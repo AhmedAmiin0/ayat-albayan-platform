@@ -23,6 +23,39 @@ export type Database = {
   };
   public: {
     Tables: {
+      audit_log: {
+        Row: {
+          action: string;
+          actor_id: string | null;
+          after: Json | null;
+          at: string;
+          before: Json | null;
+          entity: string;
+          entity_id: string;
+          id: string;
+        };
+        Insert: {
+          action: string;
+          actor_id?: string | null;
+          after?: Json | null;
+          at?: string;
+          before?: Json | null;
+          entity: string;
+          entity_id: string;
+          id?: string;
+        };
+        Update: {
+          action?: string;
+          actor_id?: string | null;
+          after?: Json | null;
+          at?: string;
+          before?: Json | null;
+          entity?: string;
+          entity_id?: string;
+          id?: string;
+        };
+        Relationships: [];
+      };
       guardians: {
         Row: {
           country: string | null;
@@ -69,6 +102,56 @@ export type Database = {
             columns: ['profile_id'];
             isOneToOne: true;
             referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      job_applicants: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          cv_url: string | null;
+          from_lead_id: string | null;
+          id: string;
+          name: string | null;
+          notes: string | null;
+          phone_e164: string;
+          recitation_url: string | null;
+          status: Database['public']['Enums']['job_applicant_status'];
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          cv_url?: string | null;
+          from_lead_id?: string | null;
+          id?: string;
+          name?: string | null;
+          notes?: string | null;
+          phone_e164: string;
+          recitation_url?: string | null;
+          status?: Database['public']['Enums']['job_applicant_status'];
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          cv_url?: string | null;
+          from_lead_id?: string | null;
+          id?: string;
+          name?: string | null;
+          notes?: string | null;
+          phone_e164?: string;
+          recitation_url?: string | null;
+          status?: Database['public']['Enums']['job_applicant_status'];
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'job_applicants_from_lead_id_fkey';
+            columns: ['from_lead_id'];
+            isOneToOne: false;
+            referencedRelation: 'leads';
             referencedColumns: ['id'];
           },
         ];
@@ -175,6 +258,41 @@ export type Database = {
         };
         Relationships: [];
       };
+      student_merges: {
+        Row: {
+          at: string;
+          id: string;
+          kept_id: string;
+          merged_by: string | null;
+          merged_id: string;
+          snapshot: NonNullable<Json>;
+        };
+        Insert: {
+          at?: string;
+          id?: string;
+          kept_id: string;
+          merged_by?: string | null;
+          merged_id: string;
+          snapshot?: NonNullable<Json>;
+        };
+        Update: {
+          at?: string;
+          id?: string;
+          kept_id?: string;
+          merged_by?: string | null;
+          merged_id?: string;
+          snapshot?: NonNullable<Json>;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'student_merges_kept_id_fkey';
+            columns: ['kept_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       students: {
         Row: {
           age: number | null;
@@ -255,6 +373,91 @@ export type Database = {
           },
           {
             foreignKeyName: 'students_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      teacher_availability: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          end_time: string;
+          id: string;
+          start_time: string;
+          teacher_id: string;
+          tz: string;
+          updated_at: string;
+          weekday: number;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          end_time: string;
+          id?: string;
+          start_time: string;
+          teacher_id: string;
+          tz: string;
+          updated_at?: string;
+          weekday: number;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          end_time?: string;
+          id?: string;
+          start_time?: string;
+          teacher_id?: string;
+          tz?: string;
+          updated_at?: string;
+          weekday?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_availability_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      teacher_time_off: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          ends_at: string;
+          id: string;
+          reason: string | null;
+          starts_at: string;
+          teacher_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          ends_at: string;
+          id?: string;
+          reason?: string | null;
+          starts_at: string;
+          teacher_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          ends_at?: string;
+          id?: string;
+          reason?: string | null;
+          starts_at?: string;
+          teacher_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_time_off_teacher_id_fkey';
             columns: ['teacher_id'];
             isOneToOne: false;
             referencedRelation: 'teachers';
@@ -350,11 +553,13 @@ export type Database = {
       };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
     };
     Enums: {
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
+      job_applicant_status: 'new' | 'contacted' | 'accepted' | 'rejected';
       lead_source: 'facebook_ad' | 'instagram_ad' | 'whatsapp_direct' | 'referral' | 'other';
       lead_status:
         | 'new'
@@ -498,6 +703,7 @@ export const Constants = {
       attendance: ['on_time', 'late', 'excused', 'absent'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
+      job_applicant_status: ['new', 'contacted', 'accepted', 'rejected'],
       lead_source: ['facebook_ad', 'instagram_ad', 'whatsapp_direct', 'referral', 'other'],
       lead_status: [
         'new',

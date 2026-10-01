@@ -6,6 +6,8 @@ const schema = z.object({
   WEB_ORIGIN: z.string().default('http://localhost:5173'),
   SUPABASE_URL: z.url(),
   SUPABASE_JWT_SECRET: z.string().min(32).optional(),
+  /** Server-only key for the DbModule client (bypasses RLS; Nest guards enforce access). */
+  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
 });
 
 export type Env = z.infer<typeof schema>;
