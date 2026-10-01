@@ -1,0 +1,51 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fireEvent, render, screen } from '@testing-library/react-native';
+import { router } from 'expo-router';
+import { Appearance } from 'react-native';
+import { t } from '@/lib/i18n';
+import { APPEARANCE_KEY } from './appearance';
+import { MoreScreen } from './MoreScreen';
+import { signOutDevice } from './sign-out';
+
+jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
+jest.mock('./sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
+
+let setScheme: jest.SpyInstance;
+
+beforeEach(async () => {
+  jest.clearAllMocks();
+  await AsyncStorage.clear();
+  setScheme = jest.spyOn(Appearance, 'setColorScheme').mockImplementation(() => undefined);
+});
+afterEach(() => jest.restoreAllMocks());
+
+test('«المزيد» title; المعلمين and طلبات التوظيف open their lists', async () => {
+  await render(<MoreScreen />);
+  expect(screen.getByRole('header', { name: t.mobile.more })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.nav.teachers }));
+  expect(router.push).toHaveBeenCalledWith('/more/teachers');
+  await fireEvent.press(screen.getByRole('button', { name: t.nav.jobApplicants }));
+  expect(router.push).toHaveBeenCalledWith('/more/job-applicants');
+});
+
+test('المظهر: تلقائي by default; ليلي applies dark at once and is saved', async () => {
+  await render(<MoreScreen />);
+  expect(await screen.findByRole('tab', { name: t.theme.auto, selected: true })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('tab', { name: t.theme.dark }));
+  expect(screen.getByRole('tab', { name: t.theme.dark, selected: true })).toBeTruthy();
+  expect(setScheme).toHaveBeenCalledWith('dark');
+  expect(await AsyncStorage.getItem(APPEARANCE_KEY)).toBe('dark');
+});
+
+test('a saved choice shows selected and is re-applied', async () => {
+  await AsyncStorage.setItem(APPEARANCE_KEY, 'light');
+  await render(<MoreScreen />);
+  expect(await screen.findByRole('tab', { name: t.theme.light, selected: true })).toBeTruthy();
+  expect(setScheme).toHaveBeenCalledWith('light');
+});
+
+test('تسجيل الخروج signs this device out (push token first, then the session)', async () => {
+  await render(<MoreScreen />);
+  await fireEvent.press(screen.getByRole('button', { name: t.auth.logout }));
+  expect(signOutDevice).toHaveBeenCalledTimes(1);
+});

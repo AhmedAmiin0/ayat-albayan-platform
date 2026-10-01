@@ -1,14 +1,23 @@
 import { render, screen } from '@testing-library/react-native';
 import RootLayout from '../app/_layout';
 
-// Fonts are mocked: the gate is what is tested, not expo-font.
+// Fonts and the auth gate are mocked: the root layout's waiting is what is tested here
+// (src/nav/routing.test.tsx drives the real router through the gate).
 const mockUseFonts = jest.fn();
+const mockGate = jest.fn();
 jest.mock('expo-font', () => ({ useFonts: (map: object) => mockUseFonts(map) }));
+jest.mock('@/auth/use-auth-gate', () => ({ useAuthGate: () => mockGate() }));
 jest.mock('expo-router', () => {
-  const { createElement } = jest.requireActual('react');
+  const { createElement, Fragment } = jest.requireActual('react');
   const { Text } = jest.requireActual('react-native');
-  return { Stack: () => createElement(Text, null, 'stack') };
+  const Stack = () => createElement(Text, null, 'stack');
+  Stack.Protected = ({ children }: { children: unknown }) =>
+    createElement(Fragment, null, children);
+  Stack.Screen = () => null;
+  return { Stack };
 });
+
+beforeEach(() => mockGate.mockReturnValue('admin'));
 
 test('loads Amiri 700 and the four Plex weights named in the theme', async () => {
   mockUseFonts.mockReturnValue([true, null]);
@@ -33,4 +42,11 @@ test('a font error still opens the app with the system font', async () => {
   mockUseFonts.mockReturnValue([false, new Error('font')]);
   await render(<RootLayout />);
   expect(screen.getByText('stack')).toBeTruthy();
+});
+
+test('renders nothing while the stored session is being checked (no login flash)', async () => {
+  mockUseFonts.mockReturnValue([true, null]);
+  mockGate.mockReturnValue('booting');
+  await render(<RootLayout />);
+  expect(screen.queryByText('stack')).toBeNull();
 });

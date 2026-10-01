@@ -3,9 +3,7 @@ import { t } from '@/lib/i18n';
 import Login from '../../app/login';
 
 const mockSignIn = jest.fn();
-const mockReplace = jest.fn();
 jest.mock('@/auth/sign-in', () => ({ signIn: (c: unknown) => mockSignIn(c) }));
-jest.mock('expo-router', () => ({ router: { replace: (p: string) => mockReplace(p) } }));
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -26,24 +24,26 @@ test('error is an alert with the struck glyph, not colour alone', async () => {
   expect(screen.getByTestId('nuqta-struck', { includeHiddenElements: true })).toBeTruthy();
 });
 
-test('navigates home on success with trimmed email', async () => {
+test('success signs in with the trimmed email and stays busy for the auth gate', async () => {
   mockSignIn.mockResolvedValue({ ok: true });
   await render(<Login />);
   await fireEvent.changeText(screen.getByLabelText(t.auth.email), ' a@b.c ');
   await fireEvent.changeText(screen.getByLabelText(t.auth.password), 'pw');
   await fireEvent.press(screen.getByRole('button'));
-  await waitFor(() => expect(mockReplace).toHaveBeenCalledWith('/home'));
-  expect(mockSignIn).toHaveBeenCalledWith({ email: 'a@b.c', password: 'pw' });
+  await waitFor(() => expect(mockSignIn).toHaveBeenCalledWith({ email: 'a@b.c', password: 'pw' }));
+  // No navigation here: Stack.Protected in app/_layout swaps the screen when the gate says admin.
+  expect(screen.getByRole('button', { name: t.auth.submitting })).toBeDisabled();
+  expect(screen.queryByRole('alert')).toBeNull();
 });
 
 test('while signing in the button says why it is disabled', async () => {
-  let finish: (r: { ok: true }) => void = () => undefined;
+  let finish: (r: { ok: false; error: string }) => void = () => undefined;
   mockSignIn.mockReturnValue(new Promise((resolve) => (finish = resolve)));
   await render(<Login />);
   // RNTL 14 awaits the press handler, which waits on signIn: start it, inspect, then let it finish.
   const pressed = fireEvent.press(screen.getByRole('button', { name: t.auth.submit }));
   expect(await screen.findByRole('button', { name: t.auth.submitting })).toBeDisabled();
-  await act(async () => finish({ ok: true }));
+  await act(async () => finish({ ok: false, error: t.auth.invalidCredentials }));
   await pressed;
   expect(await screen.findByRole('button', { name: t.auth.submit })).toBeEnabled();
 });
