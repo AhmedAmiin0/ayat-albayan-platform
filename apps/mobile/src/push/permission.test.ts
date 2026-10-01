@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Notifications from 'expo-notifications';
 import { Alert, type AlertButton } from 'react-native';
 import { t } from '@/lib/i18n';
-import { ASKED_KEY, ensurePushPermission } from './permission';
+import { ASK_AGAIN_MS, ASKED_KEY, ensurePushPermission } from './permission';
 
 jest.mock('expo-notifications', () => ({
   getPermissionsAsync: jest.fn(),
@@ -50,14 +50,25 @@ test('first time: Arabic rationale, then the system prompt', async () => {
   expect(requestPermissions).toHaveBeenCalledTimes(1);
 });
 
-test('«مش دلوقتي» skips the system prompt, and we never ask again', async () => {
+test('«مش دلوقتي» skips the system prompt; the rationale comes back only a week later', async () => {
   getPermissions.mockResolvedValue(perm(false));
   const alert = answerRationale(t.mobile.pushLater);
   await expect(ensurePushPermission()).resolves.toBe(false);
   expect(requestPermissions).not.toHaveBeenCalled();
-  expect(await AsyncStorage.getItem(ASKED_KEY)).toBe('1');
 
   await expect(ensurePushPermission()).resolves.toBe(false);
+  expect(alert).toHaveBeenCalledTimes(1);
+
+  await AsyncStorage.setItem(ASKED_KEY, String(Date.now() - ASK_AGAIN_MS - 1));
+  await expect(ensurePushPermission()).resolves.toBe(false);
+  expect(alert).toHaveBeenCalledTimes(2);
+});
+
+test('a device that said «مش دلوقتي» before this change (stored "1") is asked again', async () => {
+  getPermissions.mockResolvedValue(perm(false));
+  await AsyncStorage.setItem(ASKED_KEY, '1');
+  const alert = answerRationale(t.mobile.pushLater);
+  await ensurePushPermission();
   expect(alert).toHaveBeenCalledTimes(1);
 });
 

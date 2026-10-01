@@ -1,7 +1,8 @@
 import type { Glyph, Tone } from '@ab/shared';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { type Palette, shape, type, useTheme } from '@/theme';
 import { NuqtaGlyph } from './NuqtaGlyph';
+import { AppText } from './AppText';
 
 /** Foreground + soft background per tone (docs/07 §6). There is no neutral ink: it is ink-2. */
 export function toneColors(color: Palette, tone: Tone): { fg: string; bg: string } {
@@ -52,12 +53,12 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
       }}
     >
       <NuqtaGlyph shape={glyph} color={fg} />
-      <Text
+      <AppText
         numberOfLines={1}
         style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: fg }}
       >
         {label}
-      </Text>
+      </AppText>
     </View>
   );
 }

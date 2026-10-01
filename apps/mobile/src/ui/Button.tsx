@@ -1,5 +1,6 @@
-import { Pressable, Text } from 'react-native';
+import { Pressable } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
+import { AppText } from './AppText';
 
 export interface ButtonProps {
   label: string;
@@ -32,16 +33,17 @@ export function Button({ label, onPress, variant = 'primary', busy = false }: Bu
           : pressed ? color.lapisWash : 'transparent',
       })}
     >
-      <Text
+      <AppText
         style={{
           fontFamily: type.ui[600],
           fontSize: type.size.body,
           lineHeight: type.lineHeight(type.size.body),
           color: primary ? color.onLapis : color.lapis,
+          textAlign: 'center',
         }}
       >
         {label}
-      </Text>
+      </AppText>
     </Pressable>
   );
 }

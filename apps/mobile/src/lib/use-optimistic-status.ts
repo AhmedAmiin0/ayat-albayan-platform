@@ -17,7 +17,8 @@ export interface OptimisticStatusOptions {
 
 /**
  * Optimistic status change (R-MOB-03): every cached list page and detail under the resource shows
- * the new status at once; on failure the snapshot comes back; either way the resource refetches.
+ * the new status at once; on failure the snapshot comes back; either way the resource refetches,
+ * lists before details.
  * `mutate({ id, status })`. Show the error yourself (`isError`); the row has already rolled back.
  */
 export function useOptimisticStatus<S extends string>({ path, patchPath }: OptimisticStatusOptions) {
@@ -35,6 +36,11 @@ export function useOptimisticStatus<S extends string>({ path, patchPath }: Optim
     onError: (_error, _change, context) => {
       context?.snapshot.forEach(([key, data]) => client.setQueryData(key, data));
     },
-    onSettled: () => client.invalidateQueries({ queryKey }),
+    // Lists first: the lead screen reads its lead out of the cached lists, so after a refused move
+    // it must see the server's status, not the rolled-back one. Then everything else under it.
+    onSettled: async () => {
+      await client.invalidateQueries({ queryKey: [...queryKey, 'list'] });
+      await client.invalidateQueries({ queryKey, predicate: (q) => q.queryKey[1] !== 'list' });
+    },
   });
 }

@@ -1,11 +1,11 @@
-import { Text } from 'react-native';
 import { type, useTheme } from '@/theme';
+import { AppText } from '@/ui/AppText';
 
 /** Small ink-3 line: a hint («المواعيد بتوقيت الرياض») or an empty note («مفيش إجازات»). */
 export function Note({ children }: { children: string }) {
   const { color } = useTheme();
   return (
-    <Text
+    <AppText
       style={{
         fontFamily: type.ui[400],
         fontSize: type.size.xs,
@@ -14,6 +14,6 @@ export function Note({ children }: { children: string }) {
       }}
     >
       {children}
-    </Text>
+    </AppText>
   );
 }

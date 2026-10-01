@@ -2,6 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { LeadSource, LeadStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { guardianSearchFilter } from '../guardians/guardians.mapper';
 import { pageRange, throwIfDbError, type PageQuery } from './http';
 
 export type LeadRow = Tables<'leads'>;
@@ -78,7 +79,9 @@ export class LeadsQueries {
     let query = this.db.from('leads').select('*', { count: 'exact' });
     if (f.status) query = query.eq('status', f.status);
     if (f.source) query = query.eq('source', f.source);
-    if (f.q) query = query.or(`name.ilike.*${f.q}*,phone_e164.ilike.*${f.q}*`);
+    // A phone in any format («0552147730», «+966 55 214 7730») → its E.164 digits; else the name.
+    const search = f.q ? guardianSearchFilter(f.q) : null;
+    if (search) query = query.or(search);
     const { data, error, count } = await query
       .order('last_inbound_at', { ascending: false, nullsFirst: false })
       .order('created_at', { ascending: false })

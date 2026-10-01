@@ -1,6 +1,7 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { shape, type, useTheme } from '@/theme';
+import { AppText } from './AppText';
 
 /** docs/07 §10: dashed box, 56px gold double-outline rhombus (never the rosette), Amiri title. */
 export function EmptyState({ title }: { title: string }) {
@@ -35,7 +36,7 @@ export function EmptyState({ title }: { title: string }) {
           strokeDasharray="1.5 3"
         />
       </Svg>
-      <Text
+      <AppText
         accessibilityRole="header"
         style={{
           fontFamily: type.display,
@@ -46,7 +47,7 @@ export function EmptyState({ title }: { title: string }) {
         }}
       >
         {title}
-      </Text>
+      </AppText>
     </View>
   );
 }

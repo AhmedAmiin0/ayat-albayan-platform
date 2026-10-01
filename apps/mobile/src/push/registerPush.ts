@@ -25,7 +25,7 @@ export function easProjectId(extra: unknown): string | null {
 }
 
 /**
- * On every admin start: real device + EAS project + permission (asked once) → Expo push token →
+ * On every admin start: real device + EAS project + permission (re-asked weekly) → Expo push token →
  * PUT /me/push-tokens (idempotent). Best effort: Expo Go, offline or a refused prompt skip silently
  * and the next start tries again. Never throws.
  */
@@ -45,8 +45,10 @@ export async function registerPush(): Promise<void> {
     const { data: token } = await Notifications.getExpoPushTokenAsync({ projectId });
     await apiSend('PUT', '/me/push-tokens', { token });
     await AsyncStorage.setItem(TOKEN_KEY, token);
-  } catch {
-    // Push is a convenience: no error UI. The next start registers again.
+  } catch (error) {
+    // Push is a convenience: no error UI. The next start registers again. A dev build says why
+    // (an Android build without android.googleServicesFile never gets a token).
+    if (__DEV__) console.warn('registerPush', error);
   }
 }
 

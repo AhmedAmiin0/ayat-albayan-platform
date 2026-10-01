@@ -14,6 +14,16 @@ describe('MeService push tokens (R-MOB-01)', () => {
     expect(argsOf('profiles', 'update')).toEqual([{ push_tokens: [A, B] }]);
   });
 
+  it('add: takes the token off any other profile (a handed-over phone)', async () => {
+    const other = { id: 'admin-2', push_tokens: [A, B] };
+    const { db, calls } = fakeDb({ profiles: [{ data: { push_tokens: [] } }, {}, { data: [other] }, {}] });
+    await new MeService(db).addPushToken('admin-1', A);
+    expect(calls).toContainEqual({ table: 'profiles', method: 'contains', args: ['push_tokens', [A]] });
+    expect(calls).toContainEqual({ table: 'profiles', method: 'neq', args: ['id', 'admin-1'] });
+    const writes = calls.filter((c) => c.method === 'update' || c.method === 'eq').map((c) => c.args);
+    expect(writes.slice(-2)).toEqual([[{ push_tokens: [B] }], ['id', 'admin-2']]);
+  });
+
   it('add: a token already stored writes nothing (idempotent)', async () => {
     const { db, argsOf } = fakeDb({ profiles: [{ data: { push_tokens: [A] } }] });
     await new MeService(db).addPushToken('admin-1', A);

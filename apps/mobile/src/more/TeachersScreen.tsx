@@ -37,14 +37,12 @@ export function TeachersScreen() {
             onPress={() => router.push(`/more/teachers/${item.id}`)}
           />
         )}
-        onEndReached={() => {
-          if (list.hasNextPage && !list.isFetchingNextPage) void list.fetchNextPage();
-        }}
+        onEndReached={list.loadMore}
         refreshing={list.isRefetching}
-        onRefresh={() => void list.refetch()}
+        onRefresh={list.refresh}
         ListEmptyComponent={
           list.isPending ? null : list.isError ? (
-            <ErrorState onRetry={() => void list.refetch()} />
+            <ErrorState onRetry={list.refresh} />
           ) : (
             <EmptyState title={t.teachers.empty} />
           )

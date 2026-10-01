@@ -29,7 +29,7 @@ export function phoneSearchDigits(term: string): string | null {
   return /^[0-9]{4,}$/.test(digits) ? digits.replace(/^0+/, '') : null;
 }
 
-/** PostgREST or() filter for the guardians list: by phone digits, else by name. */
+/** PostgREST or() filter on name + phone_e164 (guardians, leads, job applicants): phone digits, else name. */
 export function guardianSearchFilter(term: string): string | null {
   const digits = phoneSearchDigits(term);
   if (digits) return `phone_e164.ilike.*${digits}*`;

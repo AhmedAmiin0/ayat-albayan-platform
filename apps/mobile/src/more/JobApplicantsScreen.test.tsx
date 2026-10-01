@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
@@ -35,4 +35,14 @@ test('no applicants: the honest empty state', async () => {
   mockApiFetch.mockResolvedValue(page([]));
   await renderWithQuery(<JobApplicantsScreen />);
   expect(await screen.findByRole('header', { name: t.jobApplicants.empty })).toBeTruthy();
+});
+
+test('failed with nothing cached: error + retry', async () => {
+  mockApiFetch.mockRejectedValueOnce(new Error('offline')).mockResolvedValue(
+    page([{ id: 'j1', name: 'أ. منى', phone_e164: '+201001234567', status: 'new' }]),
+  );
+  await renderWithQuery(<JobApplicantsScreen />);
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
+  expect(await screen.findByText('أ. منى')).toBeTruthy();
 });

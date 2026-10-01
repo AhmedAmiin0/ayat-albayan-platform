@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
+import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { signIn } from '@/auth/sign-in';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -7,6 +7,7 @@ import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
 import { Mark } from '@/ui/Mark';
 import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { AppText } from '@/ui/AppText';
 
 // docs/07 §12: mobile drops the binding cover, frame and cartouche; it keeps the mark, Amiri title,
 // 16pt inputs and one lapis button. The error is the §10 inline alert: danger-soft, struck glyph, word.
@@ -38,17 +39,18 @@ export default function Login() {
       >
         <View style={{ alignItems: 'center', gap: 8, marginBottom: 8 }}>
           <Mark size={56} labelled />
-          <Text
+          <AppText
             accessibilityRole="header"
             style={{
               fontFamily: type.display,
               fontSize: type.size.h2,
               lineHeight: type.lineHeight(type.size.h2, true),
               color: color.ink,
+              textAlign: 'center',
             }}
           >
             {t.auth.loginTitle}
-          </Text>
+          </AppText>
         </View>
         <Field
           label={t.auth.email}
@@ -83,7 +85,7 @@ export default function Login() {
             }}
           >
             <NuqtaGlyph shape="struck" color={color.bad} />
-            <Text
+            <AppText
               style={{
                 flex: 1,
                 fontFamily: type.ui[500],
@@ -93,7 +95,7 @@ export default function Login() {
               }}
             >
               {error}
-            </Text>
+            </AppText>
           </View>
         ) : null}
         <Button label={busy ? t.auth.submitting : t.auth.submit} onPress={submit} busy={busy} />

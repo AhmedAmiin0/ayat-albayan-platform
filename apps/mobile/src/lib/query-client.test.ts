@@ -1,5 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { dehydrate, focusManager, QueryClient, QueryObserver } from '@tanstack/react-query';
+import { waitFor } from '@testing-library/react-native';
+import { AppState } from 'react-native';
 import { ApiError } from './api';
 import {
   clearQueryCaches,
@@ -13,7 +15,25 @@ import {
 const mockSignOut = jest.fn();
 jest.mock('./supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
 
+// query-client registers its AppState listener on import: keep it before clearAllMocks wipes it.
+const onAppState = jest.mocked(AppState.addEventListener).mock.calls[0]?.[1];
+
 beforeEach(() => jest.clearAllMocks());
+
+test('back in the foreground, mounted queries refetch (RN has no window focus event)', async () => {
+  const client = new QueryClient();
+  client.mount();
+  const queryFn = jest.fn(async () => 'fresh');
+  const unsubscribe = new QueryObserver(client, { queryKey: ['focus'], queryFn }).subscribe(() => undefined);
+  await waitFor(() => expect(queryFn).toHaveBeenCalledTimes(1));
+  onAppState?.('background');
+  expect(focusManager.isFocused()).toBe(false);
+  onAppState?.('active');
+  await waitFor(() => expect(queryFn).toHaveBeenCalledTimes(2));
+  unsubscribe();
+  client.unmount();
+  client.clear();
+});
 
 test('4xx is final, network errors and 5xx retry up to three times', () => {
   expect(shouldRetry(0, new ApiError(401))).toBe(false);

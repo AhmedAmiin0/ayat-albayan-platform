@@ -1,6 +1,7 @@
+import { formatPhone } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { formatPhoneDisplay, whatsappLink } from '@/lib/phone';
+import { whatsappLink } from '@/lib/phone';
 import { type, useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { Ltr } from '@/ui/Ltr';
@@ -22,7 +23,7 @@ export function TeacherContact({ teacher }: { teacher: Teacher }) {
           color: color.ink,
         }}
       >
-        {formatPhoneDisplay(phone)}
+        {formatPhone(phone)}
       </Ltr>
       <View style={{ alignItems: 'flex-start' }}>
         <Button

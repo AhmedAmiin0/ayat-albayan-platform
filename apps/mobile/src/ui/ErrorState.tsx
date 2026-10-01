@@ -1,8 +1,9 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { Button } from './Button';
 import { NuqtaGlyph } from './NuqtaGlyph';
+import { AppText } from './AppText';
 
 export interface ErrorStateProps {
   /** Usually the query's `refetch`. */
@@ -21,7 +22,7 @@ export function ErrorState({ onRetry, message = t.common.error }: ErrorStateProp
     <View style={{ alignItems: 'center', gap: 8, paddingVertical: 32, paddingHorizontal: 24 }}>
       <NuqtaGlyph shape="struck" color={color.bad} size={16} />
       {/* The alert is the sentence, not the box: an accessible box would swallow the retry button. */}
-      <Text
+      <AppText
         accessibilityRole="alert"
         accessibilityLiveRegion="polite"
         style={{
@@ -33,7 +34,7 @@ export function ErrorState({ onRetry, message = t.common.error }: ErrorStateProp
         }}
       >
         {message}
-      </Text>
+      </AppText>
       <Button variant="ghost" label={t.mobile.retry} onPress={onRetry} />
     </View>
   );

@@ -18,9 +18,8 @@ const themes: Record<ThemeName, Theme> = {
 };
 
 /**
- * Follows the system colour scheme (app.json userInterfaceStyle: automatic); stable object per scheme.
- * TODO(docs/07 §12): a manual «تلقائي / فاتح / ليلي» override in settings once the app has a
- * settings screen (mobile track, R-MOB).
+ * Follows the colour scheme (app.json userInterfaceStyle: automatic); stable object per scheme.
+ * Manual «تلقائي / فاتح / ليلي» override: src/more/appearance.ts (Appearance.setColorScheme).
  */
 export function useTheme(): Theme {
   return themes[useColorScheme() === 'dark' ? 'dark' : 'light'];

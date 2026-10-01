@@ -1,7 +1,8 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { Button } from './Button';
+import { AppText } from './AppText';
 
 export interface InlineConfirmProps {
   /** The question, e.g. «شكلها طلب توظيف مش طالب.» */
@@ -32,7 +33,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
         backgroundColor: color.goldWash,
       }}
     >
-      <Text
+      <AppText
         style={{
           fontFamily: type.ui[500],
           fontSize: type.size.sm,
@@ -41,7 +42,7 @@ export function InlineConfirm(props: InlineConfirmProps) {
         }}
       >
         {message}
-      </Text>
+      </AppText>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <View style={{ flex: 1 }}>
           <Button variant="ghost" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />

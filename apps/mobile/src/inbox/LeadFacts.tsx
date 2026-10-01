@@ -1,13 +1,13 @@
-import { leadStatusStyle } from '@ab/shared';
+import { formatPhone, leadStatusStyle } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { formatPhoneDisplay } from '@/lib/phone';
 import { Ltr } from '@/ui/Ltr';
 import { StatusChip } from '@/ui/StatusChip';
 import { shape, type, useTheme } from '@/theme';
 import { leadAge } from './format';
 import type { Lead } from './types';
+import { AppText } from '@/ui/AppText';
 
 /** Label/value card with only what GET /leads returns. TODO(R-LEAD-02): qualification fields. */
 export function LeadFacts({ lead }: { lead: Lead }) {
@@ -23,14 +23,14 @@ export function LeadFacts({ lead }: { lead: Lead }) {
       t.leads.status,
       <StatusChip {...leadStatusStyle[lead.status]} label={t.enums.leadStatus[lead.status]} />,
     ],
-    [t.leads.phone, <Ltr style={valueStyle}>{formatPhoneDisplay(lead.phone_e164)}</Ltr>],
-    [t.leads.source, <Text style={valueStyle}>{t.enums.leadSource[lead.source]}</Text>],
-    [t.leads.age, <Text style={valueStyle}>{leadAge(lead.created_at)}</Text>],
+    [t.leads.phone, <Ltr style={valueStyle}>{formatPhone(lead.phone_e164)}</Ltr>],
+    [t.leads.source, <AppText style={valueStyle}>{t.enums.leadSource[lead.source]}</AppText>],
+    [t.leads.age, <AppText style={valueStyle}>{leadAge(lead.created_at)}</AppText>],
   ];
   if (lead.last_inbound_at) {
     facts.push([
       t.leads.lastInboundAt,
-      <Text style={valueStyle}>{leadAge(lead.last_inbound_at)}</Text>,
+      <AppText style={valueStyle}>{leadAge(lead.last_inbound_at)}</AppText>,
     ]);
   }
   return (
@@ -57,9 +57,9 @@ export function LeadFacts({ lead }: { lead: Lead }) {
             borderTopColor: color.rule,
           }}
         >
-          <Text style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}>
+          <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}>
             {label}
-          </Text>
+          </AppText>
           {value}
         </View>
       ))}

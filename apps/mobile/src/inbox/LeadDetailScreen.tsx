@@ -1,7 +1,8 @@
+import { formatPhone } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { Linking, ScrollView, View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { formatPhoneDisplay, whatsappLink } from '@/lib/phone';
+import { whatsappLink } from '@/lib/phone';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
@@ -44,7 +45,7 @@ export function LeadDetailScreen() {
         keyboardShouldPersistTaps="handled"
       >
         {back}
-        <ScreenHeader title={name ?? ltr(formatPhoneDisplay(phone))} />
+        <ScreenHeader title={name ?? ltr(formatPhone(phone))} />
         <LeadFacts lead={lead.data} />
         <LeadStatusChanger lead={lead.data} />
         <Button

@@ -30,9 +30,9 @@ test('«المزيد» title; المعلمين and طلبات التوظيف ope
 
 test('المظهر: تلقائي by default; ليلي applies dark at once and is saved', async () => {
   await render(<MoreScreen />);
-  expect(await screen.findByRole('tab', { name: t.theme.auto, selected: true })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('tab', { name: t.theme.dark }));
-  expect(screen.getByRole('tab', { name: t.theme.dark, selected: true })).toBeTruthy();
+  expect(await screen.findByRole('radio', { name: t.theme.auto, checked: true })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('radio', { name: t.theme.dark }));
+  expect(screen.getByRole('radio', { name: t.theme.dark, checked: true })).toBeTruthy();
   expect(setScheme).toHaveBeenCalledWith('dark');
   expect(await AsyncStorage.getItem(APPEARANCE_KEY)).toBe('dark');
 });
@@ -40,7 +40,7 @@ test('المظهر: تلقائي by default; ليلي applies dark at once and i
 test('a saved choice shows selected and is re-applied', async () => {
   await AsyncStorage.setItem(APPEARANCE_KEY, 'light');
   await render(<MoreScreen />);
-  expect(await screen.findByRole('tab', { name: t.theme.light, selected: true })).toBeTruthy();
+  expect(await screen.findByRole('radio', { name: t.theme.light, checked: true })).toBeTruthy();
   expect(setScheme).toHaveBeenCalledWith('light');
 });
 

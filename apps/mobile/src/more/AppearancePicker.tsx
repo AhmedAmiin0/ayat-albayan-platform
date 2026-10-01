@@ -15,7 +15,13 @@ export function AppearancePicker() {
   const [pref, choose] = useAppearancePref();
   return (
     <Section title={t.theme.label}>
-      <FilterPills items={ITEMS} value={pref} onChange={choose} accessibilityLabel={t.theme.label} />
+      <FilterPills
+        items={ITEMS}
+        value={pref}
+        onChange={choose}
+        accessibilityLabel={t.theme.label}
+        role="radiogroup"
+      />
     </Section>
   );
 }

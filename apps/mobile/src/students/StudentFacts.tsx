@@ -1,10 +1,11 @@
-import { Linking, Pressable, Text, View } from 'react-native';
+import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { Ltr } from '@/ui/Ltr';
 import { profileFacts } from './profile-facts';
 import { SectionLabel } from './SectionLabel';
 import type { StudentProfile } from './types';
+import { AppText } from '@/ui/AppText';
 
 /** Program, level…, tz, teacher, then the effective meeting link, which opens in the browser/app. */
 export function StudentFacts({ student }: { student: StudentProfile }) {
@@ -19,7 +20,7 @@ export function StudentFacts({ student }: { student: StudentProfile }) {
           {fact.ltr ? (
             <Ltr style={[value, { alignSelf: 'flex-start' }]}>{fact.value}</Ltr>
           ) : (
-            <Text style={[value, { lineHeight: type.lineHeight(type.size.body) }]}>{fact.value}</Text>
+            <AppText style={[value, { lineHeight: type.lineHeight(type.size.body) }]}>{fact.value}</AppText>
           )}
         </View>
       ))}

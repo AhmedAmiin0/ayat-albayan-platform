@@ -1,15 +1,16 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { formatTimeOff } from './schedule';
 import type { TimeOff } from './types';
+import { AppText } from '@/ui/AppText';
 
 /** One time-off: the span (device zone), and the reason when there is one. */
 export function TimeOffRow({ off }: { off: TimeOff }) {
   const { color } = useTheme();
   return (
     <View style={{ gap: 2, paddingVertical: 10, borderBottomWidth: 1, borderBottomColor: color.rule }}>
-      <Text
+      <AppText
         style={{
           fontFamily: type.ui[600],
           fontSize: type.size.body,
@@ -19,9 +20,9 @@ export function TimeOffRow({ off }: { off: TimeOff }) {
         }}
       >
         {formatTimeOff(off)}
-      </Text>
+      </AppText>
       {off.reason ? (
-        <Text
+        <AppText
           style={{
             fontFamily: type.ui[400],
             fontSize: type.size.xs,
@@ -30,7 +31,7 @@ export function TimeOffRow({ off }: { off: TimeOff }) {
           }}
         >
           {`${t.availability.reason}: ${off.reason}`}
-        </Text>
+        </AppText>
       ) : null}
     </View>
   );

@@ -1,5 +1,5 @@
 import { leadStatusStyle, type LeadStatus } from '@ab/shared';
-import { Pressable, Text, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { useOptimisticStatus } from '@/lib/use-optimistic-status';
@@ -8,6 +8,7 @@ import { type, useTheme } from '@/theme';
 import { allowedNextStatuses } from './allowed-next-statuses';
 import { ErrorLine } from './ErrorLine';
 import type { Lead } from './types';
+import { AppText } from '@/ui/AppText';
 
 /**
  * «تغيير الحالة»: one chip button per move the API allows from the current status (R-LEAD-01).
@@ -21,12 +22,12 @@ export function LeadStatusChanger({ lead }: { lead: Lead }) {
   const refused = change.error instanceof ApiError && change.error.status === 409;
   return (
     <View style={{ gap: 4 }}>
-      <Text
+      <AppText
         accessibilityRole="header"
         style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink2 }}
       >
         {t.leads.changeStatus}
-      </Text>
+      </AppText>
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', columnGap: 8 }}>
         {next.map((s) => (
           <Pressable

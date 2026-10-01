@@ -47,3 +47,12 @@ test('status pills carry their nuqta shape', async () => {
   expect(screen.getByTestId('nuqta-hollow', hidden)).toBeTruthy();
   expect(screen.getByTestId('nuqta-struck', hidden)).toBeTruthy();
 });
+
+test('a value setter is a radiogroup: radios with checked, not tabs', async () => {
+  await render(
+    <FilterPills items={items} value="lost" onChange={jest.fn()} accessibilityLabel="status" role="radiogroup" />,
+  );
+  expect(screen.queryAllByRole('tab')).toHaveLength(0);
+  expect(screen.getAllByRole('radio')).toHaveLength(3);
+  expect(screen.getByRole('radio', { checked: true })).toHaveTextContent(t.enums.leadStatus.lost);
+});

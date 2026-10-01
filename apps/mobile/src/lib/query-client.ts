@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { QueryCache, QueryClient } from '@tanstack/react-query';
+import { focusManager, QueryCache, QueryClient } from '@tanstack/react-query';
 import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
+import { AppState } from 'react-native';
 import { ApiError } from './api';
 import { supabase } from './supabase';
 
@@ -19,6 +20,13 @@ export function shouldRetry(failureCount: number, error: unknown): boolean {
 export function signOutOn401(error: unknown): void {
   if (error instanceof ApiError && error.status === 401) void supabase.auth.signOut();
 }
+
+// RN has no window focus event: back in the foreground, mounted stale lists refetch (tabs stay
+// mounted, so nothing else would). TanStack's React Native recipe.
+focusManager.setEventListener((setFocused) => {
+  const sub = AppState.addEventListener('change', (state) => setFocused(state === 'active'));
+  return () => sub.remove();
+});
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({ onError: signOutOn401 }),

@@ -1,8 +1,9 @@
 import type { Glyph, Tone } from '@ab/shared';
-import { Pressable, ScrollView, Text } from 'react-native';
+import { Pressable, ScrollView } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
 import { NuqtaGlyph } from './NuqtaGlyph';
 import { toneColors } from './StatusChip';
+import { AppText } from './AppText';
 
 export interface FilterPill<V extends string> {
   value: V;
@@ -21,21 +22,25 @@ export interface FilterPillsProps<V extends string> {
   onChange: (value: V) => void;
   /** Names the group for screen readers, e.g. t.leads.statusFilter. */
   accessibilityLabel: string;
+  /** 'radiogroup' when a pill sets a value (a student's status, the appearance) instead of filtering. */
+  role?: 'tablist' | 'radiogroup';
 }
 
-/** Horizontal, scrolling single-choice pills (docs/07 §12 Today, §9 fihris under 900px). */
+/** Horizontal, scrolling single-choice pills (docs/07 §12 Today, §9 fihris under 900px): tabs or radios. */
 export function FilterPills<V extends string>({
   items,
   value,
   onChange,
   accessibilityLabel,
+  role = 'tablist',
 }: FilterPillsProps<V>) {
   const { color } = useTheme();
+  const radio = role === 'radiogroup';
   return (
     <ScrollView
       horizontal
       showsHorizontalScrollIndicator={false}
-      accessibilityRole="tablist"
+      accessibilityRole={role}
       accessibilityLabel={accessibilityLabel}
       contentContainerStyle={{ gap: 8, paddingVertical: 4 }}
     >
@@ -45,9 +50,8 @@ export function FilterPills<V extends string>({
         return (
           <Pressable
             key={item.value}
-            accessibilityRole="tab"
-            accessibilityState={{ selected }}
-            aria-selected={selected}
+            accessibilityRole={radio ? 'radio' : 'tab'}
+            accessibilityState={radio ? { checked: selected } : { selected }}
             onPress={() => onChange(item.value)}
             hitSlop={{ top: 4, bottom: 4 }}
             style={{
@@ -68,7 +72,7 @@ export function FilterPills<V extends string>({
                 color={selected ? fg : toneColors(color, item.tone ?? 'neutral').fg}
               />
             ) : null}
-            <Text
+            <AppText
               style={{
                 fontFamily: type.ui[600],
                 fontSize: type.size.sm,
@@ -79,7 +83,7 @@ export function FilterPills<V extends string>({
             >
               {item.label}
               {item.count === undefined ? '' : ` ${item.count}`}
-            </Text>
+            </AppText>
           </Pressable>
         );
       })}

@@ -1,3 +1,4 @@
+import { useQuery } from '@tanstack/react-query';
 import { act, renderHook, waitFor } from '@testing-library/react-native';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { ApiError } from './api';
@@ -53,7 +54,7 @@ test('the new status shows before the server answers, then the resource refetche
 
   await act(async () => resolve({ id: 'a', status: 'contacted' }));
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] });
+  expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['leads'] }));
 });
 
 test('a failed change rolls every cached copy back to the snapshot', async () => {
@@ -65,7 +66,31 @@ test('a failed change rolls every cached copy back to the snapshot', async () =>
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(client.getQueryData(listKey)).toEqual(seedList);
   expect(client.getQueryData(detailKey)).toEqual({ id: 'a', status: 'new', name: 'Huda' });
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] });
+  expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['leads'] }));
+});
+
+test('lists refetch before details: a detail read from the lists sees the server, not the rollback', async () => {
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'invalid_transition' }));
+  const { client, wrapper } = setup();
+  const lost = { ...seedList, pages: [{ ...seedList.pages[0], items: [{ id: 'a', status: 'lost' }] }] };
+  const listFn = jest.fn().mockResolvedValueOnce(seedList).mockResolvedValue(lost);
+  const { result } = await renderHook(
+    () => {
+      const list = useQuery({ queryKey: listKey, queryFn: listFn });
+      // The lead screen's pattern (use-cached-lead): the detail is read out of the cached list.
+      const detail = useQuery({
+        queryKey: detailKey,
+        queryFn: () => ({ id: 'a', status: statusOf(client.getQueryData(listKey), 0) }),
+      });
+      return { list, detail, change: useOptimisticStatus({ path: '/leads' }) };
+    },
+    { wrapper },
+  );
+  await waitFor(() => expect(result.current.list.isFetching).toBe(false));
+  // Someone else moved the lead to «lost» meanwhile; this move is refused.
+  await act(async () => result.current.change.mutate({ id: 'a', status: 'contacted' }));
+  await waitFor(() => expect(result.current.change.isError).toBe(true));
+  expect(result.current.detail.data).toMatchObject({ status: 'lost' });
 });
 
 test('other resources are never touched', async () => {
@@ -92,5 +117,5 @@ test('patchPath sends the row PATCH for resources without a /status route (stude
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/students/s1', { status: 'active' });
   expect(client.getQueryData(studentKey)).toMatchObject({ status: 'active', name: 'هدى' });
-  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['students'] });
+  expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['students'] }));
 });

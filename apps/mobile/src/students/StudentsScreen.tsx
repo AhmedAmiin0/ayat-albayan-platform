@@ -31,16 +31,14 @@ export function StudentsScreen() {
         data={list.items}
         keyExtractor={(s) => s.id}
         renderItem={({ item }) => <StudentRow student={item} />}
-        onEndReached={() => {
-          if (list.hasNextPage && !list.isFetchingNextPage) void list.fetchNextPage();
-        }}
+        onEndReached={list.loadMore}
         refreshing={list.isRefetching}
-        onRefresh={() => void list.refetch()}
+        onRefresh={list.refresh}
         ListEmptyComponent={
           list.data ? (
             <EmptyState title={empty} />
           ) : list.isError ? (
-            <ErrorState onRetry={() => void list.refetch()} />
+            <ErrorState onRetry={list.refresh} />
           ) : null
         }
       />

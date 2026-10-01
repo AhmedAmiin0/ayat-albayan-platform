@@ -1,7 +1,8 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 import { toneColors } from '@/ui/StatusChip';
+import { AppText } from '@/ui/AppText';
 
 /** «دورك» note (docs/07 §6 hamish): small saffron nuqta + ink 600 words, like the web row. */
 export function StudentNote({ text }: { text: string }) {
@@ -9,7 +10,7 @@ export function StudentNote({ text }: { text: string }) {
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
       <NuqtaGlyph shape="fill" color={toneColors(color, 'act').fg} size={9} />
-      <Text
+      <AppText
         numberOfLines={1}
         style={{
           fontFamily: type.ui[600],
@@ -19,7 +20,7 @@ export function StudentNote({ text }: { text: string }) {
         }}
       >
         {text}
-      </Text>
+      </AppText>
     </View>
   );
 }

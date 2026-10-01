@@ -14,8 +14,8 @@ export interface PagedListOptions {
 }
 
 /**
- * Infinite list over a `{ items, total, page, pageSize }` endpoint. Feed `items` to a FlatList and
- * `fetchNextPage` (guarded by `hasNextPage`) to `onEndReached`. Everything else is TanStack's result.
+ * Infinite list over a `{ items, total, page, pageSize }` endpoint. Feed `items` to a FlatList,
+ * `loadMore` to `onEndReached` and `refresh` to `onRefresh`. Everything else is TanStack's result.
  */
 export function usePagedList<T extends WithId>({
   path,
@@ -31,5 +31,10 @@ export function usePagedList<T extends WithId>({
   });
   const pages = query.data?.pages;
   const items = useMemo(() => flattenPages(pages ?? []), [pages]);
-  return { ...query, items, total: pages?.[0]?.total ?? 0 };
+  /** The next page, only if there is one and it isn't already on its way. */
+  const loadMore = () => {
+    if (query.hasNextPage && !query.isFetchingNextPage) void query.fetchNextPage();
+  };
+  const refresh = () => void query.refetch();
+  return { ...query, items, total: pages?.[0]?.total ?? 0, loadMore, refresh };
 }

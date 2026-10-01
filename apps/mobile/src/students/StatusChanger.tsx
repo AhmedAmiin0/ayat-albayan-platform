@@ -1,11 +1,12 @@
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { useOptimisticStatus } from '@/lib/use-optimistic-status';
 import { type, useTheme } from '@/theme';
 import { FilterPills } from '@/ui/FilterPills';
 import { SectionLabel } from './SectionLabel';
 import type { StudentRef } from './types';
+import { AppText } from '@/ui/AppText';
 
 // Students have no /status route: status is a field of PATCH /students/:id.
 const STATUS = { path: '/students', patchPath: (id: string) => `/students/${id}` };
@@ -34,9 +35,10 @@ export function StatusChanger({ student }: { student: StudentRef }) {
         value={student.status}
         onChange={set}
         accessibilityLabel={t.students.status}
+        role="radiogroup"
       />
       {change.isError ? (
-        <Text
+        <AppText
           accessibilityRole="alert"
           accessibilityLiveRegion="polite"
           style={{
@@ -47,7 +49,7 @@ export function StatusChanger({ student }: { student: StudentRef }) {
           }}
         >
           {t.common.error}
-        </Text>
+        </AppText>
       ) : null}
     </View>
   );

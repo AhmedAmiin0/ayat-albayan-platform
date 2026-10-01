@@ -17,8 +17,8 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ id: 's1' }),
 }));
 
-const selected = () => screen.getByRole('tab', { selected: true });
-const tab = (name: string) => screen.getByRole('tab', { name });
+const selected = () => screen.getByRole('radio', { checked: true });
+const pill = (name: string) => screen.getByRole('radio', { name });
 
 beforeEach(() => {
   mockApiFetch.mockReset().mockResolvedValue(profile);
@@ -28,16 +28,16 @@ beforeEach(() => {
 test('every student status is offered; the current one is selected', async () => {
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  expect(screen.getAllByRole('tab')).toHaveLength(4);
-  expect(selected()).toBe(tab(t.enums.studentStatus.active));
+  expect(screen.getAllByRole('radio')).toHaveLength(4);
+  expect(selected()).toBe(pill(t.enums.studentStatus.active));
 });
 
 test('a tap shows the new status at once and PATCHes /students/:id', async () => {
   mockApiSend.mockReturnValue(new Promise(() => undefined));
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  await fireEvent.press(tab(t.enums.studentStatus.paused));
-  expect(await screen.findByRole('tab', { selected: true, name: t.enums.studentStatus.paused })).toBeTruthy();
+  await fireEvent.press(pill(t.enums.studentStatus.paused));
+  expect(await screen.findByRole('radio', { checked: true, name: t.enums.studentStatus.paused })).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/students/s1', { status: 'paused' });
 });
 
@@ -45,14 +45,14 @@ test('a refused change rolls back and says so', async () => {
   mockApiSend.mockRejectedValue(new ApiError(400));
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  await fireEvent.press(tab(t.enums.studentStatus.churned));
+  await fireEvent.press(pill(t.enums.studentStatus.churned));
   expect(await screen.findByRole('alert')).toHaveTextContent(t.common.error);
-  expect(selected()).toBe(tab(t.enums.studentStatus.active));
+  expect(selected()).toBe(pill(t.enums.studentStatus.active));
 });
 
 test('tapping the current status sends nothing', async () => {
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  await fireEvent.press(tab(t.enums.studentStatus.active));
+  await fireEvent.press(pill(t.enums.studentStatus.active));
   expect(mockApiSend).not.toHaveBeenCalled();
 });

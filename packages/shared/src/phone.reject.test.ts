@@ -11,9 +11,9 @@ describe('normalizePhone — rejected (R-STU-02)', () => {
     ['+96650abc4567', 'not_a_number'],
     ['12345', 'missing_country_code'],
     ['501234567', 'missing_country_code'],
-    // Bare 20… only when it is a full Egyptian mobile; anything else stays ambiguous.
+    // Bare 20… only when it is a full Egyptian mobile (20 1x, 12 digits); anything else stays ambiguous.
     ['2010012345', 'missing_country_code'],
-    ['201301234567', 'missing_country_code'],
+    ['202012345678', 'missing_country_code'],
     ['2010012345678', 'missing_country_code'],
     ['971501234567', 'missing_country_code'],
     ['+966 50 123', 'invalid_length'],

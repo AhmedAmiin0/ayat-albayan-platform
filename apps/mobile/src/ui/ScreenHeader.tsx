@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { Mark } from './Mark';
+import { AppText } from './AppText';
 
 export interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */
@@ -28,7 +29,7 @@ export function ScreenHeader({
           gap: 12,
         }}
       >
-        <Text
+        <AppText
           accessibilityRole="header"
           style={{
             flexShrink: 1,
@@ -39,11 +40,11 @@ export function ScreenHeader({
           }}
         >
           {title}
-        </Text>
+        </AppText>
         {trailing}
       </View>
       {subtitle ? (
-        <Text
+        <AppText
           style={{
             fontFamily: type.ui[500],
             fontSize: type.size.xs,
@@ -53,7 +54,7 @@ export function ScreenHeader({
           }}
         >
           {subtitle}
-        </Text>
+        </AppText>
       ) : null}
     </View>
   );

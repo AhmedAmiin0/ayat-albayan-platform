@@ -1,9 +1,8 @@
-import { LEAD_STATUSES, leadStatusStyle, type LeadStatus } from '@ab/shared';
+import { formatPhone, LEAD_STATUSES, type LeadStatus, leadStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
-import { formatPhoneDisplay } from '@/lib/phone';
 import { usePagedList } from '@/lib/use-paged-list';
 import { Avatar } from '@/ui/Avatar';
 import { EmptyState } from '@/ui/EmptyState';
@@ -65,7 +64,7 @@ export function InboxScreen() {
         data={list.items}
         keyExtractor={(lead) => lead.id}
         renderItem={({ item }) => {
-          const phone = formatPhoneDisplay(item.phone_e164);
+          const phone = formatPhone(item.phone_e164);
           return (
             <ListRow
               leading={<Avatar letter={initialOf(item.name)} />}
@@ -83,16 +82,14 @@ export function InboxScreen() {
             />
           );
         }}
-        onEndReached={() => {
-          if (list.hasNextPage && !list.isFetchingNextPage) void list.fetchNextPage();
-        }}
+        onEndReached={list.loadMore}
         refreshing={list.isRefetching}
-        onRefresh={() => void list.refetch()}
+        onRefresh={list.refresh}
         ListEmptyComponent={
           list.isPending ? null : loaded ? (
             <EmptyState title={t.leads.empty} />
           ) : (
-            <ErrorState onRetry={() => void list.refetch()} />
+            <ErrorState onRetry={list.refresh} />
           )
         }
       />

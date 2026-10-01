@@ -1,11 +1,11 @@
-import { Text } from 'react-native';
 import { type, useTheme } from '@/theme';
+import { AppText } from '@/ui/AppText';
 
 /** Small ink-3 label over a quick-view block (البرنامج، ولي الأمر…). */
 export function SectionLabel({ children }: { children: string }) {
   const { color } = useTheme();
   return (
-    <Text
+    <AppText
       style={{
         fontFamily: type.ui[600],
         fontSize: type.size.xs,
@@ -14,6 +14,6 @@ export function SectionLabel({ children }: { children: string }) {
       }}
     >
       {children}
-    </Text>
+    </AppText>
   );
 }

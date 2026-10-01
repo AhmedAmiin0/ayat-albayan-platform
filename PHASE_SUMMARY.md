@@ -294,9 +294,9 @@ E2E: **18 passed**. That is 2 setup runs plus 8 tests, each on desktop and Pixel
 - **Bare counts (medium):** the wording is fixed. The reference's «11 مستنيين رد» is **not built**: the API has no unreplied count, and showing one would fake data (TODO(R-LEAD-02)).
 - **Expo textAlign (medium):**
   - `AppText` is in place, `Field` uses it, and the TextInput starts at the inline-start.
-  - The screen-level Text in `app/login.tsx` and `app/home.tsx` is left to the mobile/phase5a merge (task #4). That track is rewriting both files; home.tsx is already renamed to `src/today/TodayScreen.tsx` there.
-  - Not yet verified on a device: it still needs a check on the Android emulator and on the iOS simulator with the device language set to English.
-- **Theme on phones (low):** fixed on web. The Expo manual «تلقائي / فاتح / ليلي» override waits for a settings screen (TODO in `apps/mobile/src/theme.ts`).
+  - The screen-level Text was left to the mobile/phase5a merge. The merge itself missed it; the Phase 5a verifier fixes did it: every app Text is now `AppText`, and lint forbids a raw `Text` (see Phase 5a, Verifier fixes).
+  - Not yet verified on a device: it still needs a check on the Android emulator and on the iOS simulator with the device language set to English (Phase 5a owner input 5).
+- **Theme on phones (low):** fixed on web. The Expo manual «تلقائي / فاتح / ليلي» override shipped in Phase 5a (المزيد → المظهر, `apps/mobile/src/more/appearance.ts`).
 - **RN theme as one source (medium):** done, and the contrast test runs in CI. Generating the web raw-token CSS from the same object is still a TODO (docs/07 §12).
 
 **Rejected or deferred (2):**
@@ -395,7 +395,7 @@ Branch `develop`. The Expo admin app was built ahead of schedule on top of the P
   - write nothing when the token is already stored, and keep only the newest 10.
 - **Mobile:** `usePushRegistration()` is mounted in the tabs layout, so it runs on every admin start.
   - It needs a real device, the EAS project id and notification permission.
-  - Permission is asked once, after an Arabic explanation («تفعيل الإشعارات»). On Android the channel is created first.
+  - Permission is asked after an Arabic explanation («تفعيل الإشعارات»). «مش دلوقتي» brings the explanation back a week later; once the system prompt is refused, only the phone's settings can turn it on. On Android the channel is created first.
   - Every failure is skipped silently.
 
 ### EAS
@@ -413,7 +413,7 @@ Branch `develop`. The Expo admin app was built ahead of schedule on top of the P
 ## R-STU-02 fix (Ouroboros evaluation finding)
 - **The bug:** `normalizePhone` rejected `201001234567` with `missing_country_code`. That is exactly the WhatsApp `wa_id` shape the Phase 4 webhook will receive. Bare `966…` already worked.
 - **Where it was fixed:** in `normalizePhone` itself, which every caller goes through: the zod `phoneE164` schema, `LeadsService.upsertByPhone`, the guardians mapper and the web forms.
-- **What it accepts now:** bare `20` + an Egyptian mobile (`1[0125]` + 8 digits, 12 digits in all) becomes `+20…`. The local `05…`/`01…` rules are unchanged, and no local format starts with `2`, so there is no ambiguity.
+- **What it accepts now:** bare `20` + an Egyptian mobile (`1x` + 8 digits, 12 digits in all) becomes `+20…`. Since the verifier fixes this is the same `1x` set as `+20…` and `01…`, so a number is accepted however it is written. The local `05…`/`01…` rules are unchanged, and no local format starts with `2`, so there is no ambiguity.
 - **Still rejected:** other bare international numbers (`971…`, `44…`), with a `TODO(R-STU-02)`. Without a `+` they can't be told apart from local numbers. The webhook knows `wa_id` is international, so it should add the `+` itself.
 - **Guardians test:** the missing controller test is added. A teacher gets 403 on all five routes without touching the DB, and an admin gets the page.
 
@@ -428,34 +428,55 @@ Branch `develop`. The Expo admin app was built ahead of schedule on top of the P
   - `pnpm i` found the merged lockfile already consistent.
 - **Wiring:** `MeModule` is registered, and `supabase db reset` + `gen:types` were run (no diff). The merged mobile worktrees are removed and the `mobile/*` branches are kept.
 
-## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+## Verifier fixes
+The final verifier sent 4 medium and 10 low findings. Every medium is fixed; the lows are fixed where cheap, and the rest are explained.
+
+**Fixed:**
+- **Inbox search by phone (medium):** `/leads` matched the raw text against `phone_e164`, so «0552147730», «+966 55 214 7730» or Arabic-Indic digits found nothing. `LeadsQueries.list` now builds its filter with `guardianSearchFilter` (the students and guardians rule: a phone in any format → its E.164 digits, else the name). `/job-applicants` had the same line and is fixed the same way. Test: `leads.queries.test.ts`.
+- **Lists never refreshed on return (medium, R-MOB-03):** `query-client.ts` wires TanStack's `focusManager` to `AppState`, so back in the foreground the mounted lists refetch. Supabase `startAutoRefresh` on the same event is not added: `apiFetch` takes the token from `getSession()`, which refreshes an expired session first.
+- **«مش دلوقتي» was forever (medium, R-MOB-01):** `push.asked` now stores the time, and the explanation comes back a week later. A device that stored the old `'1'` is asked again. The timestamp option needs no new copy. A system prompt that was refused leaves the phone's own settings, since the app did ask.
+- **RTL text alignment (medium, handed over from the design pass):** all 23 app files that rendered a raw `Text` (including `Ltr`, `ScreenHeader`, `ListRow` and `app/login.tsx`) render `AppText`. The button label and the login title set `textAlign: 'center'`. `apps/mobile/eslint.config.js` now forbids importing `Text` from `react-native` in app code (except `ui/AppText.tsx` and tests), so it can't come back. The device check is owner input 5.
+- **Push token on a handed-over phone (low):** `PUT /me/push-tokens` also takes the token off every other profile (`contains` + `neq`, then the same write). The two-device append race is unchanged (Residual TODOs).
+- **Lead screen stale after a 409 (low):** `useOptimisticStatus` now refetches the lists first and the details after. The lead screen reads its lead from the lists, so it now shows the server's status. The new regression test fails on the old order.
+- **Status pills announced as tabs (low):** `FilterPills` takes `role="radiogroup"` (radios with `checked`), used by the student status changer and the appearance picker.
+- **Duplicate phone formatter (low):** mobile uses `@ab/shared` `formatPhone`. `formatPhoneDisplay` and its 3 tests are deleted, so Gulf numbers (+974/+968/+965/+973) are grouped as on web.
+- **Stale theme TODO (low, reported twice):** `theme.ts` points at `more/appearance.ts`, and the design-pass note above says the override shipped.
+- **Egyptian prefix consistency (low, R-STU-02):** the bare `20…` rule accepts `201` + 9 digits, the same set as `+20…` and `01…`. I loosened it instead of tightening all three to `1[0125]`: the Sheets export isn't in this checkout to check, and tightening could reject existing rows. `201301234567` and `01301234567` now both give `+201301234567`. The rejected case moved to `202012345678`.
+- **Test depth on list screens (low):** paging and refresh moved into `usePagedList` (`loadMore`, `refresh`) and are tested once there, in place of four copies of the same `onEndReached` guard. A job-applicants error + retry test is added. RNTL 14 renders host elements only, so the screen tests can't fire a FlatList's `onEndReached` directly.
+
+**Partly done or rejected:**
+- **Android `googleServicesFile` (low), partly done:** the key is not added. The config plugin fails prebuild when the file is missing, which would break the preview APK the owner is about to build. Owner input 2 now names the key, and `registerPush` logs the swallowed error in dev builds.
+- **Confirm before «وقف» (low), deferred:** the radio role half is done. The confirm needs new Arabic copy, which the owner has to sign off. A status change is one tap to undo, and a horizontal ScrollView cancels a pill press once a drag starts.
+- **Expo template icon (low), deferred:** it needs exported artwork, and the mark waits on the calligrapher's check (design-pass owner sign-off 3). Listed under owner input 2.
+
+## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`, after the verifier fixes)
 | Package | Unit tests | Design pass | Added |
 |---|---|---|---|
-| api | 334 (38 files) | 307 | +27: me module 21, guardians controller 6 |
+| api | 340 (39 files) | 307 | +33: me module 22, guardians controller 6, leads/applicants phone search 5 |
 | web | 230 (47 files) | 230 | 0 |
-| @ab/shared | 192 (15 files) | 180 | +12: phone accept 8, reject 4 |
-| mobile | 224 (44 suites) | 27 | +197 |
+| @ab/shared | 194 (15 files) | 180 | +14: phone accept 10, reject 4 |
+| mobile | 228 (44 suites) | 27 | +201 |
 | wa-stub | 5 (1 file) | 5 | 0 |
-| **Total** | **985** | 749 | +236 |
+| **Total** | **997** | 749 | +248 |
 
 Mobile tests by area (tests, suites in brackets):
 
 | Area | Tests |
 |---|---|
 | inbox | 58 (6) |
-| more | 30 (7) |
-| ui | 30 (9) |
-| lib | 27 (6) |
+| more | 31 (7) |
+| ui | 31 (9) |
+| lib | 28 (6) |
 | students | 22 (5) |
 | auth | 21 (4) |
-| push | 17 (3) |
+| push | 18 (3) |
 | theme | 8 |
 | nav | 5 |
 | fonts | 4 |
 | today | 2 |
 
 - **E2E: 18 passed.** That is 2 setup runs plus login (7 tests) and journey 6 (1 test), each on the desktop and mobile (Pixel 7) projects.
-- **Gate:** green with **23/23 tasks** on the first try.
+- **Gate:** green with **23/23 tasks**, before and after the verifier fixes.
 - **File limits:** lint enforces max-lines 150 and max-params 3. A scan found no tracked `.ts`/`.tsx` file over 150 lines apart from the generated `types.ts` and `routeTree.gen.ts`.
 
 ## Deferred
@@ -479,6 +500,8 @@ Mobile tests by area (tests, suites in brackets):
    - All three are public values.
    - A forgotten placeholder gives an app that can't log in.
 2. **Push credentials on EAS:** an APNs key for iOS, and an FCM V1 service account plus `google-services.json` for Android. Without them no token is stored, and nothing fails. Expo Go on Android can't receive push, so use a development build.
+   - The Android file has to be wired in `apps/mobile/app.json` as `expo.android.googleServicesFile: "./google-services.json"` (or through an EAS file env var). It is not set now on purpose: the config plugin fails prebuild when the file is missing, which would break the preview APK. Without it `getExpoPushTokenAsync` throws on Android; a dev build now logs that (`console.warn` under `__DEV__`).
+   - The app icon and splash are still the Expo template. The academy mark goes in only after the calligrapher's check (design-pass owner sign-off 3).
 3. **`expo-dev-client`:** the `development` profile needs `npx expo install expo-dev-client` before its first build.
 4. **New copy to sign off (`mobile.*`):**
    - `more`, `retry` «جرّب تاني» and `openWhatsapp`.
@@ -488,11 +511,13 @@ Mobile tests by area (tests, suites in brackets):
 5. **Checks on a real device:**
    - The appearance switch changes the theme and the status bar.
    - Hermes formats Arabic weekday and month names with Western digits.
+   - RTL text alignment: every Text now starts at the inline-start (`AppText`). Check on the Android emulator and on the iOS simulator with the device language set to English.
+   - Coming back from the background refreshes the open list.
 
 ## Residual TODOs
 - **Duplicated tables to move into `@ab/shared`:** `LEAD_TRANSITIONS` (a mobile copy of the API state machine) and `initialOf`/`KUNYA` (a mobile copy of the web leads format). Both are marked `ponytail:`.
 - **API helpers shared across modules:** `me` imports `parseOrThrow`/`dbError` from `teachers/http`, and its tests use `guardians/fake-db`. Both are candidates for `common/`.
 - **Push token race:** `PUT /me/push-tokens` reads, then writes. If two devices register at the same moment one token can be lost; that device registers again on its next start. The upgrade is an `array_append` RPC.
-- **Sign-out edge cases:** a sign-out forced by a 401 skips the token DELETE. An offline sign-out leaves the token on the profile until pruning arrives with push sending.
+- **Sign-out edge cases:** a sign-out forced by a 401 skips the token DELETE, and an offline sign-out leaves the token on the profile. The next admin who registers on that phone takes the token off every other profile, so pushes never reach the wrong person; a phone nobody signs in to again keeps it until pruning arrives with push sending.
 - **Login edge case:** if the role check after a successful sign-in gets a 401/403, the login button stays busy.
-- **No NetInfo:** offline fetches fail, and the cached data stays on screen.
+- **No NetInfo:** offline fetches fail, and the cached data stays on screen. Coming back to the foreground refetches (TanStack `focusManager` on `AppState`); a regained connection alone does not.

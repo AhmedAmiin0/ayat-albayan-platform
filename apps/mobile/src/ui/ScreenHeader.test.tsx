@@ -1,6 +1,6 @@
+import { formatPhone } from '@ab/shared';
 import { render, screen } from '@testing-library/react-native';
 import { Text } from 'react-native';
-import { formatPhoneDisplay } from '@/lib/phone';
 import { Ltr, ltr } from './Ltr';
 import { ScreenHeader } from './ScreenHeader';
 
@@ -18,7 +18,7 @@ test('trailing replaces the mark', async () => {
 });
 
 test('Ltr isolates a phone so RTL cannot reorder its groups', async () => {
-  await render(<Ltr>{formatPhoneDisplay('+966552147730')}</Ltr>);
+  await render(<Ltr>{formatPhone('+966552147730')}</Ltr>);
   const text = screen.getByText(ltr('+966 55 214 7730'));
   expect(text).toHaveStyle({ writingDirection: 'ltr', fontVariant: ['tabular-nums'] });
   expect(ltr('AB-0183')).toBe('⁦AB-0183⁩');

@@ -1,7 +1,6 @@
-import { jobApplicantStatusStyle } from '@ab/shared';
+import { formatPhone, jobApplicantStatusStyle } from '@ab/shared';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
-import { formatPhoneDisplay } from '@/lib/phone';
 import { usePagedList } from '@/lib/use-paged-list';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -26,7 +25,7 @@ export function JobApplicantsScreen() {
         data={list.items}
         keyExtractor={(applicant) => applicant.id}
         renderItem={({ item }) => {
-          const phone = formatPhoneDisplay(item.phone_e164);
+          const phone = formatPhone(item.phone_e164);
           return (
             <ListRow
               title={item.name ?? ltr(phone)}
@@ -40,14 +39,12 @@ export function JobApplicantsScreen() {
             />
           );
         }}
-        onEndReached={() => {
-          if (list.hasNextPage && !list.isFetchingNextPage) void list.fetchNextPage();
-        }}
+        onEndReached={list.loadMore}
         refreshing={list.isRefetching}
-        onRefresh={() => void list.refetch()}
+        onRefresh={list.refresh}
         ListEmptyComponent={
           list.isPending ? null : list.isError ? (
-            <ErrorState onRetry={() => void list.refetch()} />
+            <ErrorState onRetry={list.refresh} />
           ) : (
             <EmptyState title={t.jobApplicants.empty} />
           )

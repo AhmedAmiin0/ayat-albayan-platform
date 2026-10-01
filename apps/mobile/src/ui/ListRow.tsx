@@ -1,7 +1,8 @@
 import type { ReactNode } from 'react';
-import { Pressable, Text, View, type ViewStyle } from 'react-native';
+import { Pressable, View, type ViewStyle } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { Ltr } from './Ltr';
+import { AppText } from './AppText';
 
 export interface ListRowProps {
   /** At the inline-start, usually an <Avatar>. */
@@ -10,7 +11,7 @@ export interface ListRowProps {
   title: string;
   /** Second line (last message, teacher, program…), one line. */
   subtitle?: string;
-  /** LTR value beside the title: «AB-0183» or formatPhoneDisplay(phone). */
+  /** LTR value beside the title: «AB-0183» or formatPhone(phone). */
   meta?: string;
   /** At the inline-end, usually a <StatusChip>. */
   trailing?: ReactNode;
@@ -37,7 +38,7 @@ export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: L
       {leading}
       <View style={{ flex: 1, gap: 2 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
-          <Text
+          <AppText
             numberOfLines={1}
             style={{
               flexShrink: 1,
@@ -48,7 +49,7 @@ export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: L
             }}
           >
             {title}
-          </Text>
+          </AppText>
           {meta ? (
             <Ltr
               style={{ fontFamily: type.ui[500], fontSize: type.size['2xs'], color: color.ink3 }}
@@ -58,7 +59,7 @@ export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: L
           ) : null}
         </View>
         {subtitle ? (
-          <Text
+          <AppText
             numberOfLines={1}
             style={{
               fontFamily: type.ui[400],
@@ -69,7 +70,7 @@ export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: L
             }}
           >
             {subtitle}
-          </Text>
+          </AppText>
         ) : null}
       </View>
       {trailing}

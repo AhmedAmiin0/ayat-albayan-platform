@@ -16,6 +16,7 @@ export class MeService {
     const tokens = await this.pushTokens(userId);
     const next = withPushToken(tokens, token);
     if (next !== tokens) await this.savePushTokens(userId, next);
+    await this.releaseFromOthers(userId, token);
   }
 
   async removePushToken(userId: string, token: string): Promise<void> {
@@ -33,6 +34,20 @@ export class MeService {
     if (error) throw dbError(error);
     if (!data) throw new NotFoundException();
     return data.push_tokens;
+  }
+
+  /**
+   * A device belongs to whoever signed in on it last: a handed-over phone, or one whose sign-out
+   * DELETE never ran (401, offline, timeout), stops receiving the previous admin's pushes.
+   */
+  private async releaseFromOthers(userId: string, token: string): Promise<void> {
+    const { data, error } = await this.db
+      .from('profiles')
+      .select('id, push_tokens')
+      .contains('push_tokens', [token])
+      .neq('id', userId);
+    if (error) throw dbError(error);
+    for (const p of data ?? []) await this.savePushTokens(p.id, withoutPushToken(p.push_tokens, token));
   }
 
   private async savePushTokens(userId: string, tokens: string[]): Promise<void> {

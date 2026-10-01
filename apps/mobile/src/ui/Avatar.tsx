@@ -1,5 +1,6 @@
-import { Text, View } from 'react-native';
+import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
+import { AppText } from './AppText';
 
 /** Initial-letter avatar (docs/07, web LeadListItem): gold-wash circle, decorative only. */
 export function Avatar({ letter }: { letter: string }) {
@@ -19,9 +20,9 @@ export function Avatar({ letter }: { letter: string }) {
         justifyContent: 'center',
       }}
     >
-      <Text style={{ fontFamily: type.ui[700], fontSize: type.size.lg, color: color.ink }}>
+      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.lg, color: color.ink }}>
         {letter}
-      </Text>
+      </AppText>
     </View>
   );
 }

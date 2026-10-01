@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { guardianSearchFilter } from '../guardians/guardians.mapper';
 import { pageRange, throwIfDbError, type PageQuery } from '../leads/http';
 import type { ApplicantStatus } from './applicant-state-machine';
 
@@ -80,7 +81,8 @@ export class JobApplicantsQueries {
   async list(f: ApplicantListFilter): Promise<{ items: JobApplicantRow[]; total: number }> {
     let query = this.db.from('job_applicants').select('*', { count: 'exact' });
     if (f.status) query = query.eq('status', f.status);
-    if (f.q) query = query.or(`name.ilike.*${f.q}*,phone_e164.ilike.*${f.q}*`);
+    const search = f.q ? guardianSearchFilter(f.q) : null;
+    if (search) query = query.or(search);
     const { data, error, count } = await query
       .order('created_at', { ascending: false })
       .range(...pageRange(f));

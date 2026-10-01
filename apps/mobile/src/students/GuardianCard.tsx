@@ -1,11 +1,13 @@
-import { Linking, Text, View } from 'react-native';
+import { formatPhone } from '@ab/shared';
+import { Linking, View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { formatPhoneDisplay, whatsappLink } from '@/lib/phone';
+import { whatsappLink } from '@/lib/phone';
 import { shape, type, useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { Ltr } from '@/ui/Ltr';
 import { SectionLabel } from './SectionLabel';
 import type { StudentProfile } from './types';
+import { AppText } from '@/ui/AppText';
 
 /** ولي الأمر: name, LTR phone, «اتصال» (tel:) and «واتساب» (wa.me, the academy's channel). */
 export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'] }) {
@@ -23,7 +25,7 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
       }}
     >
       <SectionLabel>{t.students.guardian}</SectionLabel>
-      <Text
+      <AppText
         style={{
           fontFamily: type.ui[600],
           fontSize: type.size.body,
@@ -32,7 +34,7 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
         }}
       >
         {guardian.name}
-      </Text>
+      </AppText>
       <Ltr
         style={{
           alignSelf: 'flex-start',
@@ -41,7 +43,7 @@ export function GuardianCard({ guardian }: { guardian: StudentProfile['guardian'
           color: color.ink2,
         }}
       >
-        {formatPhoneDisplay(phone)}
+        {formatPhone(phone)}
       </Ltr>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         <View style={{ flex: 1 }}>
