@@ -1,4 +1,4 @@
-import { guardianCreateSchema, studentCreateSchema } from '@ab/shared';
+import { guardianCreateSchema, PROGRAMS, STUDENT_STATUSES, studentCreateSchema } from '@ab/shared';
 import { z } from 'zod';
 
 /**
@@ -17,6 +17,16 @@ export const studentCreateRequestSchema = studentCreateSchema
     path: ['guardian'],
   });
 export type StudentCreateRequest = z.infer<typeof studentCreateRequestSchema>;
+
+/**
+ * PATCH /students/:id. Shared `studentUpdateSchema` is `.partial()` over fields with defaults and
+ * zod 4 still applies them: `{ level }` came back with status 'trial' / program 'quran', silently
+ * resetting an active student. Same fields here, without the defaults.
+ */
+export const studentPatchSchema = studentCreateSchema
+  .omit({ guardian_id: true })
+  .extend({ program: z.enum(PROGRAMS), status: z.enum(STUDENT_STATUSES) })
+  .partial();
 
 /** POST /students/:id/merge — `merged_id` is folded into `:id` (kept). */
 export const mergeRequestSchema = z.object({ merged_id: z.uuid() });

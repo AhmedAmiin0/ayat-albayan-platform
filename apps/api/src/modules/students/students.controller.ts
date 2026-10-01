@@ -1,4 +1,3 @@
-import { studentUpdateSchema } from '@ab/shared';
 import {
   Body,
   Controller,
@@ -18,7 +17,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { DB, type Db } from '../../common/db/db.module';
 import { blankToNull, listQuerySchema, parse } from '../guardians/http';
 import { MergeService } from './merge.service';
-import { mergeRequestSchema, studentCreateRequestSchema } from './students.dto';
+import { mergeRequestSchema, studentCreateRequestSchema, studentPatchSchema } from './students.dto';
 import { getStudentProfile, listStudents, listTeacherOptions } from './students.queries';
 import { StudentsService } from './students.service';
 
@@ -59,7 +58,7 @@ export class StudentsController {
 
   @Patch(':id')
   update(@Param('id', Uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
-    return this.students.update(id, parse(studentUpdateSchema, blankToNull(body)), user.id);
+    return this.students.update(id, parse(studentPatchSchema, blankToNull(body)), user.id);
   }
 
   @Delete(':id')
