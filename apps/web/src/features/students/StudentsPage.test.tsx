@@ -51,9 +51,10 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
 
   it('pages through 45 results 20 at a time', async () => {
     const { onChange } = renderPage({ page: 3 });
-    await screen.findByText(t.students.pageOf.replace('{page}', '3').replace('{pages}', '3'));
-    expect(screen.getByRole('button', { name: t.students.nextPage })).toHaveProperty('disabled', true);
-    fireEvent.click(screen.getByRole('button', { name: t.students.prevPage }));
+    await screen.findByText(t.common.showing.replace('{shown}', '5').replace('{total}', '45'));
+    expect(screen.getByRole('button', { current: 'page' }).textContent).toBe('3');
+    expect(screen.getByRole('button', { name: t.common.nextPage })).toHaveProperty('disabled', true);
+    fireEvent.click(screen.getByRole('button', { name: t.common.prevPage }));
     expect(onChange).toHaveBeenCalledWith({ search: '', page: 2 });
   });
 
