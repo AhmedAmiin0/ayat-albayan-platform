@@ -11,7 +11,7 @@ Source of truth for prices: the academy's public staff calculator, **ayatalbayan
 | قطر | QA | QAR | ر.ق | base |
 | الكويت | KW | KWD | د.ك | `ceil(base / 10)` |
 | عمان | OM | OMR | ر.ع | `ceil(base / 10)` |
-| **any other / unknown** | — | **USD** | $ | `ceil(base × rate(SAR→USD))` — rate from the currency API (§4) |
+| **any other / unknown** | — | **USD** | $ | `ceil(round2(base × rate(SAR→USD)))` — rate from the currency API (§4); rounded to cents first because API rates carry 6 decimals (120 × 0.266667 = 32.00004 → $32, not $33) |
 
 `base` numbers are SAR.
 
