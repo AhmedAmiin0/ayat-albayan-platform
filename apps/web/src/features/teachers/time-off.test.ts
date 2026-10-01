@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
-import { toTimeOffBody } from './time-off';
+import { formatTimeOff, toTimeOffBody } from './time-off';
 
 const draft = { starts_at: '2026-10-05T10:00', ends_at: '2026-10-07T18:00', reason: '' };
 
@@ -29,5 +29,29 @@ describe('time-off draft → body (R-TCH-02, rule 6)', () => {
 
   it('rejects missing dates', () => {
     expect(toTimeOffBody({ ...draft, starts_at: '' })).toEqual({ ok: false, error: t.common.required });
+  });
+});
+
+describe('time-off span display (docs/07 §2, §8)', () => {
+  const iso = (...p: [number, number, number, number?]) => new Date(...p).toISOString();
+  const EASTERN = /[٠-٩]/;
+
+  it('shows whole days with an exclusive end, in Western digits', () => {
+    const text = formatTimeOff(iso(2026, 9, 10), iso(2026, 9, 13));
+    expect(text).toContain('10');
+    expect(text).toContain('12 أكتوبر');
+    expect(text).not.toContain('13');
+    expect(text).not.toMatch(EASTERN);
+  });
+
+  it('a single whole day reads as one date', () => {
+    expect(formatTimeOff(iso(2026, 10, 5), iso(2026, 10, 6))).not.toMatch(/–|-/);
+  });
+
+  it('keeps the times of a partial-day span', () => {
+    const text = formatTimeOff(iso(2026, 9, 5, 10), iso(2026, 9, 7, 18));
+    expect(text).toContain('10:00');
+    expect(text).toContain('18:00');
+    expect(text).not.toMatch(EASTERN);
   });
 });

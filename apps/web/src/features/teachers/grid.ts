@@ -8,6 +8,9 @@ export type DayProblem = 'endBeforeStart' | 'overlap' | null;
 const DEFAULT_START = '16:00';
 const LAST_MINUTE = 23 * 60 + 59;
 
+/** Rows of the editor: السبت → الجمعة (docs/07 §8). */
+export const WEEK_ORDER: readonly Weekday[] = [6, 0, 1, 2, 3, 4, 5];
+
 export function emptyGrid(): Grid {
   return { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };
 }
@@ -36,7 +39,7 @@ export function gridTz(rows: readonly AvailabilitySlot[], teacherTz: string): st
   return rows[0]?.tz ?? teacherTz;
 }
 
-const toMin = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
+export const toMin = (time: string) => Number(time.slice(0, 2)) * 60 + Number(time.slice(3, 5));
 const toTime = (min: number) =>
   `${String(Math.floor(min / 60)).padStart(2, '0')}:${String(min % 60).padStart(2, '0')}`;
 
@@ -64,4 +67,19 @@ export function dayProblem(ranges: readonly Range[]): DayProblem {
 
 export function gridIsValid(grid: Grid): boolean {
   return WEEKDAYS.every((day) => dayProblem(grid[day]) === null);
+}
+
+/** Time select options: 30-minute steps plus the day's last minute; an off-grid value is kept. */
+export function timeOptions(current: string): string[] {
+  const all = [...Array.from({ length: 48 }, (_, i) => toTime(i * 30)), toTime(LAST_MINUTE)];
+  return !current || all.includes(current) ? all : [...all, current].sort();
+}
+
+/** Range the day's problem points at: the inverted one, else the later of an overlap; -1 if none. */
+export function problemIndex(ranges: readonly Range[]): number {
+  const inverted = ranges.findIndex((r) => !r.start || !r.end || r.start >= r.end);
+  if (inverted >= 0) return inverted;
+  const order = ranges.map((range, index) => ({ range, index })).sort((a, b) => byStart(a.range, b.range));
+  const clash = order.find((o, k) => k > 0 && o.range.start < (order[k - 1]?.range.end ?? ''));
+  return clash?.index ?? -1;
 }

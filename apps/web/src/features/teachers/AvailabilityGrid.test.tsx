@@ -26,8 +26,9 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
   it('shows all seven weekdays in Arabic and the stored range', () => {
     renderGrid();
     for (const day of Object.values(t.enums.weekday)) expect(screen.getByText(day)).toBeTruthy();
-    expect(screen.getByLabelText<HTMLInputElement>(`${SAT} ${t.availability.from}`).value).toBe('16:00');
-    expect(screen.getByText(t.availability.tzHint.replace('{tz}', CAIRO))).toBeTruthy();
+    expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe('16:00');
+    const hint = t.availability.tzHint.replace('{tz}', CAIRO);
+    expect(screen.getByText((_, el) => el?.tagName === 'P' && el.textContent === hint)).toBeTruthy();
   });
 
   it('adds a range after the last one and saves the whole grid with PUT', async () => {
@@ -44,13 +45,18 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
     });
   });
 
-  it('flags overlapping ranges and blocks saving', () => {
+  it('flags overlapping ranges and refuses to save, focusing the offending select (docs/07 §8)', () => {
     renderGrid();
     fireEvent.click(screen.getByRole('button', { name: `${t.availability.addSlot} ${SAT}` }));
     const starts = screen.getAllByLabelText(`${SAT} ${t.availability.from}`);
-    fireEvent.change(starts[1] as HTMLInputElement, { target: { value: '17:00' } });
-    expect(screen.getByRole('alert').textContent).toBe(t.availability.overlap);
-    expect((save() as HTMLButtonElement).disabled).toBe(true);
+    fireEvent.change(starts[1] as HTMLSelectElement, { target: { value: '17:00' } });
+    const alert = screen.getByRole('alert');
+    expect(alert.textContent).toBe(t.availability.overlap);
+    expect(starts[1]?.getAttribute('aria-invalid')).toBe('true');
+    expect(starts[1]?.getAttribute('aria-describedby')).toBe(alert.id);
+    fireEvent.click(save());
+    expect(apiSend).not.toHaveBeenCalled();
+    expect(document.activeElement).toBe(starts[1]);
   });
 
   it('flags a range that ends before it starts', () => {
@@ -65,5 +71,27 @@ describe('AvailabilityGrid (R-TCH-02)', () => {
     fireEvent.click(screen.getByRole('button', { name: `${t.availability.removeSlot} ${SAT}` }));
     fireEvent.click(save());
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/teachers/t1/availability', { slots: [] }));
+  });
+
+  it('saves in the zone picked in the tz select and shows the weekly summary', async () => {
+    apiSend.mockResolvedValue([]);
+    renderGrid();
+    expect(screen.getByText(t.availability.weeklyHours.other.replace('{n}', '2.5'))).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(t.availability.tz), { target: { value: 'Asia/Riyadh' } });
+    fireEvent.click(save());
+    await waitFor(() =>
+      expect(apiSend).toHaveBeenCalledWith('PUT', '/teachers/t1/availability', {
+        slots: [{ weekday: 6, start_time: '16:00', end_time: '18:30', tz: 'Asia/Riyadh' }],
+      }),
+    );
+  });
+
+  it('«إلغاء» drops unsaved edits and the zone change', () => {
+    renderGrid();
+    fireEvent.click(screen.getByRole('button', { name: `${t.availability.removeSlot} ${SAT}` }));
+    fireEvent.change(screen.getByLabelText(t.availability.tz), { target: { value: 'Asia/Riyadh' } });
+    fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
+    expect(screen.getByLabelText<HTMLSelectElement>(`${SAT} ${t.availability.from}`).value).toBe('16:00');
+    expect(screen.getByLabelText<HTMLSelectElement>(t.availability.tz).value).toBe(CAIRO);
   });
 });

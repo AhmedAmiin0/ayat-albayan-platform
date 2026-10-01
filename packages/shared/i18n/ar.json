@@ -176,7 +176,9 @@
     "prevPage": "السابق",
     "nextPage": "التالي",
     "pageInfo": "صفحة {page} من {pages}",
-    "listSeparator": "، "
+    "listSeparator": "، ",
+    "count": "{n} معلم/ة",
+    "tabData": "البيانات"
   },
   "availability": {
     "title": "المواعيد المتاحة",
@@ -199,7 +201,17 @@
     "tzHint": "المواعيد بتوقيت {tz}",
     "timeOffTzHint": "الإجازات بتوقيت جهازك",
     "today": "النهارده",
-    "timeOffImpact": "{n} حلقات واقعة في الإجازة دي ومحتاجة ميعاد جديد"
+    "timeOffImpact": "{n} حلقات واقعة في الإجازة دي ومحتاجة ميعاد جديد",
+    "timeOffDelete": "حذف الإجازة",
+    "legendAvailable": "متاح",
+    "legendOverlap": "ميعاد داخل في ميعاد",
+    "legendNow": "دلوقتي",
+    "weeklyHours": {
+      "one": "ساعة واحدة متاحة في الأسبوع",
+      "two": "ساعتين متاحين في الأسبوع",
+      "few": "{n} ساعات متاحة في الأسبوع",
+      "other": "{n} ساعة متاحة في الأسبوع"
+    }
   },
   "leads": {
     "title": "كل المحادثات",
