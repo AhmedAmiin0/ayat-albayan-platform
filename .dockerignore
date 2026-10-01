@@ -1,0 +1,12 @@
+**/node_modules
+**/dist
+**/.turbo
+**/coverage
+.git
+.claude
+tools/*.zip
+tools/*.xlsx
+tools/migrate/input
+**/.env
+**/.env.*
+!**/.env.example

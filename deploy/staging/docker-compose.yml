@@ -1,0 +1,14 @@
+# Staging API on the Hostinger VPS (docs/09-deployment.md). Lives in /opt/ayat-albayan-staging.
+# Bound to localhost only; Caddy terminates TLS for api-staging.148-230-116-195.sslip.io.
+# Never touches the CRM stack in /opt/wacrm.
+name: ayat-albayan-staging
+services:
+  ayat-api:
+    build:
+      context: ./src
+      dockerfile: apps/api/Dockerfile
+    image: ayat-api:staging
+    env_file: .env
+    ports:
+      - "127.0.0.1:3110:3000"
+    restart: unless-stopped
