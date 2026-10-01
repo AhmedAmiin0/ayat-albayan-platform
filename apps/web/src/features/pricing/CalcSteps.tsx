@@ -1,0 +1,104 @@
+import {
+  CUSTOM_COUNT_MAX,
+  CUSTOM_COUNT_MIN,
+  DEFAULT_DURATION,
+  DISCOUNTS,
+  PRICING_DURATIONS,
+  SITE_COUNTRIES,
+  type PackageId,
+} from '@ab/shared';
+import { t } from '@/lib/i18n';
+import { OTHER, type Selection } from './api';
+import { SegmentStep } from './SegmentStep';
+import { Stepper } from './Stepper';
+
+const STUDENTS_MAX = 20;
+
+const COUNTRY_OPTIONS = [
+  ...SITE_COUNTRIES.map((c) => ({ value: c, label: t.pricing.countries[c] })),
+  { value: OTHER, label: t.pricing.otherCountry },
+];
+const DURATION_OPTIONS = PRICING_DURATIONS.map((d) => ({
+  value: String(d),
+  label: t.pricing.durations[d],
+}));
+/** The site's frequency order: once a week up to every day. */
+const FREQUENCY_ORDER: readonly PackageId[] = [
+  'weekly',
+  'starter',
+  'standard',
+  'premium',
+  'monthly',
+  'bulk',
+];
+const PACKAGE_OPTIONS = [
+  ...FREQUENCY_ORDER.map((id) => ({ value: id, label: t.pricing.frequencies[id] })),
+  { value: 'custom' as const, label: t.pricing.customLabel },
+];
+const DISCOUNT_OPTIONS = DISCOUNTS.map((d) => ({
+  value: String(d),
+  label: t.pricing.discounts[d],
+}));
+
+export interface CalcStepsProps {
+  sel: Selection;
+  onChange: (patch: Partial<Selection>) => void;
+}
+
+/** The five calculator steps (docs/08 §3): country, duration, package, students, discount. */
+export function CalcSteps({ sel, onChange }: CalcStepsProps) {
+  const weekly = sel.pkg === 'weekly';
+  return (
+    <div className="grid content-start gap-6">
+      <SegmentStep
+        label={t.pricing.steps.country}
+        options={COUNTRY_OPTIONS}
+        value={sel.country}
+        onChange={(country) => onChange({ country })}
+      />
+      <SegmentStep
+        label={t.pricing.steps.duration}
+        options={DURATION_OPTIONS}
+        value={String(sel.duration)}
+        onChange={(v) =>
+          onChange({ duration: PRICING_DURATIONS.find((d) => String(d) === v) ?? DEFAULT_DURATION })
+        }
+        hidden={weekly}
+      >
+        {weekly && <p className="text-sm text-ink-2">{t.pricing.fixedDuration}</p>}
+      </SegmentStep>
+      <SegmentStep
+        label={t.pricing.steps.frequency}
+        options={PACKAGE_OPTIONS}
+        value={sel.pkg}
+        onChange={(pkg) => onChange({ pkg })}
+      >
+        {sel.pkg === 'custom' && (
+          <div className="mt-2">
+            <Stepper
+              label={t.pricing.customCount}
+              value={sel.count}
+              min={CUSTOM_COUNT_MIN}
+              max={CUSTOM_COUNT_MAX}
+              onChange={(count) => onChange({ count })}
+            />
+          </div>
+        )}
+      </SegmentStep>
+      <Stepper
+        label={t.pricing.steps.students}
+        value={sel.students}
+        min={1}
+        max={STUDENTS_MAX}
+        onChange={(students) => onChange({ students })}
+        hint={sel.students > 1 ? t.pricing.familyHint : undefined}
+      />
+      <SegmentStep
+        label={t.pricing.steps.discount}
+        options={DISCOUNT_OPTIONS}
+        value={String(sel.discount)}
+        onChange={(v) => onChange({ discount: DISCOUNTS.find((d) => String(d) === v) ?? 0 })}
+      />
+    </div>
+  );
+}

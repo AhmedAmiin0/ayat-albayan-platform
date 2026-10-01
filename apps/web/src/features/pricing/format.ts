@@ -1,0 +1,42 @@
+import { counted, type Quote } from '@ab/shared';
+import { formatDate } from '@/features/leads/format';
+import { t } from '@/lib/i18n';
+import type { FxRate } from './api';
+
+// Display text for a quote. Wording from ar.json (the site's copy, Western digits).
+
+const durations: Readonly<Record<string, string>> = t.pricing.durations;
+
+/** «45 دقيقة»; weekly comes back as 90. */
+export function durationLabel(minutes: number): string {
+  return durations[String(minutes)] ?? String(minutes);
+}
+
+/** «12 حلقة», or the counted form for a custom count («حلقتان», «7 حلقات»). */
+export function sessionsOf(q: Pick<Quote, 'package' | 'lessons'>): string {
+  return q.package === 'custom'
+    ? counted(t.pricing.customSessions, q.lessons)
+    : t.pricing.packages[q.package].sessions;
+}
+
+/** Name + tagline of a site package or «باقة مخصّصة». */
+export function packageCopy(id: Quote['package']): { name: string; tagline: string } {
+  return t.pricing.packages[id];
+}
+
+/** «3 مرات» (lessons a week, the site's wording); none for a custom count. */
+export function frequencyOf(id: Quote['package']): string | null {
+  return id === 'custom' ? null : t.pricing.frequencies[id];
+}
+
+/** The line under a USD price (docs/08 §4): the peg fallback, an older stored rate, or the rate's date. */
+export function fxLine(fx: FxRate): string {
+  if (fx.fallback) return t.pricing.fx.fallback;
+  const line = fx.ageHours === null ? t.pricing.fx.rateDate : t.pricing.fx.stale;
+  return line.replace('{date}', formatDate(fx.date));
+}
+
+/** wa.me with no number: WhatsApp asks whom to send the offer to. */
+export function waLink(text: string): string {
+  return `https://wa.me/?text=${encodeURIComponent(text)}`;
+}

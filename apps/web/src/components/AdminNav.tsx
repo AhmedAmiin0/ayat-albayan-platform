@@ -3,7 +3,7 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
-// The fihris (surah index) nav, docs/07 §7. Only Phase 1 routes that exist; future screens
+// The fihris (surah index) nav, docs/07 §7. Only routes that exist; future screens
 // (الجدول، التقارير، الاشتراكات، لوحة التحكم) join when their routes land, never as dead links.
 const GROUPS = [
   [
@@ -14,6 +14,7 @@ const GROUPS = [
     { key: 'students', to: '/admin/students', label: t.nav.students, icon: 'users' },
     { key: 'teachers', to: '/admin/teachers', label: t.nav.teachers, icon: 'teacher' },
   ],
+  [{ key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' }],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];
 
 export type NavKey = (typeof GROUPS)[number][number]['key'];
