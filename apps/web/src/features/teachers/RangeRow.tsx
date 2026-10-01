@@ -42,7 +42,7 @@ export function RangeRow({ dayName, range, invalid, errorId, onChange, onRemove 
       {select('start', t.availability.from)}
       <span className="px-0.5 text-2xs text-ink-3">{t.availability.to}</span>
       {select('end', t.availability.to)}
-      <IconButton label={`${t.availability.removeSlot} ${dayName}`} className="size-7 [&_svg]:size-[15px]" onClick={onRemove}>
+      <IconButton label={`${t.availability.removeSlot} ${dayName}`} className="size-11 sm:size-7 [&_svg]:size-[15px]" onClick={onRemove}>
         <Icon name="x" />
       </IconButton>
     </span>

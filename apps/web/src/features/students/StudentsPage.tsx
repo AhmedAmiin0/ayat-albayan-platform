@@ -58,7 +58,8 @@ export function StudentsPage({ search, page, onChange, onOpen }: StudentsPagePro
         </p>
       )}
       {none ? (
-        <EmptyState title={t.students.empty} />
+        // The head already holds «إضافة طالب»: one primary per screen, so no second one here.
+        <EmptyState title={t.students.empty}>{t.students.emptyHint}</EmptyState>
       ) : (
         <DataTable
           stacked

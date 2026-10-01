@@ -16,7 +16,7 @@ export function EmptyState({ title, children, action, className }: EmptyStatePro
   return (
     <div
       className={cn(
-        'grid justify-items-center gap-2.5 rounded-[10px] border border-dashed border-rule-strong px-6 py-9 text-center',
+        'grid justify-items-center gap-2.5 rounded-lg border border-dashed border-rule-strong px-6 py-9 text-center',
         className,
       )}
     >

@@ -45,8 +45,9 @@ describe('StudentProfileForm (R-STU-05)', () => {
   it('saves level, status and teacher as a PATCH', async () => {
     api.updateStudent.mockResolvedValue(STUDENT);
     renderForm();
-    // Text query: a role query over ~400 tz <option>s times out under parallel load.
     await screen.findByText('أبرار');
+    expect(screen.getByLabelText(t.students.tz).tagName).toBe('SELECT'); // picked, never typed (rule 6)
+    fireEvent.change(screen.getByLabelText(t.students.tz), { target: { value: 'Africa/Cairo' } });
     fireEvent.change(screen.getByLabelText(t.students.level), { target: { value: 'جزء عم' } });
     fireEvent.change(screen.getByLabelText(t.students.status), { target: { value: 'active' } });
     fireEvent.change(screen.getByLabelText(t.students.teacher), { target: { value: TEACHER_ID } });
@@ -54,7 +55,7 @@ describe('StudentProfileForm (R-STU-05)', () => {
     await screen.findByText(t.students.updated);
     expect(api.updateStudent).toHaveBeenCalledWith(
       's1',
-      expect.objectContaining({ level: 'جزء عم', status: 'active', teacher_id: TEACHER_ID, memorized: null }),
+      expect.objectContaining({ level: 'جزء عم', status: 'active', teacher_id: TEACHER_ID, tz: 'Africa/Cairo', memorized: null }),
     );
   });
 

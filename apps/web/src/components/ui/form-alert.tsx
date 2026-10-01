@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { isolateLtr } from './ltr';
 import { NuqtaGlyph } from './nuqta-glyph';
 import { cn } from '@/lib/utils';
 
@@ -13,7 +14,7 @@ export function FormAlert({ children, className }: { children: ReactNode; classN
       )}
     >
       <NuqtaGlyph shape="struck" className="mt-1 text-danger" />
-      <span>{children}</span>
+      <span>{typeof children === 'string' ? isolateLtr(children) : children}</span>
     </p>
   );
 }

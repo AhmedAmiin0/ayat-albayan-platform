@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { duplicateCandidates } from './api';
-import { EMPTY_STUDENT, phoneError, toCreateBody } from './create-student';
+import { EMPTY_STUDENT, phoneError, requiredError, toCreateBody } from './create-student';
 
 describe('create student helpers (R-STU-02, R-STU-03)', () => {
   it('phoneError: accepts any Saudi/Egyptian format, explains rejects in Arabic', () => {
@@ -11,6 +11,12 @@ describe('create student helpers (R-STU-02, R-STU-03)', () => {
     expect(phoneError('@suhaila')).toBe(t.common.phoneErrors.not_a_number);
     expect(phoneError('12345')).toBe(t.common.phoneErrors.missing_country_code);
     expect(phoneError('')).toBe(t.common.phoneErrors.empty);
+  });
+
+  it('requiredError: blank or spaces-only is «الخانة دي مطلوبة»', () => {
+    expect(requiredError('')).toBe(t.common.required);
+    expect(requiredError('   ')).toBe(t.common.required);
+    expect(requiredError('سهيلة')).toBeUndefined();
   });
 
   it('toCreateBody: one tz for student and guardian, trimmed names, force flag', () => {

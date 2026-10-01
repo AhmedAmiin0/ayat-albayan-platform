@@ -16,7 +16,8 @@ export const hardRules = {
   '@typescript-eslint/no-extraneous-class': ['error', { allowWithDecorator: true }],
 };
 
-const ignores = ['**/dist/**', '**/coverage/**', '**/*.gen.ts', '**/.expo/**', '**/playwright-report/**'];
+// test-results: Playwright rewrites it while lint runs in parallel under turbo (ENOENT race).
+const ignores = ['**/dist/**', '**/coverage/**', '**/*.gen.ts', '**/.expo/**', '**/playwright-report/**', '**/test-results/**'];
 
 /** Base config for every package. Pass extra flat-config blocks to extend. */
 export function config(...extra) {

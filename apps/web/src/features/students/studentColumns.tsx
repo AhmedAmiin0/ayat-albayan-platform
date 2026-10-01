@@ -1,6 +1,6 @@
-import { studentStatusStyle } from '@ab/shared';
+import { formatPhone, studentStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import { hamishClass, type DataTableFeatures } from '@/components/DataTable';
+import { hamishMeta, type DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
@@ -16,7 +16,8 @@ const quiet = (phone: string) => ({ className: `text-xs text-ink-2 ${phone}` });
 
 /**
  * Students list columns (docs/07 §6 Data table, R-STU-01: the code is shown, never typed). The
- * hamish note folds under the name when the page is 940px or narrower.
+ * hamish note folds under the name when the page is 940px or narrower. The name is a button: the
+ * keyboard / screen-reader path to the profile at every width (the row click is for pointers).
  */
 export function studentColumns(onOpen: (studentId: string) => void) {
   return col.columns([
@@ -29,7 +30,16 @@ export function studentColumns(onOpen: (studentId: string) => void) {
       header: () => t.students.name,
       cell: (c) => (
         <>
-          <span className="block font-semibold">{c.getValue()}</span>
+          <button
+            type="button"
+            className="block cursor-pointer text-start font-semibold text-ink hover:underline max-sm:min-h-11"
+            onClick={(e) => {
+              e.stopPropagation();
+              onOpen(c.row.original.id);
+            }}
+          >
+            {c.getValue()}
+          </button>
           {/* TODO(R-STU-05): «9 سنين، الرياض» sub-line once the list returns age (no city column yet). */}
           <StudentNote text={studentNote(c.row.original)} className="mt-[3px] hidden text-2xs @max-[940px]:block" />
         </>
@@ -42,7 +52,7 @@ export function studentColumns(onOpen: (studentId: string) => void) {
         <>
           <span className="block">{c.getValue()}</span>
           <span className="block text-2xs text-ink-3">
-            <Ltr>{c.row.original.guardian_phone}</Ltr>
+            <Ltr>{formatPhone(c.row.original.guardian_phone)}</Ltr>
           </span>
         </>
       ),
@@ -73,7 +83,7 @@ export function studentColumns(onOpen: (studentId: string) => void) {
       id: 'hamish',
       header: () => t.students.hamish,
       cell: (c) => <StudentNote text={studentNote(c.row.original)} />,
-      meta: { className: hamishClass },
+      meta: hamishMeta,
     }),
   ]);
 }

@@ -1,4 +1,4 @@
-import { studentStatusStyle } from '@ab/shared';
+import { formatPhone, studentStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@/components/ui/cartouche';
 import { Ltr } from '@/components/ui/ltr';
@@ -27,7 +27,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
   const meta = [
     [t.students.code, <Ltr key="c">{student.code ?? '—'}</Ltr>],
     [t.students.guardian, <span key="g">{student.guardian.name}</span>],
-    [t.students.guardianPhone, <Ltr key="p">{student.guardian.phone_e164}</Ltr>],
+    [t.students.guardianPhone, <Ltr key="p">{formatPhone(student.guardian.phone_e164)}</Ltr>],
     [
       t.students.effectiveLink,
       student.meeting_link ? (

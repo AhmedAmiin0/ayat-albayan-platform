@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { formatPhone, normalizePhone } from '@ab/shared';
 import { HighlightDiff } from '@/components/ui/highlight-diff';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
@@ -55,12 +55,12 @@ export function DuplicateCompare({ typed, candidate, profile }: DuplicateCompare
             <Ltr>{typed.guardianPhone}</Ltr>
             {e164 !== typed.guardianPhone && (
               <small className={sub}>
-                {t.students.normalized} <Ltr>{e164}</Ltr>
+                {t.students.normalized} <Ltr>{formatPhone(e164)}</Ltr>
               </small>
             )}
           </>
         }
-        existing={<Ltr>{profile?.guardian.phone_e164 ?? e164}</Ltr>}
+        existing={<Ltr>{formatPhone(profile?.guardian.phone_e164 ?? e164)}</Ltr>}
         match="phone"
       />
       <CompareRow

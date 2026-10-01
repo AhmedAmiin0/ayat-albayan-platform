@@ -1,4 +1,4 @@
-import { Fragment, type KeyboardEvent } from 'react';
+import { Fragment, useSyncExternalStore, type KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SegmentOption } from './segmented-control';
 
@@ -21,12 +21,24 @@ export interface TabsProps<V extends string> {
   className?: string;
 }
 
+// 44px touch targets below the `shell:` breakpoint (docs/07 §4).
 const tabClass = {
   horizontal:
-    '-mb-px whitespace-nowrap border-b-[3px] border-double border-transparent px-3.5 pt-2 pb-2.5 font-medium text-ink-2 aria-selected:border-gold aria-selected:font-semibold aria-selected:text-ink',
+    '-mb-px min-h-11 whitespace-nowrap border-b-[3px] border-double border-transparent px-3.5 pt-2 pb-2.5 font-medium text-ink-2 aria-selected:border-gold aria-selected:font-semibold aria-selected:text-ink',
   vertical:
-    'flex items-baseline gap-1.5 whitespace-nowrap rounded-sm border border-rule px-2.5 py-[7px] text-xs text-ink-2 hover:bg-sunk aria-selected:bg-gold-wash aria-selected:font-semibold aria-selected:text-ink aria-selected:shadow-[inset_0_0_0_1px_var(--gold-soft)] shell:border-transparent',
+    'flex min-h-11 items-center gap-1.5 whitespace-nowrap shell:min-h-0 shell:items-baseline rounded-sm border border-rule px-2.5 py-[7px] text-xs text-ink-2 hover:bg-sunk aria-selected:bg-gold-wash aria-selected:font-semibold aria-selected:text-ink aria-selected:shadow-[inset_0_0_0_1px_var(--gold-soft)] shell:border-transparent',
 };
+
+// The vertical fihris is a chip row below `shell:` (56.25rem), so say so to assistive tech.
+const WIDE = '(min-width: 56.25rem)';
+const hasMedia = () => typeof matchMedia === 'function';
+function subscribe(onChange: () => void): () => void {
+  if (!hasMedia()) return () => undefined;
+  const query = matchMedia(WIDE);
+  query.addEventListener('change', onChange);
+  return () => query.removeEventListener('change', onChange);
+}
+const isWide = () => !hasMedia() || matchMedia(WIDE).matches;
 
 /** Next tab = inline-end, which is the LEFT arrow in RTL. */
 const STEP: Record<string, number> = { ArrowLeft: 1, ArrowDown: 1, ArrowRight: -1, ArrowUp: -1 };
@@ -41,6 +53,7 @@ export function Tabs<V extends string>({
   className,
 }: TabsProps<V>) {
   const vertical = orientation === 'vertical';
+  const wide = useSyncExternalStore(subscribe, isWide);
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const step = STEP[e.key];
     if (step === undefined) return;
@@ -56,12 +69,12 @@ export function Tabs<V extends string>({
     <div
       role="tablist"
       aria-label={label}
-      aria-orientation={vertical ? 'vertical' : 'horizontal'}
+      aria-orientation={vertical && wide ? 'vertical' : 'horizontal'}
       onKeyDown={onKeyDown}
       className={cn(
         'flex overflow-x-auto',
         vertical
-          ? 'gap-1.5 pb-1 shell:flex-col shell:gap-px shell:self-start'
+          ? '-m-1 gap-1.5 p-1 shell:flex-col shell:gap-px shell:self-start' // p-1: room for the focus ring
           : 'mb-5 gap-1 border-b border-rule',
         className,
       )}

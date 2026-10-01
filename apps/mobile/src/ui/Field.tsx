@@ -1,6 +1,7 @@
 import { useState } from 'react';
-import { Text, TextInput, View, type TextInputProps } from 'react-native';
+import { TextInput, View, type TextInputProps } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
+import { AppText } from './AppText';
 
 export interface FieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
@@ -11,13 +12,14 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
 /**
  * Label + 16pt input, 44pt tall (docs/07 §4: the iOS zoom floor and mobile touch size).
  * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring (border + outline, so nothing shifts).
+ * Label and value start at the inline-start (AppText / textAlign 'left' = start in RTL).
  */
 export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);
   return (
     <View style={{ gap: 6 }}>
-      <Text
+      <AppText
         style={{
           fontFamily: type.ui[600],
           fontSize: type.size.xs,
@@ -26,7 +28,7 @@ export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldPr
         }}
       >
         {label}
-      </Text>
+      </AppText>
       <TextInput
         accessibilityLabel={label}
         placeholderTextColor={color.ink3}
@@ -52,6 +54,7 @@ export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldPr
           fontFamily: type.ui[400],
           fontSize: type.size.base,
           writingDirection: ltr ? 'ltr' : 'auto',
+          textAlign: 'left', // = start under forceRTL: an LTR email sits under its label
         }}
         {...input}
       />

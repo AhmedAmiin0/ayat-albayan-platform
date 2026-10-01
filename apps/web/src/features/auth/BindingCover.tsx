@@ -26,7 +26,7 @@ function Corner({ className }: { className: string }) {
 
 function Mandorla() {
   return (
-    <span className="relative grid h-[138px] w-[92px] place-items-center text-gold-on-cover shell:h-[252px] shell:w-[168px]">
+    <span className="relative grid h-[120px] w-[80px] place-items-center text-gold-on-cover shell:h-[252px] shell:w-[168px]">
       <svg viewBox="0 0 200 300" className="absolute inset-0 size-full">
         <path d="M100 6 106 12 100 18 94 12Z" fill="currentColor" />
         <path d="M100 282 106 288 100 294 94 288Z" fill="currentColor" />
@@ -39,11 +39,12 @@ function Mandorla() {
   );
 }
 
+/** Phones: a fixed 280px band, so the form (and «دخول») fits above the fold on a 667px phone. */
 export function BindingCover() {
   return (
     <div
       aria-hidden="true"
-      className="ab-binding relative isolate order-first grid min-h-[300px] place-items-center overflow-hidden text-cover-ink shell:order-none shell:min-h-screen"
+      className="ab-binding relative isolate order-first grid h-[280px] place-items-center overflow-hidden text-cover-ink shell:order-none shell:h-auto shell:min-h-screen"
     >
       <div className="absolute inset-3.5 border border-gold-on-cover shell:inset-[26px]">
         <div className="absolute inset-[5px] border border-gold-on-cover/55" />

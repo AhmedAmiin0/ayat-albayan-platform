@@ -2,30 +2,17 @@ import { TEACHER_STATUSES } from '@ab/shared';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { TimeZoneSelect } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { RATE_FIELDS, type SetField, type TeacherForm } from './teacher-form';
 
 type Props = { form: TeacherForm; set: SetField };
 
-const TIME_ZONES = Intl.supportedValuesOf('timeZone');
-
-/** Time zone, status, capacity and per-duration rates (R-TCH-01, rule 6). */
+/** Time zone, status, capacity (one row of three) and per-duration rates (R-TCH-01, rule 6). */
 export function TeacherWorkFields({ form, set }: Props) {
-  const zones = TIME_ZONES.includes(form.tz) ? TIME_ZONES : [form.tz, ...TIME_ZONES];
-
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
-      <Field label={t.teachers.tz}>
-        {(p) => (
-          <Select {...p} dir="ltr" value={form.tz} onChange={(e) => set('tz', e.target.value)}>
-            {zones.map((z) => (
-              <option key={z} value={z}>
-                {z}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
+    <div className="grid gap-4 sm:grid-cols-3">
+      <Field label={t.teachers.tz}>{(p) => <TimeZoneSelect {...p} value={form.tz} onValue={(tz) => set('tz', tz)} />}</Field>
       <Field label={t.teachers.status}>
         {(p) => (
           <Select
@@ -54,7 +41,7 @@ export function TeacherWorkFields({ form, set }: Props) {
           />
         )}
       </Field>
-      <fieldset className="sm:col-span-2">
+      <fieldset className="sm:col-span-full">
         <legend className="mb-2 text-xs font-semibold text-ink-2">{t.teachers.rates}</legend>
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {RATE_FIELDS.map(({ key, label }) => (

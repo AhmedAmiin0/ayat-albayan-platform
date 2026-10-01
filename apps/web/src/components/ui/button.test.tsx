@@ -17,9 +17,12 @@ describe('Button (docs/07 §6)', () => {
     expect(buttonVariants({ size })).toContain(cls);
   });
 
-  it('secondary carries the 3:1 input border; outline is the same look', () => {
+  it('secondary carries the 3:1 input border', () => {
     expect(buttonVariants({ variant: 'secondary' })).toContain('border-input');
-    expect(buttonVariants({ variant: 'outline' })).toBe(buttonVariants({ variant: 'secondary' }));
+  });
+
+  it.each(['sm', 'md'] as const)('size %s is 44px tall on phones (touch floor)', (size) => {
+    expect(buttonVariants({ size }).split(' ')).toContain('min-h-11');
   });
 
   it('danger fills with the solid cinnabar, danger-quiet only outlines', () => {

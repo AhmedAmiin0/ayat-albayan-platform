@@ -6,12 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
+import { TimeZoneSelect } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { STUDENTS_KEY, teacherOptionsQuery, updateStudent } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PROFILE_LABELS, toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
 import { SavedNote } from './SavedNote';
-import { TimeZoneOptions } from './TimeZoneOptions';
 import type { StudentProfile } from './types';
 
 type SelectName = 'program' | 'status' | 'teacher_id';
@@ -22,7 +22,7 @@ const FIELDS: FieldName[] = [
   'name', 'status', 'teacher_id', 'program', 'level', 'memorized',
   'goal', 'riwaya', 'tz', 'meeting_link_override', 'notes',
 ];
-const LTR: FieldName[] = ['tz', 'meeting_link_override'];
+const LTR: FieldName[] = ['meeting_link_override'];
 const isSelect = (name: FieldName): name is SelectName => name === 'program' || name === 'status' || name === 'teacher_id';
 
 /** Editable student profile (R-STU-05), saved with PATCH /students/:id. */
@@ -63,20 +63,20 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
         void form.handleSubmit();
       }}
     >
-      <TimeZoneOptions />
       {FIELDS.map((name) => (
         <form.Field key={name} name={name}>
           {(field) => (
             <Field id={`p-${name}`} label={PROFILE_LABELS[name]}
               hint={name === 'meeting_link_override' ? t.students.meetingLinkHint : undefined}>
               {(p) =>
-                isSelect(name) ? (
+                name === 'tz' ? (
+                  <TimeZoneSelect {...p} value={field.state.value} onValue={(tz) => field.handleChange(tz)} />
+                ) : isSelect(name) ? (
                   <Select {...p} value={field.state.value} onChange={(e) => field.handleChange(e.target.value as never)}>
                     {selects[name].map((o) => <option key={o.value} value={o.value}>{o.label}</option>)}
                   </Select>
                 ) : (
                   <Input {...p} value={field.state.value} dir={LTR.includes(name) ? 'ltr' : undefined}
-                    list={name === 'tz' ? 'tz-options' : undefined}
                     onChange={(e) => field.handleChange(e.target.value)} />
                 )
               }

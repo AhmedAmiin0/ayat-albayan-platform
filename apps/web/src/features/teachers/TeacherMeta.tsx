@@ -1,3 +1,4 @@
+import { formatPhone } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
@@ -26,7 +27,7 @@ export function TeacherMeta({ teacher }: { teacher: Teacher }) {
       </Item>
       {teacher.phone_e164 && (
         <Item icon="phone">
-          <Ltr>{teacher.phone_e164}</Ltr>
+          <Ltr>{formatPhone(teacher.phone_e164)}</Ltr>
         </Item>
       )}
       {teacher.max_students !== null && teacher.max_students !== undefined && (

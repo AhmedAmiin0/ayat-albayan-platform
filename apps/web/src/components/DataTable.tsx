@@ -2,9 +2,10 @@ import { tableFeatures, useTable, type ColumnDef, type RowData } from '@tanstack
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
-/** Per-column classes for both <th> and <td>, e.g. the hamish column or a 1% actions column. */
+/** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
 export interface DataTableColumnMeta {
   className?: string;
+  headClassName?: string;
 }
 
 /**
@@ -16,8 +17,10 @@ export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableColumn<T extends RowData> = ColumnDef<DataTableFeatures, T>;
 
 /** Hamish (marginal note) column: after a double gold-soft rule; folds away in narrow pages. */
-export const hamishClass =
-  'border-s-[3px] border-double border-s-gold-soft ps-3.5 text-xs text-ink-2 @max-[940px]:hidden';
+const hamishHeadClass = 'border-s-[3px] border-double border-s-gold-soft ps-3.5 @max-[940px]:hidden';
+const hamishClass = `${hamishHeadClass} text-xs text-ink-2`;
+/** The hamish column's `meta`: the double rule sits on the head and on the cells. */
+export const hamishMeta: DataTableColumnMeta = { className: hamishClass, headClassName: hamishHeadClass };
 
 /**
  * Under 640px rows stack (docs/07 §6 Data table): CSS only, td's become flex items; order them with
@@ -27,8 +30,10 @@ export const hamishClass =
 const stackedClass = [
   'max-sm:[&_table]:block max-sm:[&_tbody]:block max-sm:[&_thead]:sr-only',
   'max-sm:[&_tbody_tr]:flex max-sm:[&_tbody_tr]:flex-wrap max-sm:[&_tbody_tr]:items-center',
-  'max-sm:[&_tbody_tr]:gap-x-2.5 max-sm:[&_tbody_tr]:gap-y-0.5 max-sm:[&_tbody_tr]:border-b max-sm:[&_tbody_tr]:border-rule max-sm:[&_tbody_tr]:py-3',
-  'max-sm:[&_td]:border-0 max-sm:[&_td]:p-0 max-sm:[&_td]:whitespace-normal',
+  'max-sm:[&_tbody_tr]:gap-x-2.5 max-sm:[&_tbody_tr]:gap-y-0.5 max-sm:[&_tbody_tr]:border-b max-sm:[&_tbody_tr]:border-rule max-sm:[&_tbody_tr]:px-1 max-sm:[&_tbody_tr]:py-3',
+  // Cells may wrap here, so Arabic gets its 1.5 line-height back (docs/07 §14.7); column widths
+  // (w-px, w-[1%]) are for the table layout and would crush a flex item.
+  'max-sm:[&_td]:w-auto max-sm:[&_td]:border-0 max-sm:[&_td]:p-0 max-sm:[&_td]:whitespace-normal max-sm:[&_td]:leading-normal',
 ].join(' ');
 
 export interface DataTableProps<T extends RowData> {
@@ -77,7 +82,7 @@ export function DataTable<T extends RowData>({
                   scope="col"
                   className={cn(
                     'border-b-[3px] border-double border-gold px-2 py-[9px] text-start text-xs font-semibold whitespace-nowrap text-ink-3',
-                    header.column.columnDef.meta?.className,
+                    header.column.columnDef.meta?.headClassName,
                   )}
                 >
                   {header.isPlaceholder ? null : <table.FlexRender header={header} />}

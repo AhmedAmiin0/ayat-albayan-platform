@@ -18,6 +18,11 @@ export const EMPTY_STUDENT: CreateStudentValues = {
   program: 'quran',
 };
 
+/** «الخانة دي مطلوبة» for a blank (or spaces-only) value. */
+export function requiredError(value: string): string | undefined {
+  return value.trim() ? undefined : t.common.required;
+}
+
 /** Arabic reason when the phone cannot become E.164 (R-STU-02); the API re-checks. */
 export function phoneError(value: string): string | undefined {
   const r = normalizePhone(value);

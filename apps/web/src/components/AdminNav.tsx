@@ -30,7 +30,13 @@ export function AdminNav({ counts = {} }: AdminNavProps) {
   return (
     <nav
       aria-label={t.nav.label}
-      className="ab-fade-end flex min-w-0 flex-1 gap-0.5 overflow-x-auto pe-10 [scrollbar-width:none] shell:flex-none shell:flex-col shell:gap-3.5 shell:overflow-visible shell:pe-0 shell:[mask-image:none]"
+      className={cn(
+        'ab-fade-end flex min-w-0 flex-1 gap-0.5 overflow-x-auto pe-10 [scrollbar-width:none]',
+        // Compact row: py-1 leaves room for the focus ring and ps-5 clears the start fade;
+        // scroll-padding keeps the current item clear of the logo and the end fade (docs/07 §7).
+        '-my-1 py-1 ps-5 [scroll-padding-inline:24px_44px]',
+        'shell:my-0 shell:flex-none shell:flex-col shell:gap-3.5 shell:overflow-visible shell:p-0 shell:[mask-image:none]',
+      )}
     >
       {GROUPS.map((group) => (
         <ul key={group[0].key} className="flex gap-0.5 shell:flex-col">
@@ -40,7 +46,7 @@ export function AdminNav({ counts = {} }: AdminNavProps) {
               <li key={item.key}>
                 <Link
                   to={item.to}
-                  className="group flex min-h-[38px] items-center gap-2 whitespace-nowrap rounded-md px-2.5 font-medium text-ink-2 hover:bg-sunk hover:text-ink aria-[current=page]:bg-page aria-[current=page]:font-semibold aria-[current=page]:text-ink aria-[current=page]:shadow-[0_0_0_1px_var(--rule-strong)]"
+                  className="group flex min-h-11 items-center gap-2 whitespace-nowrap rounded-md px-2.5 font-medium text-ink-2 hover:bg-sunk hover:text-ink aria-[current=page]:bg-page aria-[current=page]:font-semibold aria-[current=page]:text-ink aria-[current=page]:shadow-[0_0_0_1px_var(--rule-strong)] shell:min-h-[38px]"
                 >
                   <Icon name={item.icon} className="text-ink-3 group-aria-[current=page]:text-lapis" />
                   <span>{item.label}</span>

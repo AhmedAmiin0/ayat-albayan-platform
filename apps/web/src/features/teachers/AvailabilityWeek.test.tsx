@@ -1,5 +1,5 @@
 import type { Weekday } from '@ab/shared';
-import { render, screen, within } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { AvailabilityWeek } from './AvailabilityWeek';
@@ -49,6 +49,23 @@ describe('AvailabilityWeek (R-TCH-02, docs/07 §8)', () => {
     const monday = row(1);
     expect(monday.querySelectorAll('[data-bar]')).toHaveLength(2);
     expect(monday.querySelectorAll('[data-clash]')).toHaveLength(1);
-    expect(within(monday).getByRole('alert').textContent).toBe(t.availability.overlap);
+    const span = t.availability.overlapSpan.replace('{from}', '17:30').replace('{to}', '18:00');
+    expect(within(monday).getByRole('alert').textContent).toBe(`${t.availability.overlap}${t.teachers.listSeparator}${span}`);
+  });
+
+  it('the range whose selects have focus is drawn as the band being edited', () => {
+    renderWeek({ ...emptyGrid(), 1: [r('15:00', '16:00'), r('17:00', '20:00')] });
+    const monday = row(1);
+    const editing = () => monday.querySelectorAll('[data-bar="editing"]');
+    const [, secondStart] = within(monday).getAllByLabelText(`${t.enums.weekday[1]} ${t.availability.from}`);
+    const [, secondEnd] = within(monday).getAllByLabelText(`${t.enums.weekday[1]} ${t.availability.to}`);
+    fireEvent.focusIn(secondStart as HTMLElement);
+    expect(editing()).toHaveLength(1);
+    expect(monday.querySelectorAll('[data-bar]')[1]?.getAttribute('data-bar')).toBe('editing');
+    expect(editing()[0]?.querySelectorAll('i')).toHaveLength(2); // the two lapis grips
+    fireEvent.focusOut(secondStart as HTMLElement, { relatedTarget: secondEnd });
+    expect(editing()).toHaveLength(1); // still the same range
+    fireEvent.focusOut(secondEnd as HTMLElement, { relatedTarget: document.body });
+    expect(editing()).toHaveLength(0);
   });
 });

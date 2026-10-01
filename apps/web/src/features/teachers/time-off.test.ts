@@ -2,19 +2,24 @@ import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
 import { formatTimeOff, toTimeOffBody } from './time-off';
 
-const draft = { starts_at: '2026-10-05T10:00', ends_at: '2026-10-07T18:00', reason: '' };
+const draft = { from: '2026-10-05', to: '2026-10-07', reason: '' };
 
 describe('time-off draft → body (R-TCH-02, rule 6)', () => {
-  it('converts local datetime inputs to UTC ISO and blank reason to null', () => {
+  it('whole local days: «من» at midnight, «إلى» included (ends the next midnight), UTC ISO', () => {
     const r = toTimeOffBody(draft);
     expect(r).toEqual({
       ok: true,
       body: {
-        starts_at: new Date(2026, 9, 5, 10, 0).toISOString(),
-        ends_at: new Date(2026, 9, 7, 18, 0).toISOString(),
+        starts_at: new Date(2026, 9, 5).toISOString(),
+        ends_at: new Date(2026, 9, 8).toISOString(),
         reason: null,
       },
     });
+  });
+
+  it('one day off: from = to', () => {
+    const r = toTimeOffBody({ ...draft, to: draft.from });
+    expect(r.ok && r.body.ends_at).toBe(new Date(2026, 9, 6).toISOString());
   });
 
   it('keeps a trimmed reason', () => {
@@ -23,12 +28,13 @@ describe('time-off draft → body (R-TCH-02, rule 6)', () => {
   });
 
   it('rejects an end before the start', () => {
-    const r = toTimeOffBody({ ...draft, ends_at: '2026-10-04T10:00' });
+    const r = toTimeOffBody({ ...draft, to: '2026-10-03' });
     expect(r).toEqual({ ok: false, error: t.common.endBeforeStart });
   });
 
   it('rejects missing dates', () => {
-    expect(toTimeOffBody({ ...draft, starts_at: '' })).toEqual({ ok: false, error: t.common.required });
+    expect(toTimeOffBody({ ...draft, from: '' })).toEqual({ ok: false, error: t.common.required });
+    expect(toTimeOffBody({ ...draft, to: '' })).toEqual({ ok: false, error: t.common.required });
   });
 });
 

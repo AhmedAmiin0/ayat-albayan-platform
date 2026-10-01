@@ -4,13 +4,13 @@ import { useId } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { t } from '@/lib/i18n';
-import { EMPTY_STUDENT, phoneError, type CreateStudentValues } from './create-student';
 import { FormAlert } from '@/components/ui/form-alert';
-import { PhonePreview } from './PhonePreview';
-import { TimeZoneOptions } from './TimeZoneOptions';
+import { Input } from '@/components/ui/input';
+import { PhonePreview } from '@/components/ui/phone-preview';
+import { Select } from '@/components/ui/select';
+import { TimeZoneSelect } from '@/components/ui/time-zone-select';
+import { t } from '@/lib/i18n';
+import { EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
 
 type CreateStudentFormProps = {
   onSubmit: (values: CreateStudentValues) => Promise<void>;
@@ -19,13 +19,15 @@ type CreateStudentFormProps = {
 };
 
 const TEXT_FIELDS = [
-  { name: 'name', label: t.students.name },
-  { name: 'guardianName', label: t.guardians.name },
-  { name: 'guardianPhone', label: t.guardians.phone, dir: 'ltr', type: 'tel' },
-  { name: 'tz', label: t.students.tz, dir: 'ltr', list: 'tz-options' },
+  { name: 'name', label: t.students.name, check: requiredError },
+  { name: 'guardianName', label: t.guardians.name, check: requiredError },
+  { name: 'guardianPhone', label: t.guardians.phone, check: phoneError, dir: 'ltr', type: 'tel' },
 ] as const;
 
-/** «إضافة طالب» dialog: student + guardian phone in one step (R-STU-02, R-STU-04). */
+/**
+ * «إضافة طالب» dialog: student + guardian phone in one step (R-STU-02, R-STU-04). `noValidate`:
+ * errors are the Arabic field errors (docs/07 §10), never the browser's bubble.
+ */
 export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFormProps) {
   const formId = useId();
   const form = useForm({ defaultValues: EMPTY_STUDENT, onSubmit: ({ value }) => onSubmit(value) });
@@ -45,26 +47,21 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
     <Dialog title={t.students.add} onClose={onCancel} actions={actions} className="max-w-[640px]">
       <form
         id={formId}
+        noValidate
         className="grid gap-x-5 gap-y-4 sm:grid-cols-2"
         onSubmit={(e) => {
           e.preventDefault();
           void form.handleSubmit();
         }}
       >
-        <TimeZoneOptions />
         {TEXT_FIELDS.map((f) => (
-          <form.Field
-            key={f.name}
-            name={f.name}
-            validators={f.name === 'guardianPhone' ? { onSubmit: ({ value }) => phoneError(value) } : {}}
-          >
+          <form.Field key={f.name} name={f.name} validators={{ onSubmit: ({ value }) => f.check(value) }}>
             {(field) => (
               <Field label={f.label} error={field.state.meta.errors[0]}>
                 {(p) => (
                   <>
                     <Input {...p} required value={field.state.value} data-autofocus={f.name === 'name' || undefined}
                       dir={'dir' in f ? f.dir : undefined} type={'type' in f ? f.type : 'text'}
-                      list={'list' in f ? f.list : undefined}
                       onChange={(e) => field.handleChange(e.target.value)} />
                     {f.name === 'guardianPhone' && <PhonePreview value={field.state.value} />}
                   </>
@@ -73,6 +70,13 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
             )}
           </form.Field>
         ))}
+        <form.Field name="tz">
+          {(field) => (
+            <Field label={t.students.tz}>
+              {(p) => <TimeZoneSelect {...p} value={field.state.value} onValue={field.handleChange} />}
+            </Field>
+          )}
+        </form.Field>
         <form.Field name="program">
           {(field) => (
             <Field label={t.students.program}>

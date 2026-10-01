@@ -46,7 +46,7 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     const chip = screen.getByText(t.enums.teacherStatus.active).parentElement;
     expect(chip?.querySelector('[data-glyph="fill"]')).toBeTruthy();
     expect(screen.getByText(`${t.teachers.genderLabel.female}${t.teachers.listSeparator}${t.enums.program.quran}`)).toBeTruthy();
-    expect(screen.getAllByText('+201066123049')[0]?.getAttribute('dir')).toBe('ltr');
+    expect(screen.getAllByText('+20 10 6612 3049')[0]?.getAttribute('dir')).toBe('ltr');
     expect(screen.getByRole('link', { name: 'meet.google.com/xqa-ngdu-fpe' }).getAttribute('href')).toBe(FATMA.meeting_link);
   });
 

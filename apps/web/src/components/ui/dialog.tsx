@@ -60,18 +60,37 @@ export function Dialog({ title, onClose, children, description, glyph, actions, 
         <div
           className={cn(
             'grid items-start gap-x-3.5 gap-y-1',
-            glyph ? 'grid-cols-[auto_minmax(0,1fr)_auto]' : 'grid-cols-[minmax(0,1fr)_auto]',
+            // Phones: the glyph tile shares the first row with the close button, the title gets
+            // the full width under them (docs/07 §6 Dialog, phone crop).
+            'grid-cols-[minmax(0,1fr)_auto]',
+            glyph && 'sm:grid-cols-[auto_minmax(0,1fr)_auto]',
           )}
         >
           {glyph && (
-            <span className={cn('mt-1.5 grid size-10 place-items-center rounded-full', toneClass[glyph.tone])}>
+            <span
+              className={cn(
+                'mt-1.5 grid size-10 place-items-center rounded-full max-sm:col-start-1 max-sm:row-start-1',
+                toneClass[glyph.tone],
+              )}
+            >
               <NuqtaGlyph shape={glyph.shape} className="size-[18px]" />
             </span>
           )}
-          <h2 id={titleId} className="font-display text-[22px] font-bold leading-normal sm:text-[27px]">
+          <h2
+            id={titleId}
+            className={cn(
+              'font-display text-[22px] font-bold leading-normal sm:text-[27px]',
+              glyph && 'max-sm:col-span-full max-sm:row-start-2',
+            )}
+          >
             {title}
           </h2>
-          <IconButton label={t.common.close} data-dialog-close onClick={onClose} className="mt-0.5">
+          <IconButton
+            label={t.common.close}
+            data-dialog-close
+            onClick={onClose}
+            className={cn('mt-0.5', glyph && 'max-sm:col-start-2 max-sm:row-start-1 max-sm:justify-self-end')}
+          >
             <Icon name="x" />
           </IconButton>
           {description && (

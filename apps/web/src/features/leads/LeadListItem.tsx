@@ -1,4 +1,4 @@
-import { leadStatusStyle } from '@ab/shared';
+import { formatPhone, leadStatusStyle } from '@ab/shared';
 import { useRef } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
@@ -47,8 +47,8 @@ export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: 
         {initialOf(lead.name)}
       </span>
       <div className="flex min-w-0 flex-wrap items-baseline gap-x-2.5 gap-y-0.5">
-        <span className="font-semibold">{lead.name ?? <Ltr>{lead.phone_e164}</Ltr>}</span>
-        {lead.name && <Ltr className="text-2xs text-ink-3">{lead.phone_e164}</Ltr>}
+        <span className="font-semibold">{lead.name ?? <Ltr>{formatPhone(lead.phone_e164)}</Ltr>}</span>
+        {lead.name && <Ltr className="text-2xs text-ink-3">{formatPhone(lead.phone_e164)}</Ltr>}
         <span className="text-2xs text-ink-3">{t.enums.leadSource[lead.source]}</span>
         <time
           dateTime={lead.created_at}

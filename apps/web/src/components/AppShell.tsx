@@ -8,6 +8,7 @@ import { RunningHead } from '@/components/ui/running-head';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { meQuery } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { Crumbs } from './shell/Crumbs';
 import { LogoutButton } from './shell/LogoutButton';
 import { SideFoot } from './shell/SideFoot';
@@ -40,7 +41,7 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.resolvedLocation?.pathname });
   useEffect(() => {
     // Compact top row (<900px): keep the current section in view, clear of the fade.
-    aside.current?.querySelector('nav [aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
+    aside.current?.querySelector('nav [aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
   return (
     <div className="min-h-screen shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
@@ -59,6 +60,7 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
       <div className="min-w-0 px-2 pb-2.5 shell:px-4 shell:pb-5">
         <RunningHead crumbs={<Crumbs />} />
         {page}
+        <PhoneTheme className="shell:hidden" />
       </div>
     </div>
   );
@@ -72,11 +74,21 @@ function TopBarLayout({ page }: { page: ReactNode }) {
         <Logo />
         <div className="ms-auto flex items-center gap-2">
           <ThemeToggle className="hidden sm:inline-flex" />
-          <LogoutButton className="size-12" />
+          <LogoutButton className="size-12 sm:size-12" />
         </div>
       </header>
       <RunningHead />
       {page}
+      <PhoneTheme className="sm:hidden" />
+    </div>
+  );
+}
+
+/** The theme choice under the page where the bar has no room for it (phones). */
+function PhoneTheme({ className }: { className: string }) {
+  return (
+    <div className={cn('flex justify-center pt-4', className)}>
+      <ThemeToggle />
     </div>
   );
 }

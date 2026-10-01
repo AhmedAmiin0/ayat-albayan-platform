@@ -57,7 +57,7 @@ describe('DuplicateDialog compare (R-STU-03, docs/07 §6)', () => {
     renderDialog();
     const phone = row(t.students.guardianPhone);
     expect(phone.getByText('00966501234567')).toBeTruthy();
-    expect(phone.getAllByText('+966501234567')).toHaveLength(2);
+    expect(phone.getAllByText('+966 50 123 4567')).toHaveLength(2); // grouped for reading back
     expect(phone.getByText(t.students.samePhone)).toBeTruthy();
   });
 

@@ -1,4 +1,4 @@
-import { queryOptions } from '@tanstack/react-query';
+import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import type { JobApplicantRow, LeadRow, LeadSearch, Page, PageSearch } from './types';
 
@@ -14,6 +14,8 @@ export const leadsQuery = (s: LeadSearch) =>
       if (s.q) params.set('q', s.q);
       return apiFetch<Page<LeadRow>>(`/leads?${params}`);
     },
+    // A filter/page switch keeps the old rows (dimmed, aria-busy) until the new page lands.
+    placeholderData: keepPreviousData,
   });
 
 export const jobApplicantsQuery = (s: PageSearch) =>

@@ -32,8 +32,9 @@
       1px 1px 0 color-mix(in oklab, var(--leather-lift) 70%, transparent),
       inset 1px 1px 0 color-mix(in oklab, var(--leather-lift) 70%, transparent);
   }
-  /* "more" cue on the compact top nav: fade at the inline-end (left in RTL). */
+  /* "more" cue on the compact top nav: a 40px fade at the inline-end (left in RTL), and one at
+     the start (20px) so an item scrolled past the logo fades out instead of reading as a cut word. */
   .ab-fade-end {
-    mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+    mask-image: linear-gradient(to left, transparent, #000 20px, #000 calc(100% - 40px), transparent);
   }
 }

@@ -54,13 +54,14 @@ describe('TimeOffList (R-TCH-02, docs/07 §8)', () => {
     const submit = () => fireEvent.click(screen.getAllByRole('button', { name: t.availability.timeOffAdd }).at(-1) as HTMLElement);
     submit();
     expect(screen.getByRole('alert').textContent).toBe(t.common.required);
-    fireEvent.change(screen.getByLabelText(t.availability.startsAt), { target: { value: '2026-10-05T10:00' } });
-    fireEvent.change(screen.getByLabelText(t.availability.endsAt), { target: { value: '2026-10-07T18:00' } });
+    expect(screen.getByLabelText(t.availability.startsAt).getAttribute('type')).toBe('date');
+    fireEvent.change(screen.getByLabelText(t.availability.startsAt), { target: { value: '2026-10-05' } });
+    fireEvent.change(screen.getByLabelText(t.availability.endsAt), { target: { value: '2026-10-07' } });
     submit();
     await waitFor(() =>
       expect(apiSend).toHaveBeenCalledWith('POST', '/teachers/t1/time-off', {
-        starts_at: new Date(2026, 9, 5, 10, 0).toISOString(),
-        ends_at: new Date(2026, 9, 7, 18, 0).toISOString(),
+        starts_at: new Date(2026, 9, 5).toISOString(),
+        ends_at: new Date(2026, 9, 8).toISOString(),
         reason: null,
       }),
     );

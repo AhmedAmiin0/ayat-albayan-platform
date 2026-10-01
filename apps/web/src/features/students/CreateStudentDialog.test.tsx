@@ -42,6 +42,18 @@ describe('CreateStudentDialog (R-STU-02, R-STU-03)', () => {
     expect(api.createStudent).toHaveBeenCalledWith(expect.objectContaining({ name: 'سهيله', force: false }));
   });
 
+  it('empty «حفظ»: Arabic field errors (no browser bubble), nothing sent; tz is a select', async () => {
+    renderDialog();
+    const form = screen.getByLabelText(t.students.name).closest('form');
+    expect(form?.noValidate).toBe(true);
+    expect(screen.getByLabelText(t.students.tz).tagName).toBe('SELECT');
+    fireEvent.click(screen.getByRole('button', { name: t.common.save }));
+    await waitFor(() => expect(screen.getAllByText(t.common.required)).toHaveLength(2));
+    expect(screen.getByText(t.common.phoneErrors.empty)).toBeTruthy();
+    expect(screen.getByLabelText(t.students.name).getAttribute('aria-invalid')).toBe('true');
+    expect(api.createStudent).not.toHaveBeenCalled();
+  });
+
   it('a bad phone is explained in Arabic and never sent', async () => {
     renderDialog();
     fillAndSubmit('@suhaila');
@@ -84,6 +96,8 @@ describe('CreateStudentDialog (R-STU-02, R-STU-03)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.confirm }));
     await screen.findByText(t.common.error);
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
+    // Back on the duplicate step, focus is on «دمج», the button the admin had pressed.
+    await waitFor(() => expect(document.activeElement?.textContent).toBe(t.students.merge));
     fireEvent.click(await screen.findByRole('button', { name: t.students.createAnyway }));
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.students.created));
     expect(api.createStudent).toHaveBeenCalledTimes(2); // the 409 attempt + the one forced create

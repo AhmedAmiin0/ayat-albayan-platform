@@ -1,5 +1,5 @@
 import type { Weekday } from '@ab/shared';
-import { useId } from 'react';
+import { useId, useState, type FocusEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
@@ -9,6 +9,7 @@ import { cn } from '@/lib/utils';
 import { DayTrack } from './DayTrack';
 import { addRange, dayProblem, problemIndex, removeRange, updateRange, type Range } from './grid';
 import { RangeRow } from './RangeRow';
+import { overlaps } from './track';
 
 /** Shared by the header row and every day row so the columns line up (container queries). */
 export const weekRowClass =
@@ -24,10 +25,14 @@ type Props = {
   onChange: (ranges: Range[]) => void;
 };
 
-const PROBLEM_TEXT = {
-  endBeforeStart: t.common.endBeforeStart,
-  overlap: t.availability.overlap,
-} as const;
+/** The error line, in ONE inline run (docs/07 §14.3): «… من 17:30 لحد 18:00» for an overlap. */
+function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Range[]): string {
+  if (problem === 'endBeforeStart') return t.common.endBeforeStart;
+  const clash = overlaps(ranges)[0];
+  if (!clash) return t.availability.overlap;
+  const span = t.availability.overlapSpan.replace('{from}', clash.start).replace('{to}', clash.end);
+  return `${t.availability.overlap}${t.teachers.listSeparator}${span}`;
+}
 
 /** One weekday row: ranges as selects + add/remove, the 08–24 track, and its error line. R-TCH-02. */
 export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
@@ -37,6 +42,11 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
   const bad = problemIndex(ranges);
   const invalid = problem === 'endBeforeStart' ? 'end' : 'start';
   const addLabel = `${t.availability.addSlot} ${dayName}`;
+  const [editing, setEditing] = useState<number | null>(null);
+  // Focus moving between the two selects of one range must not clear the band.
+  const leave = (e: FocusEvent<HTMLElement>) => {
+    if (!e.currentTarget.contains(e.relatedTarget)) setEditing(null);
+  };
 
   return (
     <div
@@ -56,15 +66,19 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
       </div>
       <div role="cell" className={cn(cellClass, 'flex-wrap gap-x-2.5 gap-y-1.5')}>
         {ranges.map((range, i) => (
-          <RangeRow
-            key={i}
-            dayName={dayName}
-            range={range}
-            invalid={problem && i === bad ? invalid : null}
-            errorId={errorId}
-            onChange={(patch) => onChange(updateRange(ranges, i, patch))}
-            onRemove={() => onChange(removeRange(ranges, i))}
-          />
+          <span key={i} className="contents" onFocus={() => setEditing(i)} onBlur={leave}>
+            <RangeRow
+              dayName={dayName}
+              range={range}
+              invalid={problem && i === bad ? invalid : null}
+              errorId={errorId}
+              onChange={(patch) => onChange(updateRange(ranges, i, patch))}
+              onRemove={() => {
+                setEditing(null);
+                onChange(removeRange(ranges, i));
+              }}
+            />
+          </span>
         ))}
         {ranges.length === 0 ? (
           <>
@@ -77,7 +91,7 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
         ) : (
           <IconButton
             label={addLabel}
-            className="size-[30px] border border-dashed border-rule-strong text-lapis"
+            className="size-11 border border-dashed border-input text-lapis sm:size-[30px]"
             onClick={() => onChange(addRange(ranges))}
           >
             <Icon name="plus" />
@@ -86,12 +100,12 @@ export function AvailabilityDay({ day, ranges, now, onChange }: Props) {
         {problem && (
           <p id={errorId} role="alert" className="flex basis-full items-center gap-1.5 text-xs text-danger">
             <NuqtaGlyph shape="struck" />
-            <span>{PROBLEM_TEXT[problem]}</span>
+            <span>{problemText(problem, ranges)}</span>
           </p>
         )}
       </div>
       <div aria-hidden="true" className={trackCellClass}>
-        <DayTrack ranges={ranges} now={now} />
+        <DayTrack ranges={ranges} now={now} editing={editing} />
       </div>
     </div>
   );

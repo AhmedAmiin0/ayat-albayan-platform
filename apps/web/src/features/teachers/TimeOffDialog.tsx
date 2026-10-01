@@ -54,21 +54,14 @@ export function TimeOffDialog({ teacherId, onClose }: Props) {
       }
     >
       <form id={formId} className="grid gap-4 sm:grid-cols-2" onSubmit={submit} noValidate>
+        {/* Whole days, picked (rule 6: never a typed time). Dates are LTR islands. */}
         <Field label={t.availability.startsAt}>
           {(p) => (
-            <Input
-              {...p}
-              data-autofocus
-              type="datetime-local"
-              value={draft.starts_at}
-              onChange={(e) => set({ starts_at: e.target.value })}
-            />
+            <Input {...p} data-autofocus type="date" dir="ltr" value={draft.from} onChange={(e) => set({ from: e.target.value })} />
           )}
         </Field>
         <Field label={t.availability.endsAt}>
-          {(p) => (
-            <Input {...p} type="datetime-local" value={draft.ends_at} onChange={(e) => set({ ends_at: e.target.value })} />
-          )}
+          {(p) => <Input {...p} type="date" dir="ltr" value={draft.to} onChange={(e) => set({ to: e.target.value })} />}
         </Field>
         <div className="sm:col-span-2">
           <Field label={t.availability.reason}>

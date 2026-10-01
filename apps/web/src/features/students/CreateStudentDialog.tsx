@@ -21,6 +21,8 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
   const [candidates, setCandidates] = useState<StudentRef[] | null>(null);
   const [mergeInto, setMergeInto] = useState<StudentRef | null>(null);
   const [error, setError] = useState<string | null>(null);
+  // Back from a cancelled merge: focus returns to «دمج», the button that opened it.
+  const [backFromMerge, setBackFromMerge] = useState(false);
   // Survives a failed merge so a retry never creates the student twice.
   const createdId = useRef<string | null>(null);
 
@@ -58,7 +60,10 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
         kept={mergeInto}
         merged={{ name: pending.name }}
         onConfirm={() => confirmMerge(mergeInto, pending)}
-        onCancel={() => setMergeInto(null)}
+        onCancel={() => {
+          setMergeInto(null);
+          setBackFromMerge(true);
+        }}
       />
     );
   }
@@ -70,6 +75,7 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
         candidates={candidates}
         error={error}
         onClose={onClose}
+        focusMerge={backFromMerge}
         onMerge={setMergeInto}
         onCreateAnyway={() => void submit(pending, true)}
       />

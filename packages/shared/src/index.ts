@@ -6,3 +6,5 @@ export * from './roles.js';
 export * from './running-head.js';
 export * from './schemas/index.js';
 export * from './status-style.js';
+export * from './theme.js';
+export * from './time-zone.js';

@@ -1,6 +1,7 @@
 import { GENDERS, PROGRAMS } from '@ab/shared';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { PhonePreview } from '@/components/ui/phone-preview';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
 import type { SetField, TeacherForm } from './teacher-form';
@@ -49,7 +50,7 @@ export function TeacherFormFields({ form, set }: Props) {
         <legend className="mb-1.5 text-xs font-semibold text-ink-2">{t.teachers.programs}</legend>
         <div className="flex min-h-10 flex-wrap items-center gap-x-4 gap-y-2">
           {PROGRAMS.map((p) => (
-            <label key={p} className="flex items-center gap-2 text-sm">
+            <label key={p} className="flex min-h-11 items-center gap-2 text-sm sm:min-h-0">
               <input
                 type="checkbox"
                 className="size-4 accent-primary"
@@ -63,14 +64,17 @@ export function TeacherFormFields({ form, set }: Props) {
       </fieldset>
       <Field label={t.teachers.phone}>
         {(p) => (
-          <Input
-            {...p}
-            type="tel"
-            dir="ltr"
-            autoComplete="off"
-            value={form.phone_e164}
-            onChange={(e) => set('phone_e164', e.target.value)}
-          />
+          <>
+            <Input
+              {...p}
+              type="tel"
+              dir="ltr"
+              autoComplete="off"
+              value={form.phone_e164}
+              onChange={(e) => set('phone_e164', e.target.value)}
+            />
+            <PhonePreview value={form.phone_e164} />
+          </>
         )}
       </Field>
       <Field label={t.teachers.meetingLink}>

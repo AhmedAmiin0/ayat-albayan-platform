@@ -12,10 +12,16 @@
     "submitting": "جاري الدخول…",
     "invalidCredentials": "البريد أو كلمة السر مش صح، جرّب تاني",
     "noRole": "حسابك لسه ما اتفعّلش، كلّم الإدارة",
-    "logout": "تسجيل الخروج"
+    "logout": "تسجيل الخروج",
+    "intro": "للإدارة والمعلمين. ادخل بالبريد وكلمة السر اللي وصلوك من الأكاديمية.",
+    "showPassword": "إظهار",
+    "guardiansNote": "أولياء الأمور مش محتاجين حساب: بيفتحوا متابعة الطالب من اللينك اللي بيوصلهم على الواتساب."
   },
   "admin": {
-    "dashboardTitle": "لوحة التحكم"
+    "dashboardTitle": "لوحة التحكم",
+    "homeEmpty": "الملخص لسه بيتجهز",
+    "homeHint": "لحد ما يجهز، ابدأ يومك من المحادثات.",
+    "openLeads": "افتح المحادثات"
   },
   "teacher": {
     "dashboardTitle": "حلقاتي"
@@ -128,7 +134,8 @@
     "differs": "مختلف",
     "normalized": "بعد التوحيد:",
     "withTeacher": "مع {teacher}",
-    "duplicateHint": "الدمج بينقل كل الحلقات والتقارير والمدفوعات، والسجل القديم بيتحفظ في التاريخ."
+    "duplicateHint": "الدمج بينقل كل الحلقات والتقارير والمدفوعات، والسجل القديم بيتحفظ في التاريخ.",
+    "emptyHint": "أول ما تحوّل محادثة لطالب أو تضيف طالب بنفسك، هيظهر هنا."
   },
   "guardians": {
     "title": "أولياء الأمور",
@@ -206,6 +213,9 @@
     "legendAvailable": "متاح",
     "legendOverlap": "ميعاد داخل في ميعاد",
     "legendNow": "دلوقتي",
+    "overlapSpan": "من {from} لحد {to}",
+    "dstBack": "من {date} {city} بترجع ساعة",
+    "dstForward": "من {date} {city} بتقدّم ساعة",
     "weeklyHours": {
       "one": "ساعة واحدة متاحة في الأسبوع",
       "two": "ساعتين متاحين في الأسبوع",
@@ -250,7 +260,9 @@
     "you": "إنت:",
     "reclassifyRow": "نقل {name} لطلبات التوظيف",
     "searchPlaceholder": "دوّر بالاسم أو الرقم",
-    "sourceAll": "المصدر: الكل"
+    "sourceAll": "المصدر: الكل",
+    "count": "{n} محادثة",
+    "countStatus": "{n} {status}"
   },
   "jobApplicants": {
     "title": "طلبات التوظيف",
@@ -262,7 +274,8 @@
     "notes": "ملاحظات",
     "fromLead": "جاي من المحادثات",
     "empty": "مفيش طلبات توظيف",
-    "createdAt": "تاريخ الطلب"
+    "createdAt": "تاريخ الطلب",
+    "count": "{n} طلب"
   },
   "alerts": {
     "needsTeacher": "محتاج معلم/ة"
@@ -276,6 +289,22 @@
   "runningHead": {
     "riyadh": "الرياض",
     "cairo": "القاهرة"
+  },
+  "tz": {
+    "Asia/Riyadh": "الرياض",
+    "Africa/Cairo": "القاهرة",
+    "Asia/Dubai": "دبي",
+    "Asia/Qatar": "الدوحة",
+    "Asia/Kuwait": "الكويت",
+    "Asia/Bahrain": "المنامة",
+    "Asia/Muscat": "مسقط",
+    "Asia/Amman": "عمّان",
+    "Europe/London": "لندن",
+    "Europe/Berlin": "برلين",
+    "America/New_York": "نيويورك",
+    "America/Chicago": "شيكاغو",
+    "America/Los_Angeles": "لوس أنجلوس",
+    "America/Toronto": "تورنتو"
   },
   "enums": {
     "leadStatus": {

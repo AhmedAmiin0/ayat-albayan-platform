@@ -5,6 +5,7 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Toast, type ToastProps } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { LeadList } from './LeadList';
 import { leadsQuery, reclassifyLead } from './leads.api';
 import { LeadStatusTabs } from './LeadStatusTabs';
@@ -17,6 +18,12 @@ export interface LeadsInboxProps {
 }
 
 type Notice = Pick<ToastProps, 'message' | 'tone'>;
+
+/** «10 محادثة», or «3 جديد» under a status filter, so the number names what it counts. */
+function countLabel(total: number, status: LeadSearch['status']): string {
+  if (!status) return t.leads.count.replace('{n}', String(total));
+  return t.leads.countStatus.replace('{n}', String(total)).replace('{status}', t.enums.leadStatus[status]);
+}
 
 /**
  * Admin lead inbox (R-LEAD-01/02, docs/07 §9): cartouche + total, search and source filter, the
@@ -44,12 +51,18 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
     <>
       <PageHead>
         <Cartouche>{t.leads.title}</Cartouche>
-        {leads.data && <span className="text-sm text-ink-3 tabular-nums">{leads.data.total}</span>}
+        {/* TODO(R-LEAD-02): «11 مستنيين رد» once the API returns an unreplied count. */}
+        {leads.data && (
+          <span className="text-sm text-ink-3 tabular-nums">{countLabel(leads.data.total, search.status)}</span>
+        )}
       </PageHead>
       <LeadsToolbar search={search} onFilter={filter} />
       <div className="grid gap-[22px] shell:grid-cols-[196px_minmax(0,1fr)]">
         <LeadStatusTabs value={search.status} onChange={(status) => filter({ status })} />
-        <div className="min-w-0">
+        <div
+          className={cn('min-w-0 transition-opacity duration-[120ms]', leads.isPlaceholderData && 'opacity-60')}
+          aria-busy={leads.isPlaceholderData || undefined}
+        >
           {leads.isError && <p role="alert">{t.common.error}</p>}
           {leads.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
           {leads.data && (

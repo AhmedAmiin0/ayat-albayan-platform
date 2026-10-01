@@ -11,7 +11,7 @@ export function TeacherCell({ row, onOpen }: TeacherCellProps) {
       <span className="text-ink-3">{t.students.noTeacher}</span>{' '}
       <button
         type="button"
-        className="cursor-pointer rounded-xs font-semibold text-lapis underline underline-offset-4"
+        className="cursor-pointer rounded-xs font-semibold text-lapis underline underline-offset-4 max-sm:inline-flex max-sm:min-h-11 max-sm:items-center"
         onClick={(e) => {
           e.stopPropagation();
           onOpen(row.id);

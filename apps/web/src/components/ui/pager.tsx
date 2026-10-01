@@ -45,7 +45,7 @@ export function Pager({ page, total, pageSize, onPage }: PagerProps) {
                     aria-current={n === page ? 'page' : undefined}
                     onClick={() => onPage(n)}
                     className={cn(
-                      'grid h-9 min-w-9 place-items-center rounded-md text-ink-2 tabular-nums',
+                      'grid h-11 min-w-11 place-items-center rounded-md text-ink-2 tabular-nums sm:h-9 sm:min-w-9',
                       n === page ? 'text-ink' : 'hover:bg-sunk',
                     )}
                   >

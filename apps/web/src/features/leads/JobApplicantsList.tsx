@@ -22,7 +22,9 @@ export function JobApplicantsList({ search, onSearch }: JobApplicantsListProps) 
     <>
       <PageHead>
         <Cartouche>{t.jobApplicants.title}</Cartouche>
-        {data && <span className="text-sm text-ink-3 tabular-nums">{data.total}</span>}
+        {data && (
+          <span className="text-sm text-ink-3 tabular-nums">{t.jobApplicants.count.replace('{n}', String(data.total))}</span>
+        )}
       </PageHead>
       {applicants.isError && <p role="alert">{t.common.error}</p>}
       {applicants.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
@@ -31,7 +33,7 @@ export function JobApplicantsList({ search, onSearch }: JobApplicantsListProps) 
           {data.items.length === 0 ? (
             <EmptyState title={t.jobApplicants.empty} />
           ) : (
-            <DataTable columns={applicantColumns} data={data.items} getRowId={(r) => r.id} />
+            <DataTable stacked columns={applicantColumns} data={data.items} getRowId={(r) => r.id} />
           )}
           <Pager
             page={search.page}

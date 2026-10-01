@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { formatAge, formatDateTime, initialOf } from './format';
+import { formatAge, formatDate, formatDateTime, initialOf } from './format';
 import { parseLeadSearch, parsePageSearch } from './types';
 
 const rel = new Intl.RelativeTimeFormat('ar-EG-u-nu-latn', { numeric: 'auto' });
@@ -24,6 +24,15 @@ describe('lead inbox formatting (R-LEAD-02 list columns)', () => {
   it('formatDateTime shows a dash for an empty value', () => {
     expect(formatDateTime(null)).toBe('—');
     expect(formatDateTime('2026-10-01T12:00:00Z')).not.toBe('—');
+  });
+
+  it('formatDateTime is 24h (no «م/ص»); formatDate drops the time', () => {
+    const evening = new Date(2026, 9, 1, 23, 15).toISOString();
+    expect(formatDateTime(evening)).toContain('23:15');
+    expect(formatDateTime(evening)).not.toMatch(/[صم]$/);
+    expect(formatDate(evening)).not.toContain(':');
+    expect(formatDate(evening)).toContain('2026');
+    expect(formatDate(null)).toBe('—');
   });
 
   it.each([

@@ -13,7 +13,8 @@ export interface ReclassifyConfirmProps {
 
 /**
  * Inline confirm strip under an inbox row (docs/07 §9, R-LEAD-04): «سيبها هنا» (ghost) or
- * «نقل لطلبات التوظيف» (the screen's one primary). Focus moves to the safe choice on open.
+ * «نقل لطلبات التوظيف» (the screen's one primary). Focus moves to the safe choice on open; Esc
+ * keeps the lead, like every other transient surface.
  */
 export function ReclassifyConfirm({ busy, onKeep, onMove }: ReclassifyConfirmProps) {
   const keep = useRef<HTMLButtonElement>(null);
@@ -23,6 +24,11 @@ export function ReclassifyConfirm({ busy, onKeep, onMove }: ReclassifyConfirmPro
     <div
       role="group"
       aria-label={t.leads.reclassifyAsApplicant}
+      onKeyDown={(e) => {
+        if (e.key !== 'Escape') return;
+        e.stopPropagation();
+        onKeep();
+      }}
       className="col-span-full mt-2.5 flex sm:col-[2/-1] flex-wrap items-center gap-x-3.5 gap-y-2 rounded-md border border-gold-soft bg-page px-3 py-2.5 text-xs text-ink-2"
     >
       <span className="font-semibold text-ink">

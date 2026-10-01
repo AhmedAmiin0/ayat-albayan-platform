@@ -103,3 +103,232 @@ Raised by the verifiers and builders:
 3. Which Meta WABA and phone number ID to use, and who owns template approval?
 4. Guardian portal link in v1, or WhatsApp PDFs only?
 5. Group lessons: what is the maximum number of students per lesson?
+
+---
+
+# Design pass (Ink & Gold)
+
+Branch `develop`. This pass implements `docs/07-design-system.md` (the spec) against the rendered reference `docs/design/ink-and-gold.html`. It landed in these commits:
+- `b28dbb4`: the spec, the showcase and the logo.
+- `da9ca2a`: the foundation.
+- The four builder branches `design/students`, `design/teachers`, `design/leads` and `design/mobile`, merged with `--no-ff`.
+- `a028b7c`: the integrator commit.
+- «Design pass: critic fixes + summary»: this commit.
+
+Two critics reviewed the running app. The fidelity critic checked it against the reference, and the mobile/a11y critic checked it at 390 and 320 px, at 1440 px in light and dark, and with the keyboard. They raised 37 findings; what happened to each is listed below.
+
+## What changed per area
+
+### Foundation and shell
+- **Tokens:**
+  - Tailwind v4 raw tokens for light and dark. `data-theme` is set at boot, and `dark:` follows it.
+  - `@theme inline` over the shadcn slot names.
+  - Self-hosted Amiri 700 and IBM Plex Sans Arabic.
+  - The 12–68px type scale, the xs/sm/md/lg radius scale, three elevations and `ease-ink`.
+- **Shell:**
+  - The fihris sidebar with real API counts. Only the new-leads count is saffron.
+  - The running head: Gregorian date, Hijri date, Riyadh and Cairo clocks.
+  - One jadwal work page per screen.
+  - A compact top row under 900px, with fades at both ends and the current item kept in view.
+  - A teacher/guardian top bar.
+  - On phones the theme choice sits under the page.
+- **/admin:** the «لوحة التحكم» cartouche over an empty state with one primary button, «افتح المحادثات». It shows no invented numbers. TODO(R-RPT-01): the KPI strip in Phase 5.
+- **Login:**
+  - The leather binding, used on the login screen only.
+  - The intro line, the «إظهار» toggle on the password, and the guardians footnote.
+  - Blank fields get Arabic field errors (`noValidate`).
+  - The cover is a 280px band on phones.
+
+### Students (R-STU-01..05)
+- **List:**
+  - Cartouche with the real count, plus search.
+  - DataTable with LTR codes and grouped phones, and StatusChip.
+  - «لسه مفيش معلم» with «تعيين».
+  - Hamish note «محتاج معلم/ة», which folds under the name at 940px.
+  - Stacked rows under 640px.
+- **Name and row actions:** the name is a button, so it is the keyboard and screen-reader path to the profile at every width. WhatsApp and «افتح ملف …» stay visible on phones.
+- **Create dialog:** field errors instead of the browser bubble, the curated tz select, and the live E.164 preview.
+- **Duplicate step:**
+  - Its own dialog: the four-column compare, HighlightDiff and the siblings strip.
+  - After a cancelled merge, focus returns to «دمج».
+  - On phones the glyph tile and the close button share the first row.
+- **Profile:** the cartouche name, the meta line with the grouped phone, and a tz select.
+
+### Teachers (R-TCH-01, R-TCH-02)
+- **List:** stacked rows on phones (name + status, then programs, phone and تعديل).
+- **Profile:** cartouche, status chip, meta line and tabs.
+- **Availability editor (docs/07 §8):**
+  - Times are 30-minute selects.
+  - The 08–24 track runs right to left, with gold bars and an overlap hatch.
+  - The band being edited gets a lapis border, a halo and two grips.
+  - The overlap error names the clashing span («… من 16:00 لحد 18:00»).
+  - Today's row has a tint and a now-line.
+  - The tz select reads «القاهرة (Africa/Cairo)».
+  - The note line names the city and carries the DST warning («من الجمعة 30 أكتوبر القاهرة بترجع ساعة»).
+  - No horizontal scroll at 320.
+- **Time off:** whole days, picked with two date inputs. «إلى» is inclusive, and no time is ever typed (rule 6).
+- **Teacher dialog:** tz, status and max students sit on one row, with the phone preview under «رقم التواصل».
+
+### Leads and job applicants (R-LEAD-01/02/04)
+- **Inbox:**
+  - The vertical status fihris turns into chips under 900px, and its `aria-orientation` follows.
+  - The count names what it counts («10 محادثة», «3 جديد»).
+  - A filter switch keeps the old rows, dimmed and `aria-busy`, instead of blanking the list.
+  - Rows show the avatar initial, grouped phone, source, age and status chip.
+  - The reclassify confirm is an inline strip, and Esc closes it.
+- **Applicants:** the count reads «3 طلب», rows stack on phones, and the application date shows the date only.
+
+### Mobile (Expo)
+- **Theme:** `packages/shared/src/theme.ts` is now the one source for the RN palette, elevation, type, shape, space and motion. `apps/mobile/src/theme.ts` re-exports it and only picks the scheme.
+- **Fonts and graphics:** Amiri and Plex via expo-font, plus the Mark, the NuqtaGlyph and the empty-state rhombus.
+- **Screens:** the login screen and the «النهارده» shell.
+- **Start alignment:** the new `AppText` and the `Field` primitive align to the start under forceRTL.
+
+## New primitives and shared helpers
+- **Web `components/ui`:**
+  - Controls: Button, IconButton (exports `iconButtonClass`), Input, Select, **TimeZoneSelect**, Label, Field and FormAlert.
+  - Dialog: traps focus, and on phones opening it no longer scrolls the title out of view.
+  - Layout and ornament: Page and PageHead, Cartouche, StatusChip, NuqtaGlyph, Mark/Logo, Rosette, EmptyState, HighlightDiff and RunningHead.
+  - Navigation and feedback: Pager, SegmentedControl, Tabs and Toast.
+  - **Ltr + `isolateLtr`:** every «+966» in an i18n string becomes its own LTR island.
+  - **PhonePreview:** moved here from students.
+- **`DataTable`:**
+  - It has a `stacked` mode for phones.
+  - Column `meta` is split into `className` for cells and `headClassName` for the head, so the head stays ink-3.
+  - `hamishMeta` styles the hamish column.
+- **Web shell:** `AdminHome` and `PasswordInput`.
+- **`@ab/shared`:**
+  - `status-style` (42 state values), `running-head` and `highlight-diff`.
+  - **`formatPhone`**: display-only grouping (SA 2-3-4, EG 2-4-4, Gulf 4-4).
+  - **`TZ_OPTIONS`, `tzChoices`, `tzOptionLabel`** and **`nextDstTransition`**.
+  - The **RN theme**: `palette`, `elevation`, `type`, `shape`, `space` and `motion`.
+- **Mobile:** `AppText`.
+- **Tooling:** eslint now ignores `test-results/`. Playwright rewrites that folder while `e2e#lint` runs in parallel, and the resulting `ENOENT` race failed one gate run.
+
+## Tests (measured with `pnpm turbo lint typecheck test e2e --force`)
+| Package | Unit tests | Phase 1 |
+|---|---|---|
+| api | 307 (34 files) | 307 |
+| web | 230 (47 files) | 92 |
+| @ab/shared | 180 (15 files) | 100 |
+| mobile | 27 (7 suites) | 5 |
+| wa-stub | 5 (1 file) | 5 |
+| **Total** | **749** | 509 |
+
+Tests added by the critic-fix commit:
+- **@ab/shared:**
+  - `time-zone.test.ts`: every curated zone has an ar.json city; the Cairo, London and New York DST windows.
+  - `phone.format.test.ts`.
+  - `theme.contrast.test.ts`: the docs/07 §3 pairs on both RN themes, at 4.5:1 for text and 3:1 for `ruleInput` on `raised`. Every pair passes.
+- **Web:**
+  - New files: `ltr.test.tsx` (phone-error bidi), `time-zone-select.test.tsx` and `AdminHome.test.tsx`.
+  - Extended suites:
+    - Availability: the edit band, the overlap span and the DST note.
+    - Forms: `noValidate` with field errors on create-student and login, and the «إظهار» toggle.
+    - Time off: whole days.
+    - Leads: the count wording and Esc on reclassify.
+    - Primitives:
+      - Focus returns to «دمج».
+      - `aria-orientation` under 900px.
+      - Phone heights of 44px.
+      - The head/cell meta split.
+- **Mobile:** `AppText.test.tsx`.
+
+E2E: **18 passed**. That is 2 setup runs plus 8 tests, each on desktop and Pixel 7. Journey 6 now also checks, on both projects, that Tab reaches the student's name right after the search and that Enter opens the profile. The gate ran green with **23/23 tasks**. One earlier gate run lost Playwright to a native crash (0xC0000409) under parallel load. Run on its own it passed, and the full gate passed on the next try.
+
+## Screenshots
+- **`C:/Users/NTG/AppData/Local/Temp/ayat-design/shots/final/`:** desktop-light, desktop-dark and mobile-light (390) shots of login, /admin, students, the first student, teachers, the first teacher, leads and job applicants.
+- **`final/probe/`:**
+  - The edit band and the overlap, plus the teacher profile at 320.
+  - The time-off dialog, the teacher edit dialog and the create-form errors.
+  - The phone-error bidi.
+  - The duplicate header at 390, light and dark.
+- **To re-shoot:** `pnpm seed:demo`, then `pnpm --filter e2e screens --base <web url>`.
+
+## Critic findings: 37 total (3 high, 14 medium, 20 low)
+
+**Fixed (35):**
+- **High (3/3):**
+  - Time-off times: now whole-day date inputs, with no typed time.
+  - Keyboard and screen-reader path to a student on phones: the name is a button and the actions stay visible, with an e2e check.
+  - «966+» in the phone error: `isolateLtr` in Field and FormAlert.
+- **Medium (11 fully, 3 partly; the partial ones are explained below):**
+  - The native validation bubble.
+  - The edit band.
+  - The free-text student tz.
+  - The th ink colour.
+  - The blank /admin page.
+  - The login intro, toggle and footnote.
+  - Reflow at 320.
+  - Focus rings clipped by scrollers.
+  - Touch targets of 44px.
+  - Teacher and applicant tables on phones.
+  - The RN theme as one source, with the contrast test.
+- **Low (18, one of them web-only):**
+  - Copy and data display:
+    - The overlap span.
+    - 24h dates.
+    - Grouped phones (two findings).
+  - Controls:
+    - Kebab icon replaced by a chevron.
+    - The dead `outline` variant.
+    - The dashed «+» edge.
+  - Layout:
+    - Radii, plus the empty-state sentence.
+    - The teacher-dialog hole and its phone preview.
+    - The stacked line-height.
+    - The cover height at 390.
+    - The duplicate header on phones.
+  - Behaviour:
+    - `keepPreviousData` on the inbox.
+    - Nav clipping against the logo.
+  - Accessibility:
+    - `aria-orientation`.
+    - Esc on reclassify.
+    - Focus after a cancelled merge.
+  - Theme toggle on phones (web side only).
+
+**Fixed differently or partly, and why:**
+- **/admin blank (medium):** I used an EmptyState instead of the redirect. A redirect changes the landing URL and heading that `auth.setup.ts`, `login.spec.ts` and `screens.ts` wait on, and the critic allowed either fix. The crumb root stays a real page.
+- **Time zones (medium):** the curated list, city labels, the city in the note and the DST warning are done. The «بتوقيتها | بتوقيت الرياض» view switch is **deferred** (TODO(R-SCH-01)). It needs weekday-shifting conversion of the whole grid, which belongs with scheduling, and a switch that does nothing would be fake UI.
+- **Bare counts (medium):** the wording is fixed. The reference's «11 مستنيين رد» is **not built**: the API has no unreplied count, and showing one would fake data (TODO(R-LEAD-02)).
+- **Expo textAlign (medium):**
+  - `AppText` is in place, `Field` uses it, and the TextInput starts at the inline-start.
+  - The screen-level Text in `app/login.tsx` and `app/home.tsx` is left to the mobile/phase5a merge (task #4). That track is rewriting both files; home.tsx is already renamed to `src/today/TodayScreen.tsx` there.
+  - Not yet verified on a device: it still needs a check on the Android emulator and on the iOS simulator with the device language set to English.
+- **Theme on phones (low):** fixed on web. The Expo manual «تلقائي / فاتح / ليلي» override waits for a settings screen (TODO in `apps/mobile/src/theme.ts`).
+- **RN theme as one source (medium):** done, and the contrast test runs in CI. Generating the web raw-token CSS from the same object is still a TODO (docs/07 §12).
+
+**Rejected or deferred (2):**
+- **Duplicate-dialog explanation «نفس الاسم لو ه = ة» (low):** the critic marked it optional. It is new copy that needs owner sign-off, nothing structural is wrong, and HighlightDiff already marks the differing letter in place.
+- **Expo «النهارده» Hijri date line and timeline (low):**
+  - The Hijri string has to come from the API, because Hermes' ICU can't be relied on for it (docs/07 §2).
+  - The lesson cards wait on `/lessons`.
+  - The file belongs to the mobile track (TODO(R-MOB-02)).
+
+## Residual TODOs
+- **R-SCH-01:** the «بتوقيتها | بتوقيت الرياض» switch, booked-lesson ticks and draggable grips.
+- **R-SCH-07:** the time-off impact note with «انقل الحلقات».
+- **R-TCH-03/04:** the teacher's student count, and the الطلاب and المستحقات tabs.
+- **R-STU-01/05:** list filters with counts, the «9 سنين، الرياض» sub-line and a real ⋮ menu.
+- **R-LEAD-02/05/06:**
+  - Inbox rows: unread dot, last message and next-action buttons.
+  - Per-status counts in the fihris.
+  - The «مسؤول المتابعة» filter.
+- **R-RPT-01/03:** the dashboard KPI strip and the students export.
+- **R-MOB-02:** mobile timeline, lesson cards and bottom tabs.
+- **Time-off zone:** time off is still read in the browser's zone. Using the teacher's zone needs the API's zoned-time helper moved into `@ab/shared`.
+- **Lint warnings:** three complexity warnings remain (`DuplicateCompare`, `DuplicateDialog`, `StudentsPage`). They are warnings, not errors.
+
+## Owner sign-offs needed
+1. **The six `ar.json` digit changes** (docs/07 §2): `enums.duration.30/45` and `enums.packageSize.4/8/12/16` now use Western digits, with the wording unchanged. They are already applied, and a test fails if any value contains an Eastern digit.
+2. **New copy:**
+   - `auth.intro`, `auth.showPassword` and `auth.guardiansNote` (taken from the reference).
+   - `admin.homeEmpty` «الملخص لسه بيتجهز», `admin.homeHint` and `admin.openLeads`.
+   - `students.emptyHint` (taken from the reference).
+   - `leads.count` «{n} محادثة», `leads.countStatus` and `jobApplicants.count` «{n} طلب».
+   - `availability.overlapSpan` «من {from} لحد {to}», `availability.dstBack` and `availability.dstForward`.
+   - The `tz.*` city names and the curated zone list. Which countries matter is the same open question as R-STU-02.
+3. **A calligrapher's check** of the alef and madda in the mark, before the app-store icon and print (docs/07 §17).
+4. **Sign-off from the academy's teachers** on using Mushaf devices in admin chrome: the verse-end rosette for numbers and the surah-header cartouche for page titles (docs/07 §17).
+5. **The six real report rubric names** from the «تقرير الحلقة» Google Form, to replace the placeholders in docs/07 §16.

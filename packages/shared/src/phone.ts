@@ -53,3 +53,32 @@ function ok(e164: string, country: PhoneCountry | null): PhoneResult {
 function bad(): PhoneResult {
   return { ok: false, reason: 'invalid_length' };
 }
+
+// National-number grouping per country code: SA +966 5x xxx xxxx, EG +20 1x xxxx xxxx, Gulf 4-4.
+const GROUPS: readonly (readonly [string, readonly number[]])[] = [
+  ['+966', [2, 3, 4]],
+  ['+20', [2, 4, 4]],
+  ['+974', [4, 4]],
+  ['+968', [4, 4]],
+  ['+965', [4, 4]],
+  ['+973', [4, 4]],
+];
+
+/**
+ * Display-only grouping of an E.164 number: «+966 55 214 7730». Storage, wa.me and tel: links
+ * keep the raw E.164 (rule 7). Other countries and odd lengths come back unchanged.
+ */
+export function formatPhone(e164: string): string {
+  for (const [cc, sizes] of GROUPS) {
+    const rest = e164.slice(cc.length);
+    if (!e164.startsWith(cc) || !/^[0-9]+$/.test(rest) || rest.length !== sizes.reduce((a, b) => a + b, 0)) continue;
+    const parts = [cc];
+    let at = 0;
+    for (const n of sizes) {
+      parts.push(rest.slice(at, at + n));
+      at += n;
+    }
+    return parts.join(' ');
+  }
+  return e164;
+}

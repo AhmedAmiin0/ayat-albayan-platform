@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { LeadsInbox } from './LeadsInbox';
@@ -39,7 +39,7 @@ describe('LeadsInbox (R-LEAD-01, R-LEAD-02)', () => {
     expect(await screen.findByText('أم سهيلة')).toBeTruthy();
     expect(screen.getByRole('heading', { level: 1, name: t.leads.title })).toBeTruthy();
     const row = within(screen.getByRole('listitem'));
-    expect(row.getByText('+966501234567').getAttribute('dir')).toBe('ltr');
+    expect(row.getByText('+966 50 123 4567').getAttribute('dir')).toBe('ltr'); // grouped, display only
     expect(row.getByText(t.enums.leadSource.facebook_ad)).toBeTruthy();
     expect(row.getByText('س')).toBeTruthy(); // avatar skips the kunya «أم»
     const chip = row.getByText(t.enums.leadStatus.interested_no_slot).closest('[data-tone]');
@@ -88,6 +88,15 @@ describe('LeadsInbox (R-LEAD-01, R-LEAD-02)', () => {
     const { onSearch } = renderInbox({ page: 1 }, { total: 60 });
     fireEvent.click(await screen.findByRole('button', { name: new RegExp(t.common.nextPage) }));
     expect(onSearch).toHaveBeenCalledWith({ page: 2 });
+  });
+
+  it('the count names what it counts: «N محادثة», or «N جديد» under a status filter', async () => {
+    renderInbox({ page: 1 }, { total: 10 });
+    expect(await screen.findByText(t.leads.count.replace('{n}', '10'))).toBeTruthy();
+    cleanup();
+    renderInbox({ status: 'new', page: 1 }, { total: 3 });
+    const filtered = t.leads.countStatus.replace('{n}', '3').replace('{status}', t.enums.leadStatus.new);
+    expect(await screen.findByText(filtered)).toBeTruthy();
   });
 
   it('shows the Arabic empty state', async () => {

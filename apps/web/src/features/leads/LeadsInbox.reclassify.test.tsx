@@ -64,6 +64,14 @@ describe('LeadsInbox reclassify to job applicants (R-LEAD-04)', () => {
     expect(apiSend).not.toHaveBeenCalled();
   });
 
+  it('Esc keeps the lead: the strip closes and focus returns to the briefcase', async () => {
+    const { ask, strip } = await openConfirm();
+    fireEvent.keyDown(within(strip).getByRole('button', { name: t.leads.keepHere }), { key: 'Escape' });
+    expect(screen.queryByRole('group', { name: t.leads.reclassifyAsApplicant })).toBeNull();
+    expect(document.activeElement).toBe(ask);
+    expect(apiSend).not.toHaveBeenCalled();
+  });
+
   it('a failed move keeps the strip open and says so', async () => {
     apiSend.mockRejectedValue(new Error('boom'));
     const { strip } = await openConfirm();
@@ -75,6 +83,6 @@ describe('LeadsInbox reclassify to job applicants (R-LEAD-04)', () => {
   it('an unnamed lead is named by its phone', async () => {
     const { strip } = await openConfirm({ ...ROW, name: null });
     expect(strip).toBeTruthy();
-    expect(screen.getAllByText('+966501234567')).toHaveLength(1);
+    expect(screen.getAllByText('+966 50 123 4567')).toHaveLength(1);
   });
 });

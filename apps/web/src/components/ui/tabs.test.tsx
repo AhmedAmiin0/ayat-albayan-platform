@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import { describe, expect, it, vi } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { SegmentedControl } from './segmented-control';
 import { Tabs } from './tabs';
@@ -42,6 +42,18 @@ describe('Tabs', () => {
     expect(list.querySelectorAll('hr[aria-hidden="true"]')).toHaveLength(1);
     fireEvent.keyDown(list, { key: 'ArrowLeft' });
     expect(onChange).toHaveBeenCalledWith('no_reply');
+  });
+});
+
+describe('Tabs orientation', () => {
+  afterEach(() => vi.unstubAllGlobals());
+
+  it('the vertical fihris announces horizontal while it is a chip row (< 900px)', () => {
+    const query = { matches: false, addEventListener: vi.fn(), removeEventListener: vi.fn() };
+    vi.stubGlobal('matchMedia', vi.fn(() => query));
+    render(<Tabs label={t.leads.status} tabs={[...TABS]} value="all" orientation="vertical" onChange={vi.fn()} />);
+    expect(screen.getByRole('tablist').getAttribute('aria-orientation')).toBe('horizontal');
+    expect(matchMedia).toHaveBeenCalledWith('(min-width: 56.25rem)');
   });
 });
 

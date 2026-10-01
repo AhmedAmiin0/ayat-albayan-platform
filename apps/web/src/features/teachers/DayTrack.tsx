@@ -1,4 +1,5 @@
 import type { CSSProperties } from 'react';
+import { cn } from '@/lib/utils';
 import type { Range } from './grid';
 import { barBox, overlaps, trackPct } from './track';
 
@@ -16,14 +17,23 @@ const place = (range: Range): CSSProperties | null => {
   return box && { insetInlineStart: `${box.start}%`, width: `${box.width}%` };
 };
 
-type Props = { ranges: readonly Range[]; /** Minute of the day on today's row, else null. */ now: number | null };
+type Props = {
+  ranges: readonly Range[];
+  /** Minute of the day on today's row, else null. */
+  now: number | null;
+  /** Index of the range whose selects have focus: drawn as the band being edited. */
+  editing?: number | null;
+};
+
+const grip = 'absolute top-1/2 h-3.5 w-[5px] -translate-y-1/2 rounded-[2px] bg-lapis';
 
 /**
  * Visual-only 08–24 track of one day (the selects are the accessible path): gold-wash bars for
- * available ranges, a cinnabar hatch where two overlap, a 2px ink now-line on today's row.
- * TODO(R-SCH-01): booked-lesson ticks (6px ink-2) once lessons exist.
+ * available ranges, a cinnabar hatch where two overlap, a 2px ink now-line on today's row. The
+ * band being edited gets a lapis border, halo and two grips (docs/07 §8).
+ * TODO(R-SCH-01): booked-lesson ticks (6px ink-2) once lessons exist; Phase 2 makes the grips draggable.
  */
-export function DayTrack({ ranges, now }: Props) {
+export function DayTrack({ ranges, now, editing = null }: Props) {
   const nowPct = now === null ? null : trackPct(now);
   return (
     <div className="relative h-7 w-full rounded-[4px] bg-sunk" style={trackStyle}>
@@ -33,10 +43,22 @@ export function DayTrack({ ranges, now }: Props) {
           style && (
             <span
               key={`bar-${i}`}
-              data-bar=""
-              className="absolute inset-y-[3px] rounded-[4px] border border-gold bg-gold-wash"
+              data-bar={i === editing ? 'editing' : ''}
+              className={cn(
+                'absolute inset-y-[3px] rounded-[4px] bg-gold-wash',
+                i === editing
+                  ? 'border-[1.5px] border-lapis shadow-[0_0_0_3px_color-mix(in_oklab,var(--lapis)_22%,transparent)]'
+                  : 'border border-gold',
+              )}
               style={style}
-            />
+            >
+              {i === editing && (
+                <>
+                  <i className={cn(grip, '-start-[3px]')} />
+                  <i className={cn(grip, '-end-[3px]')} />
+                </>
+              )}
+            </span>
           )
         );
       })}

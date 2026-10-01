@@ -1,7 +1,9 @@
 // Display helpers for the inbox. DB times are UTC; these render in the viewer's zone (rule 6).
 // `nu-latn`: Western digits everywhere (docs/07 §2 Numerals); `ar-EG` alone prints Eastern ones.
 const LOCALE = 'ar-EG-u-nu-latn';
-const dateTime = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short' });
+// 24h like every other time in the product (running head, availability).
+const dateTime = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23' });
+const dateOnly = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });
 const relative = new Intl.RelativeTimeFormat(LOCALE, { numeric: 'auto' });
 
 const MINUTE = 60_000;
@@ -10,6 +12,11 @@ const DAY = 24 * HOUR;
 
 export function formatDateTime(iso: string | null): string {
   return iso ? dateTime.format(new Date(iso)) : '—';
+}
+
+/** A day with no time (e.g. an application date: minutes add nothing, and need no zone). */
+export function formatDate(iso: string | null): string {
+  return iso ? dateOnly.format(new Date(iso)) : '—';
 }
 
 /** Lead age as relative time ("قبل 3 أيام"): minutes under an hour, hours under a day. */

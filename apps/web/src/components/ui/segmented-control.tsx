@@ -28,7 +28,7 @@ export function SegmentedControl<V extends string>({
     <div
       role="group"
       aria-label={label}
-      className={cn('inline-flex max-w-full gap-0.5 overflow-x-auto rounded-[10px] border border-rule bg-sunk p-[3px]', className)}
+      className={cn('inline-flex max-w-full gap-0.5 overflow-x-auto rounded-md border border-rule bg-sunk p-[3px]', className)}
     >
       {options.map((o) => (
         <button
@@ -37,7 +37,7 @@ export function SegmentedControl<V extends string>({
           aria-pressed={o.value === value}
           onClick={() => onChange(o.value)}
           className={cn(
-            'inline-flex min-h-[30px] items-center gap-1.5 whitespace-nowrap rounded-[7px] px-3 py-1 text-xs',
+            'inline-flex min-h-11 items-center gap-1.5 whitespace-nowrap rounded-sm px-3 py-1 text-xs sm:min-h-[30px]',
             o.value === value
               ? 'bg-raised font-semibold text-ink shadow-[0_0_0_1px_var(--rule-strong)]'
               : 'font-medium text-ink-2 hover:text-ink',

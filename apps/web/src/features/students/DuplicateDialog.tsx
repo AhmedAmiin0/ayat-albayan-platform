@@ -16,6 +16,8 @@ export type DuplicateDialogProps = {
   /** From the 409 body; never empty. */
   candidates: StudentRef[];
   error: string | null;
+  /** Start focus on «دمج» (coming back from a cancelled merge) instead of the first control. */
+  focusMerge?: boolean;
   onClose: () => void;
   onMerge: (candidate: StudentRef) => void;
   onCreateAnyway: () => void;
@@ -26,7 +28,8 @@ export type DuplicateDialogProps = {
  * entry is compared field by field with the existing student, whose profile (guardian, program,
  * teacher, siblings) is fetched; until it arrives those cells stay empty.
  */
-export function DuplicateDialog({ typed, candidates, error, onClose, onMerge, onCreateAnyway }: DuplicateDialogProps) {
+export function DuplicateDialog(props: DuplicateDialogProps) {
+  const { typed, candidates, error, focusMerge, onClose, onMerge, onCreateAnyway } = props;
   const [pickedId, setPickedId] = useState(candidates[0]?.id ?? '');
   const candidate = candidates.find((c) => c.id === pickedId) ?? candidates[0];
   const { data: profile } = useQuery({ ...studentQuery(candidate?.id ?? ''), enabled: !!candidate });
@@ -36,7 +39,9 @@ export function DuplicateDialog({ typed, candidates, error, onClose, onMerge, on
     <>
       <Button variant="ghost" onClick={onClose}>{t.common.cancel}</Button>
       <Button variant="secondary" onClick={onCreateAnyway}>{t.students.createAnyway}</Button>
-      <Button onClick={() => onMerge(candidate)}>{t.students.merge}</Button>
+      <Button data-autofocus={focusMerge || undefined} onClick={() => onMerge(candidate)}>
+        {t.students.merge}
+      </Button>
     </>
   );
 

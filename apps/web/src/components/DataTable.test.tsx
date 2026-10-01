@@ -2,7 +2,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { DataTable, hamishClass, type DataTableFeatures } from './DataTable';
+import { DataTable, hamishMeta, type DataTableFeatures } from './DataTable';
 
 type Row = {
   id: string;
@@ -51,15 +51,21 @@ describe('DataTable', () => {
     expect(screen.getAllByRole('row')).toHaveLength(3);
   });
 
-  it('scopes header cells and applies column meta classes to th and td', () => {
+  it('scopes header cells; meta className styles cells, headClassName the head', () => {
     const withMeta = col.columns([
-      col.accessor('name', { header: () => t.students.name }),
-      col.accessor('code', { header: () => t.students.hamish, meta: { className: hamishClass } }),
+      col.accessor('name', { header: () => t.students.name, meta: { className: 'text-ink-2' } }),
+      col.accessor('code', { header: () => t.students.hamish, meta: hamishMeta }),
     ]);
     render(<DataTable columns={withMeta} data={DATA} />);
     const th = screen.getByRole('columnheader', { name: t.students.hamish });
     expect(th.getAttribute('scope')).toBe('col');
     expect(th.className).toContain('border-s-gold-soft');
     expect(screen.getByText('AB-0183').className).toContain('@max-[940px]:hidden');
+    // The head ink stays ink-3 in every column (cell classes never leak into <th>).
+    for (const head of screen.getAllByRole('columnheader')) {
+      expect(head.className).toContain('text-ink-3');
+      expect(head.className).not.toContain('text-ink-2');
+    }
+    expect(screen.getByText('سهيلة').className).toContain('text-ink-2');
   });
 });

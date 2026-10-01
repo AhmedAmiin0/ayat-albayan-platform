@@ -26,7 +26,7 @@ export function useFocusTrap(ref: RefObject<HTMLElement | null>, onEscape: () =>
       node.querySelector<HTMLElement>('[data-autofocus]') ??
       focusables(node).find((el) => !el.hasAttribute('data-dialog-close')) ??
       node;
-    start.focus();
+    start.focus({ preventScroll: true }); // phones: keep the title in view, not the footer button
 
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {

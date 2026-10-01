@@ -46,5 +46,15 @@ test.describe('journey 6 — duplicate student (R-STU-03)', () => {
     await expect(rows).toHaveCount(2); // header + one student
     await expect(rows.nth(1)).toContainText('سهيلة');
     await expect(rows.nth(1)).toContainText(/AB-\d{4,}/);
+
+    // The keyboard path to the profile exists at every width, Pixel 7 included: the name is a
+    // button right after the search, and Enter opens the merged student's profile.
+    const name = rows.nth(1).getByRole('button', { name: 'سهيلة', exact: true });
+    await page.getByRole('button', { name: ar.common.search, exact: true }).focus();
+    await page.keyboard.press('Tab');
+    await expect(name).toBeFocused();
+    await page.keyboard.press('Enter');
+    await expect(page).toHaveURL(/\/admin\/students\/[^/?]+$/);
+    await expect(page.getByRole('heading', { level: 1, name: 'سهيلة' })).toBeVisible();
   });
 });

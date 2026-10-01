@@ -1,5 +1,6 @@
 import { useId, type ReactNode } from 'react';
 import { Label } from './label';
+import { isolateLtr } from './ltr';
 import { NuqtaGlyph } from './nuqta-glyph';
 
 /** Spread onto the control: links it to the label, hint and error. */
@@ -43,7 +44,7 @@ export function Field({ label, id, hint, error, children }: FieldProps) {
       {error && (
         <p id={errorId} role="alert" className="flex items-center gap-1.5 text-xs text-danger">
           <NuqtaGlyph shape="struck" />
-          <span>{error}</span>
+          <span>{isolateLtr(error)}</span>
         </p>
       )}
     </div>
