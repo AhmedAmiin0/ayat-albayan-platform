@@ -4,18 +4,14 @@ import {
   DISCOUNTS,
   PRICING_DURATIONS,
   SITE_COUNTRIES,
+  STUDENTS_MAX,
+  STUDENTS_MIN,
 } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
-import {
-  STUDENTS_MAX,
-  STUDENTS_MIN,
-  type CountryChoice,
-  type PlanChoice,
-  type Selection,
-} from './selection';
+import type { CountryChoice, PlanChoice, Selection } from './selection';
 import { Stepper } from './Stepper';
 
 const p = t.pricing;

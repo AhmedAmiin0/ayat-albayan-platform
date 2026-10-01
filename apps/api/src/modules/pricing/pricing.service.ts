@@ -1,18 +1,15 @@
-import { currencyForCountry, PACKAGE_IDS, quote, siteCountry, type Quote } from '@ab/shared';
+import {
+  currencyForCountry,
+  PACKAGE_IDS,
+  quote,
+  siteCountry,
+  type CatalogResponse,
+  type FxRate,
+  type QuoteResponse,
+} from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { FxService, type FxRate } from '../fx/fx.service';
+import { FxService } from '../fx/fx.service';
 import type { CatalogQuery, QuoteQuery } from './pricing.dto';
-
-export type QuoteResponse = Quote & { fx: FxRate | null };
-
-export interface CatalogResponse {
-  country: Quote['country'];
-  currency: Quote['currency'];
-  duration: number;
-  /** All six packages in site order, one student, no discount. */
-  packages: Quote[];
-  fx: FxRate | null;
-}
 
 /** Site prices in the guardian's currency (docs/08); USD goes through FxService. */
 @Injectable()

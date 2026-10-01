@@ -42,6 +42,9 @@ export const MONTHLY = {
 /** Custom lesson counts the calculator accepts. */
 export const CUSTOM_COUNT_MIN = 1;
 export const CUSTOM_COUNT_MAX = 60;
+/** Students per quote the calculator accepts. */
+export const STUDENTS_MIN = 1;
+export const STUDENTS_MAX = 20;
 
 export function lessonsOf(id: PackageId): number {
   if (id === 'weekly') return WEEKLY.lessons;

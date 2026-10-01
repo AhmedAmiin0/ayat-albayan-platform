@@ -12,6 +12,7 @@ const SECTIONS: Record<string, { label: string; profile?: string }> = {
   teachers: { label: t.nav.teachers, profile: t.teachers.profile },
   leads: { label: t.nav.leads },
   'job-applicants': { label: t.nav.jobApplicants },
+  pricing: { label: t.pricing.title },
 };
 
 /** Running-head breadcrumbs for an /admin path (docs/07 §7). Unknown paths get none. */

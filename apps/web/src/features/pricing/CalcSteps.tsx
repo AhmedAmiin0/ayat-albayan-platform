@@ -5,14 +5,14 @@ import {
   DISCOUNTS,
   PRICING_DURATIONS,
   SITE_COUNTRIES,
+  STUDENTS_MAX,
+  STUDENTS_MIN,
   type PackageId,
 } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { OTHER, type Selection } from './api';
 import { SegmentStep } from './SegmentStep';
 import { Stepper } from './Stepper';
-
-const STUDENTS_MAX = 20;
 
 const COUNTRY_OPTIONS = [
   ...SITE_COUNTRIES.map((c) => ({ value: c, label: t.pricing.countries[c] })),
@@ -88,7 +88,7 @@ export function CalcSteps({ sel, onChange }: CalcStepsProps) {
       <Stepper
         label={t.pricing.steps.students}
         value={sel.students}
-        min={1}
+        min={STUDENTS_MIN}
         max={STUDENTS_MAX}
         onChange={(students) => onChange({ students })}
         hint={sel.students > 1 ? t.pricing.familyHint : undefined}

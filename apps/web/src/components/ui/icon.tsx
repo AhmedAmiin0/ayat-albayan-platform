@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 const PATHS = {
   search: 'M14.5 9a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0ZM13.2 13.2l3.6 3.6',
   plus: 'M10 4.5v11M4.5 10h11',
+  minus: 'M4.5 10h11',
   more: 'M10 4.8h.01M10 10h.01M10 15.2h.01',
   'chevron-left': 'M12.5 5 7.5 10l5 5',
   'chevron-right': 'm7.5 5 5 5-5 5',

@@ -8,6 +8,7 @@ describe('crumbsFor', () => {
     ['/admin/students', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.nav.students }]],
     ['/admin/leads/', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.nav.leads }]],
     ['/admin/job-applicants', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.nav.jobApplicants }]],
+    ['/admin/pricing', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.pricing.title }]],
     ['/admin/students/abc', [{ label: t.nav.students, to: '/admin/students' }, { label: t.students.profile }]],
     ['/admin/teachers/abc', [{ label: t.nav.teachers, to: '/admin/teachers' }, { label: t.teachers.profile }]],
   ])('%s', (path, crumbs) => {

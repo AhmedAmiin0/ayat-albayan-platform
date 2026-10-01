@@ -85,3 +85,31 @@ export function quote(o: QuoteOptions): Quote {
     featured: tier?.featured === true,
   };
 }
+
+// GET /pricing/* response shapes (apps/api pricing module), shared by the API, web and mobile.
+
+/** The rate a USD quote used, returned with every USD price so it can be reproduced (docs/08 §4). */
+export interface FxRate {
+  quote: string;
+  rate: number;
+  /** Provider publication time (ISO); null for the peg. */
+  date: string | null;
+  /** "open.er-api.com", or "peg" for the 3.75 fallback. */
+  provider: string;
+  /** True when no rate was ever stored and the official SAR/USD peg was used. */
+  fallback: boolean;
+  /** Set when the API failed and an older stored rate was used: hours since the provider published it. */
+  ageHours: number | null;
+}
+
+/** null for the site's own currencies. */
+export type QuoteResponse = Quote & { fx: FxRate | null };
+
+export interface CatalogResponse {
+  country: SiteCountry | null;
+  currency: CurrencyIso;
+  duration: number;
+  /** All six packages in site order, one student, no discount. */
+  packages: Quote[];
+  fx: FxRate | null;
+}

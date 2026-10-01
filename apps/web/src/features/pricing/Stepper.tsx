@@ -13,24 +13,6 @@ export interface StepperProps {
   hint?: string | undefined;
 }
 
-// ponytail: icon.tsx has no minus yet; drawn here on the same 20px grid as <Icon>.
-function Minus() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      aria-hidden="true"
-      focusable="false"
-      className="size-[18px]"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={1.6}
-      strokeLinecap="round"
-    >
-      <path d="M4.5 10h11" />
-    </svg>
-  );
-}
-
 /** «أقل | n | أكثر» for whole numbers in [min, max]; typing works too and is clamped. */
 export function Stepper({ label, value, min, max, onChange, hint }: StepperProps) {
   const set = (n: number) => onChange(Math.min(max, Math.max(min, n)));
@@ -44,7 +26,7 @@ export function Stepper({ label, value, min, max, onChange, hint }: StepperProps
             onClick={() => set(value - 1)}
             className="border border-input"
           >
-            <Minus />
+            <Icon name="minus" />
           </IconButton>
           <Input
             {...control}

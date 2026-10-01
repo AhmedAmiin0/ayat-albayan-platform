@@ -1,21 +1,7 @@
-import { SAR_PER_USD_PEG } from '@ab/shared';
+import { SAR_PER_USD_PEG, type FxRate } from '@ab/shared';
 import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
 import { FX_FETCHER, type FxFetcher, type FxSnapshot } from './fx.fetcher';
 import { FxQueries, type FxRow } from './fx.queries';
-
-/** The rate a quote used, returned with every USD price so it can be reproduced (docs/08 §4). */
-export interface FxRate {
-  quote: string;
-  rate: number;
-  /** Provider publication time (ISO); null for the peg. */
-  date: string | null;
-  /** "open.er-api.com", or "peg" for the 3.75 fallback. */
-  provider: string;
-  /** True when no rate was ever stored and the official SAR/USD peg was used. */
-  fallback: boolean;
-  /** Set when the API failed and an older stored rate was used: hours since the provider published it. */
-  ageHours: number | null;
-}
 
 const HOUR_MS = 3_600_000;
 const FRESH_MS = 24 * HOUR_MS;

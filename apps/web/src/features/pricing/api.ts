@@ -1,11 +1,12 @@
 import {
   DEFAULT_DURATION,
   lessonsOf,
-  type CurrencyIso,
+  STUDENTS_MIN,
+  type CatalogResponse,
   type Discount,
   type PackageId,
   type PricingDuration,
-  type Quote,
+  type QuoteResponse,
   type SiteCountry,
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
@@ -13,30 +14,7 @@ import { apiFetch } from '@/lib/api';
 
 // Shapes returned by apps/api/src/modules/pricing (docs/08). The client never prices anything:
 // every number on the calculator comes from these responses.
-
-/** The rate a USD quote used (FxService.FxRate). */
-export interface FxRate {
-  quote: string;
-  rate: number;
-  /** Provider publication time (ISO); null for the peg. */
-  date: string | null;
-  provider: string;
-  /** No rate was ever stored: the official 3.75 peg was used. */
-  fallback: boolean;
-  /** The API failed and an older stored rate was used: hours since it was published. */
-  ageHours: number | null;
-}
-
-export type QuoteResponse = Quote & { fx: FxRate | null };
-
-export interface CatalogResponse {
-  country: SiteCountry | null;
-  currency: CurrencyIso;
-  duration: number;
-  /** All six packages in site order, one student, no discount. */
-  packages: Quote[];
-  fx: FxRate | null;
-}
+export type { CatalogResponse, FxRate, QuoteResponse } from '@ab/shared';
 
 /** «دولة تانية (بالدولار)»: no country is sent, so the API quotes in USD. */
 export const OTHER = 'other' as const;
@@ -57,7 +35,7 @@ export const INITIAL_SELECTION: Selection = {
   duration: DEFAULT_DURATION,
   pkg: 'standard',
   count: lessonsOf('starter'),
-  students: 1,
+  students: STUDENTS_MIN,
   discount: 0,
 };
 

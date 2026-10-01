@@ -5,6 +5,8 @@ import {
   DISCOUNTS,
   PACKAGE_IDS,
   PRICING_DURATIONS,
+  STUDENTS_MAX,
+  STUDENTS_MIN,
 } from '@ab/shared';
 import { z } from 'zod';
 
@@ -21,7 +23,7 @@ const shape = {
 };
 const quoteShape = {
   ...shape,
-  students: z.coerce.number().int().min(1).max(20).default(1),
+  students: z.coerce.number().int().min(STUDENTS_MIN).max(STUDENTS_MAX).default(STUDENTS_MIN),
   discount: z.coerce.number().pipe(z.literal(DISCOUNTS)).default(0),
 };
 

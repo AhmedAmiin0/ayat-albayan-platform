@@ -1,6 +1,7 @@
 import {
   DEFAULT_DURATION,
   STARTER,
+  STUDENTS_MIN,
   type Discount,
   type PackageId,
   type PricingDuration,
@@ -24,10 +25,6 @@ export interface Selection {
   students: number;
   discount: `${Discount}`;
 }
-
-/** The API's `students` limit (apps/api pricing.dto: 1–20). */
-export const STUDENTS_MIN = 1;
-export const STUDENTS_MAX = 20;
 
 export const DEFAULT_SELECTION: Selection = {
   country: 'SA',
