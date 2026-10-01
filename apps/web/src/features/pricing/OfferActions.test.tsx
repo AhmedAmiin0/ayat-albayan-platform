@@ -13,7 +13,7 @@ describe('OfferActions', () => {
   it('copies the site offer text and says so', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined);
     vi.stubGlobal('navigator', { clipboard: { writeText } });
-    render(<OfferActions quote={KW} />);
+    render(<OfferActions quote={KW} stale={false} />);
     fireEvent.click(screen.getByRole('button', { name: t.pricing.cta }));
     expect(await screen.findByRole('status')).toHaveProperty('textContent', t.pricing.copied);
     expect(writeText).toHaveBeenCalledWith(offerText(KW, t.pricing));
@@ -21,17 +21,29 @@ describe('OfferActions', () => {
 
   it('fails gracefully without a clipboard and points to WhatsApp', async () => {
     vi.stubGlobal('navigator', {});
-    render(<OfferActions quote={KW} />);
+    render(<OfferActions quote={KW} stale={false} />);
     fireEvent.click(screen.getByRole('button', { name: t.pricing.cta }));
     expect(await screen.findByRole('status')).toHaveProperty('textContent', t.pricing.copyFailed);
   });
 
   it('opens WhatsApp with the same offer text', () => {
-    render(<OfferActions quote={KW} />);
+    render(<OfferActions quote={KW} stale={false} />);
     const link = screen.getByRole('link', { name: t.pricing.sendWhatsapp });
     const text = new URL(link.getAttribute('href') ?? '').searchParams.get('text');
     expect(text).toBe(offerText(KW, t.pricing));
     expect(text).toContain('36 د.ك');
     expect(link.getAttribute('rel')).toContain('noopener');
+  });
+
+  it('while the quote belongs to the previous choice nothing can be copied or sent', () => {
+    const writeText = vi.fn().mockResolvedValue(undefined);
+    vi.stubGlobal('navigator', { clipboard: { writeText } });
+    render(<OfferActions quote={KW} stale />);
+    const copy = screen.getByRole('button', { name: t.pricing.cta });
+    expect(copy).toHaveProperty('disabled', true);
+    fireEvent.click(copy);
+    expect(writeText).not.toHaveBeenCalled();
+    expect(screen.queryByRole('link', { name: t.pricing.sendWhatsapp })).toBeNull();
+    expect(screen.getByRole('button', { name: t.pricing.sendWhatsapp })).toHaveProperty('disabled', true);
   });
 });

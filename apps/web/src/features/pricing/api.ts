@@ -1,9 +1,8 @@
 import {
+  CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
-  lessonsOf,
   STUDENTS_MIN,
   type CatalogResponse,
-  type Discount,
   type PackageId,
   type PricingDuration,
   type QuoteResponse,
@@ -27,14 +26,15 @@ export interface Selection {
   /** Lessons for «عدد مخصوص» (1–60); kept when another package is picked. */
   count: number;
   students: number;
-  discount: Discount;
+  /** Percent 0–100: a pill or the free field. */
+  discount: number;
 }
 
 export const INITIAL_SELECTION: Selection = {
   country: 'SA',
   duration: DEFAULT_DURATION,
   pkg: 'standard',
-  count: lessonsOf('starter'),
+  count: CUSTOM_COUNT_DEFAULT,
   students: STUDENTS_MIN,
   discount: 0,
 };

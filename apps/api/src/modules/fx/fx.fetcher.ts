@@ -17,7 +17,8 @@ export interface FxFetcher {
   latest(): Promise<FxSnapshot>;
 }
 
-const TIMEOUT_MS = 5_000;
+// A quote waits for this call (at most once per retry window), so keep it short.
+const TIMEOUT_MS = 3_000;
 const rateMap = z.record(z.string(), z.number());
 // open.er-api.com (`rates`) and the keyed v6.exchangerate-api.com (`conversion_rates`) share this shape.
 const response = z.object({

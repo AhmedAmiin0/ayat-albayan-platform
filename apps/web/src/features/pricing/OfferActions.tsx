@@ -8,13 +8,25 @@ import { waLink } from './format';
 
 type Outcome = 'copied' | 'failed' | null;
 
+export interface OfferActionsProps {
+  quote: Quote;
+  /** The card still shows the previous choice's price (debounce or fetch): nothing may be sent. */
+  stale: boolean;
+}
+
 /**
  * «انسخ العرض للعميل» (the screen's one filled button) and «أرسله على واتساب», both with the
  * site's offer text. No clipboard (http, old browser, denied) → an error toast; WhatsApp still works.
  */
-export function OfferActions({ quote }: { quote: Quote }) {
+export function OfferActions({ quote, stale }: OfferActionsProps) {
   const [outcome, setOutcome] = useState<Outcome>(null);
   const text = offerText(quote, t.pricing);
+  const wa = (
+    <>
+      <Icon name="chat" />
+      {t.pricing.sendWhatsapp}
+    </>
+  );
 
   async function copy() {
     try {
@@ -27,13 +39,20 @@ export function OfferActions({ quote }: { quote: Quote }) {
 
   return (
     <div className="flex flex-wrap gap-2.5">
-      <Button onClick={() => void copy()}>{t.pricing.cta}</Button>
-      <Button asChild variant="secondary">
-        <a href={waLink(text)} target="_blank" rel="noopener noreferrer">
-          <Icon name="chat" />
-          {t.pricing.sendWhatsapp}
-        </a>
+      <Button disabled={stale} onClick={() => void copy()}>
+        {t.pricing.cta}
       </Button>
+      {stale ? (
+        <Button variant="secondary" disabled>
+          {wa}
+        </Button>
+      ) : (
+        <Button asChild variant="secondary">
+          <a href={waLink(text)} target="_blank" rel="noopener noreferrer">
+            {wa}
+          </a>
+        </Button>
+      )}
       {outcome && (
         <Toast
           key={outcome}

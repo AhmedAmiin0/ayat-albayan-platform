@@ -71,12 +71,12 @@ test('«عدد مخصوص» asks by count, and steps the count', async () => {
   await renderWithQuery(<PricingScreen />);
   await screen.findByText(p.packages.bulk.name);
   await fireEvent.press(screen.getByRole('radio', { name: p.customLabel }));
-  expect(lastPath()).toBe('/pricing/quote?count=8&duration=45&country=SA&students=1&discount=0');
+  expect(lastPath()).toBe('/pricing/quote?count=10&duration=45&country=SA&students=1&discount=0');
   // Two steppers now: the lesson count comes before the students.
   const [countMore] = screen.getAllByRole('button', { name: p.increase });
   if (!countMore) throw new Error('no count stepper');
   await fireEvent.press(countMore);
-  expect(lastPath()).toContain('count=9');
+  expect(lastPath()).toContain('count=11');
 });
 
 test('weekly: duration is fixed at 90, students and discount go to the API', async () => {
@@ -90,6 +90,17 @@ test('weekly: duration is fixed at 90, students and discount go to the API', asy
   await fireEvent.press(screen.getByRole('radio', { name: p.discounts['15'] }));
   expect(lastPath()).toBe(
     '/pricing/quote?tier=weekly&duration=45&country=SA&students=2&discount=15',
+  );
+});
+
+test('the free discount field sends any 0–100, as the site allows', async () => {
+  mockApiFetch.mockResolvedValue(bulkSa);
+  await renderWithQuery(<PricingScreen />);
+  await screen.findByText(p.packages.bulk.name);
+  // The pills share the step's name; the free field is the one holding the default «0».
+  await fireEvent.changeText(screen.getByDisplayValue('0'), '12.5');
+  expect(lastPath()).toBe(
+    '/pricing/quote?tier=standard&duration=45&country=SA&students=1&discount=12.5',
   );
 });
 

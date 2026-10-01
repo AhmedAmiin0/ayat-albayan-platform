@@ -1,4 +1,4 @@
-import { counted, type Quote } from '@ab/shared';
+import { counted, formatAmount, type Quote } from '@ab/shared';
 import { formatDate } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 import type { FxRate } from './api';
@@ -34,6 +34,15 @@ export function fxLine(fx: FxRate): string {
   if (fx.fallback) return t.pricing.fx.fallback;
   const line = fx.ageHours === null ? t.pricing.fx.rateDate : t.pricing.fx.stale;
   return line.replace('{date}', formatDate(fx.date));
+}
+
+/** The polite live-region line: the package, its price, and the final total when it differs. */
+export function quoteSummary(q: Quote): string {
+  const money = (n: number) => `${formatAmount(n)} ${t.pricing.currencies[q.currency]}`;
+  const head = `${packageCopy(q.package).name} (${sessionsOf(q)}): ${money(q.price)}`;
+  if (q.students === 1 && q.discount === 0) return head;
+  const label = q.discount > 0 ? t.pricing.afterDiscount : t.pricing.total;
+  return `${head}، ${label}: ${money(q.afterDiscount)}`;
 }
 
 /** wa.me with no number: WhatsApp asks whom to send the offer to. */

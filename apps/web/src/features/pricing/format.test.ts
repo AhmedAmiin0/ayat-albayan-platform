@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
 import type { FxRate } from './api';
-import { durationLabel, fxLine, sessionsOf, waLink } from './format';
+import { quote } from '@ab/shared';
+import { durationLabel, fxLine, quoteSummary, sessionsOf, waLink } from './format';
 
 const FX: FxRate = {
   quote: 'USD',
@@ -37,6 +38,16 @@ describe('pricing display text', () => {
     expect(fxLine({ ...FX, ageHours: 30 })).toContain(t.pricing.fx.stale.split('{date}')[0]);
     expect(fxLine({ ...FX, provider: 'peg', date: null, fallback: true })).toBe(
       t.pricing.fx.fallback,
+    );
+  });
+
+  it('sums a quote up for screen readers: price, then the final total when it differs', () => {
+    const one = quote({ tier: 'standard', duration: 45, country: 'SA', students: 1, discount: 0 });
+    expect(quoteSummary(one)).toBe(`${t.pricing.packages.standard.name} (12 حلقة): 180 ر.س`);
+    const three = { ...one, students: 3, total: 540, discount: 10, afterDiscount: 486 };
+    expect(quoteSummary(three)).toContain(`${t.pricing.afterDiscount}: 486 ر.س`);
+    expect(quoteSummary({ ...three, discount: 0, afterDiscount: 540 })).toContain(
+      `${t.pricing.total}: 540 ر.س`,
     );
   });
 

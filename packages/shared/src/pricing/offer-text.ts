@@ -1,4 +1,5 @@
-// The calculator's «انسخ العرض للعميل» WhatsApp text (docs/08 §3), one line per item.
+// The calculator's «انسخ العرض للعميل» WhatsApp text (docs/08 §3), one line per item; the greeting
+// and the package share the first line, as on the site.
 // Labels come from ar.json: pass `ar.pricing` as `t`.
 import { counted, type PluralForm } from '../plural.js';
 import type { PackageId } from './catalog.js';
@@ -36,8 +37,7 @@ function packageLine(q: Quote, t: OfferLabels): string {
 export function offerText(q: Quote, t: OfferLabels): string {
   const money = (n: number) => `${formatAmount(n)} ${t.currencies[q.currency]}`;
   const lines = [
-    t.waIntro,
-    packageLine(q, t),
+    `${t.waIntro} ${packageLine(q, t)}`,
     `${t.studentsLabel}: ${q.students}`,
     `${t.total}: ${money(q.total)}`,
   ];

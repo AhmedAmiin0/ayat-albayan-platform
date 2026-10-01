@@ -68,10 +68,10 @@ describe('FxService.rateSarTo (docs/08 §4)', () => {
     expect((await fx.service.rateSarTo('USD')).fallback).toBe(true);
   });
 
-  it('a failed save falls back like a failed fetch', async () => {
+  it('a failed save still quotes the rate just fetched', async () => {
     fx.queries.newest.mockResolvedValue(fxRow({ fetched_at: hoursAgo(30) }));
     fx.queries.save.mockRejectedValue(new Error('db: down'));
-    expect((await fx.service.rateSarTo('USD')).ageHours).toBe(5);
+    expect(await fx.service.rateSarTo('USD')).toMatchObject({ rate: 0.2666, ageHours: null });
   });
 
   it('concurrent stale quotes share one API call', async () => {

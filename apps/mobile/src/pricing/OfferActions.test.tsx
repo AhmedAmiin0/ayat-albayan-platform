@@ -19,8 +19,7 @@ test('«أرسله على واتساب» opens wa.me with the site’s offer tex
   expect(url).toBe(`https://wa.me/?text=${encodeURIComponent(offerText(bulkSa, p))}`);
   const text = decodeURIComponent(url.split('?text=')[1] ?? '');
   expect(text.split('\n')).toEqual([
-    p.waIntro,
-    `${p.packages.bulk.name} (${p.packages.bulk.sessions} - ${p.durations['45']} ${p.perCircle})`,
+    `${p.waIntro} ${p.packages.bulk.name} (${p.packages.bulk.sessions} - ${p.durations['45']} ${p.perCircle})`,
     `${p.studentsLabel}: 2`,
     `${p.total}: 770 ${p.currencies.SAR}`,
     `${p.discountLabel}: 10%`,

@@ -11,6 +11,7 @@ import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { Section } from '@/more/Section';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { DiscountField } from './DiscountField';
 import type { CountryChoice, PlanChoice, Selection } from './selection';
 import { Stepper } from './Stepper';
 
@@ -102,6 +103,7 @@ export function PricingSteps({ selection: s, onChange }: PricingStepsProps) {
           accessibilityLabel={p.steps.discount}
           role="radiogroup"
         />
+        <DiscountField value={s.discount} onChange={(discount) => onChange({ discount })} />
       </Section>
     </>
   );

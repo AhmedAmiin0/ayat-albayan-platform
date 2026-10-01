@@ -2,13 +2,16 @@ import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
   DEFAULT_DURATION,
+  DISCOUNT_MAX,
   DISCOUNTS,
+  parseDiscount,
   PRICING_DURATIONS,
   SITE_COUNTRIES,
   STUDENTS_MAX,
   STUDENTS_MIN,
   type PackageId,
 } from '@ab/shared';
+import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 import { OTHER, type Selection } from './api';
 import { SegmentStep } from './SegmentStep';
@@ -97,8 +100,25 @@ export function CalcSteps({ sel, onChange }: CalcStepsProps) {
         label={t.pricing.steps.discount}
         options={DISCOUNT_OPTIONS}
         value={String(sel.discount)}
-        onChange={(v) => onChange({ discount: DISCOUNTS.find((d) => String(d) === v) ?? 0 })}
-      />
+        onChange={(v) => onChange({ discount: parseDiscount(v) })}
+      >
+        {/* The site's free field beside the pills: any 0–100, decimals allowed. */}
+        <span className="flex items-center gap-1.5 text-sm text-ink-2">
+          <Input
+            type="number"
+            inputMode="decimal"
+            dir="ltr"
+            min={0}
+            max={DISCOUNT_MAX}
+            step="any"
+            aria-label={t.pricing.steps.discount}
+            value={sel.discount}
+            onChange={(e) => onChange({ discount: parseDiscount(e.target.value) })}
+            className="w-20 text-center tabular-nums [&[dir=ltr]]:text-center"
+          />
+          <span aria-hidden="true">%</span>
+        </span>
+      </SegmentStep>
     </div>
   );
 }

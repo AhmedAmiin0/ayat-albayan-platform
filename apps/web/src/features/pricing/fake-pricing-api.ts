@@ -1,4 +1,4 @@
-import { DISCOUNTS, PACKAGE_IDS, PRICING_DURATIONS, quote, type Quote } from '@ab/shared';
+import { PACKAGE_IDS, parseDiscount, PRICING_DURATIONS, quote, type Quote } from '@ab/shared';
 import type { CatalogResponse, FxRate, QuoteResponse } from './api';
 
 // Test double for GET /pricing/quote and /pricing/catalog: answers the way PricingService does
@@ -19,7 +19,7 @@ function options(params: URLSearchParams) {
     country,
     duration: PRICING_DURATIONS.find((d) => String(d) === params.get('duration')) ?? 45,
     students: Number(params.get('students') ?? 1),
-    discount: DISCOUNTS.find((d) => String(d) === params.get('discount')) ?? 0,
+    discount: parseDiscount(params.get('discount') ?? '0'),
     usdRate: FAKE_FX.rate,
     fx: country ? null : FAKE_FX,
   };

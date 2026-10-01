@@ -47,8 +47,12 @@ describe('PricingPage (docs/08)', () => {
   it('quotes another country in USD with the rate date and the attribution link', async () => {
     renderPage();
     pick(t.pricing.steps.country, t.pricing.otherCountry);
-    const link = await screen.findByRole('link', { name: t.pricing.fx.attribution });
-    expect(link.getAttribute('href')).toBe('https://www.exchangerate-api.com');
+    // Under the quote and under the «أسعار كل الخطط» table: both show converted prices.
+    const links = () => screen.queryAllByRole('link', { name: t.pricing.fx.attribution });
+    await waitFor(() => expect(links()).toHaveLength(2));
+    for (const link of links()) {
+      expect(link.getAttribute('href')).toBe('https://www.exchangerate-api.com');
+    }
     expect((await price()).textContent).toContain('48 $');
     expect(apiFetch).toHaveBeenCalledWith(
       '/pricing/quote?duration=45&tier=standard&students=1&discount=0',

@@ -69,7 +69,9 @@ export function QuoteCard({ quote: q }: { quote: QuoteResponse }) {
         <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
           {q.students > 1 ? `${p.packagePrice} ${p.perStudent}` : p.packagePrice}
         </AppText>
+        {/* Android reads the new price out when it changes (docs/07 a11y). */}
         <AppText
+          accessibilityLiveRegion="polite"
           style={{
             fontFamily: type.display,
             fontSize: type.size.h1,

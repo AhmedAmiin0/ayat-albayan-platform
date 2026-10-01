@@ -7,6 +7,8 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { catalogQuery, INITIAL_SELECTION, quoteQuery, type Selection } from './api';
 import { CalcSteps } from './CalcSteps';
+import { quoteSummary } from './format';
+import { FxNote } from './FxNote';
 import { PlansTable } from './PlansTable';
 import { QuoteResult } from './QuoteResult';
 import { useDebounced } from './use-debounced';
@@ -21,7 +23,8 @@ export function PricingPage() {
   const [sel, setSel] = useState<Selection>(INITIAL_SELECTION);
   const asked = useDebounced(sel);
   const quote = useQuery(quoteQuery(asked));
-  const catalog = useQuery(catalogQuery(asked));
+  // Until the debounce settles and the new quote arrives, the card shows the previous choice.
+  const stale = sel !== asked || quote.isPlaceholderData;
   const onChange = useCallback(
     (patch: Partial<Selection>) => setSel((s) => ({ ...s, ...patch })),
     [],
@@ -45,6 +48,10 @@ export function PricingPage() {
           <h2 id="pricing-result" className={sectionTitle}>
             {t.pricing.resultTitle}
           </h2>
+          {/* Screen readers hear the new price once it is in (not the whole card). */}
+          <p className="sr-only" aria-live="polite">
+            {quote.data && !stale ? quoteSummary(quote.data) : ''}
+          </p>
           {quote.isError && <FormAlert>{t.common.error}</FormAlert>}
           {quote.isPending && <p className="py-6 text-ink-3">{t.common.loading}</p>}
           {quote.data && (
@@ -54,23 +61,32 @@ export function PricingPage() {
                 quote.isPlaceholderData && 'opacity-60',
               )}
             >
-              <QuoteResult quote={quote.data} />
+              <QuoteResult quote={quote.data} stale={stale} />
             </div>
           )}
         </section>
       </div>
 
-      <section aria-labelledby="pricing-table" className="mt-10 grid gap-3">
-        <div>
-          <h2 id="pricing-table" className={sectionTitle}>
-            {t.pricing.tableTitle}
-          </h2>
-          <p className="text-xs text-ink-3">{t.pricing.tableSubtitle}</p>
-        </div>
-        {catalog.isError && <FormAlert>{t.common.error}</FormAlert>}
-        {catalog.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
-        {catalog.data && <PlansTable packages={catalog.data.packages} />}
-      </section>
+      <CatalogSection asked={asked} />
     </>
+  );
+}
+
+/** «أسعار كل الخطط» (GET /pricing/catalog), with the rate's source when the prices are converted. */
+function CatalogSection({ asked }: { asked: Selection }) {
+  const catalog = useQuery(catalogQuery(asked));
+  return (
+    <section aria-labelledby="pricing-table" className="mt-10 grid gap-3">
+      <div>
+        <h2 id="pricing-table" className={sectionTitle}>
+          {t.pricing.tableTitle}
+        </h2>
+        <p className="text-xs text-ink-3">{t.pricing.tableSubtitle}</p>
+      </div>
+      {catalog.isError && <FormAlert>{t.common.error}</FormAlert>}
+      {catalog.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {catalog.data && <PlansTable packages={catalog.data.packages} />}
+      {catalog.data?.fx && <FxNote fx={catalog.data.fx} />}
+    </section>
   );
 }

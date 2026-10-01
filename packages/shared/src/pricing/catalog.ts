@@ -10,8 +10,9 @@ export const DEFAULT_DURATION: PricingDuration = 45;
 export const PACKAGE_IDS = ['starter', 'standard', 'premium', 'bulk', 'weekly', 'monthly'] as const;
 export type PackageId = (typeof PACKAGE_IDS)[number];
 
+/** The site's discount pills. Its number field next to them takes any 0–100 (see parseDiscount). */
 export const DISCOUNTS = [0, 5, 10, 15] as const;
-export type Discount = (typeof DISCOUNTS)[number];
+export const DISCOUNT_MAX = 100;
 
 export interface Tier {
   id: 'starter' | 'standard' | 'premium' | 'bulk';
@@ -42,9 +43,11 @@ export const MONTHLY = {
 /** Custom lesson counts the calculator accepts. */
 export const CUSTOM_COUNT_MIN = 1;
 export const CUSTOM_COUNT_MAX = 60;
-/** Students per quote the calculator accepts. */
+/** «عدد مخصوص» opens on 10 lessons, as on the site. */
+export const CUSTOM_COUNT_DEFAULT = 10;
+/** Students per quote the calculator accepts (the site's stepper stops at 6). */
 export const STUDENTS_MIN = 1;
-export const STUDENTS_MAX = 20;
+export const STUDENTS_MAX = 6;
 
 export function lessonsOf(id: PackageId): number {
   if (id === 'weekly') return WEEKLY.lessons;
@@ -57,6 +60,18 @@ export function basePrice(id: PackageId, duration: PricingDuration): number {
   if (id === 'weekly') return WEEKLY.base;
   if (id === 'monthly') return MONTHLY.base[duration];
   return tierOf(id).base[duration];
+}
+
+/**
+ * The site's discount field: `Number(text) || 0`, clamped to 0–100. Also takes Arabic digits and
+ * «٫» / «,» as the decimal point (a phone's Arabic keypad).
+ */
+export function parseDiscount(text: string): number {
+  const western = text
+    .trim()
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[٫,]/g, '.');
+  return Math.min(DISCOUNT_MAX, Math.max(0, Number(western) || 0));
 }
 
 function tierOf(id: Tier['id']): Tier {

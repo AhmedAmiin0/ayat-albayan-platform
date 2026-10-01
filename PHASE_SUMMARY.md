@@ -521,3 +521,98 @@ Mobile tests by area (tests, suites in brackets):
 - **Sign-out edge cases:** a sign-out forced by a 401 skips the token DELETE, and an offline sign-out leaves the token on the profile. The next admin who registers on that phone takes the token off every other profile, so pushes never reach the wrong person; a phone nobody signs in to again keeps it until pruning arrives with push sending.
 - **Login edge case:** if the role check after a successful sign-in gets a 401/403, the login button stays busy.
 - **No NetInfo:** offline fetches fail, and the cached data stays on screen. Coming back to the foreground refetches (TanStack `focusManager` on `AppState`); a regained connection alone does not.
+
+# Pricing & currency (pulled forward from Phase 3)
+
+Owner request: every price on **ayatalbayan.com/calculator**, with a currency API, and USD for any country whose currency the site doesn't have. Spec: `docs/08-pricing.md`.
+
+## What was built
+- **`@ab/shared` `pricing/`**: the site's catalog (`catalog.ts`), countries and currencies (`currency.ts`), the price rules (`price.ts`), one calculator result (`quote.ts`) and the WhatsApp offer text (`offer-text.ts`). Every number the platform quotes comes from `catalog.ts`.
+- **API**:
+  - `GET /pricing/catalog?country&duration` returns the six packages for one student.
+  - `GET /pricing/quote?tier|count&country&duration&students&discount` returns one quote.
+  - Both are admin-only and zod-validated. A USD answer carries the rate it used (`fx`).
+  - The `fx` module (`FxService`, `OpenErApiFetcher`, `FxQueries`) reads and writes the `fx_rates` table (migration `20261001000061_fx_rates.sql`, RLS admin-read).
+- **Web** `/admin/pricing` «حاسبة الأسعار»:
+  - The site's five steps.
+  - The result card with «انسخ العرض للعميل» / «أرسله على واتساب».
+  - The «أسعار كل الخطط» table.
+- **Mobile** More → «حاسبة الأسعار»: the same steps, the quote card, and WhatsApp/share actions.
+- **No client prices anything.** Web and mobile only build the query. The web `fake-pricing-api.ts` (test-only) is the one client-side `quote()` call.
+
+## Price rules (docs/08 §1–3, the site's arithmetic)
+- **Countries:** SA/AE/QA are quoted at the SAR base as-is. KW/OM are `ceil(base / 10)`. Any other or unknown country is USD: `ceil(round2(base × rate))`.
+- **Packages and durations:** six packages at 30/45/60 min (default 45). Weekly is a fixed 145 for 4 × 90 min.
+- **Custom count** (1–60, opens on 10): the bulk per-lesson rate from 28 lessons up, the starter rate below.
+- **Students** run from 1 to 6. Total = price × students.
+- **Discount:** the 0/5/10/15 pills plus the site's free field (any 0–100, decimals allowed). After discount = `round(total × (1 − d/100))`.
+- **Per lesson** = price × (1 − d) / lessons. It is rounded like the site's `Intl.NumberFormat` (half-up on the shortest decimal form), by `roundCents` with no Intl.
+- **Bulk savings badge:** «وفّر n%» against the starter rate.
+- **Offer text:** the site's lines, greeting and package together on line 1.
+- **Verified exact against the site's own functions** (the verifier's `site-ref.mjs`, copied verbatim from the live `calculator-Dz_7C7yN.js` / `index-P7HmNtLA.js`): 59,400 combinations with 0 mismatches. That is 5 countries × 3 durations × 6 packages + custom 1–60 × students 1–6 × discounts 0/5/10/15/7/12.5/20/33.3/99.99/100.
+
+## Currency API and fallback chain (docs/08 §4)
+- **Provider:** ExchangeRate-API open access, `https://open.er-api.com/v6/latest/SAR` (`FX_API_URL`, so a keyed URL can replace it). Each USD price shows the attribution link to https://www.exchangerate-api.com and the rate's date.
+- **Fallback chain:**
+  1. A stored rate fetched less than 24 h ago is used.
+  2. Otherwise the API is called (3 s timeout) and the whole update is stored.
+  3. If the call fails, the newest stored rate is used and its age is shown.
+  4. If nothing was ever stored, USD uses the 3.75 peg, marked `fallback`.
+- **After a failed call or a failed save,** the API is not called again for 30 minutes. It is rate-limited, and quotes would otherwise each wait for the timeout.
+- **A rate that was fetched but couldn't be saved** is still used for that quote.
+- **Provider data is checked before it is stored.** A SAR→USD rate more than 5% from 1/3.75, or a publication time in the future, counts as a failed call.
+- **Tests never touch the network.** The fetcher is injected (`FX_FETCHER`). E2E seeds a stored rate, and `FX_API_URL` is unroutable there.
+
+## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+- **Gate:** green, **23/23 tasks**. E2E: **20 passed**, including `pricing.spec.ts` on desktop and mobile. The only lint output is 3 older web complexity warnings.
+- **Unit tests per package:** api 388, web 261, @ab/shared 445, mobile 251, wa-stub 5, **1,350 in total**.
+- **Pricing tests now:**
+  - shared 231 in 8 files
+  - api 48 in 4 files
+  - web 29 in 7 files
+  - mobile 23 in 6 suites
+- **Added by the verifier fixes (+78):**
+  - **shared +59:**
+    - `quote.per-lesson.test.ts`: the 40 former per-lesson mismatches, each for students 1–6, plus `roundCents` edge cases.
+    - `catalog.test.ts`: `parseDiscount`, including Arabic digits, «٫» and clamping.
+    - One offer-text case.
+  - **api +11:**
+    - `fx.service.retry.test.ts`: the 30-minute window, the peg with one call per window, a save that keeps failing, and 4 implausible provider updates plus the 5% boundary.
+    - Controller: a free discount of 12.5%, and 400s for `discount=101/-1/abc` and `students=7`.
+  - **web +5:**
+    - `PricingPage.flow.test.tsx`: the free discount, the custom count opening on 10, and stale offer actions plus the live announcement.
+    - An OfferActions stale case.
+    - A `quoteSummary` case.
+  - **mobile +3:** the free discount, `DiscountField`, and `parseDiscount` in `quoteParams`.
+
+## Verifier findings: 19 (one reported twice, one informational: the coverage list)
+**Fixed:**
+- **Per-lesson rounding (high):** `perLesson` used `Math.round(x × 100) / 100` and was off by 0.01 from the site in 40 site-country configurations. Now `roundCents` gives 0 mismatches.
+- **Offer text line 1 (medium):** the greeting and the package are one line, as on the site. Every combination now matches the site byte for byte.
+- **A stale quote could be sent from web (medium, reported twice):** `stale = sel !== asked || isPlaceholderData` disables «انسخ العرض للعميل» and «أرسله على واتساب» during the debounce and the fetch. While stale, the WhatsApp control is a disabled button, not a link. Mobile already did this.
+- **Free discount (medium):** the API accepts any 0–100. Web has a number field and mobile a decimal-pad field beside the pills. Both are parsed by the shared `parseDiscount`, which is the site's `Number(v) || 0` clamped.
+- **FX throttling (medium):** the 30-minute retry window and the 3 s timeout described above.
+- **Result not announced (medium):** web has an `sr-only` `aria-live="polite"` line with the package, price and final total, filled only once the new quote is in. Mobile's hero price has `accessibilityLiveRegion="polite"`.
+- **No attribution on the converted table (medium):** `FxNote` is under «أسعار كل الخطط» when the catalog is in USD. The table moved into its own `CatalogSection`.
+- **Lows fixed:**
+  - Students are capped at 6, and the custom count opens on 10, both as on the site.
+  - Provider data is sanity-checked.
+  - A failed save no longer throws away a good fetched rate.
+  - docs/08 §1 records the USD custom-count base (fractional SAR, the cheaper reading).
+
+**Not done, on purpose:**
+- **Headline (low):** the card still headlines the package price and lists the total and after-discount below it. The site headlines the after-discount total. Every value is there, and changing it touches both cards and the e2e figure assertion.
+- **Radiogroup on web steps (low):** the shared `SegmentedControl` stays a group of `aria-pressed` buttons. It is keyboard-operable, and it is shared with filter bars. A radio variant would also change the e2e `pick()` helper.
+- **Attribution wording (low):** this is an owner question (below).
+- **`%` and date isolation on web (low):** these render correctly today. Web still shows the Arabic medium date and mobile the ISO day.
+- **Mobile catalog table (low):** this is scope. The phone gets the single quote, and the web has the full table.
+
+## Owner notes
+- **Egypt is quoted in USD.** EGP is not one of the site's currencies, so Egypt-based guardians (and any other country) get USD at the API rate. Teacher payouts stay in EGP (R-TCH-01).
+- **Provider attribution:** the link reads «أسعار الصرف من ExchangeRate-API» and points to exchangerate-api.com. docs/08 §4 quotes the provider's own wording, «Rates By Exchange Rate API». Please confirm the Arabic wording is acceptable; if not, change `pricing.fx.attribution` in `packages/shared/i18n/ar.json`.
+- **Keep prices in sync with the site.** If ayatalbayan.com/calculator changes, update these places, then run `pnpm test:all`. The tier tests pin today's numbers, so they will fail until updated.
+  - **Base prices, lesson counts, the weekly/monthly packages, the discount pills and the limits:** `packages/shared/src/pricing/catalog.ts`.
+  - **Countries, currencies and divisors:** `packages/shared/src/pricing/currency.ts`.
+  - **Package names, taglines and the offer wording:** `ar.json` under `pricing`.
+  - **The spec tables:** docs/08 §1–3.
+- **Free discount:** staff can type any 0–100%, as on the site. The family-discount hint still points to the sales sheet.

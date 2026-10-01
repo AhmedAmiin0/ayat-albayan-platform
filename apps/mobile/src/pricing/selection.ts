@@ -1,8 +1,8 @@
 import {
+  CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
-  STARTER,
+  parseDiscount,
   STUDENTS_MIN,
-  type Discount,
   type PackageId,
   type PricingDuration,
   type SiteCountry,
@@ -23,14 +23,15 @@ export interface Selection {
   /** Lessons for 'custom' only. */
   count: number;
   students: number;
-  discount: `${Discount}`;
+  /** A pill's value or what was typed in the free field («12.5», «١٢٫٥», «»); parsed when sent. */
+  discount: string;
 }
 
 export const DEFAULT_SELECTION: Selection = {
   country: 'SA',
   duration: `${DEFAULT_DURATION}`,
   plan: 'standard',
-  count: STARTER.lessons,
+  count: CUSTOM_COUNT_DEFAULT,
   students: STUDENTS_MIN,
   discount: '0',
 };
@@ -44,6 +45,6 @@ export function quoteParams(s: Selection): ListParams {
     duration: s.duration,
     country: s.country === 'other' ? undefined : s.country,
     students: s.students,
-    discount: s.discount,
+    discount: parseDiscount(s.discount),
   };
 }

@@ -4,13 +4,12 @@ import {
   lessonsOf,
   TIERS,
   WEEKLY,
-  type Discount,
   type PackageId,
   type PricingDuration,
   type Tier,
 } from './catalog.js';
 import { currencyForCountry, siteCountry, type CurrencyIso, type SiteCountry } from './currency.js';
-import { customBase, priceIn, starterRateBase } from './price.js';
+import { customBase, priceIn, roundCents, starterRateBase } from './price.js';
 
 /** A package, or a custom lesson count (1–60), never both. */
 export type QuotePackage =
@@ -21,7 +20,8 @@ export type QuoteOptions = QuotePackage & {
   duration: PricingDuration;
   country?: string | null | undefined;
   students: number;
-  discount: Discount;
+  /** Percent, 0–100 (the site's pills or its free field). */
+  discount: number;
   /** SAR→USD; required when the country is quoted in USD. */
   usdRate?: number | undefined;
 };
@@ -39,10 +39,10 @@ export interface Quote {
   students: number;
   /** price × students. */
   total: number;
-  discount: Discount;
+  discount: number;
   /** round(total × (1 − discount%)). */
   afterDiscount: number;
-  /** One student's price per lesson after the discount, 2 decimals max. */
+  /** One student's price per lesson after the discount, 2 decimals max (rounded like the site). */
   perLesson: number;
   /** Featured (bulk) tier only: the same lessons at the starter rate, and the saving vs it. */
   insteadOf: number | null;
@@ -78,7 +78,7 @@ export function quote(o: QuoteOptions): Quote {
     total,
     discount: o.discount,
     afterDiscount: Math.round(total * keep),
-    perLesson: Math.round(((price * keep) / lessons) * 100) / 100,
+    perLesson: roundCents((price * keep) / lessons),
     insteadOf,
     savingsPct: insteadOf === null ? null : Math.round((1 - price / insteadOf) * 100),
     popular: tier?.popular === true,

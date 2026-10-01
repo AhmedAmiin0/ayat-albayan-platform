@@ -2,7 +2,7 @@ import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
   DEFAULT_DURATION,
-  DISCOUNTS,
+  DISCOUNT_MAX,
   PACKAGE_IDS,
   PRICING_DURATIONS,
   STUDENTS_MAX,
@@ -24,7 +24,8 @@ const shape = {
 const quoteShape = {
   ...shape,
   students: z.coerce.number().int().min(STUDENTS_MIN).max(STUDENTS_MAX).default(STUDENTS_MIN),
-  discount: z.coerce.number().pipe(z.literal(DISCOUNTS)).default(0),
+  /** Percent: the site's 0/5/10/15 pills or its free field (any number 0–100). */
+  discount: z.coerce.number().min(0).max(DISCOUNT_MAX).default(0),
 };
 
 export const catalogQuery = z.object(shape);

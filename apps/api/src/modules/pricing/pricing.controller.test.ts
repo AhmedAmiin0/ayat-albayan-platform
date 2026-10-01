@@ -39,8 +39,10 @@ describe('/pricing access and validation', () => {
     'count=61',
     'count=2.5',
     'tier=starter&students=0',
-    'tier=starter&students=21',
-    'tier=starter&discount=20',
+    'tier=starter&students=7',
+    'tier=starter&discount=101',
+    'tier=starter&discount=-1',
+    'tier=starter&discount=abc',
     'tier=starter&duration=50',
   ])('quote ?%s is 400', async (qs) => {
     expect((await h.get(`/pricing/quote?${qs}`)).statusCode).toBe(400);
@@ -93,6 +95,11 @@ describe('GET /pricing/quote', () => {
       perLesson: 1.35,
       fx: null,
     });
+  });
+
+  it('a free-field discount (12.5 %), as the site allows', async () => {
+    const body = (await h.get('/pricing/quote?tier=starter&country=SA&students=6&discount=12.5')).json();
+    expect(body).toMatchObject({ total: 720, discount: 12.5, afterDiscount: 630, perLesson: 13.13 });
   });
 
   it('custom count in QA', async () => {

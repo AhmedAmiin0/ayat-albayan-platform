@@ -35,3 +35,16 @@ export function priceIn({ base, country, usdRate }: PriceInOptions): number {
   if (usdRate === undefined || !(usdRate > 0)) throw new Error('usdRate required for a USD price');
   return Math.ceil(Math.round(base * usdRate * 100) / 100);
 }
+
+/**
+ * 2 decimals, half-up on the shortest decimal form: what the site's
+ * `Intl.NumberFormat('en-US', { maximumFractionDigits: 2 })` shows. 9.825 → 9.83 and
+ * 10.924999999999999 → 10.92, where Math.round(x × 100) / 100 gives 9.82 and 10.93. No Intl
+ * (Hermes). Non-negative input; below 0.001 is 0 (String() turns exponential under 1e-6).
+ */
+export function roundCents(x: number): number {
+  if (x < 0.001) return 0;
+  const [int = '0', frac = ''] = String(x).split('.');
+  const cents = Number(int + (frac + '00').slice(0, 2));
+  return (cents + (Number(frac[2] ?? '0') >= 5 ? 1 : 0)) / 100;
+}

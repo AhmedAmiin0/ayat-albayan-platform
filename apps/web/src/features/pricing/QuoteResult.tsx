@@ -32,8 +32,14 @@ function Savings({ q }: { q: QuoteResponse }) {
   );
 }
 
+export interface QuoteResultProps {
+  quote: QuoteResponse;
+  /** The quote belongs to the previous choice: the offer buttons are disabled. */
+  stale: boolean;
+}
+
 /** One quote from GET /pricing/quote (docs/08 §3): nothing here is computed on the client. */
-export function QuoteResult({ quote: q }: { quote: QuoteResponse }) {
+export function QuoteResult({ quote: q, stale }: QuoteResultProps) {
   const copy = packageCopy(q.package);
   const captionId = useId();
   return (
@@ -82,7 +88,7 @@ export function QuoteResult({ quote: q }: { quote: QuoteResponse }) {
         )}
       </dl>
       {q.fx && <FxNote fx={q.fx} />}
-      <OfferActions quote={q} />
+      <OfferActions quote={q} stale={stale} />
       <p className="text-xs text-ink-3 text-pretty">{t.pricing.trialNote}</p>
     </div>
   );
