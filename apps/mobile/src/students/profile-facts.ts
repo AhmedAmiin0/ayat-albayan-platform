@@ -1,0 +1,27 @@
+import { t } from '@/lib/i18n';
+import type { StudentProfile } from './types';
+
+export interface Fact {
+  label: string;
+  value: string;
+  /** IANA zone and the like: render inside <Ltr>. */
+  ltr?: boolean;
+}
+
+const filled = (v: string | null): v is string => v !== null && v.trim() !== '';
+
+/** The quick view's facts, in the profile form's order; empty ones are left out, the teacher never. */
+export function profileFacts(s: StudentProfile): Fact[] {
+  const text: [string, string | null][] = [
+    [t.students.level, s.level],
+    [t.students.memorized, s.memorized],
+    [t.students.goal, s.goal],
+    [t.students.riwaya, s.riwaya],
+  ];
+  return [
+    { label: t.students.program, value: t.enums.program[s.program] },
+    ...text.flatMap(([label, value]) => (filled(value) ? [{ label, value: value.trim() }] : [])),
+    ...(filled(s.tz) ? [{ label: t.students.tz, value: s.tz, ltr: true }] : []),
+    { label: t.students.teacher, value: s.teacher?.display_name_ar ?? t.students.noTeacher },
+  ];
+}

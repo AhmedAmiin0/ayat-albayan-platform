@@ -2,11 +2,9 @@ import { fireEvent, render, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 import More from '../../app/(tabs)/more/index';
-import Students from '../../app/(tabs)/students/index';
 
 // Placeholders until the builders fill the tabs: a title and an honest empty state, nothing fake.
 test.each([
-  ['students', Students, t.nav.students],
   ['more', More, t.mobile.more],
 ])('%s tab: Amiri title and empty state', async (_name, Tab, title) => {
   await render(<Tab />);
