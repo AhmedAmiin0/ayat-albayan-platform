@@ -7,8 +7,11 @@ import {
   gridIsValid,
   gridToSlots,
   gridTz,
+  problemIndex,
   removeRange,
+  timeOptions,
   updateRange,
+  WEEK_ORDER,
 } from './grid';
 
 const CAIRO = 'Africa/Cairo';
@@ -84,5 +87,27 @@ describe('availability grid validation (R-TCH-02)', () => {
   it('a grid is valid only when every day is', () => {
     expect(gridIsValid({ ...emptyGrid(), 2: [r('16:00', '17:00')] })).toBe(true);
     expect(gridIsValid({ ...emptyGrid(), 2: [r('16:00', '17:00'), r('16:30', '18:00')] })).toBe(false);
+  });
+});
+
+describe('availability editor view helpers (docs/07 §8)', () => {
+  it('lists the week from السبت to الجمعة', () => {
+    expect(WEEK_ORDER).toEqual([6, 0, 1, 2, 3, 4, 5]);
+  });
+
+  it('offers 30-minute steps plus 23:59 and keeps an off-grid stored value', () => {
+    const steps = timeOptions('16:00');
+    expect(steps).toHaveLength(49);
+    expect(steps.slice(0, 3)).toEqual(['00:00', '00:30', '01:00']);
+    expect(steps.at(-1)).toBe('23:59');
+    expect(timeOptions('16:15')).toContain('16:15');
+    expect(timeOptions('16:15').indexOf('16:15')).toBe(timeOptions('16:15').indexOf('16:30') - 1);
+  });
+
+  it('points at the range that breaks the day', () => {
+    expect(problemIndex([r('16:00', '17:00')])).toBe(-1);
+    expect(problemIndex([r('16:00', '17:00'), r('18:00', '17:00')])).toBe(1);
+    expect(problemIndex([r('17:30', '19:00'), r('16:00', '18:00')])).toBe(0);
+    expect(problemIndex([r('15:00', '18:00'), r('17:30', '20:00')])).toBe(1);
   });
 });

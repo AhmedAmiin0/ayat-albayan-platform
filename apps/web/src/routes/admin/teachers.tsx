@@ -1,4 +1,5 @@
-import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router';
+import { createFileRoute, Outlet, useChildMatches, useNavigate } from '@tanstack/react-router';
+import { useCallback } from 'react';
 import { TeachersPage } from '@/features/teachers/TeachersPage';
 
 /** `?page=n` (1-based); omitted on page 1 so nav links need no search. */
@@ -15,6 +16,18 @@ export const Route = createFileRoute('/admin/teachers')({
 
 function TeachersRoute() {
   const { page = 1 } = Route.useSearch();
+  const navigate = useNavigate();
   const hasChild = useChildMatches().length > 0;
-  return hasChild ? <Outlet /> : <TeachersPage page={page} />;
+  const onOpen = useCallback(
+    (teacherId: string) => void navigate({ to: '/admin/teachers/$teacherId', params: { teacherId } }),
+    [navigate],
+  );
+  if (hasChild) return <Outlet />;
+  return (
+    <TeachersPage
+      page={page}
+      onOpen={onOpen}
+      onPage={(p) => void navigate({ to: '/admin/teachers', search: { page: p } })}
+    />
+  );
 }

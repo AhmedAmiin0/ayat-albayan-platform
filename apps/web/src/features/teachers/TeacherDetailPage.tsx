@@ -1,65 +1,81 @@
+import { teacherStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Cartouche } from '@/components/ui/cartouche';
+import { PageHead } from '@/components/ui/page';
+import { StatusChip } from '@/components/ui/status-chip';
+import { Tabs } from '@/components/ui/tabs';
 import { t } from '@/lib/i18n';
-import { availabilityQuery, teacherQuery } from './api';
+import { availabilityQuery, teacherQuery, type Teacher } from './api';
 import { AvailabilityGrid } from './AvailabilityGrid';
+import { FormAlert } from './FormAlert';
 import { gridTz } from './grid';
+import { RatesTable } from './RatesTable';
 import { TeacherDialog } from './TeacherDialog';
+import { TeacherFacts } from './TeacherFacts';
+import { TeacherMeta } from './TeacherMeta';
 import { TimeOffList } from './TimeOffList';
 
-/** Teacher profile: edit, weekly availability grid, time-off (R-TCH-01, R-TCH-02). */
+type Tab = 'data' | 'availability';
+// TODO(R-TCH-03, R-TCH-04): «الطلاب» and «المستحقات» tabs once their data exists.
+const TABS: { value: Tab; label: string }[] = [
+  { value: 'data', label: t.teachers.tabData },
+  { value: 'availability', label: t.availability.title },
+];
+
+/** «المواعيد المتاحة» tab: the weekly editor, then time-off beside the rates (docs/07 §8). */
+function AvailabilityPanel({ teacher }: { teacher: Teacher }) {
+  const availability = useQuery(availabilityQuery(teacher.id));
+  return (
+    <>
+      {availability.data ? (
+        <AvailabilityGrid
+          key={teacher.id}
+          teacherId={teacher.id}
+          tz={gridTz(availability.data, teacher.tz)}
+          rows={availability.data}
+        />
+      ) : availability.isError ? (
+        <FormAlert>{t.common.error}</FormAlert>
+      ) : (
+        <p className="py-6 text-center text-ink-3">{t.common.loading}</p>
+      )}
+      <div className="mt-7 grid gap-7 shell:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
+        <TimeOffList teacherId={teacher.id} />
+        <RatesTable teacher={teacher} />
+      </div>
+    </>
+  );
+}
+
+/** Teacher profile (R-TCH-01, R-TCH-02): cartouche name + status, meta line, tabs. */
 export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   const teacher = useQuery(teacherQuery(teacherId));
-  const availability = useQuery(availabilityQuery(teacherId));
+  const [tab, setTab] = useState<Tab>('availability');
   const [editing, setEditing] = useState(false);
 
-  if (teacher.isError) {
-    return (
-      <p role="alert" className="text-destructive">
-        {t.common.notFound}
-      </p>
-    );
-  }
-  if (!teacher.data) return <p className="text-muted-foreground">{t.common.loading}</p>;
+  if (teacher.isError) return <FormAlert>{t.common.notFound}</FormAlert>;
+  if (!teacher.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  const data = teacher.data;
 
   return (
-    <div className="flex flex-col gap-8">
-      <div className="flex items-start justify-between gap-4">
-        <div>
-          <Link to="/admin/teachers" className="text-sm text-muted-foreground hover:underline">
-            {t.common.back}
-          </Link>
-          <h2 className="text-xl font-semibold">{teacher.data.display_name_ar}</h2>
-          {teacher.data.display_name_en && (
-            <p dir="ltr" className="text-start text-muted-foreground">
-              {teacher.data.display_name_en}
-            </p>
-          )}
+    <>
+      <PageHead className="mb-3.5">
+        <Cartouche>{data.display_name_ar}</Cartouche>
+        <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
+        <div className="ms-auto flex gap-2.5">
+          <Button variant="secondary" onClick={() => setEditing(true)}>
+            {t.teachers.edit}
+          </Button>
         </div>
-        <Button onClick={() => setEditing(true)}>{t.common.edit}</Button>
+      </PageHead>
+      <TeacherMeta teacher={data} />
+      <Tabs label={t.teachers.profile} tabs={TABS} value={tab} onChange={setTab} />
+      <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>
+        {tab === 'availability' ? <AvailabilityPanel teacher={data} /> : <TeacherFacts teacher={data} />}
       </div>
-      <section className="flex flex-col gap-3">
-        <h3 className="text-lg font-semibold">{t.availability.title}</h3>
-        {availability.data ? (
-          <AvailabilityGrid
-            key={teacherId}
-            teacherId={teacherId}
-            tz={gridTz(availability.data, teacher.data.tz)}
-            rows={availability.data}
-          />
-        ) : (
-          <p className="text-muted-foreground">
-            {availability.isError ? t.common.error : t.common.loading}
-          </p>
-        )}
-      </section>
-      <section className="flex flex-col gap-3">
-        <h3 className="text-lg font-semibold">{t.availability.timeOff}</h3>
-        <TimeOffList teacherId={teacherId} />
-      </section>
-      {editing && <TeacherDialog teacher={teacher.data} onClose={() => setEditing(false)} />}
-    </div>
+      {editing && <TeacherDialog teacher={data} onClose={() => setEditing(false)} />}
+    </>
   );
 }
