@@ -188,7 +188,10 @@
     "reclassifyAsApplicant": "نقل لطلبات التوظيف",
     "reclassifyConfirm": "الرقم ده هيتشال من المحادثات ويتنقل لطلبات التوظيف. متأكد؟",
     "reclassified": "اتنقل لطلبات التوظيف",
-    "convert": "تحويل لطالب"
+    "convert": "تحويل لطالب",
+    "prevPage": "السابق",
+    "nextPage": "التالي",
+    "pageOf": "صفحة {page} من {pages}"
   },
   "jobApplicants": {
     "title": "طلبات التوظيف",
@@ -199,7 +202,8 @@
     "recitation": "تسجيل التلاوة",
     "notes": "ملاحظات",
     "fromLead": "جاي من المحادثات",
-    "empty": "مفيش طلبات توظيف"
+    "empty": "مفيش طلبات توظيف",
+    "createdAt": "تاريخ الطلب"
   },
   "enums": {
     "leadStatus": {
