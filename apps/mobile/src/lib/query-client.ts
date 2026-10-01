@@ -36,6 +36,9 @@ export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
   maxAge: DAY,
   // A new app version may change response shapes: its first launch starts from an empty cache.
   buster: Constants.expoConfig?.version ?? 'dev',
+  // TanStack saves only `success` queries: the first failed refetch offline would drop the saved
+  // list from disk. Keep every query that still holds data, so a restart offline shows it.
+  dehydrateOptions: { shouldDehydrateQuery: (query) => query.state.data !== undefined },
 };
 
 /** Sign-out: nothing of the previous session survives, in memory or on disk. */
