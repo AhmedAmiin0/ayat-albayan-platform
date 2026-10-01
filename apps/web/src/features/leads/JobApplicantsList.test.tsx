@@ -42,9 +42,11 @@ describe('JobApplicantsList (R-LEAD-04)', () => {
     expect(apiFetch).toHaveBeenCalledWith('/job-applicants?page=1&pageSize=25');
   });
 
-  it('shows a pipeline status without an ar.json label as its raw value', async () => {
-    renderList([row({ status: 'interview' })]);
-    expect(await screen.findByText('interview')).toBeTruthy();
+  // Uses a value that will never get a label, so it survives the integrator adding
+  // ar.json labels for reviewing/interview (TODO(R-LEAD-04)).
+  it('shows a status without an ar.json label as its raw value', async () => {
+    renderList([row({ status: 'not_a_status' })]);
+    expect(await screen.findByText('not_a_status')).toBeTruthy();
   });
 
   it('shows the Arabic empty state', async () => {
