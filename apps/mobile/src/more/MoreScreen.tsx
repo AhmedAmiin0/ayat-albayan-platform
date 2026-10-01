@@ -9,7 +9,7 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { AppearancePicker } from './AppearancePicker';
 import { signOutDevice } from './sign-out';
 
-/** «المزيد» (R-MOB-02): the read-only lists that don't earn a tab, the appearance, sign-out. */
+/** «المزيد» (R-MOB-02): the read-only lists that don't earn a tab, the price calculator, the appearance, sign-out. */
 export function MoreScreen() {
   const [leaving, setLeaving] = useState(false);
   const logout = () => {
@@ -23,6 +23,7 @@ export function MoreScreen() {
       <View style={{ marginHorizontal: -16 }}>
         <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />
         <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />
+        <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />
       </View>
       <AppearancePicker />
       <View style={{ alignItems: 'flex-start' }}>

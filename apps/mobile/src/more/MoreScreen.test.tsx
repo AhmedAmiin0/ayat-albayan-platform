@@ -19,13 +19,15 @@ beforeEach(async () => {
 });
 afterEach(() => jest.restoreAllMocks());
 
-test('«المزيد» title; المعلمين and طلبات التوظيف open their lists', async () => {
+test('«المزيد» title; المعلمين, طلبات التوظيف and حاسبة الأسعار open their screens', async () => {
   await render(<MoreScreen />);
   expect(screen.getByRole('header', { name: t.mobile.more })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.nav.teachers }));
   expect(router.push).toHaveBeenCalledWith('/more/teachers');
   await fireEvent.press(screen.getByRole('button', { name: t.nav.jobApplicants }));
   expect(router.push).toHaveBeenCalledWith('/more/job-applicants');
+  await fireEvent.press(screen.getByRole('button', { name: t.pricing.title }));
+  expect(router.push).toHaveBeenCalledWith('/more/pricing');
 });
 
 test('المظهر: تلقائي by default; ليلي applies dark at once and is saved', async () => {
