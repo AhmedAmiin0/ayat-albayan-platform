@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, Text, View } from 'react-native';
 import { signIn } from '@/auth/sign-in';
@@ -22,9 +21,10 @@ export default function Login() {
     setBusy(true);
     setError(null);
     const res = await signIn({ email: email.trim(), password });
+    // On success the auth gate swaps this screen for the tabs (Stack.Protected); stay busy till then.
+    if (res.ok) return;
     setBusy(false);
-    if (res.ok) router.replace('/home');
-    else setError(res.error);
+    setError(res.error);
   };
 
   return (

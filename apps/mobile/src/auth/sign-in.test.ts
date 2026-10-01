@@ -31,6 +31,13 @@ test('non-admin is signed out again', async () => {
   expect(mockSignOut).toHaveBeenCalled();
 });
 
+test('role check failing (offline) signs out again with the common error', async () => {
+  mockSignInWithPassword.mockResolvedValue({ error: null });
+  mockApiFetch.mockRejectedValue(new TypeError('Network request failed'));
+  expect(await signIn(creds)).toEqual({ ok: false, error: t.common.error });
+  expect(mockSignOut).toHaveBeenCalled();
+});
+
 test('admin signs in', async () => {
   mockSignInWithPassword.mockResolvedValue({ error: null });
   mockApiFetch.mockResolvedValue({ role: 'admin' });

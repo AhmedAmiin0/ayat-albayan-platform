@@ -1,2 +1,2 @@
 import { reactConfig } from '@ab/config/eslint';
-export default reactConfig({ ignores: ['jest.config.cjs'] });
+export default reactConfig({ ignores: ['jest.config.cjs', 'jest.setup.cjs'] });

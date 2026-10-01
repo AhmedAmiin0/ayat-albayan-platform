@@ -1,0 +1,55 @@
+import { Text, View } from 'react-native';
+import { t } from '@/lib/i18n';
+import { shape, type, useTheme } from '@/theme';
+import { Button } from './Button';
+
+export interface InlineConfirmProps {
+  /** The question, e.g. «شكلها طلب توظيف مش طالب.» */
+  message: string;
+  /** Primary action, named by its verb («نقل لطلبات التوظيف»); defaults to «تأكيد». */
+  confirmLabel?: string;
+  /** Ghost way out («سيبها هنا»); defaults to «إلغاء». */
+  cancelLabel?: string;
+  onConfirm: () => void;
+  onCancel: () => void;
+  /** While the confirm request runs; pass the confirm label that says so. */
+  busy?: boolean;
+}
+
+/** docs/07 §9 inline confirm strip: the question, then [cancel ghost][confirm primary] at 44pt. */
+export function InlineConfirm(props: InlineConfirmProps) {
+  const { message, onConfirm, onCancel, busy = false } = props;
+  const { color } = useTheme();
+  return (
+    <View
+      accessibilityLiveRegion="polite"
+      style={{
+        gap: 10,
+        padding: 12,
+        borderRadius: shape.radius.md,
+        borderWidth: 1,
+        borderColor: color.goldSoft,
+        backgroundColor: color.goldWash,
+      }}
+    >
+      <Text
+        style={{
+          fontFamily: type.ui[500],
+          fontSize: type.size.sm,
+          lineHeight: type.lineHeight(type.size.sm),
+          color: color.ink,
+        }}
+      >
+        {message}
+      </Text>
+      <View style={{ flexDirection: 'row', gap: 8 }}>
+        <View style={{ flex: 1 }}>
+          <Button variant="ghost" label={props.cancelLabel ?? t.common.cancel} onPress={onCancel} />
+        </View>
+        <View style={{ flex: 1 }}>
+          <Button label={props.confirmLabel ?? t.common.confirm} onPress={onConfirm} busy={busy} />
+        </View>
+      </View>
+    </View>
+  );
+}

@@ -24,7 +24,9 @@
     "dashboardTitle": "متابعة الطالب"
   },
   "mobile": {
-    "today": "النهارده"
+    "today": "النهارده",
+    "more": "المزيد",
+    "retry": "جرّب تاني"
   },
   "common": {
     "loading": "جاري التحميل…",

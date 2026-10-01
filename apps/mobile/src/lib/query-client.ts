@@ -1,0 +1,46 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
+import { QueryCache, QueryClient } from '@tanstack/react-query';
+import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
+import Constants from 'expo-constants';
+import { ApiError } from './api';
+import { supabase } from './supabase';
+
+// R-MOB-03: reads survive a restart or a dead connection (the last good answer stays on screen).
+const DAY = 24 * 60 * 60 * 1000;
+
+/** A 4xx never succeeds on retry; network errors and 5xx get TanStack's default three tries. */
+export function shouldRetry(failureCount: number, error: unknown): boolean {
+  if (error instanceof ApiError && error.status < 500) return false;
+  return failureCount < 3;
+}
+
+/** Expired or revoked session: sign out; the auth gate then shows /login and clears the caches. */
+export function signOutOn401(error: unknown): void {
+  if (error instanceof ApiError && error.status === 401) void supabase.auth.signOut();
+}
+
+export const queryClient = new QueryClient({
+  queryCache: new QueryCache({ onError: signOutOn401 }),
+  // gcTime must be ≥ the persist maxAge, or restored queries are collected before a screen reads them.
+  defaultOptions: { queries: { gcTime: DAY, retry: shouldRetry } },
+});
+
+export const persister = createAsyncStoragePersister({
+  storage: AsyncStorage,
+  key: 'ab-query-cache',
+});
+
+export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
+  persister,
+  maxAge: DAY,
+  // A new app version may change response shapes: its first launch starts from an empty cache.
+  buster: Constants.expoConfig?.version ?? 'dev',
+};
+
+/** Sign-out: nothing of the previous session survives, in memory or on disk. */
+export async function clearQueryCaches(): Promise<void> {
+  await queryClient.cancelQueries();
+  queryClient.clear();
+  await persister.removeClient();
+}
