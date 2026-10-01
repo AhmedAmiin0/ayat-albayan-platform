@@ -16,6 +16,14 @@ describe('normalizePhone — accepted (R-STU-02)', () => {
     ['00201001234567', '+201001234567', 'EG'],
     ['01001234567', '+201001234567', 'EG'],
     ['(+20) 112-345-6789', '+201123456789', 'EG'],
+    // Bare international digits, the WhatsApp wa_id shape (no + or 00).
+    ['201001234567', '+201001234567', 'EG'],
+    ['201123456789', '+201123456789', 'EG'],
+    ['201223456789', '+201223456789', 'EG'],
+    ['201523456789', '+201523456789', 'EG'],
+    ['20 100 123 4567', '+201001234567', 'EG'],
+    ['٢٠١٠٠١٢٣٤٥٦٧', '+201001234567', 'EG'],
+    ['966551234567', '+966551234567', 'SA'],
   ])('%j → %s (%s)', (input, e164, country) => {
     expect(normalizePhone(input)).toEqual({ ok: true, e164, country });
   });
@@ -28,7 +36,7 @@ describe('normalizePhone — accepted (R-STU-02)', () => {
     expect(normalizePhone(input)).toEqual({ ok: true, e164, country: null });
   });
 
-  it.each(['0501234567', '01001234567', '+447911123456', '966501234567'])(
+  it.each(['0501234567', '01001234567', '+447911123456', '966501234567', '201001234567'])(
     '%s output satisfies the DB e164 domain',
     (input) => {
       const r = normalizePhone(input);

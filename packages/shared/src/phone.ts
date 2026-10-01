@@ -23,6 +23,10 @@ function withCountryCode(digits: string): string | null {
   if (digits.startsWith('+')) return digits;
   if (digits.startsWith('00')) return `+${digits.slice(2)}`;
   if (digits.startsWith('966')) return `+${digits}`;
+  // Bare 20 + Egyptian mobile: the WhatsApp wa_id shape. Unambiguous: no local format starts with 2.
+  if (/^201[0125][0-9]{8}$/.test(digits)) return `+${digits}`;
+  // TODO(R-STU-02): other bare international numbers (971…, 44…) stay rejected: without a + they are
+  // indistinguishable from local numbers. The Phase 4 webhook knows wa_id is international and adds the +.
   if (/^05[0-9]{8}$/.test(digits)) return `+966${digits.slice(1)}`;
   if (/^01[0-9]{9}$/.test(digits)) return `+20${digits.slice(1)}`;
   return null;
@@ -30,7 +34,8 @@ function withCountryCode(digits: string): string | null {
 
 /**
  * Normalises a phone to E.164. Accepts +966 / 00966 / 966 / 05xxxxxxxx (Saudi),
- * +20 / 0020 / 01xxxxxxxxx (Egypt), and any other country written with + or 00.
+ * +20 / 0020 / 2010xxxxxxxx (bare mobile, as WhatsApp sends it) / 01xxxxxxxxx (Egypt),
+ * and any other country written with + or 00.
  * Rejects handles, letters and short numbers.
  */
 export function normalizePhone(input: string): PhoneResult {
