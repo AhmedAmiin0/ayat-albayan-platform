@@ -137,7 +137,15 @@
     "availability": "المواعيد المتاحة",
     "empty": "لسه مفيش معلمين",
     "created": "المعلم/ة اتسجل",
-    "updated": "البيانات اتحدثت"
+    "updated": "البيانات اتحدثت",
+    "edit": "تعديل بيانات المعلم/ة",
+    "phoneTaken": "الرقم ده متسجل لمعلم/ة تاني",
+    "programsRequired": "اختار تخصص واحد على الأقل",
+    "invalidLink": "اللينك مش صحيح، انسخه تاني",
+    "invalidNumber": "اكتب رقم صحيح",
+    "prevPage": "السابق",
+    "nextPage": "التالي",
+    "pageInfo": "صفحة {page} من {pages}"
   },
   "availability": {
     "title": "المواعيد المتاحة",
@@ -156,7 +164,9 @@
     "startsAt": "من",
     "endsAt": "إلى",
     "reason": "السبب",
-    "timeOffEmpty": "مفيش إجازات"
+    "timeOffEmpty": "مفيش إجازات",
+    "tzHint": "المواعيد بتوقيت {tz}",
+    "timeOffTzHint": "الإجازات بتوقيت جهازك"
   },
   "leads": {
     "title": "كل المحادثات",
