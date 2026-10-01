@@ -14,14 +14,15 @@ describe('AdminNav', () => {
     [t.nav.teachers, '/admin/teachers'],
     [t.nav.leads, '/admin/leads'],
     [t.nav.jobApplicants, '/admin/job-applicants'],
+    [t.pricing.title, '/admin/pricing'],
   ])('links %s to %s', (label, href) => {
     render(<AdminNav />);
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);
   });
 
-  it('links only the four Phase 1 routes', () => {
+  it('links only the routes that exist: the four Phase 1 screens and the price calculator', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(4);
+    expect(screen.getAllByRole('link')).toHaveLength(5);
   });
 
   it('shows real counts; work counts are saffron and say what they are', () => {
