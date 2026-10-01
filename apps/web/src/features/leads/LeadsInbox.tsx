@@ -1,66 +1,77 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
-import { DataTable } from '@/components/DataTable';
+import { Cartouche } from '@/components/ui/cartouche';
+import { PageHead } from '@/components/ui/page';
+import { Pager } from '@/components/ui/pager';
+import { Toast, type ToastProps } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
-import { leadColumns } from './leadColumns';
+import { LeadList } from './LeadList';
 import { leadsQuery, reclassifyLead } from './leads.api';
 import { LeadStatusTabs } from './LeadStatusTabs';
-import { Pager } from './Pager';
-import type { LeadRow, LeadSearch } from './types';
+import { LeadsToolbar } from './LeadsToolbar';
+import { parseLeadSearch, type LeadSearch } from './types';
 
 export interface LeadsInboxProps {
   search: LeadSearch;
   onSearch: (next: LeadSearch) => void;
 }
 
-/** Admin lead inbox list (R-LEAD-01/02, no messaging yet) with one-click reclassify (R-LEAD-04). */
+type Notice = Pick<ToastProps, 'message' | 'tone'>;
+
+/**
+ * Admin lead inbox (R-LEAD-01/02, docs/07 §9): cartouche + total, search and source filter, the
+ * status fihris beside the rows, one-click reclassify with an inline confirm (R-LEAD-04).
+ */
 export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
   const queryClient = useQueryClient();
   const leads = useQuery(leadsQuery(search));
-  const [notice, setNotice] = useState<string | null>(null);
+  const [notice, setNotice] = useState<Notice | null>(null);
+  const [confirmId, setConfirmId] = useState<string | null>(null);
   const reclassify = useMutation({
-    mutationFn: (row: LeadRow) => reclassifyLead(row.id),
+    mutationFn: reclassifyLead,
     onSuccess: async () => {
-      setNotice(t.leads.reclassified);
+      setConfirmId(null);
+      setNotice({ message: t.leads.reclassified });
       await queryClient.invalidateQueries({ queryKey: ['leads'] });
       await queryClient.invalidateQueries({ queryKey: ['job-applicants'] });
     },
-    onError: () => setNotice(t.common.error),
+    onError: () => setNotice({ message: t.common.error, tone: 'error' }),
   });
-
-  const columns = leadColumns({
-    onReclassify: (row) => {
-      if (window.confirm(t.leads.reclassifyConfirm)) reclassify.mutate(row);
-    },
-    busyId: reclassify.isPending ? (reclassify.variables?.id ?? null) : null,
-  });
+  // Any filter change goes back to page 1; parseLeadSearch drops blank / unknown values.
+  const filter = (patch: Record<string, unknown>) => onSearch(parseLeadSearch({ ...search, ...patch, page: 1 }));
 
   return (
-    <section className="space-y-3">
-      <h2 className="text-xl font-semibold">{t.leads.title}</h2>
-      <LeadStatusTabs
-        value={search.status}
-        onChange={(status) => onSearch(status ? { status, page: 1 } : { page: 1 })}
-      />
-      {notice && <p role="status">{notice}</p>}
-      {leads.isError && <p role="alert">{t.common.error}</p>}
-      {leads.isPending && <p>{t.common.loading}</p>}
-      {leads.data && (
-        <>
-          <DataTable
-            columns={columns}
-            data={leads.data.items}
-            getRowId={(r) => r.id}
-            emptyText={t.leads.empty}
-          />
-          <Pager
-            page={search.page}
-            total={leads.data.total}
-            pageSize={leads.data.pageSize}
-            onPage={(page) => onSearch({ ...search, page })}
-          />
-        </>
-      )}
-    </section>
+    <>
+      <PageHead>
+        <Cartouche>{t.leads.title}</Cartouche>
+        {leads.data && <span className="text-sm text-ink-3 tabular-nums">{leads.data.total}</span>}
+      </PageHead>
+      <LeadsToolbar search={search} onFilter={filter} />
+      <div className="grid gap-[22px] shell:grid-cols-[196px_minmax(0,1fr)]">
+        <LeadStatusTabs value={search.status} onChange={(status) => filter({ status })} />
+        <div className="min-w-0">
+          {leads.isError && <p role="alert">{t.common.error}</p>}
+          {leads.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+          {leads.data && (
+            <>
+              <LeadList
+                leads={leads.data.items}
+                confirmId={confirmId}
+                busy={reclassify.isPending}
+                onConfirm={setConfirmId}
+                onMove={(id) => reclassify.mutate(id)}
+              />
+              <Pager
+                page={search.page}
+                total={leads.data.total}
+                pageSize={leads.data.pageSize}
+                onPage={(page) => onSearch({ ...search, page })}
+              />
+            </>
+          )}
+        </div>
+      </div>
+      {notice && <Toast {...notice} onDismiss={() => setNotice(null)} />}
+    </>
   );
 }

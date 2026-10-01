@@ -10,6 +10,8 @@ export const leadsQuery = (s: LeadSearch) =>
     queryFn: () => {
       const params = new URLSearchParams({ page: String(s.page), pageSize: String(PAGE_SIZE) });
       if (s.status) params.set('status', s.status);
+      if (s.source) params.set('source', s.source);
+      if (s.q) params.set('q', s.q);
       return apiFetch<Page<LeadRow>>(`/leads?${params}`);
     },
   });

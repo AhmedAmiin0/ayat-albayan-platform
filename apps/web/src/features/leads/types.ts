@@ -1,4 +1,4 @@
-import { LEAD_STATUSES, type LeadSource, type LeadStatus } from '@ab/shared';
+import { LEAD_SOURCES, LEAD_STATUSES, type LeadSource, type LeadStatus } from '@ab/shared';
 
 // Row shapes returned by the API (`type`, not `interface`, for DataTable's RowData).
 export type LeadRow = {
@@ -31,8 +31,8 @@ export type Page<T> = {
   pageSize: number;
 };
 
-/** Inbox URL state: status tab + page (server-side paging, R-NFR-08). */
-export type LeadSearch = { status?: LeadStatus; page: number };
+/** Inbox URL state: status tab, source filter, name/phone search, page (server-side, R-NFR-08). */
+export type LeadSearch = { status?: LeadStatus; source?: LeadSource; q?: string; page: number };
 export type PageSearch = { page: number };
 
 function toPage(value: unknown): number {
@@ -40,10 +40,16 @@ function toPage(value: unknown): number {
   return Number.isInteger(n) && n > 1 ? n : 1;
 }
 
-/** Route `validateSearch`: unknown status → all, bad page → 1. */
+/** Route `validateSearch`: unknown status/source → all, blank search dropped, bad page → 1. */
 export function parseLeadSearch(s: Record<string, unknown>): LeadSearch {
+  const out: LeadSearch = { page: toPage(s['page']) };
   const status = LEAD_STATUSES.find((x) => x === s['status']);
-  return status ? { status, page: toPage(s['page']) } : { page: toPage(s['page']) };
+  const source = LEAD_SOURCES.find((x) => x === s['source']);
+  const q = typeof s['q'] === 'string' ? s['q'].trim() : '';
+  if (status) out.status = status;
+  if (source) out.source = source;
+  if (q) out.q = q;
+  return out;
 }
 
 export function parsePageSearch(s: Record<string, unknown>): PageSearch {

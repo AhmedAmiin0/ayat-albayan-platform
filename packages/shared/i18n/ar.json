@@ -250,7 +250,10 @@
     "reply": "رد",
     "keepHere": "سيبها هنا",
     "looksLikeApplicant": "شكلها طلب توظيف مش طالب.",
-    "you": "إنت:"
+    "you": "إنت:",
+    "reclassifyRow": "نقل {name} لطلبات التوظيف",
+    "searchPlaceholder": "دوّر بالاسم أو الرقم",
+    "sourceAll": "المصدر: الكل"
   },
   "jobApplicants": {
     "title": "طلبات التوظيف",

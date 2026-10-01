@@ -35,7 +35,11 @@ describe('JobApplicantsList (R-LEAD-04)', () => {
   it('lists applicants with status label and CV link', async () => {
     renderList([row({})]);
     expect(await screen.findByText('أ. منى')).toBeTruthy();
-    expect(screen.getByText(t.enums.jobApplicantStatus.new)).toBeTruthy();
+    expect(screen.getByRole('heading', { level: 1, name: t.jobApplicants.title })).toBeTruthy();
+    expect(screen.getByText('+201001234567').getAttribute('dir')).toBe('ltr');
+    // A new applicant is not the admin's «دورك»: neutral, never saffron (docs/07 §6).
+    const chip = screen.getByText(t.enums.jobApplicantStatus.new).closest('[data-tone]');
+    expect(chip?.getAttribute('data-tone')).toBe('neutral');
     expect(screen.getByRole('link', { name: t.jobApplicants.cv }).getAttribute('href')).toBe(
       'https://example.com/cv.pdf',
     );
@@ -45,11 +49,12 @@ describe('JobApplicantsList (R-LEAD-04)', () => {
   // A value that will never get an ar.json label.
   it('shows a status without an ar.json label as its raw value', async () => {
     renderList([row({ status: 'not_a_status' })]);
-    expect(await screen.findByText('not_a_status')).toBeTruthy();
+    const raw = await screen.findByText('not_a_status');
+    expect(raw.closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
   });
 
   it('shows the Arabic empty state', async () => {
     renderList([]);
-    expect(await screen.findByText(t.jobApplicants.empty)).toBeTruthy();
+    expect(await screen.findByRole('heading', { name: t.jobApplicants.empty })).toBeTruthy();
   });
 });

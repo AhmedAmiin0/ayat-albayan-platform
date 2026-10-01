@@ -1,9 +1,13 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
+import { Tabs } from '@/components/ui/tabs';
 import { t } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
 
-const TABS: { value: LeadStatus | undefined; label: string }[] = [
-  { value: undefined, label: t.leads.filterAll },
+type Tab = LeadStatus | 'all';
+
+// Funnel order (LEAD_STATUSES). TODO(R-LEAD-02): per-status counts like page numbers once the API
+// returns them (the list endpoint only gives `total` for the current filter).
+const TABS: { value: Tab; label: string }[] = [
+  { value: 'all', label: t.leads.filterAll },
   ...LEAD_STATUSES.map((s) => ({ value: s, label: t.enums.leadStatus[s] })),
 ];
 
@@ -12,25 +16,15 @@ export interface LeadStatusTabsProps {
   onChange: (value: LeadStatus | undefined) => void;
 }
 
-/** Status filter tabs over the lead inbox (R-LEAD-02). */
+/** Status filter as a vertical fihris beside the list; chips under 900px (R-LEAD-02, docs/07 §9). */
 export function LeadStatusTabs({ value, onChange }: LeadStatusTabsProps) {
   return (
-    <div role="tablist" aria-label={t.leads.status} className="flex flex-wrap gap-1">
-      {TABS.map((tab) => (
-        <button
-          key={tab.value ?? 'all'}
-          type="button"
-          role="tab"
-          aria-selected={tab.value === value}
-          onClick={() => onChange(tab.value)}
-          className={cn(
-            'rounded-md px-3 py-1.5 text-sm',
-            tab.value === value ? 'bg-primary text-primary-foreground' : 'hover:bg-muted',
-          )}
-        >
-          {tab.label}
-        </button>
-      ))}
-    </div>
+    <Tabs
+      orientation="vertical"
+      label={t.leads.status}
+      tabs={TABS}
+      value={value ?? 'all'}
+      onChange={(tab) => onChange(tab === 'all' ? undefined : tab)}
+    />
   );
 }
