@@ -24,7 +24,7 @@ PW="$(sed -n 's/^db_password: //p' "$ART/supabase.md")"
 step "2/5 ship API source (HEAD $(git -C "$ROOT" rev-parse --short HEAD)) and rebuild the container"
 ssh "$SSH_HOST" "test -f $DEST/.env || { echo 'missing $DEST/.env, see docs/09-deployment.md'; exit 1; }"
 ssh "$SSH_HOST" "rm -rf $DEST/src.new && mkdir -p $DEST/src.new"
-git -C "$ROOT" archive --format=tar HEAD | ssh "$SSH_HOST" "tar -x -C $DEST/src.new"
+git -C "$ROOT" archive --format=tar HEAD | ssh "$SSH_HOST" "tar --no-same-owner -x -C $DEST/src.new"
 scp -q "$ROOT/deploy/staging/docker-compose.yml" "$SSH_HOST:$DEST/docker-compose.yml"
 ssh "$SSH_HOST" "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
   && docker compose up -d --build && docker image prune -f >/dev/null"
@@ -36,7 +36,7 @@ pnpm --dir "$ROOT" --filter web build
 
 step "4/5 upload web (atomic swap)"
 ssh "$SSH_HOST" "rm -rf $DEST/web.new && mkdir -p $DEST/web.new"
-tar -C "$ROOT/apps/web/dist" -cf - . | ssh "$SSH_HOST" "tar -x -C $DEST/web.new \
+tar -C "$ROOT/apps/web/dist" -cf - . | ssh "$SSH_HOST" "tar --no-same-owner -x -C $DEST/web.new && chmod -R o+rX $DEST/web.new \
   && rm -rf $DEST/web.old && { [ ! -d $DEST/web ] || mv $DEST/web $DEST/web.old; } && mv $DEST/web.new $DEST/web"
 
 step "5/5 health check"
