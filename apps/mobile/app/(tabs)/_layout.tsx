@@ -1,5 +1,6 @@
 import { Tabs } from 'expo-router';
 import { t } from '@/lib/i18n';
+import { usePushRegistration } from '@/push/usePushRegistration';
 import { type, useTheme } from '@/theme';
 import { TabIcon, type TabIconName } from '@/ui/TabIcon';
 
@@ -14,6 +15,8 @@ const TABS: { name: string; title: string; icon: TabIconName }[] = [
 
 export default function TabsLayout() {
   const { color } = useTheme();
+  // Admin-only tree: every sign-in and cold start registers this device (R-MOB-01).
+  usePushRegistration();
   return (
     <Tabs
       screenOptions={{

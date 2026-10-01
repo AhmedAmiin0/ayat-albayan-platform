@@ -1,12 +1,16 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter, screen } from 'expo-router/testing-library';
-import { Text } from 'react-native';
+import { Appearance, Text } from 'react-native';
 import { t } from '@/lib/i18n';
+import { APPEARANCE_KEY } from '@/more/appearance';
 import { TabStack } from '@/nav/TabStack';
+import { registerPush } from '@/push/registerPush';
 import TabsLayout from '../../app/(tabs)/_layout';
 import RootLayout from '../../app/_layout';
 
 // The real root + tabs layouts with stub screens: proves the gate decides what can be reached.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
+jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
 jest.mock('@/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };
@@ -37,6 +41,7 @@ const app = {
   '(tabs)/more/index': stub('more-screen'),
 };
 
+beforeEach(() => jest.clearAllMocks());
 afterEach(() => jest.useRealTimers());
 
 /** RNTL 14 renders asynchronously, so renderRouter hands back the pending render with getters on it. */
@@ -51,6 +56,7 @@ test('signed out: every route lands on /login', async () => {
   const router = await open('/students');
   expect(screen.getByText('login-screen')).toBeTruthy();
   expect(router.pathname()).toBe('/login');
+  expect(registerPush).not.toHaveBeenCalled();
 });
 
 test('admin: tabs in RTL order النهارده، المحادثات، الطلاب، المزيد', async () => {
@@ -67,6 +73,8 @@ test('admin: tabs in RTL order النهارده، المحادثات، الطل�
     t.mobile.more,
   ]);
   expect(screen.getByRole('button', { selected: true, name: t.mobile.today })).toBeTruthy();
+  // The admin tree registers this device for push (R-MOB-01).
+  expect(registerPush).toHaveBeenCalledTimes(1);
 });
 
 test('admin cannot sit on /login', async () => {
@@ -84,4 +92,14 @@ test('the gate flipping moves the screen: sign-in opens the tabs, sign-out retur
   await act(async () => mockGate.set('out'));
   expect(screen.getByText('login-screen')).toBeTruthy();
   expect(router.pathname()).toBe('/login');
+});
+
+test('boot re-applies the saved «المظهر» before the screens render', async () => {
+  const setScheme = jest.spyOn(Appearance, 'setColorScheme').mockImplementation(() => undefined);
+  await AsyncStorage.setItem(APPEARANCE_KEY, 'dark');
+  mockGate.initial = 'out';
+  await open('/');
+  expect(setScheme).toHaveBeenCalledWith('dark');
+  setScheme.mockRestore();
+  await AsyncStorage.clear();
 });

@@ -7,9 +7,11 @@ import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
+import { useEffect } from 'react';
 import { I18nManager } from 'react-native';
 import { useAuthGate } from '@/auth/use-auth-gate';
 import { persistOptions, queryClient } from '@/lib/query-client';
+import { restoreAppearance } from '@/more/appearance';
 import { useTheme } from '@/theme';
 
 I18nManager.allowRTL(true);
@@ -32,6 +34,10 @@ export default function RootLayout() {
   const [loaded, error] = useFonts(fonts);
   const gate = useAuthGate();
   const { color } = useTheme();
+  // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
+  useEffect(() => {
+    void restoreAppearance();
+  }, []);
   // On a font error fall through: the system Arabic font is better than a blank app.
   const ready = (loaded || error) && gate !== 'booting';
   return (
