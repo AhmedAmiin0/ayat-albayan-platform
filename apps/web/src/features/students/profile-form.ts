@@ -1,0 +1,62 @@
+import { studentUpdateSchema, type Program, type StudentStatus, type StudentUpdate } from '@ab/shared';
+import { t } from '@/lib/i18n';
+import type { StudentProfile } from './types';
+
+/** Editable profile fields (R-STU-05). Inputs hold strings; '' means "not set". */
+export type ProfileValues = {
+  name: string;
+  program: Program;
+  status: StudentStatus;
+  teacher_id: string;
+  tz: string;
+  level: string;
+  memorized: string;
+  goal: string;
+  riwaya: string;
+  meeting_link_override: string;
+  notes: string;
+};
+
+export const PROFILE_LABELS: Record<keyof ProfileValues, string> = {
+  name: t.students.name,
+  program: t.students.program,
+  status: t.students.status,
+  teacher_id: t.students.teacher,
+  tz: t.students.tz,
+  level: t.students.level,
+  memorized: t.students.memorized,
+  goal: t.students.goal,
+  riwaya: t.students.riwaya,
+  meeting_link_override: t.students.meetingLink,
+  notes: t.students.notes,
+};
+
+export function toProfileValues(p: StudentProfile): ProfileValues {
+  return {
+    name: p.name,
+    program: p.program,
+    status: p.status,
+    teacher_id: p.teacher_id ?? '',
+    tz: p.tz,
+    level: p.level ?? '',
+    memorized: p.memorized ?? '',
+    goal: p.goal ?? '',
+    riwaya: p.riwaya ?? '',
+    meeting_link_override: p.meeting_link_override ?? '',
+    notes: p.notes ?? '',
+  };
+}
+
+export type PatchResult = { ok: true; patch: StudentUpdate } | { ok: false; error: string };
+
+/** Values → PATCH body, validated with the shared schema the API uses. */
+export function toStudentPatch(values: ProfileValues): PatchResult {
+  const raw = Object.fromEntries(
+    Object.entries(values).map(([k, v]) => [k, v.trim() === '' ? null : v.trim()]),
+  );
+  const r = studentUpdateSchema.safeParse(raw);
+  if (r.success) return { ok: true, patch: r.data };
+  const key = String(r.error.issues[0]?.path[0] ?? '') as keyof ProfileValues;
+  const field = PROFILE_LABELS[key] ?? key;
+  return { ok: false, error: t.students.invalidField.replace('{field}', field) };
+}
