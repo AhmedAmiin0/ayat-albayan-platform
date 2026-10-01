@@ -23,6 +23,9 @@
   "portal": {
     "dashboardTitle": "متابعة الطالب"
   },
+  "mobile": {
+    "today": "النهارده"
+  },
   "common": {
     "loading": "جاري التحميل…",
     "error": "حصلت مشكلة، حاول تاني",
