@@ -16,7 +16,7 @@ export function teacherColumns(onEdit: (teacher: Teacher) => void) {
     }),
     col.accessor('programs', {
       header: () => t.teachers.programs,
-      cell: (c) => c.getValue().map((p) => t.enums.program[p]).join('، '),
+      cell: (c) => c.getValue().map((p) => t.enums.program[p]).join(t.teachers.listSeparator),
     }),
     col.accessor('phone_e164', {
       header: () => t.teachers.phone,

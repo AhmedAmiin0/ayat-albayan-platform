@@ -44,6 +44,7 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
         <h3 className="text-lg font-semibold">{t.availability.title}</h3>
         {availability.data ? (
           <AvailabilityGrid
+            key={teacherId}
             teacherId={teacherId}
             tz={gridTz(availability.data, teacher.data.tz)}
             rows={availability.data}

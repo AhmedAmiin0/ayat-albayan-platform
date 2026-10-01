@@ -145,7 +145,8 @@
     "invalidNumber": "اكتب رقم صحيح",
     "prevPage": "السابق",
     "nextPage": "التالي",
-    "pageInfo": "صفحة {page} من {pages}"
+    "pageInfo": "صفحة {page} من {pages}",
+    "listSeparator": "، "
   },
   "availability": {
     "title": "المواعيد المتاحة",
