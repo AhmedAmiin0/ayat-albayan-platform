@@ -1,13 +1,11 @@
 import { useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 import { createStudent, duplicateCandidates, mergeStudents, STUDENTS_KEY } from './api';
 import { toCreateBody, type CreateStudentValues } from './create-student';
 import { CreateStudentForm } from './CreateStudentForm';
-import { DuplicateWarning } from './DuplicateWarning';
+import { DuplicateDialog } from './DuplicateDialog';
 import { MergeDialog } from './MergeDialog';
-import { Modal } from './Modal';
 import type { StudentRef } from './types';
 
 type CreateStudentDialogProps = { onClose: () => void; onDone: (notice: string) => void };
@@ -26,8 +24,10 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
   // Survives a failed merge so a retry never creates the student twice.
   const createdId = useRef<string | null>(null);
 
-  const finish = async (notice: string) => {
-    await queryClient.invalidateQueries({ queryKey: STUDENTS_KEY });
+  // Not awaited: the open duplicate dialog's profile query is under the same key, and closing
+  // must not wait for (or retry) that refetch. The list refreshes in the background.
+  const finish = (notice: string) => {
+    void queryClient.invalidateQueries({ queryKey: STUDENTS_KEY });
     onDone(notice);
   };
 
@@ -36,7 +36,7 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
     try {
       // A failed merge already created the row: "create anyway" must not add a second one.
       if (!createdId.current) await createStudent(toCreateBody(values, force));
-      await finish(t.students.created);
+      finish(t.students.created);
     } catch (e) {
       const dupes = duplicateCandidates(e);
       if (dupes) {
@@ -49,7 +49,7 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
   const confirmMerge = async (kept: StudentRef, values: CreateStudentValues) => {
     createdId.current ??= (await createStudent(toCreateBody(values, true))).id;
     await mergeStudents({ keptId: kept.id, mergedId: createdId.current });
-    await finish(t.students.mergeDone);
+    finish(t.students.mergeDone);
   };
 
   if (mergeInto && pending) {
@@ -63,21 +63,18 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
     );
   }
 
-  return (
-    <Modal title={t.students.add}>
-      {candidates && pending ? (
-        <div className="flex flex-col gap-3">
-          <DuplicateWarning
-            candidates={candidates}
-            onMerge={setMergeInto}
-            onCreateAnyway={() => void submit(pending, true)}
-          />
-          {error && <p role="alert" className="text-sm text-destructive">{error}</p>}
-          <Button variant="ghost" onClick={onClose}>{t.common.cancel}</Button>
-        </div>
-      ) : (
-        <CreateStudentForm onSubmit={(v) => submit(v, false)} onCancel={onClose} error={error} />
-      )}
-    </Modal>
-  );
+  if (candidates && candidates.length > 0 && pending) {
+    return (
+      <DuplicateDialog
+        typed={pending}
+        candidates={candidates}
+        error={error}
+        onClose={onClose}
+        onMerge={setMergeInto}
+        onCreateAnyway={() => void submit(pending, true)}
+      />
+    );
+  }
+
+  return <CreateStudentForm onSubmit={(v) => submit(v, false)} onCancel={onClose} error={error} />;
 }

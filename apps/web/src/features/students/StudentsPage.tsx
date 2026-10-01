@@ -1,12 +1,19 @@
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { Cartouche } from '@/components/ui/cartouche';
+import { EmptyState } from '@/components/ui/empty-state';
+import { Icon } from '@/components/ui/icon';
+import { PageHead } from '@/components/ui/page';
+import { Pager } from '@/components/ui/pager';
+import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { studentListQuery } from './api';
 import { CreateStudentDialog } from './CreateStudentDialog';
+import { stackedRows } from './stacked-rows';
 import { studentColumns } from './studentColumns';
+import { StudentSearch } from './StudentSearch';
 
 export type StudentsSearch = { search: string; page: number };
 
@@ -16,52 +23,57 @@ type StudentsPageProps = StudentsSearch & {
   onOpen: (studentId: string) => void;
 };
 
-/** Students list: search by name / phone / code, paginate, add (R-STU-01..03). */
+/** Students list: search by name / phone / code, paginate, add (R-STU-01..03). Inside the shell's Page. */
 export function StudentsPage({ search, page, onChange, onOpen }: StudentsPageProps) {
   const { data, isError } = useQuery(studentListQuery(search, page));
-  const [term, setTerm] = useState(search);
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
-  const pages = data ? Math.max(1, Math.ceil(data.total / data.pageSize)) : 1;
+  const dismiss = useCallback(() => setNotice(null), []);
+  const columns = useMemo(() => studentColumns(onOpen), [onOpen]);
+  const none = data?.total === 0 && !search;
 
   return (
-    <section className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-xl font-semibold">{t.students.title}</h2>
-        <Button onClick={() => setAdding(true)}>{t.students.add}</Button>
+    <>
+      <PageHead>
+        <Cartouche>{t.students.title}</Cartouche>
+        {data && (
+          // ponytail: «{n} طالب» for every n; Arabic plural forms (3–10 طلاب) when copy needs them.
+          <span className="text-sm text-ink-3 tabular-nums">{t.students.count.replace('{n}', String(data.total))}</span>
+        )}
+        <div className="ms-auto flex gap-2.5 max-sm:w-full max-sm:[&>*]:flex-1">
+          {/* TODO(R-RPT-03): «تصدير» (students CSV) once the API has an export endpoint. */}
+          <Button onClick={() => setAdding(true)}>
+            <Icon name="plus" />
+            {t.students.add}
+          </Button>
+        </div>
+      </PageHead>
+      <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
+        <StudentSearch initial={search} onSearch={(term) => onChange({ search: term, page: 1 })} />
+        {/* TODO(R-STU-01): البرنامج / المعلم/ة selects and the status SegmentedControl with counts,
+            once GET /students filters by program, teacher_id and status. */}
       </div>
-      <form
-        role="search"
-        className="flex gap-2"
-        onSubmit={(e) => {
-          e.preventDefault();
-          onChange({ search: term.trim(), page: 1 });
-        }}
-      >
-        <Input
-          aria-label={t.common.search}
-          placeholder={t.students.searchPlaceholder}
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
-        />
-        <Button type="submit" variant="outline">{t.common.search}</Button>
-      </form>
-      {notice && <p role="status" className="text-sm text-muted-foreground">{notice}</p>}
-      {isError && <p role="alert" className="text-sm text-destructive">{t.common.error}</p>}
-      <DataTable
-        columns={studentColumns}
-        data={data?.items ?? []}
-        getRowId={(r) => r.id}
-        onRowClick={(r) => onOpen(r.id)}
-        emptyText={data ? t.students.empty : t.common.loading}
-      />
-      <nav className="flex items-center justify-center gap-3 text-sm">
-        <Button variant="outline" size="sm" disabled={page <= 1}
-          onClick={() => onChange({ search, page: page - 1 })}>{t.students.prevPage}</Button>
-        <span>{t.students.pageOf.replace('{page}', String(page)).replace('{pages}', String(pages))}</span>
-        <Button variant="outline" size="sm" disabled={page >= pages}
-          onClick={() => onChange({ search, page: page + 1 })}>{t.students.nextPage}</Button>
-      </nav>
+      {isError && (
+        <p role="alert" className="mb-3 text-sm text-danger">
+          {t.common.error}
+        </p>
+      )}
+      {none ? (
+        <EmptyState title={t.students.empty} />
+      ) : (
+        <div className={stackedRows}>
+          <DataTable
+            columns={columns}
+            data={data?.items ?? []}
+            getRowId={(r) => r.id}
+            onRowClick={(r) => onOpen(r.id)}
+            emptyText={data ? t.common.notFound : t.common.loading}
+          />
+        </div>
+      )}
+      {data && (
+        <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ search, page: p })} />
+      )}
       {adding && (
         <CreateStudentDialog
           onClose={() => setAdding(false)}
@@ -71,6 +83,8 @@ export function StudentsPage({ search, page, onChange, onOpen }: StudentsPagePro
           }}
         />
       )}
-    </section>
+      {/* Keyed so «تم الدمج» right after «الطالب اتسجل» gets its own full 10 s (journey 6). */}
+      {notice && <Toast key={notice} message={notice} duration={10_000} onDismiss={dismiss} />}
+    </>
   );
 }

@@ -1,9 +1,13 @@
+import { studentStatusStyle } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Ltr } from '@/components/ui/ltr';
+import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { mergeStudents, STUDENTS_KEY } from './api';
 import { MergeDialog } from './MergeDialog';
+import { SavedNote } from './SavedNote';
 import type { StudentRef } from './types';
 
 type SiblingMergeProps = { student: StudentRef; siblings: StudentRef[] };
@@ -26,16 +30,16 @@ export function SiblingMerge({ student, siblings }: SiblingMergeProps) {
   };
 
   return (
-    <section className="flex flex-col gap-2">
-      <h3 className="font-semibold">{t.students.siblings}</h3>
-      {done && <p role="status" className="text-sm">{t.students.mergeDone}</p>}
-      <ul className="flex flex-col gap-2">
+    <section className="mt-8 border-t border-rule pt-5">
+      <h2 className="mb-3 font-display text-h4 font-bold">{t.students.siblings}</h2>
+      {done && <SavedNote>{t.students.mergeDone}</SavedNote>}
+      <ul>
         {siblings.map((s) => (
-          <li key={s.id} className="flex items-center justify-between gap-2">
-            <span>
-              {s.name} <span className="text-muted-foreground">({s.code})</span>
-            </span>
-            <Button size="sm" variant="outline" onClick={() => setMerging(s)}>
+          <li key={s.id} className="flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule py-2.5">
+            <span className="font-semibold">{s.name}</span>
+            <Ltr className="text-xs text-ink-2">{s.code}</Ltr>
+            <StatusChip {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} size="sm" />
+            <Button size="sm" variant="secondary" className="ms-auto" onClick={() => setMerging(s)}>
               {t.students.mergeIntoThis}
             </Button>
           </li>

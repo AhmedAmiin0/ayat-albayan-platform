@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Dialog } from '@/components/ui/dialog';
+import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
-import { Modal } from './Modal';
+import { FormAlert } from './FormAlert';
 
 type Named = { name: string; code?: string | null };
 
@@ -34,28 +36,30 @@ export function MergeDialog({ kept, merged, onConfirm, onCancel }: MergeDialogPr
     }
   };
 
+  const actions = (
+    <>
+      <Button variant="ghost" onClick={onCancel} disabled={busy}>{t.common.cancel}</Button>
+      <Button onClick={() => void confirm()} disabled={busy}>{t.common.confirm}</Button>
+    </>
+  );
+
   return (
-    <Modal title={t.students.mergeTitle}>
-      <dl className="mb-4 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1 text-sm">
-        <dt className="text-muted-foreground">{t.students.mergeKeep}</dt>
-        <dd>{label(kept)}</dd>
-        <dt className="text-muted-foreground">{t.students.mergeRemove}</dt>
-        <dd>{label(merged)}</dd>
+    <Dialog title={t.students.mergeTitle} onClose={onCancel} actions={actions} className="max-w-[560px]">
+      <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-y border-rule py-3 text-sm">
+        {([
+          [t.students.mergeKeep, kept],
+          [t.students.mergeRemove, merged],
+        ] as const).map(([term, s]) => (
+          <div key={term} className="contents">
+            <dt className="text-ink-3">{term}</dt>
+            <dd className="font-semibold">
+              <span>{s.name}</span> {s.code && <Ltr className="text-xs font-medium text-ink-3">{s.code}</Ltr>}
+            </dd>
+          </div>
+        ))}
       </dl>
-      <p className="mb-4">{text}</p>
-      {failed && (
-        <p role="alert" className="mb-4 text-sm text-destructive">
-          {t.common.error}
-        </p>
-      )}
-      <div className="flex justify-end gap-2">
-        <Button variant="outline" onClick={onCancel} disabled={busy}>
-          {t.common.cancel}
-        </Button>
-        <Button onClick={() => void confirm()} disabled={busy}>
-          {t.common.confirm}
-        </Button>
-      </div>
-    </Modal>
+      <p className="mt-4 max-w-[70ch] text-body text-pretty text-ink-2">{text}</p>
+      {failed && <FormAlert className="mt-4">{t.common.error}</FormAlert>}
+    </Dialog>
   );
 }

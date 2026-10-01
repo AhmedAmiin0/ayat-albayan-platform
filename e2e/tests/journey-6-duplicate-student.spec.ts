@@ -28,7 +28,8 @@ test.describe('journey 6 — duplicate student (R-STU-03)', () => {
 
     // Same guardian phone typed the local way, name with ه instead of ة.
     await createStudent(page, { phone: `05${digits}`, guardian: 'ام جود', name: 'سهيله' });
-    const dialog = page.getByRole('dialog', { name: ar.students.add });
+    // The duplicate step is its own dialog, titled by the warning (docs/07 §6 Dialog).
+    const dialog = page.getByRole('dialog', { name: ar.students.duplicateTitle });
     await expect(dialog.getByRole('heading', { name: ar.students.duplicateTitle })).toBeVisible();
     await expect(dialog.getByText('سهيلة', { exact: false })).toBeVisible();
 
