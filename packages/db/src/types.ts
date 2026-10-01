@@ -553,13 +553,17 @@ export type Database = {
       };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      merge_students: {
+        Args: { p_actor: string; p_kept: string; p_merged: string };
+        Returns: string;
+      };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
     };
     Enums: {
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
-      job_applicant_status: 'new' | 'contacted' | 'accepted' | 'rejected';
+      job_applicant_status: 'new' | 'reviewing' | 'interview' | 'accepted' | 'rejected';
       lead_source: 'facebook_ad' | 'instagram_ad' | 'whatsapp_direct' | 'referral' | 'other';
       lead_status:
         | 'new'
@@ -703,7 +707,7 @@ export const Constants = {
       attendance: ['on_time', 'late', 'excused', 'absent'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
-      job_applicant_status: ['new', 'contacted', 'accepted', 'rejected'],
+      job_applicant_status: ['new', 'reviewing', 'interview', 'accepted', 'rejected'],
       lead_source: ['facebook_ad', 'instagram_ad', 'whatsapp_direct', 'referral', 'other'],
       lead_status: [
         'new',

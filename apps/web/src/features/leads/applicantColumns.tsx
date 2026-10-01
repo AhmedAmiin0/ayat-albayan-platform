@@ -7,8 +7,7 @@ import type { JobApplicantRow } from './types';
 
 const col = createColumnHelper<DataTableFeatures, JobApplicantRow>();
 
-// TODO(R-LEAD-04): 'reviewing' / 'interview' have no ar.json label until the integrator adds them
-// to enums.jobApplicantStatus (with the shared enum); until then the raw value shows.
+// A status without an ar.json label (e.g. a newer DB value) falls back to its raw value.
 const statusLabel = (s: string) =>
   (t.enums.jobApplicantStatus as Record<string, string | undefined>)[s] ?? s;
 

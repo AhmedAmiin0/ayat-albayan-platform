@@ -45,7 +45,8 @@ describe('StudentProfileForm (R-STU-05)', () => {
   it('saves level, status and teacher as a PATCH', async () => {
     api.updateStudent.mockResolvedValue(STUDENT);
     renderForm();
-    await screen.findByRole('option', { name: 'أبرار' });
+    // Text query: a role query over ~400 tz <option>s times out under parallel load.
+    await screen.findByText('أبرار');
     fireEvent.change(screen.getByLabelText(t.students.level), { target: { value: 'جزء عم' } });
     fireEvent.change(screen.getByLabelText(t.students.status), { target: { value: 'active' } });
     fireEvent.change(screen.getByLabelText(t.students.teacher), { target: { value: TEACHER_ID } });

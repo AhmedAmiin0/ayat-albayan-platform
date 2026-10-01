@@ -1,4 +1,4 @@
-import type { Enums, Tables, TablesInsert, TablesUpdate } from '@ab/db';
+import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { pageRange, throwIfDbError, type PageQuery } from '../leads/http';
@@ -15,9 +15,6 @@ export interface ApplicantMove {
   from: JobApplicantRow['status'];
   to: ApplicantStatus;
 }
-
-// TODO(R-LEAD-04): drop this cast once gen:types includes migration 040's enum values.
-const dbStatus = (s: ApplicantStatus) => s as Enums<'job_applicant_status'>;
 
 /** Thin supabase-js access for `job_applicants`; rules live in JobApplicantsService. */
 @Injectable()
@@ -66,7 +63,7 @@ export class JobApplicantsQueries {
   async moveStatus({ id, from, to }: ApplicantMove): Promise<JobApplicantRow | null> {
     const { data, error } = await this.db
       .from('job_applicants')
-      .update({ status: dbStatus(to) })
+      .update({ status: to })
       .eq('id', id)
       .eq('status', from)
       .select('*')
@@ -82,7 +79,7 @@ export class JobApplicantsQueries {
 
   async list(f: ApplicantListFilter): Promise<{ items: JobApplicantRow[]; total: number }> {
     let query = this.db.from('job_applicants').select('*', { count: 'exact' });
-    if (f.status) query = query.eq('status', dbStatus(f.status));
+    if (f.status) query = query.eq('status', f.status);
     if (f.q) query = query.or(`name.ilike.*${f.q}*,phone_e164.ilike.*${f.q}*`);
     const { data, error, count } = await query
       .order('created_at', { ascending: false })

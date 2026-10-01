@@ -300,7 +300,8 @@
     },
     "jobApplicantStatus": {
       "new": "جديد",
-      "contacted": "اتواصلنا",
+      "reviewing": "تحت المراجعة",
+      "interview": "مقابلة",
       "accepted": "اتقبل",
       "rejected": "اترفض"
     },

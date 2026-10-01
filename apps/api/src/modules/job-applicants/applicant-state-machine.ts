@@ -1,7 +1,7 @@
-// TODO(R-LEAD-04): replace with JOB_APPLICANT_STATUSES from @ab/shared once migration 040 is
-// applied, types are regenerated and the shared enum lists these five values.
-export const APPLICANT_STATUSES = ['new', 'reviewing', 'interview', 'accepted', 'rejected'] as const;
-export type ApplicantStatus = (typeof APPLICANT_STATUSES)[number];
+import { JOB_APPLICANT_STATUSES, type JobApplicantStatus } from '@ab/shared';
+
+export const APPLICANT_STATUSES = JOB_APPLICANT_STATUSES;
+export type ApplicantStatus = JobApplicantStatus;
 
 /**
  * Applicant pipeline (R-LEAD-04): new → reviewing → interview → accepted | rejected.

@@ -13,6 +13,7 @@ describe('AdminNav', () => {
     [t.nav.students, '/admin/students'],
     [t.nav.teachers, '/admin/teachers'],
     [t.nav.leads, '/admin/leads'],
+    [t.nav.jobApplicants, '/admin/job-applicants'],
   ])('links %s to %s', (label, href) => {
     render(<AdminNav />);
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);

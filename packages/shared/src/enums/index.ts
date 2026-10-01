@@ -74,7 +74,8 @@ export const TEACHER_STATUSES = [
 ] as const satisfies readonly Enums<'teacher_status'>[];
 export const JOB_APPLICANT_STATUSES = [
   'new',
-  'contacted',
+  'reviewing',
+  'interview',
   'accepted',
   'rejected',
 ] as const satisfies readonly Enums<'job_applicant_status'>[];

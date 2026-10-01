@@ -14,6 +14,12 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as TeacherRouteImport } from './routes/teacher'
+import { Route as AdminJobApplicantsRouteImport } from './routes/admin/job-applicants'
+import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
+import { Route as AdminStudentsRouteImport } from './routes/admin/students'
+import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
+import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students.$studentId'
+import { Route as AdminTeachersTeacherIdRouteImport } from './routes/admin/teachers.$teacherId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -40,40 +46,122 @@ const TeacherRoute = TeacherRouteImport.update({
   path: '/teacher',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminJobApplicantsRoute = AdminJobApplicantsRouteImport.update({
+  id: '/job-applicants',
+  path: '/job-applicants',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminLeadsRoute = AdminLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStudentsRoute = AdminStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTeachersRoute = AdminTeachersRouteImport.update({
+  id: '/teachers',
+  path: '/teachers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminStudentsStudentIdRoute = AdminStudentsStudentIdRouteImport.update({
+  id: '/$studentId',
+  path: '/$studentId',
+  getParentRoute: () => AdminStudentsRoute,
+} as any)
+const AdminTeachersTeacherIdRoute = AdminTeachersTeacherIdRouteImport.update({
+  id: '/$teacherId',
+  path: '/$teacherId',
+  getParentRoute: () => AdminTeachersRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/teacher': typeof TeacherRoute
+  '/admin/job-applicants': typeof AdminJobApplicantsRoute
+  '/admin/leads': typeof AdminLeadsRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
+  '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/teacher': typeof TeacherRoute
+  '/admin/job-applicants': typeof AdminJobApplicantsRoute
+  '/admin/leads': typeof AdminLeadsRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
+  '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/admin': typeof AdminRoute
+  '/admin': typeof AdminRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/teacher': typeof TeacherRoute
+  '/admin/job-applicants': typeof AdminJobApplicantsRoute
+  '/admin/leads': typeof AdminLeadsRoute
+  '/admin/students': typeof AdminStudentsRouteWithChildren
+  '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
+  '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/admin' | '/login' | '/portal' | '/teacher'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/portal'
+    | '/teacher'
+    | '/admin/job-applicants'
+    | '/admin/leads'
+    | '/admin/students'
+    | '/admin/teachers'
+    | '/admin/students/$studentId'
+    | '/admin/teachers/$teacherId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/admin' | '/login' | '/portal' | '/teacher'
-  id: '__root__' | '/' | '/admin' | '/login' | '/portal' | '/teacher'
+  to:
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/portal'
+    | '/teacher'
+    | '/admin/job-applicants'
+    | '/admin/leads'
+    | '/admin/students'
+    | '/admin/teachers'
+    | '/admin/students/$studentId'
+    | '/admin/teachers/$teacherId'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/portal'
+    | '/teacher'
+    | '/admin/job-applicants'
+    | '/admin/leads'
+    | '/admin/students'
+    | '/admin/teachers'
+    | '/admin/students/$studentId'
+    | '/admin/teachers/$teacherId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  AdminRoute: typeof AdminRoute
+  AdminRoute: typeof AdminRouteWithChildren
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRoute
   TeacherRoute: typeof TeacherRoute
@@ -116,12 +204,94 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TeacherRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/job-applicants': {
+      id: '/admin/job-applicants'
+      path: '/job-applicants'
+      fullPath: '/admin/job-applicants'
+      preLoaderRoute: typeof AdminJobApplicantsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/leads': {
+      id: '/admin/leads'
+      path: '/leads'
+      fullPath: '/admin/leads'
+      preLoaderRoute: typeof AdminLeadsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/students': {
+      id: '/admin/students'
+      path: '/students'
+      fullPath: '/admin/students'
+      preLoaderRoute: typeof AdminStudentsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/teachers': {
+      id: '/admin/teachers'
+      path: '/teachers'
+      fullPath: '/admin/teachers'
+      preLoaderRoute: typeof AdminTeachersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/students/$studentId': {
+      id: '/admin/students/$studentId'
+      path: '/$studentId'
+      fullPath: '/admin/students/$studentId'
+      preLoaderRoute: typeof AdminStudentsStudentIdRouteImport
+      parentRoute: typeof AdminStudentsRoute
+    }
+    '/admin/teachers/$teacherId': {
+      id: '/admin/teachers/$teacherId'
+      path: '/$teacherId'
+      fullPath: '/admin/teachers/$teacherId'
+      preLoaderRoute: typeof AdminTeachersTeacherIdRouteImport
+      parentRoute: typeof AdminTeachersRoute
+    }
   }
 }
 
+interface AdminStudentsRouteChildren {
+  AdminStudentsStudentIdRoute: typeof AdminStudentsStudentIdRoute
+}
+
+const AdminStudentsRouteChildren: AdminStudentsRouteChildren = {
+  AdminStudentsStudentIdRoute: AdminStudentsStudentIdRoute,
+}
+
+const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
+  AdminStudentsRouteChildren,
+)
+
+interface AdminTeachersRouteChildren {
+  AdminTeachersTeacherIdRoute: typeof AdminTeachersTeacherIdRoute
+}
+
+const AdminTeachersRouteChildren: AdminTeachersRouteChildren = {
+  AdminTeachersTeacherIdRoute: AdminTeachersTeacherIdRoute,
+}
+
+const AdminTeachersRouteWithChildren = AdminTeachersRoute._addFileChildren(
+  AdminTeachersRouteChildren,
+)
+
+interface AdminRouteChildren {
+  AdminJobApplicantsRoute: typeof AdminJobApplicantsRoute
+  AdminLeadsRoute: typeof AdminLeadsRoute
+  AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
+  AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
+}
+
+const AdminRouteChildren: AdminRouteChildren = {
+  AdminJobApplicantsRoute: AdminJobApplicantsRoute,
+  AdminLeadsRoute: AdminLeadsRoute,
+  AdminStudentsRoute: AdminStudentsRouteWithChildren,
+  AdminTeachersRoute: AdminTeachersRouteWithChildren,
+}
+
+const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  AdminRoute: AdminRoute,
+  AdminRoute: AdminRouteWithChildren,
   LoginRoute: LoginRoute,
   PortalRoute: PortalRoute,
   TeacherRoute: TeacherRoute,
