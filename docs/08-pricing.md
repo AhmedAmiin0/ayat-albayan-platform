@@ -1,0 +1,55 @@
+# 08 — Pricing & currency
+
+Source of truth for prices: the academy's public staff calculator, **ayatalbayan.com/calculator** (model read from its bundle `/assets/index-P7HmNtLA.js` on 2026-10-02). The platform must quote exactly what the site quotes. Owner rule (2026-10-02): *any country whose currency is not one of the site's currencies is quoted in USD, converted with a currency API.*
+
+## 1. Countries and currencies (from the site)
+
+| Country | Code | Currency | Arabic symbol | Price rule |
+|---|---|---|---|---|
+| السعودية | SA | SAR | ر.س | base |
+| الإمارات | AE | AED | د.إ | base (same numbers as SAR, by the site's choice — not an FX conversion) |
+| قطر | QA | QAR | ر.ق | base |
+| الكويت | KW | KWD | د.ك | `ceil(base / 10)` |
+| عمان | OM | OMR | ر.ع | `ceil(base / 10)` |
+| **any other / unknown** | — | **USD** | $ | `ceil(base × rate(SAR→USD))` — rate from the currency API (§4) |
+
+`base` numbers are SAR.
+
+## 2. Packages (base per lesson duration)
+
+Durations: 30 / 45 / 60 minutes, default **45**.
+
+| id | Arabic name (site) | Lessons | 30 | 45 | 60 | Flag |
+|---|---|---|---|---|---|---|
+| starter | الباقة الأساسية | 8 | 90 | 120 | 160 | |
+| standard | الباقة المتقدمة | 12 | 135 | 180 | 235 | الأكثر شيوعاً (popular) |
+| premium | الباقة الشاملة | 16 | 175 | 240 | 315 | |
+| bulk | باقة الـ28 حلقة | 28 | 275 | 385 | 495 | خصم خاص (featured) |
+| weekly | باقة الحلقة الأسبوعية | 4 (one 90-min lesson/week) | — | — | — | fixed **145**, duration fixed 90 |
+| monthly | الاشتراك الشهري المكثّف | 20 (5 days/week) | 210 | 285 | 375 | |
+
+Site "frequency" labels: weekly «مرة — ٩٠ دقيقة», starter «مرتين», standard «٣ مرات», premium «٤ مرات», monthly «٥ مرات», bulk «كل يوم».
+
+## 3. Calculator rules (site)
+
+- `price(tier, duration, country)` = rule from §1 applied to the tier base.
+- **Custom lesson count** `n` (1–60): per-lesson rate = `bulk.base[d] / 28` if `n ≥ 28`, else `starter.base[d] / 8`; price = `ceil(rate × n / divisor)` (USD: convert as §1).
+- **Students**: total = price × students.
+- **Discount**: 0 / 5 / 10 / 15 % on the total; after-discount = `round(total × (1 − d/100))`. Site hint: «أكثر من طالب؟ يمكنك عرض خصم الأسرة حسب شيت المبيعات.»
+- **Per-lesson price** shown = price × (1 − d) / lessons, max 2 decimals.
+- **Savings badge** on the featured tier: `round((1 − price / starterRatePrice) × 100)` % where starterRatePrice = `ceil(starter.base[d]/8 × 28 / divisor)`.
+- **WhatsApp offer text** (site format, one line each): «السلام عليكم، الباقة المقترحة لك:» + name (lessons - duration للحلقة) · «عدد الطلاب: n» · «الإجمالي: X SYM» [+ «الخصم: d%» + «الإجمالي بعد الخصم: Y SYM»] · trial note «جميع الباقات تبدأ بجلسة تجريبية مجانية بالكامل — جرّب أولاً ثم قرّر.»
+- Platform display follows docs/07: Western digits for every number (the site copy's Eastern digits are changed to Western, wording unchanged).
+
+## 4. Currency API
+
+- Provider: **ExchangeRate-API open access** — `https://open.er-api.com/v6/latest/SAR` (no key; daily updates; requires attribution «Rates By Exchange Rate API» linking to https://www.exchangerate-api.com; rate-limited, so the platform fetches at most once per update window).
+- Configurable via env `FX_API_URL` (default above) so a keyed provider can replace it without code changes.
+- Rates are cached in the `fx_rates` table (base, quote, rate, provider, fetched_at, provider_updated_at). A quote uses the newest stored rate if it is younger than 24 h; otherwise it refreshes; if the API is down it uses the newest stored rate (and says how old it is); if nothing was ever stored it falls back to the official **SAR/USD peg 3.75** and marks the quote as `fallback`.
+- Every USD quote returns the rate, its date and the source, so a quote can be reproduced later; subscriptions/payments (Phase 3) snapshot the price **and** the rate used.
+
+## 5. Owner decisions recorded / still open
+
+- Prices = site (settled, owner 2026-10-02). Egypt-based guardians are quoted in USD (owner rule: not a site currency).
+- Late-cancellation policy: still open (docs/05 §4 q2).
+- Teacher payouts stay in EGP (R-TCH-01 rates); converting revenue to EGP for reports can reuse the same `fx_rates` table (Phase 3).
