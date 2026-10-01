@@ -17,3 +17,7 @@ packages/db/supabase/.branches/
 .reticle/
 .reticle-setup-crash.log
 .ouroboros_eval_artifact.md
+# Owner data exports (personal data: never commit)
+tools/migrate/input/
+tools/*.zip
+tools/*.xlsx

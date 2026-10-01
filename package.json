@@ -15,7 +15,7 @@
     "supabase": "pnpm --filter @ab/db exec supabase",
     "env:local": "node tools/scripts/write-local-env.mjs",
     "seed:demo": "node --env-file-if-exists=e2e/.env tools/scripts/seed-demo.mjs",
-    "test:all": "turbo test e2e"
+    "test:all": "turbo lint typecheck test e2e --force"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {
