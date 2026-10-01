@@ -5,7 +5,8 @@
  * TODO(integrator): move into DataTable as a `stacked` prop once a second list needs it.
  */
 export const stackedRows = [
-  'max-sm:[&_table]:block max-sm:[&_tbody]:block max-sm:[&_thead]:hidden',
+  // The head stays in the a11y tree (column names; journey 6 counts its row on Pixel 7).
+  'max-sm:[&_table]:block max-sm:[&_tbody]:block max-sm:[&_thead]:sr-only',
   'max-sm:[&_tbody_tr]:flex max-sm:[&_tbody_tr]:flex-wrap max-sm:[&_tbody_tr]:items-center',
   'max-sm:[&_tbody_tr]:gap-x-2.5 max-sm:[&_tbody_tr]:gap-y-0.5 max-sm:[&_tbody_tr]:border-b max-sm:[&_tbody_tr]:border-rule max-sm:[&_tbody_tr]:py-3',
   'max-sm:[&_td]:border-0 max-sm:[&_td]:p-0 max-sm:[&_td]:whitespace-normal',
