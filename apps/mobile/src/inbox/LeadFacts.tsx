@@ -12,7 +12,12 @@ import type { Lead } from './types';
 /** Label/value card with only what GET /leads returns. TODO(R-LEAD-02): qualification fields. */
 export function LeadFacts({ lead }: { lead: Lead }) {
   const { color } = useTheme();
-  const valueStyle = { fontFamily: type.ui[500], fontSize: type.size.body, color: color.ink };
+  const valueStyle = {
+    fontFamily: type.ui[500],
+    fontSize: type.size.body,
+    color: color.ink,
+    fontVariant: ['tabular-nums' as const],
+  };
   const facts: [string, ReactNode][] = [
     [
       t.leads.status,
