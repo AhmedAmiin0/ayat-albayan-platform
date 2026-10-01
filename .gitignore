@@ -13,3 +13,7 @@ e2e/.auth/
 packages/db/supabase/.temp/
 packages/db/supabase/.branches/
 .claude/worktrees/
+.claude/artifacts/
+.reticle/
+.reticle-setup-crash.log
+.ouroboros_eval_artifact.md

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="44" height="44" color="#C59542">
+  <!-- Verse-end rosette, for numbers only: section numbers, current page in pagination, PDF page number.
+       Centre the number on top (ink, tabular). Never a status, never struck through. -->
+  <path fill="none" stroke="currentColor" stroke-width="1.1" vector-effect="non-scaling-stroke" d="M8 1.6A2.5 2.5 0 0 1 12.53 3.47A2.5 2.5 0 0 1 14.4 8A2.5 2.5 0 0 1 12.53 12.53A2.5 2.5 0 0 1 8 14.4A2.5 2.5 0 0 1 3.47 12.53A2.5 2.5 0 0 1 1.6 8A2.5 2.5 0 0 1 3.47 3.47A2.5 2.5 0 0 1 8 1.6Z"/>
+  <circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width=".8" vector-effect="non-scaling-stroke"/>
+</svg>

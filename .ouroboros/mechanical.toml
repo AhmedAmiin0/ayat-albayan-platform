@@ -1,0 +1,5 @@
+# Stage 1 for ouroboros_evaluate: the same gate as CI (needs local Supabase running + pnpm env:local).
+lint = "pnpm lint"
+static = "pnpm typecheck"
+test = "pnpm test:all"
+timeout = 900

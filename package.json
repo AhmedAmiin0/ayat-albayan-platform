@@ -13,7 +13,8 @@
     "test": "turbo test",
     "e2e": "turbo e2e",
     "supabase": "pnpm --filter @ab/db exec supabase",
-    "env:local": "node tools/scripts/write-local-env.mjs"
+    "env:local": "node tools/scripts/write-local-env.mjs",
+    "test:all": "turbo test e2e"
   },
   "prettier": "@ab/config/prettier",
   "devDependencies": {

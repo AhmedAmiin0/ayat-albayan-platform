@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 16" width="192" height="32" color="#444D5E">
+  <!-- Status glyph grammar: the calligrapher's rhombic nuqta. Copy each symbol into the icon sprite / react-native-svg.
+       fill = settled or done, half = underway, hollow = waiting, struck = stopped or cancelled.
+       The rosette is never a status glyph. -->
+  <defs>
+    <symbol id="g-fill" viewBox="0 0 16 16"><path fill="currentColor" d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/></symbol>
+    <symbol id="g-half" viewBox="0 0 16 16"><path fill="currentColor" d="M2.9 8h10.2L8 13.1Z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+    <symbol id="g-hollow" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+    <symbol id="g-struck" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/><path d="M2.6 13.4 13.4 2.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  </defs>
+  <use href="#g-fill" x="0" width="16" height="16"/>
+  <use href="#g-half" x="26" width="16" height="16"/>
+  <use href="#g-hollow" x="52" width="16" height="16"/>
+  <use href="#g-struck" x="78" width="16" height="16"/>
+</svg>

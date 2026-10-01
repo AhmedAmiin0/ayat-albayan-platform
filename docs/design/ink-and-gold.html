@@ -1,0 +1,1936 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>المداد والذهب</title>
+<meta name="description" content="نظام التصميم النهائي لمنصة أكاديمية آيات البيان: صفحة مصحف مُذهّبة، مداد ولازورد، ونقطة الخطاط علامة لكل حالة.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Amiri:wght@700&family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script>
+  /* theme: only set data-theme when the viewer picked one; "auto" leaves the OS media query in charge */
+  try { var t = localStorage.getItem('ayat-theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+</script>
+<style>
+/* ================= COLOR TOKENS: light (also any [data-theme=light] scope) ================= */
+:root, [data-theme="light"] {
+  color-scheme: light;
+  --margin: oklch(0.938 0.024 86);
+  --page: oklch(0.978 0.012 90);
+  --raised: oklch(0.992 0.006 90);
+  --sunk: oklch(0.955 0.018 88);
+  --ink: oklch(0.24 0.035 262);
+  --ink-2: oklch(0.42 0.03 262);
+  --ink-3: oklch(0.50 0.025 262);
+  --rule: oklch(0.87 0.022 85);
+  --rule-strong: oklch(0.78 0.03 82);
+  --rule-input: oklch(0.62 0.03 80);
+  --gold: oklch(0.70 0.115 78);
+  --gold-soft: oklch(0.82 0.07 82);
+  --gold-wash: oklch(0.93 0.045 85);
+  --lapis: oklch(0.43 0.135 263);
+  --lapis-hover: oklch(0.37 0.13 263);
+  --lapis-wash: oklch(0.93 0.03 263);
+  --on-lapis: oklch(0.98 0.01 90);
+  --verdigris: oklch(0.46 0.09 165);
+  --verdigris-wash: oklch(0.93 0.035 165);
+  --saffron: oklch(0.50 0.11 55);
+  --saffron-wash: oklch(0.94 0.045 75);
+  --cinnabar: oklch(0.50 0.16 27);
+  --cinnabar-solid: oklch(0.52 0.17 27);
+  --cinnabar-wash: oklch(0.94 0.03 27);
+  --on-cinnabar: oklch(0.98 0.01 90);
+  --neutral-wash: oklch(0.925 0.012 262);
+  --inverse: oklch(0.26 0.04 262);
+  --on-inverse: oklch(0.96 0.014 88);
+  --inverse-gold: oklch(0.80 0.10 82);
+  --cover: oklch(0.25 0.05 262);
+  --leather: oklch(0.32 0.06 42);
+  --leather-deep: oklch(0.255 0.05 40);
+  --leather-lift: oklch(0.40 0.06 45);
+  --gold-on-cover: oklch(0.80 0.105 82);
+  --cover-ink: oklch(0.93 0.02 88);
+  --scrim: oklch(0.22 0.03 262 / 0.45);
+  --elev-page: 0 1px 0 oklch(0.24 0.035 262 / 0.04), 0 18px 40px -18px oklch(0.24 0.035 262 / 0.28);
+  --elev-pop: 0 30px 60px -20px oklch(0.15 0.03 262 / 0.55);
+  --elev-toast: 0 12px 28px -12px oklch(0.15 0.03 262 / 0.5);
+}
+/* ================= COLOR TOKENS: dark (night Mushaf) ================= */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --margin: oklch(0.165 0.022 262); --page: oklch(0.205 0.026 262); --raised: oklch(0.235 0.028 262); --sunk: oklch(0.185 0.024 262);
+    --ink: oklch(0.93 0.018 88); --ink-2: oklch(0.80 0.02 88); --ink-3: oklch(0.70 0.02 88);
+    --rule: oklch(0.30 0.028 262); --rule-strong: oklch(0.38 0.035 262); --rule-input: oklch(0.54 0.03 262);
+    --gold: oklch(0.74 0.105 82); --gold-soft: oklch(0.48 0.07 80); --gold-wash: oklch(0.26 0.04 78);
+    --lapis: oklch(0.74 0.11 258); --lapis-hover: oklch(0.80 0.10 258); --lapis-wash: oklch(0.28 0.05 262); --on-lapis: oklch(0.17 0.03 262);
+    --verdigris: oklch(0.78 0.09 165); --verdigris-wash: oklch(0.27 0.04 165);
+    --saffron: oklch(0.80 0.11 58); --saffron-wash: oklch(0.28 0.045 58);
+    --cinnabar: oklch(0.75 0.13 27); --cinnabar-solid: oklch(0.62 0.16 27); --cinnabar-wash: oklch(0.27 0.05 27); --on-cinnabar: oklch(0.17 0.03 262);
+    --neutral-wash: oklch(0.27 0.02 262);
+    --inverse: oklch(0.90 0.02 88); --on-inverse: oklch(0.22 0.03 262); --inverse-gold: oklch(0.55 0.11 72);
+    --cover: oklch(0.27 0.05 262);
+    --leather: oklch(0.28 0.05 42); --leather-deep: oklch(0.215 0.04 40); --leather-lift: oklch(0.35 0.055 45);
+    --scrim: oklch(0.08 0.02 262 / 0.62);
+    --elev-page: 0 0 0 1px oklch(0 0 0 / 0.25), 0 18px 40px -16px oklch(0 0 0 / 0.65);
+    --elev-pop: 0 30px 60px -20px oklch(0 0 0 / 0.7);
+    --elev-toast: 0 12px 28px -12px oklch(0 0 0 / 0.6);
+  }
+}
+[data-theme="dark"] {
+  color-scheme: dark;
+  --margin: oklch(0.165 0.022 262); --page: oklch(0.205 0.026 262); --raised: oklch(0.235 0.028 262); --sunk: oklch(0.185 0.024 262);
+  --ink: oklch(0.93 0.018 88); --ink-2: oklch(0.80 0.02 88); --ink-3: oklch(0.70 0.02 88);
+  --rule: oklch(0.30 0.028 262); --rule-strong: oklch(0.38 0.035 262); --rule-input: oklch(0.54 0.03 262);
+  --gold: oklch(0.74 0.105 82); --gold-soft: oklch(0.48 0.07 80); --gold-wash: oklch(0.26 0.04 78);
+  --lapis: oklch(0.74 0.11 258); --lapis-hover: oklch(0.80 0.10 258); --lapis-wash: oklch(0.28 0.05 262); --on-lapis: oklch(0.17 0.03 262);
+  --verdigris: oklch(0.78 0.09 165); --verdigris-wash: oklch(0.27 0.04 165);
+  --saffron: oklch(0.80 0.11 58); --saffron-wash: oklch(0.28 0.045 58);
+  --cinnabar: oklch(0.75 0.13 27); --cinnabar-solid: oklch(0.62 0.16 27); --cinnabar-wash: oklch(0.27 0.05 27); --on-cinnabar: oklch(0.17 0.03 262);
+  --neutral-wash: oklch(0.27 0.02 262);
+  --inverse: oklch(0.90 0.02 88); --on-inverse: oklch(0.22 0.03 262); --inverse-gold: oklch(0.55 0.11 72);
+  --cover: oklch(0.27 0.05 262);
+  --leather: oklch(0.28 0.05 42); --leather-deep: oklch(0.215 0.04 40); --leather-lift: oklch(0.35 0.055 45);
+  --scrim: oklch(0.08 0.02 262 / 0.62);
+  --elev-page: 0 0 0 1px oklch(0 0 0 / 0.25), 0 18px 40px -16px oklch(0 0 0 / 0.65);
+  --elev-pop: 0 30px 60px -20px oklch(0 0 0 / 0.7);
+  --elev-toast: 0 12px 28px -12px oklch(0 0 0 / 0.6);
+}
+/* ================= NON-COLOR TOKENS (theme-independent) ================= */
+:root {
+  --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
+  --font-ui: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --fs-2xs: 12px; --fs-xs: 13px; --fs-sm: 14px; --fs-body: 15px; --fs-base: 16px; --fs-lg: 18px;
+  --fs-h4: 20px; --fs-h3: 23px; --fs-h2: 28px; --fs-h1: 34px; --fs-display: 46px; --fs-hero: 68px;
+  --lh-ui: 1.6; --lh-snug: 1.4; --lh-tight: 1.2; --lh-display: 1.5;
+  --radius-xs: 2px; --radius-sm: 6px; --radius-md: 8px; --radius-lg: 12px; --radius-pill: 999px;
+  --h-dense: 32px; --h-control: 40px; --h-comfort: 48px;
+  --dur-1: 120ms; --dur-2: 200ms; --ease-out: cubic-bezier(.2, .7, .2, 1);
+}
+
+/* ================= BASE ================= */
+*, *::before, *::after { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--margin); color: var(--ink); font-family: var(--font-ui); font-size: var(--fs-sm); line-height: var(--lh-ui); -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+[data-theme] { color: var(--ink); }
+h1, h2, h3, h4, p, ul, ol, figure { margin: 0; }
+ul, ol { padding: 0; list-style: none; }
+a { color: var(--lapis); text-underline-offset: 3px; }
+button, input, select { font: inherit; color: inherit; }
+.num { font-variant-numeric: tabular-nums; }
+[dir="ltr"].num { white-space: nowrap; }
+.display { font-family: var(--font-display); font-weight: 700; }
+.muted { color: var(--ink-3); }
+.sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+:focus-visible { outline: 2px solid var(--lapis); outline-offset: 2px; }
+.i { width: 18px; height: 18px; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.g { width: 12px; height: 12px; flex: none; }
+/* icons drawn for LTR that point somewhere (reply) mirror in RTL; chevrons are picked per direction instead */
+[dir="rtl"] .i--flip { transform: scaleX(-1); }
+
+/* ================= BOARD (showcase chrome) ================= */
+.board { max-width: 1376px; margin-inline: auto; padding: 56px 32px 120px; }
+.board-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 28px 36px; align-items: center; padding-block-end: 44px; margin-block-end: 72px; border-block-end: 1px solid var(--rule-strong); }
+.board-head .mark-xl { width: 112px; height: 112px; color: var(--gold); }
+.board-head h1 { font-family: var(--font-display); font-size: var(--fs-display); line-height: var(--lh-display); text-wrap: balance; }
+.board-head p { color: var(--ink-2); font-size: var(--fs-base); max-width: 68ch; text-wrap: pretty; }
+.board-head .sub { color: var(--ink-3); font-size: var(--fs-sm); margin-block-end: 4px; }
+.theme-pick { align-self: start; display: grid; gap: 6px; justify-items: start; }
+.theme-pick .label { font-size: var(--fs-xs); }
+.sheet { margin-block-end: 104px; }
+.sheet-head { display: grid; grid-template-columns: auto minmax(0, 1fr); column-gap: 14px; row-gap: 4px; align-items: center; margin-block-end: 28px; max-width: 900px; }
+.sheet-head h2 { font-family: var(--font-display); font-size: var(--fs-h2); line-height: var(--lh-display); }
+.sheet-head p { grid-column: 2; color: var(--ink-2); font-size: var(--fs-body); text-wrap: pretty; }
+.rnum { position: relative; width: 44px; height: 44px; display: grid; place-items: center; color: var(--gold); }
+.rnum svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.rnum b { position: relative; color: var(--ink); font-size: var(--fs-body); font-weight: 600; font-variant-numeric: tabular-nums; }
+.screen { position: relative; background: var(--margin); border: 1px solid var(--rule-strong); border-radius: var(--radius-lg); overflow: hidden; box-shadow: var(--elev-page); }
+
+/* ================= ORNAMENT: cartouche + jadwal ================= */
+.cart { display: inline-flex; align-items: stretch; height: 52px; color: var(--gold); max-width: 100%; flex: none; }
+.cart > svg { width: 26px; height: 52px; flex: none; }
+.cart > svg:first-child { transform: scaleX(-1); }
+.cart-mid { display: flex; min-width: 0; margin-block: 2px; border-block: 1px solid currentColor; }
+.cart-mid > span { display: flex; align-items: center; min-width: 0; margin-block: 3px; padding-inline: 10px; border-block: 1px solid var(--gold-soft); background: var(--gold-wash); color: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 25px; line-height: 1; white-space: nowrap; padding-block-end: 5px; }
+.page { position: relative; flex: 1; min-width: 0; margin: 6px; padding: 22px 24px 18px; background: var(--page); border: 1px solid var(--rule-strong); outline: 1.5px solid var(--gold); outline-offset: 4px; border-radius: var(--radius-xs); container-type: inline-size; }
+.page-head { display: flex; align-items: center; flex-wrap: wrap; gap: 12px 16px; margin-block-end: 20px; }
+.page-head .count { color: var(--ink-3); font-size: var(--fs-sm); }
+.page-head .actions { display: flex; gap: 10px; margin-inline-start: auto; }
+
+/* ================= CONTROLS ================= */
+.btn { display: inline-flex; align-items: center; justify-content: center; gap: 8px; min-height: var(--h-control); padding-inline: 16px; border: 1px solid transparent; border-radius: var(--radius-md); font-size: var(--fs-sm); font-weight: 600; line-height: var(--lh-tight); white-space: nowrap; text-decoration: none; cursor: pointer; transition: background-color var(--dur-1) var(--ease-out); }
+.btn .i { width: 17px; height: 17px; }
+.btn--primary { background: var(--lapis); color: var(--on-lapis); }
+.btn--primary:hover { background: var(--lapis-hover); }
+.btn--secondary { background: var(--raised); color: var(--ink); border-color: var(--rule-input); }
+.btn--secondary:hover { background: var(--sunk); }
+.btn--ghost { background: transparent; color: var(--lapis); }
+.btn--ghost:hover { background: var(--lapis-wash); }
+.btn--danger { background: var(--cinnabar-solid); color: var(--on-cinnabar); }
+.btn--danger-quiet { background: transparent; color: var(--cinnabar); border-color: color-mix(in oklab, var(--cinnabar) 45%, transparent); }
+.btn:disabled { opacity: .45; cursor: not-allowed; }
+.btn--sm { min-height: var(--h-dense); padding-inline: 12px; font-size: var(--fs-xs); }
+.btn--lg { min-height: var(--h-comfort); padding-inline: 20px; font-size: var(--fs-body); }
+.btn--block { width: 100%; min-height: 44px; }
+.btn.is-focus { outline: 2px solid var(--lapis); outline-offset: 2px; }
+.icon-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: var(--radius-md); background: transparent; color: var(--ink-3); cursor: pointer; }
+.icon-btn:hover { background: var(--sunk); color: var(--ink); }
+.field { display: grid; gap: 6px; align-content: start; }
+.label { font-size: var(--fs-xs); font-weight: 600; color: var(--ink-2); }
+.input, .select { min-height: var(--h-control); width: 100%; padding-inline: 12px; border: 1px solid var(--rule-input); border-radius: var(--radius-md); background: var(--raised); color: var(--ink); font-size: var(--fs-sm); }
+.input::placeholder { color: var(--ink-3); }
+.input:focus, .select:focus, .input.is-focus, .select.is-focus { outline: 2px solid var(--lapis); outline-offset: 1px; border-color: var(--lapis); }
+.input[aria-invalid="true"], .select[aria-invalid="true"] { border-color: var(--cinnabar); box-shadow: 0 0 0 1px var(--cinnabar); }
+.input:disabled, .select:disabled { background: var(--sunk); color: var(--ink-3); cursor: not-allowed; }
+/* background-position has no logical keywords; "left" is the inline-end in RTL */
+.select { appearance: none; padding-inline-end: 32px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%237c8090' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2.5 4.5 3.5 3.5 3.5-3.5'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: left 11px center; cursor: pointer; }
+.input.ltr { text-align: end; }
+.hint { font-size: var(--fs-xs); color: var(--ink-3); line-height: 1.5; }
+.err { display: flex; align-items: center; gap: 6px; font-size: var(--fs-xs); color: var(--cinnabar); line-height: 1.5; }
+.search { position: relative; flex: 1 1 260px; max-width: 340px; }
+.search .i { position: absolute; inset-inline-start: 11px; top: 50%; translate: 0 -50%; color: var(--ink-3); pointer-events: none; }
+.search .input { padding-inline-start: 36px; }
+.seg { display: inline-flex; gap: 2px; padding: 3px; border: 1px solid var(--rule); border-radius: 10px; background: var(--sunk); max-width: 100%; overflow-x: auto; }
+.seg button { display: inline-flex; align-items: center; gap: 6px; min-height: 30px; padding: 4px 12px; border: 0; border-radius: 7px; background: transparent; color: var(--ink-2); font-size: var(--fs-xs); font-weight: 500; white-space: nowrap; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--raised); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--rule-strong); }
+.seg .n { color: var(--ink-3); font-variant-numeric: tabular-nums; font-weight: 500; }
+.toolbar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-block-end: 14px; }
+.toolbar .select { width: auto; min-width: 150px; }
+.check { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-sm); }
+.check input { width: 18px; height: 18px; margin: 0; accent-color: var(--lapis); }
+
+/* ================= STATUS: nuqta chips ================= */
+.chip { --fg: var(--ink-2); --bg: var(--neutral-wash); display: inline-flex; align-items: center; gap: 6px; height: 26px; padding-inline: 9px 11px; border: 1px solid color-mix(in oklab, var(--fg) 26%, transparent); border-radius: var(--radius-pill); background: var(--bg); color: var(--fg); font-size: var(--fs-xs); font-weight: 600; line-height: 1; white-space: nowrap; }
+.chip--ok { --fg: var(--verdigris); --bg: var(--verdigris-wash); }
+.chip--act { --fg: var(--saffron); --bg: var(--saffron-wash); }
+.chip--bad { --fg: var(--cinnabar); --bg: var(--cinnabar-wash); }
+.chip--sm { height: 22px; padding-inline: 7px 9px; }
+.pips { display: inline-flex; gap: 1px; }
+.pips .g { width: 9px; height: 9px; }
+.badge { display: inline-grid; place-items: center; min-width: 22px; height: 20px; padding-inline: 6px; border-radius: var(--radius-pill); background: var(--saffron-wash); color: var(--saffron); font-size: var(--fs-2xs); font-weight: 700; font-variant-numeric: tabular-nums; box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--saffron) 30%, transparent); }
+.note { display: inline; }
+.note .g { display: inline-block; width: 9px; height: 9px; margin-inline-end: 6px; color: var(--gold); vertical-align: 0; }
+.note--act { color: var(--ink); font-weight: 600; }
+.note--act .g { color: var(--saffron); }
+
+/* ================= ADMIN SHELL ================= */
+.shell { display: grid; grid-template-columns: 236px minmax(0, 1fr); min-height: 720px; }
+.side { display: flex; flex-direction: column; gap: 26px; padding: 22px 12px 16px; min-width: 0; }
+.brand { display: flex; align-items: center; gap: 10px; padding-inline: 6px; text-decoration: none; color: var(--ink); }
+.brand svg { width: 42px; height: 42px; color: var(--gold); flex: none; }
+.wm small { display: block; font-size: var(--fs-2xs); color: var(--ink-3); line-height: 1.3; }
+.wm b { display: block; font-family: var(--font-display); font-size: var(--fs-h3); line-height: 1.35; white-space: nowrap; }
+.nav { display: flex; flex-direction: column; gap: 14px; }
+.nav ul { display: flex; flex-direction: column; gap: 2px; }
+.nav a { display: flex; align-items: center; gap: 8px; min-height: 38px; padding-inline: 10px; border-radius: var(--radius-md); color: var(--ink-2); font-weight: 500; text-decoration: none; white-space: nowrap; }
+.nav a .i { color: var(--ink-3); }
+.nav a:hover { background: var(--sunk); color: var(--ink); }
+.nav a[aria-current="page"] { background: var(--page); color: var(--ink); font-weight: 600; box-shadow: 0 0 0 1px var(--rule-strong); }
+.nav a[aria-current="page"] .i { color: var(--lapis); }
+.nav .ld { flex: 1; min-width: 6px; height: 1px; margin-block-start: 6px; border-block-start: 1.5px dotted var(--rule-strong); }
+.nav .cnt { font-size: var(--fs-2xs); font-weight: 500; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.nav .cnt--act { color: var(--saffron); font-weight: 700; }
+.side-foot { display: flex; align-items: center; gap: 10px; margin-block-start: auto; padding: 12px 6px 0; border-block-start: 1px solid var(--rule); }
+.avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--gold-wash); color: var(--ink); font-family: var(--font-display); font-weight: 700; font-size: 17px; box-shadow: inset 0 0 0 1px var(--gold); flex: none; }
+.side-foot .who { font-size: var(--fs-xs); line-height: 1.4; }
+.side-foot .who span { display: block; color: var(--ink-3); font-size: var(--fs-2xs); }
+.side-foot .icon-btn { margin-inline-start: auto; }
+.main { display: flex; flex-direction: column; min-width: 0; padding: 0 16px 20px; }
+.runhead { display: flex; align-items: center; justify-content: space-between; gap: 8px 20px; flex-wrap: wrap; min-height: 54px; color: var(--ink-3); font-size: var(--fs-xs); }
+.crumbs { display: flex; align-items: center; gap: 6px; }
+.crumbs a { color: var(--ink-3); text-decoration: none; }
+.crumbs .i { width: 14px; height: 14px; }
+.crumbs [aria-current] { color: var(--ink-2); font-weight: 600; }
+.clocks { display: flex; align-items: center; gap: 16px; }
+.clocks .hijri { color: var(--ink-3); }
+.clocks .sep { width: 1px; height: 14px; background: var(--rule-strong); }
+.clocks b { color: var(--ink-2); font-weight: 600; margin-inline-start: 4px; }
+
+/* table */
+.table-wrap { overflow-x: auto; }
+table.data { width: 100%; border-collapse: collapse; }
+.data th { padding: 9px 8px; border-block-end: 3px double var(--gold); color: var(--ink-3); font-size: var(--fs-xs); font-weight: 600; text-align: start; white-space: nowrap; }
+.data td { padding: 9px 8px; border-block-end: 1px solid var(--rule); white-space: nowrap; vertical-align: middle; line-height: var(--lh-snug); }
+.data tbody tr:hover { background: color-mix(in oklab, var(--sunk) 75%, transparent); }
+.data .c-code { color: var(--ink-2); font-size: var(--fs-xs); }
+.data .c-name b { display: block; font-weight: 600; }
+.data .c-name small, .data .c-guard small { display: block; color: var(--ink-3); font-size: var(--fs-2xs); }
+.data .c-prog, .data .c-teacher { font-size: var(--fs-xs); color: var(--ink-2); }
+.data .c-teacher .none { color: var(--ink-3); }
+.data .c-act { width: 1%; }
+.data .c-act div { display: flex; gap: 0; }
+.data .hamish { border-inline-start: 3px double var(--gold-soft); padding-inline-start: 14px; font-size: var(--fs-xs); color: var(--ink-2); }
+.data th.hamish { color: var(--ink-3); }
+.data .fold { display: none; margin-block-start: 3px; font-size: var(--fs-2xs); white-space: nowrap; }
+.data .c-name .fold.note { color: var(--ink-2); }
+.data .c-name .fold.note--act { color: var(--ink); }
+@container (max-width: 940px) {
+  .data .hamish { display: none; }
+  .data .fold { display: block; }
+}
+.pager { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; padding-block-start: 14px; color: var(--ink-3); font-size: var(--fs-xs); }
+.pages { display: flex; align-items: center; gap: 2px; }
+.pages a, .pages span { display: grid; place-items: center; min-width: 36px; height: 36px; border-radius: var(--radius-md); color: var(--ink-2); text-decoration: none; font-variant-numeric: tabular-nums; }
+.pages a:hover { background: var(--sunk); }
+.pages a[aria-current="page"] { position: relative; color: var(--ink); font-weight: 700; }
+.pages a[aria-current="page"] svg { position: absolute; inset: -2px; width: 40px; height: 40px; color: var(--gold); }
+.pages a[aria-current="page"] b { position: relative; }
+.pager .step { display: flex; gap: 6px; }
+
+/* ================= LOGIN + BINDING COVER ================= */
+.login { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); min-height: 660px; background: var(--page); }
+.login-form { display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 48px 32px; }
+.login-form .inner { width: 100%; max-width: 380px; display: grid; gap: 22px; }
+.login-form .intro { color: var(--ink-2); font-size: var(--fs-body); }
+.login-form .foot { color: var(--ink-3); font-size: var(--fs-xs); padding-block-start: 18px; border-block-start: 1px solid var(--rule); text-wrap: pretty; }
+.pw { position: relative; }
+.pw .input { padding-inline-end: 72px; }
+.pw button { position: absolute; inset-inline-end: 6px; top: 50%; translate: 0 -50%; border: 0; background: transparent; color: var(--lapis); font-size: var(--fs-xs); font-weight: 600; padding: 6px 8px; border-radius: var(--radius-sm); cursor: pointer; }
+.cover { position: relative; isolation: isolate; display: grid; place-items: center; overflow: hidden; background: radial-gradient(120% 90% at 50% 45%, var(--leather-lift), var(--leather) 55%, var(--leather-deep)); color: var(--cover-ink); }
+/* leather grain: fractal noise, multiplied in */
+.cover::before { content: ""; position: absolute; inset: 0; z-index: -1; opacity: .5; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .08 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.cv-frame { position: absolute; inset: 26px; border: 1px solid var(--gold-on-cover); }
+.cv-frame::before { content: ""; position: absolute; inset: 5px; border: 1px solid color-mix(in oklab, var(--gold-on-cover) 55%, transparent); }
+/* blind tooling: a pressed fillet, shaded like an impression (physical light from top-left) */
+.cv-blind { position: absolute; inset: 52px; border: 1px solid var(--leather-deep); box-shadow: 1px 1px 0 color-mix(in oklab, var(--leather-lift) 70%, transparent), inset 1px 1px 0 color-mix(in oklab, var(--leather-lift) 70%, transparent); }
+.cv-corner { position: absolute; width: 132px; height: 132px; color: var(--gold-on-cover); }
+.cv-corner.c-tl { top: 52px; left: 52px; }
+.cv-corner.c-tr { top: 52px; right: 52px; transform: scaleX(-1); }
+.cv-corner.c-bl { bottom: 52px; left: 52px; transform: scaleY(-1); }
+.cv-corner.c-br { bottom: 52px; right: 52px; transform: scale(-1, -1); }
+.cv-center { position: relative; display: grid; justify-items: center; gap: 6px; text-align: center; }
+.mandorla { width: 168px; height: 252px; color: var(--gold-on-cover); }
+.cv-center b { font-family: var(--font-display); font-size: 40px; line-height: 1.4; color: var(--gold-on-cover); }
+.cv-center small { font-size: var(--fs-sm); color: var(--cover-ink); opacity: .9; }
+
+/* ================= BRAND ================= */
+.brand-grid { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 20px; }
+.tile { background: var(--page); border: 1px solid var(--rule); border-radius: 10px; padding: 24px; min-width: 0; }
+.lockups { grid-column: span 5; display: grid; gap: 20px; align-content: start; }
+.lock-a { display: flex; align-items: center; gap: 18px; }
+.lock-a svg { width: 84px; height: 84px; color: var(--gold); flex: none; }
+.lock-a .wm b { font-size: var(--fs-display); line-height: 1.3; }
+.lock-a .wm small { font-size: var(--fs-body); }
+.lock-b { display: flex; align-items: center; gap: 18px; padding: 26px; border-radius: 10px; background: var(--cover); color: var(--cover-ink); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold-on-cover) 35%, transparent); }
+.lock-b svg { width: 64px; height: 64px; color: var(--gold-on-cover); flex: none; }
+.lock-b .wm b { color: var(--gold-on-cover); font-size: 34px; }
+.lock-b .wm small { color: var(--cover-ink); opacity: .85; }
+.sizes { display: flex; align-items: end; flex-wrap: wrap; gap: 14px 22px; }
+.sizes figure { display: grid; justify-items: center; gap: 6px; font-size: var(--fs-2xs); color: var(--ink-3); }
+.appicon { display: grid; place-items: center; width: 72px; height: 72px; border-radius: 18px; background: var(--cover); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--gold-on-cover) 30%, transparent); }
+.appicon svg { width: 52px; height: 52px; color: var(--gold-on-cover); }
+.mk { color: var(--gold); display: block; }
+.palette { grid-column: span 7; }
+.palette h3, .specimen h3, .kit h3, .tile h3 { font-family: var(--font-display); font-size: var(--fs-h4); line-height: var(--lh-display); margin-block-end: 12px; }
+.swatches { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px 14px; }
+.sw { display: grid; gap: 4px; align-content: start; }
+.sw i { display: flex; height: 56px; border-radius: var(--radius-md); overflow: hidden; border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent); margin-block-end: 4px; }
+.sw i span { flex: 1; }
+.sw b { font-size: var(--fs-sm); line-height: 1.4; }
+.sw b span { color: var(--ink-3); font-weight: 400; margin-inline-start: 6px; }
+.sw small { font-size: var(--fs-2xs); color: var(--ink-2); line-height: 1.5; }
+.marks { grid-column: span 5; }
+.devices { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 26px 24px; }
+.dev { display: grid; gap: 4px; align-content: start; }
+.dev .demo { height: 56px; display: flex; align-items: center; gap: 8px; color: var(--gold); }
+.dev b { font-weight: 600; font-size: var(--fs-sm); }
+.dev p { color: var(--ink-2); font-size: var(--fs-xs); text-wrap: pretty; }
+.cart--sm { height: 40px; } .cart--sm > svg { width: 20px; height: 40px; } .cart--sm .cart-mid > span { font-size: 19px; padding-inline: 8px; padding-block-end: 4px; }
+.mini-page { display: block; width: 84px; height: 40px; margin-inline-start: 5px; background: var(--page); border: 1px solid var(--rule-strong); outline: 1.5px solid var(--gold); outline-offset: 3px; border-radius: 2px; }
+.mini-hamish { border-inline-start: 3px double var(--gold-soft); padding-block: 6px; padding-inline-start: 12px; font-size: var(--fs-xs); }
+.mini-rule { display: block; width: 44px; border-block-end: 3px double var(--gold); }
+.specimen { grid-column: span 7; display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 28px; }
+.spec-display { font-family: var(--font-display); font-weight: 700; font-size: var(--fs-hero); line-height: 1.45; }
+.spec-scale { display: grid; gap: 4px; margin-block-start: 6px; }
+.spec-scale div { display: grid; grid-template-columns: 112px minmax(0, 1fr); align-items: baseline; gap: 14px; padding-block: 7px; border-block-start: 1px solid var(--rule); }
+.spec-scale code { font-family: var(--font-ui); font-size: var(--fs-2xs); color: var(--ink-3); }
+.data-sample { display: grid; gap: 9px; padding: 16px; background: var(--sunk); border-radius: var(--radius-md); }
+.data-sample div { display: flex; justify-content: space-between; gap: 12px; border-block-end: 1px solid var(--rule); padding-block-end: 8px; }
+.data-sample div:last-child { border: 0; padding: 0; }
+.data-sample span { color: var(--ink-3); font-size: var(--fs-xs); }
+.rules-list { display: grid; gap: 8px; margin-block-start: 14px; font-size: var(--fs-xs); color: var(--ink-2); }
+.rules-list li { display: grid; grid-template-columns: 10px minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.rules-list .g { width: 9px; height: 9px; color: var(--gold); }
+.folio { font-family: var(--font-display); font-weight: 700; font-variant-numeric: lining-nums; }
+</style>
+<style>
+/* ================= DIALOG ================= */
+.dlg-stage { position: relative; min-height: 780px; }
+.dlg-bg { padding: 20px 24px 24px; display: flex; flex-direction: column; min-height: 780px; }
+.dlg-bg .page { display: grid; gap: 16px; align-content: start; }
+.form-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px 20px; }
+.scrim { position: absolute; inset: 0; background: var(--scrim); }
+.dialog { position: absolute; inset-inline: 0; top: 50%; translate: 0 -50%; margin-inline: auto; width: min(740px, calc(100% - 32px)); padding: 26px 28px 22px; background: var(--page); border: 1px solid var(--rule-strong); outline: 1.5px solid var(--gold); outline-offset: 4px; border-radius: 3px; box-shadow: var(--elev-pop); }
+.dlg-head { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 4px 14px; align-items: start; }
+.dlg-glyph { width: 40px; height: 40px; display: grid; place-items: center; color: var(--saffron); background: var(--saffron-wash); border-radius: 50%; margin-block-start: 6px; }
+.dlg-glyph svg { width: 18px; height: 18px; }
+.dlg-head h3 { font-family: var(--font-display); font-size: 27px; line-height: var(--lh-display); text-wrap: balance; }
+.dlg-head p { grid-column: 2 / -1; color: var(--ink-2); font-size: var(--fs-body); }
+.compare { display: grid; grid-template-columns: 120px minmax(0, 1fr) minmax(0, 1fr) 160px; margin-block: 22px 18px; border: 1px solid var(--rule); border-radius: var(--radius-md); overflow: hidden; }
+.compare > * { padding: 10px 14px; border-block-end: 1px solid var(--rule); display: flex; align-items: center; gap: 6px; flex-wrap: wrap; min-width: 0; }
+.compare .h { background: var(--sunk); color: var(--ink-3); font-size: var(--fs-xs); font-weight: 600; border-block-end: 3px double var(--gold-soft); }
+.compare .k { color: var(--ink-3); font-size: var(--fs-xs); }
+.compare .v { font-weight: 600; }
+.compare .v.name { font-size: var(--fs-base); }
+.compare .v small { width: 100%; font-weight: 400; color: var(--ink-3); font-size: var(--fs-2xs); }
+.compare .last { border-block-end: 0; }
+.compare .m { font-size: var(--fs-xs); font-weight: 600; }
+.compare .m.same { color: var(--verdigris); }
+.compare .m.near { color: var(--saffron); }
+.compare .m .i { width: 15px; height: 15px; stroke-width: 2; }
+.compare .ex { background: color-mix(in oklab, var(--gold-wash) 45%, transparent); }
+/* the differing letter: colour + underline only. No padding, margin, border or ZWJ, so Arabic joining survives. */
+.diff { color: var(--saffron); text-decoration: underline 2px; text-decoration-color: var(--saffron); text-underline-offset: 7px; text-decoration-skip-ink: none; }
+.kids { display: flex; align-items: center; flex-wrap: wrap; gap: 8px 10px; font-size: var(--fs-xs); color: var(--ink-2); }
+.kid { display: inline-flex; align-items: center; gap: 8px; padding-block: 5px; padding-inline: 6px 10px; border: 1px solid var(--rule); border-radius: var(--radius-md); background: var(--raised); color: var(--ink); font-weight: 600; }
+.kid .num { color: var(--ink-3); font-weight: 500; font-size: var(--fs-2xs); }
+.dlg-foot { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 14px 20px; margin-block-start: 20px; padding-block-start: 18px; border-block-start: 1px solid var(--rule); }
+.dlg-foot .hint { max-width: 32ch; }
+.dlg-foot .btns { display: flex; gap: 10px; flex-wrap: wrap; }
+.dlg-x { margin-block-start: 2px; }
+
+/* ================= TEACHER / AVAILABILITY ================= */
+.t-head { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 18px; }
+.t-meta { display: flex; flex-wrap: wrap; gap: 6px 22px; margin-block: 14px 18px; color: var(--ink-2); font-size: var(--fs-xs); }
+.t-meta span { display: inline-flex; align-items: center; gap: 7px; }
+.t-meta .i { width: 16px; height: 16px; color: var(--ink-3); }
+.tabs { display: flex; gap: 4px; border-block-end: 1px solid var(--rule); margin-block-end: 20px; overflow-x: auto; }
+.tabs a { padding: 8px 14px 10px; color: var(--ink-2); text-decoration: none; font-weight: 500; white-space: nowrap; border-block-end: 3px double transparent; margin-block-end: -1px; }
+.tabs a[aria-selected="true"] { color: var(--ink); font-weight: 600; border-block-end-color: var(--gold); }
+.tabs .n { color: var(--ink-3); font-variant-numeric: tabular-nums; margin-inline-start: 4px; }
+.avail-head { display: flex; flex-wrap: wrap; align-items: end; justify-content: space-between; gap: 14px 24px; margin-block-end: 14px; }
+.avail-head h3 { font-family: var(--font-display); font-size: var(--fs-h3); line-height: var(--lh-display); }
+.tz { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.tz .select { width: auto; min-width: 210px; }
+.tz-note { display: flex; align-items: flex-start; gap: 8px; margin-block-end: 16px; padding: 10px 14px; border-radius: var(--radius-md); background: var(--sunk); color: var(--ink-2); font-size: var(--fs-xs); }
+.tz-note .i { width: 16px; height: 16px; color: var(--ink-3); margin-block-start: 3px; }
+.week { display: grid; grid-template-columns: 92px 452px minmax(0, 1fr); border-block-start: 3px double var(--gold); }
+.week > .row { display: contents; }
+.week .cell { padding: 9px 10px; border-block-end: 1px solid var(--rule); display: flex; align-items: center; min-width: 0; }
+.week .day { flex-direction: column; align-items: flex-start; justify-content: center; font-weight: 600; line-height: 1.3; }
+.week .day .today { font-size: var(--fs-2xs); font-weight: 600; color: var(--ink-3); }
+.week .hdr { color: var(--ink-3); font-size: var(--fs-2xs); font-weight: 600; padding-block: 8px; }
+.row.is-today .cell { background: color-mix(in oklab, var(--gold-wash) 40%, transparent); }
+.ranges { flex-wrap: wrap; gap: 6px 10px; }
+.range { display: inline-flex; align-items: center; gap: 4px; }
+.range .select { width: 84px; min-height: var(--h-dense); font-size: var(--fs-xs); padding-inline: 10px 26px; background-position: left 8px center; font-variant-numeric: tabular-nums; }
+.range .to { color: var(--ink-3); font-size: var(--fs-2xs); padding-inline: 2px; }
+.range .icon-btn { width: 28px; height: 28px; }
+.range .icon-btn .i { width: 15px; height: 15px; }
+.add-slot { width: 30px; height: 30px; border: 1px dashed var(--rule-strong); color: var(--lapis); }
+.empty-day { color: var(--ink-3); font-size: var(--fs-xs); margin-inline-end: 6px; }
+.row.bad .cell { background: color-mix(in oklab, var(--cinnabar-wash) 55%, transparent); }
+.row-err { grid-column: 2 / -1; padding: 0 10px 10px; border-block-end: 1px solid var(--rule); background: color-mix(in oklab, var(--cinnabar-wash) 55%, transparent); }
+.row-err-pad { border-block-end: 1px solid var(--rule); background: color-mix(in oklab, var(--cinnabar-wash) 55%, transparent); }
+.axis { position: relative; width: 100%; height: 18px; }
+.axis span { position: absolute; inset-inline-start: calc(var(--h) / 16 * 100%); translate: 50% 0; font-size: var(--fs-2xs); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.axis span:first-child { translate: 0 0; }
+.axis span:last-child { translate: 100% 0; }
+/* the scribe's mistara: hour rules every 2h; the track runs right-to-left like the text */
+.track { position: relative; width: 100%; height: 28px; border-radius: 4px; background-color: var(--sunk); background-image: repeating-linear-gradient(to left, var(--rule) 0 1px, transparent 1px calc(100% / 8)); }
+.bar { position: absolute; inset-block: 3px; inset-inline-start: calc(var(--s) / 16 * 100%); width: calc((var(--e) - var(--s)) / 16 * 100%); border: 1px solid var(--gold); border-radius: 4px; background: var(--gold-wash); }
+.bar.sel { border-width: 1.5px; border-color: var(--lapis); box-shadow: 0 0 0 3px color-mix(in oklab, var(--lapis) 22%, transparent); }
+.bar.sel::before, .bar.sel::after { content: ""; position: absolute; top: 50%; width: 5px; height: 14px; translate: 0 -50%; border-radius: 2px; background: var(--lapis); }
+.bar.sel::before { inset-inline-start: -3px; } .bar.sel::after { inset-inline-end: -3px; }
+.booked { position: absolute; inset-block: 9px; inset-inline-start: calc(var(--s) / 16 * 100%); width: calc((var(--e) - var(--s)) / 16 * 100%); border-radius: 2px; background: var(--ink-2); }
+.clash { position: absolute; inset-block: 1px; inset-inline-start: calc(var(--s) / 16 * 100%); width: calc((var(--e) - var(--s)) / 16 * 100%); border: 1.5px solid var(--cinnabar); border-radius: 3px; background: repeating-linear-gradient(45deg, color-mix(in oklab, var(--cinnabar) 55%, transparent) 0 2px, transparent 2px 5px); }
+.nowmark { position: absolute; inset-block: -4px; inset-inline-start: calc(var(--t) / 16 * 100%); width: 2px; translate: 50% 0; background: var(--ink); border-radius: 1px; }
+.legend { display: flex; flex-wrap: wrap; gap: 8px 20px; margin-block-start: 12px; color: var(--ink-3); font-size: var(--fs-2xs); }
+.legend span { display: inline-flex; align-items: center; gap: 7px; }
+.legend i { display: inline-block; width: 22px; height: 12px; border-radius: 3px; }
+.lg-a { border: 1px solid var(--gold); background: var(--gold-wash); }
+.lg-b { background: var(--ink-2); height: 8px !important; }
+.lg-c { border: 1.5px solid var(--cinnabar); background: repeating-linear-gradient(45deg, color-mix(in oklab, var(--cinnabar) 55%, transparent) 0 2px, transparent 2px 5px); }
+.lg-d { width: 2px !important; height: 14px !important; background: var(--ink); border-radius: 1px !important; }
+.avail-foot { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; margin-block-start: 18px; padding-block-start: 16px; border-block-start: 1px solid var(--rule); }
+.avail-foot p { color: var(--ink-2); font-size: var(--fs-xs); }
+.avail-foot .btns { display: flex; gap: 10px; }
+.t-lower { display: grid; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); gap: 28px; margin-block-start: 28px; }
+.t-lower h3 { font-family: var(--font-display); font-size: var(--fs-h4); line-height: var(--lh-display); }
+.sec-h { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-block-end: 8px; }
+.off { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; padding-block: 12px; border-block-end: 1px solid var(--rule); }
+.off b { font-weight: 600; }
+.off .r { color: var(--ink-2); font-size: var(--fs-xs); }
+.off .warn { grid-column: 1 / -1; display: flex; align-items: center; flex-wrap: wrap; gap: 6px 10px; margin-block-start: 6px; font-size: var(--fs-xs); color: var(--ink-2); }
+.off .icon-btn { grid-row: 1 / span 2; align-self: center; }
+.rates { width: 100%; border-collapse: collapse; }
+.rates td { padding: 9px 4px; border-block-end: 1px solid var(--rule); }
+.rates td:last-child { text-align: end; font-weight: 600; }
+
+/* ================= LEADS INBOX ================= */
+.inbox { display: grid; grid-template-columns: 196px minmax(0, 1fr); gap: 22px; }
+.fihris { display: flex; flex-direction: column; gap: 1px; align-self: start; }
+.fihris a { display: flex; align-items: baseline; gap: 6px; padding: 7px 10px; border-radius: var(--radius-sm); color: var(--ink-2); text-decoration: none; font-size: var(--fs-xs); white-space: nowrap; }
+.fihris a::after { content: ""; order: 2; flex: 1; border-block-end: 1.5px dotted var(--rule-strong); translate: 0 -4px; min-width: 12px; }
+.fihris a .n { order: 3; font-variant-numeric: tabular-nums; color: var(--ink-3); font-weight: 500; }
+.fihris a:hover { background: var(--sunk); }
+.fihris a[aria-selected="true"] { background: var(--gold-wash); color: var(--ink); font-weight: 600; box-shadow: inset 0 0 0 1px var(--gold-soft); }
+.fihris a[aria-selected="true"] .n { color: var(--ink); font-weight: 700; }
+.fihris hr { border: 0; border-block-start: 1px solid var(--rule); margin: 8px 10px; }
+.leads-list { min-width: 0; }
+.lhdr, .lead { display: grid; grid-template-columns: 38px minmax(0, 1fr) 156px 184px; gap: 0 12px; align-items: center; }
+.lhdr { padding: 0 10px 8px; border-block-end: 3px double var(--gold); color: var(--ink-3); font-size: var(--fs-2xs); font-weight: 600; }
+.lhdr > :first-child { grid-column: 1 / span 2; }
+.lhdr > :last-child { justify-self: end; }
+.lead { padding: 12px 10px; border-block-end: 1px solid var(--rule); }
+.lead:hover { background: color-mix(in oklab, var(--sunk) 75%, transparent); }
+.lead .avatar { width: 38px; height: 38px; font-size: 18px; grid-row: 1 / span 2; }
+.lead .who { display: flex; align-items: baseline; flex-wrap: wrap; gap: 2px 10px; min-width: 0; }
+.lead .who b { font-weight: 600; }
+.lead.unread .who b { font-weight: 700; }
+.lead .who .num { color: var(--ink-3); font-size: var(--fs-2xs); }
+.lead .src { color: var(--ink-3); font-size: var(--fs-2xs); }
+.lead .msg { grid-column: 2; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--ink-2); font-size: var(--fs-xs); }
+.lead.unread .msg { color: var(--ink); }
+.lead .msg .me { color: var(--ink-3); }
+.lead .who .age { margin-inline-start: auto; color: var(--ink-3); font-size: var(--fs-2xs); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.lead .st { grid-row: 1 / span 2; grid-column: 3; justify-self: start; }
+.lead .acts { grid-row: 1 / span 2; grid-column: 4; display: flex; gap: 2px; align-items: center; justify-content: flex-end; }
+.lead .acts .btn { margin-inline-end: 4px; }
+.lead .fu { grid-column: 2; font-size: var(--fs-2xs); color: var(--ink-3); }
+.dot { width: 7px; height: 7px; border-radius: 50%; background: var(--saffron); display: inline-block; translate: 0 -1px; }
+.lead.flag { background: color-mix(in oklab, var(--gold-wash) 50%, transparent); }
+.flag-note { grid-column: 2 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; margin-block-start: 10px; padding: 10px 12px; border: 1px solid var(--gold-soft); border-radius: var(--radius-md); background: var(--page); font-size: var(--fs-xs); color: var(--ink-2); }
+.flag-note .btns { display: flex; gap: 8px; margin-inline-start: auto; }
+
+/* ================= MOBILE TODAY (Expo) ================= */
+.phone-stage { display: grid; grid-template-columns: auto minmax(0, 44ch); justify-content: center; gap: 64px; align-items: center; padding: 48px 56px; background: var(--margin); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
+.phone { width: 390px; height: 844px; padding: 12px; border-radius: 54px; background: oklch(0.2 0.02 262); box-shadow: 0 0 0 1px oklch(0.4 0.02 262), var(--elev-pop); }
+.ph { position: relative; height: 100%; border-radius: 43px; overflow: hidden; background: var(--margin); display: flex; flex-direction: column; }
+.ph-status { display: flex; justify-content: space-between; align-items: center; padding: 14px 30px 2px; font-size: var(--fs-sm); font-weight: 600; direction: ltr; }
+.ph-status .bars i { display: block; width: 22px; height: 11px; border-radius: 3px; border: 1.5px solid currentColor; }
+.ph-head { padding: 8px 18px 10px; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0 12px; align-items: center; }
+.ph-head h3 { font-family: var(--font-display); font-size: 32px; line-height: 1.35; }
+.ph-head .date { grid-column: 1 / -1; color: var(--ink-2); font-size: var(--fs-xs); }
+.ph-head .mark { width: 34px; height: 34px; color: var(--gold); }
+.ph-sum { display: flex; gap: 8px; padding: 0 18px 12px; overflow-x: auto; scrollbar-width: none; }
+.ph-sum button { display: inline-flex; gap: 6px; align-items: center; min-height: 36px; padding-inline: 12px; border: 1px solid var(--rule-strong); border-radius: var(--radius-pill); background: var(--raised); font-size: var(--fs-xs); font-weight: 500; white-space: nowrap; color: var(--ink-2); }
+.ph-sum button[aria-pressed="true"] { background: var(--ink); color: var(--page); border-color: var(--ink); }
+.ph-sum .g { width: 10px; height: 10px; }
+.ph-body { flex: 1; overflow: hidden; padding: 4px 14px 0; }
+/* timeline spine: time | node | card. Nodes reuse the nuqta grammar. */
+.tl { position: relative; display: grid; gap: 8px; }
+.tl::before { content: ""; position: absolute; inset-block: 10px 0; inset-inline-start: 56px; border-inline-start: 1.5px solid var(--rule-strong); }
+.tl-row { display: grid; grid-template-columns: 42px 18px minmax(0, 1fr); column-gap: 6px; align-items: start; }
+.tl-time { padding-block-start: 11px; font-size: var(--fs-xs); font-weight: 600; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.tl-node { position: relative; width: 18px; height: 18px; margin-block-start: 12px; display: grid; place-items: center; background: var(--margin); }
+.tl-node svg { width: 14px; height: 14px; }
+.tl-past .tl-time { color: var(--ink-3); font-weight: 500; }
+.tl-past .tl-node { color: var(--ink-3); }
+.mini { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 42px; padding: 8px 2px; color: var(--ink-2); font-size: var(--fs-xs); border-block-end: 1px dashed var(--rule); }
+.mini b { color: var(--ink-2); font-weight: 600; }
+.tl-now { display: grid; grid-template-columns: 42px 18px minmax(0, 1fr); column-gap: 6px; align-items: center; margin-block: 2px; }
+.tl-now .pill { grid-column: 1 / span 2; justify-self: start; z-index: 1; padding: 2px 8px; border-radius: var(--radius-pill); background: var(--ink); color: var(--margin); font-size: var(--fs-2xs); font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.tl-now .line { border-block-start: 2px solid var(--ink); }
+.lcard { padding: 12px 14px; background: var(--page); border: 1px solid var(--rule-strong); border-radius: 10px; display: grid; gap: 7px; }
+.lcard.need { border-inline-start: 4px solid var(--saffron); padding-inline-start: 11px; }
+.lcard .r1 { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+.lcard .nm { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 8px; font-weight: 700; font-size: var(--fs-body); line-height: 1.5; }
+.lcard .nm .num { color: var(--ink-3); font-weight: 500; font-size: var(--fs-2xs); }
+.lcard .meta { color: var(--ink-2); font-size: var(--fs-xs); line-height: 1.5; }
+.lcard .pkg { display: flex; align-items: center; gap: 6px; font-size: var(--fs-2xs); color: var(--ink-3); }
+.lcard .pkg .note--act { font-size: var(--fs-2xs); }
+.lcard .acts { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.lcard .acts .btn { min-height: 44px; }
+.ph-toast { position: absolute; inset-inline: 12px; bottom: 98px; display: flex; align-items: center; gap: 10px; padding-block: 10px; padding-inline: 14px 10px; border-radius: var(--radius-lg); background: var(--inverse); color: var(--on-inverse); font-size: var(--fs-xs); box-shadow: var(--elev-toast); }
+.ph-toast .g { width: 13px; height: 13px; color: var(--inverse-gold); }
+.ph-toast button { margin-inline-start: auto; border: 0; background: transparent; color: var(--on-inverse); font-weight: 700; font-size: var(--fs-xs); min-height: 40px; padding-inline: 10px; text-decoration: underline; text-underline-offset: 4px; }
+.tabbar { display: grid; grid-template-columns: repeat(4, 1fr); padding: 8px 8px 24px; background: var(--page); border-block-start: 1px solid var(--rule-strong); }
+.tabbar a { position: relative; display: grid; justify-items: center; gap: 2px; min-height: 48px; padding-block-start: 4px; color: var(--ink-3); font-size: var(--fs-2xs); font-weight: 500; text-decoration: none; }
+.tabbar a .i { width: 22px; height: 22px; }
+.tabbar a[aria-current="page"] { color: var(--ink); font-weight: 700; }
+.tabbar a[aria-current="page"] .i { color: var(--lapis); }
+.tabbar .badge { position: absolute; top: -3px; inset-inline-start: calc(50% + 7px); min-width: 20px; height: 18px; font-size: var(--fs-2xs); padding-inline: 5px; }
+.phone-notes { display: grid; gap: 22px; max-width: 46ch; }
+.phone-notes div { display: grid; grid-template-columns: 12px minmax(0, 1fr); gap: 4px 12px; }
+.phone-notes .g { width: 10px; height: 10px; color: var(--gold); margin-block-start: 8px; grid-row: span 2; }
+.phone-notes b { font-weight: 600; font-size: var(--fs-body); }
+.phone-notes p { color: var(--ink-2); font-size: var(--fs-sm); text-wrap: pretty; }
+
+/* ================= KIT ================= */
+.kit { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 44px 36px; }
+.kit section { min-width: 0; }
+.kit-6 { grid-column: span 6; } .kit-12 { grid-column: 1 / -1; } .kit-5 { grid-column: span 5; } .kit-7 { grid-column: span 7; } .kit-4 { grid-column: span 4; } .kit-8 { grid-column: span 8; }
+.kit .row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-block-end: 14px; }
+.kit .cap { color: var(--ink-3); font-size: var(--fs-xs); margin-block-end: 8px; text-wrap: pretty; }
+.kit .fields { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px 20px; }
+.phone-in { display: flex; direction: ltr; }
+.phone-in .select { width: auto; flex: none; padding-inline: 10px 28px; border-start-end-radius: 0; border-end-end-radius: 0; background-position: right 9px center; font-variant-numeric: tabular-nums; }
+.phone-in .input { border-start-start-radius: 0; border-end-start-radius: 0; margin-inline-start: -1px; text-align: left; }
+.preview { font-size: var(--fs-xs); color: var(--ink-2); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.preview .i { width: 15px; height: 15px; color: var(--verdigris); stroke-width: 2; }
+.chips-group { display: grid; grid-template-columns: 168px minmax(0, 1fr); gap: 10px 20px; align-items: start; padding-block: 14px; border-block-end: 1px solid var(--rule); }
+.chips-group:first-of-type { border-block-start: 3px double var(--gold); }
+.chips-group h4 { font-size: var(--fs-xs); font-weight: 600; color: var(--ink-2); padding-block-start: 2px; }
+.chips-group h4 code { display: block; font-family: var(--font-ui); font-size: var(--fs-2xs); color: var(--ink-3); font-weight: 400; }
+.chips-group .row { margin: 0; gap: 8px; }
+.shapes { display: flex; flex-wrap: wrap; gap: 10px 26px; margin-block-start: 16px; color: var(--ink-2); font-size: var(--fs-xs); }
+.shapes span { display: inline-flex; align-items: center; gap: 7px; }
+.shapes .g { width: 14px; height: 14px; color: var(--ink-2); }
+.tones { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-block-start: 10px; color: var(--ink-2); font-size: var(--fs-xs); }
+.tones span { display: inline-flex; align-items: center; gap: 7px; }
+.tones i { width: 14px; height: 14px; border-radius: 4px; }
+.toast { display: flex; align-items: center; gap: 12px; padding-block: 10px; padding-inline: 14px 10px; border-radius: 10px; background: var(--inverse); color: var(--on-inverse); font-size: var(--fs-sm); box-shadow: var(--elev-toast); max-width: 460px; }
+.toast .g { width: 13px; height: 13px; color: var(--inverse-gold); }
+.toast.bad { background: var(--cinnabar-wash); color: var(--ink); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--cinnabar) 40%, transparent); }
+.toast.bad .g { color: var(--cinnabar); }
+.toast button { margin-inline-start: auto; border: 0; background: transparent; color: inherit; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; cursor: pointer; min-height: 36px; padding-inline: 8px; border-radius: var(--radius-sm); }
+.toast.bad button { color: var(--lapis); }
+.toasts { display: grid; gap: 12px; }
+.alert { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; border-radius: var(--radius-md); background: var(--cinnabar-wash); color: var(--ink); font-size: var(--fs-xs); box-shadow: inset 0 0 0 1px color-mix(in oklab, var(--cinnabar) 35%, transparent); }
+.alert .g { width: 13px; height: 13px; color: var(--cinnabar); margin-block-start: 4px; }
+.empty { display: grid; justify-items: center; text-align: center; gap: 10px; padding: 36px 24px; border: 1px dashed var(--rule-strong); border-radius: 10px; }
+.empty .orn { width: 56px; height: 56px; color: var(--gold); }
+.empty h4 { font-family: var(--font-display); font-size: var(--fs-h3); line-height: var(--lh-display); }
+.empty p { color: var(--ink-2); font-size: var(--fs-sm); max-width: 36ch; text-wrap: pretty; }
+.kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); border-block: 3px double var(--gold); }
+.kpi { display: grid; gap: 0; padding: 12px 16px 14px; border: 0; background: transparent; text-align: start; cursor: pointer; border-inline-start: 1px solid var(--rule); }
+.kpi:first-child { border-inline-start: 0; }
+.kpi:hover { background: var(--sunk); }
+.kpi[aria-pressed="true"] { background: var(--gold-wash); }
+.kpi .folio { font-size: 40px; line-height: 1.25; color: var(--ink); }
+.kpi span { font-size: var(--fs-xs); color: var(--ink-2); }
+.kpi.act .folio { color: var(--saffron); }
+.sizes-btn { display: flex; align-items: end; gap: 12px; flex-wrap: wrap; }
+.sizes-btn small { display: block; text-align: center; color: var(--ink-3); font-size: var(--fs-2xs); margin-block-start: 4px; }
+
+/* ================= PDF REPORT (A4) ================= */
+.pdf-stage { display: grid; grid-template-columns: minmax(0, 794px) minmax(0, 40ch); justify-content: center; gap: 56px; align-items: start; padding: 48px 40px; background: var(--sunk); border: 1px solid var(--rule); border-radius: var(--radius-lg); }
+.a4-wrap { container-type: inline-size; width: 100%; }
+/* 1em = 14px at 794px wide (A4 @ 96dpi), about 10.5pt; everything inside scales with the page */
+.a4 { font-size: calc(100cqi / 794 * 14); aspect-ratio: 210 / 297; background: var(--raised); color: var(--ink); padding: 3.4em 3.6em 3em; box-shadow: 0 1px 2px oklch(0.2 0.03 262 / .12), 0 18px 40px -20px oklch(0.2 0.03 262 / .35); display: flex; flex-direction: column; line-height: 1.55; }
+.a4 .frame { flex: 1; display: flex; flex-direction: column; gap: 1.25em; padding: 1.7em 1.9em 1.4em; border: 1px solid var(--rule-strong); outline: 0.12em solid var(--gold); outline-offset: 0.35em; }
+.a4-top { display: flex; align-items: center; justify-content: space-between; gap: 1em; }
+.a4-brand { display: flex; align-items: center; gap: 0.7em; }
+.a4-brand svg { width: 3.6em; height: 3.6em; color: var(--gold); }
+.a4-brand b { display: block; font-family: var(--font-display); font-size: 1.75em; line-height: 1.3; }
+.a4-brand small { display: block; font-size: 0.86em; color: var(--ink-3); }
+.a4 .cart { height: 3.6em; }
+.a4 .cart > svg { width: 1.8em; height: 3.6em; }
+.a4 .cart-mid > span { font-size: 1.75em; padding-inline: 0.5em; }
+.a4-meta { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border-block: 0.2em double var(--gold); }
+.a4-meta div { padding: 0.55em 0.8em; border-inline-start: 1px solid var(--rule); }
+.a4-meta div:nth-child(3n+1) { border-inline-start: 0; }
+.a4-meta div:nth-child(n+4) { border-block-start: 1px solid var(--rule); }
+.a4-meta div > span { display: block; font-size: 0.86em; color: var(--ink-3); }
+.a4-meta b { font-weight: 600; font-size: 1.02em; }
+.a4-att { display: flex; align-items: center; gap: 0.8em; flex-wrap: wrap; font-size: 0.95em; }
+.a4-att .chip { height: 2em; font-size: 0.95em; }
+.a4-h { display: flex; align-items: center; gap: 0.5em; font-family: var(--font-display); font-size: 1.35em; line-height: 1.4; }
+.a4-h .g { width: 0.55em; height: 0.55em; color: var(--gold); }
+.a4-learn { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.8em 1.6em; }
+.a4-learn div { padding-block: 0.3em 0.6em; border-block-end: 1px solid var(--rule); }
+.a4-learn div > span { display: block; font-size: 0.86em; color: var(--ink-3); }
+.a4-learn b { font-weight: 600; }
+.a4-grades { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr); gap: 1.6em; align-items: stretch; }
+.rubric { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; gap: 0 1em; align-items: center; }
+.rubric > * { padding-block: 0.38em; border-block-end: 1px solid var(--rule); }
+.rubric .pips .g { width: 0.75em; height: 0.75em; }
+.rubric .gl { font-size: 0.92em; font-weight: 600; color: var(--ink-2); min-width: 7em; }
+.overall { display: grid; place-items: center; align-content: center; gap: 0.3em; text-align: center; padding: 1em; background: var(--gold-wash); border: 1px solid var(--gold-soft); }
+.overall span { font-size: 0.86em; color: var(--ink-2); }
+.overall b { font-family: var(--font-display); font-size: 2.6em; line-height: 1.3; }
+.overall .pips .g { width: 1em; height: 1em; color: var(--ink); }
+.a4-notes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1em 1.6em; }
+.a4-notes p { font-size: 1em; line-height: 1.7; color: var(--ink); text-wrap: pretty; }
+.a4-notes .wide { grid-column: 1 / -1; }
+.a4-foot { margin-block-start: auto; display: flex; align-items: center; justify-content: space-between; gap: 1em; padding-block-start: 0.8em; border-block-start: 1px solid var(--rule); font-size: 0.86em; color: var(--ink-3); }
+.a4-foot .pg { position: relative; width: 2.6em; height: 2.6em; display: grid; place-items: center; color: var(--gold); }
+.a4-foot .pg svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.a4-foot .pg b { position: relative; color: var(--ink); font-size: 1.05em; }
+
+/* ================= TOKENS SECTION ================= */
+.tok-grid { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.tok { width: 100%; border-collapse: collapse; font-size: var(--fs-xs); }
+.tok th { padding: 8px; border-block-end: 3px double var(--gold); color: var(--ink-3); font-weight: 600; text-align: start; white-space: nowrap; }
+.tok td { padding: 7px 8px; border-block-end: 1px solid var(--rule); vertical-align: middle; }
+.tok tr.grp td { padding-block-start: 16px; font-weight: 700; color: var(--ink); border-block-end-color: var(--rule-strong); }
+.tok code { font-family: var(--font-ui); font-size: var(--fs-2xs); color: var(--ink-2); direction: ltr; unicode-bidi: isolate; white-space: nowrap; }
+.tok .pair { display: flex; width: 64px; height: 24px; border-radius: 5px; overflow: hidden; border: 1px solid color-mix(in oklab, var(--ink) 22%, transparent); }
+.tok .pair span { flex: 1; }
+.tok .val { color: var(--ink-3); }
+.scale-row { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 14px; align-items: baseline; padding-block: 6px; border-block-end: 1px solid var(--rule); }
+.scale-row code { font-family: var(--font-ui); font-size: var(--fs-2xs); color: var(--ink-3); direction: ltr; text-align: end; }
+.radii { display: flex; flex-wrap: wrap; gap: 14px; }
+.radii div { display: grid; justify-items: center; gap: 6px; font-size: var(--fs-2xs); color: var(--ink-3); }
+.radii i { width: 56px; height: 40px; background: var(--page); border: 1px solid var(--rule-strong); }
+.space { display: flex; align-items: end; gap: 10px; flex-wrap: wrap; }
+.space div { display: grid; justify-items: center; gap: 4px; font-size: var(--fs-2xs); color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.space i { display: block; height: 12px; background: var(--gold-soft); border-radius: 2px; }
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 1240px) {
+  .week { grid-template-columns: 92px minmax(0, 1fr); }
+  .week .trk { grid-column: 2; padding-block-start: 0; }
+  .week .hdr.trk { display: none; }
+  .row-err { grid-column: 2; }
+  .lockups, .palette, .marks, .specimen { grid-column: 1 / -1; }
+  .phone-stage, .pdf-stage { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .tok-grid { grid-template-columns: minmax(0, 1fr); }
+  .lhdr, .lead { grid-template-columns: 38px minmax(0, 1fr) 156px 76px; }
+  .lead .acts .btn { display: none; }
+}
+@media (max-width: 900px) {
+  .board { padding: 32px 16px 80px; }
+  .board-head { grid-template-columns: 1fr; gap: 16px; }
+  .board-head .mark-xl { width: 72px; height: 72px; }
+  .board-head h1 { font-size: var(--fs-h1); }
+  .theme-pick { justify-items: start; }
+  .shell { grid-template-columns: minmax(0, 1fr); min-height: 0; }
+  .side { flex-direction: row; align-items: center; gap: 12px; padding: 12px 12px 0; overflow: hidden; }
+  .brand .wm { display: none; }
+  .brand svg { width: 34px; height: 34px; }
+  .nav { flex-direction: row; gap: 2px; overflow-x: auto; scrollbar-width: none; mask-image: linear-gradient(to left, #000 80%, transparent); padding-inline-end: 32px; }
+  .nav ul { flex-direction: row; }
+  .nav .ld { display: none; }
+  .nav .cnt:not(.cnt--act) { display: none; }
+  .side-foot { display: none; }
+  .main { padding: 0 8px 10px; }
+  .page { padding: 18px 16px 14px; }
+  .inbox { grid-template-columns: minmax(0, 1fr); }
+  .fihris { flex-direction: row; overflow-x: auto; gap: 6px; padding-block-end: 4px; }
+  .fihris a::after, .fihris hr { display: none; }
+  .fihris a { border: 1px solid var(--rule); gap: 6px; }
+  .t-lower { grid-template-columns: minmax(0, 1fr); }
+  .kit, .brand-grid { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .kit section, .lockups, .palette, .marks, .specimen { grid-column: auto; }
+  .specimen { grid-template-columns: minmax(0, 1fr); }
+  .login { grid-template-columns: minmax(0, 1fr); }
+  .cover { order: -1; min-height: 300px; }
+  .cv-frame { inset: 14px; } .cv-blind { inset: 30px; }
+  .cv-corner { width: 64px; height: 64px; }
+  .cv-corner.c-tl, .cv-corner.c-tr { top: 30px; } .cv-corner.c-bl, .cv-corner.c-br { bottom: 30px; }
+  .cv-corner.c-tl, .cv-corner.c-bl { left: 30px; } .cv-corner.c-tr, .cv-corner.c-br { right: 30px; }
+  .mandorla { width: 92px; height: 138px; }
+  .cv-center b { font-size: 28px; }
+  .form-grid { grid-template-columns: 1fr 1fr; }
+  .pdf-stage { padding: 20px 12px; gap: 28px; }
+  .kpis { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .kpi:nth-child(3) { border-inline-start: 0; }
+  .kpi:nth-child(n+3) { border-block-start: 1px solid var(--rule); }
+}
+@media (max-width: 640px) {
+  body { font-size: var(--fs-body); }
+  .input, .select { font-size: var(--fs-base); min-height: 44px; }
+  .range .select { font-size: var(--fs-base); width: 92px; min-height: 40px; }
+  .sheet { margin-block-end: 72px; }
+  .sheet-head p { grid-column: 1 / -1; }
+  .sheet-head h2 { font-size: 25px; }
+  .runhead .clocks { display: none; }
+  .cart-mid > span { font-size: 21px; }
+  .page-head .actions { margin-inline-start: 0; width: 100%; }
+  .page-head .actions .btn { flex: 1; }
+  .search { max-width: none; flex-basis: 100%; }
+  .toolbar .select { flex: 1; min-width: 0; }
+  /* students table becomes stacked rows */
+  .data thead { display: none; }
+  .data, .data tbody { display: block; }
+  .data tr { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; padding: 12px 2px; border-block-end: 1px solid var(--rule); }
+  .data td { display: block; padding: 0; border: 0; white-space: normal; }
+  .data .c-name { order: 1; flex: 1 1 55%; }
+  .data .c-name b { font-size: var(--fs-base); }
+  .data .c-status { order: 2; }
+  .data .c-code { order: 3; }
+  .data .c-prog { order: 4; }
+  .data .c-teacher { order: 5; }
+  .data .c-guard { order: 6; display: flex; flex-wrap: wrap; gap: 0 10px; flex-basis: 100%; font-size: var(--fs-xs); color: var(--ink-2); }
+  .data .c-guard small { display: inline; font-size: var(--fs-xs); }
+  .data .c-act { display: none; }
+  .data .hamish { display: none; }
+  .data .fold { display: block; flex-basis: 100%; }
+  .data .c-code, .data .c-prog, .data .c-teacher { font-size: var(--fs-xs); color: var(--ink-3); }
+  .pager { justify-content: center; }
+  .pager > span:first-child { width: 100%; text-align: center; }
+  /* dialog flows in the document */
+  .dlg-stage { min-height: 0; padding: 72px 0 24px; }
+  .dlg-bg { position: absolute; inset: 0; min-height: 0; overflow: hidden; }
+  .dialog { position: relative; top: auto; translate: none; width: calc(100% - 24px); padding: 20px 16px 16px; outline-offset: 3px; }
+  .dlg-head { grid-template-columns: auto minmax(0, 1fr); }
+  .dlg-head .dlg-x { grid-column: 2; grid-row: 1; justify-self: end; }
+  .dlg-head h3 { font-size: 22px; }
+  .dlg-head p { grid-column: 1 / -1; }
+  .compare { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); font-size: var(--fs-xs); }
+  .compare > * { padding: 8px 10px; }
+  .compare .k { grid-column: 1 / -1; padding-block: 10px 0; border-block-end: 0; font-weight: 600; }
+  .compare .h:first-child, .compare .h.m { display: none; }
+  .compare .m { grid-column: 1 / -1; padding-block: 2px 10px; }
+  .dlg-foot .btns { width: 100%; flex-direction: column-reverse; }
+  .dlg-foot .btns .btn { width: 100%; min-height: 44px; white-space: normal; }
+  .form-grid { grid-template-columns: 1fr; }
+  /* availability */
+  .week { grid-template-columns: minmax(0, 1fr); }
+  .week .cell { border-block-end: 0; padding-inline: 0; }
+  .week .day { flex-direction: row; align-items: baseline; gap: 8px; padding-block: 12px 0; border-block-start: 1px solid var(--rule); }
+  .week .trk { grid-column: 1; padding-block-end: 12px; }
+  .week .hdr { display: none; }
+  .week .hdr.trk { display: flex; grid-column: 1; padding-block: 8px 2px; }
+  .row-err, .row-err-pad { grid-column: 1; border: 0; }
+  .row-err-pad { display: none; }
+  .row.bad .cell, .row-err, .row.is-today .cell { background: transparent; }
+  .avail-foot .btns { width: 100%; } .avail-foot .btns .btn { flex: 1; }
+  /* inbox */
+  .lhdr { display: none; }
+  .lead { grid-template-columns: 38px minmax(0, 1fr); gap: 4px 12px; }
+  .lead .st { grid-row: 3; grid-column: 2 / -1; }
+  .lead .acts { display: none; }
+  .lead .fu { grid-row: 4; grid-column: 2 / -1; }
+  .lead .msg { grid-column: 2 / -1; }
+  .flag-note { grid-column: 1 / -1; }
+  .flag-note .btns { margin-inline-start: 0; width: 100%; flex-wrap: wrap; }
+  .flag-note .btns .btn { flex: 1 1 auto; }
+  /* phone: drop the device frame, render edge-to-edge */
+  .phone-stage { padding: 0; border: 0; background: none; gap: 32px; }
+  .phone { width: 100%; height: 844px; padding: 0; border-radius: 16px; background: none; box-shadow: var(--elev-page); border: 1px solid var(--rule-strong); }
+  .ph { border-radius: 16px; }
+  .ph-status { display: none; }
+  .tile { padding: 18px; }
+  .lock-a .wm b { font-size: 36px; }
+  .lock-a svg { width: 64px; height: 64px; }
+  .lock-b { padding: 18px; }
+  .lock-b .wm b { font-size: 28px; }
+  .swatches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spec-display { font-size: var(--fs-display); }
+  .spec-scale div { grid-template-columns: minmax(0, 1fr); gap: 2px; }
+  .chips-group { grid-template-columns: minmax(0, 1fr); }
+  .kit .fields { grid-template-columns: minmax(0, 1fr); }
+  .login-form { padding: 32px 16px; }
+  .scale-row { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .scale-row code { text-align: start; }
+  /* tokens table: one stacked entry per token (swatch | name, role, utility) instead of five squeezed columns */
+  .tok thead, .tok .val { display: none; }
+  .tok, .tok tbody { display: block; }
+  .tok tr { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 2px 12px; align-items: center; padding-block: 9px; border-block-end: 1px solid var(--rule); }
+  .tok tr.grp { display: block; padding-block: 16px 6px; border-block-end-color: var(--rule-strong); }
+  .tok td, .tok tr.grp td { padding: 0; border: 0; }
+  .tok tr[data-t] td:nth-child(1) { grid-column: 2; grid-row: 1; }
+  .tok tr[data-t] td:nth-child(2) { grid-column: 1; grid-row: 1 / span 3; }
+  .tok tr[data-t] td:nth-child(3), .tok tr[data-t] td:nth-child(4) { grid-column: 2; }
+}
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+<!-- ================= SVG SPRITE ================= -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <!-- nuqta status glyphs: the calligrapher's rhombic dot. Shape carries the meaning. -->
+  <symbol id="g-fill" viewBox="0 0 16 16"><path fill="currentColor" d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/></symbol>
+  <symbol id="g-half" viewBox="0 0 16 16"><path fill="currentColor" d="M2.9 8h10.2L8 13.1Z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-hollow" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-struck" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/><path d="M2.6 13.4 13.4 2.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <!-- verse-end rosette: only ever holds a number (section, page) or the alef in the logo -->
+  <symbol id="r-ring" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.1" vector-effect="non-scaling-stroke" d="M8 1.6A2.5 2.5 0 0 1 12.53 3.47A2.5 2.5 0 0 1 14.4 8A2.5 2.5 0 0 1 12.53 12.53A2.5 2.5 0 0 1 8 14.4A2.5 2.5 0 0 1 3.47 12.53A2.5 2.5 0 0 1 1.6 8A2.5 2.5 0 0 1 3.47 3.47A2.5 2.5 0 0 1 8 1.6Z"/><circle cx="8" cy="8" r="4.6" fill="none" stroke="currentColor" stroke-width=".8" vector-effect="non-scaling-stroke"/></symbol>
+  <!-- surah-header cartouche end cap (points toward x=0) -->
+  <symbol id="cap" viewBox="0 0 26 52">
+    <path style="fill:var(--gold-wash)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26Z"/>
+    <path fill="none" stroke="currentColor" d="M26 2.5H15C9.5 2.5 8.5 7 6.5 12L1.5 26L6.5 40C8.5 45 9.5 49.5 15 49.5H26"/>
+    <path fill="none" style="stroke:var(--gold-soft)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26"/>
+    <path fill="currentColor" d="M13.5 23.6 15.9 26 13.5 28.4 11.1 26Z"/>
+  </symbol>
+  <!-- logo mark: verse-end rosette holding an alef with madda ("آيات" = verses) -->
+  <symbol id="mark" viewBox="0 0 64 64">
+    <path fill="none" stroke="currentColor" stroke-width="2" d="M32 7A7 7 0 0 1 44.5 10.35A7 7 0 0 1 53.65 19.5A7 7 0 0 1 57 32A7 7 0 0 1 53.65 44.5A7 7 0 0 1 44.5 53.65A7 7 0 0 1 32 57A7 7 0 0 1 19.5 53.65A7 7 0 0 1 10.35 44.5A7 7 0 0 1 7 32A7 7 0 0 1 10.35 19.5A7 7 0 0 1 19.5 10.35A7 7 0 0 1 32 7Z"/>
+    <circle cx="32" cy="32" r="17.5" fill="none" stroke="currentColor" stroke-width="1.25"/>
+    <path fill="currentColor" d="M31.9 24.8L33.3 24.2C34.2 26.2 34.3 29 34.2 32.2C34.1 37.2 33.2 42.6 32.4 46.6C32.2 47.7 31 47.8 30.8 46.8C30.3 42.6 30.2 37.6 30.4 32.4C30.6 29.2 31 26.6 31.9 24.8Z"/>
+    <path fill="currentColor" d="M38.6 17.4C37.6 18.7 36.2 19.1 34 18.9C31 18.6 28 18.3 26.5 18.9C25.6 19.4 25.2 20.6 25.4 22.1C26.1 21.5 26.8 21.3 27.6 21.2C29.6 21.1 31.6 21.7 34 21.7C36.5 21.7 38.1 20.1 38.6 17.4Z"/>
+  </symbol>
+  <!-- small-size mark (<=28px): no inner ring, heavier rosette, alef and madda -->
+  <symbol id="mark-sm" viewBox="0 0 64 64">
+    <path fill="none" stroke="currentColor" stroke-width="4.5" d="M32 7A7 7 0 0 1 44.5 10.35A7 7 0 0 1 53.65 19.5A7 7 0 0 1 57 32A7 7 0 0 1 53.65 44.5A7 7 0 0 1 44.5 53.65A7 7 0 0 1 32 57A7 7 0 0 1 19.5 53.65A7 7 0 0 1 10.35 44.5A7 7 0 0 1 7 32A7 7 0 0 1 10.35 19.5A7 7 0 0 1 19.5 10.35A7 7 0 0 1 32 7Z"/>
+    <path fill="currentColor" d="M31.2 24.6L33.8 23.5C35.1 25.6 35.4 28.8 35.3 32.2C35.2 37.4 34.1 42.8 33.2 46.8C32.8 48.5 30.8 48.6 30.4 46.9C29.7 42.6 29.5 37.6 29.7 32.4C29.9 28.8 30.3 26.4 31.2 24.6Z"/>
+    <path fill="currentColor" d="M40.2 16.8C39 18.6 37 19.2 34.2 18.9C30.8 18.6 27.4 18.2 25.6 19C24.4 19.6 23.8 21 24.2 22.8C24.9 22 25.8 21.6 26.9 21.5C29.4 21.4 31.8 22 34.2 22C37.4 22 39.6 20.2 40.2 16.8Z"/>
+  </symbol>
+  <!-- binding corner piece (quarter lobed medallion), corner at 0,0 -->
+  <symbol id="corner" viewBox="0 0 120 120">
+    <path style="fill:var(--leather-deep)" stroke="currentColor" stroke-width="1.2" d="M0 0H96A22 22 0 0 1 88.7 36.7A22 22 0 0 1 67.9 67.9A22 22 0 0 1 36.7 88.7A22 22 0 0 1 0 96Z"/>
+    <path fill="none" stroke="currentColor" stroke-opacity=".55" stroke-width=".9" d="M84 0A18 18 0 0 1 77.6 32.1A18 18 0 0 1 59.4 59.4A18 18 0 0 1 32.1 77.6A18 18 0 0 1 0 84"/>
+    <path fill="none" stroke="currentColor" stroke-opacity=".4" stroke-width=".8" stroke-dasharray="1.5 3" d="M66 0A66 66 0 0 1 0 66"/>
+    <path fill="currentColor" d="M34 26 42 34 34 42 26 34Z"/>
+  </symbol>
+  <!-- icons (20px grid, 1.6 stroke) -->
+  <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.6 3.6"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 20 20"><path d="M10 4.5v11M4.5 10h11"/></symbol>
+  <symbol id="i-more" viewBox="0 0 20 20"><circle cx="10" cy="4.8" r=".9" fill="currentColor"/><circle cx="10" cy="10" r=".9" fill="currentColor"/><circle cx="10" cy="15.2" r=".9" fill="currentColor"/></symbol>
+  <symbol id="i-left" viewBox="0 0 20 20"><path d="M12.5 5 7.5 10l5 5"/></symbol>
+  <symbol id="i-right" viewBox="0 0 20 20"><path d="m7.5 5 5 5-5 5"/></symbol>
+  <symbol id="i-x" viewBox="0 0 20 20"><path d="m5.5 5.5 9 9M14.5 5.5l-9 9"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="m4.5 10.5 3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-approx" viewBox="0 0 20 20"><path d="M4 8c2-2 4-2 6 0s4 2 6 0M4 13c2-2 4-2 6 0s4 2 6 0"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 20 20"><path d="M10 3.5a6.5 6.5 0 0 0-5.6 9.8L3.5 16.5l3.3-.9A6.5 6.5 0 1 0 10 3.5Z"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 20 20"><rect x="3.5" y="3.5" width="5" height="5" rx="1"/><rect x="11.5" y="3.5" width="5" height="5" rx="1"/><rect x="3.5" y="11.5" width="5" height="5" rx="1"/><rect x="11.5" y="11.5" width="5" height="5" rx="1"/></symbol>
+  <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7.5" cy="7" r="2.8"/><path d="M2.8 16c.8-2.6 2.5-3.8 4.7-3.8s3.9 1.2 4.7 3.8"/><path d="M13 4.5a2.6 2.6 0 0 1 0 5M14.5 12.4c1.4.4 2.3 1.6 2.8 3.6"/></symbol>
+  <symbol id="i-teacher" viewBox="0 0 20 20"><circle cx="10" cy="6.5" r="3"/><path d="M4 16.5c1.1-2.9 3.3-4.3 6-4.3s4.9 1.4 6 4.3"/></symbol>
+  <symbol id="i-brief" viewBox="0 0 20 20"><rect x="3" y="6.5" width="14" height="9.5" rx="1.5"/><path d="M7.5 6.5V5a1.5 1.5 0 0 1 1.5-1.5h2A1.5 1.5 0 0 1 12.5 5v1.5M3 10.5h14"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 20 20"><rect x="3.5" y="4.5" width="13" height="12" rx="1.5"/><path d="M3.5 8.5h13M7 3v3M13 3v3"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 20 20"><path d="M5.5 3.5h6l3 3v10h-9z"/><path d="M11.5 3.5v3h3M8 10.5h4.5M8 13.5h4.5"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 20 20"><rect x="3" y="5.5" width="14" height="10.5" rx="1.5"/><path d="M13.5 10.8h.5M3 8.5h14"/></symbol>
+  <symbol id="i-out" viewBox="0 0 20 20"><path d="M12 4.5h3a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-3M7.5 13.5 4 10l3.5-3.5M4 10h7.5"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6.5"/><path d="M10 6.5V10l2.5 1.5"/></symbol>
+  <symbol id="i-phone" viewBox="0 0 20 20"><rect x="6" y="2.5" width="8" height="15" rx="1.8"/><path d="M9 14.5h2"/></symbol>
+  <symbol id="i-video" viewBox="0 0 20 20"><rect x="2.5" y="5.5" width="10.5" height="9" rx="1.5"/><path d="m13 9 4.5-2.5v7L13 11"/></symbol>
+  <symbol id="i-globe" viewBox="0 0 20 20"><circle cx="10" cy="10" r="6.5"/><path d="M3.5 10h13M10 3.5c1.8 2 2.6 4.1 2.6 6.5S11.8 14.5 10 16.5c-1.8-2-2.6-4.1-2.6-6.5S8.2 5.5 10 3.5Z"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 20 20"><path d="M4.5 6h11M8 6V4.5h4V6M6 6l.7 9.5h6.6L14 6"/></symbol>
+  <symbol id="i-down" viewBox="0 0 20 20"><path d="M10 4v9M6 9.5l4 4 4-4M4.5 16h11"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 20 20"><path d="M4 6h12M4 10h12M4 14h12"/></symbol>
+  <symbol id="i-sun" viewBox="0 0 20 20"><circle cx="10" cy="10" r="3.5"/><path d="M10 2.5v1.5M10 16v1.5M2.5 10H4M16 10h1.5M4.7 4.7l1 1M14.3 14.3l1 1M4.7 15.3l1-1M14.3 5.7l1-1"/></symbol>
+  <symbol id="i-reply" viewBox="0 0 20 20"><path d="M8 5.5 3.5 10 8 14.5"/><path d="M3.5 10H11a5.5 5.5 0 0 1 5.5 5.5"/></symbol>
+</svg>
+
+<main class="board">
+
+<header class="board-head">
+  <svg class="mark-xl" aria-hidden="true"><use href="#mark"/></svg>
+  <div>
+    <p class="sub">أكاديمية آيات البيان، نظام التصميم</p>
+    <h1>المِداد والذهب</h1>
+    <p>كل شاشة صفحة مصحف. البيانات جوّه «جدول» مُذهّب، والقائمة والساعة والتنبيهات في الهامش، وعنوان الشاشة في ترويسة زي ترويسة السورة. الذهب للزخرفة بس، واللازورد لأي حاجة بتتداس، والزعفران معناه حاجة واحدة: «دورك». ونقطة الخطاط بتقول حالة كل حلقة وطالب ومحادثة بشكلها، مش بلونها بس.</p>
+  </div>
+  <div class="theme-pick">
+    <span class="label" id="tp">المظهر</span>
+    <div class="seg" role="group" aria-labelledby="tp">
+      <button type="button" data-set-theme="auto" aria-pressed="true">تلقائي</button>
+      <button type="button" data-set-theme="light" aria-pressed="false">فاتح</button>
+      <button type="button" data-set-theme="dark" aria-pressed="false">ليلي</button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 1. BRAND ============ -->
+<section class="sheet" aria-labelledby="s1">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>1</b></span>
+    <h2 id="s1">الهوية</h2>
+    <p>العلامة وردة آخر الآية وجواها ألف ممدودة: «آيات» يعني آيات. الاسم بخط أميري، إحياء لنسخ مطبعة بولاق الأميرية في القاهرة، وهو نفس الخط اللي هيطلع بيه تقرير الحلقة PDF.</p>
+  </header>
+  <div class="brand-grid">
+    <div class="lockups">
+      <div class="tile lock-a">
+        <svg aria-hidden="true"><use href="#mark"/></svg>
+        <div class="wm"><small>أكاديمية</small><b>آيات البيان</b></div>
+      </div>
+      <div class="lock-b">
+        <svg aria-hidden="true"><use href="#mark"/></svg>
+        <div class="wm"><small>أكاديمية</small><b>آيات البيان</b></div>
+      </div>
+      <div class="tile">
+        <h3>اختبار المقاسات</h3>
+        <div class="sizes">
+          <figure><span class="appicon"><svg aria-hidden="true"><use href="#mark"/></svg></span><figcaption>أيقونة التطبيق</figcaption></figure>
+          <figure><svg class="mk" width="48" height="48" aria-hidden="true"><use href="#mark"/></svg><figcaption class="num">48</figcaption></figure>
+          <figure><svg class="mk" width="28" height="28" aria-hidden="true"><use href="#mark-sm"/></svg><figcaption class="num">28</figcaption></figure>
+          <figure><svg class="mk" width="20" height="20" aria-hidden="true"><use href="#mark-sm"/></svg><figcaption class="num">20</figcaption></figure>
+          <figure><svg class="mk" width="16" height="16" aria-hidden="true"><use href="#mark-sm"/></svg><figcaption class="num">16</figcaption></figure>
+        </div>
+        <p class="hint" style="margin-block-start:12px">من <span class="num">28px</span> وأصغر بنستعمل النسخة التقيلة: من غير الدايرة الجوّانية، والألف والمدّة أتقل، عشان ما تتقريش «T» أو «1».</p>
+      </div>
+    </div>
+
+    <div class="tile palette">
+      <h3>الألوان</h3>
+      <p class="hint" style="margin-block:-4px 14px">كل عيّنة نصها اليمين فاتح ونصها الشمال ليلي، ومتلوّنة من نفس التوكنز اللي في الكود.</p>
+      <div class="swatches">
+        <div class="sw"><i><span data-theme="light" style="background:var(--ink)"></span><span data-theme="dark" style="background:var(--ink)"></span></i><b>مِداد<span>ink</span></b><small>كل النصوص</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--page)"></span><span data-theme="dark" style="background:var(--page)"></span></i><b>رَقّ<span>page</span></b><small>الصفحة نفسها، جوّه الجدول</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--margin)"></span><span data-theme="dark" style="background:var(--margin)"></span></i><b>هامش<span>margin</span></b><small>اللي حوالين الصفحة: القائمة والساعة</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--gold)"></span><span data-theme="dark" style="background:var(--gold)"></span></i><b>ذهب<span>gold</span></b><small>زخرفة وإطارات بس، عمره ما يبقى نص ولا زرار</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--lapis)"></span><span data-theme="dark" style="background:var(--lapis)"></span></i><b>لازورد<span>lapis</span></b><small>أي حاجة بتتداس: أزرار ولينكات وتركيز</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--saffron)"></span><span data-theme="dark" style="background:var(--saffron)"></span></i><b>زعفران<span>saffron</span></b><small>«دورك»: الأدمن لازم يعمل حاجة دلوقتي</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--verdigris)"></span><span data-theme="dark" style="background:var(--verdigris)"></span></i><b>زِنجار<span>verdigris</span></b><small>ماشي تمام: مؤكدة، مشترك، حضرت</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--cinnabar)"></span><span data-theme="dark" style="background:var(--cinnabar)"></span></i><b>زِنجفر<span>cinnabar</span></b><small>حاجة باظت: غياب، إلغاء، حذف</small></div>
+        <div class="sw"><i><span data-theme="light" style="background:var(--leather)"></span><span data-theme="dark" style="background:var(--leather)"></span></i><b>جِلد<span>leather</span></b><small>جلدة المصحف في شاشة الدخول بس</small></div>
+      </div>
+    </div>
+
+    <div class="tile marks">
+      <h3>أدوات المصحف، كل واحدة ليها شغلانة</h3>
+      <div class="devices">
+        <div class="dev"><span class="demo"><span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>7</b></span></span><b>الوردة شايلة رقم</b><p>زي رقم الآية: رقم القسم أو الصفحة الحالية أو الألف في العلامة. عمرها ما بتبقى حالة ولا بتتشطب.</p></div>
+        <div class="dev"><span class="demo" style="color:var(--ink-2)"><svg width="15" height="15" aria-hidden="true"><use href="#g-fill"/></svg><svg width="15" height="15" aria-hidden="true"><use href="#g-half"/></svg><svg width="15" height="15" aria-hidden="true"><use href="#g-hollow"/></svg><svg width="15" height="15" aria-hidden="true"><use href="#g-struck"/></svg></span><b>النقطة شايلة الحالة</b><p>نقطة الخطاط المعيّنة. مليانة ثابتة أو خلصت، نصها ماشية، فاضية مستنية، مشطوبة وقفت.</p></div>
+        <div class="dev"><span class="demo"><span class="cart cart--sm"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>الطلاب</span></span><svg aria-hidden="true"><use href="#cap"/></svg></span></span><b>ترويسة واحدة في الشاشة</b><p>عنوان الصفحة أو اسم الشخص في ملفه، بأميري جوّه ترويسة زي ترويسة السورة. مفيش تانية.</p></div>
+        <div class="dev"><span class="demo"><i class="mini-page"></i></span><b>الجدول حوالين الصفحة</b><p>إطار مداد وجنبه خط ذهب، حوالين صفحة الشغل والحوار بس. اللي جوّه الصفحة من غير إطارات.</p></div>
+        <div class="dev"><span class="demo"><span class="mini-hamish"><span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>باقي حلقتين</span></span></span><b>الحاشية للتنبيه</b><p>التنبيه بيتكتب في الهامش جنب الصف اللي يخصه، زي علامات الأحزاب، وبالزعفران لو مستنياك.</p></div>
+        <div class="dev"><span class="demo"><i class="mini-rule"></i><a href="#">انقل الحلقات</a></span><b>الذهب ما بيتداسش</b><p>الخط المزدوج الذهب تحت كل رأس جدول وكل تاب مختار. أي حاجة بتتداس لونها لازورد.</p></div>
+      </div>
+    </div>
+
+    <div class="tile specimen">
+      <div>
+        <h3>الحروف</h3>
+        <p class="spec-display">آيات البيان</p>
+        <div class="spec-scale">
+          <div><code dir="ltr">Amiri 700 / 28</code><span class="display" style="font-size:28px;line-height:1.5">ملف المعلم/ة</span></div>
+          <div><code dir="ltr">Amiri 700 / 20</code><span class="display" style="font-size:20px;line-height:1.5">المواعيد المتاحة</span></div>
+          <div><code dir="ltr">Plex Arabic 600 / 15</code><span style="font-size:15px;font-weight:600">الطالب ده شكله متسجل قبل كده</span></div>
+          <div><code dir="ltr">Plex Arabic 400 / 14</code><span>فيه طالب بنفس الرقم واسم قريب. تحب تدمجهم بدل ما يبقى فيه نسختين؟</span></div>
+          <div><code dir="ltr">Plex Arabic 500 / 12</code><span style="font-size:12px;font-weight:500;color:var(--ink-3)">آخر رسالة منه من 3 ساعات</span></div>
+        </div>
+      </div>
+      <div>
+        <h3>الأرقام</h3>
+        <div class="data-sample">
+          <div><span>الكود</span><b class="num" dir="ltr">AB-0183</b></div>
+          <div><span>رقم ولي الأمر</span><b class="num" dir="ltr">+966 55 214 7730</b></div>
+          <div><span>رقم المعلمة</span><b class="num" dir="ltr">+20 10 6612 3049</b></div>
+          <div><span>ميعاد الحلقة</span><b class="num">16:30</b></div>
+          <div><span>مستحقات أكتوبر</span><b class="num">2,640 ج.م</b></div>
+          <div><span>رقم كبير للوحة</span><b class="folio" style="font-size:30px;line-height:1.1">38</b></div>
+        </div>
+        <ul class="rules-list">
+          <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>أميري <span class="num">700</span> للعناوين بس، من <span class="num">20px</span> وطالع، وارتفاع سطر <span class="num">1.5</span> عشان المدّات والنقط.</span></li>
+          <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>IBM Plex Sans Arabic لكل البيانات، وهو نفس الخط اللي في الكود دلوقتي.</span></li>
+          <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>نظام أرقام واحد: أرقام لاتينية بعرض ثابت في كل حتة، حتى التاريخ الهجري وأرقام اللوحة الكبيرة.</span></li>
+          <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>مفيش مسافات بين الحروف العربي، ومفيش عنصر له حشو جوّه كلمة عربي.</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. LOGIN ============ -->
+<section class="sheet" aria-labelledby="s2">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>2</b></span>
+    <h2 id="s2">تسجيل الدخول</h2>
+    <p>فتح المصحف: جلدة مدبوغة زي التجليد المملوكي، فيها شمسة في النص وأربع كوشات في الأركان، والذهب في الخطوط بس والباقي «تجليد على البارد» من غير دهب. دي الشاشة الوحيدة اللي فيها زخرفة كاملة.</p>
+  </header>
+  <div class="screen login">
+    <div class="login-form">
+      <form class="inner" onsubmit="return false">
+        <span class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>تسجيل الدخول</span></span><svg aria-hidden="true"><use href="#cap"/></svg></span>
+        <p class="intro">للإدارة والمعلمين. ادخل بالبريد وكلمة السر اللي وصلوك من الأكاديمية.</p>
+        <div class="field">
+          <label class="label" for="em">البريد الإلكتروني</label>
+          <input class="input num ltr" id="em" type="email" dir="ltr" value="heba.teacher@ayatalbayan.com" autocomplete="email">
+        </div>
+        <div class="field">
+          <label class="label" for="pw">كلمة السر</label>
+          <div class="pw"><input class="input" id="pw" type="password" value="password12" autocomplete="current-password"><button type="button">إظهار</button></div>
+        </div>
+        <button class="btn btn--primary btn--block" type="submit">دخول</button>
+        <p class="foot">أولياء الأمور مش محتاجين حساب: بيفتحوا متابعة الطالب من اللينك اللي بيوصلهم على الواتساب.</p>
+      </form>
+    </div>
+    <div class="cover" aria-hidden="true">
+      <div class="cv-frame"></div>
+      <div class="cv-blind"></div>
+      <svg class="cv-corner c-tl"><use href="#corner"/></svg><svg class="cv-corner c-tr"><use href="#corner"/></svg><svg class="cv-corner c-bl"><use href="#corner"/></svg><svg class="cv-corner c-br"><use href="#corner"/></svg>
+      <div class="cv-center">
+        <svg class="mandorla" viewBox="0 0 200 300">
+          <path d="M100 6 106 12 100 18 94 12Z" fill="currentColor"/>
+          <path d="M100 282 106 288 100 294 94 288Z" fill="currentColor"/>
+          <path style="fill:var(--leather-deep)" stroke="currentColor" stroke-width="1.5" d="M100 22C150 72 170 118 170 150S150 228 100 278C50 228 30 182 30 150S50 72 100 22Z"/>
+          <path fill="none" stroke="currentColor" stroke-opacity=".5" stroke-width="1" d="M100 40C141 84 157 122 157 150S141 216 100 260C59 216 43 178 43 150S59 84 100 40Z"/>
+          <path fill="none" stroke="currentColor" stroke-opacity=".35" stroke-width="1" stroke-dasharray="1.5 3.5" d="M100 54C133 92 145 126 145 150S133 208 100 246C67 208 55 174 55 150S67 92 100 54Z"/>
+          <use href="#mark" x="62" y="112" width="76" height="76"/>
+        </svg>
+        <b>آيات البيان</b>
+        <small>تحفيظ وتجويد، لغة عربية، علوم شرعية</small>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 3. ADMIN SHELL + STUDENTS ============ -->
+<section class="sheet" aria-labelledby="s3">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>3</b></span>
+    <h2 id="s3">لوحة الإدارة: الطلاب</h2>
+    <p>القائمة فهرس زي فهرس السور: نقط لحد العدد، والعدد بالزعفران لو فيه حاجة مستنياك. فوق الصفحة الترويسة الجارية فيها التاريخ الميلادي والهجري وساعة الرياض والقاهرة. عمود «حاشية» بعد الخط المزدوج بيكتب التنبيه جنب الطالب بالظبط، ولو الشاشة ضاقت بينزل تحت الاسم.</p>
+  </header>
+  <div class="screen shell">
+    <aside class="side">
+      <a class="brand" href="#" aria-label="آيات البيان"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span></a>
+      <nav class="nav" aria-label="القائمة">
+        <ul><li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>لوحة التحكم</a></li></ul>
+        <ul>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<i class="ld"></i><span class="cnt cnt--act">11 جديدة</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-brief"/></svg>طلبات التوظيف<i class="ld"></i><span class="cnt">3</span></a></li>
+        </ul>
+        <ul>
+          <li><a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب<i class="ld"></i><span class="cnt">64</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-teacher"/></svg>المعلمين<i class="ld"></i><span class="cnt">11</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>الجدول<i class="ld"></i><span class="cnt cnt--act">3 يحتاج تأكيد</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>التقارير<i class="ld"></i><span class="cnt cnt--act">2 ما اتبعتش</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg>الاشتراكات<i class="ld"></i><span class="cnt cnt--act">3 مش مدفوع</span></a></li>
+        </ul>
+      </nav>
+      <div class="side-foot">
+        <span class="avatar" aria-hidden="true">م</span>
+        <span class="who">منى عبد الله<span>الإدارة</span></span>
+        <button class="icon-btn" aria-label="تسجيل الخروج"><svg class="i"><use href="#i-out"/></svg></button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="runhead">
+        <nav class="crumbs" aria-label="مسار الصفحة"><a href="#">لوحة التحكم</a><svg class="i" aria-hidden="true"><use href="#i-left"/></svg><span aria-current="page">الطلاب</span></nav>
+        <div class="clocks"><span>الخميس <span class="num">1</span> أكتوبر <span class="num">2026</span></span><span class="hijri"><span class="num">20</span> ربيع الآخر <span class="num">1448</span> هـ</span><i class="sep" aria-hidden="true"></i><span>الرياض<b class="num">15:20</b></span><span>القاهرة<b class="num">15:20</b></span></div>
+      </div>
+      <div class="page">
+        <div class="page-head">
+          <span class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>الطلاب</span></span><svg aria-hidden="true"><use href="#cap"/></svg></span>
+          <span class="count"><span class="num">64</span> طالب</span>
+          <div class="actions">
+            <button class="btn btn--secondary"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg>تصدير</button>
+            <button class="btn btn--primary"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة طالب</button>
+          </div>
+        </div>
+        <div class="toolbar">
+          <label class="search"><span class="sr-only">بحث</span><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input class="input" type="search" placeholder="دوّر بالاسم أو الرقم أو الكود"></label>
+          <select class="select" aria-label="البرنامج"><option>البرنامج: الكل</option></select>
+          <select class="select" aria-label="المعلم/ة"><option>المعلم/ة: الكل</option></select>
+          <div class="seg" role="group" aria-label="الحالة">
+            <button aria-pressed="true">الكل <span class="n">64</span></button>
+            <button aria-pressed="false">تجريبي <span class="n">9</span></button>
+            <button aria-pressed="false">مشترك <span class="n">38</span></button>
+            <button aria-pressed="false">متوقف مؤقتًا <span class="n">7</span></button>
+            <button aria-pressed="false">وقف <span class="n">10</span></button>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="data">
+            <thead><tr>
+              <th scope="col">الكود</th><th scope="col" aria-sort="ascending">اسم الطالب / الطالبة</th><th scope="col">ولي الأمر</th><th scope="col">البرنامج</th><th scope="col">المعلم/ة</th><th scope="col">الحالة</th><th scope="col"><span class="sr-only">إجراءات</span></th><th scope="col" class="hamish">حاشية</th>
+            </tr></thead>
+            <tbody>
+              <tr><td class="c-code num" dir="ltr">AB-0183</td><td class="c-name"><b>سهيلة محمد</b><small><span class="num">9</span> سنين، الرياض</small><span class="fold note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>باقي حلقتين</span></td><td class="c-guard">أم إيمان<small class="num" dir="ltr">+966 55 214 7730</small></td><td class="c-prog">تحفيظ وتجويد</td><td class="c-teacher">أ. فاطمة الزهراء</td><td class="c-status"><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأم إيمان"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات سهيلة محمد"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"><span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>باقي حلقتين</span></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0182</td><td class="c-name"><b>يوسف أحمد</b><small><span class="num">7</span> سنين، جدة</small><span class="fold note"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تجريبية النهارده <span class="num">16:00</span></span></td><td class="c-guard">أبو يوسف<small class="num" dir="ltr">+966 50 873 1142</small></td><td class="c-prog">تحفيظ وتجويد</td><td class="c-teacher">أ. محمود</td><td class="c-status"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>تجريبي</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأبو يوسف"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات يوسف أحمد"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"><span class="note"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تجريبية النهارده <span class="num">16:00</span></span></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0179</td><td class="c-name"><b>جودى خالد</b><small><span class="num">11</span> سنة، القاهرة</small></td><td class="c-guard">أم جودى<small class="num" dir="ltr">+20 10 2234 8871</small></td><td class="c-prog">لغة عربية</td><td class="c-teacher">أ. هبة</td><td class="c-status"><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأم جودى"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات جودى خالد"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0176</td><td class="c-name"><b>عبد الرحمن سامي</b><small><span class="num">13</span> سنة، الدمام</small><span class="fold note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>الباقة خلصت</span></td><td class="c-guard">أبو عبد الرحمن<small class="num" dir="ltr">+966 54 410 0927</small></td><td class="c-prog">تحفيظ وتجويد</td><td class="c-teacher">أ. محمود</td><td class="c-status"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>متوقف مؤقتًا</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأبو عبد الرحمن"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات عبد الرحمن سامي"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"><span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>الباقة خلصت</span></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0171</td><td class="c-name"><b>مريم علي</b><small><span class="num">24</span> سنة، الرياض</small></td><td class="c-guard">مريم علي<small class="num" dir="ltr">+966 56 332 9084</small></td><td class="c-prog">علوم شرعية</td><td class="c-teacher">أ. فاطمة الزهراء</td><td class="c-status"><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لمريم علي"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات مريم علي"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0168</td><td class="c-name"><b>إيمان محمد</b><small><span class="num">12</span> سنة، الرياض</small><span class="fold note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تقرير ما اتبعتش</span></td><td class="c-guard">أم إيمان<small class="num" dir="ltr">+966 55 214 7730</small></td><td class="c-prog">تحفيظ وتجويد</td><td class="c-teacher">أ. فاطمة الزهراء</td><td class="c-status"><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأم إيمان"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات إيمان محمد"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"><span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تقرير ما اتبعتش</span></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0164</td><td class="c-name"><b>عمر حسام</b><small><span class="num">8</span> سنين، الدوحة</small><span class="fold note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>محتاج معلم/ة</span></td><td class="c-guard">أبو عمر<small class="num" dir="ltr">+974 5512 3398</small></td><td class="c-prog">تحفيظ وتجويد</td><td class="c-teacher"><span class="none">لسه مفيش معلم</span> <a href="#">تعيين</a></td><td class="c-status"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>تجريبي</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأبو عمر"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات عمر حسام"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"><span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>محتاج معلم/ة</span></td></tr>
+              <tr><td class="c-code num" dir="ltr">AB-0159</td><td class="c-name"><b>ليان عبد الله</b><small><span class="num">10</span> سنين، مسقط</small></td><td class="c-guard">أم ليان<small class="num" dir="ltr">+968 9123 4410</small></td><td class="c-prog">لغة عربية</td><td class="c-teacher">أ. هبة</td><td class="c-status"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>وقف</span></td><td class="c-act"><div><button class="icon-btn" aria-label="رسالة واتساب لأم ليان"><svg class="i"><use href="#i-chat"/></svg></button><button class="icon-btn" aria-label="إجراءات ليان عبد الله"><svg class="i"><use href="#i-more"/></svg></button></div></td><td class="hamish"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pager">
+          <span>عرض <span class="num">8</span> من <span class="num">64</span> طالب</span>
+          <nav class="pages" aria-label="الصفحات">
+            <a href="#" aria-current="page"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>1</b></a>
+            <a href="#">2</a><a href="#">3</a><span aria-hidden="true">…</span><a href="#">8</a>
+          </nav>
+          <div class="step">
+            <button class="btn btn--secondary btn--sm" disabled><svg class="i" aria-hidden="true"><use href="#i-right"/></svg>السابق</button>
+            <button class="btn btn--secondary btn--sm">التالي<svg class="i" aria-hidden="true"><use href="#i-left"/></svg></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4. DUPLICATE DIALOG ============ -->
+<section class="sheet" aria-labelledby="s4">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>4</b></span>
+    <h2 id="s4">تنبيه طالب مكرر</h2>
+    <p>الأدمن كتب «سهيله» والرقم بصيغة <span class="num" dir="ltr">00966</span>. النظام وحّد الرقم وقارن الاسم بعد توحيد الحروف، ولقى «سهيلة». الحرف المختلف متلوّن وتحته خط من غير ما الكلمة تتقطع، والإخوات على نفس الرقم قدامك عشان القرار ياخد ثانية. مفيش أحمر هنا لأن مفيش غلط حصل.</p>
+  </header>
+  <div class="screen dlg-stage">
+    <div class="dlg-bg" aria-hidden="true">
+      <div class="runhead"><span class="crumbs">الطلاب<svg class="i"><use href="#i-left"/></svg>إضافة طالب</span></div>
+      <div class="page">
+        <div class="page-head"><span class="cart"><svg><use href="#cap"/></svg><span class="cart-mid"><span>إضافة طالب</span></span><svg><use href="#cap"/></svg></span></div>
+        <div class="form-grid">
+          <div class="field"><span class="label">اسم الطالب / الطالبة</span><input class="input" value="سهيله محمد" tabindex="-1"></div>
+          <div class="field"><span class="label">ولي الأمر</span><input class="input" value="أم إيمان" tabindex="-1"></div>
+          <div class="field"><span class="label">رقم ولي الأمر</span><input class="input num ltr" dir="ltr" value="00966552147730" tabindex="-1"></div>
+          <div class="field"><span class="label">السن</span><input class="input" value="9" tabindex="-1"></div>
+          <div class="field"><span class="label">البرنامج</span><input class="input" value="تحفيظ وتجويد" tabindex="-1"></div>
+          <div class="field"><span class="label">المنطقة الزمنية</span><input class="input" value="الرياض (Asia/Riyadh)" tabindex="-1"></div>
+        </div>
+      </div>
+    </div>
+    <div class="scrim"></div>
+    <div class="dialog" role="dialog" aria-modal="true" aria-labelledby="dup-t" aria-describedby="dup-d">
+      <div class="dlg-head">
+        <span class="dlg-glyph" aria-hidden="true"><svg><use href="#g-hollow"/></svg></span>
+        <h3 id="dup-t">الطالب ده شكله متسجل قبل كده</h3>
+        <button class="icon-btn dlg-x" aria-label="إغلاق"><svg class="i"><use href="#i-x"/></svg></button>
+        <p id="dup-d">فيه طالب بنفس الرقم واسم قريب. تحب تدمجهم بدل ما يبقى فيه نسختين؟</p>
+      </div>
+      <div class="compare" role="table" aria-label="طلاب ممكن يكونوا نفس الشخص">
+        <div class="h" role="columnheader"></div>
+        <div class="h" role="columnheader">اللي بتسجله دلوقتي</div>
+        <div class="h ex" role="columnheader">متسجل من قبل&nbsp;<span class="num" dir="ltr">AB-0183</span></div>
+        <div class="h m" role="columnheader">النتيجة</div>
+
+        <div class="k" role="rowheader">الاسم</div>
+        <div class="v name"><span>سهيل<span class="diff">ه</span> محمد</span></div>
+        <div class="v name ex"><span>سهيل<span class="diff">ة</span> محمد</span></div>
+        <div class="m near"><svg class="i" aria-hidden="true"><use href="#i-approx"/></svg>نفس الاسم لو ه = ة</div>
+
+        <div class="k" role="rowheader">رقم ولي الأمر</div>
+        <div class="v"><span class="num" dir="ltr">00966552147730</span><small>بعد التوحيد: <span class="num" dir="ltr">+966 55 214 7730</span></small></div>
+        <div class="v ex"><span class="num" dir="ltr">+966 55 214 7730</span></div>
+        <div class="m same"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>نفس الرقم</div>
+
+        <div class="k" role="rowheader">ولي الأمر</div>
+        <div class="v">أم إيمان</div>
+        <div class="v ex">أم إيمان</div>
+        <div class="m same"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>متطابق</div>
+
+        <div class="k last" role="rowheader">البرنامج</div>
+        <div class="v last">تحفيظ وتجويد</div>
+        <div class="v ex last">تحفيظ وتجويد<small>مع أ. فاطمة الزهراء، <span class="num">14</span> حلقة تمت</small></div>
+        <div class="m same last"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg>متطابق</div>
+      </div>
+      <div class="kids">
+        <span>طلاب تانيين على نفس رقم ولي الأمر:</span>
+        <span class="kid"><span class="chip chip--ok chip--sm"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span>سهيلة محمد <span class="num" dir="ltr">AB-0183</span></span>
+        <span class="kid"><span class="chip chip--ok chip--sm"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span>إيمان محمد <span class="num" dir="ltr">AB-0168</span></span>
+      </div>
+      <div class="dlg-foot">
+        <p class="hint">الدمج بينقل كل الحلقات والتقارير والمدفوعات، والسجل القديم بيتحفظ في التاريخ.</p>
+        <div class="btns">
+          <button class="btn btn--ghost">إلغاء</button>
+          <button class="btn btn--secondary">لأ، ده طالب جديد (أخ أو أخت)</button>
+          <button class="btn btn--primary">دمج</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 5. TEACHER PROFILE ============ -->
+<section class="sheet" aria-labelledby="s5">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>5</b></span>
+    <h2 id="s5">ملف المعلمة والمواعيد المتاحة</h2>
+    <p>كل يوم سطر زي سطور المسطرة. الأوقات بتتختار من قايمة، عمرها ما بتتكتب بإيد، والقايمة هي طريق الكيبورد. الشريط بيمشي من اليمين للشمال زي الكلام: المتاح بالذهب، المحجوز بالمداد، والتداخل مشطوب بالزنجفر ومكتوب سببه. خط المداد الرفيع على سطر النهارده هو الساعة دلوقتي.</p>
+  </header>
+  <div class="screen shell">
+    <aside class="side">
+      <a class="brand" href="#" aria-label="آيات البيان"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span></a>
+      <nav class="nav" aria-label="القائمة">
+        <ul><li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>لوحة التحكم</a></li></ul>
+        <ul>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<i class="ld"></i><span class="cnt cnt--act">11 جديدة</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-brief"/></svg>طلبات التوظيف<i class="ld"></i><span class="cnt">3</span></a></li>
+        </ul>
+        <ul>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب<i class="ld"></i><span class="cnt">64</span></a></li>
+          <li><a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-teacher"/></svg>المعلمين<i class="ld"></i><span class="cnt">11</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>الجدول<i class="ld"></i><span class="cnt cnt--act">3 يحتاج تأكيد</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>التقارير<i class="ld"></i><span class="cnt cnt--act">2 ما اتبعتش</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg>الاشتراكات<i class="ld"></i><span class="cnt cnt--act">3 مش مدفوع</span></a></li>
+        </ul>
+      </nav>
+      <div class="side-foot">
+        <span class="avatar" aria-hidden="true">م</span>
+        <span class="who">منى عبد الله<span>الإدارة</span></span>
+        <button class="icon-btn" aria-label="تسجيل الخروج"><svg class="i"><use href="#i-out"/></svg></button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="runhead">
+        <nav class="crumbs" aria-label="مسار الصفحة"><a href="#">المعلمين</a><svg class="i" aria-hidden="true"><use href="#i-left"/></svg><span aria-current="page">ملف المعلم/ة</span></nav>
+        <div class="clocks"><span>الخميس <span class="num">1</span> أكتوبر <span class="num">2026</span></span><span class="hijri"><span class="num">20</span> ربيع الآخر <span class="num">1448</span> هـ</span><i class="sep" aria-hidden="true"></i><span>الرياض<b class="num">15:20</b></span><span>القاهرة<b class="num">15:20</b></span></div>
+      </div>
+      <div class="page">
+        <div class="t-head">
+          <span class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>أ. فاطمة الزهراء</span></span><svg aria-hidden="true"><use href="#cap"/></svg></span>
+          <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>شغال</span>
+          <div style="margin-inline-start:auto;display:flex;gap:10px"><button class="btn btn--secondary">تعديل بيانات المعلم/ة</button></div>
+        </div>
+        <div class="t-meta">
+          <span><svg class="i" aria-hidden="true"><use href="#i-teacher"/></svg>معلمة، تحفيظ وتجويد وعلوم شرعية</span>
+          <span><svg class="i" aria-hidden="true"><use href="#i-phone"/></svg><span class="num" dir="ltr">+20 10 6612 3049</span></span>
+          <span><svg class="i" aria-hidden="true"><use href="#i-users"/></svg><span><span class="num">9</span> طلاب من أقصى <span class="num">12</span></span></span>
+          <span><svg class="i" aria-hidden="true"><use href="#i-video"/></svg><a href="#" class="num" dir="ltr">meet.google.com/xqa-ngdu-fpe</a></span>
+        </div>
+        <nav class="tabs" role="tablist" aria-label="ملف المعلم/ة">
+          <a href="#" role="tab" aria-selected="false">البيانات</a>
+          <a href="#" role="tab" aria-selected="true">المواعيد المتاحة</a>
+          <a href="#" role="tab" aria-selected="false">الطلاب<span class="n">9</span></a>
+          <a href="#" role="tab" aria-selected="false">المستحقات</a>
+        </nav>
+
+        <div class="avail-head">
+          <h3>المواعيد المتاحة</h3>
+          <div class="tz">
+            <label class="label" for="tz1">المنطقة الزمنية</label>
+            <select class="select" id="tz1"><option>القاهرة (Africa/Cairo)</option></select>
+            <div class="seg" role="group" aria-label="اعرض بتوقيت"><button aria-pressed="true">بتوقيتها</button><button aria-pressed="false">بتوقيت الرياض</button></div>
+          </div>
+        </div>
+        <p class="tz-note"><svg class="i" aria-hidden="true"><use href="#i-globe"/></svg><span>المواعيد بتوقيت القاهرة. القاهرة والرياض دلوقتي نفس الساعة، ومن <b>الجمعة <span class="num">30</span> أكتوبر</b> القاهرة بترجع ساعة. الحلقات المحجوزة هتفضل في ميعادها بتوقيت ولي الأمر.</span></p>
+
+        <div class="week" role="table" aria-label="المواعيد المتاحة في الأسبوع">
+          <div class="row" role="row">
+            <div class="cell hdr" role="columnheader">اليوم</div>
+            <div class="cell hdr" role="columnheader">من، إلى</div>
+            <div class="cell hdr trk" role="columnheader"><div class="axis" aria-hidden="true"><span style="--h:0">08</span><span style="--h:4">12</span><span style="--h:8">16</span><span style="--h:12">20</span><span style="--h:16">24</span></div></div>
+          </div>
+          <div class="row" role="row">
+            <div class="cell day" role="rowheader">السبت</div>
+            <div class="cell ranges">
+              <span class="range"><select class="select" aria-label="السبت من"><option>15:00</option></select><span class="to">إلى</span><select class="select" aria-label="السبت إلى"><option>18:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <span class="range"><select class="select" aria-label="السبت من"><option>19:00</option></select><span class="to">إلى</span><select class="select" aria-label="السبت إلى"><option>22:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <button class="icon-btn add-slot" aria-label="إضافة ميعاد"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="cell trk"><div class="track"><span class="bar" style="--s:7;--e:10"></span><span class="bar" style="--s:11;--e:14"></span><span class="booked" style="--s:8;--e:8.75"></span><span class="booked" style="--s:11;--e:11.75"></span><span class="booked" style="--s:12;--e:12.75"></span></div></div>
+          </div>
+          <div class="row" role="row">
+            <div class="cell day" role="rowheader">الأحد</div>
+            <div class="cell ranges">
+              <span class="range"><select class="select is-focus" aria-label="الأحد من"><option>16:00</option></select><span class="to">إلى</span><select class="select" aria-label="الأحد إلى"><option>21:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <button class="icon-btn add-slot" aria-label="إضافة ميعاد"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="cell trk"><div class="track"><span class="bar sel" style="--s:8;--e:13"></span><span class="booked" style="--s:9;--e:9.75"></span><span class="booked" style="--s:10.5;--e:11.25"></span></div></div>
+          </div>
+          <div class="row bad" role="row">
+            <div class="cell day" role="rowheader">الاتنين</div>
+            <div class="cell ranges">
+              <span class="range"><select class="select" aria-label="الاتنين من"><option>15:00</option></select><span class="to">إلى</span><select class="select" aria-label="الاتنين إلى"><option>18:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <span class="range"><select class="select" aria-label="الاتنين من" aria-invalid="true" aria-describedby="ov1"><option>17:30</option></select><span class="to">إلى</span><select class="select" aria-label="الاتنين إلى"><option>20:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+            </div>
+            <div class="cell trk"><div class="track"><span class="bar" style="--s:7;--e:10"></span><span class="bar" style="--s:9.5;--e:12"></span><span class="clash" style="--s:9.5;--e:10"></span></div></div>
+          </div>
+          <div class="row-err-pad" aria-hidden="true"></div>
+          <div class="row-err"><p class="err" id="ov1"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>الميعاد ده داخل في ميعاد تاني في نفس اليوم، من <span class="num">17:30</span> لحد <span class="num">18:00</span></span></p></div>
+          <div class="row" role="row">
+            <div class="cell day" role="rowheader">الثلاثاء</div>
+            <div class="cell ranges">
+              <span class="range"><select class="select" aria-label="الثلاثاء من"><option>16:00</option></select><span class="to">إلى</span><select class="select" aria-label="الثلاثاء إلى"><option>21:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <button class="icon-btn add-slot" aria-label="إضافة ميعاد"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="cell trk"><div class="track"><span class="bar" style="--s:8;--e:13"></span><span class="booked" style="--s:8;--e:8.75"></span><span class="booked" style="--s:10.5;--e:11.25"></span><span class="booked" style="--s:12;--e:12.75"></span></div></div>
+          </div>
+          <div class="row" role="row">
+            <div class="cell day" role="rowheader">الأربعاء</div>
+            <div class="cell ranges"><span class="empty-day">لسه مفيش مواعيد متاحة</span><button class="btn btn--ghost btn--sm"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة ميعاد</button></div>
+            <div class="cell trk"><div class="track"></div></div>
+          </div>
+          <div class="row is-today" role="row">
+            <div class="cell day" role="rowheader">الخميس<span class="today">النهارده</span></div>
+            <div class="cell ranges">
+              <span class="range"><select class="select" aria-label="الخميس من"><option>10:00</option></select><span class="to">إلى</span><select class="select" aria-label="الخميس إلى"><option>13:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <span class="range"><select class="select" aria-label="الخميس من"><option>16:00</option></select><span class="to">إلى</span><select class="select" aria-label="الخميس إلى"><option>19:00</option></select><button class="icon-btn" aria-label="حذف الميعاد"><svg class="i"><use href="#i-x"/></svg></button></span>
+              <button class="icon-btn add-slot" aria-label="إضافة ميعاد"><svg class="i"><use href="#i-plus"/></svg></button>
+            </div>
+            <div class="cell trk"><div class="track"><span class="bar" style="--s:2;--e:5"></span><span class="bar" style="--s:8;--e:11"></span><span class="booked" style="--s:8;--e:8.75"></span><span class="booked" style="--s:10.5;--e:11"></span><span class="nowmark" style="--t:7.33" title="دلوقتي 15:20"></span></div></div>
+          </div>
+          <div class="row" role="row">
+            <div class="cell day" role="rowheader">الجمعة</div>
+            <div class="cell ranges"><span class="empty-day">لسه مفيش مواعيد متاحة</span><button class="btn btn--ghost btn--sm"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة ميعاد</button></div>
+            <div class="cell trk"><div class="track"></div></div>
+          </div>
+        </div>
+        <div class="legend" aria-hidden="true"><span><i class="lg-a"></i>متاح</span><span><i class="lg-b"></i>حلقة محجوزة</span><span><i class="lg-c"></i>ميعاد داخل في ميعاد</span><span><i class="lg-d"></i>دلوقتي</span></div>
+        <div class="avail-foot">
+          <p><span class="num">27</span> ساعة متاحة في الأسبوع، محجوز منها <span class="num">10</span> حلقات</p>
+          <div class="btns"><button class="btn btn--ghost">إلغاء</button><button class="btn btn--primary">حفظ المواعيد</button></div>
+        </div>
+
+        <div class="t-lower">
+          <section>
+            <div class="sec-h"><h3>الإجازات</h3><button class="btn btn--secondary btn--sm"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة إجازة</button></div>
+            <div class="off">
+              <b>من السبت <span class="num">10</span> لحد الاتنين <span class="num">12</span> أكتوبر</b>
+              <button class="icon-btn" aria-label="حذف الإجازة"><svg class="i"><use href="#i-trash"/></svg></button>
+              <span class="r">السبب: سفر</span>
+              <p class="warn"><span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span><span class="num">4</span> حلقات واقعة في الإجازة دي ومحتاجة ميعاد جديد</span></span><a href="#">انقل الحلقات</a></p>
+            </div>
+            <div class="off">
+              <b>الخميس <span class="num">5</span> نوفمبر</b>
+              <button class="icon-btn" aria-label="حذف الإجازة"><svg class="i"><use href="#i-trash"/></svg></button>
+              <span class="r">السبب: ظرف عائلي</span>
+            </div>
+            <p class="hint" style="margin-block-start:8px">الإجازات بتوقيت جهازك</p>
+          </section>
+          <section>
+            <div class="sec-h"><h3>سعر الحلقة (جنيه)</h3></div>
+            <table class="rates">
+              <tr><td><span class="num">30</span> دقيقة</td><td class="num">60</td></tr>
+              <tr><td><span class="num">45</span> دقيقة</td><td class="num">85</td></tr>
+              <tr><td>ساعة</td><td class="num">110</td></tr>
+              <tr><td>ساعة ونص</td><td class="num">160</td></tr>
+            </table>
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 6. LEADS INBOX ============ -->
+<section class="sheet" aria-labelledby="s6">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>6</b></span>
+    <h2 id="s6">المحادثات</h2>
+    <p>الحالات متعلقة على جنب زي فهرس السور، بترتيب رحلة العميل، وجنب كل حالة عددها زي رقم الصفحة. كل صف قدامه الخطوة الجاية بكلمة واضحة، وزرار النقل لطلبات التوظيف موجود في كل صف. لو الرسالة شكلها طلب شغل، الصف نفسه بيسأل قبل ما ينقل.</p>
+  </header>
+  <div class="screen shell">
+    <aside class="side">
+      <a class="brand" href="#" aria-label="آيات البيان"><svg aria-hidden="true"><use href="#mark"/></svg><span class="wm"><small>أكاديمية</small><b>آيات البيان</b></span></a>
+      <nav class="nav" aria-label="القائمة">
+        <ul><li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-grid"/></svg>لوحة التحكم</a></li></ul>
+        <ul>
+          <li><a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<i class="ld"></i><span class="cnt cnt--act">11 جديدة</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-brief"/></svg>طلبات التوظيف<i class="ld"></i><span class="cnt">3</span></a></li>
+        </ul>
+        <ul>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب<i class="ld"></i><span class="cnt">64</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-teacher"/></svg>المعلمين<i class="ld"></i><span class="cnt">11</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>الجدول<i class="ld"></i><span class="cnt cnt--act">3 يحتاج تأكيد</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-doc"/></svg>التقارير<i class="ld"></i><span class="cnt cnt--act">2 ما اتبعتش</span></a></li>
+          <li><a href="#"><svg class="i" aria-hidden="true"><use href="#i-wallet"/></svg>الاشتراكات<i class="ld"></i><span class="cnt cnt--act">3 مش مدفوع</span></a></li>
+        </ul>
+      </nav>
+      <div class="side-foot">
+        <span class="avatar" aria-hidden="true">م</span>
+        <span class="who">منى عبد الله<span>الإدارة</span></span>
+        <button class="icon-btn" aria-label="تسجيل الخروج"><svg class="i"><use href="#i-out"/></svg></button>
+      </div>
+    </aside>
+    <div class="main">
+      <div class="runhead">
+        <nav class="crumbs" aria-label="مسار الصفحة"><a href="#">لوحة التحكم</a><svg class="i" aria-hidden="true"><use href="#i-left"/></svg><span aria-current="page">المحادثات</span></nav>
+        <div class="clocks"><span>الخميس <span class="num">1</span> أكتوبر <span class="num">2026</span></span><span class="hijri"><span class="num">20</span> ربيع الآخر <span class="num">1448</span> هـ</span><i class="sep" aria-hidden="true"></i><span>الرياض<b class="num">15:20</b></span><span>القاهرة<b class="num">15:20</b></span></div>
+      </div>
+      <div class="page">
+        <div class="page-head">
+          <span class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>كل المحادثات</span></span><svg aria-hidden="true"><use href="#cap"/></svg></span>
+          <span class="count"><span class="num">11</span> مستنيين رد</span>
+        </div>
+        <div class="toolbar">
+          <label class="search"><span class="sr-only">بحث</span><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input class="input" type="search" placeholder="دوّر بالاسم أو الرقم"></label>
+          <select class="select" aria-label="المصدر"><option>المصدر: الكل</option></select>
+          <select class="select" aria-label="مسؤول المتابعة"><option>مسؤول المتابعة: أنا</option></select>
+        </div>
+        <div class="inbox">
+          <nav class="fihris" role="tablist" aria-orientation="vertical" aria-label="الحالة">
+            <a href="#" role="tab" aria-selected="true">الكل<span class="n">107</span></a>
+            <hr>
+            <a href="#" role="tab" aria-selected="false">جديد<span class="n">11</span></a>
+            <a href="#" role="tab" aria-selected="false">اتواصلنا<span class="n">25</span></a>
+            <a href="#" role="tab" aria-selected="false">مهتم بدون ميعاد<span class="n">41</span></a>
+            <a href="#" role="tab" aria-selected="false">حجز حلقة تجريبية<span class="n">5</span></a>
+            <a href="#" role="tab" aria-selected="false">حضر الحلقة التجريبية<span class="n">4</span></a>
+            <a href="#" role="tab" aria-selected="false">مشترك<span class="n">16</span></a>
+            <hr>
+            <a href="#" role="tab" aria-selected="false">مردّش<span class="n">3</span></a>
+            <a href="#" role="tab" aria-selected="false">عميل ضايع / اعتذر<span class="n">2</span></a>
+          </nav>
+          <div class="leads-list" role="tabpanel">
+            <div class="lhdr" aria-hidden="true"><span>الاسم وآخر رسالة</span><span>الحالة</span><span>إجراءات</span></div>
+
+            <div class="lead unread">
+              <span class="avatar" aria-hidden="true">س</span>
+              <div class="who"><span class="dot" aria-hidden="true"></span><span class="sr-only">رسالة جديدة من</span><b>أم سلمى</b><span class="num" dir="ltr">+966 53 118 4402</span><span class="src">إعلان فيسبوك</span><span class="age">25 دقيقة</span></div>
+              <span class="st"><span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>جديد</span></span>
+              <div class="acts"><button class="btn btn--secondary btn--sm"><svg class="i i--flip" aria-hidden="true"><use href="#i-reply"/></svg>رد</button><button class="icon-btn" aria-label="نقل لطلبات التوظيف"><svg class="i"><use href="#i-brief"/></svg></button><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg">السلام عليكم، عايزة أعرف الأسعار والمواعيد لبنتي عندها 7 سنين</p>
+            </div>
+
+            <div class="lead unread flag">
+              <span class="avatar" aria-hidden="true">ن</span>
+              <div class="who"><span class="dot" aria-hidden="true"></span><span class="sr-only">رسالة جديدة من</span><b>نورهان سعيد</b><span class="num" dir="ltr">+20 11 4587 2290</span><span class="src">واتساب مباشر</span><span class="age">ساعتين</span></div>
+              <span class="st"><span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>جديد</span></span>
+              <div class="acts"><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg">السلام عليكم، أنا محفّظة ومعايا إجازة في رواية حفص، هل محتاجين معلمات؟</p>
+              <div class="flag-note" role="group" aria-label="نقل لطلبات التوظيف">
+                <span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>شكلها طلب توظيف مش طالب.</span>
+                <span>الرقم ده هيتشال من المحادثات ويتنقل لطلبات التوظيف. متأكد؟</span>
+                <div class="btns"><button class="btn btn--ghost btn--sm">سيبها هنا</button><button class="btn btn--primary btn--sm"><svg class="i" aria-hidden="true"><use href="#i-brief"/></svg>نقل لطلبات التوظيف</button></div>
+              </div>
+            </div>
+
+            <div class="lead">
+              <span class="avatar" aria-hidden="true">ع</span>
+              <div class="who"><b>عبد الله الشهري</b><span class="num" dir="ltr">+966 50 662 7719</span><span class="src">إعلان إنستجرام</span><span class="age">3 ساعات</span></div>
+              <span class="st"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>مهتم بدون ميعاد</span></span>
+              <div class="acts"><button class="btn btn--secondary btn--sm"><svg class="i" aria-hidden="true"><use href="#i-cal"/></svg>اقترح ميعاد</button><button class="icon-btn" aria-label="نقل لطلبات التوظيف"><svg class="i"><use href="#i-brief"/></svg></button><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg">تمام، بس السبت مش هينفع معانا، ينفع الأحد بعد العشا؟</p>
+              <p class="fu"><span class="note"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>المتابعة الجاية: بكرة <span class="num">10:00</span>، رسالة تلقائية بميعادين فاضيين</span></p>
+            </div>
+
+            <div class="lead">
+              <span class="avatar" aria-hidden="true">ج</span>
+              <div class="who"><b>أم جنى</b><span class="num" dir="ltr">+968 9234 5170</span><span class="src">إعلان إنستجرام</span><span class="age">6 ساعات</span></div>
+              <span class="st"><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>حجز حلقة تجريبية</span></span>
+              <div class="acts"><button class="btn btn--secondary btn--sm"><svg class="i" aria-hidden="true"><use href="#i-video"/></svg>فتح الحلقة</button><button class="icon-btn" aria-label="نقل لطلبات التوظيف"><svg class="i"><use href="#i-brief"/></svg></button><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg"><span class="me">إنت:</span> تمام يا فندم، اتفقنا الخميس الساعة 5 العصر بتوقيت مسقط مع أ. هبة</p>
+            </div>
+
+            <div class="lead">
+              <span class="avatar" aria-hidden="true">ر</span>
+              <div class="who"><b>أم ريان</b><span class="num" dir="ltr">+966 55 903 2214</span><span class="src">ترشيح</span><span class="age">يوم</span></div>
+              <span class="st"><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>حضر الحلقة التجريبية</span></span>
+              <div class="acts"><button class="btn btn--secondary btn--sm"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>تحويل لطالب</button><button class="icon-btn" aria-label="نقل لطلبات التوظيف"><svg class="i"><use href="#i-brief"/></svg></button><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg">جزاكم الله خير، الحلقة كانت حلوة وريان مبسوط. الباقة بتاعة 8 حلقات بكام؟</p>
+            </div>
+
+            <div class="lead">
+              <span class="avatar" aria-hidden="true">خ</span>
+              <div class="who"><b>خالد العتيبي</b><span class="num" dir="ltr">+966 56 771 0035</span><span class="src">إعلان فيسبوك</span><span class="age">3 أيام</span></div>
+              <span class="st"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>مردّش</span></span>
+              <div class="acts"><button class="btn btn--secondary btn--sm"><svg class="i i--flip" aria-hidden="true"><use href="#i-reply"/></svg>رد</button><button class="icon-btn" aria-label="نقل لطلبات التوظيف"><svg class="i"><use href="#i-brief"/></svg></button><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg"><span class="me">إنت:</span> السلام عليكم أستاذ خالد، لسه حابب تحجز؟ عندنا ميعاد الثلاثاء 8 بالليل</p>
+              <p class="fu"><span class="note"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>آخر متابعة تلقائية النهارده <span class="num">18:00</span></span></p>
+            </div>
+
+            <div class="lead">
+              <span class="avatar" aria-hidden="true">م</span>
+              <div class="who"><b>مها فؤاد</b><span class="num" dir="ltr">+20 10 9981 4420</span><span class="src">واتساب مباشر</span><span class="age">9 أيام</span></div>
+              <span class="st"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>عميل ضايع / اعتذر</span></span>
+              <div class="acts"><button class="icon-btn" aria-label="نقل لطلبات التوظيف"><svg class="i"><use href="#i-brief"/></svg></button><button class="icon-btn" aria-label="إجراءات"><svg class="i"><use href="#i-more"/></svg></button></div>
+              <p class="msg">شكرًا ليكم، هنأجلها لبعد امتحانات الترم</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- ============ 7. MOBILE TODAY ============ -->
+<section class="sheet" aria-labelledby="s7">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>7</b></span>
+    <h2 id="s7">تطبيق الإدارة: النهارده</h2>
+    <p>شاشة الصبح للأدمن: كل حلقات اليوم عند كل المعلمين على خط واحد. اللي فات صغير وهادي، وخط المداد بيقول الساعة كام، واللي «يحتاج تأكيد» قدامه زرارين كبار. من غير إطار ولا ترويسة، لأن الموبايل محتاج كل بكسل.</p>
+  </header>
+  <div class="phone-stage">
+    <div class="phone">
+      <div class="ph">
+        <div class="ph-status"><span class="num">15:20</span><span class="bars"><i></i></span></div>
+        <div class="ph-head">
+          <h3>النهارده</h3><svg class="mark" aria-hidden="true"><use href="#mark-sm"/></svg>
+          <p class="date">الخميس <span class="num">1</span> أكتوبر، <span class="num">20</span> ربيع الآخر. المواعيد بتوقيت الرياض</p>
+        </div>
+        <div class="ph-sum" role="group" aria-label="فلتر الحالة">
+          <button aria-pressed="true">الكل <span class="num">11</span></button>
+          <button aria-pressed="false"><svg class="g" aria-hidden="true" style="color:var(--saffron)"><use href="#g-hollow"/></svg>يحتاج تأكيد <span class="num">3</span></button>
+          <button aria-pressed="false"><svg class="g" aria-hidden="true" style="color:var(--verdigris)"><use href="#g-fill"/></svg>مؤكدة <span class="num">5</span></button>
+          <button aria-pressed="false"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تمت <span class="num">3</span></button>
+        </div>
+        <div class="ph-body">
+          <ol class="tl" aria-label="حلقات النهارده">
+            <li class="tl-row tl-past"><span class="tl-time num">13:00</span><span class="tl-node"><svg aria-hidden="true"><use href="#g-fill"/></svg></span><div class="mini"><span><b>جودى خالد</b> مع أ. هبة</span><span>تمت</span></div></li>
+            <li class="tl-row tl-past"><span class="tl-time num">14:00</span><span class="tl-node"><svg aria-hidden="true"><use href="#g-fill"/></svg></span><div class="mini"><span><b>إيمان محمد</b> مع أ. فاطمة الزهراء</span><span>تمت</span></div></li>
+            <li class="tl-now" aria-label="دلوقتي 15:20"><span class="pill">دلوقتي <span class="num">15:20</span></span><span class="line" aria-hidden="true"></span></li>
+            <li class="tl-row"><span class="tl-time num">16:00</span><span class="tl-node" style="color:var(--saffron)"><svg aria-hidden="true"><use href="#g-hollow"/></svg></span>
+              <article class="lcard need">
+                <div class="r1"><span class="nm">يوسف أحمد<span class="num" dir="ltr">AB-0182</span></span><span class="chip chip--act chip--sm"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يحتاج تأكيد</span></div>
+                <p class="meta">حلقة تجريبية مع أ. محمود، <span class="num">45</span> دقيقة</p>
+                <div class="acts"><button class="btn btn--secondary">إلغاء</button><button class="btn btn--primary">تأكيد</button></div>
+              </article>
+            </li>
+            <li class="tl-row"><span class="tl-time num">16:00</span><span class="tl-node" style="color:var(--verdigris)"><svg aria-hidden="true"><use href="#g-fill"/></svg></span>
+              <article class="lcard">
+                <div class="r1"><span class="nm">سهيلة محمد<span class="num" dir="ltr">AB-0183</span></span><span class="chip chip--ok chip--sm"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مؤكدة</span></div>
+                <p class="meta">أ. فاطمة الزهراء، <span class="num">45</span> دقيقة</p>
+                <p class="pkg"><span class="num">8</span> حلقات في الشهر، <span class="note note--act"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>فاضل حلقتين</span></p>
+              </article>
+            </li>
+            <li class="tl-row"><span class="tl-time num">17:00</span><span class="tl-node" style="color:var(--saffron)"><svg aria-hidden="true"><use href="#g-hollow"/></svg></span>
+              <article class="lcard need">
+                <div class="r1"><span class="nm">جنى وليد<span class="num" dir="ltr">AB-0185</span></span><span class="chip chip--act chip--sm"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يحتاج تأكيد</span></div>
+                <p class="meta">حلقة تجريبية مع أ. هبة، <span class="num">18:00</span> بتوقيت مسقط</p>
+                <div class="acts"><button class="btn btn--secondary">إلغاء</button><button class="btn btn--primary">تأكيد</button></div>
+              </article>
+            </li>
+            <li class="tl-row"><span class="tl-time num">18:30</span><span class="tl-node" style="color:var(--verdigris)"><svg aria-hidden="true"><use href="#g-fill"/></svg></span>
+              <article class="lcard">
+                <div class="r1"><span class="nm">مريم علي<span class="num" dir="ltr">AB-0171</span></span><span class="chip chip--ok chip--sm"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مؤكدة</span></div>
+                <p class="meta">أ. فاطمة الزهراء، ساعة</p>
+              </article>
+            </li>
+          </ol>
+        </div>
+        <div class="ph-toast" role="status"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>حلقة عمر اتأكدت، واتبعت رسالة لولي الأمر</span><button type="button">تراجع</button></div>
+        <nav class="tabbar" aria-label="التطبيق">
+          <a href="#" aria-current="page"><svg class="i" aria-hidden="true"><use href="#i-sun"/></svg>النهارده</a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-chat"/></svg>المحادثات<span class="badge">11</span></a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-users"/></svg>الطلاب</a>
+          <a href="#"><svg class="i" aria-hidden="true"><use href="#i-menu"/></svg>المزيد</a>
+        </nav>
+      </div>
+    </div>
+    <div class="phone-notes">
+      <div><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>خط المداد هو الساعة دلوقتي</b><p>اللي فات بيتلم في سطر صغير، واللي جاي كروت. النقطة على الخط بنفس شكل الحالة: فاضية لسه مستنية تأكيد، ومليانة اتأكدت أو خلصت.</p></div>
+      <div><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>الحلقة اللي مستنياك بتبان من بعيد</b><p>حافة زعفران في أول الكارت، وزرارين بارتفاع <span class="num">44px</span>. التأكيد بيحصل فورًا، و«تراجع» بيفضل ظاهر لحد ما الرسالة تتبعت.</p></div>
+      <div><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>الباقة بالكلام، مش برسمة</b><p>«فاضل حلقتين» بالزعفران لما الباقة تقرب تخلص. الجملة جاية من دالة واحدة بتتختبر، وهي نفسها اللي في الجدول وفي تقرير الحلقة.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8. COMPONENTS ============ -->
+<section class="sheet" aria-labelledby="s8">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>8</b></span>
+    <h2 id="s8">المكونات</h2>
+    <p>كل حالة ليها نقطة وكلمة ولون، فلو اللون مش باين الشكل والكلمة بيقولوا المعنى. فيه <span class="num">42</span> قيمة من الـ enums التمانية اللي ليها حالة، كلها بنصوص ar.json زي ما هي.</p>
+  </header>
+  <div class="page" style="margin:6px;padding:32px">
+    <div class="kit">
+      <section class="kit-6">
+        <h3>الأزرار</h3>
+        <div class="row">
+          <button class="btn btn--primary">حفظ</button>
+          <button class="btn btn--secondary">تعديل</button>
+          <button class="btn btn--ghost">رجوع</button>
+          <button class="btn btn--danger">حذف</button>
+          <button class="btn btn--danger-quiet">إلغاء الحلقة</button>
+        </div>
+        <div class="sizes-btn row">
+          <div><button class="btn btn--secondary btn--sm"><svg class="i" aria-hidden="true"><use href="#i-down"/></svg>تصدير</button><small class="num">32</small></div>
+          <div><button class="btn btn--primary"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة طالب</button><small class="num">40</small></div>
+          <div><button class="btn btn--primary btn--lg">إرسال التقرير</button><small class="num">48</small></div>
+        </div>
+        <div class="row">
+          <button class="btn btn--primary is-focus">تأكيد</button>
+          <button class="btn btn--primary" disabled>جاري الحفظ…</button>
+          <button class="icon-btn" aria-label="إجراءات" style="box-shadow:inset 0 0 0 1px var(--rule-input)"><svg class="i"><use href="#i-more"/></svg></button>
+        </div>
+        <p class="cap">زرار واحد مليان في الشاشة. <span class="num">32</span> للجداول الكثيفة، <span class="num">40</span> عادي، <span class="num">48</span> لشاشات المعلمين وأولياء الأمور. الحذف بالزنجفر ودايمًا بيسأل الأول.</p>
+      </section>
+      <section class="kit-6">
+        <h3>الخانات</h3>
+        <div class="fields">
+          <div class="field"><label class="label" for="k1">اسم الطالب / الطالبة</label><input class="input" id="k1" value="جودى خالد"></div>
+          <div class="field"><label class="label" for="k2">الرواية</label><input class="input is-focus" id="k2" value="حفص عن عاصم"></div>
+          <div class="field"><label class="label" for="k3n">رقم الواتساب</label>
+            <div class="phone-in"><select class="select" aria-label="كود الدولة"><option>+966</option></select><input class="input num" id="k3n" inputmode="tel" value="55 214 7730"></div>
+            <p class="preview"><svg class="i" aria-hidden="true"><use href="#i-check"/></svg><span>هيتحفظ كده: <span class="num" dir="ltr">+966552147730</span></span></p>
+          </div>
+          <div class="field"><label class="label" for="k3">رقم ولي الأمر</label><input class="input num ltr" id="k3" dir="ltr" value="0552147730" aria-invalid="true" aria-describedby="k3e"><p class="err" id="k3e"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>اكتب الرقم بكود الدولة، مثلًا <bdi dir="ltr">+966</bdi> أو <bdi dir="ltr">+20</bdi></span></p></div>
+          <div class="field"><label class="label" for="k4">الكود</label><input class="input num ltr" id="k4" dir="ltr" value="AB-0186" disabled><p class="hint">بيتعمل لوحده، مش بيتكتب</p></div>
+          <div class="field"><label class="label" for="k5">المنطقة الزمنية</label><select class="select" id="k5"><option>الرياض (Asia/Riyadh)</option></select></div>
+          <div class="field"><label class="label" for="k6">مدة الحلقة</label><select class="select num" id="k6"><option>45 دقيقة</option></select></div>
+          <div class="field"><span class="label">اعرض المواعيد</span><div class="seg" role="group" aria-label="اعرض بتوقيت"><button aria-pressed="true">بتوقيت الرياض</button><button aria-pressed="false">بتوقيت القاهرة</button></div></div>
+          <label class="check"><input type="checkbox" checked>ابعت التقرير لولي الأمر على الواتساب</label>
+        </div>
+      </section>
+
+      <section class="kit-12">
+        <h3>الحالات</h3>
+        <div class="chips-group">
+          <h4>حالة الحلقة<code dir="ltr">lesson_status</code></h4>
+          <div class="row">
+            <span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>يحتاج تأكيد</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مؤكدة</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>تمت</span>
+            <span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>متأخرة</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>اعتذر مسبقًا</span>
+            <span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>غياب بدون إشعار</span>
+            <span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>اتلغت من المعلم/ة</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>اتلغت من الإدارة</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>اتغير ميعادها</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>حالة المحادثة<code dir="ltr">lead_status</code></h4>
+          <div class="row">
+            <span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>جديد</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>اتواصلنا</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>مهتم بدون ميعاد</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>حجز حلقة تجريبية</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>حضر الحلقة التجريبية</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>مردّش</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>عميل ضايع / اعتذر</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>حالة الطالب<code dir="ltr">student_status</code></h4>
+          <div class="row">
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>تجريبي</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>متوقف مؤقتًا</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>وقف</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>حالة الباقة<code dir="ltr">subscription_status</code></h4>
+          <div class="row">
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>تجريبي</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>مشترك</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>متوقف مؤقتًا</span>
+            <span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>الباقة خلصت</span>
+            <span class="chip chip--act"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>مش مدفوع</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>الحضور<code dir="ltr">attendance</code></h4>
+          <div class="row">
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>حضرت في الموعد</span>
+            <span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>حضرت متأخرة</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>اعتذرت مسبقًا</span>
+            <span class="chip chip--bad"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>غياب بدون إشعار</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>التقدير<code dir="ltr">grade</code></h4>
+          <div class="row">
+            <span class="chip chip--ok"><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg></span>ممتاز</span>
+            <span class="chip chip--ok"><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg></span>جيد جدًا</span>
+            <span class="chip"><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg></span>جيد</span>
+            <span class="chip"><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg></span>مقبول</span>
+            <span class="chip chip--act"><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg></span>يحتاج إلى مراجعة</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>حالة المعلم/ة<code dir="ltr">teacher_status</code></h4>
+          <div class="row">
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>شغال</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span>
+          </div>
+        </div>
+        <div class="chips-group">
+          <h4>طلب التوظيف<code dir="ltr">job_applicant_status</code></h4>
+          <div class="row">
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>جديد</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-half"/></svg>تحت المراجعة</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>مقابلة</span>
+            <span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>اتقبل</span>
+            <span class="chip"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>اترفض</span>
+          </div>
+        </div>
+        <div class="shapes" aria-hidden="true">
+          <span><svg class="g"><use href="#g-fill"/></svg>مليانة: ثابتة أو خلصت</span>
+          <span><svg class="g"><use href="#g-half"/></svg>نصها: ماشية</span>
+          <span><svg class="g"><use href="#g-hollow"/></svg>فاضية: مستنية</span>
+          <span><svg class="g"><use href="#g-struck"/></svg>مشطوبة: وقفت أو اتلغت</span>
+        </div>
+        <div class="tones" aria-hidden="true">
+          <span><i style="background:var(--saffron-wash);box-shadow:inset 0 0 0 1.5px var(--saffron)"></i>زعفران: دورك، لازم تعمل حاجة</span>
+          <span><i style="background:var(--verdigris-wash);box-shadow:inset 0 0 0 1.5px var(--verdigris)"></i>زنجار: ماشي تمام</span>
+          <span><i style="background:var(--cinnabar-wash);box-shadow:inset 0 0 0 1.5px var(--cinnabar)"></i>زنجفر: حاجة باظت</span>
+          <span><i style="background:var(--neutral-wash);box-shadow:inset 0 0 0 1.5px var(--ink-3)"></i>مداد: معلومة أو مقفولة</span>
+        </div>
+      </section>
+
+      <section class="kit-12">
+        <h3>أرقام اللوحة</h3>
+        <p class="cap">لوحة التحكم: أرقام كبيرة بأميري وبنفس الأرقام اللاتينية، وكل رقم زرار فلتر. الرقم بالزعفران لو وراه شغل مستنيك.</p>
+        <div class="kpis" role="group" aria-label="فلتر سريع">
+          <button class="kpi" aria-pressed="true"><b class="folio">38</b><span>مشترك</span></button>
+          <button class="kpi" aria-pressed="false"><b class="folio">9</b><span>تجريبي، منهم <span class="num">4</span> النهارده</span></button>
+          <button class="kpi act" aria-pressed="false"><b class="folio">3</b><span>حلقات يحتاج تأكيد</span></button>
+          <button class="kpi act" aria-pressed="false"><b class="folio">3</b><span>باقات مش مدفوعة</span></button>
+        </div>
+      </section>
+
+      <section class="kit-7">
+        <h3>الرسايل</h3>
+        <div class="toasts">
+          <div class="toast" role="status"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>الطالب اتسجل</span><button type="button">افتح الملف</button></div>
+          <div class="toast" role="status"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>المواعيد اتحفظت</span></div>
+          <div class="toast bad" role="alert"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>حصلت مشكلة، حاول تاني</span><button type="button">جرّب تاني</button></div>
+          <div class="alert" role="alert"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>البريد أو كلمة السر مش صح، جرّب تاني</span></div>
+        </div>
+      </section>
+      <section class="kit-5">
+        <h3>لما مفيش حاجة</h3>
+        <div class="empty">
+          <svg class="orn" viewBox="0 0 64 64" aria-hidden="true"><path fill="none" stroke="currentColor" stroke-width="1.3" d="M32 5 59 32 32 59 5 32Z"/><path fill="none" stroke="currentColor" stroke-width="1" stroke-dasharray="2 3" d="M32 15 49 32 32 49 15 32Z"/></svg>
+          <h4>لسه مفيش طلاب</h4>
+          <p>أول ما تحوّل محادثة لطالب أو تضيف طالب بنفسك، هيظهر هنا.</p>
+          <button class="btn btn--primary"><svg class="i" aria-hidden="true"><use href="#i-plus"/></svg>إضافة طالب</button>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
+<!-- ============ 9. LESSON REPORT PDF ============ -->
+<section class="sheet" aria-labelledby="s9">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>9</b></span>
+    <h2 id="s9">تقرير الحلقة PDF</h2>
+    <p>الورقة اللي بتوصل لولي الأمر على الواتساب بعد كل حلقة. نفس الجدول المذهب ونفس الترويسة، بس على ورق أبيض حتى لو الشاشة ليلي، لأنها ورقة بتتحفظ وبتتطبع.</p>
+  </header>
+  <div class="pdf-stage">
+    <div class="a4-wrap" data-theme="light">
+      <article class="a4" aria-label="معاينة تقرير الحلقة">
+        <div class="frame">
+          <header class="a4-top">
+            <div class="a4-brand"><svg aria-hidden="true"><use href="#mark"/></svg><div><small>أكاديمية</small><b>آيات البيان</b></div></div>
+            <span class="cart"><svg aria-hidden="true"><use href="#cap"/></svg><span class="cart-mid"><span>تقرير الحلقة</span></span><svg aria-hidden="true"><use href="#cap"/></svg></span>
+          </header>
+          <div class="a4-meta">
+            <div><span>الطالبة</span><b>سهيلة محمد</b> <span class="num" dir="ltr" style="display:inline;font-size:.9em">AB-0183</span></div>
+            <div><span>المعلمة</span><b>أ. فاطمة الزهراء</b></div>
+            <div><span>البرنامج</span><b>تحفيظ وتجويد</b></div>
+            <div><span>التاريخ</span><b>الثلاثاء <span class="num">29</span> سبتمبر <span class="num">2026</span></b></div>
+            <div><span>الميعاد</span><b><span class="num">16:00</span> بتوقيت الرياض، <span class="num">45</span> دقيقة</b></div>
+            <div><span>رقم الحلقة</span><b><span class="num">6</span> من <span class="num">8</span></b></div>
+          </div>
+          <p class="a4-att"><span>الحضور</span><span class="chip chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>حضرت في الموعد</span></p>
+
+          <h3 class="a4-h"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>اللي اتعمل في الحلقة</h3>
+          <div class="a4-learn">
+            <div><span>التسميع</span><b>سورة الملك، من آية <span class="num">1</span> لحد <span class="num">15</span></b></div>
+            <div><span>الحفظ الجديد</span><b>سورة الملك، من آية <span class="num">16</span> لحد <span class="num">22</span></b></div>
+            <div><span>المراجعة</span><b>سورة الإنسان وسورة المرسلات</b></div>
+            <div><span>التجويد</span><b>أحكام النون الساكنة والتنوين: الإخفاء</b></div>
+          </div>
+
+          <h3 class="a4-h"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>التقييم</h3>
+          <div class="a4-grades">
+            <div class="rubric">
+              <span>الحفظ</span><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg></span><span class="gl">ممتاز</span>
+              <span>التسميع</span><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg></span><span class="gl">جيد جدًا</span>
+              <span>أحكام التجويد</span><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg></span><span class="gl">جيد جدًا</span>
+              <span>مخارج الحروف</span><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg></span><span class="gl">ممتاز</span>
+              <span>المراجعة</span><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg><svg class="g"><use href="#g-hollow"/></svg></span><span class="gl">جيد</span>
+              <span>التركيز والالتزام</span><span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg></span><span class="gl">ممتاز</span>
+            </div>
+            <div class="overall">
+              <span>التقدير العام</span>
+              <b>جيد جدًا</b>
+              <span class="pips" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-fill"/></svg><svg class="g"><use href="#g-hollow"/></svg></span>
+            </div>
+          </div>
+
+          <div class="a4-notes">
+            <div><h3 class="a4-h"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>ملاحظات المعلمة</h3><p>ما شاء الله سهيلة حافظة كويس وصوتها حلو. محتاجين بس نركز على المدّ في المراجعة، وتاخد نفسها قبل آخر الآية مش في نصها.</p></div>
+            <div><h3 class="a4-h"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>الواجب</h3><p>تراجع سورة الملك من آية <span class="num">16</span> لحد <span class="num">22</span> مرتين كل يوم، وتسمّعها لماما قبل الحلقة الجاية.</p></div>
+            <div class="wide"><h3 class="a4-h"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>الخطة الجاية</h3><p>الخميس <span class="num">1</span> أكتوبر الساعة <span class="num">16:00</span>: تسميع الملك من <span class="num">16</span> لحد <span class="num">22</span>، وحفظ جديد من <span class="num">23</span> لحد <span class="num">30</span>، ومراجعة سورة الإنسان.</p></div>
+          </div>
+
+          <footer class="a4-foot">
+            <span><span class="num">8</span> حلقات في الشهر، فاضل حلقتين</span>
+            <span class="pg"><svg aria-hidden="true"><use href="#r-ring"/></svg><b class="num">1</b></span>
+            <span>اتبعت على الواتساب الثلاثاء <span class="num">29</span> سبتمبر <span class="num">17:02</span></span>
+          </footer>
+        </div>
+      </article>
+    </div>
+    <div class="phone-notes">
+      <div><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>صفحة A4 واحدة، بنفس الخطين</b><p>طولي، هوامش <span class="num">18</span> مم. التقرير بيتعمل HTML ويتحول PDF بـ Chromium، وأميري وPlex مدمجين في الملف فبيتقري على أي موبايل.</p></div>
+      <div><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>التقدير بالنقط مش باللون</b><p>خمس نقط لكل تقدير، من «ممتاز» لـ«يحتاج إلى مراجعة». لو اتطبع أبيض وأسود أو اتبعت صورة باهتة على الواتساب، لسه بيتقري.</p></div>
+      <div><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>الوردة رقم الصفحة بس</b><p>زي المصحف: الوردة شايلة رقم. الذهب في الإطار والترويسة، وكل الكلام بالمداد.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 10. TOKENS ============ -->
+<section class="sheet" aria-labelledby="s10">
+  <header class="sheet-head">
+    <span class="rnum"><svg aria-hidden="true"><use href="#r-ring"/></svg><b>10</b></span>
+    <h2 id="s10">التوكنز</h2>
+    <p>نفس الأسماء في CSS وفي Tailwind <span class="num">v4</span> وفي تطبيق Expo. القيم في الجدول بتتقري من الصفحة نفسها، فلو اتغيرت في الكود هتتغير هنا.</p>
+  </header>
+  <div class="page" style="margin:6px;padding:28px">
+    <div class="tok-grid">
+      <div class="table-wrap">
+        <table class="tok" id="tok">
+          <thead><tr><th scope="col">التوكن</th><th scope="col">فاتح / ليلي</th><th scope="col">الدور</th><th scope="col">Tailwind</th><th scope="col" class="val">القيمة (فاتح، ليلي)</th></tr></thead>
+          <tbody>
+            <tr class="grp"><td colspan="5">الأسطح</td></tr>
+            <tr data-t="--margin"><td><code>--margin</code></td><td></td><td>الهامش: خلفية التطبيق والقائمة</td><td><code>bg-background</code></td><td class="val"></td></tr>
+            <tr data-t="--page"><td><code>--page</code></td><td></td><td>الصفحة جوّه الجدول</td><td><code>bg-card</code></td><td class="val"></td></tr>
+            <tr data-t="--raised"><td><code>--raised</code></td><td></td><td>خانات، قوايم منسدلة</td><td><code>bg-popover</code></td><td class="val"></td></tr>
+            <tr data-t="--sunk"><td><code>--sunk</code></td><td></td><td>تحويم، خلفية هادية</td><td><code>bg-muted</code></td><td class="val"></td></tr>
+            <tr class="grp"><td colspan="5">المداد والخطوط</td></tr>
+            <tr data-t="--ink"><td><code>--ink</code></td><td></td><td>النص الأساسي</td><td><code>text-foreground</code></td><td class="val"></td></tr>
+            <tr data-t="--ink-2"><td><code>--ink-2</code></td><td></td><td>نص تاني</td><td><code>text-ink-2</code></td><td class="val"></td></tr>
+            <tr data-t="--ink-3"><td><code>--ink-3</code></td><td></td><td>تفاصيل وتسميات</td><td><code>text-muted-foreground</code></td><td class="val"></td></tr>
+            <tr data-t="--rule"><td><code>--rule</code></td><td></td><td>فواصل الصفوف</td><td><code>border-border</code></td><td class="val"></td></tr>
+            <tr data-t="--rule-strong"><td><code>--rule-strong</code></td><td></td><td>حدود الصفحة والكروت (زخرفي، أقل من 3:1)</td><td><code>border-rule-strong</code></td><td class="val"></td></tr>
+            <tr data-t="--rule-input"><td><code>--rule-input</code></td><td></td><td>حدود الخانات والزرار التاني (3:1 على الأقل)</td><td><code>border-input</code></td><td class="val"></td></tr>
+            <tr class="grp"><td colspan="5">الذهب (زخرفة بس)</td></tr>
+            <tr data-t="--gold"><td><code>--gold</code></td><td></td><td>الإطار، الخط المزدوج، الوردة</td><td><code>border-gold</code></td><td class="val"></td></tr>
+            <tr data-t="--gold-soft"><td><code>--gold-soft</code></td><td></td><td>الخط الجوّاني، حدود الحاشية</td><td><code>border-gold-soft</code></td><td class="val"></td></tr>
+            <tr data-t="--gold-wash"><td><code>--gold-wash</code></td><td></td><td>جوّه الترويسة، الصف المحدد</td><td><code>bg-gold-wash</code></td><td class="val"></td></tr>
+            <tr class="grp"><td colspan="5">اللازورد (أي حاجة بتتداس)</td></tr>
+            <tr data-t="--lapis"><td><code>--lapis</code></td><td></td><td>الزرار الأساسي، اللينك، التركيز</td><td><code>bg-primary ring-ring</code></td><td class="val"></td></tr>
+            <tr data-t="--lapis-hover"><td><code>--lapis-hover</code></td><td></td><td>تحويم الزرار</td><td><code>bg-primary-hover</code></td><td class="val"></td></tr>
+            <tr data-t="--lapis-wash"><td><code>--lapis-wash</code></td><td></td><td>تحويم الزرار الشفاف</td><td><code>bg-accent</code></td><td class="val"></td></tr>
+            <tr data-t="--on-lapis"><td><code>--on-lapis</code></td><td></td><td>الكلام على اللازورد</td><td><code>text-primary-foreground</code></td><td class="val"></td></tr>
+            <tr class="grp"><td colspan="5">الحالات</td></tr>
+            <tr data-t="--saffron"><td><code>--saffron</code></td><td></td><td>دورك: نص وحدود</td><td><code>text-act</code></td><td class="val"></td></tr>
+            <tr data-t="--saffron-wash"><td><code>--saffron-wash</code></td><td></td><td>دورك: خلفية</td><td><code>bg-act-soft</code></td><td class="val"></td></tr>
+            <tr data-t="--verdigris"><td><code>--verdigris</code></td><td></td><td>تمام: نص وحدود</td><td><code>text-ok</code></td><td class="val"></td></tr>
+            <tr data-t="--verdigris-wash"><td><code>--verdigris-wash</code></td><td></td><td>تمام: خلفية</td><td><code>bg-ok-soft</code></td><td class="val"></td></tr>
+            <tr data-t="--cinnabar"><td><code>--cinnabar</code></td><td></td><td>باظت: نص وحدود</td><td><code>text-danger text-destructive</code></td><td class="val"></td></tr>
+            <tr data-t="--cinnabar-wash"><td><code>--cinnabar-wash</code></td><td></td><td>باظت: خلفية</td><td><code>bg-danger-soft</code></td><td class="val"></td></tr>
+            <tr data-t="--cinnabar-solid"><td><code>--cinnabar-solid</code></td><td></td><td>زرار الحذف المليان (مش للنص)</td><td><code>bg-destructive-solid</code></td><td class="val"></td></tr>
+            <tr data-t="--neutral-wash"><td><code>--neutral-wash</code></td><td></td><td>حالة معلومة أو مقفولة</td><td><code>bg-neutral-soft</code></td><td class="val"></td></tr>
+            <tr class="grp"><td colspan="5">المقلوب والجلدة</td></tr>
+            <tr data-t="--inverse"><td><code>--inverse</code></td><td></td><td>خلفية الرسايل السريعة</td><td><code>bg-inverse</code></td><td class="val"></td></tr>
+            <tr data-t="--on-inverse"><td><code>--on-inverse</code></td><td></td><td>الكلام والزرار عليها</td><td><code>text-on-inverse</code></td><td class="val"></td></tr>
+            <tr data-t="--inverse-gold"><td><code>--inverse-gold</code></td><td></td><td>النقطة على الرسالة السريعة</td><td><code>text-inverse-gold</code></td><td class="val"></td></tr>
+            <tr data-t="--cover"><td><code>--cover</code></td><td></td><td>أيقونة التطبيق والعلامة الغامقة</td><td><code>bg-cover</code></td><td class="val"></td></tr>
+            <tr data-t="--leather"><td><code>--leather</code></td><td></td><td>جلدة شاشة الدخول</td><td><code>bg-leather</code></td><td class="val"></td></tr>
+            <tr data-t="--cover-ink"><td><code>--cover-ink</code></td><td></td><td>الكلام على الجلدة والأيقونة</td><td><code>text-cover-ink</code></td><td class="val"></td></tr>
+            <tr data-t="--gold-on-cover"><td><code>--gold-on-cover</code></td><td></td><td>الذهب على الجلدة والأيقونة</td><td><code>text-gold-on-cover</code></td><td class="val"></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div style="display:grid;gap:28px">
+        <div>
+          <h3 class="display" style="font-size:var(--fs-h4);line-height:1.5;margin-block-end:8px">مقاسات الخط</h3>
+          <div class="scale-row"><code>hero 68 / 1.45</code><span class="display" style="font-size:68px;line-height:1.45">آيات</span></div>
+          <div class="scale-row"><code>display 46 / 1.5</code><span class="display" style="font-size:46px;line-height:1.5">المداد والذهب</span></div>
+          <div class="scale-row"><code>h1 34 / 1.5</code><span class="display" style="font-size:34px;line-height:1.5">النهارده</span></div>
+          <div class="scale-row"><code>h2 28 / 1.5</code><span class="display" style="font-size:28px;line-height:1.5">المحادثات</span></div>
+          <div class="scale-row"><code>h3 23 / 1.5</code><span class="display" style="font-size:23px;line-height:1.5">الإجازات</span></div>
+          <div class="scale-row"><code>h4 20 / 1.5</code><span class="display" style="font-size:20px;line-height:1.5">سعر الحلقة</span></div>
+          <div class="scale-row"><code>lg 18 / 1.6</code><span style="font-size:18px;font-weight:600">ملف الطالب</span></div>
+          <div class="scale-row"><code>base 16 / 1.6</code><span style="font-size:16px">خانات الموبايل</span></div>
+          <div class="scale-row"><code>body 15 / 1.6</code><span style="font-size:15px">فقرات وشرح</span></div>
+          <div class="scale-row"><code>sm 14 / 1.6</code><span style="font-size:14px">نص الجدول والزراير</span></div>
+          <div class="scale-row"><code>xs 13 / 1.5</code><span style="font-size:13px">تسميات وحالات</span></div>
+          <div class="scale-row"><code>2xs 12 / 1.5</code><span style="font-size:12px;color:var(--ink-3)">أرقام تحت الأسماء</span></div>
+        </div>
+        <div>
+          <h3 class="display" style="font-size:var(--fs-h4);line-height:1.5;margin-block-end:10px">الحواف</h3>
+          <div class="radii">
+            <div><i style="border-radius:2px;outline:1.5px solid var(--gold);outline-offset:3px"></i><span class="num">xs 2</span>الصفحة</div>
+            <div><i style="border-radius:6px"></i><span class="num">sm 6</span>صغير</div>
+            <div><i style="border-radius:8px"></i><span class="num">md 8</span>زراير وخانات</div>
+            <div><i style="border-radius:12px"></i><span class="num">lg 12</span>شاشات وكروت</div>
+            <div><i style="border-radius:999px;width:56px;height:26px"></i><span class="num">pill</span>حالات</div>
+          </div>
+        </div>
+        <div>
+          <h3 class="display" style="font-size:var(--fs-h4);line-height:1.5;margin-block-end:10px">المسافات</h3>
+          <div class="space">
+            <div><i style="width:4px"></i>4</div><div><i style="width:8px"></i>8</div><div><i style="width:12px"></i>12</div><div><i style="width:16px"></i>16</div><div><i style="width:24px"></i>24</div><div><i style="width:32px"></i>32</div><div><i style="width:48px"></i>48</div><div><i style="width:72px"></i>72</div>
+          </div>
+          <p class="hint" style="margin-block-start:10px">جوّه المجموعة <span class="num">8</span>، بين المجموعات <span class="num">16</span> وطالع، بين أقسام الصفحة <span class="num">24</span>. الحركة: <span class="num">120</span> مللي ثانية للتحويم والضغط، و<span class="num">200</span> للحوار والرسالة، وصفر لو الجهاز طالب حركة أقل.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+/* theme switcher: auto removes the attribute so the OS media query decides */
+(function () {
+  var root = document.documentElement;
+  var btns = document.querySelectorAll('[data-set-theme]');
+  function sync() {
+    var cur = root.getAttribute('data-theme') || 'auto';
+    btns.forEach(function (b) { b.setAttribute('aria-pressed', String(b.dataset.setTheme === cur)); });
+  }
+  btns.forEach(function (b) {
+    b.addEventListener('click', function () {
+      var v = b.dataset.setTheme;
+      if (v === 'auto') root.removeAttribute('data-theme'); else root.setAttribute('data-theme', v);
+      try { localStorage.setItem('ayat-theme', v); } catch (e) {}
+      sync();
+    });
+  });
+  sync();
+  /* tokens table: swatches are scoped [data-theme] spans, values read back from the page itself */
+  document.querySelectorAll('#tok tr[data-t]').forEach(function (tr) {
+    var name = tr.dataset.t;
+    var cell = tr.children[1];
+    var pair = document.createElement('span'); pair.className = 'pair';
+    var vals = [];
+    ['light', 'dark'].forEach(function (t) {
+      var s = document.createElement('span'); s.setAttribute('data-theme', t); s.style.background = 'var(' + name + ')';
+      pair.appendChild(s);
+      cell.appendChild(pair);
+      vals.push(getComputedStyle(s).getPropertyValue(name).trim());
+    });
+    tr.children[4].innerHTML = '<code>' + vals[0] + '</code><br><code>' + vals[1] + '</code>';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="16" height="16" color="#C59542" role="img" aria-label="آيات البيان">
+  <!-- Mark for 28px and below (favicon, tab bar, mobile header): no inner ring, heavier rosette, alef and madda. -->
+  <g>
+    <path fill="none" stroke="currentColor" stroke-width="4.5" d="M32 7A7 7 0 0 1 44.5 10.35A7 7 0 0 1 53.65 19.5A7 7 0 0 1 57 32A7 7 0 0 1 53.65 44.5A7 7 0 0 1 44.5 53.65A7 7 0 0 1 32 57A7 7 0 0 1 19.5 53.65A7 7 0 0 1 10.35 44.5A7 7 0 0 1 7 32A7 7 0 0 1 10.35 19.5A7 7 0 0 1 19.5 10.35A7 7 0 0 1 32 7Z"/>
+    <path fill="currentColor" d="M31.2 24.6L33.8 23.5C35.1 25.6 35.4 28.8 35.3 32.2C35.2 37.4 34.1 42.8 33.2 46.8C32.8 48.5 30.8 48.6 30.4 46.9C29.7 42.6 29.5 37.6 29.7 32.4C29.9 28.8 30.3 26.4 31.2 24.6Z"/>
+    <path fill="currentColor" d="M40.2 16.8C39 18.6 37 19.2 34.2 18.9C30.8 18.6 27.4 18.2 25.6 19C24.4 19.6 23.8 21 24.2 22.8C24.9 22 25.8 21.6 26.9 21.5C29.4 21.4 31.8 22 34.2 22C37.4 22 39.6 20.2 40.2 16.8Z"/>
+  </g>
+</svg>

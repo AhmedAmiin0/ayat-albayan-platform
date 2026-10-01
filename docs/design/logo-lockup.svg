@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 110" width="420" height="110">
+  <!-- Horizontal lockup, RTL: mark at the inline-start (right), wordmark to its left.
+       The wordmark is LIVE TEXT in Amiri 700: outline it to paths (Figma/Illustrator with Amiri installed) before any use
+       outside the web app. Light: mark #C59542, text #161F30. On dark/cover: mark and text #DFB76C, small line #EDE7D9. -->
+  <g transform="translate(316 8) scale(1.47)" color="#C59542">
+    <path fill="none" stroke="currentColor" stroke-width="2" d="M32 7A7 7 0 0 1 44.5 10.35A7 7 0 0 1 53.65 19.5A7 7 0 0 1 57 32A7 7 0 0 1 53.65 44.5A7 7 0 0 1 44.5 53.65A7 7 0 0 1 32 57A7 7 0 0 1 19.5 53.65A7 7 0 0 1 10.35 44.5A7 7 0 0 1 7 32A7 7 0 0 1 10.35 19.5A7 7 0 0 1 19.5 10.35A7 7 0 0 1 32 7Z"/>
+    <circle cx="32" cy="32" r="17.5" fill="none" stroke="currentColor" stroke-width="1.25"/>
+    <path fill="currentColor" d="M31.9 24.8L33.3 24.2C34.2 26.2 34.3 29 34.2 32.2C34.1 37.2 33.2 42.6 32.4 46.6C32.2 47.7 31 47.8 30.8 46.8C30.3 42.6 30.2 37.6 30.4 32.4C30.6 29.2 31 26.6 31.9 24.8Z"/>
+    <path fill="currentColor" d="M38.6 17.4C37.6 18.7 36.2 19.1 34 18.9C31 18.6 28 18.3 26.5 18.9C25.6 19.4 25.2 20.6 25.4 22.1C26.1 21.5 26.8 21.3 27.6 21.2C29.6 21.1 31.6 21.7 34 21.7C36.5 21.7 38.1 20.1 38.6 17.4Z"/>
+  </g>
+  <text x="300" y="36" direction="rtl" text-anchor="start" font-family="IBM Plex Sans Arabic, sans-serif" font-size="16" fill="#5B6472">أكاديمية</text>
+  <text x="300" y="88" direction="rtl" text-anchor="start" font-family="Amiri, serif" font-weight="700" font-size="52" fill="#161F30">آيات البيان</text>
+</svg>
