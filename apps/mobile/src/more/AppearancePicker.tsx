@@ -1,0 +1,21 @@
+import { t } from '@/lib/i18n';
+import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import type { AppearancePref } from './appearance';
+import { Section } from './Section';
+import { useAppearancePref } from './useAppearancePref';
+
+const ITEMS: readonly FilterPill<AppearancePref>[] = [
+  { value: 'auto', label: t.theme.auto },
+  { value: 'light', label: t.theme.light },
+  { value: 'dark', label: t.theme.dark },
+];
+
+/** «المظهر»: تلقائي / فاتح / ليلي, saved on the device. */
+export function AppearancePicker() {
+  const [pref, choose] = useAppearancePref();
+  return (
+    <Section title={t.theme.label}>
+      <FilterPills items={ITEMS} value={pref} onChange={choose} accessibilityLabel={t.theme.label} />
+    </Section>
+  );
+}

@@ -232,6 +232,7 @@ export type Database = {
           id: string;
           locale: string;
           phone_e164: string | null;
+          push_tokens: string[];
           role: Database['public']['Enums']['user_role'];
           tz: string;
           updated_at: string;
@@ -242,6 +243,7 @@ export type Database = {
           id: string;
           locale?: string;
           phone_e164?: string | null;
+          push_tokens?: string[];
           role: Database['public']['Enums']['user_role'];
           tz?: string;
           updated_at?: string;
@@ -252,6 +254,7 @@ export type Database = {
           id?: string;
           locale?: string;
           phone_e164?: string | null;
+          push_tokens?: string[];
           role?: Database['public']['Enums']['user_role'];
           tz?: string;
           updated_at?: string;
