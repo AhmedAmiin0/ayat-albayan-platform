@@ -5,7 +5,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
-ART="${ART:-$ROOT/.claude/artifacts/staging}"
+# Secrets live in the main checkout (also when this runs from a git worktree).
+MAIN="$(cd "$(git -C "$ROOT" rev-parse --path-format=absolute --git-common-dir)/.." && pwd)"
+ART="${ART:-$MAIN/.claude/artifacts/staging}"
 SSH_HOST="${SSH_HOST:-hostinger}"
 DEST=/opt/ayat-albayan-staging
 REF=knxfwiimjcifwckhwbim
