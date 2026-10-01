@@ -1,0 +1,18 @@
+# Ouroboros seed seed_9a2a30519bd8 (interview-less, from docs/03 + docs/05 Phase 1)
+seed_id: seed_9a2a30519bd8
+goal: Phase 1 — Core domain (students+guardians, teachers, leads+job_applicants, shared)
+acceptance_criteria:
+  - "R-STU-01: students.code AB-nnnn generated, unique, never typed; records reference student_id"
+  - "R-STU-02: phones normalised to E.164 on write (+966/966/0, EG/SA); handles/short numbers rejected; normalizePhone unit-tested"
+  - "R-STU-03: duplicate detection (phone + normalizeArabic-similar name) warns + offers merge; MergeService keeps history in student_merges + audit_log; >=20 unit cases"
+  - "R-STU-04: guardian has many students (siblings separate)"
+  - "R-STU-05: student profile fields editable via API + web profile page"
+  - "R-TCH-01: teachers CRUD API + web list"
+  - "R-TCH-02: teacher_availability weekly grid + teacher_time_off; freeSlots unit-tested across Asia/Riyadh and Africa/Cairo"
+  - "R-LEAD-01 (data): leads upsert by E.164 phone"
+  - "R-LEAD-04: job_applicants separate entity + status; lead re-classify in one action; status machine unit-tested"
+  - "Web: students table + profile + merge dialog, teacher list + availability grid, leads inbox list"
+  - "RLS on every new table; Nest guards admin-only"
+  - "Files <=150 lines, functions <=3 params, strict TS, unit tests beside code, Arabic labels in ar.json"
+  - "Playwright journey #6 (duplicate student blocked and merged) passes"
+  - "pnpm turbo lint typecheck test e2e green; PHASE_SUMMARY.md written"
