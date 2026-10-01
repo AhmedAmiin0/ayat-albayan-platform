@@ -5,7 +5,8 @@
   "scripts": {
     "e2e": "playwright test",
     "lint": "eslint .",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "screens": "node scripts/screens.ts"
   },
   "devDependencies": {
     "@ab/config": "workspace:*",

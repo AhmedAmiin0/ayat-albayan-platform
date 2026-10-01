@@ -1,24 +1,123 @@
 @import 'tailwindcss';
+@import './styles/tokens.css';
+@import './styles/components.css';
 
-/* shadcn/ui tokens (neutral). RTL: use logical utilities only (ps/pe/ms/me/start/end). */
+/* Ink & Gold (docs/07). RTL: logical utilities only (ps/pe/ms/me/start/end).
+   `dark:` follows <html data-theme>, which the boot script in index.html always sets. */
+@custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
+
+/* ---------- theme-independent tokens ---------- */
 @theme {
   --font-sans: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
-  --color-background: oklch(0.985 0.002 95);
-  --color-foreground: oklch(0.2 0.01 95);
-  --color-card: oklch(1 0 0);
-  --color-card-foreground: oklch(0.2 0.01 95);
-  --color-primary: oklch(0.45 0.09 165);
-  --color-primary-foreground: oklch(0.98 0.01 165);
-  --color-muted: oklch(0.95 0.005 95);
-  --color-muted-foreground: oklch(0.5 0.01 95);
-  --color-destructive: oklch(0.55 0.2 27);
-  --color-border: oklch(0.9 0.005 95);
-  --color-input: oklch(0.88 0.005 95);
-  --color-ring: oklch(0.45 0.09 165);
-  --radius-md: 0.5rem;
-  --radius-lg: 0.75rem;
+  --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
+
+  --text-2xs: 12px;     --text-2xs--line-height: 1.5;
+  --text-xs: 13px;      --text-xs--line-height: 1.5;
+  --text-sm: 14px;      --text-sm--line-height: 1.6;
+  --text-body: 15px;    --text-body--line-height: 1.6;
+  --text-base: 16px;    --text-base--line-height: 1.6;
+  --text-lg: 18px;      --text-lg--line-height: 1.6;
+  --text-h4: 20px;      --text-h4--line-height: 1.5;
+  --text-h3: 23px;      --text-h3--line-height: 1.5;
+  --text-h2: 28px;      --text-h2--line-height: 1.5;
+  --text-h1: 34px;      --text-h1--line-height: 1.5;
+  --text-display: 46px; --text-display--line-height: 1.5;
+  --text-hero: 68px;    --text-hero--line-height: 1.45;
+
+  --radius-xs: 2px;  /* the jadwal page, dialogs */
+  --radius-sm: 6px;  /* small tabs, fihris items */
+  --radius-md: 8px;  /* buttons, inputs, menus */
+  --radius-lg: 12px; /* screens, mobile cards, toasts */
+
+  --ease-ink: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  /* `shell:` = the sidebar fihris; below it the compact top row (docs/07 §7) */
+  --breakpoint-shell: 56.25rem;
 }
 
-body {
-  @apply bg-background text-foreground font-sans antialiased;
+/* ---------- semantic colours for utilities (resolved at use-time) ---------- */
+@theme inline {
+  /* shadcn slots */
+  --color-background: var(--margin);
+  --color-foreground: var(--ink);
+  --color-card: var(--page);
+  --color-card-foreground: var(--ink);
+  --color-popover: var(--raised);
+  --color-popover-foreground: var(--ink);
+  --color-primary: var(--lapis);
+  --color-primary-hover: var(--lapis-hover);
+  --color-primary-foreground: var(--on-lapis);
+  --color-secondary: var(--raised);
+  --color-secondary-foreground: var(--ink);
+  --color-muted: var(--sunk);
+  --color-muted-foreground: var(--ink-3);
+  --color-accent: var(--lapis-wash);
+  --color-accent-foreground: var(--lapis);
+  /* destructive is text-safe in both themes; the filled delete button uses destructive-solid */
+  --color-destructive: var(--cinnabar);
+  --color-destructive-solid: var(--cinnabar-solid);
+  --color-destructive-foreground: var(--on-cinnabar);
+  --color-border: var(--rule);
+  --color-input: var(--rule-input);
+  --color-ring: var(--lapis);
+  /* surfaces + ink */
+  --color-margin: var(--margin);
+  --color-page: var(--page);
+  --color-raised: var(--raised);
+  --color-sunk: var(--sunk);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-rule-strong: var(--rule-strong);
+  --color-rule-input: var(--rule-input);
+  /* ornament: never on interactive elements, never as text */
+  --color-gold: var(--gold);
+  --color-gold-soft: var(--gold-soft);
+  --color-gold-wash: var(--gold-wash);
+  /* action (lapis) */
+  --color-lapis: var(--lapis);
+  --color-lapis-wash: var(--lapis-wash);
+  /* status families: text/border + soft background */
+  --color-ok: var(--verdigris);
+  --color-ok-soft: var(--verdigris-wash);
+  --color-act: var(--saffron);
+  --color-act-soft: var(--saffron-wash);
+  --color-danger: var(--cinnabar);
+  --color-danger-soft: var(--cinnabar-wash);
+  --color-neutral-soft: var(--neutral-wash);
+  /* inverse (toasts) + brand surfaces */
+  --color-inverse: var(--inverse);
+  --color-on-inverse: var(--on-inverse);
+  --color-inverse-gold: var(--inverse-gold);
+  --color-cover: var(--cover);
+  --color-leather: var(--leather);
+  --color-leather-deep: var(--leather-deep);
+  --color-leather-lift: var(--leather-lift);
+  --color-gold-on-cover: var(--gold-on-cover);
+  --color-cover-ink: var(--cover-ink);
+  --color-scrim: var(--scrim);
+  /* elevation: three levels only */
+  --shadow-page: var(--elev-page);
+  --shadow-pop: var(--elev-pop);
+  --shadow-toast: var(--elev-toast);
+}
+
+@layer base {
+  body {
+    @apply bg-background text-foreground font-sans text-sm antialiased;
+  }
+  :focus-visible {
+    outline: 2px solid var(--lapis);
+    outline-offset: 2px;
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition: none !important;
+      animation: none !important;
+    }
+  }
 }

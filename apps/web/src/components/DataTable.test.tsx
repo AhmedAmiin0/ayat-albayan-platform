@@ -2,7 +2,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { DataTable, type DataTableFeatures } from './DataTable';
+import { DataTable, hamishClass, type DataTableFeatures } from './DataTable';
 
 type Row = {
   id: string;
@@ -38,5 +38,17 @@ describe('DataTable', () => {
     render(<DataTable columns={columns} data={DATA} onRowClick={onRowClick} />);
     fireEvent.click(screen.getByText('جودي'));
     expect(onRowClick).toHaveBeenCalledWith(DATA[1]);
+  });
+
+  it('scopes header cells and applies column meta classes to th and td', () => {
+    const withMeta = col.columns([
+      col.accessor('name', { header: () => t.students.name }),
+      col.accessor('code', { header: () => t.students.hamish, meta: { className: hamishClass } }),
+    ]);
+    render(<DataTable columns={withMeta} data={DATA} />);
+    const th = screen.getByRole('columnheader', { name: t.students.hamish });
+    expect(th.getAttribute('scope')).toBe('col');
+    expect(th.className).toContain('border-s-gold-soft');
+    expect(screen.getByText('AB-0183').className).toContain('@max-[940px]:hidden');
   });
 });

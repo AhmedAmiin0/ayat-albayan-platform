@@ -1,17 +1,13 @@
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
+// docs/07 §6 Input/Select: 3:1 rule-input border on raised paper, lapis focus, cinnabar when
+// aria-invalid. 16px text and 44px tall under 640px (iOS zoom floor). LTR values (email, codes,
+// phones): pass dir="ltr"; they align to the inline-end so they line up with their labels.
+export const controlClass =
+  'w-full min-h-11 rounded-md border border-input bg-popover px-3 text-base text-ink placeholder:text-ink-3 focus:border-ring focus:outline-2 focus:outline-offset-1 focus:outline-ring aria-invalid:border-danger aria-invalid:ring-1 aria-invalid:ring-danger disabled:cursor-not-allowed disabled:bg-sunk disabled:text-ink-3 sm:min-h-10 sm:text-sm [&[dir=ltr]]:text-end';
+
 export const Input = React.forwardRef<HTMLInputElement, React.ComponentProps<'input'>>(
-  ({ className, type, ...props }, ref) => (
-    <input
-      type={type}
-      ref={ref}
-      className={cn(
-        'flex h-10 w-full rounded-md border border-input bg-card px-3 py-2 text-base focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-50 md:text-sm',
-        className,
-      )}
-      {...props}
-    />
-  ),
+  ({ className, ...props }, ref) => <input ref={ref} className={cn(controlClass, className)} {...props} />,
 );
 Input.displayName = 'Input';

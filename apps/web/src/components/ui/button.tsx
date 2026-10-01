@@ -3,18 +3,36 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50',
+// docs/07 §6 Button. Lapis is the only action colour; at most ONE filled primary per screen.
+// Focus is the global lapis outline (index.css). Icons are 17px; directional ones mirror in RTL.
+const secondary =
+  'bg-secondary text-secondary-foreground border-input enabled:hover:bg-sunk';
+
+export const buttonVariants = cva(
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border border-transparent font-semibold leading-tight no-underline transition-colors duration-[120ms] ease-ink cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 [&_svg]:size-[17px] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
-        default: 'bg-primary text-primary-foreground hover:bg-primary/90',
-        outline: 'border border-input bg-card hover:bg-muted',
-        ghost: 'hover:bg-muted',
+        /** One per view: إضافة طالب, حفظ المواعيد, دمج, تأكيد, دخول. */
+        primary: 'bg-primary text-primary-foreground enabled:hover:bg-primary-hover',
+        /** Peers: تصدير, تعديل, row next-actions. The border is its only edge (3:1 rule-input). */
+        secondary,
+        /** إلغاء, سيبها هنا, inline «إضافة ميعاد». */
+        ghost: 'bg-transparent text-primary enabled:hover:bg-accent',
+        /** حذف, inside a confirm only. */
+        danger: 'bg-destructive-solid text-destructive-foreground',
+        /** إلغاء الحلقة in lists. */
+        'danger-quiet': 'bg-transparent text-destructive border-destructive/45',
+        /** @deprecated Phase 1 name for `secondary`; switch call sites, then delete. */
+        outline: secondary,
       },
-      size: { default: 'h-10 px-4', sm: 'h-8 px-3', lg: 'h-11 px-6' },
+      size: {
+        sm: 'min-h-8 px-3 text-xs',
+        md: 'min-h-10 px-4 text-sm',
+        lg: 'min-h-12 px-5 text-body',
+      },
     },
-    defaultVariants: { variant: 'default', size: 'default' },
+    defaultVariants: { variant: 'primary', size: 'md' },
   },
 );
 

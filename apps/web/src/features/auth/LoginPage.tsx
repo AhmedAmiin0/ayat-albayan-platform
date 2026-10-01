@@ -3,12 +3,15 @@ import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Cartouche } from '@/components/ui/cartouche';
+import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
+import { BindingCover } from './BindingCover';
 import { signIn } from './sign-in';
 
+/** Login (docs/07 login section): the form beside the leather binding; cover on top on phones. */
 export function LoginPage() {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
@@ -25,55 +28,55 @@ export function LoginPage() {
   });
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-4">
-      <Card className="w-full max-w-sm">
-        <CardHeader>
-          <p className="text-sm text-muted-foreground">{t.app.name}</p>
-          <CardTitle>
-            <h1>{t.auth.loginTitle}</h1>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form
-            className="flex flex-col gap-4"
-            onSubmit={(e) => {
-              e.preventDefault();
-              void form.handleSubmit();
-            }}
-          >
-            <form.Field name="email">
-              {(field) => (
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="email">{t.auth.email}</Label>
-                  <Input id="email" type="email" dir="ltr" autoComplete="email" required
+    <main className="grid min-h-screen bg-page shell:grid-cols-2">
+      <div className="grid place-items-center px-4 py-8 sm:px-8 sm:py-12">
+        <form
+          className="grid w-full max-w-[380px] gap-[22px]"
+          onSubmit={(e) => {
+            e.preventDefault();
+            void form.handleSubmit();
+          }}
+        >
+          <Cartouche className="justify-self-start">{t.auth.loginTitle}</Cartouche>
+          <form.Field name="email">
+            {(field) => (
+              <Field id="email" label={t.auth.email}>
+                {(p) => (
+                  <Input {...p} type="email" dir="ltr" autoComplete="email" required
                     value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-                </div>
-              )}
-            </form.Field>
-            <form.Field name="password">
-              {(field) => (
-                <div className="flex flex-col gap-2">
-                  <Label htmlFor="password">{t.auth.password}</Label>
-                  <Input id="password" type="password" dir="ltr" autoComplete="current-password" required
-                    value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
-                </div>
-              )}
-            </form.Field>
-            {error && (
-              <p role="alert" className="text-sm text-destructive">
-                {error}
-              </p>
+                )}
+              </Field>
             )}
-            <form.Subscribe selector={(s) => s.isSubmitting}>
-              {(submitting) => (
-                <Button type="submit" disabled={submitting}>
-                  {submitting ? t.auth.submitting : t.auth.submit}
-                </Button>
-              )}
-            </form.Subscribe>
-          </form>
-        </CardContent>
-      </Card>
+          </form.Field>
+          <form.Field name="password">
+            {(field) => (
+              <Field id="password" label={t.auth.password}>
+                {(p) => (
+                  <Input {...p} type="password" dir="ltr" autoComplete="current-password" required
+                    value={field.state.value} onChange={(e) => field.handleChange(e.target.value)} />
+                )}
+              </Field>
+            )}
+          </form.Field>
+          {error && (
+            <p
+              role="alert"
+              className="flex items-start gap-2.5 rounded-md bg-danger-soft px-3.5 py-3 text-xs text-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]"
+            >
+              <NuqtaGlyph shape="struck" className="mt-1 size-[13px] text-danger" />
+              <span>{error}</span>
+            </p>
+          )}
+          <form.Subscribe selector={(s) => s.isSubmitting}>
+            {(submitting) => (
+              <Button type="submit" disabled={submitting} className="min-h-11 w-full">
+                {submitting ? t.auth.submitting : t.auth.submit}
+              </Button>
+            )}
+          </form.Subscribe>
+        </form>
+      </div>
+      <BindingCover />
     </main>
   );
 }

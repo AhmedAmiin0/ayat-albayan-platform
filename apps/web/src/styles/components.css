@@ -1,0 +1,39 @@
+/* The few styles Tailwind utilities can't express (docs/07): data-URI chevron, leather grain,
+   blind tooling, the compact nav fade. Ornament classes, keep this file small. */
+@layer components {
+  /* Native select chevron at the inline-end. background-position has no logical keyword:
+     "left" is the inline-end in RTL. Mid-grey serves both themes (docs/07 §17). */
+  .ab-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='none' stroke='%237c8090' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m2.5 4.5 3.5 3.5 3.5-3.5'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: left 11px center;
+  }
+  [dir='ltr'] .ab-select, .ab-select[dir='ltr'] {
+    background-position: right 11px center;
+  }
+  /* Login binding only (docs/07 §5): tooled leather with a fractal-noise grain multiplied in. */
+  .ab-binding {
+    background: radial-gradient(120% 90% at 50% 45%, var(--leather-lift), var(--leather) 55%, var(--leather-deep));
+  }
+  .ab-binding::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    opacity: 0.5;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .2 0 0 0 0 .12 0 0 0 0 .08 0 0 0 .7 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  /* Blind tooling: a pressed fillet shaded like an impression (physical light from top-left). */
+  .ab-blind {
+    border: 1px solid var(--leather-deep);
+    box-shadow:
+      1px 1px 0 color-mix(in oklab, var(--leather-lift) 70%, transparent),
+      inset 1px 1px 0 color-mix(in oklab, var(--leather-lift) 70%, transparent);
+  }
+  /* "more" cue on the compact top nav: fade at the inline-end (left in RTL). */
+  .ab-fade-end {
+    mask-image: linear-gradient(to left, #000 calc(100% - 40px), transparent);
+  }
+}

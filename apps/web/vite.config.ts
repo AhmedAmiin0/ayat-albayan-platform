@@ -12,6 +12,8 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test-setup.ts'],
+    // tokens.test.ts reads the raw token sheet; every other stylesheet stays stubbed.
+    css: { include: [/styles\/tokens\.css/] },
     env: { VITE_SUPABASE_URL: 'http://sb.test', VITE_SUPABASE_ANON_KEY: 'anon', VITE_API_URL: 'http://api.test' },
   },
 });
