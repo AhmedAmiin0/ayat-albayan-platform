@@ -6,7 +6,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import {
   apiErrorMessage,
   emptyTeacherForm,

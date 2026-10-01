@@ -40,6 +40,17 @@ describe('DataTable', () => {
     expect(onRowClick).toHaveBeenCalledWith(DATA[1]);
   });
 
+  it('stacked: rows stack under 640px, head stays sr-only (not hidden); scroll box is relative', () => {
+    const { container, rerender } = render(<DataTable columns={columns} data={DATA} />);
+    const box = container.firstElementChild as HTMLElement;
+    expect(box.className).toContain('relative');
+    expect(box.className).not.toContain('max-sm:[&_tbody_tr]:flex');
+    rerender(<DataTable stacked columns={columns} data={DATA} />);
+    expect(box.className).toContain('max-sm:[&_tbody_tr]:flex');
+    expect(box.className).toContain('max-sm:[&_thead]:sr-only');
+    expect(screen.getAllByRole('row')).toHaveLength(3);
+  });
+
   it('scopes header cells and applies column meta classes to th and td', () => {
     const withMeta = col.columns([
       col.accessor('name', { header: () => t.students.name }),

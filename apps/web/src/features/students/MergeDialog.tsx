@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 
 type Named = { name: string; code?: string | null };
 

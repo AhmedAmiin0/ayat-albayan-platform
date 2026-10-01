@@ -1,14 +1,19 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
-import { Tabs } from '@/components/ui/tabs';
+import { Tabs, type TabOption } from '@/components/ui/tabs';
 import { t } from '@/lib/i18n';
 
 type Tab = LeadStatus | 'all';
 
-// Funnel order (LEAD_STATUSES). TODO(R-LEAD-02): per-status counts like page numbers once the API
-// returns them (the list endpoint only gives `total` for the current filter).
-const TABS: { value: Tab; label: string }[] = [
+// Funnel order (LEAD_STATUSES), grouped الكل / the funnel / مردّش + عميل ضايع (docs/07 §9).
+// TODO(R-LEAD-02): per-status counts like page numbers once the API returns them (the list
+// endpoint only gives `total` for the current filter).
+const TABS: TabOption<Tab>[] = [
   { value: 'all', label: t.leads.filterAll },
-  ...LEAD_STATUSES.map((s) => ({ value: s, label: t.enums.leadStatus[s] })),
+  ...LEAD_STATUSES.map((s) => ({
+    value: s,
+    label: t.enums.leadStatus[s],
+    separatorBefore: s === 'new' || s === 'no_reply',
+  })),
 ];
 
 export interface LeadStatusTabsProps {

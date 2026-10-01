@@ -19,6 +19,18 @@ export type DataTableColumn<T extends RowData> = ColumnDef<DataTableFeatures, T>
 export const hamishClass =
   'border-s-[3px] border-double border-s-gold-soft ps-3.5 text-xs text-ink-2 @max-[940px]:hidden';
 
+/**
+ * Under 640px rows stack (docs/07 §6 Data table): CSS only, td's become flex items; order them with
+ * per-column `max-sm:order-n` meta classes. The head stays sr-only, so column names reach screen
+ * readers (journey 6 counts its row on Pixel 7).
+ */
+const stackedClass = [
+  'max-sm:[&_table]:block max-sm:[&_tbody]:block max-sm:[&_thead]:sr-only',
+  'max-sm:[&_tbody_tr]:flex max-sm:[&_tbody_tr]:flex-wrap max-sm:[&_tbody_tr]:items-center',
+  'max-sm:[&_tbody_tr]:gap-x-2.5 max-sm:[&_tbody_tr]:gap-y-0.5 max-sm:[&_tbody_tr]:border-b max-sm:[&_tbody_tr]:border-rule max-sm:[&_tbody_tr]:py-3',
+  'max-sm:[&_td]:border-0 max-sm:[&_td]:p-0 max-sm:[&_td]:whitespace-normal',
+].join(' ');
+
 export interface DataTableProps<T extends RowData> {
   /** Build with `col.columns([col.accessor(...), ...])` so mixed value types type-check. */
   columns: DataTableColumn<T>[];
@@ -27,6 +39,8 @@ export interface DataTableProps<T extends RowData> {
   getRowId?: (row: T) => string;
   onRowClick?: (row: T) => void;
   emptyText?: string;
+  /** Stacked rows under 640px instead of horizontal scroll. */
+  stacked?: boolean;
 }
 
 /**
@@ -40,6 +54,7 @@ export function DataTable<T extends RowData>({
   getRowId,
   onRowClick,
   emptyText,
+  stacked,
 }: DataTableProps<T>) {
   const table = useTable({
     features: dataTableFeatures,
@@ -50,7 +65,8 @@ export function DataTable<T extends RowData>({
   const rows = table.getRowModel().rows;
 
   return (
-    <div className="overflow-x-auto">
+    // `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width).
+    <div className={cn('relative overflow-x-auto', stacked && stackedClass)}>
       <table className="w-full border-collapse text-sm">
         <thead>
           {table.getHeaderGroups().map((group) => (

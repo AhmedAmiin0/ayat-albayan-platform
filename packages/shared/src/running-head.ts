@@ -21,12 +21,24 @@ const gregorian = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
   year: 'numeric',
   timeZone: RIYADH_TZ,
 });
-const hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', {
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-  timeZone: RIYADH_TZ,
-});
+// Built on first use, not at import: an engine without the Umm al-Qura calendar (Hermes on some
+// Android builds) must not crash every importer of @ab/shared. Without it the Hijri line is ''.
+let hijri: Intl.DateTimeFormat | null | undefined;
+function hijriLine(date: Date): string {
+  if (hijri === undefined) {
+    try {
+      hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        timeZone: RIYADH_TZ,
+      });
+    } catch {
+      hijri = null;
+    }
+  }
+  return hijri?.format(date) ?? '';
+}
 
 /** «HH:mm» in `timeZone`, 24h, Western digits. */
 export function clockTime(date: Date, timeZone: string): string {
@@ -48,7 +60,7 @@ function gregorianLine(date: Date): string {
 export function formatRunningHead(date: Date): RunningHead {
   return {
     gregorian: gregorianLine(date),
-    hijri: hijri.format(date),
+    hijri: hijriLine(date),
     riyadhTime: clockTime(date, RIYADH_TZ),
     cairoTime: clockTime(date, CAIRO_TZ),
   };

@@ -29,6 +29,20 @@ describe('Tabs', () => {
     fireEvent.keyDown(list, { key: 'ArrowRight' });
     expect(onChange.mock.calls).toEqual([['new'], ['lost']]);
   });
+
+  it('vertical: a dotted leader only before a count; separators group tabs without breaking arrows', () => {
+    const onChange = vi.fn();
+    const tabs = [...TABS, { value: 'no_reply', label: t.enums.leadStatus.no_reply, separatorBefore: true }];
+    render(<Tabs label={t.leads.status} tabs={tabs} value="lost" orientation="vertical" onChange={onChange} />);
+    const leaders = (name: string) =>
+      screen.getByRole('tab', { name: new RegExp(name) }).querySelectorAll('.border-dotted').length;
+    expect(leaders(t.leads.filterAll)).toBe(1);
+    expect(leaders(t.enums.leadStatus.lost)).toBe(0);
+    const list = screen.getByRole('tablist');
+    expect(list.querySelectorAll('hr[aria-hidden="true"]')).toHaveLength(1);
+    fireEvent.keyDown(list, { key: 'ArrowLeft' });
+    expect(onChange).toHaveBeenCalledWith('no_reply');
+  });
 });
 
 describe('SegmentedControl', () => {

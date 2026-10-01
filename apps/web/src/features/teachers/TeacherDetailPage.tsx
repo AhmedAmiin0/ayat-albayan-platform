@@ -9,7 +9,7 @@ import { Tabs } from '@/components/ui/tabs';
 import { t } from '@/lib/i18n';
 import { availabilityQuery, teacherQuery, type Teacher } from './api';
 import { AvailabilityGrid } from './AvailabilityGrid';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { gridTz } from './grid';
 import { RatesTable } from './RatesTable';
 import { TeacherDialog } from './TeacherDialog';

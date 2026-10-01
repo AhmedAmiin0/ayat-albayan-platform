@@ -57,7 +57,6 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
     }),
     col.display({
       id: 'actions',
-      // A visible word: an sr-only span inside the scrolling table would widen the page on phones.
       header: () => t.common.actions,
       meta: { className: 'w-px text-end' },
       cell: (c) => (

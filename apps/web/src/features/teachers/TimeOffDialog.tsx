@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { timeOffQuery } from './api';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { emptyTimeOffDraft, toTimeOffBody, type TimeOffDraft } from './time-off';
 
 type Props = { teacherId: string; onClose: () => void };

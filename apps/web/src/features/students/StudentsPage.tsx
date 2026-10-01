@@ -11,7 +11,6 @@ import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { studentListQuery } from './api';
 import { CreateStudentDialog } from './CreateStudentDialog';
-import { stackedRows } from './stacked-rows';
 import { studentColumns } from './studentColumns';
 import { StudentSearch } from './StudentSearch';
 
@@ -61,15 +60,14 @@ export function StudentsPage({ search, page, onChange, onOpen }: StudentsPagePro
       {none ? (
         <EmptyState title={t.students.empty} />
       ) : (
-        <div className={stackedRows}>
-          <DataTable
-            columns={columns}
-            data={data?.items ?? []}
-            getRowId={(r) => r.id}
-            onRowClick={(r) => onOpen(r.id)}
-            emptyText={data ? t.common.notFound : t.common.loading}
-          />
-        </div>
+        <DataTable
+          stacked
+          columns={columns}
+          data={data?.items ?? []}
+          getRowId={(r) => r.id}
+          onRowClick={(r) => onOpen(r.id)}
+          emptyText={data ? t.common.notFound : t.common.loading}
+        />
       )}
       {data && (
         <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ search, page: p })} />

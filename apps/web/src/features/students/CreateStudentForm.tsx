@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
 import { EMPTY_STUDENT, phoneError, type CreateStudentValues } from './create-student';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { PhonePreview } from './PhonePreview';
 import { TimeZoneOptions } from './TimeZoneOptions';
 

@@ -9,7 +9,7 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { t } from '@/lib/i18n';
 import { teachersPageQuery, type Page, type Teacher } from './api';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './TeacherDialog';
 

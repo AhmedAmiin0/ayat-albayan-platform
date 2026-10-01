@@ -18,7 +18,10 @@ export interface DialogProps {
   description?: ReactNode;
   /** 40px glyph tile before the title, e.g. `{ tone: 'act', shape: 'hollow' }` (duplicate). */
   glyph?: { tone: Tone; shape: Glyph };
-  /** Buttons at the inline-end in the order ghost, secondary, primary. */
+  /**
+   * Buttons at the inline-end in the order ghost, secondary, primary. They render outside
+   * `children`, so a form in the body submits via `<Button type="submit" form={formId}>`.
+   */
   actions?: ReactNode;
   /** Short note at the inline-start of the footer. */
   hint?: ReactNode;

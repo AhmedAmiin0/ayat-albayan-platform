@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
 import { STUDENTS_KEY, teacherOptionsQuery, updateStudent } from './api';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { PROFILE_LABELS, toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
 import { SavedNote } from './SavedNote';
 import { TimeZoneOptions } from './TimeZoneOptions';

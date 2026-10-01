@@ -1,10 +1,15 @@
-import type { KeyboardEvent } from 'react';
+import { Fragment, type KeyboardEvent } from 'react';
 import { cn } from '@/lib/utils';
 import type { SegmentOption } from './segmented-control';
 
+export interface TabOption<V extends string> extends SegmentOption<V> {
+  /** Vertical fihris only: a hairline before this tab to group it (docs/07 §9). */
+  separatorBefore?: boolean;
+}
+
 export interface TabsProps<V extends string> {
   label: string;
-  tabs: SegmentOption<V>[];
+  tabs: TabOption<V>[];
   value: V;
   onChange: (value: V) => void;
   /**
@@ -27,7 +32,14 @@ const tabClass = {
 const STEP: Record<string, number> = { ArrowLeft: 1, ArrowDown: 1, ArrowRight: -1, ArrowUp: -1 };
 
 /** role=tablist filter/tab strip. Arrow keys move along the reading direction (RTL aware). */
-export function Tabs<V extends string>({ label, tabs, value, onChange, orientation = 'horizontal', className }: TabsProps<V>) {
+export function Tabs<V extends string>({
+  label,
+  tabs,
+  value,
+  onChange,
+  orientation = 'horizontal',
+  className,
+}: TabsProps<V>) {
   const vertical = orientation === 'vertical';
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     const step = STEP[e.key];
@@ -48,26 +60,42 @@ export function Tabs<V extends string>({ label, tabs, value, onChange, orientati
       onKeyDown={onKeyDown}
       className={cn(
         'flex overflow-x-auto',
-        vertical ? 'gap-1.5 pb-1 shell:flex-col shell:gap-px shell:self-start' : 'mb-5 gap-1 border-b border-rule',
+        vertical
+          ? 'gap-1.5 pb-1 shell:flex-col shell:gap-px shell:self-start'
+          : 'mb-5 gap-1 border-b border-rule',
         className,
       )}
     >
       {tabs.map((tab) => (
-        <button
-          key={tab.value}
-          type="button"
-          role="tab"
-          aria-selected={tab.value === value}
-          tabIndex={tab.value === value ? 0 : -1}
-          onClick={() => onChange(tab.value)}
-          className={tabClass[orientation]}
-        >
-          {tab.label}
-          {vertical && <span aria-hidden="true" className="hidden min-w-3 flex-1 -translate-y-1 border-b-[1.5px] border-dotted border-rule-strong shell:block" />}
-          {tab.count !== undefined && (
-            <span className={cn('tabular-nums text-ink-3', !vertical && 'ms-1')}>{tab.count}</span>
+        <Fragment key={tab.value}>
+          {vertical && tab.separatorBefore && (
+            <hr aria-hidden="true" className="my-1.5 hidden border-rule shell:block" />
           )}
-        </button>
+          <button
+            type="button"
+            role="tab"
+            aria-selected={tab.value === value}
+            tabIndex={tab.value === value ? 0 : -1}
+            onClick={() => onChange(tab.value)}
+            className={tabClass[orientation]}
+          >
+            {tab.label}
+            {tab.count !== undefined && (
+              <>
+                {/* The dotted leader points at a count; without one there is nothing to lead to. */}
+                {vertical && (
+                  <span
+                    aria-hidden="true"
+                    className="hidden min-w-3 flex-1 -translate-y-1 border-b-[1.5px] border-dotted border-rule-strong shell:block"
+                  />
+                )}
+                <span className={cn('tabular-nums text-ink-3', !vertical && 'ms-1')}>
+                  {tab.count}
+                </span>
+              </>
+            )}
+          </button>
+        </Fragment>
       ))}
     </div>
   );

@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n';
 import { studentQuery } from './api';
 import type { CreateStudentValues } from './create-student';
 import { DuplicateCompare } from './DuplicateCompare';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { SiblingsStrip } from './SiblingsStrip';
 import type { StudentRef } from './types';
 

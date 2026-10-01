@@ -7,7 +7,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { studentQuery } from './api';
-import { FormAlert } from './FormAlert';
+import { FormAlert } from '@/components/ui/form-alert';
 import { SiblingMerge } from './SiblingMerge';
 import { StudentProfileForm } from './StudentProfileForm';
 
