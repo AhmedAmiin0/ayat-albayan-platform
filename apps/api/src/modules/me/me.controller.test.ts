@@ -6,7 +6,6 @@ import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard
 import type { AuthUser } from '../../common/auth/verify-token';
 import { DB } from '../../common/db/db.module';
 import { fakeDb, type FakeResult } from '../guardians/fake-db';
-import { MeModule } from './me.module';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'a@x.com', role: 'admin' },
@@ -24,7 +23,7 @@ const fake = fakeDb(results);
 let app: NestFastifyApplication;
 
 beforeAll(async () => {
-  const mod = await Test.createTestingModule({ imports: [AppModule, MeModule] })
+  const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(DB)

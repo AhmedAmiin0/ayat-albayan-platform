@@ -17,7 +17,7 @@ export const ANDROID_CHANNEL = 'default';
 
 const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
 
-/** app.json `extra.eas.projectId`, written by `eas init`; null until the owner links the project. */
+/** app.json `extra.eas.projectId` (EAS project @holdmycup/ayat-albayan-admin); null if unlinked. */
 export function easProjectId(extra: unknown): string | null {
   const eas = isRecord(extra) ? extra['eas'] : undefined;
   const id = isRecord(eas) ? eas['projectId'] : undefined;
@@ -31,7 +31,6 @@ export function easProjectId(extra: unknown): string | null {
  */
 export async function registerPush(): Promise<void> {
   if (!Device.isDevice) return;
-  // TODO(owner): run `eas init` in apps/mobile so app.json gets extra.eas.projectId.
   const projectId = easProjectId(Constants.expoConfig?.extra);
   if (!projectId) return;
   try {

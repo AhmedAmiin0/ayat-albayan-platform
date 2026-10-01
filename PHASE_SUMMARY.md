@@ -332,3 +332,167 @@ E2E: **18 passed**. That is 2 setup runs plus 8 tests, each on desktop and Pixel
 3. **A calligrapher's check** of the alef and madda in the mark, before the app-store icon and print (docs/07 §17).
 4. **Sign-off from the academy's teachers** on using Mushaf devices in admin chrome: the verse-end rosette for numbers and the surah-header cartouche for page titles (docs/07 §17).
 5. **The six real report rubric names** from the «تقرير الحلقة» Google Form, to replace the placeholders in docs/07 §16.
+
+---
+
+# Phase 5a: mobile track (started early, on Phase 1 APIs)
+
+Branch `develop`. The Expo admin app was built ahead of schedule on top of the Phase 1 endpoints. Four builder branches (`mobile/foundation`, `mobile/inbox`, `mobile/students`, `mobile/more`) were each checked by a verifier, assembled on `mobile/phase5a`, and merged into `develop` with `--no-ff`. Only screens backed by a real Phase 1 endpoint were built, and none of them shows made-up data.
+
+## What each tab does
+
+### Foundation (R-MOB-01 login, R-MOB-03)
+- **Auth gate:** `useAuthGate()` returns `booting | admin | out`. `Stack.Protected` lets admins into the tabs; everyone else only reaches `login`. Logout is `supabase.auth.signOut()`, and the gate then clears the memory and saved caches.
+- **Tabs, in RTL order:** النهارده, المحادثات, الطلاب, المزيد. Each tab is its own stack, so detail screens keep the tab bar.
+- **Data layer:**
+  - `apiFetch`/`apiSend`, the same shape as on web.
+  - `usePagedList`: an infinite list, deduped by id, with the API `total`.
+  - `useOptimisticStatus`: every cached list page and detail flip at once, roll back on error, and refetch either way. It takes an optional `patchPath(id)` for resources whose status is set by the row PATCH (students).
+- **Offline (R-MOB-03):**
+  - The query cache is saved to AsyncStorage for 24 h and wiped when the app version changes.
+  - Every query that still has data is saved, so a failed refresh while offline no longer drops the list from disk.
+  - The error screen shows only when nothing is cached.
+- **UI kit (`src/ui`):** StatusChip, ListRow (with an optional leading slot), Avatar, Ltr, SearchField, FilterPills, ScreenHeader, Screen, ErrorState and InlineConfirm. All of them use the design pass's shared theme (`@ab/shared` `theme.ts`).
+
+### المحادثات: inbox (R-MOB-02 partial, R-MOB-03)
+- **List:**
+  - Header «كل المحادثات» with «عرض {shown} من {total}».
+  - Status pills; the selected pill shows the API total.
+  - Server search by name or phone, infinite scroll and pull to refresh.
+  - Each row shows an initial-letter avatar, the name (or the LTR phone), the grouped phone, the source, the lead age and a status chip.
+  - After a failed refresh the header adds «آخر تحديث HH:mm».
+- **Lead screen:**
+  - A facts card.
+  - A status changer limited to the moves the API's state machine allows. A 409 shows the Arabic «مينفعش تنقل…».
+  - «فتح واتساب» (wa.me).
+  - «نقل لطلبات التوظيف», with an inline confirm.
+
+### الطلاب: students (R-MOB-02 student quick view, R-MOB-03)
+- **List:** GET /students with server search (`search=` matches the name, a phone in any format or the AB- code), the API total and a status chip. Rows get the saffron «محتاج معلم/ة» note for a trial or active student with no teacher, the same rule as on web.
+- **Quick view:**
+  - The name and the LTR code.
+  - The program, level, memorized, goal, riwaya and tz facts. Empty ones are skipped.
+  - The teacher and the meeting link.
+  - A guardian card with «اتصال» (tel:) and «واتساب».
+  - Siblings.
+  - An optimistic status changer (`PATCH /students/:id`).
+  - A 404 shows «مش لاقيين اللي بتدور عليه».
+
+### المزيد (R-MOB-02, R-MOB-01 registration part)
+- **المعلمين:** a list with status chips and the API count. The read-only teacher view shows:
+  - the LTR phone and a WhatsApp button;
+  - the weekly availability by weekday, with «المواعيد بتوقيت {city}»;
+  - upcoming time off.
+- **طلبات التوظيف:** a read-only list with status chips.
+- **المظهر:** تلقائي / فاتح / ليلي through `Appearance.setColorScheme`. The choice is saved and restored at boot.
+- **تسجيل الخروج:** sends the push-token DELETE first, with a 3-second cap, then signs out.
+
+### Push registration (R-MOB-01, registration only)
+- **DB:** migration `20261001000050_push_tokens.sql` adds `profiles.push_tokens text[] not null default '{}'`. RLS is unchanged. `gen:types` after a db reset produced exactly the types the builder had added by hand.
+- **API:** `MeModule`, now registered in `app.module.ts`, serves `PUT /me/push-tokens {token}` and `DELETE /me/push-tokens/:token`. Both routes:
+  - are admin-only and always act on the caller's own profile;
+  - accept `Expo(nent)PushToken[...]`;
+  - write nothing when the token is already stored, and keep only the newest 10.
+- **Mobile:** `usePushRegistration()` is mounted in the tabs layout, so it runs on every admin start.
+  - It needs a real device, the EAS project id and notification permission.
+  - Permission is asked once, after an Arabic explanation («تفعيل الإشعارات»). On Android the channel is created first.
+  - Every failure is skipped silently.
+
+### EAS
+- **Project:** `@holdmycup/ayat-albayan-admin`, projectId `729e0cc3-f51d-4dab-b263-a107c7da8da8`, owner `holdmycup`.
+  - `app.json` now has `owner`, `extra.eas.projectId`, `extra.router` and the iOS `ExpoLocalization_supportsRTL/forcesRTL` keys. The mobile track's `expo-notifications` plugin is kept.
+  - The patch from `eas init` no longer applied after the plugins change, so the same keys were added by hand.
+  - The stale "run eas init" TODO in `registerPush.ts` is removed.
+- **`apps/mobile/eas.json`** has three profiles:
+  - `development`: dev client, internal.
+  - `preview`: internal, Android APK, channel preview.
+  - `production`: build number auto-increments.
+
+  No secrets are in the repo.
+
+## R-STU-02 fix (Ouroboros evaluation finding)
+- **The bug:** `normalizePhone` rejected `201001234567` with `missing_country_code`. That is exactly the WhatsApp `wa_id` shape the Phase 4 webhook will receive. Bare `966…` already worked.
+- **Where it was fixed:** in `normalizePhone` itself, which every caller goes through: the zod `phoneE164` schema, `LeadsService.upsertByPhone`, the guardians mapper and the web forms.
+- **What it accepts now:** bare `20` + an Egyptian mobile (`1[0125]` + 8 digits, 12 digits in all) becomes `+20…`. The local `05…`/`01…` rules are unchanged, and no local format starts with `2`, so there is no ambiguity.
+- **Still rejected:** other bare international numbers (`971…`, `44…`), with a `TODO(R-STU-02)`. Without a `+` they can't be told apart from local numbers. The webhook knows `wa_id` is international, so it should add the `+` itself.
+- **Guardians test:** the missing controller test is added. A teacher gets 403 on all five routes without touching the DB, and an admin gets the page.
+
+## Integration
+- **`mobile/more` into `mobile/phase5a`:**
+  - The only conflict was `apps/mobile/src/nav/placeholders.test.tsx`. It is deleted, because all four tabs are real now; its logout case lives in `MoreScreen.test.tsx` and `sign-out.test.ts`.
+  - `ar.json` keeps the `mobile.*` keys from both sides.
+- **One optimistic hook:** the students copy (`use-student-status.ts` and its test) is deleted. Students pass `patchPath` to the shared hook, and a shared-hook test covers the students URL.
+- **`mobile/phase5a` into `develop`:**
+  - The only textual conflict was `apps/mobile/jest.config.cjs`. Both sides were kept: the design pass's `testTimeout: 30000` and the track's `setupFiles`.
+  - The track never touched `apps/mobile/src/theme.ts`, `AppText` or `Field`. So the design pass's architecture stands, with `@ab/shared` `theme.ts` as the one RN token source, and mobile typecheck passes on it.
+  - `pnpm i` found the merged lockfile already consistent.
+- **Wiring:** `MeModule` is registered, and `supabase db reset` + `gen:types` were run (no diff). The merged mobile worktrees are removed and the `mobile/*` branches are kept.
+
+## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+| Package | Unit tests | Design pass | Added |
+|---|---|---|---|
+| api | 334 (38 files) | 307 | +27: me module 21, guardians controller 6 |
+| web | 230 (47 files) | 230 | 0 |
+| @ab/shared | 192 (15 files) | 180 | +12: phone accept 8, reject 4 |
+| mobile | 224 (44 suites) | 27 | +197 |
+| wa-stub | 5 (1 file) | 5 | 0 |
+| **Total** | **985** | 749 | +236 |
+
+Mobile tests by area (tests, suites in brackets):
+
+| Area | Tests |
+|---|---|
+| inbox | 58 (6) |
+| more | 30 (7) |
+| ui | 30 (9) |
+| lib | 27 (6) |
+| students | 22 (5) |
+| auth | 21 (4) |
+| push | 17 (3) |
+| theme | 8 |
+| nav | 5 |
+| fonts | 4 |
+| today | 2 |
+
+- **E2E: 18 passed.** That is 2 setup runs plus login (7 tests) and journey 6 (1 test), each on the desktop and mobile (Pixel 7) projects.
+- **Gate:** green with **23/23 tasks** on the first try.
+- **File limits:** lint enforces max-lines 150 and max-params 3. A scan found no tracked `.ts`/`.tsx` file over 150 lines apart from the generated `types.ts` and `routeTree.gen.ts`.
+
+## Deferred
+- **Phase 2:**
+  - The Today tab's lesson timeline and confirm/cancel cards. The tab shows its honest empty state until `/lessons` exists.
+  - The Hijri date line, which has to come from the API.
+  - «حجز حلقة تجريبية» (quick book trial) on the student quick view.
+- **Phase 3:** recording a payment with a camera receipt.
+- **Phase 4:**
+  - The inbox message thread, in-app reply and templates.
+  - The unread dot and the last-message line on inbox rows.
+  - Push sending: one push per event, a foreground handler, and pruning tokens that Expo reports as `DeviceNotRegistered`.
+- **API gaps:**
+  - GET /students has no `status` filter, so neither mobile nor web has status pills on the student list.
+  - There is no GET /leads/:id. The lead screen reads cached list pages, so a cold deep link shows not-found.
+  - There is no per-status lead count, which a «جديد» tab badge would need.
+
+## Owner inputs
+1. **`EXPO_PUBLIC_*` for preview and production builds:** `EXPO_PUBLIC_API_URL`, `EXPO_PUBLIC_SUPABASE_URL` and `EXPO_PUBLIC_SUPABASE_ANON_KEY`.
+   - `eas.json` holds obvious `REPLACE-ME-…` placeholders. Either replace them in the file, or delete the `env` blocks and run `eas env:create --environment preview|production --visibility plaintext`.
+   - All three are public values.
+   - A forgotten placeholder gives an app that can't log in.
+2. **Push credentials on EAS:** an APNs key for iOS, and an FCM V1 service account plus `google-services.json` for Android. Without them no token is stored, and nothing fails. Expo Go on Android can't receive push, so use a development build.
+3. **`expo-dev-client`:** the `development` profile needs `npx expo install expo-dev-client` before its first build.
+4. **New copy to sign off (`mobile.*`):**
+   - `more`, `retry` «جرّب تاني» and `openWhatsapp`.
+   - `lastUpdated` and `age.*` («من 3 أيام»).
+   - `call` «اتصال» and `whatsapp`.
+   - The push explanation: `pushTitle`, `pushRationale`, `pushAllow`, `pushLater` and `pushChannel`.
+5. **Checks on a real device:**
+   - The appearance switch changes the theme and the status bar.
+   - Hermes formats Arabic weekday and month names with Western digits.
+
+## Residual TODOs
+- **Duplicated tables to move into `@ab/shared`:** `LEAD_TRANSITIONS` (a mobile copy of the API state machine) and `initialOf`/`KUNYA` (a mobile copy of the web leads format). Both are marked `ponytail:`.
+- **API helpers shared across modules:** `me` imports `parseOrThrow`/`dbError` from `teachers/http`, and its tests use `guardians/fake-db`. Both are candidates for `common/`.
+- **Push token race:** `PUT /me/push-tokens` reads, then writes. If two devices register at the same moment one token can be lost; that device registers again on its next start. The upgrade is an `array_append` RPC.
+- **Sign-out edge cases:** a sign-out forced by a 401 skips the token DELETE. An offline sign-out leaves the token on the profile until pruning arrives with push sending.
+- **Login edge case:** if the role check after a successful sign-in gets a 401/403, the login button stays busy.
+- **No NetInfo:** offline fetches fail, and the cached data stays on screen.

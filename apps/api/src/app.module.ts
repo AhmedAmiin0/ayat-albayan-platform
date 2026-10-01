@@ -6,6 +6,7 @@ import { GuardiansModule } from './modules/guardians/guardians.module';
 import { HealthController } from './modules/health/health.controller';
 import { JobApplicantsModule } from './modules/job-applicants/job-applicants.module';
 import { LeadsModule } from './modules/leads/leads.module';
+import { MeModule } from './modules/me/me.module';
 import { StudentsModule } from './modules/students/students.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
 
@@ -19,6 +20,7 @@ import { TeachersModule } from './modules/teachers/teachers.module';
     TeachersModule,
     LeadsModule,
     JobApplicantsModule,
+    MeModule,
   ],
   controllers: [HealthController],
 })
