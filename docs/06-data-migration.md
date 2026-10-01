@@ -95,3 +95,24 @@ Aug/Sept rows for Ads, Content, Website, Followers, other → `expenses`.
 - Count students by teacher vs SUBS; completed lessons per student vs ATT-* row counts (expect fewer after de-dup — list diffs).
 - Every student has ≥1 guardian phone; every lesson has a teacher; no future `completed` lessons.
 - Export `tools/migrate/out/review.xlsx` for the owner: merges performed, rejected rows, missing teacher.
+
+## Sources actually available (2026-10-02)
+
+The owner's Google Drive export is in `tools/drive-download-*.zip` (git-ignored; personal data). It holds `.xlsx` files, not CSVs, so `tools/migrate` reads xlsx directly (one workbook, many tabs) instead of asking for per-tab CSVs.
+
+| Docs name | File in the export | Tabs |
+|---|---|---|
+| HUB | `أكاديمية آيات البيان — نسخة تجريبية (نظام تسجيل الطلاب).xlsx` | تقارير الحلقات, ردود التسجيل, سجل التذكيرات, لينكات الحلقات, ردود التوظيف, المعلمين, الردود الجاهزة, المواعيد المتاحة, الطلاب, لوحة الملخص, تقويم الحجوزات, كل المحادثات |
+| BOOK | `أكاديمية آيات البيان — الحجوزات والمحادثات.xlsx` | لوحة الملخص, تقويم الحجوزات, كل المحادثات, المعلمون |
+| REP | `أكاديمية آيات البيان — سجل تقارير الحلقات.xlsx` | Form Responses 1 |
+| SUBS | `تقارير آيات البيان/سجل الطلاب المشتركين.xlsx` | الطلاب |
+| HEART | `Ayat ALBayan Heart.xlsx` (+ two older copies `(1)`, `(2)`) | ABRAR, RABIA, HEND, subscription |
+| FIN | `Main income statment.xlsx`; `Augest cost/` (expenses tracker, income statement, customers) | general, Sheet3, sept |
+| ATT-* | `تقارير آيات البيان/<student>/سجل حضور — <student>.xlsx` (60 files) | per student |
+| Report PDFs | `تقارير آيات البيان/<student>/*.pdf` (136) + `مرفقات/` images | — |
+| Job applicants | `job-applications-clean.xlsx` | job-applications-clean.csv |
+| Per-teacher sheets | `Ayat Al Bayan -- <teacher>.xlsx` (3) | Sheet1 |
+
+Not migration data, never imported: `Backup  keys.docx` (likely recovery codes — keep out of the repo and out of shared exports), `data.zip` (a Facebook account export), `SKILL.md.docx`, the Apps Script JSON files (`Brand`, `Sheet & Calendar Sync`).
+
+**Better source for leads and message history:** the owner's WhatsApp CRM (Supabase project `rfsfrmkmfbrsuoctwfzg`, app "wacrm" on the Hostinger VPS): 1,227 contacts, 801 conversations, 8,244 messages, tags that map onto `lead_status` (جديد → new, تجريبي محجوز → trial_booked, حضر التجربة → trial_done, محتاج متابعة → interested_no_slot, مش مهتم → lost, مشترك → converted), 9 message templates (8 approved on Meta), 5 quick replies. Leads and `messages` should be migrated from there, with the Sheets «كل المحادثات» tab only filling gaps.
