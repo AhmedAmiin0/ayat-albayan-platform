@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { ApiError } from './api';
 import {
   clearQueryCaches,
@@ -50,4 +51,17 @@ test('sign-out clears the memory cache and the persisted copy', async () => {
   await clearQueryCaches();
   expect(queryClient.getQueryCache().getAll()).toHaveLength(0);
   expect(await AsyncStorage.getItem('ab-query-cache')).toBeNull();
+});
+
+test('a list whose refetch failed offline is still saved to disk', () => {
+  const client = new QueryClient();
+  client.setQueryData(['leads', 'list', {}], { pages: [], pageParams: [] });
+  client.getQueryCache().find({ queryKey: ['leads', 'list', {}] })?.setState({
+    status: 'error',
+    error: new ApiError(503),
+  });
+  client.getQueryCache().build(client, { queryKey: ['never', 'loaded'] });
+  const saved = dehydrate(client, persistOptions.dehydrateOptions).queries.map((q) => q.queryKey);
+  expect(saved).toEqual([['leads', 'list', {}]]);
+  client.clear();
 });

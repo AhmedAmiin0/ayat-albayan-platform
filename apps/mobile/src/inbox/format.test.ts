@@ -1,5 +1,5 @@
 import { t } from '@/lib/i18n';
-import { clockAt, leadAge, pluralForm } from './format';
+import { clockAt, initialOf, leadAge, pluralForm } from './format';
 
 const NOW = new Date('2026-10-01T12:00:00Z');
 const ago = (ms: number) => new Date(NOW.getTime() - ms).toISOString();
@@ -47,4 +47,13 @@ test('Western digits only', () => {
 
 test('clockAt is a 24h HH:mm', () => {
   expect(clockAt(NOW.getTime())).toMatch(/^\d{2}:\d{2}$/);
+});
+
+test.each([
+  ['هدى سالم', 'ه'],
+  ['أم سلمى', 'س'],
+  ['  ابو يوسف ', 'ي'],
+  [null, ''],
+])('initialOf(%j) = %j', (name, letter) => {
+  expect(initialOf(name)).toBe(letter);
 });

@@ -5,6 +5,7 @@ import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
 import { formatPhoneDisplay } from '@/lib/phone';
 import { usePagedList } from '@/lib/use-paged-list';
+import { Avatar } from '@/ui/Avatar';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
@@ -14,7 +15,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
-import { clockAt, leadAge } from './format';
+import { clockAt, initialOf, leadAge } from './format';
 import type { Lead } from './types';
 
 type Filter = 'all' | LeadStatus;
@@ -27,7 +28,7 @@ const PILLS: FilterPill<Filter>[] = [
 /**
  * «كل المحادثات» (R-MOB-02 inbox, R-MOB-03 offline): GET /leads by status and name/phone search,
  * newest inbound first. The API returns only the selected filter's total, so only that pill counts.
- * TODO(R-MOB-02): avatar initial (ListRow has no leading slot yet), unread dot, last message line.
+ * TODO(R-MOB-02): unread dot and last message line arrive with Phase 4 messaging.
  */
 export function InboxScreen() {
   const [q, setQ] = useState('');
@@ -67,6 +68,7 @@ export function InboxScreen() {
           const phone = formatPhoneDisplay(item.phone_e164);
           return (
             <ListRow
+              leading={<Avatar letter={initialOf(item.name)} />}
               title={item.name ?? ltr(phone)}
               meta={item.name ? phone : undefined}
               subtitle={`${t.enums.leadSource[item.source]} · ${leadAge(item.created_at)}`}

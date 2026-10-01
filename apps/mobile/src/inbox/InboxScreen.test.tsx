@@ -27,6 +27,7 @@ test('rows: name, isolated phone, source, status chip; an unnamed lead is titled
   expect(screen.getByRole('header', { name: t.leads.title })).toBeTruthy();
   expect(screen.getByText(ltr('+966 55 214 7730'))).toBeTruthy();
   expect(screen.getByText(ltr('+20 10 1234 5678'))).toBeTruthy();
+  expect(screen.getByText('ه', { includeHiddenElements: true })).toBeTruthy();
   expect(screen.getByText(new RegExp(t.enums.leadSource.facebook_ad))).toBeTruthy();
   expect(screen.getAllByText(t.enums.leadStatus.contacted).length).toBeGreaterThan(0);
   expect(

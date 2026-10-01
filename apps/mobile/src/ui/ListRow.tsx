@@ -4,6 +4,8 @@ import { type, useTheme } from '@/theme';
 import { Ltr } from './Ltr';
 
 export interface ListRowProps {
+  /** At the inline-start, usually an <Avatar>. */
+  leading?: ReactNode;
   /** Arabic name, one line. */
   title: string;
   /** Second line (last message, teacher, program…), one line. */
@@ -17,7 +19,7 @@ export interface ListRowProps {
 }
 
 /** One list row, 56pt minimum, hairline below. Feed it to FlatList renderItem. */
-export function ListRow({ title, subtitle, meta, trailing, onPress }: ListRowProps) {
+export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: ListRowProps) {
   const { color } = useTheme();
   const row: ViewStyle = {
     minHeight: 56,
@@ -32,6 +34,7 @@ export function ListRow({ title, subtitle, meta, trailing, onPress }: ListRowPro
   };
   const body = (
     <>
+      {leading}
       <View style={{ flex: 1, gap: 2 }}>
         <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
           <Text
@@ -62,6 +65,7 @@ export function ListRow({ title, subtitle, meta, trailing, onPress }: ListRowPro
               fontSize: type.size.xs,
               lineHeight: type.lineHeight(type.size.xs),
               color: color.ink2,
+              fontVariant: ['tabular-nums'],
             }}
           >
             {subtitle}
