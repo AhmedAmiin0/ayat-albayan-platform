@@ -34,7 +34,8 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
   const submit = async (values: CreateStudentValues, force: boolean) => {
     setError(null);
     try {
-      await createStudent(toCreateBody(values, force));
+      // A failed merge already created the row: "create anyway" must not add a second one.
+      if (!createdId.current) await createStudent(toCreateBody(values, force));
       await finish(t.students.created);
     } catch (e) {
       const dupes = duplicateCandidates(e);

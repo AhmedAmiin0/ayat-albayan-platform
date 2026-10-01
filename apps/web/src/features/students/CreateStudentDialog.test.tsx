@@ -74,4 +74,18 @@ describe('CreateStudentDialog (R-STU-02, R-STU-03)', () => {
     expect(api.createStudent).toHaveBeenCalledTimes(2); // the retry did not create a second copy
     expect(api.mergeStudents).toHaveBeenLastCalledWith({ keptId: 's1', mergedId: 's2' });
   });
+
+  it('merge fails, admin backs out and picks "create anyway": no second copy', async () => {
+    api.createStudent.mockRejectedValueOnce(duplicate()).mockResolvedValueOnce({ id: 's2' });
+    api.mergeStudents.mockRejectedValueOnce(new Error('net'));
+    const onDone = renderDialog();
+    fillAndSubmit();
+    fireEvent.click(await screen.findByRole('button', { name: t.students.merge }));
+    fireEvent.click(screen.getByRole('button', { name: t.common.confirm }));
+    await screen.findByText(t.common.error);
+    fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
+    fireEvent.click(await screen.findByRole('button', { name: t.students.createAnyway }));
+    await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.students.created));
+    expect(api.createStudent).toHaveBeenCalledTimes(2); // the 409 attempt + the one forced create
+  });
 });

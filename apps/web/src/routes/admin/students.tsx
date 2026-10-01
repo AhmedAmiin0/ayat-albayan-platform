@@ -1,14 +1,10 @@
 import { createFileRoute, Outlet, useChildMatches } from '@tanstack/react-router';
+import { parseStudentsSearch } from '@/features/students/search';
 import { StudentsPage } from '@/features/students/StudentsPage';
-
-type Search = { search?: string; page?: number };
 
 /** /admin/students — list; also the parent of /admin/students/$studentId (renders it via Outlet). */
 export const Route = createFileRoute('/admin/students')({
-  validateSearch: (s: Record<string, unknown>): Search => ({
-    search: typeof s['search'] === 'string' && s['search'] ? s['search'] : undefined,
-    page: Number(s['page']) > 1 ? Math.floor(Number(s['page'])) : undefined,
-  }),
+  validateSearch: parseStudentsSearch,
   component: StudentsRoute,
 });
 
