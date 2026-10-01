@@ -1,0 +1,28 @@
+{
+  "app": {
+    "name": "أكاديمية آيات البيان"
+  },
+  "auth": {
+    "loginTitle": "تسجيل الدخول",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة السر",
+    "submit": "دخول",
+    "submitting": "جاري الدخول…",
+    "invalidCredentials": "البريد أو كلمة السر مش صح، جرّب تاني",
+    "noRole": "حسابك لسه ما اتفعّلش، كلّم الإدارة",
+    "logout": "تسجيل الخروج"
+  },
+  "admin": {
+    "dashboardTitle": "لوحة التحكم"
+  },
+  "teacher": {
+    "dashboardTitle": "حلقاتي"
+  },
+  "portal": {
+    "dashboardTitle": "متابعة الطالب"
+  },
+  "common": {
+    "loading": "جاري التحميل…",
+    "error": "حصلت مشكلة، حاول تاني"
+  }
+}

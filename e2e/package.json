@@ -1,0 +1,22 @@
+{
+  "name": "e2e",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e": "playwright test",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "@ab/shared": "workspace:*",
+    "@playwright/test": "^1.63.0",
+    "@supabase/supabase-js": "^2.117.2",
+    "@types/node": "^24.0.0",
+    "api": "workspace:*",
+    "eslint": "^10.0.0",
+    "postgres": "^3.4.9",
+    "typescript": "~6.0.3",
+    "web": "workspace:*"
+  }
+}

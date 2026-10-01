@@ -1,0 +1,24 @@
+{
+  "name": "ayat-albayan",
+  "private": true,
+  "packageManager": "pnpm@11.25.0",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck",
+    "test": "turbo test",
+    "e2e": "turbo e2e",
+    "supabase": "pnpm --filter @ab/db exec supabase",
+    "env:local": "node tools/scripts/write-local-env.mjs"
+  },
+  "prettier": "@ab/config/prettier",
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "prettier": "^3.6.0",
+    "turbo": "^2.11.6"
+  }
+}

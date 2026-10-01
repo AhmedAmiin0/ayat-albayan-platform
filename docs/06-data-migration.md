@@ -1,0 +1,97 @@
+# 06 — Data Migration Map (Google Sheets → Supabase)
+
+Export each sheet tab to CSV into `tools/migrate/input/`. Scripts run `dry-run` first and write `tools/migrate/out/report.md` (counts, rejected rows, merge queue).
+
+## Source files (Drive IDs)
+
+| Alias | File | ID | Tabs used |
+|-------|------|----|-----------|
+| HUB | أكاديمية آيات البيان — نسخة تجريبية (نظام تسجيل الطلاب) | `1UO_Kh_eSDWd7JYHVyhfhOr94Vbh3-2E4R2GnvBVEbY0` | ردود التسجيل, الطلاب, المعلمين, تقويم الحجوزات, كل المحادثات, سجل التذكيرات, الردود الجاهزة, ردود التوظيف |
+| BOOK | أكاديمية آيات البيان — الحجوزات والمحادثات | `1Q9N1Emhmh0iq5kz0TEDZDqlOJt1mLtpEo-m_9pGyYLQ` | تقويم الحجوزات (284 rows — superset), المعلمون (calendar IDs) |
+| REP | أكاديمية آيات البيان — سجل تقارير الحلقات | `1trZNAFeiUyGChVHYFmdPQwT26Civb4YXatChLbJI4ZM` | Form Responses 1 |
+| SUBS | سجل الطلاب المشتركين | `1IbZXQrwftvgNpULv2XMkI7heJVLaiZhAzU_8l6MHvRE` | الطلاب (60 rows: teacher, first/last lesson, count, folder, attendance sheet link) |
+| HEART | Ayat ALBayan Heart | `1Xap8wVaJu2Ea-it_SGuRkDJRxv1J6t6GRihpHaURR8I` | subscription, ABRAR/RABIA/HEND timetables |
+| FIN | Main income statment | `1lct5ImTOa1Dm8g3XtdD9se92ZPi-LBlAUPSu8YV17QU` | general (Aug), sept |
+| ATT-* | سجل حضور — {student} (~60 files) | linked from SUBS col H | الحضور |
+
+## Mappings
+
+### teachers ← HUB.المعلمين + BOOK.المعلمون
+| Source | Target |
+|--------|--------|
+| اسم المعلم (Abrar…) | `display_name_en`; `display_name_ar` from alias table below |
+| رقم التواصل | `phone_e164` (prefix `+`) |
+| النوع (معلمة/معلم) | `gender` |
+| التخصص | `programs[]` (تحفيظ وتجويد → `quran`) |
+| رابط Google Meet | `meeting_link` |
+| BOOK.معرّف التقويم | `google_calendar_id` |
+| — | rates from FIN per-lesson implied values (owner confirms) |
+
+Teacher alias table (for matching free text in REP/SUBS): `Abrar` ← أبرار, ابرار, أبرار عاطف, ابرار عاطف, أبرار عاطف قاسم · `Rabia` ← ربيعه, ربيعه عبدالله المكاوى · `Hassan` ← حسن فتحي, حسن فتحي حسن · `Hend` ← هند, الأستاذة : هند, المعلمة: هند, معلمه هند · values "الفيوم", "مصر" → **null + flag**.
+
+### guardians + students ← HUB.الطلاب ∪ HUB.ردود التسجيل ∪ SUBS ∪ HEART.subscription
+1. Normalise phone → E.164; group by phone → one `guardian`.
+2. Within a guardian, split names on " و " / "و" patterns ("سهيلة وجودى" → سهيلة, جودى) → separate `students`.
+3. `name_normalized` = strip diacritics, unify أ/إ/آ→ا, ة→ه, ى→ي, trim titles (أم/ام/أ./الأستاذة/دكتورة/الحاجه kept in `notes.title`).
+4. Merge candidates (same guardian phone + Levenshtein ≤ 2 on normalized name) → `merge_queue.csv` for owner review; auto-merge only exact normalized matches.
+5. Fields: age, gender, country, level, memorized, goal, riwaya, tz from ردود التسجيل where present; package from الباقة المطلوبة; source from عرفت عننا منين؟; `code` keeps existing `AB-nnnn` when known (store in `legacy_code`), new codes continue the sequence from AB-0183.
+6. Reject rows: name contains TEST/تجربة/اختبار/test/نمنم/Lorem patterns; phone `+966500000000`, `+966501234567`.
+
+### schedule_rules + lessons ← BOOK.تقويم الحجوزات (status مؤكد/مشترك) + HEART timetables
+| Source | Target |
+|--------|--------|
+| التكرار "أسبوعي: السبت,الثلاثاء" | `byday[]` (السبت=6, الأحد=0, الاتنين/الاثنين=1, الثلاثاء=2, الأربعاء=3, الخميس=4, الجمعة=5) |
+| وقت البداية + التاريخ | `start_time_local`, `starts_on`; tz `Asia/Riyadh` |
+| المدة (دقيقة) | `duration_min` |
+| المعلم/ة | `teacher_id` via alias table |
+| الاسم/الرقم | students via guardian phone |
+| نوع الحلقة "حلقة تجريبية مجانية" | one-off lesson, not a rule |
+| Rows with the same student+teacher and different times → keep the **latest-created** row, flag others (issue B1) |
+
+Generate `lessons` for past dates only where a report exists (below); future lessons from rules.
+
+### lessons (completed) + lesson_reports ← REP.Form Responses 1 (+ ATT-* for PDF links)
+| Source | Target |
+|--------|--------|
+| اسم المعلمة | teacher via alias |
+| اسم الطالب / الطالبة | student via normalized name within teacher's students; else merge_queue |
+| تاريخ الحلقة | `lessons.starts_at` (date + rule time if known, else 00:00 flag) |
+| رقم الحلقة | ignored (derived) |
+| البرنامج | `program` |
+| الحضور | `attendance` enum |
+| التسميع / الحفظ الجديد / المراجعة / الدرس النظري | text fields |
+| تقييم البنود [6] + التقدير العام | grades enum |
+| ملاحظات / الواجب / خطة | text |
+| ATT-*.تقرير PDF | download by link → Storage `reports/{student}/{lesson}.pdf`, set `pdf_path` |
+| Reject: Lorem rows, dates < 2026-08-01 or > today, exact duplicates (same student+date+content) → keep first |
+
+### subscriptions + payments ← HEART.subscription + SUBS counts
+| Source | Target |
+|--------|--------|
+| Name/Phone | student |
+| Date | `starts_on`, `payments.paid_at` |
+| Lectures (used) + Sub (remaining) | `lessons_total = used + remaining`; verify against completed lessons imported |
+| Status Paid/Not paid | payment row if Paid (amount from FIN revenue per student, else null + flag) ; `unpaid` status otherwise |
+| Teacher | cross-check `students.teacher_id` |
+
+### leads ← HUB.كل المحادثات (and BOOK copy, dedupe by phone)
+| Source status | Target |
+|---------------|--------|
+| مهتم بدون ميعاد | `interested_no_slot` |
+| حجز مؤكد / حجز مبدئي | `trial_booked` (link to student if converted) |
+| مردّش | `no_reply` |
+| عميل ضايع / اعتذر | `lost` |
+| توظيف / عرض خدمة | → `job_applicants` (also HUB.ردود التوظيف) |
+| جروب حلقة | skip |
+| Summary | `leads.qualification.legacy_summary`; المصدر → `source` enum |
+
+### message_templates ← HUB.الردود الجاهزة + لينكات الحلقات bodies
+Seed the Arabic bodies as the starting text for `follow_up_slots`, `booking_confirmation`; owner registers them in Meta.
+
+### expenses ← FIN
+Aug/Sept rows for Ads, Content, Website, Followers, other → `expenses`.
+
+## Validation after apply
+- Count students by teacher vs SUBS; completed lessons per student vs ATT-* row counts (expect fewer after de-dup — list diffs).
+- Every student has ≥1 guardian phone; every lesson has a teacher; no future `completed` lessons.
+- Export `tools/migrate/out/review.xlsx` for the owner: merges performed, rejected rows, missing teacher.

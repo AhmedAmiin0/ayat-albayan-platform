@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+/* shadcn/ui tokens (neutral). RTL: use logical utilities only (ps/pe/ms/me/start/end). */
+@theme {
+  --font-sans: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --color-background: oklch(0.985 0.002 95);
+  --color-foreground: oklch(0.2 0.01 95);
+  --color-card: oklch(1 0 0);
+  --color-card-foreground: oklch(0.2 0.01 95);
+  --color-primary: oklch(0.45 0.09 165);
+  --color-primary-foreground: oklch(0.98 0.01 165);
+  --color-muted: oklch(0.95 0.005 95);
+  --color-muted-foreground: oklch(0.5 0.01 95);
+  --color-destructive: oklch(0.55 0.2 27);
+  --color-border: oklch(0.9 0.005 95);
+  --color-input: oklch(0.88 0.005 95);
+  --color-ring: oklch(0.45 0.09 165);
+  --radius-md: 0.5rem;
+  --radius-lg: 0.75rem;
+}
+
+body {
+  @apply bg-background text-foreground font-sans antialiased;
+}

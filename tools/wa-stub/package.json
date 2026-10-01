@@ -1,0 +1,19 @@
+{
+  "name": "wa-stub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.ts",
+    "start": "node src/server.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.0.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  }
+}

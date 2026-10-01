@@ -1,0 +1,136 @@
+# 03 — System Requirements
+
+Product name (working): **Ayat Al-Bayan Academy Platform**. Arabic-first UI (RTL), Egyptian-Arabic tone in messages as today, English code.
+
+Decisions already taken with the owner (2026-10-01):
+- Mobile app (Expo) is for **Admin** only in v1 (teachers & parents use the web).
+- WhatsApp through **Meta Cloud API** (approved templates + 24-h session messages). Click-to-chat links remain as fallback.
+- Payments are **manual bank/wallet transfers, recorded in the system**; no gateway in v1.
+- **One fixed meeting link per teacher** (Google Meet today).
+
+## 1. Roles
+
+| Role | Can |
+|------|-----|
+| `admin` | Everything: leads, students, teachers, scheduling, subscriptions, payments, messaging, reports, settings |
+| `teacher` | See own schedule, own students, submit/edit own lesson reports, mark attendance, set own weekly availability, see own payout summary |
+| `guardian` (parent / adult student) | Read-only portal via WhatsApp magic link: upcoming lessons, reports (PDF), homework, remaining lessons, payment status |
+
+## 2. Domain model (entities)
+
+```
+Lead ──(converts)──► Guardian ──1..n──► Student ──n..1──► Teacher
+                                          │
+                                          ├──► Subscription (package) ──► Payment*
+                                          ├──► ScheduleRule (weekly recurrence, tz)
+                                          │        └──► Lesson (occurrence) ──► LessonReport ──► ReportPdf
+                                          └──► Message* (WhatsApp in/out, linked to lead or student)
+Teacher ──► TeacherAvailability (weekly slots)  ──► TeacherPayout (per lesson rate)
+JobApplicant (separate from Lead)
+MessageTemplate (Meta template name + variables + Arabic body)
+```
+
+Key enums (store in `packages/shared/src/enums`):
+- `LeadStatus`: `new` · `contacted` · `interested_no_slot` · `trial_booked` · `trial_done` · `converted` · `no_reply` · `lost`
+- `LeadSource`: `facebook_ad` · `instagram_ad` · `whatsapp_direct` · `referral` · `other`
+- `LessonStatus`: `scheduled` · `confirmed` · `completed` · `late` · `excused` · `no_show` · `cancelled_by_teacher` · `cancelled_by_admin` · `rescheduled`
+- `SubscriptionStatus`: `trial` · `active` · `paused` · `expired` · `unpaid`
+- `Program`: `quran` · `arabic` · `islamic_studies`
+- `Grade`: `excellent` · `very_good` · `good` · `acceptable` · `needs_review` (ممتاز / جيد جدًا / جيد / مقبول / يحتاج إلى مراجعة)
+- `Attendance`: `on_time` · `late` · `excused` · `absent` (حضرت في الموعد / حضرت متأخرة / اعتذرت مسبقًا / غياب بدون إشعار)
+- `PackageSize`: `trial` · `4` · `8` · `12` · `16` (lessons per month)
+- `Duration`: `30` · `45` · `60` · `90`
+
+## 3. Functional requirements
+
+### 3.1 Leads & WhatsApp inbox
+- **R-LEAD-01** Inbound WhatsApp messages (Meta webhook) create or update a `Lead` keyed by E.164 phone; store every inbound/outbound message in `messages`.
+- **R-LEAD-02** Admin inbox view (web + mobile): list leads by status, last message, source, age of lead; open a thread; reply (session message) or send a template.
+- **R-LEAD-03** Lead qualification fields captured in-thread (optional, structured): student name, age, gender, country/time zone, level, memorized, goal, riwaya, available days, preferred time range. Replaces the deleted form questions (issue A9).
+- **R-LEAD-04** Job applicants are a separate entity (`job_applicants`) with their own status; a lead can be re-classified with one click. Never counted in sales funnel (issue C4).
+- **R-LEAD-05** Follow-up automation: a lead in `interested_no_slot` or `no_reply` for N hours (configurable, default 24h then 72h) gets a queued follow-up template with two free slots proposed from real teacher availability. Admin can pause per lead.
+- **R-LEAD-06** Convert lead → creates Guardian + Student(s) + trial Lesson in one wizard (see 3.3).
+
+### 3.2 Students & guardians
+- **R-STU-01** `students` is the single table of truth; every other record references `student_id` (UUID) — the human code `AB-nnnn` is a generated display column, unique, never typed by a human.
+- **R-STU-02** Phone numbers normalised to E.164 on write (`+966…`); country inferred; validation rejects handles/short numbers.
+- **R-STU-03** Duplicate detection on create: same phone + similar name (normalised Arabic: strip hamza/taa marbuta/ya variants) → warn and offer merge. Merge tool keeps history.
+- **R-STU-04** A guardian can have many students; each sibling is a separate student with own lessons, reports and package. A lesson can have many students (group lesson) via `lesson_students`.
+- **R-STU-05** Student profile: level, memorized (surah/juz), goal, riwaya, time zone, notes, program, status (`trial`/`active`/`paused`/`churned`), assigned teacher, meeting link (defaults to teacher's).
+- **R-STU-06** Student timeline: all lessons, reports, messages, payments in one view.
+
+### 3.3 Scheduling
+- **R-SCH-01** All times stored UTC; every student and teacher has an IANA time zone; UI shows both Riyadh and student local time. No free-text times.
+- **R-SCH-02** `schedule_rules` (weekly byday + start time + duration + teacher + students + tz) generate `lessons` rows for a rolling horizon (default 5 weeks). Re-generation is idempotent (upsert by rule_id + date), never duplicates (issue B1).
+- **R-SCH-03** Lesson status lifecycle (`scheduled → confirmed → completed/…`). Confirmation can come from student reply ("نعم"/button) or teacher/admin action. Dashboards count by real status (issue B2).
+- **R-SCH-04** Conflict check at booking time: teacher busy, student busy, outside teacher availability → hard block with a clear message; admin may override with a reason.
+- **R-SCH-05** Optional Google Calendar mirror (teacher calendar) is write-only from the system, keyed by `lesson_id` in extended properties, update-in-place; can be disabled per teacher. Not the source of truth.
+- **R-SCH-06** Booking wizard: pick student(s) → pick teacher (filtered by gender preference, program, availability) → pick slot from a real availability grid → set package → create rule + lessons + confirmation message in one transaction.
+- **R-SCH-07** Reschedule / cancel single occurrence or whole rule; cancellations by teacher do not consume the student's package; late cancels by student (<N hours) optionally consume one lesson (setting).
+- **R-SCH-08** Teacher self-service: view week, mark attendance, propose reschedule (admin approves).
+
+### 3.4 Teachers
+- **R-TCH-01** `teachers` table: display name (ar/en), gender, programs, phone, email (auth), meeting link, per-lesson rate (EGP) by duration, status, max students.
+- **R-TCH-02** Weekly availability grid (`teacher_availability`: weekday, start, end, tz) + one-off unavailability (`teacher_time_off`).
+- **R-TCH-03** Teacher web dashboard: today / this week, join link, pending reports, students list.
+- **R-TCH-04** Teacher payout report per month: completed lessons × rate; export CSV.
+
+### 3.5 Lessons & meeting links
+- **R-LES-01** Each lesson row stores teacher, students, start/end UTC, status, meeting link (copied from teacher at creation, overridable).
+- **R-LES-02** Join link sent to guardian automatically (confirmation + reminder); same link every time for that teacher (issue B8).
+- **R-LES-03** Lesson sequence number per student computed (`row_number` over completed lessons) — never typed (issue A5).
+
+### 3.6 Lesson reports
+- **R-REP-01** Teacher opens the report from the lesson itself; student, teacher, date, lesson no., program, link are pre-filled and read-only (issues A2, A3, D1).
+- **R-REP-02** Form fields: attendance, recited, new memorization, revision, theory/tajweed, 6 rubric grades, overall grade, notes, homework, next plan, attachments (Supabase Storage). Validation: date not in future, not before lesson date; drafts auto-saved; editable by teacher for 24h, by admin always; versioned.
+- **R-REP-03** On submit: generate branded PDF (HTML template → PDF, Arabic fonts, RTL), store in Storage under `reports/{student_id}/{lesson_id}.pdf`, send to guardian via WhatsApp template with document, mark lesson `completed`, decrement package balance.
+- **R-REP-04** One report per lesson (unique constraint `lesson_id, student_id`); resubmission updates (issue A7).
+- **R-REP-05** Student report history and progress view (grades over time) replaces per-student sheets (issue D2).
+
+### 3.7 Subscriptions & payments
+- **R-SUB-01** `subscriptions`: student, package size, price, start date, lessons_total, lessons_used (derived), status, renews_on. Balance decrements only on `completed` or chargeable statuses (issue E1).
+- **R-SUB-02** Alerts: 2 lessons remaining → WhatsApp renewal reminder to guardian + admin task; 0 remaining → status `unpaid`, future lessons flagged (not auto-cancelled; setting).
+- **R-SUB-03** Package end date derived from actual completed lessons, not fixed at creation (issue B5).
+- **R-PAY-01** `payments`: subscription, amount, currency, method (bank/wallet/cash), paid_at, receipt image (Storage), recorded_by. Manual entry in v1.
+- **R-PAY-02** Teacher payout: `lessons.completed × teacher.rate` per month, with approve/paid flag (issue E3).
+
+### 3.8 Messaging (WhatsApp Cloud API)
+- **R-MSG-01** Outbound: templates registered in Meta (`booking_confirmation`, `lesson_reminder_24h`, `lesson_reminder_1h`, `report_ready`, `renewal_due`, `follow_up_slots`). Template names and language codes live in DB `message_templates`; a startup health check verifies each exists in Meta and surfaces missing ones in admin settings (issue C1).
+- **R-MSG-02** Scheduler (cron every 5 min) queues reminders: 24h and 1h before lesson start, in guardian's time zone wording; dedup key `lesson_id+type`; retry with backoff; failures visible in admin.
+- **R-MSG-03** Fallback: every outbound message has a `wa.me` click-to-chat deep link with prefilled text for manual sending; marks `sent_manually` when admin taps it.
+- **R-MSG-04** Inbound webhook: verify signature, store message, match to lead/guardian by phone, handle quick replies (confirm / reschedule / stop).
+- **R-MSG-05** Message log per contact with delivery status (sent, delivered, read, failed + error code).
+
+### 3.9 Reporting / dashboard
+- **R-RPT-01** Admin dashboard: funnel (new → trial_booked → trial_done → converted), active students, lessons this week by status, pending reports, unpaid subscriptions, teacher load. Numbers come from statuses, not formulas (issue F3).
+- **R-RPT-02** Lead source → conversion → revenue attribution; monthly revenue, teacher cost, gross margin by source (issue E4). Ads/content spend entered manually as `expenses`.
+- **R-RPT-03** Exports: students, lessons, payments, payouts CSV.
+
+### 3.10 Admin mobile app (Expo)
+- **R-MOB-01** Login (admin), push notifications for: new lead, lesson needing confirmation, report submitted, reminder failed, payment due.
+- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial.
+- **R-MOB-03** Offline-tolerant reads (TanStack Query persist), optimistic status updates.
+
+### 3.11 Migration from Google
+- **R-MIG-01** One-off import scripts (`tools/migrate`) for: teachers (11), students (dedupe per A1 rules; review queue for ambiguous merges), schedule rules from «تقويم الحجوزات» rows with status مؤكد/مشترك, completed lessons + reports from «سجل تقارير الحلقات» (skip Lorem/test rows and dates outside 2026-08-01..today), subscriptions + payments from «Heart › subscription», leads from «كل المحادثات» (exclude توظيف → job_applicants, exclude جروب حلقة), existing PDFs copied into Storage by link.
+- **R-MIG-02** Dry-run mode producing a diff report; import report with counts and rejected rows.
+- **R-MIG-03** Keep Google Calendar mirror on for teachers during transition; stop Apps Script triggers at cut-over.
+
+## 4. Non-functional requirements
+- **R-NFR-01** Arabic RTL UI, Arabic + English teacher names, Hijri date optional display; all messages in Egyptian Arabic matching current templates.
+- **R-NFR-02** Secrets only in environment / Supabase Vault; no keys in repo or Drive. RLS on every table; teachers see only own rows.
+- **R-NFR-03** Audit log for status changes, payments, merges, report edits.
+- **R-NFR-04** Separate `dev` / `staging` / `prod` Supabase projects; seed data clearly marked; no test rows in prod (issue A6).
+- **R-NFR-05** Code constraints (enforced by ESLint + CI): max 150 lines per file, max 3 parameters per function, strict TypeScript, no `any`.
+- **R-NFR-06** Tests: unit tests on every package (Vitest/Jest), API e2e (Supertest against local Supabase), web e2e (Playwright) for the 6 core journeys, mobile component tests (jest-expo + RNTL). CI must be green to merge.
+- **R-NFR-07** Observability: structured logs, Sentry (api/web/mobile), health endpoint, WhatsApp failure alerts.
+- **R-NFR-08** Performance: inbox and schedule views < 300 ms p95 on 10k lessons; all list endpoints paginated.
+- **R-NFR-09** Backups: Supabase PITR; nightly export of PDFs bucket.
+
+## 5. Core user journeys (drive Playwright e2e)
+1. Lead arrives on WhatsApp → appears in inbox → admin replies → books trial via wizard → confirmation sent → lesson on teacher calendar.
+2. Teacher logs in → sees today's lesson → marks attendance → submits report → PDF generated → guardian receives WhatsApp → package balance decremented.
+3. Admin records payment → subscription active → renewal reminder fires at 2 lessons left.
+4. Admin reschedules one occurrence → conflict detected → chooses another slot → guardian notified.
+5. Teacher sets availability → booking wizard only offers those slots.
+6. Duplicate student creation blocked and merged.

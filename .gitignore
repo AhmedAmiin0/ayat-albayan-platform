@@ -1,0 +1,14 @@
+node_modules/
+dist/
+.turbo/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+.expo/
+playwright-report/
+test-results/
+e2e/.auth/
+packages/db/supabase/.temp/
+packages/db/supabase/.branches/

@@ -1,0 +1,2 @@
+-- Local/dev seed only (R-NFR-04: never run against prod). Users are created through the
+-- Auth admin API by e2e/global-setup.ts, not here.

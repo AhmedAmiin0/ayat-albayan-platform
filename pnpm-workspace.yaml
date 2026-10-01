@@ -1,0 +1,35 @@
+packages:
+  - apps/*
+  - packages/*
+  - tools/*
+  - e2e
+allowBuilds:
+  supabase: true
+  esbuild: true
+  '@swc/core': true
+  '@nestjs/core': false
+  '@parcel/watcher': false
+  unrs-resolver: false
+minimumReleaseAgeExclude:
+  - '@supabase/cli-darwin-arm64@2.119.0'
+  - '@supabase/cli-darwin-x64@2.119.0'
+  - '@supabase/cli-linux-arm64-musl@2.119.0'
+  - '@supabase/cli-linux-arm64@2.119.0'
+  - '@supabase/cli-linux-x64-musl@2.119.0'
+  - '@supabase/cli-linux-x64@2.119.0'
+  - '@supabase/cli-windows-arm64@2.119.0'
+  - '@supabase/cli-windows-x64@2.119.0'
+  - '@turbo/darwin-64@2.11.6'
+  - '@turbo/darwin-arm64@2.11.6'
+  - '@turbo/linux-64@2.11.6'
+  - '@turbo/linux-arm64@2.11.6'
+  - '@turbo/windows-64@2.11.6'
+  - '@turbo/windows-arm64@2.11.6'
+  - supabase@2.119.0
+  - turbo@2.11.6
+  - '@tanstack/react-router@1.170.41'
+  - '@tanstack/router-cli@1.167.40'
+  - '@tanstack/router-core@1.171.34'
+  - '@tanstack/router-generator@1.167.40'
+  - '@tanstack/router-plugin@1.168.42'
+  - vite@8.3.2
