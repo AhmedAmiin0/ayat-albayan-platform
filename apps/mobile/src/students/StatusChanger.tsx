@@ -1,11 +1,14 @@
 import { STUDENT_STATUSES, studentStatusStyle, type StudentStatus } from '@ab/shared';
 import { Text, View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { useOptimisticStatus } from '@/lib/use-optimistic-status';
 import { type, useTheme } from '@/theme';
 import { FilterPills } from '@/ui/FilterPills';
 import { SectionLabel } from './SectionLabel';
 import type { StudentRef } from './types';
-import { useStudentStatus } from './use-student-status';
+
+// Students have no /status route: status is a field of PATCH /students/:id.
+const STATUS = { path: '/students', patchPath: (id: string) => `/students/${id}` };
 
 const PILLS = STUDENT_STATUSES.map((s) => ({
   value: s,
@@ -19,7 +22,7 @@ const PILLS = STUDENT_STATUSES.map((s) => ({
  */
 export function StatusChanger({ student }: { student: StudentRef }) {
   const { color } = useTheme();
-  const change = useStudentStatus();
+  const change = useOptimisticStatus<StudentStatus>(STATUS);
   const set = (status: StudentStatus) => {
     if (status !== student.status) change.mutate({ id: student.id, status });
   };

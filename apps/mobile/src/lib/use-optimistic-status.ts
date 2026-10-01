@@ -9,8 +9,10 @@ export interface StatusChange<S extends string> {
 }
 
 export interface OptimisticStatusOptions {
-  /** Resource path, e.g. '/leads' → PATCH /leads/:id/status { status }. */
+  /** Resource path, e.g. '/leads' → PATCH /leads/:id/status { status }. Also the cache key. */
   path: string;
+  /** PATCH URL for one row when the resource has no /status route, e.g. students: (id) => `/students/${id}`. */
+  patchPath?: (id: string) => string;
 }
 
 /**
@@ -18,12 +20,12 @@ export interface OptimisticStatusOptions {
  * the new status at once; on failure the snapshot comes back; either way the resource refetches.
  * `mutate({ id, status })`. Show the error yourself (`isError`); the row has already rolled back.
  */
-export function useOptimisticStatus<S extends string>({ path }: OptimisticStatusOptions) {
+export function useOptimisticStatus<S extends string>({ path, patchPath }: OptimisticStatusOptions) {
   const client = useQueryClient();
   const queryKey = pathKey(path);
+  const urlOf = patchPath ?? ((id: string) => `${path}/${id}/status`);
   return useMutation({
-    mutationFn: ({ id, status }: StatusChange<S>) =>
-      apiSend<unknown>('PATCH', `${path}/${id}/status`, { status }),
+    mutationFn: ({ id, status }: StatusChange<S>) => apiSend<unknown>('PATCH', urlOf(id), { status }),
     onMutate: async (change) => {
       await client.cancelQueries({ queryKey });
       const snapshot = client.getQueriesData({ queryKey });

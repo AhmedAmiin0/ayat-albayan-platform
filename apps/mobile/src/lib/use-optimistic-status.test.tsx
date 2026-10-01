@@ -78,3 +78,19 @@ test('other resources are never touched', async () => {
   await waitFor(() => expect(result.current.isSuccess).toBe(true));
   expect(client.getQueryData(['job-applicants', 'a'])).toBe(other);
 });
+
+test('patchPath sends the row PATCH for resources without a /status route (students)', async () => {
+  mockApiSend.mockResolvedValue(undefined);
+  const client = createTestQueryClient();
+  const studentKey = ['students', 's1'];
+  client.setQueryData(studentKey, { id: 's1', status: 'trial', name: 'هدى' });
+  const invalidate = jest.spyOn(client, 'invalidateQueries');
+  const options = { path: '/students', patchPath: (id: string) => `/students/${id}` };
+  const { result } = await renderHook(() => useOptimisticStatus(options), { wrapper: queryWrapper(client) });
+
+  await act(async () => result.current.mutate({ id: 's1', status: 'active' }));
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/students/s1', { status: 'active' });
+  expect(client.getQueryData(studentKey)).toMatchObject({ status: 'active', name: 'هدى' });
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['students'] });
+});
