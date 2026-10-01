@@ -7,7 +7,10 @@
     "development": {
       "developmentClient": true,
       "distribution": "internal",
-      "channel": "development"
+      "channel": "development",
+      "environment": "development",
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
     },
     "preview": {
       "distribution": "internal",
@@ -15,20 +18,16 @@
       "android": {
         "buildType": "apk"
       },
-      "env": {
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-ME-preview-api.invalid",
-        "EXPO_PUBLIC_SUPABASE_URL": "https://REPLACE-ME-preview.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "REPLACE-ME-preview-anon-key"
-      }
+      "environment": "preview",
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
     },
     "production": {
       "channel": "production",
       "autoIncrement": true,
-      "env": {
-        "EXPO_PUBLIC_API_URL": "https://REPLACE-ME-api.invalid",
-        "EXPO_PUBLIC_SUPABASE_URL": "https://REPLACE-ME.supabase.co",
-        "EXPO_PUBLIC_SUPABASE_ANON_KEY": "REPLACE-ME-anon-key"
-      }
+      "environment": "production",
+      "node": "24.15.0",
+      "pnpm": "11.25.0"
     }
   },
   "submit": {
