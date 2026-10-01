@@ -2,11 +2,13 @@ import { Module } from '@nestjs/common';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { DbModule } from './common/db/db.module';
+import { FxModule } from './modules/fx/fx.module';
 import { GuardiansModule } from './modules/guardians/guardians.module';
 import { HealthController } from './modules/health/health.controller';
 import { JobApplicantsModule } from './modules/job-applicants/job-applicants.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { MeModule } from './modules/me/me.module';
+import { PricingModule } from './modules/pricing/pricing.module';
 import { StudentsModule } from './modules/students/students.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
 
@@ -21,6 +23,8 @@ import { TeachersModule } from './modules/teachers/teachers.module';
     LeadsModule,
     JobApplicantsModule,
     MeModule,
+    FxModule,
+    PricingModule,
   ],
   controllers: [HealthController],
 })

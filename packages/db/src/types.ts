@@ -56,6 +56,36 @@ export type Database = {
         };
         Relationships: [];
       };
+      fx_rates: {
+        Row: {
+          base: string;
+          fetched_at: string;
+          id: string;
+          provider: string;
+          provider_updated_at: string;
+          quote: string;
+          rate: number;
+        };
+        Insert: {
+          base: string;
+          fetched_at?: string;
+          id?: string;
+          provider: string;
+          provider_updated_at: string;
+          quote: string;
+          rate: number;
+        };
+        Update: {
+          base?: string;
+          fetched_at?: string;
+          id?: string;
+          provider?: string;
+          provider_updated_at?: string;
+          quote?: string;
+          rate?: number;
+        };
+        Relationships: [];
+      };
       guardians: {
         Row: {
           country: string | null;
@@ -587,7 +617,7 @@ export type Database = {
         | 'cancelled_by_teacher'
         | 'cancelled_by_admin'
         | 'rescheduled';
-      package_size: 'trial' | '4' | '8' | '12' | '16';
+      package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
       program: 'quran' | 'arabic' | 'islamic_studies';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
@@ -733,7 +763,7 @@ export const Constants = {
         'cancelled_by_admin',
         'rescheduled',
       ],
-      package_size: ['trial', '4', '8', '12', '16'],
+      package_size: ['trial', '4', '8', '12', '16', '20', '28'],
       program: ['quran', 'arabic', 'islamic_studies'],
       student_status: ['trial', 'active', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],

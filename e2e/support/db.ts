@@ -23,6 +23,21 @@ export async function resetDb(): Promise<void> {
   }
 }
 
+/**
+ * A fresh SAR→USD rate (the 3.75 peg, as the API publishes it) so USD quotes never call the
+ * live currency API during e2e (docs/08 §4: a rate fetched < 24 h ago is reused).
+ */
+export async function seedFxRate(): Promise<void> {
+  const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
+  try {
+    await sql`
+      insert into public.fx_rates (base, quote, rate, provider, provider_updated_at)
+      values ('SAR', 'USD', 0.266667, 'e2e', now())`;
+  } finally {
+    await sql.end();
+  }
+}
+
 export interface SeedUser {
   email: string;
   password: string;

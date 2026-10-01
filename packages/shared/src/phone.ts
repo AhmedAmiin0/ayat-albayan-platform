@@ -1,5 +1,5 @@
 // Phone normalisation to E.164 (rule 7, R-STU-02).
-export type PhoneCountry = 'SA' | 'EG';
+export type PhoneCountry = 'SA' | 'EG' | 'AE' | 'QA' | 'KW' | 'OM';
 export type PhoneResult =
   | { ok: true; e164: string; country: PhoneCountry | null }
   | { ok: false; reason: 'empty' | 'not_a_number' | 'invalid_length' | 'missing_country_code' };
@@ -7,8 +7,19 @@ export type PhoneResult =
 /** Same rule as the DB domain `public.e164`. */
 export const E164_RE = /^\+[1-9][0-9]{7,14}$/;
 
-const SA_RE = /^\+9665[0-9]{8}$/; // mobiles: +966 5x xxx xxxx
-const EG_RE = /^\+201[0-9]{9}$/; // mobiles: +20 1x xxxx xxxx
+/**
+ * Inferred countries by calling code, with the numbers each accepts: SA/EG mobiles only
+ * (+966 5x xxx xxxx, +20 1x xxxx xxxx); Gulf by national length (QA/KW/OM 8, AE 8–9).
+ * These are the pricing countries (docs/08 §1) plus Egypt; every other code → country null.
+ */
+const COUNTRIES: readonly (readonly [string, PhoneCountry, RegExp])[] = [
+  ['+966', 'SA', /^\+9665[0-9]{8}$/],
+  ['+20', 'EG', /^\+201[0-9]{9}$/],
+  ['+971', 'AE', /^\+971[0-9]{8,9}$/],
+  ['+974', 'QA', /^\+974[0-9]{8}$/],
+  ['+965', 'KW', /^\+965[0-9]{8}$/],
+  ['+968', 'OM', /^\+968[0-9]{8}$/],
+];
 // Spaces, dashes, brackets, dots and the bidi marks WhatsApp copies along with numbers.
 const NOISE = /[\s\-().‎‏‪-‮]/g;
 
@@ -24,7 +35,7 @@ function withCountryCode(digits: string): string | null {
   if (digits.startsWith('00')) return `+${digits.slice(2)}`;
   if (digits.startsWith('966')) return `+${digits}`;
   // Bare 20 + Egyptian mobile: the WhatsApp wa_id shape. Unambiguous: no local format starts with 2.
-  // Same 1x set as EG_RE and the 01… rule, so a number is accepted however it is written.
+  // Same 1x set as the EG pattern and the 01… rule, so a number is accepted however it is written.
   if (/^201[0-9]{9}$/.test(digits)) return `+${digits}`;
   // TODO(R-STU-02): other bare international numbers (971…, 44…) stay rejected: without a + they are
   // indistinguishable from local numbers. The Phase 4 webhook knows wa_id is international and adds the +.
@@ -46,9 +57,9 @@ export function normalizePhone(input: string): PhoneResult {
 
   const e164 = withCountryCode(cleaned);
   if (!e164) return { ok: false, reason: 'missing_country_code' };
-  if (e164.startsWith('+966')) return SA_RE.test(e164) ? ok(e164, 'SA') : bad();
-  if (e164.startsWith('+20')) return EG_RE.test(e164) ? ok(e164, 'EG') : bad();
-  // TODO(R-STU-02): no country inference outside SA/EG; owner to say which countries matter.
+  for (const [code, country, re] of COUNTRIES) {
+    if (e164.startsWith(code)) return re.test(e164) ? ok(e164, country) : bad();
+  }
   return E164_RE.test(e164) ? ok(e164, null) : bad();
 }
 

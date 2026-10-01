@@ -33,7 +33,7 @@ describe('normalizePhone — accepted (R-STU-02)', () => {
 
   it.each([
     ['+447911123456', '+447911123456'],
-    ['00971501234567', '+971501234567'],
+    ['00358401234567', '+358401234567'],
     ['+1 (415) 555-2671', '+14155552671'],
   ])('other country %s → %s with no inferred country', (input, e164) => {
     expect(normalizePhone(input)).toEqual({ ok: true, e164, country: null });

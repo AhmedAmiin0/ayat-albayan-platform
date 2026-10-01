@@ -13,6 +13,8 @@ describe('guardians mapper (R-STU-02)', () => {
   it('infers the country from the phone', () => {
     expect(inferCountry('+966501234567')).toBe('SA');
     expect(inferCountry('+201001234567')).toBe('EG');
+    expect(inferCountry('+97455123398')).toBe('QA');
+    expect(inferCountry('+971501234567')).toBe('AE');
     expect(inferCountry('+358401234567')).toBeNull();
   });
 

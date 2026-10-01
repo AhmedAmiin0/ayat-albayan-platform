@@ -42,7 +42,8 @@ export default defineConfig({
       command: 'node --env-file-if-exists=.env dist/main.js',
       cwd: '../apps/api',
       url: `http://localhost:${API_PORT}/health`,
-      env: { PORT: String(API_PORT), WEB_ORIGIN: WEB_URL },
+      // Unroutable: an e2e USD quote must use the seeded fx_rates row, never the live currency API.
+      env: { PORT: String(API_PORT), WEB_ORIGIN: WEB_URL, FX_API_URL: 'http://127.0.0.1:9/' },
       reuseExistingServer: !process.env['CI'],
     },
     {

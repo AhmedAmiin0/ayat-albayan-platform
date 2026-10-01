@@ -60,6 +60,8 @@ export const PACKAGE_SIZES = [
   '8',
   '12',
   '16',
+  '20',
+  '28',
 ] as const satisfies readonly Enums<'package_size'>[];
 export const GENDERS = ['male', 'female'] as const satisfies readonly Enums<'gender'>[];
 export const STUDENT_STATUSES = [
