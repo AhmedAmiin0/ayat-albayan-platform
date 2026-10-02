@@ -87,22 +87,36 @@ export class WebhookQueries {
     return (data ?? []).length > 0;
   }
 
-  /** The guardian's children's next lesson still waiting for a «نعم» (R-SCH-03). */
-  async nextScheduledLesson(guardianId: string, after: Date): Promise<string | null> {
-    const kids = await this.db.from('students').select('id').eq('guardian_id', guardianId);
-    check(kids.error);
-    const ids = (kids.data ?? []).map((k) => k.id);
-    if (ids.length === 0) return null;
+  /** The lesson exists and one of its students is this guardian's child (a payload is not trusted). */
+  async guardianLesson(input: { lessonId: string; guardianId: string }): Promise<boolean> {
     const { data, error } = await this.db
-      .from('lessons')
-      .select('id, lesson_students!inner(student_id)')
-      .in('lesson_students.student_id', ids)
-      .eq('status', 'scheduled')
-      .gt('starts_at', after.toISOString())
-      .order('starts_at')
+      .from('lesson_students')
+      .select('lesson_id, student:students!inner(guardian_id)')
+      .eq('lesson_id', input.lessonId)
+      .eq('student.guardian_id', input.guardianId)
       .limit(1);
     check(error);
-    return data?.[0]?.id ?? null;
+    return (data ?? []).length > 0;
+  }
+
+  /**
+   * docs/12 §3.5: the lesson of the latest outbound row with a lesson_id we sent this phone since
+   * `since` (48 h), while that lesson is still open (scheduled | confirmed). Only rows that actually
+   * went out: a reply can't answer a message still in the queue. null otherwise.
+   */
+  async recentLessonOutbound(input: { phone: string; since: Date }): Promise<string | null> {
+    const { data, error } = await this.db
+      .from('messages')
+      .select('lesson_id, lesson:lessons!inner(status)')
+      .eq('direction', 'outbound')
+      .eq('phone_e164', input.phone)
+      .in('status', ['sent', 'delivered', 'read', 'sent_manually'])
+      .gt('created_at', input.since.toISOString())
+      .in('lesson.status', ['scheduled', 'confirmed'])
+      .order('created_at', { ascending: false })
+      .limit(1);
+    check(error);
+    return data?.[0]?.lesson_id ?? null;
   }
 
   async updateLead(id: string, patch: TablesUpdate<'leads'>): Promise<void> {

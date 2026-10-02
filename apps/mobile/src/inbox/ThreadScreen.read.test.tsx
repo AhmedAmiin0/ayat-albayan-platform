@@ -56,6 +56,21 @@ test('media: the kind as a link once the file is there; unsupported says so', as
   expect(screen.getByText(t.inbox.media.other)).toBeTruthy();
 });
 
+test('a guardian’s «تمام» says what it did: the lesson it confirmed, or that none was', async () => {
+  const yes = message({
+    id: 'c',
+    direction: 'inbound',
+    body: 'تمام',
+    guardian_id: 'g-1',
+    lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
+  });
+  const nothing = message({ id: 'n', direction: 'inbound', body: 'نعم', guardian_id: 'g-1' });
+  mockApiFetch.mockResolvedValue(detail([yes, nothing]));
+  await renderWithQuery(<ThreadScreen />);
+  expect(await screen.findByText(t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00'))).toBeTruthy();
+  expect(screen.getByText(t.inbox.quickReply.notConfirmed)).toBeTruthy();
+});
+
 test('offline: the saved thread stays, with when it was fetched', async () => {
   mockApiFetch.mockRejectedValue(new Error('offline'));
   const client = createTestQueryClient();
@@ -85,9 +100,10 @@ test('pull to refresh asks the API again', async () => {
 
 test('«رسايل أقدم» pages back from the oldest loaded message', async () => {
   const older = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
-  mockApiFetch
-    .mockResolvedValueOnce(detail([inbound, delivered], { has_more: true }))
-    .mockResolvedValueOnce(detail([older]));
+  const pages = [detail([inbound, delivered], { has_more: true }), detail([older])];
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path.startsWith('/threads') ? pages.shift() : { open: true, reason: null, queued: 0 },
+  );
   await renderWithQuery(<ThreadScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.loadOlder }));
   expect(await screen.findByText('رسالة قديمة')).toBeTruthy();

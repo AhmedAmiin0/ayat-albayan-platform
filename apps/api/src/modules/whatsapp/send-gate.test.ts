@@ -1,10 +1,12 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
 import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
+import type { Db } from '../../common/db/db.module';
+import { fakeDb } from '../guardians/fake-db';
 import { SendGate } from './send-gate';
 
 const settings = { all: vi.fn() };
-const gate = () => new SendGate(settings as unknown as SettingsService);
+const gate = (db: Db = fakeDb({}).db) => new SendGate(settings as unknown as SettingsService, db);
 
 function stubWhatsapp(enabled: string): void {
   vi.stubEnv('MESSAGING_ENABLED', enabled);
@@ -38,5 +40,24 @@ describe('SendGate — env switch AND WhatsApp configured AND the admin kill swi
     await expect(gate().open()).resolves.toBe(false);
     settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
     await expect(gate().open()).resolves.toBe(true);
+  });
+
+  it('state names the closed gate for the admin (settings chip, composer note)', async () => {
+    vi.stubEnv('MESSAGING_ENABLED', '');
+    await expect(gate().state()).resolves.toEqual({ open: false, reason: 'env_off' });
+    vi.stubEnv('MESSAGING_ENABLED', 'true');
+    vi.stubEnv('WA_API_BASE', '');
+    await expect(gate().state()).resolves.toEqual({ open: false, reason: 'not_configured' });
+    stubWhatsapp('true');
+    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
+    await expect(gate().state()).resolves.toEqual({ open: false, reason: 'switch_off' });
+    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
+    await expect(gate().state()).resolves.toEqual({ open: true, reason: null });
+  });
+
+  it('view adds the queue that goes out the moment the gate opens', async () => {
+    vi.stubEnv('MESSAGING_ENABLED', '');
+    const { db } = fakeDb({ messages: [{ count: 7 }] });
+    await expect(gate(db).view()).resolves.toEqual({ open: false, reason: 'env_off', queued: 7 });
   });
 });

@@ -8,7 +8,7 @@ import { TabIcon, type TabIconName } from '@/ui/TabIcon';
 // API returns a real count: TODO(R-MOB-02) المحادثات gets the saffron «جديد» count from /leads.
 const TABS: { name: string; title: string; icon: TabIconName }[] = [
   { name: 'index', title: t.mobile.today, icon: 'today' },
-  { name: 'inbox', title: t.nav.leads, icon: 'inbox' },
+  { name: 'inbox', title: t.nav.conversations, icon: 'inbox' },
   { name: 'students', title: t.nav.students, icon: 'students' },
   { name: 'more', title: t.mobile.more, icon: 'more' },
 ];

@@ -38,6 +38,8 @@ export interface RowInput {
 /**
  * The messages row. Inbound rows are «delivered» (they reached us); read_at stays null until an
  * admin opens the thread (= unread). Media is stored by id only; the file is fetched later.
+ * created_at is when the person sent it (Meta's timestamp), not when the webhook arrived: a late
+ * or re-sent webhook must not stretch the 24 h window or reorder the thread.
  */
 export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): TablesInsert<'messages'> {
   return {
@@ -53,6 +55,7 @@ export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): Table
     media_id: m.mediaId,
     media_mime: m.mediaMime,
     interactive_payload: m.payload,
+    created_at: m.at.toISOString(),
   };
 }
 
@@ -84,11 +87,17 @@ function messageSubject({ m, phone, intent }: Pick<PushInput, 'm' | 'phone' | 'i
   return `${phone}:${Math.floor(m.at.getTime() / PUSH_BUCKET_MS)}`;
 }
 
-/** new_lead for a number we did not know (subject = the new lead), else new_message. */
+/**
+ * new_lead for a number we did not know (subject = the new lead), else new_message — titled
+ * «طلب تغيير ميعاد من …» when it asks to move a lesson.
+ */
 export function inboundPush(input: PushInput): { kind: PushKind; event: PushEvent } {
   const { m, phone, newLeadId } = input;
   const text = pushPreview(m);
   const data = { phone };
   if (newLeadId) return { kind: 'new_lead', event: { subject: newLeadId, vars: { name: m.name ?? phone, text }, data } };
-  return { kind: 'new_message', event: { subject: messageSubject(input), vars: { name: senderName(input), text }, data } };
+  const name = senderName(input);
+  const event: PushEvent = { subject: messageSubject(input), vars: { name, text }, data };
+  if (input.intent === 'reschedule') event.title = fill(ar.notifications.rescheduleTitle, { name });
+  return { kind: 'new_message', event };
 }

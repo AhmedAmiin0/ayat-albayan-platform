@@ -11,7 +11,7 @@ export interface MessageChange {
   view: MessageView;
 }
 
-/** M1 retry and M2 sent-manually (R-MSG-03, docs/12 §4). The controller audits both. */
+/** M1 retry, M2 sent-manually, M3 hand-off (R-MSG-03, docs/12 §4); the controller audits them. */
 @Injectable()
 export class MessagesService {
   constructor(
@@ -37,6 +37,16 @@ export class MessagesService {
     const notManual = () => waHttpError('not_manual', 409, { status: before.status });
     if (!needsManualSend(before)) throw notManual();
     const after = await this.queries.markSentManually(id, new Date());
+    if (!after) throw notManual();
+    return { before, view: await this.views.view(after) };
+  }
+
+  /** The admin opened wa.me for it: the sender holds it until they confirm (M2) or undo (M1). */
+  async handOff(id: string): Promise<MessageChange> {
+    const before = await this.row(id);
+    const notManual = () => waHttpError('not_manual', 409, { status: before.status });
+    if (!needsManualSend(before)) throw notManual();
+    const after = await this.queries.handOff(id);
     if (!after) throw notManual();
     return { before, view: await this.views.view(after) };
   }

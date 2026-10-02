@@ -1,6 +1,7 @@
 import type {
   LeadSource,
   LeadStatus,
+  LessonStatus,
   MessageDirection,
   MessageStatus,
   TemplateCategory,
@@ -69,6 +70,16 @@ export interface MessageView {
   created_at: string;
   /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
   click_to_chat: string | null;
+  /**
+   * The lesson of lesson_id as it is now (thread pages only; null elsewhere): what a guardian's
+   * «تمام» actually did — «اتأكدت حلقة …» only when it is confirmed.
+   */
+  lesson: MessageLesson | null;
+}
+
+export interface MessageLesson {
+  starts_at: string;
+  status: LessonStatus;
 }
 
 /** GET /threads/:phone: the thread (null if the phone has no messages) and a page of messages. */
@@ -77,6 +88,19 @@ export interface ThreadDetail {
   /** Oldest → newest; `before` (an instant) pages back. */
   messages: MessageView[];
   has_more: boolean;
+  /** First page only: the guardian's / teacher's next open lessons, for the template composer. */
+  lessons: ThreadLesson[];
+}
+
+/** An upcoming lesson of the thread's person: its times fill a template's variables (rule 6). */
+export interface ThreadLesson {
+  id: string;
+  starts_at: string;
+  meeting_link: string | null;
+  /** The guardian's own children in it (all students for a teacher). */
+  student_names: string[];
+  /** The recipient's tz (the guardian's, or the teacher's). */
+  tz: string;
 }
 
 /** GET /messaging/templates item: one message_templates row. */
@@ -97,4 +121,15 @@ export interface TemplateView {
   last_checked_at: string | null;
   last_error: string | null;
   submitted_at: string | null;
+}
+
+/**
+ * GET /messages/gate: can anything go out now (docs/12 §3.1), and if not, which gate is closed —
+ * the server's MESSAGING_ENABLED (env_off), WhatsApp not configured, or the admin's switch.
+ */
+export interface SendGateView {
+  open: boolean;
+  reason: 'env_off' | 'not_configured' | 'switch_off' | null;
+  /** Outbound rows waiting in the queue: they go out the moment the gate opens. */
+  queued: number;
 }

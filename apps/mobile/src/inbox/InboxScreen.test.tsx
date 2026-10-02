@@ -20,9 +20,15 @@ beforeEach(() => {
   mockPush.mockReset();
 });
 
+/** The tab opens on the threads; these tests are about the new-leads pipeline beside them. */
+async function openLeads() {
+  await fireEvent.press(await screen.findByRole('tab', { name: t.nav.leads }));
+}
+
 test('rows: name, isolated phone, source, status chip; an unnamed lead is titled by its phone', async () => {
   mockApiFetch.mockResolvedValue(page([huda, unnamed], 2));
   await renderWithQuery(<InboxScreen />);
+  await openLeads();
   expect(await screen.findByText('هدى سالم')).toBeTruthy();
   expect(screen.getByRole('header', { name: t.leads.title })).toBeTruthy();
   expect(screen.getByText(ltr('+966 55 214 7730'))).toBeTruthy();
@@ -39,6 +45,7 @@ test('rows: name, isolated phone, source, status chip; an unnamed lead is titled
 test('a status pill filters server-side and only the selected pill carries the API total', async () => {
   mockApiFetch.mockResolvedValue(page([huda], 7));
   await renderWithQuery(<InboxScreen />);
+  await openLeads();
   await screen.findByText('هدى سالم');
   expect(screen.getByRole('tab', { name: `${t.leads.filterAll} 7` })).toBeTruthy();
 
@@ -53,6 +60,7 @@ test('a status pill filters server-side and only the selected pill carries the A
 test('search sends q to the API', async () => {
   mockApiFetch.mockResolvedValue(page([huda]));
   await renderWithQuery(<InboxScreen />);
+  await openLeads();
   await screen.findByText('هدى سالم');
   const field = screen.getByLabelText(t.leads.searchPlaceholder);
   await fireEvent.changeText(field, ' هدى ');
@@ -67,6 +75,7 @@ test('search sends q to the API', async () => {
 test('a row opens the lead screen', async () => {
   mockApiFetch.mockResolvedValue(page([huda]));
   await renderWithQuery(<InboxScreen />);
+  await openLeads();
   await fireEvent.press(await screen.findByRole('button', { name: /هدى سالم/ }));
   expect(mockPush).toHaveBeenCalledWith('/inbox/a1');
 });
@@ -74,12 +83,21 @@ test('a row opens the lead screen', async () => {
 test('nothing found: the inbox empty state', async () => {
   mockApiFetch.mockResolvedValue(page([]));
   await renderWithQuery(<InboxScreen />);
+  await openLeads();
   expect(await screen.findByRole('header', { name: t.leads.empty })).toBeTruthy();
 });
 
 test('failed with nothing saved: error and retry', async () => {
-  mockApiFetch.mockRejectedValueOnce(new ApiError(500)).mockResolvedValue(page([huda]));
+  let failed = false;
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path.startsWith('/leads') && !failed) {
+      failed = true;
+      throw new ApiError(500);
+    }
+    return page([huda]);
+  });
   await renderWithQuery(<InboxScreen />);
+  await openLeads();
   expect(await screen.findByRole('alert')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('هدى سالم')).toBeTruthy();
@@ -90,6 +108,7 @@ test('offline with a saved list: rows stay, no error, and «آخر تحديث» 
   const client = createTestQueryClient();
   client.setQueryData(listKey('/leads', { q: '' }), cachedList([huda]));
   await renderWithQuery(<InboxScreen />, client);
+  await openLeads();
   expect(screen.getByText('هدى سالم')).toBeTruthy();
   expect(
     await screen.findByText(new RegExp(t.mobile.lastUpdated.replace(' {time}', ''))),

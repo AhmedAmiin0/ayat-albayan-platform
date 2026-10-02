@@ -68,7 +68,7 @@ test('admin: tabs in RTL order النهارده، المحادثات، الطل�
   const tabs = screen.getAllByRole('button'); // the stub screens have none: these are the tabs
   expect(tabs.map((tab) => tab.props.accessibilityLabel)).toEqual([
     t.mobile.today,
-    t.nav.leads,
+    t.nav.conversations,
     t.nav.students,
     t.mobile.more,
   ]);

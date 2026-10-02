@@ -18,8 +18,8 @@ import { WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from './we
 
 /**
  * ponytail: the work runs inline; after this budget Meta gets its 200 and the rest finishes in
- * the background. Meta re-sends after ~20 s without an answer. Move to a pg-boss queue if a
- * batch ever needs longer.
+ * the background, so a failure past the budget is only logged (no 500, no re-send). Meta re-sends
+ * after ~20 s without an answer. Move to a pg-boss queue if a batch ever needs longer.
  */
 export const RESPONSE_BUDGET_MS = 5_000;
 
@@ -58,7 +58,10 @@ export class WebhookController {
     return challenge;
   }
 
-  /** Signed events: 401 (nothing stored) unless the HMAC over the raw bytes matches. */
+  /**
+   * Signed events: 401 (nothing stored) unless the HMAC over the raw bytes matches. 500 when an
+   * item failed within the budget (WebhookService.handle), so Meta re-sends instead of losing it.
+   */
   @Post()
   @HttpCode(200)
   async receive(@Req() req: RawRequest, @Headers('x-hub-signature-256') signature?: string): Promise<void> {

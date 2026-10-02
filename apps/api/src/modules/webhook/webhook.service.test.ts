@@ -29,12 +29,18 @@ describe('WebhookService', () => {
     expect(statuses.handle).toHaveBeenCalledWith(expect.objectContaining({ waMessageId: 'wamid.OUT1', status: 'read' }));
   });
 
-  it('one failing item does not stop the others and never throws', async () => {
+  it('one failing item does not stop the others, then the batch fails so Meta re-sends it', async () => {
     const { svc, inbound, statuses } = service();
     inbound.handle.mockRejectedValueOnce(new Error('db down'));
-    await expect(svc.handle(envelope(both))).resolves.toBeUndefined();
+    await expect(svc.handle(envelope(both))).rejects.toMatchObject({ status: 500 });
     expect(inbound.handle).toHaveBeenCalledTimes(2);
     expect(statuses.handle).toHaveBeenCalledTimes(1);
+  });
+
+  it('an unparseable body is not a failure (nothing to retry)', async () => {
+    const { svc, inbound } = service();
+    await expect(svc.handle({ object: 'whatsapp_business_account', entry: 'nope' })).resolves.toBeUndefined();
+    expect(inbound.handle).not.toHaveBeenCalled();
   });
 
   it('skips changes for another phone number id', async () => {

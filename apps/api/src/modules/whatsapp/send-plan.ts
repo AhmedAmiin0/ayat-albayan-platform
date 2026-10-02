@@ -2,6 +2,7 @@ import type { Json } from '@ab/db';
 import {
   backoff,
   isRetryableWaError,
+  isWaAuthError,
   MAX_SEND_ATTEMPTS,
   quickReplyPayload,
   type TemplateButton,
@@ -15,6 +16,14 @@ import { WaError, type TemplateRow } from './whatsapp.types';
 
 /** How long a claimed row is held: a worker that dies mid-send frees it after this. */
 export const CLAIM_LEASE_MS = 2 * 60_000;
+/** error_code written with the claim, before Meta is called (write-ahead; see SenderQueries.claim). */
+export const SENDING = 'sending';
+/** error_code of a row Meta may or may not have sent: the admin checks WhatsApp before resending. */
+export const UNCERTAIN = 'uncertain';
+/** error_code while the admin sends it from their own WhatsApp (M3); the UI asks them to confirm. */
+export const HANDED_OFF = 'handed_off';
+/** An expired / revoked token holds the queue this long before the next try (no attempt counted). */
+export const AUTH_HOLD_MS = 15 * 60_000;
 const ERROR_TEXT_MAX = 500;
 
 export interface FailurePlan {
@@ -22,6 +31,8 @@ export interface FailurePlan {
   next_attempt_at: string | null;
   error_code: string;
   error_text: string;
+  /** Set when the try is not counted (auth hold): the claim's +1 is undone. */
+  attempts?: number;
 }
 
 /** messages.error_code: Meta's code («131026»), else what kind of failure it was. */
@@ -38,19 +49,32 @@ function errorText(error: unknown): string {
 }
 
 /**
- * Throttling, Meta outages and network errors retry with backoff (1 min, 5 min, …) until
+ * Throttling, Meta outages and connection errors retry with backoff (1 min, 5 min, …) until
  * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, 131047
- * window closed, bad parameters) fails at once. `attempts` counts this try.
+ * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
+ * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
+ * error (190 / 10 / 200) holds the row, uncounted: the token is broken, not the message.
+ * `attempts` counts this try.
  */
 export function failurePlan(input: { error: unknown; attempts: number; now: Date }): FailurePlan {
-  const code = input.error instanceof WaError ? input.error.info.code : null;
-  const retry = isRetryableWaError(code) && input.attempts < MAX_SEND_ATTEMPTS;
+  const info = input.error instanceof WaError ? input.error.info : null;
+  const at = (ms: number) => new Date(input.now.getTime() + ms).toISOString();
+  const error_text = errorText(input.error);
+  if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
+  if (isWaAuthError(info?.code)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
+  const retry = isRetryableWaError(info?.code ?? null) && input.attempts < MAX_SEND_ATTEMPTS;
   return {
     status: retry ? 'queued' : 'failed',
-    next_attempt_at: retry ? new Date(input.now.getTime() + backoff(input.attempts)).toISOString() : null,
+    next_attempt_at: retry ? at(backoff(input.attempts)) : null,
     error_code: errorCode(input.error),
-    error_text: errorText(input.error),
+    error_text,
   };
+}
+
+/** The token is broken, not the message: back in the queue, this try not counted. */
+function authHold(h: { error: unknown; attempts: number; error_text: string; until: string }): FailurePlan {
+  const attempts = Math.max(0, h.attempts - 1);
+  return { status: 'queued', next_attempt_at: h.until, error_code: errorCode(h.error), error_text: h.error_text, attempts };
 }
 
 /**

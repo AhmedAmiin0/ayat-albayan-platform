@@ -35,6 +35,6 @@ export function useNavCounts(): NonNullable<AdminNavProps['counts']> {
   if (teachers.data !== undefined) counts.teachers = { text: String(teachers.data) };
   if (applicants.data !== undefined) counts.jobApplicants = { text: String(applicants.data) };
   if (newLeads.data) counts.leads = { text: t.nav.newLeads.replace('{n}', String(newLeads.data)), act: true };
-  if (unread.data) counts.inbox = { text: t.nav.newLeads.replace('{n}', String(unread.data)), act: true };
+  if (unread.data) counts.inbox = { text: t.nav.unread.replace('{n}', String(unread.data)), act: true };
   return counts;
 }

@@ -1014,3 +1014,129 @@ api 1410 passed + 1 skipped (205 files) · web 598 (120 files) · mobile 422 · 
 - An outbound row sent from the inbox to a phone with no thread yet carries no `lead_id` / `guardian_id` (the thread view still joins by phone).
 - The web lead panel finds the lead via `GET /leads?q=`; lesson-timed template variables are not prefilled; mobile inbox list still uses `GET /leads`.
 - Template wording of `report_ready`, `renewal_due`, `follow_up_slots`, `lesson_reminder_24h` awaits the owner before anyone presses submit; the 8 approved bodies sync from Meta at the first health check.
+
+## Phase 4: messaging — verifier fixes
+
+Branch `develop`. This commit fixes 31 verifier findings. Each one was re-checked against the code first. None was rejected; two optional parts are deferred (listed below). There is one new migration, `144_follow_up_state`. Nothing reached graph.facebook.com: tests and local runs use `tools/wa-stub`, and `apps/api/.env.secrets` was never read.
+
+### Built and fixed, by requirement ID
+- **R-LEAD-05 follow-ups (high + medium):**
+  - **Dedup key.** The key is now `follow_up_slots:{lead}:{cycle}:{stage}`. The cycle is the time the lead's silence started, taken from their last inbound message. Before this fix, a lead's reply reset the stage, the next follow-up reused the old key, and it was silently dropped. Now each new silence gets its own key.
+  - **Stage.** The stage moves on only on a later tick, once that stage's row has left: sent, sent by hand, or failed for good (in that case the admin was pushed).
+    - A row that is still queued, or handed off to the admin, waits.
+    - A row that expired or went stale before it was sent is deleted and replaced with fresh slots.
+  - **Counting.** `queued` is counted only when the insert returned a row.
+  - **Follow-up note.** The job writes `leads.follow_up_note` (`queued`, `waiting_template` or `no_slots`). The panel shows this note instead of an old «المتابعة الجاية» date.
+  - **Who paused.** `leads.follow_up_paused_by` is `lead` for a lead's own «وقف» and `admin` for L2. Existing pauses were backfilled from the audit log. The panel shows «العميل طلب وقف الرسايل». Resuming a lead's own «وقف» asks first, and cancel has the default focus.
+- **R-SCH-03 / R-MSG-04 quick replies (high), per docs/12 §3.5:**
+  - **Which lesson a reply is about:**
+    - A lesson in a button payload counts only if it exists and is the guardian's child's lesson.
+    - A reply to one of our messages (Meta's `context.id`) uses that message's lesson, only if it was sent to the same phone.
+    - A typed reply uses the latest outbound row with a `lesson_id` that actually went out to that phone (sent / delivered / read / sent by hand) in the last 48 h, while its lesson is open.
+    - A reply from anyone who is not a guardian is only stored.
+  - **Confirm words.** «تم» confirms only when it is the whole reply. Money and renewal words (تحويل، فلوس، هبعت، اشتراك…) block a «yes».
+  - **Lost button replies (high).** A button payload with an unknown lesson UUID used to fail on the FK and the message was lost. It is now stored with `lesson_id` null, and a test covers it.
+  - **Bubble label.** It shows what really happened, from `MessageView.lesson`: «اتأكدت حلقة {when} (بتوقيت الرياض)» or «مفيش حلقة اتأكدت بالرد ده». A reschedule request names the lesson. This works for typed replies too, on web and mobile.
+  - **Reschedule push.** Its title is «طلب تغيير ميعاد من {name}».
+- **R-MSG-02/03 sender (high + medium + low):**
+  - **Stale rows.** At send time these become `failed` / `stale`, with no push:
+    - a confirmation or reminder whose lesson left `scheduled` / `confirmed`;
+    - a follow-up to a lead who paused, asked to stop, moved status, or wrote again;
+    - a `renewal_due` row whose renewal task closed (`AlertsQueries.closeTasks` fails those rows).
+  - **Kill switch.** The gate is re-read before every row, so turning sending OFF stops a pass that is already running.
+  - **Possible duplicate sends.** The claim writes `error_code = 'sending'` before Meta is called. These cases become `failed` / `uncertain`, are pushed, and are never resent on their own:
+    - a row still marked `sending` on a later pass;
+    - a timeout, or a connection that dropped after the request left (`mayHaveReachedMeta`).
+    A connection refused before anything was sent is still retried.
+  - **Token errors.** Meta 190, 10 and 200 hold the row for 15 min without counting a try, stop the pass, and send one admin push per day.
+  - **Bookkeeping.**
+    - `stampDelivered` is skipped when the CAS to `sent` matched no row.
+    - `reminder_failed` is keyed per failed try (the claim time, or the wamid for a status webhook). A row that fails again after the admin's retry pushes again.
+- **R-MSG-03 send by hand (medium):** new `POST /messages/:id/hand-off` (M3, audited).
+  - Tapping wa.me holds the row as `failed` / `handed_off`.
+  - The question «بعتّها؟» comes from the row itself, so it survives a refresh, on web and mobile.
+  - Yes = M2. «لأ، رجّعها للطابور» = M1. Retry is hidden while a hand-off is pending.
+- **R-MSG-04 webhook (medium):**
+  - When an item fails for a reason other than parsing, the request answers 500 after all items were tried, so Meta re-sends. Items that already went through are no-ops on the replay.
+  - Inbound rows keep Meta's timestamp as `created_at`, so the 24 h window and the thread order are right.
+- **R-MOB-01 push (medium + low):**
+  - `lesson_needs_confirmation` is pushed at the same-day reminder time (docs/12 §6).
+  - The day-before reminder expires at the guardian's local midnight, so «بكرة» is never sent on the lesson day.
+  - `EXPO_API_BASE` is a new env with no default. When it is unset (local, e2e), pushes are recorded but never leave the server.
+- **R-MOB-02 mobile inbox (high + medium):**
+  - The «المحادثات» tab opens on `GET /threads`: guardians and teachers too, with unread counts and failed sends, and a tap opens the thread. The leads pipeline is one pill away.
+  - Sending the same template again after an error keeps its clientRequestId (rule 8).
+  - Bubbles use `writingDirection: 'auto'`.
+- **Gate visibility (medium):** `GET /messages/gate` returns `{open, reason, queued}`.
+  - The composers (web and mobile) say «الإرسال متوقف» when the admin switch is off, and «الإرسال مقفول من السيرفر» when the server env or config is off.
+  - The settings chip names a gate that is closed on the server.
+  - The kill-switch dialog says how many queued messages go out at once. Its confirm button is the quiet danger style, and cancel has the default focus.
+  - `settings.crm_cutover_done` hides the CRM warning: the button is «نقلنا الرقم من الـCRM», and docs/09 has a new cut-over step 5 for it.
+- **Rule 6 template composer (medium):**
+  - `ThreadDetail.lessons` lists the next open lessons of the guardian or teacher, in the recipient's tz.
+  - On web and mobile, `lesson_when`, `lesson_time` and `lesson_slot` come from the picked lesson and are read-only. The names and the matching meeting code are filled in too, and the `lessonId` is sent.
+  - Teacher templates are offered only on teacher threads.
+  - Fields are labelled by their variable name, and the error names the field («اكتب اسم الطالب أو الإخوات»).
+- **Web inbox polish (medium + low):**
+  - **Thread list:**
+    - When our last send failed, the row shows «متبعتتش» with a saffron struck glyph.
+    - The phone is never cut off; below `sm` the row shows its last 4 digits.
+    - Previews use `dir="auto"`.
+  - **Bubbles and thread:**
+    - A bubble from another day shows the date with the time.
+    - The header says «المواعيد بتوقيت …».
+    - The URL hint is an LTR island that can wrap anywhere.
+  - **Errors and retry:**
+    - Arabic text for codes 131049, 131051, 131056, 470, 190, 10, 200, `uncertain`, `stale`, `handed_off` and `sending`.
+    - No «جرّب تاني» for 131026, 131047, `expired` or `stale`.
+    - While the send is leased, the bubble says «بتتبعت دلوقتي».
+  - **Nav:** «العملاء الجداد» and «الرسايل», with the icons swapped. The inbox badge says «{n} مش مقروءة».
+  - **Template health:**
+    - Stacked rows show a label for each value.
+    - A template that is not approved shows «—» for quality.
+    - `report_ready` shows the Business Manager hint instead of a submit button that always got 409.
+    - Inbound media without a downloaded file says «عرض الملفات لسه مش متاح هنا».
+- **Docs:**
+  - `docs/09`: `EXPO_API_BASE`; which gate is closed; send-time staleness; the cut-over cleanup SQL (limited to the lesson-timed template keys, so report rows are kept); CRM step 5.
+  - `docs/12`: the new dedup keys and expiries; a new §11 lists every contract change.
+
+### Findings rejected or deferred
+- None rejected. The «verified OK» and «verification notes» items needed no change.
+- Deferred (optional): replaying a Meta status that arrives before the `sent` write. The write-ahead `sending` mark shrinks that window to one Graph call.
+- Still not built: downloading inbound media to Storage. The UI now says so (residual from Phase 4).
+- Residual: `v_threads.last_status` is `failed` for rows the system dropped on purpose (`stale`, `expired`) as well as for `handed_off`. The thread list therefore shows «متبعتتش» for those too. The bubble gives the reason; the list row does not, because `v_threads` has no `error_code`.
+
+### Tests (measured: `pnpm test:all` = `turbo lint typecheck test e2e --force`, 23/23 tasks green)
+
+| Package | Passed | Files | Change since Phase 4 |
+|---|---|---|---|
+| api | 1467 (+1 skipped) | 208 | +57 |
+| web | 612 | 120 | +14 |
+| mobile | 428 | 81 suites | +6 |
+| @ab/shared | 1096 | 54 | +34 |
+| wa-stub | 19 | | |
+| e2e | 33 (+3 skipped by design) | | |
+
+- That is **+111 unit tests**. The api row was re-run after the amend that added `webhook.queries.test.ts`.
+- e2e runs on desktop and mobile, including journey 1. The 3 skips are `report-outcome.sql`, which runs on desktop only.
+- Lint has 0 errors. Warnings, all complexity: web 14, api 3, mobile 3, wa-stub 2, shared 1.
+- New pure logic and its tests:
+  - follow-up cycle keys and stage steps;
+  - local-midnight expiry;
+  - the send-time staleness check;
+  - quick-reply narrowing;
+  - the reply note;
+  - lesson template variables;
+  - uncertain / auth failure plans;
+  - the auth / retry code sets;
+  - the gate reasons.
+
+### Owner actions
+- **Webhook cut-over:** confirm it, then run the docs/09 «WhatsApp cut-over runbook» steps 1–5. Nothing has been executed yet.
+- **New templates:** approve the wording of `report_ready`, `renewal_due`, `follow_up_slots` and `lesson_reminder_24h`, then submit them from `/admin/settings`. `report_ready` is submitted in Business Manager.
+- **Android push:** set up Firebase / FCM V1 credentials. iOS needs an Apple Developer account.
+- **With this release:** set `EXPO_API_BASE=https://exp.host` on the server. Without it, admin pushes are recorded but not sent.
+- **To confirm (implemented per the contract):**
+  - A bare «تمام» confirms only the open lesson of the last lesson-linked message in the past 48 h.
+  - `lesson_needs_confirmation` is pushed at the same-day reminder time.
+- **Still open:** «stop» from a guardian, and quiet hours.

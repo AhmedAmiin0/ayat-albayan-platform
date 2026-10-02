@@ -27,7 +27,7 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
 
   it('kill switch / env / config closed → reads nothing, sends nothing, rows stay queued', async () => {
     gate.open.mockResolvedValue(false);
-    await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, skipped: 0 });
+    await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, paused: 0, skipped: 0 });
     expect(queries.due).not.toHaveBeenCalled();
     expect(worker.process).not.toHaveBeenCalled();
   });
@@ -39,12 +39,26 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
       [{ row: dueMessage(), template: booking, now: NOW }],
       [{ row: expect.objectContaining({ id: 'm2' }), template: null, now: NOW }],
     ]);
-    expect(summary).toEqual({ sent: 1, retry: 1, failed: 0, expired: 0, skipped: 0 });
+    expect(summary).toEqual({ sent: 1, retry: 1, failed: 0, expired: 0, stale: 0, paused: 0, skipped: 0 });
+  });
+
+  it('the kill switch is read before every row: OFF mid-pass stops the rest at once', async () => {
+    gate.open.mockResolvedValueOnce(true).mockResolvedValueOnce(true).mockResolvedValue(false);
+    const summary = await sender().runOnce(NOW);
+    expect(worker.process).toHaveBeenCalledTimes(1);
+    expect(summary).toMatchObject({ sent: 1, retry: 0 });
+  });
+
+  it('a broken token (paused) stops the pass: the other rows are not tried', async () => {
+    worker.process.mockReset().mockResolvedValue('paused');
+    const summary = await sender().runOnce(NOW);
+    expect(worker.process).toHaveBeenCalledTimes(1);
+    expect(summary).toMatchObject({ paused: 1 });
   });
 
   it('never throws, even when the queue cannot be read', async () => {
     queries.due.mockRejectedValue(new Error('db down'));
-    await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, skipped: 0 });
+    await expect(sender().runOnce(NOW)).resolves.toEqual({ sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, paused: 0, skipped: 0 });
   });
 
   it('kick is single-flight: a kick during a run queues exactly one more run', async () => {
@@ -56,7 +70,7 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
     expect(second).toBe(first);
     expect(third).toBe(first);
     await first;
-    expect(gate.open).toHaveBeenCalledTimes(2);
+    expect(queries.due).toHaveBeenCalledTimes(2);
   });
 
   it('boot schedules the timers (unref’d) and destroy clears them', () => {

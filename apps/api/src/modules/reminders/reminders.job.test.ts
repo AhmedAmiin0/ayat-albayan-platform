@@ -79,11 +79,13 @@ describe('lesson_needs_confirmation push (R-MOB-01)', () => {
   const confirmed = sampleLesson({ id: 'lesson-2', status: 'confirmed' });
   const later = sampleLesson({ id: 'lesson-3', starts_at: '2026-10-05T14:01:00Z' });
 
-  it('a still-scheduled lesson starting within 24 h', () => {
-    const now = at('2026-10-03T14:00:00Z');
-    expect(needsConfirmation([scheduled, confirmed, later], now).map((l) => l.id)).toEqual(['lesson-1']);
-    expect(needsConfirmation([scheduled], at('2026-10-03T13:59:00Z'))).toEqual([]);
-    expect(needsConfirmation([scheduled], at('2026-10-04T14:00:00Z'))).toEqual([]);
+  it('at the same-day reminder time the lesson is still scheduled (docs/12 §6), not a day ahead', () => {
+    const when = (now: string) => ({ now: at(now), minutesBefore: 60 });
+    expect(needsConfirmation([scheduled, confirmed, later], when('2026-10-04T13:00:00Z')).map((l) => l.id)).toEqual(['lesson-1']);
+    expect(needsConfirmation([scheduled], when('2026-10-04T12:59:00Z'))).toEqual([]);
+    expect(needsConfirmation([scheduled], when('2026-10-03T14:00:00Z'))).toEqual([]);
+    expect(needsConfirmation([scheduled], when('2026-10-04T14:00:00Z'))).toEqual([]);
+    expect(needsConfirmation([scheduled], { now: at('2026-10-04T12:30:00Z'), minutesBefore: 90 })).toHaveLength(1);
   });
 
   it('names every student; the time is Riyadh (one text for all admins)', () => {
@@ -96,12 +98,12 @@ describe('lesson_needs_confirmation push (R-MOB-01)', () => {
 
   it('pushes once: lessons already in push_notifications are skipped', async () => {
     const { job, push, queries } = setup({ lessons: [scheduled, confirmed], pushed: [] });
-    await job.runOnce(at('2026-10-04T10:00:00Z'));
+    await job.runOnce(at('2026-10-04T13:10:00Z'));
     expect(push.notifyAdmins).toHaveBeenCalledWith('lesson_needs_confirmation', confirmationPush(scheduled));
-    expect(queries.pushedSubjects).toHaveBeenCalledWith('lesson_needs_confirmation', at('2026-10-02T10:00:00Z'));
+    expect(queries.pushedSubjects).toHaveBeenCalledWith('lesson_needs_confirmation', at('2026-10-02T13:10:00Z'));
 
     const again = setup({ lessons: [scheduled], pushed: ['lesson-1'] });
-    expect(await again.job.runOnce(at('2026-10-04T10:05:00Z'))).toMatchObject({ pushed: 0 });
+    expect(await again.job.runOnce(at('2026-10-04T13:15:00Z'))).toMatchObject({ pushed: 0 });
     expect(again.push.notifyAdmins).not.toHaveBeenCalled();
   });
 });

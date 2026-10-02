@@ -13,13 +13,20 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
 
 const PATH = '/threads/%2B966501234567';
-const TEMPLATES = [template(), template({ key: 'renewal_due', status: 'not_submitted' })];
+const TEMPLATES = [
+  template(),
+  template({ key: 'renewal_due', status: 'not_submitted' }),
+  template({ key: 'teacher_lesson_reminder', params: ['teacher_name', 'lesson_slot'] }),
+];
+const LESSON = { id: 'l-1', starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
+type Gate = 'switch_off' | 'env_off' | null;
 
-function renderThread(open: boolean, messagingEnabled = true) {
+function renderThread(open: boolean, gate: Gate = null) {
   routeFetch(apiFetch, [
-    [PATH, detail([message()], { session_open: open })],
+    [PATH, { ...detail([message()], { session_open: open, guardian_id: 'g-1' }), lessons: [LESSON] }],
     ['/messaging/templates', TEMPLATES],
-    ['/settings', { ...SETTINGS, messaging_enabled: messagingEnabled }],
+    ['/messages/gate', { open: gate === null, reason: gate, queued: 0 }],
+    ['/settings', SETTINGS],
     ['/leads?', { items: [lead({ qualification: { student_name: 'سهيلة' } })], total: 1, page: 1, pageSize: 5 }],
   ]);
   renderWithClient(<ThreadPane phone={PHONE} listSearch={{ page: 1 }} />);
@@ -58,29 +65,35 @@ describe('thread composer inside the 24 h window (R-LEAD-02)', () => {
   });
 
   it('says messages wait in the queue while the kill switch is off', async () => {
-    renderThread(true, false);
+    renderThread(true, 'switch_off');
     expect(await screen.findByText(t.inbox.messagingOff)).toBeTruthy();
+  });
+
+  it('a gate closed on the server (env / WhatsApp not configured) is said too, even with the switch on', async () => {
+    renderThread(true, 'env_off');
+    expect(await screen.findByText(t.inbox.messagingOffServer)).toBeTruthy();
   });
 });
 
 describe('after the 24 h window: approved templates only', () => {
-  it('fixed notice, approved templates, {{1}} prefilled from the lead, every variable required', async () => {
+  it('fixed notice; this audience’s approved templates; the lesson time is picked, never typed (rule 6)', async () => {
     renderThread(false);
     expect(await screen.findByText(t.inbox.sessionClosed)).toBeTruthy();
     expect(screen.queryByRole('textbox', { name: t.inbox.composer.messageLabel })).toBeNull();
     const select = await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate });
     await waitFor(() => expect(within(select).getAllByRole('option')).toHaveLength(2)); // «—» + one approved
     expect(within(select).queryByText(t.templates.names.renewal_due)).toBeNull();
+    expect(within(select).queryByText(t.templates.names.teacher_lesson_reminder)).toBeNull();
     fireEvent.change(select, { target: { value: 'booking_confirmation_plain' } });
-    await waitFor(() =>
-      expect(screen.getByLabelText<HTMLInputElement>(t.inbox.composer.paramNames.student_names).value).toBe('سهيلة'),
-    );
+    const when = screen.getByLabelText<HTMLInputElement>(t.inbox.composer.paramNames.lesson_when);
+    expect(when.readOnly).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
-    expect(await screen.findByText(t.inbox.composer.required)).toBeTruthy();
+    expect((await screen.findAllByText(t.inbox.composer.pickLesson)).length).toBeGreaterThan(1);
     expect(apiSend).not.toHaveBeenCalled();
 
     apiSend.mockResolvedValue(message({ id: 'm-t', direction: 'outbound', status: 'queued' }));
-    fireEvent.change(screen.getByLabelText(t.inbox.composer.paramNames.lesson_when), { target: { value: 'الأحد 4 أكتوبر 17:00' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    expect(when.value).toBe('الأحد 4 أكتوبر 17:00');
     expect(screen.getByText('تم حجز حلقة سهيلة يوم الأحد 4 أكتوبر 17:00')).toBeTruthy(); // the preview
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     await waitFor(() =>
@@ -88,7 +101,21 @@ describe('after the 24 h window: approved templates only', () => {
         key: 'booking_confirmation_plain',
         params: { '1': 'سهيلة', '2': 'الأحد 4 أكتوبر 17:00' },
         clientRequestId: expect.any(String),
+        lessonId: 'l-1',
       }),
     );
+  });
+
+  it('an empty name is refused by its field’s name, not «المتغير»', async () => {
+    renderThread(false);
+    fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), {
+      target: { value: 'booking_confirmation_plain' },
+    });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    fireEvent.change(screen.getByLabelText(t.inbox.composer.paramNames.student_names), { target: { value: ' ' } });
+    fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
+    const name = t.inbox.composer.paramNames.student_names;
+    expect(await screen.findByText(t.inbox.composer.required.replace('{field}', name))).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalled();
   });
 });

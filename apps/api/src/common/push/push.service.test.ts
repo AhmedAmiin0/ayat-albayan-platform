@@ -64,4 +64,11 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
     };
     await expect(new PushService(db, transport).notifyAdmins('new_lead', event)).resolves.toBeUndefined();
   });
+
+  it('an event title replaces the kind’s title (a reschedule request)', async () => {
+    const { db, writes } = fakeDb([{ id: 'a1', push_tokens: [] }]);
+    const titled = { ...event, title: 'طلب تغيير ميعاد من أم سهيلة' };
+    await new PushService(db, vi.fn<PushTransport>()).notifyAdmins('new_message', titled);
+    expect(writes[0]?.value).toMatchObject({ title: 'طلب تغيير ميعاد من أم سهيلة', body: 'السلام عليكم' });
+  });
 });

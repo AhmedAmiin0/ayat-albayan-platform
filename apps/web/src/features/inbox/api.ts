@@ -1,4 +1,5 @@
 import type {
+  FollowUpNote,
   LeadQualification,
   LeadStatus,
   MessageView,
@@ -55,6 +56,9 @@ export const sendTemplate = ({ phone, ...body }: ThreadTemplate & { phone: strin
 /** M1: a failed row goes back to the queue (attempts 0). */
 export const retryMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/retry`);
 
+/** M3: the admin opened wa.me; the sender holds the row until they confirm (M2) or put it back (M1). */
+export const handOffMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/hand-off`);
+
 /** M2: the admin sent it from WhatsApp by hand (R-MSG-03); the sender never resends it. */
 export const markSentManually = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/sent-manually`);
 
@@ -65,6 +69,10 @@ export type InboxLead = LeadRow & {
   follow_up_paused: boolean;
   follow_up_stage: number;
   next_follow_up_at: string | null;
+  /** Why the due follow-up has not gone out (migration 144). */
+  follow_up_note: FollowUpNote | null;
+  /** «lead» = they sent «وقف»: resuming needs the admin's explicit confirm. */
+  follow_up_paused_by: 'lead' | 'admin' | null;
   updated_at: string;
 };
 

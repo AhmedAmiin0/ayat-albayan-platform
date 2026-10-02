@@ -3,11 +3,13 @@ import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
-import { failurePlan, messageLabel, readyToSend } from './send-plan';
+import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
+import { staleReason } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
-import type { TemplateRow, WaSent } from './whatsapp.types';
+import { WaError, type TemplateRow, type WaSent } from './whatsapp.types';
 
-export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'skipped';
+/** paused = the token is broken (auth error): the sender stops this pass. */
+export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'paused' | 'skipped';
 
 export interface SendJob {
   row: DueMessage;
@@ -17,16 +19,22 @@ export interface SendJob {
 }
 
 /**
- * Writing «sent» after Meta accepted is retried hard: losing it would send the message twice.
- * ponytail: if all tries fail the 2-min claim lease lapses and the row is resent; an outbox
- * write-ahead (wamid stored before the status) closes that window if it ever shows up.
+ * Writing «sent» after Meta accepted is retried hard. If all tries fail, the claim's SENDING mark
+ * stays on the row and the next pass hands it to the admin (UNCERTAIN) instead of resending.
  */
 const RECORD_DELAYS_MS = [500, 2_000] as const;
 
+/** A row still marked SENDING: a try was made and its outcome never recorded. */
+const UNRECORDED = new WaError('the last try was never recorded; check WhatsApp before resending', {
+  code: null,
+  status: 0,
+  uncertain: true,
+});
+
 /**
- * One queued row, end to end (docs/12 §3.3): expiry, claim, send, outcome. Never throws.
- * Idempotency: a row is claimed by compare-and-set before Meta is called, so two workers never
- * send it twice; producers dedupe the row itself by dedup_key.
+ * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness, claim, send, outcome.
+ * Never throws. Idempotency: a row is claimed by compare-and-set before Meta is called, so two
+ * workers never send it twice; producers dedupe the row itself by dedup_key.
  */
 @Injectable()
 export class MessageWorker {
@@ -52,9 +60,15 @@ export class MessageWorker {
   private async run({ row, template, now }: SendJob): Promise<SendOutcome> {
     const lessonStartsAt = row.lesson?.starts_at ?? null;
     if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
-      await this.queries.expire(row.id);
+      await this.queries.expire(row.id, { code: 'expired', text: 'expired before it was sent' });
       return 'expired';
     }
+    const stale = staleReason(row);
+    if (stale) {
+      await this.queries.expire(row.id, { code: 'stale', text: stale });
+      return 'stale';
+    }
+    if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now });
     if (!readyToSend(row, template)) return 'skipped';
     const attempts = await this.queries.claim({ id: row.id, attempts: row.attempts, now });
     if (attempts === null) return 'skipped';
@@ -72,16 +86,27 @@ export class MessageWorker {
   }
 
   private async failed(input: { row: DueMessage; error: unknown; attempts: number; now: Date }): Promise<SendOutcome> {
-    const { row } = input;
+    const { row, now } = input;
     const plan = failurePlan(input);
     await this.queries.failure(row.id, plan);
+    if (plan.attempts !== undefined) {
+      // The token, not the message: rows wait; one push a day (fixed in Business Manager).
+      this.log.error(`WhatsApp refused the token (${plan.error_code}); sending paused: ${plan.error_text}`);
+      await this.alert(row, `whatsapp_auth:${now.toISOString().slice(0, 10)}`);
+      return 'paused';
+    }
     if (plan.status === 'queued') return 'retry';
     this.log.warn(`message ${row.id} failed: ${plan.error_code} ${plan.error_text}`);
-    await this.push.notifyAdmins('reminder_failed', {
-      subject: row.id,
+    await this.alert(row, `${row.id}:${now.getTime()}`);
+    return 'failed';
+  }
+
+  /** reminder_failed, keyed per failed try: a row that fails again after the admin's retry pushes again. */
+  private alert(row: DueMessage, subject: string): Promise<void> {
+    return this.push.notifyAdmins('reminder_failed', {
+      subject,
       vars: { template: messageLabel(row), name: row.guardian?.name ?? row.lead?.name ?? row.phone_e164 },
       data: { phone: row.phone_e164, messageId: row.id },
     });
-    return 'failed';
   }
 }

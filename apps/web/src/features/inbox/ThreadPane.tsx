@@ -42,7 +42,11 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   if (!th) return <EmptyState title={t.inbox.noThread} />;
   const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
-  const context = { studentName: lead.data?.qualification.student_name ?? null, teacherName: th.teacher_name };
+  const context = {
+    studentName: lead.data?.qualification.student_name ?? null,
+    teacherName: th.teacher_name,
+    lessons: detail.data.pages[0]?.lessons ?? [],
+  };
 
   return (
     <section aria-labelledby={headingId} className="min-w-0">

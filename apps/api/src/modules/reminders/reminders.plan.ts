@@ -3,6 +3,7 @@ import {
   lessonReminder24hMessage,
   lessonReminderMessage,
   lessonWhenText,
+  localDayStart,
   reminderDue,
   RIYADH_TZ,
   teacherReminderMessage,
@@ -69,7 +70,9 @@ function guardianRows(lesson: ReminderLesson, input: ReminderPlanInput): QueuedM
     }
     if (input.dayBefore && reminderDue({ kind: 'day_before', startsAt, tz: guardian.tz, minutesBefore, now })) {
       const template = lessonReminder24hMessage({ ...message, lessonId: lesson.id });
-      rows.push(queuedRow({ ...to, template, dedupKey: `lesson_reminder_24h:${lesson.id}:${guardian.id}` }));
+      const dedupKey = `lesson_reminder_24h:${lesson.id}:${guardian.id}`;
+      // «بكرة» is only true until the lesson's day starts for the guardian: never sent later.
+      rows.push(queuedRow({ ...to, template, dedupKey, expiresAt: localDayStart(startsAt, guardian.tz) }));
     }
   }
   return rows;
@@ -95,8 +98,9 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
 
 /**
  * Every reminder due at `now`: same-day to each guardian (wording and time in the guardian's tz)
- * and to the teacher (teacher's tz), plus the day-before one when enabled. Each expires at the
- * lesson start, so a row the sender could not send in time is never sent late.
+ * and to the teacher (teacher's tz), plus the day-before one when enabled. Same-day ones expire at
+ * the lesson start, the day-before one at the guardian's midnight before it, so a row the sender
+ * could not send in time is never sent late.
  */
 export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
   return input.lessons
@@ -104,17 +108,16 @@ export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
     .flatMap((l) => [...guardianRows(l, input), ...teacherRow(l, input)]);
 }
 
-const DAY_MS = 24 * 60 * 60_000;
-
 /**
- * R-MOB-01 lesson_needs_confirmation: a lesson still `scheduled` (nobody confirmed it) that
- * starts within the next 24 h. PushService's dedup key (lesson id) makes it once per lesson.
+ * R-MOB-01 lesson_needs_confirmation (docs/12 §6): at the same-day reminder time
+ * (settings.reminder_minutes_before) the lesson is still `scheduled` — nobody confirmed it.
+ * PushService's dedup key (lesson id) makes it once per lesson.
  */
-export function needsConfirmation(lessons: readonly ReminderLesson[], now: Date): ReminderLesson[] {
-  const t = now.getTime();
+export function needsConfirmation(lessons: readonly ReminderLesson[], at: { now: Date; minutesBefore: number }): ReminderLesson[] {
+  const t = at.now.getTime();
   return lessons.filter((l) => {
     const start = Date.parse(l.starts_at);
-    return l.status === 'scheduled' && start > t && start - t <= DAY_MS;
+    return l.status === 'scheduled' && start > t && start - at.minutesBefore * 60_000 <= t;
   });
 }
 

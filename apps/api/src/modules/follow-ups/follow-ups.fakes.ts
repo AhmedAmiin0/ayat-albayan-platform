@@ -15,6 +15,7 @@ export function sampleLead(over: Partial<FollowUpLeadRow> = {}): FollowUpLeadRow
     last_inbound_at: '2026-10-01T10:00:00Z',
     created_at: '2026-09-30T08:00:00Z',
     next_follow_up_at: null,
+    follow_up_note: null,
     ...over,
   };
 }

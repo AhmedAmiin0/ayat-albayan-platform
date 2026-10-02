@@ -29,7 +29,7 @@ export function useThread(phone: string) {
 /** What the composer sends: session text, or an approved template with its params (H3 / H4). */
 export type Outgoing =
   | { kind: 'text'; text: string }
-  | { kind: 'template'; key: TemplateKey; params: TemplateParamsInput; preview: string };
+  | { kind: 'template'; key: TemplateKey; params: TemplateParamsInput; preview: string; lessonId?: string };
 
 export interface SendInput {
   out: Outgoing;
@@ -39,7 +39,8 @@ export interface SendInput {
 
 function body({ out, id }: SendInput) {
   if (out.kind === 'text') return { text: out.text, clientRequestId: id };
-  return { key: out.key, params: out.params, clientRequestId: id };
+  const lesson = out.lessonId ? { lessonId: out.lessonId } : {};
+  return { key: out.key, params: out.params, clientRequestId: id, ...lesson };
 }
 
 /**
@@ -66,11 +67,12 @@ export function useSendMessage(phone: string) {
   });
 }
 
-export type MessageAction = 'retry' | 'sent-manually';
+export type MessageAction = 'retry' | 'sent-manually' | 'hand-off';
 
 /**
- * POST /messages/:id/retry (failed → queued) or /sent-manually (the admin sent it from WhatsApp,
- * so the sender never sends it again). Not optimistic: the API decides the new state.
+ * POST /messages/:id/retry (failed → queued), /sent-manually (the admin sent it from WhatsApp, so
+ * the sender never sends it again) or /hand-off (wa.me opened: held until one of the other two).
+ * Not optimistic: the API decides the new state.
  */
 export function useMessageAction(phone: string, action: MessageAction) {
   const client = useQueryClient();

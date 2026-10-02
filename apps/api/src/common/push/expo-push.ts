@@ -4,7 +4,8 @@ import { fill } from '../../modules/report-pdf/pdf-text';
 
 // Expo push API shapes and the pure parts of sending (R-MOB-01).
 
-export const EXPO_PUSH_URL = 'https://exp.host/--/api/v2/push/send';
+/** Under EXPO_API_BASE («https://exp.host»). */
+export const EXPO_PUSH_PATH = '/--/api/v2/push/send';
 /** = apps/mobile/src/push/registerPush.ts ANDROID_CHANNEL, created before permission is asked. */
 export const ANDROID_CHANNEL = 'default';
 

@@ -1,6 +1,8 @@
 import { FOLLOW_UP_STATUSES } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { Dialog } from '@/components/ui/dialog';
 import { settingsQuery } from '@/features/messaging/api';
 import { t } from '@/lib/i18n';
 import { setFollowUpPaused, type InboxLead } from './api';
@@ -12,38 +14,50 @@ export interface FollowUpLineProps {
 }
 
 const statuses: readonly string[] = FOLLOW_UP_STATUSES;
+const f = t.followUps;
+const NOTES = { queued: f.queued, waiting_template: f.waitingTemplate, no_slots: f.noSlots } as const;
 
-/** What the follow-up automation will do next (R-LEAD-05), and the per-lead pause (L2). */
-function stateText(lead: InboxLead, total: number | undefined): string[] {
-  if (lead.follow_up_paused) return [t.followUps.paused];
+/**
+ * What the follow-up automation will do next (R-LEAD-05): who paused it, or why the due one has
+ * not gone out (in the queue, waiting for Meta's approval, no free slots), else when it is due.
+ */
+export function followUpText(lead: InboxLead, total: number | undefined): string[] {
+  if (lead.follow_up_paused) return [lead.follow_up_paused_by === 'lead' ? f.pausedByLead : f.paused];
+  if (!statuses.includes(lead.status)) return [f.none];
   const lines: string[] = [];
-  if (lead.next_follow_up_at && statuses.includes(lead.status)) {
-    lines.push(t.followUps.next.replace('{time}', fullTime(lead.next_follow_up_at)));
-  } else lines.push(t.followUps.none);
+  if (lead.follow_up_note) lines.push(NOTES[lead.follow_up_note]);
+  else lines.push(lead.next_follow_up_at ? f.next.replace('{time}', fullTime(lead.next_follow_up_at)) : f.none);
   if (lead.follow_up_stage > 0 && total) {
-    lines.push(t.followUps.stage.replace('{n}', String(lead.follow_up_stage)).replace('{total}', String(total)));
+    lines.push(f.stage.replace('{n}', String(lead.follow_up_stage)).replace('{total}', String(total)));
   }
   return lines;
 }
 
-/** The hamish note of the thread: the next automatic follow-up, or why there is none. */
+/**
+ * The hamish note of the thread and the per-lead pause (L2). A lead who sent «وقف» opted out of
+ * marketing: resuming asks first.
+ */
 export function FollowUpLine({ lead, onDone }: FollowUpLineProps) {
   const queryClient = useQueryClient();
   const settings = useQuery(settingsQuery);
+  const [confirming, setConfirming] = useState(false);
   const pause = useMutation({
     mutationFn: setFollowUpPaused,
     onSuccess: async () => {
+      setConfirming(false);
       onDone(t.inbox.followUpSaved);
       await queryClient.invalidateQueries({ queryKey: ['leads'] });
     },
     onError: () => onDone(t.common.error, 'error'),
   });
+  const resume = () => pause.mutate({ id: lead.id, paused: false });
+  const byLead = lead.follow_up_paused && lead.follow_up_paused_by === 'lead';
 
   return (
     <div className="grid gap-2">
-      <h3 className="text-sm font-semibold">{t.followUps.title}</h3>
+      <h3 className="text-sm font-semibold">{f.title}</h3>
       <div className="border-s-[3px] border-double border-s-gold-soft ps-3 text-xs text-ink-2">
-        {stateText(lead, settings.data?.follow_up_hours.length).map((line) => (
+        {followUpText(lead, settings.data?.follow_up_hours.length).map((line) => (
           <p key={line}>{line}</p>
         ))}
       </div>
@@ -52,10 +66,29 @@ export function FollowUpLine({ lead, onDone }: FollowUpLineProps) {
         variant="ghost"
         className="justify-self-start"
         disabled={pause.isPending}
-        onClick={() => pause.mutate({ id: lead.id, paused: !lead.follow_up_paused })}
+        onClick={() => (!lead.follow_up_paused ? pause.mutate({ id: lead.id, paused: true }) : byLead ? setConfirming(true) : resume())}
       >
-        {lead.follow_up_paused ? t.followUps.resume : t.followUps.pause}
+        {lead.follow_up_paused ? f.resume : f.pause}
       </Button>
+      {confirming && (
+        <Dialog
+          title={f.resumeLeadTitle}
+          glyph={{ tone: 'act', shape: 'hollow' }}
+          onClose={() => setConfirming(false)}
+          actions={
+            <>
+              <Button variant="secondary" onClick={() => setConfirming(false)}>
+                {t.common.cancel}
+              </Button>
+              <Button variant="danger-quiet" disabled={pause.isPending} onClick={resume}>
+                {f.resumeLeadYes}
+              </Button>
+            </>
+          }
+        >
+          <p className="text-sm text-ink-2">{f.resumeLeadConfirm}</p>
+        </Dialog>
+      )}
     </div>
   );
 }

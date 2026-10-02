@@ -33,16 +33,22 @@ describe('HttpWhatsappClient against recorded wa-stub answers (no network)', () 
     expect((err as WaError).info).toEqual(info);
   });
 
-  it('a 5xx without a Meta body, a network error or a timeout → code null (retryable)', async () => {
+  it('a 5xx without a Meta body or a refused connection → code null, safe to retry', async () => {
     const html = { status: 502, body: '<html>bad gateway</html>' };
     expect(await send(client(html).c).catch((e: WaError) => e.info)).toMatchObject({ code: null, status: 502 });
-    const down = send(client(new TypeError('fetch failed')).c);
-    await expect(down).rejects.toMatchObject({ info: { code: null, status: 0 }, message: expect.stringContaining('fetch failed') });
+    const refused = new TypeError('fetch failed', { cause: Object.assign(new Error('connect'), { code: 'ECONNREFUSED' }) });
+    const down = send(client(refused).c);
+    await expect(down).rejects.toMatchObject({ info: { code: null, status: 0, uncertain: false }, message: expect.stringContaining('fetch failed') });
+  });
+
+  it('a timeout or a dropped connection may have reached Meta → flagged uncertain (never resent blindly)', async () => {
     const slow = new HttpWhatsappClient(STUB_ENV, {
       timeoutMs: 5,
       fetch: (_u, init) => new Promise((_r, reject) => init.signal?.addEventListener('abort', () => reject(init.signal?.reason))),
     });
-    expect(await send(slow).catch((e: WaError) => e.info)).toEqual({ code: null, status: 0 });
+    expect(await send(slow).catch((e: WaError) => e.info)).toEqual({ code: null, status: 0, uncertain: true });
+    const reset = new TypeError('fetch failed', { cause: Object.assign(new Error('socket'), { code: 'ECONNRESET' }) });
+    await expect(send(client(reset).c)).rejects.toMatchObject({ info: { uncertain: true } });
   });
 
   it('not configured: every call throws code null / status 0 and nothing is requested', async () => {

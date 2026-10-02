@@ -23,8 +23,10 @@ const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString(
 const openThread = detail([inbound], { thread: { ...thread, last_inbound_at: minutesAgo(5) } });
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 
-async function open() {
-  mockApiFetch.mockResolvedValue(openThread);
+type Gate = { open: boolean; reason: 'switch_off' | 'env_off' | null; queued: number };
+
+async function open(gate: Gate = { open: true, reason: null, queued: 0 }) {
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? gate : openThread));
   const client = createTestQueryClient();
   await renderWithQuery(<ThreadScreen />, client);
   await screen.findByText(inbound.body ?? '');
@@ -54,7 +56,8 @@ test('inside 24 h: free text shows at once as queued, then becomes the API row',
   expect(screen.getByText(t.enums.messageStatus.queued)).toBeTruthy();
   expect(box().props.value).toBe('');
 
-  mockApiFetch.mockResolvedValue(detail([inbound, message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' })]));
+  const after = detail([inbound, message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' })]);
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : after));
   answer(message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' }));
   await waitFor(() => expect(cached(client).map((m) => m.id)).toEqual(['m1', 'srv']));
   expect(await screen.findByText(t.enums.messageStatus.sent)).toBeTruthy();
@@ -86,12 +89,14 @@ test('the same text sent again keeps its clientRequestId; an edited one gets a n
   expect((mockApiSend.mock.calls[2]?.[2] as { clientRequestId: string }).clientRequestId).not.toBe(ids[0]);
 });
 
-test('sending switched off: the row stays queued and the box says so', async () => {
-  mockApiSend.mockResolvedValue(message({ id: 'q1', body: 'مستنية', status: 'queued' }));
-  await open();
-  await fireEvent.changeText(box(), 'مستنية');
-  await fireEvent.press(screen.getByRole('button', { name: t.inbox.composer.send }));
+test('sending switched off: the box says messages wait in the queue', async () => {
+  await open({ open: false, reason: 'switch_off', queued: 3 });
   expect(await screen.findByText(t.inbox.messagingOff)).toBeTruthy();
+});
+
+test('a gate closed on the server is said too (the switch alone would not send)', async () => {
+  await open({ open: false, reason: 'env_off', queued: 0 });
+  expect(await screen.findByText(t.inbox.messagingOffServer)).toBeTruthy();
 });
 
 test('an empty box sends nothing', async () => {

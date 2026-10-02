@@ -24,7 +24,10 @@ const verify: TokenVerifier = async (token) => {
 
 function mocks() {
   return {
-    queries: { list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
+    queries: {
+      ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
+      lessons: vi.fn(async () => []),
+    },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     client: { configured: vi.fn(() => false), markRead: vi.fn() },
     gate: { open: vi.fn() },

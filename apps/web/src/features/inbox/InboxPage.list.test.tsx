@@ -72,4 +72,12 @@ describe('InboxPage thread list (R-LEAD-02)', () => {
     renderInbox({ unread: true, page: 1 }, []);
     expect(await screen.findByRole('heading', { name: t.inbox.emptyUnread })).toBeTruthy();
   });
+
+  it('a thread whose last send failed says so on the row (the admin’s turn), with the phone’s end', async () => {
+    const failed = thread({ display_name: 'أم نور', last_direction: 'outbound', last_status: 'failed', last_body: 'تذكير' });
+    renderInbox({ page: 1 }, [failed]);
+    const row = await screen.findByRole('link', { name: new RegExp(t.inbox.failedLast) });
+    expect(within(row).getByText(t.enums.messageStatus.failed)).toBeTruthy();
+    expect(within(row).getByText('…4567')).toBeTruthy();
+  });
 });

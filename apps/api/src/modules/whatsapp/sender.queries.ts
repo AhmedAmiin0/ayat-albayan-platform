@@ -1,10 +1,13 @@
 import type { Json } from '@ab/db';
+import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { CLAIM_LEASE_MS, reportIdOf, type FailurePlan } from './send-plan';
+import { stampDelivered } from './delivered';
+import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
+import type { StaleLead } from './send-stale';
 import type { TemplateRow } from './whatsapp.types';
 
-/** A queued outbound row with what expiry and the failure push need. */
+/** A queued outbound row with what expiry, staleness and the failure push need. */
 export interface DueMessage {
   id: string;
   phone_e164: string;
@@ -17,27 +20,15 @@ export interface DueMessage {
   dedup_key: string | null;
   attempts: number;
   expires_at: string | null;
-  lesson: { starts_at: string } | null;
+  /** SENDING = a previous try was claimed and never resolved (send-plan). */
+  error_code: string | null;
+  lesson: { starts_at: string; status: LessonStatus } | null;
   guardian: { name: string } | null;
-  lead: { name: string | null } | null;
+  lead: (StaleLead & { name: string | null }) | null;
 }
 
-const DUE_COLUMNS = 'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, attempts, expires_at, lesson:lessons(starts_at), guardian:guardians(name), lead:leads(name)';
-
-/**
- * The delivery side effects, for a send and for the admin's manual send (R-MSG-03): the lead's
- * last_outbound_at, and lesson_reports.sent_at for a report_ready row (id = dedup key suffix).
- */
-export async function stampDelivered(db: Db, input: { leadId: string | null; dedupKey: string | null; at: string }): Promise<void> {
-  if (input.leadId) {
-    const { error } = await db.from('leads').update({ last_outbound_at: input.at }).eq('id', input.leadId);
-    if (error) throw new Error(`lead last_outbound_at failed: ${error.message}`);
-  }
-  const reportId = reportIdOf(input.dedupKey);
-  if (!reportId) return;
-  const { error } = await db.from('lesson_reports').update({ sent_at: input.at }).eq('id', reportId).is('sent_at', null);
-  if (error) throw new Error(`report sent_at failed: ${error.message}`);
-}
+const DUE_COLUMNS =
+  'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, attempts, expires_at, error_code, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
 @Injectable()
@@ -72,12 +63,17 @@ export class SenderQueries {
     return data;
   }
 
-  /** attempts n → n+1 and a lease; null when another worker (or the admin) got there first. */
+  /**
+   * attempts n → n+1, a lease, and error_code SENDING written ahead of the Meta call: if the outcome
+   * is never recorded (the «sent» write failed, the process died) the next pass sees SENDING and
+   * asks the admin instead of sending again. null when another worker (or the admin) got there first.
+   */
   async claim(input: { id: string; attempts: number; now: Date }): Promise<number | null> {
     const attempts = input.attempts + 1;
+    const lease = new Date(input.now.getTime() + CLAIM_LEASE_MS).toISOString();
     const { data, error } = await this.db
       .from('messages')
-      .update({ attempts, next_attempt_at: new Date(input.now.getTime() + CLAIM_LEASE_MS).toISOString() })
+      .update({ attempts, next_attempt_at: lease, error_code: SENDING })
       .eq('id', input.id)
       .eq('status', 'queued')
       .eq('attempts', input.attempts)
@@ -96,8 +92,9 @@ export class SenderQueries {
       .eq('status', 'queued')
       .select('id');
     if (error) throw new Error(`message sent write failed: ${error.message}`);
+    if (data.length === 0) return false; // the admin's manual send already stamped the delivery
     await stampDelivered(this.db, { leadId: input.row.lead_id, dedupKey: input.row.dedup_key, at });
-    return data.length > 0;
+    return true;
   }
 
   async failure(id: string, plan: FailurePlan): Promise<void> {
@@ -105,11 +102,14 @@ export class SenderQueries {
     if (error) throw new Error(`message failure write failed: ${error.message}`);
   }
 
-  /** Past its use (a reminder after the lesson started): failed, never sent, no push. */
-  async expire(id: string): Promise<void> {
+  /**
+   * Never sent, no push: past its use (`expired`: a reminder after the lesson started) or no longer
+   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in error_text).
+   */
+  async expire(id: string, why: { code: 'expired' | 'stale'; text: string }): Promise<void> {
     const { error } = await this.db
       .from('messages')
-      .update({ status: 'failed', error_code: 'expired', error_text: 'expired before it was sent', next_attempt_at: null })
+      .update({ status: 'failed', error_code: why.code, error_text: why.text, next_attempt_at: null })
       .eq('id', id)
       .eq('status', 'queued');
     if (error) throw new Error(`message expiry write failed: ${error.message}`);

@@ -1,8 +1,16 @@
-import type { TemplateParamsInput, TemplateView } from '@ab/shared';
+import {
+  forAudience as audienceOf,
+  lessonParams,
+  LESSON_TIME_PARAMS,
+  type TemplateParamsInput,
+  type TemplateView,
+  type ThreadLesson,
+} from '@ab/shared';
 import { t } from '@/lib/i18n';
 
 // The inbox template composer's form (R-LEAD-02, docs/12 H4): {{1}}…{{3}} by position, plus the
-// URL button's suffix (the Meet code / Jitsi room) when the template has one.
+// URL button's suffix (the Meet code / Jitsi room) when the template has one. Lesson times come
+// from a picked lesson, never typed (rule 6).
 
 export type ParamSlot = '1' | '2' | '3';
 export type ParamValues = Partial<Record<ParamSlot | 'button', string>>;
@@ -11,11 +19,11 @@ const SLOTS: readonly ParamSlot[] = ['1', '2', '3'];
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
 /** The body variables a template takes, by position, with their human names. */
-export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlot; label: string }[] {
-  return SLOTS.slice(0, tpl.params.length).map((slot, i) => ({
-    slot,
-    label: NAMES[tpl.params[i] ?? ''] ?? t.inbox.composer.param.replace('{n}', slot),
-  }));
+export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlot; label: string; fromLesson: boolean }[] {
+  return SLOTS.slice(0, tpl.params.length).map((slot, i) => {
+    const name = tpl.params[i] ?? '';
+    return { slot, label: NAMES[name] ?? t.inbox.composer.param.replace('{n}', slot), fromLesson: LESSON_TIME_PARAMS.includes(name) };
+  });
 }
 
 /** The URL button's address with {{1}} in it, or null when the template has none. */
@@ -24,17 +32,19 @@ export function urlButton(tpl: Pick<TemplateView, 'buttons'>): string | null {
   return button?.type === 'url' && button.url.includes('{{1}}') ? button.url : null;
 }
 
+/** Teacher templates go to teachers only, and a teacher gets nothing else (docs/12 §2.1). */
+export const forAudience = (tpl: Pick<TemplateView, 'key'>, teacher: boolean): boolean => audienceOf(tpl.key, teacher);
+
 export interface PrefillContext {
   /** qualification.student_name of the thread's lead. */
   studentName?: string | null;
   /** The thread is a teacher's. */
   teacherName?: string | null;
+  /** The guardian's / teacher's next open lessons (ThreadDetail.lessons). */
+  lessons?: readonly ThreadLesson[];
 }
 
-/**
- * What the thread already knows. Lesson times are not prefilled: the inbox has no lesson to read
- * them from. TODO(R-LEAD-02): pick the guardian's next lesson once ThreadDetail carries it.
- */
+/** What the thread already knows: the student's or the teacher's name. */
 export function prefillParams(tpl: Pick<TemplateView, 'params'>, ctx: PrefillContext): ParamValues {
   const known: Record<string, string | null | undefined> = {
     student_names: ctx.studentName,
@@ -49,6 +59,10 @@ export function prefillParams(tpl: Pick<TemplateView, 'params'>, ctx: PrefillCon
   });
   return out;
 }
+
+/** The picked lesson's values: its time in the recipient's tz, the names, the meeting code. */
+export const lessonValues = (tpl: Pick<TemplateView, 'params' | 'buttons'>, lesson: ThreadLesson): ParamValues =>
+  lessonParams(tpl, lesson);
 
 /** Every variable and the button suffix are required (Meta rejects a missing one: 132000). */
 export function missingParams(tpl: Pick<TemplateView, 'params' | 'buttons'>, values: ParamValues): (ParamSlot | 'button')[] {

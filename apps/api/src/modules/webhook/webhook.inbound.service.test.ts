@@ -82,7 +82,7 @@ describe('InboundService — replays', () => {
   it('a replayed «نعم» confirms once', async () => {
     const s = services();
     s.queries.identify.mockResolvedValue({ ...nobody(), guardian: { id: GUARDIAN_ID, name: 'أم سهيلة' } });
-    s.queries.nextScheduledLesson.mockResolvedValue('00000000-0000-4000-8000-0000000000a1');
+    s.queries.recentLessonOutbound.mockResolvedValue('00000000-0000-4000-8000-0000000000a1');
     await s.inbound.handle(event({ body: 'نعم' }));
     await s.inbound.handle(event({ body: 'نعم' }));
     expect(s.lessons.confirm).toHaveBeenCalledTimes(1);

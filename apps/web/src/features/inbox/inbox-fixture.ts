@@ -59,6 +59,7 @@ export function message(patch: Partial<MessageView> = {}): MessageView {
     sent_manually_at: null,
     created_at: '2026-10-01T10:00:00Z',
     click_to_chat: null,
+    lesson: null,
     ...patch,
   };
 }
@@ -67,6 +68,7 @@ export const detail = (messages: MessageView[], patch: Partial<ThreadView> = {})
   thread: thread(patch),
   messages,
   has_more: false,
+  lessons: [],
 });
 
 export function template(patch: Partial<TemplateView> = {}): TemplateView {
@@ -105,6 +107,8 @@ export function lead(patch: Partial<InboxLead> = {}): InboxLead {
     follow_up_paused: false,
     follow_up_stage: 0,
     next_follow_up_at: null,
+    follow_up_note: null,
+    follow_up_paused_by: null,
     updated_at: '2026-10-01T10:00:00Z',
     ...patch,
   };

@@ -14,6 +14,9 @@ const QUALITY: Record<string, string | undefined> = t.templates.qualityScore;
 
 export const templateName = (key: string): string => NAMES[key] ?? key;
 
+/** Stacked rows (< 640px) drop the table head: each value keeps its label inline. */
+const Label = ({ text }: { text: string }) => <span className="text-ink-3 sm:hidden">{text}: </span>;
+
 /** R-MSG-01 health table: name + Meta name, category, status (+ Meta's reason), quality, checked. */
 export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) => void }) {
   return col.columns([
@@ -29,7 +32,12 @@ export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) =>
     }),
     col.accessor('category', {
       header: () => t.templates.category,
-      cell: (c) => <span className="text-ink-2">{t.enums.templateCategory[c.getValue()]}</span>,
+      cell: (c) => (
+        <span className="text-ink-2">
+          <Label text={t.templates.category} />
+          {t.enums.templateCategory[c.getValue()]}
+        </span>
+      ),
       meta: { className: 'max-sm:order-3' },
     }),
     col.accessor('status', {
@@ -46,26 +54,50 @@ export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) =>
     }),
     col.accessor('quality', {
       header: () => t.templates.quality,
-      cell: (c) => <span className="text-ink-2">{QUALITY[c.getValue() ?? 'UNKNOWN'] ?? c.getValue()}</span>,
+      // Meta's quality only means something for an approved template; a rejected one shows «—».
+      cell: (c) => (
+        <span className="text-ink-2">
+          <Label text={t.templates.quality} />
+          {c.row.original.status === 'approved' ? (QUALITY[c.getValue() ?? 'UNKNOWN'] ?? c.getValue()) : '—'}
+        </span>
+      ),
       meta: { className: 'max-sm:order-4' },
     }),
     col.accessor('last_checked_at', {
       header: () => t.templates.lastChecked,
       cell: (c) => {
         const at = c.getValue();
-        return at ? <time dateTime={at} className="tabular-nums text-ink-2">{fullTime(at)}</time> : <span className="text-ink-3">{t.templates.neverChecked}</span>;
+        return (
+          <span>
+            <Label text={t.templates.lastChecked} />
+            {at ? (
+              <time dateTime={at} className="tabular-nums text-ink-2">
+                {fullTime(at)}
+              </time>
+            ) : (
+              <span className="text-ink-3">{t.templates.neverChecked}</span>
+            )}
+          </span>
+        );
       },
       meta: { className: 'max-sm:order-5' },
     }),
     col.display({
       id: 'actions',
       header: () => t.templates.actions,
-      cell: (c) =>
-        canSubmit(c.row.original) ? (
-          <Button size="sm" variant="secondary" onClick={() => onSubmit(c.row.original)}>
+      // A PDF-header template can't be submitted from here (409 needs_manual_submit): say where instead.
+      cell: (c) => {
+        const tpl = c.row.original;
+        if (!canSubmit(tpl)) return null;
+        if (tpl.header_format === 'document') {
+          return <p className="max-w-[32ch] text-2xs whitespace-normal text-ink-2">{t.templates.manualSubmit}</p>;
+        }
+        return (
+          <Button size="sm" variant="secondary" onClick={() => onSubmit(tpl)}>
             {t.templates.submit}
           </Button>
-        ) : null,
+        );
+      },
       meta: { className: 'w-px max-sm:order-6', headClassName: 'w-px' },
     }),
   ]);

@@ -1,14 +1,20 @@
-import { FOLLOW_UP_STATUSES } from '@ab/shared';
+import { FOLLOW_UP_STATUSES, type FollowUpNote } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { QueuedMessage } from '../reminders/queued-row';
 import { approvedTemplates, queueMessages } from '../reminders/reminders.queries';
 import { readAll } from '../scheduling/read-all';
 import { dbError } from '../teachers/http';
-import type { FollowUpLeadRow } from './follow-ups.plan';
+import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
 
 const LEAD_SELECT =
-  'id, phone_e164, tz, qualification, status, follow_up_paused, follow_up_stage, last_inbound_at, created_at, next_follow_up_at' as const;
+  'id, phone_e164, tz, qualification, status, follow_up_paused, follow_up_stage, last_inbound_at, created_at, next_follow_up_at, follow_up_note' as const;
+
+/** leads columns the job keeps current for the lead panel (followUps.next / followUps.note). */
+export interface LeadFollowUpState {
+  next_follow_up_at: string | null;
+  follow_up_note: FollowUpNote | null;
+}
 
 export interface AdvanceInput {
   id: string;
@@ -51,12 +57,26 @@ export class FollowUpsQueries {
     return data.map((t) => t.id);
   }
 
-  /** Keeps leads.next_follow_up_at = the computed due time, for the lead drawer (followUps.next). */
-  async setNext(id: string, at: Date | null): Promise<void> {
-    const { error } = await this.db
-      .from('leads')
-      .update({ next_follow_up_at: at?.toISOString() ?? null })
-      .eq('id', id);
+  /** The row already queued for this follow-up (its dedup key), if any. */
+  async stageRow(dedupKey: string): Promise<StageRow | null> {
+    const { data, error } = await this.db
+      .from('messages')
+      .select('id, status, error_code')
+      .eq('dedup_key', dedupKey)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** Frees the key of a follow-up that expired / went stale unsent, so fresh slots can go out. */
+  async drop(id: string): Promise<void> {
+    const { error } = await this.db.from('messages').delete().eq('id', id).eq('status', 'failed');
+    if (error) throw dbError(error);
+  }
+
+  /** Keeps next_follow_up_at (the computed due time) and follow_up_note current for the lead panel. */
+  async sync(id: string, state: LeadFollowUpState): Promise<void> {
+    const { error } = await this.db.from('leads').update(state).eq('id', id);
     if (error) throw dbError(error);
   }
 
@@ -64,7 +84,11 @@ export class FollowUpsQueries {
   async advance(input: AdvanceInput): Promise<boolean> {
     const { data, error } = await this.db
       .from('leads')
-      .update({ follow_up_stage: input.stage + 1, next_follow_up_at: input.next?.toISOString() ?? null })
+      .update({
+        follow_up_stage: input.stage + 1,
+        next_follow_up_at: input.next?.toISOString() ?? null,
+        follow_up_note: null,
+      })
       .eq('id', input.id)
       .eq('follow_up_stage', input.stage)
       .select('id');

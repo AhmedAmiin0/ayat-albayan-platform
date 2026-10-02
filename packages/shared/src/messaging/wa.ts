@@ -57,3 +57,24 @@ const RETRYABLE = new Set([1, 2, 4, 80007, 130429, 131000, 131016, 131048, 13105
 export function isRetryableWaError(code: number | null | undefined): boolean {
   return code === null || code === undefined || RETRYABLE.has(code);
 }
+
+/**
+ * The access token expired or lost its permissions (190, 10, 200): every send fails the same way
+ * until an admin fixes it in Business Manager, so the sender stops instead of failing each row.
+ */
+const AUTH = new Set([10, 190, 200]);
+
+export function isWaAuthError(code: number | null | undefined): boolean {
+  return code !== null && code !== undefined && AUTH.has(code);
+}
+
+/**
+ * messages.error_code values where the admin's «جرّب تاني» can't help: not on WhatsApp, the 24 h
+ * window closed (a template is needed), too late for the lesson, no longer wanted, or already
+ * handed to the admin's own WhatsApp (that prompt answers it).
+ */
+const RETRY_POINTLESS = new Set(['131026', '131047', 'expired', 'stale', 'handed_off']);
+
+export function canRetryCode(code: string | null | undefined): boolean {
+  return !RETRY_POINTLESS.has(code ?? '');
+}

@@ -9,7 +9,14 @@ describe('Phase 4 messaging settings (migration 142, docs/12 §2)', () => {
       reminder_minutes_before: 60,
       reminder_24h_enabled: false,
       messaging_enabled: false,
+      crm_cutover_done: false,
     });
+  });
+
+  it('the CRM cut-over flag is a boolean, false until the owner says the number moved', () => {
+    expect(readSettings([{ key: 'crm_cutover_done', value: true }]).crm_cutover_done).toBe(true);
+    expect(readSettings([{ key: 'crm_cutover_done', value: 'yes' }]).crm_cutover_done).toBe(false);
+    expect(settingsChanges(settingsUpdateSchema.parse({ crmCutoverDone: true }))).toEqual({ crm_cutover_done: true });
   });
 
   it('valid stored values win', () => {

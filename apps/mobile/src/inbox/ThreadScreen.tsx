@@ -94,7 +94,7 @@ export function ThreadScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <MessageList phone={phone} query={query} />
-          <Composer phone={phone} thread={thread} />
+          <Composer phone={phone} thread={thread} lessons={query.data.pages[0]?.lessons ?? []} />
         </KeyboardAvoidingView>
       ) : query.isError ? (
         <ErrorState onRetry={() => void query.refetch()} />

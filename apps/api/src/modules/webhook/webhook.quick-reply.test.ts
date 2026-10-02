@@ -34,24 +34,47 @@ describe('confirm by reply (R-SCH-03)', () => {
   it('ignores a replied-to message sent to another phone', async () => {
     const s = asGuardian();
     s.queries.outboundByWaId.mockResolvedValue(outbound({ lesson_id: OTHER_LESSON, phone_e164: '+201001234567' }));
-    s.queries.nextScheduledLesson.mockResolvedValue(LESSON_ID);
+    s.queries.recentLessonOutbound.mockResolvedValue(LESSON_ID);
     await s.inbound.handle(event({ body: 'نعم', replyTo: 'wamid.OUT1' }));
     expect(s.lessons.confirm).toHaveBeenCalledWith({ lessonId: LESSON_ID, actor: null });
   });
 
-  it('a plain «تمام» confirms the guardian’s next scheduled lesson', async () => {
+  it('a plain «تمام» confirms the open lesson we messaged them about in the last 48 h', async () => {
     const s = asGuardian();
-    s.queries.nextScheduledLesson.mockResolvedValue(LESSON_ID);
+    s.queries.recentLessonOutbound.mockResolvedValue(LESSON_ID);
     await s.inbound.handle(event({ body: 'تمام' }));
-    expect(s.queries.nextScheduledLesson).toHaveBeenCalledWith(GUARDIAN_ID, AT);
+    const since = new Date(AT.getTime() - 48 * 3_600_000);
+    expect(s.queries.recentLessonOutbound).toHaveBeenCalledWith({ phone: '+966501234567', since });
     expect(s.lessons.confirm).toHaveBeenCalledWith({ lessonId: LESSON_ID, actor: null });
   });
 
-  it('nothing to confirm (a lead, or no lesson waiting): only stored', async () => {
-    const s = services();
+  it('a plain «تمام» with no lesson message in 48 h: only stored, no lesson linked', async () => {
+    const s = asGuardian();
     await s.inbound.handle(event({ body: 'تمام' }));
     expect(s.lessons.confirm).not.toHaveBeenCalled();
+    expect(s.queries.stored[0]?.lesson_id).toBeNull();
+  });
+
+  it('nothing to confirm for a lead or a teacher: only stored, no lookup', async () => {
+    for (const who of [nobody(), { ...nobody(), teacher: { id: 't1', name: 'أ. فاطمة' } }]) {
+      const s = services();
+      s.queries.identify.mockResolvedValue(who);
+      await s.inbound.handle(event({ body: 'تمام', replyKey: `confirm:${LESSON_ID}` }));
+      expect(s.lessons.confirm).not.toHaveBeenCalled();
+      expect(s.queries.recentLessonOutbound).not.toHaveBeenCalled();
+      expect(s.queries.stored).toHaveLength(1);
+    }
+  });
+
+  it('a payload lesson that is not theirs (or no longer exists) is neither confirmed nor linked', async () => {
+    const s = asGuardian();
+    s.queries.guardianLesson.mockResolvedValue(false);
+    await s.inbound.handle(event({ type: 'button', body: 'تمام، هنحضر', replyKey: `confirm:${OTHER_LESSON}` }));
+    expect(s.queries.guardianLesson).toHaveBeenCalledWith({ lessonId: OTHER_LESSON, guardianId: GUARDIAN_ID });
+    expect(s.lessons.confirm).not.toHaveBeenCalled();
     expect(s.queries.stored).toHaveLength(1);
+    expect(s.queries.stored[0]?.lesson_id).toBeNull();
+    expect(s.push.notifyAdmins).toHaveBeenCalled();
   });
 
   it('a lesson that can no longer be confirmed is logged, not an error', async () => {
@@ -87,7 +110,7 @@ describe('reschedule and stop', () => {
     const s = services();
     s.leads.upsertByPhone.mockResolvedValue(lead({ id: NEW_LEAD_ID }));
     await s.inbound.handle(event({ type: 'button', body: 'وقف الرسايل', replyKey: `stop:${NEW_LEAD_ID}` }));
-    expect(s.queries.updateLead).toHaveBeenCalledWith(NEW_LEAD_ID, { follow_up_paused: true });
+    expect(s.queries.updateLead).toHaveBeenCalledWith(NEW_LEAD_ID, { follow_up_paused: true, follow_up_paused_by: 'lead' });
     expect(s.audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'leads', action: 'follow_up_paused' }));
   });
 

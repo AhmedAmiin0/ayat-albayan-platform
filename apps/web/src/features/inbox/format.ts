@@ -61,6 +61,19 @@ export function listTime(iso: string, now: Date = new Date()): string {
 }
 
 export const clockText = (iso: string): string => clock.format(new Date(iso));
+
+/** A bubble's time: «05:53» today, «1 أكتوبر 05:53» another day (the 24 h window needs the day). */
+export function stampText(iso: string, now: Date = new Date()): string {
+  const at = new Date(iso);
+  return at.toDateString() === now.toDateString() ? clock.format(at) : `${dayMonth.format(at)} ${clock.format(at)}`;
+}
+
+const CITIES: Record<string, string | undefined> = t.tz;
+
+/** «المواعيد بتوقيت الرياض»: the zone every time on the page is shown in (the viewer's). */
+export function timesInText(tz: string = Intl.DateTimeFormat().resolvedOptions().timeZone): string {
+  return t.inbox.timesIn.replace('{city}', CITIES[tz] ?? tz);
+}
 export const fullTime = (iso: string): string => full.format(new Date(iso));
 
 /** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message. */

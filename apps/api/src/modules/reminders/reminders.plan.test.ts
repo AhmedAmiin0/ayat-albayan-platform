@@ -94,9 +94,11 @@ describe('planReminders: day before (R-MSG-02, R-SCH-03)', () => {
     ]);
   });
 
-  it('carries confirm / reschedule payloads for this lesson and expires at the start', () => {
-    const [row] = dayBefore('2026-10-03T14:00:00Z');
-    expect(row).toMatchObject({ template_key: 'lesson_reminder_24h', expires_at: '2026-10-04T14:00:00.000Z' });
+  it('carries confirm / reschedule payloads; expires when the lesson day starts for the guardian («بكرة» stays true)', () => {
+    const [riyadh, london] = dayBefore('2026-10-03T14:00:00Z');
+    expect(riyadh).toMatchObject({ template_key: 'lesson_reminder_24h', expires_at: '2026-10-03T21:00:00.000Z' });
+    expect(london).toMatchObject({ expires_at: '2026-10-03T23:00:00.000Z' });
+    const row = riyadh;
     expect(row?.template_params).toEqual({
       '1': 'سهيلة ومريم',
       '2': '17:00',

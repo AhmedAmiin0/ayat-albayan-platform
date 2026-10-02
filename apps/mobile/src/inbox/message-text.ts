@@ -1,4 +1,4 @@
-import { clockTime, type MessageView, SESSION_WINDOW_MS } from '@ab/shared';
+import { clockTime, type MessageView, SESSION_WINDOW_MS, type ThreadView } from '@ab/shared';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 
@@ -30,6 +30,15 @@ export function mediaLine(m: Pick<MessageView, 'body' | 'media_mime'>): string |
 export function templateLine(key: string): string {
   const names: Record<string, string> = t.templates.names;
   return t.inbox.templateLine.replace('{name}', names[key] ?? key);
+}
+
+/** A thread row's last message: «إنت: …» for ours, media and templates named. */
+export function threadPreview(th: ThreadView): string {
+  const media = th.last_media_mime ? t.inbox.media[mediaKind(th.last_media_mime)] : null;
+  const text = media
+    ? [media, th.last_body].filter(Boolean).join(': ')
+    : (th.last_body ?? (th.last_template_key ? templateLine(th.last_template_key) : t.inbox.media.other));
+  return th.last_direction === 'outbound' ? `${t.inbox.you} ${text}` : text;
 }
 
 export function deviceTimeZone(): string {

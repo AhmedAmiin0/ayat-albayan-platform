@@ -1,4 +1,4 @@
-import { MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
+import { canRetryCode, MAX_SEND_ATTEMPTS, type MessageView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { errorText, fullTime } from './format';
 
@@ -16,6 +16,7 @@ const at = (template: string, iso: string) => template.replace('{time}', fullTim
  */
 export function outboundNotes(m: MessageView, o: NotesInput): string[] {
   if (m.direction !== 'outbound') return [];
+  if (isHandedOff(m)) return []; // MessageActions asks «بعتّها؟» instead
   if (m.status === 'failed') return [t.messages.errorLine.replace('{reason}', errorText(m))];
   if (m.status === 'sent_manually') return m.sent_manually_at ? [at(t.messages.sentManuallyAt, m.sent_manually_at)] : [];
   return m.status === 'queued' ? queuedNotes(m, o) : [];
@@ -27,6 +28,8 @@ function queuedNotes(m: MessageView, o: NotesInput): string[] {
   else if (m.scheduled_for && Date.parse(m.scheduled_for) > o.now.getTime()) {
     notes.push(at(t.messages.queuedFor, m.scheduled_for));
   }
+  // Claimed by the sender right now (its lease, not a retry time): say so instead of «المحاولة الجاية».
+  if (m.error_code === 'sending') return [...notes, t.messages.sendingNow];
   if (m.attempts > 0) {
     notes.push(t.messages.attempts.replace('{n}', String(m.attempts)).replace('{max}', String(MAX_SEND_ATTEMPTS)));
     if (m.error_code) notes.push(t.messages.errorLine.replace('{reason}', errorText(m)));
@@ -45,7 +48,14 @@ export function deliveryTitle(m: MessageView): string {
   return steps.flatMap(([text, iso]) => (iso ? [at(text, iso)] : [])).join(' · ');
 }
 
-/** Retry (M1) is for failed rows; sending by hand (M2) for any outbound row still not out. */
-export const canRetry = (m: MessageView): boolean => m.direction === 'outbound' && m.status === 'failed';
+/** The admin opened wa.me for it (M3): the row waits for their «بعتّها؟» answer. */
+export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' && m.error_code === 'handed_off';
+
+/**
+ * Retry (M1) is for failed rows where trying again can help (not «not on WhatsApp», a closed 24 h
+ * window, too late, or a hand-off); sending by hand (M2) for any outbound row still not out.
+ */
+export const canRetry = (m: MessageView): boolean =>
+  m.direction === 'outbound' && m.status === 'failed' && canRetryCode(m.error_code);
 export const canSendByHand = (m: MessageView): boolean =>
   m.direction === 'outbound' && (m.status === 'failed' || m.status === 'queued') && !!m.click_to_chat;

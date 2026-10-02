@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
 import { message } from './inbox-fixture';
-import { canRetry, canSendByHand, deliveryTitle, outboundNotes } from './message-notes';
+import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 
 const NOW = new Date('2026-10-01T12:00:00Z');
 const out = (patch: Parameters<typeof message>[0]) => message({ id: 'm-out', direction: 'outbound', ...patch });
@@ -32,6 +32,15 @@ describe('outbound notes (R-MSG-05)', () => {
     expect(notes[2]).toMatch(/^المحاولة الجاية /);
   });
 
+  it('claimed by the sender right now: «بتتبعت دلوقتي», not the lease as «المحاولة الجاية»', () => {
+    const row = out({ status: 'queued', attempts: 1, error_code: 'sending', next_attempt_at: '2026-10-01T12:02:00Z' });
+    expect(outboundNotes(row, { waitingTemplate: false, now: NOW })).toEqual([t.messages.sendingNow]);
+  });
+
+  it('a hand-off has no error line: the «بعتّها؟» question stands in for it', () => {
+    expect(outboundNotes(out({ status: 'failed', error_code: 'handed_off' }), { waitingTemplate: false, now: NOW })).toEqual([]);
+  });
+
   it('sent by hand says when', () => {
     const notes = outboundNotes(out({ status: 'sent_manually', sent_manually_at: '2026-10-01T11:00:00Z' }), {
       waitingTemplate: false,
@@ -56,5 +65,14 @@ describe('delivery title and actions', () => {
     expect(canSendByHand(out({ status: 'failed', click_to_chat: null }))).toBe(false);
     expect(canSendByHand(out({ status: 'sent', click_to_chat: link }))).toBe(false);
     expect(canSendByHand(message({ click_to_chat: link }))).toBe(false);
+  });
+
+  it('no «جرّب تاني» where it cannot help; a hand-off is answered by its own question', () => {
+    for (const code of ['131026', '131047', 'expired', 'stale', 'handed_off']) {
+      expect(canRetry(out({ status: 'failed', error_code: code }))).toBe(false);
+    }
+    expect(canRetry(out({ status: 'failed', error_code: 'uncertain' }))).toBe(true);
+    expect(isHandedOff(out({ status: 'failed', error_code: 'handed_off' }))).toBe(true);
+    expect(isHandedOff(out({ status: 'queued', error_code: 'handed_off' }))).toBe(false);
   });
 });

@@ -1,7 +1,9 @@
 import type { TablesInsert } from '@ab/db';
+import type { ThreadLesson, ThreadView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import type { MessageRow } from '../whatsapp/message.mapper';
+import type { MessageRow, ThreadMessageRow } from '../whatsapp/message.mapper';
+import { upcomingLessons } from './thread-lessons';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 
 export interface ThreadListFilter {
@@ -39,13 +41,18 @@ export class ThreadsQueries {
     return data;
   }
 
-  /** Newest first, `limit + 1` rows so the caller knows whether older ones exist. */
-  async messages(input: { phone: string; before?: string; limit: number }): Promise<MessageRow[]> {
-    let query = this.db.from('messages').select('*').eq('phone_e164', input.phone);
+  /** Newest first, `limit + 1` rows so the caller knows whether older ones exist; each with its lesson. */
+  async messages(input: { phone: string; before?: string; limit: number }): Promise<ThreadMessageRow[]> {
+    let query = this.db.from('messages').select('*, lesson:lessons(starts_at, status)').eq('phone_e164', input.phone);
     if (input.before) query = query.lt('created_at', input.before);
     const { data, error } = await query.order('created_at', { ascending: false }).limit(input.limit + 1);
     check(error, 'thread messages read');
     return data ?? [];
+  }
+
+  /** The guardian's / teacher's next open lessons (thread-lessons.ts). */
+  lessons(thread: ThreadView, now: Date): Promise<ThreadLesson[]> {
+    return upcomingLessons(this.db, { thread, now });
   }
 
   /** Opening the thread reads its inbound messages; returns the newest stamped wamid. */

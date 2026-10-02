@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
 import { template } from './inbox-fixture';
-import { missingParams, paramFields, prefillParams, toParamsInput, urlButton } from './template-params';
+import { forAudience, lessonValues, missingParams, paramFields, prefillParams, toParamsInput, urlButton } from './template-params';
 
 const jitsi = template({
   key: 'booking_confirmation',
@@ -16,10 +16,10 @@ const followUp = template({
 describe('template composer params (R-LEAD-02)', () => {
   it('labels each variable by its name, else «المتغير n»', () => {
     expect(paramFields(jitsi)).toEqual([
-      { slot: '1', label: t.inbox.composer.paramNames.student_names },
-      { slot: '2', label: t.inbox.composer.paramNames.lesson_when },
+      { slot: '1', label: t.inbox.composer.paramNames.student_names, fromLesson: false },
+      { slot: '2', label: t.inbox.composer.paramNames.lesson_when, fromLesson: true },
     ]);
-    expect(paramFields(template({ params: ['mystery'] }))).toEqual([{ slot: '1', label: 'المتغير 1' }]);
+    expect(paramFields(template({ params: ['mystery'] }))).toEqual([{ slot: '1', label: 'المتغير 1', fromLesson: false }]);
     expect(paramFields(followUp).map((f) => f.slot)).toEqual(['1', '2', '3']);
   });
 
@@ -50,5 +50,19 @@ describe('template composer params (R-LEAD-02)', () => {
       button: 'room',
     });
     expect(toParamsInput(followUp, { '1': 'a', button: 'x' })).toEqual({ '1': 'a' });
+  });
+
+  it('a picked lesson fills its time (recipient tz), names and the matching meeting code', () => {
+    const lesson = { id: 'l1', starts_at: '2026-10-04T14:00:00Z', meeting_link: 'https://meet.jit.si/ab-x', student_names: ['سهيلة', 'مريم'], tz: 'Africa/Cairo' };
+    expect(lessonValues(jitsi, lesson)).toEqual({ '1': 'سهيلة ومريم', '2': 'الأحد 4 أكتوبر 17:00', button: 'ab-x' });
+    const meet = template({ buttons: [{ type: 'url', url: 'https://meet.google.com/{{1}}' }] });
+    expect(lessonValues(meet, lesson).button).toBeUndefined();
+  });
+
+  it('teacher templates only on a teacher’s thread, and a teacher gets only those', () => {
+    expect(forAudience(template({ key: 'teacher_lesson_reminder' }), true)).toBe(true);
+    expect(forAudience(template({ key: 'teacher_lesson_reminder' }), false)).toBe(false);
+    expect(forAudience(jitsi, false)).toBe(true);
+    expect(forAudience(jitsi, true)).toBe(false);
   });
 });

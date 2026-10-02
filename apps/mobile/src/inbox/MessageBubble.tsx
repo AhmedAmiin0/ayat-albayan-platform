@@ -1,4 +1,4 @@
-import { type MessageView, messageStatusStyle } from '@ab/shared';
+import { type MessageView, messageStatusStyle, replyNote } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -7,8 +7,8 @@ import { StatusChip } from '@/ui/StatusChip';
 import { MessageActions } from './MessageActions';
 import { mediaLine, queuedLine, stamp, templateLine } from './message-text';
 
-/** A file line: a link to the signed URL once the API has the file, else just its kind. */
-function MediaLine({ label, url }: { label: string; url: string | null }) {
+/** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
+function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {
   const { color } = useTheme();
   const style = {
     fontFamily: type.ui[600],
@@ -17,7 +17,7 @@ function MediaLine({ label, url }: { label: string; url: string | null }) {
     color: url ? color.lapis : color.ink2,
     textDecorationLine: url ? ('underline' as const) : ('none' as const),
   };
-  if (!url) return <AppText style={style}>{label}</AppText>;
+  if (!url) return <AppText style={style}>{file ? `${label} · ${t.inbox.mediaNotDownloaded}` : label}</AppText>;
   return (
     <Pressable accessibilityRole="link" onPress={() => void Linking.openURL(url)}>
       <AppText style={style}>{label}</AppText>
@@ -67,6 +67,8 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
   const small = useSmall();
   const ours = m.direction === 'outbound';
   const media = mediaLine(m);
+  // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
+  const note = replyNote(m);
   const stuck = ours && (m.status === 'failed' || m.click_to_chat !== null);
   return (
     <View
@@ -83,7 +85,7 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
       }}
     >
       {m.template_key ? <AppText style={small}>{templateLine(m.template_key)}</AppText> : null}
-      {media ? <MediaLine label={media} url={m.media_url} /> : null}
+      {media ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
       {m.body ? (
         <AppText
           selectable
@@ -92,9 +94,15 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
             fontSize: type.size.body,
             lineHeight: type.lineHeight(type.size.body),
             color: color.ink,
+            writingDirection: 'auto',
           }}
         >
           {m.body}
+        </AppText>
+      ) : null}
+      {note ? (
+        <AppText style={{ ...small, fontFamily: type.ui[600] }}>
+          {t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}
         </AppText>
       ) : null}
       <MessageMeta message={m} />

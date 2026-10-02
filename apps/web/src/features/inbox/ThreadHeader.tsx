@@ -4,7 +4,7 @@ import { Icon } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import { threadKind, threadName } from './format';
+import { threadKind, threadName, timesInText } from './format';
 import type { InboxSearch } from './search';
 
 export interface ThreadHeaderProps {
@@ -38,6 +38,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId }: ThreadHeader
           <span className="text-xs font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}
         {th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
+        <span>{timesInText()}</span>
       </span>
     </header>
   );

@@ -85,6 +85,11 @@ const LESSON_TIMED: ReadonlySet<string> = new Set<TemplateKey>([
   'lesson_reminder_24h',
 ]);
 
+/** A template about an upcoming lesson: a booking confirmation or a reminder. */
+export function isLessonTimed(key: string | null): boolean {
+  return key !== null && LESSON_TIMED.has(key);
+}
+
 export interface ExpiryInput {
   templateKey: string | null;
   /** messages.expires_at (set by Phase 4 producers). */

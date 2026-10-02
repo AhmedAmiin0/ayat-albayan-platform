@@ -15,6 +15,8 @@ export interface PushEvent {
   vars: Record<string, string | number>;
   /** Delivered to the app for navigation, e.g. { phone } or { lessonId }. */
   data?: Record<string, string>;
+  /** Replaces notifications.<kind>.title (a reschedule request is not just «رسالة جديدة»). */
+  title?: string;
 }
 
 interface AdminRow {
@@ -39,7 +41,7 @@ export class PushService {
   async notifyAdmins(kind: PushKind, event: PushEvent): Promise<void> {
     try {
       const admins = await this.admins();
-      const text = pushText(kind, event.vars);
+      const text = { ...pushText(kind, event.vars), ...(event.title ? { title: event.title } : {}) };
       const data = { kind, ...event.data };
       for (const admin of admins) await this.notify({ admin, kind, event, text, data });
     } catch (e) {

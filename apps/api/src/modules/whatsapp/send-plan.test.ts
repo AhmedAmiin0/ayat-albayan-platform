@@ -10,7 +10,7 @@ describe('failurePlan — retry with backoff or fail for good (docs/12 §3.3)', 
   it.each([
     { name: 'rate limit 130429', error: meta(130429), attempts: 1, next: '2026-10-02T08:01:00.000Z' },
     { name: 'Meta outage 131000', error: meta(131000, 500), attempts: 2, next: '2026-10-02T08:05:00.000Z' },
-    { name: 'network (no code)', error: new WaError('fetch failed', { code: null, status: 0 }), attempts: 1, next: '2026-10-02T08:01:00.000Z' },
+    { name: 'refused connection (never reached Meta)', error: new WaError('fetch failed', { code: null, status: 0, uncertain: false }), attempts: 1, next: '2026-10-02T08:01:00.000Z' },
     { name: 'a bug or storage error', error: new Error('storage down'), attempts: 2, next: '2026-10-02T08:05:00.000Z' },
   ])('$name on try $attempts stays queued until the backoff', ({ error, attempts, next }) => {
     expect(failurePlan({ error, attempts, now: NOW })).toMatchObject({ status: 'queued', next_attempt_at: next });
@@ -20,12 +20,27 @@ describe('failurePlan — retry with backoff or fail for good (docs/12 §3.3)', 
     expect(failurePlan({ error: meta(130429), attempts: 3, now: NOW })).toMatchObject({ status: 'failed', next_attempt_at: null });
   });
 
-  it.each([131026, 132001, 131047, 132000, 132015, 100, 190])('Meta %i fails at once, with code and text stored', (code) => {
+  it.each([131026, 132001, 131047, 132000, 132015, 100])('Meta %i fails at once, with code and text stored', (code) => {
     expect(failurePlan({ error: meta(code), attempts: 1, now: NOW })).toEqual({
       status: 'failed',
       next_attempt_at: null,
       error_code: String(code),
       error_text: '(#x) meta says no — why',
+    });
+  });
+
+  it('a timeout after the request left (Meta may have sent it) fails at once as «uncertain»: no blind resend', () => {
+    const timeout = new WaError('The operation was aborted due to timeout', { code: null, status: 0, uncertain: true });
+    expect(failurePlan({ error: timeout, attempts: 1, now: NOW })).toMatchObject({ status: 'failed', next_attempt_at: null, error_code: 'uncertain' });
+  });
+
+  it.each([190, 10, 200])('token / permission error %i holds the row 15 min, try not counted', (code) => {
+    expect(failurePlan({ error: meta(code, 401), attempts: 2, now: NOW })).toEqual({
+      status: 'queued',
+      next_attempt_at: '2026-10-02T08:15:00.000Z',
+      error_code: String(code),
+      error_text: '(#x) meta says no — why',
+      attempts: 1,
     });
   });
 

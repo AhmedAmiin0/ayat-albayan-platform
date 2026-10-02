@@ -1,5 +1,5 @@
-import { sessionWindowOpen, type ThreadView, WA_TEXT_MAX } from '@ab/shared';
-import { useState } from 'react';
+import { sessionWindowOpen, type ThreadLesson, type ThreadView, WA_TEXT_MAX } from '@ab/shared';
+import { useRef, useState } from 'react';
 import { TextInput, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { requestId } from '@/lib/request-id';
@@ -7,9 +7,13 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { ErrorLine } from './ErrorLine';
+import { GateNote } from './GateNote';
 import { sendError, sessionUntil } from './message-text';
 import { TemplatePicker } from './TemplatePicker';
-import { useSendMessage } from './use-thread';
+import { type Outgoing, useSendMessage } from './use-thread';
+
+/** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
+const draftOf = (out: Outgoing): string => (out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '');
 
 /**
  * Reply box (R-MOB-02, R-MSG-03). Within 24 h of their last message: free text, plus a template if
@@ -17,12 +21,14 @@ import { useSendMessage } from './use-thread';
  * (inbox.sessionClosed, verbatim) and offers the template sheet. The window is checked against the
  * device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  */
-export function Composer({ phone, thread }: { phone: string; thread: ThreadView | null }) {
+export function Composer({ phone, thread, lessons }: { phone: string; thread: ThreadView | null; lessons: ThreadLesson[] }) {
   const { color } = useTheme();
   const send = useSendMessage(phone);
   const [text, setText] = useState('');
   // clientRequestId: kept while the same text is retried, so a lost answer never sends twice.
   const [draftId, setDraftId] = useState(requestId);
+  // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
+  const templateDraft = useRef<{ draft: string; id: string } | null>(null);
   const [picking, setPicking] = useState(false);
   const lastInbound = thread?.last_inbound_at ?? null;
   const open = sessionWindowOpen(lastInbound, new Date());
@@ -32,8 +38,6 @@ export function Composer({ phone, thread }: { phone: string; thread: ThreadView 
     lineHeight: type.lineHeight(type.size.xs),
     color: color.ink2,
   };
-  // H3/H4 answer `queued` with no error only when sending is switched off (docs/12 §3.1).
-  const parked = send.data?.status === 'queued' && !send.data.error_code;
 
   const sendText = () => {
     const body = text.trim();
@@ -51,7 +55,7 @@ export function Composer({ phone, thread }: { phone: string; thread: ThreadView 
   return (
     <View style={{ gap: 8, paddingBottom: 12 }}>
       {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
-      {parked && !send.isPending ? <AppText style={note}>{t.inbox.messagingOff}</AppText> : null}
+      <GateNote />
       {open ? (
         <>
           <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
@@ -107,10 +111,16 @@ export function Composer({ phone, thread }: { phone: string; thread: ThreadView 
       )}
       <TemplatePicker
         visible={picking}
+        lessons={lessons}
+        teacher={!!thread?.teacher_id && !thread.guardian_id}
         onClose={() => setPicking(false)}
         onSend={(out) => {
           setPicking(false);
-          send.mutate({ out, id: requestId() });
+          const draft = draftOf(out);
+          const last = templateDraft.current;
+          const id = last?.draft === draft ? last.id : requestId();
+          templateDraft.current = { draft, id };
+          send.mutate({ out, id }, { onSuccess: () => (templateDraft.current = null) });
         }}
       />
     </View>

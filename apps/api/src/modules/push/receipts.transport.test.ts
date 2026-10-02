@@ -1,5 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { EXPO_RECEIPTS_URL, expoReceiptsTransport } from './receipts.transport';
+import { expoReceiptsTransport } from './receipts.transport';
+
+const BASE = 'https://exp.host';
 
 // fetch is always stubbed: no test ever reaches exp.host.
 function stubFetch(status = 200) {
@@ -20,9 +22,9 @@ describe('expoReceiptsTransport', () => {
   it('posts the ids in batches of 1000 with the access token', async () => {
     const calls = stubFetch();
     const ids = Array.from({ length: 1001 }, (_, i) => `t${i}`);
-    const receipts = await expoReceiptsTransport('expo-token')(ids);
+    const receipts = await expoReceiptsTransport({ base: BASE, accessToken: 'expo-token' })(ids);
     expect(calls).toHaveLength(2);
-    expect(calls[0]?.url).toBe(EXPO_RECEIPTS_URL);
+    expect(calls[0]?.url).toBe('https://exp.host/--/api/v2/push/getReceipts');
     expect(calls[0]?.init.headers).toMatchObject({ authorization: 'Bearer expo-token' });
     expect((JSON.parse(String(calls[1]?.init.body)) as { ids: string[] }).ids).toEqual(['t1000']);
     expect(Object.keys(receipts)).toHaveLength(1001);
@@ -30,12 +32,18 @@ describe('expoReceiptsTransport', () => {
 
   it('no token → no authorization header', async () => {
     const calls = stubFetch();
-    await expoReceiptsTransport(undefined)(['t1']);
+    await expoReceiptsTransport({ base: BASE, accessToken: undefined })(['t1']);
     expect(calls[0]?.init.headers).not.toHaveProperty('authorization');
   });
 
   it('an HTTP error throws (the job logs it and retries next run)', async () => {
     stubFetch(503);
-    await expect(expoReceiptsTransport(undefined)(['t1'])).rejects.toThrow('expo receipts HTTP 503');
+    await expect(expoReceiptsTransport({ base: BASE, accessToken: undefined })(['t1'])).rejects.toThrow('expo receipts HTTP 503');
+  });
+
+  it('EXPO_API_BASE unset (local, e2e): no receipts and nothing fetched', async () => {
+    const calls = stubFetch();
+    await expect(expoReceiptsTransport({ base: undefined, accessToken: 'x' })(['t1'])).resolves.toEqual({});
+    expect(calls).toHaveLength(0);
   });
 });

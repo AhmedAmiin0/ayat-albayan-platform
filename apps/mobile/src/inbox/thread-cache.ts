@@ -85,5 +85,6 @@ export function provisionalMessage(p: Provisional): MessageView {
     sent_manually_at: null,
     created_at: (p.now ?? new Date()).toISOString(),
     click_to_chat: null,
+    lesson: null,
   };
 }

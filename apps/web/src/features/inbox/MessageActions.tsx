@@ -1,28 +1,24 @@
 import type { MessageView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
-import { markSentManually, retryMessage } from './api';
-import { canRetry, canSendByHand } from './message-notes';
+import { handOffMessage, markSentManually, retryMessage } from './api';
+import { canRetry, canSendByHand, isHandedOff } from './message-notes';
 
 /**
  * A send that didn't go out (R-MSG-03/05): «جرّب تاني» puts a failed row back in the queue (M1);
- * «ابعتها بنفسك من واتساب» opens wa.me with the text prefilled, then asks before recording that the
- * admin sent it by hand (M2), so the sender never sends it twice.
+ * «ابعتها بنفسك من واتساب» opens wa.me with the text prefilled and tells the server (M3), which
+ * holds the row so the sender never sends it too. The question «بعتّها؟» then comes from the row
+ * itself, so it survives a refresh: yes records the manual send (M2), no puts it back (M1).
  */
 export function MessageActions({ message: m }: { message: MessageView }) {
   const queryClient = useQueryClient();
-  const [asking, setAsking] = useState(false);
   const refresh = () => queryClient.invalidateQueries({ queryKey: ['threads'] });
   const retry = useMutation({ mutationFn: retryMessage, onSuccess: refresh });
-  const manual = useMutation({
-    mutationFn: markSentManually,
-    onSuccess: async () => {
-      setAsking(false);
-      await refresh();
-    },
-  });
+  const handOff = useMutation({ mutationFn: handOffMessage, onSuccess: refresh });
+  const manual = useMutation({ mutationFn: markSentManually, onSuccess: refresh });
+  const asking = isHandedOff(m);
+  const busy = retry.isPending || manual.isPending;
 
   return (
     <div className="mt-2 grid gap-2 border-t border-rule pt-2">
@@ -37,7 +33,7 @@ export function MessageActions({ message: m }: { message: MessageView }) {
             href={m.click_to_chat}
             target="_blank"
             rel="noreferrer"
-            onClick={() => setAsking(true)}
+            onClick={() => !asking && handOff.mutate(m.id)}
             className={buttonVariants({ variant: 'ghost', size: 'sm' })}
           >
             {t.messages.clickToChat}
@@ -46,19 +42,19 @@ export function MessageActions({ message: m }: { message: MessageView }) {
       </div>
       {asking && (
         <div role="group" aria-label={t.messages.markSentManually} className="grid gap-2 text-xs text-ink-2">
-          <span>{t.messages.sentManuallyConfirm}</span>
+          <span>{t.messages.handedOff}</span>
           <span className="flex flex-wrap gap-2">
-            <Button size="sm" variant="secondary" disabled={manual.isPending} onClick={() => manual.mutate(m.id)}>
+            <Button size="sm" variant="secondary" disabled={busy} onClick={() => manual.mutate(m.id)}>
               {t.messages.markSentManually}
             </Button>
-            <Button size="sm" variant="ghost" onClick={() => setAsking(false)}>
-              {t.messages.cancelManual}
+            <Button size="sm" variant="ghost" disabled={busy} onClick={() => retry.mutate(m.id)}>
+              {t.messages.undoHandOff}
             </Button>
           </span>
         </div>
       )}
-      {retry.isSuccess && <p className="text-2xs text-ink-2">{t.messages.retryQueued}</p>}
-      {(retry.isError || manual.isError) && (
+      {retry.isSuccess && !asking && <p className="text-2xs text-ink-2">{t.messages.retryQueued}</p>}
+      {(retry.isError || manual.isError || handOff.isError) && (
         <p role="alert" className="text-2xs text-danger">
           {t.common.error}
         </p>

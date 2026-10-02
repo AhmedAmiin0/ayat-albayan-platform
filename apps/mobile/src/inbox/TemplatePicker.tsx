@@ -1,4 +1,4 @@
-import type { TemplateView } from '@ab/shared';
+import { forAudience, type TemplateView, type ThreadLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { FlatList, Modal } from 'react-native';
@@ -27,16 +27,23 @@ export function useApprovedTemplates(enabled: boolean) {
 
 const names: Record<string, string> = t.templates.names;
 
-/**
- * «اختار القالب» sheet: the approved templates by their Arabic name, then the chosen one's params
- * and preview. Sending closes the sheet; the row shows in the thread at once (useSendMessage).
- */
-export function TemplatePicker(props: {
+export interface TemplatePickerProps {
   visible: boolean;
+  /** The guardian's / teacher's next open lessons: a lesson time is picked, never typed (rule 6). */
+  lessons: readonly ThreadLesson[];
+  /** A teacher's thread: only teacher templates, and only there. */
+  teacher: boolean;
   onClose: () => void;
   onSend: (out: Outgoing) => void;
-}) {
+}
+
+/**
+ * «اختار القالب» sheet: this person's approved templates by their Arabic name, then the chosen
+ * one's params and preview. Sending closes the sheet; the row shows in the thread at once.
+ */
+export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
+  const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
   const close = () => {
     setChosen(null);
@@ -57,6 +64,7 @@ export function TemplatePicker(props: {
         {chosen ? (
           <TemplateForm
             template={chosen}
+            lessons={props.lessons}
             onBack={() => setChosen(null)}
             onSend={(out) => {
               setChosen(null);
@@ -66,7 +74,7 @@ export function TemplatePicker(props: {
         ) : (
           <FlatList
             style={{ flex: 1, marginHorizontal: -16 }}
-            data={templates.data ?? []}
+            data={offered}
             keyExtractor={(row) => row.key}
             renderItem={({ item }) => (
               <ListRow

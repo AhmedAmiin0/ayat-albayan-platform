@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { sampleLead } from './follow-ups.fakes';
-import { followUpRow, leadZone, pickTwoSlots, sameInstant } from './follow-ups.plan';
+import { followUpRow, followUpStep, leadZone, pickTwoSlots, sameInstant } from './follow-ups.plan';
 
 const d = (iso: string) => new Date(iso);
 const iso = (pair: [Date, Date] | null) => pair?.map((x) => x.toISOString()) ?? null;
@@ -61,7 +61,7 @@ describe('followUpRow', () => {
         '3': 'الرياض',
         payloads: ['stop:lead-1'],
       },
-      dedup_key: 'follow_up_slots:lead-1:1',
+      dedup_key: `follow_up_slots:lead-1:${Date.parse('2026-10-01T10:00:00Z')}:1`,
       scheduled_for: '2026-10-02T10:00:00.000Z',
       expires_at: '2026-10-04T14:00:00.000Z',
     });
@@ -75,5 +75,27 @@ describe('sameInstant', () => {
     expect(sameInstant(null, null)).toBe(true);
     expect(sameInstant(null, d('2026-10-02T10:00:00Z'))).toBe(false);
     expect(sameInstant('2026-10-02T10:00:00Z', null)).toBe(false);
+  });
+});
+
+describe('followUpStep (the stage moves on only when the follow-up left)', () => {
+  const row = (status: 'queued' | 'sent' | 'delivered' | 'read' | 'sent_manually' | 'failed', error_code: string | null = null) => ({
+    id: 'm1',
+    status,
+    error_code,
+  });
+
+  it.each([
+    ['nothing queued yet', null, 'queue'],
+    ['queued, gate closed or retrying', row('queued'), 'wait'],
+    ['the admin is sending it by hand', row('failed', 'handed_off'), 'wait'],
+    ['sent', row('sent'), 'advance'],
+    ['read', row('read'), 'advance'],
+    ['sent by hand', row('sent_manually'), 'advance'],
+    ['failed for good: the admin was told', row('failed', '131026'), 'advance'],
+    ['expired before it went out', row('failed', 'expired'), 'requeue'],
+    ['dropped as stale', row('failed', 'stale'), 'requeue'],
+  ] as const)('%s → %s', (_name, input, want) => {
+    expect(followUpStep(input)).toBe(want);
   });
 });

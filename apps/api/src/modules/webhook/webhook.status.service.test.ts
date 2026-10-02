@@ -56,7 +56,7 @@ describe('StatusService (R-MSG-05)', () => {
       expect.objectContaining({ patch: expect.objectContaining({ status: 'failed', error_code: '131026' }) }),
     );
     expect(s.push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', {
-      subject: 'msg-out-1',
+      subject: `msg-out-1:${ev({ status: 'failed' }).waMessageId}`,
       vars: { template: 'تذكير الحلقة النهاردة — Jitsi', name: 'أم سهيلة' },
       data: { phone: '+966501234567', messageId: 'msg-out-1' },
     });

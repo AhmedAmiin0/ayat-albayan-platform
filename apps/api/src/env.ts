@@ -30,6 +30,11 @@ const schema = z.object({
   WA_VERIFY_TOKEN: optionalSecret,
   /** Expo push access token (only when the Expo project enforces push security). */
   EXPO_ACCESS_TOKEN: optionalSecret,
+  /**
+   * Expo push API base («https://exp.host» in production). No default on purpose: unset = admin
+   * pushes are recorded but never leave the server (local, e2e), like WA_API_BASE.
+   */
+  EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 });

@@ -72,6 +72,8 @@ export interface AcademySettings {
   reminder_24h_enabled: boolean;
   /** The admin's kill switch; the sender also needs env MESSAGING_ENABLED=true. */
   messaging_enabled: boolean;
+  /** The academy number moved off the old CRM (docs/09 cut-over): the CRM warning goes away. */
+  crm_cutover_done: boolean;
 }
 
 /** GET /teachers/me (R-TCH-03). */

@@ -1,15 +1,23 @@
-import { nextFollowUpAt } from '@ab/shared';
+import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { SettingsService } from '../../common/settings/settings.service';
 import { Ticker } from '../reminders/ticker';
 import { FollowUpSlots } from './follow-up-slots';
-import { followUpRow, leadZone, pickTwoSlots, sameInstant, type FollowUpLeadRow } from './follow-ups.plan';
+import {
+  followUpDedupKey,
+  followUpRow,
+  followUpStep,
+  leadZone,
+  pickTwoSlots,
+  sameInstant,
+  type FollowUpLeadRow,
+} from './follow-ups.plan';
 import { FollowUpsQueries } from './follow-ups.queries';
 
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
 
-type Outcome = 'queued' | 'notDue' | 'waitingTemplate' | 'noSlots' | 'failed';
+type Outcome = 'queued' | 'waiting' | 'advanced' | 'notDue' | 'waitingTemplate' | 'noSlots' | 'failed';
 export type FollowUpSummary = { leads: number } & Record<Outcome, number>;
 
 interface Tick {
@@ -24,12 +32,13 @@ interface Tick {
 /**
  * R-LEAD-05 follow-up scheduler (docs/12 §7): every 5 minutes, single flight. A lead in
  * interested_no_slot / no_reply, not paused, whose nextFollowUpAt (follow_up_hours[stage] after
- * its last message) has passed gets follow_up_slots with two real free slots; the stage advances
- * (compare-and-set), and after the last stage nothing more is sent. leads.next_follow_up_at is
- * kept equal to the computed due time for the UI.
- * - follow_up_slots not approved → nothing queued, the stage stays: the follow-up goes out on the
- *   first tick after approval (the Templates page already flags the template; see TODO below).
- * - fewer than two free slots → nothing queued, retried next tick (followUps.noSlots).
+ * its last message) has passed gets follow_up_slots with two real free slots, keyed by this
+ * silence and stage (rule 8). The stage advances (compare-and-set) only once that row left, on a
+ * later tick (followUpStep); after the last stage nothing more is sent. leads.next_follow_up_at
+ * and follow_up_note are kept current for the lead panel.
+ * - follow_up_slots not approved → nothing queued, the stage stays (note waiting_template): the
+ *   follow-up goes out on the first tick after approval.
+ * - fewer than two free slots → nothing queued, retried next tick (note no_slots).
  * TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration + types).
  */
 @Injectable()
@@ -62,7 +71,10 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** One pass. Never throws; one lead's failure doesn't stop the others. */
   async runOnce(now = new Date()): Promise<FollowUpSummary> {
-    const summary: FollowUpSummary = { leads: 0, queued: 0, notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 };
+    const summary: FollowUpSummary = {
+      ...{ leads: 0, queued: 0, waiting: 0, advanced: 0 },
+      ...{ notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 },
+    };
     try {
       const { follow_up_hours: hours } = await this.settings.all();
       const leads = await this.queries.candidates(hours.length);
@@ -74,27 +86,47 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
     } catch (e) {
       this.log.error(`follow-ups run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
-    if (summary.queued + summary.failed + summary.noSlots > 0) this.log.log(`follow-ups: ${JSON.stringify(summary)}`);
+    if (summary.queued + summary.advanced + summary.failed > 0) this.log.log(`follow-ups: ${JSON.stringify(summary)}`);
     return summary;
   }
 
   private async process(t: Tick): Promise<Outcome> {
-    const { lead, hours, now } = t;
+    const { lead } = t;
     try {
-      const due = nextFollowUpAt(lead, hours);
-      if (!sameInstant(lead.next_follow_up_at, due)) await this.queries.setNext(lead.id, due);
-      if (!due || due > now) return 'notDue';
-      if (!t.approved) return 'waitingTemplate';
-      const zone = leadZone(lead);
-      const pair = pickTwoSlots(await t.starts(), zone.tz);
-      if (!pair) return 'noSlots';
-      await this.queries.queue(followUpRow({ lead, slots: pair, zone, now }));
-      const next = nextFollowUpAt({ ...lead, follow_up_stage: lead.follow_up_stage + 1 }, hours);
-      await this.queries.advance({ id: lead.id, stage: lead.follow_up_stage, next });
-      return 'queued';
+      return await this.step(t);
     } catch (e) {
       this.log.warn(`follow-up for lead ${lead.id} failed: ${e instanceof Error ? e.message : String(e)}`);
       return 'failed';
     }
+  }
+
+  private async step(t: Tick): Promise<Outcome> {
+    const { lead, hours, now } = t;
+    const due = nextFollowUpAt(lead, hours);
+    if (!due || due > now) return this.note(t, { due, note: null, outcome: 'notDue' });
+    const prior = await this.queries.stageRow(followUpDedupKey(lead));
+    const step = followUpStep(prior);
+    if (step === 'advance') {
+      const next = nextFollowUpAt({ ...lead, follow_up_stage: lead.follow_up_stage + 1 }, hours);
+      await this.queries.advance({ id: lead.id, stage: lead.follow_up_stage, next });
+      return 'advanced';
+    }
+    if (step === 'wait') return this.note(t, { due, note: 'queued', outcome: 'waiting' });
+    if (!t.approved) return this.note(t, { due, note: 'waiting_template', outcome: 'waitingTemplate' });
+    const zone = leadZone(lead);
+    const pair = pickTwoSlots(await t.starts(), zone.tz);
+    if (!pair) return this.note(t, { due, note: 'no_slots', outcome: 'noSlots' });
+    if (step === 'requeue' && prior) await this.queries.drop(prior.id);
+    const added = await this.queries.queue(followUpRow({ lead, slots: pair, zone, now }));
+    return this.note(t, { due, note: 'queued', outcome: added > 0 ? 'queued' : 'waiting' });
+  }
+
+  /** Writes next_follow_up_at / follow_up_note only when they changed, then reports `outcome`. */
+  private async note(t: Tick, s: { due: Date | null; note: FollowUpNote | null; outcome: Outcome }): Promise<Outcome> {
+    const { lead } = t;
+    if (!sameInstant(lead.next_follow_up_at, s.due) || lead.follow_up_note !== s.note) {
+      await this.queries.sync(lead.id, { next_follow_up_at: s.due?.toISOString() ?? null, follow_up_note: s.note });
+    }
+    return s.outcome;
   }
 }

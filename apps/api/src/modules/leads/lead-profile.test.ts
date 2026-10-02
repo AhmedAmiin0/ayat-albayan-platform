@@ -40,9 +40,17 @@ describe('LeadProfileService (L1/L2)', () => {
     const row = lead({ status: 'no_reply', last_inbound_at: '2026-10-01T10:00:00Z', follow_up_paused: true });
     const { service, leads } = setup(row);
     await service.followUp({ id: LEAD_ID, patch: { paused: false }, actorId: ACTOR });
-    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, { follow_up_paused: false, next_follow_up_at: '2026-10-02T10:00:00.000Z' });
+    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, {
+      follow_up_paused: false,
+      follow_up_paused_by: null,
+      next_follow_up_at: '2026-10-02T10:00:00.000Z',
+    });
     await service.followUp({ id: LEAD_ID, patch: { paused: true }, actorId: ACTOR });
-    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, { follow_up_paused: true, next_follow_up_at: null });
+    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, {
+      follow_up_paused: true,
+      follow_up_paused_by: 'admin',
+      next_follow_up_at: null,
+    });
   });
 
   it('404 for an unknown lead', async () => {

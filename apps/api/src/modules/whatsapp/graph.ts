@@ -51,7 +51,24 @@ export function waErrorFrom(status: number, text: string): WaError {
   return new WaError(e.message ?? `WhatsApp HTTP ${status}`, { code: e.code ?? null, status, details });
 }
 
-/** Resolves on 2xx; throws WaError otherwise. A network error or timeout is code null, status 0. */
+/** Connection errors raised before any byte left: the request never reached Meta, so a retry is safe. */
+const NEVER_SENT = new Set(['ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN', 'ENETUNREACH', 'EHOSTUNREACH', 'UND_ERR_CONNECT_TIMEOUT']);
+
+/**
+ * Could this fetch error have happened after Meta got the request? A timeout or a dropped
+ * connection can (Meta may have sent the message and only the answer was lost); a refused or
+ * unresolvable connection cannot. Unknown errors count as uncertain: never resend blindly.
+ */
+export function mayHaveReachedMeta(error: unknown): boolean {
+  const cause: unknown = error instanceof Error ? error.cause : undefined;
+  const code = cause && typeof cause === 'object' && 'code' in cause ? String(cause.code) : '';
+  return !NEVER_SENT.has(code);
+}
+
+/**
+ * Resolves on 2xx; throws WaError otherwise. A network error or timeout is code null, status 0,
+ * flagged `uncertain` unless the connection was never made.
+ */
 export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Response> {
   const hasBody = req.body !== undefined;
   let res: Response;
@@ -66,7 +83,8 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
       signal: AbortSignal.timeout(conn.timeoutMs),
     });
   } catch (e) {
-    throw new WaError(`WhatsApp request failed: ${e instanceof Error ? e.message : String(e)}`, { code: null, status: 0 });
+    const message = `WhatsApp request failed: ${e instanceof Error ? e.message : String(e)}`;
+    throw new WaError(message, { code: null, status: 0, uncertain: mayHaveReachedMeta(e) });
   }
   if (res.ok) return res;
   throw waErrorFrom(res.status, await res.text().catch(() => ''));

@@ -1,12 +1,13 @@
-import type { MessageView } from '@ab/shared';
-import { Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import type { MessageView, SendGateView } from '@ab/shared';
+import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { MessagesService, type MessageChange } from './messages.service';
+import { SendGate } from './send-gate';
 
-/** M1–M2 (docs/12 §4): what the admin does with an outbound message that did not go out. */
+/** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
 @ApiTags('messaging')
 @ApiBearerAuth()
 @Roles('admin')
@@ -15,7 +16,14 @@ export class MessagesController {
   constructor(
     private readonly messages: MessagesService,
     private readonly audit: AuditService,
+    private readonly sendGate: SendGate,
   ) {}
+
+  /** G: is sending on (env, WhatsApp config, kill switch) and how many rows wait in the queue. */
+  @Get('gate')
+  gate(): Promise<SendGateView> {
+    return this.sendGate.view();
+  }
 
   /** failed → queued, attempts 0 (409 not_retryable otherwise). */
   @Post(':id/retry')
@@ -29,6 +37,13 @@ export class MessagesController {
   @HttpCode(200)
   async sentManually(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
     return this.audited({ change: await this.messages.sentManually(id), action: 'message_sent_manually', user });
+  }
+
+  /** M3: the admin opened wa.me; held (failed «handed_off») until M2 or M1. 409 not_manual otherwise. */
+  @Post(':id/hand-off')
+  @HttpCode(200)
+  async handOff(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
+    return this.audited({ change: await this.messages.handOff(id), action: 'message_handed_off', user });
   }
 
   private async audited(input: { change: MessageChange; action: string; user: AuthUser }): Promise<MessageView> {

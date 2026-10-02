@@ -47,4 +47,10 @@ describe('toTemplateView', () => {
     const odd = toTemplateView(templateRow({ header_format: 'image', params: 'oops', buttons: [{ type: 'phone' }] }));
     expect(odd).toMatchObject({ header_format: null, params: [], buttons: [] });
   });
+
+  it('carries the lesson as it is now (thread rows embed it), else null', () => {
+    const lesson = { starts_at: '2026-10-04T14:00:00+00:00', status: 'confirmed' as const };
+    expect(toMessageView({ row: { ...messageRow(), lesson }, template: booking }).lesson).toEqual(lesson);
+    expect(toMessageView({ row: messageRow(), template: booking }).lesson).toBeNull();
+  });
 });

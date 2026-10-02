@@ -47,6 +47,8 @@ describe('inboundRow', () => {
       media_id: 'media-1',
       media_mime: 'image/jpeg',
       interactive_payload: null,
+      // Meta's send time, not arrival: a late webhook can't stretch the 24 h window.
+      created_at: '2026-10-03T13:00:00.000Z',
     });
   });
 });
@@ -81,6 +83,9 @@ describe('inboundPush', () => {
   it('gives a reschedule or stop request its own push', () => {
     const push = inboundPush({ m: event(), phone: PHONE, who: guardian, newLeadId: null, intent: 'reschedule' });
     expect(push.event.subject).toBe(`${PHONE}:reschedule:wamid.IN1`);
+    expect(push.event.title).toBe('طلب تغيير ميعاد من أم سهيلة');
+    const plain = inboundPush({ m: event(), phone: PHONE, who: guardian, newLeadId: null, intent: null });
+    expect(plain.event.title).toBeUndefined();
   });
 
   it('names an unknown sender by profile name, else the phone', () => {

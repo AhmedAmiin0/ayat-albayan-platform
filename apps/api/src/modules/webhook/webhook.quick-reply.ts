@@ -6,6 +6,9 @@ import type { InboundEvent } from './webhook.events';
 import { payloadLesson } from './webhook.inbound';
 import { WebhookQueries, type Contact } from './webhook.queries';
 
+/** A typed «نعم» counts only for a lesson we messaged them about this recently (docs/12 §3.5). */
+const REPLY_WINDOW_MS = 48 * 60 * 60_000;
+
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
 export const WHATSAPP_ACTOR = 'system:whatsapp';
 
@@ -31,18 +34,24 @@ export class QuickReplies {
   ) {}
 
   /**
-   * The lesson a reply is about: our button payload, else the lesson of the outbound message it
-   * answers (Meta's context.id), else the guardian's next lesson still `scheduled`.
+   * The lesson a guardian's reply is about (docs/12 §3.5): our button payload (only if that lesson
+   * is theirs), else the lesson of the outbound message it answers (Meta's context.id, same phone),
+   * else the latest lesson-linked message we sent them in the last 48 h whose lesson is still open.
+   * Anyone else, or nothing found → null: the message is only stored and the admin reads it.
    */
   async lessonFor(input: { m: InboundEvent; phone: string; who: Contact }): Promise<string | null> {
     const { m, phone, who } = input;
+    if (!who.guardian) return null;
     const fromPayload = payloadLesson(m);
-    if (fromPayload) return fromPayload;
+    if (fromPayload) {
+      const theirs = await this.queries.guardianLesson({ lessonId: fromPayload, guardianId: who.guardian.id });
+      return theirs ? fromPayload : null;
+    }
     if (m.replyTo) {
       const answered = await this.queries.outboundByWaId(m.replyTo);
       if (answered?.lesson_id && answered.phone_e164 === phone) return answered.lesson_id;
     }
-    return who.guardian ? this.queries.nextScheduledLesson(who.guardian.id, m.at) : null;
+    return this.queries.recentLessonOutbound({ phone, since: new Date(m.at.getTime() - REPLY_WINDOW_MS) });
   }
 
   async act({ intent, m, lessonId, leadId }: ReplyAction): Promise<void> {
@@ -77,7 +86,7 @@ export class QuickReplies {
    * and goes to leads only, so this flag is the marketing opt-out; utility messages continue.
    */
   private async stop(leadId: string, m: InboundEvent): Promise<void> {
-    await this.queries.updateLead(leadId, { follow_up_paused: true });
+    await this.queries.updateLead(leadId, { follow_up_paused: true, follow_up_paused_by: 'lead' });
     await this.audit.record({
       actorId: null,
       entity: 'leads',

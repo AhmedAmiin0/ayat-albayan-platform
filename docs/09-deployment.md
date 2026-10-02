@@ -44,7 +44,7 @@ Lesson report PDFs (R-REP-03) are rendered in the API process by `playwright-cor
 ## Not on staging yet
 
 - WhatsApp (Phase 4). The code is shipped; the credentials stay off staging until the owner runs the cut-over below.
-- Android push credentials (FCM V1 via a Firebase project) and iOS (Apple Developer account). `EXPO_ACCESS_TOKEN` is already on the server.
+- Android push credentials (FCM V1 via a Firebase project) and iOS (Apple Developer account). `EXPO_ACCESS_TOKEN` is already on the server; **add `EXPO_API_BASE=https://exp.host`** with the Phase 4 fixes release, or admin pushes stay on the server (recorded, never sent).
 - Production: a separate Supabase project and hosts, created at go-live.
 
 ## WhatsApp messaging (Phase 4)
@@ -61,8 +61,11 @@ The API talks to the WhatsApp Cloud API only through `WA_API_BASE`; there is **n
 | `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). |
 | `MESSAGING_ENABLED` | `true` opens the deployment's gate. Default `false`. |
 | `EXPO_ACCESS_TOKEN` | Admin push notifications (already on the server). |
+| `EXPO_API_BASE` | `https://exp.host` on staging/production. **No default**: unset (local, e2e) = pushes are recorded in `push_notifications` but never leave the server. |
 
-**Three gates, all required to send** (`sendingAllowed`): `MESSAGING_ENABLED=true`, WhatsApp configured (base, phone-number id, WABA id, token), and the admin's **kill switch** in `/admin/settings` (`settings.messaging_enabled`, seeded `false`). Any of them off → outbound rows stay `queued`: nothing fails, nothing is lost, and the inbox says «الإرسال متوقف». Turning the switch ON asks for confirmation; OFF is immediate.
+**Three gates, all required to send** (`sendingAllowed`): `MESSAGING_ENABLED=true`, WhatsApp configured (base, phone-number id, WABA id, token), and the admin's **kill switch** in `/admin/settings` (`settings.messaging_enabled`, seeded `false`). Any of them off → outbound rows stay `queued`: nothing fails, nothing is lost. The inbox and the settings page say which gate is closed (`GET /messages/gate`): «الإرسال متوقف» for the switch, «الإرسال مقفول من السيرفر» for the env / config. Turning the switch ON asks for confirmation and says how many queued messages go out at once; OFF is immediate (the sender re-reads the gate before every message).
+
+At send time the sender also drops rows that are no longer true (`failed`, `error_code = 'stale'`, never sent, no push): a booking confirmation or reminder whose lesson was cancelled or moved, a follow-up to a lead who paused, asked to stop, moved on or wrote again, and a `renewal_due` whose renewal task closed. A timeout after the request left (Meta may have sent it) is `failed` / `uncertain` for the admin to check — never resent blindly. An expired or revoked token (Meta 190 / 10 / 200) holds the queue (one admin push a day) instead of failing every row. A webhook item that fails (DB down) answers 500, so Meta re-sends it.
 
 Independent of the gates: the webhook stores inbound messages and statuses, the jobs (reminders every 5 min, follow-ups every 5 min, push receipts every 15 min) keep **queuing** rows with dedup keys, and with WhatsApp configured the API runs one read-only template health check 5 s after boot (log only). Templates are submitted to Meta only when an admin presses «ابعته لميتا للموافقة» in `/admin/settings`; `report_ready` (PDF header) is submitted by hand in Business Manager.
 
@@ -73,7 +76,7 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 ### 1. The owner confirms first
 - Which Meta app the CRM uses. Same app as ours → the cut-over is a callback-URL change (3b). Its own app → the WABA's app subscription moves (3c).
 - The CRM stops its own reminders / automations at the moment our gate opens, or guardians get every reminder twice.
-- Wording of `report_ready`, `renewal_due`, `follow_up_slots`, `lesson_reminder_24h` before anyone submits them; the open questions in docs/12 §10 (bare «تمام» confirms which lesson, «stop» from a guardian, quiet hours, the `lesson_needs_confirmation` rule).
+- Wording of `report_ready`, `renewal_due`, `follow_up_slots`, `lesson_reminder_24h` before anyone submits them; the open questions in docs/12 §10 («stop» from a guardian, quiet hours). Implemented per the contract, for the owner to confirm: a bare «تمام» confirms only the open lesson of the latest lesson-linked message we sent that guardian in the last 48 h (docs/12 §3.5), and `lesson_needs_confirmation` is pushed at the same-day reminder time (docs/12 §6).
 - A quiet time window, and who watches `/admin/inbox` during it.
 
 ### 2. Prepare (no traffic moves)
@@ -81,7 +84,8 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 2. `/admin/settings` → «راجع حالة القوالب»: a read-only sync from Meta. The 8 approved templates must show «متوافق عليه» with Meta's real text.
 3. Look at what would go out the moment sending opens:
    `select template_key, count(*), min(created_at) from messages where direction = 'outbound' and status = 'queued' group by 1;`
-   Reminders past their lesson expire on their own (`failed`, `expired`). Rows without an expiry (`renewal_due`, admin texts) do go out: mark the ones that should not as sent by hand from the inbox, or decide with the owner.
+   Reminders past their lesson expire on their own (`failed`, `expired`); confirmations / reminders of lessons cancelled or moved since, follow-ups to leads who replied or paused, and renewals already settled are dropped as `stale` when their turn comes. Admin texts and still-due `renewal_due` / `report_ready` rows do go out: mark the ones that should not as sent by hand from the inbox, or decide with the owner. To drop the stale lesson rows up front (same rule as the sender):
+   `update messages m set status = 'failed', error_code = 'stale', error_text = 'cut-over cleanup', next_attempt_at = null from lessons l where m.lesson_id = l.id and m.direction = 'outbound' and m.status = 'queued' and l.status not in ('scheduled', 'confirmed') and m.template_key in ('booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'lesson_reminder', 'lesson_reminder_meet', 'lesson_reminder_plain', 'lesson_reminder_24h', 'teacher_lesson_reminder', 'teacher_lesson_reminder_meet');`
 
 ### 3. Cut over
 1. Meta App Dashboard → WhatsApp → Configuration → Webhook: **write down** the current callback URL and verify token (the rollback target).
@@ -90,6 +94,7 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
    (c) CRM on its own app: in our app do (a) and subscribe `messages`; subscribe our app to the WABA (`POST /{WA_WABA_ID}/subscribed_apps` with our token) and unsubscribe the CRM's app (`DELETE /{WA_WABA_ID}/subscribed_apps` with the CRM app's token).
 3. Stop the CRM's automations (1).
 4. Set `MESSAGING_ENABLED=true` on the server, restart the API, then switch sending ON in `/admin/settings`.
+5. In `/admin/settings` press «نقلنا الرقم من الـCRM» (`settings.crm_cutover_done`): the «don't turn sending on» CRM warning goes away. On a rollback (5), turn it back by `PATCH /settings { "crmCutoverDone": false }` or the settings row.
 
 ### 4. Verify (10 minutes)
 - From a staff phone, write to the academy number: the thread shows in `/admin/inbox` within seconds. The API log shows `POST /webhooks/whatsapp` 200; a 401 means `WA_APP_SECRET` is wrong (nothing was stored).

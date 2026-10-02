@@ -34,7 +34,7 @@ export function SettingsPage() {
             <h2 id={ids.sending} className={h2}>
               {t.templates.settings.title}
             </h2>
-            <MessagingSwitch enabled={settings.data.messaging_enabled} />
+            <MessagingSwitch settings={settings.data} />
           </section>
         )}
         <section aria-labelledby={ids.templates}>

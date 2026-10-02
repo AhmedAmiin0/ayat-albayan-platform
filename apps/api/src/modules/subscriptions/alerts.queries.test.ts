@@ -22,13 +22,21 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
   });
 
   it('stale tasks: open ones about the packages, except the keys still called for, are closed by the system', async () => {
-    const { db, argsOf } = fakeDb({ admin_tasks: [{}] });
+    const { db, argsOf } = fakeDb({ admin_tasks: [{ data: [] }] });
     const now = new Date('2026-10-02T09:00:00Z');
     await new AlertsQueries(db).closeTasks({ subjectIds: ['sub-1', 'sub-2'], keep: ['renewal_due:sub-2'], now });
     expect(argsOf('admin_tasks', 'update')).toEqual([{ done_at: '2026-10-02T09:00:00.000Z', done_by: null }]);
     expect(argsOf('admin_tasks', 'in')).toEqual(['subject_id', ['sub-1', 'sub-2']]);
     expect(argsOf('admin_tasks', 'is')).toEqual(['done_at', null]);
     expect(argsOf('admin_tasks', 'not')).toEqual(['dedup_key', 'in', '("renewal_due:sub-2")']);
+  });
+
+  it('a renewal message still queued under a closed task is failed as stale (renewed meanwhile)', async () => {
+    const { db, argsOf } = fakeDb({ admin_tasks: [{ data: [{ dedup_key: 'renewal_due:sub-1' }] }], messages: [{}] });
+    await new AlertsQueries(db).closeTasks({ subjectIds: ['sub-1'], keep: [], now: new Date('2026-10-02T09:00:00Z') });
+    expect(argsOf('messages', 'update')).toEqual([expect.objectContaining({ status: 'failed', error_code: 'stale' })]);
+    expect(argsOf('messages', 'in')).toEqual(['dedup_key', ['renewal_due:sub-1']]);
+    expect(argsOf('messages', 'eq')).toEqual(['status', 'queued']);
   });
 
   it('the renewal message is a queued outbound renewal_due to the guardian, deduped', async () => {

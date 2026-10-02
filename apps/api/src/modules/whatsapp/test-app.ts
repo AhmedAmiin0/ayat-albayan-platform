@@ -10,6 +10,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
 import { MessageSender } from './message.sender';
 import { MessagesQueries } from './messages.queries';
+import { SendGate } from './send-gate';
 import { TemplatesQueries } from './templates.queries';
 import { WHATSAPP_CLIENT } from './whatsapp.types';
 
@@ -25,7 +26,8 @@ const verify: TokenVerifier = async (token) => {
 function mocks() {
   return {
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
-    messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn() },
+    messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
+    gate: { view: vi.fn(), open: vi.fn() },
     client: { configured: vi.fn(() => false), getTemplates: vi.fn(), submitTemplate: vi.fn() },
     storage: { signedDownload: vi.fn() },
     sender: { kick: vi.fn() },
@@ -42,6 +44,7 @@ export async function whatsappApp() {
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(MessageSender).useValue(m.sender)
+    .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(AuditService).useValue(m.audit)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });

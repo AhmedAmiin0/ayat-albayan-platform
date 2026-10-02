@@ -1,11 +1,20 @@
 import type { Tables } from '@ab/db';
-import { clickToChatLink, fallbackText, renderTemplateBody, type MessageView, type RenderableTemplate } from '@ab/shared';
+import {
+  clickToChatLink,
+  fallbackText,
+  renderTemplateBody,
+  type MessageLesson,
+  type MessageView,
+  type RenderableTemplate,
+} from '@ab/shared';
 import { templateParams } from './wa-json';
 
 export type MessageRow = Tables<'messages'>;
+/** A thread row: the message with its lesson embedded (ThreadsQueries.messages). */
+export type ThreadMessageRow = MessageRow & { lesson?: MessageLesson | null };
 
 export interface MessageViewInput {
-  row: MessageRow;
+  row: ThreadMessageRow;
   /** The registry row of row.template_key (renderable()), when there is one. */
   template: RenderableTemplate | null;
   /** Signed link of params.document (report_ready), for the wa.me fallback text. */
@@ -55,5 +64,6 @@ export function toMessageView(input: MessageViewInput): MessageView {
     sent_manually_at: row.sent_manually_at,
     created_at: row.created_at,
     click_to_chat: needsManualSend(row) ? clickToChatLink(row.phone_e164, text) : null,
+    lesson: row.lesson ?? null,
   };
 }

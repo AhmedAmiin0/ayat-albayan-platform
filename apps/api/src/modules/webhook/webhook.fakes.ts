@@ -67,7 +67,8 @@ export function fakeQueries() {
     }),
     outboundByWaId: vi.fn().mockResolvedValue(null),
     moveStatus: vi.fn().mockResolvedValue(true),
-    nextScheduledLesson: vi.fn().mockResolvedValue(null),
+    guardianLesson: vi.fn().mockResolvedValue(true),
+    recentLessonOutbound: vi.fn().mockResolvedValue(null),
     updateLead: vi.fn().mockResolvedValue(undefined),
   };
 }

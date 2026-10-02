@@ -21,9 +21,10 @@ const DRAFT = template({
   last_checked_at: null,
 });
 const REJECTED = template({ key: 'follow_up_slots', status: 'rejected', last_error: 'INVALID_FORMAT', category: 'marketing' });
+const PDF = template({ key: 'report_ready', status: 'not_submitted', header_format: 'document', params: ['student_name', 'lesson_when'] });
 
 function renderHealth() {
-  routeFetch(apiFetch, [['/messaging/templates', [APPROVED, DRAFT, REJECTED]]]);
+  routeFetch(apiFetch, [['/messaging/templates', [APPROVED, DRAFT, REJECTED, PDF]]]);
   renderWithClient(<TemplateHealth headingId="h" />);
 }
 
@@ -84,5 +85,13 @@ describe('template health (R-MSG-01, issue C1)', () => {
     fireEvent.click(rowOf('renewal_due').getByRole('button', { name: t.templates.submit }));
     fireEvent.click(screen.getByRole('button', { name: t.templates.submitConfirmYes }));
     expect((await screen.findByRole('status')).textContent).toContain(t.templates.error.needs_manual_submit);
+  });
+
+  it('a rejected row shows no stale quality; a PDF template says to submit it in Business Manager', async () => {
+    renderHealth();
+    await screen.findByText(t.templates.names.follow_up_slots);
+    expect(rowOf('follow_up_slots').queryByText(t.templates.qualityScore.GREEN)).toBeNull();
+    expect(rowOf('report_ready').getByText(t.templates.manualSubmit)).toBeTruthy();
+    expect(rowOf('report_ready').queryByRole('button', { name: t.templates.submit })).toBeNull();
   });
 });

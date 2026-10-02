@@ -88,9 +88,13 @@ describe('POST /webhooks/whatsapp (W2) — entries', () => {
     );
   });
 
-  it('still 200 when processing an item fails', async () => {
+  it('500 when processing an item fails, so Meta re-sends; the replay then goes through once', async () => {
     const { post, queries } = await boot();
-    queries.identify.mockRejectedValue(new Error('db down'));
+    queries.identify.mockRejectedValueOnce(new Error('db down'));
+    expect((await post(text)).statusCode).toBe(500);
+    expect(queries.stored).toHaveLength(0);
     expect((await post(text)).statusCode).toBe(200);
+    expect((await post(text)).statusCode).toBe(200);
+    expect(queries.stored).toHaveLength(1);
   });
 });

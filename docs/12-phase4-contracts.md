@@ -64,10 +64,10 @@ Dedup keys (rule 8; `insert … on conflict (dedup_key) do nothing`):
 | Row | dedup_key | expires_at |
 |---|---|---|
 | booking (existing RPCs) | `booking_confirmation:{lesson}:{guardian}` | null (expires with the lesson, `messageExpired`) |
-| day-before reminder | `lesson_reminder_24h:{lesson}:{guardian}` | lesson start |
+| day-before reminder | `lesson_reminder_24h:{lesson}:{guardian}` | the guardian's local midnight before the lesson day («بكرة» stays true) |
 | same-day reminder | `lesson_reminder:{lesson}:{guardian}` | lesson start |
 | teacher reminder | `teacher_lesson_reminder:{lesson}:{teacher}` | lesson start |
-| follow-up | `follow_up_slots:{lead}:{stage}` | the first proposed slot |
+| follow-up | `follow_up_slots:{lead}:{cycle}:{stage}` (cycle = epoch ms of the lead's last inbound, else created_at) | the first proposed slot |
 | report / renewal (existing) | `report_ready:{report}` / `renewal_due:{subscription}` | null |
 | admin session text / template | `admin:{clientRequestId}` (null without one) | null |
 
@@ -178,3 +178,12 @@ Journey #1 (docs/03 §5) runs against the e2e stub (`:4110`, started by `playwri
 - «stop» from a guardian: also stop utility reminders? Now only follow-ups stop.
 - Quiet hours for follow-ups (no night sends)? Not enforced.
 - Phase 6: CRM messages carry Meta names (`lesson_reminder_v2`); map them to registry keys by `meta_name` when importing. `messages_content_check` rejects an **outbound** row with no `template_key`, `body` or `media_path`: give imported outbound media rows a `media_path` or a `body`.
+
+## 11. Changes from the Phase 4 verification (fixer, 2026-10-02)
+- **Follow-ups (R-LEAD-05):** key per silence (`cycle`, above), so a lead who replied gets later follow-ups. The stage advances only once the stage's row left (sent / sent by hand, or failed for good with the admin pushed); a row that expired or went stale unsent is replaced with fresh slots. Migration 144: `leads.follow_up_note` (`queued | waiting_template | no_slots`, written by the job) and `leads.follow_up_paused_by` (`lead` = «وقف», `admin` = L2); the panel shows them and asks before resuming a lead's own «وقف».
+- **Quick replies (§3.5 as written):** a payload lesson counts only if it exists and is the guardian's child's; a typed reply uses the latest outbound row with a `lesson_id` to that phone in the last 48 h whose lesson is open; anyone not a guardian → stored only. «تم» confirms only on its own; money / renewal words block a «yes». Inbound rows keep Meta's timestamp as `created_at` (24 h window, thread order). `MessageView.lesson` (`{starts_at, status}` on thread pages) lets the UI say «اتأكدت حلقة …» / «مفيش حلقة اتأكدت» from what happened.
+- **Webhook:** any item that fails (not a parse problem) → 500 after all items were tried, so Meta re-sends; replays stay no-ops.
+- **Sender (§3.3):** the gate is re-read before every row; send-time staleness (`failed` / `stale`, see docs/09); the claim writes `error_code = 'sending'` before Meta is called — a row still `sending` on a later pass, or a timeout / dropped connection after the request left, becomes `failed` / `uncertain` (pushed, never resent blindly); Meta 190 / 10 / 200 hold the row 15 min uncounted, stop the pass and push once a day; `reminder_failed` is keyed per failed try (`{message}:{claim ms}`, `{message}:{wamid}` from statuses). A `renewal_due` row is failed `stale` when its renewal task closes.
+- **Routes:** `GET /messages/gate` → `SendGateView { open, reason: env_off | not_configured | switch_off | null, queued }`; `POST /messages/:id/hand-off` (M3): an outbound queued / failed row → `failed` / `handed_off` (the sender never reads failed rows) until M2 (sent by hand) or M1 (back to the queue); audited. `ThreadDetail.lessons` (first page): the guardian's / teacher's next open lessons in the recipient's tz; template composers fill `lesson_when` / `lesson_time` / `lesson_slot` from the picked lesson (rule 6) and send its `lessonId`; teacher templates only on teacher threads.
+- **Push:** `lesson_needs_confirmation` at the same-day reminder time (§6). `EXPO_API_BASE` (no default; production `https://exp.host`) — unset = pushes recorded, never sent. A reschedule request's push is titled «طلب تغيير ميعاد من {name}».
+- **Settings:** `crm_cutover_done` (PATCH `crmCutoverDone`) retires the CRM warning after the cut-over.

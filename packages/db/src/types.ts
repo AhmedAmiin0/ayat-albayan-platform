@@ -274,7 +274,9 @@ export type Database = {
           converted_guardian_id: string | null;
           created_at: string;
           created_by: string | null;
+          follow_up_note: string | null;
           follow_up_paused: boolean;
+          follow_up_paused_by: string | null;
           follow_up_stage: number;
           id: string;
           last_inbound_at: string | null;
@@ -293,7 +295,9 @@ export type Database = {
           converted_guardian_id?: string | null;
           created_at?: string;
           created_by?: string | null;
+          follow_up_note?: string | null;
           follow_up_paused?: boolean;
+          follow_up_paused_by?: string | null;
           follow_up_stage?: number;
           id?: string;
           last_inbound_at?: string | null;
@@ -312,7 +316,9 @@ export type Database = {
           converted_guardian_id?: string | null;
           created_at?: string;
           created_by?: string | null;
+          follow_up_note?: string | null;
           follow_up_paused?: boolean;
+          follow_up_paused_by?: string | null;
           follow_up_stage?: number;
           id?: string;
           last_inbound_at?: string | null;

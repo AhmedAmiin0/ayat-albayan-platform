@@ -32,7 +32,7 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     const { db, calls, argsOf } = fakeDb({ [M]: [{ data: [{ id: 'm1' }] }, { data: [] }] });
     const q = new SenderQueries(db);
     await expect(q.claim({ id: 'm1', attempts: 1, now: NOW })).resolves.toBe(2);
-    expect(argsOf(M, 'update')).toEqual([{ attempts: 2, next_attempt_at: '2026-10-02T08:02:00.000Z' }]);
+    expect(argsOf(M, 'update')).toEqual([{ attempts: 2, next_attempt_at: '2026-10-02T08:02:00.000Z', error_code: 'sending' }]);
     expect(eqs(calls).slice(0, 3)).toEqual([['id', 'm1'], ['status', 'queued'], ['attempts', 1]]);
     await expect(q.claim({ id: 'm1', attempts: 1, now: NOW })).resolves.toBeNull();
   });
@@ -51,9 +51,10 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     expect(argsOf('lesson_reports', 'is')).toEqual(['sent_at', null]);
   });
 
-  it('sent on a row the admin marked by hand meanwhile → false; no lead or report to stamp', async () => {
+  it('sent on a row the admin marked by hand meanwhile → false; their send already stamped the lead', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
-    await expect(new SenderQueries(db).sent({ row: dueMessage(), waMessageId: 'w', at: NOW })).resolves.toBe(false);
+    const row = dueMessage({ lead_id: 'lead-1', dedup_key: 'report_ready:r1' });
+    await expect(new SenderQueries(db).sent({ row, waMessageId: 'w', at: NOW })).resolves.toBe(false);
     expect(calls.some((c) => c.table !== M)).toBe(false);
   });
 
@@ -63,10 +64,14 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     const q = new SenderQueries(db);
     await q.failure('m1', plan);
     expect(argsOf(M, 'update')).toEqual([plan]);
-    await q.expire('m2');
-    expect(calls.filter((c) => c.method === 'update').at(-1)?.args[0]).toMatchObject({ status: 'failed', error_code: 'expired' });
+    await q.expire('m2', { code: 'stale', text: 'lesson cancelled_by_admin' });
+    expect(calls.filter((c) => c.method === 'update').at(-1)?.args[0]).toMatchObject({
+      status: 'failed',
+      error_code: 'stale',
+      error_text: 'lesson cancelled_by_admin',
+    });
     expect(eqs(calls).slice(-2)).toEqual([['id', 'm2'], ['status', 'queued']]);
-    await expect(q.expire('m3')).rejects.toThrow('boom');
+    await expect(q.expire('m3', { code: 'expired', text: 'x' })).rejects.toThrow('boom');
   });
 
   it('approvedTemplates reads the approved registry rows', async () => {
@@ -89,11 +94,20 @@ describe('MessagesQueries — admin retry / sent by hand (M1, M2)', () => {
     const { db, argsOf, calls } = fakeDb({ [M]: [{ data: row }, { data: null }], leads: [{}] });
     const q = new MessagesQueries(db);
     await expect(q.markSentManually('m1', NOW)).resolves.toEqual(row);
-    expect(argsOf(M, 'update')).toEqual([{ status: 'sent_manually', sent_manually_at: '2026-10-02T08:00:00.000Z', next_attempt_at: null }]);
+    expect(argsOf(M, 'update')).toEqual([
+      { status: 'sent_manually', sent_manually_at: '2026-10-02T08:00:00.000Z', next_attempt_at: null, error_code: null, error_text: null },
+    ]);
     expect(argsOf(M, 'in')).toEqual(['status', ['queued', 'failed']]);
     expect(eqs(calls)).toEqual([['id', 'm1'], ['direction', 'outbound']]);
     expect(argsOf('leads', 'eq')).toEqual(['id', 'lead-1']);
     expect(calls.some((c) => c.table === 'lesson_reports')).toBe(false);
     await expect(q.markSentManually('m1', NOW)).resolves.toBeNull();
+  });
+
+  it('handOff: outbound queued/failed → failed «handed_off» (the sender skips it)', async () => {
+    const { db, argsOf } = fakeDb({ [M]: [{ data: { id: 'm1' } }] });
+    await expect(new MessagesQueries(db).handOff('m1')).resolves.toEqual({ id: 'm1' });
+    expect(argsOf(M, 'update')).toEqual([expect.objectContaining({ status: 'failed', error_code: 'handed_off', next_attempt_at: null })]);
+    expect(argsOf(M, 'in')).toEqual(['status', ['queued', 'failed']]);
   });
 });

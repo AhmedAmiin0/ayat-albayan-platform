@@ -127,6 +127,7 @@ export const settingsUpdateSchema = z.object({
   reminderMinutesBefore: z.int().min(5).max(720).optional(),
   reminder24hEnabled: z.boolean().optional(),
   messagingEnabled: z.boolean().optional(),
+  crmCutoverDone: z.boolean().optional(),
 });
 
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;

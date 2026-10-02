@@ -11,6 +11,10 @@ const DAY = 24 * HOUR;
 /** R-LEAD-05: only these leads get follow-ups. */
 export const FOLLOW_UP_STATUSES = ['interested_no_slot', 'no_reply'] as const satisfies readonly LeadStatus[];
 
+/** leads.follow_up_note (migration 144): why a due follow-up has not gone out yet. */
+export const FOLLOW_UP_NOTES = ['queued', 'waiting_template', 'no_slots'] as const;
+export type FollowUpNote = (typeof FOLLOW_UP_NOTES)[number];
+
 export interface FollowUpLead {
   status: LeadStatus;
   follow_up_paused: boolean;
@@ -30,7 +34,33 @@ export function nextFollowUpAt(lead: FollowUpLead, hours: readonly number[]): Da
   if (!(FOLLOW_UP_STATUSES as readonly string[]).includes(lead.status)) return null;
   const h = hours[lead.follow_up_stage];
   if (h === undefined) return null;
-  return new Date(Date.parse(lead.last_inbound_at ?? lead.created_at) + h * HOUR);
+  return new Date(followUpCycle(lead) + h * HOUR);
+}
+
+/**
+ * The follow-up cycle: the instant (epoch ms) the silence started, i.e. the lead's last message,
+ * else when the lead was created. A new message starts a new cycle.
+ */
+export function followUpCycle(lead: Pick<FollowUpLead, 'last_inbound_at' | 'created_at'>): number {
+  return Date.parse(lead.last_inbound_at ?? lead.created_at);
+}
+
+const FOLLOW_UP_PREFIX = 'follow_up_slots';
+
+/**
+ * dedup_key of a follow-up: `follow_up_slots:{lead}:{cycle}:{stage}`. The cycle keeps a later
+ * silence (after the lead replied and the stage went back to 0) from colliding with an earlier one.
+ */
+export function followUpKey(input: { leadId: string; cycle: number; stage: number }): string {
+  return `${FOLLOW_UP_PREFIX}:${input.leadId}:${input.cycle}:${input.stage}`;
+}
+
+/** The cycle inside a followUpKey, or null for any other key. */
+export function followUpKeyCycle(key: string | null): number | null {
+  const parts = key?.split(':') ?? [];
+  if (parts.length !== 4 || parts[0] !== FOLLOW_UP_PREFIX) return null;
+  const cycle = Number(parts[2]);
+  return Number.isSafeInteger(cycle) ? cycle : null;
 }
 
 const localDates = new Map<string, Intl.DateTimeFormat>();
@@ -53,6 +83,16 @@ export function dayBeforeSendAt(startsAt: Date, tz: string): Date {
   const naive = new Date(startsAt.getTime() - DAY);
   const shift = utcOffsetMinutes(tz, startsAt) - utcOffsetMinutes(tz, naive);
   return new Date(naive.getTime() + shift * MINUTE);
+}
+
+/**
+ * Midnight that starts `at`'s local day in `tz`, as a UTC instant. The day-before reminder expires
+ * then: sent any later (gate closed, retries) its «بكرة» would already be «النهاردة».
+ */
+export function localDayStart(at: Date, tz: string): Date {
+  const naive = Date.parse(`${localDate(at, tz)}T00:00:00Z`);
+  const guess = naive - utcOffsetMinutes(tz, new Date(naive)) * MINUTE;
+  return new Date(naive - utcOffsetMinutes(tz, new Date(guess)) * MINUTE);
 }
 
 export type ReminderKind = 'day_before' | 'same_day';

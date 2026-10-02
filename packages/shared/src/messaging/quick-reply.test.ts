@@ -59,6 +59,8 @@ describe('quickReplyIntent: unclear → null, the admin reads it', () => {
     '', '   ', 'لا', 'لأ', 'مش موافق', 'نعم بس متأخرين شوية', 'السلام عليكم', '1', '2',
     'إلغاء', 'موقف السيارات', 'هو الميعاد امتى؟',
     'تمام تمام تمام تمام تمام تمام تمام',
+    // Payment and renewal replies are not a lesson confirmation (verifier, Phase 4).
+    'تم التحويل', 'تمام هبعت الفلوس بكرة', 'حولت المبلغ تمام', 'تمام هجدد الاشتراك', 'تم الدفع',
   ])('«%s» → null', (text) => {
     expect(quickReplyIntent(text)).toBeNull();
   });

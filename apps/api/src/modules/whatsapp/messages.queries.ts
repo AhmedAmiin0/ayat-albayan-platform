@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { MessageRow } from './message.mapper';
-import { stampDelivered } from './sender.queries';
+import { stampDelivered } from './delivered';
+import { HANDED_OFF } from './send-plan';
 
-/** M1 / M2 (docs/12 §4): the admin's retry and «I sent it myself», both compare-and-set. */
+/** M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set. */
 @Injectable()
 export class MessagesQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -35,7 +36,7 @@ export class MessagesQueries {
     const stamp = at.toISOString();
     const { data, error } = await this.db
       .from('messages')
-      .update({ status: 'sent_manually', sent_manually_at: stamp, next_attempt_at: null })
+      .update({ status: 'sent_manually', sent_manually_at: stamp, next_attempt_at: null, error_code: null, error_text: null })
       .eq('id', id)
       .eq('direction', 'outbound')
       .in('status', ['queued', 'failed'])
@@ -43,6 +44,23 @@ export class MessagesQueries {
       .maybeSingle();
     if (error) throw new Error(`message manual send failed: ${error.message}`);
     if (data) await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
+    return data;
+  }
+
+  /**
+   * M3: the admin opened wa.me to send it from their own WhatsApp. Held as failed «handed_off»
+   * (the sender never reads failed rows) until they confirm (M2) or put it back (M1).
+   */
+  async handOff(id: string): Promise<MessageRow | null> {
+    const { data, error } = await this.db
+      .from('messages')
+      .update({ status: 'failed', error_code: HANDED_OFF, error_text: 'the admin is sending it from WhatsApp', next_attempt_at: null })
+      .eq('id', id)
+      .eq('direction', 'outbound')
+      .in('status', ['queued', 'failed'])
+      .select('*')
+      .maybeSingle();
+    if (error) throw new Error(`message hand-off failed: ${error.message}`);
     return data;
   }
 }

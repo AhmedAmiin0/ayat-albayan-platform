@@ -1,4 +1,4 @@
-import { Inject, Injectable, Logger } from '@nestjs/common';
+import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
 import { InboundService } from './webhook.inbound.service';
 import { parseWebhook } from './webhook.parse';
 import { StatusService } from './webhook.status.service';
@@ -29,7 +29,9 @@ export async function within(work: Promise<unknown>, ms: number): Promise<boolea
 
 /**
  * Handles one signed webhook body: every message and status on its own, so one bad item never
- * fails the batch (Meta would re-send all of it). Never throws.
+ * stops the others. If any item failed (DB down, a timeout) it throws once all were tried: the
+ * controller answers 500 and Meta re-sends the batch. Replays are no-ops for the items that went
+ * through (wamid is unique, statuses only move forward), so only the failed ones get another go.
  */
 @Injectable()
 export class WebhookService {
@@ -43,19 +45,20 @@ export class WebhookService {
 
   async handle(body: unknown): Promise<void> {
     const batch = parseWebhook(body, { now: new Date(), phoneNumberId: this.config.phoneNumberId });
-    for (const m of batch.messages) await this.safely(m.waMessageId, () => this.inbound.handle(m));
-    for (const s of batch.statuses) await this.safely(s.waMessageId, () => this.statuses.handle(s));
+    let failed = 0;
+    for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m));
+    for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
+    if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }
 
-  /**
-   * ponytail: a failed item is logged, not retried — Meta gets its 200 either way. Replays are
-   * safe (wamid dedup), so answering 500 to get Meta's retry is the upgrade if items get lost.
-   */
-  private async safely(waMessageId: string, work: () => Promise<void>): Promise<void> {
+  /** 1 when the item failed (logged), else 0. */
+  private async safely(waMessageId: string, work: () => Promise<void>): Promise<number> {
     try {
       await work();
+      return 0;
     } catch (e) {
       this.log.error(`webhook item ${waMessageId} failed: ${e instanceof Error ? e.message : String(e)}`);
+      return 1;
     }
   }
 }

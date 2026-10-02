@@ -9,9 +9,9 @@ const MINUTE = 60_000;
 /** R-MSG-02: every 5 minutes. */
 const EVERY_MS = 5 * MINUTE;
 const FIRST_RUN_MS = 30_000;
-/** The day-before send time is 23–25 h ahead across DST; the confirmation push looks 24 h ahead. */
+/** The day-before send time is 23–25 h ahead across DST. */
 const LOOKAHEAD_MS = 25 * 60 * MINUTE;
-/** How far back push_notifications is read to skip lessons already pushed (> the 24 h window). */
+/** How far back push_notifications is read to skip lessons already pushed (> any reminder window). */
 const PUSHED_SINCE_MS = 48 * 60 * MINUTE;
 
 export type ReminderSummary = { lessons: number; queued: number; dropped: number; pushed: number };
@@ -63,7 +63,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
         settings.reminder_24h_enabled && (await this.queries.approved(['lesson_reminder_24h'])).has('lesson_reminder_24h');
       const rows = planReminders({ lessons, minutesBefore: settings.reminder_minutes_before, dayBefore, now });
       summary.queued = await this.queries.queue(rows);
-      summary.pushed = await this.confirmations(lessons, now);
+      summary.pushed = await this.confirmations(lessons, { now, minutesBefore: settings.reminder_minutes_before });
     } catch (e) {
       this.log.error(`reminders run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
@@ -82,10 +82,11 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     }
   }
 
-  private async confirmations(lessons: readonly ReminderLesson[], now: Date): Promise<number> {
-    const due = needsConfirmation(lessons, now);
+  private async confirmations(lessons: readonly ReminderLesson[], at: { now: Date; minutesBefore: number }): Promise<number> {
+    const due = needsConfirmation(lessons, at);
     if (due.length === 0) return 0;
-    const done = await this.queries.pushedSubjects('lesson_needs_confirmation', new Date(now.getTime() - PUSHED_SINCE_MS));
+    const since = new Date(at.now.getTime() - PUSHED_SINCE_MS);
+    const done = await this.queries.pushedSubjects('lesson_needs_confirmation', since);
     const fresh = due.filter((l) => !done.has(l.id));
     for (const lesson of fresh) await this.push.notifyAdmins('lesson_needs_confirmation', confirmationPush(lesson));
     return fresh.length;

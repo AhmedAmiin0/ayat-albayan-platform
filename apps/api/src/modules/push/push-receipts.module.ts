@@ -12,7 +12,10 @@ import { expoReceiptsTransport, RECEIPTS_TRANSPORT } from './receipts.transport'
   providers: [
     PushReceiptsQueries,
     PushReceiptsJob,
-    { provide: RECEIPTS_TRANSPORT, useFactory: () => expoReceiptsTransport(loadEnv().EXPO_ACCESS_TOKEN) },
+    {
+      provide: RECEIPTS_TRANSPORT,
+      useFactory: () => expoReceiptsTransport({ base: loadEnv().EXPO_API_BASE, accessToken: loadEnv().EXPO_ACCESS_TOKEN }),
+    },
   ],
 })
 export class PushReceiptsModule {}

@@ -57,14 +57,14 @@ export const failed = message({
   body: 'حلقة سهيلة النهاردة — 17:00',
   template_key: 'lesson_reminder_plain',
   status: 'failed',
-  error_code: '131026',
+  error_code: '131049',
   attempts: 1,
   created_at: '2026-10-02T08:10:00Z',
   click_to_chat: 'https://wa.me/966552147730?text=x',
 });
 
 export function detail(messages: MessageView[], fields: Partial<ThreadDetail> = {}): ThreadDetail {
-  return { thread, messages, has_more: false, ...fields };
+  return { thread, messages, has_more: false, lessons: [], ...fields };
 }
 
 /** A cached thread, as useThread stores it. */

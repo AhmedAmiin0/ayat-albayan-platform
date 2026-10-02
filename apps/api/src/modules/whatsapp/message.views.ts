@@ -2,7 +2,7 @@ import type { MessageView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { StorageService } from '../../common/storage/storage.service';
 import { documentLink } from './message.dispatch';
-import { needsManualSend, toMessageView, type MessageRow } from './message.mapper';
+import { needsManualSend, toMessageView, type ThreadMessageRow } from './message.mapper';
 import { renderable } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
 import { templateParams } from './wa-json';
@@ -18,7 +18,7 @@ export class MessageViews {
     private readonly storage: StorageService,
   ) {}
 
-  async view(row: MessageRow, mediaUrl: string | null = null): Promise<MessageView> {
+  async view(row: ThreadMessageRow, mediaUrl: string | null = null): Promise<MessageView> {
     const template = row.template_key ? await this.templates.get(row.template_key) : null;
     const doc = templateParams(row.template_params).document;
     const documentUrl = template && needsManualSend(row) ? await documentLink(this.storage, doc) : null;

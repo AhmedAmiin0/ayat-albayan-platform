@@ -84,6 +84,23 @@ describe('lead panel in the thread (R-LEAD-02/03/05)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/leads/lead-1/follow-up', { paused: true }));
   });
 
+  it('says why the due follow-up has not gone out (no stale «المتابعة الجاية» in the past)', async () => {
+    renderPanel(lead({ status: 'no_reply', next_follow_up_at: '2026-09-27T07:00:00Z', follow_up_note: 'waiting_template' }));
+    expect(await screen.findByText(t.followUps.waitingTemplate)).toBeTruthy();
+    expect(screen.queryByText(/^المتابعة الجاية /)).toBeNull();
+  });
+
+  it('a lead who sent «وقف» shows it, and resuming asks first', async () => {
+    renderPanel(lead({ status: 'no_reply', follow_up_paused: true, follow_up_paused_by: 'lead' }));
+    expect(await screen.findByText(t.followUps.pausedByLead)).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: t.followUps.resume }));
+    const dialog = screen.getByRole('dialog', { name: t.followUps.resumeLeadTitle });
+    expect(apiSend).not.toHaveBeenCalled();
+    apiSend.mockResolvedValue(lead({ follow_up_paused: false }));
+    fireEvent.click(within(dialog).getByRole('button', { name: t.followUps.resumeLeadYes }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/leads/lead-1/follow-up', { paused: false }));
+  });
+
   it('a number that is not a lead has no panel', async () => {
     routeFetch(apiFetch, [['/leads?', { items: [], total: 0, page: 1, pageSize: 5 }]]);
     renderWithClient(<LeadPanel phone={PHONE} />);

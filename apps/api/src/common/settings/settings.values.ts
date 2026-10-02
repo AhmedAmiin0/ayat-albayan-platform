@@ -15,6 +15,7 @@ export const SETTING_DEFAULTS: AcademySettings = {
   reminder_minutes_before: 60,
   reminder_24h_enabled: false,
   messaging_enabled: false,
+  crm_cutover_done: false,
 };
 
 export type SettingKey = keyof AcademySettings;
@@ -40,6 +41,7 @@ const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
   reminder_minutes_before: int(1),
   reminder_24h_enabled: bool,
   messaging_enabled: bool,
+  crm_cutover_done: bool,
 };
 
 /** Stored rows → typed settings, defaults filled in key by key. */
@@ -62,6 +64,7 @@ export function readSettings(rows: readonly { key: string; value: Json }[]): Aca
     reminder_minutes_before: pick('reminder_minutes_before'),
     reminder_24h_enabled: pick('reminder_24h_enabled'),
     messaging_enabled: pick('messaging_enabled'),
+    crm_cutover_done: pick('crm_cutover_done'),
   };
 }
 
@@ -78,6 +81,7 @@ const KEY_OF: { [K in keyof Required<SettingsUpdate>]: SettingKey } = {
   reminderMinutesBefore: 'reminder_minutes_before',
   reminder24hEnabled: 'reminder_24h_enabled',
   messagingEnabled: 'messaging_enabled',
+  crmCutoverDone: 'crm_cutover_done',
 };
 
 /** PATCH body (camelCase, only sent keys) → settings rows to write. */

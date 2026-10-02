@@ -19,7 +19,7 @@ export type SendSummary = Record<SendOutcome, number>;
 /**
  * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains `messages` where status = queued, due,
  * and either a session text or an approved template. Gate closed (env, WhatsApp config or the
- * admin's kill switch) → nothing is read, rows wait. In-process and single-flight; safe across
+ * admin's kill switch) → nothing is read, rows wait; the gate is asked again before every row. In-process and single-flight; safe across
  * instances because each row is claimed by compare-and-set.
  */
 @Injectable()
@@ -67,18 +67,22 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** One pass over the due rows. Never throws. */
   async runOnce(now = new Date()): Promise<SendSummary> {
-    const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, skipped: 0 };
+    const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, paused: 0, skipped: 0 };
     try {
       if (!(await this.gate.open())) return summary;
       const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
       for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
+        // The kill switch is read before every row, so OFF stops a long pass at once (docs/09).
+        if (!(await this.gate.open())) break;
         const template = row.template_key ? (templates.get(row.template_key) ?? null) : null;
-        summary[await this.worker.process({ row, template, now })] += 1;
+        const outcome = await this.worker.process({ row, template, now });
+        summary[outcome] += 1;
+        if (outcome === 'paused') break; // a broken token fails every row the same way
       }
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
-    if (summary.sent + summary.retry + summary.failed + summary.expired > 0) {
+    if (summary.sent + summary.retry + summary.failed + summary.expired + summary.stale + summary.paused > 0) {
       this.log.log(`outbound messages: ${JSON.stringify(summary)}`);
     }
     return summary;

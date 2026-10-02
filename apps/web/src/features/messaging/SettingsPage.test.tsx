@@ -11,9 +11,12 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 
 const s = t.templates.settings;
 
-function renderPage(messagingEnabled = false) {
+type Gate = { open: boolean; reason: 'env_off' | 'not_configured' | 'switch_off' | null; queued: number };
+
+function renderPage(messagingEnabled = false, gate: Gate = { open: messagingEnabled, reason: messagingEnabled ? null : 'switch_off', queued: 0 }) {
   routeFetch(apiFetch, [
     ['/settings', { ...SETTINGS, messaging_enabled: messagingEnabled }],
+    ['/messages/gate', gate],
     ['/messaging/templates', []],
   ]);
   renderWithClient(<SettingsPage />);
@@ -25,13 +28,15 @@ afterEach(() => {
 });
 
 describe('messaging kill switch (docs/12 §3.1)', () => {
-  it('warns that the CRM owns the number, and turning sending ON asks first', async () => {
-    renderPage(false);
-    expect(await screen.findByText(s.crmWarning)).toBeTruthy();
+  it('warns that the CRM owns the number, and turning sending ON asks first, saying how many go out', async () => {
+    renderPage(false, { open: false, reason: 'switch_off', queued: 5 });
+    expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
     expect(screen.getByText(s.off)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: s.enableTitle }));
     const dialog = screen.getByRole('dialog', { name: s.enableTitle });
     expect(within(dialog).getByText(s.enableConfirm)).toBeTruthy();
+    expect(within(dialog).getByText(new RegExp(s.queued.few.replace('{n}', '5')))).toBeTruthy();
+    expect(document.activeElement?.textContent).toBe(t.common.cancel);
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue({ ...SETTINGS, messaging_enabled: true });
     fireEvent.click(within(dialog).getByRole('button', { name: s.enableYes }));
@@ -79,5 +84,19 @@ describe('academy settings form', () => {
     const alerts = await screen.findAllByRole('alert');
     expect(alerts.map((a) => a.textContent)).toEqual([t.settings.notAscending, t.settings.invalid]);
     expect(apiSend).not.toHaveBeenCalled();
+  });
+
+  it('a gate closed on the server is named: the switch alone would not send anything', async () => {
+    renderPage(true, { open: false, reason: 'env_off', queued: 2 });
+    expect(await screen.findByText(s.gateEnvOff)).toBeTruthy();
+    expect(screen.getByText(s.queued.two)).toBeTruthy();
+  });
+
+  it('after the cut-over the owner retires the CRM warning', async () => {
+    renderPage(false);
+    apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: true });
+    fireEvent.click(await screen.findByRole('button', { name: s.crmDone }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { crmCutoverDone: true }));
+    await waitFor(() => expect(screen.queryByText(s.crmWarning)).toBeNull());
   });
 });

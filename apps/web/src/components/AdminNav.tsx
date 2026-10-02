@@ -7,8 +7,8 @@ import { cn } from '@/lib/utils';
 // لوحة التحكم is the logo link (/admin); student reports open from the student profile.
 const GROUPS = [
   [
-    { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'chat' },
-    { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'phone' },
+    { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'phone' },
+    { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'chat' },
     { key: 'jobApplicants', to: '/admin/job-applicants', label: t.nav.jobApplicants, icon: 'brief' },
   ],
   [

@@ -36,10 +36,12 @@ export class ThreadsService {
     const row = await this.queries.thread(q.phone);
     const rows = await this.queries.messages(q);
     const page = rows.slice(0, q.limit).reverse();
+    const thread = row ? toThreadView(row, now) : null;
     return {
-      thread: row ? toThreadView(row, now) : null,
+      thread,
       messages: await Promise.all(page.map((m) => this.views.view(m))),
       has_more: rows.length > q.limit,
+      lessons: thread && !q.before ? await this.queries.lessons(thread, now) : [],
     };
   }
 }

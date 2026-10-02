@@ -30,6 +30,8 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
       ['POST', '/messaging/templates/renewal_due/submit'],
       ['POST', `/messages/${ID}/retry`],
       ['POST', `/messages/${ID}/sent-manually`],
+      ['POST', `/messages/${ID}/hand-off`],
+      ['GET', '/messages/gate'],
     ] as const) {
       expect((await t.call({ method, url, token: 'teacher' })).statusCode).toBe(403);
     }
@@ -104,5 +106,23 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
       expect([res.statusCode, res.json().code]).toEqual([409, 'not_manual']);
     }
     expect(t.messages.markSentManually).not.toHaveBeenCalled();
+  });
+
+  it('M3 hand-off: the row is held for the admin (failed «handed_off», wa.me kept), audited', async () => {
+    t.messages.get.mockResolvedValue(messageRow({ id: ID, status: 'queued' }));
+    t.messages.handOff.mockResolvedValue(messageRow({ id: ID, status: 'failed', error_code: 'handed_off' }));
+    const res = await t.call({ method: 'POST', url: `/messages/${ID}/hand-off` });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toMatchObject({ status: 'failed', error_code: 'handed_off', click_to_chat: expect.stringContaining('wa.me') });
+    expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'message_handed_off' }));
+    t.messages.get.mockResolvedValue(messageRow({ id: ID, status: 'sent' }));
+    expect((await t.call({ method: 'POST', url: `/messages/${ID}/hand-off` })).statusCode).toBe(409);
+  });
+
+  it('G gate: which gate is closed and how many rows wait', async () => {
+    t.gate.view.mockResolvedValue({ open: false, reason: 'switch_off', queued: 5 });
+    const res = await t.call({ method: 'GET', url: '/messages/gate' });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toEqual({ open: false, reason: 'switch_off', queued: 5 });
   });
 });

@@ -1,6 +1,14 @@
 import type { Json } from '@ab/db';
 import ar from '@ab/shared/i18n/ar.json';
-import { followUpSlotsMessage, leadQualificationSchema, RIYADH_TZ, type FollowUpLead } from '@ab/shared';
+import {
+  followUpCycle,
+  followUpKey,
+  followUpSlotsMessage,
+  leadQualificationSchema,
+  RIYADH_TZ,
+  type FollowUpLead,
+  type MessageStatus,
+} from '@ab/shared';
 import { queuedRow, type QueuedMessage } from '../reminders/queued-row';
 import { localDay } from '../teachers/availability/zoned-time';
 
@@ -13,6 +21,8 @@ export interface FollowUpLeadRow extends FollowUpLead {
   tz: string | null;
   qualification: Json;
   next_follow_up_at: string | null;
+  /** Why the due follow-up has not gone out (migration 144); the job keeps it current. */
+  follow_up_note: string | null;
 }
 
 export interface LeadZone {
@@ -50,8 +60,33 @@ export function pickTwoSlots(starts: readonly Date[], tz: string): [Date, Date] 
   return [new Date(first), new Date(second)];
 }
 
-export function followUpDedupKey(leadId: string, stage: number): string {
-  return `follow_up_slots:${leadId}:${stage}`;
+/** dedup_key of the lead's current follow-up: this silence (cycle) and this stage. */
+export function followUpDedupKey(lead: Pick<FollowUpLeadRow, 'id' | 'follow_up_stage' | 'last_inbound_at' | 'created_at'>): string {
+  return followUpKey({ leadId: lead.id, cycle: followUpCycle(lead), stage: lead.follow_up_stage });
+}
+
+/** The messages row already queued under followUpDedupKey, if any. */
+export interface StageRow {
+  id: string;
+  status: MessageStatus;
+  error_code: string | null;
+}
+
+/** Nothing went out and nobody was told: the sender dropped it (late, or no longer wanted). */
+const UNSENT_CODES: ReadonlySet<string> = new Set(['expired', 'stale']);
+
+/**
+ * What a due follow-up needs, given the row of its key (R-LEAD-05). The stage moves on only once
+ * the follow-up actually left (sent, or the admin sent it by hand) or failed for good (the admin
+ * got reminder_failed); a queued or handed-off row waits; a row that expired or went stale before
+ * it was sent is replaced with fresh slots.
+ */
+export function followUpStep(row: StageRow | null): 'queue' | 'requeue' | 'wait' | 'advance' {
+  if (!row) return 'queue';
+  if (row.status === 'queued') return 'wait';
+  if (row.status !== 'failed') return 'advance';
+  if (row.error_code === 'handed_off') return 'wait';
+  return UNSENT_CODES.has(row.error_code ?? '') ? 'requeue' : 'advance';
 }
 
 export interface FollowUpRowInput {
@@ -68,7 +103,7 @@ export function followUpRow(input: FollowUpRowInput): QueuedMessage {
     phone: lead.phone_e164,
     leadId: lead.id,
     template: followUpSlotsMessage({ slots, tz: zone.tz, tzCity: zone.city, leadId: lead.id }),
-    dedupKey: followUpDedupKey(lead.id, lead.follow_up_stage),
+    dedupKey: followUpDedupKey(lead),
     now: input.now,
     expiresAt: slots[0],
   });

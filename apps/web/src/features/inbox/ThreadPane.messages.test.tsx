@@ -17,7 +17,7 @@ const FAILED = message({
   direction: 'outbound',
   status: 'failed',
   body: 'تذكير بالحلقة',
-  error_code: '131026',
+  error_code: '131049',
   click_to_chat: LINK,
   created_at: '2026-10-01T11:00:00Z',
 });
@@ -31,11 +31,19 @@ const WAITING = message({
   created_at: '2026-10-01T12:00:00Z',
 });
 const PHOTO = message({ id: 'm-p', body: null, media_mime: 'image/jpeg', media_url: 'https://sb.test/signed/p.jpg' });
-const CONFIRM = message({ id: 'm-c', body: 'تمام، هنحضر', interactive_payload: { payload: 'confirm:l-1' } });
+const CONFIRM = message({
+  id: 'm-c',
+  body: 'تمام، هنحضر',
+  guardian_id: 'g-1',
+  interactive_payload: { payload: 'confirm:l-1' },
+  lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'confirmed' },
+});
+const UNLINKED = message({ id: 'm-u', body: 'تمام', guardian_id: 'g-1' });
+const HANDED = message({ ...FAILED, id: 'm-h', body: 'رسالة باليد', error_code: 'handed_off', created_at: '2026-10-01T11:30:00Z' });
 
 function renderThread() {
   routeFetch(apiFetch, [
-    ['/threads/%2B966501234567', detail([PHOTO, CONFIRM, FAILED, WAITING])],
+    ['/threads/%2B966501234567', detail([PHOTO, CONFIRM, UNLINKED, FAILED, HANDED, WAITING])],
     ['/messaging/templates', [template({ key: 'renewal_due', status: 'pending' })]],
     ['/settings', SETTINGS],
     ['/leads?', { items: [lead()], total: 1, page: 1, pageSize: 5 }],
@@ -55,12 +63,14 @@ afterEach(() => {
 });
 
 describe('message log (R-MSG-05, R-MSG-03)', () => {
-  it('media placeholders open the signed file; a tapped quick reply says what it meant', async () => {
+  it('media placeholders open the signed file; a quick reply says what it did, not what it looked like', async () => {
     renderThread();
     await screen.findByRole('log');
     const open = screen.getByRole('link', { name: t.inbox.openMedia.replace('{kind}', t.inbox.media.image) });
     expect(open.getAttribute('href')).toBe(PHOTO.media_url);
-    expect(bubble('تمام، هنحضر').getByText(t.inbox.quickReply.confirm)).toBeTruthy();
+    const confirmed = t.inbox.quickReply.confirmed.replace('{when}', 'الأحد 4 أكتوبر 17:00');
+    expect(bubble('تمام، هنحضر').getByText(confirmed)).toBeTruthy();
+    expect(bubble('تمام').getByText(t.inbox.quickReply.notConfirmed)).toBeTruthy();
   });
 
   it('a failed send: saffron chip, the reason in words, retry puts it back in the queue', async () => {
@@ -69,26 +79,37 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     const failed = bubble('تذكير بالحلقة');
     const chip = failed.getByText(t.enums.messageStatus.failed).closest('[data-tone]');
     expect(chip?.getAttribute('data-tone')).toBe('act');
-    expect(failed.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131026']))).toBeTruthy();
+    expect(failed.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
     apiSend.mockResolvedValue({ ...FAILED, status: 'queued' });
     fireEvent.click(failed.getByRole('button', { name: t.messages.retry }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-f/retry'));
     expect(await screen.findByText(t.messages.retryQueued)).toBeTruthy();
   });
 
-  it('click-to-chat opens wa.me, then asks before recording it was sent by hand', async () => {
+  it('click-to-chat opens wa.me and tells the server, which holds the row (no second send)', async () => {
     renderThread();
     await screen.findByRole('log');
     const failed = bubble('تذكير بالحلقة');
     const link = failed.getByRole('link', { name: t.messages.clickToChat });
     expect(link.getAttribute('href')).toBe(LINK);
     expect(link.getAttribute('target')).toBe('_blank');
+    apiSend.mockResolvedValue({ ...FAILED, error_code: 'handed_off' });
     fireEvent.click(link);
-    const ask = screen.getByRole('group', { name: t.messages.markSentManually });
-    expect(within(ask).getByText(t.messages.sentManuallyConfirm)).toBeTruthy();
-    apiSend.mockResolvedValue({ ...FAILED, status: 'sent_manually' });
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-f/hand-off'));
+  });
+
+  it('a held row asks «بعتّها؟» from its own state (survives a refresh): yes = sent by hand, no = back to the queue', async () => {
+    renderThread();
+    await screen.findByRole('log');
+    const held = bubble('رسالة باليد');
+    const ask = held.getByRole('group', { name: t.messages.markSentManually });
+    expect(within(ask).getByText(t.messages.handedOff)).toBeTruthy();
+    expect(held.queryByRole('button', { name: t.messages.retry })).toBeNull();
+    apiSend.mockResolvedValue({ ...HANDED, status: 'sent_manually' });
     fireEvent.click(within(ask).getByRole('button', { name: t.messages.markSentManually }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-f/sent-manually'));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/sent-manually'));
+    fireEvent.click(within(ask).getByRole('button', { name: t.messages.undoHandOff }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-h/retry'));
   });
 
   it('a queued row whose template Meta has not approved says so', async () => {

@@ -1,6 +1,8 @@
+import type { ExpoConn } from '../../common/push/push.module';
 import type { ExpoReceipt } from './push-receipts';
 
-export const EXPO_RECEIPTS_URL = 'https://exp.host/--/api/v2/push/getReceipts';
+/** Under EXPO_API_BASE («https://exp.host»). */
+export const EXPO_RECEIPTS_PATH = '/--/api/v2/push/getReceipts';
 /** Expo's limit of ids per getReceipts request. */
 export const RECEIPTS_BATCH = 1000;
 
@@ -8,12 +10,17 @@ export const RECEIPTS_BATCH = 1000;
 export type ReceiptsTransport = (ids: readonly string[]) => Promise<Record<string, ExpoReceipt>>;
 export const RECEIPTS_TRANSPORT = Symbol('RECEIPTS_TRANSPORT');
 
-/** The real transport: POST the ids in batches of 1000, with EXPO_ACCESS_TOKEN when set. */
-export function expoReceiptsTransport(accessToken: string | undefined): ReceiptsTransport {
+/**
+ * The real transport: POST the ids in batches of 1000, with EXPO_ACCESS_TOKEN when set.
+ * EXPO_API_BASE unset (push off): no receipts, nothing is fetched.
+ */
+export function expoReceiptsTransport({ base, accessToken }: ExpoConn): ReceiptsTransport {
+  if (!base) return async () => ({});
+  const url = `${base.replace(/\/+$/, '')}${EXPO_RECEIPTS_PATH}`;
   return async (ids) => {
     const out: Record<string, ExpoReceipt> = {};
     for (let i = 0; i < ids.length; i += RECEIPTS_BATCH) {
-      const res = await fetch(EXPO_RECEIPTS_URL, {
+      const res = await fetch(url, {
         method: 'POST',
         headers: {
           accept: 'application/json',

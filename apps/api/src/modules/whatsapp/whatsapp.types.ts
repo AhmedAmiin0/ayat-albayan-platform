@@ -65,7 +65,13 @@ export interface WhatsappClient {
 export class WaError extends Error {
   constructor(
     message: string,
-    readonly info: { code: number | null; status: number; details?: string },
+    readonly info: {
+      code: number | null;
+      status: number;
+      details?: string;
+      /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
+      uncertain?: boolean;
+    },
   ) {
     super(message);
     this.name = 'WaError';

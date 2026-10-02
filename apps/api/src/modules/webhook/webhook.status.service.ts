@@ -33,16 +33,17 @@ export class StatusService {
       const patch = row && statusPatch(row, e);
       if (!row || !patch) return;
       if (await this.queries.moveStatus({ id: row.id, from: row.status, patch })) {
-        if (patch.status === 'failed') await this.pushFailed(row);
+        if (patch.status === 'failed') await this.pushFailed(row, e.waMessageId);
         return;
       }
     }
   }
 
-  private async pushFailed(row: OutboundRow): Promise<void> {
+  /** Keyed by the send (wamid), so a row that fails again after the admin's retry pushes again. */
+  private async pushFailed(row: OutboundRow, waMessageId: string): Promise<void> {
     const name = row.guardians?.name ?? row.leads?.name ?? row.phone_e164;
     await this.push.notifyAdmins('reminder_failed', {
-      subject: row.id,
+      subject: `${row.id}:${waMessageId}`,
       vars: { template: failedLabel(row), name },
       data: { phone: row.phone_e164, messageId: row.id },
     });

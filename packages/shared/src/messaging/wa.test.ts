@@ -1,8 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import {
   backoff,
+  canRetryCode,
   clickToChatLink,
   isRetryableWaError,
+  isWaAuthError,
   MAX_SEND_ATTEMPTS,
   SESSION_WINDOW_MS,
   sessionWindowOpen,
@@ -90,5 +92,31 @@ describe('backoff and retry (R-MSG-02, rule 8)', () => {
     [100, false],
   ])('Meta error %j retryable → %s', (code, retry) => {
     expect(isRetryableWaError(code)).toBe(retry);
+  });
+});
+
+describe('token / permission errors and the admin retry button', () => {
+  it.each([
+    [190, true],
+    [10, true],
+    [200, true],
+    [131026, false],
+    [null, false],
+  ])('Meta error %j is an auth error → %s', (code, auth) => {
+    expect(isWaAuthError(code)).toBe(auth);
+  });
+
+  it.each([
+    ['131026', false],
+    ['131047', false],
+    ['expired', false],
+    ['stale', false],
+    ['handed_off', false],
+    ['132001', true],
+    ['uncertain', true],
+    ['network', true],
+    [null, true],
+  ])('«جرّب تاني» for error %j → %s', (code, ok) => {
+    expect(canRetryCode(code)).toBe(ok);
   });
 });

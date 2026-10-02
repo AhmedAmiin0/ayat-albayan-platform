@@ -32,11 +32,20 @@ const RESCHEDULE = [
   'غيروا الميعاد', 'ميعاد تاني', 'ميعاد اخر', 'مش هنقدر', 'مش هقدر', 'مش هنلحق',
 ];
 const CONFIRM = new Set([
-  'نعم', 'اه', 'ايوه', 'ايوا', 'تمام', 'موافق', 'موافقه', 'اكيد', 'تم', 'حاضر', 'موكد',
+  'نعم', 'اه', 'ايوه', 'ايوا', 'تمام', 'موافق', 'موافقه', 'اكيد', 'حاضر', 'موكد',
   'ok', 'okay', 'yes',
 ]);
-/** Any of these turns a «yes» into something the admin should read. */
-const BLOCKERS = new Set(['مش', 'لا', 'لاء', 'مو', 'ما', 'بس', 'no', 'not']);
+/** «تم» is «done» far more often than «yes» («تم التحويل»): a confirm only on its own. */
+const CONFIRM_ALONE = 'تم';
+/**
+ * Any of these turns a «yes» into something the admin should read: a negation or «but», or talk
+ * of money and renewals («تمام هبعت الفلوس بكرة», «تم التحويل»), which is not about the lesson.
+ */
+const BLOCKERS = new Set([
+  'مش', 'لا', 'لاء', 'مو', 'ما', 'بس', 'no', 'not',
+  'تحويل', 'التحويل', 'حولت', 'حولنا', 'هحول', 'فلوس', 'الفلوس', 'المبلغ', 'مبلغ', 'دفعت', 'هدفع',
+  'الدفع', 'هبعت', 'ايصال', 'الايصال', 'اشتراك', 'الاشتراك', 'الباقه', 'باقه', 'تجديد', 'هجدد',
+]);
 const GOD_WILLING = ['ان شاء الله', 'انشاء الله', 'انشالله'];
 const MAX_CONFIRM_WORDS = 6;
 const THUMBS_UP = /^(?:👍[\u{1F3FB}-\u{1F3FF}]?\s*)+$/u;
@@ -52,6 +61,7 @@ function hasPhrase(tokens: readonly string[], phrase: string): boolean {
 }
 
 function confirms(tokens: readonly string[]): boolean {
+  if (tokens.length === 1 && tokens[0] === CONFIRM_ALONE) return true;
   if (tokens.length === 0 || tokens.length > MAX_CONFIRM_WORDS) return false;
   if (tokens.some((t) => BLOCKERS.has(t))) return false;
   return tokens.some((t) => CONFIRM.has(t)) || GOD_WILLING.includes(tokens.join(' '));
@@ -60,7 +70,8 @@ function confirms(tokens: readonly string[]): boolean {
 /**
  * confirm / reschedule / stop from a button payload («confirm:<id>») or a short text in Egyptian
  * or Gulf Arabic (نعم، أيوه، تمام، موافق، أكيد · تأجيل، غيّر الميعاد · وقف، إلغاء الاشتراك، stop).
- * Stop beats reschedule beats confirm; a «yes» with مش / لا / بس in it, or a long text, is null.
+ * Stop beats reschedule beats confirm; a «yes» with مش / لا / بس or money talk in it, «تم» with
+ * anything after it, or a long text, is null.
  */
 export function quickReplyIntent(input: string): QuickReplyIntent | null {
   const payload = payloadIntent(input.trim());

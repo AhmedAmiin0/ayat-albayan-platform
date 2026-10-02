@@ -14,4 +14,5 @@ export const SETTINGS: AcademySettings = {
   reminder_minutes_before: 60,
   reminder_24h_enabled: false,
   messaging_enabled: false,
+  crm_cutover_done: false,
 };

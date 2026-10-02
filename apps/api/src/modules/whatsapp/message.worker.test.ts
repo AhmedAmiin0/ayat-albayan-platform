@@ -12,6 +12,7 @@ const dispatch = { send: vi.fn() };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const template = templateRow();
+const staleLead = { status: 'no_reply', follow_up_paused: false, last_inbound_at: null, created_at: '2026-10-01T00:00:00Z' } as const;
 
 function worker() {
   const w = new MessageWorker(queries as unknown as SenderQueries, dispatch as unknown as MessageDispatch, push as unknown as PushService);
@@ -44,9 +45,9 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
   });
 
   it('a lesson reminder after the lesson started expires: failed «expired», no claim, no push', async () => {
-    const row = dueMessage({ lesson: { starts_at: '2026-10-02T07:59:00Z' } });
+    const row = dueMessage({ lesson: { starts_at: '2026-10-02T07:59:00Z', status: 'scheduled' } });
     await expect(worker().process({ row, template, now: NOW })).resolves.toBe('expired');
-    expect(queries.expire).toHaveBeenCalledWith(row.id);
+    expect(queries.expire).toHaveBeenCalledWith(row.id, { code: 'expired', text: 'expired before it was sent' });
     expect(queries.claim).not.toHaveBeenCalled();
     expect(push.notifyAdmins).not.toHaveBeenCalled();
   });
@@ -78,7 +79,7 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
     await expect(worker().process({ row: dueMessage(), template, now: NOW })).resolves.toBe('failed');
     expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'failed', error_code: '131026' }));
     expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', {
-      subject: dueMessage().id,
+      subject: `${dueMessage().id}:${NOW.getTime()}`,
       vars: { template: 'تأكيد الحجز — لينك Jitsi', name: 'أم سلمى' },
       data: { phone: '+966551234567', messageId: dueMessage().id },
     });
@@ -86,8 +87,8 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
 
   it('retryable errors fail on the third try; the push names the lead, else the phone', async () => {
     queries.claim.mockResolvedValue(3);
-    dispatch.send.mockRejectedValue(new WaError('timeout', { code: null, status: 0 }));
-    const row = dueMessage({ guardian: null, lead: { name: null }, attempts: 2 });
+    dispatch.send.mockRejectedValue(new WaError('refused', { code: null, status: 0, uncertain: false }));
+    const row = dueMessage({ guardian: null, lead: { ...staleLead, name: null }, attempts: 2 });
     await expect(worker().process({ row, template, now: NOW })).resolves.toBe('failed');
     expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', expect.objectContaining({
       vars: expect.objectContaining({ name: '+966551234567' }),
@@ -101,6 +102,36 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
     expect(dispatch.send).toHaveBeenCalledTimes(1);
     expect(queries.sent).toHaveBeenCalledTimes(2);
     expect(vi.mocked(w.wait)).toHaveBeenCalledWith(500);
+  });
+
+  it('a confirmation for a lesson cancelled since it was queued goes stale: never sent, no push', async () => {
+    const row = dueMessage({ lesson: { starts_at: '2026-10-04T14:00:00Z', status: 'cancelled_by_admin' } });
+    await expect(worker().process({ row, template, now: NOW })).resolves.toBe('stale');
+    expect(queries.expire).toHaveBeenCalledWith(row.id, { code: 'stale', text: 'lesson cancelled_by_admin' });
+    expect(queries.claim).not.toHaveBeenCalled();
+    expect(push.notifyAdmins).not.toHaveBeenCalled();
+  });
+
+  it('a timeout after the request left: failed «uncertain» for the admin, never resent', async () => {
+    dispatch.send.mockRejectedValue(new WaError('timeout', { code: null, status: 0, uncertain: true }));
+    await expect(worker().process({ row: dueMessage(), template, now: NOW })).resolves.toBe('failed');
+    expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'failed', error_code: 'uncertain' }));
+    expect(push.notifyAdmins).toHaveBeenCalledTimes(1);
+  });
+
+  it('a row still marked «sending» (outcome never recorded): handed to the admin, Meta not called again', async () => {
+    const row = dueMessage({ error_code: 'sending', attempts: 1 });
+    await expect(worker().process({ row, template, now: NOW })).resolves.toBe('failed');
+    expect(dispatch.send).not.toHaveBeenCalled();
+    expect(queries.claim).not.toHaveBeenCalled();
+    expect(queries.failure).toHaveBeenCalledWith(row.id, expect.objectContaining({ status: 'failed', error_code: 'uncertain' }));
+  });
+
+  it('an expired token: the row waits uncounted, one push a day, the pass pauses', async () => {
+    dispatch.send.mockRejectedValue(new WaError('Error validating access token', { code: 190, status: 401 }));
+    await expect(worker().process({ row: dueMessage(), template, now: NOW })).resolves.toBe('paused');
+    expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'queued', attempts: 0, error_code: '190' }));
+    expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', expect.objectContaining({ subject: 'whatsapp_auth:2026-10-02' }));
   });
 
   it('never throws: a DB error is logged and the row skipped', async () => {
