@@ -13,10 +13,14 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { z } from 'zod';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from './http';
 import { TeachersQueries, type Teacher } from './teachers.queries';
+
+/** `?search=` name or phone in any format (teacherSearchFilter). */
+const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).optional() });
 
 /** Admin-only teacher CRUD (R-TCH-01). */
 @ApiTags('teachers')
@@ -28,7 +32,7 @@ export class TeachersController {
 
   @Get()
   list(@Query() query: unknown): Promise<Page<Teacher>> {
-    return this.teachers.list(parseOrThrow(pageQuerySchema, query));
+    return this.teachers.list(parseOrThrow(listQuery, query));
   }
 
   @Get(':id')

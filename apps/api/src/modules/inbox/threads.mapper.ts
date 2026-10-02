@@ -1,6 +1,5 @@
 import type { Tables } from '@ab/db';
-import { sessionWindowOpen, type TemplateParamsInput, type TemplateView, type ThreadView } from '@ab/shared';
-import { phoneSearchDigits } from '../guardians/guardians.mapper';
+import { searchDigits, sessionWindowOpen, type TemplateParamsInput, type TemplateView, type ThreadView } from '@ab/shared';
 import { orSafe } from '../guardians/http';
 
 export type ThreadRow = Tables<'v_threads'>;
@@ -8,8 +7,9 @@ export type ThreadRow = Tables<'v_threads'>;
 /**
  * v_threads row → ThreadView (H1/H2). The view's columns are typed nullable, but a thread only
  * exists for a phone with at least one message, so the last-message fields are always set.
+ * `subscribed` comes from the guardian's students (ThreadsQueries.subscribedGuardians / people).
  */
-export function toThreadView(row: ThreadRow, now: Date): ThreadView {
+export function toThreadView(row: ThreadRow, now: Date, subscribed = false): ThreadView {
   return {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
@@ -32,12 +32,13 @@ export function toThreadView(row: ThreadRow, now: Date): ThreadView {
     teacher_id: row.teacher_id,
     teacher_name: row.teacher_name,
     session_open: sessionWindowOpen(row.last_inbound_at, now),
+    subscribed,
   };
 }
 
 /** H1 search: a phone in any format → its digits; else the display name. */
 export function threadSearchFilter(term: string): string | null {
-  const digits = phoneSearchDigits(term);
+  const digits = searchDigits(term);
   if (digits) return `phone_e164.ilike.*${digits}*`;
   const safe = orSafe(term);
   return safe ? `display_name.ilike.*${safe}*` : null;

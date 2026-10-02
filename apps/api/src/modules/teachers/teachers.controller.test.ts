@@ -69,6 +69,12 @@ describe('TeachersController (R-TCH-01)', () => {
     expect(res.json()).toEqual({ items: [], total: 0, page: 1, pageSize: 25 });
   });
 
+  it('passes ?search through, trimmed', async () => {
+    teachers.list.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 25 });
+    expect((await call('GET', `/teachers?search=${encodeURIComponent(' ٠١٠ ')}`)).statusCode).toBe(200);
+    expect(teachers.list).toHaveBeenLastCalledWith({ page: 1, pageSize: 25, search: '٠١٠' });
+  });
+
   it('rejects a page size above 100', async () => {
     expect((await call('GET', '/teachers?pageSize=500')).statusCode).toBe(400);
   });

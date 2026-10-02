@@ -12,13 +12,20 @@ const ROW = {
 };
 
 describe('students queries (R-STU-01, R-NFR-08)', () => {
-  it('phone search filters on the guardian phone, in any format', async () => {
-    const { db, argsOf } = fakeDb({ students: [{ data: [ROW], count: 1 }] });
+  it('phone search finds the guardian’s students, in any format', async () => {
+    const { db, argsOf } = fakeDb({ guardians: [{ data: [{ id: 'g1' }, { id: 'g2' }] }], students: [{ data: [ROW], count: 1 }] });
     const page = await listStudents(db, { search: '0501234567', page: 1, pageSize: 20 });
-    expect(argsOf('students', 'ilike')).toEqual(['guardian.phone_e164', '%966501234567%']);
-    expect(argsOf('students', 'or')).toBeUndefined();
+    expect(argsOf('guardians', 'ilike')).toEqual(['phone_e164', '%966501234567%']);
+    expect(argsOf('students', 'or')).toEqual(['guardian_id.in.(g1,g2),code.ilike.*966501234567*']);
     expect(page.items[0]).toMatchObject({ guardian_phone: '+966501234567', teacher_name: 'أبرار' });
     expect(page.total).toBe(1);
+  });
+
+  it('partial Arabic digits: the guardian phone or the code («٠١٨٣» finds AB-0183)', async () => {
+    const { db, argsOf } = fakeDb({ guardians: [{ data: [] }], students: [{ data: [], count: 0 }] });
+    await listStudents(db, { search: '٠١٨٣', page: 1, pageSize: 20 });
+    expect(argsOf('guardians', 'ilike')).toEqual(['phone_e164', '%183%']);
+    expect(argsOf('students', 'or')).toEqual(['code.ilike.*183*']);
   });
 
   it('name search uses the normalised name or the code', async () => {

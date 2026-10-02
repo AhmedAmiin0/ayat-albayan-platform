@@ -1,5 +1,5 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import { normalizePhone, type GuardianCreate, type GuardianUpdate } from '@ab/shared';
+import { normalizePhone, searchDigits, type GuardianCreate, type GuardianUpdate } from '@ab/shared';
 import { orSafe } from './http';
 
 /** Country inferred from the E.164 number when the admin left it empty (R-STU-02). */
@@ -18,20 +18,9 @@ export function toGuardianPatch(dto: GuardianUpdate): TablesUpdate<'guardians'> 
   return { ...dto, country: inferCountry(dto.phone_e164) };
 }
 
-/**
- * Phone part of a search term: digits without leading zeros / "+", so "0501234567",
- * "+966 50 123 4567" and "4567" all match "+966501234567" with a contains filter.
- */
-export function phoneSearchDigits(term: string): string | null {
-  const r = normalizePhone(term);
-  if (r.ok) return r.e164.slice(1);
-  const digits = term.replace(/[\s\-+()]/g, '');
-  return /^[0-9]{4,}$/.test(digits) ? digits.replace(/^0+/, '') : null;
-}
-
 /** PostgREST or() filter on name + phone_e164 (guardians, leads, job applicants): phone digits, else name. */
 export function guardianSearchFilter(term: string): string | null {
-  const digits = phoneSearchDigits(term);
+  const digits = searchDigits(term);
   if (digits) return `phone_e164.ilike.*${digits}*`;
   const safe = orSafe(term);
   return safe ? `name.ilike.*${safe}*` : null;

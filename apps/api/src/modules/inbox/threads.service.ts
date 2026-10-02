@@ -1,9 +1,9 @@
-import type { ThreadDetail, ThreadView } from '@ab/shared';
+import { subscriptionBadge, type ThreadDetail, type ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { Page } from '../teachers/http';
 import { MessageViews } from '../whatsapp/message.views';
 import { ReadReceipts } from './read-receipts';
-import { toThreadView } from './threads.mapper';
+import { toThreadView, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
 
 export interface ThreadPageQuery {
@@ -22,9 +22,12 @@ export class ThreadsService {
     private readonly receipts: ReadReceipts,
   ) {}
 
+  /** Each row's `subscribed` comes from its guardian's students (one read for the whole page). */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const { items, total } = await this.queries.list(f);
-    return { items: items.map((r) => toThreadView(r, now)), total, page: f.page, pageSize: f.pageSize };
+    const subscribed = await this.queries.subscribedGuardians(items.flatMap((r) => (r.guardian_id ? [r.guardian_id] : [])));
+    const view = (r: ThreadRow) => toThreadView(r, now, r.guardian_id !== null && subscribed.has(r.guardian_id));
+    return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
   /**
@@ -34,14 +37,15 @@ export class ThreadsService {
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
     if (!q.before) await this.receipts.open(q.phone, now);
     const row = await this.queries.thread(q.phone);
-    const rows = await this.queries.messages(q);
+    const [rows, people] = await Promise.all([this.queries.messages(q), this.queries.people(row)]);
     const page = rows.slice(0, q.limit).reverse();
-    const thread = row ? toThreadView(row, now) : null;
+    const thread = row ? toThreadView(row, now, subscriptionBadge(people.students) === 'subscribed') : null;
     return {
       thread,
       messages: await Promise.all(page.map((m) => this.views.view(m))),
       has_more: rows.length > q.limit,
       lessons: thread && !q.before ? await this.queries.lessons(thread, now) : [],
+      people,
     };
   }
 }

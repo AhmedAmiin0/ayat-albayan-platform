@@ -2,6 +2,7 @@ import type { Tables } from '@ab/db';
 import { describe, expect, it } from 'vitest';
 import {
   studentNameOrCodeFilter,
+  studentPhoneOrCodeFilter,
   toListItem,
   toProfile,
   toStudentInsert,
@@ -77,5 +78,10 @@ describe('students mapper', () => {
     expect(studentNameOrCodeFilter('سهيلة')).toBe('name_normalized.ilike.*سهيله*,code.ilike.*سهيلة*');
     expect(studentNameOrCodeFilter('AB-0183')).toBe('name_normalized.ilike.*ab-0183*,code.ilike.*AB-0183*');
     expect(studentNameOrCodeFilter(' ')).toBeNull();
+  });
+
+  it('digit filter: the matching guardians or the code', () => {
+    expect(studentPhoneOrCodeFilter(['g1', 'g2'], '56610')).toBe('guardian_id.in.(g1,g2),code.ilike.*56610*');
+    expect(studentPhoneOrCodeFilter([], '183')).toBe('code.ilike.*183*');
   });
 });
