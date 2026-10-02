@@ -31,7 +31,7 @@ const grip = 'absolute top-1/2 h-3.5 w-[5px] -translate-y-1/2 rounded-[2px] bg-l
  * Visual-only 08–24 track of one day (the selects are the accessible path): gold-wash bars for
  * available ranges, a cinnabar hatch where two overlap, a 2px ink now-line on today's row. The
  * band being edited gets a lapis border, halo and two grips (docs/07 §8).
- * TODO(R-SCH-01): booked-lesson ticks (6px ink-2) once lessons exist; Phase 2 makes the grips draggable.
+ * Booked-lesson ticks are drawn on the calendar's ScheduleTrack (features/schedule), not here.
  */
 export function DayTrack({ ranges, now, editing = null }: Props) {
   const nowPct = now === null ? null : trackPct(now);
