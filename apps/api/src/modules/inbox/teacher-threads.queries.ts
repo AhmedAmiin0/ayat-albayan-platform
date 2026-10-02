@@ -1,5 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { TeacherMeQueries } from '../lessons/teacher-me.queries';
 import { dbError } from '../teachers/http';
 import type { PeopleStudentRow } from './thread-people.mapper';
 
@@ -15,7 +16,10 @@ export interface ScopeTeacher {
  */
 @Injectable()
 export class TeacherThreadsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly me: TeacherMeQueries,
+  ) {}
 
   /** The signed-in teacher's row (JWT sub = teachers.profile_id); null when not linked. */
   async teacher(profileId: string): Promise<ScopeTeacher | null> {
@@ -50,11 +54,9 @@ export class TeacherThreadsQueries {
     if (error) throw dbError(error);
   }
 
-  /** The lesson's teacher; null for an unknown lesson. */
-  async lessonTeacher(lessonId: string): Promise<string | null> {
-    const { data, error } = await this.db.from('lessons').select('teacher_id').eq('id', lessonId).maybeSingle();
-    if (error) throw dbError(error);
-    return data?.teacher_id ?? null;
+  /** Ids of the teacher's own students (TeacherMeQueries.students: assigned + active rules). */
+  async myStudentIds(teacherId: string): Promise<Set<string>> {
+    return new Set((await this.me.students(teacherId)).map((s) => s.id));
   }
 
   /** The guardian's students, oldest first, without packages (no money in teacher mode). */

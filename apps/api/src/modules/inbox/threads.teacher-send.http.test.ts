@@ -27,7 +27,7 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     vi.resetAllMocks();
     t.teacher.teacher.mockImplementation(async (profileId: string) => (profileId === TEACHER.id ? ME : null));
     t.teacher.phones.mockResolvedValue([PHONE, OWN]);
-    t.teacher.lessonTeacher.mockResolvedValue('tch-1');
+    t.queries.lessonTeacher.mockResolvedValue('tch-1');
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'g1' }));
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
     t.queries.get.mockImplementation(async () => ({ ...messageRow({ id: 'm9', status: 'sent', body: 'أهلًا', template_key: null }), sent_by_teacher: { display_name_ar: 'أبرار' } }));
@@ -75,13 +75,13 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
   });
 
   it("H4 403 not_your_lesson for another teacher's lesson; my lesson goes out attributed", async () => {
-    t.teacher.lessonTeacher.mockResolvedValueOnce('tch-other');
+    t.queries.lessonTeacher.mockResolvedValueOnce('tch-other');
     const theirs = await t.call(tpl({ key: 'lesson_reminder', lessonId: LESSON }));
     expect([theirs.statusCode, theirs.json().code]).toEqual([403, 'not_your_lesson']);
     expect(t.queries.enqueue).not.toHaveBeenCalled();
     const mine = await t.call(tpl({ key: 'lesson_reminder', lessonId: LESSON }));
     expect(mine.statusCode).toBe(201);
-    expect(t.teacher.lessonTeacher).toHaveBeenLastCalledWith(LESSON);
+    expect(t.queries.lessonTeacher).toHaveBeenLastCalledWith(LESSON);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
       template_key: 'lesson_reminder', lesson_id: LESSON, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:${REQ}`,
     }));

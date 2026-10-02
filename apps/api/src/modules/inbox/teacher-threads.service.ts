@@ -1,6 +1,5 @@
 import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { TeacherMeQueries } from '../lessons/teacher-me.queries';
 import type { Page } from '../teachers/http';
 import { MessageViews } from '../whatsapp/message.views';
 import { assertPhone, type TeacherScope } from './teacher-scope';
@@ -23,7 +22,6 @@ export class TeacherThreadsService {
     private readonly queries: ThreadsQueries,
     private readonly teacher: TeacherThreadsQueries,
     private readonly views: MessageViews,
-    private readonly me: TeacherMeQueries,
   ) {}
 
   async list(f: ThreadListFilter, scope: TeacherScope, now = new Date()): Promise<Page<ThreadView>> {
@@ -59,8 +57,8 @@ export class TeacherThreadsService {
     if (!row?.guardian_id) return teacherPeople({ row, students: [], mine: new Set() });
     const [students, mine] = await Promise.all([
       this.teacher.guardianStudents(row.guardian_id),
-      this.me.students(scope.teacherId),
+      this.teacher.myStudentIds(scope.teacherId),
     ]);
-    return teacherPeople({ row, students, mine: new Set(mine.map((s) => s.id)) });
+    return teacherPeople({ row, students, mine });
   }
 }

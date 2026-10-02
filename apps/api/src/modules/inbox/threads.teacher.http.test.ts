@@ -25,7 +25,7 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
     t.queries.messages.mockResolvedValue([]);
     t.queries.lessons.mockResolvedValue([]);
     t.teacher.guardianStudents.mockResolvedValue([kid('s1', 'ياسمين'), kid('s2', 'مريم')]);
-    t.me.students.mockResolvedValue([{ id: 's1', code: 'AB-0101', name: 'ياسمين', tz: 'Asia/Riyadh', status: 'active' }]);
+    t.teacher.myStudentIds.mockResolvedValue(new Set(['s1']));
   });
 
   it('H1 lists only the scope, with my unread, lead fields cleared and no «مشترك» lookup', async () => {
@@ -87,7 +87,7 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
       lead: null,
       students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', teacher_name: 'أبرار', status: 'active', subscription: null }],
     });
-    expect(t.me.students).toHaveBeenCalledWith('tch-1');
+    expect(t.teacher.myStudentIds).toHaveBeenCalledWith('tch-1');
     expect(t.queries.people).not.toHaveBeenCalled();
     expect(t.queries.lessons).toHaveBeenCalledWith(expect.objectContaining({ phone_e164: PHONE }), expect.any(Date), 'tch-1');
   });

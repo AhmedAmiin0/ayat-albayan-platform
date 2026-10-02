@@ -9,7 +9,6 @@ import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
 import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { TeacherMeQueries } from '../lessons/teacher-me.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
 import { TemplatesQueries } from '../whatsapp/templates.queries';
@@ -37,15 +36,15 @@ function mocks() {
   return {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
+      lessonTeacher: vi.fn(),
       lessons: vi.fn(async () => []),
       people: vi.fn(async () => NO_PEOPLE),
       familyTags: vi.fn(async () => new Map<string, FamilyTag>()),
     },
     teacher: {
       ...{ teacher: vi.fn(), phones: vi.fn(), unread: vi.fn(), stampRead: vi.fn() },
-      ...{ lessonTeacher: vi.fn(), guardianStudents: vi.fn() },
+      ...{ myStudentIds: vi.fn(), guardianStudents: vi.fn() },
     },
-    me: { me: vi.fn(), students: vi.fn() },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     client: { configured: vi.fn(() => false), markRead: vi.fn() },
     gate: { open: vi.fn() },
@@ -60,7 +59,6 @@ export async function inboxApp() {
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ThreadsQueries).useValue(m.queries)
     .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
-    .overrideProvider(TeacherMeQueries).useValue(m.me)
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(SendGate).useValue(m.gate)

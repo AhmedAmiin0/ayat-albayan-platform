@@ -6,6 +6,7 @@ import { ReadReceipts } from './read-receipts';
 import { TeacherScopes } from './teacher-scope';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { TeacherThreadsService } from './teacher-threads.service';
+import { ThreadReads } from './thread-reads';
 import { ThreadSendService } from './thread-send.service';
 import { ThreadsController } from './threads.controller';
 import { ThreadsQueries } from './threads.queries';
@@ -16,7 +17,8 @@ import { ThreadsService } from './threads.service';
  * qualification / follow-up routes (L1–L2) in LeadsModule; WhatsappModule (global) brings the
  * client, the send gate, the sender, the registry and MessageViews. SubscriptionsModule brings the
  * package balances behind a thread's `people` and «مشترك» tag (R-SUB-01). Teacher mode (R-TCH-03):
- * TeacherScopes + TeacherThreadsService, with LessonsModule's TeacherMeQueries for «my students».
+ * ThreadReads picks the admin's or the teacher's reads per request (TeacherScopes); LessonsModule
+ * brings TeacherMeQueries for «my students».
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule],
@@ -30,6 +32,7 @@ import { ThreadsService } from './threads.service';
     TeacherThreadsQueries,
     TeacherScopes,
     TeacherThreadsService,
+    ThreadReads,
   ],
 })
 export class InboxModule {}

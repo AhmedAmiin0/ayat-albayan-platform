@@ -7,10 +7,9 @@ import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow } from '../teachers/http';
 import { waHttpError } from '../whatsapp/template.mapper';
-import { TeacherScopes, type TeacherScope } from './teacher-scope';
-import { TeacherThreadsService } from './teacher-threads.service';
+import type { TeacherScope } from './teacher-scope';
+import { ThreadReads } from './thread-reads';
 import { ThreadSendService } from './thread-send.service';
-import { ThreadsService } from './threads.service';
 
 const listQuery = pageQuerySchema.extend({
   search: z.string().trim().max(100).optional(),
@@ -41,32 +40,26 @@ type Audited = { view: MessageView; action: string; user: AuthUser; scope: Teach
 @Controller('threads')
 export class ThreadsController {
   constructor(
-    private readonly threads: ThreadsService,
-    private readonly teacherThreads: TeacherThreadsService,
+    private readonly reads: ThreadReads,
     private readonly sends: ThreadSendService,
-    private readonly scopes: TeacherScopes,
     private readonly audit: AuditService,
   ) {}
 
   @Get()
-  async list(@Query() query: unknown, @CurrentUser() user: AuthUser) {
-    const filter = parseOrThrow(listQuery, query);
-    const scope = await this.scopes.of(user);
-    return scope ? this.teacherThreads.list(filter, scope) : this.threads.list(filter);
+  list(@Query() query: unknown, @CurrentUser() user: AuthUser) {
+    return this.reads.list(parseOrThrow(listQuery, query), user);
   }
 
   @Get(':phone')
-  async detail(@Param('phone') raw: string, @Query() query: unknown, @CurrentUser() user: AuthUser) {
-    const page = { phone: phoneParam(raw), ...parseOrThrow(detailQuery, query) };
-    const scope = await this.scopes.of(user);
-    return scope ? this.teacherThreads.detail(page, scope) : this.threads.detail(page);
+  detail(@Param('phone') raw: string, @Query() query: unknown, @CurrentUser() user: AuthUser) {
+    return this.reads.detail({ phone: phoneParam(raw), ...parseOrThrow(detailQuery, query) }, user);
   }
 
   @Post(':phone/text')
   @HttpCode(201)
   async text(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTextSchema, body);
-    const scope = await this.scopes.of(user);
+    const scope = await this.reads.scope(user);
     const view = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id, scope });
     return this.audited({ view, action: 'thread_text', user, scope });
   }
@@ -75,7 +68,7 @@ export class ThreadsController {
   @HttpCode(201)
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
-    const scope = await this.scopes.of(user);
+    const scope = await this.reads.scope(user);
     const view = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope });
     return this.audited({ view, action: 'thread_template', user, scope });
   }

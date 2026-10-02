@@ -109,4 +109,11 @@ export class ThreadsQueries {
     check(error, 'message read');
     return data;
   }
+
+  /** The lesson's teacher (teacher-mode template sends); null for an unknown lesson. */
+  async lessonTeacher(lessonId: string): Promise<string | null> {
+    const { data, error } = await this.db.from('lessons').select('teacher_id').eq('id', lessonId).maybeSingle();
+    check(error, 'lesson teacher read');
+    return data?.teacher_id ?? null;
+  }
 }

@@ -4,7 +4,6 @@ import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import { Outbox } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
-import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
@@ -47,7 +46,6 @@ export class ThreadSendService {
     private readonly queries: ThreadsQueries,
     private readonly templates: TemplateRegistry,
     private readonly outbox: Outbox,
-    private readonly teacher: TeacherThreadsQueries,
   ) {}
 
   /** H3: free text inside the 24 h window only (WhatsApp rejects it after: 131047). */
@@ -82,7 +80,7 @@ export class ThreadSendService {
   private async teacherMay(scope: TeacherScope, s: ThreadSend<ThreadTemplate>): Promise<void> {
     assertCanSend(scope, s.phone);
     if (!isTeacherTemplate(s.input.key)) throw waHttpError('template_not_allowed', 403);
-    if (s.input.lessonId && (await this.teacher.lessonTeacher(s.input.lessonId)) !== scope.teacherId) {
+    if (s.input.lessonId && (await this.queries.lessonTeacher(s.input.lessonId)) !== scope.teacherId) {
       throw waHttpError('not_your_lesson', 403);
     }
   }
