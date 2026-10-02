@@ -10,7 +10,7 @@ import type { AvailabilityRow, Teacher } from './types';
 import { WeekdayRow } from './WeekdayRow';
 
 /** «المواعيد المتاحة», read-only: the weekly grid by day, in the zone it was saved in. R-TCH-02. */
-export function WeeklyAvailability({ teacher }: { teacher: Teacher }) {
+export function WeeklyAvailability({ teacher }: { teacher: Pick<Teacher, 'id' | 'tz'> }) {
   const path = `/teachers/${teacher.id}/availability`;
   const query = useQuery({
     queryKey: pathKey(path),

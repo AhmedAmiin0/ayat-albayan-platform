@@ -18,7 +18,7 @@ jest.mock('@/lib/supabase', () => ({
     },
   },
 }));
-jest.mock('./verify-admin', () => ({ verifyAdmin: () => mockVerify() }));
+jest.mock('./verify-role', () => ({ verifyRole: (s: unknown) => mockVerify(s) }));
 jest.mock('@/lib/query-client', () => ({ clearQueryCaches: () => mockClear() }));
 
 const session = { access_token: 'tok', user: { id: 'u1' } } as Session;
@@ -32,6 +32,14 @@ test('boots, then admits a restored admin session', async () => {
   await act(async () => mockEmit('INITIAL_SESSION', session));
   await waitFor(() => expect(result.current).toBe('admin'));
   expect(mockClear).not.toHaveBeenCalled();
+});
+
+test('a restored teacher session opens the teacher app, checked with that session', async () => {
+  mockVerify.mockResolvedValue('teacher');
+  const { result } = await renderHook(() => useAuthGate());
+  await act(async () => mockEmit('INITIAL_SESSION', session));
+  await waitFor(() => expect(result.current).toBe('teacher'));
+  expect(mockVerify).toHaveBeenCalledWith(session);
 });
 
 test('no stored session: out, with the caches cleared', async () => {

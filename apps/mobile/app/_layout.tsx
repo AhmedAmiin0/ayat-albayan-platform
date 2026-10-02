@@ -24,7 +24,9 @@ const fonts = {
 };
 
 /**
- * Fonts + language + session gate, then one stack: admins get (tabs), everyone else only /login.
+ * Fonts + language + session gate, then one stack: admins get (tabs), teachers get /teacher (their
+ * own lessons, chats, reports and payouts; a real segment, so its tabs never share a URL with the
+ * admin's), everyone else only /login.
  * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
  */
 export default function RootLayout() {
@@ -50,7 +52,10 @@ export default function RootLayout() {
             <Stack.Protected guard={gate === 'admin'}>
               <Stack.Screen name="(tabs)" />
             </Stack.Protected>
-            <Stack.Protected guard={gate !== 'admin'}>
+            <Stack.Protected guard={gate === 'teacher'}>
+              <Stack.Screen name="teacher" />
+            </Stack.Protected>
+            <Stack.Protected guard={gate === 'out'}>
               <Stack.Screen name="login" />
             </Stack.Protected>
           </Stack>

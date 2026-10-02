@@ -1,7 +1,8 @@
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
-import type { Me } from './verify-admin';
+import { appRole } from './role-claim';
+import type { Me } from './verify-role';
 
 export interface Credentials {
   email: string;
@@ -11,8 +12,8 @@ export interface Credentials {
 export type SignInResult = { ok: true } | { ok: false; error: string };
 
 /**
- * Admin app: password sign-in, then only admins may stay signed in. On success the auth gate
- * (use-auth-gate) sees SIGNED_IN and opens the tabs; the screen does not navigate itself.
+ * Password sign-in, then only admins and teachers may stay signed in (R-AUTH-01). On success the
+ * auth gate (use-auth-gate) sees SIGNED_IN and opens their tabs; the screen does not navigate.
  */
 export async function signIn(creds: Credentials): Promise<SignInResult> {
   const { error } = await supabase.auth.signInWithPassword(creds);
@@ -26,7 +27,7 @@ export async function signIn(creds: Credentials): Promise<SignInResult> {
     await supabase.auth.signOut();
     return { ok: false, error: t.common.error };
   }
-  if (me.role !== 'admin') {
+  if (!appRole(me.role)) {
     await supabase.auth.signOut();
     return { ok: false, error: t.auth.noRole };
   }

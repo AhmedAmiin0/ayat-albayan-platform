@@ -927,7 +927,9 @@
       "generated": "Report generated automatically by the student follow-up system"
     },
     "submittedTitle": "Sent reports",
-    "noSubmitted": "No sent reports yet"
+    "noSubmitted": "No sent reports yet",
+    "mobileAttachHint": "From the phone you can add photos only; PDFs and voice notes from the website",
+    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online"
   },
   "subscriptions": {
     "title": "Subscriptions",

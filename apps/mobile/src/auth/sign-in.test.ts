@@ -24,9 +24,9 @@ test('wrong password shows Arabic error', async () => {
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.invalidCredentials });
 });
 
-test('non-admin is signed out again', async () => {
+test.each([['guardian'], [null]])('role %s is signed out again', async (role) => {
   mockSignInWithPassword.mockResolvedValue({ error: null });
-  mockApiFetch.mockResolvedValue({ role: 'teacher' });
+  mockApiFetch.mockResolvedValue({ role });
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.noRole });
   expect(mockSignOut).toHaveBeenCalled();
 });
@@ -38,8 +38,9 @@ test('role check failing (offline) signs out again with the common error', async
   expect(mockSignOut).toHaveBeenCalled();
 });
 
-test('admin signs in', async () => {
+test.each([['admin'], ['teacher']])('%s signs in', async (role) => {
   mockSignInWithPassword.mockResolvedValue({ error: null });
-  mockApiFetch.mockResolvedValue({ role: 'admin' });
+  mockApiFetch.mockResolvedValue({ role });
   expect(await signIn(creds)).toEqual({ ok: true });
+  expect(mockSignOut).not.toHaveBeenCalled();
 });
