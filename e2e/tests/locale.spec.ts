@@ -4,11 +4,12 @@ import { ar, expect, test } from '../support/fixtures';
 
 // Phase 7: Arabic RTL is the default; the switch saves English, reloads, and the whole UI is
 // English LTR until switched back. Expected text comes from en.json / ar.json, never literals.
-// The switch's accessible name is «<label> <the other language's own name>».
+// The switch's accessible name is «<label> <the other language's own name>»; the gap between
+// the two (a whitespace node inside an inline-flex button) is not guaranteed, hence \s*.
 
 type Dict = typeof ar;
 const switchTo = (page: Page, dict: Dict, target: 'ar' | 'en') =>
-  page.getByRole('button', { name: `${dict.language.label} ${dict.language[target]}` });
+  page.getByRole('button', { name: new RegExp(`${dict.language.label}\\s*${dict.language[target]}`) });
 
 async function expectDocument(page: Page, lang: 'ar' | 'en'): Promise<void> {
   await expect(page.locator('html')).toHaveAttribute('lang', lang);
