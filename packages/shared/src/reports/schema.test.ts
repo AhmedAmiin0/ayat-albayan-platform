@@ -15,7 +15,8 @@ const allGrades = {
   engagement: 'needs_review',
   commitment: 'excellent',
 } as const;
-const full = { attendance: 'on_time', grades: allGrades, overall: 'very_good', expectedVersion: 0 } as const;
+const text = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'الملك 6-10' };
+const full = { attendance: 'on_time', grades: allGrades, overall: 'very_good', ...text, expectedVersion: 0 } as const;
 
 const messages = (r: { success: boolean; error?: { issues: { message: string }[] } }) =>
   r.success ? [] : (r.error?.issues.map((i) => i.message) ?? []);
@@ -64,6 +65,17 @@ describe('reportSubmitSchema (R-REP-02 validation)', () => {
     ['late but ungraded', { attendance: 'late', expectedVersion: 0 }],
   ])('attended with %s → missing_grades', (_name, body) => {
     expect(messages(reportSubmitSchema.safeParse(body))).toEqual(['missing_grades']);
+  });
+
+  it.each(['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const)(
+    'attended with a blank %s → missing_text (the form required it)',
+    (key) => {
+      expect(messages(reportSubmitSchema.safeParse({ ...full, [key]: '  ' }))).toEqual(['missing_text']);
+    },
+  );
+
+  it('theory and next plan stay optional', () => {
+    expect(reportSubmitSchema.safeParse({ ...full, theory: '', nextPlan: null }).success).toBe(true);
   });
 
   it.each(['absent', 'excused'] as const)('%s needs no grades', (attendance) => {

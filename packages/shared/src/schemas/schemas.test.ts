@@ -4,6 +4,7 @@ import {
   guardianCreateSchema,
   jobApplicantCreateSchema,
   leadCreateSchema,
+  leadQualificationSchema,
   studentCreateSchema,
   timeOffCreateSchema,
 } from './index.js';
@@ -69,6 +70,21 @@ describe('lead + job applicant schemas (R-LEAD-01, R-LEAD-03, R-LEAD-04)', () =>
       status: 'new',
       qualification: {},
     });
+  });
+
+  it('keeps the first registration form questions (A9) and normalises the alternate phone', () => {
+    const q = leadQualificationSchema.parse({
+      city: 'جدة',
+      filled_by: 'guardian',
+      guardian_name: 'أم جود',
+      guardian_relation: 'الأب',
+      alt_phone: '0501234567',
+      group_kind: 'group',
+      notes: 'تفضّل معلمة',
+    });
+    expect(q).toMatchObject({ alt_phone: '+966501234567', filled_by: 'guardian', group_kind: 'group', notes: 'تفضّل معلمة' });
+    expect(leadQualificationSchema.safeParse({ filled_by: 'teacher' }).success).toBe(false);
+    expect(leadQualificationSchema.safeParse({ alt_phone: '12' }).success).toBe(false);
   });
 
   it('defaults job applicant status to new', () => {

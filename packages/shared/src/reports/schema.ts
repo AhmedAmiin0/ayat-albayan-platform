@@ -34,8 +34,15 @@ export const reportDraftSchema = z.object({
 });
 
 /**
+ * Text the «تقرير الحلقة» Google Form required (inferred from 194/194 answers, research-forms
+ * item 12): required when the student attended, like the grades. The rest stays optional.
+ */
+export const REPORT_REQUIRED_TEXT = ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const;
+
+/**
  * POST /reports/:id/submit: the whole form. Attendance is required; when the student attended
- * (on time or late) the six rubric grades and the overall grade are required too (`missing_grades`).
+ * (on time or late) the six rubric grades and the overall grade are required too (`missing_grades`),
+ * then the REPORT_REQUIRED_TEXT fields (`missing_text`).
  * `expectedVersion` is the version the form was loaded at (409 `version_conflict` otherwise).
  */
 export const reportSubmitSchema = reportDraftSchema
@@ -47,8 +54,12 @@ export const reportSubmitSchema = reportDraftSchema
     }
     if (!attended(r.attendance)) return;
     const missing = REPORT_RUBRICS.filter((k) => !r.grades?.[k]);
-    if (missing.length > 0 || !r.overall)
+    if (missing.length > 0 || !r.overall) {
       ctx.addIssue({ code: 'custom', path: ['grades'], message: 'missing_grades' });
+      return;
+    }
+    const blank = REPORT_REQUIRED_TEXT.filter((k) => !r[k]);
+    if (blank.length > 0) ctx.addIssue({ code: 'custom', path: [blank[0] ?? 'recited'], message: 'missing_text' });
   });
 
 /** POST /reports/:id/attachments/upload-url: the file the teacher picked (R-REP-02). */

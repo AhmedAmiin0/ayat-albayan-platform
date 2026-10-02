@@ -1,7 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { draftBody, submitBody, submitProblem, valuesOf } from './form-values';
+import { draftBody, submitBody, submitProblem, textRequired, valuesOf } from './form-values';
 import { FULL_GRADES, reportView } from './report-fixture';
 import { shouldSave } from './use-autosave';
+
+const TEXT = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'الملك 6-10' };
 
 describe('form values (R-REP-02)', () => {
   it('a fresh draft: empty strings, no grades', () => {
@@ -32,8 +34,17 @@ describe('form values (R-REP-02)', () => {
     expect(submitProblem(base)).toBe('missing_attendance');
     expect(submitProblem({ ...base, attendance: 'on_time' })).toBe('missing_grades');
     expect(submitProblem({ ...base, attendance: 'on_time', grades: { ...FULL_GRADES }, overall: null })).toBe('missing_grades');
-    expect(submitProblem({ ...base, attendance: 'on_time', grades: { ...FULL_GRADES }, overall: 'excellent' })).toBeNull();
+    const graded = { ...base, attendance: 'on_time', grades: { ...FULL_GRADES }, overall: 'excellent' } as const;
+    expect(submitProblem(graded)).toBe('missing_text');
+    expect(submitProblem({ ...graded, ...TEXT })).toBeNull();
     expect(submitProblem({ ...base, attendance: 'absent' })).toBeNull();
+  });
+
+  it('textRequired: the five fields the form required, unless absent / excused (research-forms 12)', () => {
+    expect(['recited', 'newMemorization', 'revision', 'notes', 'homework'].every((k) => textRequired(k as 'notes', 'late'))).toBe(true);
+    expect(textRequired('theory', 'on_time')).toBe(false);
+    expect(textRequired('nextPlan', null)).toBe(false);
+    expect(textRequired('recited', 'excused')).toBe(false);
   });
 });
 

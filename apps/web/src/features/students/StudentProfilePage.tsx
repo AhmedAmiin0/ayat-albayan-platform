@@ -1,11 +1,14 @@
 import { formatPhone, studentStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { buttonVariants } from '@/components/ui/button';
+import { useState } from 'react';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { Ltr } from '@/components/ui/ltr';
 import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
+import { Toast } from '@/components/ui/toast';
+import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { studentQuery } from './api';
@@ -20,6 +23,8 @@ import { StudentProfileForm } from './StudentProfileForm';
  */
 export function StudentProfilePage({ studentId }: { studentId: string }) {
   const { data: student, error, isPending } = useQuery(studentQuery(studentId));
+  const [editGuardian, setEditGuardian] = useState(false);
+  const [notice, setNotice] = useState<string | null>(null);
 
   if (isPending) return <p className="text-ink-3">{t.common.loading}</p>;
   if (error) {
@@ -60,6 +65,9 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
             {t.booking.open}
           </Link>
+          <Button type="button" variant="secondary" onClick={() => setEditGuardian(true)}>
+            {t.guardians.edit}
+          </Button>
         </div>
       </PageHead>
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
@@ -73,6 +81,17 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <BalanceCard student={student} />
       <StudentProfileForm key={student.id} student={student} />
       <SiblingMerge student={student} siblings={student.siblings} />
+      {editGuardian && (
+        <GuardianEditDialog
+          guardianId={student.guardian_id}
+          onClose={() => setEditGuardian(false)}
+          onDone={(text) => {
+            setEditGuardian(false);
+            setNotice(text);
+          }}
+        />
+      )}
+      {notice && <Toast message={notice} onDismiss={() => setNotice(null)} />}
     </>
   );
 }

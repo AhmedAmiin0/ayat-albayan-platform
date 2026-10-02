@@ -2,7 +2,7 @@ import { REPORT_RUBRICS, type ReportFormEntry, type ReportFormResponse } from '@
 import { t } from '@/lib/i18n';
 import { AttachmentsField } from './AttachmentsField';
 import { AttendanceField } from './AttendanceField';
-import { AFTER_FIELDS, DONE_FIELDS, type TextKey } from './form-values';
+import { AFTER_FIELDS, DONE_FIELDS, textRequired, type TextKey } from './form-values';
 import { GradePicker } from './GradePicker';
 import { IdentityBlock } from './IdentityBlock';
 import { ReportEntryFooter } from './ReportEntryFooter';
@@ -27,9 +27,14 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   const { report, values } = s;
   const locked = !report.can_edit;
   const title = t.reports.entryFor.replace('{name}', entry.student.name);
-  const text = (k: TextKey) => (
-    <ReportTextField key={k} label={t.reports[k]} value={values[k]} onChange={(v) => s.set(k, v)} disabled={locked} />
-  );
+  const text = (k: TextKey) => {
+    const required = textRequired(k, values.attendance);
+    const missing = required && s.problem === 'missing_text' && !values[k].trim();
+    return (
+      <ReportTextField key={k} label={t.reports[k]} value={values[k]} onChange={(v) => s.set(k, v)} disabled={locked}
+        required={required} error={missing ? t.common.required : undefined} />
+    );
+  };
 
   return (
     <article aria-label={title} className="grid gap-5">

@@ -124,13 +124,13 @@
     "profile": "Student profile",
     "code": "Code",
     "name": "Student name",
-    "age": "Age",
+    "age": "Student's age",
     "gender": "Gender",
     "program": "Program",
-    "level": "Level",
-    "memorized": "Memorized",
-    "goal": "Goal",
-    "riwaya": "Riwaya",
+    "level": "Current reading level",
+    "memorized": "How much has the student memorized?",
+    "goal": "Goal of subscribing",
+    "riwaya": "Requested riwaya",
     "tz": "Time zone",
     "status": "Status",
     "teacher": "Teacher",
@@ -176,21 +176,25 @@
     "normalized": "Normalized:",
     "withTeacher": "With {teacher}",
     "duplicateHint": "Merging moves all lessons, reports, and payments, and the old record is kept in the history.",
-    "emptyHint": "As soon as you convert a conversation into a student or add one yourself, they'll show up here."
+    "emptyHint": "As soon as you convert a conversation into a student or add one yourself, they'll show up here.",
+    "ageInvalid": "Write the age in digits (3 to 99)"
   },
   "guardians": {
     "title": "Guardians",
     "add": "Add guardian",
     "name": "Guardian name",
-    "phone": "WhatsApp number",
+    "phone": "WhatsApp number (with country code)",
     "country": "Country",
     "tz": "Time zone",
-    "source": "How they found us",
+    "source": "How did you hear about us?",
     "notes": "Notes",
     "students": "Children",
     "addSibling": "Add brother / sister",
     "empty": "No guardians yet",
-    "phoneTaken": "This number is already registered to another guardian"
+    "phoneTaken": "This number is already registered to another guardian",
+    "phoneHint": "Start with your country code, then your number — Saudi Arabia 966 · Egypt 20 · Sudan 249",
+    "edit": "Edit guardian",
+    "updated": "Guardian details updated"
   },
   "teachers": {
     "title": "Teachers",
@@ -279,16 +283,16 @@
     "empty": "No conversations",
     "qualification": "Student details",
     "studentName": "Student name",
-    "studentAge": "Age",
+    "studentAge": "Student's age",
     "gender": "Gender",
     "country": "Country",
-    "tz": "Time zone",
-    "level": "Level",
-    "memorized": "Memorized",
-    "goal": "Goal",
-    "riwaya": "Riwaya",
+    "tz": "Country / time zone you'll attend in",
+    "level": "Current reading level",
+    "memorized": "How much has the student memorized?",
+    "goal": "Goal of subscribing",
+    "riwaya": "Requested riwaya",
     "availableDays": "Available days",
-    "preferredTime": "Preferred time",
+    "preferredTime": "Start time",
     "changeStatus": "Change status",
     "invalidTransition": "You can't move the conversation to this status from its current one",
     "reclassifyAsApplicant": "Move to job applications",
@@ -306,7 +310,21 @@
     "countStatus": "{n} {status}",
     "mobile": {
       "offline": "The connection dropped, so this is the last data we received and changes can't be saved right now. Try again when you're back online."
-    }
+    },
+    "city": "City",
+    "filledBy": "You're filling this in as",
+    "filledByOption": {
+      "guardian": "The student's guardian",
+      "student": "The student"
+    },
+    "guardianRelation": "Relation to the student",
+    "altPhone": "Alternative contact number",
+    "groupKind": "Lesson type",
+    "groupKindOption": {
+      "individual": "Individual",
+      "group": "Group"
+    },
+    "notes": "Notes or special requests"
   },
   "jobApplicants": {
     "title": "Job applications",
@@ -455,7 +473,9 @@
       "backToLead": "Back to the conversation",
       "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice.",
       "toSubscription": "Continue to the subscription"
-    }
+    },
+    "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
+    "packageTrial": "Free trial lesson only"
   },
   "lessons": {
     "title": "Lessons",
@@ -853,7 +873,8 @@
       "already_submitted": "The report was already sent. Edit it and press “Save changes”",
       "lesson_not_found": "This lesson doesn't exist",
       "attachment_path": "The file didn't upload correctly. Upload it again",
-      "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it"
+      "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it",
+      "missing_text": "Write the recitation, new memorization, revision, notes and homework before sending"
     },
     "entryFor": "Report for {name}",
     "submitting": "Sending…",
@@ -1459,7 +1480,7 @@
       "facebook_ad": "Facebook ad",
       "instagram_ad": "Instagram ad",
       "whatsapp_direct": "WhatsApp direct",
-      "referral": "Referral",
+      "referral": "Friend or acquaintance",
       "other": "Other"
     },
     "lessonStatus": {
@@ -1481,7 +1502,7 @@
       "unpaid": "Unpaid"
     },
     "program": {
-      "quran": "Quran memorization and tajweed",
+      "quran": "The Holy Quran",
       "arabic": "Arabic language",
       "islamic_studies": "Islamic studies"
     },
@@ -1540,8 +1561,8 @@
     "duration": {
       "30": "30 minutes",
       "45": "45 minutes",
-      "60": "1 hour",
-      "90": "1.5 hours"
+      "60": "60 minutes",
+      "90": "90 minutes"
     },
     "scheduleRuleStatus": {
       "active": "Active",

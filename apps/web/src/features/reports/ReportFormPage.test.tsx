@@ -28,6 +28,9 @@ function gradeEverything() {
     pick(t.reports.rubric[rubric as keyof typeof FULL_GRADES], t.enums.grade[grade]);
   }
   pick(t.reports.overall, t.enums.grade.excellent);
+  for (const k of ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const) {
+    fireEvent.change(screen.getByLabelText(t.reports[k]), { target: { value: 'تمام' } });
+  }
 }
 
 describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
@@ -58,6 +61,19 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     pick(t.reports.attendance, t.enums.attendance.late);
     fireEvent.click(screen.getByRole('button', { name: t.reports.submit }));
     expect(await screen.findByText(t.reports.error.missing_grades)).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalledWith('POST', expect.anything(), expect.anything());
+  });
+
+  it('graded but the required text is blank: «missing_text», the blank fields marked (research-forms 12)', async () => {
+    renderForm();
+    await screen.findByRole('region', { name: t.reports.identity });
+    gradeEverything();
+    fireEvent.change(screen.getByLabelText(t.reports.homework), { target: { value: '' } });
+    expect(screen.getByLabelText(t.reports.homework).getAttribute('aria-required')).toBe('true');
+    expect(screen.getByLabelText(t.reports.theory).getAttribute('aria-required')).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.reports.submit }));
+    expect(await screen.findByText(t.reports.error.missing_text)).toBeTruthy();
+    expect(screen.getByLabelText(t.reports.homework).getAttribute('aria-invalid')).toBe('true');
     expect(apiSend).not.toHaveBeenCalledWith('POST', expect.anything(), expect.anything());
   });
 

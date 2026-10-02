@@ -26,7 +26,7 @@ async function bookFromLead() {
       <BookingPage search={{ leadId: LEAD, phone: '+966501234567', name: 'أم جود' }} onOpenStudent={vi.fn()} />
     </QueryClientProvider>,
   );
-  fireEvent.change(screen.getByLabelText(t.students.name), { target: { value: 'جوود' } });
+  fireEvent.change(await screen.findByLabelText(t.leads.studentName), { target: { value: 'جوود' } });
   next();
   await pickTeacherAndSlot();
   next();

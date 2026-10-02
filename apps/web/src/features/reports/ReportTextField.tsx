@@ -7,15 +7,20 @@ export interface ReportTextFieldProps {
   value: string;
   onChange: (value: string) => void;
   disabled?: boolean;
+  /** The Google Form required it (REPORT_REQUIRED_TEXT) and the student attended. */
+  required?: boolean;
+  error?: string | undefined;
 }
 
 /** A free-text line of the report (التسميع، الواجب، …): grows with the text, 4000 chars max. */
-export function ReportTextField({ label, value, onChange, disabled }: ReportTextFieldProps) {
+export function ReportTextField({ label, value, onChange, disabled, required, error }: ReportTextFieldProps) {
   return (
-    <Field label={label}>
+    <Field label={label} error={error}>
       {(control) => (
         <textarea
           {...control}
+          required={required}
+          aria-required={required || undefined}
           rows={2}
           maxLength={4000}
           value={value}

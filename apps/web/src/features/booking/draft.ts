@@ -1,13 +1,8 @@
-import {
-  normalizePhone,
-  type BookingRequest,
-  type BookingTeacherOption,
-  type Duration,
-  type Gender,
-  type PackageSize,
-  type Program,
-} from '@ab/shared';
+import type { BookingRequest, BookingTeacherOption, Duration, Gender, PackageSize, Program } from '@ab/shared';
 import { RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
+import { leadParts, newStudentReady, type NewStudentDraft } from './new-student';
+
+export type { NewStudentDraft } from './new-student';
 
 // The booking wizard's state and its mapping onto POST /booking (R-SCH-06, R-LEAD-06).
 // Pure and unit-tested; the React steps only edit a BookingDraft.
@@ -17,13 +12,6 @@ export const STEPS = ['students', 'teacher', 'package', 'slot', 'review'] as con
 export type StepKey = (typeof STEPS)[number];
 
 export type PickedStudent = { id: string; name: string; code: string | null };
-
-/** Lead path: the new student + guardian typed in step 1 (phone prefilled from the lead). */
-export interface NewStudentDraft {
-  name: string;
-  guardianName: string;
-  guardianPhone: string;
-}
 
 export interface BookingDraft {
   /** Existing students (group = siblings); empty on the lead path. */
@@ -84,10 +72,6 @@ export function effectiveByday(d: Pick<BookingDraft, 'startsAt' | 'tz' | 'pkg' |
   return [...new Set([weekday, ...d.byday])].sort((a, b) => a - b);
 }
 
-function newStudentReady(s: NewStudentDraft | null): boolean {
-  return !!s && !!s.name.trim() && !!s.guardianName.trim() && normalizePhone(s.guardianPhone).ok;
-}
-
 /** Whether «التالي» may leave `step`. */
 export function stepReady(d: BookingDraft, step: StepKey): boolean {
   switch (step) {
@@ -102,9 +86,6 @@ export function stepReady(d: BookingDraft, step: StepKey): boolean {
       return true;
   }
 }
-
-/** A regular package from the chat's «اشترك» makes them a subscribed student straight away. */
-const newStudentStatus = (pkg: PackageSize) => (pkg === 'trial' ? 'trial' : 'active');
 
 /** POST /booking body; `override` = the reason to book over conflicts (R-SCH-04). */
 export function toBookingRequest(d: BookingDraft, override?: string): BookingRequest | null {
@@ -127,18 +108,5 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
     return { ...base, studentIds: d.students.map((s) => s.id), ...(d.leadId ? { leadId: d.leadId } : {}) };
   }
   if (!d.leadId || !d.newStudent) return null;
-  const s = d.newStudent;
-  return {
-    ...base,
-    leadId: d.leadId,
-    newStudent: {
-      name: s.name.trim(),
-      program: d.program,
-      tz: d.tz,
-      status: newStudentStatus(d.pkg),
-      teacher_gender_pref: d.genderPref,
-    },
-    guardian: { name: s.guardianName.trim(), phone_e164: s.guardianPhone, tz: d.tz, country: d.country },
-    ...(d.force ? { force: true } : {}),
-  };
+  return { ...base, leadId: d.leadId, ...leadParts(d.newStudent, d), ...(d.force ? { force: true } : {}) };
 }

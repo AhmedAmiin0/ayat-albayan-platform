@@ -1,4 +1,6 @@
 import {
+  attended,
+  REPORT_REQUIRED_TEXT,
   REPORT_RUBRICS,
   reportSubmitSchema,
   type Attendance,
@@ -27,6 +29,13 @@ export type TextKey = 'recited' | 'newMemorization' | 'revision' | 'theory' | 'n
 /** The four «اللي اتعمل في الحلقة» fields, then the three after the grades, in form order. */
 export const DONE_FIELDS = ['recited', 'newMemorization', 'revision', 'theory'] as const satisfies readonly TextKey[];
 export const AFTER_FIELDS = ['notes', 'homework', 'nextPlan'] as const satisfies readonly TextKey[];
+
+const REQUIRED: readonly TextKey[] = REPORT_REQUIRED_TEXT;
+
+/** Required like on the Google Form (research-forms 12) unless the student was absent / excused. */
+export function textRequired(key: TextKey, attendance: Attendance | null): boolean {
+  return REQUIRED.includes(key) && (attendance === null || attended(attendance));
+}
 
 export function valuesOf(report: ReportView): FormValues {
   return {
@@ -66,7 +75,8 @@ export function submitBody(v: FormValues, expectedVersion: number): SubmitBody {
 
 /**
  * Same rules as the API (reportSubmitSchema): attendance first (`missing_attendance`), then the
- * six grades + overall when the student attended (`missing_grades`). null = ready to send.
+ * six grades + overall when the student attended (`missing_grades`), then the required text
+ * (`missing_text`). null = ready to send.
  */
 export function submitProblem(v: FormValues): string | null {
   const parsed = reportSubmitSchema.safeParse(submitBody(v, 0));

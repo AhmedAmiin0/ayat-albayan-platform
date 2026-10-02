@@ -34,6 +34,20 @@ describe('qualification form (R-LEAD-03)', () => {
     });
   });
 
+  it('the first form’s questions (research-forms 9): enums, the alternate phone as E.164', () => {
+    const before = qualForm({ ...STORED, filled_by: 'guardian', group_kind: 'nope' });
+    expect(before).toMatchObject({ filled_by: 'guardian', group_kind: '', city: '', notes: '' });
+    const after = { ...before, city: 'جدة', guardian_relation: 'الأب', alt_phone: '0501234567', group_kind: 'group', notes: 'تفضّل معلمة' } as const;
+    expect(qualPatch(after, before)).toEqual({
+      ok: true,
+      patch: { city: 'جدة', guardian_relation: 'الأب', alt_phone: '+966501234567', group_kind: 'group', notes: 'تفضّل معلمة' },
+    });
+    expect(qualPatch({ ...before, alt_phone: '12345' }, before)).toEqual({
+      ok: false,
+      errors: { alt_phone: t.common.phoneErrors.missing_country_code },
+    });
+  });
+
   it('days and the time range are structured values, cleared with null', () => {
     const before = qualForm(STORED);
     expect(qualPatch({ ...before, available_days: [] }, before)).toEqual({ ok: true, patch: { available_days: null } });
@@ -49,7 +63,7 @@ describe('qualification form (R-LEAD-03)', () => {
       ok: false,
       errors: { preferred_to: t.common.endBeforeStart },
     });
-    expect(qualPatch({ ...before, age: '200' }, before)).toEqual({ ok: false, errors: { age: t.settings.invalid } });
+    expect(qualPatch({ ...before, age: '200' }, before)).toEqual({ ok: false, errors: { age: t.students.ageInvalid } });
     expect(qualPatch({ ...before, tz: 'Mars/Base' }, before)).toEqual({
       ok: false,
       errors: { tz: t.common.invalidTimeZone },

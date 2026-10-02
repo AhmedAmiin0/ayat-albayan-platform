@@ -34,6 +34,14 @@ describe('profile form mapping (R-STU-05)', () => {
     });
   });
 
+  it('«سن الطالب» and «النوع» (research-forms 1): a number or null, the form’s age message', () => {
+    const v = toProfileValues({ ...PROFILE, age: 9, gender: 'female' });
+    expect(v).toMatchObject({ age: '9', gender: 'female' });
+    expect(toStudentPatch(v)).toEqual({ ok: true, patch: expect.objectContaining({ age: 9, gender: 'female' }) });
+    expect(toStudentPatch({ ...v, age: '', gender: '' })).toEqual({ ok: true, patch: expect.objectContaining({ age: null, gender: null }) });
+    expect(toStudentPatch({ ...v, age: '2' })).toEqual({ ok: false, error: t.students.ageInvalid });
+  });
+
   it('a bad meeting link names the field in Arabic', () => {
     const r = toStudentPatch({ ...toProfileValues(PROFILE), meeting_link_override: 'not a link' });
     expect(r).toEqual({ ok: false, error: t.students.invalidField.replace('{field}', t.students.meetingLink) });

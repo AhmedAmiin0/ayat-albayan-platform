@@ -9,8 +9,10 @@ import { Input } from '@/components/ui/input';
 import { PhonePreview } from '@/components/ui/phone-preview';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
+import { SourceField } from '@/features/guardians/SourceField';
 import { t } from '@/lib/i18n';
-import { EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
+import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
+import { AgeField, GenderField } from './FactFields';
 
 type CreateStudentFormProps = {
   onSubmit: (values: CreateStudentValues) => Promise<void>;
@@ -18,10 +20,12 @@ type CreateStudentFormProps = {
   error: string | null;
 };
 
+// The registration form's wording (research-forms 1, 3, 4, 7): «اسم الطالب», «رقم الواتساب
+// (مع كود الدولة)» with its hint, then «سن الطالب», «النوع» and «عرفت عننا منين؟» (optional).
 const TEXT_FIELDS = [
-  { name: 'name', label: t.students.name, check: requiredError },
+  { name: 'name', label: t.leads.studentName, check: requiredError },
   { name: 'guardianName', label: t.guardians.name, check: requiredError },
-  { name: 'guardianPhone', label: t.guardians.phone, check: phoneError, dir: 'ltr', type: 'tel' },
+  { name: 'guardianPhone', label: t.guardians.phone, check: phoneError, dir: 'ltr', type: 'tel', hint: t.guardians.phoneHint },
 ] as const;
 
 /**
@@ -57,7 +61,7 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
         {TEXT_FIELDS.map((f) => (
           <form.Field key={f.name} name={f.name} validators={{ onSubmit: ({ value }) => f.check(value) }}>
             {(field) => (
-              <Field label={f.label} error={field.state.meta.errors[0]}>
+              <Field label={f.label} hint={'hint' in f ? f.hint : undefined} error={field.state.meta.errors[0]}>
                 {(p) => (
                   <>
                     <Input {...p} required value={field.state.value} data-autofocus={f.name === 'name' || undefined}
@@ -70,6 +74,10 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
             )}
           </form.Field>
         ))}
+        <form.Field name="age" validators={{ onSubmit: ({ value }) => ageError(value) }}>
+          {(field) => <AgeField value={field.state.value} error={field.state.meta.errors[0]} onChange={field.handleChange} />}
+        </form.Field>
+        <form.Field name="gender">{(field) => <GenderField value={field.state.value} onChange={field.handleChange} />}</form.Field>
         <form.Field name="tz">
           {(field) => (
             <Field label={t.students.tz}>
@@ -90,6 +98,7 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
             </Field>
           )}
         </form.Field>
+        <form.Field name="source">{(field) => <SourceField value={field.state.value} onChange={field.handleChange} />}</form.Field>
         {error && <FormAlert className="sm:col-span-2">{error}</FormAlert>}
       </form>
     </Dialog>

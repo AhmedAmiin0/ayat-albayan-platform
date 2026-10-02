@@ -2,12 +2,24 @@ import { z } from 'zod';
 import { GENDERS, JOB_APPLICANT_STATUSES, LEAD_SOURCES, LEAD_STATUSES } from '../enums/index.js';
 import { optionalText, phoneE164, timeOfDay, timeZone } from './common.js';
 
-/** Structured, all-optional qualification captured in-thread (R-LEAD-03). */
+/** «بتملا الاستمارة بصفتك» and «نوع الحلقة» from the registration form's first version (A9). */
+export const FILLED_BY = ['guardian', 'student'] as const;
+export const GROUP_KINDS = ['individual', 'group'] as const;
+
+/**
+ * Structured, all-optional qualification captured in-thread (R-LEAD-03), plus the questions the
+ * first registration form asked (city … notes; owner's "identical fields", 2026-10-02).
+ */
 export const leadQualificationSchema = z.object({
   student_name: optionalText,
   age: z.int().min(3).max(99).nullish(),
   gender: z.enum(GENDERS).nullish(),
   country: optionalText,
+  city: optionalText,
+  filled_by: z.enum(FILLED_BY).nullish(),
+  guardian_name: optionalText,
+  guardian_relation: optionalText,
+  alt_phone: phoneE164.nullish(),
   tz: timeZone.nullish(),
   level: optionalText,
   memorized: optionalText,
@@ -16,6 +28,8 @@ export const leadQualificationSchema = z.object({
   available_days: z.array(z.int().min(0).max(6)).nullish(),
   preferred_from: timeOfDay.nullish(),
   preferred_to: timeOfDay.nullish(),
+  group_kind: z.enum(GROUP_KINDS).nullish(),
+  notes: optionalText,
 });
 
 /** Lead keyed by E.164 phone (R-LEAD-01). */

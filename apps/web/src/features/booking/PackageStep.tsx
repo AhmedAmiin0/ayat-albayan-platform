@@ -15,7 +15,7 @@ export interface PackageStepProps {
   onChange: (patch: Partial<Pick<BookingDraft, 'pkg' | 'durationMin' | 'startsAt'>>) => void;
 }
 
-/** Trial first (the usual first booking), then the paid sizes in order. */
+/** Trial first (the usual first booking, worded as the form: «حلقة تجريبية مجانية بس»), then the paid sizes. */
 const ORDER = ['trial', ...PACKAGE_SIZES.filter((p) => p !== 'trial')] as const;
 
 /**
@@ -28,7 +28,7 @@ export function PackageStep({ draft, onChange }: PackageStepProps) {
   return (
     <div className="grid gap-5">
       <div className="sm:max-w-[220px]">
-        <Field label={t.booking.pickDuration}>
+        <Field label={t.booking.pickDuration} hint={t.booking.durationHint}>
           {(p) => (
             <Select
               {...p}
@@ -72,7 +72,7 @@ function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; stude
                 onChange={() => onPick(pkg)}
                 className="size-4 accent-[var(--lapis)]"
               />
-              <span className="font-semibold">{t.enums.packageSize[pkg]}</span>
+              <span className="font-semibold">{pkg === 'trial' ? t.booking.packageTrial : t.enums.packageSize[pkg]}</span>
               <span className="ms-auto text-sm">
                 <PackagePrice input={{ pkg, durationMin: draft.durationMin, country: draft.country, students }} />
               </span>
