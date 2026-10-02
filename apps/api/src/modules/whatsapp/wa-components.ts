@@ -1,5 +1,6 @@
 import type { TemplateParams } from '@ab/shared';
-import { paramNames, templateButtons } from './wa-json';
+import { bodyExamples } from './template-review';
+import { templateButtons } from './wa-json';
 import { WaError, type TemplateRow, type TemplateSend } from './whatsapp.types';
 
 // Graph request bodies (docs/12 §3.2): what POST /{phone}/messages and POST /message_templates get.
@@ -92,14 +93,17 @@ export const readReceipt = (waMessageId: string): GraphBody => ({
 });
 
 /**
- * POST /{waba}/message_templates (docs/12 §3.4): BODY with the param names as Meta's required
- * examples, FOOTER, BUTTONS. Document headers are refused earlier (needs_manual_submit).
+ * POST /{waba}/message_templates (docs/12 §3.4): a DOCUMENT HEADER with the uploaded sample's
+ * handle, BODY with a sample value for every {{n}} (Meta requires them), FOOTER, BUTTONS.
  */
-export function submitPayload(row: TemplateRow): GraphBody {
-  const names = paramNames(row.params);
-  const components: GraphBody[] = [
-    { type: 'BODY', text: row.body_ar, ...(names.length ? { example: { body_text: [names] } } : {}) },
-  ];
+export function submitPayload(row: TemplateRow, headerHandle?: string): GraphBody {
+  const examples = bodyExamples(row);
+  const components: GraphBody[] = [];
+  if (row.header_format === 'document') {
+    if (!headerHandle) throw new WaError('a document header needs a sample upload handle', { code: null, status: 0 });
+    components.push({ type: 'HEADER', format: 'DOCUMENT', example: { header_handle: [headerHandle] } });
+  }
+  components.push({ type: 'BODY', text: row.body_ar, ...(examples.length ? { example: { body_text: [examples] } } : {}) });
   if (row.footer_ar) components.push({ type: 'FOOTER', text: row.footer_ar });
   const buttons = templateButtons(row.buttons).map((b) =>
     b.type === 'url'

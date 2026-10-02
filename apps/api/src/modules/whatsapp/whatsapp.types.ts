@@ -40,6 +40,13 @@ export interface TemplateSend {
   payloads?: readonly string[];
 }
 
+/** A sample file Meta shows the template reviewer (report_ready's PDF header). */
+export interface SampleFile {
+  name: string;
+  mime: string;
+  bytes: Uint8Array<ArrayBuffer>;
+}
+
 /**
  * Every call throws WaError on a Meta error or a network failure, and WaError with code null and
  * status 0 when WhatsApp is not configured (whatsappEnv(env) === null).
@@ -55,8 +62,15 @@ export interface WhatsappClient {
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */
   getTemplates(): Promise<MetaTemplate[]>;
-  /** Creates the template on Meta (status PENDING). Only ever from the explicit admin route. */
-  submitTemplate(template: TemplateRow): Promise<{ metaId: string; status: string }>;
+  /**
+   * Creates the template on Meta (status PENDING). Only ever from the explicit admin route. A
+   * document header needs `headerHandle` from uploadSample (Meta's sample for the reviewer).
+   */
+  submitTemplate(template: TemplateRow, opts?: { headerHandle?: string }): Promise<{ metaId: string; status: string }>;
+  /** WA_APP_ID is set: the Resumable Upload API (sample files for template headers) is usable. */
+  canUploadSamples(): boolean;
+  /** Resumable Upload API (session on the app, then the bytes): the handle for header_handle. */
+  uploadSample(file: SampleFile): Promise<string>;
   /** Downloads inbound media: metadata GET /{media_id}, then the bytes with the bearer. */
   getMedia(mediaId: string): Promise<{ bytes: Uint8Array; mime: string }>;
 }

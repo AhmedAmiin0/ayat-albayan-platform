@@ -24,6 +24,11 @@ const schema = z.object({
   WA_PHONE_NUMBER_ID: optionalSecret,
   WA_WABA_ID: optionalSecret,
   WA_ACCESS_TOKEN: optionalSecret,
+  /**
+   * The Meta app that issued WA_ACCESS_TOKEN. Only the Resumable Upload API needs it (the sample
+   * PDF of a document-header template, report_ready); without it that submit is 409 needs_app_id.
+   */
+  WA_APP_ID: optionalSecret,
   /** Meta app secret: X-Hub-Signature-256 of every webhook POST. */
   WA_APP_SECRET: optionalSecret,
   /** hub.verify_token answered by GET /webhooks/whatsapp. */
@@ -52,13 +57,16 @@ export interface WhatsappEnv {
   phoneNumberId: string;
   wabaId: string;
   accessToken: string;
+  /** WA_APP_ID; absent = no sample uploads, so a document-header template can't be submitted. */
+  appId?: string;
 }
 
 /** null = WhatsApp not configured: the client refuses every call and nothing is sent. */
 export function whatsappEnv(env: Env): WhatsappEnv | null {
   const { WA_API_BASE: base, WA_PHONE_NUMBER_ID: phoneNumberId, WA_WABA_ID: wabaId, WA_ACCESS_TOKEN: accessToken } = env;
   if (!base || !phoneNumberId || !wabaId || !accessToken) return null;
-  return { base: base.replace(/\/+$/, ''), version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
+  const conn = { base: base.replace(/\/+$/, ''), version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
+  return env.WA_APP_ID ? { ...conn, appId: env.WA_APP_ID } : conn;
 }
 
 /**

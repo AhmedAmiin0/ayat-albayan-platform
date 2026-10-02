@@ -52,6 +52,8 @@ export const controlRoutes: Route[] = [
     s.media.clear();
     s.lastInbound.clear();
     s.failNext.clear();
+    s.uploads.clear();
+    s.handles.clear();
     return [200, { reset: true }];
   }],
   ['POST', /^\/__stub\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec))]],
