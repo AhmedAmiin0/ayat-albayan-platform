@@ -1,6 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
+import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { t } from '@/lib/i18n';
 import { CancelForm } from './CancelForm';
 import { Drawer } from './Drawer';
@@ -45,6 +46,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
           <>
             <LessonDetails lesson={lesson} />
             <ProposalBox lesson={lesson} onDone={done} />
+            <LessonReportLinks lesson={lesson} role="admin" />
             <LessonActions
               lesson={lesson}
               onDone={done}

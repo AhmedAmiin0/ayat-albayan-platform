@@ -7,6 +7,7 @@ import { PageHead } from '@/components/ui/page';
 import { Tabs } from '@/components/ui/tabs';
 import { Toast } from '@/components/ui/toast';
 import { errorCode } from '@/features/schedule/api';
+import { PendingReports } from '@/features/reports/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
@@ -67,6 +68,7 @@ function Dashboard({ me }: { me: TeacherMe }) {
   return (
     <>
       <JoinLink link={me.meeting_link} />
+      <PendingReports tz={me.tz} />
       <Tabs label={t.teacherDash.tabs} tabs={TABS} value={tab} onChange={setTab} />
       <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>
         {tab === 'today' && list('today')}

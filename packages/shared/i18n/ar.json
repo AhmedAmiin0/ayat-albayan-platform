@@ -820,6 +820,25 @@
       "lesson_not_found": "الحلقة دي مش موجودة",
       "attachment_path": "الملف ما اترفعش صح، ارفعه تاني",
       "pdf_not_failed": "الـPDF مش واقف، مفيش داعي تعيد تجهيزه"
+    },
+    "entryFor": "تقرير {name}",
+    "submitting": "بيتبعت…",
+    "saveFailed": "المسودة ما اتحفظتش، هنحاول تاني أول ما تكمّل كتابة",
+    "uploading": "بيترفع…",
+    "openFile": "فتح الملف",
+    "fileKind": {
+      "image": "صورة",
+      "pdf": "ملف PDF",
+      "audio": "تسجيل صوتي"
+    },
+    "sizeMb": "{n} ميجا",
+    "lessonNoShort": "الحلقة {n}",
+    "pdf": "الـPDF",
+    "chart": {
+      "series": "البند اللي ظاهر في الرسم",
+      "summary": "{label}: آخر تقييم {grade}، من {n} تقارير",
+      "table": "جدول التقييمات",
+      "noGrade": "من غير تقييم"
     }
   },
   "subscriptions": {
