@@ -21,3 +21,4 @@ packages/db/supabase/.branches/
 tools/migrate/input/
 tools/*.zip
 tools/*.xlsx
+.playwright-mcp/
