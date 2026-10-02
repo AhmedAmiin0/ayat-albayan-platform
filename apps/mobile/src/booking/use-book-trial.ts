@@ -15,11 +15,12 @@ export interface BookTrialInput {
 }
 
 /**
- * «احجز» (R-MOB-02, R-LEAD-06): POST /booking with package trial. One clientRequestId per wizard,
- * re-sent on every retry (a 409 wrote nothing; a lost reply replays to the first booking), so a
- * double tap or a retry books once (rule 8). Afterwards the lead shows trial_booked at once when
- * the funnel allows it (as the API moves it; it may leave a filtered inbox list), then the inbox
- * lists refetch before the lead, since the lead screen reads its lead out of them.
+ * «احجز» (R-MOB-02, R-LEAD-06): POST /booking (a trial, or a paid package from the chat). One
+ * clientRequestId per wizard, re-sent on every retry (a 409 wrote nothing; a lost reply replays to
+ * the first booking), so a double tap or a retry books once (rule 8). Afterwards the lead shows
+ * trial_booked / converted at once when the funnel allows it (as the API's leadTarget moves it; it
+ * may leave a filtered inbox list), then the inbox lists refetch before the lead, since the lead
+ * screen reads its lead out of them; the chats refetch too (the number is a guardian now).
  */
 export function useBookTrial() {
   const client = useQueryClient();
@@ -39,11 +40,13 @@ export function useBookTrial() {
     onSuccess: (_result, input) => {
       const id = input.draft.leadId;
       const lead = client.getQueryData<Lead>(pathKey(`/leads/${id}`));
-      if (lead && allowedNextStatuses(lead.status).includes('trial_booked')) {
-        const patch = { id, status: 'trial_booked' };
+      const status = input.draft.pkg === 'trial' ? 'trial_booked' : 'converted';
+      if (lead && allowedNextStatuses(lead.status).includes(status)) {
+        const patch = { id, status };
         client.setQueriesData({ queryKey: ['leads'] }, (old: unknown) => patchCached(old, patch));
       }
       void client.invalidateQueries({ queryKey: ['lessons'] });
+      void client.invalidateQueries({ queryKey: ['threads'] });
       void client.invalidateQueries({ queryKey: ['leads', 'list'] }).then(() =>
         client.invalidateQueries({
           queryKey: ['leads'],

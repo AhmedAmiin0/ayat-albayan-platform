@@ -41,7 +41,7 @@ export interface SlotDay {
 }
 
 /** «الأحد 4 أكتوبر» of an instant on the Riyadh calendar (lessonWhenText without its clock). */
-function dayLabel(at: Date): string {
+export function dayLabel(at: Date): string {
   return lessonWhenText(at, RIYADH_TZ, locale).replace(/\s\d{2}:\d{2}$/, '');
 }
 

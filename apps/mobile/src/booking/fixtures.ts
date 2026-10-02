@@ -67,6 +67,9 @@ export function draft(patch: Partial<TrialDraft> = {}): TrialDraft {
     gender: 'female',
     teacher: maryam,
     startsAt: SUN_17,
+    pkg: 'trial',
+    durationMin: 45,
+    byday: [],
     ...patch,
   };
 }

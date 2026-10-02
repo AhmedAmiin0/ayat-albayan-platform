@@ -1,4 +1,4 @@
-import type { MessageView, TemplateView, ThreadDetail, ThreadView } from '@ab/shared';
+import type { MessageView, TemplateView, ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { provisionalMessage, type ThreadCache } from './thread-cache';
 
 // Test rows in the GET /threads/:phone and GET /messaging/templates shapes (huda's test phone).
@@ -28,6 +28,7 @@ export const thread: ThreadView = {
   teacher_id: null,
   teacher_name: null,
   session_open: true,
+  subscribed: false,
 };
 
 /** An API row: the provisional shape with the server's fields over it. */
@@ -63,8 +64,11 @@ export const failed = message({
   click_to_chat: 'https://wa.me/966552147730?text=x',
 });
 
+/** A thread with nobody on file: no guardian, no lead row, no students. */
+export const noPeople: ThreadPeople = { guardian: null, lead: null, students: [] };
+
 export function detail(messages: MessageView[], fields: Partial<ThreadDetail> = {}): ThreadDetail {
-  return { thread, messages, has_more: false, lessons: [], ...fields };
+  return { thread, messages, has_more: false, lessons: [], people: noPeople, ...fields };
 }
 
 /** A cached thread, as useThread stores it. */

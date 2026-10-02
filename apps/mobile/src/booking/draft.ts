@@ -5,17 +5,21 @@ import {
   type BookingTeacherOption,
   type Duration,
   type Gender,
+  type PackageSize,
   type PhoneCountry,
   type Program,
 } from '@ab/shared';
 import type { Lead } from '@/inbox/types';
+import { effectiveByday, lessonMinutes, TRIAL_MINUTES } from './package-choice';
 import { ruleFromSlot } from './slots';
 
-// «حجز حلقة تجريبية» from a lead (R-MOB-02, R-LEAD-06): the wizard's state and its POST /booking
-// body. Pure; the screens only edit a TrialDraft.
+// «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):
+// the wizard's state and its POST /booking body. Pure; the screens only edit a TrialDraft.
 
-/** ponytail: every quick trial is 45 minutes (the web wizard's default); add a length picker if trials vary. */
-export const TRIAL_MINUTES: Duration = 45;
+export { TRIAL_MINUTES } from './package-choice';
+
+/** What the wizard needs of the lead: a cached GET /leads row, or the chat's lead. */
+export type BookingLead = Pick<Lead, 'id' | 'name' | 'phone_e164'>;
 
 export interface TrialDraft {
   leadId: string;
@@ -30,6 +34,12 @@ export interface TrialDraft {
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant). */
   startsAt: string | null;
+  /** 'trial', or a paid size (8, 12…) booked from the chat's «اشترك». */
+  pkg: PackageSize;
+  /** A paid package's lesson length; a trial is always TRIAL_MINUTES (lessonMinutes). */
+  durationMin: Duration;
+  /** A paid package's extra weekly days; the first slot's day is always in (effectiveByday). */
+  byday: number[];
 }
 
 /** The answer to 409 duplicate_student: book that existing child, or create the new one anyway. */
@@ -51,7 +61,7 @@ export function tzForPhone(phone: string): string {
 }
 
 /** The lead's number and WhatsApp name (the parent's) prefill the guardian; the child is typed. */
-export function draftFromLead(lead: Lead): TrialDraft {
+export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): TrialDraft {
   return {
     leadId: lead.id,
     studentName: '',
@@ -62,6 +72,9 @@ export function draftFromLead(lead: Lead): TrialDraft {
     gender: null,
     teacher: null,
     startsAt: null,
+    pkg,
+    durationMin: TRIAL_MINUTES,
+    byday: [],
   };
 }
 
@@ -86,19 +99,22 @@ export interface BodyOptions {
   choice?: StudentChoice;
 }
 
-/** POST /booking for one trial lesson: a rule on the slot's local day that ends on it (invariant 4). */
+/**
+ * POST /booking: a trial is one lesson, a rule on the slot's local day that ends on it (invariant
+ * 4); a paid package repeats weekly from the slot on its days. The new child is active when paid.
+ */
 export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest | null {
   const phone = normalizePhone(d.phone);
   if (!d.teacher || !d.startsAt || !phone.ok) return null;
   const rule = ruleFromSlot(d.startsAt, d.tz);
   const base = {
     teacherId: d.teacher.id,
-    byday: [rule.weekday],
+    byday: effectiveByday(d),
     startTimeLocal: rule.startTimeLocal,
     tz: d.tz,
-    durationMin: TRIAL_MINUTES,
+    durationMin: lessonMinutes(d),
     startsOn: rule.startsOn,
-    package: 'trial' as const,
+    package: d.pkg,
     clientRequestId: o.requestId,
     startsAt: d.startsAt,
     leadId: d.leadId,
@@ -110,7 +126,7 @@ export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest 
       name: d.studentName.trim(),
       program: d.program,
       tz: d.tz,
-      status: 'trial',
+      status: d.pkg === 'trial' ? 'trial' : 'active',
       teacher_gender_pref: d.gender,
     },
     guardian: {

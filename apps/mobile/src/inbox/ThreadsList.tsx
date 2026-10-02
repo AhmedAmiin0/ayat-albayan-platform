@@ -14,6 +14,7 @@ import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf } from './format';
 import { threadPreview } from './message-text';
+import { badgeChip } from './subscription/subscription-words';
 import { threadHref } from './thread-cache';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
@@ -65,7 +66,12 @@ export function ThreadsList({ switcher }: { switcher: ReactNode }) {
               title={th.display_name ?? ltr(phone)}
               meta={th.display_name ? phone : undefined}
               subtitle={threadPreview(th)}
-              tags={<ThreadTags thread={th} />}
+              tags={
+                <>
+                  <ThreadTags thread={th} />
+                  {th.subscribed ? <StatusChip {...badgeChip('subscribed')} size="sm" /> : null}
+                </>
+              }
               trailing={turnChip(th)}
               onPress={() => router.push(threadHref(th.phone_e164))}
             />
