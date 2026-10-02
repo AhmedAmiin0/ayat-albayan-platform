@@ -66,6 +66,12 @@ export interface AcademySettings {
   reporting_currency: string;
   payout_count_late: boolean;
   payout_count_no_show: boolean;
+  /** Phase 4 (docs/12 §2): R-LEAD-05 hours after the last inbound message, ascending. */
+  follow_up_hours: number[];
+  reminder_minutes_before: number;
+  reminder_24h_enabled: boolean;
+  /** The admin's kill switch; the sender also needs env MESSAGING_ENABLED=true. */
+  messaging_enabled: boolean;
 }
 
 /** GET /teachers/me (R-TCH-03). */

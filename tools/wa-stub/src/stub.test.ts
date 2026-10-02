@@ -1,81 +1,77 @@
-import { createHmac } from 'node:crypto';
-import { createServer, type Server } from 'node:http';
-import type { AddressInfo } from 'node:net';
 import { afterEach, describe, expect, it } from 'vitest';
-import { createStub, type StubOptions } from './stub.ts';
+import { AUTH, closeAll, post, startHook, startStub, templateBody } from './test-server.ts';
 
-const servers: Server[] = [];
+afterEach(closeAll);
 
-async function start(opts: StubOptions = {}) {
-  const stub = createStub(opts);
-  const server = createServer((req, res) => void stub.handle(req, res));
-  servers.push(server);
-  await new Promise<void>((r) => server.listen(0, r));
-  return { stub, url: `http://localhost:${(server.address() as AddressInfo).port}` };
-}
+const MSG = '/v21.0/PHONE/messages';
 
-afterEach(() => servers.splice(0).forEach((s) => s.close()));
-
-const post = (url: string, body: unknown) =>
-  fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(body) });
-
-describe('wa-stub', () => {
-  it('accepts a registered template and logs it', async () => {
-    const { url, stub } = await start();
-    const res = await post(`${url}/v20.0/PHONE/messages`, {
-      messaging_product: 'whatsapp', to: '966598917071', type: 'template',
-      template: { name: 'lesson_reminder_24h', language: { code: 'ar' } },
-    });
+describe('wa-stub: POST /messages (docs/12 §5)', () => {
+  it('accepts an approved template with the right parameter count and logs it', async () => {
+    const { url, stub } = await startStub();
+    const res = await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2));
     expect(res.status).toBe(200);
     const json = (await res.json()) as { messages: { id: string }[] };
     expect(json.messages[0]?.id).toMatch(/^wamid\./);
-    expect(stub.sent).toHaveLength(1);
-    expect(stub.sent[0]).toMatchObject({ to: '966598917071', template: 'lesson_reminder_24h' });
+    expect(stub.sent[0]).toMatchObject({ to: '966598917071', template: 'lesson_reminder_v2' });
   });
 
-  it('reproduces error 132001 for unknown templates (issue C1)', async () => {
-    const { url, stub } = await start();
-    const res = await post(`${url}/v20.0/PHONE/messages`, { type: 'template', template: { name: 'lesson_reminder_v2' } });
+  it('reproduces 132001 for a template Meta does not have (issue C1)', async () => {
+    const { url, stub } = await startStub();
+    const res = await post(`${url}${MSG}`, templateBody('lesson_reminder_1h', 2));
     expect(res.status).toBe(404);
     expect(((await res.json()) as { error: { code: number } }).error.code).toBe(132001);
     expect(stub.sent).toHaveLength(0);
   });
 
-  it('accepts session text messages', async () => {
-    const { url } = await start();
-    const res = await post(`${url}/v20.0/PHONE/messages`, { to: '966500000001', type: 'text', text: { body: 'أهلاً' } });
-    expect(res.status).toBe(200);
+  it('132000 when the body parameter count is wrong', async () => {
+    const { url } = await startStub();
+    const res = await post(`${url}${MSG}`, templateBody('booking_confirmation_plain', 1));
+    expect(((await res.json()) as { error: { code: number } }).error.code).toBe(132000);
   });
 
-  it('lists templates and exposes/clears the sent log', async () => {
-    const { url } = await start({ templates: ['report_ready'] });
-    const list = (await (await fetch(`${url}/v20.0/WABA/message_templates`)).json()) as { data: { name: string }[] };
-    expect(list.data.map((t) => t.name)).toEqual(['report_ready']);
-    await post(`${url}/v20.0/PHONE/messages`, { type: 'template', template: { name: 'report_ready' } });
+  it('190 without a bearer token; a configured token must match', async () => {
+    const { url } = await startStub({ accessToken: 'secret' });
+    expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), {})).status).toBe(401);
+    expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2))).status).toBe(401);
+    const ok = await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), { authorization: 'Bearer secret' });
+    expect(ok.status).toBe(200);
+  });
+
+  it('free text needs an inbound in the last 24 h (131047), then goes through', async () => {
+    const hook = await startHook();
+    const { url } = await startStub({ webhookUrl: hook.url, appSecret: 's' });
+    const text = { to: '+966500000001', type: 'text', text: { body: 'أهلاً' } };
+    const closed = await post(`${url}${MSG}`, text);
+    expect(((await closed.json()) as { error: { code: number } }).error.code).toBe(131047);
+    await post(`${url}/__stub/inbound`, { from: '966500000001', text: 'السلام عليكم' });
+    expect((await post(`${url}${MSG}`, text)).status).toBe(200);
+    expect((await post(`${url}${MSG}`, { ...text, type: 'document', document: { link: 'https://x/r.pdf' } })).status).toBe(200);
+  });
+
+  it('marks an inbound message read without logging a send', async () => {
+    const { url, stub } = await startStub();
+    const res = await post(`${url}${MSG}`, { messaging_product: 'whatsapp', status: 'read', message_id: 'wamid.in1' });
+    expect(await res.json()).toEqual({ success: true });
+    expect(stub.sent).toHaveLength(0);
+    expect(await (await fetch(`${url}/__stub/reads`)).json()).toEqual(['wamid.in1']);
+  });
+
+  it('injected failure hits the next send to that number only', async () => {
+    const { url } = await startStub();
+    await post(`${url}/__stub/fail`, { to: '+966598917071', code: 131026 });
+    const failed = await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2));
+    expect(((await failed.json()) as { error: { code: number } }).error.code).toBe(131026);
+    expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2))).status).toBe(200);
+  });
+
+  it('exposes, clears and resets its state', async () => {
+    const { url } = await startStub();
+    await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2));
     expect(((await (await fetch(`${url}/__stub/messages`)).json()) as unknown[]).length).toBe(1);
     await fetch(`${url}/__stub/messages`, { method: 'DELETE' });
     expect(((await (await fetch(`${url}/__stub/messages`)).json()) as unknown[]).length).toBe(0);
-  });
-
-  it('forwards simulated inbound messages with a valid signature', async () => {
-    let received: { sig: string | undefined; body: string } | undefined;
-    const hook = createServer((req, res) => {
-      let body = '';
-      req.on('data', (c: Buffer) => (body += c.toString()));
-      req.on('end', () => {
-        received = { sig: req.headers['x-hub-signature-256'] as string | undefined, body };
-        res.writeHead(200).end();
-      });
-    });
-    servers.push(hook);
-    await new Promise<void>((r) => hook.listen(0, r));
-    const webhookUrl = `http://localhost:${(hook.address() as AddressInfo).port}/webhooks/whatsapp`;
-    const { url } = await start({ webhookUrl, appSecret: 's3cret' });
-
-    const res = await post(`${url}/__stub/inbound`, { from: '966598917071', text: 'السلام عليكم' });
-    expect(res.status).toBe(200);
-    const expected = createHmac('sha256', 's3cret').update(received?.body ?? '').digest('hex');
-    expect(received?.sig).toBe(`sha256=${expected}`);
-    expect(received?.body).toContain('السلام عليكم');
+    expect((await fetch(`${url}/__stub/health`)).status).toBe(200);
+    expect((await post(`${url}/__stub/reset`, {})).status).toBe(200);
+    expect((await fetch(`${url}/nope`, { headers: AUTH })).status).toBe(404);
   });
 });

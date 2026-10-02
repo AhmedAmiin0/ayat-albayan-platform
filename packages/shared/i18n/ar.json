@@ -111,7 +111,9 @@
     "reports": "التقارير",
     "subscriptions": "الاشتراكات",
     "payouts": "مستحقات المعلمين",
-    "expenses": "المصروفات"
+    "expenses": "المصروفات",
+    "inbox": "الرسايل",
+    "templates": "قوالب واتساب"
   },
   "students": {
     "title": "الطلاب",
@@ -1115,6 +1117,188 @@
       "invalid_month": "اختار الشهر من القايمة"
     }
   },
+  "inbox": {
+    "title": "الرسايل",
+    "searchPlaceholder": "دوّر بالاسم أو الرقم",
+    "filterAll": "الكل",
+    "filterUnread": "مش مقروءة",
+    "empty": "مفيش رسايل لسه",
+    "emptyUnread": "مفيش رسايل جديدة",
+    "unknownNumber": "رقم مش متسجل",
+    "unread": {
+      "one": "رسالة جديدة",
+      "two": "رسالتين جداد",
+      "few": "{n} رسايل جديدة",
+      "other": "{n} رسالة جديدة"
+    },
+    "kind": {
+      "lead": "عميل جديد",
+      "guardian": "ولي أمر",
+      "teacher": "معلم/ة"
+    },
+    "you": "إنت:",
+    "templateLine": "قالب: {name}",
+    "media": {
+      "image": "صورة",
+      "audio": "رسالة صوتية",
+      "video": "فيديو",
+      "document": "ملف",
+      "sticker": "ستيكر",
+      "location": "موقع",
+      "other": "رسالة مش مدعومة — افتحها من واتساب"
+    },
+    "openThread": "افتح المحادثة مع {name}",
+    "loadOlder": "رسايل أقدم",
+    "replyTo": "رد على:",
+    "quickReply": {
+      "confirm": "أكّد الحلقة",
+      "reschedule": "طلب تغيير الميعاد",
+      "stop": "طلب وقف الرسايل"
+    },
+    "composer": {
+      "placeholder": "اكتب رسالة…",
+      "send": "ابعت",
+      "sending": "بيتبعت…",
+      "sendTemplate": "ابعت قالب",
+      "chooseTemplate": "اختار القالب",
+      "param": "المتغير {n}",
+      "button": "كود لينك الحلقة",
+      "preview": "شكل الرسالة",
+      "tooLong": "الرسالة أطول من 4096 حرف"
+    },
+    "sessionClosed": "فات أكتر من 24 ساعة على آخر رسالة منه — لازم تبعت قالب",
+    "sessionOpenUntil": "تقدر ترد برسالة عادية لحد {time}",
+    "messagingOff": "الإرسال متوقف دلوقتي — الرسايل مستنية في الطابور لحد ما يتشغل",
+    "error": {
+      "session_closed": "فات أكتر من 24 ساعة على آخر رسالة منه — لازم تبعت قالب",
+      "template_not_approved": "القالب ده لسه مش متوافق عليه من ميتا",
+      "invalid_phone": "الرقم ده مش مظبوط",
+      "send_failed": "الرسالة متبعتتش، جرّب تاني أو ابعتها بنفسك من واتساب"
+    }
+  },
+  "templates": {
+    "title": "قوالب واتساب",
+    "intro": "مفيش رسالة بتتبعت لولي أمر أو عميل من غير قالب متوافق عليه من ميتا، إلا لو هو بعتلنا في آخر 24 ساعة.",
+    "name": "القالب",
+    "metaName": "اسمه على ميتا",
+    "category": "النوع",
+    "status": "الحالة",
+    "quality": "الجودة",
+    "lastChecked": "آخر مراجعة",
+    "neverChecked": "لسه متراجعش",
+    "body": "نص الرسالة",
+    "footer": "التذييل",
+    "params": "المتغيرات",
+    "header": "مرفق PDF",
+    "checkHealth": "راجع حالة القوالب",
+    "checking": "بنراجع…",
+    "checkedAt": "اتراجعت {time}",
+    "submit": "ابعته لميتا للموافقة",
+    "submitConfirm": "القالب «{name}» هيتبعت لميتا للمراجعة. الموافقة بتاخد من دقايق لكام يوم، والنص مش هيتعدّل وهو تحت المراجعة. نبعته؟",
+    "submitConfirmYes": "أيوه، ابعته",
+    "submitted": "اتبعت لميتا — مستنيين الموافقة",
+    "needsAttention": "في قوالب مش جاهزة — الرسايل بتاعتها هتفضل في الطابور لحد ما تتوافق",
+    "qualityScore": {
+      "GREEN": "عالية",
+      "YELLOW": "متوسطة",
+      "RED": "ضعيفة",
+      "UNKNOWN": "لسه مفيش تقييم"
+    },
+    "names": {
+      "booking_confirmation": "تأكيد الحجز — لينك Jitsi",
+      "booking_confirmation_meet": "تأكيد الحجز — لينك Meet",
+      "booking_confirmation_plain": "تأكيد الحجز — من غير لينك",
+      "lesson_reminder": "تذكير الحلقة النهاردة — Jitsi",
+      "lesson_reminder_meet": "تذكير الحلقة النهاردة — Meet",
+      "lesson_reminder_plain": "تذكير الحلقة النهاردة — من غير لينك",
+      "teacher_lesson_reminder": "تذكير المعلم/ة",
+      "teacher_lesson_reminder_meet": "تذكير المعلم/ة — Meet",
+      "lesson_reminder_24h": "تذكير قبل الحلقة بيوم",
+      "report_ready": "تقرير الحلقة (PDF)",
+      "renewal_due": "تذكير التجديد",
+      "follow_up_slots": "متابعة بميعادين مقترحين"
+    },
+    "settings": {
+      "title": "إعدادات الإرسال",
+      "messagingEnabled": "تشغيل إرسال الرسايل",
+      "messagingEnabledHint": "لما يكون مقفول، الرسايل بتتسجل وتستنى في الطابور ومحدش بيستلمها.",
+      "reminderMinutesBefore": "تذكير الحلقة قبلها بكام دقيقة",
+      "reminder24hEnabled": "تذكير قبل الحلقة بيوم",
+      "reminder24hHint": "بيشتغل بعد ما ميتا توافق على قالب «تذكير قبل الحلقة بيوم».",
+      "followUpHours": "المتابعة بعد كام ساعة من آخر رسالة",
+      "followUpHoursHint": "مثلًا 24 وبعدين 72"
+    },
+    "error": {
+      "not_submittable": "القالب ده اتبعت قبل كده أو متوافق عليه",
+      "not_configured": "بيانات واتساب مش متظبطة على السيرفر",
+      "meta_error": "ميتا رفضت الطلب: {message}"
+    }
+  },
+  "messages": {
+    "log": "سجل الرسايل",
+    "retry": "جرّب تاني",
+    "retrying": "بنجرّب تاني…",
+    "retryQueued": "رجعت الطابور وهتتبعت تاني",
+    "clickToChat": "ابعتها بنفسك من واتساب",
+    "markSentManually": "بعتّها بنفسي",
+    "sentManuallyConfirm": "بعت الرسالة دي بنفسك من واتساب؟ مش هنبعتها تاني.",
+    "sentManuallyAt": "اتبعتت يدوي {time}",
+    "queuedFor": "هتتبعت {time}",
+    "sentAt": "اتبعتت {time}",
+    "deliveredAt": "وصلت {time}",
+    "readAt": "اتقرت {time}",
+    "attempts": "المحاولات: {n} من {max}",
+    "nextAttempt": "المحاولة الجاية {time}",
+    "waitingTemplate": "مستنية موافقة ميتا على القالب",
+    "errorLine": "السبب: {reason}",
+    "errors": {
+      "130429": "ميتا وقفت الإرسال شوية بسبب كتر الرسايل",
+      "131026": "الرقم مش على واتساب أو مش قادر يستقبل رسايل",
+      "131047": "فات أكتر من 24 ساعة على آخر رسالة منه",
+      "132000": "عدد المتغيرات مش مظبوط في القالب",
+      "132001": "القالب مش موجود على ميتا",
+      "template_not_approved": "القالب لسه مش متوافق عليه من ميتا",
+      "unknown": "حصلت مشكلة في الإرسال ({code})"
+    }
+  },
+  "followUps": {
+    "title": "المتابعة",
+    "next": "المتابعة الجاية {time}",
+    "none": "مفيش متابعة متجدولة",
+    "stage": "اتبعت {n} من {total}",
+    "pause": "وقّف المتابعة",
+    "resume": "رجّع المتابعة",
+    "paused": "المتابعة متوقفة",
+    "pausedByLead": "العميل طلب وقف الرسايل",
+    "noSlots": "مفيش مواعيد فاضية نقترحها دلوقتي — المتابعة هتتجرّب تاني"
+  },
+  "notifications": {
+    "new_lead": {
+      "title": "رسالة من رقم جديد",
+      "body": "{name}: {text}"
+    },
+    "new_message": {
+      "title": "رسالة جديدة من {name}",
+      "body": "{text}"
+    },
+    "lesson_needs_confirmation": {
+      "title": "حلقة محتاجة تأكيد",
+      "body": "حلقة {names} {when} لسه متأكدتش"
+    },
+    "report_submitted": {
+      "title": "تقرير حلقة جديد",
+      "body": "اتكتب تقرير حلقة {student} مع {teacher}"
+    },
+    "reminder_failed": {
+      "title": "رسالة متبعتتش",
+      "body": "«{template}» لـ {name} متبعتتش — ابعتها بنفسك من المحادثة"
+    },
+    "payment_due": {
+      "title": "باقة محتاجة دفع أو تجديد",
+      "body": "باقة {student}: {left}"
+    },
+    "media": "بعت {kind}"
+  },
   "enums": {
     "leadStatus": {
       "new": "جديد",
@@ -1250,6 +1434,35 @@
     "adminTaskKind": {
       "renewal_due": "تجديد باقة",
       "subscription_unpaid": "باقة مش مدفوعة"
+    },
+    "messageStatus": {
+      "queued": "في الطابور",
+      "sent": "اتبعتت",
+      "delivered": "وصلت",
+      "read": "اتقرت",
+      "failed": "متبعتتش",
+      "sent_manually": "اتبعتت يدوي"
+    },
+    "templateStatus": {
+      "not_submitted": "لسه متبعتش لميتا",
+      "pending": "تحت المراجعة",
+      "approved": "متوافق عليه",
+      "rejected": "مرفوض",
+      "paused": "موقوف مؤقتًا",
+      "disabled": "متعطل",
+      "missing": "مش موجود على ميتا"
+    },
+    "templateCategory": {
+      "utility": "خدمي",
+      "marketing": "تسويقي"
+    },
+    "pushKind": {
+      "new_lead": "رقم جديد بعت رسالة",
+      "new_message": "رسالة جديدة",
+      "lesson_needs_confirmation": "حلقة محتاجة تأكيد",
+      "report_submitted": "تقرير حلقة جديد",
+      "reminder_failed": "رسالة متبعتتش",
+      "payment_due": "باقة محتاجة دفع أو تجديد"
     }
   }
 }

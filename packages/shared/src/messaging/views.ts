@@ -1,0 +1,100 @@
+import type {
+  LeadSource,
+  LeadStatus,
+  MessageDirection,
+  MessageStatus,
+  TemplateCategory,
+  TemplateStatus,
+} from '../enums/index.js';
+import type { TemplateButton, TemplateParams } from './templates.js';
+
+// Phase 4 responses (docs/12 §4). snake_case rows like every API response; instants are ISO-8601
+// UTC strings.
+
+/** GET /threads item: one v_threads row plus the 24 h window at response time. */
+export interface ThreadView {
+  phone_e164: string;
+  /** Guardian name ?? lead name ?? teacher name; null = an unknown number (show the phone). */
+  display_name: string | null;
+  last_message_id: string;
+  last_direction: MessageDirection;
+  last_body: string | null;
+  last_template_key: string | null;
+  last_status: MessageStatus;
+  last_media_mime: string | null;
+  last_message_at: string;
+  last_inbound_at: string | null;
+  /** Inbound rows no admin has opened yet (read_at null). */
+  unread_count: number;
+  lead_id: string | null;
+  lead_name: string | null;
+  lead_status: LeadStatus | null;
+  lead_source: LeadSource | null;
+  guardian_id: string | null;
+  guardian_name: string | null;
+  guardian_tz: string | null;
+  teacher_id: string | null;
+  teacher_name: string | null;
+  /** sessionWindowOpen(last_inbound_at, now): free text allowed, else only a template. */
+  session_open: boolean;
+}
+
+/** One messages row in a thread (R-MSG-05). */
+export interface MessageView {
+  id: string;
+  direction: MessageDirection;
+  status: MessageStatus;
+  phone_e164: string;
+  lead_id: string | null;
+  guardian_id: string | null;
+  lesson_id: string | null;
+  template_key: string | null;
+  template_params: TemplateParams | null;
+  /** Inbound or session text as stored; for a template row, the rendered template text. */
+  body: string | null;
+  media_mime: string | null;
+  /** Signed Storage URL (1 h) of a downloaded inbound or outbound file; null until downloaded. */
+  media_url: string | null;
+  reply_to_wa_id: string | null;
+  interactive_payload: unknown;
+  error_code: string | null;
+  error_text: string | null;
+  attempts: number;
+  next_attempt_at: string | null;
+  scheduled_for: string | null;
+  sent_at: string | null;
+  delivered_at: string | null;
+  read_at: string | null;
+  sent_manually_at: string | null;
+  created_at: string;
+  /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
+  click_to_chat: string | null;
+}
+
+/** GET /threads/:phone: the thread (null if the phone has no messages) and a page of messages. */
+export interface ThreadDetail {
+  thread: ThreadView | null;
+  /** Oldest → newest; `before` (an instant) pages back. */
+  messages: MessageView[];
+  has_more: boolean;
+}
+
+/** GET /messaging/templates item: one message_templates row. */
+export interface TemplateView {
+  key: string;
+  meta_name: string;
+  language: string;
+  category: TemplateCategory;
+  header_format: 'document' | null;
+  body_ar: string;
+  footer_ar: string | null;
+  /** Names of {{1}}, {{2}}, … in order. */
+  params: string[];
+  buttons: TemplateButton[];
+  status: TemplateStatus;
+  quality: string | null;
+  meta_id: string | null;
+  last_checked_at: string | null;
+  last_error: string | null;
+  submitted_at: string | null;
+}

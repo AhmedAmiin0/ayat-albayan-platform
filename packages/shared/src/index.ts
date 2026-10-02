@@ -2,7 +2,7 @@ export * from './arabic.js';
 export * from './enums/index.js';
 export * from './highlight-diff.js';
 export * from './lessons/index.js';
-export * from './messaging/booking-confirmation.js';
+export * from './messaging/index.js';
 export * from './money/index.js';
 export * from './phone.js';
 export * from './plural.js';

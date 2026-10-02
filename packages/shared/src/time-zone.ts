@@ -54,6 +54,18 @@ function offsetMinutes(fmt: Intl.DateTimeFormat, at: Date): number {
   return m[1] === '-' ? -minutes : minutes;
 }
 
+const offsetFormats = new Map<string, Intl.DateTimeFormat>();
+
+/** UTC offset of `tz` at `at`, in minutes (Riyadh +180, Cairo +120 / +180 in summer). */
+export function utcOffsetMinutes(tz: string, at: Date): number {
+  let fmt = offsetFormats.get(tz);
+  if (!fmt) {
+    fmt = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'longOffset' });
+    offsetFormats.set(tz, fmt);
+  }
+  return offsetMinutes(fmt, at);
+}
+
 /**
  * The next UTC-offset change of `tz` within `days` after `now`, or null (docs/07 §8 DST note:
  * «من الجمعة 30 أكتوبر القاهرة بترجع ساعة»). ponytail: an hourly scan (≤720 Intl calls);

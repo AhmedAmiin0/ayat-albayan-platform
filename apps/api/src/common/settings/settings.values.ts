@@ -11,6 +11,10 @@ export const SETTING_DEFAULTS: AcademySettings = {
   reporting_currency: 'SAR',
   payout_count_late: false,
   payout_count_no_show: false,
+  follow_up_hours: [24, 72],
+  reminder_minutes_before: 60,
+  reminder_24h_enabled: false,
+  messaging_enabled: false,
 };
 
 export type SettingKey = keyof AcademySettings;
@@ -18,6 +22,9 @@ export type SettingKey = keyof AcademySettings;
 const int = (min: number) => (v: Json | undefined): v is number =>
   typeof v === 'number' && Number.isInteger(v) && v >= min;
 const bool = (v: Json | undefined): v is boolean => typeof v === 'boolean';
+/** Non-empty, ascending whole hours (R-LEAD-05). */
+const hours = (v: Json | undefined): boolean =>
+  Array.isArray(v) && v.length > 0 && v.every((h, i) => int(1)(h) && (i === 0 || h > Number(v[i - 1])));
 
 /** Per key: is the stored JSON a valid value? Anything else reads as the default. */
 const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
@@ -29,6 +36,10 @@ const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
   reporting_currency: (v) => typeof v === 'string' && /^[A-Z]{3}$/.test(v),
   payout_count_late: bool,
   payout_count_no_show: bool,
+  follow_up_hours: hours,
+  reminder_minutes_before: int(1),
+  reminder_24h_enabled: bool,
+  messaging_enabled: bool,
 };
 
 /** Stored rows → typed settings, defaults filled in key by key. */
@@ -47,6 +58,10 @@ export function readSettings(rows: readonly { key: string; value: Json }[]): Aca
     reporting_currency: pick('reporting_currency'),
     payout_count_late: pick('payout_count_late'),
     payout_count_no_show: pick('payout_count_no_show'),
+    follow_up_hours: pick('follow_up_hours'),
+    reminder_minutes_before: pick('reminder_minutes_before'),
+    reminder_24h_enabled: pick('reminder_24h_enabled'),
+    messaging_enabled: pick('messaging_enabled'),
   };
 }
 
@@ -59,6 +74,10 @@ const KEY_OF: { [K in keyof Required<SettingsUpdate>]: SettingKey } = {
   reportingCurrency: 'reporting_currency',
   payoutCountLate: 'payout_count_late',
   payoutCountNoShow: 'payout_count_no_show',
+  followUpHours: 'follow_up_hours',
+  reminderMinutesBefore: 'reminder_minutes_before',
+  reminder24hEnabled: 'reminder_24h_enabled',
+  messagingEnabled: 'messaging_enabled',
 };
 
 /** PATCH body (camelCase, only sent keys) → settings rows to write. */

@@ -3,6 +3,7 @@ import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { DbModule } from './common/db/db.module';
 import { LessonEventsModule } from './common/events/lesson-events';
+import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
 import { StorageModule } from './common/storage/storage.service';
 import { BookingModule } from './modules/booking/booking.module';
@@ -12,10 +13,12 @@ import { ExportsModule } from './modules/exports/exports.module';
 import { FxModule } from './modules/fx/fx.module';
 import { GuardiansModule } from './modules/guardians/guardians.module';
 import { HealthController } from './modules/health/health.controller';
+import { InboxModule } from './modules/inbox/inbox.module';
 import { JobApplicantsModule } from './modules/job-applicants/job-applicants.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { MeModule } from './modules/me/me.module';
+import { MessagingJobsModule } from './modules/messaging-jobs/messaging-jobs.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
 import { PricingModule } from './modules/pricing/pricing.module';
@@ -25,6 +28,7 @@ import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
+import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
 
 @Module({
   imports: [
@@ -34,6 +38,7 @@ import { TeachersModule } from './modules/teachers/teachers.module';
     SettingsModule,
     StorageModule,
     LessonEventsModule,
+    PushModule,
     GuardiansModule,
     StudentsModule,
     TeachersModule,
@@ -53,6 +58,9 @@ import { TeachersModule } from './modules/teachers/teachers.module';
     ExpensesModule,
     DashboardModule,
     ExportsModule,
+    WhatsappModule,
+    InboxModule,
+    MessagingJobsModule,
   ],
   controllers: [HealthController],
 })

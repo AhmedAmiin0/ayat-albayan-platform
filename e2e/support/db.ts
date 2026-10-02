@@ -8,14 +8,19 @@ function env(name: string): string {
   return value;
 }
 
-/** Wipes every public table and all auth users. Local/CI database only (R-NFR-04). */
+/**
+ * Wipes every public table and all auth users. Local/CI database only (R-NFR-04).
+ * message_templates is reference data seeded by migration 141 (like an enum), so it survives;
+ * a journey that changes a template's status puts it back.
+ */
 export async function resetDb(): Promise<void> {
   const url = env('DATABASE_URL');
   if (!/127\.0\.0\.1|localhost/.test(url)) throw new Error(`refusing to reset non-local DB: ${url}`);
   const sql = postgres(url, { max: 1, onnotice: () => undefined });
   try {
     const rows = await sql<{ t: string }[]>`
-      select format('%I.%I', schemaname, tablename) as t from pg_tables where schemaname = 'public'`;
+      select format('%I.%I', schemaname, tablename) as t from pg_tables
+      where schemaname = 'public' and tablename <> 'message_templates'`;
     if (rows.length) await sql.unsafe(`truncate ${rows.map((r) => r.t).join(', ')} restart identity cascade`);
     await sql`delete from auth.users`;
   } finally {

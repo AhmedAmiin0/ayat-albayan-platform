@@ -1,10 +1,13 @@
 import { createServer } from 'node:http';
 import { createStub } from './stub.ts';
 
+// Local/e2e only: WhatsappClient talks to this through WA_API_BASE, never to graph.facebook.com.
 const port = Number(process.env['WA_STUB_PORT'] ?? 4010);
 const stub = createStub({
   webhookUrl: process.env['WA_WEBHOOK_URL'] ?? 'http://localhost:3000/webhooks/whatsapp',
   appSecret: process.env['WA_APP_SECRET'] ?? 'local-app-secret',
+  phoneNumberId: process.env['WA_PHONE_NUMBER_ID'] ?? 'stub-phone',
+  ...(process.env['WA_ACCESS_TOKEN'] ? { accessToken: process.env['WA_ACCESS_TOKEN'] } : {}),
 });
 
 createServer((req, res) => {

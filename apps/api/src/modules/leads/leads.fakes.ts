@@ -24,6 +24,8 @@ export function lead(over: Partial<LeadRow> = {}): LeadRow {
     last_inbound_at: null,
     last_outbound_at: null,
     next_follow_up_at: null,
+    follow_up_paused: false,
+    follow_up_stage: 0,
     converted_guardian_id: null,
     created_at: '2026-09-01T10:00:00+00:00',
     updated_at: '2026-09-01T10:00:00+00:00',

@@ -16,7 +16,14 @@ const files = {
     SUPABASE_JWT_SECRET: s.JWT_SECRET,
     SUPABASE_SERVICE_ROLE_KEY: s.SERVICE_ROLE_KEY,
     DATABASE_URL: s.DB_URL,
+    // tools/wa-stub only (pnpm turbo dev starts it on :4010); never Meta from a local run.
     WA_API_BASE: 'http://localhost:4010',
+    WA_PHONE_NUMBER_ID: 'stub-phone',
+    WA_WABA_ID: 'stub-waba',
+    WA_ACCESS_TOKEN: 'local-token',
+    WA_APP_SECRET: 'local-app-secret',
+    WA_VERIFY_TOKEN: 'local-verify',
+    MESSAGING_ENABLED: 'true',
   },
   'apps/web/.env.local': {
     VITE_SUPABASE_URL: s.API_URL,

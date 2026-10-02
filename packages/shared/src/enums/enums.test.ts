@@ -24,6 +24,10 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['payoutStatus', E.PAYOUT_STATUSES],
   ['expenseCategory', E.EXPENSE_CATEGORIES],
   ['adminTaskKind', E.ADMIN_TASK_KINDS],
+  ['messageStatus', E.MESSAGE_STATUSES],
+  ['templateStatus', E.TEMPLATE_STATUSES],
+  ['templateCategory', E.TEMPLATE_CATEGORIES],
+  ['pushKind', E.PUSH_KINDS],
 ];
 
 describe('enums ↔ ar.json labels (rule 10, R-NFR-01)', () => {

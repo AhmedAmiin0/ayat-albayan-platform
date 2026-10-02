@@ -1,4 +1,5 @@
 import { clockTime } from '../running-head.js';
+import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
 
 // Queued booking confirmation (R-SCH-06, R-LES-02). Three Meta-approved templates, all with
 // {{1}} = name and {{2}} = date/time text; the two link templates add a URL button whose
@@ -17,22 +18,17 @@ export interface BookingTemplate {
   button: string | null;
 }
 
-const BY_HOST: Record<string, BookingTemplateKey> = {
-  'meet.jit.si': 'booking_confirmation',
-  'meet.google.com': 'booking_confirmation_meet',
+const BY_HOST: Record<MeetingHost, BookingTemplateKey> = {
+  jitsi: 'booking_confirmation',
+  meet: 'booking_confirmation_meet',
 };
-
-// No URL global here: @ab/shared also runs on Hermes, whose URL lacks hostname/pathname.
-const LINK = /^https?:\/\/([^/?#]+)\/([^?#]*)/i;
 
 /** meet.jit.si/<slug> → booking_confirmation, meet.google.com/<code> → _meet, else → _plain. */
 export function bookingConfirmationTemplate(
   meetingLink: string | null | undefined,
 ): BookingTemplate {
-  const [, host = '', path = ''] = LINK.exec(meetingLink?.trim() ?? '') ?? [];
-  const key = BY_HOST[host.toLowerCase()];
-  const slug = path.replace(/\/+$/, '');
-  return key && slug ? { key, button: slug } : { key: 'booking_confirmation_plain', button: null };
+  const { host, slug } = meetingLinkParts(meetingLink);
+  return host ? { key: BY_HOST[host], button: slug } : { key: 'booking_confirmation_plain', button: null };
 }
 
 const whenFormatters = new Map<string, Intl.DateTimeFormat>();

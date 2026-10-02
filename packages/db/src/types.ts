@@ -259,6 +259,13 @@ export type Database = {
             referencedRelation: 'leads';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'job_applicants_from_lead_id_fkey';
+            columns: ['from_lead_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['lead_id'];
+          },
         ];
       };
       leads: {
@@ -267,6 +274,8 @@ export type Database = {
           converted_guardian_id: string | null;
           created_at: string;
           created_by: string | null;
+          follow_up_paused: boolean;
+          follow_up_stage: number;
           id: string;
           last_inbound_at: string | null;
           last_outbound_at: string | null;
@@ -284,6 +293,8 @@ export type Database = {
           converted_guardian_id?: string | null;
           created_at?: string;
           created_by?: string | null;
+          follow_up_paused?: boolean;
+          follow_up_stage?: number;
           id?: string;
           last_inbound_at?: string | null;
           last_outbound_at?: string | null;
@@ -301,6 +312,8 @@ export type Database = {
           converted_guardian_id?: string | null;
           created_at?: string;
           created_by?: string | null;
+          follow_up_paused?: boolean;
+          follow_up_stage?: number;
           id?: string;
           last_inbound_at?: string | null;
           last_outbound_at?: string | null;
@@ -327,6 +340,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'guardians';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'leads_converted_guardian_id_fkey';
+            columns: ['converted_guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['guardian_id'];
           },
         ];
       };
@@ -391,6 +411,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_proposals_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -555,6 +582,13 @@ export type Database = {
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'lesson_reports_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
         ];
       };
       lesson_students: {
@@ -682,10 +716,75 @@ export type Database = {
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'lessons_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
         ];
+      };
+      message_templates: {
+        Row: {
+          body_ar: string;
+          buttons: NonNullable<Json>;
+          category: Database['public']['Enums']['template_category'];
+          footer_ar: string | null;
+          header_format: string | null;
+          key: string;
+          language: string;
+          last_checked_at: string | null;
+          last_error: string | null;
+          meta_id: string | null;
+          meta_name: string;
+          params: NonNullable<Json>;
+          quality: string | null;
+          status: Database['public']['Enums']['template_status'];
+          submitted_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          body_ar: string;
+          buttons?: NonNullable<Json>;
+          category?: Database['public']['Enums']['template_category'];
+          footer_ar?: string | null;
+          header_format?: string | null;
+          key: string;
+          language?: string;
+          last_checked_at?: string | null;
+          last_error?: string | null;
+          meta_id?: string | null;
+          meta_name: string;
+          params?: NonNullable<Json>;
+          quality?: string | null;
+          status?: Database['public']['Enums']['template_status'];
+          submitted_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          body_ar?: string;
+          buttons?: NonNullable<Json>;
+          category?: Database['public']['Enums']['template_category'];
+          footer_ar?: string | null;
+          header_format?: string | null;
+          key?: string;
+          language?: string;
+          last_checked_at?: string | null;
+          last_error?: string | null;
+          meta_id?: string | null;
+          meta_name?: string;
+          params?: NonNullable<Json>;
+          quality?: string | null;
+          status?: Database['public']['Enums']['template_status'];
+          submitted_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
       };
       messages: {
         Row: {
+          attempts: number;
           body: string | null;
           channel: string;
           created_at: string;
@@ -695,20 +794,31 @@ export type Database = {
           direction: Database['public']['Enums']['message_direction'];
           error_code: string | null;
           error_text: string | null;
+          expires_at: string | null;
           guardian_id: string | null;
           id: string;
+          interactive_payload: Json | null;
           lead_id: string | null;
           lesson_id: string | null;
+          media_id: string | null;
+          media_mime: string | null;
+          media_path: string | null;
+          next_attempt_at: string | null;
           phone_e164: string;
           read_at: string | null;
+          reply_to_wa_id: string | null;
           scheduled_for: string | null;
           sent_at: string | null;
+          sent_manually_at: string | null;
           status: Database['public']['Enums']['message_status'];
           template_key: string | null;
           template_params: Json | null;
+          wa_conversation_id: string | null;
           wa_message_id: string | null;
+          wa_pricing_category: string | null;
         };
         Insert: {
+          attempts?: number;
           body?: string | null;
           channel?: string;
           created_at?: string;
@@ -718,20 +828,31 @@ export type Database = {
           direction: Database['public']['Enums']['message_direction'];
           error_code?: string | null;
           error_text?: string | null;
+          expires_at?: string | null;
           guardian_id?: string | null;
           id?: string;
+          interactive_payload?: Json | null;
           lead_id?: string | null;
           lesson_id?: string | null;
+          media_id?: string | null;
+          media_mime?: string | null;
+          media_path?: string | null;
+          next_attempt_at?: string | null;
           phone_e164: string;
           read_at?: string | null;
+          reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
+          sent_manually_at?: string | null;
           status?: Database['public']['Enums']['message_status'];
           template_key?: string | null;
           template_params?: Json | null;
+          wa_conversation_id?: string | null;
           wa_message_id?: string | null;
+          wa_pricing_category?: string | null;
         };
         Update: {
+          attempts?: number;
           body?: string | null;
           channel?: string;
           created_at?: string;
@@ -741,18 +862,28 @@ export type Database = {
           direction?: Database['public']['Enums']['message_direction'];
           error_code?: string | null;
           error_text?: string | null;
+          expires_at?: string | null;
           guardian_id?: string | null;
           id?: string;
+          interactive_payload?: Json | null;
           lead_id?: string | null;
           lesson_id?: string | null;
+          media_id?: string | null;
+          media_mime?: string | null;
+          media_path?: string | null;
+          next_attempt_at?: string | null;
           phone_e164?: string;
           read_at?: string | null;
+          reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
+          sent_manually_at?: string | null;
           status?: Database['public']['Enums']['message_status'];
           template_key?: string | null;
           template_params?: Json | null;
+          wa_conversation_id?: string | null;
           wa_message_id?: string | null;
+          wa_pricing_category?: string | null;
         };
         Relationships: [
           {
@@ -763,11 +894,25 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'messages_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['guardian_id'];
+          },
+          {
             foreignKeyName: 'messages_lead_id_fkey';
             columns: ['lead_id'];
             isOneToOne: false;
             referencedRelation: 'leads';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_lead_id_fkey';
+            columns: ['lead_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['lead_id'];
           },
           {
             foreignKeyName: 'messages_lesson_id_fkey';
@@ -873,6 +1018,56 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      push_notifications: {
+        Row: {
+          body: string;
+          created_at: string;
+          data: NonNullable<Json>;
+          dedup_key: string;
+          error: string | null;
+          id: string;
+          kind: Database['public']['Enums']['push_kind'];
+          profile_id: string;
+          sent_at: string | null;
+          ticket_ids: string[];
+          title: string;
+        };
+        Insert: {
+          body: string;
+          created_at?: string;
+          data?: NonNullable<Json>;
+          dedup_key: string;
+          error?: string | null;
+          id?: string;
+          kind: Database['public']['Enums']['push_kind'];
+          profile_id: string;
+          sent_at?: string | null;
+          ticket_ids?: string[];
+          title: string;
+        };
+        Update: {
+          body?: string;
+          created_at?: string;
+          data?: NonNullable<Json>;
+          dedup_key?: string;
+          error?: string | null;
+          id?: string;
+          kind?: Database['public']['Enums']['push_kind'];
+          profile_id?: string;
+          sent_at?: string | null;
+          ticket_ids?: string[];
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'push_notifications_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       report_attachments: {
         Row: {
@@ -1009,11 +1204,25 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'schedule_rules_created_from_lead_id_fkey';
+            columns: ['created_from_lead_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['lead_id'];
+          },
+          {
             foreignKeyName: 'schedule_rules_teacher_id_fkey';
             columns: ['teacher_id'];
             isOneToOne: false;
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'schedule_rules_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -1155,11 +1364,25 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'students_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['guardian_id'];
+          },
+          {
             foreignKeyName: 'students_teacher_id_fkey';
             columns: ['teacher_id'];
             isOneToOne: false;
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'students_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -1273,6 +1496,13 @@ export type Database = {
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'teacher_availability_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
         ];
       };
       teacher_payouts: {
@@ -1335,6 +1565,13 @@ export type Database = {
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'teacher_payouts_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
         ];
       };
       teacher_time_off: {
@@ -1375,6 +1612,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_time_off_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -1526,6 +1770,31 @@ export type Database = {
           },
         ];
       };
+      v_threads: {
+        Row: {
+          display_name: string | null;
+          guardian_id: string | null;
+          guardian_name: string | null;
+          guardian_tz: string | null;
+          last_body: string | null;
+          last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_inbound_at: string | null;
+          last_media_mime: string | null;
+          last_message_at: string | null;
+          last_message_id: string | null;
+          last_status: Database['public']['Enums']['message_status'] | null;
+          last_template_key: string | null;
+          lead_id: string | null;
+          lead_name: string | null;
+          lead_source: Database['public']['Enums']['lead_source'] | null;
+          lead_status: Database['public']['Enums']['lead_status'] | null;
+          phone_e164: string | null;
+          teacher_id: string | null;
+          teacher_name: string | null;
+          unread_count: number | null;
+        };
+        Relationships: [];
+      };
     };
     Functions: {
       apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
@@ -1609,18 +1878,28 @@ export type Database = {
         | 'cancelled_by_admin'
         | 'rescheduled';
       message_direction: 'inbound' | 'outbound';
-      message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed';
+      message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed' | 'sent_manually';
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
       payment_method: 'bank' | 'wallet' | 'cash' | 'other';
       payout_status: 'draft' | 'approved' | 'paid';
       pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
       proposal_status: 'pending' | 'approved' | 'rejected';
+      push_kind:
+        | 'new_lead'
+        | 'new_message'
+        | 'lesson_needs_confirmation'
+        | 'report_submitted'
+        | 'reminder_failed'
+        | 'payment_due';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
       teacher_status: 'active' | 'inactive';
+      template_category: 'utility' | 'marketing';
+      template_status:
+        'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
       user_role: 'admin' | 'teacher' | 'guardian';
     };
     CompositeTypes: {
@@ -1765,18 +2044,36 @@ export const Constants = {
         'rescheduled',
       ],
       message_direction: ['inbound', 'outbound'],
-      message_status: ['queued', 'sent', 'delivered', 'read', 'failed'],
+      message_status: ['queued', 'sent', 'delivered', 'read', 'failed', 'sent_manually'],
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
       payment_method: ['bank', 'wallet', 'cash', 'other'],
       payout_status: ['draft', 'approved', 'paid'],
       pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],
       proposal_status: ['pending', 'approved', 'rejected'],
+      push_kind: [
+        'new_lead',
+        'new_message',
+        'lesson_needs_confirmation',
+        'report_submitted',
+        'reminder_failed',
+        'payment_due',
+      ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],
       student_status: ['trial', 'active', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
       teacher_status: ['active', 'inactive'],
+      template_category: ['utility', 'marketing'],
+      template_status: [
+        'not_submitted',
+        'pending',
+        'approved',
+        'rejected',
+        'paused',
+        'disabled',
+        'missing',
+      ],
       user_role: ['admin', 'teacher', 'guardian'],
     },
   },

@@ -107,3 +107,4 @@ export type ScheduleRuleStatus = Enums<'schedule_rule_status'>;
 export type Duration = (typeof DURATIONS)[number];
 export type Weekday = (typeof WEEKDAYS)[number];
 export * from './finance.js';
+export * from './messaging.js';
