@@ -110,9 +110,8 @@ The owner's Google Drive export is in `tools/drive-download-*.zip` (git-ignored;
 | FIN | `Main income statment.xlsx`; `Augest cost/` (expenses tracker, income statement, customers) | general, Sheet3, sept |
 | ATT-* | `تقارير آيات البيان/<student>/سجل حضور — <student>.xlsx` (60 files) | per student |
 | Report PDFs | `تقارير آيات البيان/<student>/*.pdf` (136) + `مرفقات/` images | — |
-| Job applicants | `job-applications-clean.xlsx` | job-applications-clean.csv |
-| Per-teacher sheets | `Ayat Al Bayan -- <teacher>.xlsx` (3) | Sheet1 |
+| Job applicants | HUB «ردود التوظيف» + «كل المحادثات» rows tagged توظيف / عرض خدمة | — |
 
-Not migration data, never imported: `Backup  keys.docx` (likely recovery codes — keep out of the repo and out of shared exports), `data.zip` (a Facebook account export), `SKILL.md.docx`, the Apps Script JSON files (`Brand`, `Sheet & Calendar Sync`).
+Not migration data, never imported (`tools/migrate` excludes them, see its README «Corrections to docs/06»): `job-applications-clean.xlsx` (the owner's own job-search log, not academy applicants), the three empty per-teacher sheets `Ayat Al Bayan -- <teacher>.xlsx`, `Backup  keys.docx` (likely recovery codes — keep out of the repo and out of shared exports), `data.zip` (a Facebook account export), `SKILL.md.docx`, the Apps Script JSON files (`Brand`, `Sheet & Calendar Sync`).
 
 **Better source for leads and message history:** the owner's WhatsApp CRM (Supabase project `rfsfrmkmfbrsuoctwfzg`, app "wacrm" on the Hostinger VPS): 1,227 contacts, 801 conversations, 8,244 messages, tags that map onto `lead_status` (جديد → new, تجريبي محجوز → trial_booked, حضر التجربة → trial_done, محتاج متابعة → interested_no_slot, مش مهتم → lost, مشترك → converted), 9 message templates (8 approved on Meta), 5 quick replies. Leads and `messages` should be migrated from there, with the Sheets «كل المحادثات» tab only filling gaps.
