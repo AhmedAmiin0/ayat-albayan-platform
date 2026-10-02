@@ -32,10 +32,10 @@ export interface LessonOverrides {
 }
 
 export function lesson(o: LessonOverrides = {}): BoardLesson {
-  return { ...core(o), conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null, trial: o.trial ?? false };
+  return { ...core(o), conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null };
 }
 
-function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_proposal'> {
+function core(o: LessonOverrides): Omit<BoardLesson, 'conflicts' | 'pending_proposal'> {
   const startsAt = o.starts_at ?? '2026-10-04T14:00:00.000Z';
   const status = o.status ?? 'scheduled';
   return {
@@ -52,5 +52,6 @@ function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_propo
     rescheduled_from_id: null,
     students: o.students ?? [SUHAILA],
     allowed_events: allowedLessonEvents(status),
+    trial: o.trial ?? false,
   };
 }
