@@ -44,9 +44,11 @@ function patchItems(page: unknown, patch: Patch): unknown {
 
 /**
  * Applies `patch` to the row with the same id in any cached shape: an infinite list
- * ({ pages: Page[] }), one Page ({ items }), or a single detail object. Anything else is returned as is.
+ * ({ pages: Page[] }), one Page ({ items }), a plain array (GET /lessons/day), or a single detail
+ * object. Anything else is returned as is.
  */
 export function patchCached(data: unknown, patch: Patch): unknown {
+  if (Array.isArray(data)) return data.map((i: unknown) => patchOne(i, patch));
   if (isObject(data) && Array.isArray(data['pages'])) {
     return { ...data, pages: data['pages'].map((p: unknown) => patchItems(p, patch)) };
   }

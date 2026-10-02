@@ -1,22 +1,106 @@
-import { formatRunningHead } from '@ab/shared';
+import { formatRunningHead, lessonStatusStyle } from '@ab/shared';
+import { useState } from 'react';
+import { FlatList } from 'react-native';
+import { clockAt } from '@/inbox/format';
 import { t } from '@/lib/i18n';
 import { EmptyState } from '@/ui/EmptyState';
+import { ErrorState } from '@/ui/ErrorState';
+import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { LessonCard } from './LessonCard';
+import { NowLine } from './NowLine';
+import { Notice } from './Notice';
+import { PastLessonRow } from './PastLessonRow';
+import {
+  applyFilter,
+  filterCounts,
+  timeline,
+  timelineKey,
+  visibleLessons,
+  type TodayFilter,
+} from './timeline';
+import { TimelineRow } from './TimelineRow';
+import { riyadhTime } from './lesson-text';
+import { useDayLessons, useNow } from './use-day-lessons';
+import { useLessonAction } from './use-lesson-action';
 
-// «النهارده» (R-MOB-02, docs/07 §12): the admin's morning screen. No frame, no cartouche on mobile.
-// TODO(R-MOB-02): filter pills, timeline spine + now-line, lesson cards with تأكيد/إلغاء arrive
-// with /lessons (Phase 2/5). Until then the list is honestly empty.
+const PILLS: FilterPill<TodayFilter>[] = [
+  { value: 'all', label: t.today.all },
+  ...(['scheduled', 'confirmed', 'completed'] as const).map((s) => ({
+    value: s,
+    label: t.enums.lessonStatus[s],
+    ...lessonStatusStyle[s],
+  })),
+];
+
+/**
+ * «النهارده» (R-MOB-02, docs/07 §12): every teacher's lessons today on one spine. Ended lessons
+ * are one line each, a «دلوقتي» line marks the time, the rest are cards with تأكيد / إلغاء
+ * (optimistic, R-MOB-03). Pull to refresh; offline the saved day stays with its «آخر تحديث».
+ * TODO(R-MOB-02): Hijri date from the API (Hermes ICU has no reliable islamic-umalqura, docs/07 §2).
+ */
 export function TodayScreen() {
-  // TODO(R-MOB-02): Hijri date from the API (Hermes ICU has no reliable islamic-umalqura, docs/07 §2).
-  const dateLine = `${formatRunningHead(new Date()).gregorian}. ${t.availability.tzHint.replace(
-    '{tz}',
-    t.runningHead.riyadh,
-  )}`;
+  const now = useNow();
+  const day = useDayLessons(now);
+  const action = useLessonAction();
+  const [filter, setFilter] = useState<TodayFilter>('all');
+  const loaded = day.data !== undefined;
+  const lessons = visibleLessons(day.data ?? []);
+  const counts = filterCounts(lessons);
+  const items = timeline(applyFilter(lessons, filter), now);
+  const pills = loaded ? PILLS.map((p) => ({ ...p, count: counts[p.value] })) : PILLS;
+  const dateLine = `${formatRunningHead(now).gregorian}. ${t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}`;
+  // Offline (no NetInfo): the refetch failed but the saved day is on screen; say how old it is.
+  const stale = day.isError && loaded;
+  const subtitle = stale
+    ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt))}`
+    : dateLine;
+
   return (
     <Screen>
-      <ScreenHeader title={t.mobile.today} subtitle={dateLine} />
-      <EmptyState title={t.common.empty} />
+      <ScreenHeader title={t.today.title} subtitle={subtitle} />
+      <FilterPills
+        items={pills}
+        value={filter}
+        onChange={setFilter}
+        accessibilityLabel={t.today.statusFilter}
+      />
+      {action.notice ? <Notice message={action.notice} /> : null}
+      <FlatList
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingBottom: 24 }}
+        // The cancel reason is typed inside the list: a tap on «إلغاء الحلقة» must land with the keyboard up.
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+        data={items}
+        keyExtractor={timelineKey}
+        renderItem={({ item }) => {
+          if (item.kind === 'now') return <NowLine now={now} />;
+          if (item.kind === 'past') return <PastLessonRow lesson={item.lesson} />;
+          const { lesson } = item;
+          return (
+            <TimelineRow time={riyadhTime(lesson.starts_at)} status={lesson.status}>
+              <LessonCard
+                lesson={lesson}
+                busy={action.busyId === lesson.id}
+                error={action.errorFor(lesson.id)}
+                onConfirm={() => action.confirm(lesson.id)}
+                onCancel={(cancel) => action.cancel(lesson.id, cancel)}
+              />
+            </TimelineRow>
+          );
+        }}
+        refreshing={day.isRefetching}
+        onRefresh={() => void day.refetch()}
+        ListEmptyComponent={
+          day.isPending ? null : loaded ? (
+            <EmptyState title={filter === 'all' ? t.today.empty : t.today.emptyFilter} />
+          ) : (
+            <ErrorState onRetry={() => void day.refetch()} />
+          )
+        }
+      />
     </Screen>
   );
 }
