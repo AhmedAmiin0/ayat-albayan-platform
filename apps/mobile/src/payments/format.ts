@@ -1,5 +1,6 @@
-import { counted, formatAmount, RIYADH_TZ, type SubscriptionView } from '@ab/shared';
+import { counted, formatAmount, intlLocale, RIYADH_TZ, type SubscriptionView } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { ltr } from '@/ui/Ltr';
 
 // Money lines (docs/07 §2: Western digits, LTR values isolated). Strings come from ar.json only.
@@ -22,7 +23,7 @@ export function packageName(sub: Pick<SubscriptionView, 'package' | 'lessons_tot
 }
 
 const dayIn = (timeZone: string) =>
-  new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone });
+  new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone });
 const riyadhDay = dayIn(RIYADH_TZ);
 const calendarDay = dayIn('UTC');
 

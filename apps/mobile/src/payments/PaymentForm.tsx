@@ -16,7 +16,7 @@ import { ReceiptPicker } from './ReceiptPicker';
 import { useRecordPayment } from './use-record-payment';
 
 // '' = no method picked yet: the receipt says which one, so none is preselected.
-const METHODS: FilterPill<PaymentMethod | ''>[] = PAYMENT_METHODS.map((m) => ({
+const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map((m) => ({
   value: m,
   label: t.enums.paymentMethod[m],
 }));
@@ -80,7 +80,7 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
         <FilterPills
           role="radiogroup"
           accessibilityLabel={t.payments.method}
-          items={METHODS}
+          items={methodPills()}
           value={draft.method ?? ''}
           onChange={(method) => (method ? set({ method }) : undefined)}
         />

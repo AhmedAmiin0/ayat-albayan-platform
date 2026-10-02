@@ -7,9 +7,13 @@ import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { AppearancePicker } from './AppearancePicker';
+import { LanguageRow } from './LanguageRow';
 import { signOutDevice } from './sign-out';
 
-/** «المزيد» (R-MOB-02): the read-only lists that don't earn a tab, the price calculator, the appearance, sign-out. */
+/**
+ * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab, the price calculator, the
+ * appearance, the language, sign-out.
+ */
 export function MoreScreen() {
   const [leaving, setLeaving] = useState(false);
   const logout = () => {
@@ -26,6 +30,7 @@ export function MoreScreen() {
         <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />
       </View>
       <AppearancePicker />
+      <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>
         <Button variant="ghost" label={t.auth.logout} onPress={logout} busy={leaving} />
       </View>

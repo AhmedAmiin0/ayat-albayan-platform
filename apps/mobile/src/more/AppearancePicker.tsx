@@ -4,7 +4,7 @@ import type { AppearancePref } from './appearance';
 import { Section } from './Section';
 import { useAppearancePref } from './useAppearancePref';
 
-const ITEMS: readonly FilterPill<AppearancePref>[] = [
+const appearancePills = (): readonly FilterPill<AppearancePref>[] => [
   { value: 'auto', label: t.theme.auto },
   { value: 'light', label: t.theme.light },
   { value: 'dark', label: t.theme.dark },
@@ -16,7 +16,7 @@ export function AppearancePicker() {
   return (
     <Section title={t.theme.label}>
       <FilterPills
-        items={ITEMS}
+        items={appearancePills()}
         value={pref}
         onChange={choose}
         accessibilityLabel={t.theme.label}

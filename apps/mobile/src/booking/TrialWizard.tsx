@@ -16,12 +16,12 @@ import { useBookTrial } from './use-book-trial';
 
 const STEPS = ['contact', 'teacher', 'slot', 'confirm'] as const;
 type Step = (typeof STEPS)[number];
-const STEP_NAMES: Record<Step, string> = {
+const stepNames = (): Record<Step, string> => ({
   contact: t.booking.steps.students,
   teacher: t.booking.steps.teacher,
   slot: t.booking.steps.slot,
   confirm: t.booking.steps.review,
-};
+});
 
 /**
  * «حجز حلقة تجريبية» from a lead (R-MOB-02, R-LEAD-06): الطالب → المعلم/ة → الميعاد → المراجعة.
@@ -54,7 +54,7 @@ export function TrialWizard({ lead }: { lead: Lead }) {
         subtitle={
           book.isSuccess
             ? undefined
-            : `${t.booking.stepOf.replace('{n}', String(at + 1)).replace('{total}', String(STEPS.length))} · ${STEP_NAMES[step]}`
+            : `${t.booking.stepOf.replace('{n}', String(at + 1)).replace('{total}', String(STEPS.length))} · ${stepNames()[step]}`
         }
         trailing={
           <Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />

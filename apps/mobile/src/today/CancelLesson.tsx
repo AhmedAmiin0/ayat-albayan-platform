@@ -10,8 +10,8 @@ import { InlineConfirm } from '@/ui/InlineConfirm';
 
 type Scope = CancelRequest['scope'];
 
-const SCOPES = (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
-const BY = CANCEL_BY.map((b) => ({ value: b, label: t.lessons.by[b] }));
+const scopePills = () => (['one', 'rule'] as const).map((s) => ({ value: s, label: t.lessons.scope[s] }));
+const byPills = () => CANCEL_BY.map((b) => ({ value: b, label: t.lessons.by[b] }));
 
 export interface CancelLessonProps {
   lesson: LessonView;
@@ -40,7 +40,7 @@ export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
         <View style={{ gap: 6 }}>
           <SectionLabel>{t.lessons.scopeLabel}</SectionLabel>
           <FilterPills
-            items={SCOPES}
+            items={scopePills()}
             value={scope}
             onChange={setScope}
             accessibilityLabel={t.lessons.scopeLabel}
@@ -51,7 +51,7 @@ export function CancelLesson({ lesson, onSubmit, onClose }: CancelLessonProps) {
       <View style={{ gap: 6 }}>
         <SectionLabel>{t.lessons.cancelBy}</SectionLabel>
         <FilterPills<CancelBy | ''>
-          items={BY}
+          items={byPills()}
           value={by}
           onChange={setBy}
           accessibilityLabel={t.lessons.cancelBy}

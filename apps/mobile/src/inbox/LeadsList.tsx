@@ -18,7 +18,7 @@ import type { Lead } from './types';
 
 type Filter = 'all' | LeadStatus;
 
-const PILLS: FilterPill<Filter>[] = [
+const filterPills = (): FilterPill<Filter>[] => [
   { value: 'all', label: t.leads.filterAll },
   ...LEAD_STATUSES.map((s) => ({ value: s, label: t.enums.leadStatus[s], ...leadStatusStyle[s] })),
 ];
@@ -35,7 +35,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
     params: { q, status: status === 'all' ? undefined : status },
   });
   const loaded = list.data !== undefined;
-  const pills = PILLS.map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
+  const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
   const showing = t.common.showing
     .replace('{shown}', String(list.items.length))
     .replace('{total}', String(list.total));

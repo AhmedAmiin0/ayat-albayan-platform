@@ -64,7 +64,7 @@ export function timelineKey(item: TimelineItem): string {
   return item.kind === 'now' ? 'now' : item.lesson.id;
 }
 
-/** The local calendar day in `tz` as YYYY-MM-DD, for GET /lessons/day?date. */
+/** The local calendar day in `tz` as YYYY-MM-DD, for GET /lessons/day?date (a key, not display). */
 export function localDate(now: Date, tz: string): string {
   const parts = new Intl.DateTimeFormat('en-US', {
     timeZone: tz,

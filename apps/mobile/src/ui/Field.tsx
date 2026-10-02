@@ -12,7 +12,7 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
 /**
  * Label + 16pt input, 44pt tall (docs/07 §4: the iOS zoom floor and mobile touch size).
  * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring (border + outline, so nothing shifts).
- * Label and value start at the inline-start (AppText / textAlign 'left' = start in RTL).
+ * Label and value start at the inline-start (AppText / textAlign 'left' = start in both directions).
  */
 export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldProps) {
   const { color } = useTheme();
@@ -54,7 +54,7 @@ export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldPr
           fontFamily: type.ui[400],
           fontSize: type.size.base,
           writingDirection: ltr ? 'ltr' : 'auto',
-          textAlign: 'left', // = start under forceRTL: an LTR email sits under its label
+          textAlign: 'left', // = start (RN swaps it in RTL): an LTR email sits under its label
         }}
         {...input}
       />

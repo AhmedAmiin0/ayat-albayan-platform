@@ -23,8 +23,8 @@ export interface TeacherStepProps {
 }
 
 type GenderPill = Gender | 'any';
-const PROGRAM_PILLS = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
-const GENDER_PILLS: { value: GenderPill; label: string }[] = [
+const programPills = () => PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
+const genderPills = (): { value: GenderPill; label: string }[] => [
   { value: 'any', label: t.booking.genderAny },
   ...GENDERS.map((g) => ({ value: g, label: t.teachers.genderLabel[g] })),
 ];
@@ -55,7 +55,7 @@ export function TeacherStep({ program, gender, onFilter, onPick }: TeacherStepPr
       <FilterPills
         role="radiogroup"
         accessibilityLabel={t.booking.program}
-        items={PROGRAM_PILLS}
+        items={programPills()}
         value={program}
         onChange={(next) => onFilter({ program: next })}
       />
@@ -63,7 +63,7 @@ export function TeacherStep({ program, gender, onFilter, onPick }: TeacherStepPr
       <FilterPills
         role="radiogroup"
         accessibilityLabel={t.booking.genderPref}
-        items={GENDER_PILLS}
+        items={genderPills()}
         value={gender ?? 'any'}
         onChange={(next) => onFilter({ gender: next === 'any' ? null : next })}
       />

@@ -7,7 +7,7 @@ import { ThreadsList } from './ThreadsList';
 
 type View = 'threads' | 'leads';
 
-const VIEWS: FilterPill<View>[] = [
+const views = (): FilterPill<View>[] => [
   { value: 'threads', label: t.inbox.title },
   { value: 'leads', label: t.nav.leads },
 ];
@@ -18,6 +18,6 @@ const VIEWS: FilterPill<View>[] = [
  */
 export function InboxScreen() {
   const [view, setView] = useState<View>('threads');
-  const switcher = <FilterPills items={VIEWS} value={view} onChange={setView} accessibilityLabel={t.nav.conversations} />;
+  const switcher = <FilterPills items={views()} value={view} onChange={setView} accessibilityLabel={t.nav.conversations} />;
   return <Screen>{view === 'threads' ? <ThreadsList switcher={switcher} /> : <LeadsList switcher={switcher} />}</Screen>;
 }
