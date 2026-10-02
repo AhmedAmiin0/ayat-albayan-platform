@@ -35,7 +35,7 @@ export function SubmittedNote({ report, tz }: { report: ReportView; tz: string }
         <StatusChip {...reportStatusStyle.submitted} label={t.reports.submitted} />
         <span className="text-xs text-ink-3">{t.reports.version.replace('{n}', String(report.version))}</span>
         {report.pdf_status && (
-          <StatusChip {...pdfStatusStyle[report.pdf_status]} size="sm" label={`${t.reports.pdf}: ${t.enums.pdfStatus[report.pdf_status]}`} />
+          <StatusChip {...pdfStatusStyle[report.pdf_status]} size="sm" label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[report.pdf_status]}`} />
         )}
       </p>
       {window && (

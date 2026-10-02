@@ -33,7 +33,7 @@ export function PdfAction({ report, role }: { report: Pick<ReportSummaryView, 'i
   if (!status) return null;
   return (
     <span className="inline-flex flex-wrap items-center gap-2">
-      <StatusChip {...pdfStatusStyle[status]} size="sm" label={`${t.reports.pdf}: ${t.enums.pdfStatus[status]}`} />
+      <StatusChip {...pdfStatusStyle[status]} size="sm" label={`${t.reports.pdfLabel}: ${t.enums.pdfStatus[status]}`} />
       {status === 'failed' && role === 'admin' && (
         <Button type="button" variant="secondary" size="sm" disabled={retry.isPending} onClick={() => retry.mutate()}>
           {t.reports.retryPdf}

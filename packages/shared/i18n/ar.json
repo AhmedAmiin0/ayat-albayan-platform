@@ -833,12 +833,28 @@
     },
     "sizeMb": "{n} ميجا",
     "lessonNoShort": "الحلقة {n}",
-    "pdf": "الـPDF",
+    "pdfLabel": "الـPDF",
     "chart": {
       "series": "البند اللي ظاهر في الرسم",
       "summary": "{label}: آخر تقييم {grade}، من {n} تقارير",
       "table": "جدول التقييمات",
       "noGrade": "من غير تقييم"
+    },
+    "pdf": {
+      "tagline": "رتّل بوعي، واحفظ بإتقان",
+      "studentName": "الطالب / الطالبة",
+      "teacherName": "المعلمة",
+      "time": "الميعاد",
+      "timeValue": "{time} بتوقيت {city}",
+      "minutes": "{n} دقيقة",
+      "content": "محتوى الحلقة",
+      "grades": "التقييم التفصيلي",
+      "notesTitle": "الملاحظات والواجب",
+      "teacherSign": "اسم المعلمة وتوقيعها",
+      "guardianSign": "اطّلاع ولي الأمر",
+      "closing": "بارك الله في الطالبة ونفع بها، وجعل القرآن ربيع قلبها ونور صدرها.",
+      "whatsapp": "واتساب",
+      "generated": "تقرير صادر آليًا من نظام متابعة الطلاب"
     }
   },
   "subscriptions": {
