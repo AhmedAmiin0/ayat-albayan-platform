@@ -21,7 +21,7 @@ export function ReportTextField({ label, value, onChange, disabled }: ReportText
           value={value}
           disabled={disabled}
           onChange={(e) => onChange(e.target.value)}
-          className={cn(controlClass, 'field-sizing-content min-h-20 py-2 leading-relaxed')}
+          className={cn(controlClass, 'field-sizing-content min-h-20 py-2 leading-relaxed sm:min-h-20')}
         />
       )}
     </Field>

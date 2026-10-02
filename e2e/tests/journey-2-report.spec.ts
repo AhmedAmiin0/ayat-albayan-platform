@@ -32,9 +32,9 @@ test.describe('journey 2 — lesson report (R-REP-01..04)', () => {
     await expect(page.getByRole('radio', { name: ar.enums.attendance.on_time })).toBeChecked();
 
     for (const rubric of REPORT_RUBRICS) {
-      await page.getByRole('group', { name: ar.reports.rubric[rubric] }).getByLabel(ar.enums.grade.excellent).check({ force: true });
+      await page.getByRole('group', { name: ar.reports.rubric[rubric] }).getByTitle(ar.enums.grade.excellent).click();
     }
-    await page.getByRole('group', { name: ar.reports.overall }).getByLabel(ar.enums.grade.very_good).check({ force: true });
+    await page.getByRole('group', { name: ar.reports.overall }).getByTitle(ar.enums.grade.very_good).click();
     await page.getByLabel(ar.reports.homework).fill('سورة الملك من 1 لحد 10');
     await page.getByRole('button', { name: ar.reports.submit }).click();
     await expect(page.getByText(ar.reports.submitted)).toBeVisible();

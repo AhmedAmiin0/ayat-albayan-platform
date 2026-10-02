@@ -29,7 +29,7 @@ export function GradeChart({ series, tz }: { series: readonly GradePoint[]; tz: 
       <SegmentedControl label={t.reports.chart.series} options={SERIES_KEYS.map((k) => ({ value: k, label: seriesLabel(k) }))} value={key} onChange={setKey} />
       <figcaption className="text-xs text-ink-2">{summary}</figcaption>
       <div className="grid grid-cols-[auto_minmax(0,1fr)] gap-x-3">
-        <div className="relative h-52 w-28 py-3" aria-hidden="true">
+        <div className="relative h-52 w-24 py-3 sm:w-28" aria-hidden="true">
           {GRADES.map((g, i) => (
             <span key={g} className="absolute inset-x-0 -translate-y-1/2 text-2xs text-ink-3" style={{ top: `calc(12px + (100% - 24px) * ${yOf(5 - i) / 100})` }}>
               {t.enums.grade[g]}
@@ -60,7 +60,7 @@ export function GradeChart({ series, tz }: { series: readonly GradePoint[]; tz: 
         </div>
       </div>
       {first && last && (
-        <div className="flex justify-between ps-34 pe-3 text-2xs text-ink-3" aria-hidden="true">
+        <div className="flex justify-between ps-30 pe-3 text-2xs text-ink-3 sm:ps-34" aria-hidden="true">
           <span>{shortDate(first.at, tz)}</span>
           {last !== first && <span>{shortDate(last.at, tz)}</span>}
         </div>
