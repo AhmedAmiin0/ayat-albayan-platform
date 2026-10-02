@@ -1,0 +1,37 @@
+import { Link } from '@tanstack/react-router';
+import { Ltr } from '@/components/ui/ltr';
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { dayMonthLabel } from '@/features/schedule/tz';
+import { t } from '@/lib/i18n';
+import { amount, currencyLabel } from './format';
+import { workItem, workLink } from './PendingReportsList';
+import type { UnpaidRow } from './types';
+import { packageText } from './work-text';
+
+/** Packages with status «مش مدفوع» (R-SUB-02), oldest first; each opens the student's file. */
+export function UnpaidList({ items }: { items: readonly UnpaidRow[] }) {
+  if (items.length === 0) return <p className="py-3 text-sm text-ink-2">{t.dashboard.noUnpaid}</p>;
+  return (
+    <ul>
+      {items.map((r) => (
+        <li key={r.id} className={workItem}>
+          <NuqtaGlyph shape="hollow" className="size-[9px] shrink-0 text-act" />
+          <span className="font-semibold">{r.student.name}</span>
+          {r.student.code && <Ltr className="text-2xs text-ink-3">{r.student.code}</Ltr>}
+          <span className="text-xs text-ink-2">
+            {packageText(r)} · <bdi dir="ltr" className="tabular-nums">{amount(r.price)}</bdi> {currencyLabel(r.currency)} ·{' '}
+            {t.subscriptions.startsOn} {dayMonthLabel(r.starts_on)}
+          </span>
+          <Link
+            to="/admin/students/$studentId"
+            params={{ studentId: r.student.id }}
+            aria-label={t.students.openProfile.replace('{name}', r.student.name)}
+            className={workLink}
+          >
+            {t.students.profile}
+          </Link>
+        </li>
+      ))}
+    </ul>
+  );
+}
