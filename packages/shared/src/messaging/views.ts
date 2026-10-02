@@ -73,8 +73,8 @@ export interface MessageView {
   delivered_at: string | null;
   read_at: string | null;
   sent_manually_at: string | null;
-  /** The teacher who sent it from their inbox (R-MSG-05 «بعتها»); null = the academy or a job. */
-  sent_by_teacher_name: string | null;
+  /** The teacher who sent it from their inbox («بعتها»); null = the academy or a job. Absent in an old cache. */
+  sent_by_teacher_name?: string | null;
   created_at: string;
   /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
   click_to_chat: string | null;
