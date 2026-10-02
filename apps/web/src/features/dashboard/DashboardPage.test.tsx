@@ -1,0 +1,77 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, within } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { t } from '@/lib/i18n';
+import { SUMMARY, WORK } from './dashboard-fixture';
+import { DashboardPage, previousMonth } from './DashboardPage';
+import type { DashboardSearch } from './search';
+
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
+
+function renderPage(search: DashboardSearch = {}) {
+  render(
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <DashboardPage search={search} onSearch={vi.fn()} />
+    </QueryClientProvider>,
+  );
+}
+
+describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-02T09:00:00.000Z'));
+    apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/dashboard/work' ? WORK : SUMMARY));
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+    apiFetch.mockReset();
+  });
+
+  it('reads this Riyadh week and the default six-month period, plus the queue', async () => {
+    renderPage();
+    await screen.findByRole('table', { name: t.dashboard.funnel });
+    const paths = apiFetch.mock.calls.map((c) => c[0]);
+    expect(paths).toContain('/dashboard/summary?from=2026-09-26&to=2026-10-02');
+    expect(paths).toContain('/dashboard/summary?from=2026-05-01&to=2026-10-02');
+    expect(paths).toContain('/dashboard/work');
+  });
+
+  it('KPI strip: Amiri numerals, saffron only where there is work, each a filter link', async () => {
+    renderPage();
+    const strip = await screen.findByRole('navigation', { name: t.dashboard.kpiStrip });
+    const confirm = await within(strip).findByRole('link', { name: `3 ${t.enums.lessonStatus.scheduled}` });
+    expect(confirm.getAttribute('href')).toBe('/admin/schedule?status=scheduled');
+    expect(confirm.querySelector('[data-act]')?.className).toContain('text-act');
+    const reports = within(strip).getByRole('link', { name: `0 ${t.dashboard.pendingReports}` });
+    expect(reports.querySelector('.font-display')?.className).not.toContain('text-act');
+    expect(reports.getAttribute('aria-current')).toBe('true');
+    expect(within(strip).getByRole('link', { name: `2 ${t.dashboard.unpaidSubscriptions}` }).getAttribute('href')).toBe('/admin?work=unpaid');
+  });
+
+  it('the queue follows ?work: reports by default, tasks when picked', async () => {
+    renderPage({ work: 'tasks' });
+    expect(await screen.findByRole('heading', { level: 2, name: t.dashboard.tasks })).toBeTruthy();
+    expect(await screen.findByRole('button', { name: t.dashboard.taskDone })).toBeTruthy();
+    const strip = screen.getByRole('navigation', { name: t.dashboard.kpiStrip });
+    expect(within(strip).getByRole('link', { name: `1 ${t.dashboard.tasks}` }).getAttribute('aria-current')).toBe('true');
+  });
+
+  it('the pending reports queue says how many more there are', async () => {
+    renderPage();
+    expect(await screen.findByText(t.dashboard.more.replace('{n}', '22'))).toBeTruthy();
+    expect(screen.getByRole('link', { name: t.dashboard.openSchedule }).getAttribute('href')).toBe('/admin/schedule?week=2026-10-01&teacher=t1');
+  });
+
+  it('a failed read says so instead of showing zeros', async () => {
+    apiFetch.mockRejectedValue(new Error('down'));
+    renderPage();
+    expect(await screen.findByRole('alert')).toHaveProperty('textContent', t.dashboard.loadFailed);
+  });
+
+  it('payouts export defaults to the month that just ended', () => {
+    expect(previousMonth('2026-10-02')).toBe('2026-09');
+    expect(previousMonth('2026-01-15')).toBe('2025-12');
+  });
+});

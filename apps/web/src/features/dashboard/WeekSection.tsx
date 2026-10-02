@@ -1,0 +1,35 @@
+import { dayMonthLabel } from '@/features/schedule/tz';
+import { t } from '@/lib/i18n';
+import { sectionTitle } from './Bar';
+import { LessonsByStatus } from './LessonsByStatus';
+import { TeacherLoad } from './TeacherLoad';
+import type { DashboardData, DayRange } from './types';
+
+/** «الأسبوع ده» (Saturday → Friday, Riyadh): lessons by status and teacher load (R-RPT-01). */
+export function WeekSection({ week, data }: { week: DayRange; data: DashboardData | undefined }) {
+  const span = t.dashboard.weekOf.replace('{from}', dayMonthLabel(week.from)).replace('{to}', dayMonthLabel(week.to));
+  return (
+    <section aria-labelledby="dash-week" className="grid gap-4">
+      <header className="flex flex-wrap items-baseline gap-x-3">
+        <h2 id="dash-week" className={sectionTitle}>
+          {t.dashboard.thisWeek}
+        </h2>
+        <span className="text-xs text-ink-3">{span}</span>
+      </header>
+      {data ? (
+        <div className="grid gap-6 @3xl:grid-cols-2">
+          <div className="grid content-start gap-2">
+            <h3 className="text-sm font-semibold text-ink-2">{t.dashboard.lessonsByStatus}</h3>
+            <LessonsByStatus counts={data.lessons_by_status} />
+          </div>
+          <div className="grid content-start gap-2">
+            <h3 className="text-sm font-semibold text-ink-2">{t.dashboard.teacherLoad}</h3>
+            <TeacherLoad rows={data.teacher_load} />
+          </div>
+        </div>
+      ) : (
+        <p className="text-sm text-ink-3">{t.common.loading}</p>
+      )}
+    </section>
+  );
+}
