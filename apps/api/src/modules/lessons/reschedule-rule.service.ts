@@ -6,18 +6,30 @@ import { badRequest, conflict } from '../scheduling/errors';
 import { addDays, localDateOf, startOfLocalDay } from '../scheduling/horizon';
 import { ruleStudents } from '../scheduling/schedule.queries';
 import { confirmationMessages } from './confirmation-messages';
+import type { LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
 import { planLessons } from './rule-plan';
 import { RulePlanner } from './rule-planner';
 import { invalidTransition } from './transition';
 
 type RuleScope = Extract<RescheduleRequest, { scope: 'rule' }>;
+
+/**
+ * The first day a series move covers: the tapped lesson's local day, never before today. Past
+ * lessons nobody marked stay open for their report (issue B2), even a tapped one.
+ */
+function moveFrom(lesson: LessonRow, tz: string): string {
+  const day = localDateOf(new Date(lesson.starts_at), tz);
+  const today = localDateOf(new Date(), tz);
+  return day > today ? day : today;
+}
+
 export type RescheduleRuleInput = { lessonId: string; body: RuleScope; actor: AuthUser };
 
 /**
  * Move the tapped lesson and every later one (R-SCH-07, docs/10 route 8 `rule`): the old rule ends
- * the day before the tapped lesson's local day, its open lessons from that day become `rescheduled`
- * (chargeable false), and a new rule with the same students / package generates from
+ * the day before the tapped lesson's local day (today for a past one, moveFrom), its open lessons
+ * from that day become `rescheduled` (chargeable false), and a new rule with the same students / package generates from
  * `newRule.startsOn` (never before the tapped lesson, RulePlanner) over the horizon, with the first
  * new lesson's confirmation queued. One transaction. Returns the first new lesson's id. Anchoring
  * on the tapped lesson, not the new start, keeps earlier lessons and moves the tapped one.
@@ -34,7 +46,7 @@ export class RescheduleRuleService {
     const lesson = await this.store.get(lessonId);
     if (!isOpenLesson(lesson.status)) throw invalidTransition(lesson.status, 'reschedule');
     const { old, plan, teacherLink } = await this.planner.plan(lesson, body.newRule);
-    const lessonDay = localDateOf(new Date(lesson.starts_at), old.tz);
+    const lessonDay = moveFrom(lesson, old.tz);
     const moved = await this.store.queries.openOfRule(old.id, startOfLocalDay(lessonDay, old.tz));
     const conflicts = await this.checker.check({
       teacherId: plan.rule.teacher_id,

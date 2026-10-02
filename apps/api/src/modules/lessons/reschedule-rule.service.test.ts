@@ -114,6 +114,14 @@ describe('RescheduleRuleService — move the whole rule (R-SCH-07, docs/10 route
     expect(appliedChange(writer)?.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-20' });
   });
 
+  it('a past, unmarked lesson tapped: the cut is today, so lessons nobody marked stay open (issue B2)', async () => {
+    const { service, writer, queries } = setup(lessonRow({ starts_at: '2026-09-27T14:00:00+00:00' }));
+    queries.openOfRule.mockResolvedValue([]);
+    await service.reschedule({ lessonId: LESSON_ID, body: body(), actor: ADMIN });
+    expect(queries.openOfRule).toHaveBeenCalledWith(RULE_ID, new Date('2026-10-01T21:00:00Z'));
+    expect(appliedChange(writer)?.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-01' });
+  });
+
   it('a new start before the tapped lesson’s day → 400 starts_before_lesson, nothing written', async () => {
     const { service, writer } = setup(lessonRow({ starts_at: '2026-10-21T14:00:00+00:00' }));
     await expect(service.reschedule({ lessonId: LESSON_ID, body: body(), actor: ADMIN })).rejects.toMatchObject({

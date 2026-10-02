@@ -1404,6 +1404,15 @@ Retaken after `seed:demo` plus local scratch states (inbound messages with `wa_m
 - **e2e:** 49 passed + 3 skipped by design (was 47). New: trial → «اشتراك جديد» from the guardian chat → the lead is `converted`, on desktop and mobile.
 - **Lint:** 0 errors; complexity warnings only (wa-stub 2, shared 1, migrate 10, api 3, mobile 3, web 14).
 
+### Follow-up (after the first gate): live probes and a B2 guard
+- **The cutoff never goes before today.** A past, unmarked lesson can still offer `reschedule`. Anchoring on it would have closed the lessons between it and today as `rescheduled`/not chargeable, which is the B2 case. `moveFrom` now takes the tapped lesson's local day, or today if that day has passed (unit test added).
+- **Live probes against the local API** (`%TEMP%/ayat-fixer/probe.mjs`, 127.0.0.1 only):
+  - A series lesson 3 weeks out moved to an earlier slot returns 400 `starts_before_lesson`.
+  - The same lesson moved to a later slot returns 200, with 0 lessons before it moved (the verifier's probe had 5); the tapped lesson and the 4 after it became `rescheduled`.
+  - Moving a new series from its first lesson returns 200. The RPC clamps the old rule's `ends_on` to its `starts_on`, so the `ends_on >= starts_on` check holds.
+  - Two concurrent `POST /subscriptions` with one `clientRequestId` return `[201, 201]`, 1 row and the same id.
+- Re-run after the follow-up: api 1582 passed + 1 skipped (219 files); `chat-subscribe` and `journey-4` e2e pass on desktop and mobile (10 passed); lint 0 errors.
+
 ### Residuals
 - Device check of the mobile changes at 360–390pt in RTL and LTR: the SVG chevrons, the inline «غيّر الميعاد», the gold-soft today rule, and the per-child panel.
 - A remounted mobile subscribe screen gets a new idempotency key, so a duplicate is still possible if the admin leaves the screen after a lost reply and saves again. The web dialog behaves the same way.
