@@ -599,6 +599,25 @@
     "emptyFilter": "No lessons with this status today",
     "studentTime": "{time} {city} time"
   },
+  "calendar": {
+    "teacherCalendar": "Teacher schedule",
+    "available": "Available {ranges} {city} time",
+    "range": "{from} – {to}",
+    "prevDay": "Previous day",
+    "nextDay": "Next day",
+    "emptyDay": "No lessons on this day"
+  },
+  "reschedule": {
+    "current": "Current time: {when}",
+    "newWhen": "New time: {when}",
+    "pickDay": "Pick a day",
+    "guardianNote": "The guardian gets a WhatsApp message with the new time to confirm it",
+    "seriesMoved": "The upcoming lessons moved to the new time",
+    "offline": "The connection dropped before we got an answer, so we are not sure the time changed. Open the schedule again once you are back online",
+    "badDuration": "This lesson length is not a standard one, so change its time from the web",
+    "noSlots": "No free times for this teacher in the next two weeks. On the web you can look further ahead or book over a conflict",
+    "done": "Done"
+  },
   "alerts": {
     "needsTeacher": "Needs a teacher"
   },

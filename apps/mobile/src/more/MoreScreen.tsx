@@ -11,8 +11,8 @@ import { LanguageRow } from './LanguageRow';
 import { signOutDevice } from './sign-out';
 
 /**
- * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab, the price calculator, the
- * appearance, the language, sign-out.
+ * «المزيد» (R-MOB-02): «الجدول» (every teacher's day), the read-only lists that don't earn a tab,
+ * the price calculator, the appearance, the language, sign-out.
  */
 export function MoreScreen() {
   const [leaving, setLeaving] = useState(false);
@@ -25,6 +25,7 @@ export function MoreScreen() {
     <Screen>
       <ScreenHeader title={t.mobile.more} />
       <View style={{ marginHorizontal: -16 }}>
+        <ListRow title={t.schedule.nav} onPress={() => router.push('/more/teachers/schedule')} />
         <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />
         <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />
         <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />

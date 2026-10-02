@@ -12,10 +12,10 @@ import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
 import { Ltr } from '@/ui/Ltr';
 import { StatusChip } from '@/ui/StatusChip';
 import { CancelLesson } from './CancelLesson';
+import { LessonActions } from './LessonActions';
 import { lessonSubtitle } from './lesson-text';
 import { PackageLine } from './PackageLine';
 
@@ -27,6 +27,8 @@ export interface LessonCardProps {
   error?: string;
   onConfirm: () => void;
   onCancel: (cancel: CancelRequest) => void;
+  /** «غيّر الميعاد»: opens the reschedule sheet for this lesson. */
+  onReschedule: () => void;
 }
 
 /**
@@ -36,13 +38,14 @@ export interface LessonCardProps {
  * An action shows only if the API offered it and the shared state machine still allows it from
  * the status on screen (which may already be the optimistic one).
  */
-export function LessonCard({ lesson, busy, error, onConfirm, onCancel }: LessonCardProps) {
+export function LessonCard({ lesson, busy, error, onConfirm, onCancel, onReschedule }: LessonCardProps) {
   const { color } = useTheme();
   const [cancelling, setCancelling] = useState(false);
   const can = (e: LessonEvent) =>
     lesson.allowed_events.includes(e) && applyLessonEvent(lesson.status, e) !== null;
   const canConfirm = can('confirm');
   const canCancel = can('cancel_by_admin');
+  const canMove = can('reschedule');
   const needsConfirm = lesson.status === 'scheduled';
   return (
     <View
@@ -113,20 +116,17 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel }: LessonC
       {error ? <ErrorLine message={error} /> : null}
       {cancelling && canCancel ? (
         <CancelLesson lesson={lesson} onSubmit={onCancel} onClose={() => setCancelling(false)} />
-      ) : canConfirm || canCancel ? (
-        <View style={{ flexDirection: 'row', gap: 8 }}>
-          {canCancel ? (
-            <View style={{ flex: 1 }}>
-              <Button variant="secondary" label={t.today.cancel} onPress={() => setCancelling(true)} busy={busy} />
-            </View>
-          ) : null}
-          {canConfirm ? (
-            <View style={{ flex: 1 }}>
-              <Button label={t.today.confirm} onPress={onConfirm} busy={busy} />
-            </View>
-          ) : null}
-        </View>
-      ) : null}
+      ) : (
+        <LessonActions
+          busy={busy}
+          canConfirm={canConfirm}
+          canCancel={canCancel}
+          canMove={canMove}
+          onConfirm={onConfirm}
+          onCancel={() => setCancelling(true)}
+          onReschedule={onReschedule}
+        />
+      )}
     </View>
   );
 }

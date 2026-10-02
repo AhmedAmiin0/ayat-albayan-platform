@@ -16,8 +16,8 @@ import { UpcomingTimeOff } from './UpcomingTimeOff';
 import { WeeklyAvailability } from './WeeklyAvailability';
 
 /**
- * A teacher, read-only (R-TCH-01, R-TCH-02): status, phone + WhatsApp, the weekly availability and
- * upcoming time-off. Editing stays on the web.
+ * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), phone +
+ * WhatsApp, the weekly availability and upcoming time-off. Editing stays on the web.
  */
 export function TeacherDetailScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -48,6 +48,11 @@ export function TeacherDetailScreen() {
       >
         <ScreenHeader title={data.display_name_ar} trailing={back} />
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
+        <Button
+          variant="secondary"
+          label={t.calendar.teacherCalendar}
+          onPress={() => router.push(`/more/teachers/calendar/${data.id}`)}
+        />
         <TeacherContact teacher={data} />
         <WeeklyAvailability teacher={data} />
         <UpcomingTimeOff teacherId={data.id} />

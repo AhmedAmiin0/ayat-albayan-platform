@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { Linking } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -13,7 +14,7 @@ jest.mock('@/lib/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({
-  router: { back: jest.fn() },
+  router: { back: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ id: 't1' }),
 }));
 
@@ -63,6 +64,13 @@ test('name, status, LTR phone, weekly grid by day with its zone, and only upcomi
   expect(await screen.findByText(`${t.availability.reason}: سفر`)).toBeTruthy();
   expect(screen.queryByText(`${t.availability.reason}: عيد`)).toBeNull();
   expect(screen.getByText(t.availability.timeOffTzHint)).toBeTruthy();
+});
+
+test('«جدول المعلم/ة» opens the teacher’s week', async () => {
+  serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': [], '/teachers/t1/time-off': [] });
+  await renderWithQuery(<TeacherDetailScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: t.calendar.teacherCalendar }));
+  expect(router.push).toHaveBeenCalledWith('/more/teachers/calendar/t1');
 });
 
 test('WhatsApp opens the wa.me chat for the teacher’s number', async () => {
