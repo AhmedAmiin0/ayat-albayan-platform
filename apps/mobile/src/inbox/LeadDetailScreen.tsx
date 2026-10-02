@@ -11,12 +11,12 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { LeadFacts } from './LeadFacts';
 import { LeadReclassify } from './LeadReclassify';
 import { LeadStatusChanger } from './LeadStatusChanger';
+import { threadHref } from './thread-cache';
 import { useCachedLead } from './use-cached-lead';
 
 /**
- * One conversation (R-MOB-02, partial): facts, status changer, WhatsApp, move to job applicants.
- * «فتح واتساب» is the only reply path for now.
- * TODO(R-MOB-02): message thread, in-app reply and templates arrive with Phase 4 messaging.
+ * One lead (R-MOB-02): facts, status changer, the WhatsApp thread (reply and templates in the app),
+ * WhatsApp itself as the fallback, move to job applicants.
  */
 export function LeadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -49,6 +49,11 @@ export function LeadDetailScreen() {
         <LeadFacts lead={lead.data} />
         <LeadStatusChanger lead={lead.data} />
         <Button
+          label={t.inbox.openThread.replace('{name}', name ?? ltr(formatPhone(phone)))}
+          onPress={() => router.push(threadHref(phone))}
+        />
+        <Button
+          variant="secondary"
           label={t.mobile.openWhatsapp}
           onPress={() => void Linking.openURL(whatsappLink(phone))}
         />

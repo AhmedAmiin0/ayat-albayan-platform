@@ -1,0 +1,86 @@
+import type { TemplateView } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import { FlatList, Modal } from 'react-native';
+import { apiFetch } from '@/lib/api';
+import { t } from '@/lib/i18n';
+import { pathKey } from '@/lib/query-keys';
+import { Button } from '@/ui/Button';
+import { ErrorState } from '@/ui/ErrorState';
+import { ListRow } from '@/ui/ListRow';
+import { Screen } from '@/ui/Screen';
+import { ScreenHeader } from '@/ui/ScreenHeader';
+import { TemplateForm } from './TemplateForm';
+import type { Outgoing } from './use-thread';
+
+const PATH = '/messaging/templates';
+
+/** GET /messaging/templates (docs/12 T1), kept to what Meta has approved: nothing else can go out. */
+export function useApprovedTemplates(enabled: boolean) {
+  return useQuery({
+    queryKey: pathKey(PATH),
+    queryFn: () => apiFetch<TemplateView[]>(PATH),
+    select: (rows) => rows.filter((row) => row.status === 'approved'),
+    enabled,
+  });
+}
+
+const names: Record<string, string> = t.templates.names;
+
+/**
+ * «اختار القالب» sheet: the approved templates by their Arabic name, then the chosen one's params
+ * and preview. Sending closes the sheet; the row shows in the thread at once (useSendMessage).
+ */
+export function TemplatePicker(props: {
+  visible: boolean;
+  onClose: () => void;
+  onSend: (out: Outgoing) => void;
+}) {
+  const templates = useApprovedTemplates(props.visible);
+  const [chosen, setChosen] = useState<TemplateView | null>(null);
+  const close = () => {
+    setChosen(null);
+    props.onClose();
+  };
+  return (
+    <Modal
+      visible={props.visible}
+      animationType="slide"
+      presentationStyle="pageSheet"
+      onRequestClose={close}
+    >
+      <Screen>
+        <ScreenHeader
+          title={chosen ? (names[chosen.key] ?? chosen.key) : t.inbox.composer.chooseTemplate}
+          trailing={<Button variant="ghost" label={t.common.close} onPress={close} />}
+        />
+        {chosen ? (
+          <TemplateForm
+            template={chosen}
+            onBack={() => setChosen(null)}
+            onSend={(out) => {
+              setChosen(null);
+              props.onSend(out);
+            }}
+          />
+        ) : (
+          <FlatList
+            style={{ flex: 1, marginHorizontal: -16 }}
+            data={templates.data ?? []}
+            keyExtractor={(row) => row.key}
+            renderItem={({ item }) => (
+              <ListRow
+                title={names[item.key] ?? item.key}
+                subtitle={item.body_ar}
+                onPress={() => setChosen(item)}
+              />
+            )}
+            ListEmptyComponent={
+              templates.isError ? <ErrorState onRetry={() => void templates.refetch()} /> : null
+            }
+          />
+        )}
+      </Screen>
+    </Modal>
+  );
+}

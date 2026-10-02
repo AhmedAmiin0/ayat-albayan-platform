@@ -7,8 +7,8 @@ import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { ensurePushPermission } from './permission';
 
-// R-MOB-01, registration only. Sending is later: TODO(R-MOB-01) one push per event in Phases 2-4
-// (new lead message, lesson needs confirmation…), plus setNotificationHandler for foreground display.
+// R-MOB-01 registration. The API sends the pushes (common/push, one per event per admin);
+// useNotificationHandling shows them in the foreground and opens their screen on a tap.
 
 /** The token this device put on the profile, so sign-out removes exactly it (survives restarts). */
 export const TOKEN_KEY = 'push.token';
