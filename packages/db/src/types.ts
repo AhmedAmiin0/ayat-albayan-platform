@@ -2004,17 +2004,24 @@ export type Database = {
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
       my_thread_phones: {
         Args: Record<PropertyKey, never>;
-        Returns: { phone_e164: string }[];
+        Returns: {
+          phone_e164: string;
+        }[];
       };
       report_of_path: { Args: { p_name: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
       teacher_thread_phones: {
         Args: { p_teacher_id: string };
-        Returns: { phone_e164: string }[];
+        Returns: {
+          phone_e164: string;
+        }[];
       };
       teacher_unread: {
         Args: { p_phones: string[]; p_teacher_id: string };
-        Returns: { phone_e164: string; unread: number }[];
+        Returns: {
+          phone_e164: string;
+          unread: number;
+        }[];
       };
     };
     Enums: {
