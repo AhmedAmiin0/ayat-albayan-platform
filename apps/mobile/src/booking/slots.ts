@@ -1,5 +1,6 @@
 import { clockTime, lessonWhenText, RIYADH_TZ, type SlotView } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { ltr } from '@/ui/Ltr';
 import { localDate } from '@/today/timeline';
 
@@ -41,7 +42,7 @@ export interface SlotDay {
 
 /** «الأحد 4 أكتوبر» of an instant on the Riyadh calendar (lessonWhenText without its clock). */
 function dayLabel(at: Date): string {
-  return lessonWhenText(at, RIYADH_TZ).replace(/\s\d{2}:\d{2}$/, '');
+  return lessonWhenText(at, RIYADH_TZ, locale).replace(/\s\d{2}:\d{2}$/, '');
 }
 
 /** Only the slots with no clash, grouped by Riyadh day, earliest first. */
@@ -73,12 +74,12 @@ export function slotTimes(startsAt: string, tz: string): { riyadh: string; local
 /** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض، عند الطالب الأحد 4 أكتوبر 16:00 بتوقيت القاهرة». */
 export function whenText(startsAt: string, tz: string): string {
   const at = new Date(startsAt);
-  const riyadh = `${lessonWhenText(at, RIYADH_TZ)} ${t.schedule.riyadhTime}`;
+  const riyadh = `${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
   if (tz === RIYADH_TZ) return riyadh;
   const local = t.schedule.inCity
-    .replace('{time}', lessonWhenText(at, tz))
+    .replace('{time}', lessonWhenText(at, tz, locale))
     .replace('{city}', cityOf(tz));
-  return `${riyadh}، ${t.booking.studentLocal.replace('{time}', local)}`;
+  return `${riyadh}${t.common.listJoiner}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
 /** The legend over the slots: whose clock is big and whose is small. */

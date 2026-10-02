@@ -2,6 +2,7 @@ import { counted, joinNames } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { WEEK_ORDER } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { effectiveByday, type BookingDraft } from './draft';
 import { PackagePrice } from './PackageStep';
 import { pickedText } from './SlotStep';
@@ -25,7 +26,7 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
   const students = Math.max(1, draft.students.length);
   return (
     <dl>
-      <Row label={t.schedule.students}>{joinNames(names)}</Row>
+      <Row label={t.schedule.students}>{joinNames(names, locale)}</Row>
       <Row label={t.schedule.teacher}>{draft.teacher?.display_name_ar}</Row>
       <Row label={t.schedule.time}>
         {draft.startsAt && t.booking.firstLesson.replace('{when}', pickedText(draft.startsAt, draft.tz))}

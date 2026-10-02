@@ -2,11 +2,12 @@ import { lessonWhenText, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { proposalsQuery } from './api';
 import { studentNames } from './lessons';
 import { RIYADH_TZ } from './tz';
 
-const when = (iso: string) => lessonWhenText(new Date(iso), RIYADH_TZ);
+const when = (iso: string) => lessonWhenText(new Date(iso), RIYADH_TZ, locale);
 
 /**
  * «طلبات تغيير الميعاد» above the week (R-SCH-08): every lesson a teacher proposed to move, in any
@@ -35,7 +36,11 @@ export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => voi
             >
               <span className="font-semibold">{`${studentNames(lesson)} · ${lesson.teacher.display_name_ar}`}</span>
               {': '}
-              <span>{`${when(lesson.starts_at)} ← ${when(lesson.pending_proposal?.proposed_starts_at ?? lesson.starts_at)}`}</span>
+              <span>
+                {t.lessons.proposal.change
+                  .replace('{from}', when(lesson.starts_at))
+                  .replace('{to}', when(lesson.pending_proposal?.proposed_starts_at ?? lesson.starts_at))}
+              </span>
             </button>
           </li>
         ))}

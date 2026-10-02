@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { Ltr } from '@/components/ui/ltr';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -27,7 +28,7 @@ function lessonNo(entry: ReportFormEntry): string {
  */
 export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
   const { student } = entry;
-  const when = `${lessonWhenText(new Date(lesson.starts_at), student.tz)} (${tzCity(student.tz) ?? student.tz})`;
+  const when = `${lessonWhenText(new Date(lesson.starts_at), student.tz, locale)} (${tzCity(student.tz) ?? student.tz})`;
   return (
     <section aria-label={t.reports.identity} className="grid gap-2 border-y border-rule bg-sunk/60 px-3 py-3">
       <p className="text-xs text-ink-3">{t.reports.readOnlyHint}</p>

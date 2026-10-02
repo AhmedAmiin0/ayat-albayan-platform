@@ -3,6 +3,7 @@ import { tzCity } from '@/components/ui/time-zone-select';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { ByDayPicker } from './ByDayPicker';
 import { effectiveByday, ruleFromSlot, type BookingDraft } from './draft';
 import { SeriesCheck } from './SeriesCheck';
@@ -15,10 +16,10 @@ export interface SlotStepProps {
 /** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض» (+ the family's wall clock when it differs). */
 export function pickedText(startsAt: string, tz: string): string {
   const at = new Date(startsAt);
-  const riyadh = `${lessonWhenText(at, RIYADH_TZ)} ${t.schedule.riyadhTime}`;
+  const riyadh = `${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
   if (tz === RIYADH_TZ) return riyadh;
-  const local = t.schedule.inCity.replace('{time}', lessonWhenText(at, tz)).replace('{city}', tzCity(tz) ?? tz);
-  return `${riyadh}، ${t.booking.studentLocal.replace('{time}', local)}`;
+  const local = t.schedule.inCity.replace('{time}', lessonWhenText(at, tz, locale)).replace('{city}', tzCity(tz) ?? tz);
+  return `${riyadh}${t.common.listJoiner}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
 /**

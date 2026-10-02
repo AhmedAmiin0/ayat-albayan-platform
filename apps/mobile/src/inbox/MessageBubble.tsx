@@ -1,6 +1,7 @@
 import { type MessageView, messageStatusStyle, replyNote } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { StatusChip } from '@/ui/StatusChip';
@@ -68,7 +69,7 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
   const ours = m.direction === 'outbound';
   const media = mediaLine(m);
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
-  const note = replyNote(m);
+  const note = replyNote(m, locale);
   const stuck = ours && (m.status === 'failed' || m.click_to_chat !== null);
   return (
     <View

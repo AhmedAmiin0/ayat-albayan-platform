@@ -12,6 +12,7 @@ import {
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
 import { FilterPills } from '@/ui/FilterPills';
@@ -66,7 +67,7 @@ export function TemplateForm({ template, lessons, onBack, onSend }: TemplateForm
         <FilterPills
           role="radiogroup"
           accessibilityLabel={t.inbox.composer.pickLesson}
-          items={lessons.map((l) => ({ value: l.id, label: lessonWhenText(new Date(l.starts_at), l.tz) }))}
+          items={lessons.map((l) => ({ value: l.id, label: lessonWhenText(new Date(l.starts_at), l.tz, locale) }))}
           value={lessonId}
           onChange={pick}
         />

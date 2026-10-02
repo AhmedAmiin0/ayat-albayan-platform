@@ -3,7 +3,7 @@ import { t } from '@/lib/i18n';
 import { setLocale } from '@/lib/locale-switch';
 import { LanguageRow } from './LanguageRow';
 
-jest.mock('@/lib/locale-switch', () => ({ setLocale: jest.fn(async () => undefined) }));
+jest.mock('@/lib/locale-switch', () => ({ setLocale: jest.fn(async () => 'reloading') }));
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -24,4 +24,12 @@ test('إلغاء keeps the language', async () => {
   await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
   expect(screen.queryByText(t.language.restart)).toBeNull();
   expect(setLocale).not.toHaveBeenCalled();
+});
+
+test('a restart that failed says to reopen the app (the choice is saved)', async () => {
+  jest.mocked(setLocale).mockResolvedValueOnce('restart');
+  await render(<LanguageRow />);
+  await fireEvent.press(screen.getByRole('button', { name: 'English' }));
+  await fireEvent.press(screen.getByRole('button', { name: t.common.confirm }));
+  expect(await screen.findByText(t.language.restartManually)).toBeTruthy();
 });

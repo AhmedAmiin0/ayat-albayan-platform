@@ -3,9 +3,9 @@ import { Link } from '@tanstack/react-router';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
 
-/** «45 والـ60» for the sentence «سعر حلقة الـ{durations} دقيقة …». */
+/** «45 والـ60» / «45 and 60» for the sentence «سعر حلقة الـ{durations} دقيقة …». */
 export function durationsText(durations: readonly number[]): string {
-  return durations.join(' والـ');
+  return durations.join(t.payouts.durationsJoiner);
 }
 
 /**

@@ -1190,12 +1190,14 @@ Branch `develop`. Six branches merged with `--no-ff`, in order: `phase7/foundati
 - **Web switch:** `LanguageSwitch` shows the other language by its own name. It sits in the admin side foot, on the login page, and now in the teacher/guardian top bar too. It saves the choice, reloads, and `main.tsx` sets `<html lang dir>` before React renders.
 - **Mobile switch:** a «اللغة» row in More asks for confirmation (`language.restart`), saves `ab.locale`, then sets `I18nManager.allowRTL`/`forceRTL` and calls `reloadAppAsync()`. `app/_layout` waits for `useLocaleReady()` before the first render.
 - **Intl formats:** every display formatter in apps/web and apps/mobile uses `intlLocale(locale)` (`ar-EG-u-nu-latn` / `en-GB-u-nu-latn`). `formatRunningHead(date, locale)` now takes the UI language too (default `'ar'`), so the running head on web and the mobile Today and paid-day lines read «Friday 2 October 2026 · 21 Rabiʻ II 1448 AH» in English. A few formatters stay on fixed `en-CA`/`en-US`/`en-GB` on purpose: they produce machine values (ISO dates, weekday index, HH:mm), not display text.
+  - The @ab/shared formatters the screens borrow from the WhatsApp code take the UI language as an optional last argument, default `'ar'`: `lessonWhenText(date, tz, locale)`, `joinNames(names, locale)` and `replyNote(m, locale)`. WhatsApp callers pass nothing and stay Arabic. Every web and mobile call site passes `locale` (verifier fix: before it, 10 web screens and 5 mobile ones showed «الأحد 4 أكتوبر 17:00» in the English UI).
 - **Mirroring:**
   - `BindingCover` corners use start/end positions and flip by direction.
   - `Icon` flips the chevrons and logout in LTR, and reply in RTL.
   - The `Cartouche` caps, the `AvailabilityWeek` hour labels, tab arrow keys, the nav fade and LTR inputs all follow the direction.
   - The side-foot email now aligns to the page start in both directions (it had stuck to the logout button in LTR).
-  - Component tests cover these.
+  - The admin's «طلبات تغيير الميعاد» rows read `lessons.proposal.change`: «{from} ← {to}» in Arabic and «{from} → {to}» in English (verifier fix: the arrow had pointed new → old in LTR).
+  - Component tests cover these, and `schedule.en.test.tsx` covers the proposal arrow.
 - **Playwright locale e2e** (`e2e/tests/locale.spec.ts`), on desktop and Pixel 7:
   - Admin: switches to English (dir ltr, English dashboard heading and nav, the pricing form's groups), then switches back (dir rtl).
   - Teacher: switches from the top bar and back.
@@ -1205,7 +1207,7 @@ Branch `develop`. Six branches merged with `--no-ff`, in order: `phase7/foundati
   - The calculator's offer text («انسخ العرض للعميل» / «أرسله على واتساب») was the one parent-facing text built in the client from `t`. Web and mobile now build it from `ar.pricing`, with an English-UI test on each.
   - The teacher reminder link wording in `@ab/shared` messaging is fixed Arabic.
 - **Report history links:** the admin student profile has «سجل التقارير» linking to `/admin/students/$id/reports`. In the teacher's MyStudents list, each student name links to `/teacher/reports/$id`.
-- **List joiners:** `common.listJoiner` is «، » in Arabic and «, » in English. It is used in the web finance notes, the web settings follow-up hours, and the mobile lesson student names.
+- **List joiners:** `common.listJoiner` is «، » in Arabic and «, » in English. It is used in the web finance notes, the web settings follow-up hours, the mobile lesson student names, and (verifier fix) the web and mobile slot lines, the mobile slot a11y label, the web conflict lines and the pricing live-region summary. Group names on screens use `joinNames(names, locale)` («سهيلة وجود» / «Suhaila and Joud»). The payout «missing rate» sentence joins durations with the new `payouts.durationsJoiner` («45 والـ60» / «45 and 60»).
 - **USD subscription FX snapshot:** `apps/api/src/modules/subscriptions/subscription-row.test.ts`.
   - EG at 0.266667 gives $39 and saves the same rate and date.
   - The 1/3.75 peg fallback is saved with `fx_date` null.
@@ -1214,7 +1216,7 @@ Branch `develop`. Six branches merged with `--no-ff`, in order: `phase7/foundati
 - **All settings keys editable:** `/admin/settings` has a control for all 13 keys. `crm_cutover_done` is now two-way, via «الرقم رجع على الـCRM؟ رجّع التحذير». The docs/09 cut-over step 5 now points to that button.
 - **Polish, API:**
   - The teacher reminder {{2}} carries a non-Meet lesson link.
-  - The webhook deletes the inbound row and answers 500 when a quick-reply side effect fails, so Meta retries.
+  - The webhook deletes the inbound row and answers 500 when a quick-reply side effect fails, so Meta retries. Verifier fix: it deletes only while Meta still waits for the answer (deadline = parse time + `RESPONSE_BUDGET_MS`, less a 500 ms margin for the DELETE). Past that, Meta already has its 200, so the row stays in the inbox and the error is logged. A failed delete is logged on its own, and the quick reply's error is the one that goes up.
   - Hand-off and sent-manually return 409 `not_manual` on a row the sender has claimed.
   - Thread sends require `clientRequestId`.
   - Reports tests now check the `report_submitted` push.
@@ -1229,12 +1231,13 @@ Round 1 (right after the merges and the en.json assembly) was green. Round 2 (af
 
 ## Residuals
 - **Mixed-direction user data in the English UI:** an Arabic name stored with Latin digits (e.g. e2e's «أم ياسمين 2002») shows as «2002 أم ياسمين» in an LTR row. Plain Arabic names display correctly. Fix if it shows up in real data: add `dir="auto"` on name cells.
-- **Mobile date lines stay Arabic in English mode:** the mobile lead follow-up «next due» line and the lesson/booking time lines use `lessonWhenText`, the Arabic WhatsApp formatter. They need a display variant that takes `intlLocale(locale)`. The code has a TODO(Phase 7 locale) comment.
 - **Plurals:** `counted()` uses Arabic plural rules for both languages. This is correct for English only because en.json's one/two forms are written «1 …» and «2 …» and few/other are the same text. The four list counts are now «{n} total», so they read correctly at n = 1. `leads.countStatus` reads «2 Active».
 - **Bundle size:** ar.json and en.json are both in the web bundle (75 KB + 61 KB raw). A dynamic import of the unused one can come later if size matters.
 - **Native date pickers:** `<input type="date">` shows the browser's own format (e.g. mm/dd/yyyy). The label above it shows the formatted date.
 - **Duplicated mobile code:** `qualification-form.ts` on mobile copies the web's `qualForm`/`qualPatch`. Move both into @ab/shared later.
 - **Webhook retry edge:** if a new lead's first message is «وقف الرسايل» and the pause write fails, Meta's retry sends the admin push as `new_message` instead of `new_lead`.
+- **Webhook late failure:** a quick reply that fails after the 5 s budget keeps its row but loses the confirm / pause and the admin push (Meta will not re-send). The same happens when the DB is down for the undo too. A `quick_reply_pending` flag plus a sweeper would retry these; add it if the «failed after the 200» log line ever shows up.
+- **Mobile boot gate:** when a reload does not apply the native direction, the app now opens in that run's language on every start and keeps its marker (no more English/Arabic flip on alternate cold starts). A user who never chose English then stays in English until the flag applies. Only the device checklist can confirm the flag sticks.
 
 ## Owner notes
 - **A new APK/IPA is needed for native LTR.** `app.json` drops expo-localization's `supportsRTL`/`forcesRTL` extras, so JS alone owns `I18nManager`. Switching depends on `reloadAppAsync` in a real build.
@@ -1243,3 +1246,25 @@ Round 1 (right after the merges and the en.json assembly) was green. Round 2 (af
 - **Parent-facing output stays Arabic whatever the UI language:** report PDFs, WhatsApp messages (including the calculator offer), exports and push bodies.
 - **Translations:** en.json is a first full pass. Wording choices to review are in the translators' notes; for example «Absent without notice» for no_show, and ISO currency codes («1,200 SAR»).
 - **Screenshots:** `C:/Users/NTG/AppData/Local/Temp/ayat-design/shots/phase7`. They show /login, /admin, students, teachers, pricing, schedule and /teacher, in English LTR and Arabic RTL (light), on desktop and phone.
+## Phase 7: verifier fixes
+
+The verifier sent 9 findings: 1 high, 3 medium and 5 low. One of the lows was a "verified clean" note with nothing to fix. Each finding was checked against the code before any change, and none was wrong. All are fixed. The exceptions are the `dir="auto"` part of finding 8 and the device run in finding 6, which stay listed under Residuals and Owner notes above.
+
+- **High: webhook `forget()` could lose a message.** `WebhookService.handle` passes `{ deadline }` (parse time + `RESPONSE_BUDGET_MS`, which now lives in `webhook.service.ts`) to `InboundService.handle`. A quick reply that fails is unstored only while Meta still waits, and only if at least 500 ms remain for the DELETE. Later than that, the row stays and the error is logged. If the delete itself fails, that is logged separately, and the quick reply's error is the one that goes up. Tests: `webhook.inbound.undo.test.ts` (in budget, past the budget, too close to the deadline, failed undo) and a deadline case in `webhook.service.test.ts`.
+- **Medium: Arabic dates in the English web UI.** `lessonWhenText`, `joinNames` and `replyNote` take the UI `locale`, default `'ar'` so WhatsApp output does not change. The 10 web sites, the 5 mobile sites (booking errors, slot day/when lines, follow-up «next» line, template lesson picker) and both inbox `MessageBubble`s pass `locale`. `replyNote` was a site the verifier had missed. Tests: shared `booking-confirmation.test.ts` and `reply-note.test.ts` (English cases), web `schedule.en.test.tsx` (drawer, proposals, conflict line, names), and mobile `slots.en.test.ts`.
+- **Medium: hard-coded Arabic joiners.** See "List joiners" above. Tests: `MissingRates.en.test.ts`, `SlotStep.en.test.ts`, `schedule.en.test.tsx` and mobile `slots.en.test.ts`.
+- **Medium: ProposalsPanel arrow.** The row now reads from the new key `lessons.proposal.change` («{from} ← {to}» / «{from} → {to}»), with an LTR test.
+- **Low: wa.me race.** The web link's click opens a blank tab straight away (so popup blockers allow it), calls hand-off, then loads wa.me in that tab only once the server holds the row. If the request fails, the tab is closed. Mobile opens WhatsApp in hand-off's `onSuccess`. A 409 `not_manual` shows `messages.alreadySending` («الرسالة دي بتتبعت دلوقتي من المنصة، متبعتهاش بنفسك.») and refreshes the thread. Tests: web `ThreadPane.handoff.test.tsx` and mobile `ThreadScreen.actions.test.tsx` (order: hand-off before openURL, plus the 409 case).
+- **Low: mobile boot gate.** The reload marker now stays while starts still disagree with the saved language. It is cleared only once a start shows that language. This ends the flip between the two languages on alternate cold starts, and a dev-only warning is logged. `setLocale` returns `'reloading' | 'restart' | 'error'`. The «اللغة» row shows `language.restartManually` when the reload failed, and `common.error` when the choice could not be saved. The verifier's counter idea was not built: if `forceRTL` does not apply, more reloads would not change that. The device checklist is still the owner's step.
+- **Low: summary accuracy.** The "Intl formats", "Mirroring", "List joiners", webhook polish and Residuals bullets above now match the code. The Phase 7 merge commits still lack the Co-Authored-By and Claude-Session lines; that was already disclosed, and history was not rewritten.
+- **Low: visual polish.**
+  1. The teacher card shows «ادخل الحلقة» (or «لسه مفيش لينك») only on an open lesson, never on a rescheduled or cancelled one (`TeacherLessonCard.join.test.tsx`).
+  2. The breadcrumb on `/admin/students/$id/reports` reads Students › Report history, and on `…/reports/$lessonId` it reads Students › Lesson report (`crumb-trail.test.ts`).
+  3. The settings label is now «إرسال الرسايل» / «Message sending», so it no longer repeats the button.
+  4. `dir="auto"` on name cells stays in Residuals.
+
+### Gate (measured, `pnpm test:all` after `supabase db reset` + `gen:types`, no types drift)
+- 27/27 turbo tasks green.
+- **Unit tests:** api 1488 passed + 1 skipped (210 files) · web 649 (133 files) · mobile 509 (100 suites) · @ab/shared 1108 (56 files) · @ab/migrate 292 (50 files) · @ab/scripts 9 · wa-stub 19.
+- **e2e:** 43 passed + 3 skipped by design.
+- **Lint:** 0 errors. The gate run showed 34 warnings, one of them new: `crumbsFor` complexity 11. Pulling `reportCrumbs` out fixed it, and web lint, typecheck and test were re-run green after that change. That leaves the 33 pre-existing warnings.

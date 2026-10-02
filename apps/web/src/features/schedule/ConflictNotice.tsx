@@ -6,6 +6,7 @@ import { Input } from '@/components/ui/input';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { RIYADH_TZ } from './tz';
 
 /** How many clashes are listed before «وفيه {n} تعارض كمان». */
@@ -20,10 +21,10 @@ const TEACHER_SIDE = new Set<Conflict['kind']>(['outside_availability', 'time_of
  */
 export function conflictText(c: Conflict, teacherTz?: string): string {
   const at = new Date(c.startsAt);
-  let when = lessonWhenText(at, RIYADH_TZ);
+  let when = lessonWhenText(at, RIYADH_TZ, locale);
   if (teacherTz && teacherTz !== RIYADH_TZ && TEACHER_SIDE.has(c.kind)) {
     const city = tzCity(teacherTz) ?? teacherTz;
-    when += `، ${t.booking.teacherClock.replace('{time}', clockTime(at, teacherTz)).replace('{city}', city)}`;
+    when += `${t.common.listJoiner}${t.booking.teacherClock.replace('{time}', clockTime(at, teacherTz)).replace('{city}', city)}`;
   }
   return t.booking.conflict[c.kind].replace('{when}', when);
 }

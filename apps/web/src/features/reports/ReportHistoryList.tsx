@@ -1,6 +1,7 @@
 import { gradeStyle, lessonWhenText, type ReportSummaryView, type UserRole } from '@ab/shared';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { PdfAction } from './PdfAction';
 
 export interface ReportHistoryListProps {
@@ -20,7 +21,7 @@ export function ReportHistoryList({ items, role, tz }: ReportHistoryListProps) {
         <li key={r.id} className="grid gap-2 border-b border-rule py-3 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
           <div className="grid gap-1">
             <p className="flex flex-wrap items-baseline gap-x-3 gap-y-0.5">
-              <span className="font-semibold">{lessonWhenText(new Date(r.starts_at), tz)}</span>
+              <span className="font-semibold">{lessonWhenText(new Date(r.starts_at), tz, locale)}</span>
               {r.lesson_no !== null && (
                 <span className="text-xs text-ink-3">{t.reports.lessonNoShort.replace('{n}', String(r.lesson_no))}</span>
               )}

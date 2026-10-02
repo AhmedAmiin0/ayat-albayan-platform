@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingConfirmationTemplate, lessonWhenText } from './booking-confirmation.js';
+import { bookingConfirmationTemplate, joinNames, lessonWhenText } from './booking-confirmation.js';
 
 describe('bookingConfirmationTemplate (R-SCH-06, R-LES-02)', () => {
   it('a Jitsi room → booking_confirmation with the slug as button param', () => {
@@ -50,5 +50,18 @@ describe('lessonWhenText ({{2}}, R-SCH-01)', () => {
     expect(lessonWhenText(new Date('2026-10-04T22:30:00Z'), 'Asia/Riyadh')).toBe(
       'الاثنين 5 أكتوبر 01:30',
     );
+  });
+
+  it('in the English UI reads in English; the WhatsApp default stays Arabic', () => {
+    expect(lessonWhenText(at, 'Asia/Riyadh', 'en')).toBe('Sunday 4 October 17:00');
+    expect(lessonWhenText(at, 'Asia/Riyadh')).toBe('الأحد 4 أكتوبر 17:00');
+  });
+});
+
+describe('joinNames', () => {
+  it('attaches و in Arabic (WhatsApp {{1}}) and says «and» in the English UI', () => {
+    expect(joinNames(['سهيلة', 'مريم'])).toBe('سهيلة ومريم');
+    expect(joinNames(['Suhaila', 'Mariam'], 'en')).toBe('Suhaila and Mariam');
+    expect(joinNames(['سهيلة'], 'en')).toBe('سهيلة');
   });
 });

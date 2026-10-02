@@ -2,6 +2,7 @@ import { isOpenLesson, lessonWhenText, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { ProposeForm } from './ProposeForm';
 
 export interface TeacherProposalProps {
@@ -19,7 +20,7 @@ export function TeacherProposal({ lesson, tz, onDone }: TeacherProposalProps) {
   const [proposing, setProposing] = useState(false);
   const proposal = lesson.pending_proposal;
   if (proposal) {
-    const when = lessonWhenText(new Date(proposal.proposed_starts_at), tz);
+    const when = lessonWhenText(new Date(proposal.proposed_starts_at), tz, locale);
     return <p className="text-sm text-act">{t.teacherDash.propose.pending.replace('{when}', when)}</p>;
   }
   if (!isOpenLesson(lesson.status)) return null;

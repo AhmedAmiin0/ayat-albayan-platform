@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
 import type { InboundService } from './webhook.inbound.service';
-import { WebhookService, within } from './webhook.service';
+import { RESPONSE_BUDGET_MS, WebhookService, within } from './webhook.service';
 import type { StatusService } from './webhook.status.service';
 
 function service(phoneNumberId: string | undefined = PHONE_NUMBER_ID) {
@@ -27,6 +27,15 @@ describe('WebhookService', () => {
     await svc.handle(envelope(both));
     expect(inbound.handle.mock.calls.map(([m]) => m.waMessageId)).toEqual(['wamid.A', 'wamid.B']);
     expect(statuses.handle).toHaveBeenCalledWith(expect.objectContaining({ waMessageId: 'wamid.OUT1', status: 'read' }));
+  });
+
+  it('tells each message when the controller stops waiting (now + RESPONSE_BUDGET_MS)', async () => {
+    const { svc, inbound } = service();
+    const before = Date.now();
+    await svc.handle(envelope(both));
+    const deadline = inbound.handle.mock.calls[0]?.[1]?.deadline;
+    expect(deadline).toBeGreaterThanOrEqual(before + RESPONSE_BUDGET_MS);
+    expect(deadline).toBeLessThanOrEqual(Date.now() + RESPONSE_BUDGET_MS);
   });
 
   it('one failing item does not stop the others, then the batch fails so Meta re-sends it', async () => {

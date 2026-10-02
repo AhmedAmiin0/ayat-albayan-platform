@@ -3,21 +3,27 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { setLocale } from '@/lib/locale-switch';
+import { ErrorLine } from '@/inbox/ErrorLine';
 import { InlineConfirm } from '@/ui/InlineConfirm';
 import { ListRow } from '@/ui/ListRow';
 import { Section } from './Section';
 
 /**
  * «اللغة»: offers the other language by its own name (العربية / English). Every screen reads its
- * strings once, at start, so switching restarts the app: one short confirm first.
+ * strings once, at start, so switching restarts the app: one short confirm first. If the restart
+ * itself fails, it says to reopen the app (the choice is saved and applies then).
  */
 export function LanguageRow() {
   const other = locale === 'ar' ? 'en' : 'ar';
   const [asking, setAsking] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [note, setNote] = useState<string | null>(null);
   const confirm = () => {
     setBusy(true);
-    void setLocale(other).finally(() => setBusy(false));
+    void setLocale(other).then((r) => {
+      setBusy(false);
+      setNote(r === 'restart' ? t.language.restartManually : r === 'error' ? t.common.error : null);
+    });
   };
   return (
     <Section title={t.language.label}>
@@ -32,6 +38,7 @@ export function LanguageRow() {
           busy={busy}
         />
       ) : null}
+      {note ? <ErrorLine message={note} /> : null}
     </Section>
   );
 }

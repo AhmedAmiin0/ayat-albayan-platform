@@ -1,3 +1,4 @@
+import { intlLocale, type Locale } from '../locale.js';
 import { clockTime } from '../running-head.js';
 import { meetingLinkParts, type MeetingHost } from './meeting-link.js';
 
@@ -33,30 +34,40 @@ export function bookingConfirmationTemplate(
 
 const whenFormatters = new Map<string, Intl.DateTimeFormat>();
 
-/** {{2}}: «الأحد 4 أكتوبر 17:00», wall-clock in `tz` (the guardian's), Western digits, 24h. */
-export function lessonWhenText(startsAt: Date, tz: string): string {
-  let f = whenFormatters.get(tz);
+/**
+ * {{2}}: «الأحد 4 أكتوبر 17:00», wall-clock in `tz` (the guardian's), Western digits, 24h.
+ * WhatsApp text is always Arabic (the default); a screen passes its UI language, so the English
+ * UI reads «Sunday 4 October 17:00».
+ */
+export function lessonWhenText(startsAt: Date, tz: string, locale: Locale = 'ar'): string {
+  const key = `${locale}|${tz}`;
+  let f = whenFormatters.get(key);
   if (!f) {
-    f = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+    f = new Intl.DateTimeFormat(intlLocale(locale), {
       weekday: 'long',
       day: 'numeric',
       month: 'long',
       timeZone: tz,
     });
-    whenFormatters.set(tz, f);
+    whenFormatters.set(key, f);
   }
   const parts = f.formatToParts(startsAt);
   const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
   return [part('weekday'), part('day'), part('month'), clockTime(startsAt, tz)].join(' ');
 }
 
-let listFormat: Intl.ListFormat | undefined;
+const listFormats = new Map<Locale, Intl.ListFormat>();
 
 /**
- * {{1}} for several children of one guardian: «سهيلة ومريم» (Intl.ListFormat, attached و).
- * Created on first use: Hermes may lack Intl.ListFormat and the mobile app imports this module.
+ * {{1}} for several children of one guardian: «سهيلة ومريم» (Intl.ListFormat, attached و); a
+ * screen passes its UI language («Suhaila and Mariam»). Created on first use: Hermes may lack
+ * Intl.ListFormat and the mobile app imports this module.
  */
-export function joinNames(names: readonly string[]): string {
-  listFormat ??= new Intl.ListFormat('ar', { type: 'conjunction' });
-  return listFormat.format(names);
+export function joinNames(names: readonly string[], locale: Locale = 'ar'): string {
+  let f = listFormats.get(locale);
+  if (!f) {
+    f = new Intl.ListFormat(intlLocale(locale), { type: 'conjunction' });
+    listFormats.set(locale, f);
+  }
+  return f.format(names);
 }

@@ -7,6 +7,7 @@ const lesson = (status: 'scheduled' | 'confirmed' | 'cancelled_by_admin') => ({ 
 describe('replyNote: what a quick reply did (R-SCH-03)', () => {
   it('a guardian’s «تمام» that confirmed its lesson names it (Riyadh time)', () => {
     expect(replyNote({ ...base, lesson: lesson('confirmed') })).toEqual({ key: 'confirmed', when: 'الأحد 4 أكتوبر 17:00' });
+    expect(replyNote({ ...base, lesson: lesson('confirmed') }, 'en')?.when).toBe('Sunday 4 October 17:00');
   });
 
   it('nothing confirmed: no lesson found, or it could not be confirmed', () => {

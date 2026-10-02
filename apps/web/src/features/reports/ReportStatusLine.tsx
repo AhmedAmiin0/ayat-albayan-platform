@@ -2,6 +2,7 @@ import { clockTime, lessonWhenText, pdfStatusStyle, reportStatusStyle, type Repo
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import type { SaveState } from './use-autosave';
 
 /** «بيتحفظ…» / «المسودة اتحفظت 17:42» / a failed save, while the report is a draft (R-REP-02). */
@@ -28,7 +29,7 @@ export function SubmittedNote({ report, tz }: { report: ReportView; tz: string }
   if (report.status !== 'submitted') return null;
   const until = report.edit_until ? new Date(report.edit_until) : null;
   const window =
-    !report.can_edit ? t.reports.editClosed : until ? t.reports.editUntil.replace('{when}', lessonWhenText(until, tz)) : null;
+    !report.can_edit ? t.reports.editClosed : until ? t.reports.editUntil.replace('{when}', lessonWhenText(until, tz, locale)) : null;
   return (
     <div className="grid gap-1.5">
       <p role="status" className="flex flex-wrap items-center gap-2">

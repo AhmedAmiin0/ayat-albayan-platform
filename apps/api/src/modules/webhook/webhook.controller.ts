@@ -14,14 +14,7 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../../common/auth/decorators';
 import { verifyChallenge, verifySignature } from './webhook.signature';
-import { WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from './webhook.service';
-
-/**
- * ponytail: the work runs inline; after this budget Meta gets its 200 and the rest finishes in
- * the background, so a failure past the budget is only logged (no 500, no re-send). Meta re-sends
- * after ~20 s without an answer. Move to a pg-boss queue if a batch ever needs longer.
- */
-export const RESPONSE_BUDGET_MS = 5_000;
+import { RESPONSE_BUDGET_MS, WEBHOOK_CONFIG, WebhookService, within, type WebhookConfig } from './webhook.service';
 
 /** The bits of the Fastify request / reply used here (no direct `fastify` dependency). */
 interface RawRequest {

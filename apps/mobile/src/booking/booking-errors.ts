@@ -1,6 +1,7 @@
 import { CONFLICT_KINDS, lessonWhenText, RIYADH_TZ, type Conflict } from '@ab/shared';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { isOffline } from '@/payments/payment-errors';
 
 // What a failed POST /booking means for the trial wizard (docs/10 §3: clients switch on `code`).
@@ -37,7 +38,7 @@ function toCandidate(v: unknown): Candidate | null {
 export function conflictLine(c: Conflict): string {
   return t.booking.conflict[c.kind].replace(
     '{when}',
-    lessonWhenText(new Date(c.startsAt), RIYADH_TZ),
+    lessonWhenText(new Date(c.startsAt), RIYADH_TZ, locale),
   );
 }
 

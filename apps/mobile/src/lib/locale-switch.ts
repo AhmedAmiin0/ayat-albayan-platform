@@ -5,9 +5,13 @@ import { useEffect, useState } from 'react';
 import { I18nManager } from 'react-native';
 import { locale } from './locale';
 
-// The language a reload was last asked for. If the next start still disagrees (the native flag did
-// not stick), the app opens as it is instead of reloading forever.
+// The language a reload was last asked for. While starts still disagree with it (the native flag
+// did not stick), the app opens as it is and keeps the marker: no reload loop, and no flip between
+// the two languages on every other cold start. Cleared once a start shows the saved language.
 export const RELOAD_KEY = 'ab.locale.reload';
+
+/** What «اللغة» got: restarting now, saved but needs a manual restart, or nothing changed. */
+export type SwitchResult = 'reloading' | 'restart' | 'error';
 
 /**
  * Persists `next`'s direction natively, then reloads the JS. Both flags: RN's isRTL is
@@ -41,19 +45,26 @@ export async function syncLocale(current: Locale = locale): Promise<boolean> {
     return false; // Unreadable storage: keep this run's language rather than guess.
   }
   const wanted = parseLocale(saved);
-  if (wanted !== current && pending !== wanted) return reloadInto(wanted);
-  if (pending !== null) await AsyncStorage.removeItem(RELOAD_KEY).catch(() => undefined);
+  if (wanted === current) {
+    if (pending !== null) await AsyncStorage.removeItem(RELOAD_KEY).catch(() => undefined);
+    return false;
+  }
+  if (pending !== wanted) return reloadInto(wanted);
+  if (__DEV__) console.warn(`locale: the native direction did not switch to ${wanted}`);
   return false;
 }
 
-/** «اللغة»: saves the choice and restarts in it. Not saved → nothing changes (the gate would undo it). */
-export async function setLocale(next: Locale): Promise<void> {
+/**
+ * «اللغة»: saves the choice and restarts in it. Not saved → nothing changes (the gate would undo it);
+ * saved but the reload failed → the next cold start opens in it.
+ */
+export async function setLocale(next: Locale): Promise<SwitchResult> {
   try {
     await AsyncStorage.setItem(LOCALE_STORAGE_KEY, next);
   } catch {
-    return;
+    return 'error';
   }
-  await reloadInto(next);
+  return (await reloadInto(next)) ? 'reloading' : 'restart';
 }
 
 /** app/_layout: false until the UI language matches the saved one (or a reload is under way). */

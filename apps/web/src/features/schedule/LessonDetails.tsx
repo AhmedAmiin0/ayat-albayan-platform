@@ -5,6 +5,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { RIYADH_TZ } from './tz';
 
@@ -33,7 +34,7 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
       <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} className="justify-self-start" />
       <dl className="grid gap-3">
         <Row label={t.schedule.time}>
-          <span className="block">{`${lessonWhenText(at, RIYADH_TZ)} ${t.schedule.riyadhTime}`}</span>
+          <span className="block">{`${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`}</span>
           {studentTimes(lesson, RIYADH_TZ).map((line) => (
             <span key={line} className="block text-xs text-ink-2">{line}</span>
           ))}

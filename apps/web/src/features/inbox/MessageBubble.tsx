@@ -1,6 +1,7 @@
 import { messageStatusStyle, replyNote, type MessageView } from '@ab/shared';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 import { fullTime, mediaKind, stampText, templateLine } from './format';
 import { MessageActions } from './MessageActions';
@@ -31,7 +32,7 @@ function Media({ message: m }: { message: MessageView }) {
 
 /** What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now. */
 function ReplyLine({ message: m }: { message: MessageView }) {
-  const note = replyNote(m);
+  const note = replyNote(m, locale);
   if (!note) return null;
   return <p className="mt-1 text-xs font-semibold text-ink-2">{t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}</p>;
 }

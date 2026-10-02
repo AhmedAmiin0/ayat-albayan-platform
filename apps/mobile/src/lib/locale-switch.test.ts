@@ -42,14 +42,15 @@ test('the run already shows the saved language: no flag change, no reload', asyn
   expect(reloadAppAsync).not.toHaveBeenCalled();
 });
 
-test('a reload that did not stick opens as it is instead of reloading forever', async () => {
+test('a reload that did not stick opens as it is, every start (no loop, no flip-flop)', async () => {
   await AsyncStorage.multiSet([
     [LOCALE_STORAGE_KEY, 'en'],
     [RELOAD_KEY, 'en'],
   ]);
   expect(await syncLocale('ar')).toBe(false);
+  expect(await syncLocale('ar')).toBe(false); // the next cold start: still no reload
   expect(reloadAppAsync).not.toHaveBeenCalled();
-  expect(await AsyncStorage.getItem(RELOAD_KEY)).toBeNull();
+  expect(await AsyncStorage.getItem(RELOAD_KEY)).toBe('en');
 });
 
 test('a reload that worked clears its marker', async () => {
@@ -74,16 +75,22 @@ test('a failed reload still opens the app (the flags apply on the next start)', 
 });
 
 test('setLocale saves the choice, sets the direction, reloads', async () => {
-  await setLocale('en');
+  expect(await setLocale('en')).toBe('reloading');
   expect(await AsyncStorage.getItem(LOCALE_STORAGE_KEY)).toBe('en');
   expect(allow).toHaveBeenCalledWith(false);
   expect(force).toHaveBeenCalledWith(false);
   expect(reloadAppAsync).toHaveBeenCalledTimes(1);
 });
 
+test('setLocale: a saved choice whose reload failed asks for a manual restart', async () => {
+  jest.mocked(reloadAppAsync).mockRejectedValueOnce(new Error('no reload'));
+  expect(await setLocale('en')).toBe('restart');
+  expect(await AsyncStorage.getItem(LOCALE_STORAGE_KEY)).toBe('en');
+});
+
 test('setLocale: a choice that cannot be saved changes nothing (the gate would undo it)', async () => {
   jest.spyOn(AsyncStorage, 'setItem').mockRejectedValueOnce(new Error('full'));
-  await setLocale('en');
+  expect(await setLocale('en')).toBe('error');
   expect(force).not.toHaveBeenCalled();
   expect(reloadAppAsync).not.toHaveBeenCalled();
 });

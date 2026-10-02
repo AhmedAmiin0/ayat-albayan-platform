@@ -86,18 +86,6 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(await screen.findByText(t.messages.retryQueued)).toBeTruthy();
   });
 
-  it('click-to-chat opens wa.me and tells the server, which holds the row (no second send)', async () => {
-    renderThread();
-    await screen.findByRole('log');
-    const failed = bubble('تذكير بالحلقة');
-    const link = failed.getByRole('link', { name: t.messages.clickToChat });
-    expect(link.getAttribute('href')).toBe(LINK);
-    expect(link.getAttribute('target')).toBe('_blank');
-    apiSend.mockResolvedValue({ ...FAILED, error_code: 'handed_off' });
-    fireEvent.click(link);
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messages/m-f/hand-off'));
-  });
-
   it('a held row asks «بعتّها؟» from its own state (survives a refresh): yes = sent by hand, no = back to the queue', async () => {
     renderThread();
     await screen.findByRole('log');

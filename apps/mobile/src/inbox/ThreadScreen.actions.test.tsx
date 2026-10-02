@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -64,16 +64,27 @@ test('a refused retry says so and leaves the row as it was', async () => {
   expect(screen.getByText(word.failed)).toBeTruthy();
 });
 
-test('«ابعتها بنفسك» opens the API wa.me link and tells the server, which holds the row', async () => {
+test('«ابعتها بنفسك» tells the server first (it holds the row), then opens the API wa.me link', async () => {
   const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   const held = { ...failed, error_code: 'handed_off' };
   mockApiSend.mockResolvedValue(held);
   await open();
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, held]));
   await fireEvent.press(screen.getByRole('button', { name: t.messages.clickToChat }));
-  expect(openUrl).toHaveBeenCalledWith(failed.click_to_chat);
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/hand-off');
+  await waitFor(() => expect(openUrl).toHaveBeenCalledWith(failed.click_to_chat));
+  expect(mockApiSend.mock.invocationCallOrder[0]).toBeLessThan(openUrl.mock.invocationCallOrder[0] ?? 0);
   expect(await screen.findByText(t.messages.handedOff)).toBeTruthy();
+});
+
+test('the sender claimed it meanwhile (409 not_manual): no WhatsApp, it says the message is going out', async () => {
+  const openUrl = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
+  openUrl.mockClear(); // Linking's mock keeps one spy across tests
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'not_manual' }));
+  await open();
+  await fireEvent.press(screen.getByRole('button', { name: t.messages.clickToChat }));
+  expect(await screen.findByText(t.messages.alreadySending)).toBeTruthy();
+  expect(openUrl).not.toHaveBeenCalled();
 });
 
 test('a held row asks from its own state: «بعتّها بنفسي» records it, «رجّعها» puts it back', async () => {

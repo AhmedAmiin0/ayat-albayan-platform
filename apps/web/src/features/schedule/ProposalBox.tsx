@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { approveProposal, conflictsOf, lessonErrorText, LESSONS_KEY, rejectProposal } from './api';
 import { ConflictNotice } from './ConflictNotice';
 import { RIYADH_TZ } from './tz';
@@ -36,7 +37,7 @@ export function ProposalBox({ lesson, onDone }: ProposalBoxProps) {
   if (!proposal) return null;
   const conflicts = conflictsOf(approve.error);
   const busy = approve.isPending || reject.isPending;
-  const when = `${lessonWhenText(new Date(proposal.proposed_starts_at), RIYADH_TZ)} ${t.schedule.riyadhTime}`;
+  const when = `${lessonWhenText(new Date(proposal.proposed_starts_at), RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
 
   return (
     <section aria-label={t.lessons.proposal.title} className="grid gap-3 rounded-md bg-act-soft px-4 py-3.5">

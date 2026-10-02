@@ -1,4 +1,4 @@
-import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView } from '@ab/shared';
+import { clockTime, isOpenLesson, lessonStatusStyle, subscriptionStatusStyle, type LessonView } from '@ab/shared';
 import { buttonVariants } from '@/components/ui/button';
 import { StatusChip } from '@/components/ui/status-chip';
 import { tzCity } from '@/components/ui/time-zone-select';
@@ -20,7 +20,8 @@ export interface TeacherLessonCardProps {
 
 /**
  * One lesson on the teacher dashboard (R-TCH-03, R-SCH-08): own time + each student's clock, the
- * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة», confirm / attendance
+ * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة» (open lessons only:
+ * never on a moved / cancelled one), confirm / attendance
  * for open lessons, and «اقترح ميعاد تاني» (or the proposal waiting for the admin). 48px controls.
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
@@ -59,7 +60,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
         <StatusChip {...style} label={t.enums.lessonStatus[lesson.status]} className="ms-auto" />
       </div>
       <div className="flex flex-wrap items-start gap-3">
-        {link ? (
+        {!isOpenLesson(lesson.status) ? null : link ? (
           <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
             {t.teacherDash.join}
           </a>

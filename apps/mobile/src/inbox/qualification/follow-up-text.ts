@@ -1,13 +1,11 @@
 import { FOLLOW_UP_STATUSES, lessonWhenText } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import type { LeadProfile } from './queries';
 
 const statuses: readonly string[] = FOLLOW_UP_STATUSES;
 const f = t.followUps;
 const NOTES = { queued: f.queued, waiting_template: f.waitingTemplate, no_slots: f.noSlots } as const;
-
-// TODO(Phase 7 locale): lessonWhenText is the Arabic WhatsApp {{2}} formatter; once lib/i18n
-// exports the boot locale, format this UI line with intlLocale(locale) instead.
 
 /**
  * What the follow-up automation will do next (R-LEAD-05), like the web's followUpText: who paused
@@ -22,7 +20,7 @@ export function followUpLines(lead: LeadProfile, total: number | undefined, tz: 
     lead.follow_up_note
       ? NOTES[lead.follow_up_note]
       : next
-        ? f.next.replace('{time}', lessonWhenText(new Date(next), tz))
+        ? f.next.replace('{time}', lessonWhenText(new Date(next), tz, locale))
         : f.none,
   ];
   const stage = lead.follow_up_stage ?? 0;

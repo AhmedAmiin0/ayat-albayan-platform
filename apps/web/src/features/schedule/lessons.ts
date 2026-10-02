@@ -1,6 +1,7 @@
 import { clockTime, joinNames, type LessonStatus, type LessonView } from '@ab/shared';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { RIYADH_TZ, zonedParts } from './tz';
 
 // Pure view logic for lesson lists (R-SCH-01, R-SCH-03). No React, unit-tested.
@@ -30,7 +31,7 @@ export function filterLessons(lessons: readonly LessonView[], f: LessonFilter): 
 
 /** «سهيلة وجود» for a group (attached و, as in the WhatsApp text), the name for one student. */
 export function studentNames(lesson: Pick<LessonView, 'students'>): string {
-  return joinNames(lesson.students.map((s) => s.name));
+  return joinNames(lesson.students.map((s) => s.name), locale);
 }
 
 export interface TeacherRow {

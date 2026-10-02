@@ -539,7 +539,8 @@
       "reject": "Reject proposal",
       "approved": "Lesson moved to the time the teacher proposed",
       "rejected": "Proposal rejected",
-      "open": "Open lesson"
+      "open": "Open lesson",
+      "change": "{from} → {to}"
     }
   },
   "teacherDash": {
@@ -997,6 +998,7 @@
     "empty": "No lessons counted this month",
     "ratesMissing": "The rate for {durations}-minute lessons isn't set for {teacher}, so this month's payouts weren't calculated.",
     "setRate": "Set the rate from the teacher's profile",
+    "durationsJoiner": " and ",
     "error": {
       "rate_missing": "The rate for a {duration} lesson isn't set for this teacher. Set it first",
       "payout_frozen": "These payouts are approved and can't be recalculated",
@@ -1269,7 +1271,7 @@
     },
     "settings": {
       "title": "Sending settings",
-      "messagingEnabled": "Turn on message sending",
+      "messagingEnabled": "Message sending",
       "messagingEnabledHint": "While it's off, messages are logged and wait in the queue, and nobody receives them.",
       "reminderMinutesBefore": "Minutes before the lesson to send the reminder",
       "reminder24hEnabled": "Reminder one day before the lesson",
@@ -1314,6 +1316,7 @@
     "retrying": "Retrying…",
     "retryQueued": "Back in the queue and will be sent again",
     "clickToChat": "Send it yourself from WhatsApp",
+    "alreadySending": "This message is going out from the platform right now. Don't send it yourself.",
     "markSentManually": "I sent it myself",
     "sentManuallyConfirm": "Did you send this message yourself from WhatsApp? We won't send it again.",
     "handedOff": "You opened WhatsApp to send it yourself. Did you send it? Until you answer, we won't send it.",
@@ -1590,6 +1593,7 @@
     "label": "Language",
     "ar": "العربية",
     "en": "English",
-    "restart": "The app will restart in the other language."
+    "restart": "The app will restart in the other language.",
+    "restartManually": "Close the app and open it again to switch the language."
   }
 }

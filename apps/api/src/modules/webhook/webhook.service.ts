@@ -14,6 +14,13 @@ export interface WebhookConfig {
   phoneNumberId: string | undefined;
 }
 
+/**
+ * ponytail: the work runs inline; after this budget Meta gets its 200 and the rest finishes in
+ * the background, so a failure past the budget is only logged (no 500, no re-send). Meta re-sends
+ * after ~20 s without an answer. Move to a pg-boss queue if a batch ever needs longer.
+ */
+export const RESPONSE_BUDGET_MS = 5_000;
+
 /** Waits for `work` at most `ms`; past that the caller moves on and `work` finishes on its own. */
 export async function within(work: Promise<unknown>, ms: number): Promise<boolean> {
   let timer: NodeJS.Timeout | undefined;
@@ -44,9 +51,12 @@ export class WebhookService {
   ) {}
 
   async handle(body: unknown): Promise<void> {
-    const batch = parseWebhook(body, { now: new Date(), phoneNumberId: this.config.phoneNumberId });
+    const now = new Date();
+    const batch = parseWebhook(body, { now, phoneNumberId: this.config.phoneNumberId });
+    // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
+    const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
-    for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m));
+    for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
     for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
   }

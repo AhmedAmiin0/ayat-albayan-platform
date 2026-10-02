@@ -2,6 +2,7 @@ import { joinNames, lessonWhenText, type ThreadLesson } from '@ab/shared';
 import { Field } from '@/components/ui/field';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 const CITIES: Record<string, string | undefined> = t.tz;
 
@@ -27,7 +28,7 @@ export function LessonPicker({ lessons, value, onChange, error }: LessonPickerPr
           <option value="">—</option>
           {lessons.map((l) => (
             <option key={l.id} value={l.id}>
-              {`${lessonWhenText(new Date(l.starts_at), l.tz)} — ${joinNames(l.student_names)}`}
+              {`${lessonWhenText(new Date(l.starts_at), l.tz, locale)} — ${joinNames(l.student_names, locale)}`}
             </option>
           ))}
         </Select>
