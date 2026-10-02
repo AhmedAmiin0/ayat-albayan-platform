@@ -1,7 +1,8 @@
 import type { Tables } from '@ab/db';
-import type { AvailabilitySlot, TimeOffCreate } from '@ab/shared';
+import { OCCUPYING_LESSON_STATUSES, type AvailabilitySlot, type TimeOffCreate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import type { BusyLesson } from '../../scheduling/conflicts';
 import { dbError } from '../http';
 
 export type AvailabilityRow = AvailabilitySlot & { id: string };
@@ -56,6 +57,19 @@ export class AvailabilityQueries {
     const { data, error } = await query.order('starts_at', { ascending: false });
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** The teacher's occupying lessons overlapping `range` (R-SCH-04): what a new booking can't hit. */
+  async listBusyLessons(teacherId: string, range: { from: Date; to: Date }): Promise<BusyLesson[]> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select('id, starts_at, ends_at')
+      .eq('teacher_id', teacherId)
+      .in('status', OCCUPYING_LESSON_STATUSES)
+      .lt('starts_at', range.to.toISOString())
+      .gt('ends_at', range.from.toISOString());
+    if (error) throw dbError(error);
+    return data.map((l) => ({ id: l.id, starts_at: new Date(l.starts_at), ends_at: new Date(l.ends_at) }));
   }
 
   async insertTimeOff(opts: Owned & { body: TimeOffCreate }): Promise<TimeOff> {

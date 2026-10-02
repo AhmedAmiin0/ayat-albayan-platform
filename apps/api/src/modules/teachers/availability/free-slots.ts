@@ -12,7 +12,7 @@ export type FreeSlotsInput = {
   availability: readonly WeeklyRow[];
   /** One-off unavailability (teacher_time_off), UTC. */
   timeOff: readonly TimeRange[];
-  /** Already-booked lessons, UTC. TODO(Phase 2): fed from `lessons` once that table exists. */
+  /** Already-booked lessons, UTC (AvailabilityQuery loads the occupying `lessons` rows). */
   busy: readonly TimeRange[];
   /** Distance between candidate starts. TODO(R-SCH-06): confirm the wizard's grid step. */
   stepMin?: number;
