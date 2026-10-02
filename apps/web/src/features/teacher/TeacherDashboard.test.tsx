@@ -10,6 +10,10 @@ import { TeacherDashboard } from './TeacherDashboard';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  Link: (await import('@/features/dashboard/link-mock')).Link,
+}));
 
 const ME: TeacherMe = {
   id: 't-abrar',
@@ -74,6 +78,8 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.myStudents }));
     const table = screen.getByRole('table', { name: t.teacherDash.myStudents });
     expect(within(table).getByRole('rowheader', { name: 'سهيلة' })).toBeTruthy();
+    // Each name opens the student's «سجل التقارير» (R-REP-05).
+    expect(within(table).getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/reports/s-1');
     expect(within(table).getByText(t.enums.studentStatus.active)).toBeTruthy();
   });
 

@@ -98,7 +98,8 @@
     "nextPage": "التالي",
     "pages": "الصفحات",
     "showing": "عرض {shown} من {total}",
-    "breadcrumbs": "مسار الصفحة"
+    "breadcrumbs": "مسار الصفحة",
+    "listJoiner": ", "
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -1275,6 +1276,8 @@
       "crmWarning": "رقم الأكاديمية لسه شغال على نظام الـCRM التاني. متشغّلش الإرسال من هنا غير بعد ما ننقل الرقم للمنصة، عشان أولياء الأمور ميوصلهمش نفس الرسالة مرتين.",
       "crmDone": "نقلنا الرقم من الـCRM",
       "crmDoneHint": "بعد ما الرقم يتنقل للمنصة (docs/09 خطوة 3)، اضغط هنا عشان التحذير يختفي.",
+      "crmMoved": "The number has moved off the CRM to the platform.",
+      "crmUndo": "Back on the CRM? Bring the warning back",
       "enableTitle": "تشغيل إرسال الرسايل",
       "enableConfirm": "كل الرسايل اللي مستنية في الطابور هتبدأ تتبعت لأولياء الأمور والعملاء على واتساب دلوقتي. اتأكد إن الرقم اتنقل من الـCRM الأول. نشغّل الإرسال؟",
       "enableYes": "أيوه، شغّل الإرسال",

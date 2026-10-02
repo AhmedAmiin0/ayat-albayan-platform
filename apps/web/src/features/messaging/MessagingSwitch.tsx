@@ -17,7 +17,7 @@ const warning =
 /**
  * The admin's messaging kill switch (settings.messaging_enabled, docs/12 §3.1). Until the owner
  * marks the number moved off the CRM (crm_cutover_done, docs/09 step 3) a warning stays on
- * screen; a gate closed on the server is named (the switch alone can't open it); turning sending
+ * screen (a rollback to the CRM brings it back); a gate closed on the server is named (the switch alone can't open it); turning sending
  * ON says how many queued messages go out at once and asks first, with cancel as the default.
  * Turning it OFF is immediate: the sender reads it before every message.
  */
@@ -48,6 +48,14 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
           </Button>
           <p className="text-2xs text-ink-3">{s.crmDoneHint}</p>
         </div>
+      )}
+      {settings.crm_cutover_done && (
+        <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-ink-3">
+          <span>{s.crmMoved}</span>
+          <Button size="sm" variant="ghost" disabled={save.isPending} onClick={() => save.mutate({ crmCutoverDone: false })}>
+            {s.crmUndo}
+          </Button>
+        </p>
       )}
       <div className="flex flex-wrap items-center gap-3">
         <span className="text-sm font-semibold">{s.messagingEnabled}</span>
