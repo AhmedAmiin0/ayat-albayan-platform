@@ -1,8 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
 import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import type { AlertsQueries } from './alerts.queries';
-import { SubscriptionAlertsService } from './alerts.service';
+import { SubscriptionAlertsService, type AlertsEnv } from './alerts.service';
 import type { PackagesService, StudentState } from './packages.service';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
@@ -30,12 +29,13 @@ function setup(states: Record<string, StudentState | Error>) {
     closeTasks: vi.fn(async () => undefined),
   };
   const settings = { all: vi.fn(async () => SETTING_DEFAULTS) };
+  const push = { notifyAdmins: vi.fn(async () => undefined) };
   const service = new SubscriptionAlertsService(
     packages as unknown as PackagesService,
     queries as unknown as AlertsQueries,
-    settings as unknown as SettingsService,
+    { settings, push } as unknown as AlertsEnv,
   );
-  return { service, packages, queries };
+  return { service, packages, queries, push };
 }
 
 describe('SubscriptionAlertsService (R-SUB-02)', () => {
@@ -67,6 +67,19 @@ describe('SubscriptionAlertsService (R-SUB-02)', () => {
       subjectIds: ['sub-1'],
       keep: ['renewal_due:sub-1', 'subscription_unpaid:sub-1'],
       now: NOW,
+    });
+  });
+
+  it('payment_due push only when the task is newly raised (R-MOB-01)', async () => {
+    const { service, queries, push } = setup({ s1: state('active', 2) });
+    await service.evaluateStudents(['s1'], { now: NOW });
+    expect(push.notifyAdmins).not.toHaveBeenCalled(); // raiseTask: already open
+    queries.raiseTask.mockResolvedValueOnce(true as never);
+    await service.evaluateStudents(['s1'], { now: NOW });
+    expect(push.notifyAdmins).toHaveBeenCalledWith('payment_due', {
+      subject: 'renewal_due:sub-1',
+      vars: { student: 'سهيلة', left: 'فاضل حلقتين' },
+      data: { subscriptionId: 'sub-1', studentId: 's1' },
     });
   });
 

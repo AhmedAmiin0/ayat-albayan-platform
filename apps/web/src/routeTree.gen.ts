@@ -17,12 +17,14 @@ import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBookRouteImport } from './routes/admin/book'
 import { Route as AdminExpensesRouteImport } from './routes/admin/expenses'
+import { Route as AdminInboxRouteImport } from './routes/admin/inbox'
 import { Route as AdminJobApplicantsRouteImport } from './routes/admin/job-applicants'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
 import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
 import { Route as AdminPayoutsRouteImport } from './routes/admin/payouts'
 import { Route as AdminPricingRouteImport } from './routes/admin/pricing'
 import { Route as AdminScheduleRouteImport } from './routes/admin/schedule'
+import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
@@ -74,6 +76,11 @@ const AdminExpensesRoute = AdminExpensesRouteImport.update({
   path: '/expenses',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminInboxRoute = AdminInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminJobApplicantsRoute = AdminJobApplicantsRouteImport.update({
   id: '/job-applicants',
   path: '/job-applicants',
@@ -102,6 +109,11 @@ const AdminPricingRoute = AdminPricingRouteImport.update({
 const AdminScheduleRoute = AdminScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminSettingsRoute = AdminSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminStudentsRoute = AdminStudentsRouteImport.update({
@@ -165,12 +177,14 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/expenses': typeof AdminExpensesRoute
+  '/admin/inbox': typeof AdminInboxRoute
   '/admin/job-applicants': typeof AdminJobApplicantsRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/schedule': typeof AdminScheduleRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
@@ -189,12 +203,14 @@ export interface FileRoutesByTo {
   '/portal': typeof PortalRoute
   '/admin/book': typeof AdminBookRoute
   '/admin/expenses': typeof AdminExpensesRoute
+  '/admin/inbox': typeof AdminInboxRoute
   '/admin/job-applicants': typeof AdminJobApplicantsRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/schedule': typeof AdminScheduleRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
@@ -216,12 +232,14 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/expenses': typeof AdminExpensesRoute
+  '/admin/inbox': typeof AdminInboxRoute
   '/admin/job-applicants': typeof AdminJobApplicantsRoute
   '/admin/leads': typeof AdminLeadsRoute
   '/admin/payments': typeof AdminPaymentsRoute
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/schedule': typeof AdminScheduleRoute
+  '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
@@ -244,12 +262,14 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/book'
     | '/admin/expenses'
+    | '/admin/inbox'
     | '/admin/job-applicants'
     | '/admin/leads'
     | '/admin/payments'
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/schedule'
+    | '/admin/settings'
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
@@ -268,12 +288,14 @@ export interface FileRouteTypes {
     | '/portal'
     | '/admin/book'
     | '/admin/expenses'
+    | '/admin/inbox'
     | '/admin/job-applicants'
     | '/admin/leads'
     | '/admin/payments'
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/schedule'
+    | '/admin/settings'
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
@@ -294,12 +316,14 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/book'
     | '/admin/expenses'
+    | '/admin/inbox'
     | '/admin/job-applicants'
     | '/admin/leads'
     | '/admin/payments'
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/schedule'
+    | '/admin/settings'
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
@@ -379,6 +403,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminExpensesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/inbox': {
+      id: '/admin/inbox'
+      path: '/inbox'
+      fullPath: '/admin/inbox'
+      preLoaderRoute: typeof AdminInboxRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/job-applicants': {
       id: '/admin/job-applicants'
       path: '/job-applicants'
@@ -419,6 +450,13 @@ declare module '@tanstack/react-router' {
       path: '/schedule'
       fullPath: '/admin/schedule'
       preLoaderRoute: typeof AdminScheduleRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/settings': {
+      id: '/admin/settings'
+      path: '/settings'
+      fullPath: '/admin/settings'
+      preLoaderRoute: typeof AdminSettingsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/students': {
@@ -539,12 +577,14 @@ const AdminTeachersRouteWithChildren = AdminTeachersRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminBookRoute: typeof AdminBookRoute
   AdminExpensesRoute: typeof AdminExpensesRoute
+  AdminInboxRoute: typeof AdminInboxRoute
   AdminJobApplicantsRoute: typeof AdminJobApplicantsRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
   AdminPaymentsRoute: typeof AdminPaymentsRoute
   AdminPayoutsRoute: typeof AdminPayoutsRoute
   AdminPricingRoute: typeof AdminPricingRoute
   AdminScheduleRoute: typeof AdminScheduleRoute
+  AdminSettingsRoute: typeof AdminSettingsRoute
   AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
@@ -554,12 +594,14 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBookRoute: AdminBookRoute,
   AdminExpensesRoute: AdminExpensesRoute,
+  AdminInboxRoute: AdminInboxRoute,
   AdminJobApplicantsRoute: AdminJobApplicantsRoute,
   AdminLeadsRoute: AdminLeadsRoute,
   AdminPaymentsRoute: AdminPaymentsRoute,
   AdminPayoutsRoute: AdminPayoutsRoute,
   AdminPricingRoute: AdminPricingRoute,
   AdminScheduleRoute: AdminScheduleRoute,
+  AdminSettingsRoute: AdminSettingsRoute,
   AdminStudentsRoute: AdminStudentsRouteWithChildren,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminTeachersRoute: AdminTeachersRouteWithChildren,

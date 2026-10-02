@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { JobApplicantsModule } from '../job-applicants/job-applicants.module';
+import { LeadProfileService } from './lead-profile.service';
 import { LeadsController } from './leads.controller';
 import { LeadsQueries } from './leads.queries';
 import { LeadsService } from './leads.service';
@@ -8,7 +9,7 @@ import { LeadsService } from './leads.service';
 @Module({
   imports: [JobApplicantsModule],
   controllers: [LeadsController],
-  providers: [LeadsService, LeadsQueries],
+  providers: [LeadsService, LeadsQueries, LeadProfileService],
   exports: [LeadsService],
 })
 export class LeadsModule {}

@@ -1,6 +1,7 @@
 import ar from '@ab/shared/i18n/ar.json';
 import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
+import { PushService } from '../../common/push/push.service';
 import { SettingsService } from '../../common/settings/settings.service';
 import { AlertsQueries } from './alerts.queries';
 import { alertPlan, openTaskKeys, type AlertPlan } from './packages.plan';
@@ -17,6 +18,15 @@ export type EvaluateOptions = { actorId?: string | null; now?: Date };
  * every money write (MoneyWrites) and the sweep job. Idempotent: the task and the message carry
  * the same dedup key (rule 8).
  */
+/** What the alerts read (the threshold) and whom they tell (R-MOB-01 payment_due); max-params. */
+@Injectable()
+export class AlertsEnv {
+  constructor(
+    readonly settings: SettingsService,
+    readonly push: PushService,
+  ) {}
+}
+
 @Injectable()
 export class SubscriptionAlertsService {
   private readonly log = new Logger(SubscriptionAlertsService.name);
@@ -24,7 +34,7 @@ export class SubscriptionAlertsService {
   constructor(
     private readonly packages: PackagesService,
     private readonly queries: AlertsQueries,
-    private readonly settings: SettingsService,
+    private readonly env: AlertsEnv,
   ) {}
 
   async evaluateLessons(lessonIds: readonly string[]): Promise<void> {
@@ -34,7 +44,7 @@ export class SubscriptionAlertsService {
   /** Recompute statuses, then raise the alert. One student's failure never stops the others. */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     if (studentIds.length === 0) return 0;
-    const { renewal_alert_remaining: threshold } = await this.settings.all();
+    const { renewal_alert_remaining: threshold } = await this.env.settings.all();
     let failed = 0;
     for (const studentId of new Set(studentIds)) {
       try {
@@ -56,8 +66,13 @@ export class SubscriptionAlertsService {
     const dedupKey = alertDedupKey(plan.alert, plan.subscriptionId);
     const label = packageProgress(plan.used, plan.total, { forms: ar.subscriptions.progress }).remainingLabel;
     const kind = ALERT_TASK_KIND[plan.alert];
-    await this.queries.raiseTask({ kind, subjectId: plan.subscriptionId, dedupKey, title: label });
+    const raised = await this.queries.raiseTask({ kind, subjectId: plan.subscriptionId, dedupKey, title: label });
     const recipient = await this.queries.recipient(input.studentId);
+    if (raised) {
+      const vars = { student: recipient?.studentName ?? '', left: label };
+      const data = { subscriptionId: plan.subscriptionId, studentId: input.studentId };
+      await this.env.push.notifyAdmins('payment_due', { subject: dedupKey, vars, data });
+    }
     if (!recipient) return;
     // TODO(R-MSG-01): {{1}}/{{2}} against the approved renewal_due template.
     const params = { '1': recipient.studentName, '2': label };

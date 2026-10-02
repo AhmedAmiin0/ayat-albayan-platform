@@ -1,0 +1,53 @@
+import { describe, expect, it, vi } from 'vitest';
+import type { SettingsService } from '../../common/settings/settings.service';
+import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
+import { LeadProfileService, mergeQualification } from './lead-profile.service';
+import { fakeDeps, lead, LEAD_ID } from './leads.fakes';
+
+const ACTOR = 'a0000000-0000-4000-8000-000000000001';
+
+function setup(row = lead()) {
+  const deps = fakeDeps();
+  deps.leads.findById.mockResolvedValue(row);
+  deps.leads.update.mockImplementation(async (_id: string, patch: object) => ({ ...row, ...patch }));
+  const settings = { all: vi.fn(async () => SETTING_DEFAULTS) };
+  const service = new LeadProfileService(deps.asLeads, settings as unknown as SettingsService, deps.asAudit);
+  return { ...deps, service };
+}
+
+describe('mergeQualification (L1, R-LEAD-03)', () => {
+  it('sent keys overwrite, null clears, the rest stays', () => {
+    const current = { student_name: 'ياسمين', age: 9, level: 'جزء عم' };
+    expect(mergeQualification(current, { age: 10, level: null, tz: 'Africa/Cairo' })).toEqual({
+      student_name: 'ياسمين',
+      age: 10,
+      tz: 'Africa/Cairo',
+    });
+    expect(mergeQualification(null, { goal: 'حفظ' })).toEqual({ goal: 'حفظ' });
+  });
+});
+
+describe('LeadProfileService (L1/L2)', () => {
+  it('L1 writes the merged qualification and audits before/after', async () => {
+    const { service, leads, audit } = setup(lead({ qualification: { age: 9 } }));
+    const out = await service.qualification({ id: LEAD_ID, patch: { goal: 'حفظ' }, actorId: ACTOR });
+    expect(leads.update).toHaveBeenCalledWith(LEAD_ID, { qualification: { age: 9, goal: 'حفظ' } });
+    expect(out.qualification).toEqual({ age: 9, goal: 'حفظ' });
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'qualification_update', before: { qualification: { age: 9 } } }));
+  });
+
+  it('L2 pause clears next_follow_up_at; resume recomputes it (24 h after the last message)', async () => {
+    const row = lead({ status: 'no_reply', last_inbound_at: '2026-10-01T10:00:00Z', follow_up_paused: true });
+    const { service, leads } = setup(row);
+    await service.followUp({ id: LEAD_ID, patch: { paused: false }, actorId: ACTOR });
+    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, { follow_up_paused: false, next_follow_up_at: '2026-10-02T10:00:00.000Z' });
+    await service.followUp({ id: LEAD_ID, patch: { paused: true }, actorId: ACTOR });
+    expect(leads.update).toHaveBeenLastCalledWith(LEAD_ID, { follow_up_paused: true, next_follow_up_at: null });
+  });
+
+  it('404 for an unknown lead', async () => {
+    const { service, leads } = setup();
+    leads.findById.mockResolvedValue(null);
+    await expect(service.followUp({ id: LEAD_ID, patch: { paused: true }, actorId: ACTOR })).rejects.toMatchObject({ status: 404 });
+  });
+});

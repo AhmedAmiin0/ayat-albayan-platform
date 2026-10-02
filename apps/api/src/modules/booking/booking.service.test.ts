@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bookingRequest, fakePlanner, IDS, NOW } from './booking.fakes';
 import type { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
+import type { MessageSender } from '../whatsapp/message.sender';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const RESULT = {
@@ -14,8 +15,9 @@ const RESULT = {
 function setup() {
   const deps = fakePlanner();
   deps.queries.createBooking.mockResolvedValue(RESULT);
-  const service = new BookingService(deps.planner, deps.queries as unknown as BookingQueries);
-  return { ...deps, service };
+  const sender = { kick: vi.fn(async () => undefined) };
+  const service = new BookingService(deps.planner, deps.queries as unknown as BookingQueries, sender as unknown as MessageSender);
+  return { ...deps, service, sender };
 }
 type Queries = ReturnType<typeof setup>['queries'];
 const sentAudit = (queries: Queries) => queries.createBooking.mock.calls[0]?.[0]?.audit;
@@ -32,6 +34,12 @@ describe('BookingService (R-SCH-06, R-SCH-04, R-NFR-03)', () => {
     const [payload, actor] = queries.createBooking.mock.calls[0] ?? [];
     expect(actor).toBe(ACTOR);
     expect(payload).toMatchObject({ student_ids: [IDS.s1, IDS.s2], rule: { package: '8' } });
+  });
+
+  it('kicks the WhatsApp sender so the confirmation goes out now (docs/12 §3.3)', async () => {
+    const { service, sender } = setup();
+    await service.book(bookingRequest(), ACTOR);
+    expect(sender.kick).toHaveBeenCalledTimes(1);
   });
 
   it('the audit row travels in the same RPC, so it is written in its transaction', async () => {

@@ -1,10 +1,11 @@
-import { LEAD_SOURCES, LEAD_STATUSES } from '@ab/shared';
+import { LEAD_SOURCES, LEAD_STATUSES, leadFollowUpSchema, leadQualificationPatchSchema } from '@ab/shared';
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQueryShape, parseOr400 } from './http';
+import { LeadProfileService } from './lead-profile.service';
 import { LeadsService } from './leads.service';
 
 const listQuery = z.object({
@@ -20,7 +21,10 @@ const statusBody = z.object({ status: z.enum(LEAD_STATUSES) });
 @Roles('admin')
 @Controller('leads')
 export class LeadsController {
-  constructor(private readonly leads: LeadsService) {}
+  constructor(
+    private readonly leads: LeadsService,
+    private readonly profile: LeadProfileService,
+  ) {}
 
   @Get()
   list(@Query() query: unknown) {
@@ -41,5 +45,19 @@ export class LeadsController {
   @Post(':id/reclassify')
   reclassify(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser) {
     return this.leads.reclassify({ id, actorId: user.id });
+  }
+
+  /** L1: merge into leads.qualification; null clears a field (R-LEAD-03). */
+  @Patch(':id/qualification')
+  qualification(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
+    const patch = parseOr400(leadQualificationPatchSchema, body);
+    return this.profile.qualification({ id, patch, actorId: user.id });
+  }
+
+  /** L2: the admin's per-lead follow-up pause (R-LEAD-05). */
+  @Patch(':id/follow-up')
+  followUp(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
+    const patch = parseOr400(leadFollowUpSchema, body);
+    return this.profile.followUp({ id, patch, actorId: user.id });
   }
 }

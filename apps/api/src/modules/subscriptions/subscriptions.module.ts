@@ -5,7 +5,7 @@ import { AdminTasksController } from './admin-tasks.controller';
 import { AdminTasksQueries } from './admin-tasks.queries';
 import { AlertsJob } from './alerts.job';
 import { AlertsQueries } from './alerts.queries';
-import { SubscriptionAlertsService } from './alerts.service';
+import { AlertsEnv, SubscriptionAlertsService } from './alerts.service';
 import { BalanceQueries } from './balance.queries';
 import { MoneyWrites } from './money-writes';
 import { PackagesService } from './packages.service';
@@ -34,6 +34,7 @@ import { UnpaidFlags } from './unpaid-flags.service';
     PackagesService,
     StudentAccess,
     SubscriptionAlertsService,
+    AlertsEnv,
     SubscriptionsQueries,
     SubscriptionCreator,
     SubscriptionsService,

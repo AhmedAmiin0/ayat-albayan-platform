@@ -41,8 +41,9 @@ export class AlertsQueries {
    * insert … on conflict (dedup_key) do nothing. `title` keeps the balance line when it was raised
    * («فاضل حلقتين»): the UI fills {left} of dashboard.task.renewal_due with it.
    */
-  async raiseTask(task: { kind: AdminTaskKind; subjectId: string; dedupKey: string; title: string }): Promise<void> {
-    const { error } = await this.db.from('admin_tasks').upsert(
+  /** true when the task is new (not already raised under its dedup key). */
+  async raiseTask(task: { kind: AdminTaskKind; subjectId: string; dedupKey: string; title: string }): Promise<boolean> {
+    const { data, error } = await this.db.from('admin_tasks').upsert(
       {
         kind: task.kind,
         subject_type: 'subscription',
@@ -51,8 +52,9 @@ export class AlertsQueries {
         title: task.title,
       },
       { onConflict: 'dedup_key', ignoreDuplicates: true },
-    );
+    ).select('id');
     if (error) throw dbError(error);
+    return (data?.length ?? 0) > 0;
   }
 
   /**

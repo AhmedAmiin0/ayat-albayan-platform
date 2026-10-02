@@ -28,6 +28,7 @@ import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
+import { WebhookModule } from './modules/webhook/webhook.module';
 import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
 
 @Module({
@@ -61,6 +62,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     WhatsappModule,
     InboxModule,
     MessagingJobsModule,
+    WebhookModule,
   ],
   controllers: [HealthController],
 })

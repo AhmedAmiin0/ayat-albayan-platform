@@ -63,8 +63,9 @@ test('queued line only for a row scheduled later', () => {
 test('error line: Meta code in Arabic, else the unknown line with the code', () => {
   const reason = (r: string) => t.messages.errorLine.replace('{reason}', r);
   expect(errorLine({ error_code: '131026' })).toBe(reason(t.messages.errors['131026']));
-  expect(errorLine({ error_code: 'expired' })).toBe(
-    reason(t.messages.errors.unknown.replace('{code}', 'expired')),
+  expect(errorLine({ error_code: 'expired' })).toBe(reason(t.messages.errors.expired));
+  expect(errorLine({ error_code: 'http_500' })).toBe(
+    reason(t.messages.errors.unknown.replace('{code}', 'http_500')),
   );
   expect(errorLine({ error_code: 'unknown' })).toBe(
     reason(t.messages.errors.unknown.replace('{code}', 'unknown')),

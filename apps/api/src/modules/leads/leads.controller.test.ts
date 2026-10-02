@@ -61,4 +61,18 @@ describe('LeadsController HTTP (R-LEAD-01, R-LEAD-04)', () => {
     expect(res.json()).toMatchObject({ id: applicant().id });
     expect(h.leads.remove).toHaveBeenCalledWith(LEAD_ID);
   });
+
+  it('L1 PATCH /leads/:id/qualification merges (null clears); bad values are 400', async () => {
+    h.leads.findById.mockResolvedValue(lead({ qualification: { age: 9, goal: 'حفظ' } }));
+    h.leads.update.mockImplementation(async (_id: string, patch: object) => ({ ...lead(), ...patch }));
+    const res = await h.call({ method: 'PATCH', url: `/leads/${LEAD_ID}/qualification`, body: { goal: null, riwaya: 'حفص' } });
+    expect([res.statusCode, res.json().qualification]).toEqual([200, { age: 9, riwaya: 'حفص' }]);
+    const bad = await h.call({ method: 'PATCH', url: `/leads/${LEAD_ID}/qualification`, body: { age: 'tween' } });
+    expect(bad.statusCode).toBe(400);
+  });
+
+  it('L2 PATCH /leads/:id/follow-up needs a boolean', async () => {
+    const res = await h.call({ method: 'PATCH', url: `/leads/${LEAD_ID}/follow-up`, body: { paused: 'yes' } });
+    expect(res.statusCode).toBe(400);
+  });
 });

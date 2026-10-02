@@ -43,7 +43,8 @@ export class ReportSubmitService {
         lateCancelHours: ctx.lateCancelHours,
       }),
     );
-    await this.followUp.submitted(row);
+    const student = lesson.lesson_students.find((s) => s.student_id === row.student_id)?.student?.name ?? '';
+    await this.followUp.submitted(row, { student, teacher: lesson.teacher?.display_name_ar ?? '' });
     return this.view(id, user);
   }
 
