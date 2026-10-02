@@ -1,4 +1,5 @@
 import type { BookingResult } from '@ab/shared';
+import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { AppText } from '@/ui/AppText';
@@ -12,14 +13,18 @@ export interface BookedPanelProps {
   teacherName: string;
   /** The family's zone, for the lesson's local time. */
   tz: string;
+  /** «رجوع للمحادثة». */
   onDone: () => void;
+  /** After a paid package: «كمّل الاشتراك» opens its subscription instead (subscriptionHref). */
+  next?: Href | null;
 }
 
 /**
  * After POST /booking 201: the lesson the API created (its own starts_at, so a replayed booking
- * shows the truth), the queued WhatsApp confirmation, and the way back to the conversation.
+ * shows the truth), the queued WhatsApp confirmation, and the way on: back to the conversation,
+ * or to the package's subscription.
  */
-export function BookedPanel({ result, teacherName, tz, onDone }: BookedPanelProps) {
+export function BookedPanel({ result, teacherName, tz, onDone, next }: BookedPanelProps) {
   const { color } = useTheme();
   const first = [...result.lessons].sort((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
   const line = {
@@ -55,7 +60,11 @@ export function BookedPanel({ result, teacherName, tz, onDone }: BookedPanelProp
           {t.booking.confirmationNote}
         </AppText>
       ) : null}
-      <Button label={t.booking.mobile.backToLead} onPress={onDone} />
+      {next ? (
+        <Button label={t.booking.mobile.toSubscription} onPress={() => router.replace(next)} />
+      ) : (
+        <Button label={t.booking.mobile.backToLead} onPress={onDone} />
+      )}
     </View>
   );
 }

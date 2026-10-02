@@ -12,6 +12,7 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { Composer } from './Composer';
 import { clockAt } from './format';
 import { MessageBubble } from './MessageBubble';
+import { SubscriptionPanel } from './subscription/SubscriptionPanel';
 import { threadMessages } from './thread-cache';
 import { useThread } from './use-thread';
 
@@ -76,6 +77,7 @@ function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
  * One WhatsApp conversation (R-MOB-02, R-MSG-05): GET /threads/:phone oldest → newest with each
  * of our rows' status word, «رسايل أقدم» to page back, pull to refresh, and the composer. Offline
  * it shows the saved thread and when it was fetched (R-MOB-03). Opened from a lead or a push.
+ * Over the messages: whether the family is subscribed, and the button to subscribe (R-SUB-01).
  */
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
@@ -88,6 +90,7 @@ export function ThreadScreen() {
         subtitle={subtitleOf(phone, query)}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
+      <SubscriptionPanel data={query.data} phone={phone} />
       {query.data ? (
         <KeyboardAvoidingView
           style={{ flex: 1, gap: 8 }}

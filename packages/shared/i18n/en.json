@@ -453,7 +453,8 @@
     "mobile": {
       "noSlots": "No free times in the next 7 days. Try another teacher.",
       "backToLead": "Back to the conversation",
-      "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice."
+      "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice.",
+      "toSubscription": "Continue to the subscription"
     }
   },
   "lessons": {
@@ -921,7 +922,10 @@
     "emptyList": "No subscriptions yet",
     "allStatuses": "All statuses",
     "country": "Pricing country",
-    "guardianCountry": "Guardian's country"
+    "guardianCountry": "Guardian's country",
+    "mobile": {
+      "offline": "The connection dropped before we got a reply, so we're not sure the subscription was saved. Try again when you're back online; we'll check first so it isn't saved twice."
+    }
   },
   "payments": {
     "title": "Payments",
@@ -1148,6 +1152,14 @@
       "lead": "New lead",
       "guardian": "Guardian",
       "teacher": "Teacher"
+    },
+    "subscription": {
+      "subscribed": "Subscribed",
+      "expired": "Subscription ended",
+      "none": "Not subscribed",
+      "renew": "Renew",
+      "subscribe": "Subscribe",
+      "due": "{amount} due"
     },
     "you": "You:",
     "failedLast": "Last message wasn't sent",
