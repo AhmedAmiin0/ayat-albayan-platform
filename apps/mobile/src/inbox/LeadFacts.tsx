@@ -9,7 +9,7 @@ import { leadAge } from './format';
 import type { Lead } from './types';
 import { AppText } from '@/ui/AppText';
 
-/** Label/value card with only what GET /leads returns. TODO(R-LEAD-02): qualification fields. */
+/** Label/value card of the lead row; its qualification and follow-up sit below (qualification/). */
 export function LeadFacts({ lead }: { lead: Lead }) {
   const { color } = useTheme();
   const valueStyle = {
