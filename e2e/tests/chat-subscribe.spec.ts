@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { resetAbrar, seedFamily, setAvailability, withSql } from '../support/schedule';
+import { fillStable } from '../support/fill';
 import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
@@ -50,7 +51,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     // «اشترك» opens the wizard with the lead and a regular package (not the trial).
     await thread.getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=.*pkg=/);
-    await admin.getByLabel(ar.leads.studentName, { exact: true }).fill(student);
+    await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();

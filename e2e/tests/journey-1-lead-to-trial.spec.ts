@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
+import { fillStable } from '../support/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../support/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../support/wa-stub';
 
@@ -60,7 +61,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     // «حجز حلقة تجريبية» opens the Phase 2 wizard with the lead (phone + name prefilled).
     await admin.getByRole('link', { name: ar.booking.trialTitle }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=/);
-    await admin.getByLabel(ar.leads.studentName, { exact: true }).fill(student);
+    await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
     await expect(admin.getByLabel(ar.guardians.name, { exact: true })).toHaveValue(guardian);
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByRole('radio', { name: /أبرار/ }).check();

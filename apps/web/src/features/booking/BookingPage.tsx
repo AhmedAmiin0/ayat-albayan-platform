@@ -96,7 +96,7 @@ interface WizardProps {
 /** The lead path, once the lead's qualification is in; without it step 1 starts from the URL. */
 function LeadBooking({ search, onOpenStudent, hint }: WizardProps & { search: BookSearch }) {
   const lead = useQuery({ ...leadByPhoneQuery(search.phone ?? ''), enabled: !!search.phone });
-  if (lead.isLoading) return <p className="text-ink-3">{t.common.loading}</p>;
+  if (lead.isPending && !!search.phone) return <p className="text-ink-3">{t.common.loading}</p>;
   const found = lead.data && lead.data.id === search.leadId ? lead.data : null;
   const initial = draftFromLead(search, found);
   return (

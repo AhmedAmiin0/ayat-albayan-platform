@@ -1416,3 +1416,34 @@ Retaken after `seed:demo` plus local scratch states (inbound messages with `wa_m
 ### Residuals
 - Device check of the mobile changes at 360–390pt in RTL and LTR: the SVG chevrons, the inline «غيّر الميعاد», the gold-soft today rule, and the per-child panel.
 - A remounted mobile subscribe screen gets a new idempotency key, so a duplicate is still possible if the admin leaves the screen after a lost reply and saves again. The web dialog behaves the same way.
+
+# Teacher mode, all-teachers calendar, Google-Forms parity (2026-10-03)
+
+## What changed
+- **All-teachers calendar** (owner: "see all the teachers data from the app / web calendar"): `GET /lessons/overview` (admin, <= 31 days), web `/admin/schedule` day and week boards with per-teacher rows, load, time off, free gaps and the «تجريبية» tag, free gap -> `/admin/book?teacherId&startsAt`; mobile admin «الجدول» tab (sticky teacher sections, free gaps, confirm / cancel / reschedule actions).
+- **Teacher mode** ("login as a teacher and see only my chats, forms, calendar, reports, history"): web `/teacher/{today,calendar,inbox,reports,payouts}` and mobile `app/teacher/*`. Migration 164 (`messages.sent_by_teacher_id`, `teacher_thread_phones`, `my_thread_phones`, `teacher_unread`, `messages_teacher_read`, `teacher_thread_reads`); `/threads*` scoped server-side by `TeacherScopes`; `GET /teachers/me/reports`.
+- **Forms parity**: lead -> student prefill, registration/qualification wording and v1 questions, duration wording, program names, required report texts (`missing_text`).
+
+## Owner decisions
+- Teachers see the chats of guardians whose children they teach (plus their own chat with the academy, read-only) and can reply from the academy number, reminder templates only; every teacher message is logged with the teacher's name («بعتها: ...», `sent_by_teacher_id`, audit).
+
+## Integration
+- All five wave-a branches were already merged into develop (fd30aec, 2b5d90b, a7949be, 5d52f7b, f91f6a2) with the UI-local stand-in types replaced by `@ab/shared`; migration 164 applied with no `gen:types` drift.
+- Final fix: `BookingPage` waits on `lead.isPending` instead of `isLoading`; e2e `fillStable` (e2e/support/fill.ts) for the wizard's first-paint remount in journeys 1 and chat-subscribe.
+- Merged worktrees removed (branches kept).
+
+## Gate (measured, `pnpm turbo lint typecheck test e2e` after `supabase db reset` (164 applied) + `gen:types` + `pnpm env:local`)
+- 27/27 turbo tasks green.
+- Unit: api 1646 passed + 1 skipped (229 files) · web 738 (158 files) · mobile 707 (148 suites) · @ab/shared 1208 (62 files) · @ab/migrate 292 · wa-stub 25.
+- e2e: 59 passed + 3 skipped by design (desktop + mobile, incl. teacher-mode, teacher-rls.sql, schedule-overview).
+- Lint: 0 errors; complexity warnings only (wa-stub 2, shared 1, migrate 10, api 3, mobile 6, web 18).
+
+## Residuals
+- **Feedback form «رأيك يهمّنا» (research-forms item 14)**: not built; needs a `lesson_feedback` table + RLS + API + guardian-portal page. Owner decision.
+- Report required-text flags (التسميع, الحفظ الجديد, المراجعة, ملاحظات المعلمة, الواجب) inferred from fill rates: owner to confirm. No visual asterisk (Label has no slot).
+- Level / memorized / goal / riwaya stay free text until the owner supplies the v1 option lists.
+- Teacher push notifications not added (push is admin-only in spec and API). Owner decision.
+- Teacher people panel lists assigned students only, while thread scope also covers guardians from lessons in the last 90 days.
+- Mobile: free gap -> booking not wired (needs a lead picker); mobile teacher multi-select filter deferred; audio/PDF attachments need expo-document-picker (new APK); no mobile propose-another-time.
+- BookingPage first-paint remount in dev StrictMode (text typed in the first ~20 ms is dropped) was worked around in e2e, not root-caused.
+- Device check at 360-390pt in RTL and LTR for the new mobile screens.
