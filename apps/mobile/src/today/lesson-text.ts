@@ -39,5 +39,5 @@ export function lessonSubtitle(lesson: LessonView): string {
 
 /** «جودى خالد، يوسف أحمد» for the compact past row. */
 export function studentNames(lesson: LessonView): string {
-  return lesson.students.map((s) => s.name).join('، ');
+  return lesson.students.map((s) => s.name).join(t.common.listJoiner);
 }

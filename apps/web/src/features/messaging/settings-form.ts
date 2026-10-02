@@ -37,7 +37,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
     payoutCountNoShow: s.payout_count_no_show,
     reminderMinutesBefore: String(s.reminder_minutes_before),
     reminder24hEnabled: s.reminder_24h_enabled,
-    followUpHours: s.follow_up_hours.join('، '),
+    followUpHours: s.follow_up_hours.join(t.common.listJoiner),
   };
 }
 

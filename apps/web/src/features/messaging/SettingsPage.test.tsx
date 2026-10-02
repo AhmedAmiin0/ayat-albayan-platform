@@ -99,4 +99,18 @@ describe('academy settings form', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { crmCutoverDone: true }));
     await waitFor(() => expect(screen.queryByText(s.crmWarning)).toBeNull());
   });
+
+  it('a rollback to the CRM turns the cut-over back off and the warning returns', async () => {
+    routeFetch(apiFetch, [
+      ['/settings', { ...SETTINGS, crm_cutover_done: true }],
+      ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
+      ['/messaging/templates', []],
+    ]);
+    renderWithClient(<SettingsPage />);
+    expect(await screen.findByText(s.crmMoved)).toBeTruthy();
+    apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: false });
+    fireEvent.click(screen.getByRole('button', { name: s.crmUndo }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { crmCutoverDone: false }));
+    expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
+  });
 });

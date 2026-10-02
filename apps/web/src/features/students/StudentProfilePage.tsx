@@ -16,7 +16,7 @@ import { StudentProfileForm } from './StudentProfileForm';
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
- * code / guardian / effective link, the edit form and the merge tool.
+ * «سجل التقارير» and «احجز» links, code / guardian / effective link, the edit form and the merge tool.
  */
 export function StudentProfilePage({ studentId }: { studentId: string }) {
   const { data: student, error, isPending } = useQuery(studentQuery(studentId));
@@ -49,13 +49,18 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <PageHead className="mb-3">
         <Cartouche>{student.name}</Cartouche>
         <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
-        <Link
-          to="/admin/book"
-          search={{ studentId: student.id }}
-          className={buttonVariants({ variant: 'secondary', className: 'ms-auto' })}
-        >
-          {t.booking.open}
-        </Link>
+        <div className="ms-auto flex flex-wrap gap-2.5">
+          <Link
+            to="/admin/students/$studentId/reports"
+            params={{ studentId: student.id }}
+            className={buttonVariants({ variant: 'secondary' })}
+          >
+            {t.reports.history}
+          </Link>
+          <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
+            {t.booking.open}
+          </Link>
+        </div>
       </PageHead>
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
