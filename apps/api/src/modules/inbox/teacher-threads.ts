@@ -3,8 +3,9 @@ import type { PeopleStudentRow } from './thread-people.mapper';
 import type { ThreadRow } from './threads.mapper';
 
 /**
- * A thread as a teacher sees it: no lead (the admin's pipeline), no «مشترك» (it is about money),
- * and their own unread count (teacher_unread), never the admin's read_at.
+ * A thread as a teacher sees it: no lead (the admin's pipeline), no family tags («مشترك»,
+ * «مش مدفوع»: they are about money), and their own unread count (teacher_unread), never the
+ * admin's read_at.
  */
 export function forTeacher(view: ThreadView, unread: ReadonlyMap<string, number>): ThreadView {
   return {
@@ -14,6 +15,8 @@ export function forTeacher(view: ThreadView, unread: ReadonlyMap<string, number>
     lead_status: null,
     lead_source: null,
     subscribed: false,
+    badge: null,
+    unpaid: false,
     unread_count: unread.get(view.phone_e164) ?? 0,
   };
 }

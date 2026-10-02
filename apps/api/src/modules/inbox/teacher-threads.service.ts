@@ -10,6 +10,7 @@ import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
 import type { ThreadPageQuery } from './threads.service';
 
 const NO_READS: ReadonlyMap<string, number> = new Map();
+const NO_ONE: ThreadPeople = { guardian: null, lead: null, students: [] };
 
 /**
  * H1/H2 in teacher mode (R-TCH-03, R-MSG-05): only the scope's threads, the teacher's own unread,
@@ -37,24 +38,26 @@ export class TeacherThreadsService {
   }
 
   /** One page, oldest → newest; 403 not_your_thread outside the scope. */
+  /** One page, oldest → newest; the first page also carries people and lessons (as the admin's). */
   async detail(q: ThreadPageQuery, scope: TeacherScope, now = new Date()): Promise<ThreadDetail> {
     assertPhone(scope, q.phone);
-    if (!q.before) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
+    const first = !q.before;
+    if (first) await this.teacher.stampRead({ teacherId: scope.teacherId, phone: q.phone, at: now });
     const row = await this.queries.thread(q.phone);
-    const [rows, people] = await Promise.all([this.queries.messages(q), this.people(row, scope)]);
+    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.people(row, scope) : NO_ONE]);
     const page = rows.slice(0, q.limit).reverse();
     const thread = row ? forTeacher(toThreadView(row, now), NO_READS) : null;
     return {
       thread,
       messages: await Promise.all(page.map((m) => this.views.view(m))),
       has_more: rows.length > q.limit,
-      lessons: thread && !q.before ? await this.queries.lessons(thread, now, scope.teacherId) : [],
+      lessons: thread && first ? await this.queries.lessons(thread, now, scope.teacherId) : [],
       people,
     };
   }
 
   private async people(row: ThreadRow | null, scope: TeacherScope): Promise<ThreadPeople> {
-    if (!row?.guardian_id) return teacherPeople({ row, students: [], mine: new Set() });
+    if (!row?.guardian_id) return NO_ONE;
     const [students, mine] = await Promise.all([
       this.teacher.guardianStudents(row.guardian_id),
       this.teacher.myStudentIds(scope.teacherId),

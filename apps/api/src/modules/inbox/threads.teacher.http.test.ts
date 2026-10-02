@@ -35,7 +35,8 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
     expect(t.teacher.unread).toHaveBeenCalledWith('tch-1', [PHONE, OWN]);
     const [item] = res.json().items;
     expect(item).toMatchObject({ unread_count: 2, lead_id: null, lead_name: null, lead_status: null, lead_source: null, subscribed: false });
-    expect(t.queries.subscribedGuardians).not.toHaveBeenCalled();
+    expect(item).toMatchObject({ badge: null, unpaid: false });
+    expect(t.queries.familyTags).not.toHaveBeenCalled();
   });
 
   it('H1 unread=true pages only the phones with my unread; none → an empty page without a query', async () => {
@@ -90,6 +91,10 @@ describe('teacher mode H1/H2: only my families, my unread, no lead, no money (R-
     expect(t.teacher.myStudentIds).toHaveBeenCalledWith('tch-1');
     expect(t.queries.people).not.toHaveBeenCalled();
     expect(t.queries.lessons).toHaveBeenCalledWith(expect.objectContaining({ phone_e164: PHONE }), expect.any(Date), 'tch-1');
+    t.teacher.guardianStudents.mockClear();
+    const older = (await t.call({ method: 'GET', url: `${URL}?before=2026-10-02T08:00:00Z`, token: 'teacher' })).json();
+    expect([older.people.students, older.lessons]).toEqual([[], []]);
+    expect(t.teacher.guardianStudents).not.toHaveBeenCalled();
   });
 
   it('H2 my own chat with the academy is readable (no guardian → no students)', async () => {
