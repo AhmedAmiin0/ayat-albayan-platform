@@ -48,6 +48,11 @@ test('status pills carry their nuqta shape', async () => {
   expect(screen.getByTestId('nuqta-struck', hidden)).toBeTruthy();
 });
 
+test('the pill row keeps its own height beside a flex: 1 list (a horizontal ScrollView grows by default)', async () => {
+  await setup();
+  expect(screen.getByLabelText('filter')).toHaveStyle({ flexGrow: 0, flexShrink: 0 });
+});
+
 test('a value setter is a radiogroup: radios with checked, not tabs', async () => {
   await render(
     <FilterPills items={items} value="lost" onChange={jest.fn()} accessibilityLabel="status" role="radiogroup" />,
