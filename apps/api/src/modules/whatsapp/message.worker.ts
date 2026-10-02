@@ -4,18 +4,21 @@ import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
 import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
-import { staleReason } from './send-stale';
+import { isAutomatic, staleReason } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
 import { WaError, type TemplateRow, type WaSent } from './whatsapp.types';
 
 /** paused = the token is broken (auth error): the sender stops this pass. */
-export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'paused' | 'skipped';
+/** held = a job-made reminder / follow-up / renewal while automatic messages are OFF (auto_off). */
+export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'held' | 'paused' | 'skipped';
 
 export interface SendJob {
   row: DueMessage;
   /** The approved registry row of row.template_key; null for a session text. */
   template: TemplateRow | null;
   now: Date;
+  /** settings.auto_messages_enabled, read once per pass by the sender. */
+  autoOn: boolean;
 }
 
 /**
@@ -32,7 +35,8 @@ const UNRECORDED = new WaError('the last try was never recorded; check WhatsApp 
 });
 
 /**
- * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness, claim, send, outcome.
+ * One queued row, end to end (docs/12 §3.3): expiry, send-time staleness, the automatic-messages
+ * hold (auto_off), claim, send, outcome.
  * Never throws. Idempotency: a row is claimed by compare-and-set before Meta is called, so two
  * workers never send it twice; producers dedupe the row itself by dedup_key.
  */
@@ -57,7 +61,7 @@ export class MessageWorker {
     }
   }
 
-  private async run({ row, template, now }: SendJob): Promise<SendOutcome> {
+  private async run({ row, template, now, autoOn }: SendJob): Promise<SendOutcome> {
     const lessonStartsAt = row.lesson?.starts_at ?? null;
     if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
       await this.queries.expire(row.id, { code: 'expired', text: 'expired before it was sent' });
@@ -69,6 +73,11 @@ export class MessageWorker {
       return 'stale';
     }
     if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now });
+    // Not left queued: it would go out at a wrong time once the switch is back ON. No push.
+    if (!autoOn && isAutomatic(row)) {
+      await this.queries.expire(row.id, { code: 'auto_off', text: 'automatic messages are off in settings' });
+      return 'held';
+    }
     if (!readyToSend(row, template)) return 'skipped';
     const attempts = await this.queries.claim({ id: row.id, attempts: row.attempts, now });
     if (attempts === null) return 'skipped';

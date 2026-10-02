@@ -7,14 +7,16 @@ import { Toast } from '@/components/ui/toast';
 import { TemplateHealth } from '@/features/templates/TemplateHealth';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from './api';
+import { AutoMessagesSwitch } from './AutoMessagesSwitch';
 import { MessagingSwitch } from './MessagingSwitch';
 import { SettingsForm } from './SettingsForm';
 
 const h2 = 'mb-3 font-display text-h4 font-bold';
 
 /**
- * /admin/settings: the messaging kill switch (with the CRM warning), WhatsApp template health
- * (R-MSG-01) and every academy setting (late cancel, horizon, alert thresholds, payouts, reminders).
+ * /admin/settings: the messaging kill switch (with the CRM warning) and the automatic-messages
+ * switch next to it, WhatsApp template health (R-MSG-01) and every academy setting (late cancel,
+ * horizon, alert thresholds, payouts, reminders).
  */
 export function SettingsPage() {
   const settings = useQuery(settingsQuery);
@@ -34,7 +36,10 @@ export function SettingsPage() {
             <h2 id={ids.sending} className={h2}>
               {t.templates.settings.title}
             </h2>
-            <MessagingSwitch settings={settings.data} />
+            <div className="grid gap-4">
+              <MessagingSwitch settings={settings.data} />
+              <AutoMessagesSwitch settings={settings.data} />
+            </div>
           </section>
         )}
         <section aria-labelledby={ids.templates}>

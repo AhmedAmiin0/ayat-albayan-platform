@@ -1,4 +1,5 @@
 import { FOLLOW_UP_STATUSES, followUpCycle, followUpKeyCycle, isLessonTimed, type LeadStatus, type LessonStatus } from '@ab/shared';
+import { REMINDER_KEYS } from '../reminders/reminders.queries';
 
 // Send-time check of a queued row (docs/12 §3.3): rows wait in the queue while the send gate is
 // closed (until cut-over, after a kill-switch OFF), so what was right to queue may be wrong to send.
@@ -45,4 +46,17 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
   if (!FOLLOW_UP.includes(lead.status)) return `lead ${lead.status}`;
   const cycle = followUpKeyCycle(dedup_key);
   return cycle !== null && cycle !== followUpCycle(lead) ? 'lead wrote again' : null;
+}
+
+/** What the jobs queue on their own: reminders, follow-ups and renewal reminders (migration 162). */
+const AUTOMATIC: ReadonlySet<string> = new Set([...REMINDER_KEYS, 'follow_up_slots', 'renewal_due']);
+
+/**
+ * A job-made row of an automatic kind, held (failed 'auto_off') while settings.auto_messages_enabled
+ * is OFF. created_by tells them apart: the jobs leave it null; an admin's inbox send of the same
+ * template carries the admin (ThreadSendService) and goes. Booking confirmations and report_ready
+ * are never automatic here.
+ */
+export function isAutomatic(row: { template_key: string | null; created_by: string | null }): boolean {
+  return row.created_by === null && AUTOMATIC.has(row.template_key ?? '');
 }

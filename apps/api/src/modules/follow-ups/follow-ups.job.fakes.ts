@@ -18,6 +18,8 @@ export interface JobSetup {
   prior?: StageRow | null;
   /** What the insert reports (0 = the dedup key was taken). */
   inserted?: number;
+  /** settings.auto_messages_enabled (default here: ON, the behaviour before migration 162). */
+  auto?: boolean;
 }
 
 /** FollowUpsJob over in-memory query doubles (test-only). */
@@ -41,7 +43,7 @@ export function setup(opts: JobSetup = {}) {
     advance: vi.fn(async (a: AdvanceInput) => advanced.push(a) > 0),
   };
   const slots = { freeStarts: vi.fn(async () => opts.free ?? FREE) };
-  const settings = { all: async () => SETTING_DEFAULTS };
+  const settings = { all: async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: opts.auto ?? true }) };
   const job = new FollowUpsJob(
     queries as unknown as FollowUpsQueries,
     slots as unknown as FollowUpSlots,

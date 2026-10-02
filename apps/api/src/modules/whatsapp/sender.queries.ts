@@ -18,6 +18,8 @@ export interface DueMessage {
   body: string | null;
   reply_to_wa_id: string | null;
   dedup_key: string | null;
+  /** The admin who wrote it from the inbox; null for rows the jobs queued (isAutomatic). */
+  created_by: string | null;
   attempts: number;
   expires_at: string | null;
   /** SENDING = a previous try was claimed and never resolved (send-plan). */
@@ -28,7 +30,7 @@ export interface DueMessage {
 }
 
 const DUE_COLUMNS =
-  'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, attempts, expires_at, error_code, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
+  'id, phone_e164, lead_id, lesson_id, template_key, template_params, body, reply_to_wa_id, dedup_key, created_by, attempts, expires_at, error_code, lesson:lessons(starts_at, status), guardian:guardians(name), lead:leads(name, status, follow_up_paused, last_inbound_at, created_at)';
 
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
 @Injectable()
@@ -103,10 +105,11 @@ export class SenderQueries {
   }
 
   /**
-   * Never sent, no push: past its use (`expired`: a reminder after the lesson started) or no longer
-   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in error_text).
+   * Never sent, no push: past its use (`expired`: a reminder after the lesson started), no longer
+   * wanted (`stale`: its lesson was cancelled, the lead paused or replied; the reason in error_text)
+   * or held (`auto_off`: automatic messages are OFF; the admin's retry re-queues it).
    */
-  async expire(id: string, why: { code: 'expired' | 'stale'; text: string }): Promise<void> {
+  async expire(id: string, why: { code: 'expired' | 'stale' | 'auto_off'; text: string }): Promise<void> {
     const { error } = await this.db
       .from('messages')
       .update({ status: 'failed', error_code: why.code, error_text: why.text, next_attempt_at: null })

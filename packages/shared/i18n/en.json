@@ -1298,7 +1298,13 @@
         "few": "{n} messages waiting in the queue",
         "other": "{n} messages waiting in the queue"
       },
-      "queuedGoOut": "They'll all go out as soon as sending is turned on."
+      "queuedGoOut": "They'll all go out as soon as sending is turned on.",
+      "autoMessages": "Automatic messages (lesson reminders, follow-ups, renewals)",
+      "autoMessagesHint": "Keep this off until the old Apps Script reminders are stopped and the imported lesson times are confirmed, so nobody gets the same reminder twice. Your chat messages, booking confirmations and lesson reports still go out.",
+      "autoOn": "Automatic messages are on",
+      "autoOff": "Automatic messages are off",
+      "autoEnable": "Turn on automatic messages",
+      "autoDisable": "Turn off automatic messages"
     },
     "error": {
       "not_submittable": "This template was already sent or is already approved",
@@ -1349,6 +1355,7 @@
       "sending": "Sending now",
       "handed_off": "Waiting for you to confirm you sent it yourself",
       "stale": "No longer needed: the lesson was cancelled or changed, or the lead replied or asked to stop messages",
+      "auto_off": "Not sent because automatic messages are off — turn them on in Settings, then press “Try again”",
       "uncertain": "We're not sure it was sent — check WhatsApp before sending it again",
       "template_not_approved": "The template isn't approved by Meta yet",
       "network": "We couldn't reach WhatsApp",

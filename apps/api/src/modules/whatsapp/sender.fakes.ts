@@ -14,6 +14,7 @@ export function dueMessage(over: Partial<DueMessage> = {}): DueMessage {
     body: null,
     reply_to_wa_id: null,
     dedup_key: 'booking_confirmation:l1:g1',
+    created_by: null,
     attempts: 0,
     expires_at: null,
     error_code: null,

@@ -55,6 +55,14 @@ describe('SendGate — env switch AND WhatsApp configured AND the admin kill swi
     await expect(gate().state()).resolves.toEqual({ open: true, reason: null });
   });
 
+  it('automaticOn is the admin’s settings.auto_messages_enabled (OFF by default), independent of the gate', async () => {
+    vi.stubEnv('MESSAGING_ENABLED', '');
+    settings.all.mockResolvedValueOnce(SETTING_DEFAULTS);
+    await expect(gate().automaticOn()).resolves.toBe(false);
+    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, auto_messages_enabled: true });
+    await expect(gate().automaticOn()).resolves.toBe(true);
+  });
+
   it('view adds the queue that goes out the moment the gate opens', async () => {
     vi.stubEnv('MESSAGING_ENABLED', '');
     const { db } = fakeDb({ messages: [{ count: 7 }] });

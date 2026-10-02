@@ -74,6 +74,16 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     await expect(q.expire('m3', { code: 'expired', text: 'x' })).rejects.toThrow('boom');
   });
 
+  it('held while automatic messages are OFF: failed auto_off, only if still queued', async () => {
+    const { db, calls } = fakeDb({ [M]: [{}] });
+    await new SenderQueries(db).expire('m4', { code: 'auto_off', text: 'automatic messages are off in settings' });
+    expect(calls.find((c) => c.method === 'update')?.args[0]).toMatchObject({ status: 'failed', error_code: 'auto_off' });
+    expect(eqs(calls)).toEqual([['id', 'm4'], ['status', 'queued']]);
+    const read = fakeDb({ [M]: [{ data: [] }] });
+    await new SenderQueries(read.db).due({ keys: [], now: NOW, limit: 1 });
+    expect(String(read.calls.find((c) => c.method === 'select')?.args[0])).toContain('created_by'); // isAutomatic reads it
+  });
+
   it('approvedTemplates reads the approved registry rows', async () => {
     const { db, argsOf } = fakeDb({ message_templates: [{ data: [] }] });
     await new SenderQueries(db).approvedTemplates();

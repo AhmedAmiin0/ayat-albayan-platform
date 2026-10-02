@@ -19,7 +19,8 @@ function setup(opts: Opts = {}) {
     queue: vi.fn(async (rows: readonly QueuedMessage[]) => queued.push(...rows)),
     pushedSubjects: vi.fn(async () => new Set(opts.pushed ?? [])),
   };
-  const settings = { all: async () => ({ ...SETTING_DEFAULTS, ...opts.settings }) };
+  // Automatic messages ON unless a test says otherwise (the default is OFF, migration 162).
+  const settings = { all: async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: true, ...opts.settings }) };
   const push = { notifyAdmins: vi.fn(async () => undefined) };
   const job = new RemindersJob(
     queries as unknown as RemindersQueries,
@@ -52,6 +53,18 @@ describe('RemindersJob.runOnce (R-MSG-02)', () => {
     const on = setup({ settings: { reminder_24h_enabled: true }, approved: ['lesson_reminder_24h'] });
     await on.job.runOnce(now);
     expect(on.queued.map((r) => r.template_key)).toEqual(['lesson_reminder_24h', 'lesson_reminder_24h']);
+  });
+
+  it('automatic messages OFF: nothing queued, no template lookup; cleanup and the confirmation push still run', async () => {
+    const opts = { settings: { auto_messages_enabled: false, reminder_24h_enabled: true }, approved: ['lesson_reminder_24h'] };
+    const { job, queries, queued, push } = setup(opts);
+    const summary = await job.runOnce(at('2026-10-04T13:10:00Z'));
+    expect(queries.queue).not.toHaveBeenCalled();
+    expect(queries.approved).not.toHaveBeenCalled();
+    expect(queued).toEqual([]);
+    expect(queries.dropCancelled).toHaveBeenCalledWith(at('2026-10-04T13:10:00Z'));
+    expect(push.notifyAdmins).toHaveBeenCalledWith('lesson_needs_confirmation', confirmationPush(sampleLesson()));
+    expect(summary).toMatchObject({ lessons: 1, queued: 0, pushed: 1 });
   });
 
   it('drops queued reminders of cancelled lessons every tick', async () => {

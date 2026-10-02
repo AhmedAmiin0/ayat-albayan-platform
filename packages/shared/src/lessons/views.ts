@@ -72,6 +72,8 @@ export interface AcademySettings {
   reminder_24h_enabled: boolean;
   /** The admin's kill switch; the sender also needs env MESSAGING_ENABLED=true. */
   messaging_enabled: boolean;
+  /** Reminders, follow-ups and renewal_due from the jobs (migration 162); admin sends ignore it. */
+  auto_messages_enabled: boolean;
   /** The academy number moved off the old CRM (docs/09 cut-over): the CRM warning goes away. */
   crm_cutover_done: boolean;
 }

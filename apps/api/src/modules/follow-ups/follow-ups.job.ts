@@ -39,6 +39,7 @@ interface Tick {
  * - follow_up_slots not approved → nothing queued, the stage stays (note waiting_template): the
  *   follow-up goes out on the first tick after approval.
  * - fewer than two free slots → nothing queued, retried next tick (note no_slots).
+ * - settings.auto_messages_enabled OFF → the tick does nothing: no row queued, no stage advanced.
  * TODO(owner/integrator): «else an admin task» needs an admin_task_kind value (migration + types).
  */
 @Injectable()
@@ -76,7 +77,8 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
       ...{ notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 },
     };
     try {
-      const { follow_up_hours: hours } = await this.settings.all();
+      const { follow_up_hours: hours, auto_messages_enabled: auto } = await this.settings.all();
+      if (!auto) return summary; // automatic messages OFF (docs/09 cut-over): nothing queued or advanced
       const leads = await this.queries.candidates(hours.length);
       summary.leads = leads.length;
       const approved = leads.length > 0 && (await this.queries.approved());

@@ -95,6 +95,7 @@ describe('followUpStep (the stage moves on only when the follow-up left)', () =>
     ['failed for good: the admin was told', row('failed', '131026'), 'advance'],
     ['expired before it went out', row('failed', 'expired'), 'requeue'],
     ['dropped as stale', row('failed', 'stale'), 'requeue'],
+    ['held while automatic messages were OFF', row('failed', 'auto_off'), 'requeue'],
   ] as const)('%s → %s', (_name, input, want) => {
     expect(followUpStep(input)).toBe(want);
   });
