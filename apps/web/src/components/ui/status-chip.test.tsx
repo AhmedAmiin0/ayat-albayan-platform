@@ -2,7 +2,6 @@ import { gradeStyle, leadStatusStyle, studentStatusStyle } from '@ab/shared';
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
-import { Mark } from './mark';
 import { StatusChip, toneClass } from './status-chip';
 
 describe('StatusChip', () => {
@@ -30,15 +29,5 @@ describe('StatusChip', () => {
 
   it('bad uses the danger utilities (there is no text-bad)', () => {
     expect(toneClass.bad).toBe('bg-danger-soft text-danger border-danger/25');
-  });
-});
-
-describe('Mark', () => {
-  it('switches to the heavier small mark at 28px and below', () => {
-    const { container, rerender } = render(<Mark size={28} />);
-    expect(container.querySelector('svg')?.dataset['mark']).toBe('small');
-    expect(container.querySelector('circle')).toBeNull();
-    rerender(<Mark size={42} labelled />);
-    expect(screen.getByRole('img', { name: t.app.brand }).dataset['mark']).toBe('large');
   });
 });

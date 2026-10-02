@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
 import { palette, type Palette, type ThemeName } from './theme.js';
 
-// docs/07 §3 measured pairs, re-checked on the RN hex tokens in both themes (WCAG 2.x, sRGB).
+// Every text/background pair the apps use, on the brand palette, in both themes (WCAG 2.x, sRGB).
+// docs/07 §3 prints these numbers; regenerate that table from here, never by hand.
 const channel = (v: number) => {
   const c = v / 255;
   return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
@@ -18,33 +19,52 @@ function contrast(a: string, b: string): number {
 }
 
 type Key = keyof Palette;
-/** [foreground, background]: text pairs need 4.5:1 (AA). */
-const TEXT: [Key, Key][] = [
-  ['ink', 'margin'],
-  ['ink2', 'page'],
-  ['ink3', 'sunk'],
-  ['ink3', 'margin'],
-  ['lapis', 'page'],
-  ['onLapis', 'lapis'],
-  ['onBad', 'badSolid'],
-  ['act', 'actSoft'],
+const SURFACES: Key[] = ['margin', 'page', 'raised', 'sunk'];
+/** Every token that is ever text: body ink, links/ghost buttons (lapis), and the three status tones. */
+const TEXT: Key[] = ['ink', 'ink2', 'ink3', 'lapis', 'ok', 'act', 'bad'];
+const WASHES: Key[] = ['goldWash', 'lapisWash', 'okSoft', 'actSoft', 'badSoft', 'neutralSoft'];
+
+/** [foreground, background] pairs beyond TEXT × SURFACES: each needs 4.5:1 (AA). */
+const PAIRS: [Key, Key][] = [
+  // a tone on its own soft background (chips, accent rows, alerts)
+  ['lapis', 'lapisWash'],
   ['ok', 'okSoft'],
+  ['act', 'actSoft'],
   ['bad', 'badSoft'],
-  ['bad', 'page'],
-  ['ink2', 'neutralSoft'],
+  // body text on every wash (tinted rows, the error toast, the selected fihris tile)
+  ...WASHES.flatMap((w): [Key, Key][] => [['ink', w], ['ink2', w]]),
+  ['ink3', 'neutralSoft'],
+  // text on fills: primary + hover, destructive-solid, the inverse toast
+  ['onLapis', 'lapis'],
+  ['onLapis', 'lapisHover'],
+  ['onBad', 'badSolid'],
   ['onInverse', 'inverse'],
+  // the login binding: wordmark and programme line on every leather tone
   ['goldOnCover', 'leather'],
+  ['goldOnCover', 'leatherDeep'],
+  ['goldOnCover', 'leatherLift'],
+  ['coverInk', 'leather'],
+  ['coverInk', 'leatherLift'],
+  ['coverInk', 'cover'],
+];
+
+/** Non-text 3:1 (WCAG 1.4.11): the only edge of a control, and the toast's status glyph. */
+const EDGES: [Key, Key][] = [
+  ['ruleInput', 'raised'],
+  ['ruleInput', 'page'],
+  ['inverseGold', 'inverse'],
 ];
 
 describe.each(['light', 'dark'] as ThemeName[])('%s theme contrast (docs/07 §3)', (name) => {
   const c = palette[name];
+  const cross = TEXT.flatMap((t) => SURFACES.map((s): [Key, Key] => [t, s]));
 
-  it.each(TEXT)('%s on %s ≥ 4.5', (fg, bg) => {
+  it.each([...cross, ...PAIRS])('%s on %s ≥ 4.5', (fg, bg) => {
     expect(contrast(c[fg], c[bg])).toBeGreaterThanOrEqual(4.5);
   });
 
-  it('ruleInput on raised ≥ 3 (the only edge of inputs and secondary buttons)', () => {
-    expect(contrast(c.ruleInput, c.raised)).toBeGreaterThanOrEqual(3);
+  it.each(EDGES)('%s against %s ≥ 3', (fg, bg) => {
+    expect(contrast(c[fg], c[bg])).toBeGreaterThanOrEqual(3);
   });
 });
 

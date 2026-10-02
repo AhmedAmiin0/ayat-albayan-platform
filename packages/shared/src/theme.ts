@@ -1,41 +1,43 @@
-// Ink & Gold tokens as sRGB hex (docs/07 §12): the ONE source for React Native, read from the
-// rendered web page. Gold is ornament only, lapis is the only action colour, saffron (`act`)
-// only means «دورك». theme.contrast.test.ts checks the docs/07 §3 pairs in both themes.
-// TODO(docs/07 §12): generate the web raw-token CSS (apps/web/src/styles/tokens.css) from this.
+// Ink & Gold tokens on the academy brand palette (docs/07 §3, §12): the ONE source of colour values.
+// apps/web/src/styles/tokens.css carries the same hex (tokens.test.ts there diffs the two).
+// Gold decorates, GREEN acts: `lapis*` is the action token's historical name and now holds the
+// brand green; saffron (`act`) only means «دورك». theme.contrast.test.ts checks every text pair.
+// Brand source: the Apps Script «Brand» library palette T (green #0C2A1E/#14503A/#1E6B4C,
+// gold #C2A24A, paper #FDF8F0, ink #14261E, warn #B4842A, bad #9C3B2E).
 export type ThemeName = 'light' | 'dark';
 
 const light = {
-  margin: '#f2ead9', page: '#fbf8ef', raised: '#fefcf8', sunk: '#f5f0e3',
-  ink: '#161f30', ink2: '#444d5e', ink3: '#5b6472',
-  rule: '#dbd3c4', ruleStrong: '#c1b6a2', ruleInput: '#908572',
-  gold: '#c59542', goldSoft: '#dbc090', goldWash: '#f6e6c7',
-  lapis: '#264b99', lapisHover: '#183a83', lapisWash: '#dde8fd', onLapis: '#fbf8f1',
-  ok: '#13684b', okSoft: '#d3f0e2',
-  act: '#925019', actSoft: '#fde8cb',
-  bad: '#ac312c', badSoft: '#ffe4e0', badSolid: '#b6322d', onBad: '#fbf8f1',
-  neutralSoft: '#e2e6ee',
-  inverse: '#192437', onInverse: '#f6f1e7', inverseGold: '#deb870',
-  cover: '#142139', leather: '#4c2819', leatherDeep: '#371a0f', leatherLift: '#633d2c',
-  goldOnCover: '#dfb76c', coverInk: '#ede7d9',
-  scrim: 'rgba(19, 27, 41, 0.45)',
+  margin: '#f5eddd', page: '#fdf8f0', raised: '#fffdf9', sunk: '#f7f0e1',
+  ink: '#14261e', ink2: '#3c4b44', ink3: '#55625b',
+  rule: '#e5d9bf', ruleStrong: '#cdbb94', ruleInput: '#958666',
+  gold: '#c2a24a', goldSoft: '#d6bc80', goldWash: '#e7dab4',
+  lapis: '#14503a', lapisHover: '#0c2a1e', lapisWash: '#e1ede5', onLapis: '#fdf8f0',
+  ok: '#1e6b4c', okSoft: '#dcebdf',
+  act: '#8c5212', actSoft: '#f6e7c6',
+  bad: '#9c3b2e', badSoft: '#f8e1db', badSolid: '#9c3b2e', onBad: '#fdf8f0',
+  neutralSoft: '#e9e7dd',
+  inverse: '#0c2a1e', onInverse: '#fdf8f0', inverseGold: '#d6bc80',
+  cover: '#0c2a1e', leather: '#14402f', leatherDeep: '#0b281c', leatherLift: '#1f553f',
+  goldOnCover: '#d6bc80', coverInk: '#f3ead6',
+  scrim: 'rgba(12, 38, 28, 0.45)',
 };
 
 export type Palette = Record<keyof typeof light, string>;
 
 const dark: Palette = {
-  margin: '#090e18', page: '#111723', raised: '#171e2b', sunk: '#0d131d',
-  ink: '#ede7db', ink2: '#c3bdb0', ink3: '#a39e91',
-  rule: '#262e3c', ruleStrong: '#384355', ruleInput: '#656f81',
-  gold: '#cca459', goldSoft: '#72592c', goldWash: '#2f210c',
-  lapis: '#7facf0', lapisHover: '#95c0fe', lapisWash: '#1b2942', onLapis: '#080f1c',
-  ok: '#7ecaa9', okSoft: '#112d21',
-  act: '#f3ac75', actSoft: '#392311',
-  bad: '#f58c81', badSoft: '#3b1c19', badSolid: '#d5584f', onBad: '#080f1c',
-  neutralSoft: '#212730',
-  inverse: '#e3decf', onInverse: '#131b29', inverseGold: '#996516',
-  cover: '#19263f', leather: '#3d2014', leatherDeep: '#29120b', leatherLift: '#523122',
-  goldOnCover: '#dfb76c', coverInk: '#ede7d9',
-  scrim: 'rgba(1, 2, 5, 0.62)',
+  margin: '#07110c', page: '#0c1913', raised: '#112019', sunk: '#09150f',
+  ink: '#efe8d8', ink2: '#c7bfac', ink3: '#a49d8b',
+  rule: '#1f3229', ruleStrong: '#2f463a', ruleInput: '#5f766a',
+  gold: '#cfb062', goldSoft: '#6c5a2b', goldWash: '#29230f',
+  lapis: '#78c49c', lapisHover: '#92d4b0', lapisWash: '#122a1f', onLapis: '#06120c',
+  ok: '#8fcf95', okSoft: '#112a17',
+  act: '#f2aa6b', actSoft: '#36220f',
+  bad: '#f0927f', badSoft: '#3a1914', badSolid: '#d0604d', onBad: '#06120c',
+  neutralSoft: '#1d2621',
+  inverse: '#ece4d2', onInverse: '#0c1913', inverseGold: '#8a6a1c',
+  cover: '#0e2419', leather: '#123826', leatherDeep: '#0a2117', leatherLift: '#1b4a35',
+  goldOnCover: '#d6bc80', coverInk: '#f3ead6',
+  scrim: 'rgba(1, 5, 3, 0.62)',
 };
 
 export const palette: Record<ThemeName, Palette> = { light, dark };
@@ -49,9 +51,9 @@ export interface Elevation {
 // RN 0.86 (New Architecture) takes CSS boxShadow strings: the main layer of each web elevation.
 export const elevation: Record<ThemeName, Elevation> = {
   light: {
-    page: '0 18px 40px -18px rgba(22, 31, 48, 0.28)',
-    pop: '0 30px 60px -20px rgba(5, 11, 24, 0.55)',
-    toast: '0 12px 28px -12px rgba(5, 11, 24, 0.5)',
+    page: '0 18px 40px -18px rgba(20, 38, 30, 0.28)',
+    pop: '0 30px 60px -20px rgba(4, 16, 11, 0.55)',
+    toast: '0 12px 28px -12px rgba(4, 16, 11, 0.5)',
   },
   dark: {
     page: '0 18px 40px -16px rgba(0, 0, 0, 0.65)',
