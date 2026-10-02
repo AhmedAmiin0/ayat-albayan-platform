@@ -3,8 +3,10 @@
 import { randomUUID } from 'node:crypto';
 import type { IncomingMessage, ServerResponse } from 'node:http';
 import { controlRoutes } from './control.ts';
-import { bodyParamCount, defaultTemplates, ERR, templateJson, type Json, type StubTemplate } from './meta.ts';
+import { bodyParamCount, defaultTemplates, ERR, templateJson, type Json } from './meta.ts';
 import { DAY_MS, digits, readJson, type Reply, type Route, type StubOptions, type StubState } from './state.ts';
+import { createTemplate, editTemplate } from './templates.ts';
+import { uploadRoutes } from './uploads.ts';
 
 export type { SentMessage, StubOptions } from './state.ts';
 
@@ -44,28 +46,6 @@ function postMessage(s: StubState, body: Json): Reply {
   return [200, { messaging_product: 'whatsapp', contacts: [{ input: to, wa_id: to }], messages: [{ id }] }];
 }
 
-function createTemplate(s: StubState, body: Json): Reply {
-  const name = String(body['name'] ?? '');
-  const language = String(body['language'] ?? 'ar');
-  if (!/^[a-z0-9_]{1,512}$/.test(name)) return [400, ERR.badName(name)];
-  if (s.templates.some((t) => t.name === name && t.language === language)) return [400, ERR.duplicate(name)];
-  const category = String(body['category'] ?? 'UTILITY').toUpperCase();
-  const components = Array.isArray(body['components']) ? (body['components'] as Json[]) : [];
-  const t: StubTemplate = { id: randomUUID(), name, language, category, status: 'PENDING', quality: 'UNKNOWN', components };
-  s.templates.push(t);
-  return [200, { id: t.id, status: t.status, category }];
-}
-
-/** POST /{template id}: Meta's edit of a rejected / paused template; it goes back to review. */
-function editTemplate(s: StubState, id: string, body: Json): Reply {
-  const t = s.templates.find((x) => x.id === id);
-  if (!t) return [400, ERR.noObject(id)];
-  if (Array.isArray(body['components'])) t.components = body['components'] as Json[];
-  if (typeof body['category'] === 'string') t.category = body['category'].toUpperCase();
-  t.status = 'PENDING';
-  return [200, { success: true }];
-}
-
 const V = String.raw`\/v\d+\.\d+`;
 const graphRoutes: Route[] = [
   ['POST', new RegExp(`^${V}/[^/]+/messages$`), async (req, _m, s) => postMessage(s, await readJson(req))],
@@ -86,9 +66,9 @@ const graphRoutes: Route[] = [
 ];
 
 function authorized(req: IncomingMessage, s: StubState): boolean {
-  const auth = req.headers.authorization ?? '';
-  if (!auth.startsWith('Bearer ') || auth.length <= 7) return false;
-  return !s.opts.accessToken || auth === `Bearer ${s.opts.accessToken}`;
+  // Graph takes the token as Bearer or OAuth (the scheme the resumable upload documents).
+  const token = /^(?:Bearer|OAuth) (\S+)$/.exec(req.headers.authorization ?? '')?.[1];
+  return token !== undefined && (!s.opts.accessToken || token === s.opts.accessToken);
 }
 
 /** Builds the request handler plus the inspectable state (sent log, templates, media). */
@@ -101,8 +81,10 @@ export function createStub(opts: StubOptions = {}) {
     media: new Map(),
     lastInbound: new Map(),
     failNext: new Map(),
+    uploads: new Map(),
+    handles: new Set(),
   };
-  const routes = [...controlRoutes, ...graphRoutes];
+  const routes = [...controlRoutes, ...uploadRoutes, ...graphRoutes];
 
   async function handle(req: IncomingMessage, res: ServerResponse): Promise<void> {
     const path = new URL(req.url ?? '/', 'http://stub').pathname;

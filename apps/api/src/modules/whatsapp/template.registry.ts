@@ -8,6 +8,7 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
+import { SAMPLE_REPORT, templateProblem } from './template-review';
 import { findMeta, ourStatus, syncPatch } from './template-sync';
 import { toTemplateView, waHttpError } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
@@ -78,16 +79,21 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   }
 
   /**
-   * POST /messaging/templates/:key/submit. A document header needs a sample upload handle we
-   * can't produce: the admin submits report_ready in Business Manager, then runs the check.
+   * POST /messaging/templates/:key/submit. A body Meta would reject is 409 invalid_template before
+   * any call. A document header (report_ready) first uploads the sample PDF for Meta's reviewer:
+   * that needs WA_APP_ID (409 needs_app_id without it).
    */
   async submit(key: string, actorId: string): Promise<TemplateView> {
     const row = await this.queries.get(key);
     if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
     if (!SUBMITTABLE.has(row.status)) throw waHttpError('not_submittable', 409, { status: row.status });
-    if (row.header_format === 'document') throw waHttpError('needs_manual_submit', 409);
+    const problem = templateProblem(row);
+    if (problem) throw waHttpError('invalid_template', 409, { reason: problem });
     this.requireConfigured();
-    const res = await this.fromMeta(() => this.client.submitTemplate(row));
+    const document = row.header_format === 'document';
+    if (document && !this.client.canUploadSamples()) throw waHttpError('needs_app_id', 409);
+    const headerHandle = document ? await this.fromMeta(() => this.client.uploadSample(SAMPLE_REPORT)) : undefined;
+    const res = await this.fromMeta(() => this.client.submitTemplate(row, { headerHandle }));
     const status = ourStatus(res.status);
     const meta_id = res.metaId || row.meta_id;
     const updated = await this.queries.update(key, {

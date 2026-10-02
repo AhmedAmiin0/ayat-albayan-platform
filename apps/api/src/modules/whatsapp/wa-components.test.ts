@@ -94,13 +94,13 @@ describe('Graph message bodies (docs/12 §3.2)', () => {
 });
 
 describe('submitPayload — a registry row as Meta creates it (docs/12 §3.4)', () => {
-  it('BODY with the param names as examples, FOOTER, quick-reply BUTTONS, upper-case category', () => {
+  it('BODY with a realistic sample per {{n}}, FOOTER, quick-reply BUTTONS, upper-case category', () => {
     expect(submitPayload(REMINDER_24H)).toEqual({
       name: 'lesson_reminder_24h',
       language: 'ar',
       category: 'UTILITY',
       components: [
-        { type: 'BODY', text: REMINDER_24H.body_ar, example: { body_text: [['student_names', 'lesson_time']] } },
+        { type: 'BODY', text: REMINDER_24H.body_ar, example: { body_text: [['أحمد وسارة', 'الأحد 4 أكتوبر 17:00']] } },
         { type: 'FOOTER', text: 'أكاديمية آيات البيان' },
         { type: 'BUTTONS', buttons: [{ type: 'QUICK_REPLY', text: 'تمام، هنحضر' }, { type: 'QUICK_REPLY', text: 'محتاجين نغيّر الميعاد' }] },
       ],
@@ -113,5 +113,15 @@ describe('submitPayload — a registry row as Meta creates it (docs/12 §3.4)', 
       { type: 'BODY', text: 'نص ثابت' },
       { type: 'BUTTONS', buttons: [{ type: 'URL', text: 'ادخل', url: 'https://meet.google.com/{{1}}', example: ['https://meet.google.com/sample'] }] },
     ]);
+  });
+
+  it('a document header comes first with the uploaded sample’s handle; without a handle it never builds', () => {
+    expect(submitPayload(REPORT_READY, '4::h1')['components']).toEqual([
+      { type: 'HEADER', format: 'DOCUMENT', example: { header_handle: ['4::h1'] } },
+      { type: 'BODY', text: REPORT_READY.body_ar, example: { body_text: [['أحمد', 'الأحد 4 أكتوبر 17:00']] } },
+      { type: 'FOOTER', text: 'أكاديمية آيات البيان' },
+    ]);
+    expect(() => submitPayload(REPORT_READY)).toThrow(WaError);
+    expect(submitPayload(REMINDER_24H, '4::h1')['components']).not.toContainEqual(expect.objectContaining({ type: 'HEADER' }));
   });
 });

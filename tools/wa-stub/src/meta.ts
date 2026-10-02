@@ -88,4 +88,6 @@ export const ERR = {
   badName: (name: string) => metaError(100, 'Invalid parameter', `invalid template name ${name}`),
   noMedia: (id: string) => metaError(100, 'Invalid parameter', `media ${id} not found`),
   noObject: (id: string) => metaError(100, 'Unsupported post request', `Object with ID '${id}' does not exist`),
+  /** Template components and resumable uploads: Meta's code 100 with what was wrong. */
+  invalid: (details: string) => metaError(100, 'Invalid parameter', details),
 };

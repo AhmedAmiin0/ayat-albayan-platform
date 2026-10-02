@@ -42,3 +42,7 @@ export function toMetaTemplate(t: z.infer<typeof metaTemplateSchema>): MetaTempl
 export const submitSchema = z.object({ id: z.string().optional(), status: z.string().optional() });
 
 export const mediaSchema = z.object({ url: z.string().min(1), mime_type: z.string().min(1) });
+
+/** Resumable Upload API: the session (`upload:…`, used verbatim as the next path), then the handle. */
+export const uploadSessionSchema = z.object({ id: z.string().regex(/^upload:[^/\s]+$/) });
+export const uploadHandleSchema = z.object({ h: z.string().min(1) });

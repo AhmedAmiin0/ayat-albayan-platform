@@ -1310,7 +1310,9 @@
       "not_submittable": "This template was already sent or is already approved",
       "not_configured": "WhatsApp details aren't set up on the server",
       "meta_error": "Meta rejected the request: {message}",
-      "needs_manual_submit": "This template includes a PDF file, so it has to be sent to Meta from Business Manager. After you send it, press “Check template status”."
+      "needs_manual_submit": "This template includes a PDF file, so it has to be sent to Meta from Business Manager. After you send it, press “Check template status”.",
+      "needs_app_id": "This template includes a PDF file. To send it to Meta, the Meta app ID (WA_APP_ID) has to be set on the server first.",
+      "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value."
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",

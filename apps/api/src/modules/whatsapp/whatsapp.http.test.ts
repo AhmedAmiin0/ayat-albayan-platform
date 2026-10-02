@@ -2,7 +2,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { toMetaTemplate } from './meta-shapes';
 import { messageRow } from './sender.fakes';
 import { ADMIN, whatsappApp } from './test-app';
-import { RECORDED, REPORT_READY, templateRow } from './whatsapp.fakes';
+import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
+import { RECORDED, templateRow } from './whatsapp.fakes';
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const ID = 'b0000000-0000-4000-8000-000000000009';
@@ -54,15 +55,17 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
     expect([off.statusCode, off.json().code]).toEqual([503, 'not_configured']);
   });
 
-  it('T3 submits only on the admin’s request, audited; a document template is 409 needs_manual_submit', async () => {
-    t.templates.get.mockResolvedValue(templateRow({ key: 'renewal_due', meta_name: 'renewal_due', status: 'not_submitted', buttons: [] }));
+  it('T3 submits only on the admin’s request, audited; a document template without WA_APP_ID is 409 needs_app_id', async () => {
+    t.templates.get.mockResolvedValue(RENEWAL_DUE_SEED);
     t.client.submitTemplate.mockResolvedValue({ metaId: 'meta-9', status: 'PENDING' });
     const res = await t.call({ method: 'POST', url: '/messaging/templates/renewal_due/submit' });
     expect([res.statusCode, res.json().status]).toEqual([200, 'pending']);
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: ADMIN.id, action: 'template_submitted' }));
-    t.templates.get.mockResolvedValue(REPORT_READY);
+    t.templates.get.mockResolvedValue(REPORT_READY_SEED);
+    t.client.canUploadSamples.mockReturnValue(false);
     const doc = await t.call({ method: 'POST', url: '/messaging/templates/report_ready/submit' });
-    expect([doc.statusCode, doc.json().code]).toEqual([409, 'needs_manual_submit']);
+    expect([doc.statusCode, doc.json().code]).toEqual([409, 'needs_app_id']);
+    expect(t.client.uploadSample).not.toHaveBeenCalled();
   });
 
   it('M1 retry: a failed row goes back to the queue, the sender is kicked, audited', async () => {

@@ -33,6 +33,10 @@ export interface StubState {
   lastInbound: Map<string, number>;
   /** digits → the Meta error the next send to that number gets. */
   failNext: Map<string, Json>;
+  /** Open resumable-upload sessions by id (without `upload:`): the `sig` and what was announced. */
+  uploads: Map<string, { sig: string; length: number; type: string }>;
+  /** Handles of finished uploads: the only header_handle values template creation accepts. */
+  handles: Set<string>;
 }
 
 export type Reply = [number, unknown] | { status: number; mime: string; bytes: Buffer };
@@ -41,8 +45,13 @@ export type Route = [string, RegExp, (req: IncomingMessage, m: RegExpExecArray, 
 export const digits = (phone: unknown) => String(phone ?? '').replace(/\D/g, '');
 export const DAY_MS = 24 * 60 * 60 * 1000;
 
-export async function readJson(req: IncomingMessage): Promise<Json> {
+export async function readBytes(req: IncomingMessage): Promise<Buffer> {
   const chunks: Buffer[] = [];
   for await (const chunk of req) chunks.push(chunk as Buffer);
-  return chunks.length ? (JSON.parse(Buffer.concat(chunks).toString('utf8')) as Json) : {};
+  return Buffer.concat(chunks);
+}
+
+export async function readJson(req: IncomingMessage): Promise<Json> {
+  const bytes = await readBytes(req);
+  return bytes.length ? (JSON.parse(bytes.toString('utf8')) as Json) : {};
 }

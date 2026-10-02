@@ -3,14 +3,15 @@ import type { AuditService } from '../../common/audit/audit.service';
 import { toMetaTemplate } from './meta-shapes';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
-import { RECORDED, REPORT_READY, templateRow } from './whatsapp.fakes';
+import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
+import { RECORDED, templateRow } from './whatsapp.fakes';
 import { WaError, type WhatsappClient } from './whatsapp.types';
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn() };
-const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn() };
+const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
-const RENEWAL = templateRow({ key: 'renewal_due', meta_name: 'renewal_due', status: 'not_submitted', buttons: [] });
+const RENEWAL = RENEWAL_DUE_SEED;
 const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));
 
 const registry = () =>
@@ -48,7 +49,8 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
 
   it('submit: creates on Meta, stores pending + meta id + submitted_at, audits it', async () => {
     const view = await registry().submit('renewal_due', 'admin-1');
-    expect(client.submitTemplate).toHaveBeenCalledWith(RENEWAL);
+    expect(client.submitTemplate).toHaveBeenCalledWith(RENEWAL, { headerHandle: undefined });
+    expect(client.uploadSample).not.toHaveBeenCalled();
     expect(queries.update).toHaveBeenCalledWith('renewal_due', expect.objectContaining({ status: 'pending', meta_id: 'meta-9', last_error: null }));
     expect(view.status).toBe('pending');
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({
@@ -57,13 +59,17 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
     }));
   });
 
-  it('submit guards, in order: 404, 409 not_submittable, 409 needs_manual_submit (document), 503, 502', async () => {
+  it('submit guards, in order: 404, 409 not_submittable, 409 invalid_template, 503, 409 needs_app_id (document), 502', async () => {
     queries.get.mockResolvedValueOnce(null);
     expect((await status(registry().submit('nope', 'a')))[0]).toBe(404);
     queries.get.mockResolvedValueOnce(templateRow());
     expect(await status(registry().submit('booking_confirmation', 'a'))).toEqual([409, { code: 'not_submittable', message: 'not_submittable', status: 'approved' }]);
-    queries.get.mockResolvedValueOnce(REPORT_READY);
-    expect(await status(registry().submit('report_ready', 'a'))).toEqual([409, { code: 'needs_manual_submit', message: 'needs_manual_submit' }]);
+    queries.get.mockResolvedValueOnce({ ...RENEWAL, body_ar: '{{1}}: {{2}}' });
+    expect((await status(registry().submit('renewal_due', 'a')))[1]).toMatchObject({ code: 'invalid_template' });
+    queries.get.mockResolvedValueOnce(REPORT_READY_SEED);
+    client.canUploadSamples.mockReturnValueOnce(false);
+    expect(await status(registry().submit('report_ready', 'a'))).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id' }]);
+    expect(client.uploadSample).not.toHaveBeenCalled();
     client.configured.mockReturnValueOnce(false);
     expect((await status(registry().submit('renewal_due', 'a')))[0]).toBe(503);
     client.submitTemplate.mockRejectedValueOnce(new WaError('dup', { code: 100, status: 400, details: 'already exists' }));

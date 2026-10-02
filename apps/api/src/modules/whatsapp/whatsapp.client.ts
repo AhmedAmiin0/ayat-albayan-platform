@@ -1,11 +1,20 @@
 import type { z } from 'zod';
 import type { WhatsappEnv } from '../../env';
 import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './graph';
-import { mediaSchema, sentSchema, submitSchema, templatesPageSchema, toMetaTemplate } from './meta-shapes';
+import {
+  mediaSchema,
+  sentSchema,
+  submitSchema,
+  templatesPageSchema,
+  toMetaTemplate,
+  uploadHandleSchema,
+  uploadSessionSchema,
+} from './meta-shapes';
 import { documentMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './wa-components';
 import {
   WaError,
   type MetaTemplate,
+  type SampleFile,
   type TemplateRow,
   type TemplateSend,
   type WaSent,
@@ -70,15 +79,34 @@ export class HttpWhatsappClient implements WhatsappClient {
    * Creates the template (status PENDING). A rejected one Meta already knows is edited in place
    * (POST /{template id}): creating it again would be a duplicate name.
    */
-  async submitTemplate(template: TemplateRow): Promise<{ metaId: string; status: string }> {
+  async submitTemplate(template: TemplateRow, opts: { headerHandle?: string } = {}): Promise<{ metaId: string; status: string }> {
     const c = this.connection();
-    const payload = submitPayload(template);
+    const payload = submitPayload(template, opts.headerHandle);
     const req: GraphRequest =
       template.status === 'rejected' && template.meta_id
         ? { path: template.meta_id, method: 'POST', body: { category: payload['category'], components: payload['components'] } }
         : { path: `${c.env.wabaId}/message_templates`, method: 'POST', body: payload };
     const res = this.parsed(submitSchema, await graphJson(c, req));
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
+  }
+
+  canUploadSamples(): boolean {
+    return Boolean(this.conn?.env.appId);
+  }
+
+  /**
+   * Resumable Upload API: a session on the app (bearer, like every Graph call), then all the bytes
+   * at offset 0 to the session id as given (`upload:…?sig=…`, never re-encoded) with `OAuth`.
+   */
+  async uploadSample(file: SampleFile): Promise<string> {
+    const c = this.connection();
+    if (!c.env.appId) throw new WaError('WA_APP_ID is not set', { code: null, status: 0 });
+    const q = new URLSearchParams({ file_name: file.name, file_length: String(file.bytes.byteLength), file_type: file.mime });
+    const start = await graphJson(c, { path: `${encodeURIComponent(c.env.appId)}/uploads?${q}`, method: 'POST' });
+    const session = this.parsed(uploadSessionSchema, start);
+    const headers = { authorization: `OAuth ${c.env.accessToken}`, file_offset: '0' };
+    const done = await graphJson(c, { path: session.id, method: 'POST', raw: file.bytes, headers });
+    return this.parsed(uploadHandleSchema, done).h;
   }
 
   /** Metadata (GET /{media id}), then the bytes from Meta's short-lived URL with the bearer. */

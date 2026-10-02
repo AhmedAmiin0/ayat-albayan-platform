@@ -17,6 +17,10 @@ export interface GraphRequest {
   path: string;
   method?: 'GET' | 'POST';
   body?: unknown;
+  /** Raw bytes instead of a JSON body (the resumable upload). */
+  raw?: Uint8Array<ArrayBuffer>;
+  /** Override or add headers (the upload's `authorization: OAuth …` and `file_offset`). */
+  headers?: Record<string, string>;
 }
 
 const metaErrorSchema = z.object({
@@ -78,8 +82,9 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
       headers: {
         authorization: `Bearer ${conn.env.accessToken}`,
         ...(hasBody ? { 'content-type': 'application/json' } : {}),
+        ...req.headers,
       },
-      body: hasBody ? JSON.stringify(req.body) : undefined,
+      body: req.raw ?? (hasBody ? JSON.stringify(req.body) : undefined),
       signal: AbortSignal.timeout(conn.timeoutMs),
     });
   } catch (e) {

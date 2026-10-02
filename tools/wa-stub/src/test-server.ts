@@ -51,6 +51,20 @@ export function post(url: string, body: unknown, headers: Record<string, string>
   });
 }
 
+/** Step 1 of a resumable upload: the session id (`upload:…?sig=…`) or the raw response. */
+export function startUpload(url: string, query: Record<string, string>, headers: Record<string, string> = AUTH) {
+  return fetch(`${url}/v21.0/APP/uploads?${new URLSearchParams(query)}`, { method: 'POST', headers });
+}
+
+/** Both steps for `bytes` as a PDF: Meta's handle for example.header_handle. */
+export async function uploadPdf(url: string, bytes: Uint8Array<ArrayBuffer>): Promise<string> {
+  const query = { file_name: 'sample.pdf', file_length: String(bytes.length), file_type: 'application/pdf' };
+  const { id } = (await (await startUpload(url, query)).json()) as { id: string };
+  const headers = { authorization: 'OAuth test-token', file_offset: '0' };
+  const res = await fetch(`${url}/v21.0/${id}`, { method: 'POST', headers, body: bytes });
+  return ((await res.json()) as { h: string }).h;
+}
+
 /** A template send with `n` body parameters. */
 export function templateBody(name: string, n: number, to = '966598917071') {
   const parameters = Array.from({ length: n }, (_, i) => ({ type: 'text', text: `p${i + 1}` }));

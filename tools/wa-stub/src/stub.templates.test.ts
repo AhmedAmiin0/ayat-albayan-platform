@@ -1,10 +1,12 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { AUTH, closeAll, post, startStub, templateBody } from './test-server.ts';
+import { AUTH, closeAll, post, startStub, templateBody, uploadPdf } from './test-server.ts';
 
 afterEach(closeAll);
 
 type TemplateList = { data: { name: string; status: string; id: string; quality_score: { score: string } }[] };
 const TPL = '/v21.0/WABA/message_templates';
+const BODY = { type: 'BODY', text: 'ده تقرير {{1}} يوم {{2}}، ربنا يبارك فيه', example: { body_text: [['أحمد', 'الأحد']] } };
+const code = async (res: Response) => [res.status, ((await res.json()) as { error: { code: number } }).error.code];
 
 describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
   it('lists the 8 approved templates with id, status, category and quality', async () => {
@@ -31,16 +33,40 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
 
   it('a submitted template is PENDING (not sendable) until the stub approves it', async () => {
     const { url } = await startStub();
+    const h = await uploadPdf(url, new Uint8Array(Buffer.from('%PDF-1.4\n%%EOF\n')));
     const created = await post(`${url}${TPL}`, {
       name: 'report_ready',
       language: 'ar',
       category: 'UTILITY',
-      components: [{ type: 'HEADER', format: 'DOCUMENT' }, { type: 'BODY', text: 'تقرير {{1}} يوم {{2}}' }],
+      components: [{ type: 'HEADER', format: 'DOCUMENT', example: { header_handle: [h] } }, BODY],
     });
     expect(await created.json()).toMatchObject({ status: 'PENDING', category: 'UTILITY' });
     expect((await post(`${url}/v21.0/PHONE/messages`, templateBody('report_ready', 2))).status).toBe(404);
     await post(`${url}/__stub/templates/report_ready`, { status: 'APPROVED', quality: 'GREEN' });
     expect((await post(`${url}/v21.0/PHONE/messages`, templateBody('report_ready', 2))).status).toBe(200);
+  });
+
+  it('a DOCUMENT header needs example.header_handle from an upload; code 100 otherwise', async () => {
+    const { url, stub } = await startStub();
+    const create = (header: object) =>
+      post(`${url}${TPL}`, { name: 'report_ready', language: 'ar', components: [{ type: 'HEADER', format: 'DOCUMENT', ...header }, BODY] });
+    expect(await code(await create({}))).toEqual([400, 100]);
+    expect(await code(await create({ example: { header_handle: ['4::made-up'] } }))).toEqual([400, 100]);
+    expect(stub.state.templates.some((t) => t.name === 'report_ready')).toBe(false);
+    const h = await uploadPdf(url, new Uint8Array(Buffer.from('%PDF-1.4\n%%EOF\n')));
+    expect((await create({ example: { header_handle: [h] } })).status).toBe(200);
+  });
+
+  it('a body variable needs an example and may not open or close the body (create and edit)', async () => {
+    const { url, stub } = await startStub();
+    const create = (body: object) => post(`${url}${TPL}`, { name: 'renewal_due', language: 'ar', components: [body] });
+    expect(await code(await create({ ...BODY, example: undefined }))).toEqual([400, 100]);
+    expect(await code(await create({ ...BODY, example: { body_text: [['أحمد']] } }))).toEqual([400, 100]);
+    expect(await code(await create({ type: 'BODY', text: '{{1}} باقتك خلصت', example: { body_text: [['أحمد']] } }))).toEqual([400, 100]);
+    expect(await code(await create({ type: 'BODY', text: 'باقة {{1}}', example: { body_text: [['أحمد']] } }))).toEqual([400, 100]);
+    expect((await create({ type: 'BODY', text: 'نص ثابت من غير متغيرات' })).status).toBe(200);
+    const id = stub.state.templates.find((t) => t.name === 'renewal_due')?.id ?? '';
+    expect(await code(await post(`${url}/v21.0/${id}`, { components: [{ type: 'BODY', text: 'باقة {{1}}' }] }))).toEqual([400, 100]);
   });
 
   it('rejects a duplicate name and a bad name', async () => {
@@ -54,7 +80,7 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
     const { url, stub } = await startStub();
     await post(`${url}/__stub/templates/booking_confirmation`, { status: 'REJECTED' });
     const id = stub.state.templates.find((t) => t.name === 'booking_confirmation')?.id ?? '';
-    const components = [{ type: 'BODY', text: 'تم حجز حلقة {{1}} — {{2}}' }];
+    const components = [BODY];
     const res = await post(`${url}/v21.0/${id}`, { category: 'utility', components });
     expect(await res.json()).toEqual({ success: true });
     expect(stub.state.templates.find((t) => t.id === id)).toMatchObject({ status: 'PENDING', category: 'UTILITY', components });
