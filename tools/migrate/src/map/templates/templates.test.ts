@@ -51,7 +51,7 @@ describe('mapTemplates', () => {
       body_ar: 'حلقة {{1}} — {{2}}',
       footer_ar: 'footer',
       meta_id: '123',
-      buttons: JSON.stringify([{ type: 'url', url: url.url, text: url.text }]),
+      buttons: [{ type: 'url', url: url.url, text: url.text }],
     });
   });
 
@@ -61,8 +61,8 @@ describe('mapTemplates', () => {
       key: 'brand_new',
       status: 'pending',
       category: 'marketing',
-      params: JSON.stringify(['var_1', 'var_2', 'var_3']),
-      buttons: '[]',
+      params: ['var_1', 'var_2', 'var_3'],
+      buttons: [],
     });
   });
 

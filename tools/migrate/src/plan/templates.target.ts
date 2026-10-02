@@ -15,16 +15,6 @@ interface TemplateRow {
   row: Record<string, unknown>;
 }
 
-/** jsonb columns travel as JSON text in the record; compare them as values. */
-const value = (v: unknown): unknown => {
-  if (typeof v !== 'string' || !/^[[{]/.test(v)) return v;
-  try {
-    return JSON.parse(v);
-  } catch {
-    return v;
-  }
-};
-
 /** Pure: mutates `existing` (found → update) and returns the synced fields that would change. */
 export function templateChanges(o: {
   fresh: readonly Desired[];
@@ -38,7 +28,7 @@ export function templateChanges(o: {
     if (!hit) continue;
     o.existing.set(keyId(d.key), { targetId: null, hash: 'in target, not imported yet' });
     for (const field of SYNCED) {
-      const [from, to] = [hit.row[field] ?? null, value(c[field] ?? null)];
+      const [from, to] = [hit.row[field] ?? null, c[field] ?? null];
       if (!sameValue(from, to))
         out.push({ entity: d.key.entity, key: d.key.key, ref: d.ref, field, from, to });
     }

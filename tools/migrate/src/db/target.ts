@@ -124,7 +124,7 @@ export function createTargetDb(config: TargetConfig): TargetDb {
     async startRun(o) {
       const rows = await run<{ id: string }>(sql, {
         text: 'insert into public.import_runs (target, sources, git_sha) values ($1, $2::jsonb, $3) returning id',
-        params: [config.name, JSON.stringify(o.sources), o.gitSha],
+        params: [config.name, o.sources, o.gitSha],
       });
       const id = rows[0]?.id;
       if (!id) throw new Error('import_runs insert returned no id');
@@ -133,7 +133,7 @@ export function createTargetDb(config: TargetConfig): TargetDb {
     async finishRun(o) {
       await run(sql, {
         text: `update public.import_runs set status = $2, counts = $3::jsonb, error = $4, finished_at = now() where id = $1`,
-        params: [o.runId, o.ok ? 'succeeded' : 'failed', JSON.stringify(o.counts), o.error ?? null],
+        params: [o.runId, o.ok ? 'succeeded' : 'failed', { ...o.counts }, o.error ?? null],
       });
     },
     transaction: (fn) => sql.begin((tx) => fn(txOf(tx))) as Promise<Awaited<ReturnType<typeof fn>>>,

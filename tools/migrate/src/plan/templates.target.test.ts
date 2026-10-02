@@ -14,7 +14,7 @@ function template(name: string, body: string): Desired {
     meta_name: name,
     language: 'ar',
     body_ar: body,
-    buttons: JSON.stringify([{ type: 'QUICK_REPLY', text: 'تمام' }]),
+    buttons: [{ type: 'QUICK_REPLY', text: 'تمام' }],
     status: 'approved',
     footer_ar: null,
     meta_id: '42',
