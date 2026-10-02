@@ -69,6 +69,15 @@ export const CHECKS: Check[] = [
     expect: 'zero',
   },
   {
+    // JSON text bound to a jsonb parameter lands as a jsonb string (staging 2026-10-02, db/sql.ts).
+    name: 'imported jsonb stored as a string',
+    sql: count(`(select qualification v from public.leads union all
+          select snapshot from public.lesson_report_versions union all
+          select price_source from public.subscriptions union all
+          select source_ref from public.import_items) j where jsonb_typeof(j.v) = 'string'`),
+    expect: 'zero',
+  },
+  {
     name: 'submitted reports without a PDF path',
     sql: count(`public.lesson_reports where status = 'submitted' and pdf_path is null`),
     expect: 'info',
