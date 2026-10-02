@@ -90,7 +90,7 @@ Dedup keys (rule 8; `insert … on conflict (dedup_key) do nothing`):
 - Quick-reply payloads: `params.payloads[i]`, else `quickReplyPayload(button.intent, lesson_id ?? lead_id ?? id)`.
 
 ### 3.4 Template registry (B1)
-- `POST /messaging/templates/health` (and once at boot when configured): `getTemplates()`, then per row match `meta_name + language`:
+- `POST /messaging/templates/health` (and once at boot when configured, **best-effort**: log and continue, never fail boot or block requests; in e2e the stub may not be listening yet): `getTemplates()`, then per row match `meta_name + language`:
 
   | Meta status | ours |
   |---|---|
@@ -177,4 +177,4 @@ Journey #1 (docs/03 §5) runs against the e2e stub (`:4110`, started by `playwri
 - R-MSG-01: `report_ready` / `renewal_due` / `follow_up_slots` / `lesson_reminder_24h` wording for the owner to approve before submitting; `follow_up_slots` is filed as marketing.
 - «stop» from a guardian: also stop utility reminders? Now only follow-ups stop.
 - Quiet hours for follow-ups (no night sends)? Not enforced.
-- Phase 6: CRM messages carry Meta names (`lesson_reminder_v2`); map them to registry keys by `meta_name` when importing.
+- Phase 6: CRM messages carry Meta names (`lesson_reminder_v2`); map them to registry keys by `meta_name` when importing. `messages_content_check` rejects an **outbound** row with no `template_key`, `body` or `media_path`: give imported outbound media rows a `media_path` or a `body`.
