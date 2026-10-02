@@ -16,6 +16,7 @@ import { ReportHistoryQueries } from './report-history.queries';
 import { ReportLessonQueries } from './report-lesson.queries';
 import { ReportPdfQueue } from './report-pdf.queue';
 import { ReportsQueries } from './reports.queries';
+import { TeacherReportsQueries } from './teacher-reports.queries';
 import { ADMIN, GUARDIAN, lessonRow, OTHER_TEACHER, reportRow, TEACHER, TEACHER_ID } from './reports.fakes';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, guardian: GUARDIAN };
@@ -39,6 +40,7 @@ function mocks() {
     files: { add: vi.fn(), get: vi.fn(), remove: vi.fn(), pdfName: vi.fn() },
     storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), upload: vi.fn() },
     teachers: { idByProfile: vi.fn() },
+    mine: { page: vi.fn(), students: vi.fn() },
     settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
     events: { changed: vi.fn(), onChanged: vi.fn() },
     pdf: { enqueue: vi.fn() },
@@ -54,6 +56,7 @@ export async function reportsApp() {
     .overrideProvider(ReportsQueries).useValue(m.reports)
     .overrideProvider(ReportLessonQueries).useValue(m.lessons)
     .overrideProvider(ReportHistoryQueries).useValue(m.history)
+    .overrideProvider(TeacherReportsQueries).useValue(m.mine)
     .overrideProvider(ReportAttachmentsQueries).useValue(m.files)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(TeachersQueries).useValue(m.teachers)
@@ -81,6 +84,8 @@ export async function reportsApp() {
     m.history.lessons.mockResolvedValue([]);
     m.history.sequence.mockResolvedValue(new Map());
     m.history.pending.mockResolvedValue([]);
+    m.mine.page.mockResolvedValue({ rows: [], total: 0 });
+    m.mine.students.mockResolvedValue([]);
   };
   return { ...m, app, call, reset };
 }
