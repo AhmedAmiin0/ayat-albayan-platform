@@ -135,3 +135,23 @@ These supersede §2 and §5 where they differ.
   - `GET /lesson-proposals` (admin) → `LessonView[]` with a pending proposal. `POST /lesson-proposals/:id/approve` `{ override? }` = a one-lesson reschedule (409 `conflict` without a reason). `POST /lesson-proposals/:id/reject`. Both 409 `proposal_decided` once answered.
   - `GET /settings`, `PATCH /settings` `{ lateCancelHours: 1..168 | null, bookingHorizonWeeks: 1..12 }` (admin, audited).
 - **LessonView** gains `conflicts: Conflict[]` (stored generation clashes) and `pending_proposal: { id, proposed_starts_at, note, created_at } | null`.
+
+## 9. All-teachers calendar and teacher mode (owner requests 2026-10-02, migration 164)
+
+**LessonView** gains `trial: boolean` (its rule's `package = 'trial'`; a one-off move keeps `rule_id`, so the tag survives). **MessageView** gains `sent_by_teacher_name: string | null` (null = the academy or a job).
+
+| # | Route | Guard | Input | 2xx | Errors |
+|---|---|---|---|---|---|
+| 15 | `GET /lessons/overview?from&to&teacherId?` | admin | instants (≤ 31 days), uuid | `ScheduleOverview` | 400 `range_too_large` |
+| 16 | `GET /threads?page&pageSize&search&unread` | admin, teacher (scope) | as H1 | `Page<ThreadView>` | 404 `teacher_not_linked` |
+| 17 | `GET /threads/:phone?before&limit` | admin, teacher (scope) | as H2 | `ThreadDetail` | 403 `not_your_thread` |
+| 18 | `POST /threads/:phone/text`, `/template` | admin, teacher (scope) | as H3/H4 | 201 `MessageView` | 403 `not_your_thread`, `own_thread_read_only`, `template_not_allowed`, `not_your_lesson`; 409 `session_closed` |
+| 19 | `GET /messaging/templates` | admin, teacher | — | `TemplateView[]` (teacher: approved `TEACHER_TEMPLATE_KEYS`, no document header) | — |
+| 20 | `GET /messages/gate` | admin, teacher | — | `SendGateView` | — |
+| 21 | `GET /teachers/me/reports?page&pageSize` | teacher | page | `Page<TeacherReportView>`, newest `submitted_at` first | 404 `teacher_not_linked` |
+
+- **15:** five parallel reads (teachers, weekly rows, time off overlapping the window, `TeachersQueries.loads`, the window's lessons). Teachers = active ones plus any inactive one with a lesson in the window, by Arabic name; each with `students_count` (trial | active), `windows` (weekly rows expanded in the teacher's tz, merged, clipped), `time_off` and `free` = windows − time off − occupying lessons, gaps ≥ 30 min (`teacherSpans`). `teacherId` narrows every read (a per-teacher agenda). Lessons are one flat list by `starts_at`, every status.
+- **Teacher scope (16–18):** `teacher_thread_phones(teacher)` = guardians of students assigned to them, guardians of students on their lessons from 90 days ago on, and their own phone. A teacher's list shows only those phones, `unread_count` from `teacher_unread` (inbound after their last open, or the last 24 h if never opened), lead fields null and `subscribed` false. Opening a thread stamps `teacher_thread_reads` only: never `messages.read_at` (the admin's unread) and no Meta read receipt. `people` = the guardian and only their own students (`TeacherMeQueries.students`) with `subscription: null`; `lessons` = their own upcoming lessons.
+- **Teacher sends (18):** from the academy number, in their families' threads only; their own chat is read-only. Templates: `lesson_reminder`, `_meet`, `_plain`, `_24h` only; a `lessonId` must be their lesson. The 24 h window rule is unchanged. Dedup key `teacher:{clientRequestId}` (the admin keeps `admin:`); the row gets `created_by` = their profile and `sent_by_teacher_id`; the audit `after` adds `{ teacher_id, teacher_name }`.
+- **Reused as is:** `/teachers/me`, `/teachers/me/lessons`, `/teachers/me/pending-reports`, `/teachers/me/payouts`, `/teachers/:id/availability|time-off` (OwnTeacherGuard), `/students/:id/reports`, the report form routes.
+- **RLS (164):** `messages_teacher_read` (phone in `my_thread_phones()`), `teacher_thread_reads` (own rows; admin all; API writes). `teacher_thread_phones` and `teacher_unread` are service-role only.

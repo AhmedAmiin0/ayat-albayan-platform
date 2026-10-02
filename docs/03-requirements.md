@@ -68,11 +68,12 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-SCH-06** Booking wizard: pick student(s) → pick teacher (filtered by gender preference, program, availability) → pick slot from a real availability grid → set package → create rule + lessons + confirmation message in one transaction.
 - **R-SCH-07** Reschedule / cancel single occurrence or whole rule; cancellations by teacher do not consume the student's package; late cancels by student (<N hours) optionally consume one lesson (setting).
 - **R-SCH-08** Teacher self-service: view week, mark attendance, propose reschedule (admin approves).
+- **R-SCH-09** All-teachers calendar (owner request 2026-10-02): every teacher — empty ones too — with programs, gender, tz, load (n of max), weekly windows, time off, free gaps (≥ 30 min) and lessons (trial lessons tagged «تجريبية»), as a web day/week board and a mobile agenda, from one batched read (`GET /lessons/overview`, docs/10 §9).
 
 ### 3.4 Teachers
 - **R-TCH-01** `teachers` table: display name (ar/en), gender, programs, phone, email (auth), meeting link, per-lesson rate (EGP) by duration, status, max students.
 - **R-TCH-02** Weekly availability grid (`teacher_availability`: weekday, start, end, tz) + one-off unavailability (`teacher_time_off`).
-- **R-TCH-03** Teacher web dashboard: today / this week, join link, pending reports, students list.
+- **R-TCH-03** Teacher web dashboard: today / this week, join link, pending reports, students list. Teacher mode (owner request 2026-10-02, web + mobile): a teacher signs in and sees only their own chats, report forms, calendar, submitted reports and payouts (docs/10 §9); every scope is enforced server-side.
 - **R-TCH-04** Teacher payout report per month: completed lessons × rate; export CSV.
 
 ### 3.5 Lessons & meeting links
@@ -99,7 +100,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-MSG-02** Scheduler (cron every 5 min) queues reminders: 24h and 1h before lesson start, in guardian's time zone wording; dedup key `lesson_id+type`; retry with backoff; failures visible in admin.
 - **R-MSG-03** Fallback: every outbound message has a `wa.me` click-to-chat deep link with prefilled text for manual sending; marks `sent_manually` when admin taps it.
 - **R-MSG-04** Inbound webhook: verify signature, store message, match to lead/guardian by phone, handle quick replies (confirm / reschedule / stop).
-- **R-MSG-05** Message log per contact with delivery status (sent, delivered, read, failed + error code).
+- **R-MSG-05** Message log per contact with delivery status (sent, delivered, read, failed + error code). A row a teacher sent from their inbox names them («بعتها: {name}», `messages.sent_by_teacher_id`) and its audit row carries their name.
 
 ### 3.9 Reporting / dashboard
 - **R-RPT-01** Admin dashboard: funnel (new → trial_booked → trial_done → converted), active students, lessons this week by status, pending reports, unpaid subscriptions, teacher load. Numbers come from statuses, not formulas (issue F3).

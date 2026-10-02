@@ -11,6 +11,16 @@ export type TeacherReportParts = {
   hours: number;
 };
 
+/** Read-only identity from the lesson and the student; a missing embed degrades to ''. */
+function identity(row: TeacherReportRow, p: TeacherReportParts): Pick<TeacherReportView, 'starts_at' | 'student'> {
+  const startsAt = p.lessons.get(row.lesson_id);
+  const student = p.students.get(row.student_id);
+  return {
+    starts_at: startsAt ? iso(startsAt) : '',
+    student: { id: row.student_id, code: student?.code ?? '', name: student?.name ?? '' },
+  };
+}
+
 /**
  * One of my submitted reports (R-REP-02): «تعديل التقرير» while canEditReport for the teacher
  * (edit_until = first submit + report_teacher_edit_hours), else «عرض التقرير».
@@ -18,13 +28,10 @@ export type TeacherReportParts = {
 export function toTeacherReportView(row: TeacherReportRow, p: TeacherReportParts): TeacherReportView {
   const submittedAt = row.submitted_at === null ? null : new Date(row.submitted_at);
   const until = editUntil({ submittedAt, hours: p.hours });
-  const startsAt = p.lessons.get(row.lesson_id);
-  const student = p.students.get(row.student_id);
   return {
     id: row.id,
     lesson_id: row.lesson_id,
-    starts_at: startsAt ? iso(startsAt) : '',
-    student: { id: row.student_id, code: student?.code ?? '', name: student?.name ?? '' },
+    ...identity(row, p),
     attendance: row.attendance,
     grade_overall: row.grade_overall,
     status: row.status,
