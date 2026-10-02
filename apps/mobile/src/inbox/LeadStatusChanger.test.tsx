@@ -35,7 +35,7 @@ test('offers exactly the moves the API allows from جديد', async () => {
   await open('new');
   const offered = LEAD_STATUSES.filter((s) => screen.queryByRole('button', { name: word[s] }));
   expect(offered.sort()).toEqual(
-    ['contacted', 'interested_no_slot', 'lost', 'no_reply', 'trial_booked'].sort(),
+    ['contacted', 'converted', 'interested_no_slot', 'lost', 'no_reply', 'trial_booked'].sort(),
   );
 });
 

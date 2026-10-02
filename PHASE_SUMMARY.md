@@ -1323,3 +1323,39 @@ Gate after the fixes (`pnpm test:all`; no migration changed, so no db reset or g
 - **Unit tests:** api 1545 passed + 1 skipped (214 files; was 1488) · web 652 (134 files; was 649) · mobile 517 (103 suites; was 509) · @ab/shared 1108 (56 files) · @ab/migrate 292 (50 files) · @ab/scripts 9 · wa-stub 25 (4 files; was 19).
 - **e2e:** 43 passed + 3 skipped by design (setup 2, desktop 22, mobile 22).
 - **Lint:** 0 errors, 32 warnings, all pre-existing (the merge's new `MessageWorker.run` warning was fixed).
+
+# Chat: phone search, subscription status + subscribe; mobile teacher calendar + reschedule (2026-10-02)
+
+Owner requests (2026-10-02): search the chats by phone number; see in the chat whether the contact is subscribed, with a button to subscribe; see each teacher's calendar in the mobile app; reschedule from the app. Four builder branches merged into develop with `--no-ff`: `features/api` b26b936, `features/web-chat` c375f08, `features/mobile-chat` bde5ceb, `features/mobile-schedule` cc9972f. No migration.
+
+## What changed
+- **Phone search everywhere (API + shared).** `searchDigits` (`packages/shared/src/phone.ts`) accepts Arabic and Persian digits, spaces, dashes, `+`, bidi marks and partial input (3+ digits; a leading 0/00 is dropped). It now drives threads `?search`, leads `?q`, guardians, job applicants and students; on students, digits also match the code («0183» finds AB-0183). There is a new `GET /teachers?search=` (Arabic/English name or phone).
+- **Subscription in the chat (R-SUB-01).** `GET /threads/:phone` returns `people` (guardian, lead, every child with the newest package's money and the summed lesson balance, the same as the BalanceCard). `GET /threads` items carry `subscribed`. The shared `subscriptionBadge` gives «مشترك» / «اشتراكه خلص» / «مش مشترك»: a paused package with lessons left counts as subscribed, and a trial-only package as not subscribed.
+- **Web `/admin/inbox`.** Status chip in the thread header, a «مشترك» tag on list rows, and a «الاشتراك» aside with one row per child and «اشتراك جديد» / «جدّد الاشتراك» (opens CreateSubscriptionDialog for that child). On a lead thread, «اشترك» opens `/admin/book?leadId…&pkg=8`. **`/admin/book`** takes `pkg`; after a paid-package booking, BookedPanel offers «اعمل الاشتراك» and «ارجع للمحادثة». A regular-package booking from a student profile also shows «اعمل الاشتراك» as the primary button.
+- **Mobile chats.** «مشترك» chip next to the cut-over's status/source/kind tags. The thread shows SubscriptionPanel: the badge, one line per child, and one button (guardian → the new `/inbox/subscribe` screen; lead → `/inbox/book` in subscribe mode with a package step, weekday chips and «كمّل الاشتراك»). A second tap while saving joins the first save; after a lost reply, the balance is re-read before posting again.
+- **Mobile teacher calendar.** More → المعلمين → a teacher → «جدول المعلم/ة» opens `/more/teachers/calendar/[id]`: a Saturday-to-Friday agenda on the Riyadh calendar, the teacher's own clock when it differs, availability, pull to refresh and the offline cache. More → «الجدول» (`/more/teachers/schedule`) lists every teacher's lessons for one day.
+- **Mobile reschedule.** «غيّر الميعاد» on Today cards and on calendar and «الجدول» rows opens RescheduleSheet: this lesson only, or this one and all after it; a free slot from `GET /booking/slots` (never a typed time); `POST /lessons/:id/reschedule` with the same bodies as the web. A 409 conflict shows ConflictNotice with fresh slots.
+
+## Integration decisions
+- **i18n conflict (no textual conflict, but a duplicate key).** Both chat builders added an `inbox.subscription` object, and git merged them into two sibling keys in the same block. JSON.parse keeps only the last one, so this did not fail. Kept the web block (`title`, `badge.{subscribed,expired,none}`, `subscribe`, `renew`, `due`, `make`, `backToChat`) and pointed mobile at `badge.*`. **Visible mobile wording change:** «جدّد» is now «جدّد الاشتراك», and «فاضل عليه 120 ر.س» is now «عليه 120 ر.س». A Python `object_pairs_hook` check finds no duplicate keys in ar.json or en.json.
+- `apps/mobile/src/inbox/thread-fixtures.ts`: both mobile branches added `people`; kept mobile-chat's shared `noPeople`.
+- **Lead funnel: a paid package converts any open lead (both UI builders flagged this).** `LEAD_TRANSITIONS` let a lead become `converted` only from `trial_done`. A lead who subscribed from the chat therefore stayed «جديد» in the leads list while the thread said «مشترك». `converted` is now reachable from every non-terminal status, in the API and in the mobile mirror (`allowed-next-statuses.ts`). The booking RPC already applies `leadTarget`, so no client or DB change was needed. The tests were updated: lead-state-machine, the mobile mirror, LeadStatusChanger, leadTarget, and booking.planner.lead. The e2e lead case now asserts `leads.status = 'converted'` after the booking. Side effect: the manual status changers (web and mobile) also offer «مشترك» from any open status.
+- The merge added two web lint warnings (`BookedPanel` and `toBookingRequest`, complexity 11). Small helpers moved out (`firstLesson`, `newStudentStatus`); the warnings are gone.
+
+## Gate (measured, `pnpm test:all` after `supabase db reset` + `gen:types` (no types drift) + `pnpm env:local`)
+- 27/27 turbo tasks green on the third run. The first run found the two real test failures from the funnel change (fixed). The e2e task crashed with Windows 3221226505 before any test ran, and a re-run of e2e alone passed. The second run failed only on a Windows `EBUSY` lock on `@nestjs/swagger` while loading `guardians.controller.test.ts`; no assertion failed.
+- **Unit tests:** api 1569 passed + 1 skipped (217 files; was 1547) · web 671 (139 files; was 652) · mobile 609 (124 suites; was 517) · @ab/shared 1146 (58 files; was 1108) · @ab/migrate 292 (50 files) · @ab/scripts 9 · wa-stub 25 (4 files).
+- **e2e:** 47 passed + 3 skipped by design (was 43). `chat-subscribe.spec.ts` passes on both desktop and mobile.
+- **Lint:** 0 errors, 32 warnings, all pre-existing. The web count went 16 → 14 after the fix above.
+- That fix came after the full gate run. The final tree was checked again with web lint, typecheck and test (671) and `pnpm turbo e2e --force`: 47 passed + 3 skipped.
+
+## Residuals
+- Reschedule from inside a WhatsApp thread is not wired. ThreadScreen only passes `lessons` to the Composer; to wire it, render `<RescheduleSheet lesson onClose/>`. The owner's request is covered from Today, the teacher calendar and «الجدول».
+- No search box on the teachers lists yet (web or mobile); `GET /teachers?search=` exists. Teacher name search has no Arabic normalisation («ساره» does not find «سارة»).
+- Students digit search sends at most 100 matching guardian ids, so a very short run like «966» is incomplete.
+- `POST /subscriptions` has no server idempotency key; mobile double-submit safety is client-side only. Adding `clientRequestId`, as payments have, would fix it.
+- No trial tag on calendar rows (LessonView has no trial flag). No note field on reschedule (the schema and template have no parameter for it). A series reschedule pre-ticks only the new slot's weekday (LessonView has no byday). All three are the same as the web.
+- After a sibling group booking on a paid package, «اعمل الاشتراك» / «كمّل الاشتراك» covers only the first child.
+- `people` makes one balance read per child; batch it if families grow large.
+- The dashboard funnel counts each stage cumulatively by status. A lead converted straight from the chat therefore also counts toward «trial_booked» and «trial_done», which inflates the trial stages. If the owner wants the old reading, split `converted` by whether a trial happened.
+- Device check of the new mobile screens at 360–390 px in RTL and LTR (jest can't compute layout).

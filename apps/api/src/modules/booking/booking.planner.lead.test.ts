@@ -51,10 +51,10 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
     expect(payload.rule.meeting_link).toBeNull();
   });
 
-  it('a paid package from a fresh lead books but leaves the lead status alone', async () => {
+  it('a paid package from a fresh lead books and converts it (subscribe from the chat)', async () => {
     const { planner } = fakePlanner();
     const { payload } = await planner.prepare(leadRequest({ package: '8' }));
-    expect(payload.lead).toEqual({ id: IDS.lead, from: 'new', to: null });
+    expect(payload.lead).toEqual({ id: IDS.lead, from: 'new', to: 'converted' });
     expect(payload.lessons).toHaveLength(5);
     expect(payload.rule.ends_on).toBeNull();
   });

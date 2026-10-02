@@ -20,6 +20,12 @@ export interface BookedPanelProps {
   chatPhone?: string | null;
 }
 
+/** The first lesson and the Riyadh week it falls in (the «افتح الجدول» link). */
+function firstLesson(result: BookingResult) {
+  const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
+  return { first, week: first ? weekStart(zonedParts(new Date(first.starts_at), RIYADH_TZ).date) : undefined };
+}
+
 /**
  * After POST /booking: what was created, the queued WhatsApp confirmation, the subscription for a
  * regular package, and the way to the week (or back to the chat).
@@ -27,8 +33,7 @@ export interface BookedPanelProps {
 export function BookedPanel({ result, teacherId, tz, subscribeFor, chatPhone }: BookedPanelProps) {
   const [dialog, setDialog] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
-  const first = result.lessons.toSorted((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
-  const week = first ? weekStart(zonedParts(new Date(first.starts_at), RIYADH_TZ).date) : undefined;
+  const { first, week } = firstLesson(result);
   const offer = !!subscribeFor && !subscribed;
   return (
     <section aria-labelledby="booked-title" className="grid justify-items-start gap-3 py-2">

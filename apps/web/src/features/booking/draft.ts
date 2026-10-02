@@ -103,6 +103,9 @@ export function stepReady(d: BookingDraft, step: StepKey): boolean {
   }
 }
 
+/** A regular package from the chat's «اشترك» makes them a subscribed student straight away. */
+const newStudentStatus = (pkg: PackageSize) => (pkg === 'trial' ? 'trial' : 'active');
+
 /** POST /booking body; `override` = the reason to book over conflicts (R-SCH-04). */
 export function toBookingRequest(d: BookingDraft, override?: string): BookingRequest | null {
   if (!d.teacher || !d.startsAt) return null;
@@ -132,8 +135,7 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
       name: s.name.trim(),
       program: d.program,
       tz: d.tz,
-      // A regular package from the chat's «اشترك» makes them a subscribed student straight away.
-      status: d.pkg === 'trial' ? 'trial' : 'active',
+      status: newStudentStatus(d.pkg),
       teacher_gender_pref: d.genderPref,
     },
     guardian: { name: s.guardianName.trim(), phone_e164: s.guardianPhone, tz: d.tz, country: d.country },

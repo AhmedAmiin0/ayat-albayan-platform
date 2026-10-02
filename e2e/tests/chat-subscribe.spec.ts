@@ -63,6 +63,9 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await admin.getByLabel(ar.booking.meetingLink).fill('https://meet.jit.si/ayat-e2e-subscribe');
     await admin.getByRole('button', { name: ar.booking.submit }).click();
     await expect(admin.getByRole('heading', { name: ar.booking.booked })).toBeVisible();
+    // A paid package converts the lead straight away, no trial needed (leadTarget).
+    const lead = await withSql((sql) => sql<{ status: string }[]>`select status from public.leads where phone_e164 = ${`+${digits}`}`);
+    expect(lead[0]?.status).toBe('converted');
 
     // «اعمل الاشتراك» right after the booking, for the new student.
     await admin.getByRole('button', { name: ar.inbox.subscription.make }).click();

@@ -31,12 +31,13 @@ describe('leadTarget (R-LEAD-06)', () => {
     expect(leadTarget('contacted', 'trial')).toBe('trial_booked');
   });
 
-  it('a paid package converts a lead after its trial', () => {
+  it('a paid package converts a lead, with or without a trial (subscribe from the chat)', () => {
     expect(leadTarget('trial_done', '8')).toBe('converted');
+    expect(leadTarget('new', '12')).toBe('converted');
+    expect(leadTarget('contacted', '8')).toBe('converted');
   });
 
   it('leaves the lead alone when the funnel does not allow the move', () => {
-    expect(leadTarget('new', '12')).toBeNull();
     expect(leadTarget('trial_booked', 'trial')).toBeNull();
     expect(leadTarget('converted', '8')).toBeNull();
   });

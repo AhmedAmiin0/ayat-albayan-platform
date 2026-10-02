@@ -4,13 +4,13 @@ import { canTransitionLead } from './lead-state-machine';
 
 // Expected table written out independently of the implementation (R-LEAD-01).
 const ALLOWED: Record<LeadStatus, LeadStatus[]> = {
-  new: ['contacted', 'no_reply', 'lost', 'interested_no_slot', 'trial_booked'],
-  contacted: ['interested_no_slot', 'trial_booked', 'no_reply', 'lost'],
-  interested_no_slot: ['trial_booked', 'no_reply', 'lost'],
-  no_reply: ['contacted', 'lost', 'interested_no_slot'],
-  trial_booked: ['trial_done', 'no_reply', 'lost'],
+  new: ['contacted', 'no_reply', 'lost', 'interested_no_slot', 'trial_booked', 'converted'],
+  contacted: ['interested_no_slot', 'trial_booked', 'no_reply', 'lost', 'converted'],
+  interested_no_slot: ['trial_booked', 'no_reply', 'lost', 'converted'],
+  no_reply: ['contacted', 'lost', 'interested_no_slot', 'converted'],
+  trial_booked: ['trial_done', 'no_reply', 'lost', 'converted'],
   trial_done: ['converted', 'lost', 'interested_no_slot'],
-  lost: ['contacted'],
+  lost: ['contacted', 'converted'],
   converted: [],
 };
 

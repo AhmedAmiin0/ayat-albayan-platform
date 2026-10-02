@@ -3,13 +3,13 @@ import { allowedNextStatuses } from './allowed-next-statuses';
 
 // Same rows as apps/api lead-state-machine.ts: a drift here is a status the API would 409.
 const expected: [LeadStatus, LeadStatus[]][] = [
-  ['new', ['contacted', 'no_reply', 'lost', 'interested_no_slot', 'trial_booked']],
-  ['contacted', ['interested_no_slot', 'trial_booked', 'no_reply', 'lost']],
-  ['interested_no_slot', ['trial_booked', 'no_reply', 'lost']],
-  ['no_reply', ['contacted', 'lost', 'interested_no_slot']],
-  ['trial_booked', ['trial_done', 'no_reply', 'lost']],
+  ['new', ['contacted', 'no_reply', 'lost', 'interested_no_slot', 'trial_booked', 'converted']],
+  ['contacted', ['interested_no_slot', 'trial_booked', 'no_reply', 'lost', 'converted']],
+  ['interested_no_slot', ['trial_booked', 'no_reply', 'lost', 'converted']],
+  ['no_reply', ['contacted', 'lost', 'interested_no_slot', 'converted']],
+  ['trial_booked', ['trial_done', 'no_reply', 'lost', 'converted']],
   ['trial_done', ['converted', 'lost', 'interested_no_slot']],
-  ['lost', ['contacted']],
+  ['lost', ['contacted', 'converted']],
   ['converted', []],
 ];
 
@@ -22,7 +22,7 @@ test('every status has a row, and no status moves to itself', () => {
   for (const from of LEAD_STATUSES) expect(allowedNextStatuses(from)).not.toContain(from);
 });
 
-test('only a finished trial can become مشترك', () => {
+test('any open lead can become مشترك (a paid package booked straight from the chat)', () => {
   const into = LEAD_STATUSES.filter((s) => allowedNextStatuses(s).includes('converted'));
-  expect(into).toEqual(['trial_done']);
+  expect(into).toEqual(LEAD_STATUSES.filter((s) => s !== 'converted'));
 });
