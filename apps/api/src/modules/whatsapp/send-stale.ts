@@ -1,4 +1,12 @@
-import { FOLLOW_UP_STATUSES, followUpCycle, followUpKeyCycle, isLessonTimed, type LeadStatus, type LessonStatus } from '@ab/shared';
+import {
+  FOLLOW_UP_STATUSES,
+  followUpCycle,
+  followUpKeyCycle,
+  isLessonTimed,
+  messageExpired,
+  type LeadStatus,
+  type LessonStatus,
+} from '@ab/shared';
 import { REMINDER_KEYS } from '../reminders/reminders.queries';
 
 // Send-time check of a queued row (docs/12 §3.3): rows wait in the queue while the send gate is
@@ -38,6 +46,19 @@ export function staleReason(row: StaleInput): string | null {
     return `lesson ${row.lesson.status}`;
   }
   return row.template_key === 'follow_up_slots' && row.lead_id ? followUpStale(row) : null;
+}
+
+/** A queued row the worker drops before claiming it: past its send window, or stale (above). */
+export function dropReason(
+  row: StaleInput & { expires_at: string | null; lesson: { starts_at: string } | null },
+  now: Date,
+): { code: 'expired' | 'stale'; text: string } | null {
+  const lessonStartsAt = row.lesson?.starts_at ?? null;
+  if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
+    return { code: 'expired', text: 'expired before it was sent' };
+  }
+  const stale = staleReason(row);
+  return stale ? { code: 'stale', text: stale } : null;
 }
 
 function followUpStale({ lead, dedup_key }: StaleInput): string | null {

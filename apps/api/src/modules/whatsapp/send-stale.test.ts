@@ -1,6 +1,6 @@
 import { followUpKey, type LessonStatus } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { staleReason, type StaleInput, type StaleLead } from './send-stale';
+import { dropReason, staleReason, type StaleInput, type StaleLead } from './send-stale';
 
 const LAST = '2026-10-01T10:00:00Z';
 const lead = (over: Partial<StaleLead> = {}): StaleLead => ({
@@ -58,5 +58,23 @@ describe('staleReason (send-time check, docs/12 §3.3)', () => {
 
   it('an old-format follow-up key (no cycle) is judged on the lead only', () => {
     expect(staleReason({ ...followUp(lead()), dedup_key: 'follow_up_slots:lead-1:0' })).toBeNull();
+  });
+});
+
+describe('dropReason (before the claim)', () => {
+  const NOW = new Date('2026-10-02T12:00:00Z');
+  const row = (status: LessonStatus, expires_at: string | null) => ({
+    ...booking(status),
+    expires_at,
+    lesson: { status, starts_at: '2026-10-03T12:00:00Z' },
+  });
+
+  it('past expires_at → expired, before the stale check', () => {
+    expect(dropReason(row('cancelled_by_admin', '2026-10-02T11:00:00Z'), NOW)).toEqual({ code: 'expired', text: 'expired before it was sent' });
+  });
+
+  it('in its window: stale when the lesson moved, else kept', () => {
+    expect(dropReason(row('rescheduled', null), NOW)).toEqual({ code: 'stale', text: 'lesson rescheduled' });
+    expect(dropReason(row('scheduled', null), NOW)).toBeNull();
   });
 });

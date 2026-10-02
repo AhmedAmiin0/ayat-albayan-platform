@@ -21,6 +21,7 @@ const files = {
     WA_PHONE_NUMBER_ID: 'stub-phone',
     WA_WABA_ID: 'stub-waba',
     WA_ACCESS_TOKEN: 'local-token',
+    WA_APP_ID: 'stub-app',
     WA_APP_SECRET: 'local-app-secret',
     WA_VERIFY_TOKEN: 'local-verify',
     MESSAGING_ENABLED: 'true',

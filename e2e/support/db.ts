@@ -43,7 +43,10 @@ export async function seedFxRate(): Promise<void> {
   }
 }
 
-/** Default academy settings (migrations 073, 123), which resetDb truncates with everything else. */
+/**
+ * Default academy settings (migrations 073, 123), which resetDb truncates with everything else.
+ * auto_messages_enabled (162) is on here: journey 3 asserts the job-queued renewal_due.
+ */
 export async function seedSettings(): Promise<void> {
   const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
   try {
@@ -52,7 +55,8 @@ export async function seedSettings(): Promise<void> {
       values ('late_cancel_hours', 'null'::jsonb), ('booking_horizon_weeks', '5'::jsonb),
         ('renewal_alert_remaining', '2'::jsonb), ('flag_future_lessons_when_unpaid', 'true'::jsonb),
         ('report_teacher_edit_hours', '24'::jsonb), ('reporting_currency', '"SAR"'::jsonb),
-        ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb)
+        ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb),
+        ('auto_messages_enabled', 'true'::jsonb)
       on conflict (key) do update set value = excluded.value`;
   } finally {
     await sql.end();

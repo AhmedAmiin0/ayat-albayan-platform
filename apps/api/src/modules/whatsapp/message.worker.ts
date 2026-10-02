@@ -1,10 +1,9 @@
-import { messageExpired } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
 import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
-import { isAutomatic, staleReason } from './send-stale';
+import { dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
 import { WaError, type TemplateRow, type WaSent } from './whatsapp.types';
 
@@ -62,15 +61,10 @@ export class MessageWorker {
   }
 
   private async run({ row, template, now, autoOn }: SendJob): Promise<SendOutcome> {
-    const lessonStartsAt = row.lesson?.starts_at ?? null;
-    if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
-      await this.queries.expire(row.id, { code: 'expired', text: 'expired before it was sent' });
-      return 'expired';
-    }
-    const stale = staleReason(row);
-    if (stale) {
-      await this.queries.expire(row.id, { code: 'stale', text: stale });
-      return 'stale';
+    const drop = dropReason(row, now);
+    if (drop) {
+      await this.queries.expire(row.id, drop);
+      return drop.code;
     }
     if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now });
     // Not left queued: it would go out at a wrong time once the switch is back ON. No push.

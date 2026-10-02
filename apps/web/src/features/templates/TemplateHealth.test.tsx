@@ -78,20 +78,19 @@ describe('template health (R-MSG-01, issue C1)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('a document template Meta needs by hand says so', async () => {
+  it('a PDF template without the Meta app id on the server says so', async () => {
     renderHealth();
-    apiSend.mockRejectedValue(new ApiError(409, { code: 'needs_manual_submit' }));
-    await screen.findByText(t.templates.names.renewal_due);
-    fireEvent.click(rowOf('renewal_due').getByRole('button', { name: t.templates.submit }));
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'needs_app_id' }));
+    await screen.findByText(t.templates.names.report_ready);
+    fireEvent.click(rowOf('report_ready').getByRole('button', { name: t.templates.submit }));
     fireEvent.click(screen.getByRole('button', { name: t.templates.submitConfirmYes }));
-    expect((await screen.findByRole('status')).textContent).toContain(t.templates.error.needs_manual_submit);
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/report_ready/submit'));
+    expect((await screen.findByRole('status')).textContent).toContain(t.templates.error.needs_app_id);
   });
 
-  it('a rejected row shows no stale quality; a PDF template says to submit it in Business Manager', async () => {
+  it('a rejected row shows no stale quality', async () => {
     renderHealth();
     await screen.findByText(t.templates.names.follow_up_slots);
     expect(rowOf('follow_up_slots').queryByText(t.templates.qualityScore.GREEN)).toBeNull();
-    expect(rowOf('report_ready').getByText(t.templates.manualSubmit)).toBeTruthy();
-    expect(rowOf('report_ready').queryByRole('button', { name: t.templates.submit })).toBeNull();
   });
 });

@@ -57,6 +57,7 @@ The API talks to the WhatsApp Cloud API only through `WA_API_BASE`; there is **n
 | `WA_API_VERSION` | Graph version, default `v21.0`. |
 | `WA_PHONE_NUMBER_ID`, `WA_WABA_ID` | The academy number's phone-number id and its WhatsApp Business Account id (Meta → WhatsApp → API Setup). The webhook ignores changes for any other phone-number id. |
 | `WA_ACCESS_TOKEN` | Permanent System User token with `whatsapp_business_messaging` + `whatsapp_business_management`. |
+| `WA_APP_ID` | Id of the Meta app that issued `WA_ACCESS_TOKEN` (Meta app → Settings → Basic → App ID). Needed only to submit `report_ready` (PDF header: the sample PDF goes through Meta's Resumable Upload API); unset = that submit answers 409 `needs_app_id`. |
 | `WA_APP_SECRET` | Meta app → Settings → Basic → App secret. Signs every webhook POST; wrong or missing = every POST is 401 and nothing is stored. |
 | `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). |
 | `MESSAGING_ENABLED` | `true` opens the deployment's gate. Default `false`. |

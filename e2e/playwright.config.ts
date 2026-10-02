@@ -15,6 +15,7 @@ const E2E_WA = {
   WA_PHONE_NUMBER_ID: 'e2e-phone',
   WA_WABA_ID: 'e2e-waba',
   WA_ACCESS_TOKEN: 'e2e-token',
+  WA_APP_ID: 'e2e-app',
   WA_APP_SECRET: 'e2e-app-secret',
   WA_VERIFY_TOKEN: 'e2e-verify',
 };

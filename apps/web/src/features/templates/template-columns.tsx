@@ -85,13 +85,10 @@ export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) =>
     col.display({
       id: 'actions',
       header: () => t.templates.actions,
-      // A PDF-header template can't be submitted from here (409 needs_manual_submit): say where instead.
+      // A PDF-header template (report_ready) is submitted here too: the API uploads a sample PDF first.
       cell: (c) => {
         const tpl = c.row.original;
         if (!canSubmit(tpl)) return null;
-        if (tpl.header_format === 'document') {
-          return <p className="max-w-[32ch] text-2xs whitespace-normal text-ink-2">{t.templates.manualSubmit}</p>;
-        }
         return (
           <Button size="sm" variant="secondary" onClick={() => onSubmit(tpl)}>
             {t.templates.submit}
