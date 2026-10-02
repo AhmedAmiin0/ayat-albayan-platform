@@ -1,7 +1,8 @@
 import { formatPhone, leadStatusStyle } from '@ab/shared';
+import { Link } from '@tanstack/react-router';
 import { useRef } from 'react';
 import { Icon } from '@/components/ui/icon';
-import { IconButton } from '@/components/ui/icon-button';
+import { IconButton, iconButtonClass } from '@/components/ui/icon-button';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
@@ -11,7 +12,7 @@ import { ReclassifyConfirm } from './ReclassifyConfirm';
 import type { LeadRow } from './types';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
-export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_56px]';
+export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_96px]';
 
 export interface LeadListItemProps {
   lead: LeadRow;
@@ -61,7 +62,18 @@ export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: 
       <div className="col-start-2 row-start-2 sm:col-start-3 sm:row-start-1">
         <StatusChip {...leadStatusStyle[lead.status]} label={t.enums.leadStatus[lead.status]} />
       </div>
-      <div className="col-start-3 row-start-1 flex justify-end sm:col-start-4">
+      <div className="col-start-3 row-start-1 flex justify-end gap-1 sm:col-start-4">
+        {lead.status !== 'converted' && lead.status !== 'lost' && (
+          <Link
+            to="/admin/book"
+            search={{ leadId: lead.id, phone: lead.phone_e164, name: lead.name ?? undefined }}
+            aria-label={t.booking.trialFor.replace('{name}', who)}
+            title={t.booking.trialTitle}
+            className={iconButtonClass}
+          >
+            <Icon name="calendar" />
+          </Link>
+        )}
         <IconButton
           ref={ask}
           label={t.leads.reclassifyRow.replace('{name}', who)}

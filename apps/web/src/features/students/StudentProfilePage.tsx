@@ -1,5 +1,7 @@
 import { formatPhone, studentStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
+import { Link } from '@tanstack/react-router';
+import { buttonVariants } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { Ltr } from '@/components/ui/ltr';
 import { PageHead } from '@/components/ui/page';
@@ -46,6 +48,13 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <PageHead className="mb-3">
         <Cartouche>{student.name}</Cartouche>
         <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
+        <Link
+          to="/admin/book"
+          search={{ studentId: student.id }}
+          className={buttonVariants({ variant: 'secondary', className: 'ms-auto' })}
+        >
+          {t.booking.open}
+        </Link>
       </PageHead>
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (
