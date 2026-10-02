@@ -1,5 +1,4 @@
-import { counted, packageProgress, RIYADH_TZ } from '@ab/shared';
-import { zonedParts } from '@/features/schedule/tz';
+import { counted, packageProgress } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import type { TaskRow, UnpaidRow } from './types';
 
@@ -14,9 +13,4 @@ export function taskText(task: Pick<TaskRow, 'kind' | 'student' | 'balance'>): s
 /** «4 حلقات في الشهر», or the counted lessons of a custom package («6 حلقات»). */
 export function packageText(row: Pick<UnpaidRow, 'package' | 'lessons_total'>): string {
   return row.package ? t.enums.packageSize[row.package] : counted(t.pricing.customSessions, row.lessons_total);
-}
-
-/** The Riyadh day of a lesson: /admin/schedule snaps it to its week. */
-export function scheduleWeekOf(startsAt: string): string {
-  return zonedParts(new Date(startsAt), RIYADH_TZ).date;
 }

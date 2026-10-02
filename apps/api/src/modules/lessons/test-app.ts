@@ -12,6 +12,7 @@ import { ConflictChecker } from '../scheduling/conflict-checker';
 import { LessonWriter } from '../scheduling/lesson-writer';
 import { ruleRow } from '../scheduling/scheduling.fakes';
 import { ScheduleQueries } from '../scheduling/schedule.queries';
+import { AlertsQueries } from '../subscriptions/alerts.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonsQueries } from './lessons.queries';
@@ -64,6 +65,8 @@ export async function lessonsApp() {
     .overrideProvider(ConflictChecker).useValue(m.checker)
     .overrideProvider(TeacherMeQueries).useValue(m.me)
     .overrideProvider(LessonProposalQueries).useValue(m.proposals)
+    // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
+    .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

@@ -16,14 +16,18 @@ describe('AdminNav', () => {
     [t.nav.jobApplicants, '/admin/job-applicants'],
     [t.pricing.title, '/admin/pricing'],
     [t.schedule.nav, '/admin/schedule'],
+    [t.nav.subscriptions, '/admin/subscriptions'],
+    [t.payments.title, '/admin/payments'],
+    [t.nav.payouts, '/admin/payouts'],
+    [t.nav.expenses, '/admin/expenses'],
   ])('links %s to %s', (label, href) => {
     render(<AdminNav />);
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);
   });
 
-  it('links only the routes that exist: the four Phase 1 screens, the price calculator and the schedule', () => {
+  it('links only the routes that exist: Phase 1 screens, schedule, the four money screens and pricing', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(6);
+    expect(screen.getAllByRole('link')).toHaveLength(10);
   });
 
   it('shows real counts; work counts are saffron and say what they are', () => {

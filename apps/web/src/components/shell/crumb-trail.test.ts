@@ -11,6 +11,7 @@ describe('crumbsFor', () => {
     ['/admin/pricing', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.pricing.title }]],
     ['/admin/schedule', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.schedule.nav }]],
     ['/admin/book', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.booking.title }]],
+    ['/admin/payouts', [{ label: t.nav.dashboard, to: '/admin' }, { label: t.nav.payouts }]],
     ['/admin/students/abc', [{ label: t.nav.students, to: '/admin/students' }, { label: t.students.profile }]],
     ['/admin/teachers/abc', [{ label: t.nav.teachers, to: '/admin/teachers' }, { label: t.teachers.profile }]],
   ])('%s', (path, crumbs) => {

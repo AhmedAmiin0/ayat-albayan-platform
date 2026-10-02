@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ReportPdfModule } from '../report-pdf/report-pdf.module';
 import { TeachersModule } from '../teachers/teachers.module';
 import { ReportAccess } from './report-access';
 import { ReportAttachmentsController } from './report-attachments.controller';
@@ -19,10 +20,10 @@ import { ReportsService } from './reports.service';
 /**
  * Lesson reports: form prefill, drafts, submit (versions + lesson outcome), attachments, history
  * + grade series, teacher pending reports. R-REP-01/02/04/05, R-TCH-03 (docs/11 §4).
- * ReportPdfQueue is exported so the PDF builder (ReportPdfModule) can rebind it to its job.
+ * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03).
  */
 @Module({
-  imports: [TeachersModule],
+  imports: [TeachersModule, ReportPdfModule],
   controllers: [ReportsController, ReportAttachmentsController, ReportEntryController],
   providers: [
     ReportAccess,

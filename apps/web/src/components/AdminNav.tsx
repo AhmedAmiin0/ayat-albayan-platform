@@ -3,8 +3,8 @@ import { Icon, type IconName } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
-// The fihris (surah index) nav, docs/07 §7. Only routes that exist; future screens
-// (التقارير، الاشتراكات، لوحة التحكم) join when their routes land, never as dead links.
+// The fihris (surah index) nav, docs/07 §7. Only routes that exist, never dead links.
+// لوحة التحكم is the logo link (/admin); student reports open from the student profile.
 const GROUPS = [
   [
     { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'chat' },
@@ -14,6 +14,12 @@ const GROUPS = [
     { key: 'students', to: '/admin/students', label: t.nav.students, icon: 'users' },
     { key: 'teachers', to: '/admin/teachers', label: t.nav.teachers, icon: 'teacher' },
     { key: 'schedule', to: '/admin/schedule', label: t.schedule.nav, icon: 'calendar' },
+  ],
+  [
+    { key: 'subscriptions', to: '/admin/subscriptions', label: t.nav.subscriptions, icon: 'box' },
+    { key: 'payments', to: '/admin/payments', label: t.payments.title, icon: 'card' },
+    { key: 'payouts', to: '/admin/payouts', label: t.nav.payouts, icon: 'wallet' },
+    { key: 'expenses', to: '/admin/expenses', label: t.nav.expenses, icon: 'receipt' },
   ],
   [{ key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' }],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];

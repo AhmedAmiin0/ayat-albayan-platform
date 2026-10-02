@@ -796,3 +796,81 @@ None. Every finding checked out against the code. "Verification notes" was not a
 - **Owner:**
   - The «الاتنين» vs «الاثنين» spelling.
   - Still open: R-LES-03, R-MSG-01 and R-SCH-06 above. The multi-student `{{1}}` join is settled as «سهيلة ومريم».
+
+# Phase 3: reports + PDF, subscriptions/payments/payouts, dashboard, mobile payments
+
+Branch `develop`. Foundation commit `5bfeac1` (reports/money schema, storage, shared rules, `docs/11-phase3-contracts.md`), then five builder branches merged with `--no-ff`: `phase3/reports` (`eb7fdba`), `phase3/pdf` (`dce60b4`), `phase3/money` (`2849f3f`), `phase3/dashboard` (`fd26702`), `phase3/mobile` (`e073572`).
+
+**Conflicts (2, both `ar.json`):**
+- reports × pdf: both added `reports.pdf`, a string label in reports and an object of PDF strings in pdf. The label is now `reports.pdfLabel` (2 web call sites updated); the PDF object keeps `reports.pdf.*`.
+- money × mobile: both appended to `payments.mobile`. Union of both sides, with mobile's nine keys inside `payments.mobile` and money's four keys after it. A duplicate-key scan of the merged file is clean.
+- `pnpm-lock.yaml` merged without conflict; `pnpm i` reports it up to date.
+
+## What was built
+- **Reports** (R-REP-01, 02, 04, 05, R-TCH-03, part of R-REP-03):
+  - API: form prefill from the lesson (read-only identity, lesson number, package balance), idempotent drafts, autosave, and submit through the `submit_report` RPC (migration 130). Submit runs in one transaction: version CAS, the version snapshot, audit, the lesson outcome through `apply_lesson_changes`, and `pdf_status = pending`, `pdf_error = null`. It also covers attachments through signed Storage URLs, history with the grade series, and the teacher's pending reports.
+  - Web: the teacher form `/teacher/report/$lessonId` with autosave, the history and SVG grade chart (admin and teacher views), the admin form, and entry links from the lesson card, the drawer and the teacher dashboard.
+- **Report PDF** (R-REP-03): `ReportPdfJob` claims `pending` rows by CAS. It renders the certificate-style A4 template (Amiri + IBM Plex embedded, RTL, Western digits, ≥ 12 px) with playwright-core Chromium and uploads `reports/{student}/{lesson}.pdf`. Then it queues `report_ready` (dedup `report_ready:{report_id}`) and marks the report `ready`. It makes 3 attempts with backoff, then `failed` and the admin retry. Stale `rendering` rows recover after 10 min.
+- **Money** (R-SUB-01..03, R-PAY-01, 02, R-TCH-04, R-RPT-02 expenses):
+  - Subscriptions are priced only from the catalog quote. Statuses are derived from `v_subscription_balance`.
+  - Alerts at 2 left (`renewal_due` task + guardian message, one dedup key) and at 0 (`unpaid` + task). They run on every `LessonEvents.changed`, after money writes, and in a 15-min sweep.
+  - Payments with a receipt upload. The currency must match the package; a full payment makes the package active.
+  - Monthly payouts per teacher in EGP: draft → approved → paid, and approved/paid rows are never recalculated.
+  - Expenses CRUD.
+  - Web: `/admin/subscriptions`, `/admin/payments`, `/admin/payouts` and `/admin/expenses`, plus a balance card on the student profile.
+- **Dashboard + exports** (R-RPT-01..03): `/admin` is now the dashboard.
+  - A KPI strip and the work queue: pending reports, unpaid packages and tasks.
+  - The week by status, and teacher load.
+  - The funnel with conversion rates.
+  - Revenue / teacher cost / expenses / margin, by month and by lead source, in the reporting currency through `fx_rates`.
+  - CSV exports (students, lessons, payments, payouts): UTF-8 with BOM, formula-injection guarded, Riyadh times.
+- **Mobile** (R-MOB-02, 03): a «رصيد الحلقات» card in the student quick view, and the payment screen with a camera or gallery receipt (Arabic permission rationale, signed upload, optimistic row with rollback, blocked offline). Today cards get the package line.
+
+## Integrator changes in this commit
+- **PDF wiring:** `ReportsModule` imports `ReportPdfModule`. `PendingPdfQueue.enqueue` marks the report pending, then `kick()`s `ReportPdfJob`, so a submitted report renders at once instead of at the next 60 s poll (new `report-pdf.queue.test.ts`). Journey 2 confirms the PDF is `ready` and `report_ready` is queued.
+- **Alerts call site:** already wired through `LessonEvents.changed` (lesson status and report submit). The lessons HTTP harness now stubs `AlertsQueries`, so the listener no longer logs `PGRST301`. The reports harness mocks `LessonEvents` and needs no stub.
+- **Types:** `supabase db reset` (migrations through 130) and `gen:types`. `submit_report` is now called through the typed `db.rpc`, and its `UntypedRpc` cast is gone.
+- **Nav:** `AdminNav` gains a money group: الاشتراكات، المدفوعات، مستحقات المعلمين، المصروفات, with new `box`/`card`/`wallet`/`receipt` line icons. Breadcrumbs cover the four new pages.
+- **Dashboard:** pending-report rows open the admin report form (`/admin/students/$studentId/reports/$lessonId`, «اكتب التقرير») instead of the schedule week. The `scheduleWeekOf` helper and the `dashboard.openSchedule` key are no longer used and were deleted.
+- **Dead code:** `components/shell/AdminHome.tsx` and its test are deleted (`/admin` renders `DashboardPage`).
+- **`routeTree.gen.ts`:** regenerated, adding the report and money routes.
+- **Docker:** `docker build -f apps/api/Dockerfile .` succeeds. Inside the image, playwright-core launched the headless shell from `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright` and printed a PDF. The test image was then removed. `docs/09-deployment.md` gains "Report PDFs (Chromium in the API image)".
+- **Worktrees:** the five merged worktrees are removed (long paths needed `rd \\?\…`) and pruned. The `phase3/*` branches are kept.
+
+## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+- **Gate:** green, **23/23 tasks**. Lint shows 0 errors and 9 complexity warnings: 6 in the new money pages (ExpenseDialog, ExpensesPage, RecordPaymentDialog, PayoutsPage, BalanceCard, SubscriptionsPage) and 3 older ones in students.
+- **Unit tests:** api 1,045 + 1 skipped (157 files; the skip is the opt-in PDF PNG writer), web 517 (104 files), @ab/shared 890 (43 files), mobile 375 (71 suites), wa-stub 5. That is **2,832 in total**, up from 2,028 after Phase 2.
+- **E2E: 28 passed.** That is 2 setup runs plus 13 tests on each of the desktop and mobile (Pixel 7) projects: login 7, journey 2 (report → PDF ready → `report_ready` queued → 2 left), journey 3 (payment → active → lesson → `renewal_due` task and message), journeys 4, 5 and 6, and pricing.
+
+## Residual TODOs and questions for the owner
+- **Owner questions:**
+  - R-REP-03: the PDF cartouche says «تقرير الحلقة»; today's PDF says «تقرير متابعة الطالب». Which one?
+  - The du'a and the labels use the feminine form for every student, as today's report does. Should they follow `gender`?
+  - Is an edited report re-sent to the guardian? Now it is not: one `report_ready` per report.
+  - R-LES-03: does `late` count in «رقم الحلقة»? The form shows the overall lesson number, while the PDF shows the position inside the package («6 من 8»).
+  - R-REP-02: rubric grades are required whenever the student attended.
+  - Are reports expected for `no_show` and `excused` lessons? The pending lists include them.
+  - R-SUB-01: do lessons past a package count against the next one (FIFO, as now)? Do `late` and `no_show` use up a lesson?
+  - R-PAY-02: are `late` and `no_show` lessons paid? Both settings are OFF.
+  - Are teachers who left mid-month included? Generation goes through all teachers.
+  - Lessons whose length is not 30, 45, 60 or 90 minutes have no rate: they are paid 0 and listed in `breakdown.skipped_lesson_ids`, which is not shown yet.
+  - R-PAY-01: a payment in another currency is refused (`currency_mismatch`), and a partly paid package stays `unpaid`.
+  - R-MSG-01: the variables of the `report_ready` and `renewal_due` templates are a guess. There is no template for an unpaid package, so it raises a task only.
+  - R-RPT-01: the funnel counts each lead's current status. A stage-reached funnel needs a lead status log.
+- **Not wired yet:**
+  - The «الباقة مش مدفوعة» flag on future lessons (`UnpaidFlags` is exported; it needs `unpaid` on `LessonView.students[]` and a chip on the schedule, the teacher card and mobile Today).
+  - `GET /lessons/day` has no balance, so mobile Today reads each student's balance (cached 5 min).
+- **Cleanup:**
+  - Lift the dashboard response types from `apps/api/.../dashboard.types.ts` into `@ab/shared`, and delete the web copy.
+  - Converge the dashboard's pending-reports query with the reports module's R11.
+  - `exports.controller` sets `Access-Control-Expose-Headers` per response; move it to `enableCors({ exposedHeaders })`.
+  - Split the 6 new complexity warnings.
+- **Ponytail:**
+  - R11 scans the teacher's whole history. Add a lookback window if migrated history floods it.
+  - The dashboard summary pages the whole range with `readAll`. Move it to SQL if a 1-year range gets slow.
+  - `ReportPdfJob` and the alerts sweep are in-process timers; claims are CAS-safe across instances.
+- **Mobile:** not yet seen on a device. The camera module needs a new EAS build (no OTA).
+- **Ops:**
+  - The PDF smoke test is skipped where Chromium is missing (CI without `playwright install chromium`).
+  - Very long notes flow onto a second PDF page.
+  - Orphaned receipts (upload with no payment) need a cleanup job.

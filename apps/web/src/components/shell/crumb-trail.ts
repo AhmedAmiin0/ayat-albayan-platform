@@ -15,6 +15,10 @@ const SECTIONS: Record<string, { label: string; profile?: string }> = {
   pricing: { label: t.pricing.title },
   schedule: { label: t.schedule.nav },
   book: { label: t.booking.title },
+  subscriptions: { label: t.nav.subscriptions },
+  payments: { label: t.payments.title },
+  payouts: { label: t.nav.payouts },
+  expenses: { label: t.nav.expenses },
 };
 
 /** Running-head breadcrumbs for an /admin path (docs/07 §7). Unknown paths get none. */

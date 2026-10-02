@@ -61,7 +61,7 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
   it('the pending reports queue says how many more there are', async () => {
     renderPage();
     expect(await screen.findByText(t.dashboard.more.replace('{n}', '22'))).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.dashboard.openSchedule }).getAttribute('href')).toBe('/admin/schedule?week=2026-10-01&teacher=t1');
+    expect(screen.getByRole('link', { name: t.reports.open }).getAttribute('href')).toBe('/admin/students/s1/reports/l1');
   });
 
   it('a failed read says so instead of showing zeros', async () => {

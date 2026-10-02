@@ -1576,6 +1576,7 @@ export type Database = {
       my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
       report_of_path: { Args: { p_name: string }; Returns: string };
+      submit_report: { Args: { p: Json }; Returns: Json };
     };
     Enums: {
       admin_task_kind: 'renewal_due' | 'subscription_unpaid';
