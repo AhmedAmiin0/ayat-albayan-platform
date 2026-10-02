@@ -32,7 +32,11 @@ export class TeacherOptionsService {
   }
 
   private async filter(q: TeacherOptionsQuery): Promise<TeacherFilter> {
-    if (!q.studentId) return { program: q.program ?? 'quran', gender: q.gender };
+    if (!q.studentId) {
+      // The DTO already requires one of the two; never fall back to a program silently.
+      if (!q.program) throw domainError(HttpStatus.BAD_REQUEST, 'student_or_program');
+      return { program: q.program, gender: q.gender };
+    }
     const [student] = await this.queries.students([q.studentId]);
     if (!student) throw domainError(HttpStatus.NOT_FOUND, 'student_not_found');
     return { program: student.program, gender: q.gender ?? student.teacher_gender_pref ?? undefined };
