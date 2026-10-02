@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
 // The fihris (surah index) nav, docs/07 §7. Only routes that exist; future screens
-// (الجدول، التقارير، الاشتراكات، لوحة التحكم) join when their routes land, never as dead links.
+// (التقارير، الاشتراكات، لوحة التحكم) join when their routes land, never as dead links.
 const GROUPS = [
   [
     { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'chat' },
@@ -13,6 +13,7 @@ const GROUPS = [
   [
     { key: 'students', to: '/admin/students', label: t.nav.students, icon: 'users' },
     { key: 'teachers', to: '/admin/teachers', label: t.nav.teachers, icon: 'teacher' },
+    { key: 'schedule', to: '/admin/schedule', label: t.schedule.nav, icon: 'calendar' },
   ],
   [{ key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' }],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];

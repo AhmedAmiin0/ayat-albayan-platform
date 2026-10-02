@@ -1,0 +1,42 @@
+import type { Conflict } from '@ab/shared';
+import { fireEvent, render, screen } from '@testing-library/react';
+import { describe, expect, it, vi } from 'vitest';
+import { t } from '@/lib/i18n';
+import { ConflictNotice, conflictText } from './ConflictNotice';
+
+const busy = (startsAt: string): Conflict => ({ kind: 'teacher_busy', startsAt, endsAt: startsAt });
+
+describe('ConflictNotice (R-SCH-04, issue B3)', () => {
+  it('words each conflict kind in Arabic with the Riyadh time', () => {
+    const text = conflictText({ kind: 'student_busy', startsAt: '2026-10-04T14:00:00Z', endsAt: '2026-10-04T14:45:00Z' });
+    expect(text.startsWith(t.booking.conflict.student_busy.split('(')[0] ?? '')).toBe(true);
+    expect(text).toContain('17:00');
+    expect(text).not.toContain('{when}');
+  });
+
+  it('lists five clashes and counts the rest', () => {
+    const many = Array.from({ length: 7 }, (_, i) => busy(`2026-10-${10 + i}T14:00:00Z`));
+    render(<ConflictNotice conflicts={many} onChangeSlot={vi.fn()} onOverride={vi.fn()} />);
+    expect(screen.getByRole('alert').textContent).toBe(t.booking.conflictTitle);
+    expect(screen.getAllByRole('listitem')).toHaveLength(5);
+    expect(screen.getByText(t.booking.conflictMore.replace('{n}', '2'))).toBeTruthy();
+  });
+
+  it('book-anyway needs a reason, then passes it on', () => {
+    const onOverride = vi.fn();
+    render(<ConflictNotice conflicts={[busy('2026-10-04T14:00:00Z')]} onChangeSlot={vi.fn()} onOverride={onOverride} />);
+    fireEvent.click(screen.getByRole('button', { name: t.booking.override }));
+    expect(onOverride).not.toHaveBeenCalled();
+    expect(screen.getByText(t.common.required)).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(t.booking.overrideReason), { target: { value: '  طلب ولي الأمر ' } });
+    fireEvent.click(screen.getByRole('button', { name: t.booking.override }));
+    expect(onOverride).toHaveBeenCalledWith('طلب ولي الأمر');
+  });
+
+  it('«اختار ميعاد تاني» goes back to the slots', () => {
+    const onChangeSlot = vi.fn();
+    render(<ConflictNotice conflicts={[busy('2026-10-04T14:00:00Z')]} onChangeSlot={onChangeSlot} onOverride={vi.fn()} />);
+    fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));
+    expect(onChangeSlot).toHaveBeenCalled();
+  });
+});

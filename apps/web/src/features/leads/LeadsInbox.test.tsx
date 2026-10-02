@@ -1,5 +1,6 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, within } from '@testing-library/react';
+import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { LeadsInbox } from './LeadsInbox';
@@ -7,6 +8,11 @@ import type { LeadRow, LeadSearch } from './types';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', () => ({ apiFetch, apiSend: vi.fn() }));
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ to, search, children, ...rest }: { to: string; search: Record<string, string>; children: ReactNode }) => (
+    <a href={`${to}?${new URLSearchParams(search)}`} {...rest}>{children}</a>
+  ),
+}));
 
 const ROW: LeadRow = {
   id: 'l1',
@@ -102,5 +108,12 @@ describe('LeadsInbox (R-LEAD-01, R-LEAD-02)', () => {
   it('shows the Arabic empty state', async () => {
     renderInbox({ page: 1 }, { items: [] });
     expect(await screen.findByRole('heading', { name: t.leads.empty })).toBeTruthy();
+  });
+
+  it('«حجز حلقة تجريبية» opens the wizard with the lead, its phone and name (R-LEAD-06)', async () => {
+    renderInbox({ page: 1 }, { items: [ROW, { ...ROW, id: 'l2', name: 'أم جود', status: 'converted' }] });
+    const book = await screen.findByRole('link', { name: t.booking.trialFor.replace('{name}', 'أم سهيلة') });
+    expect(book.getAttribute('href')).toBe('/admin/book?leadId=l1&phone=%2B966501234567&name=%D8%A3%D9%85+%D8%B3%D9%87%D9%8A%D9%84%D8%A9');
+    expect(screen.queryByRole('link', { name: t.booking.trialFor.replace('{name}', 'أم جود') })).toBeNull();
   });
 });

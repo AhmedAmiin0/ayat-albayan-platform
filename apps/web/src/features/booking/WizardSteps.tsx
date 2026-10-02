@@ -1,0 +1,28 @@
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
+import { STEPS, type StepKey } from './draft';
+
+/** «خطوة 2 من 5» and the five step names; done steps get a filled nuqta, the current one half. */
+export function WizardSteps({ step }: { step: StepKey }) {
+  const current = STEPS.indexOf(step);
+  return (
+    <div className="mb-5 grid gap-2">
+      <p className="text-xs text-ink-3 tabular-nums">
+        {t.booking.stepOf.replace('{n}', String(current + 1)).replace('{total}', String(STEPS.length))}
+      </p>
+      <ol className="flex flex-wrap gap-x-5 gap-y-1.5 border-b-[3px] border-double border-gold pb-2.5 text-sm">
+        {STEPS.map((key, i) => (
+          <li
+            key={key}
+            aria-current={i === current ? 'step' : undefined}
+            className={cn('flex items-center gap-1.5', i === current ? 'font-semibold text-ink' : 'text-ink-3')}
+          >
+            <NuqtaGlyph shape={i < current ? 'fill' : i === current ? 'half' : 'hollow'} />
+            <span>{t.booking.steps[key]}</span>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
