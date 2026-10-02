@@ -21,15 +21,24 @@ export interface SlotPickerProps {
   /** starts_at of the picked slot; also opens the grid on that slot's week. */
   value: string | null;
   onPick: (slot: SlotView) => void;
+  /** With nothing picked yet, open on this instant's week (the lesson being moved). */
+  near?: string;
 }
 
 const cityOf = (tz: string) => tzCity(tz) ?? tz;
 
+/** The Riyadh week to open on: the picked slot's, else `near`'s, never before this week. */
+function openingWeek(anchor: string | undefined, first: string): string {
+  if (!anchor) return first;
+  const week = weekStart(zonedParts(new Date(anchor), RIYADH_TZ).date);
+  return week > first ? week : first;
+}
+
 /** Week-by-week picker over GET /booking/slots (R-SCH-06, R-SCH-07): no past weeks, no typing. */
-export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, value, onPick }: SlotPickerProps) {
+export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, value, onPick, near }: SlotPickerProps) {
   const [now] = useState(() => new Date());
   const first = currentWeekStart(now);
-  const [week, setWeek] = useState(() => (value ? weekStart(zonedParts(new Date(value), RIYADH_TZ).date) : first));
+  const [week, setWeek] = useState(() => openingWeek(value ?? near, first));
   const range = bookableWindow(week, now);
   const slots = useQuery({
     ...slotsQuery({ teacherId, durationMin, studentIds, from: range?.from ?? now, to: range?.to ?? now }),

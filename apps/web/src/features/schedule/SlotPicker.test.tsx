@@ -67,4 +67,16 @@ describe('SlotPicker (R-SCH-06, R-SCH-01)', () => {
     expect(String(apiFetch.mock.calls[1]?.[0])).toContain('from=2026-10-09T21%3A00%3A00.000Z');
     expect(screen.getByText(t.schedule.weekOf.replace('{date}', '10 أكتوبر'))).toBeTruthy();
   });
+
+  it('opens on the week of the lesson being moved (never a past week)', async () => {
+    apiFetch.mockResolvedValue({ teacher_tz: 'Africa/Cairo', step_min: 45, slots: [] });
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <SlotPicker teacherId="t1" durationMin={45} studentIds={[]} studentTz="Asia/Riyadh" value={null} near="2026-10-13T14:00:00.000Z" onPick={vi.fn()} />
+      </QueryClientProvider>,
+    );
+    expect(await screen.findByText(t.booking.noSlots)).toBeTruthy();
+    expect(String(apiFetch.mock.calls[0]?.[0])).toContain('from=2026-10-09T21%3A00%3A00.000Z');
+    expect(screen.getByRole('button', { name: t.schedule.prevWeek }).hasAttribute('disabled')).toBe(false);
+  });
 });

@@ -54,6 +54,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
           durationMin={durationMin(lesson)}
           studentIds={lesson.students.map((s) => s.id)}
           studentTz={tz}
+          near={lesson.starts_at}
           value={startsAt}
           onPick={(slot) => {
             move.reset();
