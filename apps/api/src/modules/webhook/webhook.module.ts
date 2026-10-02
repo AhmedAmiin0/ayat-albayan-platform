@@ -1,0 +1,36 @@
+import { Module } from '@nestjs/common';
+import { loadEnv } from '../../env';
+import { LeadsModule } from '../leads/leads.module';
+import { LessonsModule } from '../lessons/lessons.module';
+import { WebhookController } from './webhook.controller';
+import { InboundService } from './webhook.inbound.service';
+import { InboundStore } from './webhook.inbound.store';
+import { WebhookQueries } from './webhook.queries';
+import { QuickReplies } from './webhook.quick-reply';
+import { WEBHOOK_CONFIG, WebhookService, type WebhookConfig } from './webhook.service';
+import { StatusService } from './webhook.status.service';
+
+/**
+ * GET/POST /webhooks/whatsapp (docs/12 §3.5, routes W1–W2). Inbound processing does not depend on
+ * the send gate. PushService and AuditService are global.
+ */
+@Module({
+  imports: [LeadsModule, LessonsModule],
+  controllers: [WebhookController],
+  providers: [
+    {
+      provide: WEBHOOK_CONFIG,
+      useFactory: (): WebhookConfig => {
+        const env = loadEnv();
+        return { appSecret: env.WA_APP_SECRET, verifyToken: env.WA_VERIFY_TOKEN, phoneNumberId: env.WA_PHONE_NUMBER_ID };
+      },
+    },
+    WebhookService,
+    InboundService,
+    InboundStore,
+    StatusService,
+    QuickReplies,
+    WebhookQueries,
+  ],
+})
+export class WebhookModule {}
