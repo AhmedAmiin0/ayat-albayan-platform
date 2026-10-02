@@ -28,6 +28,7 @@ export const thread: ThreadView = {
   teacher_id: null,
   teacher_name: null,
   session_open: true,
+  subscribed: false,
 };
 
 /** An API row: the provisional shape with the server's fields over it. */
@@ -64,7 +65,14 @@ export const failed = message({
 });
 
 export function detail(messages: MessageView[], fields: Partial<ThreadDetail> = {}): ThreadDetail {
-  return { thread, messages, has_more: false, lessons: [], ...fields };
+  return {
+    thread,
+    messages,
+    has_more: false,
+    lessons: [],
+    people: { guardian: null, lead: null, students: [] },
+    ...fields,
+  };
 }
 
 /** A cached thread, as useThread stores it. */

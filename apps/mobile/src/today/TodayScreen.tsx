@@ -1,9 +1,10 @@
-import { formatRunningHead, lessonStatusStyle } from '@ab/shared';
+import { formatRunningHead, lessonStatusStyle, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { clockAt } from '@/inbox/format';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
@@ -38,7 +39,8 @@ const filterPills = (): FilterPill<TodayFilter>[] => [
 /**
  * «النهارده» (R-MOB-02, docs/07 §12): every teacher's lessons today on one spine. Ended lessons
  * are one line each, a «دلوقتي» line marks the time, the rest are cards with تأكيد / إلغاء
- * (optimistic, R-MOB-03). Pull to refresh; offline the saved day stays with its «آخر تحديث».
+ * (optimistic, R-MOB-03) and «غيّر الميعاد» (the reschedule sheet, R-SCH-07). Pull to refresh;
+ * offline the saved day stays with its «آخر تحديث».
  * TODO(R-MOB-02): Hijri date from the API (Hermes ICU has no reliable islamic-umalqura, docs/07 §2).
  */
 export function TodayScreen() {
@@ -46,6 +48,7 @@ export function TodayScreen() {
   const day = useDayLessons(now);
   const action = useLessonAction();
   const [filter, setFilter] = useState<TodayFilter>('all');
+  const [moving, setMoving] = useState<LessonView | null>(null);
   const loaded = day.data !== undefined;
   const lessons = visibleLessons(day.data ?? []);
   const counts = filterCounts(lessons);
@@ -88,6 +91,7 @@ export function TodayScreen() {
                 error={action.errorFor(lesson.id)}
                 onConfirm={() => action.confirm(lesson.id)}
                 onCancel={(cancel) => action.cancel(lesson.id, cancel)}
+                onReschedule={() => setMoving(lesson)}
               />
             </TimelineRow>
           );
@@ -102,6 +106,7 @@ export function TodayScreen() {
           )
         }
       />
+      <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
     </Screen>
   );
 }
