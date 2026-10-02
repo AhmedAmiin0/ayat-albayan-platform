@@ -1,6 +1,8 @@
-import { useMutation } from '@tanstack/react-query';
+import type { ReportFormResponse } from '@ab/shared';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
-import { saveDraft } from './api';
+import { pathKey } from '@/lib/query-keys';
+import { saveDraft, withReport } from './api';
 import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues } from './form-values';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
@@ -15,8 +17,12 @@ function useSettled(value: string, ms: number): string {
   return settled;
 }
 
-/** Debounced PUT /reports/:id/draft of the whole form while it is a draft (R-REP-02), as on the web. */
+/**
+ * Debounced PUT /reports/:id/draft of the whole form while it is a draft (R-REP-02), as on the web.
+ * Each saved draft also goes into the saved form, so reopening it (even offline) shows what was typed.
+ */
 export function useAutosave(input: { id: string; values: FormValues; enabled: boolean }): SaveState {
+  const client = useQueryClient();
   const body = JSON.stringify(draftBody(input.values));
   const settled = useSettled(body, AUTOSAVE_MS);
   const [saved, setSaved] = useState(body);
@@ -24,7 +30,8 @@ export function useAutosave(input: { id: string; values: FormValues; enabled: bo
   const [result, setResult] = useState<SaveState>({ kind: 'idle' });
   const save = useMutation({
     mutationFn: (b: string) => saveDraft(input.id, JSON.parse(b) as DraftBody),
-    onSuccess: (_view, b) => {
+    onSuccess: (view, b) => {
+      client.setQueriesData<ReportFormResponse>({ queryKey: [...pathKey('/reports'), 'form'] }, (old) => withReport(old, view));
       setSaved(b);
       setFailed(null);
       setResult({ kind: 'saved', at: new Date() });

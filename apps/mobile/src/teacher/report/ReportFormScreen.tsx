@@ -23,7 +23,9 @@ export function ReportFormScreen() {
   const { lessonId = '' } = useLocalSearchParams<{ lessonId: string }>();
   const form = useReportForm(lessonId);
   const tz = useTeacherMe().data?.tz ?? RIYADH_TZ;
-  const data = form.data;
+  // A saved form is shown only once this open has asked the API (or could not): each card seeds
+  // its fields once, and must not seed them from an older copy than the server's draft.
+  const data = form.isFetchedAfterMount || form.isError ? form.data : undefined;
   const stale = form.isError && data !== undefined;
   const titled = (data?.entries.length ?? 0) > 1;
   return (

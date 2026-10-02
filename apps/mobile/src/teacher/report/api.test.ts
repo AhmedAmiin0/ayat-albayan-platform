@@ -1,6 +1,7 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { reportErrorText } from './api';
+import { reportErrorText, withReport } from './api';
+import { formResponse, reportView } from './fixtures';
 
 test('a domain code or the first validation issue, in the form’s words', () => {
   expect(reportErrorText(new ApiError(409, { code: 'version_conflict' }))).toBe(t.reports.error.version_conflict);
@@ -13,4 +14,12 @@ test('an unknown code is the common error; no connection says the report was not
   expect(reportErrorText(new ApiError(500, { code: 'boom' }))).toBe(t.common.error);
   expect(reportErrorText(new ApiError(502))).toBe(t.common.error);
   expect(reportErrorText(new TypeError('Network request failed'))).toBe(t.reports.offlineNotSent);
+});
+
+test('withReport puts an autosaved draft into the saved form, leaving the other students alone', () => {
+  const form = formResponse();
+  const saved = reportView({ recited: 'الفاتحة' });
+  expect(withReport(form, saved)?.entries[0]?.report.recited).toBe('الفاتحة');
+  expect(withReport(form, reportView({ id: 'r-other', recited: 'x' }))?.entries[0]?.report.recited).toBeNull();
+  expect(withReport(undefined, saved)).toBeUndefined();
 });

@@ -1,8 +1,9 @@
 import type { ReportFormResponse } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
+import { reportFormKey } from './api';
 import { formResponse } from './fixtures';
 import { ReportFormScreen } from './ReportFormScreen';
 
@@ -48,6 +49,14 @@ test('the Google Form’s questions: identity read-only, الحضور, the done 
   expect(screen.getByText(t.reports.theory)).toBeTruthy();
   expect(screen.getByText(t.reports.nextPlan)).toBeTruthy();
   expect(screen.getByText(t.reports.submit)).toBeTruthy();
+});
+
+test('reopening: an older saved copy never seeds the fields over the server’s newer draft', async () => {
+  const client = createTestQueryClient();
+  client.setQueryData(reportFormKey('l-1'), formResponse());
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/teachers/me' ? me : formResponse({ recited: 'الفاتحة' })));
+  await renderWithQuery(<ReportFormScreen />, client);
+  await waitFor(() => expect(screen.getByLabelText(t.reports.recited).props.value).toBe('الفاتحة'));
 });
 
 test('a sent report past its edit window is read-only: no submit, says why', async () => {

@@ -14,12 +14,22 @@ import type { DraftBody, SubmitBody } from './form-values';
 /** Under ['reports'], so a submit's invalidation reaches the form, the pending list and history. */
 export const reportFormKey = (lessonId: string) => [...pathKey('/reports'), 'form', lessonId];
 
-/** R1: GET /lessons/:id/report-form — creates the drafts on first open. Persisted for offline. */
+/**
+ * R1: GET /lessons/:id/report-form — creates the drafts on first open. Persisted for offline; no
+ * retries, so an offline open falls back to the saved form at once (as the web).
+ */
 export function useReportForm(lessonId: string) {
   return useQuery({
     queryKey: reportFormKey(lessonId),
     queryFn: () => apiFetch<ReportFormResponse>(`/lessons/${lessonId}/report-form`),
+    retry: false,
   });
+}
+
+/** The saved form with this report replaced by the server's copy (after an autosave). */
+export function withReport(form: ReportFormResponse | undefined, view: ReportView): ReportFormResponse | undefined {
+  if (!form) return form;
+  return { ...form, entries: form.entries.map((e) => (e.report.id === view.id ? { ...e, report: view } : e)) };
 }
 
 export const saveDraft = (id: string, body: DraftBody) => apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);
