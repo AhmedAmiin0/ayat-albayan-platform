@@ -68,9 +68,13 @@ export interface Family {
   studentIds: string[];
 }
 
+let families = 0;
+
 /** A guardian (fresh Saudi mobile per call) with students in Riyadh, studying Quran. */
 export async function seedFamily(guardian: string, students: string[]): Promise<Family> {
-  const phone = `+9665${String(Date.now()).slice(-6)}${String(Math.floor(Math.random() * 90) + 10)}`;
+  // Time (per run) + a per-process counter (per call): two calls in one millisecond never clash.
+  families += 1;
+  const phone = `+9665${String(Date.now()).slice(-6)}${String(families % 100).padStart(2, '0')}`;
   return withSql(async (sql) => {
     const [g] = await sql<{ id: string }[]>`
       insert into public.guardians (name, phone_e164, country, tz)
