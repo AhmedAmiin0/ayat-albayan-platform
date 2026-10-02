@@ -12,7 +12,7 @@ import { ReclassifyConfirm } from './ReclassifyConfirm';
 import type { LeadRow } from './types';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
-export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_96px]';
+export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_120px]';
 
 export interface LeadListItemProps {
   lead: LeadRow;
@@ -25,7 +25,8 @@ export interface LeadListItemProps {
 }
 
 /**
- * One inbox row: avatar initial · name, E.164 phone, source, lead age · status chip · actions.
+ * One inbox row: avatar initial · name, E.164 phone, source, lead age · status chip · actions
+ * (open the WhatsApp thread, book a trial, reclassify).
  * TODO(R-LEAD-02): unread dot, last-message line and the per-status next-action button (رد /
  * اقترح ميعاد / فتح الحلقة) arrive with Phase 4 messaging; تحويل لطالب with R-LEAD-06.
  */
@@ -63,6 +64,15 @@ export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: 
         <StatusChip {...leadStatusStyle[lead.status]} label={t.enums.leadStatus[lead.status]} />
       </div>
       <div className="col-start-3 row-start-1 flex justify-end gap-1 sm:col-start-4">
+        <Link
+          to="/admin/inbox"
+          search={{ phone: lead.phone_e164, page: 1 }}
+          aria-label={t.inbox.openThread.replace('{name}', who)}
+          title={t.leads.reply}
+          className={iconButtonClass}
+        >
+          <Icon name="chat" />
+        </Link>
         {lead.status !== 'converted' && lead.status !== 'lost' && (
           <Link
             to="/admin/book"

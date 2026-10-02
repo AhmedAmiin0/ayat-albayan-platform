@@ -20,12 +20,14 @@ const countQuery = (prefix: string, path: string) => ({
  * TODO(R-SCH-03, R-REP-05, R-SUB-02): الجدول / التقارير / الاشتراكات counts when those land.
  */
 export function useNavCounts(): NonNullable<AdminNavProps['counts']> {
-  const [students, teachers, newLeads, applicants] = useQueries({
+  const [students, teachers, newLeads, applicants, unread] = useQueries({
     queries: [
       countQuery('students', '/students?page=1&pageSize=1'),
       countQuery('teachers', '/teachers?page=1&pageSize=1'),
       countQuery('leads', '/leads?status=new&page=1&pageSize=1'),
       countQuery('job-applicants', '/job-applicants?page=1&pageSize=1'),
+      // Threads with a message no admin has opened (Phase 4 H1), also the admin's turn.
+      countQuery('threads', '/threads?unread=true&page=1&pageSize=1'),
     ],
   });
   const counts: NonNullable<AdminNavProps['counts']> = {};
@@ -33,5 +35,6 @@ export function useNavCounts(): NonNullable<AdminNavProps['counts']> {
   if (teachers.data !== undefined) counts.teachers = { text: String(teachers.data) };
   if (applicants.data !== undefined) counts.jobApplicants = { text: String(applicants.data) };
   if (newLeads.data) counts.leads = { text: t.nav.newLeads.replace('{n}', String(newLeads.data)), act: true };
+  if (unread.data) counts.inbox = { text: t.nav.newLeads.replace('{n}', String(unread.data)), act: true };
   return counts;
 }

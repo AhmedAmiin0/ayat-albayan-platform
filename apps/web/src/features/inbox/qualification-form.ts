@@ -1,0 +1,78 @@
+import { GENDERS, leadQualificationPatchSchema, type Gender, type LeadQualificationPatch } from '@ab/shared';
+import { t } from '@/lib/i18n';
+
+// R-LEAD-03: the lead's structured qualification, captured in the thread. All optional; a field
+// emptied by the admin is sent as null (clears it); untouched fields are not sent (L1 merges).
+
+export const TEXT_FIELDS = ['student_name', 'country', 'level', 'memorized', 'goal', 'riwaya'] as const;
+type TextField = (typeof TEXT_FIELDS)[number];
+
+export type QualForm = Record<TextField, string> & {
+  age: string;
+  gender: Gender | '';
+  tz: string;
+  available_days: number[];
+  preferred_from: string;
+  preferred_to: string;
+};
+
+export type QualErrors = Partial<Record<keyof QualForm, string>>;
+export type QualResult = { ok: true; patch: LeadQualificationPatch } | { ok: false; errors: QualErrors };
+
+const str = (v: unknown): string => (typeof v === 'string' ? v : typeof v === 'number' ? String(v) : '');
+
+/** leads.qualification (jsonb, anything) → the form's strings. */
+export function qualForm(q: unknown): QualForm {
+  const r = q && typeof q === 'object' ? (q as Record<string, unknown>) : {};
+  const days = Array.isArray(r['available_days']) ? r['available_days'].filter((d): d is number => Number.isInteger(d)) : [];
+  const gender = GENDERS.find((g) => g === r['gender']) ?? '';
+  return {
+    student_name: str(r['student_name']),
+    age: str(r['age']),
+    gender,
+    country: str(r['country']),
+    tz: str(r['tz']),
+    level: str(r['level']),
+    memorized: str(r['memorized']),
+    goal: str(r['goal']),
+    riwaya: str(r['riwaya']),
+    available_days: [...days].sort((a, b) => a - b),
+    preferred_from: str(r['preferred_from']),
+    preferred_to: str(r['preferred_to']),
+  };
+}
+
+function wire(key: keyof QualForm, form: QualForm): unknown {
+  const value = form[key];
+  if (key === 'available_days') return form.available_days.length ? form.available_days : null;
+  if (typeof value !== 'string') return value;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  return key === 'age' ? Number(trimmed) : trimmed;
+}
+
+const MESSAGES: QualErrors = {
+  age: t.settings.invalid,
+  tz: t.common.invalidTimeZone,
+  preferred_from: t.common.invalidTime,
+  preferred_to: t.common.invalidTime,
+};
+
+/** Only what changed, validated with the API's own schema (leadQualificationPatchSchema). */
+export function qualPatch(form: QualForm, before: QualForm): QualResult {
+  const patch: Record<string, unknown> = {};
+  for (const key of Object.keys(form) as (keyof QualForm)[]) {
+    if (JSON.stringify(wire(key, form)) !== JSON.stringify(wire(key, before))) patch[key] = wire(key, form);
+  }
+  if (form.preferred_from && form.preferred_to && form.preferred_from >= form.preferred_to) {
+    return { ok: false, errors: { preferred_to: t.common.endBeforeStart } };
+  }
+  const parsed = leadQualificationPatchSchema.safeParse(patch);
+  if (parsed.success) return { ok: true, patch: parsed.data };
+  const errors: QualErrors = {};
+  for (const issue of parsed.error.issues) {
+    const key = issue.path[0] as keyof QualForm;
+    errors[key] = MESSAGES[key] ?? t.common.error;
+  }
+  return { ok: false, errors };
+}
