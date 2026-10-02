@@ -13,6 +13,9 @@ jest.mock('@/lib/api', () => ({
 }));
 
 const dayKey = ['lessons', 'day', { date: '2026-10-01', tz: 'Asia/Riyadh' }];
+/** GET /lessons/day calls only (the cards also read each student's balance and the settings). */
+const dayCalls = () =>
+  mockApiFetch.mock.calls.filter(([path]: [string]) => path.startsWith('/lessons/day')).length;
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -59,7 +62,7 @@ test('pills count the returned day and filter it on the phone', async () => {
   await fireEvent.press(screen.getByRole('tab', { name: `${t.enums.lessonStatus.confirmed} 1` }));
   expect(screen.getByText('جنى وليد')).toBeTruthy();
   expect(screen.queryByText('يوسف أحمد')).toBeNull();
-  expect(mockApiFetch).toHaveBeenCalledTimes(1);
+  expect(dayCalls()).toBe(1);
 });
 
 test('only open lessons get actions: تأكيد where it can still be confirmed, إلغاء on both', async () => {
@@ -107,5 +110,5 @@ test('pull to refresh asks the API again', async () => {
   const [list] = container.queryAll((node) => typeof node.props['onRefresh'] === 'function');
   if (!list) throw new Error('no pull-to-refresh on the list');
   await fireEvent(list, 'refresh');
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(dayCalls()).toBe(2));
 });
