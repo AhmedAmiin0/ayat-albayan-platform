@@ -43,7 +43,7 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
   expect(screen.getByRole('header', { name: t.subscriptions.new })).toBeTruthy();
   expect(screen.getByText('خطوة 1 من 5 · الطالب')).toBeTruthy();
   expect(screen.getByLabelText(t.guardians.name).props.value).toBe('هدى سالم');
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'يوسف');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
 
@@ -98,12 +98,13 @@ test('the trial is still offered there; a lead past its trial shows converted af
   const client = createTestQueryClient();
   client.setQueryData(LEADS_KEY, cachedList([{ ...huda, status: 'trial_done' }]));
   await renderWithQuery(<BookTrialScreen />, client);
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'يوسف');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await press('radio', t.enums.packageSize.trial);
+  await press('radio', t.booking.packageTrial);
   expect(screen.getByText(t.booking.trialFree)).toBeTruthy();
-  expect(screen.queryByRole('radio', { name: t.enums.duration['60'] })).toBeNull();
+  // A trial takes the form's «المده» too, 45 by default.
+  expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
   await press('radio', t.enums.packageSize['8']);
   await press('button', t.booking.next);
   await press('button', '17:00');

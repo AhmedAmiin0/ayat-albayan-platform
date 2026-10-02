@@ -1,4 +1,4 @@
-import type { Program, StudentStatus } from '@ab/shared';
+import type { Gender, Program, StudentStatus } from '@ab/shared';
 
 // Response shapes of apps/api/src/modules/students (students.mapper.ts), the fields mobile reads.
 // Same as apps/web/src/features/students/types.ts; the apps cannot import each other.
@@ -16,6 +16,9 @@ export type StudentListItem = StudentRef & {
 
 /** GET /students/:id. */
 export type StudentProfile = StudentRef & {
+  /** «سن الطالب» / «النوع» from the registration form; optional: a profile cached by an older build has none. */
+  age?: number | null;
+  gender?: Gender | null;
   program: Program;
   level: string | null;
   memorized: string | null;

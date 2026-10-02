@@ -13,7 +13,7 @@ export interface SlotStepProps {
   teacherId: string;
   /** The family's zone: the small clock under each Riyadh time. */
   tz: string;
-  /** The lesson length the slot must fit (lessonMinutes). */
+  /** The lesson length the slot must fit (the draft's «المده»). */
   durationMin: number;
   onPick: (startsAt: string) => void;
 }

@@ -5,8 +5,10 @@ import { FormLabel } from '@/payments/FormLabel';
 import { Field } from '@/ui/Field';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { ErrorLine } from '../ErrorLine';
+import { FamilyFields } from './FamilyFields';
 import { CLEAR } from './PreferenceFields';
 import type { QualErrors, QualForm, TextField } from './qualification-form';
+import { QualText } from './QualText';
 
 export interface QualFieldsProps {
   form: QualForm;
@@ -19,29 +21,22 @@ const GENDER_PILLS: FilterPill<Gender | ''>[] = [
   ...GENDERS.map((g) => ({ value: g, label: t.enums.gender[g] })),
 ];
 
-const TEXT: { key: TextField; label: string }[] = [
-  { key: 'country', label: t.leads.country },
+const STUDY: { key: TextField; label: string }[] = [
   { key: 'level', label: t.leads.level },
   { key: 'memorized', label: t.leads.memorized },
   { key: 'goal', label: t.leads.goal },
   { key: 'riwaya', label: t.leads.riwaya },
 ];
 
-/** Who the student is (R-LEAD-03): name, age, gender, country, level, memorized, goal, riwaya. */
-export function QualificationFields({ form, errors, onChange }: QualFieldsProps) {
-  const text = (key: TextField, label: string) => {
-    const error = errors[key];
-    return (
-      <View key={key} style={{ gap: 4 }}>
-        <Field label={label} value={form[key]} onChangeText={(v) => onChange({ [key]: v })} />
-        {error ? <ErrorLine message={error} /> : null}
-      </View>
-    );
-  };
-
+/**
+ * Who the student is (R-LEAD-03), in the registration form's order and wording: name, age, gender,
+ * country, then the family questions, then level, memorized, goal, riwaya.
+ */
+export function QualificationFields(props: QualFieldsProps) {
+  const { form, errors, onChange } = props;
   return (
     <View style={{ gap: 14 }}>
-      {text('student_name', t.leads.studentName)}
+      <QualText {...props} field="student_name" label={t.leads.studentName} />
       <View style={{ gap: 4 }}>
         <Field
           label={t.leads.studentAge}
@@ -63,7 +58,11 @@ export function QualificationFields({ form, errors, onChange }: QualFieldsProps)
           onChange={(gender) => onChange({ gender })}
         />
       </View>
-      {TEXT.map(({ key, label }) => text(key, label))}
+      <QualText {...props} field="country" label={t.leads.country} />
+      <FamilyFields {...props} />
+      {STUDY.map(({ key, label }) => (
+        <QualText key={key} {...props} field={key} label={label} />
+      ))}
     </View>
   );
 }

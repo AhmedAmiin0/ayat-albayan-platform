@@ -63,6 +63,15 @@ test('patchCached patches a plain array response (GET /lessons/day) without touc
   expect(data[1]?.status).toBe('scheduled');
 });
 
+test('patchCached patches the overview’s lessons (GET /lessons/overview), teachers untouched', () => {
+  const data = { from: 'f', to: 't', teachers: [{ id: 'b' }], lessons: [{ id: 'a', status: 'scheduled' }, { id: 'b', status: 'scheduled' }] };
+  expect(patchCached(data, { id: 'b', status: 'confirmed' })).toEqual({
+    ...data,
+    lessons: [{ id: 'a', status: 'scheduled' }, { id: 'b', status: 'confirmed' }],
+  });
+  expect(data.lessons[1]?.status).toBe('scheduled');
+});
+
 test('keys are the path segments, lists add their params', () => {
   expect(pathKey('/students/42')).toEqual(['students', '42']);
   expect(listKey('/leads', { status: 'new' })).toEqual(['leads', 'list', { status: 'new' }]);

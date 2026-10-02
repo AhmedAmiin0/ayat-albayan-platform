@@ -67,7 +67,14 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
       status: 'trial',
       teacher_gender_pref: null,
     },
-    guardian: { name: 'هدى سالم', phone_e164: '+966552147730', tz: 'Asia/Riyadh', country: 'SA' },
+    // «عرفت عننا منين؟» comes over from the lead (a Facebook ad).
+    guardian: {
+      name: 'هدى سالم',
+      phone_e164: '+966552147730',
+      tz: 'Asia/Riyadh',
+      country: 'SA',
+      source: 'facebook_ad',
+    },
   });
   expect(
     screen.getByText(t.booking.firstLesson.replace('{when}', whenText(SUN_17, 'Asia/Riyadh'))),
@@ -83,7 +90,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
 
 test('teachers: filtered by program and gender; one without availability shows why and cannot be picked', async () => {
   await renderWithQuery(<BookTrialScreen />, seededClient());
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'يوسف');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   expect(await screen.findByText(t.booking.noAvailabilityWhy)).toBeTruthy();
   expect(screen.getByText(t.booking.notAvailable)).toBeTruthy();
@@ -102,7 +109,7 @@ test('teachers: filtered by program and gender; one without availability shows w
 
 test('slots: only free ones, by Riyadh day; «رجوع» walks the steps back, then leaves', async () => {
   await renderWithQuery(<BookTrialScreen />, seededClient());
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'يوسف');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   expect(await screen.findByRole('button', { name: '17:00' })).toBeTruthy();
@@ -114,7 +121,7 @@ test('slots: only free ones, by Riyadh day; «رجوع» walks the steps back, t
   await back();
   expect(await screen.findByText('خطوة 2 من 4 · المعلم/ة')).toBeTruthy();
   await back();
-  expect(screen.getByLabelText(t.students.name).props.value).toBe('يوسف');
+  expect(screen.getByLabelText(t.leads.studentName).props.value).toBe('يوسف');
   expect(mockBack).not.toHaveBeenCalled();
   await back();
   expect(mockBack).toHaveBeenCalledTimes(1);

@@ -8,18 +8,27 @@ import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { ErrorLine } from '../ErrorLine';
 import { DayChips } from './DayChips';
 import { timeOptions } from './qualification-form';
+import { GROUP_KINDS, type GroupKind } from './qualification-schema';
 import type { QualFieldsProps } from './QualificationFields';
+import { QualText } from './QualText';
 
 /** «—» first in every single choice: picking it clears the field (sent as null). */
 export const CLEAR: FilterPill<''> = { value: '', label: '—' };
 
 type TimeKey = 'preferred_from' | 'preferred_to';
 
+const GROUP_PILLS = (): FilterPill<GroupKind | ''>[] => [
+  CLEAR,
+  ...GROUP_KINDS.map((v) => ({ value: v, label: t.leads.groupKindOption[v] })),
+];
+
 /**
- * When the student can study (R-LEAD-03): zone, days, and a time range picked from 30-minute
- * choices, like the web's selects. Times are never typed (rule 6).
+ * When and how the student can study (R-LEAD-03), in the old form's order: days, a start-time
+ * range picked from 30-minute choices (never typed, rule 6), the zone they attend in, the lesson
+ * type, then «ملاحظات أو طلبات خاصة».
  */
-export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
+export function PreferenceFields(props: QualFieldsProps) {
+  const { form, errors, onChange } = props;
   const group = (label: string, error: string | undefined, pills: ReactNode) => (
     <View style={{ gap: 6 }}>
       <FormLabel>{label}</FormLabel>
@@ -44,6 +53,17 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
   return (
     <View style={{ gap: 14 }}>
       {group(
+        t.leads.availableDays,
+        errors.available_days,
+        <DayChips
+          value={form.available_days}
+          onChange={(available_days) => onChange({ available_days })}
+        />,
+      )}
+      <FormLabel>{t.leads.preferredTime}</FormLabel>
+      {time('preferred_from', t.availability.from)}
+      {time('preferred_to', t.availability.to)}
+      {group(
         form.tz ? `${t.leads.tz} · ${cityOf(form.tz)}` : t.leads.tz,
         errors.tz,
         <FilterPills
@@ -55,13 +75,17 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
         />,
       )}
       {group(
-        t.leads.availableDays,
-        errors.available_days,
-        <DayChips value={form.available_days} onChange={(available_days) => onChange({ available_days })} />,
+        t.leads.groupKind,
+        errors.group_kind,
+        <FilterPills
+          role="radiogroup"
+          accessibilityLabel={t.leads.groupKind}
+          items={GROUP_PILLS()}
+          value={form.group_kind}
+          onChange={(group_kind) => onChange({ group_kind })}
+        />,
       )}
-      <FormLabel>{t.leads.preferredTime}</FormLabel>
-      {time('preferred_from', t.availability.from)}
-      {time('preferred_to', t.availability.to)}
+      <QualText {...props} field="notes" label={t.leads.notes} multiline />
     </View>
   );
 }

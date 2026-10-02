@@ -7,6 +7,8 @@ const PATHS = {
     'M12 2.5v2M12 19.5v2M2.5 12h2M19.5 12h2',
     'M5.3 5.3l1.4 1.4M17.3 17.3l1.4 1.4M5.3 18.7l1.4-1.4M17.3 6.7l1.4-1.4',
   ],
+  // A calendar page: frame, the two rings and the header rule.
+  schedule: ['M4.5 5.5h15v15h-15z', 'M8 3v4M16 3v4M4.5 10h15'],
   inbox: ['M20.5 11.5a8.5 8.5 0 0 1-12.4 7.6L3.5 20.5l1.4-4.6A8.5 8.5 0 1 1 20.5 11.5Z'],
   students: [
     'M2.5 20v-1.5a4.5 4.5 0 0 1 4.5-4.5h4a4.5 4.5 0 0 1 4.5 4.5V20',

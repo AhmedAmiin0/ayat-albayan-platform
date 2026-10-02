@@ -28,24 +28,6 @@ export function agendaDays(lessons: readonly LessonView[], start: string, count 
   return days;
 }
 
-export interface TeacherLessons {
-  teacher: LessonView['teacher'];
-  lessons: LessonView[];
-}
-
-/** «الجدول»: one day's lessons by teacher (teachers by name), each teacher's earliest first. */
-export function byTeacher(lessons: readonly LessonView[]): TeacherLessons[] {
-  const groups = new Map<string, TeacherLessons>();
-  for (const lesson of visibleLessons(lessons)) {
-    const group = groups.get(lesson.teacher.id) ?? { teacher: lesson.teacher, lessons: [] };
-    group.lessons.push(lesson);
-    groups.set(lesson.teacher.id, group);
-  }
-  return [...groups.values()].sort((a, b) =>
-    a.teacher.display_name_ar.localeCompare(b.teacher.display_name_ar, 'ar'),
-  );
-}
-
 /**
  * «عند المعلم/ة 15:00 بتوقيت القاهرة» when the teacher's wall clock reads differently from
  * Riyadh's (Cairo in winter); null when it reads the same (Riyadh, or Cairo on summer time). Past

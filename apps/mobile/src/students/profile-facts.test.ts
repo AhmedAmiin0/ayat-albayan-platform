@@ -10,6 +10,16 @@ test('program, tz and «no teacher» when everything else is empty', () => {
   ]);
 });
 
+test('the form’s age and gender lead the facts; unknown ones are left out', () => {
+  const facts = profileFacts({ ...base, age: 9, gender: 'female' });
+  expect(facts.slice(0, 3)).toEqual([
+    { label: t.students.age, value: '9' },
+    { label: t.students.gender, value: t.enums.gender.female },
+    { label: t.students.program, value: t.enums.program.quran },
+  ]);
+  expect(profileFacts({ ...base, age: null, gender: null })[0]?.label).toBe(t.students.program);
+});
+
 test('filled fields appear in form order, trimmed', () => {
   const teacher = { id: 't1', display_name_ar: 'أ. منى', meeting_link: null };
   const facts = profileFacts({ ...base, riwaya: 'حفص', level: ' مبتدئ ', memorized: 'جزء عم', teacher });

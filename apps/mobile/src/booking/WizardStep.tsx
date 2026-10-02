@@ -2,7 +2,6 @@ import type { BookFailure } from './booking-errors';
 import { ConfirmStep } from './ConfirmStep';
 import { ContactStep } from './ContactStep';
 import type { StudentChoice, TrialDraft } from './draft';
-import { lessonMinutes } from './package-choice';
 import { PackageStep } from './PackageStep';
 import { SlotStep } from './SlotStep';
 import { TeacherStep } from './TeacherStep';
@@ -29,7 +28,15 @@ export interface WizardStepProps {
 export function WizardStep({ step, steps, draft, patch, go, booking }: WizardStepProps) {
   const next = steps[steps.indexOf(step) + 1] ?? 'confirm';
   if (step === 'contact') {
-    return <ContactStep value={draft} onChange={patch} onNext={() => go(next)} />;
+    // «المده» is asked here unless a package step follows (it asks the length with the package).
+    return (
+      <ContactStep
+        value={draft}
+        withDuration={!steps.includes('package')}
+        onChange={(p) => patch(p.durationMin ? { ...p, startsAt: null } : p)}
+        onNext={() => go(next)}
+      />
+    );
   }
   if (step === 'teacher') {
     return (
@@ -58,7 +65,7 @@ export function WizardStep({ step, steps, draft, patch, go, booking }: WizardSte
       <SlotStep
         teacherId={draft.teacher.id}
         tz={draft.tz}
-        durationMin={lessonMinutes(draft)}
+        durationMin={draft.durationMin}
         onPick={(startsAt) => {
           patch({ startsAt });
           go(next);

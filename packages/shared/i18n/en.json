@@ -124,13 +124,13 @@
     "profile": "Student profile",
     "code": "Code",
     "name": "Student name",
-    "age": "Age",
+    "age": "Student's age",
     "gender": "Gender",
     "program": "Program",
-    "level": "Level",
-    "memorized": "Memorized",
-    "goal": "Goal",
-    "riwaya": "Riwaya",
+    "level": "Current reading level",
+    "memorized": "How much has the student memorized?",
+    "goal": "Goal of subscribing",
+    "riwaya": "Requested riwaya",
     "tz": "Time zone",
     "status": "Status",
     "teacher": "Teacher",
@@ -176,16 +176,18 @@
     "normalized": "Normalized:",
     "withTeacher": "With {teacher}",
     "duplicateHint": "Merging moves all lessons, reports, and payments, and the old record is kept in the history.",
-    "emptyHint": "As soon as you convert a conversation into a student or add one yourself, they'll show up here."
+    "emptyHint": "As soon as you convert a conversation into a student or add one yourself, they'll show up here.",
+    "ageInvalid": "Write the age in digits (3 to 99)"
   },
   "guardians": {
     "title": "Guardians",
     "add": "Add guardian",
     "name": "Guardian name",
-    "phone": "WhatsApp number",
+    "phone": "WhatsApp number (with country code)",
+    "phoneHint": "Start with your country code, then your number — Saudi Arabia 966 · Egypt 20 · Sudan 249",
     "country": "Country",
     "tz": "Time zone",
-    "source": "How they found us",
+    "source": "How did you hear about us?",
     "notes": "Notes",
     "students": "Children",
     "addSibling": "Add brother / sister",
@@ -279,16 +281,16 @@
     "empty": "No conversations",
     "qualification": "Student details",
     "studentName": "Student name",
-    "studentAge": "Age",
+    "studentAge": "Student's age",
     "gender": "Gender",
     "country": "Country",
-    "tz": "Time zone",
-    "level": "Level",
-    "memorized": "Memorized",
-    "goal": "Goal",
-    "riwaya": "Riwaya",
+    "tz": "Country / time zone you'll attend in",
+    "level": "Current reading level",
+    "memorized": "How much has the student memorized?",
+    "goal": "Goal of subscribing",
+    "riwaya": "Requested riwaya",
     "availableDays": "Available days",
-    "preferredTime": "Preferred time",
+    "preferredTime": "Start time",
     "changeStatus": "Change status",
     "invalidTransition": "You can't move the conversation to this status from its current one",
     "reclassifyAsApplicant": "Move to job applications",
@@ -306,7 +308,21 @@
     "countStatus": "{n} {status}",
     "mobile": {
       "offline": "The connection dropped, so this is the last data we received and changes can't be saved right now. Try again when you're back online."
-    }
+    },
+    "city": "City",
+    "filledBy": "You're filling this in as",
+    "filledByOption": {
+      "guardian": "The student's guardian",
+      "student": "The student"
+    },
+    "guardianRelation": "Relation to the student",
+    "altPhone": "Alternative contact number",
+    "groupKind": "Lesson type",
+    "groupKindOption": {
+      "individual": "Individual",
+      "group": "Group"
+    },
+    "notes": "Notes or special requests"
   },
   "jobApplicants": {
     "title": "Job applications",
@@ -364,7 +380,19 @@
     "needsReview": "Conflict",
     "generatedConflict": "This lesson was added automatically and has a conflict. Review it and change its time if needed:",
     "noLessons": "No lessons",
-    "hasProposal": "New time proposed"
+    "hasProposal": "New time proposed",
+    "viewLabel": "View",
+    "viewDay": "Day",
+    "viewWeek": "Week",
+    "prevDay": "Previous day",
+    "nextDay": "Next day",
+    "free": "Free {from} – {to}",
+    "freeTotal": "Free {h}",
+    "trialTag": "Trial",
+    "dayOff": "Day off",
+    "noWindows": "No available hours this day",
+    "teachersPicked": "{n} teachers",
+    "dayBoard": "Day schedule"
   },
   "booking": {
     "title": "Book lessons",
@@ -456,6 +484,8 @@
       "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice.",
       "toSubscription": "Continue to the subscription"
     },
+    "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
+    "packageTrial": "Free trial lesson only",
     "dayLocked": "The picked time's day stays on",
     "packageDays": "{package} = {perWeek}"
   },
@@ -1464,7 +1494,7 @@
       "facebook_ad": "Facebook ad",
       "instagram_ad": "Instagram ad",
       "whatsapp_direct": "WhatsApp direct",
-      "referral": "Referral",
+      "referral": "Friend or acquaintance",
       "other": "Other"
     },
     "lessonStatus": {

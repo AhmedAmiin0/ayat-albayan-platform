@@ -2,6 +2,8 @@ import type { AvailabilityRow } from '@/more/types';
 import { lesson } from '@/today/fixtures';
 import { ltr } from '@/ui/Ltr';
 import { availabilityLine, teacherClock } from './agenda';
+import { abrar, omar } from './overview-fixtures';
+import { freeLabel, teacherMeta, windowsLine } from './overview-text';
 import { dayLabel, weekLabel } from './week';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
@@ -9,6 +11,14 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
+});
+
+test('«الجدول» sections in English: who, load and city; windows and free gaps on the Riyadh clock', () => {
+  expect(teacherMeta(abrar)).toBe('Female teacher · Quran memorization and tajweed · Students: 3 of 10 · Cairo');
+  expect(windowsLine(omar.windows)).toBe(`Available ${ltr('20:00 – 02:00')} Riyadh time`);
+  const [gap] = abrar.free;
+  if (!gap) throw new Error('fixture');
+  expect(freeLabel(gap)).toBe(`Free ${ltr('10:45')} – ${ltr('16:00')}`);
 });
 
 test('days and the week range read in English with Western digits', () => {

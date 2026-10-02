@@ -97,7 +97,7 @@ test('an end before the start, or an impossible age, is refused in words and not
   await fireEvent.press(group(t.availability.to).getByRole('radio', { name: '18:00' }));
   await fireEvent.changeText(screen.getByLabelText(t.leads.studentAge), '1');
   await save();
-  expect(screen.getByText(t.settings.invalid)).toBeTruthy();
+  expect(screen.getByText(t.students.ageInvalid)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 

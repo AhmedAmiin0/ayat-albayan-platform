@@ -38,7 +38,7 @@ test('an unnamed +20 lead: both names required, Cairo picked from the number, no
 
 test('a bad number shows why (normalizePhone) and blocks «التالي»; a fixed one goes on as E.164', async () => {
   await renderWithQuery(<BookTrialScreen />, seededClient());
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'مريم');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'مريم');
   await fireEvent.changeText(screen.getByLabelText(t.guardians.name), 'أبو مريم');
   await fireEvent.changeText(screen.getByLabelText(t.guardians.phone), '0101234');
   expect(screen.getByText(t.common.phoneErrors.missing_country_code)).toBeTruthy();
@@ -57,7 +57,7 @@ test('the family zone set on step 1 is the rule zone, and the slots show its clo
   mockParams.leadId = 'a1';
   await renderWithQuery(<BookTrialScreen />, seededClient());
   await fireEvent.press(screen.getByRole('radio', { name: 'دبي' }));
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'يوسف');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await fireEvent.press(await screen.findByText('مريم المعلمة'));
   expect(await screen.findByText('18:00 بتوقيت دبي')).toBeTruthy();
