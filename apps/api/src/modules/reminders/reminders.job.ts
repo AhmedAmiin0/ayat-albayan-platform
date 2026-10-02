@@ -57,7 +57,6 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const summary: ReminderSummary = { lessons: 0, queued: 0, dropped: 0, pushed: 0 };
     try {
       const settings = await this.settings.all();
-      summary.dropped = await this.queries.dropCancelled(now);
       const lessons = await this.queries.upcoming({ now, until: new Date(now.getTime() + LOOKAHEAD_MS) });
       summary.lessons = lessons.length;
       const dayBefore =
@@ -68,8 +67,19 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     } catch (e) {
       this.log.error(`reminders run aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
+    summary.dropped = await this.dropCancelled(now);
     if (summary.queued + summary.dropped + summary.pushed > 0) this.log.log(`reminders: ${JSON.stringify(summary)}`);
     return summary;
+  }
+
+  /** Cleanup on its own: a failure here never keeps reminders from being queued. */
+  private async dropCancelled(now: Date): Promise<number> {
+    try {
+      return await this.queries.dropCancelled(now);
+    } catch (e) {
+      this.log.warn(`dropping cancelled reminders failed: ${e instanceof Error ? e.message : String(e)}`);
+      return 0;
+    }
   }
 
   private async confirmations(lessons: readonly ReminderLesson[], now: Date): Promise<number> {

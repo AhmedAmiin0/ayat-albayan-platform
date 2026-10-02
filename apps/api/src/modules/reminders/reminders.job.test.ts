@@ -60,6 +60,13 @@ describe('RemindersJob.runOnce (R-MSG-02)', () => {
     expect(queries.dropCancelled).toHaveBeenCalledWith(at('2026-10-04T13:10:00Z'));
   });
 
+  it('a failing cleanup never blocks queuing', async () => {
+    const { job, queries, queued } = setup();
+    queries.dropCancelled.mockRejectedValueOnce(new Error('embed failed'));
+    expect(await job.runOnce(at('2026-10-04T13:10:00Z'))).toMatchObject({ queued: 3, dropped: 0 });
+    expect(queued).toHaveLength(3);
+  });
+
   it('never throws: a failing read is logged and the summary is empty', async () => {
     const { job, queries } = setup();
     queries.upcoming.mockRejectedValueOnce(new Error('db down'));
