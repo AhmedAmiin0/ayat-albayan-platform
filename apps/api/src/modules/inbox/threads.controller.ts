@@ -7,8 +7,9 @@ import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow } from '../teachers/http';
 import { waHttpError } from '../whatsapp/template.mapper';
+import type { TeacherScope } from './teacher-scope';
+import { ThreadReads } from './thread-reads';
 import { ThreadSendService } from './thread-send.service';
-import { ThreadsService } from './threads.service';
 
 const listQuery = pageQuerySchema.extend({
   search: z.string().trim().max(100).optional(),
@@ -26,53 +27,63 @@ function phoneParam(raw: string): string {
   return phone.e164;
 }
 
-/** H1–H4 (docs/12 §4): the WhatsApp inbox (R-LEAD-02, R-MSG-05). Sends are audited. */
+type Audited = { view: MessageView; action: string; user: AuthUser; scope: TeacherScope | null };
+
+/**
+ * H1–H4 (docs/12 §4): the WhatsApp inbox (R-LEAD-02, R-MSG-05). Sends are audited. Same paths for
+ * the admin (everything) and, in teacher mode, a teacher (TeacherScope: their families' chats and
+ * their own, server-side; R-TCH-03).
+ */
 @ApiTags('inbox')
 @ApiBearerAuth()
-@Roles('admin')
+@Roles('admin', 'teacher')
 @Controller('threads')
 export class ThreadsController {
   constructor(
-    private readonly threads: ThreadsService,
+    private readonly reads: ThreadReads,
     private readonly sends: ThreadSendService,
     private readonly audit: AuditService,
   ) {}
 
   @Get()
-  list(@Query() query: unknown) {
-    return this.threads.list(parseOrThrow(listQuery, query));
+  list(@Query() query: unknown, @CurrentUser() user: AuthUser) {
+    return this.reads.list(parseOrThrow(listQuery, query), user);
   }
 
   @Get(':phone')
-  detail(@Param('phone') raw: string, @Query() query: unknown) {
-    return this.threads.detail({ phone: phoneParam(raw), ...parseOrThrow(detailQuery, query) });
+  detail(@Param('phone') raw: string, @Query() query: unknown, @CurrentUser() user: AuthUser) {
+    return this.reads.detail({ phone: phoneParam(raw), ...parseOrThrow(detailQuery, query) }, user);
   }
 
   @Post(':phone/text')
   @HttpCode(201)
   async text(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTextSchema, body);
-    const view = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id });
-    return this.audited({ view, action: 'thread_text', user });
+    const scope = await this.reads.scope(user);
+    const view = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id, scope });
+    return this.audited({ view, action: 'thread_text', user, scope });
   }
 
   @Post(':phone/template')
   @HttpCode(201)
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
-    const view = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id });
-    return this.audited({ view, action: 'thread_template', user });
+    const scope = await this.reads.scope(user);
+    const view = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope });
+    return this.audited({ view, action: 'thread_template', user, scope });
   }
 
-  private async audited(input: { view: MessageView; action: string; user: AuthUser }): Promise<MessageView> {
-    const { view } = input;
+  /** A teacher's send names them in the audit row too (every message a teacher sends is logged). */
+  private async audited(input: Audited): Promise<MessageView> {
+    const { view, scope } = input;
+    const teacher = scope ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName } : {};
     await this.audit.record({
       actorId: input.user.id,
       entity: 'messages',
       entityId: view.id,
       action: input.action,
       before: null,
-      after: { phone: view.phone_e164, template_key: view.template_key, status: view.status },
+      after: { phone: view.phone_e164, template_key: view.template_key, status: view.status, ...teacher },
     });
     return view;
   }

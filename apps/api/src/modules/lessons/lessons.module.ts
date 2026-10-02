@@ -14,6 +14,8 @@ import { LessonStore } from './lesson-store';
 import { LessonViews } from './lesson-views';
 import { LessonsController } from './lessons.controller';
 import { LessonsQueries } from './lessons.queries';
+import { OverviewQueries } from './overview/overview.queries';
+import { OverviewService } from './overview/overview.service';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
 import { RuleCancelController } from './rule-cancel.controller';
@@ -26,7 +28,9 @@ import { TeacherMeQueries } from './teacher-me.queries';
  * Lesson lists (week / day / student), confirm, status, reschedule, cancel, and the teacher's own
  * routes (/teachers/me, /teachers/me/lessons, «اقترح ميعاد تاني» proposals). R-SCH-03, R-SCH-07,
  * R-SCH-08, R-TCH-03, R-LES-01..03.
- * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm).
+ * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm);
+ * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees).
+ * GET /lessons/overview is the all-teachers calendar (R-SCH-09).
  */
 @Module({
   imports: [SchedulingModule, SubscriptionsModule, TeachersModule],
@@ -48,12 +52,14 @@ import { TeacherMeQueries } from './teacher-me.queries';
     LessonStore,
     LessonViews,
     LessonsQueries,
+    OverviewQueries,
+    OverviewService,
     ProposalDecisionService,
     RescheduleOneService,
     RescheduleRuleService,
     RulePlanner,
     TeacherMeQueries,
   ],
-  exports: [LessonStatusService, LessonViews],
+  exports: [LessonStatusService, LessonViews, TeacherMeQueries],
 })
 export class LessonsModule {}

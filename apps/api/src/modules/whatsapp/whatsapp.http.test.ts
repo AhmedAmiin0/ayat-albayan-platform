@@ -24,15 +24,13 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
     t.storage.signedDownload.mockResolvedValue({ url: 'https://storage.local/r.pdf', expires_at: 'x' });
   });
 
-  it('every route is admin only', async () => {
+  it('every write is admin only (teacher reads: whatsapp.teacher.http.test)', async () => {
     for (const [method, url] of [
-      ['GET', '/messaging/templates'],
       ['POST', '/messaging/templates/health'],
       ['POST', '/messaging/templates/renewal_due/submit'],
       ['POST', `/messages/${ID}/retry`],
       ['POST', `/messages/${ID}/sent-manually`],
       ['POST', `/messages/${ID}/hand-off`],
-      ['GET', '/messages/gate'],
     ] as const) {
       expect((await t.call({ method, url, token: 'teacher' })).statusCode).toBe(403);
     }

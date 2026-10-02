@@ -4,6 +4,7 @@ import { domainError } from './booking.errors';
 import { BookingQueries } from './booking.queries';
 import type { TeacherOptionsQuery } from './booking.dto';
 import { TeacherOptionsQueries, type TeacherFilter } from './teacher-options.queries';
+import { TeachersQueries } from '../teachers/teachers.queries';
 
 /**
  * GET /booking/teachers (R-SCH-06): active teachers of the program, filtered by gender — the
@@ -14,6 +15,7 @@ export class TeacherOptionsService {
   constructor(
     private readonly options: TeacherOptionsQueries,
     private readonly queries: BookingQueries,
+    private readonly teachers: TeachersQueries,
   ) {}
 
   async list(q: TeacherOptionsQuery): Promise<BookingTeacherOption[]> {
@@ -21,7 +23,7 @@ export class TeacherOptionsService {
     if (teachers.length === 0) return [];
     const ids = teachers.map((t) => t.id);
     const [loads, available] = await Promise.all([
-      this.options.loads(ids),
+      this.teachers.loads(ids),
       this.options.withAvailability(ids),
     ]);
     return teachers.map((t) => ({

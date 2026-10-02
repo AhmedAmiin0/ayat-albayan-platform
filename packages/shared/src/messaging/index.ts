@@ -7,6 +7,7 @@ export * from './render.js';
 export * from './reply-note.js';
 export * from './schemas.js';
 export * from './status-style.js';
+export * from './teacher-templates.js';
 export * from './templates.js';
 export * from './thread-people.js';
 export * from './timing.js';

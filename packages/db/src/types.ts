@@ -911,6 +911,7 @@ export type Database = {
           reply_to_wa_id: string | null;
           scheduled_for: string | null;
           sent_at: string | null;
+          sent_by_teacher_id: string | null;
           sent_manually_at: string | null;
           status: Database['public']['Enums']['message_status'];
           template_key: string | null;
@@ -945,6 +946,7 @@ export type Database = {
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
+          sent_by_teacher_id?: string | null;
           sent_manually_at?: string | null;
           status?: Database['public']['Enums']['message_status'];
           template_key?: string | null;
@@ -979,6 +981,7 @@ export type Database = {
           reply_to_wa_id?: string | null;
           scheduled_for?: string | null;
           sent_at?: string | null;
+          sent_by_teacher_id?: string | null;
           sent_manually_at?: string | null;
           status?: Database['public']['Enums']['message_status'];
           template_key?: string | null;
@@ -1022,6 +1025,20 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'lessons';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_sent_by_teacher_id_fkey';
+            columns: ['sent_by_teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_sent_by_teacher_id_fkey';
+            columns: ['sent_by_teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -1679,6 +1696,39 @@ export type Database = {
           },
         ];
       };
+      teacher_thread_reads: {
+        Row: {
+          phone_e164: string;
+          read_at: string;
+          teacher_id: string;
+        };
+        Insert: {
+          phone_e164: string;
+          read_at: string;
+          teacher_id: string;
+        };
+        Update: {
+          phone_e164?: string;
+          read_at?: string;
+          teacher_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_thread_reads_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_thread_reads_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
+        ];
+      };
       teacher_time_off: {
         Row: {
           created_at: string;
@@ -1952,8 +2002,20 @@ export type Database = {
       };
       my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
+      my_thread_phones: {
+        Args: Record<PropertyKey, never>;
+        Returns: { phone_e164: string }[];
+      };
       report_of_path: { Args: { p_name: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
+      teacher_thread_phones: {
+        Args: { p_teacher_id: string };
+        Returns: { phone_e164: string }[];
+      };
+      teacher_unread: {
+        Args: { p_phones: string[]; p_teacher_id: string };
+        Returns: { phone_e164: string; unread: number }[];
+      };
     };
     Enums: {
       admin_task_kind: 'renewal_due' | 'subscription_unpaid';

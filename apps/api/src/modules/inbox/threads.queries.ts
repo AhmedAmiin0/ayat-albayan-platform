@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
-import type { MessageRow, ThreadMessageRow } from '../whatsapp/message.mapper';
+import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/message.mapper';
 import { upcomingLessons } from './thread-lessons';
 import { familyTagsOf, threadPeople } from './thread-people';
 import type { FamilyTag } from './thread-people.mapper';
@@ -15,6 +15,8 @@ export interface ThreadListFilter {
   pageSize: number;
   search?: string;
   unread?: boolean;
+  /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
+  phones?: readonly string[];
 }
 
 function check(error: { message: string } | null, what: string): asserts error is null {
@@ -33,6 +35,7 @@ export class ThreadsQueries {
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     let query = this.db.from('v_threads').select('*', { count: 'exact' });
     if (f.unread) query = query.gt('unread_count', 0);
+    if (f.phones) query = query.in('phone_e164', [...f.phones]);
     const search = f.search ? threadSearchFilter(f.search) : null;
     if (search) query = query.or(search);
     const from = (f.page - 1) * f.pageSize;
@@ -51,16 +54,16 @@ export class ThreadsQueries {
 
   /** Newest first, `limit + 1` rows so the caller knows whether older ones exist; each with its lesson. */
   async messages(input: { phone: string; before?: string; limit: number }): Promise<ThreadMessageRow[]> {
-    let query = this.db.from('messages').select('*, lesson:lessons(starts_at, status)').eq('phone_e164', input.phone);
+    let query = this.db.from('messages').select(`${MESSAGE_SELECT}, lesson:lessons(starts_at, status)` as const).eq('phone_e164', input.phone);
     if (input.before) query = query.lt('created_at', input.before);
     const { data, error } = await query.order('created_at', { ascending: false }).limit(input.limit + 1);
     check(error, 'thread messages read');
     return data ?? [];
   }
 
-  /** The guardian's / teacher's next open lessons (thread-lessons.ts). */
-  lessons(thread: ThreadView, now: Date): Promise<ThreadLesson[]> {
-    return upcomingLessons(this.db, { thread, now });
+  /** The guardian's / teacher's next open lessons (thread-lessons.ts); with `teacherId` only theirs. */
+  lessons(thread: ThreadView, now: Date, teacherId?: string): Promise<ThreadLesson[]> {
+    return upcomingLessons(this.db, { thread, now, teacherId });
   }
 
   /** The guardian, lead and the guardian's students with their packages (thread-people.ts). */
@@ -101,9 +104,16 @@ export class ThreadsQueries {
     return data;
   }
 
-  async get(id: string): Promise<MessageRow | null> {
-    const { data, error } = await this.db.from('messages').select('*').eq('id', id).maybeSingle();
+  async get(id: string): Promise<ThreadMessageRow | null> {
+    const { data, error } = await this.db.from('messages').select(MESSAGE_SELECT).eq('id', id).maybeSingle();
     check(error, 'message read');
     return data;
+  }
+
+  /** The lesson's teacher (teacher-mode template sends); null for an unknown lesson. */
+  async lessonTeacher(lessonId: string): Promise<string | null> {
+    const { data, error } = await this.db.from('lessons').select('teacher_id').eq('id', lessonId).maybeSingle();
+    check(error, 'lesson teacher read');
+    return data?.teacher_id ?? null;
   }
 }

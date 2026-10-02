@@ -1237,7 +1237,11 @@
       "session_closed": "More than 24 hours have passed since their last message — you need to send a template",
       "template_not_approved": "This template isn't approved by Meta yet",
       "invalid_phone": "This number isn't valid",
-      "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp"
+      "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp",
+      "not_your_thread": "This chat isn't one of yours",
+      "own_thread_read_only": "This is your chat with the academy; it's read-only",
+      "template_not_allowed": "Only the admin can send this template",
+      "not_your_lesson": "This lesson isn't one of yours"
     },
     "pickThread": "Choose a conversation from the list",
     "pickThreadHint": "New messages show up here automatically as soon as they arrive.",

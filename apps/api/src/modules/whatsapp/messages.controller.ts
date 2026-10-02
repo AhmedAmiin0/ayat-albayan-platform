@@ -19,8 +19,12 @@ export class MessagesController {
     private readonly sendGate: SendGate,
   ) {}
 
-  /** G: is sending on (env, WhatsApp config, kill switch) and how many rows wait in the queue. */
+  /**
+   * G: is sending on (env, WhatsApp config, kill switch) and how many rows wait in the queue.
+   * Read only, so a teacher's composer (teacher mode) shows the same «الإرسال متوقف» note.
+   */
   @Get('gate')
+  @Roles('admin', 'teacher')
   gate(): Promise<SendGateView> {
     return this.sendGate.view();
   }

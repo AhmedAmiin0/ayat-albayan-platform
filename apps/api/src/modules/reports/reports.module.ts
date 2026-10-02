@@ -16,10 +16,12 @@ import { ReportSubmitService } from './report-submit.service';
 import { ReportsController } from './reports.controller';
 import { ReportsQueries } from './reports.queries';
 import { ReportsService } from './reports.service';
+import { TeacherReportsQueries } from './teacher-reports.queries';
+import { TeacherReportsService } from './teacher-reports.service';
 
 /**
  * Lesson reports: form prefill, drafts, submit (versions + lesson outcome), attachments, history
- * + grade series, teacher pending reports. R-REP-01/02/04/05, R-TCH-03 (docs/11 §4).
+ * + grade series, teacher pending and submitted reports. R-REP-01/02/04/05, R-TCH-03 (docs/11 §4).
  * ReportPdfQueue marks a report pending and kicks ReportPdfJob (R-REP-03).
  */
 @Module({
@@ -37,6 +39,8 @@ import { ReportsService } from './reports.service';
     ReportSubmitService,
     ReportsQueries,
     ReportsService,
+    TeacherReportsQueries,
+    TeacherReportsService,
     { provide: ReportPdfQueue, useClass: PendingPdfQueue },
   ],
   exports: [ReportPdfQueue, ReportsQueries],

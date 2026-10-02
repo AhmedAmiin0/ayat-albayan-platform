@@ -35,7 +35,7 @@ export function messageRow(over: Partial<MessageRow> = {}): MessageRow {
     sent_at: null, delivered_at: null, read_at: null, created_at: '2026-10-02T08:00:00Z', created_by: null,
     attempts: 0, next_attempt_at: null, expires_at: null, sent_manually_at: null, reply_to_wa_id: null,
     media_id: null, media_mime: null, media_path: null, interactive_payload: null, wa_conversation_id: null,
-    wa_pricing_category: null,
+    wa_pricing_category: null, sent_by_teacher_id: null,
     ...over,
   };
 }

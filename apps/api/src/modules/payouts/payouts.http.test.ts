@@ -126,5 +126,10 @@ describe('payouts routes (Y1–Y5, R-PAY-02, R-TCH-04)', () => {
     const none = await call({ method: 'GET', url: '/teachers/me/payouts', token: 'teacher' });
     expect(none.json().code).toBe('teacher_not_linked');
     expect((await call({ method: 'GET', url: '/payouts?month=2026-09', token: 'teacher' })).statusCode).toBe(403);
+    // Teacher mode «مستحقاتي»: no id route reaches another teacher's payout.
+    for (const action of ['approve', 'pay']) {
+      const id = '00000000-0000-4000-8000-0000000000e9';
+      expect((await call({ method: 'POST', url: `/payouts/${id}/${action}`, token: 'teacher' })).statusCode).toBe(403);
+    }
   });
 });

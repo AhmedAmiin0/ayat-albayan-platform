@@ -28,6 +28,8 @@ export interface LessonView {
   rule_id: string | null;
   /** The weekly rule's weekdays (0 = الأحد) in its zone; null for a one-off. Absent in an old cache. */
   rule_byday?: number[] | null;
+  /** The rule is a حلقة تجريبية (schedule_rules.package = 'trial'); a one-off move keeps it. Absent in an old cache. */
+  trial?: boolean;
   teacher: { id: string; display_name_ar: string; tz: string };
   starts_at: string;
   ends_at: string;

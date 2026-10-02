@@ -59,9 +59,17 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     expect(t.queries.familyTags).toHaveBeenCalledWith(['g1']);
   });
 
-  it('admin only', async () => {
-    expect((await t.call({ method: 'GET', url: '/threads', token: 'teacher' })).statusCode).toBe(403);
-    expect((await t.call({ method: 'GET', url: URL, token: 'teacher' })).statusCode).toBe(403);
+  it('admin and teacher (teacher mode, threads.teacher.http.test); a guardian gets 403', async () => {
+    expect((await t.call({ method: 'GET', url: '/threads', token: 'guardian' })).statusCode).toBe(403);
+    expect((await t.call({ method: 'GET', url: URL, token: 'guardian' })).statusCode).toBe(403);
+  });
+
+  it('the admin path never resolves a teacher scope', async () => {
+    t.queries.messages.mockResolvedValue([]);
+    await t.call({ method: 'GET', url: '/threads' });
+    await t.call({ method: 'GET', url: URL });
+    expect(t.teacher.teacher).not.toHaveBeenCalled();
+    expect(t.teacher.stampRead).not.toHaveBeenCalled();
   });
 
   it('H1 pages v_threads with search and unread', async () => {
