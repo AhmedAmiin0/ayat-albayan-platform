@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { conflictsOf, errorCode, lessonErrorText, lessonsQuery, slotsQuery } from './api';
+import { conflictsOf, errorCode, lessonErrorText, overviewQuery, slotsQuery } from './api';
 
 const FROM = new Date('2026-10-02T21:00:00.000Z');
 const TO = new Date('2026-10-09T21:00:00.000Z');
@@ -31,11 +31,9 @@ describe('error helpers (docs/10 §3 errors)', () => {
 });
 
 describe('query keys', () => {
-  it('lessonsQuery sends the UTC window and the teacher filter', () => {
-    const q = lessonsQuery({ from: FROM, to: TO, teacherId: 't1' });
-    expect(q.queryKey.at(-1)).toBe(
-      'from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z&teacherId=t1',
-    );
+  it('overviewQuery sends the UTC window under the lessons key', () => {
+    const q = overviewQuery({ from: FROM, to: TO });
+    expect(q.queryKey).toEqual(['lessons', 'overview', 'from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z']);
   });
 
   it('slotsQuery joins student ids with commas and omits an empty list', () => {

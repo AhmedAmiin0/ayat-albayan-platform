@@ -20,6 +20,16 @@ describe('parseBookSearch (/admin/book)', () => {
     expect(parseBookSearch({ leadId: 'l1', pkg: '9' })).toEqual({ leadId: 'l1' });
     expect(parseBookSearch({ studentId: 's1', pkg: '8' })).toEqual({ studentId: 's1' });
   });
+
+  it('keeps a free gap’s teacher and start next to anything else; a start alone or bad is dropped', () => {
+    const id = '6f1c2a3e-1b2c-4d5e-8f90-123456789abc';
+    expect(parseBookSearch({ teacherId: id, startsAt: '2026-10-04T13:00:00Z' })).toEqual({
+      teacherId: id,
+      startsAt: '2026-10-04T13:00:00.000Z',
+    });
+    expect(parseBookSearch({ studentId: 's1', teacherId: id, startsAt: 'soon' })).toEqual({ studentId: 's1', teacherId: id });
+    expect(parseBookSearch({ teacherId: 't-1', startsAt: '2026-10-04T13:00:00Z' })).toEqual({});
+  });
 });
 
 describe('bookingTeachersQuery', () => {

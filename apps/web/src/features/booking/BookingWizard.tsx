@@ -7,6 +7,7 @@ import { t } from '@/lib/i18n';
 import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
 import { STEPS, stepReady, type BookingDraft, type PickedStudent, type StepKey } from './draft';
+import { teacherPatch, type BookHint } from './hint';
 import { LeadStudentStep } from './LeadStudentStep';
 import { PackageStep } from './PackageStep';
 import { guardianCountry } from './price';
@@ -22,6 +23,8 @@ export interface BookingWizardProps {
   primary: PickedStudent | null;
   siblings: readonly StudentRef[];
   onOpenStudent: (id: string) => void;
+  /** From a calendar free gap: that teacher, then that start, preselected. */
+  hint?: BookHint | null;
 }
 
 /**
@@ -29,7 +32,7 @@ export interface BookingWizardProps {
  * repeat → review → POST /booking. One filled primary per step («التالي», then «احجز» on the
  * review). Every step change (also «اختار ميعاد تاني») moves focus to the new step.
  */
-export function BookingWizard({ initial, primary, siblings, onOpenStudent }: BookingWizardProps) {
+export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null }: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
   const [step, setStep] = useState<StepKey>('students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
@@ -75,7 +78,13 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent }: Boo
         />
       ),
     teacher: (
-      <TeacherStep program={draft.program} genderPref={draft.genderPref} teacher={draft.teacher} onChange={patch} />
+      <TeacherStep
+        program={draft.program}
+        genderPref={draft.genderPref}
+        teacher={draft.teacher}
+        hintId={hint?.teacherId}
+        onChange={(change) => patch(teacherPatch(draft, change, hint))}
+      />
     ),
     package: <PackageStep draft={draft} onChange={patch} />,
     slot: <SlotStep draft={draft} onChange={patch} />,

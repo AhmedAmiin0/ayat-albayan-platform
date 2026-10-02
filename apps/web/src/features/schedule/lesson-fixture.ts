@@ -1,4 +1,5 @@
 import { allowedLessonEvents, type LessonStatus, type LessonView } from '@ab/shared';
+import type { BoardLesson } from './overview-types';
 
 // Test data only (imported by *.test.tsx): LessonView rows shaped like GET /lessons responses.
 
@@ -27,10 +28,11 @@ export interface LessonOverrides {
   rule_id?: string | null;
   conflicts?: LessonView['conflicts'];
   pending_proposal?: LessonView['pending_proposal'];
+  trial?: boolean;
 }
 
-export function lesson(o: LessonOverrides = {}): LessonView {
-  return { ...core(o), conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null };
+export function lesson(o: LessonOverrides = {}): BoardLesson {
+  return { ...core(o), conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null, trial: o.trial ?? false };
 }
 
 function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_proposal'> {

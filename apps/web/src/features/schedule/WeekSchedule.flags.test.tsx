@@ -4,6 +4,8 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { lesson } from './lesson-fixture';
+import { overview } from './overview-fixture';
+import type { BoardLesson } from './overview-types';
 import { WeekSchedule } from './WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -21,9 +23,9 @@ const PROPOSED = lesson({
   pending_proposal: { id: 'pp', proposed_starts_at: '2026-10-12T15:00:00.000Z', note: null, created_at: '2026-10-02T09:00:00.000Z' },
 });
 
-function renderWeek(week: unknown[]) {
+function renderWeek(week: BoardLesson[]) {
   apiFetch.mockImplementation((path: string) =>
-    Promise.resolve(path.startsWith('/lessons') ? week : path.startsWith('/lesson-proposals') ? [PROPOSED] : []),
+    Promise.resolve(path.startsWith('/lessons/overview') ? overview(week) : path.startsWith('/lesson-proposals') ? [PROPOSED] : []),
   );
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
@@ -57,9 +59,21 @@ describe('WeekSchedule — proposals and flags (R-SCH-08, R-SCH-04)', () => {
     expect(within(chip).getByText(t.schedule.needsReview)).toBeTruthy();
   });
 
-  it('an empty week shows the empty state, not «0 حلقة»', async () => {
+  it('a week with no lessons still lists the teachers, never «0 حلقة»', async () => {
     renderWeek([]);
-    expect(await screen.findByText(t.schedule.empty)).toBeTruthy();
+    const grid = await screen.findByRole('table', { name: t.schedule.grid });
+    expect(within(grid).getAllByRole('rowheader')).toHaveLength(3);
+    expect(within(grid).queryAllByRole('button')).toHaveLength(0);
     expect(screen.queryByText(/^0 /)).toBeNull();
+  });
+
+  it('an academy with no teachers yet says so', async () => {
+    apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/lessons/overview') ? overview([], []) : []));
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <WeekSchedule search={{}} onSearch={vi.fn()} />
+      </QueryClientProvider>,
+    );
+    expect(await screen.findByRole('heading', { name: t.teachers.empty })).toBeTruthy();
   });
 });

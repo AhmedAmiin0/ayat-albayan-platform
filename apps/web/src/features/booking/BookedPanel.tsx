@@ -55,7 +55,7 @@ export function BookedPanel({ result, teacherId, tz, subscribeFor, chatPhone }: 
         )}
         <Link
           to="/admin/schedule"
-          search={{ week, teacher: teacherId }}
+          search={{ week, teachers: [teacherId] }}
           className={buttonVariants({ variant: offer ? 'secondary' : 'primary' })}
         >
           {t.booking.openSchedule}

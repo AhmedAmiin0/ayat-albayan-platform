@@ -51,14 +51,24 @@ export const bookingCheckQuery = (body: BookingRequest) => {
 
 /**
  * /admin/book URL state: from a student profile, or from a lead row (R-LEAD-06). `pkg` = the
- * lead's package: none = a trial, a size = «اشترك» from the chat (R-SUB-01).
+ * lead's package: none = a trial, a size = «اشترك» from the chat (R-SUB-01). `teacherId` +
+ * `startsAt` = a free gap on the calendar: the wizard preselects that teacher and start.
  */
-export type BookSearch = { studentId?: string; leadId?: string; phone?: string; name?: string; pkg?: PackageSize };
+export type BookSearch = {
+  studentId?: string;
+  leadId?: string;
+  phone?: string;
+  name?: string;
+  pkg?: PackageSize;
+  teacherId?: string;
+  startsAt?: string;
+};
 
 const text = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 export function parseBookSearch(s: Record<string, unknown>): BookSearch {
-  const out: BookSearch = {};
+  const out: BookSearch = { ...hintOf(s) };
   const studentId = text(s['studentId']);
   const leadId = text(s['leadId']);
   if (studentId) out.studentId = studentId;
@@ -72,4 +82,12 @@ export function parseBookSearch(s: Record<string, unknown>): BookSearch {
     if (pkg) out.pkg = pkg;
   }
   return out;
+}
+
+/** The calendar's free-gap hint: a teacher uuid, and its start (an instant) only with it. */
+function hintOf(s: Record<string, unknown>): Pick<BookSearch, 'teacherId' | 'startsAt'> {
+  const teacherId = text(s['teacherId']);
+  if (!teacherId || !UUID.test(teacherId)) return {};
+  const at = Date.parse(text(s['startsAt']) ?? '');
+  return Number.isNaN(at) ? { teacherId } : { teacherId, startsAt: new Date(at).toISOString() };
 }
