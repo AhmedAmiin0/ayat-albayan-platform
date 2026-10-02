@@ -10,8 +10,7 @@ import type {
 import type { TemplateButton, TemplateParams } from './templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
-// Phase 4 responses (docs/12 §4). snake_case rows like every API response; instants are ISO-8601
-// UTC strings.
+// Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
 
 /** GET /threads item: one v_threads row plus the 24 h window at response time. */
 export interface ThreadView {
@@ -26,7 +25,7 @@ export interface ThreadView {
   last_media_mime: string | null;
   last_message_at: string;
   last_inbound_at: string | null;
-  /** Inbound rows no admin has opened yet (read_at null). */
+  /** Inbound rows no admin has opened yet (read_at null); a teacher's own (teacher_unread). */
   unread_count: number;
   lead_id: string | null;
   lead_name: string | null;
@@ -41,10 +40,7 @@ export interface ThreadView {
   session_open: boolean;
   /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
   subscribed: boolean;
-  /**
-   * The guardian's family badge (subscriptionBadge), null without a guardian: the list tags
-   * «اشتراكه خلص» (renew) as well as «مشترك». Absent in a list cached before it existed.
-   */
+  /** Family subscriptionBadge, null without a guardian: «اشتراكه خلص» and «مشترك». Absent in an old cache. */
   badge?: SubscriptionBadge | null;
   /** familyUnpaid: a running package still owes money, the «مش مدفوع» tag. Absent like `badge`. */
   unpaid?: boolean;
