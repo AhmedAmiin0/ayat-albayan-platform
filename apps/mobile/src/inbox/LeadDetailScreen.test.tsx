@@ -8,9 +8,10 @@ import { cachedList, huda, unnamed } from './fixtures';
 import { LeadDetailScreen } from './LeadDetailScreen';
 
 const mockBack = jest.fn();
+const mockPush = jest.fn();
 const mockParams = { id: 'a1' };
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack() },
+  router: { back: () => mockBack(), push: (mockHref: string) => mockPush(mockHref) },
   useLocalSearchParams: () => mockParams,
 }));
 
@@ -22,6 +23,7 @@ function seeded() {
 
 beforeEach(() => {
   mockBack.mockReset();
+  mockPush.mockReset();
   mockParams.id = 'a1';
 });
 
@@ -46,6 +48,13 @@ test('«فتح واتساب» opens wa.me for the lead', async () => {
   await renderWithQuery(<LeadDetailScreen />, seeded());
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.openWhatsapp }));
   expect(open).toHaveBeenCalledWith('https://wa.me/966552147730');
+});
+
+test('«افتح المحادثة» opens the WhatsApp thread of the lead (encoded +)', async () => {
+  await renderWithQuery(<LeadDetailScreen />, seeded());
+  const label = t.inbox.openThread.replace('{name}', 'هدى سالم');
+  await fireEvent.press(screen.getByRole('button', { name: label }));
+  expect(mockPush).toHaveBeenCalledWith('/inbox/thread/%2B966552147730');
 });
 
 test('«رجوع» pops back to the inbox', async () => {
