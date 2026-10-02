@@ -40,6 +40,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
       testID={`chip-${tone}`}
       style={{
         alignSelf: 'flex-start',
+        flexShrink: 1, // in a capped slot the word ellipsizes inside the pill instead of overflowing it
         flexDirection: 'row',
         alignItems: 'center',
         gap: 6,
@@ -55,7 +56,7 @@ export function StatusChip({ tone, glyph, label, size = 'md' }: StatusChipProps)
       <NuqtaGlyph shape={glyph} color={fg} />
       <AppText
         numberOfLines={1}
-        style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: fg }}
+        style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: fg }}
       >
         {label}
       </AppText>

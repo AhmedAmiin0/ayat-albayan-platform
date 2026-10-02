@@ -29,6 +29,26 @@ test('with onPress it is a 56pt button named by its content', async () => {
   expect(onPress).toHaveBeenCalledTimes(1);
 });
 
+test('a tags line wraps under the subtitle; the trailing slot is capped so the name keeps room', async () => {
+  await render(
+    <ListRow
+      title="هدى سالم"
+      subtitle="أهلًا بيكي"
+      tags={<StatusChip tone="neutral" glyph="hollow" label="a status word long enough to need two lines" size="sm" />}
+      trailing={<StatusChip tone="act" glyph="fill" label={t.inbox.unread.one} size="sm" />}
+    />,
+  );
+  expect(screen.getByTestId('list-row-tags')).toHaveStyle({ flexDirection: 'row', flexWrap: 'wrap' });
+  expect(screen.getByTestId('list-row-trailing')).toHaveStyle({ flexShrink: 1, maxWidth: '45%' });
+  expect(screen.getByText(t.inbox.unread.one)).toHaveStyle({ flexShrink: 1 });
+});
+
+test('no trailing, no empty slot (no stray gap at the row end)', async () => {
+  await render(<ListRow title="جنى وليد" trailing={null} />);
+  expect(screen.queryByTestId('list-row-trailing')).toBeNull();
+  expect(screen.queryByTestId('list-row-tags')).toBeNull();
+});
+
 test('without onPress there is no dead button', async () => {
   await render(<ListRow title="جنى وليد" />);
   expect(screen.queryByRole('button')).toBeNull();

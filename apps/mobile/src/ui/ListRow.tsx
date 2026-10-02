@@ -13,14 +13,16 @@ export interface ListRowProps {
   subtitle?: string;
   /** LTR value beside the title: «AB-0183» or formatPhone(phone). */
   meta?: string;
-  /** At the inline-end, usually a <StatusChip>. */
+  /** Third line: chips and short words that wrap (a thread's lead status + source). */
+  tags?: ReactNode;
+  /** At the inline-end, usually a <StatusChip>. At most 45 % of the row: a long word ellipsizes. */
   trailing?: ReactNode;
   /** Makes the row a button (opens the detail). Without it the row is plain text. */
   onPress?: () => void;
 }
 
 /** One list row, 56pt minimum, hairline below. Feed it to FlatList renderItem. */
-export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: ListRowProps) {
+export function ListRow({ leading, title, subtitle, meta, tags, trailing, onPress }: ListRowProps) {
   const { color } = useTheme();
   const row: ViewStyle = {
     minHeight: 56,
@@ -72,8 +74,21 @@ export function ListRow({ leading, title, subtitle, meta, trailing, onPress }: L
             {subtitle}
           </AppText>
         ) : null}
+        {tags ? (
+          <View
+            testID="list-row-tags"
+            style={{ flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', columnGap: 8, rowGap: 4 }}
+          >
+            {tags}
+          </View>
+        ) : null}
       </View>
-      {trailing}
+      {/* RN items don't shrink by default: uncapped, a long chip word squeezes the name to «…». */}
+      {trailing ? (
+        <View testID="list-row-trailing" style={{ flexShrink: 1, maxWidth: '45%' }}>
+          {trailing}
+        </View>
+      ) : null}
     </>
   );
   if (!onPress) return <View style={row}>{body}</View>;

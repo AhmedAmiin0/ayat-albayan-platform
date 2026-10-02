@@ -15,6 +15,7 @@ import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf } from './format';
 import { threadPreview } from './message-text';
 import { threadHref } from './thread-cache';
+import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
 
 type Filter = 'all' | 'unread';
@@ -23,14 +24,8 @@ const filterPills = (): FilterPill<Filter>[] => [
   { value: 'unread', label: t.inbox.filterUnread },
 ];
 
-function kindOf(th: ThreadView): string {
-  if (th.guardian_id) return t.inbox.kind.guardian;
-  if (th.teacher_id) return t.inbox.kind.teacher;
-  return th.lead_id ? t.inbox.kind.lead : t.inbox.unknownNumber;
-}
-
-/** Our last send failed (the admin's turn), else the unread count, else who the number is. */
-function Trailing({ thread: th }: { thread: ThreadView }) {
+/** Our last send failed (the admin's turn), else the unread count, else nothing (no empty slot). */
+function turnChip(th: ThreadView): ReactNode {
   if (th.last_direction === 'outbound' && th.last_status === 'failed') {
     return <StatusChip {...messageStatusStyle.failed} label={t.enums.messageStatus.failed} size="sm" />;
   }
@@ -69,8 +64,9 @@ export function ThreadsList({ switcher }: { switcher: ReactNode }) {
               leading={<Avatar letter={initialOf(th.display_name)} />}
               title={th.display_name ?? ltr(phone)}
               meta={th.display_name ? phone : undefined}
-              subtitle={`${kindOf(th)} · ${threadPreview(th)}`}
-              trailing={<Trailing thread={th} />}
+              subtitle={threadPreview(th)}
+              tags={<ThreadTags thread={th} />}
+              trailing={turnChip(th)}
               onPress={() => router.push(threadHref(th.phone_e164))}
             />
           );

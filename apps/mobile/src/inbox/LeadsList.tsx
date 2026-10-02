@@ -14,6 +14,7 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, leadAge } from './format';
+import { leadSourceWord, leadStatusChip } from './lead-words';
 import type { Lead } from './types';
 
 type Filter = 'all' | LeadStatus;
@@ -64,8 +65,8 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
               leading={<Avatar letter={initialOf(item.name)} />}
               title={item.name ?? ltr(phone)}
               meta={item.name ? phone : undefined}
-              subtitle={`${t.enums.leadSource[item.source]} · ${leadAge(item.created_at)}`}
-              trailing={<StatusChip {...leadStatusStyle[item.status]} label={t.enums.leadStatus[item.status]} size="sm" />}
+              subtitle={`${leadSourceWord(item.source)} · ${leadAge(item.created_at)}`}
+              trailing={<StatusChip {...leadStatusChip(item.status)} size="sm" />}
               onPress={() => router.push(`/inbox/${item.id}`)}
             />
           );
