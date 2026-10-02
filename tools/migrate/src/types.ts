@@ -83,8 +83,12 @@ export interface NaturalKey {
 }
 
 export type Scalar = string | number | boolean | null;
-/** jsonb values go in as plain objects; arrays map to Postgres arrays. */
-export type ColumnValue = Scalar | readonly Scalar[] | { readonly [k: string]: unknown };
+/** jsonb values go in as plain objects or arrays; postgres.js encodes by the column's type. */
+export type ColumnValue =
+  | Scalar
+  | readonly Scalar[]
+  | { readonly [k: string]: unknown }
+  | readonly object[];
 
 /**
  * A target row before ids exist. Foreign keys are `refs` (column → natural key) and are resolved

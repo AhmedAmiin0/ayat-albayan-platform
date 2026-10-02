@@ -78,9 +78,9 @@ function mapTemplate(row: CrmRow): Mapped {
     header_format: header,
     body_ar: body,
     footer_ar: text(row, 'footer_text'),
-    // jsonb arrays travel as JSON text (a JS array would bind as a Postgres array).
-    params: JSON.stringify(paramNames(body)),
-    buttons: JSON.stringify(buttons),
+    // jsonb arrays bind as JS arrays: postgres.js sends them as JSON for a jsonb parameter.
+    params: paramNames(body),
+    buttons,
     status,
     meta_id: text(row, 'meta_template_id'),
   };

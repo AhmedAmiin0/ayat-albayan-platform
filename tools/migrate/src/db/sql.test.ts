@@ -3,7 +3,6 @@ import {
   findByColumnSql,
   ident,
   insertSql,
-  param,
   recordItemSql,
   tableIdent,
   updateSql,
@@ -19,12 +18,13 @@ describe('identifiers', () => {
   });
 });
 
-describe('param', () => {
-  it('stringifies jsonb objects, keeps arrays and scalars', () => {
-    expect(param({ a: 1 })).toBe('{"a":1}');
-    expect(param(['quran'])).toEqual(['quran']);
-    expect(param(3)).toBe(3);
-    expect(param(null)).toBeNull();
+describe('jsonb params', () => {
+  // Regression (staging import 2026-10-02): JSON text bound to a jsonb parameter was stored as a
+  // jsonb string. Objects and arrays must reach postgres.js unchanged.
+  it('passes objects and arrays through unchanged', () => {
+    const q = insertSql({ table: 'leads', columns: { qualification: { a: 1 }, programs: ['quran'], n: 3, x: null } });
+    expect(q.params).toEqual([{ a: 1 }, ['quran'], 3, null]);
+    expect(q.params.some((p) => typeof p === 'string')).toBe(false);
   });
 });
 
@@ -64,7 +64,7 @@ describe('updateSql / findByColumnSql', () => {
     expect(q.text).toBe(
       'update "public"."guardians" set "name" = $1, "qualification" = $2 where "id" = $3',
     );
-    expect(q.params).toEqual(['n', '{"x":1}', 'g1']);
+    expect(q.params).toEqual(['n', { x: 1 }, 'g1']);
     expect(() => updateSql({ table: 't', id: 'x', columns: {} })).toThrow();
   });
   it('looks rows up by a unique column', () => {
@@ -94,7 +94,7 @@ describe('recordItemSql', () => {
       'g1',
       null,
       'h',
-      '{"source":"HUB","tab":"t","row":2}',
+      { source: 'HUB', tab: 't', row: 2 },
       'r1',
     ]);
   });

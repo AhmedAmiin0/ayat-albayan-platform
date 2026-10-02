@@ -2,7 +2,6 @@
 // (no uuid id), so the default insert-returning-id write does not fit. On a match only Meta's side
 // changes: the registry key, params, category and header stay as the platform defined them.
 import type { SqlText } from '../../db/sql.ts';
-import { param } from '../../db/sql.ts';
 import type { WriteContext, WriteResult } from '../../entities/contract.ts';
 import type { ColumnValue } from '../../types.ts';
 
@@ -31,7 +30,7 @@ export function upsertTemplateSql(columns: Readonly<Record<string, ColumnValue>>
     text:
       `insert into public.message_templates (${names}) values (${values}) ` +
       `on conflict (meta_name, language) do update set ${sets}`,
-    params: COLUMNS.map(([c]) => param(columns[c] ?? null)),
+    params: COLUMNS.map(([c]) => columns[c] ?? null),
   };
 }
 

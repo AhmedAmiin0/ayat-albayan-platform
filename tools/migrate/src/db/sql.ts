@@ -1,8 +1,12 @@
 // Pure SQL text builders for the target adapter. Identifiers are whitelisted, values are params.
 import type { ColumnValue, EntityName, SourceRef } from '../types.ts';
 
-export type Param =
-  string | number | boolean | null | readonly (string | number | boolean | null)[];
+/**
+ * Values bind as they are: postgres.js serialises each one by the parameter type the server
+ * describes, so a jsonb object or array goes out as JSON and a text[] array as a Postgres array.
+ * Never pre-stringify JSON: JSON text bound to a jsonb parameter is stored as a jsonb *string*.
+ */
+export type Param = ColumnValue;
 
 export interface SqlText {
   text: string;
@@ -22,12 +26,6 @@ export function tableIdent(name: string): string {
   return (parts.length === 1 ? ['public', ...parts] : parts).map(ident).join('.');
 }
 
-/** jsonb objects travel as JSON text (the column type casts it); arrays and scalars as-is. */
-export function param(v: ColumnValue): Param {
-  if (v === null || typeof v !== 'object') return v;
-  if (Array.isArray(v)) return v as readonly (string | number | boolean | null)[];
-  return JSON.stringify(v);
-}
 
 export interface InsertSpec {
   table: string;
@@ -50,7 +48,7 @@ export function insertSql(spec: InsertSpec): SqlText {
   const tail = `${skip ? ' on conflict do nothing' : ''}${spec.returning === null ? '' : ' returning id'}`;
   return {
     text: `insert into ${tableIdent(spec.table)} (${cols})${overriding} values (${values})${tail}`,
-    params: names.map((n) => param(spec.columns[n] ?? null)),
+    params: names.map((n) => spec.columns[n] ?? null),
   };
 }
 
@@ -64,7 +62,7 @@ export function updateSql(spec: {
   const sets = names.map((n, i) => `${ident(n)} = $${i + 1}`).join(', ');
   return {
     text: `update ${tableIdent(spec.table)} set ${sets} where "id" = $${names.length + 1}`,
-    params: [...names.map((n) => param(spec.columns[n] ?? null)), spec.id],
+    params: [...names.map((n) => spec.columns[n] ?? null), spec.id],
   };
 }
 
@@ -106,7 +104,7 @@ export function recordItemSql(i: ImportItemWrite): SqlText {
       i.targetId,
       i.targetPath ?? null,
       i.payloadHash,
-      JSON.stringify(i.sourceRef),
+      { ...i.sourceRef },
       i.runId,
     ],
   };
