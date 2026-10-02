@@ -8,14 +8,11 @@ import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
-import { I18nManager } from 'react-native';
 import { useAuthGate } from '@/auth/use-auth-gate';
+import { useLocaleReady } from '@/lib/locale-switch';
 import { persistOptions, queryClient } from '@/lib/query-client';
 import { restoreAppearance } from '@/more/appearance';
 import { useTheme } from '@/theme';
-
-I18nManager.allowRTL(true);
-I18nManager.forceRTL(true);
 
 // Bundled files (docs/07 §2: Amiri 700 for titles, Plex for everything else); names match theme.type.
 const fonts = {
@@ -27,19 +24,21 @@ const fonts = {
 };
 
 /**
- * Fonts + session gate, then one stack: admins get (tabs), everyone else only /login. When the gate
- * flips, Stack.Protected moves the screen by itself, so no screen navigates after sign-in/out.
+ * Fonts + language + session gate, then one stack: admins get (tabs), everyone else only /login.
+ * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
  */
 export default function RootLayout() {
   const [loaded, error] = useFonts(fonts);
   const gate = useAuthGate();
+  // The saved language before any screen: a mismatch reloads, so nothing paints in the wrong one.
+  const localeReady = useLocaleReady();
   const { color } = useTheme();
   // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
   useEffect(() => {
     void restoreAppearance();
   }, []);
   // On a font error fall through: the system Arabic font is better than a blank app.
-  const ready = (loaded || error) && gate !== 'booting';
+  const ready = (loaded || error) && localeReady && gate !== 'booting';
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
       {ready ? (

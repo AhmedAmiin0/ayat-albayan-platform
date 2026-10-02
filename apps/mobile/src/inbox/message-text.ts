@@ -46,7 +46,10 @@ export function deviceTimeZone(): string {
 }
 
 const dayFormats = new Map<string, Intl.DateTimeFormat>();
-/** [day, month, year] of the instant in `tz`, as plain numbers (engines differ on zero-padding). */
+/**
+ * [day, month, year] of the instant in `tz`, as plain numbers (engines differ on zero-padding).
+ * Not display text, so a fixed locale whatever the UI language (the parts are compared, not shown).
+ */
 function dayOf(at: Date, tz: string): number[] {
   let f = dayFormats.get(tz);
   if (!f) {

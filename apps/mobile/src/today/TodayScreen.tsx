@@ -25,7 +25,7 @@ import { riyadhTime } from './lesson-text';
 import { useDayLessons, useNow } from './use-day-lessons';
 import { useLessonAction } from './use-lesson-action';
 
-const PILLS: FilterPill<TodayFilter>[] = [
+const filterPills = (): FilterPill<TodayFilter>[] => [
   { value: 'all', label: t.today.all },
   ...(['scheduled', 'confirmed', 'completed'] as const).map((s) => ({
     value: s,
@@ -49,7 +49,7 @@ export function TodayScreen() {
   const lessons = visibleLessons(day.data ?? []);
   const counts = filterCounts(lessons);
   const items = timeline(applyFilter(lessons, filter), now);
-  const pills = loaded ? PILLS.map((p) => ({ ...p, count: counts[p.value] })) : PILLS;
+  const pills = loaded ? filterPills().map((p) => ({ ...p, count: counts[p.value] })) : filterPills();
   const dateLine = `${formatRunningHead(now).gregorian}. ${t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}`;
   // Offline (no NetInfo): the refetch failed but the saved day is on screen; say how old it is.
   const stale = day.isError && loaded;

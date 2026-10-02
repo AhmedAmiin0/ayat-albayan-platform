@@ -1583,6 +1583,7 @@
   "language": {
     "label": "اللغة",
     "ar": "العربية",
-    "en": "English"
+    "en": "English",
+    "restart": "The app will restart in the other language."
   }
 }

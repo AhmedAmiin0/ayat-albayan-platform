@@ -11,7 +11,7 @@ import { AppText } from '@/ui/AppText';
 // Students have no /status route: status is a field of PATCH /students/:id.
 const STATUS = { path: '/students', patchPath: (id: string) => `/students/${id}` };
 
-const PILLS = STUDENT_STATUSES.map((s) => ({
+const statusPills = () => STUDENT_STATUSES.map((s) => ({
   value: s,
   label: t.enums.studentStatus[s],
   ...studentStatusStyle[s],
@@ -31,7 +31,7 @@ export function StatusChanger({ student }: { student: StudentRef }) {
     <View style={{ gap: 6 }}>
       <SectionLabel>{t.students.status}</SectionLabel>
       <FilterPills
-        items={PILLS}
+        items={statusPills()}
         value={student.status}
         onChange={set}
         accessibilityLabel={t.students.status}

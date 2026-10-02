@@ -1,5 +1,6 @@
-import { CAIRO_TZ, RIYADH_TZ } from '@ab/shared';
+import { CAIRO_TZ, intlLocale, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { ltr } from '@/ui/Ltr';
 import type { AvailabilityRow, TimeOff } from './types';
 
@@ -51,13 +52,13 @@ export function upcomingTimeOff(list: readonly TimeOff[], now: Date): TimeOff[] 
     .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at));
 }
 
-// Western digits (docs/07 §2): `nu-latn`. No formatRange: Hermes' Intl does not have it.
-const day = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+// The UI language, Western digits (docs/07 §2: `nu-latn`). No formatRange: Hermes' Intl lacks it.
+const day = new Intl.DateTimeFormat(intlLocale(locale), {
   weekday: 'long',
   day: 'numeric',
   month: 'long',
 });
-const dayTime = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+const dayTime = new Intl.DateTimeFormat(intlLocale(locale), {
   weekday: 'long',
   day: 'numeric',
   month: 'long',

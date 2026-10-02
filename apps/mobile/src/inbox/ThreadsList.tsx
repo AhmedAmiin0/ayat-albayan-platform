@@ -18,7 +18,7 @@ import { threadHref } from './thread-cache';
 import { useThreadList } from './use-thread-list';
 
 type Filter = 'all' | 'unread';
-const PILLS: FilterPill<Filter>[] = [
+const filterPills = (): FilterPill<Filter>[] => [
   { value: 'all', label: t.inbox.filterAll },
   { value: 'unread', label: t.inbox.filterUnread },
 ];
@@ -57,7 +57,7 @@ export function ThreadsList({ switcher }: { switcher: ReactNode }) {
       <ScreenHeader title={t.nav.conversations} subtitle={subtitle} />
       {switcher}
       <SearchField onSearch={setSearch} label={t.inbox.searchPlaceholder} />
-      <FilterPills items={PILLS} value={filter} onChange={setFilter} accessibilityLabel={t.inbox.title} />
+      <FilterPills items={filterPills()} value={filter} onChange={setFilter} accessibilityLabel={t.inbox.title} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         data={list.items}
