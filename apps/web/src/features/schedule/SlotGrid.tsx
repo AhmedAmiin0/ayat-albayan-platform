@@ -28,7 +28,7 @@ export function SlotGrid({ week, slots, studentTz, value, onPick }: SlotGridProp
   const days = byLocalDay(slots, RIYADH_TZ);
   // Container query: 7 columns on a wide page, stacked days inside the narrow lesson drawer.
   return (
-    <div className="@container">
+    <div role="group" aria-label={t.booking.freeSlots} className="@container">
       <div className="grid gap-x-2 gap-y-3 border-t-[3px] border-double border-gold pt-3 @[640px]:grid-cols-7">
         {weekDays(week).map((day) => {
           const daySlots = days.get(day) ?? [];

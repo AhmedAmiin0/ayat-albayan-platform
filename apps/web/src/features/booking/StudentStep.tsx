@@ -23,7 +23,9 @@ const asPicked = (s: StudentRef): PickedStudent => ({ id: s.id, name: s.name, co
 /** Step 1 (R-SCH-06): the student, plus siblings for a group lesson, or search for someone else. */
 export function StudentStep({ primary, siblings, picked, onPicked, onOpenStudent }: StudentStepProps) {
   const [term, setTerm] = useState('');
-  const results = useQuery({ ...studentListQuery(term, 1), enabled: term !== '' });
+  // A cached unfiltered list must not show up as «results» before anything was searched.
+  const query = useQuery({ ...studentListQuery(term, 1), enabled: term !== '' });
+  const results = term ? query : { isFetching: false, data: undefined };
   const isPicked = (id: string) => picked.some((s) => s.id === id);
   const toggle = (s: StudentRef) =>
     onPicked(isPicked(s.id) ? picked.filter((p) => p.id !== s.id) : [...picked, asPicked(s)]);

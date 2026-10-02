@@ -31,6 +31,9 @@ describe('slot grid helpers (R-SCH-06, R-SCH-01)', () => {
   it('zoneLabel shows the student wall clock, with the weekday when the day differs', () => {
     expect(zoneLabel('2026-10-04T14:00:00Z', { tz: RIYADH_TZ, base: RIYADH_TZ })).toBeNull();
     expect(zoneLabel('2026-12-06T14:00:00Z', { tz: 'Africa/Cairo', base: RIYADH_TZ })).toBe('16:00');
+    // Kuwait, and Cairo in summer, read the same clock as Riyadh: nothing to add.
+    expect(zoneLabel('2026-12-06T14:00:00Z', { tz: 'Asia/Kuwait', base: RIYADH_TZ })).toBeNull();
+    expect(zoneLabel('2026-10-04T14:00:00Z', { tz: 'Africa/Cairo', base: RIYADH_TZ })).toBeNull();
     // 01:00 Sunday in Riyadh is 18:00 Saturday in New York.
     expect(zoneLabel('2026-10-03T22:00:00Z', { tz: 'America/New_York', base: RIYADH_TZ })).toBe(
       `18:00 ${t.enums.weekday[6]}`,

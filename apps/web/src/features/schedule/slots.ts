@@ -30,14 +30,16 @@ export function bookableWindow(start: string, now: Date): Window | null {
 
 /**
  * The small label under a Riyadh slot time: the wall clock in the student's zone, plus the
- * weekday when that zone is already on another day («18:00 السبت»). Null when it's Riyadh time.
+ * weekday when that zone is already on another day («18:00 السبت»). Null when the clock reads
+ * the same as the base zone (Riyadh, or Kuwait / Cairo-in-summer at UTC+3): nothing to add.
  */
 export function zoneLabel(instant: string, zones: { tz: string; base: string }): string | null {
   if (zones.tz === zones.base) return null;
   const at = new Date(instant);
   const local = zonedParts(at, zones.tz);
+  const base = zonedParts(at, zones.base);
   const time = clockTime(at, zones.tz);
-  if (local.date === zonedParts(at, zones.base).date) return time;
+  if (local.date === base.date) return local.time === base.time ? null : time;
   const day: Record<string, string> = t.enums.weekday;
   return `${time} ${day[String(local.weekday)] ?? ''}`.trim();
 }

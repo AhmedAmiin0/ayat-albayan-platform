@@ -35,7 +35,7 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     // Next week is whole (this week's Wednesday may be gone): 45-minute starts inside 16:00–18:00.
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
-    const slots = step.getByRole('button', { pressed: false });
+    const slots = step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('button');
     await expect(slots).toHaveCount(2);
     await expect(slots.nth(0)).toContainText('16:00');
     await expect(slots.nth(1)).toContainText('16:45');

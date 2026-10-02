@@ -29,19 +29,25 @@ export function TeacherStep({ program, genderPref, teacher, onChange }: TeacherS
 
   return (
     <div className="grid gap-4">
-      <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
-        <SegmentedControl
-          label={t.booking.program}
-          options={PROGRAM_CHIPS}
-          value={program}
-          onChange={(next) => onChange({ program: next, teacher: null })}
-        />
-        <SegmentedControl
-          label={t.booking.genderPref}
-          options={GENDER_CHIPS}
-          value={genderPref ?? 'any'}
-          onChange={(next) => onChange({ genderPref: next === 'any' ? null : next, teacher: null })}
-        />
+      <div className="flex flex-wrap items-end gap-x-6 gap-y-3">
+        <div className="grid gap-1.5">
+          <span aria-hidden="true" className="text-xs font-semibold text-ink-2">{t.booking.program}</span>
+          <SegmentedControl
+            label={t.booking.program}
+            options={PROGRAM_CHIPS}
+            value={program}
+            onChange={(next) => onChange({ program: next, teacher: null })}
+          />
+        </div>
+        <div className="grid gap-1.5">
+          <span aria-hidden="true" className="text-xs font-semibold text-ink-2">{t.booking.genderPref}</span>
+          <SegmentedControl
+            label={t.booking.genderPref}
+            options={GENDER_CHIPS}
+            value={genderPref ?? 'any'}
+            onChange={(next) => onChange({ genderPref: next === 'any' ? null : next, teacher: null })}
+          />
+        </div>
       </div>
       {teachers.isError && <FormAlert>{t.common.error}</FormAlert>}
       {teachers.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}

@@ -1,5 +1,5 @@
 import { lessonWhenText, type Conflict } from '@ab/shared';
-import { useId, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -31,6 +31,11 @@ export interface ConflictNoticeProps {
  */
 export function ConflictNotice({ conflicts, onChangeSlot, onOverride, busy = false }: ConflictNoticeProps) {
   const titleId = useId();
+  const box = useRef<HTMLElement>(null);
+  // The clash appears under a tall slot grid (drawer, phones): bring it into view.
+  useEffect(() => {
+    box.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
+  }, []);
   const [reason, setReason] = useState('');
   const [missing, setMissing] = useState(false);
   const more = conflicts.length - SHOWN;
@@ -41,6 +46,7 @@ export function ConflictNotice({ conflicts, onChangeSlot, onOverride, busy = fal
 
   return (
     <section
+      ref={box}
       aria-labelledby={titleId}
       className="grid gap-3 rounded-md bg-danger-soft px-4 py-3.5 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]"
     >

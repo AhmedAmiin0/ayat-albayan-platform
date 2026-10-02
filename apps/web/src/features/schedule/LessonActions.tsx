@@ -44,7 +44,7 @@ export function LessonActions({ lesson, onDone, onCancel, onReschedule, size = '
     <div className="grid gap-3">
       {error && <FormAlert>{lessonErrorText(error)}</FormAlert>}
       {lesson.allowed_events.includes('confirm') && (
-        <Button type="button" size={size} disabled={busy} onClick={() => confirm.mutate(lesson.id)}>
+        <Button type="button" size={size} disabled={busy} className="justify-self-start" onClick={() => confirm.mutate(lesson.id)}>
           {t.lessons.event.confirm}
         </Button>
       )}
