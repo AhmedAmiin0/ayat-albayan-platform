@@ -1,0 +1,94 @@
+import { subscriptionStatusStyle } from '@ab/shared';
+import { createColumnHelper } from '@tanstack/react-table';
+import type { DataTableFeatures } from '@/components/DataTable';
+import { Button } from '@/components/ui/button';
+import { Ltr } from '@/components/ui/ltr';
+import { StatusChip } from '@/components/ui/status-chip';
+import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
+import { Amount } from './Amount';
+import type { SubscriptionView } from './api';
+import { moneyText, packageName, progressOf } from './format';
+
+const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
+
+type Handlers = {
+  onPay: (s: SubscriptionView) => void;
+  onPause: (s: SubscriptionView, paused: boolean) => void;
+  onOpen: (studentId: string) => void;
+};
+
+/** Packages list (R-SUB-01): student, package, price/paid, the package line, status, actions. */
+export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
+  return col.columns([
+    col.accessor('student', {
+      header: () => t.subscriptions.student,
+      cell: (c) => (
+        <div className="grid">
+          <button type="button" onClick={() => onOpen(c.getValue().id)} className="text-start font-semibold text-ink hover:underline">
+            {c.getValue().name}
+          </button>
+          <Ltr className="text-2xs text-ink-3">{c.getValue().code}</Ltr>
+        </div>
+      ),
+      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
+    }),
+    col.accessor('package', {
+      header: () => t.subscriptions.package,
+      cell: (c) => packageName(c.row.original),
+      meta: { className: 'max-sm:order-3 max-sm:text-xs' },
+    }),
+    col.accessor('price', {
+      header: () => t.subscriptions.price,
+      cell: (c) => {
+        const s = c.row.original;
+        return (
+          <div className="grid">
+            <Amount amount={s.price} currency={s.currency} className="font-semibold" />
+            {s.paid < s.price && (
+              <span className="text-2xs text-ink-3">
+                {t.payments.paidOf
+                  .replace('{paid}', moneyText(s.paid, s.currency))
+                  .replace('{price}', moneyText(s.price, s.currency))}
+              </span>
+            )}
+          </div>
+        );
+      },
+      meta: { className: 'max-sm:order-4' },
+    }),
+    col.accessor('balance', {
+      header: () => t.subscriptions.balance,
+      cell: (c) => {
+        const p = progressOf(c.getValue());
+        return <span className={cn('text-sm', p.tone === 'act' ? 'font-semibold text-act' : 'text-ink-2')}>{p.remainingLabel}</span>;
+      },
+      meta: { className: 'max-sm:order-5 max-sm:text-xs' },
+    }),
+    col.accessor('status', {
+      header: () => t.subscriptions.status,
+      cell: (c) => <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />,
+      meta: { className: 'max-sm:order-2' },
+    }),
+    col.display({
+      id: 'actions',
+      header: () => t.common.actions,
+      cell: (c) => {
+        const s = c.row.original;
+        return (
+          <div className="flex gap-2">
+            {s.paid < s.price && (
+              <Button type="button" variant="secondary" size="sm" onClick={() => onPay(s)}>
+                {t.payments.record}
+              </Button>
+            )}
+            <Button type="button" variant="ghost" size="sm" onClick={() => onPause(s, s.status !== 'paused')}>
+              {s.status === 'paused' ? t.subscriptions.resume : t.subscriptions.pause}
+            </Button>
+          </div>
+        );
+      },
+      meta: { className: 'w-px max-sm:order-6' },
+    }),
+  ]);
+}
