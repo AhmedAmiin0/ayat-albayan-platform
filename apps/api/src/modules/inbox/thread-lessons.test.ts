@@ -32,6 +32,18 @@ describe('upcomingLessons (template composer, rule 6)', () => {
     expect(callsOf(log, 'lessons')).toContainEqual(['eq', ['teacher_id', 't1']]);
   });
 
+  it('teacher mode: a guardian thread lists only the signed-in teacher’s lessons', async () => {
+    const { db, log } = chainDb({ lessons: [{ data: [] }] });
+    const thread = view({ guardian_id: 'g1', teacher_id: null });
+    await upcomingLessons(db, { thread, now: NOW, teacherId: 't-me' });
+    expect(callsOf(log, 'lessons')).toEqual(
+      expect.arrayContaining([
+        ['eq', ['lesson_students.student.guardian_id', 'g1']],
+        ['eq', ['teacher_id', 't-me']],
+      ]),
+    );
+  });
+
   it('a lead or an unknown number has no lessons (nothing is read)', async () => {
     const { db, log } = chainDb();
     expect(await upcomingLessons(db, { thread: view({ guardian_id: null, teacher_id: null }), now: NOW })).toEqual([]);

@@ -38,6 +38,9 @@ export function needsManualSend(row: Pick<MessageRow, 'direction' | 'status' | '
   return row.direction === 'outbound' && (row.status === 'queued' || row.status === 'failed') && row.error_code !== SENDING;
 }
 
+/** The teacher who sent the row from their inbox; null for the academy or a job. */
+const senderName = (row: ThreadMessageRow): string | null => row.sent_by_teacher?.display_name_ar ?? null;
+
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
  * failed outbound row carries the wa.me link with the same text pre-filled (R-MSG-03).
@@ -72,7 +75,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     delivered_at: row.delivered_at,
     read_at: row.read_at,
     sent_manually_at: row.sent_manually_at,
-    sent_by_teacher_name: row.sent_by_teacher?.display_name_ar ?? null,
+    sent_by_teacher_name: senderName(row),
     created_at: row.created_at,
     click_to_chat: needsManualSend(row) ? clickToChatLink(row.phone_e164, text) : null,
     lesson: row.lesson ?? null,

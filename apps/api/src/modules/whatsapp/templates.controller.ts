@@ -1,11 +1,18 @@
-import type { TemplateView } from '@ab/shared';
+import { isTeacherTemplate, type TemplateView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { TemplateRegistry } from './template.registry';
 
-/** T1–T3 (docs/12 §4): the template registry and its health, admin only (R-MSG-01). */
+/** What a teacher's composer may offer: approved reminder templates, never a PDF one. */
+const teacherMay = (t: TemplateView): boolean =>
+  t.status === 'approved' && t.header_format !== 'document' && isTeacherTemplate(t.key);
+
+/**
+ * T1–T3 (docs/12 §4): the template registry and its health (R-MSG-01). The health check and
+ * submitting stay admin only; a teacher (teacher mode) lists only what they may send.
+ */
 @ApiTags('messaging')
 @ApiBearerAuth()
 @Roles('admin')
@@ -14,8 +21,10 @@ export class TemplatesController {
   constructor(private readonly registry: TemplateRegistry) {}
 
   @Get()
-  list(): Promise<TemplateView[]> {
-    return this.registry.list();
+  @Roles('admin', 'teacher')
+  async list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
+    const all = await this.registry.list();
+    return user.role === 'admin' ? all : all.filter(teacherMay);
   }
 
   /** Reads Meta's list and syncs status, quality and text. 503 not_configured, 502 meta_error. */

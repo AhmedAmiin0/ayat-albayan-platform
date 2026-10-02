@@ -15,6 +15,8 @@ export interface ThreadListFilter {
   pageSize: number;
   search?: string;
   unread?: boolean;
+  /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
+  phones?: readonly string[];
 }
 
 function check(error: { message: string } | null, what: string): asserts error is null {
@@ -33,6 +35,7 @@ export class ThreadsQueries {
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     let query = this.db.from('v_threads').select('*', { count: 'exact' });
     if (f.unread) query = query.gt('unread_count', 0);
+    if (f.phones) query = query.in('phone_e164', [...f.phones]);
     const search = f.search ? threadSearchFilter(f.search) : null;
     if (search) query = query.or(search);
     const from = (f.page - 1) * f.pageSize;
@@ -58,9 +61,9 @@ export class ThreadsQueries {
     return data ?? [];
   }
 
-  /** The guardian's / teacher's next open lessons (thread-lessons.ts). */
-  lessons(thread: ThreadView, now: Date): Promise<ThreadLesson[]> {
-    return upcomingLessons(this.db, { thread, now });
+  /** The guardian's / teacher's next open lessons (thread-lessons.ts); with `teacherId` only theirs. */
+  lessons(thread: ThreadView, now: Date, teacherId?: string): Promise<ThreadLesson[]> {
+    return upcomingLessons(this.db, { thread, now, teacherId });
   }
 
   /** The guardian, lead and the guardian's students with their packages (thread-people.ts). */

@@ -21,11 +21,12 @@ const toLesson = (row: LessonRow, tz: string): ThreadLesson => ({
   tz,
 });
 
-async function read(db: Db, by: { select: string; column: string; id: string; now: Date }): Promise<LessonRow[]> {
-  const { data, error } = await db
-    .from('lessons')
-    .select(by.select)
-    .eq(by.column, by.id)
+type ReadBy = { select: string; column: string; id: string; now: Date; teacherId?: string | undefined };
+
+async function read(db: Db, by: ReadBy): Promise<LessonRow[]> {
+  let query = db.from('lessons').select(by.select).eq(by.column, by.id);
+  if (by.teacherId) query = query.eq('teacher_id', by.teacherId);
+  const { data, error } = await query
     .in('status', [...OPEN])
     .gt('starts_at', by.now.toISOString())
     .order('starts_at')
@@ -41,16 +42,20 @@ const TEACHER_SELECT = 'id, starts_at, meeting_link, teacher:teachers(tz), lesso
 
 /**
  * The thread's next open lessons (scheduled | confirmed, not started), for the template composer:
- * a guardian's (only their children named, their tz) or a teacher's (their tz). Rule 6: a
- * template's lesson time is picked from these, never typed.
+ * a guardian's (only their children named, their tz) or a teacher's (their tz). In teacher mode
+ * only the signed-in teacher's own (`teacherId`). Rule 6: a template's lesson time is picked from
+ * these, never typed.
  */
-export async function upcomingLessons(db: Db, at: { thread: ThreadView; now: Date }): Promise<ThreadLesson[]> {
-  const { thread, now } = at;
+export async function upcomingLessons(
+  db: Db,
+  at: { thread: ThreadView; now: Date; teacherId?: string | undefined },
+): Promise<ThreadLesson[]> {
+  const { thread, now, teacherId } = at;
   if (thread.guardian_id) {
-    const by = { select: GUARDIAN_SELECT, column: 'lesson_students.student.guardian_id', id: thread.guardian_id, now };
+    const by = { select: GUARDIAN_SELECT, column: 'lesson_students.student.guardian_id', id: thread.guardian_id, now, teacherId };
     return (await read(db, by)).map((r) => toLesson(r, thread.guardian_tz ?? RIYADH_TZ));
   }
   if (!thread.teacher_id) return [];
-  const rows = await read(db, { select: TEACHER_SELECT, column: 'teacher_id', id: thread.teacher_id, now });
+  const rows = await read(db, { select: TEACHER_SELECT, column: 'teacher_id', id: thread.teacher_id, now, teacherId });
   return rows.map((r) => toLesson(r, r.teacher?.tz ?? RIYADH_TZ));
 }

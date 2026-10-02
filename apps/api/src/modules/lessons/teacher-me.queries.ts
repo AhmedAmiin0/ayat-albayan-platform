@@ -22,8 +22,11 @@ export class TeacherMeQueries {
     return data && { ...data, students: await this.students(data.id) };
   }
 
-  /** Distinct union of students assigned to me and students of my active rules, by name. */
-  private async students(teacherId: string): Promise<MyStudent[]> {
+  /**
+   * Distinct union of students assigned to me and students of my active rules, by name. Also the
+   * teacher-mode inbox: which of a guardian's children the teacher sees.
+   */
+  async students(teacherId: string): Promise<MyStudent[]> {
     const [assigned, rules] = await Promise.all([
       this.db.from('students').select(STUDENT).eq('teacher_id', teacherId),
       this.db

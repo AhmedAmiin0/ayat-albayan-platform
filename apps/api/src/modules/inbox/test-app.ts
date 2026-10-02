@@ -9,16 +9,24 @@ import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
 import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { TeacherMeQueries } from '../lessons/teacher-me.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
 import { TemplatesQueries } from '../whatsapp/templates.queries';
 import { WHATSAPP_CLIENT } from '../whatsapp/whatsapp.types';
 import type { FamilyTag } from './thread-people.mapper';
+import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { ThreadsQueries } from './threads.queries';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
 export const ADMIN: AuthUser ={ id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: { id: 't1', email: null, role: 'teacher' } };
+export const TEACHER: AuthUser = { id: 't1', email: null, role: 'teacher' };
+const USERS: Record<string, AuthUser> = {
+  admin: ADMIN,
+  teacher: TEACHER,
+  unlinked: { id: 't9', email: null, role: 'teacher' },
+  guardian: { id: 'g9', email: null, role: 'guardian' },
+};
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -33,6 +41,11 @@ function mocks() {
       people: vi.fn(async () => NO_PEOPLE),
       familyTags: vi.fn(async () => new Map<string, FamilyTag>()),
     },
+    teacher: {
+      ...{ teacher: vi.fn(), phones: vi.fn(), unread: vi.fn(), stampRead: vi.fn() },
+      ...{ lessonTeacher: vi.fn(), guardianStudents: vi.fn() },
+    },
+    me: { me: vi.fn(), students: vi.fn() },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     client: { configured: vi.fn(() => false), markRead: vi.fn() },
     gate: { open: vi.fn() },
@@ -46,6 +59,8 @@ export async function inboxApp() {
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ThreadsQueries).useValue(m.queries)
+    .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
+    .overrideProvider(TeacherMeQueries).useValue(m.me)
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(SendGate).useValue(m.gate)
