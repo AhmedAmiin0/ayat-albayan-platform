@@ -19,6 +19,8 @@ const SECTIONS: Record<string, { label: string; profile?: string }> = {
   payments: { label: t.payments.title },
   payouts: { label: t.nav.payouts },
   expenses: { label: t.nav.expenses },
+  inbox: { label: t.nav.inbox },
+  settings: { label: t.settings.title },
 };
 
 /** Running-head breadcrumbs for an /admin path (docs/07 §7). Unknown paths get none. */

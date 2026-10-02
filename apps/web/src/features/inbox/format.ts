@@ -1,0 +1,76 @@
+import { counted, formatPhone, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
+import { t } from '@/lib/i18n';
+
+// Display text for the inbox (docs/07 §9, docs/12 §8). DB instants are UTC; times render in the
+// viewer's zone, 24h, Western digits (`nu-latn`), like every other time in the product.
+
+const LOCALE = 'ar-EG-u-nu-latn';
+const clock = new Intl.DateTimeFormat(LOCALE, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
+const dayMonth = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
+const full = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23' });
+
+export type MediaKind = keyof typeof t.inbox.media;
+
+/** WhatsApp media by MIME: image / audio / video, PDFs and other files are documents. */
+export function mediaKind(mime: string | null): MediaKind {
+  if (!mime) return 'other';
+  const top = mime.split('/')[0];
+  if (top === 'image' || top === 'audio' || top === 'video') return top;
+  return 'document';
+}
+
+/** The name a person reads: guardian ?? lead ?? teacher, else the grouped phone. */
+export function threadName(th: Pick<ThreadView, 'display_name' | 'phone_e164'>): string {
+  return th.display_name ?? formatPhone(th.phone_e164);
+}
+
+/** Who the number is: a guardian or teacher on file, else a lead, else nobody known yet. */
+export function threadKind(th: ThreadView): keyof typeof t.inbox.kind | null {
+  if (th.guardian_id) return 'guardian';
+  if (th.teacher_id) return 'teacher';
+  return th.lead_id ? 'lead' : null;
+}
+
+const templateName = (key: string): string => (t.templates.names as Record<string, string>)[key] ?? key;
+
+/** The template line over an outbound template bubble: «قالب: تأكيد الحجز — لينك Jitsi». */
+export function templateLine(key: string): string {
+  return t.inbox.templateLine.replace('{name}', templateName(key));
+}
+
+function lastText(th: ThreadView): string {
+  const media = th.last_media_mime ? t.inbox.media[mediaKind(th.last_media_mime)] : null;
+  if (media) return th.last_body ? `${media}: ${th.last_body}` : media;
+  if (th.last_body) return th.last_body;
+  if (th.last_template_key) return templateLine(th.last_template_key);
+  return t.inbox.media.other; // an inbound type we can't show (location, contacts, …)
+}
+
+/** One line under the name: the last message, «إنت:» before ours, media and templates named. */
+export function previewText(th: ThreadView): string {
+  return th.last_direction === 'outbound' ? `${t.inbox.you} ${lastText(th)}` : lastText(th);
+}
+
+/** «رسالتين جداد», «3 رسايل جديدة». */
+export const unreadLabel = (n: number): string => counted(t.inbox.unread, n);
+
+/** Today → «14:05», another day → «3 أكتوبر». */
+export function listTime(iso: string, now: Date = new Date()): string {
+  const at = new Date(iso);
+  return at.toDateString() === now.toDateString() ? clock.format(at) : dayMonth.format(at);
+}
+
+export const clockText = (iso: string): string => clock.format(new Date(iso));
+export const fullTime = (iso: string): string => full.format(new Date(iso));
+
+/** «تقدر ترد برسالة عادية لحد …»: 24 h after their last message. */
+export function sessionUntil(lastInboundAt: string): string {
+  return t.inbox.sessionOpenUntil.replace('{time}', full.format(new Date(Date.parse(lastInboundAt) + SESSION_WINDOW_MS)));
+}
+
+/** Meta / sender error in words: messages.errors.<code>, else «حصلت مشكلة في الإرسال (code)». */
+export function errorText(m: Pick<MessageView, 'error_code' | 'error_text'>): string {
+  const known = (t.messages.errors as Record<string, string>)[m.error_code ?? ''];
+  if (known) return known;
+  return t.messages.errors.unknown.replace('{code}', m.error_code ?? m.error_text ?? '—');
+}

@@ -8,6 +8,7 @@ import { cn } from '@/lib/utils';
 const GROUPS = [
   [
     { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'chat' },
+    { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'phone' },
     { key: 'jobApplicants', to: '/admin/job-applicants', label: t.nav.jobApplicants, icon: 'brief' },
   ],
   [
@@ -21,7 +22,10 @@ const GROUPS = [
     { key: 'payouts', to: '/admin/payouts', label: t.nav.payouts, icon: 'wallet' },
     { key: 'expenses', to: '/admin/expenses', label: t.nav.expenses, icon: 'receipt' },
   ],
-  [{ key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' }],
+  [
+    { key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' },
+    { key: 'settings', to: '/admin/settings', label: t.settings.title, icon: 'sliders' },
+  ],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];
 
 export type NavKey = (typeof GROUPS)[number][number]['key'];
