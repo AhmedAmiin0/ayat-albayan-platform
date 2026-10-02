@@ -45,11 +45,12 @@ export function useCreateSubscription() {
   const inflight = useRef<Promise<SubscriptionView> | null>(null);
   const attempt = useRef<Attempt | null>(null);
   const lost = useRef(false);
-  const newest = async (studentId: string, staleTime: number) => {
+  // Always a fresh read: a cached balance may predate a package added since (e.g. on the web).
+  const newest = async (studentId: string) => {
     const balance = await client.fetchQuery({
       queryKey: balanceKey(studentId),
       queryFn: () => apiFetch<StudentBalanceView>(`/students/${studentId}/balance`),
-      staleTime,
+      staleTime: 0,
     });
     return balance.current;
   };
@@ -57,10 +58,10 @@ export function useCreateSubscription() {
   async function save(input: SubscribeInput): Promise<SubscriptionView> {
     const retry = lost.current && attempt.current?.studentId === input.studentId;
     if (retry) {
-      const latest = await newest(input.studentId, 0);
+      const latest = await newest(input.studentId);
       if (latest && latest.id !== attempt.current?.before) return latest;
     } else {
-      const before = (await newest(input.studentId, Infinity))?.id ?? null;
+      const before = (await newest(input.studentId))?.id ?? null;
       attempt.current = { studentId: input.studentId, before };
     }
     return apiSend<SubscriptionView>('POST', '/subscriptions', { ...input, notes: null });

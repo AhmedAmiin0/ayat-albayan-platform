@@ -1,4 +1,5 @@
 import { act, renderHook } from '@testing-library/react-native';
+import { balanceKey } from '@/payments/queries';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { balance, CHILD, saved } from './fixtures';
 import { useCreateSubscription, type SubscribeInput } from './use-subscribe';
@@ -20,6 +21,8 @@ const offline = () => new TypeError('Network request failed');
 
 function setup() {
   const client = createTestQueryClient();
+  // A balance cached long ago, before the package the API now has as newest ('old-sub').
+  client.setQueryData(balanceKey(CHILD), balance(saved('ancient')));
   return renderHook(() => useCreateSubscription(), { wrapper: queryWrapper(client) });
 }
 
@@ -52,7 +55,7 @@ test('no answer, but it was saved: the retry finds the new package and does not 
   expect(mockApiFetch).toHaveBeenLastCalledWith(`/students/${CHILD}/balance`);
 });
 
-test('no answer and nothing saved: the retry posts again', async () => {
+test('no answer and nothing saved: the retry posts again (a stale cached balance is not trusted)', async () => {
   mockApiSend.mockRejectedValueOnce(offline()).mockResolvedValueOnce(saved('new-sub'));
   const { result } = await setup();
   await act(() => result.current.mutateAsync(input).catch(() => undefined));
