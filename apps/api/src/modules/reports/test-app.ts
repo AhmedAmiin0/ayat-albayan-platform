@@ -7,6 +7,7 @@ import { AppModule } from '../../app.module';
 import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { LessonEvents } from '../../common/events/lesson-events';
+import { PushService } from '../../common/push/push.service';
 import { SETTING_DEFAULTS, SettingsService } from '../../common/settings/settings.service';
 import { StorageService } from '../../common/storage/storage.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -41,6 +42,7 @@ function mocks() {
     settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
     events: { changed: vi.fn(), onChanged: vi.fn() },
     pdf: { enqueue: vi.fn() },
+    push: { notifyAdmins: vi.fn() },
   };
 }
 
@@ -58,6 +60,7 @@ export async function reportsApp() {
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(LessonEvents).useValue(m.events)
     .overrideProvider(ReportPdfQueue).useValue(m.pdf)
+    .overrideProvider(PushService).useValue(m.push)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

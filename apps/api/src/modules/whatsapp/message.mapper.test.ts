@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { toMessageView } from './message.mapper';
+import { needsManualSend, toMessageView } from './message.mapper';
 import { messageRow } from './sender.fakes';
 import { renderable, toTemplateView } from './template.mapper';
 import { REPORT_READY, templateRow } from './whatsapp.fakes';
@@ -29,6 +29,15 @@ describe('toMessageView (R-MSG-05, R-MSG-03)', () => {
     ]) {
       expect(toMessageView({ row, template: null }).click_to_chat).toBeNull();
     }
+  });
+
+  it('a row the sender has claimed (queued, «sending» under its lease) offers no wa.me link', () => {
+    const claimed = messageRow({ status: 'queued', attempts: 1, error_code: 'sending', next_attempt_at: '2026-10-02T08:02:00Z' });
+    expect(needsManualSend(claimed)).toBe(false);
+    expect(toMessageView({ row: claimed, template: booking }).click_to_chat).toBeNull();
+    // the claim resolved: back in the queue after a retryable error, or failed → offered again
+    expect(needsManualSend({ ...claimed, error_code: '130429' })).toBe(true);
+    expect(needsManualSend({ ...claimed, status: 'failed', error_code: 'uncertain' })).toBe(true);
   });
 
   it('a queued session text links its own text; stored body wins over the template; media url passes through', () => {

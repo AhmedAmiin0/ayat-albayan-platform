@@ -37,7 +37,7 @@ describe('H3/H4 sends (docs/12 §4, R-LEAD-02, R-MSG-01)', () => {
 
   it('H3 409 session_closed after 24 h, nothing queued', async () => {
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: '2026-01-01T00:00:00Z' }));
-    const res = await t.call({ method: 'POST', url: `${URL}/text`, body: { text: 'أهلًا' } });
+    const res = await t.call({ method: 'POST', url: `${URL}/text`, body: { text: 'أهلًا', clientRequestId: REQ } });
     expect([res.statusCode, res.json().code]).toEqual([409, 'session_closed']);
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
@@ -59,13 +59,22 @@ describe('H3/H4 sends (docs/12 §4, R-LEAD-02, R-MSG-01)', () => {
 
   it('H4 409 template_not_approved, 400 missing_params, 400 needs_document', async () => {
     t.templates.get.mockResolvedValueOnce(templateRow({ status: 'pending' }));
-    const pending = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'booking_confirmation', params: PARAMS } });
+    const pending = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'booking_confirmation', params: PARAMS, clientRequestId: REQ } });
     expect([pending.statusCode, pending.json().code]).toEqual([409, 'template_not_approved']);
-    const missing = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'booking_confirmation', params: { '1': 'x' } } });
+    const missing = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'booking_confirmation', params: { '1': 'x' }, clientRequestId: REQ } });
     expect([missing.statusCode, missing.json().missing]).toEqual([400, ['2', 'button']]);
     t.templates.get.mockResolvedValueOnce({ ...REPORT_READY, status: 'approved' });
-    const doc = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'report_ready', params: PARAMS } });
+    const doc = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'report_ready', params: PARAMS, clientRequestId: REQ } });
     expect([doc.statusCode, doc.json().code]).toEqual([400, 'needs_document']);
     expect(t.queries.enqueue).not.toHaveBeenCalled();
+  });
+
+  it('H3/H4 400 missing_client_request_id: no send without its idempotency key (rule 8)', async () => {
+    const text = await t.call({ method: 'POST', url: `${URL}/text`, body: { text: 'أهلًا' } });
+    expect([text.statusCode, text.json().code]).toEqual([400, 'missing_client_request_id']);
+    const tpl = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'booking_confirmation', params: PARAMS } });
+    expect([tpl.statusCode, tpl.json().code]).toEqual([400, 'missing_client_request_id']);
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+    expect(t.sender.kick).not.toHaveBeenCalled();
   });
 });

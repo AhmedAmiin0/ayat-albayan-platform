@@ -53,7 +53,8 @@ export const isHandedOff = (m: MessageView): boolean => m.status === 'failed' &&
 
 /**
  * Retry (M1) is for failed rows where trying again can help (not «not on WhatsApp», a closed 24 h
- * window, too late, or a hand-off); sending by hand (M2) for any outbound row still not out.
+ * window, too late, or a hand-off); sending by hand (M2) for any outbound row still not out that
+ * the API gave a wa.me link: none while the sender holds the row («sending»), so no double send.
  */
 export const canRetry = (m: MessageView): boolean =>
   m.direction === 'outbound' && m.status === 'failed' && canRetryCode(m.error_code);

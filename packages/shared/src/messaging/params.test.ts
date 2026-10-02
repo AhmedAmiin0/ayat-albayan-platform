@@ -57,10 +57,32 @@ describe('teacherReminderMessage', () => {
     });
   });
 
-  it('Jitsi has no teacher variant → the plain template, no button', () => {
-    const msg = teacherReminderMessage({ ...base, teacherName: 'أبرار', meetingLink: 'https://meet.jit.si/x' });
-    expect(msg.key).toBe('teacher_lesson_reminder');
-    expect(msg.params).not.toHaveProperty('button');
+  it('Jitsi has no teacher variant → the plain template, the link in {{2}} as in the approved sample', () => {
+    const link = 'https://meet.jit.si/AyatAlBayan-1cd3400cedd7';
+    const msg = teacherReminderMessage({ ...base, teacherName: 'أبرار', meetingLink: link });
+    expect(msg).toEqual({
+      key: 'teacher_lesson_reminder',
+      params: { '1': 'أبرار', '2': `17:00 — سهيلة ومريم · رابط الحلقة: ${link}` },
+    });
+  });
+
+  it('any other link rides in {{2}} too; no link → time and names only', () => {
+    const zoom = teacherReminderMessage({ ...base, teacherName: 'أبرار', meetingLink: 'https://us06web.zoom.us/j/123' });
+    expect(zoom.params['2']).toBe('17:00 — سهيلة ومريم · رابط الحلقة: https://us06web.zoom.us/j/123');
+    for (const meetingLink of [null, undefined, '   ']) {
+      expect(teacherReminderMessage({ ...base, teacherName: 'أبرار', meetingLink }).params['2']).toBe('17:00 — سهيلة ومريم');
+    }
+  });
+
+  it('{{2}} stays one line: Meta refuses newlines, tabs and 4+ spaces in a parameter', () => {
+    const msg = teacherReminderMessage({
+      ...base,
+      names: ['سهيلة\n', 'مريم'],
+      teacherName: 'أبرار',
+      meetingLink: ' https://meet.jit.si/x\t\n',
+    });
+    expect(msg.params['2']).toBe('17:00 — سهيلة ومريم · رابط الحلقة: https://meet.jit.si/x');
+    expect(msg.params['2']).not.toMatch(/[\n\t]| {4}/);
   });
 });
 

@@ -67,6 +67,13 @@ describe('delivery title and actions', () => {
     expect(canSendByHand(message({ click_to_chat: link }))).toBe(false);
   });
 
+  it('a row the sender is sending right now: no wa.me, no hand-off (the API sends no link)', () => {
+    const claimed = out({ status: 'queued', attempts: 1, error_code: 'sending', click_to_chat: null });
+    expect(canSendByHand(claimed)).toBe(false);
+    expect(canRetry(claimed)).toBe(false);
+    expect(isHandedOff(claimed)).toBe(false);
+  });
+
   it('no «جرّب تاني» where it cannot help; a hand-off is answered by its own question', () => {
     for (const code of ['131026', '131047', 'expired', 'stale', 'handed_off']) {
       expect(canRetry(out({ status: 'failed', error_code: code }))).toBe(false);

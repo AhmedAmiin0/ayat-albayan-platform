@@ -50,4 +50,9 @@ export class InboundStore {
     }
     return stored;
   }
+
+  /** Undoes save() when the side effects failed, so Meta's re-send of the wamid runs them again. */
+  async forget(waMessageId: string): Promise<void> {
+    await this.queries.deleteInbound(waMessageId);
+  }
 }

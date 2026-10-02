@@ -7,6 +7,7 @@ import {
   type MessageView,
   type RenderableTemplate,
 } from '@ab/shared';
+import { SENDING } from './send-plan';
 import { templateParams } from './wa-json';
 
 export type MessageRow = Tables<'messages'>;
@@ -23,9 +24,13 @@ export interface MessageViewInput {
   mediaUrl?: string | null;
 }
 
-/** Only an outbound message still waiting or failed offers the admin the wa.me fallback (R-MSG-03). */
-export function needsManualSend(row: Pick<MessageRow, 'direction' | 'status'>): boolean {
-  return row.direction === 'outbound' && (row.status === 'queued' || row.status === 'failed');
+/**
+ * Only an outbound message still waiting or failed offers the admin the wa.me fallback (R-MSG-03).
+ * Not one the sender has claimed (SENDING, under its lease): Meta may be sending it right now, and
+ * a hand-off then would send it twice. Once the claim resolves it is sent, queued again or failed.
+ */
+export function needsManualSend(row: Pick<MessageRow, 'direction' | 'status' | 'error_code'>): boolean {
+  return row.direction === 'outbound' && (row.status === 'queued' || row.status === 'failed') && row.error_code !== SENDING;
 }
 
 /**

@@ -97,4 +97,16 @@ describe('POST /webhooks/whatsapp (W2) — entries', () => {
     expect((await post(text)).statusCode).toBe(200);
     expect(queries.stored).toHaveLength(1);
   });
+
+  it('500 when the «نعم» confirm fails after the row was stored; the re-send confirms it', async () => {
+    const { post, queries, lessons } = await boot();
+    queries.identify.mockResolvedValue({ ...nobody(), guardian: { id: GUARDIAN_ID, name: 'أم سهيلة' } });
+    lessons.confirm.mockRejectedValueOnce(new Error('db down'));
+    const body = JSON.stringify(envelope(inboundValue(buttonPart('تمام، هنحضر', `confirm:${LESSON_ID}`))));
+    expect((await post(body)).statusCode).toBe(500);
+    expect(queries.stored).toHaveLength(0);
+    expect((await post(body)).statusCode).toBe(200);
+    expect(lessons.confirm).toHaveBeenCalledTimes(2);
+    expect(queries.stored).toHaveLength(1);
+  });
 });
