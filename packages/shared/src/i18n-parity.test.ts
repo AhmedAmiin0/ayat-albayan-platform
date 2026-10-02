@@ -34,3 +34,10 @@ describe('en.json ↔ ar.json', () => {
     expect(diff.map(([k]) => k)).toEqual([]);
   });
 });
+
+describe('en.json is fully English', () => {
+  it('has no Arabic letters except the Arabic endonym language.ar', () => {
+    const arabic = leaves(en, '').filter(([k, v]) => k !== 'language.ar' && /[؀-ۿ]/.test(String(v)));
+    expect(arabic.map(([k]) => k)).toEqual([]);
+  });
+});

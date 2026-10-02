@@ -1,5 +1,6 @@
 // Running head (docs/07 §1.7, §7): Gregorian + Hijri date and the Riyadh / Cairo clocks.
 // Western digits everywhere (one numeral system), Hijri via Umm al-Qura. DB stays UTC.
+import { intlLocale, type Locale } from './locale.js';
 
 export const RIYADH_TZ = 'Asia/Riyadh';
 export const CAIRO_TZ = 'Africa/Cairo';
@@ -14,30 +15,46 @@ export interface RunningHead {
   cairoTime: string;
 }
 
-const gregorian = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
-  weekday: 'long',
-  day: 'numeric',
-  month: 'long',
-  year: 'numeric',
-  timeZone: RIYADH_TZ,
-});
-// Built on first use, not at import: an engine without the Umm al-Qura calendar (Hermes on some
-// Android builds) must not crash every importer of @ab/shared. Without it the Hijri line is ''.
-let hijri: Intl.DateTimeFormat | null | undefined;
-function hijriLine(date: Date): string {
-  if (hijri === undefined) {
+// Built on first use per UI language, not at import: an engine without the Umm al-Qura calendar
+// (Hermes on some Android builds) must not crash every importer of @ab/shared. Without it the Hijri
+// line is ''.
+const gregorians = new Map<Locale, Intl.DateTimeFormat>();
+const hijris = new Map<Locale, Intl.DateTimeFormat | null>();
+
+function gregorianFormat(locale: Locale): Intl.DateTimeFormat {
+  let f = gregorians.get(locale);
+  if (!f) {
+    f = new Intl.DateTimeFormat(intlLocale(locale), {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      timeZone: RIYADH_TZ,
+    });
+    gregorians.set(locale, f);
+  }
+  return f;
+}
+
+/** «20 ربيع الآخر 1448 هـ» / «20 Rabiʻ II 1448 AH». */
+function hijriLine(date: Date, locale: Locale): string {
+  if (!hijris.has(locale)) {
+    const tag = locale === 'ar' ? 'ar-SA' : 'en-GB';
     try {
-      hijri = new Intl.DateTimeFormat('ar-SA-u-ca-islamic-umalqura-nu-latn', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        timeZone: RIYADH_TZ,
-      });
+      hijris.set(
+        locale,
+        new Intl.DateTimeFormat(`${tag}-u-ca-islamic-umalqura-nu-latn`, {
+          day: 'numeric',
+          month: 'long',
+          year: 'numeric',
+          timeZone: RIYADH_TZ,
+        }),
+      );
     } catch {
-      hijri = null;
+      hijris.set(locale, null);
     }
   }
-  return hijri?.format(date) ?? '';
+  return hijris.get(locale)?.format(date) ?? '';
 }
 
 /** «HH:mm» in `timeZone`, 24h, Western digits. */
@@ -51,16 +68,17 @@ export function clockTime(date: Date, timeZone: string): string {
 }
 
 /** Weekday, day, month, year joined by spaces (Intl puts «، » after the weekday). */
-function gregorianLine(date: Date): string {
-  const part = (type: Intl.DateTimeFormatPartTypes) =>
-    gregorian.formatToParts(date).find((p) => p.type === type)?.value ?? '';
+function gregorianLine(date: Date, locale: Locale): string {
+  const parts = gregorianFormat(locale).formatToParts(date);
+  const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value ?? '';
   return [part('weekday'), part('day'), part('month'), part('year')].join(' ');
 }
 
-export function formatRunningHead(date: Date): RunningHead {
+/** Screen text in the UI language (Arabic by default); the clocks are the same in both. */
+export function formatRunningHead(date: Date, locale: Locale = 'ar'): RunningHead {
   return {
-    gregorian: gregorianLine(date),
-    hijri: hijriLine(date),
+    gregorian: gregorianLine(date, locale),
+    hijri: hijriLine(date, locale),
     riyadhTime: clockTime(date, RIYADH_TZ),
     cairoTime: clockTime(date, CAIRO_TZ),
   };

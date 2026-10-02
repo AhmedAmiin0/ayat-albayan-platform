@@ -1,5 +1,6 @@
 import { formatRunningHead, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { localDate } from '@/today/timeline';
 
 const DAY = 86_400_000;
@@ -17,7 +18,7 @@ export function paidAtFor(now: Date, daysAgo: number): Date {
 
 /** «النهارده · الخميس 1 أكتوبر 2026», «امبارح · …», then the date alone. */
 export function paidDayLabel(now: Date, daysAgo: number): string {
-  const date = formatRunningHead(paidAtFor(now, daysAgo)).gregorian;
+  const date = formatRunningHead(paidAtFor(now, daysAgo), locale).gregorian;
   const near = daysAgo <= 0 ? t.mobile.today : daysAgo === 1 ? t.payments.mobile.yesterday : null;
   return near ? `${near} · ${date}` : date;
 }

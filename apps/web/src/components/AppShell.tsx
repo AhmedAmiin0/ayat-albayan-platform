@@ -10,6 +10,7 @@ import { meQuery } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { Crumbs } from './shell/Crumbs';
+import { LanguageSwitch } from './shell/LanguageSwitch';
 import { LogoutButton } from './shell/LogoutButton';
 import { SideFoot } from './shell/SideFoot';
 
@@ -73,6 +74,7 @@ function TopBarLayout({ page }: { page: ReactNode }) {
       <header className="flex items-center gap-3 px-1.5 pt-4">
         <Logo />
         <div className="ms-auto flex items-center gap-2">
+          <LanguageSwitch />
           <ThemeToggle className="hidden sm:inline-flex" />
           <LogoutButton className="size-12 sm:size-12" />
         </div>

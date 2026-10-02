@@ -29,6 +29,15 @@ describe('formatRunningHead (docs/07 §7)', () => {
     expect(head.cairoTime).toBe('00:30');
   });
 
+  it('speaks English for the English UI, same clocks', () => {
+    expect(formatRunningHead(new Date('2026-10-01T12:20:00Z'), 'en')).toEqual({
+      gregorian: 'Thursday 1 October 2026',
+      hijri: '20 Rabiʻ II 1448 AH',
+      riyadhTime: '15:20',
+      cairoTime: '15:20',
+    });
+  });
+
   it('never emits Eastern-Arabic digits', () => {
     const all = Object.values(formatRunningHead(new Date('2027-03-15T05:05:00Z'))).join(' ');
     expect(all).not.toMatch(/[٠-٩۰-۹]/);

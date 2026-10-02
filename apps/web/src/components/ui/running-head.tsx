@@ -1,6 +1,7 @@
 import { formatRunningHead } from '@ab/shared';
 import { useEffect, useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 
 /** Current time, re-rendered on every minute boundary. */
@@ -27,7 +28,7 @@ export function useMinuteClock(): Date {
  * keeps a single role=status).
  */
 export function RunningHead({ crumbs }: { crumbs?: ReactNode }) {
-  const head = formatRunningHead(useMinuteClock());
+  const head = formatRunningHead(useMinuteClock(), locale);
   return (
     <div
       className={cn(

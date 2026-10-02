@@ -94,7 +94,7 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
    (c) CRM on its own app: in our app do (a) and subscribe `messages`; subscribe our app to the WABA (`POST /{WA_WABA_ID}/subscribed_apps` with our token) and unsubscribe the CRM's app (`DELETE /{WA_WABA_ID}/subscribed_apps` with the CRM app's token).
 3. Stop the CRM's automations (1).
 4. Set `MESSAGING_ENABLED=true` on the server, restart the API, then switch sending ON in `/admin/settings`.
-5. In `/admin/settings` press «نقلنا الرقم من الـCRM» (`settings.crm_cutover_done`): the «don't turn sending on» CRM warning goes away. On a rollback (5), turn it back by `PATCH /settings { "crmCutoverDone": false }` or the settings row.
+5. In `/admin/settings` press «نقلنا الرقم من الـCRM» (`settings.crm_cutover_done`): the «don't turn sending on» CRM warning goes away. On a rollback (5), press «الرقم رجع على الـCRM؟ رجّع التحذير» on the same page: the flag goes back to false and the warning returns.
 
 ### 4. Verify (10 minutes)
 - From a staff phone, write to the academy number: the thread shows in `/admin/inbox` within seconds. The API log shows `POST /webhooks/whatsapp` 200; a 401 means `WA_APP_SECRET` is wrong (nothing was stored).

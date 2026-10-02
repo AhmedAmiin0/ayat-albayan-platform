@@ -1,4 +1,5 @@
 import { offerText } from '@ab/shared';
+import ar from '@ab/shared/i18n/ar.json';
 import { Linking, Share, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
@@ -15,7 +16,8 @@ export interface OfferActionsProps {
  * member picks the guardian). «انسخ العرض للعميل» opens the share sheet, which has Copy.
  */
 export function OfferActions({ quote, stale }: OfferActionsProps) {
-  const text = offerText(quote, t.pricing);
+  // The guardian reads it on WhatsApp: Arabic whatever the UI language (parent-facing output).
+  const text = offerText(quote, ar.pricing);
   return (
     <View style={{ gap: 8 }}>
       <Button

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { clockAt } from '@/inbox/format';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
@@ -50,7 +51,7 @@ export function TodayScreen() {
   const counts = filterCounts(lessons);
   const items = timeline(applyFilter(lessons, filter), now);
   const pills = loaded ? filterPills().map((p) => ({ ...p, count: counts[p.value] })) : filterPills();
-  const dateLine = `${formatRunningHead(now).gregorian}. ${t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}`;
+  const dateLine = `${formatRunningHead(now, locale).gregorian}. ${t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}`;
   // Offline (no NetInfo): the refetch failed but the saved day is on screen; say how old it is.
   const stale = day.isError && loaded;
   const subtitle = stale

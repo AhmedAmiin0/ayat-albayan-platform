@@ -1,4 +1,5 @@
 import { offerText, type Quote } from '@ab/shared';
+import ar from '@ab/shared/i18n/ar.json';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
@@ -20,7 +21,8 @@ export interface OfferActionsProps {
  */
 export function OfferActions({ quote, stale }: OfferActionsProps) {
   const [outcome, setOutcome] = useState<Outcome>(null);
-  const text = offerText(quote, t.pricing);
+  // The guardian reads it on WhatsApp: Arabic whatever the UI language (parent-facing output).
+  const text = offerText(quote, ar.pricing);
   const wa = (
     <>
       <Icon name="chat" />

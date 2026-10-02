@@ -1176,3 +1176,70 @@ No updates or adopts (first run). Rejects are test rows, bad phones, out-of-rang
 3. Answer the RUNBOOK open questions (HEART times/45 min, guardian names, Arabic-programme students).
 4. `pnpm migrate:apply --target staging`, `pnpm migrate validate --target staging`, spot-check five students, one family's lessons and reports, a balance, one lead thread.
 5. Production only on the owner's written go (RUNBOOK §8).
+
+# Phase 7: English/LTR + polish
+
+Branch `develop`. Six branches merged with `--no-ff`, in order: `phase7/foundation`, `phase7/web-locale`, `phase7/mobile-locale`, `phase7/polish-api`, `phase7/polish-web`, `phase7/polish-mobile`. All six merged with no conflicts; the `ar.json`/`en.json` additions fell in different namespaces. Ouroboros seed `seed_3b571c8825e2`. Owner mandate (2026-10-02): English and LTR after the MVP, Arabic stays the default.
+
+## By acceptance criterion
+- **en.json mirrors ar.json:** `packages/shared/i18n/en.json` is fully translated (1,309 strings: two translator passes plus the 5 keys the builders added, which already had English values). `i18n-parity.test.ts` checks the same key tree, a non-empty value for every string, and the same `{placeholders}`. A new case checks that no English value contains Arabic letters, except `language.ar` («العربية»). The numeric keys under `messages.errors` are in ascending order in en.json; the parity test compares by key, so order does not matter.
+- **Arabic RTL is the default when nothing is saved:**
+  - Web: `index.html` stays `lang="ar" dir="rtl"`. `lib/locale.ts` reads `localStorage['ab.locale']` once at boot through `parseLocale`; a missing or unknown value, or blocked storage, gives `'ar'`.
+  - Mobile: `bootLocale()` follows `I18nManager.isRTL`. A first start on an LTR phone switches to RTL and reloads once. Existing installs never reload.
+- **`t` keeps its shape:** `lib/i18n.ts` on web and mobile still exports `t: typeof ar`, chosen once at boot. None of the ~450 import sites changed.
+- **Web switch:** `LanguageSwitch` shows the other language by its own name. It sits in the admin side foot, on the login page, and now in the teacher/guardian top bar too. It saves the choice, reloads, and `main.tsx` sets `<html lang dir>` before React renders.
+- **Mobile switch:** a «اللغة» row in More asks for confirmation (`language.restart`), saves `ab.locale`, then sets `I18nManager.allowRTL`/`forceRTL` and calls `reloadAppAsync()`. `app/_layout` waits for `useLocaleReady()` before the first render.
+- **Intl formats:** every display formatter in apps/web and apps/mobile uses `intlLocale(locale)` (`ar-EG-u-nu-latn` / `en-GB-u-nu-latn`). `formatRunningHead(date, locale)` now takes the UI language too (default `'ar'`), so the running head on web and the mobile Today and paid-day lines read «Friday 2 October 2026 · 21 Rabiʻ II 1448 AH» in English. A few formatters stay on fixed `en-CA`/`en-US`/`en-GB` on purpose: they produce machine values (ISO dates, weekday index, HH:mm), not display text.
+- **Mirroring:**
+  - `BindingCover` corners use start/end positions and flip by direction.
+  - `Icon` flips the chevrons and logout in LTR, and reply in RTL.
+  - The `Cartouche` caps, the `AvailabilityWeek` hour labels, tab arrow keys, the nav fade and LTR inputs all follow the direction.
+  - The side-foot email now aligns to the page start in both directions (it had stuck to the logout button in LTR).
+  - Component tests cover these.
+- **Playwright locale e2e** (`e2e/tests/locale.spec.ts`), on desktop and Pixel 7:
+  - Admin: switches to English (dir ltr, English dashboard heading and nav, the pricing form's groups), then switches back (dir rtl).
+  - Teacher: switches from the top bar and back.
+  - Login page: switches to English and back.
+- **Parent-facing output stays Arabic:**
+  - apps/api imports ar.json directly and was not touched, so report PDFs, WhatsApp messages, CSV exports and push bodies are Arabic.
+  - The calculator's offer text («انسخ العرض للعميل» / «أرسله على واتساب») was the one parent-facing text built in the client from `t`. Web and mobile now build it from `ar.pricing`, with an English-UI test on each.
+  - The teacher reminder link wording in `@ab/shared` messaging is fixed Arabic.
+- **Report history links:** the admin student profile has «سجل التقارير» linking to `/admin/students/$id/reports`. In the teacher's MyStudents list, each student name links to `/teacher/reports/$id`.
+- **List joiners:** `common.listJoiner` is «، » in Arabic and «, » in English. It is used in the web finance notes, the web settings follow-up hours, and the mobile lesson student names.
+- **USD subscription FX snapshot:** `apps/api/src/modules/subscriptions/subscription-row.test.ts`.
+  - EG at 0.266667 gives $39 and saves the same rate and date.
+  - The 1/3.75 peg fallback is saved with `fx_date` null.
+  - GCC countries make no FX call.
+- **e2e for teacher propose → admin approve** (`proposals.spec.ts`) and **for payouts** (`payouts.spec.ts`). The payouts spec checks: 2 × 70 for the two attended lessons, the no-show unpaid, approve refused while a report is pending, 230 EGP after recalculation, then approved → paid.
+- **All settings keys editable:** `/admin/settings` has a control for all 13 keys. `crm_cutover_done` is now two-way, via «الرقم رجع على الـCRM؟ رجّع التحذير». The docs/09 cut-over step 5 now points to that button.
+- **Polish, API:**
+  - The teacher reminder {{2}} carries a non-Meet lesson link.
+  - The webhook deletes the inbound row and answers 500 when a quick-reply side effect fails, so Meta retries.
+  - Hand-off and sent-manually return 409 `not_manual` on a row the sender has claimed.
+  - Thread sends require `clientRequestId`.
+  - Reports tests now check the `report_submitted` push.
+- **Polish, mobile:** the lead screen has the qualification form (R-LEAD-03), saving only changed fields, and follow-up pause/resume (R-LEAD-05).
+
+## Gate (measured, `pnpm test:all` = `turbo lint typecheck test e2e --force`, after `supabase db reset` + `gen:types`, no types drift)
+Round 1 (right after the merges and the en.json assembly) was green. Round 2 (after the visual-check fixes) was also green: 27/27 turbo tasks.
+- **Unit tests:** api 1483 passed + 1 skipped (209 files) · web 637 (128 files) · mobile 505 (99 suites) · @ab/shared 1106 (56 files) · @ab/migrate 292 (50 files) · @ab/scripts 9 · wa-stub 19.
+- **Change since Phase 6:** api +16, web +25, mobile +45, shared +10.
+- **e2e:** 43 passed + 3 skipped by design, on desktop and mobile. That is +10: locale ×3, proposals and payouts, each on both projects.
+- **Lint:** 0 errors. 33 complexity warnings, all pre-existing: web 14, migrate 10, api 3, mobile 3, wa-stub 2, shared 1.
+
+## Residuals
+- **Mixed-direction user data in the English UI:** an Arabic name stored with Latin digits (e.g. e2e's «أم ياسمين 2002») shows as «2002 أم ياسمين» in an LTR row. Plain Arabic names display correctly. Fix if it shows up in real data: add `dir="auto"` on name cells.
+- **Mobile date lines stay Arabic in English mode:** the mobile lead follow-up «next due» line and the lesson/booking time lines use `lessonWhenText`, the Arabic WhatsApp formatter. They need a display variant that takes `intlLocale(locale)`. The code has a TODO(Phase 7 locale) comment.
+- **Plurals:** `counted()` uses Arabic plural rules for both languages. This is correct for English only because en.json's one/two forms are written «1 …» and «2 …» and few/other are the same text. The four list counts are now «{n} total», so they read correctly at n = 1. `leads.countStatus` reads «2 Active».
+- **Bundle size:** ar.json and en.json are both in the web bundle (75 KB + 61 KB raw). A dynamic import of the unused one can come later if size matters.
+- **Native date pickers:** `<input type="date">` shows the browser's own format (e.g. mm/dd/yyyy). The label above it shows the formatted date.
+- **Duplicated mobile code:** `qualification-form.ts` on mobile copies the web's `qualForm`/`qualPatch`. Move both into @ab/shared later.
+- **Webhook retry edge:** if a new lead's first message is «وقف الرسايل» and the pause write fails, Meta's retry sends the admin push as `new_message` instead of `new_lead`.
+
+## Owner notes
+- **A new APK/IPA is needed for native LTR.** `app.json` drops expo-localization's `supportsRTL`/`forcesRTL` extras, so JS alone owns `I18nManager`. Switching depends on `reloadAppAsync` in a real build.
+  - Device checklist: fresh install on an English and an Arabic phone (Android and iPhone), switch both ways, then cold-start twice after each switch.
+  - Expect one extra reload on the first start of a fresh install on an LTR phone. It may also happen on an Arabic iPhone, because the app has no `ar` localization.
+- **Parent-facing output stays Arabic whatever the UI language:** report PDFs, WhatsApp messages (including the calculator offer), exports and push bodies.
+- **Translations:** en.json is a first full pass. Wording choices to review are in the translators' notes; for example «Absent without notice» for no_show, and ISO currency codes («1,200 SAR»).
+- **Screenshots:** `C:/Users/NTG/AppData/Local/Temp/ayat-design/shots/phase7`. They show /login, /admin, students, teachers, pricing, schedule and /teacher, in English LTR and Arabic RTL (light), on desktop and phone.

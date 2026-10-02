@@ -44,6 +44,17 @@ test.describe('language switch (English LTR, Arabic default)', () => {
     await expect(page.getByRole('heading', { level: 1, name: ar.pricing.title })).toBeVisible();
   });
 
+  test('a teacher switches from the top bar (no sidebar) and back', async ({ asRole }) => {
+    const page = await asRole('teacher');
+    await page.goto('/teacher');
+    await switchTo(page, ar, 'en').click();
+    await expectDocument(page, 'en');
+    await expect(page.getByRole('heading', { level: 1, name: en.teacher.dashboardTitle })).toBeVisible();
+    await switchTo(page, en, 'ar').click();
+    await expectDocument(page, 'ar');
+    await expect(page.getByRole('heading', { level: 1, name: ar.teacher.dashboardTitle })).toBeVisible();
+  });
+
   test('the login page switches to English and back', async ({ page }) => {
     await page.goto('/login');
     await expectDocument(page, 'ar');
