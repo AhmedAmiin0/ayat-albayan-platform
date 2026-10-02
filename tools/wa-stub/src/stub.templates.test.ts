@@ -50,6 +50,18 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
     expect((await post(`${url}${TPL}`, { name: 'Bad Name', language: 'ar' })).status).toBe(400);
   });
 
+  it('editing a rejected template (POST /{id}) sends it back to review; an unknown id is code 100', async () => {
+    const { url, stub } = await startStub();
+    await post(`${url}/__stub/templates/booking_confirmation`, { status: 'REJECTED' });
+    const id = stub.state.templates.find((t) => t.name === 'booking_confirmation')?.id ?? '';
+    const components = [{ type: 'BODY', text: 'تم حجز حلقة {{1}} — {{2}}' }];
+    const res = await post(`${url}/v21.0/${id}`, { category: 'utility', components });
+    expect(await res.json()).toEqual({ success: true });
+    expect(stub.state.templates.find((t) => t.id === id)).toMatchObject({ status: 'PENDING', category: 'UTILITY', components });
+    const missing = await post(`${url}/v21.0/nope`, { components });
+    expect([missing.status, ((await missing.json()) as { error: { code: number } }).error.code]).toEqual([400, 100]);
+  });
+
   it('a paused template answers 132015', async () => {
     const { url } = await startStub();
     await post(`${url}/__stub/templates/lesson_reminder_v2`, { status: 'PAUSED' });

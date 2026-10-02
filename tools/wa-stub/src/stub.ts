@@ -56,6 +56,16 @@ function createTemplate(s: StubState, body: Json): Reply {
   return [200, { id: t.id, status: t.status, category }];
 }
 
+/** POST /{template id}: Meta's edit of a rejected / paused template; it goes back to review. */
+function editTemplate(s: StubState, id: string, body: Json): Reply {
+  const t = s.templates.find((x) => x.id === id);
+  if (!t) return [400, ERR.noObject(id)];
+  if (Array.isArray(body['components'])) t.components = body['components'] as Json[];
+  if (typeof body['category'] === 'string') t.category = body['category'].toUpperCase();
+  t.status = 'PENDING';
+  return [200, { success: true }];
+}
+
 const V = String.raw`\/v\d+\.\d+`;
 const graphRoutes: Route[] = [
   ['POST', new RegExp(`^${V}/[^/]+/messages$`), async (req, _m, s) => postMessage(s, await readJson(req))],
@@ -65,6 +75,7 @@ const graphRoutes: Route[] = [
     return [200, { data, paging: { cursors: { before: 'stub', after: 'stub' } } }];
   }],
   ['POST', new RegExp(`^${V}/[^/]+/message_templates$`), async (req, _m, s) => createTemplate(s, await readJson(req))],
+  ['POST', new RegExp(`^${V}/([^/]+)$`), async (req, m, s) => editTemplate(s, m[1] ?? '', await readJson(req))],
   ['GET', new RegExp(`^${V}/([^/]+)$`), async (req, m, s) => {
     const id = m[1] ?? '';
     const media = s.media.get(id);
