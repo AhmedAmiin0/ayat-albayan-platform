@@ -2,7 +2,7 @@
 @import './styles/tokens.css';
 @import './styles/components.css';
 
-/* Ink & Gold (docs/07). RTL: logical utilities only (ps/pe/ms/me/start/end).
+/* Ink & Gold on the academy brand (docs/07): gold decorates, green acts. RTL: logical utilities only.
    `dark:` follows <html data-theme>, which the boot script in index.html always sets. */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
@@ -75,7 +75,7 @@
   --color-gold: var(--gold);
   --color-gold-soft: var(--gold-soft);
   --color-gold-wash: var(--gold-wash);
-  /* action (lapis) */
+  /* action: the brand green (historical token name lapis) */
   --color-lapis: var(--lapis);
   --color-lapis-wash: var(--lapis-wash);
   /* status families: text/border + soft background */

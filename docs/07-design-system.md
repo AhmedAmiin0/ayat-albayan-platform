@@ -1,7 +1,9 @@
 # المِداد والذهب — Ink & Gold: the Ayat Al-Bayan design system
 
 Implementation spec for `apps/web` (Tailwind v4 + shadcn/ui + TanStack Table), `apps/mobile` (Expo / React Native) and the lesson-report PDF worker.
-Live reference: `docs/design/ink-and-gold.html` (10 sections, light/dark/auto toggle). The token values in this file were read back from the rendered page, so they match it.
+
+**Brand alignment (2026-10-02).** The layout system below (jadwal frame, cartouche, nuqta glyphs, fihris, saffron = «دورك») is unchanged. Its colours and logo are now the academy's own brand: the palette `T` of the Apps Script «Brand» library (the one that already styles the PDF reports, emails and Sheets) and the real logo, the open Mushaf on a green rahle inside a gold eight-point star (`docs/design/brand/`, also on ayatalbayan.com). The source of truth for every colour value is `packages/shared/src/theme.ts`; `apps/web/src/styles/tokens.css` carries the same hex and a test diffs the two.
+`docs/design/ink-and-gold.html` and `docs/design/logo*.svg` predate this: their layout still applies, but their lapis/navy palette and rosette mark are superseded.
 
 ---
 
@@ -12,16 +14,16 @@ Every screen is a page of an illuminated Mushaf.
 - **The margin (هامش)** is the app background. It holds the navigation, the running head (dates and clocks) and the per-row marginal notes.
 - **The page (رَقّ)** is a lighter sheet inside a *jadwal*: a ruled frame with an ink rule and a gold rule. The work lives on it: tables, forms, dialogs.
 - **The surah-header cartouche** appears once per screen and holds that screen's title.
-- **The binding** (leather, gold fillets, corner pieces, a central shamsa) appears once in the whole product: on the login screen.
+- **The binding** (green leather, gold fillets, corner pieces, a central mandorla holding the academy emblem) appears once in the whole product: on the login screen.
 
 Amiri, the revival of Cairo's Bulaq/Amiriya press Naskh, sets titles. IBM Plex Sans Arabic sets everything else.
 
 ### Principles (the rules reviewers enforce)
 
-1. **Gold is ornament, lapis is action.** Gold (`--gold*`) never fills a button, a link or text. Anything clickable is lapis, or neutral with a lapis focus ring. If you are reaching for gold to make something "important", use hierarchy instead.
+1. **Gold decorates, GREEN acts.** Gold (`--gold*`) never fills a button, a link or text. Anything clickable is the brand green (the `--lapis*` tokens, a historical name: their value is green), or neutral with a green focus ring. If you are reaching for gold to make something "important", use hierarchy instead. The `ok` status (brand green3 `#1E6B4C`) shares the green family on purpose, as in the brand's own reports («تم / حاضر»); it is never filled or underlined and always sits in a chip with its nuqta glyph, so it never reads as a link or a button.
 2. **Saffron means «دورك» and nothing else.** Saffron marks only things an admin must act on now: «يحتاج تأكيد», new lead «جديد», «محتاج معلم/ة», «الباقة خلصت», «مش مدفوع», «تقرير ما اتبعتش», «فاضل حلقتين». It is never a button, a focus ring or a decoration. If nobody has to do anything, it is not saffron.
 3. **Shape carries state; colour only confirms it.** Every status shows a nuqta glyph (fill, half, hollow or struck) **and** the ar.json word. Colour is the third channel, so no state is ever communicated by colour alone.
-4. **One rosette, one cartouche, one filled button.** The verse-end rosette ۝ only ever holds a number (section, page, PDF page) or the alef in the logo. It is never a status and is never struck through. Each screen has exactly one cartouche (its title) and at most one filled primary button. The one exception is a list whose rows *are* the task: on the mobile «النهارده» screen every card that needs confirmation carries its own filled «تأكيد», because confirming is the only job on that screen.
+4. **One rosette, one cartouche, one filled button.** The verse-end rosette ۝ only ever holds a number (section, page, PDF page). It is never a status, never the logo and is never struck through. Each screen has exactly one cartouche (its title) and at most one filled primary button. The one exception is a list whose rows *are* the task: on the mobile «النهارده» screen every card that needs confirmation carries its own filled «تأكيد», because confirming is the only job on that screen.
 5. **Arabic first, one numeral system.**
    - Titles are Amiri 700 at 20px or larger, with line-height 1.5.
    - UI text is Plex with line-height 1.6.
@@ -29,7 +31,7 @@ Amiri, the revival of Cairo's Bulaq/Amiriya press Naskh, sets titles. IBM Plex S
    - Western digits everywhere, tabular in data: codes, phones, times, money, counts, and the Hijri date as well.
    - Nothing below 12px anywhere, the PDF included (its smallest label is 0.86em = 12px at 794px).
    - LTR values are always isolated (`dir="ltr"` / `<bdi>`).
-6. **Ornament sits outside the work.** Frames, cartouches and marginal notes sit around the data and never inside table cells, inputs or dense rows. Mobile drops the frame and cartouche entirely and keeps the nuqta, lapis and saffron.
+6. **Ornament sits outside the work.** Frames, cartouches and marginal notes sit around the data and never inside table cells, inputs or dense rows. Mobile drops the frame and cartouche entirely and keeps the nuqta, green and saffron.
 7. **Every time is shown with its zone.** The running head shows Gregorian date, Hijri date, Riyadh and Cairo clocks. Any time that belongs to someone else's zone says so in the same line, e.g. «18:00 بتوقيت مسقط». DB stays UTC (CLAUDE.md rule 6).
 
 ---
@@ -103,7 +105,38 @@ Rules:
 
 ---
 
-## 3. Tailwind v4 tokens: paste into `apps/web/src/index.css`
+## 3. Tailwind v4 tokens (`apps/web/src/styles/tokens.css` + `index.css`)
+
+### Brand palette
+
+The brand («Brand» Apps Script library, palette `T`) gives one light set. The tokens use it wherever it passes AA, and tune only where it does not; dark mode is the same family on a green-black «night Mushaf». Values are `packages/shared/src/theme.ts` (RN key in brackets where it differs).
+
+| Token | Role | Light | Dark | Brand source |
+|---|---|---|---|---|
+| `--page` | the work page (رَقّ) | `#FDF8F0` | `#0C1913` | `T.paper`, the logo's own background |
+| `--margin` | app background | `#F5EDDD` | `#07110C` | `T.sand` |
+| `--sunk` | sunk rows, disabled | `#F7F0E1` | `#09150F` | `T.tint` |
+| `--raised` | inputs, dialogs, menus | `#FFFDF9` | `#112019` | `T.card`, warmed |
+| `--ink` | body text | `#14261E` | `#EFE8D8` | `T.ink` |
+| `--ink-2` / `--ink-3` | secondary / meta text | `#3C4B44` / `#55625B` | `#C7BFAC` / `#A49D8B` | green-grey ink; `T.soft` `#8A8272` is 3.6:1 on paper, too faint for text |
+| `--rule` | hairlines | `#E5D9BF` | `#1F3229` | `T.rule` |
+| `--rule-strong` / `--rule-input` | frames / the 3:1 control edge | `#CDBB94` / `#958666` | `#2F463A` / `#5F766A` | darkened `T.rule` |
+| `--gold` | ornament only | `#C2A24A` | `#CFB062` | `T.gold` |
+| `--gold-soft` | inner gold fillet, hamish rule | `#D6BC80` | `#6C5A2B` | `T.goldSoft` |
+| `--gold-wash` | cartouche, selected tile, availability bars | `#E7DAB4` | `#29230F` | `T.gold2` |
+| `--lapis` (`lapis`) | **action**: primary fill, links, focus ring | `#14503A` | `#78C49C` | `T.green2`; dark lightened for AA |
+| `--lapis-hover` | primary hover | `#0C2A1E` | `#92D4B0` | `T.green` |
+| `--lapis-wash` / `--on-lapis` | accent row / text on the fill | `#E1EDE5` / `#FDF8F0` | `#122A1F` / `#06120C` | |
+| `--verdigris` (`ok`) | settled and good | `#1E6B4C` | `#8FCF95` | `T.ok` = `T.green3` |
+| `--saffron` (`act`) | «دورك» only | `#8C5212` | `#F2AA6B` | `T.warn` `#B4842A` is 3.17:1 on paper and only 10° of hue from gold, so it is darkened and turned 17° toward orange |
+| `--cinnabar` (`bad`) / `-solid` | a lesson went wrong / destructive fill | `#9C3B2E` / `#9C3B2E` | `#F0927F` / `#D0604D` | `T.bad` |
+| `--inverse` / `--on-inverse` | toasts | `#0C2A1E` / `#FDF8F0` | `#ECE4D2` / `#0C1913` | `T.green` on `T.paper` |
+| `--cover`, `--leather*` | the login binding | `#0C2A1E`, `#14402F` … | `#0E2419`, `#123826` … | the brand's green header |
+| `--gold-on-cover` / `--cover-ink` | binding wordmark / small line | `#D6BC80` / `#F3EAD6` | same | `T.goldSoft` |
+
+The `--lapis*`, `--verdigris*`, `--saffron*` and `--cinnabar*` names are historical, kept so no component changed. Read them as action, ok, act and bad.
+
+### The CSS
 
 Raw tokens switch per theme. Tailwind maps them with `@theme inline`, which resolves at use-time, so theme switching needs no rebuild. The existing shadcn slot names (`background`, `card`, `primary`, `input`, `ring`, `destructive`, ...) are kept, so `button.tsx` and `input.tsx` keep compiling.
 
@@ -114,91 +147,93 @@ Raw tokens switch per theme. Tailwind maps them with `@theme inline`, which reso
    so tokens and dark: utilities always agree. The media query below is the no-JS fallback. */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
-/* ---------- raw tokens: light (also any element with data-theme="light", e.g. the PDF preview) ---------- */
-:root, [data-theme='light'] {
+/* ---------- light (also any element with data-theme="light", e.g. the PDF preview) ---------- */
+:root,
+[data-theme='light'] {
   color-scheme: light;
-  --margin: oklch(0.938 0.024 86);
-  --page: oklch(0.978 0.012 90);
-  --raised: oklch(0.992 0.006 90);
-  --sunk: oklch(0.955 0.018 88);
-  --ink: oklch(0.24 0.035 262);
-  --ink-2: oklch(0.42 0.03 262);
-  --ink-3: oklch(0.50 0.025 262);
-  --rule: oklch(0.87 0.022 85);
-  --rule-strong: oklch(0.78 0.03 82);
-  --rule-input: oklch(0.62 0.03 80);
-  --gold: oklch(0.70 0.115 78);
-  --gold-soft: oklch(0.82 0.07 82);
-  --gold-wash: oklch(0.93 0.045 85);
-  --lapis: oklch(0.43 0.135 263);
-  --lapis-hover: oklch(0.37 0.13 263);
-  --lapis-wash: oklch(0.93 0.03 263);
-  --on-lapis: oklch(0.98 0.01 90);
-  --verdigris: oklch(0.46 0.09 165);
-  --verdigris-wash: oklch(0.93 0.035 165);
-  --saffron: oklch(0.50 0.11 55);
-  --saffron-wash: oklch(0.94 0.045 75);
-  --cinnabar: oklch(0.50 0.16 27);
-  --cinnabar-solid: oklch(0.52 0.17 27);
-  --cinnabar-wash: oklch(0.94 0.03 27);
-  --on-cinnabar: oklch(0.98 0.01 90);
-  --neutral-wash: oklch(0.925 0.012 262);
-  --inverse: oklch(0.26 0.04 262);
-  --on-inverse: oklch(0.96 0.014 88);
-  --inverse-gold: oklch(0.80 0.10 82);
-  --cover: oklch(0.25 0.05 262);
-  --leather: oklch(0.32 0.06 42);
-  --leather-deep: oklch(0.255 0.05 40);
-  --leather-lift: oklch(0.40 0.06 45);
-  --gold-on-cover: oklch(0.80 0.105 82);
-  --cover-ink: oklch(0.93 0.02 88);
-  --scrim: oklch(0.22 0.03 262 / 0.45);
-  --elev-page: 0 1px 0 oklch(0.24 0.035 262 / 0.04), 0 18px 40px -18px oklch(0.24 0.035 262 / 0.28);
-  --elev-pop: 0 30px 60px -20px oklch(0.15 0.03 262 / 0.55);
-  --elev-toast: 0 12px 28px -12px oklch(0.15 0.03 262 / 0.5);
+  --margin: #f5eddd;
+  --page: #fdf8f0;
+  --raised: #fffdf9;
+  --sunk: #f7f0e1;
+  --ink: #14261e;
+  --ink-2: #3c4b44;
+  --ink-3: #55625b;
+  --rule: #e5d9bf;
+  --rule-strong: #cdbb94;
+  --rule-input: #958666;
+  --gold: #c2a24a;
+  --gold-soft: #d6bc80;
+  --gold-wash: #e7dab4;
+  --lapis: #14503a;
+  --lapis-hover: #0c2a1e;
+  --lapis-wash: #e1ede5;
+  --on-lapis: #fdf8f0;
+  --verdigris: #1e6b4c;
+  --verdigris-wash: #dcebdf;
+  --saffron: #8c5212;
+  --saffron-wash: #f6e7c6;
+  --cinnabar: #9c3b2e;
+  --cinnabar-solid: #9c3b2e;
+  --cinnabar-wash: #f8e1db;
+  --on-cinnabar: #fdf8f0;
+  --neutral-wash: #e9e7dd;
+  --inverse: #0c2a1e;
+  --on-inverse: #fdf8f0;
+  --inverse-gold: #d6bc80;
+  --cover: #0c2a1e;
+  --leather: #14402f;
+  --leather-deep: #0b281c;
+  --leather-lift: #1f553f;
+  --gold-on-cover: #d6bc80;
+  --cover-ink: #f3ead6;
+  --scrim: rgba(12, 38, 28, 0.45);
+  --elev-page: 0 1px 0 rgba(20, 38, 30, 0.04), 0 18px 40px -18px rgba(20, 38, 30, 0.28);
+  --elev-pop: 0 30px 60px -20px rgba(4, 16, 11, 0.55);
+  --elev-toast: 0 12px 28px -12px rgba(4, 16, 11, 0.5);
 }
 
-/* ---------- raw tokens: dark ("night Mushaf") ---------- */
+/* ---------- dark ("night Mushaf", green-black): no-JS fallback ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --margin: oklch(0.165 0.022 262); --page: oklch(0.205 0.026 262); --raised: oklch(0.235 0.028 262); --sunk: oklch(0.185 0.024 262);
-    --ink: oklch(0.93 0.018 88); --ink-2: oklch(0.80 0.02 88); --ink-3: oklch(0.70 0.02 88);
-    --rule: oklch(0.30 0.028 262); --rule-strong: oklch(0.38 0.035 262); --rule-input: oklch(0.54 0.03 262);
-    --gold: oklch(0.74 0.105 82); --gold-soft: oklch(0.48 0.07 80); --gold-wash: oklch(0.26 0.04 78);
-    --lapis: oklch(0.74 0.11 258); --lapis-hover: oklch(0.80 0.10 258); --lapis-wash: oklch(0.28 0.05 262); --on-lapis: oklch(0.17 0.03 262);
-    --verdigris: oklch(0.78 0.09 165); --verdigris-wash: oklch(0.27 0.04 165);
-    --saffron: oklch(0.80 0.11 58); --saffron-wash: oklch(0.28 0.045 58);
-    --cinnabar: oklch(0.75 0.13 27); --cinnabar-solid: oklch(0.62 0.16 27); --cinnabar-wash: oklch(0.27 0.05 27); --on-cinnabar: oklch(0.17 0.03 262);
-    --neutral-wash: oklch(0.27 0.02 262);
-    --inverse: oklch(0.90 0.02 88); --on-inverse: oklch(0.22 0.03 262); --inverse-gold: oklch(0.55 0.11 72);
-    --cover: oklch(0.27 0.05 262);
-    --leather: oklch(0.28 0.05 42); --leather-deep: oklch(0.215 0.04 40); --leather-lift: oklch(0.35 0.055 45);
-    --scrim: oklch(0.08 0.02 262 / 0.62);
-    --elev-page: 0 0 0 1px oklch(0 0 0 / 0.25), 0 18px 40px -16px oklch(0 0 0 / 0.65);
-    --elev-pop: 0 30px 60px -20px oklch(0 0 0 / 0.7);
-    --elev-toast: 0 12px 28px -12px oklch(0 0 0 / 0.6);
+    --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
+    --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
+    --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
+    --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
+    --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
+    --verdigris: #8fcf95; --verdigris-wash: #112a17;
+    --saffron: #f2aa6b; --saffron-wash: #36220f;
+    --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
+    --neutral-wash: #1d2621;
+    --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
+    --cover: #0e2419;
+    --leather: #123826; --leather-deep: #0a2117; --leather-lift: #1b4a35;
+    --scrim: rgba(1, 5, 3, 0.62);
+    --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
+    --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+    --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
   }
 }
+
+/* ---------- dark: chosen or resolved at boot ---------- */
 [data-theme='dark'] {
   color-scheme: dark;
-  /* identical values to the media block above; keep the two in sync (a lint test can diff them) */
-  --margin: oklch(0.165 0.022 262); --page: oklch(0.205 0.026 262); --raised: oklch(0.235 0.028 262); --sunk: oklch(0.185 0.024 262);
-  --ink: oklch(0.93 0.018 88); --ink-2: oklch(0.80 0.02 88); --ink-3: oklch(0.70 0.02 88);
-  --rule: oklch(0.30 0.028 262); --rule-strong: oklch(0.38 0.035 262); --rule-input: oklch(0.54 0.03 262);
-  --gold: oklch(0.74 0.105 82); --gold-soft: oklch(0.48 0.07 80); --gold-wash: oklch(0.26 0.04 78);
-  --lapis: oklch(0.74 0.11 258); --lapis-hover: oklch(0.80 0.10 258); --lapis-wash: oklch(0.28 0.05 262); --on-lapis: oklch(0.17 0.03 262);
-  --verdigris: oklch(0.78 0.09 165); --verdigris-wash: oklch(0.27 0.04 165);
-  --saffron: oklch(0.80 0.11 58); --saffron-wash: oklch(0.28 0.045 58);
-  --cinnabar: oklch(0.75 0.13 27); --cinnabar-solid: oklch(0.62 0.16 27); --cinnabar-wash: oklch(0.27 0.05 27); --on-cinnabar: oklch(0.17 0.03 262);
-  --neutral-wash: oklch(0.27 0.02 262);
-  --inverse: oklch(0.90 0.02 88); --on-inverse: oklch(0.22 0.03 262); --inverse-gold: oklch(0.55 0.11 72);
-  --cover: oklch(0.27 0.05 262);
-  --leather: oklch(0.28 0.05 42); --leather-deep: oklch(0.215 0.04 40); --leather-lift: oklch(0.35 0.055 45);
-  --scrim: oklch(0.08 0.02 262 / 0.62);
-  --elev-page: 0 0 0 1px oklch(0 0 0 / 0.25), 0 18px 40px -16px oklch(0 0 0 / 0.65);
-  --elev-pop: 0 30px 60px -20px oklch(0 0 0 / 0.7);
-  --elev-toast: 0 12px 28px -12px oklch(0 0 0 / 0.6);
+  --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
+  --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
+  --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
+  --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
+  --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
+  --verdigris: #8fcf95; --verdigris-wash: #112a17;
+  --saffron: #f2aa6b; --saffron-wash: #36220f;
+  --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
+  --neutral-wash: #1d2621;
+  --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
+  --cover: #0e2419;
+  --leather: #123826; --leather-deep: #0a2117; --leather-lift: #1b4a35;
+  --scrim: rgba(1, 5, 3, 0.62);
+  --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
+  --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
+  --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
 }
 
 /* ---------- theme-independent tokens ---------- */
@@ -309,31 +344,36 @@ Raw tokens switch per theme. Tailwind maps them with `@theme inline`, which reso
 }
 ```
 
-Measured contrast (WCAG 2.x, sRGB, both themes, from `shots.mjs`). Every text pair passes AA:
+Measured contrast (WCAG 2.x, sRGB, both themes). CI checks every pair: `packages/shared/src/theme.contrast.test.ts` runs each text token (ink, ink-2, ink-3, green, ok, saffron, cinnabar) on each surface (margin, page, raised, sunk), each tone on its wash, ink and ink-2 on every wash, the text on every fill and the binding pairs, all at 4.5:1, plus the 3:1 control edges. A selection:
 
 | Pair | Light | Dark |
 |---|---|---|
-| ink / margin | 13.79 | 15.68 |
-| ink-2 / page | 8.01 | 9.59 |
-| ink-3 / sunk (lowest secondary-text pair) | 5.26 | 6.97 |
-| ink-3 / margin | 5.00 | 7.22 |
-| lapis / page (links) | 7.76 | 7.74 |
-| on-lapis / lapis (primary button) | 7.77 | 8.27 |
-| on-cinnabar / cinnabar-solid (destructive-solid button) | 5.68 | 4.87 |
-| saffron / saffron-wash (act chip) | 5.20 | 7.71 |
-| verdigris / verdigris-wash (ok chip) | 5.57 | 7.68 |
-| cinnabar / cinnabar-wash (bad chip) | 5.40 | 6.55 |
-| ink-2 / neutral-wash (neutral chip) | 6.80 | 8.03 |
-| on-inverse / inverse (toast and its action) | 13.83 | 12.84 |
-| gold-on-cover / leather | 6.85 | 7.86 |
-| **rule-input / raised** (input and secondary-button boundary, non-text needs 3:1) | 3.54 | 3.30 |
-| cinnabar / page (`text-destructive`, `text-danger`) | 6.12 | 7.65 |
-| rule-strong / raised (frames and hairlines only: never the only edge of a control) | 1.96 | 1.67 |
-| gold / page (ornament only, exempt) | 2.55 | 7.71 |
+| ink / margin | 13.61 | 15.72 |
+| ink-2 / page | 8.70 | 9.86 |
+| ink-3 / sunk | 5.63 | 6.91 |
+| ink-3 / margin (lowest secondary-text pair) | 5.49 | 7.10 |
+| lapis (green) / page (links, ghost buttons) | 8.87 | 8.74 |
+| lapis (green) / raised | 9.23 | 8.18 |
+| on-lapis / lapis (primary button) | 8.87 | 9.25 |
+| on-lapis / lapis-hover | 14.54 | 11.16 |
+| on-cinnabar / cinnabar-solid (destructive-solid button) | 6.45 | 4.97 |
+| saffron / saffron-wash (act chip) | 5.15 | 7.71 |
+| saffron / margin (fihris «دورك» count) | 5.42 | 9.81 |
+| verdigris (ok) / verdigris-wash (ok chip) | 5.21 | 8.43 |
+| cinnabar / cinnabar-wash (bad chip) | 5.45 | 6.86 |
+| cinnabar / page (`text-destructive`, `text-danger`) | 6.45 | 7.84 |
+| ink-2 / neutral-wash (neutral chip) | 7.42 | 8.49 |
+| ink / gold-wash (cartouche, selected fihris tile) | 11.38 | 12.82 |
+| on-inverse / inverse (toast and its action) | 14.54 | 14.26 |
+| gold-on-cover / leather (binding wordmark) | 6.30 | 7.02 |
+| cover-ink / leather (binding programme line) | 9.73 | 10.84 |
+| **rule-input / raised** (input and secondary-button boundary, non-text needs 3:1) | 3.52 | 3.44 |
+| rule-strong / raised (frames and hairlines only: never the only edge of a control) | 1.86 | 1.65 |
+| gold / page (ornament only, exempt) | 2.32 | 8.62 |
 
-`--cinnabar-solid` is a fill, never text: in dark it measures 4.56:1 on `--page`, 4.25 on `--raised` (inputs, dialogs) and 3.91 on `--cinnabar-wash` (alerts), so the 13 existing `text-destructive` error labels would fail AA wherever they sit on a raised surface. That is why `destructive` maps to `--cinnabar` (7.65 / 7.12 / 6.55).
+`--cinnabar-solid` is a fill, never text: in dark it measures 4.69:1 on `--page`, 4.39 on `--raised` and 4.11 on `--cinnabar-wash`, so error labels would fail AA on raised surfaces. That is why `destructive` maps to `--cinnabar` (dark 7.84 / 7.33 / 6.86). In light the brand's `#9C3B2E` serves as both.
 
-Put `shots.mjs`'s pair check into CI against the shared theme object (section 12).
+`packages/shared/src/theme.brand.test.ts` pins the light anchors to the brand values and keeps the one-meaning colours apart in OKLCH hue: saffron ≥ 20° from gold and from cinnabar, and the action inside the green range.
 
 ---
 
@@ -373,7 +413,7 @@ Put `shots.mjs`'s pair check into CI against the shared theme object (section 12
 | **Jadwal frame**: `border: 1px var(--rule-strong)` + `outline: 1.5px var(--gold)` at a 4px offset, `rounded-xs` | Around the one work page per admin screen; around dialogs; around the PDF page | Cards inside a page, table cells, mobile, nested frames |
 | **3px double gold rule** (`border-block-end: 3px double var(--gold)`) | Under table heads, under the inbox list head, under the selected tab, on top of the week grid, KPI strip | Between rows (use `--rule`), under body text |
 | **Cartouche** (`motif-cartouche-cap.svg` twice, first mirrored) | Exactly one per screen: page title, or the entity name on a profile (أ. فاطمة الزهراء); PDF title | Section headings, buttons, mobile, two on one screen |
-| **Verse-end rosette** (`motif-rosette-number.svg`) | Logo; current page in pagination; section numbers; PDF page number. It only holds a number | Status glyphs, bullets, empty states, anything struck through, decoration |
+| **Verse-end rosette** (`motif-rosette-number.svg`) | Current page in pagination; section numbers; PDF page number. It only holds a number (the logo is the academy emblem, §11) | Status glyphs, bullets, empty states, anything struck through, decoration |
 | **Nuqta glyphs** (`motif-nuqta-glyphs.svg`) | All statuses, grade pips, timeline nodes, marginal-note bullets, list bullets | Large decorative use (more than 16px) except the empty state |
 | **Hamish (marginal note)** | One alert per row in the حاشية column after a double rule (`border-inline-start: 3px double var(--gold-soft)`); automated follow-up notes in the inbox; time-off impact | Long text (keep to 3 words or so), more than one per row |
 | **Binding cover** (`motif-binding.svg`) | Login screen only | Anywhere else, including empty states and splash screens |
@@ -398,7 +438,7 @@ Never: Quran verses as decoration, mosques, domes, crescents, mihrab arches, sta
 - Sizes: `sm` `h-8 px-3 text-xs`, `default` `h-10 px-4 text-sm`, `lg` `h-12 px-5 text-body`.
 - All variants use `rounded-md font-semibold gap-2`.
 - Disabled is `opacity-45 cursor-not-allowed`, and the label says why when it can («جاري الحفظ…»).
-- Focus is the global lapis 2px outline at a 2px offset.
+- Focus is the global green (`--lapis`) 2px outline at a 2px offset.
 - Icons are 17px. Directional icons (chevrons, reply, back) mirror in RTL: «السابق» uses a chevron pointing right, «التالي» a chevron pointing left. Lucide's `reply` is drawn for LTR, so it gets `rtl:-scale-x-100`. Logout is drawn RTL-native: the door at the inline-start (right), the arrow leaving toward the inline-end.
 
 ### Input / Select
@@ -575,7 +615,7 @@ Arabic agreement rules for `remainingLabel`:
   - Groups are separated by 14px of space only: dashboard / المحادثات + طلبات التوظيف / الطلاب, المعلمين, الجدول, التقارير, الاشتراكات.
   - Each item: icon (18) + label, a dotted leader (`border-top: 1.5px dotted var(--rule-strong)`, flex 1) and a count.
   - Counts are 12px `ink-3`. When the count is work for the admin it is saffron 700 and says what it is: «11 جديدة», «3 يحتاج تأكيد», «2 ما اتبعتش», «3 مش مدفوع».
-  - Active: `aria-current="page"`, `bg-page` tile with a `rule-strong` ring, lapis icon, weight 600.
+  - Active: `aria-current="page"`, `bg-page` tile with a `rule-strong` ring, green icon, weight 600.
 - **Running head** (`text-xs text-ink-3`): breadcrumbs at the start; at the end the Gregorian date, Hijri date, a 1px divider, then `الرياض 15:20` and `القاهرة 15:20` with the times in ink-2 600. Add a third clock only when a relevant zone differs. It is hidden below 640px.
 - **Under 900px:** the sidebar becomes a top row (mark + horizontally scrolling nav, with a mask fade at the inline-end as the "more" cue). Only saffron counts stay; leaders and the user block hide.
 - **Under 640px:** the admin web is usable but secondary. The Expo app is the mobile admin surface.
@@ -593,7 +633,7 @@ Arabic agreement rules for `remainingLabel`:
   - Booked lessons: 6px `ink-2` ticks inside.
   - Overlap: a cinnabar 1.5px border plus a 45° hatch.
   - Now: a 2px ink line on today's row.
-  - The band being edited: a lapis 1.5px border with a 3px lapis/22% halo and two 5×14 lapis grips at the ends. Phase 2 makes those grips draggable in 30-minute steps; the selects stay the accessible path.
+  - The band being edited: a green (`--lapis`) 1.5px border with a 3px green/22% halo and two 5×14 green grips at the ends. Phase 2 makes those grips draggable in 30-minute steps; the selects stay the accessible path.
 - **Overlap:** the whole row gets a `cinnabar-wash/55` tint, the offending select gets `aria-invalid` and `aria-describedby`, and the error sits under the row: struck glyph + `availability.overlap` + «من 17:30 لحد 18:00». «حفظ المواعيد» stays enabled, but the save is refused with focus moved to the first error.
 - **Zone:**
   - A tz select «القاهرة (Africa/Cairo)» plus a seg «بتوقيتها | بتوقيت الرياض».
@@ -635,9 +675,9 @@ Arabic agreement rules for `remainingLabel`:
   - One primary action.
 - **Toast** (bottom inline-end, 200ms in, 5s; actions keep it open until hover-out):
   - `bg-inverse text-on-inverse rounded-lg shadow-toast`, with a 13px `inverse-gold` filled nuqta.
-  - The action is a text button in `on-inverse`, 700, underlined («افتح الملف», «تراجع»). It is never gold text and never lapis on ink.
+  - The action is a text button in `on-inverse`, 700, underlined («افتح الملف», «تراجع»). It is never gold text and never green on ink.
   - The wording follows the same verb as the action (`students.created` «الطالب اتسجل»).
-- **Error toast:** `bg-danger-soft text-ink` + a cinnabar struck glyph + a lapis underlined «جرّب تاني».
+- **Error toast:** `bg-danger-soft text-ink` + a cinnabar struck glyph + a green underlined «جرّب تاني».
 - **Inline alert** (form level): `bg-danger-soft` with an inset 1px `danger/35` ring, struck glyph, and `auth.invalidCredentials`-style copy.
 - **Field error:** 13px cinnabar with a struck glyph under the field, linked via `aria-describedby`.
 
@@ -645,31 +685,38 @@ Arabic agreement rules for `remainingLabel`:
 
 ## 11. Logo
 
-Files in this folder:
+The logo is the academy's own, as on ayatalbayan.com and in the Apps Script «Brand» library: an **open Mushaf on a green rahle inside a gold eight-point star**, with rays rising from the spine. It replaces the rosette-and-alef mark this system first drew (`docs/design/logo*.svg`, retired).
+
+Sources (`docs/design/brand/`, never edited):
 
 | File | What it is |
 |---|---|
-| `logo.svg` | Mark for 32px and up |
-| `logo-small.svg` | Mark for 28px and below: no inner ring, heavier strokes, so the alef-madda never reads as «T» or «1» |
-| `logo-app-icon.svg` | 1024² on cover ink |
-| `logo-lockup.svg` | Mark + wordmark |
+| `logo.png` | Lockup: emblem + calligraphic «آيات البيان» + the tagline «رتّل بوعي، واحفظ بإتقان», 1536×1024 on ivory `#FDF8F0`. Email, print, store listing |
+| `logo-mark.png` | The emblem alone, 1536×1024 on ivory. What the PDF report and emails use today |
+| `logo-mark@198.png` | The same at 198px tall, as the Brand library caches it |
 
-- **Construction:** the verse-end rosette (12 lobes) holds an alef with a madda: «آيات» = verses. The wordmark «آيات البيان» is Amiri 700, with «أكاديمية» in Plex above it.
-- The alef and madda are drawn as Naskh strokes, following Amiri: the alef has a thin angled head, a belly in the upper third and a tapered foot; the madda is a bar that drops at its left end and flicks up at its right. The earlier stick-and-tilde read as a Latin «Ĩ».
-- **Colours:** gold `#C59542` mark on light; `#DFB76C` on `--cover` / dark. The wordmark is in `--ink` (light) or `#DFB76C` (cover).
-- **Clear space:** 0.5× the mark height on all sides.
-- **Minimum size:** 16px for `logo-small.svg`; switch to `logo.svg` at 32px or more.
-- **The wordmark in `logo-lockup.svg` is live text.** Outline it to paths with Amiri installed before using it in email, print or the app store.
-- Never: recolour the mark lapis, put it on photos, add a crescent or stars, or strike it through.
+Derived by `node docs/design/brand/tools/build.mjs` (no dependencies: a node:zlib PNG codec and pixel ops beside it). Re-run it if the source changes; never hand-edit the outputs:
 
-```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="آيات البيان">
-  <path fill="none" stroke="currentColor" stroke-width="2" d="M32 7A7 7 0 0 1 44.5 10.35A7 7 0 0 1 53.65 19.5A7 7 0 0 1 57 32A7 7 0 0 1 53.65 44.5A7 7 0 0 1 44.5 53.65A7 7 0 0 1 32 57A7 7 0 0 1 19.5 53.65A7 7 0 0 1 10.35 44.5A7 7 0 0 1 7 32A7 7 0 0 1 10.35 19.5A7 7 0 0 1 19.5 10.35A7 7 0 0 1 32 7Z"/>
-  <circle cx="32" cy="32" r="17.5" fill="none" stroke="currentColor" stroke-width="1.25"/>
-  <path fill="currentColor" d="M31.9 24.8L33.3 24.2C34.2 26.2 34.3 29 34.2 32.2C34.1 37.2 33.2 42.6 32.4 46.6C32.2 47.7 31 47.8 30.8 46.8C30.3 42.6 30.2 37.6 30.4 32.4C30.6 29.2 31 26.6 31.9 24.8Z"/>
-  <path fill="currentColor" d="M38.6 17.4C37.6 18.7 36.2 19.1 34 18.9C31 18.6 28 18.3 26.5 18.9C25.6 19.4 25.2 20.6 25.4 22.1C26.1 21.5 26.8 21.3 27.6 21.2C29.6 21.1 31.6 21.7 34 21.7C36.5 21.7 38.1 20.1 38.6 17.4Z"/>
-</svg>
-```
+| Output | What it is |
+|---|---|
+| `docs/design/brand/logo-mark-transparent.png` | Master: the emblem on transparency, cropped tight. The paper **outside** the emblem is removed by a flood fill from the border (plus the two pockets the swirl ornaments enclose), and the band where strokes meet paper is un-blended, so the anti-aliasing is kept. The emblem keeps its own ivory (star field, pages), because it is the same colour as the paper and a colour key would hollow out the Mushaf |
+| `docs/design/brand/logo-mushaf-transparent.png` | The Mushaf on its rahle alone, star field cleared above the pages: the mark for small sizes |
+| `apps/web/public/brand/mark.png`, `mark-small.png` | What `<Mark>` shows (192px tall / 96px wide) |
+| `apps/web/public/favicon.ico` (16, 32, 48), `favicon-16.png`, `favicon-32.png` | Tab icons: the Mushaf crop at 16 and 32, the full emblem at 48 |
+| `apps/web/public/apple-touch-icon.png` (180), `icon-192.png`, `icon-512.png` | The emblem on brand paper `#FDF8F0`, 80% of the square |
+| `apps/mobile/assets/icon.png` | 1024² app icon: emblem on brand paper, opaque (iOS refuses alpha) |
+| `apps/mobile/assets/android-icon-foreground.png` / `-background.png` / `-monochrome.png` | Adaptive icon: the emblem at 50% (inside the 66dp safe circle) over solid paper; the monochrome is its line art for Android 13 themed icons |
+| `apps/mobile/assets/splash-icon.png` | The emblem on transparency, 1024², for the splash on `#FDF8F0` |
+| `apps/mobile/assets/brand/mark.png`, `mark-small.png` | What the RN `<Mark>` shows |
+
+Use:
+
+- **Components:** web `components/ui/mark.tsx` (`<Mark size labelled className>`, `<Logo collapse>`) and RN `src/ui/Mark.tsx` (`<Mark size labelled>`) render those PNGs in a square box, contained. **32px or less shows the Mushaf crop**; at that size the star frame and rays blur into a pale blot. The same rule makes the favicons. Decorative by default; `labelled` names it «آيات البيان».
+- **Wordmark:** in the app it stays live Amiri 700 «آيات البيان» with «أكاديمية» in Plex above it (`<Logo>`), so it follows the theme. Outside the app, use `logo.png`, whose calligraphy is the brand's.
+- **Colours:** never recoloured, tinted or turned monochrome in the UI. It is drawn on ivory and keeps that ivory inside the star, so on dark surfaces and on the green binding it reads as an inlaid medallion (as the brand email header shows it, on an ivory tile).
+- **Clear space:** a quarter of the emblem's height on all sides; the binding's mandorla and the sidebar gap already give it that.
+- **Minimum size:** 16px (the Mushaf crop). The full emblem starts at 33px.
+- Never: put it on photos, crop it differently from the two masters, add a crescent or stars, strike it through, or set it in the rosette.
 
 Motif files:
 
@@ -687,39 +734,41 @@ Put them in `packages/shared/assets/` and render them via an icon sprite (web) a
 ## 12. React Native (Expo) theme
 
 - RN has no oklch, so these are the same tokens as sRGB hex, read from the rendered page.
-- Keep **one** source: `packages/shared/src/theme.ts` exports this object, and a small script generates the CSS raw-token blocks in section 3 from it. CI runs the contrast pairs against both themes.
-- Needs `react-native-svg` (Nuqta, rosette and mark) and `@expo-google-fonts/amiri` + `@expo-google-fonts/ibm-plex-sans-arabic`.
+- Keep **one** source: `packages/shared/src/theme.ts` exports this object. `apps/web/src/styles/tokens.css` carries the same hex, and `tokens.test.ts` fails if any colour differs. CI runs the contrast matrix and the brand/hue checks against both themes (section 3).
+- Needs `react-native-svg` (Nuqta, rosette; the mark is the brand PNG, section 11) and `@expo-google-fonts/amiri` + `@expo-google-fonts/ibm-plex-sans-arabic`.
 
 ```ts
 // packages/shared/src/theme.ts
 export const palette = {
   light: {
-    margin: '#f2ead9', page: '#fbf8ef', raised: '#fefcf8', sunk: '#f5f0e3',
-    ink: '#161f30', ink2: '#444d5e', ink3: '#5b6472',
-    rule: '#dbd3c4', ruleStrong: '#c1b6a2', ruleInput: '#908572',
-    gold: '#c59542', goldSoft: '#dbc090', goldWash: '#f6e6c7',
-    lapis: '#264b99', lapisHover: '#183a83', lapisWash: '#dde8fd', onLapis: '#fbf8f1',
-    ok: '#13684b', okSoft: '#d3f0e2',
-    act: '#925019', actSoft: '#fde8cb',
-    bad: '#ac312c', badSoft: '#ffe4e0', badSolid: '#b6322d', onBad: '#fbf8f1',
-    neutralSoft: '#e2e6ee',
-    inverse: '#192437', onInverse: '#f6f1e7', inverseGold: '#deb870',
-    cover: '#142139', leather: '#4c2819', leatherDeep: '#371a0f', leatherLift: '#633d2c', goldOnCover: '#dfb76c', coverInk: '#ede7d9',
-    scrim: 'rgba(19, 27, 41, 0.45)',
+    margin: '#f5eddd', page: '#fdf8f0', raised: '#fffdf9', sunk: '#f7f0e1',
+    ink: '#14261e', ink2: '#3c4b44', ink3: '#55625b',
+    rule: '#e5d9bf', ruleStrong: '#cdbb94', ruleInput: '#958666',
+    gold: '#c2a24a', goldSoft: '#d6bc80', goldWash: '#e7dab4',
+    lapis: '#14503a', lapisHover: '#0c2a1e', lapisWash: '#e1ede5', onLapis: '#fdf8f0',
+    ok: '#1e6b4c', okSoft: '#dcebdf',
+    act: '#8c5212', actSoft: '#f6e7c6',
+    bad: '#9c3b2e', badSoft: '#f8e1db', badSolid: '#9c3b2e', onBad: '#fdf8f0',
+    neutralSoft: '#e9e7dd',
+    inverse: '#0c2a1e', onInverse: '#fdf8f0', inverseGold: '#d6bc80',
+    cover: '#0c2a1e', leather: '#14402f', leatherDeep: '#0b281c', leatherLift: '#1f553f',
+    goldOnCover: '#d6bc80', coverInk: '#f3ead6',
+    scrim: 'rgba(12, 38, 28, 0.45)',
   },
   dark: {
-    margin: '#090e18', page: '#111723', raised: '#171e2b', sunk: '#0d131d',
-    ink: '#ede7db', ink2: '#c3bdb0', ink3: '#a39e91',
-    rule: '#262e3c', ruleStrong: '#384355', ruleInput: '#656f81',
-    gold: '#cca459', goldSoft: '#72592c', goldWash: '#2f210c',
-    lapis: '#7facf0', lapisHover: '#95c0fe', lapisWash: '#1b2942', onLapis: '#080f1c',
-    ok: '#7ecaa9', okSoft: '#112d21',
-    act: '#f3ac75', actSoft: '#392311',
-    bad: '#f58c81', badSoft: '#3b1c19', badSolid: '#d5584f', onBad: '#080f1c',
-    neutralSoft: '#212730',
-    inverse: '#e3decf', onInverse: '#131b29', inverseGold: '#996516',
-    cover: '#19263f', leather: '#3d2014', leatherDeep: '#29120b', leatherLift: '#523122', goldOnCover: '#dfb76c', coverInk: '#ede7d9',
-    scrim: 'rgba(1, 2, 5, 0.62)',
+    margin: '#07110c', page: '#0c1913', raised: '#112019', sunk: '#09150f',
+    ink: '#efe8d8', ink2: '#c7bfac', ink3: '#a49d8b',
+    rule: '#1f3229', ruleStrong: '#2f463a', ruleInput: '#5f766a',
+    gold: '#cfb062', goldSoft: '#6c5a2b', goldWash: '#29230f',
+    lapis: '#78c49c', lapisHover: '#92d4b0', lapisWash: '#122a1f', onLapis: '#06120c',
+    ok: '#8fcf95', okSoft: '#112a17',
+    act: '#f2aa6b', actSoft: '#36220f',
+    bad: '#f0927f', badSoft: '#3a1914', badSolid: '#d0604d', onBad: '#06120c',
+    neutralSoft: '#1d2621',
+    inverse: '#ece4d2', onInverse: '#0c1913', inverseGold: '#8a6a1c',
+    cover: '#0e2419', leather: '#123826', leatherDeep: '#0a2117', leatherLift: '#1b4a35',
+    goldOnCover: '#d6bc80', coverInk: '#f3ead6',
+    scrim: 'rgba(1, 5, 3, 0.62)',
   },
 } as const;
 
@@ -727,9 +776,9 @@ export const palette = {
 // the light page hairline (0 1px 0 at 4%) is dropped because RN cards already have a 1px border.
 export const elevation = {
   light: {
-    page: '0 18px 40px -18px rgba(22, 31, 48, 0.28)',
-    pop: '0 30px 60px -20px rgba(5, 11, 24, 0.55)',
-    toast: '0 12px 28px -12px rgba(5, 11, 24, 0.5)',
+    page: '0 18px 40px -18px rgba(20, 38, 30, 0.28)',
+    pop: '0 30px 60px -20px rgba(4, 16, 11, 0.55)',
+    toast: '0 12px 28px -12px rgba(4, 16, 11, 0.5)',
   },
   dark: {
     page: '0 18px 40px -16px rgba(0, 0, 0, 0.65)',
@@ -762,7 +811,7 @@ Expo specifics:
 
 **Today screen** (R-MOB-02):
 
-- Header: Amiri «النهارده» + `logo-small`, then the date line «الخميس 1 أكتوبر، 20 ربيع الآخر. المواعيد بتوقيت الرياض».
+- Header: Amiri «النهارده» + the emblem at 28pt (the Mushaf crop, §11), then the date line «الخميس 1 أكتوبر، 20 ربيع الآخر. المواعيد بتوقيت الرياض».
 - Filter pills with nuqta glyphs.
 - A timeline: a 1.5px `ruleStrong` spine and 14px nuqta nodes (the same glyph and tone as the status).
 - Past lessons collapse to one 42px dashed-rule row.
@@ -781,7 +830,7 @@ Expo specifics:
 - **Always light tokens** (wrap in `data-theme="light"`) whatever the requester's theme, on `--raised` paper.
 - **One page, fixed layout:** 1em = 14px at 794px (about 10.5pt). Top to bottom:
   1. Jadwal frame with the gold outline 0.35em outside the ink rule.
-  2. Header: mark + «أكاديمية / آيات البيان» at the start, cartouche «تقرير الحلقة» at the end.
+  2. Header: the emblem (`logo-mark-transparent.png`) + «أكاديمية / آيات البيان» at the start, cartouche «تقرير الحلقة» at the end. The brand's Apps Script `reportHtml` frames its certificate the same way (2px `T.gold` outside a 1px `T.goldSoft`), so the two reports read as one family.
   3. Meta grid 3×2 between double gold rules: الطالبة + code, المعلمة, البرنامج, التاريخ, الميعاد with zone and duration, رقم الحلقة «6 من 8».
   4. Attendance chip.
   5. «اللي اتعمل في الحلقة» 2×2: التسميع, الحفظ الجديد, المراجعة, التجويد.
@@ -825,7 +874,7 @@ Expo specifics:
 - Inverse toast tokens, fixing the 1.89:1 dark failure.
 - A 3:1 `--rule-input` boundary.
 - The hamish container-query collapse.
-- A warm leather Mamluk binding in both themes, replacing the khatam lattice and the black-and-gold dark cover.
+- A green leather Mamluk binding in both themes (the brand green, 2026-10-02; it was warm brown), replacing the khatam lattice and the black-and-gold dark cover.
 - An oklab `color-mix` everywhere.
 - Status glyphs moved off the rosette.
 
@@ -874,9 +923,10 @@ The **6 rubric names** (الحفظ، التسميع، أحكام التجويد�
 ## 17. Known limits
 
 - The board is a static mock with a little JS (the theme switch and the tokens table). Hover/focus/selected states are forced classes. The availability drag grips are drawn, not wired.
-- The wordmark is live Amiri text and needs outlining for non-web use.
-- The select chevron is a mid-grey data-URI that serves both themes, at about 3.5:1 on dark `raised`.
-- Gold frames are 2.5:1 on light paper by design. They are ornament, and all structure is also carried by `rule-strong` and spacing.
-- The Expo screen is an HTML approximation. Real RN needs `react-native-svg` for the glyphs and mark.
-- The alef and madda in the mark are hand-drawn with Amiri as the reference. Have a calligrapher check them before the app-store icon and print.
+- In the app the wordmark is live Amiri text; anywhere else use the brand lockup `docs/design/brand/logo.png`.
+- The select chevron is a green-grey (`#7A867F`) data-URI that serves both themes: 3.7:1 on light and 4.5:1 on dark `raised`.
+- Gold frames are 2.3:1 on light paper by design. They are ornament, and all structure is also carried by `rule-strong` and spacing.
+- The Expo screen is an HTML approximation. Real RN needs `react-native-svg` for the glyphs (the mark is a PNG).
+- The emblem is a raster (1536×1024 source). The 512/1024 icons are downscaled from it and are sharp; anything larger than the source (print, a billboard) needs a vector from the logo's designer.
+- The native splash needs the `expo-splash-screen` config plugin, which is not installed: `splash-icon.png` is ready, and is wired as `["expo-splash-screen", { "image": "./assets/splash-icon.png", "imageWidth": 200, "backgroundColor": "#FDF8F0", "dark": { "backgroundColor": "#07110C" } }]` once the package is added.
 - The rosette (ayah-end marker) as section number and current page, and the surah-header cartouche as a page title, borrow Mushaf devices for admin chrome. They never hold Quran text and never decorate, but get one sign-off from the academy's teachers before launch.
