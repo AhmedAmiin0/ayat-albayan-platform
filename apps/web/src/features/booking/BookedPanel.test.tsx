@@ -1,0 +1,59 @@
+import type { BookingResult } from '@ab/shared';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import type { ReactNode } from 'react';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { t } from '@/lib/i18n';
+import { BookedPanel, type BookedPanelProps } from './BookedPanel';
+
+const apiSend = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+vi.mock('@tanstack/react-router', () => ({
+  Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
+    <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
+  ),
+}));
+
+const RESULT: BookingResult = {
+  rule_id: 'r-1',
+  student_ids: ['s-new'],
+  guardian_ids: ['g-1'],
+  lessons: [{ id: 'l-1', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' }],
+  message_ids: [],
+};
+
+function renderPanel(props: Partial<BookedPanelProps>) {
+  render(
+    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+      <BookedPanel result={RESULT} teacherId="t-1" tz="Asia/Riyadh" {...props} />
+    </QueryClientProvider>,
+  );
+}
+
+afterEach(() => apiSend.mockReset());
+
+describe('BookedPanel after «اشترك» from the chat (R-SUB-01)', () => {
+  it('a regular package offers «اعمل الاشتراك» for the new student, then the way back to the chat', async () => {
+    renderPanel({ subscribeFor: { id: 's-new', name: 'جود', code: null }, chatPhone: '+966501234567' });
+    expect(screen.getByRole('link', { name: t.inbox.subscription.backToChat }).getAttribute('href')).toBe(
+      '/admin/inbox?phone=%2B966501234567&page=1',
+    );
+    apiSend.mockImplementation(async (_m: string, path: string) =>
+      path === '/subscriptions/quote' ? Promise.reject(new Error('no quote in this test')) : { id: 'sub-1' },
+    );
+    fireEvent.click(screen.getByRole('button', { name: t.inbox.subscription.make }));
+    const dialog = within(screen.getByRole('dialog', { name: t.subscriptions.new }));
+    expect(dialog.getByText('جود')).toBeTruthy();
+    fireEvent.click(dialog.getByRole('button', { name: t.common.save }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/subscriptions', expect.objectContaining({ studentId: 's-new' })));
+    expect(await screen.findByText(t.subscriptions.saved)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
+  });
+
+  it('a trial (or a booking not from a lead) offers neither', () => {
+    renderPanel({ subscribeFor: null, chatPhone: null });
+    expect(screen.getByRole('heading', { name: t.booking.booked })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
+    expect(screen.queryByRole('link', { name: t.inbox.subscription.backToChat })).toBeNull();
+  });
+});

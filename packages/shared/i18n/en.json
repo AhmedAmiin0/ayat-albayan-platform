@@ -1224,7 +1224,20 @@
     "qualificationSaved": "Student details saved",
     "followUpSaved": "Follow-up updated",
     "applyStatus": "Change",
-    "noLead": "This number isn't a new lead, so there are no qualification details for it."
+    "noLead": "This number isn't a new lead, so there are no qualification details for it.",
+    "subscription": {
+      "title": "Subscription",
+      "badge": {
+        "subscribed": "Subscribed",
+        "expired": "Subscription ended",
+        "none": "Not subscribed"
+      },
+      "subscribe": "Subscribe",
+      "renew": "Renew subscription",
+      "due": "Owes {amount}",
+      "make": "Create the subscription",
+      "backToChat": "Back to the chat"
+    }
   },
   "templates": {
     "title": "WhatsApp templates",

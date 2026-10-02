@@ -1,4 +1,13 @@
-import type { BookingRequest, BookingResult, BookingTeacherOption, Conflict, Gender, Program } from '@ab/shared';
+import {
+  PACKAGE_SIZES,
+  type BookingRequest,
+  type BookingResult,
+  type BookingTeacherOption,
+  type Conflict,
+  type Gender,
+  type PackageSize,
+  type Program,
+} from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 
@@ -40,8 +49,11 @@ export const bookingCheckQuery = (body: BookingRequest) => {
   });
 };
 
-/** /admin/book URL state: from a student profile, or from a lead row (R-LEAD-06). */
-export type BookSearch = { studentId?: string; leadId?: string; phone?: string; name?: string };
+/**
+ * /admin/book URL state: from a student profile, or from a lead row (R-LEAD-06). `pkg` = the
+ * lead's package: none = a trial, a size = «اشترك» from the chat (R-SUB-01).
+ */
+export type BookSearch = { studentId?: string; leadId?: string; phone?: string; name?: string; pkg?: PackageSize };
 
 const text = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
 
@@ -54,8 +66,10 @@ export function parseBookSearch(s: Record<string, unknown>): BookSearch {
     out.leadId = leadId;
     const phone = text(s['phone']);
     const name = text(s['name']);
+    const pkg = PACKAGE_SIZES.find((p) => p === String(s['pkg']));
     if (phone) out.phone = phone;
     if (name) out.name = name;
+    if (pkg) out.pkg = pkg;
   }
   return out;
 }

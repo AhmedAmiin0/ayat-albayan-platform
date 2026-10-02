@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
 import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n';
+import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
 import { STEPS, stepReady, type BookingDraft, type PickedStudent, type StepKey } from './draft';
 import { LeadStudentStep } from './LeadStudentStep';
@@ -38,7 +39,17 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent }: Boo
   const index = STEPS.indexOf(step);
   const go = (to: number) => setStep(STEPS[to] ?? step);
 
-  if (booked && draft.teacher) return <BookedPanel result={booked} teacherId={draft.teacher.id} tz={draft.tz} />;
+  if (booked && draft.teacher) {
+    return (
+      <BookedPanel
+        result={booked}
+        teacherId={draft.teacher.id}
+        tz={draft.tz}
+        subscribeFor={subscribeTarget(draft, booked)}
+        chatPhone={chatPhone(draft)}
+      />
+    );
+  }
 
   const body = {
     students:

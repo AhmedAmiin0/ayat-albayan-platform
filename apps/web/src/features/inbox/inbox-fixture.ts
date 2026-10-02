@@ -1,4 +1,11 @@
-import type { MessageView, TemplateView, ThreadDetail, ThreadView } from '@ab/shared';
+import type {
+  MessageView,
+  TemplateView,
+  ThreadDetail,
+  ThreadStudentView,
+  ThreadSubscriptionView,
+  ThreadView,
+} from '@ab/shared';
 import type { InboxLead } from './api';
 
 // Test rows shaped like the Phase 4 API (docs/12 §4). Not imported by app code.
@@ -28,6 +35,7 @@ export function thread(patch: Partial<ThreadView> = {}): ThreadView {
     teacher_id: null,
     teacher_name: null,
     session_open: true,
+    subscribed: false,
     ...patch,
   };
 }
@@ -69,7 +77,28 @@ export const detail = (messages: MessageView[], patch: Partial<ThreadView> = {})
   messages,
   has_more: false,
   lessons: [],
+  people: { guardian: null, lead: null, students: [] },
 });
+
+/** A guardian's child in `people.students`; `sub` patches an «8 حلقات» package, 3 left, unpaid. */
+export function pupil(patch: Partial<ThreadStudentView> = {}, sub?: Partial<ThreadSubscriptionView> | null): ThreadStudentView {
+  const package8: ThreadSubscriptionView = {
+    id: 'sub-1',
+    status: 'unpaid',
+    package_size: '8',
+    lessons_total: 8,
+    lessons_used: 5,
+    lessons_remaining: 3,
+    price: 290,
+    currency: 'SAR',
+    paid_amount: 0,
+    due_amount: 290,
+    renews_on: null,
+    starts_on: '2026-09-01',
+  };
+  const subscription = sub === null ? null : { ...package8, ...sub };
+  return { id: 's-1', name: 'سهيلة', code: 'AB-0183', teacher_name: 'أبرار', status: 'active', subscription, ...patch };
+}
 
 export function template(patch: Partial<TemplateView> = {}): TemplateView {
   return {

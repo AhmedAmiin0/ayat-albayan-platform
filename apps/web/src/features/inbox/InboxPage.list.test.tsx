@@ -20,6 +20,7 @@ const GUARDIAN = thread({
   lead_status: null,
   lead_source: null,
   guardian_id: 'g-1',
+  subscribed: true,
 });
 
 function renderInbox(search: InboxSearch, items = [LEAD, GUARDIAN]) {
@@ -46,6 +47,9 @@ describe('InboxPage thread list (R-LEAD-02)', () => {
     const guardian = within(screen.getByRole('link', { name: /\+20 10 0123 4567/ }));
     expect(guardian.getByText(`${t.inbox.you} أهلًا`)).toBeTruthy();
     expect(guardian.getByText(t.inbox.kind.guardian)).toBeTruthy();
+    // «مشترك» (R-SUB-01): the family's tag next to who the number is, on that row only.
+    expect(guardian.getByText(t.inbox.subscription.badge.subscribed).closest('[data-tone]')?.getAttribute('data-tone')).toBe('ok');
+    expect(row.queryByText(t.inbox.subscription.badge.subscribed)).toBeNull();
     expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/threads\?page=1&pageSize=30&search=/));
     expect(screen.getByText(t.leads.count.replace('{n}', '2'))).toBeTruthy();
   });
