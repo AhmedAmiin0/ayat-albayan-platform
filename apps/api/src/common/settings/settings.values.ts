@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import type { AcademySettings, SettingsUpdate } from '@ab/shared';
 
-/** Used when a row is missing or malformed; migrations 073 and 123 seed the same values. */
+/** Used when a row is missing or malformed; migrations 073, 123, 142 and 162 seed the same values. */
 export const SETTING_DEFAULTS: AcademySettings = {
   late_cancel_hours: null,
   booking_horizon_weeks: 5,
@@ -15,6 +15,7 @@ export const SETTING_DEFAULTS: AcademySettings = {
   reminder_minutes_before: 60,
   reminder_24h_enabled: false,
   messaging_enabled: false,
+  auto_messages_enabled: false,
   crm_cutover_done: false,
 };
 
@@ -41,6 +42,7 @@ const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
   reminder_minutes_before: int(1),
   reminder_24h_enabled: bool,
   messaging_enabled: bool,
+  auto_messages_enabled: bool,
   crm_cutover_done: bool,
 };
 
@@ -64,6 +66,7 @@ export function readSettings(rows: readonly { key: string; value: Json }[]): Aca
     reminder_minutes_before: pick('reminder_minutes_before'),
     reminder_24h_enabled: pick('reminder_24h_enabled'),
     messaging_enabled: pick('messaging_enabled'),
+    auto_messages_enabled: pick('auto_messages_enabled'),
     crm_cutover_done: pick('crm_cutover_done'),
   };
 }
@@ -81,6 +84,7 @@ const KEY_OF: { [K in keyof Required<SettingsUpdate>]: SettingKey } = {
   reminderMinutesBefore: 'reminder_minutes_before',
   reminder24hEnabled: 'reminder_24h_enabled',
   messagingEnabled: 'messaging_enabled',
+  autoMessagesEnabled: 'auto_messages_enabled',
   crmCutoverDone: 'crm_cutover_done',
 };
 

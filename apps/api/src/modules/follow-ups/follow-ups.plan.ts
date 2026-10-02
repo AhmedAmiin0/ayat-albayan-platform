@@ -72,14 +72,17 @@ export interface StageRow {
   error_code: string | null;
 }
 
-/** Nothing went out and nobody was told: the sender dropped it (late, or no longer wanted). */
-const UNSENT_CODES: ReadonlySet<string> = new Set(['expired', 'stale']);
+/**
+ * Nothing went out and nobody was told: the sender dropped it (late, no longer wanted, or held
+ * while settings.auto_messages_enabled was OFF).
+ */
+const UNSENT_CODES: ReadonlySet<string> = new Set(['expired', 'stale', 'auto_off']);
 
 /**
  * What a due follow-up needs, given the row of its key (R-LEAD-05). The stage moves on only once
  * the follow-up actually left (sent, or the admin sent it by hand) or failed for good (the admin
- * got reminder_failed); a queued or handed-off row waits; a row that expired or went stale before
- * it was sent is replaced with fresh slots.
+ * got reminder_failed); a queued or handed-off row waits; a row that expired, went stale or was
+ * held (auto_off) before it was sent is replaced with fresh slots.
  */
 export function followUpStep(row: StageRow | null): 'queue' | 'requeue' | 'wait' | 'advance' {
   if (!row) return 'queue';

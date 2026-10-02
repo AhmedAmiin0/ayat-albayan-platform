@@ -19,6 +19,15 @@ describe('Phase 4 messaging settings (migration 142, docs/12 §2)', () => {
     expect(settingsChanges(settingsUpdateSchema.parse({ crmCutoverDone: true }))).toEqual({ crm_cutover_done: true });
   });
 
+  it('automatic messages (migration 162): OFF by default, a boolean, PATCH autoMessagesEnabled', () => {
+    expect(SETTING_DEFAULTS.auto_messages_enabled).toBe(false);
+    expect(readSettings([{ key: 'auto_messages_enabled', value: true }]).auto_messages_enabled).toBe(true);
+    expect(readSettings([{ key: 'auto_messages_enabled', value: 'true' }]).auto_messages_enabled).toBe(false);
+    expect(settingsChanges(settingsUpdateSchema.parse({ autoMessagesEnabled: true }))).toEqual({ auto_messages_enabled: true });
+    expect(settingsChanges(settingsUpdateSchema.parse({ autoMessagesEnabled: false }))).toEqual({ auto_messages_enabled: false });
+    expect(settingsUpdateSchema.safeParse({ autoMessagesEnabled: 'on' }).success).toBe(false);
+  });
+
   it('valid stored values win', () => {
     const rows = [
       { key: 'follow_up_hours', value: [12, 48, 96] },

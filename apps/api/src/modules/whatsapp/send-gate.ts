@@ -23,6 +23,11 @@ export class SendGate {
     return sendingAllowed(this.env, (await this.settings.all()).messaging_enabled);
   }
 
+  /** settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when ON. */
+  async automaticOn(): Promise<boolean> {
+    return (await this.settings.all()).auto_messages_enabled;
+  }
+
   /** GET /messages/gate: which gate is closed, and the queue that goes out the moment all are open. */
   async view(): Promise<SendGateView> {
     const [state, queued] = await Promise.all([this.state(), this.queuedCount()]);

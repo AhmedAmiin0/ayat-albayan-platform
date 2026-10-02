@@ -13,6 +13,23 @@ describe('FollowUpsJob.runOnce (R-LEAD-05)', () => {
     expect(queries.candidates).toHaveBeenCalledWith(2);
   });
 
+  it('automatic messages OFF: no lead read, nothing queued, no stage advanced', async () => {
+    const { job, queries, queued, advanced } = setup({ auto: false, prior: { id: 'm1', status: 'sent', error_code: null } });
+    expect(await job.runOnce(DUE)).toMatchObject({ leads: 0, queued: 0, advanced: 0 });
+    expect(queries.candidates).not.toHaveBeenCalled();
+    expect(queries.sync).not.toHaveBeenCalled();
+    expect(queued).toEqual([]);
+    expect(advanced).toEqual([]);
+  });
+
+  it('held while OFF, then ON: the stage stays and fresh slots are queued under the same key', async () => {
+    const { job, queries, queued, advanced } = setup({ prior: { id: 'm1', status: 'failed', error_code: 'auto_off' } });
+    expect(await job.runOnce(DUE)).toMatchObject({ queued: 1, advanced: 0 });
+    expect(queries.drop).toHaveBeenCalledWith('m1');
+    expect(queued[0]?.dedup_key).toBe(`follow_up_slots:lead-1:${CYCLE}:0`);
+    expect(advanced).toEqual([]);
+  });
+
   it('not due yet: only keeps next_follow_up_at in sync', async () => {
     const { job, queries, queued } = setup();
     expect(await job.runOnce(d('2026-10-02T09:59:00Z'))).toMatchObject({ notDue: 1, queued: 0 });

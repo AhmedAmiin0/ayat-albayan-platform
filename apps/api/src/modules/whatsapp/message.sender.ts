@@ -67,22 +67,23 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
 
   /** One pass over the due rows. Never throws. */
   async runOnce(now = new Date()): Promise<SendSummary> {
-    const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, paused: 0, skipped: 0 };
+    const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0 };
     try {
       if (!(await this.gate.open())) return summary;
       const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
+      const autoOn = await this.gate.automaticOn(); // once per pass; the kill switch stays per row
       for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
         // The kill switch is read before every row, so OFF stops a long pass at once (docs/09).
         if (!(await this.gate.open())) break;
         const template = row.template_key ? (templates.get(row.template_key) ?? null) : null;
-        const outcome = await this.worker.process({ row, template, now });
+        const outcome = await this.worker.process({ row, template, now, autoOn });
         summary[outcome] += 1;
         if (outcome === 'paused') break; // a broken token fails every row the same way
       }
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
-    if (summary.sent + summary.retry + summary.failed + summary.expired + summary.stale + summary.paused > 0) {
+    if (summary.sent + summary.retry + summary.failed + summary.expired + summary.stale + summary.held + summary.paused > 0) {
       this.log.log(`outbound messages: ${JSON.stringify(summary)}`);
     }
     return summary;

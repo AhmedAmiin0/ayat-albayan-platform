@@ -44,14 +44,14 @@ export class SubscriptionAlertsService {
   /** Recompute statuses, then raise the alert. One student's failure never stops the others. */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     if (studentIds.length === 0) return 0;
-    const { renewal_alert_remaining: threshold } = await this.env.settings.all();
+    const { renewal_alert_remaining: threshold, auto_messages_enabled: auto } = await this.env.settings.all();
     let failed = 0;
     for (const studentId of new Set(studentIds)) {
       try {
         const { rows, ctx } = await this.packages.recompute(studentId, opts.actorId ?? null);
         const plan = alertPlan({ subs: rows, balances: ctx.balances, threshold });
         const now = opts.now ?? new Date();
-        if (plan) await this.raise({ studentId, plan, now });
+        if (plan) await this.raise({ studentId, plan, now, auto });
         await this.queries.closeTasks({ subjectIds: rows.map((r) => r.id), keep: openTaskKeys(plan), now });
       } catch (e) {
         failed += 1;
@@ -61,7 +61,8 @@ export class SubscriptionAlertsService {
     return failed;
   }
 
-  private async raise(input: { studentId: string; plan: AlertPlan; now: Date }): Promise<void> {
+  /** auto = settings.auto_messages_enabled: OFF raises the task and the push but queues no renewal_due. */
+  private async raise(input: { studentId: string; plan: AlertPlan; now: Date; auto: boolean }): Promise<void> {
     const { plan } = input;
     const dedupKey = alertDedupKey(plan.alert, plan.subscriptionId);
     const label = packageProgress(plan.used, plan.total, { forms: ar.subscriptions.progress }).remainingLabel;
@@ -73,7 +74,7 @@ export class SubscriptionAlertsService {
       const data = { subscriptionId: plan.subscriptionId, studentId: input.studentId };
       await this.env.push.notifyAdmins('payment_due', { subject: dedupKey, vars, data });
     }
-    if (!recipient) return;
+    if (!recipient || !input.auto) return; // no guardian, or automatic messages OFF (docs/09 cut-over)
     // TODO(R-MSG-01): {{1}}/{{2}} against the approved renewal_due template.
     const params = { '1': recipient.studentName, '2': label };
     const renewalKey = alertDedupKey('renewal', plan.subscriptionId);

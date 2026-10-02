@@ -20,8 +20,9 @@ export type ReminderSummary = { lessons: number; queued: number; dropped: number
  * R-MSG-02 reminder scheduler (docs/12 §7): every 5 minutes, single flight. Queues the same-day
  * reminder to each guardian (template by meeting link, time in the guardian's tz) and to the
  * teacher (teacher's tz); the day-before one only when settings.reminder_24h_enabled and
- * lesson_reminder_24h is approved. Drops queued reminders of lessons cancelled since, and pushes
- * lesson_needs_confirmation (R-MOB-01) once per lesson. Only queues: the sender owns the send gate.
+ * lesson_reminder_24h is approved; nothing while settings.auto_messages_enabled is OFF. Drops queued
+ * reminders of lessons cancelled since, and pushes lesson_needs_confirmation (R-MOB-01) once per
+ * lesson (also when OFF). Only queues: the sender owns the send gate.
  */
 @Injectable()
 export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
@@ -59,10 +60,13 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
       const settings = await this.settings.all();
       const lessons = await this.queries.upcoming({ now, until: new Date(now.getTime() + LOOKAHEAD_MS) });
       summary.lessons = lessons.length;
-      const dayBefore =
-        settings.reminder_24h_enabled && (await this.queries.approved(['lesson_reminder_24h'])).has('lesson_reminder_24h');
-      const rows = planReminders({ lessons, minutesBefore: settings.reminder_minutes_before, dayBefore, now });
-      summary.queued = await this.queries.queue(rows);
+      // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.
+      if (settings.auto_messages_enabled) {
+        const dayBefore =
+          settings.reminder_24h_enabled && (await this.queries.approved(['lesson_reminder_24h'])).has('lesson_reminder_24h');
+        const rows = planReminders({ lessons, minutesBefore: settings.reminder_minutes_before, dayBefore, now });
+        summary.queued = await this.queries.queue(rows);
+      }
       summary.pushed = await this.confirmations(lessons, { now, minutesBefore: settings.reminder_minutes_before });
     } catch (e) {
       this.log.error(`reminders run aborted: ${e instanceof Error ? e.message : String(e)}`);

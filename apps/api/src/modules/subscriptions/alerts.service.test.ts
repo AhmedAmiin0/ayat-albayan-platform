@@ -13,7 +13,7 @@ function state(status: 'active' | 'unpaid' | 'paused', used: number, total = 4):
   return { rows: [row], ctx: { balances: new Map([['sub-1', balance]]), paid: new Map() } } as unknown as StudentState;
 }
 
-function setup(states: Record<string, StudentState | Error>) {
+function setup(states: Record<string, StudentState | Error>, auto = true) {
   const packages = {
     recompute: vi.fn(async (id: string) => {
       const s = states[id];
@@ -28,7 +28,7 @@ function setup(states: Record<string, StudentState | Error>) {
     queueRenewal: vi.fn(async () => undefined),
     closeTasks: vi.fn(async () => undefined),
   };
-  const settings = { all: vi.fn(async () => SETTING_DEFAULTS) };
+  const settings = { all: vi.fn(async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: auto })) };
   const push = { notifyAdmins: vi.fn(async () => undefined) };
   const service = new SubscriptionAlertsService(
     packages as unknown as PackagesService,
@@ -81,6 +81,16 @@ describe('SubscriptionAlertsService (R-SUB-02)', () => {
       vars: { student: 'سهيلة', left: 'فاضل حلقتين' },
       data: { subscriptionId: 'sub-1', studentId: 's1' },
     });
+  });
+
+  it('automatic messages OFF: the task and the payment_due push still happen, no renewal_due is queued', async () => {
+    const { service, queries, push } = setup({ s1: state('active', 2) }, false);
+    queries.raiseTask.mockResolvedValueOnce(true as never);
+    await service.evaluateStudents(['s1'], { now: NOW });
+    expect(queries.raiseTask).toHaveBeenCalledWith(expect.objectContaining({ kind: 'renewal_due', dedupKey: 'renewal_due:sub-1' }));
+    expect(push.notifyAdmins).toHaveBeenCalledWith('payment_due', expect.objectContaining({ subject: 'renewal_due:sub-1' }));
+    expect(queries.queueRenewal).not.toHaveBeenCalled();
+    expect(queries.closeTasks).toHaveBeenCalledWith(expect.objectContaining({ subjectIds: ['sub-1'] }));
   });
 
   it('3 left or a paused package → nothing raised, and their open tasks are closed', async () => {

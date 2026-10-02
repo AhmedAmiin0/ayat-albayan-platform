@@ -58,6 +58,17 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     );
   });
 
+  it('PATCH autoMessagesEnabled writes only auto_messages_enabled and audits before/after', async () => {
+    const after = { ...SETTING_DEFAULTS, auto_messages_enabled: true };
+    settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
+    expect((await call('PATCH', 'admin', { autoMessagesEnabled: true })).json()).toEqual(after);
+    expect(settings.write).toHaveBeenCalledWith({ auto_messages_enabled: true }, USERS['admin']?.id);
+    expect(audit.record).toHaveBeenCalledWith(
+      expect.objectContaining({ entity: 'settings', action: 'update', before: SETTING_DEFAULTS, after }),
+    );
+    expect((await call('PATCH', 'teacher', { autoMessagesEnabled: true })).statusCode).toBe(403);
+  });
+
   it('null turns the policy back OFF; out-of-range values → 400', async () => {
     await call('PATCH', 'admin', { lateCancelHours: null });
     expect(settings.write).toHaveBeenCalledWith({ late_cancel_hours: null }, expect.any(String));
