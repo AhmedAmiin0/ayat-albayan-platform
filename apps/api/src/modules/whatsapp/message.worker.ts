@@ -16,7 +16,11 @@ export interface SendJob {
   now: Date;
 }
 
-/** Writing «sent» after Meta accepted is retried hard: losing it would send the message twice. */
+/**
+ * Writing «sent» after Meta accepted is retried hard: losing it would send the message twice.
+ * ponytail: if all tries fail the 2-min claim lease lapses and the row is resent; an outbox
+ * write-ahead (wamid stored before the status) closes that window if it ever shows up.
+ */
 const RECORD_DELAYS_MS = [500, 2_000] as const;
 
 /**
