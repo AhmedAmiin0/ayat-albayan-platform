@@ -65,6 +65,10 @@ export function fakeQueries() {
       stored.push(row);
       return true;
     }),
+    deleteInbound: vi.fn(async (waMessageId: string) => {
+      const i = stored.findIndex((r) => r.wa_message_id === waMessageId);
+      if (i >= 0) stored.splice(i, 1);
+    }),
     outboundByWaId: vi.fn().mockResolvedValue(null),
     moveStatus: vi.fn().mockResolvedValue(true),
     guardianLesson: vi.fn().mockResolvedValue(true),

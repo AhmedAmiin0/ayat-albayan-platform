@@ -42,10 +42,11 @@ describe('planReminders: same-day window (R-MSG-02)', () => {
     expect(rows[2]).toMatchObject({ guardian_id: null, phone_e164: '+966500000201', lesson_id: 'lesson-1' });
   });
 
-  it('{{2}} is the time in each guardian tz; the teacher gets theirs', () => {
+  it('{{2}} is the time in each guardian tz; the teacher gets theirs (+ the Jitsi link: no button)', () => {
     const teacher = { id: 't-1', display_name_ar: 'هدى', phone_e164: '+966500000201', tz: 'America/New_York' };
     const rows = plan({ lessons: [sampleLesson({ teacher })] });
-    expect(rows.map((r) => r.template_params['2'])).toEqual(['17:00', '15:00', '10:00 — سهيلة ومريم وياسين']);
+    const slot = '10:00 — سهيلة ومريم وياسين · رابط الحلقة: https://meet.jit.si/ab-room-7';
+    expect(rows.map((r) => r.template_params['2'])).toEqual(['17:00', '15:00', slot]);
     expect(rows[0]?.template_params['1']).toBe('سهيلة ومريم');
     expect(rows[1]?.template_params['1']).toBe('ياسين');
     expect(rows[2]?.template_params['1']).toBe('هدى');

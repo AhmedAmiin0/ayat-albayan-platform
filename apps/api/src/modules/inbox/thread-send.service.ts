@@ -12,14 +12,22 @@ export interface ThreadSend<T> {
   actorId: string;
 }
 
-/** The row's people (by phone, like v_threads), author and idempotency key (rule 8). */
+/**
+ * Rule 8: every inbox send carries the client's request id, so a retried POST (lost answer, double
+ * tap) returns the first row instead of messaging the family twice. 400 without one.
+ */
+function dedupKey<T>(s: ThreadSend<T>): string {
+  if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
+  return `admin:${s.input.clientRequestId}`;
+}
+
+/** The row's people (by phone, like v_threads) and author. */
 function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
   return {
     phone_e164: s.phone,
     lead_id: thread?.lead_id ?? null,
     guardian_id: thread?.guardian_id ?? null,
     created_by: s.actorId,
-    dedup_key: s.input.clientRequestId ? `admin:${s.input.clientRequestId}` : null,
   };
 }
 
@@ -34,13 +42,15 @@ export class ThreadSendService {
 
   /** H3: free text inside the 24 h window only (WhatsApp rejects it after: 131047). */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<MessageView> {
+    const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     if (!sessionWindowOpen(thread?.last_inbound_at, now)) throw waHttpError('session_closed', 409);
-    return this.outbox.send({ ...outboundBase(s, thread), body: s.input.text });
+    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text });
   }
 
   /** H4: an approved template with every variable filled; a PDF template comes only from the PDF job. */
   async template(s: ThreadSend<ThreadTemplate>): Promise<MessageView> {
+    const key = dedupKey(s);
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
     if (template.header_format === 'document') throw waHttpError('needs_document', 400);
@@ -49,6 +59,7 @@ export class ThreadSendService {
     const thread = await this.queries.thread(s.phone);
     return this.outbox.send({
       ...outboundBase(s, thread),
+      dedup_key: key,
       template_key: s.input.key,
       template_params: s.input.params,
       lesson_id: s.input.lessonId ?? null,

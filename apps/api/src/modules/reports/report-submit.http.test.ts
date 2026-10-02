@@ -1,6 +1,17 @@
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { conflict } from '../scheduling/errors';
-import { AFTER, BEFORE, FULL_GRADES, LESSON_ID, lessonRow, REPORT_ID, reportRow, submittedRow, TEACHER } from './reports.fakes';
+import {
+  AFTER,
+  BEFORE,
+  FULL_GRADES,
+  LESSON_ID,
+  lessonRow,
+  REPORT_ID,
+  reportRow,
+  STUDENT_ID,
+  submittedRow,
+  TEACHER,
+} from './reports.fakes';
 import { reportsApp } from './test-app';
 
 const URL = `/reports/${REPORT_ID}/submit`;
@@ -34,6 +45,24 @@ describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
     expect(h.events.changed).toHaveBeenCalledWith([LESSON_ID]);
     expect(h.pdf.enqueue).toHaveBeenCalledWith(REPORT_ID);
     expect(res.json()).toMatchObject({ status: 'submitted', version: 1, pdf_status: 'pending' });
+  });
+
+  it('report_submitted push to the admins (R-MOB-01): student and teacher names, keyed by the report', async () => {
+    h.reports.get.mockResolvedValueOnce(reportRow()).mockResolvedValue(submittedRow());
+    expect((await h.call({ method: 'POST', url: URL, body: FORM })).statusCode).toBe(200);
+    expect(h.push.notifyAdmins).toHaveBeenCalledTimes(1);
+    expect(h.push.notifyAdmins).toHaveBeenCalledWith('report_submitted', {
+      subject: REPORT_ID,
+      vars: { student: 'سهيلة', teacher: 'أبرار' },
+      data: { reportId: REPORT_ID, lessonId: LESSON_ID, studentId: STUDENT_ID },
+    });
+  });
+
+  it('no push when the submit is refused or loses the race', async () => {
+    await h.call({ method: 'POST', url: URL, body: { ...FORM, expectedVersion: 3 } });
+    h.reports.submit.mockRejectedValue(conflict('version_conflict'));
+    await h.call({ method: 'POST', url: URL, body: FORM });
+    expect(h.push.notifyAdmins).not.toHaveBeenCalled();
   });
 
   it('a failing PDF kick does not fail the committed submit', async () => {

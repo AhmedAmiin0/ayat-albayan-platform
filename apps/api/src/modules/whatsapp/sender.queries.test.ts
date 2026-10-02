@@ -98,16 +98,18 @@ describe('MessagesQueries — admin retry / sent by hand (M1, M2)', () => {
       { status: 'sent_manually', sent_manually_at: '2026-10-02T08:00:00.000Z', next_attempt_at: null, error_code: null, error_text: null },
     ]);
     expect(argsOf(M, 'in')).toEqual(['status', ['queued', 'failed']]);
+    expect(argsOf(M, 'or')).toEqual(['error_code.is.null,error_code.neq.sending']);
     expect(eqs(calls)).toEqual([['id', 'm1'], ['direction', 'outbound']]);
     expect(argsOf('leads', 'eq')).toEqual(['id', 'lead-1']);
     expect(calls.some((c) => c.table === 'lesson_reports')).toBe(false);
     await expect(q.markSentManually('m1', NOW)).resolves.toBeNull();
   });
 
-  it('handOff: outbound queued/failed → failed «handed_off» (the sender skips it)', async () => {
+  it('handOff: outbound queued/failed, not claimed by the sender → failed «handed_off» (the sender skips it)', async () => {
     const { db, argsOf } = fakeDb({ [M]: [{ data: { id: 'm1' } }] });
     await expect(new MessagesQueries(db).handOff('m1')).resolves.toEqual({ id: 'm1' });
     expect(argsOf(M, 'update')).toEqual([expect.objectContaining({ status: 'failed', error_code: 'handed_off', next_attempt_at: null })]);
     expect(argsOf(M, 'in')).toEqual(['status', ['queued', 'failed']]);
+    expect(argsOf(M, 'or')).toEqual(['error_code.is.null,error_code.neq.sending']);
   });
 });

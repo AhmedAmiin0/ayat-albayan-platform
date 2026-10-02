@@ -2,9 +2,15 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { MessageRow } from './message.mapper';
 import { stampDelivered } from './delivered';
-import { HANDED_OFF } from './send-plan';
+import { HANDED_OFF, SENDING } from './send-plan';
 
-/** M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set. */
+/** Not while the sender holds the row (its claim): Meta may be sending it right now. */
+const NOT_CLAIMED = `error_code.is.null,error_code.neq.${SENDING}`;
+
+/**
+ * M1–M3 (docs/12 §4): the admin's retry, «I sent it myself» and the hand-off, all compare-and-set.
+ * M2/M3 also skip a row the sender claimed between the admin's read and this write.
+ */
 @Injectable()
 export class MessagesQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -40,6 +46,7 @@ export class MessagesQueries {
       .eq('id', id)
       .eq('direction', 'outbound')
       .in('status', ['queued', 'failed'])
+      .or(NOT_CLAIMED)
       .select('*')
       .maybeSingle();
     if (error) throw new Error(`message manual send failed: ${error.message}`);
@@ -58,6 +65,7 @@ export class MessagesQueries {
       .eq('id', id)
       .eq('direction', 'outbound')
       .in('status', ['queued', 'failed'])
+      .or(NOT_CLAIMED)
       .select('*')
       .maybeSingle();
     if (error) throw new Error(`message hand-off failed: ${error.message}`);

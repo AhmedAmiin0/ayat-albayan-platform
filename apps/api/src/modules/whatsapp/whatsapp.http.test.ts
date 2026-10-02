@@ -117,6 +117,12 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'message_handed_off' }));
     t.messages.get.mockResolvedValue(messageRow({ id: ID, status: 'sent' }));
     expect((await t.call({ method: 'POST', url: `/messages/${ID}/hand-off` })).statusCode).toBe(409);
+    // claimed by the sender (Meta may be sending it now): neither hand-off nor «sent by hand»
+    t.messages.handOff.mockClear();
+    t.messages.get.mockResolvedValue(messageRow({ id: ID, status: 'queued', error_code: 'sending' }));
+    expect((await t.call({ method: 'POST', url: `/messages/${ID}/hand-off` })).json().code).toBe('not_manual');
+    expect((await t.call({ method: 'POST', url: `/messages/${ID}/sent-manually` })).json().code).toBe('not_manual');
+    expect(t.messages.handOff).not.toHaveBeenCalled();
   });
 
   it('G gate: which gate is closed and how many rows wait', async () => {

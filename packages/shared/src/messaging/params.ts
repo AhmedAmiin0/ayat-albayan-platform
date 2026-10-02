@@ -11,7 +11,9 @@ import {
 // Typed params for the Phase 4 producers (docs/12 §2). Producers that already exist keep their
 // own builders: booking_confirmation* (booking.messages.ts, confirmation-messages.ts),
 // report_ready (report-ready.ts), renewal_due (alerts.service.ts).
-// TODO(R-MSG-01): {{2}} of the approved reminders is assumed to be the time; check against Meta.
+// R-MSG-01, checked against Meta's approved bodies and samples (owner's CRM copy, 2026-10-02):
+// lesson_reminder_v2 / _meet / _plain read «حلقة {{1}} النهاردة — {{2}}», {{2}} = the time
+// («8:30 م بتوقيت الرياض»); teacher_lesson_reminder has no button, so its {{2}} carries the link.
 
 export interface LessonMessageInput {
   /** The guardian's booked children in this lesson: {{1}} «سهيلة ومريم». */
@@ -48,11 +50,23 @@ export function lessonReminder24hMessage(input: LessonMessageInput & { lessonId:
   };
 }
 
-/** teacher_lesson_reminder*: {{1}} the teacher's name, {{2}} «17:00 — سهيلة ومريم» in their tz. */
+/** The approved sample's wording before the link (WhatsApp text: Arabic whatever the UI language). */
+const LINK_LABEL = 'رابط الحلقة:';
+
+/** Meta rejects a parameter with a newline, a tab or 4+ spaces in a row: one line, single spaces. */
+const oneLine = (text: string) => text.replace(/\s+/g, ' ').trim();
+
+/**
+ * teacher_lesson_reminder*: {{1}} the teacher's name, {{2}} «17:00 — سهيلة ومريم» in their tz.
+ * Meet → the _meet button; the plain template (Jitsi, any other link) has no button, so a link
+ * rides in {{2}}: «17:00 — سهيلة ومريم · رابط الحلقة: https://meet.jit.si/…».
+ */
 export function teacherReminderMessage(input: LessonMessageInput & { teacherName: string }): OutboundTemplate {
   const { key, button } = teacherReminderTemplate(input.meetingLink);
+  const link = oneLine(input.meetingLink ?? '');
   const slot = `${clockTime(input.startsAt, input.tz)} — ${joinNames(input.names)}`;
-  return { key, params: withButton({ '1': input.teacherName, '2': slot }, button) };
+  const withLink = key === 'teacher_lesson_reminder' && link ? `${slot} · ${LINK_LABEL} ${link}` : slot;
+  return { key, params: withButton({ '1': input.teacherName, '2': oneLine(withLink) }, button) };
 }
 
 export interface FollowUpInput {

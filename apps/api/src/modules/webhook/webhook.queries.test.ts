@@ -31,4 +31,14 @@ describe('WebhookQueries: which lesson a reply is about (docs/12 §3.5)', () => 
       ]),
     );
   });
+
+  it('deleteInbound removes only the inbound row of that wamid', async () => {
+    const { db, log } = chainDb();
+    await new WebhookQueries(db).deleteInbound('wamid.IN1');
+    expect(callsOf(log, 'messages')).toEqual([
+      ['delete', []],
+      ['eq', ['wa_message_id', 'wamid.IN1']],
+      ['eq', ['direction', 'inbound']],
+    ]);
+  });
 });

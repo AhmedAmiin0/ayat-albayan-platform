@@ -1,6 +1,7 @@
+import { ConflictException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
 import { lead } from '../leads/leads.fakes';
-import { AT, event, GUARDIAN_ID, NEW_LEAD_ID, nobody, services } from './webhook.fakes';
+import { AT, event, GUARDIAN_ID, LESSON_ID, NEW_LEAD_ID, nobody, services } from './webhook.fakes';
 
 const PHONE = '+966501234567';
 const LEAD_ID = '00000000-0000-4000-8000-0000000000c2';
@@ -77,6 +78,42 @@ describe('InboundService — replays', () => {
     await s.inbound.handle(event());
     expect(s.queries.stored).toHaveLength(1);
     expect(s.push.notifyAdmins).toHaveBeenCalledTimes(1);
+  });
+
+  it('a «نعم» whose confirm fails (DB down) is unstored and thrown, so Meta’s re-send confirms it', async () => {
+    const s = services();
+    s.queries.identify.mockResolvedValue({ ...nobody(), guardian: { id: GUARDIAN_ID, name: 'أم سهيلة' } });
+    s.queries.recentLessonOutbound.mockResolvedValue(LESSON_ID);
+    s.lessons.confirm.mockRejectedValueOnce(new Error('db: connection refused'));
+    await expect(s.inbound.handle(event({ body: 'نعم' }))).rejects.toThrow('connection refused');
+    expect(s.queries.stored).toEqual([]);
+    expect(s.push.notifyAdmins).not.toHaveBeenCalled();
+    await s.inbound.handle(event({ body: 'نعم' })); // Meta re-sends after the 500
+    await s.inbound.handle(event({ body: 'نعم' })); // a later replay of the processed wamid: no-op
+    expect(s.lessons.confirm).toHaveBeenCalledTimes(2);
+    expect(s.audit.record).toHaveBeenCalledTimes(1);
+    expect(s.queries.stored).toHaveLength(1);
+    expect(s.push.notifyAdmins).toHaveBeenCalledTimes(1);
+  });
+
+  it('a «وقف الرسايل» whose pause fails is retried the same way', async () => {
+    const s = services();
+    s.queries.updateLead.mockRejectedValueOnce(new Error('db: timeout'));
+    await expect(s.inbound.handle(event({ body: 'وقف الرسايل' }))).rejects.toThrow('timeout');
+    expect(s.queries.deleteInbound).toHaveBeenCalledWith('wamid.IN1');
+    await s.inbound.handle(event({ body: 'وقف الرسايل' }));
+    expect(s.queries.updateLead).toHaveBeenLastCalledWith(NEW_LEAD_ID, { follow_up_paused: true, follow_up_paused_by: 'lead' });
+    expect(s.queries.stored).toHaveLength(1);
+  });
+
+  it('a lesson that can no longer be confirmed (HTTP 409) is not retried: the row stays', async () => {
+    const s = services();
+    s.queries.identify.mockResolvedValue({ ...nobody(), guardian: { id: GUARDIAN_ID, name: 'أم سهيلة' } });
+    s.queries.recentLessonOutbound.mockResolvedValue(LESSON_ID);
+    s.lessons.confirm.mockRejectedValueOnce(new ConflictException({ code: 'invalid_transition' }));
+    await s.inbound.handle(event({ body: 'نعم' }));
+    expect(s.queries.deleteInbound).not.toHaveBeenCalled();
+    expect(s.queries.stored).toHaveLength(1);
   });
 
   it('a replayed «نعم» confirms once', async () => {

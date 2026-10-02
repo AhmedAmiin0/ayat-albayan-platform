@@ -62,6 +62,12 @@ export class WebhookQueries {
     return (data ?? []).length > 0;
   }
 
+  /** Removes an inbound row by wamid (its quick reply failed: Meta's re-send must not be a replay). */
+  async deleteInbound(waMessageId: string): Promise<void> {
+    const { error } = await this.db.from('messages').delete().eq('wa_message_id', waMessageId).eq('direction', 'inbound');
+    check(error);
+  }
+
   async outboundByWaId(waMessageId: string): Promise<OutboundRow | null> {
     const { data, error } = await this.db
       .from('messages')

@@ -97,3 +97,12 @@ test('queued with sending off: hand-send offered, no retry; a later one says whe
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.getByText(new RegExp(t.messages.queuedFor.replace(' {time}', '')))).toBeTruthy();
 });
+
+test('a row the sender is sending right now (no wa.me from the API): no hand-send, no retry', async () => {
+  const claimed = message({ id: 'c', body: 'تذكير', status: 'queued', attempts: 1, error_code: 'sending', click_to_chat: null });
+  await open([inbound, claimed]);
+  expect(screen.getByText(word.queued)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
+  expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
+  expect(mockApiSend).not.toHaveBeenCalled();
+});
