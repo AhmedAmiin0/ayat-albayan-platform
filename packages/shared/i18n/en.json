@@ -910,7 +910,9 @@
       "closing": "May Allah bless the student and make them a source of benefit, and make the Quran the spring of their heart and the light of their chest.",
       "whatsapp": "WhatsApp",
       "generated": "Report generated automatically by the student follow-up system"
-    }
+    },
+    "submittedTitle": "Sent reports",
+    "noSubmitted": "No sent reports yet"
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -1051,7 +1053,8 @@
       "invalid_month": "Choose the month from the list",
       "month_not_over": "The month isn't over yet. Approve the payouts after its last day",
       "reports_pending": "This teacher still has unwritten lesson reports for this month. Write them first, then approve"
-    }
+    },
+    "mineEmpty": "No payouts calculated yet"
   },
   "expenses": {
     "title": "Expenses",
@@ -1255,7 +1258,10 @@
       "session_closed": "More than 24 hours have passed since their last message — you need to send a template",
       "template_not_approved": "This template isn't approved by Meta yet",
       "invalid_phone": "This number isn't valid",
-      "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp"
+      "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp",
+      "not_your_thread": "This conversation isn't one of yours",
+      "own_thread_read_only": "This is your chat with the academy, read only",
+      "template_not_allowed": "This template is for the admin only"
     },
     "pickThread": "Choose a conversation from the list",
     "pickThreadHint": "New messages show up here automatically as soon as they arrive.",
@@ -1281,7 +1287,9 @@
       "due": "Owes {amount}",
       "make": "Create the subscription",
       "backToChat": "Back to the chat"
-    }
+    },
+    "sentBy": "Sent by: {name}",
+    "ownThreadReadOnly": "This is your chat with the academy, read only"
   },
   "templates": {
     "title": "WhatsApp templates",
@@ -1659,5 +1667,12 @@
     "en": "English",
     "restart": "The app will restart in the other language.",
     "restartManually": "Close the app and open it again to switch the language."
+  },
+  "teacherNav": {
+    "label": "Teacher sections",
+    "today": "Today",
+    "calendar": "My schedule",
+    "reports": "Reports",
+    "payouts": "My payouts"
   }
 }

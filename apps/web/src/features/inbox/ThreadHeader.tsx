@@ -5,6 +5,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { threadKind, threadName, timesInText } from './format';
+import { inboxBase, useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { SubscriptionChip } from './SubscriptionChip';
 
@@ -20,10 +21,11 @@ export interface ThreadHeaderProps {
 /** Name, phone, who the number is (lead status chip / guardian / teacher), «مشترك» and the source. */
 export function ThreadHeader({ thread: th, listSearch, headingId, badge }: ThreadHeaderProps) {
   const kind = threadKind(th);
+  const mode = useInboxMode();
   return (
     <header className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule pb-3">
       <Link
-        to="/admin/inbox"
+        to={inboxBase(mode)}
         search={listSearch}
         className="inline-flex min-h-11 items-center gap-1 rounded-md px-1.5 text-sm font-semibold text-lapis shell:hidden"
       >
@@ -41,7 +43,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge }: Threa
           <span className="text-xs font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}
         {badge && <SubscriptionChip badge={badge} />}
-        {th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
+        {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         <span>{timesInText()}</span>
       </span>
     </header>

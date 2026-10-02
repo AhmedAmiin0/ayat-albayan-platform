@@ -5,10 +5,12 @@ import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 import { fullTime, mediaKind, stampText, templateLine } from './format';
 import { MessageActions } from './MessageActions';
+import { useInboxMode } from './mode';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 
 export interface MessageBubbleProps {
-  message: MessageView;
+  /** `sent_by_teacher_name`: the teacher who sent it from the academy number; null = the academy. */
+  message: MessageView & { sent_by_teacher_name?: string | null };
   /** Its template is not approved yet, so the sender leaves it queued. */
   waitingTemplate: boolean;
   now: Date;
@@ -63,6 +65,7 @@ function Content({ message: m }: { message: MessageView }) {
 export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbleProps) {
   const outbound = m.direction === 'outbound';
   const notes = outboundNotes(m, { waitingTemplate, now });
+  const admin = useInboxMode() === 'admin';
 
   return (
     <li className={cn('flex', outbound ? 'justify-end' : 'justify-start')}>
@@ -74,6 +77,9 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         )}
       >
         <Content message={m} />
+        {m.sent_by_teacher_name && (
+          <p className="mt-1 text-2xs font-semibold text-ink-2">{t.inbox.sentBy.replace('{name}', m.sent_by_teacher_name)}</p>
+        )}
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
             {stampText(m.created_at, now)}
@@ -89,7 +95,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
             {note}
           </p>
         ))}
-        {(canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
+        {admin && (canRetry(m) || canSendByHand(m) || isHandedOff(m)) && <MessageActions message={m} />}
       </article>
     </li>
   );
