@@ -1,6 +1,7 @@
 import {
   applyLessonEvent,
   lessonStatusStyle,
+  subscriptionStatusStyle,
   type CancelRequest,
   type LessonEvent,
   type LessonView,
@@ -30,8 +31,8 @@ export interface LessonCardProps {
 
 /**
  * A lesson still ahead (or under way): students with their AB codes, the status chip, teacher,
- * length and the student's clock, each student's package line. «يحتاج تأكيد» carries the saffron
- * start edge (docs/07 §12).
+ * length and the student's clock, each student's package line, and «الباقة مش مدفوعة» when the API
+ * flags the student (R-SUB-02). «يحتاج تأكيد» carries the saffron start edge (docs/07 §12).
  * An action shows only if the API offered it and the shared state machine still allows it from
  * the status on screen (which may already be the optimistic one).
  */
@@ -84,6 +85,11 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel }: LessonC
                 </Ltr>
               </View>
               <PackageLine studentId={s.id} />
+              {s.unpaid ? (
+                <View style={{ alignItems: 'flex-start', paddingTop: 2 }}>
+                  <StatusChip {...subscriptionStatusStyle.unpaid} label={t.subscriptions.unpaidFlag} size="sm" />
+                </View>
+              ) : null}
             </View>
           ))}
         </View>

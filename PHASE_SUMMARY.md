@@ -836,11 +836,16 @@ Branch `develop`. Foundation commit `5bfeac1` (reports/money schema, storage, sh
 - **`routeTree.gen.ts`:** regenerated, adding the report and money routes.
 - **Docker:** `docker build -f apps/api/Dockerfile .` succeeds. Inside the image, playwright-core launched the headless shell from `PLAYWRIGHT_BROWSERS_PATH=/ms-playwright` and printed a PDF. The test image was then removed. `docs/09-deployment.md` gains "Report PDFs (Chromium in the API image)".
 - **Worktrees:** the five merged worktrees are removed (long paths needed `rd \\?\…`) and pruned. The `phase3/*` branches are kept.
+- **«الباقة مش مدفوعة» on lessons (R-SUB-02, docs/11 §6 "Flagged lessons"), follow-up commit:**
+  - `LessonStudentView.unpaid?: boolean`. `LessonViews.map` asks `UnpaidFlags` about the students of upcoming open lessons only, and `markUnpaid` (pure, `unpaid-mark.ts`) sets the flag. `LessonsModule` imports `SubscriptionsModule`; there is no cycle.
+  - A failed lookup logs a warning and returns the lessons unflagged, so the flag never takes the schedule down.
+  - Shown on the web week-grid chip (one line), per student in the drawer, on the teacher card (named when the lesson has several students), and on mobile Today, all with `subscriptionStatusStyle.unpaid` and `subscriptions.unpaidFlag`.
+  - Checked live: `GET /lessons` on the local stack returns 200 and runs the flag lookup without a warning.
 
 ## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`)
 - **Gate:** green, **23/23 tasks**. Lint shows 0 errors and 9 complexity warnings: 6 in the new money pages (ExpenseDialog, ExpensesPage, RecordPaymentDialog, PayoutsPage, BalanceCard, SubscriptionsPage) and 3 older ones in students.
-- **Unit tests:** api 1,045 + 1 skipped (157 files; the skip is the opt-in PDF PNG writer), web 517 (104 files), @ab/shared 890 (43 files), mobile 375 (71 suites), wa-stub 5. That is **2,832 in total**, up from 2,028 after Phase 2.
-- **E2E: 28 passed.** That is 2 setup runs plus 13 tests on each of the desktop and mobile (Pixel 7) projects: login 7, journey 2 (report → PDF ready → `report_ready` queued → 2 left), journey 3 (payment → active → lesson → `renewal_due` task and message), journeys 4, 5 and 6, and pricing.
+- **Unit tests:** api 1,051 + 1 skipped (159 files; the skip is the opt-in PDF PNG writer), web 521 (105 files), @ab/shared 890 (43 files), mobile 376 (71 suites), wa-stub 5. That is **2,843 in total**, up from 2,028 after Phase 2.
+- **E2E: 28 passed** (both runs, before and after the unpaid flag). That is 2 setup runs plus 13 tests on each of the desktop and mobile (Pixel 7) projects: login 7, journey 2 (report → PDF ready → `report_ready` queued → 2 left), journey 3 (payment → active → lesson → `renewal_due` task and message), journeys 4, 5 and 6, and pricing.
 
 ## Residual TODOs and questions for the owner
 - **Owner questions:**
@@ -858,12 +863,12 @@ Branch `develop`. Foundation commit `5bfeac1` (reports/money schema, storage, sh
   - R-MSG-01: the variables of the `report_ready` and `renewal_due` templates are a guess. There is no template for an unpaid package, so it raises a task only.
   - R-RPT-01: the funnel counts each lead's current status. A stage-reached funnel needs a lead status log.
 - **Not wired yet:**
-  - The «الباقة مش مدفوعة» flag on future lessons (`UnpaidFlags` is exported; it needs `unpaid` on `LessonView.students[]` and a chip on the schedule, the teacher card and mobile Today).
-  - `GET /lessons/day` has no balance, so mobile Today reads each student's balance (cached 5 min).
+  - `GET /lessons/day` has no balance, so mobile Today reads each student's balance (cached 5 min). The teacher card on the web has no package line yet.
+  - There is no e2e for the unpaid flag; it needs a seeded package used up and unpaid.
 - **Cleanup:**
   - Lift the dashboard response types from `apps/api/.../dashboard.types.ts` into `@ab/shared`, and delete the web copy.
   - Converge the dashboard's pending-reports query with the reports module's R11.
-  - `exports.controller` sets `Access-Control-Expose-Headers` per response; move it to `enableCors({ exposedHeaders })`.
+  - `exports.controller` sets `Access-Control-Expose-Headers` per response. It works; move it to `enableCors({ exposedHeaders })` when another route needs it.
   - Split the 6 new complexity warnings.
 - **Ponytail:**
   - R11 scans the teacher's whole history. Add a lookback window if migrated history floods it.

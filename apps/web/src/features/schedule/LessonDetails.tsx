@@ -1,4 +1,4 @@
-import { lessonStatusStyle, lessonWhenText, type LessonView } from '@ab/shared';
+import { lessonStatusStyle, lessonWhenText, subscriptionStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
@@ -50,6 +50,7 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
             <span key={s.id} className="me-3 inline-flex items-baseline gap-1.5">
               {s.name}
               <Ltr className="text-xs text-ink-3">{s.code}</Ltr>
+              {s.unpaid && <StatusChip {...subscriptionStatusStyle.unpaid} label={t.subscriptions.unpaidFlag} size="sm" />}
             </span>
           ))}
         </Row>

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { SchedulingModule } from '../scheduling/scheduling.module';
+import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { TeachersModule } from '../teachers/teachers.module';
 import { LessonAccess } from './lesson-access';
 import { LessonActionsController } from './lesson-actions.controller';
@@ -28,7 +29,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
  * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm).
  */
 @Module({
-  imports: [SchedulingModule, TeachersModule],
+  imports: [SchedulingModule, SubscriptionsModule, TeachersModule],
   controllers: [
     LessonsController,
     LessonActionsController,

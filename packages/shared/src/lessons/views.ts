@@ -15,6 +15,11 @@ export interface LessonStudentView {
   chargeable: boolean;
   /** Lesson number for this student (v_lesson_sequence), null until the lesson is completed. */
   seq: number | null;
+  /**
+   * R-SUB-02 «الباقة مش مدفوعة»: true on a future open lesson when the student's newest package is
+   * unpaid with nothing left (setting flag_future_lessons_when_unpaid). Absent otherwise.
+   */
+  unpaid?: boolean;
 }
 
 /** GET /lessons, /lessons/day, /teachers/me/lessons, /students/:id/lessons items. */

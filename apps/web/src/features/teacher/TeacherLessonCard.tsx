@@ -1,4 +1,4 @@
-import { clockTime, lessonStatusStyle, type LessonView } from '@ab/shared';
+import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView } from '@ab/shared';
 import { buttonVariants } from '@/components/ui/button';
 import { StatusChip } from '@/components/ui/status-chip';
 import { tzCity } from '@/components/ui/time-zone-select';
@@ -20,8 +20,8 @@ export interface TeacherLessonCardProps {
 
 /**
  * One lesson on the teacher dashboard (R-TCH-03, R-SCH-08): own time + each student's clock, the
- * status, «ادخل الحلقة», confirm / attendance for open lessons, and «اقترح ميعاد تاني» (or the
- * proposal waiting for the admin). 48px controls (docs/07 §4).
+ * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة», confirm / attendance
+ * for open lessons, and «اقترح ميعاد تاني» (or the proposal waiting for the admin). 48px controls.
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const style = lessonStatusStyle[lesson.status];
@@ -45,6 +45,15 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
           <p className="text-body font-semibold">{studentNames(lesson)}</p>
           {studentTimes(lesson, tz).map((line) => (
             <p key={line} className="text-xs text-ink-2">{line}</p>
+          ))}
+          {lesson.students.filter((s) => s.unpaid).map((s) => (
+            <StatusChip
+              key={s.id}
+              {...subscriptionStatusStyle.unpaid}
+              size="sm"
+              label={lesson.students.length > 1 ? `${s.name}: ${t.subscriptions.unpaidFlag}` : t.subscriptions.unpaidFlag}
+              className="justify-self-start"
+            />
           ))}
         </div>
         <StatusChip {...style} label={t.enums.lessonStatus[lesson.status]} className="ms-auto" />

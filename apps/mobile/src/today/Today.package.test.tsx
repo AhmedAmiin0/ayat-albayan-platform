@@ -64,3 +64,13 @@ test('above the threshold the line is ink; a student without a package has none'
   await waitFor(() => expect(colorOf(lines[0] as never)).toBe(palette.light.ink2));
   expect(screen.queryByText(/الباقة خلصت|فاضل \d/)).toBeNull();
 });
+
+test('a student the API flags as unpaid gets «الباقة مش مدفوعة» (R-SUB-02)', async () => {
+  const flagged = { ...pending, students: pending.students.map((s) => ({ ...s, unpaid: true })) };
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path.startsWith('/lessons/day')) return [flagged, muscat];
+    throw new ApiError(404);
+  });
+  await renderWithQuery(<TodayRoute />);
+  expect(await screen.findAllByText('الباقة مش مدفوعة')).toHaveLength(1);
+});

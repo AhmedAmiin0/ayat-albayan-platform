@@ -13,6 +13,7 @@ import { LessonWriter } from '../scheduling/lesson-writer';
 import { ruleRow } from '../scheduling/scheduling.fakes';
 import { ScheduleQueries } from '../scheduling/schedule.queries';
 import { AlertsQueries } from '../subscriptions/alerts.queries';
+import { UnpaidFlags } from '../subscriptions/unpaid-flags.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonsQueries } from './lessons.queries';
@@ -47,6 +48,7 @@ function mocks() {
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
+    unpaid: { studentIds: vi.fn() },
     proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
   };
 }
@@ -67,6 +69,7 @@ export async function lessonsApp() {
     .overrideProvider(LessonProposalQueries).useValue(m.proposals)
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
     .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
+    .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
@@ -88,6 +91,7 @@ export async function lessonsApp() {
     m.checker.check.mockResolvedValue([]);
     m.proposals.decide.mockResolvedValue(true);
     m.proposals.pendingLessonIds.mockResolvedValue([]);
+    m.unpaid.studentIds.mockResolvedValue(new Set());
   };
   return { ...m, app, call, reset };
 }

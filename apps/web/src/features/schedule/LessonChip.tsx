@@ -1,4 +1,4 @@
-import { clockTime, lessonStatusStyle, type LessonView, type Tone } from '@ab/shared';
+import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView, type Tone } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
@@ -15,6 +15,7 @@ const EDGE: Record<Tone, string> = {
   neutral: 'border-s-rule-strong',
 };
 const INK: Record<Tone, string> = { ok: 'text-ok', act: 'text-act', bad: 'text-danger', neutral: 'text-ink-3' };
+const unpaid = subscriptionStatusStyle.unpaid;
 
 export interface LessonChipProps {
   lesson: LessonView;
@@ -26,7 +27,8 @@ export interface LessonChipProps {
 /**
  * One lesson in the week grid (R-SCH-01, R-SCH-03): Riyadh time · student(s), the status as nuqta
  * + word (shape carries state, colour only confirms), the student's own clock when it differs, and
- * a flag for a generated lesson that clashes (R-SCH-04) or a teacher's pending proposal (R-SCH-08).
+ * a flag for a generated lesson that clashes (R-SCH-04), a student whose package is unpaid with
+ * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08).
  */
 export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipProps) {
   const style = lessonStatusStyle[lesson.status];
@@ -61,6 +63,12 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
         <span className="flex items-center gap-1 text-danger">
           <NuqtaGlyph shape="struck" />
           <span>{t.schedule.needsReview}</span>
+        </span>
+      )}
+      {lesson.students.some((s) => s.unpaid) && (
+        <span className={cn('flex items-center gap-1', INK[unpaid.tone])}>
+          <NuqtaGlyph shape={unpaid.glyph} />
+          <span>{t.subscriptions.unpaidFlag}</span>
         </span>
       )}
       {lesson.pending_proposal && (
