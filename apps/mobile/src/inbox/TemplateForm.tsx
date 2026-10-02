@@ -45,7 +45,9 @@ export function TemplateForm(props: {
     const parsed = threadTemplateSchema.safeParse({ key: template.key, params });
     if (!filled || !parsed.success) return setMissing(true);
     const { key, params: clean } = parsed.data;
-    props.onSend({ kind: 'template', key, params: clean, preview: templatePreview(template, clean) });
+    // The thread row shows what the API stores for a template row: the rendered body, no footer.
+    const preview = renderTemplateBody(template.body_ar, clean);
+    props.onSend({ kind: 'template', key, params: clean, preview });
   };
 
   return (

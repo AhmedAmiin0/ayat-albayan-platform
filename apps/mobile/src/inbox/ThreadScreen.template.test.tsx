@@ -72,7 +72,8 @@ test('params fill the preview; a missing one stops the send; then it goes out op
   await waitFor(() => expect(screen.queryByLabelText(t.inbox.composer.param.replace('{n}', '1'))).toBeNull());
   const row = screen.getByText(t.inbox.templateLine.replace('{name}', names.lesson_reminder_plain));
   expect(row).toBeTruthy();
-  expect(screen.getByText(/حلقة سهيلة النهاردة — 17:00/)).toBeTruthy();
+  // Like the API's template rows: the rendered body, the footer only in the preview.
+  expect(screen.getByText('حلقة سهيلة النهاردة — 17:00')).toBeTruthy();
   expect(screen.getByText(t.enums.messageStatus.queued)).toBeTruthy();
 });
 
