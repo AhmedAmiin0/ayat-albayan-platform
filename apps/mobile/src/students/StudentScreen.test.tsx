@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
 import { StudentScreen } from './StudentScreen';
+import { balanceOf, subscription } from '@/payments/fixtures';
 import { profile } from './test-data';
 
 const mockApiFetch = jest.fn();
@@ -30,6 +31,15 @@ const full = {
   siblings: [{ id: 's2', code: 'AB-0184', name: 'يوسف', status: 'trial' as const }],
 };
 
+/** GET /students/s1 answers the profile; the money reads 404 unless given (no package yet). */
+function serve(student: typeof full, balance?: unknown) {
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path === '/students/s1') return student;
+    if (path === '/students/s1/balance' && balance) return balance;
+    throw new ApiError(404);
+  });
+}
+
 let openURL: jest.SpyInstance;
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -39,7 +49,7 @@ beforeEach(() => {
 afterEach(() => openURL.mockRestore());
 
 test('header is name + LTR code; non-empty facts only; no teacher says so', async () => {
-  mockApiFetch.mockResolvedValue(full);
+  serve(full);
   await renderWithQuery(<StudentScreen />);
   expect(await screen.findByRole('header', { name: 'هدى' })).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students/s1');
@@ -52,7 +62,7 @@ test('header is name + LTR code; non-empty facts only; no teacher says so', asyn
 });
 
 test('meeting link, call and WhatsApp open outside the app', async () => {
-  mockApiFetch.mockResolvedValue(full);
+  serve(full);
   await renderWithQuery(<StudentScreen />);
   await fireEvent.press(await screen.findByRole('link', { name: t.students.meetingLink }));
   expect(openURL).toHaveBeenLastCalledWith('https://meet.google.com/abc-defg-hij');
@@ -64,7 +74,7 @@ test('meeting link, call and WhatsApp open outside the app', async () => {
 });
 
 test('a sibling opens its own quick view; back goes back', async () => {
-  mockApiFetch.mockResolvedValue(full);
+  serve(full);
   await renderWithQuery(<StudentScreen />);
   await fireEvent.press(await screen.findByText('يوسف'));
   expect(mockPush).toHaveBeenCalledWith('/students/s2');
@@ -86,4 +96,20 @@ test('offline with a cached profile: shown, no error (R-MOB-03)', async () => {
   await waitFor(() => expect(client.getQueryState(['students', 's1'])?.status).toBe('error'));
   expect(screen.getByRole('header', { name: 'هدى' })).toBeTruthy();
   expect(screen.queryByText(t.common.error)).toBeNull();
+});
+
+test('the balance card sits under the status: what is left and «سجّل دفعة»', async () => {
+  serve(full, balanceOf(subscription()));
+  await renderWithQuery(<StudentScreen />);
+  expect(await screen.findByText('فاضل حلقتين')).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.record }));
+  expect(mockPush).toHaveBeenCalledWith('/students/payment/s1');
+});
+
+test('no balance route answer: the quick view is unchanged', async () => {
+  serve(full);
+  await renderWithQuery(<StudentScreen />);
+  expect(await screen.findByRole('header', { name: 'هدى' })).toBeTruthy();
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
+  expect(screen.queryByText(t.subscriptions.balance)).toBeNull();
 });

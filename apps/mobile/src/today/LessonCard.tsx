@@ -16,6 +16,7 @@ import { Ltr } from '@/ui/Ltr';
 import { StatusChip } from '@/ui/StatusChip';
 import { CancelLesson } from './CancelLesson';
 import { lessonSubtitle } from './lesson-text';
+import { PackageLine } from './PackageLine';
 
 export interface LessonCardProps {
   lesson: LessonView;
@@ -29,7 +30,8 @@ export interface LessonCardProps {
 
 /**
  * A lesson still ahead (or under way): students with their AB codes, the status chip, teacher,
- * length and the student's clock. «يحتاج تأكيد» carries the saffron start edge (docs/07 §12).
+ * length and the student's clock, each student's package line. «يحتاج تأكيد» carries the saffron
+ * start edge (docs/07 §12).
  * An action shows only if the API offered it and the shared state machine still allows it from
  * the status on screen (which may already be the optimistic one).
  */
@@ -57,22 +59,31 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel }: LessonC
       <View style={{ flexDirection: 'row', alignItems: 'flex-start', gap: 8 }}>
         <View style={{ flex: 1, gap: 2 }}>
           {lesson.students.map((s) => (
-            <View key={s.id} style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
-              <AppText
-                numberOfLines={1}
-                style={{
-                  flexShrink: 1,
-                  fontFamily: type.ui[700],
-                  fontSize: type.size.base,
-                  lineHeight: type.lineHeight(type.size.base),
-                  color: color.ink,
-                }}
-              >
-                {s.name}
-              </AppText>
-              <Ltr style={{ fontFamily: type.ui[500], fontSize: type.size['2xs'], color: color.ink3 }}>
-                {s.code}
-              </Ltr>
+            <View key={s.id}>
+              <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
+                <AppText
+                  numberOfLines={1}
+                  style={{
+                    flexShrink: 1,
+                    fontFamily: type.ui[700],
+                    fontSize: type.size.base,
+                    lineHeight: type.lineHeight(type.size.base),
+                    color: color.ink,
+                  }}
+                >
+                  {s.name}
+                </AppText>
+                <Ltr
+                  style={{
+                    fontFamily: type.ui[500],
+                    fontSize: type.size['2xs'],
+                    color: color.ink3,
+                  }}
+                >
+                  {s.code}
+                </Ltr>
+              </View>
+              <PackageLine studentId={s.id} />
             </View>
           ))}
         </View>

@@ -1,0 +1,23 @@
+import { formatRunningHead, RIYADH_TZ } from '@ab/shared';
+import { t } from '@/lib/i18n';
+import { localDate } from '@/today/timeline';
+
+const DAY = 86_400_000;
+
+/**
+ * paid_at for the day picked `daysAgo` back on the Riyadh calendar (no typed dates, rule 6):
+ * today is now; an earlier day is its 12:00 in Riyadh (09:00Z, Riyadh has no DST), the same day in
+ * Cairo too. Never ahead of now, so the API's paid_at_future check cannot fire.
+ */
+export function paidAtFor(now: Date, daysAgo: number): Date {
+  if (daysAgo <= 0) return now;
+  const day = localDate(new Date(now.getTime() - daysAgo * DAY), RIYADH_TZ);
+  return new Date(`${day}T09:00:00.000Z`);
+}
+
+/** «النهارده · الخميس 1 أكتوبر 2026», «امبارح · …», then the date alone. */
+export function paidDayLabel(now: Date, daysAgo: number): string {
+  const date = formatRunningHead(paidAtFor(now, daysAgo)).gregorian;
+  const near = daysAgo <= 0 ? t.mobile.today : daysAgo === 1 ? t.payments.mobile.yesterday : null;
+  return near ? `${near} · ${date}` : date;
+}

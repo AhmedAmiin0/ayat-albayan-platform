@@ -37,7 +37,15 @@
       "expo-router",
       "expo-localization",
       "expo-font",
-      ["expo-notifications", { "defaultChannel": "default" }]
+      ["expo-notifications", { "defaultChannel": "default" }],
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "محتاجين الكاميرا عشان تصوّر إيصال التحويل وتسجّله مع الدفعة.",
+          "photosPermission": "محتاجين الصور عشان تختار صورة إيصال التحويل وتسجّلها مع الدفعة.",
+          "microphonePermission": false
+        }
+      ]
     ]
   }
 }

@@ -9,6 +9,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { BalanceCard } from './BalanceCard';
 import { GuardianCard } from './GuardianCard';
 import { SiblingsList } from './SiblingsList';
 import { StatusChanger } from './StatusChanger';
@@ -18,8 +19,9 @@ import type { StudentProfile } from './types';
 const back = () => (router.canGoBack() ? router.back() : router.replace('/students'));
 
 /**
- * Student quick view (R-MOB-02) on GET /students/:id. Only the status changes here; editing, adding
- * and merging stay on the web. TODO(R-MOB-02): «حجز حلقة تجريبية» (quick book trial) with Phase 2.
+ * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
+ * recorded from the balance card; editing, adding and merging stay on the web.
+ * TODO(R-MOB-02): «حجز حلقة تجريبية» (quick book trial) with Phase 2.
  */
 export function StudentScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -55,6 +57,7 @@ export function StudentScreen() {
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <StatusChanger student={student} />
+        <BalanceCard studentId={student.id} />
         <StudentFacts student={student} />
         <GuardianCard guardian={student.guardian} />
         <SiblingsList siblings={student.siblings} />
