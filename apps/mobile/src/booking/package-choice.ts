@@ -8,15 +8,10 @@ import { ruleFromSlot } from './slots';
 // The booking's package (R-SCH-06, R-SUB-01): the lead screen books a trial; the chat's «اشترك»
 // may book a paid package instead, which repeats weekly on the picked days (R-SCH-02 byday).
 
-/** ponytail: every quick trial is 45 minutes (the web wizard's default); add a length picker if trials vary. */
-export const TRIAL_MINUTES: Duration = 45;
+/** The form's «المده» default: «لو مش متأكد سيبها وهنحسبها 45 دقيقة». */
+export const DEFAULT_MINUTES: Duration = 45;
 
-type PackageFields = Pick<TrialDraft, 'pkg' | 'durationMin' | 'byday' | 'startsAt' | 'tz'>;
-
-/** The lesson length the slots and the rule use: a trial is always TRIAL_MINUTES. */
-export function lessonMinutes(d: Pick<TrialDraft, 'pkg' | 'durationMin'>): Duration {
-  return d.pkg === 'trial' ? TRIAL_MINUTES : d.durationMin;
-}
+type PackageFields = Pick<TrialDraft, 'pkg' | 'byday' | 'startsAt' | 'tz'>;
 
 /**
  * The rule's weekdays (0 = الأحد): the first slot's day always; a trial only that one (docs/10

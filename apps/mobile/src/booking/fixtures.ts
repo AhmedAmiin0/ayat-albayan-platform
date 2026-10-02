@@ -60,9 +60,12 @@ export function draft(patch: Partial<TrialDraft> = {}): TrialDraft {
   return {
     leadId: LEAD_ID,
     studentName: 'يوسف',
+    age: '',
+    studentGender: null,
     guardianName: 'أم يوسف',
     phone: '+971501234567',
     tz: 'Asia/Dubai',
+    source: null,
     program: 'quran',
     gender: 'female',
     teacher: maryam,

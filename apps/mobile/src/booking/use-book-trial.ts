@@ -7,7 +7,8 @@ import { apiSend } from '@/lib/api';
 import { patchCached } from '@/lib/paging';
 import { pathKey } from '@/lib/query-keys';
 import { requestId } from '@/lib/request-id';
-import { toBookingRequest, type StudentChoice, type TrialDraft } from './draft';
+import { toBookingRequest } from './booking-body';
+import type { StudentChoice, TrialDraft } from './draft';
 
 export interface BookTrialInput {
   draft: TrialDraft;

@@ -82,7 +82,7 @@ test('a teacher with no free slot this week says so', async () => {
   fake.api.slots = [slot(SUN_17, true)];
   mockApiFetch.mockImplementation(fake.fetch);
   await renderWithQuery(<BookTrialScreen />, seededClient());
-  await fireEvent.changeText(screen.getByLabelText(t.students.name), 'يوسف');
+  await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await fireEvent.press(await screen.findByText('مريم المعلمة'));
   expect(await screen.findByText(t.booking.mobile.noSlots)).toBeTruthy();

@@ -33,6 +33,7 @@ const app = {
   login: stub('login-screen'),
   '(tabs)/_layout': TabsLayout,
   '(tabs)/index': stub('today-screen'),
+  '(tabs)/schedule': stub('schedule-screen'),
   '(tabs)/inbox/_layout': TabStack,
   '(tabs)/inbox/index': stub('inbox-screen'),
   '(tabs)/students/_layout': TabStack,
@@ -59,7 +60,7 @@ test('signed out: every route lands on /login', async () => {
   expect(registerPush).not.toHaveBeenCalled();
 });
 
-test('admin: tabs in RTL order النهارده، المحادثات، الطلاب، المزيد', async () => {
+test('admin: tabs in RTL order النهارده، الجدول، المحادثات، الطلاب، المزيد', async () => {
   mockGate.initial = 'admin';
   const router = await open('/');
   expect(screen.getByText('today-screen')).toBeTruthy();
@@ -68,6 +69,7 @@ test('admin: tabs in RTL order النهارده، المحادثات، الطل�
   const tabs = screen.getAllByRole('button'); // the stub screens have none: these are the tabs
   expect(tabs.map((tab) => tab.props.accessibilityLabel)).toEqual([
     t.mobile.today,
+    t.schedule.nav,
     t.nav.conversations,
     t.nav.students,
     t.mobile.more,

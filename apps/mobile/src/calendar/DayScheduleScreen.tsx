@@ -1,65 +1,117 @@
 import type { LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { FlatList } from 'react-native';
+import { SectionList } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
-import { useDayLessons, useNow } from '@/today/use-day-lessons';
+import { Notice } from '@/today/Notice';
+import { useNow } from '@/today/use-day-lessons';
+import { useLessonAction } from '@/today/use-lesson-action';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
-import { byTeacher, headerLine } from './agenda';
-import { PeriodSwitcher } from './PeriodSwitcher';
-import { TeacherGroup } from './TeacherGroup';
-import { addDays, dayLabel, riyadhNoon, riyadhToday } from './week';
+import { headerLine } from './agenda';
+import { AgendaItemRow } from './AgendaItemRow';
+import { AgendaLessonRow } from './AgendaLessonRow';
+import { LessonRowActions } from './LessonRowActions';
+import {
+  dayCounts,
+  itemKey,
+  teacherAgendas,
+  type ScheduleView,
+  type TeacherFilter,
+} from './overview';
+import type { OverviewLesson } from './overview-types';
+import { ScheduleFilters } from './ScheduleFilters';
+import { SchedulePeriod } from './SchedulePeriod';
+import { TeacherHeader } from './TeacherHeader';
+import { useOverview } from './use-overview';
+import { riyadhToday, weekStart, weekWindow } from './week';
+
+const ALL: TeacherFilter = { program: 'all', gender: 'all' };
 
 /**
- * «الجدول» (R-SCH-01): every teacher's lessons on one Riyadh day, grouped by teacher, with the
- * agenda rows of the teacher calendar. ‹ › moves a day; the day's cache is Today's (GET
- * /lessons/day), so today opens at once. Pull to refresh; offline the saved day stays.
+ * «الجدول» (R-SCH-01, R-TCH-02): every teacher, even one with nothing booked, on one Riyadh day
+ * (lessons and free gaps by time) or the whole week (lessons by day), from GET /lessons/overview,
+ * fetched once per week. Each lesson shows تأكيد / إلغاء (optimistic, R-MOB-03) and «غيّر الميعاد»
+ * (the reschedule sheet, R-SCH-07). Filter by program and gender. `back` when it is pushed from
+ * «المزيد» rather than opened as its tab.
  */
-export function DayScheduleScreen() {
+export function DayScheduleScreen({ back = false }: { back?: boolean }) {
   const today = riyadhToday(useNow());
   const [date, setDate] = useState(today);
-  const day = useDayLessons(riyadhNoon(date));
+  const [view, setView] = useState<ScheduleView>('day');
+  const [filter, setFilter] = useState<TeacherFilter>(ALL);
   const [moving, setMoving] = useState<LessonView | null>(null);
-  const loaded = day.data !== undefined;
-  const subtitle = headerLine([t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)], day);
+  const action = useLessonAction();
+  const start = weekStart(date);
+  const overview = useOverview(weekWindow(start));
+  const data = overview.data;
+  const day = view === 'day';
+  const agendas = data ? teacherAgendas(data, { start: day ? date : start, view, filter }) : [];
+  const subtitle = headerLine(
+    [t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)],
+    overview,
+  );
+  const lessonRow = (lesson: OverviewLesson) => (
+    <AgendaLessonRow
+      key={lesson.id}
+      lesson={lesson}
+      onReschedule={setMoving}
+      actions={<LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} />}
+    />
+  );
 
   return (
     <Screen>
       <ScreenHeader
         title={t.schedule.nav}
         subtitle={subtitle}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        trailing={
+          back ? (
+            <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />
+          ) : undefined
+        }
       />
-      <PeriodSwitcher
-        label={dayLabel(date)}
-        current={date === today}
-        prevLabel={t.calendar.prevDay}
-        nextLabel={t.calendar.nextDay}
-        onPrev={() => setDate(addDays(date, -1))}
-        onNext={() => setDate(addDays(date, 1))}
-        onToday={() => setDate(today)}
-      />
-      <FlatList
+      <SchedulePeriod view={view} date={date} today={today} onDate={setDate} />
+      {action.notice ? <Notice message={action.notice} /> : null}
+      <SectionList
         style={{ flex: 1 }}
         contentContainerStyle={{ paddingBottom: 24 }}
-        data={byTeacher(day.data ?? [])}
-        keyExtractor={(group) => group.teacher.id}
-        renderItem={({ item }) => <TeacherGroup group={item} onReschedule={setMoving} />}
-        refreshing={day.isRefetching}
-        onRefresh={() => void day.refetch()}
+        // The cancel reason is typed inside the list: a tap on «إلغاء الحلقة» must land with the keyboard up.
+        keyboardShouldPersistTaps="handled"
+        automaticallyAdjustKeyboardInsets
+        // Android defaults to false: the teacher stays on top while their day scrolls.
+        stickySectionHeadersEnabled
+        ListHeaderComponent={
+          <ScheduleFilters
+            view={view}
+            filter={filter}
+            date={date}
+            days={day && data ? dayCounts(data, start, filter) : null}
+            onView={setView}
+            onFilter={setFilter}
+            onDate={setDate}
+          />
+        }
+        sections={agendas.map((agenda) => ({ key: agenda.teacher.id, agenda, data: agenda.items }))}
+        keyExtractor={itemKey}
+        renderSectionHeader={({ section }) => (
+          <TeacherHeader agenda={section.agenda} showWindows={day} />
+        )}
+        renderItem={({ item }) => <AgendaItemRow item={item} lessonRow={lessonRow} />}
+        refreshing={overview.isRefetching}
+        onRefresh={() => void overview.refetch()}
         ListEmptyComponent={
-          day.isPending ? (
+          overview.isPending ? (
             <Note>{t.common.loading}</Note>
-          ) : loaded ? (
-            <EmptyState title={t.calendar.emptyDay} />
+          ) : data ? (
+            <EmptyState title={t.booking.noTeachers} />
           ) : (
-            <ErrorState onRetry={() => void day.refetch()} />
+            <ErrorState onRetry={() => void overview.refetch()} />
           )
         }
       />

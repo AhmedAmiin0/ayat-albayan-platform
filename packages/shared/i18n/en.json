@@ -486,10 +486,10 @@
       "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice.",
       "toSubscription": "Continue to the subscription"
     },
-    "dayLocked": "The picked time's day stays on",
-    "packageDays": "{package} = {perWeek}",
     "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
-    "packageTrial": "Free trial lesson only"
+    "packageTrial": "Free trial lesson only",
+    "dayLocked": "The picked time's day stays on",
+    "packageDays": "{package} = {perWeek}"
   },
   "lessons": {
     "title": "Lessons",

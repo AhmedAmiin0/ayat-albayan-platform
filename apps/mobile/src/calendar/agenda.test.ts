@@ -2,7 +2,7 @@ import { t } from '@/lib/i18n';
 import type { AvailabilityRow } from '@/more/types';
 import { lesson } from '@/today/fixtures';
 import { ltr } from '@/ui/Ltr';
-import { agendaDays, availabilityLine, byTeacher, headerLine, teacherClock } from './agenda';
+import { agendaDays, availabilityLine, headerLine, teacherClock } from './agenda';
 
 // Winter week (Cairo back on UTC+2 since 30 Oct): Saturday 31 Oct → Friday 6 Nov 2026.
 const START = '2026-10-31';
@@ -61,21 +61,6 @@ test('past midnight the teacher clock names the teacher’s own day (verifier: S
   const late = at('late', '2026-10-30T21:30:00.000Z');
   const friday = `${t.enums.weekday['5']} 23:30`;
   expect(teacherClock(late)).toBe(t.booking.teacherClock.replace('{time}', friday).replace('{city}', 'القاهرة'));
-});
-
-test('«الجدول» groups the day by teacher, teachers by name, lessons in time order', () => {
-  const sara = { id: 't2', display_name_ar: 'سارة', tz: 'Asia/Riyadh' };
-  const groups = byTeacher([
-    lesson({ id: 's2', teacher: sara, starts_at: '2026-11-04T15:00:00.000Z' }),
-    lesson({ id: 'a1', starts_at: '2026-11-04T14:00:00.000Z' }),
-    lesson({ id: 's1', teacher: sara, starts_at: '2026-11-04T09:00:00.000Z' }),
-    lesson({ id: 'gone', teacher: sara, status: 'excused' }),
-  ]);
-  expect(groups.map((g) => [g.teacher.display_name_ar, g.lessons.map((l) => l.id)])).toEqual([
-    ['أبرار', ['a1']],
-    ['سارة', ['s1', 's2']],
-  ]);
-  expect(byTeacher([])).toEqual([]);
 });
 
 /** `range` is «HH:MM-HH:MM», Cairo wall clock. */

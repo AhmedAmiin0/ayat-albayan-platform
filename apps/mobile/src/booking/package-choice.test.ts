@@ -1,16 +1,11 @@
 import { bookingRequestSchema } from '@ab/shared';
-import { toBookingRequest } from './draft';
+import { toBookingRequest } from './booking-body';
 import { booked, draft, maryam, SUN_17 } from './fixtures';
 import { t } from '@/lib/i18n';
-import { effectiveByday, lessonMinutes, packageDaysNote, subscriptionHref } from './package-choice';
+import { effectiveByday, packageDaysNote, subscriptionHref } from './package-choice';
 
 const REQ = '99999999-9999-4999-8999-999999999999';
 const paid = draft({ pkg: '12', durationMin: 60, byday: [4, 2], tz: 'Asia/Riyadh' });
-
-test('a trial is always 45 minutes; a paid package takes its picked length', () => {
-  expect(lessonMinutes({ pkg: 'trial', durationMin: 60 })).toBe(45);
-  expect(lessonMinutes({ pkg: '12', durationMin: 60 })).toBe(60);
-});
 
 test('weekdays: none before a slot; a trial only its day; a package its day plus the picked ones', () => {
   expect(effectiveByday(draft({ startsAt: null }))).toEqual([]);
@@ -40,6 +35,8 @@ test('a paid package: a weekly rule on its days, its length and size, the new ch
     durationMin: 45,
     newStudent: { status: 'trial' },
   });
+  // A trial takes the form's «المده» too (30 / 45 / 60 / 90).
+  expect(toBookingRequest(draft({ durationMin: 30 }), { requestId: REQ })).toMatchObject({ durationMin: 30 });
 });
 
 test('after a paid package: on to its subscription, prefilled; a trial goes nowhere', () => {

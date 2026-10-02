@@ -1,42 +1,52 @@
 import {
   normalizePhone,
   RIYADH_TZ,
-  type BookingRequest,
+  TZ_OPTIONS,
   type BookingTeacherOption,
   type Duration,
   type Gender,
+  type LeadSource,
   type PackageSize,
   type PhoneCountry,
   type Program,
 } from '@ab/shared';
+import { qualForm } from '@/inbox/qualification/qualification-form';
 import type { Lead } from '@/inbox/types';
-import { effectiveByday, lessonMinutes, TRIAL_MINUTES } from './package-choice';
-import { ruleFromSlot } from './slots';
+import { DEFAULT_MINUTES } from './package-choice';
 
 // «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):
-// the wizard's state and its POST /booking body. Pure; the screens only edit a TrialDraft.
+// the wizard's state. Pure; the screens only edit a TrialDraft (booking-body.ts sends it).
 
-export { TRIAL_MINUTES } from './package-choice';
-
-/** What the wizard needs of the lead: a cached GET /leads row, or the chat's lead. */
-export type BookingLead = Pick<Lead, 'id' | 'name' | 'phone_e164'>;
+/** What the wizard needs of the lead: a cached GET /leads row (with its answers), or the chat's lead. */
+export type BookingLead = Pick<Lead, 'id' | 'name' | 'phone_e164'> & {
+  source?: LeadSource;
+  /** leads.qualification (jsonb): «بيانات الطالب» prefill the child (R-LEAD-03). */
+  qualification?: unknown;
+};
 
 export interface TrialDraft {
   leadId: string;
   studentName: string;
+  /** «سن الطالب» as typed; empty = not asked (optional on the form). */
+  age: string;
+  /** «النوع» of the child; not the teacher-gender preference below. */
+  studentGender: Gender | null;
   guardianName: string;
   /** Prefilled from the lead's WhatsApp number, editable (a parent may book from another one). */
   phone: string;
   /** The family's zone: the new student's, the guardian's and the rule's (docs/10 §5 route 14). */
   tz: string;
+  /** «عرفت عننا منين؟»: the guardian's source, prefilled from the lead's. */
+  source: LeadSource | null;
   program: Program;
+  /** Teacher-gender preference (R-SCH-06); null = «مش فارقة». */
   gender: Gender | null;
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant). */
   startsAt: string | null;
   /** 'trial', or a paid size (8, 12…) booked from the chat's «اشترك». */
   pkg: PackageSize;
-  /** A paid package's lesson length; a trial is always TRIAL_MINUTES (lessonMinutes). */
+  /** «المده»: the lesson length the slots and the rule use (the form's default 45). */
   durationMin: Duration;
   /** A paid package's extra weekly days; the first slot's day is always in (effectiveByday). */
   byday: number[];
@@ -60,20 +70,29 @@ export function tzForPhone(phone: string): string {
   return p.ok && p.country ? COUNTRY_TZ[p.country] : RIYADH_TZ;
 }
 
-/** The lead's number and WhatsApp name (the parent's) prefill the guardian; the child is typed. */
+const ZONES: readonly string[] = TZ_OPTIONS;
+
+/**
+ * The lead prefills the wizard: the number, the parent's name (asked, else the WhatsApp name) and
+ * whatever «بيانات الطالب» already holds (the child's name, age, gender and zone), plus the source.
+ */
 export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): TrialDraft {
+  const q = qualForm(lead.qualification);
   return {
     leadId: lead.id,
-    studentName: '',
-    guardianName: lead.name ?? '',
+    studentName: q.student_name,
+    age: q.age,
+    studentGender: q.gender || null,
+    guardianName: q.guardian_name || (lead.name ?? ''),
     phone: lead.phone_e164,
-    tz: tzForPhone(lead.phone_e164),
+    tz: ZONES.includes(q.tz) ? q.tz : tzForPhone(lead.phone_e164),
+    source: lead.source ?? null,
     program: 'quran',
     gender: null,
     teacher: null,
     startsAt: null,
     pkg,
-    durationMin: TRIAL_MINUTES,
+    durationMin: DEFAULT_MINUTES,
     byday: [],
   };
 }
@@ -86,55 +105,20 @@ export function phoneProblem(phone: string): PhoneProblem | null {
   return p.ok ? null : p.reason;
 }
 
-/** «التالي» on the first step: both names and a phone that normalizes to E.164. */
+/** «سن الطالب» is optional; typed, it is a whole number 3–99 (the form's own check). */
+export function ageValid(age: string): boolean {
+  const text = age.trim();
+  const n = Number(text);
+  return !text || (/^\d+$/.test(text) && n >= 3 && n <= 99);
+}
+
+/** «التالي» on the first step: both names, a phone that normalizes to E.164, a sane age. */
 export function contactReady(
-  d: Pick<TrialDraft, 'studentName' | 'guardianName' | 'phone'>,
+  d: Pick<TrialDraft, 'studentName' | 'guardianName' | 'phone' | 'age'>,
 ): boolean {
-  return Boolean(d.studentName.trim() && d.guardianName.trim()) && phoneProblem(d.phone) === null;
-}
-
-export interface BodyOptions {
-  /** Idempotency key, the same on every retry of this wizard (rule 8). */
-  requestId: string;
-  choice?: StudentChoice;
-}
-
-/**
- * POST /booking: a trial is one lesson, a rule on the slot's local day that ends on it (invariant
- * 4); a paid package repeats weekly from the slot on its days. The new child is active when paid.
- */
-export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingRequest | null {
-  const phone = normalizePhone(d.phone);
-  if (!d.teacher || !d.startsAt || !phone.ok) return null;
-  const rule = ruleFromSlot(d.startsAt, d.tz);
-  const base = {
-    teacherId: d.teacher.id,
-    byday: effectiveByday(d),
-    startTimeLocal: rule.startTimeLocal,
-    tz: d.tz,
-    durationMin: lessonMinutes(d),
-    startsOn: rule.startsOn,
-    package: d.pkg,
-    clientRequestId: o.requestId,
-    startsAt: d.startsAt,
-    leadId: d.leadId,
-  };
-  if (o.choice && 'existingId' in o.choice) return { ...base, studentIds: [o.choice.existingId] };
-  return {
-    ...base,
-    newStudent: {
-      name: d.studentName.trim(),
-      program: d.program,
-      tz: d.tz,
-      status: d.pkg === 'trial' ? 'trial' : 'active',
-      teacher_gender_pref: d.gender,
-    },
-    guardian: {
-      name: d.guardianName.trim(),
-      phone_e164: phone.e164,
-      tz: d.tz,
-      country: phone.country,
-    },
-    ...(o.choice ? { force: true } : {}),
-  };
+  return (
+    Boolean(d.studentName.trim() && d.guardianName.trim()) &&
+    phoneProblem(d.phone) === null &&
+    ageValid(d.age)
+  );
 }

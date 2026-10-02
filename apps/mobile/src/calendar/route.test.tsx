@@ -11,6 +11,7 @@ const stub = (label: string) => () => <Text>{label}</Text>;
 const app = {
   _layout: TabsLayout,
   index: stub('today-screen'),
+  schedule: stub('schedule-tab'),
   'inbox/_layout': TabStack,
   'inbox/index': stub('inbox-screen'),
   'students/_layout': TabStack,
@@ -34,7 +35,13 @@ test('a teacher calendar opens inside the More tab', async () => {
   expect(screen.getByRole('button', { selected: true, name: t.mobile.more })).toBeTruthy();
 });
 
-test('«الجدول» is its own screen, not a teacher id', async () => {
+test('«الجدول» is a tab of its own, after النهارده', async () => {
+  expect(await open('/schedule')).toBe('/schedule');
+  expect(screen.getByText('schedule-tab')).toBeTruthy();
+  expect(screen.getByRole('button', { selected: true, name: t.schedule.nav })).toBeTruthy();
+});
+
+test('«الجدول» under More is its own screen, not a teacher id', async () => {
   expect(await open('/more/teachers/schedule')).toBe('/more/teachers/schedule');
   expect(screen.getByText('day-schedule')).toBeTruthy();
   await open('/more/teachers/t1');

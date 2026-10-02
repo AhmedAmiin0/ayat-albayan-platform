@@ -12,7 +12,7 @@ import type { BookFailure } from './booking-errors';
 import { ConflictNotice } from './ConflictNotice';
 import type { StudentChoice, TrialDraft } from './draft';
 import { DuplicateNotice } from './DuplicateNotice';
-import { effectiveByday, lessonMinutes, packageDaysNote } from './package-choice';
+import { effectiveByday, packageDaysNote } from './package-choice';
 import { ruleFromSlot, whenText } from './slots';
 
 export interface ConfirmStepProps {
@@ -40,8 +40,7 @@ function summary(d: TrialDraft): [string, string][] {
   if (d.teacher) rows.push([t.booking.steps.teacher, d.teacher.display_name_ar]);
   if (d.pkg !== 'trial') rows.push([t.booking.steps.package, t.enums.packageSize[d.pkg]]);
   if (d.startsAt) rows.push([t.booking.steps.slot, whenText(d.startsAt, d.tz)]);
-  const minutes = lessonMinutes(d);
-  rows.push([t.booking.pickDuration, durations[String(minutes)] ?? String(minutes)]);
+  rows.push([t.booking.pickDuration, durations[String(d.durationMin)] ?? String(d.durationMin)]);
   return rows;
 }
 
