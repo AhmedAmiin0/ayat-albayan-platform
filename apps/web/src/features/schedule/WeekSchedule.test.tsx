@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { FATMA, lesson } from './lesson-fixture';
+import { overview } from './overview-fixture';
 import type { ScheduleSearch } from './search';
 import { WeekSchedule } from './WeekSchedule';
 
@@ -21,7 +22,7 @@ const MOVED = lesson({ id: 'c', status: 'rescheduled', starts_at: '2026-10-06T10
 
 function renderWeek(search: ScheduleSearch = {}) {
   apiFetch.mockImplementation((path: string) =>
-    Promise.resolve(path.startsWith('/lessons') ? [SUNDAY, MONDAY, MOVED] : []),
+    Promise.resolve(path.startsWith('/lessons/overview') ? overview([SUNDAY, MONDAY, MOVED]) : []),
   );
   const onSearch = vi.fn();
   render(
@@ -31,6 +32,9 @@ function renderWeek(search: ScheduleSearch = {}) {
   );
   return onSearch;
 }
+
+const rowNames = (grid: HTMLElement) =>
+  within(grid).getAllByRole('rowheader').map((r) => within(r).getByRole('link').textContent);
 
 describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
   beforeEach(() => {
@@ -42,13 +46,22 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
     apiFetch.mockReset();
   });
 
-  it('loads the Riyadh week in UTC and lays lessons out per teacher and day', async () => {
+  it('loads the Riyadh week in UTC and gives every teacher a row, lessons or not', async () => {
     renderWeek();
     const grid = await screen.findByRole('table', { name: t.schedule.grid });
-    expect(apiFetch).toHaveBeenCalledWith('/lessons?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
-    const rows = within(grid).getAllByRole('row');
-    expect(rows.map((r) => within(r).queryByRole('rowheader')?.textContent)).toEqual([undefined, 'أبرار', FATMA.display_name_ar]);
-    expect(within(rows[1] as HTMLElement).getByRole('button', { name: /17:00/ }).textContent).toContain(t.enums.lessonStatus.scheduled);
+    expect(apiFetch).toHaveBeenCalledWith('/lessons/overview?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
+    expect(rowNames(grid)).toEqual(['أبرار', FATMA.display_name_ar, 'نور']);
+    const abrar = within(grid).getAllByRole('row')[1] as HTMLElement;
+    expect(within(abrar).getByRole('button', { name: /17:00/ }).textContent).toContain(t.enums.lessonStatus.scheduled);
+    expect(within(abrar).getByText(t.dashboard.ofMax.replace('{n}', '4').replace('{max}', '10'))).toBeTruthy();
+    expect(within(abrar).getByText(t.schedule.freeTotal.replace('{h}', '3:15'))).toBeTruthy();
+  });
+
+  it('a whole day of time off is one «إجازة» note with the reason', async () => {
+    renderWeek();
+    const grid = await screen.findByRole('table', { name: t.schedule.grid });
+    const fatma = within(grid).getAllByRole('row')[2] as HTMLElement;
+    expect(within(fatma).getByText(`${t.schedule.dayOff} · سفر`)).toBeTruthy();
   });
 
   it('hides moved lessons until «إظهار الملغية…», counts lessons and the ones needing a confirm', async () => {
@@ -67,12 +80,20 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
     expect(onSearch).toHaveBeenCalledWith({ closed: true, week: '2026-10-10' });
     fireEvent.change(screen.getByLabelText(t.schedule.statusFilter), { target: { value: 'confirmed' } });
     expect(onSearch).toHaveBeenLastCalledWith({ closed: true, status: 'confirmed' });
+    fireEvent.change(screen.getByLabelText(t.teachers.gender), { target: { value: 'male' } });
+    expect(onSearch).toHaveBeenLastCalledWith({ closed: true, gender: 'male' });
   });
 
-  it('asks the API for one teacher when filtered', async () => {
-    renderWeek({ teacher: 't-abrar', week: '2026-10-10' });
-    await screen.findByRole('table', { name: t.schedule.grid });
-    expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/lessons\?from=2026-10-09T21.*&teacherId=t-abrar$/));
+  it('picked teachers, program and gender filter the rows on the client', async () => {
+    renderWeek({ teachers: ['t-abrar', 't-nour'], program: 'quran' });
+    const grid = await screen.findByRole('table', { name: t.schedule.grid });
+    expect(rowNames(grid)).toEqual(['أبرار']);
+    expect(apiFetch).toHaveBeenCalledWith(expect.not.stringContaining('teacherId'));
+  });
+
+  it('filters that leave no teacher say so', async () => {
+    renderWeek({ gender: 'male', program: 'quran' });
+    expect(await screen.findByRole('heading', { name: t.booking.noTeachers })).toBeTruthy();
   });
 
   it('a chip opens the lesson drawer with Riyadh and the student time', async () => {
@@ -82,15 +103,5 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
     expect(within(drawer).getByText(new RegExp(t.schedule.riyadhTime)).textContent).toContain('17:00');
     expect(within(drawer).getByRole('button', { name: t.lessons.event.confirm })).toBeTruthy();
     expect(within(drawer).getByRole('link', { name: new RegExp(t.lessons.join) }).getAttribute('href')).toBe(SUNDAY.meeting_link);
-  });
-
-  it('an empty week says so', async () => {
-    apiFetch.mockResolvedValue([]);
-    render(
-      <QueryClientProvider client={new QueryClient()}>
-        <WeekSchedule search={{}} onSearch={vi.fn()} />
-      </QueryClientProvider>,
-    );
-    expect(await screen.findByRole('heading', { name: t.schedule.empty })).toBeTruthy();
   });
 });

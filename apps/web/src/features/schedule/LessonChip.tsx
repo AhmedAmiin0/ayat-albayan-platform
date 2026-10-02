@@ -4,6 +4,7 @@ import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
+import type { BoardLesson } from './overview-types';
 import { zoneLabel } from './slots';
 import { RIYADH_TZ } from './tz';
 
@@ -18,7 +19,7 @@ const INK: Record<Tone, string> = { ok: 'text-ok', act: 'text-act', bad: 'text-d
 const unpaid = subscriptionStatusStyle.unpaid;
 
 export interface LessonChipProps {
-  lesson: LessonView;
+  lesson: BoardLesson;
   onOpen: (lesson: LessonView) => void;
   /** Hide the teacher line (the row already names the teacher). */
   hideTeacher?: boolean;
@@ -28,7 +29,7 @@ export interface LessonChipProps {
  * One lesson in the week grid (R-SCH-01, R-SCH-03): Riyadh time · student(s), the status as nuqta
  * + word (shape carries state, colour only confirms), the student's own clock when it differs, and
  * a flag for a generated lesson that clashes (R-SCH-04), a student whose package is unpaid with
- * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08).
+ * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08). A trial says «تجريبية».
  */
 export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipProps) {
   const style = lessonStatusStyle[lesson.status];
@@ -53,6 +54,9 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
       <span className={cn('flex items-center gap-1', INK[style.tone])}>
         <NuqtaGlyph shape={style.glyph} />
         <span>{t.enums.lessonStatus[lesson.status]}</span>
+        {lesson.trial && (
+          <span className="ms-auto rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.schedule.trialTag}</span>
+        )}
       </span>
       {local && (
         <span className="text-2xs text-ink-3">

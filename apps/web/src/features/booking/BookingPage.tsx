@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n';
 import { guardianQuery, type BookSearch, type GuardianRow } from './api';
 import { BookingWizard } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft';
+import { bookHint, type BookHint } from './hint';
 import { guardianCountry } from './price';
 
 export interface BookingPageProps {
@@ -49,28 +50,36 @@ export function draftFromLead(search: BookSearch): BookingDraft {
  */
 export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
   const trial = !!search.leadId && (search.pkg ?? 'trial') === 'trial';
+  const hint = bookHint(search);
   return (
     <>
       <PageHead>
         <Cartouche>{trial ? t.booking.trialTitle : t.booking.title}</Cartouche>
       </PageHead>
       {search.studentId ? (
-        <StudentBooking studentId={search.studentId} onOpenStudent={onOpenStudent} />
+        <StudentBooking studentId={search.studentId} onOpenStudent={onOpenStudent} hint={hint} />
       ) : (
         <BookingWizard
-          key={search.leadId ? `${search.leadId}-${search.pkg ?? 'trial'}` : 'bare'}
+          key={[search.leadId ?? 'bare', search.pkg ?? 'trial', hint?.teacherId, hint?.startsAt].join('-')}
           initial={search.leadId ? draftFromLead(search) : emptyDraft()}
           primary={null}
           siblings={[]}
           onOpenStudent={onOpenStudent}
+          hint={hint}
         />
       )}
     </>
   );
 }
 
+interface StudentBookingProps {
+  studentId: string;
+  onOpenStudent: (id: string) => void;
+  hint: BookHint | null;
+}
+
 /** The wizard for one student, once their profile (tz, program, siblings) and guardian are in. */
-function StudentBooking({ studentId, onOpenStudent }: { studentId: string; onOpenStudent: (id: string) => void }) {
+function StudentBooking({ studentId, onOpenStudent, hint }: StudentBookingProps) {
   const student = useQuery(studentQuery(studentId));
   const guardianId = student.data?.guardian_id;
   const guardian = useQuery({ ...guardianQuery(guardianId ?? ''), enabled: !!guardianId });
@@ -85,6 +94,7 @@ function StudentBooking({ studentId, onOpenStudent }: { studentId: string; onOpe
       primary={{ id: s.id, name: s.name, code: s.code }}
       siblings={s.siblings.filter((x) => x.id !== s.id)}
       onOpenStudent={onOpenStudent}
+      hint={hint}
     />
   );
 }

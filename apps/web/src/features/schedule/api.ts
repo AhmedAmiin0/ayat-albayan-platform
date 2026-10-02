@@ -9,6 +9,7 @@ import type {
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import type { ScheduleOverview } from './overview-types';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 
@@ -20,13 +21,16 @@ export interface Window {
   to: Date;
 }
 
-/** GET /lessons?from&to&teacherId — every status, the window is the page (≤ 31 days). */
-export const lessonsQuery = (w: Window & { teacherId?: string | undefined }) => {
+/**
+ * GET /lessons/overview?from&to (≤ 31 days): every teacher with hours, time off, load and free
+ * gaps, plus the window's lessons (every status). One request; the filters run on this payload.
+ * Under LESSONS_KEY, so every lesson write refreshes the calendar.
+ */
+export const overviewQuery = (w: Window) => {
   const params = new URLSearchParams({ from: w.from.toISOString(), to: w.to.toISOString() });
-  if (w.teacherId) params.set('teacherId', w.teacherId);
   return queryOptions({
-    queryKey: [...LESSONS_KEY, 'list', params.toString()],
-    queryFn: () => apiFetch<LessonView[]>(`/lessons?${params}`),
+    queryKey: [...LESSONS_KEY, 'overview', params.toString()],
+    queryFn: () => apiFetch<ScheduleOverview>(`/lessons/overview?${params}`),
     placeholderData: keepPreviousData,
   });
 };

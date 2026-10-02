@@ -364,7 +364,19 @@
     "needsReview": "Conflict",
     "generatedConflict": "This lesson was added automatically and has a conflict. Review it and change its time if needed:",
     "noLessons": "No lessons",
-    "hasProposal": "New time proposed"
+    "hasProposal": "New time proposed",
+    "viewLabel": "View",
+    "viewDay": "Day",
+    "viewWeek": "Week",
+    "prevDay": "Previous day",
+    "nextDay": "Next day",
+    "free": "Free {from} – {to}",
+    "freeTotal": "Free {h}",
+    "trialTag": "Trial",
+    "dayOff": "Day off",
+    "noWindows": "No available hours this day",
+    "teachersPicked": "{n} teachers",
+    "dayBoard": "Day schedule"
   },
   "booking": {
     "title": "Book lessons",

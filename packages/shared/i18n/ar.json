@@ -364,7 +364,19 @@
     "needsReview": "فيه تعارض",
     "generatedConflict": "الحلقة دي اتضافت تلقائيًا وفيها تعارض، راجعها وغيّر ميعادها لو محتاج:",
     "noLessons": "مفيش حلقات",
-    "hasProposal": "فيه اقتراح ميعاد"
+    "hasProposal": "فيه اقتراح ميعاد",
+    "viewLabel": "طريقة العرض",
+    "viewDay": "اليوم",
+    "viewWeek": "الأسبوع",
+    "prevDay": "اليوم اللي قبله",
+    "nextDay": "اليوم اللي بعده",
+    "free": "فاضي {from} – {to}",
+    "freeTotal": "فاضي {h}",
+    "trialTag": "تجريبية",
+    "dayOff": "إجازة",
+    "noWindows": "مفيش مواعيد متاحة اليوم ده",
+    "teachersPicked": "{n} معلمين",
+    "dayBoard": "جدول اليوم"
   },
   "booking": {
     "title": "حجز حلقات",

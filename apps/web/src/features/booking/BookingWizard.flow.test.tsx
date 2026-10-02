@@ -101,7 +101,7 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
       startsAt: SLOT,
     });
     const open = screen.getByRole('link', { name: t.booking.openSchedule });
-    expect(open.getAttribute('href')).toBe(`/admin/schedule?week=2026-10-03&teacher=${ABRAR.id}`);
+    expect(open.getAttribute('href')).toBe(`/admin/schedule?week=2026-10-03&teachers=${ABRAR.id}`);
   });
 
   it('«التالي» waits for a choice on each step', async () => {
