@@ -1268,3 +1268,14 @@ The verifier sent 9 findings: 1 high, 3 medium and 5 low. One of the lows was a 
 - **Unit tests:** api 1488 passed + 1 skipped (210 files) · web 649 (133 files) · mobile 509 (100 suites) · @ab/shared 1108 (56 files) · @ab/migrate 292 (50 files) · @ab/scripts 9 · wa-stub 19.
 - **e2e:** 43 passed + 3 skipped by design.
 - **Lint:** 0 errors. The gate run showed 34 warnings, one of them new: `crumbsFor` complexity 11. Pulling `reportCrumbs` out fixed it, and web lint, typecheck and test were re-run green after that change. That leaves the 33 pre-existing warnings.
+
+# Staging: real data imported (2026-10-02)
+
+Staging (`knxfwiimjcifwckhwbim`) runs develop `8bc34c3` (Phases 0–7) and now holds the academy's real data instead of the demo seed.
+
+- `pnpm clear:demo --allow-remote-staging --apply` removed the demo rows (teachers 4, guardians 8, students 12, leads 10, job applicants 3); a second dry-run showed zeros.
+- Fresh extract: Drive zip 1,746 sheet rows; CRM (read-only) 1,235 contacts, 809 conversations, 8,327 messages, 9 templates.
+- Applied with `tools/migrate`: 10,227 records (teachers 11, guardians 182, students 190, leads 1,047, job applicants 27, schedule rules 5, lessons / reports 113, report PDFs 82, subscriptions 4, payments 2, expenses 6, messages 8,319) plus the 7 approved message templates updated to Meta's exact bodies, buttons and ids. 294 issues wait for the owner in `tools/migrate/out/review.xlsx` (RUNBOOK §4).
+- `pnpm migrate validate --target staging`: 0 failing checks. A second dry-run plans create 0, update 0, unchanged 10,227 (idempotent).
+- **Bug found and fixed on the way (8bc34c3):** postgres.js serialises a parameter by the type the server describes, so JSON text bound to a jsonb parameter was stored as a jsonb *string* (leads.qualification, lesson_report_versions.snapshot, subscriptions.price_source, import log) and template buttons failed their array check. The importer now binds objects/arrays as-is (regression test in `db/sql.test.ts`), the rows already written were unwrapped in one transaction, and validate flags any imported jsonb string.
+- Smoke on the live staging site after the import (headless, Arabic and English): dashboard, students, leads (1,047), inbox (473+ threads, thread history loads), schedule, subscriptions, settings — 0 page errors, 0 failed API calls, `dir` rtl ↔ ltr as expected.
