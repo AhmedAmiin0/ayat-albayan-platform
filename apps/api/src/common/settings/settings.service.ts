@@ -1,14 +1,25 @@
 import type { Json } from '@ab/db';
+import type { AcademySettings } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
+import { readSettings, SETTING_DEFAULTS } from './settings.values';
 
-/** Used when a row is missing or malformed; migration 073 seeds the same values. */
-export const SETTING_DEFAULTS = { late_cancel_hours: null, booking_horizon_weeks: 5 } as const;
+export { SETTING_DEFAULTS } from './settings.values';
 
-/** Academy settings (`settings` table, written by the service role). R-SCH-02, R-SCH-07. */
+/**
+ * Academy settings (`settings` table, written by the service role). R-SCH-02, R-SCH-07 and the
+ * Phase 3 keys (R-SUB-02, R-REP-02, R-RPT-02, R-PAY-02): see migration 123 and docs/11 §2.
+ */
 @Injectable()
 export class SettingsService {
   constructor(@Inject(DB) private readonly db: Db) {}
+
+  /** Every setting in one query, defaults filled in for missing or malformed rows. */
+  async all(): Promise<AcademySettings> {
+    const { data, error } = await this.db.from('settings').select('key, value');
+    if (error) throw new Error(`settings read failed: ${error.message}`);
+    return readSettings(data);
+  }
 
   /** null = policy OFF: a student's late cancellation never consumes a lesson (the default). */
   async lateCancelHours(): Promise<number | null> {
@@ -28,8 +39,8 @@ export class SettingsService {
    * PATCH /settings: writes the given keys, stamped with the admin. null removes the row, which
    * reads back as the default (late_cancel_hours OFF): PostgREST cannot store a JSON null.
    */
-  async write(values: Partial<Record<keyof typeof SETTING_DEFAULTS, number | null>>, actorId: string): Promise<void> {
-    for (const [key, value] of Object.entries(values)) {
+  async write(values: Partial<AcademySettings>, actorId: string): Promise<void> {
+    for (const [key, value] of Object.entries(values) as [string, Json][]) {
       const { error } =
         value === null
           ? await this.db.from('settings').delete().eq('key', key)

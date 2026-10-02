@@ -106,3 +106,4 @@ export type JobApplicantStatus = Enums<'job_applicant_status'>;
 export type ScheduleRuleStatus = Enums<'schedule_rule_status'>;
 export type Duration = (typeof DURATIONS)[number];
 export type Weekday = (typeof WEEKDAYS)[number];
+export * from './finance.js';

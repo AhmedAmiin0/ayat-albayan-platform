@@ -23,6 +23,45 @@ export type Database = {
   };
   public: {
     Tables: {
+      admin_tasks: {
+        Row: {
+          created_at: string;
+          dedup_key: string;
+          done_at: string | null;
+          done_by: string | null;
+          due_at: string | null;
+          id: string;
+          kind: Database['public']['Enums']['admin_task_kind'];
+          subject_id: string;
+          subject_type: string;
+          title: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          dedup_key: string;
+          done_at?: string | null;
+          done_by?: string | null;
+          due_at?: string | null;
+          id?: string;
+          kind: Database['public']['Enums']['admin_task_kind'];
+          subject_id: string;
+          subject_type: string;
+          title?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          dedup_key?: string;
+          done_at?: string | null;
+          done_by?: string | null;
+          due_at?: string | null;
+          id?: string;
+          kind?: Database['public']['Enums']['admin_task_kind'];
+          subject_id?: string;
+          subject_type?: string;
+          title?: string | null;
+        };
+        Relationships: [];
+      };
       audit_log: {
         Row: {
           action: string;
@@ -53,6 +92,42 @@ export type Database = {
           entity?: string;
           entity_id?: string;
           id?: string;
+        };
+        Relationships: [];
+      };
+      expenses: {
+        Row: {
+          amount: number;
+          category: Database['public']['Enums']['expense_category'];
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          id: string;
+          month: string;
+          note: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          category: Database['public']['Enums']['expense_category'];
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          id?: string;
+          month: string;
+          note?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          category?: Database['public']['Enums']['expense_category'];
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          id?: string;
+          month?: string;
+          note?: string | null;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -319,6 +394,169 @@ export type Database = {
           },
         ];
       };
+      lesson_report_versions: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          report_id: string;
+          snapshot: NonNullable<Json>;
+          version: number;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          report_id: string;
+          snapshot: NonNullable<Json>;
+          version: number;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          report_id?: string;
+          snapshot?: NonNullable<Json>;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_report_versions_report_id_fkey';
+            columns: ['report_id'];
+            isOneToOne: false;
+            referencedRelation: 'lesson_reports';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      lesson_reports: {
+        Row: {
+          attendance: Database['public']['Enums']['attendance'] | null;
+          created_at: string;
+          created_by: string | null;
+          edited_at: string | null;
+          grade_commitment: Database['public']['Enums']['grade'] | null;
+          grade_engagement: Database['public']['Enums']['grade'] | null;
+          grade_memorization: Database['public']['Enums']['grade'] | null;
+          grade_overall: Database['public']['Enums']['grade'] | null;
+          grade_recitation: Database['public']['Enums']['grade'] | null;
+          grade_revision: Database['public']['Enums']['grade'] | null;
+          grade_tajweed: Database['public']['Enums']['grade'] | null;
+          homework: string | null;
+          id: string;
+          lesson_id: string;
+          new_memorization: string | null;
+          next_plan: string | null;
+          notes: string | null;
+          pdf_error: string | null;
+          pdf_path: string | null;
+          pdf_status: Database['public']['Enums']['pdf_status'] | null;
+          recited: string | null;
+          revision: string | null;
+          sent_at: string | null;
+          status: Database['public']['Enums']['report_status'];
+          student_id: string;
+          submitted_at: string | null;
+          teacher_id: string;
+          theory: string | null;
+          updated_at: string;
+          version: number;
+        };
+        Insert: {
+          attendance?: Database['public']['Enums']['attendance'] | null;
+          created_at?: string;
+          created_by?: string | null;
+          edited_at?: string | null;
+          grade_commitment?: Database['public']['Enums']['grade'] | null;
+          grade_engagement?: Database['public']['Enums']['grade'] | null;
+          grade_memorization?: Database['public']['Enums']['grade'] | null;
+          grade_overall?: Database['public']['Enums']['grade'] | null;
+          grade_recitation?: Database['public']['Enums']['grade'] | null;
+          grade_revision?: Database['public']['Enums']['grade'] | null;
+          grade_tajweed?: Database['public']['Enums']['grade'] | null;
+          homework?: string | null;
+          id?: string;
+          lesson_id: string;
+          new_memorization?: string | null;
+          next_plan?: string | null;
+          notes?: string | null;
+          pdf_error?: string | null;
+          pdf_path?: string | null;
+          pdf_status?: Database['public']['Enums']['pdf_status'] | null;
+          recited?: string | null;
+          revision?: string | null;
+          sent_at?: string | null;
+          status?: Database['public']['Enums']['report_status'];
+          student_id: string;
+          submitted_at?: string | null;
+          teacher_id: string;
+          theory?: string | null;
+          updated_at?: string;
+          version?: number;
+        };
+        Update: {
+          attendance?: Database['public']['Enums']['attendance'] | null;
+          created_at?: string;
+          created_by?: string | null;
+          edited_at?: string | null;
+          grade_commitment?: Database['public']['Enums']['grade'] | null;
+          grade_engagement?: Database['public']['Enums']['grade'] | null;
+          grade_memorization?: Database['public']['Enums']['grade'] | null;
+          grade_overall?: Database['public']['Enums']['grade'] | null;
+          grade_recitation?: Database['public']['Enums']['grade'] | null;
+          grade_revision?: Database['public']['Enums']['grade'] | null;
+          grade_tajweed?: Database['public']['Enums']['grade'] | null;
+          homework?: string | null;
+          id?: string;
+          lesson_id?: string;
+          new_memorization?: string | null;
+          next_plan?: string | null;
+          notes?: string | null;
+          pdf_error?: string | null;
+          pdf_path?: string | null;
+          pdf_status?: Database['public']['Enums']['pdf_status'] | null;
+          recited?: string | null;
+          revision?: string | null;
+          sent_at?: string | null;
+          status?: Database['public']['Enums']['report_status'];
+          student_id?: string;
+          submitted_at?: string | null;
+          teacher_id?: string;
+          theory?: string | null;
+          updated_at?: string;
+          version?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_reports_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'lesson_students';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+          {
+            foreignKeyName: 'lesson_reports_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_lesson_sequence';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+          {
+            foreignKeyName: 'lesson_reports_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_package_lessons';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+          {
+            foreignKeyName: 'lesson_reports_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       lesson_students: {
         Row: {
           attendance: Database['public']['Enums']['attendance'] | null;
@@ -540,6 +778,63 @@ export type Database = {
           },
         ];
       };
+      payments: {
+        Row: {
+          amount: number;
+          created_at: string;
+          currency: string;
+          id: string;
+          method: Database['public']['Enums']['payment_method'];
+          note: string | null;
+          paid_at: string;
+          receipt_path: string | null;
+          recorded_by: string | null;
+          subscription_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          currency: string;
+          id?: string;
+          method: Database['public']['Enums']['payment_method'];
+          note?: string | null;
+          paid_at: string;
+          receipt_path?: string | null;
+          recorded_by?: string | null;
+          subscription_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          method?: Database['public']['Enums']['payment_method'];
+          note?: string | null;
+          paid_at?: string;
+          receipt_path?: string | null;
+          recorded_by?: string | null;
+          subscription_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'payments_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'payments_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_subscription_balance';
+            referencedColumns: ['subscription_id'];
+          },
+        ];
+      };
       profiles: {
         Row: {
           created_at: string;
@@ -575,6 +870,44 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      report_attachments: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          mime: string;
+          report_id: string;
+          size: number;
+          storage_path: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          mime: string;
+          report_id: string;
+          size: number;
+          storage_path: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          mime?: string;
+          report_id?: string;
+          size?: number;
+          storage_path?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'report_attachments_report_id_fkey';
+            columns: ['report_id'];
+            isOneToOne: false;
+            referencedRelation: 'lesson_reports';
+            referencedColumns: ['id'];
+          },
+        ];
       };
       schedule_rule_students: {
         Row: {
@@ -827,6 +1160,74 @@ export type Database = {
           },
         ];
       };
+      subscriptions: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          duration: number;
+          fx_date: string | null;
+          fx_rate: number | null;
+          id: string;
+          lessons_total: number;
+          notes: string | null;
+          package: Database['public']['Enums']['package_size'] | null;
+          price: number;
+          price_source: NonNullable<Json>;
+          renews_on: string | null;
+          starts_on: string;
+          status: Database['public']['Enums']['subscription_status'];
+          student_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          duration: number;
+          fx_date?: string | null;
+          fx_rate?: number | null;
+          id?: string;
+          lessons_total: number;
+          notes?: string | null;
+          package?: Database['public']['Enums']['package_size'] | null;
+          price: number;
+          price_source: NonNullable<Json>;
+          renews_on?: string | null;
+          starts_on: string;
+          status?: Database['public']['Enums']['subscription_status'];
+          student_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          duration?: number;
+          fx_date?: string | null;
+          fx_rate?: number | null;
+          id?: string;
+          lessons_total?: number;
+          notes?: string | null;
+          package?: Database['public']['Enums']['package_size'] | null;
+          price?: number;
+          price_source?: NonNullable<Json>;
+          renews_on?: string | null;
+          starts_on?: string;
+          status?: Database['public']['Enums']['subscription_status'];
+          student_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscriptions_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       teacher_availability: {
         Row: {
           created_at: string;
@@ -864,6 +1265,68 @@ export type Database = {
         Relationships: [
           {
             foreignKeyName: 'teacher_availability_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      teacher_payouts: {
+        Row: {
+          amount: number;
+          approved_at: string | null;
+          approved_by: string | null;
+          breakdown: NonNullable<Json>;
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          id: string;
+          lessons_count: number;
+          month: string;
+          paid_at: string | null;
+          paid_by: string | null;
+          status: Database['public']['Enums']['payout_status'];
+          teacher_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          approved_at?: string | null;
+          approved_by?: string | null;
+          breakdown?: NonNullable<Json>;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          id?: string;
+          lessons_count: number;
+          month: string;
+          paid_at?: string | null;
+          paid_by?: string | null;
+          status?: Database['public']['Enums']['payout_status'];
+          teacher_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          approved_at?: string | null;
+          approved_by?: string | null;
+          breakdown?: NonNullable<Json>;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          id?: string;
+          lessons_count?: number;
+          month?: string;
+          paid_at?: string | null;
+          paid_by?: string | null;
+          status?: Database['public']['Enums']['payout_status'];
+          teacher_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_payouts_teacher_id_fkey';
             columns: ['teacher_id'];
             isOneToOne: false;
             referencedRelation: 'teachers';
@@ -1015,6 +1478,51 @@ export type Database = {
           },
         ];
       };
+      v_package_lessons: {
+        Row: {
+          lesson_id: string | null;
+          n: number | null;
+          starts_at: string | null;
+          student_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_students_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_students_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      v_subscription_balance: {
+        Row: {
+          ended_at: string | null;
+          is_last: boolean | null;
+          lessons_total: number | null;
+          lessons_used: number | null;
+          projected_end_at: string | null;
+          remaining: number | null;
+          student_id: string | null;
+          subscription_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'subscriptions_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Functions: {
       apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
@@ -1056,16 +1564,23 @@ export type Database = {
       };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
+      is_my_child_report: { Args: { p_report: string }; Returns: boolean };
+      is_my_child_report_pdf: { Args: { p_name: string }; Returns: boolean };
       is_my_lesson: { Args: { p_lesson: string }; Returns: boolean };
+      is_my_report: { Args: { p_report: string }; Returns: boolean };
+      is_my_report_pdf: { Args: { p_name: string }; Returns: boolean };
       merge_students: {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;
       };
       my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
+      report_of_path: { Args: { p_name: string }; Returns: string };
     };
     Enums: {
+      admin_task_kind: 'renewal_due' | 'subscription_unpaid';
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
+      expense_category: 'ads' | 'content' | 'tools' | 'operations' | 'other';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
       job_applicant_status: 'new' | 'reviewing' | 'interview' | 'accepted' | 'rejected';
@@ -1092,8 +1607,12 @@ export type Database = {
       message_direction: 'inbound' | 'outbound';
       message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed';
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
+      payment_method: 'bank' | 'wallet' | 'cash' | 'other';
+      payout_status: 'draft' | 'approved' | 'paid';
+      pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
       proposal_status: 'pending' | 'approved' | 'rejected';
+      report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
@@ -1213,7 +1732,9 @@ export const Constants = {
   },
   public: {
     Enums: {
+      admin_task_kind: ['renewal_due', 'subscription_unpaid'],
       attendance: ['on_time', 'late', 'excused', 'absent'],
+      expense_category: ['ads', 'content', 'tools', 'operations', 'other'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
       job_applicant_status: ['new', 'reviewing', 'interview', 'accepted', 'rejected'],
@@ -1242,8 +1763,12 @@ export const Constants = {
       message_direction: ['inbound', 'outbound'],
       message_status: ['queued', 'sent', 'delivered', 'read', 'failed'],
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
+      payment_method: ['bank', 'wallet', 'cash', 'other'],
+      payout_status: ['draft', 'approved', 'paid'],
+      pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],
       proposal_status: ['pending', 'approved', 'rejected'],
+      report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],
       student_status: ['trial', 'active', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],

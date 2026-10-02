@@ -6,13 +6,15 @@ import { AuditService } from '../audit/audit.service';
 import { CurrentUser, Roles } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { SettingsService } from './settings.service';
+import { settingsChanges } from './settings.values';
 
 /** audit_log.entity_id of the academy-wide settings (one entity, no row id of its own). */
 const SETTINGS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
 /**
  * Academy settings for admins (R-SCH-07, R-SCH-02): late-cancel hours (null = OFF, the default
- * until the owner picks a number, docs/05 q2) and the booking horizon. Changes are audited.
+ * until the owner picks a number, docs/05 q2), the booking horizon, and the Phase 3 keys
+ * (docs/11 §2). Changes are audited.
  */
 @ApiTags('settings')
 @ApiBearerAuth()
@@ -25,20 +27,15 @@ export class SettingsController {
   ) {}
 
   @Get()
-  async get(): Promise<AcademySettings> {
-    const [late, weeks] = await Promise.all([this.settings.lateCancelHours(), this.settings.bookingHorizonWeeks()]);
-    return { late_cancel_hours: late, booking_horizon_weeks: weeks };
+  get(): Promise<AcademySettings> {
+    return this.settings.all();
   }
 
   @Patch()
   async update(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AcademySettings> {
     const req = parseOrThrow(settingsUpdateSchema, body);
     const before = await this.get();
-    const values = {
-      ...(req.lateCancelHours !== undefined ? { late_cancel_hours: req.lateCancelHours } : {}),
-      ...(req.bookingHorizonWeeks !== undefined ? { booking_horizon_weeks: req.bookingHorizonWeeks } : {}),
-    };
-    await this.settings.write(values, user.id);
+    await this.settings.write(settingsChanges(req), user.id);
     const after = await this.get();
     await this.audit.record({
       actorId: user.id,

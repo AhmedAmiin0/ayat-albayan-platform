@@ -60,3 +60,20 @@ describe('SettingsService.write (PATCH /settings)', () => {
     expect(eq).toHaveBeenCalledWith('key', 'late_cancel_hours');
   });
 });
+
+describe('SettingsService.all (docs/11 §2)', () => {
+  it('reads every row in one query and fills defaults', async () => {
+    const select = vi.fn().mockResolvedValue({ data: [{ key: 'renewal_alert_remaining', value: 3 }], error: null });
+    const from = vi.fn().mockReturnValue({ select });
+    const all = await new SettingsService({ from } as unknown as Db).all();
+    expect(select).toHaveBeenCalledWith('key, value');
+    expect(all.renewal_alert_remaining).toBe(3);
+    expect(all.report_teacher_edit_hours).toBe(24);
+  });
+
+  it('throws on a DB error', async () => {
+    const select = vi.fn().mockResolvedValue({ data: null, error: { message: 'down' } });
+    const svc = new SettingsService({ from: vi.fn().mockReturnValue({ select }) } as unknown as Db);
+    await expect(svc.all()).rejects.toThrow(/down/);
+  });
+});

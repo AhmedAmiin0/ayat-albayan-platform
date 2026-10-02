@@ -112,10 +112,16 @@ export const lessonProposalRequestSchema = z.object({
 /** POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason. */
 export const proposalApproveSchema = z.object({ override: overrideSchema.optional() });
 
-/** PATCH /settings (admin). late_cancel_hours null = OFF (R-SCH-07, docs/05 q2). */
+/** PATCH /settings (admin). late_cancel_hours null = OFF (R-SCH-07, docs/05 q2). Phase 3: docs/11. */
 export const settingsUpdateSchema = z.object({
   lateCancelHours: z.int().min(1).max(168).nullable().optional(),
   bookingHorizonWeeks: z.int().min(1).max(12).optional(),
+  renewalAlertRemaining: z.int().min(0).max(10).optional(),
+  flagFutureLessonsWhenUnpaid: z.boolean().optional(),
+  reportTeacherEditHours: z.int().min(0).max(168).optional(),
+  reportingCurrency: z.string().regex(/^[A-Z]{3}$/).optional(),
+  payoutCountLate: z.boolean().optional(),
+  payoutCountNoShow: z.boolean().optional(),
 });
 
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;

@@ -6,6 +6,7 @@ import { AuditService } from '../audit/audit.service';
 import { TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
 import type { AuthUser } from '../auth/verify-token';
 import { SettingsService } from './settings.service';
+import { SETTING_DEFAULTS } from './settings.values';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -16,7 +17,7 @@ const verify: TokenVerifier = async (token) => {
   if (!user) throw new Error('bad token');
   return user;
 };
-const settings = { lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn(), write: vi.fn() };
+const settings = { all: vi.fn(), write: vi.fn() };
 const audit = { record: vi.fn() };
 
 describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH-02)', () => {
@@ -37,22 +38,23 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
   afterAll(() => app.close());
   beforeEach(() => {
     vi.resetAllMocks();
-    settings.lateCancelHours.mockResolvedValue(null);
-    settings.bookingHorizonWeeks.mockResolvedValue(5);
+    settings.all.mockResolvedValue(SETTING_DEFAULTS);
   });
 
   it('admins read them; late-cancel is OFF (null) by default; teachers get 403', async () => {
-    expect((await call('GET')).json()).toEqual({ late_cancel_hours: null, booking_horizon_weeks: 5 });
+    expect((await call('GET')).json()).toEqual(SETTING_DEFAULTS);
+    expect(SETTING_DEFAULTS.late_cancel_hours).toBeNull();
     expect((await call('GET', 'teacher')).statusCode).toBe(403);
   });
 
   it('PATCH writes only the given keys and audits before/after', async () => {
-    settings.lateCancelHours.mockResolvedValueOnce(null).mockResolvedValue(24);
+    const after = { ...SETTING_DEFAULTS, late_cancel_hours: 24 };
+    settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
     const res = await call('PATCH', 'admin', { lateCancelHours: 24 });
-    expect(res.json()).toEqual({ late_cancel_hours: 24, booking_horizon_weeks: 5 });
+    expect(res.json()).toEqual(after);
     expect(settings.write).toHaveBeenCalledWith({ late_cancel_hours: 24 }, USERS['admin']?.id);
     expect(audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({ entity: 'settings', before: { late_cancel_hours: null, booking_horizon_weeks: 5 } }),
+      expect.objectContaining({ entity: 'settings', before: SETTING_DEFAULTS, after }),
     );
   });
 
@@ -61,5 +63,16 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     expect(settings.write).toHaveBeenCalledWith({ late_cancel_hours: null }, expect.any(String));
     expect((await call('PATCH', 'admin', { bookingHorizonWeeks: 13 })).statusCode).toBe(400);
     expect((await call('PATCH', 'admin', { lateCancelHours: 0 })).statusCode).toBe(400);
+  });
+
+  it('Phase 3 keys (R-SUB-02, R-REP-02, R-RPT-02, R-PAY-02) map to their snake_case rows', async () => {
+    const body = { renewalAlertRemaining: 3, payoutCountLate: true, reportingCurrency: 'EGP' };
+    expect((await call('PATCH', 'admin', body)).statusCode).toBe(200);
+    expect(settings.write).toHaveBeenCalledWith(
+      { renewal_alert_remaining: 3, payout_count_late: true, reporting_currency: 'EGP' },
+      USERS['admin']?.id,
+    );
+    expect((await call('PATCH', 'admin', { reportingCurrency: 'sar' })).statusCode).toBe(400);
+    expect((await call('PATCH', 'admin', { reportTeacherEditHours: 169 })).statusCode).toBe(400);
   });
 });

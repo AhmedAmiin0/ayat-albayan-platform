@@ -38,13 +38,16 @@ export async function seedFxRate(): Promise<void> {
   }
 }
 
-/** Default academy settings (migration 073), which resetDb truncates with everything else. */
+/** Default academy settings (migrations 073, 123), which resetDb truncates with everything else. */
 export async function seedSettings(): Promise<void> {
   const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
   try {
     await sql`
       insert into public.settings (key, value)
-      values ('late_cancel_hours', 'null'::jsonb), ('booking_horizon_weeks', '5'::jsonb)
+      values ('late_cancel_hours', 'null'::jsonb), ('booking_horizon_weeks', '5'::jsonb),
+        ('renewal_alert_remaining', '2'::jsonb), ('flag_future_lessons_when_unpaid', 'true'::jsonb),
+        ('report_teacher_edit_hours', '24'::jsonb), ('reporting_currency', '"SAR"'::jsonb),
+        ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb)
       on conflict (key) do update set value = excluded.value`;
   } finally {
     await sql.end();

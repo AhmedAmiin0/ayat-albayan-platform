@@ -1,0 +1,36 @@
+import { describe, expect, it } from 'vitest';
+import { ATTACHMENT_MIMES, RECEIPT_MIMES } from '@ab/shared';
+import { attachmentPath, extFor, isPathOf, receiptPath, reportPdfPath } from './storage.paths';
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
+
+describe('storage paths (migration 122 policies parse these)', () => {
+  it('report PDF: {student_id}/{lesson_id}.pdf (R-REP-03)', () => {
+    expect(reportPdfPath({ studentId: 's1', lessonId: 'l1' })).toBe('s1/l1.pdf');
+  });
+
+  it('attachment and receipt: {owner}/{uuid}.{ext}, a new name per upload', () => {
+    const a = attachmentPath({ reportId: 'r1', mime: 'audio/mpeg' });
+    const [owner, file] = a.split('/');
+    expect(owner).toBe('r1');
+    expect(file?.replace(/\.mp3$/, '')).toMatch(UUID);
+    expect(attachmentPath({ reportId: 'r1', mime: 'audio/mpeg' })).not.toBe(a);
+    expect(receiptPath({ subscriptionId: 'sub', mime: 'image/jpeg' })).toMatch(/^sub\/[0-9a-f-]{36}\.jpg$/);
+  });
+
+  it('every accepted mime has a real extension', () => {
+    for (const mime of [...ATTACHMENT_MIMES, ...RECEIPT_MIMES]) expect(extFor(mime)).not.toBe('bin');
+    expect(extFor('video/mp4')).toBe('bin');
+  });
+
+  it.each([
+    ['sub/abc.jpg', 'sub', true],
+    ['other/abc.jpg', 'sub', false],
+    ['sub/', 'sub', false],
+    ['sub', 'sub', false],
+    ['sub/x/abc.jpg', 'sub', false],
+    ['../sub/abc.jpg', 'sub', false],
+  ])('isPathOf(%s, %s) → %s', (path, owner, ok) => {
+    expect(isPathOf(path, owner)).toBe(ok);
+  });
+});

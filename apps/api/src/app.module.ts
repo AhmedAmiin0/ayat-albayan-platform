@@ -2,8 +2,13 @@ import { Module } from '@nestjs/common';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { DbModule } from './common/db/db.module';
+import { LessonEventsModule } from './common/events/lesson-events';
 import { SettingsModule } from './common/settings/settings.module';
+import { StorageModule } from './common/storage/storage.service';
 import { BookingModule } from './modules/booking/booking.module';
+import { DashboardModule } from './modules/dashboard/dashboard.module';
+import { ExpensesModule } from './modules/expenses/expenses.module';
+import { ExportsModule } from './modules/exports/exports.module';
 import { FxModule } from './modules/fx/fx.module';
 import { GuardiansModule } from './modules/guardians/guardians.module';
 import { HealthController } from './modules/health/health.controller';
@@ -11,9 +16,14 @@ import { JobApplicantsModule } from './modules/job-applicants/job-applicants.mod
 import { LeadsModule } from './modules/leads/leads.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { MeModule } from './modules/me/me.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { PayoutsModule } from './modules/payouts/payouts.module';
 import { PricingModule } from './modules/pricing/pricing.module';
+import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
+import { ReportsModule } from './modules/reports/reports.module';
 import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentsModule } from './modules/students/students.module';
+import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
 
 @Module({
@@ -22,6 +32,8 @@ import { TeachersModule } from './modules/teachers/teachers.module';
     AuditModule,
     AuthModule,
     SettingsModule,
+    StorageModule,
+    LessonEventsModule,
     GuardiansModule,
     StudentsModule,
     TeachersModule,
@@ -33,6 +45,14 @@ import { TeachersModule } from './modules/teachers/teachers.module';
     SchedulingModule,
     BookingModule,
     LessonsModule,
+    ReportsModule,
+    ReportPdfModule,
+    SubscriptionsModule,
+    PaymentsModule,
+    PayoutsModule,
+    ExpensesModule,
+    DashboardModule,
+    ExportsModule,
   ],
   controllers: [HealthController],
 })

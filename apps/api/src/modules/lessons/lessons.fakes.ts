@@ -5,6 +5,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import type { LessonWriter } from '../scheduling/lesson-writer';
 import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
 import type { LessonRow } from './lesson-row';
+import { LessonEvents } from '../../common/events/lesson-events';
 import { LessonStore } from './lesson-store';
 import type { LessonsQueries } from './lessons.queries';
 
@@ -69,7 +70,7 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
       if (a) record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
     }),
   };
-  const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter);
+  const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter, new LessonEvents());
   return { store, queries, writer, record };
 }
 

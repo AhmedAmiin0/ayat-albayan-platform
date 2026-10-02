@@ -1,0 +1,144 @@
+import { z } from 'zod';
+import { EXPENSE_CATEGORIES, PAYMENT_METHODS } from '../enums/index.js';
+import {
+  CUSTOM_COUNT_MAX,
+  CUSTOM_COUNT_MIN,
+  DEFAULT_DURATION,
+  DISCOUNT_MAX,
+  PACKAGE_IDS,
+  PRICING_DURATIONS,
+} from '../pricing/catalog.js';
+import { optionalText } from '../schemas/common.js';
+import { instant, localDate } from '../schemas/scheduling.js';
+
+// Money commands (docs/11 §5–8). camelCase like every command. No client ever sends a price:
+// a subscription is priced by the API from the catalog (docs/08), the same quote as /pricing.
+
+/** `YYYY-MM` in routes and queries; stored as the month's first day (monthStart). */
+export const monthParam = z.string().regex(/^\d{4}-(0[1-9]|1[0-2])$/, 'invalid_month');
+export function monthStart(month: string): string {
+  return `${month}-01`;
+}
+
+/** ISO 4217, upper case. */
+export const currencyIso = z.string().regex(/^[A-Z]{3}$/, 'invalid_currency');
+
+/** A positive amount with at most 2 decimals (numeric(12,2)). */
+export const moneyAmount = z
+  .number()
+  .positive()
+  .max(9_999_999_999)
+  .refine((v) => Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, { message: 'too_many_decimals' });
+
+const pricingBase = {
+  duration: z.literal(PRICING_DURATIONS).default(DEFAULT_DURATION),
+  /** ISO 3166 alpha-2; omitted → the guardian's country; not a site country → USD (docs/08 §1). */
+  country: z
+    .string()
+    .regex(/^[A-Za-z]{2}$/)
+    .transform((c) => c.toUpperCase())
+    .optional(),
+  /** Percent, 0–100: the calculator's pills or its free field. */
+  discount: z.number().min(0).max(DISCOUNT_MAX).default(0),
+};
+
+/** The calculator inputs for ONE student (a family buys one subscription per child). */
+export const subscriptionPricingSchema = z.xor([
+  z.object({ ...pricingBase, tier: z.enum(PACKAGE_IDS) }),
+  z.object({ ...pricingBase, count: z.int().min(CUSTOM_COUNT_MIN).max(CUSTOM_COUNT_MAX) }),
+]);
+
+/** POST /subscriptions (R-SUB-01). */
+export const subscriptionCreateSchema = z.object({
+  studentId: z.uuid(),
+  pricing: subscriptionPricingSchema,
+  startsOn: localDate,
+  renewsOn: localDate.nullish(),
+  notes: optionalText,
+});
+
+/** PATCH /subscriptions/:id. Only what an admin may set; price and size never change. */
+export const subscriptionUpdateSchema = z.object({
+  /** true → paused; false → back to the derived status (subscriptionStatusFor). */
+  paused: z.boolean().optional(),
+  renewsOn: localDate.nullable().optional(),
+  notes: optionalText,
+});
+
+/** Payment dates may not be in the future (5 minutes of clock skew allowed). */
+const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 300_000, {
+  message: 'paid_at_future',
+});
+
+/** POST /payments (R-PAY-01). receiptPath comes from POST /payments/receipt-upload-url. */
+export const paymentCreateSchema = z.object({
+  subscriptionId: z.uuid(),
+  amount: moneyAmount,
+  currency: currencyIso,
+  method: z.enum(PAYMENT_METHODS),
+  paidAt: pastInstant,
+  receiptPath: z.string().min(1).nullish(),
+  note: optionalText,
+});
+
+/** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */
+export const paymentUpdateSchema = z.object({
+  amount: moneyAmount.optional(),
+  method: z.enum(PAYMENT_METHODS).optional(),
+  paidAt: pastInstant.optional(),
+  receiptPath: z.string().min(1).nullable().optional(),
+  note: optionalText,
+});
+
+export const RECEIPT_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'] as const;
+/** Same as the receipts bucket limit (migration 122). */
+export const RECEIPT_MAX_BYTES = 10 * 1024 * 1024;
+
+/** POST /payments/receipt-upload-url (R-PAY-01, R-MOB-02 camera). */
+export const receiptUploadSchema = z.object({
+  subscriptionId: z.uuid(),
+  mime: z.enum(RECEIPT_MIMES, { message: 'receipt_type' }),
+  size: z.int().min(1).max(RECEIPT_MAX_BYTES, { message: 'receipt_too_large' }),
+});
+
+/** POST /expenses (R-RPT-02). The owner's tracker is in EGP. */
+export const expenseCreateSchema = z.object({
+  month: monthParam,
+  category: z.enum(EXPENSE_CATEGORIES),
+  amount: moneyAmount,
+  currency: currencyIso.default('EGP'),
+  note: optionalText,
+});
+
+export const expenseUpdateSchema = z.object({
+  month: monthParam.optional(),
+  category: z.enum(EXPENSE_CATEGORIES).optional(),
+  amount: moneyAmount.optional(),
+  currency: currencyIso.optional(),
+  note: optionalText,
+});
+
+/** POST /payouts/:id/pay. Approve takes no body. */
+export const payoutPaySchema = z.object({ paidAt: pastInstant.optional() });
+
+/** `?from&to` local days (Asia/Riyadh), inclusive, at most a year (else range_too_large). */
+export const dateRangeQuery = z
+  .object({ from: localDate, to: localDate })
+  .refine((r) => r.from <= r.to, { message: 'invalid_range', path: ['to'] })
+  .refine((r) => Date.parse(r.to) - Date.parse(r.from) <= 366 * 86_400_000, {
+    message: 'range_too_large',
+    path: ['to'],
+  });
+
+export const monthQuery = z.object({ month: monthParam });
+
+export type SubscriptionPricing = z.output<typeof subscriptionPricingSchema>;
+export type SubscriptionCreate = z.output<typeof subscriptionCreateSchema>;
+export type SubscriptionUpdate = z.output<typeof subscriptionUpdateSchema>;
+export type PaymentCreate = z.output<typeof paymentCreateSchema>;
+export type PaymentUpdate = z.output<typeof paymentUpdateSchema>;
+export type ReceiptUpload = z.output<typeof receiptUploadSchema>;
+export type ExpenseCreate = z.output<typeof expenseCreateSchema>;
+export type ExpenseUpdate = z.output<typeof expenseUpdateSchema>;
+export type PayoutPay = z.output<typeof payoutPaySchema>;
+export type DateRangeQuery = z.output<typeof dateRangeQuery>;

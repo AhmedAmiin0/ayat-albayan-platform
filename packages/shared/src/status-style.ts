@@ -4,6 +4,9 @@ import type {
   JobApplicantStatus,
   LeadStatus,
   LessonStatus,
+  PayoutStatus,
+  PdfStatus,
+  ReportStatus,
   ScheduleRuleStatus,
   StudentStatus,
   SubscriptionStatus,
@@ -101,4 +104,21 @@ export const gradeStyle: Record<Grade, GradeStyle> = {
   needs_review: { tone: 'act', pips: 1 },
 };
 
-// TODO(R-SUB-02): packageProgress(used, total) → «فاضل حلقتين» etc. lands with subscriptions (Phase 3).
+// Phase 3 (R-REP-02/03, R-PAY-02). A failed PDF is the admin's to retry, hence act.
+export const reportStatusStyle: Record<ReportStatus, StatusStyle> = {
+  draft: { tone: 'neutral', glyph: 'hollow' },
+  submitted: { tone: 'ok', glyph: 'fill' },
+};
+
+export const pdfStatusStyle: Record<PdfStatus, StatusStyle> = {
+  pending: { tone: 'neutral', glyph: 'hollow' },
+  rendering: { tone: 'neutral', glyph: 'half' },
+  ready: { tone: 'ok', glyph: 'fill' },
+  failed: { tone: 'act', glyph: 'struck' },
+};
+
+export const payoutStatusStyle: Record<PayoutStatus, StatusStyle> = {
+  draft: { tone: 'neutral', glyph: 'hollow' },
+  approved: { tone: 'neutral', glyph: 'half' },
+  paid: { tone: 'ok', glyph: 'fill' },
+};

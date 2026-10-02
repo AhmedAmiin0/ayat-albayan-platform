@@ -51,10 +51,16 @@ export interface LessonProposalView {
   created_at: string;
 }
 
-/** GET /settings (admin). late_cancel_hours null = OFF. */
+/** GET /settings (admin). late_cancel_hours null = OFF. Phase 3 keys: migration 123. */
 export interface AcademySettings {
   late_cancel_hours: number | null;
   booking_horizon_weeks: number;
+  renewal_alert_remaining: number;
+  flag_future_lessons_when_unpaid: boolean;
+  report_teacher_edit_hours: number;
+  reporting_currency: string;
+  payout_count_late: boolean;
+  payout_count_no_show: boolean;
 }
 
 /** GET /teachers/me (R-TCH-03). */

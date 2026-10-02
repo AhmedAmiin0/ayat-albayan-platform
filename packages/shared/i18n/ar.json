@@ -107,7 +107,11 @@
     "leads": "المحادثات",
     "jobApplicants": "طلبات التوظيف",
     "label": "القائمة",
-    "newLeads": "{n} جديدة"
+    "newLeads": "{n} جديدة",
+    "reports": "التقارير",
+    "subscriptions": "الاشتراكات",
+    "payouts": "مستحقات المعلمين",
+    "expenses": "المصروفات"
   },
   "students": {
     "title": "الطلاب",
@@ -737,6 +741,273 @@
       "fallback": "مفيش سعر صرف متاح دلوقتي، الحساب على سعر ربط الريال بالدولار (3.75)"
     }
   },
+  "reports": {
+    "title": "تقارير الحلقات",
+    "formTitle": "تقرير الحلقة",
+    "open": "اكتب التقرير",
+    "edit": "تعديل التقرير",
+    "view": "عرض التقرير",
+    "identity": "بيانات الحلقة",
+    "readOnlyHint": "البيانات دي بتتملى لوحدها من الحلقة",
+    "student": "اسم الطالب / الطالبة",
+    "teacher": "اسم المعلمة",
+    "date": "تاريخ الحلقة",
+    "lessonNo": "رقم الحلقة",
+    "lessonNoValue": "{n} من {total}",
+    "program": "البرنامج",
+    "link": "رابط الاجتماع",
+    "done": "اللي اتعمل في الحلقة",
+    "attendance": "الحضور",
+    "recited": "التسميع (المُسمَّع)",
+    "newMemorization": "الحفظ الجديد",
+    "revision": "المراجعة",
+    "theory": "الدرس النظري / أحكام التجويد",
+    "rubricTitle": "تقييم البنود",
+    "rubric": {
+      "recitation": "التلاوة والنطق",
+      "memorization": "الحفظ الجديد",
+      "revision": "المراجعة",
+      "tajweed": "التجويد",
+      "engagement": "الاستيعاب والتفاعل",
+      "commitment": "الالتزام والحضور"
+    },
+    "overall": "التقدير العام للحلقة",
+    "notes": "ملاحظات المعلمة",
+    "homework": "الواجب المطلوب قبل الحلقة القادمة",
+    "nextPlan": "خطة الحلقة القادمة",
+    "attachments": "المرفقات (اختياري)",
+    "attach": "إرفاق ملف",
+    "removeAttachment": "شيل الملف",
+    "attachmentHint": "صورة أو PDF أو تسجيل صوتي، لحد 25 ميجا",
+    "saveDraft": "حفظ كمسودة",
+    "autosaving": "بيتحفظ…",
+    "draftSaved": "المسودة اتحفظت {time}",
+    "submit": "إرسال التقرير",
+    "resubmit": "حفظ التعديل",
+    "submitted": "التقرير اتبعت",
+    "editUntil": "تقدر تعدّل التقرير لحد {when}",
+    "editClosed": "مدة التعديل خلصت، كلّم الإدارة لو محتاج تعديل",
+    "version": "النسخة {n}",
+    "editedAt": "اتعدّل {when}",
+    "history": "سجل التقارير",
+    "progress": "التقدم في التقييم",
+    "noReports": "لسه مفيش تقارير للطالب ده",
+    "pending": "تقارير لسه ما اتكتبتش",
+    "pendingCount": {
+      "one": "تقرير واحد مستني",
+      "two": "تقريرين مستنيين",
+      "few": "{n} تقارير مستنية",
+      "other": "{n} تقرير مستني"
+    },
+    "noPending": "كل التقارير اتكتبت",
+    "notSent": "تقرير ما اتبعتش",
+    "sentAt": "اتبعت على الواتساب {when}",
+    "downloadPdf": "تحميل PDF",
+    "retryPdf": "جهّز الـPDF تاني",
+    "pdfFileSuffix": "تقرير-الحلقة",
+    "error": {
+      "lesson_cancelled": "الحلقة دي اتلغت أو اتغير ميعادها، مفيش تقرير ليها",
+      "not_started": "الحلقة لسه مبدأتش، ابعت التقرير بعد ميعادها",
+      "edit_window_closed": "مدة تعديل التقرير خلصت، كلّم الإدارة",
+      "version_conflict": "حد عدّل التقرير ده قبلك، حدّث الصفحة وحاول تاني",
+      "missing_grades": "قيّم كل البنود والتقدير العام قبل الإرسال",
+      "missing_attendance": "اختار الحضور الأول",
+      "student_not_in_lesson": "الطالب ده مش في الحلقة دي",
+      "attachment_too_large": "الملف كبير، الحد الأقصى 25 ميجا",
+      "attachment_type": "نوع الملف ده مش مسموح، ارفع صورة أو PDF أو تسجيل صوتي",
+      "pdf_not_ready": "الـPDF لسه بيتجهز، جرّب كمان شوية",
+      "already_submitted": "التقرير اتبعت خلاص، عدّل فيه واضغط «حفظ التعديل»",
+      "lesson_not_found": "الحلقة دي مش موجودة",
+      "attachment_path": "الملف ما اترفعش صح، ارفعه تاني",
+      "pdf_not_failed": "الـPDF مش واقف، مفيش داعي تعيد تجهيزه"
+    }
+  },
+  "subscriptions": {
+    "title": "الاشتراكات",
+    "new": "اشتراك جديد",
+    "student": "الطالب",
+    "package": "الباقة",
+    "lessonsTotal": "عدد الحلقات",
+    "duration": "مدة الحلقة",
+    "price": "السعر",
+    "priceHint": "السعر من حاسبة الأسعار، مش بيتكتب بإيده",
+    "discount": "الخصم",
+    "startsOn": "بداية الباقة",
+    "renewsOn": "ميعاد التجديد",
+    "status": "الحالة",
+    "notes": "ملاحظات",
+    "balance": "رصيد الحلقات",
+    "usedOf": "{used} من {total} حلقة",
+    "endedAt": "الباقة خلصت يوم {date}",
+    "projectedEnd": "متوقع تخلص يوم {date}",
+    "noProjection": "الحلقات المحجوزة لسه مش كفاية نعرف منها الباقة هتخلص امتى",
+    "progress": {
+      "zero": "الباقة خلصت",
+      "left": {
+        "one": "فاضل حلقة",
+        "two": "فاضل حلقتين",
+        "few": "فاضل {n} حلقات",
+        "other": "فاضل {n} حلقة"
+      },
+      "over": {
+        "one": "حضر حلقة زيادة عن الباقة",
+        "two": "حضر حلقتين زيادة عن الباقة",
+        "few": "حضر {n} حلقات زيادة عن الباقة",
+        "other": "حضر {n} حلقة زيادة عن الباقة"
+      }
+    },
+    "unpaidFlag": "الباقة مش مدفوعة",
+    "pause": "إيقاف مؤقت",
+    "resume": "تشغيل الباقة تاني",
+    "saved": "الاشتراك اتسجل",
+    "empty": "لسه مفيش اشتراكات للطالب ده",
+    "error": {
+      "student_not_found": "الطالب ده مش موجود",
+      "subscription_not_found": "الاشتراك ده مش موجود",
+      "invalid_status": "مينفعش تغيّر حالة الاشتراك للحالة دي",
+      "has_payments": "الاشتراك ده عليه مدفوعات، مينفعش يتمسح",
+      "fx_unavailable": "سعر الصرف مش متاح دلوقتي، جرّب كمان شوية"
+    }
+  },
+  "payments": {
+    "title": "المدفوعات",
+    "record": "تسجيل دفعة",
+    "subscription": "الاشتراك",
+    "amount": "المبلغ",
+    "currency": "العملة",
+    "method": "طريقة الدفع",
+    "paidAt": "تاريخ الدفع",
+    "receipt": "صورة الإيصال",
+    "addReceipt": "إرفاق الإيصال",
+    "viewReceipt": "عرض الإيصال",
+    "uploading": "بيترفع…",
+    "note": "ملاحظة",
+    "recordedBy": "سجّلها {name}",
+    "paidOf": "اتدفع {paid} من {price}",
+    "saved": "الدفعة اتسجلت",
+    "empty": "لسه مفيش مدفوعات",
+    "error": {
+      "currency_mismatch": "عملة الدفعة لازم تبقى نفس عملة الاشتراك ({currency})",
+      "paid_at_future": "تاريخ الدفع لسه مجاش",
+      "receipt_type": "ارفع صورة أو PDF بس",
+      "receipt_too_large": "الإيصال كبير، الحد الأقصى 10 ميجا",
+      "receipt_path": "الإيصال ده مش تبع الاشتراك ده، ارفعه تاني",
+      "subscription_not_found": "الاشتراك ده مش موجود"
+    },
+    "mobile": {
+      "tab": "المدفوعات",
+      "recordFor": "دفعة لـ{student}",
+      "chooseStudent": "اختار الطالب",
+      "chooseSubscription": "اختار الباقة",
+      "takePhoto": "صوّر الإيصال",
+      "pickPhoto": "اختار من الصور",
+      "retake": "صوّر تاني",
+      "cameraTitle": "إذن الكاميرا",
+      "cameraRationale": "محتاجين الكاميرا عشان تصوّر إيصال التحويل وتسجّله مع الدفعة.",
+      "cameraDenied": "الكاميرا مقفولة للتطبيق، فعّلها من الإعدادات",
+      "openSettings": "افتح الإعدادات",
+      "uploadFailed": "الإيصال ما اترفعش، جرّب تاني"
+    }
+  },
+  "payouts": {
+    "title": "مستحقات المعلمين",
+    "mine": "مستحقاتي",
+    "month": "الشهر",
+    "teacher": "المعلم/ة",
+    "generate": "احسب مستحقات الشهر",
+    "regenerate": "إعادة الحساب",
+    "lessons": "عدد الحلقات",
+    "rate": "سعر الحلقة",
+    "amount": "المستحق",
+    "breakdown": "التفاصيل",
+    "line": "{lessons} × {rate} = {amount}",
+    "currency": "ج.م",
+    "approve": "اعتماد",
+    "markPaid": "اتدفعت",
+    "approvedAt": "اتعتمدت {date}",
+    "paidAt": "اتدفعت {date}",
+    "exportCsv": "تصدير CSV",
+    "empty": "مفيش حلقات محسوبة في الشهر ده",
+    "error": {
+      "rate_missing": "سعر حلقة الـ{duration} مش متسجل للمعلم/ة، سجّله الأول",
+      "payout_frozen": "المستحقات دي اتعتمدت، مينفعش تتحسب تاني",
+      "invalid_transition": "مينفعش تغيّر حالة المستحقات دي من حالتها الحالية",
+      "payout_not_found": "المستحقات دي مش موجودة",
+      "invalid_month": "اختار الشهر من القايمة"
+    }
+  },
+  "expenses": {
+    "title": "المصروفات",
+    "add": "إضافة مصروف",
+    "month": "الشهر",
+    "category": "البند",
+    "amount": "المبلغ",
+    "currency": "العملة",
+    "note": "ملاحظة",
+    "total": "الإجمالي",
+    "saved": "المصروف اتسجل",
+    "deleteConfirm": "تمسح المصروف ده؟",
+    "empty": "مفيش مصروفات في الشهر ده"
+  },
+  "dashboard": {
+    "title": "لوحة التحكم",
+    "range": "الفترة",
+    "from": "من",
+    "to": "إلى",
+    "funnel": "رحلة العميل",
+    "activeStudents": "طلاب مشتركين",
+    "lessonsByStatus": "الحلقات حسب الحالة",
+    "pendingReports": "تقارير مستنية",
+    "unpaidSubscriptions": "باقات مش مدفوعة",
+    "teacherLoad": "حمل المعلمين",
+    "revenue": "الإيرادات",
+    "teacherCost": "مستحقات المعلمين",
+    "expenses": "المصروفات",
+    "grossMargin": "هامش الربح",
+    "bySource": "حسب مصدر العميل",
+    "conversion": "نسبة التحويل",
+    "fxNote": "المبالغ محوّلة لـ{currency} بسعر صرف {date}",
+    "noData": "مفيش بيانات في الفترة دي",
+    "kpi": {
+      "needsConfirm": {
+        "one": "حلقة يحتاج تأكيد",
+        "two": "حلقتين يحتاج تأكيد",
+        "few": "{n} حلقات يحتاج تأكيد",
+        "other": "{n} حلقة يحتاج تأكيد"
+      },
+      "unpaid": {
+        "one": "باقة مش مدفوعة",
+        "two": "باقتين مش مدفوعين",
+        "few": "{n} باقات مش مدفوعة",
+        "other": "{n} باقة مش مدفوعة"
+      }
+    },
+    "tasks": "مهام الإدارة",
+    "noTasks": "مفيش مهام مستنياك",
+    "taskDone": "خلصت",
+    "task": {
+      "renewal_due": "باقة {student} قربت تخلص: {left}",
+      "subscription_unpaid": "باقة {student} خلصت ومش مدفوعة"
+    },
+    "error": {
+      "invalid_range": "تاريخ النهاية لازم يكون بعد البداية",
+      "range_too_large": "الفترة طويلة، اختار سنة أو أقل"
+    }
+  },
+  "exports": {
+    "title": "تصدير البيانات",
+    "students": "الطلاب",
+    "lessons": "الحلقات",
+    "payments": "المدفوعات",
+    "payouts": "مستحقات المعلمين",
+    "range": "الفترة",
+    "download": "تحميل CSV",
+    "preparing": "بيتجهز…",
+    "error": {
+      "invalid_range": "تاريخ النهاية لازم يكون بعد البداية",
+      "range_too_large": "الفترة طويلة، اختار سنة أو أقل"
+    }
+  },
   "enums": {
     "leadStatus": {
       "new": "جديد",
@@ -840,6 +1111,38 @@
       "active": "شغالة",
       "paused": "متوقفة مؤقتًا",
       "ended": "خلصت"
+    },
+    "reportStatus": {
+      "draft": "مسودة",
+      "submitted": "اتبعت"
+    },
+    "pdfStatus": {
+      "pending": "مستني",
+      "rendering": "بيتجهز",
+      "ready": "جاهز",
+      "failed": "ما اتجهزش"
+    },
+    "paymentMethod": {
+      "bank": "تحويل بنكي",
+      "wallet": "محفظة إلكترونية",
+      "cash": "كاش",
+      "other": "أخرى"
+    },
+    "payoutStatus": {
+      "draft": "مسودة",
+      "approved": "اتعتمدت",
+      "paid": "اتدفعت"
+    },
+    "expenseCategory": {
+      "ads": "إعلانات",
+      "content": "محتوى",
+      "tools": "أدوات واشتراكات",
+      "operations": "تشغيل",
+      "other": "أخرى"
+    },
+    "adminTaskKind": {
+      "renewal_due": "تجديد باقة",
+      "subscription_unpaid": "باقة مش مدفوعة"
     }
   }
 }

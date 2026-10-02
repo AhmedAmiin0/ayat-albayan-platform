@@ -8,7 +8,7 @@ import { USERS } from './users';
 
 type Sql = ReturnType<typeof postgres>;
 
-async function withSql<T>(run: (sql: Sql) => Promise<T>): Promise<T> {
+export async function withSql<T>(run: (sql: Sql) => Promise<T>): Promise<T> {
   const url = process.env['DATABASE_URL'];
   if (!url) throw new Error('DATABASE_URL missing — run `pnpm env:local`');
   const sql = postgres(url, { max: 1, onnotice: () => undefined });

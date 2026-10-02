@@ -7,5 +7,7 @@ import { PricingService } from './pricing.service';
   imports: [FxModule],
   controllers: [PricingController],
   providers: [PricingService],
+  // Subscriptions (Phase 3, R-SUB-01) price a package with the same quote as /pricing.
+  exports: [PricingService],
 })
 export class PricingModule {}
