@@ -1,4 +1,4 @@
-import { lessonWhenText, type Conflict } from '@ab/shared';
+import { clockTime, lessonWhenText, type Conflict } from '@ab/shared';
 import { useEffect, useId, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
@@ -11,13 +11,27 @@ import { RIYADH_TZ } from './tz';
 /** How many clashes are listed before «وفيه {n} تعارض كمان». */
 const SHOWN = 5;
 
-/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», Riyadh wall clock. */
-export function conflictText(c: Conflict): string {
-  return t.booking.conflict[c.kind].replace('{when}', lessonWhenText(new Date(c.startsAt), RIYADH_TZ));
+/** Clashes with the teacher's own week, read better on the teacher's clock (a DST shift shows). */
+const TEACHER_SIDE = new Set<Conflict['kind']>(['outside_availability', 'time_off']);
+
+/**
+ * «الميعاد ده مش من المواعيد المتاحة للمعلم/ة (السبت 31 أكتوبر 15:00، عند المعلم/ة 14:00 بتوقيت
+ * القاهرة)»: Riyadh wall clock, plus the teacher's own for their availability / time off.
+ */
+export function conflictText(c: Conflict, teacherTz?: string): string {
+  const at = new Date(c.startsAt);
+  let when = lessonWhenText(at, RIYADH_TZ);
+  if (teacherTz && teacherTz !== RIYADH_TZ && TEACHER_SIDE.has(c.kind)) {
+    const city = tzCity(teacherTz) ?? teacherTz;
+    when += `، ${t.booking.teacherClock.replace('{time}', clockTime(at, teacherTz)).replace('{city}', city)}`;
+  }
+  return t.booking.conflict[c.kind].replace('{when}', when);
 }
 
 export interface ConflictNoticeProps {
   conflicts: readonly Conflict[];
+  /** The teacher's zone, for their clock on availability / time-off lines. */
+  teacherTz?: string;
   /** «اختار ميعاد تاني»: back to the slot grid. */
   onChangeSlot: () => void;
   /** «احجز رغم التعارض» with the reason (R-SCH-04); stored on the clashing lessons. */
@@ -29,7 +43,7 @@ export interface ConflictNoticeProps {
  * 409 `conflict` (R-SCH-04, issue B3): every clash in Arabic, then the two ways out: pick another
  * slot, or book anyway with a reason. The reason is required (the API rejects a blank one).
  */
-export function ConflictNotice({ conflicts, onChangeSlot, onOverride, busy = false }: ConflictNoticeProps) {
+export function ConflictNotice({ conflicts, teacherTz, onChangeSlot, onOverride, busy = false }: ConflictNoticeProps) {
   const titleId = useId();
   const box = useRef<HTMLElement>(null);
   // The clash appears under a tall slot grid (drawer, phones): bring it into view.
@@ -50,16 +64,18 @@ export function ConflictNotice({ conflicts, onChangeSlot, onOverride, busy = fal
       aria-labelledby={titleId}
       className="grid gap-3 rounded-md bg-danger-soft px-4 py-3.5 shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_35%,transparent)]"
     >
-      <h3 id={titleId} role="alert" className="flex items-center gap-2 font-semibold">
-        <NuqtaGlyph shape="struck" className="text-danger" />
-        <span>{t.booking.conflictTitle}</span>
-      </h3>
+      <div role="alert">
+        <h3 id={titleId} className="flex items-center gap-2 font-semibold">
+          <NuqtaGlyph shape="struck" className="text-danger" />
+          <span>{t.booking.conflictTitle}</span>
+        </h3>
+      </div>
       <p className="text-xs text-ink-2">{t.booking.tzNote.replace('{city}', tzCity(RIYADH_TZ) ?? RIYADH_TZ)}</p>
       <ul className="grid gap-1.5 text-sm">
         {conflicts.slice(0, SHOWN).map((c, i) => (
           <li key={`${c.kind}-${c.startsAt}-${i}`} className="flex items-start gap-2">
             <NuqtaGlyph shape="hollow" className="mt-1.5 text-danger" />
-            <span>{conflictText(c)}</span>
+            <span>{conflictText(c, teacherTz)}</span>
           </li>
         ))}
       </ul>
@@ -74,7 +90,7 @@ export function ConflictNotice({ conflicts, onChangeSlot, onOverride, busy = fal
             <Input
               {...p}
               value={reason}
-              placeholder={t.lessons.reasonHint}
+              placeholder={t.booking.overridePlaceholder}
               onChange={(e) => {
                 setReason(e.target.value);
                 setMissing(false);

@@ -48,7 +48,7 @@ export function CancelForm({ lesson, onBack, onDone }: CancelFormProps) {
       }}
     >
       <h3 className="font-display text-h4 font-bold">{t.lessons.cancelTitle}</h3>
-      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} />
+      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} label={t.lessons.scopeLabelCancel} />
       <fieldset className="grid gap-1">
         <legend className="mb-1 text-xs font-semibold text-ink-2">{t.lessons.cancelBy}</legend>
         {CANCEL_BY.map((x) => (

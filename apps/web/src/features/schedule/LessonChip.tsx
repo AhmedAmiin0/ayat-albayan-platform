@@ -1,5 +1,6 @@
 import { clockTime, lessonStatusStyle, type LessonView, type Tone } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
@@ -24,7 +25,8 @@ export interface LessonChipProps {
 
 /**
  * One lesson in the week grid (R-SCH-01, R-SCH-03): Riyadh time · student(s), the status as nuqta
- * + word (shape carries state, colour only confirms), and the student's own clock when it differs.
+ * + word (shape carries state, colour only confirms), the student's own clock when it differs, and
+ * a flag for a generated lesson that clashes (R-SCH-04) or a teacher's pending proposal (R-SCH-08).
  */
 export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipProps) {
   const style = lessonStatusStyle[lesson.status];
@@ -51,7 +53,21 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
         <span>{t.enums.lessonStatus[lesson.status]}</span>
       </span>
       {local && (
-        <span className="text-2xs text-ink-3">{t.schedule.studentTime.replace('{time}', local)}</span>
+        <span className="text-2xs text-ink-3">
+          {t.schedule.studentTime.replace('{time}', t.schedule.inCity.replace('{time}', local).replace('{city}', tzCity(tz) ?? tz))}
+        </span>
+      )}
+      {lesson.conflicts.length > 0 && (
+        <span className="flex items-center gap-1 text-danger">
+          <NuqtaGlyph shape="struck" />
+          <span>{t.schedule.needsReview}</span>
+        </span>
+      )}
+      {lesson.pending_proposal && (
+        <span className="flex items-center gap-1 text-act">
+          <NuqtaGlyph shape="half" />
+          <span>{t.schedule.hasProposal}</span>
+        </span>
       )}
     </button>
   );

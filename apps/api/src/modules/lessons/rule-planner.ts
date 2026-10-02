@@ -2,6 +2,7 @@ import type { WeeklyRule } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { SettingsService } from '../../common/settings/settings.service';
 import { badRequest, conflict } from '../scheduling/errors';
+import { localDateOf } from '../scheduling/horizon';
 import { ScheduleQueries, type RuleWithLinks } from '../scheduling/schedule.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import type { LessonRow } from './lesson-row';
@@ -18,11 +19,15 @@ export class RulePlanner {
     private readonly settings: SettingsService,
   ) {}
 
-  /** 400 no_rule, 409 rule_not_active, 404 unknown teacher, 400 no_occurrences. */
+  /**
+   * 400 no_rule, 409 rule_not_active, 404 unknown teacher, 400 no_occurrences, and 400
+   * date_in_past for a start before today (it would close lessons nobody marked, issue B2).
+   */
   async plan(lesson: LessonRow, next: WeeklyRule): Promise<PlannedMove> {
     const old = lesson.rule_id ? await this.rules.rule(lesson.rule_id) : null;
     if (!old) throw badRequest('no_rule');
     if (old.status !== 'active') throw conflict('rule_not_active');
+    if (next.startsOn < localDateOf(new Date(), next.tz)) throw badRequest('date_in_past');
     const teacherLink = await this.teacherLink(old, next.teacherId);
     const weeks = await this.settings.bookingHorizonWeeks();
     const plan = planNewRule({ old, next, now: new Date(), weeks });

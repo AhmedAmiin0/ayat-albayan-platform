@@ -39,6 +39,7 @@ export class RescheduleRuleService {
       studentIds: plan.rule.student_ids,
       proposed: plan.occurrences,
       excludeIds: moved.map((m) => m.id),
+      excludeRuleIds: [old.id],
     });
     if (conflicts.length > 0 && !body.override) throw conflict('conflict', { conflicts });
     const lessons = planLessons({
@@ -60,12 +61,17 @@ export class RescheduleRuleService {
         messages: confirmationMessages(first, contacts),
       },
       audit: {
-        actorId: actor.id,
         entity: 'schedule_rules',
         entityId: old.id,
         action: 'reschedule',
         before: { status: old.status, ends_on: old.ends_on },
-        after: { new_rule_id: plan.rule.id, starts_on: body.newRule.startsOn, moved: moved.map((m) => m.id) },
+        after: {
+          new_rule_id: plan.rule.id,
+          starts_on: body.newRule.startsOn,
+          moved: moved.map((m) => m.id),
+          override_reason: conflicts.length > 0 ? (body.override?.reason ?? null) : null,
+          conflicts: conflicts.map((c) => ({ ...c })),
+        },
       },
       transition: { from: lesson.status, event: 'reschedule' },
     });

@@ -1,6 +1,7 @@
 import type { BookingResult } from '@ab/shared';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
+import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
 import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n';
 import { BookedPanel } from './BookedPanel';
@@ -23,13 +24,16 @@ export interface BookingWizardProps {
 }
 
 /**
- * Booking wizard (R-SCH-06, R-LEAD-06): student(s) → teacher → slot + weekly repeat → package →
- * review → POST /booking. One filled primary per step («التالي», then «احجز» on the review).
+ * Booking wizard (R-SCH-06, R-LEAD-06): student(s) → teacher → length + package → slot + weekly
+ * repeat → review → POST /booking. One filled primary per step («التالي», then «احجز» on the
+ * review). Every step change (also «اختار ميعاد تاني») moves focus to the new step.
  */
 export function BookingWizard({ initial, primary, siblings, onOpenStudent }: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
   const [step, setStep] = useState<StepKey>('students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
+  const section = useRef<HTMLElement>(null);
+  useFocusOnChange(section, step);
   const patch = (p: Partial<BookingDraft>) => setDraft((d) => ({ ...d, ...p }));
   const index = STEPS.indexOf(step);
   const go = (to: number) => setStep(STEPS[to] ?? step);
@@ -62,14 +66,15 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent }: Boo
     teacher: (
       <TeacherStep program={draft.program} genderPref={draft.genderPref} teacher={draft.teacher} onChange={patch} />
     ),
+    package: <PackageStep draft={draft} onChange={patch} />,
     slot: <SlotStep draft={draft} onChange={patch} />,
-    package: <PackageStep draft={draft} onChange={(pkg) => patch({ pkg })} />,
     review: (
       <ReviewStep
         draft={draft}
         onMeetingLink={(meetingLink) => patch({ meetingLink })}
         onChangeSlot={() => setStep('slot')}
         onBooked={setBooked}
+        onPatch={patch}
       />
     ),
   } satisfies Record<StepKey, unknown>;
@@ -77,7 +82,9 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent }: Boo
   return (
     <>
       <WizardSteps step={step} />
-      <section aria-label={t.booking.steps[step]}>{body[step]}</section>
+      <section ref={section} tabIndex={-1} aria-label={t.booking.steps[step]} className="outline-none">
+        {body[step]}
+      </section>
       <div className="mt-6 flex items-center justify-between gap-3 border-t border-rule pt-4">
         <Button type="button" variant="ghost" disabled={index === 0} onClick={() => go(index - 1)}>
           {t.booking.back}

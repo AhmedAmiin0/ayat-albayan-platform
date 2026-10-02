@@ -2,12 +2,15 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AvailabilityQueries } from '../teachers/availability/availability.queries';
 import type { BusyQueries } from './busy.queries';
 import { ConflictChecker } from './conflict-checker';
+import type { RuleProjectionQueries } from './rule-projection.queries';
 
 const busy = { teacherLessons: vi.fn(), studentLessons: vi.fn() };
 const availability = { listSlots: vi.fn(), listTimeOff: vi.fn() };
+const projection = { busy: vi.fn() };
 const checker = new ConflictChecker(
   busy as unknown as BusyQueries,
   availability as unknown as AvailabilityQueries,
+  projection as unknown as RuleProjectionQueries,
 );
 // Sunday 2026-10-04 17:00–17:45 Riyadh.
 const SLOT = { starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') };
@@ -21,6 +24,7 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
     busy.studentLessons.mockResolvedValue([]);
     availability.listSlots.mockResolvedValue(ALL_SUNDAY);
     availability.listTimeOff.mockResolvedValue([]);
+    projection.busy.mockResolvedValue({ teacher: [], students: [] });
   });
 
   it('nothing proposed → no queries, no conflicts', async () => {
@@ -54,5 +58,23 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
     ]);
     const res = await checker.check({ teacherId: 't', studentIds: [], proposed: [SLOT], excludeIds: [] });
     expect(res.map((c) => c.kind)).toEqual(['outside_availability', 'time_off']);
+  });
+
+  it('counts the occurrences active rules will still generate, minus the excluded rules', async () => {
+    projection.busy.mockResolvedValue({ teacher: [{ id: 'rule-2', ...SAME }], students: [] });
+    const res = await checker.check({
+      teacherId: 't',
+      studentIds: ['s1'],
+      proposed: [SLOT],
+      excludeIds: [],
+      excludeRuleIds: ['rule-1'],
+    });
+    expect(projection.busy).toHaveBeenCalledWith({
+      teacherId: 't',
+      studentIds: ['s1'],
+      span: { from: SLOT.starts_at, to: SLOT.ends_at },
+      excludeRuleIds: ['rule-1'],
+    });
+    expect(res.map((c) => [c.kind, c.lessonId])).toEqual([['teacher_busy', 'rule-2']]);
   });
 });

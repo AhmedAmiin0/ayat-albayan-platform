@@ -3,6 +3,7 @@ import type { ReactNode } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
+import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { RIYADH_TZ } from './tz';
@@ -20,7 +21,8 @@ const duration: Record<string, string> = t.enums.duration;
 
 /**
  * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in Riyadh with every
- * student's and the teacher's own clock, the teacher, the copied meeting link, and any reason.
+ * student's and the teacher's own clock, the teacher, the copied meeting link, any reason, and the
+ * clashes the daily job found when it generated the lesson (R-SCH-04).
  */
 export function LessonDetails({ lesson }: { lesson: LessonView }) {
   const at = new Date(lesson.starts_at);
@@ -62,6 +64,14 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
           )}
         </Row>
         {lesson.override_reason && <Row label={t.booking.overrideReason}>{lesson.override_reason}</Row>}
+        {lesson.conflicts.length > 0 && (
+          <Row label={t.schedule.needsReview}>
+            <span className="block text-danger">{t.schedule.generatedConflict}</span>
+            {lesson.conflicts.map((c, i) => (
+              <span key={`${c.kind}-${i}`} className="block text-xs text-ink-2">{conflictText(c, teacherTz)}</span>
+            ))}
+          </Row>
+        )}
         {lesson.cancel_reason && <Row label={t.lessons.reason}>{lesson.cancel_reason}</Row>}
       </dl>
     </>

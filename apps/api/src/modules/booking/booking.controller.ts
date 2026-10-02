@@ -2,9 +2,10 @@ import {
   bookingRequestSchema,
   type BookingResult,
   type BookingTeacherOption,
+  type Conflict,
   type SlotsResponse,
 } from '@ab/shared';
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
@@ -35,6 +36,14 @@ export class BookingController {
   @Get('slots')
   slots(@Query() query: unknown): Promise<SlotsResponse> {
     return this.slotsService.slots(parseOrThrow(slotsQuerySchema, query));
+  }
+
+  /** The same body as POST /booking; 200 { conflicts } of the whole series, nothing written. */
+  @Post('check')
+  @HttpCode(200)
+  async check(@Body() body: unknown): Promise<{ conflicts: Conflict[] }> {
+    const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
+    return { conflicts: await this.booking.check(req) };
   }
 
   /** 201 BookingResult; 409 { code: 'conflict', conflicts } unless override.reason is given. */

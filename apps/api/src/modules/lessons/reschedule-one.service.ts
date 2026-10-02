@@ -16,8 +16,9 @@ export type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser 
 /**
  * Move one occurrence (R-SCH-07, docs/10 route 8 `one`): the old row becomes `rescheduled`
  * (chargeable false) and a new row with the same rule_id + rescheduled_from_id takes the new
- * time; students copied, confirmation queued, one transaction. A clash blocks unless the admin
- * gives an override reason; a time the rule already holds → 409 slot_taken. Returns the new id.
+ * time; students copied, confirmation queued, one transaction. A clash (including an occurrence
+ * its rule will still generate there) blocks unless the admin gives an override reason. The moved
+ * row never holds its rule's slot, so moving back to the old time works. Returns the new id.
  */
 @Injectable()
 export class RescheduleOneService {
@@ -63,7 +64,6 @@ export class RescheduleOneService {
         messages: confirmationMessages(next, contacts),
       },
       audit: {
-        actorId: actor.id,
         entity: 'lessons',
         entityId: old.id,
         action: 'reschedule',

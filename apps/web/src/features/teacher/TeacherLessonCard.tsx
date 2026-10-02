@@ -6,6 +6,7 @@ import { LessonActions } from '@/features/schedule/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lessons';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { TeacherProposal } from './TeacherProposal';
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;
@@ -18,7 +19,8 @@ export interface TeacherLessonCardProps {
 
 /**
  * One lesson on the teacher dashboard (R-TCH-03, R-SCH-08): own time + each student's clock, the
- * status, «ادخل الحلقة», and confirm / attendance for open lessons. 48px controls (docs/07 §4).
+ * status, «ادخل الحلقة», confirm / attendance for open lessons, and «اقترح ميعاد تاني» (or the
+ * proposal waiting for the admin). 48px controls (docs/07 §4).
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const style = lessonStatusStyle[lesson.status];
@@ -34,7 +36,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
       <div className="flex flex-wrap items-start gap-x-4 gap-y-2">
         <div className="grid gap-0.5">
           <p className="flex items-baseline gap-2">
-            <span dir="ltr" className="font-display text-h3 font-bold tabular-nums">
+            <span dir="ltr" className="text-lg font-semibold tabular-nums">
               {clockTime(new Date(lesson.starts_at), tz)}
             </span>
             <span className="text-xs text-ink-3">{`${t.teacherDash.yourTime} (${tzCity(tz) ?? tz})`}</span>
@@ -58,6 +60,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
           <LessonActions lesson={lesson} onDone={onDone} size="lg" />
         </div>
       </div>
+      <TeacherProposal lesson={lesson} tz={tz} onDone={onDone} />
     </article>
   );
 }

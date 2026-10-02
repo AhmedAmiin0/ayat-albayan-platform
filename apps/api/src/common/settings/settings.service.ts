@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { Global, Inject, Injectable, Module } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
 
 /** Used when a row is missing or malformed; migration 073 seeds the same values. */
@@ -24,6 +24,20 @@ export class SettingsService {
       : SETTING_DEFAULTS.booking_horizon_weeks;
   }
 
+  /**
+   * PATCH /settings: writes the given keys, stamped with the admin. null removes the row, which
+   * reads back as the default (late_cancel_hours OFF): PostgREST cannot store a JSON null.
+   */
+  async write(values: Partial<Record<keyof typeof SETTING_DEFAULTS, number | null>>, actorId: string): Promise<void> {
+    for (const [key, value] of Object.entries(values)) {
+      const { error } =
+        value === null
+          ? await this.db.from('settings').delete().eq('key', key)
+          : await this.db.from('settings').upsert({ key, value, updated_by: actorId });
+      if (error) throw new Error(`settings write failed: ${error.message}`);
+    }
+  }
+
   private async read(key: string): Promise<Json | undefined> {
     const { data, error } = await this.db
       .from('settings')
@@ -34,7 +48,3 @@ export class SettingsService {
     return data?.value;
   }
 }
-
-@Global()
-@Module({ providers: [SettingsService], exports: [SettingsService] })
-export class SettingsModule {}

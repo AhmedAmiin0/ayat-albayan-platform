@@ -12,7 +12,8 @@ import { RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
 // The booking wizard's state and its mapping onto POST /booking (R-SCH-06, R-LEAD-06).
 // Pure and unit-tested; the React steps only edit a BookingDraft.
 
-export const STEPS = ['students', 'teacher', 'slot', 'package', 'review'] as const;
+/** The package (and lesson length) comes before the slot: the repeat days depend on it. */
+export const STEPS = ['students', 'teacher', 'package', 'slot', 'review'] as const;
 export type StepKey = (typeof STEPS)[number];
 
 export type PickedStudent = { id: string; name: string; code: string | null };
@@ -43,6 +44,10 @@ export interface BookingDraft {
   byday: number[];
   pkg: PackageSize;
   meetingLink: string;
+  /** Idempotency key of this wizard's POST /booking: a retry or double submit books once. */
+  requestId: string;
+  /** Lead path: create the new student although the guardian has a similar-named one (R-STU-03). */
+  force: boolean;
 }
 
 export function emptyDraft(o: { leadId?: string | null; trial?: boolean } = {}): BookingDraft {
@@ -60,6 +65,8 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean } = {}):
     byday: [],
     pkg: o.trial ? 'trial' : '8',
     meetingLink: '',
+    requestId: crypto.randomUUID(),
+    force: false,
   };
 }
 
@@ -109,6 +116,8 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
     startsOn: rule.startsOn,
     package: d.pkg,
     meetingLink: d.meetingLink.trim() || null,
+    clientRequestId: d.requestId,
+    startsAt: d.startsAt,
     ...(override ? { override: { reason: override } } : {}),
   };
   if (d.students.length > 0) {
@@ -127,5 +136,6 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
       teacher_gender_pref: d.genderPref,
     },
     guardian: { name: s.guardianName.trim(), phone_e164: s.guardianPhone, tz: d.tz, country: d.country },
+    ...(d.force ? { force: true } : {}),
   };
 }

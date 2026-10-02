@@ -20,7 +20,7 @@ const verify: TokenVerifier = async (token) => {
   if (!user) throw new Error('bad token');
   return user;
 };
-const booking = { book: vi.fn() };
+const booking = { book: vi.fn(), check: vi.fn() };
 const slots = { slots: vi.fn() };
 const teachers = { list: vi.fn() };
 const BODY = {
@@ -119,5 +119,14 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
     const base = `/booking/slots?teacherId=${IDS.teacher}&from=2026-10-04T00:00:00Z`;
     expect((await call({ url: `${base}&to=2026-10-05T00:00:00Z&durationMin=50` })).statusCode).toBe(400);
     expect((await call({ url: `${base}&to=2026-10-03T00:00:00Z&durationMin=45` })).statusCode).toBe(400);
+  });
+
+  it('POST /booking/check: the same body, 200 with the series clashes, nothing booked', async () => {
+    const clash = { kind: 'outside_availability', startsAt: '2026-11-01T14:00:00.000Z', endsAt: '2026-11-01T14:45:00.000Z' };
+    booking.check.mockResolvedValue([clash]);
+    const res = await call({ method: 'POST', url: '/booking/check', payload: BODY });
+    expect([res.statusCode, res.json()]).toEqual([200, { conflicts: [clash] }]);
+    expect(booking.book).not.toHaveBeenCalled();
+    expect((await call({ method: 'POST', url: '/booking/check', payload: BODY, token: 'teacher' })).statusCode).toBe(403);
   });
 });

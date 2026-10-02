@@ -13,6 +13,7 @@ import { LessonWriter } from '../scheduling/lesson-writer';
 import { ruleRow } from '../scheduling/scheduling.fakes';
 import { ScheduleQueries } from '../scheduling/schedule.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';
+import { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonsQueries } from './lessons.queries';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
 import { TeacherMeQueries } from './teacher-me.queries';
@@ -45,6 +46,7 @@ function mocks() {
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
+    proposals: { create: vi.fn(), get: vi.fn(), decide: vi.fn(), pendingLessonIds: vi.fn() },
   };
 }
 
@@ -61,6 +63,7 @@ export async function lessonsApp() {
     .overrideProvider(ScheduleQueries).useValue(m.rules)
     .overrideProvider(ConflictChecker).useValue(m.checker)
     .overrideProvider(TeacherMeQueries).useValue(m.me)
+    .overrideProvider(LessonProposalQueries).useValue(m.proposals)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
@@ -80,6 +83,8 @@ export async function lessonsApp() {
     m.settings.bookingHorizonWeeks.mockResolvedValue(5);
     m.rules.rule.mockResolvedValue(ruleRow());
     m.checker.check.mockResolvedValue([]);
+    m.proposals.decide.mockResolvedValue(true);
+    m.proposals.pendingLessonIds.mockResolvedValue([]);
   };
   return { ...m, app, call, reset };
 }

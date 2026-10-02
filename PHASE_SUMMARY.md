@@ -694,3 +694,105 @@ Branch `develop`. Foundation commit `8ea89a6` (scheduling schema, lesson state m
   - Pending reports on the teacher dashboard wait for Phase 3.
   - The booking-only codes `student_not_found`, `teacher_not_found` and `lead_not_found` still show the generic error; the wizard cannot normally reach them.
 - Cleanup: booking's `ConflictContext` and the engine's `ConflictChecker` both load busy lessons, availability and time-off for the same pure `findConflicts`. Merge them when either changes.
+
+## Phase 2: scheduling — verifier fixes
+
+Branch `develop`, one commit on top of `f4f91e2`: «Phase 2: verifier fixes + summary».
+- **Migrations:** `110` (schema, RLS and generation), `111` (`create_booking` v2) and `112` (`apply_lesson_changes` v2).
+- **Types:** `@ab/db` regenerated.
+- **Contract changes:** written up in `docs/10-phase2-contracts.md` §8.
+- **Local DB:** reset with `pnpm supabase db reset` before the gate. This also removed the verifier's test bookings.
+
+### Built and fixed, by requirement ID
+- **R-NFR-02 (high): teacher forgery through PostgREST.**
+  - The `lessons_teacher_update` and `lesson_students_teacher_update` policies are dropped.
+  - `anon` has no privileges on schedule_rules, schedule_rule_students, lessons, lesson_students, messages, settings or lesson_proposals. `authenticated` keeps only `SELECT` (RLS).
+  - Checked on the local DB as `authenticated` with a teacher JWT: `UPDATE lessons` and `UPDATE lesson_students` both fail with "permission denied", and reads still work.
+- **R-SCH-02, R-SCH-04 (high): DST double-booking from the daily job and extend.**
+  - `OccurrenceGenerator.topUp` serves both `HorizonJob` and `POST /schedule-rules/:id/extend`. It now conflict-checks the rows it inserts and stores the clashes in `lessons.conflicts`, exposed as `LessonView.conflicts`. The week chip shows «فيه تعارض», and the drawer lists each clash with the teacher's clock.
+  - "Busy" now also covers the occurrences active rules have not generated yet (`rule-projection.ts`).
+  - Booking checks the week after every UTC-offset change of the rule's zone or the teacher's zone within a year (`dst-probe.ts`). The verifier's case, a Riyadh 18:00 booking against a Cairo 17:00 rule, now returns 409 at booking time.
+- **R-SCH-08 (high): the teacher's «اقترح ميعاد تاني».**
+  - Data: a `lesson_proposals` table, with one pending proposal per lesson.
+  - Routes: `POST /lessons/:id/propose` (teacher, own open lesson), `GET /lesson-proposals`, and `POST /lesson-proposals/:id/approve|reject` (admin).
+  - Approving runs a one-lesson reschedule: conflict check, override reason and the queued confirmation.
+  - Teacher card: a native date picker plus a time select on the teacher's own clock. While it waits, the card shows «اقترحت … مستني رد الإدارة».
+  - Admin: a «طلبات تغيير الميعاد» panel on `/admin/schedule` (any week), and «وافق» / «ارفض» in the drawer.
+- **R-LEAD-06, R-STU-03 (medium): duplicates and replays on the lead path.**
+  - If the guardian already has a similar-named child, the lead path returns 409 `duplicate_student` with the candidates, unless `force` is set.
+  - The wizard then offers «احجز للطالب ده» (books the existing student with the lead) or «لا، ده طالب جديد».
+  - Idempotency: `clientRequestId` goes into the new unique column `schedule_rules.client_request_id`, and a replay returns the first result (`booking_result`). Checked in SQL: the same payload sent twice gave 1 rule, 2 lessons, 1 message and equal results.
+- **R-LES-01, R-LES-02 (medium): frozen meeting link.**
+  - The rule now stores only the admin's explicit link. Each lesson stores the link resolved when it is created.
+  - Migration 110 clears existing rule links that only repeated the teacher's link or the student's own link.
+- **R-SCH-07 (medium): rule cancel with a future `from`.**
+  - The rule stays `active` with the new `ends_on` until that day has passed, and the daily job then ends it (`endExpired`). It ends at once when nothing is left.
+  - A `from` or `startsOn` before today returns 400 `date_in_past`.
+- **R-SCH-07, R-SCH-02 (medium): moved lessons.**
+  - Partial unique indexes on `(rule_id, starts_at)` and `(rule_id, local_date)` where `rescheduled_from_id is null`. Moving a lesson back to its old slot works (checked in SQL).
+  - Moving onto a not-yet-generated occurrence of the same rule is reported as a conflict.
+- **R-SCH-02 (medium): idempotency by date.** `lessons.local_date` is set by a trigger in the rule's zone. A shifted instant on a date the rule already holds inserts 0 rows (checked in SQL).
+- **R-NFR-03 (medium): audit inside the transaction.** `create_booking` and `apply_lesson_changes` write the audit row themselves. The whole-rule reschedule audit now carries `override_reason` and `conflicts`.
+- **R-STU-04 (medium): per-student outcome.**
+  - `POST /lessons/:id/status` accepts `students: [{ studentId, event }]`, built by `outcomes.ts` and applied per row in SQL.
+  - Checked in SQL: lesson completed, one sister absent and charged.
+- **Web (medium):**
+  - Focus moves to the new form or step on every drawer mode change and every wizard step change, including «اختار ميعاد تاني».
+  - The focus trap listens on the document, so Esc and Tab still work after focus has fallen to `<body>`.
+  - The teacher's «الأسبوع» is a rolling 7 days, with a date-range heading.
+  - «مش فاضي» is shown on busy slots.
+  - Conflict lines add the teacher's clock.
+  - The slot step checks the whole series first (`POST /booking/check`).
+  - Wizard order: students → teacher → length + package → slot + days → review.
+- **Contrast (high):** `cn()` now uses `extendTailwindMerge` with our `text-*` sizes. `text-body` no longer drops `text-primary-foreground` on the `lg` buttons («احجز», «تأكيد الحلقة»), and the dialog description keeps its size.
+- **Mobile (medium):** «إلغاء» uses a new `secondary` Button.
+- **Lows fixed:**
+  - DST fall-back pick: the wizard sends `startsAt`, and the clicked instance is kept.
+  - An availability end of 23:59 now means midnight.
+  - `joinNames` («سهيلة ومريم») is shared by booking, the engine and the web.
+  - Booking's student-busy query is paginated.
+  - New `GET/PATCH /settings` for late-cancel hours (null = OFF) and the horizon, audited.
+  - Override placeholder.
+  - Review days start on Saturday.
+  - Chip zone name.
+  - Trial price in `ink-2`.
+  - Teacher time in Plex.
+  - Live roles on wrapper elements.
+  - Scope legends.
+  - Teacher empty hint.
+  - No «0 حلقة».
+  - Week-grid end fade below `lg`.
+
+### Findings rejected
+None. Every finding checked out against the code. "Verification notes" was not a defect; its action, the db reset, is done.
+
+### Tests (measured: `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+- **Gate:** green, **23/23 tasks**. Lint shows only the 3 older web complexity warnings (students files).
+- **Unit tests:** api 717 (101 files), web 393 (81 files), @ab/shared 723 (35 files), mobile 282 (54 suites), wa-stub 5. That is **2,120 in total**, up from 2,028.
+- **E2E: 24 passed.** Journey 5 now goes through the package step before the slot, then books end to end: the real `create_booking` v2 and `POST /booking/check`. It checks the Wednesday lessons, `client_request_id` set, the rule link null, 1 in-transaction `book` audit row and 1 queued confirmation.
+- **New unit tests:**
+  - Pure logic: `rule-projection`, `dst-probe`, `outcomes`, the booking DST pin, `joinNames`, `cn`, `useFocusOnChange`.
+  - Services, controllers and UI: proposals (service and HTTP), settings (HTTP), booking parties / DST / check, the series check, the wizard duplicate path, drawer proposals and focus, week flags, and the mobile Button variants.
+- **SQL plan** (local DB, inside `begin … rollback`): replay equality, teacher DML denied, move back to the original slot, regeneration on a held date and on a shifted instant, per-student outcome, `end_rule` future vs past, one pending proposal per lesson, and the grants.
+
+### Residual TODOs for later phases
+- **Phase 3 (attendance, reports, balances):**
+  - Per-student outcome UI in the drawer and on mobile; the API is ready.
+  - The package line on mobile Today and on the teacher card (`packageProgress`).
+  - Pending reports on the teacher dashboard.
+  - A settings screen; the API is ready.
+- **Phase 4 (WhatsApp sending, reminders, notifications):**
+  - Send the queued confirmations.
+  - Reminders.
+  - An admin push when the daily job stores a clash. There is no push sender yet; the chip and drawer show it today.
+  - Tell the teacher when a proposal is answered.
+  - A proposal on a lesson that was then cancelled or held is hidden: `pending_proposal` is null on closed lessons, and the list filters it out. Its row stays `pending` in the table.
+- **Optional later:** the Google Calendar mirror (R-SCH-05).
+- **Low, not done:**
+  - `newStudents[]` for several siblings on one lead booking.
+  - The wizard does not auto-open on next week when this week is empty.
+  - ByDayPicker does not grey out days; the series check lists them.
+  - A sibling's excuse before the lesson is recorded with the outcome after it.
+- **Owner:**
+  - The «الاتنين» vs «الاثنين» spelling.
+  - Still open: R-LES-03, R-MSG-01 and R-SCH-06 above. The multi-student `{{1}}` join is settled as «سهيلة ومريم».

@@ -1,16 +1,15 @@
-import { DURATIONS, lessonWhenText } from '@ab/shared';
-import { Field } from '@/components/ui/field';
-import { Select } from '@/components/ui/select';
+import { lessonWhenText } from '@ab/shared';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { ByDayPicker } from './ByDayPicker';
 import { effectiveByday, ruleFromSlot, type BookingDraft } from './draft';
+import { SeriesCheck } from './SeriesCheck';
 
 export interface SlotStepProps {
   draft: BookingDraft;
-  onChange: (patch: Partial<Pick<BookingDraft, 'durationMin' | 'startsAt' | 'byday'>>) => void;
+  onChange: (patch: Partial<Pick<BookingDraft, 'startsAt' | 'byday'>>) => void;
 }
 
 /** «الأحد 4 أكتوبر 17:00 بتوقيت الرياض» (+ the family's wall clock when it differs). */
@@ -23,8 +22,8 @@ export function pickedText(startsAt: string, tz: string): string {
 }
 
 /**
- * Step 3 (R-SCH-06): the lesson length, the first lesson from the teacher's real free slots, then
- * the weekly repeat days at that same local time. A trial is one lesson, so it has no repeat.
+ * Step 4 (R-SCH-06): the first lesson from the teacher's real free slots (length picked with the
+ * package), then the weekly repeat days at that same local time. A trial is one lesson: no repeat.
  */
 export function SlotStep({ draft, onChange }: SlotStepProps) {
   const teacher = draft.teacher;
@@ -33,26 +32,6 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
 
   return (
     <div className="grid gap-5">
-      <div className="sm:max-w-[220px]">
-        <Field label={t.booking.pickDuration}>
-          {(p) => (
-            <Select
-              {...p}
-              value={draft.durationMin}
-              onChange={(e) => {
-                const next = DURATIONS.find((d) => String(d) === e.target.value);
-                if (next) onChange({ durationMin: next, startsAt: null });
-              }}
-            >
-              {DURATIONS.map((d) => (
-                <option key={d} value={d}>
-                  {t.enums.duration[d]}
-                </option>
-              ))}
-            </Select>
-          )}
-        </Field>
-      </div>
       <section className="grid gap-2">
         <h3 className="text-sm font-semibold">{t.booking.freeSlots}</h3>
         <SlotPicker
@@ -76,6 +55,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
               onChange={(byday) => onChange({ byday })}
             />
           )}
+          <SeriesCheck draft={draft} />
         </>
       ) : (
         <p className="text-xs text-ink-3">{t.booking.pickSlotFirst}</p>

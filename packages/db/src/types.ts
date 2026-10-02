@@ -255,6 +255,70 @@ export type Database = {
           },
         ];
       };
+      lesson_proposals: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          decided_at: string | null;
+          decided_by: string | null;
+          id: string;
+          lesson_id: string;
+          new_lesson_id: string | null;
+          note: string | null;
+          proposed_starts_at: string;
+          status: Database['public']['Enums']['proposal_status'];
+          teacher_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          id?: string;
+          lesson_id: string;
+          new_lesson_id?: string | null;
+          note?: string | null;
+          proposed_starts_at: string;
+          status?: Database['public']['Enums']['proposal_status'];
+          teacher_id: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          decided_at?: string | null;
+          decided_by?: string | null;
+          id?: string;
+          lesson_id?: string;
+          new_lesson_id?: string | null;
+          note?: string | null;
+          proposed_starts_at?: string;
+          status?: Database['public']['Enums']['proposal_status'];
+          teacher_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_proposals_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_proposals_new_lesson_id_fkey';
+            columns: ['new_lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_proposals_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       lesson_students: {
         Row: {
           attendance: Database['public']['Enums']['attendance'] | null;
@@ -302,11 +366,13 @@ export type Database = {
           cancel_reason: string | null;
           confirmed_at: string | null;
           confirmed_by: string | null;
+          conflicts: Json | null;
           created_at: string;
           created_by: string | null;
           ends_at: string;
           google_event_id: string | null;
           id: string;
+          local_date: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
@@ -320,11 +386,13 @@ export type Database = {
           cancel_reason?: string | null;
           confirmed_at?: string | null;
           confirmed_by?: string | null;
+          conflicts?: Json | null;
           created_at?: string;
           created_by?: string | null;
           ends_at: string;
           google_event_id?: string | null;
           id?: string;
+          local_date?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
@@ -338,11 +406,13 @@ export type Database = {
           cancel_reason?: string | null;
           confirmed_at?: string | null;
           confirmed_by?: string | null;
+          conflicts?: Json | null;
           created_at?: string;
           created_by?: string | null;
           ends_at?: string;
           google_event_id?: string | null;
           id?: string;
+          local_date?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
@@ -542,6 +612,7 @@ export type Database = {
       schedule_rules: {
         Row: {
           byday: number[];
+          client_request_id: string | null;
           created_at: string;
           created_by: string | null;
           created_from_lead_id: string | null;
@@ -559,6 +630,7 @@ export type Database = {
         };
         Insert: {
           byday: number[];
+          client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           created_from_lead_id?: string | null;
@@ -576,6 +648,7 @@ export type Database = {
         };
         Update: {
           byday?: number[];
+          client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           created_from_lead_id?: string | null;
@@ -949,6 +1022,7 @@ export type Database = {
         Args: Record<PropertyKey, never>;
         Returns: Database['public']['Enums']['user_role'];
       };
+      booking_result: { Args: { p_rule: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       generate_rule_lessons: {
@@ -957,11 +1031,13 @@ export type Database = {
           cancel_reason: string | null;
           confirmed_at: string | null;
           confirmed_by: string | null;
+          conflicts: Json | null;
           created_at: string;
           created_by: string | null;
           ends_at: string;
           google_event_id: string | null;
           id: string;
+          local_date: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
@@ -1017,6 +1093,7 @@ export type Database = {
       message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed';
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
       program: 'quran' | 'arabic' | 'islamic_studies';
+      proposal_status: 'pending' | 'approved' | 'rejected';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
@@ -1166,6 +1243,7 @@ export const Constants = {
       message_status: ['queued', 'sent', 'delivered', 'read', 'failed'],
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
       program: ['quran', 'arabic', 'islamic_studies'],
+      proposal_status: ['pending', 'approved', 'rejected'],
       schedule_rule_status: ['active', 'paused', 'ended'],
       student_status: ['trial', 'active', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],

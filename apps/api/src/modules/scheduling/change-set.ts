@@ -1,3 +1,4 @@
+import type { Json } from '@ab/db';
 import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
 
 // Payload of public.apply_lesson_changes (migration 100): the API decides, the RPC applies it in
@@ -13,7 +14,14 @@ export type LessonChange = {
   confirmed_by?: string | null;
   attendance?: Attendance;
   chargeable?: boolean;
+  /** Per-student outcome over the lesson-wide one (group / sibling lesson, R-STU-04). */
+  students?: StudentOutcome[];
 };
+
+export type StudentOutcome = { student_id: string; attendance: Attendance; chargeable: boolean };
+
+/** audit_log row written inside the same transaction (R-NFR-03); actor = ChangeSet.actor. */
+export type AuditRow = { entity: string; entity_id: string; action: string; before?: Json; after?: Json };
 
 export type NewLesson = {
   id: string;
@@ -55,10 +63,14 @@ export type QueuedMessage = {
 export type ChangeSet = {
   /** auth.users id stored as created_by; null for jobs / guardian replies. */
   actor: string | null;
-  /** active → ended with ends_on = greatest(starts_on, ends_on); 409 rule_not_active otherwise. */
+  /**
+   * ends_on = greatest(starts_on, ends_on); the rule ends now when that day is past in its tz,
+   * else stays active until the daily job ends it. 409 rule_not_active when it isn't active.
+   */
   end_rule?: { id: string; ends_on: string };
   changes?: LessonChange[];
   new_rule?: NewRule;
   lessons?: NewLesson[];
   messages?: QueuedMessage[];
+  audit?: AuditRow;
 };

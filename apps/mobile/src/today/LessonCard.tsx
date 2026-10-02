@@ -100,7 +100,7 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel }: LessonC
         <View style={{ flexDirection: 'row', gap: 8 }}>
           {canCancel ? (
             <View style={{ flex: 1 }}>
-              <Button variant="ghost" label={t.today.cancel} onPress={() => setCancelling(true)} busy={busy} />
+              <Button variant="secondary" label={t.today.cancel} onPress={() => setCancelling(true)} busy={busy} />
             </View>
           ) : null}
           {canConfirm ? (

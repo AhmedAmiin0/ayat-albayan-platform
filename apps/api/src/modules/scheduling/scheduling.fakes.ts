@@ -27,6 +27,7 @@ export function ruleRow(over: Partial<RuleWithLinks> = {}): RuleWithLinks {
     created_at: '2026-10-01T10:00:00+00:00',
     updated_at: '2026-10-01T10:00:00+00:00',
     created_by: null,
+    client_request_id: null,
     teacher: { id: TEACHER_ID, meeting_link: 'https://meet.jit.si/abrar', tz: 'Africa/Cairo' },
     schedule_rule_students: [{ student_id: STUDENT_ID, student: { meeting_link_override: null } }],
     ...over,
@@ -67,7 +68,17 @@ export function fakeLessonsDb(state: { ruleStatus: string } = { ruleStatus: 'act
     }
     return { data: inserted, error: null };
   };
-  return { db: { rpc } as unknown as Db, lessons, rpcCalls, state };
+  /** lessons.conflicts writes (LessonWriter.flagConflicts). */
+  const flags: { id: string; conflicts: unknown }[] = [];
+  const from = () => ({
+    update: (patch: { conflicts: unknown }) => ({
+      eq: async (_col: string, id: string) => {
+        flags.push({ id, conflicts: patch.conflicts });
+        return { error: null };
+      },
+    }),
+  });
+  return { db: { rpc, from } as unknown as Db, lessons, rpcCalls, state, flags };
 }
 
 export function fakeSettings(weeks = 5, lateCancelHours: number | null = null) {

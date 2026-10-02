@@ -63,6 +63,15 @@ describe('findConflicts — edges (R-SCH-04)', () => {
     expect(findConflicts({ ...base, availability, proposed: [midnight] })).toEqual([]);
   });
 
+  it('an end of 23:59 (the UI last option) means midnight, so it merges with the next day', () => {
+    const availability = [
+      { weekday: 6, start_time: '22:00', end_time: '23:59', tz: 'Asia/Riyadh' },
+      { weekday: 0, start_time: '00:00', end_time: '02:00', tz: 'Asia/Riyadh' },
+    ];
+    const midnight = occ('2026-10-03T20:30:00Z', '2026-10-03T21:30:00Z'); // Sat 23:30–Sun 00:30 Riyadh
+    expect(findConflicts({ ...base, availability, proposed: [midnight] })).toEqual([]);
+  });
+
   it('no availability at all → every occurrence is outside it', () => {
     expect(findConflicts({ ...base, availability: [] }).map((c) => c.kind)).toEqual([
       'outside_availability',

@@ -1,9 +1,14 @@
 import {
   allowedLessonEvents,
+  CONFLICT_KINDS,
+  isOpenLesson,
+  type Conflict,
   type LessonEvent,
+  type LessonProposalView,
   type LessonStudentView,
   type LessonView,
 } from '@ab/shared';
+import { z } from 'zod';
 import type { Role } from '../../common/auth/verify-token';
 import type { LessonRow } from './lesson-row';
 import type { SeqMap } from './lessons.queries';
@@ -52,7 +57,31 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     rescheduled_from_id: row.rescheduled_from_id,
     students,
     allowed_events: eventsFor(row, ctx.role),
+    conflicts: storedConflicts(row.conflicts),
+    // A proposal on a lesson that was cancelled / held meanwhile is moot (approving would 409).
+    pending_proposal: isOpenLesson(row.status) ? pendingProposal(row.proposals) : null,
   };
+}
+
+const conflictList = z.array(
+  z.object({
+    kind: z.enum(CONFLICT_KINDS),
+    startsAt: z.string(),
+    endsAt: z.string(),
+    lessonId: z.string().optional(),
+    studentId: z.string().optional(),
+  }),
+);
+
+/** lessons.conflicts jsonb → Conflict[] ([] when none or unreadable). */
+export function storedConflicts(value: unknown): Conflict[] {
+  const parsed = conflictList.safeParse(value);
+  return parsed.success ? parsed.data : [];
+}
+
+function pendingProposal(rows: LessonRow['proposals'] | undefined): LessonProposalView | null {
+  const p = rows?.find((r) => r.status === 'pending');
+  return p ? { id: p.id, proposed_starts_at: iso(p.proposed_starts_at), note: p.note, created_at: iso(p.created_at) } : null;
 }
 
 /** Postgres "2026-10-04 14:00:00+00" / "+00:00" → "2026-10-04T14:00:00.000Z". */

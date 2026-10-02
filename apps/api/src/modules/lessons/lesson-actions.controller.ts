@@ -37,8 +37,8 @@ export class LessonActionsController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<LessonView> {
-    const { event } = parseOrThrow(lessonStatusRequestSchema, body);
-    return this.views.one(await this.status.changeStatus({ lessonId: id, event, actor: user }), user.role);
+    const req = parseOrThrow(lessonStatusRequestSchema, body);
+    return this.views.one(await this.status.changeStatus({ ...req, lessonId: id, actor: user }), user.role);
   }
 
   /** Every lesson cancelled (one, or this and the rest of its rule). */

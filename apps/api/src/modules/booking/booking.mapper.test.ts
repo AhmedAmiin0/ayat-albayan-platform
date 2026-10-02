@@ -50,15 +50,24 @@ describe('lessonRows (R-SCH-04)', () => {
   ];
   const clash = { kind: 'teacher_busy' as const, startsAt: '2026-10-11T14:00:00.000Z', endsAt: '2026-10-11T14:45:00.000Z' };
 
-  it('stores the override reason only on the clashing occurrence', () => {
-    expect(lessonRows(occurrences, [clash], 'ولي الأمر طلب كده')).toEqual([
-      { starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z', override_reason: null },
-      { starts_at: '2026-10-11T14:00:00.000Z', ends_at: '2026-10-11T14:45:00.000Z', override_reason: 'ولي الأمر طلب كده' },
+  const link = 'https://meet.jit.si/ab-abrar';
+
+  it('stores the override reason only on the clashing occurrence; every lesson gets the link', () => {
+    const rows = lessonRows({ occurrences, conflicts: [clash], reason: 'ولي الأمر طلب كده', meetingLink: link });
+    expect(rows).toEqual([
+      { starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z', meeting_link: link, override_reason: null },
+      {
+        starts_at: '2026-10-11T14:00:00.000Z',
+        ends_at: '2026-10-11T14:45:00.000Z',
+        meeting_link: link,
+        override_reason: 'ولي الأمر طلب كده',
+      },
     ]);
   });
 
   it('no conflicts → no reasons', () => {
-    expect(lessonRows(occurrences, [], null).every((l) => l.override_reason === null)).toBe(true);
+    const rows = lessonRows({ occurrences, conflicts: [], reason: null, meetingLink: null });
+    expect(rows.every((l) => l.override_reason === null && l.meeting_link === null)).toBe(true);
   });
 });
 

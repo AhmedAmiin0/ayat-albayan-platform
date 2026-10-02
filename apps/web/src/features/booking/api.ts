@@ -1,4 +1,4 @@
-import type { BookingRequest, BookingResult, BookingTeacherOption, Gender, Program } from '@ab/shared';
+import type { BookingRequest, BookingResult, BookingTeacherOption, Conflict, Gender, Program } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 
@@ -25,6 +25,20 @@ export const guardianQuery = (id: string) =>
 
 /** POST /booking: one transaction (rule + lessons + queued confirmations). 409 = conflicts. */
 export const createBooking = (body: BookingRequest) => apiSend<BookingResult>('POST', '/booking', body);
+
+/**
+ * POST /booking/check — the whole series' clashes for the slot step, before «احجز» (R-SCH-04),
+ * including the weeks after a coming DST change. Keyed by the body minus its idempotency key.
+ */
+export const bookingCheckQuery = (body: BookingRequest) => {
+  const key: Partial<BookingRequest> = { ...body };
+  delete key.clientRequestId;
+  return queryOptions({
+    queryKey: ['booking', 'check', JSON.stringify(key)],
+    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', '/booking/check', body),
+    retry: false,
+  });
+};
 
 /** /admin/book URL state: from a student profile, or from a lead row (R-LEAD-06). */
 export type BookSearch = { studentId?: string; leadId?: string; phone?: string; name?: string };

@@ -131,3 +131,12 @@ export async function lessonsOf(studentId: string): Promise<{ starts_at: Date; s
     join public.lesson_students ls on ls.lesson_id = l.id
     where ls.student_id = ${studentId} order by l.starts_at`);
 }
+
+/** The rule a booking made for a student: its idempotency key, its link and its in-transaction audit. */
+export async function ruleOf(studentId: string): Promise<{ client_request_id: string | null; meeting_link: string | null; audits: number }[]> {
+  return withSql((sql) => sql<{ client_request_id: string | null; meeting_link: string | null; audits: number }[]>`
+    select r.client_request_id, r.meeting_link,
+      (select count(*)::int from public.audit_log a where a.entity_id = r.id and a.action = 'book') as audits
+    from public.schedule_rules r join public.schedule_rule_students rs on rs.rule_id = r.id
+    where rs.student_id = ${studentId}`);
+}

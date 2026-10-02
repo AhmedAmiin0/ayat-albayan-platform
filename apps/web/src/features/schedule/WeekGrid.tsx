@@ -24,7 +24,8 @@ export function WeekGrid({ week, today, lessons, onOpen }: WeekGridProps) {
   const days = weekDays(week);
   const rows = teacherRows(lessons);
   return (
-    <div className="-mx-1 overflow-x-auto px-1">
+    // Below lg the grid scrolls sideways: the end fade (as on the nav row) says more columns exist.
+    <div className="ab-fade-end -mx-1 overflow-x-auto ps-5 pe-10 lg:px-1 lg:[mask-image:none]">
       <table aria-label={t.schedule.grid} className="w-full min-w-[880px] table-fixed border-collapse text-sm">
         <thead>
           <tr className="border-t-[3px] border-b-[3px] border-double border-gold">

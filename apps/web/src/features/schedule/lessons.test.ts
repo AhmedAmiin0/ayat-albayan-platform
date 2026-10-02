@@ -74,7 +74,7 @@ describe('times with their zone (R-SCH-01)', () => {
 
 describe('small helpers', () => {
   it('studentNames joins a group with و', () => {
-    expect(studentNames(lesson({ students: [SUHAILA, JOUD] }))).toBe('سهيلة و جود');
+    expect(studentNames(lesson({ students: [SUHAILA, JOUD] }))).toBe('سهيلة وجود');
   });
 
   it('needsConfirmCount counts scheduled lessons only', () => {

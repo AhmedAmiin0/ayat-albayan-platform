@@ -1,0 +1,57 @@
+import type { BookingRequest } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { conflictText } from '@/features/schedule/ConflictNotice';
+import { t } from '@/lib/i18n';
+import { bookingCheckQuery } from './api';
+import { toBookingRequest, type BookingDraft } from './draft';
+
+/** How many clashes are listed under the count. */
+const SHOWN = 4;
+
+/**
+ * Under the picked slot (R-SCH-04, R-SCH-06): what «احجز» would clash with over the whole series
+ * (POST /booking/check), so a clash in a later week — time off, or the teacher's availability
+ * after a DST change — shows before the review step, on the teacher's clock too. Silent on error
+ * (the review step reports it).
+ */
+export function SeriesCheck({ draft }: { draft: BookingDraft }) {
+  const body = toBookingRequest(draft);
+  const check = useQuery({ ...bookingCheckQuery(body ?? emptyBody), enabled: body !== null });
+  if (!body || check.isError) return null;
+  if (!check.data) return <p className="text-xs text-ink-3">{t.booking.seriesChecking}</p>;
+  const conflicts = Array.isArray(check.data.conflicts) ? check.data.conflicts : [];
+  if (conflicts.length === 0) {
+    return (
+      <p className="flex items-center gap-1.5 text-xs text-ink-2">
+        <NuqtaGlyph shape="fill" className="text-ok" />
+        {t.booking.seriesFree}
+      </p>
+    );
+  }
+  return (
+    <div role="status" className="grid gap-1.5 rounded-md bg-danger-soft px-3.5 py-2.5 text-sm">
+      <p className="flex items-center gap-1.5 font-semibold">
+        <NuqtaGlyph shape="struck" className="text-danger" />
+        {t.booking.seriesCheck.replace('{n}', String(conflicts.length))}
+      </p>
+      <ul className="grid gap-1 text-xs text-ink-2">
+        {conflicts.slice(0, SHOWN).map((c, i) => (
+          <li key={`${c.kind}-${c.startsAt}-${i}`}>{conflictText(c, draft.teacher?.tz)}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+// Only to keep the hook call unconditional; a disabled query never runs.
+const emptyBody: BookingRequest = {
+  teacherId: '',
+  byday: [0],
+  startTimeLocal: '00:00',
+  tz: 'Asia/Riyadh',
+  durationMin: 45,
+  startsOn: '2026-01-01',
+  package: 'trial',
+  studentIds: [''],
+};

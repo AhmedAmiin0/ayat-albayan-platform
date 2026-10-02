@@ -47,3 +47,16 @@ describe('SettingsService.bookingHorizonWeeks (R-SCH-02)', () => {
     await expect(svc.bookingHorizonWeeks()).rejects.toThrow(/boom/);
   });
 });
+
+describe('SettingsService.write (PATCH /settings)', () => {
+  it('upserts numbers stamped with the admin; null deletes the row (reads back as OFF)', async () => {
+    const eq = vi.fn().mockResolvedValue({ error: null });
+    const del = vi.fn().mockReturnValue({ eq });
+    const upsert = vi.fn().mockResolvedValue({ error: null });
+    const from = vi.fn().mockReturnValue({ upsert, delete: del });
+    const svc = new SettingsService({ from } as unknown as Db);
+    await svc.write({ booking_horizon_weeks: 6, late_cancel_hours: null }, 'admin-1');
+    expect(upsert).toHaveBeenCalledWith({ key: 'booking_horizon_weeks', value: 6, updated_by: 'admin-1' });
+    expect(eq).toHaveBeenCalledWith('key', 'late_cancel_hours');
+  });
+});

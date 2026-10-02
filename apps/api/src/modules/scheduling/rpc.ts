@@ -14,8 +14,9 @@ const RAISED_CODES = new Set(['invalid_transition', 'rule_not_active']);
 /** Postgres error from the lesson RPCs → HTTP. */
 export function rpcError(error: PostgrestError): Error {
   if (error.code === 'P0001' && RAISED_CODES.has(error.message)) return conflict(error.message);
-  // The only unique key a lesson write can hit is (rule_id, starts_at): that slot is taken.
-  if (error.code === '23505') return conflict('slot_taken');
+  // A generated row's (rule_id, starts_at | local_date) key (migration 110): that slot is taken.
+  // Moved rows never hold a slot, so other unique keys stay plain DB errors.
+  if (error.code === '23505' && error.message.includes('lessons_rule_')) return conflict('slot_taken');
   return dbError(error);
 }
 

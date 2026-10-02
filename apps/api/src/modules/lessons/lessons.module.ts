@@ -4,6 +4,9 @@ import { TeachersModule } from '../teachers/teachers.module';
 import { LessonAccess } from './lesson-access';
 import { LessonActionsController } from './lesson-actions.controller';
 import { LessonCancelService } from './lesson-cancel.service';
+import { LessonProposalsController } from './lesson-proposals.controller';
+import { LessonProposalQueries } from './lesson-proposals.queries';
+import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
 import { LessonRescheduleController } from './lesson-reschedule.controller';
 import { LessonStatusService } from './lesson-status.service';
 import { LessonStore } from './lesson-store';
@@ -20,7 +23,8 @@ import { TeacherMeQueries } from './teacher-me.queries';
 
 /**
  * Lesson lists (week / day / student), confirm, status, reschedule, cancel, and the teacher's own
- * routes (/teachers/me, /teachers/me/lessons). R-SCH-03, R-SCH-07, R-SCH-08, R-TCH-03, R-LES-01..03.
+ * routes (/teachers/me, /teachers/me/lessons, «اقترح ميعاد تاني» proposals). R-SCH-03, R-SCH-07,
+ * R-SCH-08, R-TCH-03, R-LES-01..03.
  * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm).
  */
 @Module({
@@ -28,6 +32,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
   controllers: [
     LessonsController,
     LessonActionsController,
+    LessonProposalsController,
     LessonRescheduleController,
     RuleCancelController,
     StudentLessonsController,
@@ -36,10 +41,13 @@ import { TeacherMeQueries } from './teacher-me.queries';
   providers: [
     LessonAccess,
     LessonCancelService,
+    LessonProposalQueries,
+    LessonProposeService,
     LessonStatusService,
     LessonStore,
     LessonViews,
     LessonsQueries,
+    ProposalDecisionService,
     RescheduleOneService,
     RescheduleRuleService,
     RulePlanner,

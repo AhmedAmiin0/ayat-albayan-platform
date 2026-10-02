@@ -39,6 +39,10 @@ const bookingBase = weeklyRuleSchema.extend({
   package: z.enum(PACKAGE_SIZES),
   meetingLink: z.url().nullish(),
   override: overrideSchema.optional(),
+  /** Idempotency key: a replay with the same id returns the first booking (rule 8). */
+  clientRequestId: z.uuid().optional(),
+  /** The slot the admin picked; pins the first lesson when its wall time repeats (DST fall-back). */
+  startsAt: instant.optional(),
 });
 
 /**
@@ -51,6 +55,8 @@ export const bookingRequestSchema = z.xor([
     leadId: z.uuid(),
     newStudent: studentCreateSchema.omit({ guardian_id: true, teacher_id: true }),
     guardian: guardianCreateSchema,
+    /** Create the student although the guardian has one with a similar name (R-STU-03). */
+    force: z.boolean().optional(),
   }),
 ]);
 
@@ -87,8 +93,30 @@ export const ruleCancelRequestSchema = z.object({
 /** POST /schedule-rules/:id/extend — weeks ahead from now (default settings.booking_horizon_weeks). */
 export const ruleExtendRequestSchema = z.object({ weeks: z.int().min(1).max(12).optional() });
 
-/** POST /lessons/:id/status — attendance outcomes (R-SCH-08). */
-export const lessonStatusRequestSchema = z.object({ event: z.enum(STATUS_ROUTE_EVENTS) });
+/**
+ * POST /lessons/:id/status — attendance outcomes (R-SCH-08). `event` is the lesson's outcome;
+ * `students` overrides it per student in a group or sibling lesson (R-STU-04).
+ */
+export const lessonStatusRequestSchema = z.object({
+  event: z.enum(STATUS_ROUTE_EVENTS),
+  students: z
+    .array(z.object({ studentId: z.uuid(), event: z.enum(STATUS_ROUTE_EVENTS) }))
+    .optional(),
+});
+
+/** POST /lessons/:id/propose — the teacher's «اقترح ميعاد تاني» (R-SCH-08). */
+export const lessonProposalRequestSchema = z.object({
+  startsAt: instant,
+  note: z.string().trim().max(500).optional(),
+});
+/** POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason. */
+export const proposalApproveSchema = z.object({ override: overrideSchema.optional() });
+
+/** PATCH /settings (admin). late_cancel_hours null = OFF (R-SCH-07, docs/05 q2). */
+export const settingsUpdateSchema = z.object({
+  lateCancelHours: z.int().min(1).max(168).nullable().optional(),
+  bookingHorizonWeeks: z.int().min(1).max(12).optional(),
+});
 
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;
 export type RescheduleRequest = z.infer<typeof rescheduleRequestSchema>;
@@ -97,3 +125,6 @@ export type RuleCancelRequest = z.infer<typeof ruleCancelRequestSchema>;
 export type RuleExtendRequest = z.infer<typeof ruleExtendRequestSchema>;
 export type LessonStatusRequest = z.infer<typeof lessonStatusRequestSchema>;
 export type WeeklyRule = z.infer<typeof weeklyRuleSchema>;
+export type LessonProposalRequest = z.infer<typeof lessonProposalRequestSchema>;
+export type ProposalApprove = z.infer<typeof proposalApproveSchema>;
+export type SettingsUpdate = z.infer<typeof settingsUpdateSchema>;

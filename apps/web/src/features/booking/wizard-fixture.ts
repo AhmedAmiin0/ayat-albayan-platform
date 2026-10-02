@@ -1,5 +1,6 @@
 import type { BookingTeacherOption } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
+import type { Mock } from 'vitest';
 import { t } from '@/lib/i18n';
 
 // Test data only (imported by the wizard *.test.tsx): API responses keyed by path prefix.
@@ -50,10 +51,37 @@ export function respond(path: string): Promise<unknown> {
 
 export const next = () => fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
 
-/** Teacher → slot (Sunday 17:00): the steps every path shares. */
-export async function pickTeacherAndSlot(): Promise<void> {
+/** Teacher, then on to the length + package step. */
+export async function pickTeacher(): Promise<void> {
   fireEvent.click(await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) }));
+  next();
+}
+
+/** From the package step on to the slot grid, and pick Sunday 17:00. */
+export async function pickSlot(): Promise<void> {
   next();
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
 }
+
+/** Teacher → package (as preset) → slot (Sunday 17:00): the steps every path shares. */
+export async function pickTeacherAndSlot(): Promise<void> {
+  await pickTeacher();
+  await pickSlot();
+}
+
+/**
+ * apiSend by path: POST /booking/check (the slot step's series check) answers «no clash»; each
+ * POST /booking takes the next answer (an Error rejects).
+ */
+export function routeSend(apiSend: Mock, answers: unknown[]): void {
+  apiSend.mockImplementation((_method: string, path: string) => {
+    if (path === '/booking/check') return Promise.resolve({ conflicts: [] });
+    const answer = answers.shift();
+    return answer instanceof Error ? Promise.reject(answer) : Promise.resolve(answer);
+  });
+}
+
+/** The bodies of every POST /booking, in order (series checks left out). */
+export const bookingBodies = (apiSend: Mock): Record<string, unknown>[] =>
+  apiSend.mock.calls.filter(([, path]) => path === '/booking').map(([, , body]) => body as Record<string, unknown>);

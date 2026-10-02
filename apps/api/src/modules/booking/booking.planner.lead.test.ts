@@ -32,7 +32,7 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
 
   it('reuses the guardian that already has this phone (id and time zone)', async () => {
     const { planner, queries } = fakePlanner();
-    queries.guardianByPhone.mockResolvedValue({ id: IDS.g2, tz: 'Africa/Cairo' });
+    queries.guardianByPhone.mockResolvedValue({ id: IDS.g2, tz: 'Africa/Cairo', students: [] });
     const { payload } = await planner.prepare(leadRequest({ meetingLink: 'https://meet.google.com/abc-defg-hij' }));
     expect(payload.messages[0]).toMatchObject({
       guardian_id: IDS.g2,
@@ -40,13 +40,15 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
       template_params: { button: 'abc-defg-hij' },
     });
     expect(payload.rule.meeting_link).toBe('https://meet.google.com/abc-defg-hij');
+    expect(payload.lessons[0]?.meeting_link).toBe('https://meet.google.com/abc-defg-hij');
   });
 
   it("the new student's own link is used for a one-student booking", async () => {
     const { planner } = fakePlanner();
     const newStudent = { name: 'رِيم', tz: 'Asia/Riyadh', meeting_link_override: 'https://meet.google.com/own-link-xyz' };
     const { payload } = await planner.prepare(leadRequest({ newStudent }));
-    expect(payload.rule.meeting_link).toBe('https://meet.google.com/own-link-xyz');
+    expect(payload.lessons[0]?.meeting_link).toBe('https://meet.google.com/own-link-xyz');
+    expect(payload.rule.meeting_link).toBeNull();
   });
 
   it('a paid package from a fresh lead books but leaves the lead status alone', async () => {
@@ -58,8 +60,8 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
   });
 
   it('a brand-new student is not checked for student clashes', async () => {
-    const { planner, queries } = fakePlanner();
+    const { planner, busy } = fakePlanner();
     await planner.prepare(leadRequest());
-    expect(queries.studentBusyLessons).not.toHaveBeenCalled();
+    expect(busy.studentLessons).toHaveBeenCalledWith([], expect.anything());
   });
 });

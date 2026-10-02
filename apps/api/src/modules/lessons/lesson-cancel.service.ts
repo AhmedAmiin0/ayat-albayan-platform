@@ -49,7 +49,6 @@ export class LessonCancelService {
     await this.store.commit({
       change: { actor: actor.id, changes: [change] },
       audit: {
-        actorId: actor.id,
         entity: 'lessons',
         entityId: lesson.id,
         action: 'cancel',
@@ -61,12 +60,18 @@ export class LessonCancelService {
     return [lesson.id];
   }
 
-  /** POST /schedule-rules/:id/cancel: from `from` (default today in the rule's tz) on. */
+  /**
+   * POST /schedule-rules/:id/cancel: from `from` (default today in the rule's tz) on. A past
+   * `from` → 400 date_in_past (it would close lessons nobody marked, issue B2). A future one
+   * keeps the rule active until then, so the lessons it still owes are generated (R-SCH-07).
+   */
   async cancelRule({ ruleId, body, actor }: RuleCancelInput): Promise<string[]> {
     const rule = await this.rules.rule(ruleId);
     if (!rule) throw new NotFoundException();
     if (rule.status !== 'active') throw conflict('rule_not_active');
-    const from = body.from ?? localDateOf(new Date(), rule.tz);
+    const today = localDateOf(new Date(), rule.tz);
+    if (body.from && body.from < today) throw badRequest('date_in_past');
+    const from = body.from ?? today;
     return this.endRule({ rule, from, cutoff: startOfLocalDay(from, rule.tz), body, actor });
   }
 
@@ -83,12 +88,11 @@ export class LessonCancelService {
         changes: open.map((l) => cancelChange(l, ctx)),
       },
       audit: {
-        actorId: actor.id,
         entity: 'schedule_rules',
         entityId: rule.id,
         action: 'cancel',
         before: { status: rule.status, ends_on: rule.ends_on },
-        after: { status: 'ended', from, by: body.by, reason: body.reason, cancelled: open.map((l) => l.id) },
+        after: { ends_on: addDays(from, -1), from, by: body.by, reason: body.reason, cancelled: open.map((l) => l.id) },
       },
       transition: { from: open[0]?.status ?? 'scheduled', event: CANCEL_EVENT[body.by] },
     });

@@ -1,6 +1,6 @@
 import type { LessonEvent, LessonStatus } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AuditService, type AuditEntry } from '../../common/audit/audit.service';
+import type { AuditEntry } from '../../common/audit/audit.service';
 import type { ChangeSet } from '../scheduling/change-set';
 import { errorCode } from '../scheduling/errors';
 import { LessonWriter } from '../scheduling/lesson-writer';
@@ -10,7 +10,8 @@ import { invalidTransition } from './transition';
 
 export type Commit = {
   change: ChangeSet;
-  audit: AuditEntry;
+  /** Written by apply_lesson_changes in the same transaction; its actor is change.actor. */
+  audit: Omit<AuditEntry, 'actorId'>;
   /** Reported in the 409 when the compare-and-set loses (the lesson changed meanwhile). */
   transition: { from: LessonStatus; event: LessonEvent };
 };
@@ -21,7 +22,6 @@ export class LessonStore {
   constructor(
     readonly queries: LessonsQueries,
     private readonly writer: LessonWriter,
-    private readonly audit: AuditService,
   ) {}
 
   async get(id: string): Promise<LessonRow> {
@@ -30,16 +30,16 @@ export class LessonStore {
     return row;
   }
 
-  /** One transaction (apply_lesson_changes), then the audit row (docs/10 invariant 6). */
+  /** One transaction (apply_lesson_changes) with its audit row: never committed unaudited. */
   async commit({ change, audit, transition }: Commit): Promise<void> {
+    const { entity, entityId, action, before, after } = audit;
     try {
-      await this.writer.apply(change);
+      await this.writer.apply({ ...change, audit: { entity, entity_id: entityId, action, before, after } });
     } catch (e) {
       if (errorCode(e) === 'invalid_transition') {
         throw invalidTransition(transition.from, transition.event);
       }
       throw e;
     }
-    await this.audit.record(audit);
   }
 }

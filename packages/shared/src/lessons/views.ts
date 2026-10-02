@@ -34,6 +34,27 @@ export interface LessonView {
   students: LessonStudentView[];
   /** allowedLessonEvents(status) minus what the caller's role may not do. */
   allowed_events: LessonEvent[];
+  /**
+   * Clashes found when the daily job / extend generated this lesson without an admin override
+   * (R-SCH-04: e.g. a DST change moved it onto another lesson). [] = none.
+   */
+  conflicts: Conflict[];
+  /** The teacher's pending «اقترح ميعاد تاني» (R-SCH-08), null when there is none. */
+  pending_proposal: LessonProposalView | null;
+}
+
+/** A teacher's proposed new time for one lesson; an admin approves (reschedule) or rejects. */
+export interface LessonProposalView {
+  id: string;
+  proposed_starts_at: string;
+  note: string | null;
+  created_at: string;
+}
+
+/** GET /settings (admin). late_cancel_hours null = OFF. */
+export interface AcademySettings {
+  late_cancel_hours: number | null;
+  booking_horizon_weeks: number;
 }
 
 /** GET /teachers/me (R-TCH-03). */

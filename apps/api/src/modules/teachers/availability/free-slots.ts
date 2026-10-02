@@ -20,10 +20,15 @@ export type FreeSlotsInput = {
 
 const toInterval = (r: TimeRange): Interval => ({ start: r.start.getTime(), end: r.end.getTime() });
 
+/** The availability UI's last option is 23:59; as an end it means "until midnight" (24:00). */
+const LAST_MINUTE = 23 * 60 + 59;
+
 /** Every occurrence of `row` whose local day is within `range` ±1 day (covers ±14h offsets). */
 export function expandRow(row: WeeklyRow, range: Interval): Interval[] {
   const startMin = toMinutes(row.start_time);
-  const endMin = toMinutes(row.end_time);
+  const rawEnd = toMinutes(row.end_time);
+  // 22:00–23:59 + next day 00:00–02:00 must merge into one window across midnight.
+  const endMin = rawEnd === LAST_MINUTE ? 24 * 60 : rawEnd;
   const firstDay = localDay(range.start, row.tz) - DAY;
   const lastDay = localDay(range.end, row.tz) + DAY;
   const out: Interval[] = [];

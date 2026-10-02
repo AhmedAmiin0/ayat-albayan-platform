@@ -111,8 +111,27 @@ One `messages` row per distinct guardian of the booked students: `direction 'out
 ## 7. Open questions (TODO, do not decide in code)
 - R-SCH-03: may an admin correct a wrong outcome (no_show → completed)? Terminal for now.
 - R-SCH-07 / docs/05 q2: late-cancel hours — setting stays OFF until the owner sets it.
-- R-SCH-08: teacher «اقترح ميعاد تاني» (propose, admin approves) has no route yet.
+- ~~R-SCH-08: teacher «اقترح ميعاد تاني» has no route yet.~~ Done, see §8.
 - R-LES-03: does `late` count in the lesson number?
 - R-SCH-06: slot grid step (15 / 30 / duration); rule tz = student's tz by default.
 - R-MSG-01: `{{1}}` = student or guardian name in the approved templates; reschedule reuses `booking_confirmation*`.
 - docs/05 q5: max students per group lesson (no cap enforced).
+
+## 8. Changes from the Phase 2 verifier fixes (migrations 110–112)
+
+These supersede §2 and §5 where they differ.
+
+- **Invariant 1:** generated rows are unique on `(rule_id, starts_at)` **and** `(rule_id, local_date)` where `rescheduled_from_id is null` (partial indexes; `lessons.local_date` is set by trigger from the rule's tz). Generation inserts with `on conflict do nothing`. A moved lesson keeps `rule_id` but no longer holds its rule's slot, so moving a lesson back to its old time works. A tz-rule change that shifts an instant cannot add a second lesson on a date the rule already holds (R-SCH-02 "upsert by rule_id + date").
+- **Invariant 3:** `schedule_rules.meeting_link` holds only the admin's explicit link. Each lesson gets the resolved link (request → single student's override → the teacher's current link) when it is created, so a new teacher link reaches lessons generated later. Migration 110 cleared rule links that only repeated the teacher's or the student's link.
+- **Invariant 6:** `create_booking` and `apply_lesson_changes` write the audit row in the same transaction (`p_booking.audit.after`, change set `audit`). The generator's `extend` audit is still written after the idempotent insert.
+- **RLS:** `lessons_teacher_update` and `lesson_students_teacher_update` are dropped. `anon` has no privileges and `authenticated` only `SELECT` on schedule_rules, schedule_rule_students, lessons, lesson_students, messages, settings and lesson_proposals. The API (service role) is the only writer.
+- **Ending a rule:** `end_rule` with a last day of today or later keeps the rule `active` with that `ends_on`; the daily job ends it once the day has passed. A cancel `from` or a whole-rule reschedule `startsOn` before today → 400 `date_in_past`.
+- **Conflicts:** busy = occupying lessons **plus** the occurrences active rules will still generate (dates they don't hold yet), so a clash with a not-yet-generated lesson is caught. Booking also checks the week after every UTC-offset change of the rule's or the teacher's zone within a year (DST). The daily job and `extend` check the rows they insert and store the clashes in `lessons.conflicts` (jsonb, null = none).
+- **Routes:**
+  - `POST /booking` takes `clientRequestId` (a replay returns the first booking), `startsAt` (the picked slot; pins an ambiguous DST wall time), and on the lead path `force`. A guardian on file with a similar-named child → 409 `duplicate_student` `{ guardian_id, candidates }` (R-STU-03).
+  - `POST /booking/check` (admin): the same body → 200 `{ conflicts }`, nothing written.
+  - `POST /lessons/:id/status` takes `students: [{ studentId, event }]` for a per-student outcome in a group lesson; 400 `student_not_in_lesson`.
+  - `POST /lessons/:id/propose` (teacher, own open lesson) `{ startsAt, note? }` → 201 `LessonView`; 409 `proposal_pending`, 400 `date_in_past`.
+  - `GET /lesson-proposals` (admin) → `LessonView[]` with a pending proposal. `POST /lesson-proposals/:id/approve` `{ override? }` = a one-lesson reschedule (409 `conflict` without a reason). `POST /lesson-proposals/:id/reject`. Both 409 `proposal_decided` once answered.
+  - `GET /settings`, `PATCH /settings` `{ lateCancelHours: 1..168 | null, bookingHorizonWeeks: 1..12 }` (admin, audited).
+- **LessonView** gains `conflicts: Conflict[]` (stored generation clashes) and `pending_proposal: { id, proposed_starts_at, note, created_at } | null`.

@@ -11,9 +11,10 @@ import { Toast } from '@/components/ui/toast';
 import { bookingTeachersQuery } from '@/features/booking/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { lessonsQuery } from './api';
+import { lessonsQuery, proposalsQuery } from './api';
 import { LessonDrawer } from './LessonDrawer';
 import { filterLessons, needsConfirmCount } from './lessons';
+import { ProposalsPanel } from './ProposalsPanel';
 import { ScheduleFilters } from './ScheduleFilters';
 import type { ScheduleSearch } from './search';
 import { currentWeekStart } from './slots';
@@ -32,8 +33,9 @@ function useProgramTeachers(program: Program | undefined): Set<string> | undefin
 }
 
 /**
- * /admin/schedule (R-SCH-01, R-SCH-03): the Riyadh week across teachers, filters in the URL,
- * one GET /lessons per week. A lesson chip opens its drawer; writes refresh the week.
+ * /admin/schedule (R-SCH-01, R-SCH-03, R-SCH-08): the teachers' pending proposals, then the Riyadh
+ * week across teachers, filters in the URL, one GET /lessons per week. A lesson chip opens its
+ * drawer; writes refresh the week.
  */
 export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   const [now] = useState(() => new Date());
@@ -41,10 +43,12 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   const week = search.week ?? thisWeek;
   const lessons = useQuery(lessonsQuery({ ...weekWindow(week, RIYADH_TZ), teacherId: search.teacher }));
   const teacherIds = useProgramTeachers(search.program);
+  const proposals = useQuery(proposalsQuery);
   const [openId, setOpenId] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const shown = filterLessons(lessons.data ?? [], { status: search.status, showClosed: search.closed, teacherIds });
-  const open = lessons.data?.find((l) => l.id === openId);
+  // A proposal's lesson may sit in another week than the one on screen.
+  const open = lessons.data?.find((l) => l.id === openId) ?? proposals.data?.find((l) => l.id === openId);
 
   return (
     <>
@@ -55,6 +59,7 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
           {t.schedule.book}
         </Link>
       </PageHead>
+      <ProposalsPanel onOpen={(l) => setOpenId(l.id)} />
       <ScheduleFilters week={week} thisWeek={thisWeek} search={search} onSearch={(p) => onSearch({ ...search, ...p })} />
       <WeekBody
         query={lessons}
@@ -70,9 +75,10 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
   );
 }
 
-/** «5 حلقات» and, in saffron (دورك), «2 يحتاج تأكيد». */
+/** «5 حلقات» and, in saffron (دورك), «2 يحتاج تأكيد». An empty week says so below, not «0 حلقة». */
 function Counts({ shown }: { shown: readonly LessonView[] }) {
   const waiting = needsConfirmCount(shown);
+  if (shown.length === 0) return null;
   return (
     <>
       <span className="text-sm text-ink-3 tabular-nums">{counted(t.schedule.lessonCount, shown.length)}</span>

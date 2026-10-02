@@ -6,22 +6,31 @@ import type {
   PackageSize,
   StudentCreate,
 } from '@ab/shared';
+import type { Json } from '@ab/db';
 import { z } from 'zod';
 import { canTransitionLead } from '../leads/lead-state-machine';
 import type { Occurrence, RuleTiming } from '../scheduling/occurrences';
 import type { MessageDraft } from './booking.messages';
 
-export type LessonRow = { starts_at: string; ends_at: string; override_reason: string | null };
+export type LessonRow = {
+  starts_at: string;
+  ends_at: string;
+  meeting_link: string | null;
+  override_reason: string | null;
+};
 export type RuleRow = RuleTiming & {
   teacher_id: string;
+  /** Only the admin's explicit link: lessons resolve the current teacher link (issue B8). */
   meeting_link: string | null;
   package: PackageSize;
+  /** Idempotency key: a replay returns the first booking (migration 111). */
+  client_request_id: string | null;
 };
 export type NewStudentRow = Omit<StudentCreate, 'guardian_id' | 'teacher_id'> & {
   name_normalized: string;
 };
 
-/** The create_booking(p_booking) argument (migration 20261001000090). */
+/** The create_booking(p_booking) argument (migrations 090, 111). */
 export type BookingPayload = {
   rule: RuleRow;
   student_ids: string[];
@@ -30,6 +39,8 @@ export type BookingPayload = {
   new_student: NewStudentRow | null;
   lessons: LessonRow[];
   messages: MessageDraft[];
+  /** audit_log.after of the 'book' row, written in the same transaction (R-NFR-03). */
+  audit: { after: { [key: string]: Json | undefined } };
 };
 
 export type LinkInput = {
@@ -53,17 +64,21 @@ export function leadTarget(status: LeadStatus, pkg: PackageSize): LeadStatus | n
   return canTransitionLead(status, to) ? to : null;
 }
 
+export type LessonRowsInput = {
+  occurrences: readonly Occurrence[];
+  conflicts: readonly Conflict[];
+  reason: string | null;
+  /** The resolved link copied onto every lesson (docs/10 invariant 3). */
+  meetingLink: string | null;
+};
+
 /** Lessons for the RPC; an override reason lands only on the occurrences that clash (R-SCH-04). */
-export function lessonRows(
-  occurrences: readonly Occurrence[],
-  conflicts: readonly Conflict[],
-  reason: string | null,
-): LessonRow[] {
+export function lessonRows({ occurrences, conflicts, reason, meetingLink }: LessonRowsInput): LessonRow[] {
   const clashing = new Set(conflicts.map((c) => c.startsAt));
   return occurrences.map((o) => {
     const starts_at = o.starts_at.toISOString();
     const override_reason = clashing.has(starts_at) ? reason : null;
-    return { starts_at, ends_at: o.ends_at.toISOString(), override_reason };
+    return { starts_at, ends_at: o.ends_at.toISOString(), meeting_link: meetingLink, override_reason };
   });
 }
 

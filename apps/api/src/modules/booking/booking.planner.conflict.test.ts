@@ -2,7 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { bookingRequest, fakePlanner, IDS, NOW } from './booking.fakes';
 
-const busy = (id: string, start: string, end: string) => ({
+const lesson = (id: string, start: string, end: string) => ({
   id,
   starts_at: new Date(start),
   ends_at: new Date(end),
@@ -18,12 +18,12 @@ describe('BookingPlanner — conflicts (R-SCH-04, issue B3)', () => {
   afterEach(() => vi.useRealTimers());
 
   it('409 { code: conflict } lists every clashing occurrence of the series', async () => {
-    const { planner, availability, queries } = fakePlanner();
-    availability.listBusyLessons.mockResolvedValue([
-      busy('T1', '2026-10-11T14:30:00Z', '2026-10-11T15:15:00Z'),
+    const { planner, busy } = fakePlanner();
+    busy.teacherLessons.mockResolvedValue([
+      lesson('T1', '2026-10-11T14:30:00Z', '2026-10-11T15:15:00Z'),
     ]);
-    queries.studentBusyLessons.mockResolvedValue([
-      { ...busy('S9', '2026-10-25T13:30:00Z', '2026-10-25T14:15:00Z'), student_id: IDS.s2 },
+    busy.studentLessons.mockResolvedValue([
+      { ...lesson('S9', '2026-10-25T13:30:00Z', '2026-10-25T14:15:00Z'), student_id: IDS.s2 },
     ]);
     const { status, body } = await failure(planner.prepare(bookingRequest()));
     expect(status).toBe(409);
@@ -59,9 +59,9 @@ describe('BookingPlanner — conflicts (R-SCH-04, issue B3)', () => {
   });
 
   it('with override.reason the booking goes ahead; only the clashing lesson keeps the reason', async () => {
-    const { planner, availability } = fakePlanner();
-    availability.listBusyLessons.mockResolvedValue([
-      busy('T1', '2026-10-11T14:00:00Z', '2026-10-11T14:45:00Z'),
+    const { planner, busy } = fakePlanner();
+    busy.teacherLessons.mockResolvedValue([
+      lesson('T1', '2026-10-11T14:00:00Z', '2026-10-11T14:45:00Z'),
     ]);
     const reason = 'ولي الأمر طلب الميعاد ده بالذات';
     const { payload, conflicts } = await planner.prepare(bookingRequest({ override: { reason } }));
@@ -70,6 +70,14 @@ describe('BookingPlanner — conflicts (R-SCH-04, issue B3)', () => {
       '2026-10-11T14:00:00.000Z',
     ]);
     expect(payload.lessons.filter((l) => l.override_reason === null)).toHaveLength(4);
+  });
+
+  it('conflicts() returns the same clashes without throwing (the wizard check before review)', async () => {
+    const { planner, busy } = fakePlanner();
+    busy.teacherLessons.mockResolvedValue([lesson('T1', '2026-10-11T14:00:00Z', '2026-10-11T14:45:00Z')]);
+    expect((await planner.conflicts(bookingRequest())).map((c) => [c.kind, c.startsAt])).toEqual([
+      ['teacher_busy', '2026-10-11T14:00:00.000Z'],
+    ]);
   });
 
   it('400 no_occurrences when startsOn is past the horizon', async () => {

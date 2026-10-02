@@ -32,7 +32,7 @@ describe('LessonDrawer details and actions (R-SCH-01, R-SCH-03)', () => {
 
   it('titles the drawer by the students and shows each zone once', () => {
     const { drawer } = renderDrawer(lesson({ students: [SUHAILA, JOUD], starts_at: '2026-12-06T14:00:00.000Z' }));
-    expect(within(drawer).getByRole('heading', { name: 'سهيلة و جود' })).toBeTruthy();
+    expect(within(drawer).getByRole('heading', { name: 'سهيلة وجود' })).toBeTruthy();
     expect(within(drawer).getByText(/عند الطالب 16:00 بتوقيت القاهرة/)).toBeTruthy();
     expect(within(drawer).getByText(/عند المعلم\/ة 16:00 بتوقيت القاهرة/)).toBeTruthy();
     expect(within(drawer).getByText('AB-0184')).toBeTruthy();

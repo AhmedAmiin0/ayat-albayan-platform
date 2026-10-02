@@ -19,10 +19,12 @@ export function BookedPanel({ result, teacherId, tz }: BookedPanelProps) {
   const week = first ? weekStart(zonedParts(new Date(first.starts_at), RIYADH_TZ).date) : undefined;
   return (
     <section aria-labelledby="booked-title" className="grid justify-items-start gap-3 py-2">
-      <h2 id="booked-title" role="status" className="flex items-center gap-2 font-display text-h3 font-bold">
-        <NuqtaGlyph shape="fill" className="text-ok" />
-        <span>{t.booking.booked}</span>
-      </h2>
+      <div role="status">
+        <h2 id="booked-title" className="flex items-center gap-2 font-display text-h3 font-bold">
+          <NuqtaGlyph shape="fill" className="text-ok" />
+          <span>{t.booking.booked}</span>
+        </h2>
+      </div>
       {first && <p>{t.booking.firstLesson.replace('{when}', pickedText(first.starts_at, tz))}</p>}
       <p className="text-sm text-ink-2 tabular-nums">{counted(t.schedule.lessonCount, result.lessons.length)}</p>
       {result.message_ids.length > 0 && <p className="text-sm text-ink-2">{t.booking.confirmationNote}</p>}

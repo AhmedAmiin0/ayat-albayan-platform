@@ -6,6 +6,7 @@ import { HorizonJob } from './horizon.job';
 import { LessonWriter } from './lesson-writer';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { RuleExtendService } from './rule-extend.service';
+import { RuleProjectionQueries } from './rule-projection.queries';
 import { ScheduleRulesController } from './schedule-rules.controller';
 import { ScheduleQueries } from './schedule.queries';
 
@@ -23,8 +24,9 @@ import { ScheduleQueries } from './schedule.queries';
     LessonWriter,
     OccurrenceGenerator,
     RuleExtendService,
+    RuleProjectionQueries,
     ScheduleQueries,
   ],
-  exports: [ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries],
+  exports: [BusyQueries, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries],
 })
 export class SchedulingModule {}

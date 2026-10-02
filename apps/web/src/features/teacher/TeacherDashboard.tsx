@@ -8,7 +8,7 @@ import { Tabs } from '@/components/ui/tabs';
 import { Toast } from '@/components/ui/toast';
 import { errorCode } from '@/features/schedule/api';
 import { lessonsOnDay } from '@/features/schedule/lessons';
-import { weekStart, weekWindow, zonedParts } from '@/features/schedule/tz';
+import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { JoinLink } from './JoinLink';
@@ -40,11 +40,15 @@ export function TeacherDashboard() {
   return <>{head}<Dashboard me={me.data} /></>;
 }
 
-/** Today / this week in the teacher's own zone, their students, their availability. */
+/**
+ * Today / the next 7 days in the teacher's own zone (a rolling week, so on a Friday it still shows
+ * the coming days), their students, their availability.
+ */
 function Dashboard({ me }: { me: TeacherMe }) {
   const [now] = useState(() => new Date());
   const today = zonedParts(now, me.tz).date;
-  const lessons = useQuery(myLessonsQuery(weekWindow(weekStart(today), me.tz)));
+  const lessons = useQuery(myLessonsQuery(weekWindow(today, me.tz)));
+  const range = t.teacherDash.weekRange.replace('{from}', dayMonthLabel(today)).replace('{to}', dayMonthLabel(addDays(today, 6)));
   const [tab, setTab] = useState<Tab>('today');
   const [notice, setNotice] = useState<string | null>(null);
   const list = (which: 'today' | 'week') => {
@@ -52,7 +56,12 @@ function Dashboard({ me }: { me: TeacherMe }) {
     if (!lessons.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
     const shown = which === 'today' ? lessonsOnDay(lessons.data, { date: today, tz: me.tz }) : lessons.data;
     const empty = which === 'today' ? t.teacherDash.noLessonsToday : t.teacherDash.noLessonsWeek;
-    return <LessonDayList lessons={shown} tz={me.tz} fallbackLink={me.meeting_link} empty={empty} onDone={setNotice} />;
+    return (
+      <>
+        {which === 'week' && <h2 className="mb-3 text-sm font-semibold text-ink-2">{range}</h2>}
+        <LessonDayList lessons={shown} tz={me.tz} fallbackLink={me.meeting_link} empty={empty} onDone={setNotice} />
+      </>
+    );
   };
 
   return (

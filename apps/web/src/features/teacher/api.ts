@@ -1,7 +1,7 @@
-import type { LessonView, TeacherMe } from '@ab/shared';
+import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { LESSONS_KEY, type Window } from '@/features/schedule/api';
-import { apiFetch } from '@/lib/api';
+import { apiFetch, apiSend } from '@/lib/api';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 
@@ -21,3 +21,7 @@ export const myLessonsQuery = (w: Window) => {
     placeholderData: keepPreviousData,
   });
 };
+
+/** POST /lessons/:id/propose — «اقترح ميعاد تاني» for the admin to approve (R-SCH-08). */
+export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRequest }) =>
+  apiSend<LessonView>('POST', `/lessons/${id}/propose`, body);

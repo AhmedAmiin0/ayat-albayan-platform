@@ -4,9 +4,9 @@ import { notFound } from '../scheduling/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 
 /**
- * Who may touch which lesson (rule 9). The DB client is the service role and bypasses RLS, so
- * this mirrors lessons_teacher_update / my_teacher_id(): admin any lesson, a teacher only lessons
- * whose teacher_id is their own teachers row (OwnTeacherGuard does the same for /teachers/:id).
+ * Who may touch which lesson (rule 9). The API (service role) is the only writer of lessons —
+ * client roles have no DML on them (migration 110) — so this is the check: admin any lesson, a
+ * teacher only lessons whose teacher_id is their own teachers row (as OwnTeacherGuard does).
  */
 @Injectable()
 export class LessonAccess {

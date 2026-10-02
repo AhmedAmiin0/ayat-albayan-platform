@@ -14,6 +14,21 @@ describe('ConflictNotice (R-SCH-04, issue B3)', () => {
     expect(text).not.toContain('{when}');
   });
 
+  it("adds the teacher's own clock to availability / time-off lines, e.g. after a DST change", () => {
+    const outside: Conflict = { kind: 'outside_availability', startsAt: '2026-11-01T14:00:00Z', endsAt: '2026-11-01T14:45:00Z' };
+    const text = conflictText(outside, 'Africa/Cairo');
+    expect(text).toContain('17:00');
+    expect(text).toContain(t.booking.teacherClock.replace('{time}', '16:00').split(' بتوقيت')[0] ?? '');
+    expect(conflictText(busy('2026-11-01T14:00:00Z'), 'Africa/Cairo')).not.toContain('16:00');
+    expect(conflictText(outside, 'Asia/Riyadh')).not.toContain('،');
+  });
+
+  it('keeps the heading a heading inside the live region; the reason hint fits booking', () => {
+    render(<ConflictNotice conflicts={[busy('2026-10-04T14:00:00Z')]} onChangeSlot={vi.fn()} onOverride={vi.fn()} />);
+    expect(screen.getByRole('heading', { name: t.booking.conflictTitle })).toBeTruthy();
+    expect(screen.getByPlaceholderText(t.booking.overridePlaceholder)).toBeTruthy();
+  });
+
   it('lists five clashes and counts the rest', () => {
     const many = Array.from({ length: 7 }, (_, i) => busy(`2026-10-${10 + i}T14:00:00Z`));
     render(<ConflictNotice conflicts={many} onChangeSlot={vi.fn()} onOverride={vi.fn()} />);

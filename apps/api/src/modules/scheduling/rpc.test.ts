@@ -18,8 +18,10 @@ describe('rpcError — lesson RPC errors → HTTP (docs/10 §3)', () => {
     }
   });
 
-  it('a unique violation on (rule_id, starts_at) → 409 slot_taken', () => {
-    expect(errorCode(rpcError(pgError('23505', 'duplicate key')))).toBe('slot_taken');
+  it('a unique violation on a generated slot → 409 slot_taken; other unique keys are not', () => {
+    const slot = 'duplicate key value violates unique constraint "lessons_rule_date_uidx"';
+    expect(errorCode(rpcError(pgError('23505', slot)))).toBe('slot_taken');
+    expect(errorCode(rpcError(pgError('23505', 'duplicate key "messages_dedup_key_key"')))).toBeUndefined();
   });
 
   it('any other P0001 or unknown error is not dressed up as a domain error', () => {

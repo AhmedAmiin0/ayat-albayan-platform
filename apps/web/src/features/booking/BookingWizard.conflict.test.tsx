@@ -5,7 +5,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { BookingPage } from './BookingPage';
-import { next, pickTeacherAndSlot, respond, SLOT } from './wizard-fixture';
+import { bookingBodies, next, pickTeacherAndSlot, respond, routeSend, SLOT } from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -35,7 +35,6 @@ async function reachReview() {
   next();
   await pickTeacherAndSlot();
   next();
-  next();
   fireEvent.click(screen.getByRole('button', { name: t.booking.submit }));
 }
 
@@ -51,30 +50,32 @@ describe('BookingWizard conflicts (R-SCH-04, issue B3)', () => {
   });
 
   it('lists each clash in Arabic, then books anyway with the reason', async () => {
-    apiSend.mockRejectedValueOnce(CONFLICT).mockResolvedValueOnce(BOOKED);
+    routeSend(apiSend, [CONFLICT, BOOKED]);
     await reachReview();
     expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
     expect(screen.getByText(/الطالب عنده حلقة تانية في الميعاد ده \(الأحد 4 أكتوبر 17:00\)/)).toBeTruthy();
-    expect(screen.getByText(/مش من المواعيد المتاحة للمعلم\/ة \(الأربعاء 7 أكتوبر 17:00\)/)).toBeTruthy();
+    // The teacher's own clock rides along on availability lines (Cairo is UTC+3 until 29 Oct).
+    expect(screen.getByText(/مش من المواعيد المتاحة للمعلم\/ة \(الأربعاء 7 أكتوبر 17:00، عند المعلم\/ة 17:00 بتوقيت/)).toBeTruthy();
     fireEvent.change(screen.getByLabelText(t.booking.overrideReason), { target: { value: 'ولي الأمر موافق' } });
     fireEvent.click(screen.getByRole('button', { name: t.booking.override }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
-    expect(apiSend.mock.calls[1]?.[2]).toMatchObject({ override: { reason: 'ولي الأمر موافق' } });
+    await waitFor(() => expect(bookingBodies(apiSend)).toHaveLength(2));
+    expect(bookingBodies(apiSend)[1]).toMatchObject({ override: { reason: 'ولي الأمر موافق' } });
     expect(await screen.findByText(t.booking.booked)).toBeTruthy();
   });
 
   it('«اختار ميعاد تاني» goes back to the slot step', async () => {
-    apiSend.mockRejectedValueOnce(CONFLICT);
+    routeSend(apiSend, [CONFLICT]);
     await reachReview();
     fireEvent.click(await screen.findByRole('button', { name: t.booking.changeSlot }));
-    expect(screen.getByRole('region', { name: t.booking.steps.slot })).toBeTruthy();
+    const slotStep = screen.getByRole('region', { name: t.booking.steps.slot });
+    expect(document.activeElement).toBe(slotStep); // focus follows the step, not <body>
   });
 
   it('a lead booking sends the new student, the guardian and the trial package', async () => {
-    apiSend.mockResolvedValueOnce(BOOKED);
+    routeSend(apiSend, [BOOKED]);
     await reachReview();
-    await waitFor(() => expect(apiSend).toHaveBeenCalled());
-    expect(apiSend.mock.calls[0]?.[2]).toMatchObject({
+    await waitFor(() => expect(bookingBodies(apiSend)).toHaveLength(1));
+    expect(bookingBodies(apiSend)[0]).toMatchObject({
       leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d',
       package: 'trial',
       byday: [0],

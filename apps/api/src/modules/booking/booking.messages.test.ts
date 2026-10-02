@@ -41,7 +41,7 @@ describe('confirmationDrafts — one per guardian', () => {
     ];
     const drafts = confirmationDrafts({ students, firstStart, meetingLink: null });
     expect(drafts).toHaveLength(1);
-    expect(drafts[0]?.template_params['1']).toBe('سهيلة و مريم');
+    expect(drafts[0]?.template_params['1']).toBe('سهيلة ومريم');
   });
 
   it("two guardians → two messages, each in that guardian's own time zone", () => {

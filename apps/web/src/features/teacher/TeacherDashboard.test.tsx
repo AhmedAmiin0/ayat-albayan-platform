@@ -77,6 +77,14 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     expect(within(table).getByText(t.enums.studentStatus.active)).toBeTruthy();
   });
 
+  it('the week is the next 7 days from today (on a Friday too), with its dates as a heading', async () => {
+    vi.setSystemTime(new Date('2026-10-09T09:00:00.000Z')); // Friday 9 Oct, 12:00 Cairo
+    renderDash();
+    fireEvent.click(await screen.findByRole('tab', { name: t.teacherDash.week }));
+    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/lessons?from=2026-10-08T21%3A00%3A00.000Z&to=2026-10-15T21%3A00%3A00.000Z');
+    expect(screen.getByRole('heading', { name: 'من 9 أكتوبر لحد 15 أكتوبر' })).toBeTruthy();
+  });
+
   it('a login without a teachers row is told to call the admin', async () => {
     renderDash(new ApiError(404, { code: 'teacher_not_linked', message: 'teacher_not_linked' }));
     expect(await screen.findByText(t.teacherDash.notLinked)).toBeTruthy();

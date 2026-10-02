@@ -4,7 +4,19 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { BookingPage } from './BookingPage';
-import { ABRAR, next, NOOR, pickTeacherAndSlot, respond, SISTER_ID, SLOT, STUDENT_ID } from './wizard-fixture';
+import {
+  ABRAR,
+  next,
+  NOOR,
+  pickSlot,
+  pickTeacher,
+  pickTeacherAndSlot,
+  respond,
+  routeSend,
+  SISTER_ID,
+  SLOT,
+  STUDENT_ID,
+} from './wizard-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -35,14 +47,16 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
     apiSend.mockReset();
   });
 
-  it('student + sister → teacher → slot + repeat → package → review → booked', async () => {
-    apiSend.mockResolvedValue({
-      rule_id: 'r1',
-      student_ids: [STUDENT_ID, SISTER_ID],
-      guardian_ids: ['g-1'],
-      lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }],
-      message_ids: ['m1'],
-    });
+  it('student + sister → teacher → length + package → slot + repeat → review → booked', async () => {
+    routeSend(apiSend, [
+      {
+        rule_id: 'r1',
+        student_ids: [STUDENT_ID, SISTER_ID],
+        guardian_ids: ['g-1'],
+        lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }],
+        message_ids: ['m1'],
+      },
+    ]);
     renderBooking();
     expect(await screen.findByRole('heading', { level: 1, name: t.booking.title })).toBeTruthy();
     fireEvent.click(await screen.findByRole('checkbox', { name: /جود/ }));
@@ -53,17 +67,22 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
     const noor = await screen.findByRole('radio', { name: new RegExp(NOOR.display_name_ar) });
     expect(noor.hasAttribute('disabled')).toBe(true);
     expect(screen.getByText(`${t.booking.notAvailable}: ${t.booking.noAvailabilityWhy}`)).toBeTruthy();
-    await pickTeacherAndSlot();
-    expect(String(apiFetch.mock.calls.find(([p]) => String(p).startsWith('/booking/slots'))?.[0])).toContain(
-      `studentIds=${STUDENT_ID}%2C${SISTER_ID}`,
-    );
-    fireEvent.click(screen.getByRole('checkbox', { name: t.enums.weekday[3] }));
-    next();
+    await pickTeacher();
 
     const pkg = await screen.findByRole('radio', { name: new RegExp(t.enums.packageSize['8']) });
     expect(pkg).toHaveProperty('checked', true);
     expect(await screen.findAllByText('1,080')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith(expect.stringMatching(/^\/pricing\/quote\?country=SA&duration=45&tier=starter&students=2/));
+
+    await pickSlot();
+    expect(String(apiFetch.mock.calls.find(([p]) => String(p).startsWith('/booking/slots'))?.[0])).toContain(
+      `studentIds=${STUDENT_ID}%2C${SISTER_ID}`,
+    );
+    // The paid package came first, so the repeat days are offered right on the slot step, and the
+    // whole series is checked there before the review.
+    fireEvent.click(screen.getByRole('checkbox', { name: t.enums.weekday[3] }));
+    expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();
+    expect(apiSend).toHaveBeenCalledWith('POST', '/booking/check', expect.objectContaining({ byday: [0, 3] }));
     next();
 
     fireEvent.click(screen.getByRole('button', { name: t.booking.submit }));
@@ -78,12 +97,15 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
       startsOn: '2026-10-04',
       package: '8',
       meetingLink: null,
+      clientRequestId: expect.any(String),
+      startsAt: SLOT,
     });
     const open = screen.getByRole('link', { name: t.booking.openSchedule });
     expect(open.getAttribute('href')).toBe(`/admin/schedule?week=2026-10-03&teacher=${ABRAR.id}`);
   });
 
   it('«التالي» waits for a choice on each step', async () => {
+    routeSend(apiSend, []);
     renderBooking();
     await screen.findByRole('checkbox', { name: /جود/ });
     next();

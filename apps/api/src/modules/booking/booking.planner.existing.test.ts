@@ -17,9 +17,11 @@ describe('BookingPlanner — existing students (R-SCH-06, docs/10 §5 #14)', () 
       tz: 'Asia/Riyadh',
       starts_on: '2026-10-01',
       ends_on: null,
-      meeting_link: 'https://meet.jit.si/ab-abrar',
+      meeting_link: null,
       package: '8',
+      client_request_id: null,
     });
+    expect(payload.lessons.every((l) => l.meeting_link === 'https://meet.jit.si/ab-abrar')).toBe(true);
     expect(payload.student_ids).toEqual([IDS.s1, IDS.s2]);
     expect(payload.lessons.map((l) => l.starts_at)).toEqual([
       '2026-10-04T14:00:00.000Z',
@@ -39,7 +41,7 @@ describe('BookingPlanner — existing students (R-SCH-06, docs/10 §5 #14)', () 
         guardian_id: IDS.g1,
         phone_e164: '+966552147730',
         template_key: 'booking_confirmation',
-        template_params: { '1': 'سهيلة و مريم', '2': 'الأحد 4 أكتوبر 17:00', button: 'ab-abrar' },
+        template_params: { '1': 'سهيلة ومريم', '2': 'الأحد 4 أكتوبر 17:00', button: 'ab-abrar' },
       },
     ]);
   });
@@ -50,13 +52,22 @@ describe('BookingPlanner — existing students (R-SCH-06, docs/10 §5 #14)', () 
     expect(payload.messages.map((m) => m.guardian_id)).toEqual([IDS.g1, IDS.g2]);
   });
 
-  it('checks the students and the teacher over the whole series span', async () => {
-    const { planner, queries, availability } = fakePlanner();
+  it('checks the students and the teacher over the series and a week past the next DST change', async () => {
+    const { planner, busy, availability, projection } = fakePlanner();
     await planner.prepare(bookingRequest());
-    const span = { from: new Date('2026-10-04T14:00:00Z'), to: new Date('2026-11-01T14:45:00Z') };
-    expect(queries.studentBusyLessons).toHaveBeenCalledWith([IDS.s1, IDS.s2], span);
-    expect(availability.listBusyLessons).toHaveBeenCalledWith(IDS.teacher, span);
+    // Cairo (the teacher) changes on 30 Apr and 28 Oct 2027: a week after each is probed too.
+    const span = { from: new Date('2026-10-04T14:00:00Z'), to: new Date('2027-10-31T14:45:00Z') };
+    expect(busy.studentLessons).toHaveBeenCalledWith([IDS.s1, IDS.s2], span);
+    expect(busy.teacherLessons).toHaveBeenCalledWith(IDS.teacher, span);
     expect(availability.listTimeOff).toHaveBeenCalledWith(IDS.teacher, span);
+    expect(projection.busy).toHaveBeenCalledWith(expect.objectContaining({ span, excludeRuleIds: [] }));
+  });
+
+  it('keeps the idempotency key on the rule', async () => {
+    const { planner } = fakePlanner();
+    const clientRequestId = '77777777-7777-4777-8777-777777777777';
+    const { payload } = await planner.prepare(bookingRequest({ clientRequestId }));
+    expect(payload.rule.client_request_id).toBe(clientRequestId);
   });
 
   it('links a lead given alongside existing students', async () => {

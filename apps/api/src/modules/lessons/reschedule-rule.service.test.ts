@@ -92,4 +92,23 @@ describe('RescheduleRuleService — move the whole rule (R-SCH-07, docs/10 route
     expect(appliedChange(writer)?.lessons[0]?.meeting_link).toBe('https://meet.google.com/sub-code-xyz');
     expect(appliedChange(writer)?.messages[0]?.template_key).toBe('booking_confirmation_meet');
   });
+
+  it('an override is audited with its reason and the clashes; the old rule is not "busy" for its replacement', async () => {
+    const { service, record } = setup();
+    const clash = { kind: 'teacher_busy', startsAt: '2026-10-14T15:30:00.000Z', endsAt: '2026-10-14T16:30:00.000Z' };
+    checker.check.mockResolvedValue([clash]);
+    await service.reschedule({ lessonId: LESSON_ID, body: body({ override: { reason: 'مضطرين' } }), actor: ADMIN });
+    expect(checker.check).toHaveBeenCalledWith(expect.objectContaining({ excludeRuleIds: [RULE_ID] }));
+    expect(record).toHaveBeenCalledWith(
+      expect.objectContaining({ after: expect.objectContaining({ override_reason: 'مضطرين', conflicts: [clash] }) }),
+    );
+  });
+
+  it('a start before today → 400 date_in_past (would close unmarked lessons, issue B2)', async () => {
+    const past = { ...NEW_RULE, startsOn: '2026-09-28' };
+    await expect(setup().service.reschedule({ lessonId: LESSON_ID, body: body({ newRule: past }), actor: ADMIN })).rejects.toMatchObject({
+      status: 400,
+      response: { code: 'date_in_past' },
+    });
+  });
 });

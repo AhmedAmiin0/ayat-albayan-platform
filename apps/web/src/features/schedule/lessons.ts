@@ -1,4 +1,4 @@
-import { clockTime, type LessonStatus, type LessonView } from '@ab/shared';
+import { clockTime, joinNames, type LessonStatus, type LessonView } from '@ab/shared';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { RIYADH_TZ, zonedParts } from './tz';
@@ -28,9 +28,9 @@ export function filterLessons(lessons: readonly LessonView[], f: LessonFilter): 
   });
 }
 
-/** «سهيلة و جود» for a group, the name for one student. */
+/** «سهيلة وجود» for a group (attached و, as in the WhatsApp text), the name for one student. */
 export function studentNames(lesson: Pick<LessonView, 'students'>): string {
-  return lesson.students.map((s) => s.name).join(' و ');
+  return joinNames(lesson.students.map((s) => s.name));
 }
 
 export interface TeacherRow {

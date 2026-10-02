@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { DbModule } from './common/db/db.module';
-import { SettingsModule } from './common/settings/settings.service';
+import { SettingsModule } from './common/settings/settings.module';
 import { BookingModule } from './modules/booking/booking.module';
 import { FxModule } from './modules/fx/fx.module';
 import { GuardiansModule } from './modules/guardians/guardians.module';

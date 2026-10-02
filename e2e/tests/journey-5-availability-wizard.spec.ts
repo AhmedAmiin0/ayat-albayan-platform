@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { resetAbrar, seedFamily } from '../support/schedule';
+import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../support/schedule';
 
 // Journey 5 (docs/03 §5): the teacher sets availability → the booking wizard only offers those
 // slots. R-TCH-02, R-SCH-08 (teacher self-service), R-SCH-06 (slot grid from real availability).
@@ -31,6 +31,9 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();
+    // Length + package come before the slot (the repeat days depend on the package).
+    await expect(admin.getByRole('radio', { name: new RegExp(ar.enums.packageSize['8']) })).toBeChecked();
+    await admin.getByRole('button', { name: ar.booking.next }).click();
 
     // Next week is whole (this week's Wednesday may be gone): 45-minute starts inside 16:00–18:00.
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
@@ -47,5 +50,21 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     await expect(step.getByRole('status')).toContainText(`${WEDNESDAY}`);
     await expect(step.getByRole('status')).toContainText('16:00');
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeEnabled();
+
+    // Review → «احجز»: one transaction writes the rule (idempotency key, no frozen link), the
+    // Wednesday lessons, one queued confirmation and the audit row (migrations 110–112).
+    await admin.getByRole('button', { name: ar.booking.next }).click();
+    await admin.getByRole('button', { name: ar.booking.submit }).click();
+    await expect(admin.getByRole('heading', { name: ar.booking.booked })).toBeVisible();
+    const studentId = family.studentIds[0] ?? '';
+    const lessons = await lessonsOf(studentId);
+    expect(lessons.length).toBeGreaterThan(0);
+    for (const l of lessons) {
+      expect([l.status, l.starts_at.getUTCDay(), l.starts_at.getUTCHours()]).toEqual(['scheduled', 3, 13]);
+    }
+    expect(await ruleOf(studentId)).toEqual([
+      { client_request_id: expect.any(String), meeting_link: null, audits: 1 },
+    ]);
+    await expect.poll(() => queuedFor(family.guardianId)).toEqual([expect.objectContaining({ status: 'queued' })]);
   });
 });

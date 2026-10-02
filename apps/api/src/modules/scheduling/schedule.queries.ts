@@ -31,6 +31,21 @@ export class ScheduleQueries {
     return data;
   }
 
+  /**
+   * Ends active rules whose last day is before `before` (a rule cancelled from a future date
+   * stays active until then, R-SCH-07). Returns how many were ended.
+   */
+  async endExpired(before: string): Promise<number> {
+    const { data, error } = await this.db
+      .from('schedule_rules')
+      .update({ status: 'ended' })
+      .eq('status', 'active')
+      .lt('ends_on', before)
+      .select('id');
+    if (error) throw dbError(error);
+    return data.length;
+  }
+
   /** Active rules that can still produce lessons on or after `today` (local dates are ≤ 1 day off). */
   activeRuleIds(today: string): Promise<{ id: string }[]> {
     return readAll((from, to) =>

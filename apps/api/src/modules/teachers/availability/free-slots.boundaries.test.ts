@@ -75,10 +75,11 @@ describe('freeSlots — slots crossing midnight (R-TCH-02)', () => {
     expect(got).toContain('2026-10-03T20:00:00.000Z');
   });
 
-  it('a window ending "23:59" leaves a gap, so no slot spans midnight', () => {
-    // TODO(R-TCH-02): shared `timeOfDay` rejects "24:00"; allow it so teachers can mean midnight.
+  it('a window ending "23:59" (the UI last option) runs to midnight, so a slot spans it', () => {
     const availability = [row(6, ['23:00', '23:59']), earlySun];
     expect(starts({ ...base, availability, stepMin: 30 })).toEqual([
+      '2026-10-03T20:00:00.000Z', // 23:00–00:00
+      '2026-10-03T20:30:00.000Z', // 23:30–00:30, across midnight
       '2026-10-03T21:00:00.000Z',
       '2026-10-03T21:30:00.000Z',
       '2026-10-03T22:00:00.000Z',

@@ -53,3 +53,14 @@ export function lessonWhenText(startsAt: Date, tz: string): string {
   const part = (type: Intl.DateTimeFormatPartTypes) => parts.find((p) => p.type === type)?.value;
   return [part('weekday'), part('day'), part('month'), clockTime(startsAt, tz)].join(' ');
 }
+
+let listFormat: Intl.ListFormat | undefined;
+
+/**
+ * {{1}} for several children of one guardian: «سهيلة ومريم» (Intl.ListFormat, attached و).
+ * Created on first use: Hermes may lack Intl.ListFormat and the mobile app imports this module.
+ */
+export function joinNames(names: readonly string[]): string {
+  listFormat ??= new Intl.ListFormat('ar', { type: 'conjunction' });
+  return listFormat.format(names);
+}

@@ -1,6 +1,6 @@
 // Test fixtures for the lessons tests (not shipped; excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
-import type { AuditService } from '../../common/audit/audit.service';
+import type { ChangeSet } from '../scheduling/change-set';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { LessonWriter } from '../scheduling/lesson-writer';
 import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
@@ -30,6 +30,7 @@ export function lessonRow(over: Partial<LessonRow> = {}): LessonRow {
     override_reason: null,
     confirmed_at: null,
     rescheduled_from_id: null,
+    conflicts: null,
     teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', tz: 'Africa/Cairo' },
     lesson_students: [
       {
@@ -39,6 +40,7 @@ export function lessonRow(over: Partial<LessonRow> = {}): LessonRow {
         student: { id: STUDENT_ID, code: 'AB-0183', name: 'سهيلة', tz: 'Asia/Riyadh' },
       },
     ],
+    proposals: [],
     ...over,
   };
 }
@@ -49,23 +51,34 @@ export const CONTACT = {
   guardian: { id: GUARDIAN_ID, phone_e164: '+966501234567', tz: 'Asia/Riyadh' },
 };
 
-/** A LessonStore over mocked queries / writer / audit, as the services see it. */
+/**
+ * A LessonStore over mocked queries / writer, as the services see it. `record` sees the audit row
+ * each change set carries (apply_lesson_changes writes it in the same transaction), in the
+ * AuditService shape, once that apply succeeded.
+ */
 export function fakeStore(row: LessonRow | null = lessonRow()) {
   const queries = {
     get: vi.fn().mockResolvedValue(row),
     openOfRule: vi.fn().mockResolvedValue([]),
     contacts: vi.fn().mockResolvedValue([CONTACT]),
   };
-  const writer = { apply: vi.fn().mockResolvedValue(undefined) };
-  const record = vi.fn().mockResolvedValue(undefined);
-  const store = new LessonStore(
-    queries as unknown as LessonsQueries,
-    writer as unknown as LessonWriter,
-    { record } as unknown as AuditService,
-  );
+  const record = vi.fn();
+  const writer = {
+    apply: vi.fn(async (change: ChangeSet) => {
+      const a = change.audit;
+      if (a) record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
+    }),
+  };
+  const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter);
   return { store, queries, writer, record };
 }
 
-/** The change set passed to the n-th writer.apply call. */
-export const appliedChange = (writer: { apply: ReturnType<typeof vi.fn> }, n = 0) =>
-  writer.apply.mock.calls[n]?.[0];
+/** The change set passed to the n-th writer.apply call, without its audit row (see `record`). */
+export const appliedChange = (writer: { apply: ReturnType<typeof vi.fn> }, n = 0) => {
+  const change = writer.apply.mock.calls[n]?.[0] as ChangeSet | undefined;
+  if (!change) return undefined;
+  const rest: ChangeSet = { ...change };
+  delete rest.audit;
+  // Required: tests index the lists they expect without re-checking each one exists.
+  return rest as Omit<Required<ChangeSet>, 'audit'>;
+};

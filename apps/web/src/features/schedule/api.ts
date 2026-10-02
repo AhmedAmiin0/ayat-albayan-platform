@@ -64,6 +64,18 @@ export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) 
 export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/reschedule`, body);
 
+/** GET /lesson-proposals — lessons with a teacher's pending «اقترح ميعاد تاني» (R-SCH-08). */
+export const proposalsQuery = queryOptions({
+  queryKey: [...LESSONS_KEY, 'proposals'],
+  queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
+});
+
+/** Approving moves the lesson (a reschedule): 409 conflict unless `override` is given. */
+export const approveProposal = ({ id, override }: { id: string; override?: string }) =>
+  apiSend<LessonView>('POST', `/lesson-proposals/${id}/approve`, override ? { override: { reason: override } } : {});
+
+export const rejectProposal = (id: string) => apiSend<LessonView>('POST', `/lesson-proposals/${id}/reject`);
+
 /** Domain error code of an API failure (`{ code }`, docs/10 §3), else null. */
 export function errorCode(error: unknown): string | null {
   if (!(error instanceof ApiError)) return null;

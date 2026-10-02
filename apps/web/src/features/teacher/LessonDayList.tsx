@@ -18,7 +18,7 @@ const weekday: Record<string, string> = t.enums.weekday;
 
 /** The teacher's lessons under a heading per local day (one heading for «اليوم»). */
 export function LessonDayList({ lessons, tz, fallbackLink, empty, onDone }: LessonDayListProps) {
-  if (lessons.length === 0) return <EmptyState title={empty} />;
+  if (lessons.length === 0) return <EmptyState title={empty}>{t.teacherDash.emptyHint}</EmptyState>;
   return (
     <div className="grid gap-6">
       {[...byLocalDay(lessons, tz)].map(([day, list]) => (

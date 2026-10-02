@@ -1,20 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import type { ConflictInput } from '../scheduling/conflicts';
+import { BusyQueries } from '../scheduling/busy.queries';
 import { AvailabilityQueries } from '../teachers/availability/availability.queries';
-import { BookingQueries, type Range } from './booking.queries';
+import type { Range } from './booking.queries';
 
 export type ContextQuery = Range & { teacherId: string; studentIds: readonly string[] };
 export type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
 
 /**
  * Loads what findConflicts checks against (R-SCH-04, issue B3): the teacher's weekly grid and
- * time-off, and the occupying lessons of the teacher and of the students overlapping `range`.
+ * time-off, and the occupying lessons of the teacher and of the students overlapping `range`
+ * (read page by page, never cut at PostgREST's max_rows). Used by the slot grid.
  */
 @Injectable()
 export class ConflictContext {
   constructor(
     private readonly availability: AvailabilityQueries,
-    private readonly queries: BookingQueries,
+    private readonly busy: BusyQueries,
   ) {}
 
   async load(q: ContextQuery): Promise<ConflictContextRows> {
@@ -23,7 +25,7 @@ export class ConflictContext {
       this.availability.listSlots(q.teacherId),
       this.availability.listTimeOff(q.teacherId, range),
       this.availability.listBusyLessons(q.teacherId, range),
-      q.studentIds.length > 0 ? this.queries.studentBusyLessons(q.studentIds, range) : [],
+      this.busy.studentLessons(q.studentIds, range),
     ]);
     return {
       availability,

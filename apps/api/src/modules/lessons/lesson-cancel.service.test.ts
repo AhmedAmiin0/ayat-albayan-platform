@@ -102,6 +102,16 @@ describe('LessonCancelService.cancelRule — POST /schedule-rules/:id/cancel', (
     expect(appliedChange(writer)).toMatchObject({ end_rule: { ends_on: '2026-10-19' }, changes: [] });
   });
 
+  it('a from date before today in the rule tz → 400 date_in_past, nothing written (issue B2)', async () => {
+    const { service, writer } = setup();
+    const body = { by: 'admin' as const, reason: 'x', from: '2026-10-01' };
+    await expect(service.cancelRule({ ruleId: RULE_ID, body, actor: ADMIN })).rejects.toMatchObject({
+      status: 400,
+      response: { code: 'date_in_past' },
+    });
+    expect(writer.apply).not.toHaveBeenCalled();
+  });
+
   it('404 unknown rule, 409 rule_not_active for an ended one', async () => {
     const { service } = setup();
     rules.rule.mockResolvedValueOnce(null);

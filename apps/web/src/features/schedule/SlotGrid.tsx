@@ -84,7 +84,7 @@ function SlotButton({ slot, studentTz, picked, onPick }: SlotButtonProps) {
         <span dir="ltr">{clockTime(new Date(slot.starts_at), RIYADH_TZ)}</span>
       </span>
       {small && <span className="text-2xs text-ink-3">{small}</span>}
-      {busy && <span className="sr-only">{t.booking.slotBusy}</span>}
+      {busy && <span className="text-2xs text-ink-3">{t.booking.slotBusy}</span>}
     </button>
   );
 }

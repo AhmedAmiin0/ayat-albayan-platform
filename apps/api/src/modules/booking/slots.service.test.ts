@@ -29,11 +29,11 @@ describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {
   });
 
   it('keeps blocked starts and says why (teacher lesson, student lesson, time-off)', async () => {
-    const { service, availability, queries } = setup();
+    const { service, availability, busy } = setup();
     availability.listBusyLessons.mockResolvedValue([
       { id: 'T1', starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') },
     ]);
-    queries.studentBusyLessons.mockResolvedValue([
+    busy.studentLessons.mockResolvedValue([
       { id: 'S1L', student_id: IDS.s1, starts_at: new Date('2026-10-04T16:30:00Z'), ends_at: new Date('2026-10-04T17:15:00Z') },
     ]);
     availability.listTimeOff.mockResolvedValue([
@@ -49,7 +49,7 @@ describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {
       '17:00': ['student_busy'],
       '18:00': ['time_off'],
     });
-    expect(queries.studentBusyLessons).toHaveBeenCalledWith([IDS.s1], {
+    expect(busy.studentLessons).toHaveBeenCalledWith([IDS.s1], {
       from: new Date('2026-10-04T00:00:00Z'),
       to: new Date('2026-10-05T00:00:00Z'),
     });

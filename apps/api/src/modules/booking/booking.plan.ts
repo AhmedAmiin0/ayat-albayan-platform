@@ -5,11 +5,11 @@ import {
   type RuleTiming,
   type UtcWindow,
 } from '../scheduling/occurrences';
-import { DAY, localDay, zonedToUtc } from '../teachers/availability/zoned-time';
+import { DAY, localDay, offsetMs, zonedToUtc } from '../teachers/availability/zoned-time';
 
 export type PlanRule = Pick<
   BookingRequest,
-  'byday' | 'startTimeLocal' | 'tz' | 'durationMin' | 'startsOn' | 'package'
+  'byday' | 'startTimeLocal' | 'tz' | 'durationMin' | 'startsOn' | 'package' | 'startsAt'
 >;
 export type PlanInput = { rule: PlanRule; now: Date; horizonWeeks: number };
 export type Plan = { timing: RuleTiming; occurrences: Occurrence[] };
@@ -26,6 +26,21 @@ export function horizonWindow(input: PlanInput): UtcWindow {
 }
 
 const isoDay = (day: number) => new Date(day).toISOString().slice(0, 10);
+const wall = (instant: number, tz: string) => instant + offsetMs(instant, tz);
+
+/**
+ * The slot the admin clicked, when it is the other instance of the first lesson's wall time (DST
+ * fall-back repeats an hour; zonedToUtc picks the later one). Otherwise the occurrences as is.
+ */
+function pinFirst(all: Occurrence[], rule: PlanRule): Occurrence[] {
+  const [first, ...rest] = all;
+  if (!first || !rule.startsAt) return all;
+  const picked = Date.parse(rule.startsAt);
+  const at = first.starts_at.getTime();
+  if (picked === at || wall(picked, rule.tz) !== wall(at, rule.tz)) return all;
+  const length = first.ends_at.getTime() - at;
+  return [{ starts_at: new Date(picked), ends_at: new Date(picked + length) }, ...rest];
+}
 
 /**
  * The rule and the lessons a booking creates over the horizon (R-SCH-02, R-SCH-06). A trial is
@@ -42,7 +57,7 @@ export function planBooking(input: PlanInput): Plan {
     starts_on: rule.startsOn,
     ends_on: null,
   };
-  const all = ruleOccurrences(timing, horizonWindow(input));
+  const all = pinFirst(ruleOccurrences(timing, horizonWindow(input)), rule);
   const [first] = all;
   if (rule.package !== 'trial' || !first) return { timing, occurrences: all };
   const endsOn = isoDay(localDay(first.starts_at.getTime(), rule.tz));

@@ -2,7 +2,11 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
+import type { BusyQueries } from '../scheduling/busy.queries';
+import { ConflictChecker } from '../scheduling/conflict-checker';
+import type { RuleProjectionQueries } from '../scheduling/rule-projection.queries';
 import type { AvailabilityQueries } from '../teachers/availability/availability.queries';
+import { BookingParties } from './booking.parties';
 import { BookingPlanner } from './booking.planner';
 import type { BookingQueries, BookingStudent } from './booking.queries';
 import { ConflictContext } from './conflict-context';
@@ -51,7 +55,6 @@ export function fakeQueries() {
     students: vi.fn(async (ids: readonly string[]) => STUDENTS.filter((s) => ids.includes(s.id))),
     lead: vi.fn().mockResolvedValue({ id: IDS.lead, status: 'new' }),
     guardianByPhone: vi.fn().mockResolvedValue(null),
-    studentBusyLessons: vi.fn().mockResolvedValue([]),
     createBooking: vi.fn(),
   };
 }
@@ -64,26 +67,42 @@ export function fakeAvailability() {
   };
 }
 
+/** Occupying lessons (BusyQueries) and not-yet-generated rule occurrences (RuleProjectionQueries). */
+export function fakeBusy() {
+  return {
+    busy: { teacherLessons: vi.fn().mockResolvedValue([]), studentLessons: vi.fn().mockResolvedValue([]) },
+    projection: { busy: vi.fn().mockResolvedValue({ teacher: [], students: [] }) },
+  };
+}
+
 export function fakeContext() {
   const queries = fakeQueries();
   const availability = fakeAvailability();
+  const { busy } = fakeBusy();
   const context = new ConflictContext(
     availability as unknown as AvailabilityQueries,
-    queries as unknown as BookingQueries,
+    busy as unknown as BusyQueries,
   );
-  return { queries, availability, context };
+  return { queries, availability, busy, context };
 }
 
-/** A real BookingPlanner over the fakes; the 5-week horizon matches the seeded setting. */
+/** A real BookingPlanner + ConflictChecker over the fakes; 5-week horizon as seeded. */
 export function fakePlanner() {
-  const deps = fakeContext();
+  const queries = fakeQueries();
+  const availability = fakeAvailability();
+  const { busy, projection } = fakeBusy();
+  const checker = new ConflictChecker(
+    busy as unknown as BusyQueries,
+    availability as unknown as AvailabilityQueries,
+    projection as unknown as RuleProjectionQueries,
+  );
   const settings = { bookingHorizonWeeks: vi.fn().mockResolvedValue(5) };
   const planner = new BookingPlanner(
-    deps.queries as unknown as BookingQueries,
-    deps.context,
+    new BookingParties(queries as unknown as BookingQueries),
+    checker,
     settings as unknown as SettingsService,
   );
-  return { ...deps, settings, planner };
+  return { queries, availability, busy, projection, settings, planner };
 }
 
 const RULE = {

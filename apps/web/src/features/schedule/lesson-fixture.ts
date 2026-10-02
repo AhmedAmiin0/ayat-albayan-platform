@@ -25,9 +25,15 @@ export interface LessonOverrides {
   students?: LessonView['students'];
   meeting_link?: string | null;
   rule_id?: string | null;
+  conflicts?: LessonView['conflicts'];
+  pending_proposal?: LessonView['pending_proposal'];
 }
 
 export function lesson(o: LessonOverrides = {}): LessonView {
+  return { ...core(o), conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null };
+}
+
+function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_proposal'> {
   const startsAt = o.starts_at ?? '2026-10-04T14:00:00.000Z';
   const status = o.status ?? 'scheduled';
   return {

@@ -30,6 +30,8 @@ export function lesson(over: Partial<LessonView> & Pick<LessonView, 'id'>): Less
     rescheduled_from_id: null,
     students: [yusuf],
     allowed_events: allowedLessonEvents(status),
+    conflicts: [],
+    pending_proposal: null,
     ...over,
   };
 }

@@ -13,6 +13,10 @@ const CODES = [
   'no_occurrences',
   'range_too_large',
   'teacher_not_linked',
+  'date_in_past',
+  'proposal_pending',
+  'proposal_decided',
+  'student_not_in_lesson',
 ];
 
 describe('lessons.error messages in ar.json', () => {

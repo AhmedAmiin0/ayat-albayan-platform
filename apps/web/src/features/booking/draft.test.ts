@@ -99,6 +99,20 @@ describe('toBookingRequest (POST /booking)', () => {
     expect(bookingRequestSchema.safeParse(body).success).toBe(true);
   });
 
+  it('carries the idempotency key, the picked instant, and force on the lead path', () => {
+    const d = ready({});
+    const body = toBookingRequest(d);
+    expect(body).toMatchObject({ clientRequestId: d.requestId, startsAt: d.startsAt });
+    expect(toBookingRequest(d)?.clientRequestId).toBe(body?.clientRequestId);
+    const lead: BookingDraft = {
+      ...ready({ students: [], pkg: 'trial', force: true }),
+      leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d',
+      newStudent: { name: 'جود', guardianName: 'أم جود', guardianPhone: '0501234567' },
+    };
+    expect(toBookingRequest(lead)).toMatchObject({ force: true });
+    expect(emptyDraft().requestId).not.toBe(emptyDraft().requestId);
+  });
+
   it('is null until a teacher and a slot are picked', () => {
     expect(toBookingRequest(ready({ teacher: null }))).toBeNull();
     expect(toBookingRequest(ready({ startsAt: null }))).toBeNull();

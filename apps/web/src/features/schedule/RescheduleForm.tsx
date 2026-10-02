@@ -46,7 +46,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
   return (
     <section aria-label={t.lessons.rescheduleTitle} className="grid gap-4">
       <h3 className="font-display text-h4 font-bold">{t.lessons.rescheduleTitle}</h3>
-      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} />
+      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} label={t.lessons.scopeLabelMove} />
       <div className="grid gap-1.5">
         <p className="text-xs font-semibold text-ink-2">{t.lessons.newTime}</p>
         <SlotPicker
@@ -75,6 +75,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
       {conflicts ? (
         <ConflictNotice
           conflicts={conflicts}
+          teacherTz={lesson.teacher.tz}
           busy={move.isPending}
           onChangeSlot={() => {
             move.reset();
