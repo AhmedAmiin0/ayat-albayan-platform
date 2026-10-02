@@ -72,16 +72,14 @@ test('«الجدول» groups the day by teacher, teachers by name, lessons in t
   expect(byTeacher([])).toEqual([]);
 });
 
-const row = (id: string, weekday: number, start: string, end: string): AvailabilityRow => ({
-  id,
-  weekday,
-  start_time: start,
-  end_time: end,
-  tz: 'Africa/Cairo',
-});
+/** `range` is «HH:MM-HH:MM», Cairo wall clock. */
+const row = (id: string, weekday: number, range: string): AvailabilityRow => {
+  const [start_time = '', end_time = ''] = range.split('-');
+  return { id, weekday, start_time, end_time, tz: 'Africa/Cairo' };
+};
 
 test('a day’s availability: its weekday’s windows by start, named in the grid’s zone', () => {
-  const grid = [row('b', 3, '20:00', '22:00'), row('a', 3, '16:00', '18:00'), row('c', 6, '10:00', '12:00')];
+  const grid = [row('b', 3, '20:00-22:00'), row('a', 3, '16:00-18:00'), row('c', 6, '10:00-12:00')];
   expect(availabilityLine(grid, '2026-11-04', 'Asia/Riyadh')).toBe(
     `متاح ${ltr('16:00 – 18:00')}، ${ltr('20:00 – 22:00')} بتوقيت القاهرة`,
   );
