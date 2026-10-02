@@ -52,6 +52,7 @@ export function paymentRow(patch: Partial<PaymentRow> = {}): PaymentRow {
     method: 'bank',
     paid_at: '2026-10-01T09:00:00Z',
     receipt_path: null,
+    client_request_id: null,
     recorded_by: 'a0000000-0000-4000-8000-000000000001',
     note: null,
     created_at: '2026-10-01T09:00:00Z',
@@ -64,7 +65,7 @@ export function payoutRow(patch: Partial<PayoutRow> = {}): PayoutRow {
   return {
     id: PAYOUT_ID,
     teacher_id: TEACHER_ID,
-    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار' },
+    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', tz: 'Africa/Cairo' },
     month: '2026-09-01',
     lessons_count: 2,
     amount: 140,

@@ -35,7 +35,7 @@ function mocks() {
     },
     lessons: { lessonNumbers: vi.fn(), packages: vi.fn() },
     history: { submitted: vi.fn(), lessons: vi.fn(), sequence: vi.fn(), student: vi.fn(), taught: vi.fn(), pending: vi.fn() },
-    files: { add: vi.fn(), get: vi.fn(), remove: vi.fn() },
+    files: { add: vi.fn(), get: vi.fn(), remove: vi.fn(), pdfName: vi.fn() },
     storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), upload: vi.fn() },
     teachers: { idByProfile: vi.fn() },
     settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },

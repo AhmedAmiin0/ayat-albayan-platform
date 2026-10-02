@@ -4,10 +4,10 @@ import { SettingsService } from '../../common/settings/settings.service';
 import { sourceRows } from './dashboard.mapper';
 import type { DashboardResponse } from './dashboard.types';
 import { financeTotals } from './finance';
-import { costFacts, currenciesOf, expenseFacts, paymentFacts } from './finance.mapper';
+import { costFacts, currenciesOf, expenseFacts, frozenRates, paymentFacts } from './finance.mapper';
 import { FinanceQueries } from './finance.queries';
 import { FxConverter } from './fx-converter';
-import { monthsOf, rangeWindow } from './range';
+import { monthShift, monthsOf, rangeWindow } from './range';
 
 export interface FinanceInput {
   range: DateRangeQuery;
@@ -29,13 +29,16 @@ export class FinanceService {
     const months = monthsOf(range);
     const settings = await this.settings.all();
     const paid = payoutStatuses({ countLate: settings.payout_count_late, countNoShow: settings.payout_count_no_show });
-    const [paymentRows, lessonRows, expenseRows] = await Promise.all([
+    const [first, last] = [months[0] ?? range.from.slice(0, 7), months.at(-1) ?? range.to.slice(0, 7)];
+    const [paymentRows, lessonRows, expenseRows, payouts] = await Promise.all([
       this.money.payments(w),
       this.money.paidLessons(w, paid),
-      this.money.expenses(months[0] ?? range.from.slice(0, 7), months.at(-1) ?? range.to.slice(0, 7)),
+      this.money.expenses(first, last),
+      // ±1 month: payouts bucket lessons by the teacher's tz month, the dashboard by Riyadh's.
+      this.money.frozenPayouts(monthShift(first, -1), monthShift(last, 1)),
     ]);
     const payments = paymentFacts(paymentRows);
-    const costs = costFacts(lessonRows);
+    const costs = costFacts(lessonRows, frozenRates(payouts));
     const expenses = expenseFacts(expenseRows);
     const conversion = await this.fx.conversion(
       settings.reporting_currency,

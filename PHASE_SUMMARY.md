@@ -879,3 +879,113 @@ Branch `develop`. Foundation commit `5bfeac1` (reports/money schema, storage, sh
   - The PDF smoke test is skipped where Chromium is missing (CI without `playwright install chromium`).
   - Very long notes flow onto a second PDF page.
   - Orphaned receipts (upload with no payment) need a cleanup job.
+
+## Phase 3: reports & money — verifier fixes
+
+Branch `develop`, on top of `ecc019e`. The Phase 3 verifier reported 21 entries: 3 high, 5 medium, 12 low, and 1 record of checks that passed. Of the 20 findings, 18 are fixed, 1 is deferred to Phase 6, and 1 became an owner question. The record of passing checks needed no change.
+
+### Built and fixed, by requirement ID
+- **R-REP-03, R-PAY-02, R-TCH-04, R-LES-03: the lesson outcome follows the reports (high).**
+  - Migration `131_submit_report_v2` locks the lesson row, then re-derives `lessons.status` from the attendance of all its students after every submit or edit:
+    - any `on_time` → `completed`;
+    - else any `late` → `late`;
+    - else any `absent` → `no_show`;
+    - else `excused`.
+  - This is the only outcome → outcome path, it is audited (`status_change`, `via: report`), and admins reach it by editing the report. Payouts, «رقم الحلقة» (`v_lesson_sequence`) and the dashboard's `lessons_by_status` therefore follow corrected and sibling reports.
+  - The shared state machine is unchanged, so outcomes stay terminal for the status routes. Its TODO(R-SCH-03) now points at the report path.
+  - New e2e `report-outcome.sql.spec.ts` runs `submit_report` against the real database in a rolled-back transaction (desktop project only):
+    - group lesson, excused then on time → `completed`, audited;
+    - 1:1 lesson absent → on time → `completed` and numbered, then back to absent → `no_show`;
+    - late + absent → `late`, then on time → `completed`.
+- **R-PAY-02, issue E3: approve waits for the month and its reports (high).**
+  - `POST /payouts/:id/approve` returns 409 `month_not_over` until the month has ended in the teacher's tz (`monthWindow.to`).
+  - It returns 409 `reports_pending` (with `count`) while a reportable lesson of that teacher in that month has no submitted report. This is the R11 anti-join, `PayoutsQueries.pendingReports`, checked against local PostgREST.
+  - Pure `approveBlock` is unit-tested. Arabic copy is in `payouts.error`.
+  - Generating drafts for the current month still works as a preview.
+- **R-PAY-01, R-MOB-02, rule 8: a payment is recorded once, even when the reply is lost (high).**
+  - Migration `132_payments_idempotency` adds `payments.client_request_id` with a partial unique index.
+  - `paymentCreateSchema.clientRequestId` (uuid) is optional, so older app builds keep working.
+  - A retry returns the payment already recorded, with no second audit or recompute. A retry that loses the race hits the unique key and returns the winner.
+  - Web: one id per open dialog (`use-record-payment.ts`), and the receipt is uploaded once per file.
+  - Mobile: one id per form until a payment is recorded (`lib/request-id.ts`; crypto when present, a v4-shaped fallback on Hermes).
+  - The offline text (`payments.mobile.offline`) no longer claims the payment was not recorded: «… مش متأكدين الدفعة اتسجلت ولا لأ. جرّب تاني … ومش هتتسجل مرتين». Web also shows it on a network `TypeError` and refetches the money lists after any failure.
+- **R-SUB-02, R-RPT-01: the unpaid queue says what is due (medium).**
+  - `UnpaidRow` gains `paid`, `owed` and `reason: 'owes' | 'renewal_due'`, computed from the package's payments.
+  - The dashboard row shows either «فاضل عليها {owed}» or «اتدفعت كاملة وخلصت، مستنية تجديد».
+  - The KPI and list label is now «باقات محتاجة دفع أو تجديد», and the unpaid task reads «باقة {student} خلصت ومحتاجة تجديد». No one is chased for money already paid.
+- **R-RPT-02: closed months stay closed (medium).**
+  - Teacher cost uses the rate frozen in an approved or paid payout's `breakdown` for each lesson that payout counted; other lessons use current rates.
+  - A payment on a package quoted in USD is booked at its quote's `subscriptions.fx_rate`. SAR-base packages have no snapshot and still use today's rate.
+  - docs/11 §9 is updated.
+- **R-PAY-01: student codes in the web payment dialog (medium).** The option text, the dialog title and the receipt dialog read «يوسف أحمد · AB-0210». The code is an LTR isolate (`studentLabel`).
+- **R-PAY-01: Arabic digits in the web amount (medium).**
+  - `westernDigits` and `parseAmount` moved from mobile to `@ab/shared` (`money/amount.ts`, with their tests).
+  - The web amount is a text input with `inputMode=decimal`. «١٤٥» saves as 145.
+  - An empty or invalid amount shows «الخانة دي مطلوبة» or `amountInvalid` with `aria-invalid`, and nothing is sent.
+- **R-REP-03: a PDF that runs past one page (medium).**
+  - A typical report still fits on one A4 page, with about 100pt to spare. Seven fields of about 165 characters, or notes of about 660 characters, flow onto a second page.
+  - Such a report is printed again with a footer on every page: `AB-0183 | 2026-09-29 | n / total`. It is ASCII only, because the header and footer templates cannot use the embedded fonts, and it is 12px.
+  - Checked: the long sample renders 2 pages, and PyMuPDF reads «AB-0183 | 2026-09-29 | 2 / 2» on page 2.
+- **Lows fixed:**
+  - Alerts sweep and `.in()` lists:
+    - The sweep pages through `readAll`.
+    - `readChunked` (100 ids per request) serves `UnpaidFlags`, `BalanceQueries`, `subs.forStudents`, `studentsOfLessons` and `taskSubjects`. This removes the HTTP 414 and the silent loss of the «الباقة مش مدفوعة» flag.
+  - Task lifecycle:
+    - `evaluateStudents` closes open tasks the balance no longer calls for (renewed, paid, paused or superseded), with `done_by` null.
+    - Deleting a package closes its tasks.
+  - The renewal reminder is also queued (same dedup key) when a balance jumps from 3 or more straight to 0.
+  - Storage:
+    - The direct teacher insert policy on report attachments is dropped (migration `133`). Uploads go only through the API's signed URL, which checks the edit window. Checked live: a signed upload works with no policy, and a direct upload is refused.
+    - `payments.receipt_path` is unique.
+  - The PDF download is saved as `AB-0183_2026-09-29_تقرير-الحلقة.pdf`. The name is appended to the signed URL encoded once, because supabase-js's own `download` option double-encodes Arabic. The tab opens inside the click (popup blockers allow that) and is pointed at the URL afterwards.
+  - Dashboard dates:
+    - The payouts CSV month uses `MonthSelect` («أكتوبر 2026»).
+    - The period inputs and the payment date show the day in Arabic beside or under them (`dateLabel`).
+  - The subscriptions page's «مهام الإدارة» no longer prints the balance stored when the task was raised. The live balance is on the row above it.
+  - Missing payout rates: one sentence per teacher («سعر حلقة الـ45 والـ60 دقيقة مش متسجل لـأبرار…») with a link to the teacher's file.
+  - PDF overall box: `gap` 6px and `line-height` 1.5, so «جيد جدًا» no longer touches the label.
+  - The grade picker shows the grade word (12px) on every tile.
+
+### Findings rejected or deferred
+- **Trial detection with `rule_id` null (low): deferred to Phase 6.** Every current writer sets `rule_id`: `create_booking`, and reschedule copies it. The exposure is the Sheets import. `lessons.is_trial`, or a required `rule_id` for chargeable lessons, lands with the `tools/migrate` importer.
+- **«البرنامج: تحفيظ وتجويد» vs today's «القرآن الكريم» (low): moved to the owner questions** next to the title choice (rule 10).
+
+### Tests (measured: `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+- **Gate:** green, **23/23 tasks**, 0 cached. Lint shows 0 errors and the same 9 web complexity warnings as before.
+- **Unit tests:** api 1,071 + 1 skipped (161 files), web 529 (108 files), @ab/shared 911 (44 files), mobile 358 (71 suites), wa-stub 5. That is **2,874 in total**, up from 2,843.
+  - The 21 amount-parsing tests moved from mobile to `@ab/shared`.
+  - The skip is the opt-in PDF PNG writer. The Chromium smoke test ran, including the new long-report case.
+- **Added (net +31):**
+  - **api +20:**
+    - `payments.retry.http.test.ts`: retry, race, no id, and a bad id.
+    - Approve guard: http and `approveBlock`.
+    - `unpaidList` reasons.
+    - Frozen payout rates and the USD quote rate.
+    - `monthShift`, `readChunked`, `closeTasks` (query and service), and the renewal at 0.
+    - `pdf-pages.test.ts` and the publisher footer label.
+    - The PDF file name.
+    - The signed URL `download`.
+  - **web +8:**
+    - `RecordPaymentDialog.test.tsx`: codes, Arabic digits, empty or bad amount, lost reply with the same id and one upload.
+    - `UnpaidList.test.tsx`.
+    - `GradePicker.test.tsx`.
+    - The period date label.
+  - **mobile:** +3 (`request-id`, the same clientRequestId on retry), and the 21 amount tests moved out.
+- **E2E: 31 passed, 3 skipped.** That is 2 setup runs plus 13 tests on each of desktop and Pixel 7, plus the 3 new `report-outcome.sql.spec.ts` cases. Those run on desktop only; their mobile runs are the 3 skips. Journey 3 now checks the task's live balance on the dashboard and the stable wording on the packages page.
+
+### Residual TODOs and questions for the owner
+- **Phase 4:**
+  - Sending the queued messages (`report_ready`, `renewal_due`).
+  - Approval of the `report_ready` and `renewal_due` WhatsApp templates. Their variables are still a guess (TODO(R-MSG-01)).
+  - There is no unpaid-package template, so that alert raises a task only.
+- **Real rubric names:** the six rubric names are still the placeholders of docs/07 §16. They are needed from the «تقرير الحلقة» Google Form.
+- **Owner questions (new):**
+  - Group lessons: siblings without their own report still follow the first report's attendance and chargeable (R-STU-04, unchanged). An attended sibling whose report is never filed therefore stays as the first report said: for example, uncharged if that report was `excused`. The pending-reports queue lists the missing report.
+  - Program wording on the PDF: «تحفيظ وتجويد» or today's «القرآن الكريم»?
+- **After approval:** an admin can still edit a report after its month was approved and flip a lesson's outcome. The approved payout is frozen and does not carry that lesson forward. The approve guard covers the common case (late reports). An adjustment line in the next month is the upgrade path.
+- **`approve`'s tz fallback:** `before.teacher?.tz ?? 'UTC'` can't fire, because `teacher_id` is a not-null FK and the teacher is always embedded.
+- **«تحميل PDF» behaviour:** it now saves the file (Content-Disposition attachment) instead of opening it inline, as the button says. It has not been checked on iOS Safari, because WebKit isn't installed.
+- **ponytail notes:**
+  - `readChunked` assumes one 100-id chunk fits in `max_rows`, which means at most 10 packages per student.
+  - SAR-base packages (AED/QAR/KWD/OMR, …) have no FX snapshot, so their revenue still uses today's rate.
+- **Lint:** the web complexity warnings stay at 9. `RecordPaymentDialog` went from 11 to 13. Splitting them is the existing cleanup item.

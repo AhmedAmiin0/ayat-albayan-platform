@@ -14,6 +14,12 @@ describe('PeriodFilter (one filter row, Riyadh days)', () => {
     expect(onChange).toHaveBeenCalledWith({ from: '2026-09-01', to: '2026-10-02' });
   });
 
+  it('each day is also written in Arabic («2 أكتوبر 2026»), since the native input shows the OS locale', () => {
+    render(<PeriodFilter value={VALUE} onChange={vi.fn()} />);
+    const to = screen.getByLabelText(t.dashboard.to);
+    expect(screen.getByText('2 أكتوبر 2026').id).toBe(to.getAttribute('aria-describedby'));
+  });
+
   it('a reversed range is refused with the API wording, and nothing is fetched', () => {
     const onChange = vi.fn();
     render(<PeriodFilter value={VALUE} onChange={onChange} />);

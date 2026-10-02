@@ -10,7 +10,8 @@ import type { LessonStatus } from '../enums/index.js';
 //   cancellation is `excused` («اعتذر مسبقًا»); there is no cancelled_by_student status.
 // - Every other status is terminal: the outcome drives package balance (R-SUB-03) and teacher
 //   payouts (R-TCH-04), and a moved lesson lives on as a new row (lessons.rescheduled_from_id).
-// TODO(R-SCH-03): fixing a wrong outcome (no_show → completed) is not allowed yet; owner to confirm.
+// - A wrong outcome is fixed through the report, not here: submit_report (migration 131)
+//   re-derives the lesson's outcome from its students' attendance, audited (R-REP-03).
 
 const OUTCOMES = ['completed', 'late', 'excused', 'no_show'] as const;
 const CLOSERS = ['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'] as const;

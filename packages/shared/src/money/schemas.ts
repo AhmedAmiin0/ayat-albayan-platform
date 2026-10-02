@@ -79,6 +79,11 @@ export const paymentCreateSchema = z.object({
   paidAt: pastInstant,
   receiptPath: z.string().min(1).nullish(),
   note: optionalText,
+  /**
+   * Made once per payment form and re-sent on every retry: a POST whose reply was lost returns
+   * the payment already recorded instead of recording it twice (rule 8).
+   */
+  clientRequestId: z.uuid().optional(),
 });
 
 /** PATCH /payments/:id: explicit optionals (a .partial() would re-apply defaults). */

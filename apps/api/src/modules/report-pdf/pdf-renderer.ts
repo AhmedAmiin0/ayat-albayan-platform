@@ -1,5 +1,8 @@
 import { Injectable, type OnModuleDestroy } from '@nestjs/common';
 import { chromium, type Browser } from 'playwright-core';
+import { footerTemplate, pageCount } from './pdf-pages';
+
+const A4 = { format: 'A4', printBackground: true, preferCSSPageSize: true } as const;
 
 /**
  * HTML → A4 PDF with headless Chromium (docs/07 §13). playwright-core is pinned to the version
@@ -10,7 +13,11 @@ import { chromium, type Browser } from 'playwright-core';
 export class PdfRenderer implements OnModuleDestroy {
   private browser: Promise<Browser> | null = null;
 
-  async render(html: string): Promise<Uint8Array> {
+  /**
+   * One A4 page as designed; a report that runs longer is printed again with `footer` (ASCII,
+   * footerLabel) and «n / total» on every page (pdf-pages.ts).
+   */
+  async render(html: string, footer?: string): Promise<Uint8Array> {
     const browser = await this.open();
     const context = await browser.newContext();
     try {
@@ -18,7 +25,14 @@ export class PdfRenderer implements OnModuleDestroy {
       await page.setContent(html, { waitUntil: 'load' });
       // Never print with a fallback font: the faces are font-display:block data URIs.
       await page.evaluate('document.fonts.ready.then(() => true)');
-      return await page.pdf({ format: 'A4', printBackground: true, preferCSSPageSize: true });
+      const pdf = await page.pdf(A4);
+      if (!footer || pageCount(pdf) <= 1) return pdf;
+      return await page.pdf({
+        ...A4,
+        displayHeaderFooter: true,
+        headerTemplate: '<span></span>',
+        footerTemplate: footerTemplate(footer),
+      });
     } finally {
       await context.close();
     }

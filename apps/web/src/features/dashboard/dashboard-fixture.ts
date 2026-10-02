@@ -61,7 +61,7 @@ export const WORK: DashboardWork = {
   },
   unpaid: {
     total: 1,
-    items: [{ id: 'sub2', student: { id: 's2', code: 'AB-0187', name: 'يوسف أحمد' }, package: '4', lessons_total: 4, price: 145, currency: 'SAR', starts_on: '2026-09-22' }],
+    items: [{ id: 'sub2', student: { id: 's2', code: 'AB-0187', name: 'يوسف أحمد' }, package: '4', lessons_total: 4, price: 145, paid: 45, owed: 100, reason: 'owes', currency: 'SAR', starts_on: '2026-09-22' }],
   },
   tasks: {
     total: 1,

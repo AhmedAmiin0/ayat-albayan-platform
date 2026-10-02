@@ -11,10 +11,17 @@ import { pdfUrl, REPORTS_KEY, reportErrorText, retryPdf } from './api';
  */
 export function PdfAction({ report, role }: { report: Pick<ReportSummaryView, 'id' | 'pdf_status'>; role: UserRole }) {
   const queryClient = useQueryClient();
-  const open = useMutation({
-    mutationFn: () => pdfUrl(report.id),
-    onSuccess: ({ url }) => window.open(url, '_blank', 'noopener'),
-  });
+  const open = useMutation({ mutationFn: () => pdfUrl(report.id) });
+  // The tab opens inside the click (a phone's popup blocker allows that, not one opened after an
+  // await) and goes to the signed URL once it is in; the URL saves the file under its report name.
+  const download = () => {
+    const tab = window.open('', '_blank');
+    if (tab) tab.opener = null;
+    open.mutate(undefined, {
+      onSuccess: ({ url }) => (tab ? tab.location.assign(url) : window.location.assign(url)),
+      onError: () => tab?.close(),
+    });
+  };
   const retry = useMutation({
     mutationFn: () => retryPdf(report.id),
     onSuccess: () => queryClient.invalidateQueries({ queryKey: [...REPORTS_KEY, 'student'] }),
@@ -23,7 +30,7 @@ export function PdfAction({ report, role }: { report: Pick<ReportSummaryView, 'i
   if (status === 'ready') {
     return (
       <span className="inline-flex items-center gap-2">
-        <Button type="button" variant="secondary" size="sm" disabled={open.isPending} onClick={() => open.mutate()}>
+        <Button type="button" variant="secondary" size="sm" disabled={open.isPending} onClick={download}>
           {t.reports.downloadPdf}
         </Button>
         {open.error && <span className="text-xs text-danger">{reportErrorText(open.error)}</span>}

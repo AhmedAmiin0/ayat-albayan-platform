@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { rangeError } from './search';
 import type { DayRange } from './types';
@@ -26,16 +27,21 @@ export function PeriodFilter({ value, onChange }: PeriodFilterProps) {
   };
   const field = (key: keyof DayRange, label: string) => (
     <div className="grid gap-1">
-      <Label htmlFor={`dash-${key}`} className="text-xs text-ink-2">
-        {label}
-      </Label>
+      <span className="flex items-baseline gap-2">
+        <Label htmlFor={`dash-${key}`} className="text-xs text-ink-2">
+          {label}
+        </Label>
+        <span id={`dash-${key}-label`} className="text-xs text-ink-3">
+          {dateLabel(draft[key])}
+        </span>
+      </span>
       <Input
         id={`dash-${key}`}
         type="date"
         dir="ltr"
         value={draft[key]}
         aria-invalid={error ? true : undefined}
-        aria-describedby={error ? 'dash-range-error' : undefined}
+        aria-describedby={[`dash-${key}-label`, error && 'dash-range-error'].filter(Boolean).join(' ')}
         onChange={(e) => setDraft({ ...draft, [key]: e.target.value })}
         className="w-40 tabular-nums sm:min-h-8"
       />

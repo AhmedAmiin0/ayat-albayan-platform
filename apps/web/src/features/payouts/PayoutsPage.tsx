@@ -6,7 +6,6 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
-import { durationLabel } from '@/features/pricing/format';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { apiErrorText } from '@/features/subscriptions/format';
@@ -20,6 +19,7 @@ import {
   payPayout,
   type PayoutGenerateResult,
 } from './api';
+import { MissingRates } from './MissingRates';
 import { MonthSelect } from './MonthSelect';
 import { payoutColumns } from './payout-columns';
 
@@ -72,11 +72,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
       </PageHead>
       {error && <FormAlert>{apiErrorText(error, t.payouts.error)}</FormAlert>}
       {csv.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {missing.map((m) => (
-        <FormAlert key={m.teacher_id} className="mb-2">
-          {`${m.display_name_ar}: ${m.durations.map((d) => t.payouts.error.rate_missing.replace('{duration}', durationLabel(d))).join('، ')}`}
-        </FormAlert>
-      ))}
+      <MissingRates items={missing} />
       {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isSuccess && rows.length === 0 && <EmptyState title={t.payouts.empty} />}

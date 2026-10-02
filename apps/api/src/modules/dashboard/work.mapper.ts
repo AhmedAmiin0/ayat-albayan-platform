@@ -1,4 +1,5 @@
 import type { AdminTaskKind, LessonStatus, PackageSize } from '@ab/shared';
+import { round2 } from './conversion';
 import { WORK_ITEMS, type PendingReportRow, type TaskRow, type UnpaidRow, type WorkList } from './dashboard.types';
 
 // GET /dashboard/work rows (pure). Each list: the total, and the oldest WORK_ITEMS first.
@@ -18,6 +19,7 @@ export interface UnpaidIn {
   currency: string;
   starts_on: string;
   student: Student;
+  payments: { amount: number }[];
 }
 export interface TaskIn {
   id: string;
@@ -50,13 +52,21 @@ export function pendingList(rows: readonly PendingIn[]): WorkList<PendingReportR
   return list(out);
 }
 
+/**
+ * Status `unpaid` covers two cases (R-SUB-02, subscriptionStatusFor): money still owed, or a
+ * package paid in full whose lessons are used up. `reason` tells the admin which one to chase.
+ */
 export function unpaidList(rows: readonly UnpaidIn[]): WorkList<UnpaidRow> {
   return list(
     rows.flatMap((r) => {
       const s = student(r.student);
       if (!s) return [];
       const { id, package: pkg, lessons_total, currency, starts_on } = r;
-      return [{ id, student: s, package: pkg, lessons_total, price: Number(r.price), currency, starts_on }];
+      const price = Number(r.price);
+      const paid = round2(r.payments.reduce((n, p) => n + Number(p.amount), 0));
+      const owed = round2(Math.max(0, price - paid));
+      const reason = owed > 0 ? 'owes' : 'renewal_due';
+      return [{ id, student: s, package: pkg, lessons_total, price, paid, owed, reason, currency, starts_on } as const];
     }),
   );
 }

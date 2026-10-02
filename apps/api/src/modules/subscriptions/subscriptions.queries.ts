@@ -3,6 +3,7 @@ import type { SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError, type Page, type PageQuery } from '../teachers/http';
+import { readChunked } from '../scheduling/read-all';
 
 export type StudentRef = { id: string; code: string | null; name: string };
 export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };
@@ -49,16 +50,9 @@ export class SubscriptionsQueries {
 
   /** Several students' packages (no join), FIFO order within each student. */
   async forStudents(studentIds: readonly string[]): Promise<Tables<'subscriptions'>[]> {
-    if (studentIds.length === 0) return [];
-    const { data, error } = await this.db
-      .from('subscriptions')
-      .select('*')
-      .in('student_id', [...studentIds])
-      .order('starts_on')
-      .order('created_at')
-      .order('id');
-    if (error) throw dbError(error);
-    return data;
+    return readChunked(studentIds, (chunk) =>
+      this.db.from('subscriptions').select('*').in('student_id', chunk).order('starts_on').order('created_at').order('id'),
+    );
   }
 
   async insert(row: TablesInsert<'subscriptions'>): Promise<SubRow> {

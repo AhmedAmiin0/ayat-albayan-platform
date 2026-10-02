@@ -1,6 +1,6 @@
 import type { PostgrestError } from '@supabase/supabase-js';
 import { describe, expect, it } from 'vitest';
-import { MAX_ROWS, readAll } from './read-all';
+import { IN_CHUNK, MAX_ROWS, readAll, readChunked } from './read-all';
 
 describe('readAll — never truncated at PostgREST max_rows', () => {
   it('keeps reading ranges until a short page', async () => {
@@ -29,5 +29,16 @@ describe('readAll — never truncated at PostgREST max_rows', () => {
         error: { code: 'XX000', message: 'boom', details: '', hint: '', name: 'PostgrestError' } as PostgrestError,
       })),
     ).rejects.toThrow(/boom/);
+  });
+});
+
+describe('readChunked — long .in() lists never hit HTTP 414', () => {
+  it('reads IN_CHUNK ids per request, in order; nothing to read → no request', async () => {
+    const ids = Array.from({ length: IN_CHUNK * 2 + 3 }, (_, i) => `id${i}`);
+    const sizes: number[] = [];
+    const rows = await readChunked(ids, async (chunk) => (sizes.push(chunk.length), { data: chunk, error: null }));
+    expect(sizes).toEqual([IN_CHUNK, IN_CHUNK, 3]);
+    expect(rows).toEqual(ids);
+    expect(await readChunked([], async () => ({ data: ['x'], error: null }))).toEqual([]);
   });
 });

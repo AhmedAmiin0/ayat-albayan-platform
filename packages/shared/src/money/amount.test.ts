@@ -1,4 +1,5 @@
-import { parseAmount, westernDigits } from './amount';
+import { expect, test } from 'vitest';
+import { parseAmount, westernDigits } from './amount.js';
 
 test.each([
   ['145', 145],

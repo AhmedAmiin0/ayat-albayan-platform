@@ -3,14 +3,16 @@ import { ALERT_TASK_KIND, alertDedupKey, packageProgress } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { SettingsService } from '../../common/settings/settings.service';
 import { AlertsQueries } from './alerts.queries';
-import { alertPlan, type AlertPlan } from './packages.plan';
+import { alertPlan, openTaskKeys, type AlertPlan } from './packages.plan';
 import { PackagesService } from './packages.service';
 
 export type EvaluateOptions = { actorId?: string | null; now?: Date };
 
 /**
  * R-SUB-02 «2 lessons remaining» → renewal reminder to the guardian + an admin task; at 0 the
- * newest package is `unpaid` (+ task, no WhatsApp: no approved template, TODO(R-MSG-01)).
+ * newest package is `unpaid` (+ task; no unpaid WhatsApp: no approved template, TODO(R-MSG-01)).
+ * A balance that skips the reminder (3 → 0 in one change set, a missed run) still sends the
+ * renewal reminder once at 0 (same dedup key). Tasks the balance no longer calls for are closed.
  * Runs after every lesson change (AlertsJob subscribes to LessonEvents, incl. a submitted report),
  * every money write (MoneyWrites) and the sweep job. Idempotent: the task and the message carry
  * the same dedup key (rule 8).
@@ -38,7 +40,9 @@ export class SubscriptionAlertsService {
       try {
         const { rows, ctx } = await this.packages.recompute(studentId, opts.actorId ?? null);
         const plan = alertPlan({ subs: rows, balances: ctx.balances, threshold });
-        if (plan) await this.raise({ studentId, plan, now: opts.now ?? new Date() });
+        const now = opts.now ?? new Date();
+        if (plan) await this.raise({ studentId, plan, now });
+        await this.queries.closeTasks({ subjectIds: rows.map((r) => r.id), keep: openTaskKeys(plan), now });
       } catch (e) {
         failed += 1;
         this.log.error(`alerts failed for student ${studentId}: ${e instanceof Error ? e.message : String(e)}`);
@@ -53,11 +57,16 @@ export class SubscriptionAlertsService {
     const label = packageProgress(plan.used, plan.total, { forms: ar.subscriptions.progress }).remainingLabel;
     const kind = ALERT_TASK_KIND[plan.alert];
     await this.queries.raiseTask({ kind, subjectId: plan.subscriptionId, dedupKey, title: label });
-    if (plan.alert !== 'renewal') return;
     const recipient = await this.queries.recipient(input.studentId);
     if (!recipient) return;
     // TODO(R-MSG-01): {{1}}/{{2}} against the approved renewal_due template.
     const params = { '1': recipient.studentName, '2': label };
-    await this.queries.queueRenewal({ recipient, params, dedupKey, now: input.now });
+    const renewalKey = alertDedupKey('renewal', plan.subscriptionId);
+    await this.queries.queueRenewal({ recipient, params, dedupKey: renewalKey, now: input.now });
+  }
+
+  /** A deleted package: its open tasks have nothing left to point at. */
+  async closeTasksOf(subscriptionId: string, now = new Date()): Promise<void> {
+    await this.queries.closeTasks({ subjectIds: [subscriptionId], keep: [], now });
   }
 }

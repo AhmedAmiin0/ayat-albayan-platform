@@ -59,9 +59,12 @@ test.describe('journey 3 — payment → active → renewal at 2 left (R-PAY-01,
       .poll(() => queuedFor(seed.guardianId))
       .toContainEqual(expect.objectContaining({ template_key: 'renewal_due', status: 'queued' }));
 
-    // The admin sees the task, worded from ar.json with the balance line.
+    // The admin sees the task, worded from ar.json: on the dashboard with the live balance line;
+    // on the packages page without it (the package row above carries the live balance).
+    const task = ar.dashboard.task.renewal_due.replace('{student}', 'سهيلة');
+    await page.goto('/admin?work=tasks');
+    await expect(page.getByText(task.replace('{left}', 'فاضل حلقتين')).first()).toBeVisible();
     await page.goto('/admin/subscriptions');
-    const task = ar.dashboard.task.renewal_due.replace('{student}', 'سهيلة').replace('{left}', 'فاضل حلقتين');
-    await expect(page.getByText(task).first()).toBeVisible();
+    await expect(page.getByText(task.replace(/:\s*\{left\}$/, ''), { exact: true }).first()).toBeVisible();
   });
 });

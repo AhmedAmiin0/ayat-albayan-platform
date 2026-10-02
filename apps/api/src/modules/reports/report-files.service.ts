@@ -9,6 +9,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { attachmentPath, BUCKETS, isPathOf } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
+import { reportFileName } from '../report-pdf/report-ready';
 import { badRequest, conflict } from '../scheduling/errors';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
 import { ReportGate } from './report-gate';
@@ -25,11 +26,16 @@ export class ReportFilesService {
     private readonly storage: StorageService,
   ) {}
 
-  /** R6: 1 h signed URL to reports/{student_id}/{lesson_id}.pdf; 409 pdf_not_ready before. */
+  /**
+   * R6: 1 h signed URL to reports/{student_id}/{lesson_id}.pdf, saved as the file name the
+   * guardian gets on WhatsApp («AB-0183_2026-09-29_تقرير-الحلقة.pdf»); 409 pdf_not_ready before.
+   */
   async pdfUrl({ id, user }: FileRef): Promise<SignedDownload> {
     const row = await this.gate.load(id, user);
     if (row.pdf_status !== 'ready' || !row.pdf_path) throw conflict('pdf_not_ready');
-    return this.storage.signedDownload({ bucket: BUCKETS.reports, path: row.pdf_path });
+    const name = await this.files.pdfName({ studentId: row.student_id, lessonId: row.lesson_id });
+    const download = name ? reportFileName(name) : undefined;
+    return this.storage.signedDownload({ bucket: BUCKETS.reports, path: row.pdf_path, ...(download ? { download } : {}) });
   }
 
   /** R7: a signed upload URL for a new object under the report (the bucket enforces type and size). */

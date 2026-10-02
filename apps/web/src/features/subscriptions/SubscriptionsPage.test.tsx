@@ -46,7 +46,8 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     expect(cells.getByText(t.enums.packageSize['4'])).toBeTruthy();
     expect(cells.getByText('فاضل حلقتين')).toBeTruthy();
     expect(cells.getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
-    expect(await screen.findByText('باقة سهيلة قربت تخلص: فاضل حلقتين')).toBeTruthy();
+    // The task never repeats the balance it was raised with (it can be stale); the row above has it live.
+    expect(await screen.findByText('باقة سهيلة قربت تخلص')).toBeTruthy();
   });
 
   it('filters by status from the first page', async () => {

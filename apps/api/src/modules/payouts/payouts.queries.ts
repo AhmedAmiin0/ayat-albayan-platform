@@ -2,13 +2,16 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { REPORTABLE_STATUSES } from '../reports/report-history.queries';
 import { dbError } from '../teachers/http';
 import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
 
-export type PayoutRow = Tables<'teacher_payouts'> & { teacher: { id: string; display_name_ar: string } | null };
+export type PayoutRow = Tables<'teacher_payouts'> & {
+  teacher: { id: string; display_name_ar: string; tz: string } | null;
+};
 export type LessonWindow = { teacherId: string; from: string; to: string; statuses: LessonStatus[] };
 
-const SELECT = '*, teacher:teachers(id, display_name_ar)';
+const SELECT = '*, teacher:teachers(id, display_name_ar, tz)';
 const byTeacherName = (a: PayoutRow, b: PayoutRow) =>
   (a.teacher?.display_name_ar ?? '').localeCompare(b.teacher?.display_name_ar ?? '', 'ar') || a.id.localeCompare(b.id);
 
@@ -37,6 +40,27 @@ export class PayoutsQueries {
       .order('starts_at');
     if (error) throw dbError(error);
     return data;
+  }
+
+  /**
+   * (lesson, student) pairs of the teacher's reportable lessons in the window still missing a
+   * submitted report (docs/11 R11's anti-join: the embed keeps submitted reports, `is.null` the rest).
+   */
+  async pendingReports(w: Omit<LessonWindow, 'statuses'>): Promise<number> {
+    const { count, error } = await this.db
+      .from('lesson_students')
+      .select('lesson_id, lesson:lessons!inner(teacher_id, starts_at, status), lesson_reports(id)', {
+        count: 'exact',
+        head: true,
+      })
+      .eq('lesson.teacher_id', w.teacherId)
+      .gte('lesson.starts_at', w.from)
+      .lt('lesson.starts_at', w.to)
+      .in('lesson.status', [...REPORTABLE_STATUSES])
+      .eq('lesson_reports.status', 'submitted')
+      .is('lesson_reports', null);
+    if (error) throw dbError(error);
+    return count ?? 0;
   }
 
   /** A month's rows by teacher name; `month` is the first day (YYYY-MM-01). */

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { monthsOf, parseRange, rangeWindow, riyadhDate, riyadhMonth } from './range';
+import { monthShift, monthsOf, parseRange, rangeWindow, riyadhDate, riyadhMonth } from './range';
 
 const body = (fn: () => unknown) => {
   try {
@@ -48,5 +48,13 @@ describe('monthsOf', () => {
 
   it('one month for a range inside it', () => {
     expect(monthsOf({ from: '2026-10-01', to: '2026-10-02' })).toEqual(['2026-10']);
+  });
+});
+
+describe('monthShift', () => {
+  it('moves across year ends', () => {
+    expect(monthShift('2026-01', -1)).toBe('2025-12-01');
+    expect(monthShift('2026-12', 1)).toBe('2027-01-01');
+    expect(monthShift('2026-10', 0)).toBe('2026-10-01');
   });
 });

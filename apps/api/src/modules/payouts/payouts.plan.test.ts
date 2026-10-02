@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { byDuration, monthWindow, planPayout, type PayoutLesson, type PlanInput } from './payouts.plan';
+import { approveBlock, byDuration, monthWindow, planPayout, type PayoutLesson, type PlanInput } from './payouts.plan';
 
 const MIN = 60_000;
 let seq = 0;
@@ -102,5 +102,17 @@ describe('planPayout (R-PAY-02: completed lessons × rate, EGP; E3 frozen once a
     const plan = planPayout(base({ lessons: [odd] }));
     expect(plan).toMatchObject({ kind: 'draft', lessonsCount: 0, amount: 0 });
     expect(plan.kind === 'draft' && plan.breakdown.skipped_lesson_ids).toEqual([odd.id]);
+  });
+});
+
+describe('approveBlock (E3: an approved month is frozen, so it waits for the month and its reports)', () => {
+  const monthEnd = '2026-09-30T21:00:00.000Z';
+  it('the month is not over until its last local midnight', () => {
+    expect(approveBlock({ monthEnd, now: new Date('2026-09-30T20:59:59Z'), pendingReports: 0 })).toBe('month_not_over');
+    expect(approveBlock({ monthEnd, now: new Date(monthEnd), pendingReports: 0 })).toBeNull();
+  });
+  it('a missing report blocks; none → approvable', () => {
+    expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 1 })).toBe('reports_pending');
+    expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 0 })).toBeNull();
   });
 });

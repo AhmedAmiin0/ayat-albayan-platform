@@ -24,12 +24,18 @@ export class StorageService {
     return { bucket: ref.bucket, path: data.path, token: data.token, signed_url: data.signedUrl };
   }
 
-  /** A time-limited GET URL; `seconds` defaults to the UI lifetime (1 h). */
-  async signedDownload(ref: ObjectRef & { seconds?: number }): Promise<SignedDownload> {
+  /**
+   * A time-limited GET URL; `seconds` defaults to the UI lifetime (1 h). `download` makes the
+   * browser save it under that name (Content-Disposition) instead of the object's uuid.
+   */
+  async signedDownload(ref: ObjectRef & { seconds?: number; download?: string }): Promise<SignedDownload> {
     const seconds = ref.seconds ?? SIGNED_URL_SECONDS.ui;
     const { data, error } = await this.db.storage.from(ref.bucket).createSignedUrl(ref.path, seconds);
     if (error) throw new Error(`storage signed url failed: ${error.message}`);
-    return { url: data.signedUrl, expires_at: new Date(Date.now() + seconds * 1000).toISOString() };
+    // Not createSignedUrl's own `download` option: supabase-js encodes it twice, and an Arabic
+    // name would save as «AB-0183_…_%D8%AA….pdf». Encoded once, Storage sends filename*=UTF-8''.
+    const url = ref.download ? `${data.signedUrl}&download=${encodeURIComponent(ref.download)}` : data.signedUrl;
+    return { url, expires_at: new Date(Date.now() + seconds * 1000).toISOString() };
   }
 
   /** Server-side write (the PDF job). Overwrites: a re-rendered report keeps its path. */

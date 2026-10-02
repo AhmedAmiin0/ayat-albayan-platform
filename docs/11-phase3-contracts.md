@@ -284,7 +284,7 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
   - `teacher_load`: per active teacher, the occupying lessons in the range and students with `teacher_id` = them in `trial | active`.
   - `finance`, all converted to `settings.reporting_currency`:
     - `revenue` = payments with `paid_at` in the range;
-    - `teacher_cost` = the paid lessons in the range (`payoutStatuses`) × the teacher's rate (EGP);
+    - `teacher_cost` = the paid lessons in the range (`payoutStatuses`) × the teacher's rate (EGP); a lesson counted by an approved or paid payout uses the rate frozen in that payout's `breakdown` (verifier fix: a closed month keeps what was paid);
     - `expenses` = expenses whose month falls in the range's months;
     - `gross_margin = revenue − teacher_cost − expenses`;
     - `by_source`, per `guardians.source` (null → `unknown`):
@@ -294,7 +294,7 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
       - `gross_margin = revenue − teacher_cost`.
 
       Ad spend is shown as one total (expenses `ads`), not split by source.
-  - **FX:** amount in C → SAR = `amount / rate(SAR→C)` (SAR itself is 1), then × `rate(SAR→R)`, using `FxService.rateSarTo(C)`. A currency whose rate throws (`fx_unavailable`) is left out and listed in `fx_missing`. `fx_date` = the oldest rate date used.
+  - **FX:** amount in C → SAR = `amount / rate(SAR→C)` (SAR itself is 1), then × `rate(SAR→R)`, using `FxService.rateSarTo(C)`. A payment on a package quoted in USD uses its quote's `subscriptions.fx_rate` for C → SAR instead (verifier fix: closed months stay stable); packages priced at the SAR base have no snapshot and use today's rate. A currency whose rate throws (`fx_unavailable`) is left out and listed in `fx_missing`. `fx_date` = the oldest rate date used.
 - **CSV:** UTF-8 **with BOM** (Excel opens Arabic correctly), a header row from `ar.json`, and `Content-Disposition: attachment; filename="<name>-<range>.csv"`. Instants are written as local Riyadh `YYYY-MM-DD HH:MM`, and E.164 phones as-is. Streams or pages internally (R-NFR-08). Quote every field (RFC 4180). The payout CSV has one row per teacher plus its breakdown lines.
 
 ## 10. UI notes

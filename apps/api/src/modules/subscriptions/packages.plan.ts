@@ -1,4 +1,5 @@
 import {
+  alertDedupKey,
   alertFor,
   studentRemaining,
   subscriptionStatusFor,
@@ -80,4 +81,15 @@ export function unpaidFlagged(p: StudentPackages): boolean {
   const newest = p.subs.at(-1);
   if (newest?.status !== 'unpaid') return false;
   return studentRemaining(p.subs.map((s) => balanceOf(p, s))) <= 0;
+}
+
+/**
+ * The task keys the student's balance still calls for; every other open task about the student's
+ * packages is closed (renewed, paid, paused, or a newer package took over). At 0 left both the
+ * renewal and the unpaid task stand.
+ */
+export function openTaskKeys(plan: AlertPlan | null): string[] {
+  if (!plan) return [];
+  const renewal = alertDedupKey('renewal', plan.subscriptionId);
+  return plan.alert === 'unpaid' ? [renewal, alertDedupKey('unpaid', plan.subscriptionId)] : [renewal];
 }

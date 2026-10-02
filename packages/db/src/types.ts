@@ -781,6 +781,7 @@ export type Database = {
       payments: {
         Row: {
           amount: number;
+          client_request_id: string | null;
           created_at: string;
           currency: string;
           id: string;
@@ -794,6 +795,7 @@ export type Database = {
         };
         Insert: {
           amount: number;
+          client_request_id?: string | null;
           created_at?: string;
           currency: string;
           id?: string;
@@ -807,6 +809,7 @@ export type Database = {
         };
         Update: {
           amount?: number;
+          client_request_id?: string | null;
           created_at?: string;
           currency?: string;
           id?: string;

@@ -63,8 +63,10 @@ export function submitPayload(input: SubmitPlanInput): SubmitPayload {
  * The lesson side of a submit (R-REP-03 «mark lesson completed», event = ATTENDANCE_EVENT):
  * - an open lesson (scheduled | confirmed) moves to the event's status; the other students of a
  *   group lesson follow the lesson-wide event until their own reports arrive;
- * - a lesson that already has an outcome keeps it; only this student's attendance and chargeable
- *   are synced, and only when they differ (the report is the source of truth for its student).
+ * - a lesson that already has an outcome: this student's attendance and chargeable are synced,
+ *   only when they differ (the report is the source of truth for its student).
+ * Either way submit_report (migration 131) then re-derives lessons.status from every student's
+ * attendance, so a sibling's report or a corrected one also corrects the lesson (payouts, R-PAY-02).
  */
 export function lessonOutcome(input: SubmitPlanInput): Pick<SubmitPayload, 'lesson_change' | 'student'> {
   const { lesson, now, lateCancelHours } = input;

@@ -27,6 +27,7 @@ function setup(states: Record<string, StudentState | Error>) {
     raiseTask: vi.fn(async () => undefined),
     recipient: vi.fn(async () => RECIPIENT),
     queueRenewal: vi.fn(async () => undefined),
+    closeTasks: vi.fn(async () => undefined),
   };
   const settings = { all: vi.fn(async () => SETTING_DEFAULTS) };
   const service = new SubscriptionAlertsService(
@@ -55,19 +56,32 @@ describe('SubscriptionAlertsService (R-SUB-02)', () => {
     });
   });
 
-  it('used up → subscription_unpaid task, no WhatsApp (no approved template)', async () => {
+  it('used up → subscription_unpaid task; the renewal reminder under its own key (sent once even if 2 left was skipped)', async () => {
     const { service, queries } = setup({ s1: state('unpaid', 4) });
-    await service.evaluateStudents(['s1']);
+    await service.evaluateStudents(['s1'], { now: NOW });
     expect(queries.raiseTask).toHaveBeenCalledWith(
       expect.objectContaining({ kind: 'subscription_unpaid', title: 'الباقة خلصت' }),
     );
-    expect(queries.queueRenewal).not.toHaveBeenCalled();
+    expect(queries.queueRenewal).toHaveBeenCalledWith(expect.objectContaining({ dedupKey: 'renewal_due:sub-1' }));
+    expect(queries.closeTasks).toHaveBeenCalledWith({
+      subjectIds: ['sub-1'],
+      keep: ['renewal_due:sub-1', 'subscription_unpaid:sub-1'],
+      now: NOW,
+    });
   });
 
-  it('3 left or a paused package → nothing raised', async () => {
+  it('3 left or a paused package → nothing raised, and their open tasks are closed', async () => {
     const { service, queries } = setup({ s1: state('active', 1), s2: state('paused', 4) });
-    await service.evaluateStudents(['s1', 's2']);
+    await service.evaluateStudents(['s1', 's2'], { now: NOW });
     expect(queries.raiseTask).not.toHaveBeenCalled();
+    expect(queries.closeTasks).toHaveBeenCalledWith({ subjectIds: ['sub-1'], keep: [], now: NOW });
+    expect(queries.closeTasks).toHaveBeenCalledTimes(2);
+  });
+
+  it('a deleted package: all its open tasks are closed', async () => {
+    const { service, queries } = setup({});
+    await service.closeTasksOf('sub-9', NOW);
+    expect(queries.closeTasks).toHaveBeenCalledWith({ subjectIds: ['sub-9'], keep: [], now: NOW });
   });
 
   it('no guardian on file → the task is still raised, no message', async () => {

@@ -21,6 +21,16 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
     ]);
   });
 
+  it('stale tasks: open ones about the packages, except the keys still called for, are closed by the system', async () => {
+    const { db, argsOf } = fakeDb({ admin_tasks: [{}] });
+    const now = new Date('2026-10-02T09:00:00Z');
+    await new AlertsQueries(db).closeTasks({ subjectIds: ['sub-1', 'sub-2'], keep: ['renewal_due:sub-2'], now });
+    expect(argsOf('admin_tasks', 'update')).toEqual([{ done_at: '2026-10-02T09:00:00.000Z', done_by: null }]);
+    expect(argsOf('admin_tasks', 'in')).toEqual(['subject_id', ['sub-1', 'sub-2']]);
+    expect(argsOf('admin_tasks', 'is')).toEqual(['done_at', null]);
+    expect(argsOf('admin_tasks', 'not')).toEqual(['dedup_key', 'in', '("renewal_due:sub-2")']);
+  });
+
   it('the renewal message is a queued outbound renewal_due to the guardian, deduped', async () => {
     const { db, argsOf } = fakeDb({ messages: [{}] });
     const recipient = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };

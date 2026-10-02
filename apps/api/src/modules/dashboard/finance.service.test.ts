@@ -11,12 +11,13 @@ const at = { starts_at: '2026-10-01T16:00:00Z', ends_at: '2026-10-01T16:30:00Z' 
 function service(over: { countLate?: boolean } = {}) {
   const money = {
     payments: vi.fn().mockResolvedValue([
-      { amount: 145, currency: 'SAR', paid_at: '2026-10-01T10:00:00Z', subscription: { student: { guardian: { source: 'facebook_ad' } } } },
+      { amount: 145, currency: 'SAR', paid_at: '2026-10-01T10:00:00Z', subscription: { fx_rate: null, student: { guardian: { source: 'facebook_ad' } } } },
     ]),
     paidLessons: vi.fn().mockResolvedValue([
-      { ...at, teacher: RATES, lesson_students: [] },
-      { ...at, ends_at: '2026-10-01T17:00:00Z', teacher: RATES, lesson_students: [] },
+      { ...at, id: 'l1', teacher: RATES, lesson_students: [] },
+      { ...at, id: 'l2', ends_at: '2026-10-01T17:00:00Z', teacher: RATES, lesson_students: [] },
     ]),
+    frozenPayouts: vi.fn().mockResolvedValue([]),
     expenses: vi.fn().mockResolvedValue([{ id: 'e', month: '2026-10-01', category: 'ads', amount: 260, currency: 'EGP' }]),
   };
   const fx = {
@@ -62,5 +63,6 @@ describe('FinanceService.finance (R-RPT-02)', () => {
     await svc.finance({ range: { from: '2026-09-15', to: '2026-10-02' }, leads: [] });
     expect(money.paidLessons.mock.calls[0]?.[1]).toEqual(['completed', 'late']);
     expect(money.expenses).toHaveBeenCalledWith('2026-09', '2026-10');
+    expect(money.frozenPayouts).toHaveBeenCalledWith('2026-08-01', '2026-11-01');
   });
 });

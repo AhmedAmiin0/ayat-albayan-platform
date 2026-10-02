@@ -99,3 +99,18 @@ const dayFormatter = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
 export function dayMonthLabel(date: string): string {
   return dayFormatter.format(new Date(utcOf(date)));
 }
+
+const dateFormatter = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+});
+
+/**
+ * «3 أكتوبر 2026» for a local date: shown under native date inputs, which print the OS locale
+ * («10/02/2026» reads as 10 February to an Egyptian or Saudi admin).
+ */
+export function dateLabel(date: string): string {
+  return date ? dateFormatter.format(new Date(utcOf(date))) : '';
+}

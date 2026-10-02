@@ -11,6 +11,7 @@ import { PayoutsPage } from './PayoutsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
 function renderPage(rows = [PAYOUT]) {
   apiFetch.mockResolvedValue(rows);
@@ -53,10 +54,13 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     apiSend.mockResolvedValue({
       month: '2026-09',
       payouts: [],
-      missing_rates: [{ teacher_id: 't1', display_name_ar: 'أبرار', durations: [90] }],
+      missing_rates: [{ teacher_id: 't1', display_name_ar: 'أبرار', durations: [45, 60] }],
     });
     fireEvent.click(screen.getByRole('button', { name: t.payouts.generate }));
-    expect(await screen.findByText(`أبرار: ${t.payouts.error.rate_missing.replace('{duration}', '90 دقيقة')}`)).toBeTruthy();
+    // One sentence per teacher, every duration in it, and the way to the teacher's file.
+    const link = await screen.findByRole('link', { name: t.payouts.setRate });
+    expect(link.getAttribute('href')).toBe('/admin/teachers/t1');
+    expect(link.parentElement?.textContent).toContain('سعر حلقة الـ45 والـ60 دقيقة مش متسجل لـأبرار');
     expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/2026-09/generate');
   });
 

@@ -1,15 +1,15 @@
 import { OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { readAll, readChunked } from '../scheduling/read-all';
 
 /** Open or with an outcome; never cancelled or moved (docs/11 R11). */
 export const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'completed', 'late', 'excused', 'no_show'];
 
 const PENDING =
   'lesson_id, student_id, student:students(id, code, name), lesson:lessons!inner(id, starts_at, status, teacher:teachers(id, display_name_ar)), lesson_reports(id)';
-const UNPAID = 'id, package, lessons_total, price, currency, starts_on, created_at, student:students(id, code, name)';
+const UNPAID =
+  'id, package, lessons_total, price, currency, starts_on, created_at, student:students(id, code, name), payments(amount)';
 const TASK = 'id, kind, subject_type, subject_id, title, due_at, done_at, created_at';
 
 /** The admin's queue (GET /dashboard/work). Service role; the controller is admin-only. */
@@ -66,18 +66,15 @@ export class WorkQueries {
 
   /** Student and lesson use of the packages the tasks are about (v_subscription_balance, service role only). */
   async taskSubjects(subscriptionIds: readonly string[]) {
-    if (subscriptionIds.length === 0) return [];
+    const ids = [...new Set(subscriptionIds)];
     const [subs, balances] = await Promise.all([
-      this.db.from('subscriptions').select('id, student:students(id, code, name)').in('id', [...subscriptionIds]),
-      this.db
-        .from('v_subscription_balance')
-        .select('subscription_id, lessons_total, lessons_used')
-        .in('subscription_id', [...subscriptionIds]),
+      readChunked(ids, (chunk) => this.db.from('subscriptions').select('id, student:students(id, code, name)').in('id', chunk)),
+      readChunked(ids, (chunk) =>
+        this.db.from('v_subscription_balance').select('subscription_id, lessons_total, lessons_used').in('subscription_id', chunk),
+      ),
     ]);
-    if (subs.error) throw dbError(subs.error);
-    if (balances.error) throw dbError(balances.error);
-    const used = new Map(balances.data.map((b) => [b.subscription_id, b]));
-    return subs.data.map((s) => ({ id: s.id, student: s.student, balance: used.get(s.id) ?? null }));
+    const used = new Map(balances.map((b) => [b.subscription_id, b]));
+    return subs.map((s) => ({ id: s.id, student: s.student, balance: used.get(s.id) ?? null }));
   }
 }
 

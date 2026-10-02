@@ -44,8 +44,21 @@ export class PaymentsQueries {
     return data;
   }
 
-  async insert(row: TablesInsert<'payments'>): Promise<PaymentRow> {
+  /** null: a payment with this client_request_id is already recorded (a retry raced it). */
+  async insert(row: TablesInsert<'payments'>): Promise<PaymentRow | null> {
     const { data, error } = await this.db.from('payments').insert(row).select(SELECT).single();
+    if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The payment a form already recorded (its client_request_id), or null. */
+  async byRequest(clientRequestId: string): Promise<PaymentRow | null> {
+    const { data, error } = await this.db
+      .from('payments')
+      .select(SELECT)
+      .eq('client_request_id', clientRequestId)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

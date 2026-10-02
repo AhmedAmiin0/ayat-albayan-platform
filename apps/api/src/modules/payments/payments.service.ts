@@ -31,7 +31,10 @@ export class PaymentsService {
     return view;
   }
 
+  /** A retry of the same form (clientRequestId) returns the payment it already recorded. */
   async create(input: PaymentCreate, actorId: string): Promise<PaymentView> {
+    const replay = await this.replayOf(input.clientRequestId);
+    if (replay) return replay;
     const sub = await this.receipts.subscription(input.subscriptionId);
     // TODO(R-PAY-01) owner: payments in another currency than the package's.
     if (input.currency !== sub.currency) throw badRequest('currency_mismatch', { currency: sub.currency });
@@ -45,7 +48,14 @@ export class PaymentsService {
       receipt_path: input.receiptPath ?? null,
       recorded_by: actorId,
       note: input.note ?? null,
+      client_request_id: input.clientRequestId ?? null,
     });
+    if (!row) {
+      // Lost the race to a retry of the same form: that one recorded it.
+      const raced = await this.replayOf(input.clientRequestId);
+      if (!raced) throw notFound('payment_not_found');
+      return raced;
+    }
     await this.writes.done({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, sub.student_id);
     return this.get(row.id);
   }
@@ -77,6 +87,11 @@ export class PaymentsService {
   /** P7. */
   async receipt(id: string) {
     return this.receipts.download((await this.row(id)).receipt_path);
+  }
+
+  private async replayOf(clientRequestId: string | undefined): Promise<PaymentView | null> {
+    const row = clientRequestId ? await this.payments.byRequest(clientRequestId) : null;
+    return row ? this.get(row.id) : null;
   }
 
   private async row(id: string): Promise<PaymentRow> {

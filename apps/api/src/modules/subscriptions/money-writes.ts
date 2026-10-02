@@ -15,6 +15,7 @@ export class MoneyWrites {
 
   async done(entry: AuditEntry & { actorId: string }, studentId: string | null): Promise<void> {
     await this.audit.record(entry);
+    if (entry.entity === 'subscriptions' && entry.action === 'delete') await this.alerts.closeTasksOf(entry.entityId);
     if (studentId) await this.alerts.evaluateStudents([studentId], { actorId: entry.actorId });
   }
 }

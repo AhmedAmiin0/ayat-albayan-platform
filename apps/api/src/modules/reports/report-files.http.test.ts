@@ -25,6 +25,14 @@ describe('report PDF (R6, R12) and attachments (R7–R10; R-REP-02/03)', () => {
     h.reports.get.mockResolvedValue(submittedRow({ pdf_status: 'ready', pdf_path: 's/l.pdf' }));
     expect((await h.call({ method: 'GET', url: `${BASE}/pdf` })).json()).toEqual(SIGNED);
     expect(h.storage.signedDownload).toHaveBeenCalledWith({ bucket: 'reports', path: 's/l.pdf' });
+    // Saved under the WhatsApp file name, not the lesson uuid.
+    h.files.pdfName.mockResolvedValue({ code: 'AB-0183', startsAt: new Date('2026-09-29T14:00:00Z'), tz: 'Asia/Riyadh' });
+    await h.call({ method: 'GET', url: `${BASE}/pdf` });
+    expect(h.storage.signedDownload).toHaveBeenLastCalledWith({
+      bucket: 'reports',
+      path: 's/l.pdf',
+      download: 'AB-0183_2026-09-29_تقرير-الحلقة.pdf',
+    });
   });
 
   it('retry (admin): failed → pending and the builder is kicked; 409 pdf_not_failed otherwise; teacher 403', async () => {

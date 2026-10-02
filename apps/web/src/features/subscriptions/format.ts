@@ -37,16 +37,26 @@ export function studentProgress(view: Pick<StudentBalanceView, 'packages'>): Pac
   return progressOf({ lessons_used: sum((b) => b.lessons_used), lessons_total: sum((b) => b.lessons_total) });
 }
 
+const [LRI, PDI] = [String.fromCodePoint(0x2066), String.fromCodePoint(0x2069)];
+
+/** «يوسف أحمد · AB-0210»: names repeat in the academy, the code (an LTR isolate) tells them apart. */
+export function studentLabel(s: { name: string; code: string }): string {
+  return `${s.name} · ${LRI}${s.code}${PDI}`;
+}
+
 /** «4 حلقات في الشهر», or a custom count «10 حلقات». */
 export function packageName(s: Pick<SubscriptionView, 'package' | 'lessons_total'>): string {
   return s.package === null ? counted(t.pricing.customSessions, s.lessons_total) : t.enums.packageSize[s.package];
 }
 
-/** «باقة سهيلة قربت تخلص: فاضل حلقتين» (title = the balance line when the task was raised). */
+/**
+ * «باقة سهيلة قربت تخلص». The stored title is the balance when the task was raised; it is kept
+ * for the record only, never shown: the live balance is on the package row above.
+ */
 export function taskText(task: AdminTaskView): string {
   return t.dashboard.task[task.kind]
     .replace('{student}', task.student?.name ?? '')
-    .replace('{left}', task.title ?? '')
+    .replace('{left}', '')
     .replace(/:\s*$/, '');
 }
 

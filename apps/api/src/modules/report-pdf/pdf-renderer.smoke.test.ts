@@ -3,6 +3,7 @@ import { join } from 'node:path';
 import { chromium } from 'playwright-core';
 import { afterAll, describe, expect, it } from 'vitest';
 import { pdfAssets } from './pdf-assets';
+import { pageCount } from './pdf-pages';
 import { PdfRenderer } from './pdf-renderer';
 import { absentModel, sampleModel } from './report-pdf.fakes';
 import { reportHtml } from './template';
@@ -12,10 +13,6 @@ import { reportHtml } from './template';
 const hasChromium = existsSync(chromium.executablePath());
 const out = process.env.PDF_SAMPLE_OUT;
 
-/** Page objects in the PDF (not the /Pages tree). */
-function pageCount(pdf: Uint8Array): number {
-  return Buffer.from(pdf).toString('latin1').match(/\/Type\s*\/Page(?!s)/g)?.length ?? 0;
-}
 
 describe.skipIf(!hasChromium)('PdfRenderer — Chromium smoke (R-REP-03)', () => {
   const renderer = new PdfRenderer();
@@ -40,6 +37,17 @@ describe.skipIf(!hasChromium)('PdfRenderer — Chromium smoke (R-REP-03)', () =>
   it('renders the absent sample as one page too, and reuses the browser', async () => {
     const pdf = await renderer.render(reportHtml(absentModel(), pdfAssets()));
     expect(pageCount(pdf)).toBe(1);
+  }, 60_000);
+
+  it('a report too long for one page flows on and is printed with the footer on every page', async () => {
+    const long = 'تحسّن واضح في المدود ومخارج الحروف، ومحتاجين نركّز على الإدغام بغنة. '.repeat(14);
+    const html = reportHtml(sampleModel({ notes: long }), pdfAssets());
+    const plain = await renderer.render(html);
+    const footed = await renderer.render(html, 'AB-0183 | 2026-09-29');
+    if (out) writeFileSync(join(out, 'sample-long.pdf'), footed);
+    expect(pageCount(plain)).toBeGreaterThan(1);
+    expect(pageCount(footed)).toBe(pageCount(plain));
+    expect(footed).not.toEqual(plain);
   }, 60_000);
 
   it.skipIf(!out)('writes a PNG of the page for a visual check', async () => {

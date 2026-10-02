@@ -56,6 +56,7 @@ test('row and paid show at once, only for this student; POST /payments without a
   expect(client.getQueryData(balanceKey)).toMatchObject({ current: { paid: 145 } });
   expect(mockUpload).not.toHaveBeenCalled();
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', {
+    clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
     subscriptionId: SUB_ID,
     amount: 145,
     currency: 'SAR',
@@ -103,4 +104,20 @@ test('a failed upload never records the payment', async () => {
   await waitFor(() => expect(result.current.isError).toBe(true));
   expect(mockApiSend).not.toHaveBeenCalled();
   expect(ids(client.getQueryData(listKey))).toEqual(['p1']);
+});
+
+test('a lost reply: the retry re-sends the same clientRequestId; the next payment gets a new one', async () => {
+  mockApiSend.mockRejectedValueOnce(new TypeError('Network request failed'));
+  const { wrapper } = setup();
+  const { result } = await renderHook(() => useRecordPayment('s1'), { wrapper });
+  await act(async () => result.current.mutate(input));
+  await waitFor(() => expect(result.current.isError).toBe(true));
+  mockApiSend.mockResolvedValue(payment({ id: 'p2' }));
+  await act(async () => result.current.mutate(input));
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  await act(async () => result.current.mutate({ ...input, amount: 50 }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(3));
+  const [lost, retry, next] = mockApiSend.mock.calls.map((c) => (c[2] as { clientRequestId: string }).clientRequestId);
+  expect(retry).toBe(lost);
+  expect(next).not.toBe(lost);
 });

@@ -88,6 +88,7 @@ test('photo → signed upload → POST /payments with its path → back; the lis
     contentType: 'image/jpeg',
   });
   expect(mockApiSend).toHaveBeenLastCalledWith('POST', '/payments', {
+    clientRequestId: expect.any(String),
     subscriptionId: SUB_ID,
     amount: 145,
     currency: 'SAR',

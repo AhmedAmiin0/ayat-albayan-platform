@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import { currentMonth } from '@/features/payouts/api';
+import { MonthSelect } from '@/features/payouts/MonthSelect';
 import { dayMonthLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { downloadCsv, exportErrorCode, type ExportKind, type ExportRequest } from './api';
@@ -62,10 +63,8 @@ export function ExportsPanel({ period, month: initialMonth }: ExportsPanelProps)
         ))}
         <li className={row}>
           <span className="min-w-28 font-semibold">{t.exports.payouts}</span>
-          <label className="flex items-center gap-2 text-xs text-ink-2">
-            {t.exports.month}
-            <Input type="month" dir="ltr" value={month} onChange={(e) => setMonth(e.target.value)} className="w-44 tabular-nums sm:min-h-8" />
-          </label>
+          {/* «أكتوبر 2026» like the payouts page; a native month input shows the OS locale. */}
+          <MonthSelect label={t.exports.month} value={month} latest={currentMonth()} onChange={setMonth} />
           <span className="ms-auto">{button({ kind: 'payouts', params: { month } }, t.exports.payouts)}</span>
         </li>
       </ul>

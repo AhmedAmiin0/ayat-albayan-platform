@@ -53,6 +53,12 @@ export interface UnpaidRow {
   package: PackageSize | null;
   lessons_total: number;
   price: number;
+  /** Sum of its payments, in `currency`. */
+  paid: number;
+  /** price − paid, never below 0. */
+  owed: number;
+  /** owes: money is still due; renewal_due: paid in full and used up, a new package is due. */
+  reason: 'owes' | 'renewal_due';
   currency: string;
   starts_on: string;
 }

@@ -61,6 +61,18 @@ export function byDuration(lessons: readonly PayoutLesson[]) {
   return { counts, counted, skipped };
 }
 
+export type ApproveBlock = 'month_not_over' | 'reports_pending';
+
+/**
+ * Approving freezes the month (E3), so it waits until the month has ended in the teacher's tz
+ * (`to` of monthWindow) and every report of it is in: a report filed later could otherwise
+ * complete a lesson that is never paid.
+ */
+export function approveBlock(input: { monthEnd: string; now: Date; pendingReports: number }): ApproveBlock | null {
+  if (input.now.getTime() < Date.parse(input.monthEnd)) return 'month_not_over';
+  return input.pendingReports > 0 ? 'reports_pending' : null;
+}
+
 export type PayoutAction =
   | { kind: 'frozen' }
   | { kind: 'clear'; deleteId: string | null }

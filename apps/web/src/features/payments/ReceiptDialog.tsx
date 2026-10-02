@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
 import { MONEY_KEY } from '@/features/subscriptions/api';
-import { apiErrorText } from '@/features/subscriptions/format';
+import { apiErrorText, studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { receiptUrl, type PaymentView } from './api';
 
@@ -16,7 +16,7 @@ export function ReceiptDialog({ payment, onClose }: { payment: PaymentView; onCl
   const pdf = payment.receipt_path?.endsWith('.pdf') ?? false;
 
   return (
-    <Dialog title={t.payments.receipt} description={payment.student.name} onClose={onClose}>
+    <Dialog title={t.payments.receipt} description={studentLabel(payment.student)} onClose={onClose}>
       {signed.isError && <FormAlert>{apiErrorText(signed.error, t.payments.error)}</FormAlert>}
       {signed.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {signed.data &&

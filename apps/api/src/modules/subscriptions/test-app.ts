@@ -42,16 +42,16 @@ function mocks() {
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
     alerts: {
       studentsOfLessons: vi.fn(), studentsWithPackages: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
-      queueRenewal: vi.fn(),
+      queueRenewal: vi.fn(), closeTasks: vi.fn(),
     },
     tasks: { list: vi.fn(), done: vi.fn() },
     payments: {
       list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), subscription: vi.fn(),
-      recorders: vi.fn(),
+      recorders: vi.fn(), byRequest: vi.fn(),
     },
     payouts: {
       teachers: vi.fn(), lessons: vi.fn(), forMonth: vi.fn(), forTeacher: vi.fn(), get: vi.fn(),
-      insert: vi.fn(), update: vi.fn(), removeDraft: vi.fn(),
+      insert: vi.fn(), update: vi.fn(), removeDraft: vi.fn(), pendingReports: vi.fn(),
     },
     expenses: { forMonth: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn() },
     teachers: { idByProfile: vi.fn() },
@@ -73,6 +73,8 @@ export function resetMocks(m: Mocks): void {
   m.balances.forSubscriptions.mockResolvedValue(new Map());
   m.balances.forStudents.mockResolvedValue([]);
   m.payments.recorders.mockResolvedValue(new Map());
+  m.payouts.pendingReports.mockResolvedValue(0);
+  m.payments.byRequest.mockResolvedValue(null);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
 }

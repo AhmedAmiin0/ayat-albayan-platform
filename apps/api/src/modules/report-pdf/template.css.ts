@@ -4,8 +4,8 @@ import { palette } from '@ab/shared';
 // nothing below 12px. The frame, header, summary grid and ۞ sections follow the academy's own
 // certificate report (Brand library reportHtml: 2px gold outside a 1px gold-soft rule). Page margin
 // is 10mm, not docs/07's 18mm: the frame itself is the margin, and 18mm overflows at a 12px floor.
-// ponytail: very long notes flow onto a 2nd page (the frame repeats via box-decoration-break);
-// add a fit-to-page step if real reports do that often.
+// A long report flows onto a 2nd page (the frame repeats via box-decoration-break) and then gets
+// a code / date / page-number footer (pdf-pages.ts has the threshold).
 const c = palette.light;
 
 const tokens = `:root{--ink:${c.ink};--ink3:${c.ink3};--green:${c.lapisHover};--green2:${c.lapis};
@@ -67,10 +67,10 @@ const grades = `.grades{display:grid;grid-template-columns:1fr 200px;gap:8px;bre
 .pips{display:inline-flex;gap:5px}
 .pip{display:inline-block;width:8px;height:8px;transform:rotate(45deg);border:1.5px solid var(--green2)}
 .pip.on{background:var(--green2)}
-.overall{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;
+.overall{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;
 border:1px solid var(--gold-soft);border-radius:6px;background:var(--gold-wash);text-align:center;padding:6px}
 .overall .k{font-size:12px;font-weight:600;color:var(--green)}
-.overall .w{font:700 28px/1.25 'Amiri',serif;color:var(--green)}`;
+.overall .w{font:700 28px/1.5 'Amiri',serif;color:var(--green)}`;
 
 const closing = `.signs{display:grid;grid-template-columns:1fr 1fr;gap:40px;margin-top:8px;padding-top:4px;
 border-top:1px solid var(--rule);break-inside:avoid}

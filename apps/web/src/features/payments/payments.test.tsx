@@ -105,7 +105,7 @@ describe('PaymentsPage', () => {
     const picker = within(dialog).getByRole('combobox', { name: t.payments.mobile.chooseSubscription });
     await within(dialog).findByRole('option', { name: /سهيلة/ });
     fireEvent.change(picker, { target: { value: 'sub-1' } });
-    expect((within(dialog).getByRole('spinbutton') as HTMLInputElement).value).toBe('145');
+    expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('145');
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
     await vi.waitFor(() =>

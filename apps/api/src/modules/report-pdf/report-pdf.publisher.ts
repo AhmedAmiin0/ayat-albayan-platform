@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { StorageService } from '../../common/storage/storage.service';
 import { BUCKETS, reportPdfPath } from '../../common/storage/storage.paths';
 import { pdfAssets } from './pdf-assets';
+import { footerLabel } from './pdf-pages';
 import { PdfRenderer } from './pdf-renderer';
 import { toMessage, toModel } from './report-pdf.mapper';
 import { ReportPdfSource } from './report-pdf.source';
@@ -26,7 +27,8 @@ export class ReportPdfPublisher {
   async publish(reportId: string, now: Date): Promise<Published> {
     const source = await this.source.load(reportId);
     if (!source) throw new Error('report not found');
-    const body = await this.renderer.render(reportHtml(toModel(source, now), pdfAssets()));
+    const model = toModel(source, now);
+    const body = await this.renderer.render(reportHtml(model, pdfAssets()), footerLabel({ code: model.student.code, startsAt: model.startsAt, tz: model.tz }));
     const { student_id: studentId, lesson_id: lessonId } = source.report;
     const path = reportPdfPath({ studentId, lessonId });
     await this.storage.upload({ bucket: BUCKETS.reports, path, body, contentType: 'application/pdf' });

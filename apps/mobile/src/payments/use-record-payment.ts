@@ -3,6 +3,7 @@ import { useMutation, useQueryClient, type Query } from '@tanstack/react-query';
 import { useRef } from 'react';
 import { apiSend } from '@/lib/api';
 import type { Page } from '@/lib/paging';
+import { requestId } from '@/lib/request-id';
 import { pendingPayment, withPaid, withPayment, type PaymentInput } from './optimistic';
 import { balanceKey } from './queries';
 import { uploadReceipt } from './upload-receipt';
@@ -24,11 +25,14 @@ function studentLists(studentId: string) {
  * «سجّل دفعة» (R-PAY-01, R-MOB-02): the receipt goes up first (signed URL), then POST /payments.
  * Optimistic (R-MOB-03): the student's payments lists show the row and the package its new `paid`
  * at once; a failure puts the snapshot back; either way both refetch. A receipt that went up is
- * remembered, so retrying after a failed POST does not upload it again.
+ * remembered, so retrying after a failed POST does not upload it again; and the form's
+ * clientRequestId is re-sent until a payment is recorded, so a retry after a lost reply returns the
+ * payment the API already has instead of recording the money twice (rule 8).
  */
 export function useRecordPayment(studentId: string) {
   const client = useQueryClient();
   const uploaded = useRef<{ key: string; path: string } | null>(null);
+  const request = useRef<string | null>(null);
 
   async function receiptPath(input: PaymentInput): Promise<string | undefined> {
     if (!input.receipt) return undefined;
@@ -43,7 +47,9 @@ export function useRecordPayment(studentId: string) {
     mutationKey: ['payments', 'record', studentId],
     mutationFn: async (input: PaymentInput) => {
       const path = await receiptPath(input);
+      request.current ??= requestId();
       return apiSend<PaymentView>('POST', '/payments', {
+        clientRequestId: request.current,
         subscriptionId: input.subscriptionId,
         amount: input.amount,
         currency: input.currency,
@@ -61,6 +67,9 @@ export function useRecordPayment(studentId: string) {
       client.setQueriesData<Page<PaymentView>>(lists, (page) => withPayment(page, row));
       client.setQueryData<StudentBalanceView>(balance.queryKey, (b) => withPaid(b, input));
       return { snapshot };
+    },
+    onSuccess: () => {
+      request.current = null;
     },
     onError: (_error, _input, context) => {
       context?.snapshot.forEach(([key, data]) => client.setQueryData(key, data));

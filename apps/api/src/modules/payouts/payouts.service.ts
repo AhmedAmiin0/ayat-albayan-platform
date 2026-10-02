@@ -4,7 +4,8 @@ import { AuditService } from '../../common/audit/audit.service';
 import { conflict, notFound } from '../scheduling/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { toPayoutView } from './payouts.mapper';
-import { PayoutsQueries } from './payouts.queries';
+import { approveBlock, monthWindow } from './payouts.plan';
+import { PayoutsQueries, type PayoutRow } from './payouts.queries';
 
 /** Y1, Y3, Y4, Y5: list a month, approve, mark paid (draft → approved → paid), a teacher's own. */
 @Injectable()
@@ -19,14 +20,22 @@ export class PayoutsService {
     return (await this.payouts.forMonth(monthStart(month))).map(toPayoutView);
   }
 
+  /** Y3: only once the month is over in the teacher's tz and its reports are in (409 otherwise). */
   async approve(id: string, actorId: string): Promise<PayoutView> {
+    const before = await this.row(id);
+    if (before.status === 'draft') {
+      const window = monthWindow(before.month.slice(0, 7), before.teacher?.tz ?? 'UTC');
+      const pendingReports = await this.payouts.pendingReports({ teacherId: before.teacher_id, ...window });
+      const block = approveBlock({ monthEnd: window.to, now: new Date(), pendingReports });
+      if (block) throw conflict(block, block === 'reports_pending' ? { count: pendingReports } : {});
+    }
     const now = new Date().toISOString();
-    return this.move({ id, actorId, to: 'approved', write: { approved_at: now, approved_by: actorId } });
+    return this.move({ before, actorId, to: 'approved', write: { approved_at: now, approved_by: actorId } });
   }
 
   async pay(id: string, body: PayoutPay, actorId: string): Promise<PayoutView> {
     const paidAt = body.paidAt ?? new Date().toISOString();
-    return this.move({ id, actorId, to: 'paid', write: { paid_at: paidAt, paid_by: actorId } });
+    return this.move({ before: await this.row(id), actorId, to: 'paid', write: { paid_at: paidAt, paid_by: actorId } });
   }
 
   /** Y5: the signed-in teacher's rows, newest month first. */
@@ -36,21 +45,26 @@ export class PayoutsService {
     return (await this.payouts.forTeacher(teacherId, month ? monthStart(month) : undefined)).map(toPayoutView);
   }
 
+  private async row(id: string): Promise<PayoutRow> {
+    const row = await this.payouts.get(id);
+    if (!row) throw notFound('payout_not_found');
+    return row;
+  }
+
   private async move(input: {
-    id: string;
+    before: PayoutRow;
     actorId: string;
     to: 'approved' | 'paid';
     write: Record<string, string>;
   }): Promise<PayoutView> {
-    const before = await this.payouts.get(input.id);
-    if (!before) throw notFound('payout_not_found');
+    const { before } = input;
     if (!canTransitionPayout(before.status, input.to)) throw conflict('invalid_transition', { from: before.status });
-    const after = await this.payouts.update(input.id, { ...input.write, status: input.to, from: before.status });
+    const after = await this.payouts.update(before.id, { ...input.write, status: input.to, from: before.status });
     if (!after) throw conflict('invalid_transition');
     await this.audit.record({
       actorId: input.actorId,
       entity: 'teacher_payouts',
-      entityId: input.id,
+      entityId: before.id,
       action: input.to === 'approved' ? 'approve' : 'pay',
       before: { status: before.status },
       after: { status: after.status, ...input.write },

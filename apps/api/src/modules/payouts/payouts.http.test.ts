@@ -98,6 +98,24 @@ describe('payouts routes (Y1–Y5, R-PAY-02, R-TCH-04)', () => {
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'pay' }));
   });
 
+  it('Y3: 409 month_not_over before the month ends in the teacher tz; 409 reports_pending while reports are missing', async () => {
+    m.payouts.get.mockResolvedValue(payoutRow({ month: '2999-01-01' }));
+    const early = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/approve` });
+    expect(early.statusCode).toBe(409);
+    expect(early.json().code).toBe('month_not_over');
+
+    m.payouts.get.mockResolvedValue(payoutRow());
+    m.payouts.pendingReports.mockResolvedValue(2);
+    const pending = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/approve` });
+    expect(pending.json()).toMatchObject({ code: 'reports_pending', count: 2 });
+    expect(m.payouts.pendingReports).toHaveBeenCalledWith({
+      teacherId: TEACHER_ID,
+      from: '2026-08-31T21:00:00.000Z',
+      to: '2026-09-30T21:00:00.000Z',
+    });
+    expect(m.payouts.update).not.toHaveBeenCalled();
+  });
+
   it('Y5: a teacher reads own payouts; unlinked → 404 teacher_not_linked; admin routes refused', async () => {
     m.teachers.idByProfile.mockResolvedValue(TEACHER_ID);
     m.payouts.forTeacher.mockResolvedValue([payoutRow()]);

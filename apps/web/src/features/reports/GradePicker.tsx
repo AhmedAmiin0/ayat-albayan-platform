@@ -16,7 +16,8 @@ export interface GradePickerProps {
 
 /**
  * One rubric (R-REP-02): five native radios drawn as grade pips (gradeStyle, ordinal so it reads
- * in greyscale), ممتاز first; the chosen word is spelled out beside them. Arrow keys move.
+ * in greyscale) with the grade word under them (12px, never counted from dots), ممتاز first.
+ * Arrow keys move.
  */
 export function GradePicker({ name, label, value, onChange, disabled, emphasis }: GradePickerProps) {
   return (
@@ -36,8 +37,9 @@ export function GradePicker({ name, label, value, onChange, disabled, emphasis }
                 className="peer sr-only"
               />
               <span
+                aria-hidden
                 className={cn(
-                  'grid min-h-11 place-items-center rounded-md border border-rule px-0.5 text-ink-3 sm:min-h-9 sm:min-w-11 sm:px-2',
+                  'grid min-h-11 place-items-center content-center gap-0.5 rounded-md border border-rule px-0.5 py-1 text-ink-3 sm:min-h-9 sm:min-w-11 sm:px-2',
                   '[&_svg]:size-[7px] sm:[&_svg]:size-[9px]',
                   'peer-checked:border-primary peer-checked:bg-lapis-wash peer-checked:text-ink',
                   'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
@@ -45,13 +47,12 @@ export function GradePicker({ name, label, value, onChange, disabled, emphasis }
                 )}
               >
                 <GradePips pips={gradeStyle[g].pips} />
+                <span className="text-center text-2xs leading-tight text-balance">{t.enums.grade[g]}</span>
               </span>
             </label>
           ))}
         </div>
-        <span className={cn('text-sm', value ? 'font-semibold text-ink' : 'text-ink-3')}>
-          {value ? t.enums.grade[value] : t.reports.chart.noGrade}
-        </span>
+        {!value && <span className="text-sm text-ink-3">{t.reports.chart.noGrade}</span>}
       </div>
     </fieldset>
   );

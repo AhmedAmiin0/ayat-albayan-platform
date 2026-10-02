@@ -1,8 +1,8 @@
-import { moneyAmount } from '@ab/shared';
+import { moneyAmount } from './schemas.js';
 
 /**
- * Arabic-Indic (٠-٩) and Persian (۰-۹) digits to Western, «٫» and «,» to «.»: a phone's Arabic
- * keypad types them on the numeric pad.
+ * Arabic-Indic (٠-٩) and Persian (۰-۹) digits to Western, «٫» and «,» to «.»: an Arabic keypad
+ * (phone or desktop) types them. Used by every money input (web and mobile, R-PAY-01).
  */
 export function westernDigits(text: string): string {
   return text

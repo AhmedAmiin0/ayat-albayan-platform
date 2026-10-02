@@ -13,10 +13,24 @@ export type NewAttachment = {
   created_by: string;
 };
 
+export type PdfNameInput = { code: string; startsAt: Date; tz: string };
+
 /** report_attachments rows (R-REP-02); the objects live in the report-attachments bucket. */
 @Injectable()
 export class ReportAttachmentsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
+
+  /** What the PDF's file name is made of (reportFileName): code, lesson start, guardian tz. */
+  async pdfName(input: { studentId: string; lessonId: string }): Promise<PdfNameInput | null> {
+    const [student, lesson] = await Promise.all([
+      this.db.from('students').select('code, guardian:guardians(tz)').eq('id', input.studentId).maybeSingle(),
+      this.db.from('lessons').select('starts_at').eq('id', input.lessonId).maybeSingle(),
+    ]);
+    if (student.error) throw dbError(student.error);
+    if (lesson.error) throw dbError(lesson.error);
+    if (!student.data?.code || !student.data.guardian || !lesson.data) return null;
+    return { code: student.data.code, startsAt: new Date(lesson.data.starts_at), tz: student.data.guardian.tz };
+  }
 
   async add(row: NewAttachment): Promise<ReportAttachmentRow> {
     const { data, error } = await this.db.from('report_attachments').insert(row).select(COLUMNS).single();

@@ -37,6 +37,10 @@ export type UnpaidRow = {
   package: PackageSize | null;
   lessons_total: number;
   price: number;
+  paid: number;
+  owed: number;
+  /** owes: money is still due; renewal_due: paid in full and used up. */
+  reason: 'owes' | 'renewal_due';
   currency: string;
   starts_on: string;
 };

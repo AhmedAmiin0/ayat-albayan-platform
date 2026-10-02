@@ -10,7 +10,7 @@ const NOW = new Date('2026-09-29T15:12:00Z');
 function setup(found = true) {
   const source = { load: vi.fn(async () => (found ? sampleSource() : null)) };
   const renderer = {
-    render: vi.fn<(html: string) => Promise<Uint8Array>>(async () => new Uint8Array([37, 80, 68, 70])),
+    render: vi.fn<(html: string, footer?: string) => Promise<Uint8Array>>(async () => new Uint8Array([37, 80, 68, 70])),
     close: vi.fn(async () => undefined),
   };
   const storage = { upload: vi.fn(async () => undefined) };
@@ -29,6 +29,8 @@ describe('ReportPdfPublisher — render and store one report', () => {
     const html = renderer.render.mock.calls[0]?.[0] ?? '';
     expect(html).toContain('سلمى عبد الرحمن');
     expect(html).toContain('@font-face');
+    // Used only when the report runs past one page: code and the lesson's local date, ASCII.
+    expect(renderer.render.mock.calls[0]?.[1]).toMatch(/^AB-\d{4} \| \d{4}-\d{2}-\d{2}$/);
     expect(storage.upload).toHaveBeenCalledWith({
       bucket: 'reports',
       path: 's1/l1.pdf',

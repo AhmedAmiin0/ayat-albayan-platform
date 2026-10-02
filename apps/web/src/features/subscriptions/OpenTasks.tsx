@@ -7,7 +7,7 @@ import { completeTask, MONEY_KEY, openTasksQuery } from './api';
 import { taskText } from './format';
 
 /**
- * R-SUB-02 admin tasks: «باقة سهيلة قربت تخلص: فاضل حلقتين» / «… خلصت ومش مدفوعة». Each is work
+ * R-SUB-02 admin tasks: «باقة سهيلة قربت تخلص» / «… خلصت ومحتاجة تجديد». Each is work
  * waiting for the admin (saffron «دورك» glyph), done with one click.
  */
 export function OpenTasks() {

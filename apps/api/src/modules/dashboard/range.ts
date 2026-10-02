@@ -48,3 +48,9 @@ export function monthsOf(r: DateRangeQuery): string[] {
     if (month === 1) year += 1;
   }
 }
+
+/** "YYYY-MM" moved by `by` months → its first day, "YYYY-MM-01". */
+export function monthShift(month: string, by: number): string {
+  const first = Date.UTC(Number(month.slice(0, 4)), Number(month.slice(5, 7)) - 1 + by, 1);
+  return new Date(first).toISOString().slice(0, 10);
+}

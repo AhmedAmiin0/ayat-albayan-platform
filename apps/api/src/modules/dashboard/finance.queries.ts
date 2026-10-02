@@ -2,10 +2,12 @@ import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { readAll } from '../scheduling/read-all';
+import { dbError } from '../teachers/http';
 
 export type Window = { from: Date; to: Date };
 
-const PAYMENT = 'id, amount, currency, paid_at, subscription:subscriptions(student:students(guardian:guardians(source)))';
+const PAYMENT =
+  'id, amount, currency, paid_at, subscription:subscriptions(fx_rate, student:students(guardian:guardians(source)))';
 const COST_LESSON =
   'id, starts_at, ends_at, teacher:teachers(rate_30, rate_45, rate_60, rate_90), lesson_students(student:students(guardian:guardians(source)))';
 
@@ -41,6 +43,21 @@ export class FinanceQueries {
         .order('id')
         .range(from, to),
     );
+  }
+
+  /**
+   * Approved and paid payouts of the months `first`…`last` ("YYYY-MM-01") for their frozen rates
+   * (breakdown.lines and lesson_ids). Few rows: one per teacher per month.
+   */
+  async frozenPayouts(first: string, last: string) {
+    const { data, error } = await this.db
+      .from('teacher_payouts')
+      .select('breakdown')
+      .in('status', ['approved', 'paid'])
+      .gte('month', first)
+      .lte('month', last);
+    if (error) throw dbError(error);
+    return data;
   }
 
   /** Expenses of the months `first`…`last` ("YYYY-MM"), inclusive. */

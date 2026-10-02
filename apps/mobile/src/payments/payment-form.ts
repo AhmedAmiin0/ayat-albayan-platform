@@ -1,6 +1,5 @@
-import type { PaymentMethod, StudentBalanceView, SubscriptionView } from '@ab/shared';
+import { parseAmount, type PaymentMethod, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { parseAmount } from './amount';
 import type { PaymentInput } from './optimistic';
 import { paidAtFor } from './paid-day';
 import type { Receipt } from './receipt';

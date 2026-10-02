@@ -83,13 +83,16 @@ describe('StudentReportsPage (R-REP-05, issue D2)', () => {
     expect(within(chart).getByRole('tooltip').textContent).toBe(`${t.enums.grade.good}26 سبتمبر`);
   });
 
-  it('a teacher never gets the PDF retry; the PDF opens a signed URL', async () => {
-    const open = vi.spyOn(window, 'open').mockReturnValue(null);
+  it('a teacher never gets the PDF retry; the PDF tab opens in the click, then goes to the signed URL', async () => {
+    const tab = { opener: {}, location: { assign: vi.fn() }, close: vi.fn() };
+    const open = vi.spyOn(window, 'open').mockReturnValue(tab as unknown as Window);
     renderPage(DATA, 'teacher');
     const list = await screen.findByRole('region', { name: t.reports.title });
     expect(within(list).queryByRole('button', { name: t.reports.retryPdf })).toBeNull();
     fireEvent.click(within(list).getByRole('button', { name: t.reports.downloadPdf }));
-    await waitFor(() => expect(open).toHaveBeenCalledWith('https://x/pdf', '_blank', 'noopener'));
+    expect(open).toHaveBeenCalledWith('', '_blank');
+    expect(tab.opener).toBeNull();
+    await waitFor(() => expect(tab.location.assign).toHaveBeenCalledWith('https://x/pdf'));
     expect(apiFetch).toHaveBeenCalledWith('/reports/b/pdf');
   });
 

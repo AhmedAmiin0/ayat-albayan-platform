@@ -22,6 +22,8 @@ export type RecordPaymentBody = {
   paidAt: string;
   receiptPath: string | null;
   note: string | null;
+  /** One per payment form, re-sent on retries (the API returns the payment it already recorded). */
+  clientRequestId: string;
 };
 
 export const recordPayment = (body: RecordPaymentBody) => apiSend<PaymentView>('POST', '/payments', body);

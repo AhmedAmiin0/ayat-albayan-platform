@@ -32,6 +32,14 @@ describe('StorageService (R-REP-02/03, R-PAY-01)', () => {
     expect(r).toEqual({ url: 'http://d', expires_at: '2026-10-02T11:00:00.000Z' });
   });
 
+  it('signedDownload with a file name: added once-encoded, so an Arabic name is saved as itself', async () => {
+    const createSignedUrl = vi.fn().mockResolvedValue({ data: { signedUrl: 'http://d?token=t' }, error: null });
+    const { svc } = fakeStorage({ createSignedUrl });
+    const r = await svc.signedDownload({ bucket: 'reports', path: 's/l.pdf', download: 'AB-0183_تقرير.pdf' });
+    expect(createSignedUrl).toHaveBeenCalledWith('s/l.pdf', 3600);
+    expect(r.url).toBe(`http://d?token=t&download=${encodeURIComponent('AB-0183_تقرير.pdf')}`);
+  });
+
   it('upload overwrites (a re-rendered PDF keeps its path)', async () => {
     const upload = vi.fn().mockResolvedValue({ error: null });
     const { svc } = fakeStorage({ upload });

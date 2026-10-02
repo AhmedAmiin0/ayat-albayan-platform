@@ -42,14 +42,18 @@ describe('pendingList (R-RPT-01 pending reports)', () => {
 });
 
 describe('unpaidList', () => {
-  it('maps the package and its student; price as a number', () => {
-    const l = unpaidList([
-      { id: 'sub1', package: '4', lessons_total: 4, price: 145, currency: 'SAR', starts_on: '2026-09-28', student: SUHAILA },
-    ]);
+  const row = { id: 'sub1', package: '4' as const, lessons_total: 4, price: 145, currency: 'SAR', starts_on: '2026-09-28', student: SUHAILA };
+  it('money still owed: paid and owed from its payments', () => {
+    const l = unpaidList([{ ...row, payments: [{ amount: 100 }] }]);
     expect(l).toEqual({
       total: 1,
-      items: [{ id: 'sub1', student: SUHAILA, package: '4', lessons_total: 4, price: 145, currency: 'SAR', starts_on: '2026-09-28' }],
+      items: [{ ...row, student: SUHAILA, paid: 100, owed: 45, reason: 'owes' }],
     });
+  });
+
+  it('paid in full and used up → renewal_due, nothing owed (never chase a guardian who paid)', () => {
+    const [item] = unpaidList([{ ...row, payments: [{ amount: 100 }, { amount: 45 }] }]).items;
+    expect(item).toMatchObject({ paid: 145, owed: 0, reason: 'renewal_due' });
   });
 });
 

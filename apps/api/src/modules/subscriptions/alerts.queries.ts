@@ -1,6 +1,7 @@
 import type { AdminTaskKind } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { readAll, readChunked } from '../scheduling/read-all';
 import { dbError } from '../teachers/http';
 
 export interface Recipient {
@@ -22,19 +23,17 @@ export class AlertsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async studentsOfLessons(lessonIds: readonly string[]): Promise<string[]> {
-    if (lessonIds.length === 0) return [];
-    const { data, error } = await this.db
-      .from('lesson_students')
-      .select('student_id')
-      .in('lesson_id', [...lessonIds]);
-    if (error) throw dbError(error);
+    const data = await readChunked(lessonIds, (chunk) =>
+      this.db.from('lesson_students').select('student_id').in('lesson_id', chunk),
+    );
     return [...new Set(data.map((r) => r.student_id))];
   }
 
-  /** Every student with a package (the sweep). ponytail: one read; page it past ~10k packages. */
+  /** Every student with a package (the sweep), paged past PostgREST's max_rows. */
   async studentsWithPackages(): Promise<string[]> {
-    const { data, error } = await this.db.from('subscriptions').select('student_id');
-    if (error) throw dbError(error);
+    const data = await readAll((from, to) =>
+      this.db.from('subscriptions').select('student_id').order('id').range(from, to),
+    );
     return [...new Set(data.map((r) => r.student_id))];
   }
 
@@ -53,6 +52,23 @@ export class AlertsQueries {
       },
       { onConflict: 'dedup_key', ignoreDuplicates: true },
     );
+    if (error) throw dbError(error);
+  }
+
+  /**
+   * Closes the open tasks about these packages whose dedup key is not in `keep` (done_by null: the
+   * system closed it). The task stays in the list of done tasks for the record.
+   */
+  async closeTasks(input: { subjectIds: readonly string[]; keep: readonly string[]; now: Date }): Promise<void> {
+    if (input.subjectIds.length === 0) return;
+    let q = this.db
+      .from('admin_tasks')
+      .update({ done_at: input.now.toISOString(), done_by: null })
+      .eq('subject_type', 'subscription')
+      .in('subject_id', [...input.subjectIds])
+      .is('done_at', null);
+    if (input.keep.length > 0) q = q.not('dedup_key', 'in', `(${input.keep.map((k) => `"${k}"`).join(',')})`);
+    const { error } = await q;
     if (error) throw dbError(error);
   }
 

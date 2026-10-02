@@ -21,3 +21,23 @@ export async function readAll<T>(
     if (!data || data.length < MAX_ROWS) return out;
   }
 }
+
+/** Ids per `.in()` request: the list goes into the URL, and ~200 uuids already get HTTP 414. */
+export const IN_CHUNK = 100;
+
+/**
+ * `read(chunk)` for every IN_CHUNK ids, results concatenated in chunk order (so rows of one id
+ * keep their order). ponytail: one chunk is assumed to fit in max_rows.
+ */
+export async function readChunked<T>(
+  ids: readonly string[],
+  read: (chunk: string[]) => PromiseLike<PageResult<T>>,
+): Promise<T[]> {
+  const out: T[] = [];
+  for (let i = 0; i < ids.length; i += IN_CHUNK) {
+    const { data, error } = await read(ids.slice(i, i + IN_CHUNK));
+    if (error) throw dbError(error);
+    out.push(...(data ?? []));
+  }
+  return out;
+}
