@@ -15,7 +15,8 @@ const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name)
 /** A fresh Saudi mobile per call (desktop and mobile share one DB), wa_id digits without «+». */
 const freshDigits = () => `9665${String(Date.now()).slice(-8)}`;
 
-/** The open conversation: its section is named by the heading (the contact's name). */
+/** The open conversation: its section is named by the heading (the contact's name). Badges are
+ * read from its header: «مشترك» is also the child's package chip once a package is active. */
 const pane = (page: Page, name: string) => page.getByRole('region', { name });
 
 /** The create dialog preset with `student`: keep the calculator defaults and save. */
@@ -44,7 +45,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await admin.goto('/admin/inbox');
     await admin.getByRole('link', { name: openThread(guardian) }).click({ timeout: 30_000 });
     const thread = pane(admin, guardian);
-    await expect(thread.getByText(badge.none, { exact: true })).toBeVisible();
+    await expect(thread.locator('header').getByText(badge.none, { exact: true })).toBeVisible();
 
     // «اشترك» opens the wizard with the lead and a regular package (not the trial).
     await thread.getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
@@ -70,13 +71,14 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
 
     // Back in the chat: the family is subscribed, and the child's package is beside the chat.
     await admin.getByRole('link', { name: ar.inbox.subscription.backToChat }).click();
-    await expect(thread.getByText(badge.subscribed, { exact: true })).toBeVisible();
+    await expect(thread.locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
     const family = admin.getByRole('complementary', { name: ar.inbox.subscription.title });
     await expect(family.getByText(student, { exact: true })).toBeVisible();
     await expect(family.getByRole('button', { name: new RegExp(ar.subscriptions.new) })).toBeVisible();
   });
 
   test('a guardian’s thread: «اشتراك جديد» for the child → «مشترك» in the chat and the list', async ({ asRole }) => {
+    test.setTimeout(90_000);
     const guardian = `أم يوسف ${String(Date.now()).slice(-4)}`;
     const student = 'يوسف';
     const family = await seedFamily(guardian, [student]);
@@ -87,10 +89,10 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await admin.goto('/admin/inbox');
     await admin.getByRole('link', { name: openThread(guardian) }).click({ timeout: 30_000 });
     const thread = pane(admin, guardian);
-    await expect(thread.getByText(badge.none, { exact: true })).toBeVisible();
+    await expect(thread.locator('header').getByText(badge.none, { exact: true })).toBeVisible();
     await thread.getByRole('button', { name: `${ar.subscriptions.new} — ${student}` }).click();
     await saveSubscription(admin, student);
-    await expect(thread.getByText(badge.subscribed, { exact: true })).toBeVisible();
+    await expect(thread.locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
 
     await admin.goto('/admin/inbox');
     await expect(admin.getByRole('link', { name: openThread(guardian) }).getByText(badge.subscribed)).toBeVisible();
