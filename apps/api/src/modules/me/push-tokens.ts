@@ -8,8 +8,9 @@ export const pushTokenSchema = z
 export const pushTokenBody = z.object({ token: pushTokenSchema });
 
 /**
- * A reinstall mints a new token and nothing deletes the dead one until sending prunes it
- * (TODO(R-MOB-01): drop tokens Expo answers DeviceNotRegistered for). Keep the newest few.
+ * A reinstall mints a new token; the dead one stays until Expo reports it DeviceNotRegistered,
+ * on a push ticket (common/push PushService) or a receipt (modules/push PushReceiptsJob), which
+ * prune it with withoutPushToken. Keep the newest few meanwhile.
  */
 export const MAX_PUSH_TOKENS = 10;
 
