@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Input } from '@/components/ui/input';
-import { conflictsOf, LESSONS_KEY } from '@/features/schedule/api';
+import { conflictsOf, lessonErrorText, LESSONS_KEY } from '@/features/schedule/api';
 import { ConflictNotice } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';
 import { createBooking } from './api';
@@ -88,7 +88,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onBooked }: Rev
           onOverride={(reason) => book.mutate(reason)}
         />
       ) : (
-        book.isError && <FormAlert>{t.common.error}</FormAlert>
+        book.isError && <FormAlert>{lessonErrorText(book.error)}</FormAlert>
       )}
       {!conflicts && (
         <div className="flex justify-end">

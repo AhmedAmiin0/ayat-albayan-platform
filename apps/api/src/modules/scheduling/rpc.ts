@@ -1,9 +1,11 @@
+import type { Database } from '@ab/db';
 import type { PostgrestError } from '@supabase/supabase-js';
 import type { Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
 import { conflict } from './errors';
 
 type RpcResult = { data: unknown; error: PostgrestError | null };
+type RpcName = keyof Database['public']['Functions'];
 type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<RpcResult> };
 
 /** `raise exception '<code>'` messages in migrations 080 / 100 that map to a 409 domain error. */
@@ -18,11 +20,11 @@ export function rpcError(error: PostgrestError): Error {
 }
 
 /**
- * Calls an RPC from migrations 080 / 100. They are not in packages/db/src/types.ts until the
- * integrator regenerates it, so the typed client would reject the name.
- * TODO(Phase 2 integration): regenerate types.ts and call `db.rpc` directly.
+ * Calls a lesson RPC (migrations 080 / 100) by its generated name. Args stay loose on purpose:
+ * the generated types make every arg non-null and jsonb-typed, but p_actor may be null (the
+ * daily job) and the change sets are typed objects, not `Json`.
  */
-export async function callRpc(db: Db, fn: string, args: Record<string, unknown>): Promise<unknown> {
+export async function callRpc(db: Db, fn: RpcName, args: Record<string, unknown>): Promise<unknown> {
   const { data, error } = await (db as unknown as UntypedRpc).rpc(fn, args);
   if (error) throw rpcError(error);
   return data;

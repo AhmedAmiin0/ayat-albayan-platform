@@ -13,6 +13,8 @@ const SECTIONS: Record<string, { label: string; profile?: string }> = {
   leads: { label: t.nav.leads },
   'job-applicants': { label: t.nav.jobApplicants },
   pricing: { label: t.pricing.title },
+  schedule: { label: t.schedule.nav },
+  book: { label: t.booking.title },
 };
 
 /** Running-head breadcrumbs for an /admin path (docs/07 §7). Unknown paths get none. */

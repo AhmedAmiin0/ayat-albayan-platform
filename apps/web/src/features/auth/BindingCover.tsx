@@ -34,7 +34,7 @@ function Mandorla() {
         <path fill="none" stroke="currentColor" strokeOpacity=".5" d="M100 40C141 84 157 122 157 150S141 216 100 260C59 216 43 178 43 150S59 84 100 40Z" />
         <path fill="none" stroke="currentColor" strokeOpacity=".35" strokeDasharray="1.5 3.5" d="M100 54C133 92 145 126 145 150S133 208 100 246C67 208 55 174 55 150S67 92 100 54Z" />
       </svg>
-      <Mark size={64} className="relative size-[35px] text-gold-on-cover shell:size-16" />
+      <Mark size={104} className="relative size-[56px] text-gold-on-cover shell:size-[104px]" />
     </span>
   );
 }

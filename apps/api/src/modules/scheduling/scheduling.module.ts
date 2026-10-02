@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { AvailabilityQueries } from '../teachers/availability/availability.queries';
+import { TeachersModule } from '../teachers/teachers.module';
 import { BusyQueries } from './busy.queries';
 import { ConflictChecker } from './conflict-checker';
 import { HorizonJob } from './horizon.job';
@@ -12,12 +12,11 @@ import { ScheduleQueries } from './schedule.queries';
 /**
  * Schedule rules + OccurrenceGenerator: idempotent horizon upsert, POST /schedule-rules/:id/extend
  * and the daily refresh. R-SCH-02, R-SCH-04, R-SCH-07. Pure math: ./occurrences.ts, ./conflicts.ts.
- * AvailabilityQueries is provided here too because TeachersModule doesn't export it (stateless).
  */
 @Module({
+  imports: [TeachersModule],
   controllers: [ScheduleRulesController],
   providers: [
-    AvailabilityQueries,
     BusyQueries,
     ConflictChecker,
     HorizonJob,

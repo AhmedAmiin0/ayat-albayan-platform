@@ -25,6 +25,7 @@ describe('error helpers (docs/10 §3 errors)', () => {
     expect(lessonErrorText(new ApiError(409, { code: 'invalid_transition' }))).toBe(t.lessons.invalidTransition);
     expect(lessonErrorText(new ApiError(409, { code: 'slot_taken' }))).toBe(t.lessons.slotTaken);
     expect(lessonErrorText(new ApiError(409, { code: 'not_started' }))).toBe(t.lessons.notStarted);
+    expect(lessonErrorText(new ApiError(400, { code: 'no_occurrences' }))).toBe(t.lessons.error.no_occurrences);
     expect(lessonErrorText(new ApiError(500, null))).toBe(t.common.error);
   });
 });

@@ -34,12 +34,12 @@ describe('callRpc', () => {
     const db = {
       rpc: async (fn: string, args: unknown) => {
         calls.push([fn, args]);
-        return fn === 'ok' ? { data: [1], error: null } : { data: null, error: pgError('P0001', 'rule_not_active') };
+        return fn === 'generate_rule_lessons' ? { data: [1], error: null } : { data: null, error: pgError('P0001', 'rule_not_active') };
       },
     } as unknown as Db;
-    expect(await callRpc(db, 'ok', { p: 1 })).toEqual([1]);
-    expect(calls).toEqual([['ok', { p: 1 }]]);
-    await expect(callRpc(db, 'bad', {})).rejects.toBeInstanceOf(ConflictException);
+    expect(await callRpc(db, 'generate_rule_lessons', { p: 1 })).toEqual([1]);
+    expect(calls).toEqual([['generate_rule_lessons', { p: 1 }]]);
+    await expect(callRpc(db, 'apply_lesson_changes', {})).rejects.toBeInstanceOf(ConflictException);
   });
 });
 

@@ -1,3 +1,4 @@
+import type { Json } from '@ab/db';
 import {
   OCCUPYING_LESSON_STATUSES,
   type BookingResult,
@@ -6,7 +7,6 @@ import {
   type Program,
 } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
-import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
 import type { StudentBusyLesson } from '../scheduling/conflicts';
 import { dbError } from '../teachers/http';
@@ -24,12 +24,6 @@ export type BookingStudent = {
 export type BookingTeacher = { id: string; tz: string; meeting_link: string | null };
 
 const STUDENT_COLUMNS = `id, name, program, teacher_gender_pref, meeting_link_override, guardian:guardians!inner(id, phone_e164, tz)`;
-
-// ponytail: create_booking is not in packages/db types.ts until the integrator regenerates it
-// (`pnpm --filter @ab/db gen:types`); then call this.db.rpc directly and drop this type.
-type UntypedRpc = {
-  rpc(fn: string, args: Record<string, unknown>): PromiseLike<{ data: unknown; error: PostgrestError | null }>;
-};
 
 /** Every DB touch of the booking wizard (service role; the controller is admin-only). */
 @Injectable()
@@ -90,8 +84,8 @@ export class BookingQueries {
 
   /** Rule + students + lessons + lead + queued messages in one transaction (docs/10 §5 #14). */
   async createBooking(payload: BookingPayload, actorId: string): Promise<BookingResult> {
-    const db = this.db as unknown as UntypedRpc;
-    const { data, error } = await db.rpc('create_booking', { p_booking: payload, p_actor: actorId });
+    const p_booking = payload as unknown as Json; // typed payload; the RPC validates it in SQL
+    const { data, error } = await this.db.rpc('create_booking', { p_booking, p_actor: actorId });
     if (error) throw dbError(error);
     return toBookingResult(data);
   }

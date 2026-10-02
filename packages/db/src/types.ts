@@ -944,11 +944,40 @@ export type Database = {
       };
     };
     Functions: {
+      apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
       auth_role: {
         Args: Record<PropertyKey, never>;
         Returns: Database['public']['Enums']['user_role'];
       };
+      create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
+      generate_rule_lessons: {
+        Args: { p_actor: string; p_lessons: Json; p_rule: string };
+        Returns: {
+          cancel_reason: string | null;
+          confirmed_at: string | null;
+          confirmed_by: string | null;
+          created_at: string;
+          created_by: string | null;
+          ends_at: string;
+          google_event_id: string | null;
+          id: string;
+          meeting_link: string | null;
+          override_reason: string | null;
+          rescheduled_from_id: string | null;
+          rule_id: string | null;
+          starts_at: string;
+          status: Database['public']['Enums']['lesson_status'];
+          teacher_id: string;
+          updated_at: string;
+        }[];
+        SetofOptions: {
+          from: '*';
+          to: 'lessons';
+          isOneToOne: false;
+          isSetofReturn: true;
+        };
+      };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_lesson: { Args: { p_lesson: string }; Returns: boolean };

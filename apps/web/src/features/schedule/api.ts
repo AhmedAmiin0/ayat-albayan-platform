@@ -78,14 +78,16 @@ export function conflictsOf(error: unknown): Conflict[] | null {
   return Array.isArray(body.conflicts) ? (body.conflicts as Conflict[]) : [];
 }
 
+// Every lesson/booking domain code (lessons.error.*), with the drawer's own wording on top.
 const ERROR_TEXT: Record<string, string> = {
+  ...t.lessons.error,
   invalid_transition: t.lessons.invalidTransition,
   slot_taken: t.lessons.slotTaken,
   rule_not_active: t.lessons.ruleNotActive,
   not_started: t.lessons.notStarted,
 };
 
-/** Arabic line for a failed lesson command (docs/10 §3 codes), else the generic error. */
+/** Arabic line for a failed lesson or booking command (docs/10 §3 codes), else the generic error. */
 export function lessonErrorText(error: unknown): string {
   return ERROR_TEXT[errorCode(error) ?? ''] ?? t.common.error;
 }

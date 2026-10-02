@@ -12,6 +12,8 @@ export default defineConfig({
     environment: 'jsdom',
     include: ['src/**/*.test.{ts,tsx}'],
     setupFiles: ['src/test-setup.ts'],
+    // Multi-step wizard/drawer flows take ~1.5s alone and >5s under parallel `turbo test` load.
+    testTimeout: 20_000,
     // tokens.test.ts reads the raw token sheet; every other stylesheet stays stubbed.
     css: { include: [/styles\/tokens\.css/] },
     env: { VITE_SUPABASE_URL: 'http://sb.test', VITE_SUPABASE_ANON_KEY: 'anon', VITE_API_URL: 'http://api.test' },

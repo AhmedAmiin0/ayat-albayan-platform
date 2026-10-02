@@ -616,3 +616,81 @@ Owner request: every price on **ayatalbayan.com/calculator**, with a currency AP
   - **Package names, taglines and the offer wording:** `ar.json` under `pricing`.
   - **The spec tables:** docs/08 §1–3.
 - **Free discount:** staff can type any 0–100%, as on the site. The family-discount hint still points to the sales sheet.
+
+# Phase 2: scheduling, booking, lessons lifecycle, teacher dashboard, mobile Today, real brand
+
+Branch `develop`. Foundation commit `8ea89a6` (scheduling schema, lesson state machine, `docs/10-phase2-contracts.md`), then five builder branches merged with `--no-ff` in this order: `phase2/brand` (`6e9d431`), `phase2/engine` (`69b439f`), `phase2/booking` (`8c7fc50`), `phase2/web` (`5249b06`), `phase2/mobile` (`205c006`). All five merges were clean, with no textual conflicts. The `ar.json` hunks fell in separate namespaces (`lessons.error`, `schedule`, `booking`, `teacherDash`, `today`), and the migrations have distinct numbers (080 engine, 090 booking, 100 engine).
+
+## What was built
+- **Brand** (`phase2/brand`): the real academy emblem replaces the invented rosette everywhere: web shell, login cover, favicons, mobile header and login, iOS and Android icons, and the splash image. The palette moves to brand green, gold and paper in `packages/shared/src/theme.ts` and `apps/web/src/styles/tokens.css`, kept in sync by a test. Every text/surface pair passes AA in light and dark (`theme.contrast.test.ts`). Token names are unchanged.
+- **Lessons engine** (`phase2/engine`; R-SCH-02, 03, 07, 08, R-LES-01, 03, R-TCH-03):
+  - `generate_rule_lessons` (migration 080) inserts with `on conflict (rule_id, starts_at) do nothing`, so re-runs add 0 rows and never recreate cancelled or rescheduled slots (issue B1).
+  - `apply_lesson_changes` (migration 100) applies status CAS, the end of a rule, a new rule with its lessons, and dedup-keyed queued messages in one transaction.
+  - `HorizonJob` runs the daily horizon top-up. `POST /schedule-rules/:id/extend` is admin-only.
+  - Routes: `GET /lessons` (week, ≤ 31 days), `/lessons/day`, `/students/:id/lessons`, `/teachers/me` and `/teachers/me/lessons`.
+  - Lesson actions: `confirm`, `status`, `reschedule` (one lesson or the whole rule) and `cancel`. Chargeable is decided by the shared `isChargeable`, with `late_cancel_hours` OFF by default. Teachers may act only on their own lessons, and every change is audited.
+- **Booking API** (`phase2/booking`; R-SCH-04, 06, R-LEAD-06):
+  - `GET /booking/teachers` and `GET /booking/slots` (every grid start with its conflict reasons, ≤ 14 days).
+  - `POST /booking` checks conflicts on every horizon lesson; a clash returns 409 `conflict`, or goes ahead with a stored override reason. The `create_booking` RPC (migration 090) then writes everything in one transaction: guardian by phone, the new student, the rule, lessons and lesson students, the lead status CAS, and one queued confirmation per guardian.
+  - `freeSlots` now subtracts the teacher's real lessons.
+- **Web** (`phase2/web`):
+  - The booking wizard `/admin/book`: students or lead → teacher → slot grid → package priced by `/pricing/quote` → review, with conflicts listed in Arabic and «احجز رغم التعارض» plus a reason.
+  - The week schedule `/admin/schedule`: teachers × Riyadh week, with a lesson drawer for confirm, attendance, reschedule and cancel.
+  - The teacher dashboard `/teacher`: today, the week, my students, and my availability.
+  - The e2e journeys 4 and 5.
+- **Mobile** (`phase2/mobile`; R-MOB-02, 03): the Today tab on `GET /lessons/day`, with a timeline, status filters, optimistic confirm and cancel with rollback, and the offline cache shown with «آخر تحديث».
+
+## Integrator changes in this commit
+- **Types:** ran `supabase db reset` with migrations through 100, then `gen:types`. `create_booking` is now called through the typed `db.rpc`, and booking's `UntypedRpc` cast is gone. The engine's `callRpc` now only accepts names from the generated `Functions`. Its args stay loose on purpose, because `p_actor` can be null for the daily job and the generated args are all non-null.
+- **Modules:** `TeachersModule` now exports `AvailabilityQueries`, and `SchedulingModule` and `BookingModule` import it instead of providing a second copy.
+- **Web unit tests:** `testTimeout: 20_000` in `apps/web/vite.config.ts`. The wizard and drawer journey tests take about 1.4 s alone but went over 5 s under parallel `turbo test` load, which failed 3 tests in the first gate.
+- **Error text:** `lessonErrorText` now covers every `lessons.error.*` code, so a booking 400/409 such as `no_occurrences` shows its Arabic line instead of the generic error. The review step uses it.
+- **Breadcrumbs:** running-head crumbs for `/admin/schedule` («الجدول») and `/admin/book` («حجز حلقات»).
+- **Login cover:** the emblem is now 56 px on phones and 104 px on desktop, up from 35/64, as the brand builder suggested. I checked it in screenshots at 412 and 1280 px.
+- **`create_booking` SQL test plan** (all 6 steps, run inside `begin … rollback` on the local DB): all passed, and nothing was left behind.
+  1. Lead path: 1 guardian and 1 student with `teacher_id` set, 2 lessons, 2 lesson students, 1 message on the first lesson, and the lead moves to `trial_booked` with `converted_guardian_id` set.
+  2. The same phone is reused.
+  3. Two siblings: 2N lesson students, 1 message.
+  4. Empty lessons: 22023 and 0 rows.
+  5. A stale `lead.from`: the status is unchanged and the booking still succeeds.
+  6. The `authenticated` role gets permission denied.
+- **`routeTree.gen.ts`:** regenerated for `/admin/book`, `/admin/schedule` and `/teacher/`.
+- **Worktrees:** the merged worktrees are removed and the `phase2/*` branches are kept. The builders' leftover vite servers (5251/5252) are stopped.
+
+## Tests (measured with `pnpm test:all` = `turbo lint typecheck test e2e --force`)
+- **Gate:** green, **23/23 tasks**. The only lint output is the 3 older web complexity warnings (students files).
+- **Unit tests per package:** api 664 (89 files), web 363 (74 files), @ab/shared 716 (33 files), mobile 280 (53 suites), wa-stub 5. That is **2,028 in total**, up from 1,350 after Pricing.
+- **E2E: 24 passed.** That is 2 setup runs plus 11 tests on each of the desktop and mobile (Pixel 7) projects: login 7, journey 4 (reschedule into a busy slot → conflict → another slot → moved, confirmation queued), journey 5 (availability drives the wizard), journey 6, and pricing.
+
+## Residual TODOs and questions for the owner
+- R-LES-03: should `late` lessons count in the lesson number? `v_lesson_sequence` counts `completed` only.
+- R-SCH-07: `late_cancel_hours` stays OFF (null) until you pick a number. Cancel shows no "counts against the package" hint.
+- R-MSG-01:
+  - Is `{{1}}` the student's name or the guardian's?
+  - Should a reschedule reuse the `booking_confirmation*` templates?
+  - Cancelling sends no WhatsApp message, because there is no approved template yet.
+  - Multi-student `{{1}}` is joined two ways: the engine uses `Intl.ListFormat('ar')` («سهيلة ومريم») and booking uses the contract's literal « و ». Pick one.
+- R-SCH-06: the slot grid step (15 min, 30 min, or the lesson length; it is currently the lesson length). The API does not check that the booked teacher is `active`. `POST /booking` has no idempotency key: a repeat returns 409, or with an override creates a second rule. Two admins booking the same slot at the same moment can both pass the pre-write conflict check; the upgrade path is a per-teacher lock and a re-check inside `create_booking`.
+- R-LEAD-06: `converted_guardian_id` is set on trial bookings too. A paid booking from a `new` or `contacted` lead leaves the status unchanged, because the state machine has no `new → converted`.
+- R-SCH-03: outcomes are final, so an admin cannot correct `no_show` to `completed`.
+- R-SCH-08: the teacher's «اقترح ميعاد تاني» (propose a new time for the admin to approve) has no route or UI yet.
+- R-SCH-07: a whole-rule reschedule or booking that starts beyond the horizon returns 400 `no_occurrences`.
+- Ponytail, rule cancel: a lesson the daily job generates between reading the open lessons and the RPC lock stays `scheduled`.
+- Ponytail, daily job: `HorizonJob` assumes one API instance. Move it to pg_cron or pg-boss when the API scales out.
+- Hardening: `lessons_teacher_update` RLS checks the row, not the columns, so column-level grants are still needed.
+- Mobile:
+  - The Hijri date has no source yet.
+  - There is no «تراجع» undo and no toggle to show cancelled lessons.
+  - The package line and the trial label wait for Phase 3.
+  - The dashed separator may render solid on iOS.
+- Brand:
+  - `expo-splash-screen` is not installed or wired; `splash-icon.png` is ready (docs/07 §17).
+  - Delete the retired `docs/design/logo*.svg`.
+  - The Expo icons have not been seen in a device build.
+  - The theme-color meta follows the system theme, not the in-app toggle.
+- Web:
+  - There is no `GET /leads/:id`, so the lead row passes the lead's details in the `/admin/book` URL.
+  - A changed gender preference for an existing student is not saved.
+  - Pending reports on the teacher dashboard wait for Phase 3.
+  - The booking-only codes `student_not_found`, `teacher_not_found` and `lead_not_found` still show the generic error; the wizard cannot normally reach them.
+- Cleanup: booking's `ConflictContext` and the engine's `ConflictChecker` both load busy lessons, availability and time-off for the same pure `findConflicts`. Merge them when either changes.
