@@ -1,9 +1,8 @@
-import type { PendingReportView } from '@ab/shared';
+import type { PendingReportView, TeacherReportView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { TeacherReportsScreen } from './TeacherReportsScreen';
-import type { TeacherReportView } from './types';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));

@@ -1,4 +1,4 @@
-import { RIYADH_TZ } from '@ab/shared';
+import { RIYADH_TZ, type TeacherReportView } from '@ab/shared';
 import { useState, type ReactElement } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
@@ -10,7 +10,6 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { usePendingReports, useTeacherMe } from './queries';
 import { PendingReportRow, StudentHistoryRow, SubmittedReportRow } from './ReportRows';
-import type { TeacherReportView } from './types';
 
 type View = 'pending' | 'submitted' | 'students';
 

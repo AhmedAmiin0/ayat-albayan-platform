@@ -1,10 +1,9 @@
-import { gradeStyle, lessonWhenText, type PendingReportView } from '@ab/shared';
+import { gradeStyle, lessonWhenText, type PendingReportView, type TeacherReportView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { ListRow } from '@/ui/ListRow';
 import { StatusChip } from '@/ui/StatusChip';
-import type { TeacherReportView } from './types';
 
 // The rows of «التقارير». A row opens the lesson's report form (to write, edit or read it) or a
 // student's history; the API decides what may still change (can_edit).

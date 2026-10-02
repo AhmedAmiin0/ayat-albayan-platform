@@ -37,10 +37,8 @@ export function isOwnThread(mode: ThreadMode, thread: ThreadView | null): boolea
 
 /**
  * The teacher who sent this row from the academy number, so the admin sees «بعتها: أبرار».
- * TODO(merge): `sent_by_teacher_name` joins MessageView in @ab/shared (teacher-mode step 0); until
- * then it is read as an optional extra field. null = the academy or a system job.
+ * null = the academy or a system job; absent on old cached / optimistic rows.
  */
 export function sentByName(m: MessageView): string | null {
-  const name = (m as MessageView & { sent_by_teacher_name?: string | null }).sent_by_teacher_name;
-  return typeof name === 'string' && name ? name : null;
+  return m.sent_by_teacher_name || null;
 }

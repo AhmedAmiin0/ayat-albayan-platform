@@ -1,10 +1,19 @@
-import { ATTENDANCES, GRADES, REPORT_RUBRICS, type ReportFormEntry, type ReportFormResponse } from '@ab/shared';
+import {
+  AFTER_FIELDS,
+  ATTENDANCES,
+  DONE_FIELDS,
+  GRADES,
+  REPORT_RUBRICS,
+  textRequired,
+  type ReportFormEntry,
+  type ReportFormResponse,
+  type TextKey,
+} from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Section } from '@/more/Section';
 import { AttachmentsField } from './AttachmentsField';
 import { ChoiceChips } from './ChoiceChips';
-import { AFTER_FIELDS, DONE_FIELDS, REQUIRED_TEXT, type TextKey } from './form-values';
 import { IdentityBlock } from './IdentityBlock';
 import { ReportFooter } from './ReportFooter';
 import { ReportTextField } from './ReportTextField';
@@ -36,7 +45,7 @@ export function ReportEntryCard({ form, entry, tz }: ReportEntryCardProps) {
       value={values[k]}
       onChange={(v) => s.set(k, v)}
       disabled={locked}
-      required={REQUIRED_TEXT.includes(k)}
+      required={textRequired(k, values.attendance)}
     />
   );
   return (
