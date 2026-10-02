@@ -15,7 +15,7 @@ function Item({ icon, children }: { icon: IconName; children: ReactNode }) {
 }
 
 /**
- * Meta line under the cartouche (docs/07 §8): «معلمة، تحفيظ وتجويد», LTR phone, capacity, link.
+ * Meta line under the cartouche (docs/07 §8): «معلمة، القرآن الكريم», LTR phone, capacity, link.
  * TODO(R-TCH-03): «9 طلاب من أقصى 12» once the API returns the teacher's student count.
  */
 export function TeacherMeta({ teacher }: { teacher: Teacher }) {

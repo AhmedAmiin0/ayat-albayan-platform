@@ -14,7 +14,7 @@ export interface TeacherCellProps {
 }
 
 /**
- * The teacher at the head of a calendar row (R-SCH-01): name → profile, «معلمة · تحفيظ وتجويد»,
+ * The teacher at the head of a calendar row (R-SCH-01): name → profile, «معلمة · القرآن الكريم»,
  * their own clock when not Riyadh, the load «4 من 10» as a neutral meter (a full teacher is not
  * the admin's work, so no saffron), and any time off in the window as one marginal note each.
  */

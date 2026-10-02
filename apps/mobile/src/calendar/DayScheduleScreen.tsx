@@ -24,7 +24,6 @@ import {
   type ScheduleView,
   type TeacherFilter,
 } from './overview';
-import type { OverviewLesson } from './overview-types';
 import { ScheduleFilters } from './ScheduleFilters';
 import { SchedulePeriod } from './SchedulePeriod';
 import { TeacherHeader } from './TeacherHeader';
@@ -56,7 +55,7 @@ export function DayScheduleScreen({ back = false }: { back?: boolean }) {
     [t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)],
     overview,
   );
-  const lessonRow = (lesson: OverviewLesson) => (
+  const lessonRow = (lesson: LessonView) => (
     <AgendaLessonRow
       key={lesson.id}
       lesson={lesson}

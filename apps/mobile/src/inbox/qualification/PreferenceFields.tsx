@@ -1,4 +1,4 @@
-import { tzChoices } from '@ab/shared';
+import { GROUP_KINDS, tzChoices, type GroupKind } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { cityOf } from '@/booking/slots';
@@ -8,7 +8,6 @@ import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { ErrorLine } from '../ErrorLine';
 import { DayChips } from './DayChips';
 import { timeOptions } from './qualification-form';
-import { GROUP_KINDS, type GroupKind } from './qualification-schema';
 import type { QualFieldsProps } from './QualificationFields';
 import { QualText } from './QualText';
 

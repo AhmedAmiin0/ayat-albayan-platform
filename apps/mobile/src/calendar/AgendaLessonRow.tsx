@@ -8,11 +8,10 @@ import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { StatusChip } from '@/ui/StatusChip';
 import { teacherClock } from './agenda';
-import type { OverviewLesson } from './overview-types';
 import { Tag } from './Tag';
 
 export interface AgendaLessonRowProps {
-  lesson: OverviewLesson;
+  lesson: LessonView;
   /** «غيّر الميعاد» on the row; opens the reschedule sheet. */
   onReschedule: (lesson: LessonView) => void;
   /** The row's own actions (تأكيد / إلغاء / غيّر الميعاد) in place of «غيّر الميعاد» alone. */

@@ -19,11 +19,10 @@ beforeEach(async () => {
 });
 afterEach(() => jest.restoreAllMocks());
 
-test('«المزيد» title; الجدول, المعلمين, طلبات التوظيف and حاسبة الأسعار open their screens', async () => {
+test('«المزيد» title; المعلمين, طلبات التوظيف and حاسبة الأسعار open their screens («الجدول» is a tab)', async () => {
   await render(<MoreScreen />);
   expect(screen.getByRole('header', { name: t.mobile.more })).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: t.schedule.nav }));
-  expect(router.push).toHaveBeenCalledWith('/more/teachers/schedule');
+  expect(screen.queryByRole('button', { name: t.schedule.nav })).toBeNull();
   await fireEvent.press(screen.getByRole('button', { name: t.nav.teachers }));
   expect(router.push).toHaveBeenCalledWith('/more/teachers');
   await fireEvent.press(screen.getByRole('button', { name: t.nav.jobApplicants }));

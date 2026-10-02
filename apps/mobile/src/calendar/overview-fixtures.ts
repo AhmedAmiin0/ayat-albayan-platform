@@ -1,5 +1,5 @@
+import type { OverviewTeacher, ScheduleOverview } from '@ab/shared';
 import { cancelled, done, lesson, muscat, pending } from '@/today/fixtures';
-import type { OverviewTeacher, ScheduleOverview } from './overview-types';
 
 // Test-only GET /lessons/overview rows for the week of Saturday 26 Sep 2026 (Riyadh UTC+3).
 // Thursday 1 Oct: أبرار (Cairo) held 10:00, has 16:00 and 17:00 booked and 10:45–16:00 free;

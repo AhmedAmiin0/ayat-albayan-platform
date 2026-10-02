@@ -1,13 +1,15 @@
-import { GENDERS, type Gender, type Weekday } from '@ab/shared';
-import { t } from '@/lib/i18n';
 import {
   FILLED_BY,
+  GENDERS,
   GROUP_KINDS,
-  qualificationPatchSchema,
+  leadQualificationPatchSchema,
   type FilledBy,
+  type Gender,
   type GroupKind,
-  type QualificationPatch,
-} from './qualification-schema';
+  type LeadQualificationPatch,
+  type Weekday,
+} from '@ab/shared';
+import { t } from '@/lib/i18n';
 
 // R-LEAD-03: the lead's structured qualification, captured on the lead screen. All optional; a
 // field emptied by the admin is sent as null (clears it); untouched fields are not sent (L1 merges).
@@ -42,7 +44,7 @@ export type QualForm = Record<TextField, string> & {
 
 export type QualErrors = Partial<Record<keyof QualForm, string>>;
 export type QualResult =
-  { ok: true; patch: QualificationPatch } | { ok: false; errors: QualErrors };
+  { ok: true; patch: LeadQualificationPatch } | { ok: false; errors: QualErrors };
 
 /** Day chips: السبت → الجمعة, like the availability editor (docs/07 §8). */
 export const WEEK_ORDER: readonly Weekday[] = [6, 0, 1, 2, 3, 4, 5];
@@ -103,7 +105,7 @@ const MESSAGES: QualErrors = {
 };
 const phoneErrors: Record<string, string | undefined> = t.common.phoneErrors;
 
-/** Only what changed, validated with the API's own schema (+ the v1 keys, qualification-schema). */
+/** Only what changed, validated with the API's own schema (the v1 keys included). */
 export function qualPatch(form: QualForm, before: QualForm): QualResult {
   const patch: Record<string, unknown> = {};
   for (const key of Object.keys(form) as (keyof QualForm)[]) {
@@ -113,7 +115,7 @@ export function qualPatch(form: QualForm, before: QualForm): QualResult {
   if (form.preferred_from && form.preferred_to && form.preferred_from >= form.preferred_to) {
     return { ok: false, errors: { preferred_to: t.common.endBeforeStart } };
   }
-  const parsed = qualificationPatchSchema.safeParse(patch);
+  const parsed = leadQualificationPatchSchema.safeParse(patch);
   return parsed.success
     ? { ok: true, patch: parsed.data }
     : { ok: false, errors: errorsOf(parsed.error.issues) };

@@ -1,7 +1,7 @@
+import type { ScheduleOverview } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
-import type { ScheduleOverview } from './overview-types';
 
 /**
  * GET /lessons/overview?from&to (admin, ≤ 31 days): one Riyadh week of every teacher and lesson.

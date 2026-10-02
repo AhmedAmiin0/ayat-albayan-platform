@@ -1,3 +1,4 @@
+import type { LeadQualificationPatch } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
@@ -8,7 +9,6 @@ import { Heading } from './Heading';
 import { PreferenceFields } from './PreferenceFields';
 import { qualForm, qualPatch, type QualErrors, type QualForm } from './qualification-form';
 import { QualificationFields } from './QualificationFields';
-import type { QualificationPatch } from './qualification-schema';
 import { saveErrorText, useLeadPatch, type LeadProfile } from './queries';
 
 export interface QualificationFormProps {
@@ -23,7 +23,7 @@ export interface QualificationFormProps {
  * field is cleared). Offline the form stays readable, with no save button.
  */
 export function QualificationForm({ lead, offline }: QualificationFormProps) {
-  const save = useLeadPatch<QualificationPatch>('qualification');
+  const save = useLeadPatch<LeadQualificationPatch>('qualification');
   const [initial, setInitial] = useState(() => qualForm(lead.qualification));
   const [form, setForm] = useState<QualForm>(initial);
   const [errors, setErrors] = useState<QualErrors>({});

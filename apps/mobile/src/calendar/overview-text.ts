@@ -1,10 +1,9 @@
-import { clockTime, RIYADH_TZ } from '@ab/shared';
+import { clockTime, RIYADH_TZ, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import { teacherLoad } from '@/booking/TeacherStep';
 import { cityOf } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { formatTimeOff } from '@/more/schedule';
 import { ltr } from '@/ui/Ltr';
-import type { OverviewTeacher, OverviewTimeOff, Span } from './overview-types';
 
 // The words of a «الجدول» teacher section (R-SCH-01): who the teacher is, their load, the day's
 // windows and free gaps on the Riyadh clock, and time off. Pure, unit-tested in Arabic and English.
@@ -18,7 +17,7 @@ export function spanClock(span: Span): { from: string; to: string } {
   };
 }
 
-/** «معلمة · تحفيظ وتجويد، لغة عربية · 3 من 10 طالب · القاهرة» (the city only when not Riyadh). */
+/** «معلمة · القرآن الكريم، اللغة العربية · 3 من 10 طالب · القاهرة» (the city only when not Riyadh). */
 export function teacherMeta(teacher: OverviewTeacher): string {
   const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.teachers.listSeparator);
   return [

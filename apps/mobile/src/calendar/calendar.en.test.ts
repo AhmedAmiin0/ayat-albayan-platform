@@ -14,7 +14,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 
 test('«الجدول» sections in English: who, load and city; windows and free gaps on the Riyadh clock', () => {
-  expect(teacherMeta(abrar)).toBe('Female teacher · Quran memorization and tajweed · Students: 3 of 10 · Cairo');
+  expect(teacherMeta(abrar)).toBe('Female teacher · The Holy Quran · Students: 3 of 10 · Cairo');
   expect(windowsLine(omar.windows)).toBe(`Available ${ltr('20:00 – 02:00')} Riyadh time`);
   const [gap] = abrar.free;
   if (!gap) throw new Error('fixture');

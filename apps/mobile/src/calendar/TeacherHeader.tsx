@@ -14,7 +14,7 @@ export interface TeacherHeaderProps {
 }
 
 /**
- * A «الجدول» section's head: the name (opens the teacher), «معلمة · تحفيظ وتجويد · 3 من 10 طالب ·
+ * A «الجدول» section's head: the name (opens the teacher), «معلمة · القرآن الكريم · 3 من 10 طالب ·
  * القاهرة», then the day's availability, any time off touching the period, and «مفيش حلقات» when
  * nothing is booked.
  */

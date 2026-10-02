@@ -1,13 +1,15 @@
-import { RIYADH_TZ, type Gender, type Program } from '@ab/shared';
+import {
+  RIYADH_TZ,
+  type Gender,
+  type LessonView,
+  type OverviewTeacher,
+  type OverviewTimeOff,
+  type Program,
+  type ScheduleOverview,
+  type Span,
+} from '@ab/shared';
 import { localDate, visibleLessons } from '@/today/timeline';
 import { agendaDays } from './agenda';
-import type {
-  OverviewLesson,
-  OverviewTeacher,
-  OverviewTimeOff,
-  ScheduleOverview,
-  Span,
-} from './overview-types';
 import { addDays, riyadhMidnight } from './week';
 
 // «الجدول» for every teacher (R-SCH-01, R-TCH-02): the overview cut to one Riyadh day or the
@@ -22,7 +24,7 @@ export interface TeacherFilter {
 }
 
 export type AgendaItem =
-  | { kind: 'lesson'; lesson: OverviewLesson }
+  | { kind: 'lesson'; lesson: LessonView }
   | { kind: 'free'; span: Span }
   /** Week view: the Riyadh day the next lessons fall on. */
   | { kind: 'day'; date: string };
@@ -63,13 +65,13 @@ export function matches(teacher: OverviewTeacher, f: TeacherFilter): boolean {
 }
 
 /** The open and held lessons (closed ones hidden, as on Today), earliest first, trial flag kept. */
-function openLessons(lessons: readonly OverviewLesson[]): OverviewLesson[] {
+function openLessons(lessons: readonly LessonView[]): LessonView[] {
   const open = new Set(visibleLessons(lessons).map((l) => l.id));
   return lessons.filter((l) => open.has(l.id)).sort((a, b) => ms(a.starts_at) - ms(b.starts_at));
 }
 
 /** Lessons and free gaps of one day, by start. */
-function dayItems(lessons: readonly OverviewLesson[], free: readonly Span[]): AgendaItem[] {
+function dayItems(lessons: readonly LessonView[], free: readonly Span[]): AgendaItem[] {
   const items: { at: number; item: AgendaItem }[] = [
     ...lessons.map((lesson) => ({
       at: ms(lesson.starts_at),
@@ -81,7 +83,7 @@ function dayItems(lessons: readonly OverviewLesson[], free: readonly Span[]): Ag
 }
 
 /** A week's lessons under their Riyadh day; days without lessons are left out. */
-function weekItems(lessons: readonly OverviewLesson[]): AgendaItem[] {
+function weekItems(lessons: readonly LessonView[]): AgendaItem[] {
   const items: AgendaItem[] = [];
   let last = '';
   for (const lesson of lessons) {

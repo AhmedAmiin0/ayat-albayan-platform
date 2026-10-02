@@ -1,9 +1,9 @@
+import { FILLED_BY, type FilledBy } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { CLEAR } from './PreferenceFields';
-import { FILLED_BY, type FilledBy } from './qualification-schema';
 import type { QualFieldsProps } from './QualificationFields';
 import { QualText } from './QualText';
 

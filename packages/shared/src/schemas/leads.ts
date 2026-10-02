@@ -5,6 +5,8 @@ import { optionalText, phoneE164, timeOfDay, timeZone } from './common.js';
 /** «بتملا الاستمارة بصفتك» and «نوع الحلقة» from the registration form's first version (A9). */
 export const FILLED_BY = ['guardian', 'student'] as const;
 export const GROUP_KINDS = ['individual', 'group'] as const;
+export type FilledBy = (typeof FILLED_BY)[number];
+export type GroupKind = (typeof GROUP_KINDS)[number];
 
 /**
  * Structured, all-optional qualification captured in-thread (R-LEAD-03), plus the questions the

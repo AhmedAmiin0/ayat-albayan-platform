@@ -1,16 +1,16 @@
+import type { LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import type { AgendaItem } from './overview';
 import { freeLabel } from './overview-text';
-import type { OverviewLesson } from './overview-types';
 import { dayLabel } from './week';
 
 export interface AgendaItemRowProps {
   item: AgendaItem;
   /** One lesson's agenda row, with its actions. */
-  lessonRow: (lesson: OverviewLesson) => ReactNode;
+  lessonRow: (lesson: LessonView) => ReactNode;
 }
 
 /** A «الجدول» section row: a lesson, a dashed «فاضي 17:00 – 19:00» gap, or (week) a day label. */
