@@ -109,7 +109,7 @@ Key enums (store in `packages/shared/src/enums`):
 
 ### 3.10 Admin mobile app (Expo)
 - **R-MOB-01** Login (admin), push notifications for: new lead, lesson needing confirmation, report submitted, reminder failed, payment due.
-- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial.
+- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial. Also «الجدول»: the all-teachers agenda (R-SCH-09) for the admin, and a teacher tree (اليوم، جدولي، المحادثات، التقارير، المزيد) for a teacher login (R-TCH-03).
 - **R-MOB-03** Offline-tolerant reads (TanStack Query persist), optimistic status updates.
 
 ### 3.11 Migration from Google

@@ -138,7 +138,7 @@ These supersede §2 and §5 where they differ.
 
 ## 9. All-teachers calendar and teacher mode (owner requests 2026-10-02, migration 164)
 
-**LessonView** gains `trial: boolean` (its rule's `package = 'trial'`; a one-off move keeps `rule_id`, so the tag survives). **MessageView** gains `sent_by_teacher_name: string | null` (null = the academy or a job).
+**LessonView** gains `trial?: boolean` (its rule's `package = 'trial'`; a one-off move keeps `rule_id`, so the tag survives). **MessageView** gains `sent_by_teacher_name?: string | null` (null = the academy or a job). Both are optional only because an old client cache or an optimistic row lacks them (the API always sets them): clients test truthiness (`if (l.trial)`, `if (m.sent_by_teacher_name)`), never `!== null`.
 
 | # | Route | Guard | Input | 2xx | Errors |
 |---|---|---|---|---|---|

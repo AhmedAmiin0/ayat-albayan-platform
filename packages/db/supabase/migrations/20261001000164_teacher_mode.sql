@@ -55,7 +55,10 @@ create policy teacher_thread_reads_self on public.teacher_thread_reads for selec
   using (teacher_id = (select public.my_teacher_id()));
 create policy teacher_thread_reads_admin on public.teacher_thread_reads for select to authenticated
   using (public.is_admin());
-revoke insert, update, delete on public.teacher_thread_reads from anon, authenticated; -- API writes
+-- Client roles read through RLS only; the API (service role) writes (rule 9, as migration 110).
+revoke all on public.teacher_thread_reads from anon;
+revoke insert, update, delete, truncate, references, trigger on public.teacher_thread_reads
+  from authenticated;
 
 -- Inbound rows after the teacher last opened the thread; never opened → only the last 24 h count.
 -- p_phones is text[] (not e164[]) so PostgREST passes a plain JSON array of strings.
