@@ -3,6 +3,7 @@ import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-quer
 import { useEffect, useId } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
+import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -10,6 +11,7 @@ import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
 import { LeadPanel } from './LeadPanel';
 import { MessageLog } from './MessageLog';
+import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
 import { sendErrorText } from './TextComposer';
@@ -23,6 +25,7 @@ export interface ThreadPaneProps {
 /**
  * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the message log, the reply box and beside it
  * (below it under 1280px) the lead's qualification panel, or the guardian's children and packages.
+ * Teacher mode: the log and the reply box only; their own chat with the academy is read-only.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
@@ -30,7 +33,10 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const detail = useInfiniteQuery(threadQuery(phone));
   const templates = useQuery(templatesQuery);
   const th = detail.data?.pages[0]?.thread ?? null;
-  const isLead = !!th?.lead_id && !th.guardian_id && !th.teacher_id;
+  const admin = useInboxMode() === 'admin';
+  const me = useQuery({ ...teacherMeQuery, enabled: !admin });
+  // /leads is the admin's: never asked in teacher mode (the API also nulls lead_id there).
+  const isLead = admin && !!th?.lead_id && !th.guardian_id && !th.teacher_id;
   const lead = useQuery({ ...leadByPhoneQuery(phone), enabled: isLead });
   const loaded = detail.isSuccess;
   // Opening the thread marks their messages read (H2): refresh the unread counts (list + fihris).
@@ -49,8 +55,10 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
     teacherName: th.teacher_name,
     lessons: detail.data.pages[0]?.lessons ?? [],
   };
-  const people = detail.data.pages[0]?.people ?? null;
+  const people = admin ? (detail.data.pages[0]?.people ?? null) : null;
   const aside = isLead || !!people?.guardian;
+  // Until /teachers/me answers, a teacher's number counts as their own (no composer).
+  const ownThread = !admin && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   return (
     <section aria-labelledby={headingId} className="min-w-0">
@@ -64,7 +72,11 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
             onOlder={() => void detail.fetchNextPage()}
             waitingKeys={waiting}
           />
-          <Composer key={phone} thread={th} context={context} />
+          {ownThread ? (
+            <p className="mt-4 border-t-[3px] border-double border-gold pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>
+          ) : (
+            <Composer key={phone} thread={th} context={context} />
+          )}
         </div>
         {isLead && <LeadPanel phone={phone} />}
         {people?.guardian && <SubscribePanel people={people} />}

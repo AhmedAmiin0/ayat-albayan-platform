@@ -3,7 +3,8 @@ import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
-import type { QualErrors, QualForm } from './qualification-form';
+import { FamilyFields } from './FamilyFields';
+import type { QualErrors, QualForm, QualTextField } from './qualification-form';
 
 export interface QualFieldsProps {
   form: QualForm;
@@ -11,18 +12,19 @@ export interface QualFieldsProps {
   onChange: (patch: Partial<QualForm>) => void;
 }
 
-type TextKey = 'student_name' | 'country' | 'level' | 'memorized' | 'goal' | 'riwaya';
-
-const TEXT: { key: TextKey; label: string }[] = [
+const TEXT: { key: QualTextField; label: string }[] = [
   { key: 'level', label: t.leads.level },
   { key: 'memorized', label: t.leads.memorized },
   { key: 'goal', label: t.leads.goal },
   { key: 'riwaya', label: t.leads.riwaya },
 ];
 
-/** Who the student is (R-LEAD-03): name, age, gender, country, level, memorized, goal, riwaya. */
+/**
+ * Who the student is (R-LEAD-03), in the registration form's order and wording (research-forms
+ * 8–9): name, age, gender, country, the family block, level, memorized, goal, riwaya.
+ */
 export function QualificationFields({ form, errors, onChange }: QualFieldsProps) {
-  const text = (key: TextKey, label: string) => (
+  const text = (key: QualTextField, label: string) => (
     <Field key={key} label={label} error={errors[key]}>
       {(p) => <Input {...p} value={form[key]} onChange={(e) => onChange({ [key]: e.target.value })} />}
     </Field>
@@ -58,7 +60,12 @@ export function QualificationFields({ form, errors, onChange }: QualFieldsProps)
         )}
       </Field>
       <div className="col-span-2">{text('country', t.leads.country)}</div>
-      {TEXT.map(({ key, label }) => text(key, label))}
+      <FamilyFields form={form} errors={errors} onChange={onChange} />
+      {TEXT.map(({ key, label }) => (
+        <div key={key} className="col-span-2">
+          {text(key, label)}
+        </div>
+      ))}
     </div>
   );
 }

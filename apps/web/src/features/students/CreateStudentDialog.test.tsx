@@ -24,7 +24,7 @@ function renderDialog() {
 function fillAndSubmit(phone = '0501234567') {
   fireEvent.change(screen.getByLabelText(t.guardians.phone), { target: { value: phone } });
   fireEvent.change(screen.getByLabelText(t.guardians.name), { target: { value: 'ام جود' } });
-  fireEvent.change(screen.getByLabelText(t.students.name), { target: { value: 'سهيله' } });
+  fireEvent.change(screen.getByLabelText(t.leads.studentName), { target: { value: 'سهيله' } });
   fireEvent.click(screen.getByRole('button', { name: t.common.save }));
 }
 
@@ -44,14 +44,30 @@ describe('CreateStudentDialog (R-STU-02, R-STU-03)', () => {
 
   it('empty «حفظ»: Arabic field errors (no browser bubble), nothing sent; tz is a select', async () => {
     renderDialog();
-    const form = screen.getByLabelText(t.students.name).closest('form');
+    const form = screen.getByLabelText(t.leads.studentName).closest('form');
     expect(form?.noValidate).toBe(true);
     expect(screen.getByLabelText(t.students.tz).tagName).toBe('SELECT');
     fireEvent.click(screen.getByRole('button', { name: t.common.save }));
     await waitFor(() => expect(screen.getAllByText(t.common.required)).toHaveLength(2));
     expect(screen.getByText(t.common.phoneErrors.empty)).toBeTruthy();
-    expect(screen.getByLabelText(t.students.name).getAttribute('aria-invalid')).toBe('true');
+    expect(screen.getByLabelText(t.leads.studentName).getAttribute('aria-invalid')).toBe('true');
     expect(api.createStudent).not.toHaveBeenCalled();
+  });
+
+  it('the registration form’s age, gender, source and phone hint (research-forms 1, 3, 4)', async () => {
+    api.createStudent.mockResolvedValue({ id: 's2' });
+    renderDialog();
+    expect(screen.getByText(t.guardians.phoneHint)).toBeTruthy();
+    fireEvent.change(screen.getByLabelText(t.students.age), { target: { value: '120' } });
+    fillAndSubmit();
+    expect(await screen.findByText(t.students.ageInvalid)).toBeTruthy();
+    expect(api.createStudent).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText(t.students.age), { target: { value: '9' } });
+    fireEvent.change(screen.getByLabelText(t.students.gender), { target: { value: 'female' } });
+    fireEvent.change(screen.getByLabelText(t.guardians.source), { target: { value: 'referral' } });
+    fireEvent.click(screen.getByRole('button', { name: t.common.save }));
+    const sent = expect.objectContaining({ age: 9, gender: 'female', guardian: expect.objectContaining({ source: 'referral' }) });
+    await waitFor(() => expect(api.createStudent).toHaveBeenCalledWith(sent));
   });
 
   it('a bad phone is explained in Arabic and never sent', async () => {

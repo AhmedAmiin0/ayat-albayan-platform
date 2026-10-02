@@ -1,3 +1,4 @@
+import type { Gender, LeadSource } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import type {
@@ -38,9 +39,11 @@ export const teacherOptionsQuery = queryOptions({
 
 export type CreateStudentBody = {
   name: string;
+  age: number | null;
+  gender: Gender | null;
   tz: string;
   program: string;
-  guardian: { name: string; phone_e164: string; tz: string };
+  guardian: { name: string; phone_e164: string; tz: string; source: LeadSource | null };
   force: boolean;
 };
 

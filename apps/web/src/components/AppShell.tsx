@@ -19,20 +19,22 @@ export interface AppShellProps {
   title: string;
   /** The fihris; when given, the admin sidebar layout, otherwise the teacher/guardian top bar. */
   nav?: ReactNode;
+  /** Links under the top bar (the teacher's own pages); top-bar layout only. */
+  topNav?: ReactNode;
 }
 
 /**
  * Signed-in layout (docs/07 §7): margin + running head + ONE jadwal work page. Child routes render
  * inside the page and own its cartouche; the section home shows `title` in the cartouche.
  */
-export function AppShell({ title, nav }: AppShellProps) {
+export function AppShell({ title, nav, topNav }: AppShellProps) {
   const isHome = useChildMatches().length === 0;
   const page = (
     <main className="min-w-0">
       <Page>{isHome ? <Cartouche>{title}</Cartouche> : <Outlet />}</Page>
     </main>
   );
-  return nav ? <AdminLayout nav={nav} page={page} /> : <TopBarLayout page={page} />;
+  return nav ? <AdminLayout nav={nav} page={page} /> : <TopBarLayout page={page} topNav={topNav} />;
 }
 
 function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
@@ -68,7 +70,7 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
 }
 
 /** Teacher / guardian: same margin, page and cartouche, no fihris; 48px controls. */
-function TopBarLayout({ page }: { page: ReactNode }) {
+function TopBarLayout({ page, topNav }: { page: ReactNode; topNav?: ReactNode }) {
   return (
     <div className="mx-auto min-h-screen max-w-[1180px] px-2 pb-5 shell:px-6">
       <header className="flex items-center gap-3 px-1.5 pt-4">
@@ -79,6 +81,7 @@ function TopBarLayout({ page }: { page: ReactNode }) {
           <LogoutButton className="size-12 sm:size-12" />
         </div>
       </header>
+      {topNav && <div className="px-1.5 pt-3">{topNav}</div>}
       <RunningHead />
       {page}
       <PhoneTheme className="sm:hidden" />

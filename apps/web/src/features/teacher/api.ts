@@ -1,7 +1,11 @@
-import type { LessonProposalRequest, LessonView, TeacherMe } from '@ab/shared';
+import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
+import type { Page } from '@/features/leads/types';
+import { REPORTS_KEY } from '@/features/reports/api';
 import { LESSONS_KEY, type Window } from '@/features/schedule/api';
+import { MONEY_KEY } from '@/features/subscriptions/api';
 import { apiFetch, apiSend } from '@/lib/api';
+import type { TeacherReportView } from './types';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 
@@ -25,3 +29,19 @@ export const myLessonsQuery = (w: Window) => {
 /** POST /lessons/:id/propose — «اقترح ميعاد تاني» for the admin to approve (R-SCH-08). */
 export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/propose`, body);
+
+export const MY_REPORTS_PAGE_SIZE = 20;
+
+/** GET /teachers/me/reports — my sent reports, newest first, with the edit window (spec §3). */
+export const myReportsQuery = (page: number) =>
+  queryOptions({
+    queryKey: [...REPORTS_KEY, 'mine', page],
+    queryFn: () => apiFetch<Page<TeacherReportView>>(`/teachers/me/reports?page=${page}&pageSize=${MY_REPORTS_PAGE_SIZE}`),
+    placeholderData: keepPreviousData,
+  });
+
+/** GET /teachers/me/payouts — every month of mine, newest first (R-TCH-04). */
+export const myPayoutsQuery = queryOptions({
+  queryKey: [...MONEY_KEY, 'payouts', 'mine'],
+  queryFn: () => apiFetch<PayoutView[]>('/teachers/me/payouts'),
+});

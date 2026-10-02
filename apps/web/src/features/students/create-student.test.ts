@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { duplicateCandidates } from './api';
-import { EMPTY_STUDENT, phoneError, requiredError, toCreateBody } from './create-student';
+import { ageError, EMPTY_STUDENT, parseAge, phoneError, requiredError, toCreateBody } from './create-student';
 
 describe('create student helpers (R-STU-02, R-STU-03)', () => {
   it('phoneError: accepts any Saudi/Egyptian format, explains rejects in Arabic', () => {
@@ -23,11 +23,26 @@ describe('create student helpers (R-STU-02, R-STU-03)', () => {
     const v = { ...EMPTY_STUDENT, guardianPhone: '0501234567', guardianName: ' ام جود ', name: ' سهيلة ' };
     expect(toCreateBody(v, true)).toEqual({
       name: 'سهيلة',
+      age: null,
+      gender: null,
       tz: 'Asia/Riyadh',
       program: 'quran',
-      guardian: { name: 'ام جود', phone_e164: '0501234567', tz: 'Asia/Riyadh' },
+      guardian: { name: 'ام جود', phone_e164: '0501234567', tz: 'Asia/Riyadh', source: null },
       force: true,
     });
+  });
+
+  it('toCreateBody: the form’s «سن الطالب», «النوع» and «عرفت عننا منين؟» (research-forms 1, 3)', () => {
+    const v = { ...EMPTY_STUDENT, name: 'جود', age: ' 9 ', gender: 'female', source: 'referral' } as const;
+    expect(toCreateBody(v, false)).toMatchObject({ age: 9, gender: 'female', guardian: { source: 'referral' } });
+  });
+
+  it('ageError: blank is fine; anything but a whole 3–99 gets the form’s message', () => {
+    expect(ageError('')).toBeUndefined();
+    expect(ageError('12')).toBeUndefined();
+    expect(parseAge('12')).toBe(12);
+    for (const bad of ['2', '100', '7.5', 'سبعة']) expect(ageError(bad)).toBe(t.students.ageInvalid);
+    expect(t.students.ageInvalid).toBe('اكتب السن بالأرقام (من 3 لـ 99)');
   });
 
   it('duplicateCandidates: only a 409 duplicate_student body yields candidates', () => {

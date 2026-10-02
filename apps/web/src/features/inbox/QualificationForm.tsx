@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 import { patchQualification, type InboxLead } from './api';
+import { RequestFields } from './FamilyFields';
 import { PreferenceFields } from './PreferenceFields';
 import { QualificationFields } from './QualificationFields';
 import { qualForm, qualPatch, type QualErrors, type QualForm } from './qualification-form';
@@ -48,6 +49,7 @@ export function QualificationForm({ lead, onDone }: QualificationFormProps) {
       <h3 className="text-sm font-semibold">{t.leads.qualification}</h3>
       <QualificationFields form={form} errors={errors} onChange={change} />
       <PreferenceFields form={form} errors={errors} onChange={change} />
+      <RequestFields form={form} errors={errors} onChange={change} />
       <Button type="submit" variant="secondary" className="justify-self-start" disabled={save.isPending}>
         {save.isPending ? t.common.saving : t.common.save}
       </Button>

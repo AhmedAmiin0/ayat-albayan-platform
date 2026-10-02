@@ -31,7 +31,7 @@ async function reachReview() {
       <BookingPage search={{ leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d', phone: '+966501234567', name: 'أم جود' }} onOpenStudent={vi.fn()} />
     </QueryClientProvider>,
   );
-  fireEvent.change(screen.getByLabelText(t.students.name), { target: { value: 'جود' } });
+  fireEvent.change(await screen.findByLabelText(t.leads.studentName), { target: { value: 'جود' } });
   next();
   await pickTeacherAndSlot();
   next();

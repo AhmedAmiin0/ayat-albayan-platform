@@ -1,15 +1,37 @@
-import { GENDERS, leadQualificationPatchSchema, type Gender, type LeadQualificationPatch } from '@ab/shared';
+import {
+  FILLED_BY,
+  GENDERS,
+  GROUP_KINDS,
+  leadQualificationPatchSchema,
+  type Gender,
+  type LeadQualificationPatch,
+} from '@ab/shared';
 import { t } from '@/lib/i18n';
 
-// R-LEAD-03: the lead's structured qualification, captured in the thread. All optional; a field
-// emptied by the admin is sent as null (clears it); untouched fields are not sent (L1 merges).
+// R-LEAD-03: the lead's structured qualification, captured in the thread, with the questions the
+// first registration form asked (research-forms 8–9). All optional; a field emptied by the admin
+// is sent as null (clears it); untouched fields are not sent (L1 merges).
 
-export const TEXT_FIELDS = ['student_name', 'country', 'level', 'memorized', 'goal', 'riwaya'] as const;
-type TextField = (typeof TEXT_FIELDS)[number];
+export const TEXT_FIELDS = [
+  'student_name',
+  'country',
+  'city',
+  'guardian_name',
+  'guardian_relation',
+  'alt_phone',
+  'level',
+  'memorized',
+  'goal',
+  'riwaya',
+  'notes',
+] as const;
+export type QualTextField = (typeof TEXT_FIELDS)[number];
 
-export type QualForm = Record<TextField, string> & {
+export type QualForm = Record<QualTextField, string> & {
   age: string;
   gender: Gender | '';
+  filled_by: (typeof FILLED_BY)[number] | '';
+  group_kind: (typeof GROUP_KINDS)[number] | '';
   tz: string;
   available_days: number[];
   preferred_from: string;
@@ -20,22 +42,20 @@ export type QualErrors = Partial<Record<keyof QualForm, string>>;
 export type QualResult = { ok: true; patch: LeadQualificationPatch } | { ok: false; errors: QualErrors };
 
 const str = (v: unknown): string => (typeof v === 'string' ? v : typeof v === 'number' ? String(v) : '');
+const pick = <T extends string>(list: readonly T[], v: unknown): T | '' => list.find((x) => x === v) ?? '';
 
 /** leads.qualification (jsonb, anything) → the form's strings. */
 export function qualForm(q: unknown): QualForm {
   const r = q && typeof q === 'object' ? (q as Record<string, unknown>) : {};
   const days = Array.isArray(r['available_days']) ? r['available_days'].filter((d): d is number => Number.isInteger(d)) : [];
-  const gender = GENDERS.find((g) => g === r['gender']) ?? '';
+  const text = Object.fromEntries(TEXT_FIELDS.map((k) => [k, str(r[k])])) as Record<QualTextField, string>;
   return {
-    student_name: str(r['student_name']),
+    ...text,
     age: str(r['age']),
-    gender,
-    country: str(r['country']),
+    gender: pick(GENDERS, r['gender']),
+    filled_by: pick(FILLED_BY, r['filled_by']),
+    group_kind: pick(GROUP_KINDS, r['group_kind']),
     tz: str(r['tz']),
-    level: str(r['level']),
-    memorized: str(r['memorized']),
-    goal: str(r['goal']),
-    riwaya: str(r['riwaya']),
     available_days: [...days].sort((a, b) => a - b),
     preferred_from: str(r['preferred_from']),
     preferred_to: str(r['preferred_to']),
@@ -52,11 +72,12 @@ function wire(key: keyof QualForm, form: QualForm): unknown {
 }
 
 const MESSAGES: QualErrors = {
-  age: t.settings.invalid,
+  age: t.students.ageInvalid,
   tz: t.common.invalidTimeZone,
   preferred_from: t.common.invalidTime,
   preferred_to: t.common.invalidTime,
 };
+const PHONE: Record<string, string | undefined> = t.common.phoneErrors;
 
 /** Only what changed, validated with the API's own schema (leadQualificationPatchSchema). */
 export function qualPatch(form: QualForm, before: QualForm): QualResult {
@@ -72,7 +93,7 @@ export function qualPatch(form: QualForm, before: QualForm): QualResult {
   const errors: QualErrors = {};
   for (const issue of parsed.error.issues) {
     const key = issue.path[0] as keyof QualForm;
-    errors[key] = MESSAGES[key] ?? t.common.error;
+    errors[key] = (key === 'alt_phone' ? PHONE[issue.message] : MESSAGES[key]) ?? t.common.error;
   }
   return { ok: false, errors };
 }

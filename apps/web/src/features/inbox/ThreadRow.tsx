@@ -8,6 +8,7 @@ import { initialOf } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { fullTime, listTime, previewText, threadKind, threadName, unreadLabel } from './format';
+import { inboxBase, useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { leadChip } from './subscription';
 import { SubscriptionChip } from './SubscriptionChip';
@@ -52,6 +53,7 @@ function PhoneTag({ phone }: { phone: string }) {
  * status chip or who the number is, the family's package tags (FamilyTags), source.
  */
 export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
+  const mode = useInboxMode();
   const name = threadName(th);
   const unread = th.unread_count > 0;
   const failed = lastFailed(th);
@@ -64,7 +66,7 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   return (
     <li>
       <Link
-        to="/admin/inbox"
+        to={inboxBase(mode)}
         search={{ ...search, phone: th.phone_e164 }}
         aria-label={label}
         aria-current={active ? 'page' : undefined}
@@ -106,8 +108,8 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
           ) : (
             <span>{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
           )}
-          <FamilyTags thread={th} />
-          {th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
+          {mode === 'admin' && <FamilyTags thread={th} />}
+          {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         </span>
       </Link>
     </li>

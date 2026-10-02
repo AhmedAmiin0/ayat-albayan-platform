@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { leadByPhoneQuery, type InboxLead } from '@/features/inbox/api';
 import { studentQuery } from '@/features/students/api';
 import type { StudentProfile } from '@/features/students/types';
 import { t } from '@/lib/i18n';
@@ -10,6 +11,7 @@ import { guardianQuery, type BookSearch, type GuardianRow } from './api';
 import { BookingWizard } from './BookingWizard';
 import { emptyDraft, type BookingDraft } from './draft';
 import { bookHint, type BookHint } from './hint';
+import { newStudentFromLead } from './new-student';
 import { guardianCountry } from './price';
 
 export interface BookingPageProps {
@@ -32,14 +34,19 @@ export function draftFromStudent(s: ProfileWithPref, guardian: GuardianRow | und
   };
 }
 
-/** A lead books a trial, unless «اشترك» in the chat asked for a regular package (R-SUB-01). */
-export function draftFromLead(search: BookSearch): BookingDraft {
-  const phone = search.phone ?? '';
+/**
+ * A lead books a trial, unless «اشترك» in the chat asked for a regular package (R-SUB-01). What
+ * «بيانات الطالب» captured and the lead's source prefill step 1 (research-forms item 2).
+ */
+export function draftFromLead(search: BookSearch, lead: InboxLead | null): BookingDraft {
+  const base = emptyDraft({ leadId: search.leadId ?? null });
+  const { student, tz } = newStudentFromLead(lead, search);
   return {
-    ...emptyDraft({ leadId: search.leadId ?? null }),
+    ...base,
     pkg: search.pkg ?? 'trial',
-    newStudent: { name: '', guardianName: search.name ?? '', guardianPhone: phone },
-    country: guardianCountry({ phone_e164: phone }),
+    tz: tz ?? base.tz,
+    newStudent: student,
+    country: guardianCountry({ phone_e164: search.phone ?? '' }),
   };
 }
 
@@ -51,6 +58,7 @@ export function draftFromLead(search: BookSearch): BookingDraft {
 export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
   const trial = !!search.leadId && (search.pkg ?? 'trial') === 'trial';
   const hint = bookHint(search);
+  const hintKey = [hint?.teacherId, hint?.startsAt].join('-');
   return (
     <>
       <PageHead>
@@ -58,10 +66,17 @@ export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
       </PageHead>
       {search.studentId ? (
         <StudentBooking studentId={search.studentId} onOpenStudent={onOpenStudent} hint={hint} />
+      ) : search.leadId ? (
+        <LeadBooking
+          key={`${search.leadId}-${search.pkg ?? 'trial'}-${hintKey}`}
+          search={search}
+          onOpenStudent={onOpenStudent}
+          hint={hint}
+        />
       ) : (
         <BookingWizard
-          key={[search.leadId ?? 'bare', search.pkg ?? 'trial', hint?.teacherId, hint?.startsAt].join('-')}
-          initial={search.leadId ? draftFromLead(search) : emptyDraft()}
+          key={`bare-${hintKey}`}
+          initial={emptyDraft()}
           primary={null}
           siblings={[]}
           onOpenStudent={onOpenStudent}
@@ -72,14 +87,25 @@ export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
   );
 }
 
-interface StudentBookingProps {
-  studentId: string;
+interface WizardProps {
   onOpenStudent: (id: string) => void;
+  /** A free gap's teacher + start from the calendar (?teacherId&startsAt). */
   hint: BookHint | null;
 }
 
+/** The lead path, once the lead's qualification is in; without it step 1 starts from the URL. */
+function LeadBooking({ search, onOpenStudent, hint }: WizardProps & { search: BookSearch }) {
+  const lead = useQuery({ ...leadByPhoneQuery(search.phone ?? ''), enabled: !!search.phone });
+  if (lead.isLoading) return <p className="text-ink-3">{t.common.loading}</p>;
+  const found = lead.data && lead.data.id === search.leadId ? lead.data : null;
+  const initial = draftFromLead(search, found);
+  return (
+    <BookingWizard initial={initial} primary={null} siblings={[]} onOpenStudent={onOpenStudent} hint={hint} />
+  );
+}
+
 /** The wizard for one student, once their profile (tz, program, siblings) and guardian are in. */
-function StudentBooking({ studentId, onOpenStudent, hint }: StudentBookingProps) {
+function StudentBooking({ studentId, onOpenStudent, hint }: WizardProps & { studentId: string }) {
   const student = useQuery(studentQuery(studentId));
   const guardianId = student.data?.guardian_id;
   const guardian = useQuery({ ...guardianQuery(guardianId ?? ''), enabled: !!guardianId });

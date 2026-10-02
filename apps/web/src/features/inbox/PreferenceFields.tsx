@@ -9,8 +9,9 @@ import type { QualFieldsProps } from './QualificationFields';
 const weekday: Record<string, string> = t.enums.weekday;
 
 /**
- * When the student can study (R-LEAD-03): zone, days, and a time range picked from the same
- * 30-minute selects as availability. Times are never typed (rule 6).
+ * When the student can study (R-LEAD-03): days, «وقت البدء» as a range picked from the same
+ * 30-minute selects as availability (times are never typed, rule 6), then the zone — the first
+ * registration form's order (research-forms 8).
  */
 export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
   const toggle = (day: number) =>
@@ -36,18 +37,6 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
 
   return (
     <div className="grid gap-3">
-      <Field label={t.leads.tz} error={errors.tz}>
-        {(p) => (
-          <Select {...p} value={form.tz} onChange={(e) => onChange({ tz: e.target.value })}>
-            <option value="">—</option>
-            {tzChoices(form.tz).map((id) => (
-              <option key={id} value={id}>
-                {tzOptionLabel(id, tzCity(id))}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
       <fieldset>
         <legend className="mb-1.5 text-sm font-semibold">{t.leads.availableDays}</legend>
         <div className="flex flex-wrap gap-x-3.5 gap-y-1">
@@ -71,6 +60,18 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
           {time('preferred_to', t.availability.to)}
         </div>
       </fieldset>
+      <Field label={t.leads.tz} error={errors.tz}>
+        {(p) => (
+          <Select {...p} value={form.tz} onChange={(e) => onChange({ tz: e.target.value })}>
+            <option value="">—</option>
+            {tzChoices(form.tz).map((id) => (
+              <option key={id} value={id}>
+                {tzOptionLabel(id, tzCity(id))}
+              </option>
+            ))}
+          </Select>
+        )}
+      </Field>
     </div>
   );
 }
