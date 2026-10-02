@@ -901,8 +901,13 @@
       "subscription_not_found": "الاشتراك ده مش موجود",
       "invalid_status": "مينفعش تغيّر حالة الاشتراك للحالة دي",
       "has_payments": "الاشتراك ده عليه مدفوعات، مينفعش يتمسح",
-      "fx_unavailable": "سعر الصرف مش متاح دلوقتي، جرّب كمان شوية"
-    }
+      "fx_unavailable": "سعر الصرف مش متاح دلوقتي، جرّب كمان شوية",
+      "task_not_found": "المهمة دي مش موجودة"
+    },
+    "emptyList": "لسه مفيش اشتراكات",
+    "allStatuses": "كل الحالات",
+    "country": "بلد التسعير",
+    "guardianCountry": "بلد ولي الأمر"
   },
   "payments": {
     "title": "المدفوعات",
@@ -927,7 +932,9 @@
       "receipt_type": "ارفع صورة أو PDF بس",
       "receipt_too_large": "الإيصال كبير، الحد الأقصى 10 ميجا",
       "receipt_path": "الإيصال ده مش تبع الاشتراك ده، ارفعه تاني",
-      "subscription_not_found": "الاشتراك ده مش موجود"
+      "subscription_not_found": "الاشتراك ده مش موجود",
+      "payment_not_found": "الدفعة دي مش موجودة",
+      "receipt_not_found": "مفيش إيصال متسجل للدفعة دي"
     },
     "mobile": {
       "tab": "المدفوعات",
@@ -942,7 +949,11 @@
       "cameraDenied": "الكاميرا مقفولة للتطبيق، فعّلها من الإعدادات",
       "openSettings": "افتح الإعدادات",
       "uploadFailed": "الإيصال ما اترفعش، جرّب تاني"
-    }
+    },
+    "recordedByColumn": "سجّلها",
+    "removeReceipt": "شيل الإيصال",
+    "openReceipt": "افتح الإيصال في صفحة جديدة",
+    "noUnpaid": "مفيش باقات مستنية دفع دلوقتي"
   },
   "payouts": {
     "title": "مستحقات المعلمين",
@@ -982,7 +993,10 @@
     "total": "الإجمالي",
     "saved": "المصروف اتسجل",
     "deleteConfirm": "تمسح المصروف ده؟",
-    "empty": "مفيش مصروفات في الشهر ده"
+    "empty": "مفيش مصروفات في الشهر ده",
+    "error": {
+      "expense_not_found": "المصروف ده مش موجود"
+    }
   },
   "dashboard": {
     "title": "لوحة التحكم",

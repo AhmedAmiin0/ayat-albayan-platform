@@ -10,6 +10,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { studentQuery } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
+import { BalanceCard } from '@/features/subscriptions/BalanceCard';
 import { SiblingMerge } from './SiblingMerge';
 import { StudentProfileForm } from './StudentProfileForm';
 
@@ -64,6 +65,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
           </div>
         ))}
       </dl>
+      <BalanceCard student={student} />
       <StudentProfileForm key={student.id} student={student} />
       <SiblingMerge student={student} siblings={student.siblings} />
     </>

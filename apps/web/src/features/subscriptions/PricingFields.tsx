@@ -1,0 +1,85 @@
+import { CUSTOM_COUNT_MAX, CUSTOM_COUNT_MIN, PACKAGE_IDS, PRICING_DURATIONS, SITE_COUNTRIES } from '@ab/shared';
+import { Field } from '@/components/ui/field';
+import { Input } from '@/components/ui/input';
+import { Select } from '@/components/ui/select';
+import { durationLabel, packageCopy } from '@/features/pricing/format';
+import { t } from '@/lib/i18n';
+import type { PricingForm } from './pricing-form';
+
+type Props = { form: PricingForm; set: (patch: Partial<PricingForm>) => void };
+
+/** Package, count, duration, discount and country: the calculator's inputs, never a price. */
+export function PricingFields({ form, set }: Props) {
+  return (
+    <div className="grid gap-4 sm:grid-cols-2">
+      <Field label={t.subscriptions.package}>
+        {(p) => (
+          <Select {...p} value={form.pkg} onChange={(e) => set({ pkg: e.target.value as PricingForm['pkg'] })}>
+            {PACKAGE_IDS.map((id) => (
+              <option key={id} value={id}>
+                {packageCopy(id).name}
+              </option>
+            ))}
+            <option value="custom">{t.pricing.customLabel}</option>
+          </Select>
+        )}
+      </Field>
+      {form.pkg === 'custom' && (
+        <Field label={t.pricing.customCount}>
+          {(p) => (
+            <Input
+              {...p}
+              type="number"
+              dir="ltr"
+              min={CUSTOM_COUNT_MIN}
+              max={CUSTOM_COUNT_MAX}
+              value={form.count}
+              onChange={(e) => set({ count: Number(e.target.value) })}
+            />
+          )}
+        </Field>
+      )}
+      <Field label={t.subscriptions.duration} hint={form.pkg === 'weekly' ? t.pricing.fixedDuration : undefined}>
+        {(p) => (
+          <Select
+            {...p}
+            value={form.duration}
+            disabled={form.pkg === 'weekly'}
+            onChange={(e) => set({ duration: Number(e.target.value) as PricingForm['duration'] })}
+          >
+            {PRICING_DURATIONS.map((d) => (
+              <option key={d} value={d}>
+                {durationLabel(d)}
+              </option>
+            ))}
+          </Select>
+        )}
+      </Field>
+      <Field label={t.subscriptions.discount}>
+        {(p) => (
+          <Input
+            {...p}
+            type="number"
+            dir="ltr"
+            min={0}
+            max={100}
+            value={form.discount}
+            onChange={(e) => set({ discount: Number(e.target.value) })}
+          />
+        )}
+      </Field>
+      <Field label={t.subscriptions.country}>
+        {(p) => (
+          <Select {...p} value={form.country} onChange={(e) => set({ country: e.target.value as PricingForm['country'] })}>
+            <option value="">{t.subscriptions.guardianCountry}</option>
+            {SITE_COUNTRIES.map((c) => (
+              <option key={c} value={c}>
+                {t.pricing.countries[c]}
+              </option>
+            ))}
+          </Select>
+        )}
+      </Field>
+    </div>
+  );
+}

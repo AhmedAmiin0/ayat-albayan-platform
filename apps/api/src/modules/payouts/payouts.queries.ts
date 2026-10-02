@@ -1,0 +1,92 @@
+import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
+import type { LessonStatus } from '@ab/shared';
+import { Inject, Injectable } from '@nestjs/common';
+import { DB, type Db } from '../../common/db/db.module';
+import { dbError } from '../teachers/http';
+import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
+
+export type PayoutRow = Tables<'teacher_payouts'> & { teacher: { id: string; display_name_ar: string } | null };
+export type LessonWindow = { teacherId: string; from: string; to: string; statuses: LessonStatus[] };
+
+const SELECT = '*, teacher:teachers(id, display_name_ar)';
+const byTeacherName = (a: PayoutRow, b: PayoutRow) =>
+  (a.teacher?.display_name_ar ?? '').localeCompare(b.teacher?.display_name_ar ?? '', 'ar') || a.id.localeCompare(b.id);
+
+/** All supabase access for `teacher_payouts` (service role; the controllers guard). R-PAY-02. */
+@Injectable()
+export class PayoutsQueries {
+  constructor(@Inject(DB) private readonly db: Db) {}
+
+  /** Every teacher, whatever the status: one who left mid-month is still paid for that month. */
+  async teachers(): Promise<(PayoutTeacher & { display_name_ar: string })[]> {
+    const { data, error } = await this.db
+      .from('teachers')
+      .select('id, tz, display_name_ar, rate_30, rate_45, rate_60, rate_90');
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  async lessons(w: LessonWindow): Promise<PayoutLesson[]> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select('id, starts_at, ends_at, status')
+      .eq('teacher_id', w.teacherId)
+      .gte('starts_at', w.from)
+      .lt('starts_at', w.to)
+      .in('status', w.statuses)
+      .order('starts_at');
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** A month's rows by teacher name; `month` is the first day (YYYY-MM-01). */
+  async forMonth(month: string): Promise<PayoutRow[]> {
+    const { data, error } = await this.db.from('teacher_payouts').select(SELECT).eq('month', month);
+    if (error) throw dbError(error);
+    return data.sort(byTeacherName);
+  }
+
+  /** A teacher's own rows, newest month first (Y5). */
+  async forTeacher(teacherId: string, month?: string): Promise<PayoutRow[]> {
+    let q = this.db.from('teacher_payouts').select(SELECT).eq('teacher_id', teacherId);
+    if (month) q = q.eq('month', month);
+    const { data, error } = await q.order('month', { ascending: false });
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  async get(id: string): Promise<PayoutRow | null> {
+    const { data, error } = await this.db.from('teacher_payouts').select(SELECT).eq('id', id).maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  async insert(row: TablesInsert<'teacher_payouts'>): Promise<PayoutRow> {
+    const { data, error } = await this.db.from('teacher_payouts').insert(row).select(SELECT).single();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /**
+   * Writes only while the row is still in `from` status (compare-and-set): a concurrent approve
+   * never gets overwritten by a regenerate. null when the row moved on.
+   */
+  async update(id: string, patch: TablesUpdate<'teacher_payouts'> & { from: Tables<'teacher_payouts'>['status'] }) {
+    const { from, ...write } = patch;
+    const { data, error } = await this.db
+      .from('teacher_payouts')
+      .update(write)
+      .eq('id', id)
+      .eq('status', from)
+      .select(SELECT)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** Deletes a draft only (approved and paid rows are frozen). */
+  async removeDraft(id: string): Promise<void> {
+    const { error } = await this.db.from('teacher_payouts').delete().eq('id', id).eq('status', 'draft');
+    if (error) throw dbError(error);
+  }
+}
