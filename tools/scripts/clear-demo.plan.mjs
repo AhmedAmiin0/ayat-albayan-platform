@@ -3,14 +3,33 @@
 // by the seed's marker, so a real row that happens to share a phone is never selected.
 import { APPLICANTS, DEMO_NOTE, FAMILIES, LEADS, TEACHERS } from './seed-demo.data.mjs';
 
-/** Same as seed-demo: local DB, or the hosted STAGING project with an explicit flag. Never prod. */
+/** Hosted STAGING project (same pooler/user as tools/migrate/src/config.ts). */
 export const STAGING_REF = 'knxfwiimjcifwckhwbim';
+const STAGING_POOLER = 'aws-1-eu-central-1.pooler.supabase.com';
+const LOCAL_HOSTS = ['127.0.0.1', 'localhost', '[::1]'];
 
+/** seed:demo + clear:demo guard: local DB, or STAGING with --allow-remote-staging. Never prod. */
 export function allowedTarget(url, argv) {
-  const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
-  const isStaging = argv.includes('--allow-remote-staging') && url.includes(STAGING_REF);
-  return isLocal || isStaging;
+  if (!URL.canParse(url)) return false;
+  const u = new URL(url);
+  if (LOCAL_HOSTS.includes(u.hostname)) return true;
+  const user = decodeURIComponent(u.username);
+  const isStaging =
+    (u.hostname === STAGING_POOLER && user === `postgres.${STAGING_REF}`) ||
+    u.hostname === `db.${STAGING_REF}.supabase.co`;
+  return isStaging && argv.includes('--allow-remote-staging');
 }
+
+/**
+ * App rows that point at demo people through ON DELETE SET NULL. Deleting the person would quietly
+ * detach them, so clear:demo refuses while any exist (NO ACTION FKs refuse on their own).
+ */
+export const SET_NULL_DEPENDENTS = [
+  { table: 'job_applicants', column: 'from_lead_id', parent: 'leads' },
+  { table: 'schedule_rules', column: 'created_from_lead_id', parent: 'leads' },
+  { table: 'messages', column: 'lead_id', parent: 'leads' },
+  { table: 'messages', column: 'guardian_id', parent: 'guardians' },
+];
 
 /** FK-safe: rows that point at others go first (leads → guardians, students → guardians/teachers). */
 export const DELETE_ORDER = [

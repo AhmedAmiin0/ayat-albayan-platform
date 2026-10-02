@@ -1,11 +1,8 @@
-// Owner's WhatsApp CRM ("wacrm", Supabase rfsfrmkmfbrsuoctwfzg): the tables we read and their
+// Owner's WhatsApp CRM ("wacrm", a Supabase project; URL in crm.env): the tables we read and their
 // columns (PostgREST OpenAPI, 2026-10-02). Multi-tenant: every read filters account_id.
 // Counts then: contacts 1230 · conversations 804 · messages 8267 · contact_tags 1047 · tags 9 ·
 // message_templates 9 · quick_replies 5 · custom_fields 3 (contact_notes, deals, values: 0).
 import type { Enums } from '@ab/db';
-
-/** The academy's account (the only one with data; its display name is a placeholder). */
-export const DEFAULT_CRM_ACCOUNT_ID = 'fcd54b00-5215-4470-8671-12b4d97d4220';
 
 export interface CrmTableSpec {
   table: string;

@@ -3,7 +3,7 @@
 import { cachePath, readJson, writeJson } from '../cache.ts';
 import type { CrmRow } from '../types.ts';
 import { type CrmReader, maxCursor, mergeById, selectAll } from './crm.ts';
-import { CRM_TABLES, DEFAULT_CRM_ACCOUNT_ID } from './crm.schema.ts';
+import { CRM_TABLES } from './crm.schema.ts';
 
 /** Per table: the newest cursor value extracted. `--since last` resumes from here. */
 export type CrmCursor = Record<string, string>;
@@ -16,7 +16,13 @@ export interface ExtractCrmOptions {
 }
 
 export async function extractCrm(opts: ExtractCrmOptions): Promise<Record<string, number>> {
-  const accountId = opts.accountId ?? process.env['CRM_ACCOUNT_ID'] ?? DEFAULT_CRM_ACCOUNT_ID;
+  // The academy's account (the only one with data). Its id is the owner's: env only, never committed.
+  const accountId = opts.accountId ?? process.env['CRM_ACCOUNT_ID'];
+  if (!accountId) {
+    throw new Error(
+      'CRM_ACCOUNT_ID missing (tools/migrate/.env; value in .claude/artifacts/crm/crm.env)',
+    );
+  }
   const cursor = readJson<CrmCursor>(cachePath.crmCursor(), {});
   const counts: Record<string, number> = {};
   for (const spec of CRM_TABLES) {

@@ -30,6 +30,9 @@ The target must have the full app schema before an apply (a dry-run works withou
   Delete the demo rows before the apply (preferred: `pnpm clear:demo --allow-remote-staging`
   with the staging `DATABASE_URL`, check the counts, then add `--apply`), or accept that those
   five students get new codes (the dry-run lists each one under «duplicates to decide»).
+  clear:demo refuses (nothing deleted, the table is named) while app rows still point at demo
+  people: lessons, rules and payments block the delete, and WhatsApp messages, trial rules booked
+  from a demo lead and job applicants are counted first so they are never silently detached.
 
 ## 2. Extract (no target involved)
 

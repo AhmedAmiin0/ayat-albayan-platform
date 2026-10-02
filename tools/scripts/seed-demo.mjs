@@ -4,15 +4,15 @@
 // (students), so codes stay stable. Availability and time-off of demo teachers are replaced.
 import { normalizeArabic } from '@ab/shared';
 import postgres from 'postgres';
+import { allowedTarget } from './clear-demo.plan.mjs';
 import { APPLICANTS, DEMO_NOTE, FAMILIES, LEADS, TEACHERS } from './seed-demo.data.mjs';
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error('DATABASE_URL missing: run `pnpm env:local` (writes e2e/.env)');
 // The hosted STAGING project is allowed only with an explicit flag; production never.
-const STAGING_REF = 'knxfwiimjcifwckhwbim';
-const isLocal = /@(localhost|127\.0\.0\.1)[:/]/.test(url);
-const isStaging = process.argv.includes('--allow-remote-staging') && url.includes(STAGING_REF);
-if (!isLocal && !isStaging) throw new Error('refusing to seed a non-local DB (staging needs --allow-remote-staging)');
+if (!allowedTarget(url, process.argv)) {
+  throw new Error('refusing to seed a non-local DB (staging needs --allow-remote-staging)');
+}
 
 const sql = postgres(url, { max: 1, onnotice: () => undefined });
 const ago = (minutes) => (minutes === undefined ? null : new Date(Date.now() - minutes * 60_000));

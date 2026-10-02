@@ -1,10 +1,16 @@
 // pnpm clear:demo [--apply] [--allow-remote-staging] — removes exactly the rows `pnpm seed:demo`
 // writes (selection: clear-demo.plan.mjs). Dry-run by default: the deletes run in one transaction
-// that is rolled back, so the counts are exact and an FK blocker shows up without touching data.
-// --apply commits. Rows the app attached to demo people (lessons, rules, payments…) are never
-// deleted: the delete is refused and rolled back, naming the blocking constraint.
+// that is rolled back, so the counts are exact and a blocker shows up without touching data.
+// --apply commits. Rows the app attached to demo people are never deleted or detached: NO ACTION
+// FKs (lessons, rules, payments…) make the delete fail, and SET NULL dependents (messages, trial
+// rules, applicants: SET_NULL_DEPENDENTS) are counted first. Either way it refuses and rolls back.
 import postgres from 'postgres';
-import { allowedTarget, DELETE_ORDER, demoSelection } from './clear-demo.plan.mjs';
+import {
+  allowedTarget,
+  DELETE_ORDER,
+  demoSelection,
+  SET_NULL_DEPENDENTS,
+} from './clear-demo.plan.mjs';
 
 const url = process.env.DATABASE_URL;
 if (!url) throw new Error('DATABASE_URL missing: run `pnpm env:local` (writes e2e/.env)');
@@ -13,31 +19,49 @@ if (!allowedTarget(url, process.argv)) {
 }
 const apply = process.argv.includes('--apply');
 
-const demoTeachers = (tx, s) => tx`
-  select id from public.teachers
-  where phone_e164 = any(${tx.array(s.teacherPhones)}) and display_name_en like ${`%${s.teacherNameSuffix}`}`;
+const DEMO_IDS = {
+  leads: (tx, s) => tx`
+    select id from public.leads
+    where phone_e164 = any(${tx.array(s.leadPhones)}) and qualification ->> 'demo' = 'true'`,
+  guardians: (tx, s) => tx`
+    select id from public.guardians where phone_e164 = any(${tx.array(s.guardianPhones)}) and notes = ${s.note}`,
+  teachers: (tx, s) => tx`
+    select id from public.teachers
+    where phone_e164 = any(${tx.array(s.teacherPhones)}) and display_name_en like ${`%${s.teacherNameSuffix}`}`,
+};
 
 const DELETES = {
   job_applicants: (tx, s) => tx`
     delete from public.job_applicants
     where phone_e164 = any(${tx.array(s.applicantPhones)}) and notes = ${s.note} returning id`,
-  leads: (tx, s) => tx`
-    delete from public.leads
-    where phone_e164 = any(${tx.array(s.leadPhones)}) and qualification ->> 'demo' = 'true' returning id`,
+  leads: (tx, s) =>
+    tx`delete from public.leads where id in (${DEMO_IDS.leads(tx, s)}) returning id`,
   students: (tx, s) => tx`
     delete from public.students st using public.guardians g
     where g.id = st.guardian_id and st.notes = ${s.note}
       and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)}) returning st.id`,
-  guardians: (tx, s) => tx`
-    delete from public.guardians
-    where phone_e164 = any(${tx.array(s.guardianPhones)}) and notes = ${s.note} returning id`,
+  guardians: (tx, s) =>
+    tx`delete from public.guardians where id in (${DEMO_IDS.guardians(tx, s)}) returning id`,
   teacher_time_off: (tx, s) => tx`
-    delete from public.teacher_time_off where teacher_id in (${demoTeachers(tx, s)}) returning id`,
+    delete from public.teacher_time_off where teacher_id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
   teacher_availability: (tx, s) => tx`
-    delete from public.teacher_availability where teacher_id in (${demoTeachers(tx, s)}) returning id`,
-  teachers: (tx, s) => tx`
-    delete from public.teachers where id in (${demoTeachers(tx, s)}) returning id`,
+    delete from public.teacher_availability where teacher_id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
+  teachers: (tx, s) =>
+    tx`delete from public.teachers where id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
 };
+
+/** Runs before `table` is deleted; demo applicants are already gone (DELETE_ORDER), real ones count. */
+async function refuseDetaching(tx, table, s) {
+  for (const d of SET_NULL_DEPENDENTS.filter((x) => x.parent === table)) {
+    const [{ n }] = await tx`
+      select count(*)::int as n from ${tx(`public.${d.table}`)}
+      where ${tx(d.column)} in (${DEMO_IDS[table](tx, s)})`;
+    if (n > 0)
+      throw new Error(
+        `${n} ${d.table}.${d.column} row(s) point at demo ${table} and would be detached`,
+      );
+  }
+}
 
 class DryRun extends Error {}
 
@@ -46,7 +70,10 @@ const counts = {};
 try {
   await sql.begin(async (tx) => {
     const selection = demoSelection();
-    for (const table of DELETE_ORDER) counts[table] = (await DELETES[table](tx, selection)).length;
+    for (const table of DELETE_ORDER) {
+      await refuseDetaching(tx, table, selection);
+      counts[table] = (await DELETES[table](tx, selection)).length;
+    }
     if (!apply) throw new DryRun();
   });
 } catch (e) {
@@ -59,5 +86,7 @@ try {
 }
 if (process.exitCode !== 1) {
   const summary = DELETE_ORDER.map((t) => `${t}=${counts[t]}`).join(', ');
-  console.log(apply ? `DEMO rows deleted: ${summary}` : `dry-run (pass --apply to delete): ${summary}`);
+  console.log(
+    apply ? `DEMO rows deleted: ${summary}` : `dry-run (pass --apply to delete): ${summary}`,
+  );
 }
