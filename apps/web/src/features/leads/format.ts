@@ -1,6 +1,9 @@
+import { intlLocale } from '@ab/shared';
+import { locale } from '@/lib/locale';
+
 // Display helpers for the inbox. DB times are UTC; these render in the viewer's zone (rule 6).
-// `nu-latn`: Western digits everywhere (docs/07 §2 Numerals); `ar-EG` alone prints Eastern ones.
-const LOCALE = 'ar-EG-u-nu-latn';
+// `nu-latn` (in intlLocale): Western digits everywhere (docs/07 §2 Numerals), either language.
+const LOCALE = intlLocale(locale);
 // 24h like every other time in the product (running head, availability).
 const dateTime = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23' });
 const dateOnly = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium' });

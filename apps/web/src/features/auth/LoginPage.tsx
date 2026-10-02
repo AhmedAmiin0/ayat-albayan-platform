@@ -2,6 +2,7 @@ import { useForm } from '@tanstack/react-form';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from '@tanstack/react-router';
 import { useState } from 'react';
+import { LanguageSwitch } from '@/components/shell/LanguageSwitch';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { Field } from '@/components/ui/field';
@@ -44,7 +45,11 @@ export function LoginPage() {
             void form.handleSubmit();
           }}
         >
-          <Cartouche className="justify-self-start">{t.auth.loginTitle}</Cartouche>
+          {/* One row with the title, so the switch costs no height above «دخول» on phones. */}
+          <div className="flex items-center justify-between gap-3">
+            <Cartouche>{t.auth.loginTitle}</Cartouche>
+            <LanguageSwitch />
+          </div>
           <p className="text-body text-pretty text-ink-2">{t.auth.intro}</p>
           <form.Field name="email" validators={{ onSubmit: required }}>
             {(field) => (

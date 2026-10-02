@@ -1,10 +1,11 @@
-import { counted, formatPhone, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
+import { counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 // Display text for the inbox (docs/07 §9, docs/12 §8). DB instants are UTC; times render in the
 // viewer's zone, 24h, Western digits (`nu-latn`), like every other time in the product.
 
-const LOCALE = 'ar-EG-u-nu-latn';
+const LOCALE = intlLocale(locale);
 const clock = new Intl.DateTimeFormat(LOCALE, { hour: '2-digit', minute: '2-digit', hourCycle: 'h23' });
 const dayMonth = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'short' });
 const full = new Intl.DateTimeFormat(LOCALE, { dateStyle: 'medium', timeStyle: 'short', hourCycle: 'h23' });

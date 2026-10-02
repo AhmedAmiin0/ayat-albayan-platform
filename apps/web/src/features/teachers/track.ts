@@ -1,5 +1,6 @@
-import { WEEKDAYS, type Weekday } from '@ab/shared';
+import { intlLocale, WEEKDAYS, type Weekday } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { toMin, type Grid, type Range } from './grid';
 
 // The availability track (docs/07 §8): 08:00–24:00, drawn from the inline-start like the text.
@@ -47,7 +48,7 @@ export function weeklyHours(grid: Grid): number {
   return minutes / 60;
 }
 
-const plural = new Intl.PluralRules('ar');
+const plural = new Intl.PluralRules(intlLocale(locale));
 
 /** «27 ساعة متاحة في الأسبوع» with Arabic number agreement; '' for an empty week. */
 export function weeklyHoursLabel(hours: number): string {

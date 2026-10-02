@@ -53,6 +53,14 @@ describe('AvailabilityWeek (R-TCH-02, docs/07 §8)', () => {
     expect(within(monday).getByRole('alert').textContent).toBe(`${t.availability.overlap}${t.teachers.listSeparator}${span}`);
   });
 
+  it('axis hours centre toward the inline-start in either direction (LTR mirror)', () => {
+    renderWeek(emptyGrid());
+    const mid = document.querySelector('[data-axis-hour="12"]');
+    expect(mid?.className).toContain('rtl:translate-x-1/2');
+    expect(mid?.className).toContain('ltr:-translate-x-1/2');
+    expect(mid?.className).not.toMatch(/(^|\s)translate-x-1\/2/);
+  });
+
   it('the range whose selects have focus is drawn as the band being edited', () => {
     renderWeek({ ...emptyGrid(), 1: [r('15:00', '16:00'), r('17:00', '20:00')] });
     const monday = row(1);

@@ -1,8 +1,10 @@
+import { intlLocale } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { locale } from '@/lib/locale';
 import { formatAge, formatDate, formatDateTime, initialOf } from './format';
 import { parseLeadSearch, parsePageSearch } from './types';
 
-const rel = new Intl.RelativeTimeFormat('ar-EG-u-nu-latn', { numeric: 'auto' });
+const rel = new Intl.RelativeTimeFormat(intlLocale(locale), { numeric: 'auto' });
 const NOW = new Date('2026-10-01T12:00:00Z');
 const EASTERN = /[٠-٩]/;
 
