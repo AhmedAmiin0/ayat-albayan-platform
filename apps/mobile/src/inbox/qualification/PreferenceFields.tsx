@@ -27,9 +27,10 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
       {error ? <ErrorLine message={error} /> : null}
     </View>
   );
+  // A long row scrolls: the label carries the pick, so it shows even when its pill is off screen.
   const time = (key: TimeKey, label: string) =>
     group(
-      label,
+      form[key] ? `${label} ${form[key]}` : label,
       errors[key],
       <FilterPills
         role="radiogroup"
@@ -43,7 +44,7 @@ export function PreferenceFields({ form, errors, onChange }: QualFieldsProps) {
   return (
     <View style={{ gap: 14 }}>
       {group(
-        t.leads.tz,
+        form.tz ? `${t.leads.tz} · ${cityOf(form.tz)}` : t.leads.tz,
         errors.tz,
         <FilterPills
           role="radiogroup"

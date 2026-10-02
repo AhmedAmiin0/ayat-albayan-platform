@@ -43,6 +43,9 @@ test('the stored answers, picked not typed: age, gender, zone, days, time range'
   expect(group(t.leads.availableDays).getByRole('checkbox', { name: t.enums.weekday['1'] })).not.toBeChecked();
   expect(group(t.availability.from).getByRole('radio', { name: '16:00' })).toBeChecked();
   expect(group(t.availability.to).getByRole('radio', { name: '18:00' })).toBeChecked();
+  // The picks are named in their labels too: a long pill row may have them off screen.
+  expect(screen.getByText(`${t.availability.from} 16:00`)).toBeTruthy();
+  expect(screen.getByText(`${t.leads.tz} · ${t.tz['Asia/Riyadh']}`)).toBeTruthy();
 });
 
 test('«حفظ» sends only what changed, then the saved row is the lead in every cached list', async () => {
