@@ -28,6 +28,8 @@ function line(duration: '45' | '60', lessons: number, rate: number): string {
   return `${ar.pricing.durations[duration]}: ${text}`;
 }
 
+const TEXTS = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'الملك 6-10' };
+
 /** The signed-in user's Supabase access token, from the page's own session. */
 async function accessToken(page: Page): Promise<string> {
   const token = await page.evaluate(() => {
@@ -46,7 +48,8 @@ async function submitReport(page: Page, input: { lessonId: string; attendance: '
   expect(opened.status()).toBe(200);
   const report = ((await opened.json()) as ReportFormResponse).entries[0]?.report;
   if (!report) throw new Error('no report on the lesson');
-  const graded = input.attendance === 'on_time' ? { grades: GRADES, overall: 'very_good' } : {};
+  // Attended: the grades and the five texts the Google Form required (research-forms 12).
+  const graded = input.attendance === 'on_time' ? { grades: GRADES, overall: 'very_good', ...TEXTS } : {};
   const sent = await page.request.post(`${API}/reports/${report.id}/submit`, {
     headers,
     data: { attendance: input.attendance, expectedVersion: report.version, ...graded },

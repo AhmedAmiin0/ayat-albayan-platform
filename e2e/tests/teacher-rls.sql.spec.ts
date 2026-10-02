@@ -88,8 +88,10 @@ async function seed(tx: Tx) {
   return { abrar: abrar.id, other: other.id };
 }
 
-const phonesIn = (rows: readonly { phone_e164: string }[]) =>
-  [...new Set(rows.map((r) => r.phone_e164))].filter((p) => p.startsWith('+966500164')).sort();
+/** Only this spec's rows: other journeys leave messages and read marks in the shared DB. */
+const ours = <T extends { phone_e164: string }>(rows: readonly T[]) => rows.filter((r) => r.phone_e164.startsWith('+966500164'));
+const phonesIn = (rows: readonly { phone_e164: string }[]) => [...new Set(ours(rows).map((r) => r.phone_e164))].sort();
+type ReadRow = { teacher_id: string; phone_e164: string };
 
 test.describe('teacher mode RLS (migration 164, rule 9)', () => {
   test('a teacher reads her families, the 90-day window and her own chat; an admin reads all', async () => {
@@ -98,14 +100,15 @@ test.describe('teacher mode RLS (migration 164, rule 9)', () => {
       const teacher = await userId(tx, USERS.teacher.email);
       const messages = await as(tx, teacher, () => tx<{ phone_e164: string }[]>`select phone_e164 from public.messages`);
       expect(phonesIn(messages)).toEqual([PHONE.assigned, PHONE.recent, PHONE.own].sort());
-      const reads = await as(tx, teacher, () => tx<{ teacher_id: string }[]>`select teacher_id from public.teacher_thread_reads`);
-      expect(reads).toEqual([{ teacher_id: t.abrar }]);
+      const reads = await as(tx, teacher, () => tx<ReadRow[]>`select teacher_id, phone_e164 from public.teacher_thread_reads`);
+      expect(reads.every((r) => r.teacher_id === t.abrar)).toBe(true);
+      expect(ours(reads)).toEqual([{ teacher_id: t.abrar, phone_e164: PHONE.assigned }]);
 
       const admin = await userId(tx, USERS.admin.email);
       const all = await as(tx, admin, () => tx<{ phone_e164: string }[]>`select phone_e164 from public.messages`);
       expect(phonesIn(all)).toEqual(Object.values(PHONE).sort());
-      const allReads = await as(tx, admin, () => tx<{ teacher_id: string }[]>`select teacher_id from public.teacher_thread_reads`);
-      expect(allReads).toHaveLength(2);
+      const allReads = await as(tx, admin, () => tx<ReadRow[]>`select teacher_id, phone_e164 from public.teacher_thread_reads`);
+      expect(ours(allReads)).toHaveLength(2);
     });
   });
 
