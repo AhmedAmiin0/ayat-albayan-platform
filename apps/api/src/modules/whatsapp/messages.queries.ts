@@ -1,0 +1,48 @@
+import { Inject, Injectable } from '@nestjs/common';
+import { DB, type Db } from '../../common/db/db.module';
+import type { MessageRow } from './message.mapper';
+import { stampDelivered } from './sender.queries';
+
+/** M1 / M2 (docs/12 §4): the admin's retry and «I sent it myself», both compare-and-set. */
+@Injectable()
+export class MessagesQueries {
+  constructor(@Inject(DB) private readonly db: Db) {}
+
+  async get(id: string): Promise<MessageRow | null> {
+    const { data, error } = await this.db.from('messages').select('*').eq('id', id).maybeSingle();
+    if (error) throw new Error(`message read failed: ${error.message}`);
+    return data;
+  }
+
+  /** failed → queued with a fresh attempt budget; null when it is no longer failed. */
+  async requeue(id: string): Promise<MessageRow | null> {
+    const { data, error } = await this.db
+      .from('messages')
+      .update({ status: 'queued', attempts: 0, next_attempt_at: null, error_code: null, error_text: null })
+      .eq('id', id)
+      .eq('status', 'failed')
+      .select('*')
+      .maybeSingle();
+    if (error) throw new Error(`message retry failed: ${error.message}`);
+    return data;
+  }
+
+  /**
+   * Outbound queued / failed → sent_manually (R-MSG-03): the sender never sends it again. The
+   * delivery side effects follow (lead last_outbound_at, report sent_at).
+   */
+  async markSentManually(id: string, at: Date): Promise<MessageRow | null> {
+    const stamp = at.toISOString();
+    const { data, error } = await this.db
+      .from('messages')
+      .update({ status: 'sent_manually', sent_manually_at: stamp, next_attempt_at: null })
+      .eq('id', id)
+      .eq('direction', 'outbound')
+      .in('status', ['queued', 'failed'])
+      .select('*')
+      .maybeSingle();
+    if (error) throw new Error(`message manual send failed: ${error.message}`);
+    if (data) await stampDelivered(this.db, { leadId: data.lead_id, dedupKey: data.dedup_key, at: stamp });
+    return data;
+  }
+}

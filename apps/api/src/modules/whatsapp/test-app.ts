@@ -1,0 +1,53 @@
+// HTTP test harness for the WhatsApp routes (test-only, excluded from the build). Real controllers,
+// guards, registry and services; the DB-facing queries, the client, storage and the sender are mocks.
+import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
+import { Test } from '@nestjs/testing';
+import { vi } from 'vitest';
+import { AppModule } from '../../app.module';
+import { AuditService } from '../../common/audit/audit.service';
+import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import type { AuthUser } from '../../common/auth/verify-token';
+import { StorageService } from '../../common/storage/storage.service';
+import { MessageSender } from './message.sender';
+import { MessagesQueries } from './messages.queries';
+import { TemplatesQueries } from './templates.queries';
+import { WHATSAPP_CLIENT } from './whatsapp.types';
+
+export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
+const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER };
+const verify: TokenVerifier = async (token) => {
+  const user = USERS[token];
+  if (!user) throw new Error('bad token');
+  return user;
+};
+
+function mocks() {
+  return {
+    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
+    messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn() },
+    client: { configured: vi.fn(() => false), getTemplates: vi.fn(), submitTemplate: vi.fn() },
+    storage: { signedDownload: vi.fn() },
+    sender: { kick: vi.fn() },
+    audit: { record: vi.fn() },
+  };
+}
+
+export async function whatsappApp() {
+  const m = mocks();
+  const mod = await Test.createTestingModule({ imports: [AppModule] })
+    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(TemplatesQueries).useValue(m.templates)
+    .overrideProvider(MessagesQueries).useValue(m.messages)
+    .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
+    .overrideProvider(StorageService).useValue(m.storage)
+    .overrideProvider(MessageSender).useValue(m.sender)
+    .overrideProvider(AuditService).useValue(m.audit)
+    .compile();
+  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
+  await app.init();
+  await app.getHttpAdapter().getInstance().ready();
+  const call = (input: { method: 'GET' | 'POST'; url: string; token?: string }) =>
+    app.inject({ method: input.method, url: input.url, headers: { authorization: `Bearer ${input.token ?? 'admin'}` } });
+  return { ...m, app, call };
+}

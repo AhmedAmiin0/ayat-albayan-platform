@@ -87,4 +87,5 @@ export const ERR = {
   duplicate: (name: string) => metaError(100, 'Invalid parameter', `template ${name} already exists in this language`),
   badName: (name: string) => metaError(100, 'Invalid parameter', `invalid template name ${name}`),
   noMedia: (id: string) => metaError(100, 'Invalid parameter', `media ${id} not found`),
+  noObject: (id: string) => metaError(100, 'Unsupported post request', `Object with ID '${id}' does not exist`),
 };
