@@ -30,9 +30,10 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     // «أبرار» is free on Sundays 16:00–18:00 Riyadh only, so the wizard's first slot is known.
     const teacherId = await resetAbrar();
     await setAvailability(teacherId, [[0, '16:00', '18:00']]);
-    // desktop and mobile share one DB: a fresh Saudi mobile per run (wa_id = digits, no +).
+    // desktop and mobile share one DB: a fresh Saudi mobile and guardian name per run (wa_id =
+    // digits, no +), so the other project's thread never matches the same link.
     const digits = `9665${String(Date.now()).slice(-8)}`;
-    const guardian = 'أم ياسمين';
+    const guardian = `أم ياسمين ${digits.slice(-4)}`;
     const student = 'ياسمين';
     const hello = 'السلام عليكم، عايزة أحجز حلقة تجريبية لبنتي';
     const inbound = await stubInbound({ from: digits, name: guardian, text: hello });

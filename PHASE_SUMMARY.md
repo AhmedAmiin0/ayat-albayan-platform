@@ -989,3 +989,28 @@ Branch `develop`, on top of `ecc019e`. The Phase 3 verifier reported 21 entries:
   - `readChunked` assumes one 100-id chunk fits in `max_rows`, which means at most 10 packages per student.
   - SAR-base packages (AED/QAR/KWD/OMR, …) have no FX snapshot, so their revenue still uses today's rate.
 - **Lint:** the web complexity warnings stay at 9. `RecordPaymentDialog` went from 11 to 13. Splitting them is the existing cleanup item.
+
+# Phase 4 summary: WhatsApp messaging, inbox, reminders, follow-ups, push
+
+Branch `develop`. Foundation `712a566` (schema 140–143, shared messaging, stub parity), then five builder branches merged with `--no-ff`: `phase4/sender` (B1), `phase4/webhook`, `phase4/schedulers` (B3), `phase4/web`, `phase4/mobile`. One conflict: `ar.json` `templates.error` (union; one `messages.errors.expired` kept, `messages.errors.network` added). Requirement IDs: R-MSG-01..05, R-LEAD-01..06, R-SCH-03, R-MOB-01/02, R-REP-03 delivery.
+
+## What was built
+- **WhatsApp core (B1, `modules/whatsapp`)**: client over `WA_API_BASE` only, template registry (T1 list, T2 health sync, T3 admin-only submit; `report_ready` → 409 `needs_manual_submit`), the one send gate, the outbound sender (30 s tick + `kick()`, CAS claim, expiry, 3 tries with backoff, `reminder_failed` push), M1 retry / M2 sent-manually, `MessageView` with the wa.me fallback.
+- **Webhook (`modules/webhook`)**: W1 verify, W2 HMAC-signed ingest (401 on a bad signature, nothing stored), inbound text/buttons/interactive/media ids, lead upsert (guardians/teachers never become leads), quick replies (confirm → lessons confirm service, reschedule → push, stop → follow-up pause), forward-only statuses, `new_lead` / `new_message` pushes.
+- **Jobs (`modules/{reminders,follow-ups,push}`)**: same-day / teacher / day-before reminders (guardian tz, dedup keys, expire at lesson start, cancelled lessons' queued rows dropped), `lesson_needs_confirmation` push, follow-ups with two real free slots, Expo receipt pruning.
+- **Integrator (this merge)**: the inbox API H1–H4 (`modules/inbox`: thread list over `v_threads`, thread page that stamps inbound `read_at` and sends Meta's read receipt only when the gate is open, text inside 24 h / approved template with every variable, idempotent by `clientRequestId`, sent synchronously so a `queued` answer means «sending off»), lead routes L1 (qualification merge, null clears) and L2 (follow-up pause; resume recomputes `next_follow_up_at`), all audited; `WebhookModule` registered; `MessagingJobsModule` imports the three job modules; booking kicks the sender; `report_submitted` and `payment_due` pushes (with `studentId` for the mobile tap).
+- **Web**: `/admin/inbox` (threads, bubbles with status, retry, wa.me + confirm, session/template composer, lead panel with qualification and follow-up), `/admin/settings` (kill switch with CRM warning, template health + submit dialog, academy settings).
+- **Mobile**: thread screen with optimistic send, template sheet, retry / sent-by-hand, push tap routing by kind.
+- **Docs**: `docs/09-deployment.md` gains the messaging env, the three gates and the owner-run cut-over runbook (nothing executed).
+
+## Tests (measured, `pnpm test:all`)
+api 1410 passed + 1 skipped (205 files) · web 598 (120 files) · mobile 422 · @ab/shared 1062 · wa-stub 19 · e2e 33 passed + 3 skipped by design (`report-outcome.sql` runs on desktop only), desktop + mobile, including journey 1 (WhatsApp lead → inbox → session reply → trial booked → `booking_confirmation` at the stub → teacher week). Lint: 0 errors (13 web + 1 api + 2 wa-stub complexity warnings).
+
+## Residuals and owner questions
+- Inbound media is stored as `media_id` / `media_mime` only; the download to Storage (`media_path`, signed `media_url`) is not built.
+- `reschedule` replies and unapproved `follow_up_slots` raise no admin task: needs a new `admin_task_kind` value (migration) + dashboard label.
+- Owner: bare «تمام» confirms the guardian's next scheduled lesson (docs/12 §3.5 suggests the latest lesson-linked outbound in 48 h); «stop» from a guardian; quiet hours; `lesson_needs_confirmation` fires for every still-scheduled lesson within 24 h; follow-up timing counted from the last inbound; day-before reminder may go out on the lesson day if the gate opens late.
+- Sender ceiling (ponytail): if Meta accepts a send and the `sent` write fails 3 times, the lease expires and the guardian may get a duplicate.
+- An outbound row sent from the inbox to a phone with no thread yet carries no `lead_id` / `guardian_id` (the thread view still joins by phone).
+- The web lead panel finds the lead via `GET /leads?q=`; lesson-timed template variables are not prefilled; mobile inbox list still uses `GET /leads`.
+- Template wording of `report_ready`, `renewal_due`, `follow_up_slots`, `lesson_reminder_24h` awaits the owner before anyone presses submit; the 8 approved bodies sync from Meta at the first health check.

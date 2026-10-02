@@ -43,6 +43,62 @@ Lesson report PDFs (R-REP-03) are rendered in the API process by `playwright-cor
 
 ## Not on staging yet
 
-- WhatsApp sending (Phase 4). The WhatsApp credentials stay off staging until the webhook cut-over from the CRM is planned with the owner.
+- WhatsApp (Phase 4). The code is shipped; the credentials stay off staging until the owner runs the cut-over below.
 - Android push credentials (FCM V1 via a Firebase project) and iOS (Apple Developer account). `EXPO_ACCESS_TOKEN` is already on the server.
 - Production: a separate Supabase project and hosts, created at go-live.
+
+## WhatsApp messaging (Phase 4)
+
+The API talks to the WhatsApp Cloud API only through `WA_API_BASE`; there is **no default**, so a server without it can never reach Meta. Local runs and e2e point it at `tools/wa-stub` (`pnpm env:local` → `:4010`; Playwright → `:4110`). Never put production values in a local `.env`, and never read `apps/api/.env.secrets`.
+
+| Env var (`apps/api`) | Meaning |
+|---|---|
+| `WA_API_BASE` | `https://graph.facebook.com` in production; the stub URL locally. Unset = WhatsApp off. |
+| `WA_API_VERSION` | Graph version, default `v21.0`. |
+| `WA_PHONE_NUMBER_ID`, `WA_WABA_ID` | The academy number's phone-number id and its WhatsApp Business Account id (Meta → WhatsApp → API Setup). The webhook ignores changes for any other phone-number id. |
+| `WA_ACCESS_TOKEN` | Permanent System User token with `whatsapp_business_messaging` + `whatsapp_business_management`. |
+| `WA_APP_SECRET` | Meta app → Settings → Basic → App secret. Signs every webhook POST; wrong or missing = every POST is 401 and nothing is stored. |
+| `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). |
+| `MESSAGING_ENABLED` | `true` opens the deployment's gate. Default `false`. |
+| `EXPO_ACCESS_TOKEN` | Admin push notifications (already on the server). |
+
+**Three gates, all required to send** (`sendingAllowed`): `MESSAGING_ENABLED=true`, WhatsApp configured (base, phone-number id, WABA id, token), and the admin's **kill switch** in `/admin/settings` (`settings.messaging_enabled`, seeded `false`). Any of them off → outbound rows stay `queued`: nothing fails, nothing is lost, and the inbox says «الإرسال متوقف». Turning the switch ON asks for confirmation; OFF is immediate.
+
+Independent of the gates: the webhook stores inbound messages and statuses, the jobs (reminders every 5 min, follow-ups every 5 min, push receipts every 15 min) keep **queuing** rows with dedup keys, and with WhatsApp configured the API runs one read-only template health check 5 s after boot (log only). Templates are submitted to Meta only when an admin presses «ابعته لميتا للموافقة» in `/admin/settings`; `report_ready` (PDF header) is submitted by hand in Business Manager.
+
+## WhatsApp cut-over runbook (owner-run; documentation only)
+
+Today the academy number (+966 56 610 1447) is served by the owner's CRM on the same VPS. Nothing below has been done; each step is the owner's call.
+
+### 1. The owner confirms first
+- Which Meta app the CRM uses. Same app as ours → the cut-over is a callback-URL change (3b). Its own app → the WABA's app subscription moves (3c).
+- The CRM stops its own reminders / automations at the moment our gate opens, or guardians get every reminder twice.
+- Wording of `report_ready`, `renewal_due`, `follow_up_slots`, `lesson_reminder_24h` before anyone submits them; the open questions in docs/12 §10 (bare «تمام» confirms which lesson, «stop» from a guardian, quiet hours, the `lesson_needs_confirmation` rule).
+- A quiet time window, and who watches `/admin/inbox` during it.
+
+### 2. Prepare (no traffic moves)
+1. On the server (`/opt/ayat-albayan-staging/.env`, or the production host's): set the `WA_*` values above with `WA_API_BASE=https://graph.facebook.com`, leave `MESSAGING_ENABLED` unset. Redeploy (`bash tools/scripts/deploy-staging.sh`). `/health` must answer.
+2. `/admin/settings` → «راجع حالة القوالب»: a read-only sync from Meta. The 8 approved templates must show «متوافق عليه» with Meta's real text.
+3. Look at what would go out the moment sending opens:
+   `select template_key, count(*), min(created_at) from messages where direction = 'outbound' and status = 'queued' group by 1;`
+   Reminders past their lesson expire on their own (`failed`, `expired`). Rows without an expiry (`renewal_due`, admin texts) do go out: mark the ones that should not as sent by hand from the inbox, or decide with the owner.
+
+### 3. Cut over
+1. Meta App Dashboard → WhatsApp → Configuration → Webhook: **write down** the current callback URL and verify token (the rollback target).
+2. (a) Point the webhook at us: callback `https://api-staging.148-230-116-195.sslip.io/webhooks/whatsapp` (or the production API host), verify token = `WA_VERIFY_TOKEN`, «Verify and save». Meta's GET must succeed (our route answers the challenge).
+   (b) Same app as the CRM: (a) replaces the CRM's URL. Subscribe the webhook field `messages`.
+   (c) CRM on its own app: in our app do (a) and subscribe `messages`; subscribe our app to the WABA (`POST /{WA_WABA_ID}/subscribed_apps` with our token) and unsubscribe the CRM's app (`DELETE /{WA_WABA_ID}/subscribed_apps` with the CRM app's token).
+3. Stop the CRM's automations (1).
+4. Set `MESSAGING_ENABLED=true` on the server, restart the API, then switch sending ON in `/admin/settings`.
+
+### 4. Verify (10 minutes)
+- From a staff phone, write to the academy number: the thread shows in `/admin/inbox` within seconds. The API log shows `POST /webhooks/whatsapp` 200; a 401 means `WA_APP_SECRET` is wrong (nothing was stored).
+- Reply from the inbox: it arrives on the staff phone, and the bubble moves «اتبعتت» → «وصلت» → «اتقرت».
+- No new `failed` rows: `select error_code, count(*) from messages where status = 'failed' and created_at > now() - interval '1 hour' group by 1;`
+- The admin phone gets the `new_message` push (needs the FCM credentials, see above).
+
+### 5. Roll back
+1. `/admin/settings` → sending OFF (immediate; rows stay queued). Or `MESSAGING_ENABLED=false` + restart.
+2. Meta App Dashboard: put back the callback URL and verify token from 3.1 (or re-subscribe the CRM's app to the WABA and unsubscribe ours).
+3. Turn the CRM's automations back on.
+4. Messages that reached us during the window are only in our database: list them for the owner with `select phone_e164, body, created_at from messages where direction = 'inbound' and created_at > '<cut-over time>' order by created_at;`.
