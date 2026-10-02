@@ -1,4 +1,5 @@
-import { clockTime, RIYADH_TZ } from '@ab/shared';
+import { clockTime, intlLocale, RIYADH_TZ } from '@ab/shared';
+import { locale } from '@/lib/locale';
 
 // Wall-clock math for the schedule screens (R-SCH-01, rule 6). The DB and the API speak UTC
 // instants; these helpers turn them into a person's local day / time with Intl only (no tz library,
@@ -89,7 +90,7 @@ export function weekWindow(start: string, tz: string): { from: Date; to: Date } 
   return { from: zonedToUtc(start, '00:00', tz), to: zonedToUtc(addDays(start, 7), '00:00', tz) };
 }
 
-const dayFormatter = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+const dayFormatter = new Intl.DateTimeFormat(intlLocale(locale), {
   day: 'numeric',
   month: 'long',
   timeZone: 'UTC',
@@ -100,7 +101,7 @@ export function dayMonthLabel(date: string): string {
   return dayFormatter.format(new Date(utcOf(date)));
 }
 
-const dateFormatter = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+const dateFormatter = new Intl.DateTimeFormat(intlLocale(locale), {
   day: 'numeric',
   month: 'long',
   year: 'numeric',

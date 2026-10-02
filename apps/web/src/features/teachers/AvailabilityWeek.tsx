@@ -12,14 +12,20 @@ type Props = { grid: Grid; tz: string; onDay: (day: Weekday, ranges: Range[]) =>
 
 const headClass = 'py-2 text-2xs font-semibold text-ink-3';
 
-/** 08 … 24 above the track; the first and last labels sit inside its ends. */
+/** 08 … 24 above the track; the first and last labels sit inside its ends; the rest centre on
+ * their hour, shifting toward the inline-start edge (right in RTL, left in LTR). */
 function Axis() {
   return (
     <div className="relative h-[18px] w-full text-2xs text-ink-3 tabular-nums">
       {AXIS_HOURS.map((h, i) => (
         <span
           key={h}
-          className={cn('absolute', i > 0 && i < AXIS_HOURS.length - 1 && 'translate-x-1/2', i === AXIS_HOURS.length - 1 && 'end-0')}
+          data-axis-hour={h}
+          className={cn(
+            'absolute',
+            i > 0 && i < AXIS_HOURS.length - 1 && 'rtl:translate-x-1/2 ltr:-translate-x-1/2',
+            i === AXIS_HOURS.length - 1 && 'end-0',
+          )}
           style={i === AXIS_HOURS.length - 1 ? undefined : { insetInlineStart: `${trackPct(h * 60)}%` }}
         >
           {String(h).padStart(2, '0')}

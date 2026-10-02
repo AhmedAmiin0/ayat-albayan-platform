@@ -1,5 +1,6 @@
-import { timeOffCreateSchema, type TimeOffCreate } from '@ab/shared';
+import { intlLocale, timeOffCreateSchema, type TimeOffCreate } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 /** Raw `<input type="date">` values (whole days, «إلى» included) + reason, as typed. */
 export type TimeOffDraft = { from: string; to: string; reason: string };
@@ -30,9 +31,9 @@ export function toTimeOffBody(
   return { ok: false, error: missing ? t.common.required : t.common.endBeforeStart };
 }
 
-// Western digits (docs/07 §2): `nu-latn`, never plain 'ar-EG'.
-const days = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { weekday: 'long', day: 'numeric', month: 'long' });
-const daysAndTimes = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+// Western digits (docs/07 §2): intlLocale carries `nu-latn` in both languages.
+const days = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
+const daysAndTimes = new Intl.DateTimeFormat(intlLocale(locale), {
   weekday: 'long',
   day: 'numeric',
   month: 'long',

@@ -1,7 +1,9 @@
+import { intlLocale } from '@ab/shared';
 import { Field } from '@/components/ui/field';
 import { Select } from '@/components/ui/select';
+import { locale } from '@/lib/locale';
 
-const LABEL = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const LABEL = new Intl.DateTimeFormat(intlLocale(locale), { month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 /** `YYYY-MM` → «أكتوبر 2026». */
 export function monthLabel(month: string): string {

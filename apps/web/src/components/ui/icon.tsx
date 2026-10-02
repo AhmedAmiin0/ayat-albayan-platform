@@ -2,8 +2,8 @@ import type { SVGProps } from 'react';
 import { cn } from '@/lib/utils';
 
 // Line icons from the reference sprite (docs/design/ink-and-gold.html): 20px grid, 1.6 stroke.
-// Directional icons: «السابق» uses chevron-right, «التالي» chevron-left (picked per direction);
-// `reply` is drawn for LTR, so pass className="rtl:-scale-x-100". Logout is drawn RTL-native.
+// Directional icons are picked for RTL: «السابق» uses chevron-right, «التالي» chevron-left, and
+// logout is drawn RTL-native; MIRROR flips them in an LTR page. `reply` is drawn for LTR.
 const PATHS = {
   search: 'M14.5 9a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0ZM13.2 13.2l3.6 3.6',
   plus: 'M10 4.5v11M4.5 10h11',
@@ -40,6 +40,14 @@ const PATHS = {
 
 export type IconName = keyof typeof PATHS;
 
+/** Each directional icon follows the reading direction (docs/07 icons), no caller has to. */
+const MIRROR: Partial<Record<IconName, string>> = {
+  'chevron-left': 'ltr:-scale-x-100',
+  'chevron-right': 'ltr:-scale-x-100',
+  logout: 'ltr:-scale-x-100',
+  reply: 'rtl:-scale-x-100',
+};
+
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name'> {
   name: IconName;
 }
@@ -56,7 +64,7 @@ export function Icon({ name, className, ...props }: IconProps) {
       strokeWidth={name === 'more' ? 2.2 : 1.6}
       strokeLinecap="round"
       strokeLinejoin="round"
-      className={cn('size-[18px] shrink-0', className)}
+      className={cn('size-[18px] shrink-0', MIRROR[name], className)}
       {...props}
     >
       <path d={PATHS[name]} />

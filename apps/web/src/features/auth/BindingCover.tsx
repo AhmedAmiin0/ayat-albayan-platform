@@ -5,12 +5,13 @@ import { cn } from '@/lib/utils';
 
 // The binding (docs/07 §1, §5): Mamluk tooled leather, gold fillets, four corner pieces and a
 // central mandorla holding the mark. Login screen ONLY. Decorative, so aria-hidden. The corner
-// pieces are genuinely physical, so they use left/right (docs/07 §14.1 exception).
+// piece is drawn for the top-left, so whichever piece lands on the right (start in RTL, end in
+// LTR) flips horizontally: logical offsets, direction-bound flips, the same cover both ways.
 const CORNERS = [
-  'top-[30px] left-[30px] shell:top-[52px] shell:left-[52px]',
-  'top-[30px] right-[30px] -scale-x-100 shell:top-[52px] shell:right-[52px]',
-  'bottom-[30px] left-[30px] -scale-y-100 shell:bottom-[52px] shell:left-[52px]',
-  'bottom-[30px] right-[30px] -scale-100 shell:bottom-[52px] shell:right-[52px]',
+  'top-[30px] start-[30px] rtl:-scale-x-100 shell:top-[52px] shell:start-[52px]',
+  'top-[30px] end-[30px] ltr:-scale-x-100 shell:top-[52px] shell:end-[52px]',
+  'bottom-[30px] start-[30px] -scale-y-100 rtl:-scale-x-100 shell:bottom-[52px] shell:start-[52px]',
+  'bottom-[30px] end-[30px] -scale-y-100 ltr:-scale-x-100 shell:bottom-[52px] shell:end-[52px]',
 ];
 
 function Corner({ className }: { className: string }) {

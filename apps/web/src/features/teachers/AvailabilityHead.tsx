@@ -1,10 +1,11 @@
-import { nextDstTransition } from '@ab/shared';
+import { intlLocale, nextDstTransition } from '@ab/shared';
 import { useId, useMemo } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { Label } from '@/components/ui/label';
 import { Ltr } from '@/components/ui/ltr';
 import { TimeZoneSelect, tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 type Props = { tz: string; onTz: (tz: string) => void };
 
@@ -20,9 +21,9 @@ function ZoneText({ template, tz }: { template: string; tz: string }) {
   );
 }
 
-const weekday = (tz: string) => new Intl.DateTimeFormat('ar-EG-u-nu-latn', { timeZone: tz, weekday: 'long' });
+const weekday = (tz: string) => new Intl.DateTimeFormat(intlLocale(locale), { timeZone: tz, weekday: 'long' });
 const dayMonth = (tz: string) =>
-  new Intl.DateTimeFormat('ar-EG-u-nu-latn', { timeZone: tz, day: 'numeric', month: 'long' });
+  new Intl.DateTimeFormat(intlLocale(locale), { timeZone: tz, day: 'numeric', month: 'long' });
 
 /** «من الجمعة 30 أكتوبر القاهرة بترجع ساعة» when the zone shifts within 30 days (docs/07 §8). */
 function dstTemplate(tz: string): string | null {

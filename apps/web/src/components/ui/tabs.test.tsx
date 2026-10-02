@@ -30,6 +30,19 @@ describe('Tabs', () => {
     expect(onChange.mock.calls).toEqual([['new'], ['lost']]);
   });
 
+  it('in an LTR (English) page the RIGHT arrow is next', () => {
+    const onChange = vi.fn();
+    render(
+      <div dir="ltr">
+        <Tabs label={t.leads.status} tabs={[...TABS]} value="all" onChange={onChange} />
+      </div>,
+    );
+    const list = screen.getByRole('tablist');
+    fireEvent.keyDown(list, { key: 'ArrowRight' });
+    fireEvent.keyDown(list, { key: 'ArrowLeft' });
+    expect(onChange.mock.calls).toEqual([['new'], ['lost']]);
+  });
+
   it('vertical: a dotted leader only before a count; separators group tabs without breaking arrows', () => {
     const onChange = vi.fn();
     const tabs = [...TABS, { value: 'no_reply', label: t.enums.leadStatus.no_reply, separatorBefore: true }];

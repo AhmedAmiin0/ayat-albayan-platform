@@ -1,5 +1,6 @@
-import { clockTime, formatAmount, RIYADH_TZ } from '@ab/shared';
+import { clockTime, formatAmount, intlLocale, RIYADH_TZ } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 // Display text for the dashboard: Western digits everywhere (docs/07 §2), money rounded to whole
 // units (the table and the CSV keep the exact amounts), Riyadh times with the zone said once.
@@ -22,14 +23,14 @@ export function percent(rate: number | null): string {
   return rate === null ? '—' : `${Math.round(rate * 100)}%`;
 }
 
-const monthFormat = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { month: 'long', year: 'numeric', timeZone: 'UTC' });
+const monthFormat = new Intl.DateTimeFormat(intlLocale(locale), { month: 'long', year: 'numeric', timeZone: 'UTC' });
 
 /** "2026-09" → «سبتمبر 2026». */
 export function monthLabel(month: string): string {
   return monthFormat.format(new Date(`${month}-01T00:00:00Z`));
 }
 
-const dayFormat = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { weekday: 'long', day: 'numeric', month: 'long', timeZone: RIYADH_TZ });
+const dayFormat = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long', timeZone: RIYADH_TZ });
 
 /** «الخميس، 1 أكتوبر 16:00» in Riyadh time. */
 export function whenRiyadh(iso: string): string {
@@ -37,7 +38,7 @@ export function whenRiyadh(iso: string): string {
   return `${dayFormat.format(at)} ${clockTime(at, RIYADH_TZ)}`;
 }
 
-const dateFormat = new Intl.DateTimeFormat('ar-EG-u-nu-latn', { day: 'numeric', month: 'long', year: 'numeric', timeZone: RIYADH_TZ });
+const dateFormat = new Intl.DateTimeFormat(intlLocale(locale), { day: 'numeric', month: 'long', year: 'numeric', timeZone: RIYADH_TZ });
 
 /** A provider rate time as a Riyadh date. */
 export function rateDate(iso: string): string {

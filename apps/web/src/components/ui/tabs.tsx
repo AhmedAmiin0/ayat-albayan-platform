@@ -40,8 +40,10 @@ function subscribe(onChange: () => void): () => void {
 }
 const isWide = () => !hasMedia() || matchMedia(WIDE).matches;
 
-/** Next tab = inline-end, which is the LEFT arrow in RTL. */
-const STEP: Record<string, number> = { ArrowLeft: 1, ArrowDown: 1, ArrowRight: -1, ArrowUp: -1 };
+/** Next tab = inline-end: the LEFT arrow in RTL, the RIGHT arrow in LTR. */
+const STEP_RTL: Record<string, number> = { ArrowLeft: 1, ArrowDown: 1, ArrowRight: -1, ArrowUp: -1 };
+const STEP_LTR: Record<string, number> = { ...STEP_RTL, ArrowLeft: -1, ArrowRight: 1 };
+const isLtr = (el: Element) => el.closest('[dir]')?.getAttribute('dir') === 'ltr';
 
 /** role=tablist filter/tab strip. Arrow keys move along the reading direction (RTL aware). */
 export function Tabs<V extends string>({
@@ -55,7 +57,7 @@ export function Tabs<V extends string>({
   const vertical = orientation === 'vertical';
   const wide = useSyncExternalStore(subscribe, isWide);
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
-    const step = STEP[e.key];
+    const step = (isLtr(e.currentTarget) ? STEP_LTR : STEP_RTL)[e.key];
     if (step === undefined) return;
     e.preventDefault();
     const to = (tabs.findIndex((tab) => tab.value === value) + step + tabs.length) % tabs.length;
