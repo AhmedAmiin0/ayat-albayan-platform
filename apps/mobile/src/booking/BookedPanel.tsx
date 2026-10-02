@@ -13,9 +13,9 @@ export interface BookedPanelProps {
   teacherName: string;
   /** The family's zone, for the lesson's local time. */
   tz: string;
-  /** «رجوع للمحادثة». */
+  /** «ارجع للمحادثة» (the web's words). */
   onDone: () => void;
-  /** After a paid package: «كمّل الاشتراك» opens its subscription instead (subscriptionHref). */
+  /** After a paid package: «اعمل الاشتراك» opens its subscription instead (subscriptionHref). */
   next?: Href | null;
 }
 
@@ -61,9 +61,9 @@ export function BookedPanel({ result, teacherName, tz, onDone, next }: BookedPan
         </AppText>
       ) : null}
       {next ? (
-        <Button label={t.booking.mobile.toSubscription} onPress={() => router.replace(next)} />
+        <Button label={t.inbox.subscription.make} onPress={() => router.replace(next)} />
       ) : (
-        <Button label={t.booking.mobile.backToLead} onPress={onDone} />
+        <Button label={t.inbox.subscription.backToChat} onPress={onDone} />
       )}
     </View>
   );

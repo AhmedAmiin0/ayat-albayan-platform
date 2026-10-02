@@ -1,4 +1,4 @@
-import { formatPhone, leadStatusStyle, type ThreadView } from '@ab/shared';
+import { formatPhone, subscriptionStatusStyle, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { fullTime, listTime, previewText, threadKind, threadName, unreadLabel } from './format';
 import type { InboxSearch } from './search';
+import { leadChip } from './subscription';
 import { SubscriptionChip } from './SubscriptionChip';
 
 export interface ThreadRowProps {
@@ -20,6 +21,20 @@ export interface ThreadRowProps {
 
 /** Our last message did not go out: the admin's turn (saffron «دورك», docs/07), shown on the row. */
 const lastFailed = (th: ThreadView): boolean => th.last_direction === 'outbound' && th.last_status === 'failed';
+
+/**
+ * The family's tags: «مشترك» or «اشتراكه خلص» (renew, the admin's turn), and «مش مدفوع» while a
+ * running package owes money. A list cached before `badge` existed falls back to `subscribed`.
+ */
+function FamilyTags({ thread: th }: { thread: ThreadView }) {
+  const badge = th.badge ?? (th.subscribed ? 'subscribed' : null);
+  return (
+    <>
+      {(badge === 'subscribed' || badge === 'expired') && <SubscriptionChip size="sm" badge={badge} />}
+      {th.unpaid && <StatusChip size="sm" {...subscriptionStatusStyle.unpaid} label={t.enums.subscriptionStatus.unpaid} />}
+    </>
+  );
+}
 
 /** The phone never truncates: on narrow screens its last 4 digits tell same-named threads apart. */
 function PhoneTag({ phone }: { phone: string }) {
@@ -34,7 +49,7 @@ function PhoneTag({ phone }: { phone: string }) {
 /**
  * One conversation (docs/07 §9, R-LEAD-02): avatar · name (bold + saffron dot when unread) · phone
  * · time; the last message («إنت:» for ours), or «متبعتتش» when our last send failed; the lead's
- * status chip or who the number is, «مشترك» while the family has a running package, source.
+ * status chip or who the number is, the family's package tags (FamilyTags), source.
  */
 export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const name = threadName(th);
@@ -87,11 +102,11 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
         )}
         <span className="col-span-2 col-start-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-2xs text-ink-3">
           {th.lead_status && kind === 'lead' ? (
-            <StatusChip size="sm" {...leadStatusStyle[th.lead_status]} label={t.enums.leadStatus[th.lead_status]} />
+            <StatusChip size="sm" {...leadChip(th.lead_status)} />
           ) : (
             <span>{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
           )}
-          {th.subscribed && <SubscriptionChip size="sm" badge="subscribed" />}
+          <FamilyTags thread={th} />
           {th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         </span>
       </Link>

@@ -1,4 +1,4 @@
-import { formatPhone, leadStatusStyle, type SubscriptionBadge, type ThreadView } from '@ab/shared';
+import { formatPhone, type SubscriptionBadge, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
@@ -6,6 +6,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { threadKind, threadName, timesInText } from './format';
 import type { InboxSearch } from './search';
+import { leadChip } from './subscription';
 import { SubscriptionChip } from './SubscriptionChip';
 
 export interface ThreadHeaderProps {
@@ -36,7 +37,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge }: Threa
       {th.display_name && <Ltr className="text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
       <span className="flex flex-wrap items-center gap-2 text-2xs text-ink-3 sm:ms-auto">
         {kind === 'lead' && th.lead_status ? (
-          <StatusChip {...leadStatusStyle[th.lead_status]} label={t.enums.leadStatus[th.lead_status]} />
+          <StatusChip {...leadChip(th.lead_status)} />
         ) : (
           <span className="text-xs font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}

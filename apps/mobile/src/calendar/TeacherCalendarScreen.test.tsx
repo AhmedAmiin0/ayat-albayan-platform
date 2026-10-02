@@ -85,15 +85,23 @@ test('‹ › moves a week, an empty week says so, «النهارده» comes ba
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(week('2026-09-18T21:00:00.000Z', '2026-09-25T21:00:00.000Z')));
 });
 
-test('a lesson’s actions: «غيّر الميعاد» opens the reschedule sheet; a held lesson has none', async () => {
+test('a week still loading says so instead of a blank list', async () => {
+  serve({ [THIS_WEEK]: [pending] });
+  await renderWithQuery(<TeacherCalendarScreen />);
+  await screen.findByText('يوسف أحمد');
+  mockApiFetch.mockImplementation(() => new Promise(() => undefined));
+  await fireEvent.press(screen.getByRole('button', { name: t.schedule.nextWeek }));
+  expect(await screen.findByText(t.common.loading)).toBeTruthy();
+});
+
+test('a lesson’s «غيّر الميعاد» is in view on its row (no hidden tap) and opens the sheet; a held lesson has none', async () => {
   serve({ [THIS_WEEK]: [done, pending] });
   await renderWithQuery(<TeacherCalendarScreen />);
-  expect(screen.queryByRole('button', { name: t.lessons.rescheduleSubmit })).toBeNull();
-  await fireEvent.press(await screen.findByText('يوسف أحمد'));
-  await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
+  const move = await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });
+  // One action: the held lesson (جودى) cannot move.
+  expect(screen.getAllByRole('button', { name: new RegExp(t.lessons.rescheduleSubmit) })).toHaveLength(1);
+  await fireEvent.press(move);
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
-  // The held lesson (جودى) is plain text, not a button.
-  expect(screen.getAllByRole('button', { expanded: true })).toHaveLength(1);
 });
 
 test('offline with a saved week: it stays, and the subtitle says how old it is', async () => {

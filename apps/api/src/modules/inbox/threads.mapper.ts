@@ -1,15 +1,17 @@
 import type { Tables } from '@ab/db';
 import { searchDigits, sessionWindowOpen, type TemplateParamsInput, type TemplateView, type ThreadView } from '@ab/shared';
 import { orSafe } from '../guardians/http';
+import type { FamilyTag } from './thread-people.mapper';
 
 export type ThreadRow = Tables<'v_threads'>;
 
 /**
  * v_threads row → ThreadView (H1/H2). The view's columns are typed nullable, but a thread only
  * exists for a phone with at least one message, so the last-message fields are always set.
- * `subscribed` comes from the guardian's students (ThreadsQueries.subscribedGuardians / people).
+ * The family tags come from the guardian's students (ThreadsQueries.familyTags / people); a
+ * guardian without students is «مش مشترك», a row without a guardian has no badge.
  */
-export function toThreadView(row: ThreadRow, now: Date, subscribed = false): ThreadView {
+export function toThreadView(row: ThreadRow, now: Date, tag: FamilyTag | null = null): ThreadView {
   return {
     phone_e164: row.phone_e164 ?? '',
     display_name: row.display_name,
@@ -32,8 +34,13 @@ export function toThreadView(row: ThreadRow, now: Date, subscribed = false): Thr
     teacher_id: row.teacher_id,
     teacher_name: row.teacher_name,
     session_open: sessionWindowOpen(row.last_inbound_at, now),
-    subscribed,
+    ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
   };
+}
+
+/** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */
+function familyFields(tag: FamilyTag | null): Pick<ThreadView, 'subscribed' | 'badge' | 'unpaid'> {
+  return { subscribed: tag?.badge === 'subscribed', badge: tag?.badge ?? null, unpaid: tag?.unpaid ?? false };
 }
 
 /** H1 search: a phone in any format → its digits; else the display name. */

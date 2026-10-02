@@ -18,6 +18,11 @@ describe('toLessonView (R-LES-01, R-LES-03, R-SCH-03)', () => {
     });
   });
 
+  it('carries the rule’s weekdays (a series reschedule keeps them); null for a one-off', () => {
+    expect(toLessonView(lessonRow({ rule: { byday: [0, 3] } }), { role: 'admin', seq: none }).rule_byday).toEqual([0, 3]);
+    expect(toLessonView(lessonRow({ rule_id: null, rule: null }), { role: 'admin', seq: none }).rule_byday).toBeNull();
+  });
+
   it('fills the lesson number from v_lesson_sequence for that (lesson, student)', () => {
     const seq = new Map([[`${LESSON_ID}:${STUDENT_ID}`, 7]]);
     const view = toLessonView(lessonRow({ status: 'completed' }), { role: 'admin', seq });

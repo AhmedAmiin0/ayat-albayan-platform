@@ -65,11 +65,13 @@ describe('subscription in the chat (R-SUB-01)', () => {
     await waitFor(() => expect(apiFetch.mock.calls.length).toBeGreaterThan(reads));
   });
 
-  it('a family whose packages ended: «اشتراكه خلص», the admin’s turn', async () => {
+  it('a family whose packages ended: «الباقة خلصت» in the header and on the child (one word), the admin’s turn', async () => {
     const ended = pupil({}, { status: 'expired', lessons_remaining: 0 });
     renderThread({ ...detail([], GUARDIAN), people: { ...FAMILY, students: [ended] } });
     await screen.findByRole('complementary', { name: t.inbox.subscription.title });
-    expect(tone(t.inbox.subscription.badge.expired)).toBe('act');
+    const chips = screen.getAllByText(t.inbox.subscription.badge.expired);
+    expect(t.inbox.subscription.badge.expired).toBe(t.enums.subscriptionStatus.expired);
+    expect(chips.map((c) => c.closest('[data-tone]')?.getAttribute('data-tone'))).toEqual(['act', 'act']);
   });
 
   it('a lead: «مش مشترك» and «اشترك» opens the wizard with a regular package', async () => {

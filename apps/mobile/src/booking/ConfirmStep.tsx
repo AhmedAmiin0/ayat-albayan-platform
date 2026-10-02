@@ -12,8 +12,8 @@ import type { BookFailure } from './booking-errors';
 import { ConflictNotice } from './ConflictNotice';
 import type { StudentChoice, TrialDraft } from './draft';
 import { DuplicateNotice } from './DuplicateNotice';
-import { effectiveByday, lessonMinutes } from './package-choice';
-import { whenText } from './slots';
+import { effectiveByday, lessonMinutes, packageDaysNote } from './package-choice';
+import { ruleFromSlot, whenText } from './slots';
 
 export interface ConfirmStepProps {
   draft: TrialDraft;
@@ -73,7 +73,13 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
       ) : (
         <View style={{ gap: 6 }}>
           <SectionLabel>{`${t.booking.pickDays} · ${counted(t.booking.perWeek, days.length)}`}</SectionLabel>
-          <DayChips value={days} onChange={props.onDays} />
+          <DayChips
+            value={days}
+            onChange={props.onDays}
+            locked={draft.startsAt ? ruleFromSlot(draft.startsAt, draft.tz).weekday : undefined}
+            accessibilityLabel={t.booking.pickDays}
+          />
+          <PackageDaysNote pkg={draft.pkg} days={days.length} />
         </View>
       )}
       <AppText style={note}>{t.booking.confirmationNote}</AppText>
@@ -113,5 +119,19 @@ function FailureNotice({
       onUse={(existingId) => onSubmit({ existingId })}
       onNew={() => onSubmit({ force: true })}
     />
+  );
+}
+
+/** The package/days mismatch as a hamish line (double gold-soft rule), in act: the admin's to fix. */
+function PackageDaysNote({ pkg, days }: { pkg: TrialDraft['pkg']; days: number }) {
+  const { color } = useTheme();
+  const note = packageDaysNote(pkg, days);
+  if (!note) return null;
+  return (
+    <View style={{ borderStartWidth: 3, borderStartColor: color.goldSoft, paddingStart: 10 }}>
+      <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.act }}>
+        {note}
+      </AppText>
+    </View>
   );
 }

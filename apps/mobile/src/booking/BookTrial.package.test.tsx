@@ -82,7 +82,7 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
     }),
   );
 
-  await press('button', t.booking.mobile.toSubscription);
+  await press('button', t.inbox.subscription.make);
   expect(mockReplace).toHaveBeenCalledWith({
     pathname: '/inbox/subscribe',
     params: {

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { badRequest, conflict } from '../scheduling/errors';
-import { addDays, startOfLocalDay } from '../scheduling/horizon';
+import { addDays, localDateOf, startOfLocalDay } from '../scheduling/horizon';
 import { ruleStudents } from '../scheduling/schedule.queries';
 import { confirmationMessages } from './confirmation-messages';
 import { LessonStore } from './lesson-store';
@@ -15,10 +15,12 @@ type RuleScope = Extract<RescheduleRequest, { scope: 'rule' }>;
 export type RescheduleRuleInput = { lessonId: string; body: RuleScope; actor: AuthUser };
 
 /**
- * Move the whole rule from `newRule.startsOn` (R-SCH-07, docs/10 route 8 `rule`): the old rule
- * ends the day before, its open lessons from that local day become `rescheduled` (chargeable
- * false), and a new rule with the same students / package generates over the horizon, with the
- * first new lesson's confirmation queued. One transaction. Returns the first new lesson's id.
+ * Move the tapped lesson and every later one (R-SCH-07, docs/10 route 8 `rule`): the old rule ends
+ * the day before the tapped lesson's local day, its open lessons from that day become `rescheduled`
+ * (chargeable false), and a new rule with the same students / package generates from
+ * `newRule.startsOn` (never before the tapped lesson, RulePlanner) over the horizon, with the first
+ * new lesson's confirmation queued. One transaction. Returns the first new lesson's id. Anchoring
+ * on the tapped lesson, not the new start, keeps earlier lessons and moves the tapped one.
  */
 @Injectable()
 export class RescheduleRuleService {
@@ -32,8 +34,8 @@ export class RescheduleRuleService {
     const lesson = await this.store.get(lessonId);
     if (!isOpenLesson(lesson.status)) throw invalidTransition(lesson.status, 'reschedule');
     const { old, plan, teacherLink } = await this.planner.plan(lesson, body.newRule);
-    const cutoff = startOfLocalDay(body.newRule.startsOn, old.tz);
-    const moved = await this.store.queries.openOfRule(old.id, cutoff);
+    const lessonDay = localDateOf(new Date(lesson.starts_at), old.tz);
+    const moved = await this.store.queries.openOfRule(old.id, startOfLocalDay(lessonDay, old.tz));
     const conflicts = await this.checker.check({
       teacherId: plan.rule.teacher_id,
       studentIds: plan.rule.student_ids,
@@ -54,7 +56,7 @@ export class RescheduleRuleService {
     await this.store.commit({
       change: {
         actor: actor.id,
-        end_rule: { id: old.id, ends_on: addDays(body.newRule.startsOn, -1) },
+        end_rule: { id: old.id, ends_on: addDays(lessonDay, -1) },
         changes: moved.map((m) => ({ id: m.id, from_status: m.status, to_status: 'rescheduled', chargeable: false })),
         new_rule: plan.rule,
         lessons,

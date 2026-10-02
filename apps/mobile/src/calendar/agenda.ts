@@ -48,14 +48,20 @@ export function byTeacher(lessons: readonly LessonView[]): TeacherLessons[] {
 
 /**
  * «عند المعلم/ة 15:00 بتوقيت القاهرة» when the teacher's wall clock reads differently from
- * Riyadh's (Cairo in winter); null when it reads the same (Riyadh, or Cairo on summer time).
+ * Riyadh's (Cairo in winter); null when it reads the same (Riyadh, or Cairo on summer time). Past
+ * midnight it names the teacher's day: «عند المعلم/ة الجمعة 23:30 بتوقيت القاهرة».
  */
 export function teacherClock(lesson: LessonView): string | null {
   const at = new Date(lesson.starts_at);
-  const time = clockTime(at, lesson.teacher.tz);
+  const { tz } = lesson.teacher;
+  const time = clockTime(at, tz);
   if (time === clockTime(at, RIYADH_TZ)) return null;
-  return t.booking.teacherClock.replace('{time}', time).replace('{city}', cityOf(lesson.teacher.tz));
+  const date = localDate(at, tz);
+  const day = date === localDate(at, RIYADH_TZ) ? '' : `${weekday[String(weekdayOf(date))]} `;
+  return t.booking.teacherClock.replace('{time}', `${day}${time}`).replace('{city}', cityOf(tz));
 }
+
+const weekday: Record<string, string> = t.enums.weekday;
 
 /**
  * The faint availability line of a day: «متاح 16:00 – 18:00، 20:00 – 22:00 بتوقيت القاهرة». The

@@ -31,3 +31,23 @@ test('a subscribed family’s row says «مشترك» beside its tags; others do
   const lead = within(screen.getByRole('button', { name: /هدى سالم/ }));
   expect(lead.queryByText(t.inbox.subscription.badge.subscribed)).toBeNull();
 });
+
+test('rows also say what needs the admin: «الباقة خلصت» and «مش مدفوع» (act); a converted lead is «اتحول لطالب», not «مشترك»', async () => {
+  const ended: ThreadView = { ...subscribed, phone_e164: '+966552147732', display_name: 'أم ليان', subscribed: false, badge: 'expired', unpaid: false };
+  const owes: ThreadView = { ...subscribed, phone_e164: '+966552147733', display_name: 'أم جود', badge: 'subscribed', unpaid: true };
+  const converted: ThreadView = { ...thread, phone_e164: '+966551234008', display_name: 'أبو مالك', lead_status: 'converted' };
+  mockApiFetch.mockResolvedValue({ items: [ended, owes, converted], total: 3, page: 1, pageSize: 25 });
+  await renderWithQuery(<InboxScreen />);
+  const row = async (name: string) => within(await screen.findByRole('button', { name: new RegExp(name) }));
+  const tone = (r: Awaited<ReturnType<typeof row>>, label: string) => {
+    let node = r.getByText(label).parent;
+    while (node && !String(node.props.testID ?? '').startsWith('chip-')) node = node.parent;
+    return node?.props.testID;
+  };
+
+  expect(tone(await row('أم ليان'), t.inbox.subscription.badge.expired)).toBe('chip-act');
+  expect(tone(await row('أم جود'), t.enums.subscriptionStatus.unpaid)).toBe('chip-act');
+  const malik = await row('أبو مالك');
+  expect(malik.queryByText(t.enums.leadStatus.converted)).toBeNull();
+  expect(tone(malik, t.inbox.convertedLead)).toBe('chip-neutral');
+});

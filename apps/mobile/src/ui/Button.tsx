@@ -12,8 +12,12 @@ export interface ButtonProps {
    * (a peer action, e.g. «إلغاء» on a lesson card, docs/07 §6). ghost: lapis text (تسجيل الخروج).
    */
   variant?: ButtonVariant;
-  /** Disables the button; pass the label that says why («جاري الدخول…»). */
+  /** Work in flight: disabled and announced busy; pass the label that says so («جاري الحفظ…»). */
   busy?: boolean;
+  /** Not usable yet (nothing picked): disabled, not announced busy; a hint nearby says why. */
+  disabled?: boolean;
+  /** The spoken name when the label repeats down a list («غيّر الميعاد — يوسف»). */
+  accessibilityLabel?: string;
 }
 
 type Palette = ReturnType<typeof useTheme>['color'];
@@ -25,13 +29,15 @@ function look(variant: ButtonVariant, color: Palette, pressed: boolean) {
 }
 
 /** docs/07 §6 Button, at the 44pt mobile touch size. Lapis only: never gold, never saffron. */
-export function Button({ label, onPress, variant = 'primary', busy = false }: ButtonProps) {
+export function Button({ label, onPress, variant = 'primary', busy = false, ...p }: ButtonProps) {
   const { color } = useTheme();
+  const off = busy || p.disabled === true;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityState={{ disabled: busy, busy }}
-      disabled={busy}
+      accessibilityLabel={p.accessibilityLabel}
+      accessibilityState={{ disabled: off, busy }}
+      disabled={off}
       onPress={onPress}
       style={({ pressed }) => ({
         minHeight: shape.control.touch,
@@ -41,7 +47,7 @@ export function Button({ label, onPress, variant = 'primary', busy = false }: Bu
         borderColor: color.ruleInput,
         alignItems: 'center',
         justifyContent: 'center',
-        opacity: busy ? 0.45 : 1,
+        opacity: off ? 0.45 : 1,
         backgroundColor: look(variant, color, pressed).bg,
       })}
     >

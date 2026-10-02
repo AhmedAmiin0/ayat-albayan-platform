@@ -62,8 +62,7 @@ test('‹ › moves a day; an empty day says so; «النهارده» comes back
 test('a lesson’s «غيّر الميعاد» opens the reschedule sheet over the day', async () => {
   mockApiFetch.mockImplementation(async (path: string) => (path === day('2026-10-01') ? [pending] : { slots: [] }));
   await renderWithQuery(<ScheduleRoute />);
-  await fireEvent.press(await screen.findByText('يوسف أحمد'));
-  await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` }));
   expect(await screen.findByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
   expect(await screen.findByText(t.reschedule.noSlots)).toBeTruthy();
 });

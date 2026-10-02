@@ -1,13 +1,10 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import type { QuoteResponse, SubscriptionCreate, SubscriptionUpdate, SubscriptionView } from '@ab/shared';
+import type { SubscriptionUpdate, SubscriptionView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { PricingService } from '../pricing/pricing.service';
 import { conflict, notFound } from '../scheduling/errors';
 import type { Page } from '../teachers/http';
 import { MoneyWrites } from './money-writes';
 import { PackagesService } from './packages.service';
-import { subscriptionRow } from './subscription-row';
-import { quoteQueryFor, type SubscriptionQuote } from './subscriptions.dto';
 import { SubscriptionsQueries, type SubListQuery, type SubRow } from './subscriptions.queries';
 
 /**
@@ -33,8 +30,10 @@ export class SubscriptionsService {
     return view;
   }
 
-  async add(row: TablesInsert<'subscriptions'>, actorId: string): Promise<SubscriptionView> {
+  /** null: the row's client_request_id is already taken (the caller replays that package). */
+  async add(row: TablesInsert<'subscriptions'>, actorId: string): Promise<SubscriptionView | null> {
     const created = await this.subs.insert(row);
+    if (!created) return null;
     const audit = { actorId, entity: 'subscriptions', entityId: created.id, action: 'create', after: created };
     await this.writes.done(audit, created.student_id);
     return this.get(created.id);
@@ -66,27 +65,5 @@ export class SubscriptionsService {
     const row = await this.subs.get(id);
     if (!row) throw notFound('subscription_not_found');
     return row;
-  }
-}
-
-/** S2: priced from the catalog with the same quote as /pricing; never a typed price. */
-@Injectable()
-export class SubscriptionCreator {
-  constructor(
-    private readonly subs: SubscriptionsQueries,
-    private readonly pricing: PricingService,
-    private readonly service: SubscriptionsService,
-  ) {}
-
-  async create(input: SubscriptionCreate, actorId: string): Promise<SubscriptionView> {
-    return this.service.add(subscriptionRow(input, await this.quote(input), actorId), actorId);
-  }
-
-  /** The quote S2 stores. An unknown guardian country is quoted in USD (docs/08 §1): 503 fx_unavailable. */
-  async quote(input: SubscriptionQuote): Promise<QuoteResponse> {
-    const student = await this.subs.studentForQuote(input.studentId);
-    if (!student) throw notFound('student_not_found');
-    const country = input.pricing.country ?? student.country ?? undefined;
-    return this.pricing.quote(quoteQueryFor(input.pricing, country));
   }
 }

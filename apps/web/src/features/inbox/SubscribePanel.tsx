@@ -1,4 +1,4 @@
-import { subscriptionStatusStyle, type ThreadPeople } from '@ab/shared';
+import type { ThreadPeople } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -8,7 +8,7 @@ import { Toast } from '@/components/ui/toast';
 import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
 import type { PickedStudent } from '@/features/subscriptions/StudentPicker';
 import { t } from '@/lib/i18n';
-import { dueText, packageLine, subscribeLabel } from './subscription';
+import { dueText, packageChipProps, packageLine, subscribeLabel } from './subscription';
 
 /**
  * The guardian's children beside the chat (R-SUB-01): each one's package line («8 حلقات في الشهر —
@@ -22,8 +22,9 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
   const saved = async () => {
     setPicked(null);
     setToast(t.subscriptions.saved);
-    // The dialog refreshes the money screens; the chip, the lines and the list tag live under threads.
-    await queryClient.invalidateQueries({ queryKey: ['threads'] });
+    // The dialog refreshes the money screens; the chip, the lines and the list tag live under
+    // threads; the family's lead may have just become «مشترك» (R-LEAD-01).
+    for (const key of ['threads', 'leads']) await queryClient.invalidateQueries({ queryKey: [key] });
   };
 
   return (
@@ -42,7 +43,7 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
               </span>
               {sub ? (
                 <>
-                  <StatusChip size="sm" {...subscriptionStatusStyle[sub.status]} label={t.enums.subscriptionStatus[sub.status]} />
+                  <StatusChip size="sm" {...packageChipProps(sub)} />
                   <span className="text-ink-2">{packageLine(sub)}</span>
                   {due && <span className="font-semibold text-act">{due}</span>}
                 </>

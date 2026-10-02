@@ -1,14 +1,8 @@
-import type {
-  QuoteResponse,
-  StudentBalanceView,
-  SubscriptionPricing,
-  SubscriptionView,
-} from '@ab/shared';
+import type { QuoteResponse, SubscriptionPricing, SubscriptionView } from '@ab/shared';
 import { keepPreviousData, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef } from 'react';
-import { apiFetch, apiSend } from '@/lib/api';
-import { isOffline } from '@/payments/payment-errors';
-import { balanceKey } from '@/payments/queries';
+import { apiSend } from '@/lib/api';
+import { requestId } from '@/lib/request-id';
 
 /**
  * POST /subscriptions/quote (R-SUB-01): the price the save would store, from the catalog in the
@@ -31,40 +25,22 @@ export interface SubscribeInput {
   startsOn: string;
 }
 
-/** The student's newest package id right before a POST, to recognise ours after a lost reply. */
-type Attempt = { studentId: string; before: string | null };
-
 /**
- * «حفظ» → POST /subscriptions. The API takes no idempotency key here, so the hook keeps the rule-8
- * promise itself: a second tap while a save is in flight joins it (one POST); and after a try that
- * got no answer (offline), the next one first reads the balance and, if a newer package is there,
- * returns it instead of saving twice. Afterwards the chat («مشترك»), its list and the balance refetch.
+ * «اعمل الاشتراك» → POST /subscriptions with an idempotency key (rule 8): the same body re-sent (a
+ * retry after a 502, a dropped reply, or the screen opened again) carries the same clientRequestId
+ * and the API returns the package it already made; a changed child, price or day is a new key. A
+ * second tap while a save is in flight joins it (one POST). Afterwards the chat («مشترك»), its
+ * list, the leads (the family's lead turns «مشترك», R-LEAD-01) and the balance refetch.
  */
 export function useCreateSubscription() {
   const client = useQueryClient();
   const inflight = useRef<Promise<SubscriptionView> | null>(null);
-  const attempt = useRef<Attempt | null>(null);
-  const lost = useRef(false);
-  // Always a fresh read: a cached balance may predate a package added since (e.g. on the web).
-  const newest = async (studentId: string) => {
-    const balance = await client.fetchQuery({
-      queryKey: balanceKey(studentId),
-      queryFn: () => apiFetch<StudentBalanceView>(`/students/${studentId}/balance`),
-      staleTime: 0,
-    });
-    return balance.current;
-  };
+  const request = useRef<{ body: string; id: string } | null>(null);
 
-  async function save(input: SubscribeInput): Promise<SubscriptionView> {
-    const retry = lost.current && attempt.current?.studentId === input.studentId;
-    if (retry) {
-      const latest = await newest(input.studentId);
-      if (latest && latest.id !== attempt.current?.before) return latest;
-    } else {
-      const before = (await newest(input.studentId))?.id ?? null;
-      attempt.current = { studentId: input.studentId, before };
-    }
-    return apiSend<SubscriptionView>('POST', '/subscriptions', { ...input, notes: null });
+  function save(input: SubscribeInput): Promise<SubscriptionView> {
+    const body = JSON.stringify(input);
+    if (request.current?.body !== body) request.current = { body, id: requestId() };
+    return apiSend<SubscriptionView>('POST', '/subscriptions', { ...input, notes: null, clientRequestId: request.current.id });
   }
 
   return useMutation({
@@ -73,16 +49,8 @@ export function useCreateSubscription() {
       (inflight.current ??= save(input).finally(() => {
         inflight.current = null;
       })),
-    onSuccess: () => {
-      lost.current = false;
-      attempt.current = null;
-    },
-    onError: (error) => {
-      lost.current = isOffline(error);
-    },
     onSettled: (_data, _error, input) => {
-      void client.invalidateQueries({ queryKey: ['threads'] });
-      void client.invalidateQueries({ queryKey: ['students', input.studentId] });
+      for (const key of [['threads'], ['leads'], ['students', input.studentId]]) void client.invalidateQueries({ queryKey: key });
     },
   });
 }

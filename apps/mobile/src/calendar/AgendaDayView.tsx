@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { shape, type, useTheme } from '@/theme';
+import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import type { AgendaDay } from './agenda';
 import { AgendaLessonRow } from './AgendaLessonRow';
@@ -9,7 +9,7 @@ import { dayLabel } from './week';
 
 export interface AgendaDayViewProps {
   day: AgendaDay;
-  /** Today on the Riyadh calendar: the lapis edge and «النهارده». */
+  /** Today on the Riyadh calendar: a gold-soft start rule and a plain «النهارده» (gold marks, green acts, §1.1). */
   today: boolean;
   /** The day's faint availability line (agenda.availabilityLine), or null. */
   available: string | null;
@@ -32,34 +32,23 @@ export function AgendaDayView({ day, today, available, onReschedule }: AgendaDay
         paddingBottom: 4,
         paddingStart: today ? 10 : 0,
         borderStartWidth: today ? 3 : 0,
-        borderStartColor: color.lapis,
+        borderStartColor: color.goldSoft,
       }}
     >
-      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'baseline', gap: 8 }}>
         <AppText
           accessibilityRole="header"
           style={{
-            fontFamily: type.ui[empty ? 500 : 700],
+            fontFamily: type.ui[empty && !today ? 500 : 700],
             fontSize: type.size.sm,
             lineHeight: type.lineHeight(type.size.sm),
-            color: today ? color.lapis : empty ? color.ink3 : color.ink,
+            color: empty && !today ? color.ink3 : color.ink,
           }}
         >
           {dayLabel(day.date)}
         </AppText>
         {today ? (
-          <AppText
-            style={{
-              paddingHorizontal: 8,
-              borderRadius: shape.radius.pill,
-              overflow: 'hidden',
-              fontFamily: type.ui[600],
-              fontSize: type.size['2xs'],
-              lineHeight: 20,
-              color: color.lapis,
-              backgroundColor: color.lapisWash,
-            }}
-          >
+          <AppText style={{ fontFamily: type.ui[500], fontSize: type.size['2xs'], lineHeight: 20, color: color.ink2 }}>
             {t.schedule.today}
           </AppText>
         ) : null}

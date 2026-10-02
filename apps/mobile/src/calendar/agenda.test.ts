@@ -57,6 +57,12 @@ test('the teacher clock shows only when it reads differently from Riyadh', () =>
   expect(teacherClock(riyadh)).toBeNull();
 });
 
+test('past midnight the teacher clock names the teacher’s own day (verifier: Sat 00:30 Riyadh = Fri 23:30 Cairo)', () => {
+  const late = at('late', '2026-10-30T21:30:00.000Z');
+  const friday = `${t.enums.weekday['5']} 23:30`;
+  expect(teacherClock(late)).toBe(t.booking.teacherClock.replace('{time}', friday).replace('{city}', 'القاهرة'));
+});
+
 test('«الجدول» groups the day by teacher, teachers by name, lessons in time order', () => {
   const sara = { id: 't2', display_name_ar: 'سارة', tz: 'Asia/Riyadh' };
   const groups = byTeacher([

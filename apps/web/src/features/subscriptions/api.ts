@@ -51,6 +51,8 @@ export type CreateSubscriptionBody = {
   pricing: SubscriptionPricing;
   startsOn: string;
   notes?: string | null;
+  /** Rule 8: the same body re-sent (a retry) carries the same id, so the API replays the first package. */
+  clientRequestId?: string;
 };
 
 export const quoteSubscription = (body: Pick<CreateSubscriptionBody, 'studentId' | 'pricing'>) =>

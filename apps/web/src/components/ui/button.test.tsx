@@ -17,8 +17,10 @@ describe('Button (docs/07 §6)', () => {
     expect(buttonVariants({ size })).toContain(cls);
   });
 
-  it('secondary carries the 3:1 input border', () => {
-    expect(buttonVariants({ variant: 'secondary' })).toContain('border-input');
+  it('secondary carries the 3:1 input border, also as a <Link> class (no transparent border to win)', () => {
+    const cls = buttonVariants({ variant: 'secondary' }).split(' ');
+    expect(cls).toContain('border-input');
+    expect(cls).not.toContain('border-transparent');
   });
 
   it.each(['sm', 'md'] as const)('size %s is 44px tall on phones (touch floor)', (size) => {

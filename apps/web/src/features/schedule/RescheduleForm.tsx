@@ -10,7 +10,7 @@ import { t } from '@/lib/i18n';
 import { conflictsOf, lessonErrorText, LESSONS_KEY, rescheduleLesson } from './api';
 import { ConflictNotice } from './ConflictNotice';
 import { durationMin } from './lessons';
-import { familyTz, rescheduleBody } from './reschedule';
+import { familyTz, rescheduleBody, seriesDays } from './reschedule';
 import { ScopeRadios, type Scope } from './ScopeRadios';
 import { SlotPicker } from './SlotPicker';
 
@@ -28,8 +28,10 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
   const queryClient = useQueryClient();
   const [scope, setScope] = useState<Scope>('one');
   const [startsAt, setStartsAt] = useState<string | null>(null);
-  const [byday, setByday] = useState<number[]>([]);
+  // null = untouched: the old rule's days, shifted to the new slot (seriesDays).
+  const [picked, setByday] = useState<number[] | null>(null);
   const tz = familyTz(lesson);
+  const byday = picked ?? (startsAt ? seriesDays(lesson, startsAt) : []);
   const move = useMutation({
     mutationFn: (override?: string) => {
       const body = startsAt ? rescheduleBody({ lesson, scope, startsAt, byday, override }) : null;
@@ -59,6 +61,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
           onPick={(slot) => {
             move.reset();
             setStartsAt(slot.starts_at);
+            setByday(null);
           }}
         />
       </div>

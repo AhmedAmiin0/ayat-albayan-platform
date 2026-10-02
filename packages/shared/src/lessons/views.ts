@@ -26,6 +26,8 @@ export interface LessonStudentView {
 export interface LessonView {
   id: string;
   rule_id: string | null;
+  /** The weekly rule's weekdays (0 = الأحد) in its zone; null for a one-off. Absent in an old cache. */
+  rule_byday?: number[] | null;
   teacher: { id: string; display_name_ar: string; tz: string };
   starts_at: string;
   ends_at: string;

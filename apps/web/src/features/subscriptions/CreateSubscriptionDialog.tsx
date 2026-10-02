@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useId, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
@@ -30,6 +30,9 @@ export function CreateSubscriptionDialog({ student: preset, onClose, onSaved }: 
   const [startsOn, setStartsOn] = useState(() => todayIn('Asia/Riyadh'));
   const [notes, setNotes] = useState('');
   const pricing = pricingBody(form);
+  // One idempotency key per body: a retry after a 5xx / lost reply re-sends it and gets the first
+  // package back; changing the child, price or day makes a new one (a different package).
+  const request = useRef<{ body: string; id: string } | null>(null);
 
   const save = useMutation({
     mutationFn: createSubscription,
@@ -41,7 +44,10 @@ export function CreateSubscriptionDialog({ student: preset, onClose, onSaved }: 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!student || !startsOn) return;
-    save.mutate({ studentId: student.id, pricing, startsOn, notes: notes.trim() || null });
+    const body = { studentId: student.id, pricing, startsOn, notes: notes.trim() || null };
+    const key = JSON.stringify(body);
+    if (request.current?.body !== key) request.current = { body: key, id: crypto.randomUUID() };
+    save.mutate({ ...body, clientRequestId: request.current.id });
   };
 
   return (

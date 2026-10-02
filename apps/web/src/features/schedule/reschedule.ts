@@ -1,4 +1,4 @@
-import { DURATIONS, type LessonView, type RescheduleRequest } from '@ab/shared';
+import { DURATIONS, shiftByday, type LessonView, type RescheduleRequest } from '@ab/shared';
 import { ruleFromSlot } from '@/features/booking/draft';
 import { durationMin } from './lessons';
 import { RIYADH_TZ } from './tz';
@@ -18,6 +18,18 @@ export interface RescheduleInput {
 /** The family's zone: the (first) student's, so their wall clock stays fixed. */
 export function familyTz(lesson: Pick<LessonView, 'students'>): string {
   return lesson.students[0]?.tz ?? RIYADH_TZ;
+}
+
+/**
+ * A moved series' days before the admin touches them: the old rule's weekdays shifted as far as
+ * this lesson moves (Sun+Wed, Wed → Thu = Mon+Thu), so a twice-a-week series stays twice a week.
+ * Just the new slot's day when the lesson's rule days are unknown.
+ */
+export function seriesDays(lesson: Pick<LessonView, 'starts_at' | 'rule_byday' | 'students'>, startsAt: string): number[] {
+  const tz = familyTz(lesson);
+  const to = ruleFromSlot(startsAt, tz).weekday;
+  const from = ruleFromSlot(lesson.starts_at, tz).weekday;
+  return [...new Set([to, ...shiftByday({ byday: lesson.rule_byday ?? [], from, to })])].sort((a, b) => a - b);
 }
 
 /**

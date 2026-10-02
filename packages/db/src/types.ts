@@ -1490,6 +1490,7 @@ export type Database = {
       };
       subscriptions: {
         Row: {
+          client_request_id: string | null;
           created_at: string;
           created_by: string | null;
           currency: string;
@@ -1509,6 +1510,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           currency?: string;
@@ -1528,6 +1530,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           currency?: string;

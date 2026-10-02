@@ -29,7 +29,7 @@ describe('guardians mapper (R-STU-02)', () => {
 
 describe('guardian search filter (R-STU-02): searchDigits, else the name', () => {
   it.each([
-    ['0501234567', 'phone_e164.ilike.*966501234567*'],
+    ['0501234567', 'phone_e164.ilike.*501234567*'], // a local number: under any country code
     ['+966 50 123 4567', 'phone_e164.ilike.*966501234567*'],
     ['٥٦٦١٠', 'phone_e164.ilike.*56610*'],
     ['٠٥٦ 610', 'phone_e164.ilike.*56610*'],

@@ -23,3 +23,12 @@ test('busy disables the press', async () => {
   await fireEvent.press(screen.getByRole('button', { name: 'إلغاء' }));
   expect(onPress).not.toHaveBeenCalled();
 });
+
+test('disabled (nothing picked yet) is off but not announced busy', async () => {
+  const onPress = jest.fn();
+  await render(<Button label="غيّر الميعاد" disabled onPress={onPress} />);
+  const button = screen.getByRole('button', { name: 'غيّر الميعاد' });
+  await fireEvent.press(button);
+  expect(onPress).not.toHaveBeenCalled();
+  expect(button.props.accessibilityState).toEqual({ disabled: true, busy: false });
+});

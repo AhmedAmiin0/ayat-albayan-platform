@@ -8,7 +8,7 @@ import type {
   TemplateStatus,
 } from '../enums/index.js';
 import type { TemplateButton, TemplateParams } from './templates.js';
-import type { ThreadPeople } from './thread-people.js';
+import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
 // Phase 4 responses (docs/12 §4). snake_case rows like every API response; instants are ISO-8601
 // UTC strings.
@@ -41,6 +41,13 @@ export interface ThreadView {
   session_open: boolean;
   /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
   subscribed: boolean;
+  /**
+   * The guardian's family badge (subscriptionBadge), null without a guardian: the list tags
+   * «اشتراكه خلص» (renew) as well as «مشترك». Absent in a list cached before it existed.
+   */
+  badge?: SubscriptionBadge | null;
+  /** familyUnpaid: a running package still owes money, the «مش مدفوع» tag. Absent like `badge`. */
+  unpaid?: boolean;
 }
 
 /** One messages row in a thread (R-MSG-05). */
@@ -93,7 +100,10 @@ export interface ThreadDetail {
   has_more: boolean;
   /** First page only: the guardian's / teacher's next open lessons, for the template composer. */
   lessons: ThreadLesson[];
-  /** Every page: the guardian, the lead and the guardian's students with their packages. */
+  /**
+   * First page: the guardian, the lead and the guardian's students with their packages. An older
+   * page (`before`) carries an empty one: clients read pages[0].
+   */
   people: ThreadPeople;
 }
 

@@ -33,13 +33,14 @@ describe('RescheduleRuleService — move the whole rule (R-SCH-07, docs/10 route
   });
   afterEach(() => vi.useRealTimers());
 
-  it('ends the old rule the day before, moves its open lessons from that local day, creates the new rule + lessons', async () => {
+  it('ends the old rule the day before the tapped lesson, moves its open lessons from that day, creates the new rule + lessons', async () => {
     const { service, writer, queries, record } = setup();
     queries.openOfRule.mockResolvedValue(MOVED);
     const firstId = await service.reschedule({ lessonId: LESSON_ID, body: body(), actor: ADMIN });
-    expect(queries.openOfRule).toHaveBeenCalledWith(RULE_ID, new Date('2026-10-11T21:00:00Z'));
+    // The tapped lesson is Sun 4 Oct (17:00 Riyadh): cut from its day, not from the new start.
+    expect(queries.openOfRule).toHaveBeenCalledWith(RULE_ID, new Date('2026-10-03T21:00:00Z'));
     const change = appliedChange(writer);
-    expect(change?.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-11' });
+    expect(change?.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-03' });
     expect(change?.changes).toEqual([{ id: 'old-1', from_status: 'scheduled', to_status: 'rescheduled', chargeable: false }]);
     expect(change?.new_rule).toMatchObject({ teacher_id: TEACHER_ID, byday: [1, 3], starts_on: '2026-10-12', package: '8', student_ids: [STUDENT_ID] });
     expect(change?.lessons.map((l: { starts_at: string }) => l.starts_at)).toEqual(['2026-10-12T15:30:00.000Z', '2026-10-14T15:30:00.000Z']);
@@ -102,6 +103,24 @@ describe('RescheduleRuleService — move the whole rule (R-SCH-07, docs/10 route
     expect(record).toHaveBeenCalledWith(
       expect.objectContaining({ after: expect.objectContaining({ override_reason: 'مضطرين', conflicts: [clash] }) }),
     );
+  });
+
+  it('a later lesson tapped: the earlier ones stay (verifier probe: 5 lessons before it were swept)', async () => {
+    const { service, writer, queries } = setup(lessonRow({ starts_at: '2026-10-21T20:30:00+00:00' }), 6);
+    queries.openOfRule.mockResolvedValue([]);
+    await service.reschedule({ lessonId: LESSON_ID, body: body({ newRule: { ...NEW_RULE, startsOn: '2026-10-22' } }), actor: ADMIN });
+    // 23:30 Riyadh on Wed 21 Oct: its own local day, not the UTC one.
+    expect(queries.openOfRule).toHaveBeenCalledWith(RULE_ID, new Date('2026-10-20T21:00:00Z'));
+    expect(appliedChange(writer)?.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-20' });
+  });
+
+  it('a new start before the tapped lesson’s day → 400 starts_before_lesson, nothing written', async () => {
+    const { service, writer } = setup(lessonRow({ starts_at: '2026-10-21T14:00:00+00:00' }));
+    await expect(service.reschedule({ lessonId: LESSON_ID, body: body(), actor: ADMIN })).rejects.toMatchObject({
+      status: 400,
+      response: { code: 'starts_before_lesson' },
+    });
+    expect(appliedChange(writer)).toBeUndefined();
   });
 
   it('a start before today → 400 date_in_past (would close unmarked lessons, issue B2)', async () => {

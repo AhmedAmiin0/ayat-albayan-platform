@@ -16,11 +16,11 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { PricingInputs } from './PricingInputs';
 import { formFrom, pricingOf, startDays, subscribeErrorText } from './subscribe-form';
-import { PriceSection, StartDayPills, StudentPills } from './SubscribeParts';
+import { PriceSection, SavedPanel, StartDayPills, StudentPills } from './SubscribeParts';
 import { useCreateSubscription, useSubscriptionQuote } from './use-subscribe';
 
-/** studentId; after a booking also its package size, lesson minutes and first lesson's day. */
-type Params = { studentId?: string; pkg?: string; minutes?: string; startsOn?: string };
+/** studentId; after a booking also its package size, lesson minutes and first lesson's day; renew from «جدّد الاشتراك». */
+type Params = { studentId?: string; pkg?: string; minutes?: string; startsOn?: string; renew?: string };
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/inbox'));
 
@@ -43,9 +43,10 @@ const childLine = (s: StudentRef | undefined) =>
   s ? [s.name, s.code ? ltr(s.code) : null].filter(Boolean).join(' · ') : undefined;
 
 /**
- * /inbox/subscribe?studentId=… (R-SUB-01): «اشتراك جديد» / «جدّد» from a chat, or right after
- * booking a lead's package. The child (or a sibling), the calculator's inputs, the API's price,
- * the first day from chips (rule 6), then POST /subscriptions and back to the chat, now «مشترك».
+ * /inbox/subscribe?studentId=… (R-SUB-01): «اشتراك جديد» / «جدّد الاشتراك» (its title) from a
+ * chat, or right after booking a lead's package. The child (or a sibling), the calculator's inputs,
+ * the API's price, the first day from chips (rule 6), then «اعمل الاشتراك» (POST /subscriptions),
+ * «الاشتراك اتسجل» and back to the chat, now «مشترك».
  */
 export function SubscribeScreen() {
   const params = useLocalSearchParams<Params>();
@@ -71,7 +72,7 @@ export function SubscribeScreen() {
         keyboardShouldPersistTaps="handled"
       >
         <ScreenHeader
-          title={t.subscriptions.new}
+          title={params.renew ? t.inbox.subscription.renew : t.subscriptions.new}
           subtitle={childLine(family.find((f) => f.id === studentId))}
           trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
         />
@@ -86,11 +87,16 @@ export function SubscribeScreen() {
           onChange={setPicked}
         />
         {save.isError ? <ErrorLine message={subscribeErrorText(save.error, 'save')} /> : null}
-        <Button
-          label={save.isPending ? t.common.saving : t.common.save}
-          busy={save.isPending || !priced}
-          onPress={() => save.mutate({ studentId, pricing, startsOn }, { onSuccess: back })}
-        />
+        {save.isSuccess ? (
+          <SavedPanel onBack={back} />
+        ) : (
+          <Button
+            label={save.isPending ? t.common.saving : t.inbox.subscription.make}
+            busy={save.isPending}
+            disabled={!priced}
+            onPress={() => save.mutate({ studentId, pricing, startsOn })}
+          />
+        )}
       </ScrollView>
     </Screen>
   );

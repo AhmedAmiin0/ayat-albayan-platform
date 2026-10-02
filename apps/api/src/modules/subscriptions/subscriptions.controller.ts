@@ -13,7 +13,8 @@ import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
 import { PackagesService } from './packages.service';
 import { StudentAccess } from './student-access';
 import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
-import { SubscriptionCreator, SubscriptionsService } from './subscriptions.service';
+import { SubscriptionCreator } from './subscription-creator';
+import { SubscriptionsService } from './subscriptions.service';
 
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
 @ApiTags('subscriptions')

@@ -15,8 +15,8 @@ describe('students queries (R-STU-01, R-NFR-08)', () => {
   it('phone search finds the guardian’s students, in any format', async () => {
     const { db, argsOf } = fakeDb({ guardians: [{ data: [{ id: 'g1' }, { id: 'g2' }] }], students: [{ data: [ROW], count: 1 }] });
     const page = await listStudents(db, { search: '0501234567', page: 1, pageSize: 20 });
-    expect(argsOf('guardians', 'ilike')).toEqual(['phone_e164', '%966501234567%']);
-    expect(argsOf('students', 'or')).toEqual(['guardian_id.in.(g1,g2),code.ilike.*966501234567*']);
+    expect(argsOf('guardians', 'ilike')).toEqual(['phone_e164', '%501234567%']);
+    expect(argsOf('students', 'or')).toEqual(['guardian_id.in.(g1,g2),code.ilike.*501234567*']);
     expect(page.items[0]).toMatchObject({ guardian_phone: '+966501234567', teacher_name: 'أبرار' });
     expect(page.total).toBe(1);
   });

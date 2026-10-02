@@ -11,12 +11,15 @@ export interface ScreenHeaderProps {
   subtitle?: string;
   /** At the inline-end; defaults to the small gold mark. */
   trailing?: ReactNode;
+  /** h1 for a screen; a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
+  size?: 'h1' | 'h2';
 }
 
 export function ScreenHeader({
   title,
   subtitle,
   trailing = <Mark size={28} />,
+  size = 'h1',
 }: ScreenHeaderProps) {
   const { color } = useTheme();
   return (
@@ -34,8 +37,8 @@ export function ScreenHeader({
           style={{
             flexShrink: 1,
             fontFamily: type.display,
-            fontSize: type.size.h1,
-            lineHeight: type.lineHeight(type.size.h1, true),
+            fontSize: type.size[size],
+            lineHeight: type.lineHeight(type.size[size], true),
             color: color.ink,
           }}
         >

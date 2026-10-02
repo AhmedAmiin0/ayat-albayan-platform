@@ -4,7 +4,7 @@ import type { Attendance, LessonStatus } from '@ab/shared';
 const LESSON_COLUMNS =
   'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, rescheduled_from_id, conflicts' as const;
 const LESSON_EMBEDS =
-  'teacher:teachers(id, display_name_ar, tz), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at)' as const;
+  'teacher:teachers(id, display_name_ar, tz), rule:schedule_rules!lessons_rule_id_fkey(byday), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at)' as const;
 
 /** One select for every lesson view: the row, its teacher and its students. */
 export const LESSON_SELECT = `${LESSON_COLUMNS}, ${LESSON_EMBEDS}` as const;
@@ -25,6 +25,8 @@ export type LessonRow = {
   /** Clashes stored when the daily job / extend generated it (Conflict[] as jsonb), or null. */
   conflicts: Json | null;
   teacher: { id: string; display_name_ar: string; tz: string } | null;
+  /** The weekly rule's days (a series reschedule keeps them, R-SCH-07); optional in test fakes. */
+  rule?: { byday: number[] } | null;
   lesson_students: {
     student_id: string;
     attendance: Attendance | null;

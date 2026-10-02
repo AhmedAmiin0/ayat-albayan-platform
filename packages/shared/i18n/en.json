@@ -455,7 +455,9 @@
       "backToLead": "Back to the conversation",
       "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice.",
       "toSubscription": "Continue to the subscription"
-    }
+    },
+    "dayLocked": "The picked time's day stays on",
+    "packageDays": "{package} = {perWeek}"
   },
   "lessons": {
     "title": "Lessons",
@@ -485,7 +487,8 @@
       "date_in_past": "That date has passed. Pick today or later.",
       "proposal_pending": "A proposal for this lesson is still waiting for the admin team's reply",
       "proposal_decided": "This proposal has already been answered",
-      "student_not_in_lesson": "This student isn't in this lesson"
+      "student_not_in_lesson": "This student isn't in this lesson",
+      "starts_before_lesson": "Pick a new time on this lesson's day or later"
     },
     "cancelTitle": "Cancel lesson",
     "cancelBy": "Who cancelled?",
@@ -615,7 +618,7 @@
     "seriesMoved": "The upcoming lessons moved to the new time",
     "offline": "The connection dropped before we got an answer, so we are not sure the time changed. Open the schedule again once you are back online",
     "badDuration": "This lesson length is not a standard one, so change its time from the web",
-    "noSlots": "No free times for this teacher in the next two weeks. On the web you can look further ahead or book over a conflict",
+    "noSlots": "No free times for this teacher this week. Try the next week.",
     "done": "Done"
   },
   "alerts": {
@@ -1252,7 +1255,7 @@
       "title": "Subscription",
       "badge": {
         "subscribed": "Subscribed",
-        "expired": "Subscription ended",
+        "expired": "Package finished",
         "none": "Not subscribed"
       },
       "subscribe": "Subscribe",
@@ -1260,7 +1263,8 @@
       "due": "Owes {amount}",
       "make": "Create the subscription",
       "backToChat": "Back to the chat"
-    }
+    },
+    "convertedLead": "Became a student"
   },
   "templates": {
     "title": "WhatsApp templates",
@@ -1339,7 +1343,8 @@
       "autoOn": "Automatic messages are on",
       "autoOff": "Automatic messages are off",
       "autoEnable": "Turn on automatic messages",
-      "autoDisable": "Turn off automatic messages"
+      "autoDisable": "Turn off automatic messages",
+      "autoCheckScript": "Make sure the Apps Script reminders have stopped"
     },
     "error": {
       "not_submittable": "This template was already sent or is already approved",

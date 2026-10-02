@@ -1,3 +1,4 @@
+import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -11,7 +12,6 @@ import { LeadPanel } from './LeadPanel';
 import { MessageLog } from './MessageLog';
 import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
-import { threadBadge } from './subscription';
 import { sendErrorText } from './TextComposer';
 import { ThreadHeader } from './ThreadHeader';
 

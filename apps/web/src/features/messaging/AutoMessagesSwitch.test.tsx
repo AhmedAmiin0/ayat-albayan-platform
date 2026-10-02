@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
@@ -11,9 +11,9 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 
 const s = t.templates.settings;
 
-function renderPage(auto: boolean) {
+function renderPage(auto: boolean, cutover = false) {
   routeFetch(apiFetch, [
-    ['/settings', { ...SETTINGS, auto_messages_enabled: auto }],
+    ['/settings', { ...SETTINGS, auto_messages_enabled: auto, crm_cutover_done: cutover }],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],
   ]);
@@ -54,5 +54,17 @@ describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut
     fireEvent.click(await screen.findByRole('button', { name: s.autoEnable }));
     expect(await screen.findByText(t.common.error)).toBeTruthy();
     expect(screen.getByText(s.autoOff)).toBeTruthy();
+  });
+
+  it('ON before the cut-over is ticked: the admin’s turn (act, hollow) with the Apps Script check; settled once ticked', async () => {
+    renderPage(true);
+    const chip = () => screen.getByText(s.autoOn).closest('[data-tone]')?.getAttribute('data-tone');
+    expect(await screen.findByText(s.autoCheckScript)).toBeTruthy();
+    expect(chip()).toBe('act');
+    cleanup();
+    renderPage(true, true);
+    expect(await screen.findByText(s.autoOn)).toBeTruthy();
+    expect(chip()).toBe('ok');
+    expect(screen.queryByText(s.autoCheckScript)).toBeNull();
   });
 });

@@ -13,3 +13,11 @@ export const TIER_PACKAGE_SIZE: Record<PackageId, PackageSize> = {
   weekly: '4',
   monthly: '20',
 };
+
+/**
+ * Lessons a week a monthly package implies (a month = 4 weeks): «8 حلقات في الشهر» = twice a
+ * week. The booking review warns when the picked weekdays don't match. null for a trial.
+ */
+export function packagePerWeek(size: PackageSize): number | null {
+  return size === 'trial' ? null : Number(size) / 4;
+}

@@ -1,10 +1,12 @@
 import {
+  familyUnpaid,
   studentRemaining,
   subscriptionBadge,
   type BadgeStudent,
   type BalanceView,
   type StudentBalanceView,
   type StudentStatus,
+  type SubscriptionBadge,
   type SubscriptionStatus,
   type ThreadStudentView,
   type ThreadSubscriptionView,
@@ -58,11 +60,20 @@ export interface BadgeStudentRow {
   subscriptions: { id: string; status: SubscriptionStatus }[];
 }
 
+/** A list row's family tags: the badge («مشترك» / «اشتراكه خلص») and «مش مدفوع». */
+export type FamilyTag = { badge: SubscriptionBadge; unpaid: boolean };
+
+/** The chat's people → the same tags the list computes (subscriptionBadge, familyUnpaid). */
+export const familyTag = (kids: readonly BadgeStudent[]): FamilyTag => ({
+  badge: subscriptionBadge(kids),
+  unpaid: familyUnpaid(kids),
+});
+
 /**
- * H1 «مشترك»: the guardians whose children make subscriptionBadge 'subscribed' — the same rule as
- * the chat's people, from each child's newest package (is_last) and units left (studentRemaining).
+ * H1 tags per guardian, the same rule as the chat's people: each child's newest package (is_last)
+ * and units left (studentRemaining).
  */
-export function subscribedGuardianIds(students: readonly BadgeStudentRow[], balances: readonly BalanceRow[]): Set<string> {
+export function familyTags(students: readonly BadgeStudentRow[], balances: readonly BalanceRow[]): Map<string, FamilyTag> {
   const families = new Map<string, BadgeStudent[]>();
   for (const s of students) {
     const own = balances.filter((b) => b.student_id === s.id);
@@ -71,5 +82,5 @@ export function subscribedGuardianIds(students: readonly BadgeStudentRow[], bala
     const kid = { subscription: newest ? { status: newest.status, lessons_remaining: studentRemaining(own) } : null };
     families.set(s.guardian_id, [...(families.get(s.guardian_id) ?? []), kid]);
   }
-  return new Set([...families].filter(([, kids]) => subscriptionBadge(kids) === 'subscribed').map(([id]) => id));
+  return new Map([...families].map(([id, kids]) => [id, familyTag(kids)]));
 }

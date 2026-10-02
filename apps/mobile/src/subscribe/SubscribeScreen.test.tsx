@@ -25,7 +25,7 @@ jest.mock('expo-router', () => ({
 const p = t.pricing;
 const radio = (name: string) => fireEvent.press(screen.getByRole('radio', { name }));
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
-const saveButton = () => screen.findByRole('button', { name: t.common.save, disabled: false });
+const saveButton = () => screen.findByRole('button', { name: t.inbox.subscription.make, disabled: false });
 
 beforeEach(() => {
   jest.useFakeTimers({ now: new Date('2026-10-02T09:00:00Z'), advanceTimers: true });
@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('pick the package → the API’s price → a day chip → «حفظ»: POST /subscriptions, back to the chat', async () => {
+test('pick the package → the API’s price → a day chip → «اعمل الاشتراك»: POST /subscriptions, «الاشتراك اتسجل», back to the chat', async () => {
   const client = createTestQueryClient();
   client.setQueryData(threadKey(PHONE), cachedThread(detail([])));
   await renderWithQuery(<SubscribeScreen />, client);
@@ -63,9 +63,11 @@ test('pick the package → the API’s price → a day chip → «حفظ»: POST
   await radio('السبت 3 أكتوبر');
 
   await fireEvent.press(await saveButton());
-  await waitFor(() => expect(mockBack).toHaveBeenCalledTimes(1));
+  expect(await screen.findByText(t.subscriptions.saved)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.subscription.backToChat }));
+  expect(mockBack).toHaveBeenCalledTimes(1);
   expect(sent('/subscriptions')).toEqual([
-    ['POST', '/subscriptions', { studentId: CHILD, pricing, startsOn: '2026-10-03', notes: null }],
+    ['POST', '/subscriptions', { studentId: CHILD, pricing, startsOn: '2026-10-03', notes: null, clientRequestId: expect.any(String) }],
   ]);
   // The chat refetches, so its badge now says «مشترك».
   expect(client.getQueryState(threadKey(PHONE))?.isInvalidated).toBe(true);
@@ -92,9 +94,15 @@ test('after booking a package: its size, length and first lesson day are already
   expect(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر', checked: true })).toBeTruthy();
 });
 
-test('no price yet (offline): «حفظ» stays off and the quote offers a retry', async () => {
+test('no price yet (offline): «اعمل الاشتراك» stays off and the quote offers a retry', async () => {
   mockApiSend.mockRejectedValue(new TypeError('Network request failed'));
   await renderWithQuery(<SubscribeScreen />);
   expect(await screen.findByText(t.common.error)).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.common.save, disabled: true })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.inbox.subscription.make, disabled: true })).toBeTruthy();
+});
+
+test('from «جدّد الاشتراك» the screen says so in its title', async () => {
+  mockParams.mockReturnValue({ studentId: CHILD, renew: '1' });
+  await renderWithQuery(<SubscribeScreen />);
+  expect(await screen.findByRole('header', { name: t.inbox.subscription.renew })).toBeTruthy();
 });

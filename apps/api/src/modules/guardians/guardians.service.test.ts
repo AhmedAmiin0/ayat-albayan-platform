@@ -10,7 +10,7 @@ describe('GuardiansService (R-STU-02, R-STU-04)', () => {
     const { db, argsOf } = fakeDb({ guardians: [{ data: [G], count: 41 }] });
     const page = await new GuardiansService(db).list({ search: '0501234567', page: 3, pageSize: 20 });
     expect(page).toEqual({ items: [G], total: 41, page: 3, pageSize: 20 });
-    expect(argsOf('guardians', 'or')).toEqual(['phone_e164.ilike.*966501234567*']);
+    expect(argsOf('guardians', 'or')).toEqual(['phone_e164.ilike.*501234567*']);
     expect(argsOf('guardians', 'range')).toEqual([40, 59]);
   });
 

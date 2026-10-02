@@ -12,7 +12,9 @@ import { PackagesService } from './packages.service';
 import { StudentAccess } from './student-access';
 import { StudentBalanceController, SubscriptionsController } from './subscriptions.controller';
 import { SubscriptionsQueries } from './subscriptions.queries';
-import { SubscriptionCreator, SubscriptionsService } from './subscriptions.service';
+import { LeadConversion } from './lead-conversion';
+import { SubscriptionCreator } from './subscription-creator';
+import { SubscriptionsService } from './subscriptions.service';
 import { UnpaidFlags } from './unpaid-flags.service';
 
 /**
@@ -30,6 +32,7 @@ import { UnpaidFlags } from './unpaid-flags.service';
     AlertsJob,
     AlertsQueries,
     BalanceQueries,
+    LeadConversion,
     MoneyWrites,
     PackagesService,
     StudentAccess,

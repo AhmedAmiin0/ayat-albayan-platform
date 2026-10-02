@@ -38,6 +38,7 @@ export function subRow(patch: Partial<SubRow> = {}): SubRow {
     created_at: '2026-09-25T09:00:00Z',
     updated_at: '2026-09-25T09:00:00Z',
     created_by: null,
+    client_request_id: null,
     ...patch,
   };
 }

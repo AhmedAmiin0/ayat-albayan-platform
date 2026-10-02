@@ -1,6 +1,7 @@
 import type { ThreadPeople, ThreadView } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
+import { money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { child, CHILD_ID, family, leadOnly, sub, usedUp } from './subscription/people-fixtures';
 import { detail, PHONE, thread } from './thread-fixtures';
@@ -41,7 +42,7 @@ beforeEach(() => {
 });
 
 test.each([
-  { badge: 'subscribed', kids: [child()], word: s.badge.subscribed, chip: 'chip-ok', button: s.renew },
+  { badge: 'subscribed', kids: [child()], word: s.badge.subscribed, chip: 'chip-ok', button: t.subscriptions.new },
   {
     badge: 'expired',
     kids: [child({ subscription: usedUp })],
@@ -63,24 +64,37 @@ test.each([
   expect(screen.getByRole('button', { name: c.button })).toBeTruthy();
 });
 
-test('each child’s package line, with what is still due', async () => {
+test('each child like the web: name, «مش مدفوع» while money is owed, the package, then «عليه X» on its own line', async () => {
   const paid = child({
     id: 'c2',
     name: 'سارة',
     subscription: sub({ due_amount: 0, lessons_used: 2 }),
   });
   await open(family([child(), paid]));
-  expect(await screen.findByText(/^يوسف · .* · فاضل حلقتين · عليه/)).toBeTruthy();
-  expect(screen.getByText(`سارة · ${t.enums.packageSize['8']} · فاضل 6 حلقات`)).toBeTruthy();
+  expect(await screen.findByText('يوسف')).toBeTruthy();
+  expect(screen.getAllByText(t.enums.subscriptionStatus.unpaid)).toHaveLength(1);
+  expect(screen.getByText(`${t.enums.packageSize['8']} · فاضل حلقتين`)).toBeTruthy();
+  expect(screen.getByText(s.due.replace('{amount}', money(120, 'SAR')))).toBeTruthy();
+  expect(screen.getByText(`${t.enums.packageSize['8']} · فاضل 6 حلقات`)).toBeTruthy();
 });
 
-test('guardian: «جدّد» opens the subscribe screen for the child whose package ended', async () => {
+test('guardian: «جدّد الاشتراك — يوسف» names the child whose package ended and opens the renewal', async () => {
   await open(family([child({ id: 'c2', name: 'سارة' }), child({ subscription: usedUp })]));
-  await fireEvent.press(await screen.findByRole('button', { name: s.renew }));
+  await fireEvent.press(await screen.findByRole('button', { name: `${s.renew} — يوسف` }));
   expect(mockPush).toHaveBeenCalledWith({
     pathname: '/inbox/subscribe',
-    params: { studentId: CHILD_ID, phone: PHONE },
+    params: { studentId: CHILD_ID, phone: PHONE, renew: '1' },
   });
+});
+
+test('a lost lead: «مش مشترك» but no «اشترك» (as the web); a converted one: no badge, «اشترك» stays', async () => {
+  await open({ ...leadOnly, lead: { id: 'a1', status: 'lost' } }, thread);
+  expect(await screen.findByText(s.badge.none)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: s.subscribe })).toBeNull();
+  await open({ ...leadOnly, lead: { id: 'a1', status: 'converted' } }, { ...thread, lead_status: 'converted' });
+  expect(await screen.findByRole('button', { name: s.subscribe })).toBeTruthy();
+  expect(screen.queryByText(s.badge.none)).toBeNull();
+  expect(screen.queryByText(s.badge.subscribed)).toBeNull();
 });
 
 test('a lead with no guardian yet: «مش مشترك», and «اشترك» opens the booking wizard', async () => {

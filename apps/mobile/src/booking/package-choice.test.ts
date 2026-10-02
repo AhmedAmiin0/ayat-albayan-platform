@@ -1,7 +1,8 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { toBookingRequest } from './draft';
 import { booked, draft, maryam, SUN_17 } from './fixtures';
-import { effectiveByday, lessonMinutes, subscriptionHref } from './package-choice';
+import { t } from '@/lib/i18n';
+import { effectiveByday, lessonMinutes, packageDaysNote, subscriptionHref } from './package-choice';
 
 const REQ = '99999999-9999-4999-8999-999999999999';
 const paid = draft({ pkg: '12', durationMin: 60, byday: [4, 2], tz: 'Asia/Riyadh' });
@@ -53,4 +54,12 @@ test('after a paid package: on to its subscription, prefilled; a trial goes nowh
   });
   expect(subscriptionHref(draft(), booked(SUN_17))).toBeNull();
   expect(subscriptionHref(paid, { ...booked(SUN_17), student_ids: [] })).toBeNull();
+});
+
+describe('packageDaysNote: the package and the weekly days agree (as the web)', () => {
+  it('8 a month on one day → «= مرتين في الأسبوع»; matching days or a trial → nothing', () => {
+    expect(packageDaysNote('8', 1)).toBe(`الباقة ${t.enums.packageSize['8']} = ${t.booking.perWeek.two}`);
+    expect(packageDaysNote('8', 2)).toBeNull();
+    expect(packageDaysNote('trial', 1)).toBeNull();
+  });
 });

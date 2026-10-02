@@ -100,6 +100,26 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await admin.goto('/admin/inbox');
     await expect(admin.getByRole('link', { name: openThread(guardian) }).getByText(badge.subscribed)).toBeVisible();
   });
+
+  test('after a trial: «اشتراك جديد» from the guardian’s chat converts the family’s lead (verifier)', async ({ asRole }) => {
+    test.setTimeout(90_000);
+    const guardian = `أم هند ${String(Date.now()).slice(-4)}`;
+    const family = await seedFamily(guardian, ['هند']);
+    const phone = await guardianPhone(family.guardianId);
+    expect((await stubInbound({ from: phone.slice(1), name: guardian, text: 'الحلقة التجريبية كانت حلوة' })).status).toBe(200);
+    // The trial was booked from this lead: the most common funnel.
+    await withSql((sql) => sql`insert into public.leads (phone_e164, status) values (${phone}, 'trial_booked')
+      on conflict (phone_e164) do update set status = 'trial_booked'`);
+
+    const admin = await asRole('admin');
+    await admin.goto('/admin/inbox');
+    await admin.getByRole('link', { name: openThread(guardian) }).click({ timeout: 30_000 });
+    await pane(admin, guardian).getByRole('button', { name: `${ar.subscriptions.new} — هند` }).click();
+    await saveSubscription(admin, 'هند');
+    await expect(pane(admin, guardian).locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
+    const lead = await withSql((sql) => sql<{ status: string }[]>`select status from public.leads where phone_e164 = ${phone}`);
+    expect(lead[0]?.status).toBe('converted');
+  });
 });
 
 /** The seeded guardian's E.164 number (seedFamily makes a fresh one per call). */

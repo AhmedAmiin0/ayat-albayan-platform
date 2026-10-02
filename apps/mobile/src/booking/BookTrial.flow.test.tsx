@@ -77,7 +77,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
   expect(client.getQueryData(['leads', 'a1'])).toMatchObject({ status: 'trial_booked' });
   await waitFor(() => expect(client.getQueryState(LEADS_KEY)?.isInvalidated).toBe(true));
 
-  await fireEvent.press(screen.getByRole('button', { name: t.booking.mobile.backToLead }));
+  await fireEvent.press(screen.getByRole('button', { name: t.inbox.subscription.backToChat }));
   expect(mockBack).toHaveBeenCalledTimes(1);
 });
 

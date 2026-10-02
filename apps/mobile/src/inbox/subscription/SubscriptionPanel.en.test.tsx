@@ -24,9 +24,9 @@ test('an LTR run words the chat’s subscription from en.json', async () => {
   await panel(family([child({ subscription: usedUp })]));
   expect(screen.getByText(en.inbox.subscription.badge.expired)).toBeTruthy();
   expect(screen.getByRole('button', { name: en.inbox.subscription.renew })).toBeTruthy();
-  expect(
-    screen.getByText(`يوسف · ${en.enums.packageSize['8']} · ${en.subscriptions.progress.zero}`),
-  ).toBeTruthy();
+  expect(screen.getByText('يوسف')).toBeTruthy();
+  // Ended: the package by its name, no «0 left» under «Package finished».
+  expect(screen.getByText(en.enums.packageSize['8'])).toBeTruthy();
 });
 
 test('an LTR run: a family that never subscribed, and a lead', async () => {

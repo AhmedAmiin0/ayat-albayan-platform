@@ -20,14 +20,17 @@ export class RulePlanner {
   ) {}
 
   /**
-   * 400 no_rule, 409 rule_not_active, 404 unknown teacher, 400 no_occurrences, and 400
-   * date_in_past for a start before today (it would close lessons nobody marked, issue B2).
+   * 400 no_rule, 409 rule_not_active, 404 unknown teacher, 400 no_occurrences, 400 date_in_past
+   * for a start before today (it would close lessons nobody marked, issue B2), and 400
+   * starts_before_lesson for a start before the tapped lesson's day: the old lessons in between
+   * would stay beside the new ones (the old rule is excluded from the clash check).
    */
   async plan(lesson: LessonRow, next: WeeklyRule): Promise<PlannedMove> {
     const old = lesson.rule_id ? await this.rules.rule(lesson.rule_id) : null;
     if (!old) throw badRequest('no_rule');
     if (old.status !== 'active') throw conflict('rule_not_active');
     if (next.startsOn < localDateOf(new Date(), next.tz)) throw badRequest('date_in_past');
+    if (next.startsOn < localDateOf(new Date(lesson.starts_at), next.tz)) throw badRequest('starts_before_lesson');
     const teacherLink = await this.teacherLink(old, next.teacherId);
     const weeks = await this.settings.bookingHorizonWeeks();
     const plan = planNewRule({ old, next, now: new Date(), weeks });

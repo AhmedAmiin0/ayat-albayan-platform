@@ -3,7 +3,7 @@ import type { BalanceRow } from '../subscriptions/balance.queries';
 import { STUDENT_ID, subRow } from '../subscriptions/money.fakes';
 import { toStudentBalance, toSubscriptionView } from '../subscriptions/subscriptions.mapper';
 import type { SubRow } from '../subscriptions/subscriptions.queries';
-import { subscribedGuardianIds, toThreadStudent, type PeopleStudentRow } from './thread-people.mapper';
+import { familyTags, toThreadStudent, type PeopleStudentRow } from './thread-people.mapper';
 
 const STUDENT: PeopleStudentRow = {
   id: STUDENT_ID,
@@ -54,7 +54,7 @@ describe('toThreadStudent (R-SUB-01): the chat’s student card', () => {
   });
 });
 
-describe('subscribedGuardianIds (H1 «مشترك»)', () => {
+describe('familyTags (H1 «مشترك» / «اشتراكه خلص» / «مش مدفوع»)', () => {
   const kid = (id: string, guardian_id: string, subscriptions: SubRow['status'][]) => ({
     id,
     guardian_id,
@@ -79,6 +79,12 @@ describe('subscribedGuardianIds (H1 «مشترك»)', () => {
       unit({ id: 's5-1', student: 's5', used: 4, total: 4, last: true }),
       unit({ id: 's6-0', student: 's6', used: 0, total: 1, last: true }),
     ];
-    expect([...subscribedGuardianIds(students, balances)]).toEqual(['g1', 'g3']);
+    expect(Object.fromEntries(familyTags(students, balances))).toEqual({
+      g1: { badge: 'subscribed', unpaid: true },
+      g2: { badge: 'expired', unpaid: false },
+      g3: { badge: 'subscribed', unpaid: false },
+      g4: { badge: 'expired', unpaid: false },
+      g5: { badge: 'none', unpaid: false },
+    });
   });
 });

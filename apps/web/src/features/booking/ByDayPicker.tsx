@@ -1,6 +1,7 @@
-import { counted } from '@ab/shared';
+import { counted, type PackageSize } from '@ab/shared';
 import { WEEK_ORDER } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n';
+import { PACKAGE_NOTE_CLASS, packageDaysNote } from './package-days';
 
 export interface ByDayPickerProps {
   /** The first slot's weekday in the family zone: always on, can't be unticked. */
@@ -8,12 +9,15 @@ export interface ByDayPickerProps {
   /** Every repeat day, `fixed` included. */
   value: readonly number[];
   onChange: (days: number[]) => void;
+  /** The package being booked: a note when the days don't add up to it (packageDaysNote). */
+  pkg?: PackageSize;
 }
 
 const weekday: Record<string, string> = t.enums.weekday;
 
 /** Weekly repeat «أيام الحلقة» (R-SCH-02 byday), السبت → الجمعة, at the first slot's time. */
-export function ByDayPicker({ fixed, value, onChange }: ByDayPickerProps) {
+export function ByDayPicker({ fixed, value, onChange, pkg }: ByDayPickerProps) {
+  const note = pkg ? packageDaysNote(pkg, value.length) : null;
   const toggle = (day: number) =>
     onChange(value.includes(day) ? value.filter((d) => d !== day) : [...value, day].sort((a, b) => a - b));
   return (
@@ -36,6 +40,7 @@ export function ByDayPicker({ fixed, value, onChange }: ByDayPickerProps) {
           </label>
         ))}
       </div>
+      {note && <p className={PACKAGE_NOTE_CLASS}>{note}</p>}
     </fieldset>
   );
 }

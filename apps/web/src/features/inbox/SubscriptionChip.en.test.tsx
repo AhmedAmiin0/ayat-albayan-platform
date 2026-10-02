@@ -21,7 +21,7 @@ describe('subscription in the chat, English', () => {
     );
     const toneOf = (text: string) => screen.getByText(text).closest('[data-tone]')?.getAttribute('data-tone');
     expect(toneOf('Subscribed')).toBe('ok');
-    expect(toneOf('Subscription ended')).toBe('act');
+    expect(toneOf('Package finished')).toBe('act');
     expect(toneOf('Not subscribed')).toBe('neutral');
   });
 

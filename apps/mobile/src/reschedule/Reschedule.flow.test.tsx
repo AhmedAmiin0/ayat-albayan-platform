@@ -33,12 +33,17 @@ async function openSheet(l = pending) {
   return { onClose, client };
 }
 
-test('the free slots of the same teacher, 14 days, the lesson’s length and students; busy ones hidden', async () => {
+const slotsUrl = (from: string, to: string) =>
+  `/booking/slots?teacherId=t1&from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&durationMin=45&studentIds=s1`;
+
+test('the free slots of the same teacher, the lesson’s week from now, its length and students; busy ones hidden', async () => {
   await openSheet();
-  expect(mockApiFetch).toHaveBeenCalledWith(
-    `/booking/slots?teacherId=t1&from=${encodeURIComponent('2026-10-01T13:20:00.000Z')}` +
-      `&to=${encodeURIComponent('2026-10-15T13:20:00.000Z')}&durationMin=45&studentIds=s1`,
-  );
+  expect(mockApiFetch).toHaveBeenCalledWith(slotsUrl('2026-10-01T13:20:00.000Z', '2026-10-02T21:00:00.000Z'));
+  // This week is the earliest: no going back; «الأسبوع الجاي» asks the next Saturday → Saturday.
+  expect(screen.getByRole('button', { name: t.schedule.prevWeek })).toBeDisabled();
+  await fireEvent.press(screen.getByRole('button', { name: t.schedule.nextWeek }));
+  expect(mockApiFetch).toHaveBeenLastCalledWith(slotsUrl('2026-10-02T21:00:00.000Z', '2026-10-09T21:00:00.000Z'));
+  await screen.findByRole('radio', { name: '17:00' });
   expect(screen.getByRole('header', { name: t.lessons.rescheduleTitle })).toBeTruthy();
   expect(screen.getByText(t.reschedule.current.replace('{when}', 'الخميس 1 أكتوبر 16:00 بتوقيت الرياض'))).toBeTruthy();
   expect(screen.getByRole('radio', { name: 'السبت 3 أكتوبر', checked: true })).toBeTruthy();

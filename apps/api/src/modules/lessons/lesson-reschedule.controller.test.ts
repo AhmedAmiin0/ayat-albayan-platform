@@ -46,7 +46,7 @@ describe('POST /lessons/:id/reschedule and /schedule-rules/:id/cancel (R-SCH-07)
     const res = await h.call({ method: 'POST', url: `/lessons/${LESSON_ID}/reschedule`, body: RULE });
     expect(res.statusCode).toBe(200);
     const change = h.writer.apply.mock.calls[0]?.[0];
-    expect(change.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-11' });
+    expect(change.end_rule).toEqual({ id: RULE_ID, ends_on: '2026-10-03' }); // the day before the tapped lesson
     expect(h.lessons.get).toHaveBeenLastCalledWith(change.lessons[0].id);
   });
 

@@ -71,7 +71,8 @@ export function TeacherCalendarScreen() {
           void lessons.refetch();
           void grid.refetch();
         }}
-        ListEmptyComponent={lessons.isPending ? null : <ErrorState onRetry={() => void lessons.refetch()} />}
+        // A new week has no data yet: say it is loading rather than show a blank screen.
+        ListEmptyComponent={lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />}
       />
       <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
     </Screen>

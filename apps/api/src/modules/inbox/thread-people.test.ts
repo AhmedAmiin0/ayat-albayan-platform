@@ -3,7 +3,7 @@ import { fakeDb } from '../guardians/fake-db';
 import type { BalanceQueries } from '../subscriptions/balance.queries';
 import type { PackagesService } from '../subscriptions/packages.service';
 import { threadRow } from './inbox.fakes';
-import { subscribedGuardians, threadPeople } from './thread-people';
+import { familyTagsOf, threadPeople } from './thread-people';
 
 function deps(results: Parameters<typeof fakeDb>[0]) {
   const { db, calls, argsOf } = fakeDb(results);
@@ -36,16 +36,16 @@ describe('threadPeople (R-SUB-01)', () => {
   });
 });
 
-describe('subscribedGuardians (H1)', () => {
+describe('familyTagsOf (H1)', () => {
   it('no guardians on the page → no read (an empty in() is a PostgREST error)', async () => {
     const t = deps({});
-    expect(await subscribedGuardians(t.deps, [])).toEqual(new Set());
+    expect(await familyTagsOf(t.deps, [])).toEqual(new Map());
     expect(t.calls).toEqual([]);
   });
 
   it('one read for the page’s distinct guardians, then their balances', async () => {
     const t = deps({ students: [{ data: [{ id: 's1', guardian_id: 'g1', subscriptions: [] }] }] });
-    await subscribedGuardians(t.deps, ['g1', 'g1', 'g2']);
+    await familyTagsOf(t.deps, ['g1', 'g1', 'g2']);
     expect(t.argsOf('students', 'in')).toEqual(['guardian_id', ['g1', 'g2']]);
     expect(t.balances.forStudents).toHaveBeenCalledWith(['s1']);
   });

@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
+import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
 import { useDayLessons, useNow } from '@/today/use-day-lessons';
 import { Button } from '@/ui/Button';
@@ -53,7 +54,9 @@ export function DayScheduleScreen() {
         refreshing={day.isRefetching}
         onRefresh={() => void day.refetch()}
         ListEmptyComponent={
-          day.isPending ? null : loaded ? (
+          day.isPending ? (
+            <Note>{t.common.loading}</Note>
+          ) : loaded ? (
             <EmptyState title={t.calendar.emptyDay} />
           ) : (
             <ErrorState onRetry={() => void day.refetch()} />

@@ -55,8 +55,17 @@ export class SubscriptionsQueries {
     );
   }
 
-  async insert(row: TablesInsert<'subscriptions'>): Promise<SubRow> {
+  /** null: a package with this client_request_id already exists (a retry raced it). */
+  async insert(row: TablesInsert<'subscriptions'>): Promise<SubRow | null> {
     const { data, error } = await this.db.from('subscriptions').insert(row).select(SELECT).single();
+    if (error?.code === '23505' && error.message.includes('client_request_id')) return null;
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The package a subscribe form already created (its client_request_id), or null. */
+  async byRequest(clientRequestId: string): Promise<SubRow | null> {
+    const { data, error } = await this.db.from('subscriptions').select(SELECT).eq('client_request_id', clientRequestId).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

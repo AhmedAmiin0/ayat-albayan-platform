@@ -1,14 +1,11 @@
 import { act, renderHook } from '@testing-library/react-native';
-import { balanceKey } from '@/payments/queries';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { balance, CHILD, saved } from './fixtures';
+import { CHILD, saved } from './fixtures';
 import { useCreateSubscription, type SubscribeInput } from './use-subscribe';
 
-const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 
@@ -17,49 +14,35 @@ const input: SubscribeInput = {
   pricing: { duration: 45, discount: 0, tier: 'standard' },
   startsOn: '2026-10-03',
 };
-const offline = () => new TypeError('Network request failed');
+const keyOf = (call: number) => (mockApiSend.mock.calls[call]?.[2] as { clientRequestId: string }).clientRequestId;
 
-function setup() {
-  const client = createTestQueryClient();
-  // A balance cached long ago, before the package the API now has as newest ('old-sub').
-  client.setQueryData(balanceKey(CHILD), balance(saved('ancient')));
-  return renderHook(() => useCreateSubscription(), { wrapper: queryWrapper(client) });
-}
+const setup = () => renderHook(() => useCreateSubscription(), { wrapper: queryWrapper(createTestQueryClient()) });
 
-beforeEach(() => {
-  jest.clearAllMocks();
-  mockApiFetch.mockResolvedValue(balance(saved('old-sub')));
-});
+beforeEach(() => jest.clearAllMocks());
 
-test('a double tap joins the save in flight: one POST /subscriptions', async () => {
+test('a double tap joins the save in flight: one POST /subscriptions with a key', async () => {
   mockApiSend.mockResolvedValue(saved('new-sub'));
   const { result } = await setup();
-  const both = await act(() =>
-    Promise.all([result.current.mutateAsync(input), result.current.mutateAsync(input)]),
-  );
+  const both = await act(() => Promise.all([result.current.mutateAsync(input), result.current.mutateAsync(input)]));
   expect(both.map((s) => s.id)).toEqual(['new-sub', 'new-sub']);
   expect(mockApiSend).toHaveBeenCalledTimes(1);
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/subscriptions', { ...input, notes: null });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/subscriptions', { ...input, notes: null, clientRequestId: keyOf(0) });
+  expect(keyOf(0)).toMatch(/^[0-9a-f]{8}-[0-9a-f]{4}-4/);
 });
 
-test('no answer, but it was saved: the retry finds the new package and does not post again', async () => {
-  mockApiSend.mockRejectedValueOnce(offline());
-  const { result } = await setup();
-  const lost = await act(() => result.current.mutateAsync(input).catch((e: unknown) => e));
-  expect(lost).toBeInstanceOf(TypeError);
-
-  mockApiFetch.mockResolvedValue(balance(saved('new-sub')));
-  const retried = await act(() => result.current.mutateAsync(input));
-  expect(retried.id).toBe('new-sub');
-  expect(mockApiSend).toHaveBeenCalledTimes(1);
-  expect(mockApiFetch).toHaveBeenLastCalledWith(`/students/${CHILD}/balance`);
-});
-
-test('no answer and nothing saved: the retry posts again (a stale cached balance is not trusted)', async () => {
-  mockApiSend.mockRejectedValueOnce(offline()).mockResolvedValueOnce(saved('new-sub'));
+test('a retry after a 502 (the row may exist) re-sends the same key, so the API replays the first package', async () => {
+  mockApiSend.mockRejectedValueOnce(new Error('502')).mockResolvedValueOnce(saved('new-sub'));
   const { result } = await setup();
   await act(() => result.current.mutateAsync(input).catch(() => undefined));
   const retried = await act(() => result.current.mutateAsync(input));
   expect(retried.id).toBe('new-sub');
-  expect(mockApiSend).toHaveBeenCalledTimes(2);
+  expect(keyOf(1)).toBe(keyOf(0));
+});
+
+test('another child or day is another package: a new key', async () => {
+  mockApiSend.mockResolvedValue(saved('new-sub'));
+  const { result } = await setup();
+  await act(() => result.current.mutateAsync(input));
+  await act(() => result.current.mutateAsync({ ...input, startsOn: '2026-10-04' }));
+  expect(keyOf(1)).not.toBe(keyOf(0));
 });

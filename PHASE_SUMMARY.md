@@ -1359,3 +1359,51 @@ Owner requests (2026-10-02): search the chats by phone number; see in the chat w
 - `people` makes one balance read per child; batch it if families grow large.
 - The dashboard funnel counts each stage cumulatively by status. A lead converted straight from the chat therefore also counts toward «trial_booked» and «trial_done», which inflates the trial stages. If the owner wants the old reading, split `converted` by whether a trial happened.
 - Device check of the new mobile screens at 360–390 px in RTL and LTR (jest can't compute layout).
+
+## Design review + verifier fixes (2026-10-02)
+
+The design review (web screenshots at 1440 and 390, ar/en, light/dark) and the verifier's live probes found 29 issues. 26 are fixed, 3 are rejected or left to the owner. One migration: `20261001000163_subscriptions_idempotency.sql`.
+
+### Fixed: reschedule from the app (the owner's request)
+- **Series move starts at the tapped lesson (API, web and mobile).** «الحلقة دي وكل اللي بعدها» used the new slot's day as the cutoff, so a lesson more than 14 days out also rescheduled the lessons before it (the verifier's probe showed 5 swept). `RescheduleRuleService` now ends the old rule the day before the tapped lesson's local day and moves only open lessons from that day on. `RulePlanner` returns 400 `starts_before_lesson` for a new start before that day; otherwise the old lessons in between would stay next to the new ones, because the clash check excludes the old rule. ar/en have the message, and both clients map it through `lessons.error`.
+- **Mobile slot picker opens on the lesson's week**, never before this week, with ‹ › week navigation (the existing `PeriodSwitcher`, prev disabled on this week). Each window is one Riyadh week (`slotWindow`). The series scope offers only days on or after the lesson's day, and changing the scope clears the pick.
+- **Series weekdays keep their rhythm.** `LessonView.rule_byday` (the rule's days) is new. `shiftByday` (@ab/shared) shifts the old days by as far as the lesson moves (Sun+Wed, Wed → Thu = Mon+Thu). Mobile `MoveFields` and web `RescheduleForm` both start from it. The new slot's day is a locked chip (`DayChips locked`, «يوم الميعاد اللي اخترته ثابت»).
+- **«غيّر الميعاد» is always visible on calendar and «الجدول» rows** (a ghost button under the subtitle, spoken as «غيّر الميعاد — {names}»). The hidden tap-to-expand is gone.
+- **RTL arrows.** The ‹ › text glyphs mirrored twice in RTL. They are now an SVG `Chevron` (`ui/Chevron.tsx`), flipped on purpose, with an RNTL test for both directions.
+- **Calendar polish.** Today has a gold-soft start rule and a plain «النهارده» (no lapis pill that looks tappable). «النهارده» has a 44pt hit area. The teacher name in «الجدول» is a 44pt link with a chevron. A week or day that is still loading says «جاري التحميل…» instead of showing a blank list. «عند المعلم/ة الجمعة 23:30 بتوقيت القاهرة» names the teacher's day after midnight.
+- **Reschedule sheet.** `Button` takes `disabled` separately from `busy` (nothing picked = disabled, not "busy"), the label changes to «جاري الحفظ…» while saving, the success view looks like BookedPanel (nuqta and Amiri, no box), and the sheet title is h2 (`ScreenHeader size`).
+
+### Fixed: chat subscription
+- **Converted lead with no family on this number.** `threadBadge` (@ab/shared) returns no badge, and the lead chip is a neutral «اتحول لطالب» on web (header and rows) and mobile (row tags), so it no longer shows «مشترك» next to «مش مشترك». «اشترك» shows for a converted lead and is hidden for a lost one, on both platforms.
+- **Duplicate subscriptions (rule 8).** `subscriptions.client_request_id` has a partial unique index, and `subscriptionCreateSchema.clientRequestId` is new. `SubscriptionCreator` replays the first package before inserting and re-reads it after losing a 23505 race. Web and mobile send one key per body (the same body on a retry gets the same key; a different child, price or day gets a new one). The mobile balance-diff "lost reply" logic was removed.
+- **A package converts the family's lead.** `LeadConversion` runs in `MoneyWrites` after a subscription create. It finds the lead by `converted_guardian_id`, else by the guardian's phone, then does a compare-and-set to `converted` when the state machine allows it, and audits the change. Both clients invalidate `['leads']`. New e2e: trial_booked lead → «اشتراك جديد» from the guardian chat → `leads.status = 'converted'`.
+- **List tags show what needs the admin.** `GET /threads` items also carry `badge` and `unpaid` (`subscribed` is kept for older cached lists). Web and mobile rows show «الباقة خلصت» and «مش مدفوع» in act, never «مش مشترك».
+- **One word per state.** `inbox.subscription.badge.expired` = `enums.subscriptionStatus.expired` = «الباقة خلصت». An expired package shows only its name (no «فاضل 4 حلقات» under it). The child's chip comes from `packageChip` (@ab/shared): a paid, used-up package reads «الباقة خلصت», not «مش مدفوع».
+- **Mobile panel matches the web.** Each child shows the name, a «مش مدفوع» / «متوقف مؤقتًا» chip, the package (2 lines), and «عليه X» on its own line in act. `subscribeKind` (@ab/shared) is the one new-or-renew rule, and the button names the child when the family has more than one. SubscribeScreen is titled «جدّد الاشتراك» from a renewal, its button says «اعمل الاشتراك», and a save shows «الاشتراك اتسجل» with «ارجع للمحادثة». BookedPanel uses the web's «اعمل الاشتراك» / «ارجع للمحادثة».
+- **Booking: package vs days.** Web (slot step and review) and mobile (review) add a hamish act note «الباقة 8 حلقات في الشهر = مرتين في الأسبوع» when the weekdays don't add up (`packagePerWeek`).
+- **Web secondary links had no edge.** `border-transparent` moved out of the cva base into primary, ghost and danger, so `buttonVariants({variant:'secondary'})` on a `<Link>` keeps `border-input` (regression test added).
+- **Settings.** With automatic messages on while `crm_cutover_done` is false, the chip is act/hollow and a hamish line reads «اتأكد إن تذكيرات الـApps Script وقفت».
+- **Phone search.** A whole local number (`05…`, `01…`) now searches its national digits, so a UAE `05…` is found under +971 too.
+- **Thread detail cost.** Older pages (`before`) skip `people` (1 + 3 reads per child) and take the list's single tag read.
+- **Wording.** «مفيش حلقات للمعلم/ة في الأسبوع ده»; DayChips takes `accessibilityLabel` («أيام الحلقة» where it means that).
+
+### Rejected or left to the owner
+- **Pre-ticking days from the package size** (design review): the app can't know which extra weekday the family wants, so it shows a note instead.
+- **`placeholderData: keepPreviousData` on the calendar**: the previous week's lessons would land in the new week's days, which would then render as empty «مفيش حلقات». The screens show a loading note.
+- **SubscribeScreen price font** (Amiri 32): the pricing calculator (`QuoteCard`) already sets the price in Amiri, so it stays consistent.
+- **Toast on the thread after a mobile save**: replaced by the success view on the screen (the booking's own pattern), so no cross-screen param plumbing.
+- **Refuse a manual «مشترك» without a booking** ("consider"): not done. A family may subscribe under another number, and the chat now reads that case correctly.
+- **Owner question:** should a child whose status is `churned` (or `paused`) still count toward «مشترك» while a package has lessons left? It currently counts.
+
+### Screenshots (web; mobile has no react-native-web, so jest + RNTL only)
+Retaken after `seed:demo` plus local scratch states (inbound messages with `wa_message_id 'demo-review-*'`, an unpaid package for سهيلة محمد, an expired one for ليان عبد الله), using `shots.mjs` / `book.mjs` in `%TEMP%/ayat-design`. The "before" copies are in `shots/before/`. Checked after the fixes: «أبو مالك» reads «اتحول لطالب» with «اشترك» and no trial; «أم ليان» shows «الباقة خلصت» in the header, on the child and on the list row, with no «فاضل» line; families that owe show «مش مدفوع» on the row; the booking review shows the 8-a-month / once-a-week note; «افتح الجدول» and «اشترك» have their 3:1 edge; settings shows the act chip and the Apps Script line.
+
+### Gate (measured, `pnpm test:all` after `supabase db reset` (163 applied) + `gen:types` + `pnpm env:local`)
+- 27/27 turbo tasks green on the first run.
+- **Unit tests:** api 1581 passed + 1 skipped (219 files; was 1569) · web 684 (143 files; was 671) · mobile 624 (126 suites; was 609) · @ab/shared 1180 (60 files; was 1146) · @ab/migrate 292 · wa-stub 25 · @ab/scripts green.
+- **e2e:** 49 passed + 3 skipped by design (was 47). New: trial → «اشتراك جديد» from the guardian chat → the lead is `converted`, on desktop and mobile.
+- **Lint:** 0 errors; complexity warnings only (wa-stub 2, shared 1, migrate 10, api 3, mobile 3, web 14).
+
+### Residuals
+- Device check of the mobile changes at 360–390pt in RTL and LTR: the SVG chevrons, the inline «غيّر الميعاد», the gold-soft today rule, and the per-child panel.
+- A remounted mobile subscribe screen gets a new idempotency key, so a duplicate is still possible if the admin leaves the screen after a lost reply and saves again. The web dialog behaves the same way.

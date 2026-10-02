@@ -54,6 +54,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
               fixed={ruleFromSlot(draft.startsAt, draft.tz).weekday}
               value={days}
               onChange={(byday) => onChange({ byday })}
+              pkg={draft.pkg}
             />
           )}
           <SeriesCheck draft={draft} />

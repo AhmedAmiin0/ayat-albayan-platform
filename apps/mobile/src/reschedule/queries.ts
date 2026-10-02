@@ -1,30 +1,41 @@
 import type { LessonView, RescheduleRequest, SlotsResponse } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { addDays, riyadhMidnight } from '@/calendar/week';
 import { apiFetch, apiSend, toQueryString } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
-
-const DAY = 86_400_000;
-/** GET /booking/slots caps a window at 14 days. */
-export const SLOT_DAYS = 14;
 
 export interface RescheduleSlotsParams {
   teacherId: string;
   durationMin: number;
   /** The lesson's students: their other lessons count as clashes. */
   studentIds: readonly string[];
-  now: Date;
+  /** The window (slotWindow): one Riyadh week, never in the past. */
+  from: string;
+  to: string;
 }
 
 /**
- * GET /booking/slots (docs/10 route 13) for the next 14 days: the teacher's candidate starts with
- * their clashes, the lesson's own students included. The lesson being moved is not excluded, so
- * its current time shows busy, which it is.
+ * The picker's window: the Riyadh week starting `week` (a Saturday), from now when it is this
+ * week. GET /booking/slots caps a window at 14 days; a week is 7.
+ */
+export function slotWindow(week: string, now: Date): { from: string; to: string } {
+  const start = riyadhMidnight(week);
+  return {
+    from: start > now.toISOString() ? start : now.toISOString(),
+    to: riyadhMidnight(addDays(week, 7)),
+  };
+}
+
+/**
+ * GET /booking/slots (docs/10 route 13) for one week: the teacher's candidate starts with their
+ * clashes, the lesson's own students included. The lesson being moved is not excluded, so its
+ * current time shows busy, which it is.
  */
 export function useRescheduleSlots(p: RescheduleSlotsParams) {
   const params = {
     teacherId: p.teacherId,
-    from: p.now.toISOString(),
-    to: new Date(p.now.getTime() + SLOT_DAYS * DAY).toISOString(),
+    from: p.from,
+    to: p.to,
     durationMin: p.durationMin,
     studentIds: p.studentIds.join(','),
   };

@@ -1,8 +1,9 @@
-import { subscriptionBadge, type ThreadDetail, type ThreadView } from '@ab/shared';
+import type { ThreadDetail, ThreadPeople, ThreadView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { Page } from '../teachers/http';
 import { MessageViews } from '../whatsapp/message.views';
 import { ReadReceipts } from './read-receipts';
+import { familyTag, type FamilyTag } from './thread-people.mapper';
 import { toThreadView, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
 
@@ -22,30 +23,41 @@ export class ThreadsService {
     private readonly receipts: ReadReceipts,
   ) {}
 
-  /** Each row's `subscribed` comes from its guardian's students (one read for the whole page). */
+  /** Each row's family tags come from its guardian's students (one read for the whole page). */
   async list(f: ThreadListFilter, now = new Date()): Promise<Page<ThreadView>> {
     const { items, total } = await this.queries.list(f);
-    const subscribed = await this.queries.subscribedGuardians(items.flatMap((r) => (r.guardian_id ? [r.guardian_id] : [])));
-    const view = (r: ThreadRow) => toThreadView(r, now, r.guardian_id !== null && subscribed.has(r.guardian_id));
+    const tags = await this.queries.familyTags(guardiansOf(items));
+    const view = (r: ThreadRow) => toThreadView(r, now, r.guardian_id ? (tags.get(r.guardian_id) ?? null) : null);
     return { items: items.map(view), total, page: f.page, pageSize: f.pageSize };
   }
 
   /**
-   * One page, oldest → newest. The first page (no `before`) marks the inbound rows read.
+   * One page, oldest → newest. The first page (no `before`) marks the inbound rows read and
+   * carries the people; an older page gets the list's cheap tags instead (one read, not 1 + 3 a child).
    * ponytail: one registry read per templated row (≤ 50, by pk); batch if threads get slow.
    */
   async detail(q: ThreadPageQuery, now = new Date()): Promise<ThreadDetail> {
-    if (!q.before) await this.receipts.open(q.phone, now);
+    const first = !q.before;
+    if (first) await this.receipts.open(q.phone, now);
     const row = await this.queries.thread(q.phone);
-    const [rows, people] = await Promise.all([this.queries.messages(q), this.queries.people(row)]);
+    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.queries.people(row) : NO_PEOPLE]);
     const page = rows.slice(0, q.limit).reverse();
-    const thread = row ? toThreadView(row, now, subscriptionBadge(people.students) === 'subscribed') : null;
+    const tag = first ? familyTag(people.students) : await this.tagOf(row);
+    const thread = row ? toThreadView(row, now, tag) : null;
     return {
       thread,
       messages: await Promise.all(page.map((m) => this.views.view(m))),
       has_more: rows.length > q.limit,
-      lessons: thread && !q.before ? await this.queries.lessons(thread, now) : [],
+      lessons: thread && first ? await this.queries.lessons(thread, now) : [],
       people,
     };
   }
+
+  private async tagOf(row: ThreadRow | null): Promise<FamilyTag | null> {
+    if (!row?.guardian_id) return null;
+    return (await this.queries.familyTags([row.guardian_id])).get(row.guardian_id) ?? null;
+  }
 }
+
+const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
+const guardiansOf = (rows: readonly ThreadRow[]): string[] => rows.flatMap((r) => (r.guardian_id ? [r.guardian_id] : []));

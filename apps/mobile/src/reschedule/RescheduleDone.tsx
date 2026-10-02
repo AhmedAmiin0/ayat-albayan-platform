@@ -2,9 +2,10 @@ import { lessonStatusStyle, type LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { whenText } from '@/booking/slots';
 import { t } from '@/lib/i18n';
-import { shape, type, useTheme } from '@/theme';
+import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
+import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 import { StatusChip } from '@/ui/StatusChip';
 import type { Scope } from './reschedule-body';
 
@@ -18,24 +19,28 @@ export interface RescheduleDoneProps {
 }
 
 /**
- * The move landed: the new time, the new lesson's status («يحتاج تأكيد» until the guardian answers)
- * and that the WhatsApp confirmation is on its way (the API queued it with the move).
+ * The move landed, said like the booking's success (BookedPanel): a fill nuqta and an Amiri title,
+ * then the new time, the new lesson's status («يحتاج تأكيد» until the guardian answers) and that
+ * the WhatsApp confirmation is on its way (the API queued it with the move). No box.
  */
 export function RescheduleDone({ moved, scope, tz, onClose }: RescheduleDoneProps) {
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
   return (
-    <View style={{ gap: 12, padding: 16, borderRadius: shape.radius.lg, backgroundColor: color.okSoft }}>
-      <AppText
-        accessibilityRole="alert"
-        accessibilityLiveRegion="polite"
-        style={{ ...text, fontFamily: type.ui[700], color: color.ok }}
-      >
-        {scope === 'rule' ? t.reschedule.seriesMoved : t.lessons.rescheduled}
-      </AppText>
+    <View style={{ gap: 12 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+        <NuqtaGlyph shape="fill" color={color.ok} size={14} />
+        <AppText
+          accessibilityRole="alert"
+          accessibilityLiveRegion="polite"
+          style={{ fontFamily: type.display, fontSize: type.size.h2, lineHeight: type.lineHeight(type.size.h2, true), color: color.ink }}
+        >
+          {scope === 'rule' ? t.reschedule.seriesMoved : t.lessons.rescheduled}
+        </AppText>
+      </View>
       <AppText style={text}>{t.reschedule.newWhen.replace('{when}', whenText(moved.starts_at, tz))}</AppText>
       <StatusChip {...lessonStatusStyle[moved.status]} label={t.enums.lessonStatus[moved.status]} />
-      <AppText style={{ ...text, color: color.ink2 }}>{t.reschedule.guardianNote}</AppText>
+      <AppText style={{ ...text, fontSize: type.size.sm, color: color.ink2 }}>{t.reschedule.guardianNote}</AppText>
       <Button label={t.reschedule.done} onPress={onClose} />
     </View>
   );

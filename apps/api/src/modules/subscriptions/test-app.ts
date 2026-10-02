@@ -18,6 +18,7 @@ import { TeachersQueries } from '../teachers/teachers.queries';
 import { AdminTasksQueries } from './admin-tasks.queries';
 import { AlertsQueries } from './alerts.queries';
 import { BalanceQueries } from './balance.queries';
+import { LeadConversion } from './lead-conversion';
 import { StudentAccess } from './student-access';
 import { SubscriptionsQueries } from './subscriptions.queries';
 
@@ -38,7 +39,9 @@ function mocks() {
     subs: {
       list: vi.fn(), get: vi.fn(), forStudent: vi.fn(), forStudents: vi.fn(), insert: vi.fn(),
       update: vi.fn(), remove: vi.fn(), hasPayments: vi.fn(), paid: vi.fn(), studentForQuote: vi.fn(),
+      byRequest: vi.fn(),
     },
+    leads: { afterPackage: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
     alerts: {
       studentsOfLessons: vi.fn(), studentsWithPackages: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
@@ -75,6 +78,7 @@ export function resetMocks(m: Mocks): void {
   m.payments.recorders.mockResolvedValue(new Map());
   m.payouts.pendingReports.mockResolvedValue(0);
   m.payments.byRequest.mockResolvedValue(null);
+  m.subs.byRequest.mockResolvedValue(null);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
 }
@@ -86,6 +90,7 @@ export async function moneyApp() {
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SubscriptionsQueries).useValue(m.subs)
     .overrideProvider(BalanceQueries).useValue(m.balances)
+    .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(AlertsQueries).useValue(m.alerts)
     .overrideProvider(AdminTasksQueries).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)

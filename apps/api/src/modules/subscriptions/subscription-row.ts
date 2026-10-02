@@ -25,5 +25,6 @@ export function subscriptionRow(
     renews_on: input.renewsOn ?? null,
     notes: input.notes ?? null,
     created_by: actorId,
+    client_request_id: input.clientRequestId ?? null,
   };
 }

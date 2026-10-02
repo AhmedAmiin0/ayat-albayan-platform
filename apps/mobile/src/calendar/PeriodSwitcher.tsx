@@ -1,13 +1,16 @@
-import { I18nManager, Pressable, View } from 'react-native';
+import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
+import { Chevron } from '@/ui/Chevron';
 
 export interface PeriodSwitcherProps {
   /** «3 أكتوبر – 9 أكتوبر» or «الخميس 1 أكتوبر». */
   label: string;
   /** The shown week/day holds today: no «النهارده» jump. */
   current: boolean;
+  /** false: nothing earlier to show (a slot picker never goes before this week). Default true. */
+  canPrev?: boolean;
   /** «الأسبوع اللي فات» / «اليوم اللي فات»: the arrows' spoken names. */
   prevLabel: string;
   nextLabel: string;
@@ -16,12 +19,15 @@ export interface PeriodSwitcherProps {
   onToday: () => void;
 }
 
-/** ‹ label › with 44pt arrows (earlier at the inline-start, mirrored in RTL, docs/07 §14.8). */
+/**
+ * ‹ label › with 44pt arrows (earlier at the inline-start, mirrored in RTL, docs/07 §14.8), and
+ * «النهارده» when the shown period is elsewhere: a 28pt pill with a 44pt hit area.
+ */
 export function PeriodSwitcher(props: PeriodSwitcherProps) {
   const { color } = useTheme();
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-      <Arrow label={props.prevLabel} glyph="‹" onPress={props.onPrev} />
+      <Arrow label={props.prevLabel} to="prev" onPress={props.onPrev} disabled={props.canPrev === false} />
       <AppText
         accessibilityRole="header"
         style={{
@@ -40,7 +46,7 @@ export function PeriodSwitcher(props: PeriodSwitcherProps) {
         <Pressable
           accessibilityRole="button"
           onPress={props.onToday}
-          hitSlop={{ top: 6, bottom: 6 }}
+          hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
           style={{ paddingHorizontal: 10, paddingVertical: 4, borderRadius: shape.radius.pill, backgroundColor: color.lapisWash }}
         >
           <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.xs, lineHeight: 20, color: color.lapis }}>
@@ -48,19 +54,24 @@ export function PeriodSwitcher(props: PeriodSwitcherProps) {
           </AppText>
         </Pressable>
       )}
-      <Arrow label={props.nextLabel} glyph="›" onPress={props.onNext} />
+      <Arrow label={props.nextLabel} to="next" onPress={props.onNext} />
     </View>
   );
 }
 
-function Arrow({ label, glyph, onPress }: { label: string; glyph: string; onPress: () => void }) {
+type ArrowProps = { label: string; to: 'prev' | 'next'; onPress: () => void; disabled?: boolean };
+
+function Arrow({ label, to, onPress, disabled = false }: ArrowProps) {
   const { color } = useTheme();
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
+      accessibilityState={{ disabled }}
+      disabled={disabled}
       onPress={onPress}
       style={({ pressed }) => ({
+        opacity: disabled ? 0.45 : 1,
         width: shape.control.touch,
         height: shape.control.touch,
         alignItems: 'center',
@@ -71,17 +82,7 @@ function Arrow({ label, glyph, onPress }: { label: string; glyph: string; onPres
         backgroundColor: pressed ? color.sunk : color.raised,
       })}
     >
-      <AppText
-        style={{
-          fontFamily: type.ui[600],
-          fontSize: type.size.h4,
-          lineHeight: type.size.h4 + 4,
-          color: color.ink,
-          transform: [{ scaleX: I18nManager.isRTL ? -1 : 1 }],
-        }}
-      >
-        {glyph}
-      </AppText>
+      <Chevron to={to} color={color.ink} />
     </Pressable>
   );
 }

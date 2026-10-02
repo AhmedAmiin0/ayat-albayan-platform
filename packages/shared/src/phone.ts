@@ -65,15 +65,17 @@ export function normalizePhone(input: string): PhoneResult {
 
 /**
  * The phone part of a list search box (R-STU-02, R-LEAD-01): the digits to find inside phone_e164,
- * or null to search by name. A whole number in any format → its E.164 digits; a partial one typed
- * on any keyboard (٠-٩, ۰-۹, spaces, dashes, dots, brackets, +) → its digits without a leading
- * 00 / 0, once at least 3 digits are typed.
+ * or null to search by name. Typed on any keyboard (٠-٩, ۰-۹, spaces, dashes, dots, brackets, +),
+ * at least 3 digits. A local number (one leading 0, e.g. 05… or 01…) → its national digits, so it
+ * is found under any country code (a UAE 05… is not read as Saudi); a whole international number
+ * → its E.164 digits; a partial one → its digits without a leading 00.
  */
 export function searchDigits(term: string): string | null {
-  const whole = normalizePhone(term);
-  if (whole.ok) return whole.e164.slice(1);
   const digits = toAsciiDigits(term).replace(NOISE, '').replace(/\+/g, '');
-  return /^[0-9]{3,}$/.test(digits) ? digits.replace(/^00?/, '') : null;
+  if (!/^[0-9]{3,}$/.test(digits)) return null;
+  if (/^0[1-9]/.test(digits)) return digits.slice(1);
+  const whole = normalizePhone(term);
+  return whole.ok ? whole.e164.slice(1) : digits.replace(/^00?/, '');
 }
 
 function ok(e164: string, country: PhoneCountry | null): PhoneResult {

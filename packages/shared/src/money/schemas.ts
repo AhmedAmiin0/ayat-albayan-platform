@@ -55,6 +55,7 @@ export const subscriptionCreateSchema = z.object({
   startsOn: localDate,
   renewsOn: localDate.nullish(),
   notes: optionalText,
+  clientRequestId: z.uuid().optional(), // rule 8: a retry of the same form returns its package
 });
 
 /** PATCH /subscriptions/:id. Only what an admin may set; price and size never change. */

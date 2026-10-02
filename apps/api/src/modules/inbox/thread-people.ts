@@ -3,7 +3,7 @@ import type { Db } from '../../common/db/db.module';
 import type { BalanceQueries } from '../subscriptions/balance.queries';
 import type { PackagesService } from '../subscriptions/packages.service';
 import { dbError } from '../teachers/http';
-import { subscribedGuardianIds, toThreadStudent } from './thread-people.mapper';
+import { familyTags, toThreadStudent, type FamilyTag } from './thread-people.mapper';
 import type { ThreadRow } from './threads.mapper';
 
 export interface PeopleDeps {
@@ -29,12 +29,12 @@ export async function threadPeople(deps: PeopleDeps, row: ThreadRow | null): Pro
   return { guardian, lead, students };
 }
 
-/** H1: which of the page's guardians get the «مشترك» tag (subscribedGuardianIds). */
-export async function subscribedGuardians(deps: PeopleDeps, guardianIds: readonly string[]): Promise<Set<string>> {
+/** H1: the page's guardians' tags (familyTags), one read for the page. */
+export async function familyTagsOf(deps: PeopleDeps, guardianIds: readonly string[]): Promise<Map<string, FamilyTag>> {
   const ids = [...new Set(guardianIds)];
-  if (ids.length === 0) return new Set(); // .in() with no ids is a PostgREST error
+  if (ids.length === 0) return new Map(); // .in() with no ids is a PostgREST error
   const { data, error } = await deps.db.from('students').select('id, guardian_id, subscriptions(id, status)').in('guardian_id', ids);
   if (error) throw dbError(error);
   const balances = await deps.balances.forStudents(data.map((s) => s.id));
-  return subscribedGuardianIds(data, balances);
+  return familyTags(data, balances);
 }

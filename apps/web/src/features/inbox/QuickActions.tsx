@@ -34,22 +34,24 @@ export function QuickActions({ lead, onDone }: QuickActionsProps) {
     onError: () => onDone(t.common.error, 'error'),
   });
   const open = lead.status !== 'converted' && lead.status !== 'lost';
+  // A converted lead on this number has no family here yet («مش مشترك»): it can still subscribe.
+  const subscribe = lead.status !== 'lost';
   const book = { leadId: lead.id, phone: lead.phone_e164, name: lead.name ?? undefined };
 
   return (
     <div className="grid gap-3">
       <h3 className="text-sm font-semibold">{t.common.actions}</h3>
       {open && (
-        <>
-          <Link to="/admin/book" search={book} className={linkClass}>
-            <Icon name="calendar" />
-            {t.booking.trialTitle}
-          </Link>
-          <Link to="/admin/book" search={{ ...book, pkg: '8' }} className={linkClass}>
-            <Icon name="card" />
-            {t.inbox.subscription.subscribe}
-          </Link>
-        </>
+        <Link to="/admin/book" search={book} className={linkClass}>
+          <Icon name="calendar" />
+          {t.booking.trialTitle}
+        </Link>
+      )}
+      {subscribe && (
+        <Link to="/admin/book" search={{ ...book, pkg: '8' }} className={linkClass}>
+          <Icon name="card" />
+          {t.inbox.subscription.subscribe}
+        </Link>
       )}
       <LeadStatusChange lead={lead} onDone={onDone} />
       <Button

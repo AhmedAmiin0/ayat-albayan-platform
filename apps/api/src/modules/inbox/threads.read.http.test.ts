@@ -20,25 +20,43 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     t.queries.thread.mockResolvedValue(threadRow());
     t.queries.markInboundRead.mockResolvedValue('wamid.newest');
     t.queries.people.mockResolvedValue(NO_PEOPLE);
-    t.queries.subscribedGuardians.mockResolvedValue(new Set());
+    t.queries.familyTags.mockResolvedValue(new Map());
   });
 
-  it('H1 «مشترك»: subscribed per row from its guardian, one read for the page', async () => {
-    const rows = [threadRow({ guardian_id: 'g1' }), threadRow({ phone_e164: '+966551112222', guardian_id: 'g2' }), threadRow()];
-    t.queries.list.mockResolvedValue({ items: rows, total: 3 });
-    t.queries.subscribedGuardians.mockResolvedValue(new Set(['g1']));
+  it('H1 tags per row from its guardian, one read for the page: «مشترك», «اشتراكه خلص», «مش مدفوع»', async () => {
+    const rows = [
+      threadRow({ guardian_id: 'g1' }),
+      threadRow({ phone_e164: '+966551112222', guardian_id: 'g2' }),
+      threadRow({ phone_e164: '+966551113333', guardian_id: 'g3' }),
+      threadRow(),
+    ];
+    t.queries.list.mockResolvedValue({ items: rows, total: 4 });
+    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed', unpaid: true }], ['g2', { badge: 'expired', unpaid: false }]]));
     const items = (await t.call({ method: 'GET', url: '/threads' })).json().items;
-    expect(items.map((i: { subscribed: boolean }) => i.subscribed)).toEqual([true, false, false]);
-    expect(t.queries.subscribedGuardians).toHaveBeenCalledWith(['g1', 'g2']);
+    const tags = items.map((i: { subscribed: boolean; badge: string | null; unpaid: boolean }) => [i.subscribed, i.badge, i.unpaid]);
+    expect(tags).toEqual([[true, 'subscribed', true], [false, 'expired', false], [false, 'none', false], [false, null, false]]);
+    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1', 'g2', 'g3']);
   });
 
-  it('H2 people on every page; the thread is subscribed from the same badge', async () => {
+  it('H2 first page: people, and the thread’s tags from the same badge', async () => {
     t.queries.messages.mockResolvedValue([]);
     const people = { guardian: { id: 'g1', name: 'أم ياسمين' }, lead: null, students: [threadStudent()] };
     t.queries.people.mockResolvedValue(people);
+    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'g1' }));
+    const body = (await t.call({ method: 'GET', url: URL })).json();
+    expect([body.people, body.thread.subscribed, body.thread.badge]).toEqual([people, true, 'subscribed']);
+    expect(t.queries.people).toHaveBeenCalledWith(threadRow({ guardian_id: 'g1' }));
+  });
+
+  it('H2 an older page skips the people (1 + 3 reads a child) and takes the list’s tags', async () => {
+    t.queries.messages.mockResolvedValue([]);
+    t.queries.thread.mockResolvedValue(threadRow({ guardian_id: 'g1' }));
+    t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed', unpaid: false }]]));
     const body = (await t.call({ method: 'GET', url: `${URL}?before=2026-10-02T08:00:00Z` })).json();
-    expect([body.people, body.thread.subscribed]).toEqual([people, true]);
-    expect(t.queries.people).toHaveBeenCalledWith(threadRow());
+    expect(body.people).toEqual(NO_PEOPLE);
+    expect(body.thread.subscribed).toBe(true);
+    expect(t.queries.people).not.toHaveBeenCalled();
+    expect(t.queries.familyTags).toHaveBeenCalledWith(['g1']);
   });
 
   it('admin only', async () => {

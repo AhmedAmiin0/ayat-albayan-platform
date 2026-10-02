@@ -1,4 +1,10 @@
-import { DURATIONS, RIYADH_TZ, type LessonView, type RescheduleRequest } from '@ab/shared';
+import {
+  DURATIONS,
+  RIYADH_TZ,
+  shiftByday,
+  type LessonView,
+  type RescheduleRequest,
+} from '@ab/shared';
 import { ruleFromSlot } from '@/booking/slots';
 
 // POST /lessons/:id/reschedule bodies (R-SCH-07, docs/10 route 8), as the web builds them
@@ -23,6 +29,21 @@ export function lessonDuration(lesson: Pick<LessonView, 'starts_at' | 'ends_at'>
 /** A moved series repeats on the picked slot's weekday (in the family zone) plus any days added. */
 export function repeatDays(startsAt: string, tz: string, extra: readonly number[]): number[] {
   return [...new Set([ruleFromSlot(startsAt, tz).weekday, ...extra])].sort((a, b) => a - b);
+}
+
+/**
+ * A moved series' days before the admin touches them: the old rule's weekdays shifted as far as
+ * the lesson moves (Sun+Wed, Wed → Thu = Mon+Thu), so twice a week stays twice a week (the web
+ * does the same). Just the slot's day when the rule's days are unknown (an old cache).
+ */
+export function seriesDays(
+  lesson: Pick<LessonView, 'starts_at' | 'rule_byday'>,
+  startsAt: string,
+  tz: string,
+): number[] {
+  const to = ruleFromSlot(startsAt, tz).weekday;
+  const from = ruleFromSlot(lesson.starts_at, tz).weekday;
+  return repeatDays(startsAt, tz, shiftByday({ byday: lesson.rule_byday ?? [], from, to }));
 }
 
 export interface RescheduleInput {

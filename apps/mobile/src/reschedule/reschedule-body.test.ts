@@ -1,6 +1,6 @@
 import { rescheduleRequestSchema } from '@ab/shared';
 import { jana, lesson, pending } from '@/today/fixtures';
-import { familyTz, lessonDuration, repeatDays, rescheduleBody } from './reschedule-body';
+import { familyTz, lessonDuration, repeatDays, rescheduleBody, seriesDays } from './reschedule-body';
 
 // Saturday 3 Oct 2026, 17:00 in Riyadh.
 const SAT_17 = '2026-10-03T14:00:00.000Z';
@@ -64,4 +64,14 @@ test('a length outside 30/45/60/90 cannot become a rule (one lesson still moves)
 
 test('no students on the lesson: the family zone falls back to Riyadh', () => {
   expect(familyTz({ students: [] })).toBe('Asia/Riyadh');
+});
+
+describe('seriesDays: the moved series keeps how often it repeats', () => {
+  const thu = lesson({ id: 'thu', starts_at: '2026-10-01T14:00:00.000Z', rule_byday: [0, 4] });
+  it('Sun+Thu, Thu → Sat (2 days on) → Tue+Sat', () => {
+    expect(seriesDays(thu, '2026-10-03T14:00:00.000Z', 'Asia/Riyadh')).toEqual([2, 6]);
+  });
+  it('unknown rule days (old cache) → the slot’s day only', () => {
+    expect(seriesDays({ ...thu, rule_byday: undefined }, '2026-10-03T14:00:00.000Z', 'Asia/Riyadh')).toEqual([6]);
+  });
 });

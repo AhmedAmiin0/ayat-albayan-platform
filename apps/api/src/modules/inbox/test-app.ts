@@ -13,6 +13,7 @@ import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
 import { TemplatesQueries } from '../whatsapp/templates.queries';
 import { WHATSAPP_CLIENT } from '../whatsapp/whatsapp.types';
+import type { FamilyTag } from './thread-people.mapper';
 import { ThreadsQueries } from './threads.queries';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
@@ -30,7 +31,7 @@ function mocks() {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessons: vi.fn(async () => []),
       people: vi.fn(async () => NO_PEOPLE),
-      subscribedGuardians: vi.fn(async () => new Set<string>()),
+      familyTags: vi.fn(async () => new Map<string, FamilyTag>()),
     },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     client: { configured: vi.fn(() => false), markRead: vi.fn() },

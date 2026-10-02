@@ -6,7 +6,8 @@ import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
 import type { MessageRow, ThreadMessageRow } from '../whatsapp/message.mapper';
 import { upcomingLessons } from './thread-lessons';
-import { subscribedGuardians, threadPeople } from './thread-people';
+import { familyTagsOf, threadPeople } from './thread-people';
+import type { FamilyTag } from './thread-people.mapper';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 
 export interface ThreadListFilter {
@@ -67,9 +68,9 @@ export class ThreadsQueries {
     return threadPeople({ db: this.db, packages: this.packages, balances: this.balances }, row);
   }
 
-  /** The page's guardians that get the «مشترك» tag (thread-people.ts). */
-  subscribedGuardians(guardianIds: readonly string[]): Promise<Set<string>> {
-    return subscribedGuardians({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
+  /** The page's guardians' «مشترك» / «اشتراكه خلص» / «مش مدفوع» tags (thread-people.ts). */
+  familyTags(guardianIds: readonly string[]): Promise<Map<string, FamilyTag>> {
+    return familyTagsOf({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
   }
 
   /** Opening the thread reads its inbound messages; returns the newest stamped wamid. */

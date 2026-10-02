@@ -14,6 +14,7 @@ const CODES = [
   'range_too_large',
   'teacher_not_linked',
   'date_in_past',
+  'starts_before_lesson',
   'proposal_pending',
   'proposal_decided',
   'student_not_in_lesson',

@@ -1,5 +1,6 @@
-import type { BookingResult, Duration } from '@ab/shared';
+import { counted, packagePerWeek, type BookingResult, type Duration, type PackageSize } from '@ab/shared';
 import type { Href } from 'expo-router';
+import { t } from '@/lib/i18n';
 import { localDate } from '@/today/timeline';
 import type { TrialDraft } from './draft';
 import { ruleFromSlot } from './slots';
@@ -39,4 +40,17 @@ export function subscriptionHref(d: TrialDraft, result: BookingResult): Href | n
   const startsOn = first ? { startsOn: localDate(new Date(first), d.tz) } : {};
   const params = { studentId, pkg: d.pkg, minutes: String(d.durationMin), ...startsOn };
   return { pathname: '/inbox/subscribe', params };
+}
+
+/**
+ * «الباقة 8 حلقات في الشهر = مرتين في الأسبوع» when the weekly days don't add up to the package
+ * (as the web): one day a week for 8 a month books half of what is charged. A note, not a fix: which
+ * extra day the family wants is the admin's choice. null when they match, or for a trial.
+ */
+export function packageDaysNote(pkg: PackageSize, days: number): string | null {
+  const perWeek = packagePerWeek(pkg);
+  if (perWeek === null || perWeek === days) return null;
+  return t.booking.packageDays
+    .replace('{package}', t.enums.packageSize[pkg])
+    .replace('{perWeek}', counted(t.booking.perWeek, perWeek));
 }

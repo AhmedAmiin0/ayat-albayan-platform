@@ -4,6 +4,7 @@ import { WEEK_ORDER } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { effectiveByday, type BookingDraft } from './draft';
+import { PACKAGE_NOTE_CLASS, packageDaysNote } from './package-days';
 import { PackagePrice } from './PackageStep';
 import { pickedText } from './SlotStep';
 
@@ -24,6 +25,7 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
   const days = WEEK_ORDER.filter((d) => effectiveByday(draft).includes(d));
   const names = draft.students.length > 0 ? draft.students.map((s) => s.name) : [draft.newStudent?.name ?? ''];
   const students = Math.max(1, draft.students.length);
+  const note = packageDaysNote(draft.pkg, days.length);
   return (
     <dl>
       <Row label={t.schedule.students}>{joinNames(names, locale)}</Row>
@@ -33,6 +35,7 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
       </Row>
       <Row label={t.booking.pickDays}>
         {days.map((d) => weekday[String(d)]).join(t.teachers.listSeparator)} ({counted(t.booking.perWeek, days.length)})
+        {note && <p className={`mt-1 ${PACKAGE_NOTE_CLASS}`}>{note}</p>}
       </Row>
       <Row label={t.schedule.duration}>{t.enums.duration[draft.durationMin]}</Row>
       <Row label={t.booking.pickPackage}>
