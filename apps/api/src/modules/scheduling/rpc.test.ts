@@ -1,0 +1,51 @@
+import { ConflictException } from '@nestjs/common';
+import type { PostgrestError } from '@supabase/supabase-js';
+import { describe, expect, it } from 'vitest';
+import type { Db } from '../../common/db/db.module';
+import { errorCode } from './errors';
+import { callRpc, rpcError } from './rpc';
+
+const pgError = (code: string, message: string): PostgrestError =>
+  ({ code, message, details: '', hint: '', name: 'PostgrestError' }) as PostgrestError;
+
+describe('rpcError — lesson RPC errors → HTTP (docs/10 §3)', () => {
+  it('raised invalid_transition / rule_not_active → 409 with that code', () => {
+    for (const code of ['invalid_transition', 'rule_not_active']) {
+      const e = rpcError(pgError('P0001', code));
+      expect(e).toBeInstanceOf(ConflictException);
+      expect(errorCode(e)).toBe(code);
+      expect((e as ConflictException).getResponse()).toEqual({ code, message: code });
+    }
+  });
+
+  it('a unique violation on (rule_id, starts_at) → 409 slot_taken', () => {
+    expect(errorCode(rpcError(pgError('23505', 'duplicate key')))).toBe('slot_taken');
+  });
+
+  it('any other P0001 or unknown error is not dressed up as a domain error', () => {
+    expect(errorCode(rpcError(pgError('P0001', 'something else')))).toBeUndefined();
+    expect(rpcError(pgError('XX000', 'boom'))).toBeInstanceOf(Error);
+  });
+});
+
+describe('callRpc', () => {
+  it('passes the function name and args, returns data, throws mapped errors', async () => {
+    const calls: unknown[] = [];
+    const db = {
+      rpc: async (fn: string, args: unknown) => {
+        calls.push([fn, args]);
+        return fn === 'ok' ? { data: [1], error: null } : { data: null, error: pgError('P0001', 'rule_not_active') };
+      },
+    } as unknown as Db;
+    expect(await callRpc(db, 'ok', { p: 1 })).toEqual([1]);
+    expect(calls).toEqual([['ok', { p: 1 }]]);
+    await expect(callRpc(db, 'bad', {})).rejects.toBeInstanceOf(ConflictException);
+  });
+});
+
+describe('errorCode', () => {
+  it('is undefined for non-HTTP errors and bodies without a code', () => {
+    expect(errorCode(new Error('x'))).toBeUndefined();
+    expect(errorCode(new ConflictException({ message: 'duplicate' }))).toBeUndefined();
+  });
+});

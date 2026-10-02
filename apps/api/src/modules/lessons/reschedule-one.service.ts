@@ -1,0 +1,85 @@
+import { isOpenLesson, type RescheduleRequest } from '@ab/shared';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { randomUUID } from 'node:crypto';
+import type { AuthUser } from '../../common/auth/verify-token';
+import { ConflictChecker } from '../scheduling/conflict-checker';
+import { conflict } from '../scheduling/errors';
+import { TeachersQueries } from '../teachers/teachers.queries';
+import { confirmationMessages } from './confirmation-messages';
+import { studentIdsOf, type LessonRow } from './lesson-row';
+import { LessonStore } from './lesson-store';
+import { invalidTransition } from './transition';
+
+type One = Extract<RescheduleRequest, { scope: 'one' }>;
+export type RescheduleOneInput = { lessonId: string; body: One; actor: AuthUser };
+
+/**
+ * Move one occurrence (R-SCH-07, docs/10 route 8 `one`): the old row becomes `rescheduled`
+ * (chargeable false) and a new row with the same rule_id + rescheduled_from_id takes the new
+ * time; students copied, confirmation queued, one transaction. A clash blocks unless the admin
+ * gives an override reason; a time the rule already holds → 409 slot_taken. Returns the new id.
+ */
+@Injectable()
+export class RescheduleOneService {
+  constructor(
+    private readonly store: LessonStore,
+    private readonly teachers: TeachersQueries,
+    private readonly checker: ConflictChecker,
+  ) {}
+
+  async reschedule({ lessonId, body, actor }: RescheduleOneInput): Promise<string> {
+    const old = await this.store.get(lessonId);
+    if (!isOpenLesson(old.status)) throw invalidTransition(old.status, 'reschedule');
+    const teacherId = body.teacherId ?? old.teacher_id;
+    const meetingLink = await this.linkFor(old, teacherId);
+    const startsAt = new Date(body.startsAt);
+    const duration = Date.parse(old.ends_at) - Date.parse(old.starts_at);
+    const proposed = { starts_at: startsAt, ends_at: new Date(startsAt.getTime() + duration) };
+    const studentIds = studentIdsOf(old);
+    const conflicts = await this.checker.check({
+      teacherId,
+      studentIds,
+      proposed: [proposed],
+      excludeIds: [old.id],
+    });
+    if (conflicts.length > 0 && !body.override) throw conflict('conflict', { conflicts });
+    const next = {
+      id: randomUUID(),
+      rule_id: old.rule_id,
+      teacher_id: teacherId,
+      starts_at: proposed.starts_at.toISOString(),
+      ends_at: proposed.ends_at.toISOString(),
+      meeting_link: meetingLink,
+      override_reason: conflicts.length > 0 ? (body.override?.reason ?? null) : null,
+      rescheduled_from_id: old.id,
+      student_ids: studentIds,
+    };
+    const contacts = await this.store.queries.contacts(studentIds);
+    await this.store.commit({
+      change: {
+        actor: actor.id,
+        changes: [{ id: old.id, from_status: old.status, to_status: 'rescheduled', chargeable: false }],
+        lessons: [next],
+        messages: confirmationMessages(next, contacts),
+      },
+      audit: {
+        actorId: actor.id,
+        entity: 'lessons',
+        entityId: old.id,
+        action: 'reschedule',
+        before: { status: old.status, starts_at: old.starts_at, teacher_id: old.teacher_id },
+        after: { lesson_id: next.id, starts_at: next.starts_at, teacher_id: teacherId, override_reason: next.override_reason },
+      },
+      transition: { from: old.status, event: 'reschedule' },
+    });
+    return next.id;
+  }
+
+  /** Same link as before; a substitute teacher brings their own fixed link (R-LES-01, issue B8). */
+  private async linkFor(old: LessonRow, teacherId: string): Promise<string | null> {
+    if (teacherId === old.teacher_id) return old.meeting_link;
+    const substitute = await this.teachers.get(teacherId);
+    if (!substitute) throw new NotFoundException();
+    return substitute.meeting_link;
+  }
+}
