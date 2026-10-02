@@ -1,0 +1,40 @@
+import type { ThreadPeople } from '@ab/shared';
+import type { Db } from '../../common/db/db.module';
+import type { BalanceQueries } from '../subscriptions/balance.queries';
+import type { PackagesService } from '../subscriptions/packages.service';
+import { dbError } from '../teachers/http';
+import { subscribedGuardianIds, toThreadStudent } from './thread-people.mapper';
+import type { ThreadRow } from './threads.mapper';
+
+export interface PeopleDeps {
+  db: Db;
+  packages: PackagesService;
+  balances: BalanceQueries;
+}
+
+const STUDENTS = 'id, code, name, status, teacher:teachers(display_name_ar)';
+
+/**
+ * GET /threads/:phone `people` (R-SUB-01): the v_threads row's guardian and lead, and every student
+ * of the guardian (oldest first) with their newest package. No guardian → no students.
+ */
+export async function threadPeople(deps: PeopleDeps, row: ThreadRow | null): Promise<ThreadPeople> {
+  const guardian = row?.guardian_id ? { id: row.guardian_id, name: row.guardian_name ?? '' } : null;
+  const lead = row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
+  if (!guardian) return { guardian, lead, students: [] };
+  const { data, error } = await deps.db.from('students').select(STUDENTS).eq('guardian_id', guardian.id).order('created_at');
+  if (error) throw dbError(error);
+  // ponytail: one S6 balance read per child (a family has a handful); batch if families grow.
+  const students = await Promise.all(data.map(async (s) => toThreadStudent(s, await deps.packages.studentBalance(s.id))));
+  return { guardian, lead, students };
+}
+
+/** H1: which of the page's guardians get the «مشترك» tag (subscribedGuardianIds). */
+export async function subscribedGuardians(deps: PeopleDeps, guardianIds: readonly string[]): Promise<Set<string>> {
+  const ids = [...new Set(guardianIds)];
+  if (ids.length === 0) return new Set(); // .in() with no ids is a PostgREST error
+  const { data, error } = await deps.db.from('students').select('id, guardian_id, subscriptions(id, status)').in('guardian_id', ids);
+  if (error) throw dbError(error);
+  const balances = await deps.balances.forStudents(data.map((s) => s.id));
+  return subscribedGuardianIds(data, balances);
+}

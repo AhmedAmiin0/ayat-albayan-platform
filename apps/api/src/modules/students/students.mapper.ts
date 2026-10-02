@@ -74,3 +74,9 @@ export function studentNameOrCodeFilter(term: string): string | null {
   const code = orSafe(term);
   return name ? `name_normalized.ilike.*${name}*,code.ilike.*${code}*` : null;
 }
+
+/** PostgREST or() filter for a digit search: a guardian whose phone has the digits, or the code. */
+export function studentPhoneOrCodeFilter(guardianIds: readonly string[], digits: string): string {
+  const code = `code.ilike.*${digits}*`;
+  return guardianIds.length > 0 ? `guardian_id.in.(${guardianIds.join(',')}),${code}` : code;
+}

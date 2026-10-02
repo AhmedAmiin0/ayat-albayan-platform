@@ -8,6 +8,7 @@ import type {
   TemplateStatus,
 } from '../enums/index.js';
 import type { TemplateButton, TemplateParams } from './templates.js';
+import type { ThreadPeople } from './thread-people.js';
 
 // Phase 4 responses (docs/12 §4). snake_case rows like every API response; instants are ISO-8601
 // UTC strings.
@@ -38,6 +39,8 @@ export interface ThreadView {
   teacher_name: string | null;
   /** sessionWindowOpen(last_inbound_at, now): free text allowed, else only a template. */
   session_open: boolean;
+  /** subscriptionBadge(the guardian's students) === 'subscribed': the «مشترك» tag. */
+  subscribed: boolean;
 }
 
 /** One messages row in a thread (R-MSG-05). */
@@ -90,6 +93,8 @@ export interface ThreadDetail {
   has_more: boolean;
   /** First page only: the guardian's / teacher's next open lessons, for the template composer. */
   lessons: ThreadLesson[];
+  /** Every page: the guardian, the lead and the guardian's students with their packages. */
+  people: ThreadPeople;
 }
 
 /** An upcoming lesson of the thread's person: its times fill a template's variables (rule 6). */

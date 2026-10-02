@@ -12,6 +12,12 @@ describe('inbox search (R-LEAD-01): a phone in any format finds the E.164 row', 
     expect(argsOf('leads', 'or')).toEqual(['phone_e164.ilike.*966552147730*']);
   });
 
+  it.each(['٥٥٢١٤', '٠٥٥ 214', '55-214'])('leads: a partial number %s → its digits', async (q) => {
+    const { db, argsOf } = fakeDb({ leads: [{ data: [], count: 0 }] });
+    await new LeadsQueries(db).list({ ...page, q });
+    expect(argsOf('leads', 'or')).toEqual(['phone_e164.ilike.*55214*']);
+  });
+
   it('leads: a name searches the name only', async () => {
     const { db, argsOf } = fakeDb({ leads: [{ data: [], count: 0 }] });
     await new LeadsQueries(db).list({ ...page, q: 'ام جود' });
@@ -22,5 +28,11 @@ describe('inbox search (R-LEAD-01): a phone in any format finds the E.164 row', 
     const { db, argsOf } = fakeDb({ job_applicants: [{ data: [], count: 0 }] });
     await new JobApplicantsQueries(db).list({ ...page, q: '01001234567' });
     expect(argsOf('job_applicants', 'or')).toEqual(['phone_e164.ilike.*201001234567*']);
+  });
+
+  it('job applicants: partial Arabic digits', async () => {
+    const { db, argsOf } = fakeDb({ job_applicants: [{ data: [], count: 0 }] });
+    await new JobApplicantsQueries(db).list({ ...page, q: '١٢٣٤٥' });
+    expect(argsOf('job_applicants', 'or')).toEqual(['phone_e164.ilike.*12345*']);
   });
 });

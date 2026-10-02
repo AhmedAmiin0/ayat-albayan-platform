@@ -2,6 +2,7 @@ import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError, type Page, type PageQuery } from './http';
+import { teacherSearchFilter } from './teachers.mapper';
 
 export type Teacher = Tables<'teachers'>;
 
@@ -10,11 +11,12 @@ export type Teacher = Tables<'teachers'>;
 export class TeachersQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async list({ page, pageSize }: PageQuery): Promise<Page<Teacher>> {
+  async list({ page, pageSize, search }: PageQuery & { search?: string }): Promise<Page<Teacher>> {
     const from = (page - 1) * pageSize;
-    const { data, count, error } = await this.db
-      .from('teachers')
-      .select('*', { count: 'exact' })
+    let query = this.db.from('teachers').select('*', { count: 'exact' });
+    const filter = search ? teacherSearchFilter(search) : null;
+    if (filter) query = query.or(filter);
+    const { data, count, error } = await query
       .order('display_name_ar')
       .order('id')
       .range(from, from + pageSize - 1);

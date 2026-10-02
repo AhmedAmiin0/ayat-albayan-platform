@@ -1,11 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import {
-  guardianSearchFilter,
-  inferCountry,
-  phoneSearchDigits,
-  toGuardianInsert,
-  toGuardianPatch,
-} from './guardians.mapper';
+import { guardianSearchFilter, inferCountry, toGuardianInsert, toGuardianPatch } from './guardians.mapper';
 
 const dto = { name: 'ام جود', phone_e164: '+966501234567', tz: 'Asia/Riyadh' };
 
@@ -33,26 +27,19 @@ describe('guardians mapper (R-STU-02)', () => {
   });
 });
 
-describe('phone search (R-STU-02)', () => {
+describe('guardian search filter (R-STU-02): searchDigits, else the name', () => {
   it.each([
-    ['0501234567', '966501234567'],
-    ['+966 50 123 4567', '966501234567'],
-    ['٠٥٠١٢٣٤٥٦٧', '966501234567'],
-    ['4567', '4567'],
-    ['0050', '50'],
-  ])('%s → %s', (term, digits) => {
-    expect(phoneSearchDigits(term)).toBe(digits);
+    ['0501234567', 'phone_e164.ilike.*966501234567*'],
+    ['+966 50 123 4567', 'phone_e164.ilike.*966501234567*'],
+    ['٥٦٦١٠', 'phone_e164.ilike.*56610*'],
+    ['٠٥٦ 610', 'phone_e164.ilike.*56610*'],
+    ['ام جود', 'name.ilike.*ام جود*'],
+  ])('%s → %s', (term, filter) => {
+    expect(guardianSearchFilter(term)).toBe(filter);
   });
 
-  it('is null for names, codes and short numbers', () => {
-    expect(phoneSearchDigits('سهيلة')).toBeNull();
-    expect(phoneSearchDigits('AB-0183')).toBeNull();
-    expect(phoneSearchDigits('123')).toBeNull();
-  });
-
-  it('guardian filter: phone contains, else name ilike, else none', () => {
-    expect(guardianSearchFilter('0501234567')).toBe('phone_e164.ilike.*966501234567*');
-    expect(guardianSearchFilter('ام جود')).toBe('name.ilike.*ام جود*');
+  it('nothing searchable → no filter', () => {
     expect(guardianSearchFilter('  ')).toBeNull();
+    expect(guardianSearchFilter('(),')).toBeNull();
   });
 });

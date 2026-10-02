@@ -1,7 +1,7 @@
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { messageRow } from '../whatsapp/sender.fakes';
-import { PHONE, threadRow } from './inbox.fakes';
-import { inboxApp } from './test-app';
+import { PHONE, threadRow, threadStudent } from './inbox.fakes';
+import { inboxApp, NO_PEOPLE } from './test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const URL = `/threads/${encodeURIComponent(PHONE)}`;
@@ -19,6 +19,26 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     t.queries.list.mockResolvedValue({ items: [threadRow()], total: 1 });
     t.queries.thread.mockResolvedValue(threadRow());
     t.queries.markInboundRead.mockResolvedValue('wamid.newest');
+    t.queries.people.mockResolvedValue(NO_PEOPLE);
+    t.queries.subscribedGuardians.mockResolvedValue(new Set());
+  });
+
+  it('H1 «مشترك»: subscribed per row from its guardian, one read for the page', async () => {
+    const rows = [threadRow({ guardian_id: 'g1' }), threadRow({ phone_e164: '+966551112222', guardian_id: 'g2' }), threadRow()];
+    t.queries.list.mockResolvedValue({ items: rows, total: 3 });
+    t.queries.subscribedGuardians.mockResolvedValue(new Set(['g1']));
+    const items = (await t.call({ method: 'GET', url: '/threads' })).json().items;
+    expect(items.map((i: { subscribed: boolean }) => i.subscribed)).toEqual([true, false, false]);
+    expect(t.queries.subscribedGuardians).toHaveBeenCalledWith(['g1', 'g2']);
+  });
+
+  it('H2 people on every page; the thread is subscribed from the same badge', async () => {
+    t.queries.messages.mockResolvedValue([]);
+    const people = { guardian: { id: 'g1', name: 'أم ياسمين' }, lead: null, students: [threadStudent()] };
+    t.queries.people.mockResolvedValue(people);
+    const body = (await t.call({ method: 'GET', url: `${URL}?before=2026-10-02T08:00:00Z` })).json();
+    expect([body.people, body.thread.subscribed]).toEqual([people, true]);
+    expect(t.queries.people).toHaveBeenCalledWith(threadRow());
   });
 
   it('admin only', async () => {

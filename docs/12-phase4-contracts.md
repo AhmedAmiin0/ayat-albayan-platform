@@ -125,8 +125,8 @@ All admin (`@Roles('admin')`) unless marked. `MV` = `MessageView`, `TV` = `Threa
 | T3 | `POST /messaging/templates/:key/submit` | — | `TplV` | 404, 409 `not_submittable` / `invalid_template` / `needs_app_id`, 503, 502 | B1 |
 | M1 | `POST /messages/:id/retry` | — | `MV` (queued, attempts 0, error cleared) | 404, 409 `not_retryable` (only failed) | B1 |
 | M2 | `POST /messages/:id/sent-manually` | — | `MV` (`sent_manually`, `sent_manually_at`) | 404, 409 `not_manual` (only outbound queued/failed) | B1 |
-| H1 | `GET /threads?search&unread&page&pageSize` | page query | `Page<TV>` by `last_message_at` desc | 400 | B2 |
-| H2 | `GET /threads/:phone?before&limit` | E.164 (url-encoded `+`) | `ThreadDetail`; stamps inbound `read_at` + `markRead` the newest inbound | 400 `invalid_phone` | B2 |
+| H1 | `GET /threads?search&unread&page&pageSize` | page query (`search`: `searchDigits` phone, else name) | `Page<TV>` by `last_message_at` desc; `TV.subscribed` = `subscriptionBadge(guardian's students) === 'subscribed'` (computed per page, not a view column) | 400 | B2 |
+| H2 | `GET /threads/:phone?before&limit` | E.164 (url-encoded `+`) | `ThreadDetail` (+ `people`: guardian, lead, the guardian's students with their newest package, every page); stamps inbound `read_at` + `markRead` the newest inbound | 400 `invalid_phone` | B2 |
 | H3 | `POST /threads/:phone/text` | `threadTextSchema` | 201 `MV` | 409 `session_closed` (`sessionWindowOpen`) | B2 |
 | H4 | `POST /threads/:phone/template` | `threadTemplateSchema` | 201 `MV` | 409 `template_not_approved`, 400 | B2 |
 | L1 | `PATCH /leads/:id/qualification` | `leadQualificationPatchSchema` (merge; null clears) | lead row | 404, 400 | B2 |

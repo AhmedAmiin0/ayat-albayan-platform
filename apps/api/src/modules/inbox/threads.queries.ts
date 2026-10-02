@@ -1,9 +1,12 @@
 import type { TablesInsert } from '@ab/db';
-import type { ThreadLesson, ThreadView } from '@ab/shared';
+import type { ThreadLesson, ThreadPeople, ThreadView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { BalanceQueries } from '../subscriptions/balance.queries';
+import { PackagesService } from '../subscriptions/packages.service';
 import type { MessageRow, ThreadMessageRow } from '../whatsapp/message.mapper';
 import { upcomingLessons } from './thread-lessons';
+import { subscribedGuardians, threadPeople } from './thread-people';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 
 export interface ThreadListFilter {
@@ -20,7 +23,11 @@ function check(error: { message: string } | null, what: string): asserts error i
 /** H1–H4 (docs/12 §4): v_threads (service role only) and the messages of one phone. */
 @Injectable()
 export class ThreadsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly packages: PackagesService,
+    private readonly balances: BalanceQueries,
+  ) {}
 
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     let query = this.db.from('v_threads').select('*', { count: 'exact' });
@@ -53,6 +60,16 @@ export class ThreadsQueries {
   /** The guardian's / teacher's next open lessons (thread-lessons.ts). */
   lessons(thread: ThreadView, now: Date): Promise<ThreadLesson[]> {
     return upcomingLessons(this.db, { thread, now });
+  }
+
+  /** The guardian, lead and the guardian's students with their packages (thread-people.ts). */
+  people(row: ThreadRow | null): Promise<ThreadPeople> {
+    return threadPeople({ db: this.db, packages: this.packages, balances: this.balances }, row);
+  }
+
+  /** The page's guardians that get the «مشترك» tag (thread-people.ts). */
+  subscribedGuardians(guardianIds: readonly string[]): Promise<Set<string>> {
+    return subscribedGuardians({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
   }
 
   /** Opening the thread reads its inbound messages; returns the newest stamped wamid. */

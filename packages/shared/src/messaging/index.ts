@@ -8,6 +8,7 @@ export * from './reply-note.js';
 export * from './schemas.js';
 export * from './status-style.js';
 export * from './templates.js';
+export * from './thread-people.js';
 export * from './timing.js';
 export * from './wa.js';
 export type * from './views.js';

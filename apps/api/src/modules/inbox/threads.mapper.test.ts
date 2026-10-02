@@ -24,6 +24,8 @@ describe('threadSearchFilter', () => {
   it('a phone in any format → its digits; otherwise the display name', () => {
     expect(threadSearchFilter('0501234567')).toBe('phone_e164.ilike.*966501234567*');
     expect(threadSearchFilter('+966 50 123 4567')).toBe('phone_e164.ilike.*966501234567*');
+    expect(threadSearchFilter('٥٦٦١٠')).toBe('phone_e164.ilike.*56610*');
+    expect(threadSearchFilter('٠٥٦ 610')).toBe('phone_e164.ilike.*56610*');
     expect(threadSearchFilter('ياسمين')).toBe('display_name.ilike.*ياسمين*');
     expect(threadSearchFilter('(),')).toBeNull();
   });

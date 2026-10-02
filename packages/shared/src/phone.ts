@@ -63,6 +63,19 @@ export function normalizePhone(input: string): PhoneResult {
   return E164_RE.test(e164) ? ok(e164, null) : bad();
 }
 
+/**
+ * The phone part of a list search box (R-STU-02, R-LEAD-01): the digits to find inside phone_e164,
+ * or null to search by name. A whole number in any format → its E.164 digits; a partial one typed
+ * on any keyboard (٠-٩, ۰-۹, spaces, dashes, dots, brackets, +) → its digits without a leading
+ * 00 / 0, once at least 3 digits are typed.
+ */
+export function searchDigits(term: string): string | null {
+  const whole = normalizePhone(term);
+  if (whole.ok) return whole.e164.slice(1);
+  const digits = toAsciiDigits(term).replace(NOISE, '').replace(/\+/g, '');
+  return /^[0-9]{3,}$/.test(digits) ? digits.replace(/^00?/, '') : null;
+}
+
 function ok(e164: string, country: PhoneCountry | null): PhoneResult {
   return { ok: true, e164, country };
 }

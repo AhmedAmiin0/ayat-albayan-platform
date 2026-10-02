@@ -1,6 +1,7 @@
 // HTTP test harness for the inbox routes (test-only, excluded from the build). Real controllers,
 // guards, services, registry and MessageViews; the DB-facing queries, the client, the gate and
 // the sender are mocks.
+import type { ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -14,7 +15,8 @@ import { TemplatesQueries } from '../whatsapp/templates.queries';
 import { WHATSAPP_CLIENT } from '../whatsapp/whatsapp.types';
 import { ThreadsQueries } from './threads.queries';
 
-export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
+export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
+export const ADMIN: AuthUser ={ id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: { id: 't1', email: null, role: 'teacher' } };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
@@ -27,6 +29,8 @@ function mocks() {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessons: vi.fn(async () => []),
+      people: vi.fn(async () => NO_PEOPLE),
+      subscribedGuardians: vi.fn(async () => new Set<string>()),
     },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     client: { configured: vi.fn(() => false), markRead: vi.fn() },
