@@ -50,6 +50,16 @@ describe('toLessonView (R-LES-01, R-LES-03, R-SCH-03)', () => {
     ]);
   });
 
+  it.each([
+    ['a trial rule', { rule: { byday: [0], package: 'trial' as const } }, true],
+    ['a package rule', { rule: { byday: [0], package: '8' as const } }, false],
+    ['a rule without a package', { rule: { byday: [0], package: null } }, false],
+    ['no rule embed', { rule: null }, false],
+    ['an old fake without the embed', {}, false],
+  ])('trial (R-SCH-09): %s', (_name, over, trial) => {
+    expect(toLessonView(lessonRow(over), { role: 'admin', seq: none }).trial).toBe(trial);
+  });
+
   it('a terminal lesson offers nothing', () => {
     expect(toLessonView(lessonRow({ status: 'rescheduled' }), { role: 'admin', seq: none }).allowed_events).toEqual([]);
   });

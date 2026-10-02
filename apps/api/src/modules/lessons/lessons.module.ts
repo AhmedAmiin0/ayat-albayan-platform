@@ -14,6 +14,8 @@ import { LessonStore } from './lesson-store';
 import { LessonViews } from './lesson-views';
 import { LessonsController } from './lessons.controller';
 import { LessonsQueries } from './lessons.queries';
+import { OverviewQueries } from './overview/overview.queries';
+import { OverviewService } from './overview/overview.service';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
 import { RuleCancelController } from './rule-cancel.controller';
@@ -48,6 +50,8 @@ import { TeacherMeQueries } from './teacher-me.queries';
     LessonStore,
     LessonViews,
     LessonsQueries,
+    OverviewQueries,
+    OverviewService,
     ProposalDecisionService,
     RescheduleOneService,
     RescheduleRuleService,

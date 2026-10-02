@@ -54,6 +54,21 @@ export class TeachersQueries {
     return data.length > 0;
   }
 
+  /**
+   * Current load: students with the teacher whose status is trial | active (booking options,
+   * the all-teachers calendar). No ids = every teacher.
+   * ponytail: counts rows in JS — fine for one academy; a grouped view if teachers get thousands.
+   */
+  async loads(teacherIds?: readonly string[]): Promise<Map<string, number>> {
+    let query = this.db.from('students').select('teacher_id').in('status', ['trial', 'active']);
+    query = teacherIds ? query.in('teacher_id', [...teacherIds]) : query.not('teacher_id', 'is', null);
+    const { data, error } = await query;
+    if (error) throw dbError(error);
+    const counts = new Map<string, number>();
+    for (const { teacher_id: id } of data) if (id) counts.set(id, (counts.get(id) ?? 0) + 1);
+    return counts;
+  }
+
   /** teachers.id of the signed-in user (JWT sub = profiles.id = teachers.profile_id). */
   async idByProfile(profileId: string): Promise<string | null> {
     const { data, error } = await this.db

@@ -17,6 +17,7 @@ import { UnpaidFlags } from '../subscriptions/unpaid-flags.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonsQueries } from './lessons.queries';
+import { OverviewQueries } from './overview/overview.queries';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
 import { TeacherMeQueries } from './teacher-me.queries';
 
@@ -42,7 +43,8 @@ function mocks() {
       openOfRule: vi.fn(), contacts: vi.fn(), seq: vi.fn(),
     },
     writer: { apply: vi.fn(), generate: vi.fn() },
-    teachers: { idByProfile: vi.fn(), get: vi.fn() },
+    teachers: { idByProfile: vi.fn(), get: vi.fn(), loads: vi.fn() },
+    overview: { teachers: vi.fn(), slots: vi.fn(), timeOff: vi.fn() },
     audit: { record: vi.fn() },
     settings: { lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
@@ -66,6 +68,7 @@ export async function lessonsApp() {
     .overrideProvider(ScheduleQueries).useValue(m.rules)
     .overrideProvider(ConflictChecker).useValue(m.checker)
     .overrideProvider(TeacherMeQueries).useValue(m.me)
+    .overrideProvider(OverviewQueries).useValue(m.overview)
     .overrideProvider(LessonProposalQueries).useValue(m.proposals)
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
     .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
@@ -92,6 +95,8 @@ export async function lessonsApp() {
     m.proposals.decide.mockResolvedValue(true);
     m.proposals.pendingLessonIds.mockResolvedValue([]);
     m.unpaid.studentIds.mockResolvedValue(new Set());
+    m.teachers.loads.mockResolvedValue(new Map());
+    for (const read of Object.values(m.overview)) read.mockResolvedValue([]);
   };
   return { ...m, app, call, reset };
 }

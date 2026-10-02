@@ -32,22 +32,6 @@ export class TeacherOptionsQueries {
     return data;
   }
 
-  /**
-   * Current load: students with this teacher and status trial | active.
-   * ponytail: counts rows in JS — fine for one academy; a grouped view if teachers get thousands.
-   */
-  async loads(teacherIds: readonly string[]): Promise<Map<string, number>> {
-    const { data, error } = await this.db
-      .from('students')
-      .select('teacher_id')
-      .in('teacher_id', teacherIds)
-      .in('status', ['trial', 'active']);
-    if (error) throw dbError(error);
-    const counts = new Map<string, number>();
-    for (const { teacher_id: id } of data) if (id) counts.set(id, (counts.get(id) ?? 0) + 1);
-    return counts;
-  }
-
   /** Teachers among `teacherIds` with at least one weekly availability row. */
   async withAvailability(teacherIds: readonly string[]): Promise<Set<string>> {
     const { data, error } = await this.db

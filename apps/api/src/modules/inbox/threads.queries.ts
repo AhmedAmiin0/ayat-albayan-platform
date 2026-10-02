@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
-import type { MessageRow, ThreadMessageRow } from '../whatsapp/message.mapper';
+import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/message.mapper';
 import { upcomingLessons } from './thread-lessons';
 import { familyTagsOf, threadPeople } from './thread-people';
 import type { FamilyTag } from './thread-people.mapper';
@@ -51,7 +51,7 @@ export class ThreadsQueries {
 
   /** Newest first, `limit + 1` rows so the caller knows whether older ones exist; each with its lesson. */
   async messages(input: { phone: string; before?: string; limit: number }): Promise<ThreadMessageRow[]> {
-    let query = this.db.from('messages').select('*, lesson:lessons(starts_at, status)').eq('phone_e164', input.phone);
+    let query = this.db.from('messages').select(`${MESSAGE_SELECT}, lesson:lessons(starts_at, status)` as const).eq('phone_e164', input.phone);
     if (input.before) query = query.lt('created_at', input.before);
     const { data, error } = await query.order('created_at', { ascending: false }).limit(input.limit + 1);
     check(error, 'thread messages read');
@@ -101,8 +101,8 @@ export class ThreadsQueries {
     return data;
   }
 
-  async get(id: string): Promise<MessageRow | null> {
-    const { data, error } = await this.db.from('messages').select('*').eq('id', id).maybeSingle();
+  async get(id: string): Promise<ThreadMessageRow | null> {
+    const { data, error } = await this.db.from('messages').select(MESSAGE_SELECT).eq('id', id).maybeSingle();
     check(error, 'message read');
     return data;
   }

@@ -11,8 +11,13 @@ import { SENDING } from './send-plan';
 import { templateParams } from './wa-json';
 
 export type MessageRow = Tables<'messages'>;
-/** A thread row: the message with its lesson embedded (ThreadsQueries.messages). */
-export type ThreadMessageRow = MessageRow & { lesson?: MessageLesson | null };
+/** A messages row with the teacher who sent it (teacher mode «بعتها»), for every view-producing read. */
+export const MESSAGE_SELECT = '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar)' as const;
+/** A thread row: the message with its lesson and sending teacher embedded (ThreadsQueries.messages). */
+export type ThreadMessageRow = MessageRow & {
+  lesson?: MessageLesson | null;
+  sent_by_teacher?: { display_name_ar: string } | null;
+};
 
 export interface MessageViewInput {
   row: ThreadMessageRow;
@@ -67,6 +72,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     delivered_at: row.delivered_at,
     read_at: row.read_at,
     sent_manually_at: row.sent_manually_at,
+    sent_by_teacher_name: row.sent_by_teacher?.display_name_ar ?? null,
     created_at: row.created_at,
     click_to_chat: needsManualSend(row) ? clickToChatLink(row.phone_e164, text) : null,
     lesson: row.lesson ?? null,

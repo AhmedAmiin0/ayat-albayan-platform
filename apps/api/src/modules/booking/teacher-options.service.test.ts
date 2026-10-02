@@ -2,6 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { fakeQueries, IDS, STUDENTS } from './booking.fakes';
 import type { BookingQueries } from './booking.queries';
+import type { TeachersQueries } from '../teachers/teachers.queries';
 import type { TeacherOptionsQueries } from './teacher-options.queries';
 import { TeacherOptionsService } from './teacher-options.service';
 
@@ -17,15 +18,16 @@ const ABRAR = {
 function setup() {
   const options = {
     active: vi.fn().mockResolvedValue([ABRAR]),
-    loads: vi.fn().mockResolvedValue(new Map([[IDS.teacher, 7]])),
     withAvailability: vi.fn().mockResolvedValue(new Set([IDS.teacher])),
   };
+  const teachers = { loads: vi.fn().mockResolvedValue(new Map([[IDS.teacher, 7]])) };
   const queries = fakeQueries();
   const service = new TeacherOptionsService(
     options as unknown as TeacherOptionsQueries,
     queries as unknown as BookingQueries,
+    teachers as unknown as TeachersQueries,
   );
-  return { options, queries, service };
+  return { options, queries, service, teachers };
 }
 
 describe('TeacherOptionsService (R-SCH-06, docs/10 §5 #12)', () => {
@@ -65,18 +67,18 @@ describe('TeacherOptionsService (R-SCH-06, docs/10 §5 #12)', () => {
   });
 
   it('a teacher with no students and no grid shows 0 and disabled', async () => {
-    const { service, options } = setup();
-    options.loads.mockResolvedValue(new Map());
+    const { service, options, teachers } = setup();
+    teachers.loads.mockResolvedValue(new Map());
     options.withAvailability.mockResolvedValue(new Set());
     const [only] = await service.list({ program: 'quran' });
     expect(only).toMatchObject({ students_count: 0, has_availability: false });
   });
 
   it('no matching teacher → [] without the load queries', async () => {
-    const { service, options } = setup();
+    const { service, options, teachers } = setup();
     options.active.mockResolvedValue([]);
     expect(await service.list({ program: 'quran' })).toEqual([]);
-    expect(options.loads).not.toHaveBeenCalled();
+    expect(teachers.loads).not.toHaveBeenCalled();
   });
 
   it('404 student_not_found', async () => {
