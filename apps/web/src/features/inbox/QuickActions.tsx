@@ -14,9 +14,12 @@ export interface QuickActionsProps {
   onDone: (message: string, tone?: 'error') => void;
 }
 
+const linkClass = buttonVariants({ variant: 'secondary', className: 'justify-self-start' });
+
 /**
- * What the admin does next from the thread: «حجز حلقة تجريبية» (the Phase 2 wizard with this
- * lead, R-LEAD-06), change the status, or move the number to job applicants (R-LEAD-04).
+ * What the admin does next from the thread: «حجز حلقة تجريبية» or «اشترك» (the Phase 2 wizard with
+ * this lead and a trial or a regular package, R-LEAD-06, R-SUB-01; the booked panel then offers the
+ * subscription), change the status, or move the number to job applicants (R-LEAD-04).
  */
 export function QuickActions({ lead, onDone }: QuickActionsProps) {
   const queryClient = useQueryClient();
@@ -31,19 +34,22 @@ export function QuickActions({ lead, onDone }: QuickActionsProps) {
     onError: () => onDone(t.common.error, 'error'),
   });
   const open = lead.status !== 'converted' && lead.status !== 'lost';
+  const book = { leadId: lead.id, phone: lead.phone_e164, name: lead.name ?? undefined };
 
   return (
     <div className="grid gap-3">
       <h3 className="text-sm font-semibold">{t.common.actions}</h3>
       {open && (
-        <Link
-          to="/admin/book"
-          search={{ leadId: lead.id, phone: lead.phone_e164, name: lead.name ?? undefined }}
-          className={buttonVariants({ variant: 'secondary', className: 'justify-self-start' })}
-        >
-          <Icon name="calendar" />
-          {t.booking.trialTitle}
-        </Link>
+        <>
+          <Link to="/admin/book" search={book} className={linkClass}>
+            <Icon name="calendar" />
+            {t.booking.trialTitle}
+          </Link>
+          <Link to="/admin/book" search={{ ...book, pkg: '8' }} className={linkClass}>
+            <Icon name="card" />
+            {t.inbox.subscription.subscribe}
+          </Link>
+        </>
       )}
       <LeadStatusChange lead={lead} onDone={onDone} />
       <Button

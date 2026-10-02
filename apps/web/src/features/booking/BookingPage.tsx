@@ -31,10 +31,12 @@ export function draftFromStudent(s: ProfileWithPref, guardian: GuardianRow | und
   };
 }
 
+/** A lead books a trial, unless «اشترك» in the chat asked for a regular package (R-SUB-01). */
 export function draftFromLead(search: BookSearch): BookingDraft {
   const phone = search.phone ?? '';
   return {
-    ...emptyDraft({ leadId: search.leadId ?? null, trial: true }),
+    ...emptyDraft({ leadId: search.leadId ?? null }),
+    pkg: search.pkg ?? 'trial',
     newStudent: { name: '', guardianName: search.name ?? '', guardianPhone: phone },
     country: guardianCountry({ phone_e164: phone }),
   };
@@ -42,19 +44,21 @@ export function draftFromLead(search: BookSearch): BookingDraft {
 
 /**
  * /admin/book (R-SCH-06): from a student profile «احجز حلقات» (student + siblings), from a lead
- * row «حجز حلقة تجريبية» (new student + guardian, R-LEAD-06), or bare (search a student first).
+ * row «حجز حلقة تجريبية» or the chat's «اشترك» (new student + guardian, R-LEAD-06), or bare
+ * (search a student first).
  */
 export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
+  const trial = !!search.leadId && (search.pkg ?? 'trial') === 'trial';
   return (
     <>
       <PageHead>
-        <Cartouche>{search.leadId ? t.booking.trialTitle : t.booking.title}</Cartouche>
+        <Cartouche>{trial ? t.booking.trialTitle : t.booking.title}</Cartouche>
       </PageHead>
       {search.studentId ? (
         <StudentBooking studentId={search.studentId} onOpenStudent={onOpenStudent} />
       ) : (
         <BookingWizard
-          key={search.leadId ?? 'bare'}
+          key={search.leadId ? `${search.leadId}-${search.pkg ?? 'trial'}` : 'bare'}
           initial={search.leadId ? draftFromLead(search) : emptyDraft()}
           primary={null}
           siblings={[]}

@@ -1224,7 +1224,20 @@
     "qualificationSaved": "بيانات الطالب اتحفظت",
     "followUpSaved": "المتابعة اتحدّثت",
     "applyStatus": "غيّر",
-    "noLead": "الرقم ده مش عميل جديد، فمفيش بيانات تأهيل ليه."
+    "noLead": "الرقم ده مش عميل جديد، فمفيش بيانات تأهيل ليه.",
+    "subscription": {
+      "title": "الاشتراك",
+      "badge": {
+        "subscribed": "مشترك",
+        "expired": "اشتراكه خلص",
+        "none": "مش مشترك"
+      },
+      "subscribe": "اشترك",
+      "renew": "جدّد الاشتراك",
+      "due": "عليه {amount}",
+      "make": "اعمل الاشتراك",
+      "backToChat": "ارجع للمحادثة"
+    }
   },
   "templates": {
     "title": "قوالب واتساب",

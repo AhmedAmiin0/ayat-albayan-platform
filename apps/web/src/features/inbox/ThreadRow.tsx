@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { fullTime, listTime, previewText, threadKind, threadName, unreadLabel } from './format';
 import type { InboxSearch } from './search';
+import { SubscriptionChip } from './SubscriptionChip';
 
 export interface ThreadRowProps {
   thread: ThreadView;
@@ -33,7 +34,7 @@ function PhoneTag({ phone }: { phone: string }) {
 /**
  * One conversation (docs/07 §9, R-LEAD-02): avatar · name (bold + saffron dot when unread) · phone
  * · time; the last message («إنت:» for ours), or «متبعتتش» when our last send failed; the lead's
- * status chip or who the number is, source.
+ * status chip or who the number is, «مشترك» while the family has a running package, source.
  */
 export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const name = threadName(th);
@@ -90,6 +91,7 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
           ) : (
             <span>{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
           )}
+          {th.subscribed && <SubscriptionChip size="sm" badge="subscribed" />}
           {th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         </span>
       </Link>

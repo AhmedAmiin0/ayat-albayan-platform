@@ -132,7 +132,8 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingReq
       name: s.name.trim(),
       program: d.program,
       tz: d.tz,
-      status: 'trial',
+      // A regular package from the chat's «اشترك» makes them a subscribed student straight away.
+      status: d.pkg === 'trial' ? 'trial' : 'active',
       teacher_gender_pref: d.genderPref,
     },
     guardian: { name: s.guardianName.trim(), phone_e164: s.guardianPhone, tz: d.tz, country: d.country },

@@ -13,6 +13,13 @@ describe('parseBookSearch (/admin/book)', () => {
     });
     expect(parseBookSearch({ leadId: 3, studentId: null })).toEqual({});
   });
+
+  it('keeps a lead’s package size («اشترك» from the chat), parsed or raw; drops unknown ones', () => {
+    expect(parseBookSearch({ leadId: 'l1', pkg: 8 })).toEqual({ leadId: 'l1', pkg: '8' });
+    expect(parseBookSearch({ leadId: 'l1', pkg: 'trial' })).toEqual({ leadId: 'l1', pkg: 'trial' });
+    expect(parseBookSearch({ leadId: 'l1', pkg: '9' })).toEqual({ leadId: 'l1' });
+    expect(parseBookSearch({ studentId: 's1', pkg: '8' })).toEqual({ studentId: 's1' });
+  });
 });
 
 describe('bookingTeachersQuery', () => {

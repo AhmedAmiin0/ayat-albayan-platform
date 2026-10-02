@@ -91,12 +91,14 @@ describe('toBookingRequest (POST /booking)', () => {
     const body = toBookingRequest(lead);
     expect(body).toMatchObject({
       leadId: lead.leadId,
-      newStudent: { name: 'جود', program: 'quran', tz: 'Asia/Riyadh', teacher_gender_pref: 'female' },
+      newStudent: { name: 'جود', program: 'quran', tz: 'Asia/Riyadh', status: 'trial', teacher_gender_pref: 'female' },
       guardian: { name: 'أم جود', tz: 'Asia/Riyadh', country: 'SA' },
       byday: [0],
     });
     expect(body).not.toHaveProperty('studentIds');
     expect(bookingRequestSchema.safeParse(body).success).toBe(true);
+    // «اشترك» from the chat: a regular package books an active student.
+    expect(toBookingRequest({ ...lead, pkg: '8' })).toMatchObject({ package: '8', newStudent: { status: 'active' } });
   });
 
   it('carries the idempotency key, the picked instant, and force on the lead path', () => {

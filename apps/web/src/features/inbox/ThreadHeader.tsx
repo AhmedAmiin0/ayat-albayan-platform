@@ -1,4 +1,4 @@
-import { formatPhone, leadStatusStyle, type ThreadView } from '@ab/shared';
+import { formatPhone, leadStatusStyle, type SubscriptionBadge, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
@@ -6,16 +6,19 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { threadKind, threadName, timesInText } from './format';
 import type { InboxSearch } from './search';
+import { SubscriptionChip } from './SubscriptionChip';
 
 export interface ThreadHeaderProps {
   thread: ThreadView;
   /** The list's URL state without the open thread (the phone-width «رجوع»). */
   listSearch: InboxSearch;
   headingId: string;
+  /** The family's subscription (threadBadge); null for a teacher or an unknown number. */
+  badge: SubscriptionBadge | null;
 }
 
-/** Name, phone, who the number is (lead status chip / guardian / teacher) and the source. */
-export function ThreadHeader({ thread: th, listSearch, headingId }: ThreadHeaderProps) {
+/** Name, phone, who the number is (lead status chip / guardian / teacher), «مشترك» and the source. */
+export function ThreadHeader({ thread: th, listSearch, headingId, badge }: ThreadHeaderProps) {
   const kind = threadKind(th);
   return (
     <header className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule pb-3">
@@ -37,6 +40,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId }: ThreadHeader
         ) : (
           <span className="text-xs font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}
+        {badge && <SubscriptionChip badge={badge} />}
         {th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         <span>{timesInText()}</span>
       </span>

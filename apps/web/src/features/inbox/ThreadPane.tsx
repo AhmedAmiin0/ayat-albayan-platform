@@ -10,6 +10,8 @@ import { Composer } from './Composer';
 import { LeadPanel } from './LeadPanel';
 import { MessageLog } from './MessageLog';
 import type { InboxSearch } from './search';
+import { SubscribePanel } from './SubscribePanel';
+import { threadBadge } from './subscription';
 import { sendErrorText } from './TextComposer';
 import { ThreadHeader } from './ThreadHeader';
 
@@ -19,8 +21,8 @@ export interface ThreadPaneProps {
 }
 
 /**
- * One conversation (R-LEAD-02, R-MSG-05): the message log, the reply box and, for a lead, the
- * qualification panel beside it (below it under 1280px).
+ * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the message log, the reply box and beside it
+ * (below it under 1280px) the lead's qualification panel, or the guardian's children and packages.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
@@ -47,11 +49,13 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
     teacherName: th.teacher_name,
     lessons: detail.data.pages[0]?.lessons ?? [],
   };
+  const people = detail.data.pages[0]?.people ?? null;
+  const aside = isLead || !!people?.guardian;
 
   return (
     <section aria-labelledby={headingId} className="min-w-0">
-      <ThreadHeader thread={th} listSearch={listSearch} headingId={headingId} />
-      <div className={cn('grid gap-6', isLead && 'xl:grid-cols-[minmax(0,1fr)_280px]')}>
+      <ThreadHeader thread={th} listSearch={listSearch} headingId={headingId} badge={people && threadBadge(people)} />
+      <div className={cn('grid gap-6', aside && 'xl:grid-cols-[minmax(0,1fr)_280px]')}>
         <div className="min-w-0">
           <MessageLog
             messages={messages}
@@ -63,6 +67,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
           <Composer key={phone} thread={th} context={context} />
         </div>
         {isLead && <LeadPanel phone={phone} />}
+        {people?.guardian && <SubscribePanel people={people} />}
       </div>
     </section>
   );
