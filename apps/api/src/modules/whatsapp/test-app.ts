@@ -27,7 +27,7 @@ function mocks() {
   return {
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
-    gate: { view: vi.fn(), open: vi.fn() },
+    gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },
     client: { configured: vi.fn(() => false), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() },
     storage: { signedDownload: vi.fn() },
     sender: { kick: vi.fn() },

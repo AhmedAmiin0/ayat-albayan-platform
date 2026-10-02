@@ -4,7 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { stampDelivered } from './delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
-import type { StaleLead } from './send-stale';
+import { AUTO_OFF, AUTOMATIC_KEYS, type StaleLead } from './send-stale';
 import type { TemplateRow } from './whatsapp.types';
 
 /** A queued outbound row with what expiry, staleness and the failure push need. */
@@ -63,6 +63,26 @@ export class SenderQueries {
       .limit(input.limit);
     if (error) throw new Error(`outbound queue read failed: ${error.message}`);
     return data;
+  }
+
+  /**
+   * Automatic messages OFF: every job-made reminder / follow-up / renewal still queued is held
+   * (failed «auto_off», no push), also under a template Meta has not approved yet, which due()
+   * never reads and which would otherwise go out on its own once approved and switched ON. Not a
+   * row already claimed (SENDING): Meta may have sent it; the worker asks the admin. Returns the count.
+   */
+  async holdAutomatic(): Promise<number> {
+    const { data, error } = await this.db
+      .from('messages')
+      .update({ status: 'failed', error_code: AUTO_OFF.code, error_text: AUTO_OFF.text, next_attempt_at: null })
+      .eq('direction', 'outbound')
+      .eq('status', 'queued')
+      .is('created_by', null)
+      .in('template_key', [...AUTOMATIC_KEYS])
+      .or(`error_code.is.null,error_code.neq.${SENDING}`)
+      .select('id');
+    if (error) throw new Error(`automatic hold failed: ${error.message}`);
+    return data.length;
   }
 
   /**

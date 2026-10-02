@@ -70,12 +70,14 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     const summary: SendSummary = { sent: 0, retry: 0, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0 };
     try {
       if (!(await this.gate.open())) return summary;
+      // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved template).
+      if (!(await this.gate.automaticOn())) summary.held += await this.queries.holdAutomatic();
       const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
-      const autoOn = await this.gate.automaticOn(); // once per pass; the kill switch stays per row
       for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
-        // The kill switch is read before every row, so OFF stops a long pass at once (docs/09).
+        // Both switches are read before every row, so OFF stops a long pass at once (docs/09).
         if (!(await this.gate.open())) break;
-        const template = row.template_key ? (templates.get(row.template_key) ?? null) : null;
+        const autoOn = await this.gate.automaticOn();
+        const template = templates.get(row.template_key ?? '') ?? null;
         const outcome = await this.worker.process({ row, template, now, autoOn });
         summary[outcome] += 1;
         if (outcome === 'paused') break; // a broken token fails every row the same way
@@ -83,9 +85,14 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);
     }
-    if (summary.sent + summary.retry + summary.failed + summary.expired + summary.stale + summary.held + summary.paused > 0) {
+    this.report(summary);
+    return summary;
+  }
+
+  /** Logged only when a pass did something (skipped rows alone stay quiet). */
+  private report(summary: SendSummary): void {
+    if (Object.entries(summary).some(([outcome, n]) => outcome !== 'skipped' && n > 0)) {
       this.log.log(`outbound messages: ${JSON.stringify(summary)}`);
     }
-    return summary;
   }
 }

@@ -3,7 +3,7 @@ import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
 import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
-import { dropReason, isAutomatic } from './send-stale';
+import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
 import { WaError, type TemplateRow, type WaSent } from './whatsapp.types';
 
@@ -16,7 +16,7 @@ export interface SendJob {
   /** The approved registry row of row.template_key; null for a session text. */
   template: TemplateRow | null;
   now: Date;
-  /** settings.auto_messages_enabled, read once per pass by the sender. */
+  /** settings.auto_messages_enabled, read by the sender before this row. */
   autoOn: boolean;
 }
 
@@ -69,7 +69,7 @@ export class MessageWorker {
     if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now });
     // Not left queued: it would go out at a wrong time once the switch is back ON. No push.
     if (!autoOn && isAutomatic(row)) {
-      await this.queries.expire(row.id, { code: 'auto_off', text: 'automatic messages are off in settings' });
+      await this.queries.expire(row.id, AUTO_OFF);
       return 'held';
     }
     if (!readyToSend(row, template)) return 'skipped';

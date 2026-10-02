@@ -1,9 +1,10 @@
+import { TEMPLATE_KEYS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
 import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { SENDING } from './send-plan';
-import { isAutomatic } from './send-stale';
+import { AUTOMATIC_KEYS, isAutomatic } from './send-stale';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
 import { templateRow } from './whatsapp.fakes';
@@ -44,6 +45,12 @@ describe('isAutomatic: job-made reminders, follow-ups and renewals', () => {
 
   it.each(['booking_confirmation', 'booking_confirmation_meet', 'report_ready', null])('%s is never automatic', (key) => {
     expect(isAutomatic({ template_key: key, created_by: null })).toBe(false);
+  });
+
+  it('every registry key is classified: a new key fails here until it is automatic or sent on an action', () => {
+    // Sent because someone acted in the app: a booking made, a report a teacher submitted.
+    const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready'];
+    expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
   });
 });
 

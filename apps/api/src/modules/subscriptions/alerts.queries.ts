@@ -60,8 +60,8 @@ export class AlertsQueries {
   /**
    * Closes the open tasks about these packages whose dedup key is not in `keep` (done_by null: the
    * system closed it). The task stays in the list of done tasks for the record. A renewal message
-   * still queued under a closed key (`renewal_due:{sub}`, the same key) is no longer true — the
-   * package was renewed or paid — so it is failed as stale and never sent.
+   * still queued or held (auto_off) under a closed key (`renewal_due:{sub}`, the same key) is no
+   * longer true — the package was renewed or paid — so it is failed as stale and never sent.
    */
   async closeTasks(input: { subjectIds: readonly string[]; keep: readonly string[]; now: Date }): Promise<void> {
     if (input.subjectIds.length === 0) return;
@@ -80,7 +80,7 @@ export class AlertsQueries {
       .from('messages')
       .update({ status: 'failed', error_code: 'stale', error_text: 'renewal no longer due', next_attempt_at: null })
       .in('dedup_key', closed)
-      .eq('status', 'queued');
+      .or('status.eq.queued,error_code.eq.auto_off');
     if (stale.error) throw dbError(stale.error);
   }
 

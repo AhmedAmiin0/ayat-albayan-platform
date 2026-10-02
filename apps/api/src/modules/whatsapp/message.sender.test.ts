@@ -7,7 +7,7 @@ import type { SenderQueries } from './sender.queries';
 import { templateRow } from './whatsapp.fakes';
 
 const gate = { open: vi.fn(), automaticOn: vi.fn() };
-const queries = { approvedTemplates: vi.fn(), due: vi.fn() };
+const queries = { approvedTemplates: vi.fn(), due: vi.fn(), holdAutomatic: vi.fn() };
 const worker = { process: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const booking = templateRow();
@@ -22,6 +22,7 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
     gate.open.mockResolvedValue(true);
     gate.automaticOn.mockResolvedValue(true);
     queries.approvedTemplates.mockResolvedValue([booking, reminder]);
+    queries.holdAutomatic.mockResolvedValue(0);
     queries.due.mockResolvedValue([dueMessage(), dueMessage({ id: 'm2', template_key: null, body: 'وعليكم السلام' })]);
     worker.process.mockResolvedValueOnce('sent').mockResolvedValueOnce('retry');
   });
@@ -41,15 +42,23 @@ describe('MessageSender — the outbound pass (R-MSG-01/02, docs/12 §3.3)', () 
       [{ row: expect.objectContaining({ id: 'm2' }), template: null, now: NOW, autoOn: true }],
     ]);
     expect(summary).toEqual({ sent: 1, retry: 1, failed: 0, expired: 0, stale: 0, held: 0, paused: 0, skipped: 0 });
+    expect(queries.holdAutomatic).not.toHaveBeenCalled();
   });
 
-  it('automatic messages OFF: read once per pass and handed to every row; held rows are counted', async () => {
+  it('automatic messages OFF: every job-made row is held up front (approved template or not), then per row', async () => {
     gate.automaticOn.mockResolvedValue(false);
+    queries.holdAutomatic.mockResolvedValue(2); // e.g. the 2 renewal_due rows under a not-yet-approved template
     worker.process.mockReset().mockResolvedValueOnce('held').mockResolvedValueOnce('sent');
     const summary = await sender().runOnce(NOW);
-    expect(gate.automaticOn).toHaveBeenCalledTimes(1);
+    expect(queries.holdAutomatic.mock.invocationCallOrder[0]).toBeLessThan(queries.due.mock.invocationCallOrder[0] ?? 0);
     expect(worker.process.mock.calls.map(([job]) => job.autoOn)).toEqual([false, false]);
-    expect(summary).toMatchObject({ held: 1, sent: 1 });
+    expect(summary).toMatchObject({ held: 3, sent: 1 });
+  });
+
+  it('automatic messages turned OFF mid-pass: the switch is read before every row', async () => {
+    gate.automaticOn.mockResolvedValueOnce(true).mockResolvedValueOnce(true).mockResolvedValue(false);
+    await sender().runOnce(NOW);
+    expect(worker.process.mock.calls.map(([job]) => job.autoOn)).toEqual([true, false]);
   });
 
   it('the kill switch is read before every row: OFF mid-pass stops the rest at once', async () => {

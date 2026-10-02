@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
 import { MessagesQueries } from './messages.queries';
+import { AUTOMATIC_KEYS } from './send-stale';
 import { dueMessage } from './sender.fakes';
 import { SenderQueries } from './sender.queries';
 
@@ -79,6 +80,13 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
     await new SenderQueries(db).expire('m4', { code: 'auto_off', text: 'automatic messages are off in settings' });
     expect(calls.find((c) => c.method === 'update')?.args[0]).toMatchObject({ status: 'failed', error_code: 'auto_off' });
     expect(eqs(calls)).toEqual([['id', 'm4'], ['status', 'queued']]);
+    const hold = fakeDb({ [M]: [{ data: [{ id: 'm5' }, { id: 'm6' }] }] });
+    await expect(new SenderQueries(hold.db).holdAutomatic()).resolves.toBe(2); // whatever the template's approval
+    expect(hold.argsOf(M, 'update')).toEqual([{ status: 'failed', error_code: 'auto_off', error_text: 'automatic messages are off in settings', next_attempt_at: null }]);
+    expect(eqs(hold.calls)).toEqual([['direction', 'outbound'], ['status', 'queued']]);
+    expect(hold.argsOf(M, 'is')).toEqual(['created_by', null]); // never an admin's inbox send
+    expect(hold.argsOf(M, 'in')).toEqual(['template_key', [...AUTOMATIC_KEYS]]);
+    expect(hold.argsOf(M, 'or')).toEqual(['error_code.is.null,error_code.neq.sending']); // not a claimed row
     const read = fakeDb({ [M]: [{ data: [] }] });
     await new SenderQueries(read.db).due({ keys: [], now: NOW, limit: 1 });
     expect(String(read.calls.find((c) => c.method === 'select')?.args[0])).toContain('created_by'); // isAutomatic reads it

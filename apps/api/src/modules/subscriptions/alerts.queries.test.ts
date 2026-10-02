@@ -31,12 +31,12 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
     expect(argsOf('admin_tasks', 'not')).toEqual(['dedup_key', 'in', '("renewal_due:sub-2")']);
   });
 
-  it('a renewal message still queued under a closed task is failed as stale (renewed meanwhile)', async () => {
+  it('a renewal message still queued (or held auto_off) under a closed task is failed as stale (renewed meanwhile)', async () => {
     const { db, argsOf } = fakeDb({ admin_tasks: [{ data: [{ dedup_key: 'renewal_due:sub-1' }] }], messages: [{}] });
     await new AlertsQueries(db).closeTasks({ subjectIds: ['sub-1'], keep: [], now: new Date('2026-10-02T09:00:00Z') });
     expect(argsOf('messages', 'update')).toEqual([expect.objectContaining({ status: 'failed', error_code: 'stale' })]);
     expect(argsOf('messages', 'in')).toEqual(['dedup_key', ['renewal_due:sub-1']]);
-    expect(argsOf('messages', 'eq')).toEqual(['status', 'queued']);
+    expect(argsOf('messages', 'or')).toEqual(['status.eq.queued,error_code.eq.auto_off']);
   });
 
   it('the renewal message is a queued outbound renewal_due to the guardian, deduped', async () => {

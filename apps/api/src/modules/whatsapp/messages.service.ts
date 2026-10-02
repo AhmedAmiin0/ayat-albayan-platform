@@ -4,6 +4,7 @@ import { MessageSender } from './message.sender';
 import { MessageViews } from './message.views';
 import { needsManualSend, type MessageRow } from './message.mapper';
 import { MessagesQueries } from './messages.queries';
+import { AUTO_OFF } from './send-stale';
 import { waHttpError } from './template.mapper';
 
 export interface MessageChange {
@@ -20,11 +21,15 @@ export class MessagesService {
     private readonly sender: MessageSender,
   ) {}
 
-  /** Only a failed row goes back to the queue (attempts 0, error cleared); the sender runs now. */
-  async retry(id: string): Promise<MessageChange> {
+  /**
+   * Only a failed row goes back to the queue (attempts 0, error cleared); the sender runs now.
+   * A held row (auto_off) while automatic messages are still OFF: 409 auto_off, it would be held again.
+   */
+  async retry(id: string, opts: { automaticOn: boolean }): Promise<MessageChange> {
     const before = await this.row(id);
     const notRetryable = () => waHttpError('not_retryable', 409, { status: before.status });
     if (before.status !== 'failed') throw notRetryable();
+    if (before.error_code === AUTO_OFF.code && !opts.automaticOn) throw waHttpError(AUTO_OFF.code, 409);
     const after = await this.queries.requeue(id);
     if (!after) throw notRetryable();
     void this.sender.kick();

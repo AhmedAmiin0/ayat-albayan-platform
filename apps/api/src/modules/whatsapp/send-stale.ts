@@ -6,6 +6,7 @@ import {
   messageExpired,
   type LeadStatus,
   type LessonStatus,
+  type TemplateKey,
 } from '@ab/shared';
 import { REMINDER_KEYS } from '../reminders/reminders.queries';
 
@@ -69,8 +70,16 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
   return cycle !== null && cycle !== followUpCycle(lead) ? 'lead wrote again' : null;
 }
 
-/** What the jobs queue on their own: reminders, follow-ups and renewal reminders (migration 162). */
-const AUTOMATIC: ReadonlySet<string> = new Set([...REMINDER_KEYS, 'follow_up_slots', 'renewal_due']);
+/**
+ * What the jobs queue on their own: reminders, follow-ups and renewal reminders (migration 162).
+ * Every other TEMPLATE_KEYS key goes out because someone acted: a booking, a submitted report
+ * (message.worker.auto.test checks the split).
+ */
+export const AUTOMATIC_KEYS: readonly TemplateKey[] = [...REMINDER_KEYS, 'follow_up_slots', 'renewal_due'];
+const AUTOMATIC: ReadonlySet<string> = new Set(AUTOMATIC_KEYS);
+
+/** The hold of an automatic row while the switch is OFF (failed, no push). */
+export const AUTO_OFF = { code: 'auto_off', text: 'automatic messages are off in settings' } as const;
 
 /**
  * A job-made row of an automatic kind, held (failed 'auto_off') while settings.auto_messages_enabled

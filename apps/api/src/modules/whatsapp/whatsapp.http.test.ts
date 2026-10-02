@@ -90,6 +90,10 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
     t.messages.requeue.mockResolvedValueOnce(null);
     expect((await t.call({ method: 'POST', url: `/messages/${ID}/retry` })).statusCode).toBe(409);
     expect((await t.call({ method: 'POST', url: '/messages/nope/retry' })).statusCode).toBe(400);
+    t.messages.get.mockResolvedValueOnce(messageRow({ status: 'failed', error_code: 'auto_off' }));
+    t.gate.automaticOn.mockResolvedValueOnce(false); // held, switch still OFF: it would be held again
+    const held = await t.call({ method: 'POST', url: `/messages/${ID}/retry` });
+    expect([held.statusCode, held.json().code]).toEqual([409, 'auto_off']);
     expect(t.sender.kick).not.toHaveBeenCalled();
   });
 

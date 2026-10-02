@@ -25,11 +25,12 @@ export class MessagesController {
     return this.sendGate.view();
   }
 
-  /** failed → queued, attempts 0 (409 not_retryable otherwise). */
+  /** failed → queued, attempts 0 (409 not_retryable otherwise; 409 auto_off for a held row while OFF). */
   @Post(':id/retry')
   @HttpCode(200)
   async retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<MessageView> {
-    return this.audited({ change: await this.messages.retry(id), action: 'message_retry', user });
+    const change = await this.messages.retry(id, { automaticOn: await this.sendGate.automaticOn() });
+    return this.audited({ change, action: 'message_retry', user });
   }
 
   /** R-MSG-03: queued / failed outbound → sent_manually (409 not_manual otherwise). */
