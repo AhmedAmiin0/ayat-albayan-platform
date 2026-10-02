@@ -20,11 +20,11 @@ export function useReportEntry(initial: ReportView) {
     onSuccess: async (view) => {
       setReport(view);
       setValues(valuesOf(view));
-      // The lesson moved (completed …) and the pending list shrank; the form keeps its own state.
+      // The lesson moved (completed …), the pending list shrank, and a reopened form must load the
+      // sent version (this entry keeps its own state: it is keyed by report id, seeded once).
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: LESSONS_KEY }),
-        queryClient.invalidateQueries({ queryKey: [...REPORTS_KEY, 'pending'] }),
-        queryClient.invalidateQueries({ queryKey: [...REPORTS_KEY, 'student'] }),
+        queryClient.invalidateQueries({ queryKey: REPORTS_KEY }),
       ]);
     },
   });

@@ -24,8 +24,7 @@ export const reportFormQuery = (lessonId: string) =>
     queryKey: [...REPORTS_KEY, 'form', lessonId],
     queryFn: () => apiFetch<ReportFormResponse>(`/lessons/${lessonId}/report-form`),
     retry: false,
-    // The form keeps its own state once loaded; a refetch would reset what the teacher typed.
-    staleTime: Infinity,
+    // No refetch on focus: each entry seeds its state once; a submit invalidates REPORTS_KEY.
     refetchOnWindowFocus: false,
   });
 

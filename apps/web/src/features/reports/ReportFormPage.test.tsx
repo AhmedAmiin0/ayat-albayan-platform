@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -83,6 +83,9 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/reports/r-1/submit', expect.objectContaining({ attendance: 'on_time', overall: 'excellent', expectedVersion: 0 }));
     expect(screen.getByRole('button', { name: t.reports.resubmit })).toBeTruthy();
     expect(screen.getByText(/تقدر تعدّل التقرير لحد/)).toBeTruthy();
+    // A reopened form must load the sent version, so the cached form is refetched.
+    const formLoads = () => apiFetch.mock.calls.filter(([path]) => path === '/lessons/l-1/report-form').length;
+    await waitFor(() => expect(formLoads()).toBe(2));
   });
 
   it('a refusal reads in Arabic (409 version_conflict)', async () => {

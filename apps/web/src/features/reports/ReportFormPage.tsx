@@ -38,6 +38,7 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
   const data = form.data;
   const entries = studentId ? data.entries.filter((e) => e.student.id === studentId) : data.entries;
   const tz = role === 'admin' ? RIYADH_TZ : data.lesson.teacher.tz;
+  if (entries.length === 0) return <>{head}<FormAlert>{t.common.notFound}</FormAlert></>;
   return (
     <>
       {head}
