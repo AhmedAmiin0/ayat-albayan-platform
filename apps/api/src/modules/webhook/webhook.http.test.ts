@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { GUARDIAN_ID, LESSON_ID, nobody, outbound } from './webhook.fakes';
-import { buttonPart, envelope, inboundValue, statusValue, textPart } from './webhook.fixtures';
-import { sign, VERIFY, webhookApp } from './webhook.test-app';
+import { buttonPart, envelope, inboundValue, statusValue, textPart } from './meta.fakes';
+import { sign, VERIFY, webhookApp } from './test-app';
 
 let ctx: Awaited<ReturnType<typeof webhookApp>> | undefined;
 afterEach(async () => {

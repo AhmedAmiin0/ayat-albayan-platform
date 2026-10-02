@@ -10,7 +10,7 @@ import { PushService } from '../../common/push/push.service';
 import { LeadsService } from '../leads/leads.service';
 import { LessonStatusService } from '../lessons/lesson-status.service';
 import { fakeDeps } from './webhook.fakes';
-import { PHONE_NUMBER_ID } from './webhook.fixtures';
+import { PHONE_NUMBER_ID } from './meta.fakes';
 import { WebhookModule } from './webhook.module';
 import { WebhookQueries } from './webhook.queries';
 import { WEBHOOK_CONFIG, type WebhookConfig } from './webhook.service';

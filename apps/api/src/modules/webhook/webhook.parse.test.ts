@@ -10,7 +10,7 @@ import {
   statusValue,
   textPart,
   TS_DATE,
-} from './webhook.fixtures';
+} from './meta.fakes';
 import { metaTime, parseWebhook } from './webhook.parse';
 
 const NOW = new Date('2026-10-03T13:05:00Z');

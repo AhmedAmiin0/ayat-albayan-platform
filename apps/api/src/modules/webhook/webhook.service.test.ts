@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './webhook.fixtures';
+import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
 import type { InboundService } from './webhook.inbound.service';
 import { WebhookService, within } from './webhook.service';
 import type { StatusService } from './webhook.status.service';
