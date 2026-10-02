@@ -10,7 +10,7 @@ async function createStudent(page: Page, s: NewStudent): Promise<void> {
   const dialog = page.getByRole('dialog', { name: ar.students.add });
   await dialog.getByLabel(ar.guardians.phone, { exact: true }).fill(s.phone);
   await dialog.getByLabel(ar.guardians.name, { exact: true }).fill(s.guardian);
-  await dialog.getByLabel(ar.students.name, { exact: true }).fill(s.name);
+  await dialog.getByLabel(ar.leads.studentName, { exact: true }).fill(s.name);
   await dialog.getByRole('button', { name: ar.common.save }).click();
 }
 

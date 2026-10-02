@@ -1,12 +1,13 @@
 import type {
   PendingReportView,
   ReportAttachmentView,
-  ReportDraft,
   ReportFormResponse,
   ReportView,
   SignedDownload,
   SignedUpload,
   StudentReportsResponse,
+  DraftBody,
+  SubmitBody,
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
@@ -41,8 +42,6 @@ export const pendingReportsQuery = queryOptions({
   queryFn: () => apiFetch<PendingReportView[]>('/teachers/me/pending-reports'),
 });
 
-export type DraftBody = Partial<ReportDraft>;
-export type SubmitBody = DraftBody & { expectedVersion: number };
 
 export const saveDraft = ({ id, body }: { id: string; body: DraftBody }) =>
   apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);

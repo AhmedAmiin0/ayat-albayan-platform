@@ -1,8 +1,15 @@
-import { REPORT_RUBRICS, type ReportFormEntry, type ReportFormResponse } from '@ab/shared';
+import {
+  AFTER_FIELDS,
+  DONE_FIELDS,
+  REPORT_RUBRICS,
+  textRequired,
+  type ReportFormEntry,
+  type ReportFormResponse,
+  type TextKey,
+} from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { AttachmentsField } from './AttachmentsField';
 import { AttendanceField } from './AttendanceField';
-import { AFTER_FIELDS, DONE_FIELDS, textRequired, type TextKey } from './form-values';
 import { GradePicker } from './GradePicker';
 import { IdentityBlock } from './IdentityBlock';
 import { ReportEntryFooter } from './ReportEntryFooter';

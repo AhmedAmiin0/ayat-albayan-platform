@@ -1,6 +1,6 @@
 import type { Attendance, Grade } from '../enums/index.js';
-import { REPORT_RUBRICS, type Rubric } from './rules.js';
-import { reportSubmitSchema, type ReportDraft } from './schema.js';
+import { attended, REPORT_RUBRICS, type Rubric } from './rules.js';
+import { REPORT_REQUIRED_TEXT, reportSubmitSchema, type ReportDraft } from './schema.js';
 import type { ReportView } from './views.js';
 
 // «تقرير الحلقة» form state shared by web and mobile (R-REP-01, R-REP-02, docs/01 T7): the same
@@ -30,6 +30,13 @@ export type SubmitBody = DraftBody & { expectedVersion: number };
 /** The four «اللي اتعمل في الحلقة» fields, then the three after the grades, in form order. */
 export const DONE_FIELDS = ['recited', 'newMemorization', 'revision', 'theory'] as const satisfies readonly TextKey[];
 export const AFTER_FIELDS = ['notes', 'homework', 'nextPlan'] as const satisfies readonly TextKey[];
+
+const REQUIRED: readonly TextKey[] = REPORT_REQUIRED_TEXT;
+
+/** Required like on the Google Form (research-forms 12) unless the student was absent / excused. */
+export function textRequired(key: TextKey, attendance: Attendance | null): boolean {
+  return REQUIRED.includes(key) && (attendance === null || attended(attendance));
+}
 
 /** Typing pause before a draft is saved (R-REP-02 «drafts auto-saved»). */
 export const AUTOSAVE_MS = 800;
@@ -72,7 +79,8 @@ export function submitBody(v: FormValues, expectedVersion: number): SubmitBody {
 
 /**
  * Same rules as the API (reportSubmitSchema): attendance first (`missing_attendance`), then the
- * six grades + overall when the student attended (`missing_grades`). null = ready to send.
+ * six grades + overall when the student attended (`missing_grades`), then the required text
+ * (`missing_text`). null = ready to send.
  */
 export function submitProblem(v: FormValues): string | null {
   const parsed = reportSubmitSchema.safeParse(submitBody(v, 0));

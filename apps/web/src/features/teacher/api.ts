@@ -1,11 +1,10 @@
-import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe } from '@ab/shared';
+import type { LessonProposalRequest, LessonView, PayoutView, TeacherMe, TeacherReportView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { Page } from '@/features/leads/types';
 import { REPORTS_KEY } from '@/features/reports/api';
 import { LESSONS_KEY, type Window } from '@/features/schedule/api';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { apiFetch, apiSend } from '@/lib/api';
-import type { TeacherReportView } from './types';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 

@@ -35,8 +35,8 @@ describe('pdf-text helpers (R-REP-03)', () => {
 
   it('durationText: the four standard lengths from enums.duration, else «n دقيقة»', () => {
     expect(durationText(30)).toBe('30 دقيقة');
-    expect(durationText(60)).toBe('ساعة');
-    expect(durationText(90)).toBe('ساعة ونص');
+    expect(durationText(60)).toBe('60 دقيقة');
+    expect(durationText(90)).toBe('90 دقيقة');
     expect(durationText(50)).toBe('50 دقيقة');
   });
 

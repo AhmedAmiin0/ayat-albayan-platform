@@ -1,21 +1,10 @@
+import { AUTOSAVE_MS, draftBody, shouldSave, type FormValues } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { saveDraft } from './api';
-import { draftBody, type FormValues } from './form-values';
-
-/** Typing pause before a draft is saved (R-REP-02 «drafts auto-saved»). */
-export const AUTOSAVE_MS = 800;
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
-
-/**
- * Save when the settled form differs from what the server has, nothing is in flight, and this
- * exact body did not just fail (it is retried once the teacher changes something).
- */
-export function shouldSave(s: { enabled: boolean; settled: string; saved: string; failed: string | null; pending: boolean }): boolean {
-  return s.enabled && !s.pending && s.settled !== s.saved && s.settled !== s.failed;
-}
 
 /** Debounced PUT /reports/:id/draft of the whole form while it is a draft. */
 export function useAutosave(input: { id: string; values: FormValues; enabled: boolean }): SaveState {

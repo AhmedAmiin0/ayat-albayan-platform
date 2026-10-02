@@ -50,7 +50,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     // «اشترك» opens the wizard with the lead and a regular package (not the trial).
     await thread.getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=.*pkg=/);
-    await admin.getByLabel(ar.students.name, { exact: true }).fill(student);
+    await admin.getByLabel(ar.leads.studentName, { exact: true }).fill(student);
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();

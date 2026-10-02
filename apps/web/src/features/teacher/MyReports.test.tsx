@@ -1,10 +1,9 @@
-import type { PendingReportView, TeacherMe } from '@ab/shared';
+import type { PendingReportView, TeacherMe, TeacherReportView } from '@ab/shared';
 import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
 import { MyReports } from './MyReports';
-import type { TeacherReportView } from './types';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));

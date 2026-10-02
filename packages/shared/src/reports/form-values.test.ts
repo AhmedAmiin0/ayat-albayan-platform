@@ -1,5 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { AFTER_FIELDS, DONE_FIELDS, draftBody, shouldSave, submitBody, submitProblem, valuesOf } from './form-values.js';
+import {
+  AFTER_FIELDS,
+  DONE_FIELDS,
+  draftBody,
+  shouldSave,
+  submitBody,
+  submitProblem,
+  textRequired,
+  valuesOf,
+} from './form-values.js';
 import type { ReportView } from './views.js';
 
 const FULL_GRADES = {
@@ -10,6 +19,7 @@ const FULL_GRADES = {
   engagement: 'excellent',
   commitment: 'excellent',
 } as const;
+const TEXT = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'الملك 6-10' };
 const NO_GRADES = { recitation: null, memorization: null, revision: null, tajweed: null, engagement: null, commitment: null };
 
 function reportView(over: Partial<ReportView> = {}): ReportView {
@@ -40,13 +50,23 @@ describe('form values (R-REP-02)', () => {
     expect(submitBody(v, 3).expectedVersion).toBe(3);
   });
 
-  it('submitProblem mirrors the API: attendance first, then grades when attended', () => {
+  it('submitProblem mirrors the API: attendance first, then grades, then the required text', () => {
     const base = valuesOf(reportView());
     expect(submitProblem(base)).toBe('missing_attendance');
     expect(submitProblem({ ...base, attendance: 'on_time' })).toBe('missing_grades');
     expect(submitProblem({ ...base, attendance: 'on_time', grades: { ...FULL_GRADES } })).toBe('missing_grades');
-    expect(submitProblem({ ...base, attendance: 'on_time', grades: { ...FULL_GRADES }, overall: 'excellent' })).toBeNull();
+    const graded = { ...base, attendance: 'on_time', grades: { ...FULL_GRADES }, overall: 'excellent' } as const;
+    expect(submitProblem(graded)).toBe('missing_text');
+    expect(submitProblem({ ...graded, ...TEXT, notes: '  ' })).toBe('missing_text');
+    expect(submitProblem({ ...graded, ...TEXT })).toBeNull();
     expect(submitProblem({ ...base, attendance: 'absent' })).toBeNull();
+  });
+
+  it('textRequired: the five fields the form required, unless absent / excused (research-forms 12)', () => {
+    expect(['recited', 'newMemorization', 'revision', 'notes', 'homework'].every((k) => textRequired(k as 'notes', 'late'))).toBe(true);
+    expect(textRequired('theory', 'on_time')).toBe(false);
+    expect(textRequired('nextPlan', null)).toBe(false);
+    expect(textRequired('recited', 'excused')).toBe(false);
   });
 
   it('the text fields in form order (web and mobile render the same list)', () => {

@@ -10,7 +10,7 @@ import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } fr
 
 export interface MessageBubbleProps {
   /** `sent_by_teacher_name`: the teacher who sent it from the academy number; null = the academy. */
-  message: MessageView & { sent_by_teacher_name?: string | null };
+  message: MessageView;
   /** Its template is not approved yet, so the sender leaves it queued. */
   waitingTemplate: boolean;
   now: Date;

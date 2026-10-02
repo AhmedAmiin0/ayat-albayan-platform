@@ -1,4 +1,4 @@
-import { gradeStyle, lessonWhenText } from '@ab/shared';
+import { gradeStyle, lessonWhenText, type TeacherReportView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -12,7 +12,6 @@ import { ReportLink } from '@/features/reports/ReportLink';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { myReportsQuery } from './api';
-import type { TeacherReportView } from './types';
 
 /**
  * «تقارير اتبعتت» (R-REP-02, R-TCH-03): my sent reports, newest first, paged. Inside the edit

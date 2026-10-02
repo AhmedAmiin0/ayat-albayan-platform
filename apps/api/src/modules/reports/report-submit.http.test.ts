@@ -15,7 +15,9 @@ import {
 import { reportsApp } from './test-app';
 
 const URL = `/reports/${REPORT_ID}/submit`;
-const FORM = { attendance: 'on_time', grades: FULL_GRADES, overall: 'excellent', homework: 'سورة الملك', expectedVersion: 0 };
+/** The five texts the Google Form required when the student attended (research-forms 12). */
+const TEXT = { recited: 'الفاتحة', newMemorization: 'الملك 1-5', revision: 'جزء عم', notes: 'ممتازة', homework: 'سورة الملك' };
+const FORM = { attendance: 'on_time', grades: FULL_GRADES, overall: 'excellent', ...TEXT, expectedVersion: 0 };
 const DAY = 24 * 3_600_000;
 
 describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
@@ -39,7 +41,7 @@ describe('POST /reports/:id/submit (R3; R-REP-02/03/04)', () => {
       report_id: REPORT_ID,
       expected_version: 0,
       actor: TEACHER.id,
-      report: { attendance: 'on_time', grade_overall: 'excellent', homework: 'سورة الملك', notes: null, version: 1 },
+      report: { attendance: 'on_time', grade_overall: 'excellent', homework: 'سورة الملك', notes: 'ممتازة', version: 1 },
       lesson_change: { changes: [{ id: LESSON_ID, from_status: 'scheduled', to_status: 'completed' }] },
     });
     expect(h.events.changed).toHaveBeenCalledWith([LESSON_ID]);

@@ -35,7 +35,17 @@ test.describe('journey 2 — lesson report (R-REP-01..04)', () => {
       await page.getByRole('group', { name: ar.reports.rubric[rubric] }).getByTitle(ar.enums.grade.excellent).click();
     }
     await page.getByRole('group', { name: ar.reports.overall }).getByTitle(ar.enums.grade.very_good).click();
-    await page.getByLabel(ar.reports.homework).fill('سورة الملك من 1 لحد 10');
+    // The five texts the Google Form required when the student attended (research-forms 12).
+    const texts = {
+      recited: 'الفاتحة',
+      newMemorization: 'الملك 1-5',
+      revision: 'جزء عم',
+      notes: 'ممتازة ما شاء الله',
+      homework: 'سورة الملك من 1 لحد 10',
+    } as const;
+    for (const [key, text] of Object.entries(texts) as [keyof typeof texts, string][]) {
+      await page.getByRole('textbox', { name: ar.reports[key], exact: true }).fill(text);
+    }
     await page.getByRole('button', { name: ar.reports.submit }).click();
     await expect(page.getByText(ar.reports.submitted)).toBeVisible();
     expect(await reportOf(seed.todayLessonId)).toMatchObject({ status: 'submitted', version: 1 });
