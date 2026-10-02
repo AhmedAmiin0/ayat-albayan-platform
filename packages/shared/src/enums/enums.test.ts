@@ -15,6 +15,7 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['studentStatus', E.STUDENT_STATUSES],
   ['teacherStatus', E.TEACHER_STATUSES],
   ['jobApplicantStatus', E.JOB_APPLICANT_STATUSES],
+  ['scheduleRuleStatus', E.SCHEDULE_RULE_STATUSES],
   ['weekday', E.WEEKDAYS],
   ['duration', E.DURATIONS],
 ];

@@ -38,6 +38,39 @@ export async function seedFxRate(): Promise<void> {
   }
 }
 
+/** Default academy settings (migration 073), which resetDb truncates with everything else. */
+export async function seedSettings(): Promise<void> {
+  const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
+  try {
+    await sql`
+      insert into public.settings (key, value)
+      values ('late_cancel_hours', 'null'::jsonb), ('booking_horizon_weeks', '5'::jsonb)
+      on conflict (key) do update set value = excluded.value`;
+  } finally {
+    await sql.end();
+  }
+}
+
+/**
+ * The teachers row owned by a teacher account (profile_id), so teacher journeys log in as a real
+ * teacher (R-TCH-03). Upsert on profile_id keeps a re-run idempotent. Availability is left to the
+ * journeys (journey 5 sets it through the UI).
+ */
+export async function seedTeacherRow(profileId: string, name: string): Promise<string> {
+  const sql = postgres(env('DATABASE_URL'), { max: 1, onnotice: () => undefined });
+  try {
+    const [row] = await sql<{ id: string }[]>`
+      insert into public.teachers (profile_id, display_name_ar, gender, programs, tz)
+      values (${profileId}, ${name}, 'female', '{quran}', 'Africa/Cairo')
+      on conflict (profile_id) do update set display_name_ar = excluded.display_name_ar
+      returning id`;
+    if (!row) throw new Error('teacher row not written');
+    return row.id;
+  } finally {
+    await sql.end();
+  }
+}
+
 export interface SeedUser {
   email: string;
   password: string;

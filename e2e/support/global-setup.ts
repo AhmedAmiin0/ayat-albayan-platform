@@ -1,9 +1,16 @@
-import { resetDb, seedFxRate, seedUser } from './db';
+import { resetDb, seedFxRate, seedSettings, seedTeacherRow, seedUser } from './db';
 import { USERS } from './users';
 
-/** Clean DB + one account per role before the run. Journeys add their own data. */
+/**
+ * Clean DB + default settings + one account per role before the run; the teacher account owns a
+ * teachers row (abrar@e2e.local → «أبرار»). Journeys add their own data.
+ */
 export default async function globalSetup(): Promise<void> {
   await resetDb();
   await seedFxRate();
-  for (const user of Object.values(USERS)) await seedUser(user);
+  await seedSettings();
+  for (const user of Object.values(USERS)) {
+    const id = await seedUser(user);
+    if (user.role === 'teacher') await seedTeacherRow(id, user.fullName);
+  }
 }

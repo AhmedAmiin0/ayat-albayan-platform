@@ -255,6 +255,221 @@ export type Database = {
           },
         ];
       };
+      lesson_students: {
+        Row: {
+          attendance: Database['public']['Enums']['attendance'] | null;
+          chargeable: boolean;
+          created_at: string;
+          lesson_id: string;
+          student_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          attendance?: Database['public']['Enums']['attendance'] | null;
+          chargeable?: boolean;
+          created_at?: string;
+          lesson_id: string;
+          student_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          attendance?: Database['public']['Enums']['attendance'] | null;
+          chargeable?: boolean;
+          created_at?: string;
+          lesson_id?: string;
+          student_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_students_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_students_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      lessons: {
+        Row: {
+          cancel_reason: string | null;
+          confirmed_at: string | null;
+          confirmed_by: string | null;
+          created_at: string;
+          created_by: string | null;
+          ends_at: string;
+          google_event_id: string | null;
+          id: string;
+          meeting_link: string | null;
+          override_reason: string | null;
+          rescheduled_from_id: string | null;
+          rule_id: string | null;
+          starts_at: string;
+          status: Database['public']['Enums']['lesson_status'];
+          teacher_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          cancel_reason?: string | null;
+          confirmed_at?: string | null;
+          confirmed_by?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          ends_at: string;
+          google_event_id?: string | null;
+          id?: string;
+          meeting_link?: string | null;
+          override_reason?: string | null;
+          rescheduled_from_id?: string | null;
+          rule_id?: string | null;
+          starts_at: string;
+          status?: Database['public']['Enums']['lesson_status'];
+          teacher_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          cancel_reason?: string | null;
+          confirmed_at?: string | null;
+          confirmed_by?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          ends_at?: string;
+          google_event_id?: string | null;
+          id?: string;
+          meeting_link?: string | null;
+          override_reason?: string | null;
+          rescheduled_from_id?: string | null;
+          rule_id?: string | null;
+          starts_at?: string;
+          status?: Database['public']['Enums']['lesson_status'];
+          teacher_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lessons_rescheduled_from_id_fkey';
+            columns: ['rescheduled_from_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lessons_rule_id_fkey';
+            columns: ['rule_id'];
+            isOneToOne: false;
+            referencedRelation: 'schedule_rules';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lessons_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      messages: {
+        Row: {
+          body: string | null;
+          channel: string;
+          created_at: string;
+          created_by: string | null;
+          dedup_key: string | null;
+          delivered_at: string | null;
+          direction: Database['public']['Enums']['message_direction'];
+          error_code: string | null;
+          error_text: string | null;
+          guardian_id: string | null;
+          id: string;
+          lead_id: string | null;
+          lesson_id: string | null;
+          phone_e164: string;
+          read_at: string | null;
+          scheduled_for: string | null;
+          sent_at: string | null;
+          status: Database['public']['Enums']['message_status'];
+          template_key: string | null;
+          template_params: Json | null;
+          wa_message_id: string | null;
+        };
+        Insert: {
+          body?: string | null;
+          channel?: string;
+          created_at?: string;
+          created_by?: string | null;
+          dedup_key?: string | null;
+          delivered_at?: string | null;
+          direction: Database['public']['Enums']['message_direction'];
+          error_code?: string | null;
+          error_text?: string | null;
+          guardian_id?: string | null;
+          id?: string;
+          lead_id?: string | null;
+          lesson_id?: string | null;
+          phone_e164: string;
+          read_at?: string | null;
+          scheduled_for?: string | null;
+          sent_at?: string | null;
+          status?: Database['public']['Enums']['message_status'];
+          template_key?: string | null;
+          template_params?: Json | null;
+          wa_message_id?: string | null;
+        };
+        Update: {
+          body?: string | null;
+          channel?: string;
+          created_at?: string;
+          created_by?: string | null;
+          dedup_key?: string | null;
+          delivered_at?: string | null;
+          direction?: Database['public']['Enums']['message_direction'];
+          error_code?: string | null;
+          error_text?: string | null;
+          guardian_id?: string | null;
+          id?: string;
+          lead_id?: string | null;
+          lesson_id?: string | null;
+          phone_e164?: string;
+          read_at?: string | null;
+          scheduled_for?: string | null;
+          sent_at?: string | null;
+          status?: Database['public']['Enums']['message_status'];
+          template_key?: string | null;
+          template_params?: Json | null;
+          wa_message_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'messages_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_lead_id_fkey';
+            columns: ['lead_id'];
+            isOneToOne: false;
+            referencedRelation: 'leads';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'messages_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       profiles: {
         Row: {
           created_at: string;
@@ -288,6 +503,129 @@ export type Database = {
           role?: Database['public']['Enums']['user_role'];
           tz?: string;
           updated_at?: string;
+        };
+        Relationships: [];
+      };
+      schedule_rule_students: {
+        Row: {
+          created_at: string;
+          rule_id: string;
+          student_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          rule_id: string;
+          student_id: string;
+        };
+        Update: {
+          created_at?: string;
+          rule_id?: string;
+          student_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'schedule_rule_students_rule_id_fkey';
+            columns: ['rule_id'];
+            isOneToOne: false;
+            referencedRelation: 'schedule_rules';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'schedule_rule_students_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      schedule_rules: {
+        Row: {
+          byday: number[];
+          created_at: string;
+          created_by: string | null;
+          created_from_lead_id: string | null;
+          duration_min: number;
+          ends_on: string | null;
+          id: string;
+          meeting_link: string | null;
+          package: Database['public']['Enums']['package_size'] | null;
+          start_time_local: string;
+          starts_on: string;
+          status: Database['public']['Enums']['schedule_rule_status'];
+          teacher_id: string;
+          tz: string;
+          updated_at: string;
+        };
+        Insert: {
+          byday: number[];
+          created_at?: string;
+          created_by?: string | null;
+          created_from_lead_id?: string | null;
+          duration_min: number;
+          ends_on?: string | null;
+          id?: string;
+          meeting_link?: string | null;
+          package?: Database['public']['Enums']['package_size'] | null;
+          start_time_local: string;
+          starts_on: string;
+          status?: Database['public']['Enums']['schedule_rule_status'];
+          teacher_id: string;
+          tz: string;
+          updated_at?: string;
+        };
+        Update: {
+          byday?: number[];
+          created_at?: string;
+          created_by?: string | null;
+          created_from_lead_id?: string | null;
+          duration_min?: number;
+          ends_on?: string | null;
+          id?: string;
+          meeting_link?: string | null;
+          package?: Database['public']['Enums']['package_size'] | null;
+          start_time_local?: string;
+          starts_on?: string;
+          status?: Database['public']['Enums']['schedule_rule_status'];
+          teacher_id?: string;
+          tz?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'schedule_rules_created_from_lead_id_fkey';
+            columns: ['created_from_lead_id'];
+            isOneToOne: false;
+            referencedRelation: 'leads';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'schedule_rules_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      settings: {
+        Row: {
+          key: string;
+          updated_at: string;
+          updated_by: string | null;
+          value: NonNullable<Json>;
+        };
+        Insert: {
+          key: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value: NonNullable<Json>;
+        };
+        Update: {
+          key?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value?: NonNullable<Json>;
         };
         Relationships: [];
       };
@@ -346,6 +684,7 @@ export type Database = {
           program: Database['public']['Enums']['program'];
           riwaya: string | null;
           status: Database['public']['Enums']['student_status'];
+          teacher_gender_pref: Database['public']['Enums']['gender'] | null;
           teacher_id: string | null;
           tz: string;
           updated_at: string;
@@ -369,6 +708,7 @@ export type Database = {
           program?: Database['public']['Enums']['program'];
           riwaya?: string | null;
           status?: Database['public']['Enums']['student_status'];
+          teacher_gender_pref?: Database['public']['Enums']['gender'] | null;
           teacher_id?: string | null;
           tz?: string;
           updated_at?: string;
@@ -392,6 +732,7 @@ export type Database = {
           program?: Database['public']['Enums']['program'];
           riwaya?: string | null;
           status?: Database['public']['Enums']['student_status'];
+          teacher_gender_pref?: Database['public']['Enums']['gender'] | null;
           teacher_id?: string | null;
           tz?: string;
           updated_at?: string;
@@ -577,7 +918,30 @@ export type Database = {
       };
     };
     Views: {
-      [_ in never]: never;
+      v_lesson_sequence: {
+        Row: {
+          lesson_id: string | null;
+          seq: number | null;
+          starts_at: string | null;
+          student_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_students_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_students_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Functions: {
       auth_role: {
@@ -586,10 +950,13 @@ export type Database = {
       };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
+      is_my_lesson: { Args: { p_lesson: string }; Returns: boolean };
       merge_students: {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;
       };
+      my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
     };
     Enums: {
@@ -617,8 +984,11 @@ export type Database = {
         | 'cancelled_by_teacher'
         | 'cancelled_by_admin'
         | 'rescheduled';
+      message_direction: 'inbound' | 'outbound';
+      message_status: 'queued' | 'sent' | 'delivered' | 'read' | 'failed';
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
       program: 'quran' | 'arabic' | 'islamic_studies';
+      schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
       teacher_status: 'active' | 'inactive';
@@ -763,8 +1133,11 @@ export const Constants = {
         'cancelled_by_admin',
         'rescheduled',
       ],
+      message_direction: ['inbound', 'outbound'],
+      message_status: ['queued', 'sent', 'delivered', 'read', 'failed'],
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
       program: ['quran', 'arabic', 'islamic_studies'],
+      schedule_rule_status: ['active', 'paused', 'ended'],
       student_status: ['trial', 'active', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
       teacher_status: ['active', 'inactive'],

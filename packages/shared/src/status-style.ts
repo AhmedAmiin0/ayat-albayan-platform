@@ -4,6 +4,7 @@ import type {
   JobApplicantStatus,
   LeadStatus,
   LessonStatus,
+  ScheduleRuleStatus,
   StudentStatus,
   SubscriptionStatus,
   TeacherStatus,
@@ -83,6 +84,13 @@ export const jobApplicantStatusStyle: Record<JobApplicantStatus, StatusStyle> = 
   interview: { tone: 'ok', glyph: 'hollow' },
   accepted: { tone: 'ok', glyph: 'fill' },
   rejected: { tone: 'neutral', glyph: 'struck' },
+};
+
+/** A paused series waits on the family; an ended one is closed. R-SCH-02. */
+export const scheduleRuleStatusStyle: Record<ScheduleRuleStatus, StatusStyle> = {
+  active: { tone: 'ok', glyph: 'fill' },
+  paused: { tone: 'neutral', glyph: 'half' },
+  ended: { tone: 'neutral', glyph: 'struck' },
 };
 
 export const gradeStyle: Record<Grade, GradeStyle> = {

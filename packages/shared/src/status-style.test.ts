@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import * as E from './enums/index.js';
 import * as S from './status-style.js';
 
-// docs/07 §6: every value of the 8 state enums has a tone and a glyph (grade: pips).
+// docs/07 §6: every value of the 9 state enums has a tone and a glyph (grade: pips).
 const STATE_ENUMS: [string, readonly string[], Record<string, S.StatusStyle>][] = [
   ['lesson_status', E.LESSON_STATUSES, S.lessonStatusStyle],
   ['lead_status', E.LEAD_STATUSES, S.leadStatusStyle],
@@ -11,6 +11,7 @@ const STATE_ENUMS: [string, readonly string[], Record<string, S.StatusStyle>][] 
   ['attendance', E.ATTENDANCES, S.attendanceStyle],
   ['teacher_status', E.TEACHER_STATUSES, S.teacherStatusStyle],
   ['job_applicant_status', E.JOB_APPLICANT_STATUSES, S.jobApplicantStatusStyle],
+  ['schedule_rule_status', E.SCHEDULE_RULE_STATUSES, S.scheduleRuleStatusStyle],
 ];
 
 describe('status-style (docs/07 §6)', () => {
@@ -27,9 +28,9 @@ describe('status-style (docs/07 §6)', () => {
     expect(E.GRADES.map((g) => S.gradeStyle[g].pips)).toEqual([5, 4, 3, 2, 1]);
   });
 
-  it('covers 42 values across the 8 state enums', () => {
+  it('covers 45 values across the 9 state enums', () => {
     const n = STATE_ENUMS.reduce((sum, [, values]) => sum + values.length, 0) + E.GRADES.length;
-    expect(n).toBe(42);
+    expect(n).toBe(45);
   });
 
   it('saffron (act) only where an admin must act now', () => {

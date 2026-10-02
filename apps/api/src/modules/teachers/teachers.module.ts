@@ -9,6 +9,6 @@ import { TeachersQueries } from './teachers.queries';
 @Module({
   controllers: [TeachersController, AvailabilityController],
   providers: [TeachersQueries, AvailabilityQueries, AvailabilityQuery],
-  exports: [AvailabilityQuery],
+  exports: [AvailabilityQuery, TeachersQueries],
 })
 export class TeachersModule {}

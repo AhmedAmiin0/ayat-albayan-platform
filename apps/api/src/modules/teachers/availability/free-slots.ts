@@ -21,7 +21,7 @@ export type FreeSlotsInput = {
 const toInterval = (r: TimeRange): Interval => ({ start: r.start.getTime(), end: r.end.getTime() });
 
 /** Every occurrence of `row` whose local day is within `range` ±1 day (covers ±14h offsets). */
-function expandRow(row: WeeklyRow, range: Interval): Interval[] {
+export function expandRow(row: WeeklyRow, range: Interval): Interval[] {
   const startMin = toMinutes(row.start_time);
   const endMin = toMinutes(row.end_time);
   const firstDay = localDay(range.start, row.tz) - DAY;

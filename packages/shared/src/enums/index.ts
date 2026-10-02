@@ -81,6 +81,11 @@ export const JOB_APPLICANT_STATUSES = [
   'accepted',
   'rejected',
 ] as const satisfies readonly Enums<'job_applicant_status'>[];
+export const SCHEDULE_RULE_STATUSES = [
+  'active',
+  'paused',
+  'ended',
+] as const satisfies readonly Enums<'schedule_rule_status'>[];
 /** DB domain `lesson_duration` (minutes). */
 export const DURATIONS = [30, 45, 60, 90] as const;
 /** 0 = الأحد … 6 = السبت (docs/06; same as JS Date#getDay). */
@@ -98,5 +103,6 @@ export type Gender = Enums<'gender'>;
 export type StudentStatus = Enums<'student_status'>;
 export type TeacherStatus = Enums<'teacher_status'>;
 export type JobApplicantStatus = Enums<'job_applicant_status'>;
+export type ScheduleRuleStatus = Enums<'schedule_rule_status'>;
 export type Duration = (typeof DURATIONS)[number];
 export type Weekday = (typeof WEEKDAYS)[number];

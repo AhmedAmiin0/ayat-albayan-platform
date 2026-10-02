@@ -1,0 +1,84 @@
+import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../enums/index.js';
+import type { Conflict } from './conflicts.js';
+import type { LessonEvent } from './state-machine.js';
+
+// Phase 2 API response shapes (docs/10-phase2-contracts.md §3). Responses are snake_case like
+// every other API row; instants are ISO-8601 UTC strings; tz fields are IANA ids.
+
+/** One student on a lesson. */
+export interface LessonStudentView {
+  id: string;
+  code: string;
+  name: string;
+  tz: string;
+  attendance: Attendance | null;
+  chargeable: boolean;
+  /** Lesson number for this student (v_lesson_sequence), null until the lesson is completed. */
+  seq: number | null;
+}
+
+/** GET /lessons, /lessons/day, /teachers/me/lessons, /students/:id/lessons items. */
+export interface LessonView {
+  id: string;
+  rule_id: string | null;
+  teacher: { id: string; display_name_ar: string; tz: string };
+  starts_at: string;
+  ends_at: string;
+  status: LessonStatus;
+  /** Copied onto the lesson at creation (R-LES-01), sent to the guardian (R-LES-02). */
+  meeting_link: string | null;
+  cancel_reason: string | null;
+  override_reason: string | null;
+  confirmed_at: string | null;
+  rescheduled_from_id: string | null;
+  students: LessonStudentView[];
+  /** allowedLessonEvents(status) minus what the caller's role may not do. */
+  allowed_events: LessonEvent[];
+}
+
+/** GET /teachers/me (R-TCH-03). */
+export interface TeacherMe {
+  id: string;
+  display_name_ar: string;
+  gender: Gender;
+  programs: Program[];
+  tz: string;
+  meeting_link: string | null;
+  students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
+}
+
+/** GET /booking/teachers items (R-SCH-06). */
+export interface BookingTeacherOption {
+  id: string;
+  display_name_ar: string;
+  gender: Gender;
+  programs: Program[];
+  tz: string;
+  meeting_link: string | null;
+  students_count: number;
+  max_students: number | null;
+  /** false = no weekly availability rows; the wizard shows the teacher disabled. */
+  has_availability: boolean;
+}
+
+/** GET /booking/slots: candidate starts inside the teacher's availability; [] conflicts = free. */
+export interface SlotView {
+  starts_at: string;
+  ends_at: string;
+  conflicts: Conflict[];
+}
+export interface SlotsResponse {
+  teacher_tz: string;
+  step_min: number;
+  slots: SlotView[];
+}
+
+/** POST /booking 201. */
+export interface BookingResult {
+  rule_id: string;
+  student_ids: string[];
+  guardian_ids: string[];
+  lessons: { id: string; starts_at: string; ends_at: string }[];
+  /** Queued booking_confirmation* messages, one per guardian (docs/10 §5.11). */
+  message_ids: string[];
+}
