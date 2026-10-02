@@ -119,3 +119,23 @@ test('patchPath sends the row PATCH for resources without a /status route (stude
   expect(client.getQueryData(studentKey)).toMatchObject({ status: 'active', name: 'هدى' });
   expect(invalidate).toHaveBeenCalledWith(expect.objectContaining({ queryKey: ['students'] }));
 });
+
+test('request sends another route shape; only id and status reach the cached array', async () => {
+  mockApiSend.mockResolvedValue([]);
+  const client = createTestQueryClient();
+  const dayKey = ['lessons', 'day', { date: '2026-10-01' }];
+  client.setQueryData(dayKey, [{ id: 'l1', status: 'scheduled' }]);
+  type Cancel = { id: string; status: string; reason: string };
+  const options = {
+    path: '/lessons',
+    request: (c: Cancel) => ({ method: 'POST' as const, path: `/lessons/${c.id}/cancel`, body: { reason: c.reason } }),
+  };
+  const { result } = await renderHook(() => useOptimisticStatus<string, Cancel>(options), {
+    wrapper: queryWrapper(client),
+  });
+
+  await act(async () => result.current.mutate({ id: 'l1', status: 'excused', reason: 'سفر' }));
+  await waitFor(() => expect(result.current.isSuccess).toBe(true));
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/lessons/l1/cancel', { reason: 'سفر' });
+  expect(client.getQueryData(dayKey)).toEqual([{ id: 'l1', status: 'excused' }]);
+});

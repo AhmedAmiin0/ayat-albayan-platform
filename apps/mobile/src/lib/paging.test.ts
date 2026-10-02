@@ -51,6 +51,18 @@ test('patchCached handles one page, a detail object, and leaves strangers alone'
   expect(patchCached({ role: 'admin' }, patch)).toEqual({ role: 'admin' });
 });
 
+test('patchCached patches a plain array response (GET /lessons/day) without touching the snapshot', () => {
+  const data = [
+    { id: 'a', status: 'scheduled' },
+    { id: 'b', status: 'scheduled' },
+  ];
+  expect(patchCached(data, { id: 'b', status: 'confirmed' })).toEqual([
+    { id: 'a', status: 'scheduled' },
+    { id: 'b', status: 'confirmed' },
+  ]);
+  expect(data[1]?.status).toBe('scheduled');
+});
+
 test('keys are the path segments, lists add their params', () => {
   expect(pathKey('/students/42')).toEqual(['students', '42']);
   expect(listKey('/leads', { status: 'new' })).toEqual(['leads', 'list', { status: 'new' }]);

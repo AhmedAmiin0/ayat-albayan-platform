@@ -533,7 +533,11 @@
     "now": "دلوقتي",
     "upNext": "الجاية",
     "done": "خلصت",
-    "withTeacher": "مع {teacher}"
+    "withTeacher": "مع {teacher}",
+    "all": "الكل",
+    "statusFilter": "حالة الحلقة",
+    "emptyFilter": "مفيش حلقات بالحالة دي النهارده",
+    "studentTime": "{time} بتوقيت {city}"
   },
   "alerts": {
     "needsTeacher": "محتاج معلم/ة"
