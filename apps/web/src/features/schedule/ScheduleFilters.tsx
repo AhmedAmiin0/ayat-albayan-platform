@@ -1,9 +1,8 @@
-import { GENDERS, LESSON_STATUSES, PROGRAMS } from '@ab/shared';
+import { GENDERS, LESSON_STATUSES, PROGRAMS, type OverviewTeacher } from '@ab/shared';
 import { useId } from 'react';
 import { Label } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
-import type { OverviewTeacher } from './overview-types';
 import type { ScheduleSearch } from './search';
 import { TeacherPicker } from './TeacherPicker';
 

@@ -1,3 +1,4 @@
+import type { LessonView } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
@@ -5,7 +6,6 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { lesson } from './lesson-fixture';
 import { overview } from './overview-fixture';
-import type { BoardLesson } from './overview-types';
 import { WeekSchedule } from './WeekSchedule';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -23,7 +23,7 @@ const PROPOSED = lesson({
   pending_proposal: { id: 'pp', proposed_starts_at: '2026-10-12T15:00:00.000Z', note: null, created_at: '2026-10-02T09:00:00.000Z' },
 });
 
-function renderWeek(week: BoardLesson[]) {
+function renderWeek(week: LessonView[]) {
   apiFetch.mockImplementation((path: string) =>
     Promise.resolve(path.startsWith('/lessons/overview') ? overview(week) : path.startsWith('/lesson-proposals') ? [PROPOSED] : []),
   );

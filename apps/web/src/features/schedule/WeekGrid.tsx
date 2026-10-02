@@ -1,10 +1,9 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView, OverviewTeacher } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { LessonChip } from './LessonChip';
 import { teacherRows } from './lessons';
 import { boardRows, hoursText, teacherDay } from './overview';
-import type { BoardLesson, OverviewTeacher } from './overview-types';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 import { dayMonthLabel, weekDays, weekdayOf } from './tz';
@@ -14,7 +13,7 @@ export interface WeekGridProps {
   week: string;
   /** Today's Riyadh date (tinted column). */
   today: string;
-  lessons: readonly BoardLesson[];
+  lessons: readonly LessonView[];
   onOpen: (lesson: LessonView) => void;
   /**
    * The all-teachers calendar: one row per teacher here, lessons or not, with their cell and each
@@ -31,10 +30,10 @@ interface Row {
   id: string;
   name: string;
   teacher: OverviewTeacher | null;
-  days: Map<string, BoardLesson[]>;
+  days: Map<string, LessonView[]>;
 }
 
-function rowsOf(lessons: readonly BoardLesson[], teachers: readonly OverviewTeacher[] | undefined): Row[] {
+function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeacher[] | undefined): Row[] {
   if (teachers) return boardRows(teachers, lessons).map((r) => ({ ...r, id: r.teacher.id, name: r.teacher.display_name_ar }));
   return teacherRows(lessons).map((r) => ({ id: r.teacher.id, name: r.teacher.display_name_ar, teacher: null, days: r.days }));
 }
@@ -99,7 +98,7 @@ export function WeekGrid({ week, today, lessons, onOpen, teachers, now = new Dat
 interface DayFactsProps {
   teacher: OverviewTeacher;
   day: string;
-  lessons: readonly BoardLesson[];
+  lessons: readonly LessonView[];
   now: Date;
 }
 

@@ -1,15 +1,7 @@
-import type {
-  CancelRequest,
-  Conflict,
-  LessonView,
-  RescheduleRequest,
-  SlotsResponse,
-  StatusRouteEvent,
-} from '@ab/shared';
+import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsResponse, StatusRouteEvent, ScheduleOverview } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import type { ScheduleOverview } from './overview-types';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 

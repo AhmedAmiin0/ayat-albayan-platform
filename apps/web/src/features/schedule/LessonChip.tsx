@@ -4,7 +4,6 @@ import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
-import type { BoardLesson } from './overview-types';
 import { zoneLabel } from './slots';
 import { RIYADH_TZ } from './tz';
 
@@ -19,7 +18,7 @@ const INK: Record<Tone, string> = { ok: 'text-ok', act: 'text-act', bad: 'text-d
 const unpaid = subscriptionStatusStyle.unpaid;
 
 export interface LessonChipProps {
-  lesson: BoardLesson;
+  lesson: LessonView;
   onOpen: (lesson: LessonView) => void;
   /** Hide the teacher line (the row already names the teacher). */
   hideTeacher?: boolean;

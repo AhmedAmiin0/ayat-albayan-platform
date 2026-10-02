@@ -1,10 +1,10 @@
+import type { OverviewTeacher } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Bar } from '@/features/dashboard/Bar';
 import { loadLabel } from '@/features/dashboard/TeacherLoad';
 import { formatTimeOff } from '@/features/teachers/time-off';
 import { t } from '@/lib/i18n';
 import { timeInCity } from './lessons';
-import type { OverviewTeacher } from './overview-types';
 import { RIYADH_TZ } from './tz';
 
 export interface TeacherCellProps {

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView, ScheduleOverview } from '@ab/shared';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -15,7 +15,6 @@ import { DayBoard } from './DayBoard';
 import { LessonDrawer } from './LessonDrawer';
 import { filterLessons } from './lessons';
 import { boardRows, dayWindow, filterTeachers, type BoardRow } from './overview';
-import type { ScheduleOverview } from './overview-types';
 import { ProposalsPanel } from './ProposalsPanel';
 import { ScheduleCounts } from './ScheduleCounts';
 import { ScheduleFilters } from './ScheduleFilters';

@@ -1,5 +1,5 @@
+import type { LessonView, OverviewTeacher, ScheduleOverview } from '@ab/shared';
 import { ABRAR, FATMA } from './lesson-fixture';
-import type { BoardLesson, OverviewTeacher, ScheduleOverview } from './overview-types';
 
 // Test data only (imported by *.test.ts[x]): GET /lessons/overview rows for the week of Sat 3 Oct
 // 2026 (Riyadh = UTC+3). Abrar works Sunday 16:00–20:00 Riyadh; Fatma is off all Monday.
@@ -41,6 +41,6 @@ export const T_FATMA = overviewTeacher({
 
 export const T_NOUR = overviewTeacher({ id: 't-nour', display_name_ar: 'نور', gender: 'male', programs: ['arabic'], tz: 'Asia/Riyadh' });
 
-export function overview(lessons: BoardLesson[], teachers = [T_ABRAR, T_FATMA, T_NOUR]): ScheduleOverview {
+export function overview(lessons: LessonView[], teachers = [T_ABRAR, T_FATMA, T_NOUR]): ScheduleOverview {
   return { from: '2026-10-02T21:00:00.000Z', to: '2026-10-09T21:00:00.000Z', teachers, lessons };
 }

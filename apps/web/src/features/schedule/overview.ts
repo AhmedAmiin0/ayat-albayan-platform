@@ -1,8 +1,7 @@
-import { clockTime, type Gender, type Program } from '@ab/shared';
+import { clockTime, type Gender, type Program, type LessonView, type OverviewTeacher, type OverviewTimeOff, type Span } from '@ab/shared';
 import type { Range } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n';
 import { teacherRows } from './lessons';
-import type { BoardLesson, OverviewTeacher, OverviewTimeOff, Span } from './overview-types';
 import { addDays, RIYADH_TZ, zonedToUtc } from './tz';
 
 // All-teachers calendar view logic (R-SCH-01): filters on the one cached overview, and a teacher's
@@ -33,11 +32,11 @@ export function filterTeachers(teachers: readonly OverviewTeacher[], f: TeacherF
 export interface BoardRow {
   teacher: OverviewTeacher;
   /** Riyadh day → that day's lessons by start time. */
-  days: Map<string, BoardLesson[]>;
+  days: Map<string, LessonView[]>;
 }
 
 /** One row per teacher, lessons or not (a teacher with an empty week still shows). */
-export function boardRows(teachers: readonly OverviewTeacher[], lessons: readonly BoardLesson[]): BoardRow[] {
+export function boardRows(teachers: readonly OverviewTeacher[], lessons: readonly LessonView[]): BoardRow[] {
   const byTeacher = new Map(teacherRows(lessons).map((r) => [r.teacher.id, r.days]));
   return teachers.map((teacher) => ({ teacher, days: byTeacher.get(teacher.id) ?? new Map() }));
 }
@@ -89,7 +88,7 @@ export interface TeacherDay {
 export interface DayInput {
   day: string;
   /** That teacher's lessons shown on `day`. */
-  lessons: readonly BoardLesson[];
+  lessons: readonly LessonView[];
   now: Date;
 }
 

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonView, Span } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@/components/ui/button';
 import { AXIS_HOURS } from '@/features/teachers/track';
@@ -6,7 +6,6 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { LessonChip } from './LessonChip';
 import { freeText, spanRange, teacherDay, type BoardRow } from './overview';
-import type { Span } from './overview-types';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
 
