@@ -1140,3 +1140,39 @@ Branch `develop`. This commit fixes 31 verifier findings. Each one was re-checke
   - A bare «تمام» confirms only the open lesson of the last lesson-linked message in the past 48 h.
   - `lesson_needs_confirmation` is pushed at the same-day reminder time.
 - **Still open:** «stop» from a guardian, and quiet hours.
+
+# Phase 6: data migration tool + mobile quick book trial
+
+Branch `develop`, one squashed commit of `phase6/integration` (its intermediate commits held real names from the owner's export; only the final, clean tree is merged). Requirement IDs: R-MIG-01, R-MIG-02, R-MOB-02 (quick book), R-LEAD-06.
+
+## What was built
+- **`tools/migrate` (`@ab/migrate`)**: extract the Drive zip (xlsx, header maps, never by column) and the WhatsApp CRM (paged SELECTs only) into the git-ignored `cache/`; pure per-entity mappers; resolve (duplicate vs conflict); plan against the target via `import_items` (create / update / skip / adopt, dangling refs rejected with cascade); batched apply under an apply lock with `import_runs` + `import_items` (idempotent: a second apply writes nothing; an in-app report edit is never rewound; legacy AB codes never re-planned); report-PDF import (weak matches need owner approval); validate (SQL checks → `out/validate.md`); owner review workbook `out/review.xlsx`. Production refused without `--confirm-production`. Run it with `tools/migrate/RUNBOOK.md`.
+- **Schema**: `20261001000160_import_log` (`import_runs`, `import_items`), `20261001000161_students_code_reserve` (app-created codes start at AB-1000, AB-0001…0999 kept for legacy codes). Applied after Phase 4's 140–144.
+- **Mobile**: «حجز حلقة تجريبية لـ{name}» on the lead screen opens `/inbox/book` (teacher → free slot → contact → confirm; conflicts and duplicate students shown; offline-safe retry). On the merged Phase 4 lead screen it sits between «افتح المحادثة» and «فتح واتساب».
+- **`pnpm clear:demo`** (`tools/scripts/clear-demo.mjs`): deletes exactly the rows `pnpm seed:demo` writes (seed phones AND seed markers), FK-safe order, one transaction. Dry-run by default (deletes rolled back, exact counts); `--apply` commits; local, or staging with `--allow-remote-staging`; never production. Rows the app attached to demo people (lessons, rules, payments) make it refuse and roll back. Unit tests: `tools/scripts/clear-demo.plan.test.mjs` (new `@ab/scripts` package, `node --test`).
+
+## Gate (measured, `pnpm test:all` after `supabase db reset` + `gen:types`)
+api 1467 passed + 1 skipped (208 files) · web 612 (120 files) · mobile 460 (88 suites) · @ab/shared 1096 · @ab/migrate 292 (50 files) · @ab/scripts 5 · wa-stub 19 · e2e 33 passed + 3 skipped by design (journeys 1–6, login, pricing, report-outcome; desktop + mobile). Lint 0 errors (32 complexity warnings: web 14, migrate 10, api 3, mobile 3, wa-stub 2). Round 1 failed only on the Chromium PDF smoke test's `afterAll` (10 s hook timeout under parallel load); it now allows 30 s.
+
+## Staging dry-run (2026-10-02, counts only)
+| entity | create | reject | review |
+|---|---|---|---|
+| teachers | 11 | 0 | 0 |
+| guardians | 182 | 0 | 0 |
+| students | 190 | 35 | 92 |
+| leads | 1045 | 8 | 11 |
+| job_applicants | 27 | 4 | 0 |
+| schedule_rules | 5 | 0 | 3 |
+| lessons / lesson_reports | 113 / 113 | 0 / 14 | 0 / 9 |
+| report_pdfs | 82 | 0 | 54 |
+| subscriptions / payments / expenses | 4 / 2 / 6 | 3 / 0 / 0 | 4 / 0 / 0 |
+| message_templates / messages | 7 / 8274 | 0 / 8 | 0 / 0 |
+
+No updates or adopts (first run). Rejects are test rows, bad phones, out-of-range dates, unknown students/teachers.
+
+## Owner review steps (before any apply)
+1. Staging: deploy migrations 140–161, then `pnpm clear:demo --allow-remote-staging` (check counts) and `--apply`, so the demo students free AB-0183…0194.
+2. `pnpm migrate:dry --target staging`, then go through `out/review.xlsx` in RUNBOOK §4 order (merges, duplicates, rejected, unmatched PDFs, missing teachers, review).
+3. Answer the RUNBOOK open questions (HEART times/45 min, guardian names, Arabic-programme students).
+4. `pnpm migrate:apply --target staging`, `pnpm migrate validate --target staging`, spot-check five students, one family's lessons and reports, a balance, one lead thread.
+5. Production only on the owner's written go (RUNBOOK §8).

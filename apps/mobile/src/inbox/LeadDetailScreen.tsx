@@ -16,7 +16,7 @@ import { useCachedLead } from './use-cached-lead';
 
 /**
  * One lead (R-MOB-02): facts, status changer, the WhatsApp thread (reply and templates in the app),
- * WhatsApp itself as the fallback, move to job applicants.
+ * «حجز حلقة تجريبية» (quick book), WhatsApp itself as the fallback, move to job applicants.
  */
 export function LeadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -51,6 +51,12 @@ export function LeadDetailScreen() {
         <Button
           label={t.inbox.openThread.replace('{name}', name ?? ltr(formatPhone(phone)))}
           onPress={() => router.push(threadHref(phone))}
+        />
+        <Button
+          variant="secondary"
+          // Named: «… لهدى», apart from the «حجز حلقة تجريبية» status chip above (a move only).
+          label={name ? t.booking.trialFor.replace('{name}', name) : t.booking.trialTitle}
+          onPress={() => router.push({ pathname: '/inbox/book', params: { leadId: id } })}
         />
         <Button
           variant="secondary"

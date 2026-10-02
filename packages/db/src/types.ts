@@ -211,6 +211,102 @@ export type Database = {
           },
         ];
       };
+      import_items: {
+        Row: {
+          created_at: string;
+          entity: string;
+          first_run_id: string;
+          id: string;
+          last_run_id: string;
+          natural_key: string;
+          payload_hash: string;
+          source_ref: NonNullable<Json>;
+          target_id: string | null;
+          target_path: string | null;
+          target_table: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          entity: string;
+          first_run_id: string;
+          id?: string;
+          last_run_id: string;
+          natural_key: string;
+          payload_hash: string;
+          source_ref?: NonNullable<Json>;
+          target_id?: string | null;
+          target_path?: string | null;
+          target_table: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          entity?: string;
+          first_run_id?: string;
+          id?: string;
+          last_run_id?: string;
+          natural_key?: string;
+          payload_hash?: string;
+          source_ref?: NonNullable<Json>;
+          target_id?: string | null;
+          target_path?: string | null;
+          target_table?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'import_items_first_run_id_fkey';
+            columns: ['first_run_id'];
+            isOneToOne: false;
+            referencedRelation: 'import_runs';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'import_items_last_run_id_fkey';
+            columns: ['last_run_id'];
+            isOneToOne: false;
+            referencedRelation: 'import_runs';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      import_runs: {
+        Row: {
+          counts: NonNullable<Json>;
+          error: string | null;
+          finished_at: string | null;
+          git_sha: string | null;
+          id: string;
+          sources: NonNullable<Json>;
+          started_at: string;
+          status: Database['public']['Enums']['import_run_status'];
+          target: string;
+        };
+        Insert: {
+          counts?: NonNullable<Json>;
+          error?: string | null;
+          finished_at?: string | null;
+          git_sha?: string | null;
+          id?: string;
+          sources?: NonNullable<Json>;
+          started_at?: string;
+          status?: Database['public']['Enums']['import_run_status'];
+          target: string;
+        };
+        Update: {
+          counts?: NonNullable<Json>;
+          error?: string | null;
+          finished_at?: string | null;
+          git_sha?: string | null;
+          id?: string;
+          sources?: NonNullable<Json>;
+          started_at?: string;
+          status?: Database['public']['Enums']['import_run_status'];
+          target?: string;
+        };
+        Relationships: [];
+      };
       job_applicants: {
         Row: {
           created_at: string;
@@ -1862,6 +1958,7 @@ export type Database = {
       expense_category: 'ads' | 'content' | 'tools' | 'operations' | 'other';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
+      import_run_status: 'running' | 'succeeded' | 'failed';
       job_applicant_status: 'new' | 'reviewing' | 'interview' | 'accepted' | 'rejected';
       lead_source: 'facebook_ad' | 'instagram_ad' | 'whatsapp_direct' | 'referral' | 'other';
       lead_status:
@@ -2026,6 +2123,7 @@ export const Constants = {
       expense_category: ['ads', 'content', 'tools', 'operations', 'other'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
+      import_run_status: ['running', 'succeeded', 'failed'],
       job_applicant_status: ['new', 'reviewing', 'interview', 'accepted', 'rejected'],
       lead_source: ['facebook_ad', 'instagram_ad', 'whatsapp_direct', 'referral', 'other'],
       lead_status: [

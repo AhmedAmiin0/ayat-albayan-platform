@@ -11,7 +11,7 @@ const mockBack = jest.fn();
 const mockPush = jest.fn();
 const mockParams = { id: 'a1' };
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), push: (mockHref: string) => mockPush(mockHref) },
+  router: { back: () => mockBack(), push: (mockTo: unknown) => mockPush(mockTo) },
   useLocalSearchParams: () => mockParams,
 }));
 
@@ -55,6 +55,12 @@ test('«افتح المحادثة» opens the WhatsApp thread of the lead (encod
   const label = t.inbox.openThread.replace('{name}', 'هدى سالم');
   await fireEvent.press(screen.getByRole('button', { name: label }));
   expect(mockPush).toHaveBeenCalledWith('/inbox/thread/%2B966552147730');
+});
+
+test('«حجز حلقة تجريبية» opens the quick trial booking for this lead (R-MOB-02)', async () => {
+  await renderWithQuery(<LeadDetailScreen />, seeded());
+  await fireEvent.press(screen.getByRole('button', { name: 'حجز حلقة تجريبية لهدى سالم' }));
+  expect(mockPush).toHaveBeenCalledWith({ pathname: '/inbox/book', params: { leadId: 'a1' } });
 });
 
 test('«رجوع» pops back to the inbox', async () => {

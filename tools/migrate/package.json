@@ -1,0 +1,27 @@
+{
+  "name": "@ab/migrate",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "cli": "node --env-file-if-exists=.env src/cli.ts",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@ab/db": "workspace:*",
+    "@ab/shared": "workspace:*",
+    "@supabase/supabase-js": "^2.117.2",
+    "fflate": "^0.8.3",
+    "postgres": "^3.4.9",
+    "read-excel-file": "^9.3.10",
+    "write-excel-file": "^4.1.1"
+  },
+  "devDependencies": {
+    "@ab/config": "workspace:*",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.0.0",
+    "typescript": "~6.0.3",
+    "vitest": "^5.0.3"
+  }
+}

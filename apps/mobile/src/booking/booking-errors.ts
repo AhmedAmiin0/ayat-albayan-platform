@@ -1,0 +1,64 @@
+import { CONFLICT_KINDS, lessonWhenText, RIYADH_TZ, type Conflict } from '@ab/shared';
+import { ApiError } from '@/lib/api';
+import { t } from '@/lib/i18n';
+import { isOffline } from '@/payments/payment-errors';
+
+// What a failed POST /booking means for the trial wizard (docs/10 §3: clients switch on `code`).
+
+export interface Candidate {
+  id: string;
+  name: string;
+  code: string | null;
+}
+
+export type BookFailure =
+  /** 409 conflict: the slot clashes; one Arabic line per clash, then «اختار ميعاد تاني». */
+  | { kind: 'conflict'; lines: string[] }
+  /** 409 duplicate_student: the family has a similar-named child (R-STU-03). */
+  | { kind: 'duplicate'; candidates: Candidate[] }
+  | { kind: 'error'; text: string };
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null;
+}
+
+function isConflict(v: unknown): v is Conflict {
+  return (
+    isRecord(v) && CONFLICT_KINDS.some((k) => k === v['kind']) && typeof v['startsAt'] === 'string'
+  );
+}
+
+function toCandidate(v: unknown): Candidate | null {
+  if (!isRecord(v) || typeof v['id'] !== 'string' || typeof v['name'] !== 'string') return null;
+  return { id: v['id'], name: v['name'], code: typeof v['code'] === 'string' ? v['code'] : null };
+}
+
+/** «المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)», Riyadh wall clock. */
+export function conflictLine(c: Conflict): string {
+  return t.booking.conflict[c.kind].replace(
+    '{when}',
+    lessonWhenText(new Date(c.startsAt), RIYADH_TZ),
+  );
+}
+
+export function bookFailure(error: unknown): BookFailure {
+  if (isOffline(error)) return { kind: 'error', text: t.booking.mobile.offline };
+  if (!(error instanceof ApiError) || error.status !== 409 || !isRecord(error.body)) {
+    return { kind: 'error', text: t.common.error };
+  }
+  const body = error.body;
+  const list = (key: string): unknown[] => {
+    const v = body[key];
+    return Array.isArray(v) ? v : [];
+  };
+  if (body['code'] === 'conflict') {
+    return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map(conflictLine) };
+  }
+  if (body['code'] === 'duplicate_student') {
+    const candidates = list('candidates')
+      .map(toCandidate)
+      .filter((c): c is Candidate => c !== null);
+    if (candidates.length > 0) return { kind: 'duplicate', candidates };
+  }
+  return { kind: 'error', text: t.common.error };
+}

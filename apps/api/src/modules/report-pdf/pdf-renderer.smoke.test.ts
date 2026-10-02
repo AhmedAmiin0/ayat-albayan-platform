@@ -16,7 +16,8 @@ const out = process.env.PDF_SAMPLE_OUT;
 
 describe.skipIf(!hasChromium)('PdfRenderer — Chromium smoke (R-REP-03)', () => {
   const renderer = new PdfRenderer();
-  afterAll(() => renderer.close());
+  // Chromium can take >10 s to exit while turbo runs every package in parallel.
+  afterAll(() => renderer.close(), 30_000);
 
   it('renders the attended sample as one A4 page with the fonts embedded', async () => {
     const pdf = await renderer.render(reportHtml(sampleModel(), pdfAssets()));

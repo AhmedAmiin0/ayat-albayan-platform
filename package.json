@@ -15,6 +15,10 @@
     "supabase": "pnpm --filter @ab/db exec supabase",
     "env:local": "node tools/scripts/write-local-env.mjs",
     "seed:demo": "node --env-file-if-exists=e2e/.env tools/scripts/seed-demo.mjs",
+    "clear:demo": "node --env-file-if-exists=e2e/.env tools/scripts/clear-demo.mjs",
+    "migrate": "pnpm --filter @ab/migrate cli",
+    "migrate:dry": "pnpm --filter @ab/migrate cli dry-run",
+    "migrate:apply": "pnpm --filter @ab/migrate cli apply",
     "test:all": "turbo lint typecheck test e2e --force"
   },
   "prettier": "@ab/config/prettier",
