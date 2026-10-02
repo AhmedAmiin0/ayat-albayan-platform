@@ -46,6 +46,8 @@ const DELETES = {
     delete from public.teacher_time_off where teacher_id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
   teacher_availability: (tx, s) => tx`
     delete from public.teacher_availability where teacher_id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
+  teacher_thread_reads: (tx, s) => tx`
+    delete from public.teacher_thread_reads where teacher_id in (${DEMO_IDS.teachers(tx, s)}) returning teacher_id`,
   teachers: (tx, s) =>
     tx`delete from public.teachers where id in (${DEMO_IDS.teachers(tx, s)}) returning id`,
 };

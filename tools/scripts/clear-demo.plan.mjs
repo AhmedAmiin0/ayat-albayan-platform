@@ -29,6 +29,8 @@ export const SET_NULL_DEPENDENTS = [
   { table: 'schedule_rules', column: 'created_from_lead_id', parent: 'leads' },
   { table: 'messages', column: 'lead_id', parent: 'leads' },
   { table: 'messages', column: 'guardian_id', parent: 'guardians' },
+  // A reply a demo teacher sent from the inbox keeps its «بعتها:» (migration 164).
+  { table: 'messages', column: 'sent_by_teacher_id', parent: 'teachers' },
 ];
 
 /** FK-safe: rows that point at others go first (leads → guardians, students → guardians/teachers). */
@@ -39,6 +41,8 @@ export const DELETE_ORDER = [
   'guardians',
   'teacher_time_off',
   'teacher_availability',
+  // The demo teacher's own read marks (migration 164); nobody else's.
+  'teacher_thread_reads',
   'teachers',
 ];
 
