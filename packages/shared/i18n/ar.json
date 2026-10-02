@@ -303,7 +303,10 @@
     "searchPlaceholder": "دوّر بالاسم أو الرقم",
     "sourceAll": "المصدر: الكل",
     "count": "{n} محادثة",
-    "countStatus": "{n} {status}"
+    "countStatus": "{n} {status}",
+    "mobile": {
+      "offline": "الاتصال وقع، فدي آخر بيانات وصلتنا ومش هينفع نحفظ تعديل دلوقتي. جرّب تاني لما النت يرجع"
+    }
   },
   "jobApplicants": {
     "title": "طلبات التوظيف",

@@ -11,12 +11,14 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { LeadFacts } from './LeadFacts';
 import { LeadReclassify } from './LeadReclassify';
 import { LeadStatusChanger } from './LeadStatusChanger';
+import { LeadProfileSection } from './qualification/LeadProfileSection';
 import { threadHref } from './thread-cache';
 import { useCachedLead } from './use-cached-lead';
 
 /**
  * One lead (R-MOB-02): facts, status changer, the WhatsApp thread (reply and templates in the app),
- * «حجز حلقة تجريبية» (quick book), WhatsApp itself as the fallback, move to job applicants.
+ * «حجز حلقة تجريبية» (quick book), WhatsApp itself as the fallback, the follow-up and «بيانات الطالب»
+ * (R-LEAD-03/05), move to job applicants.
  */
 export function LeadDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -63,6 +65,7 @@ export function LeadDetailScreen() {
           label={t.mobile.openWhatsapp}
           onPress={() => void Linking.openURL(whatsappLink(phone))}
         />
+        <LeadProfileSection lead={lead.data} />
         <LeadReclassify id={lead.data.id} />
       </ScrollView>
     </Screen>

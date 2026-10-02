@@ -303,7 +303,10 @@
     "searchPlaceholder": "دوّر بالاسم أو الرقم",
     "sourceAll": "المصدر: الكل",
     "count": "{n} محادثة",
-    "countStatus": "{n} {status}"
+    "countStatus": "{n} {status}",
+    "mobile": {
+      "offline": "The connection dropped, so this is the last data we received and changes can't be saved right now. Try again when you're back online."
+    }
   },
   "jobApplicants": {
     "title": "طلبات التوظيف",
