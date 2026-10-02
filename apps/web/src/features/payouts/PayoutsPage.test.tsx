@@ -4,6 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYOUT } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n';
 import { currentMonth, downloadPayoutsCsv } from './api';
+import { monthLabel, monthOptions } from './MonthSelect';
 import { breakdownLines } from './payout-columns';
 import { PayoutsPage } from './PayoutsPage';
 
@@ -74,6 +75,12 @@ describe('payout helpers', () => {
 
   it('this month in Riyadh', () => {
     expect(currentMonth(new Date('2026-09-30T22:00:00Z'))).toBe('2026-10');
+  });
+
+  it('month options: newest first across the year boundary, an older value kept', () => {
+    expect(monthOptions('2026-02', { count: 3, value: '2026-01' })).toEqual(['2026-02', '2026-01', '2025-12']);
+    expect(monthOptions('2026-02', { count: 2, value: '2024-05' })).toEqual(['2026-02', '2026-01', '2024-05']);
+    expect(monthLabel('2026-10')).toBe('أكتوبر 2026');
   });
 
   it('the CSV is fetched with the token and saved with a BOM', async () => {

@@ -4,16 +4,23 @@ import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
-import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
 import { PageHead } from '@/components/ui/page';
 import { durationLabel } from '@/features/pricing/format';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
-import { approvePayout, downloadPayoutsCsv, generatePayouts, payoutsQuery, payPayout, type PayoutGenerateResult } from './api';
+import {
+  approvePayout,
+  currentMonth,
+  downloadPayoutsCsv,
+  generatePayouts,
+  payoutsQuery,
+  payPayout,
+  type PayoutGenerateResult,
+} from './api';
+import { MonthSelect } from './MonthSelect';
 import { payoutColumns } from './payout-columns';
 
 type Props = { month: string; onMonth: (month: string) => void };
@@ -53,9 +60,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
     <>
       <PageHead>
         <Cartouche>{t.payouts.title}</Cartouche>
-        <Field label={t.payouts.month}>
-          {(p) => <Input {...p} type="month" dir="ltr" className="w-auto" value={month} onChange={(e) => e.target.value && onMonth(e.target.value)} />}
-        </Field>
+        <MonthSelect label={t.payouts.month} value={month} latest={currentMonth()} onChange={onMonth} />
         <div className="ms-auto flex flex-wrap gap-2.5">
           <Button type="button" variant="secondary" disabled={rows.length === 0 || csv.isPending} onClick={() => csv.mutate(month)}>
             {t.payouts.exportCsv}

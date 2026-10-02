@@ -44,7 +44,7 @@ export function BalanceCard({ student }: { student: PickedStudent }) {
         )}
         <div className="ms-auto flex gap-2">
           {owes && (
-            <Button type="button" size="sm" onClick={() => setDialog('pay')}>
+            <Button type="button" variant="secondary" size="sm" onClick={() => setDialog('pay')}>
               {t.payments.record}
             </Button>
           )}

@@ -5,7 +5,7 @@ import { PAYMENT, WEEKLY } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n';
 import { paidAtFor, uploadReceipt } from './api';
 import { PaymentsPage } from './PaymentsPage';
-import { receiptProblem } from './ReceiptField';
+import { ReceiptField, receiptProblem } from './ReceiptField';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -57,6 +57,20 @@ describe('receipts (R-PAY-01, R-MOB-02)', () => {
     expect(receiptProblem(file('image/jpeg'))).toBeNull();
     expect(receiptProblem(file('audio/mpeg'))).toBe('receipt_type');
     expect(receiptProblem(file('application/pdf', 10 * 1024 * 1024 + 1))).toBe('receipt_too_large');
+  });
+
+  it('the picker previews an image and can drop it before saving', () => {
+    URL.createObjectURL = vi.fn(() => 'blob:receipt');
+    URL.revokeObjectURL = vi.fn();
+    const onChange = vi.fn();
+    const { rerender } = render(<ReceiptField file={null} onChange={onChange} />);
+    const f = file('image/jpeg');
+    fireEvent.change(screen.getByLabelText(t.payments.addReceipt), { target: { files: [f] } });
+    expect(onChange).toHaveBeenCalledWith(f);
+    rerender(<ReceiptField file={f} onChange={onChange} />);
+    expect(screen.getByRole('img', { name: t.payments.receipt }).getAttribute('src')).toBe('blob:receipt');
+    fireEvent.click(screen.getByRole('button', { name: t.payments.removeReceipt }));
+    expect(onChange).toHaveBeenLastCalledWith(null);
   });
 
   it('paid date: today is now, an earlier day is noon Riyadh (never in the future)', () => {
