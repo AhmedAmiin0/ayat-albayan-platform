@@ -576,6 +576,12 @@
       "back": "Back"
     }
   },
+  "teacherNav": {
+    "today": "Today",
+    "calendar": "My schedule",
+    "reports": "Reports",
+    "payouts": "My payouts"
+  },
   "today": {
     "title": "Today",
     "empty": "No lessons today",
@@ -853,7 +859,8 @@
       "already_submitted": "The report was already sent. Edit it and press “Save changes”",
       "lesson_not_found": "This lesson doesn't exist",
       "attachment_path": "The file didn't upload correctly. Upload it again",
-      "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it"
+      "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it",
+      "missing_text": "Write the recitation, new memorization, revision, notes and homework before sending"
     },
     "entryFor": "Report for {name}",
     "submitting": "Sending…",
@@ -889,7 +896,11 @@
       "closing": "May Allah bless the student and make them a source of benefit, and make the Quran the spring of their heart and the light of their chest.",
       "whatsapp": "WhatsApp",
       "generated": "Report generated automatically by the student follow-up system"
-    }
+    },
+    "submittedTitle": "Sent reports",
+    "submittedEmpty": "No sent reports yet",
+    "mobileAttachHint": "From the phone you can add photos only; PDFs and voice notes from the website",
+    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online"
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -1234,7 +1245,10 @@
       "session_closed": "More than 24 hours have passed since their last message — you need to send a template",
       "template_not_approved": "This template isn't approved by Meta yet",
       "invalid_phone": "This number isn't valid",
-      "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp"
+      "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp",
+      "not_your_thread": "This chat is not one of yours",
+      "own_thread_read_only": "This is your chat with the academy, read only",
+      "template_not_allowed": "This template is for the admin only"
     },
     "pickThread": "Choose a conversation from the list",
     "pickThreadHint": "New messages show up here automatically as soon as they arrive.",
@@ -1260,7 +1274,9 @@
       "due": "Owes {amount}",
       "make": "Create the subscription",
       "backToChat": "Back to the chat"
-    }
+    },
+    "sentBy": "Sent by: {name}",
+    "ownThreadReadOnly": "This is your chat with the academy, read only"
   },
   "templates": {
     "title": "WhatsApp templates",

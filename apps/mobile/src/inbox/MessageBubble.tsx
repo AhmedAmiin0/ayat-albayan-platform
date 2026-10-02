@@ -7,6 +7,7 @@ import { AppText } from '@/ui/AppText';
 import { StatusChip } from '@/ui/StatusChip';
 import { MessageActions } from './MessageActions';
 import { mediaLine, queuedLine, stamp, templateLine } from './message-text';
+import { sentByName, useThreadMode } from './thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
 function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {
@@ -37,12 +38,14 @@ function useSmall() {
   };
 }
 
-/** When, and for ours the status word; a row scheduled later says when it goes. */
+/** When, and for ours the status word; a row scheduled later says when it goes; a teacher's «بعتها». */
 function MessageMeta({ message: m }: { message: MessageView }) {
   const small = useSmall();
   const later = queuedLine(m);
+  const sender = sentByName(m);
   return (
     <>
+      {sender ? <AppText style={small}>{t.inbox.sentBy.replace('{name}', sender)}</AppText> : null}
       <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <AppText style={small}>{stamp(m.created_at)}</AppText>
         {m.direction === 'outbound' ? (
@@ -61,16 +64,18 @@ function MessageMeta({ message: m }: { message: MessageView }) {
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end, as WhatsApp lays out Arabic.
  * Ours carry the status word (في الطابور، اتبعتت، وصلت، اتقرت، متبعتتش، اتبعتت يدوي); a template
- * row says which template, its body already rendered by the API.
+ * row says which template, its body already rendered by the API. A row a teacher sent from the
+ * academy number says who («بعتها: أبرار»); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
 export function MessageBubble({ message: m, phone }: { message: MessageView; phone: string }) {
   const { color } = useTheme();
+  const admin = useThreadMode().kind === 'admin';
   const small = useSmall();
   const ours = m.direction === 'outbound';
   const media = mediaLine(m);
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
   const note = replyNote(m, locale);
-  const stuck = ours && (m.status === 'failed' || m.click_to_chat !== null);
+  const stuck = admin && ours && (m.status === 'failed' || m.click_to_chat !== null);
   return (
     <View
       style={{

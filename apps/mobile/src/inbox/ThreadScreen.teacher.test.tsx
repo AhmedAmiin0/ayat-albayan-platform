@@ -1,0 +1,64 @@
+import type { ThreadPeople } from '@ab/shared';
+import { fireEvent, screen } from '@testing-library/react-native';
+import { t } from '@/lib/i18n';
+import { renderWithQuery } from '@/test/query';
+import { detail, failed, inbound, message, thread } from './thread-fixtures';
+import { ThreadModeProvider } from './thread-mode';
+import { ThreadScreen } from './ThreadScreen';
+
+const mockApiFetch = jest.fn();
+jest.mock('@/lib/api', () => ({
+  ...jest.requireActual('@/lib/api'),
+  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+}));
+const mockReplace = jest.fn();
+jest.mock('expo-router', () => ({
+  router: { back: jest.fn(), canGoBack: () => false, replace: (h: string) => mockReplace(h), push: jest.fn() },
+  useLocalSearchParams: () => ({ phone: '+966552147730' }),
+}));
+
+const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, session_open: true };
+// Teacher mode: the guardian's students she teaches, with no money (subscription null).
+const people: ThreadPeople = {
+  guardian: { id: 'g-1', name: 'أم يوسف' },
+  lead: null,
+  students: [{ id: 's-1', code: 'AB-0182', name: 'يوسف أحمد', teacher_name: 'أبرار', status: 'active', subscription: null }],
+};
+const byAbrar = { ...message({ id: 'm9', body: 'الحلقة الساعة 5', status: 'delivered' }), sent_by_teacher_name: 'أبرار' };
+
+function render() {
+  return renderWithQuery(
+    <ThreadModeProvider value={{ kind: 'teacher', teacherId: 't-abrar' }}>
+      <ThreadScreen />
+    </ThreadModeProvider>,
+  );
+}
+
+beforeEach(() => {
+  mockApiFetch.mockReset();
+  mockReplace.mockReset();
+});
+
+test('a guardian’s chat: messages, «بعتها», the composer; no subscription panel, no admin actions', async () => {
+  const body = detail([inbound, byAbrar, failed], { thread: guardianThread, people });
+  mockApiFetch.mockImplementation(async (p: string) => (p.startsWith('/threads') ? body : { open: true }));
+  await render();
+  expect(await screen.findByText('الحلقة الساعة 5')).toBeTruthy();
+  expect(screen.getByText(t.inbox.sentBy.replace('{name}', 'أبرار'))).toBeTruthy();
+  expect(screen.getByLabelText(t.inbox.composer.placeholder)).toBeTruthy();
+  expect(screen.queryByText(t.inbox.subscription.badge.none)).toBeNull();
+  // A failed row: its status word, but retry / «بعتها يدوي» stay the admin's.
+  expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
+  expect(screen.queryByText(t.messages.retry)).toBeNull();
+  await fireEvent.press(screen.getByText(t.common.back));
+  expect(mockReplace).toHaveBeenCalledWith('/teacher/chats');
+});
+
+test('her own chat with the academy is read-only: the note, no composer', async () => {
+  const own = { ...thread, teacher_id: 't-abrar', lead_id: null, lead_status: null };
+  mockApiFetch.mockImplementation(async (p: string) => (p.startsWith('/threads') ? detail([inbound], { thread: own }) : { open: true }));
+  await render();
+  expect(await screen.findByText(t.inbox.ownThreadReadOnly)).toBeTruthy();
+  expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
+  expect(screen.queryByText(t.inbox.composer.sendTemplate)).toBeNull();
+});

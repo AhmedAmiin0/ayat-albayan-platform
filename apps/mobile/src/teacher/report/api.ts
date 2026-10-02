@@ -1,0 +1,62 @@
+import type { ReportAttachmentView, ReportFormResponse, ReportView, SignedDownload, SignedUpload } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
+import { Linking } from 'react-native';
+import { ApiError, apiFetch, apiSend } from '@/lib/api';
+import { t } from '@/lib/i18n';
+import { pathKey } from '@/lib/query-keys';
+import { supabase } from '@/lib/supabase';
+import type { Receipt } from '@/payments/receipt';
+import type { DraftBody, SubmitBody } from './form-values';
+
+// The web form's report routes (docs/11 §4 R1–R12), same bodies: the API checks that the report
+// is the signed-in teacher's own and that its edit window is open.
+
+/** Under ['reports'], so a submit's invalidation reaches the form, the pending list and history. */
+export const reportFormKey = (lessonId: string) => [...pathKey('/reports'), 'form', lessonId];
+
+/** R1: GET /lessons/:id/report-form — creates the drafts on first open. Persisted for offline. */
+export function useReportForm(lessonId: string) {
+  return useQuery({
+    queryKey: reportFormKey(lessonId),
+    queryFn: () => apiFetch<ReportFormResponse>(`/lessons/${lessonId}/report-form`),
+  });
+}
+
+export const saveDraft = (id: string, body: DraftBody) => apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);
+
+export const submitReport = (id: string, body: SubmitBody) => apiSend<ReportView>('POST', `/reports/${id}/submit`, body);
+
+/** R7 → Storage signed upload (the bytes, as the receipts do) → R8 register. */
+export async function uploadAttachment(id: string, file: Receipt): Promise<ReportAttachmentView> {
+  const meta = { mime: file.mime, size: file.size };
+  const slot = await apiSend<SignedUpload>('POST', `/reports/${id}/attachments/upload-url`, meta);
+  const { error } = await supabase.storage
+    .from(slot.bucket)
+    .uploadToSignedUrl(slot.path, slot.token, file.bytes, { contentType: file.mime });
+  if (error) throw new ApiError(400, { code: 'attachment_path' });
+  return apiSend<ReportAttachmentView>('POST', `/reports/${id}/attachments`, { ...meta, path: slot.path });
+}
+
+/** Opens a private file (an attachment, the report PDF) through its short-lived signed URL. */
+export async function openSigned(path: string): Promise<void> {
+  const { url } = await apiFetch<SignedDownload>(path);
+  await Linking.openURL(url);
+}
+
+const ERRORS: Record<string, string> = { ...t.reports.error, invalid_transition: t.lessons.invalidTransition };
+
+function codeOf(error: unknown): string | null {
+  if (!(error instanceof ApiError) || typeof error.body !== 'object' || error.body === null) return null;
+  const body = error.body as { code?: unknown; issues?: { message?: unknown }[] };
+  const code = typeof body.code === 'string' ? body.code : body.issues?.[0]?.message;
+  return typeof code === 'string' ? code : null;
+}
+
+/**
+ * The line for a failed report call: the domain `code` or first validation issue, said in the
+ * form's words. No connection: the report was not sent, and the form says so (R-MOB-03).
+ */
+export function reportErrorText(error: unknown): string {
+  if (!(error instanceof ApiError)) return t.reports.offlineNotSent;
+  return ERRORS[codeOf(error) ?? ''] ?? t.common.error;
+}
