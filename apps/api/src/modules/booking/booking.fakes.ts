@@ -1,0 +1,114 @@
+// Test-only fakes for the booking module: one in-memory academy, every DB touch a vi.fn.
+import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
+import { vi } from 'vitest';
+import type { SettingsService } from '../../common/settings/settings.service';
+import type { AvailabilityQueries } from '../teachers/availability/availability.queries';
+import { BookingPlanner } from './booking.planner';
+import type { BookingQueries, BookingStudent } from './booking.queries';
+import { ConflictContext } from './conflict-context';
+
+export const IDS = {
+  teacher: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
+  s1: '11111111-1111-4111-8111-111111111111',
+  s2: '22222222-2222-4222-8222-222222222222',
+  s3: '33333333-3333-4333-8333-333333333333',
+  g1: '44444444-4444-4444-8444-444444444444',
+  g2: '55555555-5555-4555-8555-555555555555',
+  lead: '66666666-6666-4666-8666-666666666666',
+  missing: '99999999-9999-4999-8999-999999999999',
+};
+/** Thu 2026-10-01 11:00 Riyadh. */
+export const NOW = new Date('2026-10-01T08:00:00Z');
+
+export const TEACHER = { id: IDS.teacher, tz: 'Africa/Cairo', meeting_link: 'https://meet.jit.si/ab-abrar' };
+const riyadh = { id: IDS.g1, phone_e164: '+966552147730', tz: 'Asia/Riyadh' };
+const cairo = { id: IDS.g2, phone_e164: '+201001234567', tz: 'Africa/Cairo' };
+const student = (id: string, name: string, guardian: BookingStudent['guardian']): BookingStudent => ({
+  id,
+  name,
+  program: 'quran',
+  teacher_gender_pref: 'female',
+  meeting_link_override: null,
+  guardian,
+});
+export const STUDENTS = [
+  student(IDS.s1, 'سهيلة', riyadh),
+  student(IDS.s2, 'مريم', riyadh),
+  student(IDS.s3, 'يوسف', cairo),
+];
+/** Sun + Tue 16:00–22:00 Cairo: Sun 17:00 Riyadh (14:00Z) fits both before and after DST. */
+export const GRID = [0, 2].map((weekday) => ({
+  id: `a${weekday}`,
+  weekday,
+  start_time: '16:00',
+  end_time: '22:00',
+  tz: 'Africa/Cairo',
+}));
+
+export function fakeQueries() {
+  return {
+    teacher: vi.fn().mockResolvedValue(TEACHER),
+    students: vi.fn(async (ids: readonly string[]) => STUDENTS.filter((s) => ids.includes(s.id))),
+    lead: vi.fn().mockResolvedValue({ id: IDS.lead, status: 'new' }),
+    guardianByPhone: vi.fn().mockResolvedValue(null),
+    studentBusyLessons: vi.fn().mockResolvedValue([]),
+    createBooking: vi.fn(),
+  };
+}
+
+export function fakeAvailability() {
+  return {
+    listSlots: vi.fn().mockResolvedValue(GRID),
+    listTimeOff: vi.fn().mockResolvedValue([]),
+    listBusyLessons: vi.fn().mockResolvedValue([]),
+  };
+}
+
+export function fakeContext() {
+  const queries = fakeQueries();
+  const availability = fakeAvailability();
+  const context = new ConflictContext(
+    availability as unknown as AvailabilityQueries,
+    queries as unknown as BookingQueries,
+  );
+  return { queries, availability, context };
+}
+
+/** A real BookingPlanner over the fakes; the 5-week horizon matches the seeded setting. */
+export function fakePlanner() {
+  const deps = fakeContext();
+  const settings = { bookingHorizonWeeks: vi.fn().mockResolvedValue(5) };
+  const planner = new BookingPlanner(
+    deps.queries as unknown as BookingQueries,
+    deps.context,
+    settings as unknown as SettingsService,
+  );
+  return { ...deps, settings, planner };
+}
+
+const RULE = {
+  teacherId: IDS.teacher,
+  byday: [0],
+  startTimeLocal: '17:00',
+  tz: 'Asia/Riyadh',
+  durationMin: 45,
+  startsOn: '2026-10-01',
+  package: '8',
+};
+
+/** Sundays 17:00 Riyadh, 45 min, 8 lessons, siblings S1 + S2 unless overridden. */
+export function bookingRequest(over: Record<string, unknown> = {}): BookingRequest {
+  return bookingRequestSchema.parse({ ...RULE, studentIds: [IDS.s1, IDS.s2], ...over });
+}
+
+/** A lead-path trial: new guardian + new student from the conversation. */
+export function leadRequest(over: Record<string, unknown> = {}): BookingRequest {
+  return bookingRequestSchema.parse({
+    ...RULE,
+    package: 'trial',
+    leadId: IDS.lead,
+    guardian: { name: 'أم ريم', phone_e164: '0501234567', tz: 'Asia/Riyadh' },
+    newStudent: { name: 'رِيم', tz: 'Asia/Riyadh' },
+    ...over,
+  });
+}

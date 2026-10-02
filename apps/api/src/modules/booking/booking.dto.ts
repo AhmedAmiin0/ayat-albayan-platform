@@ -1,0 +1,36 @@
+import { GENDERS, instant, lessonDuration, PROGRAMS } from '@ab/shared';
+import { z } from 'zod';
+
+/** GET /booking/teachers?studentId | program & gender? (docs/10 §5 #12). */
+export const teacherOptionsQuerySchema = z
+  .object({
+    studentId: z.uuid().optional(),
+    program: z.enum(PROGRAMS).optional(),
+    gender: z.enum(GENDERS).optional(),
+  })
+  .refine((q) => q.studentId !== undefined || q.program !== undefined, {
+    message: 'student_or_program',
+    path: ['program'],
+  });
+
+/** `?studentIds=a,b` → uuid[] (at most 10, a group lesson). */
+const idList = z
+  .string()
+  .transform((s) => s.split(',').map((id) => id.trim()).filter(Boolean))
+  .pipe(z.array(z.uuid()).max(10));
+
+/** GET /booking/slots (docs/10 §5 #13). The 14-day cap is checked by SlotsService. */
+export const slotsQuerySchema = z
+  .object({
+    teacherId: z.uuid(),
+    from: instant,
+    to: instant,
+    durationMin: z.coerce.number().pipe(lessonDuration),
+    studentIds: idList.optional(),
+    /** Grid step; defaults to the duration. TODO(R-SCH-06): owner to pick 15 / 30 / duration. */
+    stepMin: z.coerce.number().int().min(5).max(180).optional(),
+  })
+  .refine((q) => Date.parse(q.from) < Date.parse(q.to), { message: 'from_before_to', path: ['to'] });
+
+export type TeacherOptionsQuery = z.output<typeof teacherOptionsQuerySchema>;
+export type SlotsQuery = z.output<typeof slotsQuerySchema>;
