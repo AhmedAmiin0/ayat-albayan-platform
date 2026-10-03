@@ -1367,8 +1367,7 @@
       "lesson_reminder_24h": "تذكير قبل الحلقة بيوم",
       "report_ready": "تقرير الحلقة (PDF)",
       "renewal_due": "تذكير التجديد",
-      "follow_up_slots": "متابعة بميعادين مقترحين",
-      "lesson_feedback_request": "طلب رأي الطالب — رأيك يهمّنا"
+      "follow_up_slots": "متابعة بميعادين مقترحين"
     },
     "settings": {
       "title": "إعدادات الإرسال",

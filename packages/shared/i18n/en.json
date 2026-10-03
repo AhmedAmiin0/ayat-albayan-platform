@@ -1367,8 +1367,7 @@
       "lesson_reminder_24h": "Reminder one day before the lesson",
       "report_ready": "Lesson report (PDF)",
       "renewal_due": "Renewal reminder",
-      "follow_up_slots": "Follow-up with two suggested times",
-      "lesson_feedback_request": "Student feedback request"
+      "follow_up_slots": "Follow-up with two suggested times"
     },
     "settings": {
       "title": "Sending settings",
