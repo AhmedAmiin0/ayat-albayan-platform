@@ -1,8 +1,9 @@
 import type { ThreadPeople } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
+import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { detail, failed, inbound, message, thread } from './thread-fixtures';
+import { detail, failed, inbound, message, NOW, thread } from './thread-fixtures';
 import { ThreadModeProvider } from './thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
@@ -17,7 +18,9 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
-const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, session_open: true };
+// The 24 h window is read off the clock, so «he wrote a moment ago» must be relative to now.
+const justNow = new Date(Date.now() - 5 * 60_000).toISOString();
+const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, session_open: true, last_inbound_at: justNow };
 // Teacher mode: the guardian's students she teaches, with no money (subscription null).
 const people: ThreadPeople = {
   guardian: { id: 'g-1', name: 'أم يوسف' },
@@ -34,7 +37,10 @@ function render() {
   );
 }
 
+// Only Date is faked: the fixtures' last inbound message is NOW - 1 h, so the 24 h session window
+// stays open whatever day the suite runs (it failed in CI once the real clock passed it).
 beforeEach(() => {
+  fakeNow(NOW);
   mockApiFetch.mockReset();
   mockReplace.mockReset();
 });
@@ -62,3 +68,5 @@ test('her own chat with the academy is read-only: the note, no composer', async 
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
   expect(screen.queryByText(t.inbox.composer.sendTemplate)).toBeNull();
 });
+
+afterEach(() => jest.useRealTimers());

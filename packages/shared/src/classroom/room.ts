@@ -1,0 +1,29 @@
+const PREFIX = 'lesson-';
+
+/** The LiveKit room of a lesson (migration 181: derived, not stored). */
+export const lessonRoomName = (lessonId: string): string => `${PREFIX}${lessonId}`;
+
+/** Who a token was minted for. Staff roles join with their own login, `guest` with a link. */
+export const JOIN_ROLES = ['teacher', 'admin', 'assistant', 'guest'] as const;
+export type JoinRole = (typeof JOIN_ROLES)[number];
+
+/** POST /lessons/:id/room/join and POST /public/join/:linkToken: all the web room needs. */
+export interface RoomJoinResult {
+  url: string;
+  token: string;
+  room: string;
+  role: JoinRole;
+}
+
+/** Stable error codes of the classroom routes (the clients map them to ar/en messages). */
+export const CLASSROOM_ERRORS = [
+  'classroom_not_configured',
+  'join_not_open_yet',
+  'join_closed',
+  'link_invalid',
+  'link_expired',
+  'too_many_requests',
+  'template_not_approved',
+  'lesson_not_found',
+] as const;
+export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];

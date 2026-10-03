@@ -2,10 +2,15 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import type { AvailabilityRow, Teacher } from '@/more/types';
+import { fakeNow } from '@/test/fake-now';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { cancelled, done, lesson, muscat, pending } from '@/today/fixtures';
 import { ltr } from '@/ui/Ltr';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
+
+// The first render in this file pays the cold transform of the whole calendar tree, which exceeded the
+// 30 s default on the CI runner (develop's own runs too); the later tests take well under a second.
+jest.setTimeout(120_000);
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -42,7 +47,7 @@ function serve(lessons: Record<string, unknown> | Error) {
 beforeEach(() => {
   mockApiFetch.mockReset();
   // Thursday 1 Oct 2026, 16:20 in Riyadh.
-  jest.useFakeTimers({ now: new Date('2026-10-01T13:20:00Z'), advanceTimers: true });
+  fakeNow(new Date('2026-10-01T13:20:00Z'));
 });
 afterEach(() => jest.useRealTimers());
 

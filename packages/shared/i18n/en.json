@@ -1638,7 +1638,8 @@
       "report_ready": "Lesson report (PDF)",
       "renewal_due": "Renewal reminder",
       "follow_up_slots": "Follow-up with two suggested times",
-      "lesson_feedback_request": "Lesson feedback request"
+      "lesson_feedback_request": "Lesson feedback request",
+      "lesson_join_link": "Online classroom link"
     },
     "settings": {
       "title": "Sending settings",
@@ -2074,5 +2075,86 @@
     "allRatings": "All ratings",
     "recommendShort": "Recommend",
     "templateSettings": "Open message settings"
+  },
+  "classroom": {
+    "title": "Online classroom",
+    "enter": "Join the lesson",
+    "joining": "Joining the lesson…",
+    "leave": "Leave the lesson",
+    "opensAt": "Opens at {time}",
+    "notOpen": "The room opens 15 minutes before the lesson",
+    "closedHint": "The lesson is over",
+    "camOn": "Turn camera on",
+    "camOff": "Turn camera off",
+    "micOn": "Turn microphone on",
+    "micOff": "Turn microphone off",
+    "shareOn": "Share screen",
+    "shareOff": "Stop sharing",
+    "enableAudio": "Enable sound",
+    "you": "You",
+    "speaking": "Speaking",
+    "participants": "{n} in the room",
+    "waiting": "Waiting for the others…",
+    "reconnecting": "Reconnecting…",
+    "ended": "You left the lesson",
+    "rejoin": "Join again",
+    "retry": "Try again",
+    "muted": "Mic is off",
+    "screenOf": "{name}'s screen",
+    "roles": {
+      "teacher": "Teacher",
+      "admin": "Admin",
+      "assistant": "Assistant",
+      "guest": "Guest"
+    },
+    "guest": {
+      "title": "Join the lesson",
+      "intro": "Type your name and join right away, no sign-up.",
+      "name": "Your name",
+      "namePlaceholder": "e.g. Suhaila",
+      "join": "Join the lesson"
+    },
+    "sendLink": "Send the lesson link",
+    "sendingLink": "Sending…",
+    "linkSent": "Link sent",
+    "linkResent": "Link already sent",
+    "sendLinkTo": "To {name}",
+    "assistants": {
+      "title": "Assistants",
+      "none": "No assistant assigned",
+      "add": "Add an assistant",
+      "pick": "Pick an assistant",
+      "remove": "Remove",
+      "noneAvailable": "No assistant accounts available",
+      "homeTitle": "Today's lessons",
+      "homeEmpty": "No lessons today for your students",
+      "student": "Student",
+      "teacher": "Teacher"
+    },
+    "error": {
+      "classroom_not_configured": "Online classrooms are not switched on at the server yet",
+      "join_not_open_yet": "The room is not open yet; it opens 15 minutes before the lesson",
+      "join_closed": "The lesson time is over",
+      "link_invalid": "This link is not valid",
+      "link_expired": "This link has expired",
+      "too_many_requests": "Too many attempts, try again in a moment",
+      "template_not_approved": "Meta has not approved the lesson link template yet",
+      "lesson_not_found": "Lesson not found",
+      "forbidden": "You are not allowed to join this lesson",
+      "duplicate": "You joined from another window, so this one was closed",
+      "mic_denied": "Microphone is blocked, allow it in the browser settings",
+      "cam_denied": "Camera is blocked, allow it in the browser settings",
+      "device_missing": "No camera or microphone found",
+      "share_failed": "Could not start screen sharing",
+      "connect_failed": "Could not connect to the lesson, try again",
+      "unknown": "Something went wrong, try again"
+    },
+    "admin": {
+      "nav": "Online classrooms",
+      "title": "Online classrooms",
+      "empty": "No lessons on this day",
+      "teacher": "Teacher",
+      "students": "Students"
+    }
   }
 }

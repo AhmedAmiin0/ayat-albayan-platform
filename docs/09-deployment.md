@@ -66,6 +66,7 @@ The API talks to the WhatsApp Cloud API only through `WA_API_BASE`; there is **n
 | `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). |
 | `MESSAGING_ENABLED` | `true` opens the deployment's gate. Default `false`. |
 | `FEEDBACK_TOKEN_SECRET` | >= 32 random characters (`openssl rand -base64 48`). Signs the «رأيك يهمّنا» links (docs/13-forms-spec.md). Unset = «ابعت طلب الرأي» answers 503 and every public link is refused. Changing it invalidates links already sent. The template `lesson_feedback_request` also needs the web host in its button URL to be the final one before the admin submits it to Meta. |
+| `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | The self-hosted LiveKit (`wss://livekit-staging.148-230-116-195.sslip.io`, tools/livekit/README.md). All three or none: unset = `POST /lessons/:id/room/join` and `POST /public/join/:token` answer 503 `classroom_not_configured`. The API signs join tokens (HS256) with the key and secret; values live only in the server's `.env` and the owner's secret stores. The template `lesson_join_link` (migration 182, `not_submitted`) is submitted to Meta only by the admin's explicit action, after its button host is the final one. |
 | `EXPO_ACCESS_TOKEN` | Admin push notifications (already on the server). |
 | `EXPO_API_BASE` | `https://exp.host` on staging/production. **No default**: unset (local, e2e) = pushes are recorded in `push_notifications` but never leave the server. |
 

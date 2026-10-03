@@ -36,6 +36,10 @@ const DELETES = {
     where phone_e164 = any(${tx.array(s.applicantPhones)}) and notes = ${s.note} returning id`,
   leads: (tx, s) =>
     tx`delete from public.leads where id in (${DEMO_IDS.leads(tx, s)}) returning id`,
+  student_assistants: (tx, s) => tx`
+    delete from public.student_assistants sa using public.students st, public.guardians g
+    where st.id = sa.student_id and g.id = st.guardian_id and st.notes = ${s.note}
+      and g.phone_e164 || '|' || st.name = any(${tx.array(s.studentKeys)}) returning sa.student_id`,
   students: (tx, s) => tx`
     delete from public.students st using public.guardians g
     where g.id = st.guardian_id and st.notes = ${s.note}

@@ -8,6 +8,7 @@ import {
 } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { editMode } from '@/edit-time/types';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
@@ -132,6 +133,7 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel, onResched
           onEditTime={onEditTime}
         />
       )}
+      <JoinClassroomButton lesson={lesson} />
     </View>
   );
 }

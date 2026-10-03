@@ -1638,3 +1638,14 @@ Follow-up to the section above, from a design review (web screenshots, 8 variant
 Owner request: pay teachers per session from the admin, teachers see their money. Contract and the payout-coherence rule: docs/11 §12. Migrations 176–179 (ledger tables + RLS, sync trigger, payment RPCs, idempotent backfill); API module `teacher-earnings` (+ `PayoutsLedger`: paying a monthly payout settles the ledger once); web `/admin/teachers/:id/earnings`, `/teacher/earnings`; mobile teacher «مستحقاتي» and admin teacher «مستحقات» with a pay form.
 
 Written in a cloud run with no database: **not verified** — `supabase db reset`, `gen:types` (types.ts hand-edited), the SQL specs in `e2e/tests/teacher-*.sql.spec.ts`, e2e, real-device UI.
+
+## Online classrooms with LiveKit (cloud run, 2026-10-03)
+
+Owner request: "online sessions between teacher, student and assistant". Built in the cloud with no DB, secrets or LiveKit: **not verified end to end** (see below).
+
+- **DB (migrations 180-182):** `user_role` gains `assistant` (auth hook untouched); `student_assistants` (student, profile, trigger: profile must be an assistant); `lesson_join_links` (sha256 token hash, expires_at, revoked_at; admin may read all but the hash); RLS helpers `my_assisted_student_ids()`, `is_my_assisted_lesson()`; assistants read only lessons/lesson_students of their students; template `lesson_join_link` seeded `not_submitted` (URL button `https://app.ayatalbayan.com/join/{{1}}`). The room is `lesson-<id>`, derived, not stored. `packages/db/src/types.ts` hand-edited.
+- **API (`modules/classroom`):** `POST /lessons/:id/room/join` (admin, the lesson's teacher, an assigned assistant), `POST /public/join/:linkToken` (guest, rate limited 10/link+IP, 60/IP per 10 min), `POST /lessons/:id/join-link` (admin, through the inbox Outbox, never automatic; 409 until Meta approves the template), `GET /assistants`, `GET|POST|DELETE /students/:id/assistants[/:profileId]`, `GET /assistants/me/lessons`. Tokens are HS256 JWTs from node:crypto (no SDK), fresh identity per call, 4 h max TTL (guest: until the room closes). Window: 15 min before start to 2 h after end; admins may always enter. Guests cannot screen-share (`canPublishSources`).
+- **Web:** `/classroom/:lessonId`, `/join/:linkToken`, `/assistant`; «ادخل الحلقة» in the lesson drawer and teacher cards, «ابعت لينك الحلقة» and the assistants manager. **Mobile:** «ادخل الحلقة» calls the join endpoint, then opens the web classroom with `Linking.openURL` (no native modules).
+- **CI fix found on the way:** `ThreadScreen.teacher.test` depended on the real clock (24 h session window) and had failed every develop CI run; the clock is now pinned.
+- **Env:** `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` (all three or none; none = 503 `classroom_not_configured`).
+- **Not verified:** `db reset`, `gen:types` diff, e2e, a real two-person call (media/WebRTC), Meta approval of `lesson_join_link`.
