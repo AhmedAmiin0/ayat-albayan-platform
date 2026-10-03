@@ -50,4 +50,16 @@ describe('toLessonView — «عدّل الوقت» fields (R-SCH-11)', () => {
     const was = { starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' };
     expect(toLessonView(lessonRow({ time_edited_at: '2026-10-02 09:00:00+00', time_edit_was: was }), admin).time_edit?.reason).toBeNull();
   });
+
+  it('an admin reason stays with admins; teachers and guardians see when and what it was', () => {
+    const row = lessonRow({
+      time_edited_at: '2026-10-02 09:00:00+00',
+      time_edit_reason: 'سبب داخلي',
+      time_edit_was: { starts_at: '2026-10-04T14:00:00Z', ends_at: '2026-10-04T14:45:00Z' },
+    });
+    for (const role of ['teacher', 'guardian'] as const) {
+      expect(toLessonView(row, { role, seq }).time_edit).toMatchObject({ reason: null, was: { starts_at: '2026-10-04T14:00:00.000Z' } });
+    }
+    expect(toLessonView(row, admin).time_edit?.reason).toBe('سبب داخلي');
+  });
 });

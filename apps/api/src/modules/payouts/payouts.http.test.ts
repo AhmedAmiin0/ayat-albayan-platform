@@ -116,6 +116,16 @@ describe('payouts routes (Y1–Y5, R-PAY-02, R-TCH-04)', () => {
     expect(m.payouts.update).not.toHaveBeenCalled();
   });
 
+  it('Y3: 409 payout_stale when a lesson was re-timed after the draft was calculated; calculating again clears it', async () => {
+    m.payouts.get.mockResolvedValue(payoutRow({ updated_at: '2026-10-01T09:00:00Z' }));
+    m.payouts.editedSince.mockResolvedValue(1);
+    const stale = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/approve` });
+    expect(stale.statusCode).toBe(409);
+    expect(stale.json().code).toBe('payout_stale');
+    expect(m.payouts.editedSince).toHaveBeenCalledWith(expect.objectContaining({ teacherId: TEACHER_ID, since: '2026-10-01T09:00:00Z' }));
+    expect(m.payouts.update).not.toHaveBeenCalled();
+  });
+
   it('Y5: a teacher reads own payouts; unlinked → 404 teacher_not_linked; admin routes refused', async () => {
     m.teachers.idByProfile.mockResolvedValue(TEACHER_ID);
     m.payouts.forTeacher.mockResolvedValue([payoutRow()]);

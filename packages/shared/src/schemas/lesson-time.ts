@@ -4,12 +4,14 @@ import { instant, lessonDuration, overrideSchema } from './scheduling.js';
 
 /**
  * PATCH /lessons/:id/time (R-SCH-11, admin only): the lesson's date, start and length in place.
- * `expectedStartsAt` is the start the admin saw (two admins never overwrite each other); `reason`
+ * `expectedStartsAt` (and `expectedEndsAt`, optional for older clients) is the time the admin saw,
+ * so two admins never overwrite each other, a length-only edit included; `reason`
  * is required when correcting a held lesson; `notify` (default on) sends the guardian the new
  * time of a future lesson.
  */
 export const lessonTimeEditSchema = z.object({
   expectedStartsAt: instant,
+  expectedEndsAt: instant.optional(),
   startsAt: instant,
   durationMin: lessonDuration,
   reason: z.string().trim().max(300).optional(),

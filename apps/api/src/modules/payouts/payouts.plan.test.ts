@@ -108,11 +108,16 @@ describe('planPayout (R-PAY-02: completed lessons × rate, EGP; E3 frozen once a
 describe('approveBlock (E3: an approved month is frozen, so it waits for the month and its reports)', () => {
   const monthEnd = '2026-09-30T21:00:00.000Z';
   it('the month is not over until its last local midnight', () => {
-    expect(approveBlock({ monthEnd, now: new Date('2026-09-30T20:59:59Z'), pendingReports: 0 })).toBe('month_not_over');
-    expect(approveBlock({ monthEnd, now: new Date(monthEnd), pendingReports: 0 })).toBeNull();
+    expect(approveBlock({ monthEnd, now: new Date('2026-09-30T20:59:59Z'), pendingReports: 0, editedSince: 0 })).toBe('month_not_over');
+    expect(approveBlock({ monthEnd, now: new Date(monthEnd), pendingReports: 0, editedSince: 0 })).toBeNull();
   });
   it('a missing report blocks; none → approvable', () => {
-    expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 1 })).toBe('reports_pending');
-    expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 0 })).toBeNull();
+    expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 1, editedSince: 0 })).toBe('reports_pending');
+    expect(approveBlock({ monthEnd, now: new Date('2026-10-02T09:00:00Z'), pendingReports: 0, editedSince: 0 })).toBeNull();
+  });
+  it('a lesson re-timed after the draft was calculated blocks until it is calculated again', () => {
+    const now = new Date('2026-10-02T09:00:00Z');
+    expect(approveBlock({ monthEnd, now, pendingReports: 0, editedSince: 1 })).toBe('payout_stale');
+    expect(approveBlock({ monthEnd, now, pendingReports: 1, editedSince: 1 })).toBe('reports_pending');
   });
 });

@@ -1,23 +1,24 @@
-import { clockTime, lessonWhenText, RIYADH_TZ, type LessonView } from '@ab/shared';
+import { clockTime, durationText, lessonWhenText, RIYADH_TZ, type LessonView } from '@ab/shared';
 import { cityOf } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
-import { chosenStart, type EditState } from './edit-time-body';
+import { chosenStart, lengthOf, type EditState } from './edit-time-body';
 
-const MINUTE = 60_000;
 const lengths: Record<string, string | undefined> = t.enums.duration;
+
+/** «45 دقيقة»; a migrated odd length reads «40 دقيقة», never a bare number. */
+export const lengthText = (min: number): string => durationText(min, lengths, t.editTime.durationOther);
 
 /** «الخميس 1 أكتوبر 16:00 · 45 دقيقة»: a start in Riyadh time and its length. */
 export function timeSummary(startsAt: string, durationMin: number): string {
   const when = lessonWhenText(new Date(startsAt), RIYADH_TZ, locale);
-  return `${when} · ${lengths[String(durationMin)] ?? String(durationMin)}`;
+  return `${when} · ${lengthText(durationMin)}`;
 }
 
 /** «الخميس 1 أكتوبر 16:00 · 45 دقيقة ← الأحد 4 أكتوبر 17:00 · 60 دقيقة»: what the edit changes. */
 export function changeLine(lesson: LessonView, state: EditState): string {
-  const was = Math.round((Date.parse(lesson.ends_at) - Date.parse(lesson.starts_at)) / MINUTE);
   return t.editTime.confirmLine
-    .replace('{from}', timeSummary(lesson.starts_at, was))
+    .replace('{from}', timeSummary(lesson.starts_at, lengthOf(lesson)))
     .replace('{to}', timeSummary(chosenStart(lesson, state.picked), state.durationMin));
 }
 

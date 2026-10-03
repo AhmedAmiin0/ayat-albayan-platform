@@ -16,8 +16,8 @@ export interface EditTimeDoneProps {
 }
 
 /**
- * The edit landed: «الوقت اتعدّل» (with the guardian's WhatsApp confirmation when one was queued),
- * the new time, and the two follow-ups the API reports: a draft payout month that must be
+ * The edit landed: a short «الوقت اتعدّل», the new time, the guardian's WhatsApp confirmation when
+ * one was queued, and the two follow-ups the API reports: a draft payout month that must be
  * calculated again, and a report PDF that is re-made (the guardian is not sent it twice).
  */
 export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
@@ -32,12 +32,13 @@ export function EditTimeDone({ done, tz, onClose }: EditTimeDoneProps) {
           accessibilityLiveRegion="polite"
           style={{ fontFamily: type.display, fontSize: type.size.h2, lineHeight: type.lineHeight(type.size.h2, true), color: color.ink }}
         >
-          {done.notified > 0 ? t.editTime.savedNotified : t.editTime.saved}
+          {t.editTime.saved}
         </AppText>
       </View>
       <AppText style={{ ...text, fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}>
         {t.reschedule.newWhen.replace('{when}', whenText(done.lesson.starts_at, tz))}
       </AppText>
+      {done.notified > 0 ? <AppText style={text}>{t.editTime.notifiedLine}</AppText> : null}
       {done.payout === 'draft_stale' ? <AppText style={text}>{t.editTime.payoutDraft}</AppText> : null}
       {done.pdf_refresh ? <AppText style={text}>{t.editTime.pdfRefresh}</AppText> : null}
       <Button label={t.reschedule.done} onPress={onClose} />

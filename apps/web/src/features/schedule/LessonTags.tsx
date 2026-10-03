@@ -1,17 +1,28 @@
 import type { LessonView } from '@ab/shared';
 import { isMakeup } from '@/features/booking/contract';
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
+import { wasText } from './edit-time-text';
 import { timeEditInfo } from './edit-time.contract';
 
 const TAG = 'shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2';
 
-/** «تجريبية» on a trial (R-SCH-09), «تعويضية» on a makeup (R-SCH-10), «اتعدّل الوقت» once edited (R-SCH-11). */
+/**
+ * «تجريبية» on a trial (R-SCH-09), «تعويضية» on a makeup (R-SCH-10). «اتعدّل الوقت» (R-SCH-11) is
+ * a note, not a button: a nuqta and muted text without the pill, with «كان: …» as its tooltip.
+ */
 export function LessonTags({ lesson }: { lesson: LessonView }) {
+  const edited = timeEditInfo(lesson);
   return (
     <>
       {lesson.trial && <span className={TAG}>{t.schedule.trialTag}</span>}
       {isMakeup(lesson) && <span className={TAG}>{t.booking.makeup.tag}</span>}
-      {timeEditInfo(lesson) && <span className={TAG}>{t.lessons.timeEdit.tag}</span>}
+      {edited && (
+        <span title={wasText(edited)} className="inline-flex shrink-0 items-center gap-1 text-2xs font-semibold text-ink-3">
+          <NuqtaGlyph shape="half" className="text-gold" />
+          {t.lessons.timeEdit.tag}
+        </span>
+      )}
     </>
   );
 }

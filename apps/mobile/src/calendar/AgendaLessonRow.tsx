@@ -18,7 +18,7 @@ export interface AgendaLessonRowProps {
   onReschedule: (lesson: LessonView) => void;
   /** The row's own actions (تأكيد / إلغاء / غيّر الميعاد) in place of «غيّر الميعاد» alone. */
   actions?: ReactNode;
-  /** «عدّل الوقت» (R-SCH-11) beside «غيّر الميعاد»: shown when the lesson allows it (time_edit_mode). */
+  /** «عدّل الوقت» (R-SCH-11), the secondary button before the ghost «غيّر الميعاد»: shown when the lesson allows it (time_edit_mode). */
   onEditTime?: (lesson: LessonView) => void;
 }
 
@@ -58,6 +58,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime }: A
         {actions ??
           (canReschedule(lesson) || (onEditTime && editMode(lesson)) ? (
             <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'flex-start', gap: 8 }}>
+              {onEditTime ? <EditTimeButton lesson={lesson} onPress={() => onEditTime(lesson)} /> : null}
               {canReschedule(lesson) ? (
                 <Button
                   variant="ghost"
@@ -66,7 +67,6 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime }: A
                   onPress={() => onReschedule(lesson)}
                 />
               ) : null}
-              {onEditTime ? <EditTimeButton lesson={lesson} onPress={() => onEditTime(lesson)} /> : null}
             </View>
           ) : null)}
       </View>

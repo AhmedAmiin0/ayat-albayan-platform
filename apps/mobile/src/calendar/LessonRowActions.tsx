@@ -23,8 +23,9 @@ export interface LessonRowActionsProps {
 /**
  * A «الجدول» row's actions, in view under the line (docs/07 §6): «تأكيد» (filled only while the
  * lesson is still `scheduled`: the one thing it waits for), «إلغاء» (secondary; opens Today's
- * cancel form in place) and «غيّر الميعاد» (ghost), each only when the API offered it and the
- * state machine still allows it from the status on screen (maybe already the optimistic one).
+ * cancel form in place), «عدّل الوقت» (secondary: this lesson, in place) and «غيّر الميعاد» (ghost:
+ * closes it and opens a new one), each only when the API offered it and the state machine still
+ * allows it from the status on screen (maybe already the optimistic one).
  * A finished lesson also offers «ابعت طلب الرأي» (FeedbackRequestButton).
  */
 export function LessonRowActions({ lesson, action, onReschedule, onEditTime }: LessonRowActionsProps) {
@@ -57,8 +58,8 @@ export function LessonRowActions({ lesson, action, onReschedule, onEditTime }: L
       <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'flex-start', gap: 8 }}>
         {can('confirm') ? act(t.today.confirm, lesson.status === 'scheduled' ? 'primary' : 'ghost', () => action.confirm(lesson.id)) : null}
         {can('cancel_by_admin') ? act(t.today.cancel, 'secondary', () => setCancelling(true)) : null}
-        {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'ghost', () => onReschedule(lesson)) : null}
         {onEditTime ? <EditTimeButton lesson={lesson} busy={busy} onPress={() => onEditTime(lesson)} /> : null}
+        {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'ghost', () => onReschedule(lesson)) : null}
       </View>
       <MakeupAction lesson={lesson} />
       <FeedbackRequestButton lesson={lesson} />

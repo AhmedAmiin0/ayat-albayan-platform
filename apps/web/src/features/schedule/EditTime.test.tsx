@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor, within } from '@testing-library/rea
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
+import { confirmLine, fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
 import { lesson } from './lesson-fixture';
 import { LessonDetails } from './LessonDetails';
 import { LessonDrawer } from './LessonDrawer';
@@ -42,7 +42,8 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
       time_edit: { at: '2026-10-03T08:00:00.000Z', reason: 'طلب ولي الأمر', was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' } },
     });
     render(<LessonDetails lesson={edited} />);
-    expect(screen.getByText(/كان: .* 16:00/).textContent).toContain('طلب ولي الأمر');
+    expect(screen.getByText(/كان: .* 16:00/)).toBeTruthy();
+    expect(screen.getByText(t.lessons.timeEdit.reasonLine.replace('{reason}', 'طلب ولي الأمر'))).toBeTruthy();
     expect(screen.getAllByText(t.lessons.timeEdit.tag)).toHaveLength(1); // the tag chip; the note starts with the same words
     expect(screen.queryByRole('button', { name: t.lessons.editTime })).toBeNull(); // no handler: read-only
   });
@@ -58,7 +59,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     pick.day(MONDAY);
     pick.time('18:00');
     pick.duration(60);
-    const line = screen.getByText(/الأحد 4 أكتوبر 17:00 \(45 دقيقة\).*5 أكتوبر 18:00 \(60 دقيقة\)/);
+    const line = confirmLine(/الأحد 4 أكتوبر 17:00 \(45 دقيقة\).*5 أكتوبر 18:00 \(60 دقيقة\)/);
     expect(line.textContent).toContain(t.schedule.riyadhTime);
     expect(screen.getByText(t.lessons.timeEdit.sameLesson)).toBeTruthy();
     expect((screen.getByLabelText(t.lessons.timeEdit.notify) as HTMLInputElement).checked).toBe(true);
@@ -68,6 +69,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.lessons.timeEdit.savedNotified));
     expect(apiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-1/time', {
       expectedStartsAt: '2026-10-04T14:00:00.000Z',
+      expectedEndsAt: '2026-10-04T14:45:00.000Z',
       startsAt: '2026-10-05T15:00:00.000Z',
       durationMin: 60,
       notify: true,

@@ -61,16 +61,18 @@ export function byDuration(lessons: readonly PayoutLesson[]) {
   return { counts, counted, skipped };
 }
 
-export type ApproveBlock = 'month_not_over' | 'reports_pending';
+export type ApproveBlock = 'month_not_over' | 'reports_pending' | 'payout_stale';
 
 /**
  * Approving freezes the month (E3), so it waits until the month has ended in the teacher's tz
  * (`to` of monthWindow) and every report of it is in: a report filed later could otherwise
- * complete a lesson that is never paid.
+ * complete a lesson that is never paid. A lesson whose time was edited («عدّل الوقت») after the
+ * draft was calculated (`editedSince`) would be paid at the old length: calculate again first.
  */
-export function approveBlock(input: { monthEnd: string; now: Date; pendingReports: number }): ApproveBlock | null {
+export function approveBlock(input: { monthEnd: string; now: Date; pendingReports: number; editedSince: number }): ApproveBlock | null {
   if (input.now.getTime() < Date.parse(input.monthEnd)) return 'month_not_over';
-  return input.pendingReports > 0 ? 'reports_pending' : null;
+  if (input.pendingReports > 0) return 'reports_pending';
+  return input.editedSince > 0 ? 'payout_stale' : null;
 }
 
 export type PayoutAction =

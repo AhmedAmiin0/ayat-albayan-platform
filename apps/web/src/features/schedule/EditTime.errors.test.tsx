@@ -37,11 +37,12 @@ describe('«عدّل الوقت» refusals (R-SCH-11)', () => {
   it('can save over the clash with a reason; the override rides on the same body', async () => {
     apiSend.mockRejectedValueOnce(refuse(409, 'conflict', { conflicts: [CLASH] })).mockResolvedValueOnce(SAVED);
     const { onDone } = moveToMonday();
-    fireEvent.change(await screen.findByLabelText(t.booking.overrideReason), { target: { value: 'طلب ولي الأمر' } });
-    fireEvent.click(screen.getByRole('button', { name: t.booking.override }));
+    fireEvent.change(await screen.findByLabelText(t.lessons.timeEdit.overrideReasonEdit), { target: { value: 'طلب ولي الأمر' } });
+    fireEvent.click(screen.getByRole('button', { name: t.lessons.timeEdit.overrideEdit }));
     await waitFor(() => expect(onDone).toHaveBeenCalled());
     expect(apiSend).toHaveBeenLastCalledWith('PATCH', '/lessons/l-1/time', {
       expectedStartsAt: '2026-10-04T14:00:00.000Z',
+      expectedEndsAt: '2026-10-04T14:45:00.000Z',
       startsAt: BUSY,
       durationMin: 45,
       notify: true,
@@ -60,7 +61,6 @@ describe('«عدّل الوقت» refusals (R-SCH-11)', () => {
   });
 
   it.each([
-    [409, 'payout_locked'],
     [409, 'time_edit_not_allowed'],
     [400, 'date_in_future'],
     [400, 'correction_cross_day'],

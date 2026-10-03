@@ -8,6 +8,7 @@ describe('editBody, move', () => {
   test('a later start: the body names what was seen, the pick and the guardian toggle', () => {
     expect(editBody(upcoming, state({ picked: SAT_17, notify: true }), NOW)).toEqual({
       expectedStartsAt: SUN_17,
+      expectedEndsAt: upcoming.ends_at,
       startsAt: SAT_17,
       durationMin: 45,
       notify: true,
@@ -17,7 +18,7 @@ describe('editBody, move', () => {
 
   test('a new length alone keeps the start and sends no notify (nothing the guardian sees changed)', () => {
     const body = editBody(upcoming, state({ durationMin: 60 }), NOW);
-    expect(body).toEqual({ expectedStartsAt: SUN_17, startsAt: SUN_17, durationMin: 60 });
+    expect(body).toEqual({ expectedStartsAt: SUN_17, expectedEndsAt: upcoming.ends_at, startsAt: SUN_17, durationMin: 60 });
   });
 
   test('a trimmed reason goes along, cut at 300 characters', () => {
@@ -46,6 +47,7 @@ describe('editBody, correct', () => {
     expect(canSubmit(held, state({ durationMin: 60 }), NOW)).toBe(false);
     expect(editBody(held, state({ durationMin: 60, reason: 'الحلقة خدت ساعة' }), NOW)).toEqual({
       expectedStartsAt: held.starts_at,
+      expectedEndsAt: held.ends_at,
       startsAt: held.starts_at,
       durationMin: 60,
       reason: 'الحلقة خدت ساعة',

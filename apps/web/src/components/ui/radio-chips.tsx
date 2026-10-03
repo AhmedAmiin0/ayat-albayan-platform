@@ -14,6 +14,8 @@ export interface RadioChipsProps<V extends string> {
   invalid?: boolean | undefined;
   /** Equal-width chips in a row of the same count on a phone (long labels wrap inside their chip). */
   equal?: boolean;
+  /** One scrolling row on a phone instead of wrapping into many (a week of day chips). */
+  scroll?: boolean;
 }
 
 /** A legend and native radios styled as chips (one choice, «اختيار واحد» on the forms). */
@@ -24,7 +26,7 @@ export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
         {p.legend}
         {p.required && <RequiredMark />}
       </legend>
-      <div className={cn('flex flex-wrap gap-2', p.equal && 'max-[480px]:grid max-[480px]:grid-cols-3')}>
+      <div className={cn('flex flex-wrap gap-2', p.equal && 'max-[480px]:grid max-[480px]:grid-cols-3', p.scroll && 'max-[480px]:flex-nowrap max-[480px]:overflow-x-auto max-[480px]:pb-1 max-[480px]:[&>label]:shrink-0')}>
         {p.options.map((o) => (
           <label key={o.value} className="cursor-pointer">
             <input

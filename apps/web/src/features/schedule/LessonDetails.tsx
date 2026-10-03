@@ -7,6 +7,7 @@ import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
+import { lengthText } from './edit-time-text';
 import { EditTimeLink } from './EditTimeLink';
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { LessonTags } from './LessonTags';
@@ -20,8 +21,6 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
     </div>
   );
 }
-
-const duration: Record<string, string> = t.enums.duration;
 
 /**
  * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in Riyadh with every
@@ -58,7 +57,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
             <span className="block text-xs text-ink-2">{t.booking.makeup.noUnit}</span>
           </Row>
         )}
-        <Row label={t.schedule.duration}>{duration[String(mins)] ?? mins}</Row>
+        <Row label={t.schedule.duration}>{lengthText(mins)}</Row>
         <Row label={t.schedule.teacher}>{teacherLabel(lesson.teacher)}</Row>
         <Row label={t.schedule.students}>
           {lesson.students.map((s) => (

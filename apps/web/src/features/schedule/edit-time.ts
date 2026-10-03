@@ -76,7 +76,9 @@ export function willNotify(mode: TimeEditMode, change: Change, c: TimeChoice & {
 
 export interface BodyInput {
   mode: TimeEditMode;
+  /** The start and end the admin saw: a second admin's length-only edit is refused, not overwritten. */
   expectedStartsAt: string;
+  expectedEndsAt: string;
   choice: TimeChoice;
   reason: string;
   notify: boolean;
@@ -91,6 +93,7 @@ export function editBody(i: BodyInput): LessonTimeEdit {
   const reason = i.reason.trim();
   return {
     expectedStartsAt: i.expectedStartsAt,
+    expectedEndsAt: i.expectedEndsAt,
     startsAt: startsAtOf(i.choice),
     durationMin: lessonDuration.parse(i.choice.durationMin),
     ...(reason ? { reason } : {}),

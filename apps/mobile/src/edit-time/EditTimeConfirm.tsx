@@ -1,8 +1,8 @@
 import { Switch, View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { type, useTheme } from '@/theme';
+import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
-import { chosenStart, isChanged, willNotify, type EditState } from './edit-time-body';
+import { chosenStart, isBookable, isChanged, lengthOf, willNotify, type EditState } from './edit-time-body';
 import { changeLine, teacherLine } from './edit-time-text';
 import type { EditableLesson, TimeEditMode } from './types';
 
@@ -11,19 +11,24 @@ export interface EditTimeConfirmProps {
   mode: TimeEditMode;
   state: EditState;
   now: Date;
+  /** The month's payout is locked: «المدة اتغيرت…» would be a promise the save cannot keep. */
+  payoutLocked: boolean;
   onNotify: (notify: boolean) => void;
 }
 
 /**
- * Before «احفظ التعديل»: «{من} ← {إلى}» in Riyadh time, the teacher's own clock for the new start,
- * that it is the same lesson (report and payments stay), and for a move that a series changes with
- * «غيّر الميعاد». The guardian toggle appears only when a WhatsApp confirmation would go out (a
- * move to a later start; never for a correction or a length-only change).
+ * Before «احفظ التعديل»: nothing changed yet says so (a disabled button needs its reason), else
+ * «{من} ← {إلى}» in Riyadh time, the teacher's own clock for the new start, that it is the same
+ * lesson, and for a correction what it leaves alone (attendance, status) and what it moves (the
+ * teacher's payout when the length changed, the report file). The guardian toggle appears only
+ * when a WhatsApp confirmation would go out (a move to a later start).
  */
-export function EditTimeConfirm({ lesson, mode, state, now, onNotify }: EditTimeConfirmProps) {
+export function EditTimeConfirm({ lesson, mode, state, now, payoutLocked, onNotify }: EditTimeConfirmProps) {
   const { color } = useTheme();
   const text = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
-  if (!isChanged(lesson, state)) return null;
+  if (!isBookable(state.durationMin)) return null; // «اختار مدة الحلقة الأول» already says it
+  if (!isChanged(lesson, state)) return <AppText style={text}>{t.editTime.unchanged}</AppText>;
+  const correct = mode === 'correct';
   return (
     <View style={{ gap: 6 }}>
       <AppText accessibilityLiveRegion="polite" style={{ ...text, fontFamily: type.ui[700], color: color.ink }}>
@@ -32,7 +37,7 @@ export function EditTimeConfirm({ lesson, mode, state, now, onNotify }: EditTime
       <AppText style={text}>{t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)}</AppText>
       <AppText style={text}>{teacherLine(lesson, chosenStart(lesson, state.picked))}</AppText>
       {willNotify(lesson, state, now) ? (
-        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, paddingVertical: 4 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 10, minHeight: shape.control.touch }}>
           <Switch
             value={state.notify}
             onValueChange={onNotify}
@@ -43,7 +48,10 @@ export function EditTimeConfirm({ lesson, mode, state, now, onNotify }: EditTime
         </View>
       ) : null}
       <AppText style={text}>{t.editTime.sameLesson}</AppText>
-      {mode === 'move' ? <AppText style={text}>{t.editTime.vsReschedule}</AppText> : null}
+      {correct ? <AppText style={text}>{t.editTime.heldNote}</AppText> : null}
+      {correct && !payoutLocked && state.durationMin !== lengthOf(lesson) ? <AppText style={text}>{t.editTime.payoutWarn}</AppText> : null}
+      {correct ? <AppText style={text}>{t.editTime.pdfRefresh}</AppText> : null}
+      {correct && state.reason.trim() === '' ? <AppText style={text}>{t.editTime.error.reason_required}</AppText> : null}
     </View>
   );
 }

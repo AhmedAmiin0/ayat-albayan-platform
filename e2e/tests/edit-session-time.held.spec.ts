@@ -77,7 +77,7 @@ test.describe('«عدّل الوقت» — held lessons (R-SCH-11)', () => {
     const drawer = await openForm(admin, { date: s.date, teacherId: s.teacherId, name: 'جنى' });
     await fillForm(drawer, { minutes: '60', reason: 'الحلقة خدت ساعة' });
     await save(drawer);
-    await expect(drawer.getByRole('alert').filter({ hasText: ar.lessons.error.payout_locked })).toBeVisible();
+    await expect(drawer.getByRole('alert').filter({ hasText: ar.lessons.timeEdit.startOnly })).toBeVisible();
     const [lesson] = await lessonRows(s.teacherId);
     expect((lesson?.ends_at.getTime() ?? 0) - (lesson?.starts_at.getTime() ?? 0)).toBe(45 * 60_000);
   });

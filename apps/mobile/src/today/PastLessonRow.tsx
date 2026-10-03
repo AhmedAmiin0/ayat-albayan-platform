@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
-import { EditTimeButton } from '@/edit-time/EditTimeButton';
+import { EditTimeIconButton } from '@/edit-time/EditTimeIconButton';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
@@ -9,7 +9,8 @@ import { TimelineRow } from './TimelineRow';
 
 /**
  * A lesson that has ended: one 42pt line on a dashed rule, names, teacher and the status word, and
- * a trailing ghost «عدّل الوقت» for a held lesson whose start or length needs correcting (R-SCH-11).
+ * a trailing 44pt pencil («عدّل الوقت») for a held lesson whose start or length needs correcting
+ * (R-SCH-11): an icon, because a labelled button would leave the names a few letters.
  */
 export function PastLessonRow({ lesson, onEditTime }: { lesson: LessonView; onEditTime?: (lesson: LessonView) => void }) {
   const { color } = useTheme();
@@ -36,7 +37,7 @@ export function PastLessonRow({ lesson, onEditTime }: { lesson: LessonView; onEd
         <AppText style={{ ...text, fontFamily: type.ui[500], color: color.ink3 }}>
           {t.enums.lessonStatus[lesson.status]}
         </AppText>
-        {onEditTime ? <EditTimeButton lesson={lesson} onPress={() => onEditTime(lesson)} /> : null}
+        {onEditTime ? <EditTimeIconButton lesson={lesson} onPress={() => onEditTime(lesson)} /> : null}
       </View>
     </TimelineRow>
   );

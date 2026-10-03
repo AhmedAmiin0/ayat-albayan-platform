@@ -69,18 +69,18 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     pending_proposal: isOpenLesson(row.status) ? pendingProposal(row.proposals) : null,
     // R-SCH-11: only an admin edits a time in place; a teacher proposes (R-SCH-08) or notes it in the report.
     time_edit_mode: ctx.role === 'admin' ? timeEditMode(row.status) : null,
-    time_edit: timeEdit(row),
+    time_edit: timeEdit(row, ctx.role),
   };
 }
 
 const wasTimes = z.object({ starts_at: z.string(), ends_at: z.string() });
 
-/** lessons.time_edit_* → LessonView.time_edit (null when never edited or unreadable). */
-function timeEdit(row: LessonRow): LessonTimeEditView | null {
+/** lessons.time_edit_* → LessonView.time_edit (null when never edited or unreadable); the admin's reason stays with admins. */
+function timeEdit(row: LessonRow, role: ViewContext['role']): LessonTimeEditView | null {
   const was = wasTimes.safeParse(row.time_edit_was);
   if (!row.time_edited_at || !was.success) return null;
   const { starts_at, ends_at } = was.data;
-  return { at: iso(row.time_edited_at), reason: row.time_edit_reason ?? null, was: { starts_at: iso(starts_at), ends_at: iso(ends_at) } };
+  return { at: iso(row.time_edited_at), reason: role === 'admin' ? (row.time_edit_reason ?? null) : null, was: { starts_at: iso(starts_at), ends_at: iso(ends_at) } };
 }
 
 /** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */

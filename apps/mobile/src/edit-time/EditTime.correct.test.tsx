@@ -43,6 +43,11 @@ test('the session ran an hour: the reason is required before «احفظ التع
   await open();
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.duration['60'] }));
   expect(screen.getByText(t.editTime.sameLesson)).toBeTruthy();
+  // Before saving: attendance and status stay, the payout moves with the length, the PDF is made again.
+  expect(screen.getByText(t.editTime.heldNote)).toBeTruthy();
+  expect(screen.getByText(t.editTime.payoutWarn)).toBeTruthy();
+  expect(screen.getByText(t.editTime.pdfRefresh)).toBeTruthy();
+  expect(screen.getByText(t.editTime.error.reason_required)).toBeTruthy();
   // No guardian message for a correction, and no «غيّر الميعاد» hint.
   expect(screen.queryByRole('switch')).toBeNull();
   expect(screen.queryByText(t.editTime.vsReschedule)).toBeNull();
@@ -52,6 +57,7 @@ test('the session ran an hour: the reason is required before «احفظ التع
   await fireEvent.press(submit());
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-done/time', {
     expectedStartsAt: held.starts_at,
+    expectedEndsAt: held.ends_at,
     startsAt: held.starts_at,
     durationMin: 60,
     reason: 'الحلقة خدت ساعة بدل 45 دقيقة',
@@ -70,6 +76,7 @@ test('a corrected start is picked from the list, not typed', async () => {
   await fireEvent.press(submit());
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-done/time', {
     expectedStartsAt: held.starts_at,
+    expectedEndsAt: held.ends_at,
     startsAt: '2026-10-01T06:45:00.000Z',
     durationMin: 45,
     reason: 'بدأت بدري',

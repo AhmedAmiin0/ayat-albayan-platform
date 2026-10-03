@@ -59,8 +59,8 @@ test.describe('«عدّل الوقت» — scheduled lessons (R-SCH-11)', () => 
     await expect(drawer.getByText(/المعلم\/ة مشغول\/ة بحلقة تانية في الميعاد ده/)).toBeVisible();
     expect((await lessonRows(teacherId)).find((r) => r.id === id)?.starts_at).toEqual(from);
 
-    await drawer.getByLabel(ar.booking.overrideReason).fill('طلب ولي الأمر');
-    await drawer.getByRole('button', { name: ar.booking.override }).click();
+    await drawer.getByLabel(ar.lessons.timeEdit.overrideReasonEdit).fill('طلب ولي الأمر');
+    await drawer.getByRole('button', { name: ar.lessons.timeEdit.overrideEdit }).click();
     await expect(page.getByRole('status')).toHaveText(L.savedNotified);
     expect((await lessonRows(teacherId)).find((r) => r.id === id)).toMatchObject({ starts_at: busy, override_reason: 'طلب ولي الأمر' });
   });

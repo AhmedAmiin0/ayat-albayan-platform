@@ -44,9 +44,13 @@ test('the sheet asks 15-minute starts for this lesson’s own length and student
   expect(screen.getByRole('header', { name: t.editTime.title })).toBeTruthy();
   expect(screen.getByText(t.reschedule.current.replace('{when}', 'الأحد 4 أكتوبر 17:00 بتوقيت الرياض'))).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
-  // Nothing changed yet: nothing to save and nothing to confirm.
+  // Nothing changed yet: nothing to save, nothing to confirm, and the disabled button says why.
   expect(submit()).toBeDisabled();
   expect(screen.queryByText(t.editTime.sameLesson)).toBeNull();
+  expect(screen.getByText(t.editTime.unchanged)).toBeTruthy();
+  // «غيّر الميعاد» is the one for a series, said from the first screen (not only after a change).
+  expect(screen.getByText(t.editTime.vsReschedule)).toBeTruthy();
+  expect(screen.getByText(t.editTime.currentLength.replace('{len}', t.enums.duration['45']))).toBeTruthy();
 });
 
 test('a free start: the change line, the teacher’s clock, the guardian toggle (on), and the body', async () => {
@@ -57,16 +61,19 @@ test('a free start: the change line, the teacher’s clock, the guardian toggle 
   expect(screen.getByText(t.booking.teacherClock.replace('{time}', '17:00').replace('{city}', 'القاهرة'))).toBeTruthy();
   expect(screen.getByRole('switch', { name: t.editTime.notify }).props.value).toBe(true);
   expect(screen.getByText(t.editTime.sameLesson)).toBeTruthy();
-  expect(screen.getByText(t.editTime.vsReschedule)).toBeTruthy();
   await fireEvent.press(submit());
 
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-up/time', {
     expectedStartsAt: SUN_17,
+    expectedEndsAt: upcoming.ends_at,
     startsAt: SAT_17,
     durationMin: 45,
     notify: true,
   });
-  expect(await screen.findByText(t.editTime.savedNotified)).toBeTruthy();
+  expect(await screen.findByText(t.editTime.saved)).toBeTruthy();
+  // A short headline; the new time and the WhatsApp line are body text under it.
+  expect(screen.getByText(t.editTime.notifiedLine)).toBeTruthy();
+  expect(screen.getByText(t.reschedule.newWhen.replace('{when}', 'السبت 3 أكتوبر 17:00 بتوقيت الرياض'))).toBeTruthy();
   expect(client.getQueryState(lessonsKey)?.isInvalidated).toBe(true);
   await fireEvent.press(screen.getByRole('button', { name: t.reschedule.done }));
   expect(onClose).toHaveBeenCalled();
@@ -91,6 +98,7 @@ test('a new length alone: the start stays, the toggle is not offered, no notify 
   await fireEvent.press(submit());
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-up/time', {
     expectedStartsAt: SUN_17,
+    expectedEndsAt: upcoming.ends_at,
     startsAt: SUN_17,
     durationMin: 60,
   });
@@ -114,6 +122,9 @@ test('a recorded length outside 30 / 45 / 60 / 90: no slots asked and nothing to
   const odd = { ...upcoming, ends_at: '2026-10-04T14:50:00.000Z' };
   await renderWithQuery(<EditTimeSheet lesson={odd} onClose={jest.fn()} />);
   expect(screen.getByText(t.editTime.pickLength)).toBeTruthy();
+  // No length pill is selected for it, so the header names the recorded one, with its unit.
+  expect(screen.getByText(t.editTime.currentLength.replace('{len}', t.editTime.durationOther.replace('{n}', '50')))).toBeTruthy();
+  expect(screen.queryByText(t.editTime.unchanged)).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalled();
   expect(submit()).toBeDisabled();
   await fireEvent.press(screen.getByRole('radio', { name: t.enums.duration['45'] }));

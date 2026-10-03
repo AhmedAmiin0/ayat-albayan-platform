@@ -82,6 +82,8 @@ export function editBody(lesson: EditableLesson, s: EditState, now: Date): Lesso
   const reason = s.reason.trim().slice(0, REASON_MAX);
   return {
     expectedStartsAt: lesson.starts_at,
+    // The time the admin saw, length included: a length-only edit on an older length is refused (stale_time).
+    expectedEndsAt: lesson.ends_at,
     startsAt: chosenStart(lesson, s.picked),
     durationMin: length.data,
     ...(reason ? { reason } : {}),

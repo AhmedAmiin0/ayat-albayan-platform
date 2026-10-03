@@ -51,3 +51,7 @@ export const pick = {
   reason: (value: string) => fireEvent.change(screen.getByLabelText(label('reason')), { target: { value } }),
   save: () => fireEvent.click(screen.getByRole('button', { name: t.lessons.timeEdit.submit })),
 };
+
+/** The «قبل ← بعد» paragraph: each side sits in its own nowrap span, so match on the paragraph's text. */
+export const confirmLine = (re: RegExp) =>
+  screen.getByText((_, el) => el?.tagName === 'P' && re.test(el.textContent ?? ''));

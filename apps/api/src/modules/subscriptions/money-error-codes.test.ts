@@ -23,7 +23,7 @@ const CODES: Record<string, { table: Record<string, string>; codes: string[] }> 
   },
   payouts: {
     table: ar.payouts.error,
-    codes: ['invalid_transition', 'payout_not_found', 'invalid_month', 'rate_missing', 'month_not_over', 'reports_pending'],
+    codes: ['invalid_transition', 'payout_not_found', 'invalid_month', 'rate_missing', 'month_not_over', 'reports_pending', 'payout_stale'],
   },
   expenses: { table: ar.expenses.error, codes: ['expense_not_found'] },
 };

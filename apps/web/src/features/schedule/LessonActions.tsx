@@ -79,17 +79,20 @@ interface AdminButtonsProps {
   onReschedule?: (() => void) | undefined;
 }
 
-/** «تغيير الميعاد» and «إلغاء الحلقة», only where the caller opens their forms and the status allows. */
+/** «غيّر الميعاد» (with what it does: closes this lesson, opens a new one, can cover the series) and «إلغاء الحلقة», only where the caller opens their forms and the status allows. */
 function AdminButtons({ events, size, onCancel, onReschedule }: AdminButtonsProps) {
   const reschedule = onReschedule && events.includes('reschedule');
   const cancel = onCancel && (events.includes('cancel_by_admin') || events.includes('cancel_by_teacher'));
   if (!reschedule && !cancel) return null;
   return (
-    <div className="flex flex-wrap gap-2 border-t border-rule pt-3">
+    <div className="flex flex-wrap items-start gap-3 border-t border-rule pt-3">
       {reschedule && (
-        <Button type="button" variant="secondary" size={size} onClick={onReschedule}>
-          {t.lessons.event.reschedule}
-        </Button>
+        <div className="grid max-w-[240px] justify-items-start gap-1">
+          <Button type="button" variant="secondary" size={size} onClick={onReschedule}>
+            {t.lessons.event.reschedule}
+          </Button>
+          <span className="text-xs text-ink-3">{t.lessons.timeEdit.captionReschedule}</span>
+        </div>
       )}
       {cancel && (
         <Button type="button" variant="danger-quiet" size={size} onClick={onCancel}>

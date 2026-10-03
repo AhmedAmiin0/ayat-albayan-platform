@@ -81,11 +81,12 @@ describe('willNotify', () => {
 });
 
 describe('editBody', () => {
-  const base = { mode: 'move' as const, expectedStartsAt: '2026-10-04T14:00:00.000Z', choice: MON, reason: '  ', notify: true };
+  const base = { mode: 'move' as const, expectedStartsAt: '2026-10-04T14:00:00.000Z', expectedEndsAt: '2026-10-04T14:45:00.000Z', choice: MON, reason: '  ', notify: true };
 
   it('move: the instant, the length and notify; a blank reason is left out', () => {
     expect(editBody(base)).toEqual({
       expectedStartsAt: '2026-10-04T14:00:00.000Z',
+      expectedEndsAt: '2026-10-04T14:45:00.000Z',
       startsAt: '2026-10-05T15:00:00.000Z',
       durationMin: 60,
       notify: true,
@@ -97,6 +98,7 @@ describe('editBody', () => {
     const body = editBody({ ...base, mode: 'correct', reason: ' الحلقة خدت ساعة ', override: 'طلب ولي الأمر' });
     expect(body).toEqual({
       expectedStartsAt: '2026-10-04T14:00:00.000Z',
+      expectedEndsAt: '2026-10-04T14:45:00.000Z',
       startsAt: '2026-10-05T15:00:00.000Z',
       durationMin: 60,
       reason: 'الحلقة خدت ساعة',

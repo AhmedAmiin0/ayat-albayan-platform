@@ -38,7 +38,7 @@ export function Drawer({ title, onClose, children }: DrawerProps) {
         tabIndex={-1}
         className="fixed inset-y-0 end-0 flex w-full max-w-[460px] flex-col overflow-y-auto border-s border-rule-strong bg-card shadow-pop"
       >
-        <div className="flex items-start gap-3 border-b-[3px] border-double border-gold px-5 pt-5 pb-3">
+        <div className="sticky top-0 z-20 flex items-start gap-3 border-b-[3px] border-double border-gold bg-card px-5 pt-5 pb-3">
           <h2 id={titleId} className="min-w-0 flex-1 font-display text-[22px] font-bold leading-normal">
             {title}
           </h2>

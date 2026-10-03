@@ -35,3 +35,17 @@ export const TIME_EDIT_ERRORS = [
   'reason_required',
 ] as const;
 export type TimeEditError = (typeof TIME_EDIT_ERRORS)[number];
+
+/**
+ * «45 دقيقة»: the named length ('30' / '45' / '60' / '90' in the enums.duration table), else
+ * `other` ("{n} دقيقة") so a migrated 40-minute lesson never shows as a bare number.
+ */
+export const durationText = (min: number, named: Record<string, string | undefined>, other: string): string =>
+  named[String(min)] ?? other.replace('{n}', String(min));
+
+/** The `{ month: '2026-09', status: 'approved' }` of a 409 `payout_locked` body, else null. */
+export function payoutLockOf(body: unknown): { month: string; status: string } | null {
+  if (typeof body !== 'object' || body === null) return null;
+  const { code, month, status } = body as Record<string, unknown>;
+  return code === 'payout_locked' && typeof month === 'string' && typeof status === 'string' ? { month, status } : null;
+}

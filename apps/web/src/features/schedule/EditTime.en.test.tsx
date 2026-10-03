@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
+import { confirmLine, fakeNow, openEditTime, pick, SAVED, SCHEDULED } from './edit-time-fixture';
 
 // The form in English (LTR): labels, the day chips, the before → after line and the toast.
 vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
@@ -22,7 +22,7 @@ describe('«عدّل الوقت» in English', () => {
     pick.day(/^Monday 5 October/);
     pick.time('18:00');
     pick.duration(60);
-    expect(screen.getByText(/Sunday 4 October 17:00 \(45 minutes\) → .*Monday 5 October 18:00 \(60 minutes\)/)).toBeTruthy();
+    expect(confirmLine(/Sunday 4 October 17:00 \(45 minutes\) → .*Monday 5 October 18:00 \(60 minutes\)/)).toBeTruthy();
     expect(screen.getByLabelText(en.lessons.timeEdit.notify)).toBeTruthy();
     expect(form.textContent).not.toMatch(ARABIC);
     pick.save();

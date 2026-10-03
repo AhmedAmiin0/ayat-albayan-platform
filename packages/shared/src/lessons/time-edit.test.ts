@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { LESSON_STATUSES } from '../enums/index.js';
 import { lessonTimeEditSchema } from '../schemas/lesson-time.js';
-import { timeEditMode } from './time-edit.js';
+import { durationText, payoutLockOf, timeEditMode } from './time-edit.js';
 
 describe('timeEditMode (R-SCH-11)', () => {
   it('open lessons move, held lessons are corrected, everything else is closed', () => {
@@ -39,5 +39,23 @@ describe('lessonTimeEditSchema', () => {
     ]) {
       expect(lessonTimeEditSchema.safeParse(bad).success).toBe(false);
     }
+  });
+});
+
+describe('durationText', () => {
+  const named = { '45': '45 دقيقة' };
+  it('uses the named length, else the unit-bearing fallback', () => {
+    expect(durationText(45, named, '{n} دقيقة')).toBe('45 دقيقة');
+    expect(durationText(40, named, '{n} دقيقة')).toBe('40 دقيقة');
+    expect(durationText(40, named, '{n} minutes')).toBe('40 minutes');
+  });
+});
+
+describe('payoutLockOf', () => {
+  it('reads month and status from a payout_locked body only', () => {
+    expect(payoutLockOf({ code: 'payout_locked', month: '2026-09', status: 'approved' })).toEqual({ month: '2026-09', status: 'approved' });
+    expect(payoutLockOf({ code: 'payout_locked' })).toBeNull();
+    expect(payoutLockOf({ code: 'stale_time', month: '2026-09', status: 'paid' })).toBeNull();
+    expect(payoutLockOf(null)).toBeNull();
   });
 });

@@ -54,7 +54,7 @@ function mocks() {
     },
     payouts: {
       teachers: vi.fn(), lessons: vi.fn(), forMonth: vi.fn(), forTeacher: vi.fn(), get: vi.fn(),
-      insert: vi.fn(), update: vi.fn(), removeDraft: vi.fn(), pendingReports: vi.fn(),
+      insert: vi.fn(), update: vi.fn(), removeDraft: vi.fn(), pendingReports: vi.fn(), editedSince: vi.fn(),
     },
     expenses: { forMonth: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn() },
     teachers: { idByProfile: vi.fn() },
@@ -77,6 +77,7 @@ export function resetMocks(m: Mocks): void {
   m.balances.forStudents.mockResolvedValue([]);
   m.payments.recorders.mockResolvedValue(new Map());
   m.payouts.pendingReports.mockResolvedValue(0);
+  m.payouts.editedSince.mockResolvedValue(0);
   m.payments.byRequest.mockResolvedValue(null);
   m.subs.byRequest.mockResolvedValue(null);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);

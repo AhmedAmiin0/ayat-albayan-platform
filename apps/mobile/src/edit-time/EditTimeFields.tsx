@@ -9,10 +9,10 @@ import { Field } from '@/ui/Field';
 import { FilterPills } from '@/ui/FilterPills';
 import { CorrectTimes } from './CorrectTimes';
 import { isBookable, REASON_MAX, type EditState } from './edit-time-body';
+import { lengthText } from './edit-time-text';
 import type { TimeEditMode } from './types';
 
-const lengths: Record<string, string | undefined> = t.enums.duration;
-const pills = DURATIONS.map((d) => ({ value: String(d), label: lengths[String(d)] ?? String(d) }));
+const pills = DURATIONS.map((d) => ({ value: String(d), label: lengthText(d) }));
 
 export interface EditTimeFieldsProps {
   lesson: LessonView;

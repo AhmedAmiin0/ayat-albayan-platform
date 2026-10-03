@@ -38,13 +38,13 @@ test('a move reads in English: the change line, the teacher’s clock, the guard
   await fireEvent.press(screen.getByRole('button', { name: 'Save the change' }));
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-up/time', {
     expectedStartsAt: SUN_17,
+    expectedEndsAt: upcoming.ends_at,
     startsAt: SAT_17,
     durationMin: 45,
     notify: true,
   });
-  expect(
-    await screen.findByText('The time was updated, and the guardian is sent a WhatsApp confirmation of the new time'),
-  ).toBeTruthy();
+  expect(await screen.findByText('The time was updated')).toBeTruthy();
+  expect(screen.getByText('The guardian is sent a WhatsApp confirmation of the new time')).toBeTruthy();
 });
 
 test('a correction reads in English, its reason marked required', async () => {

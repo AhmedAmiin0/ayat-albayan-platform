@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { TimeEditChange } from '../scheduling/change-set';
 import { ConflictChecker } from '../scheduling/conflict-checker';
-import { conflict } from '../scheduling/errors';
+import { conflict, errorCode } from '../scheduling/errors';
 import { studentIdsOf, type LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
 import { TimeEditPayout } from './time-edit.payout';
@@ -42,8 +42,22 @@ export class LessonTimeService {
     const payout = await this.payout.check(row, plan);
     const messages = plan.notify ? await this.notices(row, plan) : [];
     const overrideReason = clashes.length > 0 ? (body.override?.reason ?? null) : null;
-    await this.store.retime(changeOf({ row, plan, actor, messages, overrideReason }));
+    try {
+      await this.store.retime(changeOf({ row, plan, actor, messages, overrideReason }));
+    } catch (e) {
+      // Two identical requests at once: the loser finds the edit it asked for already in place.
+      if (errorCode(e) === 'stale_time' && (await this.alreadyHolds(lessonId, body))) return NOTHING;
+      throw e;
+    }
     return { notified: messages.length, payout, pdf_refresh: plan.refreshPdf };
+  }
+
+  private async alreadyHolds(lessonId: string, body: LessonTimeEdit): Promise<boolean> {
+    const now = await this.store.get(lessonId);
+    return isSameTime(
+      { startsAt: new Date(now.starts_at), endsAt: new Date(now.ends_at) },
+      { ...body, startsAt: new Date(body.startsAt) },
+    );
   }
 
   /** One confirmation per guardian for the NEW start (admin-initiated: queued even with auto messages off). */
@@ -73,7 +87,8 @@ function admit(row: LessonRow, body: LessonTimeEdit): TimeEditInput | null {
   const current = { startsAt: new Date(row.starts_at), endsAt: new Date(row.ends_at) };
   const request = { ...body, startsAt: new Date(body.startsAt) };
   if (isSameTime(current, request)) return null;
-  if (Date.parse(body.expectedStartsAt) !== current.startsAt.getTime()) {
+  const seenEnd = body.expectedEndsAt === undefined ? current.endsAt.getTime() : Date.parse(body.expectedEndsAt);
+  if (Date.parse(body.expectedStartsAt) !== current.startsAt.getTime() || seenEnd !== current.endsAt.getTime()) {
     throw conflict('stale_time', { starts_at: iso(current.startsAt), ends_at: iso(current.endsAt) });
   }
   const zones = [row.teacher?.tz ?? 'UTC', ...row.lesson_students.map((s) => s.student?.tz ?? 'UTC')];

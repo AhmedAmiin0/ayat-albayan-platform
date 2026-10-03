@@ -26,7 +26,8 @@ export class PayoutsService {
     if (before.status === 'draft') {
       const window = monthWindow(before.month.slice(0, 7), before.teacher?.tz ?? 'UTC');
       const pendingReports = await this.payouts.pendingReports({ teacherId: before.teacher_id, ...window });
-      const block = approveBlock({ monthEnd: window.to, now: new Date(), pendingReports });
+      const editedSince = await this.payouts.editedSince({ teacherId: before.teacher_id, ...window, since: before.updated_at });
+      const block = approveBlock({ monthEnd: window.to, now: new Date(), pendingReports, editedSince });
       if (block) throw conflict(block, block === 'reports_pending' ? { count: pendingReports } : {});
     }
     const now = new Date().toISOString();

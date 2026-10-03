@@ -44,9 +44,13 @@ test('409 conflict: the clash in Arabic, then «اختار ميعاد تاني»
   expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
   expect(screen.getByText(t.booking.conflict.student_busy.replace('{when}', 'السبت 3 أكتوبر 17:00'))).toBeTruthy();
   expect(screen.queryByRole('radio', { name: '18:00' })).toBeNull();
+  // Pressing the same save again would only repeat the 409: no save, no confirm, one way out.
+  expect(screen.queryByRole('button', { name: t.editTime.submit })).toBeNull();
+  expect(screen.queryByText(t.editTime.sameLesson)).toBeNull();
 
   await fireEvent.press(screen.getByRole('button', { name: t.booking.changeSlot }));
   expect(await screen.findByRole('radio', { name: '18:00' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.editTime.submit })).toBeTruthy();
   expect(screen.queryByText(t.booking.conflictTitle)).toBeNull();
   await waitFor(() => expect(slotCalls()).toBe(2));
 });

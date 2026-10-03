@@ -34,10 +34,35 @@ describe('LessonTimeService — replays and races (idempotency, rule 8)', () => 
     expect(t.writer.retime).not.toHaveBeenCalled();
   });
 
-  it('losing the race inside the transaction (the RPC raises stale_time) is the same 409', async () => {
+  it('losing the race to a DIFFERENT edit inside the transaction (the RPC raises stale_time) is 409', async () => {
     const t = timeSetup();
     t.writer.retime.mockRejectedValue(conflict('stale_time'));
     await expect(t.run(body())).rejects.toMatchObject({ status: 409, response: { code: 'stale_time' } });
+  });
+
+  it('two identical requests at once: the loser finds its edit already in place and gets a quiet 200', async () => {
+    const t = timeSetup();
+    t.writer.retime.mockRejectedValue(conflict('stale_time'));
+    t.queries.get
+      .mockResolvedValueOnce(lessonRow())
+      .mockResolvedValue(lessonRow({ starts_at: '2026-10-05T14:00:00+00:00', ends_at: '2026-10-05T14:45:00+00:00' }));
+    expect(await t.run(body())).toEqual({ notified: 0, payout: 'none', pdf_refresh: false });
+  });
+
+  it('a duration-only edit made on an older length is 409 stale_time (expectedEndsAt), not a silent overwrite', async () => {
+    const t = timeSetup(lessonRow({ ends_at: '2026-10-04T15:30:00+00:00' }));
+    const seen45 = body({ startsAt: '2026-10-04T14:00:00.000Z', durationMin: 30, expectedEndsAt: '2026-10-04T14:45:00.000Z' });
+    await expect(t.run(seen45)).rejects.toMatchObject({ status: 409, response: { code: 'stale_time', ends_at: '2026-10-04T15:30:00.000Z' } });
+    expect(t.writer.retime).not.toHaveBeenCalled();
+    const seen90 = { ...seen45, expectedEndsAt: '2026-10-04T15:30:00.000Z' };
+    await t.run(seen90);
+    expect(t.writer.retime).toHaveBeenCalledTimes(1);
+  });
+
+  it('an older client that sends no expectedEndsAt keeps working (the start is still compared)', async () => {
+    const t = timeSetup();
+    await t.run(body());
+    expect(t.writer.retime).toHaveBeenCalledTimes(1);
   });
 
   it('landing on a slot another generated lesson of the rule holds is 409 slot_taken', async () => {

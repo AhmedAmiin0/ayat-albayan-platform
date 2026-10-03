@@ -6,6 +6,13 @@ import { fakeNow, HELD, openEditTime, pick, SAVED } from './edit-time-fixture';
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend }));
 
+vi.mock('@tanstack/react-router', async (importOriginal) => ({
+  ...(await importOriginal<object>()),
+  Link: ({ to, search, children, className }: { to: string; search: { month: string }; children: string; className?: string }) => (
+    <a href={`${to}?month=${search.month}`} className={className}>{children}</a>
+  ),
+}));
+
 const TIME = new RegExp(t.lessons.timeEdit.time.replace('{city}', '.+'));
 const optionsOf = () => within(screen.getByLabelText(TIME)).getAllByRole('option').map((o) => o.getAttribute('value'));
 
@@ -63,9 +70,12 @@ describe('«عدّل الوقت» on a held lesson: correct what was recorded (R
     expect(await screen.findByText(t.lessons.timeEdit.payoutDraft)).toBeTruthy();
     expect(screen.getByText(t.lessons.timeEdit.pdfRefresh)).toBeTruthy();
     expect(screen.getByRole('status').textContent).toBe(t.lessons.timeEdit.saved);
+    expect(screen.getByText(/الميعاد الجديد: .*4 أكتوبر/)).toBeTruthy(); // what was saved: the lesson as the API returned it
+    expect(screen.getByRole('link', { name: t.lessons.timeEdit.payoutLink }).getAttribute('href')).toBe('/admin/payouts?month=2026-10');
     expect(onDone).not.toHaveBeenCalled();
     expect(apiSend).toHaveBeenCalledWith('PATCH', '/lessons/l-9/time', {
       expectedStartsAt: '2026-10-03T07:00:00.000Z',
+      expectedEndsAt: '2026-10-03T07:45:00.000Z',
       startsAt: '2026-10-03T07:00:00.000Z',
       durationMin: 60,
       reason: 'الحلقة خدت ساعة بدل 45 دقيقة',

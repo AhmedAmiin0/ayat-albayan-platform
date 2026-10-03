@@ -68,19 +68,21 @@ test.describe('edit_lesson_time (R-SCH-11)', () => {
     });
   });
 
-  test('refresh_pdf: a ready report of a held lesson goes back to pending, an audit row is written', async () => {
-    await rolledBack(async (tx) => {
-      const s = await seed(tx);
-      await tx`update public.lessons set status = 'completed' where id = ${s.lesson}`;
-      await tx`insert into public.lesson_reports (lesson_id, student_id, teacher_id, attendance, status, version, submitted_at, pdf_status)
-        values (${s.lesson}, ${s.student}, ${s.teacher.id}, 'on_time', 'submitted', 1, now(), 'ready')`;
-      await edit(tx, { s, status: 'completed', from: BASE, to: BASE, durationMin: 60, flags: { refresh_pdf: true } });
-      const [report] = await tx<{ pdf_status: string }[]>`select pdf_status from public.lesson_reports where lesson_id = ${s.lesson}`;
-      expect(report?.pdf_status).toBe('pending');
-      const audits = await tx`select id from public.audit_log where entity_id = ${s.lesson} and action = 'time_edit'`;
-      expect(audits).toHaveLength(1);
+  for (const was of ['ready', 'failed', 'rendering']) {
+    test(`refresh_pdf: a ${was} report of a held lesson goes back to pending, an audit row is written`, async () => {
+      await rolledBack(async (tx) => {
+        const s = await seed(tx);
+        await tx`update public.lessons set status = 'completed' where id = ${s.lesson}`;
+        await tx`insert into public.lesson_reports (lesson_id, student_id, teacher_id, attendance, status, version, submitted_at, pdf_status)
+          values (${s.lesson}, ${s.student}, ${s.teacher.id}, 'on_time', 'submitted', 1, now(), ${was}::public.pdf_status)`;
+        await edit(tx, { s, status: 'completed', from: BASE, to: BASE, durationMin: 60, flags: { refresh_pdf: true } });
+        const [report] = await tx<{ pdf_status: string }[]>`select pdf_status from public.lesson_reports where lesson_id = ${s.lesson}`;
+        expect(report?.pdf_status).toBe('pending');
+        const audits = await tx`select id from public.audit_log where entity_id = ${s.lesson} and action = 'time_edit'`;
+        expect(audits).toHaveLength(1);
+      });
     });
-  });
+  }
 
   test('a pending proposal for exactly the new start is approved; another stays pending', async () => {
     await rolledBack(async (tx) => {

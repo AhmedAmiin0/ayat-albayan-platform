@@ -38,20 +38,29 @@ export interface ConflictNoticeProps {
   /** «احجز رغم التعارض» with the reason (R-SCH-04); stored on the clashing lessons. */
   onOverride: (reason: string) => void;
   busy?: boolean;
+  /** A form that already asked why (an edit's «السبب») starts the override reason with it. */
+  initialReason?: string;
+  /** Wording for the caller's own action (an edit saves, a booking books). */
+  labels?: { override: string; reason: string };
+  /** Who a `student_busy` clash is about, by student id: the line names them. */
+  studentNames?: Readonly<Record<string, string>>;
 }
 
 /**
  * 409 `conflict` (R-SCH-04, issue B3): every clash in Arabic, then the two ways out: pick another
- * slot, or book anyway with a reason. The reason is required (the API rejects a blank one).
+ * slot (the strong button), or go ahead anyway with a reason (quiet). The reason is required (the
+ * API rejects a blank one). Always stacked: it sits in a 460px drawer as well as a wide page.
  */
-export function ConflictNotice({ conflicts, teacherTz, onChangeSlot, onOverride, busy = false }: ConflictNoticeProps) {
+export function ConflictNotice(p: ConflictNoticeProps) {
+  const { conflicts, teacherTz, onChangeSlot, onOverride, busy = false, studentNames = {} } = p;
+  const labels = p.labels ?? { override: t.booking.override, reason: t.booking.overrideReason };
   const titleId = useId();
   const box = useRef<HTMLElement>(null);
   // The clash appears under a tall slot grid (drawer, phones): bring it into view.
   useEffect(() => {
     box.current?.scrollIntoView?.({ block: 'nearest', behavior: 'smooth' });
   }, []);
-  const [reason, setReason] = useState('');
+  const [reason, setReason] = useState(p.initialReason ?? '');
   const [missing, setMissing] = useState(false);
   const more = conflicts.length - SHOWN;
   const submit = () => {
@@ -76,20 +85,16 @@ export function ConflictNotice({ conflicts, teacherTz, onChangeSlot, onOverride,
         {conflicts.slice(0, SHOWN).map((c, i) => (
           <li key={`${c.kind}-${c.startsAt}-${i}`} className="flex items-start gap-2">
             <NuqtaGlyph shape="hollow" className="mt-1.5 text-danger" />
-            <span>{conflictText(c, teacherTz)}</span>
+            <span>{(c.studentId && studentNames[c.studentId] ? `${studentNames[c.studentId]}: ` : '') + conflictText(c, teacherTz)}</span>
           </li>
         ))}
       </ul>
       {more > 0 && <p className="text-xs text-ink-2">{t.booking.conflictMore.replace('{n}', String(more))}</p>}
-      <div className="grid gap-3 border-t border-rule pt-3 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-end">
-        <Field
-          label={t.booking.overrideReason}
-          hint={t.booking.overrideHint}
-          error={missing ? t.common.required : undefined}
-        >
-          {(p) => (
+      <div className="grid gap-3 border-t border-rule pt-3">
+        <Field label={labels.reason} hint={t.booking.overrideHint} error={missing ? t.common.required : undefined}>
+          {(f) => (
             <Input
-              {...p}
+              {...f}
               value={reason}
               placeholder={t.booking.overridePlaceholder}
               onChange={(e) => {
@@ -99,12 +104,12 @@ export function ConflictNotice({ conflicts, teacherTz, onChangeSlot, onOverride,
             />
           )}
         </Field>
-        <div className="flex flex-wrap gap-2.5 sm:pb-6">
-          <Button type="button" variant="ghost" onClick={onChangeSlot}>
+        <div className="flex flex-wrap gap-2.5">
+          <Button type="button" onClick={onChangeSlot}>
             {t.booking.changeSlot}
           </Button>
-          <Button type="button" variant="secondary" disabled={busy} onClick={submit}>
-            {t.booking.override}
+          <Button type="button" variant="ghost" disabled={busy} onClick={submit}>
+            {labels.override}
           </Button>
         </div>
       </div>

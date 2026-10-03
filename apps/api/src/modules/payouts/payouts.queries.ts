@@ -63,6 +63,19 @@ export class PayoutsQueries {
     return count ?? 0;
   }
 
+  /** The teacher's lessons in the window whose time was edited after `since` (the draft's last calculation). */
+  async editedSince(w: Omit<LessonWindow, 'statuses'> & { since: string }): Promise<number> {
+    const { count, error } = await this.db
+      .from('lessons')
+      .select('id', { count: 'exact', head: true })
+      .eq('teacher_id', w.teacherId)
+      .gte('starts_at', w.from)
+      .lt('starts_at', w.to)
+      .gt('time_edited_at', w.since);
+    if (error) throw dbError(error);
+    return count ?? 0;
+  }
+
   /** A month's rows by teacher name; `month` is the first day (YYYY-MM-01). */
   async forMonth(month: string): Promise<PayoutRow[]> {
     const { data, error } = await this.db.from('teacher_payouts').select(SELECT).eq('month', month);

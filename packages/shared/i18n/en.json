@@ -624,7 +624,7 @@
       "mark_no_show": "No-show without notice",
       "cancel_by_teacher": "Cancel by teacher",
       "cancel_by_admin": "Cancel by admin",
-      "reschedule": "Change time"
+      "reschedule": "Reschedule"
     },
     "confirmed": "Lesson confirmed",
     "statusSaved": "Status updated",
@@ -669,7 +669,7 @@
     "seriesCancelled": "Upcoming lessons cancelled",
     "chargeable": "Counts against the package",
     "notChargeable": "Doesn't count against the package",
-    "rescheduleTitle": "Change lesson time",
+    "rescheduleTitle": "Reschedule lesson",
     "newTime": "New time",
     "substitute": "Substitute teacher",
     "rescheduled": "Time changed",
@@ -686,7 +686,7 @@
     "extend": "Extend schedule",
     "extended": "Lessons booked until {date}",
     "newTimeHint": "Pick the new time from the free times",
-    "rescheduleSubmit": "Change time",
+    "rescheduleSubmit": "Reschedule",
     "back": "Back to lesson",
     "slotTaken": "There's a lesson from the same schedule at this time. Pick another time.",
     "ruleNotActive": "This schedule isn't active. Change this lesson's time only.",
@@ -723,20 +723,27 @@
       "tag": "Time edited",
       "was": "Was: {when}",
       "confirmLine": "{from} → {to}",
-      "teacherClock": "The teacher's clock: {time}, {city} time",
       "sameLesson": "The same lesson is edited, keeping its report and payments",
-      "vsReschedule": "To move every upcoming lesson, use \"Change time\" instead",
-      "sameDayOnly": "A correction stays on the same day",
-      "payoutDraft": "This month's payout is still a draft, press \"Calculate this month's payouts\" again",
+      "vsReschedule": "To move every upcoming lesson, use \"Reschedule\" instead",
+      "payoutDraft": "The teacher's payout for this month is still a draft, calculate it again before approving",
       "pdfRefresh": "The report file will be refreshed and not sent to the guardian again",
-      "noFree": "No free times on this day",
-      "showAll": "Show all times",
-      "unsure": "We are not sure the time was updated, open the lesson and check",
       "heldNote": "Attendance and the lesson status stay as they are; only the time and length are corrected",
       "payoutWarn": "The length changed, so the teacher's payout for this month will change",
       "unchanged": "Change the day, time or length first",
       "pickLength": "Pick the lesson length first",
-      "close": "Done"
+      "close": "Done",
+      "captionEdit": "The same lesson, with its report and payments",
+      "captionReschedule": "Closes this lesson and opens a new one; can cover the whole series",
+      "reasonLine": "Reason: {reason}",
+      "durationOther": "{n} minutes",
+      "riyadhEquiv": "= {time} Riyadh time",
+      "lockedMonth": "The teacher's payout for {month} is {status}, so this lesson's length cannot change",
+      "startOnly": "You can still correct the start time",
+      "restoreLength": "Put the length back to {len}",
+      "newWhen": "New time: {when}",
+      "payoutLink": "Calculate this month's payouts",
+      "overrideEdit": "Save despite the conflict",
+      "overrideReasonEdit": "Reason for the edit despite the conflict"
     }
   },
   "teacherDash": {
@@ -827,11 +834,10 @@
     "notify": "Send the guardian a confirmation of the new time",
     "submit": "Save the change",
     "saved": "The time was updated",
-    "savedNotified": "The time was updated, and the guardian is sent a WhatsApp confirmation of the new time",
     "confirmLine": "{from} ← {to}",
     "sameLesson": "The same lesson is edited, keeping its report and payments",
-    "vsReschedule": "To change the time of every upcoming lesson, use \"Change time\" instead",
-    "payoutDraft": "The month's payout is still a draft, press \"Calculate the month's payouts\" again",
+    "vsReschedule": "To change the time of every upcoming lesson, use \"Reschedule\" instead",
+    "payoutDraft": "The teacher's payout for this month is still a draft, calculate it again before approving",
     "pdfRefresh": "The report file is refreshed and not sent to the guardian again",
     "offline": "The connection dropped before we got an answer, so we are not sure the time changed. Open the schedule again once you are back online",
     "error": {
@@ -841,7 +847,16 @@
       "date_in_future": "A correction has to be before now",
       "correction_cross_day": "A correction has to stay on the same day",
       "reason_required": "Write the reason for the correction"
-    }
+    },
+    "notifiedLine": "The guardian is sent a WhatsApp confirmation of the new time",
+    "heldNote": "Attendance and the lesson status stay as they are; only the time and length are corrected",
+    "payoutWarn": "The length changed, so the teacher's payout for this month will change",
+    "unchanged": "Change the time or length first",
+    "durationOther": "{n} minutes",
+    "lockedMonth": "The teacher's payout for {month} is {status}, so this lesson's length cannot change",
+    "startOnly": "You can still correct the start time",
+    "restoreLength": "Put the length back to {len}",
+    "currentLength": "Current length: {len}"
   },
   "alerts": {
     "needsTeacher": "Needs a teacher"
@@ -1261,7 +1276,8 @@
       "payout_not_found": "These payouts don't exist",
       "invalid_month": "Choose the month from the list",
       "month_not_over": "The month isn't over yet. Approve the payouts after its last day",
-      "reports_pending": "This teacher still has unwritten lesson reports for this month. Write them first, then approve"
+      "reports_pending": "This teacher still has unwritten lesson reports for this month. Write them first, then approve",
+      "payout_stale": "A lesson's time was edited after this payout was calculated. Press \"Calculate this month's payouts\" again, then approve"
     },
     "mineEmpty": "No payouts calculated yet"
   },
