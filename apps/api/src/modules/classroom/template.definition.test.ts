@@ -1,10 +1,12 @@
 import { readFileSync } from 'node:fs';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { TEMPLATE_KEYS, isLessonTimed } from '../messaging/templates.js';
-import ar from '../../i18n/ar.json' with { type: 'json' };
+import { isLessonTimed, TEMPLATE_KEYS } from '@ab/shared';
 
 // The lesson_join_link definition lives in migration 182 (seeded, not submitted, admin-initiated).
-const sql = readFileSync(new URL('../../../db/supabase/migrations/20261001000182_lesson_join_link_template.sql', import.meta.url), 'utf8');
+const root = join(__dirname, '../../../../..');
+const sql = readFileSync(join(root, 'packages/db/supabase/migrations/20261001000182_lesson_join_link_template.sql'), 'utf8');
+const ar: { templates: { names: Record<string, string> } } = JSON.parse(readFileSync(join(root, 'packages/shared/i18n/ar.json'), 'utf8'));
 
 describe('lesson_join_link template definition', () => {
   it('is a known key with a name in the template list', () => {
