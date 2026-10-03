@@ -1533,3 +1533,31 @@ Owner: "THESE ARE ALL OUR FORMS" (verbatim spec: `docs/13-forms-spec.md`, R-FRM-
 - Turbo lint + typecheck + test green; e2e 73 passed + 3 skipped (desktop + mobile; includes forms-parity, feedback and the new teacher-RLS case). One full run hit a single `chat-subscribe` desktop failure that passed alone and in the next full run (shared-DB timing, not reproduced).
 - Unit: api 1724 + 1 skipped (245 files) · web 799 (177) · mobile 748 (161 suites) · @ab/shared 1243 (67) · @ab/migrate 292 (50) · wa-stub 25 (4). Lint: 0 errors, complexity warnings only.
 - Screenshots re-taken and looked at (admin list AR/EN 1440 and AR 390, public form AR light/dark and EN, wrong/expired/done/empty-error states, teacher feedback and nav EN 390, report form AR/EN 390, booking teacher step EN 390).
+
+## Makeup booking + invoice (2026-10-03)
+
+Owner request: a second booking type «حجز تعويضي» and a required «الفاتورة» on the registration/booking form unless it is a trial; the invoice can be uploaded or saved from the WhatsApp chat. Requirements R-SCH-10, R-PAY-03, R-MSG-06 (docs/03), wording rows in docs/13.
+
+### Built
+- **Type** «نوع الحجز»: تجريبية / اشتراك / حجز تعويضي (`kind`, derived from `package` when omitted so old clients keep working). A makeup is one lesson for one existing student, linked to the missed one (`lessons.makeup_of_id`, one active makeup per missed lesson), no package, never consumes a unit, still counts for the teacher's payout. Only a charged miss (no_show, or a charged excuse) within 60 days, not a trial, not a makeup, is eligible.
+- **Invoice**: required by `POST /booking` for package and makeup (400 `invoice_required`), never for a trial. Upload to a signed URL, or «من الشات»: the server copies an inbound WhatsApp image/PDF of that family into the private `invoices` bucket (no client re-download; `wa-media` caches Meta files, 410 `media_expired` after 29 days). Admin-only table, bucket and routes (`GET /invoices`, `/threads/:phone/media`); a teacher gets 403.
+- **Screens**: web booking wizard (type selector, missed-lesson step, invoice step, chat picker, makeup tag, drawer action, invoices on the student profile); mobile wizard (type pills, camera/gallery invoice, «من الشات» sheet, makeup wizard from a missed lesson in «الجدول», «تعويضية» tag).
+- Migrations 170-172 (`booking_invoices`, `create_booking` v3, balance views exclude makeups).
+
+### Integration
+- Merged `makeup/api`, `makeup/web`, `makeup/mobile` (--no-ff). i18n conflicts resolved by key union (`booking.kind/makeup/invoice/error`); the API's `booking.error.*` is the single home of the new error codes (`lessons.error` is pinned by an API test to the lessons codes), the web `lessonErrorText` reads both.
+- The web and mobile stand-in contract types now come from `@ab/shared` (`BookingKind`, `InvoiceInput`, `InvoiceView`, `MakeupCandidate`, `ThreadMediaItem`, `LessonView.makeup`, `makeupEligible`); only mobile-only drafts stay local.
+- Fixtures gained `invoice_id`. e2e: `chat-subscribe`, `journey-5` upload an invoice before review (`e2e/support/invoice.ts`), `journey-1` checks the trial type and no package list, `forms-parity` checks the three types and the four paid sizes (the trial option moved to «نوع الحجز», docs/13 DEVIATION). New `booking-makeup-invoice.spec` (trial without invoice, package blocked until upload, makeup with invoice saved from a wa-stub photo, teacher 403).
+
+### Gate (`supabase db reset` (171 applied; `gen:types` unchanged) + `pnpm env:local`, then `pnpm test:all`)
+- 27/27 turbo tasks green. e2e: 79 passed + 3 skipped (desktop + mobile).
+- Unit: api 1834 + 1 skipped (259 files) · web 854 (188) · mobile 802 (176 suites) · @ab/shared 1280 (70) · @ab/migrate 292 (50) · wa-stub 25 (4). Lint: 0 errors, complexity warnings only (wa-stub 2, migrate 10, api 6, web 32, mobile 8, shared 2).
+- Two full runs failed on Windows file-lock / worker-crash noise (vitest `EBUSY`, a migrate worker exit, a Playwright fail-fast) while worktrees were being deleted; none reproduced on a quiet re-run.
+
+### Residuals / owner decisions
+- **Owner questions** (docs/13 decisions 13-18): was a second type meant beyond makeup; does a makeup really need an invoice (read literally: yes); may a teacher/admin cancellation earn a free makeup (now: no, «غيّر الميعاد» covers it); does the guardian need different confirmation wording for a makeup (needs a new Meta template; today the approved `booking_confirmation*` is reused with «تعويضية لـ{name}»).
+- **Deploy order**: apply migrations 170-172 on staging/prod, then the API, then the web, then the mobile OTA. Older mobile builds get 400 `invoice_required` on «اشترك» until updated (trial unaffected); a new mobile build on an old API books a package with no invoice.
+- Mobile: no «من الشات» on a makeup (the lesson row has no guardian phone); a PDF from the device needs `expo-document-picker` and a native build (PDFs come only from the chat); no «سجّل الدفعة» or invoice viewer; the permission text still says «إيصال التحويل»; `makeup_exists` shows only at submit; the makeup route sits under `(tabs)/students` (check back behaviour on a device); makeup teacher filter starts at program quran.
+- Web: the inbox lesson picker (`ThreadLesson`) has no makeup tag; inbox bubbles still show «mediaNotDownloaded» for stored media.
+- Ponytail ceilings: no `payments.invoiceId` reconciliation, invoice reads not audited, booking concurrency is check-then-write.
+- Not run: e2e for a media-older-than-29-days case and journey 3 extended with the invoice (unit-tested in the API).
