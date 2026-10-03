@@ -28,7 +28,7 @@ export function weekGrid(page: Page): Locator {
 /** settings.late_cancel_hours: a number of hours, or null = OFF (the seeded default). */
 export async function setLateCancelHours(hours: number | null): Promise<void> {
   await withSql((sql) => sql`
-    insert into public.settings (key, value) values ('late_cancel_hours', ${JSON.stringify(hours)}::jsonb)
+    insert into public.settings (key, value) values ('late_cancel_hours', ${sql.json(hours)})
     on conflict (key) do update set value = excluded.value`);
 }
 
