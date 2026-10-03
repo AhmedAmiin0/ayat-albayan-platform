@@ -2174,7 +2174,10 @@
       "device_missing": "No camera or microphone found",
       "share_failed": "Could not start screen sharing",
       "connect_failed": "Could not connect to the lesson, try again",
-      "unknown": "Something went wrong, try again"
+      "unknown": "Something went wrong, try again",
+      "removed_from_room": "You were removed from the lesson and cannot rejoin it",
+      "participant_not_found": "This participant is no longer in the lesson",
+      "cannot_remove": "You are not allowed to remove this participant"
     },
     "admin": {
       "nav": "Online classrooms",
