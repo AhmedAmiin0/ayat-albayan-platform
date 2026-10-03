@@ -4,7 +4,7 @@ import { Button } from './Button';
 
 const styleOf = (label: string) => StyleSheet.flatten(screen.getByRole('button', { name: label }).props.style);
 
-test('secondary is a raised peer action with the input edge; primary and ghost have none', async () => {
+test('secondary has the input edge, primary is green with a gold edge, ghost has none', async () => {
   await render(
     <>
       <Button label="تأكيد" onPress={jest.fn()} />
@@ -13,7 +13,8 @@ test('secondary is a raised peer action with the input edge; primary and ghost h
     </>,
   );
   expect(styleOf('إلغاء')).toMatchObject({ borderWidth: 1, minHeight: 44 });
-  expect(styleOf('تأكيد').borderWidth).toBe(0);
+  expect(styleOf('تأكيد')).toMatchObject({ borderWidth: 1, borderColor: '#b7891f', backgroundColor: '#166534' });
+  expect(styleOf('خروج').borderWidth).toBe(0);
   expect(styleOf('خروج').backgroundColor).toBe('transparent');
 });
 

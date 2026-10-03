@@ -23,12 +23,14 @@ export interface ButtonProps {
 type Palette = ReturnType<typeof useTheme>['color'];
 
 function look(variant: ButtonVariant, color: Palette, pressed: boolean) {
-  if (variant === 'primary') return { bg: pressed ? color.lapisHover : color.lapis, ink: color.onLapis, edge: 0 };
-  if (variant === 'secondary') return { bg: pressed ? color.sunk : color.raised, ink: color.ink, edge: 1 };
-  return { bg: pressed ? color.lapisWash : 'transparent', ink: color.lapis, edge: 0 };
+  if (variant === 'primary') {
+    return { bg: pressed ? color.lapisHover : color.lapis, ink: color.onLapis, edge: 1, edgeColor: color.gold };
+  }
+  if (variant === 'secondary') return { bg: pressed ? color.sunk : color.raised, ink: color.ink, edge: 1, edgeColor: color.ruleInput };
+  return { bg: pressed ? color.lapisWash : 'transparent', ink: color.lapis, edge: 0, edgeColor: color.ruleInput };
 }
 
-/** docs/07 §6 Button, at the 44pt mobile touch size. Lapis only: never gold, never saffron. */
+/** docs/07 §6 Button, at the 44pt mobile touch size. Green fill with a gold edge; never saffron. */
 export function Button({ label, onPress, variant = 'primary', busy = false, ...p }: ButtonProps) {
   const { color } = useTheme();
   const off = busy || p.disabled === true;
@@ -44,7 +46,7 @@ export function Button({ label, onPress, variant = 'primary', busy = false, ...p
         paddingHorizontal: 20,
         borderRadius: shape.radius.md,
         borderWidth: look(variant, color, pressed).edge,
-        borderColor: color.ruleInput,
+        borderColor: look(variant, color, pressed).edgeColor,
         alignItems: 'center',
         justifyContent: 'center',
         opacity: off ? 0.45 : 1,
