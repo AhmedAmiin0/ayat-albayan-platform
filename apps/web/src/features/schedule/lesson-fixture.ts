@@ -1,4 +1,5 @@
 import { allowedLessonEvents, type LessonStatus, type LessonView } from '@ab/shared';
+import type { EditableLesson, TimeEditInfo, TimeEditMode } from './edit-time.contract';
 
 // Test data only (imported by *.test.tsx): LessonView rows shaped like GET /lessons responses.
 
@@ -28,10 +29,17 @@ export interface LessonOverrides {
   conflicts?: LessonView['conflicts'];
   pending_proposal?: LessonView['pending_proposal'];
   trial?: boolean;
+  /** R-SCH-11: what the admin may do to the time (the API sends it for admins only). */
+  time_edit_mode?: TimeEditMode | null;
+  time_edit?: TimeEditInfo | null;
 }
 
 export function lesson(o: LessonOverrides = {}): LessonView {
-  return { ...core(o), conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null };
+  const edit: Pick<EditableLesson, 'time_edit_mode' | 'time_edit'> = {
+    ...(o.time_edit_mode !== undefined && { time_edit_mode: o.time_edit_mode }),
+    ...(o.time_edit !== undefined && { time_edit: o.time_edit }),
+  };
+  return { ...core(o), ...edit, conflicts: o.conflicts ?? [], pending_proposal: o.pending_proposal ?? null };
 }
 
 function core(o: LessonOverrides): Omit<LessonView, 'conflicts' | 'pending_proposal'> {

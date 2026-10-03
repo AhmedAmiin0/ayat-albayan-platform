@@ -7,6 +7,7 @@ import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
+import { EditTimeLink } from './EditTimeLink';
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { LessonTags } from './LessonTags';
 import { RIYADH_TZ } from './tz';
@@ -25,9 +26,10 @@ const duration: Record<string, string> = t.enums.duration;
 /**
  * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in Riyadh with every
  * student's and the teacher's own clock, the teacher, the copied meeting link, any reason, and the
- * clashes the daily job found when it generated the lesson (R-SCH-04).
+ * clashes the daily job found when it generated the lesson (R-SCH-04). `onEditTime` adds
+ * «عدّل الوقت» under the time (R-SCH-11).
  */
-export function LessonDetails({ lesson }: { lesson: LessonView }) {
+export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEditTime?: () => void }) {
   const at = new Date(lesson.starts_at);
   const teacherTz = lesson.teacher.tz;
   const mins = durationMin(lesson);
@@ -48,6 +50,7 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
               {t.schedule.teacherTime.replace('{time}', timeInCity(lesson.starts_at, teacherTz))}
             </span>
           )}
+          <EditTimeLink lesson={lesson} onEdit={onEditTime} />
         </Row>
         {lesson.makeup_of && (
           <Row label={t.booking.makeup.missedLabel}>

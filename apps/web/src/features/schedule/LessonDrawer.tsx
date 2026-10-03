@@ -6,6 +6,7 @@ import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { t } from '@/lib/i18n';
 import { CancelForm } from './CancelForm';
 import { Drawer } from './Drawer';
+import { EditTimeForm } from './EditTimeForm';
 import { LessonActions } from './LessonActions';
 import { LessonDetails } from './LessonDetails';
 import { LessonInvoice } from './LessonInvoice';
@@ -21,18 +22,19 @@ export interface LessonDrawerProps {
   onDone: (message: string) => void;
 }
 
-type Mode = 'view' | 'cancel' | 'reschedule';
+type Mode = 'view' | 'cancel' | 'reschedule' | 'editTime';
 const LABEL: Record<Mode, string> = {
   view: t.lessons.details,
   cancel: t.lessons.cancelTitle,
   reschedule: t.lessons.rescheduleTitle,
+  editTime: t.lessons.timeEdit.title,
 };
 
 /**
  * Admin lesson drawer (R-SCH-03, R-SCH-07, R-SCH-08): details, a teacher's pending proposal, then
  * confirm / attendance, «تغيير الميعاد» (slot picker, conflict → message → another slot) and
  * «إلغاء الحلقة» (scope, by whom, reason), the booking's invoice and «حجز تعويضي» on a missed
- * lesson (R-SCH-10, R-PAY-03). Switching form moves focus to it (it replaced the button that had focus).
+ * lesson (R-SCH-10, R-PAY-03), and «عدّل الوقت» (same lesson, new time; R-SCH-11). Switching form moves focus to it (it replaced the button that had focus).
  */
 export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
   const [mode, setMode] = useState<Mode>('view');
@@ -47,7 +49,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
       <div ref={panel} role="group" tabIndex={-1} aria-label={LABEL[mode]} className="grid gap-5 outline-none">
         {mode === 'view' && (
           <>
-            <LessonDetails lesson={lesson} />
+            <LessonDetails lesson={lesson} onEditTime={() => setMode('editTime')} />
             <LessonInvoice lesson={lesson} />
             <ProposalBox lesson={lesson} onDone={done} />
             <LessonReportLinks lesson={lesson} role="admin" />
@@ -63,6 +65,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
         )}
         {mode === 'cancel' && <CancelForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}
         {mode === 'reschedule' && <RescheduleForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}
+        {mode === 'editTime' && <EditTimeForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}
       </div>
     </Drawer>
   );
