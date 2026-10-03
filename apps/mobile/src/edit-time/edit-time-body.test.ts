@@ -33,6 +33,12 @@ describe('editBody, move', () => {
   });
 });
 
+test('a length the API does not take (an odd recorded 50 minutes) is never sent', () => {
+  const odd = { ...upcoming, ends_at: '2026-10-04T14:50:00.000Z' };
+  expect(editBody(odd, state({ picked: SAT_17, durationMin: 50 }), NOW)).toBeNull();
+  expect(editBody(odd, state({ picked: SAT_17, durationMin: 45 }), NOW)?.durationMin).toBe(45);
+});
+
 describe('editBody, correct', () => {
   const ten15 = '2026-10-01T07:15:00.000Z';
 

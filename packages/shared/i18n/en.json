@@ -780,6 +780,7 @@
     "title": "Edit lesson time",
     "correctTitle": "Correct lesson time",
     "duration": "Length",
+    "pickLength": "Pick the lesson length first",
     "correctTimes": "Correct start time",
     "dayFixed": "Day: {day} (a correction stays on the same day)",
     "noTimes": "No other time on this day, the lesson has to end before now",

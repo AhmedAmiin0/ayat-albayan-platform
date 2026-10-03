@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import { DURATIONS, type LessonView } from '@ab/shared';
 import { localDate } from '@/today/timeline';
 import { editMode, type EditableLesson, type LessonTimeEditBody } from './types';
 
@@ -62,10 +62,13 @@ export function willNotify(lesson: EditableLesson, s: EditState, now: Date): boo
   return editMode(lesson) === 'move' && start !== Date.parse(lesson.starts_at) && start > now.getTime();
 }
 
-/** The submit is ready: something changed, a move starts ahead, a correction says why. */
+/** A length the API and the slot grid accept (30 / 45 / 60 / 90); an odd recorded one must be replaced. */
+export const isBookable = (durationMin: number): boolean => DURATIONS.some((d) => d === durationMin);
+
+/** The submit is ready: a bookable length, something changed, a move starts ahead, a correction says why. */
 export function canSubmit(lesson: EditableLesson, s: EditState, now: Date): boolean {
   const mode = editMode(lesson);
-  if (mode === null || !isChanged(lesson, s)) return false;
+  if (mode === null || !isBookable(s.durationMin) || !isChanged(lesson, s)) return false;
   const start = Date.parse(chosenStart(lesson, s.picked));
   if (mode === 'correct') return s.reason.trim() !== '' && start + s.durationMin * MINUTE <= now.getTime();
   return start > now.getTime();

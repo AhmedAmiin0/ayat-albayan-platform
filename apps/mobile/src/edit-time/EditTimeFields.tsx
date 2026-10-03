@@ -3,10 +3,12 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { SlotPicker } from '@/reschedule/SlotPicker';
+import { type, useTheme } from '@/theme';
+import { AppText } from '@/ui/AppText';
 import { Field } from '@/ui/Field';
 import { FilterPills } from '@/ui/FilterPills';
 import { CorrectTimes } from './CorrectTimes';
-import { REASON_MAX, type EditState } from './edit-time-body';
+import { isBookable, REASON_MAX, type EditState } from './edit-time-body';
 import type { TimeEditMode } from './types';
 
 const lengths: Record<string, string | undefined> = t.enums.duration;
@@ -30,6 +32,8 @@ export interface EditTimeFieldsProps {
  * ending by now) and the reason (optional for a move, required for a correction).
  */
 export function EditTimeFields({ lesson, mode, state, tz, now, onPick, onDuration, onReason }: EditTimeFieldsProps) {
+  const { color } = useTheme();
+  const note = { fontFamily: type.ui[500], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.ink2 };
   return (
     <View style={{ gap: 16 }}>
       <View style={{ gap: 6 }}>
@@ -44,6 +48,9 @@ export function EditTimeFields({ lesson, mode, state, tz, now, onPick, onDuratio
       </View>
       {mode === 'correct' ? (
         <CorrectTimes lesson={lesson} durationMin={state.durationMin} tz={tz} now={now} value={state.picked} onPick={onPick} />
+      ) : !isBookable(state.durationMin) ? (
+        // An odd recorded length has no slot grid (the API takes 30 / 45 / 60 / 90): pick a length first.
+        <AppText style={note}>{t.editTime.pickLength}</AppText>
       ) : (
         <SlotPicker
           lesson={lesson}

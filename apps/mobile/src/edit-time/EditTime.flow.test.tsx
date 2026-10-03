@@ -110,6 +110,18 @@ test('a lesson that cannot be edited says so and offers no form', async () => {
   expect(mockApiFetch).not.toHaveBeenCalled();
 });
 
+test('a recorded length outside 30 / 45 / 60 / 90: no slots asked and nothing to save until a length is picked', async () => {
+  const odd = { ...upcoming, ends_at: '2026-10-04T14:50:00.000Z' };
+  await renderWithQuery(<EditTimeSheet lesson={odd} onClose={jest.fn()} />);
+  expect(screen.getByText(t.editTime.pickLength)).toBeTruthy();
+  expect(mockApiFetch).not.toHaveBeenCalled();
+  expect(submit()).toBeDisabled();
+  await fireEvent.press(screen.getByRole('radio', { name: t.enums.duration['45'] }));
+  expect(await screen.findByRole('radio', { name: '17:00' })).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith(expect.stringContaining('durationMin=45'));
+  expect(screen.queryByText(t.editTime.pickLength)).toBeNull();
+});
+
 test('closed: nothing renders and nothing is asked', async () => {
   await renderWithQuery(<EditTimeSheet lesson={null} onClose={jest.fn()} />);
   expect(screen.queryByRole('header', { name: t.editTime.title })).toBeNull();
