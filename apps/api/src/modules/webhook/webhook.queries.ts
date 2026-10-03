@@ -62,6 +62,22 @@ export class WebhookQueries {
     return (data ?? []).length > 0;
   }
 
+  /** The latest message time on this phone within the whole second of `at` (orderedAt), or null. */
+  async latestInSecond(phone: string, at: Date): Promise<Date | null> {
+    const from = Math.floor(at.getTime() / 1000) * 1000;
+    const { data, error } = await this.db
+      .from('messages')
+      .select('created_at')
+      .eq('phone_e164', phone)
+      .gte('created_at', new Date(from).toISOString())
+      .lt('created_at', new Date(from + 1000).toISOString())
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    check(error);
+    return data ? new Date(data.created_at) : null;
+  }
+
   /** Removes an inbound row by wamid (its quick reply failed: Meta's re-send must not be a replay). */
   async deleteInbound(waMessageId: string): Promise<void> {
     const { error } = await this.db.from('messages').delete().eq('wa_message_id', waMessageId).eq('direction', 'inbound');

@@ -60,6 +60,14 @@ export function fakeQueries() {
   return {
     stored,
     identify: vi.fn().mockResolvedValue(nobody()),
+    latestInSecond: vi.fn(async (phone: string, at: Date) => {
+      const from = Math.floor(at.getTime() / 1000) * 1000;
+      const times = stored
+        .filter((r) => r.phone_e164 === phone && r.created_at)
+        .map((r) => Date.parse(r.created_at ?? ''))
+        .filter((t) => t >= from && t < from + 1000);
+      return times.length ? new Date(Math.max(...times)) : null;
+    }),
     insertInbound: vi.fn(async (row: TablesInsert<'messages'>) => {
       if (stored.some((r) => r.wa_message_id === row.wa_message_id)) return false;
       stored.push(row);
