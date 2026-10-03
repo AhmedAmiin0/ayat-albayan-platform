@@ -4,10 +4,42 @@ on:
     branches: [main, develop]
   pull_request:
 
+# A new push to the same branch or PR cancels the run it replaces.
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Remote Turborepo cache: with both set, unchanged packages skip lint, typecheck and test.
+# Unset (forks, no secret) = a normal uncached run, nothing breaks.
+env:
+  TURBO_TOKEN: ${{ secrets.TURBO_TOKEN }}
+  TURBO_TEAM: ${{ vars.TURBO_TEAM }}
+
 jobs:
+  # Lint, typecheck and unit tests need no database: they run alongside the e2e shards, not before them.
   check:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm i --frozen-lockfile
+      - run: pnpm turbo lint typecheck test
+
+  # The e2e suite shares one database per run and runs with one worker, so it is split across machines
+  # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
+  # not stop the others (fail-fast off), so one run shows every red spec.
+  e2e:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2, 3, 4]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -19,13 +51,29 @@ jobs:
       - name: Start local Supabase
         run: pnpm supabase start -x studio,imgproxy,inbucket,edge-runtime,logflare,vector
       - run: pnpm env:local
-      - run: pnpm turbo lint typecheck test
-      - run: pnpm --filter e2e exec playwright install --with-deps chromium
-      - run: pnpm turbo e2e --filter=e2e
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(pnpm --filter e2e exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - name: Cache the Playwright browser
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Install the browser (only on a cache miss)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter e2e exec playwright install --with-deps chromium
+      - name: Install the browser's system libraries (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter e2e exec playwright install-deps chromium
+      - run: pnpm turbo e2e --filter=e2e -- --shard=${{ matrix.shard }}/4
         env:
           CI: 'true'
       - uses: actions/upload-artifact@v4
         if: failure()
         with:
-          name: playwright-report
-          path: e2e/playwright-report
+          name: playwright-report-shard-${{ matrix.shard }}
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7
