@@ -32,9 +32,10 @@ begin
 
   -- Every session must be this teacher's own, BEFORE anything is written: an unknown teacher or someone
   -- else's session answers earning_not_found, never a raw foreign-key error from the payment insert.
-  if (select count(*) from public.teacher_session_earnings e
-       where e.teacher_id = v_teacher
-         and e.id in (select (i ->> 'earning_id')::uuid from jsonb_array_elements(p -> 'items') i))
+  -- (alias `own`, not `e`: `e` is this function's record variable and would shadow the table alias)
+  if (select count(*) from public.teacher_session_earnings own
+       where own.teacher_id = v_teacher
+         and own.id in (select (i ->> 'earning_id')::uuid from jsonb_array_elements(p -> 'items') i))
      <> jsonb_array_length(p -> 'items') then
     raise exception 'earning_not_found' using errcode = 'P0001';
   end if;
