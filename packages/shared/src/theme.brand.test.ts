@@ -1,19 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { palette, type ThemeName } from './theme.js';
 
-// The light theme is anchored on the academy's own palette (Apps Script «Brand» library, T).
-it('light tokens are the brand colours', () => {
+// The light theme: readability first (owner, 2026-10-03), not the old dark-green-on-cream brand.
+it('light tokens are the readability palette', () => {
   const c = palette.light;
-  expect(c.page).toBe('#fdf8f0'); // T.paper, the logo's own background
-  expect(c.ink).toBe('#14261e'); // T.ink
-  expect(c.lapis).toBe('#14503a'); // T.green2: action
-  expect(c.lapisHover).toBe('#0c2a1e'); // T.green
-  expect(c.ok).toBe('#1e6b4c'); // T.ok = T.green3
-  expect(c.gold).toBe('#c2a24a'); // T.gold
-  expect(c.goldSoft).toBe('#d6bc80'); // T.goldSoft
-  expect(c.goldWash).toBe('#e7dab4'); // T.gold2
-  expect(c.rule).toBe('#e5d9bf'); // T.rule
-  expect(c.bad).toBe('#9c3b2e'); // T.bad
+  expect(c.page).toBe('#ffffff'); // white page
+  expect(c.ink).toBe('#111827'); // near-black text
+  expect(c.lapis).toBe('#1d4ed8'); // blue: the action
+  expect(c.lapisHover).toBe('#1e3a8a');
+  expect(c.ok).toBe('#047857'); // green only means done/ok
+  expect(c.gold).toBe('#b7891f'); // gold decorates
+  expect(c.bad).toBe('#b91c1c');
 });
 
 // OKLCH hue in degrees (Björn Ottosson's matrices), to keep the one-meaning colours apart.
@@ -47,9 +44,10 @@ describe.each(['light', 'dark'] as ThemeName[])('%s: one colour, one meaning (do
     expect(apart(c.bad, c.act)).toBeGreaterThanOrEqual(20);
   });
 
-  it('the action is green (hue 140°–175°)', () => {
-    expect(hue(c.lapis)).toBeGreaterThanOrEqual(140);
-    expect(hue(c.lapis)).toBeLessThanOrEqual(175);
+  it('the action is blue (hue 245°–280°), apart from «ok» green', () => {
+    expect(hue(c.lapis)).toBeGreaterThanOrEqual(245);
+    expect(hue(c.lapis)).toBeLessThanOrEqual(280);
+    expect(apart(c.lapis, c.ok)).toBeGreaterThanOrEqual(60);
   });
 });
 

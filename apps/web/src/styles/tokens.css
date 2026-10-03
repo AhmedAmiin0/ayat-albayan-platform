@@ -1,6 +1,6 @@
-/* Ink & Gold raw tokens on the academy brand palette (docs/07 §3). Values are packages/shared/src/theme.ts
-   as hex (tokens.test.ts diffs them, and the contrast test runs there). Tailwind reads them via @theme inline.
-   `--lapis*` is the action token's historical name: it holds the brand green. Gold decorates, green acts.
+/* Raw colour tokens (docs/07 §3). Values are packages/shared/src/theme.ts as hex (tokens.test.ts diffs
+   them, and the contrast test runs there). Tailwind reads them via @theme inline. Readability palette:
+   white/slate surfaces, near-black ink, blue actions (`--lapis*` is the historical name), gold decorates.
    <html data-theme> is always set at boot (index.html resolves "auto" via matchMedia);
    the media block is the no-JS fallback. tokens.test.ts keeps the two dark blocks identical. */
 
@@ -8,64 +8,64 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --margin: #f5eddd;
-  --page: #fdf8f0;
-  --raised: #fffdf9;
-  --sunk: #f7f0e1;
-  --ink: #14261e;
-  --ink-2: #3c4b44;
-  --ink-3: #55625b;
-  --rule: #e5d9bf;
-  --rule-strong: #cdbb94;
-  --rule-input: #958666;
-  --gold: #c2a24a;
-  --gold-soft: #d6bc80;
-  --gold-wash: #e7dab4;
-  --lapis: #14503a;
-  --lapis-hover: #0c2a1e;
-  --lapis-wash: #e1ede5;
-  --on-lapis: #fdf8f0;
-  --verdigris: #1e6b4c;
-  --verdigris-wash: #dcebdf;
-  --saffron: #8c5212;
-  --saffron-wash: #f6e7c6;
-  --cinnabar: #9c3b2e;
-  --cinnabar-solid: #9c3b2e;
-  --cinnabar-wash: #f8e1db;
-  --on-cinnabar: #fdf8f0;
-  --neutral-wash: #e9e7dd;
-  --inverse: #0c2a1e;
-  --on-inverse: #fdf8f0;
-  --inverse-gold: #d6bc80;
-  --cover: #0c2a1e;
-  --leather: #14402f;
-  --leather-deep: #0b281c;
-  --leather-lift: #1f553f;
-  --gold-on-cover: #d6bc80;
-  --cover-ink: #f3ead6;
-  --scrim: rgba(12, 38, 28, 0.45);
-  --elev-page: 0 1px 0 rgba(20, 38, 30, 0.04), 0 18px 40px -18px rgba(20, 38, 30, 0.28);
-  --elev-pop: 0 30px 60px -20px rgba(4, 16, 11, 0.55);
-  --elev-toast: 0 12px 28px -12px rgba(4, 16, 11, 0.5);
+  --margin: #eef1f5;
+  --page: #ffffff;
+  --raised: #ffffff;
+  --sunk: #f4f6f9;
+  --ink: #111827;
+  --ink-2: #374151;
+  --ink-3: #4b5563;
+  --rule: #e3e7ee;
+  --rule-strong: #c9d0db;
+  --rule-input: #7d8696;
+  --gold: #b7891f;
+  --gold-soft: #e4c97e;
+  --gold-wash: #faf2dc;
+  --lapis: #1d4ed8;
+  --lapis-hover: #1e3a8a;
+  --lapis-wash: #e8eefd;
+  --on-lapis: #ffffff;
+  --verdigris: #047857;
+  --verdigris-wash: #e2f5ec;
+  --saffron: #a14b06;
+  --saffron-wash: #fdf1e1;
+  --cinnabar: #b91c1c;
+  --cinnabar-solid: #b91c1c;
+  --cinnabar-wash: #fde8e8;
+  --on-cinnabar: #ffffff;
+  --neutral-wash: #eceff4;
+  --inverse: #111827;
+  --on-inverse: #f9fafb;
+  --inverse-gold: #e4c97e;
+  --cover: #1e293b;
+  --leather: #1e3a5f;
+  --leather-deep: #172b47;
+  --leather-lift: #264a78;
+  --gold-on-cover: #ecd18c;
+  --cover-ink: #f8fafc;
+  --scrim: rgba(15, 23, 42, 0.45);
+  --elev-page: 0 1px 0 rgba(15, 23, 42, 0.04), 0 18px 40px -18px rgba(15, 23, 42, 0.22);
+  --elev-pop: 0 30px 60px -20px rgba(15, 23, 42, 0.45);
+  --elev-toast: 0 12px 28px -12px rgba(15, 23, 42, 0.4);
 }
 
-/* ---------- dark ("night Mushaf", green-black): no-JS fallback ---------- */
+/* ---------- dark (slate navy): no-JS fallback ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
-    --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
-    --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
-    --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
-    --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
-    --verdigris: #8fcf95; --verdigris-wash: #112a17;
-    --saffron: #f2aa6b; --saffron-wash: #36220f;
-    --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
-    --neutral-wash: #1d2621;
-    --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
-    --cover: #0e2419;
-    --leather: #123826; --leather-deep: #0a2117; --leather-lift: #1b4a35;
-    --scrim: rgba(1, 5, 3, 0.62);
+    --margin: #0b1120; --page: #0f172a; --raised: #162036; --sunk: #0c1426;
+    --ink: #f1f5f9; --ink-2: #cbd5e1; --ink-3: #a6b2c4;
+    --rule: #243049; --rule-strong: #334462; --rule-input: #6b7a94;
+    --gold: #e0b95a; --gold-soft: #6b5523; --gold-wash: #2a2210;
+    --lapis: #8fb0ff; --lapis-hover: #b3caff; --lapis-wash: #17264a; --on-lapis: #0b1120;
+    --verdigris: #6ee7b7; --verdigris-wash: #0f2a22;
+    --saffron: #fd9f68; --saffron-wash: #33200f;
+    --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #0b1120;
+    --neutral-wash: #1c2638;
+    --inverse: #e2e8f0; --on-inverse: #0f172a; --inverse-gold: #8a6a1c;
+    --cover: #111a2e;
+    --leather: #16233d; --leather-deep: #0e182c; --leather-lift: #1f3150;
+    --scrim: rgba(2, 6, 23, 0.65);
     --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
     --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
     --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
@@ -75,19 +75,19 @@
 /* ---------- dark: chosen or resolved at boot ---------- */
 [data-theme='dark'] {
   color-scheme: dark;
-  --margin: #07110c; --page: #0c1913; --raised: #112019; --sunk: #09150f;
-  --ink: #efe8d8; --ink-2: #c7bfac; --ink-3: #a49d8b;
-  --rule: #1f3229; --rule-strong: #2f463a; --rule-input: #5f766a;
-  --gold: #cfb062; --gold-soft: #6c5a2b; --gold-wash: #29230f;
-  --lapis: #78c49c; --lapis-hover: #92d4b0; --lapis-wash: #122a1f; --on-lapis: #06120c;
-  --verdigris: #8fcf95; --verdigris-wash: #112a17;
-  --saffron: #f2aa6b; --saffron-wash: #36220f;
-  --cinnabar: #f0927f; --cinnabar-solid: #d0604d; --cinnabar-wash: #3a1914; --on-cinnabar: #06120c;
-  --neutral-wash: #1d2621;
-  --inverse: #ece4d2; --on-inverse: #0c1913; --inverse-gold: #8a6a1c;
-  --cover: #0e2419;
-  --leather: #123826; --leather-deep: #0a2117; --leather-lift: #1b4a35;
-  --scrim: rgba(1, 5, 3, 0.62);
+  --margin: #0b1120; --page: #0f172a; --raised: #162036; --sunk: #0c1426;
+  --ink: #f1f5f9; --ink-2: #cbd5e1; --ink-3: #a6b2c4;
+  --rule: #243049; --rule-strong: #334462; --rule-input: #6b7a94;
+  --gold: #e0b95a; --gold-soft: #6b5523; --gold-wash: #2a2210;
+  --lapis: #8fb0ff; --lapis-hover: #b3caff; --lapis-wash: #17264a; --on-lapis: #0b1120;
+  --verdigris: #6ee7b7; --verdigris-wash: #0f2a22;
+  --saffron: #fd9f68; --saffron-wash: #33200f;
+  --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #0b1120;
+  --neutral-wash: #1c2638;
+  --inverse: #e2e8f0; --on-inverse: #0f172a; --inverse-gold: #8a6a1c;
+  --cover: #111a2e;
+  --leather: #16233d; --leather-deep: #0e182c; --leather-lift: #1f3150;
+  --scrim: rgba(2, 6, 23, 0.65);
   --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
   --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
   --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
