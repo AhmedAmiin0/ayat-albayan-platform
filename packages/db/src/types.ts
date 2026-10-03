@@ -2505,6 +2505,7 @@ export type Database = {
       is_my_child_report: { Args: { p_report: string }; Returns: boolean };
       is_my_child_report_pdf: { Args: { p_name: string }; Returns: boolean };
       is_my_lesson: { Args: { p_lesson: string }; Returns: boolean };
+      is_my_sales_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_report: { Args: { p_report: string }; Returns: boolean };
       is_my_report_pdf: { Args: { p_name: string }; Returns: boolean };
       merge_students: {
@@ -2512,6 +2513,15 @@ export type Database = {
         Returns: string;
       };
       my_assisted_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_sales_guardian_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_sales_lead_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_sales_phones: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          phone_e164: string;
+        }[];
+      };
+      my_sales_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
       my_thread_phones: {
@@ -2602,7 +2612,7 @@ export type Database = {
       template_category: 'utility' | 'marketing';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
-      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant';
+      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2781,7 +2791,7 @@ export const Constants = {
         'disabled',
         'missing',
       ],
-      user_role: ['admin', 'teacher', 'guardian', 'assistant'],
+      user_role: ['admin', 'teacher', 'guardian', 'assistant', 'sales'],
     },
   },
 } as const;

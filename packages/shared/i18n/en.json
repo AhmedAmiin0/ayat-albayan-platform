@@ -2121,7 +2121,8 @@
       "teacher": "Teacher",
       "admin": "Admin",
       "assistant": "Assistant",
-      "guest": "Guest"
+      "guest": "Guest",
+      "sales": "Sales"
     },
     "guest": {
       "title": "Join the lesson",
@@ -2181,5 +2182,37 @@
     "linkShown": "Student link",
     "linkWindow": "The link opens 15 minutes before the lesson",
     "joinMeeting": "Meeting link (Meet/Jitsi)"
+  },
+  "sales": {
+    "title": "Sales",
+    "nav": {
+      "chats": "Chats",
+      "subscriptions": "Subscriptions",
+      "schedule": "My meetings"
+    },
+    "subscriptions": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "emptyPending": "No pending subscriptions",
+      "emptyConfirmed": "No confirmed subscriptions",
+      "student": "Student",
+      "package": "Package",
+      "status": "Status"
+    },
+    "schedule": {
+      "title": "Meetings schedule",
+      "empty": "No meetings on this day",
+      "lead": "Lead"
+    },
+    "assign": {
+      "label": "Sales owner",
+      "none": "No owner",
+      "pick": "Pick an owner",
+      "saved": "Assigned",
+      "auto": "Auto-assign new leads",
+      "autoHint": "A new lead goes to the salesperson with the fewest leads",
+      "assignAll": "Assign leads without an owner",
+      "assignedN": "{n} leads assigned"
+    }
   }
 }
