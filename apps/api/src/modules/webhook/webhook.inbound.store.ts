@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LeadsService } from '../leads/leads.service';
 import type { InboundEvent } from './webhook.events';
-import { inboundRow, type RowInput } from './webhook.inbound';
+import { inboundRow, orderedAt, type RowInput } from './webhook.inbound';
 import { WebhookQueries, type Contact } from './webhook.queries';
 
 export interface LeadLink {
@@ -44,7 +44,9 @@ export class InboundStore {
    * message from a lead resets its follow-up stage (docs/12 §3.5).
    */
   async save(input: RowInput & { stage: number }): Promise<boolean> {
-    const stored = await this.queries.insertInbound(inboundRow(input));
+    const latest = await this.queries.latestInSecond(input.phone, input.m.at);
+    const m = { ...input.m, at: orderedAt(input.m.at, latest) };
+    const stored = await this.queries.insertInbound(inboundRow({ ...input, m }));
     if (stored && input.leadId && input.stage > 0) {
       await this.queries.updateLead(input.leadId, { follow_up_stage: 0 });
     }

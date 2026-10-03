@@ -1,6 +1,6 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Select } from '@/components/ui/select';
 import { errorCode } from '@/features/schedule/api';
@@ -19,6 +19,7 @@ export interface LeadStatusChangeProps {
 export function LeadStatusChange({ lead, onDone }: LeadStatusChangeProps) {
   const queryClient = useQueryClient();
   const [to, setTo] = useState<LeadStatus | ''>('');
+  const selectId = useId();
   const change = useMutation({
     mutationFn: changeLeadStatus,
     onSuccess: async () => {
@@ -38,9 +39,10 @@ export function LeadStatusChange({ lead, onDone }: LeadStatusChangeProps) {
         if (to) change.mutate({ id: lead.id, status: to });
       }}
     >
-      <label className="grid min-w-0 flex-1 gap-1.5 text-sm font-semibold">
-        <span>{t.leads.changeStatus}</span>
-        <Select value={to} onChange={(e) => setTo(LEAD_STATUSES.find((s) => s === e.target.value) ?? '')}>
+      {/* Label linked by id, not wrapping: a wrapped select puts its shown option into the name. */}
+      <div className="grid min-w-0 flex-1 gap-1.5 text-sm font-semibold">
+        <label htmlFor={selectId}>{t.leads.changeStatus}</label>
+        <Select id={selectId} value={to} onChange={(e) => setTo(LEAD_STATUSES.find((s) => s === e.target.value) ?? '')}>
           <option value="">{t.enums.leadStatus[lead.status]}</option>
           {LEAD_STATUSES.filter((s) => s !== lead.status).map((s) => (
             <option key={s} value={s}>
@@ -48,7 +50,7 @@ export function LeadStatusChange({ lead, onDone }: LeadStatusChangeProps) {
             </option>
           ))}
         </Select>
-      </label>
+      </div>
       <Button type="submit" variant="secondary" disabled={!to || change.isPending}>
         {change.isPending ? t.common.saving : t.inbox.applyStatus}
       </Button>
