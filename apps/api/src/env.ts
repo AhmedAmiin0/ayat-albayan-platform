@@ -53,6 +53,11 @@ const schema = z.object({
   LIVEKIT_URL: z.preprocess(blankIsUnset, z.url().optional()),
   LIVEKIT_API_KEY: optionalSecret,
   LIVEKIT_API_SECRET: optionalSecret,
+  /**
+   * The outbound sender's tick in ms (default 30 s). e2e sets ~1 s so a spec waits for one tick, not
+   * thirty seconds; production leaves it unset.
+   */
+  MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 });

@@ -75,6 +75,8 @@ export default defineConfig({
         FX_API_URL: 'http://127.0.0.1:9/',
         ...E2E_WA,
         MESSAGING_ENABLED: 'true',
+        // One-second sender tick: specs that wait for a send wait ~1 s, not up to 30 s.
+        MESSAGE_SENDER_POLL_MS: '1000',
       },
       reuseExistingServer: !process.env['CI'],
       // The API's own log (sender passes, job errors) in the CI output, next to the failing spec.
