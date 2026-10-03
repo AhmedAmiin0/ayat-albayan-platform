@@ -78,7 +78,7 @@ test.describe('booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06)', ()
     await openLead(admin, { name: `أم ${student}`, from: digits(1) });
     await admin.getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
     await toSlot(admin, student);
-    await expect(admin.getByText(ar.lessons.error.invoice_required)).toBeVisible();
+    await expect(admin.getByText(ar.booking.error.invoice_required)).toBeVisible();
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeDisabled();
     await upload(admin);
     await next(admin);

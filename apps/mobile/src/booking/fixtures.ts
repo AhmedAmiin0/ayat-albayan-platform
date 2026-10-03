@@ -42,6 +42,7 @@ export function slot(startsAt: string, busy = false): SlotView {
 export function booked(startsAt: string): BookingResult {
   return {
     rule_id: '33333333-3333-4333-8333-333333333333',
+    invoice_id: null,
     student_ids: ['44444444-4444-4444-8444-444444444444'],
     guardian_ids: ['55555555-5555-4555-8555-555555555555'],
     lessons: [

@@ -86,8 +86,9 @@ export function conflictsOf(error: unknown): Conflict[] | null {
   return Array.isArray(body.conflicts) ? (body.conflicts as Conflict[]) : [];
 }
 
-// Every lesson/booking domain code (lessons.error.*), with the drawer's own wording on top.
+// Every lesson/booking domain code (lessons.error.*, booking.error.*), with the drawer's own wording on top.
 const ERROR_TEXT: Record<string, string> = {
+  ...t.booking.error,
   ...t.lessons.error,
   invalid_transition: t.lessons.invalidTransition,
   slot_taken: t.lessons.slotTaken,

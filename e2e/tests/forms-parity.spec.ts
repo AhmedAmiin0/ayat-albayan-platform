@@ -52,6 +52,13 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     const family = await seedFamily('أم سارة', ['سارة']);
     const admin: Page = await asRole('admin');
     await admin.goto(`/admin/book?studentId=${family.studentIds[0] ?? ''}`);
+    // «نوع الحجز» (beyond the Google Form): trial / subscription / makeup, and the trial left the package list.
+    const kinds = admin.getByRole('group', { name: ar.booking.kind.label });
+    expect(await kinds.getByRole('radio').evaluateAll((els) => els.map((e) => e.closest('label')?.textContent?.trim()))).toEqual([
+      ar.booking.kind.trial,
+      ar.booking.kind.package,
+      ar.booking.kind.makeup,
+    ]);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
     // المعلم/المعلمه
@@ -59,13 +66,12 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // المده (30/45/60/90 دقيقة) and الباقة المطلوبة * (the form's five; DEVIATION: 20/28 stay in the DB only).
+    // المده (30/45/60/90 دقيقة) and الباقة المطلوبة * (the form's options; DEVIATION: 20/28 stay in the DB only, the trial moved to «نوع الحجز»).
     expect(await optionTexts(admin.getByLabel('المده'))).toEqual(['30 دقيقة', '45 دقيقة', '60 دقيقة', '90 دقيقة']);
     const pkg = admin.getByRole('group', { name: 'الباقة المطلوبة' });
     await expect(pkg.locator('legend')).toHaveText(/الباقة المطلوبة\s*\*/);
     // The first span of each option is its name; the price follows in the next one.
     expect(await pkg.locator('label').evaluateAll((els) => els.map((e) => e.querySelector('span')?.textContent?.trim()))).toEqual([
-      'حلقة تجريبية مجانية بس',
       '4 حلقات في الشهر',
       '8 حلقات',
       '12 حلقة',

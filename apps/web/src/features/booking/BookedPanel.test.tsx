@@ -13,6 +13,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 const INVOICE = {
   id: 'inv-1',
   rule_id: 'r-1',
+  invoice_id: null,
   kind: 'package',
   mime: 'image/png',
   size_bytes: 10,
@@ -28,6 +29,7 @@ vi.mock('@tanstack/react-router', () => ({
 
 const RESULT: BookingResult = {
   rule_id: 'r-1',
+  invoice_id: null,
   student_ids: ['s-new'],
   guardian_ids: ['g-1'],
   lessons: [{ id: 'l-1', starts_at: '2026-10-04T14:00:00.000Z', ends_at: '2026-10-04T14:45:00.000Z' }],

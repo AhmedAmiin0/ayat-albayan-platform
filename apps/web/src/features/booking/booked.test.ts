@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { chatPhone, mediaPhone, subscribeTarget } from './booked';
 import { emptyDraft } from './draft';
 
-const RESULT: BookingResult = { rule_id: 'r-1', student_ids: ['s-new'], guardian_ids: ['g-1'], lessons: [], message_ids: [] };
+const RESULT: BookingResult = { rule_id: 'r-1', invoice_id: null, student_ids: ['s-new'], guardian_ids: ['g-1'], lessons: [], message_ids: [] };
 const LEAD = {
   ...emptyDraft({ leadId: 'lead-1' }),
   newStudent: { name: ' جود ', guardianName: 'أم جود', guardianPhone: '0501234567' },

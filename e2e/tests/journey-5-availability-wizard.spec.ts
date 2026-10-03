@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
+import { uploadInvoice } from '../support/invoice';
 import { lessonsOf, queuedFor, resetAbrar, ruleOf, seedFamily } from '../support/schedule';
 
 // Journey 5 (docs/03 §5): the teacher sets availability → the booking wizard only offers those
@@ -54,6 +55,7 @@ test.describe('journey 5 — availability drives the wizard (R-SCH-06, R-SCH-08)
     // Review → «احجز»: one transaction writes the rule (idempotency key, no frozen link), the
     // Wednesday lessons, one queued confirmation and the audit row (migrations 110–112).
     await admin.getByRole('button', { name: ar.booking.next }).click();
+    await uploadInvoice(admin);
     await admin.getByRole('button', { name: ar.booking.submit }).click();
     await expect(admin.getByRole('heading', { name: ar.booking.booked })).toBeVisible();
     const studentId = family.studentIds[0] ?? '';

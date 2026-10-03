@@ -92,7 +92,7 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
     // A paid package needs its invoice (R-PAY-03): «التالي» waits, the upload goes to the bucket.
     expect(screen.getByRole('region', { name: t.booking.steps.invoice })).toBeTruthy();
     expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
-    expect(screen.getByText(t.lessons.error.invoice_required)).toBeTruthy();
+    expect(screen.getByText(t.booking.error.invoice_required)).toBeTruthy();
     await addInvoice(uploadToSignedUrl);
     expect(uploadToSignedUrl).toHaveBeenCalledWith(INVOICE_PATH, 'tok', expect.any(File), { contentType: 'image/png' });
     next();

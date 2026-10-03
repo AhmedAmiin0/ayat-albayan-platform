@@ -70,9 +70,9 @@ describe('InvoiceField (R-PAY-03)', () => {
   it('refuses a wrong type or a file over 10 MB before any upload, in Arabic', () => {
     renderField();
     choose(file('audio/mpeg'));
-    expect(screen.getByRole('alert').textContent).toBe(t.lessons.error.invoice_type);
+    expect(screen.getByRole('alert').textContent).toBe(t.booking.error.invoice_type);
     choose(file('application/pdf', 'big.pdf', 10 * 1024 * 1024 + 1));
-    expect(screen.getByRole('alert').textContent).toBe(t.lessons.error.invoice_too_large);
+    expect(screen.getByRole('alert').textContent).toBe(t.booking.error.invoice_too_large);
     expect(apiSend).not.toHaveBeenCalled();
     expect(invoiceProblem(null)).toBeNull();
     expect(invoiceProblem(file('image/heic'))).toBeNull();

@@ -17,8 +17,8 @@ describe('InvoiceField, English', () => {
       </QueryClientProvider>,
     );
     expect(screen.getByText('Invoice').textContent).toContain('*');
-    expect(screen.getByRole('button', { name: 'From the chat' })).toBeTruthy();
-    fireEvent.change(screen.getByLabelText('Upload the invoice'), { target: { files: [new File(['x'], 'a.mp3', { type: 'audio/mpeg' })] } });
-    expect(screen.getByRole('alert').textContent).toBe('Upload a photo or PDF only');
+    expect(screen.getByRole('button', { name: 'From chat' })).toBeTruthy();
+    fireEvent.change(screen.getByLabelText('Upload invoice'), { target: { files: [new File(['x'], 'a.mp3', { type: 'audio/mpeg' })] } });
+    expect(screen.getByRole('alert').textContent).toBe('Upload an image or PDF only');
   });
 });

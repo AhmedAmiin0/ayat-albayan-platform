@@ -1,15 +1,8 @@
-import type { BookingRequest, LessonView } from '@ab/shared';
+import { makeupEligible, type BookingKind, type BookingRequest, type InvoiceInput, type LessonView } from '@ab/shared';
 
-// Stand-ins for the booking-type / invoice contract (spec R-SCH-10, R-PAY-03, R-MSG-06) until
-// @ab/shared exports it (booking-extras.ts, LessonView.makeup, ThreadMediaItem). Local on purpose:
-// at integration, replace each with the shared one and delete this file's copy.
-
-export type BookingKind = 'trial' | 'package' | 'makeup';
-
-/** What POST /booking takes as «الفاتورة»: a file uploaded to the signed path, or a chat message. */
-export type InvoiceInput =
-  | { source: 'upload'; path: string }
-  | { source: 'whatsapp'; messageId: string };
+// The booking-type / invoice contract (R-SCH-10, R-PAY-03, R-MSG-06) lives in @ab/shared; the
+// types below are mobile-only (wizard drafts and the request shape it sends).
+export type { BookingKind, InvoiceInput, ThreadMediaItem } from '@ab/shared';
 
 /** The invoice the wizard holds: its input, plus what the preview needs. */
 export type InvoiceDraft = InvoiceInput & {
@@ -41,16 +34,6 @@ export interface MakeupRequest extends BookingExtras {
 
 export type BookingBody = (BookingRequest & BookingExtras) | MakeupRequest;
 
-/** GET /threads/:phone/media item: an inbound image or PDF, metadata only. */
-export interface ThreadMediaItem {
-  message_id: string;
-  created_at: string;
-  mime: string;
-  caption: string | null;
-  /** Past WhatsApp's ~30 days: the file can no longer be fetched. */
-  expired: boolean;
-}
-
 /** GET /threads/:phone/media/:messageId: the cached file, signed. */
 export interface MediaUrl {
   url: string;
@@ -58,20 +41,14 @@ export interface MediaUrl {
   expires_at: string;
 }
 
-/** LessonView.makeup: the lesson is a replacement for a missed one. Absent on an old API. */
-export type MakeupLessonView = LessonView & { makeup?: boolean };
-
-const DAY = 86_400_000;
-export const MAKEUP_WINDOW_DAYS = 60;
+/** LessonView.makeup: the lesson is a replacement for a missed one. */
+export type MakeupLessonView = LessonView;
 
 /**
- * The students a lesson can be made up for (spec §1): a no_show or excused lesson within 60 days,
- * not a trial and not itself a makeup, for each student still charged for it. Cancelled and
- * rescheduled lessons are not offered: their unit was never used («غيّر الميعاد» covers them).
+ * The students a lesson can be made up for: the shared `makeupEligible` rules (no_show or excused,
+ * within 60 days, still charged, not a trial, not itself a makeup) for each student.
  */
 export function makeupStudents(lesson: MakeupLessonView, now: Date): LessonView['students'] {
-  const recent = Date.parse(lesson.starts_at) >= now.getTime() - MAKEUP_WINDOW_DAYS * DAY;
-  const missed = lesson.status === 'no_show' || lesson.status === 'excused';
-  if (!recent || !missed || lesson.trial === true || lesson.makeup === true) return [];
-  return lesson.students.filter((s) => s.chargeable);
+  const facts = { status: lesson.status, trial: lesson.trial === true, makeup: lesson.makeup === true, startsAt: lesson.starts_at };
+  return lesson.students.filter((s) => makeupEligible({ ...facts, chargeable: s.chargeable }, now) === 'ok');
 }

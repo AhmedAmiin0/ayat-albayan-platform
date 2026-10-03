@@ -19,7 +19,7 @@ export function InvoiceStep({ draft, chatPhone, onChange }: InvoiceStepProps) {
         chatPhone={chatPhone}
         onChange={(invoice) => onChange({ invoice })}
       />
-      {!draft.invoice && <p className="text-xs text-ink-3">{t.lessons.error.invoice_required}</p>}
+      {!draft.invoice && <p className="text-xs text-ink-3">{t.booking.error.invoice_required}</p>}
     </div>
   );
 }

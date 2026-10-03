@@ -46,7 +46,7 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
   function pick(file: File | null) {
     if (!file) return;
     const bad = invoiceProblem(file);
-    setProblem(bad ? t.lessons.error[bad] : null);
+    setProblem(bad ? t.booking.error[bad] : null);
     if (bad) return;
     onChange(null);
     upload.mutate(file);

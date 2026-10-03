@@ -38,8 +38,8 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
   });
 
   it.each([
-    ['invoice_required', t.lessons.error.invoice_required],
-    ['media_expired', t.lessons.error.media_expired],
+    ['invoice_required', t.booking.error.invoice_required],
+    ['media_expired', t.booking.error.media_expired],
   ])('%s: says so in Arabic and sends the admin back to the invoice step', async (code, text) => {
     apiSend.mockRejectedValue(new ApiError(code === 'media_expired' ? 410 : 400, { code, message: code }));
     const onInvoice = renderReview();
@@ -53,7 +53,7 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'makeup_exists', message: 'makeup_exists' }));
     renderReview();
     fireEvent.click(screen.getByRole('button', { name: t.booking.submit }));
-    expect((await screen.findByRole('alert')).textContent).toBe(t.lessons.error.makeup_exists);
+    expect((await screen.findByRole('alert')).textContent).toBe(t.booking.error.makeup_exists);
     expect(screen.queryByRole('button', { name: t.booking.invoice.upload })).toBeNull();
   });
 });

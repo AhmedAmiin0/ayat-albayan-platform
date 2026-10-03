@@ -63,10 +63,12 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=/);
     await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
     await expect(admin.getByLabel(ar.guardians.name, { exact: true })).toHaveValue(guardian);
+    await expect(admin.getByRole('radio', { name: ar.booking.kind.trial })).toBeChecked();
     await admin.getByRole('button', { name: ar.booking.next }).click();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();
-    await expect(admin.getByRole('radio', { name: new RegExp(ar.enums.packageSize.trial) })).toBeChecked();
+    // A trial has no package to pick (the type is «نوع الحجز» on step 1): only the duration shows.
+    await expect(admin.getByRole('radio', { name: new RegExp(ar.enums.packageSize['8']) })).toHaveCount(0);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });

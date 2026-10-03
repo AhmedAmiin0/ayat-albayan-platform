@@ -2,6 +2,7 @@ import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { resetAbrar, seedFamily, setAvailability, withSql } from '../support/schedule';
 import { fillStable } from '../support/fill';
+import { uploadInvoice } from '../support/invoice';
 import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
@@ -61,6 +62,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
     await step.getByRole('region', { name: new RegExp(`^${SUNDAY} `) }).getByRole('button', { name: /16:00/ }).click();
     await admin.getByRole('button', { name: ar.booking.next }).click();
+    await uploadInvoice(admin);
     await admin.getByLabel(ar.booking.meetingLink).fill('https://meet.jit.si/ayat-e2e-subscribe');
     await admin.getByRole('button', { name: ar.booking.submit }).click();
     await expect(admin.getByRole('heading', { name: ar.booking.booked })).toBeVisible();

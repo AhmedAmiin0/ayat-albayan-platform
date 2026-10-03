@@ -17,8 +17,8 @@ test('the invoice step reads in English: required, hint, the buttons and the mis
     <InvoiceStep requestId="r" chatPhone="+966552147730" value={null} onChange={jest.fn()} onNext={onNext} />,
   );
   expect(screen.getByText('Invoice *')).toBeTruthy();
-  expect(screen.getByText('A photo or PDF of the payment proof. Needed before booking')).toBeTruthy();
-  for (const name of ['Photograph the invoice', 'From the chat']) {
+  expect(screen.getByText('A photo or PDF proving payment. Required before booking')).toBeTruthy();
+  for (const name of ['Photograph the invoice', 'From chat']) {
     expect(screen.getByRole('button', { name })).toBeTruthy();
   }
   await fireEvent.press(screen.getByRole('button', { name: 'Next' }));
