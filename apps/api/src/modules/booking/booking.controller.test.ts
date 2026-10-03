@@ -115,6 +115,14 @@ describe('BookingController (docs/10 §5 #12–14)', () => {
     });
   });
 
+  it('GET /booking/slots takes excludeLessonId (R-SCH-11) and rejects one that is not a uuid', async () => {
+    slots.slots.mockResolvedValue({ teacher_tz: 'Africa/Cairo', step_min: 15, slots: [] });
+    const base = `/booking/slots?teacherId=${IDS.teacher}&from=2026-10-04T00:00:00Z&to=2026-10-05T00:00:00Z&durationMin=45&stepMin=15`;
+    expect((await call({ url: `${base}&excludeLessonId=${IDS.s1}` })).statusCode).toBe(200);
+    expect(slots.slots).toHaveBeenCalledWith(expect.objectContaining({ stepMin: 15, excludeLessonId: IDS.s1 }));
+    expect((await call({ url: `${base}&excludeLessonId=nope` })).statusCode).toBe(400);
+  });
+
   it('GET /booking/slots rejects a duration that is not a lesson length or to ≤ from', async () => {
     const base = `/booking/slots?teacherId=${IDS.teacher}&from=2026-10-04T00:00:00Z`;
     expect((await call({ url: `${base}&to=2026-10-05T00:00:00Z&durationMin=50` })).statusCode).toBe(400);

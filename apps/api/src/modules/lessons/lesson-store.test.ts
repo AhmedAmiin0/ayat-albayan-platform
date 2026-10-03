@@ -37,4 +37,30 @@ describe('LessonStore.commit — the audit row rides in the same transaction (R-
     await expect(store.commit(commit)).rejects.toThrow('db down');
     expect(listener).toHaveBeenCalledTimes(1);
   });
+
+  it('retime (R-SCH-11): the audit rides in the payload; the balance alerts hear about the lesson; not on a failure', async () => {
+    const events = new LessonEvents();
+    const listener = vi.fn().mockResolvedValue(undefined);
+    events.onChanged(listener);
+    const writer = { retime: vi.fn().mockResolvedValue(undefined) };
+    const store = new LessonStore({} as LessonsQueries, writer as unknown as LessonWriter, events);
+    const change = {
+      actor: 'u1',
+      lesson_id: 'L1',
+      from: { status: 'scheduled' as const, starts_at: 'a', ends_at: 'b' },
+      to: { starts_at: 'c', ends_at: 'd' },
+      reason: null,
+      override_reason: null,
+      retime_open: true,
+      refresh_pdf: false,
+      messages: [],
+      audit: { entity: 'lessons', entity_id: 'L1', action: 'time_edit' },
+    };
+    await store.retime(change);
+    expect(writer.retime).toHaveBeenCalledWith(change);
+    expect(listener).toHaveBeenCalledWith(['L1']);
+    writer.retime.mockRejectedValueOnce(new Error('db down'));
+    await expect(store.retime(change)).rejects.toThrow('db down');
+    expect(listener).toHaveBeenCalledTimes(1);
+  });
 });

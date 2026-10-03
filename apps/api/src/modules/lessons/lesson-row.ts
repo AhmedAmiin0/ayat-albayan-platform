@@ -2,7 +2,7 @@ import type { Json } from '@ab/db';
 import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
 
 const LESSON_COLUMNS =
-  'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, rescheduled_from_id, makeup_of_id, conflicts' as const;
+  'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, rescheduled_from_id, makeup_of_id, conflicts, time_edited_at, time_edit_reason, time_edit_was' as const;
 const LESSON_EMBEDS =
   'teacher:teachers(id, display_name_ar, display_name_en, tz), rule:schedule_rules!lessons_rule_id_fkey(byday, package), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at), original:makeup_of_id(id, starts_at), makeups:lessons!makeup_of_id(id, starts_at, status, makeup_student_id)' as const;
 
@@ -29,6 +29,10 @@ export type LessonRow = {
   makeups?: { id: string; starts_at: string; status: LessonStatus; makeup_student_id: string | null }[];
   /** Clashes stored when the daily job / extend generated it (Conflict[] as jsonb), or null. */
   conflicts: Json | null;
+  /** The last in-place time edit (R-SCH-11, migration 174) and the time it replaced; optional in test fakes. */
+  time_edited_at?: string | null;
+  time_edit_reason?: string | null;
+  time_edit_was?: Json | null;
   teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz: string } | null;
   /**
    * The weekly rule's days (a series reschedule keeps them, R-SCH-07) and package (R-SCH-09

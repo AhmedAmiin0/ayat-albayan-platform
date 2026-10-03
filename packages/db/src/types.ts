@@ -927,6 +927,9 @@ export type Database = {
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
           teacher_id: string;
+          time_edit_reason: string | null;
+          time_edit_was: Json | null;
+          time_edited_at: string | null;
           updated_at: string;
         };
         Insert: {
@@ -949,6 +952,9 @@ export type Database = {
           starts_at: string;
           status?: Database['public']['Enums']['lesson_status'];
           teacher_id: string;
+          time_edit_reason?: string | null;
+          time_edit_was?: Json | null;
+          time_edited_at?: string | null;
           updated_at?: string;
         };
         Update: {
@@ -971,6 +977,9 @@ export type Database = {
           starts_at?: string;
           status?: Database['public']['Enums']['lesson_status'];
           teacher_id?: string;
+          time_edit_reason?: string | null;
+          time_edit_was?: Json | null;
+          time_edited_at?: string | null;
           updated_at?: string;
         };
         Relationships: [
@@ -2175,6 +2184,7 @@ export type Database = {
       booking_result: { Args: { p_rule: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
+      edit_lesson_time: { Args: { p: Json }; Returns: undefined };
       generate_rule_lessons: {
         Args: { p_actor: string; p_lessons: Json; p_rule: string };
         Returns: {
@@ -2197,6 +2207,9 @@ export type Database = {
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
           teacher_id: string;
+          time_edit_reason: string | null;
+          time_edit_was: Json | null;
+          time_edited_at: string | null;
           updated_at: string;
         }[];
         SetofOptions: {

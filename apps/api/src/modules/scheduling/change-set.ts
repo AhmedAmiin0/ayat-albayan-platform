@@ -60,6 +60,23 @@ export type QueuedMessage = {
   dedup_key: string;
 };
 
+/** Payload of public.edit_lesson_time (migration 174, R-SCH-11): one lesson's time, in place. */
+export type TimeEditChange = {
+  actor: string;
+  lesson_id: string;
+  /** Compare-and-set: the row must still look like this, else 409 stale_time. */
+  from: { status: LessonStatus; starts_at: string; ends_at: string };
+  to: { starts_at: string; ends_at: string };
+  reason: string | null;
+  override_reason: string | null;
+  /** An open lesson with a new start: queued old-time messages expire, reminder keys are freed. */
+  retime_open: boolean;
+  /** A held lesson with a new start or length: the report PDF is re-rendered. */
+  refresh_pdf: boolean;
+  messages: QueuedMessage[];
+  audit: AuditRow;
+};
+
 export type ChangeSet = {
   /** auth.users id stored as created_by; null for jobs / guardian replies. */
   actor: string | null;

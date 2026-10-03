@@ -1,6 +1,6 @@
 // Test fixtures for the lessons tests (not shipped; excluded from the build by *.fakes.ts).
 import { vi } from 'vitest';
-import type { ChangeSet } from '../scheduling/change-set';
+import type { ChangeSet, TimeEditChange } from '../scheduling/change-set';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { LessonWriter } from '../scheduling/lesson-writer';
 import { STUDENT_ID, TEACHER_ID } from '../scheduling/scheduling.fakes';
@@ -68,6 +68,10 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
     apply: vi.fn(async (change: ChangeSet) => {
       const a = change.audit;
       if (a) record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
+    }),
+    retime: vi.fn(async (change: TimeEditChange) => {
+      const a = change.audit;
+      record({ actorId: change.actor, entity: a.entity, entityId: a.entity_id, action: a.action, before: a.before, after: a.after });
     }),
   };
   const store = new LessonStore(queries as unknown as LessonsQueries, writer as unknown as LessonWriter, new LessonEvents());
