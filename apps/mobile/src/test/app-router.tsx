@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { act, renderRouter } from 'expo-router/testing-library';
 import { queryClient } from '@/lib/query-client';
-import { currentBackend, type FakeBackend, useBackend } from './fake-backend';
+import { currentBackend, type FakeBackend, setBackend } from './fake-backend';
 import { resetNative } from './native-mocks';
 import { routes } from './app-routes';
 
@@ -12,14 +12,14 @@ import { routes } from './app-routes';
 // its jest.mock calls must run before any app module loads.
 
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
-jest.mock('expo-device', () => require('./native-mocks').deviceMock());
-jest.mock('expo-notifications', () => require('./native-mocks').notificationsMock());
-jest.mock('expo-image-picker', () => require('./native-mocks').imagePickerMock());
+jest.mock('expo-device', () => jest.requireActual('./native-mocks').deviceMock());
+jest.mock('expo-notifications', () => jest.requireActual('./native-mocks').notificationsMock());
+jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imagePickerMock());
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
-  apiFetch: (url: string) => require('./fake-backend').currentBackend().fetch(url),
+  apiFetch: (url: string) => jest.requireActual('./fake-backend').currentBackend().fetch(url),
   apiSend: (method: string, url: string, body?: unknown) =>
-    require('./fake-backend').currentBackend().send(method, url, body),
+    jest.requireActual('./fake-backend').currentBackend().send(method, url, body),
 }));
 jest.mock('@/lib/supabase', () => ({
   supabase: {
@@ -33,7 +33,7 @@ jest.mock('@/lib/supabase', () => ({
     storage: {
       from: (bucket: string) => ({
         uploadToSignedUrl: async (path: string) => {
-          require('./fake-backend').currentBackend().uploads.push({ bucket, path });
+          jest.requireActual('./fake-backend').currentBackend().uploads.push({ bucket, path });
           return { data: { path }, error: null };
         },
       }),
@@ -74,7 +74,7 @@ export async function resetApp(): Promise<void> {
 }
 
 export async function renderApp({ url, backend, gate = 'admin', storage = {} }: AppOptions) {
-  useBackend(backend);
+  setBackend(backend);
   mockGate.initial = gate;
   await AsyncStorage.multiSet(Object.entries(storage));
   const pending = renderRouter(routes, { initialUrl: url });

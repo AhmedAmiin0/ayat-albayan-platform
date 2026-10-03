@@ -83,7 +83,7 @@ export class FakeBackend {
 }
 
 let active = new FakeBackend();
-export const useBackend = (backend: FakeBackend): void => {
+export const setBackend = (backend: FakeBackend): void => {
   active = backend;
 };
 export const currentBackend = (): FakeBackend => active;

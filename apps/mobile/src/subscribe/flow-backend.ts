@@ -2,7 +2,6 @@ import type { ThreadPeople, ThreadStudentView } from '@ab/shared';
 import { inboxBackend, GUARDIAN_PHONE } from '@/inbox/flow-backend';
 import { child, family, leadOnly, sub, usedUp } from '@/inbox/subscription/people-fixtures';
 import { detail, PHONE } from '@/inbox/thread-fixtures';
-import { FakeBackend } from '@/test/fake-backend';
 import { booked, SUN_17 } from '@/booking/fixtures';
 import { fakeBookingApi } from '@/booking/test-utils';
 import { profile, quote, saved } from './fixtures';
@@ -15,7 +14,7 @@ export function subscribeBackend({ hold = false } = {}) {
   const { backend, rows, log } = inboxBackend();
   const state = {
     child: child({ subscription: usedUp }) as ThreadStudentView,
-    release: () => undefined as void,
+    release: (): void => undefined,
   };
   const at = rows.findIndex((r) => r.phone_e164 === GUARDIAN_PHONE);
   const guardianRow = rows[at];
