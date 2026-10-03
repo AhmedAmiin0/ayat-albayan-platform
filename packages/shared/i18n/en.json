@@ -2070,6 +2070,13 @@
       "share_failed": "Could not start screen sharing",
       "connect_failed": "Could not connect to the lesson, try again",
       "unknown": "Something went wrong, try again"
+    },
+    "admin": {
+      "nav": "Online classrooms",
+      "title": "Online classrooms",
+      "empty": "No lessons on this day",
+      "teacher": "Teacher",
+      "students": "Students"
     }
   }
 }

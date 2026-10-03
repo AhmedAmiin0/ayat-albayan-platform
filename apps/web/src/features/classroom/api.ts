@@ -1,4 +1,4 @@
-import type { AssistantLessonView, AssistantView, JoinLinkResult, RoomJoinResult } from '@ab/shared';
+import type { AssistantLessonView, AssistantView, JoinLinkResult, LessonView, RoomJoinResult } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { env } from '@/lib/env';
@@ -64,4 +64,16 @@ export const assistantLessonsQuery = (day: { from: string; to: string }) =>
   queryOptions({
     queryKey: [...CLASSROOM_KEY, 'mine', day.from],
     queryFn: () => apiFetch<AssistantLessonView[]>(`/assistants/me/lessons?${new URLSearchParams(day)}`),
+  });
+
+/** The browser-local day `offset` days from `now`, as ISO instants. */
+export function dayAround(now: Date, offset: number): { from: string; to: string } {
+  return localDay(new Date(now.getFullYear(), now.getMonth(), now.getDate() + offset));
+}
+
+/** GET /lessons?from&to (admin): every teacher's lessons of one local day. */
+export const adminDayQuery = (day: { from: string; to: string }) =>
+  queryOptions({
+    queryKey: ['lessons', 'classrooms', day.from],
+    queryFn: () => apiFetch<LessonView[]>(`/lessons?${new URLSearchParams(day)}`),
   });

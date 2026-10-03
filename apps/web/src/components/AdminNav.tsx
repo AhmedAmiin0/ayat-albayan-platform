@@ -15,6 +15,7 @@ const GROUPS = [
     { key: 'students', to: '/admin/students', label: t.nav.students, icon: 'users' },
     { key: 'teachers', to: '/admin/teachers', label: t.nav.teachers, icon: 'teacher' },
     { key: 'schedule', to: '/admin/schedule', label: t.schedule.nav, icon: 'calendar' },
+    { key: 'classrooms', to: '/admin/classrooms', label: t.classroom.admin.nav, icon: 'chat' },
     { key: 'feedback', to: '/admin/feedback', label: t.nav.feedback, icon: 'star' },
   ],
   [
