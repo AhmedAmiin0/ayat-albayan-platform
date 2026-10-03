@@ -28,14 +28,14 @@ describe('BalanceCard (S6: the student package on the profile)', () => {
 
   it('the packageProgress line, used of total, paid of price, the projected end', async () => {
     renderCard();
-    expect(await screen.findByText('فاضل حلقتين')).toBeTruthy();
+    expect(await screen.findByText('بقيت حلقتان')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/students/stu-1/balance');
     expect(screen.getByText(new RegExp(t.subscriptions.usedOf.replace('{used}', '2').replace('{total}', '4')))).toBeTruthy();
     expect(screen.getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
-    expect(screen.getByText(/متوقع تخلص يوم/)).toBeTruthy();
+    expect(screen.getByText(/يُتوقع أن تنتهي يوم/)).toBeTruthy();
   });
 
-  it('nothing left on an unpaid package → «الباقة مش مدفوعة»', async () => {
+  it('nothing left on an unpaid package → «الباقة غير مدفوعة»', async () => {
     const used = { ...WEEKLY, balance: { ...WEEKLY.balance, lessons_used: 4, remaining: 0 } };
     renderCard(balanceOf([used]));
     expect(await screen.findByText(t.subscriptions.unpaidFlag)).toBeTruthy();

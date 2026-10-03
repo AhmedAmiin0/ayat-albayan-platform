@@ -22,7 +22,7 @@ describe('ConflictNotice inside an edit (R-SCH-11)', () => {
     expect(container.innerHTML).not.toMatch(/sm:grid-cols/);
   });
 
-  it('«اختار ميعاد تاني» is the strong button, the override the quiet one', () => {
+  it('«اختر موعدًا آخر» is the strong button, the override the quiet one', () => {
     render(<ConflictNotice conflicts={[clash]} labels={labels} onChangeSlot={vi.fn()} onOverride={vi.fn()} />);
     const strong = screen.getByRole('button', { name: t.booking.changeSlot }).className;
     const quiet = screen.getByRole('button', { name: labels.override }).className;

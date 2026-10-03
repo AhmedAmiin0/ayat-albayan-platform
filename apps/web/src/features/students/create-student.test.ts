@@ -13,7 +13,7 @@ describe('create student helpers (R-STU-02, R-STU-03)', () => {
     expect(phoneError('')).toBe(t.common.phoneErrors.empty);
   });
 
-  it('requiredError: blank or spaces-only is «الخانة دي مطلوبة»', () => {
+  it('requiredError: blank or spaces-only is «هذه الخانة مطلوبة»', () => {
     expect(requiredError('')).toBe(t.common.required);
     expect(requiredError('   ')).toBe(t.common.required);
     expect(requiredError('سهيلة')).toBeUndefined();
@@ -32,7 +32,7 @@ describe('create student helpers (R-STU-02, R-STU-03)', () => {
     });
   });
 
-  it('toCreateBody: the form’s «سن الطالب», «النوع» and «عرفت عننا منين؟» (research-forms 1, 3)', () => {
+  it('toCreateBody: the form’s «عمر الطالب», «النوع» and «كيف عرفت عنا؟» (research-forms 1, 3)', () => {
     const v = { ...EMPTY_STUDENT, name: 'جود', age: ' 9 ', gender: 'female', source: 'referral' } as const;
     expect(toCreateBody(v, false)).toMatchObject({ age: 9, gender: 'female', guardian: { source: 'referral' } });
   });
@@ -42,7 +42,7 @@ describe('create student helpers (R-STU-02, R-STU-03)', () => {
     expect(ageError('12')).toBeUndefined();
     expect(parseAge('12')).toBe(12);
     for (const bad of ['2', '100', '7.5', 'سبعة']) expect(ageError(bad)).toBe(t.students.ageInvalid);
-    expect(t.students.ageInvalid).toBe('اكتب السن بالأرقام (من 3 لـ 99)');
+    expect(t.students.ageInvalid).toBe('اكتب العمر بالأرقام (من 3 إلى 99)');
   });
 
   it('duplicateCandidates: only a 409 duplicate_student body yields candidates', () => {

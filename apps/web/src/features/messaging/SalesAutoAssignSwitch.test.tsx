@@ -25,8 +25,8 @@ afterEach(() => {
   apiSend.mockReset();
 });
 
-describe('«التعيين التلقائي للعملاء الجداد» (settings.sales_auto_assign)', () => {
-  it('sits with the other switches, OFF reads «موقوف», turning it on PATCHes only salesAutoAssign', async () => {
+describe('«التعيين التلقائي للعملاء الجدد» (settings.sales_auto_assign)', () => {
+  it('sits with the other switches, OFF reads «متوقف», turning it on PATCHes only salesAutoAssign', async () => {
     renderPage(false);
     expect(await screen.findByText(s.auto)).toBeTruthy();
     expect(screen.getByText(s.autoHint)).toBeTruthy();

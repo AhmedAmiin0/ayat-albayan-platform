@@ -59,7 +59,7 @@ test('phoneProblem: the normalizePhone reason, null for a storable number', () =
   expect(phoneProblem('٠٥٥٢١٤٧٧٣٠')).toBeNull();
 });
 
-test('«سن الطالب»: optional, else a whole number from 3 to 99 (the form’s check)', () => {
+test('«عمر الطالب»: optional, else a whole number from 3 to 99 (the form’s check)', () => {
   expect(['', ' ', '3', '9', '99'].every(ageValid)).toBe(true);
   expect(['2', '100', '9.5', 'تسعة', '-4'].some(ageValid)).toBe(false);
 });

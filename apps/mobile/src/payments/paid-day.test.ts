@@ -14,7 +14,7 @@ test('a picked day is never after now', () => {
   for (const days of [0, 1, 2, 30]) expect(paidAtFor(now, days).getTime()).toBeLessThanOrEqual(now.getTime());
 });
 
-test('labels: النهارده and امبارح first, then the date alone', () => {
+test('labels: اليوم and أمس first, then the date alone', () => {
   expect(paidDayLabel(now, 0)).toBe(`${t.mobile.today} · الخميس 1 أكتوبر 2026`);
   expect(paidDayLabel(now, 1)).toBe(`${t.payments.mobile.yesterday} · الأربعاء 30 سبتمبر 2026`);
   expect(paidDayLabel(now, 2)).toBe('الثلاثاء 29 سبتمبر 2026');

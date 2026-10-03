@@ -22,8 +22,8 @@ function renderLead(status: 'converted' | 'lost') {
 
 afterEach(() => apiFetch.mockReset());
 
-describe('a converted lead with no family on this number (design review: «مشترك» next to «مش مشترك»)', () => {
-  it('reads «اتحول لطالب» (neutral), no «مشترك» / «مش مشترك», and can still subscribe; no trial', async () => {
+describe('a converted lead with no family on this number (design review: «مشترك» next to «غير مشترك»)', () => {
+  it('reads «تحوّل إلى طالب» (neutral), no «مشترك» / «غير مشترك», and can still subscribe; no trial', async () => {
     renderLead('converted');
     const chip = await screen.findByText(t.inbox.convertedLead);
     expect(chip.closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
@@ -33,7 +33,7 @@ describe('a converted lead with no family on this number (design review: «مش�
     expect(screen.queryByRole('link', { name: t.booking.trialTitle })).toBeNull();
   });
 
-  it('a lost lead: «مش مشترك», and neither the trial nor «اشترك» (same as mobile)', async () => {
+  it('a lost lead: «غير مشترك», and neither the trial nor «اشترك» (same as mobile)', async () => {
     renderLead('lost');
     expect(await screen.findByText(t.inbox.subscription.badge.none)).toBeTruthy();
     await screen.findByRole('button', { name: new RegExp(t.leads.reclassifyAsApplicant) });

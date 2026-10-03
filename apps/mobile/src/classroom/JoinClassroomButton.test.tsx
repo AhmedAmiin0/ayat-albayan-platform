@@ -25,14 +25,14 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('before the window it is off with «بتفتح الساعة 15:45»', async () => {
+test('before the window it is off with «تُفتح الساعة 15:45»', async () => {
   at('2026-10-01T12:00:00.000Z');
   await render(<JoinClassroomButton lesson={row} />);
   expect(off()).toBe(true);
   expect(screen.getByText(t.classroom.opensAt.replace('{time}', '15:45'))).toBeTruthy();
 });
 
-test('inside the window it is on; after it, off with «الحلقة خلصت»', async () => {
+test('inside the window it is on; after it, off with «انتهت الحلقة»', async () => {
   at('2026-10-01T12:45:00.000Z');
   await render(<JoinClassroomButton lesson={row} />);
   expect(off()).toBe(false);

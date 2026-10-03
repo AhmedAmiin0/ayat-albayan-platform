@@ -22,7 +22,7 @@ function renderCard(l = MONDAY, onDone = vi.fn()) {
   return onDone;
 }
 
-describe('TeacherLessonCard — «اقترح ميعاد تاني» (R-SCH-08)', () => {
+describe('TeacherLessonCard — «اقترح موعدًا آخر» (R-SCH-08)', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-03T09:00:00.000Z'));
@@ -59,7 +59,7 @@ describe('TeacherLessonCard — «اقترح ميعاد تاني» (R-SCH-08)', 
   it('a pending proposal shows instead of the button; closed lessons offer none', () => {
     const pending = { id: 'p1', proposed_starts_at: '2026-10-06T15:30:00.000Z', note: null, created_at: '2026-10-03T08:00:00.000Z' };
     renderCard(lesson({ ...MONDAY, pending_proposal: pending }));
-    expect(screen.getByText(/اقترحت .*18:30، مستني رد الإدارة/)).toBeTruthy();
+    expect(screen.getByText(/اقترحت .*18:30، بانتظار رد الإدارة/)).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.teacherDash.proposeReschedule })).toBeNull();
   });
 

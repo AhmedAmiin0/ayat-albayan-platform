@@ -83,7 +83,7 @@ test.describe('cancel a lesson (R-SCH-07)', () => {
     expect((await balanceOf(seed.subscriptionId))?.remaining).toBe(2); // early cancel: free
   });
 
-  test('«الحلقة دي وكل اللي بعدها»: later open lessons are cancelled and the rule ends the day before', async ({ asRole }) => {
+  test('«هذه الحلقة وكل ما بعدها»: later open lessons are cancelled and the rule ends the day before', async ({ asRole }) => {
     const teacherId = await resetAbrar();
     const name = `ريتال${tag()}`;
     const seed = await seedPaidStudent({ teacherId, guardian: `أم ${name}`, student: name });

@@ -40,7 +40,7 @@ describe('StudentsPage rows (docs/07 §6 Data table)', () => {
     expect(screen.getByText(t.enums.studentStatus.trial).closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
   });
 
-  it('no teacher: «محتاج معلم/ة» in the hamish column and folded under the name', async () => {
+  it('no teacher: «يحتاج معلم/ة» in the hamish column and folded under the name', async () => {
     renderPage({ items: [ROW], total: 1 });
     await screen.findByText('سهيلة');
     expect(screen.getByRole('columnheader', { name: t.students.hamish })).toBeTruthy();

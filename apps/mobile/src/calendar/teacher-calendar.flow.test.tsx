@@ -56,7 +56,7 @@ test('«الجدول»: every teacher on the day with Riyadh time and the Cairo 
   expect(screen.getByText('16:00')).toBeTruthy();
   expect(screen.getAllByText(/القاهرة/).length).toBeGreaterThan(0);
 
-  await press(/^غيّر الميعاد — يوسف أحمد/);
+  await press(/^غيّر الموعد — يوسف أحمد/);
   await press('الأحد 4 أكتوبر', 'radio');
   await press('17:00', 'radio');
   const submit = screen.getAllByRole('button', { name: t.lessons.rescheduleSubmit }).at(-1);

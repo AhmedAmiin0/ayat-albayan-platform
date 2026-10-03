@@ -98,7 +98,7 @@ test('pull to refresh asks the API again', async () => {
   await waitFor(() => expect(threadCalls()).toHaveLength(2));
 });
 
-test('«رسايل أقدم» pages back from the oldest loaded message', async () => {
+test('«رسائل أقدم» pages back from the oldest loaded message', async () => {
   const older = message({ id: 'm0', direction: 'inbound', body: 'رسالة قديمة', created_at: '2026-09-29T10:00:00Z' });
   const pages = [detail([inbound, delivered], { has_more: true }), detail([older])];
   mockApiFetch.mockImplementation(async (path: string) =>

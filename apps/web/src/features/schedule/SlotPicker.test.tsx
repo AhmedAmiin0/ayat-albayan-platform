@@ -50,7 +50,7 @@ describe('SlotPicker (R-SCH-06, R-SCH-01)', () => {
     expect(screen.getByText(t.booking.slotLegend.replace('{city}', t.tz['America/New_York']))).toBeTruthy();
   });
 
-  it('marks a slot with conflicts «مش فاضي» but keeps it pickable', async () => {
+  it('marks a slot with conflicts «غير متاح» but keeps it pickable', async () => {
     const onPick = renderPicker();
     const busy = await screen.findByRole('button', { name: new RegExp(t.booking.slotBusy) });
     expect(busy.textContent).toContain('18:00');

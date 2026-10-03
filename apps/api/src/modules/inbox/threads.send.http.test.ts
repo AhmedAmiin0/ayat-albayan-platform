@@ -69,14 +69,14 @@ describe('H3/H4 sends (docs/12 §4, R-LEAD-02, R-MSG-01)', () => {
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 
-  it('H4 refuses lesson_feedback_request: its signed link only comes from «ابعت طلب الرأي»', async () => {
+  it('H4 refuses lesson_feedback_request: its signed link only comes from «أرسل طلب الرأي»', async () => {
     t.templates.get.mockResolvedValue({ ...templateRow(), key: 'lesson_feedback_request', status: 'approved' });
     const res = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'lesson_feedback_request', params: { ...PARAMS, button: 'forged' }, clientRequestId: REQ } });
     expect([res.statusCode, res.json().code]).toEqual([400, 'use_feedback_request']);
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 
-  it('H4 refuses lesson_join_link: its one-lesson token only comes from «ابعت لينك الحلقة»', async () => {
+  it('H4 refuses lesson_join_link: its one-lesson token only comes from «أرسل رابط الحلقة»', async () => {
     t.templates.get.mockResolvedValue({ ...templateRow(), key: 'lesson_join_link', status: 'approved' });
     const res = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'lesson_join_link', params: { ...PARAMS, button: 'forged' }, clientRequestId: REQ } });
     expect([res.statusCode, res.json().code]).toEqual([400, 'use_join_link']);

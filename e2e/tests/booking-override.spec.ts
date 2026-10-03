@@ -36,7 +36,7 @@ test.describe('booking override with a reason (R-SCH-04)', () => {
 
     // The clash is listed in Arabic; the override needs its reason first.
     await expect(admin.getByText(ar.booking.conflictTitle)).toBeVisible();
-    await expect(admin.getByText(/المعلم\/ة مشغول\/ة بحلقة تانية في الميعاد ده/)).toBeVisible();
+    await expect(admin.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/)).toBeVisible();
     await admin.getByRole('button', { name: ar.booking.override }).click();
     await expect(admin.getByText(ar.common.required)).toBeVisible();
     expect(await ruleOf(studentId)).toEqual([]);

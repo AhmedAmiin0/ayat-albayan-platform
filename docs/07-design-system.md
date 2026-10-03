@@ -5,6 +5,8 @@ Implementation spec for `apps/web` (Tailwind v4 + shadcn/ui + TanStack Table), `
 **Brand alignment (2026-10-02).** The layout system below (jadwal frame, cartouche, nuqta glyphs, fihris, saffron = «دورك») is unchanged. Its colours and logo are now the academy's own brand: the palette `T` of the Apps Script «Brand» library (the one that already styles the PDF reports, emails and Sheets) and the real logo, the open Mushaf on a green rahle inside a gold eight-point star (`docs/design/brand/`, also on ayatalbayan.com). The source of truth for every colour value is `packages/shared/src/theme.ts`; `apps/web/src/styles/tokens.css` carries the same hex and a test diffs the two.
 `docs/design/ink-and-gold.html` and `docs/design/logo*.svg` predate this: their layout still applies, but their lapis/navy palette and rosette mark are superseded.
 
+**Copy language (owner, 2026-10-03).** UI copy is clear Modern Standard Arabic, not Egyptian dialect (CLAUDE.md rule 10). Arabic examples quoted in this document may still show the earlier Egyptian wording; `packages/shared/i18n/ar.json` is the source of truth for every string.
+
 ---
 
 ## 1. Concept
@@ -581,11 +583,11 @@ Arabic agreement rules for `remainingLabel`:
 
 | Remaining | Label |
 |---|---|
-| 0 | «الباقة خلصت» (= `enums.subscriptionStatus.expired`) |
-| 1 | «فاضل حلقة» |
-| 2 | «فاضل حلقتين» |
-| 3–10 | «فاضل N حلقات» |
-| 11 or more | «فاضل N حلقة» |
+| 0 | «انتهت الباقة» (= `enums.subscriptionStatus.expired`) |
+| 1 | «بقيت حلقة واحدة» |
+| 2 | «بقيت حلقتان» |
+| 3–10 | «بقيت N حلقات» |
+| 11 or more | «بقيت N حلقة» |
 
 `tone` is `act` when `remaining <= 2` (the R-SUB-02 trigger). The function is used in the students hamish, the mobile card, the guardian portal and the PDF footer. It replaces the "constellation" sparkline idea.
 

@@ -29,7 +29,7 @@ function open() {
 describe('TeacherStudents «الطلاب» (teacher)', () => {
   afterEach(() => apiFetch.mockReset());
 
-  it('opens on «مشتركين» with only subscribed students, each name linking to the report history', async () => {
+  it('opens on «مشتركون» with only subscribed students, each name linking to the report history', async () => {
     open();
     expect(await screen.findByText('سهيلة')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=subscribed');

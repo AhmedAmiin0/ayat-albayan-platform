@@ -31,7 +31,7 @@ describe('the free gap chip (booking from the calendar)', () => {
     apiSend.mockReset();
   });
 
-  it('a gap with a start shows «حجز من فجوة فاضية · <when>» above the steps, also before a student is picked', async () => {
+  it('a gap with a start shows «حجز من فترة متاحة · <when>» above the steps, also before a student is picked', async () => {
     renderBooking({ teacherId: ABRAR.id, startsAt: SLOT });
     expect(await screen.findByText(new RegExp(chipText()))).toBeTruthy();
     expect(screen.getByRole('region', { name: t.booking.steps.students })).toBeTruthy();

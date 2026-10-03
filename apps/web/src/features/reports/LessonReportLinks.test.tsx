@@ -53,14 +53,14 @@ describe('PendingReports (R11, R-TCH-03)', () => {
     ...over,
   });
 
-  it('lists the missing reports with a count; a draft reads «كمّل التقرير»', async () => {
+  it('lists the missing reports with a count; a draft reads «أكمل التقرير»', async () => {
     apiFetch.mockResolvedValue([row({}), row({ lesson_id: 'l-2', report_id: 'r-2', student: { id: 's-2', code: 'AB-0184', name: 'آية' } })]);
     render(
       <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
         <PendingReports tz="Africa/Cairo" />
       </QueryClientProvider>,
     );
-    expect(await screen.findByText('تقريرين مستنيين')).toBeTruthy();
+    expect(await screen.findByText('تقريران معلّقان')).toBeTruthy();
     expect(screen.getByRole('link', { name: t.reports.open }).getAttribute('href')).toBe('/teacher/report/l-1');
     expect(screen.getByRole('link', { name: t.reports.resume }).getAttribute('href')).toBe('/teacher/report/l-2');
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/pending-reports');

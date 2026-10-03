@@ -22,7 +22,7 @@ beforeEach(() => {
   });
 });
 
-test('my Riyadh week from /teachers/me/lessons, my availability, and no «غيّر الميعاد»', async () => {
+test('my Riyadh week from /teachers/me/lessons, my availability, and no «غيّر الموعد»', async () => {
   await renderWithQuery(<TeacherScheduleScreen />);
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith(

@@ -16,7 +16,7 @@ beforeEach(() => {
   teachers = { idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null)) };
 });
 
-describe('«انسخ لينك الطالب»', () => {
+describe('«انسخ رابط الطالب»', () => {
   it('gives the admin a /join/<token> URL on the web origin, expiring with the classroom', async () => {
     const r = await url();
     expect(r.url).toMatch(/^https:\/\/app\.example\.test\/join\/[A-Za-z0-9_-]{32}$/);

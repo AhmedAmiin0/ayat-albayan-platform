@@ -45,7 +45,7 @@ test.describe('journey 4 — reschedule into a busy slot (R-SCH-07, R-SCH-04)', 
     await mondaySlots.getByRole('button', { name: /14:00/ }).click();
     await drawer.getByRole('button', { name: ar.lessons.rescheduleSubmit }).click();
     await expect(drawer.getByText(ar.booking.conflictTitle)).toBeVisible();
-    await expect(drawer.getByText(/المعلم\/ة مشغول\/ة بحلقة تانية في الميعاد ده/)).toBeVisible();
+    await expect(drawer.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/)).toBeVisible();
 
     await drawer.getByRole('button', { name: ar.booking.changeSlot }).click();
     await mondaySlots.getByRole('button', { name: /15:30/ }).click();

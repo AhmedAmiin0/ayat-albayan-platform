@@ -9,7 +9,7 @@ import { LessonTags } from './LessonTags';
 
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch: vi.fn(async () => []), apiSend: vi.fn() }));
 
-describe('«عدّل الوقت» next to «غيّر الميعاد» (R-SCH-11)', () => {
+describe('«عدّل الوقت» next to «غيّر الموعد» (R-SCH-11)', () => {
   it('each button says what it does, in the drawer, before anything is opened', () => {
     render(
       <QueryClientProvider client={new QueryClient()}>
@@ -22,7 +22,7 @@ describe('«عدّل الوقت» next to «غيّر الميعاد» (R-SCH-11)
     expect(t.lessons.timeEdit.vsReschedule).toContain(`«${t.lessons.event.reschedule}»`);
   });
 
-  it('the «اتعدّل الوقت» tag is a note with «كان …» as its tooltip, not a pill that looks pressable', () => {
+  it('the «عُدّل الوقت» tag is a note with «كان …» as its tooltip, not a pill that looks pressable', () => {
     const edited = lesson({
       time_edit: { at: '2026-10-03T08:00:00.000Z', reason: null, was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' } },
     });

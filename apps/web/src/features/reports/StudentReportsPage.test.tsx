@@ -71,7 +71,7 @@ describe('StudentReportsPage (R-REP-05, issue D2)', () => {
     const chart = await screen.findByRole('region', { name: t.reports.progress });
     fireEvent.click(within(chart).getByRole('button', { name: t.reports.rubric.commitment }));
     expect(within(chart).queryAllByRole('img')).toHaveLength(0);
-    expect(within(chart).getByText(/الالتزام والحضور: آخر تقييم من غير تقييم/)).toBeTruthy();
+    expect(within(chart).getByText(/الالتزام والحضور: آخر تقييم بدون تقييم/)).toBeTruthy();
     fireEvent.click(within(chart).getByRole('button', { name: t.reports.rubric.tajweed }));
     expect(within(chart).getAllByRole('img')[1]?.getAttribute('aria-label')).toContain(t.enums.grade.needs_review);
   });

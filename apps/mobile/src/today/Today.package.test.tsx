@@ -40,7 +40,7 @@ afterEach(() => jest.useRealTimers());
 test('each card shows its student\'s package line, saffron at the renewal threshold', async () => {
   serve();
   await renderWithQuery(<TodayRoute />);
-  const lines = await screen.findAllByText('فاضل حلقتين');
+  const lines = await screen.findAllByText('بقيت حلقتان');
   expect(lines).toHaveLength(2);
   expect(colorOf(lines[0] as never)).toBe(palette.light.act);
 });
@@ -48,7 +48,7 @@ test('each card shows its student\'s package line, saffron at the renewal thresh
 test('one balance read per student, however many cards; none for an ended lesson', async () => {
   serve();
   await renderWithQuery(<TodayRoute />);
-  await screen.findAllByText('فاضل حلقتين');
+  await screen.findAllByText('بقيت حلقتان');
   const asked = mockApiFetch.mock.calls.map(([path]: [string]) => path);
   expect(asked.filter((p) => p === '/students/s1/balance')).toHaveLength(1);
   expect(asked).toContain('/students/s2/balance');
@@ -60,17 +60,17 @@ test('above the threshold the line is ink; a student without a package has none'
   serve(1);
   await renderWithQuery(<TodayRoute />);
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/settings'));
-  const lines = await screen.findAllByText('فاضل حلقتين');
+  const lines = await screen.findAllByText('بقيت حلقتان');
   await waitFor(() => expect(colorOf(lines[0] as never)).toBe(palette.light.ink2));
-  expect(screen.queryByText(/الباقة خلصت|فاضل \d/)).toBeNull();
+  expect(screen.queryByText(/انتهت الباقة|فاضل \d/)).toBeNull();
 });
 
-test('a student the API flags as unpaid gets «الباقة مش مدفوعة» (R-SUB-02)', async () => {
+test('a student the API flags as unpaid gets «الباقة غير مدفوعة» (R-SUB-02)', async () => {
   const flagged = { ...pending, students: pending.students.map((s) => ({ ...s, unpaid: true })) };
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/lessons/day')) return [flagged, muscat];
     throw new ApiError(404);
   });
   await renderWithQuery(<TodayRoute />);
-  expect(await screen.findAllByText('الباقة مش مدفوعة')).toHaveLength(1);
+  expect(await screen.findAllByText('الباقة غير مدفوعة')).toHaveLength(1);
 });

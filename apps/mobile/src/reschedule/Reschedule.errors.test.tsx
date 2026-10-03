@@ -30,7 +30,7 @@ async function pickAndSubmit() {
   await fireEvent.press(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));
 }
 
-test('409 conflict: the clash in Arabic, then «اختار ميعاد تاني» brings the slots back, fresh', async () => {
+test('409 conflict: the clash in Arabic, then «اختر موعدًا آخر» brings the slots back, fresh', async () => {
   mockApiSend.mockRejectedValue(
     new ApiError(409, {
       code: 'conflict',

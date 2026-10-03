@@ -2,9 +2,9 @@ import { ar, expect, test } from '../support/fixtures';
 import { addDays, lessonsOf, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../support/schedule';
 import { riyadhDay } from '../support/schedule-extra';
 
-// A teacher's «اقترح ميعاد تاني» the admin answers «ارفض الاقتراح» (R-SCH-08): the proposal is
+// A teacher's «اقترح موعدًا آخر» the admin answers «ارفض الاقتراح» (R-SCH-08): the proposal is
 // `rejected` and decided, the lesson stays exactly where it was, the guardian hears nothing and the
-// teacher's card is back to «اقترح ميعاد تاني». (proposals.spec covers the propose form and approve.)
+// teacher's card is back to «اقترح موعدًا آخر». (proposals.spec covers the propose form and approve.)
 
 const MINUTE = 60_000;
 const NOTE = 'مش هقدر في الميعاد ده';

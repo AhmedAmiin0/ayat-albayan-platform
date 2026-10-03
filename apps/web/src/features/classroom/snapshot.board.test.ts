@@ -33,7 +33,7 @@ describe('snapshotOf: roles, board share, recording', () => {
     expect(s.tiles.map((x) => [x.identity, x.role])).toEqual([['me', 'teacher'], ['g', null], ['x', null]]);
   });
 
-  it('the board published as the screen share is a board tile and not «وقّف المشاركة»', () => {
+  it('the board published as the screen share is a board tile and not «أوقف المشاركة»', () => {
     const pubs = new Map([['0', screen(BOARD_TRACK_NAME)]]);
     const s = snapshotOf(room(person('me', { isLocal: true, isScreenShareEnabled: true, trackPublications: pubs })), 'connected', new Set());
     expect(s).toMatchObject({ shareOn: false, boardShareOn: true });

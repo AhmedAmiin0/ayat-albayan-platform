@@ -25,7 +25,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     return openEditTime(l);
   };
 
-  it('is offered only when the API allows it, next to the time and apart from «غيّر الميعاد»', () => {
+  it('is offered only when the API allows it, next to the time and apart from «غيّر الموعد»', () => {
     apiFetch.mockResolvedValue([]);
     render(
       <QueryClientProvider client={new QueryClient()}>
@@ -37,7 +37,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     expect(t.lessons.editTime).not.toBe(t.lessons.event.reschedule);
   });
 
-  it('shows «اتعدّل الوقت · كان …» once edited, in the drawer and as a tag', () => {
+  it('shows «عُدّل الوقت · كان …» once edited, in the drawer and as a tag', () => {
     const edited = lesson({
       time_edit: { at: '2026-10-03T08:00:00.000Z', reason: 'طلب ولي الأمر', was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' } },
     });
@@ -94,7 +94,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     expect(screen.getByText(/\(30 دقيقة\)/)).toBeTruthy();
   });
 
-  it('today only offers later times; «تاريخ تاني» is a native date, never typed text', () => {
+  it('today only offers later times; «تاريخ آخر» is a native date, never typed text', () => {
     open();
     pick.day(new RegExp(`^${t.enums.weekday[6]} 3`));
     const times = TIMES(screen.getByLabelText(new RegExp(t.lessons.timeEdit.time.replace('{city}', '.+'))));
@@ -110,7 +110,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     expect(TIMES(select)).toEqual(['30', '40', '45', '60', '90']);
   });
 
-  it('«رجوع للحلقة» returns to the details', () => {
+  it('«العودة إلى الحلقة» returns to the details', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: t.lessons.back }));
     expect(screen.getByRole('button', { name: t.lessons.editTime })).toBeTruthy();

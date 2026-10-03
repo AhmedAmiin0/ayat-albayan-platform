@@ -29,7 +29,7 @@ describe('AvailabilityWeek (R-TCH-02, docs/07 §8)', () => {
     expect(days[0]).toBe(t.enums.weekday[6]);
   });
 
-  it('marks today in the grid tz with «النهارده» and the now-line, only on that row', () => {
+  it('marks today in the grid tz with «اليوم» and the now-line, only on that row', () => {
     const table = renderWeek({ ...emptyGrid(), 4: [r('10:00', '13:00')] });
     expect(within(row(4)).getByText(t.availability.today)).toBeTruthy();
     expect(within(table).getAllByText(t.availability.today)).toHaveLength(1);
@@ -37,7 +37,7 @@ describe('AvailabilityWeek (R-TCH-02, docs/07 §8)', () => {
     expect(table.querySelectorAll('[data-now]')).toHaveLength(1);
   });
 
-  it('an empty day says so and offers «إضافة ميعاد» named for the day', () => {
+  it('an empty day says so and offers «إضافة موعد» named for the day', () => {
     renderWeek(emptyGrid());
     const friday = within(row(5));
     expect(friday.getByText(t.availability.empty)).toBeTruthy();

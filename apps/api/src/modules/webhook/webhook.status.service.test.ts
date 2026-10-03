@@ -57,7 +57,7 @@ describe('StatusService (R-MSG-05)', () => {
     );
     expect(s.push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', {
       subject: `msg-out-1:${ev({ status: 'failed' }).waMessageId}`,
-      vars: { template: 'تذكير الحلقة النهاردة — Jitsi', name: 'أم سهيلة' },
+      vars: { template: 'تذكير حلقة اليوم — Jitsi', name: 'أم سهيلة' },
       data: { phone: '+966501234567', messageId: 'msg-out-1' },
     });
   });

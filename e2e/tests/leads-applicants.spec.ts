@@ -78,7 +78,7 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     await expect(row).toContainText(ar.enums.leadStatus.new);
     await expect(row).toContainText(ar.enums.leadSource.facebook_ad);
 
-    // Reclassify: the strip asks first, «سيبها هنا» keeps it, the move removes it from the list.
+    // Reclassify: the strip asks first, «أبقِها هنا» keeps it, the move removes it from the list.
     await row.getByRole('button', { name: ar.leads.reclassifyRow.replace('{name}', name) }).click();
     const confirm = page.getByRole('group', { name: ar.leads.reclassifyAsApplicant });
     await expect(confirm).toContainText(ar.leads.reclassifyConfirm);

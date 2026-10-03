@@ -38,7 +38,7 @@ afterEach(() => {
 });
 
 describe('leads: «مسؤول المبيعات» (admin)', () => {
-  it('each lead has a select: «من غير مسؤول» plus the salespeople; picking one POSTs the assignment', async () => {
+  it('each lead has a select: «بدون مسؤول» plus the salespeople; picking one POSTs the assignment', async () => {
     open();
     const select = (await screen.findByRole('combobox', { name: /مسؤول المبيعات لـ أم سهيلة/ })) as HTMLSelectElement;
     await waitFor(() => expect(select.options).toHaveLength(3));
@@ -49,7 +49,7 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: 'p2' }));
   });
 
-  it('choosing «من غير مسؤول» sends profileId null', async () => {
+  it('choosing «بدون مسؤول» sends profileId null', async () => {
     open({ ...ROW, assigned_to: 'p1', assigned_to_name: 'منى' });
     const select = (await screen.findByRole('combobox', { name: /مسؤول المبيعات لـ/ })) as HTMLSelectElement;
     await waitFor(() => expect(select.value).toBe('p1'));
@@ -58,11 +58,11 @@ describe('leads: «مسؤول المبيعات» (admin)', () => {
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/leads/l1/assign', { profileId: null }));
   });
 
-  it('«عيّن العملاء من غير مسؤول» assigns them all and says how many', async () => {
+  it('«عيّن العملاء الذين بلا مسؤول» assigns them all and says how many', async () => {
     open();
     apiSend.mockResolvedValue({ assigned: 7 });
     fireEvent.click(await screen.findByRole('button', { name: t.sales.assign.assignAll }));
-    expect(await screen.findByText('اتعيّن 7 عميل')).toBeTruthy();
+    expect(await screen.findByText('عُيّن 7 عميل')).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/leads/assign-unassigned');
   });
 });

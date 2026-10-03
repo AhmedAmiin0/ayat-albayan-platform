@@ -57,7 +57,7 @@ describe('Riyadh-day spans', () => {
   it('words the free total and a gap', () => {
     expect(hoursText(210)).toBe('3:30');
     expect(hoursText(45)).toBe('0:45');
-    expect(freeText({ start: '17:00', end: '19:00' })).toBe('فاضي 17:00 – 19:00');
+    expect(freeText({ start: '17:00', end: '19:00' })).toBe('متاح 17:00 – 19:00');
   });
 });
 

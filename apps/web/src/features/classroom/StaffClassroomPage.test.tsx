@@ -31,7 +31,7 @@ describe('StaffClassroomPage', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-9/room/join');
   });
 
-  it('too early: «بتفتح الساعة …» and a retry that asks again', async () => {
+  it('too early: «تُفتح الساعة …» and a retry that asks again', async () => {
     apiSend.mockRejectedValueOnce(new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-03T15:45:00.000Z' }));
     const client = open();
     expect((await screen.findByRole('alert')).textContent).toMatch(/\d{2}:\d{2}/);

@@ -76,7 +76,7 @@ test('the section words: who, load, the city when not Riyadh; windows, gaps, tim
   expect(spanClock(evening)).toEqual({ from: '20:00', to: '24:00' });
   expect(windowsLine([evening])).toBe(`متاح ${ltr('20:00 – 24:00')} بتوقيت الرياض`);
   expect(windowsLine([])).toBeNull();
-  expect(freeLabel(abrar.free[0] ?? evening)).toBe(`فاضي ${ltr('10:45')} – ${ltr('16:00')}`);
+  expect(freeLabel(abrar.free[0] ?? evening)).toBe(`متاح ${ltr('10:45')} – ${ltr('16:00')}`);
   const [off] = sara.time_off;
   if (!off) throw new Error('fixture');
   expect(timeOffLine(off)).toBe(`إجازة · ${formatTimeOff(off)} · سفر`);

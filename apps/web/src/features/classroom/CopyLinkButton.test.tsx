@@ -14,7 +14,7 @@ const show = (status = 'confirmed') =>
     </QueryClientProvider>,
   );
 
-describe('CopyLinkButton («انسخ لينك الطالب»)', () => {
+describe('CopyLinkButton («انسخ رابط الطالب»)', () => {
   const writeText = vi.fn();
   beforeEach(() => {
     writeText.mockResolvedValue(undefined);

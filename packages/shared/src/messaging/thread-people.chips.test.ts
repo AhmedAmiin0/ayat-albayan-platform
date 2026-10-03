@@ -11,10 +11,10 @@ describe('threadBadge (R-SUB-01): the chat chip', () => {
   it('a guardian → the family badge', () => {
     expect(threadBadge({ guardian: { id: 'g', name: 'أم يوسف' }, lead: null, students: [] })).toBe('none');
   });
-  it.each<LeadStatus>(['new', 'trial_booked', 'lost'])('a %s lead → «مش مشترك»', (status) => {
+  it.each<LeadStatus>(['new', 'trial_booked', 'lost'])('a %s lead → «غير مشترك»', (status) => {
     expect(threadBadge(lead(status))).toBe('none');
   });
-  it('a converted lead with no guardian on this number → no badge (never «مشترك» + «مش مشترك»)', () => {
+  it('a converted lead with no guardian on this number → no badge (never «مشترك» + «غير مشترك»)', () => {
     expect(threadBadge(lead('converted'))).toBeNull();
   });
   it('a teacher or an unknown number → no badge', () => {
@@ -22,7 +22,7 @@ describe('threadBadge (R-SUB-01): the chat chip', () => {
   });
 });
 
-describe('familyUnpaid: the list row «مش مدفوع»', () => {
+describe('familyUnpaid: the list row «غير مدفوع»', () => {
   it.each<[string, BadgeStudent[], boolean]>([
     ['unpaid and running', [kid('unpaid', 3)], true],
     ['unpaid but used up (a renewal, not a debt)', [kid('unpaid', 0)], false],

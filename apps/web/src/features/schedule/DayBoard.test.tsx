@@ -57,10 +57,10 @@ describe('DayBoard — one day across every teacher (R-SCH-01)', () => {
     expect(within(abrar).getByText(t.dashboard.ofMax.replace('{n}', '4').replace('{max}', '10'))).toBeTruthy();
     const chip = within(abrar).getByRole('button', { name: /17:00/ });
     expect(within(chip).getByText(t.schedule.trialTag)).toBeTruthy();
-    const gaps = within(abrar).getAllByRole('link', { name: /فاضي/ });
+    const gaps = within(abrar).getAllByRole('link', { name: /متاح/ });
     expect(gaps.map((g) => g.textContent)).toEqual([
-      `${t.schedule.book}: فاضي 16:00 – 17:00`,
-      `${t.schedule.book}: فاضي 17:45 – 20:00`,
+      `${t.schedule.book}: متاح 16:00 – 17:00`,
+      `${t.schedule.book}: متاح 17:45 – 20:00`,
     ]);
     expect(gaps[0]?.getAttribute('href')).toBe('/admin/book?teacherId=t-abrar&startsAt=2026-10-04T13%3A00%3A00.000Z');
   });
@@ -87,7 +87,7 @@ describe('DayBoard — one day across every teacher (R-SCH-01)', () => {
     expect(onSearch).toHaveBeenLastCalledWith({});
   });
 
-  it('today is the default day, so «النهارده» is off and the week view opens on today', async () => {
+  it('today is the default day, so «اليوم» is off and the week view opens on today', async () => {
     const onSearch = renderDay({});
     await row('أبرار');
     expect(screen.getByRole('button', { name: t.schedule.today }).hasAttribute('disabled')).toBe(true);

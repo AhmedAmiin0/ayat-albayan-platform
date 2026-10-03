@@ -16,7 +16,7 @@ describe('grade chart geometry (R-REP-05)', () => {
     expect([5, 4, 3, 2, 1].map(yOf)).toEqual([0, 25, 50, 75, 100]);
     expect([5, 1].map(gradeOfScore)).toEqual(['excellent', 'needs_review']);
     expect(gradeWord(4)).toBe('جيد جدًا');
-    expect(gradeWord(null)).toBe('من غير تقييم');
+    expect(gradeWord(null)).toBe('بدون تقييم');
   });
 
   it('points spread evenly oldest → newest; the chosen series is plotted', () => {

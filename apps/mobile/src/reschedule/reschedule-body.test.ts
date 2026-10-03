@@ -5,14 +5,14 @@ import { familyTz, lessonDuration, repeatDays, rescheduleBody, seriesDays } from
 // Saturday 3 Oct 2026, 17:00 in Riyadh.
 const SAT_17 = '2026-10-03T14:00:00.000Z';
 
-test('«الحلقة دي بس» moves this lesson to the picked slot, nothing else', () => {
+test('«هذه الحلقة فقط» moves this lesson to the picked slot, nothing else', () => {
   expect(rescheduleBody({ lesson: pending, scope: 'one', startsAt: SAT_17, byday: [2] })).toEqual({
     scope: 'one',
     startsAt: SAT_17,
   });
 });
 
-test('«الحلقة دي وكل اللي بعدها» starts a weekly rule at the slot, same teacher and length', () => {
+test('«هذه الحلقة وكل ما بعدها» starts a weekly rule at the slot, same teacher and length', () => {
   const body = rescheduleBody({ lesson: pending, scope: 'rule', startsAt: SAT_17, byday: [] });
   expect(body).toEqual({
     scope: 'rule',

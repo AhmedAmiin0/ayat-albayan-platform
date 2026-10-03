@@ -30,7 +30,7 @@ function renderPicker(items: ThreadMediaItem[]) {
 
 afterEach(() => apiFetch.mockReset());
 
-describe('ChatMediaPicker «من الشات» (R-MSG-06)', () => {
+describe('ChatMediaPicker «من المحادثة» (R-MSG-06)', () => {
   it('lists the family’s files: the photo loads its thumbnail lazily, the PDF is a tile', async () => {
     renderPicker([PHOTO, PDF]);
     const photo = await screen.findByRole('button', { name: mediaCardLabel(PHOTO) });

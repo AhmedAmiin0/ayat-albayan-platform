@@ -39,7 +39,7 @@ const family = (): ThreadDetail => ({
 afterEach(() => apiFetch.mockReset());
 
 describe('teacher mode in the chat (R-TCH-03, R-MSG-05)', () => {
-  it('a family I teach: the log, «بعتها: أبرار» and the reply box; no admin panel or message actions', async () => {
+  it('a family I teach: the log, «أرسلها: أبرار» and the reply box; no admin panel or message actions', async () => {
     renderThread('teacher', family());
     expect(await screen.findByText(t.inbox.sentBy.replace('{name}', 'أبرار'))).toBeTruthy();
     expect(screen.getByRole('textbox', { name: t.inbox.composer.messageLabel })).toBeTruthy();

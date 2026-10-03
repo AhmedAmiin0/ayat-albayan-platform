@@ -49,7 +49,7 @@ async function clickToChat() {
   expect(tab.opener).toBeNull();
 }
 
-describe('«ابعتها بنفسك من واتساب» (R-MSG-03)', () => {
+describe('«أرسلها بنفسك من واتساب» (R-MSG-03)', () => {
   it('tells the server first, then opens wa.me in the tab (the row is held: no second send)', async () => {
     apiSend.mockResolvedValue({ ...FAILED, error_code: 'handed_off' });
     await clickToChat();

@@ -12,7 +12,7 @@ describe('KindStep «نوع الحجز» (R-SCH-10)', () => {
     const group = screen.getByRole('group', { name: /نوع الحجز/ });
     expect(group.querySelector('legend')?.textContent).toBe('نوع الحجز *');
     expect(within(group).getAllByRole('radio').map((r) => r.closest('label')?.textContent)).toEqual([
-      'حلقة تجريبية مجانية بس',
+      'حلقة تجريبية مجانية فقط',
       'اشتراك',
       'حجز تعويضي',
     ]);

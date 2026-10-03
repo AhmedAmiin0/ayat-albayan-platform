@@ -1,6 +1,6 @@
 # 03 — System Requirements
 
-Product name (working): **Ayat Al-Bayan Academy Platform**. Arabic-first UI (RTL), Egyptian-Arabic tone in messages as today, English code.
+Product name (working): **Ayat Al-Bayan Academy Platform**. Arabic-first UI (RTL), clear Modern Standard Arabic in the UI (owner, 2026-10-03: no Egyptian dialect; WhatsApp templates already approved by Meta keep their text until resubmitted), English code.
 
 Decisions already taken with the owner (2026-10-01):
 - Mobile app (Expo) is for **Admin** only in v1 (teachers & parents use the web).
@@ -127,7 +127,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-FRM-03** «رأيك يهمّنا»: the admin asks after a completed lesson («ابعت طلب الرأي»); the family answers once on a public signed page (rating 1–5 *, recommend نعم/ربما/لا *, note, contact phone); the admin reads all answers with a per-teacher average, a teacher reads only their own. Template `lesson_feedback_request` is submitted to Meta only by the admin.
 
 ## 4. Non-functional requirements
-- **R-NFR-01** Arabic RTL UI, Arabic + English teacher names, Hijri date optional display; all messages in Egyptian Arabic matching current templates.
+- **R-NFR-01** Arabic RTL UI, Arabic + English teacher names, Hijri date optional display; UI text in clear Modern Standard Arabic (owner, 2026-10-03); Meta-approved WhatsApp templates keep their approved text until resubmitted.
 - **R-NFR-02** Secrets only in environment / Supabase Vault; no keys in repo or Drive. RLS on every table; teachers see only own rows.
 - **R-NFR-03** Audit log for status changes, payments, merges, report edits.
 - **R-NFR-04** Separate `dev` / `staging` / `prod` Supabase projects; seed data clearly marked; no test rows in prod (issue A6).

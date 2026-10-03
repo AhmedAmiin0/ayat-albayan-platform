@@ -8,7 +8,7 @@ describe('pushText (ar.json notifications)', () => {
       title: 'رسالة جديدة من أم سهيلة',
       body: 'تمام',
     });
-    expect(pushText('payment_due', { student: 'سهيلة', left: 'فاضل حلقتين' }).body).toBe('باقة سهيلة: فاضل حلقتين');
+    expect(pushText('payment_due', { student: 'سهيلة', left: 'بقيت حلقتان' }).body).toBe('باقة سهيلة: بقيت حلقتان');
   });
 
   it('every kind has text; a missing slot stays visible', () => {

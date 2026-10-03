@@ -33,7 +33,7 @@ async function pickAndSave() {
 
 const slotCalls = () => mockApiFetch.mock.calls.filter(([p]: [string]) => p.startsWith('/booking/slots')).length;
 
-test('409 conflict: the clash in Arabic, then «اختار ميعاد تاني» brings the slots back, fresh', async () => {
+test('409 conflict: the clash in Arabic, then «اختر موعدًا آخر» brings the slots back, fresh', async () => {
   mockApiSend.mockRejectedValue(
     new ApiError(409, {
       code: 'conflict',

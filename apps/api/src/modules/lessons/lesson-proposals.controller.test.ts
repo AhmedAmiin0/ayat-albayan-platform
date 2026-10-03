@@ -9,7 +9,7 @@ const pendingRow = lessonRow({
   proposals: [{ id: PROPOSAL_ID, proposed_starts_at: LATER, note: null, status: 'pending', created_at: '2026-10-02T09:00:00Z' }],
 });
 
-describe('Teacher proposals «اقترح ميعاد تاني» — routes and roles (R-SCH-08, rule 9)', () => {
+describe('Teacher proposals «اقترح موعدًا آخر» — routes and roles (R-SCH-08, rule 9)', () => {
   let h: Harness;
   beforeAll(async () => {
     h = await lessonsApp();

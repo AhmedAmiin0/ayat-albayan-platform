@@ -45,6 +45,8 @@ export async function resetAbrar(): Promise<string> {
       select t.id from public.teachers t join auth.users u on u.id = t.profile_id
       where u.email = ${USERS.teacher.email}`;
     if (!row) throw new Error('e2e teacher row missing (global setup)');
+    // Her payments first: their items point at earnings that go with the lessons (FK, no cascade).
+    await sql`delete from public.teacher_payments where teacher_id = ${row.id}`;
     await sql`delete from public.lessons where teacher_id = ${row.id}`;
     await sql`delete from public.schedule_rules where teacher_id = ${row.id}`;
     await sql`delete from public.teacher_availability where teacher_id = ${row.id}`;

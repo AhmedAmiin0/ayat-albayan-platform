@@ -16,10 +16,10 @@ test('no package (a trial student): no line', () => {
 });
 
 test('label from the shared packageProgress; saffron only at or under the threshold', () => {
-  expect(packageLine(left(1))).toEqual({ label: 'فاضل 3 حلقات', alert: false });
-  expect(packageLine(left(2))).toEqual({ label: 'فاضل حلقتين', alert: true });
+  expect(packageLine(left(1))).toEqual({ label: 'بقيت 3 حلقات', alert: false });
+  expect(packageLine(left(2))).toEqual({ label: 'بقيت حلقتان', alert: true });
   expect(packageLine(left(4))).toEqual({ label: t.subscriptions.progress.zero, alert: true });
-  expect(packageLine(left(5))).toEqual({ label: 'حضر حلقة زيادة عن الباقة', alert: true });
+  expect(packageLine(left(5))).toEqual({ label: 'حضر حلقة زائدة عن الباقة', alert: true });
 });
 
 test('the renewal threshold setting moves the saffron', () => {
@@ -42,5 +42,5 @@ test('an early renewal: what is left counts across both packages', () => {
     status: 'active',
     balance: { ...subscription().balance, lessons_used: 0, remaining: 4 },
   });
-  expect(packageLine(balanceOf(old, renewed))).toEqual({ label: 'فاضل 5 حلقات', alert: false });
+  expect(packageLine(balanceOf(old, renewed))).toEqual({ label: 'بقيت 5 حلقات', alert: false });
 });

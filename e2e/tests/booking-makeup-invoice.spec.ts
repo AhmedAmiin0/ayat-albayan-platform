@@ -114,7 +114,7 @@ test.describe('booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06)', ()
     await expect(admin.getByRole('radio', { name: /أبرار/ })).toBeChecked();
     await next(admin);
     await pickSunday(admin);
-    // The invoice is required for a makeup too: «من الشات» lists the two photos, the old one is disabled.
+    // The invoice is required for a makeup too: «من المحادثة» lists the two photos, the old one is disabled.
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeDisabled();
     await admin.getByRole('button', { name: ar.booking.invoice.fromChat }).click();
     const dialog = admin.getByRole('dialog', { name: ar.booking.invoice.chatTitle });

@@ -33,7 +33,7 @@ test('when the next follow-up is due, in the device zone, and how many of the se
   expect(mockApiFetch).toHaveBeenCalledWith('/settings');
 });
 
-test('«وقّف المتابعة» pauses at once: PATCH follow-up, then the answer shows it paused', async () => {
+test('«أوقف المتابعة» pauses at once: PATCH follow-up, then the answer shows it paused', async () => {
   mockApiSend.mockResolvedValue({ ...hudaProfile, follow_up_paused: true, follow_up_paused_by: 'admin', next_follow_up_at: null });
   await serve(hudaProfile);
   await screen.findByDisplayValue('سهيلة');
@@ -44,7 +44,7 @@ test('«وقّف المتابعة» pauses at once: PATCH follow-up, then the an
   expect(screen.getByText(t.inbox.followUpSaved)).toBeTruthy();
 });
 
-test('paused by the admin: «رجّع المتابعة» resumes without asking', async () => {
+test('paused by the admin: «استأنف المتابعة» resumes without asking', async () => {
   mockApiSend.mockResolvedValue(hudaProfile);
   await serve({ ...hudaProfile, follow_up_paused: true, follow_up_paused_by: 'admin' });
   expect(await screen.findByText(f.paused)).toBeTruthy();

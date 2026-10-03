@@ -6,7 +6,7 @@ import { feedbackApp } from './test-app';
 const URL = `/lessons/${LESSON_ID}/feedback-request`;
 const BODY = { studentId: STUDENT_ID };
 
-describe('POST /lessons/:id/feedback-request («ابعت طلب الرأي»)', () => {
+describe('POST /lessons/:id/feedback-request («أرسل طلب الرأي»)', () => {
   let h: Awaited<ReturnType<typeof feedbackApp>>;
   beforeAll(async () => {
     h = await feedbackApp();

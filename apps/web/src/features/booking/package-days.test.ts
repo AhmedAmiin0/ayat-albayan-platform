@@ -3,7 +3,7 @@ import { t } from '@/lib/i18n';
 import { packageDaysNote } from './package-days';
 
 describe('packageDaysNote: the package and the weekly days agree', () => {
-  it('8 a month on one day → «= مرتين في الأسبوع»', () => {
+  it('8 a month on one day → «= مرتان في الأسبوع»', () => {
     expect(packageDaysNote('8', 1)).toBe(`الباقة ${t.enums.packageSize['8']} = ${t.booking.perWeek.two}`);
   });
   it('matching days, or a trial → no note', () => {

@@ -26,9 +26,9 @@ describe('registration form wording', () => {
     expect(group.querySelector('legend')?.textContent).toBe('الباقة المطلوبة *');
   });
 
-  it('«المده» offers 30 / 45 / 60 / 90 دقيقة', () => {
+  it('«المدة» offers 30 / 45 / 60 / 90 دقيقة', () => {
     render(wrap(<PackageStep draft={emptyDraft()} onChange={vi.fn()} />));
-    const select = screen.getByLabelText('المده');
+    const select = screen.getByLabelText('المدة');
     expect(within(select).getAllByRole('option').map((o) => o.textContent)).toEqual(['30 دقيقة', '45 دقيقة', '60 دقيقة', '90 دقيقة']);
   });
 
@@ -39,7 +39,7 @@ describe('registration form wording', () => {
     expect(screen.getAllByRole('checkbox').map((c) => c.closest('label')?.textContent)).toEqual([
       'السبت',
       'الأحد',
-      'الاتنين',
+      'الاثنين',
       'الثلاثاء',
       'الأربعاء',
       'الخميس',
@@ -47,13 +47,13 @@ describe('registration form wording', () => {
     ]);
   });
 
-  it('«عرفت عننا منين؟» has the four options, «أخرى» only for a row that already has it', () => {
+  it('«كيف عرفت عنا؟» has the four options, «أخرى» only for a row that already has it', () => {
     const { unmount } = render(<SourceField value="" onChange={vi.fn()} />);
     const labels = (el: HTMLElement) => within(el).getAllByRole('option').map((o) => o.textContent);
-    expect(labels(screen.getByLabelText('عرفت عننا منين؟'))).toEqual(['—', 'إعلان فيسبوك', 'إعلان انستجرام', 'واتساب مباشر', 'صديق أو معرفة']);
+    expect(labels(screen.getByLabelText('كيف عرفت عنا؟'))).toEqual(['—', 'إعلان فيسبوك', 'إعلان انستجرام', 'واتساب مباشر', 'صديق أو معرفة']);
     unmount();
     render(<SourceField value="other" onChange={vi.fn()} />);
-    expect(labels(screen.getByLabelText('عرفت عننا منين؟'))).toContain(t.enums.leadSource.other);
+    expect(labels(screen.getByLabelText('كيف عرفت عنا؟'))).toContain(t.enums.leadSource.other);
   });
 
   it('the first step asks name, WhatsApp, age, gender, source in the form’s order (and no program)', () => {
@@ -64,12 +64,12 @@ describe('registration form wording', () => {
         onChange={vi.fn()}
       />,
     );
-    const order = ['اسم الطالب', 'رقم الواتساب (مع كود الدولة)', 'سن الطالب', 'النوع', 'عرفت عننا منين؟'];
+    const order = ['اسم الطالب', 'رقم الواتساب (مع رمز الدولة)', 'عمر الطالب', 'النوع', 'كيف عرفت عنا؟'];
     const text = document.body.textContent ?? '';
     const at = order.map((x) => text.indexOf(x));
     expect(at.every((i) => i >= 0)).toBe(true);
     expect([...at].sort((a, b) => a - b)).toEqual(at);
     expect(screen.queryByLabelText(t.students.program)).toBeNull();
-    expect(screen.getByLabelText('رقم الواتساب (مع كود الدولة)').getAttribute('aria-required')).toBe('true');
+    expect(screen.getByLabelText('رقم الواتساب (مع رمز الدولة)').getAttribute('aria-required')).toBe('true');
   });
 });

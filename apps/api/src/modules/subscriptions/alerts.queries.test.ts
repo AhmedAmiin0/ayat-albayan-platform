@@ -7,7 +7,7 @@ import { cents, SubscriptionsQueries } from './subscriptions.queries';
 describe('AlertsQueries: idempotent writes (rule 8)', () => {
   it('a task is insert … on conflict (dedup_key) do nothing', async () => {
     const { db, argsOf } = fakeDb({ admin_tasks: [{}] });
-    const task = { kind: 'renewal_due' as const, subjectId: 'sub-1', dedupKey: 'renewal_due:sub-1', title: 'فاضل حلقتين' };
+    const task = { kind: 'renewal_due' as const, subjectId: 'sub-1', dedupKey: 'renewal_due:sub-1', title: 'بقيت حلقتان' };
     await new AlertsQueries(db).raiseTask(task);
     expect(argsOf('admin_tasks', 'upsert')).toEqual([
       {
@@ -15,7 +15,7 @@ describe('AlertsQueries: idempotent writes (rule 8)', () => {
         subject_type: 'subscription',
         subject_id: 'sub-1',
         dedup_key: 'renewal_due:sub-1',
-        title: 'فاضل حلقتين',
+        title: 'بقيت حلقتان',
       },
       { onConflict: 'dedup_key', ignoreDuplicates: true },
     ]);

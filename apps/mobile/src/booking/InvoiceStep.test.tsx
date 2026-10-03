@@ -70,7 +70,7 @@ test('a picked invoice shows, can be retaken or removed, and lets «التالي
   expect(props.onNext).toHaveBeenCalledTimes(1);
 });
 
-test('offline: the photo is kept and «ارفعها تاني» retries the same bytes, no second pick', async () => {
+test('offline: the photo is kept and «أعد الرفع» retries the same bytes, no second pick', async () => {
   upload.mockRejectedValueOnce(new TypeError('Network request failed'));
   const { props } = await step();
   await press(m.takePhoto);
@@ -96,7 +96,7 @@ test('Storage refusing the file says so; a photo over 10 MB never uploads', asyn
   expect(upload).toHaveBeenCalledTimes(1);
 });
 
-test('no chat number: no «من الشات»', async () => {
+test('no chat number: no «من المحادثة»', async () => {
   await step();
   expect(screen.queryByRole('button', { name: t.booking.invoice.fromChat })).toBeNull();
 });

@@ -6,7 +6,7 @@ type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const WEEK = 'from=2099-01-01T00:00:00Z&to=2099-01-08T00:00:00Z';
 type Body = { id: string; students: { id: string; unpaid?: boolean }[] }[];
 
-describe('GET /lessons: «الباقة مش مدفوعة» on upcoming lessons (R-SUB-02)', () => {
+describe('GET /lessons: «الباقة غير مدفوعة» on upcoming lessons (R-SUB-02)', () => {
   let h: Harness;
   beforeAll(async () => {
     h = await lessonsApp();

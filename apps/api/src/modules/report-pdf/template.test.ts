@@ -35,7 +35,7 @@ describe('reportHtml — the lesson report page (R-REP-03, docs/07 §13)', () =>
     expect(html).toContain('<bdi dir="ltr" class="ltr">17:00</bdi> بتوقيت الرياض');
     expect(html).toContain('<div class="sub">60 دقيقة</div>');
     expect(html).toContain('<bdi dir="ltr" class="ltr">6</bdi> من <bdi dir="ltr" class="ltr">8</bdi>');
-    expect(html).toContain('الباقة: فاضل حلقتين');
+    expect(html).toContain('الباقة: بقيت حلقتان');
   });
 
   it('shows the time in the guardian zone, with that zone named', () => {

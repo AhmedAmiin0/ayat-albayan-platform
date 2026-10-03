@@ -48,7 +48,7 @@ describe('ConflictNotice (R-SCH-04, issue B3)', () => {
     expect(onOverride).toHaveBeenCalledWith('طلب ولي الأمر');
   });
 
-  it('«اختار ميعاد تاني» goes back to the slots', () => {
+  it('«اختر موعدًا آخر» goes back to the slots', () => {
     const onChangeSlot = vi.fn();
     render(<ConflictNotice conflicts={[busy('2026-10-04T14:00:00Z')]} onChangeSlot={onChangeSlot} onOverride={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));

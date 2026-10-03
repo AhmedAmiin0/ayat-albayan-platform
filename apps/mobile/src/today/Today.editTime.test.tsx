@@ -28,7 +28,7 @@ function serve(day: unknown[]) {
   });
 }
 
-test('an open card offers «عدّل الوقت» beside «غيّر الميعاد», and it opens the edit sheet over Today', async () => {
+test('an open card offers «عدّل الوقت» beside «غيّر الموعد», and it opens the edit sheet over Today', async () => {
   serve([{ ...pending, time_edit_mode: 'move' }]);
   await renderWithQuery(<TodayScreen />);
   await screen.findByText('يوسف أحمد');
