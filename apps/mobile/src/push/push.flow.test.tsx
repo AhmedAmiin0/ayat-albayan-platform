@@ -8,6 +8,12 @@ import { GUARDIAN_PHONE } from '@/inbox/flow-backend';
 import { pushBackend } from './flow-backend';
 import { TOKEN_KEY } from './registerPush';
 
+// Jest has no EAS config; registerPush needs the linked project's id.
+jest.mock('expo-constants', () => ({
+  __esModule: true,
+  default: { expoConfig: { version: 'test', extra: { eas: { projectId: 'proj-flow' } } } },
+}));
+
 const TOKEN = 'ExponentPushToken[flow]';
 const tap = (data: Record<string, unknown>) => ({ notification: { request: { content: { data } } } });
 
@@ -77,12 +83,13 @@ test('sign out from «المزيد»: this device’s token is DELETEd first, th
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.more }));
   await fireEvent.press(await screen.findByRole('button', { name: t.auth.logout }));
 
+  await waitFor(() => expect(supabase.auth.signOut).toHaveBeenCalledTimes(1));
+  await app.setGate('out'); // the auth listener's job: the gate follows the session
   await waitFor(() => expect(app.pathname()).toBe('/login'));
   expect(backend.sent('DELETE /me/push-tokens/:token')[0]?.path).toBe(
     `/me/push-tokens/${encodeURIComponent(TOKEN)}`,
   );
   expect(signOutsAtDelete).toBe(0);
-  expect(supabase.auth.signOut).toHaveBeenCalledTimes(1);
   expect(tokens).toEqual([]);
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBeNull();
 });

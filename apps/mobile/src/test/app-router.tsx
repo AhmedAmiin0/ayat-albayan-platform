@@ -26,13 +26,9 @@ jest.mock('@/lib/supabase', () => ({
     auth: {
       getSession: jest.fn(async () => ({ data: { session: null }, error: null })),
       onAuthStateChange: jest.fn(() => ({ data: { subscription: { unsubscribe: jest.fn() } } })),
-      // Signing out flips the mocked gate, like the real onAuthStateChange would.
-      signOut: jest.fn(async () => {
-        const { act: mockAct } = require('@testing-library/react-native');
-        await mockAct(async () => require('@/auth/use-auth-gate').mockGate.set('out'));
-        return { error: null };
-      },
-      ),
+      // Records the call; the test then flips the gate (app.setGate('out')), as the real
+      // onAuthStateChange would.
+      signOut: jest.fn(async () => ({ error: null })),
     },
     storage: {
       from: (bucket: string) => ({

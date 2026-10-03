@@ -59,7 +59,7 @@ test.describe('payments page and receipts (R-PAY-01)', () => {
     const viewer = page.getByRole('dialog', { name: ar.payments.receipt });
     const image = viewer.getByRole('img', { name: ar.payments.receipt });
     await expect(image).toBeVisible();
-    await expect.poll(() => image.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+    await expect.poll(() => image.evaluate((el) => (el as unknown as { naturalWidth: number }).naturalWidth)).toBeGreaterThan(0);
     const src = await image.getAttribute('src');
     expect(src).toBeTruthy();
     expect((await page.request.get(src ?? '')).status()).toBe(200);
