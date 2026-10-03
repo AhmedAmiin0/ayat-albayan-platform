@@ -27,3 +27,7 @@ tools/migrate/out/
 
 # Firebase client config (EAS file secret GOOGLE_SERVICES_JSON)
 apps/mobile/google-services.json
+
+# Google Calendar exports and the diff generated from them hold students' names (tools/scripts/calendar-diff.mjs)
+*.ics
+calendar-diff.sql
