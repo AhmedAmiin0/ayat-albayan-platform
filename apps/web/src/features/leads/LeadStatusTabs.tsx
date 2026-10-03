@@ -2,6 +2,7 @@ import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 import { Tabs, type TabOption } from '@/components/ui/tabs';
 import { rail } from '@/components/ui/rail';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 
 type Tab = LeadStatus | 'all';
 
@@ -25,7 +26,7 @@ export interface LeadStatusTabsProps {
 /** Status filter as a vertical fihris beside the list; chips under 900px (R-LEAD-02, docs/07 §9). */
 export function LeadStatusTabs({ value, onChange }: LeadStatusTabsProps) {
   return (
-    <div className={rail}>
+    <div className={cn('min-w-0', rail)}>
       <Tabs
         orientation="vertical"
         label={t.leads.status}

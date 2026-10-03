@@ -34,8 +34,9 @@ test.describe('reschedule a whole series (R-SCH-07)', () => {
     await drawer.getByRole('button', { name: ar.lessons.rescheduleSubmit }).click();
     await expect(page.getByRole('status').filter({ hasText: ar.lessons.rescheduled })).toBeVisible();
 
-    // The old rule ends the day before the tapped lesson; all three old lessons are closed.
-    expect(await ruleStateOf(rule.ruleId)).toEqual({ status: 'active', ends_on: addDays(sunday, -1) });
+    // The tapped lesson is the rule's first: the day before it is before the rule starts, so nothing
+    // is left (apply_lesson_changes) and the rule ends at once on its start day; all three old lessons are closed.
+    expect(await ruleStateOf(rule.ruleId)).toEqual({ status: 'ended', ends_on: sunday });
     const lessons = await lessonsOf(studentId);
     const old = lessons.filter((l) => l.status === 'rescheduled');
     const fresh = lessons.filter((l) => l.status === 'scheduled');

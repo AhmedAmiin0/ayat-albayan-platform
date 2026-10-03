@@ -77,6 +77,8 @@ export default defineConfig({
         MESSAGING_ENABLED: 'true',
       },
       reuseExistingServer: !process.env['CI'],
+      // The API's own log (sender passes, job errors) in the CI output, next to the failing spec.
+      stdout: process.env['CI'] ? 'pipe' : 'ignore',
     },
     {
       command: `pnpm exec vite --port ${WEB_PORT} --strictPort`,
