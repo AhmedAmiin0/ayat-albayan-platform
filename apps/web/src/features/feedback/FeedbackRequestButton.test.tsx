@@ -54,6 +54,12 @@ describe('FeedbackRequestButton «ابعت طلب الرأي»', () => {
     expect(screen.getByRole('button', { name: t.feedback.requestFor.replace('{name}', 'سهيلة') })).toBeTruthy();
   });
 
+  it('a student who was absent or excused is not offered, the sibling who came is', async () => {
+    open(lesson({ status: 'completed', students: [{ ...SUHAILA, attendance: 'absent' }, { ...JOUD, attendance: 'on_time' }] }));
+    expect(await screen.findByRole('button', { name: t.feedback.requestFor.replace('{name}', 'جود') })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.feedback.requestFor.replace('{name}', 'سهيلة') })).toBeNull();
+  });
+
   it('words a refusal because the template is not approved (409)', async () => {
     apiSend.mockRejectedValue(new ApiError(409, { code: 'template_not_approved' }));
     open(lesson({ status: 'completed', students: [SUHAILA] }));

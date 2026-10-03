@@ -21,7 +21,7 @@ Requirements R-FRM-01..03 (docs/03 §3.12). The text below is the owner's paste,
 | `GET /public/feedback/:token` | none | `{teacherName, kind, contactPhone, alreadySubmitted}` only |
 | `POST /public/feedback/:token` `{rating, recommend, note?, contactPhone?}` | none | 404 `feedback_not_found` (wrong, tampered, replaced link), 410 `feedback_expired`, 409 `already_submitted`, 429 `too_many_requests` (10 per token and IP, 60 per IP, per 10 minutes, in memory) |
 
-The link is `base64url(lessonId | studentId | exp) . HMAC-SHA256` (71 characters, 14 days). Only its sha256 is stored (`token_hash`), so a resend revokes the old link. The server fills teacher and kind; the client never sends them.
+The link is `base64url(lessonId | studentId | exp) . HMAC-SHA256` (71 characters, 14 days). `lesson_feedback` stores only its sha256 (`token_hash`), so a resend revokes the old link. The link itself rides in the request message's `template_params.button` for the sender, and migration 168 keeps `lesson_feedback_request` messages out of the teacher's RLS read (a teacher could otherwise answer for the family). The server fills teacher and kind; the client never sends them.
 
 ## Owner decisions flagged
 
@@ -31,6 +31,12 @@ The link is `base64url(lessonId | studentId | exp) . HMAC-SHA256` (71 characters
 4. رابط الاجتماع stays read-only on the report (it lives on the lesson).
 5. The PDF labels read «اسم الطالب» / «اسم المعلم» without «(لا تعدله)» (that hint is for the editing form); the student id is the line under the name.
 6. The lead-qualification extras (level, memorized, goal, riwaya, …) stay in the lead panel.
+7. Form 1 is spread over the booking wizard's steps (student → teacher → package → slot → review), each step in the form's own order; «عرفت عننا منين؟» sits with the contact details on the first step (a source belongs to the person, not to the booking), and the wizard's step names are short («الطالب، المعلم، الباقة، الميعاد، المراجعة»), the exact form wording being on the fields. Mobile follows the same split.
+8. Form 3: «رقم واتساب للتواصل» is prefilled and editable (a corrected number is sent as E.164). «نوع الحلقة *» and «اسم المعلمة» are the lesson's own, so the family sees them as fixed lines (a one-line name, not a paragraph); the server sets kind and teacher and ignores anything the client sends for them.
+9. The lead panel's «الأيام المتاحة» and «الساعه» are preferences (a from/to range, no star); the starred, single-time versions are the wizard's. A trial books one lesson, so the days picker is hidden there (the first lesson's weekday is the day).
+10. The booking wizard needs a teacher and a free slot; a registration still waiting for a teacher («خيار فاضي») goes through «إضافة طالب» («لسه مفيش معلم»).
+11. «تاريخ الحلقة *» and «رقم الحلقة *» on the report are lesson-derived and read-only (the number is computed per student). Say if a teacher must be able to correct the number.
+12. The package labels follow the form everywhere (also subscriptions, exports, the dashboard): «حلقة تجريبية مجانية بس», «8 حلقات», «12 حلقة». Say if lists should keep the older «… في الشهر» wording and the form wording stay on the registration choice only.
 
 ---
 

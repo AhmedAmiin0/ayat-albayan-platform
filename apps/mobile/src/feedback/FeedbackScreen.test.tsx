@@ -28,8 +28,7 @@ test('each teacher’s average on top, then every answer and the request still w
   expect(screen.getByText(text.averageLine.replace('{avg}', '4.5').replace('{n}', '12'))).toBeTruthy();
   expect(screen.getByText(text.recommendLine.replace('{pct}', '83'))).toBeTruthy();
   // The answer: type, rating, «نعم», the note, the contact number (isolated LTR).
-  expect(screen.getByText(`${text.rating}: ${text.ratingValue.replace('{n}', '5')}`)).toBeTruthy();
-  expect(screen.getByText(`${text.recommend} ${text.answer.yes}`)).toBeTruthy();
+  expect(screen.getByText(`${text.ratingValue.replace('{n}', '5')} · ${text.answer.yes}`)).toBeTruthy();
   expect(screen.getByText('الحلقة كانت ممتازة')).toBeTruthy();
   expect(screen.getByText(`${text.contact}: ${ltr('+966 55 214 7730')}`)).toBeTruthy();
   // The pending one says so, and shows its own lesson type.

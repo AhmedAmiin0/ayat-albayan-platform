@@ -66,7 +66,7 @@ export function FeedbackPage() {
           ))}
         </Select>
         <Select aria-label={t.feedback.rating} value={rating} onChange={(e) => filter(() => setRating(e.target.value))}>
-          <option value="">{t.feedback.rating}</option>
+          <option value="">{t.feedback.allRatings}</option>
           {RATINGS.map((n) => (
             <option key={n} value={n}>
               {t.feedback.outOf.replace('{n}', String(n))}

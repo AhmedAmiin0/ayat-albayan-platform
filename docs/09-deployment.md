@@ -12,6 +12,8 @@
 
 The same VPS runs the owner's **live WhatsApp CRM** (`/opt/wacrm`, container `wacrm-app-1`, `crm.ayatalbayan.com`). Never stop, rebuild or edit it. The staging API listens on `127.0.0.1:3110` only; Caddy (`/etc/caddy/Caddyfile`, backups `Caddyfile.bak-*`) terminates TLS for the two staging hosts, which were appended as separate site blocks.
 
+The public feedback limiter (`/public/feedback/*`, in memory, keyed on `req.ip` with `trustProxy: 1`) is only sound while exactly one proxy (Caddy) sits in front of a single API instance: keep the API bound to `127.0.0.1`, never expose its port, and revisit `trustProxy` (and move the counter to Redis or the DB) if the proxy depth or the instance count changes.
+
 `*.sslip.io` hosts resolve to the VPS IP, so no DNS change was needed. To move to real names, add A records for e.g. `app-staging.ayatalbayan.com` and `api-staging.ayatalbayan.com` → `148.230.116.195` at **Namecheap** (the domain's DNS), then rename the two Caddy blocks, update `WEB_ORIGIN` in `/opt/ayat-albayan-staging/.env`, the `[remotes.staging.auth]` URLs in `packages/db/supabase/config.toml` (`supabase config push --project-ref knxfwiimjcifwckhwbim`), `.claude/artifacts/staging/web.env` and the EAS `preview` variables.
 
 ## Redeploy

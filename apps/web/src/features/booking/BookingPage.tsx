@@ -1,5 +1,6 @@
 import type { Gender } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
@@ -56,7 +57,11 @@ export function draftFromLead(search: BookSearch, lead: InboxLead | null): Booki
  * (search a student first).
  */
 export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
-  const trial = !!search.leadId && (search.pkg ?? 'trial') === 'trial';
+  // The title follows the package the admin has picked: «تجريبية» only while it is the free trial.
+  const [picked, setPicked] = useState<{ from: BookingDraft['pkg'] | undefined; pkg: BookingDraft['pkg'] } | null>(null);
+  const pkg = picked && picked.from === search.pkg ? picked.pkg : (search.pkg ?? 'trial');
+  const setPkg = (next: BookingDraft['pkg']) => setPicked({ from: search.pkg, pkg: next });
+  const trial = !!search.leadId && pkg === 'trial';
   const hint = bookHint(search);
   const hintKey = [hint?.teacherId, hint?.startsAt].join('-');
   return (
@@ -65,13 +70,14 @@ export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
         <Cartouche>{trial ? t.booking.trialTitle : t.booking.title}</Cartouche>
       </PageHead>
       {search.studentId ? (
-        <StudentBooking studentId={search.studentId} onOpenStudent={onOpenStudent} hint={hint} />
+        <StudentBooking studentId={search.studentId} onOpenStudent={onOpenStudent} hint={hint} onPackage={setPkg} />
       ) : search.leadId ? (
         <LeadBooking
           key={`${search.leadId}-${search.pkg ?? 'trial'}-${hintKey}`}
           search={search}
           onOpenStudent={onOpenStudent}
           hint={hint}
+          onPackage={setPkg}
         />
       ) : (
         <BookingWizard
@@ -81,6 +87,7 @@ export function BookingPage({ search, onOpenStudent }: BookingPageProps) {
           siblings={[]}
           onOpenStudent={onOpenStudent}
           hint={hint}
+          onPackage={setPkg}
         />
       )}
     </>
@@ -91,21 +98,22 @@ interface WizardProps {
   onOpenStudent: (id: string) => void;
   /** A free gap's teacher + start from the calendar (?teacherId&startsAt). */
   hint: BookHint | null;
+  onPackage: (pkg: BookingDraft['pkg']) => void;
 }
 
 /** The lead path, once the lead's qualification is in; without it step 1 starts from the URL. */
-function LeadBooking({ search, onOpenStudent, hint }: WizardProps & { search: BookSearch }) {
+function LeadBooking({ search, onOpenStudent, hint, onPackage }: WizardProps & { search: BookSearch }) {
   const lead = useQuery({ ...leadByPhoneQuery(search.phone ?? ''), enabled: !!search.phone });
   if (lead.isPending && !!search.phone) return <p className="text-ink-3">{t.common.loading}</p>;
   const found = lead.data && lead.data.id === search.leadId ? lead.data : null;
   const initial = draftFromLead(search, found);
   return (
-    <BookingWizard initial={initial} primary={null} siblings={[]} onOpenStudent={onOpenStudent} hint={hint} />
+    <BookingWizard initial={initial} primary={null} siblings={[]} onOpenStudent={onOpenStudent} hint={hint} onPackage={onPackage} />
   );
 }
 
 /** The wizard for one student, once their profile (tz, program, siblings) and guardian are in. */
-function StudentBooking({ studentId, onOpenStudent, hint }: WizardProps & { studentId: string }) {
+function StudentBooking({ studentId, onOpenStudent, hint, onPackage }: WizardProps & { studentId: string }) {
   const student = useQuery(studentQuery(studentId));
   const guardianId = student.data?.guardian_id;
   const guardian = useQuery({ ...guardianQuery(guardianId ?? ''), enabled: !!guardianId });
@@ -121,6 +129,7 @@ function StudentBooking({ studentId, onOpenStudent, hint }: WizardProps & { stud
       siblings={s.siblings.filter((x) => x.id !== s.id)}
       onOpenStudent={onOpenStudent}
       hint={hint}
+      onPackage={onPackage}
     />
   );
 }

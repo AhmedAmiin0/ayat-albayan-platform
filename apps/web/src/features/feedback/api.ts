@@ -46,7 +46,7 @@ export function toFormView(raw: unknown): FeedbackFormView {
   };
 }
 
-/** GET /public/feedback/:token. Any 4xx = a link that is wrong or expired; retrying cannot help. */
+/** GET /public/feedback/:token. Any 4xx = a link that is wrong (404) or expired (410); retrying cannot help. */
 export const publicFeedbackQuery = (token: string) =>
   queryOptions({
     queryKey: [...FEEDBACK_KEY, 'public', token],
@@ -64,12 +64,13 @@ export const submitFeedback = ({ token, body }: { token: string; body: FeedbackS
   });
 
 /** What a failed public call means to the page. */
-export type PublicProblem = 'invalid' | 'already' | 'too_many' | 'failed';
+export type PublicProblem = 'expired' | 'invalid' | 'already' | 'too_many' | 'failed';
 
 export function publicProblem(error: unknown): PublicProblem {
   if (!(error instanceof ApiError)) return 'failed';
   if (error.status === 429) return 'too_many';
   if (error.status === 409 || errorCode(error) === 'already_submitted') return 'already';
+  if (error.status === 410) return 'expired';
   return error.status >= 400 && error.status < 500 ? 'invalid' : 'failed';
 }
 

@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { FeedbackForm } from './FeedbackForm';
@@ -41,20 +41,39 @@ describe('FeedbackForm «رأيك يهمّنا»', () => {
     expect([...at].sort((a, b) => a - b)).toEqual(at);
     expect(screen.getByLabelText(t.feedback.teacher)).toHaveProperty('readOnly', true);
     expect((screen.getByLabelText(t.feedback.teacher) as HTMLInputElement).value).toBe('أبرار');
+    // The family can correct the number; the lesson type is the lesson's own, shown as a fixed line.
     expect((screen.getByLabelText(t.feedback.contact) as HTMLInputElement).value).toBe('+201001234567');
-    const kind = screen.getByRole('group', { name: t.feedback.kind });
-    expect(within(kind).getByRole('radio', { name: t.enums.feedbackKind.trial })).toHaveProperty('checked', true);
-    expect(within(kind).getByRole('radio', { name: t.enums.feedbackKind.subscription }).matches(':disabled')).toBe(true);
+    expect(screen.getByLabelText(t.feedback.contact)).toHaveProperty('readOnly', false);
+    expect(screen.getByText(t.enums.feedbackKind.trial)).toBeTruthy();
+    expect(screen.queryByText(t.enums.feedbackKind.subscription)).toBeNull();
+    expect(screen.queryByRole('radio', { name: t.enums.feedbackKind.trial })).toBeNull();
     expect(screen.getAllByRole('radio', { name: /من 5/ })).toHaveLength(5);
     expect(screen.getByText(t.feedback.ratingLow)).toBeTruthy();
     expect(screen.getByText(t.feedback.ratingHigh)).toBeTruthy();
   });
 
-  it('refuses to send without a rating and an answer to the recommendation', () => {
+  it('refuses to send without a rating and an answer to the recommendation, naming each', () => {
     renderForm();
     fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
-    expect(screen.getByText(t.common.required)).toBeTruthy();
+    expect(screen.getByText(t.feedback.pickRating)).toBeTruthy();
+    expect(screen.getByText(t.feedback.pickRecommend)).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
+  });
+
+  it('a corrected number goes out as E.164; one that is not a number stops the send', async () => {
+    fetchMock.mockResolvedValue(reply(204));
+    const onDone = renderForm();
+    fireEvent.click(screen.getByRole('radio', { name: t.feedback.rowRating.replace('{n}', '4') }));
+    fireEvent.click(screen.getByRole('radio', { name: t.enums.feedbackRecommend.no }));
+    fireEvent.change(screen.getByLabelText(t.feedback.contact), { target: { value: 'abc' } });
+    fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
+    expect(screen.getByText(t.feedback.phoneInvalid)).toBeTruthy();
+    expect(fetchMock).not.toHaveBeenCalled();
+    fireEvent.change(screen.getByLabelText(t.feedback.contact), { target: { value: '0551234567' } });
+    fireEvent.click(screen.getByRole('button', { name: t.feedback.submit }));
+    await waitFor(() => expect(onDone).toHaveBeenCalledWith('sent'));
+    const init = fetchMock.mock.calls[0]?.[1] as RequestInit;
+    expect(JSON.parse(String(init.body)).contactPhone).toBe('+966551234567');
   });
 
   it('sends rating, recommend, note and phone only — never the kind or the teacher', async () => {

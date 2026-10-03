@@ -1,6 +1,8 @@
 import { router } from 'expo-router';
-import { FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -17,6 +19,7 @@ import { useFeedbackList, useFeedbackSummary } from './queries';
 export function FeedbackScreen() {
   const list = useFeedbackList();
   const summary = useFeedbackSummary();
+  const { color } = useTheme();
   return (
     <Screen>
       <ScreenHeader
@@ -36,7 +39,9 @@ export function FeedbackScreen() {
           void summary.refetch();
         }}
         ListHeaderComponent={
-          summary.data?.length ? (
+          summary.isError ? (
+            <ErrorLine message={t.common.error} />
+          ) : summary.data?.length ? (
             <View style={{ gap: 8 }}>
               {summary.data.map((row) => (
                 <AverageCard key={row.teacher.id} name={row.teacher.name} average={row} />
@@ -45,7 +50,9 @@ export function FeedbackScreen() {
           ) : null
         }
         ListEmptyComponent={
-          list.isPending ? null : list.isError ? (
+          list.isPending ? (
+            <ActivityIndicator accessibilityLabel={t.common.loading} color={color.lapis} style={{ paddingVertical: 32 }} />
+          ) : list.isError ? (
             <ErrorState onRetry={list.refresh} />
           ) : (
             <EmptyState title={t.mobile.feedback.empty} />

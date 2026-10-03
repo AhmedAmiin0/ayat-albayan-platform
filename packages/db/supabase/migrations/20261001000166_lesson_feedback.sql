@@ -14,7 +14,8 @@ create table public.lesson_feedback (
   teacher_id uuid not null references public.teachers (id),
   -- Server-derived at request time (the lesson's rule is the free trial or not); never client-sent.
   kind public.feedback_kind not null,
-  -- sha256 (hex) of the signed token; the token itself is never stored. A resend replaces it, which
+  -- sha256 (hex) of the signed token; the token itself is not stored on this table (it rides in the request message, which
+  -- migration 168 keeps out of a teacher's reach). A resend replaces it, which
   -- revokes the old link.
   token_hash text not null unique,
   requested_at timestamptz not null default now(),

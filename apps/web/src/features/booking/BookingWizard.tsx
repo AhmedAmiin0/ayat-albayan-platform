@@ -26,6 +26,8 @@ export interface BookingWizardProps {
   onOpenStudent: (id: string) => void;
   /** From a calendar free gap: that teacher, then that start, preselected. */
   hint?: BookHint | null;
+  /** The package the admin picked, for the page title («تجريبية» only while it is the trial). */
+  onPackage?: (pkg: BookingDraft['pkg']) => void;
 }
 
 /**
@@ -33,13 +35,16 @@ export interface BookingWizardProps {
  * repeat → review → POST /booking. One filled primary per step («التالي», then «احجز» on the
  * review). Every step change (also «اختار ميعاد تاني») moves focus to the new step.
  */
-export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null }: BookingWizardProps) {
+export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null, onPackage }: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
   const [step, setStep] = useState<StepKey>('students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
   const section = useRef<HTMLElement>(null);
   useFocusOnChange(section, step);
-  const patch = (p: Partial<BookingDraft>) => setDraft((d) => ({ ...d, ...p }));
+  const patch = (p: Partial<BookingDraft>) => {
+    setDraft((d) => ({ ...d, ...p }));
+    if (p.pkg) onPackage?.(p.pkg);
+  };
   const index = STEPS.indexOf(step);
   const go = (to: number) => setStep(STEPS[to] ?? step);
 

@@ -1,70 +1,85 @@
 import { createColumnHelper } from '@tanstack/react-table';
 import { DataTable, type DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/ltr';
-import { formatDate } from '@/features/leads/format';
+import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { feedbackDate } from './format';
 import type { FeedbackListRow } from './types';
 
 const col = createColumnHelper<DataTableFeatures, FeedbackListRow>();
 
-const pending = <span className="text-ink-3">{t.feedback.pending}</span>;
-
-const student = col.accessor((r) => r.student.name, {
-  id: 'student',
-  header: () => t.feedback.student,
-  cell: (c) => (
-    <span className="font-semibold text-ink">
-      {c.getValue()} {c.row.original.student.code && <Ltr className="text-xs font-normal text-ink-3">{c.row.original.student.code}</Ltr>}
-    </span>
-  ),
-  meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
-});
+/**
+ * Name and code on the first line; the admin's list folds the family's number («رقم واتساب للتواصل»)
+ * under them. A teacher's own list never shows it (the API does not send it, and this never reads it).
+ */
+const studentColumn = (withPhone: boolean) =>
+  col.accessor((r) => r.student.name, {
+    id: 'student',
+    header: () => t.feedback.student,
+    cell: (c) => {
+      const { student: s, contact_phone: phone } = c.row.original;
+      return (
+        <span className="grid gap-0.5">
+          <span className="font-semibold text-ink">
+            {c.getValue()} {s.code && <Ltr className="text-xs font-normal text-ink-3">{s.code}</Ltr>}
+          </span>
+          {withPhone && phone && <Ltr className="text-xs text-ink-2">{phone}</Ltr>}
+        </span>
+      );
+    },
+    meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_100%]' },
+  });
 
 const teacher = col.accessor((r) => r.teacher?.name ?? '', {
   id: 'teacher',
   header: () => t.feedback.teacher,
+  meta: { className: 'max-sm:order-4 max-sm:text-xs max-sm:text-ink-2' },
+});
+
+const kind = col.accessor('kind', {
+  header: () => t.feedback.kind,
+  cell: (c) => t.enums.feedbackKind[c.getValue()],
+  meta: { className: 'max-sm:order-3 max-sm:text-xs max-sm:text-ink-2' },
+});
+
+/** The answer, or the waiting chip (hollow nuqta); the date it was answered (or asked) under it. */
+const rating = col.accessor('rating', {
+  header: () => t.feedback.rating,
+  cell: (c) => {
+    const r = c.row.original;
+    return (
+      <span className="grid gap-0.5">
+        {r.rating === null ? (
+          <StatusChip tone="neutral" glyph="hollow" size="sm" label={t.feedback.pending} />
+        ) : (
+          <span className="inline-flex items-center gap-1.5 font-semibold tabular-nums">
+            <NuqtaGlyph shape="fill" className="text-ok" />
+            {t.feedback.outOf.replace('{n}', String(r.rating))}
+          </span>
+        )}
+        <span className="text-xs text-ink-3">{feedbackDate(r.submitted_at ?? r.requested_at)}</span>
+      </span>
+    );
+  },
   meta: { className: 'max-sm:order-2' },
 });
 
-/** «رقم واتساب للتواصل»: for the academy to call back; the teacher's own list never has it. */
-const contact = col.accessor((r) => r.contact_phone ?? '', {
-  id: 'contact',
-  header: () => t.feedback.contact,
-  cell: (c) => (c.getValue() ? <Ltr className="text-xs text-ink-2">{c.getValue()}</Ltr> : '—'),
-  meta: { className: 'max-sm:order-3' },
+/** The long question is the header's title; the column says «الترشيح». */
+const recommend = col.accessor('recommend', {
+  header: () => <span title={t.feedback.recommend}>{t.feedback.recommendShort}</span>,
+  cell: (c) => (c.getValue() ? t.enums.feedbackRecommend[c.getValue() ?? 'maybe'] : <span className="max-sm:hidden">—</span>),
+  meta: { className: 'max-sm:order-2 max-sm:font-semibold' },
 });
 
-const rest = [
-  col.accessor('kind', {
-    header: () => t.feedback.kind,
-    cell: (c) => t.enums.feedbackKind[c.getValue()],
-    meta: { className: 'max-sm:order-3' },
-  }),
-  col.accessor('rating', {
-    header: () => t.feedback.rating,
-    cell: (c) => (c.getValue() === null ? pending : <span className="font-semibold tabular-nums">{t.feedback.outOf.replace('{n}', String(c.getValue()))}</span>),
-    meta: { className: 'max-sm:order-4' },
-  }),
-  col.accessor('recommend', {
-    header: () => t.feedback.recommend,
-    cell: (c) => (c.getValue() ? t.enums.feedbackRecommend[c.getValue() ?? 'maybe'] : '—'),
-    meta: { className: 'max-sm:order-5' },
-  }),
-  col.accessor('note', {
-    header: () => t.feedback.note,
-    cell: (c) => <span className="text-xs text-ink-2">{c.getValue() ?? ''}</span>,
-    meta: { className: 'max-sm:order-7 max-sm:basis-full' },
-  }),
-  col.accessor((r) => r.submitted_at ?? r.requested_at, {
-    id: 'date',
-    header: () => t.feedback.date,
-    cell: (c) => <span className="text-xs text-ink-3">{formatDate(c.getValue())}</span>,
-    meta: { className: 'max-sm:order-6' },
-  }),
-];
+const note = col.accessor('note', {
+  header: () => t.feedback.note,
+  cell: (c) => <span className="text-xs text-ink-2">{c.getValue() ?? ''}</span>,
+  meta: { className: 'min-w-40 max-w-72 whitespace-normal max-sm:order-5 max-sm:max-w-none max-sm:basis-full' },
+});
 
-const WITH_TEACHER = col.columns([student, teacher, contact, ...rest]);
-const WITHOUT_TEACHER = col.columns([student, ...rest]);
+const WITH_TEACHER = col.columns([studentColumn(true), teacher, kind, rating, recommend, note]);
+const WITHOUT_TEACHER = col.columns([studentColumn(false), kind, rating, recommend, note]);
 
 /** The feedback rows: the admin sees the teacher column, a teacher's own list does not need it. */
 export function FeedbackTable({ rows, showTeacher }: { rows: FeedbackListRow[]; showTeacher: boolean }) {

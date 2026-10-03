@@ -1,6 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
-import { approveTemplate, completedLesson, tokenSentTo } from '../support/feedback';
+import { approveTemplate, completedLesson, tokenSentTo, unapproveTemplate } from '../support/feedback';
 import { nextWeekSaturday, resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { setMessaging, stubReset } from '../support/wa-stub';
 
@@ -36,6 +36,7 @@ test.describe('رأيك يهمّنا (feedback)', () => {
   test.afterEach(async () => {
     await setMessaging(false);
     await withSql((sql) => sql`delete from public.lesson_feedback`);
+    await unapproveTemplate();
   });
 
   test('admin sends → the guardian answers by the link → admin list and teacher list show it', async ({ asRole, browser }) => {
@@ -52,8 +53,10 @@ test.describe('رأيك يهمّنا (feedback)', () => {
     const guardian = await (await browser.newContext({ locale: 'ar' })).newPage();
     await guardian.goto(`/feedback/${token}`);
     await expect(guardian.getByLabel(ar.feedback.teacher)).toHaveValue('أبرار');
-    // The lesson’s own kind is chosen for her (the server sets it): exactly one radio is on.
-    await expect(guardian.getByRole('group', { name: ar.feedback.kind }).locator('input:checked')).toHaveCount(1);
+    // The lesson’s own kind is shown as a fixed line (the server sets it); the number is hers to correct.
+    await expect(guardian.getByText(ar.enums.feedbackKind.subscription)).toBeVisible();
+    await expect(guardian.getByRole('radio', { name: ar.enums.feedbackKind.subscription })).toHaveCount(0);
+    await expect(guardian.getByLabel(ar.feedback.contact)).toBeEditable();
     await expect(guardian.getByLabel(ar.feedback.contact)).not.toHaveValue('');
     await pick(guardian, ar.feedback.rowRating.replace('{n}', '5'));
     await pick(guardian, ar.enums.feedbackRecommend.yes);
@@ -83,7 +86,7 @@ test.describe('رأيك يهمّنا (feedback)', () => {
     await guardian.context().close();
   });
 
-  test('a wrong token and an expired one both say so and show no form', async ({ asRole, browser }) => {
+  test('a wrong token and an expired one each say so, show no form and name the way to a new link', async ({ asRole, browser }) => {
     test.setTimeout(180_000);
     const teacherId = await resetAbrar();
     await setAvailability(teacherId, [[0, '10:00', '22:00']]);
@@ -94,7 +97,8 @@ test.describe('رأيك يهمّنا (feedback)', () => {
 
     const guardian = await (await browser.newContext({ locale: 'ar' })).newPage();
     await guardian.goto('/feedback/not-a-real-token');
-    await expect(guardian.getByText(ar.feedback.expired)).toBeVisible();
+    await expect(guardian.getByText(ar.feedback.invalid)).toBeVisible();
+    await expect(guardian.getByRole('link', { name: ar.feedback.openWhatsapp })).toBeVisible();
     await expect(guardian.getByRole('button', { name: ar.feedback.submit })).toHaveCount(0);
 
     await withSql((sql) => sql`update public.lesson_feedback set expires_at = now() - interval '1 day' where lesson_id = ${lesson.lessonId}`);

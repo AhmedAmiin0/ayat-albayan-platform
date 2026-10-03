@@ -18,7 +18,7 @@ export interface RadioChipsProps<V extends string> {
 export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
   return (
     <fieldset disabled={p.disabled} aria-invalid={p.invalid || undefined} className="grid gap-2">
-      <legend className="mb-2 font-display text-h3 font-bold">
+      <legend className="mb-1.5 text-sm font-semibold">
         {p.legend}
         {p.required && <RequiredMark />}
       </legend>

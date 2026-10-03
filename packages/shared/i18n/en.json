@@ -358,7 +358,7 @@
     },
     "guardianRelation": "Relation to the student",
     "altPhone": "Alternative contact number",
-    "groupKind": "Lesson type",
+    "groupKind": "Lessons (individual / group)",
     "groupKindOption": {
       "individual": "Individual",
       "group": "Group"
@@ -448,8 +448,8 @@
     "steps": {
       "students": "Student",
       "teacher": "Teacher",
-      "slot": "Hour",
-      "package": "Requested package",
+      "slot": "Time",
+      "package": "Package",
       "review": "Review"
     },
     "stepOf": "Step {n} of {total}",
@@ -866,7 +866,7 @@
     "identity": "Lesson details",
     "readOnlyHint": "These details fill in automatically from the lesson",
     "student": "Student name (don't edit)",
-    "studentId": "Student ID (don't edit)",
+    "studentId": "Student ID (do not edit)",
     "teacher": "Teacher name (don't edit)",
     "date": "Lesson date",
     "lessonNo": "Lesson number",
@@ -977,10 +977,7 @@
     "submittedTitle": "Sent reports",
     "noSubmitted": "No sent reports yet",
     "mobileAttachHint": "From the phone you can add photos only; PDFs and voice notes from the website",
-    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online",
-    "studentId": "Student ID (do not edit)",
-    "detailTitle": "Detailed assessment",
-    "notesTitle": "Notes and homework"
+    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online"
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -1753,10 +1750,11 @@
   "teacherNav": {
     "label": "Teacher sections",
     "today": "Today",
-    "calendar": "My schedule",
+    "calendar": "Schedule",
     "reports": "Reports",
-    "payouts": "My payouts",
-    "feedback": "Feedback"
+    "payouts": "Pay",
+    "feedback": "Feedback",
+    "chats": "Chats"
   },
   "feedback": {
     "title": "Your opinion matters",
@@ -1825,6 +1823,18 @@
     "outOf": "{n} of 5",
     "listError": "We could not load the feedback, try again",
     "rowRating": "Rating {n} of 5",
-    "total": "{n} responses"
+    "total": {
+      "one": "1 response",
+      "two": "2 responses",
+      "few": "{n} responses",
+      "other": "{n} responses"
+    },
+    "phoneInvalid": "That number is not valid",
+    "pickRating": "Choose your rating of the lesson",
+    "pickRecommend": "Answer whether you would recommend the academy",
+    "openWhatsapp": "Message us on WhatsApp",
+    "allRatings": "All ratings",
+    "recommendShort": "Recommend",
+    "templateSettings": "Open message settings"
   }
 }

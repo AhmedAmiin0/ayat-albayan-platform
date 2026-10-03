@@ -68,7 +68,7 @@ export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProp
     />
   );
   return (
-    <View accessibilityLabel={t.reports.entryFor.replace('{name}', entry.student.name)} style={{ gap: 20 }}>
+    <View accessibilityLabel={t.reports.entryFor.replace('{name}', entry.student.name)} style={{ gap: 24 }}>
       <IdentityBlock lesson={form.lesson} entry={entry} />
       <ChoiceChips
         label={t.reports.program}

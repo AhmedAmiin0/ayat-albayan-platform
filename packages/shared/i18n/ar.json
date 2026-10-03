@@ -358,7 +358,7 @@
     },
     "guardianRelation": "صلة القرابة بالطالب",
     "altPhone": "رقم تواصل بديل",
-    "groupKind": "نوع الحلقة",
+    "groupKind": "نوع الحلقات (فردي / جماعي)",
     "groupKindOption": {
       "individual": "فردي",
       "group": "جماعي"
@@ -447,9 +447,9 @@
     "trialTitle": "حجز حلقة تجريبية",
     "steps": {
       "students": "الطالب",
-      "teacher": "المعلم/المعلمه",
-      "slot": "الساعه",
-      "package": "الباقة المطلوبة",
+      "teacher": "المعلم",
+      "slot": "الميعاد",
+      "package": "الباقة",
       "review": "المراجعة"
     },
     "stepOf": "خطوة {n} من {total}",
@@ -1753,7 +1753,8 @@
     "calendar": "جدولي",
     "reports": "التقارير",
     "payouts": "مستحقاتي",
-    "feedback": "الآراء"
+    "feedback": "الآراء",
+    "chats": "المحادثات"
   },
   "feedback": {
     "title": "رأيك يهمّنا",
@@ -1822,6 +1823,18 @@
     "outOf": "{n} من 5",
     "listError": "مقدرناش نجيب الآراء، حاول تاني",
     "rowRating": "تقييم {n} من 5",
-    "total": "{n} رأي"
+    "total": {
+      "one": "رأي واحد",
+      "two": "رأيان",
+      "few": "{n} آراء",
+      "other": "{n} رأي"
+    },
+    "phoneInvalid": "الرقم ده مش مظبوط",
+    "pickRating": "اختار تقييمك للحلقة",
+    "pickRecommend": "جاوب على سؤال الترشيح",
+    "openWhatsapp": "كلّمونا على واتساب",
+    "allRatings": "كل التقييمات",
+    "recommendShort": "الترشيح",
+    "templateSettings": "افتح إعدادات الرسايل"
   }
 }

@@ -16,7 +16,7 @@ export function MyAvailabilityScreen() {
     <Screen>
       <ScrollView
         style={{ flex: 1, marginHorizontal: -16 }}
-        contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
+        contentContainerStyle={{ gap: 24, paddingHorizontal: 16, paddingBottom: 32 }}
       >
         <ScreenHeader title={t.availability.title} trailing={back} />
         {me ? (

@@ -1,5 +1,5 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import type { FeedbackKind, LessonStatus } from '@ab/shared';
+import type { Attendance, FeedbackKind, LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
@@ -12,6 +12,8 @@ export type Answer = Required<Pick<TablesUpdate<'lesson_feedback'>, 'rating' | '
 /** What «ابعت طلب الرأي» needs to know about one student on one lesson. */
 export interface RequestContext {
   lessonStatus: LessonStatus;
+  /** This student's own attendance on the lesson (null until an outcome is recorded). */
+  attendance: Attendance | null;
   teacher: { id: string; name: string };
   /** The lesson's rule is the free trial. */
   kind: FeedbackKind;
@@ -41,7 +43,7 @@ export class FeedbackQueries {
     if (error) throw dbError(error);
     if (!lesson) return null;
     const [onLesson, trial, teacher, student] = await Promise.all([
-      this.db.from('lesson_students').select('student_id').match({ lesson_id: lessonId, student_id: studentId }).maybeSingle(),
+      this.db.from('lesson_students').select('student_id, attendance').match({ lesson_id: lessonId, student_id: studentId }).maybeSingle(),
       this.isTrial(lesson.rule_id),
       this.db.from('teachers').select('id, display_name_ar').eq('id', lesson.teacher_id).maybeSingle(),
       this.db.from('students').select('id, name, guardian_id').eq('id', studentId).maybeSingle(),
@@ -52,6 +54,7 @@ export class FeedbackQueries {
     if (!guardian) return null;
     return {
       lessonStatus: lesson.status,
+      attendance: onLesson.data.attendance,
       teacher: { id: teacher.data.id, name: teacher.data.display_name_ar },
       kind: trial ? 'trial' : 'subscription',
       student: { id: student.data.id, name: student.data.name },

@@ -31,10 +31,11 @@ export function GradePicker({ name, label, value, onChange, disabled, emphasis, 
       aria-invalid={invalid || undefined}
       className={cn(
         'grid gap-1.5 border-b border-rule py-2.5 last:border-b-0 sm:grid-cols-[12rem_1fr] sm:items-center',
+        emphasis && 'mt-3 border-t-2 border-t-rule-strong pt-4',
         invalid && 'border-s-[3px] border-s-danger ps-2',
       )}
     >
-      <legend className={cn('float-start text-sm text-ink-2', emphasis && 'font-display text-body font-bold text-ink')}>
+      <legend className={cn('float-start text-sm text-ink-2', emphasis && 'font-display text-h3 font-bold text-ink')}>
         {label}
         {required && <RequiredMark />}
       </legend>
@@ -54,7 +55,7 @@ export function GradePicker({ name, label, value, onChange, disabled, emphasis, 
               <span
                 aria-hidden
                 className={cn(
-                  'grid min-h-11 place-items-center content-center gap-0.5 rounded-md border border-rule px-0.5 py-1 text-ink-3 sm:min-h-9 sm:min-w-11 sm:px-2',
+                  'grid min-h-11 place-items-center content-center gap-0.5 rounded-md border border-rule px-1 py-1 text-ink-2 min-w-[3.25rem] sm:min-h-9 sm:min-w-11 sm:px-2',
                   '[&_svg]:size-[7px] sm:[&_svg]:size-[9px]',
                   'peer-checked:border-primary peer-checked:bg-lapis-wash peer-checked:text-ink',
                   'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',
@@ -67,7 +68,7 @@ export function GradePicker({ name, label, value, onChange, disabled, emphasis, 
             </label>
           ))}
         </div>
-        {!value && <span className="text-sm text-ink-3">{t.reports.chart.noGrade}</span>}
+        {invalid && !value && <span className="text-sm text-danger">{t.reports.chart.noGrade}</span>}
       </div>
     </fieldset>
   );

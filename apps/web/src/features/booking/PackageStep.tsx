@@ -88,11 +88,11 @@ function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; stude
   );
 }
 
-/** The quote's total, «الحلقة التجريبية مجانية» for a trial, or why there is no price. */
+/** The quote's total, or why there is no price; nothing for a trial (its label already says «مجانية»). */
 export function PackagePrice({ input }: { input: PriceInput }) {
   const selection = quoteSelection(input);
   const quote = useQuery({ ...quoteQuery(selection ?? { ...emptySelection }), enabled: selection !== null });
-  if (input.pkg === 'trial') return <span className="text-ink-2">{t.booking.trialFree}</span>;
+  if (input.pkg === 'trial') return null;
   if (!selection) return <span className="text-xs text-ink-3">{t.booking.noPrice}</span>;
   if (quote.isError) return <span className="text-xs text-ink-3">{t.common.error}</span>;
   if (!quote.data) return <span className="text-xs text-ink-3">{t.common.loading}</span>;

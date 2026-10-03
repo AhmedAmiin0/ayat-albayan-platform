@@ -8,6 +8,7 @@ import {
   type FeedbackRecommend,
 } from '../enums/index.js';
 import { phoneE164 } from './common.js';
+import type { Attendance, LessonStatus } from '../enums/index.js';
 
 // «رأيك يهمّنا» (docs/13-forms-spec.md form 3). camelCase commands, snake_case responses like the
 // rest of the API. The server fills teacher and kind from the signed link; the client never sends them.
@@ -24,6 +25,15 @@ export const feedbackSubmitSchema = z.object({
   contactPhone: z.preprocess(blankIsAbsent, phoneE164.optional()),
 });
 export type FeedbackSubmit = z.output<typeof feedbackSubmitSchema>;
+
+/**
+ * Whether «ابعت طلب الرأي» may go to this student: the lesson took place (completed, or the student
+ * came late) and this student did not miss it (a sibling's lesson in a group does not count for an
+ * absent or excused one). The API enforces it; web and mobile hide the button with the same rule.
+ */
+export function feedbackEligible(status: LessonStatus, attendance: Attendance | null): boolean {
+  return (status === 'completed' || status === 'late') && attendance !== 'absent' && attendance !== 'excused';
+}
 
 /** POST /lessons/:lessonId/feedback-request (admin). `resend` replaces an expired link. */
 export const feedbackRequestSchema = z.object({

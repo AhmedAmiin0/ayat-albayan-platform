@@ -13,7 +13,7 @@ describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
     expect(links).toEqual([
       [t.teacherNav.today, '/teacher'],
       [t.teacherNav.calendar, '/teacher/calendar'],
-      [t.nav.conversations, '/teacher/inbox'],
+      [t.teacherNav.chats, '/teacher/inbox'],
       [t.teacherNav.reports, '/teacher/reports'],
       [t.teacherNav.payouts, '/teacher/payouts'],
       [t.teacherNav.feedback, '/teacher/feedback'],

@@ -1,3 +1,4 @@
+import { counted } from '@ab/shared';
 import { t } from '@/lib/i18n';
 
 export interface AverageItem {
@@ -20,6 +21,7 @@ export function TeacherAverages({ items }: { items: readonly AverageItem[] }) {
   if (items.length === 0) return null;
   return (
     <section aria-label={t.feedback.averages} className="mb-5">
+      <h2 className="mb-2 text-sm font-semibold text-ink-2">{items.some((i) => i.name) ? t.feedback.averagesTitle : t.feedback.average}</h2>
       <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2 xl:grid-cols-3">
         {items.map((i) => (
           <li key={i.key} className="grid gap-1 border-b border-rule pb-3">
@@ -29,7 +31,7 @@ export function TeacherAverages({ items }: { items: readonly AverageItem[] }) {
               <span className="text-xs text-ink-3">{t.feedback.outOf.replace('{n}', '5')}</span>
             </p>
             <p className="text-xs text-ink-2">
-              {t.feedback.total.replace('{n}', String(i.n))} · {t.feedback.yesPct} {pctText(i.yesPct)}
+              {counted(t.feedback.total, i.n)} · {t.feedback.yesPct} {pctText(i.yesPct)}
             </p>
           </li>
         ))}

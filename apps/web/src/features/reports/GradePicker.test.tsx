@@ -10,7 +10,7 @@ describe('GradePicker (R-REP-02)', () => {
     const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={onChange} />);
     const words = [...container.querySelectorAll('label > span')].map((s) => s.textContent);
     expect(words).toEqual(GRADES.map((g) => t.enums.grade[g]));
-    expect(screen.getByText(t.reports.chart.noGrade)).toBeTruthy();
+    expect(screen.queryByText(t.reports.chart.noGrade)).toBeNull(); // said only after a send attempt
     fireEvent.click(screen.getByRole('radio', { name: t.enums.grade.very_good }));
     expect(onChange).toHaveBeenCalledWith('very_good');
   });
@@ -24,6 +24,7 @@ describe('GradePicker required / invalid (the failed-submit state)', () => {
     expect(group?.className).toContain('border-s-danger');
     expect(container.querySelector('legend [aria-hidden="true"]')?.textContent).toBe(' *');
     expect(screen.getByRole('group', { name: 'التجويد' })).toBeTruthy(); // the mark is not in the name
+    expect(screen.getByText(t.reports.chart.noGrade)).toBeTruthy();
   });
 
   it('not required, not invalid: plain', () => {

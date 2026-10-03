@@ -6,19 +6,22 @@ import { localDate } from '@/today/timeline';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { ltr } from '@/ui/Ltr';
-import { rowLines } from './feedback-text';
+import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
+import { StatusChip } from '@/ui/StatusChip';
+import { answerLine } from './feedback-text';
 import type { FeedbackListRow } from './types';
 
 const zone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
+const text = t.mobile.feedback;
 
 /**
- * One «رأيك يهمّنا» answer (or a request still waiting): student and teacher, the lesson type,
- * the rating, «هل ترشّح الأكاديمية؟», the note, the day it came in. The contact number shows only
- * when the API sent it, which it does for admins and never for a teacher's own list.
+ * One «رأيك يهمّنا» answer (or a request still waiting): student and teacher, then the answer as a
+ * bold line of its own («5 من 5 · نعم», a filled nuqta) or the hollow «لسه ما ردّش» chip, then the
+ * lesson type and day, the note, and the contact number when the API sent it (admins only).
  */
 export function FeedbackRow({ row }: { row: FeedbackListRow }) {
   const { color } = useTheme();
-  const [kind, ...rest] = rowLines(row);
+  const answer = answerLine(row);
   const who = [row.student.name, row.teacher?.name].filter(Boolean).join(' · ');
   const when = localDate(new Date(row.submitted_at ?? row.requested_at), zone());
   return (
@@ -26,21 +29,20 @@ export function FeedbackRow({ row }: { row: FeedbackListRow }) {
       accessibilityLabel={who}
       style={{ gap: 4, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
     >
-      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
-        {who}
-      </AppText>
-      <Note>{`${kind} · ${ltr(when)}`}</Note>
-      {rest.map((line) => (
-        <AppText
-          key={line}
-          style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: row.submitted_at ? color.ink : color.ink3 }}
-        >
-          {line}
-        </AppText>
-      ))}
-      {row.contact_phone ? (
-        <Note>{`${t.mobile.feedback.contact}: ${ltr(formatPhone(row.contact_phone))}`}</Note>
+      <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>{who}</AppText>
+      {answer ? (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <NuqtaGlyph shape="fill" color={color.ok} />
+          <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>{answer}</AppText>
+        </View>
+      ) : (
+        <StatusChip tone="neutral" glyph="hollow" size="sm" label={text.pending} />
+      )}
+      <Note>{`${text.kind[row.kind]} · ${ltr(when)}`}</Note>
+      {row.note ? (
+        <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}>{row.note}</AppText>
       ) : null}
+      {row.contact_phone ? <Note>{`${text.contact}: ${ltr(formatPhone(row.contact_phone))}`}</Note> : null}
     </View>
   );
 }

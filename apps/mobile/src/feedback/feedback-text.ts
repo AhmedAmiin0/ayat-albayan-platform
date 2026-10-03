@@ -1,3 +1,4 @@
+import { feedbackEligible, type LessonView } from '@ab/shared';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import type { FeedbackAverage, FeedbackListRow } from './types';
@@ -17,21 +18,11 @@ export function recommendLine(a: FeedbackAverage | null): string | null {
   return text.recommendLine.replace('{pct}', String(Math.round(a.recommend_yes_pct)));
 }
 
-/**
- * The lines under a row's title: lesson type, then rating / «نعم ربما لا» when answered, then its
- * note; «لسه ما ردّش» for a pending request.
- */
-export function rowLines(row: FeedbackListRow): string[] {
-  if (row.submitted_at === null || row.rating === null) {
-    return [text.kind[row.kind], text.pending];
-  }
-  const answer = row.recommend ? `${text.recommend} ${text.answer[row.recommend]}` : null;
-  return [
-    text.kind[row.kind],
-    `${text.rating}: ${text.ratingValue.replace('{n}', String(row.rating))}`,
-    ...(answer ? [answer] : []),
-    ...(row.note ? [row.note] : []),
-  ];
+/** «5 من 5 · نعم»: the rating and the «هل ترشّح؟» answer, or null while the request waits. */
+export function answerLine(row: FeedbackListRow): string | null {
+  if (row.submitted_at === null || row.rating === null) return null;
+  const rating = text.ratingValue.replace('{n}', String(row.rating));
+  return row.recommend ? `${rating} · ${text.answer[row.recommend]}` : rating;
 }
 
 /** The line for a failed «ابعت طلب الرأي»: the API's domain `code` in words, else the generic error. */
@@ -42,6 +33,6 @@ export function requestError(error: unknown): string {
   return (typeof code === 'string' ? errors[code] : undefined) ?? t.common.error;
 }
 
-/** A completed or late lesson is the only one a request can follow (the API checks too). */
-export const canRequestFeedback = (status: string): boolean =>
-  status === 'completed' || status === 'late';
+/** The students a request may go to: the lesson took place and they did not miss it (the API checks too). */
+export const askable = (lesson: Pick<LessonView, 'status' | 'students'>): LessonView['students'] =>
+  lesson.students.filter((s) => feedbackEligible(lesson.status, s.attendance));

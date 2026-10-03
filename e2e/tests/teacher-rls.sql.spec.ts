@@ -105,4 +105,20 @@ test.describe('teacher mode RLS (migration 164, rule 9)', () => {
       expect(phonesIn(mine)).toEqual([PHONE.assigned, PHONE.recent, PHONE.own].sort());
     });
   });
+
+  test('the signed feedback link in a request message is the admin’s: a teacher never reads it (migration 168)', async () => {
+    await rolledBack(async (tx) => {
+      await seed(tx);
+      await tx`insert into public.messages (direction, status, phone_e164, template_key, template_params)
+        values ('outbound', 'sent', ${PHONE.assigned}, 'lesson_feedback_request', '{"button": "secret-token"}')`;
+      const teacher = await userId(tx, USERS.teacher.email);
+      const rows = await as(tx, teacher, () => tx<{ template_key: string | null }[]>`select template_key from public.messages
+        where phone_e164 = ${PHONE.assigned}`);
+      expect(rows.map((r) => r.template_key)).toEqual([null]);
+      const admin = await userId(tx, USERS.admin.email);
+      const all = await as(tx, admin, () => tx<{ template_key: string | null }[]>`select template_key from public.messages
+        where template_key = 'lesson_feedback_request' and phone_e164 = ${PHONE.assigned}`);
+      expect(all).toHaveLength(1);
+    });
+  });
 });

@@ -46,7 +46,7 @@ describe('FeedbackQueries — an answer is written once and never reset', () => 
   describe('requestContext', () => {
     const tables = (pkg: string | null, onLesson = true) => ({
       lessons: [{ data: { status: 'completed', teacher_id: 't1', rule_id: pkg ? 'rule' : null } }],
-      lesson_students: [{ data: onLesson ? { student_id: STUDENT_ID } : null }],
+      lesson_students: [{ data: onLesson ? { student_id: STUDENT_ID, attendance: 'on_time' } : null }],
       schedule_rules: [{ data: pkg ? { package: pkg } : null }],
       teachers: [{ data: { id: 't1', display_name_ar: 'أبرار' } }],
       students: [{ data: { id: STUDENT_ID, name: 'سهيلة', guardian_id: 'g1' } }],
@@ -65,6 +65,7 @@ describe('FeedbackQueries — an answer is written once and never reset', () => 
       const ctx = await new FeedbackQueries(fakeDb(tables('8')).db).requestContext(LESSON_ID, STUDENT_ID);
       expect(ctx).toEqual({
         lessonStatus: 'completed',
+        attendance: 'on_time',
         teacher: { id: 't1', name: 'أبرار' },
         kind: 'subscription',
         student: { id: STUDENT_ID, name: 'سهيلة' },

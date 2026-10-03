@@ -51,6 +51,7 @@ export function TeacherStep(props: TeacherStepProps) {
           <span aria-hidden="true" className="text-xs font-semibold text-ink-2">{t.booking.program}</span>
           <SegmentedControl
             label={t.booking.program}
+            className="flex-wrap"
             options={PROGRAM_CHIPS}
             value={program}
             onChange={(next) => onChange({ program: next, teacher: null })}
@@ -60,6 +61,7 @@ export function TeacherStep(props: TeacherStepProps) {
           <span aria-hidden="true" className="text-xs font-semibold text-ink-2">{t.booking.genderPref}</span>
           <SegmentedControl
             label={t.booking.genderPref}
+            className="flex-wrap"
             options={GENDER_CHIPS}
             value={genderPref ?? 'any'}
             onChange={(next) => onChange({ genderPref: next === 'any' ? null : next, teacher: null })}

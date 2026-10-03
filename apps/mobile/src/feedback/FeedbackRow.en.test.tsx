@@ -12,8 +12,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 
 test('the feedback rows and the average read in English', async () => {
   await render(<FeedbackRow row={answered} />);
-  expect(screen.getByText('How would you rate the lesson?: 5 out of 5')).toBeTruthy();
-  expect(screen.getByText('Would you recommend the academy to a friend or relative? Yes')).toBeTruthy();
+  expect(screen.getByText('5 out of 5 · Yes')).toBeTruthy();
   expect(screen.getByText(/Free trial lesson/)).toBeTruthy();
 });
 

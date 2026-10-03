@@ -29,6 +29,11 @@ export async function approveTemplate(): Promise<void> {
   });
 }
 
+/** The seeded state (migration 166): not on Meta yet. approveTemplate() changes it, so a journey puts it back. */
+export async function unapproveTemplate(): Promise<void> {
+  await withSql((sql) => sql`update public.message_templates set status = 'not_submitted' where key = ${TEMPLATE}`);
+}
+
 /** A student with a completed lesson next week (the API only asks about lessons that took place). */
 export async function completedLesson(teacherId: string, student: string): Promise<{ lessonId: string; studentId: string; guardianId: string }> {
   const family = await seedFamily(`أم ${student}`, [student]);

@@ -1,4 +1,4 @@
-import type { FeedbackRequest, FeedbackRequestResult, LessonStatus } from '@ab/shared';
+import { feedbackEligible, type FeedbackRequest, type FeedbackRequestResult } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { conflict, notFound } from '../scheduling/errors';
 import { waHttpError } from '../whatsapp/template.mapper';
@@ -6,9 +6,6 @@ import { FEEDBACK_CONFIG, type FeedbackConfig } from './feedback.config';
 import { FeedbackQueries, type FeedbackRow, type RequestContext } from './feedback.queries';
 import { FEEDBACK_TEMPLATE, FeedbackSender } from './feedback.sender';
 import { expiryOf, hashToken, signToken } from './feedback.token';
-
-/** Only a lesson that took place gets asked (completed, or the student came late). */
-const ELIGIBLE: readonly LessonStatus[] = ['completed', 'late'];
 
 export type RequestInput = { lessonId: string; body: FeedbackRequest; actorId: string };
 type Link = { row: FeedbackRow; token: string; exp: number };
@@ -33,7 +30,7 @@ export class FeedbackRequestService {
     await this.sender.assertApproved();
     const ctx = await this.queries.requestContext(lessonId, body.studentId);
     if (!ctx) throw notFound('student_not_in_lesson');
-    if (!ELIGIBLE.includes(ctx.lessonStatus)) throw conflict('lesson_not_eligible');
+    if (!feedbackEligible(ctx.lessonStatus, ctx.attendance)) throw conflict('lesson_not_eligible');
     const link = await this.link({ lessonId, ctx, resend: body.resend === true, secret: this.config.secret }, now);
     const sent = await this.sender.send({
       phone_e164: ctx.guardian.phone,

@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import { feedbackEligible, type LessonView } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
@@ -7,9 +7,9 @@ import { t } from '@/lib/i18n';
 import { requestErrorText, requestFeedback } from './api';
 import { FEEDBACK_TEMPLATE } from './types';
 
-/** Only a lesson that took place can be asked about (the API refuses the rest). */
-export const canRequestFeedback = (lesson: Pick<LessonView, 'status'>): boolean =>
-  lesson.status === 'completed' || lesson.status === 'late';
+/** The students who may be asked: the lesson took place and they did not miss it (the API refuses the rest). */
+export const askable = (lesson: Pick<LessonView, 'status' | 'students'>): LessonView['students'] =>
+  lesson.students.filter((s) => feedbackEligible(lesson.status, s.attendance));
 
 interface OneProps {
   lessonId: string;
@@ -45,16 +45,24 @@ function OneButton({ lessonId, student, named, approved }: OneProps) {
  * gets their own link. Disabled until WhatsApp approved the template; «اتبعت» once requested.
  */
 export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
-  const eligible = canRequestFeedback(lesson);
+  const students = askable(lesson);
+  const eligible = students.length > 0;
   const templates = useQuery({ ...templatesQuery, enabled: eligible });
   if (!eligible) return null;
   const approved = templates.data?.some((x) => x.key === FEEDBACK_TEMPLATE && x.status === 'approved') ?? false;
   return (
     <div className="grid gap-2 border-t border-rule pt-3">
-      {lesson.students.map((s) => (
+      {students.map((s) => (
         <OneButton key={s.id} lessonId={lesson.id} student={s} named={lesson.students.length > 1} approved={approved} />
       ))}
-      {!approved && templates.isSuccess && <p className="text-xs text-ink-3">{t.feedback.templateNotApproved}</p>}
+      {!approved && templates.isSuccess && (
+        <p className="text-xs text-ink-3">
+          {t.feedback.templateNotApproved}{' '}
+          <a href="/admin/settings" className="font-semibold text-lapis underline underline-offset-4">
+            {t.feedback.templateSettings}
+          </a>
+        </p>
+      )}
     </div>
   );
 }

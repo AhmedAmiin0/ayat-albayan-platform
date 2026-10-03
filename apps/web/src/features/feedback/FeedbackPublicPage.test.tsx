@@ -25,16 +25,28 @@ describe('FeedbackPublicPage (no login)', () => {
     fetchMock.mockResolvedValue(json(200, OK));
     open();
     expect(await screen.findByRole('button', { name: t.feedback.submit })).toBeTruthy();
-    expect(screen.getByRole('radio', { name: t.enums.feedbackKind.subscription })).toHaveProperty('checked', true);
+    expect(screen.getByText(t.enums.feedbackKind.subscription)).toBeTruthy();
+    expect(screen.getByText(t.app.brand)).toBeTruthy();
     expect(fetchMock.mock.calls[0]?.[0]).toBe('http://api.test/public/feedback/tok');
   });
 
-  it('a wrong or expired link says so and shows no form (and does not retry)', async () => {
+  it('a wrong link says it is not valid, shows no form, does not retry, and points to the academy’s WhatsApp', async () => {
     fetchMock.mockResolvedValue(json(404, { message: 'not_found' }));
     open('bad');
-    expect(await screen.findByText(t.feedback.expired)).toBeTruthy();
+    expect(await screen.findByText(t.feedback.invalid)).toBeTruthy();
+    expect(screen.queryByText(t.feedback.expired)).toBeNull();
     expect(screen.queryByRole('button', { name: t.feedback.submit })).toBeNull();
     expect(fetchMock).toHaveBeenCalledTimes(1);
+    expect(screen.getByRole('link', { name: t.feedback.openWhatsapp }).getAttribute('href')).toMatch(/^https:\/\/wa\.me\/\d+$/);
+  });
+
+  it('an expired link (410) says expired, and also offers the WhatsApp way to a new one', async () => {
+    fetchMock.mockResolvedValue(json(410, { code: 'feedback_expired' }));
+    open('old');
+    expect(await screen.findByText(t.feedback.expired)).toBeTruthy();
+    expect(screen.getByText(t.feedback.expiredBody)).toBeTruthy();
+    expect(screen.getByRole('link', { name: t.feedback.openWhatsapp })).toBeTruthy();
+    expect(screen.queryByText(t.feedback.invalid)).toBeNull();
   });
 
   it('too many tries (429) is not an expired link: it says wait, and offers a retry', async () => {

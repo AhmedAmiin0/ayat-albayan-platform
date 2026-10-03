@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { feedbackQuerySchema, feedbackRequestSchema, feedbackSubmitSchema } from './feedback.js';
+import { feedbackEligible, feedbackQuerySchema, feedbackRequestSchema, feedbackSubmitSchema } from './feedback.js';
 
 const ok = { rating: 5, recommend: 'yes' };
 
@@ -57,5 +57,20 @@ describe('feedbackRequestSchema and feedbackQuerySchema', () => {
     expect(feedbackQuerySchema.safeParse({ lesson: 'nope' }).success).toBe(false);
     expect(feedbackQuerySchema.parse({ lesson: '00000000-0000-4000-8000-0000000000d1' }).lesson).toBeDefined();
     expect(feedbackQuerySchema.safeParse({ from: 'yesterday' }).success).toBe(false);
+  });
+});
+
+describe('feedbackEligible', () => {
+  it('a lesson that took place, for a student who came', () => {
+    expect(feedbackEligible('completed', 'on_time')).toBe(true);
+    expect(feedbackEligible('late', 'late')).toBe(true);
+    expect(feedbackEligible('completed', null)).toBe(true);
+  });
+
+  it('not for a lesson that did not happen, nor for a student who was absent or excused', () => {
+    expect(feedbackEligible('scheduled', null)).toBe(false);
+    expect(feedbackEligible('no_show', 'absent')).toBe(false);
+    expect(feedbackEligible('completed', 'absent')).toBe(false);
+    expect(feedbackEligible('completed', 'excused')).toBe(false);
   });
 });

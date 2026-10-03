@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 const ITEMS = [
   { to: '/teacher', label: t.teacherNav.today, icon: 'clock', exact: true },
   { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', exact: false },
-  { to: '/teacher/inbox', label: t.nav.conversations, icon: 'chat', exact: false },
+  { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', exact: false },
   { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', exact: false },
   { to: '/teacher/payouts', label: t.teacherNav.payouts, icon: 'wallet', exact: false },
   { to: '/teacher/feedback', label: t.teacherNav.feedback, icon: 'star', exact: false },

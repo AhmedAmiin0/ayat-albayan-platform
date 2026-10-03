@@ -98,6 +98,14 @@ describe('POST /lessons/:id/feedback-request («ابعت طلب الرأي»)', 
     expect((await h.call({ method: 'POST', url: URL, body: BODY })).statusCode).toBe(200);
   });
 
+  it('a student who was absent or excused is not asked, even on a completed group lesson', async () => {
+    for (const attendance of ['absent', 'excused'] as const) {
+      h.queries.requestContext.mockResolvedValue(requestContext({ lessonStatus: 'completed', attendance }));
+      const res = await h.call({ method: 'POST', url: URL, body: BODY });
+      expect([res.statusCode, res.json().code]).toEqual([409, 'lesson_not_eligible']);
+    }
+  });
+
   it('404 for a student who is not on the lesson; 400 for a bad body', async () => {
     h.queries.requestContext.mockResolvedValue(null);
     expect((await h.call({ method: 'POST', url: URL, body: BODY })).statusCode).toBe(404);

@@ -57,7 +57,7 @@ function Panel({ children, label }: { children: ReactNode; label: string }) {
   return (
     <View
       accessibilityLabel={label}
-      style={{ gap: 10, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}
+      style={{ gap: 8, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}
     >
       {children}
     </View>

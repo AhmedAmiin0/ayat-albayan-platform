@@ -1,5 +1,6 @@
+import { normalizePhone } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
@@ -10,12 +11,13 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { publicProblem, submitFeedback, type PublicProblem } from './api';
 import { RatingScale } from './RatingScale';
-import { FEEDBACK_KINDS, FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend, type Rating } from './types';
+import { KindLine } from './KindLine';
+import { FEEDBACK_RECOMMEND, type FeedbackFormView, type FeedbackRecommend, type Rating } from './types';
 
-const KINDS = FEEDBACK_KINDS.map((k) => ({ value: k, label: t.enums.feedbackKind[k] }));
 const RECOMMEND = FEEDBACK_RECOMMEND.map((r) => ({ value: r, label: t.enums.feedbackRecommend[r] }));
 const PROBLEM_TEXT: Record<PublicProblem, string> = {
-  invalid: t.feedback.expired,
+  expired: t.feedback.expired,
+  invalid: t.feedback.invalid,
   already: t.feedback.alreadySent,
   too_many: t.feedback.tooMany,
   failed: t.feedback.submitFailed,
@@ -29,16 +31,18 @@ export interface FeedbackFormProps {
 }
 
 /**
- * «رأيك يهمّنا», the Google Form's fields in its order: the teacher (read-only), «نوع الحلقة»
- * (the lesson's own, read-only), «تقييمك للحلقة *», «هل ترشّح الأكاديمية لصديق أو قريب؟ *»,
- * «ملاحظة أو اقتراح» and «رقم واتساب للتواصل» (prefilled from the link). The server sets kind and
- * teacher; only rating, recommend, note and phone are sent.
+ * «رأيك يهمّنا», the Google Form's fields in its order: the teacher (prefilled, fixed), «نوع الحلقة»
+ * (the lesson's own, fixed), «تقييمك للحلقة *», «هل ترشّح الأكاديمية لصديق أو قريب؟ *»,
+ * «ملاحظة أو اقتراح» and «رقم واتساب للتواصل» (prefilled from the link, editable). The server sets
+ * kind and teacher; only rating, recommend, note and phone are sent.
  */
 export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
   const [rating, setRating] = useState<Rating | null>(null);
   const [recommend, setRecommend] = useState<FeedbackRecommend | null>(null);
   const [note, setNote] = useState('');
+  const [phone, setPhone] = useState(form.contactPhone ?? '');
   const [tried, setTried] = useState(false);
+  const ref = useRef<HTMLFormElement>(null);
   const send = useMutation({
     mutationFn: submitFeedback,
     onSuccess: () => onDone('sent'),
@@ -48,15 +52,21 @@ export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
     },
   });
   const problem = send.isError ? publicProblem(send.error) : null;
+  const typed = phone.trim() ? normalizePhone(phone) : null;
+  const badPhone = tried && typed?.ok === false;
 
   return (
     <form
       noValidate
+      ref={ref}
       className="grid gap-5"
       onSubmit={(e) => {
         e.preventDefault();
         setTried(true);
-        if (!rating || !recommend) return;
+        if (!rating || !recommend || typed?.ok === false) {
+          queueMicrotask(() => ref.current?.querySelector<HTMLElement>('[aria-invalid] input, input[aria-invalid]')?.focus());
+          return;
+        }
         const trimmed = note.trim();
         send.mutate({
           token,
@@ -64,16 +74,16 @@ export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
             rating,
             recommend,
             ...(trimmed ? { note: trimmed } : {}),
-            ...(form.contactPhone ? { contactPhone: form.contactPhone } : {}),
+            ...(typed?.ok ? { contactPhone: typed.e164 } : {}),
           },
         });
       }}
     >
       <RequiredLegend />
       <Field label={t.feedback.teacher}>
-        {(p) => <Input {...p} readOnly value={form.teacherName} />}
+        {(p) => <Input {...p} readOnly value={form.teacherName} className="bg-sunk text-ink-2" />}
       </Field>
-      <RadioChips name="feedback-kind" legend={t.feedback.kind} options={KINDS} value={form.kind} onChange={() => undefined} disabled required />
+      <KindLine kind={form.kind} />
       <RatingScale value={rating} onChange={setRating} invalid={tried && !rating} />
       <RadioChips
         name="feedback-recommend"
@@ -96,10 +106,11 @@ export function FeedbackForm({ token, form, onDone }: FeedbackFormProps) {
           />
         )}
       </Field>
-      <Field label={t.feedback.contact}>
-        {(p) => <Input {...p} readOnly dir="ltr" type="tel" value={form.contactPhone ?? ''} />}
+      <Field label={t.feedback.contact} error={badPhone ? t.feedback.phoneInvalid : undefined}>
+        {(p) => <Input {...p} dir="ltr" type="tel" inputMode="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />}
       </Field>
-      {tried && (!rating || !recommend) && <FormAlert>{t.common.required}</FormAlert>}
+      {tried && !rating && <FormAlert>{t.feedback.pickRating}</FormAlert>}
+      {tried && !recommend && <FormAlert>{t.feedback.pickRecommend}</FormAlert>}
       {problem && <FormAlert>{PROBLEM_TEXT[problem]}</FormAlert>}
       <Button type="submit" size="lg" disabled={send.isPending} className="w-full">
         {send.isPending ? t.feedback.sending : t.feedback.submit}

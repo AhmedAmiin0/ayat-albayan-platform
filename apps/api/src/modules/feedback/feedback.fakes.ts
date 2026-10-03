@@ -51,6 +51,7 @@ export function publicContext(over: Partial<FeedbackRow> = {}): PublicContext {
 export function requestContext(over: Partial<RequestContext> = {}): RequestContext {
   return {
     lessonStatus: 'completed',
+    attendance: 'on_time',
     teacher: { id: TEACHER_ID, name: 'أبرار' },
     kind: 'subscription',
     student: { id: STUDENT_ID, name: 'سهيلة' },
