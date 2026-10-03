@@ -34,10 +34,10 @@ export function FamilyFields(props: QualFieldsProps) {
   const { form, onChange } = props;
   return (
     <>
-      <div className="col-span-2">
+      <div className="@[26rem]:col-span-2">
         <TextField {...props} name="city" label={t.leads.city} />
       </div>
-      <div className="col-span-2">
+      <div className="@[26rem]:col-span-2">
         <Field label={t.leads.filledBy}>
           {(p) => (
             <Select {...p} value={form.filled_by} onChange={(e) => onChange({ filled_by: choice(FILLED_BY, e.target.value) })}>
@@ -53,7 +53,7 @@ export function FamilyFields(props: QualFieldsProps) {
       </div>
       <TextField {...props} name="guardian_name" label={t.guardians.name} />
       <TextField {...props} name="guardian_relation" label={t.leads.guardianRelation} />
-      <div className="col-span-2">
+      <div className="@[26rem]:col-span-2">
         <TextField {...props} name="alt_phone" label={t.leads.altPhone} />
       </div>
     </>

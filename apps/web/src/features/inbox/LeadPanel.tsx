@@ -22,7 +22,7 @@ export function LeadPanel({ phone }: { phone: string }) {
     setNotice(tone ? { message, tone } : { message });
 
   return (
-    <aside aria-label={t.inbox.leadPanel} className={cn('grid content-start gap-6', railXl)}>
+    <aside aria-label={t.inbox.leadPanel} className={cn('@container grid content-start gap-6', railXl)}>
       {lead.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
       {lead.isError && <p role="alert">{t.common.error}</p>}
       {lead.isSuccess && !lead.data && <p className="text-sm text-ink-3">{t.inbox.noLead}</p>}

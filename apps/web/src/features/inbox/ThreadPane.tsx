@@ -64,7 +64,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   return (
     <section aria-labelledby={headingId} className="min-w-0">
       <ThreadHeader thread={th} listSearch={listSearch} headingId={headingId} badge={people && threadBadge(people)} />
-      <div className={cn('grid gap-6', aside && 'xl:grid-cols-[minmax(0,1fr)_280px]')}>
+      <div className={cn('grid gap-6', aside && 'xl:grid-cols-[minmax(0,1fr)_340px]')}>
         <div className="min-w-0">
           <MessageLog
             messages={messages}

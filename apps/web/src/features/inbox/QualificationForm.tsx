@@ -50,9 +50,12 @@ export function QualificationForm({ lead, onDone }: QualificationFormProps) {
       <QualificationFields form={form} errors={errors} onChange={change} />
       <PreferenceFields form={form} errors={errors} onChange={change} />
       <RequestFields form={form} errors={errors} onChange={change} />
-      <Button type="submit" variant="secondary" className="justify-self-start" disabled={save.isPending}>
-        {save.isPending ? t.common.saving : t.common.save}
-      </Button>
+      {/* Pinned to the bottom of the panel's scroll, so «حفظ» is in reach from any field. */}
+      <div className="sticky bottom-0 -mx-1 border-t border-rule bg-page px-1 py-2">
+        <Button type="submit" variant="secondary" disabled={save.isPending}>
+          {save.isPending ? t.common.saving : t.common.save}
+        </Button>
+      </div>
     </form>
   );
 }
