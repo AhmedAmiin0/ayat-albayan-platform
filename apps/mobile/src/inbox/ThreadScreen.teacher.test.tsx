@@ -18,7 +18,9 @@ jest.mock('expo-router', () => ({
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
 
-const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, session_open: true };
+// The 24 h window is read off the clock, so «he wrote a moment ago» must be relative to now.
+const justNow = new Date(Date.now() - 5 * 60_000).toISOString();
+const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null, session_open: true, last_inbound_at: justNow };
 // Teacher mode: the guardian's students she teaches, with no money (subscription null).
 const people: ThreadPeople = {
   guardian: { id: 'g-1', name: 'أم يوسف' },
