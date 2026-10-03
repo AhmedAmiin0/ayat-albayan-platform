@@ -29,12 +29,14 @@ export interface AppShellProps {
  */
 export function AppShell({ title, nav, topNav }: AppShellProps) {
   const isHome = useChildMatches().length === 0;
+  const content = isHome ? <Cartouche>{title}</Cartouche> : <Outlet />;
+  if (!nav && topNav) return <FixedTopBarLayout topNav={topNav}>{content}</FixedTopBarLayout>;
   const page = (
     <main className="min-w-0">
-      <Page>{isHome ? <Cartouche>{title}</Cartouche> : <Outlet />}</Page>
+      <Page>{content}</Page>
     </main>
   );
-  return nav ? <AdminLayout nav={nav} page={page} /> : <TopBarLayout page={page} topNav={topNav} />;
+  return nav ? <AdminLayout nav={nav} page={page} /> : <TopBarLayout page={page} />;
 }
 
 function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
@@ -70,9 +72,9 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
 }
 
 /** Teacher / guardian: same margin, page and cartouche, no fihris; 48px controls. */
-function TopBarLayout({ page, topNav }: { page: ReactNode; topNav?: ReactNode }) {
+function TopBarLayout({ page }: { page: ReactNode }) {
   return (
-    <div className={cn('mx-auto min-h-screen max-w-[1180px] px-2 pb-5 shell:px-6', topNav && 'pb-24 sm:pb-5')}>
+    <div className="mx-auto min-h-screen max-w-[1180px] px-2 pb-5 shell:px-6">
       <header className="flex items-center gap-3 px-1.5 pt-4">
         <Logo />
         <div className="ms-auto flex items-center gap-2">
@@ -81,10 +83,48 @@ function TopBarLayout({ page, topNav }: { page: ReactNode; topNav?: ReactNode })
           <LogoutButton className="size-12 sm:size-12" />
         </div>
       </header>
-      {topNav && <div className="sm:px-1.5 sm:pt-3">{topNav}</div>}
       <RunningHead />
       {page}
       <PhoneTheme className="sm:hidden" />
+    </div>
+  );
+}
+
+// The page's own scroll area: the cartouche row stays pinned and a table keeps its header in view.
+const SCROLL = cn(
+  'min-h-0 flex-1 overflow-y-auto overscroll-contain',
+  '[&_[data-page-head]]:sticky [&_[data-page-head]]:top-0 [&_[data-page-head]]:z-10 [&_[data-page-head]]:bg-page',
+  '[&_thead_th]:sticky [&_thead_th]:top-0 [&_thead_th]:z-[1] [&_thead_th]:bg-page',
+);
+
+/**
+ * The teacher's layout: a fixed viewport-high frame. The header, the nav and the running head stay
+ * put, the jadwal page fills the rest and ONLY its content scrolls (tables and lists), never the
+ * browser page. On phones the bottom nav keeps its own room.
+ */
+function FixedTopBarLayout({ topNav, children }: { topNav: ReactNode; children: ReactNode }) {
+  return (
+    <div className="mx-auto flex h-dvh max-w-[1180px] flex-col overflow-hidden px-2 pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-3 shell:px-6">
+      <header className="flex shrink-0 items-center gap-3 px-1.5 pt-4">
+        <Logo />
+        <div className="ms-auto flex items-center gap-2">
+          <LanguageSwitch />
+          <ThemeToggle className="hidden sm:inline-flex" />
+          <LogoutButton className="size-12 sm:size-12" />
+        </div>
+      </header>
+      <div className="shrink-0 sm:px-1.5 sm:pt-3">{topNav}</div>
+      <div className="shrink-0">
+        <RunningHead />
+      </div>
+      <main className="flex min-h-0 min-w-0 flex-1 flex-col">
+        <Page className="flex min-h-0 flex-1 flex-col">
+          <div className={SCROLL}>
+            {children}
+            <PhoneTheme className="sm:hidden" />
+          </div>
+        </Page>
+      </main>
     </div>
   );
 }

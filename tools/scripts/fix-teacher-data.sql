@@ -26,6 +26,7 @@ select date '2026-10-03' as cutover_date,
        (date '2026-10-03')::timestamp at time zone 'Asia/Riyadh' as cutover_at,
        'تولين'::text as churn_name,
        'صباح الحبيب'::text as tuesday_name,
+       'الزهراء حمدي'::text as notstudent_name,
        2::smallint as tuesday,
        'legacy settlement: academy confirmed all teachers paid'::text as settle_note;
 
@@ -40,7 +41,8 @@ declare
   n int;
 begin
   for c in select 'churn' as label, churn_name as needle from fix_cfg
-           union all select 'tuesday', tuesday_name from fix_cfg loop
+           union all select 'tuesday', tuesday_name from fix_cfg
+           union all select 'notstudent', notstudent_name from fix_cfg loop
     select count(*) into n from public.students s
      where translate(regexp_replace(trim(s.name), '\s+', ' ', 'g'), 'أإآى', 'اااي')
            ilike '%' || translate(regexp_replace(trim(c.needle), '\s+', ' ', 'g'), 'أإآى', 'اااي') || '%';
@@ -68,17 +70,29 @@ from fix_target t
 join public.students s on s.id = t.student_id
 left join public.teachers tc on tc.id = s.teacher_id;
 
--- STEP 2: تولين is no longer subscribed: churned, rules ended, future open lessons cancelled.
+-- Where else does the third name (الزهراء حمدي: "not a student") exist? Guardian / lead / teacher.
+select 'guardian' as kind, g.id, g.name from public.guardians g, fix_cfg c
+ where translate(g.name, 'أإآى', 'اااي') ilike '%' || translate(c.notstudent_name, 'أإآى', 'اااي') || '%'
+union all
+select 'lead', l.id, l.name from public.leads l, fix_cfg c
+ where translate(l.name, 'أإآى', 'اااي') ilike '%' || translate(c.notstudent_name, 'أإآى', 'اااي') || '%'
+union all
+select 'teacher', t.id, t.display_name_ar from public.teachers t, fix_cfg c
+ where translate(t.display_name_ar, 'أإآى', 'اااي') ilike '%' || translate(c.notstudent_name, 'أإآى', 'اااي') || '%';
+
+-- STEP 2: تولين and الزهراء حمدي (not a student) are no longer subscribed: churned, rules ended,
+-- future open lessons cancelled. Rows are kept (lessons/reports/payments may hang off them).
 -- Mirrors LessonCancelService.endRule + apply_lesson_changes: ends_on = day before today (local),
 -- open lessons from the start of today cancelled as cancelled_by_admin, chargeable = false.
 do $$
 declare
-  v_student uuid := (select student_id from fix_target where label = 'churn');
+  v_student uuid;
   r record;
   v_cut timestamptz;
   v_lessons uuid[];
   n int := 0;
 begin
+ for v_student in select student_id from fix_target where label in ('churn', 'notstudent') loop
   update public.students set status = 'churned' where id = v_student and status <> 'churned';
   for r in select sr.* from public.schedule_rules sr
            join public.schedule_rule_students rs on rs.rule_id = sr.id
@@ -102,6 +116,7 @@ begin
     n := n + coalesce(cardinality(v_lessons), 0);
     insert into fix_report values ('2 churn', r.id::text, null, cardinality(v_lessons), 'rule ended, lessons cancelled');
   end loop;
+ end loop;
   raise notice 'step 2: student churned, future lessons cancelled: %', n;
 end $$;
 
@@ -142,6 +157,12 @@ begin
                                    'byday length before/after; tuesday lessons cancelled: ' || cardinality(v_lessons));
   end loop;
 end $$;
+
+-- OPTIONAL (leave commented): hard-delete الزهراء حمدي's student row ONLY if she has no lessons at all.
+-- Keeping the churned row is the safe default; run this separately, after reviewing step 1.
+-- delete from public.schedule_rule_students where student_id = (select student_id from fix_target where label = 'notstudent');
+-- delete from public.students s where s.id = (select student_id from fix_target where label = 'notstudent')
+--   and not exists (select 1 from public.lesson_students ls where ls.student_id = s.id);
 
 -- STEP 4: REPRICE historical 45-minute sessions at rate_60 (never fully paid rows; paid_amount is kept
 -- and the status recomputed with earning_status). NULL rate_60 teachers are skipped and listed.

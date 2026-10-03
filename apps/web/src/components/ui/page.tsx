@@ -18,5 +18,5 @@ export function Page({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
 
 /** Title row inside a Page: cartouche, count, then actions pushed to the inline-end. */
 export function PageHead({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
-  return <div className={cn('mb-5 flex flex-wrap items-center gap-x-4 gap-y-3', className)} {...props} />;
+  return <div data-page-head className={cn('mb-5 flex flex-wrap items-center gap-x-4 gap-y-3', className)} {...props} />;
 }

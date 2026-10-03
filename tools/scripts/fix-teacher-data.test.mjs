@@ -56,3 +56,13 @@ test('settlement uses the RPC with a deterministic request id and the legacy not
   assert.match(code, /md5\('legacy-settlement-'/);
   assert.match(code, /legacy settlement: academy confirmed all teachers paid/);
 });
+
+test('الزهراء حمدي is a third guarded case: churned, rules ended, row kept, hard delete only commented', () => {
+  assert.match(code, /الزهراء حمدي/);
+  assert.match(code, /label in \('churn', 'notstudent'\)/);
+  assert.match(code, /union all select 'notstudent', notstudent_name/);
+  assert.match(code, /if n <> 1 then/);
+  assert.match(sql, /^-- delete from public\.students/m);
+  assert.doesNotMatch(code, /\bdelete\s+from\b/i);
+  assert.equal(code.trim().split('\n').pop().trim(), 'rollback;');
+});
