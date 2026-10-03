@@ -2,6 +2,8 @@
 
 ## Staging (live since 2026-10-02)
 
+> **Hosts since 2026-10-03:** the web app is **https://app.ayatalbayan.com** and the API **https://api.ayatalbayan.com** (the domain has a wildcard A record `*.ayatalbayan.com` → 148.230.116.195; Caddy issues the certificates). The older sslip.io hosts below keep working (the API accepts both origins in `WEB_ORIGIN`), and installed Android builds still call the sslip.io API. WhatsApp URL buttons (the feedback template, `https://app.ayatalbayan.com/feedback/{{1}}`) are fixed by Meta at approval, so they always use the domain name. Supabase auth `site_url` is the domain (config.toml `[remotes.staging.auth]`).
+
 | What | Where |
 |---|---|
 | Web app (admin / teacher / portal) | https://app-staging.148-230-116-195.sslip.io |

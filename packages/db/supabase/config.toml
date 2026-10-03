@@ -420,7 +420,7 @@ enabled = true
 project_id = "knxfwiimjcifwckhwbim"
 
 [remotes.staging.auth]
-site_url = "https://app-staging.148-230-116-195.sslip.io"
-additional_redirect_urls = ["https://app-staging.148-230-116-195.sslip.io", "ayatalbayan://"]
+site_url = "https://app.ayatalbayan.com"
+additional_redirect_urls = ["https://app.ayatalbayan.com", "https://app-staging.148-230-116-195.sslip.io", "ayatalbayan://"]
 # Accounts are created by admins (service role), never by public sign-up.
 enable_signup = false

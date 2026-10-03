@@ -11,7 +11,7 @@ ART="${ART:-$MAIN/.claude/artifacts/staging}"
 SSH_HOST="${SSH_HOST:-hostinger}"
 DEST=/opt/ayat-albayan-staging
 REF=knxfwiimjcifwckhwbim
-API_URL=https://api-staging.148-230-116-195.sslip.io
+API_URL=https://api.ayatalbayan.com
 
 step() { printf '\n== %s\n' "$*"; }
 
