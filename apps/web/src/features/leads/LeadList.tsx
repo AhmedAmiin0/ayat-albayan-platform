@@ -27,6 +27,7 @@ export function LeadList({ leads, confirmId, busy, onConfirm, onMove }: LeadList
       >
         <span className="col-span-2">{t.leads.name}</span>
         <span>{t.leads.status}</span>
+        <span>{t.sales.assign.label}</span>
         <span className="justify-self-end">{t.common.actions}</span>
       </div>
       <ul>

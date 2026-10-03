@@ -6,6 +6,7 @@ import { Pager } from '@/components/ui/pager';
 import { Toast, type ToastProps } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { AssignUnassignedButton } from './AssignUnassignedButton';
 import { LeadList } from './LeadList';
 import { leadsQuery, reclassifyLead } from './leads.api';
 import { LeadStatusTabs } from './LeadStatusTabs';
@@ -51,6 +52,7 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
     <>
       <PageHead>
         <Cartouche>{t.leads.title}</Cartouche>
+        <AssignUnassignedButton />
         {/* TODO(R-LEAD-02): «11 مستنيين رد» once the API returns an unreplied count. */}
         {leads.data && (
           <span className="text-sm text-ink-3 tabular-nums">{countLabel(leads.data.total, search.status)}</span>

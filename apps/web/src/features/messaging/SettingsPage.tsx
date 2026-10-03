@@ -4,6 +4,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { SalesAutoAssignSwitch } from '@/features/sales/SalesAutoAssignSwitch';
 import { TemplateHealth } from '@/features/templates/TemplateHealth';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from './api';
@@ -39,6 +40,7 @@ export function SettingsPage() {
             <div className="grid gap-4">
               <MessagingSwitch settings={settings.data} />
               <AutoMessagesSwitch settings={settings.data} />
+              <SalesAutoAssignSwitch settings={settings.data} />
             </div>
           </section>
         )}
