@@ -1993,7 +1993,23 @@
     "reports": "Reports",
     "payouts": "Pay",
     "feedback": "Feedback",
-    "chats": "Chats"
+    "chats": "Chats",
+    "students": "Students"
+  },
+  "teacherStudents": {
+    "title": "Students",
+    "kinds": "Student type",
+    "subscribed": "Subscribed",
+    "trial": "Trial",
+    "list": "Students list",
+    "age": "{n} years",
+    "nextLesson": "Next lesson: {when}",
+    "noNextLesson": "No upcoming lesson",
+    "emptySubscribed": "You have no subscribed students yet",
+    "emptyTrial": "You have no trial students right now",
+    "loadFailed": "Could not load the students, try again",
+    "retry": "Try again",
+    "openReports": "Report history of {name}"
   },
   "feedback": {
     "title": "Your opinion matters",
@@ -2155,6 +2171,15 @@
       "empty": "No lessons on this day",
       "teacher": "Teacher",
       "students": "Students"
-    }
+    },
+    "sectionTitle": "Online classroom",
+    "sectionHint": "Join yourself, or send/copy the link for the student",
+    "copyLink": "Copy the student link",
+    "copying": "Preparing the link…",
+    "copied": "Link copied, send it to the student",
+    "copyFailed": "Could not copy the link",
+    "linkShown": "Student link",
+    "linkWindow": "The link opens 15 minutes before the lesson",
+    "joinMeeting": "Meeting link (Meet/Jitsi)"
   }
 }

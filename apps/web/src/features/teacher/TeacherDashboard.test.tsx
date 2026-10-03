@@ -56,7 +56,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     renderDash();
     const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
     expect(within(card).getByText(/عند الطالب 16:00 بتوقيت الرياض/)).toBeTruthy();
-    expect(within(card).getByRole('link', { name: t.teacherDash.join }).getAttribute('href')).toBe(ME.meeting_link);
+    expect(within(card).getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(ME.meeting_link);
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/lessons?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
     expect(within(card).queryByRole('button', { name: t.lessons.cancelSubmit })).toBeNull();
   });

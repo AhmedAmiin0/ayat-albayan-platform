@@ -1,4 +1,4 @@
-import { clockTime } from '@ab/shared';
+import { clockTime, type ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 
 // Display helpers for the inbox. Hermes has no Intl.RelativeTimeFormat / PluralRules, so the age
@@ -44,4 +44,12 @@ export function initialOf(name: string | null): string {
 /** «HH:mm» in the device's zone: when the cached list on screen was last fetched (R-MOB-03). */
 export function clockAt(epochMs: number): string {
   return clockTime(new Date(epochMs), Intl.DateTimeFormat().resolvedOptions().timeZone);
+}
+
+/** Who the number is in words (guardian / teacher / lead, else «رقم مش متسجل»): never the number. */
+export function kindLabel(thread: ThreadView | null | undefined): string {
+  if (thread?.guardian_id) return t.inbox.kind.guardian;
+  if (thread?.teacher_id) return t.inbox.kind.teacher;
+  if (thread?.lead_id) return t.inbox.kind.lead;
+  return t.inbox.unknownNumber;
 }

@@ -6,12 +6,13 @@ import { AssistantsController } from './assistants.controller';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
 import { AssistantsService } from './assistants.service';
-import { CLASSROOM_CONFIG, type ClassroomConfig } from './classroom.config';
+import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, type ClassroomConfig } from './classroom.config';
 import { ClassroomController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
 import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
+import { JoinLinkCopyService } from './join-link.copy.service';
 import { JoinLinkService } from './join-link.service';
 import { RoomJoinService } from './room-join.service';
 
@@ -26,6 +27,7 @@ import { RoomJoinService } from './room-join.service';
   controllers: [ClassroomController, ClassroomPublicController, AssistantsController],
   providers: [
     { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfig => livekitEnv(loadEnv()) },
+    { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => (loadEnv().WEB_ORIGIN.split(',')[0] ?? '').trim().replace(/\/+$/, '') },
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
     ClassroomQueries,
     AssistantsQueries,
@@ -33,6 +35,7 @@ import { RoomJoinService } from './room-join.service';
     RoomJoinService,
     GuestJoinService,
     JoinLinkService,
+    JoinLinkCopyService,
     AssistantsService,
   ],
 })

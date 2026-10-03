@@ -36,3 +36,9 @@ export interface AssistantLessonView {
   teacher_name: string;
   student_names: string[];
 }
+
+/** POST /lessons/:id/join-link/url: the guest link itself, to copy. */
+export interface JoinLinkUrl {
+  url: string;
+  expires_at: string;
+}

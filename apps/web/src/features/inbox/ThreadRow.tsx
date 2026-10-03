@@ -7,7 +7,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { initialOf } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { fullTime, listTime, previewText, threadKind, threadName, unreadLabel } from './format';
+import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from './format';
 import { inboxBase, useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { leadChip } from './subscription';
@@ -54,7 +54,7 @@ function PhoneTag({ phone }: { phone: string }) {
  */
 export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const mode = useInboxMode();
-  const name = threadName(th);
+  const name = threadTitle(th, mode);
   const unread = th.unread_count > 0;
   const failed = lastFailed(th);
   const kind = threadKind(th);
@@ -84,7 +84,7 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
         <span className="flex min-w-0 items-baseline gap-2">
           {unread && <i aria-hidden="true" className="size-[7px] shrink-0 self-center rounded-full bg-act" />}
           <span className={cn('min-w-0 truncate', unread ? 'font-bold' : 'font-semibold')}>{name}</span>
-          {th.display_name && <PhoneTag phone={th.phone_e164} />}
+          {th.display_name && mode === 'admin' && <PhoneTag phone={th.phone_e164} />}
         </span>
         <time dateTime={th.last_message_at} title={fullTime(th.last_message_at)} className="text-2xs text-ink-3 tabular-nums">
           {listTime(th.last_message_at)}

@@ -3,11 +3,12 @@ import { fakeDb } from '../guardians/fake-db';
 import { earning, TEACHER } from './earnings.fakes';
 import { EarningsQueries } from './earnings.queries';
 
+const V = 'v_teacher_countable_earnings';
 const err = (code: string, message: string) => ({ code, message });
 
 describe('EarningsQueries', () => {
   it('sessions: the teacher’s rows, the unpaid alias is earned + partially_paid, newest first', async () => {
-    const { db, calls } = fakeDb({ teacher_session_earnings: [{ data: [], count: 0 }] });
+    const { db, calls } = fakeDb({ [V]: [{ data: [], count: 0 }] });
     await new EarningsQueries(db).sessions(TEACHER, { status: 'unpaid', page: 2, pageSize: 10 });
     const on = (m: string) => calls.filter((c) => c.method === m).map((c) => c.args);
     expect(on('eq')).toEqual([['teacher_id', TEACHER]]);
@@ -16,19 +17,39 @@ describe('EarningsQueries', () => {
   });
 
   it('forPayment: ticked ids stay inside the teacher’s own rows; no ids → unpaid only', async () => {
-    const a = fakeDb({ teacher_session_earnings: [{ data: [] }] });
+    const a = fakeDb({ [V]: [{ data: [] }] });
     await new EarningsQueries(a.db).forPayment(TEACHER, ['x']);
     expect(a.calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([['teacher_id', TEACHER]]);
-    expect(a.argsOf('teacher_session_earnings', 'in')).toEqual(['id', ['x']]);
-    const b = fakeDb({ teacher_session_earnings: [{ data: [] }] });
+    expect(a.argsOf(V, 'in')).toEqual(['id', ['x']]);
+    const b = fakeDb({ [V]: [{ data: [] }] });
     await new EarningsQueries(b.db).forPayment(TEACHER, undefined);
-    expect(b.argsOf('teacher_session_earnings', 'in')).toEqual(['status', ['earned', 'partially_paid']]);
+    expect(b.argsOf(V, 'in')).toEqual(['status', ['earned', 'partially_paid']]);
   });
 
   it('money reads every page of 1000', async () => {
     const page = Array.from({ length: 1000 }, (_, i) => ({ id: String(i), amount: 1, paid_amount: 0 }));
-    const { db } = fakeDb({ teacher_session_earnings: [{ data: page }, { data: [earning(1)] }] });
+    const { db } = fakeDb({ [V]: [{ data: page }, { data: [earning(1)] }] });
     expect(await new EarningsQueries(db).money(TEACHER)).toHaveLength(1001);
+  });
+
+  it('balance, sessions and allocation read only the countable view (subscribed students)', async () => {
+    const t = 'teacher_session_earnings';
+    const a = fakeDb({ [V]: [{ data: [] }, { data: [], count: 0 }, { data: [] }] });
+    const q = new EarningsQueries(a.db);
+    await q.money(TEACHER);
+    await q.sessions(TEACHER, { page: 1, pageSize: 10 });
+    await q.forPayment(TEACHER, undefined);
+    expect([...new Set(a.calls.filter((c) => c.method === 'select').map((c) => c.table))]).toEqual([V]);
+    expect(a.calls.some((c) => c.table === t)).toBe(false);
+  });
+
+  it('sessions attach the student names of the page lessons', async () => {
+    const { db } = fakeDb({
+      [V]: [{ data: [earning(1)], count: 1 }],
+      lesson_students: [{ data: [{ lesson_id: earning(1).lesson_id, student: { name: 'سهيلة' } }] }],
+    });
+    const page = await new EarningsQueries(db).sessions(TEACHER, { page: 1, pageSize: 10 });
+    expect(page.items[0]?.lesson?.lesson_students).toEqual([{ student: { name: 'سهيلة' } }]);
   });
 
   it('record maps the raised codes to HTTP errors', async () => {

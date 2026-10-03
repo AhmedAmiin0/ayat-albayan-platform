@@ -4,6 +4,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError, type Page } from '../teachers/http';
 import { ledgerError } from './earnings.errors';
+import { lessonNames } from './earnings.names';
 
 export type EarningRow = Tables<'teacher_session_earnings'>;
 export type SessionRow = EarningRow & {
@@ -14,7 +15,9 @@ export type MoneyRow = Pick<EarningRow, 'id' | 'amount' | 'paid_amount'>;
 export type RecordResult = { payment_id: string; replayed: boolean };
 export type SessionFilter = { status?: EarningStatus | 'unpaid'; page: number; pageSize: number };
 
-const SESSION = '*, lesson:lessons(lesson_students(student:students(name)))';
+// Reads (balance, sessions, allocation) go through the view of migration 183: only sessions of
+// subscribed students (not trial, a student with status 'active'). The table is only written by the DB.
+const COUNTABLE = 'v_teacher_countable_earnings';
 const PAYMENT = '*, items:teacher_payment_items(earning_id)';
 const CHUNK = 1000; // PostgREST max-rows
 const STATUSES = { unpaid: ['earned', 'partially_paid'] } as const;
@@ -35,12 +38,13 @@ export class EarningsQueries {
     const rows: MoneyRow[] = [];
     for (let from = 0; ; from += CHUNK) {
       const { data, error } = await this.db
-        .from('teacher_session_earnings')
+        .from(COUNTABLE)
         .select('id, amount, paid_amount')
         .eq('teacher_id', teacherId)
         .order('starts_at')
         .order('id')
-        .range(from, from + CHUNK - 1);
+        .range(from, from + CHUNK - 1)
+        .returns<MoneyRow[]>();
       if (error) throw dbError(error);
       rows.push(...data);
       if (data.length < CHUNK) return rows;
@@ -49,22 +53,25 @@ export class EarningsQueries {
 
   async sessions(teacherId: string, f: SessionFilter): Promise<Page<SessionRow>> {
     const from = (f.page - 1) * f.pageSize;
-    let q = this.db.from('teacher_session_earnings').select(SESSION, { count: 'exact' }).eq('teacher_id', teacherId);
+    let q = this.db.from(COUNTABLE).select('*', { count: 'exact' }).eq('teacher_id', teacherId);
     if (f.status === 'unpaid') q = q.in('status', [...STATUSES.unpaid]);
     else if (f.status) q = q.eq('status', f.status);
     const { data, count, error } = await q
       .order('starts_at', { ascending: false })
       .order('id')
-      .range(from, from + f.pageSize - 1);
+      .range(from, from + f.pageSize - 1)
+      .returns<EarningRow[]>();
     if (error) throw dbError(error);
-    return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+    const names = await lessonNames(this.db, data.map((r) => r.lesson_id));
+    const items = data.map((r) => ({ ...r, lesson: { lesson_students: names.get(r.lesson_id) ?? [] } }));
+    return { items, total: count ?? 0, page: f.page, pageSize: f.pageSize };
   }
 
   /** The teacher's own earnings among `ids`, or all of those with something outstanding. */
   async forPayment(teacherId: string, ids: readonly string[] | undefined): Promise<EarningRow[]> {
-    let q = this.db.from('teacher_session_earnings').select('*').eq('teacher_id', teacherId);
+    let q = this.db.from(COUNTABLE).select('*').eq('teacher_id', teacherId);
     q = ids ? q.in('id', [...ids]) : q.in('status', [...STATUSES.unpaid]);
-    const { data, error } = await q.order('starts_at').order('id').limit(CHUNK);
+    const { data, error } = await q.order('starts_at').order('id').limit(CHUNK).returns<EarningRow[]>();
     if (error) throw dbError(error);
     return data;
   }

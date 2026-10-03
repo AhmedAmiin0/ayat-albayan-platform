@@ -2,6 +2,7 @@ import { clockTime, isOpenLesson, lessonStatusStyle, subscriptionStatusStyle, ty
 import { buttonVariants } from '@/components/ui/button';
 import { StatusChip } from '@/components/ui/status-chip';
 import { tzCity } from '@/components/ui/time-zone-select';
+import { CopyLinkButton } from '@/features/classroom/CopyLinkButton';
 import { JoinButton } from '@/features/classroom/JoinButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/LessonActions';
@@ -63,12 +64,13 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
       <div className="flex flex-wrap items-start gap-3">
         {!isOpenLesson(lesson.status) ? null : link ? (
           <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
-            {t.teacherDash.join}
+            {t.classroom.joinMeeting}
           </a>
         ) : (
           <span className="text-sm text-ink-3">{t.lessons.noLink}</span>
         )}
         <JoinButton lesson={lesson} size="lg" />
+        <CopyLinkButton lesson={lesson} />
         <LessonReportLinks lesson={lesson} role="teacher" size="lg" />
         <div className="min-w-0 flex-1">
           <LessonActions lesson={lesson} onDone={onDone} size="lg" />

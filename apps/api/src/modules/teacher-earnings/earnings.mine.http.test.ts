@@ -17,6 +17,11 @@ describe('teachers/me/earnings (a teacher reads only their own)', () => {
     m.earnings.teacher.mockResolvedValue({ id: TEACHER, display_name_ar: 'أبرار' });
   });
 
+  it('the teacher’s balance totals only what the countable view returned', async () => {
+    m.earnings.money.mockResolvedValue([earning(1)]); // a churned student's session is not in the view
+    expect((await mine('')).json()).toMatchObject({ earned: 70, outstanding: 70, sessions: 1 });
+  });
+
   it('balance, sessions and payments are read for the teacher behind the token', async () => {
     m.earnings.money.mockResolvedValue([earning(1, { paid_amount: 70, status: 'paid' }), earning(2)]);
     expect((await mine('')).json()).toMatchObject({ earned: 140, paid: 70, outstanding: 70 });

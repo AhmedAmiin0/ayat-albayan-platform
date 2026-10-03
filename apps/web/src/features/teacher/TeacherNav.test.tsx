@@ -6,7 +6,7 @@ import { TeacherNav } from './TeacherNav';
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
 describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
-  it('only my pages, in order: today, my schedule, chats, reports, payouts, feedback', () => {
+  it('only my pages, in order: today, my schedule, chats, students, reports, payouts, feedback', () => {
     render(<TeacherNav />);
     const nav = screen.getByRole('navigation', { name: t.teacherNav.label });
     const links = within(nav).getAllByRole('link').map((a) => [a.textContent, a.getAttribute('href')]);
@@ -14,6 +14,7 @@ describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
       [t.teacherNav.today, '/teacher'],
       [t.teacherNav.calendar, '/teacher/calendar'],
       [t.teacherNav.chats, '/teacher/inbox'],
+      [t.teacherNav.students, '/teacher/students'],
       [t.teacherNav.reports, '/teacher/reports'],
       [t.teacherNav.payouts, '/teacher/earnings'],
       [t.teacherNav.feedback, '/teacher/feedback'],

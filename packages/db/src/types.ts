@@ -2369,6 +2369,38 @@ export type Database = {
           },
         ];
       };
+      v_teacher_countable_earnings: {
+        Row: {
+          amount: number | null;
+          created_at: string | null;
+          currency: string | null;
+          id: string | null;
+          lesson_id: string | null;
+          minutes: number | null;
+          paid_amount: number | null;
+          rate: number | null;
+          starts_at: string | null;
+          status: Database['public']['Enums']['teacher_earning_status'] | null;
+          teacher_id: string | null;
+          updated_at: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_session_earnings_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: true;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_session_earnings_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       v_teacher_feedback_avg: {
         Row: {
           avg_rating: number | null;

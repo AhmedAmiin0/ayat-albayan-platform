@@ -1,5 +1,6 @@
 export * from './amount.js';
 export * from './alerts.js';
+export * from './earning-countable.js';
 export * from './earning-sync.js';
 export * from './earnings-schemas.js';
 export * from './earnings-pay.js';

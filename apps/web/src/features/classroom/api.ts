@@ -1,4 +1,4 @@
-import type { AssistantLessonView, AssistantView, JoinLinkResult, LessonView, RoomJoinResult } from '@ab/shared';
+import type { AssistantLessonView, AssistantView, JoinLinkResult, JoinLinkUrl, LessonView, RoomJoinResult } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { env } from '@/lib/env';
@@ -32,6 +32,9 @@ export async function joinAsGuest({ linkToken, name }: { linkToken: string; name
 /** POST /lessons/:id/join-link (admin): the family's one-lesson link, by WhatsApp. */
 export const sendJoinLink = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>
   apiSend<JoinLinkResult>('POST', `/lessons/${lessonId}/join-link`, { studentId });
+
+/** POST /lessons/:id/join-link/url (admin or the lesson's teacher): the guest URL to copy. */
+export const copyJoinLinkUrl = (lessonId: string) => apiSend<JoinLinkUrl>('POST', `/lessons/${lessonId}/join-link/url`);
 
 /** GET /assistants (admin): every assistant login. */
 export const assistantsQuery = queryOptions({
