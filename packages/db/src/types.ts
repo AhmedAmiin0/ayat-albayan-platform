@@ -1827,6 +1827,102 @@ export type Database = {
           },
         ];
       };
+      teacher_payment_items: {
+        Row: {
+          amount: number;
+          earning_id: string;
+          id: string;
+          payment_id: string;
+        };
+        Insert: {
+          amount: number;
+          earning_id: string;
+          id?: string;
+          payment_id: string;
+        };
+        Update: {
+          amount?: number;
+          earning_id?: string;
+          id?: string;
+          payment_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_payment_items_earning_id_fkey';
+            columns: ['earning_id'];
+            isOneToOne: false;
+            referencedRelation: 'teacher_session_earnings';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_payment_items_payment_id_fkey';
+            columns: ['payment_id'];
+            isOneToOne: false;
+            referencedRelation: 'teacher_payments';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      teacher_payments: {
+        Row: {
+          amount: number;
+          client_request_id: string | null;
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          id: string;
+          method: Database['public']['Enums']['payment_method'];
+          note: string | null;
+          paid_at: string;
+          payout_id: string | null;
+          receipt_path: string | null;
+          teacher_id: string;
+        };
+        Insert: {
+          amount: number;
+          client_request_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          id?: string;
+          method: Database['public']['Enums']['payment_method'];
+          note?: string | null;
+          paid_at: string;
+          payout_id?: string | null;
+          receipt_path?: string | null;
+          teacher_id: string;
+        };
+        Update: {
+          amount?: number;
+          client_request_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          id?: string;
+          method?: Database['public']['Enums']['payment_method'];
+          note?: string | null;
+          paid_at?: string;
+          payout_id?: string | null;
+          receipt_path?: string | null;
+          teacher_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_payments_payout_id_fkey';
+            columns: ['payout_id'];
+            isOneToOne: false;
+            referencedRelation: 'teacher_payouts';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_payments_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       teacher_payouts: {
         Row: {
           amount: number;
@@ -1893,6 +1989,63 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_threads';
             referencedColumns: ['teacher_id'];
+          },
+        ];
+      };
+      teacher_session_earnings: {
+        Row: {
+          amount: number;
+          created_at: string;
+          currency: string;
+          id: string;
+          lesson_id: string;
+          minutes: number;
+          rate: number;
+          starts_at: string;
+          status: Database['public']['Enums']['teacher_earning_status'];
+          teacher_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          amount: number;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          lesson_id: string;
+          minutes: number;
+          rate: number;
+          starts_at: string;
+          status?: Database['public']['Enums']['teacher_earning_status'];
+          teacher_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          amount?: number;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          lesson_id?: string;
+          minutes?: number;
+          rate?: number;
+          starts_at?: string;
+          status?: Database['public']['Enums']['teacher_earning_status'];
+          teacher_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'teacher_session_earnings_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_session_earnings_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -2125,6 +2278,23 @@ export type Database = {
           },
         ];
       };
+      v_teacher_earnings: {
+        Row: {
+          amount: number | null;
+          created_at: string | null;
+          currency: string | null;
+          id: string | null;
+          lesson_id: string | null;
+          minutes: number | null;
+          outstanding: number | null;
+          paid: number | null;
+          rate: number | null;
+          starts_at: string | null;
+          status: Database['public']['Enums']['teacher_earning_status'] | null;
+          teacher_id: string | null;
+        };
+        Relationships: [];
+      };
       v_teacher_feedback_avg: {
         Row: {
           avg_rating: number | null;
@@ -2185,6 +2355,11 @@ export type Database = {
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       edit_lesson_time: { Args: { p: Json }; Returns: undefined };
+      record_teacher_payment: { Args: { p: Json }; Returns: Json };
+      refresh_earning_status: { Args: { p_earning: string }; Returns: undefined };
+      settle_payout_ledger: { Args: { p_actor: string; p_payout: string }; Returns: string };
+      sync_lesson_earning: { Args: { p_lesson: string }; Returns: undefined };
+
       generate_rule_lessons: {
         Args: { p_actor: string; p_lessons: Json; p_rule: string };
         Returns: {
@@ -2313,6 +2488,7 @@ export type Database = {
       template_category: 'utility' | 'marketing';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
+      teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       user_role: 'admin' | 'teacher' | 'guardian';
     };
     CompositeTypes: {
@@ -2491,6 +2667,7 @@ export const Constants = {
         'disabled',
         'missing',
       ],
+      teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       user_role: ['admin', 'teacher', 'guardian'],
     },
   },

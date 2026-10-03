@@ -7,3 +7,5 @@ export * from './tiers.js';
 export * from './usage.js';
 export type * from './dashboard-views.js';
 export type * from './views.js';
+export * from './earnings.js';
+export * from './earnings.plan.js';

@@ -36,7 +36,13 @@ export class PayoutsService {
 
   async pay(id: string, body: PayoutPay, actorId: string): Promise<PayoutView> {
     const paidAt = body.paidAt ?? new Date().toISOString();
-    return this.move({ before: await this.row(id), actorId, to: 'paid', write: { paid_at: paidAt, paid_by: actorId } });
+    const view = await this.move({ before: await this.row(id), actorId, to: 'paid', write: { paid_at: paidAt, paid_by: actorId } });
+    // No double counting: the month's sessions are paid in the per-session ledger too (docs/11 §8b).
+    const paymentId = await this.payouts.settleLedger(id, actorId);
+    if (paymentId) {
+      await this.audit.record({ actorId, entity: 'teacher_payments', entityId: paymentId, action: 'create', after: { payout_id: id } });
+    }
+    return view;
   }
 
   /** Y5: the signed-in teacher's rows, newest month first. */

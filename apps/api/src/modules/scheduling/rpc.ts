@@ -8,8 +8,18 @@ type RpcResult = { data: unknown; error: PostgrestError | null };
 type RpcName = keyof Database['public']['Functions'];
 type UntypedRpc = { rpc(fn: string, args: Record<string, unknown>): PromiseLike<RpcResult> };
 
-/** `raise exception '<code>'` messages in migrations 080 / 100 / 174 that map to a 409 domain error. */
-const RAISED_CODES = new Set(['invalid_transition', 'rule_not_active', 'stale_time']);
+/**
+ * `raise exception '<code>'` messages in migrations 080 / 100 / 174 / 178 that map to a 409 domain
+ * error (over_payment / earning_not_found / amount_mismatch: a teacher payment lost a race).
+ */
+const RAISED_CODES = new Set([
+  'invalid_transition',
+  'rule_not_active',
+  'stale_time',
+  'over_payment',
+  'earning_not_found',
+  'amount_mismatch',
+]);
 
 /** Postgres error from the lesson RPCs → HTTP. */
 export function rpcError(error: PostgrestError): Error {

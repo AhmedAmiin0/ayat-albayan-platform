@@ -51,6 +51,11 @@ export function receiptPath(input: { subscriptionId: string; mime: string }): st
   return `${input.subscriptionId}/${randomUUID()}.${extFor(input.mime)}`;
 }
 
+/** receipts/{teacher_id}/{uuid}.{ext}: a teacher payment's receipt (migration 176). */
+export function teacherReceiptPath(input: { teacherId: string; mime: string }): string {
+  return `${input.teacherId}/${randomUUID()}.${extFor(input.mime)}`;
+}
+
 /** invoices/{client_request_id}/{name}: the booking's own folder, so a path proves whose it is. */
 export function invoicePath(input: { requestId: string; name: string }): string {
   return `${input.requestId}/${input.name}`;

@@ -3,6 +3,7 @@ import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { REPORTABLE_STATUSES } from '../reports/report-history.queries';
+import { callRpc } from '../scheduling/rpc';
 import { dbError } from '../teachers/http';
 import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
 
@@ -125,5 +126,15 @@ export class PayoutsQueries {
   async removeDraft(id: string): Promise<void> {
     const { error } = await this.db.from('teacher_payouts').delete().eq('id', id).eq('status', 'draft');
     if (error) throw dbError(error);
+  }
+
+  /**
+   * Paying a month settles the per-session ledger for the sessions it counted (migration 178,
+   * docs/11 §8b): one teacher_payments row for what is still outstanding on them. Idempotent;
+   * the payment id, or null when nothing was outstanding.
+   */
+  async settleLedger(payoutId: string, actorId: string): Promise<string | null> {
+    const id = await callRpc(this.db, 'settle_payout_ledger', { p_payout: payoutId, p_actor: actorId });
+    return typeof id === 'string' ? id : null;
   }
 }
