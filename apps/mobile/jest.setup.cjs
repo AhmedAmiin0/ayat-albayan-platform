@@ -23,3 +23,7 @@ jest.mock('./src/lib/supabase', () => ({
     },
   },
 }));
+
+// The native tab bar has no JS buttons to press in jest: tests get JS tab buttons named by each
+// tab's label instead (src/test/native-tabs-mock.tsx). The app renders the real NativeTabs.
+jest.mock('expo-router/unstable-native-tabs', () => require('./src/test/native-tabs-mock'));
