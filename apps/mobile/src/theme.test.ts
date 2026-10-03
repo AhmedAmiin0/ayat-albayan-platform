@@ -22,9 +22,9 @@ test.each([
 test('dark is the night Mushaf: dark margin, light ink, lighter action green', async () => {
   mockScheme.mockReturnValue('dark');
   const { result } = await renderHook(() => useTheme());
-  expect(result.current.color.margin).toBe('#0b1120');
-  expect(result.current.color.ink).toBe('#f1f5f9');
-  expect(result.current.color.lapis).toBe('#8fb0ff');
+  expect(result.current.color.margin).toBe('#050906');
+  expect(result.current.color.ink).toBe('#edf3ef');
+  expect(result.current.color.lapis).toBe('#4fc285');
   expect(result.current.elevation.page).toMatch(/^0 18px 40px -16px rgba/);
 });
 

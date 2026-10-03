@@ -1,6 +1,7 @@
 /* Raw colour tokens (docs/07 §3). Values are packages/shared/src/theme.ts as hex (tokens.test.ts diffs
-   them, and the contrast test runs there). Tailwind reads them via @theme inline. Readability palette:
-   white/slate surfaces, near-black ink, blue actions (`--lapis*` is the historical name), gold decorates.
+   them, and the contrast test runs there). Tailwind reads them via @theme inline. Green and black (owner,
+   2026-10-03): green-black ink and covers, deep green actions with a gold edge (`--lapis*` is the
+   historical name), teal for done/ok, gold decorates.
    <html data-theme> is always set at boot (index.html resolves "auto" via matchMedia);
    the media block is the no-JS fallback. tokens.test.ts keeps the two dark blocks identical. */
 
@@ -8,64 +9,64 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --margin: #eef1f5;
+  --margin: #eef3f0;
   --page: #ffffff;
   --raised: #ffffff;
-  --sunk: #f4f6f9;
-  --ink: #111827;
-  --ink-2: #374151;
-  --ink-3: #4b5563;
-  --rule: #e3e7ee;
-  --rule-strong: #c9d0db;
-  --rule-input: #7d8696;
+  --sunk: #f3f7f4;
+  --ink: #0b1410;
+  --ink-2: #2f3b35;
+  --ink-3: #4a5750;
+  --rule: #e0e8e3;
+  --rule-strong: #c5d2ca;
+  --rule-input: #77857d;
   --gold: #b7891f;
   --gold-soft: #e4c97e;
   --gold-wash: #faf2dc;
-  --lapis: #1d4ed8;
-  --lapis-hover: #1e3a8a;
-  --lapis-wash: #e8eefd;
-  --on-lapis: #ffffff;
-  --verdigris: #047857;
-  --verdigris-wash: #e2f5ec;
+  --lapis: #166534;
+  --lapis-hover: #0f4a26;
+  --lapis-wash: #e6f4ea;
+  --on-lapis: #f3d58a;
+  --verdigris: #0f766e;
+  --verdigris-wash: #e0f4f1;
   --saffron: #a14b06;
   --saffron-wash: #fdf1e1;
   --cinnabar: #b91c1c;
   --cinnabar-solid: #b91c1c;
   --cinnabar-wash: #fde8e8;
   --on-cinnabar: #ffffff;
-  --neutral-wash: #eceff4;
-  --inverse: #111827;
-  --on-inverse: #f9fafb;
+  --neutral-wash: #ebf0ed;
+  --inverse: #0b1410;
+  --on-inverse: #f5f8f6;
   --inverse-gold: #e4c97e;
-  --cover: #1e293b;
-  --leather: #1e3a5f;
-  --leather-deep: #172b47;
-  --leather-lift: #264a78;
+  --cover: #0d1a13;
+  --leather: #12301f;
+  --leather-deep: #0c2416;
+  --leather-lift: #1a4029;
   --gold-on-cover: #ecd18c;
   --cover-ink: #f8fafc;
-  --scrim: rgba(15, 23, 42, 0.45);
-  --elev-page: 0 1px 0 rgba(15, 23, 42, 0.04), 0 18px 40px -18px rgba(15, 23, 42, 0.22);
-  --elev-pop: 0 30px 60px -20px rgba(15, 23, 42, 0.45);
-  --elev-toast: 0 12px 28px -12px rgba(15, 23, 42, 0.4);
+  --scrim: rgba(5, 12, 8, 0.5);
+  --elev-page: 0 1px 0 rgba(5, 20, 12, 0.04), 0 18px 40px -18px rgba(5, 20, 12, 0.22);
+  --elev-pop: 0 30px 60px -20px rgba(5, 20, 12, 0.45);
+  --elev-toast: 0 12px 28px -12px rgba(5, 20, 12, 0.4);
 }
 
-/* ---------- dark (slate navy): no-JS fallback ---------- */
+/* ---------- dark (green-black): no-JS fallback ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --margin: #0b1120; --page: #0f172a; --raised: #162036; --sunk: #0c1426;
-    --ink: #f1f5f9; --ink-2: #cbd5e1; --ink-3: #a6b2c4;
-    --rule: #243049; --rule-strong: #334462; --rule-input: #6b7a94;
+    --margin: #050906; --page: #0a0f0c; --raised: #111a15; --sunk: #070c09;
+    --ink: #edf3ef; --ink-2: #c4d0c9; --ink-3: #9fb0a6;
+    --rule: #1f2c25; --rule-strong: #2d3f35; --rule-input: #64776c;
     --gold: #e0b95a; --gold-soft: #6b5523; --gold-wash: #2a2210;
-    --lapis: #8fb0ff; --lapis-hover: #b3caff; --lapis-wash: #17264a; --on-lapis: #0b1120;
-    --verdigris: #6ee7b7; --verdigris-wash: #0f2a22;
+    --lapis: #4fc285; --lapis-hover: #7fd9a6; --lapis-wash: #10281b; --on-lapis: #06100a;
+    --verdigris: #5eead4; --verdigris-wash: #0b2a26;
     --saffron: #fd9f68; --saffron-wash: #33200f;
-    --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #0b1120;
-    --neutral-wash: #1c2638;
-    --inverse: #e2e8f0; --on-inverse: #0f172a; --inverse-gold: #8a6a1c;
-    --cover: #111a2e;
-    --leather: #16233d; --leather-deep: #0e182c; --leather-lift: #1f3150;
-    --scrim: rgba(2, 6, 23, 0.65);
+    --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #06100a;
+    --neutral-wash: #18221d;
+    --inverse: #e2ebe5; --on-inverse: #0a0f0c; --inverse-gold: #8a6a1c;
+    --cover: #0b1510;
+    --leather: #0f2418; --leather-deep: #0a1b11; --leather-lift: #173322;
+    --scrim: rgba(0, 0, 0, 0.65);
     --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
     --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
     --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
@@ -75,19 +76,19 @@
 /* ---------- dark: chosen or resolved at boot ---------- */
 [data-theme='dark'] {
   color-scheme: dark;
-  --margin: #0b1120; --page: #0f172a; --raised: #162036; --sunk: #0c1426;
-  --ink: #f1f5f9; --ink-2: #cbd5e1; --ink-3: #a6b2c4;
-  --rule: #243049; --rule-strong: #334462; --rule-input: #6b7a94;
+  --margin: #050906; --page: #0a0f0c; --raised: #111a15; --sunk: #070c09;
+  --ink: #edf3ef; --ink-2: #c4d0c9; --ink-3: #9fb0a6;
+  --rule: #1f2c25; --rule-strong: #2d3f35; --rule-input: #64776c;
   --gold: #e0b95a; --gold-soft: #6b5523; --gold-wash: #2a2210;
-  --lapis: #8fb0ff; --lapis-hover: #b3caff; --lapis-wash: #17264a; --on-lapis: #0b1120;
-  --verdigris: #6ee7b7; --verdigris-wash: #0f2a22;
+  --lapis: #4fc285; --lapis-hover: #7fd9a6; --lapis-wash: #10281b; --on-lapis: #06100a;
+  --verdigris: #5eead4; --verdigris-wash: #0b2a26;
   --saffron: #fd9f68; --saffron-wash: #33200f;
-  --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #0b1120;
-  --neutral-wash: #1c2638;
-  --inverse: #e2e8f0; --on-inverse: #0f172a; --inverse-gold: #8a6a1c;
-  --cover: #111a2e;
-  --leather: #16233d; --leather-deep: #0e182c; --leather-lift: #1f3150;
-  --scrim: rgba(2, 6, 23, 0.65);
+  --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #06100a;
+  --neutral-wash: #18221d;
+  --inverse: #e2ebe5; --on-inverse: #0a0f0c; --inverse-gold: #8a6a1c;
+  --cover: #0b1510;
+  --leather: #0f2418; --leather-deep: #0a1b11; --leather-lift: #173322;
+  --scrim: rgba(0, 0, 0, 0.65);
   --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
   --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
   --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);

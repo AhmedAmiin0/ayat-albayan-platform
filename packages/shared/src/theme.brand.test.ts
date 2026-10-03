@@ -1,14 +1,14 @@
 import { describe, expect, it } from 'vitest';
 import { palette, type ThemeName } from './theme.js';
 
-// The light theme: readability first (owner, 2026-10-03), not the old dark-green-on-cream brand.
-it('light tokens are the readability palette', () => {
+// Green and black, readable, with a green/gold primary (owner, 2026-10-03).
+it('light tokens are the green-black palette', () => {
   const c = palette.light;
   expect(c.page).toBe('#ffffff'); // white page
-  expect(c.ink).toBe('#111827'); // near-black text
-  expect(c.lapis).toBe('#1d4ed8'); // blue: the action
-  expect(c.lapisHover).toBe('#1e3a8a');
-  expect(c.ok).toBe('#047857'); // green only means done/ok
+  expect(c.ink).toBe('#0b1410'); // green-black text
+  expect(c.lapis).toBe('#166534'); // deep green: the action
+  expect(c.onLapis).toBe('#f3d58a'); // gold on the green primary
+  expect(c.ok).toBe('#0f766e'); // teal means done/ok
   expect(c.gold).toBe('#b7891f'); // gold decorates
   expect(c.bad).toBe('#b91c1c');
 });
@@ -44,10 +44,11 @@ describe.each(['light', 'dark'] as ThemeName[])('%s: one colour, one meaning (do
     expect(apart(c.bad, c.act)).toBeGreaterThanOrEqual(20);
   });
 
-  it('the action is blue (hue 245°–280°), apart from «ok» green', () => {
-    expect(hue(c.lapis)).toBeGreaterThanOrEqual(245);
-    expect(hue(c.lapis)).toBeLessThanOrEqual(280);
-    expect(apart(c.lapis, c.ok)).toBeGreaterThanOrEqual(60);
+  it('the action is green (hue 135°–165°), apart from «ok» teal and the dark cover', () => {
+    expect(hue(c.lapis)).toBeGreaterThanOrEqual(135);
+    expect(hue(c.lapis)).toBeLessThanOrEqual(165);
+    expect(apart(c.lapis, c.ok)).toBeGreaterThanOrEqual(15);
+    expect(apart(c.lapis, c.gold)).toBeGreaterThanOrEqual(60);
   });
 });
 
