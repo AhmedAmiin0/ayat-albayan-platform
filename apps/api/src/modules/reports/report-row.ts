@@ -50,7 +50,7 @@ export type ReportRow = {
 
 /** The lesson a report belongs to: identity for the form (R-REP-01) and the outcome for a submit. */
 export const REPORT_LESSON_SELECT =
-  'id, teacher_id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, tz), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz, program))' as const;
+  'id, teacher_id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, display_name_en, tz), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz, program))' as const;
 
 export type ReportLessonStudent = {
   student_id: string;
@@ -67,6 +67,6 @@ export type ReportLessonRow = {
   ends_at: string;
   status: LessonStatus;
   meeting_link: string | null;
-  teacher: { id: string; display_name_ar: string; tz: string } | null;
+  teacher: { id: string; display_name_ar: string; display_name_en: string | null; tz: string } | null;
   lesson_students: ReportLessonStudent[];
 };

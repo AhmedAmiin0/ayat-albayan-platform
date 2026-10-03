@@ -3,6 +3,7 @@ import type { BookingResult, Gender, LeadStatus, Program, StudentStatus } from '
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
+import type { LeadFacts } from './booking.lead-merge';
 import { toBookingResult, type BookingPayload } from './booking.mapper';
 
 export type Range = { from: Date; to: Date };
@@ -45,8 +46,12 @@ export class BookingQueries {
     return data;
   }
 
-  async lead(id: string): Promise<{ id: string; status: LeadStatus } | null> {
-    const { data, error } = await this.db.from('leads').select('id, status').eq('id', id).maybeSingle();
+  async lead(id: string): Promise<(LeadFacts & { status: LeadStatus }) | null> {
+    const { data, error } = await this.db
+      .from('leads')
+      .select('id, status, source, qualification')
+      .eq('id', id)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }

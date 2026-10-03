@@ -6,6 +6,7 @@ import { Dialog } from '@/components/ui/dialog';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Input } from '@/components/ui/input';
+import { RequiredLegend } from '@/components/ui/label';
 import { PhonePreview } from '@/components/ui/phone-preview';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
@@ -58,10 +59,13 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
           void form.handleSubmit();
         }}
       >
+        <div className="sm:col-span-2">
+          <RequiredLegend />
+        </div>
         {TEXT_FIELDS.map((f) => (
           <form.Field key={f.name} name={f.name} validators={{ onSubmit: ({ value }) => f.check(value) }}>
             {(field) => (
-              <Field label={f.label} hint={'hint' in f ? f.hint : undefined} error={field.state.meta.errors[0]}>
+              <Field label={f.label} hint={'hint' in f ? f.hint : undefined} error={field.state.meta.errors[0]} required>
                 {(p) => (
                   <>
                     <Input {...p} required value={field.state.value} data-autofocus={f.name === 'name' || undefined}

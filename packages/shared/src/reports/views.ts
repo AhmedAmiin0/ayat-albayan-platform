@@ -57,7 +57,7 @@ export interface ReportFormLesson {
   ends_at: string;
   status: LessonStatus;
   meeting_link: string | null;
-  teacher: { id: string; display_name_ar: string; tz: string };
+  teacher: { id: string; display_name_ar: string; display_name_en?: string | null; tz: string };
 }
 
 export interface ReportFormEntry {

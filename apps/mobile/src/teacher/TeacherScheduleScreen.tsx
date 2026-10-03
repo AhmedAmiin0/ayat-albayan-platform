@@ -62,7 +62,9 @@ export function TeacherScheduleScreen() {
           void lessons.refetch();
           void grid.refetch();
         }}
-        ListEmptyComponent={lessons.isPending ? null : <ErrorState onRetry={() => void lessons.refetch()} />}
+        ListEmptyComponent={
+          lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />
+        }
       />
     </Screen>
   );

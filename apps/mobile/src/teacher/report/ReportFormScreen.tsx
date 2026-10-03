@@ -1,9 +1,11 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useRef } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
 import { clockAt } from '@/inbox/format';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { Note } from '@/more/Note';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
@@ -27,6 +29,7 @@ export function ReportFormScreen() {
   // its fields once, and must not seed them from an older copy than the server's draft.
   const data = form.isFetchedAfterMount || form.isError ? form.data : undefined;
   const stale = form.isError && data !== undefined;
+  const scroll = useRef<ScrollView>(null);
   const titled = (data?.entries.length ?? 0) > 1;
   return (
     <Screen>
@@ -38,6 +41,7 @@ export function ReportFormScreen() {
       {data ? (
         <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <ScrollView
+            ref={scroll}
             style={{ flex: 1, marginHorizontal: -16 }}
             contentContainerStyle={{ gap: 32, paddingHorizontal: 16, paddingBottom: 48 }}
             keyboardShouldPersistTaps="handled"
@@ -46,7 +50,7 @@ export function ReportFormScreen() {
               // Seeded once per server version: a newer version (sent elsewhere) reseeds the card.
               <View key={`${entry.report.id}:${entry.report.version}`} style={{ gap: 12 }}>
                 {titled ? <ScreenHeader title={t.reports.entryFor.replace('{name}', entry.student.name)} trailing={null} /> : null}
-                <ReportEntryCard form={data} entry={entry} tz={tz} />
+                <ReportEntryCard form={data} entry={entry} tz={tz} scroll={scroll} />
               </View>
             ))}
           </ScrollView>
@@ -56,7 +60,9 @@ export function ReportFormScreen() {
           onRetry={() => void form.refetch()}
           message={form.error instanceof ApiError ? reportErrorText(form.error) : undefined}
         />
-      ) : null}
+      ) : (
+        <Note>{t.common.loading}</Note>
+      )}
     </Screen>
   );
 }

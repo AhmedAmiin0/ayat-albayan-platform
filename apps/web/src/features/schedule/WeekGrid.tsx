@@ -1,11 +1,14 @@
 import type { LessonView, OverviewTeacher } from '@ab/shared';
+import { useNarrow } from '@/components/ui/use-narrow';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';
 import { LessonChip } from './LessonChip';
 import { teacherRows } from './lessons';
 import { boardRows, hoursText, teacherDay } from './overview';
 import { ScheduleTrack } from './ScheduleTrack';
 import { TeacherCell } from './TeacherCell';
+import { WeekAgenda } from './WeekAgenda';
 import { dayMonthLabel, weekDays, weekdayOf } from './tz';
 
 export interface WeekGridProps {
@@ -34,8 +37,8 @@ interface Row {
 }
 
 function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeacher[] | undefined): Row[] {
-  if (teachers) return boardRows(teachers, lessons).map((r) => ({ ...r, id: r.teacher.id, name: r.teacher.display_name_ar }));
-  return teacherRows(lessons).map((r) => ({ id: r.teacher.id, name: r.teacher.display_name_ar, teacher: null, days: r.days }));
+  if (teachers) return boardRows(teachers, lessons).map((r) => ({ ...r, id: r.teacher.id, name: teacherLabel(r.teacher) }));
+  return teacherRows(lessons).map((r) => ({ id: r.teacher.id, name: teacherLabel(r.teacher), teacher: null, days: r.days }));
 }
 
 /**
@@ -45,10 +48,11 @@ function rowsOf(lessons: readonly LessonView[], teachers: readonly OverviewTeach
 export function WeekGrid({ week, today, lessons, onOpen, teachers, now = new Date() }: WeekGridProps) {
   const days = weekDays(week);
   const rows = rowsOf(lessons, teachers);
+  if (useNarrow()) return <WeekAgenda days={days} today={today} rows={rows} onOpen={onOpen} />;
   return (
     // Below lg the grid scrolls sideways: the end fade (as on the nav row) says more columns exist.
     <div className="ab-fade-end -mx-1 overflow-x-auto ps-5 pe-10 lg:px-1 lg:[mask-image:none]">
-      <table aria-label={t.schedule.grid} className="w-full min-w-[920px] table-fixed border-collapse text-sm">
+      <table aria-label={t.schedule.grid} className={cn('w-full table-fixed border-collapse text-sm', teachers ? 'min-w-[1100px]' : 'min-w-[920px]')}>
         <thead>
           <tr className="border-t-[3px] border-b-[3px] border-double border-gold">
             <th scope="col" className={cn('px-2 py-2 text-start text-xs font-semibold text-ink-3', teachers ? 'w-[184px]' : 'w-[132px]')}>

@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { readAll } from '../scheduling/read-all';
 import { dbError, type Page, type PageQuery } from './http';
 import { teacherSearchFilter } from './teachers.mapper';
 
@@ -60,10 +61,12 @@ export class TeachersQueries {
    * ponytail: counts rows in JS — fine for one academy; a grouped view if teachers get thousands.
    */
   async loads(teacherIds?: readonly string[]): Promise<Map<string, number>> {
-    let query = this.db.from('students').select('teacher_id').in('status', ['trial', 'active']);
-    query = teacherIds ? query.in('teacher_id', [...teacherIds]) : query.not('teacher_id', 'is', null);
-    const { data, error } = await query;
-    if (error) throw dbError(error);
+    // readAll: more than max_rows (1000) students must not be cut off silently.
+    const data = await readAll((from, to) => {
+      let query = this.db.from('students').select('teacher_id').in('status', ['trial', 'active']);
+      query = teacherIds ? query.in('teacher_id', [...teacherIds]) : query.not('teacher_id', 'is', null);
+      return query.order('id').range(from, to);
+    });
     const counts = new Map<string, number>();
     for (const { teacher_id: id } of data) if (id) counts.set(id, (counts.get(id) ?? 0) + 1);
     return counts;

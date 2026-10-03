@@ -12,7 +12,7 @@ import type { QualFieldsProps } from './QualificationFields';
 import { QualText } from './QualText';
 
 /** «—» first in every single choice: picking it clears the field (sent as null). */
-export const CLEAR: FilterPill<''> = { value: '', label: '—' };
+export const CLEAR: FilterPill<''> = { value: '', label: t.common.unset };
 
 type TimeKey = 'preferred_from' | 'preferred_to';
 

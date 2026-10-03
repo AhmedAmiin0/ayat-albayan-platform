@@ -35,7 +35,9 @@ export const reportDraftSchema = z.object({
 
 /**
  * Text the «تقرير الحلقة» Google Form required (inferred from 194/194 answers, research-forms
- * item 12): required when the student attended, like the grades. The rest stays optional.
+ * item 12): required when the student attended, like the grades, on the first send only. A report
+ * already sent (expectedVersion > 0) can be corrected without filling a field its form never asked.
+ * The rest stays optional.
  */
 export const REPORT_REQUIRED_TEXT = ['recited', 'newMemorization', 'revision', 'notes', 'homework'] as const;
 
@@ -58,6 +60,7 @@ export const reportSubmitSchema = reportDraftSchema
       ctx.addIssue({ code: 'custom', path: ['grades'], message: 'missing_grades' });
       return;
     }
+    if (r.expectedVersion > 0) return;
     const blank = REPORT_REQUIRED_TEXT.filter((k) => !r[k]);
     if (blank.length > 0) ctx.addIssue({ code: 'custom', path: [blank[0] ?? 'recited'], message: 'missing_text' });
   });

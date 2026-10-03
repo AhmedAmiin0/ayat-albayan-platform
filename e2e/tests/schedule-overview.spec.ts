@@ -7,7 +7,7 @@ import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailabil
 // Riyadh next week, teaches one trial at 17:00 and is off all Monday; a second, profile-less male
 // Arabic teacher has nothing. Book-from-gap lands on the wizard with «أبرار» preselected.
 
-const STUDENT = 'تجربة الجدول';
+const STUDENT = `تجربة الجدول ${Date.now() % 100_000}`; // unique: the student search must find exactly this one
 const OTHER = `معلم الجدول ${Date.now() % 100_000}`;
 
 interface Seed {
@@ -90,7 +90,14 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       await page.goto(`/admin/schedule?view=day&day=${s.sunday}`);
       await row(page, 'أبرار').getByRole('link', { name: /فاضي 16:00 – 17:00/ }).click();
       await expect(page).toHaveURL(new RegExp(`/admin/book\\?.*teacherId=${s.abrarId}`));
-      await page.goto(`${page.url()}&studentId=${s.studentId}`);
+      // The gap stays in sight (chip) while the admin searches and picks the student: the
+      // teacher and start survive the reopen for that student (not dropped by the navigation).
+      await expect(page.getByText(ar.booking.gapChip.split(' · ')[0] ?? '')).toBeVisible();
+      await page.getByRole('search').getByRole('textbox').fill(STUDENT);
+      await page.getByRole('button', { name: new RegExp(STUDENT) }).click();
+      await expect(page).toHaveURL(new RegExp(`studentId=${s.studentId}`));
+      await expect(page).toHaveURL(new RegExp(`teacherId=${s.abrarId}`));
+      await expect(page.getByText(ar.booking.gapChip.split(' · ')[0] ?? '')).toBeVisible();
       await page.getByRole('button', { name: ar.booking.next }).click();
       await expect(page.getByRole('radio', { name: /أبرار/ })).toBeChecked();
     } finally {
@@ -103,9 +110,14 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
     try {
       const page = await asRole('admin');
       await page.goto(`/admin/schedule?week=${addDays(s.sunday, -1)}&teacher=${s.otherId}`);
-      const grid = page.getByRole('table', { name: ar.schedule.grid });
-      await expect(grid.getByRole('rowheader')).toHaveCount(1);
-      await expect(grid.getByRole('rowheader')).toContainText(OTHER);
+      const grid = page.getByRole('table', { name: ar.schedule.grid }).or(page.getByRole('group', { name: ar.schedule.grid })); // table, or the day list on a phone
+      // The table has one row header per teacher; on a phone the day list shows names only above lessons.
+      if (test.info().project.name === 'desktop') {
+        await expect(grid.getByRole('rowheader')).toHaveCount(1);
+        await expect(grid.getByRole('rowheader')).toContainText(OTHER);
+      } else {
+        await expect(grid.getByText(ar.schedule.noLessons)).toHaveCount(7);
+      }
       await page.goto(`/admin/schedule?week=${addDays(s.sunday, -1)}&teacher=${s.abrarId}`);
       await expect(grid.getByRole('button', { name: new RegExp(`17:00.*${STUDENT}`) })).toContainText(ar.schedule.trialTag);
     } finally {

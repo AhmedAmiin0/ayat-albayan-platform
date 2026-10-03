@@ -21,7 +21,7 @@ export function ScheduleFilters({ search, teachers, onSearch }: ScheduleFiltersP
   const pick = <T extends string>(list: readonly T[], value: string): T | undefined => list.find((x) => x === value);
 
   return (
-    <div role="group" aria-label={t.schedule.filters} className="flex flex-wrap items-end gap-x-4 gap-y-3">
+    <div role="group" aria-label={t.schedule.filters} className="grid grid-cols-2 items-end gap-x-3 gap-y-3 sm:flex sm:flex-wrap sm:gap-x-4">
       <TeacherPicker teachers={teachers} value={search.teachers ?? []} onChange={(ids) => onSearch({ teachers: ids.length ? ids : undefined })} />
       <div className="grid w-full gap-1.5 sm:w-auto">
         <Label htmlFor={`${id}-p`}>{t.schedule.programFilter}</Label>
@@ -50,7 +50,7 @@ export function ScheduleFilters({ search, teachers, onSearch }: ScheduleFiltersP
           ))}
         </Select>
       </div>
-      <label className="flex min-h-11 items-center gap-2 text-sm sm:min-h-10">
+      <label className="col-span-2 flex min-h-11 items-center gap-2 text-sm sm:col-auto sm:min-h-10">
         <input
           type="checkbox"
           checked={search.closed === true}

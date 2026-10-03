@@ -1,4 +1,4 @@
-import type { Gender, Program, TeacherStatus } from '@ab/shared';
+import type { Gender, LessonStatus, Program, TeacherStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
 import { dbError } from '../../teachers/http';
@@ -7,6 +7,7 @@ import type { LessonWindow } from '../lessons.queries';
 export type OverviewTeacherRow = {
   id: string;
   display_name_ar: string;
+  display_name_en: string | null;
   gender: Gender;
   programs: Program[];
   tz: string;
@@ -15,6 +16,7 @@ export type OverviewTeacherRow = {
   status: TeacherStatus;
 };
 export type OverviewSlotRow = { teacher_id: string; weekday: number; start_time: string; end_time: string; tz: string };
+export type OverviewCarryRow = { teacher_id: string; status: LessonStatus; starts_at: string; ends_at: string };
 export type OverviewTimeOffRow = { id: string; teacher_id: string; starts_at: string; ends_at: string; reason: string | null };
 
 /**
@@ -27,7 +29,7 @@ export class OverviewQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async teachers(w: LessonWindow): Promise<OverviewTeacherRow[]> {
-    let q = this.db.from('teachers').select('id, display_name_ar, gender, programs, tz, meeting_link, max_students, status');
+    let q = this.db.from('teachers').select('id, display_name_ar, display_name_en, gender, programs, tz, meeting_link, max_students, status');
     if (w.teacherId) q = q.eq('id', w.teacherId);
     const { data, error } = await q.order('display_name_ar').order('id');
     if (error) throw dbError(error);
@@ -48,6 +50,23 @@ export class OverviewQueries {
       .from('teacher_time_off')
       .select('id, teacher_id, starts_at, ends_at, reason')
       .lt('starts_at', w.to.toISOString())
+      .gt('ends_at', w.from.toISOString());
+    if (w.teacherId) q = q.eq('teacher_id', w.teacherId);
+    const { data, error } = await q.order('starts_at');
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /**
+   * Lessons that started before the window and run into it (starts_at < from, ends_at > from): not
+   * in the window's list, but they still occupy the teacher, so the free time must subtract them
+   * (same overlap as GET /booking/slots).
+   */
+  async carryOver(w: LessonWindow): Promise<OverviewCarryRow[]> {
+    let q = this.db
+      .from('lessons')
+      .select('teacher_id, status, starts_at, ends_at')
+      .lt('starts_at', w.from.toISOString())
       .gt('ends_at', w.from.toISOString());
     if (w.teacherId) q = q.eq('teacher_id', w.teacherId);
     const { data, error } = await q.order('starts_at');

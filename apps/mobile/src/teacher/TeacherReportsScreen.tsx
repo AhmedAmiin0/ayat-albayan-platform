@@ -2,6 +2,7 @@ import { RIYADH_TZ, type TeacherReportView } from '@ab/shared';
 import { useState, type ReactElement } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
+import { Note } from '@/more/Note';
 import { usePagedList } from '@/lib/use-paged-list';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -24,6 +25,7 @@ interface Rows {
   loaded: boolean;
   failed: boolean;
   empty: string;
+  refreshing: boolean;
   refresh: () => void;
   more?: () => void;
 }
@@ -45,6 +47,7 @@ export function TeacherReportsScreen() {
       loaded: pending.data !== undefined,
       failed: pending.isError,
       empty: t.reports.noPending,
+      refreshing: pending.isRefetching,
       refresh: () => void pending.refetch(),
     },
     submitted: {
@@ -52,6 +55,7 @@ export function TeacherReportsScreen() {
       loaded: sent.data !== undefined,
       failed: sent.isError,
       empty: t.reports.noSubmitted,
+      refreshing: sent.isRefetching && !sent.isFetchingNextPage,
       refresh: sent.refresh,
       more: sent.loadMore,
     },
@@ -60,6 +64,7 @@ export function TeacherReportsScreen() {
       loaded: me.data !== undefined,
       failed: me.isError,
       empty: t.teacherDash.noStudents,
+      refreshing: me.isRefetching,
       refresh: () => void me.refetch(),
     },
   };
@@ -74,10 +79,16 @@ export function TeacherReportsScreen() {
         keyExtractor={(item) => item.key}
         renderItem={({ item }) => item.row}
         onEndReached={shown.more}
-        refreshing={false}
+        refreshing={shown.refreshing}
         onRefresh={shown.refresh}
         ListEmptyComponent={
-          shown.loaded ? <EmptyState title={shown.empty} /> : shown.failed ? <ErrorState onRetry={shown.refresh} /> : null
+          shown.loaded ? (
+            <EmptyState title={shown.empty} />
+          ) : shown.failed ? (
+            <ErrorState onRetry={shown.refresh} />
+          ) : (
+            <Note>{t.common.loading}</Note>
+          )
         }
       />
     </Screen>

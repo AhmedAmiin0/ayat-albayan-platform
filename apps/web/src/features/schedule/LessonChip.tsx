@@ -2,6 +2,7 @@ import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView,
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
 import { zoneLabel } from './slots';
@@ -39,7 +40,7 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
       type="button"
       onClick={() => onOpen(lesson)}
       className={cn(
-        'grid w-full gap-0.5 rounded-sm border border-rule border-s-[3px] bg-raised px-2 py-1.5 text-start text-xs transition-colors duration-[120ms] hover:bg-sunk',
+        'grid w-full min-w-0 gap-0.5 overflow-hidden rounded-sm border border-rule border-s-[3px] bg-raised px-2 py-1.5 text-start text-xs transition-colors duration-[120ms] hover:bg-sunk',
         EDGE[style.tone],
       )}
     >
@@ -49,12 +50,14 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
         </span>
         <span className="truncate font-medium">{studentNames(lesson)}</span>
       </span>
-      {!hideTeacher && <span className="truncate text-ink-3">{lesson.teacher.display_name_ar}</span>}
-      <span className={cn('flex items-center gap-1', INK[style.tone])}>
-        <NuqtaGlyph shape={style.glyph} />
-        <span>{t.enums.lessonStatus[lesson.status]}</span>
+      {!hideTeacher && <span className="truncate text-ink-3">{teacherLabel(lesson.teacher)}</span>}
+      <span className={cn('flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5', INK[style.tone])}>
+        <span className="flex min-w-0 items-center gap-1">
+          <NuqtaGlyph shape={style.glyph} />
+          <span className="truncate">{t.enums.lessonStatus[lesson.status]}</span>
+        </span>
         {lesson.trial && (
-          <span className="ms-auto rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.schedule.trialTag}</span>
+          <span className="shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.schedule.trialTag}</span>
         )}
       </span>
       {local && (

@@ -59,6 +59,13 @@ export interface StudentBalanceView {
   packages: SubscriptionView[];
 }
 
+/** GET /students/:id/balance for a teacher: lessons only, never price, paid, fx or the quote. */
+export interface TeacherBalanceView {
+  student_id: string;
+  remaining: number;
+  packages: BalanceView[];
+}
+
 export interface PaymentView {
   id: string;
   subscription_id: string;

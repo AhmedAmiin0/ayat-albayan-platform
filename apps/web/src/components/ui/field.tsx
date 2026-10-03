@@ -1,5 +1,5 @@
 import { useId, type ReactNode } from 'react';
-import { Label } from './label';
+import { Label, RequiredMark } from './label';
 import { isolateLtr } from './ltr';
 import { NuqtaGlyph } from './nuqta-glyph';
 
@@ -8,6 +8,7 @@ export interface FieldControlProps {
   id: string;
   'aria-describedby'?: string;
   'aria-invalid'?: true;
+  'aria-required'?: true;
 }
 
 export interface FieldProps {
@@ -15,6 +16,8 @@ export interface FieldProps {
   /** Control id; generated when omitted. */
   id?: string;
   hint?: string;
+  /** Adds the « *» mark (aria-hidden, beside the label) and aria-required; pair the form with a RequiredLegend. */
+  required?: boolean;
   /** Shown under the field (13px cinnabar + struck glyph) and marks the control aria-invalid. */
   error?: string;
   /** Render the control with the wiring: `{(p) => <Input {...p} value=… />}`. */
@@ -22,7 +25,7 @@ export interface FieldProps {
 }
 
 /** Label + control + hint + error with aria wiring (docs/07 §6, §10). */
-export function Field({ label, id, hint, error, children }: FieldProps) {
+export function Field({ label, id, hint, error, required, children }: FieldProps) {
   const auto = useId();
   const controlId = id ?? auto;
   const hintId = `${controlId}-hint`;
@@ -31,10 +34,14 @@ export function Field({ label, id, hint, error, children }: FieldProps) {
   const control: FieldControlProps = { id: controlId };
   if (describedBy) control['aria-describedby'] = describedBy;
   if (error) control['aria-invalid'] = true;
+  if (required) control['aria-required'] = true;
 
   return (
     <div className="grid content-start gap-1.5">
-      <Label htmlFor={controlId}>{label}</Label>
+      <div className="flex items-baseline">
+        <Label htmlFor={controlId}>{label}</Label>
+        {required && <RequiredMark />}
+      </div>
       {children(control)}
       {hint && (
         <p id={hintId} className="text-xs text-ink-3">

@@ -9,7 +9,7 @@ import { Button } from '@/ui/Button';
 import { StatusChip } from '@/ui/StatusChip';
 import type { ReportAction } from './day';
 
-const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.edit, view: t.reports.view };
+const reportLabel: Record<ReportAction, string> = { open: t.reports.open, edit: t.reports.resume, view: t.reports.view };
 
 export interface TeacherLessonCardProps {
   lesson: LessonView;

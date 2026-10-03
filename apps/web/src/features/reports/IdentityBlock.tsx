@@ -4,6 +4,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { teacherLabel } from '@/lib/teacher-label';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -37,13 +38,13 @@ export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; ent
           <span className="me-2 font-semibold">{student.name}</span>
           <Ltr className="text-xs text-ink-3">{student.code}</Ltr>
         </Row>
-        <Row label={t.reports.teacher}>{lesson.teacher.display_name_ar}</Row>
+        <Row label={t.reports.teacher}>{teacherLabel(lesson.teacher)}</Row>
         <Row label={t.reports.date}>{when}</Row>
         <Row label={t.reports.lessonNo}>{lessonNo(entry)}</Row>
         <Row label={t.reports.program}>{t.enums.program[student.program]}</Row>
         <Row label={t.reports.link}>
           {lesson.meeting_link ? (
-            <a href={lesson.meeting_link} target="_blank" rel="noreferrer" dir="ltr" className="block truncate text-lapis underline underline-offset-4">
+            <a href={lesson.meeting_link} target="_blank" rel="noreferrer" dir="ltr" className="block truncate py-3 text-lapis underline underline-offset-4 sm:py-0">
               {lesson.meeting_link.replace(/^https?:\/\//, '')}
             </a>
           ) : (

@@ -24,7 +24,7 @@
     "openLeads": "Open conversations"
   },
   "teacher": {
-    "dashboardTitle": "My lessons"
+    "dashboardTitle": "Today"
   },
   "portal": {
     "dashboardTitle": "Student progress"
@@ -82,6 +82,8 @@
     "yes": "Yes",
     "no": "No",
     "required": "This field is required",
+    "requiredLegend": "* Required",
+    "unset": "Not set",
     "notFound": "We couldn't find what you're looking for",
     "forbidden": "You don't have access to this page",
     "phoneErrors": {
@@ -125,6 +127,7 @@
     "code": "Code",
     "name": "Student name",
     "age": "Student's age",
+    "ageHint": "From 3 to 99",
     "gender": "Gender",
     "program": "Program",
     "level": "Current reading level",
@@ -185,6 +188,7 @@
     "name": "Guardian name",
     "phone": "WhatsApp number (with country code)",
     "country": "Country",
+    "countryHint": "A two-letter code, like SA",
     "tz": "Time zone",
     "source": "How did you hear about us?",
     "notes": "Notes",
@@ -393,11 +397,18 @@
     "trialTag": "Trial",
     "dayOff": "Day off",
     "noWindows": "No available hours this day",
-    "teachersPicked": "{n} teachers",
+    "teachersPicked": {
+      "one": "1 teacher",
+      "two": "2 teachers",
+      "few": "{n} teachers",
+      "other": "{n} teachers"
+    },
     "dayBoard": "Day schedule"
   },
   "booking": {
     "title": "Book lessons",
+    "gapChip": "Booking from a free gap · {when}",
+    "fillRequired": "Fill in the student's name, the guardian's name and the WhatsApp number",
     "trialTitle": "Book a trial lesson",
     "steps": {
       "students": "Student",
@@ -815,6 +826,7 @@
     "formTitle": "Lesson report",
     "open": "Write report",
     "edit": "Edit report",
+    "resume": "Continue the report",
     "view": "View report",
     "identity": "Lesson details",
     "readOnlyHint": "These details fill in automatically from the lesson",
@@ -1271,6 +1283,7 @@
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
     "messagingOffServer": "Sending is turned off on the server — messages wait in the queue until it's turned on",
+    "messagingOffTeacher": "Your message will go out as soon as sending is back on",
     "error": {
       "session_closed": "More than 24 hours have passed since their last message — you need to send a template",
       "template_not_approved": "This template isn't approved by Meta yet",

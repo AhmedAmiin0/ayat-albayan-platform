@@ -78,7 +78,9 @@ export function TeacherTodayScreen() {
           void pending.refetch();
         }}
         ListEmptyComponent={
-          day.isPending ? null : loaded ? (
+          day.isPending ? (
+            <Note>{t.common.loading}</Note>
+          ) : loaded ? (
             <View style={{ gap: 8 }}>
               <EmptyState title={t.teacherDash.noLessonsToday} />
               <Note>{t.teacherDash.emptyHint}</Note>

@@ -32,7 +32,7 @@ export interface ContactStepProps {
   onNext: () => void;
 }
 
-const NONE = { value: '', label: '—' } as const;
+const NONE = { value: '', label: t.common.unset } as const;
 const TZ_PILLS = TZ_OPTIONS.map((tz) => ({ value: tz as string, label: cityOf(tz) }));
 const GENDER_PILLS: FilterPill<Gender | ''>[] = [
   NONE,
@@ -87,6 +87,7 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
         t.students.gender,
         <FilterPills
           role="radiogroup"
+          wrap
           accessibilityLabel={t.students.gender}
           items={GENDER_PILLS}
           value={value.studentGender ?? ''}
@@ -115,6 +116,7 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
         t.students.tz,
         <FilterPills
           role="radiogroup"
+          wrap
           accessibilityLabel={t.students.tz}
           items={TZ_PILLS}
           value={value.tz}
@@ -131,6 +133,7 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
         t.guardians.source,
         <FilterPills
           role="radiogroup"
+          wrap
           accessibilityLabel={t.guardians.source}
           items={SOURCE_PILLS}
           value={value.source ?? ''}

@@ -23,3 +23,11 @@ export function teacherPatch(draft: BookingDraft, change: TeacherChange, hint: B
   const startsAt = change.teacher && change.teacher.id === hint?.teacherId ? hint.startsAt : null;
   return { ...change, startsAt, byday: [] };
 }
+
+/**
+ * Picking a student in the wizard reopens /admin/book for them: the free gap's teacher and start
+ * ride along (an unrelated lead or package never does), so step 2 still has the gap's teacher.
+ */
+export function searchForStudent(prev: BookSearch, studentId: string): BookSearch {
+  return { studentId, ...(prev.teacherId && { teacherId: prev.teacherId }), ...(prev.startsAt && { startsAt: prev.startsAt }) };
+}

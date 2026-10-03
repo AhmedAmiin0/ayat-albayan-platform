@@ -44,7 +44,7 @@ export function useReportEntry(initial: ReportView) {
   };
   const setGrade = (rubric: Rubric, grade: Grade) => set('grades', { ...values.grades, [rubric]: grade });
   const send = () => {
-    const found = submitProblem(values);
+    const found = submitProblem(values, report.version);
     setProblem(found);
     if (!found) submit.mutate({ id: report.id, body: submitBody(values, report.version) });
   };

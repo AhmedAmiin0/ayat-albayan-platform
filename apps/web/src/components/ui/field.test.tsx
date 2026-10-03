@@ -38,3 +38,17 @@ describe('Field', () => {
     expect(select.hasAttribute('aria-describedby')).toBe(false);
   });
 });
+
+describe('Field required', () => {
+  it('aria-required on the control; the « *» is aria-hidden beside the label, whose text stays plain', () => {
+    render(
+      <Field label={t.students.code} required>
+        {(p) => <Input {...p} />}
+      </Field>,
+    );
+    const input = screen.getByLabelText(t.students.code);
+    expect(input.getAttribute('aria-required')).toBe('true');
+    expect(document.querySelector('label')?.textContent).toBe(t.students.code);
+    expect(document.querySelector('[aria-hidden="true"]')?.textContent).toBe(' *');
+  });
+});

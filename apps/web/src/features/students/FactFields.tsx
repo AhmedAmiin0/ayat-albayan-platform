@@ -15,7 +15,7 @@ export interface AgeFieldProps {
 
 export function AgeField({ value, error, onChange }: AgeFieldProps) {
   return (
-    <Field label={t.students.age} error={error}>
+    <Field label={t.students.age} hint={t.students.ageHint} error={error}>
       {(p) => (
         <Input
           {...p}

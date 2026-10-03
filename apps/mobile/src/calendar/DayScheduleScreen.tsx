@@ -40,7 +40,8 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
  * «المزيد» rather than opened as its tab.
  */
 export function DayScheduleScreen({ back = false }: { back?: boolean }) {
-  const today = riyadhToday(useNow());
+  const now = useNow();
+  const today = riyadhToday(now);
   const [date, setDate] = useState(today);
   const [view, setView] = useState<ScheduleView>('day');
   const [filter, setFilter] = useState<TeacherFilter>(ALL);
@@ -50,7 +51,7 @@ export function DayScheduleScreen({ back = false }: { back?: boolean }) {
   const overview = useOverview(weekWindow(start));
   const data = overview.data;
   const day = view === 'day';
-  const agendas = data ? teacherAgendas(data, { start: day ? date : start, view, filter }) : [];
+  const agendas = data ? teacherAgendas(data, { start: day ? date : start, view, filter, now }) : [];
   const subtitle = headerLine(
     [t.availability.tzHint.replace('{tz}', t.runningHead.riyadh)],
     overview,

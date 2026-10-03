@@ -3,6 +3,7 @@ import {
   subscriptionUpdateSchema,
   type QuoteResponse,
   type StudentBalanceView,
+  type TeacherBalanceView,
   type SubscriptionView,
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
@@ -10,6 +11,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
+import { toTeacherBalance } from './balance.teacher';
 import { PackagesService } from './packages.service';
 import { StudentAccess } from './student-access';
 import { subscriptionListQuery, subscriptionQuoteSchema } from './subscriptions.dto';
@@ -77,8 +79,12 @@ export class StudentBalanceController {
   ) {}
 
   @Get()
-  async balance(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<StudentBalanceView> {
+  async balance(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: AuthUser,
+  ): Promise<StudentBalanceView | TeacherBalanceView> {
     await this.access.check(user, id);
-    return this.packages.studentBalance(id);
+    const balance = await this.packages.studentBalance(id);
+    return user.role === 'teacher' ? toTeacherBalance(balance) : balance;
   }
 }

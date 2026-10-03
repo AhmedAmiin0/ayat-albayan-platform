@@ -14,6 +14,8 @@ export interface ChoiceChipsProps<V extends string> {
   invalid?: boolean;
   /** Marked «*» and announced as required, like the form's required questions. */
   required?: boolean;
+  /** Where useScrollToInvalid finds this question. */
+  register?: (node: View | null) => void;
 }
 
 /**
@@ -24,6 +26,7 @@ export function ChoiceChips<V extends string>(p: ChoiceChipsProps<V>) {
   const { color } = useTheme();
   return (
     <View
+      ref={(node) => p.register?.(node)}
       accessibilityRole="radiogroup"
       accessibilityLabel={p.label}
       accessibilityHint={p.required ? t.common.required : undefined}

@@ -4,6 +4,7 @@ import { detectDuplicates } from '../students/duplicate-detector';
 import { domainError } from './booking.errors';
 import type { BookingPayload } from './booking.mapper';
 import type { BookedStudent } from './booking.messages';
+import { withLeadFacts, type LeadFacts } from './booking.lead-merge';
 import { BookingQueries } from './booking.queries';
 
 /** Who is booked: existing rows (conflict-checked) and, on the lead path, the student to create. */
@@ -31,9 +32,10 @@ export class BookingParties {
   /**
    * Existing students (404 student_not_found), or the lead path's new student. A guardian already
    * on file with a similar-named child → 409 duplicate_student + candidates unless `force`
-   * (R-STU-03, issue A1); the wizard then books the existing student instead.
+   * (R-STU-03, issue A1); the wizard then books the existing student instead. The lead's
+   * qualification fills what the client left empty (withLeadFacts).
    */
-  async resolve(req: BookingRequest): Promise<Resolved> {
+  async resolve(req: BookingRequest, lead: LeadFacts | null = null): Promise<Resolved> {
     if ('studentIds' in req) {
       const rows = await this.queries.students(req.studentIds);
       if (rows.length !== req.studentIds.length) throw notFound('student_not_found');
@@ -45,7 +47,7 @@ export class BookingParties {
         overrides: rows.map((s) => s.meeting_link_override),
       };
     }
-    const { guardian, newStudent } = req;
+    const { guardian, newStudent } = withLeadFacts(req, lead);
     const existing = await this.queries.guardianByPhone(guardian.phone_e164);
     if (existing && !req.force) {
       const candidates = detectDuplicates(newStudent.name, existing.students);

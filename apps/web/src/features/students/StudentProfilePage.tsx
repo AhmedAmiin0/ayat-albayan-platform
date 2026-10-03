@@ -40,7 +40,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       t.students.effectiveLink,
       student.meeting_link ? (
         <a key="l" href={student.meeting_link} target="_blank" rel="noreferrer" dir="ltr"
-          className="block truncate text-lapis underline underline-offset-4">
+          className="block truncate py-3 text-lapis underline underline-offset-4 sm:py-0">
           {student.meeting_link.replace(/^https?:\/\//, '')}
         </a>
       ) : (

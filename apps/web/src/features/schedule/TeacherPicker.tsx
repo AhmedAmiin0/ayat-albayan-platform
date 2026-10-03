@@ -1,20 +1,22 @@
+import { counted } from '@ab/shared';
 import { controlClass } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';
 
 export interface TeacherPickerProps {
   /** Every teacher in the overview (before the other filters). */
-  teachers: readonly { id: string; display_name_ar: string }[];
+  teachers: readonly { id: string; display_name_ar: string; display_name_en?: string | null }[];
   /** Picked ids; empty = everyone. */
   value: readonly string[];
   onChange: (ids: string[]) => void;
 }
 
-/** «كل المعلمين», the one name picked, or «3 معلمين». */
+/** «كل المعلمين», the one name picked, or «3 معلمين» (counted forms). */
 export function pickedLabel(teachers: TeacherPickerProps['teachers'], value: readonly string[]): string {
   if (value.length === 0) return t.schedule.allTeachers;
-  if (value.length === 1) return teachers.find((x) => x.id === value[0])?.display_name_ar ?? t.schedule.teachersPicked.replace('{n}', '1');
-  return t.schedule.teachersPicked.replace('{n}', String(value.length));
+  const one = value.length === 1 ? teachers.find((x) => x.id === value[0]) : undefined;
+  return one ? teacherLabel(one) : counted(t.schedule.teachersPicked, value.length);
 }
 
 /**
@@ -24,7 +26,7 @@ export function pickedLabel(teachers: TeacherPickerProps['teachers'], value: rea
 export function TeacherPicker({ teachers, value, onChange }: TeacherPickerProps) {
   const toggle = (id: string, on: boolean) => onChange(on ? [...value, id] : value.filter((x) => x !== id));
   return (
-    <div className="grid w-full gap-1.5 sm:w-auto">
+    <div className="grid min-w-0 gap-1.5 sm:w-auto">
       <span className="text-xs font-semibold text-ink-2">{t.schedule.teacherFilter}</span>
       <details className="relative">
         <summary
@@ -46,7 +48,7 @@ export function TeacherPicker({ teachers, value, onChange }: TeacherPickerProps)
                 onChange={(e) => toggle(x.id, e.target.checked)}
                 className="size-4 accent-[var(--lapis)]"
               />
-              <span>{x.display_name_ar}</span>
+              <span>{teacherLabel(x)}</span>
             </label>
           ))}
         </fieldset>

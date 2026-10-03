@@ -17,7 +17,7 @@ export function PendingReportRow({ row, tz }: { row: PendingReportView; tz: stri
       title={row.student.name}
       meta={row.student.code}
       subtitle={lessonWhenText(new Date(row.starts_at), tz, locale)}
-      trailing={<StatusChip tone="act" glyph="hollow" label={row.report_id ? t.reports.edit : t.reports.open} size="sm" />}
+      trailing={<StatusChip tone="act" glyph="hollow" label={row.report_id ? t.reports.resume : t.reports.open} size="sm" />}
       onPress={() => router.push(reportFormHref(row.lesson_id))}
     />
   );

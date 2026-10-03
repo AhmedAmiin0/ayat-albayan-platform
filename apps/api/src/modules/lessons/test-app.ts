@@ -44,7 +44,7 @@ function mocks() {
     },
     writer: { apply: vi.fn(), generate: vi.fn() },
     teachers: { idByProfile: vi.fn(), get: vi.fn(), loads: vi.fn() },
-    overview: { teachers: vi.fn(), slots: vi.fn(), timeOff: vi.fn() },
+    overview: { teachers: vi.fn(), slots: vi.fn(), timeOff: vi.fn(), carryOver: vi.fn() },
     audit: { record: vi.fn() },
     settings: { lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },

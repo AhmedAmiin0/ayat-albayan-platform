@@ -21,6 +21,7 @@ export function DurationPills({ value, onChange }: DurationPillsProps) {
       <FormLabel>{t.booking.pickDuration}</FormLabel>
       <FilterPills
         role="radiogroup"
+        wrap
         accessibilityLabel={t.booking.pickDuration}
         items={pills()}
         value={`${value}`}

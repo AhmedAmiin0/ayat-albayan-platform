@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@/components/ui/button';
 import { AXIS_HOURS } from '@/features/teachers/track';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';
 import { LessonChip } from './LessonChip';
 import { freeText, spanRange, teacherDay, type BoardRow } from './overview';
@@ -47,7 +48,7 @@ function TeacherDay({ row, day, now, onOpen }: { row: BoardRow } & Omit<DayBoard
   const lessons = row.days.get(day) ?? [];
   const facts = teacherDay(row.teacher, { day, lessons, now });
   return (
-    <section aria-label={row.teacher.display_name_ar} className={cn(rowGrid, 'border-b border-rule py-3')}>
+    <section aria-label={teacherLabel(row.teacher)} className={cn(rowGrid, 'border-b border-rule py-3')}>
       <TeacherCell teacher={row.teacher} now={now} />
       <div className="grid min-w-0 content-start gap-2">
         {facts.dayOff ? (

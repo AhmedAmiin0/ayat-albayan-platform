@@ -6,6 +6,7 @@ import type { StudentRef } from '@/features/students/types';
 import { t } from '@/lib/i18n';
 import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
+import { GapChip } from './GapChip';
 import { STEPS, stepReady, type BookingDraft, type PickedStudent, type StepKey } from './draft';
 import { teacherPatch, type BookHint } from './hint';
 import { LeadStudentStep } from './LeadStudentStep';
@@ -101,10 +102,14 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
 
   return (
     <>
+      {hint?.startsAt && <GapChip startsAt={hint.startsAt} />}
       <WizardSteps step={step} />
       <section ref={section} tabIndex={-1} aria-label={t.booking.steps[step]} className="outline-none">
         {body[step]}
       </section>
+      {step === 'students' && draft.leadId && !primary && !stepReady(draft, step) && (
+        <p className="mt-3 text-xs text-ink-3">{t.booking.fillRequired}</p>
+      )}
       <div className="mt-6 flex items-center justify-between gap-3 border-t border-rule pt-4">
         <Button type="button" variant="ghost" disabled={index === 0} onClick={() => go(index - 1)}>
           {t.booking.back}

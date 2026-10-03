@@ -34,7 +34,7 @@ test.describe('journey 4 — reschedule into a busy slot (R-SCH-07, R-SCH-04)', 
 
     const page = await asRole('admin');
     await page.goto(`/admin/schedule?week=${week}&teacher=${teacherId}`);
-    const grid = page.getByRole('table', { name: ar.schedule.grid });
+    const grid = page.getByRole('table', { name: ar.schedule.grid }).or(page.getByRole('group', { name: ar.schedule.grid })); // table, or the day list on a phone
     await grid.getByRole('button', { name: /ريم/ }).click();
     const drawer = page.getByRole('dialog', { name: 'ريم' });
     await expect(drawer).toContainText(ar.schedule.riyadhTime);

@@ -33,7 +33,7 @@ export function MyReports() {
             <h2 id="my-students" className="font-display text-h3 font-bold">
               {t.reports.history}
             </h2>
-            <MyStudents students={me.data.students} />
+            <MyStudents students={me.data.students} showStatus={false} />
           </section>
         )}
       </div>

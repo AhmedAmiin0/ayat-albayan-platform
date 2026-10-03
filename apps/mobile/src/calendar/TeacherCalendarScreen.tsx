@@ -1,8 +1,9 @@
-import { RIYADH_TZ, type LessonView } from '@ab/shared';
+import { RIYADH_TZ, teacherName, type LessonView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
 import { useNow } from '@/today/use-day-lessons';
@@ -39,7 +40,7 @@ export function TeacherCalendarScreen() {
   return (
     <Screen>
       <ScreenHeader
-        title={teacher.data?.display_name_ar ?? t.calendar.teacherCalendar}
+        title={(teacher.data && teacherName(teacher.data, locale)) ?? t.calendar.teacherCalendar}
         subtitle={subtitle}
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />

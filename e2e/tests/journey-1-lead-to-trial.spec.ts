@@ -95,7 +95,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
       riyadh(addDays(week, 1), '16:00').toISOString(),
     ]);
     await admin.goto(`/admin/schedule?week=${week}&teacher=${teacherId}`);
-    const grid = admin.getByRole('table', { name: ar.schedule.grid });
+    const grid = admin.getByRole('table', { name: ar.schedule.grid }).or(admin.getByRole('group', { name: ar.schedule.grid })); // table, or the day list on a phone
     await expect(grid.getByRole('button', { name: new RegExp(`16:00.*${student}`) })).toBeVisible();
   });
 });

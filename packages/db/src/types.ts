@@ -2010,6 +2010,11 @@ export type Database = {
       };
       report_of_path: { Args: { p_name: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
+      teacher_has_student: {
+        Args: { p_student_id: string; p_teacher_id: string };
+        Returns: boolean;
+      };
+      teacher_student_ids: { Args: { p_teacher_id: string }; Returns: string[] };
       teacher_thread_phones: {
         Args: { p_teacher_id: string };
         Returns: {

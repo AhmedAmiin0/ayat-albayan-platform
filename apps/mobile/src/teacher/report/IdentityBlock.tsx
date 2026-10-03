@@ -1,4 +1,4 @@
-import { lessonWhenText, packageProgress, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import { lessonWhenText, packageProgress, teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
@@ -35,7 +35,12 @@ function Row({ label, value, onPress }: { label: string; value: string; onPress?
     <View style={{ gap: 2 }}>
       <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>{label}</AppText>
       {onPress ? (
-        <Pressable accessibilityRole="link" onPress={onPress}>
+        <Pressable
+          accessibilityRole="link"
+          onPress={onPress}
+          hitSlop={{ top: 12, bottom: 12 }}
+          style={{ minHeight: shape.control.touch, justifyContent: 'center' }}
+        >
           {text}
         </Pressable>
       ) : (
@@ -61,7 +66,7 @@ export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; ent
     >
       <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>{t.reports.readOnlyHint}</AppText>
       <Row label={t.reports.student} value={`${student.name} ${ltr(student.code)}`} />
-      <Row label={t.reports.teacher} value={lesson.teacher.display_name_ar} />
+      <Row label={t.reports.teacher} value={teacherName(lesson.teacher, locale)} />
       <Row label={t.reports.date} value={when} />
       <Row label={t.reports.lessonNo} value={lessonNo(entry)} />
       <Row label={t.reports.program} value={t.enums.program[student.program]} />

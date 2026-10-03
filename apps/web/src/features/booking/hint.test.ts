@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { emptyDraft } from './draft';
-import { bookHint, teacherPatch } from './hint';
+import { bookHint, searchForStudent, teacherPatch } from './hint';
 import { ABRAR, NOOR, SLOT } from './wizard-fixture';
 
 const HINT = { teacherId: ABRAR.id, startsAt: SLOT };
@@ -28,5 +28,13 @@ describe('teacherPatch', () => {
     const draft = { ...emptyDraft(), teacher: ABRAR, startsAt: SLOT };
     expect(teacherPatch(draft, { teacher: ABRAR }, null)).toEqual({ teacher: ABRAR });
     expect(teacherPatch(draft, { genderPref: 'female' }, null)).toEqual({ genderPref: 'female' });
+  });
+});
+
+describe('searchForStudent', () => {
+  it('keeps the free gap (teacher + start) and drops lead fields', () => {
+    const prev = { teacherId: ABRAR.id, startsAt: SLOT, leadId: 'l1', phone: '+966', pkg: 'trial' as const };
+    expect(searchForStudent(prev, 's1')).toEqual({ studentId: 's1', teacherId: ABRAR.id, startsAt: SLOT });
+    expect(searchForStudent({}, 's1')).toEqual({ studentId: 's1' });
   });
 });

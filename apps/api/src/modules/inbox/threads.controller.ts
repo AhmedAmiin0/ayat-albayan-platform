@@ -9,6 +9,7 @@ import { pageQuerySchema, parseOrThrow } from '../teachers/http';
 import { waHttpError } from '../whatsapp/template.mapper';
 import type { TeacherScope } from './teacher-scope';
 import { ThreadReads } from './thread-reads';
+import type { Sent } from './outbox';
 import { ThreadSendService } from './thread-send.service';
 
 const listQuery = pageQuerySchema.extend({
@@ -27,7 +28,7 @@ function phoneParam(raw: string): string {
   return phone.e164;
 }
 
-type Audited = { view: MessageView; action: string; user: AuthUser; scope: TeacherScope | null };
+type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope | null };
 
 /**
  * H1–H4 (docs/12 §4): the WhatsApp inbox (R-LEAD-02, R-MSG-05). Sends are audited. Same paths for
@@ -60,8 +61,8 @@ export class ThreadsController {
   async text(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTextSchema, body);
     const scope = await this.reads.scope(user);
-    const view = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id, scope });
-    return this.audited({ view, action: 'thread_text', user, scope });
+    const sent = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id, scope });
+    return this.audited({ sent, action: 'thread_text', user, scope });
   }
 
   @Post(':phone/template')
@@ -69,13 +70,15 @@ export class ThreadsController {
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
     const scope = await this.reads.scope(user);
-    const view = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope });
-    return this.audited({ view, action: 'thread_template', user, scope });
+    const sent = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope });
+    return this.audited({ sent, action: 'thread_template', user, scope });
   }
 
   /** A teacher's send names them in the audit row too (every message a teacher sends is logged). */
   private async audited(input: Audited): Promise<MessageView> {
-    const { view, scope } = input;
+    const { sent, scope } = input;
+    const { view } = sent;
+    if (sent.replayed) return view; // a retried request id: the first send was audited already
     const teacher = scope ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName } : {};
     await this.audit.record({
       actorId: input.user.id,

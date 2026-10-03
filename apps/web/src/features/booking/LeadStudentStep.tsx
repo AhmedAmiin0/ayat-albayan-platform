@@ -1,6 +1,7 @@
 import { PROGRAMS, type Program } from '@ab/shared';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
+import { RequiredLegend } from '@/components/ui/label';
 import { PhonePreview } from '@/components/ui/phone-preview';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
@@ -30,13 +31,16 @@ export function LeadStudentStep({ value, tz, program, onChange }: LeadStudentSte
   return (
     <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
       <h3 className="text-sm font-semibold sm:col-span-2">{t.booking.fromLead}</h3>
-      <Field label={t.leads.studentName}>
+      <div className="sm:col-span-2">
+        <RequiredLegend />
+      </div>
+      <Field label={t.leads.studentName} required>
         {(p) => <Input {...p} value={value.name} data-autofocus onChange={(e) => set({ name: e.target.value })} />}
       </Field>
-      <Field label={t.guardians.name}>
+      <Field label={t.guardians.name} required>
         {(p) => <Input {...p} value={value.guardianName} onChange={(e) => set({ guardianName: e.target.value })} />}
       </Field>
-      <Field label={t.guardians.phone} hint={t.guardians.phoneHint} error={phoneProblem}>
+      <Field label={t.guardians.phone} hint={t.guardians.phoneHint} error={phoneProblem} required>
         {(p) => (
           <>
             <Input

@@ -1,5 +1,6 @@
 import {
   AFTER_FIELDS,
+  attended,
   DONE_FIELDS,
   REPORT_RUBRICS,
   textRequired,
@@ -7,6 +8,8 @@ import {
   type ReportFormResponse,
   type TextKey,
 } from '@ab/shared';
+import { useRef } from 'react';
+import { RequiredLegend } from '@/components/ui/label';
 import { t } from '@/lib/i18n';
 import { AttachmentsField } from './AttachmentsField';
 import { AttendanceField } from './AttendanceField';
@@ -14,6 +17,7 @@ import { GradePicker } from './GradePicker';
 import { IdentityBlock } from './IdentityBlock';
 import { ReportEntryFooter } from './ReportEntryFooter';
 import { ReportTextField } from './ReportTextField';
+import { useFocusInvalid } from './use-focus-invalid';
 import { useReportEntry } from './use-report-entry';
 
 export interface ReportEntryProps {
@@ -34,8 +38,13 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   const { report, values } = s;
   const locked = !report.can_edit;
   const title = t.reports.entryFor.replace('{name}', entry.student.name);
+  const article = useRef<HTMLElement>(null);
+  useFocusInvalid(article, s.problem);
+  // The grades are required once the student attended (or while attendance is still open).
+  const gradesRequired = values.attendance === null || attended(values.attendance);
+  const gradeMissing = (g: unknown) => gradesRequired && s.problem === 'missing_grades' && !g;
   const text = (k: TextKey) => {
-    const required = textRequired(k, values.attendance);
+    const required = textRequired(k, values.attendance, report.version);
     const missing = required && s.problem === 'missing_text' && !values[k].trim();
     return (
       <ReportTextField key={k} label={t.reports[k]} value={values[k]} onChange={(v) => s.set(k, v)} disabled={locked}
@@ -44,9 +53,10 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   };
 
   return (
-    <article aria-label={title} className="grid gap-5">
+    <article ref={article} aria-label={title} className="grid gap-5">
       {titled && <h2 className="font-display text-h3 font-bold">{title}</h2>}
       <IdentityBlock lesson={form.lesson} entry={entry} />
+      {!locked && <RequiredLegend />}
       <AttendanceField
         name={`${report.id}-attendance`}
         value={values.attendance}
@@ -61,9 +71,27 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
       <section aria-label={t.reports.rubricTitle} className="grid">
         <h3 className="mb-1 font-display text-h3 font-bold">{t.reports.rubricTitle}</h3>
         {REPORT_RUBRICS.map((r) => (
-          <GradePicker key={r} name={`${report.id}-${r}`} label={t.reports.rubric[r]} value={values.grades[r]} onChange={(g) => s.setGrade(r, g)} disabled={locked} />
+          <GradePicker
+            key={r}
+            name={`${report.id}-${r}`}
+            label={t.reports.rubric[r]}
+            value={values.grades[r]}
+            onChange={(g) => s.setGrade(r, g)}
+            disabled={locked}
+            required={gradesRequired}
+            invalid={gradeMissing(values.grades[r])}
+          />
         ))}
-        <GradePicker emphasis name={`${report.id}-overall`} label={t.reports.overall} value={values.overall} onChange={(g) => s.set('overall', g)} disabled={locked} />
+        <GradePicker
+          emphasis
+          name={`${report.id}-overall`}
+          label={t.reports.overall}
+          value={values.overall}
+          onChange={(g) => s.set('overall', g)}
+          disabled={locked}
+          required={gradesRequired}
+          invalid={gradeMissing(values.overall)}
+        />
       </section>
       <div className="grid gap-3">{AFTER_FIELDS.map(text)}</div>
       <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />

@@ -1,3 +1,4 @@
+import { counted } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
@@ -10,7 +11,7 @@ describe('TeacherPicker (teacher multi-select)', () => {
   it('sums up everyone, one name, or a count', () => {
     expect(pickedLabel(ALL, [])).toBe(t.schedule.allTeachers);
     expect(pickedLabel(ALL, ['t-nour'])).toBe('نور');
-    expect(pickedLabel(ALL, ['t-abrar', 't-nour'])).toBe(t.schedule.teachersPicked.replace('{n}', '2'));
+    expect(pickedLabel(ALL, ['t-abrar', 't-nour'])).toBe(counted(t.schedule.teachersPicked, 2));
   });
 
   it('ticks add a teacher, unticking removes them', () => {

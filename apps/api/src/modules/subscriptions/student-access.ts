@@ -6,8 +6,8 @@ import { dbError } from '../teachers/http';
 import { TeachersQueries } from '../teachers/teachers.queries';
 
 /**
- * S6 guard (rule 9): admin sees every student; a teacher only a student assigned to them
- * (students.teacher_id) or one they have a lesson with. 404 for an unknown student, 403 otherwise.
+ * S6 guard (rule 9): admin sees every student; a teacher only a student in their scope
+ * (teacher_has_student: assigned, or a lesson of theirs in the last 90 days). 404 for an unknown student, 403 otherwise.
  */
 @Injectable()
 export class StudentAccess {
@@ -31,13 +31,10 @@ export class StudentAccess {
     throw new ForbiddenException();
   }
 
+  /** teacher_has_student: assigned, or a lesson of theirs in the last 90 days (migration 165). */
   private async taughtBy(studentId: string, teacherId: string): Promise<boolean> {
-    const { count, error } = await this.db
-      .from('lesson_students')
-      .select('lesson_id, lessons!inner(teacher_id)', { count: 'exact', head: true })
-      .eq('student_id', studentId)
-      .eq('lessons.teacher_id', teacherId);
+    const { data, error } = await this.db.rpc('teacher_has_student', { p_teacher_id: teacherId, p_student_id: studentId });
     if (error) throw dbError(error);
-    return (count ?? 0) > 0;
+    return data === true;
   }
 }

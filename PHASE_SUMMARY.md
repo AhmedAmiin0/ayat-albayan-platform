@@ -1447,3 +1447,30 @@ Retaken after `seed:demo` plus local scratch states (inbound messages with `wa_m
 - Mobile: free gap -> booking not wired (needs a lead picker); mobile teacher multi-select filter deferred; audio/PDF attachments need expo-document-picker (new APK); no mobile propose-another-time.
 - BookingPage first-paint remount in dev StrictMode (text typed in the first ~20 ms is dropped) was worked around in e2e, not root-caused.
 - Device check at 360-390pt in RTL and LTR for the new mobile screens.
+
+## Design review + verifier fixes (2026-10-03)
+
+### Fixed
+- **Book from a free gap** (high): picking a student by search keeps the gap's `teacherId` + `startsAt` (`searchForStudent`), a «حجز من فجوة فاضية · <when>» chip stays on every step, the student search now runs while typing (300 ms); e2e: gap -> search -> pick -> step 2 has the teacher.
+- **Required marks** (high/medium): `Field required` / `REQUIRED_MARK` (CSS « *», so label text and accessible names stay plain) + «* مطلوب» legend on the report form, «إضافة طالب» and the lead booking step; attendance and the grades carry it; a failed submit marks every empty grade row (`aria-invalid`, red edge) and focuses the first problem (`useFocusInvalid`); hint under the disabled «التالي»; age hint «من 3 لـ 99»; guardian country hint.
+- **Teacher nav**: fixed bottom bar of five 56px tabs on phones (like the app), top row from sm up. Admin shell: the nav gets its own full-width row under logo + foot below 900px (the 163px strip was the three sharing one row).
+- **Week boards**: `LessonChip` status row wraps and truncates the word, never the «تجريبية» tag; board columns >= 131px; under md the week is a list per day (`WeekAgenda`, also the teacher's own week); schedule filters in a 2-column grid on phones.
+- **English teacher names**: `display_name_en` in the overview, lesson and report-form teacher embeds, `teacherName(t, locale)` in shared, used on the web boards, picker, drawer, report identity and the app's «الجدول».
+- **Copy/structure**: counted «معلم / معلمين» in the picker; «كمّل التقرير» for a draft (web + app); queue banner for a teacher reads «الرسالة هتتبعت أول ما الإرسال يشتغل»; the home title is «اليوم» like its tab; one filled primary on Today (the link banner is secondary); the report history leaves out the account-status column; pending-reports heading matches the other sections; touch targets (student links, teacher name, meeting links, app IdentityBlock).
+- **App**: loading note on the teacher Today / Schedule / Reports / Payouts / report form and a real `refreshing`; invalid state on required text fields + scroll to the first invalid question; `FilterPills wrap` for time zone / source / package / duration / gender pickers and «مش محدد» for «—»; «الجدول» rows: filled «تأكيد» only while `scheduled`, «إلغاء» secondary, «غيّر الميعاد» ghost; free gaps are a quiet hollow-nuqta line (no tappable-looking box); time off in neutral ink; free gaps clipped to now (>= 30 min).
+- **Server** (migration 165): one «my student» definition (`teacher_student_ids` / `teacher_has_student`: assigned, or a lesson of theirs in the last 90 days) used by threads, report history and the balance guard; `GET /students/:id/balance` returns lesson counts only to a teacher (`TeacherBalanceView`); draft payouts hidden from a teacher (API + RLS); overview free time subtracts lessons that started before the window (`carryOver`); `BookingParties` fills level / memorized / goal / riwaya / notes and the guardian source from the lead's qualification for every client (`withLeadFacts`); teacher/admin send dedup key scoped to sender + phone, and a replayed request id writes no second audit row; the «required text» rule applies on the first send only (re-saving an old report works); `loads()` reads past max_rows.
+
+### Rejected or left
+- **Teacher template params from the lesson**: a teacher already sends free text in the 24 h window (owner decision), so a free-text time in a reminder adds no capability; deriving params is not worth the coupling.
+- **Teacher sees money templates in the chat** (owner awareness): follows the owner's decision; owner to confirm if redaction is wanted.
+- **Admin menu button / collapsible lead-form sections / folding الأسبوع into جدولي**: the nav row fix covers the first; the other two are information-architecture changes for the owner.
+- **Mobile free gap -> booking**: needs a lead picker; the gap is no longer drawn as tappable.
+- **Load count vs «my students»**: `students_count` stays «assigned trial/active» (capacity), not the people panel's list.
+- **BookingWizard first-paint remount**: still not root-caused (no repro outside dev StrictMode); `fillStable` stays in the e2e helper.
+- Device check at 360-390pt RTL/LTR and a populated payout month remain owner/pre-cut-over steps.
+
+### Gate (design review + verifier fixes; `supabase db reset` (165 applied) + `gen:types` + `pnpm env:local`, then `pnpm test:all`)
+- 27/27 turbo tasks green. e2e: 61 passed + 3 skipped by design (desktop + mobile; the gap -> search -> pick step, teacher RLS for migration 165 incl. hidden draft payouts).
+- Unit: api 1654 passed + 1 skipped (234 files) · web 167 files · mobile 718 · @ab/shared 64 files · @ab/migrate 50 files · wa-stub 4 files.
+- Lint: 0 errors; complexity warnings only (wa-stub 2, migrate 10, api 4, web 20, mobile 6).
+- A required-field mark inside a `<label>` / CSS `::after` leaks into the accessible name (Chromium and Playwright include it); the mark is an aria-hidden span beside the label instead.

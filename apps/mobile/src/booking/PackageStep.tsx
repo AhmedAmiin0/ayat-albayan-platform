@@ -34,6 +34,7 @@ export function PackageStep({ value, onChange, onNext }: PackageStepProps) {
       <FormLabel>{t.booking.pickPackage}</FormLabel>
       <FilterPills
         role="radiogroup"
+        wrap
         accessibilityLabel={t.booking.pickPackage}
         items={packagePills()}
         value={value.pkg}

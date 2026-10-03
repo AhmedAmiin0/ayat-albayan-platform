@@ -43,7 +43,8 @@ export function AdminNav({ counts = {} }: AdminNavProps) {
     <nav
       aria-label={t.nav.label}
       className={cn(
-        'ab-fade-end flex min-w-0 flex-1 gap-0.5 overflow-x-auto pe-10 [scrollbar-width:none]',
+        // Under 900px the nav gets a row of its own (order-last, full width) under logo + foot.
+        'ab-fade-end order-last flex min-w-0 basis-full gap-0.5 overflow-x-auto pe-10 [scrollbar-width:none] shell:order-none shell:basis-auto',
         // Compact row: py-1 leaves room for the focus ring and ps-5 clears the start fade;
         // scroll-padding keeps the current item clear of the logo and the end fade (docs/07 §7).
         '-my-1 py-1 ps-5 [scroll-padding-inline:24px_44px]',

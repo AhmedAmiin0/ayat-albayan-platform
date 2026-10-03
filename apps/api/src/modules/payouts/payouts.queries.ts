@@ -70,9 +70,9 @@ export class PayoutsQueries {
     return data.sort(byTeacherName);
   }
 
-  /** A teacher's own rows, newest month first (Y5). */
+  /** A teacher's own rows, newest month first (Y5); a draft is still the admin's to change, so hidden. */
   async forTeacher(teacherId: string, month?: string): Promise<PayoutRow[]> {
-    let q = this.db.from('teacher_payouts').select(SELECT).eq('teacher_id', teacherId);
+    let q = this.db.from('teacher_payouts').select(SELECT).eq('teacher_id', teacherId).neq('status', 'draft');
     if (month) q = q.eq('month', month);
     const { data, error } = await q.order('month', { ascending: false });
     if (error) throw dbError(error);

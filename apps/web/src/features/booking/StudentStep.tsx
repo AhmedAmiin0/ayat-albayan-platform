@@ -52,7 +52,7 @@ export function StudentStep({ primary, siblings, picked, onPicked, onOpenStudent
       )}
       <section className="grid gap-2.5">
         <h3 className="text-sm font-semibold">{t.booking.pickStudents}</h3>
-        <StudentSearch initial="" onSearch={setTerm} />
+        <StudentSearch initial="" onSearch={setTerm} live />
         {results.isFetching && <p className="text-xs text-ink-3">{t.common.loading}</p>}
         {results.data && results.data.items.length === 0 && <p className="text-sm text-ink-2">{t.students.empty}</p>}
         {results.data && results.data.items.length > 0 && (

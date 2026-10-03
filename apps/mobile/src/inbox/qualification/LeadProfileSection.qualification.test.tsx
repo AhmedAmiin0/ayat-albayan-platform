@@ -80,8 +80,8 @@ test('«—» clears a choice (sent as null); with nothing changed nothing is se
   await save();
   expect(mockApiSend).not.toHaveBeenCalled();
   mockApiSend.mockResolvedValue(hudaProfile);
-  await fireEvent.press(group(t.leads.gender).getByRole('radio', { name: '—' }));
-  await fireEvent.press(group(t.availability.from).getByRole('radio', { name: '—' }));
+  await fireEvent.press(group(t.leads.gender).getByRole('radio', { name: t.common.unset }));
+  await fireEvent.press(group(t.availability.from).getByRole('radio', { name: t.common.unset }));
   await save();
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/leads/a1/qualification', {
     gender: null,
@@ -106,6 +106,6 @@ test('a lead with no answers yet: an empty form, nothing picked', async () => {
   await renderWithQuery(<LeadProfileSection lead={huda} />);
   expect(await screen.findByRole('button', { name: t.common.save })).toBeTruthy();
   expect(screen.getByLabelText(t.leads.studentName)).toHaveDisplayValue('');
-  expect(group(t.leads.gender).getByRole('radio', { name: '—' })).toBeChecked();
+  expect(group(t.leads.gender).getByRole('radio', { name: t.common.unset })).toBeChecked();
   expect(group(t.leads.availableDays).queryAllByRole('checkbox', { checked: true })).toHaveLength(0);
 });

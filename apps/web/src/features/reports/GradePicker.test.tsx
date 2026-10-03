@@ -15,3 +15,20 @@ describe('GradePicker (R-REP-02)', () => {
     expect(onChange).toHaveBeenCalledWith('very_good');
   });
 });
+
+describe('GradePicker required / invalid (the failed-submit state)', () => {
+  it('a required row carries an aria-hidden « *»; an invalid one is marked and red-edged', () => {
+    const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={vi.fn()} required invalid />);
+    const group = container.querySelector('fieldset');
+    expect(group?.getAttribute('aria-invalid')).toBe('true');
+    expect(group?.className).toContain('border-s-danger');
+    expect(container.querySelector('legend [aria-hidden="true"]')?.textContent).toBe(' *');
+    expect(screen.getByRole('group', { name: 'التجويد' })).toBeTruthy(); // the mark is not in the name
+  });
+
+  it('not required, not invalid: plain', () => {
+    const { container } = render(<GradePicker name="g" label="التجويد" value={null} onChange={vi.fn()} />);
+    expect(container.querySelector('fieldset')?.getAttribute('aria-invalid')).toBeNull();
+    expect(container.querySelector('legend [aria-hidden]')).toBeNull();
+  });
+});

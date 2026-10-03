@@ -2,6 +2,7 @@ import { lessonWhenText, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
 import { proposalsQuery } from './api';
 import { studentNames } from './lessons';
@@ -34,7 +35,7 @@ export function ProposalsPanel({ onOpen }: { onOpen: (lesson: LessonView) => voi
               onClick={() => onOpen(lesson)}
               className="min-h-11 w-full rounded-sm px-2 py-1.5 text-start text-sm hover:bg-sunk sm:min-h-9"
             >
-              <span className="font-semibold">{`${studentNames(lesson)} · ${lesson.teacher.display_name_ar}`}</span>
+              <span className="font-semibold">{`${studentNames(lesson)} · ${teacherLabel(lesson.teacher)}`}</span>
               {': '}
               <span>
                 {t.lessons.proposal.change

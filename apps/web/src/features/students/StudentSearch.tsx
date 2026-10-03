@@ -1,14 +1,24 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 
-type StudentSearchProps = { initial: string; onSearch: (term: string) => void };
+type StudentSearchProps = {
+  initial: string;
+  onSearch: (term: string) => void;
+  /** Search while typing (300 ms after the last key) instead of only on Enter / the icon. */
+  live?: boolean;
+};
 
 /** Name / phone / code search; the search icon is the submit button (R-STU-01). */
-export function StudentSearch({ initial, onSearch }: StudentSearchProps) {
+export function StudentSearch({ initial, onSearch, live = false }: StudentSearchProps) {
   const [term, setTerm] = useState(initial);
+  useEffect(() => {
+    if (!live || term.trim() === initial.trim()) return;
+    const timer = setTimeout(() => onSearch(term.trim()), 300);
+    return () => clearTimeout(timer);
+  }, [live, term, initial, onSearch]);
   return (
     <form
       role="search"

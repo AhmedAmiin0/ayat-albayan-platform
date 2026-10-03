@@ -85,16 +85,14 @@ export class ReportHistoryQueries {
     return data;
   }
 
-  /** Has this teacher ever had a lesson with the student? */
+  /** Is the student in the teacher's scope (teacher_has_student: assigned or a lesson ≤ 90 days)? */
   async taught(input: { teacherId: string; studentId: string }): Promise<boolean> {
-    const { data, error } = await this.db
-      .from('lesson_students')
-      .select('lesson_id, lessons!inner(teacher_id)')
-      .eq('student_id', input.studentId)
-      .eq('lessons.teacher_id', input.teacherId)
-      .limit(1);
+    const { data, error } = await this.db.rpc('teacher_has_student', {
+      p_teacher_id: input.teacherId,
+      p_student_id: input.studentId,
+    });
     if (error) throw dbError(error);
-    return data.length > 0;
+    return data === true;
   }
 
   /**

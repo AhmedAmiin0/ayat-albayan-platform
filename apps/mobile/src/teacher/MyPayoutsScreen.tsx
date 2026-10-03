@@ -55,7 +55,13 @@ export function MyPayoutsScreen() {
         refreshing={payouts.isRefetching}
         onRefresh={() => void payouts.refetch()}
         ListEmptyComponent={
-          payouts.data ? <EmptyState title={t.payouts.empty} /> : payouts.isError ? <ErrorState onRetry={() => void payouts.refetch()} /> : null
+          payouts.data ? (
+            <EmptyState title={t.payouts.empty} />
+          ) : payouts.isError ? (
+            <ErrorState onRetry={() => void payouts.refetch()} />
+          ) : (
+            <Note>{t.common.loading}</Note>
+          )
         }
       />
     </Screen>

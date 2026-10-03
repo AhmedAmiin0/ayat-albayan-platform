@@ -39,7 +39,7 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     expect(res.statusCode).toBe(201);
     expect(res.json()).toMatchObject({ id: 'm9', status: 'sent', sent_by_teacher_name: 'أبرار' });
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
-      phone_e164: PHONE, body: 'أهلًا', created_by: TEACHER.id, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:${REQ}`,
+      phone_e164: PHONE, body: 'أهلًا', created_by: TEACHER.id, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:tch-1:${PHONE}:${REQ}`,
     }));
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({
       actorId: TEACHER.id, action: 'thread_text', after: expect.objectContaining({ teacher_id: 'tch-1', teacher_name: 'أبرار' }),
@@ -47,10 +47,12 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
   });
 
   it('a replayed clientRequestId returns the first row and sends nothing again', async () => {
-    t.queries.enqueue.mockResolvedValue(messageRow({ id: 'm9', status: 'sent', template_key: null, body: 'أهلًا', sent_by_teacher_id: 'tch-1' }));
+    const first = messageRow({ id: 'm9', status: 'sent', template_key: null, body: 'أهلًا', sent_by_teacher_id: 'tch-1' });
+    t.queries.enqueue.mockResolvedValue({ ...first, replayed: true });
     const res = await t.call(text());
     expect([res.statusCode, res.json().id]).toEqual([201, 'm9']);
     expect(t.sender.kick).not.toHaveBeenCalled();
+    expect(t.audit.record).not.toHaveBeenCalled(); // the first send was audited already
   });
 
   it('H3 409 session_closed after 24 h (the window rule is unchanged)', async () => {
@@ -83,13 +85,13 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     expect(mine.statusCode).toBe(201);
     expect(t.queries.lessonTeacher).toHaveBeenLastCalledWith(LESSON);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
-      template_key: 'lesson_reminder', lesson_id: LESSON, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:${REQ}`,
+      template_key: 'lesson_reminder', lesson_id: LESSON, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:tch-1:${PHONE}:${REQ}`,
     }));
   });
 
   it('an admin send stays the academy: no sent_by_teacher_id, admin: dedup, no teacher in the audit', async () => {
     await t.call(text({ token: 'admin' }));
-    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ sent_by_teacher_id: null, dedup_key: `admin:${REQ}` }));
+    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ sent_by_teacher_id: null, dedup_key: `admin:${PHONE}:${REQ}` }));
     expect(t.audit.record.mock.calls[0]?.[0].after).not.toHaveProperty('teacher_id');
     expect(t.teacher.teacher).not.toHaveBeenCalled();
   });

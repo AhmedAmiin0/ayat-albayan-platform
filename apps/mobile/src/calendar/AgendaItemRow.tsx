@@ -1,8 +1,9 @@
 import type { LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import { shape, type, useTheme } from '@/theme';
+import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
+import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 import type { AgendaItem } from './overview';
 import { freeLabel } from './overview-text';
 import { dayLabel } from './week';
@@ -13,7 +14,11 @@ export interface AgendaItemRowProps {
   lessonRow: (lesson: LessonView) => ReactNode;
 }
 
-/** A «الجدول» section row: a lesson, a dashed «فاضي 17:00 – 19:00» gap, or (week) a day label. */
+/**
+ * A «الجدول» section row: a lesson, a quiet «فاضي 17:00 – 19:00» line (a hollow nuqta, not a box that
+ * looks tappable: booking from a gap is a web flow until the app has a lead picker), or (week) a
+ * day label.
+ */
 export function AgendaItemRow({ item, lessonRow }: AgendaItemRowProps) {
   const { color } = useTheme();
   const small = {
@@ -30,20 +35,9 @@ export function AgendaItemRow({ item, lessonRow }: AgendaItemRowProps) {
     );
   }
   return (
-    <View
-      style={{
-        marginVertical: 4,
-        paddingVertical: 6,
-        paddingHorizontal: 10,
-        borderRadius: shape.radius.md,
-        borderWidth: 1,
-        borderStyle: 'dashed',
-        borderColor: color.ruleStrong,
-      }}
-    >
-      <AppText style={{ ...small, fontFamily: type.ui[500], color: color.ink3 }}>
-        {freeLabel(item.span)}
-      </AppText>
+    <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6, paddingVertical: 4 }}>
+      <NuqtaGlyph shape="hollow" color={color.ink3} />
+      <AppText style={{ ...small, fontFamily: type.ui[500], color: color.ink3 }}>{freeLabel(item.span)}</AppText>
     </View>
   );
 }

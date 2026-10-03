@@ -15,12 +15,11 @@ export interface ReportTextFieldProps {
 /** A free-text line of the report (التسميع، الواجب، …): grows with the text, 4000 chars max. */
 export function ReportTextField({ label, value, onChange, disabled, required, error }: ReportTextFieldProps) {
   return (
-    <Field label={label} error={error}>
+    <Field label={label} error={error} required={required}>
       {(control) => (
         <textarea
           {...control}
           required={required}
-          aria-required={required || undefined}
           rows={2}
           maxLength={4000}
           value={value}

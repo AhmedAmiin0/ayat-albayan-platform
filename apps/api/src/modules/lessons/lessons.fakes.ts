@@ -32,7 +32,7 @@ export function lessonRow(over: Partial<LessonRow> = {}): LessonRow {
     confirmed_at: null,
     rescheduled_from_id: null,
     conflicts: null,
-    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', tz: 'Africa/Cairo' },
+    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
     lesson_students: [
       {
         student_id: STUDENT_ID,

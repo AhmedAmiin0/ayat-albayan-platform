@@ -29,13 +29,13 @@ describe('StudentAccess (S6 guard, rule 9)', () => {
     await expect(access(student('t1')).check(TEACHER, 's1')).resolves.toBeUndefined();
   });
 
-  it('teacher: one who has a lesson with the student', async () => {
-    const svc = access({ ...student('t2'), lesson_students: [{ count: 1 }] });
+  it('teacher: one with a lesson of theirs in the last 90 days (teacher_has_student)', async () => {
+    const svc = access({ ...student('t2'), 'rpc:teacher_has_student': [{ data: true }] });
     await expect(svc.check(TEACHER, 's1')).resolves.toBeUndefined();
   });
 
   it('teacher: someone else’s student → 403', async () => {
-    const svc = access({ ...student('t2'), lesson_students: [{ count: 0 }] });
+    const svc = access({ ...student('t2'), 'rpc:teacher_has_student': [{ data: false }] });
     await expect(svc.check(TEACHER, 's1')).rejects.toBeInstanceOf(ForbiddenException);
   });
 

@@ -2,13 +2,15 @@ import { OCCUPYING_LESSON_STATUSES, type LessonView, type OverviewTeacher, type 
 import type { Interval } from '../../teachers/availability/intervals';
 import type { LessonWindow } from '../lessons.queries';
 import { teacherSpans } from './free-windows';
-import type { OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.queries';
+import type { OverviewCarryRow, OverviewSlotRow, OverviewTeacherRow, OverviewTimeOffRow } from './overview.queries';
 
 export type OverviewParts = {
   window: LessonWindow;
   teachers: readonly OverviewTeacherRow[];
   slots: readonly OverviewSlotRow[];
   timeOff: readonly OverviewTimeOffRow[];
+  /** Lessons that started before the window and run into it: they block free time only. */
+  carry: readonly OverviewCarryRow[];
   /** teacher id → students with status trial | active (TeachersQueries.loads). */
   loads: ReadonlyMap<string, number>;
   /** The window's lessons, every status, by starts_at. */
@@ -34,12 +36,13 @@ function byTeacher<T extends { teacher_id: string }>(rows: readonly T[]): Map<st
 export function toOverview(p: OverviewParts): ScheduleOverview {
   const slots = byTeacher(p.slots);
   const timeOff = byTeacher(p.timeOff);
+  const carry = byTeacher(p.carry);
   const lessons = byTeacher(p.lessons.map((l) => ({ ...l, teacher_id: l.teacher.id })));
   const teachers = p.teachers
     .filter((t) => t.status === 'active' || lessons.has(t.id))
     .map((t): OverviewTeacher => {
       const off = timeOff.get(t.id) ?? [];
-      const busy = (lessons.get(t.id) ?? []).filter((l) => OCCUPYING.has(l.status)).map(range);
+      const busy = [...(carry.get(t.id) ?? []), ...(lessons.get(t.id) ?? [])].filter((l) => OCCUPYING.has(l.status)).map(range);
       const spans = teacherSpans({ ...p.window, weekly: slots.get(t.id) ?? [], timeOff: off.map(range), busy });
       return {
         ...t,

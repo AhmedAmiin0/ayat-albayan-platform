@@ -6,7 +6,7 @@ type Harness = Awaited<ReturnType<typeof lessonsApp>>;
 const DAY = 'from=2026-10-04T00:00:00%2B03:00&to=2026-10-05T00:00:00%2B03:00';
 const WINDOW = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-04T21:00:00Z') };
 const ABRAR = {
-  ...{ id: TEACHER_ID, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo' },
+  ...{ id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, gender: 'female', programs: ['quran'], tz: 'Africa/Cairo' },
   ...{ meeting_link: 'https://meet.jit.si/abrar', max_students: 12, status: 'active' },
 };
 
@@ -41,9 +41,9 @@ describe('GET /lessons/overview (R-SCH-09 all-teachers calendar)', () => {
     expect(body.from).toBe('2026-10-03T21:00:00.000Z');
   });
 
-  it('five reads for the window, no per-teacher calls; teacherId narrows every read', async () => {
+  it('six reads for the window, no per-teacher calls; teacherId narrows every read', async () => {
     await h.call({ method: 'GET', url: `/lessons/overview?${DAY}` });
-    for (const read of [h.overview.teachers, h.overview.slots, h.overview.timeOff, h.lessons.window]) {
+    for (const read of [h.overview.teachers, h.overview.slots, h.overview.timeOff, h.overview.carryOver, h.lessons.window]) {
       expect(read).toHaveBeenCalledTimes(1);
       expect(read).toHaveBeenCalledWith({ ...WINDOW, teacherId: undefined });
     }

@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 import type { TransactionSql } from 'postgres';
-import { withSql } from '../support/schedule';
+import { as, family, lesson, rolledBack, userId } from '../support/rls';
 import { USERS } from '../support/users';
 
 // Migration 164 against the real database (rule 9: RLS on every table, defence in depth behind the
@@ -9,32 +9,6 @@ import { USERS } from '../support/users';
 // the academy; teacher_thread_reads shows her rows only; the scope function itself is the API's.
 
 type Tx = TransactionSql;
-const ROLLBACK = new Error('rollback');
-
-async function rolledBack(run: (tx: Tx) => Promise<void>): Promise<void> {
-  await withSql(async (sql) => {
-    await sql
-      .begin(async (tx) => {
-        await run(tx);
-        throw ROLLBACK;
-      })
-      .catch((e: unknown) => {
-        if (e !== ROLLBACK) throw e;
-      });
-  });
-}
-
-/**
- * Runs `query` as `authenticated` with this user's JWT, then back to the owner role. On an error
- * the caller's savepoint rollback undoes both SET LOCALs.
- */
-async function as<T>(tx: Tx, userId: string, query: () => Promise<T>): Promise<T> {
-  await tx`select set_config('request.jwt.claims', ${JSON.stringify({ sub: userId, role: 'authenticated' })}, true)`;
-  await tx`set local role authenticated`;
-  const result = await query();
-  await tx`reset role`;
-  return result;
-}
 
 const PHONE = {
   assigned: '+966500164001',
@@ -43,31 +17,6 @@ const PHONE = {
   other: '+966500164004',
   own: '+966500164005',
 };
-
-async function userId(tx: Tx, email: string): Promise<string> {
-  const [u] = await tx<{ id: string }[]>`select id from auth.users where email = ${email}`;
-  if (!u) throw new Error(`${email} missing (global setup)`);
-  return u.id;
-}
-
-/** A guardian with one child, taught by `teacherId` (students.teacher_id). */
-async function family(tx: Tx, input: { phone: string; teacherId: string }): Promise<string> {
-  const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
-    values ('ولي أمر RLS', ${input.phone}, 'SA', 'Asia/Riyadh') returning id`;
-  if (!g) throw new Error('guardian not written');
-  const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, teacher_id)
-    values (${g.id}, 'طالب RLS', 'طالب rls', 'Asia/Riyadh', ${input.teacherId}) returning id`;
-  if (!s) throw new Error('student not written');
-  return s.id;
-}
-
-async function lesson(tx: Tx, input: { teacherId: string; studentId: string; daysAgo: number }): Promise<void> {
-  const [l] = await tx<{ id: string }[]>`insert into public.lessons (teacher_id, starts_at, ends_at)
-    values (${input.teacherId}, now() - make_interval(days => ${input.daysAgo}),
-      now() - make_interval(days => ${input.daysAgo}) + interval '30 minutes') returning id`;
-  if (!l) throw new Error('lesson not written');
-  await tx`insert into public.lesson_students (lesson_id, student_id) values (${l.id}, ${input.studentId})`;
-}
 
 /** «أبرار» (abrar@e2e.local) and a second teacher; one family per case; one inbound row per phone. */
 async function seed(tx: Tx) {
@@ -109,6 +58,30 @@ test.describe('teacher mode RLS (migration 164, rule 9)', () => {
       expect(phonesIn(all)).toEqual(Object.values(PHONE).sort());
       const allReads = await as(tx, admin, () => tx<ReadRow[]>`select teacher_id, phone_e164 from public.teacher_thread_reads`);
       expect(ours(allReads)).toHaveLength(2);
+    });
+  });
+
+  test('one «my student» definition (migration 165) and a draft payout stays hidden from the teacher', async () => {
+    await rolledBack(async (tx) => {
+      const t = await seed(tx);
+      const teacher = await userId(tx, USERS.teacher.email);
+      const kid = async (phone: string) => {
+        const [s] = await tx<{ id: string }[]>`select s.id from public.students s join public.guardians g on g.id = s.guardian_id
+          where g.phone_e164 = ${phone}`;
+        return s?.id ?? '';
+      };
+      const has = async (phone: string) => {
+        const [r] = await tx<{ ok: boolean }[]>`select public.teacher_has_student(${t.abrar}, ${await kid(phone)}) as ok`;
+        return r?.ok;
+      };
+      // assigned, or a lesson ≤ 90 days ago: yes. A lesson 91 days ago, or someone else's: no.
+      expect([await has(PHONE.assigned), await has(PHONE.recent), await has(PHONE.old), await has(PHONE.other)]).toEqual([true, true, false, false]);
+
+      await tx`insert into public.teacher_payouts (teacher_id, month, lessons_count, amount, status, approved_at)
+        values (${t.abrar}, '2031-01-01', 3, 300, 'draft', null), (${t.abrar}, '2031-02-01', 3, 300, 'approved', now())`;
+      const rows = await as(tx, teacher, () => tx<{ status: string }[]>`select status from public.teacher_payouts
+        where month >= '2031-01-01'`);
+      expect(rows.map((r) => r.status)).toEqual(['approved']);
     });
   });
 

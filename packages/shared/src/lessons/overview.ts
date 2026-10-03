@@ -18,6 +18,8 @@ export interface OverviewTimeOff extends Span {
 export interface OverviewTeacher {
   id: string;
   display_name_ar: string;
+  /** null until the admin sets it; clients fall back to the Arabic name (teacherName). */
+  display_name_en?: string | null;
   gender: Gender;
   programs: Program[];
   tz: string;

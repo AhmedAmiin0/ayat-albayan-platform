@@ -42,8 +42,13 @@ export interface AgendaOptions {
   start: string;
   view: ScheduleView;
   filter: TeacherFilter;
+  /** Free gaps start no earlier than this, rounded up to a quarter hour, as on the web board. */
+  now?: Date;
 }
 
+const QUARTER = 15 * 60_000;
+/** Bookable free gaps are at least 30 min (the web board's rule). */
+const MIN_GAP = 30 * 60_000;
 const ms = (iso: string) => Date.parse(iso);
 
 function clip(span: Span, from: number, to: number): Span | null {
@@ -56,6 +61,12 @@ function clip(span: Span, from: number, to: number): Span | null {
 
 const clipAll = (spans: readonly Span[], from: number, to: number): Span[] =>
   spans.flatMap((s) => clip(s, from, to) ?? []);
+
+/** Free gaps still ahead: clipped to the period and to `now`, short remainders dropped. */
+const freeAhead = (spans: readonly Span[], period: { from: number; to: number; now?: Date }): Span[] => {
+  const after = period.now ? Math.ceil(period.now.getTime() / QUARTER) * QUARTER : 0;
+  return clipAll(spans, Math.max(period.from, after), period.to).filter((s) => ms(s.ends_at) - ms(s.starts_at) >= MIN_GAP);
+};
 
 export function matches(teacher: OverviewTeacher, f: TeacherFilter): boolean {
   return (
@@ -110,7 +121,7 @@ export function teacherAgendas(o: ScheduleOverview, opts: AgendaOptions): Teache
       const own = lessons.filter((l) => l.teacher.id === teacher.id);
       return {
         teacher,
-        items: days === 1 ? dayItems(own, clipAll(teacher.free, from, to)) : weekItems(own),
+        items: days === 1 ? dayItems(own, freeAhead(teacher.free, { from, to, now: opts.now })) : weekItems(own),
         windows: clipAll(teacher.windows, from, to),
         timeOff: teacher.time_off.filter((off) => clip(off, from, to) !== null),
       };

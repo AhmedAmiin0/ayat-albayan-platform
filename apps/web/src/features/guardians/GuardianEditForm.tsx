@@ -46,8 +46,8 @@ function GuardianForm({ guardian, onClose, onDone }: { guardian: GuardianDetail 
     },
   });
   const set = (patch: Partial<GuardianValues>) => setValues((v) => ({ ...v, ...patch }));
-  const text = (key: 'name' | 'country' | 'notes', label: string) => (
-    <Field label={label} error={errors[key]}>
+  const text = (key: 'name' | 'country' | 'notes', label: string, hint?: string) => (
+    <Field label={label} hint={hint} error={errors[key]}>
       {(p) => <Input {...p} value={values[key]} onChange={(e) => set({ [key]: e.target.value })} />}
     </Field>
   );
@@ -74,7 +74,7 @@ function GuardianForm({ guardian, onClose, onDone }: { guardian: GuardianDetail 
           </>
         )}
       </Field>
-      {text('country', t.guardians.country)}
+      {text('country', t.guardians.country, t.guardians.countryHint)}
       <SourceField value={values.source} onChange={(source) => set({ source })} />
       <div className="sm:col-span-2">{text('notes', t.guardians.notes)}</div>
       {save.isError && <FormAlert className="sm:col-span-2">{failed}</FormAlert>}

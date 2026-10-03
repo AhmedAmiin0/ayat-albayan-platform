@@ -4,6 +4,7 @@ import { Bar } from '@/features/dashboard/Bar';
 import { loadLabel } from '@/features/dashboard/TeacherLoad';
 import { formatTimeOff } from '@/features/teachers/time-off';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { timeInCity } from './lessons';
 import { RIYADH_TZ } from './tz';
 
@@ -26,9 +27,9 @@ export function TeacherCell({ teacher, now }: TeacherCellProps) {
       <Link
         to="/admin/teachers/$teacherId"
         params={{ teacherId: teacher.id }}
-        className="truncate font-semibold text-ink hover:text-lapis"
+        className="flex min-h-11 items-center truncate font-semibold text-ink hover:text-lapis sm:min-h-0"
       >
-        {teacher.display_name_ar}
+        {teacherLabel(teacher)}
       </Link>
       <span className="text-xs font-normal text-ink-3">{`${t.teachers.genderLabel[teacher.gender]} · ${programs}`}</span>
       {teacher.tz !== RIYADH_TZ && (

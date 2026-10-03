@@ -7,7 +7,7 @@ import type { OverviewTeacherRow } from './overview.queries';
 // The Riyadh day Sunday 2026-10-04; the fake lesson is 14:00Z–14:45Z with أبرار.
 const window = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-04T21:00:00Z') };
 const teacher = (over: Partial<OverviewTeacherRow>): OverviewTeacherRow => ({
-  ...{ id: TEACHER_ID, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo' },
+  ...{ id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, gender: 'female', programs: ['quran'], tz: 'Africa/Cairo' },
   ...{ meeting_link: null, max_students: 12, status: 'active' },
   ...over,
 });
@@ -18,6 +18,7 @@ const parts = (over: Partial<OverviewParts> = {}): OverviewParts => ({
   // 16:00–18:00 Cairo summer time = 13:00Z–15:00Z
   slots: [{ teacher_id: TEACHER_ID, weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Africa/Cairo' }],
   timeOff: [],
+  carry: [],
   loads: new Map([[TEACHER_ID, 7]]),
   lessons: [lesson()],
   ...over,
@@ -49,7 +50,7 @@ describe('toOverview (R-SCH-09)', () => {
       teacher({ id: 'gone', display_name_ar: 'بسمة', status: 'inactive' }),
       teacher({ id: 'left', display_name_ar: 'تقى', status: 'inactive' }),
     ];
-    const leftover = lesson({ id: 'l2', teacher_id: 'left', teacher: { id: 'left', display_name_ar: 'تقى', tz: 'Africa/Cairo' } });
+    const leftover = lesson({ id: 'l2', teacher_id: 'left', teacher: { id: 'left', display_name_ar: 'تقى', display_name_en: null, tz: 'Africa/Cairo' } });
     const out = toOverview(parts({ teachers, lessons: [leftover, lesson()] }));
     expect(out.teachers.map((t) => t.display_name_ar)).toEqual(['أبرار', 'تقى', 'سارة']);
     expect(out.teachers[2]).toMatchObject({ students_count: 0, windows: [], free: [], time_off: [] });

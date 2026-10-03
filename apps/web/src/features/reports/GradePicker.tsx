@@ -1,4 +1,5 @@
 import { GRADES, gradeStyle, type Grade } from '@ab/shared';
+import { RequiredMark } from '@/components/ui/label';
 import { GradePips } from '@/components/ui/nuqta-glyph';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -12,6 +13,10 @@ export interface GradePickerProps {
   disabled?: boolean;
   /** The overall grade reads larger (docs/07 §13 overall box). */
   emphasis?: boolean;
+  /** missing_grades from the last submit attempt, while this row is still empty. */
+  invalid?: boolean;
+  /** The «*» mark: required once the student attended. */
+  required?: boolean;
 }
 
 /**
@@ -19,10 +24,20 @@ export interface GradePickerProps {
  * in greyscale) with the grade word under them (12px, never counted from dots), ممتاز first.
  * Arrow keys move.
  */
-export function GradePicker({ name, label, value, onChange, disabled, emphasis }: GradePickerProps) {
+export function GradePicker({ name, label, value, onChange, disabled, emphasis, invalid, required }: GradePickerProps) {
   return (
-    <fieldset className="grid gap-1.5 border-b border-rule py-2.5 last:border-b-0 sm:grid-cols-[12rem_1fr] sm:items-center" disabled={disabled}>
-      <legend className={cn('float-start text-sm text-ink-2', emphasis && 'font-display text-body font-bold text-ink')}>{label}</legend>
+    <fieldset
+      disabled={disabled}
+      aria-invalid={invalid || undefined}
+      className={cn(
+        'grid gap-1.5 border-b border-rule py-2.5 last:border-b-0 sm:grid-cols-[12rem_1fr] sm:items-center',
+        invalid && 'border-s-[3px] border-s-danger ps-2',
+      )}
+    >
+      <legend className={cn('float-start text-sm text-ink-2', emphasis && 'font-display text-body font-bold text-ink')}>
+        {label}
+        {required && <RequiredMark />}
+      </legend>
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5">
         <div className="grid w-full grid-cols-5 gap-1 sm:inline-flex sm:w-auto">
           {GRADES.map((g) => (

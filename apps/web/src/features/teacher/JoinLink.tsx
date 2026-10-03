@@ -10,7 +10,7 @@ export function JoinLink({ link }: { link: string | null }) {
       {link ? (
         <>
           <Ltr className="min-w-0 truncate text-sm text-ink-2">{link.replace(/^https?:\/\//, '')}</Ltr>
-          <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ size: 'lg', className: 'ms-auto' })}>
+          <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'lg', className: 'ms-auto' })}>
             {t.teacherDash.join}
           </a>
         </>

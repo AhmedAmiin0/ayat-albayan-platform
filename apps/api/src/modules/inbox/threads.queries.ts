@@ -90,18 +90,21 @@ export class ThreadsQueries {
     return newest?.wa_message_id ?? null;
   }
 
-  /** Rule 8: a replayed dedup_key (admin:{clientRequestId}) returns the first row. */
-  async enqueue(row: TablesInsert<'messages'>): Promise<MessageRow> {
+  /** Rule 8: a replayed dedup_key returns the first row, flagged `replayed` (nothing was written). */
+  async enqueue(row: TablesInsert<'messages'>): Promise<MessageRow & { replayed?: boolean }> {
     if (!row.dedup_key) {
       const { data, error } = await this.db.from('messages').insert(row).select('*').single();
       check(error, 'message enqueue');
       return data;
     }
-    const { error } = await this.db.from('messages').upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true });
+    const { data: created, error } = await this.db
+      .from('messages')
+      .upsert(row, { onConflict: 'dedup_key', ignoreDuplicates: true })
+      .select('id');
     check(error, 'message enqueue');
     const { data, error: readError } = await this.db.from('messages').select('*').eq('dedup_key', row.dedup_key).single();
     check(readError, 'message enqueue read');
-    return data;
+    return { ...data, replayed: created.length === 0 };
   }
 
   async get(id: string): Promise<ThreadMessageRow | null> {

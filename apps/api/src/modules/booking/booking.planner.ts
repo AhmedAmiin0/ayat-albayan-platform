@@ -30,14 +30,14 @@ export class BookingPlanner {
 
   /** POST /booking/check: the series' clashes, nothing written, never a 409 conflict. */
   async conflicts(req: BookingRequest): Promise<Conflict[]> {
-    const { teacher } = await this.parties.lookup(req);
-    const who = await this.parties.resolve(req);
+    const { teacher, lead } = await this.parties.lookup(req);
+    const who = await this.parties.resolve(req, lead);
     return (await this.series(req, teacher, who)).conflicts;
   }
 
   async prepare(req: BookingRequest): Promise<Prepared> {
     const { teacher, lead } = await this.parties.lookup(req);
-    const who = await this.parties.resolve(req);
+    const who = await this.parties.resolve(req, lead);
     const { plan, first, conflicts } = await this.series(req, teacher, who);
     if (conflicts.length > 0 && !req.override) {
       throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });

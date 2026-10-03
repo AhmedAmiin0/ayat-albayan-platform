@@ -1,8 +1,8 @@
-import { isTeacherTemplate, sessionWindowOpen, type MessageView, type ThreadTemplate, type ThreadText } from '@ab/shared';
+import { isTeacherTemplate, sessionWindowOpen, type ThreadTemplate, type ThreadText } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
-import { Outbox } from './outbox';
+import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
 import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
@@ -17,12 +17,14 @@ export interface ThreadSend<T> {
 
 /**
  * Rule 8: every inbox send carries the client's request id, so a retried POST (lost answer, double
- * tap) returns the first row instead of messaging the family twice. 400 without one. A teacher's
- * key space (`teacher:`) is separate from the admin's (`admin:`).
+ * tap) returns the first row instead of messaging the family twice. 400 without one. The key is scoped to who sends
+ * and to whom (`teacher:<teacher>:<phone>:<id>`, `admin:<phone>:<id>`), so one id reused on another
+ * phone, or by another teacher, is a new send, never the first family's row.
  */
 function dedupKey<T>(s: ThreadSend<T>): string {
   if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
-  return `${s.scope ? 'teacher' : 'admin'}:${s.input.clientRequestId}`;
+  const who = s.scope ? `teacher:${s.scope.teacherId}` : 'admin';
+  return `${who}:${s.phone}:${s.input.clientRequestId}`;
 }
 
 /** The row's people (by phone, like v_threads) and author; a teacher's row names them («بعتها»). */
@@ -49,7 +51,7 @@ export class ThreadSendService {
   ) {}
 
   /** H3: free text inside the 24 h window only (WhatsApp rejects it after: 131047). */
-  async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<MessageView> {
+  async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
@@ -58,7 +60,7 @@ export class ThreadSendService {
   }
 
   /** H4: an approved template with every variable filled; a PDF template comes only from the PDF job. */
-  async template(s: ThreadSend<ThreadTemplate>): Promise<MessageView> {
+  async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);
     const template = await this.templates.approved(s.input.key);

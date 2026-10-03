@@ -53,7 +53,7 @@ export function fakeQueries() {
   return {
     teacher: vi.fn().mockResolvedValue(TEACHER),
     students: vi.fn(async (ids: readonly string[]) => STUDENTS.filter((s) => ids.includes(s.id))),
-    lead: vi.fn().mockResolvedValue({ id: IDS.lead, status: 'new' }),
+    lead: vi.fn().mockResolvedValue({ id: IDS.lead, status: 'new', source: null, qualification: {} }),
     guardianByPhone: vi.fn().mockResolvedValue(null),
     createBooking: vi.fn(),
   };

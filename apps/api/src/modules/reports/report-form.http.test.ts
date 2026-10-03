@@ -37,7 +37,7 @@ describe('GET /lessons/:id/report-form (R1; R-REP-01, R-REP-04, issues A7, D1)',
       ends_at: '2026-10-04T14:45:00.000Z',
       status: 'scheduled',
       meeting_link: 'https://meet.jit.si/abrar',
-      teacher: { id: lessonRow().teacher_id, display_name_ar: 'أبرار', tz: 'Africa/Cairo' },
+      teacher: { id: lessonRow().teacher_id, display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
     });
     expect(body.submit_block).toBeNull();
     expect(body.entries).toEqual([

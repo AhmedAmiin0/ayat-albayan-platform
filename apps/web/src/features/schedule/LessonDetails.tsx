@@ -5,6 +5,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
 import { durationMin, studentTimes, timeInCity } from './lessons';
 import { RIYADH_TZ } from './tz';
@@ -45,7 +46,7 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
           )}
         </Row>
         <Row label={t.schedule.duration}>{duration[String(mins)] ?? mins}</Row>
-        <Row label={t.schedule.teacher}>{lesson.teacher.display_name_ar}</Row>
+        <Row label={t.schedule.teacher}>{teacherLabel(lesson.teacher)}</Row>
         <Row label={t.schedule.students}>
           {lesson.students.map((s) => (
             <span key={s.id} className="me-3 inline-flex items-baseline gap-1.5">

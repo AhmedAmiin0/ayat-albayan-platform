@@ -48,7 +48,7 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
   return (
     <div className="min-h-screen shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
-      <aside ref={aside} className="flex items-center gap-3 px-3 pt-3 shell:sticky shell:top-0 shell:h-screen shell:flex-col shell:items-stretch shell:gap-[26px] shell:overflow-y-auto shell:pt-[22px] shell:pb-4">
+      <aside ref={aside} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3 shell:flex-nowrap shell:gap-y-0 shell:sticky shell:top-0 shell:h-screen shell:flex-col shell:items-stretch shell:gap-[26px] shell:overflow-y-auto shell:pt-[22px] shell:pb-4">
         <Link
           to="/admin"
           activeOptions={{ exact: true }}
@@ -72,7 +72,7 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
 /** Teacher / guardian: same margin, page and cartouche, no fihris; 48px controls. */
 function TopBarLayout({ page, topNav }: { page: ReactNode; topNav?: ReactNode }) {
   return (
-    <div className="mx-auto min-h-screen max-w-[1180px] px-2 pb-5 shell:px-6">
+    <div className={cn('mx-auto min-h-screen max-w-[1180px] px-2 pb-5 shell:px-6', topNav && 'pb-24 sm:pb-5')}>
       <header className="flex items-center gap-3 px-1.5 pt-4">
         <Logo />
         <div className="ms-auto flex items-center gap-2">
@@ -81,7 +81,7 @@ function TopBarLayout({ page, topNav }: { page: ReactNode; topNav?: ReactNode })
           <LogoutButton className="size-12 sm:size-12" />
         </div>
       </header>
-      {topNav && <div className="px-1.5 pt-3">{topNav}</div>}
+      {topNav && <div className="sm:px-1.5 sm:pt-3">{topNav}</div>}
       <RunningHead />
       {page}
       <PhoneTheme className="sm:hidden" />

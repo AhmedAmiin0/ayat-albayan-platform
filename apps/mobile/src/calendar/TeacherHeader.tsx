@@ -1,6 +1,8 @@
+import { teacherName } from '@ab/shared';
 import { router } from 'expo-router';
 import { Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Chevron } from '@/ui/Chevron';
@@ -15,8 +17,8 @@ export interface TeacherHeaderProps {
 
 /**
  * A «الجدول» section's head: the name (opens the teacher), «معلمة · القرآن الكريم · 3 من 10 طالب ·
- * القاهرة», then the day's availability, any time off touching the period, and «مفيش حلقات» when
- * nothing is booked.
+ * القاهرة», then the day's availability, any time off touching the period (neutral ink: cinnabar is
+ * for errors and stopped states), and «مفيش حلقات» when nothing is booked.
  */
 export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
   const { color } = useTheme();
@@ -51,7 +53,7 @@ export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
             color: color.lapis,
           }}
         >
-          {teacher.display_name_ar}
+          {teacherName(teacher, locale)}
         </AppText>
         <Chevron to="next" color={color.lapis} size={16} />
       </Pressable>
@@ -60,7 +62,7 @@ export function TeacherHeader({ agenda, showWindows }: TeacherHeaderProps) {
       </AppText>
       {available ? <AppText style={{ ...faint, color: color.ink3 }}>{available}</AppText> : null}
       {agenda.timeOff.map((off) => (
-        <AppText key={off.id} style={{ ...faint, color: color.bad }}>
+        <AppText key={off.id} style={{ ...faint, color: color.ink2 }}>
           {timeOffLine(off)}
         </AppText>
       ))}

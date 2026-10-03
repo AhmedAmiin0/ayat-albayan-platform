@@ -16,9 +16,9 @@ export function PendingReports({ tz }: { tz: string }) {
   if (rows.length === 0) return null;
   return (
     <section aria-label={t.reports.pending} className="mb-5 grid gap-2 border-b border-rule pb-4">
-      <h2 className="flex flex-wrap items-baseline gap-2 text-sm font-semibold">
+      <h2 className="flex flex-wrap items-baseline gap-2 font-display text-h3 font-bold">
         {t.reports.pending}
-        <span className="text-xs font-medium text-act">{counted(t.reports.pendingCount, rows.length)}</span>
+        <span className="font-sans text-xs font-medium text-act">{counted(t.reports.pendingCount, rows.length)}</span>
       </h2>
       <ul className="grid gap-2">
         {rows.map((r) => {
@@ -28,7 +28,7 @@ export function PendingReports({ tz }: { tz: string }) {
               <span className="font-semibold">{r.student.name}</span>
               <span className="text-xs text-ink-2 tabular-nums">{`${dayMonthLabel(zonedParts(at, tz).date)} ${clockTime(at, tz)}`}</span>
               <ReportLink href={reportFormHref({ role: 'teacher', lessonId: r.lesson_id, studentId: r.student.id })} size="lg" className="ms-auto">
-                {r.report_id ? t.reports.edit : t.reports.open}
+                {r.report_id ? t.reports.resume : t.reports.open}
               </ReportLink>
             </li>
           );

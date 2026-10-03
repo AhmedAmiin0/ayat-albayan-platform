@@ -33,9 +33,12 @@ export const AFTER_FIELDS = ['notes', 'homework', 'nextPlan'] as const satisfies
 
 const REQUIRED: readonly TextKey[] = REPORT_REQUIRED_TEXT;
 
-/** Required like on the Google Form (research-forms 12) unless the student was absent / excused. */
-export function textRequired(key: TextKey, attendance: Attendance | null): boolean {
-  return REQUIRED.includes(key) && (attendance === null || attended(attendance));
+/**
+ * Required like on the Google Form (research-forms 12) unless the student was absent / excused,
+ * and only until the report was first sent (`version` 0): a correction never needs a new field.
+ */
+export function textRequired(key: TextKey, attendance: Attendance | null, version = 0): boolean {
+  return version === 0 && REQUIRED.includes(key) && (attendance === null || attended(attendance));
 }
 
 /** Typing pause before a draft is saved (R-REP-02 «drafts auto-saved»). */
@@ -82,8 +85,8 @@ export function submitBody(v: FormValues, expectedVersion: number): SubmitBody {
  * six grades + overall when the student attended (`missing_grades`), then the required text
  * (`missing_text`). null = ready to send.
  */
-export function submitProblem(v: FormValues): string | null {
-  const parsed = reportSubmitSchema.safeParse(submitBody(v, 0));
+export function submitProblem(v: FormValues, version = 0): string | null {
+  const parsed = reportSubmitSchema.safeParse(submitBody(v, version));
   return parsed.success ? null : (parsed.error.issues[0]?.message ?? 'validation_failed');
 }
 

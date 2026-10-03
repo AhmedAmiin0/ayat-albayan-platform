@@ -86,7 +86,7 @@ export function lessonRow(over: Partial<ReportLessonRow> = {}): ReportLessonRow 
     ends_at: '2026-10-04T14:45:00+00:00',
     status: 'scheduled',
     meeting_link: 'https://meet.jit.si/abrar',
-    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', tz: 'Africa/Cairo' },
+    teacher: { id: TEACHER_ID, display_name_ar: 'أبرار', display_name_en: null, tz: 'Africa/Cairo' },
     lesson_students: [
       {
         student_id: STUDENT_ID,

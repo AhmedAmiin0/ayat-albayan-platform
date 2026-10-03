@@ -1,4 +1,5 @@
 import { ATTENDANCES, type Attendance } from '@ab/shared';
+import { RequiredMark } from '@/components/ui/label';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -15,7 +16,10 @@ export interface AttendanceFieldProps {
 export function AttendanceField({ name, value, onChange, disabled, invalid }: AttendanceFieldProps) {
   return (
     <fieldset disabled={disabled} aria-invalid={invalid || undefined} className="grid gap-2">
-      <legend className="mb-2 font-display text-h3 font-bold">{t.reports.attendance}</legend>
+      <legend className="mb-2 font-display text-h3 font-bold">
+        {t.reports.attendance}
+        <RequiredMark />
+      </legend>
       <div className="flex flex-wrap gap-2">
         {ATTENDANCES.map((a) => (
           <label key={a} className="cursor-pointer">
