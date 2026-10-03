@@ -7,7 +7,19 @@ import { t } from '@/lib/i18n';
 import { BookedPanel, type BookedPanelProps } from './BookedPanel';
 
 const apiSend = vi.hoisted(() => vi.fn());
-vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend }));
+const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+
+const INVOICE = {
+  id: 'inv-1',
+  rule_id: 'r-1',
+  kind: 'package',
+  mime: 'image/png',
+  size_bytes: 10,
+  source: 'upload',
+  created_at: '2026-10-03T09:00:00.000Z',
+  students: [],
+};
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
@@ -30,7 +42,10 @@ function renderPanel(props: Partial<BookedPanelProps>) {
   );
 }
 
-afterEach(() => apiSend.mockReset());
+afterEach(() => {
+  apiSend.mockReset();
+  apiFetch.mockReset();
+});
 
 describe('BookedPanel after «اشترك» from the chat (R-SUB-01)', () => {
   it('a regular package offers «اعمل الاشتراك» for the new student, then the way back to the chat', async () => {
@@ -50,10 +65,40 @@ describe('BookedPanel after «اشترك» from the chat (R-SUB-01)', () => {
     expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
   });
 
-  it('a trial (or a booking not from a lead) offers neither', () => {
-    renderPanel({ subscribeFor: null, chatPhone: null });
+  it('a trial (or a booking not from a lead) offers neither, and asks for no invoice', () => {
+    renderPanel({ subscribeFor: null, chatPhone: null, kind: 'trial' });
     expect(screen.getByRole('heading', { name: t.booking.booked })).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
     expect(screen.queryByRole('link', { name: t.inbox.subscription.backToChat })).toBeNull();
+    expect(apiFetch).not.toHaveBeenCalled();
+  });
+});
+
+describe('BookedPanel invoice and makeup (R-SCH-10, R-PAY-03)', () => {
+  it('a makeup says so, offers no subscription and opens its invoice in a dialog', async () => {
+    apiFetch.mockImplementation(async (path: string) =>
+      path.startsWith('/invoices?') ? [{ ...INVOICE, kind: 'makeup' }] : { url: 'https://signed/inv', expires_at: 'x' },
+    );
+    renderPanel({ kind: 'makeup', subscribeFor: null });
+    expect(screen.getByRole('heading', { name: t.booking.makeup.booked })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
+    expect(apiFetch).toHaveBeenCalledWith('/invoices?ruleId=r-1');
+    fireEvent.click(await screen.findByRole('button', { name: t.booking.invoice.view }));
+    const dialog = await screen.findByRole('dialog', { name: t.booking.invoice.label });
+    expect((await within(dialog).findByRole('img')).getAttribute('src')).toBe('https://signed/inv');
+  });
+
+  it('a package shows its invoice, and «سجّل الدفعة» only after the subscription is made', async () => {
+    apiFetch.mockResolvedValue([INVOICE]);
+    apiSend.mockImplementation(async (_m: string, path: string) =>
+      path === '/subscriptions/quote' ? Promise.reject(new Error('no quote in this test')) : { id: 'sub-1' },
+    );
+    renderPanel({ kind: 'package', subscribeFor: { id: 's-new', name: 'جود', code: null } });
+    expect(await screen.findByRole('button', { name: t.booking.invoice.view })).toBeTruthy();
+    expect(screen.queryByRole('link', { name: t.booking.invoice.recordPayment })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.inbox.subscription.make }));
+    fireEvent.click(within(screen.getByRole('dialog', { name: t.subscriptions.new })).getByRole('button', { name: t.common.save }));
+    const pay = await screen.findByRole('link', { name: t.booking.invoice.recordPayment });
+    expect(pay.getAttribute('href')).toBe('/admin/payments?');
   });
 });

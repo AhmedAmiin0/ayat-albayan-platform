@@ -1,6 +1,6 @@
 import type { BookingTeacherOption } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
-import type { Mock } from 'vitest';
+import { vi, type Mock } from 'vitest';
 import { t } from '@/lib/i18n';
 
 // Test data only (imported by the wizard *.test.tsx): API responses keyed by path prefix.
@@ -70,13 +70,31 @@ export async function pickTeacherAndSlot(): Promise<void> {
   await pickSlot();
 }
 
+export const INVOICE_PATH = 'req-1/abc.png';
+
 /**
- * apiSend by path: POST /booking/check (the slot step's series check) answers «no clash»; each
- * POST /booking takes the next answer (an Error rejects).
+ * The invoice step with a device upload (R-PAY-03): a PNG goes through the signed URL
+ * (`uploadToSignedUrl`, mocked by the test file) and shows its preview. Call on the invoice step.
+ */
+export async function addInvoice(uploadToSignedUrl: Mock): Promise<void> {
+  URL.createObjectURL = vi.fn(() => 'blob:invoice');
+  uploadToSignedUrl.mockResolvedValue({ error: null });
+  const input = screen.getByLabelText(t.booking.invoice.upload);
+  fireEvent.change(input, { target: { files: [new File(['x'], 'inv.png', { type: 'image/png' })] } });
+  await screen.findByRole('button', { name: t.booking.invoice.remove });
+}
+
+/**
+ * apiSend by path: POST /booking/check (the slot step's series check) answers «no clash»,
+ * POST /booking/invoice-upload-url a signed upload; each POST /booking takes the next answer (an
+ * Error rejects).
  */
 export function routeSend(apiSend: Mock, answers: unknown[]): void {
   apiSend.mockImplementation((_method: string, path: string) => {
     if (path === '/booking/check') return Promise.resolve({ conflicts: [] });
+    if (path === '/booking/invoice-upload-url') {
+      return Promise.resolve({ bucket: 'invoices', path: INVOICE_PATH, token: 'tok', signed_url: 'https://x' });
+    }
     const answer = answers.shift();
     return answer instanceof Error ? Promise.reject(answer) : Promise.resolve(answer);
   });

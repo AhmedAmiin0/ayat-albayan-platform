@@ -8,7 +8,9 @@ import { CancelForm } from './CancelForm';
 import { Drawer } from './Drawer';
 import { LessonActions } from './LessonActions';
 import { LessonDetails } from './LessonDetails';
+import { LessonInvoice } from './LessonInvoice';
 import { studentNames } from './lessons';
+import { MakeupAction } from './MakeupAction';
 import { ProposalBox } from './ProposalBox';
 import { RescheduleForm } from './RescheduleForm';
 
@@ -29,8 +31,8 @@ const LABEL: Record<Mode, string> = {
 /**
  * Admin lesson drawer (R-SCH-03, R-SCH-07, R-SCH-08): details, a teacher's pending proposal, then
  * confirm / attendance, «تغيير الميعاد» (slot picker, conflict → message → another slot) and
- * «إلغاء الحلقة» (scope, by whom, reason). Switching form moves focus to it (it replaced the
- * button that had focus).
+ * «إلغاء الحلقة» (scope, by whom, reason), the booking's invoice and «حجز تعويضي» on a missed
+ * lesson (R-SCH-10, R-PAY-03). Switching form moves focus to it (it replaced the button that had focus).
  */
 export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
   const [mode, setMode] = useState<Mode>('view');
@@ -46,6 +48,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
         {mode === 'view' && (
           <>
             <LessonDetails lesson={lesson} />
+            <LessonInvoice lesson={lesson} />
             <ProposalBox lesson={lesson} onDone={done} />
             <LessonReportLinks lesson={lesson} role="admin" />
             <LessonActions
@@ -54,6 +57,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
               onCancel={() => setMode('cancel')}
               onReschedule={() => setMode('reschedule')}
             />
+            <MakeupAction lesson={lesson} />
             <FeedbackRequestButton lesson={lesson} />
           </>
         )}

@@ -15,6 +15,7 @@ import { studentQuery } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { BalanceCard } from '@/features/subscriptions/BalanceCard';
 import { SiblingMerge } from './SiblingMerge';
+import { StudentInvoices } from './StudentInvoices';
 import { StudentProfileForm } from './StudentProfileForm';
 
 /**
@@ -79,6 +80,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         ))}
       </dl>
       <BalanceCard student={student} />
+      <StudentInvoices studentId={student.id} />
       <StudentProfileForm key={student.id} student={student} />
       <SiblingMerge student={student} siblings={student.siblings} />
       {editGuardian && (

@@ -1,5 +1,6 @@
 import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView, type Tone } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { isMakeup } from '@/features/booking/contract';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
@@ -29,7 +30,8 @@ export interface LessonChipProps {
  * One lesson in the week grid (R-SCH-01, R-SCH-03): Riyadh time · student(s), the status as nuqta
  * + word (shape carries state, colour only confirms), the student's own clock when it differs, and
  * a flag for a generated lesson that clashes (R-SCH-04), a student whose package is unpaid with
- * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08). A trial says «تجريبية».
+ * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08). A trial says «تجريبية», a
+ * makeup (R-SCH-10) «تعويضية».
  */
 export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipProps) {
   const style = lessonStatusStyle[lesson.status];
@@ -58,6 +60,9 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
         </span>
         {lesson.trial && (
           <span className="shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.schedule.trialTag}</span>
+        )}
+        {isMakeup(lesson) && (
+          <span className="shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.booking.makeup.tag}</span>
         )}
       </span>
       {local && (

@@ -16,12 +16,15 @@ export interface StudentStepProps {
   onPicked: (students: PickedStudent[]) => void;
   /** Reopens the wizard for another student (their profile carries tz, program, siblings). */
   onOpenStudent: (id: string) => void;
+  /** A makeup is for one student: no siblings to tick. */
+  single?: boolean;
 }
 
 const asPicked = (s: StudentRef): PickedStudent => ({ id: s.id, name: s.name, code: s.code });
 
 /** Step 1 (R-SCH-06): the student, plus siblings for a group lesson, or search for someone else. */
-export function StudentStep({ primary, siblings, picked, onPicked, onOpenStudent }: StudentStepProps) {
+export function StudentStep({ primary, siblings: all, picked, onPicked, onOpenStudent, single = false }: StudentStepProps) {
+  const siblings = single ? [] : all;
   const [term, setTerm] = useState('');
   // A cached unfiltered list must not show up as «results» before anything was searched.
   const query = useQuery({ ...studentListQuery(term, 1), enabled: term !== '' });

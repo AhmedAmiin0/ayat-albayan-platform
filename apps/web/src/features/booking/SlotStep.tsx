@@ -25,7 +25,7 @@ export function pickedText(startsAt: string, tz: string): string {
 
 /**
  * Step 4 (R-SCH-06): «الساعه» and «تاريخ اول حصه», the first lesson from the teacher's real free slots (length picked with the
- * package), then the weekly repeat days at that same local time. A trial is one lesson: no repeat.
+ * package), then the weekly repeat days at that same local time. A trial or a makeup is one lesson: no repeat.
  */
 export function SlotStep({ draft, onChange }: SlotStepProps) {
   const teacher = draft.teacher;
@@ -56,7 +56,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
               {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz))}
             </p>
           </section>
-          {draft.pkg !== 'trial' && (
+          {draft.kind === 'package' && (
             <ByDayPicker
               fixed={ruleFromSlot(draft.startsAt, draft.tz).weekday}
               value={days}

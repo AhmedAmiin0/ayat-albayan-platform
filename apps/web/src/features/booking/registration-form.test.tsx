@@ -14,11 +14,10 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.
 const wrap = (ui: React.ReactNode) => <QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>;
 
 describe('registration form wording', () => {
-  it('«الباقة المطلوبة *» offers exactly the form’s five options, in its order, with its wording', () => {
+  it('«الباقة المطلوبة *» offers the form’s paid options, in its order, with its wording (the trial moved to «نوع الحجز»)', () => {
     render(wrap(<PackageStep draft={emptyDraft()} onChange={vi.fn()} />));
     const group = screen.getByRole('group', { name: 'الباقة المطلوبة' });
     expect(within(group).getAllByRole('radio').map((r) => r.closest('label')?.querySelector('span')?.textContent)).toEqual([
-      'حلقة تجريبية مجانية بس',
       '4 حلقات في الشهر',
       '8 حلقات',
       '12 حلقة',

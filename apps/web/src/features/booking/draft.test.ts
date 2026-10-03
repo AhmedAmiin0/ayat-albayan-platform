@@ -41,8 +41,9 @@ describe('ruleFromSlot / effectiveByday (R-SCH-06)', () => {
     expect(effectiveByday(ready({ startsAt: null }))).toEqual([]);
   });
 
-  it('a trial is one lesson: only the first day', () => {
-    expect(effectiveByday(ready({ pkg: 'trial', byday: [1, 3] }))).toEqual([0]);
+  it('a trial or a makeup is one lesson: only the first day', () => {
+    expect(effectiveByday(ready({ kind: 'trial', pkg: 'trial', byday: [1, 3] }))).toEqual([0]);
+    expect(effectiveByday(ready({ kind: 'makeup', byday: [1, 3] }))).toEqual([0]);
   });
 });
 
@@ -84,7 +85,7 @@ describe('toBookingRequest (POST /booking)', () => {
 
   it('builds a valid lead request: new student + guardian, the trial package', () => {
     const lead: BookingDraft = {
-      ...ready({ students: [], pkg: 'trial', genderPref: 'female', country: 'SA' }),
+      ...ready({ students: [], kind: 'trial', pkg: 'trial', genderPref: 'female', country: 'SA' }),
       leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d',
       newStudent: { name: ' جود ', guardianName: 'أم جود', guardianPhone: '+966 50 123 4567' },
     };
@@ -98,7 +99,7 @@ describe('toBookingRequest (POST /booking)', () => {
     expect(body).not.toHaveProperty('studentIds');
     expect(bookingRequestSchema.safeParse(body).success).toBe(true);
     // «اشترك» from the chat: a regular package books an active student.
-    expect(toBookingRequest({ ...lead, pkg: '8' })).toMatchObject({ package: '8', newStudent: { status: 'active' } });
+    expect(toBookingRequest({ ...lead, kind: 'package', pkg: '8' })).toMatchObject({ package: '8', newStudent: { status: 'active' } });
   });
 
   it('carries the idempotency key, the picked instant, and force on the lead path', () => {
@@ -107,7 +108,7 @@ describe('toBookingRequest (POST /booking)', () => {
     expect(body).toMatchObject({ clientRequestId: d.requestId, startsAt: d.startsAt });
     expect(toBookingRequest(d)?.clientRequestId).toBe(body?.clientRequestId);
     const lead: BookingDraft = {
-      ...ready({ students: [], pkg: 'trial', force: true }),
+      ...ready({ students: [], kind: 'trial', pkg: 'trial', force: true }),
       leadId: '9a8b7c6d-5e4f-4a3b-8c2d-1e0f9a8b7c6d',
       newStudent: { name: 'جود', guardianName: 'أم جود', guardianPhone: '0501234567' },
     };

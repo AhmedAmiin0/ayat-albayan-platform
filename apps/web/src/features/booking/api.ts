@@ -1,6 +1,5 @@
 import {
   PACKAGE_SIZES,
-  type BookingRequest,
   type BookingResult,
   type BookingTeacherOption,
   type Conflict,
@@ -10,6 +9,7 @@ import {
 } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
+import { BOOKING_KINDS, type BookingBody, type BookingKind } from './contract';
 
 // Booking routes (docs/10 §5, rows 12–14) + the guardian row for the quote currency.
 
@@ -33,15 +33,16 @@ export const guardianQuery = (id: string) =>
   });
 
 /** POST /booking: one transaction (rule + lessons + queued confirmations). 409 = conflicts. */
-export const createBooking = (body: BookingRequest) => apiSend<BookingResult>('POST', '/booking', body);
+export const createBooking = (body: BookingBody) => apiSend<BookingResult>('POST', '/booking', body);
 
 /**
  * POST /booking/check — the whole series' clashes for the slot step, before «احجز» (R-SCH-04),
  * including the weeks after a coming DST change. Keyed by the body minus its idempotency key.
  */
-export const bookingCheckQuery = (body: BookingRequest) => {
-  const key: Partial<BookingRequest> = { ...body };
+export const bookingCheckQuery = (body: BookingBody) => {
+  const key: Partial<BookingBody> = { ...body };
   delete key.clientRequestId;
+  delete key.invoice; // the check never needs the proof
   return queryOptions({
     queryKey: ['booking', 'check', JSON.stringify(key)],
     queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', '/booking/check', body),
@@ -53,6 +54,7 @@ export const bookingCheckQuery = (body: BookingRequest) => {
  * /admin/book URL state: from a student profile, or from a lead row (R-LEAD-06). `pkg` = the
  * lead's package: none = a trial, a size = «اشترك» from the chat (R-SUB-01). `teacherId` +
  * `startsAt` = a free gap on the calendar: the wizard preselects that teacher and start.
+ * `kind` + `missedLessonId` = «حجز تعويضي» from a missed lesson's drawer (R-SCH-10).
  */
 export type BookSearch = {
   studentId?: string;
@@ -62,6 +64,8 @@ export type BookSearch = {
   pkg?: PackageSize;
   teacherId?: string;
   startsAt?: string;
+  kind?: BookingKind;
+  missedLessonId?: string;
 };
 
 const text = (v: unknown): string | undefined => (typeof v === 'string' && v.trim() ? v.trim() : undefined);
@@ -71,8 +75,13 @@ export function parseBookSearch(s: Record<string, unknown>): BookSearch {
   const out: BookSearch = { ...hintOf(s) };
   const studentId = text(s['studentId']);
   const leadId = text(s['leadId']);
-  if (studentId) out.studentId = studentId;
-  else if (leadId) {
+  if (studentId) {
+    out.studentId = studentId;
+    const kind = BOOKING_KINDS.find((k) => k === s['kind']);
+    const missed = text(s['missedLessonId']);
+    if (kind) out.kind = kind;
+    if (kind === 'makeup' && missed && UUID.test(missed)) out.missedLessonId = missed;
+  } else if (leadId) {
     out.leadId = leadId;
     const phone = text(s['phone']);
     const name = text(s['name']);

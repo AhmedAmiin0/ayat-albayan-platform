@@ -6,6 +6,8 @@ import { t } from '@/lib/i18n';
 import { BookingPage } from './BookingPage';
 import {
   ABRAR,
+  addInvoice,
+  INVOICE_PATH,
   next,
   NOOR,
   pickSlot,
@@ -20,7 +22,9 @@ import {
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
+const uploadToSignedUrl = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch, apiSend }));
+vi.mock('@/lib/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
@@ -85,6 +89,14 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/booking/check', expect.objectContaining({ byday: [0, 3] }));
     next();
 
+    // A paid package needs its invoice (R-PAY-03): «التالي» waits, the upload goes to the bucket.
+    expect(screen.getByRole('region', { name: t.booking.steps.invoice })).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
+    expect(screen.getByText(t.lessons.error.invoice_required)).toBeTruthy();
+    await addInvoice(uploadToSignedUrl);
+    expect(uploadToSignedUrl).toHaveBeenCalledWith(INVOICE_PATH, 'tok', expect.any(File), { contentType: 'image/png' });
+    next();
+
     fireEvent.click(screen.getByRole('button', { name: t.booking.submit }));
     expect(await screen.findByRole('status')).toHaveProperty('textContent', t.booking.booked);
     expect(apiSend).toHaveBeenCalledWith('POST', '/booking', {
@@ -96,6 +108,8 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
       durationMin: 45,
       startsOn: '2026-10-04',
       package: '8',
+      kind: 'package',
+      invoice: { source: 'upload', path: INVOICE_PATH },
       meetingLink: null,
       clientRequestId: expect.any(String),
       startsAt: SLOT,

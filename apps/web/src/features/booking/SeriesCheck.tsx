@@ -1,9 +1,9 @@
-import type { BookingRequest } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { conflictText } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';
 import { bookingCheckQuery } from './api';
+import type { BookingBody } from './contract';
 import { toBookingRequest, type BookingDraft } from './draft';
 
 /** How many clashes are listed under the count. */
@@ -45,7 +45,7 @@ export function SeriesCheck({ draft }: { draft: BookingDraft }) {
 }
 
 // Only to keep the hook call unconditional; a disabled query never runs.
-const emptyBody: BookingRequest = {
+const emptyBody: BookingBody = {
   teacherId: '',
   byday: [0],
   startTimeLocal: '00:00',
@@ -53,5 +53,6 @@ const emptyBody: BookingRequest = {
   durationMin: 45,
   startsOn: '2026-01-01',
   package: 'trial',
+  kind: 'trial',
   studentIds: [''],
 };

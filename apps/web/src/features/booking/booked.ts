@@ -6,11 +6,11 @@ import type { BookingDraft, PickedStudent } from './draft';
 
 /**
  * Who «اعمل الاشتراك» is for: the booked student (the lead's new one, or the first picked); null
- * after a trial. ponytail: one student; siblings booked together subscribe from their profiles.
+ * after a trial or a makeup (it consumes no package). ponytail: one student; siblings booked together subscribe from their profiles.
  */
 export function subscribeTarget(d: BookingDraft, r: BookingResult): PickedStudent | null {
   const id = r.student_ids[0];
-  if (d.pkg === 'trial' || !id) return null;
+  if (d.kind !== 'package' || !id) return null;
   return d.students.find((s) => s.id === id) ?? { id, name: d.newStudent?.name.trim() ?? '', code: null };
 }
 
@@ -19,4 +19,9 @@ export function chatPhone(d: Pick<BookingDraft, 'leadId' | 'newStudent'>): strin
   if (!d.leadId || !d.newStudent) return null;
   const phone = normalizePhone(d.newStudent.guardianPhone);
   return phone.ok ? phone.e164 : null;
+}
+
+/** The number whose chat «من الشات» lists: the student's guardian, else the lead's number. */
+export function mediaPhone(d: Pick<BookingDraft, 'leadId' | 'newStudent' | 'chatPhone'>): string | null {
+  return d.chatPhone ?? chatPhone(d);
 }
