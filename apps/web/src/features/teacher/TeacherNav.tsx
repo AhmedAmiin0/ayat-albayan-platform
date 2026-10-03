@@ -9,7 +9,7 @@ const ITEMS = [
   { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', exact: false },
   { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', exact: false },
   { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', exact: false },
-  { to: '/teacher/payouts', label: t.teacherNav.payouts, icon: 'wallet', exact: false },
+  { to: '/teacher/earnings', label: t.teacherNav.payouts, icon: 'wallet', exact: false },
   { to: '/teacher/feedback', label: t.teacherNav.feedback, icon: 'star', exact: false },
 ] as const satisfies readonly { to: string; label: string; icon: IconName; exact: boolean }[];
 

@@ -1,7 +1,8 @@
 import { teacherStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
+import { Link } from '@tanstack/react-router';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
@@ -65,6 +66,9 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
         <Cartouche>{data.display_name_ar}</Cartouche>
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
         <div className="ms-auto flex gap-2.5">
+          <Link to="/admin/teachers/$teacherId/earnings" params={{ teacherId }} className={buttonVariants({ variant: 'secondary' })}>
+            {t.earnings.title}
+          </Link>
           <Button variant="secondary" onClick={() => setEditing(true)}>
             {t.teachers.edit}
           </Button>
