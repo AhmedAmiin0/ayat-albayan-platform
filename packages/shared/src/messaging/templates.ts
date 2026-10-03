@@ -18,6 +18,7 @@ export const TEMPLATE_KEYS = [
   'renewal_due',
   'follow_up_slots',
   'lesson_feedback_request',
+  'lesson_join_link',
 ] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
 
@@ -33,7 +34,7 @@ export interface TemplateParams {
   '1'?: string;
   '2'?: string;
   '3'?: string;
-  /** URL-button suffix: the Meet code, the Jitsi room slug or the signed feedback token. */
+  /** URL-button suffix: the Meet code, the Jitsi room slug, the signed feedback token or the classroom guest token. */
   button?: string;
   /** Quick-reply payloads by button index, each quickReplyPayload(intent, ref). */
   payloads?: string[];
@@ -75,7 +76,7 @@ export function teacherReminderTemplate(
 
 /**
  * Keys that mean nothing once their lesson has started (docs/12 §3, expiry). Not here on purpose:
- * report_ready, renewal_due and lesson_feedback_request (sent after the lesson; its link carries
+ * report_ready, renewal_due, lesson_join_link (an admin's send) and lesson_feedback_request (sent after the lesson; its link carries
  * its own messages.expires_at).
  */
 const LESSON_TIMED: ReadonlySet<string> = new Set<TemplateKey>([

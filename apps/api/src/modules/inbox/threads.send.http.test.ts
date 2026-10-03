@@ -76,6 +76,13 @@ describe('H3/H4 sends (docs/12 §4, R-LEAD-02, R-MSG-01)', () => {
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 
+  it('H4 refuses lesson_join_link: its one-lesson token only comes from «ابعت لينك الحلقة»', async () => {
+    t.templates.get.mockResolvedValue({ ...templateRow(), key: 'lesson_join_link', status: 'approved' });
+    const res = await t.call({ method: 'POST', url: `${URL}/template`, body: { key: 'lesson_join_link', params: { ...PARAMS, button: 'forged' }, clientRequestId: REQ } });
+    expect([res.statusCode, res.json().code]).toEqual([400, 'use_join_link']);
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+  });
+
   it('H3/H4 400 missing_client_request_id: no send without its idempotency key (rule 8)', async () => {
     const text = await t.call({ method: 'POST', url: `${URL}/text`, body: { text: 'أهلًا' } });
     expect([text.statusCode, text.json().code]).toEqual([400, 'missing_client_request_id']);

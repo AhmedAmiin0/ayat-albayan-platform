@@ -43,13 +43,13 @@ describe('isAutomatic: job-made reminders, follow-ups and renewals', () => {
     expect(isAutomatic({ template_key: key, created_by: ADMIN })).toBe(false);
   });
 
-  it.each(['booking_confirmation', 'booking_confirmation_meet', 'report_ready', 'lesson_feedback_request', null])('%s is never automatic', (key) => {
+  it.each(['booking_confirmation', 'booking_confirmation_meet', 'report_ready', 'lesson_feedback_request', 'lesson_join_link', null])('%s is never automatic', (key) => {
     expect(isAutomatic({ template_key: key, created_by: null })).toBe(false);
   });
 
   it('every registry key is classified: a new key fails here until it is automatic or sent on an action', () => {
-    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «ابعت طلب الرأي».
-    const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request'];
+    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «ابعت طلب الرأي» and «ابعت لينك الحلقة».
+    const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'lesson_join_link'];
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
   });
 });
