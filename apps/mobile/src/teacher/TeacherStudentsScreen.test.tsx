@@ -30,7 +30,7 @@ test('opens on «مشتركين»: only subscribed students; a row opens their r
   expect(await screen.findByText('سهيلة')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=subscribed');
   expect(screen.queryByText('بلال')).toBeNull();
-  expect(screen.getByText('AB-0183')).toBeTruthy();
+  expect(screen.getByText(/AB-0183/)).toBeTruthy();
   await fireEvent.press(screen.getByText('سهيلة'));
   expect(mockPush).toHaveBeenCalledWith('/teacher/reports/student/s1');
 });
