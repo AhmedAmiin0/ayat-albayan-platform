@@ -31,6 +31,7 @@ export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
     student_id: row.student_id,
     teacher_id: row.teacher_id,
     attendance: row.attendance,
+    program: row.program,
     recited: row.recited,
     new_memorization: row.new_memorization,
     revision: row.revision,
@@ -55,6 +56,7 @@ export function reportView(row: ReportRow, ctx: ViewContext): ReportView {
 
 type FormColumn =
   | 'attendance'
+  | 'program'
   | 'recited'
   | 'new_memorization'
   | 'revision'
@@ -90,6 +92,7 @@ const TEXT_COLUMN = {
 export function formColumns(form: Partial<ReportDraft>): FormColumns {
   const out: FormColumns = {};
   if (form.attendance !== undefined) out.attendance = form.attendance;
+  if (form.program !== undefined) out.program = form.program;
   for (const key of Object.keys(TEXT_COLUMN) as TextField[]) {
     const value = form[key];
     if (value !== undefined) out[TEXT_COLUMN[key]] = value;
@@ -104,6 +107,8 @@ export function formColumns(form: Partial<ReportDraft>): FormColumns {
 
 const EMPTY: Required<{ [K in FormColumn]: null }> = {
   attendance: null,
+  // The submit RPC keeps the stored program when this is null (migration 167).
+  program: null,
   recited: null,
   new_memorization: null,
   revision: null,

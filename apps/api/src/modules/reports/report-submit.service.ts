@@ -31,6 +31,7 @@ export class ReportSubmitService {
     const block = reportBlock({ lessonStatus: lesson.status, lessonStartsAt: new Date(lesson.starts_at), now: ctx.now });
     if (block) throw conflict(block);
     if (!form.attendance) throw badRequest('missing_attendance');
+    if (!form.program && !row.program) throw badRequest('missing_program');
     await this.queries.submit(
       submitPayload({
         report: row,

@@ -82,7 +82,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-LES-03** Lesson sequence number per student computed (`row_number` over completed lessons) — never typed (issue A5).
 
 ### 3.6 Lesson reports
-- **R-REP-01** Teacher opens the report from the lesson itself; student, teacher, date, lesson no., program, link are pre-filled and read-only (issues A2, A3, D1).
+- **R-REP-01** Teacher opens the report from the lesson itself; student id, teacher, student, date, lesson no., link are pre-filled and read-only; the program is pre-filled from the student and the teacher can change it (issues A2, A3, D1; R-FRM-02).
 - **R-REP-02** Form fields: attendance, recited, new memorization, revision, theory/tajweed, 6 rubric grades, overall grade, notes, homework, next plan, attachments (Supabase Storage). Validation: date not in future, not before lesson date; drafts auto-saved; editable by teacher for 24h, by admin always; versioned.
 - **R-REP-03** On submit: generate branded PDF (HTML template → PDF, Arabic fonts, RTL), store in Storage under `reports/{student_id}/{lesson_id}.pdf`, send to guardian via WhatsApp template with document, mark lesson `completed`, decrement package balance.
 - **R-REP-04** One report per lesson (unique constraint `lesson_id, student_id`); resubmission updates (issue A7).
@@ -96,7 +96,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-PAY-02** Teacher payout: `lessons.completed × teacher.rate` per month, with approve/paid flag (issue E3).
 
 ### 3.8 Messaging (WhatsApp Cloud API)
-- **R-MSG-01** Outbound: templates registered in Meta (`booking_confirmation`, `lesson_reminder_24h`, `lesson_reminder_1h`, `report_ready`, `renewal_due`, `follow_up_slots`). Template names and language codes live in DB `message_templates`; a startup health check verifies each exists in Meta and surfaces missing ones in admin settings (issue C1).
+- **R-MSG-01** Outbound: templates registered in Meta (`booking_confirmation`, `lesson_reminder_24h`, `lesson_reminder_1h`, `report_ready`, `renewal_due`, `follow_up_slots`, `lesson_feedback_request` for «رأيك يهمّنا», R-FRM-03). Template names and language codes live in DB `message_templates`; a startup health check verifies each exists in Meta and surfaces missing ones in admin settings (issue C1).
 - **R-MSG-02** Scheduler (cron every 5 min) queues reminders: 24h and 1h before lesson start, in guardian's time zone wording; dedup key `lesson_id+type`; retry with backoff; failures visible in admin.
 - **R-MSG-03** Fallback: every outbound message has a `wa.me` click-to-chat deep link with prefilled text for manual sending; marks `sent_manually` when admin taps it.
 - **R-MSG-04** Inbound webhook: verify signature, store message, match to lead/guardian by phone, handle quick replies (confirm / reschedule / stop).
@@ -116,6 +116,11 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-MIG-01** One-off import scripts (`tools/migrate`) for: teachers (11), students (dedupe per A1 rules; review queue for ambiguous merges), schedule rules from «تقويم الحجوزات» rows with status مؤكد/مشترك, completed lessons + reports from «سجل تقارير الحلقات» (skip Lorem/test rows and dates outside 2026-08-01..today), subscriptions + payments from «Heart › subscription», leads from «كل المحادثات» (exclude توظيف → job_applicants, exclude جروب حلقة), existing PDFs copied into Storage by link.
 - **R-MIG-02** Dry-run mode producing a diff report; import report with counts and rejected rows.
 - **R-MIG-03** Keep Google Calendar mirror on for teachers during transition; stop Apps Script triggers at cut-over.
+
+### 3.12 The three forms (docs/13-forms-spec.md)
+- **R-FRM-01** «استمارة تسجيل طالب جديد»: every registration surface (booking wizard, add student, lead panel, mobile) shows the spec's titles, option wording, order and required marks; `other` is no longer offered as a source and 20/28 no longer as a package at registration.
+- **R-FRM-02** «تقرير الحلقة»: identity order and labels, section headings, «البرنامج *» as an editable choice (`lesson_reports.program`) on web, mobile and the PDF.
+- **R-FRM-03** «رأيك يهمّنا»: the admin asks after a completed lesson («ابعت طلب الرأي»); the family answers once on a public signed page (rating 1–5 *, recommend نعم/ربما/لا *, note, contact phone); the admin reads all answers with a per-teacher average, a teacher reads only their own. Template `lesson_feedback_request` is submitted to Meta only by the admin.
 
 ## 4. Non-functional requirements
 - **R-NFR-01** Arabic RTL UI, Arabic + English teacher names, Hijri date optional display; all messages in Egyptian Arabic matching current templates.

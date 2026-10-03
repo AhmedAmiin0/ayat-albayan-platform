@@ -20,7 +20,7 @@ function field(label: string, value: string | null, wide = false): string {
 /** «محتوى الحلقة» 2×2: what was recited, memorised, revised and taught. */
 export function contentHtml(m: ReportPdfModel): string {
   return [
-    sectionHtml(r.pdf.content),
+    sectionHtml(r.done),
     '<div class="fields">',
     field(r.recited, m.recited),
     field(r.newMemorization, m.newMemorization),
@@ -33,7 +33,7 @@ export function contentHtml(m: ReportPdfModel): string {
 /** «الملاحظات والواجب»: notes | homework, then the next plan full width. */
 export function notesHtml(m: ReportPdfModel): string {
   return [
-    sectionHtml(r.pdf.notesTitle),
+    sectionHtml(r.notesTitle),
     '<div class="fields">',
     field(r.notes, m.notes),
     field(r.homework, m.homework),

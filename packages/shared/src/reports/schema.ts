@@ -1,9 +1,10 @@
 import { z } from 'zod';
-import { ATTENDANCES, GRADES } from '../enums/index.js';
+import { ATTENDANCES, GRADES, PROGRAMS } from '../enums/index.js';
 import { attended, REPORT_RUBRICS, type Rubric } from './rules.js';
 
 // Report commands (docs/11 §4). camelCase like every command; the identity (student, teacher,
-// date, lesson no., program, link) is never sent: the API takes it from the lesson (R-REP-01, D1).
+// date, lesson no., link) is never sent: the API takes it from the lesson (R-REP-01, D1). The program
+// is the one identity field the teacher can change («البرنامج *» on the Google Form, docs/13).
 
 /** Free text from the form; blank → null so a cleared field really clears. */
 const longText = z
@@ -22,6 +23,8 @@ const gradesShape = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, grade])) as
 /** PUT /reports/:id/draft. Every field optional: autosave sends what the teacher has so far. */
 export const reportDraftSchema = z.object({
   attendance: z.enum(ATTENDANCES).nullish(),
+  /** Prefilled from the student; a draft or submit that leaves it out keeps the stored one. */
+  program: z.enum(PROGRAMS).optional(),
   recited: longText,
   newMemorization: longText,
   revision: longText,

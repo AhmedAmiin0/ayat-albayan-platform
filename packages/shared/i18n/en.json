@@ -118,7 +118,8 @@
     "payouts": "Teacher payouts",
     "expenses": "Expenses",
     "inbox": "Messages",
-    "templates": "WhatsApp templates"
+    "templates": "WhatsApp templates",
+    "feedback": "Your opinion matters"
   },
   "students": {
     "title": "Students",
@@ -296,7 +297,7 @@
     "goal": "Goal of subscribing",
     "riwaya": "Requested riwaya",
     "availableDays": "Available days",
-    "preferredTime": "Start time",
+    "preferredTime": "Hour",
     "changeStatus": "Change status",
     "invalidTransition": "You can't move the conversation to this status from its current one",
     "reclassifyAsApplicant": "Move to job applications",
@@ -413,8 +414,8 @@
     "steps": {
       "students": "Student",
       "teacher": "Teacher",
-      "slot": "Time",
-      "package": "Package",
+      "slot": "Hour",
+      "package": "Requested package",
       "review": "Review"
     },
     "stepOf": "Step {n} of {total}",
@@ -423,21 +424,21 @@
     "pickStudents": "Pick the student, or the siblings for a group lesson",
     "searchStudents": "Search by name, number, or code",
     "fromLead": "New student from the conversation",
-    "pickTeacher": "Pick the teacher",
+    "pickTeacher": "Teacher",
     "genderPref": "Teacher gender preference",
     "genderAny": "No preference",
     "program": "Program",
     "teacherStudents": "Current students: {n}",
     "noTeachers": "No teacher is available with these criteria. Try changing the preference or the program.",
-    "pickDays": "Lesson days",
-    "pickTime": "Time",
-    "pickDuration": "Lesson duration",
-    "startsOn": "Starts on",
+    "pickDays": "Available days",
+    "pickTime": "Hour",
+    "pickDuration": "Duration",
+    "startsOn": "First lesson date",
     "tzNote": "Times are in {city} time",
     "studentLocal": "Student: {time}",
     "freeSlots": "Free times",
     "noSlots": "No free times in this period. Check next week or another teacher.",
-    "pickPackage": "Package",
+    "pickPackage": "Requested package",
     "meetingLink": "Lesson link",
     "meetingLinkHint": "If left empty, the teacher's fixed link will be sent",
     "firstLesson": "First lesson {when}",
@@ -830,20 +831,23 @@
     "view": "View report",
     "identity": "Lesson details",
     "readOnlyHint": "These details fill in automatically from the lesson",
-    "student": "Student name",
-    "teacher": "Teacher name",
+    "student": "Student name (don't edit)",
+    "studentId": "Student ID (don't edit)",
+    "teacher": "Teacher name (don't edit)",
     "date": "Lesson date",
     "lessonNo": "Lesson number",
     "lessonNoValue": "{n} of {total}",
     "program": "Program",
     "link": "Meeting link",
-    "done": "What was covered in the lesson",
+    "done": "Lesson content",
     "attendance": "Attendance",
     "recited": "Recitation (what was recited)",
     "newMemorization": "New memorization",
     "revision": "Revision",
     "theory": "Theory lesson / tajweed rules",
     "rubricTitle": "Grades by area",
+    "notesTitle": "Notes and homework",
+    "detailTitle": "Detailed assessment",
     "rubric": {
       "recitation": "Recitation and pronunciation",
       "memorization": "New memorization",
@@ -901,7 +905,8 @@
       "lesson_not_found": "This lesson doesn't exist",
       "attachment_path": "The file didn't upload correctly. Upload it again",
       "pdf_not_failed": "The PDF hasn't failed, so there's no need to regenerate it",
-      "missing_text": "Write the recitation, new memorization, revision, notes and homework before sending"
+      "missing_text": "Write the recitation, new memorization, revision, notes and homework before sending",
+      "missing_program": "Pick the program before sending"
     },
     "entryFor": "Report for {name}",
     "submitting": "Sending…",
@@ -924,14 +929,11 @@
     },
     "pdf": {
       "tagline": "Recite mindfully, memorize with mastery",
-      "studentName": "Student",
-      "teacherName": "Teacher",
+      "studentName": "Student name",
+      "teacherName": "Teacher name",
       "time": "Time",
       "timeValue": "{time} {city} time",
       "minutes": "{n} minutes",
-      "content": "Lesson content",
-      "grades": "Detailed assessment",
-      "notesTitle": "Notes and homework",
       "teacherSign": "Teacher's name and signature",
       "guardianSign": "Guardian's acknowledgment",
       "closing": "May Allah bless the student and make them a source of benefit, and make the Quran the spring of their heart and the light of their chest.",
@@ -1363,7 +1365,8 @@
       "lesson_reminder_24h": "Reminder one day before the lesson",
       "report_ready": "Lesson report (PDF)",
       "renewal_due": "Renewal reminder",
-      "follow_up_slots": "Follow-up with two suggested times"
+      "follow_up_slots": "Follow-up with two suggested times",
+      "lesson_feedback_request": "Lesson feedback request"
     },
     "settings": {
       "title": "Sending settings",
@@ -1507,6 +1510,15 @@
     "rescheduleTitle": "Reschedule request from {name}"
   },
   "enums": {
+    "feedbackRecommend": {
+      "yes": "Yes",
+      "maybe": "Maybe",
+      "no": "No"
+    },
+    "feedbackKind": {
+      "trial": "Free trial lesson",
+      "subscription": "Part of the monthly subscription"
+    },
     "leadStatus": {
       "new": "New",
       "contacted": "Contacted",
@@ -1562,12 +1574,12 @@
     },
     "packageSize": {
       "4": "4 lessons a month",
-      "8": "8 lessons a month",
-      "12": "12 lessons a month",
+      "8": "8 lessons",
+      "12": "12 lessons",
       "16": "16 lessons a month",
       "20": "20 lessons a month",
       "28": "28 lessons a month",
-      "trial": "Trial lesson"
+      "trial": "Free trial lesson only"
     },
     "gender": {
       "male": "Male",
@@ -1706,6 +1718,56 @@
     "today": "Today",
     "calendar": "My schedule",
     "reports": "Reports",
-    "payouts": "My payouts"
+    "payouts": "My payouts",
+    "feedback": "Your opinion matters"
+  },
+  "feedback": {
+    "title": "Your opinion matters",
+    "teacher": "Teacher name",
+    "kind": "Lesson type",
+    "rating": "Your rating of the lesson",
+    "ratingLow": "Not satisfied",
+    "ratingHigh": "Completely satisfied",
+    "recommend": "Would you recommend the academy to a friend or relative?",
+    "note": "Note or suggestion",
+    "contact": "WhatsApp number to reach you",
+    "ratingValue": "{n} of 5",
+    "submit": "Send your opinion",
+    "sending": "Sending…",
+    "thanks": "Thank you for your time",
+    "thanksBody": "We received your opinion and it will help us do better, God willing.",
+    "alreadySent": "We already received your opinion, thank you",
+    "expired": "This link has expired",
+    "expiredBody": "Message us on WhatsApp and we will send you a new link.",
+    "invalid": "This link is not valid",
+    "invalidBody": "Make sure you opened the link that reached you on WhatsApp.",
+    "sendRequest": "Send feedback request",
+    "requestSending": "Sending…",
+    "requestSent": "Sent",
+    "requestResend": "Send a new link",
+    "requestedAt": "Requested {when}",
+    "answeredAt": "Answered {when}",
+    "pending": "Waiting for a reply",
+    "empty": "No feedback yet",
+    "student": "Student",
+    "teacherCol": "Teacher",
+    "allTeachers": "All teachers",
+    "averagesTitle": "Average rating per teacher",
+    "average": "Average",
+    "count": "{n} responses",
+    "recommendPct": "{pct}% would recommend the academy",
+    "mine": "My students’ feedback",
+    "mineEmpty": "No feedback from your students yet",
+    "noteEmpty": "No note",
+    "error": {
+      "template_not_approved": "The feedback request template is not approved by Meta yet",
+      "lesson_not_eligible": "A feedback request goes out after a lesson that took place",
+      "already_submitted": "This feedback was already submitted",
+      "feedback_expired": "This link has expired",
+      "feedback_not_found": "This link is not valid",
+      "too_many_requests": "Too many attempts, try again in a little while",
+      "not_configured": "Feedback requests are not enabled on the server",
+      "send_failed": "Your opinion was not sent, please try again"
+    }
   }
 }

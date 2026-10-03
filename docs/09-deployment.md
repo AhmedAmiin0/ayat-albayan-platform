@@ -61,6 +61,7 @@ The API talks to the WhatsApp Cloud API only through `WA_API_BASE`; there is **n
 | `WA_APP_SECRET` | Meta app → Settings → Basic → App secret. Signs every webhook POST; wrong or missing = every POST is 401 and nothing is stored. |
 | `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). |
 | `MESSAGING_ENABLED` | `true` opens the deployment's gate. Default `false`. |
+| `FEEDBACK_TOKEN_SECRET` | >= 32 random characters (`openssl rand -base64 48`). Signs the «رأيك يهمّنا» links (docs/13-forms-spec.md). Unset = «ابعت طلب الرأي» answers 503 and every public link is refused. Changing it invalidates links already sent. The template `lesson_feedback_request` also needs the web host in its button URL to be the final one before the admin submits it to Meta. |
 | `EXPO_ACCESS_TOKEN` | Admin push notifications (already on the server). |
 | `EXPO_API_BASE` | `https://exp.host` on staging/production. **No default**: unset (local, e2e) = pushes are recorded in `push_notifications` but never leave the server. |
 

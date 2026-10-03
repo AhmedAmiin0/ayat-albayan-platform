@@ -27,6 +27,8 @@ export interface ReportView {
   student_id: string;
   teacher_id: string;
   attendance: Attendance | null;
+  /** «البرنامج *»: the program this lesson was taught in; null only on a row older than migration 167. */
+  program: Program | null;
   recited: string | null;
   new_memorization: string | null;
   revision: string | null;

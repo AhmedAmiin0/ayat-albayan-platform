@@ -49,6 +49,7 @@ export class ReportsQueries {
       student_id: s.student_id,
       teacher_id: lesson.teacher_id,
       attendance: s.attendance,
+      program: s.student?.program ?? null,
       created_by: actorId,
     }));
     if (rows.length === 0) return;

@@ -21,7 +21,7 @@ export function reportHtml(model: ReportPdfModel, assets: PdfAssets): string {
     metaHtml(model),
     attendanceHtml(model),
     contentHtml(model),
-    sectionHtml(AR.reports.pdf.grades),
+    sectionHtml(AR.reports.detailTitle),
     gradesHtml(model),
     notesHtml(model),
     closingHtml(),

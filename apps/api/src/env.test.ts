@@ -9,6 +9,15 @@ const WA = {
   WA_ACCESS_TOKEN: 'local-token',
 };
 
+describe('env: feedback link secret (optional, >= 32 chars)', () => {
+  it('unset or blank is fine; a short one fails the boot', () => {
+    expect(loadEnv(BASE).FEEDBACK_TOKEN_SECRET).toBeUndefined();
+    expect(loadEnv({ ...BASE, FEEDBACK_TOKEN_SECRET: '' }).FEEDBACK_TOKEN_SECRET).toBeUndefined();
+    expect(() => loadEnv({ ...BASE, FEEDBACK_TOKEN_SECRET: 'short' })).toThrow();
+    expect(loadEnv({ ...BASE, FEEDBACK_TOKEN_SECRET: 'x'.repeat(32) }).FEEDBACK_TOKEN_SECRET).toHaveLength(32);
+  });
+});
+
 describe('env: WhatsApp is optional and off by default (docs/12 §3)', () => {
   it('boots without any WhatsApp or Expo value; sending is off', () => {
     const env = loadEnv(BASE);

@@ -3,7 +3,7 @@ import type { Attendance, Grade, LessonStatus, PdfStatus, Program, ReportStatus 
 // Selects + structural row types for the reports module (service role; callers guard).
 
 const REPORT_COLUMNS =
-  'id, lesson_id, student_id, teacher_id, attendance, recited, new_memorization, revision, theory, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, notes, homework, next_plan, status, version, submitted_at, edited_at, pdf_path, pdf_status, pdf_error, sent_at' as const;
+  'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, grade_commitment, grade_overall, notes, homework, next_plan, status, version, submitted_at, edited_at, pdf_path, pdf_status, pdf_error, sent_at' as const;
 
 /** One report with its attachments (ReportView). */
 export const REPORT_SELECT =
@@ -23,6 +23,7 @@ export type ReportRow = {
   student_id: string;
   teacher_id: string;
   attendance: Attendance | null;
+  program: Program | null;
   recited: string | null;
   new_memorization: string | null;
   revision: string | null;

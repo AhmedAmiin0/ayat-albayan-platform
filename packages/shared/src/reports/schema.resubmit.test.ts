@@ -16,7 +16,7 @@ describe('required text only until the first send (a legacy report can still be 
   });
 
   it('the client rule matches: marks and problem disappear after the first send', () => {
-    const v: FormValues = { ...base, attendance: 'on_time', grades: { ...grades }, theory: '', notes: '', homework: '', nextPlan: '', overall: 'good' };
+    const v: FormValues = { ...base, program: 'quran', attendance: 'on_time', grades: { ...grades }, theory: '', notes: '', homework: '', nextPlan: '', overall: 'good' };
     expect(submitProblem(v, 0)).toBe('missing_text');
     expect(submitProblem(v, 1)).toBeNull();
     expect(textRequired('notes', 'on_time', 0)).toBe(true);

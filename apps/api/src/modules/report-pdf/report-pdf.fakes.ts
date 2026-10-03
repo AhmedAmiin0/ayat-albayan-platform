@@ -73,6 +73,7 @@ export function sampleSource(over: Partial<ReportSource> = {}): ReportSource {
       student_id: 's1',
       teacher_id: 't1',
       attendance: 'on_time',
+      program: null,
       recited: 'سورة النبأ 1-20',
       new_memorization: 'سورة النازعات 1-15',
       revision: null,

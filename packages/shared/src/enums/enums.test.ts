@@ -28,6 +28,8 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['templateStatus', E.TEMPLATE_STATUSES],
   ['templateCategory', E.TEMPLATE_CATEGORIES],
   ['pushKind', E.PUSH_KINDS],
+  ['feedbackKind', E.FEEDBACK_KINDS],
+  ['feedbackRecommend', E.FEEDBACK_RECOMMEND],
 ];
 
 describe('enums ↔ ar.json labels (rule 10, R-NFR-01)', () => {
@@ -43,5 +45,11 @@ describe('enums ↔ ar.json labels (rule 10, R-NFR-01)', () => {
       'مقبول',
       'يحتاج إلى مراجعة',
     ]);
+  });
+
+  it('feedback option wording and the 1-5 scale match the Google Form (docs/13-forms-spec.md)', () => {
+    expect(E.FEEDBACK_KINDS.map((k) => ar.enums.feedbackKind[k])).toEqual(['حلقة تجريبية مجانية', 'ضمن الاشتراك الشهري']);
+    expect(E.FEEDBACK_RECOMMEND.map((k) => ar.enums.feedbackRecommend[k])).toEqual(['نعم', 'ربما', 'لا']);
+    expect(E.FEEDBACK_RATINGS).toEqual([1, 2, 3, 4, 5]);
   });
 });

@@ -34,5 +34,7 @@ import { ThreadsService } from './threads.service';
     TeacherThreadsService,
     ThreadReads,
   ],
+  // The feedback module sends «ابعت طلب الرأي» through the same send-now path.
+  exports: [Outbox],
 })
 export class InboxModule {}
