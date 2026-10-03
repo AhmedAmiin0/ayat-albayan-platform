@@ -1,6 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
+import { FeedbackRequestButton } from '@/features/feedback/FeedbackRequestButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { t } from '@/lib/i18n';
 import { CancelForm } from './CancelForm';
@@ -53,6 +54,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
               onCancel={() => setMode('cancel')}
               onReschedule={() => setMode('reschedule')}
             />
+            <FeedbackRequestButton lesson={lesson} />
           </>
         )}
         {mode === 'cancel' && <CancelForm lesson={lesson} onBack={() => setMode('view')} onDone={done} />}

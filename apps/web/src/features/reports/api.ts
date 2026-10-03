@@ -14,6 +14,7 @@ import { errorCode } from '@/features/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
+import type { WithProgram } from './report-program';
 
 // Report routes (docs/11 §4 R1–R12). Commands camelCase, responses snake_case.
 
@@ -43,10 +44,10 @@ export const pendingReportsQuery = queryOptions({
 });
 
 
-export const saveDraft = ({ id, body }: { id: string; body: DraftBody }) =>
+export const saveDraft = ({ id, body }: { id: string; body: WithProgram<DraftBody> }) =>
   apiSend<ReportView>('PUT', `/reports/${id}/draft`, body);
 
-export const submitReport = ({ id, body }: { id: string; body: SubmitBody }) =>
+export const submitReport = ({ id, body }: { id: string; body: WithProgram<SubmitBody> }) =>
   apiSend<ReportView>('POST', `/reports/${id}/submit`, body);
 
 export const retryPdf = (id: string) => apiSend<ReportView>('POST', `/reports/${id}/pdf/retry`);

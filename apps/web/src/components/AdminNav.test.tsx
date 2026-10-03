@@ -21,6 +21,7 @@ describe('AdminNav', () => {
     [t.nav.payouts, '/admin/payouts'],
     [t.nav.expenses, '/admin/expenses'],
     [t.nav.inbox, '/admin/inbox'],
+    [t.nav.feedback, '/admin/feedback'],
     [t.settings.title, '/admin/settings'],
   ])('links %s to %s', (label, href) => {
     render(<AdminNav />);
@@ -29,7 +30,7 @@ describe('AdminNav', () => {
 
   it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox and settings', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(12);
+    expect(screen.getAllByRole('link')).toHaveLength(13);
   });
 
   it('shows real counts; work counts are saffron and say what they are', () => {

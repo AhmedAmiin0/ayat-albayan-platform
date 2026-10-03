@@ -17,6 +17,7 @@ import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBookRouteImport } from './routes/admin/book'
 import { Route as AdminExpensesRouteImport } from './routes/admin/expenses'
+import { Route as AdminFeedbackRouteImport } from './routes/admin/feedback'
 import { Route as AdminInboxRouteImport } from './routes/admin/inbox'
 import { Route as AdminJobApplicantsRouteImport } from './routes/admin/job-applicants'
 import { Route as AdminLeadsRouteImport } from './routes/admin/leads'
@@ -28,8 +29,10 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
+import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
 import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
 import { Route as TeacherCalendarRouteImport } from './routes/teacher/calendar'
+import { Route as TeacherFeedbackRouteImport } from './routes/teacher/feedback'
 import { Route as TeacherInboxRouteImport } from './routes/teacher/inbox'
 import { Route as TeacherPayoutsRouteImport } from './routes/teacher/payouts'
 import { Route as AdminStudentsStudentIdRouteImport } from './routes/admin/students.$studentId'
@@ -78,6 +81,11 @@ const AdminBookRoute = AdminBookRouteImport.update({
 const AdminExpensesRoute = AdminExpensesRouteImport.update({
   id: '/expenses',
   path: '/expenses',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminFeedbackRoute = AdminFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminInboxRoute = AdminInboxRouteImport.update({
@@ -135,6 +143,11 @@ const AdminTeachersRoute = AdminTeachersRouteImport.update({
   path: '/teachers',
   getParentRoute: () => AdminRoute,
 } as any)
+const FeedbackTokenRoute = FeedbackTokenRouteImport.update({
+  id: '/feedback/$token',
+  path: '/feedback/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TeacherIndexRoute = TeacherIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -143,6 +156,11 @@ const TeacherIndexRoute = TeacherIndexRouteImport.update({
 const TeacherCalendarRoute = TeacherCalendarRouteImport.update({
   id: '/calendar',
   path: '/calendar',
+  getParentRoute: () => TeacherRoute,
+} as any)
+const TeacherFeedbackRoute = TeacherFeedbackRouteImport.update({
+  id: '/feedback',
+  path: '/feedback',
   getParentRoute: () => TeacherRoute,
 } as any)
 const TeacherInboxRoute = TeacherInboxRouteImport.update({
@@ -201,6 +219,7 @@ export interface FileRoutesByFullPath {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/expenses': typeof AdminExpensesRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/inbox': typeof AdminInboxRoute
   '/admin/job-applicants': typeof AdminJobApplicantsRoute
   '/admin/leads': typeof AdminLeadsRoute
@@ -212,7 +231,9 @@ export interface FileRoutesByFullPath {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/feedback/$token': typeof FeedbackTokenRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
+  '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/admin/': typeof AdminIndexRoute
@@ -231,6 +252,7 @@ export interface FileRoutesByTo {
   '/portal': typeof PortalRoute
   '/admin/book': typeof AdminBookRoute
   '/admin/expenses': typeof AdminExpensesRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/inbox': typeof AdminInboxRoute
   '/admin/job-applicants': typeof AdminJobApplicantsRoute
   '/admin/leads': typeof AdminLeadsRoute
@@ -242,7 +264,9 @@ export interface FileRoutesByTo {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/feedback/$token': typeof FeedbackTokenRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
+  '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/admin': typeof AdminIndexRoute
@@ -264,6 +288,7 @@ export interface FileRoutesById {
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/expenses': typeof AdminExpensesRoute
+  '/admin/feedback': typeof AdminFeedbackRoute
   '/admin/inbox': typeof AdminInboxRoute
   '/admin/job-applicants': typeof AdminJobApplicantsRoute
   '/admin/leads': typeof AdminLeadsRoute
@@ -275,7 +300,9 @@ export interface FileRoutesById {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/feedback/$token': typeof FeedbackTokenRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
+  '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/admin/': typeof AdminIndexRoute
@@ -298,6 +325,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/book'
     | '/admin/expenses'
+    | '/admin/feedback'
     | '/admin/inbox'
     | '/admin/job-applicants'
     | '/admin/leads'
@@ -309,7 +337,9 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/feedback/$token'
     | '/teacher/calendar'
+    | '/teacher/feedback'
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/admin/'
@@ -328,6 +358,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/admin/book'
     | '/admin/expenses'
+    | '/admin/feedback'
     | '/admin/inbox'
     | '/admin/job-applicants'
     | '/admin/leads'
@@ -339,7 +370,9 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/feedback/$token'
     | '/teacher/calendar'
+    | '/teacher/feedback'
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/admin'
@@ -360,6 +393,7 @@ export interface FileRouteTypes {
     | '/teacher'
     | '/admin/book'
     | '/admin/expenses'
+    | '/admin/feedback'
     | '/admin/inbox'
     | '/admin/job-applicants'
     | '/admin/leads'
@@ -371,7 +405,9 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/feedback/$token'
     | '/teacher/calendar'
+    | '/teacher/feedback'
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/admin/'
@@ -391,6 +427,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRoute
   TeacherRoute: typeof TeacherRouteWithChildren
+  FeedbackTokenRoute: typeof FeedbackTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -449,6 +486,13 @@ declare module '@tanstack/react-router' {
       path: '/expenses'
       fullPath: '/admin/expenses'
       preLoaderRoute: typeof AdminExpensesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/feedback': {
+      id: '/admin/feedback'
+      path: '/feedback'
+      fullPath: '/admin/feedback'
+      preLoaderRoute: typeof AdminFeedbackRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/inbox': {
@@ -528,6 +572,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeachersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/feedback/$token': {
+      id: '/feedback/$token'
+      path: '/feedback/$token'
+      fullPath: '/feedback/$token'
+      preLoaderRoute: typeof FeedbackTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/teacher/': {
       id: '/teacher/'
       path: '/'
@@ -540,6 +591,13 @@ declare module '@tanstack/react-router' {
       path: '/calendar'
       fullPath: '/teacher/calendar'
       preLoaderRoute: typeof TeacherCalendarRouteImport
+      parentRoute: typeof TeacherRoute
+    }
+    '/teacher/feedback': {
+      id: '/teacher/feedback'
+      path: '/feedback'
+      fullPath: '/teacher/feedback'
+      preLoaderRoute: typeof TeacherFeedbackRouteImport
       parentRoute: typeof TeacherRoute
     }
     '/teacher/inbox': {
@@ -653,6 +711,7 @@ const AdminTeachersRouteWithChildren = AdminTeachersRoute._addFileChildren(
 interface AdminRouteChildren {
   AdminBookRoute: typeof AdminBookRoute
   AdminExpensesRoute: typeof AdminExpensesRoute
+  AdminFeedbackRoute: typeof AdminFeedbackRoute
   AdminInboxRoute: typeof AdminInboxRoute
   AdminJobApplicantsRoute: typeof AdminJobApplicantsRoute
   AdminLeadsRoute: typeof AdminLeadsRoute
@@ -670,6 +729,7 @@ interface AdminRouteChildren {
 const AdminRouteChildren: AdminRouteChildren = {
   AdminBookRoute: AdminBookRoute,
   AdminExpensesRoute: AdminExpensesRoute,
+  AdminFeedbackRoute: AdminFeedbackRoute,
   AdminInboxRoute: AdminInboxRoute,
   AdminJobApplicantsRoute: AdminJobApplicantsRoute,
   AdminLeadsRoute: AdminLeadsRoute,
@@ -688,6 +748,7 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface TeacherRouteChildren {
   TeacherCalendarRoute: typeof TeacherCalendarRoute
+  TeacherFeedbackRoute: typeof TeacherFeedbackRoute
   TeacherInboxRoute: typeof TeacherInboxRoute
   TeacherPayoutsRoute: typeof TeacherPayoutsRoute
   TeacherIndexRoute: typeof TeacherIndexRoute
@@ -698,6 +759,7 @@ interface TeacherRouteChildren {
 
 const TeacherRouteChildren: TeacherRouteChildren = {
   TeacherCalendarRoute: TeacherCalendarRoute,
+  TeacherFeedbackRoute: TeacherFeedbackRoute,
   TeacherInboxRoute: TeacherInboxRoute,
   TeacherPayoutsRoute: TeacherPayoutsRoute,
   TeacherIndexRoute: TeacherIndexRoute,
@@ -715,6 +777,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PortalRoute: PortalRoute,
   TeacherRoute: TeacherRouteWithChildren,
+  FeedbackTokenRoute: FeedbackTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

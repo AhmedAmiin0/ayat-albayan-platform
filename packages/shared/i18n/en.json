@@ -1719,7 +1719,7 @@
     "calendar": "My schedule",
     "reports": "Reports",
     "payouts": "My payouts",
-    "feedback": "Your opinion matters"
+    "feedback": "Feedback"
   },
   "feedback": {
     "title": "Your opinion matters",
@@ -1768,6 +1768,26 @@
       "too_many_requests": "Too many attempts, try again in a little while",
       "not_configured": "Feedback requests are not enabled on the server",
       "send_failed": "Your opinion was not sent, please try again"
-    }
+    },
+    "ratingScale": "From 1 to 5",
+    "thanksTitle": "Thank you",
+    "loading": "One moment…",
+    "loadFailed": "We could not open the form, try again",
+    "retry": "Try again",
+    "submitFailed": "Your feedback was not sent, try again",
+    "tooMany": "Too many attempts, wait a little and try again",
+    "requestDone": "The feedback request was sent to the guardian",
+    "requestFailed": "The feedback request was not sent, try again",
+    "templateNotApproved": "The feedback request message is not approved by WhatsApp yet",
+    "requestFor": "Request feedback for {name}",
+    "listTitle": "Student feedback",
+    "date": "Date",
+    "averages": "Average rating per teacher",
+    "yesPct": "Would recommend",
+    "allKinds": "All types",
+    "outOf": "{n} of 5",
+    "listError": "We could not load the feedback, try again",
+    "rowRating": "Rating {n} of 5",
+    "total": "{n} responses"
   }
 }

@@ -43,6 +43,7 @@ export type CreateStudentBody = {
   gender: Gender | null;
   tz: string;
   program: string;
+  teacher_id?: string;
   guardian: { name: string; phone_e164: string; tz: string; source: LeadSource | null };
   force: boolean;
 };

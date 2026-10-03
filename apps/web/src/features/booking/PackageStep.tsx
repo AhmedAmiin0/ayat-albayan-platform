@@ -1,6 +1,7 @@
-import { DURATIONS, PACKAGE_SIZES } from '@ab/shared';
+import { DURATIONS, type PackageSize } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Field } from '@/components/ui/field';
+import { RequiredMark } from '@/components/ui/label';
 import { Select } from '@/components/ui/select';
 import { quoteQuery } from '@/features/pricing/api';
 import { Money } from '@/features/pricing/Money';
@@ -15,8 +16,8 @@ export interface PackageStepProps {
   onChange: (patch: Partial<Pick<BookingDraft, 'pkg' | 'durationMin' | 'startsAt'>>) => void;
 }
 
-/** Trial first (the usual first booking, worded as the form: «حلقة تجريبية مجانية بس»), then the paid sizes. */
-const ORDER = ['trial', ...PACKAGE_SIZES.filter((p) => p !== 'trial')] as const;
+/** The registration form's five options in its order («حلقة تجريبية مجانية بس» first). 20 and 28 stay in the DB, not here. */
+const ORDER = ['trial', '4', '8', '12', '16'] as const satisfies readonly PackageSize[];
 
 /**
  * Step 3 (R-SCH-06, docs/08): the lesson length and the package, each package with its catalog
@@ -55,7 +56,10 @@ export function PackageStep({ draft, onChange }: PackageStepProps) {
 function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; students: number; onPick: (pkg: BookingDraft['pkg']) => void }) {
   return (
     <fieldset>
-      <legend className="mb-2 text-sm font-semibold">{t.booking.pickPackage}</legend>
+      <legend className="mb-2 text-sm font-semibold">
+        {t.booking.pickPackage}
+        <RequiredMark />
+      </legend>
       <ul className="grid gap-2 sm:grid-cols-2">
         {ORDER.map((pkg) => (
           <li key={pkg}>
@@ -72,7 +76,7 @@ function PackageChoice({ draft, students, onPick }: { draft: BookingDraft; stude
                 onChange={() => onPick(pkg)}
                 className="size-4 accent-[var(--lapis)]"
               />
-              <span className="font-semibold">{pkg === 'trial' ? t.booking.packageTrial : t.enums.packageSize[pkg]}</span>
+              <span className="font-semibold">{t.enums.packageSize[pkg]}</span>
               <span className="ms-auto text-sm">
                 <PackagePrice input={{ pkg, durationMin: draft.durationMin, country: draft.country, students }} />
               </span>

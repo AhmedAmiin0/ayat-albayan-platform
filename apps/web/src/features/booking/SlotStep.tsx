@@ -1,4 +1,5 @@
 import { lessonWhenText } from '@ab/shared';
+import { RequiredMark } from '@/components/ui/label';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { RIYADH_TZ } from '@/features/schedule/tz';
@@ -23,7 +24,7 @@ export function pickedText(startsAt: string, tz: string): string {
 }
 
 /**
- * Step 4 (R-SCH-06): the first lesson from the teacher's real free slots (length picked with the
+ * Step 4 (R-SCH-06): «الساعه» and «تاريخ اول حصه», the first lesson from the teacher's real free slots (length picked with the
  * package), then the weekly repeat days at that same local time. A trial is one lesson: no repeat.
  */
 export function SlotStep({ draft, onChange }: SlotStepProps) {
@@ -34,7 +35,10 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
   return (
     <div className="grid gap-5">
       <section className="grid gap-2">
-        <h3 className="text-sm font-semibold">{t.booking.freeSlots}</h3>
+        <h3 className="text-sm font-semibold">
+          {t.booking.pickTime}
+          <RequiredMark />
+        </h3>
         <SlotPicker
           teacherId={teacher.id}
           durationMin={draft.durationMin}
@@ -46,9 +50,12 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
       </section>
       {draft.startsAt ? (
         <>
-          <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
-            {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz))}
-          </p>
+          <section aria-label={t.booking.startsOn} className="grid gap-2">
+            <h3 className="text-sm font-semibold">{t.booking.startsOn}</h3>
+            <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">
+              {t.booking.picked.replace('{when}', pickedText(draft.startsAt, draft.tz))}
+            </p>
+          </section>
           {draft.pkg !== 'trial' && (
             <ByDayPicker
               fixed={ruleFromSlot(draft.startsAt, draft.tz).weekday}

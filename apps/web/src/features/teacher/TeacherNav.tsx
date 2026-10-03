@@ -10,10 +10,11 @@ const ITEMS = [
   { to: '/teacher/inbox', label: t.nav.conversations, icon: 'chat', exact: false },
   { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', exact: false },
   { to: '/teacher/payouts', label: t.teacherNav.payouts, icon: 'wallet', exact: false },
+  { to: '/teacher/feedback', label: t.teacherNav.feedback, icon: 'star', exact: false },
 ] as const satisfies readonly { to: string; label: string; icon: IconName; exact: boolean }[];
 
 /**
- * A fixed bottom bar on phones (five icon + word tabs, 56px, like the mobile app), a row of 48px
+ * A fixed bottom bar on phones (six icon + word tabs, 56px, like the mobile app), a row of 48px
  * links under the logo from sm up (docs/07 §7). TopBarLayout leaves room under the page for it.
  */
 export function TeacherNav() {
@@ -22,7 +23,7 @@ export function TeacherNav() {
       aria-label={t.teacherNav.label}
       className="fixed inset-x-0 bottom-0 z-20 border-t border-rule-strong bg-page pb-[env(safe-area-inset-bottom)] sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:pb-0"
     >
-      <ul className="grid grid-cols-5 sm:flex sm:gap-1">
+      <ul className="grid grid-cols-6 sm:flex sm:gap-1">
         {ITEMS.map((item) => (
           <li key={item.to} className="min-w-0">
             <Link

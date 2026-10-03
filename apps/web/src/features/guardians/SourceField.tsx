@@ -9,8 +9,8 @@ export interface SourceFieldProps {
 }
 
 /**
- * «عرفت عننا منين؟» with the registration form's options in its order (research-forms item 3);
- * «أخرى» stays for CRM / migrated rows. Optional.
+ * «عرفت عننا منين؟» with the registration form's four options in its order; «أخرى» is offered
+ * only while an existing row already has it (CRM / migrated rows). Optional.
  */
 export function SourceField({ value, onChange }: SourceFieldProps) {
   return (
@@ -18,7 +18,7 @@ export function SourceField({ value, onChange }: SourceFieldProps) {
       {(p) => (
         <Select {...p} value={value} onChange={(e) => onChange(LEAD_SOURCES.find((s) => s === e.target.value) ?? '')}>
           <option value="">—</option>
-          {LEAD_SOURCES.map((s) => (
+          {LEAD_SOURCES.filter((s) => s !== 'other' || value === 'other').map((s) => (
             <option key={s} value={s}>
               {t.enums.leadSource[s]}
             </option>

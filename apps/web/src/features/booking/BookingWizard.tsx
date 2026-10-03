@@ -61,7 +61,6 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
         <LeadStudentStep
           value={draft.newStudent ?? { name: '', guardianName: '', guardianPhone: '' }}
           tz={draft.tz}
-          program={draft.program}
           onChange={({ newStudent, ...rest }) =>
             patch({
               ...rest,
