@@ -85,3 +85,13 @@ test('a list whose refetch failed offline is still saved to disk', () => {
   expect(saved).toEqual([['leads', 'list', {}]]);
   client.clear();
 });
+
+test('a query marked noPersist (a signed URL) never reaches the disk cache', () => {
+  const client = new QueryClient();
+  client.setQueryData(['leads', 'list', {}], { pages: [], pageParams: [] });
+  client.getQueryCache().build(client, { queryKey: ['threads', 'x', 'media'], meta: { noPersist: true } });
+  client.setQueryData(['threads', 'x', 'media'], [{ message_id: 'm' }]);
+  const saved = dehydrate(client, persistOptions.dehydrateOptions).queries.map((q) => q.queryKey);
+  expect(saved).toEqual([['leads', 'list', {}]]);
+  client.clear();
+});

@@ -1,10 +1,11 @@
 import { fireEvent, screen } from '@testing-library/react-native';
-import { cachedList, huda } from '@/inbox/fixtures';
 import { t } from '@/lib/i18n';
-import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { pickReceipt } from '@/payments/receipt';
+import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
 import { booked, maryam, SUN_17 } from './fixtures';
-import { fakeBookingApi, LEADS_KEY } from './test-utils';
+import { uploadInvoice } from './invoice-upload';
+import { fakeBookingApi, PHOTO } from './test-utils';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -13,6 +14,8 @@ jest.mock('@/lib/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
+jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
+jest.mock('./invoice-upload', () => ({ uploadInvoice: jest.fn() }));
 const mockReplace = jest.fn();
 // The chat's «اشترك»: the lead's id, number and WhatsApp name, and the package mode.
 jest.mock('expo-router', () => ({
@@ -36,18 +39,21 @@ const press = async (role: 'button' | 'radio' | 'checkbox', name: string) =>
 beforeEach(() => {
   jest.clearAllMocks();
   mockApiFetch.mockImplementation(fakeBookingApi().fetch);
+  jest.mocked(pickReceipt).mockResolvedValue(PHOTO);
+  jest.mocked(uploadInvoice).mockResolvedValue('req/0b1c.jpg');
 });
 
-test('a lead from the chat (no inbox list cached) books a package: weekly days, then its subscription', async () => {
+test('a lead from the chat books a package: size, slot, the required invoice, weekly days, then its subscription', async () => {
   await renderWithQuery(<BookTrialScreen />);
   expect(screen.getByRole('header', { name: t.subscriptions.new })).toBeTruthy();
-  expect(screen.getByText('خطوة 1 من 5 · الطالب')).toBeTruthy();
+  expect(screen.getByText('خطوة 1 من 6 · الطالب')).toBeTruthy();
+  expect(screen.getByRole('radio', { name: t.booking.kind.package, checked: true })).toBeTruthy();
   expect(screen.getByLabelText(t.guardians.name).props.value).toBe('هدى سالم');
   await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
 
-  expect(await screen.findByText(`خطوة 3 من 5 · ${t.booking.steps.package}`)).toBeTruthy();
+  expect(await screen.findByText(`خطوة 3 من 6 · ${t.booking.steps.package}`)).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.enums.packageSize['8'], checked: true })).toBeTruthy();
   await press('radio', t.enums.packageSize['12']);
   await press('radio', t.enums.duration['60']);
@@ -58,8 +64,18 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
     .find((p) => p.startsWith('/booking/slots'));
   expect(slotsPath).toContain('durationMin=60');
 
-  // «المراجعة»: the package, its length and the weekly days (Sunday's slot is always in).
+  // «الفاتورة *»: «التالي» does not pass without it; the photo uploads under the wizard's request id.
+  expect(screen.getByText(`خطوة 5 من 6 · ${t.booking.invoice.label}`)).toBeTruthy();
+  await press('button', t.booking.next);
+  expect(await screen.findByText(t.booking.error.invoice_required)).toBeTruthy();
+  await press('button', t.booking.mobile.takePhoto);
+  expect(await screen.findByLabelText(t.booking.invoice.label)).toBeTruthy();
+  await press('button', t.booking.next);
+
+  // «المراجعة»: the type, the package, its length, the invoice and the weekly days (Sunday is in).
+  expect(screen.getByText(t.booking.kind.package)).toBeTruthy();
   expect(screen.getByText(t.enums.packageSize['12'])).toBeTruthy();
+  expect(screen.getByText(t.booking.mobile.invoiceUploaded)).toBeTruthy();
   expect(screen.getByRole('checkbox', { name: 'الأحد', checked: true })).toBeTruthy();
   await press('checkbox', 'الأحد'); // the first lesson's day cannot be dropped
   await press('checkbox', 'الثلاثاء');
@@ -69,18 +85,19 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
   mockApiSend.mockResolvedValue(booked(SUN_17));
   await press('button', t.booking.submit);
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith(
-    'POST',
-    '/booking',
-    expect.objectContaining({
-      byday: [0, 2],
-      durationMin: 60,
-      package: '12',
-      leadId: 'a1',
-      newStudent: expect.objectContaining({ name: 'يوسف', status: 'active' }),
-      guardian: expect.objectContaining({ name: 'هدى سالم', phone_e164: '+966552147730' }),
-    }),
-  );
+  const body = mockApiSend.mock.calls[0]?.[2];
+  expect(body).toMatchObject({
+    kind: 'package',
+    byday: [0, 2],
+    durationMin: 60,
+    package: '12',
+    leadId: 'a1',
+    invoice: { source: 'upload', path: 'req/0b1c.jpg' },
+    newStudent: expect.objectContaining({ name: 'يوسف', status: 'active' }),
+    guardian: expect.objectContaining({ name: 'هدى سالم', phone_e164: '+966552147730' }),
+  });
+  // The invoice was uploaded under the very id the booking carries (the API checks the path).
+  expect(jest.mocked(uploadInvoice).mock.calls[0]?.[0]).toBe(body.clientRequestId);
 
   await press('button', t.inbox.subscription.make);
   expect(mockReplace).toHaveBeenCalledWith({
@@ -94,28 +111,23 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
   });
 });
 
-test('the trial is still offered there; a lead past its trial shows converted after a package', async () => {
-  const client = createTestQueryClient();
-  client.setQueryData(LEADS_KEY, cachedList([{ ...huda, status: 'trial_done' }]));
-  await renderWithQuery(<BookTrialScreen />, client);
+test('«حلقة تجريبية مجانية بس» is a type here: no package step, no invoice, free', async () => {
+  await renderWithQuery(<BookTrialScreen />);
+  await press('radio', t.booking.kind.trial);
+  expect(screen.getByText('خطوة 1 من 4 · الطالب')).toBeTruthy();
+  expect(screen.getByRole('header', { name: t.booking.trialTitle })).toBeTruthy();
+  // A trial takes the form's «المده» on the first step, 45 by default.
+  expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await press('radio', t.enums.packageSize.trial);
-  expect(screen.getByText(t.booking.trialFree)).toBeTruthy();
-  // A trial takes the form's «المده» too, 45 by default.
-  expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
-  await press('radio', t.enums.packageSize['8']);
-  await press('button', t.booking.next);
   await press('button', '17:00');
+  expect(screen.getByText(t.booking.trialFree)).toBeTruthy();
 
   mockApiSend.mockResolvedValue(booked(SUN_17));
   await press('button', t.booking.submit);
   await screen.findByText(t.booking.booked);
-  expect(mockApiSend.mock.calls[0]?.[2]).toMatchObject({
-    package: '8',
-    durationMin: 45,
-    byday: [0],
-  });
-  expect(client.getQueryData(['leads', 'a1'])).toMatchObject({ status: 'converted' });
+  expect(mockApiSend.mock.calls[0]?.[2]).toMatchObject({ kind: 'trial', package: 'trial', byday: [0] });
+  expect(mockApiSend.mock.calls[0]?.[2]).not.toHaveProperty('invoice');
+  expect(uploadInvoice).not.toHaveBeenCalled();
 });

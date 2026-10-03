@@ -11,6 +11,17 @@ import { ruleFromSlot } from './slots';
 /** «الباقة المطلوبة»: the registration form offers these five; 20 and 28 stay in the DB only. */
 export const REGISTRATION_SIZES = ['trial', '4', '8', '12', '16'] as const satisfies readonly PackageSize[];
 
+/** «الباقة المطلوبة» once «نوع الحجز» says package: the paid sizes. The trial is its own type. */
+export const PAID_SIZES = ['4', '8', '12', '16'] as const satisfies readonly PackageSize[];
+
+/**
+ * Switching «نوع الحجز»: the size follows (a trial is free; a package starts at 8), and what hung
+ * on the old type goes: the slot (its length may change), the weekly days, the invoice (a trial has none).
+ */
+export function kindPatch(kind: TrialDraft['kind']): Partial<TrialDraft> {
+  return { kind, pkg: kind === 'trial' ? 'trial' : '8', invoice: null, startsAt: null, byday: [] };
+}
+
 /** The form's «المده» default: «لو مش متأكد سيبها وهنحسبها 45 دقيقة». */
 export const DEFAULT_MINUTES: Duration = 45;
 

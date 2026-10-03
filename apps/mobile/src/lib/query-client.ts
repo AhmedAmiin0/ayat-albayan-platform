@@ -46,7 +46,11 @@ export const persistOptions: Omit<PersistQueryClientOptions, 'queryClient'> = {
   buster: Constants.expoConfig?.version ?? 'dev',
   // TanStack saves only `success` queries: the first failed refetch offline would drop the saved
   // list from disk. Keep every query that still holds data, so a restart offline shows it.
-  dehydrateOptions: { shouldDehydrateQuery: (query) => query.state.data !== undefined },
+  // `meta.noPersist`: signed URLs (booking invoices) would be dead after a restart.
+  dehydrateOptions: {
+    shouldDehydrateQuery: (query) =>
+      query.state.data !== undefined && query.meta?.['noPersist'] !== true,
+  },
 };
 
 /** Sign-out: nothing of the previous session survives, in memory or on disk. */

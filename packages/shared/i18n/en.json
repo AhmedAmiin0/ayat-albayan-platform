@@ -530,12 +530,62 @@
       "noSlots": "No free times in the next 7 days. Try another teacher.",
       "backToLead": "Back to the conversation",
       "offline": "The connection dropped before we got a reply, so we're not sure the lesson was booked. Try again when you're back online; it won't be booked twice.",
-      "toSubscription": "Continue to the subscription"
+      "toSubscription": "Continue to the subscription",
+      "makeupHint": "For a make-up lesson: open the missed lesson in the schedule and tap \"Make-up lesson\"",
+      "takePhoto": "Photograph the invoice",
+      "invoiceOffline": "The connection dropped before the invoice uploaded. Try again when you are back online",
+      "invoiceUploadFailed": "The invoice did not upload. Try again",
+      "retryUpload": "Upload it again",
+      "pdfFile": "PDF file",
+      "invoiceUploaded": "Uploaded from the phone",
+      "missedLesson": "Missed lesson",
+      "keepTeacher": "Continue with {teacher}",
+      "orPickTeacher": "Or pick another teacher",
+      "makeupFor": "For {name}"
     },
     "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
     "packageTrial": "Free trial lesson only",
     "dayLocked": "The picked time's day stays on",
-    "packageDays": "{package} = {perWeek}"
+    "packageDays": "{package} = {perWeek}",
+    "kind": {
+      "label": "Booking type",
+      "trial": "Free trial lesson only",
+      "package": "Subscription",
+      "makeup": "Make-up lesson"
+    },
+    "makeup": {
+      "pickMissed": "Pick the lesson the student missed",
+      "none": "No missed lesson to make up. If the teacher or the admin cancelled a lesson, use \"Change time\"",
+      "tag": "Make-up",
+      "title": "Book a make-up lesson",
+      "action": "Make-up lesson",
+      "booked": "The make-up lesson is booked"
+    },
+    "makeupFor": "Make-up for {names}",
+    "invoice": {
+      "label": "Invoice",
+      "hint": "A photo or PDF of the payment proof. Needed before booking",
+      "upload": "Upload the invoice",
+      "fromChat": "From the chat",
+      "replace": "Change it",
+      "remove": "Remove it",
+      "chatEmpty": "No photos or files from the guardian in the last 30 days",
+      "expired": "WhatsApp no longer has this file. Ask the guardian to send it again",
+      "uploading": "Uploading…",
+      "view": "Open the invoice",
+      "recordPayment": "Record the payment"
+    },
+    "error": {
+      "invoice_required": "Upload the invoice or pick it from the chat before booking",
+      "invoice_type": "The invoice must be a photo or a PDF",
+      "invoice_too_large": "The invoice is over 10 MB. Make it smaller and try again",
+      "invoice_path": "The invoice did not upload properly. Upload it again",
+      "invoice_message": "This file is not from this conversation. Pick another one",
+      "media_expired": "WhatsApp no longer has this file. Ask the guardian to send it again",
+      "makeup_not_eligible": "This lesson cannot be made up",
+      "makeup_exists": "This lesson already has a make-up booked",
+      "makeup_scope_one": "A make-up lesson can only be moved on its own, not with the rest of the series"
+    }
   },
   "lessons": {
     "title": "Lessons",

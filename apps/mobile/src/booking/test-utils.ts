@@ -33,6 +33,24 @@ export function fakeBookingApi() {
   return { api, fetch };
 }
 
+/** The chat's «اشترك» wizard: name, teacher, the package step as it is, the slot → «الفاتورة». */
+export async function walkPackageToInvoice(time = '17:00') {
+  await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');
+  await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
+  await fireEvent.press(await screen.findByText(maryam.display_name_ar));
+  await fireEvent.press(await screen.findByRole('button', { name: t.booking.next }));
+  await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${time}`) }));
+  await screen.findByText(t.booking.invoice.hint);
+}
+
+/** A picked photo, as pickReceipt resolves it. */
+export const PHOTO = {
+  uri: 'file:///cache/invoice.jpg',
+  mime: 'image/jpeg' as const,
+  bytes: new ArrayBuffer(3),
+  size: 3,
+};
+
 /** Steps 1 → 4: the child's name, the first teacher, then the free slot at `time` (Riyadh clock). */
 export async function walkToConfirm(time = '17:00') {
   await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');

@@ -1,4 +1,5 @@
 import type { BookingResult, BookingTeacherOption, SlotView } from '@ab/shared';
+import type { InvoiceDraft } from './contract';
 import type { TrialDraft } from './draft';
 
 // Invented test rows in the GET /booking/* and POST /booking shapes (no real people).
@@ -70,9 +71,20 @@ export function draft(patch: Partial<TrialDraft> = {}): TrialDraft {
     gender: 'female',
     teacher: maryam,
     startsAt: SUN_17,
+    // A paid `pkg` in the patch makes it a package, as kindPatch would.
+    kind: patch.pkg && patch.pkg !== 'trial' ? 'package' : 'trial',
     pkg: 'trial',
+    invoice: null,
     durationMin: 45,
     byday: [],
     ...patch,
   };
 }
+
+/** An uploaded invoice, as the invoice step leaves it in the draft. */
+export const UPLOADED: InvoiceDraft = {
+  source: 'upload',
+  path: '99999999-9999-4999-8999-999999999999/0b1c.jpg',
+  mime: 'image/jpeg',
+  uri: 'file:///cache/invoice.jpg',
+};
