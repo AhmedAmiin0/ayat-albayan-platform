@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
 import { TeacherDetailPage } from './TeacherDetailPage';
 
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
@@ -70,6 +71,12 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     expect(primaries.map((b) => b.textContent)).toEqual([t.availability.save]);
     fireEvent.click(screen.getByRole('button', { name: t.teachers.edit }));
     expect(screen.getByRole('dialog', { name: t.teachers.edit })).toBeTruthy();
+  });
+
+  it('links «مستحقات» to the teacher\'s earnings page', async () => {
+    renderPage();
+    const link = await screen.findByRole('link', { name: t.teacherEarnings.open });
+    expect(link.getAttribute('href')).toBe('/admin/teachers/t1/earnings');
   });
 
   it('«البيانات» tab lists the record, LTR values isolated', async () => {

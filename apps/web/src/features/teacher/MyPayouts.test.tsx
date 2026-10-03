@@ -1,6 +1,7 @@
 import type { PayoutView } from '@ab/shared';
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { EARNINGS, PAYMENTS } from '@/features/teacher-earnings/fixtures';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { t } from '@/lib/i18n';
@@ -23,23 +24,42 @@ const payout = (over: Partial<PayoutView>): PayoutView => ({
   ...over,
 });
 
+const earningsRoutes = [
+  ['/teachers/me/earnings/payments', PAYMENTS],
+  ['/teachers/me/earnings', EARNINGS],
+] as const;
+
 afterEach(() => apiFetch.mockReset());
 
 describe('«مستحقاتي» (R-TCH-04)', () => {
   it('every month of mine, newest first, with the breakdown and no approve / pay', async () => {
-    routeFetch(apiFetch, [['/teachers/me/payouts', [payout({}), payout({ id: 'p-0', month: '2026-08', status: 'draft', paid_at: null, approved_at: null })]]]);
+    routeFetch(apiFetch, [
+      ...earningsRoutes,
+      ['/teachers/me/payouts', [payout({}), payout({ id: 'p-0', month: '2026-08', status: 'draft', paid_at: null, approved_at: null })]],
+    ]);
     renderWithClient(<MyPayouts />);
     expect(await screen.findByText(monthLabel('2026-09'))).toBeTruthy();
     expect(screen.getByText(monthLabel('2026-08'))).toBeTruthy();
     expect(screen.getAllByText(/10 × 70/)).toHaveLength(2);
-    expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
+    // «اتدفعت» is also the paid-session chip above, so: one in the sessions, one in the months.
+    expect(screen.getAllByText(t.enums.payoutStatus.paid)).toHaveLength(2);
     expect(screen.queryByRole('button', { name: t.payouts.approve })).toBeNull();
     expect(screen.queryByRole('button', { name: t.payouts.markPaid })).toBeNull();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/payouts');
   });
 
+  it('the per-session earnings come first, then the «كشوف الشهور» section with the months', async () => {
+    routeFetch(apiFetch, [...earningsRoutes, ['/teachers/me/payouts', [payout({})]]]);
+    renderWithClient(<MyPayouts />);
+    const sessions = await screen.findByRole('region', { name: t.teacherEarnings.sessionsTitle });
+    const months = screen.getByRole('heading', { name: t.teacherEarnings.monthsTitle });
+    expect(sessions.compareDocumentPosition(months) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+    expect(await screen.findByText(monthLabel('2026-09'))).toBeTruthy();
+    expect(screen.queryByRole('checkbox')).toBeNull();
+  });
+
   it('none yet says so', async () => {
-    routeFetch(apiFetch, [['/teachers/me/payouts', []]]);
+    routeFetch(apiFetch, [...earningsRoutes, ['/teachers/me/payouts', []]]);
     renderWithClient(<MyPayouts />);
     expect(await screen.findByText(t.payouts.mineEmpty)).toBeTruthy();
   });

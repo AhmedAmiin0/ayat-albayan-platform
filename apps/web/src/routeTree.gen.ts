@@ -41,6 +41,7 @@ import { Route as TeacherReportLessonIdRouteImport } from './routes/teacher/repo
 import { Route as TeacherReportsIndexRouteImport } from './routes/teacher/reports.index'
 import { Route as TeacherReportsStudentIdRouteImport } from './routes/teacher/reports.$studentId'
 import { Route as AdminStudentsStudentIdReportsRouteImport } from './routes/admin/students.$studentId_.reports'
+import { Route as AdminTeachersTeacherIdEarningsRouteImport } from './routes/admin/teachers.$teacherId_.earnings'
 import { Route as AdminStudentsStudentIdReportsLessonIdRouteImport } from './routes/admin/students.$studentId_.reports.$lessonId'
 
 const IndexRoute = IndexRouteImport.update({
@@ -204,6 +205,12 @@ const AdminStudentsStudentIdReportsRoute =
     path: '/$studentId/reports',
     getParentRoute: () => AdminStudentsRoute,
   } as any)
+const AdminTeachersTeacherIdEarningsRoute =
+  AdminTeachersTeacherIdEarningsRouteImport.update({
+    id: '/$teacherId_/earnings',
+    path: '/$teacherId/earnings',
+    getParentRoute: () => AdminTeachersRoute,
+  } as any)
 const AdminStudentsStudentIdReportsLessonIdRoute =
   AdminStudentsStudentIdReportsLessonIdRouteImport.update({
     id: '/$lessonId',
@@ -244,6 +251,7 @@ export interface FileRoutesByFullPath {
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
   '/admin/students/$studentId/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
+  '/admin/teachers/$teacherId/earnings': typeof AdminTeachersTeacherIdEarningsRoute
   '/admin/students/$studentId/reports/$lessonId': typeof AdminStudentsStudentIdReportsLessonIdRoute
 }
 export interface FileRoutesByTo {
@@ -277,6 +285,7 @@ export interface FileRoutesByTo {
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/reports': typeof TeacherReportsIndexRoute
   '/admin/students/$studentId/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
+  '/admin/teachers/$teacherId/earnings': typeof AdminTeachersTeacherIdEarningsRoute
   '/admin/students/$studentId/reports/$lessonId': typeof AdminStudentsStudentIdReportsLessonIdRoute
 }
 export interface FileRoutesById {
@@ -313,6 +322,7 @@ export interface FileRoutesById {
   '/teacher/reports/$studentId': typeof TeacherReportsStudentIdRoute
   '/teacher/reports/': typeof TeacherReportsIndexRoute
   '/admin/students/$studentId_/reports': typeof AdminStudentsStudentIdReportsRouteWithChildren
+  '/admin/teachers/$teacherId_/earnings': typeof AdminTeachersTeacherIdEarningsRoute
   '/admin/students/$studentId_/reports/$lessonId': typeof AdminStudentsStudentIdReportsLessonIdRoute
 }
 export interface FileRouteTypes {
@@ -350,6 +360,7 @@ export interface FileRouteTypes {
     | '/teacher/reports/$studentId'
     | '/teacher/reports/'
     | '/admin/students/$studentId/reports'
+    | '/admin/teachers/$teacherId/earnings'
     | '/admin/students/$studentId/reports/$lessonId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -383,6 +394,7 @@ export interface FileRouteTypes {
     | '/teacher/reports/$studentId'
     | '/teacher/reports'
     | '/admin/students/$studentId/reports'
+    | '/admin/teachers/$teacherId/earnings'
     | '/admin/students/$studentId/reports/$lessonId'
   id:
     | '__root__'
@@ -418,6 +430,7 @@ export interface FileRouteTypes {
     | '/teacher/reports/$studentId'
     | '/teacher/reports/'
     | '/admin/students/$studentId_/reports'
+    | '/admin/teachers/$teacherId_/earnings'
     | '/admin/students/$studentId_/reports/$lessonId'
   fileRoutesById: FileRoutesById
 }
@@ -656,6 +669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminStudentsStudentIdReportsRouteImport
       parentRoute: typeof AdminStudentsRoute
     }
+    '/admin/teachers/$teacherId_/earnings': {
+      id: '/admin/teachers/$teacherId_/earnings'
+      path: '/$teacherId/earnings'
+      fullPath: '/admin/teachers/$teacherId/earnings'
+      preLoaderRoute: typeof AdminTeachersTeacherIdEarningsRouteImport
+      parentRoute: typeof AdminTeachersRoute
+    }
     '/admin/students/$studentId_/reports/$lessonId': {
       id: '/admin/students/$studentId_/reports/$lessonId'
       path: '/$lessonId'
@@ -698,10 +718,12 @@ const AdminStudentsRouteWithChildren = AdminStudentsRoute._addFileChildren(
 
 interface AdminTeachersRouteChildren {
   AdminTeachersTeacherIdRoute: typeof AdminTeachersTeacherIdRoute
+  AdminTeachersTeacherIdEarningsRoute: typeof AdminTeachersTeacherIdEarningsRoute
 }
 
 const AdminTeachersRouteChildren: AdminTeachersRouteChildren = {
   AdminTeachersTeacherIdRoute: AdminTeachersTeacherIdRoute,
+  AdminTeachersTeacherIdEarningsRoute: AdminTeachersTeacherIdEarningsRoute,
 }
 
 const AdminTeachersRouteWithChildren = AdminTeachersRoute._addFileChildren(

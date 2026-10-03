@@ -13,6 +13,7 @@ import { breakdownLines } from '@/features/payouts/payout-columns';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { myPayoutsQuery } from './api';
+import { MyEarnings } from './MyEarnings';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
@@ -61,7 +62,10 @@ const COLUMNS = col.columns([
   }),
 ]);
 
-/** /teacher/payouts «مستحقاتي» (R-TCH-04): every month calculated for me, newest first, in EGP. */
+/**
+ * /teacher/payouts «مستحقاتي» (R-TCH-04): my per-session earnings and payments on top, then every
+ * month calculated for me («كشوف الشهور»), newest first, in EGP.
+ */
 export function MyPayouts() {
   const list = useQuery(myPayoutsQuery);
   return (
@@ -69,6 +73,8 @@ export function MyPayouts() {
       <PageHead>
         <Cartouche>{t.payouts.mine}</Cartouche>
       </PageHead>
+      <MyEarnings />
+      <h2 className="mb-2 font-display text-lg text-ink">{t.teacherEarnings.monthsTitle}</h2>
       {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.data?.length === 0 && <EmptyState title={t.payouts.mineEmpty} />}
