@@ -12,6 +12,7 @@ import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { editMode } from '@/edit-time/types';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Ltr } from '@/ui/Ltr';
@@ -100,11 +101,14 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel, onResched
             </View>
           ))}
         </View>
-        <StatusChip
-          {...lessonStatusStyle[lesson.status]}
-          label={t.enums.lessonStatus[lesson.status]}
-          size="sm"
-        />
+        <View style={{ alignItems: 'flex-end', gap: 4 }}>
+          <LiveBadge lesson={lesson} />
+          <StatusChip
+            {...lessonStatusStyle[lesson.status]}
+            label={t.enums.lessonStatus[lesson.status]}
+            size="sm"
+          />
+        </View>
       </View>
       <AppText
         style={{

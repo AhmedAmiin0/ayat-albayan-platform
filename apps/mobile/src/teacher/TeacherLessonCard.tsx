@@ -2,6 +2,7 @@ import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type Less
 import { Linking, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/ui/AppText';
@@ -61,7 +62,10 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
         >
           {studentNames(lesson)}
         </AppText>
-        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+        <View style={{ alignItems: 'flex-end', gap: 4 }}>
+          <LiveBadge lesson={lesson} />
+          <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
+        </View>
       </View>
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums'] }}>
         {timeLine(lesson, p.tz)}

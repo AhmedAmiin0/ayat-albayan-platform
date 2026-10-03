@@ -5,6 +5,7 @@ import { EditTimeSheet } from '@/edit-time/EditTimeSheet';
 import { clockAt } from '@/inbox/format';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { LiveSessions } from '@/live/LiveSessions';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -67,6 +68,7 @@ export function TodayScreen() {
   return (
     <Screen>
       <ScreenHeader title={t.today.title} subtitle={subtitle} />
+      <LiveSessions lessons={lessons} showTeacher />
       <FilterPills
         items={pills}
         value={filter}

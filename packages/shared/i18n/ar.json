@@ -2092,6 +2092,12 @@
     "recommendShort": "الترشيح",
     "templateSettings": "افتح إعدادات الرسايل"
   },
+  "live": {
+    "title": "جلسات مباشرة",
+    "now": "مباشر الآن",
+    "startsAt": "بتبدأ الساعة {time}",
+    "teacher": "المعلم/ة: {name}"
+  },
   "classroom": {
     "title": "الحلقة أونلاين",
     "enter": "ادخل الحلقة",
