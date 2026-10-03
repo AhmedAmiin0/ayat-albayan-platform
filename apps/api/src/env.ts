@@ -40,6 +40,11 @@ const schema = z.object({
    * pushes are recorded but never leave the server (local, e2e), like WA_API_BASE.
    */
   EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
+  /**
+   * HMAC key of the «رأيك يهمّنا» links (>= 32 chars, via Vault). Unset = feedback requests are 503
+   * not_configured and every public link is refused; nothing else depends on it.
+   */
+  FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 });

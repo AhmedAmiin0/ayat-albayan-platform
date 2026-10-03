@@ -10,6 +10,7 @@ import { BookingModule } from './modules/booking/booking.module';
 import { DashboardModule } from './modules/dashboard/dashboard.module';
 import { ExpensesModule } from './modules/expenses/expenses.module';
 import { ExportsModule } from './modules/exports/exports.module';
+import { FeedbackModule } from './modules/feedback/feedback.module';
 import { FxModule } from './modules/fx/fx.module';
 import { GuardiansModule } from './modules/guardians/guardians.module';
 import { HealthController } from './modules/health/health.controller';
@@ -61,6 +62,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     ExportsModule,
     WhatsappModule,
     InboxModule,
+    FeedbackModule,
     MessagingJobsModule,
     WebhookModule,
   ],

@@ -4,7 +4,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import type { SlotPackage } from './pdf-model';
 
 const REPORT_COLUMNS =
-  'id, lesson_id, student_id, teacher_id, attendance, recited, new_memorization, revision, theory, ' +
+  'id, lesson_id, student_id, teacher_id, attendance, program, recited, new_memorization, revision, theory, ' +
   'grade_recitation, grade_memorization, grade_revision, grade_tajweed, grade_engagement, ' +
   'grade_commitment, grade_overall, notes, homework, next_plan, version';
 
@@ -14,6 +14,7 @@ export interface ReportRow {
   student_id: string;
   teacher_id: string;
   attendance: Attendance | null;
+  program: Program | null;
   recited: string | null;
   new_memorization: string | null;
   revision: string | null;

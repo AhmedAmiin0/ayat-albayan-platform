@@ -558,6 +558,82 @@ export type Database = {
           },
         ];
       };
+      lesson_feedback: {
+        Row: {
+          contact_phone: string | null;
+          created_at: string;
+          expires_at: string;
+          guardian_id: string;
+          id: string;
+          kind: Database['public']['Enums']['feedback_kind'];
+          lesson_id: string;
+          note: string | null;
+          rating: number | null;
+          recommend: Database['public']['Enums']['feedback_recommend'] | null;
+          requested_at: string;
+          student_id: string;
+          submitted_at: string | null;
+          teacher_id: string;
+          token_hash: string;
+        };
+        Insert: {
+          contact_phone?: string | null;
+          created_at?: string;
+          expires_at: string;
+          guardian_id: string;
+          id?: string;
+          kind: Database['public']['Enums']['feedback_kind'];
+          lesson_id: string;
+          note?: string | null;
+          rating?: number | null;
+          recommend?: Database['public']['Enums']['feedback_recommend'] | null;
+          requested_at?: string;
+          student_id: string;
+          submitted_at?: string | null;
+          teacher_id: string;
+          token_hash: string;
+        };
+        Update: {
+          contact_phone?: string | null;
+          created_at?: string;
+          expires_at?: string;
+          guardian_id?: string;
+          id?: string;
+          kind?: Database['public']['Enums']['feedback_kind'];
+          lesson_id?: string;
+          note?: string | null;
+          rating?: number | null;
+          recommend?: Database['public']['Enums']['feedback_recommend'] | null;
+          requested_at?: string;
+          student_id?: string;
+          submitted_at?: string | null;
+          teacher_id?: string;
+          token_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_feedback_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'lesson_students';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+        ];
+      };
       lesson_reports: {
         Row: {
           attendance: Database['public']['Enums']['attendance'] | null;
@@ -580,6 +656,7 @@ export type Database = {
           pdf_error: string | null;
           pdf_path: string | null;
           pdf_status: Database['public']['Enums']['pdf_status'] | null;
+          program: Database['public']['Enums']['program'] | null;
           recited: string | null;
           revision: string | null;
           sent_at: string | null;
@@ -612,6 +689,7 @@ export type Database = {
           pdf_error?: string | null;
           pdf_path?: string | null;
           pdf_status?: Database['public']['Enums']['pdf_status'] | null;
+          program?: Database['public']['Enums']['program'] | null;
           recited?: string | null;
           revision?: string | null;
           sent_at?: string | null;
@@ -644,6 +722,7 @@ export type Database = {
           pdf_error?: string | null;
           pdf_path?: string | null;
           pdf_status?: Database['public']['Enums']['pdf_status'] | null;
+          program?: Database['public']['Enums']['program'] | null;
           recited?: string | null;
           revision?: string | null;
           sent_at?: string | null;
@@ -1856,6 +1935,23 @@ export type Database = {
       };
     };
     Views: {
+      v_teacher_feedback_avg: {
+        Row: {
+          avg_rating: number | null;
+          n: number | null;
+          recommend_yes_pct: number | null;
+          teacher_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       v_lesson_sequence: {
         Row: {
           lesson_id: string | null;
@@ -2033,6 +2129,8 @@ export type Database = {
       admin_task_kind: 'renewal_due' | 'subscription_unpaid';
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
       expense_category: 'ads' | 'content' | 'tools' | 'operations' | 'other';
+      feedback_kind: 'trial' | 'subscription';
+      feedback_recommend: 'yes' | 'maybe' | 'no';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
       import_run_status: 'running' | 'succeeded' | 'failed';
@@ -2198,6 +2296,8 @@ export const Constants = {
       admin_task_kind: ['renewal_due', 'subscription_unpaid'],
       attendance: ['on_time', 'late', 'excused', 'absent'],
       expense_category: ['ads', 'content', 'tools', 'operations', 'other'],
+      feedback_kind: ['trial', 'subscription'],
+      feedback_recommend: ['yes', 'maybe', 'no'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
       import_run_status: ['running', 'succeeded', 'failed'],

@@ -3,3 +3,4 @@ export * from './common.js';
 export * from './leads.js';
 export * from './people.js';
 export * from './scheduling.js';
+export * from './feedback.js';

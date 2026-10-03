@@ -24,7 +24,7 @@ const NO_GRADES = { recitation: null, memorization: null, revision: null, tajwee
 
 function reportView(over: Partial<ReportView> = {}): ReportView {
   return {
-    ...{ id: 'r-1', lesson_id: 'l-1', student_id: 's-1', teacher_id: 't-1', attendance: null },
+    ...{ id: 'r-1', lesson_id: 'l-1', student_id: 's-1', teacher_id: 't-1', attendance: null, program: 'quran' },
     ...{ recited: null, new_memorization: null, revision: null, theory: null, grades: { ...NO_GRADES } },
     ...{ grade_overall: null, notes: null, homework: null, next_plan: null, status: 'draft', version: 0 },
     ...{ submitted_at: null, edited_at: null, pdf_status: null, pdf_error: null, sent_at: null },
@@ -44,7 +44,7 @@ describe('form values (R-REP-02)', () => {
     const saved = { attendance: 'late', new_memorization: 'الملك 1-5', next_plan: 'الملك 6-10', grade_overall: 'good' } as const;
     const v = valuesOf(reportView({ ...saved, grades: { ...FULL_GRADES } }));
     expect(draftBody(v)).toEqual({
-      ...{ attendance: 'late', recited: '', newMemorization: 'الملك 1-5', revision: '', theory: '' },
+      ...{ attendance: 'late', program: 'quran', recited: '', newMemorization: 'الملك 1-5', revision: '', theory: '' },
       ...{ grades: FULL_GRADES, overall: 'good', notes: '', homework: '', nextPlan: 'الملك 6-10' },
     });
     expect(submitBody(v, 3).expectedVersion).toBe(3);

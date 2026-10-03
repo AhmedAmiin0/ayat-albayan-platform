@@ -13,7 +13,7 @@ export function toModel(source: ReportSource, now: Date): ReportPdfModel {
   return {
     student: { name: student.name, code: student.code },
     teacherName: source.teacher.display_name_ar,
-    program: student.program,
+    program: report.program ?? student.program,
     startsAt: new Date(source.lesson.starts_at),
     endsAt: new Date(source.lesson.ends_at),
     tz: guardian.tz,

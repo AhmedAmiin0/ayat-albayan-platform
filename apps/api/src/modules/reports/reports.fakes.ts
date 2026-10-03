@@ -38,6 +38,7 @@ export function reportRow(over: Partial<ReportRow> = {}): ReportRow {
     student_id: STUDENT_ID,
     teacher_id: TEACHER_ID,
     attendance: null,
+    program: 'quran',
     recited: null,
     new_memorization: null,
     revision: null,

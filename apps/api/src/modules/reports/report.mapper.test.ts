@@ -82,6 +82,7 @@ describe('submitColumns (a submit is the whole form)', () => {
       recited: null,
       next_plan: null,
     });
-    expect(Object.keys(cols)).toHaveLength(15);
+    expect(Object.keys(cols)).toHaveLength(16); // the 15 form fields and the program (null = the RPC keeps the stored one)
+    expect(cols.program).toBeNull();
   });
 });

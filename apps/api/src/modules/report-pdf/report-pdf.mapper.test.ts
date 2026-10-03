@@ -25,6 +25,12 @@ describe('report PDF mapper (R-REP-01: everything derived from the DB)', () => {
     });
   });
 
+  it('the program is the one the teacher chose on the report, else the student’s', () => {
+    const source = sampleSource();
+    expect(toModel({ ...source, report: { ...source.report, program: 'arabic' } }, NOW).program).toBe('arabic');
+    expect(toModel({ ...source, report: { ...source.report, program: null } }, NOW).program).toBe('quran');
+  });
+
   it('reads the six rubric columns by name (RUBRIC_COLUMN)', () => {
     expect(toModel(sampleSource(), NOW).grades).toEqual({
       recitation: 'excellent',

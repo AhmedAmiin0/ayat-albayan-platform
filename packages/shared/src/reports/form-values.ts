@@ -1,4 +1,4 @@
-import type { Attendance, Grade } from '../enums/index.js';
+import type { Attendance, Grade, Program } from '../enums/index.js';
 import { attended, REPORT_RUBRICS, type Rubric } from './rules.js';
 import { REPORT_REQUIRED_TEXT, reportSubmitSchema, type ReportDraft } from './schema.js';
 import type { ReportView } from './views.js';
@@ -9,6 +9,8 @@ import type { ReportView } from './views.js';
 /** What the teacher edits (R-REP-02); identity never (R-REP-01). Text fields are '' when empty. */
 export interface FormValues {
   attendance: Attendance | null;
+  /** «البرنامج *»: prefilled from the student, the teacher may change it. */
+  program: Program | null;
   recited: string;
   newMemorization: string;
   revision: string;
@@ -47,6 +49,7 @@ export const AUTOSAVE_MS = 800;
 export function valuesOf(report: ReportView): FormValues {
   return {
     attendance: report.attendance,
+    program: report.program,
     recited: report.recited ?? '',
     newMemorization: report.new_memorization ?? '',
     revision: report.revision ?? '',
@@ -64,6 +67,7 @@ export function draftBody(v: FormValues): DraftBody {
   const grades = Object.fromEntries(REPORT_RUBRICS.map((r) => [r, v.grades[r]])) as Record<Rubric, Grade | null>;
   return {
     attendance: v.attendance,
+    ...(v.program ? { program: v.program } : {}),
     recited: v.recited,
     newMemorization: v.newMemorization,
     revision: v.revision,
@@ -83,11 +87,12 @@ export function submitBody(v: FormValues, expectedVersion: number): SubmitBody {
 /**
  * Same rules as the API (reportSubmitSchema): attendance first (`missing_attendance`), then the
  * six grades + overall when the student attended (`missing_grades`), then the required text
- * (`missing_text`). null = ready to send.
+ * (`missing_text`); then the program (`missing_program`, the form's «البرنامج *»). null = ready to send.
  */
 export function submitProblem(v: FormValues, version = 0): string | null {
   const parsed = reportSubmitSchema.safeParse(submitBody(v, version));
-  return parsed.success ? null : (parsed.error.issues[0]?.message ?? 'validation_failed');
+  if (!parsed.success) return parsed.error.issues[0]?.message ?? 'validation_failed';
+  return v.program === null ? 'missing_program' : null;
 }
 
 /**
