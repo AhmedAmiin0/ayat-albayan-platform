@@ -1,19 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import { palette, type ThemeName } from './theme.js';
 
-// The light theme is anchored on the academy's own palette (Apps Script «Brand» library, T).
-it('light tokens are the brand colours', () => {
+// Green and black, readable, with a green/gold primary (owner, 2026-10-03).
+it('light tokens are the green-black palette', () => {
   const c = palette.light;
-  expect(c.page).toBe('#fdf8f0'); // T.paper, the logo's own background
-  expect(c.ink).toBe('#14261e'); // T.ink
-  expect(c.lapis).toBe('#14503a'); // T.green2: action
-  expect(c.lapisHover).toBe('#0c2a1e'); // T.green
-  expect(c.ok).toBe('#1e6b4c'); // T.ok = T.green3
-  expect(c.gold).toBe('#c2a24a'); // T.gold
-  expect(c.goldSoft).toBe('#d6bc80'); // T.goldSoft
-  expect(c.goldWash).toBe('#e7dab4'); // T.gold2
-  expect(c.rule).toBe('#e5d9bf'); // T.rule
-  expect(c.bad).toBe('#9c3b2e'); // T.bad
+  expect(c.page).toBe('#ffffff'); // white page
+  expect(c.ink).toBe('#0b1410'); // green-black text
+  expect(c.lapis).toBe('#166534'); // deep green: the action
+  expect(c.onLapis).toBe('#f3d58a'); // gold on the green primary
+  expect(c.ok).toBe('#0f766e'); // teal means done/ok
+  expect(c.gold).toBe('#b7891f'); // gold decorates
+  expect(c.bad).toBe('#b91c1c');
 });
 
 // OKLCH hue in degrees (Björn Ottosson's matrices), to keep the one-meaning colours apart.
@@ -47,9 +44,11 @@ describe.each(['light', 'dark'] as ThemeName[])('%s: one colour, one meaning (do
     expect(apart(c.bad, c.act)).toBeGreaterThanOrEqual(20);
   });
 
-  it('the action is green (hue 140°–175°)', () => {
-    expect(hue(c.lapis)).toBeGreaterThanOrEqual(140);
-    expect(hue(c.lapis)).toBeLessThanOrEqual(175);
+  it('the action is green (hue 135°–165°), apart from «ok» teal and the dark cover', () => {
+    expect(hue(c.lapis)).toBeGreaterThanOrEqual(135);
+    expect(hue(c.lapis)).toBeLessThanOrEqual(165);
+    expect(apart(c.lapis, c.ok)).toBeGreaterThanOrEqual(15);
+    expect(apart(c.lapis, c.gold)).toBeGreaterThanOrEqual(60);
   });
 });
 

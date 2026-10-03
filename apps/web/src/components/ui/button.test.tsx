@@ -32,9 +32,10 @@ describe('Button (docs/07 §6)', () => {
     expect(buttonVariants({ variant: 'danger-quiet' })).toContain('border-destructive/45');
   });
 
-  it('never uses gold or saffron on a button', () => {
-    const variants = ['primary', 'secondary', 'ghost', 'danger', 'danger-quiet'] as const;
-    for (const variant of variants) expect(buttonVariants({ variant })).not.toMatch(/-(gold|act)\b/);
+  it('gives only the primary its gold edge, and never saffron', () => {
+    expect(buttonVariants({ variant: 'primary' })).toMatch(/\bborder-gold\b/);
+    const others = ['secondary', 'ghost', 'danger', 'danger-quiet'] as const;
+    for (const variant of others) expect(buttonVariants({ variant })).not.toMatch(/-(gold|act)\b/);
   });
 
   it('renders a native button and forwards props', () => {
