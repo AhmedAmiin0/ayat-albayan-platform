@@ -40,6 +40,7 @@ describe('FeedbackPage (admin)', () => {
     const rows = await screen.findAllByRole('row');
     const done = rows.find((r) => r.textContent?.includes('سهيلة'));
     expect(done?.textContent).toContain(t.enums.feedbackKind.trial);
+    expect(done?.textContent).toContain('+201001234567');
     expect(done?.textContent).toContain(t.feedback.outOf.replace('{n}', '5'));
     expect(done?.textContent).toContain(t.enums.feedbackRecommend.yes);
     expect(rows.find((r) => r.textContent?.includes('جود'))?.textContent).toContain(t.feedback.pending);

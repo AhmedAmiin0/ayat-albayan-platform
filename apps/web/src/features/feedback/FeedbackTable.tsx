@@ -27,6 +27,14 @@ const teacher = col.accessor((r) => teacherLabel(r.teacher), {
   meta: { className: 'max-sm:order-2' },
 });
 
+/** «رقم واتساب للتواصل»: for the academy to call back; the teacher's own list never has it. */
+const contact = col.accessor((r) => r.contact_phone ?? '', {
+  id: 'contact',
+  header: () => t.feedback.contact,
+  cell: (c) => (c.getValue() ? <Ltr className="text-xs text-ink-2">{c.getValue()}</Ltr> : '—'),
+  meta: { className: 'max-sm:order-3' },
+});
+
 const rest = [
   col.accessor('kind', {
     header: () => t.feedback.kind,
@@ -56,7 +64,7 @@ const rest = [
   }),
 ];
 
-const WITH_TEACHER = col.columns([student, teacher, ...rest]);
+const WITH_TEACHER = col.columns([student, teacher, contact, ...rest]);
 const WITHOUT_TEACHER = col.columns([student, ...rest]);
 
 /** The feedback rows: the admin sees the teacher column, a teacher's own list does not need it. */

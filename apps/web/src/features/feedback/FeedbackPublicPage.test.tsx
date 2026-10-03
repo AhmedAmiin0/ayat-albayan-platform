@@ -37,6 +37,21 @@ describe('FeedbackPublicPage (no login)', () => {
     expect(fetchMock).toHaveBeenCalledTimes(1);
   });
 
+  it('too many tries (429) is not an expired link: it says wait, and offers a retry', async () => {
+    fetchMock.mockResolvedValue(json(429, { message: 'too_many' }));
+    open();
+    expect(await screen.findByText(t.feedback.tooMany)).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.feedback.retry })).toBeTruthy();
+    expect(screen.queryByText(t.feedback.expired)).toBeNull();
+  });
+
+  it('a 409 on opening means already sent, not expired', async () => {
+    fetchMock.mockResolvedValue(json(409, { code: 'already_submitted' }));
+    open();
+    expect(await screen.findByText(t.feedback.alreadySent)).toBeTruthy();
+    expect(screen.queryByText(t.feedback.expired)).toBeNull();
+  });
+
   it('a link already used says the feedback was received', async () => {
     fetchMock.mockResolvedValue(json(200, { ...OK, alreadySubmitted: true }));
     open();
