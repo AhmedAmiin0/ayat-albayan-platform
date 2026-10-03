@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>حلقة أونلاين — أكاديمية آيات البيان</title>
+<style>
+  :root { --green:#14503A; --green-2:#1E6B4C; --gold:#C2A24A; --paper:#FDF8F0; --ink:#0C2A1E; --muted:#5b6b62; --danger:#a3321f; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; }
+  body { background: var(--paper); color: var(--ink); font: 16px/1.5 system-ui, "Segoe UI", Tahoma, sans-serif; display: flex; flex-direction: column; }
+  header { display: flex; align-items: center; gap: .75rem; padding: .75rem 1rem; background: var(--green); color: #fff; border-bottom: 3px double var(--gold); }
+  header b { font-size: 1.1rem; }
+  header span { opacity: .8; font-size: .9rem; }
+  main { flex: 1; min-height: 0; display: flex; flex-direction: column; padding: 1rem; gap: 1rem; }
+  #lobby { margin: auto; max-width: 26rem; width: 100%; text-align: center; display: grid; gap: .75rem; }
+  #lobby h1 { margin: 0; font-size: 1.4rem; }
+  #lobby p { margin: 0; color: var(--muted); }
+  input { font: inherit; padding: .7rem .9rem; border: 1px solid var(--green); border-radius: .6rem; background: #fff; color: var(--ink); text-align: center; }
+  button { font: inherit; border: 0; border-radius: .6rem; padding: .75rem 1.25rem; min-height: 2.75rem; cursor: pointer; background: var(--green); color: #fff; }
+  button:hover { background: var(--green-2); }
+  button:disabled { opacity: .5; cursor: default; }
+  button.ghost { background: #fff; color: var(--green); border: 1px solid var(--green); }
+  button.off { background: #fff; color: var(--danger); border: 1px solid var(--danger); }
+  button.leave { background: var(--danger); }
+  #err { color: var(--danger); min-height: 1.5em; }
+  #sound { display: none; background: var(--gold); color: var(--ink); }
+  #stage { flex: 1; min-height: 0; display: none; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); grid-auto-rows: minmax(10rem, 1fr); gap: .75rem; }
+  .tile { position: relative; background: #0C2A1E; border-radius: .75rem; overflow: hidden; border: 1px solid var(--gold); }
+  .tile video { width: 100%; height: 100%; object-fit: cover; background: #0C2A1E; }
+  .tile.me video { transform: scaleX(-1); }
+  .tile .name { position: absolute; inset-inline-start: .5rem; bottom: .5rem; background: rgba(12,42,30,.8); color: #fff; padding: .15rem .6rem; border-radius: 1rem; font-size: .85rem; }
+  .tile.speaking { outline: 3px solid var(--gold); }
+  .tile.novideo::after { content: attr(data-initial); position: absolute; inset: 0; display: grid; place-items: center; font-size: 3rem; color: var(--gold); }
+  #bar { display: none; justify-content: center; flex-wrap: wrap; gap: .6rem; padding-block: .25rem; }
+</style>
+</head>
+<body>
+<header><b>أكاديمية آيات البيان</b><span id="room"></span></header>
+<main>
+  <section id="lobby">
+    <h1>حلقة أونلاين</h1>
+    <p id="who"></p>
+    <input id="name" placeholder="اسمك" maxlength="30" autocomplete="off" hidden>
+    <button id="join">ادخل الحلقة</button>
+    <p>هنطلب إذن الكاميرا والميكروفون. لو بتجرب بجهاز واحد استخدم سماعات عشان الصدى.</p>
+    <div id="err" role="alert"></div>
+  </section>
+  <section id="stage" aria-live="polite"></section>
+  <div id="bar">
+    <button id="sound">شغّل الصوت</button>
+    <button id="mic" class="ghost">الميكروفون</button>
+    <button id="cam" class="ghost">الكاميرا</button>
+    <button id="share" class="ghost">مشاركة الشاشة</button>
+    <button id="leave" class="leave">اطلع</button>
+  </div>
+</main>
+<script src="/test/livekit-client.umd.js"></script>
+<script>
+(() => {
+  const L = window.LivekitClient;
+  const $ = (id) => document.getElementById(id);
+  const hash = new URLSearchParams(location.hash.slice(1));
+  const code = hash.get('c');   // meeting link: one link, every window gets its own identity
+  let token = hash.get('t');    // personal link: one token = one person
+  const url = hash.get('u') || `wss://${location.host}`;
+  const err = (m) => { $('err').textContent = m; };
+  const stop = (m) => { err(m); $('join').disabled = true; };
+
+  if (!code && !token) return stop('الرابط ناقص — اطلب رابط جديد.');
+  if (code) $('name').hidden = false;
+  else {
+    let claims = {};
+    try { claims = JSON.parse(atob(token.split('.')[1].replace(/-/g, '+').replace(/_/g, '/'))); } catch { /* shown below */ }
+    $('who').textContent = claims.name ? `أهلاً ${claims.name}` : '';
+    if (claims.exp && claims.exp * 1000 < Date.now()) return stop('الرابط انتهت صلاحيته — اطلب رابط جديد.');
+  }
+
+  const room = new L.Room({ adaptiveStream: true, dynacast: true });
+  const tiles = new Map();
+  const attached = new Set(); // one <video>/<audio> per track, never two (double sound)
+
+  function tile(p) {
+    let t = tiles.get(p.identity);
+    if (t) return t;
+    t = document.createElement('div');
+    const label = (p.name || p.identity) + (p.isLocal ? ' (أنت)' : '');
+    t.className = 'tile novideo' + (p.isLocal ? ' me' : '');
+    t.dataset.initial = (p.name || '?').trim().charAt(0);
+    t.innerHTML = '<video autoplay playsinline></video><span class="name"></span>';
+    t.querySelector('.name').textContent = label;
+    $('stage').appendChild(t);
+    tiles.set(p.identity, t);
+    return t;
+  }
+  function attach(track, p) {
+    const key = p.identity + ':' + (track.sid || track.mediaStreamTrack.id);
+    if (attached.has(key)) return;
+    attached.add(key);
+    if (track.kind === 'video') {
+      const t = tile(p);
+      track.attach(t.querySelector('video'));
+      t.classList.remove('novideo');
+    } else if (!p.isLocal) {
+      const a = track.attach();
+      a.style.display = 'none';
+      document.body.appendChild(a);
+    }
+  }
+  function detach(track, p) {
+    attached.delete(p.identity + ':' + (track.sid || track.mediaStreamTrack.id));
+    track.detach().forEach((el) => { if (el.tagName === 'AUDIO') el.remove(); });
+    if (track.kind === 'video') { const t = tiles.get(p.identity); if (t) t.classList.add('novideo'); }
+  }
+  function drop(p) { const t = tiles.get(p.identity); if (t) { t.remove(); tiles.delete(p.identity); } }
+  function setBtn(id, on, label) { const b = $(id); b.textContent = label; b.className = on ? 'ghost' : 'off'; }
+  function soundBanner() { $('sound').style.display = room.canPlaybackAudio ? 'none' : 'inline-block'; }
+
+  room
+    .on(L.RoomEvent.TrackSubscribed, (track, _pub, p) => attach(track, p))
+    .on(L.RoomEvent.TrackUnsubscribed, (track, _pub, p) => detach(track, p))
+    .on(L.RoomEvent.LocalTrackPublished, (pub) => { if (pub.track) attach(pub.track, room.localParticipant); })
+    .on(L.RoomEvent.LocalTrackUnpublished, (pub) => { if (pub.track) detach(pub.track, room.localParticipant); })
+    .on(L.RoomEvent.TrackMuted, (pub, p) => { if (pub.kind === 'video') tile(p).classList.add('novideo'); })
+    .on(L.RoomEvent.TrackUnmuted, (pub, p) => { if (pub.kind === 'video') tile(p).classList.remove('novideo'); })
+    .on(L.RoomEvent.ParticipantConnected, (p) => tile(p))
+    .on(L.RoomEvent.ParticipantDisconnected, drop)
+    .on(L.RoomEvent.AudioPlaybackStatusChanged, soundBanner)
+    .on(L.RoomEvent.ActiveSpeakersChanged, (sp) => {
+      const ids = new Set(sp.map((s) => s.identity));
+      tiles.forEach((t, id) => t.classList.toggle('speaking', ids.has(id)));
+    })
+    .on(L.RoomEvent.Disconnected, (reason) => {
+      if (reason !== L.DisconnectReason.DUPLICATE_IDENTITY) { location.reload(); return; }
+      // The same personal link was opened elsewhere: stay out (rejoining would kick that window back).
+      $('stage').style.display = 'none'; $('bar').style.display = 'none'; $('lobby').style.display = 'grid';
+      stop('الرابط ده اتفتح في نافذة تانية فاتطردت من هنا. كل نافذة محتاجة رابط مختلف.');
+    });
+
+  async function ticket() {
+    if (!code) return token;
+    const res = await fetch('/test/token', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ c: code, name: $('name').value }) });
+    if (!res.ok) throw new Error(res.status === 403 ? 'الرابط ده مش صحيح أو اتغيّر — اطلب رابط جديد.' : 'السيرفر مش بيرد.');
+    return (await res.json()).token;
+  }
+
+  $('join').onclick = async () => {
+    $('join').disabled = true; err('');
+    try {
+      await room.connect(url, await ticket());
+      room.startAudio().catch(() => {});
+      let note = '';
+      try { await room.localParticipant.setMicrophoneEnabled(true); } catch { note = 'الميكروفون مش متاح — مش هيسمعك حد. '; }
+      try { await room.localParticipant.setCameraEnabled(true); } catch { note += 'الكاميرا مش متاحة — مش هيشوفك حد.'; }
+      err(note);
+      $('lobby').style.display = 'none';
+      $('stage').style.display = 'grid';
+      $('bar').style.display = 'flex';
+      tile(room.localParticipant);
+      room.localParticipant.trackPublications.forEach((pub) => pub.track && attach(pub.track, room.localParticipant));
+      room.remoteParticipants.forEach((p) => { tile(p); p.trackPublications.forEach((pub) => pub.track && attach(pub.track, p)); });
+      soundBanner();
+      setBtn('mic', room.localParticipant.isMicrophoneEnabled, room.localParticipant.isMicrophoneEnabled ? 'الميكروفون' : 'الميكروفون مقفول');
+      setBtn('cam', room.localParticipant.isCameraEnabled, room.localParticipant.isCameraEnabled ? 'الكاميرا' : 'الكاميرا مقفولة');
+    } catch (e) {
+      $('join').disabled = false;
+      err('مقدرناش ندخل الحلقة: ' + (e && e.message ? e.message : e));
+    }
+  };
+  $('sound').onclick = () => room.startAudio().then(soundBanner);
+  $('mic').onclick = async () => { const on = !room.localParticipant.isMicrophoneEnabled; await room.localParticipant.setMicrophoneEnabled(on); setBtn('mic', on, on ? 'الميكروفون' : 'الميكروفون مقفول'); };
+  $('cam').onclick = async () => { const on = !room.localParticipant.isCameraEnabled; await room.localParticipant.setCameraEnabled(on); setBtn('cam', on, on ? 'الكاميرا' : 'الكاميرا مقفولة'); };
+  $('share').onclick = async () => { try { await room.localParticipant.setScreenShareEnabled(!room.localParticipant.isScreenShareEnabled); } catch { err('مشاركة الشاشة مش متاحة على الجهاز ده.'); } };
+  $('leave').onclick = () => room.disconnect();
+})();
+</script>
+</body>
+</html>
