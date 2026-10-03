@@ -259,6 +259,38 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
 - **Y3/Y4:** use `canTransitionPayout`. Approve sets `approved_at/by`; pay sets `paid_at` (body or now) and `paid_by`. Both are audited.
 - **CSV:** `GET /exports/payouts.csv?month=` (B4, §9). Fastify can't route `/payouts/:month.csv`.
 
+## 8b. Per-session teacher earnings (migrations 176–179, owner request «مدفوعات المعلمين لكل حلقة»)
+
+The monthly statement (§8) stays: it answers "what do we owe for September", frozen at approval. The **ledger** answers "what do we owe this teacher right now, session by session, and what did we already hand her". They never add up: **a session is owed once**.
+
+**Tables.** `teacher_session_earnings` (one row per paid lesson, `lesson_id` unique: minutes, frozen rate, amount, status `earned | partially_paid | paid`), `teacher_payments` (money handed over: method, `receipt_path`, note, `client_request_id` unique, `payout_id` unique when it settles a month) and `teacher_payment_items` (payment × session × amount). RLS: admin all; a teacher reads only her own rows; no direct writes (the API uses the service role).
+
+**The ledger follows the lesson (migration 177).** `sync_lesson_earning` runs from a trigger on `lessons` (status / start / end / teacher), so every path is covered (state machine, report submit, «عدّل الوقت», jobs). Mirror in `packages/shared/src/money/earnings.plan.ts` (`planEarningSync`):
+- Paid statuses = §8's `payoutStatuses` (`completed`, plus `late` / `no_show` when `payout_count_late` / `payout_count_no_show`). A length outside 30/45/60/90 or a teacher without that rate earns no row (as §8: skipped, never rounded).
+- Rate is frozen when the row is created; it is kept while minutes and teacher are unchanged (a later rate rise is not retroactive). A corrected length (`PATCH /lessons/:id/time`) takes the **current** rate of the new length.
+- Unpaid (`earned`): rewritten or deleted when the lesson stops being paid. Partly paid: follows minutes / amount, keeps its payments, status recomputed (a shrink to ≤ what was paid reads `paid`, outstanding never negative). `paid`: frozen. A row with payments is never deleted.
+- Flipping a setting is not retroactive. The migration backfills existing paid-status lessons (idempotent).
+
+**Recording money (migration 178).** `record_teacher_payment` is one transaction: replay by `client_request_id`, rows locked `FOR UPDATE`, each item > 0 and ≤ outstanding (`over_payment`), items sum = amount (`amount_mismatch`), audit row. The API (`teacher-earnings` module) pre-allocates: `allocateOldestFirst` over the ticked sessions (default: every open one), oldest first, last one may be partial; more than owed → 400 `over_payment`, nothing owed → 400 `nothing_due`; an RPC race → 409.
+
+| # | Route | Guard | Result |
+|---|---|---|---|
+| L1 | `GET /teachers/:id/earnings` | admin | `TeacherEarningsView` (balance + sessions) |
+| L2 | `GET /teachers/:id/earnings/payments` | admin | `TeacherPaymentView[]` |
+| L3 | `POST /teachers/:id/earnings/payments` | admin | `TeacherPaymentCreate` → `TeacherPaymentView` (idempotent on `clientRequestId`) |
+| L4 | `POST /teachers/:id/earnings/receipt-upload-url` | admin | `SignedUpload` for `receipts/{teacher_id}/{uuid}.{ext}` |
+| L5 | `GET /teachers/:id/earnings/payments/:paymentId/receipt` | admin | `SignedDownload` |
+| L6 | `GET /teachers/me/earnings` · `/payments` | teacher | her own only (`teacher_not_linked` 404) |
+
+**No double counting with the monthly payout (decision).**
+1. Approving a month changes nothing in the ledger.
+2. **Paying** a month (`POST /payouts/:id/pay`, Y4) calls `settle_payout_ledger`: one `teacher_payments` row (`method other`, `payout_id`, note `payout YYYY-MM`) for exactly what is **still outstanding** on the sessions in the payout's `breakdown.lesson_ids`. Sessions already paid through the ledger are not paid twice; running it again is a no-op.
+3. The monthly `amount` is the statement (rates at calculation time). The ledger amount (rate when earned) can differ if a rate changed in between; the ledger is what was actually settled.
+4. Migration 178 settles every already-`paid` month once, so the backfilled ledger does not show history as owed.
+5. Dashboard `teacher_cost` (§9) still reads the monthly statements; moving it to the ledger is an open question.
+
+SQL checks: `e2e/tests/teacher-earnings.{sync,payments}.sql.spec.ts` (written in a cloud session without a database: the owner runs them after `supabase db reset`).
+
 ## 9. Expenses, dashboard, exports (B4; R-RPT-01/02/03, issue E4)
 
 | # | Route | Guard | Input | 2xx | Errors |
