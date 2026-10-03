@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as TeacherRouteImport } from './routes/teacher'
@@ -29,7 +30,10 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
+import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
+import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
+import { Route as JoinLinkTokenRouteImport } from './routes/join.$linkToken'
 import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
 import { Route as TeacherCalendarRouteImport } from './routes/teacher/calendar'
 import { Route as TeacherFeedbackRouteImport } from './routes/teacher/feedback'
@@ -51,6 +55,11 @@ const IndexRoute = IndexRouteImport.update({
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AssistantRoute = AssistantRouteImport.update({
+  id: '/assistant',
+  path: '/assistant',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -143,9 +152,24 @@ const AdminTeachersRoute = AdminTeachersRouteImport.update({
   path: '/teachers',
   getParentRoute: () => AdminRoute,
 } as any)
+const AssistantIndexRoute = AssistantIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AssistantRoute,
+} as any)
+const ClassroomLessonIdRoute = ClassroomLessonIdRouteImport.update({
+  id: '/classroom/$lessonId',
+  path: '/classroom/$lessonId',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const FeedbackTokenRoute = FeedbackTokenRouteImport.update({
   id: '/feedback/$token',
   path: '/feedback/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JoinLinkTokenRoute = JoinLinkTokenRouteImport.update({
+  id: '/join/$linkToken',
+  path: '/join/$linkToken',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeacherIndexRoute = TeacherIndexRouteImport.update({
@@ -214,6 +238,7 @@ const AdminStudentsStudentIdReportsLessonIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/teacher': typeof TeacherRouteWithChildren
@@ -231,12 +256,15 @@ export interface FileRoutesByFullPath {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
+  '/join/$linkToken': typeof JoinLinkTokenRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/admin/': typeof AdminIndexRoute
+  '/assistant/': typeof AssistantIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
@@ -264,12 +292,15 @@ export interface FileRoutesByTo {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
+  '/join/$linkToken': typeof JoinLinkTokenRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/admin': typeof AdminIndexRoute
+  '/assistant': typeof AssistantIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
@@ -283,6 +314,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
+  '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/teacher': typeof TeacherRouteWithChildren
@@ -300,12 +332,15 @@ export interface FileRoutesById {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
+  '/join/$linkToken': typeof JoinLinkTokenRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/admin/': typeof AdminIndexRoute
+  '/assistant/': typeof AssistantIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
@@ -320,6 +355,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/admin'
+    | '/assistant'
     | '/login'
     | '/portal'
     | '/teacher'
@@ -337,12 +373,15 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/classroom/$lessonId'
     | '/feedback/$token'
+    | '/join/$linkToken'
     | '/teacher/calendar'
     | '/teacher/feedback'
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/admin/'
+    | '/assistant/'
     | '/teacher/'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
@@ -370,12 +409,15 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/classroom/$lessonId'
     | '/feedback/$token'
+    | '/join/$linkToken'
     | '/teacher/calendar'
     | '/teacher/feedback'
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/admin'
+    | '/assistant'
     | '/teacher'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
@@ -388,6 +430,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/admin'
+    | '/assistant'
     | '/login'
     | '/portal'
     | '/teacher'
@@ -405,12 +448,15 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/classroom/$lessonId'
     | '/feedback/$token'
+    | '/join/$linkToken'
     | '/teacher/calendar'
     | '/teacher/feedback'
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/admin/'
+    | '/assistant/'
     | '/teacher/'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
@@ -424,10 +470,13 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
+  AssistantRoute: typeof AssistantRouteWithChildren
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRoute
   TeacherRoute: typeof TeacherRouteWithChildren
+  ClassroomLessonIdRoute: typeof ClassroomLessonIdRoute
   FeedbackTokenRoute: typeof FeedbackTokenRoute
+  JoinLinkTokenRoute: typeof JoinLinkTokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -444,6 +493,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin'
       preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/assistant': {
+      id: '/assistant'
+      path: '/assistant'
+      fullPath: '/assistant'
+      preLoaderRoute: typeof AssistantRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -572,11 +628,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminTeachersRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/assistant/': {
+      id: '/assistant/'
+      path: '/'
+      fullPath: '/assistant/'
+      preLoaderRoute: typeof AssistantIndexRouteImport
+      parentRoute: typeof AssistantRoute
+    }
+    '/classroom/$lessonId': {
+      id: '/classroom/$lessonId'
+      path: '/classroom/$lessonId'
+      fullPath: '/classroom/$lessonId'
+      preLoaderRoute: typeof ClassroomLessonIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/feedback/$token': {
       id: '/feedback/$token'
       path: '/feedback/$token'
       fullPath: '/feedback/$token'
       preLoaderRoute: typeof FeedbackTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/join/$linkToken': {
+      id: '/join/$linkToken'
+      path: '/join/$linkToken'
+      fullPath: '/join/$linkToken'
+      preLoaderRoute: typeof JoinLinkTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teacher/': {
@@ -746,6 +823,18 @@ const AdminRouteChildren: AdminRouteChildren = {
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
+interface AssistantRouteChildren {
+  AssistantIndexRoute: typeof AssistantIndexRoute
+}
+
+const AssistantRouteChildren: AssistantRouteChildren = {
+  AssistantIndexRoute: AssistantIndexRoute,
+}
+
+const AssistantRouteWithChildren = AssistantRoute._addFileChildren(
+  AssistantRouteChildren,
+)
+
 interface TeacherRouteChildren {
   TeacherCalendarRoute: typeof TeacherCalendarRoute
   TeacherFeedbackRoute: typeof TeacherFeedbackRoute
@@ -774,10 +863,13 @@ const TeacherRouteWithChildren =
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
+  AssistantRoute: AssistantRouteWithChildren,
   LoginRoute: LoginRoute,
   PortalRoute: PortalRoute,
   TeacherRoute: TeacherRouteWithChildren,
+  ClassroomLessonIdRoute: ClassroomLessonIdRoute,
   FeedbackTokenRoute: FeedbackTokenRoute,
+  JoinLinkTokenRoute: JoinLinkTokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

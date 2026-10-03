@@ -1,6 +1,7 @@
 export * from './arabic.js';
 export * from './enums/index.js';
 export * from './highlight-diff.js';
+export * from './classroom/index.js';
 export * from './lessons/index.js';
 export * from './messaging/index.js';
 export * from './money/index.js';

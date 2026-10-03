@@ -1,6 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { useRef, useState } from 'react';
 import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
+import { ClassroomActions } from '@/features/classroom/ClassroomActions';
 import { FeedbackRequestButton } from '@/features/feedback/FeedbackRequestButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { t } from '@/lib/i18n';
@@ -52,6 +53,7 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
             <LessonDetails lesson={lesson} onEditTime={() => setMode('editTime')} />
             <LessonInvoice lesson={lesson} />
             <ProposalBox lesson={lesson} onDone={done} />
+            <ClassroomActions lesson={lesson} />
             <LessonReportLinks lesson={lesson} role="admin" />
             <LessonActions
               lesson={lesson}

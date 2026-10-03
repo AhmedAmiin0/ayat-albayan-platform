@@ -30,7 +30,7 @@ const INVOICE: InvoiceView = {
 };
 
 function renderDrawer(l: LessonView, invoices: InvoiceView[] = []) {
-  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/invoices?') ? invoices : { url: 'https://signed/inv' }));
+  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/invoices?') ? invoices : path === '/messaging/templates' ? [] : { url: 'https://signed/inv' }));
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
       <LessonDrawer lesson={l} onClose={vi.fn()} onDone={vi.fn()} />
@@ -104,10 +104,10 @@ describe('LessonDrawer invoice row (R-PAY-03, admin only)', () => {
 
   it('asks nothing for a trial, and shows nothing when there is no invoice', async () => {
     renderDrawer(lesson({ trial: true }));
-    expect(apiFetch).not.toHaveBeenCalled();
+    expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('/invoices'));
     cleanup();
     renderDrawer(lesson());
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalled());
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('/invoices')));
     expect(screen.queryByRole('button', { name: t.booking.invoice.view })).toBeNull();
   });
 });

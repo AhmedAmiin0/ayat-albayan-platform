@@ -2,6 +2,7 @@ import { clockTime, isOpenLesson, lessonStatusStyle, subscriptionStatusStyle, ty
 import { buttonVariants } from '@/components/ui/button';
 import { StatusChip } from '@/components/ui/status-chip';
 import { tzCity } from '@/components/ui/time-zone-select';
+import { JoinButton } from '@/features/classroom/JoinButton';
 import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lessons';
@@ -67,6 +68,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
         ) : (
           <span className="text-sm text-ink-3">{t.lessons.noLink}</span>
         )}
+        <JoinButton lesson={lesson} size="lg" />
         <LessonReportLinks lesson={lesson} role="teacher" size="lg" />
         <div className="min-w-0 flex-1">
           <LessonActions lesson={lesson} onDone={onDone} size="lg" />

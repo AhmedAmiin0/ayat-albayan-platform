@@ -1,0 +1,63 @@
+import { createHmac, randomBytes } from 'node:crypto';
+import type { JoinRole } from '@ab/shared';
+import type { LivekitEnv } from '../../env';
+
+// LiveKit join tokens are plain HS256 JWTs (tools/livekit/token-server.mjs is the reference), so
+// no server SDK: claims iss = API key, sub = identity, name, nbf, exp, video grant.
+
+/** Default lifetime: a lesson plus slack. */
+export const TOKEN_TTL_S = 4 * 3600;
+const MIN_TTL_S = 300;
+const SKEW_S = 10;
+
+type Source = 'camera' | 'microphone' | 'screen_share' | 'screen_share_audio';
+
+export interface VideoGrant {
+  roomJoin: true;
+  room: string;
+  canPublish: boolean;
+  canSubscribe: boolean;
+  canPublishData: boolean;
+  canPublishSources?: Source[];
+}
+
+/**
+ * Staff (teacher, admin, assistant) may publish everything. A guest holding a link may publish
+ * camera and microphone but not share a screen into the room.
+ */
+export function grantsFor(role: JoinRole, room: string): VideoGrant {
+  const base: VideoGrant = { roomJoin: true, room, canPublish: true, canSubscribe: true, canPublishData: true };
+  return role === 'guest' ? { ...base, canPublishSources: ['camera', 'microphone'] } : base;
+}
+
+/** One token = one identity (the same identity in two windows kicks the first), so every call gets a fresh one. */
+export const newIdentity = (role: JoinRole, bytes: (n: number) => Buffer = randomBytes): string =>
+  `${role}-${bytes(6).toString('hex')}`;
+
+export interface TokenInput {
+  room: string;
+  role: JoinRole;
+  /** Shown to the others in the room. */
+  name: string;
+  identity: string;
+  /** Lifetime in seconds; capped to TOKEN_TTL_S, at least five minutes. */
+  ttlSeconds?: number;
+}
+
+const b64 = (o: object): string => Buffer.from(JSON.stringify(o)).toString('base64url');
+
+export function mintToken(cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>, input: TokenInput, now: Date): string {
+  const ttl = Math.min(Math.max(input.ttlSeconds ?? TOKEN_TTL_S, MIN_TTL_S), TOKEN_TTL_S);
+  const nowS = Math.floor(now.getTime() / 1000);
+  const head = b64({ alg: 'HS256', typ: 'JWT' });
+  const body = b64({
+    iss: cfg.apiKey,
+    sub: input.identity,
+    name: input.name,
+    nbf: nowS - SKEW_S,
+    exp: nowS + ttl,
+    video: grantsFor(input.role, input.room),
+  });
+  const sig = createHmac('sha256', cfg.apiSecret).update(`${head}.${body}`).digest('base64url');
+  return `${head}.${body}.${sig}`;
+}

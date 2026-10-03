@@ -45,6 +45,14 @@ const schema = z.object({
    * not_configured and every public link is refused; nothing else depends on it.
    */
   FEEDBACK_TOKEN_SECRET: z.preprocess(blankIsUnset, z.string().min(32).optional()),
+  /**
+   * Self-hosted LiveKit (online classrooms, tools/livekit/README.md). All three or none: unset =
+   * the join routes answer 503 classroom_not_configured and nothing else depends on them. The API
+   * mints plain HS256 join tokens with them (no SDK); the values are never committed.
+   */
+  LIVEKIT_URL: z.preprocess(blankIsUnset, z.url().optional()),
+  LIVEKIT_API_KEY: optionalSecret,
+  LIVEKIT_API_SECRET: optionalSecret,
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 });
@@ -81,4 +89,16 @@ export function whatsappEnv(env: Env): WhatsappEnv | null {
  */
 export function sendingAllowed(env: Env, messagingEnabledSetting: boolean): boolean {
   return env.MESSAGING_ENABLED && whatsappEnv(env) !== null && messagingEnabledSetting;
+}
+
+/** What the classroom needs to mint a join token; null = not configured (503). */
+export interface LivekitEnv {
+  url: string;
+  apiKey: string;
+  apiSecret: string;
+}
+
+export function livekitEnv(env: Env): LivekitEnv | null {
+  const { LIVEKIT_URL: url, LIVEKIT_API_KEY: apiKey, LIVEKIT_API_SECRET: apiSecret } = env;
+  return url && apiKey && apiSecret ? { url, apiKey, apiSecret } : null;
 }

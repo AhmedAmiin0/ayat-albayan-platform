@@ -20,9 +20,10 @@ export const meQuery = queryOptions({
   staleTime: 60_000,
 });
 
-/** Route guard for beforeLoad: signed in and holding `role`, else back to /login. */
-export async function requireRole(queryClient: QueryClient, role: UserRole): Promise<Me> {
+/** Route guard for beforeLoad: signed in and holding `role` (or any of several), else back to /login. */
+export async function requireRole(queryClient: QueryClient, role: UserRole | readonly UserRole[]): Promise<Me> {
   const me = await queryClient.ensureQueryData(meQuery);
-  if (!me || me.role !== role) throw redirect({ to: '/login' });
+  const allowed: readonly UserRole[] = typeof role === 'string' ? [role] : role;
+  if (!me?.role || !allowed.includes(me.role)) throw redirect({ to: '/login' });
   return me;
 }

@@ -620,6 +620,51 @@ export type Database = {
           },
         ];
       };
+      lesson_join_links: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          expires_at: string;
+          id: string;
+          lesson_id: string;
+          revoked_at: string | null;
+          token_hash: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          expires_at: string;
+          id?: string;
+          lesson_id: string;
+          revoked_at?: string | null;
+          token_hash: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          expires_at?: string;
+          id?: string;
+          lesson_id?: string;
+          revoked_at?: string | null;
+          token_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_join_links_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_join_links_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       lesson_proposals: {
         Row: {
           created_at: string;
@@ -1566,6 +1611,49 @@ export type Database = {
         };
         Relationships: [];
       };
+      student_assistants: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          profile_id: string;
+          student_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          profile_id: string;
+          student_id: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          profile_id?: string;
+          student_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'student_assistants_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'student_assistants_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'student_assistants_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       student_merges: {
         Row: {
           at: string;
@@ -2220,6 +2308,7 @@ export type Database = {
         };
       };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_my_assisted_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_report: { Args: { p_report: string }; Returns: boolean };
       is_my_child_report_pdf: { Args: { p_name: string }; Returns: boolean };
@@ -2230,6 +2319,7 @@ export type Database = {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;
       };
+      my_assisted_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
       my_thread_phones: {
@@ -2313,7 +2403,7 @@ export type Database = {
       template_category: 'utility' | 'marketing';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
-      user_role: 'admin' | 'teacher' | 'guardian';
+      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2491,7 +2581,7 @@ export const Constants = {
         'disabled',
         'missing',
       ],
-      user_role: ['admin', 'teacher', 'guardian'],
+      user_role: ['admin', 'teacher', 'guardian', 'assistant'],
     },
   },
 } as const;

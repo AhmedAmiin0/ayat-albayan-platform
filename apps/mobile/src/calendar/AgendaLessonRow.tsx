@@ -1,6 +1,7 @@
 import { applyLessonEvent, lessonStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
+import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { EditTimeButton } from '@/edit-time/EditTimeButton';
 import { editMode } from '@/edit-time/types';
 import { t } from '@/lib/i18n';
@@ -69,6 +70,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime }: A
               ) : null}
             </View>
           ) : null)}
+        <JoinClassroomButton lesson={lesson} />
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />

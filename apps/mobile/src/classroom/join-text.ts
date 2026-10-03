@@ -1,0 +1,17 @@
+import { ApiError } from '@/lib/api';
+import { t } from '@/lib/i18n';
+import { riyadhTime } from '@/today/lesson-text';
+
+const errors: Record<string, string | undefined> = t.classroom.error;
+
+/** The line for a refused join: the API's `code` in words, else «unknown». */
+export function joinError(error: unknown): string {
+  const body = error instanceof ApiError ? error.body : null;
+  const code =
+    typeof body === 'object' && body !== null ? (body as { code?: unknown }).code : undefined;
+  return (typeof code === 'string' ? errors[code] : undefined) ?? errors['unknown'] ?? t.common.error;
+}
+
+/** «بتفتح الساعة 15:45», on the Riyadh clock like the row's own time. */
+export const opensAtLine = (opensAt: string): string =>
+  t.classroom.opensAt.replace('{time}', riyadhTime(opensAt));
