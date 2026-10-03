@@ -329,3 +329,51 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
 - TODO(R-REP-02): are the rubric grades required when the student attended? They are now.
 - TODO(R-MSG-01): `renewal_due` and `report_ready` template bodies and variables; no template exists for «unpaid».
 - R-LES-03 (from Phase 2): does `late` count in the lesson number?
+
+## 12. Per-session teacher earnings and payments (migrations 176–179)
+
+Owner request: pay a teacher for each session from the admin, and let teachers see their money. A **ledger** sits beside the monthly statement (§8); the two never count a lesson twice.
+
+### Tables (176)
+- `teacher_session_earnings` — one row per counted lesson: `lesson_id` unique, `teacher_id`, `starts_at`, `minutes` (30/45/60/90), `rate`, `amount` (= the rate: one amount per lesson, R-PAY-02), `paid_amount`, `status` `earned | partially_paid | paid`. `paid_amount` is written only by the two RPCs below.
+- `teacher_payments` — one transfer: `amount`, `paid_at`, `method`, `receipt_path` (bucket `receipts`, `{teacher_id}/{uuid}.{ext}`), `note`, `created_by`, `client_request_id` (unique), `payout_id` (unique; set when the payment came from a monthly payout).
+- `teacher_payment_items` — `(payment_id, earning_id, amount)`, unique per pair: one payment covers several sessions; a session can be paid in parts.
+- RLS: admin all; a teacher selects only their own rows (items through their earnings); `anon` nothing; no write grant to `authenticated` (the API is the writer).
+
+### The ledger follows the lesson (177, trigger `lessons_sync_earning`)
+| Lesson | Earning |
+|---|---|
+| `completed` (or `late` / `no_show` when `payout_count_late` / `payout_count_no_show` is on), length 30/45/60/90, teacher has that rate | inserted at the teacher's rate **now**; the rate is then frozen |
+| corrected length (`PATCH /lessons/:id/time`) while **not fully paid** | follows: re-priced with the rate of the new length; status recomputed from `paid_amount` |
+| corrected length once **fully paid** | frozen, nothing changes |
+| stops counting (corrected report, cancelled…) with nothing paid | deleted |
+| stops counting with part paid | `amount` cut to `paid_amount`, status `paid` (money out stays) |
+| teacher rate set or changed later | `resync_teacher_earnings` fills missing earnings; existing ones keep their frozen rate |
+
+`resync_teacher_earnings(teacher?)` (service role, `POST /teacher-earnings/resync`) re-applies the rule: use it after flipping the two `payout_count_*` settings. `planEarningSync` in `@ab/shared` is the unit-tested twin of the SQL decision.
+
+### Recording a payment (178, `record_teacher_payment`)
+`POST /teacher-earnings/:teacherId/payments { amount, method, paidAt, earningIds?, receiptPath?, note?, clientRequestId? }`. The API picks the sessions (the ticked `earningIds`, else every unpaid one) and spreads `amount` **oldest lesson first** (`allocatePayment`). Less than the total = a partial payment (the newest sessions stay untouched, one session can be part paid). More than the chosen sessions still owe = **409 `overpayment`**, never carried over. The RPC re-checks inside one transaction (rows locked in id order): `allocation_mismatch` / `allocation_invalid` (400), `earning_not_found` (404), `overpayment` (409). A repeated `clientRequestId` returns the payment already recorded (`replayed: true`) and pays nothing twice; the same id for another teacher is 409 `request_reused`.
+
+### Monthly payouts × the ledger — the rule
+**The ledger is the record of what was paid.**
+1. Marking a payout **paid** (`POST /payouts/:id/pay`) first calls `settle_payout_in_ledger(payout, actor, paid_at)`: it pays, in one `teacher_payments` row (`payout_id`, method `other`), only what is **still outstanding** on the payout's `breakdown.lesson_ids`, once per payout (idempotent). Sessions already paid one by one are not paid again.
+2. Approving a payout changes nothing in the ledger. Paying per session first, then the month, or the month first and then trying to pay those sessions per session (nothing outstanding: 409 `nothing_outstanding`) both end with each lesson paid exactly once.
+3. An open payout (draft / approved) carries `ledger_paid`, the part of it the ledger already covered; the cash due is `amount − ledger_paid`. The web and mobile payout lists show it.
+4. Backfill (179): earnings for every existing counted lesson, then every payout already `paid` is settled, so past months are not shown as owed again. The earning's `amount` follows the rate at backfill time; a month paid at an older rate is recorded as paid in full.
+
+### Routes
+| Route | Guard | Result |
+|---|---|---|
+| `GET /teacher-earnings/:teacherId` | admin | balance: `earned`, `paid`, `outstanding`, `overpaid` (paid above a corrected session, shown apart), session counts |
+| `GET /teacher-earnings/:teacherId/sessions?status=earned\|partially_paid\|paid\|unpaid&page&pageSize` | admin | `TeacherEarningView` page, newest first |
+| `GET /teacher-earnings/:teacherId/payments` | admin | `TeacherPaymentView` page |
+| `POST /teacher-earnings/:teacherId/payments` | admin | `{ payment, replayed }` |
+| `POST /teacher-earnings/:teacherId/receipt-upload-url` | admin | signed upload for `receipts/{teacher_id}/…` |
+| `GET /teacher-earnings/payments/:id/receipt` | admin | signed download (1 h) |
+| `POST /teacher-earnings/resync` | admin | `{ lessons }` |
+| `GET /teachers/me/earnings`, `/sessions`, `/payments`, `/payments/:id/receipt` | teacher | the same views for the teacher behind the token; the id is never taken from the URL; 404 `teacher_not_linked`; another teacher's payment is 404 |
+
+### Screens
+- Web: `/admin/teachers/:id/earnings` «مستحقات المعلم» (cards, sessions with ticks, pay dialog, history) linked from the teacher profile; `/teacher/earnings` «مستحقاتي» (the existing teacher nav entry now points here; the monthly statements stay at `/teacher/payouts`, linked from it).
+- Mobile: teacher More > «مستحقاتي» (read only; the monthly statements one tap in); admin More > المعلمين > teacher > «مستحقات» with ticks and «سجّل دفعة». No new native modules or dependencies (the receipt photo reuses `expo-image-picker`).

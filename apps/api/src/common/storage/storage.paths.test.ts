@@ -8,6 +8,7 @@ import {
   invoicePath,
   isPathOf,
   receiptPath,
+  teacherReceiptPath,
   reportPdfPath,
   uploadName,
   waMediaPath,
@@ -27,6 +28,7 @@ describe('storage paths (migration 122 policies parse these)', () => {
     expect(file?.replace(/\.mp3$/, '')).toMatch(UUID);
     expect(attachmentPath({ reportId: 'r1', mime: 'audio/mpeg' })).not.toBe(a);
     expect(receiptPath({ subscriptionId: 'sub', mime: 'image/jpeg' })).toMatch(/^sub\/[0-9a-f-]{36}\.jpg$/);
+    expect(teacherReceiptPath({ teacherId: 'tch', mime: 'application/pdf' })).toMatch(/^tch\/[0-9a-f-]{36}\.pdf$/);
   });
 
   it('invoice: {client_request_id}/{name}; a chat copy has a deterministic name, an upload a new one', () => {

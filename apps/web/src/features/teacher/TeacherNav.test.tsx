@@ -15,7 +15,7 @@ describe('TeacherNav — the teacher top bar (R-TCH-03)', () => {
       [t.teacherNav.calendar, '/teacher/calendar'],
       [t.teacherNav.chats, '/teacher/inbox'],
       [t.teacherNav.reports, '/teacher/reports'],
-      [t.teacherNav.payouts, '/teacher/payouts'],
+      [t.teacherNav.payouts, '/teacher/earnings'],
       [t.teacherNav.feedback, '/teacher/feedback'],
     ]);
   });

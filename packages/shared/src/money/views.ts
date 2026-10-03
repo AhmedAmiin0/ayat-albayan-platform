@@ -102,6 +102,8 @@ export interface PayoutView {
   approved_at: string | null;
   paid_at: string | null;
   breakdown: { lines: PayoutLine[]; lesson_ids: string[]; statuses: LessonStatus[] };
+  /** Open payouts only: already paid per session in the ledger (docs/11 §10), so due = amount − ledger_paid. */
+  ledger_paid?: number;
 }
 
 /** POST /payouts/:month/generate: draft rows written, and teachers skipped for a missing rate. */

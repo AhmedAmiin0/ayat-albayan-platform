@@ -4,6 +4,7 @@ import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { StatusChip } from '@/components/ui/status-chip';
 import { formatDate } from '@/features/leads/format';
+import { LedgerPaid } from './LedgerPaid';
 import { Amount } from '@/features/subscriptions/Amount';
 import { durationLabel } from '@/features/pricing/format';
 import { moneyText } from '@/features/subscriptions/format';
@@ -52,7 +53,12 @@ export function payoutColumns({ onApprove, onPay }: Handlers) {
     }),
     col.accessor('amount', {
       header: () => t.payouts.amount,
-      cell: (c) => <Amount amount={c.getValue()} currency="EGP" className="font-semibold" />,
+      cell: (c) => (
+        <div className="grid justify-items-start gap-0.5">
+          <Amount amount={c.getValue()} currency="EGP" className="font-semibold" />
+          <LedgerPaid amount={c.row.original.ledger_paid} />
+        </div>
+      ),
       meta: { className: 'max-sm:order-4' },
     }),
     col.accessor('status', {

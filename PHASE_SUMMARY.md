@@ -1633,6 +1633,12 @@ Follow-up to the section above, from a design review (web screenshots, 8 variant
 - **Verifier fixes:** `expectedEndsAt` (a length-only edit on an old length is 409 `stale_time`); two identical requests at once answer the loser with a quiet 200; approving a payout draft is refused with 409 `payout_stale` when a lesson was re-timed after it was calculated; migration 175 also resets a `rendering` report PDF; `time_edit.reason` is admin-only.
 - **Accepted, not changed:** payout lock read before the RPC (single admin operation), allowed edits in approved months (the payout stores lesson ids), renumbering after a same-day correction, `slot_taken` onto a cancelled sibling, series edits, past never-marked lessons, mobile override. All are documented in docs/10 §10. Dead i18n keys were removed; the second `vsReschedule` belongs to the mobile namespace.
 
+## Per-session teacher payments (cloud branch `cloud/teacher-payments`)
+
+Owner request: pay teachers per session from the admin, teachers see their money. Contract and the payout-coherence rule: docs/11 §12. Migrations 176–179 (ledger tables + RLS, sync trigger, payment RPCs, idempotent backfill); API module `teacher-earnings` (+ `PayoutsLedger`: paying a monthly payout settles the ledger once); web `/admin/teachers/:id/earnings`, `/teacher/earnings`; mobile teacher «مستحقاتي» and admin teacher «مستحقات» with a pay form.
+
+Written in a cloud run with no database: **not verified** — `supabase db reset`, `gen:types` (types.ts hand-edited), the SQL specs in `e2e/tests/teacher-*.sql.spec.ts`, e2e, real-device UI.
+
 ## Online classrooms with LiveKit (cloud run, 2026-10-03)
 
 Owner request: "online sessions between teacher, student and assistant". Built in the cloud with no DB, secrets or LiveKit: **not verified end to end** (see below).

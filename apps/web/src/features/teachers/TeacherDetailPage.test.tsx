@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
 import { TeacherDetailPage } from './TeacherDetailPage';
 
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
@@ -79,5 +80,11 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     expect(within(panel).getByText('Africa/Cairo').getAttribute('dir')).toBe('ltr');
     expect(within(panel).getByText('Fatma')).toBeTruthy();
     expect(screen.queryByRole('table', { name: t.availability.title })).toBeNull();
+  });
+
+  it('links to «مستحقات المعلم» for this teacher', async () => {
+    renderPage();
+    const link = await screen.findByRole('link', { name: t.earnings.title });
+    expect(link.getAttribute('href')).toBe('/admin/teachers/t1/earnings');
   });
 });

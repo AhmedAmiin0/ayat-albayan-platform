@@ -10,6 +10,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { breakdownLines } from '@/features/payouts/payout-columns';
+import { LedgerPaid } from '@/features/payouts/LedgerPaid';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { myPayoutsQuery } from './api';
@@ -42,7 +43,12 @@ const COLUMNS = col.columns([
   }),
   col.accessor('amount', {
     header: () => t.payouts.amount,
-    cell: (c) => <Amount amount={c.getValue()} currency="EGP" className="font-semibold" />,
+    cell: (c) => (
+      <div className="grid justify-items-start gap-0.5">
+        <Amount amount={c.getValue()} currency="EGP" className="font-semibold" />
+        <LedgerPaid amount={c.row.original.ledger_paid} />
+      </div>
+    ),
     meta: { className: 'max-sm:order-4' },
   }),
   col.accessor('status', {

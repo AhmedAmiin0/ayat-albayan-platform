@@ -13,6 +13,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { badRequest } from '../scheduling/errors';
 import { parseOrThrow } from '../teachers/http';
 import { PayoutsGenerator } from './payouts.generate';
+import { PayoutsLedger } from './payouts.ledger';
 import { PayoutsService } from './payouts.service';
 
 /** Teacher payouts per month (Y1–Y4, R-PAY-02, R-TCH-04). Admin only. CSV: /exports (B4). */
@@ -24,11 +25,12 @@ export class PayoutsController {
   constructor(
     private readonly payouts: PayoutsService,
     private readonly generator: PayoutsGenerator,
+    private readonly ledger: PayoutsLedger,
   ) {}
 
   @Get()
-  month(@Query() query: unknown): Promise<PayoutView[]> {
-    return this.payouts.month(parseOrThrow(monthQuery, query).month);
+  async month(@Query() query: unknown): Promise<PayoutView[]> {
+    return this.ledger.annotate(await this.payouts.month(parseOrThrow(monthQuery, query).month));
   }
 
   @Post(':month/generate')
@@ -51,7 +53,7 @@ export class PayoutsController {
     @Body() body: unknown,
     @CurrentUser() user: AuthUser,
   ): Promise<PayoutView> {
-    return this.payouts.pay(id, parseOrThrow(payoutPaySchema, body ?? {}), user.id);
+    return this.ledger.pay(id, parseOrThrow(payoutPaySchema, body ?? {}), user.id);
   }
 }
 
@@ -63,10 +65,13 @@ const mineQuery = z.object({ month: monthParam.optional() });
 @Roles('teacher')
 @Controller('teachers/me/payouts')
 export class TeacherPayoutsController {
-  constructor(private readonly payouts: PayoutsService) {}
+  constructor(
+    private readonly payouts: PayoutsService,
+    private readonly ledger: PayoutsLedger,
+  ) {}
 
   @Get()
-  mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView[]> {
-    return this.payouts.mine(user.id, parseOrThrow(mineQuery, query).month);
+  async mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView[]> {
+    return this.ledger.annotate(await this.payouts.mine(user.id, parseOrThrow(mineQuery, query).month));
   }
 }
