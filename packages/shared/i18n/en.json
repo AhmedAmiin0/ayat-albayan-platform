@@ -2174,7 +2174,10 @@
       "device_missing": "No camera or microphone found",
       "share_failed": "Could not start screen sharing",
       "connect_failed": "Could not connect to the lesson, try again",
-      "unknown": "Something went wrong, try again"
+      "unknown": "Something went wrong, try again",
+      "removed_from_room": "You were removed from the lesson and cannot rejoin it",
+      "participant_not_found": "This participant is no longer in the lesson",
+      "cannot_remove": "You are not allowed to remove this participant"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2191,7 +2194,54 @@
     "copyFailed": "Could not copy the link",
     "linkShown": "Student link",
     "linkWindow": "The link opens 15 minutes before the lesson",
-    "joinMeeting": "Meeting link (Meet/Jitsi)"
+    "joinMeeting": "Meeting link (Meet/Jitsi)",
+    "boardOf": "{name}'s board",
+    "recordingNow": "Recording",
+    "controls": "Classroom controls",
+    "people": "Participants",
+    "board": {
+      "toggle": "Board",
+      "title": "Whiteboard",
+      "tools": "Board tools",
+      "pen": "Pen",
+      "eraser": "Eraser",
+      "undo": "Undo",
+      "clear": "Clear board",
+      "allowStudents": "Let students write",
+      "shareOn": "Share board",
+      "shareOff": "Stop sharing board",
+      "readOnly": "View-only board",
+      "color": "Colour: {name}",
+      "colors": {
+        "ink": "Ink",
+        "lapis": "Green",
+        "cinnabar": "Red",
+        "saffron": "Orange",
+        "gold": "Gold"
+      }
+    },
+    "kick": {
+      "action": "Remove from lesson",
+      "actionOf": "Remove {name} from the lesson",
+      "title": "Remove {name} from the lesson?",
+      "body": "They leave the lesson at once and cannot join it again.",
+      "confirm": "Remove",
+      "busy": "Removing…",
+      "done": "{name} was removed from the lesson"
+    },
+    "recordings": {
+      "title": "Recordings",
+      "empty": "No recordings for this lesson yet",
+      "loading": "Loading recordings…",
+      "error": "Could not load the recordings",
+      "download": "Download",
+      "downloadOf": "Download the recording of {time}",
+      "status": {
+        "recording": "Recording",
+        "done": "Ready",
+        "failed": "Failed"
+      }
+    }
   },
   "sales": {
     "title": "Sales",

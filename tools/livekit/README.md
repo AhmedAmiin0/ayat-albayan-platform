@@ -6,3 +6,49 @@ Working proof of concept that runs today on the VPS:
 
 Server: `wss://livekit-staging.148-230-116-195.sslip.io` (signalling through Caddy; media UDP 7882 / TCP 7881 / TURN UDP 3478). Env names: `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` (values only on the server and in the owner's secret stores — never in git).
 Lesson learned: one token = one identity; opening the same personal link in two windows kicks the first (DUPLICATE_IDENTITY). Lesson links must mint a fresh identity per person/window.
+
+## Moderation («إخراج من الحلقة»)
+
+Every join token carries `metadata = {"role": "<teacher|admin|assistant|sales|guest>"}` (`participantMeta`, @ab/shared), so the room UI knows who may remove whom (`canRemove`: an admin removes anyone but another admin; the lesson's teacher removes guests, assistants and salespeople). Every successful join writes a `classroom_participants` row keyed by the identity (migration 188).
+
+`POST /lessons/:id/room/participants/:identity/remove` (staff login) checks the same rule on the server, writes a `classroom_blocks` row for the login (staff) or the guest link (family), audits `participant_removed`, and calls LiveKit `POST https://<LIVEKIT host>/twirp/livekit.RoomService/RemoveParticipant` with a short-lived server token (`video: {roomAdmin: true, room}`). Later joins of that lesson by the same login / link answer 403 `removed_from_room`. Nothing extra to deploy.
+
+## Recording (every lesson, in full)
+
+The first staff join of a lesson (teacher, admin, assistant or sales) makes the API create the room (`RoomService/CreateRoom`, so an egress can attach before anyone connects) and start a **room-composite egress** (`Egress/StartRoomCompositeEgress`, layout `grid`, one MP4) that uploads straight to the private Supabase Storage bucket `recordings` at `lessons/<lesson id>/<UTC timestamp>.mp4`. A `lesson_recordings` row (migration 189) is claimed first; a unique partial index allows one `recording` row per lesson, so concurrent joins start one egress. If the room closes and opens again, the next staff join starts a new file. `GET /lessons/:id/recordings` (admin, the lesson's teacher) lists them with 1-hour signed links.
+
+Needed on the VPS, next to `livekit-server`:
+
+1. **Redis** — egress talks to the server through it. Add the same Redis to the server's `livekit.yaml`:
+   ```yaml
+   redis:
+     address: 127.0.0.1:6379
+   ```
+2. **The egress service** (`livekit/egress` Docker image, ~2–4 GB RAM per concurrent room-composite recording; Chrome renders the grid). `egress.yaml` (placeholders only — real values live on the server, never in git):
+   ```yaml
+   api_key: <LIVEKIT_API_KEY>
+   api_secret: <LIVEKIT_API_SECRET>
+   ws_url: ws://127.0.0.1:7880        # the server, reached locally
+   redis:
+     address: 127.0.0.1:6379
+   health_port: 8080
+   log_level: info
+   # Upload target: the API sends the S3 settings with every request, nothing needed here.
+   ```
+   ```bash
+   docker run -d --name livekit-egress --network host --cap-add SYS_ADMIN \
+     -e EGRESS_CONFIG_FILE=/etc/egress.yaml -v /opt/livekit/egress.yaml:/etc/egress.yaml \
+     livekit/egress:latest
+   ```
+3. **The webhook** — in `livekit.yaml`, so recordings are marked `done` / `failed` (otherwise they stay `recording`, and no new recording of that lesson starts):
+   ```yaml
+   webhook:
+     api_key: <LIVEKIT_API_KEY>
+     urls:
+       - https://<api host>/livekit/webhook
+   ```
+   LiveKit signs each POST (`Authorization`: HS256 JWT with the API secret, claim `sha256` = base64 of sha256(body), content type `application/webhook+json`); the API answers 401 to anything else. Only `egress_ended` / `egress_updated` with a final status change a row; every other event is acknowledged and ignored.
+4. **API env** (docs/09): `RECORDING_S3_ENDPOINT` (`https://<project>.supabase.co/storage/v1/s3`), `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET=recordings`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET` (Supabase → Storage → S3 Connection → new access key). All five or none; unset = nothing is recorded and joins work as before.
+5. **Upload size** — the `recordings` bucket has no limit of its own; raise the project's global upload limit (Supabase → Storage → Settings) above the longest lesson (an hour of 720p grid ≈ 300–600 MB).
+
+Check: start a lesson as the teacher, then `docker logs livekit-egress` shows the egress; after the room closes the row turns `done` and the file is in the bucket.

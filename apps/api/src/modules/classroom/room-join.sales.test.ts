@@ -1,15 +1,14 @@
 import { ForbiddenException, HttpException } from '@nestjs/common';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { TeachersQueries } from '../teachers/teachers.queries';
-import type { ClassroomQueries } from './classroom.queries';
 import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, SALES } from './classroom.fakes';
 import { grantsFor } from './livekit-token';
+import { admissionOf, rolesOf } from './moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 import { classroomApp } from './test-app';
 
 let q: ReturnType<typeof queries>;
 const join = (now: Date) =>
-  new RoomJoinService(q as unknown as ClassroomQueries, { idByProfile: vi.fn() } as unknown as TeachersQueries, CONFIG).join({ user: SALES, lessonId: LESSON_ID }, now);
+  new RoomJoinService(rolesOf({ q, teachers: { idByProfile: vi.fn() } }), admissionOf({ q, config: CONFIG })).join({ user: SALES, lessonId: LESSON_ID }, now);
 const failure = async (p: Promise<unknown>) => ((await p.catch((e: unknown) => e)) as HttpException);
 
 beforeEach(() => {

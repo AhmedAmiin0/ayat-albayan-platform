@@ -1,19 +1,21 @@
 import { ForbiddenException, HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { TeachersQueries } from '../teachers/teachers.queries';
-import type { ClassroomQueries } from './classroom.queries';
 import { ADMIN, ASSISTANT, CLOSED, CONFIG, decode, EARLY, GUARDIAN, LESSON_ID, OPEN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from './classroom.fakes';
+import { admissionOf, moderation, recorder, rolesOf } from './moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 
 let q: ReturnType<typeof queries>;
 let teachers: { idByProfile: ReturnType<typeof vi.fn> };
-const service = (config: typeof CONFIG | null = CONFIG) =>
-  new RoomJoinService(q as unknown as ClassroomQueries, teachers as unknown as TeachersQueries, config);
+let mod: ReturnType<typeof moderation>;
+let rec: ReturnType<typeof recorder>;
+const service = (config: typeof CONFIG | null = CONFIG) => new RoomJoinService(rolesOf({ q, teachers }), admissionOf({ q, mod, rec, config }));
 const join = (user = TEACHER, now = OPEN, svc = service()) => svc.join({ user, lessonId: LESSON_ID }, now);
 const code = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 
 beforeEach(() => {
   q = queries();
+  mod = moderation();
+  rec = recorder();
   teachers = {
     idByProfile: vi.fn(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null)),
   };

@@ -25,5 +25,8 @@ export const CLASSROOM_ERRORS = [
   'too_many_requests',
   'template_not_approved',
   'lesson_not_found',
+  'removed_from_room',
+  'participant_not_found',
+  'cannot_remove',
 ] as const;
 export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];
