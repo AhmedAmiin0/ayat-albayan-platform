@@ -15,6 +15,7 @@
     "supabase": "pnpm --filter @ab/db exec supabase",
     "env:local": "node tools/scripts/write-local-env.mjs",
     "seed:demo": "node --env-file-if-exists=e2e/.env tools/scripts/seed-demo.mjs",
+    "create:login": "node tools/scripts/create-login.mjs",
     "clear:demo": "node --env-file-if-exists=e2e/.env tools/scripts/clear-demo.mjs",
     "migrate": "pnpm --filter @ab/migrate cli",
     "migrate:dry": "pnpm --filter @ab/migrate cli dry-run",
