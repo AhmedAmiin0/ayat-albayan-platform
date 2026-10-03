@@ -3,6 +3,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
+import { rail } from '@/components/ui/rail';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';
@@ -25,19 +26,27 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
   const threads = useQuery(threadsQuery(search));
   const mode = useInboxMode();
   const { phone, ...listSearch } = search;
-  const filter = (patch: Record<string, unknown>) => onSearch(parseInboxSearch({ ...search, ...patch, page: 1 }));
+  const filter = (patch: Record<string, unknown>) =>
+    onSearch(parseInboxSearch({ ...search, ...patch, page: 1 }));
 
   return (
     <>
       <PageHead>
         <Cartouche>{mode === 'teacher' ? t.nav.conversations : t.inbox.title}</Cartouche>
         {threads.data && (
-          <span className="text-sm text-ink-3 tabular-nums">{t.leads.count.replace('{n}', String(threads.data.total))}</span>
+          <span className="text-sm text-ink-3 tabular-nums">
+            {t.leads.count.replace('{n}', String(threads.data.total))}
+          </span>
         )}
       </PageHead>
       <div className="grid gap-[22px] shell:grid-cols-[320px_minmax(0,1fr)]">
         <div
-          className={cn('min-w-0 transition-opacity duration-[120ms]', phone && 'max-shell:hidden', threads.isPlaceholderData && 'opacity-60')}
+          className={cn(
+            'min-w-0 transition-opacity duration-[120ms]',
+            rail,
+            phone && 'max-shell:hidden',
+            threads.isPlaceholderData && 'opacity-60',
+          )}
           aria-busy={threads.isPlaceholderData || undefined}
         >
           {threads.isError && <p role="alert">{t.common.error}</p>}

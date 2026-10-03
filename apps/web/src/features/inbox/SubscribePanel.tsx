@@ -1,4 +1,6 @@
 import type { ThreadPeople } from '@ab/shared';
+import { railXl } from '@/components/ui/rail';
+import { cn } from '@/lib/utils';
 import { useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -24,19 +26,28 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
     setToast(t.subscriptions.saved);
     // The dialog refreshes the money screens; the chip, the lines and the list tag live under
     // threads; the family's lead may have just become «مشترك» (R-LEAD-01).
-    for (const key of ['threads', 'leads']) await queryClient.invalidateQueries({ queryKey: [key] });
+    for (const key of ['threads', 'leads'])
+      await queryClient.invalidateQueries({ queryKey: [key] });
   };
 
   return (
-    <aside aria-label={t.inbox.subscription.title} className="grid content-start gap-3">
+    <aside
+      aria-label={t.inbox.subscription.title}
+      className={cn('grid content-start gap-3', railXl)}
+    >
       <h3 className="text-sm font-semibold">{t.inbox.subscription.title}</h3>
-      {people.students.length === 0 && <p className="text-sm text-ink-3">{t.subscriptions.emptyList}</p>}
+      {people.students.length === 0 && (
+        <p className="text-sm text-ink-3">{t.subscriptions.emptyList}</p>
+      )}
       <ul className="grid gap-4">
         {people.students.map((s) => {
           const sub = s.subscription;
           const due = sub && dueText(sub);
           return (
-            <li key={s.id} className="grid justify-items-start gap-1.5 border-b border-rule pb-3 text-sm">
+            <li
+              key={s.id}
+              className="grid justify-items-start gap-1.5 border-b border-rule pb-3 text-sm"
+            >
               <span className="flex flex-wrap items-baseline gap-x-2">
                 <span className="font-semibold text-ink">{s.name}</span>
                 <Ltr className="text-xs text-ink-3">{s.code}</Ltr>
@@ -63,7 +74,13 @@ export function SubscribePanel({ people }: { people: ThreadPeople }) {
           );
         })}
       </ul>
-      {picked && <CreateSubscriptionDialog student={picked} onClose={() => setPicked(null)} onSaved={() => void saved()} />}
+      {picked && (
+        <CreateSubscriptionDialog
+          student={picked}
+          onClose={() => setPicked(null)}
+          onSaved={() => void saved()}
+        />
+      )}
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </aside>
   );

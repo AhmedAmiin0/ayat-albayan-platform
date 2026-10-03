@@ -1,5 +1,6 @@
 import { LEAD_STATUSES, type LeadStatus } from '@ab/shared';
 import { Tabs, type TabOption } from '@/components/ui/tabs';
+import { rail } from '@/components/ui/rail';
 import { t } from '@/lib/i18n';
 
 type Tab = LeadStatus | 'all';
@@ -24,12 +25,14 @@ export interface LeadStatusTabsProps {
 /** Status filter as a vertical fihris beside the list; chips under 900px (R-LEAD-02, docs/07 §9). */
 export function LeadStatusTabs({ value, onChange }: LeadStatusTabsProps) {
   return (
-    <Tabs
-      orientation="vertical"
-      label={t.leads.status}
-      tabs={TABS}
-      value={value ?? 'all'}
-      onChange={(tab) => onChange(tab === 'all' ? undefined : tab)}
-    />
+    <div className={rail}>
+      <Tabs
+        orientation="vertical"
+        label={t.leads.status}
+        tabs={TABS}
+        value={value ?? 'all'}
+        onChange={(tab) => onChange(tab === 'all' ? undefined : tab)}
+      />
+    </div>
   );
 }
