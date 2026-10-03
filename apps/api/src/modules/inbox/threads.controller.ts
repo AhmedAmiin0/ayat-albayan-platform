@@ -1,4 +1,4 @@
-import { normalizePhone, threadTemplateSchema, threadTextSchema, type MessageView } from '@ab/shared';
+import { threadTemplateSchema, threadTextSchema, type MessageView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -6,7 +6,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow } from '../teachers/http';
-import { waHttpError } from '../whatsapp/template.mapper';
+import { phoneParam } from './phone-param';
 import type { TeacherScope } from './teacher-scope';
 import { ThreadReads } from './thread-reads';
 import type { Sent } from './outbox';
@@ -20,13 +20,6 @@ const detailQuery = z.object({
   before: z.iso.datetime({ offset: true }).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
-
-/** `:phone` is url-encoded E.164 («%2B9665…»); anything else is 400 invalid_phone. */
-function phoneParam(raw: string): string {
-  const phone = normalizePhone(raw);
-  if (!phone.ok) throw waHttpError('invalid_phone', 400);
-  return phone.e164;
-}
 
 type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope | null };
 

@@ -4,3 +4,4 @@ export * from './leads.js';
 export * from './people.js';
 export * from './scheduling.js';
 export * from './feedback.js';
+export * from './booking-extras.js';

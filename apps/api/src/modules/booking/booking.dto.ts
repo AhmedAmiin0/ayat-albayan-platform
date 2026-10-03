@@ -32,5 +32,8 @@ export const slotsQuerySchema = z
   })
   .refine((q) => Date.parse(q.from) < Date.parse(q.to), { message: 'from_before_to', path: ['to'] });
 
+/** GET /booking/makeup-candidates?studentId (R-SCH-10). */
+export const makeupCandidatesQuery = z.object({ studentId: z.uuid() });
+
 export type TeacherOptionsQuery = z.output<typeof teacherOptionsQuerySchema>;
 export type SlotsQuery = z.output<typeof slotsQuerySchema>;

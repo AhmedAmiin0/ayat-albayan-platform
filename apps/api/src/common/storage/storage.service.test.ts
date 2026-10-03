@@ -48,6 +48,38 @@ describe('StorageService (R-REP-02/03, R-PAY-01)', () => {
     expect(upload).toHaveBeenCalledWith('s/l.pdf', body, { contentType: 'application/pdf', upsert: true });
   });
 
+  it('info returns size and content type, null when the object is missing', async () => {
+    const info = vi
+      .fn()
+      .mockResolvedValueOnce({ data: { size: 2048, contentType: 'image/png' }, error: null })
+      .mockResolvedValueOnce({ data: null, error: { message: 'not found' } });
+    const { svc, from } = fakeStorage({ info });
+    expect(await svc.info({ bucket: 'invoices', path: 'r/a.png' })).toEqual({ size: 2048, contentType: 'image/png' });
+    expect(from).toHaveBeenCalledWith('invoices');
+    expect(await svc.info({ bucket: 'invoices', path: 'r/none.png' })).toBeNull();
+  });
+
+  it('copy goes across buckets on the server and is idempotent (an existing target is kept)', async () => {
+    const copy = vi.fn().mockResolvedValue({ error: null });
+    const exists = vi.fn().mockResolvedValueOnce({ data: false, error: null }).mockResolvedValueOnce({ data: true, error: null });
+    const { svc, from } = fakeStorage({ copy, exists });
+    const input = { from: { bucket: 'wa-media' as const, path: 'm.png' }, to: { bucket: 'invoices' as const, path: 'r/wa-m.png' } };
+    await svc.copy(input);
+    await svc.copy(input);
+    expect(copy).toHaveBeenCalledTimes(1);
+    expect(copy).toHaveBeenCalledWith('m.png', 'r/wa-m.png', { destinationBucket: 'invoices' });
+    expect(from).toHaveBeenCalledWith('wa-media');
+  });
+
+  it('copy throws when Storage fails', async () => {
+    const { svc } = fakeStorage({
+      exists: vi.fn().mockResolvedValue({ data: false, error: null }),
+      copy: vi.fn().mockResolvedValue({ error: { message: 'nope' } }),
+    });
+    const input = { from: { bucket: 'wa-media' as const, path: 'a' }, to: { bucket: 'invoices' as const, path: 'b' } };
+    await expect(svc.copy(input)).rejects.toThrow(/nope/);
+  });
+
   it('exists is false on an error; remove and upload throw on one', async () => {
     const err = { error: { message: 'nope' } };
     const { svc } = fakeStorage({

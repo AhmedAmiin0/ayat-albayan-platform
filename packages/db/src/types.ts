@@ -307,6 +307,70 @@ export type Database = {
         };
         Relationships: [];
       };
+      invoices: {
+        Row: {
+          client_request_id: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          kind: Database['public']['Enums']['booking_kind'];
+          message_id: string | null;
+          mime: string;
+          rule_id: string | null;
+          size_bytes: number;
+          source: string;
+          storage_path: string;
+        };
+        Insert: {
+          client_request_id: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind: Database['public']['Enums']['booking_kind'];
+          message_id?: string | null;
+          mime: string;
+          rule_id?: string | null;
+          size_bytes: number;
+          source: string;
+          storage_path: string;
+        };
+        Update: {
+          client_request_id?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          kind?: Database['public']['Enums']['booking_kind'];
+          message_id?: string | null;
+          mime?: string;
+          rule_id?: string | null;
+          size_bytes?: number;
+          source?: string;
+          storage_path?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'invoices_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: false;
+            referencedRelation: 'messages';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'invoices_message_id_fkey';
+            columns: ['message_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['last_message_id'];
+          },
+          {
+            foreignKeyName: 'invoices_rule_id_fkey';
+            columns: ['rule_id'];
+            isOneToOne: false;
+            referencedRelation: 'schedule_rules';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       job_applicants: {
         Row: {
           created_at: string;
@@ -854,6 +918,7 @@ export type Database = {
           google_event_id: string | null;
           id: string;
           local_date: string | null;
+          makeup_of_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
@@ -874,6 +939,7 @@ export type Database = {
           google_event_id?: string | null;
           id?: string;
           local_date?: string | null;
+          makeup_of_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
@@ -894,6 +960,7 @@ export type Database = {
           google_event_id?: string | null;
           id?: string;
           local_date?: string | null;
+          makeup_of_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
@@ -904,6 +971,13 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'lessons_makeup_of_id_fkey';
+            columns: ['makeup_of_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'lessons_rescheduled_from_id_fkey';
             columns: ['rescheduled_from_id'];
@@ -2104,6 +2178,7 @@ export type Database = {
           google_event_id: string | null;
           id: string;
           local_date: string | null;
+          makeup_of_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
@@ -2163,6 +2238,7 @@ export type Database = {
     Enums: {
       admin_task_kind: 'renewal_due' | 'subscription_unpaid';
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
+      booking_kind: 'trial' | 'package' | 'makeup';
       expense_category: 'ads' | 'content' | 'tools' | 'operations' | 'other';
       feedback_kind: 'trial' | 'subscription';
       feedback_recommend: 'yes' | 'maybe' | 'no';
@@ -2330,6 +2406,7 @@ export const Constants = {
     Enums: {
       admin_task_kind: ['renewal_due', 'subscription_unpaid'],
       attendance: ['on_time', 'late', 'excused', 'absent'],
+      booking_kind: ['trial', 'package', 'makeup'],
       expense_category: ['ads', 'content', 'tools', 'operations', 'other'],
       feedback_kind: ['trial', 'subscription'],
       feedback_recommend: ['yes', 'maybe', 'no'],

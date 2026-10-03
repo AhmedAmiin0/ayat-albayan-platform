@@ -1,6 +1,6 @@
 import type { LessonView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { lessonRow, STUDENT_ID } from './lessons.fakes';
+import { LESSON_ID, lessonRow, STUDENT_ID } from './lessons.fakes';
 import { toLessonView } from './lessons.mapper';
 import { markUnpaid, upcomingStudentIds } from './unpaid-mark';
 
@@ -30,6 +30,11 @@ describe('markUnpaid (R-SUB-02)', () => {
       [STUDENT_ID, undefined],
       [SIBLING, true],
     ]);
+  });
+
+  it('never marks a makeup: it consumes no package unit (R-SCH-10)', () => {
+    const makeup = view({ makeup_of_id: LESSON_ID });
+    expect(markUnpaid(makeup, new Set([STUDENT_ID, SIBLING]), NOW)).toBe(makeup);
   });
 
   it('leaves started, ended and cancelled lessons alone', () => {

@@ -19,6 +19,7 @@ export const IDS = {
   g1: '44444444-4444-4444-8444-444444444444',
   g2: '55555555-5555-4555-8555-555555555555',
   lead: '66666666-6666-4666-8666-666666666666',
+  missed: '77777777-7777-4777-8777-777777777777',
   missing: '99999999-9999-4999-8999-999999999999',
 };
 /** Thu 2026-10-01 11:00 Riyadh. */
@@ -51,6 +52,7 @@ export const GRID = [0, 2].map((weekday) => ({
 
 export function fakeQueries() {
   return {
+    makeupOriginal: vi.fn(),
     teacher: vi.fn().mockResolvedValue(TEACHER),
     students: vi.fn(async (ids: readonly string[]) => STUDENTS.filter((s) => ids.includes(s.id))),
     lead: vi.fn().mockResolvedValue({ id: IDS.lead, status: 'new', source: null, qualification: {} }),

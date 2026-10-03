@@ -71,3 +71,11 @@ export function joinNames(names: readonly string[], locale: Locale = 'ar'): stri
   }
   return f.format(names);
 }
+
+/**
+ * {{1}} of a makeup's confirmation: «تعويضية لـسهيلة», so the approved body «تم حجز حلقة {{1}} — {{2}}»
+ * reads «تم حجز حلقة تعويضية لـسهيلة — الأحد 4 أكتوبر 17:00». English for a screen in English.
+ */
+export function makeupNames(names: readonly string[], locale: Locale = 'ar'): string {
+  return locale === 'ar' ? `تعويضية لـ${joinNames(names, locale)}` : `makeup for ${joinNames(names, locale)}`;
+}

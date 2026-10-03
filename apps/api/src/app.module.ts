@@ -15,6 +15,7 @@ import { FxModule } from './modules/fx/fx.module';
 import { GuardiansModule } from './modules/guardians/guardians.module';
 import { HealthController } from './modules/health/health.controller';
 import { InboxModule } from './modules/inbox/inbox.module';
+import { InvoicesModule } from './modules/invoices/invoices.module';
 import { JobApplicantsModule } from './modules/job-applicants/job-applicants.module';
 import { LeadsModule } from './modules/leads/leads.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
@@ -51,6 +52,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     PricingModule,
     SchedulingModule,
     BookingModule,
+    InvoicesModule,
     LessonsModule,
     ReportsModule,
     ReportPdfModule,

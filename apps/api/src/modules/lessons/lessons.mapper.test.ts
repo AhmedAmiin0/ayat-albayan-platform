@@ -51,6 +51,14 @@ describe('toLessonView (R-LES-01, R-LES-03, R-SCH-03)', () => {
   });
 
   it.each([
+    ['linked to a missed lesson', { makeup_of_id: LESSON_ID }, true],
+    ['not linked', { makeup_of_id: null }, false],
+    ['an old fake without the column', {}, false],
+  ])('makeup (R-SCH-10): %s', (_name, over, makeup) => {
+    expect(toLessonView(lessonRow(over), { role: 'admin', seq: none }).makeup).toBe(makeup);
+  });
+
+  it.each([
     ['a trial rule', { rule: { byday: [0], package: 'trial' as const } }, true],
     ['a package rule', { rule: { byday: [0], package: '8' as const } }, false],
     ['a rule without a package', { rule: { byday: [0], package: null } }, false],
