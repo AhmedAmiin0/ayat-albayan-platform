@@ -2,6 +2,7 @@ import type { BookingTeacherOption } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';
 
 export interface TeacherOptionProps {
@@ -45,7 +46,7 @@ export function TeacherOption({ option, checked, onPick }: TeacherOptionProps) {
         className="mt-1.5 size-4 accent-[var(--lapis)]"
       />
       <span className="grid min-w-0 gap-0.5">
-        <span className={cn('font-semibold', unavailable && 'text-ink-3')}>{option.display_name_ar}</span>
+        <span className={cn('font-semibold', unavailable && 'text-ink-3')}>{teacherLabel(option)}</span>
         <span className="text-xs text-ink-3">{meta}</span>
         <span className="text-xs text-ink-2 tabular-nums">
           {teacherLoad(option)}

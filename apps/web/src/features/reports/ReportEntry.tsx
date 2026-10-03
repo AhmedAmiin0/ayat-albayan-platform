@@ -9,12 +9,13 @@ import {
   type TextKey,
 } from '@ab/shared';
 import { useRef } from 'react';
-import { RequiredLegend } from '@/components/ui/label';
+import { RequiredLegend, RequiredMark } from '@/components/ui/label';
 import { t } from '@/lib/i18n';
 import { AttachmentsField } from './AttachmentsField';
 import { AttendanceField } from './AttendanceField';
 import { GradePicker } from './GradePicker';
-import { IdentityBlock } from './IdentityBlock';
+import { IdentityBlock, MeetingLinkRow } from './IdentityBlock';
+import { ProgramField } from './ProgramField';
 import { ReportEntryFooter } from './ReportEntryFooter';
 import { ReportTextField } from './ReportTextField';
 import { useFocusInvalid } from './use-focus-invalid';
@@ -29,12 +30,15 @@ export interface ReportEntryProps {
   tz: string;
 }
 
+const H3 = 'font-display text-h3 font-bold';
+
 /**
- * One student's «تقرير الحلقة» (R-REP-01/02): identity, attendance, what was done, the six rubric
- * grades + overall, notes / homework / next plan, attachments; autosaved while a draft, then sent.
+ * One student's «تقرير الحلقة» (R-REP-01/02), in the Google Form's sections: «بيانات الحلقة»
+ * (identity, program, attendance, link), «محتوى الحلقة», «التقييم التفصيلي» (six rubric grades +
+ * overall) and «الملاحظات والواجب» (+ attachments); autosaved while a draft, then sent.
  */
 export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
-  const s = useReportEntry(entry.report);
+  const s = useReportEntry(entry.report, entry.student.program);
   const { report, values } = s;
   const locked = !report.can_edit;
   const title = t.reports.entryFor.replace('{name}', entry.student.name);
@@ -55,21 +59,30 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
   return (
     <article ref={article} aria-label={title} className="grid gap-5">
       {titled && <h2 className="font-display text-h3 font-bold">{title}</h2>}
-      <IdentityBlock lesson={form.lesson} entry={entry} />
-      {!locked && <RequiredLegend />}
-      <AttendanceField
-        name={`${report.id}-attendance`}
-        value={values.attendance}
-        onChange={(a) => s.set('attendance', a)}
-        disabled={locked}
-        invalid={s.problem === 'missing_attendance'}
-      />
+      <section aria-label={t.reports.identity} className="grid gap-4">
+        <h3 className={H3}>{t.reports.identity}</h3>
+        <IdentityBlock lesson={form.lesson} entry={entry} />
+        {!locked && <RequiredLegend />}
+        <ProgramField name={`${report.id}-program`} value={values.program} onChange={(p) => s.set('program', p)} disabled={locked} />
+        <AttendanceField
+          name={`${report.id}-attendance`}
+          value={values.attendance}
+          onChange={(a) => s.set('attendance', a)}
+          disabled={locked}
+          invalid={s.problem === 'missing_attendance'}
+        />
+        <MeetingLinkRow lesson={form.lesson} />
+      </section>
       <section aria-label={t.reports.done} className="grid gap-3">
-        <h3 className="font-display text-h3 font-bold">{t.reports.done}</h3>
+        <h3 className={H3}>{t.reports.done}</h3>
         <div className="grid gap-3 sm:grid-cols-2">{DONE_FIELDS.map(text)}</div>
       </section>
-      <section aria-label={t.reports.rubricTitle} className="grid">
-        <h3 className="mb-1 font-display text-h3 font-bold">{t.reports.rubricTitle}</h3>
+      <section aria-label={t.reports.detailTitle} className="grid">
+        <h3 className={H3}>{t.reports.detailTitle}</h3>
+        <p className="mb-1 mt-3 text-sm font-semibold">
+          {t.reports.rubricTitle}
+          {gradesRequired && <RequiredMark />}
+        </p>
         {REPORT_RUBRICS.map((r) => (
           <GradePicker
             key={r}
@@ -93,8 +106,11 @@ export function ReportEntry({ form, entry, titled, tz }: ReportEntryProps) {
           invalid={gradeMissing(values.overall)}
         />
       </section>
-      <div className="grid gap-3">{AFTER_FIELDS.map(text)}</div>
-      <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />
+      <section aria-label={t.reports.notesTitle} className="grid gap-3">
+        <h3 className={H3}>{t.reports.notesTitle}</h3>
+        {AFTER_FIELDS.map(text)}
+        <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />
+      </section>
       <ReportEntryFooter s={s} block={form.submit_block} tz={tz} />
     </article>
   );

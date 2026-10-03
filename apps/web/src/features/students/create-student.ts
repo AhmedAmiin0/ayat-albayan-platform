@@ -13,6 +13,8 @@ export type CreateStudentValues = {
   source: LeadSource | '';
   tz: string;
   program: Program;
+  /** «المعلم/المعلمه»; '' = none yet (the form's empty option). */
+  teacher_id: string;
 };
 
 export const EMPTY_STUDENT: CreateStudentValues = {
@@ -24,6 +26,7 @@ export const EMPTY_STUDENT: CreateStudentValues = {
   source: '',
   tz: 'Asia/Riyadh',
   program: 'quran',
+  teacher_id: '',
 };
 
 /** «الخانة دي مطلوبة» for a blank (or spaces-only) value. */
@@ -58,6 +61,7 @@ export function toCreateBody(v: CreateStudentValues, force: boolean): CreateStud
     gender: v.gender || null,
     tz: v.tz,
     program: v.program,
+    ...(v.teacher_id ? { teacher_id: v.teacher_id } : {}),
     guardian: { name: v.guardianName.trim(), phone_e164: v.guardianPhone, tz: v.tz, source: v.source || null },
     force,
   };

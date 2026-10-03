@@ -1,4 +1,5 @@
 import { counted, type PackageSize } from '@ab/shared';
+import { RequiredMark } from '@/components/ui/label';
 import { WEEK_ORDER } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from './package-days';
@@ -15,7 +16,7 @@ export interface ByDayPickerProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 
-/** Weekly repeat «أيام الحلقة» (R-SCH-02 byday), السبت → الجمعة, at the first slot's time. */
+/** Weekly repeat «الأيام المتاحة» * (R-SCH-02 byday), السبت → الجمعة, at the first slot's time. */
 export function ByDayPicker({ fixed, value, onChange, pkg }: ByDayPickerProps) {
   const note = pkg ? packageDaysNote(pkg, value.length) : null;
   const toggle = (day: number) =>
@@ -24,6 +25,7 @@ export function ByDayPicker({ fixed, value, onChange, pkg }: ByDayPickerProps) {
     <fieldset className="grid gap-2">
       <legend className="mb-1 text-sm font-semibold">
         {t.booking.pickDays}
+        <RequiredMark />
         <span className="ms-2 text-xs font-normal text-ink-3">{counted(t.booking.perWeek, value.length)}</span>
       </legend>
       <div className="flex flex-wrap gap-x-4 gap-y-1">

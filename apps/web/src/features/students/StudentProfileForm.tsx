@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { STUDENTS_KEY, teacherOptionsQuery, updateStudent } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PROFILE_LABELS, toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
@@ -38,7 +39,7 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
     status: STUDENT_STATUSES.map((s) => ({ value: s, label: t.enums.studentStatus[s] })),
     teacher_id: [
       { value: '', label: t.students.noTeacher },
-      ...teachers.map((tc) => ({ value: tc.id, label: tc.display_name_ar })),
+      ...teachers.map((tc) => ({ value: tc.id, label: teacherLabel(tc) })),
     ],
   };
 

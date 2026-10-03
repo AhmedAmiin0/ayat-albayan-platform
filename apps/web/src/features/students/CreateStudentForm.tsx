@@ -14,6 +14,7 @@ import { SourceField } from '@/features/guardians/SourceField';
 import { t } from '@/lib/i18n';
 import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
 import { AgeField, GenderField } from './FactFields';
+import { TeacherField } from './TeacherField';
 
 type CreateStudentFormProps = {
   onSubmit: (values: CreateStudentValues) => Promise<void>;
@@ -21,13 +22,15 @@ type CreateStudentFormProps = {
   error: string | null;
 };
 
-// The registration form's wording (research-forms 1, 3, 4, 7): «اسم الطالب», «رقم الواتساب
-// (مع كود الدولة)» with its hint, then «سن الطالب», «النوع» and «عرفت عننا منين؟» (optional).
-const TEXT_FIELDS = [
-  { name: 'name', label: t.leads.studentName, check: requiredError },
-  { name: 'guardianName', label: t.guardians.name, check: requiredError },
-  { name: 'guardianPhone', label: t.guardians.phone, check: phoneError, dir: 'ltr', type: 'tel', hint: t.guardians.phoneHint },
-] as const;
+// The registration form's wording and order: «اسم الطالب», «رقم الواتساب (مع كود الدولة)» with its
+// hint, «سن الطالب», «النوع», then the guardian's name (kept on the guardian), the zone, the
+// program, «المعلم/المعلمه» and «عرفت عننا منين؟» (optional).
+const TEXT_FIELDS = {
+  name: { label: t.leads.studentName, check: requiredError },
+  guardianName: { label: t.guardians.name, check: requiredError },
+  guardianPhone: { label: t.guardians.phone, check: phoneError, dir: 'ltr', type: 'tel', hint: t.guardians.phoneHint },
+} as const;
+type TextName = keyof typeof TEXT_FIELDS;
 
 /**
  * «إضافة طالب» dialog: student + guardian phone in one step (R-STU-02, R-STU-04). `noValidate`:
@@ -36,6 +39,25 @@ const TEXT_FIELDS = [
 export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFormProps) {
   const formId = useId();
   const form = useForm({ defaultValues: EMPTY_STUDENT, onSubmit: ({ value }) => onSubmit(value) });
+
+  const textField = (name: TextName) => {
+    const f: { label: string; check: (v: string) => string | undefined; dir?: string; type?: string; hint?: string } = TEXT_FIELDS[name];
+    return (
+      <form.Field name={name} validators={{ onSubmit: ({ value }) => f.check(value) }}>
+        {(field) => (
+          <Field label={f.label} hint={f.hint} error={field.state.meta.errors[0]} required>
+            {(p) => (
+              <>
+                <Input {...p} required value={field.state.value} data-autofocus={name === 'name' || undefined}
+                  dir={f.dir} type={f.type ?? 'text'} onChange={(e) => field.handleChange(e.target.value)} />
+                {name === 'guardianPhone' && <PhonePreview value={field.state.value} />}
+              </>
+            )}
+          </Field>
+        )}
+      </form.Field>
+    );
+  };
 
   const actions = (
     <form.Subscribe selector={(s) => s.isSubmitting}>
@@ -62,26 +84,13 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
         <div className="sm:col-span-2">
           <RequiredLegend />
         </div>
-        {TEXT_FIELDS.map((f) => (
-          <form.Field key={f.name} name={f.name} validators={{ onSubmit: ({ value }) => f.check(value) }}>
-            {(field) => (
-              <Field label={f.label} hint={'hint' in f ? f.hint : undefined} error={field.state.meta.errors[0]} required>
-                {(p) => (
-                  <>
-                    <Input {...p} required value={field.state.value} data-autofocus={f.name === 'name' || undefined}
-                      dir={'dir' in f ? f.dir : undefined} type={'type' in f ? f.type : 'text'}
-                      onChange={(e) => field.handleChange(e.target.value)} />
-                    {f.name === 'guardianPhone' && <PhonePreview value={field.state.value} />}
-                  </>
-                )}
-              </Field>
-            )}
-          </form.Field>
-        ))}
+        {textField('name')}
+        {textField('guardianPhone')}
         <form.Field name="age" validators={{ onSubmit: ({ value }) => ageError(value) }}>
           {(field) => <AgeField value={field.state.value} error={field.state.meta.errors[0]} onChange={field.handleChange} />}
         </form.Field>
         <form.Field name="gender">{(field) => <GenderField value={field.state.value} onChange={field.handleChange} />}</form.Field>
+        {textField('guardianName')}
         <form.Field name="tz">
           {(field) => (
             <Field label={t.students.tz}>
@@ -101,6 +110,9 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
               )}
             </Field>
           )}
+        </form.Field>
+        <form.Field name="teacher_id">
+          {(field) => <TeacherField value={field.state.value} onChange={field.handleChange} />}
         </form.Field>
         <form.Field name="source">{(field) => <SourceField value={field.state.value} onChange={field.handleChange} />}</form.Field>
         {error && <FormAlert className="sm:col-span-2">{error}</FormAlert>}

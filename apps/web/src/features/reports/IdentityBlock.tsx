@@ -24,34 +24,44 @@ function lessonNo(entry: ReportFormEntry): string {
 }
 
 /**
- * The read-only identity of the report (R-REP-01, issue D1): student, teacher, date in the
- * student's zone, lesson number, program and link come from the lesson, never typed.
+ * The read-only top of the report (R-REP-01, issue D1), in the form's order: «معرّف الطالب», the
+ * teacher, the student, the date in the student's zone and the lesson number. They come from the
+ * lesson, never typed. «البرنامج» and «الحضور» (editable) follow, then the link (MeetingLinkRow).
  */
 export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
   const { student } = entry;
   const when = `${lessonWhenText(new Date(lesson.starts_at), student.tz, locale)} (${tzCity(student.tz) ?? student.tz})`;
   return (
-    <section aria-label={t.reports.identity} className="grid gap-2 border-y border-rule bg-sunk/60 px-3 py-3">
+    <div className="grid gap-2 border-y border-rule bg-sunk/60 px-3 py-3">
       <p className="text-xs text-ink-3">{t.reports.readOnlyHint}</p>
       <dl className="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3">
-        <Row label={t.reports.student}>
-          <span className="me-2 font-semibold">{student.name}</span>
-          <Ltr className="text-xs text-ink-3">{student.code}</Ltr>
+        <Row label={t.reports.studentId}>
+          <Ltr className="font-semibold">{student.code}</Ltr>
         </Row>
         <Row label={t.reports.teacher}>{teacherLabel(lesson.teacher)}</Row>
+        <Row label={t.reports.student}>
+          <span className="font-semibold">{student.name}</span>
+        </Row>
         <Row label={t.reports.date}>{when}</Row>
         <Row label={t.reports.lessonNo}>{lessonNo(entry)}</Row>
-        <Row label={t.reports.program}>{t.enums.program[student.program]}</Row>
-        <Row label={t.reports.link}>
-          {lesson.meeting_link ? (
-            <a href={lesson.meeting_link} target="_blank" rel="noreferrer" dir="ltr" className="block truncate py-3 text-lapis underline underline-offset-4 sm:py-0">
-              {lesson.meeting_link.replace(/^https?:\/\//, '')}
-            </a>
-          ) : (
-            <span className="text-ink-3">{t.lessons.noLink}</span>
-          )}
-        </Row>
       </dl>
-    </section>
+    </div>
+  );
+}
+
+/** «رابط الاجتماع»: the lesson's link, read-only (it lives on the lesson), after the attendance. */
+export function MeetingLinkRow({ lesson }: { lesson: ReportFormLesson }) {
+  return (
+    <dl>
+      <Row label={t.reports.link}>
+        {lesson.meeting_link ? (
+          <a href={lesson.meeting_link} target="_blank" rel="noreferrer" dir="ltr" className="block truncate py-3 text-lapis underline underline-offset-4 sm:py-0">
+            {lesson.meeting_link.replace(/^https?:\/\//, '')}
+          </a>
+        ) : (
+          <span className="text-ink-3">{t.lessons.noLink}</span>
+        )}
+      </Row>
+    </dl>
   );
 }

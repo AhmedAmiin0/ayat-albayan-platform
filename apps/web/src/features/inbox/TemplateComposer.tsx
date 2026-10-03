@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Select } from '@/components/ui/select';
+import { FEEDBACK_TEMPLATE } from '@/features/feedback/types';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { sendTemplate } from './api';
@@ -30,7 +31,9 @@ export interface TemplateComposerProps {
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
   const queryClient = useQueryClient();
   const templates = useQuery(templatesQuery);
-  const approved = (templates.data ?? []).filter((x) => x.status === 'approved' && forAudience(x, teacher));
+  const approved = (templates.data ?? [])
+    // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي».
+    .filter((x) => x.status === 'approved' && x.key !== FEEDBACK_TEMPLATE && forAudience(x, teacher));
   const lessons = context.lessons ?? [];
   const [key, setKey] = useState('');
   const [lessonId, setLessonId] = useState('');

@@ -66,7 +66,7 @@ function GuardianForm({ guardian, onClose, onDone }: { guardian: GuardianDetail 
       }}
     >
       {text('name', t.guardians.name)}
-      <Field label={t.guardians.phone} hint={t.guardians.phoneHint} error={errors.phone}>
+      <Field label={t.guardians.phone} hint={t.guardians.phoneHint} error={errors.phone} required>
         {(p) => (
           <>
             <Input {...p} type="tel" dir="ltr" value={values.phone} onChange={(e) => set({ phone: e.target.value })} />
