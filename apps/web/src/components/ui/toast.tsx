@@ -11,6 +11,8 @@ export interface ToastProps {
   action?: { label: string; onClick: () => void };
   tone?: 'info' | 'error';
   duration?: number;
+  /** Placement tweaks, e.g. `bottom-24` above a pinned bar. */
+  className?: string;
 }
 
 /**
@@ -18,7 +20,7 @@ export interface ToastProps {
  * inverse-gold filled nuqta; error is danger-soft with a struck glyph and a lapis action.
  * Mount it only while there is something to say (one role=status on screen).
  */
-export function Toast({ message, onDismiss, action, tone = 'info', duration = 5000 }: ToastProps) {
+export function Toast({ message, onDismiss, action, tone = 'info', duration = 5000, className }: ToastProps) {
   const [hovered, setHovered] = useState(false);
   useEffect(() => {
     if (!onDismiss || hovered) return;
@@ -37,6 +39,7 @@ export function Toast({ message, onDismiss, action, tone = 'info', duration = 50
         error
           ? 'bg-danger-soft text-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_40%,transparent)]'
           : 'bg-inverse text-on-inverse shadow-toast',
+        className,
       )}
     >
       <NuqtaGlyph shape={error ? 'struck' : 'fill'} className={cn('size-[13px]', error ? 'text-danger' : 'text-inverse-gold')} />

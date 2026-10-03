@@ -1,33 +1,41 @@
-import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
+import type { BoardController } from './board/use-board';
+import { RoomButton } from './RoomButton';
 import type { RoomController } from './use-room';
 
-/** Each toggle names the action and carries a glyph (fill = on, struck = off), so colour is never alone. */
-function Toggle({ on, label, onClick }: { on: boolean; label: string; onClick: () => void }) {
-  return (
-    <Button type="button" variant="secondary" size="md" aria-pressed={on} onClick={onClick}>
-      <NuqtaGlyph shape={on ? 'fill' : 'struck'} />
-      {label}
-    </Button>
-  );
+interface Props {
+  room: RoomController;
+  board: BoardController;
+  onPeople: () => void;
+  /** «التسجيلات», for the admin and the teacher only. */
+  onRecordings?: (() => void) | undefined;
 }
 
-export function ControlBar({ room }: { room: RoomController }) {
+/**
+ * Pinned to the bottom of the room above the phone's home bar (safe-area padding). Each toggle
+ * names its action and shows its state with aria-pressed + a filled look, never colour alone.
+ */
+export function ControlBar({ room, board, onPeople, onRecordings }: Props) {
   const { snap } = room;
   return (
-    <div role="toolbar" aria-label={t.classroom.title} className="flex flex-wrap items-center justify-center gap-2 pb-[env(safe-area-inset-bottom)]">
+    <div
+      role="toolbar"
+      aria-label={t.classroom.controls}
+      className="sticky bottom-0 z-10 -mx-3 flex flex-wrap items-center justify-center gap-1.5 border-t border-rule bg-page px-3 pt-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] sm:-mx-4 sm:gap-2"
+    >
       {!snap.canPlayAudio && (
         <Button type="button" onClick={room.enableAudio}>
           {t.classroom.enableAudio}
         </Button>
       )}
-      <Toggle on={snap.micOn} label={snap.micOn ? t.classroom.micOff : t.classroom.micOn} onClick={room.toggleMic} />
-      <Toggle on={snap.camOn} label={snap.camOn ? t.classroom.camOff : t.classroom.camOn} onClick={room.toggleCamera} />
-      <Toggle on={snap.shareOn} label={snap.shareOn ? t.classroom.shareOff : t.classroom.shareOn} onClick={room.toggleShare} />
-      <Button type="button" variant="danger" onClick={room.leave}>
-        {t.classroom.leave}
-      </Button>
+      <RoomButton icon="mic" on={snap.micOn} label={snap.micOn ? t.classroom.micOff : t.classroom.micOn} onClick={room.toggleMic} />
+      <RoomButton icon="cam" on={snap.camOn} label={snap.camOn ? t.classroom.camOff : t.classroom.camOn} onClick={room.toggleCamera} />
+      <RoomButton icon="screen" on={snap.shareOn} label={snap.shareOn ? t.classroom.shareOff : t.classroom.shareOn} onClick={room.toggleShare} />
+      <RoomButton icon="board" on={board.visible} label={t.classroom.board.toggle} onClick={board.toggleVisible} />
+      <RoomButton icon="people" label={t.classroom.people} onClick={onPeople} />
+      {onRecordings && <RoomButton icon="film" label={t.classroom.recordings.title} onClick={onRecordings} />}
+      <RoomButton icon="leave" variant="danger" label={t.classroom.leave} onClick={room.leave} />
     </div>
   );
 }

@@ -1,12 +1,18 @@
+import type { JoinRole } from '@ab/shared';
+
 /** What the room UI knows about a call. livekit-client stays behind RoomClient so tests inject a fake. */
 
-export type RoomStatus = 'connecting' | 'connected' | 'reconnecting' | 'ended' | 'duplicate';
+export type RoomStatus = 'connecting' | 'connected' | 'reconnecting' | 'ended' | 'duplicate' | 'removed';
 
 /** One square of the grid: a person's camera, or a screen they share. */
 export interface TileView {
   /** Stable key: the identity, or `<identity>:screen`. */
   key: string;
+  /** The LiveKit identity (the remove call's `:identity`). */
+  identity: string;
   name: string;
+  /** From the token metadata; null when absent or malformed. */
+  role: JoinRole | null;
   isLocal: boolean;
   kind: 'camera' | 'screen';
   speaking: boolean;
@@ -14,6 +20,8 @@ export interface TileView {
   hasVideo: boolean;
   /** Changes when the underlying video track changes, so the <video> re-attaches. */
   videoRev: string;
+  /** A screen tile that carries someone's shared whiteboard, not their screen. */
+  isBoard: boolean;
 }
 
 export interface RoomSnapshot {
@@ -23,6 +31,10 @@ export interface RoomSnapshot {
   micOn: boolean;
   camOn: boolean;
   shareOn: boolean;
+  /** The local whiteboard is published as the screen-share track. */
+  boardShareOn: boolean;
+  /** LiveKit egress is recording the room. */
+  isRecording: boolean;
 }
 
 export type MediaDevice = 'mic' | 'cam';
@@ -43,6 +55,23 @@ export interface RoomClient {
   startAudio(): Promise<void>;
   /** Shows the tile's video in `el`; the returned function detaches it. */
   attachVideo(tileKey: string, el: HTMLVideoElement): () => void;
+  /** Reliable data to everyone (or only `to`) on `topic`. */
+  sendData(bytes: Uint8Array, opts: DataSendOptions): Promise<void>;
+  /** Every data packet from another participant; returns the unsubscribe. */
+  onData(listener: (packet: DataPacketIn) => void): () => void;
+  /** Publishes a canvas track as the screen share (the whiteboard); null stops it. */
+  setBoardTrack(track: MediaStreamTrack | null): Promise<void>;
+}
+
+export interface DataSendOptions {
+  topic: string;
+  to?: string[];
+}
+
+export interface DataPacketIn {
+  bytes: Uint8Array;
+  topic: string | undefined;
+  from: { identity: string; role: JoinRole | null };
 }
 
 export const EMPTY_SNAPSHOT: RoomSnapshot = {
@@ -52,4 +81,6 @@ export const EMPTY_SNAPSHOT: RoomSnapshot = {
   micOn: false,
   camOn: false,
   shareOn: false,
+  boardShareOn: false,
+  isRecording: false,
 };
