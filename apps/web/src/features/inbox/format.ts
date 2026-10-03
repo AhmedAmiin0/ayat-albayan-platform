@@ -25,6 +25,13 @@ export function threadName(th: Pick<ThreadView, 'display_name' | 'phone_e164'>):
   return th.display_name ?? formatPhone(th.phone_e164);
 }
 
+/** What the thread is called in this mode: a teacher never sees the number, so an unnamed one says who it is. */
+export function threadTitle(th: ThreadView, mode: 'admin' | 'teacher'): string {
+  if (mode === 'admin') return threadName(th);
+  const kind = threadKind(th);
+  return th.display_name ?? (kind ? t.inbox.kind[kind] : t.inbox.unknownNumber);
+}
+
 /** Who the number is: a guardian or teacher on file, else a lead, else nobody known yet. */
 export function threadKind(th: ThreadView): keyof typeof t.inbox.kind | null {
   if (th.guardian_id) return 'guardian';

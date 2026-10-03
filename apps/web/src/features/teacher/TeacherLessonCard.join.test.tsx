@@ -17,11 +17,11 @@ function card(status: Parameters<typeof lesson>[0]) {
 
 it('«ادخل الحلقة» on an open lesson', () => {
   card({ status: 'confirmed' });
-  expect(screen.getByRole('link', { name: t.teacherDash.join }).getAttribute('href')).toBe(LINK);
+  expect(screen.getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(LINK);
 });
 
 it.each(['rescheduled', 'cancelled_by_admin'] as const)('no way in to a %s lesson (the old slot)', (status) => {
   card({ status });
-  expect(screen.queryByRole('link', { name: t.teacherDash.join })).toBeNull();
+  expect(screen.queryByRole('link', { name: t.classroom.joinMeeting })).toBeNull();
   expect(screen.queryByText(t.lessons.noLink)).toBeNull();
 });

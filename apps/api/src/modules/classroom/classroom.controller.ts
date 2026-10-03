@@ -1,9 +1,10 @@
-import { joinLinkRequestSchema, type JoinLinkResult, type RoomJoinResult } from '@ab/shared';
+import { joinLinkRequestSchema, type JoinLinkResult, type JoinLinkUrl, type RoomJoinResult } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
+import { JoinLinkCopyService } from './join-link.copy.service';
 import { JoinLinkService } from './join-link.service';
 import { RoomJoinService } from './room-join.service';
 
@@ -15,6 +16,7 @@ export class ClassroomController {
   constructor(
     private readonly rooms: RoomJoinService,
     private readonly links: JoinLinkService,
+    private readonly copies: JoinLinkCopyService,
   ) {}
 
   /** 403 not yours / join_not_open_yet, 410 join_closed, 503 classroom_not_configured. */
@@ -31,5 +33,13 @@ export class ClassroomController {
   @HttpCode(200)
   sendLink(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<JoinLinkResult> {
     return this.links.send({ lessonId: id, body: parseOrThrow(joinLinkRequestSchema, body), actorId: user.id });
+  }
+
+  /** «انسخ لينك الطالب»: the guest URL, for the admin or the lesson's own teacher. */
+  @Post('join-link/url')
+  @Roles('admin', 'teacher')
+  @HttpCode(200)
+  linkUrl(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<JoinLinkUrl> {
+    return this.copies.url({ lessonId: id, user });
   }
 }

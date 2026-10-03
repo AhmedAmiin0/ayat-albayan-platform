@@ -47,7 +47,7 @@ describe('«جدولي» — my week (R-TCH-03, R-SCH-08)', () => {
     expect(lessonCalls()[0]).toBe('/teachers/me/lessons?from=2026-10-02T21%3A00%3A00.000Z&to=2026-10-09T21%3A00%3A00.000Z');
     fireEvent.click(within(grid).getByRole('button', { name: /17:00/ }));
     const drawer = screen.getByRole('dialog');
-    expect(within(drawer).getByRole('link', { name: t.teacherDash.join }).getAttribute('href')).toBe(ME.meeting_link);
+    expect(within(drawer).getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(ME.meeting_link);
   });
 
   it('next / this week move the window; an empty week says so', async () => {

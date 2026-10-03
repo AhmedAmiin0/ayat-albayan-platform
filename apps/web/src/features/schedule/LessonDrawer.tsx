@@ -51,9 +51,9 @@ export function LessonDrawer({ lesson, onClose, onDone }: LessonDrawerProps) {
         {mode === 'view' && (
           <>
             <LessonDetails lesson={lesson} onEditTime={() => setMode('editTime')} />
+            <ClassroomActions lesson={lesson} />
             <LessonInvoice lesson={lesson} />
             <ProposalBox lesson={lesson} onDone={done} />
-            <ClassroomActions lesson={lesson} />
             <LessonReportLinks lesson={lesson} role="admin" />
             <LessonActions
               lesson={lesson}

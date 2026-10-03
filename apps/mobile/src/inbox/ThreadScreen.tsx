@@ -1,4 +1,4 @@
-import { formatPhone, type MessageView, type ThreadView } from '@ab/shared';
+import { formatPhone, type MessageView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
@@ -10,7 +10,7 @@ import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { Composer } from './Composer';
-import { clockAt } from './format';
+import { clockAt, kindLabel } from './format';
 import { MessageBubble } from './MessageBubble';
 import { OwnThreadNote } from './OwnThreadNote';
 import { SubscriptionPanel } from './subscription/SubscriptionPanel';
@@ -20,20 +20,13 @@ import { useThread } from './use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 
-function kindOf(thread: ThreadView | null | undefined): string {
-  if (thread?.guardian_id) return t.inbox.kind.guardian;
-  if (thread?.teacher_id) return t.inbox.kind.teacher;
-  if (thread?.lead_id) return t.inbox.kind.lead;
-  return t.inbox.unknownNumber;
-}
-
 /** Offline: when the saved thread was fetched. Else who the number is, then the number if named. */
-function subtitleOf(phone: string, query: ThreadQuery): string {
+function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string {
   if (query.isError && query.data) {
     return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt));
   }
   const thread = query.data?.pages[0]?.thread;
-  return thread?.display_name ? `${kindOf(thread)} · ${ltr(formatPhone(phone))}` : kindOf(thread);
+  return thread?.display_name && !teacher ? `${kindLabel(thread)} · ${ltr(formatPhone(phone))}` : kindLabel(thread);
 }
 
 /** Oldest → newest; follows the newest message (first load, a send) but not older pages. */
@@ -83,14 +76,15 @@ function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
+  const teacher = mode.kind === 'teacher';
   const query = useThread(phone);
   const thread = query.data?.pages[0]?.thread ?? null;
   const back = () => (router.canGoBack() ? router.back() : router.replace(threadBase(mode)));
   return (
     <Screen>
       <ScreenHeader
-        title={thread?.display_name ?? ltr(formatPhone(phone))}
-        subtitle={subtitleOf(phone, query)}
+        title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
+        subtitle={subtitleOf(phone, query, teacher)}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {mode.kind === 'admin' ? <SubscriptionPanel data={query.data} phone={phone} /> : null}

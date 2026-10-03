@@ -46,6 +46,7 @@ const app = {
   'teacher/schedule': stub('teacher-schedule'),
   'teacher/chats/_layout': TabStack,
   'teacher/chats/index': stub('teacher-chats'),
+  'teacher/students': stub('teacher-students'),
   'teacher/reports/_layout': TabStack,
   'teacher/reports/index': stub('teacher-reports'),
   'teacher/more/_layout': TabStack,
@@ -65,7 +66,7 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] });
 });
 
-test('teacher: her five tabs in RTL order, «اليوم» first, and no push registration', async () => {
+test('teacher: her six tabs in RTL order, «اليوم» first, and no push registration', async () => {
   mockGate.initial = 'teacher';
   const router = await open('/teacher');
   expect(screen.getByText('teacher-today')).toBeTruthy();
@@ -75,6 +76,7 @@ test('teacher: her five tabs in RTL order, «اليوم» first, and no push reg
     t.teacherNav.today,
     t.teacherNav.calendar,
     t.nav.conversations,
+    t.teacherNav.students,
     t.teacherNav.reports,
     t.mobile.more,
   ]);

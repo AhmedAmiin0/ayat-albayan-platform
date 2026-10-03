@@ -6,12 +6,13 @@ import { NotLinkedScreen } from './NotLinkedScreen';
 import { isNotLinked, useTeacherMe } from './queries';
 import { TeacherTabIcon, type TeacherTabIconName } from './TeacherTabIcon';
 
-// The teacher app (R-AUTH-01, R-TCH-03, R-MOB-02): only her lessons, schedule, chats, reports and
-// payouts. The first tab sits at the inline-start (right in Arabic), as in the admin tabs.
+// The teacher app (R-AUTH-01, R-TCH-03, R-MOB-02): only her lessons, schedule, chats, students,
+// reports and payouts. The first tab sits at the inline-start (right in Arabic), as in the admin tabs.
 const tabItems = (): { name: string; title: string; icon: TeacherTabIconName }[] => [
   { name: 'today', title: t.teacherNav.today, icon: 'today' },
   { name: 'schedule', title: t.teacherNav.calendar, icon: 'schedule' },
   { name: 'chats', title: t.nav.conversations, icon: 'inbox' },
+  { name: 'students', title: t.teacherNav.students, icon: 'students' },
   { name: 'reports', title: t.teacherNav.reports, icon: 'reports' },
   { name: 'more', title: t.mobile.more, icon: 'more' },
 ];

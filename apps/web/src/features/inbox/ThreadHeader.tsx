@@ -4,7 +4,7 @@ import { Icon } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import { threadKind, threadName, timesInText } from './format';
+import { threadKind, threadTitle, timesInText } from './format';
 import { inboxBase, useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { leadChip } from './subscription';
@@ -34,9 +34,9 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge }: Threa
         {t.common.back}
       </Link>
       <h2 id={headingId} className="min-w-0 font-display text-h3 font-bold">
-        {threadName(th)}
+        {threadTitle(th, mode)}
       </h2>
-      {th.display_name && <Ltr className="text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
+      {th.display_name && mode === 'admin' && <Ltr className="text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
       <span className="flex flex-wrap items-center gap-2 text-2xs text-ink-3 sm:ms-auto">
         {kind === 'lead' && th.lead_status ? (
           <StatusChip {...leadChip(th.lead_status)} />

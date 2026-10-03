@@ -374,6 +374,9 @@ Owner request: pay a teacher for each session from the admin, and let teachers s
 | `POST /teacher-earnings/resync` | admin | `{ lessons }` |
 | `GET /teachers/me/earnings`, `/sessions`, `/payments`, `/payments/:id/receipt` | teacher | the same views for the teacher behind the token; the id is never taken from the URL; 404 `teacher_not_linked`; another teacher's payment is 404 |
 
+### Subscribed-only view and the 45-minute decision (migration 183)
+Balances, session lists and the payment allocation read `v_teacher_countable_earnings`: a session counts only when its lesson is not a trial (`schedule_rules.package <> 'trial'`) and at least one student on it has `students.status = 'active'`; nothing is deleted (twin: `isCountableSession`). Decision: historical 45-min sessions were priced as 1 hour before 2026-10-03; `tools/scripts/fix-teacher-data.sql` re-prices them at `rate_60`, new lessons keep 45 min = `rate_45`.
+
 ### Screens
 - Web: `/admin/teachers/:id/earnings` «مستحقات المعلم» (cards, sessions with ticks, pay dialog, history) linked from the teacher profile; `/teacher/earnings` «مستحقاتي» (the existing teacher nav entry now points here; the monthly statements stay at `/teacher/payouts`, linked from it).
 - Mobile: teacher More > «مستحقاتي» (read only; the monthly statements one tap in); admin More > المعلمين > teacher > «مستحقات» with ticks and «سجّل دفعة». No new native modules or dependencies (the receipt photo reuses `expo-image-picker`).

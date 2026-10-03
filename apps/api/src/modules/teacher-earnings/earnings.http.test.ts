@@ -39,6 +39,16 @@ describe('teacher earnings routes (admin)', () => {
     expect(res.json()).toMatchObject({ replayed: false, payment: { id: PAYMENT } });
   });
 
+  it('a session hidden by the subscribed filter can be neither paid nor counted (404 / not in the cap)', async () => {
+    m.earnings.forPayment.mockResolvedValue([]); // the countable view does not return it
+    const hidden = await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/payments`, body: { ...BODY, earningIds: [eid(9)] } });
+    expect(hidden.statusCode).toBe(404);
+    expect(m.earnings.record).not.toHaveBeenCalled();
+    const all = await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/payments`, body: BODY });
+    expect(all.statusCode).toBe(409); // nothing outstanding among the countable sessions
+    expect(all.json().code).toBe('nothing_outstanding');
+  });
+
   it('POST payments: overpayment 409, bad body 400, retry replays', async () => {
     const over = await call({ method: 'POST', url: `/teacher-earnings/${TEACHER}/payments`, body: { ...BODY, amount: 71 } });
     expect(over.statusCode).toBe(409);

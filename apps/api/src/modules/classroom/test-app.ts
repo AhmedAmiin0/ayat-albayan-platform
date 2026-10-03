@@ -11,7 +11,7 @@ import { TeachersQueries } from '../teachers/teachers.queries';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
-import { CLASSROOM_CONFIG } from './classroom.config';
+import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN } from './classroom.config';
 import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from './classroom.fakes';
 import { ClassroomQueries } from './classroom.queries';
 
@@ -46,6 +46,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(TemplateRegistry).useValue(m.templates)
     .overrideProvider(Outbox).useValue(m.outbox)
     .overrideProvider(CLASSROOM_CONFIG).useValue(config)
+    .overrideProvider(CLASSROOM_WEB_ORIGIN).useValue('https://app.example.test')
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

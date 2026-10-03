@@ -31,6 +31,7 @@ import { ReportsModule } from './modules/reports/reports.module';
 import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
+import { TeacherStudentsModule } from './modules/teacher-students/teacher-students.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
@@ -47,6 +48,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     GuardiansModule,
     StudentsModule,
     TeachersModule,
+    TeacherStudentsModule,
     LeadsModule,
     JobApplicantsModule,
     MeModule,

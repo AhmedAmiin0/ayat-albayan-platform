@@ -1649,3 +1649,12 @@ Owner request: "online sessions between teacher, student and assistant". Built i
 - **CI fix found on the way:** `ThreadScreen.teacher.test` depended on the real clock (24 h session window) and had failed every develop CI run; the clock is now pinned.
 - **Env:** `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` (all three or none; none = 503 `classroom_not_configured`).
 - **Not verified:** `db reset`, `gen:types` diff, e2e, a real two-person call (media/WebRTC), Meta approval of `lesson_join_link`.
+
+## Teacher Students tab, chat privacy, subscribed-only pay, classroom link (cloud run, 2026-10-03)
+
+- **Teacher «الطلاب» tab** (web `/teacher/students`, mobile tab, `GET /teachers/me/students?kind=subscribed|trial`): two separate lists, subscribed = `students.status = 'active'`, trial = `'trial'`; no phone or money in the payload.
+- **Teacher chat:** the guardian/student phone is no longer displayed in the teacher's list, header or rows (admin unchanged); the phone stays the internal thread key.
+- **Pay tab:** earnings count only non-trial sessions with at least one `active` student (view `v_teacher_countable_earnings`, migration 183; a read-time filter, nothing deleted). `tools/scripts/fix-teacher-data.sql` (rolls back by default) ends تولين's and الزهراء حمدي's status/rules, removes Tuesday from صباح الحبيب, re-prices historical 45-minute sessions at the 1-hour rate before 2026-10-03, and settles all outstanding earnings.
+- **Classroom:** «الحلقة أونلاين» block at the top of the admin drawer with «انسخ لينك الطالب» (`POST /lessons/:id/join-link/url`, admin or the lesson's teacher, no WhatsApp template needed); teacher cards got the same button and the Jitsi link is relabelled «لينك الاجتماع».
+- **Teacher layout:** a viewport-high frame; only the page content scrolls (sticky title row and table header).
+- **Not verified:** SQL (183 and the fix script) never ran; no browser check of the fixed-height layout; e2e not run.

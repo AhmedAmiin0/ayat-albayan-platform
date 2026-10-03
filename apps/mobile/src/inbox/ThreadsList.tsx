@@ -12,7 +12,7 @@ import { ltr } from '@/ui/Ltr';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
-import { clockAt, initialOf } from './format';
+import { clockAt, initialOf, kindLabel } from './format';
 import { threadPreview } from './message-text';
 import { threadLink, useThreadMode } from './thread-mode';
 import { ThreadTags } from './ThreadTags';
@@ -61,11 +61,12 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         keyExtractor={(th) => th.phone_e164}
         renderItem={({ item: th }) => {
           const phone = formatPhone(th.phone_e164);
+          const teacher = mode.kind === 'teacher';
           return (
             <ListRow
               leading={<Avatar letter={initialOf(th.display_name)} />}
-              title={th.display_name ?? ltr(phone)}
-              meta={th.display_name ? phone : undefined}
+              title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
+              meta={th.display_name && !teacher ? phone : undefined}
               subtitle={threadPreview(th)}
               tags={mode.kind === 'admin' ? <ThreadTags thread={th} /> : undefined}
               trailing={turnChip(th)}
