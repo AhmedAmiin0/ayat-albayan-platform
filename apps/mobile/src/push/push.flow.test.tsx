@@ -30,7 +30,8 @@ test('admin tabs mount → the token is PUT once and kept on disk; the tab bar i
   await renderApp({ url: '/', backend });
   await waitFor(() => expect(backend.sent('PUT /me/push-tokens')).toHaveLength(1));
   expect(backend.sent('PUT /me/push-tokens')[0]?.body).toEqual({ token: TOKEN });
-  await waitFor(async () => expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN));
+  await act(async () => undefined); // registerPush stores the token right after the PUT answers
+  expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN);
   expect(tokens).toEqual([TOKEN]);
   expect(screen.getByRole('button', { name: t.nav.conversations })).toBeTruthy();
 });
@@ -79,7 +80,9 @@ test('sign out from «المزيد»: this device’s token is DELETEd first, th
     tokens.length = 0;
   });
   const app = await renderApp({ url: '/', backend });
-  await waitFor(async () => expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN));
+  await waitFor(() => expect(tokens).toEqual([TOKEN]));
+  await act(async () => undefined);
+  expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN);
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.more }));
   await fireEvent.press(await screen.findByRole('button', { name: t.auth.logout }));
 

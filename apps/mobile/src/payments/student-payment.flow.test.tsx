@@ -1,7 +1,7 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
-import * as ImagePicker from 'expo-image-picker';
 import { t } from '@/lib/i18n';
+import { armCamera } from '@/test/native-mocks';
 import { SUB_ID, subscription } from './fixtures';
 import { paymentBackend, SIGNED } from './flow-backend';
 
@@ -12,16 +12,7 @@ const seen = { activeWords: 0 };
 
 beforeEach(async () => {
   await resetApp();
-  jest.mocked(ImagePicker.getCameraPermissionsAsync).mockResolvedValue({
-    granted: true,
-    canAskAgain: true,
-    status: 'granted',
-    expires: 'never',
-  } as Awaited<ReturnType<typeof ImagePicker.getCameraPermissionsAsync>>);
-  jest.mocked(ImagePicker.launchCameraAsync).mockResolvedValue({
-    canceled: false,
-    assets: [{ uri: 'file:///cache/slip.jpg', width: 900, height: 1200, base64: 'aGVsbG8=', mimeType: 'image/jpeg' }],
-  });
+  armCamera();
 });
 
 /** Students → search → the student → «سجّل دفعة» → the amount, bank, and the camera photo. */
