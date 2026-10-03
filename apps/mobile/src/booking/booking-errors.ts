@@ -17,7 +17,12 @@ export type BookFailure =
   | { kind: 'conflict'; lines: string[] }
   /** 409 duplicate_student: the family has a similar-named child (R-STU-03). */
   | { kind: 'duplicate'; candidates: Candidate[] }
+  /** The invoice is missing, unusable or gone from WhatsApp: back to «الفاتورة» for another. */
+  | { kind: 'invoice'; text: string }
   | { kind: 'error'; text: string };
+
+const messages: Record<string, string | undefined> = t.booking.error;
+const isInvoiceCode = (code: string) => code.startsWith('invoice_') || code === 'media_expired';
 
 function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null;
@@ -42,12 +47,15 @@ export function conflictLine(c: Conflict): string {
   );
 }
 
-export function bookFailure(error: unknown): BookFailure {
-  if (isOffline(error)) return { kind: 'error', text: t.booking.mobile.offline };
-  if (!(error instanceof ApiError) || error.status !== 409 || !isRecord(error.body)) {
-    return { kind: 'error', text: t.common.error };
-  }
-  const body = error.body;
+/** The API's own refusal (invoice, makeup): its code has a line in booking.error. */
+function codedFailure(code: unknown): BookFailure | null {
+  const text = typeof code === 'string' ? messages[code] : undefined;
+  if (typeof code !== 'string' || text === undefined) return null;
+  return { kind: isInvoiceCode(code) ? 'invoice' : 'error', text };
+}
+
+/** The 409s that carry data: the clashes, or the similar-named children. */
+function conflictFailure(body: Record<string, unknown>): BookFailure | null {
   const list = (key: string): unknown[] => {
     const v = body[key];
     return Array.isArray(v) ? v : [];
@@ -55,11 +63,22 @@ export function bookFailure(error: unknown): BookFailure {
   if (body['code'] === 'conflict') {
     return { kind: 'conflict', lines: list('conflicts').filter(isConflict).map(conflictLine) };
   }
-  if (body['code'] === 'duplicate_student') {
-    const candidates = list('candidates')
-      .map(toCandidate)
-      .filter((c): c is Candidate => c !== null);
-    if (candidates.length > 0) return { kind: 'duplicate', candidates };
+  const candidates = list('candidates')
+    .map(toCandidate)
+    .filter((c): c is Candidate => c !== null);
+  if (body['code'] === 'duplicate_student' && candidates.length > 0) {
+    return { kind: 'duplicate', candidates };
   }
-  return { kind: 'error', text: t.common.error };
+  return null;
+}
+
+export function bookFailure(error: unknown): BookFailure {
+  if (isOffline(error)) return { kind: 'error', text: t.booking.mobile.offline };
+  if (!(error instanceof ApiError) || !isRecord(error.body)) {
+    return { kind: 'error', text: t.common.error };
+  }
+  const coded = codedFailure(error.body['code']);
+  if (coded) return coded;
+  const data = error.status === 409 ? conflictFailure(error.body) : null;
+  return data ?? { kind: 'error', text: t.common.error };
 }

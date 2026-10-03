@@ -1,12 +1,18 @@
+import { normalizePhone } from '@ab/shared';
+import { View } from 'react-native';
 import type { BookFailure } from './booking-errors';
 import { ConfirmStep } from './ConfirmStep';
 import { ContactStep } from './ContactStep';
 import type { StudentChoice, TrialDraft } from './draft';
+import { InvoiceStep } from './InvoiceStep';
+import { KindPills } from './KindPills';
+import { kindPatch } from './package-choice';
 import { PackageStep } from './PackageStep';
 import { SlotStep } from './SlotStep';
+import type { Step } from './steps';
 import { TeacherStep } from './TeacherStep';
 
-export type Step = 'contact' | 'teacher' | 'package' | 'slot' | 'confirm';
+export type { Step } from './steps';
 
 export interface WizardStepProps {
   step: Step;
@@ -15,6 +21,8 @@ export interface WizardStepProps {
   draft: TrialDraft;
   patch: (p: Partial<TrialDraft>) => void;
   go: (next: Step) => void;
+  /** The wizard's request id: the invoice uploads under it, and the booking sends it. */
+  requestId: string;
   booking: {
     busy: boolean;
     failure: BookFailure | null;
@@ -25,17 +33,20 @@ export interface WizardStepProps {
 }
 
 /** The wizard's current step. A new package or length clears the slot (the slots depend on it). */
-export function WizardStep({ step, steps, draft, patch, go, booking }: WizardStepProps) {
+export function WizardStep({ step, steps, draft, patch, go, requestId, booking }: WizardStepProps) {
   const next = steps[steps.indexOf(step) + 1] ?? 'confirm';
   if (step === 'contact') {
     // «المده» is asked here unless a package step follows (it asks the length with the package).
     return (
-      <ContactStep
-        value={draft}
-        withDuration={!steps.includes('package')}
-        onChange={(p) => patch(p.durationMin ? { ...p, startsAt: null } : p)}
-        onNext={() => go(next)}
-      />
+      <View style={{ gap: 16 }}>
+        <KindPills value={draft.kind} onChange={(kind) => patch(kindPatch(kind))} />
+        <ContactStep
+          value={draft}
+          withDuration={!steps.includes('package')}
+          onChange={(p) => patch(p.durationMin ? { ...p, startsAt: null } : p)}
+          onNext={() => go(next)}
+        />
+      </View>
     );
   }
   if (step === 'teacher') {
@@ -73,6 +84,18 @@ export function WizardStep({ step, steps, draft, patch, go, booking }: WizardSte
       />
     );
   }
+  if (step === 'invoice') {
+    const phone = normalizePhone(draft.phone);
+    return (
+      <InvoiceStep
+        requestId={requestId}
+        chatPhone={phone.ok ? phone.e164 : null}
+        value={draft.invoice}
+        onChange={(invoice) => patch({ invoice })}
+        onNext={() => go(next)}
+      />
+    );
+  }
   return (
     <ConfirmStep
       draft={draft}
@@ -83,6 +106,7 @@ export function WizardStep({ step, steps, draft, patch, go, booking }: WizardSte
         patch({ startsAt: null });
         go('slot');
       }}
+      onChangeInvoice={() => go('invoice')}
       onDays={(byday) => {
         booking.reset();
         patch({ byday });

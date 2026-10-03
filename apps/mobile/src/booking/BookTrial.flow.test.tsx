@@ -50,6 +50,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();
   expect(mockApiSend).toHaveBeenCalledTimes(1);
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/booking', {
+    kind: 'trial',
     teacherId: maryam.id,
     byday: [0],
     startTimeLocal: '17:00',

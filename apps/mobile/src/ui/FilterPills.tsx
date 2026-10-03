@@ -14,6 +14,8 @@ export interface FilterPill<V extends string> {
   glyph?: Glyph;
   /** Only a number the API returned (e.g. `total` of that filtered list). Never invent one. */
   count?: number;
+  /** Shown but not choosable (a hint beside it says where it lives): «حجز تعويضي» on a lead. */
+  disabled?: boolean;
 }
 
 export interface FilterPillsProps<V extends string> {
@@ -52,10 +54,15 @@ export function FilterPills<V extends string>({
       <Pressable
         key={item.value}
         accessibilityRole={radio ? 'radio' : 'tab'}
-        accessibilityState={radio ? { checked: selected } : { selected }}
+        accessibilityState={{
+          ...(radio ? { checked: selected } : { selected }),
+          ...(item.disabled ? { disabled: true } : {}),
+        }}
+        disabled={item.disabled}
         onPress={() => onChange(item.value)}
         hitSlop={{ top: 4, bottom: 4 }}
         style={{
+          opacity: item.disabled ? 0.5 : 1,
           minHeight: 36,
           flexDirection: 'row',
           alignItems: 'center',

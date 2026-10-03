@@ -12,6 +12,7 @@ import {
 } from '@ab/shared';
 import { qualForm } from '@/inbox/qualification/qualification-form';
 import type { Lead } from '@/inbox/types';
+import type { BookingKind, InvoiceDraft } from './contract';
 import { DEFAULT_MINUTES } from './package-choice';
 
 // «حجز حلقة تجريبية» (or a package, from the chat's «اشترك») for a lead (R-MOB-02, R-LEAD-06):
@@ -44,8 +45,12 @@ export interface TrialDraft {
   teacher: BookingTeacherOption | null;
   /** The picked free slot (UTC instant). */
   startsAt: string | null;
-  /** 'trial', or a paid size (8, 12…) booked from the chat's «اشترك». */
+  /** «نوع الحجز»: a trial or a package (a makeup has its own wizard: makeup-draft.ts). */
+  kind: Exclude<BookingKind, 'makeup'>;
+  /** 'trial' for a trial, else a paid size (8, 12…); set together with `kind` (kindPatch). */
   pkg: PackageSize;
+  /** «الفاتورة»: the payment proof, required for a package, never asked for a trial. */
+  invoice: InvoiceDraft | null;
   /** «المده»: the lesson length the slots and the rule use (the form's default 45). */
   durationMin: Duration;
   /** A paid package's extra weekly days; the first slot's day is always in (effectiveByday). */
@@ -91,7 +96,9 @@ export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): Tr
     gender: null,
     teacher: null,
     startsAt: null,
+    kind: pkg === 'trial' ? 'trial' : 'package',
     pkg,
+    invoice: null,
     durationMin: DEFAULT_MINUTES,
     byday: [],
   };

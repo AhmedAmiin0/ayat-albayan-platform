@@ -52,6 +52,26 @@ test('no answer at all: offline, and the retry will not book twice', () => {
   });
 });
 
+test('a refused or missing invoice sends the admin back to «الفاتورة» with its own line', () => {
+  for (const [status, code] of [[400, 'invoice_required'], [400, 'invoice_path'], [400, 'invoice_message'], [410, 'media_expired'], [413, 'invoice_too_large']] as const) {
+    expect(bookFailure(new ApiError(status, { code }))).toEqual({
+      kind: 'invoice',
+      text: t.booking.error[code],
+    });
+  }
+});
+
+test('a makeup the API refuses says why, wherever the status', () => {
+  expect(bookFailure(new ApiError(409, { code: 'makeup_not_eligible' }))).toEqual({
+    kind: 'error',
+    text: t.booking.error.makeup_not_eligible,
+  });
+  expect(bookFailure(new ApiError(409, { code: 'makeup_exists' }))).toEqual({
+    kind: 'error',
+    text: t.booking.error.makeup_exists,
+  });
+});
+
 test('anything else is the generic error', () => {
   const generic = { kind: 'error', text: t.common.error };
   expect(bookFailure(new ApiError(500, null))).toEqual(generic);

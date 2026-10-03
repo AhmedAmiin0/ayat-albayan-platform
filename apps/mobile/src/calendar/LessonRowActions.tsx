@@ -1,6 +1,7 @@
 import { applyLessonEvent, type LessonEvent, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { MakeupAction } from '@/booking/MakeupAction';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
@@ -55,6 +56,7 @@ export function LessonRowActions({ lesson, action, onReschedule }: LessonRowActi
         {can('cancel_by_admin') ? act(t.today.cancel, 'secondary', () => setCancelling(true)) : null}
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'ghost', () => onReschedule(lesson)) : null}
       </View>
+      <MakeupAction lesson={lesson} />
       <FeedbackRequestButton lesson={lesson} />
       {error ? <ErrorLine message={error} /> : null}
     </View>

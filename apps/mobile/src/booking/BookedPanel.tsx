@@ -17,6 +17,8 @@ export interface BookedPanelProps {
   onDone: () => void;
   /** After a paid package: «اعمل الاشتراك» opens its subscription instead (subscriptionHref). */
   next?: Href | null;
+  /** A makeup: «الحجز التعويضي اتعمل», and never a subscription to offer. */
+  makeup?: boolean;
 }
 
 /**
@@ -24,7 +26,7 @@ export interface BookedPanelProps {
  * shows the truth), the queued WhatsApp confirmation, and the way on: back to the conversation,
  * or to the package's subscription.
  */
-export function BookedPanel({ result, teacherName, tz, onDone, next }: BookedPanelProps) {
+export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: BookedPanelProps) {
   const { color } = useTheme();
   const first = [...result.lessons].sort((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
   const line = {
@@ -46,7 +48,7 @@ export function BookedPanel({ result, teacherName, tz, onDone, next }: BookedPan
             color: color.ink,
           }}
         >
-          {t.booking.booked}
+          {makeup ? t.booking.makeup.booked : t.booking.booked}
         </AppText>
       </View>
       {first ? (
@@ -60,10 +62,13 @@ export function BookedPanel({ result, teacherName, tz, onDone, next }: BookedPan
           {t.booking.confirmationNote}
         </AppText>
       ) : null}
-      {next ? (
+      {next && !makeup ? (
         <Button label={t.inbox.subscription.make} onPress={() => router.replace(next)} />
       ) : (
-        <Button label={t.inbox.subscription.backToChat} onPress={onDone} />
+        <Button
+          label={makeup ? t.common.close : t.inbox.subscription.backToChat}
+          onPress={onDone}
+        />
       )}
     </View>
   );

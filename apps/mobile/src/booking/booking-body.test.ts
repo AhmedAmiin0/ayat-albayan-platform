@@ -7,6 +7,7 @@ const REQ = '99999999-9999-4999-8999-999999999999';
 test('lead path: one trial lesson on the slot, new student + guardian in the family zone', () => {
   const body = toBookingRequest(draft({ studentName: ' يوسف ' }), { requestId: REQ });
   expect(body).toEqual({
+    kind: 'trial',
     teacherId: maryam.id,
     byday: [0],
     startTimeLocal: '18:00',
