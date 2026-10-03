@@ -1589,3 +1589,24 @@ Owner request: a second booking type «حجز تعويضي» and a required «ا
 - Unit: api 1854 + 1 skipped (262 files) · web 870 (190) · mobile 805 (177 suites) · @ab/shared 1289 (71) · @ab/migrate 292 (50) · wa-stub 25 (4) · @ab/scripts 9. Lint: 0 errors, complexity warnings only (wa-stub 2, migrate 10, api 6, web 32, mobile 9, shared 2).
 - Screenshots re-taken and looked at (desktop 1366 and 390, AR): the group lesson's drawer before and after a makeup (one button, one «التعويض محجوز» line), the makeup's own drawer (tag, missed-lesson row), «نوع الحجز» at 390 (three equal chips), the invoice step empty / failed upload / chat picker / chosen from chat (error gone) / replacing slowly (old thumbnail, spinner, buttons off) / chosen from the device / at 390 (one-row step bar), the review of a makeup (ميعاد التعويض, thumbnail). Mobile was reviewed from code and jest (no device here).
 - Owner questions added: docs/13 #19 (payout double count), #20 (mobile back on a device), #21 (retention of guardians' photos).
+
+## «عدّل الوقت»: edit one lesson's time in place, API + DB + shared (R-SCH-11, 2026-10-03)
+
+Owner request: "make an option to edit the time of the session". Backend half (branch `edittime/api`); the web drawer and the mobile sheet code against the contract in docs/10 §10.
+
+### What exists
+- **Migration 174**: `lessons.time_edited_at / time_edit_reason / time_edit_was`; `lessons.local_date` frozen at insert (trigger on insert and `rule_id` only), so a moved generated lesson keeps its slot and the daily job never regenerates the old date; `edit_lesson_time(p jsonb)` (service role): compare-and-set (`stale_time`), confirmed → scheduled when the start moves, expiry + key release of old-time messages for an open lesson, report PDF back to `pending` for a held lesson, matching proposal approved, audit row, all in one transaction. SQL test plan in the migration header, run by `e2e/tests/edit-time.sql.spec.ts` (helpers in `e2e/support/edit-time.ts`).
+- **API** `PATCH /lessons/:id/time` (admin only): `LessonTimeService` (mode, replay, stale, pure `planTimeEdit`, conflicts without the lesson itself, `TimeEditPayout` lock, guardian notice, RPC, balance alerts, audit). `move` = scheduled / confirmed; `correct` = completed / late (same local day for the teacher and every student, reason required, grid and time-off ignored); everything else 409 `time_edit_not_allowed`.
+- **Payout lock**: approved / paid month blocks a move into it and a correction that changes the length of a paid-status lesson (409 `payout_locked`); a draft month answers `payout: 'draft_stale'`.
+- **Guardian notice**: only a move with a changed start and `notify !== false`; the booking_confirmation template, dedup key suffixed with the new start; queued as an admin action even with `auto_messages_enabled` off.
+- **Slots**: `GET /booking/slots?excludeLessonId` (a lesson is not busy against itself). `rule-projection` now keys held dates on `local_date`.
+- **Shared**: `lessonTimeEditSchema`, `TimeEditResult`, `timeEditMode`, `LessonView.time_edit_mode / time_edit`, `TIME_EDIT_ERRORS`; ar.json + en.json keys `lessons.editTime`, `lessons.timeEdit.*`, six new `lessons.error.*`.
+
+### Ponytail ceilings
+- Single lesson only: a series edit stays «غيّر الميعاد».
+- `pdf_refresh` is true for any held-lesson change of start or length, even when the lesson has no report yet.
+- An override onto another generated start of the same rule raises 23505 (409 `slot_taken`).
+- `draft_stale` is reported for a correction only; a move into a draft month changes no payout line yet.
+
+### Owner questions
+Teacher proposals for held-lesson corrections; guardian notice for a length-only change; time edits for `no_show` / `excused` (409 today).

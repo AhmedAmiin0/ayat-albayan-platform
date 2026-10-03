@@ -2,7 +2,7 @@ import type { LessonEvent, LessonStatus } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuditEntry } from '../../common/audit/audit.service';
 import { LessonEvents } from '../../common/events/lesson-events';
-import type { ChangeSet } from '../scheduling/change-set';
+import type { ChangeSet, TimeEditChange } from '../scheduling/change-set';
 import { errorCode } from '../scheduling/errors';
 import { LessonWriter } from '../scheduling/lesson-writer';
 import type { LessonRow } from './lesson-row';
@@ -47,5 +47,14 @@ export class LessonStore {
       throw e;
     }
     await this.events.changed((change.changes ?? []).map((c) => c.id));
+  }
+
+  /**
+   * «عدّل الوقت» (R-SCH-11): edit_lesson_time carries its own audit row. A time edit has no
+   * `changes[]`, so the balance alerts (R-SUB-02) are told explicitly. 409 stale_time on a lost race.
+   */
+  async retime(change: TimeEditChange): Promise<void> {
+    await this.writer.retime(change);
+    await this.events.changed([change.lesson_id]);
   }
 }

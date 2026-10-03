@@ -20,6 +20,7 @@ import { LessonsQueries } from './lessons.queries';
 import { OverviewQueries } from './overview/overview.queries';
 import { ADMIN, CONTACT, lessonRow, TEACHER, TEACHER_ID } from './lessons.fakes';
 import { TeacherMeQueries } from './teacher-me.queries';
+import { TimeEditQueries } from './time-edit.queries';
 
 const USERS: Record<string, AuthUser> = {
   admin: ADMIN,
@@ -34,7 +35,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 export type Token = keyof typeof USERS;
-export type InjectArgs = { method: 'GET' | 'POST'; url: string; token?: Token; body?: object };
+export type InjectArgs = { method: 'GET' | 'POST' | 'PATCH'; url: string; token?: Token; body?: object };
 
 function mocks() {
   return {
@@ -42,11 +43,12 @@ function mocks() {
       get: vi.fn(), byIds: vi.fn(), window: vi.fn(), studentPage: vi.fn(), studentExists: vi.fn(),
       openOfRule: vi.fn(), contacts: vi.fn(), seq: vi.fn(),
     },
-    writer: { apply: vi.fn(), generate: vi.fn() },
+    writer: { apply: vi.fn(), generate: vi.fn(), retime: vi.fn() },
     teachers: { idByProfile: vi.fn(), get: vi.fn(), loads: vi.fn() },
     overview: { teachers: vi.fn(), slots: vi.fn(), timeOff: vi.fn(), carryOver: vi.fn() },
     audit: { record: vi.fn() },
-    settings: { lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
+    settings: { lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn(), all: vi.fn() },
+    time: { payoutStatus: vi.fn() },
     rules: { rule: vi.fn(), activeRuleIds: vi.fn() },
     checker: { check: vi.fn() },
     me: { me: vi.fn() },
@@ -69,6 +71,7 @@ export async function lessonsApp() {
     .overrideProvider(ConflictChecker).useValue(m.checker)
     .overrideProvider(TeacherMeQueries).useValue(m.me)
     .overrideProvider(OverviewQueries).useValue(m.overview)
+    .overrideProvider(TimeEditQueries).useValue(m.time)
     .overrideProvider(LessonProposalQueries).useValue(m.proposals)
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
     .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
@@ -90,6 +93,8 @@ export async function lessonsApp() {
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : null));
     m.settings.lateCancelHours.mockResolvedValue(null);
     m.settings.bookingHorizonWeeks.mockResolvedValue(5);
+    m.settings.all.mockResolvedValue({ payout_count_late: false, payout_count_no_show: false });
+    m.time.payoutStatus.mockResolvedValue(null);
     m.rules.rule.mockResolvedValue(ruleRow());
     m.checker.check.mockResolvedValue([]);
     m.proposals.decide.mockResolvedValue(true);

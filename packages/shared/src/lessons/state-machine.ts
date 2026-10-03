@@ -12,6 +12,9 @@ import type { LessonStatus } from '../enums/index.js';
 //   payouts (R-TCH-04), and a moved lesson lives on as a new row (lessons.rescheduled_from_id).
 // - A wrong outcome is fixed through the report, not here: submit_report (migration 131)
 //   re-derives the lesson's outcome from its students' attendance, audited (R-REP-03).
+// - «عدّل الوقت» (R-SCH-11, edit_lesson_time) is not an event: it edits the time of the SAME row.
+//   The one status change it makes (a confirmed lesson moved to a new start goes back to
+//   scheduled, the guardian confirmed the old time) is a direct update in that RPC, not an edge.
 
 const OUTCOMES = ['completed', 'late', 'excused', 'no_show'] as const;
 const CLOSERS = ['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'] as const;

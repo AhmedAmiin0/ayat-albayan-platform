@@ -149,9 +149,40 @@ These supersede §2 and §5 where they differ.
 | 19 | `GET /messaging/templates` | admin, teacher | — | `TemplateView[]` (teacher: approved `TEACHER_TEMPLATE_KEYS`, no document header) | — |
 | 20 | `GET /messages/gate` | admin, teacher | — | `SendGateView` | — |
 | 21 | `GET /teachers/me/reports?page&pageSize` | teacher | page | `Page<TeacherReportView>`, newest `submitted_at` first | 404 `teacher_not_linked` |
+| 22 | `PATCH /lessons/:id/time` | admin | `{ expectedStartsAt, startsAt, durationMin: 30\|45\|60\|90, reason?: ≤300, notify?, override?: { reason } }` | 200 `TimeEditResult { lesson, notified, payout: 'none'\|'draft_stale', pdf_refresh }` | 400 `date_in_past`, `date_in_future`, `correction_cross_day`, `reason_required`; 404; 409 `time_edit_not_allowed`, `stale_time`, `conflict`, `payout_locked`, `slot_taken` |
 
 - **15:** five parallel reads (teachers, weekly rows, time off overlapping the window, `TeachersQueries.loads`, the window's lessons). Teachers = active ones plus any inactive one with a lesson in the window, by Arabic name; each with `students_count` (trial | active), `windows` (weekly rows expanded in the teacher's tz, merged, clipped), `time_off` and `free` = windows − time off − occupying lessons, gaps ≥ 30 min (`teacherSpans`). `teacherId` narrows every read (a per-teacher agenda). Lessons are one flat list by `starts_at`, every status.
 - **Teacher scope (16–18):** `teacher_thread_phones(teacher)` = guardians of students assigned to them, guardians of students on their lessons from 90 days ago on, and their own phone. A teacher's list shows only those phones, `unread_count` from `teacher_unread` (inbound after their last open, or the last 24 h if never opened), lead fields null and `subscribed` false. Opening a thread stamps `teacher_thread_reads` only: never `messages.read_at` (the admin's unread) and no Meta read receipt. `people` = the guardian and only their own students (`TeacherMeQueries.students`) with `subscription: null`; `lessons` = their own upcoming lessons.
 - **Teacher sends (18):** from the academy number, in their families' threads only; their own chat is read-only. Templates: `lesson_reminder`, `_meet`, `_plain`, `_24h` only; a `lessonId` must be their lesson. The 24 h window rule is unchanged. Dedup key `teacher:{clientRequestId}` (the admin keeps `admin:`); the row gets `created_by` = their profile and `sent_by_teacher_id`; the audit `after` adds `{ teacher_id, teacher_name }`.
 - **Reused as is:** `/teachers/me`, `/teachers/me/lessons`, `/teachers/me/pending-reports`, `/teachers/me/payouts`, `/teachers/:id/availability|time-off` (OwnTeacherGuard), `/students/:id/reports`, the report form routes.
 - **RLS (164):** `messages_teacher_read` (phone in `my_thread_phones()`), `teacher_thread_reads` (own rows; admin all; API writes). `teacher_thread_phones` and `teacher_unread` are service-role only.
+
+## 10. «عدّل الوقت»: edit one lesson's time in place (R-SCH-11, owner request 2026-10-03, migration 174)
+
+**Edit versus reschedule**
+
+| | عدّل الوقت (#22) | غيّر الميعاد (#8) |
+|---|---|---|
+| Lesson row | Same row (same id) | Old row closes as `rescheduled`, a new row is created |
+| Report and payments | Kept | Go to the new row |
+| Series | Single lesson only: «لو عايز تغيّر ميعاد كل الحلقات الجاية استخدم «غيّر الميعاد»» | One lesson or the whole rule |
+| Held lessons | `correct`: same day, reason required, audited | Not offered |
+| Teacher | Proposes only (R-SCH-08) | Proposes only |
+
+**Modes** (`timeEditMode(status)`, `LessonView.time_edit_mode`, null for a teacher): `move` = scheduled, confirmed; `correct` = completed, late; every other status → 409 `time_edit_not_allowed { status }`.
+
+**Service order** (`LessonTimeService.edit`): (1) mode, (2) replay: the stored start and length already equal the request → 200, `notified: 0`, nothing written, (3) `expectedStartsAt` ≠ stored start → 409 `stale_time { starts_at, ends_at }`, (4) `planTimeEdit` (pure): `move` needs a start after now (400 `date_in_past`); `correct` needs start and end at or before now (400 `date_in_future`), the same local day in the teacher's and every student's tz (400 `correction_cross_day`: no lesson-number reordering, no FIFO balance shift, no cross-month payout move) and a non-empty reason (400 `reason_required`), (5) conflicts through `ConflictChecker` without the lesson itself: a correction ignores `outside_availability` and `time_off` (it records what happened); a non-empty list without `override` is 409 `conflict { conflicts }` (the reschedule body), with `override` the reason is stored in `lessons.override_reason`, (6) payout lock, (7) guardian notice, (8) `edit_lesson_time` RPC, then `LessonEvents.changed` (balance alerts), (9) audit `lessons / time_edit`: before `{starts_at, ends_at}`, after `{starts_at, ends_at, reason, override_reason, notified, mode}`.
+
+**Payout lock** (`teacher_payouts`, month = start in the teacher's tz): `move`: the NEW month approved or paid → 409 `payout_locked { month, status }` (the lesson could never be paid there). `correct`: only when the status is paid (`payoutStatuses(settings)`) AND the length changed AND that month is approved or paid. A start-only shift on the same day changes nothing (the breakdown stores lesson ids only). A draft month is allowed: `payout: 'draft_stale'` (correct only), the admin presses «احسب مستحقات الشهر» again; there is no automatic regeneration. The rate of the new length is read at generate time; an approved row stays frozen.
+
+**Guardian notice**: only for `move` + a changed start + `notify !== false`. The `booking_confirmation*` template of the lesson's link host, one per guardian, for the NEW start; dedup key `booking_confirmation:{lesson}:{guardian}:{startMs}`. An admin action: queued even with `auto_messages_enabled` off (the sender still honours `messaging_enabled` and the env flag). A length-only change and every correction send nothing.
+
+**`edit_lesson_time(p jsonb)`** (service role, one transaction): compare-and-set on `(id, status, starts_at, ends_at)` else `raise 'stale_time'` (409); sets `time_edited_at`, `time_edit_reason`, `time_edit_was`, clears `conflicts`; a confirmed lesson whose start changed goes back to `scheduled` (confirmed_at / by cleared; a direct update, the state machine gets no new edge); `retime_open` (open lesson, new start) expires queued old-time messages (`booking_confirmation`, `lesson_reminder`, `lesson_reminder_24h`, `teacher_lesson_reminder`: the sender fails them with `expired`) and frees those dedup keys plus `lesson_needs_confirmation:{id}:*` push keys (a uuid suffix) so the jobs notify again for the new time; `refresh_pdf` (held lesson, new start or length) sets the report's `pdf_status` back to `pending` (the 60 s job re-renders; `report_ready` stays deduped, the guardian is not re-sent the file); a pending proposal for exactly the new start is approved; the audit row.
+
+**`lessons.local_date` is frozen at insert** (the trigger fires on insert and `rule_id`, no longer on `starts_at`): a moved generated lesson keeps holding its original slot, so the daily job never regenerates the old date, and `rule-projection` (now keyed on `local_date`) neither projects it as busy. The new date's own occurrence is still generated and the conflict check flags the overlap. ponytail: an admin override onto another generated start of the same rule raises 23505 (409 `slot_taken`).
+
+**Slot grid**: `GET /booking/slots` takes `excludeLessonId` (uuid): the lesson being edited is not busy against itself (also with `stepMin=15`).
+
+**LessonView** gains `time_edit_mode?: 'move' | 'correct' | null` and `time_edit?: { at, reason | null, was: { starts_at, ends_at } } | null`.
+
+**Open owner questions**: offer the held-lesson correction to teachers as a proposal? Notify the guardian when only the length changes? Do `no_show` and `excused` lessons ever need a time edit (409 today)?

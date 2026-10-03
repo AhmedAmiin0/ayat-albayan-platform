@@ -2,7 +2,7 @@ import type { Conflict } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { z } from 'zod';
 import { DB, type Db } from '../../common/db/db.module';
-import type { ChangeSet } from './change-set';
+import type { ChangeSet, TimeEditChange } from './change-set';
 import { callRpc } from './rpc';
 import { dbError } from '../teachers/http';
 
@@ -58,5 +58,10 @@ export class LessonWriter {
   /** Applies a change set atomically (migration 100); 409 invalid_transition / rule_not_active / slot_taken. */
   async apply(change: ChangeSet): Promise<void> {
     await callRpc(this.db, 'apply_lesson_changes', { p: change });
+  }
+
+  /** «عدّل الوقت» (migration 174): one lesson's time in place; 409 stale_time / slot_taken. */
+  async retime(change: TimeEditChange): Promise<void> {
+    await callRpc(this.db, 'edit_lesson_time', { p: change });
   }
 }

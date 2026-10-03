@@ -63,6 +63,23 @@ describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {
     expect(res.slots.at(-1)?.ends_at).toBe('2026-10-04T18:45:00.000Z');
   });
 
+  it('excludeLessonId (R-SCH-11): the lesson being edited is not busy against itself, teacher or student side', async () => {
+    const { service, availability, busy } = setup();
+    availability.listBusyLessons.mockResolvedValue([
+      { id: 'EDITED', starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') },
+    ]);
+    busy.studentLessons.mockResolvedValue([
+      { id: 'EDITED', student_id: IDS.s1, starts_at: new Date('2026-10-04T14:00:00Z'), ends_at: new Date('2026-10-04T14:45:00Z') },
+      { id: 'OTHER', student_id: IDS.s1, starts_at: new Date('2026-10-04T16:00:00Z'), ends_at: new Date('2026-10-04T16:45:00Z') },
+    ]);
+    const kinds = async (over: Partial<SlotsQuery>) =>
+      (await service.slots(query({ studentIds: [IDS.s1], durationMin: 45, stepMin: 60, ...over }))).slots
+        .filter((x) => x.conflicts.length > 0)
+        .map((x) => x.starts_at.slice(11, 16));
+    expect(await kinds({})).toEqual(['14:00', '16:00']);
+    expect(await kinds({ excludeLessonId: 'EDITED' })).toEqual(['16:00']);
+  });
+
   it('400 range_too_large past 14 days, 404 for an unknown teacher', async () => {
     const { service, queries } = setup();
     const wide = await service.slots(query({ to: '2026-10-19T00:00:01Z' })).catch((e: unknown) => e);

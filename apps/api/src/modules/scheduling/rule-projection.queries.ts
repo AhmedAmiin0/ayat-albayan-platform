@@ -55,16 +55,21 @@ export class RuleProjectionQueries {
     return [...new Set(data.map((r) => r.rule_id))];
   }
 
-  /** Dates the rules already hold (generated rows of any status), ±1 day around the span. */
+  /**
+   * Dates the rules already hold (generated rows of any status), ±2 days around the span. Keyed on
+   * local_date, not starts_at: a lesson edited in place (R-SCH-11) keeps holding its original date
+   * (migration 174), so that date is neither regenerated nor projected as busy.
+   */
   private async generated(ruleIds: readonly string[], span: UtcWindow): Promise<Set<string>> {
+    const day = (t: number): string => new Date(t).toISOString().slice(0, 10);
     const rows = await readAll((from, to) =>
       this.db
         .from('lessons')
         .select('id, rule_id, local_date')
         .in('rule_id', [...ruleIds])
         .is('rescheduled_from_id', null)
-        .gte('starts_at', new Date(span.from.getTime() - DAY_MS).toISOString())
-        .lt('starts_at', new Date(span.to.getTime() + DAY_MS).toISOString())
+        .gte('local_date', day(span.from.getTime() - 2 * DAY_MS))
+        .lte('local_date', day(span.to.getTime() + 2 * DAY_MS))
         .order('id')
         .range(from, to),
     );

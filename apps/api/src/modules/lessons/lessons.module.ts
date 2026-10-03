@@ -9,6 +9,7 @@ import { LessonProposalsController } from './lesson-proposals.controller';
 import { LessonProposalQueries } from './lesson-proposals.queries';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
 import { LessonRescheduleController } from './lesson-reschedule.controller';
+import { LessonTimeController } from './lesson-time.controller';
 import { LessonStatusService } from './lesson-status.service';
 import { LessonStore } from './lesson-store';
 import { LessonViews } from './lesson-views';
@@ -21,6 +22,9 @@ import { RescheduleRuleService } from './reschedule-rule.service';
 import { RuleCancelController } from './rule-cancel.controller';
 import { RulePlanner } from './rule-planner';
 import { StudentLessonsController } from './student-lessons.controller';
+import { LessonTimeService } from './time-edit.service';
+import { TimeEditPayout } from './time-edit.payout';
+import { TimeEditQueries } from './time-edit.queries';
 import { TeacherMeController } from './teacher-me.controller';
 import { TeacherMeQueries } from './teacher-me.queries';
 
@@ -30,7 +34,8 @@ import { TeacherMeQueries } from './teacher-me.queries';
  * R-SCH-08, R-TCH-03, R-LES-01..03.
  * LessonStatusService.confirm is exported for the Phase 4 WhatsApp webhook («نعم» → confirm);
  * TeacherMeQueries for the teacher-mode inbox (which children of a guardian the teacher sees).
- * GET /lessons/overview is the all-teachers calendar (R-SCH-09).
+ * GET /lessons/overview is the all-teachers calendar (R-SCH-09). PATCH /lessons/:id/time is
+ * «عدّل الوقت» (R-SCH-11): one lesson edited in place.
  */
 @Module({
   imports: [SchedulingModule, SubscriptionsModule, TeachersModule],
@@ -39,6 +44,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
     LessonActionsController,
     LessonProposalsController,
     LessonRescheduleController,
+    LessonTimeController,
     RuleCancelController,
     StudentLessonsController,
     TeacherMeController,
@@ -50,6 +56,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
     LessonProposeService,
     LessonStatusService,
     LessonStore,
+    LessonTimeService,
     LessonViews,
     LessonsQueries,
     OverviewQueries,
@@ -59,6 +66,8 @@ import { TeacherMeQueries } from './teacher-me.queries';
     RescheduleRuleService,
     RulePlanner,
     TeacherMeQueries,
+    TimeEditPayout,
+    TimeEditQueries,
   ],
   exports: [LessonStatusService, LessonViews, TeacherMeQueries],
 })

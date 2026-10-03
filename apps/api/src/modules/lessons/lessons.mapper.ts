@@ -5,7 +5,9 @@ import {
   type Conflict,
   type LessonEvent,
   type LessonProposalView,
+  timeEditMode,
   type LessonStudentView,
+  type LessonTimeEditView,
   type LessonView,
 } from '@ab/shared';
 import { z } from 'zod';
@@ -65,7 +67,20 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     conflicts: storedConflicts(row.conflicts),
     // A proposal on a lesson that was cancelled / held meanwhile is moot (approving would 409).
     pending_proposal: isOpenLesson(row.status) ? pendingProposal(row.proposals) : null,
+    // R-SCH-11: only an admin edits a time in place; a teacher proposes (R-SCH-08) or notes it in the report.
+    time_edit_mode: ctx.role === 'admin' ? timeEditMode(row.status) : null,
+    time_edit: timeEdit(row),
   };
+}
+
+const wasTimes = z.object({ starts_at: z.string(), ends_at: z.string() });
+
+/** lessons.time_edit_* → LessonView.time_edit (null when never edited or unreadable). */
+function timeEdit(row: LessonRow): LessonTimeEditView | null {
+  const was = wasTimes.safeParse(row.time_edit_was);
+  if (!row.time_edited_at || !was.success) return null;
+  const { starts_at, ends_at } = was.data;
+  return { at: iso(row.time_edited_at), reason: row.time_edit_reason ?? null, was: { starts_at: iso(starts_at), ends_at: iso(ends_at) } };
 }
 
 /** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */

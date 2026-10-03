@@ -41,7 +41,7 @@ export class SlotsService {
     const teacher = await this.queries.teacher(q.teacherId);
     if (!teacher) throw domainError(HttpStatus.NOT_FOUND, 'teacher_not_found');
     const studentIds = q.studentIds ?? [];
-    const rows = await this.context.load({ teacherId: teacher.id, studentIds, from, to });
+    const rows = await this.context.load({ teacherId: teacher.id, studentIds, from, to, excludeLessonId: q.excludeLessonId });
     const stepMin = q.stepMin ?? q.durationMin;
     const { durationMin } = q;
     // Candidates ignore time-off and lessons on purpose; findConflicts reports them per slot.

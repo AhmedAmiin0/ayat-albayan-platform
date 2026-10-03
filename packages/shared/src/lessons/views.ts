@@ -1,6 +1,7 @@
 import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '../enums/index.js';
 import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
+import type { LessonTimeEditView, TimeEditMode } from './time-edit.js';
 
 // Phase 2 API response shapes (docs/10-phase2-contracts.md §3). Responses are snake_case like
 // every other API row; instants are ISO-8601 UTC strings; tz fields are IANA ids.
@@ -56,6 +57,10 @@ export interface LessonView {
   conflicts: Conflict[];
   /** The teacher's pending «اقترح ميعاد تاني» (R-SCH-08), null when there is none. */
   pending_proposal: LessonProposalView | null;
+  /** R-SCH-11 «عدّل الوقت»: what an admin may do to the time (null = nothing, and for teachers). Absent in an old cache. */
+  time_edit_mode?: TimeEditMode | null;
+  /** The last in-place time edit (the time it replaced), null when never edited. */
+  time_edit?: LessonTimeEditView | null;
 }
 
 /** A teacher's proposed new time for one lesson; an admin approves (reschedule) or rejects. */

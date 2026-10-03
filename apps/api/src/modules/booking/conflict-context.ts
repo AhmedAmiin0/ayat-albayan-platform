@@ -4,7 +4,12 @@ import { BusyQueries } from '../scheduling/busy.queries';
 import { AvailabilityQueries } from '../teachers/availability/availability.queries';
 import type { Range } from './booking.queries';
 
-export type ContextQuery = Range & { teacherId: string; studentIds: readonly string[] };
+export type ContextQuery = Range & {
+  teacherId: string;
+  studentIds: readonly string[];
+  /** A lesson being edited in place (R-SCH-11): it must not count as busy against itself. */
+  excludeLessonId?: string | undefined;
+};
 export type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
 
 /**
@@ -27,11 +32,12 @@ export class ConflictContext {
       this.availability.listBusyLessons(q.teacherId, range),
       this.busy.studentLessons(q.studentIds, range),
     ]);
+    const others = <T extends { id: string }>(lessons: T[]): T[] => lessons.filter((l) => l.id !== q.excludeLessonId);
     return {
       availability,
       timeOff: timeOff.map((t) => ({ start: new Date(t.starts_at), end: new Date(t.ends_at) })),
-      teacherLessons,
-      studentLessons,
+      teacherLessons: others(teacherLessons),
+      studentLessons: others(studentLessons),
     };
   }
 }
