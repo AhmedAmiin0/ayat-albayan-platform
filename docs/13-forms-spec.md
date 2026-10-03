@@ -51,6 +51,12 @@ Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher 
 10. The booking wizard needs a teacher and a free slot; a registration still waiting for a teacher («خيار فاضي») goes through «إضافة طالب» («لسه مفيش معلم»).
 11. «تاريخ الحلقة *» and «رقم الحلقة *» on the report are lesson-derived and read-only (the number is computed per student). Say if a teacher must be able to correct the number.
 12. The package labels follow the form everywhere (also subscriptions, exports, the dashboard): «حلقة تجريبية مجانية بس», «8 حلقات», «12 حلقة». Say if lists should keep the older «… في الشهر» wording and the form wording stay on the registration choice only.
+13. «نوع الحجز» was read as three types (تجريبية / اشتراك / حجز تعويضي), because only «حجز تعويضي» was named. If a second new type was meant, say which.
+14. The invoice is required for a makeup too (the literal reading of «not trial»). Say if a makeup should not need one: it is one line in the planner and the wizard.
+15. Only a lesson the package already charged can be made up (a student's no-show, or an excuse that counted as a late cancel). A teacher or admin cancellation goes through «غيّر الميعاد». Say if those should also allow a free makeup.
+16. The guardian's makeup confirmation reuses the approved booking templates («تم حجز حلقة تعويضية لـسهيلة — …»). Different wording needs a new Meta template and about a day of approval.
+17. The invoice is proof on the booking; no payment row is created from it. Recording the payment stays «سجّل الدفعة». Say if the invoice should pre-fill the payment's receipt.
+18. A WhatsApp file is fetchable for 29 days (Meta keeps a media id about 30). Older ones show as expired and the family is asked to send it again.
 
 ---
 
@@ -108,9 +114,3 @@ Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher 
 رقم واتساب للتواصل    نص قصير    بيتعبّى تلقائيًا من الرابط
 
 (* = required)
-13. «نوع الحجز» was read as three types (تجريبية / اشتراك / حجز تعويضي), because only «حجز تعويضي» was named. If a second new type was meant, say which.
-14. The invoice is required for a makeup too (the literal reading of «not trial»). Say if a makeup should not need one: it is one line in the planner and the wizard.
-15. Only a lesson the package already charged can be made up (a student's no-show, or an excuse that counted as a late cancel). A teacher or admin cancellation goes through «غيّر الميعاد». Say if those should also allow a free makeup.
-16. The guardian's makeup confirmation reuses the approved booking templates («تم حجز حلقة تعويضية لـسهيلة — …»). Different wording needs a new Meta template and about a day of approval.
-17. The invoice is proof on the booking; no payment row is created from it. Recording the payment stays «سجّل الدفعة». Say if the invoice should pre-fill the payment's receipt.
-18. A WhatsApp file is fetchable for 29 days (Meta keeps a media id about 30). Older ones show as expired and the family is asked to send it again.

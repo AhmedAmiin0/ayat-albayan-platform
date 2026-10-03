@@ -1,4 +1,4 @@
-import { MAKEUP_WINDOW_DAYS, type LessonStatus, type MakeupCandidate } from '@ab/shared';
+import { MAKEUP_WINDOW_DAYS, type MakeupCandidate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
@@ -8,7 +8,7 @@ const LIMIT = 20;
 /** A cancelled or moved makeup frees its missed lesson (lessons_makeup_of_key). */
 const INACTIVE = '(cancelled_by_teacher,cancelled_by_admin,rescheduled)';
 const SELECT =
-  'lesson_id, lesson:lessons!inner(id, starts_at, ends_at, status, makeup_of_id, teacher:teachers(id, display_name_ar), rule:schedule_rules!lessons_rule_id_fkey(package))';
+  'id, starts_at, ends_at, status, teacher:teachers(id, display_name_ar), rule:schedule_rules!lessons_rule_id_fkey(package), lesson_students!inner(student_id, chargeable)';
 
 /**
  * GET /booking/makeup-candidates (R-SCH-10): the lessons one student can still make up. Same rule
@@ -22,27 +22,27 @@ export class MakeupCandidates {
   async list(studentId: string): Promise<MakeupCandidate[]> {
     const since = new Date(Date.now() - MAKEUP_WINDOW_DAYS * DAY_MS).toISOString();
     const { data, error } = await this.db
-      .from('lesson_students')
+      .from('lessons')
       .select(SELECT)
-      .eq('student_id', studentId)
-      .eq('chargeable', true)
-      .in('lesson.status', ['no_show', 'excused'])
-      .gte('lesson.starts_at', since)
-      .is('lesson.makeup_of_id', null)
-      .order('starts_at', { referencedTable: 'lessons', ascending: false })
+      .eq('lesson_students.student_id', studentId)
+      .eq('lesson_students.chargeable', true)
+      .in('status', ['no_show', 'excused'])
+      .gte('starts_at', since)
+      .is('makeup_of_id', null)
+      .order('starts_at', { ascending: false })
       .limit(LIMIT * 2);
     if (error) throw dbError(error);
-    const missed = data.filter((r) => r.lesson?.rule?.package !== 'trial');
-    const taken = await this.taken(missed.map((r) => r.lesson_id));
+    const missed = data.filter((l) => l.rule?.package !== 'trial');
+    const taken = await this.taken(missed.map((l) => l.id));
     return missed
-      .filter((r) => !taken.has(r.lesson_id))
+      .filter((l) => !taken.has(l.id))
       .slice(0, LIMIT)
-      .map(({ lesson }) => ({
-        lesson_id: lesson?.id ?? '',
-        starts_at: new Date(lesson?.starts_at ?? 0).toISOString(),
-        status: lesson?.status ?? ('no_show' satisfies LessonStatus),
-        duration_min: Math.round((Date.parse(lesson?.ends_at ?? '') - Date.parse(lesson?.starts_at ?? '')) / 60_000),
-        teacher: lesson?.teacher ?? { id: '', display_name_ar: '' },
+      .map((l) => ({
+        lesson_id: l.id,
+        starts_at: new Date(l.starts_at).toISOString(),
+        status: l.status,
+        duration_min: Math.round((Date.parse(l.ends_at) - Date.parse(l.starts_at)) / 60_000),
+        teacher: l.teacher ?? { id: '', display_name_ar: '' },
       }));
   }
 
