@@ -9,7 +9,7 @@ const rule: PlanRule = {
   tz: 'Asia/Riyadh',
   durationMin: 45,
   startsOn: '2026-10-01',
-  package: '8',
+  single: false,
 };
 const input = (over: Partial<PlanRule> = {}, horizonWeeks = 5): PlanInput => ({
   rule: { ...rule, ...over },
@@ -56,20 +56,20 @@ describe('planBooking — paid packages (R-SCH-02, R-SCH-06)', () => {
 
 describe('planBooking — trial (docs/10 invariant 4)', () => {
   it('is exactly the first occurrence, and the rule ends that local day', () => {
-    const plan = planBooking(input({ package: 'trial' }));
+    const plan = planBooking(input({ single: true }));
     expect(plan.occurrences.map((o) => o.starts_at.toISOString())).toEqual(['2026-10-04T14:00:00.000Z']);
     expect(plan.timing.ends_on).toBe('2026-10-04');
   });
 
   it('ends_on is the local date even when the UTC date is the day before', () => {
     // Sunday 01:00 Riyadh = Saturday 22:00Z.
-    const plan = planBooking(input({ package: 'trial', byday: [0], startTimeLocal: '01:00' }));
+    const plan = planBooking(input({ single: true, byday: [0], startTimeLocal: '01:00' }));
     expect(plan.occurrences[0]?.starts_at.toISOString()).toBe('2026-10-03T22:00:00.000Z');
     expect(plan.timing.ends_on).toBe('2026-10-04');
   });
 
   it('a trial with nothing in the horizon stays empty', () => {
-    const plan = planBooking(input({ package: 'trial', startsOn: '2026-12-01' }));
+    const plan = planBooking(input({ single: true, startsOn: '2026-12-01' }));
     expect(plan).toMatchObject({ occurrences: [], timing: { ends_on: null } });
   });
 });

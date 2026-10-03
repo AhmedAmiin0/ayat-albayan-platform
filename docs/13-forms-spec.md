@@ -23,6 +23,20 @@ Requirements R-FRM-01..03 (docs/03 §3.12). The text below is the owner's paste,
 
 The link is `base64url(lessonId | studentId | exp) . HMAC-SHA256` (71 characters, 14 days). `lesson_feedback` stores only its sha256 (`token_hash`), so a resend revokes the old link. The link itself rides in the request message's `template_params.button` for the sender, and migration 168 keeps `lesson_feedback_request` messages out of the teacher's RLS read (a teacher could otherwise answer for the family). The server fills teacher and kind; the client never sends them.
 
+## Additions beyond the Google Form (owner request 2026-10-03)
+
+Two fields the Google Form never had, in the academy's Egyptian tone. They are additions to the wizard, not changes to the form's own wording.
+
+| Field | Type | Options / rule | API |
+|---|---|---|---|
+| نوع الحجز | one choice | حلقة تجريبية مجانية بس / اشتراك / حجز تعويضي (`kind`: trial / package / makeup) | `kind` on `POST /booking`; R-SCH-10 |
+| الحلقة اللي الطالب فاتته (makeup only) | one choice | the student's missed lessons (`GET /booking/makeup-candidates?studentId`) | `makeupOfLessonId` |
+| الفاتورة * (not for a trial) | image / PDF | upload from the device, or «من الشات» (the family's recent WhatsApp images / PDFs) | `invoice: {source: 'upload', path}` or `{source: 'whatsapp', messageId}`; R-PAY-03, R-MSG-06 |
+
+Errors with a string in `booking.error.*`: `invoice_required`, `invoice_type`, `invoice_too_large`, `invoice_path`, `invoice_message`, `media_expired`, `message_not_found`, `request_id_required`, `makeup_not_eligible`, `makeup_exists`, `makeup_student`, `makeup_scope_one`.
+
+Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher or guardian policy), private buckets `invoices` and `wa-media`, `lessons.makeup_of_id` (partial unique index: one active makeup per missed lesson; a one-lesson move keeps the tag), `create_booking` v3, balance views without makeups. Payouts count by lesson status only, so a completed makeup is paid like any completed lesson. The report PDF shows no package progress on a makeup (it has no package slot).
+
 ## Owner decisions flagged
 
 1. «الساعه» and «تاريخ اول حصه» are applied literally (the app's own wording is «الساعة» and «تاريخ أول حلقة»).
@@ -37,6 +51,12 @@ The link is `base64url(lessonId | studentId | exp) . HMAC-SHA256` (71 characters
 10. The booking wizard needs a teacher and a free slot; a registration still waiting for a teacher («خيار فاضي») goes through «إضافة طالب» («لسه مفيش معلم»).
 11. «تاريخ الحلقة *» and «رقم الحلقة *» on the report are lesson-derived and read-only (the number is computed per student). Say if a teacher must be able to correct the number.
 12. The package labels follow the form everywhere (also subscriptions, exports, the dashboard): «حلقة تجريبية مجانية بس», «8 حلقات», «12 حلقة». Say if lists should keep the older «… في الشهر» wording and the form wording stay on the registration choice only.
+13. «نوع الحجز» was read as three types (تجريبية / اشتراك / حجز تعويضي), because only «حجز تعويضي» was named. If a second new type was meant, say which.
+14. The invoice is required for a makeup too (the literal reading of «not trial»). Say if a makeup should not need one: it is one line in the planner and the wizard.
+15. Only a lesson the package already charged can be made up (a student's no-show, or an excuse that counted as a late cancel). A teacher or admin cancellation goes through «غيّر الميعاد». Say if those should also allow a free makeup.
+16. The guardian's makeup confirmation reuses the approved booking templates («تم حجز حلقة تعويضية لـسهيلة — …»). Different wording needs a new Meta template and about a day of approval.
+17. The invoice is proof on the booking; no payment row is created from it. Recording the payment stays «سجّل الدفعة». Say if the invoice should pre-fill the payment's receipt.
+18. A WhatsApp file is fetchable for 29 days (Meta keeps a media id about 30). Older ones show as expired and the family is asked to send it again.
 
 ---
 

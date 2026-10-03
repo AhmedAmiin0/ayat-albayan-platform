@@ -7,6 +7,10 @@ export const BUCKETS = {
   reports: 'reports',
   attachments: 'report-attachments',
   receipts: 'receipts',
+  /** The فاتورة of a non-trial booking (migration 170). */
+  invoices: 'invoices',
+  /** Inbound WhatsApp media downloaded on demand (migration 170). */
+  waMedia: 'wa-media',
 } as const;
 export type Bucket = (typeof BUCKETS)[keyof typeof BUCKETS];
 
@@ -45,6 +49,26 @@ export function attachmentPath(input: { reportId: string; mime: string }): strin
 /** receipts/{subscription_id}/{uuid}.{ext} (R-PAY-01, R-MOB-02 camera). */
 export function receiptPath(input: { subscriptionId: string; mime: string }): string {
   return `${input.subscriptionId}/${randomUUID()}.${extFor(input.mime)}`;
+}
+
+/** invoices/{client_request_id}/{name}: the booking's own folder, so a path proves whose it is. */
+export function invoicePath(input: { requestId: string; name: string }): string {
+  return `${input.requestId}/${input.name}`;
+}
+
+/** One object per upload: `{uuid}.{ext}`. */
+export function uploadName(mime: string): string {
+  return `${randomUUID()}.${extFor(mime)}`;
+}
+
+/** Deterministic, so saving the same chat message twice (a retry) lands on the same object. */
+export function chatName(messageId: string, mime: string): string {
+  return `wa-${messageId}.${extFor(mime)}`;
+}
+
+/** wa-media/{message_id}.{ext}: the cache of one inbound message's file. */
+export function waMediaPath(input: { messageId: string; mime: string }): string {
+  return `${input.messageId}.${extFor(input.mime)}`;
 }
 
 /** Does `path` belong to `owner` (a report id or a subscription id)? Guards a client-sent path. */

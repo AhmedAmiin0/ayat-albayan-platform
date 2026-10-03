@@ -535,7 +535,52 @@
     "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
     "packageTrial": "Free trial lesson only",
     "dayLocked": "The picked time's day stays on",
-    "packageDays": "{package} = {perWeek}"
+    "packageDays": "{package} = {perWeek}",
+    "kind": {
+      "label": "Booking type",
+      "trial": "Free trial lesson only",
+      "package": "Subscription",
+      "makeup": "Makeup lesson",
+      "makeupLead": "A makeup lesson is for a registered student only"
+    },
+    "makeup": {
+      "pickMissed": "Pick the lesson the student missed",
+      "none": "No missed lesson to make up. If the teacher or admin cancelled one, use «Reschedule»",
+      "tag": "Makeup",
+      "title": "Book a makeup lesson",
+      "action": "Book makeup",
+      "done": "The makeup lesson is booked",
+      "missedLesson": "Missed lesson"
+    },
+    "makeupFor": "Makeup for {names}",
+    "invoice": {
+      "label": "Invoice",
+      "hint": "A photo or PDF proving payment. Required before booking",
+      "upload": "Upload invoice",
+      "fromChat": "From chat",
+      "replace": "Replace",
+      "remove": "Remove",
+      "chatEmpty": "No images or files from the guardian in the last 30 days",
+      "expired": "WhatsApp no longer keeps this file. Ask the guardian to send it again",
+      "uploading": "Uploading…",
+      "view": "Open invoice",
+      "recordPayment": "Record payment",
+      "section": "Invoices"
+    },
+    "error": {
+      "invoice_required": "Upload the invoice or pick it from the chat before booking",
+      "invoice_type": "Upload an image or PDF only",
+      "invoice_too_large": "The invoice is too large, 10 MB at most",
+      "invoice_path": "This invoice does not belong to this booking, upload it again",
+      "invoice_message": "This message is not from this student's guardian or has no image or PDF",
+      "media_expired": "WhatsApp no longer keeps this file. Ask the guardian to send it again",
+      "message_not_found": "That message does not exist",
+      "request_id_required": "Try again, the booking needs a request id",
+      "makeup_not_eligible": "This lesson cannot be made up",
+      "makeup_exists": "This lesson already has a makeup booking",
+      "makeup_student": "The student is not on the missed lesson",
+      "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule"
+    }
   },
   "lessons": {
     "title": "Lessons",

@@ -9,8 +9,11 @@ import { DAY, localDay, offsetMs, zonedToUtc } from '../teachers/availability/zo
 
 export type PlanRule = Pick<
   BookingRequest,
-  'byday' | 'startTimeLocal' | 'tz' | 'durationMin' | 'startsOn' | 'package' | 'startsAt'
->;
+  'byday' | 'startTimeLocal' | 'tz' | 'durationMin' | 'startsOn' | 'startsAt'
+> & {
+  /** A trial or a makeup: exactly the first occurrence, the rule ends that local day (isSingleLesson). */
+  single: boolean;
+};
 export type PlanInput = { rule: PlanRule; now: Date; horizonWeeks: number };
 export type Plan = { timing: RuleTiming; occurrences: Occurrence[] };
 
@@ -43,9 +46,9 @@ function pinFirst(all: Occurrence[], rule: PlanRule): Occurrence[] {
 }
 
 /**
- * The rule and the lessons a booking creates over the horizon (R-SCH-02, R-SCH-06). A trial is
- * exactly the first occurrence and its rule ends on that local day (docs/10 invariant 4); paid
- * packages are open-ended. No occurrence in the window → empty list (the caller rejects it).
+ * The rule and the lessons a booking creates over the horizon (R-SCH-02, R-SCH-06, R-SCH-10). A
+ * trial or a makeup is exactly the first occurrence and its rule ends on that local day (docs/10
+ * invariant 4); paid packages are open-ended. No occurrence in the window → empty list (the caller rejects it).
  */
 export function planBooking(input: PlanInput): Plan {
   const { rule } = input;
@@ -59,7 +62,7 @@ export function planBooking(input: PlanInput): Plan {
   };
   const all = pinFirst(ruleOccurrences(timing, horizonWindow(input)), rule);
   const [first] = all;
-  if (rule.package !== 'trial' || !first) return { timing, occurrences: all };
+  if (!rule.single || !first) return { timing, occurrences: all };
   const endsOn = isoDay(localDay(first.starts_at.getTime(), rule.tz));
   return { timing: { ...timing, ends_on: endsOn }, occurrences: [first] };
 }

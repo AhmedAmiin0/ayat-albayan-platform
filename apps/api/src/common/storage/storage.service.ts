@@ -53,6 +53,23 @@ export class StorageService {
     return data;
   }
 
+  /** Size and content type of an object, null when it is missing. Trusts Storage, not the client. */
+  async info(ref: ObjectRef): Promise<{ size: number; contentType: string } | null> {
+    const { data, error } = await this.db.storage.from(ref.bucket).info(ref.path);
+    if (error || !data) return null;
+    return { size: data.size ?? 0, contentType: data.contentType ?? '' };
+  }
+
+  /** Server-side copy, across buckets, never through the client. Idempotent: an existing target stays. */
+  async copy(input: { from: ObjectRef; to: ObjectRef }): Promise<void> {
+    const { from, to } = input;
+    if (await this.exists(to)) return;
+    const { error } = await this.db.storage
+      .from(from.bucket)
+      .copy(from.path, to.path, { destinationBucket: to.bucket });
+    if (error) throw new Error(`storage copy failed: ${error.message}`);
+  }
+
   async remove(ref: ObjectRef): Promise<void> {
     const { error } = await this.db.storage.from(ref.bucket).remove([ref.path]);
     if (error) throw new Error(`storage remove failed: ${error.message}`);

@@ -6,6 +6,8 @@ import { ReadReceipts } from './read-receipts';
 import { TeacherScopes } from './teacher-scope';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { TeacherThreadsService } from './teacher-threads.service';
+import { ThreadMediaController } from './thread-media.controller';
+import { ThreadMediaService } from './thread-media.service';
 import { ThreadReads } from './thread-reads';
 import { ThreadSendService } from './thread-send.service';
 import { ThreadsController } from './threads.controller';
@@ -22,7 +24,7 @@ import { ThreadsService } from './threads.service';
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule],
-  controllers: [ThreadsController],
+  controllers: [ThreadsController, ThreadMediaController],
   providers: [
     ThreadsQueries,
     ThreadsService,
@@ -33,6 +35,7 @@ import { ThreadsService } from './threads.service';
     TeacherScopes,
     TeacherThreadsService,
     ThreadReads,
+    ThreadMediaService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path.
   exports: [Outbox],

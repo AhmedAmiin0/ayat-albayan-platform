@@ -14,6 +14,7 @@ function lesson(day: string, status: LessonStatus, extra: Partial<PackageLesson>
     status,
     chargeable: !['excused', 'cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled'].includes(status),
     trial: false,
+    makeup: false,
     ...extra,
   };
 }
@@ -47,7 +48,7 @@ describe('consumesPackage (migration 123 rules 1–3, R-SUB-01, issue E1)', () =
     ['cancelled_by_teacher', false, false, false],
     ['rescheduled', false, false, false],
   ];
-  const cases = rows.map(([status, chargeable, trial, expected]) => ({ status, chargeable, trial, expected }));
+  const cases = rows.map(([status, chargeable, trial, expected]) => ({ status, chargeable, trial, makeup: false, expected }));
   it.each(cases)('$status chargeable=$chargeable trial=$trial → $expected', (c) => {
     expect(consumesPackage(c)).toBe(c.expected);
   });

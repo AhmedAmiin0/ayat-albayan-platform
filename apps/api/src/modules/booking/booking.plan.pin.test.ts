@@ -10,7 +10,7 @@ const rule: PlanRule = {
   tz: 'Africa/Cairo',
   durationMin: 45,
   startsOn: '2026-10-29',
-  package: '8',
+  single: false,
 };
 const first = (over: Partial<PlanRule>) =>
   planBooking({ rule: { ...rule, ...over }, now, horizonWeeks: 5 }).occurrences[0];

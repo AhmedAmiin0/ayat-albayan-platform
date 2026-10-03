@@ -30,6 +30,8 @@ export interface LessonView {
   rule_byday?: number[] | null;
   /** The rule is a حلقة تجريبية (schedule_rules.package = 'trial'); a one-off move keeps it. Absent in an old cache. */
   trial?: boolean;
+  /** A حجز تعويضي: replaces a missed lesson, never consumes a package unit (lessons.makeup_of_id). */
+  makeup?: boolean;
   teacher: { id: string; display_name_ar: string; display_name_en?: string | null; tz: string };
   starts_at: string;
   ends_at: string;
@@ -127,4 +129,6 @@ export interface BookingResult {
   lessons: { id: string; starts_at: string; ends_at: string }[];
   /** Queued booking_confirmation* messages, one per guardian (docs/10 §5.11). */
   message_ids: string[];
+  /** The stored فاتورة (null for a trial). */
+  invoice_id: string | null;
 }

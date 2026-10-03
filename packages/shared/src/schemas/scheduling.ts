@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { DURATIONS, PACKAGE_SIZES } from '../enums/index.js';
 import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../lessons/state-machine.js';
+import { bookingExtras, refineBookingKind } from './booking-extras.js';
 import { requiredText, timeOfDay, timeZone } from './common.js';
 import { guardianCreateSchema, studentCreateSchema } from './people.js';
 
@@ -36,7 +37,9 @@ export const weeklyRuleSchema = z.object({
 });
 
 const bookingBase = weeklyRuleSchema.extend({
-  package: z.enum(PACKAGE_SIZES),
+  /** Absent only for a makeup (kind 'makeup'); refined below. */
+  package: z.enum(PACKAGE_SIZES).optional(),
+  ...bookingExtras,
   meetingLink: z.url().nullish(),
   override: overrideSchema.optional(),
   /** Idempotency key: a replay with the same id returns the first booking (rule 8). */
@@ -46,19 +49,22 @@ const bookingBase = weeklyRuleSchema.extend({
 });
 
 /**
- * POST /booking (R-SCH-06, R-LEAD-06): existing students, or a lead converted into a guardian +
- * new student. Exactly one of the two shapes; sending both is rejected.
+ * POST /booking (R-SCH-06, R-LEAD-06, R-SCH-10): existing students, or a lead converted into a
+ * guardian + new student. Exactly one of the two shapes; sending both is rejected. `kind` picks
+ * trial / package / makeup (derived from `package` when omitted); a makeup is one existing student.
  */
-export const bookingRequestSchema = z.xor([
-  bookingBase.extend({ studentIds: uniqueIds, leadId: z.uuid().optional() }),
-  bookingBase.extend({
-    leadId: z.uuid(),
-    newStudent: studentCreateSchema.omit({ guardian_id: true, teacher_id: true }),
-    guardian: guardianCreateSchema,
-    /** Create the student although the guardian has one with a similar name (R-STU-03). */
-    force: z.boolean().optional(),
-  }),
-]);
+export const bookingRequestSchema = z
+  .xor([
+    bookingBase.extend({ studentIds: uniqueIds, leadId: z.uuid().optional() }),
+    bookingBase.extend({
+      leadId: z.uuid(),
+      newStudent: studentCreateSchema.omit({ guardian_id: true, teacher_id: true }),
+      guardian: guardianCreateSchema,
+      /** Create the student although the guardian has one with a similar name (R-STU-03). */
+      force: z.boolean().optional(),
+    }),
+  ])
+  .superRefine(refineBookingKind);
 
 /** POST /lessons/:id/reschedule (R-SCH-07): one occurrence, or this rule from `startsOn` on. */
 export const rescheduleRequestSchema = z.discriminatedUnion('scope', [

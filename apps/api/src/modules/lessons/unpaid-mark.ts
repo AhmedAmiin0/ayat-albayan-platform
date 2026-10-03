@@ -11,9 +11,13 @@ export function upcomingStudentIds(rows: readonly LessonRow[], now: number): str
   return rows.filter((r) => upcoming(r, now)).flatMap((r) => r.lesson_students.map((s) => s.student_id));
 }
 
-/** Sets `unpaid: true` on flagged students of an upcoming lesson (R-SUB-02); others unchanged. */
+/**
+ * Sets `unpaid: true` on flagged students of an upcoming lesson (R-SUB-02); others unchanged. A
+ * makeup (R-SCH-10) is never marked: it consumes no package unit, so an unpaid package is no reason
+ * to warn about it.
+ */
 export function markUnpaid(view: LessonView, flagged: ReadonlySet<string>, now: number): LessonView {
-  if (flagged.size === 0 || !upcoming(view, now)) return view;
+  if (flagged.size === 0 || view.makeup || !upcoming(view, now)) return view;
   if (!view.students.some((s) => flagged.has(s.id))) return view;
   return { ...view, students: view.students.map((s) => (flagged.has(s.id) ? { ...s, unpaid: true } : s)) };
 }

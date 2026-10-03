@@ -1,5 +1,7 @@
 import { Global, Module } from '@nestjs/common';
 import { loadEnv, whatsappEnv } from '../../env';
+import { InboundMedia } from './inbound-media.service';
+import { InboundMediaQueries } from './inbound-media.queries';
 import { MessageDispatch } from './message.dispatch';
 import { MessageSender } from './message.sender';
 import { MessageViews } from './message.views';
@@ -18,8 +20,9 @@ import { WHATSAPP_CLIENT, type WhatsappClient } from './whatsapp.types';
 /**
  * B1 (docs/12 §1): WhatsappClient over WA_API_BASE, the template registry, the outbound sender
  * and routes T1–T3, M1–M2. Global: the inbox (B2) and the jobs (B3) inject WHATSAPP_CLIENT,
- * SendGate (is sending on?), MessageSender (kick after an enqueue), TemplateRegistry (approved?)
- * and MessageViews (MessageView with click_to_chat).
+ * SendGate (is sending on?), MessageSender (kick after an enqueue), TemplateRegistry (approved?),
+ * MessageViews (MessageView with click_to_chat) and InboundMedia (an inbound image / PDF as a file we
+ * own, R-MSG-06).
  */
 @Global()
 @Module({
@@ -36,7 +39,9 @@ import { WHATSAPP_CLIENT, type WhatsappClient } from './whatsapp.types';
     MessagesQueries,
     MessageViews,
     MessagesService,
+    InboundMediaQueries,
+    InboundMedia,
   ],
-  exports: [WHATSAPP_CLIENT, TemplateRegistry, SendGate, MessageSender, MessageViews],
+  exports: [WHATSAPP_CLIENT, TemplateRegistry, SendGate, MessageSender, MessageViews, InboundMedia, InboundMediaQueries],
 })
 export class WhatsappModule {}

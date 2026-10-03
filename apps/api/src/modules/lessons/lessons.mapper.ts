@@ -48,6 +48,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     rule_id: row.rule_id,
     rule_byday: row.rule?.byday ?? null,
     trial: row.rule?.package === 'trial',
+    makeup: (row.makeup_of_id ?? null) !== null,
     teacher: row.teacher ?? { id: row.teacher_id, display_name_ar: '', tz: '' },
     starts_at: iso(row.starts_at),
     ends_at: iso(row.ends_at),

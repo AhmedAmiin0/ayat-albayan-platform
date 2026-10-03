@@ -1,6 +1,17 @@
 import { describe, expect, it } from 'vitest';
 import { ATTACHMENT_MIMES, RECEIPT_MIMES } from '@ab/shared';
-import { attachmentPath, extFor, isPathOf, receiptPath, reportPdfPath } from './storage.paths';
+import {
+  attachmentPath,
+  BUCKETS,
+  chatName,
+  extFor,
+  invoicePath,
+  isPathOf,
+  receiptPath,
+  reportPdfPath,
+  uploadName,
+  waMediaPath,
+} from './storage.paths';
 
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
 
@@ -16,6 +27,20 @@ describe('storage paths (migration 122 policies parse these)', () => {
     expect(file?.replace(/\.mp3$/, '')).toMatch(UUID);
     expect(attachmentPath({ reportId: 'r1', mime: 'audio/mpeg' })).not.toBe(a);
     expect(receiptPath({ subscriptionId: 'sub', mime: 'image/jpeg' })).toMatch(/^sub\/[0-9a-f-]{36}\.jpg$/);
+  });
+
+  it('invoice: {client_request_id}/{name}; a chat copy has a deterministic name, an upload a new one', () => {
+    const requestId = 'req';
+    expect(invoicePath({ requestId, name: chatName('m1', 'image/png') })).toBe('req/wa-m1.png');
+    expect(chatName('m1', 'application/pdf')).toBe(chatName('m1', 'application/pdf'));
+    expect(uploadName('image/jpeg')).toMatch(/^[0-9a-f-]{36}\.jpg$/);
+    expect(uploadName('image/jpeg')).not.toBe(uploadName('image/jpeg'));
+    expect(isPathOf(invoicePath({ requestId, name: uploadName('image/png') }), requestId)).toBe(true);
+  });
+
+  it('wa-media cache: {message_id}.{ext}; the buckets are named once', () => {
+    expect(waMediaPath({ messageId: 'm1', mime: 'image/webp' })).toBe('m1.webp');
+    expect(BUCKETS).toMatchObject({ invoices: 'invoices', waMedia: 'wa-media' });
   });
 
   it('every accepted mime has a real extension', () => {

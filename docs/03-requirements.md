@@ -69,6 +69,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-SCH-07** Reschedule / cancel single occurrence or whole rule; cancellations by teacher do not consume the student's package; late cancels by student (<N hours) optionally consume one lesson (setting).
 - **R-SCH-08** Teacher self-service: view week, mark attendance, propose reschedule (admin approves).
 - **R-SCH-09** All-teachers calendar (owner request 2026-10-02): every teacher — empty ones too — with programs, gender, tz, load (n of max), weekly windows, time off, free gaps (≥ 30 min) and lessons (trial lessons tagged «تجريبية»), as a web day/week board and a mobile agenda, from one batched read (`GET /lessons/overview`, docs/10 §9).
+- **R-SCH-10** Booking type (owner request 2026-10-03): a booking is `trial` (حلقة تجريبية), `package` (اشتراك) or `makeup` (حجز تعويضي), sent as `kind` (derived from `package` when omitted, so old clients keep working). A makeup is ONE lesson for ONE existing student that replaces a lesson they missed: `lessons.makeup_of_id` links it, its rule has no package and ends that day, it never offers «اعمل الاشتراك», and it never consumes a package unit (`v_package_lessons`, `v_subscription_balance`; the lesson still counts in the lesson number and in the teacher's payout, like any completed lesson). Only a lesson the package already charged can be made up: `no_show`, or an `excused` that counted as a late cancel, within 60 days, not a trial, not itself a makeup, with no active makeup yet (409 `makeup_not_eligible` / `makeup_exists`). A cancel by the teacher or admin and a `rescheduled` lesson are never charged, so «غيّر الميعاد» covers them (a free makeup there would be an extra free lesson). The guardian gets the usual booking confirmation with {{1}} = «تعويضية لـ{name}». A makeup moves one lesson at a time (scope `rule` → 400 `makeup_scope_one`).
 
 ### 3.4 Teachers
 - **R-TCH-01** `teachers` table: display name (ar/en), gender, programs, phone, email (auth), meeting link, per-lesson rate (EGP) by duration, status, max students.
@@ -93,6 +94,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-SUB-02** Alerts: 2 lessons remaining → WhatsApp renewal reminder to guardian + admin task; 0 remaining → status `unpaid`, future lessons flagged (not auto-cancelled; setting).
 - **R-SUB-03** Package end date derived from actual completed lessons, not fixed at creation (issue B5).
 - **R-PAY-01** `payments`: subscription, amount, currency, method (bank/wallet/cash), paid_at, receipt image (Storage), recorded_by. Manual entry in v1.
+- **R-PAY-03** Invoice (فاتورة) on a booking (owner request 2026-10-03): every booking but a trial carries one image or PDF (≤ 10 MB) as payment proof, required by `POST /booking` (400 `invoice_required`; not by `/booking/check`, which runs before one exists). It is uploaded to a signed URL (`POST /booking/invoice-upload-url`, `invoices/{clientRequestId}/…`) or saved from the family's WhatsApp chat (R-MSG-06). Stored in the private `invoices` bucket and the admin-only `invoices` table in the booking's own transaction (idempotent with the booking's `clientRequestId`); mime and size are read from Storage, never from the client. Admin-only reads: `GET /invoices?ruleId|studentId`, `GET /invoices/:id/download`; a teacher gets 403. It records proof only: the payment itself stays R-PAY-01.
 - **R-PAY-02** Teacher payout: `lessons.completed × teacher.rate` per month, with approve/paid flag (issue E3).
 
 ### 3.8 Messaging (WhatsApp Cloud API)
@@ -101,6 +103,7 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-MSG-03** Fallback: every outbound message has a `wa.me` click-to-chat deep link with prefilled text for manual sending; marks `sent_manually` when admin taps it.
 - **R-MSG-04** Inbound webhook: verify signature, store message, match to lead/guardian by phone, handle quick replies (confirm / reschedule / stop).
 - **R-MSG-05** Message log per contact with delivery status (sent, delivered, read, failed + error code). A row a teacher sent from their inbox names them («بعتها: {name}», `messages.sent_by_teacher_id`) and its audit row carries their name.
+- **R-MSG-06** Save a WhatsApp file (owner request 2026-10-03): the admin can use an inbound image or PDF of a chat as the booking's invoice without downloading it to the device. `GET /threads/:phone/media` lists the chat's last 30 days of images / PDFs (metadata only, ≤ 12, admin only); `GET /threads/:phone/media/:messageId` returns a signed URL, downloading from Meta on first use into the private `wa-media` cache (410 `media_expired` after 29 days; Meta keeps a media id about 30 days). `POST /booking` with `invoice: {source: 'whatsapp', messageId}` copies it server-side into `invoices`, only when the message belongs to a booked guardian's phone (400 `invoice_message` otherwise); saving the same message twice lands on the same object.
 
 ### 3.9 Reporting / dashboard
 - **R-RPT-01** Admin dashboard: funnel (new → trial_booked → trial_done → converted), active students, lessons this week by status, pending reports, unpaid subscriptions, teacher load. Numbers come from statuses, not formulas (issue F3).
@@ -134,9 +137,9 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-NFR-09** Backups: Supabase PITR; nightly export of PDFs bucket.
 
 ## 5. Core user journeys (drive Playwright e2e)
-1. Lead arrives on WhatsApp → appears in inbox → admin replies → books trial via wizard → confirmation sent → lesson on teacher calendar.
+1. Lead arrives on WhatsApp → appears in inbox → admin replies → books trial via wizard (no invoice) → confirmation sent → lesson on teacher calendar. A paid booking from the same chat needs the invoice: uploaded, or picked from the chat (R-PAY-03, R-MSG-06).
 2. Teacher logs in → sees today's lesson → marks attendance → submits report → PDF generated → guardian receives WhatsApp → package balance decremented.
-3. Admin records payment → subscription active → renewal reminder fires at 2 lessons left.
+3. Admin records payment → subscription active → renewal reminder fires at 2 lessons left. A student's missed lesson (`no_show` / charged excuse) is replaced by a «حجز تعويضي» with its invoice; the package balance does not move (R-SCH-10).
 4. Admin reschedules one occurrence → conflict detected → chooses another slot → guardian notified.
 5. Teacher sets availability → booking wizard only offers those slots.
 6. Duplicate student creation blocked and merged.

@@ -44,6 +44,8 @@ export class RescheduleRuleService {
 
   async reschedule({ lessonId, body, actor }: RescheduleRuleInput): Promise<string> {
     const lesson = await this.store.get(lessonId);
+    // A makeup is one lesson on its own rule: the new rule would drop its link to the missed lesson.
+    if ((lesson.makeup_of_id ?? null) !== null) throw badRequest('makeup_scope_one');
     if (!isOpenLesson(lesson.status)) throw invalidTransition(lesson.status, 'reschedule');
     const { old, plan, teacherLink } = await this.planner.plan(lesson, body.newRule);
     const lessonDay = moveFrom(lesson, old.tz);

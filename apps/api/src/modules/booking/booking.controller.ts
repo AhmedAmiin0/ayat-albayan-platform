@@ -46,7 +46,10 @@ export class BookingController {
     return { conflicts: await this.booking.check(req) };
   }
 
-  /** 201 BookingResult; 409 { code: 'conflict', conflicts } unless override.reason is given. */
+  /**
+   * 201 BookingResult; 409 { code: 'conflict', conflicts } unless override.reason is given; 400
+   * invoice_required for any kind but trial without `invoice` (R-PAY-03).
+   */
   @Post()
   book(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BookingResult> {
     const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));

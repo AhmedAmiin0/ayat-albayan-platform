@@ -5,6 +5,7 @@ import { domainError } from './booking.errors';
 import type { BookingPayload } from './booking.mapper';
 import type { BookedStudent } from './booking.messages';
 import { withLeadFacts, type LeadFacts } from './booking.lead-merge';
+import { missedLesson } from './booking.makeup';
 import { BookingQueries } from './booking.queries';
 
 /** Who is booked: existing rows (conflict-checked) and, on the lead path, the student to create. */
@@ -27,6 +28,17 @@ export class BookingParties {
     const lead = req.leadId ? await this.queries.lead(req.leadId) : null;
     if (req.leadId && !lead) throw notFound('lead_not_found');
     return { teacher, lead };
+  }
+
+  /**
+   * The missed lesson of a makeup (R-SCH-10; booking.makeup.ts): 404 lesson_not_found, 400
+   * makeup_student, 409 makeup_not_eligible. The schema guarantees one student and a lesson id.
+   */
+  async missed(req: BookingRequest): Promise<string> {
+    const lessonId = req.makeupOfLessonId;
+    const studentId = 'studentIds' in req ? req.studentIds[0] : undefined;
+    if (!lessonId || !studentId) throw domainError(HttpStatus.BAD_REQUEST, 'makeup_student');
+    return missedLesson(this.queries, { lessonId, studentId, now: new Date() });
   }
 
   /**

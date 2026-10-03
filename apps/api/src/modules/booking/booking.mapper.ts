@@ -1,4 +1,5 @@
 import type {
+  BookingKind,
   BookingResult,
   Conflict,
   GuardianCreate,
@@ -22,7 +23,8 @@ export type RuleRow = RuleTiming & {
   teacher_id: string;
   /** Only the admin's explicit link: lessons resolve the current teacher link (issue B8). */
   meeting_link: string | null;
-  package: PackageSize;
+  /** null for a makeup (no package of its own, R-SCH-10). */
+  package: PackageSize | null;
   /** Idempotency key: a replay returns the first booking (migration 111). */
   client_request_id: string | null;
 };
@@ -30,7 +32,18 @@ export type NewStudentRow = Omit<StudentCreate, 'guardian_id' | 'teacher_id'> & 
   name_normalized: string;
 };
 
-/** The create_booking(p_booking) argument (migrations 090, 111). */
+/** The invoices row create_booking v3 inserts (migration 171); size and mime come from Storage. */
+export type InvoiceRow = {
+  kind: Exclude<BookingKind, 'trial'>;
+  path: string;
+  mime: string;
+  size_bytes: number;
+  source: 'upload' | 'whatsapp';
+  /** The WhatsApp message it was saved from. */
+  message_id: string | null;
+};
+
+/** The create_booking(p_booking) argument (migrations 090, 111, 171). */
 export type BookingPayload = {
   rule: RuleRow;
   student_ids: string[];
@@ -39,6 +52,10 @@ export type BookingPayload = {
   new_student: NewStudentRow | null;
   lessons: LessonRow[];
   messages: MessageDraft[];
+  /** The missed lesson a makeup replaces (create_booking re-checks it). */
+  makeup_of: string | null;
+  /** Required for every kind but trial; the service fills it after the plan is checked. */
+  invoice: InvoiceRow | null;
   /** audit_log.after of the 'book' row, written in the same transaction (R-NFR-03). */
   audit: { after: { [key: string]: Json | undefined } };
 };
@@ -58,8 +75,12 @@ export function meetingLinkFor(input: LinkInput): string | null {
   return input.teacherLink;
 }
 
-/** trial → trial_booked, paid → converted, only when the lead funnel allows it (R-LEAD-06). */
-export function leadTarget(status: LeadStatus, pkg: PackageSize): LeadStatus | null {
+/**
+ * trial → trial_booked, paid → converted, only when the lead funnel allows it (R-LEAD-06). A
+ * makeup (package null) is for a registered student and never touches the funnel.
+ */
+export function leadTarget(status: LeadStatus, pkg: PackageSize | null): LeadStatus | null {
+  if (pkg === null) return null;
   const to: LeadStatus = pkg === 'trial' ? 'trial_booked' : 'converted';
   return canTransitionLead(status, to) ? to : null;
 }
@@ -88,6 +109,7 @@ const rpcResult = z.object({
   guardian_ids: z.array(z.string()),
   lessons: z.array(z.object({ id: z.string(), starts_at: z.string(), ends_at: z.string() })),
   message_ids: z.array(z.string()),
+  invoice_id: z.string().nullish(),
 });
 const iso = (pgTime: string) => new Date(pgTime).toISOString();
 
@@ -95,5 +117,5 @@ const iso = (pgTime: string) => new Date(pgTime).toISOString();
 export function toBookingResult(data: unknown): BookingResult {
   const r = rpcResult.parse(data);
   const lessons = r.lessons.map((l) => ({ id: l.id, starts_at: iso(l.starts_at), ends_at: iso(l.ends_at) }));
-  return { ...r, lessons };
+  return { ...r, lessons, invoice_id: r.invoice_id ?? null };
 }
