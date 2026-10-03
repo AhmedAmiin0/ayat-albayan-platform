@@ -1,4 +1,4 @@
-import { formatPhone, type MessageView, type ThreadView } from '@ab/shared';
+import { formatPhone, type MessageView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
