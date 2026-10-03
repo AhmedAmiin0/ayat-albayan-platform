@@ -13,8 +13,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { pathKey } from '@/lib/query-keys';
 import { submitReport } from './api';
-import { programOf } from './report-program';
 import { useAutosave } from './use-autosave';
+
+/** Form values; «البرنامج *» is the report's own, else the student's (the prefill). */
+const entryValuesOf = (r: ReportView, student: Program): FormValues => ({ ...valuesOf(r), program: r.program ?? student });
 
 /**
  * One student's report on the form (R-REP-02): local values, the debounced draft autosave while a
@@ -24,17 +26,13 @@ import { useAutosave } from './use-autosave';
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const client = useQueryClient();
   const [report, setReport] = useState(initial);
-  const [values, setValues] = useState<FormValues>(() => valuesOf(initial));
-  const [program, setProgramState] = useState<Program>(() => programOf(initial, studentProgram));
+  const [values, setValues] = useState<FormValues>(() => entryValuesOf(initial, studentProgram));
   const [problem, setProblem] = useState<string | null>(null);
   const submit = useMutation({
-    mutationFn: (version: number) => {
-      const body = { ...submitBody(values, version), program };
-      return submitReport(report.id, body);
-    },
+    mutationFn: (version: number) => submitReport(report.id, submitBody(values, version)),
     onSuccess: async (view) => {
       setReport(view);
-      setValues(valuesOf(view));
+      setValues(entryValuesOf(view, studentProgram));
       // The lesson moved (completed …), the pending list shrank, history has a new row.
       await Promise.all([
         client.invalidateQueries({ queryKey: pathKey('/lessons') }),
@@ -43,21 +41,17 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
       ]);
     },
   });
-  const saveState = useAutosave({ id: report.id, values, program, enabled: report.status === 'draft' && !submit.isPending });
+  const saveState = useAutosave({ id: report.id, values, enabled: report.status === 'draft' && !submit.isPending });
 
   const set = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
     setProblem(null);
     setValues((v) => ({ ...v, [key]: value }));
   };
-  const setProgram = (next: Program) => {
-    setProblem(null);
-    setProgramState(next);
-  };
+  const setProgram = (next: Program) => set('program', next);
+  const program = values.program ?? studentProgram;
   const setGrade = (rubric: Rubric, grade: Grade) => set('grades', { ...values.grades, [rubric]: grade });
   const send = () => {
-    // With the program: once shared's FormValues carries it, the API's check needs it filled.
-    const checked = { ...values, program };
-    const found = submitProblem(checked, report.version);
+    const found = submitProblem(values, report.version);
     setProblem(found);
     if (!found) submit.mutate(report.version);
   };

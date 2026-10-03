@@ -47,7 +47,7 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
   await press('button', t.booking.next);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
 
-  expect(await screen.findByText('خطوة 3 من 5 · الباقة')).toBeTruthy();
+  expect(await screen.findByText(`خطوة 3 من 5 · ${t.booking.steps.package}`)).toBeTruthy();
   expect(screen.getByRole('radio', { name: t.enums.packageSize['8'], checked: true })).toBeTruthy();
   await press('radio', t.enums.packageSize['12']);
   await press('radio', t.enums.duration['60']);

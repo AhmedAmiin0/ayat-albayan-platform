@@ -8,7 +8,7 @@ const fetchMock = vi.fn();
 vi.stubGlobal('fetch', fetchMock);
 
 const json = (status: number, body: unknown) => new Response(JSON.stringify(body), { status });
-const OK = { teacherName: 'أبرار', kind: 'subscription', contactPhone: null, alreadySubmitted: false };
+const OK = { teacherName: 'أبرار', kind: 'subscription', contactPhone: '', alreadySubmitted: false };
 
 function open(token = 'tok') {
   render(

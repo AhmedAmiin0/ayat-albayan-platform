@@ -452,6 +452,110 @@ export type Database = {
           },
         ];
       };
+      lesson_feedback: {
+        Row: {
+          contact_phone: string | null;
+          created_at: string;
+          expires_at: string;
+          guardian_id: string;
+          id: string;
+          kind: Database['public']['Enums']['feedback_kind'];
+          lesson_id: string;
+          note: string | null;
+          rating: number | null;
+          recommend: Database['public']['Enums']['feedback_recommend'] | null;
+          requested_at: string;
+          student_id: string;
+          submitted_at: string | null;
+          teacher_id: string;
+          token_hash: string;
+        };
+        Insert: {
+          contact_phone?: string | null;
+          created_at?: string;
+          expires_at: string;
+          guardian_id: string;
+          id?: string;
+          kind: Database['public']['Enums']['feedback_kind'];
+          lesson_id: string;
+          note?: string | null;
+          rating?: number | null;
+          recommend?: Database['public']['Enums']['feedback_recommend'] | null;
+          requested_at?: string;
+          student_id: string;
+          submitted_at?: string | null;
+          teacher_id: string;
+          token_hash: string;
+        };
+        Update: {
+          contact_phone?: string | null;
+          created_at?: string;
+          expires_at?: string;
+          guardian_id?: string;
+          id?: string;
+          kind?: Database['public']['Enums']['feedback_kind'];
+          lesson_id?: string;
+          note?: string | null;
+          rating?: number | null;
+          recommend?: Database['public']['Enums']['feedback_recommend'] | null;
+          requested_at?: string;
+          student_id?: string;
+          submitted_at?: string | null;
+          teacher_id?: string;
+          token_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_feedback_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['guardian_id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'lesson_students';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_lesson_sequence';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_lesson_id_student_id_fkey';
+            columns: ['lesson_id', 'student_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_package_lessons';
+            referencedColumns: ['lesson_id', 'student_id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
+        ];
+      };
       lesson_proposals: {
         Row: {
           created_at: string;
@@ -555,82 +659,6 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'lesson_reports';
             referencedColumns: ['id'];
-          },
-        ];
-      };
-      lesson_feedback: {
-        Row: {
-          contact_phone: string | null;
-          created_at: string;
-          expires_at: string;
-          guardian_id: string;
-          id: string;
-          kind: Database['public']['Enums']['feedback_kind'];
-          lesson_id: string;
-          note: string | null;
-          rating: number | null;
-          recommend: Database['public']['Enums']['feedback_recommend'] | null;
-          requested_at: string;
-          student_id: string;
-          submitted_at: string | null;
-          teacher_id: string;
-          token_hash: string;
-        };
-        Insert: {
-          contact_phone?: string | null;
-          created_at?: string;
-          expires_at: string;
-          guardian_id: string;
-          id?: string;
-          kind: Database['public']['Enums']['feedback_kind'];
-          lesson_id: string;
-          note?: string | null;
-          rating?: number | null;
-          recommend?: Database['public']['Enums']['feedback_recommend'] | null;
-          requested_at?: string;
-          student_id: string;
-          submitted_at?: string | null;
-          teacher_id: string;
-          token_hash: string;
-        };
-        Update: {
-          contact_phone?: string | null;
-          created_at?: string;
-          expires_at?: string;
-          guardian_id?: string;
-          id?: string;
-          kind?: Database['public']['Enums']['feedback_kind'];
-          lesson_id?: string;
-          note?: string | null;
-          rating?: number | null;
-          recommend?: Database['public']['Enums']['feedback_recommend'] | null;
-          requested_at?: string;
-          student_id?: string;
-          submitted_at?: string | null;
-          teacher_id?: string;
-          token_hash?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'lesson_feedback_guardian_id_fkey';
-            columns: ['guardian_id'];
-            isOneToOne: false;
-            referencedRelation: 'guardians';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
-            columns: ['teacher_id'];
-            isOneToOne: false;
-            referencedRelation: 'teachers';
-            referencedColumns: ['id'];
-          },
-          {
-            foreignKeyName: 'lesson_feedback_lesson_id_student_id_fkey';
-            columns: ['lesson_id', 'student_id'];
-            isOneToOne: true;
-            referencedRelation: 'lesson_students';
-            referencedColumns: ['lesson_id', 'student_id'];
           },
         ];
       };
@@ -1935,23 +1963,6 @@ export type Database = {
       };
     };
     Views: {
-      v_teacher_feedback_avg: {
-        Row: {
-          avg_rating: number | null;
-          n: number | null;
-          recommend_yes_pct: number | null;
-          teacher_id: string | null;
-        };
-        Relationships: [
-          {
-            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
-            columns: ['teacher_id'];
-            isOneToOne: false;
-            referencedRelation: 'teachers';
-            referencedColumns: ['id'];
-          },
-        ];
-      };
       v_lesson_sequence: {
         Row: {
           lesson_id: string | null;
@@ -2018,6 +2029,30 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'students';
             referencedColumns: ['id'];
+          },
+        ];
+      };
+      v_teacher_feedback_avg: {
+        Row: {
+          avg_rating: number | null;
+          n: number | null;
+          recommend_yes_pct: number | null;
+          teacher_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_feedback_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };

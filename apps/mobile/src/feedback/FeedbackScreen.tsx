@@ -39,7 +39,7 @@ export function FeedbackScreen() {
           summary.data?.length ? (
             <View style={{ gap: 8 }}>
               {summary.data.map((row) => (
-                <AverageCard key={row.teacher_id} name={row.teacher_name} average={row} />
+                <AverageCard key={row.teacher.id} name={row.teacher.name} average={row} />
               ))}
             </View>
           ) : null

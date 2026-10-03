@@ -7,7 +7,7 @@ describe('public feedback contract', () => {
     expect(
       toFormView({ teacherName: 'أبرار', kind: 'trial', contactPhone: '+2010', alreadySubmitted: true, extra: 1 }),
     ).toEqual({ teacherName: 'أبرار', kind: 'trial', contactPhone: '+2010', alreadySubmitted: true });
-    expect(toFormView({ teacherName: 'x', kind: 'subscription' })).toMatchObject({ contactPhone: null, alreadySubmitted: false });
+    expect(toFormView({ teacherName: 'x', kind: 'subscription' })).toMatchObject({ contactPhone: '', alreadySubmitted: false });
   });
 
   it('toFormView refuses an answer it does not understand', () => {

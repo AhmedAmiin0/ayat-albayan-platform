@@ -1,42 +1,25 @@
-// «رأيك يهمّنا» (student feedback) rows, as the API's feedback module serves them.
-// ponytail: stand-ins for FeedbackRowView / TeacherFeedbackView of packages/shared (the API
-// builder defines them); swap these imports for the shared types once both branches are merged.
+import type {
+  FeedbackKind,
+  FeedbackRecommend,
+  FeedbackRowView,
+  TeacherFeedbackRowView,
+  TeacherFeedbackSummary,
+  TeacherFeedbackView,
+} from '@ab/shared';
 
-export type FeedbackKind = 'trial' | 'subscription';
-export type FeedbackRecommend = 'yes' | 'maybe' | 'no';
+// «رأيك يهمّنا» (student feedback): the contract is packages/shared/src/schemas/feedback.ts.
+export type { FeedbackKind, FeedbackRecommend, FeedbackRowView, TeacherFeedbackSummary, TeacherFeedbackView };
 
-export interface FeedbackRowView {
-  id: string;
-  lesson_id: string;
-  student_name: string;
-  teacher_id: string;
-  teacher_name: string;
-  kind: FeedbackKind;
-  /** null while the request is pending (sent, not answered). */
-  rating: number | null;
-  recommend: FeedbackRecommend | null;
-  note: string | null;
-  /** Admins only: a teacher's rows leave the contact number out. */
+/** A row of either list: a teacher's own rows have no teacher block and no contact number. */
+export type FeedbackListRow = TeacherFeedbackRowView & {
+  teacher?: FeedbackRowView['teacher'];
   contact_phone?: string | null;
-  requested_at: string;
-  submitted_at: string | null;
-}
+};
 
+/** What the average card reads: a teacher's average, or none before the first answer. */
 export interface FeedbackAverage {
   avg_rating: number | null;
   /** Answered responses. */
   n: number;
   recommend_yes_pct: number | null;
-}
-
-/** GET /feedback/summary: one row per teacher. */
-export interface TeacherAverage extends FeedbackAverage {
-  teacher_id: string;
-  teacher_name: string;
-}
-
-/** GET /teachers/me/feedback: my own rows and my own average. */
-export interface MyFeedbackView {
-  average: FeedbackAverage;
-  items: FeedbackRowView[];
 }

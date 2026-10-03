@@ -1,21 +1,20 @@
-import { AUTOSAVE_MS, shouldSave } from '@ab/shared';
+import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { useDebounced } from '@/features/pricing/use-debounced';
 import { saveDraft } from './api';
-import { draftWithProgram, type EntryValues } from './report-program';
 
 export type SaveState = { kind: 'idle' } | { kind: 'saving' } | { kind: 'saved'; at: Date } | { kind: 'failed' };
 
 /** Debounced PUT /reports/:id/draft of the whole form while it is a draft. */
-export function useAutosave(input: { id: string; values: EntryValues; enabled: boolean }): SaveState {
-  const body = JSON.stringify(draftWithProgram(input.values));
+export function useAutosave(input: { id: string; values: FormValues; enabled: boolean }): SaveState {
+  const body = JSON.stringify(draftBody(input.values));
   const settled = useDebounced(body, AUTOSAVE_MS);
   const [saved, setSaved] = useState(body);
   const [failed, setFailed] = useState<string | null>(null);
   const [result, setResult] = useState<SaveState>({ kind: 'idle' });
   const save = useMutation({
-    mutationFn: (b: string) => saveDraft({ id: input.id, body: JSON.parse(b) as ReturnType<typeof draftWithProgram> }),
+    mutationFn: (b: string) => saveDraft({ id: input.id, body: JSON.parse(b) as DraftBody }),
     onSuccess: (_view, b) => {
       setSaved(b);
       setFailed(null);

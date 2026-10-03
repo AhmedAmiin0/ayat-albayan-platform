@@ -37,8 +37,8 @@ export function FeedbackPage() {
       </PageHead>
       <TeacherAverages
         items={(summary.data ?? []).map((s) => ({
-          key: s.teacher_id,
-          name: teacherLabel(s),
+          key: s.teacher.id,
+          name: s.teacher.name,
           avg: s.avg_rating,
           n: s.n,
           yesPct: s.recommend_yes_pct,

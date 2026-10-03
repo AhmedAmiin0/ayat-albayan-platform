@@ -11,7 +11,7 @@ vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'e
 it('shows the form in English with the scale ends and the options', () => {
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <FeedbackForm token="t" form={{ teacherName: 'Abrar', kind: 'subscription', contactPhone: null, alreadySubmitted: false }} onDone={vi.fn()} />
+      <FeedbackForm token="t" form={{ teacherName: 'Abrar', kind: 'subscription', contactPhone: '', alreadySubmitted: false }} onDone={vi.fn()} />
     </QueryClientProvider>,
   );
   for (const text of [

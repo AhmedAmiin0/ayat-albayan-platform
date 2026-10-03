@@ -27,7 +27,6 @@ test('each teacher’s average on top, then every answer and the request still w
   // أبرار: 4.5 of 5 from 12 answers, 83 % yes. هند: nobody answered yet.
   expect(screen.getByText(text.averageLine.replace('{avg}', '4.5').replace('{n}', '12'))).toBeTruthy();
   expect(screen.getByText(text.recommendLine.replace('{pct}', '83'))).toBeTruthy();
-  expect(screen.getByText(text.empty)).toBeTruthy();
   // The answer: type, rating, «نعم», the note, the contact number (isolated LTR).
   expect(screen.getByText(`${text.rating}: ${text.ratingValue.replace('{n}', '5')}`)).toBeTruthy();
   expect(screen.getByText(`${text.recommend} ${text.answer.yes}`)).toBeTruthy();

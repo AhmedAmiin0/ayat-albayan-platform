@@ -3,10 +3,9 @@ import { DataTable, type DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/ltr';
 import { formatDate } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
-import { teacherLabel } from '@/lib/teacher-label';
-import type { FeedbackRowView } from './types';
+import type { FeedbackListRow } from './types';
 
-const col = createColumnHelper<DataTableFeatures, FeedbackRowView>();
+const col = createColumnHelper<DataTableFeatures, FeedbackListRow>();
 
 const pending = <span className="text-ink-3">{t.feedback.pending}</span>;
 
@@ -21,7 +20,7 @@ const student = col.accessor((r) => r.student.name, {
   meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
 });
 
-const teacher = col.accessor((r) => teacherLabel(r.teacher), {
+const teacher = col.accessor((r) => r.teacher?.name ?? '', {
   id: 'teacher',
   header: () => t.feedback.teacher,
   meta: { className: 'max-sm:order-2' },
@@ -68,7 +67,7 @@ const WITH_TEACHER = col.columns([student, teacher, contact, ...rest]);
 const WITHOUT_TEACHER = col.columns([student, ...rest]);
 
 /** The feedback rows: the admin sees the teacher column, a teacher's own list does not need it. */
-export function FeedbackTable({ rows, showTeacher }: { rows: FeedbackRowView[]; showTeacher: boolean }) {
+export function FeedbackTable({ rows, showTeacher }: { rows: FeedbackListRow[]; showTeacher: boolean }) {
   return (
     <DataTable
       stacked

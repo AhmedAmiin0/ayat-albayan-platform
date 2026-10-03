@@ -1,19 +1,19 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import type { FeedbackAverage, FeedbackRowView } from './types';
+import type { FeedbackAverage, FeedbackListRow } from './types';
 
 const text = t.mobile.feedback;
 const errors: Record<string, string | undefined> = text.error;
 
 /** «4.3 من 5 · 12 رأي», or null with no answers yet. One decimal, Western digits. */
-export function averageLine(a: FeedbackAverage): string | null {
-  if (a.avg_rating === null || a.n === 0) return null;
+export function averageLine(a: FeedbackAverage | null): string | null {
+  if (!a || a.avg_rating === null || a.n === 0) return null;
   return text.averageLine.replace('{avg}', a.avg_rating.toFixed(1)).replace('{n}', String(a.n));
 }
 
 /** «80% بيرشّحونا», or null when nobody answered the question. */
-export function recommendLine(a: FeedbackAverage): string | null {
-  if (a.recommend_yes_pct === null || a.n === 0) return null;
+export function recommendLine(a: FeedbackAverage | null): string | null {
+  if (!a || a.recommend_yes_pct === null || a.n === 0) return null;
   return text.recommendLine.replace('{pct}', String(Math.round(a.recommend_yes_pct)));
 }
 
@@ -21,7 +21,7 @@ export function recommendLine(a: FeedbackAverage): string | null {
  * The lines under a row's title: lesson type, then rating / «نعم ربما لا» when answered, then its
  * note; «لسه ما ردّش» for a pending request.
  */
-export function rowLines(row: FeedbackRowView): string[] {
+export function rowLines(row: FeedbackListRow): string[] {
   if (row.submitted_at === null || row.rating === null) {
     return [text.kind[row.kind], text.pending];
   }

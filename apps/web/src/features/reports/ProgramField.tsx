@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 
 export interface ProgramFieldProps {
   name: string;
-  value: Program;
+  value: Program | null;
   onChange: (value: Program) => void;
   disabled?: boolean;
 }

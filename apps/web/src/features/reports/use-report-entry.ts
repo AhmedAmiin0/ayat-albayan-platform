@@ -1,5 +1,8 @@
 import {
+  submitBody,
   submitProblem,
+  valuesOf,
+  type FormValues,
   type Grade,
   type Program,
   type ReportAttachmentView,
@@ -10,8 +13,13 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { LESSONS_KEY } from '@/features/schedule/api';
 import { REPORTS_KEY, submitReport } from './api';
-import { entryValuesOf, submitWithProgram, type EntryValues } from './report-program';
 import { useAutosave } from './use-autosave';
+
+/** Form values; «البرنامج *» is the report's own, else the student's (the prefill). */
+const entryValuesOf = (r: ReportView, student: Program): FormValues => ({
+  ...valuesOf(r),
+  program: r.program ?? student,
+});
 
 /**
  * One student's report on the form (R-REP-02): local values, debounced draft autosave while a
@@ -21,7 +29,7 @@ import { useAutosave } from './use-autosave';
 export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const queryClient = useQueryClient();
   const [report, setReport] = useState(initial);
-  const [values, setValues] = useState<EntryValues>(() => entryValuesOf(initial, studentProgram));
+  const [values, setValues] = useState<FormValues>(() => entryValuesOf(initial, studentProgram));
   const [problem, setProblem] = useState<string | null>(null);
   const submit = useMutation({
     mutationFn: submitReport,
@@ -38,7 +46,7 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   });
   const saveState = useAutosave({ id: report.id, values, enabled: report.status === 'draft' && !submit.isPending });
 
-  const set = <K extends keyof EntryValues>(key: K, value: EntryValues[K]) => {
+  const set = <K extends keyof FormValues>(key: K, value: FormValues[K]) => {
     setProblem(null);
     setValues((v) => ({ ...v, [key]: value }));
   };
@@ -46,7 +54,7 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   const send = () => {
     const found = submitProblem(values, report.version);
     setProblem(found);
-    if (!found) submit.mutate({ id: report.id, body: submitWithProgram(values, report.version) });
+    if (!found) submit.mutate({ id: report.id, body: submitBody(values, report.version) });
   };
   const setAttachments = (next: (files: ReportAttachmentView[]) => ReportAttachmentView[]) =>
     setReport((r) => ({ ...r, attachments: next(r.attachments) }));

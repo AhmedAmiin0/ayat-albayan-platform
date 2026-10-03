@@ -1,4 +1,4 @@
-import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues, type Program, type ReportFormResponse } from '@ab/shared';
+import { AUTOSAVE_MS, draftBody, shouldSave, type DraftBody, type FormValues, type ReportFormResponse } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import { pathKey } from '@/lib/query-keys';
@@ -20,9 +20,9 @@ function useSettled(value: string, ms: number): string {
  * Debounced PUT /reports/:id/draft of the whole form while it is a draft (R-REP-02), as on the web.
  * Each saved draft also goes into the saved form, so reopening it (even offline) shows what was typed.
  */
-export function useAutosave(input: { id: string; values: FormValues; program: Program; enabled: boolean }): SaveState {
+export function useAutosave(input: { id: string; values: FormValues; enabled: boolean }): SaveState {
   const client = useQueryClient();
-  const body = JSON.stringify({ ...draftBody(input.values), program: input.program });
+  const body = JSON.stringify(draftBody(input.values));
   const settled = useSettled(body, AUTOSAVE_MS);
   const [saved, setSaved] = useState(body);
   const [failed, setFailed] = useState<string | null>(null);

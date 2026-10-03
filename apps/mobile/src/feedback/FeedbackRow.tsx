@@ -7,7 +7,7 @@ import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { ltr } from '@/ui/Ltr';
 import { rowLines } from './feedback-text';
-import type { FeedbackRowView } from './types';
+import type { FeedbackListRow } from './types';
 
 const zone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -16,17 +16,18 @@ const zone = () => Intl.DateTimeFormat().resolvedOptions().timeZone;
  * the rating, «هل ترشّح الأكاديمية؟», the note, the day it came in. The contact number shows only
  * when the API sent it, which it does for admins and never for a teacher's own list.
  */
-export function FeedbackRow({ row }: { row: FeedbackRowView }) {
+export function FeedbackRow({ row }: { row: FeedbackListRow }) {
   const { color } = useTheme();
   const [kind, ...rest] = rowLines(row);
+  const who = [row.student.name, row.teacher?.name].filter(Boolean).join(' · ');
   const when = localDate(new Date(row.submitted_at ?? row.requested_at), zone());
   return (
     <View
-      accessibilityLabel={`${row.student_name} — ${row.teacher_name}`}
+      accessibilityLabel={who}
       style={{ gap: 4, padding: 12, borderRadius: shape.radius.lg, borderWidth: 1, borderColor: color.rule, backgroundColor: color.raised }}
     >
       <AppText style={{ fontFamily: type.ui[700], fontSize: type.size.base, color: color.ink }}>
-        {`${row.student_name} · ${row.teacher_name}`}
+        {who}
       </AppText>
       <Note>{`${kind} · ${ltr(when)}`}</Note>
       {rest.map((line) => (

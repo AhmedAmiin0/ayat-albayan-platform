@@ -25,6 +25,8 @@ const files = {
     WA_APP_SECRET: 'local-app-secret',
     WA_VERIFY_TOKEN: 'local-verify',
     MESSAGING_ENABLED: 'true',
+    // Signs the public feedback links (>= 32 chars); local only.
+    FEEDBACK_TOKEN_SECRET: 'local-feedback-secret-0123456789-abcdef',
   },
   'apps/web/.env.local': {
     VITE_SUPABASE_URL: s.API_URL,

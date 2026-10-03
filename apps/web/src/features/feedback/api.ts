@@ -9,7 +9,7 @@ import {
   type FeedbackFormView,
   type FeedbackPage,
   type FeedbackSubmitBody,
-  type TeacherAverageView,
+  type TeacherFeedbackSummary,
   type TeacherFeedbackView,
 } from './types';
 
@@ -41,7 +41,7 @@ export function toFormView(raw: unknown): FeedbackFormView {
   return {
     teacherName: r['teacherName'],
     kind,
-    contactPhone: typeof r['contactPhone'] === 'string' ? r['contactPhone'] : null,
+    contactPhone: typeof r['contactPhone'] === 'string' ? r['contactPhone'] : '',
     alreadySubmitted: r['alreadySubmitted'] === true,
   };
 }
@@ -92,7 +92,7 @@ export const feedbackListQuery = (f: FeedbackFilters) =>
 /** GET /feedback/summary (admin): average, count and «نسبة الترشيح» per teacher. */
 export const feedbackSummaryQuery = queryOptions({
   queryKey: [...FEEDBACK_KEY, 'summary'],
-  queryFn: () => apiFetch<TeacherAverageView[]>('/feedback/summary'),
+  queryFn: () => apiFetch<TeacherFeedbackSummary[]>('/feedback/summary'),
 });
 
 /** GET /teachers/me/feedback: only my rows, and my own average. */

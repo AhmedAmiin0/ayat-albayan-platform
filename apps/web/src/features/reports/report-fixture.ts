@@ -27,6 +27,7 @@ export function reportView(over: Partial<ReportView> = {}): ReportView {
     student_id: 's-1',
     teacher_id: 't-abrar',
     attendance: null,
+    program: 'quran',
     recited: null,
     new_memorization: null,
     revision: null,
