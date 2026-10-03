@@ -2,7 +2,8 @@ import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
-import { FilterPills } from '@/ui/FilterPills';
+import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import type { BookingKind } from './contract';
 import type { TrialDraft } from './draft';
 
 export interface KindPillsProps {
@@ -10,14 +11,17 @@ export interface KindPillsProps {
   onChange: (kind: TrialDraft['kind']) => void;
 }
 
-const kinds = [
+const kinds: FilterPill<BookingKind>[] = [
   { value: 'trial', label: t.booking.kind.trial },
   { value: 'package', label: t.booking.kind.package },
-] as const;
+  // A lead is not a registered student yet: a makeup needs one (and the lesson it replaces).
+  { value: 'makeup', label: t.booking.kind.makeup, disabled: true },
+];
 
 /**
- * «نوع الحجز *» on the first step. A lead is not a registered student yet, so «حجز تعويضي» is not
- * a choice here: the hint says where it lives (the missed lesson's row in the schedule).
+ * «نوع الحجز *» on the first step: «حلقة تجريبية مجانية بس» · «اشتراك» · «حجز تعويضي». The third
+ * is shown but disabled on a lead, and the hint says where it lives: the missed lesson's row in
+ * the schedule (R-SCH-10).
  */
 export function KindPills({ value, onChange }: KindPillsProps) {
   return (
@@ -29,7 +33,9 @@ export function KindPills({ value, onChange }: KindPillsProps) {
         accessibilityLabel={t.booking.kind.label}
         items={kinds}
         value={value}
-        onChange={onChange}
+        onChange={(kind) => {
+          if (kind !== 'makeup') onChange(kind);
+        }}
       />
       <Note>{t.booking.mobile.makeupHint}</Note>
     </View>
