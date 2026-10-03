@@ -13,6 +13,7 @@ import { StorageService } from '../../common/storage/storage.service';
 import { ExpensesQueries } from '../expenses/expenses.queries';
 import { PaymentsQueries } from '../payments/payments.queries';
 import { PayoutsQueries } from '../payouts/payouts.queries';
+import { EarningsQueries } from '../teacher-earnings/earnings.queries';
 import { PricingService } from '../pricing/pricing.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { AdminTasksQueries } from './admin-tasks.queries';
@@ -56,6 +57,10 @@ function mocks() {
       teachers: vi.fn(), lessons: vi.fn(), forMonth: vi.fn(), forTeacher: vi.fn(), get: vi.fn(),
       insert: vi.fn(), update: vi.fn(), removeDraft: vi.fn(), pendingReports: vi.fn(), editedSince: vi.fn(),
     },
+    earnings: {
+      teacher: vi.fn(), money: vi.fn(), sessions: vi.fn(), forPayment: vi.fn(), payments: vi.fn(), payment: vi.fn(),
+      byRequest: vi.fn(), record: vi.fn(), settlePayout: vi.fn(), resync: vi.fn(), paidOnLessons: vi.fn(),
+    },
     expenses: { forMonth: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn() },
     teachers: { idByProfile: vi.fn() },
     access: { check: vi.fn() },
@@ -79,6 +84,9 @@ export function resetMocks(m: Mocks): void {
   m.payouts.pendingReports.mockResolvedValue(0);
   m.payouts.editedSince.mockResolvedValue(0);
   m.payments.byRequest.mockResolvedValue(null);
+  m.earnings.byRequest.mockResolvedValue(null);
+  m.earnings.settlePayout.mockResolvedValue(null);
+  m.earnings.paidOnLessons.mockResolvedValue(0);
   m.subs.byRequest.mockResolvedValue(null);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
@@ -96,6 +104,7 @@ export async function moneyApp() {
     .overrideProvider(AdminTasksQueries).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)
     .overrideProvider(PayoutsQueries).useValue(m.payouts)
+    .overrideProvider(EarningsQueries).useValue(m.earnings)
     .overrideProvider(ExpensesQueries).useValue(m.expenses)
     .overrideProvider(TeachersQueries).useValue(m.teachers)
     .overrideProvider(StudentAccess).useValue(m.access)

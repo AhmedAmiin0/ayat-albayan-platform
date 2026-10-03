@@ -12,6 +12,7 @@ import type {
   SubscriptionStatus,
   TeacherStatus,
 } from './enums/index.js';
+import type { EarningStatus } from './money/earnings.js';
 
 // Status → visual grammar (docs/07 §6). Labels come from ar.json `enums.*`; this map is shape only.
 // Tone: act = admin must do something now («دورك»), bad = didn't happen through someone's fault,
@@ -120,5 +121,12 @@ export const pdfStatusStyle: Record<PdfStatus, StatusStyle> = {
 export const payoutStatusStyle: Record<PayoutStatus, StatusStyle> = {
   draft: { tone: 'neutral', glyph: 'hollow' },
   approved: { tone: 'neutral', glyph: 'half' },
+  paid: { tone: 'ok', glyph: 'fill' },
+};
+
+/** Per-session teacher earnings: waiting (hollow), underway (half), settled (fill). Never `act`: the teacher isn't the one to act. */
+export const earningStatusStyle: Record<EarningStatus, StatusStyle> = {
+  earned: { tone: 'neutral', glyph: 'hollow' },
+  partially_paid: { tone: 'neutral', glyph: 'half' },
   paid: { tone: 'ok', glyph: 'fill' },
 };

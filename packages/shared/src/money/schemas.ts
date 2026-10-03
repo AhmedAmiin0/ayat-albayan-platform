@@ -67,7 +67,7 @@ export const subscriptionUpdateSchema = z.object({
 });
 
 /** Payment dates may not be in the future (5 minutes of clock skew allowed). */
-const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 300_000, {
+export const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 300_000, {
   message: 'paid_at_future',
 });
 
