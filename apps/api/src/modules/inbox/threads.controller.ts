@@ -7,6 +7,7 @@ import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow } from '../teachers/http';
 import { phoneParam } from './phone-param';
+import type { SalesScope } from '../sales/sales-scope';
 import type { TeacherScope } from './teacher-scope';
 import { ThreadReads } from './thread-reads';
 import type { Sent } from './outbox';
@@ -21,7 +22,7 @@ const detailQuery = z.object({
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
 
-type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope | null };
+type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope | null; sales: SalesScope | null };
 
 /**
  * H1–H4 (docs/12 §4): the WhatsApp inbox (R-LEAD-02, R-MSG-05). Sends are audited. Same paths for
@@ -30,7 +31,7 @@ type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope
  */
 @ApiTags('inbox')
 @ApiBearerAuth()
-@Roles('admin', 'teacher')
+@Roles('admin', 'teacher', 'sales')
 @Controller('threads')
 export class ThreadsController {
   constructor(
@@ -53,33 +54,40 @@ export class ThreadsController {
   @HttpCode(201)
   async text(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTextSchema, body);
-    const scope = await this.reads.scope(user);
-    const sent = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id, scope });
-    return this.audited({ sent, action: 'thread_text', user, scope });
+    const { scope, sales } = await this.scopes(user);
+    const sent = await this.sends.text({ phone: phoneParam(raw), input, actorId: user.id, scope, sales });
+    return this.audited({ sent, action: 'thread_text', user, scope, sales });
   }
 
   @Post(':phone/template')
   @HttpCode(201)
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
-    const scope = await this.reads.scope(user);
-    const sent = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope });
-    return this.audited({ sent, action: 'thread_template', user, scope });
+    const { scope, sales } = await this.scopes(user);
+    const sent = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope, sales });
+    return this.audited({ sent, action: 'thread_template', user, scope, sales });
+  }
+
+  /** Who is sending: a salesperson (their SalesScope), a teacher (TeacherScope) or the admin (neither). */
+  private async scopes(user: AuthUser): Promise<{ scope: TeacherScope | null; sales: SalesScope | null }> {
+    const sales = await this.reads.salesScope(user);
+    return { sales, scope: sales ? null : await this.reads.scope(user) };
   }
 
   /** A teacher's send names them in the audit row too (every message a teacher sends is logged). */
   private async audited(input: Audited): Promise<MessageView> {
-    const { sent, scope } = input;
+    const { sent, scope, sales } = input;
     const { view } = sent;
     if (sent.replayed) return view; // a retried request id: the first send was audited already
     const teacher = scope ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName } : {};
+    const by = sales ? { sales_id: sales.salesId } : teacher;
     await this.audit.record({
       actorId: input.user.id,
       entity: 'messages',
       entityId: view.id,
       action: input.action,
       before: null,
-      after: { phone: view.phone_e164, template_key: view.template_key, status: view.status, ...teacher },
+      after: { phone: view.phone_e164, template_key: view.template_key, status: view.status, ...by },
     });
     return view;
   }

@@ -1,6 +1,7 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { isSalesLesson } from '../sales/sales-lessons';
 import { dbError } from '../teachers/http';
 
 export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at'>;
@@ -49,6 +50,11 @@ export class ClassroomQueries {
       .limit(1);
     if (error) throw dbError(error);
     return data.length > 0;
+  }
+
+  /** Is the lesson in this salesperson's scope: booked from one of their leads, or a trial of one of their students? */
+  salesOwnsLesson(profileId: string, lessonId: string): Promise<boolean> {
+    return isSalesLesson(this.db, { profileId, lessonId });
   }
 
   /** null when the student is not on the lesson or has no guardian phone. */

@@ -35,6 +35,11 @@ export class SettingsService {
       : SETTING_DEFAULTS.booking_horizon_weeks;
   }
 
+  /** Hand each NEW lead to a salesperson (migration 187 seeds true); only an explicit false turns it off. */
+  async salesAutoAssign(): Promise<boolean> {
+    return (await this.read('sales_auto_assign')) !== false;
+  }
+
   /**
    * PATCH /settings: writes the given keys, stamped with the admin. null removes the row, which
    * reads back as the default (late_cancel_hours OFF): PostgREST cannot store a JSON null.
