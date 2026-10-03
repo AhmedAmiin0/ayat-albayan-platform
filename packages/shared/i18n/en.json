@@ -2188,7 +2188,8 @@
     "nav": {
       "chats": "Chats",
       "subscriptions": "Subscriptions",
-      "schedule": "My meetings"
+      "schedule": "My meetings",
+      "label": "Sales sections"
     },
     "subscriptions": {
       "pending": "Pending",
@@ -2197,12 +2198,18 @@
       "emptyConfirmed": "No confirmed subscriptions",
       "student": "Student",
       "package": "Package",
-      "status": "Status"
+      "status": "Status",
+      "list": "Subscriptions list",
+      "kinds": "Subscription kind",
+      "lessons": "{n} lessons",
+      "startsOn": "Starts {date}"
     },
     "schedule": {
       "title": "Meetings schedule",
       "empty": "No meetings on this day",
-      "lead": "Lead"
+      "lead": "Lead",
+      "list": "Meetings list",
+      "teacher": "Teacher"
     },
     "assign": {
       "label": "Sales owner",
@@ -2212,7 +2219,14 @@
       "auto": "Auto-assign new leads",
       "autoHint": "A new lead goes to the salesperson with the fewest leads",
       "assignAll": "Assign leads without an owner",
-      "assignedN": "{n} leads assigned"
-    }
+      "assignedN": "{n} leads assigned",
+      "rowLabel": "Sales owner for {name}",
+      "autoOn": "On",
+      "autoOff": "Off",
+      "autoEnable": "Turn on",
+      "autoDisable": "Turn off"
+    },
+    "loadFailed": "Could not load the data, try again",
+    "retry": "Try again"
   }
 }

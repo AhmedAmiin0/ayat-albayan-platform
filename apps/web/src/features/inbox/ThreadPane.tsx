@@ -34,7 +34,8 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const templates = useQuery(templatesQuery);
   const th = detail.data?.pages[0]?.thread ?? null;
   const admin = useInboxMode() === 'admin';
-  const me = useQuery({ ...teacherMeQuery, enabled: !admin });
+  const teacherMode = useInboxMode() === 'teacher';
+  const me = useQuery({ ...teacherMeQuery, enabled: teacherMode });
   // /leads is the admin's: never asked in teacher mode (the API also nulls lead_id there).
   const isLead = admin && !!th?.lead_id && !th.guardian_id && !th.teacher_id;
   const lead = useQuery({ ...leadByPhoneQuery(phone), enabled: isLead });
@@ -58,7 +59,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const people = admin ? (detail.data.pages[0]?.people ?? null) : null;
   const aside = isLead || !!people?.guardian;
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
-  const ownThread = !admin && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
+  const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   return (
     <section aria-labelledby={headingId} className="min-w-0">
