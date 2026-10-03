@@ -11,6 +11,8 @@ jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
+// The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
+jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
 
 const dayKey = ['lessons', 'day', { date: '2026-10-01', tz: 'Asia/Riyadh' }];
 /** GET /lessons/day calls only (the cards also read each student's balance and the settings). */

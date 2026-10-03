@@ -12,6 +12,8 @@ jest.mock('@/lib/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
   apiSend: (...args: unknown[]) => mockApiSend(...args),
 }));
+// The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
+jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
 
 beforeEach(() => {
   mockApiFetch.mockReset();

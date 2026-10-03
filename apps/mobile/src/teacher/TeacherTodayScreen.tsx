@@ -1,6 +1,7 @@
 import { counted, formatRunningHead, RIYADH_TZ } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
+import { LiveSessions } from '@/live/LiveSessions';
 import { clockAt } from '@/inbox/format';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
@@ -54,6 +55,7 @@ export function TeacherTodayScreen() {
         title={t.teacherNav.today}
         subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt))}` : dateLine}
       />
+      <LiveSessions lessons={lessons} />
       <PendingBanner count={pending.data?.length ?? 0} />
       {action.notice ? <Notice message={action.notice} /> : null}
       <FlatList

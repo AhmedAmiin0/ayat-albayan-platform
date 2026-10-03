@@ -2092,6 +2092,12 @@
     "recommendShort": "Recommend",
     "templateSettings": "Open message settings"
   },
+  "live": {
+    "title": "Live sessions",
+    "now": "Live now",
+    "startsAt": "Starts at {time}",
+    "teacher": "Teacher: {name}"
+  },
   "classroom": {
     "title": "Online classroom",
     "enter": "Join the lesson",
