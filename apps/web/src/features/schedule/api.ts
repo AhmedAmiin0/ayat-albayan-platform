@@ -50,6 +50,10 @@ export const slotsQuery = (p: SlotsParams) => {
   });
 };
 
+/** POST /schedule-rules/refresh (admin): generate every lesson the weekly rules owe, now. */
+export const syncSchedule = () =>
+  apiSend<{ rules: number; inserted: number; failed: number; ended: number }>('POST', '/schedule-rules/refresh');
+
 export const confirmLesson = (id: string) => apiSend<LessonView>('POST', `/lessons/${id}/confirm`);
 
 export const setLessonStatus = ({ id, event }: { id: string; event: StatusRouteEvent }) =>
