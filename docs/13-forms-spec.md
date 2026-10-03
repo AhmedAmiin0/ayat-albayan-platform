@@ -33,6 +33,8 @@ Two fields the Google Form never had, in the academy's Egyptian tone. They are a
 | الحلقة اللي الطالب فاتته (makeup only) | one choice | the student's missed lessons (`GET /booking/makeup-candidates?studentId`) | `makeupOfLessonId` |
 | الفاتورة * (not for a trial) | image / PDF | upload from the device, or «من الشات» (the family's recent WhatsApp images / PDFs) | `invoice: {source: 'upload', path}` or `{source: 'whatsapp', messageId}`; R-PAY-03, R-MSG-06 |
 
+DEVIATION from the form: in the wizard «الباقة المطلوبة» lists only the four paid sizes (4 / 8 / 12 / 16); the form's option «حلقة تجريبية مجانية بس» moved to «نوع الحجز» (a trial has no package and no invoice).
+
 Errors with a string in `booking.error.*`: `invoice_required`, `invoice_type`, `invoice_too_large`, `invoice_path`, `invoice_message`, `media_expired`, `message_not_found`, `request_id_required`, `makeup_not_eligible`, `makeup_exists`, `makeup_student`, `makeup_scope_one`.
 
 Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher or guardian policy), private buckets `invoices` and `wa-media`, `lessons.makeup_of_id` (partial unique index: one active makeup per missed lesson; a one-lesson move keeps the tag), `create_booking` v3, balance views without makeups. Payouts count by lesson status only, so a completed makeup is paid like any completed lesson. The report PDF shows no package progress on a makeup (it has no package slot).

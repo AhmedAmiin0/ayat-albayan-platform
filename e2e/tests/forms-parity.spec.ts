@@ -54,6 +54,7 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     await admin.goto(`/admin/book?studentId=${family.studentIds[0] ?? ''}`);
     // «نوع الحجز» (beyond the Google Form): trial / subscription / makeup, and the trial left the package list.
     const kinds = admin.getByRole('group', { name: ar.booking.kind.label });
+    await expect(kinds).toBeVisible();
     expect(await kinds.getByRole('radio').evaluateAll((els) => els.map((e) => e.closest('label')?.textContent?.trim()))).toEqual([
       ar.booking.kind.trial,
       ar.booking.kind.package,
