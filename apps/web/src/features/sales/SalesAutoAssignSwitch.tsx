@@ -6,8 +6,6 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 
-type WithAutoAssign = AcademySettings & { sales_auto_assign?: boolean };
-
 const s = t.sales.assign;
 
 /**
@@ -16,9 +14,9 @@ const s = t.sales.assign;
  */
 export function SalesAutoAssignSwitch({ settings }: { settings: AcademySettings }) {
   const queryClient = useQueryClient();
-  const on = (settings as WithAutoAssign).sales_auto_assign === true;
+  const on = settings.sales_auto_assign;
   const save = useMutation({
-    mutationFn: (salesAutoAssign: boolean) => apiSend<WithAutoAssign>('PATCH', '/settings', { salesAutoAssign }),
+    mutationFn: (salesAutoAssign: boolean) => apiSend<AcademySettings>('PATCH', '/settings', { salesAutoAssign }),
     onSuccess: (next) => queryClient.setQueryData(['settings'], next),
   });
   return (

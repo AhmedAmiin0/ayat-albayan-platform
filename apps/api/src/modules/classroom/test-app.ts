@@ -12,10 +12,10 @@ import { TemplateRegistry } from '../whatsapp/template.registry';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
 import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN } from './classroom.config';
-import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from './classroom.fakes';
+import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, SALES, TEACHER, TEACHER_ID } from './classroom.fakes';
 import { ClassroomQueries } from './classroom.queries';
 
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, guardian: GUARDIAN };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, sales: SALES, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');

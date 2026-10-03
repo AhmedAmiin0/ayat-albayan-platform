@@ -20,7 +20,7 @@ const ROW: LeadRow = {
   last_inbound_at: null, last_outbound_at: null, created_at: '2026-09-28T10:00:00+00:00',
   assigned_to: null, assigned_to_name: null,
 };
-const PEOPLE = [{ profile_id: 'p1', full_name: 'منى', open_leads: 2 }, { profile_id: 'p2', full_name: 'خالد', open_leads: 0 }];
+const PEOPLE = [{ id: 'p1', name: 'منى', open_leads: 2 }, { id: 'p2', name: 'خالد', open_leads: 0 }];
 
 function open(row: LeadRow = ROW) {
   apiFetch.mockImplementation(async (path: string) =>

@@ -68,13 +68,18 @@ export class LeadsService {
         last_inbound_at: contact.at.toISOString(),
       });
       // Only a lead created right here is handed to a salesperson; an existing one never is (above, and the winner below).
-      return this.sales ? await this.sales.autoAssign(created) : created;
+      return await this.assigned(created);
     } catch (e) {
       // Two first messages from one phone at once: the other insert won, so update it instead.
       const winner = e instanceof ConflictException && (await this.leads.findByPhone(phone.e164));
       if (!winner) throw e;
       return this.touch(winner, contact);
     }
+  }
+
+  /** A salesperson for a lead just created (never throws; no assigner = unchanged). */
+  private assigned(lead: LeadRow): Promise<LeadRow> {
+    return this.sales ? this.sales.autoAssign(lead) : Promise.resolve(lead);
   }
 
   private touch(lead: LeadRow, c: { name: string | null; at: Date }): Promise<LeadRow> {

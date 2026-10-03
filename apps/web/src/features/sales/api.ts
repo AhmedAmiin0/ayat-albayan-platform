@@ -24,8 +24,8 @@ export interface SalesMeeting {
 }
 
 export interface SalesPerson {
-  profile_id: string;
-  full_name: string;
+  id: string;
+  name: string;
   open_leads: number;
 }
 

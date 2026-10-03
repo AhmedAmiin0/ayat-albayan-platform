@@ -17,7 +17,7 @@ export function LeadAssignSelect({ lead }: { lead: LeadRow }) {
     ]),
   });
   const current = lead.assigned_to ?? '';
-  const known = !current || options.some((p) => p.profile_id === current);
+  const known = !current || options.some((p) => p.id === current);
   return (
     <Select
       aria-label={t.sales.assign.rowLabel.replace('{name}', lead.name ?? lead.phone_e164)}
@@ -30,8 +30,8 @@ export function LeadAssignSelect({ lead }: { lead: LeadRow }) {
       <option value="">{t.sales.assign.none}</option>
       {!known && <option value={current}>{lead.assigned_to_name ?? current}</option>}
       {options.map((p) => (
-        <option key={p.profile_id} value={p.profile_id}>
-          {p.full_name}
+        <option key={p.id} value={p.id}>
+          {p.name}
         </option>
       ))}
     </Select>
