@@ -54,6 +54,8 @@ describe('feedbackRequestSchema and feedbackQuerySchema', () => {
       from: '2026-10-01',
     });
     expect(feedbackQuerySchema.safeParse({ rating: '7' }).success).toBe(false);
+    expect(feedbackQuerySchema.safeParse({ lesson: 'nope' }).success).toBe(false);
+    expect(feedbackQuerySchema.parse({ lesson: '00000000-0000-4000-8000-0000000000d1' }).lesson).toBeDefined();
     expect(feedbackQuerySchema.safeParse({ from: 'yesterday' }).success).toBe(false);
   });
 });

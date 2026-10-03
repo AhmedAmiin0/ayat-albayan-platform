@@ -35,6 +35,8 @@ export type FeedbackRequest = z.output<typeof feedbackRequestSchema>;
 /** GET /feedback filters (paged like every list). */
 export const feedbackQuerySchema = z.object({
   teacher: z.uuid().optional(),
+  /** One lesson's rows: the «اتبعت» state of its send button survives a reload. */
+  lesson: z.uuid().optional(),
   kind: z.enum(FEEDBACK_KINDS).optional(),
   rating: z.coerce.number().int().min(1).max(5).optional(),
   from: z.iso.date().optional(),

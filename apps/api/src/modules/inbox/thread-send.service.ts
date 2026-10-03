@@ -63,6 +63,8 @@ export class ThreadSendService {
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);
+    // Its link is signed per lesson and student by «ابعت طلب الرأي» (FeedbackModule); a hand-made button is a dead link.
+    if (s.input.key === 'lesson_feedback_request') throw waHttpError('use_feedback_request', 400);
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
     if (template.header_format === 'document') throw waHttpError('needs_document', 400);

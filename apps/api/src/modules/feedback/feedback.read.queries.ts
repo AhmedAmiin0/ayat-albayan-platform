@@ -36,6 +36,7 @@ export class FeedbackReadQueries {
     const { filter, page } = input;
     let q = this.db.from('lesson_feedback').select(LIST_COLUMNS, { count: 'exact' });
     if (filter.teacher) q = q.eq('teacher_id', filter.teacher);
+    if (filter.lesson) q = q.eq('lesson_id', filter.lesson);
     if (filter.kind) q = q.eq('kind', filter.kind);
     if (filter.rating) q = q.eq('rating', filter.rating);
     if (filter.from) q = q.gte('requested_at', `${filter.from}T00:00:00Z`);

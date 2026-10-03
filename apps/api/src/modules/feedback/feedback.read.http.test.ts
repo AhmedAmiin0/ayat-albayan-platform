@@ -29,7 +29,7 @@ describe('feedback lists', () => {
     });
 
     it('filters are validated', async () => {
-      for (const q of ['kind=other', 'rating=9', 'from=yesterday', 'teacher=nope', 'pageSize=500']) {
+      for (const q of ['kind=other', 'lesson=nope', 'rating=9', 'from=yesterday', 'teacher=nope', 'pageSize=500']) {
         expect((await h.call({ method: 'GET', url: `/feedback?${q}` })).statusCode).toBe(400);
       }
     });
