@@ -10,7 +10,7 @@ import { useTeacherMe } from './queries';
 import { SignOutButton } from './SignOutButton';
 
 /**
- * The teacher's «المزيد» (R-TCH-02, R-TCH-04, R-MOB-02): my earnings per lesson (monthly statements one tap in), my weekly
+ * The teacher's «المزيد» (R-TCH-02, R-TCH-04, R-MOB-02): my students (subscribed and trial), my earnings per lesson (monthly statements one tap in), my weekly
  * availability and time-off (read-only; the admin edits them), the appearance, the language,
  * sign-out.
  */
@@ -20,6 +20,7 @@ export function TeacherMoreScreen() {
     <Screen>
       <ScreenHeader title={t.mobile.more} subtitle={me.data?.display_name_ar} />
       <View style={{ marginHorizontal: -16 }}>
+        <ListRow title={t.teacherNav.students} onPress={() => router.push('/teacher/more/students')} />
         <ListRow title={t.teacherNav.payouts} onPress={() => router.push('/teacher/more/earnings')} />
         <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/teacher/more/feedback')} />
         <ListRow title={t.availability.title} onPress={() => router.push('/teacher/more/availability')} />
