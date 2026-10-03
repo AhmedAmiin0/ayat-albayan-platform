@@ -91,7 +91,9 @@ jobs:
       - name: Install the browser's system libraries (cache hit)
         if: steps.pw-cache.outputs.cache-hit == 'true'
         run: pnpm --filter e2e exec playwright install-deps chromium
-      - run: pnpm turbo e2e --filter=e2e -- --shard=${{ matrix.shard }}/4
+      # PRs run the desktop project only (half the specs); pushes to main/develop also run the phone-size
+      # project, so a mobile layout regression is still caught before a release.
+      - run: pnpm turbo e2e --filter=e2e -- --shard=${{ matrix.shard }}/4 ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
         env:
           CI: 'true'
       - uses: actions/upload-artifact@v4
