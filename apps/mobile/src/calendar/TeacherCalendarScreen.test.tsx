@@ -8,6 +8,10 @@ import { cancelled, done, lesson, muscat, pending } from '@/today/fixtures';
 import { ltr } from '@/ui/Ltr';
 import { TeacherCalendarScreen } from './TeacherCalendarScreen';
 
+// The first render in this file pays the cold transform of the whole calendar tree, which exceeded the
+// 30 s default on the CI runner (develop's own runs too); the later tests take well under a second.
+jest.setTimeout(120_000);
+
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
