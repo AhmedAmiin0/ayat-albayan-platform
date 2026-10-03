@@ -919,6 +919,7 @@ export type Database = {
           id: string;
           local_date: string | null;
           makeup_of_id: string | null;
+          makeup_student_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
@@ -940,6 +941,7 @@ export type Database = {
           id?: string;
           local_date?: string | null;
           makeup_of_id?: string | null;
+          makeup_student_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
@@ -961,6 +963,7 @@ export type Database = {
           id?: string;
           local_date?: string | null;
           makeup_of_id?: string | null;
+          makeup_student_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
@@ -976,6 +979,13 @@ export type Database = {
             columns: ['makeup_of_id'];
             isOneToOne: false;
             referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lessons_makeup_student_id_fkey';
+            columns: ['makeup_student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
             referencedColumns: ['id'];
           },
           {
@@ -2179,6 +2189,7 @@ export type Database = {
           id: string;
           local_date: string | null;
           makeup_of_id: string | null;
+          makeup_student_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;

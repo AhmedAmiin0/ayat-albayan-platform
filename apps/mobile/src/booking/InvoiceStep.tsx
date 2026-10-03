@@ -52,7 +52,7 @@ export function InvoiceStep({ requestId, chatPhone, value, onChange, onNext }: I
   const caption = value?.source === 'whatsapp' ? t.booking.invoice.fromChat : m.invoiceUploaded;
   return (
     <View style={{ gap: 12 }}>
-      <FormLabel>{`${t.booking.invoice.label} *`}</FormLabel>
+      <FormLabel required>{t.booking.invoice.label}</FormLabel>
       <Note>{t.booking.invoice.hint}</Note>
       {shown ? <InvoicePreview uri={shown.uri} mime={shown.mime} caption={caption} /> : null}
       {up.busy ? <Note>{t.booking.invoice.uploading}</Note> : null}

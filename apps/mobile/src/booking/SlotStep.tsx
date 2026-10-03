@@ -32,7 +32,7 @@ export function SlotStep({ teacherId, tz, durationMin, onPick }: SlotStepProps) 
 
   return (
     <View style={{ gap: 12 }}>
-      <FormLabel>{`${t.booking.pickTime} *`}</FormLabel>
+      <FormLabel required>{t.booking.pickTime}</FormLabel>
       <AppText style={note}>{slotLegend(tz)}</AppText>
       {slots.isError ? (
         <ErrorState message={t.booking.slotsError} onRetry={() => void slots.refetch()} />

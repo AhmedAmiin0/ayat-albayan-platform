@@ -3,6 +3,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import type { InvoiceView, MakeupCandidate, ThreadMediaItem } from './contract';
+import { invoiceMime } from './invoice-file';
 
 // R-SCH-10 / R-PAY-03 / R-MSG-06 routes (spec section 4): the invoice upload, the chat's media,
 // the missed lessons of a student and the stored invoices (all admin only).
@@ -16,10 +17,11 @@ export const invoiceUploadUrl = (body: { clientRequestId: string; mime: string; 
  */
 export async function uploadInvoiceFile(input: { requestId: string; file: File }): Promise<string> {
   const { file } = input;
-  const signed = await invoiceUploadUrl({ clientRequestId: input.requestId, mime: file.type, size: file.size });
+  const mime = invoiceMime(file);
+  const signed = await invoiceUploadUrl({ clientRequestId: input.requestId, mime, size: file.size });
   const { error } = await supabase.storage
     .from(signed.bucket)
-    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
+    .uploadToSignedUrl(signed.path, signed.token, file, { contentType: mime });
   if (error) throw error;
   return signed.path;
 }

@@ -6,8 +6,8 @@ import { makeupRequest } from './booking.makeup.fakes';
 
 describe('BookingInvoices.resolve — required unless trial (R-PAY-03)', () => {
   it.each([
-    ['a package', bookingRequest()],
-    ['a makeup', makeupRequest()],
+    ['a package', bookingRequest({ invoice: undefined })],
+    ['a makeup', makeupRequest({ invoice: undefined })],
   ])('%s without an invoice → 400 invoice_required', async (_name, req) => {
     const { invoices } = setup();
     expect(await code(invoices.resolve(req, [PHONE]))).toEqual({ status: 400, code: 'invoice_required' });

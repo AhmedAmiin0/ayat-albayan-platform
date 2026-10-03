@@ -8,6 +8,7 @@ import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
 import { durationMin, studentTimes, timeInCity } from './lessons';
+import { LessonTags } from './LessonTags';
 import { RIYADH_TZ } from './tz';
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
@@ -32,7 +33,10 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
   const mins = durationMin(lesson);
   return (
     <>
-      <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} className="justify-self-start" />
+      <div className="flex flex-wrap items-center gap-2">
+        <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} className="justify-self-start" />
+        <LessonTags lesson={lesson} />
+      </div>
       <dl className="grid gap-3">
         <Row label={t.schedule.time}>
           <span className="block">{`${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`}</span>
@@ -45,6 +49,12 @@ export function LessonDetails({ lesson }: { lesson: LessonView }) {
             </span>
           )}
         </Row>
+        {lesson.makeup_of && (
+          <Row label={t.booking.makeup.missedLabel}>
+            {lessonWhenText(new Date(lesson.makeup_of.starts_at), RIYADH_TZ, locale)}
+            <span className="block text-xs text-ink-2">{t.booking.makeup.noUnit}</span>
+          </Row>
+        )}
         <Row label={t.schedule.duration}>{duration[String(mins)] ?? mins}</Row>
         <Row label={t.schedule.teacher}>{teacherLabel(lesson.teacher)}</Row>
         <Row label={t.schedule.students}>

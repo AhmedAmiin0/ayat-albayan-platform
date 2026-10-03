@@ -98,8 +98,8 @@ describe('LessonDrawer invoice row (R-PAY-03, admin only)', () => {
     const open = await screen.findByRole('button', { name: t.booking.invoice.view });
     expect(apiFetch).toHaveBeenCalledWith('/invoices?ruleId=r-1');
     fireEvent.click(open);
-    const dialog = await screen.findByRole('dialog', { name: t.booking.invoice.label });
-    expect((await within(dialog).findByTitle(t.booking.invoice.label)).getAttribute('src')).toBe('https://signed/inv');
+    const dialog = await screen.findByRole('dialog', { name: new RegExp(t.booking.invoice.label) });
+    expect((await within(dialog).findByTitle(new RegExp(t.booking.invoice.label))).getAttribute('src')).toBe('https://signed/inv');
   });
 
   it('asks nothing for a trial, and shows nothing when there is no invoice', async () => {

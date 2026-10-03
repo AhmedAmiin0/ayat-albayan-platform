@@ -64,6 +64,18 @@ describe('MissedLessonStep (R-SCH-10)', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
+  it('coming from a lesson that already has its makeup, the empty state says that, not «غيّر الميعاد»', async () => {
+    renderStep([], { preselectId: 'l-1' });
+    expect(await screen.findByText(t.booking.makeup.noneForLesson)).toBeTruthy();
+    expect(screen.queryByText(t.booking.makeup.none)).toBeNull();
+  });
+
+  it('with other candidates left, the preselected lesson missing is named above the list', async () => {
+    renderStep([EXCUSED], { preselectId: 'l-1' });
+    expect(await screen.findByText(t.booking.makeup.noneForLesson)).toBeTruthy();
+    expect(screen.getAllByRole('radio')).toHaveLength(1);
+  });
+
   it('a failed list shows an alert', async () => {
     apiFetch.mockRejectedValue(new Error('down'));
     render(

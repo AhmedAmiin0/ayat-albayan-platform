@@ -58,6 +58,7 @@ export function fakeQueries() {
     lead: vi.fn().mockResolvedValue({ id: IDS.lead, status: 'new', source: null, qualification: {} }),
     guardianByPhone: vi.fn().mockResolvedValue(null),
     createBooking: vi.fn(),
+    replay: vi.fn().mockResolvedValue(null),
   };
 }
 
@@ -107,6 +108,8 @@ export function fakePlanner() {
   return { queries, availability, busy, projection, settings, planner };
 }
 
+/** Every non-trial booking carries one (the planner refuses it before planning otherwise). */
+const INVOICE = { source: 'upload', path: 'req/a.png' };
 const RULE = {
   teacherId: IDS.teacher,
   byday: [0],
@@ -119,7 +122,7 @@ const RULE = {
 
 /** Sundays 17:00 Riyadh, 45 min, 8 lessons, siblings S1 + S2 unless overridden. */
 export function bookingRequest(over: Record<string, unknown> = {}): BookingRequest {
-  return bookingRequestSchema.parse({ ...RULE, studentIds: [IDS.s1, IDS.s2], ...over });
+  return bookingRequestSchema.parse({ ...RULE, invoice: INVOICE, studentIds: [IDS.s1, IDS.s2], ...over });
 }
 
 /** A lead-path trial: new guardian + new student from the conversation. */

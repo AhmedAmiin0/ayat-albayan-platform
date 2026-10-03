@@ -63,7 +63,7 @@ export function FilterPills<V extends string>({
         hitSlop={{ top: 4, bottom: 4 }}
         style={{
           opacity: item.disabled ? 0.5 : 1,
-          minHeight: 36,
+          minHeight: radio ? 44 : 36,
           flexDirection: 'row',
           alignItems: 'center',
           gap: 6,

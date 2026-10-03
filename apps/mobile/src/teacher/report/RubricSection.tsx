@@ -23,7 +23,7 @@ export function RubricSection({ s, locked, register }: RubricSectionProps) {
   const { values, problem } = s;
   return (
     <Section title={t.reports.detailTitle}>
-      <FormLabel>{`${t.reports.rubricTitle} *`}</FormLabel>
+      <FormLabel required>{t.reports.rubricTitle}</FormLabel>
       {REPORT_RUBRICS.map((r) => (
         <ChoiceChips
           key={r}

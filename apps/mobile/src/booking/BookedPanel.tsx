@@ -6,6 +6,7 @@ import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 import { type, useTheme } from '@/theme';
+import { riyadhToday } from '@/calendar/week';
 import { whenText } from './slots';
 
 export interface BookedPanelProps {
@@ -64,11 +65,18 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
       ) : null}
       {next && !makeup ? (
         <Button label={t.inbox.subscription.make} onPress={() => router.replace(next)} />
+      ) : makeup ? (
+        <View style={{ gap: 8 }}>
+          {first ? (
+            <Button
+              label={t.booking.openSchedule}
+              onPress={() => router.replace({ pathname: '/schedule', params: { date: riyadhToday(new Date(first.starts_at)) } })}
+            />
+          ) : null}
+          <Button variant="ghost" label={t.common.close} onPress={onDone} />
+        </View>
       ) : (
-        <Button
-          label={makeup ? t.common.close : t.inbox.subscription.backToChat}
-          onPress={onDone}
-        />
+        <Button label={t.inbox.subscription.backToChat} onPress={onDone} />
       )}
     </View>
   );

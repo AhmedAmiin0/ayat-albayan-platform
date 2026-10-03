@@ -8,6 +8,9 @@ import { maryam, MON_19, noAvailability, slot, SUN_17 } from './fixtures';
 
 // Test-only helpers for the quick-book screen tests (the jest.mock calls stay in each test file).
 
+/** The invoice preview's label «الفاتورة، <source>» (the field's own label is just «الفاتورة»). */
+export const PREVIEW = new RegExp(`^${t.booking.mobile.invoiceA11y.split('{source}')[0] ?? ''}`);
+
 export const LEADS_KEY = listKey('/leads', { q: '' });
 
 /** The inbox list the lead screen came from: هدى (+966, Riyadh) and an unnamed +20 lead. */

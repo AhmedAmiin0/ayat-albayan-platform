@@ -7,7 +7,7 @@ import { booked, maryam, SUN_17 } from './fixtures';
 import { uploadInvoice } from './invoice-upload';
 import type { MakeupSource } from './makeup-draft';
 import { MakeupWizard } from './MakeupWizard';
-import { fakeBookingApi, PHOTO } from './test-utils';
+import { fakeBookingApi, PHOTO, PREVIEW } from './test-utils';
 import { whenText } from './slots';
 
 const mockApiFetch = jest.fn();
@@ -41,7 +41,7 @@ async function walkToConfirm() {
   await press(t.booking.mobile.keepTeacher.replace('{teacher}', maryam.display_name_ar));
   await press('17:00');
   await press(t.booking.mobile.takePhoto);
-  await screen.findByLabelText(t.booking.invoice.label);
+  await screen.findByLabelText(PREVIEW);
   await press(t.booking.next);
   await screen.findByRole('button', { name: t.booking.submit });
 }
@@ -71,7 +71,7 @@ test('missed lesson → teacher → slot of its length → invoice → «احج�
   await press(t.booking.next);
   expect(await screen.findByText(t.booking.error.invoice_required)).toBeTruthy();
   await press(t.booking.mobile.takePhoto);
-  await screen.findByLabelText(t.booking.invoice.label);
+  await screen.findByLabelText(PREVIEW);
   await press(t.booking.next);
 
   expect(screen.getByText(t.booking.kind.makeup)).toBeTruthy();

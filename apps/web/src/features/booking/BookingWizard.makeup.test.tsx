@@ -2,8 +2,8 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
+import { mediaCardLabel } from './ChatMediaPicker';
 import type { BookSearch } from './api';
 import { BookingPage } from './BookingPage';
 import type { MakeupCandidate } from './contract';
@@ -95,7 +95,7 @@ describe('BookingWizard: makeup and trial for a registered student (R-SCH-10, R-
     fireEvent.click(screen.getByRole('button', { name: t.booking.invoice.fromChat }));
     expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/media');
     const dialog = await screen.findByRole('dialog', { name: t.booking.invoice.chatTitle });
-    fireEvent.click(await within(dialog).findByRole('button', { name: fullTime(PHOTO.created_at) }));
+    fireEvent.click(await within(dialog).findByRole('button', { name: mediaCardLabel(PHOTO) }));
     next();
 
     expect(screen.getByText(t.booking.makeup.missedLabel, { selector: 'dt' })).toBeTruthy();

@@ -1,7 +1,6 @@
 import { applyLessonEvent, lessonStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
-import type { MakeupLessonView } from '@/booking/contract';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { durationLabel, riyadhTime, studentNames } from '@/today/lesson-text';
@@ -67,7 +66,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions }: AgendaLessonR
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
         <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
         {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
-        {(lesson as MakeupLessonView).makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
+        {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}
       </View>
     </View>
   );

@@ -59,7 +59,7 @@ export class BookingQueries {
   async lead(id: string): Promise<(LeadFacts & { status: LeadStatus }) | null> {
     const { data, error } = await this.db
       .from('leads')
-      .select('id, status, source, qualification')
+      .select('id, status, source, qualification, phone_e164')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);
@@ -100,6 +100,16 @@ export class BookingQueries {
     if (!data || data.kind === 'trial') return null;
     const { storage_path: path, ...rest } = data;
     return { ...rest, kind: data.kind, path, source: data.source === 'whatsapp' ? 'whatsapp' : 'upload' };
+  }
+
+  /** The booking this request already made (rule 8), null when it is new. No plan, no conflict check. */
+  async replay(requestId: string): Promise<BookingResult | null> {
+    const { data: rule, error } = await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).maybeSingle();
+    if (error) throw dbError(error);
+    if (!rule) return null;
+    const { data, error: failed } = await this.db.rpc('booking_result', { p_rule: rule.id });
+    if (failed) throw dbError(failed);
+    return toBookingResult(data);
   }
 
   /** Rule + students + lessons + lead + queued messages in one transaction (docs/10 §5 #14). */

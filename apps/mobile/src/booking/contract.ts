@@ -1,4 +1,4 @@
-import { makeupEligible, type BookingKind, type BookingRequest, type InvoiceInput, type LessonView } from '@ab/shared';
+import type { BookingKind, BookingRequest, InvoiceInput } from '@ab/shared';
 
 // The booking-type / invoice contract (R-SCH-10, R-PAY-03, R-MSG-06) lives in @ab/shared; the
 // types below are mobile-only (wizard drafts and the request shape it sends).
@@ -39,16 +39,4 @@ export interface MediaUrl {
   url: string;
   mime: string;
   expires_at: string;
-}
-
-/** LessonView.makeup: the lesson is a replacement for a missed one. */
-export type MakeupLessonView = LessonView;
-
-/**
- * The students a lesson can be made up for: the shared `makeupEligible` rules (no_show or excused,
- * within 60 days, still charged, not a trial, not itself a makeup) for each student.
- */
-export function makeupStudents(lesson: MakeupLessonView, now: Date): LessonView['students'] {
-  const facts = { status: lesson.status, trial: lesson.trial === true, makeup: lesson.makeup === true, startsAt: lesson.starts_at };
-  return lesson.students.filter((s) => makeupEligible({ ...facts, chargeable: s.chargeable }, now) === 'ok');
 }

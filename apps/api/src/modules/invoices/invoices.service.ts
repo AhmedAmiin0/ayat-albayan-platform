@@ -1,4 +1,5 @@
 import type { InvoiceView, SignedDownload } from '@ab/shared';
+import ar from '@ab/shared/i18n/ar.json';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -43,7 +44,7 @@ export class InvoicesService {
     const row = await this.queries.get(id);
     if (!row) throw notFound('invoice_not_found');
     const code = row.students[0]?.code;
-    const name = `${code ? `${code}_` : ''}فاتورة.${extFor(row.mime)}`;
+    const name = `${code ? `${code}_` : ''}${ar.booking.invoice.downloadName}.${extFor(row.mime)}`;
     return this.storage.signedDownload({ bucket: BUCKETS.invoices, path: row.storage_path, download: name });
   }
 }

@@ -1,4 +1,3 @@
-import { t } from '@/lib/i18n';
 import type { BookingDraft } from './draft';
 import { InvoiceField } from './InvoiceField';
 
@@ -19,7 +18,6 @@ export function InvoiceStep({ draft, chatPhone, onChange }: InvoiceStepProps) {
         chatPhone={chatPhone}
         onChange={(invoice) => onChange({ invoice })}
       />
-      {!draft.invoice && <p className="text-xs text-ink-3">{t.booking.error.invoice_required}</p>}
     </div>
   );
 }

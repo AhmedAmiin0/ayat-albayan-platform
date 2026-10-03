@@ -42,3 +42,19 @@ test.each([
   await render(<MakeupAction lesson={row({ id: 'x', ...over })} />);
   expect(screen.queryByRole('button')).toBeNull();
 });
+
+const BOOKED = { lesson_id: 'mk', starts_at: '2026-10-05T14:00:00.000Z' };
+
+test('once the makeup is booked the button gives way to «التعويض محجوز · <date>»', async () => {
+  await render(<MakeupAction lesson={row({ id: 'm3', status: 'no_show', students: [{ ...yusuf, makeup: BOOKED }] })} />);
+  expect(screen.queryByRole('button')).toBeNull();
+  expect(screen.getByText(new RegExp(t.booking.makeup.bookedChip.split('{when}')[0] ?? ''))).toBeTruthy();
+});
+
+test('in a group each child has their own: one booked, the other still offered', async () => {
+  const group = row({ id: 'm4', status: 'no_show', students: [{ ...yusuf, makeup: BOOKED }, jana] });
+  await render(<MakeupAction lesson={group} />);
+  expect(screen.getAllByRole('button')).toHaveLength(1);
+  expect(screen.getByRole('button', { name: `${t.booking.makeup.action} — جنى وليد` })).toBeTruthy();
+  expect(screen.getByText(new RegExp(`^${yusuf.name}: `))).toBeTruthy();
+});

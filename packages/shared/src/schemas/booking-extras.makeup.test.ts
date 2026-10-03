@@ -34,6 +34,11 @@ describe('makeupNames: {{1}} of the confirmation', () => {
     expect(makeupNames(['سهيلة'])).toBe('تعويضية لـسهيلة');
     expect(makeupNames(['سهيلة', 'مريم'])).toBe('تعويضية لـسهيلة ومريم');
   });
+
+  it('a name with the article «ال» takes «لل», not «لـال»', () => {
+    expect(makeupNames(['الزهراء'])).toBe('تعويضية للزهراء');
+    expect(makeupNames(['العنود', 'مريم'])).toBe('تعويضية للعنود ومريم');
+  });
   it('English for an English screen', () => {
     expect(makeupNames(['Suhaila'], 'en')).toBe('makeup for Suhaila');
   });

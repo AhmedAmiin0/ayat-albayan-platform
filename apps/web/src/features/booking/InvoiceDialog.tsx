@@ -3,10 +3,17 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
+import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { invoiceDownload } from './api.invoice';
 import type { InvoiceView } from './contract';
-import { isImage } from './invoice-file';
+import { canShow } from './invoice-file';
+
+/** «الفاتورة · <student> · <date>»: the title names whose invoice and when it was saved. */
+function title(invoice: InvoiceView): string {
+  const who = invoice.students.map((s) => s.name).join(t.teachers.listSeparator);
+  return [t.booking.invoice.label, who, fullTime(invoice.created_at)].filter(Boolean).join(' · ');
+}
 
 /** A stored invoice through a 1-hour signed URL: the image inline, a PDF in a frame (admin only). */
 export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onClose: () => void }) {
@@ -16,18 +23,18 @@ export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onCl
     staleTime: 30 * 60_000,
   });
   return (
-    <Dialog title={t.booking.invoice.label} onClose={onClose}>
+    <Dialog title={title(invoice)} onClose={onClose}>
       {signed.isError && <FormAlert>{t.common.error}</FormAlert>}
       {signed.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {signed.data &&
-        (isImage(invoice.mime) ? (
+        (canShow(invoice.mime) ? (
           <img src={signed.data.url} alt={t.booking.invoice.label} className="mx-auto max-h-[70vh] w-auto rounded-sm border border-rule" />
         ) : (
-          <iframe title={t.booking.invoice.label} src={signed.data.url} className="h-[70vh] w-full rounded-sm border border-rule" />
+          <iframe title={title(invoice)} src={signed.data.url} className="h-[70vh] w-full rounded-sm border border-rule" />
         ))}
       {signed.data && (
         <a href={signed.data.url} target="_blank" rel="noreferrer" className="mt-3 inline-block text-sm text-lapis underline underline-offset-4">
-          {t.booking.invoice.view}
+          {t.booking.invoice.openNewTab}
         </a>
       )}
     </Dialog>

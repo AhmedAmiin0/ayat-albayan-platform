@@ -41,6 +41,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
       attendance: s.attendance,
       chargeable: s.chargeable,
       seq: ctx.seq.get(`${row.id}:${s.student_id}`) ?? null,
+      makeup: activeMakeup(row, s.student_id),
     }))
     .sort((a, b) => a.name.localeCompare(b.name, 'ar'));
   return {
@@ -49,6 +50,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     rule_byday: row.rule?.byday ?? null,
     trial: row.rule?.package === 'trial',
     makeup: (row.makeup_of_id ?? null) !== null,
+    makeup_of: row.original ? { id: row.original.id, starts_at: iso(row.original.starts_at) } : null,
     teacher: row.teacher ?? { id: row.teacher_id, display_name_ar: '', tz: '' },
     starts_at: iso(row.starts_at),
     ends_at: iso(row.ends_at),
@@ -65,6 +67,13 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     pending_proposal: isOpenLesson(row.status) ? pendingProposal(row.proposals) : null,
   };
 }
+
+/** The makeup booked for this student's miss: not cancelled, not moved (lessons_makeup_of_key). */
+function activeMakeup(row: LessonRow, studentId: string): LessonStudentView['makeup'] {
+  const m = row.makeups?.find((x) => x.makeup_student_id === studentId && !INACTIVE.has(x.status));
+  return m ? { lesson_id: m.id, starts_at: iso(m.starts_at) } : null;
+}
+const INACTIVE: ReadonlySet<string> = new Set(['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled']);
 
 const conflictList = z.array(
   z.object({

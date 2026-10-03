@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
 import { booked, maryam, SUN_17 } from './fixtures';
 import { uploadInvoice } from './invoice-upload';
-import { fakeBookingApi, PHOTO } from './test-utils';
+import { fakeBookingApi, PHOTO, PREVIEW } from './test-utils';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -69,7 +69,7 @@ test('a lead from the chat books a package: size, slot, the required invoice, we
   await press('button', t.booking.next);
   expect(await screen.findByText(t.booking.error.invoice_required)).toBeTruthy();
   await press('button', t.booking.mobile.takePhoto);
-  expect(await screen.findByLabelText(t.booking.invoice.label)).toBeTruthy();
+  expect(await screen.findByLabelText(PREVIEW)).toBeTruthy();
   await press('button', t.booking.next);
 
   // «المراجعة»: the type, the package, its length, the invoice and the weekly days (Sunday is in).

@@ -54,7 +54,10 @@ export function MissedLessonStep({ draft, preselectId, onChange }: MissedLessonS
       </legend>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
-      {list.data?.length === 0 && <p className="text-sm text-ink-2">{t.booking.makeup.none}</p>}
+      {list.data?.length === 0 && <p className="text-sm text-ink-2">{preselectId ? t.booking.makeup.noneForLesson : t.booking.makeup.none}</p>}
+      {preselectId && !missed && list.data && list.data.length > 0 && !list.data.some((c) => c.lesson_id === preselectId) && (
+        <p className="text-sm text-ink-2">{t.booking.makeup.noneForLesson}</p>
+      )}
       <ul className="grid gap-2 sm:grid-cols-2">
         {list.data?.map((c) => (
           <li key={c.lesson_id}>

@@ -20,6 +20,8 @@ export interface LessonStudentView {
    * unpaid with nothing left (setting flag_future_lessons_when_unpaid). Absent otherwise.
    */
   unpaid?: boolean;
+  /** The active حجز تعويضي booked for this student's miss of the lesson (a group's others may have none). */
+  makeup?: { lesson_id: string; starts_at: string } | null;
 }
 
 /** GET /lessons, /lessons/day, /teachers/me/lessons, /students/:id/lessons items. */
@@ -32,6 +34,8 @@ export interface LessonView {
   trial?: boolean;
   /** A حجز تعويضي: replaces a missed lesson, never consumes a package unit (lessons.makeup_of_id). */
   makeup?: boolean;
+  /** For a makeup: the missed lesson it replaces. */
+  makeup_of?: { id: string; starts_at: string } | null;
   teacher: { id: string; display_name_ar: string; display_name_en?: string | null; tz: string };
   starts_at: string;
   ends_at: string;

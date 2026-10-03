@@ -18,6 +18,7 @@ import {
 import { StorageService } from '../../common/storage/storage.service';
 import { baseMime, InboundMedia } from '../whatsapp/inbound-media.service';
 import { domainError } from './booking.errors';
+import { SNIFF_BYTES, sniffMime } from './invoice-sniff';
 import type { InvoiceRow } from './booking.mapper';
 import { BookingQueries } from './booking.queries';
 
@@ -68,6 +69,9 @@ export class BookingInvoices {
     const info = await this.storage.info({ bucket: BUCKETS.invoices, path: a.input.path });
     if (!info) throw bad('invoice_path');
     const saved = this.checked({ path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size });
+    // Storage trusts the Content-Type the browser PUT with: the bytes must agree with it.
+    const head = await this.storage.head({ bucket: BUCKETS.invoices, path: a.input.path }, SNIFF_BYTES);
+    if (!head || sniffMime(head) !== saved.mime) throw bad('invoice_type');
     return { ...saved, kind: a.kind, source: 'upload', message_id: null };
   }
 

@@ -7,6 +7,7 @@ describe('BookingInvoices.resolve — an uploaded file', () => {
   it('mime and size come from Storage, not the client', async () => {
     const { invoices, storage } = setup();
     storage.info.mockResolvedValue({ size: 5120, contentType: 'application/pdf; charset=binary' });
+    storage.head.mockResolvedValue(new TextEncoder().encode('%PDF-1.7 ....'));
     expect(await invoices.resolve(paid(), [PHONE])).toEqual({
       kind: 'package',
       path: PATH,
@@ -40,5 +41,15 @@ describe('BookingInvoices.resolve — an uploaded file', () => {
     const { invoices, storage } = setup();
     storage.info.mockResolvedValue(info);
     expect(await code(invoices.resolve(paid(), [PHONE]))).toEqual({ status: 400, code: expected });
+  });
+
+  it.each([
+    ['text labelled image/png', new TextEncoder().encode('ftypheic fake ...')],
+    ['a PDF labelled image/png', new TextEncoder().encode('%PDF-1.7 ....')],
+    ['an unreadable object', null],
+  ])('%s → 400 invoice_type (the bytes decide, not the header)', async (_name, head) => {
+    const { invoices, storage } = setup();
+    storage.head.mockResolvedValue(head);
+    expect(await code(invoices.resolve(paid(), [PHONE]))).toEqual({ status: 400, code: 'invoice_type' });
   });
 });

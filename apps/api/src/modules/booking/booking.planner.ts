@@ -44,6 +44,8 @@ export class BookingPlanner {
 
   async prepare(req: BookingRequest): Promise<Prepared> {
     const kind = bookingKindOf(req);
+    // Before the plan: a missing invoice is not a clash the admin can override away.
+    if (kind !== 'trial' && !req.invoice) throw domainError(HttpStatus.BAD_REQUEST, 'invoice_required');
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
     const makeupOf = kind === 'makeup' ? await this.parties.missed(req) : null;
@@ -57,7 +59,8 @@ export class BookingPlanner {
       teacherLink: teacher.meeting_link,
     });
     const payload = bookingPayload({ req, kind, teacher, who, lead, plan, first, conflicts, meetingLink, makeupOf });
-    return { payload, conflicts, phones: [...new Set(who.booked.map((s) => s.guardian.phone_e164))] };
+    const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
+    return { payload, conflicts, phones: [...new Set(phones)] };
   }
 
   /**

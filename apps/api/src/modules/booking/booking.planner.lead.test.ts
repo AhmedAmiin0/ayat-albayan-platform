@@ -53,7 +53,7 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
 
   it('a paid package from a fresh lead books and converts it (subscribe from the chat)', async () => {
     const { planner } = fakePlanner();
-    const { payload } = await planner.prepare(leadRequest({ package: '8' }));
+    const { payload } = await planner.prepare(leadRequest({ package: '8', invoice: { source: 'upload', path: 'req/a.png' } }));
     expect(payload.lead).toEqual({ id: IDS.lead, from: 'new', to: 'converted' });
     expect(payload.lessons).toHaveLength(5);
     expect(payload.rule.ends_on).toBeNull();

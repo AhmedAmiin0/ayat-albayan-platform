@@ -35,6 +35,7 @@ test('toReceipt: the decoded bytes and their exact size', () => {
 test('toReceipt: a bucket image type is kept; anything else uploads as JPEG', () => {
   expect(toReceipt(asset({ mimeType: 'image/png' }))?.mime).toBe('image/png');
   expect(toReceipt(asset({ mimeType: 'image/gif' }))?.mime).toBe('image/jpeg');
+  expect(toReceipt(asset({ mimeType: 'image/heic' }))?.mime).toBe('image/jpeg');
   expect(toReceipt(asset({ mimeType: 'application/pdf' }))?.mime).toBe('image/jpeg');
   expect(toReceipt(asset({ mimeType: undefined }))?.mime).toBe('image/jpeg');
 });

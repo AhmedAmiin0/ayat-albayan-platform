@@ -28,6 +28,11 @@ const LEAD = {
 const FAMILY = { program: 'quran', tz: 'Africa/Cairo', pkg: 'trial', genderPref: null, country: 'EG' } as const;
 
 describe('lead → student conversion carries «بيانات الطالب» and the source (research-forms item 2)', () => {
+  it('the lead path lists the lead’s own chat for «من الشات», the number the invoice came from', () => {
+    expect(draftFromLead({ leadId: LEAD_ID, phone: '+966501234567' }, null).chatPhone).toBe('+966501234567');
+    expect(draftFromLead({ leadId: LEAD_ID }, null).chatPhone).toBeNull();
+  });
+
   it('prefills step 1 and the zone from the qualification', () => {
     const { student, tz } = newStudentFromLead(LEAD, { name: 'أم جود', phone: LEAD.phone_e164 });
     expect(student).toMatchObject({ name: 'جود', guardianName: 'منى', guardianPhone: '+966501234567', age: '9', gender: 'female', source: 'instagram_ad' });

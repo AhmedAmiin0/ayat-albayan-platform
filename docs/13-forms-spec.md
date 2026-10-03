@@ -59,6 +59,9 @@ Tables and buckets (migrations 170-172): `invoices` (admin-only RLS, no teacher 
 16. The guardian's makeup confirmation reuses the approved booking templates («تم حجز حلقة تعويضية لـسهيلة — …»). Different wording needs a new Meta template and about a day of approval.
 17. The invoice is proof on the booking; no payment row is created from it. Recording the payment stays «سجّل الدفعة». Say if the invoice should pre-fill the payment's receipt.
 18. A WhatsApp file is fetchable for 29 days (Meta keeps a media id about 30). Older ones show as expired and the family is asked to send it again.
+19. A completed makeup is paid to the teacher like any completed lesson. The missed original is paid only while «payout_count_no_show» is on: turning that on pays the teacher twice for one package unit. Say if the original should be left out of the payout once a non-cancelled makeup exists.
+20. Mobile: the makeup wizard opens from a missed lesson's row under `(tabs)/students`; its «رجوع» is the app's usual ghost button in the header's trailing slot (like every pushed screen), and its fallback is the schedule. Check the back behaviour on a device.
+21. Retention: invoice files that never reach a booking (a rejected or abandoned booking) and the `wa-media` copies of chat photos stay in their private buckets with no nightly clean-up yet (it needs the Storage API from a job runner, not SQL). Say how long guardians' photos may be kept.
 
 ---
 

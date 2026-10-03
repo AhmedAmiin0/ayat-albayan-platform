@@ -34,7 +34,7 @@ function setup() {
     invoices as unknown as BookingInvoices,
     sender as unknown as MessageSender,
   );
-  const service = new BookingService(deps.planner, writer);
+  const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries);
   return { ...deps, service, sender, invoices };
 }
 type Queries = ReturnType<typeof setup>['queries'];

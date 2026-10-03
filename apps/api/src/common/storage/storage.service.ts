@@ -60,6 +60,15 @@ export class StorageService {
     return { size: data.size ?? 0, contentType: data.contentType ?? '' };
   }
 
+  /** The first `bytes` bytes of an object (a ranged GET on a 1-minute signed URL), null when missing. */
+  async head(ref: ObjectRef, bytes: number): Promise<Uint8Array | null> {
+    const { data, error } = await this.db.storage.from(ref.bucket).createSignedUrl(ref.path, 60);
+    if (error) return null;
+    const res = await fetch(data.signedUrl, { headers: { Range: `bytes=0-${bytes - 1}` } });
+    if (!res.ok) return null;
+    return new Uint8Array(await res.arrayBuffer()).slice(0, bytes);
+  }
+
   /** Server-side copy, across buckets, never through the client. Idempotent: an existing target stays. */
   async copy(input: { from: ObjectRef; to: ObjectRef }): Promise<void> {
     const { from, to } = input;

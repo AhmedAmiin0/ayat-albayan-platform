@@ -74,8 +74,11 @@ export function joinNames(names: readonly string[], locale: Locale = 'ar'): stri
 
 /**
  * {{1}} of a makeup's confirmation: «تعويضية لـسهيلة», so the approved body «تم حجز حلقة {{1}} — {{2}}»
- * reads «تم حجز حلقة تعويضية لـسهيلة — الأحد 4 أكتوبر 17:00». English for a screen in English.
+ * reads «تم حجز حلقة تعويضية لـسهيلة — الأحد 4 أكتوبر 17:00» (للزهراء for الزهراء). English for a screen in English.
  */
 export function makeupNames(names: readonly string[], locale: Locale = 'ar'): string {
-  return locale === 'ar' ? `تعويضية لـ${joinNames(names, locale)}` : `makeup for ${joinNames(names, locale)}`;
+  const joined = joinNames(names, locale);
+  if (locale !== 'ar') return `makeup for ${joined}`;
+  // «لـ» + «الزهراء» is «للزهراء»: the article's alef drops (and the lam doubles).
+  return `تعويضية ${joined.startsWith('ال') ? `لل${joined.slice(2)}` : `لـ${joined}`}`;
 }

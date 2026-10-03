@@ -1,7 +1,14 @@
 import { leadQualificationSchema, type BookingRequest, type LeadSource } from '@ab/shared';
 
 /** The lead row the booking started from (BookingQueries.lead). */
-export type LeadFacts = { id: string; status: string; source: LeadSource | null; qualification: unknown };
+export type LeadFacts = {
+  id: string;
+  status: string;
+  source: LeadSource | null;
+  qualification: unknown;
+  /** The lead's own WhatsApp number: its chat is one an invoice may be saved from. */
+  phone_e164?: string;
+};
 
 type NewParts = Extract<BookingRequest, { newStudent: unknown }>;
 const TEXT = ['level', 'memorized', 'goal', 'riwaya', 'notes'] as const;

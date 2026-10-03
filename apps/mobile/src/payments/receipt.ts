@@ -33,12 +33,16 @@ function decodeBase64(base64: string): ArrayBuffer {
   return bytes.buffer;
 }
 
-/** The picker's asset as a receipt; its own image type when the bucket takes it, else JPEG. */
+/**
+ * The picker's asset as a receipt; its own image type when the bucket takes it, else JPEG. Never
+ * HEIC: the picker re-encodes (quality 0.6), so a «heic» label on a phone photo describes the
+ * original, not these JPEG bytes, and the API checks the bytes against the label.
+ */
 export function toReceipt(asset: ImagePicker.ImagePickerAsset): Receipt | null {
   if (!asset.base64) return null;
   const bytes = decodeBase64(asset.base64);
   const mime =
-    RECEIPT_MIMES.find((m) => m !== 'application/pdf' && m === asset.mimeType) ?? 'image/jpeg';
+    RECEIPT_MIMES.find((m) => m !== 'application/pdf' && m !== 'image/heic' && m === asset.mimeType) ?? 'image/jpeg';
   return { uri: asset.uri, mime, bytes, size: bytes.byteLength };
 }
 

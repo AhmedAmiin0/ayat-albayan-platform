@@ -1,9 +1,8 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
-import { ChatMediaPicker } from './ChatMediaPicker';
+import { ChatMediaPicker, mediaCardLabel } from './ChatMediaPicker';
 import type { ThreadMediaItem } from './contract';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -34,25 +33,25 @@ afterEach(() => apiFetch.mockReset());
 describe('ChatMediaPicker «من الشات» (R-MSG-06)', () => {
   it('lists the family’s files: the photo loads its thumbnail lazily, the PDF is a tile', async () => {
     renderPicker([PHOTO, PDF]);
-    const photo = await screen.findByRole('button', { name: fullTime(PHOTO.created_at) });
+    const photo = await screen.findByRole('button', { name: mediaCardLabel(PHOTO) });
     expect((await screen.findByRole('img')).getAttribute('src')).toBe('https://signed/m-photo');
     expect(photo.textContent).toContain('التحويل');
-    expect(screen.getByRole('button', { name: fullTime(PDF.created_at) }).textContent).toContain(t.booking.invoice.pdf);
+    expect(screen.getByRole('button', { name: mediaCardLabel(PDF) }).textContent).toContain(t.booking.invoice.pdf);
     expect(apiFetch).toHaveBeenCalledWith('/threads/%2B966501234567/media/m-pdf');
   });
 
   it('choosing a photo hands back the message and its preview, a PDF without one', async () => {
     const { onPick } = renderPicker([PHOTO, PDF]);
     await screen.findByRole('img');
-    fireEvent.click(screen.getByRole('button', { name: fullTime(PHOTO.created_at) }));
+    fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PHOTO) }));
     expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'm-photo', mime: 'image/jpeg', preview: 'https://signed/m-photo' });
-    fireEvent.click(screen.getByRole('button', { name: fullTime(PDF.created_at) }));
+    fireEvent.click(screen.getByRole('button', { name: mediaCardLabel(PDF) }));
     expect(onPick).toHaveBeenLastCalledWith({ source: 'whatsapp', messageId: 'm-pdf', mime: 'application/pdf', preview: null });
   });
 
   it('an expired file is disabled with the reason and never fetched', async () => {
     renderPicker([OLD]);
-    const card = await screen.findByRole('button', { name: fullTime(OLD.created_at) });
+    const card = await screen.findByRole('button', { name: mediaCardLabel(OLD) });
     expect(card.hasAttribute('disabled')).toBe(true);
     expect(card.textContent).toContain(t.booking.invoice.expired);
     expect(apiFetch).not.toHaveBeenCalledWith(expect.stringContaining('m-old'));

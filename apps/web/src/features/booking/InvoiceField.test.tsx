@@ -78,13 +78,12 @@ describe('InvoiceField (R-PAY-03)', () => {
     expect(invoiceProblem(file('image/heic'))).toBeNull();
   });
 
-  it('says why a failed upload failed and keeps no invoice', async () => {
+  it('says why a failed upload failed; nothing is attached, and nothing is wiped', async () => {
     uploadToSignedUrl.mockResolvedValue({ error: new Error('boom') });
     const onChange = renderField();
     choose(file('image/png'));
     expect((await screen.findByRole('alert')).textContent).toBe(t.common.error);
-    expect(onChange).toHaveBeenCalledTimes(1);
-    expect(onChange).toHaveBeenCalledWith(null);
+    expect(onChange).not.toHaveBeenCalled();
   });
 
   it('«شيلها» removes it, «غيّرها» replaces it', () => {

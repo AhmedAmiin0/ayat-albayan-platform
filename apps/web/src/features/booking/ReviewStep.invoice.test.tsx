@@ -37,6 +37,18 @@ describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
     expect(screen.getByText(t.booking.invoice.fromChat)).toBeTruthy();
   });
 
+  it('a makeup reads «ميعاد التعويض», not «أول حلقة»', () => {
+    const makeup: BookingDraft = { ...DRAFT, kind: 'makeup', missed: { lessonId: 'l-1', startsAt: SLOT, teacherId: ABRAR.id, durationMin: 45 } };
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <ReviewStep draft={makeup} onMeetingLink={vi.fn()} onChangeSlot={vi.fn()} onInvoice={vi.fn()} onBooked={vi.fn()} onPatch={vi.fn()} />
+      </QueryClientProvider>,
+    );
+    expect(screen.getByText(t.booking.makeup.timeLabel)).toBeTruthy();
+    expect(screen.queryByText(t.booking.startsOn)).toBeNull();
+    expect(screen.queryByText(new RegExp(t.booking.firstLesson.split('{when}')[0] ?? ''))).toBeNull();
+  });
+
   it.each([
     ['invoice_required', t.booking.error.invoice_required],
     ['media_expired', t.booking.error.media_expired],

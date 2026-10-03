@@ -33,7 +33,7 @@ export class MakeupCandidates {
       .limit(LIMIT * 2);
     if (error) throw dbError(error);
     const missed = data.filter((l) => l.rule?.package !== 'trial');
-    const taken = await this.taken(missed.map((l) => l.id));
+    const taken = await this.taken(missed.map((l) => l.id), studentId);
     return missed
       .filter((l) => !taken.has(l.id))
       .slice(0, LIMIT)
@@ -46,13 +46,14 @@ export class MakeupCandidates {
       }));
   }
 
-  /** Missed lessons that already have an active makeup. */
-  private async taken(ids: string[]): Promise<Set<string>> {
+  /** Missed lessons that already have an active makeup for this student (a group's others still can). */
+  private async taken(ids: string[], studentId: string): Promise<Set<string>> {
     if (ids.length === 0) return new Set();
     const { data, error } = await this.db
       .from('lessons')
       .select('makeup_of_id')
       .in('makeup_of_id', ids)
+      .eq('makeup_student_id', studentId)
       .not('status', 'in', INACTIVE);
     if (error) throw dbError(error);
     return new Set(data.flatMap((r) => (r.makeup_of_id ? [r.makeup_of_id] : [])));

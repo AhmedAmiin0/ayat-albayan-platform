@@ -6,7 +6,7 @@ import { renderWithQuery } from '@/test/query';
 import { UPLOADED } from './fixtures';
 import { uploadInvoice } from './invoice-upload';
 import { InvoiceStep, type InvoiceStepProps } from './InvoiceStep';
-import { PHOTO } from './test-utils';
+import { PHOTO, PREVIEW } from './test-utils';
 
 jest.mock('@/payments/receipt', () => ({ pickReceipt: jest.fn() }));
 jest.mock('./invoice-upload', () => ({ uploadInvoice: jest.fn() }));
@@ -61,7 +61,7 @@ test('camera or gallery: the photo uploads at once under the wizard’s request 
 
 test('a picked invoice shows, can be retaken or removed, and lets «التالي» through', async () => {
   const { props } = await step({ value: UPLOADED });
-  expect(screen.getByLabelText(t.booking.invoice.label)).toBeTruthy();
+  expect(screen.getByLabelText(PREVIEW)).toBeTruthy();
   await press(t.payments.mobile.retake);
   expect(pick).toHaveBeenCalledWith('camera');
   await press(t.booking.invoice.remove);
@@ -75,7 +75,7 @@ test('offline: the photo is kept and «ارفعها تاني» retries the same 
   const { props } = await step();
   await press(m.takePhoto);
   expect(await screen.findByText(m.invoiceOffline)).toBeTruthy();
-  expect(screen.getByLabelText(t.booking.invoice.label)).toBeTruthy();
+  expect(screen.getByLabelText(PREVIEW)).toBeTruthy();
   expect(props.onChange).not.toHaveBeenCalled();
   await press(m.retryUpload);
   expect(upload).toHaveBeenCalledTimes(2);

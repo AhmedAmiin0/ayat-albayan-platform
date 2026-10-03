@@ -12,6 +12,8 @@ export interface RadioChipsProps<V extends string> {
   disabled?: boolean | undefined;
   /** The last submit attempt found it missing. */
   invalid?: boolean | undefined;
+  /** Equal-width chips in a row of the same count on a phone (long labels wrap inside their chip). */
+  equal?: boolean;
 }
 
 /** A legend and native radios styled as chips (one choice, «اختيار واحد» on the forms). */
@@ -22,7 +24,7 @@ export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
         {p.legend}
         {p.required && <RequiredMark />}
       </legend>
-      <div className="flex flex-wrap gap-2">
+      <div className={cn('flex flex-wrap gap-2', p.equal && 'max-[480px]:grid max-[480px]:grid-cols-3')}>
         {p.options.map((o) => (
           <label key={o.value} className="cursor-pointer">
             <input
@@ -37,6 +39,7 @@ export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
             <span
               className={cn(
                 'inline-flex min-h-12 items-center rounded-md border px-4 text-sm font-medium text-ink-2',
+                p.equal && 'max-[480px]:flex max-[480px]:h-full max-[480px]:justify-center max-[480px]:px-2 max-[480px]:py-2 max-[480px]:text-center',
                 p.invalid ? 'border-danger' : 'border-input',
                 'peer-checked:border-primary peer-checked:bg-lapis-wash peer-checked:font-semibold peer-checked:text-ink',
                 'peer-focus-visible:outline-2 peer-focus-visible:outline-offset-2 peer-focus-visible:outline-ring',

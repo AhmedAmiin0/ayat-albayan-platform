@@ -86,7 +86,7 @@ describe('BookedPanel invoice and makeup (R-SCH-10, R-PAY-03)', () => {
     expect(screen.queryByRole('button', { name: t.inbox.subscription.make })).toBeNull();
     expect(apiFetch).toHaveBeenCalledWith('/invoices?ruleId=r-1');
     fireEvent.click(await screen.findByRole('button', { name: t.booking.invoice.view }));
-    const dialog = await screen.findByRole('dialog', { name: t.booking.invoice.label });
+    const dialog = await screen.findByRole('dialog', { name: new RegExp(t.booking.invoice.label) });
     expect((await within(dialog).findByRole('img')).getAttribute('src')).toBe('https://signed/inv');
   });
 

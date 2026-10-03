@@ -1,4 +1,4 @@
-import type { Gender } from '@ab/shared';
+import { normalizePhone, type Gender } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form-alert';
 import { leadByPhoneQuery, type InboxLead } from '@/features/inbox/api';
@@ -37,11 +37,14 @@ export function draftFromLead(search: BookSearch, lead: InboxLead | null): Booki
   const pkg = search.pkg ?? 'trial';
   const base = emptyDraft({ leadId: search.leadId ?? null, kind: pkg === 'trial' ? 'trial' : 'package' });
   const { student, tz } = newStudentFromLead(lead, search);
+  // The chat the lead wrote from: where the invoice usually arrived, even if another guardian number is typed.
+  const leadPhone = normalizePhone(search.phone ?? '');
   return {
     ...base,
     pkg,
     tz: tz ?? base.tz,
     newStudent: student,
+    chatPhone: leadPhone.ok ? leadPhone.e164 : null,
     country: guardianCountry({ phone_e164: search.phone ?? '' }),
   };
 }

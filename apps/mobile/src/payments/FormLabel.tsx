@@ -1,11 +1,18 @@
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 
+export interface FormLabelProps {
+  children: string;
+  /** Draws the «*»; a screen reader hears the label without it («نجمة»), the hint says it is required. */
+  required?: boolean;
+}
+
 /** A form group's label, styled like ui/Field's own label so every row of the form matches. */
-export function FormLabel({ children }: { children: string }) {
+export function FormLabel({ children, required = false }: FormLabelProps) {
   const { color } = useTheme();
   return (
     <AppText
+      {...(required ? { accessibilityLabel: children } : {})}
       style={{
         fontFamily: type.ui[600],
         fontSize: type.size.xs,
@@ -13,7 +20,7 @@ export function FormLabel({ children }: { children: string }) {
         color: color.ink2,
       }}
     >
-      {children}
+      {required ? `${children} *` : children}
     </AppText>
   );
 }

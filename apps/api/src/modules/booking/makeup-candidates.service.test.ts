@@ -54,6 +54,8 @@ describe('MakeupCandidates.list (R-SCH-10)', () => {
     expect(list.map((c) => [c.lesson_id, c.status])).toEqual([['L3', 'excused']]);
     // the trial is not even looked up; the cancelled / moved makeups free their lesson
     expect(calls.filter((c) => c.method === 'in').at(-1)?.args).toEqual(['makeup_of_id', ['L1', 'L3']]);
+    // per student: in a group lesson only the student who has a makeup loses the lesson
+    expect(calls.filter((c) => c.method === 'eq').at(-1)?.args).toEqual(['makeup_student_id', IDS.s1]);
     expect(calls.find((c) => c.method === 'not')?.args).toEqual(['status', 'in', '(cancelled_by_teacher,cancelled_by_admin,rescheduled)']);
   });
 

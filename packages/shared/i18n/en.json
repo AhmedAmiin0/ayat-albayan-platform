@@ -543,7 +543,8 @@
       "missedLesson": "Missed lesson",
       "keepTeacher": "Continue with {teacher}",
       "orPickTeacher": "Or pick another teacher",
-      "makeupFor": "For {name}"
+      "makeupFor": "For {name}",
+      "invoiceA11y": "Invoice, {source}"
     },
     "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
     "packageTrial": "Free trial lesson only",
@@ -554,7 +555,6 @@
       "trial": "Free trial lesson only",
       "package": "Subscription",
       "makeup": "Makeup lesson",
-      "makeupLead": "A makeup lesson is for a registered student only",
       "makeupNeedsStudent": "A makeup is for a registered student only, register them first"
     },
     "makeup": {
@@ -563,12 +563,13 @@
       "tag": "Makeup",
       "title": "Book a makeup lesson",
       "action": "Book makeup",
-      "done": "The makeup lesson is booked",
-      "missedLesson": "Missed lesson",
       "booked": "The makeup lesson is booked",
-      "missedLabel": "Missed lesson"
+      "missedLabel": "Missed lesson",
+      "bookedChip": "Makeup booked · {when}",
+      "noUnit": "A makeup lesson: it uses no package lesson",
+      "noneForLesson": "This lesson already has a makeup booked, or it is over 60 days old",
+      "timeLabel": "Makeup time"
     },
-    "makeupFor": "Makeup for {names}",
     "invoice": {
       "label": "Invoice",
       "hint": "A photo or PDF proving payment. Required before booking",
@@ -588,7 +589,14 @@
       "sourceUpload": "Uploaded from the device",
       "sourceWhatsapp": "From WhatsApp",
       "chatTitle": "Pick the invoice from the chat",
-      "chatError": "Could not load the chat files, try again"
+      "chatError": "Could not load the chat files, try again",
+      "openFull": "View the invoice full size",
+      "downloadName": "Invoice",
+      "openNewTab": "Open in a new tab",
+      "chatImageCard": "Image · {time}",
+      "chatPdfCard": "PDF file · {time}",
+      "expiredBadge": "Expired",
+      "thumbRetry": "The image did not load, tap to try again"
     },
     "error": {
       "invoice_required": "Upload the invoice or pick it from the chat before booking",

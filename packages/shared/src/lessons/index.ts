@@ -6,3 +6,4 @@ export * from './series-days.js';
 export type * from './overview.js';
 export * from './teacher-name.js';
 export type * from './makeup-views.js';
+export * from './makeup-offer.js';

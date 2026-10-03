@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react-native';
-import type { MakeupLessonView } from '@/booking/contract';
+import type { LessonView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { lesson } from '@/today/fixtures';
 import { AgendaLessonRow } from './AgendaLessonRow';
 
-const makeup: MakeupLessonView = { ...lesson({ id: 'a' }), makeup: true };
+const makeup: LessonView = { ...lesson({ id: 'a' }), makeup: true };
 
 test('a makeup lesson wears «تعويضية» beside its status; an ordinary one and a trial do not', async () => {
   const { rerender } = await render(

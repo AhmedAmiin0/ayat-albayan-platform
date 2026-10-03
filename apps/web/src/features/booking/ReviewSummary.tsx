@@ -6,6 +6,7 @@ import { locale } from '@/lib/locale';
 import { teacherLabel } from '@/lib/teacher-label';
 import { effectiveByday, type BookingDraft } from './draft';
 import { PACKAGE_NOTE_CLASS, packageDaysNote } from './package-days';
+import { InvoiceThumb } from './InvoiceThumb';
 import { PackagePrice } from './PackageStep';
 import { pickedText } from './SlotStep';
 
@@ -20,9 +21,16 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
   );
 }
 
-/** The invoice row: the uploaded file's name, or «من الشات». */
-function invoiceText(i: NonNullable<BookingDraft['invoice']>): string {
-  return i.source === 'upload' ? i.name : t.booking.invoice.fromChat;
+/** The invoice row: a small thumbnail (or the PDF tile) and where it came from. */
+function InvoiceRow({ invoice }: { invoice: NonNullable<BookingDraft['invoice']> }) {
+  return (
+    <span className="flex flex-wrap items-center gap-3">
+      <InvoiceThumb src={invoice.preview} mime={invoice.mime} className="h-14 min-w-14" />
+      <span className="text-xs text-ink-2">
+        {invoice.source === 'upload' ? invoice.name : t.booking.invoice.fromChat}
+      </span>
+    </span>
+  );
 }
 
 /** The review step's summary of what «احجز» creates (R-SCH-06): who, with whom, when, how often. */
@@ -39,8 +47,8 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
       <Row label={t.schedule.students}>{joinNames(names, locale)}</Row>
       {missed && <Row label={t.booking.makeup.missedLabel}>{pickedText(missed.startsAt, draft.tz)}</Row>}
       <Row label={t.students.teacher}>{draft.teacher && teacherLabel(draft.teacher)}</Row>
-      <Row label={t.booking.startsOn}>
-        {draft.startsAt && t.booking.firstLesson.replace('{when}', pickedText(draft.startsAt, draft.tz))}
+      <Row label={kind === 'makeup' ? t.booking.makeup.timeLabel : t.booking.startsOn}>
+        {draft.startsAt && (kind === 'makeup' ? pickedText(draft.startsAt, draft.tz) : t.booking.firstLesson.replace('{when}', pickedText(draft.startsAt, draft.tz)))}
       </Row>
       {kind !== 'makeup' && (
         <Row label={t.booking.pickDays}>
@@ -60,7 +68,7 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
           )}
         </Row>
       )}
-      {kind !== 'trial' && <Row label={t.booking.invoice.label}>{invoice ? invoiceText(invoice) : '—'}</Row>}
+      {kind !== 'trial' && <Row label={t.booking.invoice.label}>{invoice ? <InvoiceRow invoice={invoice} /> : '—'}</Row>}
     </dl>
   );
 }

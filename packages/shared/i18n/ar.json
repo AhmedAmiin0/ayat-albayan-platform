@@ -543,7 +543,8 @@
       "missedLesson": "الحلقة الفايتة",
       "keepTeacher": "كمّل مع {teacher}",
       "orPickTeacher": "أو اختار معلم/ة تاني",
-      "makeupFor": "للطالب {name}"
+      "makeupFor": "للطالب {name}",
+      "invoiceA11y": "الفاتورة، {source}"
     },
     "durationHint": "مدة الحلقة الواحدة — لو مش متأكد سيبها وهنحسبها 45 دقيقة",
     "packageTrial": "حلقة تجريبية مجانية بس",
@@ -554,7 +555,6 @@
       "trial": "حلقة تجريبية مجانية بس",
       "package": "اشتراك",
       "makeup": "حجز تعويضي",
-      "makeupLead": "الحجز التعويضي لطالب مسجل بس",
       "makeupNeedsStudent": "الحجز التعويضي للطالب المسجل بس، سجّله الأول"
     },
     "makeup": {
@@ -563,12 +563,13 @@
       "tag": "تعويضية",
       "title": "حجز حلقة تعويضية",
       "action": "حجز تعويضي",
-      "done": "الحجز التعويضي اتعمل",
-      "missedLesson": "الحلقة الفايتة",
       "booked": "الحجز التعويضي اتعمل",
-      "missedLabel": "الحلقة الفايتة"
+      "missedLabel": "الحلقة الفايتة",
+      "bookedChip": "التعويض محجوز · {when}",
+      "noUnit": "حلقة تعويضية: مش بتخصم من الباقة",
+      "noneForLesson": "الحلقة دي اتحجز لها تعويض قبل كده، أو فات عليها أكتر من 60 يوم",
+      "timeLabel": "ميعاد التعويض"
     },
-    "makeupFor": "تعويضية لـ{names}",
     "invoice": {
       "label": "الفاتورة",
       "hint": "صورة أو PDF لإثبات الدفع. لازم قبل الحجز",
@@ -588,7 +589,14 @@
       "pdf": "PDF",
       "list": "الفواتير",
       "sourceUpload": "اترفعت من الجهاز",
-      "sourceWhatsapp": "من واتساب"
+      "sourceWhatsapp": "من واتساب",
+      "openFull": "كبّر الفاتورة",
+      "downloadName": "فاتورة",
+      "openNewTab": "فتح في تبويب جديد",
+      "chatImageCard": "صورة · {time}",
+      "chatPdfCard": "ملف PDF · {time}",
+      "expiredBadge": "انتهت صلاحيته",
+      "thumbRetry": "الصورة مفتحتش، اضغط تحاول تاني"
     },
     "error": {
       "invoice_required": "ارفع الفاتورة أو اختارها من الشات قبل الحجز",

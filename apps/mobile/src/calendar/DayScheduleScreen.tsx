@@ -30,6 +30,7 @@ import { TeacherHeader } from './TeacherHeader';
 import { useOverview } from './use-overview';
 import { riyadhToday, weekStart, weekWindow } from './week';
 
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ALL: TeacherFilter = { program: 'all', gender: 'all' };
 
 /**
@@ -37,12 +38,12 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
  * (lessons and free gaps by time) or the whole week (lessons by day), from GET /lessons/overview,
  * fetched once per week. Each lesson shows تأكيد / إلغاء (optimistic, R-MOB-03) and «غيّر الميعاد»
  * (the reschedule sheet, R-SCH-07). Filter by program and gender. `back` when it is pushed from
- * «المزيد» rather than opened as its tab.
+ * «المزيد» rather than opened as its tab; `initialDate` (YYYY-MM-DD) opens it on that day.
  */
-export function DayScheduleScreen({ back = false }: { back?: boolean }) {
+export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
   const now = useNow();
   const today = riyadhToday(now);
-  const [date, setDate] = useState(today);
+  const [date, setDate] = useState(initialDate && DATE.test(initialDate) ? initialDate : today);
   const [view, setView] = useState<ScheduleView>('day');
   const [filter, setFilter] = useState<TeacherFilter>(ALL);
   const [moving, setMoving] = useState<LessonView | null>(null);

@@ -28,7 +28,7 @@ const packagePills = (): FilterPill<PackageSize>[] =>
 export function PackageStep({ value, onChange, onNext }: PackageStepProps) {
   return (
     <View style={{ gap: 12 }}>
-      <FormLabel>{`${t.booking.pickPackage} *`}</FormLabel>
+      <FormLabel required>{t.booking.pickPackage}</FormLabel>
       <FilterPills
         role="radiogroup"
         wrap

@@ -22,6 +22,7 @@ export function KindStep({ draft, leadPath, onChange }: KindStepProps) {
         name="booking-kind"
         legend={t.booking.kind.label}
         required
+        equal
         options={BOOKING_KINDS.map((k) => ({ value: k, label: t.booking.kind[k], disabled: k === 'makeup' && leadPath }))}
         value={draft.kind}
         onChange={(kind) => onChange(kindPatch(draft, kind))}

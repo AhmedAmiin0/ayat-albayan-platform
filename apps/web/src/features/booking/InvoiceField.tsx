@@ -8,8 +8,8 @@ import { cn } from '@/lib/utils';
 import { uploadInvoiceFile } from './api.invoice';
 import { ChatMediaPicker } from './ChatMediaPicker';
 import type { InvoiceDraft } from './draft';
-import { InvoiceThumb } from './InvoiceThumb';
-import { invoiceProblem, isImage } from './invoice-file';
+import { InvoiceChosen } from './InvoiceChosen';
+import { canShow, invoiceMime, invoiceProblem } from './invoice-file';
 
 export interface InvoiceFieldProps {
   value: InvoiceDraft | null;
@@ -25,7 +25,7 @@ const FOCUS = 'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offse
 /**
  * «الفاتورة *» (R-PAY-03): a photo or PDF of the payment proof, uploaded from the device (straight
  * to the private bucket at once) or saved from the family's chat (R-MSG-06). Picking a new one
- * replaces the old; the form is not ready while an upload runs.
+ * replaces the old only once it has landed; the form is not ready while an upload runs.
  */
 export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceFieldProps) {
   const id = useId();
@@ -38,8 +38,8 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
         source: 'upload',
         path,
         name: file.name,
-        mime: file.type,
-        preview: isImage(file.type) ? URL.createObjectURL(file) : null,
+        mime: invoiceMime(file),
+        preview: canShow(invoiceMime(file)) ? URL.createObjectURL(file) : null,
       }),
   });
 
@@ -48,8 +48,14 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
     const bad = invoiceProblem(file);
     setProblem(bad ? t.booking.error[bad] : null);
     if (bad) return;
-    onChange(null);
     upload.mutate(file);
+  }
+
+  // Every way of changing the invoice clears the old upload error with it.
+  function settle(next: InvoiceDraft | null) {
+    upload.reset();
+    setProblem(null);
+    onChange(next);
   }
 
   const error = problem ?? (upload.isError ? lessonErrorText(upload.error) : null);
@@ -61,14 +67,15 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
       </span>
       <p className="text-xs text-ink-3">{t.booking.invoice.hint}</p>
       <div className="flex flex-wrap items-center gap-3">
-        <label htmlFor={id} className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }), FOCUS)}>
+        <label htmlFor={id} className={cn(buttonVariants({ variant: 'secondary', size: 'sm' }), FOCUS, upload.isPending && 'pointer-events-none opacity-50')}>
           {value ? t.booking.invoice.replace : t.booking.invoice.upload}
           <input
             id={id}
             type="file"
-            accept="image/*,application/pdf"
+            accept="image/*,.heic,.heif,application/pdf"
             aria-invalid={error ? true : undefined}
             aria-required
+            disabled={upload.isPending}
             className="sr-only"
             onChange={(e) => {
               pick(e.target.files?.[0] ?? null);
@@ -77,21 +84,18 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
           />
         </label>
         {chatPhone && (
-          <Button type="button" variant="secondary" size="sm" onClick={() => setChat(true)}>
+          <Button type="button" variant="secondary" size="sm" disabled={upload.isPending} onClick={() => setChat(true)}>
             {t.booking.invoice.fromChat}
           </Button>
         )}
-        {upload.isPending && <span role="status" className="text-sm text-ink-3">{t.booking.invoice.uploading}</span>}
+        {upload.isPending && (
+          <span role="status" className="flex items-center gap-2 text-sm text-ink-3">
+            <span aria-hidden className="size-4 rounded-full border-2 border-rule border-t-ink-2 motion-safe:animate-spin" />
+            {t.booking.invoice.uploading}
+          </span>
+        )}
       </div>
-      {value && (
-        <div className="flex flex-wrap items-center gap-3">
-          <InvoiceThumb src={value.preview} mime={value.mime} name={value.source === 'upload' ? value.name : undefined} />
-          {value.source === 'whatsapp' && <span className="text-sm text-ink-2">{t.booking.invoice.fromChat}</span>}
-          <Button type="button" variant="ghost" size="sm" onClick={() => onChange(null)}>
-            {t.booking.invoice.remove}
-          </Button>
-        </div>
-      )}
+      {value && <InvoiceChosen value={value} uploading={upload.isPending} onRemove={() => settle(null)} />}
       {error && (
         <p role="alert" className="text-xs text-danger">
           {error}
@@ -103,8 +107,7 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
           onClose={() => setChat(false)}
           onPick={(invoice) => {
             setChat(false);
-            setProblem(null);
-            onChange(invoice);
+            settle(invoice);
           }}
         />
       )}

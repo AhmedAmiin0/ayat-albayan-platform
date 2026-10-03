@@ -1,11 +1,11 @@
 import { clockTime, lessonStatusStyle, subscriptionStatusStyle, type LessonView, type Tone } from '@ab/shared';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
-import { isMakeup } from '@/features/booking/contract';
 import { tzCity } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { cn } from '@/lib/utils';
 import { studentNames } from './lessons';
+import { LessonTags } from './LessonTags';
 import { zoneLabel } from './slots';
 import { RIYADH_TZ } from './tz';
 
@@ -58,12 +58,7 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
           <NuqtaGlyph shape={style.glyph} />
           <span className="truncate">{t.enums.lessonStatus[lesson.status]}</span>
         </span>
-        {lesson.trial && (
-          <span className="shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.schedule.trialTag}</span>
-        )}
-        {isMakeup(lesson) && (
-          <span className="shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold text-ink-2">{t.booking.makeup.tag}</span>
-        )}
+        <LessonTags lesson={lesson} />
       </span>
       {local && (
         <span className="text-2xs text-ink-3">

@@ -8,7 +8,7 @@ import { threadMediaQuery, threadMediaUrl } from './api.invoice';
 import type { ThreadMediaItem } from './contract';
 import type { InvoiceDraft } from './draft';
 import { InvoiceThumb } from './InvoiceThumb';
-import { isImage } from './invoice-file';
+import { canShow, isImage } from './invoice-file';
 
 export interface ChatMediaPickerProps {
   /** The family's WhatsApp number (E.164). */
@@ -40,6 +40,12 @@ export function ChatMediaPicker({ phone, onPick, onClose }: ChatMediaPickerProps
   );
 }
 
+/** «صورة · <time>» or «ملف PDF · <time>»: the card's name for a screen reader. */
+export function mediaCardLabel(item: Pick<ThreadMediaItem, 'mime' | 'created_at'>): string {
+  const label = isImage(item.mime) ? t.booking.invoice.chatImageCard : t.booking.invoice.chatPdfCard;
+  return label.replace('{time}', fullTime(item.created_at));
+}
+
 function MediaCard({ phone, item, onPick }: { phone: string; item: ThreadMediaItem; onPick: ChatMediaPickerProps['onPick'] }) {
   // Each card fetches its own file lazily; an expired one never asks.
   const file = useQuery({ ...threadMediaUrl(phone, item.message_id), enabled: !item.expired });
@@ -48,8 +54,8 @@ function MediaCard({ phone, item, onPick }: { phone: string; item: ThreadMediaIt
     <button
       type="button"
       disabled={item.expired}
-      aria-label={fullTime(item.created_at)}
-      onClick={() => onPick({ source: 'whatsapp', messageId: item.message_id, mime: item.mime, preview: isImage(item.mime) ? src : null })}
+      aria-label={mediaCardLabel(item)}
+      onClick={() => onPick({ source: 'whatsapp', messageId: item.message_id, mime: item.mime, preview: canShow(item.mime) ? src : null })}
       className={cn(
         'grid w-full justify-items-center gap-1.5 rounded-md border border-rule p-2 text-xs',
         item.expired ? 'cursor-not-allowed opacity-60' : 'hover:bg-sunk focus-visible:outline-2 focus-visible:outline-ring',

@@ -60,7 +60,9 @@ test('a file past WhatsApp’s 30 days is disabled and says to ask again; nothin
   serve([old]);
   const onPick = jest.fn();
   await renderWithQuery(<ChatMediaSheet phone={PHONE} onPick={onPick} onClose={jest.fn()} />);
-  const card = await screen.findByRole('button', { name: new RegExp(t.booking.invoice.expired) });
+  const card = await screen.findByRole('button', { name: new RegExp(t.booking.invoice.expiredBadge) });
+  // the one long sentence sits above the grid, not cut off inside a 104pt card
+  expect(screen.getByText(t.booking.invoice.expired)).toBeTruthy();
   expect(card.props.accessibilityState).toMatchObject({ disabled: true });
   await fireEvent.press(card);
   expect(onPick).not.toHaveBeenCalled();
