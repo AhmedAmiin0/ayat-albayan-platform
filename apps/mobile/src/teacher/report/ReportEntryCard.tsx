@@ -2,7 +2,7 @@ import {
   AFTER_FIELDS,
   ATTENDANCES,
   DONE_FIELDS,
-  GRADES,
+  PROGRAMS,
   REPORT_RUBRICS,
   textRequired,
   type ReportFormEntry,
@@ -16,14 +16,15 @@ import { t } from '@/lib/i18n';
 import { Section } from '@/more/Section';
 import { AttachmentsField } from './AttachmentsField';
 import { ChoiceChips } from './ChoiceChips';
-import { IdentityBlock } from './IdentityBlock';
+import { IdentityBlock, MeetingLink } from './IdentityBlock';
 import { ReportFooter } from './ReportFooter';
 import { ReportTextField } from './ReportTextField';
+import { RubricSection } from './RubricSection';
 import { useReportEntry } from './use-report-entry';
 import { useScrollToInvalid } from './use-scroll-to-invalid';
 
 const attendances = ATTENDANCES.map((a) => ({ value: a, label: t.enums.attendance[a] }));
-const grades = GRADES.map((g) => ({ value: g, label: t.enums.grade[g] }));
+const programs = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
 
 export interface ReportEntryCardProps {
   form: ReportFormResponse;
@@ -35,12 +36,13 @@ export interface ReportEntryCardProps {
 }
 
 /**
- * One student's «تقرير الحلقة» (R-REP-01/02), the Google Form's questions in its order: identity,
- * الحضور, the four done fields, تقييم البنود (six rows + التقدير العام), notes / homework / next
- * plan, attachments. Labels and options verbatim (t.reports, t.enums); autosaved while a draft.
+ * One student's «تقرير الحلقة» (R-REP-01/02), the Google Form's sections in its order: بيانات الحلقة
+ * (identity, البرنامج *, الحضور *, then the link), محتوى الحلقة, التقييم التفصيلي (six rows +
+ * التقدير العام), الملاحظات والواجب, attachments. Labels and options verbatim (t.reports,
+ * t.enums); autosaved while a draft.
  */
 export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProps) {
-  const s = useReportEntry(entry.report);
+  const s = useReportEntry(entry.report, entry.student.program);
   const { report, values } = s;
   const locked = !report.can_edit;
   const needsText = (k: TextKey) => textRequired(k, values.attendance, report.version);
@@ -69,6 +71,14 @@ export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProp
     <View accessibilityLabel={t.reports.entryFor.replace('{name}', entry.student.name)} style={{ gap: 20 }}>
       <IdentityBlock lesson={form.lesson} entry={entry} />
       <ChoiceChips
+        label={t.reports.program}
+        items={programs}
+        value={s.program}
+        onChange={s.setProgram}
+        disabled={locked}
+        required
+      />
+      <ChoiceChips
         label={t.reports.attendance}
         items={attendances}
         value={values.attendance}
@@ -78,33 +88,10 @@ export function ReportEntryCard({ form, entry, tz, scroll }: ReportEntryCardProp
         required
         register={register('attendance')}
       />
+      <MeetingLink lesson={form.lesson} />
       <Section title={t.reports.done}>{DONE_FIELDS.map(text)}</Section>
-      <Section title={t.reports.rubricTitle}>
-        {REPORT_RUBRICS.map((r) => (
-          <ChoiceChips
-            key={r}
-            label={t.reports.rubric[r]}
-            items={grades}
-            value={values.grades[r]}
-            onChange={(g) => s.setGrade(r, g)}
-            disabled={locked}
-            invalid={s.problem === 'missing_grades' && !values.grades[r]}
-            required
-            register={register(r)}
-          />
-        ))}
-        <ChoiceChips
-          label={t.reports.overall}
-          items={grades}
-          value={values.overall}
-          onChange={(g) => s.set('overall', g)}
-          disabled={locked}
-          invalid={s.problem === 'missing_grades' && !values.overall}
-          required
-          register={register('overall')}
-        />
-      </Section>
-      <View style={{ gap: 16 }}>{AFTER_FIELDS.map(text)}</View>
+      <RubricSection s={s} locked={locked} register={register} />
+      <Section title={t.reports.notesTitle}>{AFTER_FIELDS.map(text)}</Section>
       <AttachmentsField reportId={report.id} files={report.attachments} onChange={s.setAttachments} editable={!locked} />
       <ReportFooter s={s} block={form.submit_block} tz={tz} />
     </View>

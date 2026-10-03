@@ -8,6 +8,9 @@ import { ruleFromSlot } from './slots';
 // The booking's package (R-SCH-06, R-SUB-01): the lead screen books a trial; the chat's «اشترك»
 // may book a paid package instead, which repeats weekly on the picked days (R-SCH-02 byday).
 
+/** «الباقة المطلوبة»: the registration form offers these five; 20 and 28 stay in the DB only. */
+export const REGISTRATION_SIZES = ['trial', '4', '8', '12', '16'] as const satisfies readonly PackageSize[];
+
 /** The form's «المده» default: «لو مش متأكد سيبها وهنحسبها 45 دقيقة». */
 export const DEFAULT_MINUTES: Duration = 45;
 

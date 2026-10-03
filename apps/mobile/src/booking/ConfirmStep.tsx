@@ -39,7 +39,7 @@ function summary(d: TrialDraft): [string, string][] {
   ];
   if (d.teacher) rows.push([t.booking.steps.teacher, d.teacher.display_name_ar]);
   if (d.pkg !== 'trial') rows.push([t.booking.steps.package, t.enums.packageSize[d.pkg]]);
-  if (d.startsAt) rows.push([t.booking.steps.slot, whenText(d.startsAt, d.tz)]);
+  if (d.startsAt) rows.push([t.booking.startsOn, whenText(d.startsAt, d.tz)]);
   rows.push([t.booking.pickDuration, durations[String(d.durationMin)] ?? String(d.durationMin)]);
   return rows;
 }
@@ -71,7 +71,7 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (
         <View style={{ gap: 6 }}>
-          <SectionLabel>{`${t.booking.pickDays} · ${counted(t.booking.perWeek, days.length)}`}</SectionLabel>
+          <SectionLabel>{`${t.booking.pickDays} * · ${counted(t.booking.perWeek, days.length)}`}</SectionLabel>
           <DayChips
             value={days}
             onChange={props.onDays}

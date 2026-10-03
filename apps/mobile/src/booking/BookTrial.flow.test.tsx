@@ -114,12 +114,15 @@ test('slots: only free ones, by Riyadh day; «رجوع» walks the steps back, t
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   expect(await screen.findByRole('button', { name: '17:00' })).toBeTruthy();
   expect(screen.getByRole('header', { name: 'الأحد 4 أكتوبر' })).toBeTruthy();
+  // The form's «الساعه *» and «تاريخ أول حلقة» labels sit over the free slots.
+  expect(screen.getByText(`${t.booking.pickTime} *`)).toBeTruthy();
+  expect(screen.getByText(t.booking.startsOn)).toBeTruthy();
   expect(screen.queryByRole('button', { name: '19:00' })).toBeNull(); // Monday's slot is busy
   expect(screen.getByText(t.booking.tzNote.replace('{city}', 'الرياض'))).toBeTruthy();
 
   const back = () => fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   await back();
-  expect(await screen.findByText('خطوة 2 من 4 · المعلم/ة')).toBeTruthy();
+  expect(await screen.findByText(`خطوة 2 من 4 · ${t.booking.steps.teacher}`)).toBeTruthy();
   await back();
   expect(screen.getByLabelText(t.leads.studentName).props.value).toBe('يوسف');
   expect(mockBack).not.toHaveBeenCalled();

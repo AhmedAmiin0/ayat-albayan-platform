@@ -32,7 +32,7 @@ export function SlotStep({ teacherId, tz, durationMin, onPick }: SlotStepProps) 
 
   return (
     <View style={{ gap: 12 }}>
-      <FormLabel>{t.booking.freeSlots}</FormLabel>
+      <FormLabel>{`${t.booking.pickTime} *`}</FormLabel>
       <AppText style={note}>{slotLegend(tz)}</AppText>
       {slots.isError ? (
         <ErrorState message={t.booking.slotsError} onRetry={() => void slots.refetch()} />
@@ -41,6 +41,7 @@ export function SlotStep({ teacherId, tz, durationMin, onPick }: SlotStepProps) 
       {slots.data && days.length === 0 ? (
         <AppText style={note}>{t.booking.mobile.noSlots}</AppText>
       ) : null}
+      {days.length > 0 ? <FormLabel>{t.booking.startsOn}</FormLabel> : null}
       {days.map((day) => (
         <View key={day.date} style={{ gap: 8 }}>
           <AppText

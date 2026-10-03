@@ -1,6 +1,7 @@
 import { applyLessonEvent, type LessonEvent, type LessonView } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { CancelLesson } from '@/today/CancelLesson';
@@ -20,6 +21,7 @@ export interface LessonRowActionsProps {
  * lesson is still `scheduled`: the one thing it waits for), «إلغاء» (secondary; opens Today's
  * cancel form in place) and «غيّر الميعاد» (ghost), each only when the API offered it and the
  * state machine still allows it from the status on screen (maybe already the optimistic one).
+ * A finished lesson also offers «ابعت طلب الرأي» (FeedbackRequestButton).
  */
 export function LessonRowActions({ lesson, action, onReschedule }: LessonRowActionsProps) {
   const [cancelling, setCancelling] = useState(false);
@@ -53,6 +55,7 @@ export function LessonRowActions({ lesson, action, onReschedule }: LessonRowActi
         {can('cancel_by_admin') ? act(t.today.cancel, 'secondary', () => setCancelling(true)) : null}
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'ghost', () => onReschedule(lesson)) : null}
       </View>
+      <FeedbackRequestButton lesson={lesson} />
       {error ? <ErrorLine message={error} /> : null}
     </View>
   );

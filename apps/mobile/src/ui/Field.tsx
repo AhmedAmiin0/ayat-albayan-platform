@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { TextInput, View, type TextInputProps } from 'react-native';
+import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from './AppText';
 
@@ -7,6 +8,8 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
   label: string;
   /** LTR value (email, code, URL) inside the RTL form. */
   ltr?: boolean;
+  /** A required question of the Google Form: «*» after the label, announced as required. */
+  required?: boolean;
 }
 
 /**
@@ -14,7 +17,7 @@ export interface FieldProps extends Omit<TextInputProps, 'style'> {
  * Edge is the 3:1 ruleInput; focus turns it a 2px lapis ring (border + outline, so nothing shifts).
  * Label and value start at the inline-start (AppText / textAlign 'left' = start in both directions).
  */
-export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldProps) {
+export function Field({ label, ltr = false, required = false, onFocus, onBlur, ...input }: FieldProps) {
   const { color } = useTheme();
   const [focused, setFocused] = useState(false);
   return (
@@ -27,10 +30,11 @@ export function Field({ label, ltr = false, onFocus, onBlur, ...input }: FieldPr
           color: color.ink2,
         }}
       >
-        {label}
+        {required ? `${label} *` : label}
       </AppText>
       <TextInput
         accessibilityLabel={label}
+        accessibilityHint={required ? t.common.required : undefined}
         placeholderTextColor={color.ink3}
         onFocus={(e) => {
           setFocused(true);
