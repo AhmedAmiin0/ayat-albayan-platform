@@ -11,4 +11,6 @@ select e.id, e.lesson_id, e.teacher_id, e.starts_at, e.minutes, e.rate, e.amount
                from public.teacher_payment_items group by earning_id) p on p.earning_id = e.id;
 
 revoke all on public.v_teacher_earnings from anon;
+revoke insert, update, delete, truncate, references, trigger on public.v_teacher_earnings
+  from authenticated;
 grant select on public.v_teacher_earnings to authenticated, service_role;
