@@ -101,6 +101,13 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     expect((screen.getByLabelText(t.lessons.timeEdit.otherDate) as HTMLInputElement).type).toBe('date');
   });
 
+  it('a migrated lesson with an odd length (40) shows it instead of a wrong preset', () => {
+    open(lesson({ minutes: 40, time_edit_mode: 'move' }));
+    const select = screen.getByLabelText(t.lessons.timeEdit.duration) as HTMLSelectElement;
+    expect(select.value).toBe('40');
+    expect(TIMES(select)).toEqual(['30', '40', '45', '60', '90']);
+  });
+
   it('«رجوع للحلقة» returns to the details', () => {
     open();
     fireEvent.click(screen.getByRole('button', { name: t.lessons.back }));

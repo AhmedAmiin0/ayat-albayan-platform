@@ -31,7 +31,9 @@ export interface EditTimeFieldsProps {
 
 const weekday: Record<string, string> = t.enums.weekday;
 const duration: Record<string, string> = t.enums.duration;
-const dayText = (date: string) => `${weekday[String(weekdayOf(date))] ?? ''} ${dayMonthLabel(date)}`;
+/** The four bookable lengths; a migrated lesson's odd one (40) stays visible so the select tells the truth. */
+const lengths = (current: number): number[] => (DURATIONS.some((d) => d === current) ? [...DURATIONS] : [...DURATIONS, current].sort((a, b) => a - b));
+const dayText =(date: string) => `${weekday[String(weekdayOf(date))] ?? ''} ${dayMonthLabel(date)}`;
 
 /**
  * «عدّل الوقت» fields (R-SCH-11), all picked, none typed: day chips + «تاريخ تاني» (move) or the
@@ -76,7 +78,7 @@ export function EditTimeFields({ mode, tz, value, onChange, times, days, reasonM
         <Field label={t.lessons.timeEdit.duration}>
           {(p) => (
             <Select {...p} value={value.durationMin} onChange={(e) => onChange({ durationMin: Number(e.target.value) })}>
-              {DURATIONS.map((d) => (
+              {lengths(value.durationMin).map((d) => (
                 <option key={d} value={d}>{duration[String(d)] ?? d}</option>
               ))}
             </Select>
