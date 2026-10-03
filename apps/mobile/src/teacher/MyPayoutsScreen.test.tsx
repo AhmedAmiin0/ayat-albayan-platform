@@ -1,12 +1,21 @@
 import type { PayoutView } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
+import { earningsView } from '@/teacher-earnings/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { MyPayoutsScreen } from './MyPayoutsScreen';
 import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from './payout-text';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
+
+/** /teachers/me/payouts answers `months`; the per-session earnings routes answer an empty ledger. */
+function serve(months: PayoutView[]) {
+  mockApiFetch.mockImplementation(async (path: string) => {
+    if (path === '/teachers/me/payouts') return months;
+    return path.endsWith('/payments') ? [] : earningsView([]);
+  });
+}
 jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
 
 const paid: PayoutView = {
@@ -39,17 +48,28 @@ test('lines: month, lessons and EGP amount, the breakdown per length, when it wa
 });
 
 test('«مستحقاتي»: my months from /teachers/me/payouts with their state', async () => {
-  mockApiFetch.mockResolvedValue([draft, paid]);
+  serve([draft, paid]);
   await renderWithQuery(<MyPayoutsScreen />);
   expect(await screen.findByText('سبتمبر 2026')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/payouts');
   expect(screen.getByText('أكتوبر 2026')).toBeTruthy();
   expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
   expect(screen.getByText(t.enums.payoutStatus.draft)).toBeTruthy();
+  expect(screen.getByText(t.teacherEarnings.monthsTitle)).toBeTruthy();
+});
+
+test('the per-session earnings sit above the months, read-only', async () => {
+  serve([paid]);
+  await renderWithQuery(<MyPayoutsScreen />);
+  expect(await screen.findByText(t.teacherEarnings.earned)).toBeTruthy();
+  expect(screen.getByText(t.teacherEarnings.sessionsTitle)).toBeTruthy();
+  expect(screen.getByText(t.teacherEarnings.paymentsTitle)).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/earnings');
+  expect(screen.queryByRole('button', { name: t.teacherEarnings.pay })).toBeNull();
 });
 
 test('no months yet says so', async () => {
-  mockApiFetch.mockResolvedValue([]);
+  serve([]);
   await renderWithQuery(<MyPayoutsScreen />);
   expect(await screen.findByText(t.payouts.empty)).toBeTruthy();
 });

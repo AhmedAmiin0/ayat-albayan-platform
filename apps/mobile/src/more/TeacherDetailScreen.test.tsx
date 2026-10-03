@@ -73,6 +73,13 @@ test('«جدول المعلم/ة» opens the teacher’s week', async () => {
   expect(router.push).toHaveBeenCalledWith('/more/teachers/calendar/t1');
 });
 
+test('«مستحقات» opens the teacher’s earnings screen', async () => {
+  serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': [], '/teachers/t1/time-off': [] });
+  await renderWithQuery(<TeacherDetailScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: t.teacherEarnings.open }));
+  expect(router.push).toHaveBeenCalledWith('/more/teachers/earnings/t1');
+});
+
 test('WhatsApp opens the wa.me chat for the teacher’s number', async () => {
   serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': [], '/teachers/t1/time-off': [] });
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);

@@ -53,6 +53,11 @@ export function TeacherDetailScreen() {
           label={t.calendar.teacherCalendar}
           onPress={() => router.push(`/more/teachers/calendar/${data.id}`)}
         />
+        <Button
+          variant="secondary"
+          label={t.teacherEarnings.open}
+          onPress={() => router.push(`/more/teachers/earnings/${data.id}`)}
+        />
         <TeacherContact teacher={data} />
         <WeeklyAvailability teacher={data} />
         <UpcomingTimeOff teacherId={data.id} />

@@ -1,5 +1,10 @@
-import { formatAmount, type TeacherEarningStatus, type TeacherEarningView, type TeacherPaymentView } from '@ab/shared';
-import type { StatusStyle } from '@ab/shared';
+import {
+  formatAmount,
+  type StatusStyle,
+  type TeacherEarningStatus,
+  type TeacherEarningView,
+  type TeacherPaymentView,
+} from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { instantDay } from '@/payments/format';
 import { ltr } from '@/ui/Ltr';

@@ -1,8 +1,11 @@
 import { payoutStatusStyle, type PayoutView } from '@ab/shared';
+import { useQueryClient } from '@tanstack/react-query';
 import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { Section } from '@/more/Section';
+import { earningsKey, MY_BASE } from '@/teacher-earnings/queries';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
@@ -12,6 +15,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { StatusChip } from '@/ui/StatusChip';
 import { breakdownLines, monthLabel, payoutSummary, payoutWhen } from './payout-text';
+import { MyEarningsSection } from './MyEarningsSection';
 import { useMyPayouts } from './queries';
 
 function PayoutCard({ payout }: { payout: PayoutView }) {
@@ -35,11 +39,13 @@ function PayoutCard({ payout }: { payout: PayoutView }) {
 }
 
 /**
- * «مستحقاتي» (R-TCH-04): my months newest first, each with its lessons, the amount in EGP, its
- * state (مسودة / اتعتمدت / اتدفعت) and the breakdown by lesson length. Read-only.
+ * «مستحقاتي» (R-TCH-04): my per-session balance and payments on top (MyEarningsSection), then
+ * «كشوف الشهور»: my months newest first, each with its lessons, the amount in EGP, its state
+ * (مسودة / اتعتمدت / اتدفعت) and the breakdown by lesson length. Read-only.
  */
 export function MyPayoutsScreen() {
   const payouts = useMyPayouts();
+  const client = useQueryClient();
   return (
     <Screen>
       <ScreenHeader
@@ -52,8 +58,17 @@ export function MyPayoutsScreen() {
         data={payouts.data ?? []}
         keyExtractor={(p) => p.id}
         renderItem={({ item }) => <PayoutCard payout={item} />}
+        ListHeaderComponent={
+          <View style={{ gap: 20 }}>
+            <MyEarningsSection />
+            <Section title={t.teacherEarnings.monthsTitle}>{null}</Section>
+          </View>
+        }
         refreshing={payouts.isRefetching}
-        onRefresh={() => void payouts.refetch()}
+        onRefresh={() => {
+          void payouts.refetch();
+          void client.invalidateQueries({ queryKey: earningsKey(MY_BASE) });
+        }}
         ListEmptyComponent={
           payouts.data ? (
             <EmptyState title={t.payouts.empty} />
