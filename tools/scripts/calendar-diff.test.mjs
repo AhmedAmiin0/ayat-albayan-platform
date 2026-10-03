@@ -34,12 +34,12 @@ test('slots: duplicate series collapse, UTC becomes Riyadh time, ended series an
   assert.deepEqual(skipped, { mainCalendar: 1, ended: 1, notWeekly: 0, allDay: 0 });
 });
 
-test('sql: report only (ROLLBACK), names quoted, the slots inserted', () => {
+test('sql: report only (temp objects, no commit), names quoted, ends with the one report', () => {
   const slots = [{ teacher: 'Testa', student: "O'Neil", weekday: 6, at: '08:00', tz: 'Asia/Riyadh', minutes: 45, series: 2 }];
   const sql = buildSql(slots, { calendars: 1, today: '2026-10-03', skipped: {} });
   assert.match(sql, /\('Testa', 'O''Neil', 6, '08:00', 'Asia\/Riyadh', 45, 2\)/);
-  assert.match(sql.trim(), /rollback;$/);
-  assert.doesNotMatch(sql, /\bcommit;/);
+  assert.doesNotMatch(sql, /\b(commit;|insert into public|update public|delete from public)/i);
+  assert.match(sql.trim(), /order by section, status desc, teacher, student, weekday;$/);
 });
 
 test('args: --today is read, the rest are paths', () => {
