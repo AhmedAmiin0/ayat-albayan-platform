@@ -55,7 +55,8 @@ export function useReportEntry(initial: ReportView, studentProgram: Program) {
   };
   const setGrade = (rubric: Rubric, grade: Grade) => set('grades', { ...values.grades, [rubric]: grade });
   const send = () => {
-    const found = submitProblem(values, report.version);
+    // With the program: once shared's FormValues carries it, the API's check needs it filled.
+    const found = submitProblem({ ...values, program }, report.version);
     setProblem(found);
     if (!found) submit.mutate(report.version);
   };
