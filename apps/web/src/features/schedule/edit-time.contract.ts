@@ -1,41 +1,13 @@
-import type { LessonView } from '@ab/shared';
+import type { LessonTimeEditView, LessonView, TimeEditMode } from '@ab/shared';
 
-// R-SCH-11 «عدّل الوقت» wire contract (docs/10 §10). STAND-INS: the API builder moves these into
-// @ab/shared (schemas/lesson-time.ts, lessons/time-edit.ts, LessonView). After the merge, delete
-// this file and import the shared names; the shapes below are the spec's, field for field.
-
-/** `move` = scheduled / confirmed lessons; `correct` = completed / late (fix what was recorded). */
-export type TimeEditMode = 'move' | 'correct';
-
-export interface TimeEditInfo {
-  at: string;
-  reason: string | null;
-  was: { starts_at: string; ends_at: string };
-}
-
-/** The new LessonView fields, optional so an old cached lesson stays valid. */
-export type EditableLesson = LessonView & { time_edit_mode?: TimeEditMode | null; time_edit?: TimeEditInfo | null };
-
-/** PATCH /lessons/:id/time body (`lessonTimeEditSchema`). */
-export interface LessonTimeEdit {
-  expectedStartsAt: string;
-  startsAt: string;
-  durationMin: number;
-  reason?: string;
-  notify?: boolean;
-  override?: { reason: string };
-}
-
-/** PATCH /lessons/:id/time response. */
-export interface TimeEditResult {
-  lesson: LessonView;
-  notified: number;
-  payout: 'none' | 'draft_stale';
-  pdf_refresh: boolean;
-}
+// R-SCH-11 «عدّل الوقت»: the wire contract lives in @ab/shared (schemas/lesson-time.ts,
+// lessons/time-edit.ts, LessonView). This file only re-exports it under the names the form uses.
+export type { LessonTimeEdit, TimeEditMode, TimeEditResult } from '@ab/shared';
+export type TimeEditInfo = LessonTimeEditView;
+export type EditableLesson = LessonView;
 
 /** What the admin may do to this lesson's time; null for a teacher or a closed lesson. */
-export const timeEditMode = (lesson: LessonView): TimeEditMode | null => (lesson as EditableLesson).time_edit_mode ?? null;
+export const timeEditMode = (lesson: LessonView): TimeEditMode | null => lesson.time_edit_mode ?? null;
 
 /** Who changed the time and from what, once it was edited. */
-export const timeEditInfo = (lesson: LessonView): TimeEditInfo | null => (lesson as EditableLesson).time_edit ?? null;
+export const timeEditInfo = (lesson: LessonView): LessonTimeEditView | null => lesson.time_edit ?? null;

@@ -15,9 +15,9 @@ const place = (range: Range): CSSProperties | null => {
 };
 
 function Marks({ ranges, className, style }: { ranges: readonly Range[]; className: string; style?: CSSProperties }) {
-  return ranges.map((range) => {
+  return ranges.map((range, i) => {
     const at = place(range);
-    return at && <span key={`${range.start}-${range.end}`} className={cn('absolute', className)} style={{ ...style, ...at }} />;
+    return at && <span key={`${i}-${range.start}-${range.end}`} className={cn('absolute', className)} style={{ ...style, ...at }} />;
   });
 }
 

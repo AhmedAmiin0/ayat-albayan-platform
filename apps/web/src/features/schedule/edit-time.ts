@@ -1,3 +1,4 @@
+import { lessonDuration } from '@ab/shared';
 import type { LessonTimeEdit, TimeEditMode } from './edit-time.contract';
 import { addDays, zonedParts, zonedToUtc } from './tz';
 
@@ -82,13 +83,16 @@ export interface BodyInput {
   override?: string | undefined;
 }
 
+/** True for the lengths the API takes (30/45/60/90); a migrated odd length must be changed first. */
+export const validLength = (min: number): boolean => lessonDuration.safeParse(min).success;
+
 /** PATCH /lessons/:id/time body: `notify` only when moving; blank reason left out. */
 export function editBody(i: BodyInput): LessonTimeEdit {
   const reason = i.reason.trim();
   return {
     expectedStartsAt: i.expectedStartsAt,
     startsAt: startsAtOf(i.choice),
-    durationMin: i.choice.durationMin,
+    durationMin: lessonDuration.parse(i.choice.durationMin),
     ...(reason ? { reason } : {}),
     ...(i.mode === 'move' ? { notify: i.notify } : {}),
     ...(i.override ? { override: { reason: i.override } } : {}),

@@ -21,7 +21,7 @@ test.describe('edit_lesson_time (R-SCH-11)', () => {
       const [row] = await tx<{ starts_at: Date; time_edit_was: { starts_at: string } }[]>`
         select starts_at, time_edit_was from public.lessons where id = ${s.lesson}`;
       expect(row?.starts_at.toISOString()).toBe(iso(BASE + 24 * HOUR));
-      expect(row?.time_edit_was.starts_at).toBe(iso(BASE));
+      expect(new Date(row?.time_edit_was.starts_at ?? '').toISOString()).toBe(iso(BASE));
       const again = await tx`select id from public.generate_rule_lessons(
         ${s.rule}, ${tx.json([{ starts_at: iso(BASE), ends_at: iso(BASE + 45 * MIN) }])}, null)`;
       expect(again).toHaveLength(0);

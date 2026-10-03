@@ -52,8 +52,8 @@ export function EditTimeConfirm({ lesson, mode, next, change, canNotify, notify,
           .replace('{to}', when(next.startsAt, next.durationMin))}
         <span className="ms-1.5 text-xs font-normal text-ink-3">{t.schedule.riyadhTime}</span>
       </p>
-      {clocks.map((line) => (
-        <p key={line} className="text-xs text-ink-2">{line}</p>
+      {clocks.map((line, i) => (
+        <p key={`${i}-${line}`} className="text-xs text-ink-2">{line}</p>
       ))}
       <p className="text-xs text-ink-3">{t.lessons.timeEdit.sameLesson}</p>
       {correct && <Note>{t.lessons.timeEdit.heldNote}</Note>}

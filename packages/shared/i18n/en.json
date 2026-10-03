@@ -735,6 +735,7 @@
       "heldNote": "Attendance and the lesson status stay as they are; only the time and length are corrected",
       "payoutWarn": "The length changed, so the teacher's payout for this month will change",
       "unchanged": "Change the day, time or length first",
+      "pickLength": "Pick the lesson length first",
       "close": "Done"
     }
   },

@@ -1,4 +1,4 @@
-import { DURATIONS, type LessonView } from '@ab/shared';
+import { DURATIONS, lessonDuration, type LessonView } from '@ab/shared';
 import { localDate } from '@/today/timeline';
 import { editMode, type EditableLesson, type LessonTimeEditBody } from './types';
 
@@ -77,12 +77,13 @@ export function canSubmit(lesson: EditableLesson, s: EditState, now: Date): bool
 /** The PATCH body; null while the form cannot be submitted. */
 export function editBody(lesson: EditableLesson, s: EditState, now: Date): LessonTimeEditBody | null {
   const mode = editMode(lesson);
-  if (mode === null || !canSubmit(lesson, s, now)) return null;
+  const length = lessonDuration.safeParse(s.durationMin);
+  if (mode === null || !length.success || !canSubmit(lesson, s, now)) return null;
   const reason = s.reason.trim().slice(0, REASON_MAX);
   return {
     expectedStartsAt: lesson.starts_at,
     startsAt: chosenStart(lesson, s.picked),
-    durationMin: s.durationMin,
+    durationMin: length.data,
     ...(reason ? { reason } : {}),
     ...(willNotify(lesson, s, now) ? { notify: s.notify } : {}),
   };

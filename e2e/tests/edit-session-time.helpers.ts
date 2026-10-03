@@ -50,7 +50,7 @@ export const lessonRows = (teacherId: string) =>
 
 /** e2e seeds auto_messages_enabled on (journey 3); an admin edit must queue its message even when off. */
 export const autoMessages = (on: boolean) =>
-  withSql((sql) => sql`update public.settings set value = ${String(on)}::jsonb where key = 'auto_messages_enabled'`);
+  withSql((sql) => sql`update public.settings set value = ${sql.json(on)} where key = 'auto_messages_enabled'`);
 
 export const auditOf = (lessonId: string) =>
   withSql((sql) => sql<{ before: { starts_at: string }; after: { mode: string; notified: number; reason: string | null } }[]>`

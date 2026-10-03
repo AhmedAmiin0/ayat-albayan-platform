@@ -6,7 +6,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
 import { conflictsOf, editLessonTime, errorCode, lessonErrorText, LESSONS_KEY } from './api';
 import { ConflictNotice } from './ConflictNotice';
-import { changeOf, editBody, moveDays, startsAtOf, timesFor, willNotify } from './edit-time';
+import { changeOf, editBody, moveDays, startsAtOf, timesFor, validLength, willNotify } from './edit-time';
 import { timeEditMode, type TimeEditResult } from './edit-time.contract';
 import { EditTimeConfirm } from './EditTimeConfirm';
 import { EditTimeDone, needsFollowUp, savedMessage } from './EditTimeDone';
@@ -93,7 +93,9 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
         days={moveDays(now, tz)}
         reasonMissing={missing}
       />
-      {changed ? (
+      {!validLength(value.durationMin) ? (
+        <p className="text-xs text-ink-3">{t.lessons.timeEdit.pickLength}</p>
+      ) : changed ? (
         <EditTimeConfirm
           lesson={lesson}
           mode={mode}
@@ -122,7 +124,7 @@ export function EditTimeForm({ lesson, onBack, onDone }: EditTimeFormProps) {
           {t.lessons.back}
         </Button>
         {!conflicts && (
-          <Button type="button" disabled={!changed || stale || save.isPending} onClick={submit}>
+          <Button type="button" disabled={!changed || !validLength(value.durationMin) || stale || save.isPending} onClick={submit}>
             {t.lessons.timeEdit.submit}
           </Button>
         )}

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { changeOf, editBody, moveDays, startsAtOf, timeOptions15, timesFor, willNotify } from './edit-time';
+import { changeOf, editBody, moveDays, startsAtOf, timeOptions15, timesFor, validLength, willNotify } from './edit-time';
 
 // Cairo is UTC+3 until 29 Oct 2026, so Cairo and Riyadh clocks agree in these tests.
 const TZ = 'Africa/Cairo';
@@ -103,5 +103,12 @@ describe('editBody', () => {
       override: { reason: 'طلب ولي الأمر' },
     });
     expect(body).not.toHaveProperty('notify');
+  });
+});
+
+describe('validLength', () => {
+  it('accepts the four lengths the API takes and rejects a migrated odd one', () => {
+    expect([30, 45, 60, 90].every(validLength)).toBe(true);
+    expect(validLength(50)).toBe(false);
   });
 });
