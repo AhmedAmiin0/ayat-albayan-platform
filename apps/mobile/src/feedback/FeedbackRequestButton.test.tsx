@@ -24,7 +24,7 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue(template('approved'));
 });
 
-test('a completed lesson: «ابعت طلب الرأي» posts the student, then says «اتبعت» and stays off', async () => {
+test('a completed lesson: «أرسل طلب الرأي» posts the student, then says «اتبعت» and stays off', async () => {
   mockApiSend.mockResolvedValue({});
   await renderWithQuery(<FeedbackRequestButton lesson={lesson('completed')} />);
   await waitFor(() => expect(screen.getByRole('button', named('يوسف أحمد')).props.accessibilityState.disabled).toBe(false));
@@ -42,7 +42,7 @@ test.each([
   ['confirmed', 0],
   ['cancelled_by_admin', 0],
   ['no_show', 0],
-])('a %s lesson offers %i «ابعت طلب الرأي» button(s)', async (status, count) => {
+])('a %s lesson offers %i «أرسل طلب الرأي» button(s)', async (status, count) => {
   await renderWithQuery(<FeedbackRequestButton lesson={lesson(status)} />);
   expect(screen.queryAllByText(text.send)).toHaveLength(count);
 });

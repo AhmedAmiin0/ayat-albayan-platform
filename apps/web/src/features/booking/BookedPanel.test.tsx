@@ -50,7 +50,7 @@ afterEach(() => {
 });
 
 describe('BookedPanel after «اشترك» from the chat (R-SUB-01)', () => {
-  it('a regular package offers «اعمل الاشتراك» for the new student, then the way back to the chat', async () => {
+  it('a regular package offers «أنشئ الاشتراك» for the new student, then the way back to the chat', async () => {
     renderPanel({ subscribeFor: { id: 's-new', name: 'جود', code: null }, chatPhone: '+966501234567' });
     expect(screen.getByRole('link', { name: t.inbox.subscription.backToChat }).getAttribute('href')).toBe(
       '/admin/inbox?phone=%2B966501234567&page=1',

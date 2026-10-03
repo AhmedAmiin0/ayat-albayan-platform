@@ -27,7 +27,7 @@ describe('inbox display text (docs/07 §9)', () => {
     expect(threadKind(thread({ lead_id: null }))).toBeNull();
   });
 
-  it('preview: their text as is, ours after «إنت:», media and templates named', () => {
+  it('preview: their text as is, ours after «أنت:», media and templates named', () => {
     expect(previewText(thread())).toBe('السلام عليكم');
     expect(previewText(thread({ last_direction: 'outbound', last_body: 'أهلًا' }))).toBe(`${t.inbox.you} أهلًا`);
     expect(previewText(thread({ last_media_mime: 'image/png', last_body: null }))).toBe(t.inbox.media.image);
@@ -41,7 +41,7 @@ describe('inbox display text (docs/07 §9)', () => {
   it('unread counts use the Arabic forms', () => {
     expect(unreadLabel(1)).toBe(t.inbox.unread.one);
     expect(unreadLabel(2)).toBe(t.inbox.unread.two);
-    expect(unreadLabel(3)).toBe('3 رسايل جديدة');
+    expect(unreadLabel(3)).toBe('3 رسائل جديدة');
     expect(unreadLabel(11)).toBe('11 رسالة جديدة');
   });
 

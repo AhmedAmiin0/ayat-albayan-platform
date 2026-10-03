@@ -8,7 +8,7 @@ test('struck glyph + the common error, announced as an alert', async () => {
   expect(screen.getByTestId('nuqta-struck', { includeHiddenElements: true })).toBeTruthy();
 });
 
-test('«جرّب تاني» retries', async () => {
+test('«حاول مرة أخرى» retries', async () => {
   const onRetry = jest.fn();
   await render(<ErrorState onRetry={onRetry} message={t.common.notFound} />);
   expect(screen.getByText(t.common.notFound)).toBeTruthy();

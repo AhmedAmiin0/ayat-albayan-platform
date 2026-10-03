@@ -38,7 +38,7 @@ describe('LessonDrawer details and actions (R-SCH-01, R-SCH-03)', () => {
     expect(within(drawer).getByText('AB-0184')).toBeTruthy();
   });
 
-  it('confirm is the one primary; it posts and reports «الحلقة اتأكدت»', async () => {
+  it('confirm is the one primary; it posts and reports «تم تأكيد الحلقة»', async () => {
     apiSend.mockResolvedValue(lesson({ status: 'confirmed' }));
     const { onDone } = renderDrawer(lesson({ id: 'l-9' }));
     fireEvent.click(screen.getByRole('button', { name: t.lessons.event.confirm }));

@@ -16,12 +16,12 @@ describe('threadBadge (R-SUB-01)', () => {
     expect(threadBadge({ guardian: GUARDIAN, lead: null, students: [] })).toBe('none');
   });
 
-  it('a lead is «مش مشترك»; a teacher or an unknown number gets no chip', () => {
+  it('a lead is «غير مشترك»; a teacher or an unknown number gets no chip', () => {
     expect(threadBadge({ guardian: null, lead: LEAD, students: [] })).toBe('none');
     expect(threadBadge({ guardian: null, lead: null, students: [] })).toBeNull();
   });
 
-  it('a converted lead with no guardian here: no badge, and its chip is the neutral «اتحول لطالب», never «مشترك»', () => {
+  it('a converted lead with no guardian here: no badge, and its chip is the neutral «تحوّل إلى طالب», never «مشترك»', () => {
     expect(threadBadge({ guardian: null, lead: { ...LEAD, status: 'converted' }, students: [] })).toBeNull();
     expect(leadChip('converted')).toEqual({ tone: 'neutral', glyph: 'fill', label: t.inbox.convertedLead });
     expect(leadChip('new').label).toBe(t.enums.leadStatus.new);
@@ -44,13 +44,13 @@ describe('the package line', () => {
     expect(packageLine({ ...sub, package_size: null, lessons_used: 10 })).toBe(t.subscriptions.progress.over.two);
   });
 
-  it('an expired package shows its name only: no «فاضل 4 حلقات» under «الباقة خلصت»', () => {
+  it('an expired package shows its name only: no «بقيت 4 حلقات» under «انتهت الباقة»', () => {
     const sub = pupil({}, { status: 'expired', lessons_used: 4, lessons_remaining: 4 }).subscription;
     if (!sub) throw new Error('fixture');
     expect(packageLine(sub)).toBe(t.enums.packageSize['8']);
   });
 
-  it('the child’s chip comes from the numbers: a paid, used-up package is ended, not «مش مدفوع»', () => {
+  it('the child’s chip comes from the numbers: a paid, used-up package is ended, not «غير مدفوع»', () => {
     const used = pupil({}, { status: 'unpaid', lessons_remaining: 0, due_amount: 0 }).subscription;
     const owes = pupil({}, { status: 'unpaid', lessons_remaining: 5, due_amount: 120 }).subscription;
     if (!used || !owes) throw new Error('fixture');

@@ -46,11 +46,11 @@ describe('SubscriptionAlertsService (R-SUB-02)', () => {
       kind: 'renewal_due',
       subjectId: 'sub-1',
       dedupKey: 'renewal_due:sub-1',
-      title: 'فاضل حلقتين',
+      title: 'بقيت حلقتان',
     });
     expect(queries.queueRenewal).toHaveBeenCalledWith({
       recipient: RECIPIENT,
-      params: { '1': 'سهيلة', '2': 'فاضل حلقتين' },
+      params: { '1': 'سهيلة', '2': 'بقيت حلقتان' },
       dedupKey: 'renewal_due:sub-1',
       now: NOW,
     });
@@ -60,7 +60,7 @@ describe('SubscriptionAlertsService (R-SUB-02)', () => {
     const { service, queries } = setup({ s1: state('unpaid', 4) });
     await service.evaluateStudents(['s1'], { now: NOW });
     expect(queries.raiseTask).toHaveBeenCalledWith(
-      expect.objectContaining({ kind: 'subscription_unpaid', title: 'الباقة خلصت' }),
+      expect.objectContaining({ kind: 'subscription_unpaid', title: 'انتهت الباقة' }),
     );
     expect(queries.queueRenewal).toHaveBeenCalledWith(expect.objectContaining({ dedupKey: 'renewal_due:sub-1' }));
     expect(queries.closeTasks).toHaveBeenCalledWith({
@@ -78,7 +78,7 @@ describe('SubscriptionAlertsService (R-SUB-02)', () => {
     await service.evaluateStudents(['s1'], { now: NOW });
     expect(push.notifyAdmins).toHaveBeenCalledWith('payment_due', {
       subject: 'renewal_due:sub-1',
-      vars: { student: 'سهيلة', left: 'فاضل حلقتين' },
+      vars: { student: 'سهيلة', left: 'بقيت حلقتان' },
       data: { subscriptionId: 'sub-1', studentId: 's1' },
     });
   });

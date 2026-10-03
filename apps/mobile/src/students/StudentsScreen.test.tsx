@@ -25,7 +25,7 @@ beforeEach(() => {
   mockPush.mockReset();
 });
 
-test('rows: name, LTR code, guardian, status word; «محتاج معلم/ة» only on a live student without one', async () => {
+test('rows: name, LTR code, guardian, status word; «يحتاج معلم/ة» only on a live student without one', async () => {
   mockApiFetch.mockResolvedValue(page(rows));
   await renderWithQuery(<StudentsScreen />);
   expect(await screen.findByText('هدى')).toBeTruthy();

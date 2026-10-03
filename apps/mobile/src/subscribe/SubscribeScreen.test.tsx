@@ -39,7 +39,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('pick the package → the API’s price → a day chip → «اعمل الاشتراك»: POST /subscriptions, «الاشتراك اتسجل», back to the chat', async () => {
+test('pick the package → the API’s price → a day chip → «أنشئ الاشتراك»: POST /subscriptions, «تم تسجيل الاشتراك», back to the chat', async () => {
   const client = createTestQueryClient();
   client.setQueryData(threadKey(PHONE), cachedThread(detail([])));
   await renderWithQuery(<SubscribeScreen />, client);
@@ -94,7 +94,7 @@ test('after booking a package: its size, length and first lesson day are already
   expect(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر', checked: true })).toBeTruthy();
 });
 
-test('no price yet (offline): «اعمل الاشتراك» stays off and the quote offers a retry', async () => {
+test('no price yet (offline): «أنشئ الاشتراك» stays off and the quote offers a retry', async () => {
   mockApiSend.mockRejectedValue(new TypeError('Network request failed'));
   await renderWithQuery(<SubscribeScreen />);
   expect(await screen.findByText(t.common.error)).toBeTruthy();

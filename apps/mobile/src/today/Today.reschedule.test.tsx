@@ -33,14 +33,14 @@ function serve(day: unknown[]) {
   });
 }
 
-test('an open card offers «غيّر الميعاد»; a held lesson does not', async () => {
+test('an open card offers «غيّر الموعد»; a held lesson does not', async () => {
   serve([done, pending]);
   await renderWithQuery(<TodayScreen />);
   await screen.findByText('يوسف أحمد');
   expect(screen.getAllByRole('button', { name: t.lessons.rescheduleSubmit })).toHaveLength(1);
 });
 
-test('«غيّر الميعاد» opens the sheet over Today; the move lands and Today refetches', async () => {
+test('«غيّر الموعد» opens the sheet over Today; the move lands and Today refetches', async () => {
   serve([pending]);
   const moved = lesson({ id: 'new', starts_at: SUN_17, ends_at: '2026-10-04T14:45:00.000Z' });
   mockApiSend.mockResolvedValue(moved);

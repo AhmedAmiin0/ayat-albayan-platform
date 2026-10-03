@@ -57,7 +57,7 @@ test('header names the student; the package, what is paid of it, and its currenc
   await renderWithQuery(<PaymentScreen />);
   expect(await screen.findByRole('header', { name: 'دفعة لـهدى' })).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance');
-  expect(screen.getByText(/اتدفع/)).toBeTruthy();
+  expect(screen.getByText(/دُفع /)).toBeTruthy();
   expect(screen.getByText(t.pricing.currencies.SAR)).toBeTruthy();
   expect(screen.queryByRole('radio', { checked: true })).toBeNull();
 });
@@ -112,7 +112,7 @@ test('no photo (cash): straight to POST /payments, no upload', async () => {
   expect(mockUpload).not.toHaveBeenCalled();
 });
 
-test('«يوم قبله» moves the day back to امبارح; «يوم بعده» only once off today', async () => {
+test('«اليوم السابق» moves the day back to أمس; «اليوم التالي» only once off today', async () => {
   mockApiSend.mockResolvedValue(payment({ id: 'p2' }));
   await renderWithQuery(<PaymentScreen />);
   expect(await screen.findByText(new RegExp(`^${t.mobile.today} · `))).toBeTruthy();

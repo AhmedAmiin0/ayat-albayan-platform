@@ -54,10 +54,10 @@ describe('inboundRow', () => {
 });
 
 describe('pushPreview', () => {
-  it('is the text, else «بعت …» with the media kind', () => {
+  it('is the text, else «أرسل …» with the media kind', () => {
     expect(pushPreview(event({ body: '  أهلا  ' }))).toBe('أهلا');
-    expect(pushPreview(event({ type: 'audio', body: null }))).toBe('بعت رسالة صوتية');
-    expect(pushPreview(event({ type: 'reaction', body: null }))).toBe('بعت رسالة مش مدعومة — افتحها من واتساب');
+    expect(pushPreview(event({ type: 'audio', body: null }))).toBe('أرسل رسالة صوتية');
+    expect(pushPreview(event({ type: 'reaction', body: null }))).toBe('أرسل رسالة غير مدعومة — افتحها من واتساب');
   });
 });
 
@@ -83,7 +83,7 @@ describe('inboundPush', () => {
   it('gives a reschedule or stop request its own push', () => {
     const push = inboundPush({ m: event(), phone: PHONE, who: guardian, newLeadId: null, intent: 'reschedule' });
     expect(push.event.subject).toBe(`${PHONE}:reschedule:wamid.IN1`);
-    expect(push.event.title).toBe('طلب تغيير ميعاد من أم سهيلة');
+    expect(push.event.title).toBe('طلب تغيير موعد من أم سهيلة');
     const plain = inboundPush({ m: event(), phone: PHONE, who: guardian, newLeadId: null, intent: null });
     expect(plain.event.title).toBeUndefined();
   });

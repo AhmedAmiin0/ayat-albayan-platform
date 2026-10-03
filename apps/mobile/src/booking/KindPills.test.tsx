@@ -16,7 +16,7 @@ test('«نوع الحجز *» offers trial and subscription; the makeup lives on
 
 test('the words are the spec’s: trial-only, subscription, makeup', () => {
   expect([t.booking.kind.trial, t.booking.kind.package, t.booking.kind.makeup]).toEqual([
-    'حلقة تجريبية مجانية بس',
+    'حلقة تجريبية مجانية فقط',
     'اشتراك',
     'حجز تعويضي',
   ]);

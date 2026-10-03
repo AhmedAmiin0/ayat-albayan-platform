@@ -32,7 +32,7 @@ test('a subscribed family’s row says «مشترك» beside its tags; others do
   expect(lead.queryByText(t.inbox.subscription.badge.subscribed)).toBeNull();
 });
 
-test('rows also say what needs the admin: «الباقة خلصت» and «مش مدفوع» (act); a converted lead is «اتحول لطالب», not «مشترك»', async () => {
+test('rows also say what needs the admin: «انتهت الباقة» and «غير مدفوع» (act); a converted lead is «تحوّل إلى طالب», not «مشترك»', async () => {
   const ended: ThreadView = { ...subscribed, phone_e164: '+966552147732', display_name: 'أم ليان', subscribed: false, badge: 'expired', unpaid: false };
   const owes: ThreadView = { ...subscribed, phone_e164: '+966552147733', display_name: 'أم جود', badge: 'subscribed', unpaid: true };
   const converted: ThreadView = { ...thread, phone_e164: '+966551234008', display_name: 'أبو مالك', lead_status: 'converted' };

@@ -7,7 +7,7 @@ import { guardianPhoneOf, riyadhToday, seedNearEmpty, uniqueName } from '../supp
 import { addDays, resetAbrar, seedFamily, withSql } from '../support/schedule';
 
 // Subscriptions (R-SUB-01/02): a new package through the calculator dialog (the quote preview is
-// the stored price), pause / resume, and the last lesson of a PAID package → «مش مدفوع» + the
+// the stored price), pause / resume, and the last lesson of a PAID package → «غير مدفوع» + the
 // future lesson flag + the subscription_unpaid admin task. Journey 3 owns payment → active → renewal.
 
 const SAR = ar.pricing.currencies.SAR;

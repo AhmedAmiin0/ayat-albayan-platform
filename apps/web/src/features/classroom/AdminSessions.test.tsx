@@ -40,7 +40,7 @@ describe('AdminSessions (/admin/classrooms)', () => {
     expect(await screen.findByText(t.classroom.admin.empty)).toBeTruthy();
   });
 
-  it('moves a day with the arrows and comes back with «النهارده»', async () => {
+  it('moves a day with the arrows and comes back with «اليوم»', async () => {
     open([]);
     await screen.findByText(t.classroom.admin.empty);
     const today = screen.getByRole('button', { name: t.schedule.today });

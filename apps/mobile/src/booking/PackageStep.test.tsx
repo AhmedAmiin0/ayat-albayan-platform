@@ -19,7 +19,7 @@ test('«الباقة المطلوبة *» offers the paid answers only: 4, 8, 12
 
 test('the options read as the form words them', () => {
   expect(REGISTRATION_SIZES.map((s) => t.enums.packageSize[s])).toEqual([
-    'حلقة تجريبية مجانية بس',
+    'حلقة تجريبية مجانية فقط',
     '4 حلقات في الشهر',
     '8 حلقات',
     '12 حلقة',

@@ -32,7 +32,7 @@ test('asks first, in today’s words', async () => {
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
-test('«سيبها هنا» closes the question without a request', async () => {
+test('«أبقِها هنا» closes the question without a request', async () => {
   await ask();
   await fireEvent.press(screen.getByRole('button', { name: t.leads.keepHere }));
   expect(screen.queryByText(t.leads.reclassifyConfirm)).toBeNull();

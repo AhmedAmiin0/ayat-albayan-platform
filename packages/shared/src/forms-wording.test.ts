@@ -10,24 +10,24 @@ describe('form 1: استمارة تسجيل طالب جديد', () => {
   it('field titles', () => {
     expect(ar.students.name).toBe('اسم الطالب');
     expect(ar.leads.studentName).toBe('اسم الطالب');
-    expect(ar.guardians.phone).toBe('رقم الواتساب (مع كود الدولة)');
-    expect(ar.students.age).toBe('سن الطالب');
+    expect(ar.guardians.phone).toBe('رقم الواتساب (مع رمز الدولة)');
+    expect(ar.students.age).toBe('عمر الطالب');
     expect(ar.students.gender).toBe('النوع');
     expect(ar.booking.pickDays).toBe('الأيام المتاحة');
-    expect(ar.booking.pickTime).toBe('الساعه');
-    expect(ar.leads.preferredTime).toBe('الساعه');
-    expect(ar.booking.startsOn).toBe('تاريخ اول حصه');
-    expect(ar.students.teacher).toBe('المعلم/المعلمه');
-    expect(ar.booking.pickTeacher).toBe('المعلم/المعلمه');
-    expect(ar.booking.pickDuration).toBe('المده');
+    expect(ar.booking.pickTime).toBe('الساعة');
+    expect(ar.leads.preferredTime).toBe('الساعة');
+    expect(ar.booking.startsOn).toBe('تاريخ أول حلقة');
+    expect(ar.students.teacher).toBe('المعلم/المعلمة');
+    expect(ar.booking.pickTeacher).toBe('المعلم/المعلمة');
+    expect(ar.booking.pickDuration).toBe('المدة');
     expect(ar.booking.pickPackage).toBe('الباقة المطلوبة');
-    expect(ar.guardians.source).toBe('عرفت عننا منين؟');
+    expect(ar.guardians.source).toBe('كيف عرفت عنا؟');
   });
 
   it('package options', () => {
     const p = ar.enums.packageSize;
     expect([p.trial, p['4'], p['8'], p['12'], p['16']]).toEqual([
-      'حلقة تجريبية مجانية بس',
+      'حلقة تجريبية مجانية فقط',
       '4 حلقات في الشهر',
       '8 حلقات',
       '12 حلقة',

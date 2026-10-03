@@ -39,7 +39,7 @@ test('renders nothing when no lesson is live or soon', async () => {
   expect(screen.queryByRole('button')).toBeNull();
 });
 
-test('a started lesson has «مباشر الآن», a coming one «بتبدأ الساعة 16:30», far ones are left out', async () => {
+test('a started lesson has «مباشر الآن», a coming one «تبدأ الساعة 16:30», far ones are left out', async () => {
   fakeNow(new Date('2026-10-01T13:20:00Z'));
   await renderWithQuery(<LiveSessions lessons={[far, next, running]} showTeacher />);
   expect(screen.getByRole('header', { name: t.live.title })).toBeTruthy();

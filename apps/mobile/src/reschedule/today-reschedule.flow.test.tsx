@@ -12,7 +12,7 @@ beforeEach(async () => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('Today card → «غيّر الميعاد» → «الحلقة دي وكل اللي بعدها» → a weekly rule; Today refetches and the card leaves', async () => {
+test('Today card → «غيّر الموعد» → «هذه الحلقة وكل ما بعدها» → a weekly rule; Today refetches and the card leaves', async () => {
   const { backend } = calendarBackend();
   const app = await renderApp({ url: '/', backend });
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();

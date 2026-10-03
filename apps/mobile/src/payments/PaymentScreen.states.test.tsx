@@ -40,7 +40,7 @@ test('nothing entered: amount and method are required, nothing is sent', async (
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
-test('offline: the saved package shows but saving is blocked until «جرّب تاني» gets through', async () => {
+test('offline: the saved package shows but saving is blocked until «حاول مرة أخرى» gets through', async () => {
   const client = createTestQueryClient();
   client.setQueryData(balanceKey, balanceOf(subscription()), { updatedAt: Date.now() - 600_000 });
   mockApiFetch.mockRejectedValue(offline);
@@ -81,9 +81,9 @@ test('an older package still owed: both offered, the oldest picked; the paid lin
   await renderWithQuery(<PaymentScreen />);
   const oldPill = await screen.findByRole('radio', { name: /27 أغسطس 2026/ });
   expect(oldPill.props.accessibilityState).toMatchObject({ checked: true });
-  expect(screen.getByText(/اتدفع ⁦100⁩/)).toBeTruthy();
+  expect(screen.getByText(/دُفع ⁦100⁩/)).toBeTruthy();
   await fireEvent.press(screen.getByRole('radio', { name: /24 سبتمبر 2026/ }));
-  expect(screen.getByText(/اتدفع ⁦0⁩/)).toBeTruthy();
+  expect(screen.getByText(/دُفع ⁦0⁩/)).toBeTruthy();
   await fillAndSave();
   await waitFor(() => expect(mockBack).toHaveBeenCalled());
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: subscription().id }));

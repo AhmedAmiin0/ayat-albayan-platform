@@ -20,7 +20,7 @@ function card(l = flagged) {
   );
 }
 
-describe('«الباقة مش مدفوعة» on lessons (R-SUB-02)', () => {
+describe('«الباقة غير مدفوعة» on lessons (R-SUB-02)', () => {
   it('the week grid chip shows one flag when any student is flagged', () => {
     const { rerender } = render(<LessonChip lesson={flagged} onOpen={vi.fn()} />);
     expect(screen.getAllByText(FLAG)).toHaveLength(1);

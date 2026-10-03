@@ -23,7 +23,7 @@ beforeEach(() => {
   templates = { approved: vi.fn().mockResolvedValue({ key: 'lesson_join_link' }) };
 });
 
-describe('«ابعت لينك الحلقة»', () => {
+describe('«أرسل رابط الحلقة»', () => {
   it('queues the lesson_join_link template to the guardian through the Outbox, token in the button', async () => {
     const r = await send();
     expect(r).toEqual({ expires_at: '2026-10-05T19:00:00.000Z', replayed: false, message_status: 'queued' });

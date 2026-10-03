@@ -25,7 +25,7 @@ beforeEach(() => {
   });
 });
 
-test('opens on «مشتركين»: only subscribed students; a row opens their report history', async () => {
+test('opens on «مشتركون»: only subscribed students; a row opens their report history', async () => {
   await renderWithQuery(<TeacherStudentsScreen />);
   expect(await screen.findByText('سهيلة')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/teachers/me/students?kind=subscribed');

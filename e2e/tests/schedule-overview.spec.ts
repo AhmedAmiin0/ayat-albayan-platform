@@ -71,15 +71,15 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       await expect(abrar).toContainText(new RegExp(ar.dashboard.ofMax.replace('{n}', '\\d+').replace('{max}', '10')));
       const chip = abrar.getByRole('button', { name: new RegExp(`17:00.*${STUDENT}`) });
       await expect(chip).toContainText(ar.schedule.trialTag);
-      const gap = abrar.getByRole('link', { name: /فاضي 16:00 – 17:00/ });
+      const gap = abrar.getByRole('link', { name: /متاح 16:00 – 17:00/ });
       await expect(gap).toBeVisible();
-      await expect(abrar.getByRole('link', { name: /فاضي 17:45 – 20:00/ })).toBeVisible();
+      await expect(abrar.getByRole('link', { name: /متاح 17:45 – 20:00/ })).toBeVisible();
 
       // Monday: the whole day off is one note with the reason.
       await page.getByRole('button', { name: ar.schedule.nextDay }).click();
       await expect(row(page, 'أبرار')).toContainText(`${ar.schedule.dayOff} · سفر`);
 
-      // Gender filter hides the male teacher; «النهارده» goes back to today.
+      // Gender filter hides the male teacher; «اليوم» goes back to today.
       await page.getByLabel(ar.teachers.gender).selectOption('female');
       await expect(row(page, OTHER)).toHaveCount(0);
       await page.getByRole('button', { name: ar.schedule.today, exact: true }).click();
@@ -88,7 +88,7 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
 
       // A free gap opens the booking wizard with that teacher and start.
       await page.goto(`/admin/schedule?view=day&day=${s.sunday}`);
-      await row(page, 'أبرار').getByRole('link', { name: /فاضي 16:00 – 17:00/ }).click();
+      await row(page, 'أبرار').getByRole('link', { name: /متاح 16:00 – 17:00/ }).click();
       await expect(page).toHaveURL(new RegExp(`/admin/book\\?.*teacherId=${s.abrarId}`));
       // The gap stays in sight (chip) while the admin searches and picks the student: the
       // teacher and start survive the reopen for that student (not dropped by the navigation).

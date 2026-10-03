@@ -29,7 +29,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('«عدّل الوقت» sits beside «غيّر الميعاد» on the row that allows it and opens the sheet over «الجدول»', async () => {
+test('«عدّل الوقت» sits beside «غيّر الموعد» on the row that allows it and opens the sheet over «الجدول»', async () => {
   await renderWithQuery(<DayScheduleScreen />);
   const edit = await screen.findByRole('button', { name: `${t.editTime.action} — يوسف أحمد` });
   expect(screen.getAllByRole('button', { name: new RegExp(t.editTime.action) })).toHaveLength(1);

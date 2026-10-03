@@ -15,7 +15,7 @@ describe('JoinButton «ادخل الحلقة»', () => {
     vi.useRealTimers();
   });
 
-  it('is disabled with «بتفتح الساعة …» before the window', () => {
+  it('is disabled with «تُفتح الساعة …» before the window', () => {
     at('2026-10-03T15:30:00.000Z');
     render(<JoinButton lesson={L} />);
     expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty('disabled', true);

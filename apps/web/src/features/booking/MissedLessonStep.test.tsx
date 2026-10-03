@@ -47,7 +47,7 @@ describe('MissedLessonStep (R-SCH-10)', () => {
     });
   });
 
-  it('the empty state tells the admin to use «غيّر الميعاد» for cancelled lessons', async () => {
+  it('the empty state tells the admin to use «غيّر الموعد» for cancelled lessons', async () => {
     renderStep([]);
     expect(await screen.findByText(t.booking.makeup.none)).toBeTruthy();
   });
@@ -64,7 +64,7 @@ describe('MissedLessonStep (R-SCH-10)', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('coming from a lesson that already has its makeup, the empty state says that, not «غيّر الميعاد»', async () => {
+  it('coming from a lesson that already has its makeup, the empty state says that, not «غيّر الموعد»', async () => {
     renderStep([], { preselectId: 'l-1' });
     expect(await screen.findByText(t.booking.makeup.noneForLesson)).toBeTruthy();
     expect(screen.queryByText(t.booking.makeup.none)).toBeNull();

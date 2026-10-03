@@ -21,7 +21,7 @@ function open(l: ReturnType<typeof lesson>, status = 'approved') {
   );
 }
 
-describe('FeedbackRequestButton «ابعت طلب الرأي»', () => {
+describe('FeedbackRequestButton «أرسل طلب الرأي»', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();

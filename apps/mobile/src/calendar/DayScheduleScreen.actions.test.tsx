@@ -50,7 +50,7 @@ test('«إلغاء» opens Today’s cancel form on the row', async () => {
   expect(screen.getByText(t.lessons.cancelBy)).toBeTruthy();
 });
 
-test('«غيّر الميعاد» opens the reschedule sheet over «الجدول»', async () => {
+test('«غيّر الموعد» opens the reschedule sheet over «الجدول»', async () => {
   await renderWithQuery(<DayScheduleScreen />);
   await fireEvent.press(await action(t.lessons.rescheduleSubmit, 'يوسف أحمد'));
   await waitFor(() =>
@@ -58,7 +58,7 @@ test('«غيّر الميعاد» opens the reschedule sheet over «الجدول
   );
 });
 
-test('a held lesson has no confirm / cancel / reschedule, only «ابعت طلب الرأي»', async () => {
+test('a held lesson has no confirm / cancel / reschedule, only «أرسل طلب الرأي»', async () => {
   await renderWithQuery(<DayScheduleScreen />);
   await screen.findByText('جودى خالد');
   for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit]) {

@@ -77,17 +77,17 @@ describe('lead panel in the thread (R-LEAD-02/03/05)', () => {
 
   it('shows the next automatic follow-up and pauses it for this lead', async () => {
     renderPanel(lead({ status: 'no_reply', next_follow_up_at: '2026-10-03T07:00:00Z', follow_up_stage: 1 }));
-    expect(await screen.findByText(/^المتابعة الجاية /)).toBeTruthy();
+    expect(await screen.findByText(/^المتابعة القادمة /)).toBeTruthy();
     expect(await screen.findByText(t.followUps.stage.replace('{n}', '1').replace('{total}', '2'))).toBeTruthy();
     apiSend.mockResolvedValue(lead({ follow_up_paused: true }));
     fireEvent.click(screen.getByRole('button', { name: t.followUps.pause }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/leads/lead-1/follow-up', { paused: true }));
   });
 
-  it('says why the due follow-up has not gone out (no stale «المتابعة الجاية» in the past)', async () => {
+  it('says why the due follow-up has not gone out (no stale «المتابعة القادمة» in the past)', async () => {
     renderPanel(lead({ status: 'no_reply', next_follow_up_at: '2026-09-27T07:00:00Z', follow_up_note: 'waiting_template' }));
     expect(await screen.findByText(t.followUps.waitingTemplate)).toBeTruthy();
-    expect(screen.queryByText(/^المتابعة الجاية /)).toBeNull();
+    expect(screen.queryByText(/^المتابعة القادمة /)).toBeNull();
   });
 
   it('a lead who sent «وقف» shows it, and resuming asks first', async () => {

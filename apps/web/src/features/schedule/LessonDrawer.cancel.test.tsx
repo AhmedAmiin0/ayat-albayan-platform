@@ -38,7 +38,7 @@ describe('LessonDrawer cancel (R-SCH-07)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/lessons/l-3/cancel', { scope: 'one', by: 'teacher', reason: 'مرض' });
   });
 
-  it('scope «الحلقة دي وكل اللي بعدها» cancels the series', async () => {
+  it('scope «هذه الحلقة وكل ما بعدها» cancels the series', async () => {
     apiSend.mockResolvedValue([]);
     const onDone = openCancel(lesson({ id: 'l-3' }));
     fireEvent.click(screen.getByLabelText(t.lessons.scope.rule));

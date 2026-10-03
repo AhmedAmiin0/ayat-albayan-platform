@@ -26,7 +26,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('Amiri «النهارده» header, the Riyadh date line, and today in Riyadh is what it asks for', async () => {
+test('Amiri «اليوم» header, the Riyadh date line, and today in Riyadh is what it asks for', async () => {
   mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<TodayRoute />);
   expect(screen.getByRole('header', { name: t.today.title })).toBeTruthy();

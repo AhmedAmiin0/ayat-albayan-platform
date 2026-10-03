@@ -56,7 +56,7 @@ describe('GuestJoinPage', () => {
     expect(await screen.findByText(t.classroom.error[code])).toBeTruthy();
   });
 
-  it('before the window opens it says when: «بتفتح الساعة …»', async () => {
+  it('before the window opens it says when: «تُفتح الساعة …»', async () => {
     reply(403, { code: 'join_not_open_yet', opens_at: '2026-10-03T15:45:00.000Z' });
     open();
     submit('سهيلة');

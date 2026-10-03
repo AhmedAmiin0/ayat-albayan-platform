@@ -11,7 +11,7 @@ if (!OWES) throw new Error('fixture');
 
 // R-SUB-02: `unpaid` is either money owed or a package paid in full and used up.
 describe('UnpaidList says what is due', () => {
-  it('money owed: «فاضل عليها» and the amount still owed, not the price', () => {
+  it('money owed: «المتبقي عليها» and the amount still owed, not the price', () => {
     render(<UnpaidList items={[OWES]} />);
     const row = screen.getByRole('listitem');
     expect(row.textContent).toContain(t.dashboard.owes);

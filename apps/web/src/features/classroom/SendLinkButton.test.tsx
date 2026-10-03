@@ -19,7 +19,7 @@ function open(l: ReturnType<typeof lesson>, status = 'approved') {
   );
 }
 
-describe('SendLinkButton «ابعت لينك الحلقة»', () => {
+describe('SendLinkButton «أرسل رابط الحلقة»', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
@@ -36,7 +36,7 @@ describe('SendLinkButton «ابعت لينك الحلقة»', () => {
     expect(screen.getByRole('button', { name: t.classroom.sendLink })).toHaveProperty('disabled', true);
   });
 
-  it('posts the student, then reads «اللينك اتبعت»', async () => {
+  it('posts the student, then reads «أُرسل الرابط»', async () => {
     apiSend.mockResolvedValue({ expires_at: 'x', replayed: false, message_status: 'queued' });
     open(lesson({ id: 'l-7', status: 'confirmed', students: [SUHAILA] }));
     const button = await screen.findByRole('button', { name: t.classroom.sendLink });

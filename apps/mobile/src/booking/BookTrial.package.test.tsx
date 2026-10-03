@@ -111,12 +111,12 @@ test('a lead from the chat books a package: size, slot, the required invoice, we
   });
 });
 
-test('«حلقة تجريبية مجانية بس» is a type here: no package step, no invoice, free', async () => {
+test('«حلقة تجريبية مجانية فقط» is a type here: no package step, no invoice, free', async () => {
   await renderWithQuery(<BookTrialScreen />);
   await press('radio', t.booking.kind.trial);
   expect(screen.getByText('خطوة 1 من 4 · الطالب')).toBeTruthy();
   expect(screen.getByRole('header', { name: t.booking.trialTitle })).toBeTruthy();
-  // A trial takes the form's «المده» on the first step, 45 by default.
+  // A trial takes the form's «المدة» on the first step, 45 by default.
   expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();
   await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);

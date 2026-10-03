@@ -7,7 +7,7 @@ test('default: SA, 45 min, the popular standard package, 1 student, no discount'
   );
 });
 
-test('«دولة تانية (بالدولار)» leaves country out (country= would be a 400)', () => {
+test('«دولة أخرى (بالدولار)» leaves country out (country= would be a 400)', () => {
   const qs = toQueryString(quoteParams({ ...DEFAULT_SELECTION, country: 'other' }));
   expect(qs).not.toContain('country');
   expect(qs).toContain('tier=standard');

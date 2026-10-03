@@ -6,7 +6,7 @@ import { uploadInvoice } from '../support/invoice';
 import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
-// thread says «مش مشترك» → «اشترك» books a regular package (new guardian + student) → «اعمل
+// thread says «غير مشترك» → «اشترك» books a regular package (new guardian + student) → «اعمل
 // الاشتراك» → back in the thread it says «مشترك». A guardian's thread offers «اشتراك جديد» per
 // child. «Meta» is tools/wa-stub; messaging stays off (journeys 2–4 assert `queued`).
 
@@ -70,7 +70,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     const lead = await withSql((sql) => sql<{ status: string }[]>`select status from public.leads where phone_e164 = ${`+${digits}`}`);
     expect(lead[0]?.status).toBe('converted');
 
-    // «اعمل الاشتراك» right after the booking, for the new student.
+    // «أنشئ الاشتراك» right after the booking, for the new student.
     await admin.getByRole('button', { name: ar.inbox.subscription.make }).click();
     await saveSubscription(admin, student);
     await expect(admin.getByText(ar.subscriptions.saved)).toBeVisible();

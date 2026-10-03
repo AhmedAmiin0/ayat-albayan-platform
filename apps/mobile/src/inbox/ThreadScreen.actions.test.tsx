@@ -39,13 +39,13 @@ test('a failed reminder: template name, «متبعتتش», and why in Arabic', 
   expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
 });
 
-test('no «جرّب تاني» where it cannot help (not on WhatsApp)', async () => {
+test('no «حاول مرة أخرى» where it cannot help (not on WhatsApp)', async () => {
   await open([inbound, { ...failed, error_code: '131026' }]);
   expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131026']))).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
 });
 
-test('«جرّب تاني» puts it back in the queue and the row says so', async () => {
+test('«حاول مرة أخرى» puts it back in the queue and the row says so', async () => {
   const retried = { ...failed, status: 'queued' as const, error_code: null, attempts: 0 };
   mockApiSend.mockResolvedValue(retried);
   await open();
@@ -87,7 +87,7 @@ test('the sender claimed it meanwhile (409 not_manual): no WhatsApp, it says the
   expect(openUrl).not.toHaveBeenCalled();
 });
 
-test('a held row asks from its own state: «بعتّها بنفسي» records it, «رجّعها» puts it back', async () => {
+test('a held row asks from its own state: «أرسلتها بنفسي» records it, «رجّعها» puts it back', async () => {
   const held = { ...failed, error_code: 'handed_off' };
   const manual = { ...failed, status: 'sent_manually' as const, sent_manually_at: failed.created_at };
   mockApiSend.mockResolvedValue(manual);

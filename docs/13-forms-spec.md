@@ -1,6 +1,6 @@
 # 13 — The three forms (owner spec, 2026-10-03)
 
-Requirements R-FRM-01..03 (docs/03 §3.12). The text below is the owner's paste, verbatim, and is the authority for field titles, order, types, required flags and options. The app keeps three deliberate structured replacements (time from free slots, teacher from the DB, ids auto-filled from the link) but every title and option wording matches.
+Requirements R-FRM-01..03 (docs/03 §3.12). The text below is the owner's paste, verbatim, and is the authority for field titles, order, types, required flags and options. The app keeps three deliberate structured replacements (time from free slots, teacher from the DB, ids auto-filled from the link) but every title and option wording matches. **Owner, 2026-10-03:** the app renders these titles and options in clear Modern Standard Arabic (no Egyptian dialect), e.g. «عرفت عننا منين؟» → «كيف عرفت عنا؟», «المده» → «المدة»; the paste below stays as the historical record of the Google Forms.
 
 ## What the API and the DB do for it
 
@@ -25,7 +25,7 @@ The link is `base64url(lessonId | studentId | exp) . HMAC-SHA256` (71 characters
 
 ## Additions beyond the Google Form (owner request 2026-10-03)
 
-Two fields the Google Form never had, in the academy's Egyptian tone. They are additions to the wizard, not changes to the form's own wording.
+Two fields the Google Form never had, in clear Modern Standard Arabic. They are additions to the wizard, not changes to the form's own wording.
 
 | Field | Type | Options / rule | API |
 |---|---|---|---|

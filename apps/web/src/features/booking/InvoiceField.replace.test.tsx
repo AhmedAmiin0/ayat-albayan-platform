@@ -89,7 +89,7 @@ describe('InvoiceField: replacing and removing (R-PAY-03)', () => {
     expect(screen.getByText(t.booking.invoice.sourceWhatsapp)).toBeTruthy();
   });
 
-  it('«شيلها» clears the error and the invoice', async () => {
+  it('«أزلها» clears the error and the invoice', async () => {
     uploadToSignedUrl.mockResolvedValue({ error: new Error('boom') });
     renderField(GOOD);
     choose(file('image/png'));

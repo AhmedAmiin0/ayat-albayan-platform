@@ -101,7 +101,7 @@ test('offline with a cached profile: shown, no error (R-MOB-03)', async () => {
 test('the balance card sits under the status: what is left and «سجّل دفعة»', async () => {
   serve(full, balanceOf(subscription()));
   await renderWithQuery(<StudentScreen />);
-  expect(await screen.findByText('فاضل حلقتين')).toBeTruthy();
+  expect(await screen.findByText('بقيت حلقتان')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.record }));
   expect(mockPush).toHaveBeenCalledWith('/students/payment/s1');
 });

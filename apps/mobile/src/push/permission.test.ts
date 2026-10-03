@@ -50,7 +50,7 @@ test('first time: Arabic rationale, then the system prompt', async () => {
   expect(requestPermissions).toHaveBeenCalledTimes(1);
 });
 
-test('«مش دلوقتي» skips the system prompt; the rationale comes back only a week later', async () => {
+test('«ليس الآن» skips the system prompt; the rationale comes back only a week later', async () => {
   getPermissions.mockResolvedValue(perm(false));
   const alert = answerRationale(t.mobile.pushLater);
   await expect(ensurePushPermission()).resolves.toBe(false);
@@ -64,7 +64,7 @@ test('«مش دلوقتي» skips the system prompt; the rationale comes back on
   expect(alert).toHaveBeenCalledTimes(2);
 });
 
-test('a device that said «مش دلوقتي» before this change (stored "1") is asked again', async () => {
+test('a device that said «ليس الآن» before this change (stored "1") is asked again', async () => {
   getPermissions.mockResolvedValue(perm(false));
   await AsyncStorage.setItem(ASKED_KEY, '1');
   const alert = answerRationale(t.mobile.pushLater);

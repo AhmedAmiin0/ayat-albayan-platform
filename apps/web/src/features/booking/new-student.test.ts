@@ -28,7 +28,7 @@ const LEAD = {
 const FAMILY = { program: 'quran', tz: 'Africa/Cairo', pkg: 'trial', genderPref: null, country: 'EG' } as const;
 
 describe('lead → student conversion carries «بيانات الطالب» and the source (research-forms item 2)', () => {
-  it('the lead path lists the lead’s own chat for «من الشات», the number the invoice came from', () => {
+  it('the lead path lists the lead’s own chat for «من المحادثة», the number the invoice came from', () => {
     expect(draftFromLead({ leadId: LEAD_ID, phone: '+966501234567' }, null).chatPhone).toBe('+966501234567');
     expect(draftFromLead({ leadId: LEAD_ID }, null).chatPhone).toBeNull();
   });
