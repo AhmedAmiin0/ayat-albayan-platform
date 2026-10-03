@@ -4,7 +4,7 @@ import {
   clearQueue, messageState, queueRenewal, queueText, queuedCount, restoreSettings, sentToDigits,
   settingText, snapshotSettings,
 } from '../support/settings';
-import { setMessaging, stubReset, stubSent } from '../support/wa-stub';
+import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';
 
 // /admin/settings switches (R-MSG-01, cut-over docs/09): the kill switch asks first and names the
 // queue, OFF is immediate, the automatic-messages switch holds job-made rows as auto_off.
@@ -33,6 +33,8 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     test.setTimeout(150_000);
     const digits = freshDigits();
     const leadId = await seedLead({ phone: `+${digits}`, name: `عميل ${digits.slice(-4)}` });
+    // The stub only lets free text through within 24 h of an inbound it saw itself (131047).
+    expect((await stubInbound({ from: digits, text: 'السلام عليكم' })).status).toBe(200);
     await queueText({ phone: `+${digits}`, leadId, body: 'أهلًا بحضرتك' });
     await queueText({ phone: `+${digits}`, leadId, body: 'تحب نحجز لك حلقة؟' });
     const admin = await asRole('admin');
