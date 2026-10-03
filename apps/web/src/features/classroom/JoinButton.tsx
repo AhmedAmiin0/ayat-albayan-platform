@@ -1,0 +1,46 @@
+import { isOpenLesson, type LessonStatus } from '@ab/shared';
+import { Button, buttonVariants } from '@/components/ui/button';
+import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
+import { useNow } from './use-now';
+import { joinHint } from './window-hint';
+
+export interface JoinableLesson {
+  id: string;
+  starts_at: string;
+  ends_at: string;
+}
+
+interface Props {
+  lesson: JoinableLesson;
+  size?: 'md' | 'lg';
+  className?: string;
+}
+
+/** «ادخل الحلقة» into the online classroom: enabled from 15 minutes before the start to 2 hours
+ * after the end (re-checked every minute), otherwise disabled with «بتفتح الساعة …».
+ * A plain link: it works without the router and opens /classroom/:id.
+ */
+export function EnterButton({ lesson, size = 'md', className }: Props) {
+  const now = useNow();
+  const { canJoin, hint } = joinHint(lesson, now);
+  return (
+    <div className={cn('grid justify-items-start gap-1', className)}>
+      {canJoin ? (
+        <a href={`/classroom/${lesson.id}`} className={buttonVariants({ variant: 'primary', size })}>
+          {t.classroom.enter}
+        </a>
+      ) : (
+        <Button type="button" variant="secondary" size={size} disabled>
+          {t.classroom.enter}
+        </Button>
+      )}
+      {hint && <p className="text-xs text-ink-3">{hint}</p>}
+    </div>
+  );
+}
+
+/** The same button, but only for a lesson that can still take place (never a moved or cancelled one). */
+export function JoinButton({ lesson, ...rest }: Props & { lesson: { status: LessonStatus } }) {
+  return isOpenLesson(lesson.status) ? <EnterButton lesson={lesson} {...rest} /> : null;
+}

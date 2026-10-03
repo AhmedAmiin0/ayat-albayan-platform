@@ -8,6 +8,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
 import { Toast } from '@/components/ui/toast';
+import { AssistantsManager } from '@/features/classroom/AssistantsManager';
 import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -82,6 +83,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <BalanceCard student={student} />
       <StudentInvoices studentId={student.id} />
       <StudentProfileForm key={student.id} student={student} />
+      <AssistantsManager studentId={student.id} />
       <SiblingMerge student={student} siblings={student.siblings} />
       {editGuardian && (
         <GuardianEditDialog
