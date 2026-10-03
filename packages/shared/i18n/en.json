@@ -812,6 +812,36 @@
     "noSlots": "No free times for this teacher this week. Try the next week.",
     "done": "Done"
   },
+  "editTime": {
+    "action": "Edit time",
+    "title": "Edit lesson time",
+    "correctTitle": "Correct lesson time",
+    "duration": "Length",
+    "pickLength": "Pick the lesson length first",
+    "correctTimes": "Correct start time",
+    "dayFixed": "Day: {day} (a correction stays on the same day)",
+    "noTimes": "No other time on this day, the lesson has to end before now",
+    "reason": "Reason",
+    "reasonHint": "For example: the lesson ran an hour instead of 45 minutes",
+    "notify": "Send the guardian a confirmation of the new time",
+    "submit": "Save the change",
+    "saved": "The time was updated",
+    "savedNotified": "The time was updated, and the guardian is sent a WhatsApp confirmation of the new time",
+    "confirmLine": "{from} ← {to}",
+    "sameLesson": "The same lesson is edited, keeping its report and payments",
+    "vsReschedule": "To change the time of every upcoming lesson, use \"Change time\" instead",
+    "payoutDraft": "The month's payout is still a draft, press \"Calculate the month's payouts\" again",
+    "pdfRefresh": "The report file is refreshed and not sent to the guardian again",
+    "offline": "The connection dropped before we got an answer, so we are not sure the time changed. Open the schedule again once you are back online",
+    "error": {
+      "stale_time": "Someone else changed this lesson, open it again",
+      "payout_locked": "The teacher's payout for this month is approved or paid, so you cannot change the length of a lesson counted in it",
+      "time_edit_not_allowed": "You cannot edit the time of a cancelled or rescheduled lesson",
+      "date_in_future": "A correction has to be before now",
+      "correction_cross_day": "A correction has to stay on the same day",
+      "reason_required": "Write the reason for the correction"
+    }
+  },
   "alerts": {
     "needsTeacher": "Needs a teacher"
   },

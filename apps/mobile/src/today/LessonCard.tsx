@@ -8,6 +8,7 @@ import {
 } from '@ab/shared';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { editMode } from '@/edit-time/types';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -29,6 +30,8 @@ export interface LessonCardProps {
   onCancel: (cancel: CancelRequest) => void;
   /** «غيّر الميعاد»: opens the reschedule sheet for this lesson. */
   onReschedule: () => void;
+  /** «عدّل الوقت» (R-SCH-11): opens the edit sheet; the button shows when the lesson allows it. */
+  onEditTime?: () => void;
 }
 
 /**
@@ -38,7 +41,7 @@ export interface LessonCardProps {
  * An action shows only if the API offered it and the shared state machine still allows it from
  * the status on screen (which may already be the optimistic one).
  */
-export function LessonCard({ lesson, busy, error, onConfirm, onCancel, onReschedule }: LessonCardProps) {
+export function LessonCard({ lesson, busy, error, onConfirm, onCancel, onReschedule, onEditTime }: LessonCardProps) {
   const { color } = useTheme();
   const [cancelling, setCancelling] = useState(false);
   const can = (e: LessonEvent) =>
@@ -125,6 +128,8 @@ export function LessonCard({ lesson, busy, error, onConfirm, onCancel, onResched
           onConfirm={onConfirm}
           onCancel={() => setCancelling(true)}
           onReschedule={onReschedule}
+          canEditTime={onEditTime !== undefined && editMode(lesson) !== null}
+          onEditTime={onEditTime}
         />
       )}
     </View>

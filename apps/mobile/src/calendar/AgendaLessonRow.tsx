@@ -1,6 +1,8 @@
 import { applyLessonEvent, lessonStatusStyle, type LessonView } from '@ab/shared';
 import type { ReactNode } from 'react';
 import { View } from 'react-native';
+import { EditTimeButton } from '@/edit-time/EditTimeButton';
+import { editMode } from '@/edit-time/types';
 import { t } from '@/lib/i18n';
 import { type, useTheme } from '@/theme';
 import { durationLabel, riyadhTime, studentNames } from '@/today/lesson-text';
@@ -16,6 +18,8 @@ export interface AgendaLessonRowProps {
   onReschedule: (lesson: LessonView) => void;
   /** The row's own actions (تأكيد / إلغاء / غيّر الميعاد) in place of «غيّر الميعاد» alone. */
   actions?: ReactNode;
+  /** «عدّل الوقت» (R-SCH-11) beside «غيّر الميعاد»: shown when the lesson allows it (time_edit_mode). */
+  onEditTime?: (lesson: LessonView) => void;
 }
 
 /** The API offered the move and the shared state machine allows it from this status. */
@@ -29,7 +33,7 @@ export function canReschedule(lesson: LessonView): boolean {
  * line when it can still move (docs/07 §6: row actions are visible, never behind a tap a new admin
  * would not guess).
  */
-export function AgendaLessonRow({ lesson, onReschedule, actions }: AgendaLessonRowProps) {
+export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime }: AgendaLessonRowProps) {
   const { color } = useTheme();
   const subtitle = [durationLabel(lesson), teacherClock(lesson)].filter(Boolean).join(' · ');
   const body = { fontFamily: type.ui[600], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink };
@@ -52,14 +56,17 @@ export function AgendaLessonRow({ lesson, onReschedule, actions }: AgendaLessonR
         </AppText>
         {subtitle ? <AppText style={{ ...small, color: color.ink2, fontVariant: ['tabular-nums'] }}>{subtitle}</AppText> : null}
         {actions ??
-          (canReschedule(lesson) ? (
-            <View style={{ alignSelf: 'flex-start' }}>
-              <Button
-                variant="ghost"
-                label={t.lessons.rescheduleSubmit}
-                accessibilityLabel={`${t.lessons.rescheduleSubmit} — ${studentNames(lesson)}`}
-                onPress={() => onReschedule(lesson)}
-              />
+          (canReschedule(lesson) || (onEditTime && editMode(lesson)) ? (
+            <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'flex-start', gap: 8 }}>
+              {canReschedule(lesson) ? (
+                <Button
+                  variant="ghost"
+                  label={t.lessons.rescheduleSubmit}
+                  accessibilityLabel={`${t.lessons.rescheduleSubmit} — ${studentNames(lesson)}`}
+                  onPress={() => onReschedule(lesson)}
+                />
+              ) : null}
+              {onEditTime ? <EditTimeButton lesson={lesson} onPress={() => onEditTime(lesson)} /> : null}
             </View>
           ) : null)}
       </View>

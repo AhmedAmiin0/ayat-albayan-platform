@@ -2,6 +2,7 @@ import { applyLessonEvent, type LessonEvent, type LessonView } from '@ab/shared'
 import { useState } from 'react';
 import { View } from 'react-native';
 import { MakeupAction } from '@/booking/MakeupAction';
+import { EditTimeButton } from '@/edit-time/EditTimeButton';
 import { FeedbackRequestButton } from '@/feedback/FeedbackRequestButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
@@ -15,6 +16,8 @@ export interface LessonRowActionsProps {
   /** The screen's one confirm / cancel mutation (Today's, R-MOB-03). */
   action: ReturnType<typeof useLessonAction>;
   onReschedule: (lesson: LessonView) => void;
+  /** «عدّل الوقت» (R-SCH-11): opens the edit sheet; the button shows when the lesson allows it. */
+  onEditTime?: (lesson: LessonView) => void;
 }
 
 /**
@@ -24,7 +27,7 @@ export interface LessonRowActionsProps {
  * state machine still allows it from the status on screen (maybe already the optimistic one).
  * A finished lesson also offers «ابعت طلب الرأي» (FeedbackRequestButton).
  */
-export function LessonRowActions({ lesson, action, onReschedule }: LessonRowActionsProps) {
+export function LessonRowActions({ lesson, action, onReschedule, onEditTime }: LessonRowActionsProps) {
   const [cancelling, setCancelling] = useState(false);
   const can = (e: LessonEvent) =>
     lesson.allowed_events.includes(e) && applyLessonEvent(lesson.status, e) !== null;
@@ -55,6 +58,7 @@ export function LessonRowActions({ lesson, action, onReschedule }: LessonRowActi
         {can('confirm') ? act(t.today.confirm, lesson.status === 'scheduled' ? 'primary' : 'ghost', () => action.confirm(lesson.id)) : null}
         {can('cancel_by_admin') ? act(t.today.cancel, 'secondary', () => setCancelling(true)) : null}
         {can('reschedule') ? act(t.lessons.rescheduleSubmit, 'ghost', () => onReschedule(lesson)) : null}
+        {onEditTime ? <EditTimeButton lesson={lesson} busy={busy} onPress={() => onEditTime(lesson)} /> : null}
       </View>
       <MakeupAction lesson={lesson} />
       <FeedbackRequestButton lesson={lesson} />

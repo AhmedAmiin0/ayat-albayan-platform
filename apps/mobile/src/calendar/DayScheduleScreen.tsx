@@ -2,6 +2,7 @@ import type { LessonView } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { SectionList } from 'react-native';
+import { EditTimeSheet } from '@/edit-time/EditTimeSheet';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { RescheduleSheet } from '@/reschedule/RescheduleSheet';
@@ -37,7 +38,7 @@ const ALL: TeacherFilter = { program: 'all', gender: 'all' };
  * «الجدول» (R-SCH-01, R-TCH-02): every teacher, even one with nothing booked, on one Riyadh day
  * (lessons and free gaps by time) or the whole week (lessons by day), from GET /lessons/overview,
  * fetched once per week. Each lesson shows تأكيد / إلغاء (optimistic, R-MOB-03) and «غيّر الميعاد»
- * (the reschedule sheet, R-SCH-07). Filter by program and gender. `back` when it is pushed from
+ * (the reschedule sheet, R-SCH-07) and «عدّل الوقت» (the in-place edit sheet, R-SCH-11). Filter by program and gender. `back` when it is pushed from
  * «المزيد» rather than opened as its tab; `initialDate` (YYYY-MM-DD) opens it on that day.
  */
 export function DayScheduleScreen({ back = false, initialDate }: { back?: boolean; initialDate?: string }) {
@@ -47,6 +48,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
   const [view, setView] = useState<ScheduleView>('day');
   const [filter, setFilter] = useState<TeacherFilter>(ALL);
   const [moving, setMoving] = useState<LessonView | null>(null);
+  const [editing, setEditing] = useState<LessonView | null>(null);
   const action = useLessonAction();
   const start = weekStart(date);
   const overview = useOverview(weekWindow(start));
@@ -62,7 +64,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
       key={lesson.id}
       lesson={lesson}
       onReschedule={setMoving}
-      actions={<LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} />}
+      actions={<LessonRowActions lesson={lesson} action={action} onReschedule={setMoving} onEditTime={setEditing} />}
     />
   );
 
@@ -117,6 +119,7 @@ export function DayScheduleScreen({ back = false, initialDate }: { back?: boolea
         }
       />
       <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
+      <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
     </Screen>
   );
 }
