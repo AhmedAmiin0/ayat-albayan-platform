@@ -10,6 +10,9 @@ export type LeadRow = {
   last_inbound_at: string | null;
   last_outbound_at: string | null;
   created_at: string;
+  /** The salesperson's profile id (null = nobody yet) and name; absent from older payloads. */
+  assigned_to?: string | null;
+  assigned_to_name?: string | null;
 };
 
 export type JobApplicantRow = {

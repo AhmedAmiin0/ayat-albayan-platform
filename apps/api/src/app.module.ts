@@ -28,6 +28,7 @@ import { TeacherEarningsModule } from './modules/teacher-earnings/earnings.modul
 import { PricingModule } from './modules/pricing/pricing.module';
 import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { SalesModule } from './modules/sales/sales.module';
 import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
@@ -50,6 +51,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     TeachersModule,
     TeacherStudentsModule,
     LeadsModule,
+    SalesModule,
     JobApplicantsModule,
     MeModule,
     FxModule,

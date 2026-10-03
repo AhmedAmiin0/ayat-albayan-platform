@@ -5,6 +5,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
 import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/message.mapper';
+import { isSalesLesson } from '../sales/sales-lessons';
 import { upcomingLessons } from './thread-lessons';
 import { familyTagsOf, threadPeople } from './thread-people';
 import type { FamilyTag } from './thread-people.mapper';
@@ -118,5 +119,10 @@ export class ThreadsQueries {
     const { data, error } = await this.db.from('lessons').select('teacher_id').eq('id', lessonId).maybeSingle();
     check(error, 'lesson teacher read');
     return data?.teacher_id ?? null;
+  }
+
+  /** Sales mode template sends: is the lesson in the salesperson's scope (sales-lessons.ts)? */
+  salesOwnsLesson(profileId: string, lessonId: string): Promise<boolean> {
+    return isSalesLesson(this.db, { profileId, lessonId });
   }
 }

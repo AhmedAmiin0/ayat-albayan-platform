@@ -1,8 +1,10 @@
 import { Module } from '@nestjs/common';
 import { LessonsModule } from '../lessons/lessons.module';
+import { SalesModule } from '../sales/sales.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
 import { Outbox } from './outbox';
 import { ReadReceipts } from './read-receipts';
+import { SalesThreadsService } from './sales-threads.service';
 import { TeacherScopes } from './teacher-scope';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { TeacherThreadsService } from './teacher-threads.service';
@@ -20,10 +22,10 @@ import { ThreadsService } from './threads.service';
  * client, the send gate, the sender, the registry and MessageViews. SubscriptionsModule brings the
  * package balances behind a thread's `people` and «مشترك» tag (R-SUB-01). Teacher mode (R-TCH-03):
  * ThreadReads picks the admin's or the teacher's reads per request (TeacherScopes); LessonsModule
- * brings TeacherMeQueries for «my students».
+ * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson's own leads' chats.
  */
 @Module({
-  imports: [SubscriptionsModule, LessonsModule],
+  imports: [SubscriptionsModule, LessonsModule, SalesModule],
   controllers: [ThreadsController, ThreadMediaController],
   providers: [
     ThreadsQueries,
@@ -34,6 +36,7 @@ import { ThreadsService } from './threads.service';
     TeacherThreadsQueries,
     TeacherScopes,
     TeacherThreadsService,
+    SalesThreadsService,
     ThreadReads,
     ThreadMediaService,
   ],

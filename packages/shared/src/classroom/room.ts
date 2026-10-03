@@ -4,7 +4,7 @@ const PREFIX = 'lesson-';
 export const lessonRoomName = (lessonId: string): string => `${PREFIX}${lessonId}`;
 
 /** Who a token was minted for. Staff roles join with their own login, `guest` with a link. */
-export const JOIN_ROLES = ['teacher', 'admin', 'assistant', 'guest'] as const;
+export const JOIN_ROLES = ['teacher', 'admin', 'assistant', 'sales', 'guest'] as const;
 export type JoinRole = (typeof JOIN_ROLES)[number];
 
 /** POST /lessons/:id/room/join and POST /public/join/:linkToken: all the web room needs. */

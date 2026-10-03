@@ -30,6 +30,7 @@ export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', ema
 export const TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
 export const OTHER_TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000003', email: null, role: 'teacher' };
 export const ASSISTANT: AuthUser = { id: 'd0000000-0000-4000-8000-000000000005', email: null, role: 'assistant' };
+export const SALES: AuthUser = { id: 'e0000000-0000-4000-8000-000000000006', email: null, role: 'sales' };
 export const GUARDIAN: AuthUser = { id: 'c0000000-0000-4000-8000-000000000004', email: null, role: 'guardian' };
 
 export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
@@ -50,6 +51,7 @@ export function queries() {
     teacherName: vi.fn().mockResolvedValue('أبرار'),
     profileName: vi.fn().mockResolvedValue('نور'),
     assistsLesson: vi.fn().mockResolvedValue(true),
+    salesOwnsLesson: vi.fn().mockResolvedValue(true),
     sendContext: vi.fn().mockResolvedValue({
       student: { id: STUDENT_ID, name: 'سهيلة' },
       guardian: { id: '00000000-0000-4000-8000-0000000000a1', phone: '+966501234567' },

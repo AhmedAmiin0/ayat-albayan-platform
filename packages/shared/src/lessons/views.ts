@@ -91,6 +91,8 @@ export interface AcademySettings {
   auto_messages_enabled: boolean;
   /** The academy number moved off the old CRM (docs/09 cut-over): the CRM warning goes away. */
   crm_cutover_done: boolean;
+  /** A new lead goes to the salesperson with the fewest open leads (migration 187). */
+  sales_auto_assign: boolean;
 }
 
 /** GET /teachers/me (R-TCH-03). */

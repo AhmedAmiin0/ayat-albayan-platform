@@ -2,10 +2,13 @@ import { normalizePhone, type LeadSource, type LeadStatus } from '@ab/shared';
 import {
   BadRequestException,
   ConflictException,
+  Inject,
   Injectable,
   NotFoundException,
+  Optional,
 } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
+import { SalesAssignService } from '../sales/sales-assign.service';
 import { JobApplicantsQueries, type JobApplicantRow } from '../job-applicants/job-applicants.queries';
 import type { Page } from './http';
 import { canTransitionLead } from './lead-state-machine';
@@ -27,11 +30,17 @@ export interface LeadAction {
   actorId: string | null;
 }
 
+/** A lead row with its salesperson's name (the admin's list). */
+export type LeadView = LeadRow & { assigned_to_name: string | null };
+
 export const invalidTransition = (from: string, to: string) =>
   new ConflictException({ code: 'invalid_transition', from, to });
 
 @Injectable()
 export class LeadsService {
+  /** Property-injected (the constructor is at the 3-parameter limit); absent in plain unit tests = no assignment. */
+  @Optional() @Inject(SalesAssignService) private readonly sales?: SalesAssignService;
+
   constructor(
     private readonly leads: LeadsQueries,
     private readonly applicants: JobApplicantsQueries,
@@ -52,18 +61,25 @@ export class LeadsService {
     const existing = await this.leads.findByPhone(phone.e164);
     if (existing) return this.touch(existing, contact);
     try {
-      return await this.leads.insert({
+      const created = await this.leads.insert({
         phone_e164: phone.e164,
         name: contact.name,
         source: c.source,
         last_inbound_at: contact.at.toISOString(),
       });
+      // Only a lead created right here is handed to a salesperson; an existing one never is (above, and the winner below).
+      return await this.assigned(created);
     } catch (e) {
       // Two first messages from one phone at once: the other insert won, so update it instead.
       const winner = e instanceof ConflictException && (await this.leads.findByPhone(phone.e164));
       if (!winner) throw e;
       return this.touch(winner, contact);
     }
+  }
+
+  /** A salesperson for a lead just created (never throws; no assigner = unchanged). */
+  private assigned(lead: LeadRow): Promise<LeadRow> {
+    return this.sales ? this.sales.autoAssign(lead) : Promise.resolve(lead);
   }
 
   private touch(lead: LeadRow, c: { name: string | null; at: Date }): Promise<LeadRow> {
@@ -75,9 +91,12 @@ export class LeadsService {
     });
   }
 
-  async list(f: LeadListFilter): Promise<Page<LeadRow>> {
+  async list(f: LeadListFilter): Promise<Page<LeadView>> {
     const { items, total } = await this.leads.list(f);
-    return { items, total, page: f.page, pageSize: f.pageSize };
+    const ids = [...new Set(items.flatMap((l) => (l.assigned_to ? [l.assigned_to] : [])))];
+    const names = this.sales ? await this.sales.names(ids) : new Map<string, string>();
+    const views = items.map((l) => ({ ...l, assigned_to_name: l.assigned_to ? (names.get(l.assigned_to) ?? null) : null }));
+    return { items: views, total, page: f.page, pageSize: f.pageSize };
   }
 
   /** PATCH status through the LeadStateMachine; audited (R-NFR-03). */

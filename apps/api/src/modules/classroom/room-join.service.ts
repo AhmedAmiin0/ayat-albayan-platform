@@ -10,9 +10,10 @@ import { mintToken, newIdentity } from './livekit-token';
 
 /**
  * POST /lessons/:id/room/join. Who may enter (rule 9, the API being the only gate to the room):
- * any admin; the teacher of that lesson; an assistant assigned to one of its students. Nobody else,
+ * any admin; the teacher of that lesson; an assistant assigned to one of its students; a salesperson for a trial booked from one of their
+ * leads (sales-lessons.ts). Nobody else,
  * guardians included (they come by the guest link). The window (15 minutes before to 2 hours after)
- * binds teachers and assistants; an admin may always enter, to supervise or to help.
+ * binds teachers, assistants and salespeople; an admin may always enter, to supervise or to help.
  */
 @Injectable()
 export class RoomJoinService {
@@ -38,6 +39,7 @@ export class RoomJoinService {
     if (user.role === 'admin') return 'admin';
     if (user.role === 'teacher' && (await this.teachers.idByProfile(user.id)) === lesson.teacher_id) return 'teacher';
     if (user.role === 'assistant' && (await this.queries.assistsLesson(user.id, lesson.id))) return 'assistant';
+    if (user.role === 'sales' && (await this.queries.salesOwnsLesson(user.id, lesson.id))) return 'sales';
     throw new ForbiddenException();
   }
 

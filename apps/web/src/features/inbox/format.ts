@@ -1,5 +1,6 @@
 import { counted, formatPhone, intlLocale, SESSION_WINDOW_MS, type MessageView, type ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { showsPhone, type InboxMode } from './mode';
 import { locale } from '@/lib/locale';
 
 // Display text for the inbox (docs/07 §9, docs/12 §8). DB instants are UTC; times render in the
@@ -26,8 +27,8 @@ export function threadName(th: Pick<ThreadView, 'display_name' | 'phone_e164'>):
 }
 
 /** What the thread is called in this mode: a teacher never sees the number, so an unnamed one says who it is. */
-export function threadTitle(th: ThreadView, mode: 'admin' | 'teacher'): string {
-  if (mode === 'admin') return threadName(th);
+export function threadTitle(th: ThreadView, mode: InboxMode): string {
+  if (showsPhone(mode)) return threadName(th);
   const kind = threadKind(th);
   return th.display_name ?? (kind ? t.inbox.kind[kind] : t.inbox.unknownNumber);
 }

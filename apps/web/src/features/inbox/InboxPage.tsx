@@ -32,7 +32,7 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
   return (
     <>
       <PageHead>
-        <Cartouche>{mode === 'teacher' ? t.nav.conversations : t.inbox.title}</Cartouche>
+        <Cartouche>{mode !== 'admin' ? t.nav.conversations : t.inbox.title}</Cartouche>
         {threads.data && (
           <span className="text-sm text-ink-3 tabular-nums">
             {t.leads.count.replace('{n}', String(threads.data.total))}

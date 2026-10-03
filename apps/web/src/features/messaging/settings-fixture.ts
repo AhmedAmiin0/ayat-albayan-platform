@@ -16,4 +16,5 @@ export const SETTINGS: AcademySettings = {
   messaging_enabled: false,
   auto_messages_enabled: false,
   crm_cutover_done: false,
+  sales_auto_assign: true,
 };
