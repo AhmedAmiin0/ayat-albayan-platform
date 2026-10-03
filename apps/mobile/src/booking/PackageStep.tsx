@@ -1,4 +1,3 @@
-import { PACKAGE_SIZES } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
@@ -7,6 +6,7 @@ import { Button } from '@/ui/Button';
 import { FilterPills } from '@/ui/FilterPills';
 import type { TrialDraft } from './draft';
 import { DurationPills } from './DurationPills';
+import { REGISTRATION_SIZES } from './package-choice';
 
 type Choice = Pick<TrialDraft, 'pkg' | 'durationMin'>;
 
@@ -16,12 +16,9 @@ export interface PackageStepProps {
   onNext: () => void;
 }
 
-/** Trial first (the usual first booking, worded as the form: «حلقة تجريبية مجانية بس»), then the paid sizes. */
+/** The form's five answers, trial first (the usual first booking): «حلقة تجريبية مجانية بس» … 16. */
 const packagePills = () =>
-  PACKAGE_SIZES.map((p) => ({
-    value: p,
-    label: p === 'trial' ? t.booking.packageTrial : t.enums.packageSize[p],
-  }));
+  REGISTRATION_SIZES.map((p) => ({ value: p, label: t.enums.packageSize[p] }));
 
 /**
  * «الباقة» (R-SCH-06), only when the chat's «اشترك» opened the wizard: the trial or a paid
@@ -31,7 +28,7 @@ const packagePills = () =>
 export function PackageStep({ value, onChange, onNext }: PackageStepProps) {
   return (
     <View style={{ gap: 12 }}>
-      <FormLabel>{t.booking.pickPackage}</FormLabel>
+      <FormLabel>{`${t.booking.pickPackage} *`}</FormLabel>
       <FilterPills
         role="radiogroup"
         wrap

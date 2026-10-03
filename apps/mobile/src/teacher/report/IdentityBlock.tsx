@@ -1,4 +1,5 @@
 import { lessonWhenText, packageProgress, teacherName, type ReportFormEntry, type ReportFormLesson } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
@@ -50,31 +51,48 @@ function Row({ label, value, onPress }: { label: string; value: string; onPress?
   );
 }
 
+/** The grey read-only panel the identity rows, and the meeting link, sit in. */
+function Panel({ children, label }: { children: ReactNode; label: string }) {
+  const { color } = useTheme();
+  return (
+    <View
+      accessibilityLabel={label}
+      style={{ gap: 10, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}
+    >
+      {children}
+    </View>
+  );
+}
+
 /**
- * The read-only identity of the report (R-REP-01, issue D1): student, teacher, date in the
- * student's zone, lesson number, program and link come from the lesson, never typed.
+ * The read-only identity of the report (R-REP-01, issue D1), in the form's order: «معرّف الطالب»,
+ * teacher, student, date in the student's zone, lesson number. All come from the lesson, never
+ * typed. «البرنامج» and «الحضور» are questions (ReportEntryCard), then the link (MeetingLink).
  */
 export function IdentityBlock({ lesson, entry }: { lesson: ReportFormLesson; entry: ReportFormEntry }) {
   const { color } = useTheme();
   const { student } = entry;
   const when = `${lessonWhenText(new Date(lesson.starts_at), student.tz, locale)} (${cities[student.tz] ?? ltr(student.tz)})`;
-  const link = lesson.meeting_link;
   return (
-    <View
-      accessibilityLabel={t.reports.identity}
-      style={{ gap: 10, padding: 12, borderRadius: shape.radius.md, backgroundColor: color.sunk }}
-    >
+    <Panel label={t.reports.identity}>
       <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink3 }}>{t.reports.readOnlyHint}</AppText>
-      <Row label={t.reports.student} value={`${student.name} ${ltr(student.code)}`} />
+      <Row label={t.reports.studentId} value={ltr(student.code)} />
       <Row label={t.reports.teacher} value={teacherName(lesson.teacher, locale)} />
+      <Row label={t.reports.student} value={student.name} />
       <Row label={t.reports.date} value={when} />
       <Row label={t.reports.lessonNo} value={lessonNo(entry)} />
-      <Row label={t.reports.program} value={t.enums.program[student.program]} />
-      {link ? (
-        <Row label={t.reports.link} value={ltr(link.replace(/^https?:\/\//, ''))} onPress={() => void Linking.openURL(link)} />
-      ) : (
-        <Row label={t.reports.link} value={t.lessons.noLink} />
-      )}
-    </View>
+    </Panel>
+  );
+}
+
+/** «رابط الاجتماع»: the lesson's link (it opens), read-only; after «الحضور» as on the form. */
+export function MeetingLink({ lesson }: { lesson: ReportFormLesson }) {
+  const link = lesson.meeting_link;
+  const open = link ? () => void Linking.openURL(link) : undefined;
+  const shown = link ? ltr(link.replace(/^https?:\/\//, '')) : t.lessons.noLink;
+  return (
+    <Panel label={t.reports.link}>
+      <Row label={t.reports.link} value={shown} onPress={open} />
+    </Panel>
   );
 }

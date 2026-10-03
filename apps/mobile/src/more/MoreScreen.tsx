@@ -27,6 +27,7 @@ export function MoreScreen() {
       <View style={{ marginHorizontal: -16 }}>
         <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />
         <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />
+        <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />
         <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />
       </View>
       <AppearancePicker />

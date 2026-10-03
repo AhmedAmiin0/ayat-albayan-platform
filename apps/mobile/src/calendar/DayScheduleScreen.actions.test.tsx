@@ -58,8 +58,11 @@ test('«غيّر الميعاد» opens the reschedule sheet over «الجدول
   );
 });
 
-test('a held lesson has no actions', async () => {
+test('a held lesson has no confirm / cancel / reschedule, only «ابعت طلب الرأي»', async () => {
   await renderWithQuery(<DayScheduleScreen />);
   await screen.findByText('جودى خالد');
-  expect(screen.queryByRole('button', { name: new RegExp(`— جودى خالد$`) })).toBeNull();
+  for (const label of [t.today.confirm, t.today.cancel, t.lessons.rescheduleSubmit]) {
+    expect(screen.queryByRole('button', { name: `${label} — جودى خالد` })).toBeNull();
+  }
+  expect(screen.getByRole('button', { name: t.mobile.feedback.sendFor.replace('{name}', 'جودى خالد') })).toBeTruthy();
 });

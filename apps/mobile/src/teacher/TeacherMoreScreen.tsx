@@ -21,6 +21,7 @@ export function TeacherMoreScreen() {
       <ScreenHeader title={t.mobile.more} subtitle={me.data?.display_name_ar} />
       <View style={{ marginHorizontal: -16 }}>
         <ListRow title={t.teacherNav.payouts} onPress={() => router.push('/teacher/more/payouts')} />
+        <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/teacher/more/feedback')} />
         <ListRow title={t.availability.title} onPress={() => router.push('/teacher/more/availability')} />
       </View>
       <AppearancePicker />

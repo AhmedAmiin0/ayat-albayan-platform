@@ -63,7 +63,7 @@ test('a lead from the chat (no inbox list cached) books a package: weekly days, 
   expect(screen.getByRole('checkbox', { name: 'الأحد', checked: true })).toBeTruthy();
   await press('checkbox', 'الأحد'); // the first lesson's day cannot be dropped
   await press('checkbox', 'الثلاثاء');
-  expect(screen.getByText(`${t.booking.pickDays} · ${t.booking.perWeek.two}`)).toBeTruthy();
+  expect(screen.getByText(`${t.booking.pickDays} * · ${t.booking.perWeek.two}`)).toBeTruthy();
   expect(screen.queryByText(t.booking.trialFree)).toBeNull();
 
   mockApiSend.mockResolvedValue(booked(SUN_17));
@@ -101,7 +101,7 @@ test('the trial is still offered there; a lead past its trial shows converted af
   await fireEvent.changeText(screen.getByLabelText(t.leads.studentName), 'يوسف');
   await press('button', t.booking.next);
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
-  await press('radio', t.booking.packageTrial);
+  await press('radio', t.enums.packageSize.trial);
   expect(screen.getByText(t.booking.trialFree)).toBeTruthy();
   // A trial takes the form's «المده» too, 45 by default.
   expect(screen.getByRole('radio', { name: t.enums.duration['45'], checked: true })).toBeTruthy();

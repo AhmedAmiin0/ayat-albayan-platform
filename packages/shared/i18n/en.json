@@ -62,7 +62,41 @@
       }
     },
     "call": "Call",
-    "whatsapp": "WhatsApp"
+    "whatsapp": "WhatsApp",
+    "feedback": {
+      "title": "Your feedback",
+      "teacher": "Teacher name",
+      "average": "Average rating",
+      "averageLine": "{avg} out of 5 · {n} responses",
+      "recommendLine": "{pct}% would recommend us",
+      "empty": "No feedback yet",
+      "emptyHint": "As soon as a parent answers a feedback request, it shows up here.",
+      "pending": "Not answered yet",
+      "rating": "How would you rate the lesson?",
+      "ratingValue": "{n} out of 5",
+      "recommend": "Would you recommend the academy to a friend or relative?",
+      "note": "Comment or suggestion",
+      "contact": "WhatsApp number for follow-up",
+      "kindLabel": "Lesson type",
+      "kind": {
+        "trial": "Free trial lesson",
+        "subscription": "Part of the monthly subscription"
+      },
+      "answer": {
+        "yes": "Yes",
+        "maybe": "Maybe",
+        "no": "No"
+      },
+      "send": "Send feedback request",
+      "sendFor": "Send feedback request — {name}",
+      "sending": "Sending…",
+      "sent": "Sent",
+      "error": {
+        "template_not_approved": "The feedback message is not approved by WhatsApp yet, try again later",
+        "already_submitted": "The parent already answered this request",
+        "lesson_not_completed": "A feedback request is sent after the lesson is finished"
+      }
+    }
   },
   "common": {
     "loading": "Loading…",
@@ -943,7 +977,10 @@
     "submittedTitle": "Sent reports",
     "noSubmitted": "No sent reports yet",
     "mobileAttachHint": "From the phone you can add photos only; PDFs and voice notes from the website",
-    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online"
+    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online",
+    "studentId": "Student ID (do not edit)",
+    "detailTitle": "Detailed assessment",
+    "notesTitle": "Notes and homework"
   },
   "subscriptions": {
     "title": "Subscriptions",

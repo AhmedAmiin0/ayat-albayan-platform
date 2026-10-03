@@ -1,4 +1,4 @@
-import { GENDERS, LEAD_SOURCES, TZ_OPTIONS, type Gender, type LeadSource } from '@ab/shared';
+import type { Gender, LeadSource } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
@@ -7,10 +7,10 @@ import { Note } from '@/more/Note';
 import { FormLabel } from '@/payments/FormLabel';
 import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
-import { FilterPills, type FilterPill } from '@/ui/FilterPills';
+import { FilterPills } from '@/ui/FilterPills';
+import { GENDER_PILLS, sourcePills, TZ_PILLS } from './contact-pills';
 import { ageValid, contactReady, phoneProblem, type TrialDraft } from './draft';
 import { DurationPills } from './DurationPills';
-import { cityOf } from './slots';
 
 type Contact = Pick<
   TrialDraft,
@@ -32,22 +32,12 @@ export interface ContactStepProps {
   onNext: () => void;
 }
 
-const NONE = { value: '', label: t.common.unset } as const;
-const TZ_PILLS = TZ_OPTIONS.map((tz) => ({ value: tz as string, label: cityOf(tz) }));
-const GENDER_PILLS: FilterPill<Gender | ''>[] = [
-  NONE,
-  ...GENDERS.map((g) => ({ value: g, label: t.enums.gender[g] })),
-];
-const SOURCE_PILLS: FilterPill<LeadSource | ''>[] = [
-  NONE,
-  ...LEAD_SOURCES.map((s) => ({ value: s, label: t.enums.leadSource[s] })),
-];
-
 /**
- * Step 1 «الطالب» (R-LEAD-06), the registration form's questions in its words: «اسم الطالب», «سن
- * الطالب», «النوع», the parent's name, «رقم الواتساب (مع كود الدولة)» with the form's help (prefilled
- * from the lead, checked by normalizePhone, rule 7), the family's zone (picked, never typed),
- * «مدة الحلقة» for a trial, and «عرفت عننا منين؟» (prefilled from the lead's source).
+ * Step 1 «الطالب» (R-LEAD-06), the registration form's questions in its order and words: «اسم
+ * الطالب», «رقم الواتساب (مع كود الدولة) *» with the form's help (prefilled from the lead, checked
+ * by normalizePhone, rule 7), the parent's name, «سن الطالب», «النوع», «المده» for a trial and
+ * «عرفت عننا منين؟» (prefilled from the lead). The family's zone stays a pick, never typed: the
+ * slot clock and the rule's zone depend on it. Required ones carry «*».
  */
 export function ContactStep({ value, withDuration, onChange, onNext }: ContactStepProps) {
   const [tried, setTried] = useState(false);
@@ -70,10 +60,31 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
       <FormLabel>{t.booking.fromLead}</FormLabel>
       <Field
         label={t.leads.studentName}
+        required
         value={value.studentName}
         onChangeText={(studentName) => onChange({ studentName })}
       />
       {required(value.studentName)}
+      <Field
+        label={t.guardians.phone}
+        required
+        accessibilityHint={t.guardians.phoneHint}
+        ltr
+        keyboardType="phone-pad"
+        value={value.phone}
+        onChangeText={(text) => onChange({ phone: text })}
+      />
+      <Note>{t.guardians.phoneHint}</Note>
+      {(tried || value.phone.trim()) && phone ? (
+        <ErrorLine message={t.common.phoneErrors[phone]} />
+      ) : null}
+      <Field
+        label={t.guardians.name}
+        required
+        value={value.guardianName}
+        onChangeText={(guardianName) => onChange({ guardianName })}
+      />
+      {required(value.guardianName)}
       <Field
         label={t.leads.studentAge}
         ltr
@@ -85,7 +96,7 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
       {ageValid(value.age) ? null : <ErrorLine message={t.students.ageInvalid} />}
       {group(
         t.students.gender,
-        <FilterPills
+        <FilterPills<Gender | ''>
           role="radiogroup"
           wrap
           accessibilityLabel={t.students.gender}
@@ -94,24 +105,6 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
           onChange={(g) => onChange({ studentGender: g || null })}
         />,
       )}
-      <Field
-        label={t.guardians.name}
-        value={value.guardianName}
-        onChangeText={(guardianName) => onChange({ guardianName })}
-      />
-      {required(value.guardianName)}
-      <Field
-        label={t.guardians.phone}
-        accessibilityHint={t.guardians.phoneHint}
-        ltr
-        keyboardType="phone-pad"
-        value={value.phone}
-        onChangeText={(text) => onChange({ phone: text })}
-      />
-      <Note>{t.guardians.phoneHint}</Note>
-      {(tried || value.phone.trim()) && phone ? (
-        <ErrorLine message={t.common.phoneErrors[phone]} />
-      ) : null}
       {group(
         t.students.tz,
         <FilterPills
@@ -131,11 +124,11 @@ export function ContactStep({ value, withDuration, onChange, onNext }: ContactSt
       ) : null}
       {group(
         t.guardians.source,
-        <FilterPills
+        <FilterPills<LeadSource | ''>
           role="radiogroup"
           wrap
           accessibilityLabel={t.guardians.source}
-          items={SOURCE_PILLS}
+          items={sourcePills(value.source)}
           value={value.source ?? ''}
           onChange={(s) => onChange({ source: s || null })}
         />,
