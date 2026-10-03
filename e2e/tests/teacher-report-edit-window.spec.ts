@@ -1,3 +1,4 @@
+import { REPORT_RUBRICS } from '@ab/shared';
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { API, bearer } from '../support/messages';
@@ -79,7 +80,14 @@ test.describe('teacher report edit window (R-REP-02/04)', () => {
 
     const res = await teacher.request.post(`${API}/reports/${row.id}/submit`, {
       headers: await bearer(teacher),
-      data: { attendance: 'on_time', expectedVersion: 1, homework: 'متأخر' },
+      data: {
+        attendance: 'on_time',
+        expectedVersion: 1,
+        grades: Object.fromEntries(REPORT_RUBRICS.map((r) => [r, 'very_good'])),
+        overall: 'very_good',
+        ...TEXTS,
+        homework: 'متأخر',
+      },
     });
     expect(res.status()).toBe(409);
     expect(await res.json()).toMatchObject({ code: 'edit_window_closed' });

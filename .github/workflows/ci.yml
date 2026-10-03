@@ -49,7 +49,7 @@ jobs:
           cache: pnpm
       - run: pnpm i --frozen-lockfile
       - name: Start local Supabase
-        run: pnpm supabase start -x studio,imgproxy,inbucket,edge-runtime,logflare,vector
+        run: pnpm supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
       - run: pnpm env:local
       - name: Playwright version
         id: pw
