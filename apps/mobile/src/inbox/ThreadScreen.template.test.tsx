@@ -90,8 +90,9 @@ test('the lesson time is picked, never typed (rule 6); the send carries the less
     lessonId: 'l-1',
   });
   await waitFor(() => expect(screen.queryByLabelText(labels.lesson_time)).toBeNull());
-  expect(screen.getByText(t.inbox.templateLine.replace('{name}', names.lesson_reminder_plain))).toBeTruthy();
-  expect(screen.getByText('حلقة سهيلة النهاردة — 17:00')).toBeTruthy();
+  // The sent row lands through the virtualized list a render later: wait for it, don't read at once.
+  expect(await screen.findByText(t.inbox.templateLine.replace('{name}', names.lesson_reminder_plain))).toBeTruthy();
+  expect(await screen.findByText('حلقة سهيلة النهاردة — 17:00')).toBeTruthy();
 });
 
 test('a template with a meeting link also needs its code', async () => {
