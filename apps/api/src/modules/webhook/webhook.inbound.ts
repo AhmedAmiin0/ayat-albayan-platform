@@ -59,6 +59,16 @@ export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): Table
   };
 }
 
+/**
+ * Meta's timestamps are whole seconds: two messages in the same second would tie and the thread
+ * (and its list preview) could show them in either order. Kept as Meta's time, except that a
+ * message landing in a second that already holds an equal or later one goes 1 ms after it.
+ */
+export function orderedAt(at: Date, latestInSecond: Date | null): Date {
+  if (!latestInSecond || latestInSecond.getTime() < at.getTime()) return at;
+  return new Date(latestInSecond.getTime() + 1);
+}
+
 const MEDIA_LABELS: Record<string, string> = ar.inbox.media;
 
 /** Push text: what they wrote, else «بعت صورة» / «بعت رسالة صوتية» / … */
