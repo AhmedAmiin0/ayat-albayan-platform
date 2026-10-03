@@ -2213,7 +2213,7 @@
       "readOnly": "View-only board",
       "color": "Colour: {name}",
       "colors": {
-        "ink": "Black",
+        "ink": "Ink",
         "lapis": "Green",
         "cinnabar": "Red",
         "saffron": "Orange",
