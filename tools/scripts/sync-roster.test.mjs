@@ -40,3 +40,9 @@ test('أسماء حسين: علياء Sun/Mon/Tue 3 pm, أمل Sun/Tue/Thu 11 am
   assert.match(sql, /'أمل جاسم',\s+'\{0,2,4\}',\s+'11:00'/);
   assert.match(sql, /'ثمراء الحامد',\s+'\{3\}',\s+'11:00'/);
 });
+
+test('answers "am I missing a subscribed student": active or scheduled students off the roster, any teacher', () => {
+  assert.match(sql, /STEP 3c/);
+  assert.match(code, /roster name\(s\) were NOT found/);
+  assert.equal(/\bdelete\s+from\b/i.test(code), false);
+});

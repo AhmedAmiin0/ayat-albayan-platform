@@ -135,6 +135,37 @@ begin
   if k = 0 then raise notice '  (none)'; end if;
 end $$;
 
+-- STEP 3c: "am I missing a subscribed student?" Every student in the whole system who is 'active' or has an
+-- active schedule rule, whatever the teacher, and is NOT on the roster. A teacher you have not listed yet
+-- (شيماء, حسن, ...) shows up here with her students: send their names and they go on the roster.
+do $$
+declare r record; k int := 0;
+begin
+  raise notice '== STEP 3c: active students / active rules NOT on the roster (all teachers) ==';
+  for r in
+    select s.code, s.name, s.status,
+           coalesce((select string_agg(distinct t.display_name_ar, ', ')
+                       from public.schedule_rule_students rs
+                       join public.schedule_rules sr on sr.id = rs.rule_id and sr.status = 'active'
+                       join public.teachers t on t.id = sr.teacher_id
+                      where rs.student_id = s.id),
+                    (select t2.display_name_ar from public.teachers t2 where t2.id = s.teacher_id), '-') as teacher,
+           (select count(*) from public.schedule_rule_students rs join public.schedule_rules sr on sr.id = rs.rule_id
+             where rs.student_id = s.id and sr.status = 'active') as active_rules
+    from public.students s
+    where s.id not in (select student_id from roster_pick where student_id is not null)
+      and (s.status = 'active' or exists (
+            select 1 from public.schedule_rule_students rs join public.schedule_rules sr on sr.id = rs.rule_id
+             where rs.student_id = s.id and sr.status = 'active'))
+    order by teacher, s.name
+  loop
+    k := k + 1;
+    raise notice '  % % [%] teacher: % (% active rule(s))', r.code, r.name, r.status, r.teacher, r.active_rules;
+  end loop;
+  raise notice '  -> % student(s) are subscribed or scheduled but not on the roster', k;
+  raise notice '  -> % roster name(s) were NOT found in the database (see STEP 1)', (select count(*) from roster_pick where n = 0);
+end $$;
+
 -- STEP 3b: the matched students' current rules vs the roster (read-only; schedules are changed in the app).
 do $$
 declare r record;
