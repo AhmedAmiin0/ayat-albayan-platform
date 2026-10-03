@@ -75,7 +75,7 @@ test('a 409 clash keeps the wizard on its step; another slot then books', async 
 
   // Meanwhile Sunday went; Monday 19:00 is free.
   slots.slots = [slot(SUN_17, true), slot('2026-10-05T16:00:00.000Z')];
-  await fireEvent.press(screen.getByRole('button', { name: t.booking.pickAnother }));
+  await fireEvent.press(screen.getByRole('button', { name: t.booking.changeSlot }));
   await fireEvent.press(await screen.findByRole('button', { name: /^19:00/ }));
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.submit }));
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();
