@@ -24,3 +24,6 @@ tools/*.xlsx
 .playwright-mcp/
 tools/migrate/cache/
 tools/migrate/out/
+
+# Firebase client config (EAS file secret GOOGLE_SERVICES_JSON)
+apps/mobile/google-services.json
