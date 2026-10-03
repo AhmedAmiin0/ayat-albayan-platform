@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { FlatList, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { egp } from '@/earnings/format';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
@@ -29,6 +30,9 @@ function PayoutCard({ payout }: { payout: PayoutView }) {
       {breakdownLines(payout).map((line) => (
         <Note key={line}>{line}</Note>
       ))}
+      {payout.ledger_paid ? (
+        <Note>{t.earnings.ledgerPaid.replace('{amount}', egp(payout.ledger_paid))}</Note>
+      ) : null}
       {when ? <Note>{when}</Note> : null}
     </View>
   );
