@@ -13,14 +13,18 @@ export interface LessonActionsProps {
   onCancel: () => void;
   /** Opens the reschedule sheet. */
   onReschedule: () => void;
+  /** «عدّل الوقت» (R-SCH-11): the lesson allows an in-place edit. */
+  canEditTime?: boolean;
+  /** Opens the edit sheet. */
+  onEditTime?: () => void;
 }
 
 /**
  * A Today card's actions (docs/07 §12): [إلغاء secondary][تأكيد primary] at 44pt, and «غيّر
- * الميعاد» as a quiet lapis action under them. Only the ones the card allows show.
+ * الميعاد» and «عدّل الوقت» as quiet lapis actions under them. Only the ones the card allows show.
  */
 export function LessonActions(p: LessonActionsProps) {
-  if (!p.canConfirm && !p.canCancel && !p.canMove) return null;
+  if (!p.canConfirm && !p.canCancel && !p.canMove && !p.canEditTime) return null;
   return (
     <View style={{ gap: 4 }}>
       {p.canConfirm || p.canCancel ? (
@@ -37,8 +41,15 @@ export function LessonActions(p: LessonActionsProps) {
           ) : null}
         </View>
       ) : null}
-      {p.canMove ? (
-        <Button variant="ghost" label={t.lessons.rescheduleSubmit} onPress={p.onReschedule} busy={p.busy} />
+      {p.canMove || p.canEditTime ? (
+        <View style={{ flexDirection: 'row', flexWrap: 'wrap', alignSelf: 'flex-start', gap: 8 }}>
+          {p.canMove ? (
+            <Button variant="ghost" label={t.lessons.rescheduleSubmit} onPress={p.onReschedule} busy={p.busy} />
+          ) : null}
+          {p.canEditTime ? (
+            <Button variant="ghost" label={t.editTime.action} onPress={() => p.onEditTime?.()} busy={p.busy} />
+          ) : null}
+        </View>
       ) : null}
     </View>
   );

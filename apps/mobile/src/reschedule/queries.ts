@@ -12,6 +12,10 @@ export interface RescheduleSlotsParams {
   /** The window (slotWindow): one Riyadh week, never in the past. */
   from: string;
   to: string;
+  /** Grid step in minutes (the edit sheet asks for 15); the API defaults to the duration. */
+  stepMin?: number;
+  /** The lesson being edited in place: not a clash with itself («عدّل الوقت»). */
+  excludeLessonId?: string;
 }
 
 /**
@@ -38,6 +42,8 @@ export function useRescheduleSlots(p: RescheduleSlotsParams) {
     to: p.to,
     durationMin: p.durationMin,
     studentIds: p.studentIds.join(','),
+    stepMin: p.stepMin,
+    excludeLessonId: p.excludeLessonId,
   };
   return useQuery({
     queryKey: [...pathKey('/booking/slots'), params],

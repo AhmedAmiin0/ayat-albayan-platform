@@ -24,6 +24,8 @@ export interface SlotPickerProps {
   onPick: (startsAt: string) => void;
   /** «الحلقة دي وكل اللي بعدها»: only days from the lesson's own day (the API refuses earlier). */
   fromLessonDay?: boolean;
+  /** «عدّل الوقت»: 15-minute starts, the lesson itself not counted as busy (useRescheduleSlots). */
+  edit?: { stepMin: number; excludeLessonId: string };
 }
 
 /**
@@ -39,6 +41,7 @@ export function SlotPicker({
   value,
   onPick,
   fromLessonDay,
+  edit,
 }: SlotPickerProps) {
   const { color } = useTheme();
   const [now] = useState(() => new Date());
@@ -52,6 +55,7 @@ export function SlotPicker({
     durationMin,
     studentIds: lesson.students.map((s) => s.id),
     ...slotWindow(week, now),
+    ...edit,
   });
   const notBefore = fromLessonDay ? localDate(new Date(lesson.starts_at), tz) : '';
   const note = {

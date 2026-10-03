@@ -2,6 +2,7 @@ import { RIYADH_TZ, teacherName, type LessonView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { FlatList } from 'react-native';
+import { EditTimeSheet } from '@/edit-time/EditTimeSheet';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { Note } from '@/more/Note';
@@ -21,7 +22,7 @@ import { addDays, riyadhToday, weekLabel, weekStart, weekWindow } from './week';
  * «جدول المعلم/ة» (R-TCH-02, R-SCH-01): one teacher's week, السبت → الجمعة, as a day-by-day agenda
  * in Riyadh time with the teacher's own clock beside it when it differs, and each day's
  * availability as a faint line. ‹ › moves a week; a lesson's «غيّر الميعاد» opens the reschedule
- * sheet. Pull to refresh; offline the saved week stays with its «آخر تحديث».
+ * sheet and «عدّل الوقت» the in-place edit sheet. Pull to refresh; offline the saved week stays with its «آخر تحديث».
  */
 export function TeacherCalendarScreen() {
   const { id = '' } = useLocalSearchParams<{ id: string }>();
@@ -31,6 +32,7 @@ export function TeacherCalendarScreen() {
   const teacher = useTeacher(id);
   const grid = useAvailability(id);
   const [moving, setMoving] = useState<LessonView | null>(null);
+  const [editing, setEditing] = useState<LessonView | null>(null);
   const loaded = lessons.data !== undefined;
   const days = agendaDays(lessons.data ?? [], start);
   const empty = days.every((d) => d.lessons.length === 0);
@@ -65,6 +67,7 @@ export function TeacherCalendarScreen() {
             today={item.date === today}
             available={availabilityLine(grid.data ?? [], item.date, teacher.data?.tz ?? RIYADH_TZ)}
             onReschedule={setMoving}
+            onEditTime={setEditing}
           />
         )}
         refreshing={lessons.isRefetching}
@@ -76,6 +79,7 @@ export function TeacherCalendarScreen() {
         ListEmptyComponent={lessons.isPending ? <Note>{t.common.loading}</Note> : <ErrorState onRetry={() => void lessons.refetch()} />}
       />
       <RescheduleSheet lesson={moving} onClose={() => setMoving(null)} />
+      <EditTimeSheet lesson={editing} onClose={() => setEditing(null)} />
     </Screen>
   );
 }
