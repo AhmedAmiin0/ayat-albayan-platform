@@ -1,5 +1,5 @@
 -- sync-roster.sql — compares the academy's latest schedule/report ("who is subscribed, with whom, when")
--- with the database, for the teachers أبرار, ربيعة and هند. The roster below is the owner's list of
+-- with the database, for the teachers أبرار, ربيعة, هند and أسماء حسين. The roster below is the owner's list of
 -- 2026-10-03: a student on it is SUBSCRIBED, a student of these teachers who is not on it is not.
 --
 -- WHAT IT DOES (one transaction, ends with ROLLBACK; read the output, then change the LAST line to COMMIT):
@@ -38,7 +38,10 @@ insert into roster values
   ('هند',   'أم مشاري',    '{6,2}',     '18:15',        null),
   ('هند',   'أم أحمد',     '{0,2}',     '16:00',        null),
   ('هند',   'رغد',         '{1,3}',     '11:00',        null),
-  ('هند',   'ماريا',       '{0,3}',     '16:00 or 21:00', null);
+  ('هند',   'ماريا',       '{0,3}',     '16:00 or 21:00', null),
+  ('أسماء حسين', 'علياء المحمدي', '{0,1,2}', '15:00',      null),
+  ('أسماء حسين', 'أمل جاسم',   '{0,2,4}',   '11:00',        null),
+  ('أسماء حسين', 'ثمراء الحامد', '{3}',     '11:00',        null);
 
 -- a roster row gets a number so every report can say which one it talks about
 alter table roster add column rn serial;
