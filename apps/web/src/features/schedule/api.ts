@@ -2,6 +2,7 @@ import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsRespo
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import type { LessonTimeEdit, TimeEditResult } from './edit-time.contract';
 
 // Phase 2 lesson routes (docs/10 §5). Commands camelCase, responses LessonView rows.
 
@@ -60,7 +61,11 @@ export const cancelLesson = ({ id, body }: { id: string; body: CancelRequest }) 
 export const rescheduleLesson = ({ id, body }: { id: string; body: RescheduleRequest }) =>
   apiSend<LessonView>('POST', `/lessons/${id}/reschedule`, body);
 
-/** GET /lesson-proposals — lessons with a teacher's pending «اقترح ميعاد تاني» (R-SCH-08). */
+/** PATCH /lessons/:id/time «عدّل الوقت» (R-SCH-11): the same lesson, new start and length. Admin only. */
+export const editLessonTime = ({ id, body }: { id: string; body: LessonTimeEdit }) =>
+  apiSend<TimeEditResult>('PATCH', `/lessons/${id}/time`, body);
+
+/** GET /lesson-proposals —lessons with a teacher's pending «اقترح ميعاد تاني» (R-SCH-08). */
 export const proposalsQuery = queryOptions({
   queryKey: [...LESSONS_KEY, 'proposals'],
   queryFn: () => apiFetch<LessonView[]>('/lesson-proposals'),
