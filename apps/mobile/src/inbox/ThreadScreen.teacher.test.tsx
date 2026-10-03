@@ -2,7 +2,7 @@ import type { ThreadPeople } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { detail, failed, inbound, message, thread } from './thread-fixtures';
+import { detail, failed, inbound, message, NOW, thread } from './thread-fixtures';
 import { ThreadModeProvider } from './thread-mode';
 import { ThreadScreen } from './ThreadScreen';
 
@@ -34,7 +34,10 @@ function render() {
   );
 }
 
+// Only Date is faked: the fixtures' last inbound message is NOW - 1 h, so the 24 h session window
+// stays open whatever day the suite runs (it failed in CI once the real clock passed it).
 beforeEach(() => {
+  jest.useFakeTimers({ now: NOW, doNotFake: ['setTimeout', 'clearTimeout', 'setInterval', 'clearInterval', 'setImmediate', 'clearImmediate', 'nextTick', 'queueMicrotask', 'requestAnimationFrame', 'cancelAnimationFrame', 'performance'] });
   mockApiFetch.mockReset();
   mockReplace.mockReset();
 });
@@ -62,3 +65,5 @@ test('her own chat with the academy is read-only: the note, no composer', async 
   expect(screen.queryByLabelText(t.inbox.composer.placeholder)).toBeNull();
   expect(screen.queryByText(t.inbox.composer.sendTemplate)).toBeNull();
 });
+
+afterEach(() => jest.useRealTimers());
