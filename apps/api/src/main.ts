@@ -3,6 +3,7 @@ import { NestFactory } from '@nestjs/core';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { AppModule } from './app.module';
 import { loadEnv } from './env';
+import { registerLivekitWebhookParser } from './modules/classroom/livekit-webhook.controller';
 import { setupOpenApi } from './openapi';
 
 async function bootstrap(): Promise<void> {
@@ -13,6 +14,8 @@ async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter({ trustProxy: 1 }), {
     rawBody: true,
   });
+  // LiveKit posts application/webhook+json (POST /livekit/webhook), kept as raw bytes for its signature.
+  registerLivekitWebhookParser(app);
   app.enableCors({ origin: env.WEB_ORIGIN.split(',') });
   setupOpenApi(app);
   await app.listen(env.PORT, '0.0.0.0');

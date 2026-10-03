@@ -95,6 +95,117 @@ export type Database = {
         };
         Relationships: [];
       };
+      classroom_blocks: {
+        Row: {
+          blocked_by: string | null;
+          created_at: string;
+          id: string;
+          join_link_id: string | null;
+          lesson_id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          blocked_by?: string | null;
+          created_at?: string;
+          id?: string;
+          join_link_id?: string | null;
+          lesson_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          blocked_by?: string | null;
+          created_at?: string;
+          id?: string;
+          join_link_id?: string | null;
+          lesson_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'classroom_blocks_blocked_by_fkey';
+            columns: ['blocked_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_blocks_join_link_id_fkey';
+            columns: ['join_link_id'];
+            isOneToOne: false;
+            referencedRelation: 'lesson_join_links';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_blocks_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_blocks_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      classroom_participants: {
+        Row: {
+          id: string;
+          identity: string;
+          join_link_id: string | null;
+          joined_at: string;
+          lesson_id: string;
+          name: string;
+          role: string;
+          user_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          identity: string;
+          join_link_id?: string | null;
+          joined_at?: string;
+          lesson_id: string;
+          name: string;
+          role: string;
+          user_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          identity?: string;
+          join_link_id?: string | null;
+          joined_at?: string;
+          lesson_id?: string;
+          name?: string;
+          role?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'classroom_participants_join_link_id_fkey';
+            columns: ['join_link_id'];
+            isOneToOne: false;
+            referencedRelation: 'lesson_join_links';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_participants_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_participants_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       expenses: {
         Row: {
           amount: number;
@@ -733,6 +844,47 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_threads';
             referencedColumns: ['teacher_id'];
+          },
+        ];
+      };
+      lesson_recordings: {
+        Row: {
+          egress_id: string | null;
+          ended_at: string | null;
+          error: string | null;
+          file_path: string;
+          id: string;
+          lesson_id: string;
+          started_at: string;
+          status: string;
+        };
+        Insert: {
+          egress_id?: string | null;
+          ended_at?: string | null;
+          error?: string | null;
+          file_path: string;
+          id?: string;
+          lesson_id: string;
+          started_at?: string;
+          status?: string;
+        };
+        Update: {
+          egress_id?: string | null;
+          ended_at?: string | null;
+          error?: string | null;
+          file_path?: string;
+          id?: string;
+          lesson_id?: string;
+          started_at?: string;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_recordings_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
           },
         ];
       };

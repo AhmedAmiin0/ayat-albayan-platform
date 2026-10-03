@@ -42,7 +42,7 @@ describe('storage paths (migration 122 policies parse these)', () => {
 
   it('wa-media cache: {message_id}.{ext}; the buckets are named once', () => {
     expect(waMediaPath({ messageId: 'm1', mime: 'image/webp' })).toBe('m1.webp');
-    expect(BUCKETS).toMatchObject({ invoices: 'invoices', waMedia: 'wa-media' });
+    expect(BUCKETS).toMatchObject({ invoices: 'invoices', waMedia: 'wa-media', recordings: 'recordings' });
   });
 
   it('every accepted mime has a real extension', () => {

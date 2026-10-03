@@ -1,5 +1,5 @@
 import { createHmac, randomBytes } from 'node:crypto';
-import type { JoinRole } from '@ab/shared';
+import { participantMeta, type JoinRole } from '@ab/shared';
 import type { LivekitEnv } from '../../env';
 
 // LiveKit join tokens are plain HS256 JWTs (tools/livekit/token-server.mjs is the reference), so
@@ -46,18 +46,44 @@ export interface TokenInput {
 
 const b64 = (o: object): string => Buffer.from(JSON.stringify(o)).toString('base64url');
 
+/** HS256 over `claims`, signed with the API secret (join, server and webhook tokens alike). */
+export function signJwt(secret: string, claims: object): string {
+  const head = b64({ alg: 'HS256', typ: 'JWT' });
+  const body = b64(claims);
+  const sig = createHmac('sha256', secret).update(`${head}.${body}`).digest('base64url');
+  return `${head}.${body}.${sig}`;
+}
+
+/**
+ * A join token. `metadata` (participant.metadata in the room) carries the role, so every client
+ * knows who may remove whom (participantMeta, @ab/shared).
+ */
 export function mintToken(cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>, input: TokenInput, now: Date): string {
   const ttl = Math.min(Math.max(input.ttlSeconds ?? TOKEN_TTL_S, MIN_TTL_S), TOKEN_TTL_S);
   const nowS = Math.floor(now.getTime() / 1000);
-  const head = b64({ alg: 'HS256', typ: 'JWT' });
-  const body = b64({
+  return signJwt(cfg.apiSecret, {
     iss: cfg.apiKey,
     sub: input.identity,
     name: input.name,
+    metadata: participantMeta(input.role),
     nbf: nowS - SKEW_S,
     exp: nowS + ttl,
     video: grantsFor(input.role, input.room),
   });
-  const sig = createHmac('sha256', cfg.apiSecret).update(`${head}.${body}`).digest('base64url');
-  return `${head}.${body}.${sig}`;
+}
+
+/** The video grant of a server-to-server call (RoomService, Egress), never given to a client. */
+export interface ServerGrant {
+  room?: string;
+  roomAdmin?: boolean;
+  roomCreate?: boolean;
+  roomRecord?: boolean;
+}
+
+const SERVER_TTL_S = 600;
+
+/** A short-lived token for one Twirp call of the API to LiveKit (the Authorization: Bearer). */
+export function mintServerToken(cfg: Pick<LivekitEnv, 'apiKey' | 'apiSecret'>, grant: ServerGrant, now: Date): string {
+  const nowS = Math.floor(now.getTime() / 1000);
+  return signJwt(cfg.apiSecret, { iss: cfg.apiKey, sub: 'ab-api', nbf: nowS - SKEW_S, exp: nowS + SERVER_TTL_S, video: grant });
 }
