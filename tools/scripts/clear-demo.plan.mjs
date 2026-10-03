@@ -37,6 +37,8 @@ export const SET_NULL_DEPENDENTS = [
 export const DELETE_ORDER = [
   'job_applicants',
   'leads',
+  // Assistant assignments of the demo students only (migration 181); the assistants' logins stay.
+  'student_assistants',
   'students',
   'guardians',
   'teacher_time_off',
