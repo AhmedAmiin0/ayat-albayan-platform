@@ -1,4 +1,6 @@
 import { DisconnectReason, Room, RoomEvent, type Participant, type Track } from 'livekit-client';
+import { boardSharer } from './livekit-board-share';
+import { listenData, sendData } from './livekit-data';
 import { attachTrack } from './media-attach';
 import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from './room-types';
 import { snapshotOf } from './snapshot';
@@ -14,7 +16,16 @@ const REFRESH: readonly RoomEvent[] = [
   RoomEvent.ParticipantDisconnected,
   RoomEvent.ParticipantNameChanged,
   RoomEvent.AudioPlaybackStatusChanged,
+  RoomEvent.RecordingStatusChanged,
+  RoomEvent.ParticipantMetadataChanged,
 ];
+
+/** Kicked (RemoveParticipant) and opened elsewhere get their own screens; anything else is «خرجت». */
+function closingStatus(reason: DisconnectReason | undefined): RoomStatus {
+  if (reason === DisconnectReason.DUPLICATE_IDENTITY) return 'duplicate';
+  if (reason === DisconnectReason.PARTICIPANT_REMOVED) return 'removed';
+  return 'ended';
+}
 
 /** The real client: one livekit-client Room behind the RoomClient interface (ported from tools/livekit/join.html). */
 export function createLivekitRoom(): RoomClient {
@@ -50,10 +61,9 @@ export function createLivekitRoom(): RoomClient {
     })
     .on(RoomEvent.Reconnecting, () => setStatus('reconnecting'))
     .on(RoomEvent.Reconnected, () => setStatus('connected'))
-    .on(RoomEvent.Disconnected, (reason) => {
-      // The same token opened elsewhere: stay out, rejoining would kick that window back.
-      setStatus(reason === DisconnectReason.DUPLICATE_IDENTITY ? 'duplicate' : 'ended');
-    });
+    // The same token opened elsewhere: stay out, rejoining would kick that window back.
+    .on(RoomEvent.Disconnected, (reason) => setStatus(closingStatus(reason)));
+  const setBoard = boardSharer(room);
 
   const attempt = async (device: MediaFailure['device'], on: () => Promise<unknown>): Promise<MediaFailure[]> => {
     try {
@@ -85,9 +95,16 @@ export function createLivekitRoom(): RoomClient {
     setMic: async (on) => void (await room.localParticipant.setMicrophoneEnabled(on)),
     setCamera: async (on) => void (await room.localParticipant.setCameraEnabled(on)),
     setShare: async (on) => {
+      if (on && last.boardShareOn) await setBoard(null);
       await room.localParticipant.setScreenShareEnabled(on);
       emit();
     },
+    setBoardTrack: async (track) => {
+      await setBoard(track);
+      emit();
+    },
+    sendData: (bytes, opts) => sendData(room, bytes, opts),
+    onData: (listener) => listenData(room, listener),
     startAudio: async () => {
       await room.startAudio();
       emit();

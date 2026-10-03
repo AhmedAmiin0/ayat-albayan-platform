@@ -1,23 +1,23 @@
+import type { ReactNode } from 'react';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import type { TileView } from './room-types';
+import { gridColumns } from './stage';
 import { VideoTile } from './VideoTile';
 
-interface Props {
-  tiles: TileView[];
+export interface TileSlots {
   attach: (tileKey: string, el: HTMLVideoElement) => () => void;
+  /** The corner action of a tile (e.g. «إخراج من الحلقة»), or nothing. */
+  actionFor: (tile: TileView) => ReactNode;
 }
 
-/** Mobile first: one column at 390px, two from 640px, auto-fit above. Logical properties only. */
-export function ParticipantGrid({ tiles, attach }: Props) {
-  const people = tiles.filter((x) => x.kind === 'camera').length;
+/** Nothing shared: the cameras split the space evenly (1 / 2 / 4 / 6 …), sized by the grid's own width. */
+export function ParticipantGrid({ tiles, attach, actionFor }: TileSlots & { tiles: TileView[] }) {
   return (
-    <section aria-label={t.classroom.title} className="grid min-h-0 flex-1 content-start gap-3">
-      <p role="status" className="text-xs text-ink-2">
-        {people > 1 ? t.classroom.participants.replace('{n}', String(people)) : t.classroom.waiting}
-      </p>
-      <ul className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-[repeat(auto-fit,minmax(18rem,1fr))]">
+    <section aria-label={t.classroom.title} className="@container min-h-0 flex-1 overflow-y-auto">
+      <ul className={cn('grid h-full auto-rows-[minmax(10rem,1fr)] gap-2 sm:gap-3', gridColumns(tiles.length))}>
         {tiles.map((tile) => (
-          <VideoTile key={tile.key} tile={tile} attach={attach} />
+          <VideoTile key={tile.key} tile={tile} attach={attach} action={actionFor(tile)} />
         ))}
       </ul>
     </section>

@@ -1,10 +1,13 @@
 import { vi } from 'vitest';
-import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type TileView } from './room-types';
+import { EMPTY_SNAPSHOT, type DataPacketIn, type MediaFailure, type RoomClient, type RoomSnapshot, type TileView } from './room-types';
 
 // Test data only: a RoomClient whose state the test drives (livekit-client does not run in jsdom).
 
 export const tile = (o: Partial<TileView> & { key: string }): TileView => ({
   name: o.key,
+  identity: o.key,
+  role: null,
+  isBoard: false,
   isLocal: false,
   kind: 'camera',
   speaking: false,
@@ -16,6 +19,10 @@ export const tile = (o: Partial<TileView> & { key: string }): TileView => ({
 
 export interface FakeClient extends RoomClient {
   push: (patch: Partial<RoomSnapshot>) => void;
+  /** Delivers a data packet as if another participant sent it. */
+  receive: (packet: DataPacketIn) => void;
+  sendData: ReturnType<typeof vi.fn<RoomClient['sendData']>>;
+  setBoardTrack: ReturnType<typeof vi.fn<RoomClient['setBoardTrack']>>;
   connect: ReturnType<typeof vi.fn<RoomClient['connect']>>;
   disconnect: ReturnType<typeof vi.fn<RoomClient['disconnect']>>;
   setMic: ReturnType<typeof vi.fn<RoomClient['setMic']>>;
@@ -27,6 +34,7 @@ export interface FakeClient extends RoomClient {
 export function fakeClient(initial: Partial<RoomSnapshot> = {}, failures: MediaFailure[] = []): FakeClient {
   let snap: RoomSnapshot = { ...EMPTY_SNAPSHOT, status: 'connected', ...initial };
   const listeners = new Set<(s: RoomSnapshot) => void>();
+  const data = new Set<(p: DataPacketIn) => void>();
   const client: FakeClient = {
     push(patch) {
       snap = { ...snap, ...patch };
@@ -45,6 +53,13 @@ export function fakeClient(initial: Partial<RoomSnapshot> = {}, failures: MediaF
     setShare: vi.fn<RoomClient['setShare']>((on) => Promise.resolve(client.push({ shareOn: on }))),
     startAudio: vi.fn<RoomClient['startAudio']>(() => Promise.resolve(client.push({ canPlayAudio: true }))),
     attachVideo: () => () => undefined,
+    receive: (packet) => data.forEach((l) => l(packet)),
+    sendData: vi.fn<RoomClient['sendData']>(() => Promise.resolve()),
+    onData(l) {
+      data.add(l);
+      return () => void data.delete(l);
+    },
+    setBoardTrack: vi.fn<RoomClient['setBoardTrack']>((track) => Promise.resolve(client.push({ boardShareOn: track !== null }))),
   };
   return client;
 }
