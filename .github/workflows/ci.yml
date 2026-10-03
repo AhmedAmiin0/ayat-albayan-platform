@@ -3,6 +3,8 @@ on:
   push:
     branches: [main, develop]
   pull_request:
+  # Run by hand from the Actions tab (e2e included).
+  workflow_dispatch:
 
 # A new push to the same branch or PR cancels the run it replaces.
 concurrency:
@@ -57,7 +59,9 @@ jobs:
   # not stop the others (fail-fast off), so one run shows every red spec.
   e2e:
     needs: changes
-    if: needs.changes.outputs.e2e == 'true'
+    # e2e is paused (owner's call): it runs only when started by hand, or once the repository variable
+    # RUN_E2E is set to 'true' (Settings → Secrets and variables → Actions → Variables). No code change needed.
+    if: needs.changes.outputs.e2e == 'true' && (github.event_name == 'workflow_dispatch' || vars.RUN_E2E == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
