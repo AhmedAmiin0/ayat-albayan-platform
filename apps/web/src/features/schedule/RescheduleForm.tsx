@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { ByDayPicker } from '@/features/booking/ByDayPicker';
+import { isMakeup } from '@/features/booking/contract';
 import { ruleFromSlot } from '@/features/booking/draft';
 import { pickedText } from '@/features/booking/SlotStep';
 import { t } from '@/lib/i18n';
@@ -48,7 +49,7 @@ export function RescheduleForm({ lesson, onBack, onDone }: RescheduleFormProps) 
   return (
     <section aria-label={t.lessons.rescheduleTitle} className="grid gap-4">
       <h3 className="font-display text-h4 font-bold">{t.lessons.rescheduleTitle}</h3>
-      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null} label={t.lessons.scopeLabelMove} />
+      <ScopeRadios value={scope} onChange={setScope} ruleAllowed={lesson.rule_id !== null && !isMakeup(lesson)} label={t.lessons.scopeLabelMove} />
       <div className="grid gap-1.5">
         <p className="text-xs font-semibold text-ink-2">{t.lessons.newTime}</p>
         <SlotPicker

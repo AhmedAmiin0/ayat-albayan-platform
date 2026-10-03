@@ -37,4 +37,10 @@ describe('searchForStudent', () => {
     expect(searchForStudent(prev, 's1')).toEqual({ studentId: 's1', teacherId: ABRAR.id, startsAt: SLOT });
     expect(searchForStudent({}, 's1')).toEqual({ studentId: 's1' });
   });
+
+  it('the booking type picked before the student rides along, except the default subscription', () => {
+    expect(searchForStudent({}, 's1', 'makeup')).toEqual({ studentId: 's1', kind: 'makeup' });
+    expect(searchForStudent({}, 's1', 'trial')).toEqual({ studentId: 's1', kind: 'trial' });
+    expect(searchForStudent({}, 's1', 'package')).toEqual({ studentId: 's1' });
+  });
 });

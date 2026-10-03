@@ -1,4 +1,5 @@
 import { counted, type BookingResult } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
@@ -6,7 +7,10 @@ import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { RIYADH_TZ, weekStart, zonedParts } from '@/features/schedule/tz';
 import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n';
+import { invoicesQuery } from './api.invoice';
+import type { BookingKind } from './contract';
 import type { PickedStudent } from './draft';
+import { InvoiceButton } from './InvoiceDialog';
 import { pickedText } from './SlotStep';
 
 export interface BookedPanelProps {
@@ -14,6 +18,8 @@ export interface BookedPanelProps {
   teacherId: string;
   /** The family's zone, for the first lesson's local time. */
   tz: string;
+  /** The booking type: a subscription or makeup shows its invoice; a makeup never offers a subscription. */
+  kind?: BookingKind;
   /** A regular package: «اعمل الاشتراك» for this student (R-SUB-01). */
   subscribeFor?: PickedStudent | null;
   /** Booked from a lead: «ارجع للمحادثة» opens their WhatsApp thread. */
@@ -30,17 +36,19 @@ function firstLesson(result: BookingResult) {
  * After POST /booking: what was created, the queued WhatsApp confirmation, the subscription for a
  * regular package, and the way to the week (or back to the chat).
  */
-export function BookedPanel({ result, teacherId, tz, subscribeFor, chatPhone }: BookedPanelProps) {
+export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
   const [dialog, setDialog] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const { first, week } = firstLesson(result);
   const offer = !!subscribeFor && !subscribed;
+  const invoices = useQuery({ ...invoicesQuery({ ruleId: result.rule_id }), enabled: !!kind && kind !== 'trial' });
+  const invoice = invoices.data?.[0];
   return (
     <section aria-labelledby="booked-title" className="grid justify-items-start gap-3 py-2">
       <div role="status">
         <h2 id="booked-title" className="flex items-center gap-2 font-display text-h3 font-bold">
           <NuqtaGlyph shape="fill" className="text-ok" />
-          <span>{t.booking.booked}</span>
+          <span>{kind === 'makeup' ? t.booking.makeup.booked : t.booking.booked}</span>
         </h2>
         {subscribed && <p className="mt-1 font-semibold text-ok">{t.subscriptions.saved}</p>}
       </div>
@@ -60,6 +68,12 @@ export function BookedPanel({ result, teacherId, tz, subscribeFor, chatPhone }: 
         >
           {t.booking.openSchedule}
         </Link>
+        {invoice && <InvoiceButton invoice={invoice} />}
+        {kind === 'package' && subscribed && (
+          <Link to="/admin/payments" className={buttonVariants({ variant: 'secondary' })}>
+            {t.booking.invoice.recordPayment}
+          </Link>
+        )}
         {chatPhone && (
           <Link to="/admin/inbox" search={{ phone: chatPhone, page: 1 }} className={buttonVariants({ variant: 'ghost' })}>
             {t.inbox.subscription.backToChat}

@@ -16,13 +16,17 @@ export interface PackageStepProps {
   onChange: (patch: Partial<Pick<BookingDraft, 'pkg' | 'durationMin' | 'startsAt'>>) => void;
 }
 
-/** The registration form's five options in its order («حلقة تجريبية مجانية بس» first). 20 and 28 stay in the DB, not here. */
-const ORDER = ['trial', '4', '8', '12', '16'] as const satisfies readonly PackageSize[];
+/**
+ * The registration form's paid options in its order. 20 and 28 stay in the DB, not here. The
+ * form's first option «حلقة تجريبية مجانية بس» moved to «نوع الحجز» (R-SCH-10, KindStep).
+ */
+const ORDER = ['4', '8', '12', '16'] as const satisfies readonly PackageSize[];
 
 /**
- * Step 3 (R-SCH-06, docs/08): the lesson length and the package, each package with its catalog
- * price from GET /pricing/quote in the guardian's currency for this length and group size (the
- * client never prices). Before the slot step, so the slot step knows whether to offer repeat days.
+ * Step 3 (R-SCH-06, docs/08): the lesson length and, for a subscription, the package, each with its
+ * catalog price from GET /pricing/quote in the guardian's currency for this length and group size
+ * (the client never prices). A trial picks only the length. Before the slot step, so the slot
+ * step knows whether to offer repeat days.
  */
 export function PackageStep({ draft, onChange }: PackageStepProps) {
   const students = Math.max(1, draft.students.length);
@@ -48,7 +52,11 @@ export function PackageStep({ draft, onChange }: PackageStepProps) {
           )}
         </Field>
       </div>
-      <PackageChoice draft={draft} students={students} onPick={(pkg) => onChange({ pkg })} />
+      {draft.kind === 'trial' ? (
+        <p className="text-sm text-ink-2">{t.booking.trialFree}</p>
+      ) : (
+        <PackageChoice draft={draft} students={students} onPick={(pkg) => onChange({ pkg })} />
+      )}
     </div>
   );
 }

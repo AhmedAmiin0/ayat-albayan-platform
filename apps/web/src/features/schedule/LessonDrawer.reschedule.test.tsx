@@ -20,7 +20,9 @@ const slot = (starts_at: string, busy: boolean) => ({
 });
 
 function renderDrawer() {
-  apiFetch.mockResolvedValue({ teacher_tz: 'Africa/Cairo', step_min: 45, slots: [slot(BUSY, true), slot(FREE, false)] });
+  const slots = { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [slot(BUSY, true), slot(FREE, false)] };
+  // The drawer also asks for the booking's invoice (R-PAY-03): none here.
+  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/invoices') ? [] : slots));
   const onDone = vi.fn();
   const onClose = vi.fn();
   render(
@@ -59,8 +61,9 @@ describe('LessonDrawer reschedule (R-SCH-07, journey 4)', () => {
       .mockResolvedValueOnce(lesson({ id: 'l-2', starts_at: FREE }));
     const { onDone, onClose } = renderDrawer();
     fireEvent.click(screen.getByRole('button', { name: t.lessons.event.reschedule }));
-    expect(apiFetch.mock.calls[0]?.[0]).toContain('/booking/slots?teacherId=t-abrar');
-    expect(apiFetch.mock.calls[0]?.[0]).toContain('durationMin=45&studentIds=s-1');
+    const slotsCall = String(apiFetch.mock.calls.find(([p]) => String(p).startsWith('/booking/slots'))?.[0]);
+    expect(slotsCall).toContain('/booking/slots?teacherId=t-abrar');
+    expect(slotsCall).toContain('durationMin=45&studentIds=s-1');
 
     await pick(t.enums.weekday[1]);
     fireEvent.click(screen.getByRole('button', { name: t.lessons.rescheduleSubmit }));

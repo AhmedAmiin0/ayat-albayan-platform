@@ -5,7 +5,7 @@ export interface RadioChipsProps<V extends string> {
   /** Radio group name (unique per form). */
   name: string;
   legend: string;
-  options: readonly { value: V; label: string }[];
+  options: readonly { value: V; label: string; disabled?: boolean }[];
   value: V | null;
   onChange: (value: V) => void;
   required?: boolean;
@@ -30,6 +30,7 @@ export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
               name={p.name}
               value={o.value}
               checked={p.value === o.value}
+              disabled={o.disabled}
               onChange={() => p.onChange(o.value)}
               className="peer sr-only"
             />

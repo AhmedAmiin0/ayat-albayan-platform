@@ -7,15 +7,9 @@ import { t } from '@/lib/i18n';
 import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
 import { GapChip } from './GapChip';
-import { STEPS, stepReady, type BookingDraft, type PickedStudent, type StepKey } from './draft';
-import { teacherPatch, type BookHint } from './hint';
-import { LeadStudentStep } from './LeadStudentStep';
-import { PackageStep } from './PackageStep';
-import { guardianCountry } from './price';
-import { ReviewStep } from './ReviewStep';
-import { SlotStep } from './SlotStep';
-import { StudentStep } from './StudentStep';
-import { TeacherStep } from './TeacherStep';
+import { stepReady, stepsFor, type BookingDraft, type PickedStudent, type StepKey } from './draft';
+import type { BookHint } from './hint';
+import { WizardBody } from './WizardBody';
 import { WizardSteps } from './WizardSteps';
 
 export interface BookingWizardProps {
@@ -23,19 +17,23 @@ export interface BookingWizardProps {
   /** The student the wizard opened for (profile entry), else null. */
   primary: PickedStudent | null;
   siblings: readonly StudentRef[];
-  onOpenStudent: (id: string) => void;
+  /** Reopens /admin/book for another student; the booking type picked so far rides along. */
+  onOpenStudent: (id: string, kind?: BookingDraft['kind']) => void;
   /** From a calendar free gap: that teacher, then that start, preselected. */
   hint?: BookHint | null;
-  /** The package the admin picked, for the page title («تجريبية» only while it is the trial). */
-  onPackage?: (pkg: BookingDraft['pkg']) => void;
+  /** The type and package the admin picked, for the page title («تجريبية» only while it is the trial). */
+  onChoice?: (choice: Pick<BookingDraft, 'kind' | 'pkg'>) => void;
+  /** From a missed lesson's drawer: the makeup's missed-lesson step preselects it (R-SCH-10). */
+  missedLessonId?: string | undefined;
 }
 
 /**
- * Booking wizard (R-SCH-06, R-LEAD-06): student(s) → teacher → length + package → slot + weekly
- * repeat → review → POST /booking. One filled primary per step («التالي», then «احجز» on the
- * review). Every step change (also «اختار ميعاد تاني») moves focus to the new step.
+ * Booking wizard (R-SCH-06, R-LEAD-06, R-SCH-10): booking type + student(s) → [missed lesson] →
+ * teacher → [length + package] → slot (+ weekly repeat) → [invoice] → review → POST /booking. One
+ * filled primary per step («التالي», then «احجز» on the review). Every step change (also «اختار
+ * ميعاد تاني») moves focus to the new step.
  */
-export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null, onPackage }: BookingWizardProps) {
+export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId }: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
   const [step, setStep] = useState<StepKey>('students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
@@ -43,10 +41,11 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
   useFocusOnChange(section, step);
   const patch = (p: Partial<BookingDraft>) => {
     setDraft((d) => ({ ...d, ...p }));
-    if (p.pkg) onPackage?.(p.pkg);
+    if (p.pkg || p.kind) onChoice?.({ kind: p.kind ?? draft.kind, pkg: p.pkg ?? draft.pkg });
   };
-  const index = STEPS.indexOf(step);
-  const go = (to: number) => setStep(STEPS[to] ?? step);
+  const steps = stepsFor(draft.kind);
+  const index = steps.indexOf(step);
+  const go = (to: number) => setStep(steps[to] ?? step);
 
   if (booked && draft.teacher) {
     return (
@@ -54,62 +53,30 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
         result={booked}
         teacherId={draft.teacher.id}
         tz={draft.tz}
+        kind={draft.kind}
         subscribeFor={subscribeTarget(draft, booked)}
         chatPhone={chatPhone(draft)}
       />
     );
   }
 
-  const body = {
-    students:
-      draft.leadId && !primary ? (
-        <LeadStudentStep
-          value={draft.newStudent ?? { name: '', guardianName: '', guardianPhone: '' }}
-          tz={draft.tz}
-          onChange={({ newStudent, ...rest }) =>
-            patch({
-              ...rest,
-              ...(newStudent ? { newStudent, country: guardianCountry({ phone_e164: newStudent.guardianPhone }) } : {}),
-            })
-          }
-        />
-      ) : (
-        <StudentStep
-          primary={primary}
-          siblings={siblings}
-          picked={draft.students}
-          onPicked={(students) => patch({ students })}
-          onOpenStudent={onOpenStudent}
-        />
-      ),
-    teacher: (
-      <TeacherStep
-        program={draft.program}
-        genderPref={draft.genderPref}
-        teacher={draft.teacher}
-        hintId={hint?.teacherId}
-        onChange={(change) => patch(teacherPatch(draft, change, hint))}
-      />
-    ),
-    package: <PackageStep draft={draft} onChange={patch} />,
-    slot: <SlotStep draft={draft} onChange={patch} />,
-    review: (
-      <ReviewStep
-        draft={draft}
-        onMeetingLink={(meetingLink) => patch({ meetingLink })}
-        onChangeSlot={() => setStep('slot')}
-        onBooked={setBooked}
-        onPatch={patch}
-      />
-    ),
-  } satisfies Record<StepKey, unknown>;
-
   return (
     <>
       {hint?.startsAt && <GapChip startsAt={hint.startsAt} />}
-      <WizardSteps step={step} />
+      <WizardSteps steps={steps} step={step} />
       <section ref={section} tabIndex={-1} aria-label={t.booking.steps[step]} className="outline-none">
-        {body[step]}
+        <WizardBody
+          step={step}
+          draft={draft}
+          patch={patch}
+          primary={primary}
+          siblings={siblings}
+          onOpenStudent={(id) => onOpenStudent(id, draft.kind)}
+          hint={hint}
+          missedLessonId={missedLessonId}
+          onGoto={setStep}
+          onBooked={setBooked}
+        />
       </section>
       {step === 'students' && draft.leadId && !primary && !stepReady(draft, step) && (
         <p className="mt-3 text-xs text-ink-3">{t.booking.fillRequired}</p>

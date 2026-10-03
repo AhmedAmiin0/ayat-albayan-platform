@@ -450,7 +450,9 @@
       "teacher": "Teacher",
       "slot": "Time",
       "package": "Package",
-      "review": "Review"
+      "review": "Review",
+      "missed": "Missed lesson",
+      "invoice": "Invoice"
     },
     "stepOf": "Step {n} of {total}",
     "next": "Next",
@@ -535,7 +537,44 @@
     "durationHint": "Length of one lesson — not sure? Leave it and we'll count 45 minutes",
     "packageTrial": "Free trial lesson only",
     "dayLocked": "The picked time's day stays on",
-    "packageDays": "{package} = {perWeek}"
+    "packageDays": "{package} = {perWeek}",
+    "kind": {
+      "label": "Booking type",
+      "trial": "Free trial lesson only",
+      "package": "Subscription",
+      "makeup": "Makeup booking",
+      "makeupNeedsStudent": "A makeup is for a registered student only, register them first"
+    },
+    "makeup": {
+      "pickMissed": "Pick the lesson the student missed",
+      "none": "No missed lesson to make up. If the teacher or the office cancelled a lesson, use «Reschedule»",
+      "tag": "Makeup",
+      "title": "Book a makeup lesson",
+      "action": "Makeup booking",
+      "booked": "The makeup lesson is booked",
+      "missedLabel": "Missed lesson"
+    },
+    "makeupFor": "Makeup for {names}",
+    "invoice": {
+      "label": "Invoice",
+      "hint": "A photo or PDF as proof of payment. Required before booking",
+      "upload": "Upload the invoice",
+      "fromChat": "From the chat",
+      "replace": "Change",
+      "remove": "Remove",
+      "chatTitle": "Pick the invoice from the chat",
+      "chatEmpty": "No photos or files from the guardian in the last 30 days",
+      "chatError": "Could not load the chat files, try again",
+      "expired": "This file has expired on WhatsApp, ask the guardian to send it again",
+      "uploading": "Uploading…",
+      "view": "Open the invoice",
+      "recordPayment": "Record the payment",
+      "preview": "Invoice preview",
+      "pdf": "PDF",
+      "list": "Invoices",
+      "sourceUpload": "Uploaded from the device",
+      "sourceWhatsapp": "From WhatsApp"
+    }
   },
   "lessons": {
     "title": "Lessons",
@@ -566,7 +605,18 @@
       "proposal_pending": "A proposal for this lesson is still waiting for the admin team's reply",
       "proposal_decided": "This proposal has already been answered",
       "student_not_in_lesson": "This student isn't in this lesson",
-      "starts_before_lesson": "Pick a new time on this lesson's day or later"
+      "starts_before_lesson": "Pick a new time on this lesson's day or later",
+      "invoice_required": "Upload the invoice or pick it from the chat before booking",
+      "invoice_type": "Upload a photo or PDF only",
+      "invoice_too_large": "The invoice is too large, 10 MB at most",
+      "invoice_path": "This invoice does not belong to this booking, upload it again",
+      "invoice_message": "This message is not from this guardian or has no photo or file",
+      "media_expired": "This file has expired on WhatsApp, ask the guardian to send it again",
+      "makeup_not_eligible": "This lesson cannot be made up",
+      "makeup_exists": "A makeup is already booked for this lesson",
+      "makeup_scope_one": "A makeup lesson can only be changed on its own, not with the rest of the schedule",
+      "makeup_student": "This student was not in the missed lesson",
+      "request_id_required": "Something went wrong with the booking, reopen the page"
     },
     "cancelTitle": "Cancel lesson",
     "cancelBy": "Who cancelled?",

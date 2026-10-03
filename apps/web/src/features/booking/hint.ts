@@ -1,5 +1,6 @@
 import type { BookingTeacherOption } from '@ab/shared';
 import type { BookSearch } from './api';
+import type { BookingKind } from './contract';
 import type { BookingDraft } from './draft';
 
 /** A free gap clicked on the calendar: preselect this teacher, then this first lesson. */
@@ -28,6 +29,11 @@ export function teacherPatch(draft: BookingDraft, change: TeacherChange, hint: B
  * Picking a student in the wizard reopens /admin/book for them: the free gap's teacher and start
  * ride along (an unrelated lead or package never does), so step 2 still has the gap's teacher.
  */
-export function searchForStudent(prev: BookSearch, studentId: string): BookSearch {
-  return { studentId, ...(prev.teacherId && { teacherId: prev.teacherId }), ...(prev.startsAt && { startsAt: prev.startsAt }) };
+export function searchForStudent(prev: BookSearch, studentId: string, kind?: BookingKind): BookSearch {
+  return {
+    studentId,
+    ...(prev.teacherId && { teacherId: prev.teacherId }),
+    ...(prev.startsAt && { startsAt: prev.startsAt }),
+    ...(kind && kind !== 'package' && { kind }),
+  };
 }

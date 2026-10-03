@@ -21,6 +21,19 @@ describe('parseBookSearch (/admin/book)', () => {
     expect(parseBookSearch({ studentId: 's1', pkg: '8' })).toEqual({ studentId: 's1' });
   });
 
+  it('keeps a student’s booking type, and the missed lesson only for a makeup (from the lesson drawer)', () => {
+    const missed = '5a2d9c1e-0000-4000-8000-000000000001';
+    expect(parseBookSearch({ studentId: 's1', kind: 'makeup', missedLessonId: missed })).toEqual({
+      studentId: 's1',
+      kind: 'makeup',
+      missedLessonId: missed,
+    });
+    expect(parseBookSearch({ studentId: 's1', kind: 'trial', missedLessonId: missed })).toEqual({ studentId: 's1', kind: 'trial' });
+    expect(parseBookSearch({ studentId: 's1', kind: 'makeup', missedLessonId: 'not-a-uuid' })).toEqual({ studentId: 's1', kind: 'makeup' });
+    expect(parseBookSearch({ studentId: 's1', kind: 'gift' })).toEqual({ studentId: 's1' });
+    expect(parseBookSearch({ leadId: 'l1', kind: 'makeup' })).toEqual({ leadId: 'l1' });
+  });
+
   it('keeps a free gap’s teacher and start next to anything else; a start alone or bad is dropped', () => {
     const id = '6f1c2a3e-1b2c-4d5e-8f90-123456789abc';
     expect(parseBookSearch({ teacherId: id, startsAt: '2026-10-04T13:00:00Z' })).toEqual({
