@@ -12,15 +12,21 @@ async function otherTeacher(tx: Tx): Promise<string> {
   return o.id;
 }
 
-/** Two teachers, one completed lesson, one earning and one payment each. */
+/**
+ * Two teachers, one completed lesson, one earning and one payment each. The e2e teacher may already
+ * own earnings from specs that ran before on this database (they commit), so callers count only the
+ * `lessons` returned here, never every row of a teacher.
+ */
 async function seed(tx: Tx) {
   const mine = await teacherWithRates(tx);
   const other = await otherTeacher(tx);
+  const lessons: string[] = [];
   for (const teacher of [mine.id, other]) {
     const lesson = await pastLesson(tx, { teacher, minutes: 45, status: 'completed', daysAgo: 3 });
+    lessons.push(lesson);
     await pay(tx, { teacher, amount: 10, items: [{ earning_id: await earningId(tx, lesson), amount: 10 }] });
   }
-  return { mine, other };
+  return { mine, other, lessons };
 }
 
 test.describe('teacher earnings RLS (migration 176)', () => {
@@ -28,7 +34,7 @@ test.describe('teacher earnings RLS (migration 176)', () => {
 
   test('a teacher reads only their own earnings, payments and items; an admin reads all', async () => {
     await rolledBack(async (tx) => {
-      const { mine, other } = await seed(tx);
+      const { mine, other, lessons } = await seed(tx);
       const ids = (table: string) => as(tx, mine.userId, () => tx.unsafe<{ teacher_id: string }[]>(`select teacher_id from public.${table} where teacher_id in ('${mine.id}', '${other}')`));
       for (const table of ['teacher_session_earnings', 'teacher_payments']) {
         const rows = await ids(table);
@@ -40,7 +46,7 @@ test.describe('teacher earnings RLS (migration 176)', () => {
       expect(items[0]?.n).toBe('0');
       const admin = await userId(tx, USERS.admin.email);
       const all = await as(tx, admin, () => tx<{ n: string }[]>`select count(*) as n from public.teacher_session_earnings
-        where teacher_id in (${mine.id}, ${other})`);
+        where lesson_id in ${tx(lessons)}`);
       expect(all[0]?.n).toBe('2');
     });
   });
