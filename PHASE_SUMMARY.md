@@ -1474,3 +1474,37 @@ Retaken after `seed:demo` plus local scratch states (inbound messages with `wa_m
 - Unit: api 1654 passed + 1 skipped (234 files) · web 167 files · mobile 718 · @ab/shared 64 files · @ab/migrate 50 files · wa-stub 4 files.
 - Lint: 0 errors; complexity warnings only (wa-stub 2, migrate 10, api 4, web 20, mobile 6).
 - A required-field mark inside a `<label>` / CSS `::after` leaks into the accessible name (Chromium and Playwright include it); the mark is an aria-hidden span beside the label instead.
+
+## Forms identical to the owner's Google Forms + student feedback (2026-10-03)
+
+Owner: "THESE ARE ALL OUR FORMS" (verbatim spec: `docs/13-forms-spec.md`, R-FRM-01..03). Three forms, same titles, option wording, order and required flags on web, mobile and the teacher portal. The app's structured replacements stay (time from free slots, teacher from the DB, ids filled from the link).
+
+### Built
+- **1 · استمارة تسجيل طالب جديد** (wizard, «إضافة طالب», profile, guardian edit; app quick-trial + chat «اشترك»): spec labels («اسم الطالب», «الأيام المتاحة *», «الساعه *», «تاريخ اول حصه», «المعلم/المعلمه», «المده», «الباقة المطلوبة *»), packages exactly trial / 4 / 8 / 12 / 16 (20 and 28 stay in the DB only), «عرفت عننا منين؟» without «أخرى» on a new row, «إضافة طالب» has the teacher select.
+- **2 · تقرير الحلقة**: sections «بيانات الحلقة» / «محتوى الحلقة» / «التقييم التفصيلي» (grid «تقييم البنود») / «الملاحظات والواجب»; «(لا تعدله)» on the read-only identity rows; **editable required «البرنامج *»** (migration 167: `lesson_reports.program`, `submit_report` v3, 400 `missing_program`; PDF carries it).
+- **3 · رأيك يهمّنا** (new): migration 166 `lesson_feedback` (+ enums, `v_teacher_feedback_avg`, RLS: admin all, teacher own columns only), template `lesson_feedback_request` seeded `not_submitted`; HMAC-signed link (71 chars, 14 days, only its sha256 stored); admin «ابعت طلب الرأي» (completed/late lessons, per student); public page, admin list + averages, teacher list + own average.
+
+### Screens
+- **Web routes**: public `/feedback/$token` (no login; sent / already sent / expired-invalid / retry states, AR+EN); admin `/admin/feedback`; teacher `/teacher/feedback` (6th nav tab «الآراء»); «ابعت طلب الرأي» in the admin LessonDrawer; registration wizard, «إضافة طالب», student profile, guardian edit, report form.
+- **Mobile**: `app/(tabs)/more/feedback` (admin), `app/teacher/more/feedback` (teacher), `FeedbackRequestButton` in the lesson row actions (admin schedule only), booking Contact/Package/Slot/Confirm steps, teacher report form (program chips, section headings).
+- **API**: `POST /lessons/:id/feedback-request`, `GET /feedback`, `GET /feedback/summary`, `GET /teachers/me/feedback`, `GET|POST /public/feedback/:token` (rate limited 10/token+IP, 60/IP per 10 min).
+
+### Merge notes
+- Merged `forms/api`, `forms/web`, `forms/mobile` (--no-ff). Only conflicts: `packages/shared/i18n/ar.json` (+ `en.json` once). Resolved with a three-way key merge: union of keys, the API value wins where both sides changed one (`booking.startsOn` = «تاريخ اول حصه», the API's top-level `feedback` block), except `teacherNav.feedback` = «الآراء» / «Feedback» (the 6-tab bar needs the short word; `nav.feedback` stays «رأيك يهمّنا»).
+- Stand-ins deleted: web `features/feedback/types.ts` now re-exports `@ab/shared`; web and mobile `report-program.ts` removed (`FormValues.program` / `valuesOf` / `draftBody` carry it; prefill = report's program, else the student's); mobile feedback types follow the shared shapes (`student.name`, `teacher.name`, `TeacherFeedbackSummary`).
+- `packages/db/src/types.ts` regenerated from the real schema; `FEEDBACK_TOKEN_SECRET` added to `tools/scripts/write-local-env.mjs` (API env only).
+- e2e fixes: `feedback.spec.ts` taps the label around the visually hidden radios (a forced click on the `sr-only` input never toggled it). Stale e2e servers on 3100/4110/5180 from an earlier session (reuseExistingServer) were serving the pre-merge API and 404ed the new route: kill them before an e2e run after a merge.
+- Mobile test fixes: step title assertion uses `t.booking.steps.package`; the feedback screen test dropped the "teacher without answers" card (the API summary lists answered teachers only).
+
+### Gate (`supabase db reset` (167 applied) + `gen:types` + `pnpm env:local`, then `pnpm test:all`)
+- 27/27 turbo tasks green. e2e: 71 passed + 3 skipped by design (desktop + mobile; includes `forms-parity` and `feedback` journeys).
+- Unit: api 1723 passed + 1 skipped (245 files) · web 794 (177 files) · mobile 746 (161 suites) · @ab/shared 1241 (67 files) · @ab/migrate 292 (50 files) · wa-stub 25 (4 files).
+- Lint: 0 errors; complexity warnings only (wa-stub 2, migrate 10, api 4, web 21, mobile 6, shared 1).
+
+### Residuals / owner decisions
+- **Template to Meta**: `lesson_feedback_request` is `not_submitted`. The button URL host in the seed is the staging address; Meta fixes the URL at submission, so set the final web host (SQL while `not_submitted`), then submit from the templates page. Set `FEEDBACK_TOKEN_SECRET` (>= 32 chars) on staging and production (Vault); without it the request route is 503 and every public link 404.
+- Literal wording kept: «الساعه», «تاريخ اول حصه». The 8 and 12 package wording change is global (subscriptions, exports, dashboard now mix «8 حلقات» with «4 حلقات في الشهر»). PDF labels are «اسم الطالب» / «اسم المعلم» without «(لا تعدله)».
+- Not matched to the spec (owner decisions): student name stays required (spec: optional); report meeting link stays read-only; web report attachments accept image/PDF/audio only, mobile photos only (any file needs an API MIME decision and `expo-document-picker` in the next APK); the timezone select stays in the first booking step (rule 6); lead-qualification extras stay.
+- «ابعت طلب الرأي» from the chat thread is not built (no completed lesson to attach it to there); the «اتبعت» state on web is read from the API only after a reload via `GET /feedback?lesson=`, not shown on first open of the drawer; mobile does not pre-disable the button while the template is unapproved (409 message after the press); no date filters in the feedback list UIs (API supports `from`/`to`); the mobile list is unfiltered; English mode on the mobile booking teacher step still shows Arabic teacher names.
+- `lesson_feedback.guardian_id` / `teacher_id` are NO ACTION FKs, so `clear:demo` refuses to delete a demo guardian or teacher who has feedback (same as lessons).
+- Mobile OTA/APK: the new screens and the UI wording need an EAS Update or APK build; the migrations (166, 167) and the API deploy must land first.

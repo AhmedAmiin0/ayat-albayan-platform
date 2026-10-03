@@ -13,6 +13,9 @@ const NOTE = 'ما شاء الله، المعلمة صبورة جدًا';
 /** Desktop and mobile run this spec on one DB: a fresh name per run keeps the rows apart. */
 const fresh = (name: string) => `${name} ${String(Date.now()).slice(-4)}`;
 
+/** The radios are visually hidden: a person taps the label around them. */
+const pick = (page: Page, name: string) => page.getByRole('radio', { name }).locator('xpath=ancestor::label').click();
+
 async function press(admin: Page, teacherId: string, student: string): Promise<void> {
   await admin.goto(`/admin/schedule?week=${nextWeekSaturday()}&teacher=${teacherId}`);
   const grid = admin.getByRole('table', { name: ar.schedule.grid }).or(admin.getByRole('group', { name: ar.schedule.grid }));
@@ -52,8 +55,8 @@ test.describe('رأيك يهمّنا (feedback)', () => {
     // The lesson’s own kind is chosen for her (the server sets it): exactly one radio is on.
     await expect(guardian.getByRole('group', { name: ar.feedback.kind }).locator('input:checked')).toHaveCount(1);
     await expect(guardian.getByLabel(ar.feedback.contact)).not.toHaveValue('');
-    await guardian.getByRole('radio', { name: ar.feedback.rowRating.replace('{n}', '5') }).check({ force: true });
-    await guardian.getByRole('radio', { name: ar.enums.feedbackRecommend.yes }).check({ force: true });
+    await pick(guardian, ar.feedback.rowRating.replace('{n}', '5'));
+    await pick(guardian, ar.enums.feedbackRecommend.yes);
     await guardian.getByLabel(ar.feedback.note).fill(NOTE);
     await guardian.getByRole('button', { name: ar.feedback.submit }).click();
     await expect(guardian.getByText(ar.feedback.thanksTitle)).toBeVisible();
