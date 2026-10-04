@@ -739,6 +739,7 @@ export type Database = {
           id: string;
           lesson_id: string;
           revoked_at: string | null;
+          student_id: string | null;
           token_hash: string;
         };
         Insert: {
@@ -748,6 +749,7 @@ export type Database = {
           id?: string;
           lesson_id: string;
           revoked_at?: string | null;
+          student_id?: string | null;
           token_hash: string;
         };
         Update: {
@@ -757,6 +759,7 @@ export type Database = {
           id?: string;
           lesson_id?: string;
           revoked_at?: string | null;
+          student_id?: string | null;
           token_hash?: string;
         };
         Relationships: [
@@ -772,6 +775,13 @@ export type Database = {
             columns: ['lesson_id'];
             isOneToOne: false;
             referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_join_links_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
             referencedColumns: ['id'];
           },
         ];
@@ -1114,12 +1124,14 @@ export type Database = {
           ends_at: string;
           google_event_id: string | null;
           id: string;
+          instant: boolean;
           local_date: string | null;
           makeup_of_id: string | null;
           makeup_student_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
+          room_opened_at: string | null;
           rule_id: string | null;
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
@@ -1139,12 +1151,14 @@ export type Database = {
           ends_at: string;
           google_event_id?: string | null;
           id?: string;
+          instant?: boolean;
           local_date?: string | null;
           makeup_of_id?: string | null;
           makeup_student_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at: string;
           status?: Database['public']['Enums']['lesson_status'];
@@ -1164,12 +1178,14 @@ export type Database = {
           ends_at?: string;
           google_event_id?: string | null;
           id?: string;
+          instant?: boolean;
           local_date?: string | null;
           makeup_of_id?: string | null;
           makeup_student_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at?: string;
           status?: Database['public']['Enums']['lesson_status'];
@@ -1801,6 +1817,48 @@ export type Database = {
             foreignKeyName: 'student_assistants_student_id_fkey';
             columns: ['student_id'];
             isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      student_join_links: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          revoked_at: string | null;
+          student_id: string;
+          token_hash: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          revoked_at?: string | null;
+          student_id: string;
+          token_hash: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          revoked_at?: string | null;
+          student_id?: string;
+          token_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'student_join_links_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'student_join_links_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
             referencedRelation: 'students';
             referencedColumns: ['id'];
           },
@@ -2611,6 +2669,7 @@ export type Database = {
       };
       booking_result: { Args: { p_rule: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
+      create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       earning_status: {
         Args: { p_amount: number; p_paid: number };
         Returns: Database['public']['Enums']['teacher_earning_status'];
@@ -2629,12 +2688,14 @@ export type Database = {
           ends_at: string;
           google_event_id: string | null;
           id: string;
+          instant: boolean;
           local_date: string | null;
           makeup_of_id: string | null;
           makeup_student_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
+          room_opened_at: string | null;
           rule_id: string | null;
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
