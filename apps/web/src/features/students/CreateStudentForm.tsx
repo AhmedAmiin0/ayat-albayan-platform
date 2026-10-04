@@ -1,4 +1,3 @@
-import { PROGRAMS, type Program } from '@ab/shared';
 import { useForm } from '@tanstack/react-form';
 import { useId } from 'react';
 import { Button } from '@/components/ui/button';
@@ -8,18 +7,24 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Input } from '@/components/ui/input';
 import { RequiredLegend } from '@/components/ui/label';
 import { PhonePreview } from '@/components/ui/phone-preview';
-import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
 import { SourceField } from '@/features/guardians/SourceField';
 import { t } from '@/lib/i18n';
 import { ageError, EMPTY_STUDENT, phoneError, requiredError, type CreateStudentValues } from './create-student';
 import { AgeField, GenderField } from './FactFields';
+import { ProgramField } from './ProgramField';
 import { TeacherField } from './TeacherField';
 
 type CreateStudentFormProps = {
   onSubmit: (values: CreateStudentValues) => Promise<void>;
   onCancel: () => void;
   error: string | null;
+  /**
+   * «تسجيل الطالب» from an inbox thread: the lead's data pre-filled, the thread's phone read-only,
+   * and only the essentials asked — program and source keep these values without a field.
+   */
+  initial?: Partial<CreateStudentValues>;
+  title?: string;
 };
 
 // The registration form's wording and order: «اسم الطالب», «رقم الواتساب (مع كود الدولة)» with its
@@ -36,9 +41,12 @@ type TextName = keyof typeof TEXT_FIELDS;
  * «إضافة طالب» dialog: student + guardian phone in one step (R-STU-02, R-STU-04). `noValidate`:
  * errors are the Arabic field errors (docs/07 §10), never the browser's bubble.
  */
-export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFormProps) {
+export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }: CreateStudentFormProps) {
   const formId = useId();
-  const form = useForm({ defaultValues: EMPTY_STUDENT, onSubmit: ({ value }) => onSubmit(value) });
+  const defaultValues: CreateStudentValues = { ...EMPTY_STUDENT, ...initial };
+  const form = useForm({ defaultValues, onSubmit: ({ value }) => onSubmit(value) });
+  const compact = initial !== undefined;
+  const lockedPhone = Boolean(initial?.guardianPhone);
 
   const textField = (name: TextName) => {
     const f: { label: string; check: (v: string) => string | undefined; dir?: string; type?: string; hint?: string } = TEXT_FIELDS[name];
@@ -49,6 +57,7 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
             {(p) => (
               <>
                 <Input {...p} required value={field.state.value} data-autofocus={name === 'name' || undefined}
+                  readOnly={(name === 'guardianPhone' && lockedPhone) || undefined}
                   dir={f.dir} type={f.type ?? 'text'} onChange={(e) => field.handleChange(e.target.value)} />
                 {name === 'guardianPhone' && <PhonePreview value={field.state.value} />}
               </>
@@ -71,7 +80,7 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
   );
 
   return (
-    <Dialog title={t.students.add} onClose={onCancel} actions={actions} className="max-w-[640px]">
+    <Dialog title={title ?? t.students.add} onClose={onCancel} actions={actions} className="max-w-[640px]">
       <form
         id={formId}
         noValidate
@@ -98,23 +107,15 @@ export function CreateStudentForm({ onSubmit, onCancel, error }: CreateStudentFo
             </Field>
           )}
         </form.Field>
-        <form.Field name="program">
-          {(field) => (
-            <Field label={t.students.program}>
-              {(p) => (
-                <Select {...p} value={field.state.value} onChange={(e) => field.handleChange(e.target.value as Program)}>
-                  {PROGRAMS.map((v) => (
-                    <option key={v} value={v}>{t.enums.program[v]}</option>
-                  ))}
-                </Select>
-              )}
-            </Field>
-          )}
-        </form.Field>
+        {!compact && (
+          <form.Field name="program">{(field) => <ProgramField value={field.state.value} onChange={field.handleChange} />}</form.Field>
+        )}
         <form.Field name="teacher_id">
           {(field) => <TeacherField value={field.state.value} onChange={field.handleChange} />}
         </form.Field>
-        <form.Field name="source">{(field) => <SourceField value={field.state.value} onChange={field.handleChange} />}</form.Field>
+        {!compact && (
+          <form.Field name="source">{(field) => <SourceField value={field.state.value} onChange={field.handleChange} />}</form.Field>
+        )}
         {error && <FormAlert className="sm:col-span-2">{error}</FormAlert>}
       </form>
     </Dialog>

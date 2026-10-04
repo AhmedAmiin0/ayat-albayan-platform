@@ -15,8 +15,8 @@ vi.mock('@tanstack/react-router', () => ({
   Link: ({ to, search, children }: { to: string; search: Record<string, string>; children: ReactNode }) => (
     <a href={`${to}?${new URLSearchParams(search)}`}>{children}</a>
   ),
-  // ReportLink (the drawer's report links) reads the router; none here, so plain links.
-  useRouter: () => null,
+  // ReportLink (shown once the lesson is past) asks for the router; none is mounted here.
+  useRouter: () => undefined,
 }));
 
 const makeup = (l: LessonView): LessonView & { makeup: true } => ({ ...l, makeup: true });

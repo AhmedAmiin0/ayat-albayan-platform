@@ -12,6 +12,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { GuardiansService } from '../guardians/guardians.service';
 import { dbError } from '../guardians/http';
 import { detectDuplicates } from './duplicate-detector';
+import { LeadLink } from './lead-link';
 import type { StudentCreateRequest } from './students.dto';
 import { toStudentInsert, toStudentPatch } from './students.mapper';
 
@@ -20,14 +21,19 @@ type Student = Tables<'students'>;
 /** Students writes (R-STU-01..05). Reads live in students.queries.ts. */
 @Injectable()
 export class StudentsService {
+  private readonly leadLink: LeadLink;
+
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly guardians: GuardiansService,
     private readonly audit: AuditService,
-  ) {}
+  ) {
+    this.leadLink = new LeadLink(db, audit);
+  }
 
-  /** 409 `duplicate_student` + candidates unless `force` (R-STU-03). */
+  /** 409 `duplicate_student` + candidates unless `force` (R-STU-03); `lead_id` → 404 before any write. */
   async create(dto: StudentCreateRequest, actorId: string): Promise<Student> {
+    const lead = dto.lead_id ? await this.leadLink.find(dto.lead_id) : null;
     const guardianId = await this.resolveGuardian(dto, actorId);
     if (!dto.force) {
       const { students } = await this.guardians.get(guardianId);
@@ -42,6 +48,7 @@ export class StudentsService {
       .select()
       .single();
     if (error) throw dbError(error, 'guardian_not_found');
+    if (lead) await this.leadLink.convert({ lead, guardianId, actorId });
     return data;
   }
 
