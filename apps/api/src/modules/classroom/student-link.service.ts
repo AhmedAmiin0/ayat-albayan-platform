@@ -26,7 +26,7 @@ type Resolved = { student: { id: string; name: string }; lesson: StudentLesson |
  * lesson is current or next (pickStudentLesson). The token is the whole credential; a rotated link
  * is refused 404 link_invalid like an unknown one. The join is the guest join of that lesson, through
  * the one lesson_join_links row of (lesson, student), so «إخراج من الحلقة» holds (403 removed_from_room).
- * Both routes share the public join limit (429).
+ * The join counts against the public join limit, page reads (polled every 30 s) against a looser one (429).
  */
 @Injectable()
 export class StudentLinkService {
@@ -66,8 +66,9 @@ export class StudentLinkService {
     );
   }
 
-  private async resolve(call: PublicCall, now: Date, limited = true): Promise<Resolved> {
-    if (limited) this.limit.assert({ ip: call.ip, token: call.token }, now.getTime());
+  private async resolve(call: PublicCall, now: Date, read = true): Promise<Resolved> {
+    // The join counted itself already; a page read has its own polling budget (assertRead).
+    if (read) this.limit.assertRead({ ip: call.ip, token: call.token }, now.getTime());
     if (!looksLikeLinkToken(call.token)) throw notFound('link_invalid');
     const link = await this.queries.linkByHash(hashLinkToken(call.token));
     if (!link) throw notFound('link_invalid');

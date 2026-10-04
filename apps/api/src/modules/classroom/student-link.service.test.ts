@@ -88,9 +88,15 @@ describe('POST /public/student/:token/join', () => {
     expect((await join({ body: { name: ' ' } }).catch((e: HttpException) => e)) instanceof HttpException).toBe(true);
   });
 
-  it('429 after the public join limit (10 per link and IP)', async () => {
+  it('429 after the public join limit (10 joins per link and IP)', async () => {
     const svc = service(new PublicJoinLimit());
-    for (let i = 0; i < 10; i++) await svc.view({ token: STUDENT_TOKEN, ip: '1.1.1.1' }, OPEN);
+    for (let i = 0; i < 10; i++) await svc.join({ token: STUDENT_TOKEN, ip: '1.1.1.1', body: {} }, OPEN);
     expect(await body(svc.join({ token: STUDENT_TOKEN, ip: '1.1.1.1', body: {} }, OPEN))).toMatchObject({ code: 'too_many_requests' });
+  });
+
+  it('page polling (every 30 s for 10 minutes) never uses up the join', async () => {
+    const svc = service(new PublicJoinLimit());
+    for (let i = 0; i < 20; i++) await svc.view({ token: STUDENT_TOKEN, ip: '1.1.1.2' }, OPEN);
+    expect((await svc.join({ token: STUDENT_TOKEN, ip: '1.1.1.2', body: {} }, OPEN)).role).toBe('guest');
   });
 });
