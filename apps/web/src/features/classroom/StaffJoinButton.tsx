@@ -27,8 +27,9 @@ export function StaffJoinButton({ lesson, size = 'md' }: Props) {
   const shown = openedAt ? { ...lesson, room_opened_at: openedAt } : lesson;
   const open = useMutation({
     mutationFn: openRoom,
+    // The server's instant may be a moment after this page's minute clock: open from whichever is first.
     onSuccess: (r) => {
-      setOpenedAt(r.room_opened_at);
+      setOpenedAt(new Date(Math.min(Date.parse(r.room_opened_at), now.getTime())).toISOString());
       void client.invalidateQueries({ queryKey: LESSONS_KEY });
     },
   });
@@ -36,7 +37,7 @@ export function StaffJoinButton({ lesson, size = 'md' }: Props) {
   const early = joinWindow(shown, now).state === 'early';
   return (
     <div className="grid justify-items-start gap-1.5">
-      <EnterButton lesson={shown} size={size} />
+      <EnterButton lesson={shown} size={size} now={now} />
       {early && (
         <Button type="button" variant="secondary" size={size} disabled={open.isPending} onClick={() => open.mutate(lesson.id)}>
           {open.isPending ? t.classroom.opening : t.classroom.openNow}

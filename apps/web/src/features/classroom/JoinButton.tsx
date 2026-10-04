@@ -17,14 +17,17 @@ interface Props {
   lesson: JoinableLesson;
   size?: 'md' | 'lg';
   className?: string;
+  /** The caller's clock, when it has one (StaffJoinButton): both read the same minute. */
+  now?: Date;
 }
 
 /** «ادخل الحلقة» into the online classroom: enabled from 15 minutes before the start to 2 hours
  * after the end (re-checked every minute), otherwise disabled with «بتفتح الساعة …».
  * A plain link: it works without the router and opens /classroom/:id.
  */
-export function EnterButton({ lesson, size = 'md', className }: Props) {
-  const now = useNow();
+export function EnterButton({ lesson, size = 'md', className, now: given }: Props) {
+  const tick = useNow();
+  const now = given ?? tick;
   const { canJoin, hint } = joinHint(lesson, now);
   return (
     <div className={cn('grid justify-items-start gap-1', className)}>
