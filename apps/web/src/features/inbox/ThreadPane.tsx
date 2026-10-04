@@ -1,15 +1,16 @@
 import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useId } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
+import { Toast } from '@/components/ui/toast';
 import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
-import { LeadPanel } from './LeadPanel';
+import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
 import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
@@ -30,6 +31,8 @@ export interface ThreadPaneProps {
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
   const headingId = useId();
+  // The lead panel's toasts live here: «تسجيل الطالب» turns the aside into the family's panel.
+  const [notice, setNotice] = useState<LeadNotice | null>(null);
   const detail = useInfiniteQuery(threadQuery(phone));
   const templates = useQuery(templatesQuery);
   const th = detail.data?.pages[0]?.thread ?? null;
@@ -79,9 +82,10 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
             <Composer key={phone} thread={th} context={context} />
           )}
         </div>
-        {isLead && <LeadPanel phone={phone} />}
+        {isLead && <LeadPanel phone={phone} onNotice={setNotice} />}
         {people?.guardian && <SubscribePanel people={people} />}
       </div>
+      {notice && <Toast {...notice} onDismiss={() => setNotice(null)} />}
     </section>
   );
 }

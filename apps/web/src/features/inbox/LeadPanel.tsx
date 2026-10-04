@@ -6,20 +6,34 @@ import { Toast, type ToastProps } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { leadByPhoneQuery } from './api';
 import { FollowUpLine } from './FollowUpLine';
-import { QualificationForm } from './QualificationForm';
+import { LeadDataActions } from './LeadDataActions';
+import { LeadSummary } from './LeadSummary';
 import { QuickActions } from './QuickActions';
 
-type Notice = Pick<ToastProps, 'message' | 'tone'>;
+export type LeadNotice = Pick<ToastProps, 'message' | 'tone'>;
+
+export interface LeadPanelProps {
+  phone: string;
+  /**
+   * Where the panel's toasts go. ThreadPane passes its own: after «تسجيل الطالب» the thread
+   * becomes the guardian's and this panel unmounts, so its own toast would vanish with it.
+   */
+  onNotice?: (notice: LeadNotice) => void;
+}
 
 /**
- * The lead beside the thread (R-LEAD-02/03/05): next actions, the automatic follow-up and the
- * student's qualification. Guardians and teachers have no lead panel.
+ * The lead beside the thread (R-LEAD-02/03/05/06), kept short: next actions, the automatic
+ * follow-up, the student's key facts, then «تسجيل الطالب» / «تعديل البيانات» in dialogs.
+ * Guardians and teachers have no lead panel.
  */
-export function LeadPanel({ phone }: { phone: string }) {
+export function LeadPanel({ phone, onNotice }: LeadPanelProps) {
   const lead = useQuery(leadByPhoneQuery(phone));
-  const [notice, setNotice] = useState<Notice | null>(null);
-  const onDone = (message: string, tone?: 'error') =>
-    setNotice(tone ? { message, tone } : { message });
+  const [notice, setNotice] = useState<LeadNotice | null>(null);
+  const onDone = (message: string, tone?: 'error') => {
+    const next: LeadNotice = tone ? { message, tone } : { message };
+    if (onNotice) onNotice(next);
+    else setNotice(next);
+  };
 
   return (
     <aside aria-label={t.inbox.leadPanel} className={cn('@container grid content-start gap-6', railXl)}>
@@ -30,7 +44,10 @@ export function LeadPanel({ phone }: { phone: string }) {
         <>
           <QuickActions lead={lead.data} onDone={onDone} />
           <FollowUpLine lead={lead.data} onDone={onDone} />
-          <QualificationForm key={lead.data.id} lead={lead.data} onDone={onDone} />
+          <div className="grid gap-3">
+            <LeadSummary lead={lead.data} />
+            <LeadDataActions key={lead.data.id} lead={lead.data} onDone={onDone} />
+          </div>
         </>
       )}
       {notice && <Toast {...notice} onDismiss={() => setNotice(null)} />}

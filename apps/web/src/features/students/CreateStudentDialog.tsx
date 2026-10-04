@@ -8,14 +8,22 @@ import { DuplicateDialog } from './DuplicateDialog';
 import { MergeDialog } from './MergeDialog';
 import type { StudentRef } from './types';
 
-type CreateStudentDialogProps = { onClose: () => void; onDone: (notice: string) => void };
+type CreateStudentDialogProps = {
+  onClose: () => void;
+  onDone: (notice: string) => void;
+  /** Pre-filled values; given → the compact form (see CreateStudentForm). */
+  initial?: Partial<CreateStudentValues>;
+  /** The inbox lead this registration converts (R-LEAD-06); sent on every create, merge included. */
+  leadId?: string;
+  title?: string;
+};
 
 /**
  * Create a student (R-STU-01..04). On a duplicate (409, R-STU-03) the admin either merges the
  * new entry into the existing student — it is created then folded in, so the typed data stays in
  * the merge history — or creates it anyway as a sibling.
  */
-export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProps) {
+export function CreateStudentDialog({ onClose, onDone, initial, leadId, title }: CreateStudentDialogProps) {
   const queryClient = useQueryClient();
   const [pending, setPending] = useState<CreateStudentValues | null>(null);
   const [candidates, setCandidates] = useState<StudentRef[] | null>(null);
@@ -37,7 +45,7 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
     setError(null);
     try {
       // A failed merge already created the row: "create anyway" must not add a second one.
-      if (!createdId.current) await createStudent(toCreateBody(values, force));
+      if (!createdId.current) await createStudent(toCreateBody(values, force, leadId));
       finish(t.students.created);
     } catch (e) {
       const dupes = duplicateCandidates(e);
@@ -49,7 +57,7 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
   };
 
   const confirmMerge = async (kept: StudentRef, values: CreateStudentValues) => {
-    createdId.current ??= (await createStudent(toCreateBody(values, true))).id;
+    createdId.current ??= (await createStudent(toCreateBody(values, true, leadId))).id;
     await mergeStudents({ keptId: kept.id, mergedId: createdId.current });
     finish(t.students.mergeDone);
   };
@@ -82,5 +90,13 @@ export function CreateStudentDialog({ onClose, onDone }: CreateStudentDialogProp
     );
   }
 
-  return <CreateStudentForm onSubmit={(v) => submit(v, false)} onCancel={onClose} error={error} />;
+  return (
+    <CreateStudentForm
+      onSubmit={(v) => submit(v, false)}
+      onCancel={onClose}
+      error={error}
+      initial={initial}
+      title={title}
+    />
+  );
 }

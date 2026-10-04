@@ -53,8 +53,11 @@ export function ageError(value: string): string | undefined {
   return parseAge(value) === undefined ? t.students.ageInvalid : undefined;
 }
 
-/** Form → POST /students. The guardian is found (or created) by phone; tz applies to both. */
-export function toCreateBody(v: CreateStudentValues, force: boolean): CreateStudentBody {
+/**
+ * Form → POST /students. The guardian is found (or created) by phone; tz applies to both. `leadId`
+ * («تسجيل الطالب» from the inbox thread) converts that lead and links it to the guardian.
+ */
+export function toCreateBody(v: CreateStudentValues, force: boolean, leadId?: string): CreateStudentBody {
   return {
     name: v.name.trim(),
     age: parseAge(v.age) ?? null,
@@ -64,5 +67,6 @@ export function toCreateBody(v: CreateStudentValues, force: boolean): CreateStud
     ...(v.teacher_id ? { teacher_id: v.teacher_id } : {}),
     guardian: { name: v.guardianName.trim(), phone_e164: v.guardianPhone, tz: v.tz, source: v.source || null },
     force,
+    ...(leadId ? { lead_id: leadId } : {}),
   };
 }
