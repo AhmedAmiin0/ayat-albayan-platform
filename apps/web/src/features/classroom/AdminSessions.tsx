@@ -6,6 +6,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n';
 import { adminDayQuery, dayAround } from './api';
 import { ClassroomActions } from './ClassroomActions';
@@ -41,6 +42,9 @@ export function AdminSessions() {
     <section aria-label={t.classroom.admin.title}>
       <PageHead>
         <Cartouche>{t.classroom.admin.title}</Cartouche>
+        <div className="ms-auto">
+          <NewMeetingMenu />
+        </div>
       </PageHead>
       <div className="mb-3 flex flex-wrap items-center gap-2">
         <Button type="button" variant="secondary" onClick={() => setOffset(offset - 1)}>{t.schedule.prevDay}</Button>

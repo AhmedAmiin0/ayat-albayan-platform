@@ -10,6 +10,7 @@ import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { overviewQuery, proposalsQuery } from './api';
 import { DayBoard } from './DayBoard';
 import { LessonDrawer } from './LessonDrawer';
@@ -59,6 +60,7 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
         {overview.data && <ScheduleCounts shown={shown} />}
         <div className="ms-auto flex flex-wrap gap-2">
           <SyncScheduleButton onDone={setNotice} />
+          <NewMeetingMenu />
           <Link to="/admin/book" className={buttonVariants()}>
             {t.schedule.book}
           </Link>

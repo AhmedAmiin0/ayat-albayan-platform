@@ -9,6 +9,8 @@ export interface JoinableLesson {
   id: string;
   starts_at: string;
   ends_at: string;
+  /** «افتح الحلقة الآن»: the room was opened early (the window opens then). */
+  room_opened_at?: string | null;
 }
 
 interface Props {

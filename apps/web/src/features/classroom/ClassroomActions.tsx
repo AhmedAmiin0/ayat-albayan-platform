@@ -1,7 +1,7 @@
 import type { LessonView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { CopyLinkButton } from './CopyLinkButton';
-import { JoinButton } from './JoinButton';
+import { StaffJoinButton } from './StaffJoinButton';
 import { SendLinkButton } from './SendLinkButton';
 
 /**
@@ -15,7 +15,7 @@ export function ClassroomActions({ lesson }: { lesson: LessonView }) {
         <h3 className="font-display text-h4 font-bold">{t.classroom.sectionTitle}</h3>
         <p className="text-xs text-ink-3">{t.classroom.sectionHint}</p>
       </div>
-      <JoinButton lesson={lesson} />
+      <StaffJoinButton lesson={lesson} />
       <CopyLinkButton lesson={lesson} />
       <SendLinkButton lesson={lesson} />
     </section>
