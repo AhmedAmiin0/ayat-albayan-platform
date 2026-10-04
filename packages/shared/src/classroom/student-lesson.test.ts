@@ -2,12 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { firstName, instantLessonSchema, studentJoinSchema } from './meetings.js';
 import { pickStudentLesson } from './student-lesson.js';
 
-const lesson = (id: string, start: string, end: string, opened: string | null = null) => ({
-  id,
-  starts_at: start,
-  ends_at: end,
-  room_opened_at: opened,
-});
+const lesson = (id: string, start: string, end: string) => ({ id, starts_at: start, ends_at: end, room_opened_at: null as string | null });
 const A = lesson('a', '2026-10-05T16:00:00.000Z', '2026-10-05T17:00:00.000Z');
 const B = lesson('b', '2026-10-05T17:00:00.000Z', '2026-10-05T18:00:00.000Z');
 const C = lesson('c', '2026-10-07T16:00:00.000Z', '2026-10-07T17:00:00.000Z');
@@ -37,7 +32,7 @@ describe('pickStudentLesson', () => {
   });
 
   it('counts a room opened early by staff as open', () => {
-    const early = lesson('e', '2026-10-05T16:00:00.000Z', '2026-10-05T17:00:00.000Z', '2026-10-05T13:00:00.000Z');
+    const early = { ...lesson('e', '2026-10-05T16:00:00.000Z', '2026-10-05T17:00:00.000Z'), room_opened_at: '2026-10-05T13:00:00.000Z' };
     expect(pickStudentLesson([early, C], at('2026-10-05T13:30:00Z'))?.id).toBe('e');
   });
 });

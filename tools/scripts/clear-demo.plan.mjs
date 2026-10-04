@@ -39,6 +39,8 @@ export const DELETE_ORDER = [
   'leads',
   // Assistant assignments of the demo students only (migration 181); the assistants' logins stay.
   'student_assistants',
+  // The demo students' own classroom links (migration 191).
+  'student_join_links',
   'students',
   'guardians',
   'teacher_time_off',
