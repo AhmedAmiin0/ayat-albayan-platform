@@ -1,4 +1,4 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { openThread } from '../support/inbox';
 import { freshDigits } from '../support/messages';
@@ -22,6 +22,15 @@ async function moveTo(page: Page, status: keyof typeof ar.enums.leadStatus): Pro
   await page.getByRole('button', { name: ar.inbox.applyStatus, exact: true }).click();
 }
 
+/** «تعديل البيانات» in the aside → the titled dialog holding the full qualification form. */
+async function openEdit(page: Page): Promise<Locator> {
+  const panel = page.getByRole('complementary', { name: ar.inbox.leadPanel });
+  await panel.getByRole('button', { name: ar.inbox.editLeadData, exact: true }).click({ timeout: 30_000 });
+  const form = page.getByRole('dialog', { name: ar.inbox.editLeadDataTitle });
+  await expect(form).toBeVisible();
+  return form;
+}
+
 test.describe('lead qualification and status (R-LEAD-03, R-LEAD-01)', () => {
   test.beforeEach(async () => {
     await stubReset();
@@ -36,24 +45,28 @@ test.describe('lead qualification and status (R-LEAD-03, R-LEAD-01)', () => {
     const admin = await asRole('admin');
     await openThread(admin, name);
     const panel = admin.getByRole('complementary', { name: ar.inbox.leadPanel });
-    await expect(panel.getByLabel(L.studentName, exact)).toBeVisible({ timeout: 30_000 });
+    // The aside is short: a summary, then «تعديل البيانات» opens every question in a dialog.
+    await expect(panel.getByText(ar.inbox.noLeadData, exact)).toBeVisible({ timeout: 30_000 });
+    let form = await openEdit(admin);
 
-    await panel.getByLabel(L.studentName, exact).fill('عمر');
-    await panel.getByLabel(L.studentAge, exact).fill('9');
-    await panel.getByLabel(L.gender, exact).selectOption({ label: ar.enums.gender.male });
-    await panel.getByLabel(L.country, exact).fill('مصر');
-    await panel.getByLabel(L.level, exact).fill('بيقرا بالتهجي');
-    await panel.getByLabel(L.memorized, exact).fill('جزء عم');
-    await panel.getByLabel(L.goal, exact).fill('حفظ القرآن');
-    await panel.getByLabel(L.riwaya, exact).fill('حفص');
-    await panel.getByRole('checkbox', { name: day['0'], ...exact }).check();
-    await panel.getByRole('checkbox', { name: day['2'], ...exact }).check();
-    const hours = panel.getByRole('group', { name: L.preferredTime });
+    await form.getByLabel(L.studentName, exact).fill('عمر');
+    await form.getByLabel(L.studentAge, exact).fill('9');
+    await form.getByLabel(L.gender, exact).selectOption({ label: ar.enums.gender.male });
+    await form.getByLabel(L.country, exact).fill('مصر');
+    await form.getByLabel(L.level, exact).fill('بيقرا بالتهجي');
+    await form.getByLabel(L.memorized, exact).fill('جزء عم');
+    await form.getByLabel(L.goal, exact).fill('حفظ القرآن');
+    await form.getByLabel(L.riwaya, exact).fill('حفص');
+    await form.getByRole('checkbox', { name: day['0'], ...exact }).check();
+    await form.getByRole('checkbox', { name: day['2'], ...exact }).check();
+    const hours = form.getByRole('group', { name: L.preferredTime });
     await hours.getByLabel(ar.availability.from, exact).selectOption('16:00');
     await hours.getByLabel(ar.availability.to, exact).selectOption('18:00');
-    await panel.getByLabel(L.tz, exact).selectOption('Africa/Cairo');
-    await panel.getByRole('button', { name: ar.common.save, exact: true }).click();
+    await form.getByLabel(L.tz, exact).selectOption('Africa/Cairo');
+    await form.getByRole('button', { name: ar.common.save, exact: true }).click();
     await expect(admin.getByRole('status')).toHaveText(ar.inbox.qualificationSaved);
+    await expect(form).toBeHidden();
+    await expect(panel.getByText('عمر', exact)).toBeVisible();
 
     expect((await leadOf(phone))?.qualification).toMatchObject({
       student_name: 'عمر', age: 9, gender: 'male', country: 'مصر', level: 'بيقرا بالتهجي',
@@ -62,9 +75,12 @@ test.describe('lead qualification and status (R-LEAD-03, R-LEAD-01)', () => {
     });
     // Reload: the form is filled from the saved qualification, not from the page state.
     await admin.reload();
-    await expect(panel.getByLabel(L.studentName, exact)).toHaveValue('عمر');
-    await expect(panel.getByLabel(L.studentAge, exact)).toHaveValue('9');
-    await expect(panel.getByRole('checkbox', { name: day['2'], ...exact })).toBeChecked();
+    form = await openEdit(admin);
+    await expect(form.getByLabel(L.studentName, exact)).toHaveValue('عمر');
+    await expect(form.getByLabel(L.studentAge, exact)).toHaveValue('9');
+    await expect(form.getByRole('checkbox', { name: day['2'], ...exact })).toBeChecked();
+    await admin.keyboard.press('Escape');
+    await expect(form).toBeHidden();
 
     // new → interested_no_slot is a funnel move; trial_done from there is not.
     await moveTo(admin, 'interested_no_slot');

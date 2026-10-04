@@ -14,8 +14,8 @@ export interface QualificationFormProps {
 }
 
 /**
- * «بيانات الطالب» in the thread (R-LEAD-03, issue A9): the questions the deleted form asked,
- * structured and optional. Saves only what changed (L1 merges; an emptied field is cleared).
+ * «بيانات الطالب» (R-LEAD-03, issue A9): the questions the deleted form asked, structured and
+ * optional; opened from the aside's «تعديل البيانات» dialog, which carries the title. Saves only what changed (L1 merges; an emptied field is cleared).
  */
 export function QualificationForm({ lead, onDone }: QualificationFormProps) {
   const queryClient = useQueryClient();
@@ -46,12 +46,11 @@ export function QualificationForm({ lead, onDone }: QualificationFormProps) {
         save.mutate({ id: lead.id, patch: result.patch }, { onSuccess: () => setInitial(form) });
       }}
     >
-      <h3 className="text-sm font-semibold">{t.leads.qualification}</h3>
       <QualificationFields form={form} errors={errors} onChange={change} />
       <PreferenceFields form={form} errors={errors} onChange={change} />
       <RequestFields form={form} errors={errors} onChange={change} />
-      {/* Pinned to the bottom of the panel's scroll, so «حفظ» is in reach from any field. */}
-      <div className="sticky bottom-0 -mx-1 border-t border-rule bg-page px-1 py-2">
+      {/* Pinned to the bottom of the dialog's scroll, so «حفظ» is in reach from any field. */}
+      <div className="sticky bottom-0 -mx-1 border-t border-rule bg-card px-1 py-2">
         <Button type="submit" variant="secondary" disabled={save.isPending}>
           {save.isPending ? t.common.saving : t.common.save}
         </Button>

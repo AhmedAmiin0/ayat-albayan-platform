@@ -46,6 +46,8 @@ export type CreateStudentBody = {
   teacher_id?: string;
   guardian: { name: string; phone_e164: string; tz: string; source: LeadSource | null };
   force: boolean;
+  /** The inbox lead this registration converts (R-LEAD-06). */
+  lead_id?: string;
 };
 
 export const createStudent = (body: CreateStudentBody) =>
