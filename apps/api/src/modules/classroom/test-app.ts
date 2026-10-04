@@ -19,7 +19,10 @@ import { registerLivekitWebhookParser } from './livekit-webhook.controller';
 import { http, moderation, recordingQueries, S3 } from './moderation.fakes';
 import { ModerationQueries } from './moderation.queries';
 import { RecordingQueries } from './recording.queries';
+import { studentLinkQueries } from './student-link.fakes';
+import { StudentLinkQueries } from './student-link.queries';
 import { StorageService } from '../../common/storage/storage.service';
+import { AuditService } from '../../common/audit/audit.service';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, sales: SALES, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -53,6 +56,8 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     recordings: recordingQueries(),
     http: http(),
     storage: { signedDownload: vi.fn() },
+    studentLinks: studentLinkQueries(),
+    audit: { record: vi.fn() },
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
@@ -69,6 +74,8 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(LIVEKIT_HTTP).useValue((...a: Parameters<typeof m.http>) => m.http(...a))
     .overrideProvider(RECORDING_CONFIG).useValue(S3)
     .overrideProvider(StorageService).useValue(m.storage)
+    .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
+    .overrideProvider(AuditService).useValue(m.audit)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   registerLivekitWebhookParser(app);
@@ -87,6 +94,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     Object.assign(m.queries, queries());
     Object.assign(m.moderation, moderation());
     Object.assign(m.recordings, recordingQueries());
+    Object.assign(m.studentLinks, studentLinkQueries());
     m.http.mockImplementation(http({ body: { egress_id: 'EG_new' } }));
     m.storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));
