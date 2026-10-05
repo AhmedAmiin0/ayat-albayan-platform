@@ -2,6 +2,7 @@ import { STUDENT_STATUSES, searchDigits, type StudentListFilters, type StudentSt
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '../../common/db/db.module';
 import { dbError, pageRange, type ListQuery, type Page } from '../guardians/http';
+import { applySort } from '../../common/list-sort';
 import { applyStudentFilters } from './students.filters';
 import {
   studentNameOrCodeFilter,
@@ -12,22 +13,22 @@ import {
   type StudentListRow,
   type StudentProfile,
 } from './students.mapper';
+import { applyStudentColumnFilters, STUDENT_SORT, type StudentColumnFilters, type StudentListSort } from './students.sort';
 
 // One literal each: supabase-js infers the row type from the select string.
 const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
 const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status)), teacher:teachers(id, display_name_ar, meeting_link)`;
 
-export type StudentListQuery = ListQuery & StudentListFilters;
+export type StudentListQuery = ListQuery & StudentListFilters & StudentColumnFilters & StudentListSort;
 
 /**
  * Paginated list (v_student_list), searchable by name / code / guardian phone and filtered by
- * status, teacher, program, package, weekly lesson, tz (R-STU-01, R-NFR-08).
+ * status, teacher, program, package, weekly lesson, tz (R-STU-01), the column text filters and
+ * an allowlisted sort, newest first by default (R-NFR-08).
  */
 export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<StudentListItem>> {
-  let query = applyStudentFilters(
-    db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' }),
-    q,
-  ).order('created_at', { ascending: false });
+  const base = db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' });
+  let query = applySort(applyStudentColumnFilters(applyStudentFilters(base, q), q), q, STUDENT_SORT);
   const filter = await searchFilter(db, q.search);
   if (filter) query = query.or(filter);
   const [from, to] = pageRange(q);

@@ -8,8 +8,11 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Pager } from '@/components/ui/pager';
 import { studentListQuery, studentStatusCountsQuery, type StatusCounts } from '@/features/students/api';
 import { StatusChips } from '@/features/students/StatusChips';
+import { setColumnFilter } from '@/features/students/search';
 import { t } from '@/lib/i18n';
+import type { FilterSearch, SortSearch } from '@/lib/list-search';
 import { teacherStudentColumns } from './teacher-student-columns';
+import { panelView } from './teacher-students-view';
 
 /** The default view: her current students, subscribed and trial. */
 export const CURRENT: readonly StudentStatus[] = ['trial', 'active'];
@@ -24,15 +27,25 @@ export function statusSummary(counts: StatusCounts): string {
 /**
  * «طلاب المعلم/ة» (R-TCH-03): the students list API with teacher fixed to her, status chips
  * (default subscribed + trial, or every status), counts per status, and a link to the full list.
+ * Columns sort and filter server-side (R-NFR-08); the state is local (a tab of the profile).
  */
 export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
   const [statuses, setStatuses] = useState<readonly StudentStatus[]>(CURRENT);
   const [page, setPage] = useState(1);
-  const filters = { teacher: teacherId, status: statuses.join(',') || undefined };
-  const list = useQuery(studentListQuery('', page, filters));
+  const [sort, setSort] = useState<SortSearch>({});
+  const [columns, setColumns] = useState<FilterSearch>({});
+  const list = useQuery(studentListQuery('', page, panelView({ teacherId, statuses, sort, columns })));
   const counts = useQuery(studentStatusCountsQuery({ teacher: teacherId }));
   const pick = (next: readonly StudentStatus[]) => {
     setStatuses(next);
+    setPage(1);
+  };
+  const onSort = (next: { key?: string; dir?: SortSearch['dir'] }) => {
+    setSort(next.key ? { sort: next.key, dir: next.dir } : {});
+    setPage(1);
+  };
+  const onFilter = (key: string, value: string) => {
+    setColumns(setColumnFilter(columns, { key, value }));
     setPage(1);
   };
   const toggle = (s: StudentStatus) => pick(statuses.includes(s) ? statuses.filter((x) => x !== s) : [...statuses, s]);
@@ -67,6 +80,8 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       <DataTable
         columns={teacherStudentColumns}
+        sort={{ key: sort.sort, dir: sort.dir, onChange: onSort }}
+        filters={{ values: columns, onChange: onFilter }}
         data={list.data?.items ?? []}
         getRowId={(r) => r.id}
         emptyText={list.data ? t.teachers.studentsEmpty : t.common.loading}

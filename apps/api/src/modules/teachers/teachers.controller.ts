@@ -1,4 +1,4 @@
-import { teacherCreateSchema, teacherUpdateSchema } from '@ab/shared';
+import { teacherColumnQueryShape, teacherCreateSchema, teacherUpdateSchema } from '@ab/shared';
 import {
   Body,
   Controller,
@@ -19,8 +19,8 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from './http';
 import { TeachersQueries, type Teacher } from './teachers.queries';
 
-/** `?search=` name or phone in any format (teacherSearchFilter). */
-const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).optional() });
+/** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
+const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).optional(), ...teacherColumnQueryShape });
 
 /** Admin-only teacher CRUD (R-TCH-01). */
 @ApiTags('teachers')

@@ -1,6 +1,7 @@
 import type { TeacherStudentKind } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
+import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -10,7 +11,7 @@ import { Tabs } from '@/components/ui/tabs';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { teacherStudentsQuery } from './api';
-import { StudentRow } from './StudentRow';
+import { teacherStudentColumns } from './columns';
 
 const KINDS = (): { value: TeacherStudentKind; label: string }[] => [
   { value: 'subscribed', label: t.teacherStudents.subscribed },
@@ -19,7 +20,8 @@ const KINDS = (): { value: TeacherStudentKind; label: string }[] => [
 
 /**
  * /teacher/students «الطلاب» (R-TCH-03): my students in two separate lists, «مشتركين» and
- * «تجريبي» — never mixed. Only the selected kind is fetched. No phone, guardian or money.
+ * «تجريبي» — never mixed. Only the selected kind is fetched. No phone, guardian or money. Every
+ * column sorts, and name / code / program / level filter, on the loaded list (R-NFR-08).
  */
 export function TeacherStudents() {
   const [kind, setKind] = useState<TeacherStudentKind>('subscribed');
@@ -44,11 +46,7 @@ export function TeacherStudents() {
           <EmptyState title={kind === 'trial' ? t.teacherStudents.emptyTrial : t.teacherStudents.emptySubscribed} />
         )}
         {list.data && list.data.length > 0 && (
-          <ul aria-label={t.teacherStudents.list}>
-            {list.data.map((s) => (
-              <StudentRow key={s.id} student={s} />
-            ))}
-          </ul>
+          <DataTable stacked clientSort clientFilter columns={teacherStudentColumns} data={list.data} getRowId={(s) => s.id} />
         )}
       </div>
     </>

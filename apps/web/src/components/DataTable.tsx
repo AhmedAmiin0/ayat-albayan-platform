@@ -58,6 +58,8 @@ export interface DataTableProps<T extends RowData> {
   filters?: DataTableFilters;
   /** Filter the loaded rows locally (`meta.filter` columns). */
   clientFilter?: boolean;
+  /** The table's accessible name (`aria-label`), when no heading names it. */
+  label?: string;
 }
 
 /**
@@ -77,6 +79,7 @@ export function DataTable<T extends RowData>({
   clientSort,
   filters,
   clientFilter,
+  label,
 }: DataTableProps<T>) {
   const table = useTable({
     features: dataTableFeatures,
@@ -95,7 +98,7 @@ export function DataTable<T extends RowData>({
       {/* `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width). */}
       <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
         {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
-        <table className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
+        <table aria-label={label} className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
           <DataTableHead table={table} sort={sort} />
           <tbody>
             {rows.length === 0 ? (

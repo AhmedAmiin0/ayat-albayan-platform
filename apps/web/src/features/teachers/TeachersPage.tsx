@@ -8,32 +8,46 @@ import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { t } from '@/lib/i18n';
+import { withFilter, withSort, type ListUrlState } from '@/lib/list-url';
 import { teachersPageQuery, type Page, type Teacher } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './TeacherDialog';
 
-type Props = { page: number; onPage: (page: number) => void; onOpen: (teacherId: string) => void };
-
-type TableProps = Pick<Props, 'onPage' | 'onOpen'> & {
-  data: Page<Teacher>;
-  columns: ReturnType<typeof teacherColumns>;
+type Props = {
+  /** Page, column sort and filters, kept in the route search (R-NFR-08). */
+  list: ListUrlState;
+  onList: (next: ListUrlState) => void;
+  onOpen: (teacherId: string) => void;
 };
 
-function TeachersTable({ data, columns, onOpen, onPage }: TableProps) {
-  if (data.total === 0) return <EmptyState title={t.teachers.empty} />;
+type TableProps = Props & { data: Page<Teacher>; columns: ReturnType<typeof teacherColumns> };
+
+function TeachersTable({ data, columns, list, onList, onOpen }: TableProps) {
+  // No teacher at all (no filter): the empty state; a filter with no match keeps its controls.
+  if (data.total === 0 && Object.keys(list.filters).length === 0) return <EmptyState title={t.teachers.empty} />;
   return (
     <>
-      <DataTable fill stacked columns={columns} data={data.items} getRowId={(row) => row.id} onRowClick={(row) => onOpen(row.id)} />
-      <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={onPage} />
+      <DataTable
+        fill
+        stacked
+        columns={columns}
+        data={data.items}
+        getRowId={(row) => row.id}
+        onRowClick={(row) => onOpen(row.id)}
+        emptyText={t.common.notFound}
+        sort={{ key: list.sort.sort, dir: list.sort.dir, onChange: (next) => onList(withSort(list, next)) }}
+        filters={{ values: list.filters, onChange: (key, value) => onList(withFilter(list, { key, value })) }}
+      />
+      <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={(page) => onList({ ...list, page })} />
     </>
   );
 }
 
 /** Admin teacher list with create/edit dialog (R-TCH-01). The shell renders the jadwal page. */
-export function TeachersPage({ page, onPage, onOpen }: Props) {
-  const list = useQuery(teachersPageQuery(page));
+export function TeachersPage({ list: state, onList, onOpen }: Props) {
+  const list = useQuery(teachersPageQuery(state));
   const [editing, setEditing] = useState<Teacher | 'new' | null>(null);
   const columns = useMemo(() => teacherColumns({ onEdit: setEditing, onOpen }), [onOpen]);
   const total = list.data?.total;
@@ -54,7 +68,7 @@ export function TeachersPage({ page, onPage, onOpen }: Props) {
       </PageHead>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
-      {list.data && <TeachersTable data={list.data} columns={columns} onOpen={onOpen} onPage={onPage} />}
+      {list.data && <TeachersTable data={list.data} columns={columns} list={state} onList={onList} onOpen={onOpen} />}
       {editing && (
         <TeacherDialog teacher={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />
       )}

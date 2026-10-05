@@ -1,8 +1,10 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { applySort } from '../../common/list-sort';
 import { readAll } from '../scheduling/read-all';
-import { dbError, type Page, type PageQuery } from './http';
+import { dbError, type Page } from './http';
+import { applyTeacherFilters, TEACHER_SORT, type TeacherListQuery } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';
 
 export type Teacher = Tables<'teachers'>;
@@ -12,13 +14,14 @@ export type Teacher = Tables<'teachers'>;
 export class TeachersQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  async list({ page, pageSize, search }: PageQuery & { search?: string }): Promise<Page<Teacher>> {
+  /** Search, column filters, allowlisted sort (default: Arabic name), `id` as the last tiebreaker. */
+  async list(q: TeacherListQuery): Promise<Page<Teacher>> {
+    const { page, pageSize, search } = q;
     const from = (page - 1) * pageSize;
-    let query = this.db.from('teachers').select('*', { count: 'exact' });
+    let query = applyTeacherFilters(this.db.from('teachers').select('*', { count: 'exact' }), q);
     const filter = search ? teacherSearchFilter(search) : null;
     if (filter) query = query.or(filter);
-    const { data, count, error } = await query
-      .order('display_name_ar')
+    const { data, count, error } = await applySort(query, q, TEACHER_SORT)
       .order('id')
       .range(from, from + pageSize - 1);
     if (error) throw dbError(error);

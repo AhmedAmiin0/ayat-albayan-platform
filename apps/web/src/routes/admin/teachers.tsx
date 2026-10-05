@@ -1,21 +1,20 @@
+import { TEACHER_FILTER_KEYS, TEACHER_SORT_KEYS } from '@ab/shared';
 import { createFileRoute, Outlet, useChildMatches, useNavigate } from '@tanstack/react-router';
 import { useCallback } from 'react';
 import { TeachersPage } from '@/features/teachers/TeachersPage';
+import { listUrlValidator, parseListUrl, toListUrl } from '@/lib/list-url';
 
-/** `?page=n` (1-based); omitted on page 1 so nav links need no search. */
-function validateSearch(search: Record<string, unknown>): { page?: number } {
-  const page = Number(search['page']);
-  return Number.isInteger(page) && page > 1 ? { page } : {};
-}
+const KEYS = { sortKeys: TEACHER_SORT_KEYS, filterKeys: TEACHER_FILTER_KEYS };
 
 /** /admin/teachers — list (R-TCH-01). Parent of teachers.$teacherId, which replaces the list. */
 export const Route = createFileRoute('/admin/teachers')({
-  validateSearch,
+  // `?page=n&sort=&dir=desc&f_<key>=` (R-NFR-08); defaults are omitted so nav links need no search.
+  validateSearch: listUrlValidator(KEYS),
   component: TeachersRoute,
 });
 
 function TeachersRoute() {
-  const { page = 1 } = Route.useSearch();
+  const list = parseListUrl(Route.useSearch(), KEYS);
   const navigate = useNavigate();
   const hasChild = useChildMatches().length > 0;
   const onOpen = useCallback(
@@ -25,9 +24,9 @@ function TeachersRoute() {
   if (hasChild) return <Outlet />;
   return (
     <TeachersPage
-      page={page}
+      list={list}
       onOpen={onOpen}
-      onPage={(p) => void navigate({ to: '/admin/teachers', search: { page: p } })}
+      onList={(next) => void navigate({ to: '/admin/teachers', search: toListUrl(next) })}
     />
   );
 }

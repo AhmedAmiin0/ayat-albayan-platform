@@ -12,12 +12,12 @@ import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { studentListQuery } from './api';
 import { CreateStudentDialog } from './CreateStudentDialog';
-import { activeFilterCount, type StudentsFilters } from './filters';
+import { isUnfiltered, studentTableControls, type StudentsSearch } from './search';
 import { StudentFilterBar } from './StudentFilterBar';
 import { studentColumns } from './studentColumns';
 import { StudentSearch } from './StudentSearch';
 
-export type StudentsSearch = { search: string; page: number; filters?: StudentsFilters };
+export type { StudentsSearch } from './search';
 
 type StudentsPageProps = StudentsSearch & {
   /** Writes search/page/filters to the URL (server-side paging, R-NFR-08). */
@@ -26,16 +26,19 @@ type StudentsPageProps = StudentsSearch & {
 };
 
 /**
- * Students list: search by name / phone / code, filter, paginate, add (R-STU-01..03). Inside the
- * shell's Page. Any search or filter change goes back to page 1.
+ * Students list: search by name / phone / code, filter, sort by any column, paginate, add
+ * (R-STU-01..03, R-NFR-08). Inside the shell's Page. Any search, filter or sort change goes back
+ * to page 1.
  */
-export function StudentsPage({ search, page, filters = {}, onChange, onOpen }: StudentsPageProps) {
-  const { data, isError } = useQuery(studentListQuery(search, page, filters));
+export function StudentsPage({ search, page, filters = {}, sort, columns: colFilters, onChange, onOpen }: StudentsPageProps) {
+  const { data, isError } = useQuery(studentListQuery(search, page, { filters, sort, columns: colFilters }));
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const dismiss = useCallback(() => setNotice(null), []);
   const columns = useMemo(() => studentColumns(onOpen), [onOpen]);
-  const none = data?.total === 0 && !search && activeFilterCount(filters) === 0;
+  const view = { search, page: 1, filters, sort, columns: colFilters };
+  const none = data?.total === 0 && isUnfiltered(view);
+  const controls = studentTableControls(view, onChange);
 
   return (
     <>
@@ -54,8 +57,8 @@ export function StudentsPage({ search, page, filters = {}, onChange, onOpen }: S
         </div>
       </PageHead>
       <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
-        <StudentSearch initial={search} onSearch={(term) => onChange({ search: term, page: 1, filters })} />
-        <StudentFilterBar value={filters} onChange={(next) => onChange({ search, page: 1, filters: next })} />
+        <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />
+        <StudentFilterBar value={filters} onChange={(next) => onChange({ ...view, filters: next })} />
       </div>
       {isError && (
         <p role="alert" className="mb-3 text-sm text-danger">
@@ -76,10 +79,12 @@ export function StudentsPage({ search, page, filters = {}, onChange, onOpen }: S
           getRowId={(r) => r.id}
           onRowClick={(r) => onOpen(r.id)}
           emptyText={data ? t.common.notFound : t.common.loading}
+          sort={controls.sort}
+          filters={controls.filters}
         />
       )}
       {data && (
-        <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ search, page: p, filters })} />
+        <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ ...view, page: p })} />
       )}
       {adding && (
         <CreateStudentDialog
