@@ -1,6 +1,7 @@
 import { tableFeatures, useTable, type ColumnDef, type RowData } from '@tanstack/react-table';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { tableBoxClass } from './TableBox';
 
 /** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
 export interface DataTableColumnMeta {
@@ -46,6 +47,8 @@ export interface DataTableProps<T extends RowData> {
   emptyText?: string;
   /** Stacked rows under 640px instead of horizontal scroll. */
   stacked?: boolean;
+  /** A list screen's main table: a fixed-height box (TableBox) that scrolls inside itself. */
+  fill?: boolean;
 }
 
 /**
@@ -60,6 +63,7 @@ export function DataTable<T extends RowData>({
   onRowClick,
   emptyText,
   stacked,
+  fill,
 }: DataTableProps<T>) {
   const table = useTable({
     features: dataTableFeatures,
@@ -71,8 +75,9 @@ export function DataTable<T extends RowData>({
 
   return (
     // `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width).
-    <div className={cn('relative overflow-x-auto', stacked && stackedClass)}>
-      <table className="w-full border-collapse text-sm">
+    <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
+      {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
+      <table className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
         <thead>
           {table.getHeaderGroups().map((group) => (
             <tr key={group.id}>

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { DataTable } from '@/components/DataTable';
+import { TableBox } from '@/components/TableBox';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHead } from '@/components/ui/page';
@@ -31,9 +32,9 @@ export function JobApplicantsList({ search, onSearch }: JobApplicantsListProps) 
       {data && (
         <>
           {data.items.length === 0 ? (
-            <EmptyState title={t.jobApplicants.empty} />
+            <TableBox center><EmptyState title={t.jobApplicants.empty} /></TableBox>
           ) : (
-            <DataTable stacked columns={applicantColumns} data={data.items} getRowId={(r) => r.id} />
+            <DataTable fill stacked columns={applicantColumns} data={data.items} getRowId={(r) => r.id} />
           )}
           <Pager
             page={search.page}

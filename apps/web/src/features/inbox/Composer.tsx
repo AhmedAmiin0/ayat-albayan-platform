@@ -30,7 +30,7 @@ export function Composer({ thread, context }: { thread: ThreadView; context: Pre
   const teacher = !!thread.teacher_id && !thread.guardian_id;
 
   return (
-    <div className="mt-4 grid gap-3 border-t border-rule pt-4">
+    <div className="mt-4 grid shrink-0 gap-3 border-t border-rule pt-4">
       {closed && <p className={hamish}>{asTeacher ? t.inbox.messagingOffTeacher : closed === 'switch_off' ? t.inbox.messagingOff : t.inbox.messagingOffServer}</p>}
       {open ? (
         <div className="flex flex-wrap items-center justify-between gap-2">

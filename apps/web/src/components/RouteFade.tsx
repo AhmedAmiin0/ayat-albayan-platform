@@ -26,7 +26,8 @@ export function RouteFade({ children }: { children: ReactNode }) {
     el.animate(KEYFRAMES, TIMING);
   }, [pathname]);
   return (
-    <div ref={ref} data-route-fade className="min-w-0">
+    // A growing flex column: a screen may give one box the rest of the frame (`flex-1 min-h-0`).
+    <div ref={ref} data-route-fade className="flex min-w-0 flex-1 flex-col">
       {children}
     </div>
   );

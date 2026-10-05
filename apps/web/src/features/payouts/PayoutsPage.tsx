@@ -1,6 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
+import { TableBox } from '@/components/TableBox';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -76,10 +77,10 @@ export function PayoutsPage({ month, onMonth }: Props) {
       <MissingRates items={missing} />
       {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isSuccess && rows.length === 0 && <EmptyState title={t.payouts.empty} />}
+      {list.isSuccess && rows.length === 0 && <TableBox center><EmptyState title={t.payouts.empty} /></TableBox>}
       {rows.length > 0 && (
         <>
-          <DataTable stacked columns={columns} data={rows} getRowId={(r) => r.id} />
+          <DataTable fill stacked columns={columns} data={rows} getRowId={(r) => r.id} />
           <p className="mt-3 flex justify-end gap-2 text-sm">
             <span className="text-ink-3">{t.expenses.total}</span>
             <Amount amount={total} currency="EGP" className="font-semibold" />

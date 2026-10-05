@@ -28,7 +28,7 @@ export function MessageLog({ messages, hasMore, loadingOlder, onOlder, waitingKe
   const now = new Date();
 
   return (
-    <div ref={box} className="min-h-[240px] shell:max-h-[min(62vh,620px)] shell:overflow-y-auto shell:pe-1">
+    <div ref={box} className="min-h-[240px] shell:min-h-0 shell:flex-1 shell:overflow-y-auto shell:overscroll-contain shell:pe-1">
       {hasMore && (
         <div className="mb-3 flex justify-center">
           <Button size="sm" variant="ghost" disabled={loadingOlder} onClick={onOlder}>

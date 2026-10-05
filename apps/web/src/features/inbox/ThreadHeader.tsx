@@ -24,7 +24,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge }: Threa
   const kind = threadKind(th);
   const mode = useInboxMode();
   return (
-    <header className="mb-4 flex flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule pb-3">
+    <header className="mb-4 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule pb-3">
       <Link
         to={inboxBase(mode)}
         search={listSearch}

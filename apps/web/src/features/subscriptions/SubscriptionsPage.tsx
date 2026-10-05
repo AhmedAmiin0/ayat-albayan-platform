@@ -2,6 +2,7 @@ import { SUBSCRIPTION_STATUSES, type SubscriptionStatus } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
+import { TableBox } from '@/components/TableBox';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -78,10 +79,10 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
       </PageHead>
       {(list.isError || pause.isError) && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
-      {list.data?.total === 0 && <EmptyState title={t.subscriptions.emptyList} />}
+      {list.data?.total === 0 && <TableBox center><EmptyState title={t.subscriptions.emptyList} /></TableBox>}
       {list.data && list.data.total > 0 && (
         <>
-          <DataTable stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
+          <DataTable fill stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onChange({ status, page: p })} />
         </>
       )}

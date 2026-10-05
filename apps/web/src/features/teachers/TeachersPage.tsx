@@ -25,7 +25,7 @@ function TeachersTable({ data, columns, onOpen, onPage }: TableProps) {
   if (data.total === 0) return <EmptyState title={t.teachers.empty} />;
   return (
     <>
-      <DataTable stacked columns={columns} data={data.items} getRowId={(row) => row.id} onRowClick={(row) => onOpen(row.id)} />
+      <DataTable fill stacked columns={columns} data={data.items} getRowId={(row) => row.id} onRowClick={(row) => onOpen(row.id)} />
       <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={onPage} />
     </>
   );
