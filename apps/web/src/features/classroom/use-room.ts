@@ -1,7 +1,7 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { mediaErrorText } from './errors';
-import { EMPTY_SNAPSHOT, type RoomClient, type RoomSnapshot } from './room-types';
+import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type RoomClient, type RoomSnapshot } from './room-types';
 import { t } from '@/lib/i18n';
 
 export interface RoomController {
@@ -16,6 +16,11 @@ export interface RoomController {
   enableAudio: () => void;
   leave: () => void;
   attach: (tileKey: string, el: HTMLVideoElement) => () => void;
+  /** Data channel: survives a client swap because the listeners live in the hook. */
+  sendData: (bytes: Uint8Array, opts: DataSendOptions) => void;
+  onData: (listener: (packet: DataPacketIn) => void) => () => void;
+  /** The whiteboard's canvas track as the screen share; null stops it. */
+  setBoardTrack: (track: MediaStreamTrack | null) => void;
 }
 
 /** Owns one client for the life of the component: connects on mount, disconnects on unmount. */
@@ -24,18 +29,21 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
   const [snap, setSnap] = useState<RoomSnapshot>(EMPTY_SNAPSHOT);
   const [notes, setNotes] = useState<string[]>([]);
   const [failure, setFailure] = useState<string | null>(null);
+  const data = useRef(new Set<(packet: DataPacketIn) => void>());
 
   useEffect(() => {
     let live = true;
     const c = make();
     client.current = c;
     const off = c.subscribe(setSnap);
+    const offData = c.onData((packet) => data.current.forEach((l) => l(packet)));
     c.connect(join.url, join.token)
       .then((fails) => live && setNotes(fails.map((f) => mediaErrorText(f.device, f.error))))
       .catch(() => live && setFailure(t.classroom.error.connect_failed));
     return () => {
       live = false;
       off();
+      offData();
       c.disconnect();
       client.current = null;
     };
@@ -50,8 +58,19 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
 
   const attach = useCallback((key: string, el: HTMLVideoElement) => client.current?.attachVideo(key, el) ?? (() => undefined), []);
 
+  const sendData = useCallback((bytes: Uint8Array, opts: DataSendOptions) => {
+    client.current?.sendData(bytes, opts).catch(() => undefined);
+  }, []);
+  const onData = useCallback((listener: (packet: DataPacketIn) => void) => {
+    data.current.add(listener);
+    return () => void data.current.delete(listener);
+  }, []);
+
   return {
     snap,
+    sendData,
+    onData,
+    setBoardTrack: (track) => run((c) => c.setBoardTrack(track), 'share'),
     attach,
     notes,
     failure,

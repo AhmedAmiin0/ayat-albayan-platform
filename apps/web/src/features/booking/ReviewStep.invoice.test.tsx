@@ -31,13 +31,13 @@ function renderReview() {
 afterEach(() => apiSend.mockReset());
 
 describe('ReviewStep invoice errors (R-PAY-03, R-MSG-06)', () => {
-  it('shows the invoice summary row with «من الشات»', () => {
+  it('shows the invoice summary row with «من المحادثة»', () => {
     renderReview();
     expect(screen.getByText(t.booking.invoice.label)).toBeTruthy();
     expect(screen.getByText(t.booking.invoice.fromChat)).toBeTruthy();
   });
 
-  it('a makeup reads «ميعاد التعويض», not «أول حلقة»', () => {
+  it('a makeup reads «موعد التعويض», not «أول حلقة»', () => {
     const makeup: BookingDraft = { ...DRAFT, kind: 'makeup', missed: { lessonId: 'l-1', startsAt: SLOT, teacherId: ABRAR.id, durationMin: 45 } };
     render(
       <QueryClientProvider client={new QueryClient()}>

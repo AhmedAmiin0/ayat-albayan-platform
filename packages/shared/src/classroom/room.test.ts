@@ -32,6 +32,6 @@ describe('classroom wording', () => {
 
   it('keeps the owner wording of the two buttons', () => {
     expect(ar.classroom.enter).toBe('ادخل الحلقة');
-    expect(ar.classroom.sendLink).toBe('ابعت لينك الحلقة');
+    expect(ar.classroom.sendLink).toBe('أرسل رابط الحلقة');
   });
 });

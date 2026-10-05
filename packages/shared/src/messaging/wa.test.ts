@@ -116,7 +116,7 @@ describe('token / permission errors and the admin retry button', () => {
     ['uncertain', true],
     ['network', true],
     [null, true],
-  ])('«جرّب تاني» for error %j → %s', (code, ok) => {
+  ])('«حاول مرة أخرى» for error %j → %s', (code, ok) => {
     expect(canRetryCode(code)).toBe(ok);
   });
 });

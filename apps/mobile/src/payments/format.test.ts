@@ -14,7 +14,7 @@ test('money: isolated Western amount, then the Arabic currency sign or the ISO c
 test('packageName: the catalog size, or the count for a custom package', () => {
   expect(packageName({ package: '8', lessons_total: 8 })).toBe(t.enums.packageSize['8']);
   expect(packageName({ package: null, lessons_total: 10 })).toBe('10 حلقات');
-  expect(packageName({ package: null, lessons_total: 2 })).toBe('حلقتين');
+  expect(packageName({ package: null, lessons_total: 2 })).toBe('حلقتان');
 });
 
 test('instantDay is the Riyadh day; localDay keeps the stored date', () => {
@@ -26,6 +26,6 @@ test('instantDay is the Riyadh day; localDay keeps the stored date', () => {
 test('package, paid and used lines', () => {
   const sub = subscription({ paid: 72.5 });
   expect(packageFrom(sub)).toBe(`${t.enums.packageSize['4']} · من 24 سبتمبر 2026`);
-  expect(paidOf(sub)).toBe(`اتدفع ${ltr('72.5')} من ${ltr(String(sub.price))} ${SAR}`);
+  expect(paidOf(sub)).toBe(`دُفع ${ltr('72.5')} من ${ltr(String(sub.price))} ${SAR}`);
   expect(usedOf(sub)).toBe('2 من 4 حلقة');
 });

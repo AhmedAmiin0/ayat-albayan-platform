@@ -3,13 +3,16 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { calendarBackend, NOW } from '@/calendar/flow-backend';
 import { t } from '@/lib/i18n';
 
+// The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
+jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
+
 beforeEach(async () => {
   await resetApp();
   jest.useFakeTimers({ now: NOW, advanceTimers: true });
 });
 afterEach(() => jest.useRealTimers());
 
-test('Today card → «غيّر الميعاد» → «الحلقة دي وكل اللي بعدها» → a weekly rule; Today refetches and the card leaves', async () => {
+test('Today card → «غيّر الموعد» → «هذه الحلقة وكل ما بعدها» → a weekly rule; Today refetches and the card leaves', async () => {
   const { backend } = calendarBackend();
   const app = await renderApp({ url: '/', backend });
   expect(await screen.findByText('يوسف أحمد')).toBeTruthy();

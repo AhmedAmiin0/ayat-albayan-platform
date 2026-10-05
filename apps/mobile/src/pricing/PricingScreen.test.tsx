@@ -50,7 +50,7 @@ test('the card shows the API’s numbers: price, per lesson, total, discount, sa
   expect(screen.queryByText(p.fx.attribution)).toBeNull();
 });
 
-test('«دولة تانية (بالدولار)» drops the country; the USD card carries the rate’s date', async () => {
+test('«دولة أخرى (بالدولار)» drops the country; the USD card carries the rate’s date', async () => {
   mockApiFetch.mockImplementation(async (path: string) =>
     path.includes('country=') ? bulkSa : starterUsd,
   );

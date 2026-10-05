@@ -48,7 +48,7 @@ describe('isAutomatic: job-made reminders, follow-ups and renewals', () => {
   });
 
   it('every registry key is classified: a new key fails here until it is automatic or sent on an action', () => {
-    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «ابعت طلب الرأي» and «ابعت لينك الحلقة».
+    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «أرسل طلب الرأي» and «أرسل رابط الحلقة».
     const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'lesson_join_link'];
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
   });

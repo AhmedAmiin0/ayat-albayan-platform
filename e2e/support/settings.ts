@@ -127,7 +127,7 @@ export async function queueText(input: QueuedText): Promise<void> {
 export async function queueRenewal(input: { phone: string; dedupKey: string }): Promise<void> {
   await withSql((sql) => sql`
     insert into public.messages (direction, phone_e164, template_key, template_params, dedup_key, status)
-    values ('outbound', ${input.phone}, 'renewal_due', ${sql.json({ '1': 'سارة', '2': 'فاضل حلقتين' })},
+    values ('outbound', ${input.phone}, 'renewal_due', ${sql.json({ '1': 'سارة', '2': 'بقيت حلقتان' })},
       ${input.dedupKey}, 'queued')`);
 }
 

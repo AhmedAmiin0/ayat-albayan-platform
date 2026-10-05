@@ -80,7 +80,7 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
     expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'failed', error_code: '131026' }));
     expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', {
       subject: `${dueMessage().id}:${NOW.getTime()}`,
-      vars: { template: 'تأكيد الحجز — لينك Jitsi', name: 'أم سلمى' },
+      vars: { template: 'تأكيد الحجز — رابط Jitsi', name: 'أم سلمى' },
       data: { phone: '+966551234567', messageId: dueMessage().id },
     });
   });

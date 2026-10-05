@@ -33,7 +33,7 @@ test.describe('journey 3 — payment → active → renewal at 2 left (R-PAY-01,
     const page = await asRole('admin');
     await page.goto(`/admin/students/${seed.studentId}`);
     const card = page.getByRole('region', { name: ar.subscriptions.balance });
-    await expect(card.getByText('فاضل 3 حلقات')).toBeVisible();
+    await expect(card.getByText('بقيت 3 حلقات')).toBeVisible();
     await card.getByRole('button', { name: ar.payments.record }).click();
     const dialog = page.getByRole('dialog', { name: ar.payments.mobile.recordFor.replace('{student}', 'سهيلة') });
     await expect(dialog.getByLabel(new RegExp(ar.payments.amount))).toHaveValue(String(seed.price));
@@ -63,7 +63,7 @@ test.describe('journey 3 — payment → active → renewal at 2 left (R-PAY-01,
     // on the packages page without it (the package row above carries the live balance).
     const task = ar.dashboard.task.renewal_due.replace('{student}', 'سهيلة');
     await page.goto('/admin?work=tasks');
-    await expect(page.getByText(task.replace('{left}', 'فاضل حلقتين')).first()).toBeVisible();
+    await expect(page.getByText(task.replace('{left}', 'بقيت حلقتان')).first()).toBeVisible();
     await page.goto('/admin/subscriptions');
     await expect(page.getByText(task.replace(/:\s*\{left\}$/, ''), { exact: true }).first()).toBeVisible();
   });

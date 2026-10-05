@@ -5,6 +5,7 @@ import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { EditTimeButton } from '@/edit-time/EditTimeButton';
 import { editMode } from '@/edit-time/types';
 import { t } from '@/lib/i18n';
+import { LiveBadge } from '@/live/LiveBadge';
 import { type, useTheme } from '@/theme';
 import { durationLabel, riyadhTime, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/ui/AppText';
@@ -73,6 +74,7 @@ export function AgendaLessonRow({ lesson, onReschedule, actions, onEditTime }: A
         <JoinClassroomButton lesson={lesson} />
       </View>
       <View style={{ alignItems: 'flex-end', gap: 4 }}>
+        <LiveBadge lesson={lesson} />
         <StatusChip {...lessonStatusStyle[lesson.status]} label={t.enums.lessonStatus[lesson.status]} size="sm" />
         {lesson.trial ? <Tag>{t.schedule.trialTag}</Tag> : null}
         {lesson.makeup ? <Tag>{t.booking.makeup.tag}</Tag> : null}

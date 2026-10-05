@@ -58,7 +58,7 @@ describe('BookingWizard — a lead whose family is already on file (R-STU-03, R-
     expect(second?.['clientRequestId']).toBe(first?.['clientRequestId']);
   });
 
-  it('«لا، ده طالب جديد» books the new student anyway (force)', async () => {
+  it('«لا، هذا طالب جديد» books the new student anyway (force)', async () => {
     routeSend(apiSend, [DUPLICATE, BOOKED]);
     await bookFromLead();
     fireEvent.click(screen.getByRole('button', { name: t.booking.newAnyway }));

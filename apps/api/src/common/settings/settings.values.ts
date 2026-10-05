@@ -17,6 +17,7 @@ export const SETTING_DEFAULTS: AcademySettings = {
   messaging_enabled: false,
   auto_messages_enabled: false,
   crm_cutover_done: false,
+  sales_auto_assign: true,
 };
 
 export type SettingKey = keyof AcademySettings;
@@ -44,6 +45,7 @@ const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
   messaging_enabled: bool,
   auto_messages_enabled: bool,
   crm_cutover_done: bool,
+  sales_auto_assign: bool,
 };
 
 /** Stored rows → typed settings, defaults filled in key by key. */
@@ -68,6 +70,7 @@ export function readSettings(rows: readonly { key: string; value: Json }[]): Aca
     messaging_enabled: pick('messaging_enabled'),
     auto_messages_enabled: pick('auto_messages_enabled'),
     crm_cutover_done: pick('crm_cutover_done'),
+    sales_auto_assign: pick('sales_auto_assign'),
   };
 }
 
@@ -86,6 +89,7 @@ const KEY_OF: { [K in keyof Required<SettingsUpdate>]: SettingKey } = {
   messagingEnabled: 'messaging_enabled',
   autoMessagesEnabled: 'auto_messages_enabled',
   crmCutoverDone: 'crm_cutover_done',
+  salesAutoAssign: 'sales_auto_assign',
 };
 
 /** PATCH body (camelCase, only sent keys) → settings rows to write. */

@@ -3,6 +3,8 @@ on:
   push:
     branches: [main, develop]
   pull_request:
+  # Run by hand from the Actions tab (e2e included).
+  workflow_dispatch:
 
 # A new push to the same branch or PR cancels the run it replaces.
 concurrency:
@@ -16,6 +18,28 @@ env:
   TURBO_TEAM: ${{ vars.TURBO_TEAM }}
 
 jobs:
+  # Which parts changed: e2e drives apps/web against the API and database, so a PR that only touches the
+  # mobile app, docs or the migration tool skips the four e2e machines. Pushes to main/develop always run them.
+  changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    outputs:
+      e2e: ${{ steps.diff.outputs.e2e }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: diff
+        run: |
+          if [ "${{ github.event_name }}" != "pull_request" ]; then echo "e2e=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          files=$(git diff --name-only "origin/${{ github.base_ref }}...HEAD")
+          echo "$files"
+          if echo "$files" | grep -qvE '^(apps/mobile/|docs/|tools/migrate/|tools/scripts/|.*\.md$)'; then
+            echo "e2e=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "e2e=false" >> "$GITHUB_OUTPUT"
+          fi
+
   # Lint, typecheck and unit tests need no database: they run alongside the e2e shards, not before them.
   check:
     runs-on: ubuntu-latest
@@ -34,6 +58,10 @@ jobs:
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
   e2e:
+    needs: changes
+    # e2e is paused (owner's call): it runs only when started by hand, or once the repository variable
+    # RUN_E2E is set to 'true' (Settings → Secrets and variables → Actions → Variables). No code change needed.
+    if: needs.changes.outputs.e2e == 'true' && (github.event_name == 'workflow_dispatch' || vars.RUN_E2E == 'true')
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
@@ -49,6 +77,7 @@ jobs:
           cache: pnpm
       - run: pnpm i --frozen-lockfile
       - name: Start local Supabase
+        # Only what the e2e suite uses: Postgres, auth, PostgREST, storage and the gateway.
         run: pnpm supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
       - run: pnpm env:local
       - name: Playwright version
@@ -66,7 +95,9 @@ jobs:
       - name: Install the browser's system libraries (cache hit)
         if: steps.pw-cache.outputs.cache-hit == 'true'
         run: pnpm --filter e2e exec playwright install-deps chromium
-      - run: pnpm turbo e2e --filter=e2e -- --shard=${{ matrix.shard }}/4
+      # PRs run the desktop project only (half the specs); pushes to main/develop also run the phone-size
+      # project, so a mobile layout regression is still caught before a release.
+      - run: pnpm turbo e2e --filter=e2e -- --shard=${{ matrix.shard }}/4 ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
         env:
           CI: 'true'
       - uses: actions/upload-artifact@v4

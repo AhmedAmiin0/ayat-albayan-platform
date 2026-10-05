@@ -30,19 +30,19 @@ describe('money text (docs/07 §6, Western digits)', () => {
   it('the student line counts every package (FIFO): 1 left + 4 new = 5', () => {
     const old = { ...WEEKLY, balance: { ...WEEKLY.balance, lessons_used: 3, remaining: 1 } };
     const fresh = { ...WEEKLY, id: 'sub-2', balance: { ...WEEKLY.balance, lessons_used: 0, remaining: 4 } };
-    expect(studentProgress({ packages: [old, fresh] })).toMatchObject({ remaining: 5, remainingLabel: 'فاضل 5 حلقات' });
-    expect(studentProgress({ packages: [WEEKLY] })).toMatchObject({ remainingLabel: 'فاضل حلقتين', tone: 'act' });
+    expect(studentProgress({ packages: [old, fresh] })).toMatchObject({ remaining: 5, remainingLabel: 'بقيت 5 حلقات' });
+    expect(studentProgress({ packages: [WEEKLY] })).toMatchObject({ remainingLabel: 'بقيت حلقتان', tone: 'act' });
   });
 
   it('task wording: the student and the line kept when it was raised', () => {
     const task = {
       id: 'k1', kind: 'renewal_due' as const, subject_type: 'subscription', subject_id: 'sub-1',
-      student: WEEKLY.student, title: 'فاضل حلقتين', due_at: null, done_at: null, created_at: '2026-10-02T09:00:00Z',
+      student: WEEKLY.student, title: 'بقيت حلقتان', due_at: null, done_at: null, created_at: '2026-10-02T09:00:00Z',
     };
-    // The stored balance («فاضل حلقتين» when raised) can be stale: never shown.
-    expect(taskText(task)).toBe('باقة سهيلة قربت تخلص');
-    expect(taskText({ ...task, title: null })).toBe('باقة سهيلة قربت تخلص');
-    expect(taskText({ ...task, kind: 'subscription_unpaid' })).toBe('باقة سهيلة خلصت ومحتاجة تجديد');
+    // The stored balance («بقيت حلقتان» when raised) can be stale: never shown.
+    expect(taskText(task)).toBe('باقة سهيلة قاربت على الانتهاء');
+    expect(taskText({ ...task, title: null })).toBe('باقة سهيلة قاربت على الانتهاء');
+    expect(taskText({ ...task, kind: 'subscription_unpaid' })).toBe('انتهت باقة سهيلة وتحتاج إلى تجديد');
   });
 
   it('unpaid flag: newest package unpaid and nothing left', () => {

@@ -17,7 +17,7 @@ describe('Phase 4 strings and chips (rule 10, docs/07 §6)', () => {
   });
 
   it('the session-window notice keeps its exact wording', () => {
-    expect(ar.inbox.sessionClosed).toBe('فات أكتر من 24 ساعة على آخر رسالة منه — لازم تبعت قالب');
+    expect(ar.inbox.sessionClosed).toBe('مضى أكثر من 24 ساعة على آخر رسالة منه — يجب أن ترسل قالبًا');
   });
 
   it.each([

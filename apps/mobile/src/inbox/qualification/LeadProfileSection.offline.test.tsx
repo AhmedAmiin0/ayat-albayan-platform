@@ -38,7 +38,7 @@ test('no answer: says so once; the cached answers stay readable; no save, no pau
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
-test('«جرّب تاني» gets an answer: the line goes and saving and pausing are back', async () => {
+test('«حاول مرة أخرى» gets an answer: the line goes and saving and pausing are back', async () => {
   online = false;
   await renderWithQuery(<LeadProfileSection lead={huda} />);
   await screen.findByText(offlineLine);

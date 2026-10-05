@@ -68,7 +68,7 @@ test('lead → teacher → free slot → «احجز»: one trial on POST /bookin
       status: 'trial',
       teacher_gender_pref: null,
     },
-    // «عرفت عننا منين؟» comes over from the lead (a Facebook ad).
+    // «كيف عرفت عنا؟» comes over from the lead (a Facebook ad).
     guardian: {
       name: 'هدى سالم',
       phone_e164: '+966552147730',
@@ -115,7 +115,7 @@ test('slots: only free ones, by Riyadh day; «رجوع» walks the steps back, t
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   expect(await screen.findByRole('button', { name: '17:00' })).toBeTruthy();
   expect(screen.getByRole('header', { name: 'الأحد 4 أكتوبر' })).toBeTruthy();
-  // The form's «الساعه *» and «تاريخ أول حلقة» labels sit over the free slots.
+  // The form's «الساعة *» and «تاريخ أول حلقة» labels sit over the free slots.
   expect(screen.getByText(`${t.booking.pickTime} *`)).toBeTruthy();
   expect(screen.getByText(t.booking.startsOn)).toBeTruthy();
   expect(screen.queryByRole('button', { name: '19:00' })).toBeNull(); // Monday's slot is busy

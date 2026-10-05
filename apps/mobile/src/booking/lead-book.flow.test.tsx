@@ -68,7 +68,7 @@ test('a 409 clash keeps the wizard on its step; another slot then books', async 
   await fireEvent.press(screen.getByRole('button', { name: t.booking.submit }));
   expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
   expect(
-    screen.getByText('المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)'),
+    screen.getByText('المعلم/ة مشغول/ة بحلقة أخرى في هذا الموعد (الأحد 4 أكتوبر 17:00)'),
   ).toBeTruthy();
   expect(app.pathname()).toBe('/inbox/book');
   expect(screen.queryByText(t.booking.booked)).toBeNull();

@@ -72,7 +72,7 @@ test.describe('teacher dashboard — week, pending reports, history (R-TCH-03, R
         await expect(section.getByRole('article', { name: new RegExp(`^${clock} .*${s.week.name}`) })).toHaveCount(1);
       }
 
-      // «تقارير لسه ما اتكتبتش»: the past lesson without a report opens its form.
+      // «تقارير لم تُكتب بعد»: the past lesson without a report opens its form.
       await tab(teacher, ar.teacherDash.today);
       const pending = teacher.getByRole('region', { name: ar.reports.pending });
       await pending.getByRole('listitem').filter({ hasText: s.waiting.name }).getByRole('link', { name: ar.reports.open }).click();

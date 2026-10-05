@@ -34,7 +34,7 @@ describe('profile form mapping (R-STU-05)', () => {
     });
   });
 
-  it('«سن الطالب» and «النوع» (research-forms 1): a number or null, the form’s age message', () => {
+  it('«عمر الطالب» and «النوع» (research-forms 1): a number or null, the form’s age message', () => {
     const v = toProfileValues({ ...PROFILE, age: 9, gender: 'female' });
     expect(v).toMatchObject({ age: '9', gender: 'female' });
     expect(toStudentPatch(v)).toEqual({ ok: true, patch: expect.objectContaining({ age: 9, gender: 'female' }) });

@@ -25,7 +25,7 @@ const decider = new ProposalDecisionService(
   rescheduler as unknown as RescheduleOneService,
 );
 
-describe('LessonProposeService — «اقترح ميعاد تاني» (R-SCH-08)', () => {
+describe('LessonProposeService — «اقترح موعدًا آخر» (R-SCH-08)', () => {
   beforeEach(() => {
     vi.resetAllMocks();
     vi.useFakeTimers({ now: NOW });

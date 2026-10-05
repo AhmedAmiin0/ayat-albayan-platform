@@ -35,7 +35,7 @@ test('a teacher calendar opens inside the More tab', async () => {
   expect(screen.getByRole('button', { selected: true, name: t.mobile.more })).toBeTruthy();
 });
 
-test('«الجدول» is a tab of its own, after النهارده', async () => {
+test('«الجدول» is a tab of its own, after اليوم', async () => {
   expect(await open('/schedule')).toBe('/schedule');
   expect(screen.getByText('schedule-tab')).toBeTruthy();
   expect(screen.getByRole('button', { selected: true, name: t.schedule.nav })).toBeTruthy();

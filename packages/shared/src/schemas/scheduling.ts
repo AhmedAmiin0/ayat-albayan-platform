@@ -135,6 +135,7 @@ export const settingsUpdateSchema = z.object({
   messagingEnabled: z.boolean().optional(),
   autoMessagesEnabled: z.boolean().optional(),
   crmCutoverDone: z.boolean().optional(),
+  salesAutoAssign: z.boolean().optional(),
 });
 
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;

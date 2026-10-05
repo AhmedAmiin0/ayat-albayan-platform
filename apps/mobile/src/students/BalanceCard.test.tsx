@@ -43,27 +43,27 @@ const colorOf = (text: string) => {
 test('3 left: ink, the package, what is used and paid, the status, «سجّل دفعة»', async () => {
   serve(left(3));
   await renderWithQuery(<BalanceCard studentId="s1" />);
-  expect(await screen.findByText('فاضل 3 حلقات')).toBeTruthy();
-  expect(colorOf('فاضل 3 حلقات')).toBe(palette.light.ink);
+  expect(await screen.findByText('بقيت 3 حلقات')).toBeTruthy();
+  expect(colorOf('بقيت 3 حلقات')).toBe(palette.light.ink);
   expect(screen.getByText(`${t.enums.packageSize['4']} · 1 من 4 حلقة`)).toBeTruthy();
-  expect(screen.getByText(/اتدفع/)).toBeTruthy();
+  expect(screen.getByText(/دُفع /)).toBeTruthy();
   expect(screen.getByText(t.enums.subscriptionStatus.active)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.record }));
   expect(mockPush).toHaveBeenCalledWith('/students/payment/s1');
 });
 
-test('2 left (the renewal threshold): saffron «فاضل حلقتين»', async () => {
+test('2 left (the renewal threshold): saffron «بقيت حلقتان»', async () => {
   serve(left(2));
   await renderWithQuery(<BalanceCard studentId="s1" />);
-  expect(await screen.findByText('فاضل حلقتين')).toBeTruthy();
-  expect(colorOf('فاضل حلقتين')).toBe(palette.light.act);
+  expect(await screen.findByText('بقيت حلقتان')).toBeTruthy();
+  expect(colorOf('بقيت حلقتان')).toBe(palette.light.act);
 });
 
 test('the threshold comes from the settings', async () => {
   serve(left(3), 3);
   await renderWithQuery(<BalanceCard studentId="s1" />);
   await screen.findByText(t.payments.title);
-  expect(colorOf('فاضل 3 حلقات')).toBe(palette.light.act);
+  expect(colorOf('بقيت 3 حلقات')).toBe(palette.light.act);
 });
 
 test('the latest payments under the card', async () => {

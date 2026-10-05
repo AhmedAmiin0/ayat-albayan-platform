@@ -8,11 +8,12 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { formatAge, formatDateTime, initialOf } from './format';
+import { LeadAssignSelect } from './LeadAssignSelect';
 import { ReclassifyConfirm } from './ReclassifyConfirm';
 import type { LeadRow } from './types';
 
 /** Shared with the list head so chips line up across rows (docs/07 §9). */
-export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_120px]';
+export const leadGridClass = 'sm:grid-cols-[38px_minmax(0,1fr)_156px_168px_120px]';
 
 export interface LeadListItemProps {
   lead: LeadRow;
@@ -63,7 +64,10 @@ export function LeadListItem({ lead, confirming, busy, onAsk, onKeep, onMove }: 
       <div className="col-start-2 row-start-2 sm:col-start-3 sm:row-start-1">
         <StatusChip {...leadStatusStyle[lead.status]} label={t.enums.leadStatus[lead.status]} />
       </div>
-      <div className="col-start-3 row-start-1 flex justify-end gap-1 sm:col-start-4">
+      <div className="col-start-2 row-start-3 sm:col-start-4 sm:row-start-1">
+        <LeadAssignSelect lead={lead} />
+      </div>
+      <div className="col-start-3 row-start-1 flex justify-end gap-1 sm:col-start-5">
         <Link
           to="/admin/inbox"
           search={{ phone: lead.phone_e164, page: 1 }}

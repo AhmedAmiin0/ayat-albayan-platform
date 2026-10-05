@@ -66,7 +66,7 @@ test('missed lesson → teacher → slot of its length → invoice → «احج�
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain('durationMin=60'); // the original's length
 
-  // «الفاتورة *» is required for a makeup too; there is no «من الشات» (a lesson knows no guardian number).
+  // «الفاتورة *» is required for a makeup too; there is no «من المحادثة» (a lesson knows no guardian number).
   expect(screen.queryByRole('button', { name: t.booking.invoice.fromChat })).toBeNull();
   await press(t.booking.next);
   expect(await screen.findByText(t.booking.error.invoice_required)).toBeTruthy();
@@ -127,7 +127,7 @@ test('the API refusing the invoice (400 invoice_required) sends the admin back t
   expect(await screen.findByText(t.booking.invoice.hint)).toBeTruthy();
 });
 
-test('a clash shows the lines with «اختار ميعاد تاني», which reopens the slots', async () => {
+test('a clash shows the lines with «اختر موعدًا آخر», which reopens the slots', async () => {
   await renderWithQuery(<MakeupWizard source={source} />);
   await walkToConfirm();
   mockApiSend.mockRejectedValue(new ApiError(409, { code: 'conflict', conflicts: [{ kind: 'teacher_busy', startsAt: SUN_17, endsAt: SUN_17 }] }));

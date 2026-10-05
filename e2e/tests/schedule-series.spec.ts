@@ -2,7 +2,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { addDays, lessonsOf, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, setAvailability } from '../support/schedule';
 import { openLessonDrawer, ruleStateOf, seedWeeklyRule, weekGrid, weekOf } from '../support/schedule-extra';
 
-// «غيّر الميعاد» with scope «الحلقة دي وكل اللي بعدها» (R-SCH-07, reschedule-rule.service.ts): the old
+// «غيّر الموعد» with scope «هذه الحلقة وكل ما بعدها» (R-SCH-07, reschedule-rule.service.ts): the old
 // rule ends the day before, its open lessons become `rescheduled`, and a new weekly rule starts at
 // the picked weekday/time with ONE queued confirmation (the first new lesson's).
 

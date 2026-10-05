@@ -14,7 +14,7 @@ const press = async (role: 'button' | 'radio' | 'checkbox', name: string) =>
 
 beforeEach(resetApp);
 
-test('expired family: chip «الباقة خلصت» → «جدّد» → quote → save once → back: the chat chip and the list tag say «مشترك»', async () => {
+test('expired family: chip «انتهت الباقة» → «جدّد» → quote → save once → back: the chat chip and the list tag say «مشترك»', async () => {
   const { backend, state } = subscribeBackend({ hold: true });
   const app = await renderApp({ url: '/inbox', backend });
   await fireEvent.press(await screen.findByRole('button', { name: /أم يوسف/ }));

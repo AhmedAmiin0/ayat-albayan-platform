@@ -31,7 +31,7 @@ function flags(on: boolean) {
   );
 }
 
-describe('UnpaidFlags (R-SUB-02 «الباقة مش مدفوعة» on future lessons)', () => {
+describe('UnpaidFlags (R-SUB-02 «الباقة غير مدفوعة» on future lessons)', () => {
   it('only students whose newest package is unpaid with nothing left', async () => {
     expect(await flags(true).studentIds(['s1', 's2', 's3', 's1'])).toEqual(new Set(['s1']));
   });

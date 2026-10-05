@@ -15,7 +15,7 @@ const family = (name: string, phone: string, tags: object) =>
 afterEach(() => apiFetch.mockReset());
 
 describe('list tags show what needs the admin (docs/07 principle 2: saffron = «دورك»)', () => {
-  it('«الباقة خلصت» (renew) and «مش مدفوع» in act; «مش مشترك» never clutters a row; a converted lead is not «مشترك»', async () => {
+  it('«انتهت الباقة» (renew) and «غير مدفوع» in act; «غير مشترك» never clutters a row; a converted lead is not «مشترك»', async () => {
     const items = [
       family('أم ليان', '+966501110001', { badge: 'expired', unpaid: false, subscribed: false }),
       family('أم يوسف', '+966501110002', { badge: 'subscribed', unpaid: true, subscribed: true }),

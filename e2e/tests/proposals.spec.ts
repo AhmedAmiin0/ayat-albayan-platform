@@ -11,9 +11,9 @@ import {
   withSql,
 } from '../support/schedule';
 
-// Teacher «اقترح ميعاد تاني» → admin «وافق على الميعاد» (R-SCH-08, lesson-proposals.controller.ts):
+// Teacher «اقترح موعدًا آخر» → admin «وافق على الموعد» (R-SCH-08, lesson-proposals.controller.ts):
 // «أبرار» moves her own lesson 90 minutes later on her own clock (Cairo), the admin approves it
-// from «طلبات تغيير الميعاد», and the lesson moves like any reschedule (R-SCH-07): the old row is
+// from «طلبات تغيير الموعد», and the lesson moves like any reschedule (R-SCH-07): the old row is
 // `rescheduled`, a new row starts at the proposed time, the guardian's confirmation is queued.
 
 const EVERY_DAY = [0, 1, 2, 3, 4, 5, 6] as const;
@@ -46,7 +46,7 @@ async function proposalOf(lessonId: string): Promise<ProposalRow | undefined> {
 }
 
 test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)', () => {
-  test('«اقترح ميعاد تاني» 90 minutes later → «وافق على الميعاد» → the lesson moved', async ({ asRole }) => {
+  test('«اقترح موعدًا آخر» 90 minutes later → «وافق على الموعد» → the lesson moved', async ({ asRole }) => {
     // «أبرار» works 10:00–22:00 Riyadh every day (approving runs the usual conflict check).
     const teacherId = await resetAbrar();
     await setAvailability(teacherId, EVERY_DAY.map((d) => [d, '10:00', '22:00']));
@@ -75,7 +75,7 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
     expect(proposed).toMatchObject({ status: 'pending', note: NOTE });
     expect(proposed?.proposed_starts_at.toISOString()).toBe(movedTo.toISOString());
 
-    // Admin: «طلبات تغيير الميعاد» above the week → the lesson drawer → «وافق على الميعاد».
+    // Admin: «طلبات تغيير الموعد» above the week → the lesson drawer → «وافق على الموعد».
     const admin = await asRole('admin');
     await admin.goto('/admin/schedule');
     const panel = admin.getByRole('region', { name: new RegExp(ar.lessons.proposal.title) });

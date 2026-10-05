@@ -17,15 +17,15 @@ test('the badge chip: shape from the shared map, the word from ar.json', () => {
 });
 
 test('a child: the package and what is left, the due on its own, a chip only when it needs the admin', () => {
-  expect(packageText(sub())).toBe(`${t.enums.packageSize['8']} · فاضل حلقتين`);
-  expect(packageText(sub({ package_size: null }))).toBe(`${t.pricing.packages.custom.name} · فاضل حلقتين`);
-  expect(packageText(usedUp)).toBe(t.enums.packageSize['8']); // expired: no «فاضل» under «الباقة خلصت»
+  expect(packageText(sub())).toBe(`${t.enums.packageSize['8']} · بقيت حلقتان`);
+  expect(packageText(sub({ package_size: null }))).toBe(`${t.pricing.packages.custom.name} · بقيت حلقتان`);
+  expect(packageText(usedUp)).toBe(t.enums.packageSize['8']); // expired: no «فاضل» under «انتهت الباقة»
   expect(packageText(null)).toBe(t.subscriptions.empty);
   expect(dueLine(sub())).toBe(s.due.replace('{amount}', money(120, 'SAR')));
   expect(dueLine(sub({ due_amount: 0 }))).toBeNull();
   expect(childChip(sub())).toEqual({ ...subscriptionStatusStyle.unpaid, label: t.enums.subscriptionStatus.unpaid });
   expect(childChip(sub({ status: 'paused', due_amount: 0 }))?.label).toBe(t.enums.subscriptionStatus.paused);
-  // Paid in full and used up: the DB says unpaid until renewed, the chat must not say «مش مدفوع».
+  // Paid in full and used up: the DB says unpaid until renewed, the chat must not say «غير مدفوع».
   expect(childChip(sub({ status: 'unpaid', due_amount: 0, lessons_remaining: 0 }))).toBeNull();
   expect(childChip(null)).toBeNull();
 });

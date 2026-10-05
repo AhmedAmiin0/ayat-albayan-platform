@@ -1,15 +1,16 @@
 import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useId } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
+import { Toast } from '@/components/ui/toast';
 import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
-import { LeadPanel } from './LeadPanel';
+import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
 import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
@@ -30,11 +31,14 @@ export interface ThreadPaneProps {
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
   const headingId = useId();
+  // The lead panel's toasts live here: «تسجيل الطالب» turns the aside into the family's panel.
+  const [notice, setNotice] = useState<LeadNotice | null>(null);
   const detail = useInfiniteQuery(threadQuery(phone));
   const templates = useQuery(templatesQuery);
   const th = detail.data?.pages[0]?.thread ?? null;
   const admin = useInboxMode() === 'admin';
-  const me = useQuery({ ...teacherMeQuery, enabled: !admin });
+  const teacherMode = useInboxMode() === 'teacher';
+  const me = useQuery({ ...teacherMeQuery, enabled: teacherMode });
   // /leads is the admin's: never asked in teacher mode (the API also nulls lead_id there).
   const isLead = admin && !!th?.lead_id && !th.guardian_id && !th.teacher_id;
   const lead = useQuery({ ...leadByPhoneQuery(phone), enabled: isLead });
@@ -58,12 +62,12 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const people = admin ? (detail.data.pages[0]?.people ?? null) : null;
   const aside = isLead || !!people?.guardian;
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
-  const ownThread = !admin && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
+  const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   return (
     <section aria-labelledby={headingId} className="min-w-0">
       <ThreadHeader thread={th} listSearch={listSearch} headingId={headingId} badge={people && threadBadge(people)} />
-      <div className={cn('grid gap-6', aside && 'xl:grid-cols-[minmax(0,1fr)_280px]')}>
+      <div className={cn('grid gap-6', aside && 'xl:grid-cols-[minmax(0,1fr)_340px]')}>
         <div className="min-w-0">
           <MessageLog
             messages={messages}
@@ -78,9 +82,10 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
             <Composer key={phone} thread={th} context={context} />
           )}
         </div>
-        {isLead && <LeadPanel phone={phone} />}
+        {isLead && <LeadPanel phone={phone} onNotice={setNotice} />}
         {people?.guardian && <SubscribePanel people={people} />}
       </div>
+      {notice && <Toast {...notice} onDismiss={() => setNotice(null)} />}
     </section>
   );
 }

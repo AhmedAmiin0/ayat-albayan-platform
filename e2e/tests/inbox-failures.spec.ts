@@ -4,9 +4,9 @@ import { bubble, lastOutbound, openThread, pushesForMessage, stubFail, outboundR
 import { freshDigits } from '../support/messages';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';
 
-// A send that fails (R-MSG-03, R-MSG-05, M1–M3): Meta's error in words on the bubble, «جرّب تاني»,
+// A send that fails (R-MSG-03, R-MSG-05, M1–M3): Meta's error in words on the bubble, «حاول مرة أخرى»,
 // the wa.me hand-off with its «بعتّها؟» question, sent-by-hand and undo. The stub's injected
-// failure is one-shot. 131049 fails at once and is retryable (131047 would hide «جرّب تاني»).
+// failure is one-shot. 131049 fails at once and is retryable (131047 would hide «حاول مرة أخرى»).
 
 const CODE = 131049;
 const messages = ar.messages;
@@ -59,7 +59,7 @@ test.describe('inbox — failed sends (R-MSG-03, R-MSG-05)', () => {
     await setMessaging(false);
   });
 
-  test('failed → error in words, push row → «جرّب تاني» → sent', async ({ asRole }) => {
+  test('failed → error in words, push row → «حاول مرة أخرى» → sent', async ({ asRole }) => {
     test.setTimeout(150_000);
     const f = await failedReply(await asRole('admin'), 'فشل');
     const failed = await lastOutbound(f.phone);
@@ -71,7 +71,7 @@ test.describe('inbox — failed sends (R-MSG-03, R-MSG-05)', () => {
     await expect(f.row.getByText(ar.enums.messageStatus.sent, { exact: true })).toBeVisible({ timeout: 30_000 });
   });
 
-  test('failed → wa.me hand-off holds the row → «بعتّها بنفسي» → sent manually', async ({ asRole }) => {
+  test('failed → wa.me hand-off holds the row → «أرسلتها بنفسي» → sent manually', async ({ asRole }) => {
     test.setTimeout(150_000);
     const f = await failedReply(await asRole('admin'), 'يدوي');
     await handOff(f);
@@ -83,7 +83,7 @@ test.describe('inbox — failed sends (R-MSG-03, R-MSG-05)', () => {
     expect((await stubSent()).filter((m) => m.type === 'text')).toHaveLength(0); // never sent by the platform
   });
 
-  test('hand-off → «لأ، رجّعها للطابور» → back in the queue and sent', async ({ asRole }) => {
+  test('hand-off → «لا، أعدها إلى الطابور» → back in the queue and sent', async ({ asRole }) => {
     test.setTimeout(150_000);
     const f = await failedReply(await asRole('admin'), 'تراجع');
     await handOff(f);

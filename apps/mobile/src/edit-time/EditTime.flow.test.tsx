@@ -48,7 +48,7 @@ test('the sheet asks 15-minute starts for this lesson’s own length and student
   expect(submit()).toBeDisabled();
   expect(screen.queryByText(t.editTime.sameLesson)).toBeNull();
   expect(screen.getByText(t.editTime.unchanged)).toBeTruthy();
-  // «غيّر الميعاد» is the one for a series, said from the first screen (not only after a change).
+  // «غيّر الموعد» is the one for a series, said from the first screen (not only after a change).
   expect(screen.getByText(t.editTime.vsReschedule)).toBeTruthy();
   expect(screen.getByText(t.editTime.currentLength.replace('{len}', t.enums.duration['45']))).toBeTruthy();
 });

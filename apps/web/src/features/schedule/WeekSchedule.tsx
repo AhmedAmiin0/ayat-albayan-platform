@@ -10,6 +10,7 @@ import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { overviewQuery, proposalsQuery } from './api';
 import { DayBoard } from './DayBoard';
 import { LessonDrawer } from './LessonDrawer';
@@ -19,6 +20,7 @@ import { ProposalsPanel } from './ProposalsPanel';
 import { ScheduleCounts } from './ScheduleCounts';
 import { ScheduleFilters } from './ScheduleFilters';
 import { ScheduleNav } from './ScheduleNav';
+import { SyncScheduleButton } from './SyncScheduleButton';
 import type { ScheduleSearch } from './search';
 import { currentWeekStart } from './slots';
 import { RIYADH_TZ, weekWindow, zonedParts } from './tz';
@@ -56,9 +58,13 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <PageHead>
         <Cartouche>{t.schedule.title}</Cartouche>
         {overview.data && <ScheduleCounts shown={shown} />}
-        <Link to="/admin/book" className={cn(buttonVariants(), 'ms-auto')}>
-          {t.schedule.book}
-        </Link>
+        <div className="ms-auto flex flex-wrap gap-2">
+          <SyncScheduleButton onDone={setNotice} />
+          <NewMeetingMenu />
+          <Link to="/admin/book" className={buttonVariants()}>
+            {t.schedule.book}
+          </Link>
+        </div>
       </PageHead>
       <ProposalsPanel onOpen={(l) => setOpenId(l.id)} />
       <div className="mb-4 grid gap-3">

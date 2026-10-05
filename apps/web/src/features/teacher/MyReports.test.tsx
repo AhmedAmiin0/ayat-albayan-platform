@@ -52,7 +52,7 @@ describe('/teacher/reports (R-REP-01/02/05)', () => {
     const sentList = await screen.findByRole('region', { name: t.reports.submittedTitle });
     const [open, closed] = within(sentList).getAllByRole('listitem');
     expect(within(open as HTMLElement).getByRole('link', { name: t.reports.edit }).getAttribute('href')).toBe('/teacher/report/l-1');
-    expect(within(open as HTMLElement).getByText(/تقدر تعدّل التقرير لحد/)).toBeTruthy();
+    expect(within(open as HTMLElement).getByText(/يمكنك تعديل التقرير حتى/)).toBeTruthy();
     expect(within(open as HTMLElement).getByRole('button', { name: t.reports.downloadPdf })).toBeTruthy();
     expect(within(closed as HTMLElement).getByRole('link', { name: t.reports.view })).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/reports?page=1&pageSize=20');

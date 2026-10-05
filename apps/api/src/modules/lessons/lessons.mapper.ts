@@ -62,6 +62,7 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     override_reason: row.override_reason,
     confirmed_at: row.confirmed_at === null ? null : iso(row.confirmed_at),
     rescheduled_from_id: row.rescheduled_from_id,
+    ...roomFields(row),
     students,
     allowed_events: eventsFor(row, ctx.role),
     conflicts: storedConflicts(row.conflicts),
@@ -72,6 +73,12 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     time_edit: timeEdit(row, ctx.role),
   };
 }
+
+/** Migration 190: «افتح الحلقة الآن» and «حلقة فورية». */
+const roomFields = (row: LessonRow): Pick<LessonView, 'room_opened_at' | 'instant'> => ({
+  room_opened_at: row.room_opened_at ? iso(row.room_opened_at) : null,
+  instant: row.instant ?? false,
+});
 
 const wasTimes = z.object({ starts_at: z.string(), ends_at: z.string() });
 

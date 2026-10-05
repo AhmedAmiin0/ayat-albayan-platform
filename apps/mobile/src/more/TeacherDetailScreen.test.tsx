@@ -107,7 +107,7 @@ test('no phone on file: no phone, no WhatsApp button', async () => {
   );
 });
 
-test('a teacher that does not exist: «مش لاقيين اللي بتدور عليه»', async () => {
+test('a teacher that does not exist: «لم نجد ما تبحث عنه»', async () => {
   serve({});
   await renderWithQuery(<TeacherDetailScreen />);
   expect(await screen.findByText(t.common.notFound)).toBeTruthy();

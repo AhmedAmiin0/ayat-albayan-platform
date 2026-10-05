@@ -31,11 +31,11 @@ describe('report links (R-REP-01: opened from the lesson)', () => {
 
 describe('reportErrorText / fileLabel', () => {
   it('domain codes and validation issues read in Arabic; anything else is the generic line', () => {
-    expect(reportErrorText(new ApiError(409, { code: 'edit_window_closed' }))).toBe('مدة تعديل التقرير خلصت، كلّم الإدارة');
+    expect(reportErrorText(new ApiError(409, { code: 'edit_window_closed' }))).toBe('انتهت مدة تعديل التقرير، تواصل مع الإدارة');
     expect(reportErrorText(new ApiError(400, { message: 'validation_failed', issues: [{ message: 'missing_grades' }] }))).toBe(
       'قيّم كل البنود والتقدير العام قبل الإرسال',
     );
-    expect(reportErrorText(new Error('x'))).toBe('حصلت مشكلة، حاول تاني');
+    expect(reportErrorText(new Error('x'))).toBe('حدثت مشكلة، حاول مرة أخرى');
   });
 
   it('attachments read by kind and size', () => {

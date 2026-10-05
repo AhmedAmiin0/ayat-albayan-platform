@@ -60,7 +60,7 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     // One sentence per teacher, every duration in it, and the way to the teacher's file.
     const link = await screen.findByRole('link', { name: t.payouts.setRate });
     expect(link.getAttribute('href')).toBe('/admin/teachers/t1');
-    expect(link.parentElement?.textContent).toContain('سعر حلقة الـ45 والـ60 دقيقة مش متسجل لـأبرار');
+    expect(link.parentElement?.textContent).toContain('سعر حلقة الـ45 والـ60 دقيقة غير مسجل لـأبرار');
     expect(apiSend).toHaveBeenCalledWith('POST', '/payouts/2026-09/generate');
   });
 

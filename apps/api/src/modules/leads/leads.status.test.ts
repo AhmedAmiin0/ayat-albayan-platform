@@ -56,7 +56,7 @@ describe('LeadsService.changeStatus (R-LEAD-01, R-NFR-03)', () => {
     const { service, leads } = leadsService();
     leads.list.mockResolvedValue({ items: [lead()], total: 41 });
     const page = await service.list({ status: 'new', page: 2, pageSize: 20 });
-    expect(page).toEqual({ items: [lead()], total: 41, page: 2, pageSize: 20 });
+    expect(page).toEqual({ items: [{ ...lead(), assigned_to_name: null }], total: 41, page: 2, pageSize: 20 });
     expect(leads.list).toHaveBeenCalledWith({ status: 'new', page: 2, pageSize: 20 });
   });
 });

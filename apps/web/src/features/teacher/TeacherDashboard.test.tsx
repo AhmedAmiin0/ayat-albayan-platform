@@ -88,7 +88,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     renderDash();
     fireEvent.click(await screen.findByRole('tab', { name: t.teacherDash.week }));
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/lessons?from=2026-10-08T21%3A00%3A00.000Z&to=2026-10-15T21%3A00%3A00.000Z');
-    expect(screen.getByRole('heading', { name: 'من 9 أكتوبر لحد 15 أكتوبر' })).toBeTruthy();
+    expect(screen.getByRole('heading', { name: 'من 9 أكتوبر إلى 15 أكتوبر' })).toBeTruthy();
   });
 
   it('a login without a teachers row is told to call the admin', async () => {

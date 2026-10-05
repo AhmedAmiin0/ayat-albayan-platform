@@ -21,7 +21,7 @@ export class ClassroomController {
 
   /** 403 not yours / join_not_open_yet, 410 join_closed, 503 classroom_not_configured. */
   @Post('room/join')
-  @Roles('admin', 'teacher', 'assistant')
+  @Roles('admin', 'teacher', 'assistant', 'sales')
   @HttpCode(200)
   join(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoomJoinResult> {
     return this.rooms.join({ user, lessonId: id });

@@ -11,6 +11,8 @@ jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
+// The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
+jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
 
 const dayKey = ['lessons', 'day', { date: '2026-10-01', tz: 'Asia/Riyadh' }];
 /** GET /lessons/day calls only (the cards also read each student's balance and the settings). */
@@ -24,7 +26,7 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('Amiri «النهارده» header, the Riyadh date line, and today in Riyadh is what it asks for', async () => {
+test('Amiri «اليوم» header, the Riyadh date line, and today in Riyadh is what it asks for', async () => {
   mockApiFetch.mockResolvedValue([]);
   await renderWithQuery(<TodayRoute />);
   expect(screen.getByRole('header', { name: t.today.title })).toBeTruthy();

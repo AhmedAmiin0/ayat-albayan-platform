@@ -5,7 +5,7 @@ import { stubInbound, stubReset } from '../support/wa-stub';
 // Teacher mode (R-TCH-03, R-MSG-05, owner 2026-10-02: "login as a teacher and see only my chats,
 // my calendar, my reports"): «أبرار» sees the chat of the family she teaches, never another
 // teacher's; that thread answers 403 not_your_thread (enforced by the API, not only hidden); her
-// week has only her lessons; she replies from the academy number and the admin reads «بعتها: أبرار».
+// week has only her lessons; she replies from the academy number and the admin reads «أرسلها: أبرار».
 
 const openThread = (name: string) => ar.inbox.openThread.replace('{name}', name);
 

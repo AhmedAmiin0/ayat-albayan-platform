@@ -26,7 +26,7 @@ const WAITING = message({
   direction: 'outbound',
   status: 'queued',
   template_key: 'renewal_due',
-  body: 'فاضل حلقتين',
+  body: 'بقيت حلقتان',
   click_to_chat: LINK,
   created_at: '2026-10-01T12:00:00Z',
 });
@@ -103,7 +103,7 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
   it('a queued row whose template Meta has not approved says so', async () => {
     renderThread();
     await screen.findByRole('log');
-    const waiting = bubble('فاضل حلقتين');
+    const waiting = bubble('بقيت حلقتان');
     await waitFor(() => expect(waiting.getByText(t.messages.waitingTemplate)).toBeTruthy());
     expect(waiting.getByText(t.inbox.templateLine.replace('{name}', t.templates.names.renewal_due))).toBeTruthy();
     expect(waiting.queryByRole('button', { name: t.messages.retry })).toBeNull();

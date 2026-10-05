@@ -23,7 +23,7 @@ Turborepo + pnpm · Supabase (Postgres, Auth, Storage, pg_cron/pg-boss) · NestJ
 7. Phone numbers E.164 only; `students.code` (`AB-nnnn`) is generated, never typed.
 8. Idempotent jobs (dedup keys); idempotent occurrence generation (`unique(rule_id, starts_at)`).
 9. RLS on every table + guards in Nest. Secrets only via env/Vault.
-10. Arabic UI strings in `packages/shared/i18n/ar.json`; reuse the exact wording from today's forms/messages (Egyptian Arabic tone).
+10. Arabic UI strings in `packages/shared/i18n/ar.json`, written in clear Modern Standard Arabic (owner, 2026-10-03: no Egyptian dialect); keep the domain vocabulary below.
 
 ## How to execute (speed)
 - Use the **Workflow** tool for every phase with ≥ 3 independent modules (owner opted in). Builders in worktrees → verifiers → integrator (see `docs/05-build-plan.md §2`). ≤ 10 agents per run.

@@ -31,8 +31,8 @@ export function QualificationFields({ form, errors, onChange }: QualFieldsProps)
   );
 
   return (
-    <div className="grid grid-cols-2 gap-x-3 gap-y-3">
-      <div className="col-span-2">{text('student_name', t.leads.studentName)}</div>
+    <div className="grid grid-cols-1 gap-x-3 gap-y-3 @[26rem]:grid-cols-2">
+      <div className="@[26rem]:col-span-2">{text('student_name', t.leads.studentName)}</div>
       <Field label={t.leads.studentAge} error={errors.age}>
         {(p) => (
           <Input
@@ -59,10 +59,10 @@ export function QualificationFields({ form, errors, onChange }: QualFieldsProps)
           </Select>
         )}
       </Field>
-      <div className="col-span-2">{text('country', t.leads.country)}</div>
+      <div className="@[26rem]:col-span-2">{text('country', t.leads.country)}</div>
       <FamilyFields form={form} errors={errors} onChange={onChange} />
       {TEXT.map(({ key, label }) => (
-        <div key={key} className="col-span-2">
+        <div key={key} className="@[26rem]:col-span-2">
           {text(key, label)}
         </div>
       ))}

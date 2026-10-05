@@ -32,7 +32,7 @@ const slotCalls = () =>
 
 beforeEach(() => jest.clearAllMocks());
 
-test('409 conflict: the Arabic clash lines, «اختار ميعاد تاني» → fresh slots → same request id', async () => {
+test('409 conflict: the Arabic clash lines, «اختر موعدًا آخر» → fresh slots → same request id', async () => {
   const fake = fakeBookingApi();
   mockApiFetch.mockImplementation(fake.fetch);
   await renderWithQuery(<BookTrialScreen />, seededClient());
@@ -42,7 +42,7 @@ test('409 conflict: the Arabic clash lines, «اختار ميعاد تاني» �
   await fireEvent.press(screen.getByRole('button', { name: t.booking.submit }));
   expect(await screen.findByText(t.booking.conflictTitle)).toBeTruthy();
   expect(
-    screen.getByText('المعلم/ة مشغول/ة بحلقة تانية في الميعاد ده (الأحد 4 أكتوبر 17:00)'),
+    screen.getByText('المعلم/ة مشغول/ة بحلقة أخرى في هذا الموعد (الأحد 4 أكتوبر 17:00)'),
   ).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.booking.submit })).toBeNull();
 

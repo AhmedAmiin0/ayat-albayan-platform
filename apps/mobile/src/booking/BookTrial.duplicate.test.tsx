@@ -42,7 +42,7 @@ async function hitDuplicate() {
   expect(screen.getByText('AB-0100', { exact: false })).toBeTruthy();
 }
 
-test('«احجز للطالب ده»: books the child on file by id, the lead still converts, same request id', async () => {
+test('«احجز لهذا الطالب»: books the child on file by id, the lead still converts, same request id', async () => {
   await hitDuplicate();
   await fireEvent.press(screen.getByRole('button', { name: t.booking.bookExisting }));
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();
@@ -51,7 +51,7 @@ test('«احجز للطالب ده»: books the child on file by id, the lead st
   expect(sent(1)['clientRequestId']).toBe(sent(0)['clientRequestId']);
 });
 
-test('«لا، ده طالب جديد»: the same new student, forced', async () => {
+test('«لا، هذا طالب جديد»: the same new student, forced', async () => {
   await hitDuplicate();
   await fireEvent.press(screen.getByRole('button', { name: t.booking.newAnyway }));
   expect(await screen.findByText(t.booking.booked)).toBeTruthy();

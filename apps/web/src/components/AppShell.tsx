@@ -13,6 +13,7 @@ import { Crumbs } from './shell/Crumbs';
 import { LanguageSwitch } from './shell/LanguageSwitch';
 import { LogoutButton } from './shell/LogoutButton';
 import { SideFoot } from './shell/SideFoot';
+import { useRailBox } from './use-rail-box';
 
 export interface AppShellProps {
   /** Cartouche title of the section home (/admin, /teacher, /portal). */
@@ -103,6 +104,7 @@ const SCROLL = cn(
  * browser page. On phones the bottom nav keeps its own room.
  */
 function FixedTopBarLayout({ topNav, children }: { topNav: ReactNode; children: ReactNode }) {
+  const scroll = useRailBox<HTMLDivElement>();
   return (
     <div className="mx-auto flex h-dvh max-w-[1180px] flex-col overflow-hidden px-2 pb-[calc(3.5rem+env(safe-area-inset-bottom))] sm:pb-3 shell:px-6">
       <header className="flex shrink-0 items-center gap-3 px-1.5 pt-4">
@@ -119,7 +121,7 @@ function FixedTopBarLayout({ topNav, children }: { topNav: ReactNode; children: 
       </div>
       <main className="flex min-h-0 min-w-0 flex-1 flex-col">
         <Page className="flex min-h-0 flex-1 flex-col">
-          <div className={SCROLL}>
+          <div ref={scroll} className={SCROLL}>
             {children}
             <PhoneTheme className="sm:hidden" />
           </div>

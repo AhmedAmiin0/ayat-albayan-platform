@@ -39,7 +39,7 @@ const slotsUrl = (from: string, to: string) =>
 test('the free slots of the same teacher, the lesson’s week from now, its length and students; busy ones hidden', async () => {
   await openSheet();
   expect(mockApiFetch).toHaveBeenCalledWith(slotsUrl('2026-10-01T13:20:00.000Z', '2026-10-02T21:00:00.000Z'));
-  // This week is the earliest: no going back; «الأسبوع الجاي» asks the next Saturday → Saturday.
+  // This week is the earliest: no going back; «الأسبوع القادم» asks the next Saturday → Saturday.
   expect(screen.getByRole('button', { name: t.schedule.prevWeek })).toBeDisabled();
   await fireEvent.press(screen.getByRole('button', { name: t.schedule.nextWeek }));
   expect(mockApiFetch).toHaveBeenLastCalledWith(slotsUrl('2026-10-02T21:00:00.000Z', '2026-10-09T21:00:00.000Z'));
@@ -50,12 +50,12 @@ test('the free slots of the same teacher, the lesson’s week from now, its leng
   expect(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر' })).toBeTruthy();
   expect(screen.getByRole('radio', { name: '18:00' })).toBeTruthy();
   expect(screen.queryByRole('radio', { name: '19:00' })).toBeNull();
-  // Nothing picked yet: «غيّر الميعاد» waits.
+  // Nothing picked yet: «غيّر الموعد» waits.
   expect(screen.getByRole('button', { name: t.lessons.rescheduleSubmit })).toBeDisabled();
   expect(screen.getByText(t.lessons.newTimeHint)).toBeTruthy();
 });
 
-test('«الحلقة دي بس»: Sunday 17:00 sends scope one; the guardian’s confirmation is said', async () => {
+test('«هذه الحلقة فقط»: Sunday 17:00 sends scope one; the guardian’s confirmation is said', async () => {
   mockApiSend.mockResolvedValue(moved(SUN_17));
   const { onClose, client } = await openSheet();
   await fireEvent.press(screen.getByRole('radio', { name: 'الأحد 4 أكتوبر' }));
@@ -74,7 +74,7 @@ test('«الحلقة دي بس»: Sunday 17:00 sends scope one; the guardian’s
   expect(onClose).toHaveBeenCalled();
 });
 
-test('«الحلقة دي وكل اللي بعدها»: the new weekly rule, the slot’s day plus the days added', async () => {
+test('«هذه الحلقة وكل ما بعدها»: the new weekly rule, the slot’s day plus the days added', async () => {
   mockApiSend.mockResolvedValue(moved(SAT_17));
   await openSheet();
   await fireEvent.press(screen.getByRole('radio', { name: t.lessons.scope.rule }));

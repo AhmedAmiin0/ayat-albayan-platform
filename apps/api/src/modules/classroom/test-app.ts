@@ -11,18 +11,34 @@ import { TeachersQueries } from '../teachers/teachers.queries';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
-import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN } from './classroom.config';
-import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from './classroom.fakes';
+import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG } from './classroom.config';
+import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, SALES, TEACHER, TEACHER_ID } from './classroom.fakes';
 import { ClassroomQueries } from './classroom.queries';
+import { LIVEKIT_HTTP } from './livekit-api';
+import { registerLivekitWebhookParser } from './livekit-webhook.controller';
+import { http, moderation, recordingQueries, S3 } from './moderation.fakes';
+import { ModerationQueries } from './moderation.queries';
+import { RecordingQueries } from './recording.queries';
+import { studentLinkQueries } from './student-link.fakes';
+import { StudentLinkQueries } from './student-link.queries';
+import { StorageService } from '../../common/storage/storage.service';
+import { AuditService } from '../../common/audit/audit.service';
 
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, guardian: GUARDIAN };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, sales: SALES, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
   return user;
 };
 
-export type Call = { method: 'GET' | 'POST' | 'DELETE'; url: string; token?: keyof typeof USERS | null; body?: object; ip?: string };
+export type Call = {
+  method: 'GET' | 'POST' | 'DELETE';
+  url: string;
+  token?: keyof typeof USERS | null;
+  body?: object | string;
+  ip?: string;
+  headers?: Record<string, string>;
+};
 
 /** Boots AppModule with the mocks; `reset()` restores the happy-path defaults (call in beforeEach). */
 export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
@@ -36,6 +52,12 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     teachers: { idByProfile: vi.fn() },
     templates: { approved: vi.fn() },
     outbox: { send: vi.fn() },
+    moderation: moderation(),
+    recordings: recordingQueries(),
+    http: http(),
+    storage: { signedDownload: vi.fn() },
+    studentLinks: studentLinkQueries(),
+    audit: { record: vi.fn() },
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
@@ -47,21 +69,34 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(Outbox).useValue(m.outbox)
     .overrideProvider(CLASSROOM_CONFIG).useValue(config)
     .overrideProvider(CLASSROOM_WEB_ORIGIN).useValue('https://app.example.test')
+    .overrideProvider(ModerationQueries).useValue(m.moderation)
+    .overrideProvider(RecordingQueries).useValue(m.recordings)
+    .overrideProvider(LIVEKIT_HTTP).useValue((...a: Parameters<typeof m.http>) => m.http(...a))
+    .overrideProvider(RECORDING_CONFIG).useValue(S3)
+    .overrideProvider(StorageService).useValue(m.storage)
+    .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
+    .overrideProvider(AuditService).useValue(m.audit)
     .compile();
-  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
+  const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
+  registerLivekitWebhookParser(app);
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = ({ method, url, token = 'admin', body, ip }: Call) =>
+  const call = ({ method, url, token = 'admin', body, ip, headers = {} }: Call) =>
     app.inject({
       method,
       url,
-      headers: token ? { authorization: `Bearer ${token}` } : {},
+      headers: { ...(token ? { authorization: `Bearer ${token}` } : {}), ...headers },
       payload: body,
       ...(ip ? { remoteAddress: ip } : {}),
     });
   const reset = () => {
     vi.resetAllMocks();
     Object.assign(m.queries, queries());
+    Object.assign(m.moderation, moderation());
+    Object.assign(m.recordings, recordingQueries());
+    Object.assign(m.studentLinks, studentLinkQueries());
+    m.http.mockImplementation(http({ body: { egress_id: 'EG_new' } }));
+    m.storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));
     m.templates.approved.mockResolvedValue({ key: 'lesson_join_link', status: 'approved' });
     m.outbox.send.mockResolvedValue({ view: { status: 'queued' }, replayed: false });

@@ -23,7 +23,7 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     t.queries.familyTags.mockResolvedValue(new Map());
   });
 
-  it('H1 tags per row from its guardian, one read for the page: «مشترك», «اشتراكه خلص», «مش مدفوع»', async () => {
+  it('H1 tags per row from its guardian, one read for the page: «مشترك», «اشتراكه خلص», «غير مدفوع»', async () => {
     const rows = [
       threadRow({ guardian_id: 'g1' }),
       threadRow({ phone_e164: '+966551112222', guardian_id: 'g2' }),

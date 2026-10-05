@@ -21,6 +21,8 @@ export const LESSON: JoinLesson = {
   teacher_id: TEACHER_ID,
   starts_at: '2026-10-05T16:00:00.000Z',
   ends_at: '2026-10-05T17:00:00.000Z',
+  status: 'scheduled',
+  room_opened_at: null,
 };
 export const OPEN = new Date('2026-10-05T16:05:00Z');
 export const EARLY = new Date('2026-10-05T15:00:00Z');
@@ -30,6 +32,7 @@ export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', ema
 export const TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
 export const OTHER_TEACHER: AuthUser = { id: 'b0000000-0000-4000-8000-000000000003', email: null, role: 'teacher' };
 export const ASSISTANT: AuthUser = { id: 'd0000000-0000-4000-8000-000000000005', email: null, role: 'assistant' };
+export const SALES: AuthUser = { id: 'e0000000-0000-4000-8000-000000000006', email: null, role: 'sales' };
 export const GUARDIAN: AuthUser = { id: 'c0000000-0000-4000-8000-000000000004', email: null, role: 'guardian' };
 
 export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
@@ -40,6 +43,7 @@ export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
   revoked_at: null,
   created_by: ADMIN.id,
   created_at: '2026-10-05T09:00:00.000Z',
+  student_id: null,
   ...over,
 });
 
@@ -50,17 +54,19 @@ export function queries() {
     teacherName: vi.fn().mockResolvedValue('أبرار'),
     profileName: vi.fn().mockResolvedValue('نور'),
     assistsLesson: vi.fn().mockResolvedValue(true),
+    salesOwnsLesson: vi.fn().mockResolvedValue(true),
     sendContext: vi.fn().mockResolvedValue({
       student: { id: STUDENT_ID, name: 'سهيلة' },
       guardian: { id: '00000000-0000-4000-8000-0000000000a1', phone: '+966501234567' },
     }),
     insertLink: vi.fn().mockResolvedValue(linkRow()),
     linkByHash: vi.fn().mockResolvedValue(linkRow()),
+    openRoom: vi.fn(async (_id: string, at: string) => ({ ...LESSON, room_opened_at: at })),
   };
 }
 
 export type Claims = {
-  iss: string; sub: string; name: string; nbf: number; exp: number;
+  iss: string; sub: string; name: string; nbf: number; exp: number; metadata?: string;
   video: { roomJoin: boolean; room: string; canPublish: boolean; canSubscribe: boolean; canPublishData: boolean; canPublishSources?: string[] };
 };
 

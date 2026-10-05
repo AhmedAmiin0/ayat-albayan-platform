@@ -86,14 +86,14 @@ describe('InvoiceField (R-PAY-03)', () => {
     expect(onChange).not.toHaveBeenCalled();
   });
 
-  it('«شيلها» removes it, «غيّرها» replaces it', () => {
+  it('«أزلها» removes it, «استبدلها» replaces it', () => {
     const onChange = renderField({ value: { source: 'whatsapp', messageId: 'm-1', mime: 'image/png', preview: 'blob:x' } });
     expect(screen.getByLabelText(t.booking.invoice.replace)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.invoice.remove }));
     expect(onChange).toHaveBeenCalledWith(null);
   });
 
-  it('«من الشات» shows only when the family’s number is known', () => {
+  it('«من المحادثة» shows only when the family’s number is known', () => {
     renderField();
     expect(screen.queryByRole('button', { name: t.booking.invoice.fromChat })).toBeNull();
   });

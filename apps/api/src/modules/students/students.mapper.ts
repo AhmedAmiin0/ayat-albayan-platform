@@ -38,7 +38,7 @@ type InsertOpts = { dto: StudentCreateRequest; guardianId: string; actorId: stri
 export function toStudentInsert({ dto, guardianId, actorId }: InsertOpts): TablesInsert<'students'> {
   // Request-only keys are dropped by the rest spread.
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { guardian, guardian_id, force, ...student } = dto;
+  const { guardian, guardian_id, force, lead_id, ...student } = dto;
   return {
     ...student,
     guardian_id: guardianId,

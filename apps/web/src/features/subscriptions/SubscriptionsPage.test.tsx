@@ -11,7 +11,7 @@ vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<objec
 
 const TASK = {
   id: 'k1', kind: 'renewal_due', subject_type: 'subscription', subject_id: 'sub-1', student: WEEKLY.student,
-  title: 'فاضل حلقتين', due_at: null, done_at: null, created_at: '2026-10-02T09:00:00Z',
+  title: 'بقيت حلقتان', due_at: null, done_at: null, created_at: '2026-10-02T09:00:00Z',
 };
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
 
@@ -44,10 +44,10 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     if (!row) throw new Error('row missing');
     const cells = within(row);
     expect(cells.getByText(t.enums.packageSize['4'])).toBeTruthy();
-    expect(cells.getByText('فاضل حلقتين')).toBeTruthy();
+    expect(cells.getByText('بقيت حلقتان')).toBeTruthy();
     expect(cells.getByText(t.enums.subscriptionStatus.unpaid)).toBeTruthy();
     // The task never repeats the balance it was raised with (it can be stale); the row above has it live.
-    expect(await screen.findByText('باقة سهيلة قربت تخلص')).toBeTruthy();
+    expect(await screen.findByText('باقة سهيلة قاربت على الانتهاء')).toBeTruthy();
   });
 
   it('filters by status from the first page', async () => {

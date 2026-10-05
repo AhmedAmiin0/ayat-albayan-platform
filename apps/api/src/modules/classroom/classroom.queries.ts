@@ -1,9 +1,11 @@
 import type { Tables, TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { isSalesLesson } from '../sales/sales-lessons';
 import { dbError } from '../teachers/http';
 
-export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at'>;
+export type JoinLesson = Pick<Tables<'lessons'>, 'id' | 'teacher_id' | 'starts_at' | 'ends_at' | 'status' | 'room_opened_at'>;
+const JOIN_COLUMNS = 'id, teacher_id, starts_at, ends_at, status, room_opened_at';
 export type JoinLinkRow = Tables<'lesson_join_links'>;
 
 /** Who the family's link goes to: the student's guardian. */
@@ -18,9 +20,16 @@ export class ClassroomQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async lesson(id: string): Promise<JoinLesson | null> {
-    const { data, error } = await this.db.from('lessons').select('id, teacher_id, starts_at, ends_at').eq('id', id).maybeSingle();
+    const { data, error } = await this.db.from('lessons').select(JOIN_COLUMNS).eq('id', id).maybeSingle();
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** «افتح الحلقة الآن»: stamps room_opened_at once (a second call keeps the first time). */
+  async openRoom(id: string, at: string): Promise<JoinLesson | null> {
+    const { error } = await this.db.from('lessons').update({ room_opened_at: at }).eq('id', id).is('room_opened_at', null);
+    if (error) throw dbError(error);
+    return this.lesson(id);
   }
 
   async teacherName(teacherId: string): Promise<string | null> {
@@ -49,6 +58,11 @@ export class ClassroomQueries {
       .limit(1);
     if (error) throw dbError(error);
     return data.length > 0;
+  }
+
+  /** Is the lesson in this salesperson's scope: booked from one of their leads, or a trial of one of their students? */
+  salesOwnsLesson(profileId: string, lessonId: string): Promise<boolean> {
+    return isSalesLesson(this.db, { profileId, lessonId });
   }
 
   /** null when the student is not on the lesson or has no guardian phone. */

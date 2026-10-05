@@ -1,8 +1,8 @@
-import { joinWindow } from '@ab/shared';
+import { joinWindow, type WindowLesson } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
 
-/** 403 join_not_open_yet (with opens_at) before the window, 410 join_closed after it. */
-export function assertWindowOpen(lesson: { starts_at: string; ends_at: string }, now: Date): void {
+/** 403 join_not_open_yet (with opens_at) before the window (room_opened_at counts), 410 join_closed after it. */
+export function assertWindowOpen(lesson: WindowLesson, now: Date): void {
   const w = joinWindow(lesson, now);
   if (w.state === 'early') {
     throw new HttpException({ code: 'join_not_open_yet', message: 'join_not_open_yet', opens_at: w.opens_at }, HttpStatus.FORBIDDEN);

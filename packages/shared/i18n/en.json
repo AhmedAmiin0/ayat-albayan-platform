@@ -395,6 +395,10 @@
     "emptyHint": "Book a lesson from the student's profile or from the conversation.",
     "emptyTeacher": "No lessons for this teacher this week",
     "book": "Book a lesson",
+    "sync": "Sync schedule",
+    "syncing": "Syncing…",
+    "synced": "Schedule synced: {n} lessons added",
+    "syncedNone": "The schedule is in sync, nothing missing",
     "riyadhTime": "Riyadh time",
     "studentTime": "Student: {time}",
     "teacherTime": "Teacher: {time}",
@@ -1576,6 +1580,10 @@
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
     "statusSaved": "Status updated",
+    "registerStudent": "Register the student",
+    "editLeadData": "Edit details",
+    "editLeadDataTitle": "Edit student details",
+    "noLeadData": "No details yet",
     "qualificationSaved": "Student details saved",
     "followUpSaved": "Follow-up updated",
     "applyStatus": "Change",
@@ -2092,6 +2100,12 @@
     "recommendShort": "Recommend",
     "templateSettings": "Open message settings"
   },
+  "live": {
+    "title": "Live sessions",
+    "now": "Live now",
+    "startsAt": "Starts at {time}",
+    "teacher": "Teacher: {name}"
+  },
   "classroom": {
     "title": "Online classroom",
     "enter": "Join the lesson",
@@ -2121,7 +2135,8 @@
       "teacher": "Teacher",
       "admin": "Admin",
       "assistant": "Assistant",
-      "guest": "Guest"
+      "guest": "Guest",
+      "sales": "Sales"
     },
     "guest": {
       "title": "Join the lesson",
@@ -2163,7 +2178,12 @@
       "device_missing": "No camera or microphone found",
       "share_failed": "Could not start screen sharing",
       "connect_failed": "Could not connect to the lesson, try again",
-      "unknown": "Something went wrong, try again"
+      "unknown": "Something went wrong, try again",
+      "removed_from_room": "You were removed from the lesson and cannot rejoin it",
+      "participant_not_found": "This participant is no longer in the lesson",
+      "cannot_remove": "You are not allowed to remove this participant",
+      "no_lesson": "There is no upcoming lesson for this student",
+      "lesson_not_open": "This lesson cannot be opened: it was cancelled or already held"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2180,6 +2200,141 @@
     "copyFailed": "Could not copy the link",
     "linkShown": "Student link",
     "linkWindow": "The link opens 15 minutes before the lesson",
-    "joinMeeting": "Meeting link (Meet/Jitsi)"
+    "joinMeeting": "Meeting link (Meet/Jitsi)",
+    "boardOf": "{name}'s board",
+    "recordingNow": "Recording",
+    "controls": "Classroom controls",
+    "people": "Participants",
+    "board": {
+      "toggle": "Board",
+      "title": "Whiteboard",
+      "tools": "Board tools",
+      "pen": "Pen",
+      "eraser": "Eraser",
+      "undo": "Undo",
+      "clear": "Clear board",
+      "allowStudents": "Let students write",
+      "shareOn": "Share board",
+      "shareOff": "Stop sharing board",
+      "readOnly": "View-only board",
+      "color": "Colour: {name}",
+      "colors": {
+        "ink": "Ink",
+        "lapis": "Green",
+        "cinnabar": "Red",
+        "saffron": "Orange",
+        "gold": "Gold"
+      }
+    },
+    "kick": {
+      "action": "Remove from lesson",
+      "actionOf": "Remove {name} from the lesson",
+      "title": "Remove {name} from the lesson?",
+      "body": "They leave the lesson at once and cannot join it again.",
+      "confirm": "Remove",
+      "busy": "Removing…",
+      "done": "{name} was removed from the lesson"
+    },
+    "recordings": {
+      "title": "Recordings",
+      "empty": "No recordings for this lesson yet",
+      "loading": "Loading recordings…",
+      "error": "Could not load the recordings",
+      "download": "Download",
+      "downloadOf": "Download the recording of {time}",
+      "status": {
+        "recording": "Recording",
+        "done": "Ready",
+        "failed": "Failed"
+      }
+    },
+    "openNow": "Open the room now",
+    "opening": "Opening the room…",
+    "openedHint": "The room is open; everyone can join now"
+  },
+  "sales": {
+    "title": "Sales",
+    "nav": {
+      "chats": "Chats",
+      "subscriptions": "Subscriptions",
+      "schedule": "My meetings",
+      "label": "Sales sections"
+    },
+    "subscriptions": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "emptyPending": "No pending subscriptions",
+      "emptyConfirmed": "No confirmed subscriptions",
+      "student": "Student",
+      "package": "Package",
+      "status": "Status",
+      "list": "Subscriptions list",
+      "kinds": "Subscription kind",
+      "lessons": "{n} lessons",
+      "startsOn": "Starts {date}"
+    },
+    "schedule": {
+      "title": "Meetings schedule",
+      "empty": "No meetings on this day",
+      "lead": "Lead",
+      "list": "Meetings list",
+      "teacher": "Teacher"
+    },
+    "assign": {
+      "label": "Sales owner",
+      "none": "No owner",
+      "pick": "Pick an owner",
+      "saved": "Assigned",
+      "auto": "Auto-assign new leads",
+      "autoHint": "A new lead goes to the salesperson with the fewest leads",
+      "assignAll": "Assign leads without an owner",
+      "assignedN": "{n} leads assigned",
+      "rowLabel": "Sales owner for {name}",
+      "autoOn": "On",
+      "autoOff": "Off",
+      "autoEnable": "Turn on",
+      "autoDisable": "Turn off"
+    },
+    "loadFailed": "Could not load the data, try again",
+    "retry": "Try again"
+  },
+  "meetings": {
+    "new": "New meeting",
+    "startNow": "Start now",
+    "schedule": "Schedule",
+    "dialogTitle": "Instant lesson",
+    "dialogHint": "The lesson starts now with its room open, and it does not use the student's package.",
+    "students": "Students",
+    "noStudents": "Pick at least one student",
+    "remove": "Remove {name}",
+    "teacher": "Teacher",
+    "pickTeacher": "Pick a teacher",
+    "noTeacher": "Pick a teacher",
+    "duration": "Duration",
+    "start": "Start the lesson",
+    "starting": "Starting…",
+    "conflict": "This time clashes with another lesson of the teacher or a student. Give a reason to start anyway.",
+    "overrideReason": "Reason to start anyway",
+    "error": "Could not start the lesson, try again"
+  },
+  "studentLink": {
+    "title": "Student join link",
+    "hint": "A lasting link the student uses to join each lesson on time, without logging in. A new link replaces the previous one.",
+    "create": "Create and copy the link",
+    "creating": "Preparing the link…",
+    "copied": "Link copied, send it to the student",
+    "shown": "Student link",
+    "error": "Could not create the link, try again",
+    "page": {
+      "greeting": "Hello {name}",
+      "next": "Your next lesson",
+      "now": "Your lesson now",
+      "with": "with {teacher}",
+      "none": "No upcoming lesson right now; contact the academy to book one.",
+      "enter": "Join the lesson",
+      "name": "Your name (optional)",
+      "autoHint": "The button turns on by itself when the room opens",
+      "loadError": "Could not load the page, try again"
+    }
   }
 }

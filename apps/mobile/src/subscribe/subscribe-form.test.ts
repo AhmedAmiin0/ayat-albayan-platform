@@ -62,7 +62,7 @@ test('start days: today and the next 6 in the family zone; the booked day leads 
   expect(startDays(NOW, 'Asia/Riyadh', '2026-10-04')).toHaveLength(7);
 });
 
-test('day chips: «النهارده», then the weekday and date in Western digits', () => {
+test('day chips: «اليوم», then the weekday and date in Western digits', () => {
   expect(startDayLabel('2026-10-02', '2026-10-02')).toBe(t.mobile.today);
   expect(startDayLabel('2026-10-04', '2026-10-02')).toBe('الأحد 4 أكتوبر');
 });

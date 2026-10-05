@@ -2,7 +2,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { addDays, nextWeekSaturday, queuedFor, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability } from '../support/schedule';
 import { auditOf, autoMessages, cairo, fillForm, L, lessonRows, openForm, save } from './edit-session-time.helpers';
 
-// «عدّل الوقت» (R-SCH-11): edit ONE lesson in place (same id, report, payments), not «غيّر الميعاد».
+// «عدّل الوقت» (R-SCH-11): edit ONE lesson in place (same id, report, payments), not «غيّر الموعد».
 // Needs the API's PATCH /lessons/:id/time (migration 174), so it only passes once that is merged.
 // Held lessons (correction, payout line, payout lock): edit-session-time.held.spec.ts.
 
@@ -56,7 +56,7 @@ test.describe('«عدّل الوقت» — scheduled lessons (R-SCH-11)', () => 
     await fillForm(drawer, { date: cairo(busy).date, time: cairo(busy).time });
     await save(drawer);
     await expect(drawer.getByText(ar.booking.conflictTitle)).toBeVisible();
-    await expect(drawer.getByText(/المعلم\/ة مشغول\/ة بحلقة تانية في الميعاد ده/)).toBeVisible();
+    await expect(drawer.getByText(/المعلم\/ة مشغول\/ة بحلقة أخرى في هذا الموعد/)).toBeVisible();
     expect((await lessonRows(teacherId)).find((r) => r.id === id)?.starts_at).toEqual(from);
 
     await drawer.getByLabel(ar.lessons.timeEdit.overrideReasonEdit).fill('طلب ولي الأمر');

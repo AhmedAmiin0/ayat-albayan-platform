@@ -54,7 +54,7 @@ describe('toThreadStudent (R-SUB-01): the chat’s student card', () => {
   });
 });
 
-describe('familyTags (H1 «مشترك» / «اشتراكه خلص» / «مش مدفوع»)', () => {
+describe('familyTags (H1 «مشترك» / «اشتراكه خلص» / «غير مدفوع»)', () => {
   const kid = (id: string, guardian_id: string, subscriptions: SubRow['status'][]) => ({
     id,
     guardian_id,

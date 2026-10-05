@@ -35,7 +35,7 @@ test('a paid package: a weekly rule on its days, its length and size, the new ch
     durationMin: 45,
     newStudent: { status: 'trial' },
   });
-  // A trial takes the form's «المده» too (30 / 45 / 60 / 90).
+  // A trial takes the form's «المدة» too (30 / 45 / 60 / 90).
   expect(toBookingRequest(draft({ durationMin: 30 }), { requestId: REQ })).toMatchObject({ durationMin: 30 });
 });
 
@@ -54,7 +54,7 @@ test('after a paid package: on to its subscription, prefilled; a trial goes nowh
 });
 
 describe('packageDaysNote: the package and the weekly days agree (as the web)', () => {
-  it('8 a month on one day → «= مرتين في الأسبوع»; matching days or a trial → nothing', () => {
+  it('8 a month on one day → «= مرتان في الأسبوع»; matching days or a trial → nothing', () => {
     expect(packageDaysNote('8', 1)).toBe(`الباقة ${t.enums.packageSize['8']} = ${t.booking.perWeek.two}`);
     expect(packageDaysNote('8', 2)).toBeNull();
     expect(packageDaysNote('trial', 1)).toBeNull();

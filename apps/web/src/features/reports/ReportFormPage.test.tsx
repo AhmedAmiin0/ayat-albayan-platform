@@ -50,7 +50,7 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     expect(identity.textContent).toContain('سهيلة');
     expect(identity.textContent).toContain('AB-0183');
     expect(identity.textContent).toContain('أبرار');
-    expect(identity.textContent).toContain('2 · فاضل 3 حلقات');
+    expect(identity.textContent).toContain('2 · بقيت 3 حلقات');
     expect(identity.textContent).toContain(t.enums.program.quran);
     expect(within(identity).queryAllByRole('textbox')).toHaveLength(0);
   });
@@ -77,17 +77,17 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     expect(apiSend).not.toHaveBeenCalledWith('POST', expect.anything(), expect.anything());
   });
 
-  it('autosaves the draft after a pause and says «المسودة اتحفظت»', async () => {
+  it('autosaves the draft after a pause and says «حُفظت المسودة»', async () => {
     apiSend.mockResolvedValue(reportView());
     renderForm();
     await screen.findByRole('region', { name: t.reports.identity });
     fireEvent.change(screen.getByLabelText(t.reports.homework), { target: { value: 'سورة الملك' } });
     await act(() => vi.advanceTimersByTimeAsync(1000));
     expect(apiSend).toHaveBeenCalledWith('PUT', '/reports/r-1/draft', expect.objectContaining({ homework: 'سورة الملك' }));
-    expect((await screen.findByText(/المسودة اتحفظت/)).textContent).toMatch(/\d\d:\d\d/);
+    expect((await screen.findByText(/حُفظت المسودة/)).textContent).toMatch(/\d\d:\d\d/);
   });
 
-  it('a full form is sent with the version; the page then reads «التقرير اتبعت»', async () => {
+  it('a full form is sent with the version; the page then reads «أُرسل التقرير»', async () => {
     apiSend.mockImplementation((method: string) =>
       Promise.resolve(method === 'POST' ? reportView({ status: 'submitted', version: 1, attendance: 'on_time', pdf_status: 'pending', edit_until: '2026-10-04T14:00:00.000Z' }) : reportView()),
     );
@@ -98,7 +98,7 @@ describe('ReportFormPage (R-REP-01/02, journey 2)', () => {
     expect(await screen.findByText(t.reports.submitted)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledWith('POST', '/reports/r-1/submit', expect.objectContaining({ attendance: 'on_time', overall: 'excellent', expectedVersion: 0 }));
     expect(screen.getByRole('button', { name: t.reports.resubmit })).toBeTruthy();
-    expect(screen.getByText(/تقدر تعدّل التقرير لحد/)).toBeTruthy();
+    expect(screen.getByText(/يمكنك تعديل التقرير حتى/)).toBeTruthy();
     // A reopened form must load the sent version, so the cached form is refetched.
     const formLoads = () => apiFetch.mock.calls.filter(([path]) => path === '/lessons/l-1/report-form').length;
     await waitFor(() => expect(formLoads()).toBe(2));

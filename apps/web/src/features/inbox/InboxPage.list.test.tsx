@@ -33,7 +33,7 @@ function renderInbox(search: InboxSearch, items = [LEAD, GUARDIAN]) {
 afterEach(() => apiFetch.mockReset());
 
 describe('InboxPage thread list (R-LEAD-02)', () => {
-  it('lists threads: unread lead first with its chip, a guardian by phone with «إنت:»', async () => {
+  it('lists threads: unread lead first with its chip, a guardian by phone with «أنت:»', async () => {
     renderInbox({ q: 'سهيلة', page: 1 });
     const lead = await screen.findByRole('link', { name: new RegExp(t.inbox.openThread.replace('{name}', 'أم سهيلة')) });
     expect(lead.getAttribute('aria-label')).toContain(t.inbox.unread.two);

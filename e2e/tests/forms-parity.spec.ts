@@ -9,7 +9,7 @@ import { resetAbrar, seedFamily, setAvailability } from '../support/schedule';
 // differences are marked «DEVIATION».
 
 const GRADES = ['ممتاز', 'جيد جدًا', 'جيد', 'مقبول', 'يحتاج إلى مراجعة'];
-const DAYS = ['السبت', 'الأحد', 'الاتنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
+const DAYS = ['السبت', 'الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة'];
 
 /** The titles appear in this order on the page. */
 async function expectOrder(scope: Locator, titles: string[]): Promise<void> {
@@ -28,10 +28,10 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     await admin.goto('/admin/students');
     await admin.getByRole('button', { name: 'إضافة طالب' }).click();
     const dialog = admin.getByRole('dialog');
-    await expectOrder(dialog, ['اسم الطالب', 'رقم الواتساب (مع كود الدولة)', 'سن الطالب', 'النوع', 'المعلم/المعلمه', 'عرفت عننا منين؟']);
-    await expect(dialog.getByLabel('رقم الواتساب (مع كود الدولة)')).toHaveAttribute('aria-required', 'true');
+    await expectOrder(dialog, ['اسم الطالب', 'رقم الواتساب (مع رمز الدولة)', 'عمر الطالب', 'النوع', 'المعلم/المعلمة', 'كيف عرفت عنا؟']);
+    await expect(dialog.getByLabel('رقم الواتساب (مع رمز الدولة)')).toHaveAttribute('aria-required', 'true');
     expect(await optionTexts(dialog.getByLabel('النوع'))).toEqual(['—', 'ذكر', 'أنثى']);
-    expect(await optionTexts(dialog.getByLabel('عرفت عننا منين؟'))).toEqual([
+    expect(await optionTexts(dialog.getByLabel('كيف عرفت عنا؟'))).toEqual([
       '—',
       'إعلان فيسبوك',
       'إعلان انستجرام',
@@ -40,7 +40,7 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     ]);
     // DEVIATION: the teachers come from the database (not the Google Form's fixed 11 Latin names);
     // the empty first option is the form's «(خيار فاضي)».
-    const teachers = await optionTexts(dialog.getByLabel('المعلم/المعلمه'));
+    const teachers = await optionTexts(dialog.getByLabel('المعلم/المعلمة'));
     expect(teachers[0]).toBe(ar.students.noTeacher);
     expect(teachers).toContain('أبرار');
   });
@@ -62,13 +62,13 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     ]);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // المعلم/المعلمه
-    await expect(admin.getByRole('group', { name: 'المعلم/المعلمه' })).toBeVisible();
+    // المعلم/المعلمة
+    await expect(admin.getByRole('group', { name: 'المعلم/المعلمة' })).toBeVisible();
     await admin.getByRole('radio', { name: /أبرار/ }).check();
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // المده (30/45/60/90 دقيقة) and الباقة المطلوبة * (the form's options; DEVIATION: 20/28 stay in the DB only, the trial moved to «نوع الحجز»).
-    expect(await optionTexts(admin.getByLabel('المده'))).toEqual(['30 دقيقة', '45 دقيقة', '60 دقيقة', '90 دقيقة']);
+    // المدة (30/45/60/90 دقيقة) and الباقة المطلوبة * (the form's options; DEVIATION: 20/28 stay in the DB only, the trial moved to «نوع الحجز»).
+    expect(await optionTexts(admin.getByLabel('المدة'))).toEqual(['30 دقيقة', '45 دقيقة', '60 دقيقة', '90 دقيقة']);
     const pkg = admin.getByRole('group', { name: 'الباقة المطلوبة' });
     await expect(pkg.locator('legend')).toHaveText(/الباقة المطلوبة\s*\*/);
     // The first span of each option is its name; the price follows in the next one.
@@ -80,13 +80,13 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     ]);
     await admin.getByRole('button', { name: ar.booking.next }).click();
 
-    // الساعه * / تاريخ اول حصه / الأيام المتاحة * (السبت → الجمعة). DEVIATION: the hour and the date
+    // الساعة * / تاريخ أول حلقة / الأيام المتاحة * (السبت → الجمعة). DEVIATION: the hour and the date
     // are picked from the teacher's free slots (never typed), as one control.
     const step = admin.getByRole('region', { name: ar.booking.steps.slot });
-    await expect(step.getByRole('heading', { name: 'الساعه' })).toBeVisible();
+    await expect(step.getByRole('heading', { name: 'الساعة' })).toBeVisible();
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
     await step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('button').first().click();
-    await expect(step.getByRole('heading', { name: 'تاريخ اول حصه' })).toBeVisible();
+    await expect(step.getByRole('heading', { name: 'تاريخ أول حلقة' })).toBeVisible();
     const days = step.getByRole('group', { name: 'الأيام المتاحة' });
     await expect(days.locator('legend')).toContainText('*');
     expect(await days.getByRole('checkbox').evaluateAll((els) => els.map((e) => e.closest('label')?.textContent?.trim()))).toEqual(DAYS);

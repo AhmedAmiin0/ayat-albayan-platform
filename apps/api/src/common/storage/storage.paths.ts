@@ -11,6 +11,8 @@ export const BUCKETS = {
   invoices: 'invoices',
   /** Inbound WhatsApp media downloaded on demand (migration 170). */
   waMedia: 'wa-media',
+  /** Lesson recordings, written by the LiveKit egress through the S3 endpoint (migration 189). */
+  recordings: 'recordings',
 } as const;
 export type Bucket = (typeof BUCKETS)[keyof typeof BUCKETS];
 

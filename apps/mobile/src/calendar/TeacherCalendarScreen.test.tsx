@@ -72,7 +72,7 @@ test('the teacher’s Riyadh week, السبت → الجمعة: lessons by day i
   expect(screen.getAllByText(t.schedule.noLessons)).toHaveLength(5);
 });
 
-test('‹ › moves a week, an empty week says so, «النهارده» comes back', async () => {
+test('‹ › moves a week, an empty week says so, «اليوم» comes back', async () => {
   serve({ [THIS_WEEK]: [pending] });
   await renderWithQuery(<TeacherCalendarScreen />);
   await screen.findByText('يوسف أحمد');
@@ -99,7 +99,7 @@ test('a week still loading says so instead of a blank list', async () => {
   expect(await screen.findByText(t.common.loading)).toBeTruthy();
 });
 
-test('a lesson’s «غيّر الميعاد» is in view on its row (no hidden tap) and opens the sheet; a held lesson has none', async () => {
+test('a lesson’s «غيّر الموعد» is in view on its row (no hidden tap) and opens the sheet; a held lesson has none', async () => {
   serve({ [THIS_WEEK]: [done, pending] });
   await renderWithQuery(<TeacherCalendarScreen />);
   const move = await screen.findByRole('button', { name: `${t.lessons.rescheduleSubmit} — يوسف أحمد` });

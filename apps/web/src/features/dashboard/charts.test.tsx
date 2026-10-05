@@ -60,7 +60,7 @@ describe('dashboard charts (one bar system, each a labelled table)', () => {
     expect(table.textContent).toContain('-1,294');
   });
 
-  it('by source: a guardian without a source reads «مش معروف»; ad spend note under it', () => {
+  it('by source: a guardian without a source reads «غير معروف»; ad spend note under it', () => {
     render(<SourceTable rows={SUMMARY.finance.by_source} />);
     expect(screen.getByRole('rowheader', { name: t.dashboard.unknownSource })).toBeTruthy();
     expect(screen.getByText(t.dashboard.adSpendNote)).toBeTruthy();

@@ -58,6 +58,15 @@ const schema = z.object({
    * thirty seconds; production leaves it unset.
    */
   MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
+  /**
+   * Lesson recordings (env.recording.ts): the Supabase Storage S3 endpoint the LiveKit egress
+   * uploads the MP4s to. All five or none: unset = lessons are not recorded, nothing else changes.
+   */
+  RECORDING_S3_ENDPOINT: z.preprocess(blankIsUnset, z.url().optional()),
+  RECORDING_S3_REGION: optionalSecret,
+  RECORDING_S3_BUCKET: optionalSecret,
+  RECORDING_S3_ACCESS_KEY: optionalSecret,
+  RECORDING_S3_SECRET: optionalSecret,
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 });

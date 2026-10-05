@@ -12,7 +12,7 @@ const SAMPLES: Readonly<Record<string, string>> = {
   lesson_when: 'الأحد 4 أكتوبر 17:00',
   lesson_time: 'الأحد 4 أكتوبر 17:00',
   lesson_slot: 'الأحد 4 أكتوبر 17:00',
-  remaining_label: 'فاضل حلقتين',
+  remaining_label: 'بقيت حلقتان',
   slot_1: 'السبت 3 أكتوبر 17:00',
   slot_2: 'الأحد 4 أكتوبر 19:00',
   tz_city: 'الرياض',

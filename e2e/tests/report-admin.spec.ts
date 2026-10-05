@@ -6,7 +6,7 @@ import { USERS } from '../support/users';
 
 // Admin side of «تقرير الحلقة» (R-REP-02/03, R12, R-NFR-03): the teacher's window is closed (25 h
 // ago) and the admin still corrects the sent report → version 2 and an audit row; a PDF that
-// failed shows its state with «جهّز الـPDF تاني» → pending → ready; «تحميل PDF» gives a signed URL
+// failed shows its state with «جهّز ملف PDF مرة أخرى» → pending → ready; «تحميل PDF» gives a signed URL
 // that serves the file under the report's name. The job renders in-process (ReportPdfModule).
 
 const PDF_WAIT = { timeout: 150_000, intervals: [1_000, 2_000, 5_000] };

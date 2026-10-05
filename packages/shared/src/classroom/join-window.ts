@@ -14,9 +14,21 @@ export interface JoinWindow {
   closes_at: string;
 }
 
-/** Window of a lesson at `now`. Edges are inclusive, so the boundary minute still joins. */
-export function joinWindow(lesson: { starts_at: string; ends_at: string }, now: Date): JoinWindow {
-  const opens = Date.parse(lesson.starts_at) - JOIN_OPENS_BEFORE_MIN * MIN_MS;
+/** What the window reads of a lesson; room_opened_at = «افتح الحلقة الآن» (lessons.room_opened_at). */
+export interface WindowLesson {
+  starts_at: string;
+  ends_at: string;
+  room_opened_at?: string | null | undefined;
+}
+
+/**
+ * Window of a lesson at `now`. Edges are inclusive, so the boundary minute still joins. A room
+ * opened early by staff opens at min(room_opened_at, starts_at − 15 min).
+ */
+export function joinWindow(lesson: WindowLesson, now: Date): JoinWindow {
+  const usual = Date.parse(lesson.starts_at) - JOIN_OPENS_BEFORE_MIN * MIN_MS;
+  const opened = lesson.room_opened_at ? Date.parse(lesson.room_opened_at) : Number.NaN;
+  const opens = Number.isNaN(opened) ? usual : Math.min(opened, usual);
   const closes = Date.parse(lesson.ends_at) + JOIN_CLOSES_AFTER_MIN * MIN_MS;
   const t = now.getTime();
   const state: JoinState = t < opens ? 'early' : t > closes ? 'closed' : 'open';
@@ -24,5 +36,5 @@ export function joinWindow(lesson: { starts_at: string; ends_at: string }, now: 
 }
 
 /** What the «ادخل الحلقة» buttons check (the API checks again). */
-export const canJoinNow = (lesson: { starts_at: string; ends_at: string }, now: Date): boolean =>
+export const canJoinNow = (lesson: WindowLesson, now: Date): boolean =>
   joinWindow(lesson, now).state === 'open';

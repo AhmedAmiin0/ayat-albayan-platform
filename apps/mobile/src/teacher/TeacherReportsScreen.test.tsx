@@ -41,7 +41,7 @@ beforeEach(() => {
   });
 });
 
-test('pending: «اكتب التقرير», or «كمّل التقرير» for a draft; a row opens the lesson’s form', async () => {
+test('pending: «اكتب التقرير», or «أكمل التقرير» for a draft; a row opens the lesson’s form', async () => {
   await renderWithQuery(<TeacherReportsScreen />);
   expect(await screen.findByText(t.reports.open)).toBeTruthy();
   expect(screen.getByText(t.reports.resume)).toBeTruthy();

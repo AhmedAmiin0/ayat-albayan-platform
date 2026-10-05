@@ -95,6 +95,117 @@ export type Database = {
         };
         Relationships: [];
       };
+      classroom_blocks: {
+        Row: {
+          blocked_by: string | null;
+          created_at: string;
+          id: string;
+          join_link_id: string | null;
+          lesson_id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          blocked_by?: string | null;
+          created_at?: string;
+          id?: string;
+          join_link_id?: string | null;
+          lesson_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          blocked_by?: string | null;
+          created_at?: string;
+          id?: string;
+          join_link_id?: string | null;
+          lesson_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'classroom_blocks_blocked_by_fkey';
+            columns: ['blocked_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_blocks_join_link_id_fkey';
+            columns: ['join_link_id'];
+            isOneToOne: false;
+            referencedRelation: 'lesson_join_links';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_blocks_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_blocks_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      classroom_participants: {
+        Row: {
+          id: string;
+          identity: string;
+          join_link_id: string | null;
+          joined_at: string;
+          lesson_id: string;
+          name: string;
+          role: string;
+          user_id: string | null;
+        };
+        Insert: {
+          id?: string;
+          identity: string;
+          join_link_id?: string | null;
+          joined_at?: string;
+          lesson_id: string;
+          name: string;
+          role: string;
+          user_id?: string | null;
+        };
+        Update: {
+          id?: string;
+          identity?: string;
+          join_link_id?: string | null;
+          joined_at?: string;
+          lesson_id?: string;
+          name?: string;
+          role?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'classroom_participants_join_link_id_fkey';
+            columns: ['join_link_id'];
+            isOneToOne: false;
+            referencedRelation: 'lesson_join_links';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_participants_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'classroom_participants_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       expenses: {
         Row: {
           amount: number;
@@ -628,6 +739,7 @@ export type Database = {
           id: string;
           lesson_id: string;
           revoked_at: string | null;
+          student_id: string | null;
           token_hash: string;
         };
         Insert: {
@@ -637,6 +749,7 @@ export type Database = {
           id?: string;
           lesson_id: string;
           revoked_at?: string | null;
+          student_id?: string | null;
           token_hash: string;
         };
         Update: {
@@ -646,6 +759,7 @@ export type Database = {
           id?: string;
           lesson_id?: string;
           revoked_at?: string | null;
+          student_id?: string | null;
           token_hash?: string;
         };
         Relationships: [
@@ -661,6 +775,13 @@ export type Database = {
             columns: ['lesson_id'];
             isOneToOne: false;
             referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_join_links_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
             referencedColumns: ['id'];
           },
         ];
@@ -733,6 +854,47 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_threads';
             referencedColumns: ['teacher_id'];
+          },
+        ];
+      };
+      lesson_recordings: {
+        Row: {
+          egress_id: string | null;
+          ended_at: string | null;
+          error: string | null;
+          file_path: string;
+          id: string;
+          lesson_id: string;
+          started_at: string;
+          status: string;
+        };
+        Insert: {
+          egress_id?: string | null;
+          ended_at?: string | null;
+          error?: string | null;
+          file_path: string;
+          id?: string;
+          lesson_id: string;
+          started_at?: string;
+          status?: string;
+        };
+        Update: {
+          egress_id?: string | null;
+          ended_at?: string | null;
+          error?: string | null;
+          file_path?: string;
+          id?: string;
+          lesson_id?: string;
+          started_at?: string;
+          status?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'lesson_recordings_lesson_id_fkey';
+            columns: ['lesson_id'];
+            isOneToOne: false;
+            referencedRelation: 'lessons';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -962,12 +1124,14 @@ export type Database = {
           ends_at: string;
           google_event_id: string | null;
           id: string;
+          instant: boolean;
           local_date: string | null;
           makeup_of_id: string | null;
           makeup_student_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
+          room_opened_at: string | null;
           rule_id: string | null;
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
@@ -987,12 +1151,14 @@ export type Database = {
           ends_at: string;
           google_event_id?: string | null;
           id?: string;
+          instant?: boolean;
           local_date?: string | null;
           makeup_of_id?: string | null;
           makeup_student_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at: string;
           status?: Database['public']['Enums']['lesson_status'];
@@ -1012,12 +1178,14 @@ export type Database = {
           ends_at?: string;
           google_event_id?: string | null;
           id?: string;
+          instant?: boolean;
           local_date?: string | null;
           makeup_of_id?: string | null;
           makeup_student_id?: string | null;
           meeting_link?: string | null;
           override_reason?: string | null;
           rescheduled_from_id?: string | null;
+          room_opened_at?: string | null;
           rule_id?: string | null;
           starts_at?: string;
           status?: Database['public']['Enums']['lesson_status'];
@@ -1649,6 +1817,48 @@ export type Database = {
             foreignKeyName: 'student_assistants_student_id_fkey';
             columns: ['student_id'];
             isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      student_join_links: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          revoked_at: string | null;
+          student_id: string;
+          token_hash: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          revoked_at?: string | null;
+          student_id: string;
+          token_hash: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          revoked_at?: string | null;
+          student_id?: string;
+          token_hash?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'student_join_links_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'student_join_links_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
             referencedRelation: 'students';
             referencedColumns: ['id'];
           },
@@ -2459,6 +2669,7 @@ export type Database = {
       };
       booking_result: { Args: { p_rule: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
+      create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       earning_status: {
         Args: { p_amount: number; p_paid: number };
         Returns: Database['public']['Enums']['teacher_earning_status'];
@@ -2477,12 +2688,14 @@ export type Database = {
           ends_at: string;
           google_event_id: string | null;
           id: string;
+          instant: boolean;
           local_date: string | null;
           makeup_of_id: string | null;
           makeup_student_id: string | null;
           meeting_link: string | null;
           override_reason: string | null;
           rescheduled_from_id: string | null;
+          room_opened_at: string | null;
           rule_id: string | null;
           starts_at: string;
           status: Database['public']['Enums']['lesson_status'];
@@ -2505,6 +2718,7 @@ export type Database = {
       is_my_child_report: { Args: { p_report: string }; Returns: boolean };
       is_my_child_report_pdf: { Args: { p_name: string }; Returns: boolean };
       is_my_lesson: { Args: { p_lesson: string }; Returns: boolean };
+      is_my_sales_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_report: { Args: { p_report: string }; Returns: boolean };
       is_my_report_pdf: { Args: { p_name: string }; Returns: boolean };
       merge_students: {
@@ -2512,6 +2726,15 @@ export type Database = {
         Returns: string;
       };
       my_assisted_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_sales_guardian_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_sales_lead_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
+      my_sales_phones: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          phone_e164: string;
+        }[];
+      };
+      my_sales_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_student_ids: { Args: Record<PropertyKey, never>; Returns: string[] };
       my_teacher_id: { Args: Record<PropertyKey, never>; Returns: string };
       my_thread_phones: {
@@ -2602,7 +2825,7 @@ export type Database = {
       template_category: 'utility' | 'marketing';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
-      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant';
+      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -2781,7 +3004,7 @@ export const Constants = {
         'disabled',
         'missing',
       ],
-      user_role: ['admin', 'teacher', 'guardian', 'assistant'],
+      user_role: ['admin', 'teacher', 'guardian', 'assistant', 'sales'],
     },
   },
 } as const;

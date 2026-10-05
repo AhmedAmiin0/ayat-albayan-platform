@@ -20,7 +20,7 @@ function renderDialog() {
   );
 }
 
-describe('«إضافة طالب»: «المعلم/المعلمه» (registration form)', () => {
+describe('«إضافة طالب»: «المعلم/المعلمة» (registration form)', () => {
   beforeEach(() => api.createStudent.mockReset());
 
   it('asks name and WhatsApp first, then age and gender (the form’s order)', () => {

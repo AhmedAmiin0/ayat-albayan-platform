@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
+import { Route as SalesRouteImport } from './routes/sales'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminBookRouteImport } from './routes/admin/book'
@@ -35,6 +36,11 @@ import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
 import { Route as JoinLinkTokenRouteImport } from './routes/join.$linkToken'
+import { Route as STokenRouteImport } from './routes/s.$token'
+import { Route as SalesIndexRouteImport } from './routes/sales/index'
+import { Route as SalesInboxRouteImport } from './routes/sales/inbox'
+import { Route as SalesMeetingsRouteImport } from './routes/sales/meetings'
+import { Route as SalesSubscriptionsRouteImport } from './routes/sales/subscriptions'
 import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
 import { Route as TeacherCalendarRouteImport } from './routes/teacher/calendar'
 import { Route as TeacherEarningsRouteImport } from './routes/teacher/earnings'
@@ -74,6 +80,11 @@ const LoginRoute = LoginRouteImport.update({
 const PortalRoute = PortalRouteImport.update({
   id: '/portal',
   path: '/portal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesRoute = SalesRouteImport.update({
+  id: '/sales',
+  path: '/sales',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeacherRoute = TeacherRouteImport.update({
@@ -181,6 +192,31 @@ const JoinLinkTokenRoute = JoinLinkTokenRouteImport.update({
   path: '/join/$linkToken',
   getParentRoute: () => rootRouteImport,
 } as any)
+const STokenRoute = STokenRouteImport.update({
+  id: '/s/$token',
+  path: '/s/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SalesIndexRoute = SalesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesInboxRoute = SalesInboxRouteImport.update({
+  id: '/inbox',
+  path: '/inbox',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesMeetingsRoute = SalesMeetingsRouteImport.update({
+  id: '/meetings',
+  path: '/meetings',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesSubscriptionsRoute = SalesSubscriptionsRouteImport.update({
+  id: '/subscriptions',
+  path: '/subscriptions',
+  getParentRoute: () => SalesRoute,
+} as any)
 const TeacherIndexRoute = TeacherIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -266,6 +302,7 @@ export interface FileRoutesByFullPath {
   '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
+  '/sales': typeof SalesRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
@@ -285,6 +322,10 @@ export interface FileRoutesByFullPath {
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
+  '/s/$token': typeof STokenRoute
+  '/sales/inbox': typeof SalesInboxRoute
+  '/sales/meetings': typeof SalesMeetingsRoute
+  '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
@@ -293,6 +334,7 @@ export interface FileRoutesByFullPath {
   '/teacher/students': typeof TeacherStudentsRoute
   '/admin/': typeof AdminIndexRoute
   '/assistant/': typeof AssistantIndexRoute
+  '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
@@ -325,6 +367,10 @@ export interface FileRoutesByTo {
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
+  '/s/$token': typeof STokenRoute
+  '/sales/inbox': typeof SalesInboxRoute
+  '/sales/meetings': typeof SalesMeetingsRoute
+  '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
@@ -333,6 +379,7 @@ export interface FileRoutesByTo {
   '/teacher/students': typeof TeacherStudentsRoute
   '/admin': typeof AdminIndexRoute
   '/assistant': typeof AssistantIndexRoute
+  '/sales': typeof SalesIndexRoute
   '/teacher': typeof TeacherIndexRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
@@ -350,6 +397,7 @@ export interface FileRoutesById {
   '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
+  '/sales': typeof SalesRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
@@ -369,6 +417,10 @@ export interface FileRoutesById {
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
+  '/s/$token': typeof STokenRoute
+  '/sales/inbox': typeof SalesInboxRoute
+  '/sales/meetings': typeof SalesMeetingsRoute
+  '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
   '/teacher/feedback': typeof TeacherFeedbackRoute
@@ -377,6 +429,7 @@ export interface FileRoutesById {
   '/teacher/students': typeof TeacherStudentsRoute
   '/admin/': typeof AdminIndexRoute
   '/assistant/': typeof AssistantIndexRoute
+  '/sales/': typeof SalesIndexRoute
   '/teacher/': typeof TeacherIndexRoute
   '/admin/students/$studentId': typeof AdminStudentsStudentIdRoute
   '/admin/teachers/$teacherId': typeof AdminTeachersTeacherIdRoute
@@ -395,6 +448,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/login'
     | '/portal'
+    | '/sales'
     | '/teacher'
     | '/admin/book'
     | '/admin/classrooms'
@@ -414,6 +468,10 @@ export interface FileRouteTypes {
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/s/$token'
+    | '/sales/inbox'
+    | '/sales/meetings'
+    | '/sales/subscriptions'
     | '/teacher/calendar'
     | '/teacher/earnings'
     | '/teacher/feedback'
@@ -422,6 +480,7 @@ export interface FileRouteTypes {
     | '/teacher/students'
     | '/admin/'
     | '/assistant/'
+    | '/sales/'
     | '/teacher/'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
@@ -454,6 +513,10 @@ export interface FileRouteTypes {
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/s/$token'
+    | '/sales/inbox'
+    | '/sales/meetings'
+    | '/sales/subscriptions'
     | '/teacher/calendar'
     | '/teacher/earnings'
     | '/teacher/feedback'
@@ -462,6 +525,7 @@ export interface FileRouteTypes {
     | '/teacher/students'
     | '/admin'
     | '/assistant'
+    | '/sales'
     | '/teacher'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
@@ -478,6 +542,7 @@ export interface FileRouteTypes {
     | '/assistant'
     | '/login'
     | '/portal'
+    | '/sales'
     | '/teacher'
     | '/admin/book'
     | '/admin/classrooms'
@@ -497,6 +562,10 @@ export interface FileRouteTypes {
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/s/$token'
+    | '/sales/inbox'
+    | '/sales/meetings'
+    | '/sales/subscriptions'
     | '/teacher/calendar'
     | '/teacher/earnings'
     | '/teacher/feedback'
@@ -505,6 +574,7 @@ export interface FileRouteTypes {
     | '/teacher/students'
     | '/admin/'
     | '/assistant/'
+    | '/sales/'
     | '/teacher/'
     | '/admin/students/$studentId'
     | '/admin/teachers/$teacherId'
@@ -522,10 +592,12 @@ export interface RootRouteChildren {
   AssistantRoute: typeof AssistantRouteWithChildren
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRoute
+  SalesRoute: typeof SalesRouteWithChildren
   TeacherRoute: typeof TeacherRouteWithChildren
   ClassroomLessonIdRoute: typeof ClassroomLessonIdRoute
   FeedbackTokenRoute: typeof FeedbackTokenRoute
   JoinLinkTokenRoute: typeof JoinLinkTokenRoute
+  STokenRoute: typeof STokenRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -563,6 +635,13 @@ declare module '@tanstack/react-router' {
       path: '/portal'
       fullPath: '/portal'
       preLoaderRoute: typeof PortalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales': {
+      id: '/sales'
+      path: '/sales'
+      fullPath: '/sales'
+      preLoaderRoute: typeof SalesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teacher': {
@@ -711,6 +790,41 @@ declare module '@tanstack/react-router' {
       fullPath: '/join/$linkToken'
       preLoaderRoute: typeof JoinLinkTokenRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/s/$token': {
+      id: '/s/$token'
+      path: '/s/$token'
+      fullPath: '/s/$token'
+      preLoaderRoute: typeof STokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sales/': {
+      id: '/sales/'
+      path: '/'
+      fullPath: '/sales/'
+      preLoaderRoute: typeof SalesIndexRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/inbox': {
+      id: '/sales/inbox'
+      path: '/inbox'
+      fullPath: '/sales/inbox'
+      preLoaderRoute: typeof SalesInboxRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/meetings': {
+      id: '/sales/meetings'
+      path: '/meetings'
+      fullPath: '/sales/meetings'
+      preLoaderRoute: typeof SalesMeetingsRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/subscriptions': {
+      id: '/sales/subscriptions'
+      path: '/subscriptions'
+      fullPath: '/sales/subscriptions'
+      preLoaderRoute: typeof SalesSubscriptionsRouteImport
+      parentRoute: typeof SalesRoute
     }
     '/teacher/': {
       id: '/teacher/'
@@ -916,6 +1030,22 @@ const AssistantRouteWithChildren = AssistantRoute._addFileChildren(
   AssistantRouteChildren,
 )
 
+interface SalesRouteChildren {
+  SalesInboxRoute: typeof SalesInboxRoute
+  SalesMeetingsRoute: typeof SalesMeetingsRoute
+  SalesSubscriptionsRoute: typeof SalesSubscriptionsRoute
+  SalesIndexRoute: typeof SalesIndexRoute
+}
+
+const SalesRouteChildren: SalesRouteChildren = {
+  SalesInboxRoute: SalesInboxRoute,
+  SalesMeetingsRoute: SalesMeetingsRoute,
+  SalesSubscriptionsRoute: SalesSubscriptionsRoute,
+  SalesIndexRoute: SalesIndexRoute,
+}
+
+const SalesRouteWithChildren = SalesRoute._addFileChildren(SalesRouteChildren)
+
 interface TeacherRouteChildren {
   TeacherCalendarRoute: typeof TeacherCalendarRoute
   TeacherEarningsRoute: typeof TeacherEarningsRoute
@@ -951,10 +1081,12 @@ const rootRouteChildren: RootRouteChildren = {
   AssistantRoute: AssistantRouteWithChildren,
   LoginRoute: LoginRoute,
   PortalRoute: PortalRoute,
+  SalesRoute: SalesRouteWithChildren,
   TeacherRoute: TeacherRouteWithChildren,
   ClassroomLessonIdRoute: ClassroomLessonIdRoute,
   FeedbackTokenRoute: FeedbackTokenRoute,
   JoinLinkTokenRoute: JoinLinkTokenRoute,
+  STokenRoute: STokenRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

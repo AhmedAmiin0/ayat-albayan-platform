@@ -33,7 +33,7 @@ describe('after a booking (R-SUB-01)', () => {
     expect(chatPhone(emptyDraft())).toBeNull();
   });
 
-  it('«من الشات» lists the student’s guardian chat, else the lead’s (R-MSG-06)', () => {
+  it('«من المحادثة» lists the student’s guardian chat, else the lead’s (R-MSG-06)', () => {
     expect(mediaPhone({ ...emptyDraft(), chatPhone: '+201001234567' })).toBe('+201001234567');
     expect(mediaPhone(LEAD)).toBe('+966501234567');
     expect(mediaPhone(emptyDraft())).toBeNull();

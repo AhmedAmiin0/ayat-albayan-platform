@@ -41,7 +41,7 @@ afterEach(() => {
 });
 
 describe('LeadsInbox reclassify to job applicants (R-LEAD-04)', () => {
-  it('the row icon opens an inline confirm and focuses «سيبها هنا»', async () => {
+  it('the row icon opens an inline confirm and focuses «أبقِها هنا»', async () => {
     const { ask, strip } = await openConfirm();
     expect(ask.getAttribute('aria-expanded')).toBe('true');
     expect(within(strip).getByText(t.leads.reclassifyConfirm)).toBeTruthy();
@@ -58,7 +58,7 @@ describe('LeadsInbox reclassify to job applicants (R-LEAD-04)', () => {
     expect(screen.queryByRole('group', { name: t.leads.reclassifyAsApplicant })).toBeNull();
   });
 
-  it('«سيبها هنا» closes the strip without a request and returns focus to the row', async () => {
+  it('«أبقِها هنا» closes the strip without a request and returns focus to the row', async () => {
     const { ask, strip } = await openConfirm();
     fireEvent.click(within(strip).getByRole('button', { name: t.leads.keepHere }));
     expect(screen.queryByRole('group', { name: t.leads.reclassifyAsApplicant })).toBeNull();

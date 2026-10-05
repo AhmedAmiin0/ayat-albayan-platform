@@ -40,7 +40,7 @@ describe('mintToken', () => {
 });
 
 describe('role grants', () => {
-  it.each(['teacher', 'admin', 'assistant'] as const)('%s publishes everything and may subscribe', (role) => {
+  it.each(['teacher', 'admin', 'assistant', 'sales'] as const)('%s publishes everything and may subscribe', (role) => {
     expect(grantsFor(role, 'r')).toEqual({ roomJoin: true, room: 'r', canPublish: true, canSubscribe: true, canPublishData: true });
   });
 
