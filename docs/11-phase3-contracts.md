@@ -374,9 +374,40 @@ Owner request: pay a teacher for each session from the admin, and let teachers s
 | `POST /teacher-earnings/resync` | admin | `{ lessons }` |
 | `GET /teachers/me/earnings`, `/sessions`, `/payments`, `/payments/:id/receipt` | teacher | the same views for the teacher behind the token; the id is never taken from the URL; 404 `teacher_not_linked`; another teacher's payment is 404 |
 
-### Subscribed-only view and the 45-minute decision (migration 183)
-Balances, session lists and the payment allocation read `v_teacher_countable_earnings`: a session counts only when its lesson is not a trial (`schedule_rules.package <> 'trial'`) and at least one student on it has `students.status = 'active'`; nothing is deleted (twin: `isCountableSession`). Decision: historical 45-min sessions were priced as 1 hour before 2026-10-03; `tools/scripts/fix-teacher-data.sql` re-prices them at `rate_60`, new lessons keep 45 min = `rate_45`.
+### Subscribed-only view and the 45-minute decision (migration 183) — superseded by §13
+~~Balances, session lists and the payment allocation read `v_teacher_countable_earnings`: a session counts only when its lesson is not a trial and at least one student on it has `students.status = 'active'`.~~ Since 20261005000200 the view no longer reads the student's current status (§13.1). Decision: historical 45-min sessions were priced as 1 hour before 2026-10-03; `tools/scripts/fix-teacher-data.sql` re-prices them at `rate_60`, new lessons keep 45 min = `rate_45`.
 
 ### Screens
-- Web: `/admin/teachers/:id/earnings` «مستحقات المعلم» (cards, sessions with ticks, pay dialog, history) linked from the teacher profile; `/teacher/earnings` «مستحقاتي» (the existing teacher nav entry now points here; the monthly statements stay at `/teacher/payouts`, linked from it).
+- Web: `/admin/teachers/:id/earnings` «مستحقات المعلم» (cards, sessions with ticks, pay dialog, history) linked from the teacher profile; `/teacher/earnings` «أرباحي» (was «مستحقاتي») (the existing teacher nav entry now points here; the monthly statements stay at `/teacher/payouts`, linked from it).
 - Mobile: teacher More > «مستحقاتي» (read only; the monthly statements one tap in); admin More > المعلمين > teacher > «مستحقات» with ticks and «سجّل دفعة». No new native modules or dependencies (the receipt photo reuses `expo-image-picker`).
+
+## 13. Finance re-managed (owner 2026-10-05, migrations 20261005000200–204)
+
+### 13.1 One teacher-pay rule (200)
+`public.lesson_counts_for_pay(status, rule_id)`: `completed`; `late` / `no_show` per `payout_count_late` / `payout_count_no_show`; a trial (rule package `trial`) only with the new setting **`payout_count_trials`** (default false). Never the student's current status, so history does not shrink when a student churns. `public.teacher_rate_for(minutes, r30, r45, r60, r90)`: a standard length takes its rate (none → unrated, the admin sets it); **any other length is pro-rated per minute from the nearest length the teacher has a rate for (ties → the longer), 2 decimals** (50 min at rate_45 = 70 → 77.78; closes TODO(R-PAY-02)). The ledger trigger uses both, so `teacher_session_earnings` is the truth; `v_teacher_payable_lessons` (counted lessons + any paid session, with the frozen ledger amount, null = no rate) feeds the monthly payout and the dashboard teacher cost; `v_teacher_countable_earnings` (same columns as 183) feeds balances, lists, allocation and `settle_payout_in_ledger`. A session with money paid always counts. Twins: `lessonCountsForPay`, `teacherRateFor` (`@ab/shared/money/pay-rule.ts`). Payout `breakdown.lines` are per (length, ledger amount), `duration` is any minutes.
+
+### 13.2 Corrections (201)
+| Route | Result |
+|---|---|
+| `POST /teacher-earnings/payments/:id/void {reason}` | `void_teacher_payment`: allocations reversed, each session re-judged; the payment stays (`voided_at`, `void_reason`), shown struck through; a payout it settled goes back to approved. 409 `already_voided` |
+| `POST /payouts/:id/pay {paidAt?, method?, note?, receiptPath?}` | `pay_payout`: ledger settlement + status in one transaction; receipt in `receipts/{teacher_id}/…` (same upload URL as per-session pay) |
+| `POST /payouts/:id/unpay {reason}` | paid → approved, its settlement voided |
+| `POST /payouts/:id/reopen` | approved → draft (`PAYOUT_CORRECTIONS`) |
+| `GET /payouts/:id/receipt` | signed download |
+
+Only one live settlement per payout (`teacher_payments_payout_key … where voided_at is null`). Every RPC writes its audit row.
+
+### 13.3 Summary and receivables (202)
+`GET /teacher-earnings/summary` (`v_teacher_earnings_summary`): per teacher earned / paid / owed / oldest unpaid session + totals (EGP). `GET /receivables`: packages with `price − net paid > 0`, days since `starts_on`, aging `0_30 | 31_60 | 61_90 | 90_plus`, totals per currency and one total in `reporting_currency` (`fx_missing` listed). Dashboard KPIs «مستحق للمعلمين» / «مستحق على الطلاب».
+
+### 13.4 Payments (203)
+`payments.kind payment|refund` (a refund is a positive amount counted against paid everywhere: package status, dashboard revenue, CSV as negative). Another currency is accepted when a rate exists: `amount`/`currency` are stored in the **package** currency, the sent amount in `original_amount`/`original_currency` with `fx_rate` (newest stored rate at `paid_at`, else today's; no rate → 400 `fx_unavailable`); replaces 400 `currency_mismatch`. `invoice_id` (unique): «سجّل كدفعة» records a payment from a booking invoice, whose file is then its receipt (400 `invoice_mismatch`, 409 `invoice_used`). A refund above the net paid is 409 `refund_exceeds_paid`. `GET /payments?…&method&kind` returns `totals` per currency. «مدفوع جزئيًا» is derived (`paymentState`), filter `GET /subscriptions?paid=partial` (unpaid packages with a payment). `GET /invoices/recent?from&to&page` lists every invoice with its `payment_id`.
+
+### 13.5 Expenses (204)
+`expense_categories` (key, label_ar, label_en, sort, active; seeded with the 5 old keys + rent, salaries, platform_fees, marketing_tools; `POST /expense-categories`, 409 `category_exists`); `expenses.category` is a key (FK). New columns `paid_on`, `vendor`, `method`, `receipt_path` (`receipts/expenses/…`, `POST /expenses/receipt-upload-url`, `GET /expenses/:id/receipt`), `recurring`, `is_draft`, `template_id`. «تكرار شهري»: `ExpensesJob` (every 6 h) calls `create_recurring_expense_drafts(next month)`, idempotent on `(template_id, month)`; a draft is not counted until `PATCH {isDraft:false}`. `GET /expenses?year=YYYY`, `GET /expenses/year?year` (12 months in the reporting currency, `fx_missing`).
+
+### 13.6 CSV
+`/exports/payments.csv` (+ `studentId`, `method`, `kind`; kind and original amount columns), `/exports/expenses.csv?month|year`, `/exports/teacher-ledger.csv?month&teacherId?` (sessions block, then payments; a voided payment counts 0), `/exports/receivables.csv`.
+
+### 13.7 Screens
+AdminNav «المالية»: المدفوعات, الاشتراكات, مستحقات المعلمين, المصروفات, الفواتير, مستحق على الطلاب, الملخص المالي (`/admin/finance`: a year's revenue − teacher cost − expenses = net by month, converted). Teacher nav: «أرباحي» `/teacher/earnings`, «كشوف الشهر» `/teacher/payouts` (sm and up; one tap in on the phone bar).
