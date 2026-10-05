@@ -60,6 +60,8 @@ export interface EgressOutcome {
   status: 'done' | 'failed';
   endedAt: string;
   error: string | null;
+  /** The egress' room (`lesson-<id>` / `meeting-<id>`), to record again if people are still in it. */
+  room: string | null;
 }
 
 const DONE = new Set(['EGRESS_COMPLETE', 'EGRESS_LIMIT_REACHED', '3', '6']);
@@ -94,5 +96,6 @@ export function egressOutcome(event: unknown, now: Date): EgressOutcome | null {
   const kind = kindOf(status);
   if (!egressId || !kind) return null;
   const error = kind === 'failed' ? (str(info.error) ?? status).slice(0, 500) : null;
-  return { egressId, status: kind, endedAt: endedAtOf(info.endedAt ?? info.ended_at, now), error };
+  const room = str(info.roomName ?? info.room_name);
+  return { egressId, status: kind, endedAt: endedAtOf(info.endedAt ?? info.ended_at, now), error, room };
 }

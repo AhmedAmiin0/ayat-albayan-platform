@@ -2,6 +2,7 @@ import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
+import { ownerColumns, type RoomTarget } from './recording-target';
 
 export type RecordingRow = Tables<'lesson_recordings'>;
 
@@ -19,13 +20,13 @@ export class RecordingQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   /**
-   * Claims the lesson's one running recording before LiveKit is asked. null = one is already
-   * running (the unique partial index lesson_recordings_one_running_uidx), so nothing starts.
+   * Claims the room's one running recording before LiveKit is asked. null = one is already running
+   * (the unique partial indexes per lesson / per meeting, migrations 189 / 212), so nothing starts.
    */
-  async claim(input: { lessonId: string; filePath: string; startedAt: string }): Promise<string | null> {
+  async claim(input: { target: RoomTarget; filePath: string; startedAt: string }): Promise<string | null> {
     const { data, error } = await this.db
       .from('lesson_recordings')
-      .insert({ lesson_id: input.lessonId, file_path: input.filePath, started_at: input.startedAt })
+      .insert({ ...ownerColumns(input.target), file_path: input.filePath, started_at: input.startedAt })
       .select('id')
       .single();
     if (error?.code === UNIQUE_VIOLATION) return null;
@@ -48,15 +49,27 @@ export class RecordingQueries {
     await this.finishWhere({ column: 'egress_id', value: egressId }, input);
   }
 
-  /** Newest first. */
-  async forLesson(lessonId: string): Promise<RecordingRow[]> {
+  /** The lesson's or the meeting's recordings, newest first. */
+  async forTarget(target: RoomTarget): Promise<RecordingRow[]> {
     const { data, error } = await this.db
       .from('lesson_recordings')
       .select('*')
-      .eq('lesson_id', lessonId)
+      .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
       .order('started_at', { ascending: false });
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** The egress of the room's running recording, if LiveKit has answered for it. */
+  async runningEgress(target: RoomTarget): Promise<string | null> {
+    const { data, error } = await this.db
+      .from('lesson_recordings')
+      .select('egress_id')
+      .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
+      .eq('status', 'recording')
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data?.egress_id ?? null;
   }
 
   private async finishWhere(where: { column: 'id' | 'egress_id'; value: string }, input: FinishInput): Promise<void> {

@@ -1,5 +1,6 @@
+import { academyWhatsappUrl } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { ACADEMY_WHATSAPP_URL } from '@/lib/academy';
+import { usePublicConfig } from '@/lib/public-config';
 
 type Kind = 'sent' | 'already' | 'expired' | 'invalid';
 
@@ -21,6 +22,7 @@ const BODY: Partial<Record<Kind, string>> = {
  */
 export function ThankYou({ kind }: { kind: Kind }) {
   const body = BODY[kind];
+  const whatsapp = academyWhatsappUrl(usePublicConfig());
   const dead = kind === 'expired' || kind === 'invalid';
   return (
     <div role="status" className="grid justify-items-center gap-2.5 px-2 py-8 text-center">
@@ -31,7 +33,7 @@ export function ThankYou({ kind }: { kind: Kind }) {
       <h2 className="font-display text-h3 font-bold text-pretty">{TITLE[kind]}</h2>
       {body && <p className="max-w-[36ch] text-sm text-pretty text-ink-2">{body}</p>}
       {dead && (
-        <a href={ACADEMY_WHATSAPP_URL} className="min-h-11 content-center text-sm font-semibold text-lapis underline underline-offset-4">
+        <a href={whatsapp} className="min-h-11 content-center text-sm font-semibold text-lapis underline underline-offset-4">
           {t.feedback.openWhatsapp}
         </a>
       )}

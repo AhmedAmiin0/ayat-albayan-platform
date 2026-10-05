@@ -3,12 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '../../common/storage/storage.service';
 import { ADMIN, ASSISTANT, LESSON_ID, OTHER_TEACHER, queries, TEACHER } from './classroom.fakes';
 import { recordingQueries, recordingRow, rolesOf } from './moderation.fakes';
-import { RecordingListService, recordingView } from './recording-list.service';
+import { RecordingListService, recordingView, RecordingViews } from './recording-list.service';
 import type { RecordingQueries } from './recording.queries';
 
 let rq: ReturnType<typeof recordingQueries>;
 const storage = { signedDownload: vi.fn() };
-const service = () => new RecordingListService(rolesOf({ q: queries() }), rq as unknown as RecordingQueries, storage as unknown as StorageService);
+const views = () => new RecordingViews(rq as unknown as RecordingQueries, storage as unknown as StorageService);
+const service = () => new RecordingListService(rolesOf({ q: queries() }), views());
 const list = (user = ADMIN) => service().list({ user, lessonId: LESSON_ID });
 
 beforeEach(() => {
@@ -25,7 +26,7 @@ describe('GET /lessons/:id/recordings', () => {
   });
 
   it('running and failed rows have no link (and sign nothing)', async () => {
-    rq.forLesson.mockResolvedValue([recordingRow({ status: 'recording', ended_at: null }), recordingRow({ status: 'failed' })]);
+    rq.forTarget.mockResolvedValue([recordingRow({ status: 'recording', ended_at: null }), recordingRow({ status: 'failed' })]);
     const views = await list();
     expect(views.map((v) => [v.status, v.url])).toEqual([['recording', null], ['failed', null]]);
     expect(storage.signedDownload).not.toHaveBeenCalled();

@@ -21,6 +21,7 @@ alter table public.translation_overrides enable row level security;
 create policy translation_overrides_read on public.translation_overrides for select
   to anon, authenticated using (true);
 
+-- Column-level: clients never see who edited a text (updated_by stays with the service role).
 revoke all on public.translation_overrides from anon, authenticated;
-grant select on public.translation_overrides to anon, authenticated;
+grant select (key, locale, value, updated_at) on public.translation_overrides to anon, authenticated;
 grant select, insert, update, delete on public.translation_overrides to service_role;

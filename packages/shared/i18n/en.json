@@ -217,9 +217,6 @@
     "duplicateHint": "Merging moves all lessons, reports, and payments, and the old record is kept in the history.",
     "emptyHint": "As soon as you convert a conversation into a student or add one yourself, they'll show up here.",
     "ageInvalid": "Write the age in digits (3 to 99)",
-    "filters": "Filters",
-    "filtersTitle": "Filter students",
-    "clearFilters": "Clear filters",
     "teacherAll": "All teachers",
     "teacherNone": "No teacher",
     "programAll": "All programs",
@@ -232,14 +229,14 @@
       "unpaid": "Unpaid"
     },
     "weekly": "Has a weekly lesson",
+    "weeklyFilter": "Weekly lesson",
     "weeklyAll": "Weekly lesson: all",
     "tzAll": "All time zones",
     "remaining": "Remaining",
     "remainingN": "{n} lessons left",
     "noPackage": "No package",
     "weeklyYes": "Has a weekly lesson",
-    "weeklyNo": "No weekly lesson",
-    "showResults": "Show results"
+    "weeklyNo": "No weekly lesson"
   },
   "guardians": {
     "title": "Guardians",
@@ -1244,8 +1241,6 @@
     }
   },
   "payments": {
-    "filters": "Filter payments",
-    "showResults": "Show results",
     "title": "Payments",
     "record": "Record payment",
     "subscription": "Subscription",
@@ -2113,8 +2108,11 @@
     "sections": {
       "messaging": "Messages & WhatsApp",
       "schedule": "Schedule & lessons",
+      "classroom": "Online lessons",
       "reports": "Reports",
       "accounts": "Accounts & payments",
+      "uploads": "Uploads",
+      "academy": "Academy and contact",
       "sales": "Assistants & sales",
       "appearance": "Appearance"
     },
@@ -2126,11 +2124,39 @@
       "reportingCurrency": "Revenue and expense figures on the dashboard are converted to it.",
       "flagFutureLessonsWhenUnpaid": "The student's upcoming lessons show an «unpaid package» mark.",
       "payoutCountLate": "When off, this lesson is not counted for the teacher.",
-      "payoutCountNoShow": "When off, this lesson is not counted for the teacher."
+      "payoutCountNoShow": "When off, this lesson is not counted for the teacher.",
+      "reminderLookaheadHours": "The reminder job reads lessons starting within this many hours; at least 25 so the day-before reminder is never missed.",
+      "followUpSlotsFromHours": "No slot sooner than this is offered to the lead.",
+      "followUpSlotsToDays": "Free slots are offered up to this many days ahead.",
+      "quickReplyWindowHours": "A guardian’s typed reply confirms only a lesson we messaged them about within this many hours.",
+      "makeupWindowDays": "After this, the makeup button no longer shows for the lesson.",
+      "joinOpensBeforeMin": "Students and teachers can join from this time.",
+      "joinClosesAfterMin": "After this nobody can join; guest links created from now on expire then.",
+      "defaultMeetingTitle": "Used when a meeting is created without a title.",
+      "fxFreshHours": "After this, a new rate is fetched from the provider.",
+      "uploadMaxMb": "For receipts and booking invoices, up to 10 MB.",
+      "academyWhatsapp": "International format, e.g. +966500000000; shown on public pages for guardians to reach us.",
+      "academyTimezone": "Days in payment and invoice ranges, the day view and recurring expenses follow this zone.",
+      "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
-    "saveBar": "Changes to the fields are only saved with «Save»."
+    "saveBar": "Changes to the fields are only saved with «Save».",
+    "reminderLookaheadHours": "Reminder look-ahead (hours)",
+    "followUpSlotsFromHours": "Earliest follow-up slot offered (hours ahead)",
+    "followUpSlotsToDays": "Latest follow-up slot offered (days ahead)",
+    "quickReplyWindowHours": "A typed “yes” counts within (hours)",
+    "makeupWindowDays": "A missed lesson can be made up within (days)",
+    "joinOpensBeforeMin": "Room opens before the lesson (minutes)",
+    "joinClosesAfterMin": "Room closes after the lesson (minutes)",
+    "defaultMeetingTitle": "Default internal meeting title",
+    "fxFreshHours": "Reuse a stored exchange rate for (hours)",
+    "uploadMaxMb": "Maximum upload size (MB)",
+    "academyWhatsapp": "Academy WhatsApp number",
+    "academyTimezone": "Academy time zone",
+    "feedbackRateWindowMin": "Public feedback form rate-limit window (minutes)",
+    "invalidPhone": "Enter the number in international format, e.g. +966500000000",
+    "invalidText": "Check this field"
   },
   "language": {
     "label": "Language",
@@ -2343,7 +2369,8 @@
       "meeting_not_found": "Meeting not found",
       "cannot_grant_share": "You cannot allow this participant to share the screen",
       "insecure_url": "The classroom server address starts with ws:// while this page uses https, so the browser blocks it. An administrator must set LIVEKIT_URL to a wss:// address",
-      "server_unreachable": "The classroom server could not be reached. Check your connection; if it keeps happening, ask the administrators to check the server settings"
+      "server_unreachable": "The classroom server could not be reached. Check your connection; if it keeps happening, ask the administrators to check the server settings",
+      "cannot_mute": "You cannot mute this participant"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2420,7 +2447,10 @@
         "recording": "Recording",
         "done": "Ready",
         "failed": "Failed"
-      }
+      },
+      "notConfigured": "Recording is not enabled on the server",
+      "notConfiguredHint": "Sessions are not recorded until an administrator sets up recording (RECORDING_S3_* and LiveKit Egress).",
+      "emptyMeeting": "No recordings for this meeting yet"
     },
     "openNow": "Open the room now",
     "opening": "Opening the room…",
@@ -2442,7 +2472,38 @@
       "hideStrip": "Hide participants",
       "showStrip": "Show participants",
       "rotateHint": "Turn your phone sideways to see the screen better"
-    }
+    },
+    "mute": {
+      "mic": "Mute microphone",
+      "micOf": "Mute {name}’s microphone",
+      "cam": "Turn off camera",
+      "camOf": "Turn off {name}’s camera",
+      "all": "Mute everyone",
+      "micDone": "{name}’s microphone was muted",
+      "camDone": "{name}’s camera was turned off",
+      "allDone": "The students’ microphones were muted",
+      "byStaff": "The teacher muted you",
+      "camByStaff": "The teacher turned off your camera"
+    },
+    "boardRequest": {
+      "title": "Participants’ requests",
+      "draw": {
+        "request": "Ask to write on the board",
+        "pending": "Waiting for approval to write…",
+        "asks": "{name} asks to write on the board",
+        "allowed": "You may now write on the board",
+        "denied": "Your request to write on the board was declined",
+        "stop": "Stop {name}’s writing"
+      },
+      "open": {
+        "request": "Ask to open the board",
+        "pending": "Waiting for the board to open…",
+        "asks": "{name} asks to open the board",
+        "allowed": "The board is open",
+        "denied": "Your request to open the board was declined"
+      }
+    },
+    "recordedNotice": "This session is recorded"
   },
   "sales": {
     "title": "Sales",
@@ -2679,8 +2740,15 @@
     "sortNone": "Not sorted",
     "filterBy": "Filter by {col}",
     "all": "All",
-    "clearFilters": "Clear filters",
-    "searchPlaceholder": "Search…"
+    "searchPlaceholder": "Search…",
+    "searchIn": "Search: {col}",
+    "filter": "Filter",
+    "activeCount": "{n} active",
+    "showResults": "Show results",
+    "clearAll": "Clear all",
+    "activeFilter": "{label}: {value}",
+    "removeFilter": "Remove filter {filter}",
+    "activeFilters": "Active filters"
   },
   "activity": {
     "title": "Activity log",

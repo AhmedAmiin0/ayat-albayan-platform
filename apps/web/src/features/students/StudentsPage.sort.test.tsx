@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import type { StudentsSearch } from './search';
 import { StudentsPage } from './StudentsPage';
 
@@ -53,9 +54,12 @@ describe('StudentsPage sort + column filters (R-NFR-08)', () => {
     );
   });
 
-  it('code, name and guardian have search boxes; program / teacher / status stay in the filter bar', async () => {
+  it('the page search is the toolbar box; code, name and guardian search boxes sit in the «تصفية» panel', async () => {
     renderPage({});
     await screen.findByText('أم جود');
+    expect(screen.getByRole('textbox', { name: t.common.search })).toBeTruthy();
+    expect(screen.queryByRole('searchbox', { name: filterLabel(t.students.code) })).toBeNull();
+    openFilters();
     for (const col of [t.students.code, t.students.name, t.students.guardian]) {
       expect(screen.getByRole('searchbox', { name: filterLabel(col) })).toBeTruthy();
     }

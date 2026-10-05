@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { usePublicConfig } from '@/lib/public-config';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
@@ -17,7 +18,8 @@ import { makeupParams } from './makeup-draft';
  */
 export function MakeupAction({ lesson }: { lesson: LessonView }) {
   const { color } = useTheme();
-  const { open, booked } = makeupOffer(lesson, new Date());
+  const { makeup_window_days: days } = usePublicConfig();
+  const { open, booked } = makeupOffer(lesson, new Date(), days);
   if (open.length + booked.length === 0) return null;
   const group = lesson.students.length > 1;
   return (

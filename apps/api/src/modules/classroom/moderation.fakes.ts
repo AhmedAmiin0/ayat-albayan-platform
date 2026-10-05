@@ -36,6 +36,7 @@ export const participantRow = (over: Partial<ParticipantRow> = {}): ParticipantR
 export const recordingRow = (over: Partial<RecordingRow> = {}): RecordingRow => ({
   id: '00000000-0000-4000-8000-0000000000aa',
   lesson_id: LESSON_ID,
+  meeting_id: null,
   egress_id: 'EG_abc',
   status: 'done',
   file_path: `lessons/${LESSON_ID}/2026-10-05T16-00-00-000Z.mp4`,
@@ -62,11 +63,12 @@ export function recordingQueries() {
     attachEgress: vi.fn().mockResolvedValue(undefined),
     finish: vi.fn().mockResolvedValue(undefined),
     finishByEgress: vi.fn().mockResolvedValue(undefined),
-    forLesson: vi.fn().mockResolvedValue([recordingRow()]),
+    forTarget: vi.fn().mockResolvedValue([recordingRow()]),
+    runningEgress: vi.fn().mockResolvedValue('EG_abc'),
   };
 }
 
-export const recorder = () => ({ startFor: vi.fn().mockResolvedValue('started') });
+export const recorder = () => ({ startFor: vi.fn().mockResolvedValue('started'), configured: true });
 
 /** A stub HttpPost answering `status` with `body` (JSON), recording every call. */
 export function http(answer: { status?: number; body?: object } = {}) {

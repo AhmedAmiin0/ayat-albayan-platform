@@ -57,7 +57,7 @@ describe('RecordingQueries', () => {
   it('claim returns the new id, or null when a recording is already running (unique index)', async () => {
     const f = fakeDb({ lesson_recordings: [{ data: { id: 'R1' } }, { error: { code: '23505', message: 'dup' } }] });
     const q = new RecordingQueries(f.db);
-    const input = { lessonId: 'L', filePath: 'lessons/L/x.mp4', startedAt: '2026-10-05T16:00:00.000Z' };
+    const input = { target: { kind: 'lesson' as const, id: 'L' }, filePath: 'lessons/L/x.mp4', startedAt: '2026-10-05T16:00:00.000Z' };
     expect(await q.claim(input)).toBe('R1');
     expect(await q.claim(input)).toBeNull();
   });

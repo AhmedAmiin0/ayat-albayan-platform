@@ -18,6 +18,8 @@ export interface RoomJoinResult {
   token: string;
   room: string;
   role: JoinRole;
+  /** 'off': RECORDING_S3_* or LiveKit Egress are not set up, so this room is not recorded (the admin is warned). */
+  recording?: 'on' | 'off';
 }
 
 /** Stable error codes of the classroom routes (the clients map them to ar/en messages). */
@@ -38,5 +40,6 @@ export const CLASSROOM_ERRORS = [
   'meeting_ended',
   'meeting_not_found',
   'cannot_grant_share',
+  'cannot_mute',
 ] as const;
 export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];

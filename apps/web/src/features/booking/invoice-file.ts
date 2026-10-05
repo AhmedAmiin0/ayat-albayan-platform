@@ -12,11 +12,11 @@ export function invoiceMime(file: File): string {
   return file.type === '' && /\.hei[cf]$/i.test(file.name) ? HEIC : file.type;
 }
 
-/** Client-side check before the upload (the API and the bucket check again). */
-export function invoiceProblem(file: File | null): InvoiceProblem | null {
+/** Client-side check before the upload, against settings.upload_max_mb (the API and the bucket check again). */
+export function invoiceProblem(file: File | null, maxBytes = INVOICE_MAX_BYTES): InvoiceProblem | null {
   if (!file) return null;
   if (!(INVOICE_MIMES as readonly string[]).includes(invoiceMime(file))) return 'invoice_type';
-  return file.size > INVOICE_MAX_BYTES ? 'invoice_too_large' : null;
+  return file.size > maxBytes ? 'invoice_too_large' : null;
 }
 
 export const isImage = (mime: string): boolean => mime.startsWith('image/');

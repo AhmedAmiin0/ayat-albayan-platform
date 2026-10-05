@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/ColumnFilterText';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { InvoicesPage } from './InvoicesPage';
 import { ReceivablesPage } from './ReceivablesPage';
 import { invoicesList, parseInvoicesSearch } from './search';
@@ -49,6 +50,7 @@ describe('finance tables: sort + filter (R-NFR-08)', () => {
     await screen.findByRole('link', { name: 'سهيلة' });
     fireEvent.click(screen.getByRole('button', { name: t.finance.owed }));
     expect(names()).toEqual(['مريم', 'سهيلة', 'آمنة']);
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by(t.finance.agingBucket) }), { target: { value: '0_30' } });
     expect(names()).toEqual(['مريم', 'آمنة']);
     fireEvent.change(screen.getByRole('searchbox', { name: by(t.finance.guardian) }), { target: { value: 'امنة' } });
@@ -61,6 +63,7 @@ describe('finance tables: sort + filter (R-NFR-08)', () => {
     show(<InvoicesPage search={{ page: 2 }} onSearch={onSearch} />);
     fireEvent.click(await screen.findByRole('button', { name: t.finance.kind }));
     expect(onSearch).toHaveBeenLastCalledWith({ sort: 'kind', dir: undefined, page: undefined });
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by(t.finance.kind) }), { target: { value: 'makeup' } });
     expect(onSearch).toHaveBeenLastCalledWith({ f_kind: 'makeup', page: undefined });
   });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
+  clearFilterSearch,
   filterParam,
   parseFilterSearch,
   parseSortSearch,
@@ -46,6 +47,7 @@ describe('toSortSearch / toFilterSearch', () => {
   it('sets or removes one filter param', () => {
     expect(toFilterSearch('status', 'active')).toEqual({ f_status: 'active' });
     expect(toFilterSearch('status', '  ')).toEqual({ f_status: undefined });
+    expect(clearFilterSearch(['status', 'name'])).toEqual({ f_status: undefined, f_name: undefined });
   });
 });
 

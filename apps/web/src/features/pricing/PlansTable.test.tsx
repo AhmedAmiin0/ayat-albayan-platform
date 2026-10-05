@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/ColumnFilterText';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { PlansTable } from './PlansTable';
 
 const PACKAGES: Quote[] = PACKAGE_IDS.map((tier) =>
@@ -35,7 +36,9 @@ describe('PlansTable (clientSort + clientFilter)', () => {
     fireEvent.change(screen.getByRole('searchbox', { name: by(t.pricing.planColumn) }), { target: { value: name } });
     act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
     expect(plans()).toEqual([name]);
-    fireEvent.click(screen.getByRole('button', { name: t.table.clearFilters }));
+    fireEvent.change(screen.getByRole('searchbox', { name: by(t.pricing.planColumn) }), { target: { value: '' } });
+    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by(t.pricing.steps.duration) }), { target: { value: '90' } });
     // Only the weekly plan comes back as 90 minutes at a 45-minute catalog.
     expect(plans()).toEqual([name]);

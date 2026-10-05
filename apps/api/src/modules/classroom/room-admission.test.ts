@@ -48,12 +48,14 @@ describe('RoomAdmission', () => {
     expect(decode(r.token).exp).toBe(OPEN.getTime() / 1000 + 3600);
   });
 
-  it('a staff join starts the recording; a guest join does not', async () => {
-    await admission().admit(staff, OPEN);
-    expect(rec.startFor).toHaveBeenCalledWith(LESSON_ID, OPEN);
+  it('every join, staff or guest, makes sure the lesson is recorded and says whether it can be', async () => {
+    expect((await admission().admit(staff, OPEN)).recording).toBe('on');
+    expect(rec.startFor).toHaveBeenCalledWith({ kind: 'lesson', id: LESSON_ID }, OPEN);
     rec.startFor.mockClear();
     await admission().admit(guest, OPEN);
-    expect(rec.startFor).not.toHaveBeenCalled();
+    expect(rec.startFor).toHaveBeenCalledTimes(1);
+    rec.configured = false;
+    expect((await admission().admit(guest, OPEN)).recording).toBe('off');
   });
 
   it('the join never fails on the recording', async () => {

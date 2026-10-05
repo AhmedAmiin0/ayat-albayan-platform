@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { kickScope, lessonIdOfRoom, meetingIdOfRoom, recordingsQuery, removeParticipant } from './moderation-api';
+import { kickScope, lessonIdOfRoom, meetingIdOfRoom, recordingSourceOf, recordingsQuery, removeParticipant } from './moderation-api';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
 vi.mock('@/lib/api', () => ({ apiFetch: api.fetch, apiSend: api.send }));
@@ -33,10 +33,18 @@ describe('moderation api', () => {
     expect(api.send).toHaveBeenCalledWith('POST', '/meetings/7/participants/guest-0123456789ab/remove');
   });
 
-  it('lists the recordings of a lesson', async () => {
-    const q = recordingsQuery('L1');
-    expect(q.queryKey).toEqual(['classroom', 'recordings', 'L1']);
+  it('lists the recordings of a lesson or of a meeting', async () => {
+    const q = recordingsQuery({ kind: 'lesson', id: 'L1' });
+    expect(q.queryKey).toEqual(['classroom', 'recordings', 'lesson', 'L1']);
     await (q.queryFn as () => Promise<unknown>)();
     expect(api.fetch).toHaveBeenCalledWith('/lessons/L1/recordings');
+    await (recordingsQuery({ kind: 'meeting', id: 'M1' }).queryFn as () => Promise<unknown>)();
+    expect(api.fetch).toHaveBeenCalledWith('/meetings/M1/recordings');
+  });
+
+  it('reads the recording source off the room name', () => {
+    expect(recordingSourceOf('lesson-L1')).toEqual({ kind: 'lesson', id: 'L1' });
+    expect(recordingSourceOf('meeting-M1')).toEqual({ kind: 'meeting', id: 'M1' });
+    expect(recordingSourceOf('other')).toBeNull();
   });
 });

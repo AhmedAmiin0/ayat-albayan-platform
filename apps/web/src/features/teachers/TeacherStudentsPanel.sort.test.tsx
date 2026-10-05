@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { clearAllFilters, openFilters } from '@/test/open-filters';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { panelView } from './teacher-students-view';
 
@@ -38,10 +39,20 @@ describe('TeacherStudentsPanel sort + column filters (R-TCH-03, R-NFR-08)', () =
   it('package left and weekly filter through the list filters; the code through its search box', async () => {
     renderPanel();
     await screen.findByText('AB-0183');
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: label(t.students.remaining) }), { target: { value: 'low' } });
     expect(apiFetch).toHaveBeenLastCalledWith(`${BASE}&package=low`);
     fireEvent.change(screen.getByRole('combobox', { name: label(t.students.weekly) }), { target: { value: 'no' } });
     expect(apiFetch).toHaveBeenLastCalledWith(`${BASE}&package=low&weekly=no`);
+    clearAllFilters();
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenLastCalledWith(BASE));
+  });
+
+  it('the name is the search box; the code waits in the panel', async () => {
+    renderPanel();
+    await screen.findByText('AB-0183');
+    expect(screen.getByRole('searchbox', { name: label(t.students.name) })).toBeTruthy();
+    expect(screen.queryByRole('searchbox', { name: label(t.students.code) })).toBeNull();
   });
 
   it('panelView: unknown select values are dropped, text filters stay column filters', () => {

@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
+import { openFilters, showResults } from '../support/filters';
 import { seedPackageStudent } from '../support/money';
 import { uniqueName } from '../support/money-extra';
 import { resetAbrar, withSql } from '../support/schedule';
@@ -26,7 +27,9 @@ test.describe('finance: part payments, receivables, refunds', () => {
     await pay.getByRole('button', { name: ar.payments.record, exact: true }).click();
     await expect(page.getByRole('status')).toHaveText(ar.payments.saved);
     await expect(row.getByText(ar.finance.partiallyPaid)).toBeVisible();
-    await page.getByRole('combobox', { name: ar.subscriptions.status }).selectOption('partial');
+    const filters = await openFilters(page);
+    await filters.getByRole('combobox', { name: ar.subscriptions.status }).selectOption('partial');
+    await showResults(filters);
     await expect(page.getByRole('row').filter({ hasText: student })).toBeVisible();
 
     // What is left is owed, with its aging.

@@ -13,6 +13,7 @@ import { t } from '@/lib/i18n';
 import type { PayoutView } from './api';
 import { usePayPayout } from './use-pay-payout';
 import { teacherLabel } from '@/lib/teacher-label';
+import { useUploadMaxBytes } from '@/lib/public-config';
 
 type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
 
@@ -23,6 +24,7 @@ type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
 export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
   const formId = useId();
   const due = Math.max(0, Math.round((payout.amount - (payout.ledger_paid ?? 0)) * 100) / 100);
+  const maxBytes = useUploadMaxBytes();
   const [day, setDay] = useState(paidAtDay());
   const [method, setMethod] = useState<PaymentMethod>('bank');
   const [note, setNote] = useState('');
@@ -31,7 +33,7 @@ export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
   const save = usePayPayout(payout, onSaved);
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const bad = receiptProblem(file);
+    const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);
     if (!bad) save.mutate({ day, method, note, file });
   };

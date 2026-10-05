@@ -5,6 +5,7 @@ import { LivekitApi } from './livekit-api';
 import { http, recordingQueries, S3 } from './moderation.fakes';
 import type { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
+import { lessonTarget, meetingTarget } from './recording-target';
 
 let q: ReturnType<typeof recordingQueries>;
 let h: ReturnType<typeof http>;
@@ -23,8 +24,8 @@ beforeEach(() => {
 
 describe('starting a lesson recording', () => {
   it('claims the row, creates the room, then starts a grid MP4 egress into the bucket path', async () => {
-    expect(await starter().startFor(LESSON_ID, OPEN)).toBe('started');
-    expect(q.claim).toHaveBeenCalledWith({ lessonId: LESSON_ID, filePath: path, startedAt: OPEN.toISOString() });
+    expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('started');
+    expect(q.claim).toHaveBeenCalledWith({ target: lessonTarget(LESSON_ID), filePath: path, startedAt: OPEN.toISOString() });
     const urls = h.mock.calls.map(([url]) => url);
     expect(urls).toEqual([
       'https://livekit.example.test/twirp/livekit.RoomService/CreateRoom',
@@ -35,15 +36,23 @@ describe('starting a lesson recording', () => {
     expect(q.attachEgress).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', 'EG_new');
   });
 
+  it('an internal meeting records the same way, into meetings/<id>/', async () => {
+    expect(await starter().startFor(meetingTarget(LESSON_ID), OPEN)).toBe('started');
+    const body = JSON.parse(h.mock.calls[1]?.[1].body ?? '{}');
+    expect(body).toMatchObject({ room_name: `meeting-${LESSON_ID}`, file_outputs: [{ filepath: `meetings/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp4` }] });
+    expect(starter().configured).toBe(true);
+    expect(starter({ s3: null }).configured).toBe(false);
+  });
+
   it('is idempotent: a running recording (claim refused) starts nothing', async () => {
     q.claim.mockResolvedValue(null);
-    expect(await starter().startFor(LESSON_ID, OPEN)).toBe('running');
+    expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('running');
     expect(h).not.toHaveBeenCalled();
   });
 
   it('off without RECORDING_S3_* or without LiveKit: no row, no call', async () => {
-    expect(await starter({ s3: null }).startFor(LESSON_ID, OPEN)).toBe('off');
-    expect(await starter({ livekit: null }).startFor(LESSON_ID, OPEN)).toBe('off');
+    expect(await starter({ s3: null }).startFor(lessonTarget(LESSON_ID), OPEN)).toBe('off');
+    expect(await starter({ livekit: null }).startFor(lessonTarget(LESSON_ID), OPEN)).toBe('off');
     expect(q.claim).not.toHaveBeenCalled();
     expect(h).not.toHaveBeenCalled();
   });
@@ -51,20 +60,20 @@ describe('starting a lesson recording', () => {
   it('LiveKit refusing marks the claim failed with the reason (never throws)', async () => {
     h.mockResolvedValueOnce({ ok: true, status: 200, text: async () => '{}' });
     h.mockResolvedValueOnce({ ok: false, status: 503, text: async () => JSON.stringify({ code: 'unavailable' }) });
-    expect(await starter().startFor(LESSON_ID, OPEN)).toBe('failed');
+    expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
     expect(q.finish).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', expect.objectContaining({ status: 'failed', error: 'livekit 503 unavailable' }));
     expect(q.attachEgress).not.toHaveBeenCalled();
   });
 
   it('an answer without an egress id is a failure too', async () => {
     h = http({ body: {} });
-    expect(await starter().startFor(LESSON_ID, OPEN)).toBe('failed');
+    expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
     expect(q.finish).toHaveBeenCalledWith(expect.any(String), expect.objectContaining({ error: 'no egress id in the answer' }));
   });
 
   it('a failing claim (database) is reported, not thrown', async () => {
     q.claim.mockRejectedValue(new Error('db down'));
-    expect(await starter().startFor(LESSON_ID, OPEN)).toBe('failed');
+    expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('failed');
     expect(h).not.toHaveBeenCalled();
   });
 });

@@ -1,5 +1,6 @@
 import type { DataTableFilters, DataTableSort } from '@/components/data-table-features';
 import {
+  clearFilterSearch,
   parseFilterSearch,
   parseSortSearch,
   toFilterSearch,
@@ -59,6 +60,7 @@ export function serverListProps(
     filters: {
       values: state.filters,
       onChange: (key, value) => onSearch({ ...toFilterSearch(key, value), page: undefined }),
+      onClear: (keys) => onSearch({ ...clearFilterSearch(keys), page: undefined }),
     },
     onPage: (page) => onSearch({ page: page > 1 ? page : undefined }),
   };

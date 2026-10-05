@@ -1,4 +1,4 @@
-import { canJoinNow, joinWindow, type WindowLesson } from '@ab/shared';
+import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type WindowLesson } from '@ab/shared';
 import { t } from '@/lib/i18n';
 
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -14,9 +14,9 @@ export interface JoinHint {
   hint: string | null;
 }
 
-/** The «ادخل الحلقة» rule shared by every button: open from 15 min before to 2 h after. */
-export function joinHint(lesson: WindowLesson, now: Date): JoinHint {
-  if (canJoinNow(lesson, now)) return { canJoin: true, hint: null };
-  const w = joinWindow(lesson, now);
+/** The «ادخل الحلقة» rule shared by every button: the settings' window (15 min before to 2 h after by default). */
+export function joinHint(lesson: WindowLesson, now: Date, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): JoinHint {
+  if (canJoinNow(lesson, now, win)) return { canJoin: true, hint: null };
+  const w = joinWindow(lesson, now, win);
   return { canJoin: false, hint: w.state === 'early' ? opensAtText(w.opens_at) : t.classroom.closedHint };
 }

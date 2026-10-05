@@ -6,7 +6,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { t } from '@/lib/i18n';
-import { withFilter, withSort, type ListUrlState } from '@/lib/list-url';
+import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list-url';
 import { applicantColumns } from './applicantColumns';
 import { jobApplicantsQuery } from './leads.api';
 
@@ -45,7 +45,7 @@ export function JobApplicantsList({ search, onSearch }: JobApplicantsListProps) 
               getRowId={(r) => r.id}
               emptyText={t.common.notFound}
               sort={{ key: search.sort.sort, dir: search.sort.dir, onChange: (next) => onSearch(withSort(search, next)) }}
-              filters={{ values: search.filters, onChange: (key, value) => onSearch(withFilter(search, { key, value })) }}
+              filters={{ values: search.filters, onChange: (key, value) => onSearch(withFilter(search, { key, value })), onClear: (keys) => onSearch(withoutFilters(search, keys)) }}
             />
           )}
           <Pager

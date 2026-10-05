@@ -54,9 +54,9 @@ export function ReceiptField({ file, onChange, error }: Props) {
   );
 }
 
-/** Client-side check before the upload (the API and the bucket check again). */
-export function receiptProblem(file: File | null): 'receipt_type' | 'receipt_too_large' | null {
+/** Client-side check before the upload, against settings.upload_max_mb (the API and the bucket check again). */
+export function receiptProblem(file: File | null, maxBytes = RECEIPT_MAX_BYTES): 'receipt_type' | 'receipt_too_large' | null {
   if (!file) return null;
   if (!(RECEIPT_MIMES as readonly string[]).includes(file.type)) return 'receipt_type';
-  return file.size > RECEIPT_MAX_BYTES ? 'receipt_too_large' : null;
+  return file.size > maxBytes ? 'receipt_too_large' : null;
 }

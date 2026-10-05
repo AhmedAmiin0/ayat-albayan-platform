@@ -1,4 +1,4 @@
-import type { JoinRole } from '@ab/shared';
+import type { JoinRole, MuteSource } from '@ab/shared';
 
 /** What the room UI knows about a call. livekit-client stays behind RoomClient so tests inject a fake. */
 
@@ -65,6 +65,12 @@ export interface RoomClient {
   onData(listener: (packet: DataPacketIn) => void): () => void;
   /** Publishes a canvas track as the screen share (the whiteboard); null stops it. */
   setBoardTrack(track: MediaStreamTrack | null): Promise<void>;
+  /** A staff member muted my microphone or camera («كتمك المعلم»); returns the unsubscribe. */
+  onModerated(listener: (e: ModeratedEvent) => void): () => void;
+}
+
+export interface ModeratedEvent {
+  source: MuteSource;
 }
 
 export interface DataSendOptions {
