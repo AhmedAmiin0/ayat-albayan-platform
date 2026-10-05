@@ -10,7 +10,7 @@ export const Route = createFileRoute('/admin/students')({
 
 function StudentsRoute() {
   const children = useChildMatches();
-  const { search = '', page = 1 } = Route.useSearch();
+  const { search = '', page = 1, ...filters } = Route.useSearch();
   const navigate = Route.useNavigate();
   if (children.length > 0) return <Outlet />;
 
@@ -18,8 +18,11 @@ function StudentsRoute() {
     <StudentsPage
       search={search}
       page={page}
+      filters={filters}
       onChange={(next) =>
-        void navigate({ search: { search: next.search || undefined, page: next.page > 1 ? next.page : undefined } })
+        void navigate({
+          search: parseStudentsSearch({ ...next.filters, search: next.search, page: next.page }),
+        })
       }
       onOpen={(studentId) => void navigate({ to: '/admin/students/$studentId', params: { studentId } })}
     />

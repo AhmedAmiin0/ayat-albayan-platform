@@ -44,6 +44,23 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     expect((await send({ method: 'GET', url: '/students', token: 'teacher' })).statusCode).toBe(403);
   });
 
+  it('list: forwards the filters; junk filters → 400 (R-STU-01)', async () => {
+    results['v_student_list'] = [{ data: [], count: 0 }];
+    const ok = await send({ method: 'GET', url: '/students?status=trial,active&teacher=none&package=unpaid&weekly=yes' });
+    expect(ok.statusCode).toBe(200);
+    expect(fake.argsOf('v_student_list', 'in')).toEqual(['status', ['trial', 'active']]);
+    expect(fake.argsOf('v_student_list', 'is')).toEqual(['teacher_id', null]);
+    const bad = await send({ method: 'GET', url: '/students?package=free' });
+    expect(bad.statusCode).toBe(400);
+  });
+
+  it('status-counts returns a count per status', async () => {
+    results['v_student_list'] = [{ count: 1 }, { count: 2 }, { count: 0 }, { count: 0 }];
+    const res = await send({ method: 'GET', url: '/students/status-counts?teacher=none' });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toEqual({ trial: 1, active: 2, paused: 0, churned: 0 });
+  });
+
   it('rejects a handle instead of a phone with 400 (R-STU-02)', async () => {
     const res = await send({ method: 'POST', url: '/students', payload: { ...BODY, guardian: { ...BODY.guardian, phone_e164: '@ahmed' } } });
     expect(res.statusCode).toBe(400);

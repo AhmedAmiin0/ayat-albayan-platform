@@ -45,6 +45,8 @@ describe('students mapper', () => {
       program: 'quran' as const,
       tz: 'Asia/Riyadh',
       created_at: '2026-10-01T00:00:00Z',
+      package_remaining: 2,
+      has_weekly: true,
     };
     const out = toListItem({ ...row, guardian: { name: 'ام جود', phone_e164: '+966501234567' }, teacher: null });
     expect(out).toEqual({ ...row, guardian_name: 'ام جود', guardian_phone: '+966501234567', teacher_name: null });

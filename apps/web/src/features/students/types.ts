@@ -13,6 +13,10 @@ export type StudentListItem = StudentRef & {
   guardian_name: string;
   guardian_phone: string;
   teacher_name: string | null;
+  /** Newest package's remaining lessons; null without a package. */
+  package_remaining?: number | null;
+  /** On an active weekly schedule rule. */
+  has_weekly?: boolean;
 };
 
 export type StudentProfile = StudentRef & {

@@ -11,6 +11,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
+import { studentListFiltersSchema } from '@ab/shared';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
@@ -18,10 +19,12 @@ import { DB, type Db } from '../../common/db/db.module';
 import { blankToNull, listQuerySchema, parse } from '../guardians/http';
 import { MergeService } from './merge.service';
 import { mergeRequestSchema, studentCreateRequestSchema, studentPatchSchema } from './students.dto';
-import { getStudentProfile, listStudents, listTeacherOptions } from './students.queries';
+import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOptions } from './students.queries';
 import { StudentsService } from './students.service';
 
 const Uuid = new ParseUUIDPipe();
+/** Search + paging + filters (R-STU-01): ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=. */
+const studentListQuerySchema = listQuerySchema.extend(studentListFiltersSchema.shape);
 
 /** Admin-only students CRUD + merge (R-STU-01..05). */
 @ApiTags('students')
@@ -37,7 +40,13 @@ export class StudentsController {
 
   @Get()
   list(@Query() query: unknown) {
-    return listStudents(this.db, parse(listQuerySchema, query));
+    return listStudents(this.db, parse(studentListQuerySchema, query));
+  }
+
+  /** Students per status under the same filters (the teacher profile's header counts). */
+  @Get('status-counts')
+  statusCounts(@Query() query: unknown) {
+    return countStudentsByStatus(this.db, parse(studentListFiltersSchema, query));
   }
 
   @Get('teacher-options')

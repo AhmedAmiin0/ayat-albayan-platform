@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { StudentsPage } from './StudentsPage';
@@ -21,7 +21,8 @@ const ROW = {
 };
 
 function renderPage(props: { search?: string; page?: number } = {}) {
-  apiFetch.mockResolvedValue({ items: [ROW], total: 45, page: props.page ?? 1, pageSize: 20 });
+  const page = { items: [ROW], total: 45, page: props.page ?? 1, pageSize: 20 };
+  apiFetch.mockImplementation((path: string) => Promise.resolve(path.startsWith('/students?') ? page : []));
   const onChange = vi.fn();
   const onOpen = vi.fn();
   render(
@@ -37,7 +38,7 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
     const { onOpen } = renderPage();
     fireEvent.click(await screen.findByText('سهيلة'));
     expect(onOpen).toHaveBeenCalledWith('s1');
-    expect(screen.getByText(t.enums.studentStatus.active)).toBeTruthy();
+    expect(within(screen.getByRole('table')).getByText(t.enums.studentStatus.active)).toBeTruthy();
     expect(screen.getByText(t.students.noTeacher)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/students?search=&page=1&pageSize=20');
   });
@@ -46,7 +47,7 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
     const { onChange } = renderPage({ page: 2 });
     fireEvent.change(screen.getByRole('textbox', { name: t.common.search }), { target: { value: ' 0501 ' } });
     fireEvent.click(screen.getByRole('button', { name: t.common.search }));
-    expect(onChange).toHaveBeenCalledWith({ search: '0501', page: 1 });
+    expect(onChange).toHaveBeenCalledWith({ search: '0501', page: 1, filters: {} });
   });
 
   it('pages through 45 results 20 at a time', async () => {
@@ -55,7 +56,7 @@ describe('StudentsPage (R-STU-01, R-NFR-08)', () => {
     expect(screen.getByRole('button', { current: 'page' }).textContent).toBe('3');
     expect(screen.getByRole('button', { name: t.common.nextPage })).toHaveProperty('disabled', true);
     fireEvent.click(screen.getByRole('button', { name: t.common.prevPage }));
-    expect(onChange).toHaveBeenCalledWith({ search: '', page: 2 });
+    expect(onChange).toHaveBeenCalledWith({ search: '', page: 2, filters: {} });
   });
 
   it('the add button opens the create dialog', () => {
