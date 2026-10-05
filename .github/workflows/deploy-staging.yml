@@ -27,12 +27,32 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    # A ci run on develop that failed, or that came from a fork/PR, deploys nothing.
+  # Is the develop environment set up? Without the deploy key an automatic run is skipped with a
+  # warning (not a red ✗ on every merge); a run started by hand still fails and says what is missing.
+  preflight:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
        && github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    environment: develop
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [ -n "$SSH_PRIVATE_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+          msg="staging deploy skipped: add the secret SSH_PRIVATE_KEY (and SUPABASE_ACCESS_TOKEN, SUPABASE_DB_PASSWORD, variable VITE_SUPABASE_ANON_KEY) to the develop environment"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "::error::$msg"; exit 1; fi
+          echo "::warning::$msg"
+
+  deploy:
+    needs: preflight
+    if: needs.preflight.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: develop
