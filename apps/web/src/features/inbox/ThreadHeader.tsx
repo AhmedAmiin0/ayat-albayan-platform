@@ -9,6 +9,7 @@ import { inboxBase, showsPhone, useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { leadChip } from './subscription';
 import { SubscriptionChip } from './SubscriptionChip';
+import { WindowBanner } from './WindowBanner';
 
 export interface ThreadHeaderProps {
   thread: ThreadView;
@@ -43,6 +44,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge }: Threa
         ) : (
           <span className="text-xs font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}
+        <WindowBanner thread={th} />
         {badge && <SubscriptionChip badge={badge} />}
         {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         <span>{timesInText()}</span>

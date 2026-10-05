@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import type { AcademySettings, SettingsUpdate } from '@ab/shared';
 
-/** Used when a row is missing or malformed; migrations 073, 123, 142, 162 and 20261005000200 seed the same values. */
+/** Used when a row is missing or malformed; migrations 073, 123, 142, 162, 195 and 20261005000200 seed the same values. */
 export const SETTING_DEFAULTS: AcademySettings = {
   late_cancel_hours: null,
   booking_horizon_weeks: 5,
@@ -19,6 +19,7 @@ export const SETTING_DEFAULTS: AcademySettings = {
   auto_messages_enabled: false,
   crm_cutover_done: false,
   sales_auto_assign: true,
+  feedback_mode: 'buttons',
 };
 
 export type SettingKey = keyof AcademySettings;
@@ -48,6 +49,7 @@ const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
   auto_messages_enabled: bool,
   crm_cutover_done: bool,
   sales_auto_assign: bool,
+  feedback_mode: (v) => v === 'buttons' || v === 'link',
 };
 
 /** Stored rows → typed settings, defaults filled in key by key. */
@@ -74,6 +76,7 @@ export function readSettings(rows: readonly { key: string; value: Json }[]): Aca
     auto_messages_enabled: pick('auto_messages_enabled'),
     crm_cutover_done: pick('crm_cutover_done'),
     sales_auto_assign: pick('sales_auto_assign'),
+    feedback_mode: pick('feedback_mode'),
   };
 }
 
@@ -94,6 +97,7 @@ const KEY_OF: { [K in keyof Required<SettingsUpdate>]: SettingKey } = {
   autoMessagesEnabled: 'auto_messages_enabled',
   crmCutoverDone: 'crm_cutover_done',
   salesAutoAssign: 'sales_auto_assign',
+  feedbackMode: 'feedback_mode',
 };
 
 /** PATCH body (camelCase, only sent keys) → settings rows to write. */

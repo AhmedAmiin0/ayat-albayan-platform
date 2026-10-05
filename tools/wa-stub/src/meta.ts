@@ -29,7 +29,12 @@ const BOOKED = 'تم حجز حلقة {{1}} — {{2}}';
 const TODAY = 'حلقة {{1}} النهاردة — {{2}}';
 const TEACHER = 'أستاذ {{1}}، عندك حلقة {{2}}';
 
-/** The 8 templates approved on the academy's WABA (migration 141). The other 4 start absent. */
+/**
+ * The 8 templates approved on the academy's WABA (migration 141). The registry's others start absent
+ * (report_ready, renewal_due, follow_up_slots, lesson_reminder_24h, lesson_feedback_request,
+ * lesson_join_link, lesson_rating with its 3 quick replies): the admin submits them (POST
+ * /{waba}/message_templates) and POST /__stub/templates/{name} plays Meta's review.
+ */
 export function defaultTemplates(): StubTemplate[] {
   return [
     approved('booking_confirmation', BOOKED, JITSI),

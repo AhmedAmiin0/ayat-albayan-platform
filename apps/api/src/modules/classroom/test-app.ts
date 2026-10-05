@@ -14,6 +14,8 @@ import { AssistantsQueries } from './assistants.queries';
 import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG } from './classroom.config';
 import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, SALES, TEACHER, TEACHER_ID } from './classroom.fakes';
 import { ClassroomQueries } from './classroom.queries';
+import { meetingQueries } from './internal-meetings.fakes';
+import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { LIVEKIT_HTTP } from './livekit-api';
 import { registerLivekitWebhookParser } from './livekit-webhook.controller';
 import { http, moderation, recordingQueries, S3 } from './moderation.fakes';
@@ -58,6 +60,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     storage: { signedDownload: vi.fn() },
     studentLinks: studentLinkQueries(),
     audit: { record: vi.fn() },
+    meetings: meetingQueries(),
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(TOKEN_VERIFIER).useValue(verify)
@@ -76,6 +79,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
     .overrideProvider(AuditService).useValue(m.audit)
+    .overrideProvider(InternalMeetingsQueries).useValue(m.meetings)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   registerLivekitWebhookParser(app);
@@ -95,6 +99,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     Object.assign(m.moderation, moderation());
     Object.assign(m.recordings, recordingQueries());
     Object.assign(m.studentLinks, studentLinkQueries());
+    Object.assign(m.meetings, meetingQueries());
     m.http.mockImplementation(http({ body: { egress_id: 'EG_new' } }));
     m.storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));

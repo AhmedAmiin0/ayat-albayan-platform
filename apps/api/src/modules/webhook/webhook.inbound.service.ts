@@ -1,9 +1,10 @@
-import { waIdToE164 } from '@ab/shared';
+import { waIdToE164, type LessonRating } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import type { InboundEvent } from './webhook.events';
-import { inboundPush, intentOf } from './webhook.inbound';
+import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
 import { InboundStore } from './webhook.inbound.store';
+import type { Contact } from './webhook.queries';
 import { QuickReplies } from './webhook.quick-reply';
 
 /** Time an undo (one DELETE) gets before the controller's 200 goes out. */
@@ -16,7 +17,7 @@ export interface InboundOptions {
 
 /**
  * One inbound WhatsApp message (R-MSG-04, R-LEAD-01): lead upsert, the stored row, quick reply
- * and the admin push. Replay-safe: Meta re-sends a wamid until it gets a 200, and a wamid already
+ * (a lesson_rating tap is stored on lesson_feedback, migration 195) and the admin push. Replay-safe: Meta re-sends a wamid until it gets a 200, and a wamid already
  * stored stops here before any side effect (no second confirm, no second push). If the quick
  * reply fails (DB down) while Meta still waits for our answer, the row just stored is removed and
  * the error goes up (500): Meta's re-send then finds no row and does it all again. Past the
@@ -39,18 +40,27 @@ export class InboundService {
     if (!phone) return void this.log.warn(`inbound ${m.waMessageId}: wa_id ${m.from} is not a phone`);
     const { who, lead } = await this.store.sender({ m, phone });
     const intent = intentOf(m);
-    const lessonId =
-      intent === 'confirm' || intent === 'reschedule' ? await this.replies.lessonFor({ m, phone, who }) : null;
+    const rating = ratingOf(m);
+    const asks = rating !== null || intent === 'confirm' || intent === 'reschedule';
+    const lessonId = asks ? await this.replies.lessonFor({ m, phone, who, rating: rating !== null }) : null;
     const stored = await this.store.save({ m, phone, who, leadId: lead.id, lessonId, stage: lead.stage });
     if (!stored) return; // replay of a wamid we already handled
     try {
       await this.replies.act({ intent, m, lessonId, leadId: lead.id });
+      await this.rate({ m, who, rating, lessonId });
     } catch (e) {
       await this.undo(m.waMessageId, opts.deadline);
       throw e;
     }
     const { kind, event } = inboundPush({ m, phone, who, newLeadId: lead.created, intent });
     await this.push.notifyAdmins(kind, event);
+  }
+
+  /** A lesson_rating tap of a guardian on a lesson of theirs → lesson_feedback (migration 195). */
+  private async rate(input: { m: InboundEvent; who: Contact; rating: LessonRating | null; lessonId: string | null }): Promise<void> {
+    const { m, who, rating, lessonId } = input;
+    if (!rating || !lessonId || !who.guardian) return;
+    await this.store.rate({ lessonId, guardianId: who.guardian.id, rating, waMessageId: m.waMessageId, at: m.at });
   }
 
   /** Unstores the row so Meta's re-send runs the reply again, only while Meta still waits. */

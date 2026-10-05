@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { lessonIdOfRoom, recordingsQuery, removeParticipant } from './moderation-api';
+import { kickScope, lessonIdOfRoom, meetingIdOfRoom, recordingsQuery, removeParticipant } from './moderation-api';
 
 const api = vi.hoisted(() => ({ fetch: vi.fn(), send: vi.fn() }));
 vi.mock('@/lib/api', () => ({ apiFetch: api.fetch, apiSend: api.send }));
@@ -19,6 +19,18 @@ describe('moderation api', () => {
   it('removes by identity (url-encoded)', async () => {
     await removeParticipant({ lessonId: 'L1', identity: 'guest:a b' });
     expect(api.send).toHaveBeenCalledWith('POST', '/lessons/L1/room/participants/guest%3Aa%20b/remove');
+  });
+
+  it('an internal meeting room: its id, and «إخراج» through the meeting route', async () => {
+    expect(meetingIdOfRoom('meeting-7')).toBe('7');
+    expect(meetingIdOfRoom('lesson-7')).toBeNull();
+    expect(kickScope('lesson-9').lessonId).toBe('9');
+    expect(kickScope('other').lessonId).toBeNull();
+    const scope = kickScope('meeting-7');
+    expect(scope.lessonId).toBe('7');
+    expect(kickScope('lesson-9').remove).toBeUndefined();
+    await scope.remove?.({ lessonId: '7', identity: 'guest-0123456789ab' });
+    expect(api.send).toHaveBeenCalledWith('POST', '/meetings/7/participants/guest-0123456789ab/remove');
   });
 
   it('lists the recordings of a lesson', async () => {

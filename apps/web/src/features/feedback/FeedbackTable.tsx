@@ -65,6 +65,17 @@ const rating = col.accessor('rating', {
   meta: { className: 'max-sm:order-2' },
 });
 
+/** The guardian's WhatsApp button answer (lesson_rating, migration 195); «—» before any tap. */
+const quickRating = col.accessor((r) => r.quick_rating ?? null, {
+  id: 'quick_rating',
+  header: () => t.feedback.quickRatingCol,
+  cell: (c) => {
+    const v = c.getValue();
+    return v ? <StatusChip tone={v === 'needs_work' ? 'act' : 'ok'} glyph="fill" size="sm" label={t.feedback.quickRating[v]} /> : <span className="max-sm:hidden">—</span>;
+  },
+  meta: { className: 'max-sm:order-2' },
+});
+
 /** The long question is the header's title; the column says «الترشيح». */
 const recommend = col.accessor('recommend', {
   header: () => <span title={t.feedback.recommend}>{t.feedback.recommendShort}</span>,
@@ -78,8 +89,8 @@ const note = col.accessor('note', {
   meta: { className: 'min-w-40 max-w-72 whitespace-normal max-sm:order-5 max-sm:max-w-none max-sm:basis-full' },
 });
 
-const WITH_TEACHER = col.columns([studentColumn(true), teacher, kind, rating, recommend, note]);
-const WITHOUT_TEACHER = col.columns([studentColumn(false), kind, rating, recommend, note]);
+const WITH_TEACHER = col.columns([studentColumn(true), teacher, kind, quickRating, rating, recommend, note]);
+const WITHOUT_TEACHER = col.columns([studentColumn(false), kind, quickRating, rating, recommend, note]);
 
 /** The feedback rows: the admin sees the teacher column, a teacher's own list does not need it. */
 export function FeedbackTable({ rows, showTeacher }: { rows: FeedbackListRow[]; showTeacher: boolean }) {

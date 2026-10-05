@@ -8,7 +8,7 @@ import { KickButton } from './kick/KickButton';
 import { KickDialog } from './kick/KickDialog';
 import { ParticipantsSheet } from './kick/ParticipantsSheet';
 import { useKick } from './kick/use-kick';
-import { lessonIdOfRoom } from './moderation-api';
+import { kickScope, lessonIdOfRoom } from './moderation-api';
 import { ParticipantGrid, type TileSlots } from './ParticipantGrid';
 import { RecordingsPanel } from './recordings/RecordingsPanel';
 import { RoomHeader } from './RoomHeader';
@@ -20,13 +20,14 @@ type Panel = 'people' | 'recordings' | null;
 
 /**
  * The call itself, one screen tall: header, stage + strip (or the balanced grid), and the control
- * bar pinned at the bottom. The board, «إخراج من الحلقة» and «التسجيلات» hang off it.
+ * bar pinned at the bottom. The board, «إخراج من الحلقة» and «التسجيلات» hang off it (an internal
+ * meeting's room, `meeting-<id>`, has the board and «إخراج» but no recordings).
  */
 export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinResult }) {
   const { snap } = room;
   const board = useBoard({ room, role: join.role });
   const lessonId = lessonIdOfRoom(join.room);
-  const kick = useKick({ lessonId, role: join.role });
+  const kick = useKick({ ...kickScope(join.room), role: join.role });
   const [panel, setPanel] = useState<Panel>(null);
   const close = () => setPanel(null);
   const recordingsFor = lessonId !== null && (join.role === 'teacher' || join.role === 'admin') ? lessonId : null;

@@ -6,6 +6,7 @@ import { SalesAutoAssignSwitch } from '@/features/sales/SalesAutoAssignSwitch';
 import { TemplateHealth } from '@/features/templates/TemplateHealth';
 import { t } from '@/lib/i18n';
 import { AutoMessagesSwitch } from './AutoMessagesSwitch';
+import { FeedbackModeSwitch } from './FeedbackModeSwitch';
 import { MessagingSwitch } from './MessagingSwitch';
 import { CheckField, NumberField, SettingRow } from './SettingsFields';
 import { sectionId, type SettingsSection } from './SettingsNav';
@@ -34,6 +35,7 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
     <Section id="messaging">
       <MessagingSwitch settings={settings} />
       <AutoMessagesSwitch settings={settings} />
+      <FeedbackModeSwitch settings={settings} />
       <div>
         <NumberField label={msg.reminderMinutesBefore} hint={h.reminderMinutesBefore} value={form.reminderMinutesBefore} error={errors.reminderMinutesBefore} onChange={(v) => set({ reminderMinutesBefore: v })} />
         <CheckField label={msg.reminder24hEnabled} hint={msg.reminder24hHint} checked={form.reminder24hEnabled} onChange={(v) => set({ reminder24hEnabled: v })} />

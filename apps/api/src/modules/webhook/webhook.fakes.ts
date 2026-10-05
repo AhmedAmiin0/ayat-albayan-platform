@@ -5,6 +5,7 @@ import type { AuditService } from '../../common/audit/audit.service';
 import type { PushService } from '../../common/push/push.service';
 import { lead } from '../leads/leads.fakes';
 import type { LeadsService } from '../leads/leads.service';
+import type { RatingStore } from '../lesson-rating/rating.store';
 import type { LessonStatusService } from '../lessons/lesson-status.service';
 import type { InboundEvent } from './webhook.events';
 import { InboundService } from './webhook.inbound.service';
@@ -92,6 +93,7 @@ export function fakeDeps() {
     lessons: { confirm: vi.fn().mockResolvedValue(LESSON_ID) },
     push: { notifyAdmins: vi.fn().mockResolvedValue(undefined) },
     audit: { record: vi.fn().mockResolvedValue(undefined) },
+    ratings: { record: vi.fn().mockResolvedValue(1) },
   };
 }
 export type Deps = ReturnType<typeof fakeDeps>;
@@ -105,7 +107,7 @@ export function services(d: Deps = fakeDeps()) {
     d.lessons as unknown as LessonStatusService,
     d.audit as unknown as AuditService,
   );
-  const store = new InboundStore(queries, d.leads as unknown as LeadsService);
+  const store = new InboundStore(queries, d.leads as unknown as LeadsService, d.ratings as unknown as RatingStore);
   const inbound = new InboundService(store, replies, push);
   const statuses = new StatusService(queries, push);
   return { ...d, replies, inbound, statuses };

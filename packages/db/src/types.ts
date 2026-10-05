@@ -696,13 +696,17 @@ export type Database = {
           kind: Database['public']['Enums']['feedback_kind'];
           lesson_id: string;
           note: string | null;
+          quick_rated_at: string | null;
+          quick_rating: Database['public']['Enums']['feedback_quick_rating'] | null;
+          quick_rating_wa_id: string | null;
           rating: number | null;
           recommend: Database['public']['Enums']['feedback_recommend'] | null;
           requested_at: string;
+          source: Database['public']['Enums']['feedback_source'];
           student_id: string;
           submitted_at: string | null;
           teacher_id: string;
-          token_hash: string;
+          token_hash: string | null;
         };
         Insert: {
           contact_phone?: string | null;
@@ -713,13 +717,17 @@ export type Database = {
           kind: Database['public']['Enums']['feedback_kind'];
           lesson_id: string;
           note?: string | null;
+          quick_rated_at?: string | null;
+          quick_rating?: Database['public']['Enums']['feedback_quick_rating'] | null;
+          quick_rating_wa_id?: string | null;
           rating?: number | null;
           recommend?: Database['public']['Enums']['feedback_recommend'] | null;
           requested_at?: string;
+          source?: Database['public']['Enums']['feedback_source'];
           student_id: string;
           submitted_at?: string | null;
           teacher_id: string;
-          token_hash: string;
+          token_hash?: string | null;
         };
         Update: {
           contact_phone?: string | null;
@@ -730,13 +738,17 @@ export type Database = {
           kind?: Database['public']['Enums']['feedback_kind'];
           lesson_id?: string;
           note?: string | null;
+          quick_rated_at?: string | null;
+          quick_rating?: Database['public']['Enums']['feedback_quick_rating'] | null;
+          quick_rating_wa_id?: string | null;
           rating?: number | null;
           recommend?: Database['public']['Enums']['feedback_recommend'] | null;
           requested_at?: string;
+          source?: Database['public']['Enums']['feedback_source'];
           student_id?: string;
           submitted_at?: string | null;
           teacher_id?: string;
-          token_hash?: string;
+          token_hash?: string | null;
         };
         Relationships: [
           {
@@ -1296,6 +1308,44 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_threads';
             referencedColumns: ['teacher_id'];
+          },
+        ];
+      };
+      meetings: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          ends_at: string | null;
+          id: string;
+          link_token_hash: string | null;
+          revoked: boolean;
+          title: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          link_token_hash?: string | null;
+          revoked?: boolean;
+          title?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          ends_at?: string | null;
+          id?: string;
+          link_token_hash?: string | null;
+          revoked?: boolean;
+          title?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'meetings_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
           },
         ];
       };
@@ -2227,6 +2277,13 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
+            foreignKeyName: 'teacher_payment_items_earning_id_fkey';
+            columns: ['earning_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_teacher_countable_earnings';
+            referencedColumns: ['id'];
+          },
+          {
             foreignKeyName: 'teacher_payment_items_payment_id_fkey';
             columns: ['payment_id'];
             isOneToOne: false;
@@ -2301,6 +2358,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_payments_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -2439,6 +2503,13 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'teacher_session_earnings_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
           },
         ];
       };
@@ -2729,6 +2800,13 @@ export type Database = {
             referencedRelation: 'teachers';
             referencedColumns: ['id'];
           },
+          {
+            foreignKeyName: 'teacher_session_earnings_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_threads';
+            referencedColumns: ['teacher_id'];
+          },
         ];
       };
       v_teacher_feedback_avg: {
@@ -2790,11 +2868,11 @@ export type Database = {
       booking_result: { Args: { p_rule: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
+      custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       earning_status: {
         Args: { p_amount: number; p_paid: number };
         Returns: Database['public']['Enums']['teacher_earning_status'];
       };
-      custom_access_token_hook: { Args: { event: Json }; Returns: Json };
       edit_lesson_time: { Args: { p: Json }; Returns: undefined };
       generate_rule_lessons: {
         Args: { p_actor: string; p_lessons: Json; p_rule: string };
@@ -2838,9 +2916,9 @@ export type Database = {
       is_my_child_report: { Args: { p_report: string }; Returns: boolean };
       is_my_child_report_pdf: { Args: { p_name: string }; Returns: boolean };
       is_my_lesson: { Args: { p_lesson: string }; Returns: boolean };
-      is_my_sales_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_report: { Args: { p_report: string }; Returns: boolean };
       is_my_report_pdf: { Args: { p_name: string }; Returns: boolean };
+      is_my_sales_lesson: { Args: { p_lesson: string }; Returns: boolean };
       merge_students: {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;
@@ -2863,9 +2941,8 @@ export type Database = {
           phone_e164: string;
         }[];
       };
-      report_of_path: { Args: { p_name: string }; Returns: string };
-      submit_report: { Args: { p: Json }; Returns: Json };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
+      report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
       void_teacher_payment: {
@@ -2882,6 +2959,8 @@ export type Database = {
         Args: { p_actor: string; p_paid_at: string; p_payout: string };
         Returns: string;
       };
+      submit_report: { Args: { p: Json }; Returns: Json };
+      sync_teacher_earning: { Args: { p_lesson: string }; Returns: undefined };
       teacher_has_student: {
         Args: { p_student_id: string; p_teacher_id: string };
         Returns: boolean;
@@ -2907,7 +2986,9 @@ export type Database = {
       booking_kind: 'trial' | 'package' | 'makeup';
       payment_kind: 'payment' | 'refund';
       feedback_kind: 'trial' | 'subscription';
+      feedback_quick_rating: 'excellent' | 'good' | 'needs_work';
       feedback_recommend: 'yes' | 'maybe' | 'no';
+      feedback_source: 'web_link' | 'whatsapp_button';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
       import_run_status: 'running' | 'succeeded' | 'failed';
@@ -2937,7 +3018,6 @@ export type Database = {
       package_size: 'trial' | '4' | '8' | '12' | '16' | '20' | '28';
       payment_method: 'bank' | 'wallet' | 'cash' | 'other';
       payout_status: 'draft' | 'approved' | 'paid';
-      teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       pdf_status: 'pending' | 'rendering' | 'ready' | 'failed';
       program: 'quran' | 'arabic' | 'islamic_studies';
       proposal_status: 'pending' | 'approved' | 'rejected';
@@ -2952,6 +3032,7 @@ export type Database = {
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
+      teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
       template_category: 'utility' | 'marketing';
       template_status:
@@ -3076,7 +3157,9 @@ export const Constants = {
       booking_kind: ['trial', 'package', 'makeup'],
       payment_kind: ['payment', 'refund'],
       feedback_kind: ['trial', 'subscription'],
+      feedback_quick_rating: ['excellent', 'good', 'needs_work'],
       feedback_recommend: ['yes', 'maybe', 'no'],
+      feedback_source: ['web_link', 'whatsapp_button'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
       import_run_status: ['running', 'succeeded', 'failed'],
@@ -3108,7 +3191,6 @@ export const Constants = {
       package_size: ['trial', '4', '8', '12', '16', '20', '28'],
       payment_method: ['bank', 'wallet', 'cash', 'other'],
       payout_status: ['draft', 'approved', 'paid'],
-      teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       pdf_status: ['pending', 'rendering', 'ready', 'failed'],
       program: ['quran', 'arabic', 'islamic_studies'],
       proposal_status: ['pending', 'approved', 'rejected'],
@@ -3124,6 +3206,7 @@ export const Constants = {
       schedule_rule_status: ['active', 'paused', 'ended'],
       student_status: ['trial', 'active', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
+      teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],
       template_category: ['utility', 'marketing'],
       template_status: [

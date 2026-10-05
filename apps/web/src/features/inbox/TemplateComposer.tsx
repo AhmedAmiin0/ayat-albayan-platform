@@ -1,4 +1,4 @@
-import { needsLesson, TEMPLATE_KEYS } from '@ab/shared';
+import { needsLesson, RATING_TEMPLATE, TEMPLATE_KEYS } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -32,8 +32,9 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   const queryClient = useQueryClient();
   const templates = useQuery(templatesQuery);
   const approved = (templates.data ?? [])
-    // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي».
-    .filter((x) => x.status === 'approved' && x.key !== FEEDBACK_TEMPLATE && forAudience(x, teacher));
+    // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي»;
+    // the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».
+    .filter((x) => x.status === 'approved' && x.key !== FEEDBACK_TEMPLATE && x.key !== RATING_TEMPLATE && forAudience(x, teacher));
   const lessons = context.lessons ?? [];
   const [key, setKey] = useState('');
   const [lessonId, setLessonId] = useState('');

@@ -41,6 +41,8 @@ function common(row: FeedbackListRow, people: People): TeacherFeedbackRowView {
     recommend: row.recommend,
     note: row.note,
     submitted_at: row.submitted_at,
+    quick_rating: row.quick_rating,
+    quick_rated_at: row.quick_rated_at,
   };
 }
 
