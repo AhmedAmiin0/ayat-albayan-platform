@@ -5,11 +5,20 @@ const stroke = (id: string, by: string): Stroke => ({ id, by, color: 'ink', widt
 
 describe('board model', () => {
   it('teacher, admin and assistant draw; a guest only when allowed; sales and unknown never', () => {
-    for (const role of ['teacher', 'admin', 'assistant'] as const) expect(canDraw(role, false)).toBe(true);
-    expect(canDraw('guest', false)).toBe(false);
-    expect(canDraw('guest', true)).toBe(true);
-    expect(canDraw('sales', true)).toBe(false);
-    expect(canDraw(null, true)).toBe(false);
+    const off = { studentsCanDraw: false, allowed: [] };
+    const all = { studentsCanDraw: true, allowed: [] };
+    for (const role of ['teacher', 'admin', 'assistant'] as const) expect(canDraw({ identity: 'x', role }, off)).toBe(true);
+    expect(canDraw({ identity: 'g', role: 'guest' }, off)).toBe(false);
+    expect(canDraw({ identity: 'g', role: 'guest' }, all)).toBe(true);
+    expect(canDraw({ identity: 's', role: 'sales' }, all)).toBe(false);
+    expect(canDraw({ identity: 'n', role: null }, all)).toBe(false);
+  });
+
+  it('a guest allowed by name draws; other guests still do not; sales never', () => {
+    const one = { studentsCanDraw: false, allowed: ['g1', 's1'] };
+    expect(canDraw({ identity: 'g1', role: 'guest' }, one)).toBe(true);
+    expect(canDraw({ identity: 'g2', role: 'guest' }, one)).toBe(false);
+    expect(canDraw({ identity: 's1', role: 'sales' }, one)).toBe(false);
   });
 
   it('the staff manage the board; only teacher and admin allow students', () => {

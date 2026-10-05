@@ -2,7 +2,7 @@ import type { RoomJoinResult } from '@ab/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connectFailureText } from './connect-failure';
 import { mediaErrorText } from './errors';
-import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type RoomClient, type RoomSnapshot } from './room-types';
+import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type ModeratedEvent, type RoomClient, type RoomSnapshot } from './room-types';
 
 export interface RoomController {
   snap: RoomSnapshot;
@@ -19,6 +19,8 @@ export interface RoomController {
   /** Data channel: survives a client swap because the listeners live in the hook. */
   sendData: (bytes: Uint8Array, opts: DataSendOptions) => void;
   onData: (listener: (packet: DataPacketIn) => void) => () => void;
+  /** A staff member muted my microphone or camera. */
+  onModerated: (listener: (e: ModeratedEvent) => void) => () => void;
   /** The whiteboard's canvas track as the screen share; null stops it. */
   setBoardTrack: (track: MediaStreamTrack | null) => void;
 }
@@ -30,6 +32,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
   const [notes, setNotes] = useState<string[]>([]);
   const [failure, setFailure] = useState<string | null>(null);
   const data = useRef(new Set<(packet: DataPacketIn) => void>());
+  const moderated = useRef(new Set<(e: ModeratedEvent) => void>());
 
   useEffect(() => {
     let live = true;
@@ -37,6 +40,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
     client.current = c;
     const off = c.subscribe(setSnap);
     const offData = c.onData((packet) => data.current.forEach((l) => l(packet)));
+    const offModerated = c.onModerated((e) => moderated.current.forEach((l) => l(e)));
     c.connect(join.url, join.token)
       .then((fails) => live && setNotes(fails.map((f) => mediaErrorText(f.device, f.error))))
       .catch((error: unknown) => live && setFailure(connectFailureText({ url: join.url, error, pageProtocol: window.location.protocol })));
@@ -44,6 +48,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
       live = false;
       off();
       offData();
+      offModerated();
       c.disconnect();
       client.current = null;
     };
@@ -66,10 +71,16 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
     return () => void data.current.delete(listener);
   }, []);
 
+  const onModerated = useCallback((listener: (e: ModeratedEvent) => void) => {
+    moderated.current.add(listener);
+    return () => void moderated.current.delete(listener);
+  }, []);
+
   return {
     snap,
     sendData,
     onData,
+    onModerated,
     setBoardTrack: (track) => run((c) => c.setBoardTrack(track), 'share'),
     attach,
     notes,

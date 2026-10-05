@@ -1,6 +1,8 @@
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { RoomButton } from '../RoomButton';
+import { RequestButton } from '../share/RequestButton';
+import type { ShareRequests } from '../share/use-share-requests';
 import { PEN_COLORS, type PenColor } from './model';
 import type { BoardController } from './use-board';
 import type { BoardShare } from './use-board-share';
@@ -47,8 +49,15 @@ function StudentsSwitch({ board }: { board: BoardController }) {
   );
 }
 
+interface Props {
+  board: BoardController;
+  share: BoardShare;
+  /** A guest who may not draw asks «اطلب الكتابة على السبورة». */
+  requests: ShareRequests;
+}
+
 /** Pen, colours, eraser and undo for whoever may draw; clear / allow students / share for the staff. */
-export function BoardToolbar({ board, share }: { board: BoardController; share: BoardShare }) {
+export function BoardToolbar({ board, share, requests }: Props) {
   return (
     <div role="toolbar" aria-label={t.classroom.board.tools} className="flex flex-wrap items-center gap-1.5">
       {board.canDraw ? (
@@ -61,7 +70,10 @@ export function BoardToolbar({ board, share }: { board: BoardController; share: 
           <RoomButton icon="undo" label={t.classroom.board.undo} onClick={board.undo} />
         </>
       ) : (
-        <p className="px-1 text-sm text-ink-2">{t.classroom.board.readOnly}</p>
+        <>
+          <p className="px-1 text-sm text-ink-2">{t.classroom.board.readOnly}</p>
+          <RequestButton share={requests} what="draw" />
+        </>
       )}
       {board.canManage && <RoomButton icon="eraser" variant="danger-quiet" label={t.classroom.board.clear} onClick={board.clear} />}
       {board.canAllow && <StudentsSwitch board={board} />}

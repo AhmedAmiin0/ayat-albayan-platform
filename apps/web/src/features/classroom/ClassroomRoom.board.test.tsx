@@ -52,7 +52,7 @@ describe('ClassroomRoom whiteboard sync', () => {
     const c = openRoom('teacher');
     fireEvent.click(screen.getByRole('button', { name: t.classroom.board.toggle }));
     act(() => from(c, { identity: 'late', role: 'guest' })({ t: 'sync-request' }));
-    expect(sent(c).at(-1)).toEqual({ msg: { t: 'sync', strokes: [], studentsCanDraw: false, open: true }, to: ['late'] });
+    expect(sent(c).at(-1)).toEqual({ msg: { t: 'sync', strokes: [], studentsCanDraw: false, open: true, allowed: [] }, to: ['late'] });
   });
 
   it('a guest with an empty board stays quiet on a sync-request', () => {

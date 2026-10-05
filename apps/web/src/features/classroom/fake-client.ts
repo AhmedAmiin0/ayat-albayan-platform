@@ -1,5 +1,5 @@
 import { vi } from 'vitest';
-import { EMPTY_SNAPSHOT, type DataPacketIn, type MediaFailure, type RoomClient, type RoomSnapshot, type TileView } from './room-types';
+import { EMPTY_SNAPSHOT, type DataPacketIn, type MediaFailure, type ModeratedEvent, type RoomClient, type RoomSnapshot, type TileView } from './room-types';
 
 // Test data only: a RoomClient whose state the test drives (livekit-client does not run in jsdom).
 
@@ -22,6 +22,8 @@ export interface FakeClient extends RoomClient {
   push: (patch: Partial<RoomSnapshot>) => void;
   /** Delivers a data packet as if another participant sent it. */
   receive: (packet: DataPacketIn) => void;
+  /** As if a staff member muted my microphone or camera. */
+  moderate: (e: ModeratedEvent) => void;
   sendData: ReturnType<typeof vi.fn<RoomClient['sendData']>>;
   setBoardTrack: ReturnType<typeof vi.fn<RoomClient['setBoardTrack']>>;
   connect: ReturnType<typeof vi.fn<RoomClient['connect']>>;
@@ -37,6 +39,7 @@ export function fakeClient(initial: Partial<RoomSnapshot> = {}, failures: MediaF
   let snap: RoomSnapshot = { ...EMPTY_SNAPSHOT, status: 'connected', shareAllowed: true, ...initial };
   const listeners = new Set<(s: RoomSnapshot) => void>();
   const data = new Set<(p: DataPacketIn) => void>();
+  const moderated = new Set<(e: ModeratedEvent) => void>();
   const client: FakeClient = {
     push(patch) {
       snap = { ...snap, ...patch };
@@ -56,6 +59,11 @@ export function fakeClient(initial: Partial<RoomSnapshot> = {}, failures: MediaF
     startAudio: vi.fn<RoomClient['startAudio']>(() => Promise.resolve(client.push({ canPlayAudio: true }))),
     attachVideo: () => () => undefined,
     receive: (packet) => data.forEach((l) => l(packet)),
+    moderate: (e) => moderated.forEach((l) => l(e)),
+    onModerated(l) {
+      moderated.add(l);
+      return () => void moderated.delete(l);
+    },
     sendData: vi.fn<RoomClient['sendData']>(() => Promise.resolve()),
     onData(l) {
       data.add(l);

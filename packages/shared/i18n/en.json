@@ -2331,7 +2331,8 @@
       "meeting_not_found": "Meeting not found",
       "cannot_grant_share": "You cannot allow this participant to share the screen",
       "insecure_url": "The classroom server address starts with ws:// while this page uses https, so the browser blocks it. An administrator must set LIVEKIT_URL to a wss:// address",
-      "server_unreachable": "The classroom server could not be reached. Check your connection; if it keeps happening, ask the administrators to check the server settings"
+      "server_unreachable": "The classroom server could not be reached. Check your connection; if it keeps happening, ask the administrators to check the server settings",
+      "cannot_mute": "You cannot mute this participant"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2430,6 +2431,36 @@
       "hideStrip": "Hide participants",
       "showStrip": "Show participants",
       "rotateHint": "Turn your phone sideways to see the screen better"
+    },
+    "mute": {
+      "mic": "Mute microphone",
+      "micOf": "Mute {name}’s microphone",
+      "cam": "Turn off camera",
+      "camOf": "Turn off {name}’s camera",
+      "all": "Mute everyone",
+      "micDone": "{name}’s microphone was muted",
+      "camDone": "{name}’s camera was turned off",
+      "allDone": "The students’ microphones were muted",
+      "byStaff": "The teacher muted you",
+      "camByStaff": "The teacher turned off your camera"
+    },
+    "boardRequest": {
+      "title": "Participants’ requests",
+      "draw": {
+        "request": "Ask to write on the board",
+        "pending": "Waiting for approval to write…",
+        "asks": "{name} asks to write on the board",
+        "allowed": "You may now write on the board",
+        "denied": "Your request to write on the board was declined",
+        "stop": "Stop {name}’s writing"
+      },
+      "open": {
+        "request": "Ask to open the board",
+        "pending": "Waiting for the board to open…",
+        "asks": "{name} asks to open the board",
+        "allowed": "The board is open",
+        "denied": "Your request to open the board was declined"
+      }
     }
   },
   "sales": {

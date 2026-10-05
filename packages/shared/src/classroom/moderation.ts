@@ -42,6 +42,22 @@ export function canGrantShare(actor: JoinRole | null, target: JoinRole | null): 
   return actor !== null && SHARE_GRANTORS.has(actor) && target === 'guest';
 }
 
+/** Seniority in the room: a staff member mutes only someone below them. */
+const RANK: Readonly<Record<JoinRole, number>> = { admin: 4, teacher: 3, assistant: 2, sales: 1, guest: 0 };
+
+/**
+ * «كتم الميكروفون» / «إيقاف الكاميرا» (LiveKit MutePublishedTrack): the teacher, an admin or an
+ * assistant mutes someone of lower rank (admin > teacher > assistant > sales > guest), so the kick
+ * hierarchy holds and an assistant may mute guests too. Nobody mutes themselves this way.
+ */
+export function canMute(actor: JoinRole | null, target: JoinRole | null): boolean {
+  if (actor === null || target === null || !SHARE_GRANTORS.has(actor)) return false;
+  return RANK[actor] > RANK[target];
+}
+
+/** «كتم الجميع» (every guest's microphone) is the teacher's or an admin's. */
+export const canMuteAll = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';
+
 /** A lesson's recording (LiveKit egress, room composite MP4 in Supabase Storage). */
 export interface LessonRecordingView {
   id: string;

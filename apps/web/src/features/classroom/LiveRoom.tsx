@@ -9,6 +9,10 @@ import { KickDialog } from './kick/KickDialog';
 import { ParticipantsSheet } from './kick/ParticipantsSheet';
 import { useKick } from './kick/use-kick';
 import { kickScope, lessonIdOfRoom } from './moderation-api';
+import { muteFor } from './mute/mute-api';
+import { MuteButtons } from './mute/MuteButtons';
+import { MuteToasts } from './mute/MuteToasts';
+import { useMute } from './mute/use-mute';
 import { ParticipantGrid, type TileSlots } from './ParticipantGrid';
 import { RecordingsPanel } from './recordings/RecordingsPanel';
 import { RoomHeader } from './RoomHeader';
@@ -31,7 +35,8 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
   const board = useBoard({ room, role: join.role });
   const lessonId = lessonIdOfRoom(join.room);
   const kick = useKick({ ...kickScope(join.room), role: join.role });
-  const share = useShareRequests({ room, role: join.role, grant: grantShareFor(join.room) });
+  const share = useShareRequests({ room, role: join.role, grant: grantShareFor(join.room), board });
+  const mute = useMute({ role: join.role, tiles: snap.tiles, call: muteFor(join.room) });
   const [panel, setPanel] = useState<Panel>(null);
   const close = () => setPanel(null);
   const recordingsFor = lessonId !== null && (join.role === 'teacher' || join.role === 'admin') ? lessonId : null;
@@ -39,7 +44,13 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
   const layout = layoutOf(snap.tiles, board.visible);
   const slots: TileSlots = {
     attach: room.attach,
-    actionFor: (tile) => (kick.canKick(tile) ? <KickButton tile={tile} onAsk={kick.ask} /> : null),
+    actionFor: (tile) =>
+      !kick.canKick(tile) && !mute.canMute(tile, 'microphone') && !mute.canMute(tile, 'camera') ? null : (
+      <span className="flex gap-1">
+        <MuteButtons tile={tile} mute={mute} />
+        {kick.canKick(tile) && <KickButton tile={tile} onAsk={kick.ask} />}
+      </span>
+    ),
   };
 
   return (
@@ -52,7 +63,7 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
       {layout.mode === 'grid' ? (
         <ParticipantGrid tiles={layout.tiles} {...slots} />
       ) : (
-        <RoomStage stage={layout.stage} strip={layout.strip} board={<BoardStage board={board} room={room} />} {...slots} />
+        <RoomStage stage={layout.stage} strip={layout.strip} board={<BoardStage board={board} room={room} requests={share} />} {...slots} />
       )}
       <ControlBar
         room={room}
@@ -62,9 +73,10 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
         onPeople={() => setPanel('people')}
         onRecordings={recordingsFor === null ? undefined : () => setPanel('recordings')}
       />
-      {panel === 'people' && !kick.target && <ParticipantsSheet tiles={snap.tiles} kick={kick} onClose={close} />}
+      {panel === 'people' && !kick.target && <ParticipantsSheet tiles={snap.tiles} kick={kick} mute={mute} onClose={close} />}
       {panel === 'recordings' && recordingsFor !== null && <RecordingsPanel lessonId={recordingsFor} onClose={close} />}
       <KickDialog kick={kick} />
+      <MuteToasts room={room} mute={mute} />
     </main>
   );
 }

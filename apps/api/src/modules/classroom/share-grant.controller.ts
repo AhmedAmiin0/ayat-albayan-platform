@@ -9,13 +9,13 @@ import { MeetingShareGrantService, ShareGrantService } from './share-grant.servi
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
 const uuid = new ParseUUIDPipe();
 
-interface Target {
+export interface Target {
   id: string;
   identity: string;
 }
 
 /** 400 for an id that is not a uuid, 404 participant_not_found for an identity we never minted. */
-async function targetOf(params: Record<string, string | undefined>): Promise<Target> {
+export async function targetOf(params: Record<string, string | undefined>): Promise<Target> {
   const id = await uuid.transform(params['id'] ?? '', { type: 'param', data: 'id' });
   const identity = params['identity'] ?? '';
   if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
