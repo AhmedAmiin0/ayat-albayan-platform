@@ -37,6 +37,14 @@ test.describe('meetings', () => {
       return { ...l, messages: m?.n };
     });
     expect(row).toEqual({ instant: true, opened: true, chargeable: false, teacher_id: teacherId, messages: 0 });
+    // An attendance outcome rewrites chargeable (no_show → true): migration 192 keeps an instant
+    // lesson free, so it never uses a package unit nor earns a makeup.
+    const after = await withSql(async (sql) => {
+      await sql`update public.lesson_students set chargeable = true where lesson_id = ${lessonId}`;
+      const [l] = await sql<{ chargeable: boolean }[]>`select chargeable from public.lesson_students where lesson_id = ${lessonId}`;
+      return l?.chargeable;
+    });
+    expect(after).toBe(false);
   });
 
   test('«افتح الحلقة الآن»: the admin opens the room an hour early', async ({ asRole }) => {
