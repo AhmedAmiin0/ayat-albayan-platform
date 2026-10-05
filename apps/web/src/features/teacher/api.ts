@@ -5,6 +5,8 @@ import { REPORTS_KEY } from '@/features/reports/api';
 import { LESSONS_KEY, type Window } from '@/features/schedule/api';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { apiFetch, apiSend } from '@/lib/api';
+import { sortFilterParams } from '@/lib/list-search';
+import type { ServerListState } from '@/lib/server-list-search';
 
 // Teacher self-service routes (docs/10 §5 rows 3–4; R-TCH-03, R-SCH-08).
 
@@ -31,11 +33,14 @@ export const proposeLesson = ({ id, body }: { id: string; body: LessonProposalRe
 
 export const MY_REPORTS_PAGE_SIZE = 20;
 
-/** GET /teachers/me/reports — my sent reports, newest first, with the edit window (spec §3). */
-export const myReportsQuery = (page: number) =>
+/** GET /teachers/me/reports — my sent reports, newest first unless sorted, filtered (R-NFR-08), with the edit window (spec §3). */
+export const myReportsQuery = (s: ServerListState) =>
   queryOptions({
-    queryKey: [...REPORTS_KEY, 'mine', page],
-    queryFn: () => apiFetch<Page<TeacherReportView>>(`/teachers/me/reports?page=${page}&pageSize=${MY_REPORTS_PAGE_SIZE}`),
+    queryKey: [...REPORTS_KEY, 'mine', s],
+    queryFn: () => {
+      const qs = new URLSearchParams([['page', String(s.page)], ['pageSize', String(MY_REPORTS_PAGE_SIZE)], ...sortFilterParams(s.sort, s.filters)]);
+      return apiFetch<Page<TeacherReportView>>(`/teachers/me/reports?${qs}`);
+    },
     placeholderData: keepPreviousData,
   });
 

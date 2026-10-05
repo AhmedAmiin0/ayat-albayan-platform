@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
 import { applySort, ilikeContains, type SortSpec } from '../../common/list-sort';
-import { orSafe } from '../guardians/http';
+import { studentIdsMatching } from '../../common/student-ids';
 import { dbError, type PageQuery } from '../teachers/http';
 import type { FeedbackRow } from './feedback.queries';
 
@@ -39,8 +39,6 @@ const DAY_MS = 86_400_000;
 
 const bounds = (p: PageQuery): [number, number] => [(p.page - 1) * p.pageSize, p.page * p.pageSize - 1];
 const EMPTY: FeedbackPage = { rows: [], total: 0 };
-/** A student-name search matches at most this many students (their ids go in the URL). */
-const STUDENT_MATCH_LIMIT = 200;
 
 function rows(res: { data: FeedbackListRow[] | null; count: number | null; error: PostgrestError | null }): FeedbackPage {
   if (res.error) throw dbError(res.error);
@@ -59,7 +57,7 @@ export class FeedbackReadQueries {
    */
   async page(input: { filter: FeedbackQuery; page: PageQuery }): Promise<FeedbackPage> {
     const { filter, page } = input;
-    const students = filter.student ? await this.studentIds(filter.student) : null;
+    const students = filter.student ? await studentIdsMatching(this.db, filter.student) : null;
     if (students?.length === 0) return EMPTY;
     let q = this.db.from('lesson_feedback').select(LIST_COLUMNS, { count: 'exact' });
     if (filter.teacher) q = q.eq('teacher_id', filter.teacher);
@@ -78,19 +76,6 @@ export class FeedbackReadQueries {
   /** A teacher's own rows: the teacher filter is the login, never a request parameter. */
   mine(teacherId: string, input: { filter: FeedbackQuery; page: PageQuery }): Promise<FeedbackPage> {
     return this.page({ filter: { ...input.filter, teacher: teacherId }, page: input.page });
-  }
-
-  /** Students whose name or code contains the term; null = no usable term (no filter). */
-  private async studentIds(term: string): Promise<string[] | null> {
-    const safe = orSafe(term);
-    if (!safe) return null;
-    const { data, error } = await this.db
-      .from('students')
-      .select('id')
-      .or(`name.ilike.*${safe}*,code.ilike.*${safe}*`)
-      .limit(STUDENT_MATCH_LIMIT);
-    if (error) throw dbError(error);
-    return data.map((r) => r.id);
   }
 
   /** Per-teacher averages over answered rows (v_teacher_feedback_avg); `teacherId` limits to one. */

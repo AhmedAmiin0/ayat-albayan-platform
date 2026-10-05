@@ -6,6 +6,7 @@ import { PendingReports } from '@/features/reports/PendingReports';
 import { errorCode } from '@/features/schedule/api';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
+import type { ServerListPatch, ServerListSearch } from '@/lib/server-list-search';
 import { teacherMeQuery } from './api';
 import { MyStudents } from './MyStudents';
 import { SubmittedReports } from './SubmittedReports';
@@ -14,7 +15,13 @@ import { SubmittedReports } from './SubmittedReports';
  * /teacher/reports (R-REP-01/02/05, R-TCH-03): the reports still to write, the ones I sent (edit
  * while the window is open), and my students, each opening their «سجل التقارير».
  */
-export function MyReports() {
+export interface MyReportsProps {
+  /** The sent reports' page, sort and filters (route search, R-NFR-08). */
+  search: ServerListSearch;
+  onSearch: (patch: ServerListPatch) => void;
+}
+
+export function MyReports({ search, onSearch }: MyReportsProps) {
   const me = useQuery(teacherMeQuery);
   const tz = me.data?.tz ?? RIYADH_TZ;
   return (
@@ -27,7 +34,7 @@ export function MyReports() {
       )}
       <PendingReports tz={tz} />
       <div className="grid gap-8">
-        <SubmittedReports tz={tz} />
+        <SubmittedReports tz={tz} search={search} onSearch={onSearch} />
         {me.data && (
           <section aria-labelledby="my-students" className="grid gap-2">
             <h2 id="my-students" className="font-display text-h3 font-bold">
