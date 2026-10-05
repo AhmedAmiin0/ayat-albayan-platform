@@ -82,6 +82,7 @@ export function fakeQueries() {
     moveStatus: vi.fn().mockResolvedValue(true),
     guardianLesson: vi.fn().mockResolvedValue(true),
     recentLessonOutbound: vi.fn().mockResolvedValue(null),
+    replyWindowMs: vi.fn().mockResolvedValue(48 * 3_600_000),
     updateLead: vi.fn().mockResolvedValue(undefined),
   };
 }

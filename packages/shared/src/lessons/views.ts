@@ -74,32 +74,6 @@ export interface LessonProposalView {
   created_at: string;
 }
 
-/** GET /settings (admin). late_cancel_hours null = OFF. Phase 3 keys: migration 123. */
-export interface AcademySettings {
-  late_cancel_hours: number | null;
-  booking_horizon_weeks: number;
-  renewal_alert_remaining: number;
-  flag_future_lessons_when_unpaid: boolean;
-  report_teacher_edit_hours: number;
-  reporting_currency: string;
-  payout_count_late: boolean;
-  payout_count_no_show: boolean;
-  payout_count_trials: boolean; // trial lessons count toward teacher pay (migration 20261005000200)
-  /** Phase 4 (docs/12 §2): R-LEAD-05 hours after the last inbound message, ascending. */
-  follow_up_hours: number[];
-  reminder_minutes_before: number;
-  reminder_24h_enabled: boolean;
-  /** The admin's kill switch; the sender also needs env MESSAGING_ENABLED=true. */
-  messaging_enabled: boolean;
-  /** Reminders, follow-ups and renewal_due from the jobs (migration 162); admin sends ignore it. */
-  auto_messages_enabled: boolean;
-  /** The academy number moved off the old CRM (docs/09 cut-over): the CRM warning goes away. */
-  crm_cutover_done: boolean;
-  /** A new lead goes to the salesperson with the fewest open leads (migration 187). */
-  sales_auto_assign: boolean;
-  feedback_mode: 'buttons' | 'link'; // after a lesson: lesson_rating buttons or no auto message (195)
-}
-
 /** GET /teachers/me (R-TCH-03). */
 export interface TeacherMe {
   id: string;

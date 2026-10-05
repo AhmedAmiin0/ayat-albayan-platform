@@ -1,9 +1,18 @@
-import type { ExpenseCategoryView, ExpenseView, ExpenseYearView, PaymentMethod, SignedDownload, SignedUpload } from '@ab/shared';
+import {
+  localizedName,
+  type ExpenseCategoryView,
+  type ExpenseView,
+  type ExpenseYearView,
+  type PaymentMethod,
+  type SignedDownload,
+  type SignedUpload,
+} from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 
 // apps/api/src/modules/expenses (docs/11 §9 + §13, R-RPT-02, issue E4).
 export type { ExpenseCategoryView, ExpenseView, ExpenseYearView } from '@ab/shared';
@@ -28,10 +37,15 @@ export const categoriesQuery = queryOptions({
 
 export const addCategory = (body: { key: string; labelAr: string }) => apiSend<ExpenseCategoryView>('POST', '/expense-categories', body);
 
-/** The table's Arabic label, else the seeded word, else the key itself. */
+/**
+ * The table's label in the UI language (English UI: label_en, else the seeded English word, else
+ * the Arabic label); a key missing from the table: the seeded word, else the key itself.
+ */
 export function categoryLabel(categories: readonly ExpenseCategoryView[] | undefined, key: string): string {
-  const seeded = t.enums.expenseCategory as Record<string, string>;
-  return categories?.find((c) => c.key === key)?.label_ar ?? seeded[key] ?? key;
+  const seeded = (t.enums.expenseCategory as Record<string, string | undefined>)[key];
+  const row = categories?.find((c) => c.key === key);
+  if (!row) return seeded ?? key;
+  return localizedName({ ar: row.label_ar, en: row.label_en?.trim() || seeded }, locale);
 }
 
 export type ExpenseBody = {

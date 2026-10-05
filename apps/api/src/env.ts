@@ -67,6 +67,12 @@ const schema = z.object({
   RECORDING_S3_BUCKET: optionalSecret,
   RECORDING_S3_ACCESS_KEY: optionalSecret,
   RECORDING_S3_SECRET: optionalSecret,
+  /**
+   * How long the academy settings stay cached in memory (ms, default 30 s). A PATCH /settings on
+   * this instance clears the cache at once; the TTL covers other instances and direct SQL writes.
+   * e2e sets 0 (its specs write settings rows with SQL).
+   */
+  SETTINGS_CACHE_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).default(30_000)),
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
 });

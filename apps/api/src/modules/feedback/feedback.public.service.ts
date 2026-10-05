@@ -41,7 +41,7 @@ export class FeedbackPublicService {
   }
 
   private async resolve(call: PublicCall, now: Date): Promise<PublicContext> {
-    this.limit.assert({ ip: call.ip, token: call.token });
+    await this.limit.check({ ip: call.ip, token: call.token });
     const { lessonId, studentId } = this.verified(call.token, now);
     const ctx = await this.queries.byTokenHash(hashToken(call.token));
     if (!ctx || ctx.row.lesson_id !== lessonId || ctx.row.student_id !== studentId) throw invalid();

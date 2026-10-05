@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { LESSONS_KEY } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { classroomErrorText } from './errors';
 import { EnterButton, type JoinableLesson } from './JoinButton';
 import { openRoom } from './meetings-api';
@@ -22,6 +23,7 @@ interface Props {
  */
 export function StaffJoinButton({ lesson, size = 'md' }: Props) {
   const now = useNow();
+  const win = useJoinWindow();
   const client = useQueryClient();
   const [openedAt, setOpenedAt] = useState<string | null>(null);
   const shown = openedAt ? { ...lesson, room_opened_at: openedAt } : lesson;
@@ -34,7 +36,7 @@ export function StaffJoinButton({ lesson, size = 'md' }: Props) {
     },
   });
   if (!isOpenLesson(lesson.status)) return null;
-  const early = joinWindow(shown, now).state === 'early';
+  const early = joinWindow(shown, now, win).state === 'early';
   return (
     <div className="grid justify-items-start gap-1.5">
       <EnterButton lesson={shown} size={size} now={now} />

@@ -9,6 +9,7 @@ import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';
 import { apiErrorText, moneyText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { usePayTeacher } from './use-pay-teacher';
+import { useUploadMaxBytes } from '@/lib/public-config';
 
 type Props = {
   teacher: { id: string; name: string };
@@ -23,6 +24,7 @@ type Props = {
 export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: Props) {
   const formId = useId();
   const ceiling = payCeiling(selected, outstanding);
+  const maxBytes = useUploadMaxBytes();
   const [form, setForm] = useState<PaymentForm>({ amount: String(ceiling), method: 'bank', day: paidAtDay(), note: '' });
   const [file, setFile] = useState<File | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
@@ -31,7 +33,7 @@ export function PayDialog({ teacher, selected, outstanding, onClose, onSaved }: 
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const bad = receiptProblem(file);
+    const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);
     const amount = parseAmount(form.amount);
     const why = amountProblem({ amount, text: form.amount, ceiling });

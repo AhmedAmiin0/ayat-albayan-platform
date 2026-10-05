@@ -2,6 +2,7 @@ import type { LessonView, ScheduleOverview } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../common/auth/decorators';
+import { SettingsService } from '../../common/settings/settings.service';
 import { parseDay, parseWindow } from './lesson-queries.schema';
 import { LessonViews } from './lesson-views';
 import { OverviewService } from './overview/overview.service';
@@ -18,6 +19,7 @@ export class LessonsController {
   constructor(
     private readonly views: LessonViews,
     private readonly overviews: OverviewService,
+    private readonly settings: SettingsService,
   ) {}
 
   /** Week view: starts_at ∈ [from, to), optional teacherId, at most 31 days. */
@@ -26,10 +28,11 @@ export class LessonsController {
     return this.views.window(parseWindow(query), 'admin');
   }
 
-  /** Day view: one local day in `tz` (default Asia/Riyadh). */
+  /** Day view: one local day in `tz` (default settings.academy_timezone). */
   @Get('day')
-  day(@Query() query: unknown): Promise<LessonView[]> {
-    return this.views.window(parseDay(query), 'admin');
+  async day(@Query() query: unknown): Promise<LessonView[]> {
+    const { academy_timezone: tz } = await this.settings.all();
+    return this.views.window(parseDay(query, tz), 'admin');
   }
 
   /**

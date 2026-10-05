@@ -1,6 +1,7 @@
 import type { Enums } from '@ab/db';
 import { z } from 'zod';
 import type { LessonStatus } from '../enums/index.js';
+import { SETTING_DEFAULTS } from '../settings/registry.js';
 
 // Booking kind, invoice and makeup (R-SCH-10, R-PAY-03, R-MSG-06). Kept apart from scheduling.ts
 // (file size); scheduling.ts adds `bookingExtras` to the booking body and refines it.
@@ -11,12 +12,11 @@ export type BookingKind = (typeof BOOKING_KINDS)[number];
 
 /**
  * Same files as receipts (RECEIPT_MIMES / RECEIPT_MAX_BYTES, migration 170 buckets): images and PDF,
- * 10 MB. Spelled out here because money/schemas imports scheduling, which imports this file.
+ * 10 MB: the buckets' hard ceiling. The academy's own limit is settings.upload_max_mb (≤ 10),
+ * checked by the API. Spelled out here because money/schemas imports scheduling, which imports this file.
  */
 export const INVOICE_MIMES = ['image/jpeg', 'image/png', 'image/webp', 'image/heic', 'application/pdf'] as const;
 export const INVOICE_MAX_BYTES = 10 * 1024 * 1024;
-/** A missed lesson can be made up for this long after it started. */
-export const MAKEUP_WINDOW_DAYS = 60;
 
 /**
  * The invoice (فاتورة) of a non-trial booking: a file the client already uploaded to the signed
@@ -71,16 +71,20 @@ const DAY_MS = 86_400_000;
 
 /**
  * May this lesson be made up? Only a student's own miss that the package already charged
- * (no_show, or an excuse that counted as a late cancel) within 60 days. A cancel by the teacher or
+ * (no_show, or an excuse that counted as a late cancel) within `windowDays` (settings.makeup_window_days). A cancel by the teacher or
  * admin and a `rescheduled` lesson are never charged, so «غيّر الميعاد» covers them; a free
  * makeup there would be an extra free lesson. A trial and a makeup are not made up again.
  */
-export function makeupEligible(original: MakeupOriginal, now: Date): MakeupVerdict {
+export function makeupEligible(
+  original: MakeupOriginal,
+  now: Date,
+  windowDays: number = SETTING_DEFAULTS.makeup_window_days,
+): MakeupVerdict {
   if (original.makeup) return 'is_makeup';
   if (original.trial) return 'trial';
   if (original.status !== 'no_show' && original.status !== 'excused') return 'status';
   if (!original.chargeable) return 'not_charged';
-  return Date.parse(original.startsAt) >= now.getTime() - MAKEUP_WINDOW_DAYS * DAY_MS ? 'ok' : 'too_old';
+  return Date.parse(original.startsAt) >= now.getTime() - windowDays * DAY_MS ? 'ok' : 'too_old';
 }
 
 type KindFacts = {

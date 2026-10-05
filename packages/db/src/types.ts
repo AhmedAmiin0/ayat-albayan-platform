@@ -2732,6 +2732,30 @@ export type Database = {
           },
         ];
       };
+      translation_overrides: {
+        Row: {
+          key: string;
+          locale: string;
+          updated_at: string;
+          updated_by: string | null;
+          value: string;
+        };
+        Insert: {
+          key: string;
+          locale: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value: string;
+        };
+        Update: {
+          key?: string;
+          locale?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value?: string;
+        };
+        Relationships: [];
+      };
     };
     Views: {
       v_activity_log: {

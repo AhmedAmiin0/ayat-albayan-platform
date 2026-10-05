@@ -3,16 +3,18 @@ import { Link } from '@tanstack/react-router';
 import { buttonVariants } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { usePublicConfig } from '@/lib/public-config';
 import { RIYADH_TZ } from './tz';
 
 /**
  * «حجز تعويضي» on a missed lesson (R-SCH-10): opens the booking wizard for that student with the
  * lesson preselected. One link per student, named when the lesson was a group's; a student whose
  * makeup is already booked gets «التعويض محجوز · <date>» instead (makeupOffer, shared with mobile:
- * charged miss, within 60 days, not a trial or a makeup). Admin only: the drawer is the admin's.
+ * charged miss, within settings.makeup_window_days, not a trial or a makeup). Admin only: the drawer is the admin's.
  */
 export function MakeupAction({ lesson }: { lesson: LessonView }) {
-  const { open, booked } = makeupOffer(lesson, new Date());
+  const { makeup_window_days: days } = usePublicConfig();
+  const { open, booked } = makeupOffer(lesson, new Date(), days);
   if (open.length + booked.length === 0) return null;
   const group = lesson.students.length > 1;
   return (

@@ -39,6 +39,12 @@ describe('RemindersJob.runOnce (R-MSG-02)', () => {
     expect(summary).toMatchObject({ lessons: 1, queued: 3 });
   });
 
+  it('settings.reminder_lookahead_hours widens the read', async () => {
+    const { job, queries } = setup({ settings: { reminder_lookahead_hours: 48 } });
+    await job.runOnce(at('2026-10-04T13:10:00Z'));
+    expect(queries.upcoming).toHaveBeenCalledWith({ now: at('2026-10-04T13:10:00Z'), until: at('2026-10-06T13:10:00Z') });
+  });
+
   it('day-before only when reminder_24h_enabled and lesson_reminder_24h is approved', async () => {
     const now = at('2026-10-03T14:00:00Z');
     const off = setup({ approved: ['lesson_reminder_24h'] });
