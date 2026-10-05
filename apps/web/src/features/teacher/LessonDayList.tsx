@@ -23,7 +23,7 @@ export function LessonDayList({ lessons, tz, fallbackLink, empty, onDone }: Less
     <div className="grid gap-6">
       {[...byLocalDay(lessons, tz)].map(([day, list]) => (
         <section key={day} aria-label={`${weekday[String(weekdayOf(day))] ?? ''} ${dayMonthLabel(day)}`}>
-          <h3 className="border-b-[3px] border-double border-gold pb-1.5 font-display text-h4 font-bold">
+          <h3 className="border-b border-rule pb-1.5 font-display text-h4 font-bold">
             {`${weekday[String(weekdayOf(day))] ?? ''} ${dayMonthLabel(day)}`}
           </h3>
           {list.map((lesson) => (

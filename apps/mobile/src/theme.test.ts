@@ -19,12 +19,13 @@ test.each([
   expect(result.current.color).toBe(palette[name as 'light' | 'dark']);
 });
 
-test('dark is the night Mushaf: dark margin, light ink, lighter action green', async () => {
+test('dark is soft green-grey: green-grey margin, light ink, light link green', async () => {
   mockScheme.mockReturnValue('dark');
   const { result } = await renderHook(() => useTheme());
-  expect(result.current.color.margin).toBe('#050906');
-  expect(result.current.color.ink).toBe('#edf3ef');
-  expect(result.current.color.lapis).toBe('#4fc285');
+  expect(result.current.color.margin).toBe('#1a211e');
+  expect(result.current.color.ink).toBe('#e9efec');
+  expect(result.current.color.lapis).toBe('#5eead4');
+  expect(result.current.color.lapisFill).toBe('#047857');
   expect(result.current.elevation.page).toMatch(/^0 18px 40px -16px rgba/);
 });
 
@@ -40,7 +41,7 @@ test('both themes define the same tokens', () => {
   expect(Object.keys(palette.dark).sort()).toEqual(Object.keys(palette.light).sort());
 });
 
-test('Arabic line-heights: 1.5 Amiri, 1.6 Plex', () => {
+test('Arabic line-heights: 1.5 titles, 1.6 UI text', () => {
   expect(type.lineHeight(type.size.h1, true)).toBe(48);
   expect(type.lineHeight(type.size.base)).toBe(26);
 });

@@ -3,6 +3,7 @@ import { useCallback, useState } from 'react';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { catalogQuery, INITIAL_SELECTION, quoteQuery, type Selection } from './api';
@@ -84,7 +85,7 @@ function CatalogSection({ asked }: { asked: Selection }) {
         <p className="text-xs text-ink-3">{t.pricing.tableSubtitle}</p>
       </div>
       {catalog.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {catalog.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {catalog.isPending && <ListSkeleton />}
       {catalog.data && <PlansTable packages={catalog.data.packages} />}
       {catalog.data?.fx && <FxNote fx={catalog.data.fx} />}
     </section>

@@ -8,6 +8,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { currentMonth } from '@/features/payouts/api';
 import { MonthSelect } from '@/features/payouts/MonthSelect';
 import { MONEY_KEY } from '@/features/subscriptions/api';
@@ -15,6 +16,7 @@ import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { deleteExpense, expensesQuery, totalsByCurrency, type ExpenseView } from './api';
 import { ExpenseDialog } from './ExpenseDialog';
+import { TableBox } from '@/components/TableBox';
 
 type Props = { month: string; onMonth: (month: string) => void };
 
@@ -47,9 +49,15 @@ export function ExpensesPage({ month, onMonth }: Props) {
         </div>
       </PageHead>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
-      {list.isSuccess && rows.length === 0 && <EmptyState title={t.expenses.empty} />}
-      <ul className="grid divide-y divide-rule">
+      {list.isPending && <ListSkeleton />}
+      {list.isSuccess && rows.length === 0 && (
+        <TableBox center>
+          <EmptyState title={t.expenses.empty} />
+        </TableBox>
+      )}
+      {rows.length > 0 && (
+        <TableBox>
+          <ul className="grid divide-y divide-rule px-3">
         {rows.map((e) => (
           <li key={e.id} className="flex flex-wrap items-center gap-x-4 gap-y-1 py-2.5">
             <span className="min-w-28 font-semibold text-ink">{t.enums.expenseCategory[e.category]}</span>
@@ -63,9 +71,11 @@ export function ExpensesPage({ month, onMonth }: Props) {
             </Button>
           </li>
         ))}
-      </ul>
+          </ul>
+        </TableBox>
+      )}
       {rows.length > 0 && (
-        <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t-[3px] border-double border-gold pt-3 text-sm">
+        <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t border-rule pt-3 text-sm">
           <span className="text-ink-3">{t.expenses.total}</span>
           {totalsByCurrency(rows).map(([currency, amount]) => (
             <Amount key={currency} amount={amount} currency={currency} className="font-semibold" />

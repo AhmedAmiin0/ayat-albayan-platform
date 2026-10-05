@@ -8,6 +8,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
@@ -93,7 +94,7 @@ interface BodyProps {
 
 function Body({ query, rows, view, onOpen }: BodyProps) {
   if (query.isError) return <FormAlert>{t.schedule.loadError}</FormAlert>;
-  if (!query.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  if (!query.data) return <ListSkeleton />;
   if (rows.length === 0) {
     return <EmptyState title={query.data.teachers.length === 0 ? t.teachers.empty : t.booking.noTeachers} />;
   }

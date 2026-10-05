@@ -23,7 +23,7 @@ export function TeacherLoad({ rows }: { rows: readonly Load[] }) {
     <table className="w-full border-collapse text-sm">
       <caption className="sr-only">{t.dashboard.teacherLoad}</caption>
       <thead>
-        <tr className="border-b-[3px] border-double border-gold text-xs font-semibold text-ink-3">
+        <tr className="border-b border-rule text-xs font-semibold text-ink-3">
           <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.payouts.teacher}</th>
           <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.teachers.studentsCount}</th>
           <th scope="col" className="py-2 text-end font-semibold">{t.dashboard.weekLessons}</th>

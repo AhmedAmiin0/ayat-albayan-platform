@@ -65,19 +65,29 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   return (
-    <section aria-labelledby={headingId} className="min-w-0">
+    <section aria-labelledby={headingId} className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col">
       <ThreadHeader thread={th} listSearch={listSearch} headingId={headingId} badge={people && threadBadge(people)} />
-      <div className={cn('grid gap-6', aside && 'xl:grid-cols-[minmax(0,1fr)_340px]')}>
-        <div className="min-w-0">
+      <div
+        className={cn(
+          'grid gap-6 shell:min-h-0 shell:flex-1',
+          // With the side panel: one scrolling column below 1280px, three columns from it.
+          aside
+            ? 'shell:overflow-y-auto shell:overscroll-contain xl:grid-cols-[minmax(0,1fr)_340px] xl:grid-rows-[minmax(0,1fr)] xl:overflow-visible'
+            : 'shell:grid-rows-[minmax(0,1fr)]',
+        )}
+      >
+        {/* The log scrolls, the reply box stays pinned under it. */}
+        <div className={cn('min-w-0', aside ? 'xl:flex xl:min-h-0 xl:flex-col' : 'shell:flex shell:min-h-0 shell:flex-col')}>
           <MessageLog
             messages={messages}
             hasMore={detail.hasNextPage}
             loadingOlder={detail.isFetchingNextPage}
             onOlder={() => void detail.fetchNextPage()}
             waitingKeys={waiting}
+            fill={aside ? 'xl' : 'shell'}
           />
           {ownThread ? (
-            <p className="mt-4 border-t-[3px] border-double border-gold pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>
+            <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>
           ) : (
             <Composer key={phone} thread={th} context={context} />
           )}

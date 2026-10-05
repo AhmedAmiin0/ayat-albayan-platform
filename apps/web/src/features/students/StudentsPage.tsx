@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useCallback, useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
+import { TableBox } from '@/components/TableBox';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -63,9 +64,12 @@ export function StudentsPage({ search, page, filters = {}, onChange, onOpen }: S
       )}
       {none ? (
         // The head already holds «إضافة طالب»: one primary per screen, so no second one here.
-        <EmptyState title={t.students.empty}>{t.students.emptyHint}</EmptyState>
+        <TableBox center>
+          <EmptyState title={t.students.empty}>{t.students.emptyHint}</EmptyState>
+        </TableBox>
       ) : (
         <DataTable
+          fill
           stacked
           columns={columns}
           data={data?.items ?? []}

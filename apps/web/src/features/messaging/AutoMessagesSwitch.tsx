@@ -44,7 +44,7 @@ export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) 
           {on ? s.autoDisable : s.autoEnable}
         </Button>
       </div>
-      {risky && <p className="border-s-[3px] border-double border-s-gold-soft ps-3 text-xs font-semibold text-act">{s.autoCheckScript}</p>}
+      {risky && <p className="border-s border-s-rule ps-3 text-xs font-semibold text-act">{s.autoCheckScript}</p>}
       <p className="text-xs text-ink-3">{s.autoMessagesHint}</p>
       {save.isError && <FormAlert>{t.common.error}</FormAlert>}
     </div>

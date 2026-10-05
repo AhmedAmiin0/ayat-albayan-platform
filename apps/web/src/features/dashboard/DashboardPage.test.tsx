@@ -10,6 +10,14 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
+/** The dashboard's reads: work queue, today's lessons, the latest threads, else a summary. */
+function answer(path: string): unknown {
+  if (path === '/dashboard/work') return WORK;
+  if (path.startsWith('/lessons')) return [];
+  if (path.startsWith('/threads')) return { items: [], total: 0, page: 1, pageSize: 30 };
+  return SUMMARY;
+}
+
 function renderPage(search: DashboardSearch = {}) {
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
@@ -22,7 +30,7 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
   beforeEach(() => {
     vi.useFakeTimers({ toFake: ['Date'] });
     vi.setSystemTime(new Date('2026-10-02T09:00:00.000Z'));
-    apiFetch.mockImplementation((path: string) => Promise.resolve(path === '/dashboard/work' ? WORK : SUMMARY));
+    apiFetch.mockImplementation((path: string) => Promise.resolve(answer(path)));
   });
   afterEach(() => {
     vi.useRealTimers();
@@ -68,6 +76,17 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
     apiFetch.mockRejectedValue(new Error('down'));
     renderPage();
     expect(await screen.findByRole('alert')).toHaveProperty('textContent', t.dashboard.loadFailed);
+  });
+
+  it('opens with today: four numbers, today\'s lessons, the work queue and the latest messages', async () => {
+    renderPage();
+    const today = await screen.findByRole('region', { name: t.dashboard.home.today });
+    expect(await within(today).findByRole('link', { name: `${t.dashboard.home.lessonsToday} 0` })).toBeTruthy();
+    expect(within(today).getByRole('link', { name: `${t.dashboard.unpaidSubscriptions} 2` }).getAttribute('href')).toBe('/admin?work=unpaid');
+    expect(screen.getByRole('heading', { name: t.dashboard.home.todayList })).toBeTruthy();
+    expect(await screen.findByText(t.dashboard.home.todayEmpty)).toBeTruthy();
+    expect(await screen.findByText(t.dashboard.home.inboxEmpty)).toBeTruthy();
+    expect(screen.getByRole('group', { name: t.dashboard.home.quick })).toBeTruthy();
   });
 
   it('payouts export defaults to the month that just ended', () => {

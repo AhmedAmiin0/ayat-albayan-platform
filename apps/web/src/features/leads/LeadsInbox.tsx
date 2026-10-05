@@ -12,6 +12,8 @@ import { leadsQuery, reclassifyLead } from './leads.api';
 import { LeadStatusTabs } from './LeadStatusTabs';
 import { LeadsToolbar } from './LeadsToolbar';
 import { parseLeadSearch, type LeadSearch } from './types';
+import { TableBox } from '@/components/TableBox';
+import { ListSkeleton } from '@/components/ui/skeleton';
 
 export interface LeadsInboxProps {
   search: LeadSearch;
@@ -59,23 +61,25 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
         )}
       </PageHead>
       <LeadsToolbar search={search} onFilter={filter} />
-      <div className="grid gap-[22px] shell:grid-cols-[196px_minmax(0,1fr)]">
+      <div className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[420px] shell:grid-cols-[196px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]">
         <LeadStatusTabs value={search.status} onChange={(status) => filter({ status })} />
         <div
-          className={cn('min-w-0 transition-opacity duration-[120ms]', leads.isPlaceholderData && 'opacity-60')}
+          className={cn('flex min-w-0 flex-col transition-opacity duration-[120ms] shell:min-h-0', leads.isPlaceholderData && 'opacity-60')}
           aria-busy={leads.isPlaceholderData || undefined}
         >
           {leads.isError && <p role="alert">{t.common.error}</p>}
-          {leads.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+          {leads.isPending && <ListSkeleton rows={6} />}
           {leads.data && (
             <>
-              <LeadList
-                leads={leads.data.items}
-                confirmId={confirmId}
-                busy={reclassify.isPending}
-                onConfirm={setConfirmId}
-                onMove={(id) => reclassify.mutate(id)}
-              />
+              <TableBox center={leads.data.items.length === 0}>
+                <LeadList
+                  leads={leads.data.items}
+                  confirmId={confirmId}
+                  busy={reclassify.isPending}
+                  onConfirm={setConfirmId}
+                  onMove={(id) => reclassify.mutate(id)}
+                />
+              </TableBox>
               <Pager
                 page={search.page}
                 total={leads.data.total}

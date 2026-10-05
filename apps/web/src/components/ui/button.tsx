@@ -3,22 +3,22 @@ import { cva, type VariantProps } from 'class-variance-authority';
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
-// docs/07 §6 Button. Green (lapis token) is the only action colour, the primary carries a gold edge; at most ONE filled primary per screen.
+// docs/07 §6 Button. Green is the only action colour: white text on the green fill (lapis-fill), green text (lapis) on ghosts; at most ONE filled primary per screen.
 // Focus is the global lapis outline (index.css). Icons are 17px; directional ones mirror in RTL.
 // The edge colour lives in each variant (not a base border-transparent), so buttonVariants() on a
 // <Link> keeps secondary's 3:1 edge without twMerge.
 
 export const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border font-semibold leading-tight no-underline transition-colors duration-[120ms] ease-ink cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 [&_svg]:size-[17px] [&_svg]:shrink-0',
+  'inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md border font-semibold leading-tight no-underline transition-[color,background-color,border-color,transform] duration-[120ms] ease-out motion-safe:active:not-disabled:scale-[0.98] cursor-pointer disabled:cursor-not-allowed disabled:opacity-45 [&_svg]:size-[17px] [&_svg]:shrink-0',
   {
     variants: {
       variant: {
         /** One per view: إضافة طالب, حفظ المواعيد, دمج, تأكيد, دخول. */
-        primary: 'border-gold bg-primary text-primary-foreground enabled:hover:bg-primary-hover',
+        primary: 'border-transparent bg-primary text-primary-foreground enabled:hover:bg-primary-hover',
         /** Peers: تصدير, تعديل, row next-actions. The border is its only edge (3:1 rule-input). */
         secondary: 'bg-secondary text-secondary-foreground border-input enabled:hover:bg-sunk',
         /** إلغاء, سيبها هنا, inline «إضافة ميعاد». */
-        ghost: 'border-transparent bg-transparent text-primary enabled:hover:bg-accent',
+        ghost: 'border-transparent bg-transparent text-lapis enabled:hover:bg-accent',
         /** حذف, inside a confirm only. */
         danger: 'border-transparent bg-destructive-solid text-destructive-foreground',
         /** إلغاء الحلقة in lists. */

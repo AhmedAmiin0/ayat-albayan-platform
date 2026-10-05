@@ -14,7 +14,7 @@ export function WizardSteps({ steps, step }: { steps: readonly StepKey[]; step: 
       <p className="text-xs text-ink-3 tabular-nums">
         {t.booking.stepOf.replace('{n}', String(current + 1)).replace('{total}', String(steps.length))}
       </p>
-      <ol className="flex flex-wrap gap-x-5 gap-y-1.5 border-b-[3px] border-double border-gold pb-2.5 text-sm">
+      <ol className="flex flex-wrap gap-x-5 gap-y-1.5 border-b border-rule pb-2.5 text-sm">
         {steps.map((key, i) => (
           <li
             key={key}

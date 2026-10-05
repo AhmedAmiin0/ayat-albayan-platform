@@ -11,6 +11,7 @@ import { t } from '@/lib/i18n';
 import { availabilityQuery, teacherQuery, type Teacher } from './api';
 import { AvailabilityGrid } from './AvailabilityGrid';
 import { FormAlert } from '@/components/ui/form-alert';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { gridTz } from './grid';
 import { RatesTable } from './RatesTable';
 import { TeacherDialog } from './TeacherDialog';
@@ -42,7 +43,7 @@ function AvailabilityPanel({ teacher }: { teacher: Teacher }) {
       ) : availability.isError ? (
         <FormAlert>{t.common.error}</FormAlert>
       ) : (
-        <p className="py-6 text-center text-ink-3">{t.common.loading}</p>
+        <ListSkeleton />
       )}
       <div className="mt-7 grid gap-7 shell:grid-cols-[minmax(0,1.2fr)_minmax(0,1fr)]">
         <TimeOffList teacherId={teacher.id} />
@@ -59,7 +60,7 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   const [editing, setEditing] = useState(false);
 
   if (teacher.isError) return <FormAlert>{t.common.notFound}</FormAlert>;
-  if (!teacher.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  if (!teacher.data) return <ListSkeleton />;
   const data = teacher.data;
 
   return (

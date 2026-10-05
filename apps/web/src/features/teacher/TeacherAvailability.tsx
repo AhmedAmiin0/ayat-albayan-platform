@@ -1,6 +1,7 @@
 import type { TeacherMe } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form-alert';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { availabilityQuery } from '@/features/teachers/api';
 import { AvailabilityGrid } from '@/features/teachers/AvailabilityGrid';
 import { gridTz } from '@/features/teachers/grid';
@@ -15,7 +16,7 @@ import { t } from '@/lib/i18n';
 export function TeacherAvailability({ me }: { me: TeacherMe }) {
   const rows = useQuery(availabilityQuery(me.id));
   if (rows.isError) return <FormAlert>{t.common.error}</FormAlert>;
-  if (!rows.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  if (!rows.data) return <ListSkeleton />;
   return (
     <div className="grid gap-7">
       <AvailabilityGrid key={me.id} teacherId={me.id} tz={gridTz(rows.data, me.tz)} rows={rows.data} />
