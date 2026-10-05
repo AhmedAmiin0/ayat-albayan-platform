@@ -1795,6 +1795,63 @@
     "buttons": "Buttons",
     "actions": "Action"
   },
+  "mobileAdmin": {
+    "section": "Administration",
+    "rows": {
+      "dashboard": "Overview",
+      "settings": "Academy settings",
+      "activity": "Activity log"
+    },
+    "dashboard": {
+      "title": "Overview",
+      "activeStudents": "Active students",
+      "needsAttention": "Needs attention",
+      "openStudent": "Open {name}'s profile",
+      "openAll": "Open student"
+    },
+    "reports": {
+      "button": "Lesson reports",
+      "detailTitle": "Lesson report",
+      "noContent": "Nothing was written in this field"
+    },
+    "settings": {
+      "title": "Academy settings",
+      "subtitle": "Applies to every lesson and teacher",
+      "lateCancelOn": "On",
+      "lateCancelOff": "Off",
+      "hours": "hours",
+      "weeks": "weeks",
+      "lessons": "lessons",
+      "followUpHours": "Follow-up hours after the last message",
+      "followUpHint": "Ascending hours, for example 24, 72",
+      "currencyHint": "Three capital letters, such as SAR or EGP",
+      "unsaved": "You have unsaved changes",
+      "discard": "Discard changes",
+      "serverRejected": "The server rejected these values, check the marked fields",
+      "readOnlyTitle": "Managed on the web only",
+      "readOnlyNote": "To change these settings use the web admin.",
+      "messagingEnabled": "WhatsApp messaging",
+      "autoMessagesEnabled": "Automatic messages",
+      "crmCutoverDone": "Move to the new system is complete",
+      "on": "On",
+      "off": "Off"
+    },
+    "activity": {
+      "filters": "Filters",
+      "role": "User",
+      "entity": "Item",
+      "from": "From date",
+      "to": "To date",
+      "all": "All",
+      "datePlaceholder": "2026-10-05",
+      "dateInvalid": "Type the date as 2026-10-05",
+      "dateOrder": "The start date must not be after the end date",
+      "clear": "Clear filters",
+      "by": "By {name}",
+      "loadingMore": "Loading more…",
+      "emptyFiltered": "No activity matches these filters"
+    }
+  },
   "messages": {
     "log": "Message log",
     "retry": "Try again",

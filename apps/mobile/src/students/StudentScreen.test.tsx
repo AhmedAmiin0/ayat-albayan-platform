@@ -113,3 +113,10 @@ test('no balance route answer: the quick view is unchanged', async () => {
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
   expect(screen.queryByText(t.subscriptions.balance)).toBeNull();
 });
+
+test('«سجل التقارير» opens the student’s report history (admin)', async () => {
+  serve(full);
+  await renderWithQuery(<StudentScreen />);
+  await fireEvent.press(await screen.findByRole('button', { name: t.mobileAdmin.reports.button }));
+  expect(mockPush).toHaveBeenCalledWith('/students/reports/s1');
+});

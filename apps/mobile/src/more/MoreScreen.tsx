@@ -6,6 +6,7 @@ import { Button } from '@/ui/Button';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { AdminOpsSection } from './AdminOpsSection';
 import { AppearancePicker } from './AppearancePicker';
 import { LanguageRow } from './LanguageRow';
 import { signOutDevice } from './sign-out';
@@ -30,6 +31,7 @@ export function MoreScreen() {
         <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />
         <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />
       </View>
+      <AdminOpsSection />
       <AppearancePicker />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>
