@@ -19,7 +19,7 @@ export interface ThreadListProps {
 export function ThreadList({ search, threads, onFilter }: ThreadListProps) {
   return (
     <>
-      <div className="mb-3 grid gap-2.5">
+      <div className="mb-3 grid gap-2.5 max-sm:mb-2 max-sm:gap-2">
         <form
           role="search"
           key={search.q ?? ''}
@@ -39,16 +39,20 @@ export function ThreadList({ search, threads, onFilter }: ThreadListProps) {
             className="ps-9"
           />
         </form>
-        <SegmentedControl
-          label={t.inbox.title}
-          value={search.unread ? 'unread' : 'all'}
-          onChange={(v) => onFilter({ unread: v === 'unread' })}
-          options={[
-            { value: 'all', label: t.inbox.filterAll },
-            { value: 'unread', label: t.inbox.filterUnread },
-          ]}
-        />
-        <ThreadListControls search={search} onFilter={onFilter} />
+        {/* Phones: the filters on one compact row under the search. */}
+        <div className="grid gap-2.5 max-sm:flex max-sm:items-center max-sm:gap-1.5">
+          <SegmentedControl
+            label={t.inbox.title}
+            value={search.unread ? 'unread' : 'all'}
+            onChange={(v) => onFilter({ unread: v === 'unread' })}
+            options={[
+              { value: 'all', label: t.inbox.filterAll },
+              { value: 'unread', label: t.inbox.filterUnread },
+            ]}
+            className="max-sm:shrink-0"
+          />
+          <ThreadListControls search={search} onFilter={onFilter} />
+        </div>
       </div>
       {threads.length === 0 ? (
         <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />

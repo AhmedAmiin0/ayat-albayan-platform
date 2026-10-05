@@ -13,11 +13,13 @@ import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
 import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
+import { PhoneChat } from './PhoneChat';
 import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
 import { sendErrorText } from './TextComposer';
 import { ThreadHeader } from './ThreadHeader';
+import { ThreadHeaderPhone } from './ThreadHeaderPhone';
 import { ThreadSideSheet } from './ThreadSideSheet';
 
 export interface ThreadPaneProps {
@@ -29,7 +31,8 @@ export interface ThreadPaneProps {
  * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the message log, the reply box and beside it
  * (below it under 1280px) the lead's qualification panel, or the guardian's children and packages.
  * Teacher mode: the log and the reply box only; their own chat with the academy is read-only.
- * Phones (< 640px): the panel is a full-screen sheet opened from the thread header instead.
+ * Phones (< 640px): a full-screen chat (compact header, log, pinned composer); the panel is a
+ * full-screen sheet opened from the header's icon button instead.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
@@ -80,23 +83,49 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
+  const headerProps = { thread: th, listSearch, headingId, badge: people && threadBadge(people) };
+  const log = (fill: 'shell' | 'xl' | 'phone') => (
+    <MessageLog
+      messages={messages}
+      hasMore={detail.hasNextPage}
+      loadingOlder={detail.isFetchingNextPage}
+      onOlder={() => void detail.fetchNextPage()}
+      waitingKeys={waiting}
+      fill={fill}
+    />
+  );
+  const reply = ownThread ? (
+    <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2 max-sm:mt-0 max-sm:px-3 max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))] max-sm:pt-3">
+      {t.inbox.ownThreadReadOnly}
+    </p>
+  ) : (
+    <Composer key={phone} thread={th} context={context} />
+  );
+
+  if (phoneView) {
+    return (
+      <PhoneChat labelledBy={headingId}>
+        <ThreadHeaderPhone
+          {...headerProps}
+          action={
+            panel && (
+              <ThreadSideSheet compact label={sheetLabel} open={sheet} onOpenChange={setSheet}>
+                {side}
+                {sheetOpen && toast}
+              </ThreadSideSheet>
+            )
+          }
+        />
+        {log('phone')}
+        {reply}
+        {!sheetOpen && toast}
+      </PhoneChat>
+    );
+  }
+
   return (
     <section aria-labelledby={headingId} className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col">
-      <ThreadHeader
-        thread={th}
-        listSearch={listSearch}
-        headingId={headingId}
-        badge={people && threadBadge(people)}
-        action={
-          panel &&
-          phoneView && (
-            <ThreadSideSheet label={sheetLabel} open={sheet} onOpenChange={setSheet}>
-              {side}
-              {sheetOpen && toast}
-            </ThreadSideSheet>
-          )
-        }
-      />
+      <ThreadHeader {...headerProps} />
       <div
         className={cn(
           'grid gap-6 shell:min-h-0 shell:flex-1',
@@ -108,23 +137,12 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
       >
         {/* The log scrolls, the reply box stays pinned under it. */}
         <div className={cn('min-w-0', aside ? 'xl:flex xl:min-h-0 xl:flex-col' : 'shell:flex shell:min-h-0 shell:flex-col')}>
-          <MessageLog
-            messages={messages}
-            hasMore={detail.hasNextPage}
-            loadingOlder={detail.isFetchingNextPage}
-            onOlder={() => void detail.fetchNextPage()}
-            waitingKeys={waiting}
-            fill={aside ? 'xl' : 'shell'}
-          />
-          {ownThread ? (
-            <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>
-          ) : (
-            <Composer key={phone} thread={th} context={context} />
-          )}
+          {log(aside ? 'xl' : 'shell')}
+          {reply}
         </div>
         {aside && side}
       </div>
-      {!sheetOpen && toast}
+      {toast}
     </section>
   );
 }

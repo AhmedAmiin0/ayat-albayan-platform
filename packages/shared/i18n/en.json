@@ -1551,6 +1551,9 @@
     }
   },
   "inbox": {
+    "dayToday": "Today",
+    "dayYesterday": "Yesterday",
+    "noticeMore": "Show the full notice",
     "title": "Messages",
     "searchPlaceholder": "Search by name or number",
     "filterAll": "All",

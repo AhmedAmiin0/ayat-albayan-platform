@@ -17,11 +17,11 @@ export const SCROLL = cn(
  * The work page inside a viewport-high layout (owner, 2026-10-05: "don't make the page scroll"):
  * the browser page never scrolls, only this frame's content does (and boxes inside it).
  */
-export function PageFrame({ children, footer }: { children: ReactNode; footer?: ReactNode }) {
+export function PageFrame({ children, footer, pageClassName }: { children: ReactNode; footer?: ReactNode; pageClassName?: string }) {
   const scroll = useRailBox<HTMLDivElement>();
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col">
-      <Page className="flex min-h-0 flex-1 flex-col">
+      <Page className={cn('flex min-h-0 flex-1 flex-col', pageClassName)}>
         <div ref={scroll} className={SCROLL}>
           {children}
           {footer}
