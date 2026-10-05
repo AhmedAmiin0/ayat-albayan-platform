@@ -28,6 +28,14 @@ describe('Phase 4 messaging settings (migration 142, docs/12 §2)', () => {
     expect(settingsUpdateSchema.safeParse({ autoMessagesEnabled: 'on' }).success).toBe(false);
   });
 
+  it('feedback_mode (migration 195): buttons by default, buttons | link only, PATCH feedbackMode', () => {
+    expect(SETTING_DEFAULTS.feedback_mode).toBe('buttons');
+    expect(readSettings([{ key: 'feedback_mode', value: 'link' }]).feedback_mode).toBe('link');
+    expect(readSettings([{ key: 'feedback_mode', value: 'both' }]).feedback_mode).toBe('buttons');
+    expect(settingsChanges(settingsUpdateSchema.parse({ feedbackMode: 'link' }))).toEqual({ feedback_mode: 'link' });
+    expect(settingsUpdateSchema.safeParse({ feedbackMode: 'web' }).success).toBe(false);
+  });
+
   it('valid stored values win', () => {
     const rows = [
       { key: 'follow_up_hours', value: [12, 48, 96] },

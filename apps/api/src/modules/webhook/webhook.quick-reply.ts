@@ -1,4 +1,4 @@
-import type { QuickReplyIntent } from '@ab/shared';
+import { RATING_TEMPLATE, type QuickReplyIntent } from '@ab/shared';
 import { HttpException, Injectable, Logger } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { LessonStatusService } from '../lessons/lesson-status.service';
@@ -38,20 +38,28 @@ export class QuickReplies {
    * is theirs), else the lesson of the outbound message it answers (Meta's context.id, same phone),
    * else the latest lesson-linked message we sent them in the last 48 h whose lesson is still open.
    * Anyone else, or nothing found → null: the message is only stored and the admin reads it.
+   * A rating tap (lesson_rating, migration 195) takes only the first two: its payload, or the
+   * lesson_rating message it answers.
    */
-  async lessonFor(input: { m: InboundEvent; phone: string; who: Contact }): Promise<string | null> {
-    const { m, phone, who } = input;
+  async lessonFor(input: { m: InboundEvent; phone: string; who: Contact; rating?: boolean }): Promise<string | null> {
+    const { m, phone, who, rating = false } = input;
     if (!who.guardian) return null;
     const fromPayload = payloadLesson(m);
     if (fromPayload) {
       const theirs = await this.queries.guardianLesson({ lessonId: fromPayload, guardianId: who.guardian.id });
       return theirs ? fromPayload : null;
     }
-    if (m.replyTo) {
-      const answered = await this.queries.outboundByWaId(m.replyTo);
-      if (answered?.lesson_id && answered.phone_e164 === phone) return answered.lesson_id;
-    }
+    const answered = await this.answeredLesson({ m, phone, rating });
+    if (answered || rating) return answered; // a rating only ever answers our lesson_rating message, never a guess
     return this.queries.recentLessonOutbound({ phone, since: new Date(m.at.getTime() - REPLY_WINDOW_MS) });
+  }
+
+  /** The lesson of the outbound message this replies to (same phone; a rating: only lesson_rating). */
+  private async answeredLesson(input: { m: InboundEvent; phone: string; rating: boolean }): Promise<string | null> {
+    if (!input.m.replyTo) return null;
+    const answered = await this.queries.outboundByWaId(input.m.replyTo);
+    if (!answered?.lesson_id || answered.phone_e164 !== input.phone) return null;
+    return !input.rating || answered.template_key === RATING_TEMPLATE ? answered.lesson_id : null;
   }
 
   async act({ intent, m, lessonId, leadId }: ReplyAction): Promise<void> {

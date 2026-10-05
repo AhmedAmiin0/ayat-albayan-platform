@@ -9,6 +9,7 @@ import { TemplateHealth } from '@/features/templates/TemplateHealth';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from './api';
 import { AutoMessagesSwitch } from './AutoMessagesSwitch';
+import { FeedbackModeSwitch } from './FeedbackModeSwitch';
 import { MessagingSwitch } from './MessagingSwitch';
 import { SettingsForm } from './SettingsForm';
 
@@ -40,6 +41,7 @@ export function SettingsPage() {
             <div className="grid gap-4">
               <MessagingSwitch settings={settings.data} />
               <AutoMessagesSwitch settings={settings.data} />
+              <FeedbackModeSwitch settings={settings.data} />
               <SalesAutoAssignSwitch settings={settings.data} />
             </div>
           </section>

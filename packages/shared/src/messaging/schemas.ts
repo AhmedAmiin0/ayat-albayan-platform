@@ -32,6 +32,9 @@ export const threadTemplateSchema = z.object({
   clientRequestId: z.uuid().optional(),
 });
 
+/** POST /threads/:phone/rating «إرسال تقييم الحلقة»: the API picks the lesson; the id makes a retry safe. */
+export const threadRatingSchema = z.object({ clientRequestId: z.uuid() });
+
 /** PATCH /leads/:id/qualification: merged into leads.qualification; null clears a field. */
 export const leadQualificationPatchSchema = leadQualificationSchema.partial();
 
@@ -41,5 +44,6 @@ export const leadFollowUpSchema = z.object({ paused: z.boolean() });
 export type ThreadText = z.infer<typeof threadTextSchema>;
 export type TemplateParamsInput = z.infer<typeof templateParamsInputSchema>;
 export type ThreadTemplate = z.infer<typeof threadTemplateSchema>;
+export type ThreadRating = z.infer<typeof threadRatingSchema>;
 export type LeadQualificationPatch = z.infer<typeof leadQualificationPatchSchema>;
 export type LeadFollowUp = z.infer<typeof leadFollowUpSchema>;

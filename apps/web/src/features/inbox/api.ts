@@ -4,6 +4,7 @@ import type {
   LeadStatus,
   MessageView,
   ThreadDetail,
+  ThreadRating,
   ThreadTemplate,
   ThreadView,
 } from '@ab/shared';
@@ -53,6 +54,10 @@ export const sendText = (input: { phone: string; text: string; clientRequestId: 
 
 export const sendTemplate = ({ phone, ...body }: ThreadTemplate & { phone: string }) =>
   apiSend<MessageView>('POST', `${threadPath(phone)}/template`, body);
+
+/** «إرسال تقييم الحلقة»: lesson_rating for the guardian's latest lesson that took place (migration 195). */
+export const sendRating = ({ phone, ...body }: ThreadRating & { phone: string }) =>
+  apiSend<MessageView>('POST', `${threadPath(phone)}/rating`, body);
 
 /** M1: a failed row goes back to the queue (attempts 0). */
 export const retryMessage = (id: string) => apiSend<MessageView>('POST', `/messages/${id}/retry`);

@@ -72,6 +72,8 @@ export class ThreadSendService {
     if (s.input.key === 'lesson_feedback_request') throw waHttpError('use_feedback_request', 400);
     // Likewise «ابعت لينك الحلقة» (ClassroomModule) mints the one-lesson token.
     if (s.input.key === 'lesson_join_link') throw waHttpError('use_join_link', 400);
+    // «إرسال تقييم الحلقة» picks the lesson and its date itself (rule 6) and sets the button payloads.
+    if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
     if (template.header_format === 'document') throw waHttpError('needs_document', 400);

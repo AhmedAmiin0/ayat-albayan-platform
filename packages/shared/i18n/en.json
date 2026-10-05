@@ -1603,7 +1603,23 @@
     },
     "convertedLead": "Became a student",
     "sentBy": "Sent by: {name}",
-    "ownThreadReadOnly": "This is your chat with the academy, read only"
+    "ownThreadReadOnly": "This is your chat with the academy, read only",
+    "window": {
+      "open": "Chat open — {left} left",
+      "hours": "{n}h",
+      "minutes": "{n}m",
+      "closed": "Chat closed — send a template or a rating to reopen it"
+    },
+    "rating": {
+      "send": "Send lesson rating",
+      "sending": "Sending…",
+      "sent": "Lesson rating request sent",
+      "queued": "The rating request waits in the queue until sending is on",
+      "failed": "The rating request was not sent, try again",
+      "noLesson": "This guardian's children have no completed lesson yet",
+      "notApproved": "Meta has not approved the lesson rating template yet",
+      "chip": "Rating: {rating}"
+    }
   },
   "templates": {
     "title": "WhatsApp templates",
@@ -1647,7 +1663,8 @@
       "renewal_due": "Renewal reminder",
       "follow_up_slots": "Follow-up with two suggested times",
       "lesson_feedback_request": "Lesson feedback request",
-      "lesson_join_link": "Online classroom link"
+      "lesson_join_link": "Online classroom link",
+      "lesson_rating": "Lesson rating (buttons)"
     },
     "settings": {
       "title": "Sending settings",
@@ -1685,7 +1702,12 @@
       "autoOff": "Automatic messages are off",
       "autoEnable": "Turn on automatic messages",
       "autoDisable": "Turn off automatic messages",
-      "autoCheckScript": "Make sure the Apps Script reminders have stopped"
+      "autoCheckScript": "Make sure the Apps Script reminders have stopped",
+      "feedbackMode": "After a lesson",
+      "feedbackButtonsHint": "The guardian gets «How was the lesson?» with three buttons; tapping one reopens the chat for 24 hours. Works with automatic messages on, once Meta approves the «Lesson rating (buttons)» template.",
+      "feedbackLinkOnly": "Nothing is sent automatically; the form link is sent by hand from the lesson page.",
+      "feedbackModeButtons": "WhatsApp rating buttons",
+      "feedbackModeLink": "Form link, by hand"
     },
     "error": {
       "not_submittable": "This template was already sent or is already approved",
@@ -2098,7 +2120,13 @@
     "openWhatsapp": "Message us on WhatsApp",
     "allRatings": "All ratings",
     "recommendShort": "Recommend",
-    "templateSettings": "Open message settings"
+    "templateSettings": "Open message settings",
+    "quickRating": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "needs_work": "Needs improvement"
+    },
+    "quickRatingCol": "WhatsApp rating"
   },
   "live": {
     "title": "Live sessions",

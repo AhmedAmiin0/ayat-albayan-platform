@@ -637,13 +637,17 @@ export type Database = {
           kind: Database['public']['Enums']['feedback_kind'];
           lesson_id: string;
           note: string | null;
+          quick_rated_at: string | null;
+          quick_rating: Database['public']['Enums']['feedback_quick_rating'] | null;
+          quick_rating_wa_id: string | null;
           rating: number | null;
           recommend: Database['public']['Enums']['feedback_recommend'] | null;
           requested_at: string;
+          source: Database['public']['Enums']['feedback_source'];
           student_id: string;
           submitted_at: string | null;
           teacher_id: string;
-          token_hash: string;
+          token_hash: string | null;
         };
         Insert: {
           contact_phone?: string | null;
@@ -654,13 +658,17 @@ export type Database = {
           kind: Database['public']['Enums']['feedback_kind'];
           lesson_id: string;
           note?: string | null;
+          quick_rated_at?: string | null;
+          quick_rating?: Database['public']['Enums']['feedback_quick_rating'] | null;
+          quick_rating_wa_id?: string | null;
           rating?: number | null;
           recommend?: Database['public']['Enums']['feedback_recommend'] | null;
           requested_at?: string;
+          source?: Database['public']['Enums']['feedback_source'];
           student_id: string;
           submitted_at?: string | null;
           teacher_id: string;
-          token_hash: string;
+          token_hash?: string | null;
         };
         Update: {
           contact_phone?: string | null;
@@ -671,13 +679,17 @@ export type Database = {
           kind?: Database['public']['Enums']['feedback_kind'];
           lesson_id?: string;
           note?: string | null;
+          quick_rated_at?: string | null;
+          quick_rating?: Database['public']['Enums']['feedback_quick_rating'] | null;
+          quick_rating_wa_id?: string | null;
           rating?: number | null;
           recommend?: Database['public']['Enums']['feedback_recommend'] | null;
           requested_at?: string;
+          source?: Database['public']['Enums']['feedback_source'];
           student_id?: string;
           submitted_at?: string | null;
           teacher_id?: string;
-          token_hash?: string;
+          token_hash?: string | null;
         };
         Relationships: [
           {
@@ -2776,7 +2788,9 @@ export type Database = {
       booking_kind: 'trial' | 'package' | 'makeup';
       expense_category: 'ads' | 'content' | 'tools' | 'operations' | 'other';
       feedback_kind: 'trial' | 'subscription';
+      feedback_quick_rating: 'excellent' | 'good' | 'needs_work';
       feedback_recommend: 'yes' | 'maybe' | 'no';
+      feedback_source: 'web_link' | 'whatsapp_button';
       gender: 'male' | 'female';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
       import_run_status: 'running' | 'succeeded' | 'failed';
@@ -2945,7 +2959,9 @@ export const Constants = {
       booking_kind: ['trial', 'package', 'makeup'],
       expense_category: ['ads', 'content', 'tools', 'operations', 'other'],
       feedback_kind: ['trial', 'subscription'],
+      feedback_quick_rating: ['excellent', 'good', 'needs_work'],
       feedback_recommend: ['yes', 'maybe', 'no'],
+      feedback_source: ['web_link', 'whatsapp_button'],
       gender: ['male', 'female'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
       import_run_status: ['running', 'succeeded', 'failed'],

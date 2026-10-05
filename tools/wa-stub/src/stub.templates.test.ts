@@ -69,6 +69,15 @@ describe('wa-stub: templates (R-MSG-01 health + explicit submit)', () => {
     expect(await code(await post(`${url}/v21.0/${id}`, { components: [{ type: 'BODY', text: 'باقة {{1}}' }] }))).toEqual([400, 100]);
   });
 
+  it('lesson_rating: three QUICK_REPLY buttons are accepted; a text over 25 characters is code 100', async () => {
+    const { url } = await startStub();
+    const body = { type: 'BODY', text: 'كيف كانت حلقة {{1}} بتاريخ {{2}}؟ اختر تقييمك:', example: { body_text: [['أحمد', 'الأحد 4 أكتوبر']] } };
+    const buttons = (texts: string[]) => ({ type: 'BUTTONS', buttons: texts.map((text) => ({ type: 'QUICK_REPLY', text })) });
+    const create = (texts: string[]) => post(`${url}${TPL}`, { name: 'lesson_rating', language: 'ar', components: [body, buttons(texts)] });
+    expect(await code(await create(['ممتازة', 'جيدة', 'x'.repeat(26)]))).toEqual([400, 100]);
+    expect((await create(['ممتازة', 'جيدة', 'تحتاج تحسينًا'])).status).toBe(200);
+  });
+
   it('rejects a duplicate name and a bad name', async () => {
     const { url } = await startStub();
     const dup = await post(`${url}${TPL}`, { name: 'booking_confirmation', language: 'ar', components: [] });
