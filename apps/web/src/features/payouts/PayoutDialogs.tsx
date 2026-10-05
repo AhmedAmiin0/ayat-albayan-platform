@@ -5,6 +5,7 @@ import { apiErrorText, moneyText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { reopenPayout, unpayPayout, type PayoutView } from './api';
 import { PayPayoutDialog } from './PayPayoutDialog';
+import { teacherLabel } from '@/lib/teacher-label';
 
 export type PayoutDialog = { payout: PayoutView; kind: 'pay' | 'reopen' | 'unpay' };
 
@@ -20,7 +21,7 @@ export function PayoutDialogs({ open, onClose }: { open: PayoutDialog; onClose: 
     },
   });
   if (kind === 'pay') return <PayPayoutDialog payout={payout} onClose={onClose} onSaved={onClose} />;
-  const name = payout.teacher.display_name_ar;
+  const name = teacherLabel(payout.teacher);
   return (
     <ConfirmDialog
       title={kind === 'unpay' ? t.finance.unpayTitle.replace('{teacher}', name) : t.finance.reopenTitle.replace('{teacher}', name)}

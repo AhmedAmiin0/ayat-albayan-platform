@@ -68,7 +68,7 @@ export const AvailabilityWeek = forwardRef<HTMLDivElement, Props>(function Avail
             {t.availability.weekday}
           </span>
           <span role="columnheader" className={cn(cellClass, headClass, 'hidden @min-[1000px]:flex')}>
-            {`${t.availability.from}${t.teachers.listSeparator}${t.availability.to}`}
+            {`${t.availability.from}${t.common.listSeparator}${t.availability.to}`}
           </span>
           <div aria-hidden="true" className={cn(trackCellClass, headClass, 'pb-2')}>
             <Axis />

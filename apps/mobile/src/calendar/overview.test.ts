@@ -70,7 +70,7 @@ test('the section words: who, load, the city when not Riyadh; windows, gaps, tim
       .replace('{max}', '10')} · ${t.runningHead.cairo}`,
   );
   expect(teacherMeta(omar)).toBe(
-    `${t.teachers.genderLabel.male} · ${t.enums.program.quran}${t.teachers.listSeparator}${t.enums.program.islamic_studies} · ${t.booking.teacherStudents.replace('{n}', '0')}`,
+    `${t.teachers.genderLabel.male} · ${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.islamic_studies} · ${t.booking.teacherStudents.replace('{n}', '0')}`,
   );
   const evening = { starts_at: '2026-10-01T17:00:00.000Z', ends_at: '2026-10-01T21:00:00.000Z' };
   expect(spanClock(evening)).toEqual({ from: '20:00', to: '24:00' });

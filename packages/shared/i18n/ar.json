@@ -135,7 +135,7 @@
     "pages": "الصفحات",
     "showing": "عرض {shown} من {total}",
     "breadcrumbs": "مسار الصفحة",
-    "listJoiner": "، "
+    "listSeparator": "، "
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -291,7 +291,6 @@
     "programsRequired": "اختر تخصصًا واحدًا على الأقل",
     "invalidLink": "الرابط غير صحيح، انسخه مرة أخرى",
     "invalidNumber": "اكتب رقمًا صحيحًا",
-    "listSeparator": "، ",
     "count": "{n} معلم/ة",
     "tabData": "البيانات",
     "tabStudents": "الطلاب",
@@ -1798,7 +1797,20 @@
     },
     "checkedNow": "تمت مراجعة حالة القوالب",
     "buttons": "الأزرار",
-    "actions": "إجراء"
+    "actions": "إجراء",
+    "reviewSamples": {
+      "student_name": "أحمد",
+      "student_names": "أحمد وسارة",
+      "teacher_name": "محمد",
+      "lesson_when": "الأحد 4 أكتوبر 17:00",
+      "lesson_time": "الأحد 4 أكتوبر 17:00",
+      "lesson_slot": "الأحد 4 أكتوبر 17:00",
+      "lesson_date": "الأحد 4 أكتوبر",
+      "remaining_label": "بقيت حلقتان",
+      "slot_1": "السبت 3 أكتوبر 17:00",
+      "slot_2": "الأحد 4 أكتوبر 19:00",
+      "tz_city": "الرياض"
+    }
   },
   "messages": {
     "log": "سجل الرسائل",
@@ -2714,7 +2726,9 @@
       "settings": "الإعدادات",
       "booking": "حجز",
       "threads": "محادثة",
-      "activity": "جلسة الدخول"
+      "activity": "جلسة الدخول",
+      "i18n": "الترجمات",
+      "translations": "الترجمات"
     },
     "verbs": {
       "create": "إضافة",
@@ -2757,7 +2771,35 @@
       },
       "settings": {
         "update": "تعديل الإعدادات"
+      },
+      "translations": {
+        "save": "تعديل ترجمة",
+        "restore": "استعادة نص أصلي"
       }
     }
+  },
+  "translations": {
+    "nav": "الترجمات",
+    "title": "الترجمات",
+    "intro": "عدّل أي نص في الواجهة بالعربية أو الإنجليزية. النص الأصلي محفوظ ويمكن استعادته في أي وقت.",
+    "applyNote": "تظهر التعديلات عند تحميل الصفحة التالي.",
+    "search": "ابحث بالمفتاح أو بالنص",
+    "section": "القسم",
+    "allSections": "كل الأقسام",
+    "key": "المفتاح",
+    "arabic": "العربية",
+    "english": "الإنجليزية",
+    "overridden": "معدّل",
+    "edit": "تعديل الترجمة",
+    "editKey": "تعديل {key}",
+    "original": "الأصل: {text}",
+    "placeholderHint": "أبقِ هذه المتغيرات كما هي: {tokens}",
+    "placeholdersMissing": "النص ينقصه: {tokens}",
+    "save": "حفظ",
+    "restore": "استعادة الأصل",
+    "saved": "حُفظت الترجمة",
+    "restored": "استُعيد النص الأصلي",
+    "count": "عدد النصوص: {n}",
+    "empty": "لا توجد نصوص مطابقة"
   }
 }

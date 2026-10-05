@@ -43,7 +43,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
     payoutCountTrials: s.payout_count_trials,
     reminderMinutesBefore: String(s.reminder_minutes_before),
     reminder24hEnabled: s.reminder_24h_enabled,
-    followUpHours: s.follow_up_hours.join(t.common.listJoiner),
+    followUpHours: s.follow_up_hours.join(t.common.listSeparator),
   };
 }
 

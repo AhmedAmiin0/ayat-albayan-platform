@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils';
 import { teacherOptionsQuery } from './api';
 import { selectedStatuses, setFilter, toggleStatus, type StudentsFilters } from './filters';
 import { StatusChips } from './StatusChips';
+import { teacherLabel } from '@/lib/teacher-label';
 
 export interface StudentFiltersProps {
   value: StudentsFilters;
@@ -41,7 +42,7 @@ export function StudentFilters({ value, onChange, stacked = false }: StudentFilt
       {select('teacher', s.teacher, [
         { value: '', label: s.teacherAll },
         { value: NO_TEACHER, label: s.teacherNone },
-        ...(teachers.data ?? []).map((x) => ({ value: x.id, label: x.display_name_ar })),
+        ...(teachers.data ?? []).map((x) => ({ value: x.id, label: teacherLabel(x) })),
       ])}
       {select('program', s.program, [
         { value: '', label: s.programAll },

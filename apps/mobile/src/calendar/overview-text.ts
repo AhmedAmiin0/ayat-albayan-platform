@@ -19,7 +19,7 @@ export function spanClock(span: Span): { from: string; to: string } {
 
 /** «معلمة · القرآن الكريم، اللغة العربية · 3 من 10 طالب · القاهرة» (the city only when not Riyadh). */
 export function teacherMeta(teacher: OverviewTeacher): string {
-  const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.teachers.listSeparator);
+  const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   return [
     t.teachers.genderLabel[teacher.gender],
     programs,
@@ -38,7 +38,7 @@ export function windowsLine(windows: readonly Span[]): string | null {
     return ltr(`${from} – ${to}`);
   });
   return t.calendar.available
-    .replace('{ranges}', ranges.join(t.common.listJoiner))
+    .replace('{ranges}', ranges.join(t.common.listSeparator))
     .replace('{city}', t.runningHead.riyadh);
 }
 

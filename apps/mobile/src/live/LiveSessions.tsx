@@ -1,3 +1,4 @@
+import { teacherName } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
@@ -8,6 +9,7 @@ import { riyadhTime, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/ui/AppText';
 import { StatusChip } from '@/ui/StatusChip';
 import { liveLessons, type LiveLesson } from './live-filter';
+import { locale } from '@/lib/locale';
 
 function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean }) {
   const { color } = useTheme();
@@ -31,7 +33,7 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
         {studentNames(lesson)}
       </AppText>
       {showTeacher ? (
-        <AppText style={small}>{t.live.teacher.replace('{name}', lesson.teacher.display_name_ar)}</AppText>
+        <AppText style={small}>{t.live.teacher.replace('{name}', teacherName(lesson.teacher, locale))}</AppText>
       ) : null}
       <JoinClassroomButton lesson={lesson} />
     </View>

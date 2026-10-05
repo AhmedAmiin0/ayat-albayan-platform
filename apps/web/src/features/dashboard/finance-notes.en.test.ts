@@ -23,7 +23,7 @@ const finance: DashboardData['finance'] = {
 
 describe('financeNotes in English', () => {
   it('joins the missing currencies with the English list joiner', () => {
-    expect(en.common.listJoiner).toBe(', ');
+    expect(en.common.listSeparator).toBe(', ');
     expect(financeNotes(finance)[1]).toEqual({
       text: en.dashboard.fxMissing.replace('{currencies}', 'KWD, OMR'),
       warn: true,
