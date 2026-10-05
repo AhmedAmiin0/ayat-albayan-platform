@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ROW_DONE } from '@/features/feedback/feedback-fixture';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import type { ServerListSearch } from '@/lib/server-list-search';
 import { MyFeedback } from './MyFeedback';
 
@@ -41,6 +42,7 @@ describe('MyFeedback (teacher)', () => {
     const onSearch = open({ items: [ROW_DONE], total: 1, average: null }, { sort: 'note', f_recommend: 'yes', f_teacher: 'x' });
     await screen.findByText('سهيلة');
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/feedback?page=1&pageSize=20&sort=note&recommend=yes');
+    openFilters();
     expect(screen.queryByLabelText(t.table.filterBy.replace('{col}', t.feedback.teacher))).toBeNull();
     fireEvent.change(screen.getByLabelText(t.table.filterBy.replace('{col}', t.feedback.kind)), { target: { value: 'trial' } });
     expect(onSearch).toHaveBeenLastCalledWith({ f_kind: 'trial', page: undefined });

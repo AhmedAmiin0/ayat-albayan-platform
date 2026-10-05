@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYOUT } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { currentMonth, downloadPayoutsCsv } from './api';
 import { monthLabel, monthOptions } from './MonthSelect';
 import { breakdownLines } from './payout-columns';
@@ -52,7 +53,7 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
     fireEvent.click(await screen.findByRole('button', { name: t.payouts.amount }));
     expect(names()).toEqual(['سارة', 'أبرار']);
     const by = (col: string) => t.table.filterBy.replace('{col}', col);
-    fireEvent.change(screen.getByRole('combobox', { name: by(t.subscriptions.status) }), { target: { value: 'draft' } });
+    fireEvent.change(within(openFilters()).getByRole('combobox', { name: by(t.subscriptions.status) }), { target: { value: 'draft' } });
     expect(names()).toEqual(['أبرار']);
     fireEvent.change(screen.getByRole('combobox', { name: by(t.payouts.teacher) }), { target: { value: 'سارة' } });
     expect(screen.getByText(t.common.empty)).toBeTruthy();

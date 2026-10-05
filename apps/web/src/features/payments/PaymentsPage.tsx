@@ -17,10 +17,10 @@ import { toSortSearch } from '@/lib/list-search';
 import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } from './api';
 import { paymentColumns, type PaymentAction } from './payment-columns';
 import { PaymentDialogs } from './PaymentDialogs';
-import { PaymentFiltersBar } from './PaymentFiltersBar';
 import { PeriodTotals } from './PeriodTotals';
 import { RecordPaymentDialog } from './RecordPaymentDialog';
 import { paymentsView, type PaymentsUrlSearch } from './search';
+import { usePaymentFilters } from './use-payment-filters';
 
 /** A filter or sort change goes back to page 1 (the route drops `page: undefined`). */
 type Props = { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlSearch>) => void };
@@ -43,11 +43,12 @@ export function PaymentsPage({ search, onSearch }: Props) {
   const csv = useMutation({
     mutationFn: () => downloadCsv({ kind: 'payments', params: { ...filterParams(filters), ...csvRange(filters) } }),
   });
-  const columns = useMemo(() => paymentColumns({ onAction: (payment, action) => setOpen({ payment, action }) }), []);
+  const columns = useMemo(() => paymentColumns({ onAction: (payment, action) => setOpen({ payment, action }) }), [setOpen]);
   const reset = (patch: Partial<PaymentsUrlSearch>) => onSearch({ ...patch, page: undefined });
   const items = list.data?.items ?? [];
-  // A column filter that matches nothing keeps the table (and its filter row) on screen.
-  const bare = list.data?.total === 0 && !search.f_method;
+  const extra = usePaymentFilters({ value: filters, studentName: items[0]?.student.name, onChange: reset });
+  // A filter that matches nothing keeps the table (its toolbar and chips) on screen.
+  const bare = list.data?.total === 0 && Object.keys(filterParams(filters)).length === 0;
 
   return (
     <>
@@ -63,7 +64,6 @@ export function PaymentsPage({ search, onSearch }: Props) {
           </Button>
         </div>
       </PageHead>
-      <PaymentFiltersBar value={filters} studentName={items[0]?.student.name} onChange={reset} />
       {list.data && <PeriodTotals totals={list.data.totals} />}
       {(list.isError || csv.isError) && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
@@ -79,6 +79,7 @@ export function PaymentsPage({ search, onSearch }: Props) {
             emptyText={t.payments.empty}
             sort={{ key: sort.sort, dir: sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
             filters={{ values: { method: search.f_method ?? '' }, onChange: (_, v) => reset({ f_method: (v || undefined) as PaymentFilters['method'] }) }}
+            toolbar={{ extra }}
           />
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
         </>

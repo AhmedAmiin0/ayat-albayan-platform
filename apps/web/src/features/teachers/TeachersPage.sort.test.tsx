@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import type { ListUrlState } from '@/lib/list-url';
 import { TeachersPage } from './TeachersPage';
 
@@ -53,6 +54,7 @@ describe('TeachersPage sort + column filters (R-NFR-08)', () => {
     const onList = renderPage({ page: 3, sort: {}, filters: {} });
     await screen.findByText('فاطمة');
     const label = t.table.filterBy.replace('{col}', t.teachers.status);
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: label }), { target: { value: 'inactive' } });
     expect(onList).toHaveBeenCalledWith({ page: 1, sort: {}, filters: { status: 'inactive' } });
   });

@@ -3,6 +3,7 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { MyReports } from './MyReports';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -84,7 +85,8 @@ describe('/teacher/reports (R-REP-01/02/05)', () => {
     expect(within(sentList).getByRole('columnheader', { name: new RegExp(t.reports.gradeCol) }).getAttribute('aria-sort')).toBe('descending');
     fireEvent.click(within(sentList).getByRole('button', { name: t.reports.submittedAtCol }));
     expect(onSearch).toHaveBeenLastCalledWith({ sort: 'submitted', dir: undefined, page: undefined });
-    fireEvent.change(within(sentList).getByLabelText(t.table.filterBy.replace('{col}', t.reports.gradeCol)), { target: { value: 'good' } });
+    openFilters(sentList);
+    fireEvent.change(screen.getByLabelText(t.table.filterBy.replace('{col}', t.reports.gradeCol)), { target: { value: 'good' } });
     expect(onSearch).toHaveBeenLastCalledWith({ f_grade: 'good', page: undefined });
     expect(within(sentList).queryByRole('button', { name: t.reports.date })).toBeNull();
   });

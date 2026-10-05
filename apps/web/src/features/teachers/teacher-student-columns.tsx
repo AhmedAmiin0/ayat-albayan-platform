@@ -43,7 +43,7 @@ export const teacherStudentColumns = col.columns([
         {c.getValue()}
       </Link>
     ),
-    meta: { sortKey: 'name', filter: text },
+    meta: { sortKey: 'name', filter: text, search: true },
   }),
   col.accessor('status', {
     header: () => s.status,

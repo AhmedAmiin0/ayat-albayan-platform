@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { template } from '@/features/inbox/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -35,6 +36,7 @@ describe('template health sort and filters (R-NFR-08, client-side)', () => {
     routeFetch(apiFetch, [['/messaging/templates', ROWS]]);
     renderWithClient(<TemplateHealth headingId="h" />);
     await screen.findByText(t.templates.names.renewal_due);
+    openFilters();
     fireEvent.change(screen.getByLabelText(filterBy(t.templates.status)), { target: { value: 'rejected' } });
     expect(names()).toHaveLength(1);
     expect(screen.getByText(t.templates.names.follow_up_slots)).toBeTruthy();

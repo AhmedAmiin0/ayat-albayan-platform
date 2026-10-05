@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import type { ListUrlState } from '@/lib/list-url';
 import { JobApplicantsList } from './JobApplicantsList';
 
@@ -52,6 +53,7 @@ describe('JobApplicantsList sort + column filters (R-LEAD-04, R-NFR-08)', () => 
   it('link columns filter by «attached / missing»', async () => {
     const onSearch = renderList(EMPTY);
     await screen.findByText('أ. منى');
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: label(t.jobApplicants.recitation) }), { target: { value: 'no' } });
     expect(onSearch).toHaveBeenCalledWith({ page: 1, sort: {}, filters: { recitation: 'no' } });
     expect(screen.getAllByRole('option', { name: t.jobApplicants.present })).toHaveLength(2);

@@ -8,7 +8,7 @@ import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { t } from '@/lib/i18n';
-import { withFilter, withSort, type ListUrlState } from '@/lib/list-url';
+import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list-url';
 import { teachersPageQuery, type Page, type Teacher } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { ListSkeleton } from '@/components/ui/skeleton';
@@ -38,7 +38,7 @@ function TeachersTable({ data, columns, list, onList, onOpen }: TableProps) {
         onRowClick={(row) => onOpen(row.id)}
         emptyText={t.common.notFound}
         sort={{ key: list.sort.sort, dir: list.sort.dir, onChange: (next) => onList(withSort(list, next)) }}
-        filters={{ values: list.filters, onChange: (key, value) => onList(withFilter(list, { key, value })) }}
+        filters={{ values: list.filters, onChange: (key, value) => onList(withFilter(list, { key, value })), onClear: (keys) => onList(withoutFilters(list, keys)) }}
       />
       <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={(page) => onList({ ...list, page })} />
     </>

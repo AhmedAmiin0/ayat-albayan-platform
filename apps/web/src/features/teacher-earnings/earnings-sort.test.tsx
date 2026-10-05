@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { findFilters, openFilters } from '@/test/open-filters';
 import { page, PAYMENT, SESSIONS } from './fixtures';
 import { PaymentsHistory } from './PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
@@ -32,6 +33,7 @@ describe('teacher earnings tables: server sort + filters (R-NFR-08)', () => {
     show(<PaymentsHistory scope={{ kind: 'admin', teacherId: 't1' }} />);
     fireEvent.click(await screen.findByRole('button', { name: t.earnings.amount }));
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/teacher-earnings/t1/payments?sort=amount&page=1&pageSize=20'));
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by(t.finance.voidedColumn) }), { target: { value: 'false' } });
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('sort=amount&voided=false&page=1')));
     fireEvent.change(screen.getByRole('combobox', { name: by(t.payments.method) }), { target: { value: 'cash' } });
@@ -41,7 +43,8 @@ describe('teacher earnings tables: server sort + filters (R-NFR-08)', () => {
   it('payments: a filter that matches nothing keeps the filter row', async () => {
     apiFetch.mockResolvedValueOnce(page([PAYMENT])).mockResolvedValue(page([]));
     show(<PaymentsHistory scope={{ kind: 'mine' }} />);
-    fireEvent.change(await screen.findByRole('combobox', { name: by(t.payments.method) }), { target: { value: 'cash' } });
+    await findFilters();
+    fireEvent.change(screen.getByRole('combobox', { name: by(t.payments.method) }), { target: { value: 'cash' } });
     expect(await screen.findByText(t.earnings.noPayments)).toBeTruthy();
     expect(screen.getByRole('combobox', { name: by(t.payments.method) })).toBeTruthy();
   });

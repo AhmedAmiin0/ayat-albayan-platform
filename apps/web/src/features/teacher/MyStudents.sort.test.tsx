@@ -1,6 +1,7 @@
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { MyStudents } from './MyStudents';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
@@ -25,6 +26,7 @@ describe('MyStudents sort + filters (R-TCH-03, R-NFR-08)', () => {
 
   it('the status select filters; without the status column there is no status filter', () => {
     const { rerender } = render(<MyStudents students={KIDS} />);
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: label(t.students.status) }), { target: { value: 'trial' } });
     expect(names()).toEqual(['إيمان']);
     rerender(<MyStudents students={KIDS} showStatus={false} />);

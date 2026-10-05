@@ -13,11 +13,14 @@ import { t } from '@/lib/i18n';
 import { studentListQuery } from './api';
 import { CreateStudentDialog } from './CreateStudentDialog';
 import { isUnfiltered, studentTableControls, type StudentsSearch } from './search';
-import { StudentFilterBar } from './StudentFilterBar';
 import { studentColumns } from './studentColumns';
 import { StudentSearch } from './StudentSearch';
+import { useStudentFilters } from './use-student-filters';
 
 export type { StudentsSearch } from './search';
+
+const withoutKeys = (columns: Record<string, string> = {}, keys: string[]) =>
+  Object.fromEntries(Object.entries(columns).filter(([k]) => !keys.includes(k)));
 
 type StudentsPageProps = StudentsSearch & {
   /** Writes search/page/filters to the URL (server-side paging, R-NFR-08). */
@@ -39,6 +42,11 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
   const view = { search, page: 1, filters, sort, columns: colFilters };
   const none = data?.total === 0 && isUnfiltered(view);
   const controls = studentTableControls(view, onChange);
+  const extra = useStudentFilters({
+    value: filters,
+    onChange: (next) => onChange({ ...view, filters: next }),
+    onClearAll: (keys) => onChange({ ...view, filters: {}, columns: withoutKeys(colFilters, keys) }),
+  });
 
   return (
     <>
@@ -56,10 +64,6 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
           </Button>
         </div>
       </PageHead>
-      <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
-        <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />
-        <StudentFilterBar value={filters} onChange={(next) => onChange({ ...view, filters: next })} />
-      </div>
       {isError && (
         <p role="alert" className="mb-3 text-sm text-danger">
           {t.common.error}
@@ -81,6 +85,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
           emptyText={data ? t.common.notFound : t.common.loading}
           sort={controls.sort}
           filters={controls.filters}
+          toolbar={{ search: <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />, extra }}
         />
       )}
       {data && (

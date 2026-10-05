@@ -217,9 +217,6 @@
     "duplicateHint": "ينقل الدمج كل الحلقات والتقارير والمدفوعات، ويُحفظ السجل القديم في السجل التاريخي.",
     "emptyHint": "سيظهر هنا فور تحويل محادثة إلى طالب أو إضافة طالب بنفسك.",
     "ageInvalid": "اكتب العمر بالأرقام (من 3 إلى 99)",
-    "filters": "فلاتر",
-    "filtersTitle": "تصفية الطلاب",
-    "clearFilters": "مسح الفلاتر",
     "teacherAll": "كل المعلمين",
     "teacherNone": "بدون معلم",
     "programAll": "كل البرامج",
@@ -232,14 +229,14 @@
       "unpaid": "غير مدفوعة"
     },
     "weekly": "له حلقة أسبوعية",
+    "weeklyFilter": "الحلقة الأسبوعية",
     "weeklyAll": "الحلقة الأسبوعية: الكل",
     "tzAll": "كل المناطق الزمنية",
     "remaining": "المتبقي",
     "remainingN": "{n} حلقة متبقية",
     "noPackage": "بدون باقة",
     "weeklyYes": "له حلقة أسبوعية",
-    "weeklyNo": "بدون حلقة أسبوعية",
-    "showResults": "عرض النتائج"
+    "weeklyNo": "بدون حلقة أسبوعية"
   },
   "guardians": {
     "title": "أولياء الأمور",
@@ -1245,8 +1242,6 @@
     }
   },
   "payments": {
-    "filters": "تصفية المدفوعات",
-    "showResults": "عرض النتائج",
     "title": "المدفوعات",
     "record": "تسجيل دفعة",
     "subscription": "الاشتراك",
@@ -2667,8 +2662,15 @@
     "sortNone": "بدون ترتيب",
     "filterBy": "تصفية حسب {col}",
     "all": "الكل",
-    "clearFilters": "مسح التصفية",
-    "searchPlaceholder": "ابحث…"
+    "searchPlaceholder": "ابحث…",
+    "searchIn": "بحث في: {col}",
+    "filter": "تصفية",
+    "activeCount": "{n} مفعّلة",
+    "showResults": "عرض النتائج",
+    "clearAll": "مسح الكل",
+    "activeFilter": "{label}: {value}",
+    "removeFilter": "إزالة التصفية {filter}",
+    "activeFilters": "التصفية المفعّلة"
   },
   "activity": {
     "title": "سجل النشاط",

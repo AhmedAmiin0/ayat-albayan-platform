@@ -4,6 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { MyPayouts } from './MyPayouts';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -34,6 +35,7 @@ describe('«مستحقاتي» (R-TCH-04)', () => {
     expect(screen.getAllByText(/10 × 70/)).toHaveLength(2);
     expect(screen.getByText(t.enums.payoutStatus.paid, { selector: 'td *' })).toBeTruthy();
     const by = t.table.filterBy.replace('{col}', t.subscriptions.status);
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by }), { target: { value: 'draft' } });
     expect(screen.queryByText(monthLabel('2026-09'))).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.payouts.month }));
