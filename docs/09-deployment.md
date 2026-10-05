@@ -67,6 +67,21 @@ Lesson report PDFs (R-REP-03) are rendered in the API process by `playwright-cor
 - Caddy: restore the newest `/etc/caddy/Caddyfile.bak-*`, `caddy validate`, `systemctl reload caddy`.
 - Database: migrations are forward-only; restore from the Supabase dashboard backup if needed.
 
+## Online classroom: «السبورة للعرض فقط» / share not working (2026-10-05)
+
+**What was wrong (fixed in code, no server change needed for it):**
+1. A signed-in admin or teacher who opened the shared link of an internal meeting (`/m/<token>`) or a family's lesson link (`/join/<token>`) entered **as a guest**: the board said «السبورة للعرض فقط» and «شارك الشاشة» failed (a guest token may publish camera and microphone only). Now the link page sends signed-in staff to their own room (`/meeting/<id>`, `/classroom/<lesson>`; `GET /meetings/by-link/:token`, `GET /join-links/:token/lesson`). The student's long-lived link `/s/<token>` still joins as a guest.
+2. «مشاركة السبورة» published a canvas track that carried no frames while nobody drew, so LiveKit never forwarded it. The board is now re-sent a few times a second while shared.
+3. Share buttons appear only where they can work: no «شارك الشاشة» on phones (no `getDisplayMedia`); a guest gets «اطلب مشاركة الشاشة» and the teacher / admin / assistant answers «سماح» / «رفض» (`POST …/participants/:identity/share`, LiveKit `RoomService/UpdateParticipant`, nothing stored).
+
+**If the room still says it cannot connect, check the server (owner, on the VPS):**
+1. `/opt/ayat-albayan-staging/.env` has all three of `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` (else every join is 503 and the page says «الحلقات عبر الإنترنت غير مفعّلة على الخادم بعد»). `LIVEKIT_URL` **must start with `wss://`** (`wss://livekit-staging.148-230-116-195.sslip.io`): the app is served over https, and browsers block a `ws://` socket from an https page; the room then says «عنوان خادم الحلقات يبدأ بـ ws://…». After editing: `docker compose up -d` in `/opt/ayat-albayan-staging` (or the GitHub deploy with **env_only**).
+2. Open `https://livekit-staging.148-230-116-195.sslip.io` in a browser: it must answer `OK` (Caddy → `livekit-server` on 127.0.0.1:7880). If not, the room says «تعذّر الوصول إلى خادم الحلقات…»; check `docker ps` / `docker logs <livekit container>` and the Caddy block.
+3. The media ports must be open in the VPS firewall: **UDP 7882**, **TCP 7881**, TURN **UDP 3478** (`ufw status`; Hostinger panel firewall too). With them closed the call connects but no video, audio or shared screen arrives.
+4. While someone joins, `docker logs -f <livekit container>` shows `participant joined` and, for a shared board or screen, `mediaTrack published`. A track that stays `pending track` means no media reaches the server (ports in 3).
+
+Local check against a real LiveKit: `docker run -d --name lk -p 7880:7880 -p 7881:7881 -p 7882:7882/udp livekit/livekit-server --dev --bind 0.0.0.0`, then `LIVEKIT_URL=ws://localhost:7880 LIVEKIT_API_KEY=devkey LIVEKIT_API_SECRET=secret pnpm --filter e2e run e2e --project=desktop tests/classroom-live.spec.ts tests/classroom-live-phone.spec.ts` (skipped without `LIVEKIT_URL`).
+
 ## Not on staging yet
 
 - WhatsApp (Phase 4). The code is shipped; the credentials stay off staging until the owner runs the cut-over below.

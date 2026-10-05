@@ -57,6 +57,8 @@ export function useShareRequests({ room, role, grant }: ShareRequestOptions): Sh
       dispatch({ kind: 'granted' });
       setNotice(t.classroom.shareRequest.allowed);
     }
+    // «إيقاف مشاركة»: the «سُمح لك» line no longer holds.
+    if (!snap.shareAllowed && allowedBefore.current) setNotice(null);
     allowedBefore.current = snap.shareAllowed;
   }, [snap.shareAllowed, role]);
   useEffect(() => {

@@ -1,5 +1,6 @@
 import { useEffect, useRef, type RefObject } from 'react';
 import type { RoomController } from '../use-room';
+import { keepFrames } from './board-frames';
 
 /** Frames per second of the shared-board video (enough for handwriting, cheap to encode). */
 export const BOARD_FPS = 15;
@@ -26,11 +27,20 @@ export interface BoardShare {
 export function useBoardShare(canvas: RefObject<HTMLCanvasElement>, room: RoomController): BoardShare {
   const sharing = room.snap.boardShareOn;
   const live = useRef({ sharing, stop: () => room.setBoardTrack(null) });
+  const frames = useRef<(() => void) | null>(null);
+  const stopFrames = () => {
+    frames.current?.();
+    frames.current = null;
+  };
   useEffect(() => {
     live.current = { sharing, stop: () => room.setBoardTrack(null) };
   });
+  useEffect(() => {
+    if (!sharing) stopFrames();
+  }, [sharing]);
   useEffect(
     () => () => {
+      stopFrames();
       if (live.current.sharing) live.current.stop();
     },
     [],
@@ -41,8 +51,12 @@ export function useBoardShare(canvas: RefObject<HTMLCanvasElement>, room: RoomCo
     supported: canCaptureBoard(),
     toggle: () => {
       if (sharing) return room.setBoardTrack(null);
-      const track = captureBoard(canvas.current);
-      if (track) room.setBoardTrack(track);
+      const el = canvas.current;
+      const track = captureBoard(el);
+      if (!el || !track) return;
+      stopFrames();
+      frames.current = keepFrames(el, track);
+      room.setBoardTrack(track);
     },
   };
 }
