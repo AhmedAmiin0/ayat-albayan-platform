@@ -21,18 +21,23 @@ export function AdminLayout({ nav, children }: { nav: ReactNode; children: React
   // resolvedLocation: the Link is only aria-current once the (code-split) child route resolved.
   const pathname = useRouterState({ select: (s) => s.resolvedLocation?.pathname });
   useEffect(() => {
-    // Compact top row (<900px): keep the current section in view, clear of the fade.
-    aside.current?.querySelector('nav [aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
+    // Compact top row (<900px): centre the current section in the strip, clear of both fades.
+    aside.current?.querySelector('nav [aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'center' });
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
   const inbox = isInboxPath(pathname);
   return (
     <div className="flex h-dvh flex-col overflow-hidden shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
-      {/* `relative`: absolutely positioned sr-only text in a long sidebar stays inside its scroll clip. */}
+      {/* `relative`: absolutely positioned sr-only text in a long sidebar stays inside its scroll clip.
+          From 900px the rhythm is a 4px grid: 24 on top, 24 logo → fihris, 16 between groups; the sticky
+          foot owns the 24 at the bottom, so it stays on screen on short viewports. */}
       <aside
         ref={aside}
-        className="relative flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3 shell:h-dvh shell:flex-col shell:flex-nowrap shell:items-stretch shell:gap-[26px] shell:gap-y-0 shell:overflow-y-auto shell:border-e shell:border-rule shell:bg-cover shell:pt-[22px] shell:pb-4"
+        className={cn(
+          'relative flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3',
+          'shell:h-dvh shell:flex-col shell:flex-nowrap shell:items-stretch shell:gap-y-6 shell:overflow-y-auto shell:border-e shell:border-rule shell:bg-cover shell:pt-6 shell:pb-0',
+        )}
       >
-        <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="shrink-0 rounded-md px-1.5 no-underline">
+        <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="shrink-0 rounded-md px-1.5 no-underline shell:px-3">
           <Logo collapse />
         </Link>
         {nav}
