@@ -4,7 +4,7 @@ import { z } from 'zod';
 export const STUDENT_RECORDING_STATUSES = ['recording', 'done', 'failed', 'deleted'] as const;
 export type StudentRecordingStatus = (typeof STUDENT_RECORDING_STATUSES)[number];
 
-/** What a player needs for the file: video for an MP4, audio for a sound-only file. */
+/** What a player needs for the file: video for an (older) MP4, audio for a sound-only file. */
 export type StudentRecordingMedia = 'video' | 'audio';
 
 /**
@@ -52,7 +52,10 @@ export type StudentRecordingsQuery = z.output<typeof studentRecordingsQuerySchem
 export const recordingVisibilitySchema = z.object({ visible: z.boolean() });
 export type RecordingVisibility = z.output<typeof recordingVisibilitySchema>;
 
-/** Is the recording's file video or audio? By the object's extension; MP4 (the egress) is video. */
+/**
+ * Is the recording's file video or audio? By the object's extension: the egress writes MP3 (audio
+ * only since 2026-10-06); older rows are MP4 room videos and keep their video player.
+ */
 export function mediaOfPath(path: string): StudentRecordingMedia {
   return /\.(mp3|m4a|aac|ogg|wav)$/i.test(path) ? 'audio' : 'video';
 }

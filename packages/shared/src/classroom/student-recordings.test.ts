@@ -29,8 +29,10 @@ describe('recordingVisibilitySchema', () => {
 });
 
 describe('mediaOfPath / durationSeconds', () => {
-  it('MP4 is video, a sound file is audio', () => {
+  it('MP4 (rows before audio-only) is video, a sound file (the egress MP3) is audio', () => {
     expect(mediaOfPath('lessons/a/2026.mp4')).toBe('video');
+    expect(mediaOfPath('lessons/a/2026-10-06T16-00-00-000Z.mp3')).toBe('audio');
+    expect(mediaOfPath('meetings/m/2026.mp3')).toBe('audio');
     expect(mediaOfPath('lessons/a/2026.M4A')).toBe('audio');
   });
 

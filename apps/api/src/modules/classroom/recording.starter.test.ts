@@ -15,7 +15,7 @@ const starter = (opts: { s3?: RecordingConfig; livekit?: typeof CONFIG | null } 
     new LivekitApi(opts.livekit === undefined ? CONFIG : opts.livekit, h),
     opts.s3 === undefined ? S3 : opts.s3,
   );
-const path = `lessons/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp4`;
+const path = `lessons/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp3`;
 
 beforeEach(() => {
   q = recordingQueries();
@@ -23,7 +23,7 @@ beforeEach(() => {
 });
 
 describe('starting a lesson recording', () => {
-  it('claims the row, creates the room, then starts a grid MP4 egress into the bucket path', async () => {
+  it('claims the row, creates the room, then starts an audio-only MP3 egress into the bucket path', async () => {
     expect(await starter().startFor(lessonTarget(LESSON_ID), OPEN)).toBe('started');
     expect(q.claim).toHaveBeenCalledWith({ target: lessonTarget(LESSON_ID), filePath: path, startedAt: OPEN.toISOString() });
     const urls = h.mock.calls.map(([url]) => url);
@@ -32,14 +32,14 @@ describe('starting a lesson recording', () => {
       'https://livekit.example.test/twirp/livekit.Egress/StartRoomCompositeEgress',
     ]);
     const body = JSON.parse(h.mock.calls[1]?.[1].body ?? '{}');
-    expect(body).toMatchObject({ room_name: `lesson-${LESSON_ID}`, layout: 'grid', file_outputs: [{ file_type: 'MP4', filepath: path }] });
+    expect(body).toMatchObject({ room_name: `lesson-${LESSON_ID}`, audio_only: true, file_outputs: [{ file_type: 'MP3', filepath: path }] });
     expect(q.attachEgress).toHaveBeenCalledWith('00000000-0000-4000-8000-0000000000aa', 'EG_new');
   });
 
   it('an internal meeting records the same way, into meetings/<id>/', async () => {
     expect(await starter().startFor(meetingTarget(LESSON_ID), OPEN)).toBe('started');
     const body = JSON.parse(h.mock.calls[1]?.[1].body ?? '{}');
-    expect(body).toMatchObject({ room_name: `meeting-${LESSON_ID}`, file_outputs: [{ filepath: `meetings/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp4` }] });
+    expect(body).toMatchObject({ room_name: `meeting-${LESSON_ID}`, file_outputs: [{ filepath: `meetings/${LESSON_ID}/2026-10-05T16-05-00-000Z.mp3` }] });
     expect(starter().configured).toBe(true);
     expect(starter({ s3: null }).configured).toBe(false);
   });
