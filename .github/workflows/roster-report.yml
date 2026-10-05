@@ -1,0 +1,40 @@
+name: roster-report
+# Owner-run, read-only: every student with teacher, status, package and weekly slots from the
+# staging database, as roster.csv attached to the run (kept 1 day; holds students' names, so it is
+# printed to the log only when `print` is ticked; delete that run's logs after reading). Actions → roster-report → Run workflow.
+on:
+  workflow_dispatch:
+    inputs:
+      print:
+        description: Also print the CSV in the log (delete the run's logs after reading them)
+        type: boolean
+        default: false
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: develop
+    steps:
+      - uses: actions/checkout@v5
+      - name: Query the staging database (read-only)
+        env:
+          PGHOST: ${{ vars.DB_POOLER_HOST || 'aws-1-eu-central-1.pooler.supabase.com' }}
+          PGPORT: '5432'
+          PGUSER: postgres.${{ vars.SUPABASE_PROJECT_REF || 'knxfwiimjcifwckhwbim' }}
+          PGDATABASE: postgres
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PGSSLMODE: require
+        run: |
+          test -n "$PGPASSWORD" || { echo "::error::add the secret SUPABASE_DB_PASSWORD to the develop environment"; exit 1; }
+          sudo apt-get -qq install -y postgresql-client >/dev/null 2>&1 || true
+          psql -v ON_ERROR_STOP=1 -q -f tools/reports/roster-report.sql
+          echo "rows: $(($(wc -l < roster.csv) - 1))"
+      - name: Print the CSV (only when asked)
+        if: ${{ inputs.print }}
+        run: cat roster.csv
+      - uses: actions/upload-artifact@v4
+        with:
+          name: roster
+          path: roster.csv
+          retention-days: 1

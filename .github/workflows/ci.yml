@@ -40,10 +40,16 @@ jobs:
             echo "e2e=false" >> "$GITHUB_OUTPUT"
           fi
 
-  # Lint, typecheck and unit tests need no database: they run alongside the e2e shards, not before them.
-  check:
+  # Lint, typecheck and unit tests run as three parallel jobs (each was waiting on the others in one
+  # 12-minute job). Turborepo's local cache is kept between runs, so packages a PR did not touch are
+  # replayed from cache instead of re-run. Branch protection can keep requiring "check": the final job.
+  verify:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        task: [lint, typecheck, test]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -52,16 +58,30 @@ jobs:
           node-version-file: .nvmrc
           cache: pnpm
       - run: pnpm i --frozen-lockfile
-      - run: pnpm turbo lint typecheck test
+      - uses: actions/cache@v4
+        with:
+          path: .turbo/cache
+          key: turbo-${{ matrix.task }}-${{ runner.os }}-${{ github.sha }}
+          restore-keys: |
+            turbo-${{ matrix.task }}-${{ runner.os }}-
+      - run: pnpm turbo ${{ matrix.task }} --cache-dir=.turbo/cache
+
+  check:
+    needs: verify
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    steps:
+      - run: test "${{ needs.verify.result }}" = success
 
   # The e2e suite shares one database per run and runs with one worker, so it is split across machines
   # instead: each shard has its own local Supabase, API and web server (docs/04 §9). A failing shard does
   # not stop the others (fail-fast off), so one run shows every red spec.
   e2e:
     needs: changes
-    # e2e is paused (owner's call): it runs only when started by hand, or once the repository variable
-    # RUN_E2E is set to 'true' (Settings → Secrets and variables → Actions → Variables). No code change needed.
-    if: needs.changes.outputs.e2e == 'true' && (github.event_name == 'workflow_dispatch' || vars.RUN_E2E == 'true')
+    # On again (owner, 2026-10-05) now that the suite is fast. To pause it without a code change, set the
+    # repository variable RUN_E2E to 'false' (Settings → Secrets and variables → Actions → Variables).
+    if: needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
