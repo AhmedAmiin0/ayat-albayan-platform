@@ -47,6 +47,7 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
+          package-manager-cache: false
       - name: Never re-add forcesRTL
         run: "! grep -n forcesRTL apps/mobile/app.json apps/mobile/app.config.ts"
       - name: EAS build (Android preview APK, built on Expo's servers)
