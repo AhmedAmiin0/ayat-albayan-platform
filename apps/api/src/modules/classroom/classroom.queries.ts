@@ -1,6 +1,8 @@
 import type { Tables, TablesInsert } from '@ab/db';
+import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { SettingsService } from '../../common/settings/settings.service';
 import { isSalesLesson } from '../sales/sales-lessons';
 import { dbError } from '../teachers/http';
 
@@ -17,7 +19,15 @@ export interface SendContext {
 /** Reads and writes of the classroom routes (service role; the services guard). */
 @Injectable()
 export class ClassroomQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
+
+  /** The classroom window from settings (join_opens_before_min / join_closes_after_min, cached). */
+  async joinWindow(): Promise<JoinWindowConfig> {
+    return joinWindowConfig(await this.settings.all());
+  }
 
   async lesson(id: string): Promise<JoinLesson | null> {
     const { data, error } = await this.db.from('lessons').select(JOIN_COLUMNS).eq('id', id).maybeSingle();

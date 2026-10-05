@@ -1,27 +1,19 @@
+import { ar } from '../../common/i18n/server-text';
 import { paramNames } from './wa-json';
 import type { SampleFile, TemplateRow } from './whatsapp.types';
 
 // What Meta's template review gets besides the text (docs/12 §3.4): a realistic value for every
 // {{n}}, report_ready's sample PDF, and the body rules Meta rejects a submission on.
 
-/** By message_templates.params name (migration 141), shaped like what the producers send. */
-const SAMPLES: Readonly<Record<string, string>> = {
-  student_name: 'أحمد',
-  student_names: 'أحمد وسارة',
-  teacher_name: 'محمد',
-  lesson_when: 'الأحد 4 أكتوبر 17:00',
-  lesson_time: 'الأحد 4 أكتوبر 17:00',
-  lesson_slot: 'الأحد 4 أكتوبر 17:00',
-  lesson_date: 'الأحد 4 أكتوبر',
-  remaining_label: 'بقيت حلقتان',
-  slot_1: 'السبت 3 أكتوبر 17:00',
-  slot_2: 'الأحد 4 أكتوبر 19:00',
-  tz_city: 'الرياض',
-};
+/**
+ * By message_templates.params name (migration 141), shaped like what the producers send. The values
+ * live in ar.json templates.reviewSamples (the templates are Arabic, so their samples are too).
+ */
+const samples = (): Readonly<Record<string, string>> => ar.templates.reviewSamples;
 
 /** example.body_text[0]: one value per {{n}}, in order; an unknown name is its own sample. */
 export function bodyExamples(row: TemplateRow): string[] {
-  return paramNames(row.params).map((name) => SAMPLES[name] ?? name);
+  return paramNames(row.params).map((name) => samples()[name] ?? name);
 }
 
 const VAR = /\{\{(\d+)\}\}/g;

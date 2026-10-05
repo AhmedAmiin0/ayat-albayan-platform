@@ -20,7 +20,7 @@ export function pickedText(startsAt: string, tz: string): string {
   const riyadh = `${lessonWhenText(at, RIYADH_TZ, locale)} ${t.schedule.riyadhTime}`;
   if (tz === RIYADH_TZ) return riyadh;
   const local = t.schedule.inCity.replace('{time}', lessonWhenText(at, tz, locale)).replace('{city}', tzCity(tz) ?? tz);
-  return `${riyadh}${t.common.listJoiner}${t.booking.studentLocal.replace('{time}', local)}`;
+  return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
 /**

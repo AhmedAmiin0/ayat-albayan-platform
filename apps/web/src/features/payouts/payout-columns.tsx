@@ -10,6 +10,7 @@ import { durationLabel } from '@/features/pricing/format';
 import { moneyText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import type { PayoutView } from './api';
+import { teacherLabel } from '@/lib/teacher-label';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
@@ -40,7 +41,7 @@ export function breakdownLines(p: PayoutView): string[] {
  */
 export function payoutColumns({ onAction, teachers }: Handlers) {
   return col.columns([
-    col.accessor((p) => p.teacher.display_name_ar, {
+    col.accessor((p) => teacherLabel(p.teacher), {
       id: 'teacher',
       header: () => t.payouts.teacher,
       cell: (c) => <span className="font-semibold text-ink">{c.getValue()}</span>,

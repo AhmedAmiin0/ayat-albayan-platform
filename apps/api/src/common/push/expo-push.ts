@@ -1,5 +1,5 @@
 import type { PushKind } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import { ar } from '../i18n/server-text';
 import { fill } from '../../modules/report-pdf/pdf-text';
 
 // Expo push API shapes and the pure parts of sending (R-MOB-01).

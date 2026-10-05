@@ -1,6 +1,7 @@
 import { isOpenLesson, type LessonStatus } from '@ab/shared';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { cn } from '@/lib/utils';
 import { useNow } from './use-now';
 import { joinHint } from './window-hint';
@@ -21,14 +22,13 @@ interface Props {
   now?: Date;
 }
 
-/** «ادخل الحلقة» into the online classroom: enabled from 15 minutes before the start to 2 hours
- * after the end (re-checked every minute), otherwise disabled with «بتفتح الساعة …».
+/** «ادخل الحلقة» into the online classroom: enabled inside the settings' window (GET /settings/public) (re-checked every minute), otherwise disabled with «بتفتح الساعة …».
  * A plain link: it works without the router and opens /classroom/:id.
  */
 export function EnterButton({ lesson, size = 'md', className, now: given }: Props) {
   const tick = useNow();
   const now = given ?? tick;
-  const { canJoin, hint } = joinHint(lesson, now);
+  const { canJoin, hint } = joinHint(lesson, now, useJoinWindow());
   return (
     <div className={cn('grid justify-items-start gap-1', className)}>
       {canJoin ? (

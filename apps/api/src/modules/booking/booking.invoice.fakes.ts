@@ -1,4 +1,5 @@
 // Test-only fakes for BookingInvoices (R-PAY-03, R-MSG-06): Storage, InboundMedia and the queries are mocks.
+import { INVOICE_MAX_BYTES } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { vi } from 'vitest';
 import type { StorageService } from '../../common/storage/storage.service';
@@ -10,6 +11,8 @@ import type { BookingQueries } from './booking.queries';
 export const REQ = 'c1111111-1111-4111-8111-111111111111';
 export const MSG = 'd1111111-1111-4111-8111-111111111111';
 export const PHONE = '+966552147730';
+/** The booked family's phone and the default 10 MB limit (settings.upload_max_mb). */
+export const SCOPE = { phones: [PHONE], maxBytes: INVOICE_MAX_BYTES };
 export const PATH = `${REQ}/0f0e0d0c-0000-4000-8000-000000000001.png`;
 export const upload = { source: 'upload', path: PATH } as const;
 export const chat = { source: 'whatsapp', messageId: MSG } as const;

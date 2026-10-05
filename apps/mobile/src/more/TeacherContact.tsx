@@ -1,4 +1,4 @@
-import { formatPhone } from '@ab/shared';
+import { formatPhone, teacherName } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { whatsappLink } from '@/lib/phone';
@@ -7,6 +7,7 @@ import { Button } from '@/ui/Button';
 import { Ltr } from '@/ui/Ltr';
 import { Section } from './Section';
 import type { Teacher } from './types';
+import { locale } from '@/lib/locale';
 
 /** «رقم التواصل»: the LTR phone and a WhatsApp chat. Nothing at all when no phone is on file. */
 export function TeacherContact({ teacher }: { teacher: Teacher }) {
@@ -28,7 +29,7 @@ export function TeacherContact({ teacher }: { teacher: Teacher }) {
       <View style={{ alignItems: 'flex-start' }}>
         <Button
           variant="ghost"
-          label={t.students.whatsappTo.replace('{name}', teacher.display_name_ar)}
+          label={t.students.whatsappTo.replace('{name}', teacherName(teacher, locale))}
           onPress={() => void Linking.openURL(whatsappLink(phone))}
         />
       </View>

@@ -10,14 +10,10 @@ import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { settingsQuery } from './api';
 import { SettingsNav } from './SettingsNav';
-import {
-  AccountsSection,
-  AppearanceSection,
-  MessagingSection,
-  ReportsSection,
-  SalesSection,
-  ScheduleSection,
-} from './SettingsSections';
+import { AppearanceSection, FieldsSection, MessagingSection, SalesSection } from './SettingsSections';
+
+/** The sections made only of registry fields, in page order between messaging and sales. */
+const FIELD_SECTIONS = ['schedule', 'classroom', 'reports', 'accounts', 'uploads', 'academy'] as const;
 import { useSettingsForm } from './use-settings-form';
 
 /** The sections in page order, with one «حفظ» bar for every field (the switches save on their own). */
@@ -26,9 +22,9 @@ function SettingsBody({ settings, onSaved }: { settings: AcademySettings; onSave
   return (
     <div className="grid min-w-0 gap-10">
       <MessagingSection settings={settings} state={state} />
-      <ScheduleSection state={state} />
-      <ReportsSection state={state} />
-      <AccountsSection state={state} />
+      {FIELD_SECTIONS.map((id) => (
+        <FieldsSection key={id} id={id} state={state} />
+      ))}
       <SalesSection settings={settings} />
       <AppearanceSection />
       <div className="sticky bottom-0 z-10 grid gap-2 border-t border-rule bg-page py-3">
@@ -46,9 +42,9 @@ function SettingsBody({ settings, onSaved }: { settings: AcademySettings; onSave
 
 /**
  * /admin/settings (owner, 2026-10-05 «enhance the view of the settings»): the settings grouped into
- * sections with an index beside them (a chip row on phones): messages and WhatsApp, schedule,
- * reports, accounts, sales, appearance. Each setting is a row; the messaging switches keep their
- * own confirmation. Semantics and API calls are unchanged.
+ * sections with an index beside them (a chip row on phones), as the settings registry orders them
+ * («add dynamic configurations»: every field comes from the registry, by type). Each setting is a
+ * row; the messaging switches keep their own confirmation.
  */
 export function SettingsPage() {
   const settings = useQuery(settingsQuery);

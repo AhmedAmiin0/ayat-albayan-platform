@@ -1,13 +1,16 @@
+import { teacherName } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { useMinuteClock } from '@/classroom/use-minute-clock';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/ui/AppText';
 import { StatusChip } from '@/ui/StatusChip';
 import { liveLessons, type LiveLesson } from './live-filter';
+import { locale } from '@/lib/locale';
 
 function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean }) {
   const { color } = useTheme();
@@ -31,7 +34,7 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
         {studentNames(lesson)}
       </AppText>
       {showTeacher ? (
-        <AppText style={small}>{t.live.teacher.replace('{name}', lesson.teacher.display_name_ar)}</AppText>
+        <AppText style={small}>{t.live.teacher.replace('{name}', teacherName(lesson.teacher, locale))}</AppText>
       ) : null}
       <JoinClassroomButton lesson={lesson} />
     </View>
@@ -46,7 +49,7 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
 export function LiveSessions({ lessons, showTeacher = false }: { lessons: readonly LessonView[]; showTeacher?: boolean }) {
   const { color } = useTheme();
   const now = useMinuteClock();
-  const items = liveLessons(lessons, now);
+  const items = liveLessons(lessons, now, useJoinWindow());
   if (items.length === 0) return null;
   return (
     <View

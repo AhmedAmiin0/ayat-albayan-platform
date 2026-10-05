@@ -11,7 +11,7 @@ const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-dig
 const isOpen = (l: AssistantLessonView): boolean => (OPEN_LESSON_STATUSES as readonly string[]).includes(l.status);
 
 function Row({ lesson }: { lesson: AssistantLessonView }) {
-  const names = lesson.student_names.join('، ');
+  const names = lesson.student_names.join(t.common.listSeparator);
   return (
     <li className="flex flex-wrap items-center gap-x-4 gap-y-2 border-b border-rule py-4">
       <span dir="ltr" className="text-lg font-semibold tabular-nums">{CLOCK.format(new Date(lesson.starts_at))}</span>

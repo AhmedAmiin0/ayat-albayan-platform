@@ -8,7 +8,7 @@ import {
   type TemplateButton,
   type TemplateParams,
 } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import { ar } from '../../common/i18n/server-text';
 import { templateParams } from './wa-json';
 import { WaError, type TemplateRow } from './whatsapp.types';
 

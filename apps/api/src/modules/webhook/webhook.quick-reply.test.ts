@@ -48,6 +48,14 @@ describe('confirm by reply (R-SCH-03)', () => {
     expect(s.lessons.confirm).toHaveBeenCalledWith({ lessonId: LESSON_ID, actor: null });
   });
 
+  it('a shorter quick_reply_window_hours looks back less far', async () => {
+    const s = asGuardian();
+    s.queries.replyWindowMs.mockResolvedValue(6 * 3_600_000);
+    await s.inbound.handle(event({ body: 'تمام' }));
+    const since = new Date(AT.getTime() - 6 * 3_600_000);
+    expect(s.queries.recentLessonOutbound).toHaveBeenCalledWith({ phone: '+966501234567', since });
+  });
+
   it('a plain «تمام» with no lesson message in 48 h: only stored, no lesson linked', async () => {
     const s = asGuardian();
     await s.inbound.handle(event({ body: 'تمام' }));

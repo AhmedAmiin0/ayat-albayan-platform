@@ -9,8 +9,6 @@ const MINUTE = 60_000;
 /** R-MSG-02: every 5 minutes. */
 const EVERY_MS = 5 * MINUTE;
 const FIRST_RUN_MS = 30_000;
-/** The day-before send time is 23–25 h ahead across DST. */
-const LOOKAHEAD_MS = 25 * 60 * MINUTE;
 /** How far back push_notifications is read to skip lessons already pushed (> any reminder window). */
 const PUSHED_SINCE_MS = 48 * 60 * MINUTE;
 
@@ -58,7 +56,9 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const summary: ReminderSummary = { lessons: 0, queued: 0, dropped: 0, pushed: 0 };
     try {
       const settings = await this.settings.all();
-      const lessons = await this.queries.upcoming({ now, until: new Date(now.getTime() + LOOKAHEAD_MS) });
+      // settings.reminder_lookahead_hours (≥ 25): the day-before send time is 23–25 h ahead across DST.
+      const until = new Date(now.getTime() + settings.reminder_lookahead_hours * 60 * MINUTE);
+      const lessons = await this.queries.upcoming({ now, until });
       summary.lessons = lessons.length;
       // Automatic messages OFF (docs/09 cut-over: the old Apps Script still reminds): queue nothing.
       if (settings.auto_messages_enabled) {
