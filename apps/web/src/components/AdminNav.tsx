@@ -30,6 +30,14 @@ const GROUPS = [
   ],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];
 
+// ≥900px the fihris sits on the mint (dark: green-grey) sidebar in cover ink; the current item is a
+// white tile with an emerald marker at the inline-start (border-s: right in RTL, left in LTR).
+const LINK = cn(
+  'group flex min-h-11 items-center gap-2 whitespace-nowrap rounded-md border-s-[3px] border-transparent px-2.5 font-medium text-ink-2 transition-colors duration-150 ease-out',
+  'hover:bg-sunk hover:text-ink shell:min-h-[38px] shell:text-cover-ink shell:hover:bg-leather-deep shell:hover:text-cover-ink',
+  'aria-[current=page]:border-lapis aria-[current=page]:bg-page aria-[current=page]:font-semibold aria-[current=page]:text-ink',
+);
+
 export type NavKey = (typeof GROUPS)[number][number]['key'];
 /** A real count from the API. `act` = work waiting for the admin (saffron, says what it is). */
 export type NavCount = { text: string; act?: boolean };
@@ -61,9 +69,9 @@ export function AdminNav({ counts = {} }: AdminNavProps) {
               <li key={item.key}>
                 <Link
                   to={item.to}
-                  className="group flex min-h-11 items-center gap-2 whitespace-nowrap rounded-md px-2.5 font-medium text-ink-2 hover:bg-sunk hover:text-ink aria-[current=page]:bg-page aria-[current=page]:font-semibold aria-[current=page]:text-ink aria-[current=page]:shadow-[0_0_0_1px_var(--rule-strong)] shell:min-h-[38px]"
+                  className={LINK}
                 >
-                  <Icon name={item.icon} className="text-ink-3 group-aria-[current=page]:text-lapis" />
+                  <Icon name={item.icon} className="text-ink-3 shell:text-cover-ink group-aria-[current=page]:text-lapis" />
                   <span>{item.label}</span>
                   {count && (
                     <>

@@ -1,10 +1,10 @@
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { StyleSheet } from 'react-native';
-import { Button } from './Button';
+import { Button, pressScale } from './Button';
 
 const styleOf = (label: string) => StyleSheet.flatten(screen.getByRole('button', { name: label }).props.style);
 
-test('secondary has the input edge, primary is green with a gold edge, ghost has none', async () => {
+test('secondary has the input edge, primary is a plain green fill, ghost has none', async () => {
   await render(
     <>
       <Button label="تأكيد" onPress={jest.fn()} />
@@ -13,7 +13,7 @@ test('secondary has the input edge, primary is green with a gold edge, ghost has
     </>,
   );
   expect(styleOf('إلغاء')).toMatchObject({ borderWidth: 1, minHeight: 44 });
-  expect(styleOf('تأكيد')).toMatchObject({ borderWidth: 1, borderColor: '#b7891f', backgroundColor: '#166534' });
+  expect(styleOf('تأكيد')).toMatchObject({ borderColor: 'transparent', backgroundColor: '#047857' });
   expect(styleOf('خروج').borderWidth).toBe(0);
   expect(styleOf('خروج').backgroundColor).toBe('transparent');
 });
@@ -32,4 +32,12 @@ test('disabled (nothing picked yet) is off but not announced busy', async () => 
   await fireEvent.press(button);
   expect(onPress).not.toHaveBeenCalled();
   expect(button.props.accessibilityState).toEqual({ disabled: true, busy: false });
+});
+
+test('press feedback: shrinks 2% while held, never when disabled', async () => {
+  expect(pressScale(true, false)).toBe(0.98);
+  expect(pressScale(false, false)).toBe(1);
+  expect(pressScale(true, true)).toBe(1);
+  await render(<Button label="تأكيد" onPress={jest.fn()} />);
+  expect(styleOf('تأكيد').transform).toEqual([{ scale: 1 }]);
 });

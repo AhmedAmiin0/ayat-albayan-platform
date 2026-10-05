@@ -1,7 +1,7 @@
 /* Raw colour tokens (docs/07 §3). Values are packages/shared/src/theme.ts as hex (tokens.test.ts diffs
-   them, and the contrast test runs there). Tailwind reads them via @theme inline. Green and black (owner,
-   2026-10-03): green-black ink and covers, deep green actions with a gold edge (`--lapis*` is the
-   historical name), teal for done/ok, gold decorates.
+   them, and the contrast test runs there). Tailwind reads them via @theme inline. «Emerald Mint» (owner,
+   2026-10-05): white pages, a light mint sidebar, a soft green-grey dark. `--lapis` is the action as
+   text/link/focus, `--lapis-fill` the primary button's fill (white text on it); gold is ornament only.
    <html data-theme> is always set at boot (index.html resolves "auto" via matchMedia);
    the media block is the no-JS fallback. tokens.test.ts keeps the two dark blocks identical. */
 
@@ -9,25 +9,26 @@
 :root,
 [data-theme='light'] {
   color-scheme: light;
-  --margin: #eef3f0;
+  --margin: #f3f7f5;
   --page: #ffffff;
   --raised: #ffffff;
-  --sunk: #f3f7f4;
-  --ink: #0b1410;
-  --ink-2: #2f3b35;
-  --ink-3: #4a5750;
-  --rule: #e0e8e3;
-  --rule-strong: #c5d2ca;
+  --sunk: #f1f5f3;
+  --ink: #17201c;
+  --ink-2: #2f3a35;
+  --ink-3: #4f5b55;
+  --rule: #e2e8e5;
+  --rule-strong: #c8d2cd;
   --rule-input: #77857d;
   --gold: #b7891f;
   --gold-soft: #e4c97e;
-  --gold-wash: #faf2dc;
-  --lapis: #166534;
-  --lapis-hover: #0f4a26;
-  --lapis-wash: #e6f4ea;
-  --on-lapis: #f3d58a;
-  --verdigris: #0f766e;
-  --verdigris-wash: #e0f4f1;
+  --gold-wash: #eef7f1;
+  --lapis: #047857;
+  --lapis-fill: #047857;
+  --lapis-hover: #065f46;
+  --lapis-wash: #ecfdf5;
+  --on-lapis: #ffffff;
+  --verdigris: #15803d;
+  --verdigris-wash: #eaf7ee;
   --saffron: #a14b06;
   --saffron-wash: #fdf1e1;
   --cinnabar: #b91c1c;
@@ -35,61 +36,109 @@
   --cinnabar-wash: #fde8e8;
   --on-cinnabar: #ffffff;
   --neutral-wash: #ebf0ed;
-  --inverse: #0b1410;
+  --inverse: #17201c;
   --on-inverse: #f5f8f6;
   --inverse-gold: #e4c97e;
-  --cover: #0d1a13;
-  --leather: #12301f;
-  --leather-deep: #0c2416;
-  --leather-lift: #1a4029;
-  --gold-on-cover: #ecd18c;
-  --cover-ink: #f8fafc;
-  --scrim: rgba(5, 12, 8, 0.5);
-  --elev-page: 0 1px 0 rgba(5, 20, 12, 0.04), 0 18px 40px -18px rgba(5, 20, 12, 0.22);
-  --elev-pop: 0 30px 60px -20px rgba(5, 20, 12, 0.45);
-  --elev-toast: 0 12px 28px -12px rgba(5, 20, 12, 0.4);
+  --cover: #ecfdf5;
+  --leather: #ecfdf5;
+  --leather-deep: #d1fae5;
+  --leather-lift: #f0fdf8;
+  --gold-on-cover: #064e3b;
+  --cover-ink: #064e3b;
+  --scrim: rgba(15, 30, 22, 0.42);
+  --elev-page: 0 1px 2px rgba(15, 30, 22, 0.05);
+  --elev-pop: 0 18px 40px -16px rgba(15, 30, 22, 0.28);
+  --elev-toast: 0 10px 24px -12px rgba(15, 30, 22, 0.3);
 }
 
-/* ---------- dark (green-black): no-JS fallback ---------- */
+/* ---------- dark (soft green-grey): no-JS fallback ---------- */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
     color-scheme: dark;
-    --margin: #050906; --page: #0a0f0c; --raised: #111a15; --sunk: #070c09;
-    --ink: #edf3ef; --ink-2: #c4d0c9; --ink-3: #9fb0a6;
-    --rule: #1f2c25; --rule-strong: #2d3f35; --rule-input: #64776c;
-    --gold: #e0b95a; --gold-soft: #6b5523; --gold-wash: #2a2210;
-    --lapis: #4fc285; --lapis-hover: #7fd9a6; --lapis-wash: #10281b; --on-lapis: #06100a;
-    --verdigris: #5eead4; --verdigris-wash: #0b2a26;
-    --saffron: #fd9f68; --saffron-wash: #33200f;
-    --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #06100a;
-    --neutral-wash: #18221d;
-    --inverse: #e2ebe5; --on-inverse: #0a0f0c; --inverse-gold: #8a6a1c;
-    --cover: #0b1510;
-    --leather: #0f2418; --leather-deep: #0a1b11; --leather-lift: #173322;
-    --scrim: rgba(0, 0, 0, 0.65);
-    --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
-    --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
-    --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
+    --margin: #1a211e;
+    --page: #1e2623;
+    --raised: #27312d;
+    --sunk: #222b27;
+    --ink: #e9efec;
+    --ink-2: #cfd8d3;
+    --ink-3: #adbab3;
+    --rule: #35413c;
+    --rule-strong: #45524c;
+    --rule-input: #74837c;
+    --gold: #e0b95a;
+    --gold-soft: #6b5a2c;
+    --gold-wash: #2a3a31;
+    --lapis: #5eead4;
+    --lapis-fill: #047857;
+    --lapis-hover: #065f46;
+    --lapis-wash: #213a2c;
+    --on-lapis: #ffffff;
+    --verdigris: #7ee2a6;
+    --verdigris-wash: #20372b;
+    --saffron: #fd9f68;
+    --saffron-wash: #3d2b1c;
+    --cinnabar: #fca5a5;
+    --cinnabar-solid: #dc4b4b;
+    --cinnabar-wash: #432628;
+    --on-cinnabar: #0f1512;
+    --neutral-wash: #2c3632;
+    --inverse: #e2ebe5;
+    --on-inverse: #1e2623;
+    --inverse-gold: #8a6a1c;
+    --cover: #18201d;
+    --leather: #18201d;
+    --leather-deep: #141b18;
+    --leather-lift: #26302c;
+    --gold-on-cover: #ecd18c;
+    --cover-ink: #e9efec;
+    --scrim: rgba(10, 16, 13, 0.5);
+    --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.12);
+    --elev-pop: 0 18px 40px -16px rgba(0, 0, 0, 0.45);
+    --elev-toast: 0 10px 24px -12px rgba(0, 0, 0, 0.4);
   }
 }
 
 /* ---------- dark: chosen or resolved at boot ---------- */
 [data-theme='dark'] {
   color-scheme: dark;
-  --margin: #050906; --page: #0a0f0c; --raised: #111a15; --sunk: #070c09;
-  --ink: #edf3ef; --ink-2: #c4d0c9; --ink-3: #9fb0a6;
-  --rule: #1f2c25; --rule-strong: #2d3f35; --rule-input: #64776c;
-  --gold: #e0b95a; --gold-soft: #6b5523; --gold-wash: #2a2210;
-  --lapis: #4fc285; --lapis-hover: #7fd9a6; --lapis-wash: #10281b; --on-lapis: #06100a;
-  --verdigris: #5eead4; --verdigris-wash: #0b2a26;
-  --saffron: #fd9f68; --saffron-wash: #33200f;
-  --cinnabar: #fca5a5; --cinnabar-solid: #dc4b4b; --cinnabar-wash: #3a1717; --on-cinnabar: #06100a;
-  --neutral-wash: #18221d;
-  --inverse: #e2ebe5; --on-inverse: #0a0f0c; --inverse-gold: #8a6a1c;
-  --cover: #0b1510;
-  --leather: #0f2418; --leather-deep: #0a1b11; --leather-lift: #173322;
-  --scrim: rgba(0, 0, 0, 0.65);
-  --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.25), 0 18px 40px -16px rgba(0, 0, 0, 0.65);
-  --elev-pop: 0 30px 60px -20px rgba(0, 0, 0, 0.7);
-  --elev-toast: 0 12px 28px -12px rgba(0, 0, 0, 0.6);
+  --margin: #1a211e;
+  --page: #1e2623;
+  --raised: #27312d;
+  --sunk: #222b27;
+  --ink: #e9efec;
+  --ink-2: #cfd8d3;
+  --ink-3: #adbab3;
+  --rule: #35413c;
+  --rule-strong: #45524c;
+  --rule-input: #74837c;
+  --gold: #e0b95a;
+  --gold-soft: #6b5a2c;
+  --gold-wash: #2a3a31;
+  --lapis: #5eead4;
+  --lapis-fill: #047857;
+  --lapis-hover: #065f46;
+  --lapis-wash: #213a2c;
+  --on-lapis: #ffffff;
+  --verdigris: #7ee2a6;
+  --verdigris-wash: #20372b;
+  --saffron: #fd9f68;
+  --saffron-wash: #3d2b1c;
+  --cinnabar: #fca5a5;
+  --cinnabar-solid: #dc4b4b;
+  --cinnabar-wash: #432628;
+  --on-cinnabar: #0f1512;
+  --neutral-wash: #2c3632;
+  --inverse: #e2ebe5;
+  --on-inverse: #1e2623;
+  --inverse-gold: #8a6a1c;
+  --cover: #18201d;
+  --leather: #18201d;
+  --leather-deep: #141b18;
+  --leather-lift: #26302c;
+  --gold-on-cover: #ecd18c;
+  --cover-ink: #e9efec;
+  --scrim: rgba(10, 16, 13, 0.5);
+  --elev-page: 0 0 0 1px rgba(0, 0, 0, 0.12);
+  --elev-pop: 0 18px 40px -16px rgba(0, 0, 0, 0.45);
+  --elev-toast: 0 10px 24px -12px rgba(0, 0, 0, 0.4);
 }

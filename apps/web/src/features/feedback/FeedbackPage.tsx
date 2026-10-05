@@ -6,6 +6,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Select } from '@/components/ui/select';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { teacherOptionsQuery } from '@/features/students/api';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
@@ -74,7 +75,7 @@ export function FeedbackPage() {
           ))}
         </Select>
       </div>
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.feedback.listError}</FormAlert>}
       {list.data?.items.length === 0 && <EmptyState title={t.feedback.empty} />}
       {list.data && list.data.items.length > 0 && (

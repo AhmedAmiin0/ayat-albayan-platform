@@ -11,7 +11,7 @@ export interface IconButtonProps extends React.ButtonHTMLAttributes<HTMLButtonEl
  * Size overrides pass both steps, e.g. `size-11 sm:size-7`.
  */
 export const iconButtonClass =
-  'grid size-11 shrink-0 place-items-center rounded-md text-ink-3 transition-colors duration-[120ms] hover:bg-sunk hover:text-ink sm:size-[34px]';
+  'grid size-11 shrink-0 place-items-center rounded-md text-ink-3 transition-colors duration-[120ms] hover:bg-sunk hover:text-ink sm:size-[34px] pointer-coarse:size-11';
 
 /** Neutral icon button (row actions, dialog close, logout). Always visible, never hover-only. */
 export const IconButton = React.forwardRef<HTMLButtonElement, IconButtonProps>(

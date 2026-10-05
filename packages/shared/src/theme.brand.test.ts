@@ -1,16 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import { palette, type ThemeName } from './theme.js';
 
-// Green and black, readable, with a green/gold primary (owner, 2026-10-03).
-it('light tokens are the green-black palette', () => {
+// «Emerald Mint» (owner, 2026-10-05): white pages, white text on the emerald primary, a mint sidebar.
+it('light tokens are the emerald mint palette', () => {
   const c = palette.light;
   expect(c.page).toBe('#ffffff'); // white page
-  expect(c.ink).toBe('#0b1410'); // green-black text
-  expect(c.lapis).toBe('#166534'); // deep green: the action
-  expect(c.onLapis).toBe('#f3d58a'); // gold on the green primary
-  expect(c.ok).toBe('#0f766e'); // teal means done/ok
-  expect(c.gold).toBe('#b7891f'); // gold decorates
+  expect(c.ink).toBe('#17201c'); // green-grey text
+  expect(c.lapis).toBe('#047857'); // emerald: the action as text
+  expect(c.lapisFill).toBe('#047857'); // the primary button's fill
+  expect(c.onLapis).toBe('#ffffff'); // white on the green primary
+  expect(c.ok).toBe('#15803d'); // green means done/ok
+  expect(c.cover).toBe('#ecfdf5'); // the light mint sidebar
+  expect(c.coverInk).toBe('#064e3b'); // dark green text on it
+  expect(c.gold).toBe('#b7891f'); // gold: small ornament only
   expect(c.bad).toBe('#b91c1c');
+});
+
+// Soft dark (owner): green-grey surfaces, never near-black; the same emerald fill, a mint-teal link.
+it('dark tokens are soft green-grey with a separate link colour', () => {
+  const c = palette.dark;
+  expect(c.page).toBe('#1e2623');
+  expect(c.raised).toBe('#27312d');
+  expect(c.lapisFill).toBe('#047857');
+  expect(c.onLapis).toBe('#ffffff');
+  expect(c.lapis).toBe('#5eead4');
+  expect(c.cover).toBe('#18201d'); // the dark sidebar
 });
 
 // OKLCH hue in degrees (Björn Ottosson's matrices), to keep the one-meaning colours apart.
@@ -44,9 +58,9 @@ describe.each(['light', 'dark'] as ThemeName[])('%s: one colour, one meaning (do
     expect(apart(c.bad, c.act)).toBeGreaterThanOrEqual(20);
   });
 
-  it('the action is green (hue 135°–165°), apart from «ok» teal and the dark cover', () => {
+  it('the action is emerald to mint-teal (hue 135°–185°), apart from «ok» and gold', () => {
     expect(hue(c.lapis)).toBeGreaterThanOrEqual(135);
-    expect(hue(c.lapis)).toBeLessThanOrEqual(165);
+    expect(hue(c.lapis)).toBeLessThanOrEqual(185);
     expect(apart(c.lapis, c.ok)).toBeGreaterThanOrEqual(15);
     expect(apart(c.lapis, c.gold)).toBeGreaterThanOrEqual(60);
   });

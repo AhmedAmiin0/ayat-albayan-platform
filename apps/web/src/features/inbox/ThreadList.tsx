@@ -51,7 +51,7 @@ export function ThreadList({ search, threads, onFilter }: ThreadListProps) {
       {threads.length === 0 ? (
         <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />
       ) : (
-        <ul aria-label={t.inbox.title} className="border-t-[3px] border-double border-gold">
+        <ul aria-label={t.inbox.title} className="border-t border-rule">
           {threads.map((th) => (
             <ThreadRow key={th.phone_e164} thread={th} search={search} active={th.phone_e164 === search.phone} />
           ))}

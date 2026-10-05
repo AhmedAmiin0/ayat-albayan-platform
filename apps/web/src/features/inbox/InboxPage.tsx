@@ -3,7 +3,8 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
-import { rail } from '@/components/ui/rail';
+import { ListSkeleton } from '@/components/ui/skeleton';
+import { paneScroll } from '@/components/ui/rail';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';
@@ -39,18 +40,23 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
           </span>
         )}
       </PageHead>
-      <div className="grid gap-[22px] shell:grid-cols-[320px_minmax(0,1fr)]">
+      {/* From 900px the inbox is exactly the frame's height: the browser page never scrolls, the
+          list, the log and the side panel each scroll on their own. Phones: one pane, it flows. */}
+      <div
+        data-testid="inbox-layout"
+        className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[600px] shell:grid-cols-[320px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
+      >
         <div
           className={cn(
             'min-w-0 transition-opacity duration-[120ms]',
-            rail,
+            paneScroll,
             phone && 'max-shell:hidden',
             threads.isPlaceholderData && 'opacity-60',
           )}
           aria-busy={threads.isPlaceholderData || undefined}
         >
           {threads.isError && <p role="alert">{t.common.error}</p>}
-          {threads.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+          {threads.isPending && <ListSkeleton rows={6} />}
           {threads.data && (
             <>
               <ThreadList search={search} threads={threads.data.items} onFilter={filter} />

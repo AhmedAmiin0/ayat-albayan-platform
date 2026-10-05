@@ -3,6 +3,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { myFeedbackQuery } from '@/features/feedback/api';
 import { FeedbackTable } from '@/features/feedback/FeedbackTable';
 import { TeacherAverages } from '@/features/feedback/TeacherAverages';
@@ -17,7 +18,7 @@ export function MyFeedback() {
       <PageHead>
         <Cartouche>{t.feedback.mine}</Cartouche>
       </PageHead>
-      {mine.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {mine.isPending && <ListSkeleton />}
       {mine.isError && <FormAlert>{t.feedback.listError}</FormAlert>}
       {average && <TeacherAverages items={[{ key: 'me', avg: average.avg_rating, n: average.n, yesPct: average.recommend_yes_pct }]} />}
       {mine.data?.items.length === 0 && <EmptyState title={t.feedback.empty} />}

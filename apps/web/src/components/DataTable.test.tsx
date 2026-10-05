@@ -59,7 +59,7 @@ describe('DataTable', () => {
     render(<DataTable columns={withMeta} data={DATA} />);
     const th = screen.getByRole('columnheader', { name: t.students.hamish });
     expect(th.getAttribute('scope')).toBe('col');
-    expect(th.className).toContain('border-s-gold-soft');
+    expect(th.className).toContain('border-s-rule');
     expect(screen.getByText('AB-0183').className).toContain('@max-[940px]:hidden');
     // The head ink stays ink-3 in every column (cell classes never leak into <th>).
     for (const head of screen.getAllByRole('columnheader')) {

@@ -96,7 +96,7 @@ export function ListRow({ leading, title, subtitle, meta, tags, trailing, onPres
     <Pressable
       accessibilityRole="button"
       onPress={onPress}
-      style={({ pressed }) => [row, pressed ? { backgroundColor: color.sunk } : null]}
+      style={({ pressed }) => [row, pressed ? { backgroundColor: color.sunk, opacity: 0.85 } : null]}
     >
       {body}
     </Pressable>
