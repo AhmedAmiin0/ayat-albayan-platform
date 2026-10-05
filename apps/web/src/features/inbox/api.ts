@@ -10,13 +10,14 @@ import type {
 import { infiniteQueryOptions, keepPreviousData, queryOptions } from '@tanstack/react-query';
 import type { LeadRow, Page } from '@/features/leads/types';
 import { apiFetch, apiSend } from '@/lib/api';
+import { env } from '@/lib/env';
 import type { InboxSearch } from './search';
 
 // Inbox routes (docs/12 §4: H1–H4, M1–M2, L1–L2) plus the existing lead routes.
 
 export const THREADS_PAGE_SIZE = 30;
-/** New WhatsApp messages arrive by webhook; the open inbox polls for them. */
-export const INBOX_REFRESH_MS = 10_000;
+/** New WhatsApp messages arrive by webhook; the open inbox polls for them (10 s; e2e 1 s). */
+export const INBOX_REFRESH_MS = env.inboxRefreshMs;
 
 export const threadsQuery = (s: InboxSearch) => {
   const params = new URLSearchParams({ page: String(s.page), pageSize: String(THREADS_PAGE_SIZE) });

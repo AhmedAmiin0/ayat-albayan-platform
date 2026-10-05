@@ -34,7 +34,12 @@ export interface Pick {
 
 /** Day, time and length are picked (a native date, two selects); only the reason is typed. */
 export async function fillForm(d: Locator, f: Pick) {
-  if (f.date) await d.getByLabel(L.otherDate).fill(f.date);
+  if (f.date) {
+    // «تاريخ آخر» is a <details> that starts closed when the lesson's day is one of the day chips.
+    const input = d.getByLabel(L.otherDate);
+    if (!(await input.isVisible())) await d.locator('summary', { hasText: L.otherDate }).click();
+    await input.fill(f.date);
+  }
   if (f.time) await d.getByLabel(/^الساعة بتوقيت/).selectOption(f.time);
   if (f.minutes) await d.getByLabel(L.duration, { exact: true }).selectOption(f.minutes);
   if (f.reason) await d.getByLabel(L.reason, { exact: true }).fill(f.reason);

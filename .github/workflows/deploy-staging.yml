@@ -27,27 +27,60 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
-    # A ci run on develop that failed, or that came from a fork/PR, deploys nothing.
+  # Is the develop environment set up? Without the deploy key an automatic run is skipped with a
+  # warning (not a red ✗ on every merge); a run started by hand still fails and says what is missing.
+  preflight:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
        && github.event.workflow_run.head_repository.full_name == github.repository)
+    runs-on: ubuntu-latest
+    timeout-minutes: 2
+    environment: develop
+    outputs:
+      ready: ${{ steps.check.outputs.ready }}
+    steps:
+      - id: check
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        run: |
+          if [ -n "$SSH_PRIVATE_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; exit 0; fi
+          echo "ready=false" >> "$GITHUB_OUTPUT"
+          msg="staging deploy skipped: add the secret SSH_PRIVATE_KEY (and SUPABASE_ACCESS_TOKEN, SUPABASE_DB_PASSWORD, variable VITE_SUPABASE_ANON_KEY) to the develop environment"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "::error::$msg"; exit 1; fi
+          echo "::warning::$msg"
+
+  deploy:
+    needs: preflight
+    if: needs.preflight.outputs.ready == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: develop
     env:
       DEST: ${{ vars.DEPLOY_DIR || '/opt/ayat-albayan-staging' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # The exact commit ci passed on (auto), or the chosen branch (by hand).
           ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: pnpm/action-setup@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version-file: .nvmrc
           cache: pnpm
+
+      - name: Build the web app (before anything on the server changes)
+        if: ${{ !inputs.env_only }}
+        env:
+          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
+          # Public by design; accepted as a variable or a secret.
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+        run: |
+          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add VITE_SUPABASE_ANON_KEY (staging anon key) to the develop environment, as a variable or a secret"; exit 1; }
+          pnpm i --frozen-lockfile
+          pnpm --filter @ab/db --filter @ab/shared build >/dev/null
+          pnpm --filter web build
 
       - name: SSH key
         env:
@@ -129,27 +162,44 @@ jobs:
         if: ${{ inputs.env_only }}
         run: ssh target "cd $DEST && docker compose up -d --force-recreate --remove-orphans"
 
-      - name: Build and upload the web app (atomic swap)
+      - name: Upload the web app (atomic swap)
         if: ${{ !inputs.env_only }}
-        env:
-          VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY }}
         run: |
-          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add the variable VITE_SUPABASE_ANON_KEY (staging anon key) to the develop environment"; exit 1; }
-          pnpm i --frozen-lockfile
-          pnpm --filter @ab/db --filter @ab/shared build >/dev/null
-          pnpm --filter web build
           ssh target "rm -rf $DEST/web.new && mkdir -p $DEST/web.new"
           tar -C apps/web/dist -cf - . | ssh target "tar --no-same-owner -x -C $DEST/web.new && chmod -R o+rX $DEST/web.new \
             && rm -rf $DEST/web.old && { [ ! -d $DEST/web ] || mv $DEST/web $DEST/web.old; } && mv $DEST/web.new $DEST/web"
 
       - name: Health check
+        id: health
         run: |
           url="${{ vars.API_URL || 'https://api.ayatalbayan.com' }}"
           if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health"
           else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
           echo; echo "staging is up"
+
+      # The API or web swap broke staging: put the previous code and web build back. Database
+      # migrations are not undone (they only add); the next good deploy picks up from here.
+      - name: Roll back to the previous version
+        if: ${{ failure() && steps.health.conclusion == 'failure' && !inputs.env_only }}
+        run: |
+          ssh target "cd $DEST && { [ ! -d src.old ] || { rm -rf src.bad && mv src src.bad && mv src.old src; }; } \
+            && { [ ! -d web.old ] || { rm -rf web.bad && mv web web.bad && mv web.old web; }; } \
+            && docker compose up -d --build --remove-orphans"
+          echo "::error::health check failed: staging rolled back to the previous version (bad build kept in src.bad / web.bad)"
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Staging deploy: ${{ job.status }}"
+            echo ""
+            echo "| | |"
+            echo "|---|---|"
+            echo "| Commit | \`$(git rev-parse --short HEAD)\` $(git log -1 --format=%s | head -c 90) |"
+            echo "| Trigger | ${{ github.event_name }} |"
+            echo "| Web | https://app.ayatalbayan.com |"
+            echo "| API | ${{ vars.API_URL || 'https://api.ayatalbayan.com' }}/health |"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Remove the key
         if: always()

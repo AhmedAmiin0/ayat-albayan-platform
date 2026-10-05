@@ -4,13 +4,12 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
+import { loadEnv } from '../../env';
 import { MessageWorker, type SendOutcome } from './message.worker';
 import { SendGate } from './send-gate';
 import { SenderQueries } from './sender.queries';
+import { senderTiming } from './sender-timing';
 
-const POLL_MS = 30_000;
-/** Soon after boot, not at once: every API test boots AppModule (as ReportPdfJob notes). */
-const FIRST_RUN_MS = 30_000;
 /** ponytail: 50 per pass, one at a time; batch the Graph calls if volume ever needs it. */
 const BATCH = 50;
 
@@ -37,7 +36,8 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
 
   onApplicationBootstrap(): void {
     const tick = () => void this.kick();
-    this.timers.push(setTimeout(tick, FIRST_RUN_MS).unref(), setInterval(tick, POLL_MS).unref());
+    const { firstMs, everyMs } = senderTiming(loadEnv().MESSAGE_SENDER_POLL_MS);
+    this.timers.push(setTimeout(tick, firstMs).unref(), setInterval(tick, everyMs).unref());
   }
 
   onModuleDestroy(): void {

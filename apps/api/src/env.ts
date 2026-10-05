@@ -54,6 +54,11 @@ const schema = z.object({
   LIVEKIT_API_KEY: optionalSecret,
   LIVEKIT_API_SECRET: optionalSecret,
   /**
+   * The outbound sender's tick in ms (default 30 s). e2e sets ~1 s so a spec waits for one tick, not
+   * thirty seconds; production leaves it unset.
+   */
+  MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
+  /**
    * Lesson recordings (env.recording.ts): the Supabase Storage S3 endpoint the LiveKit egress
    * uploads the MP4s to. All five or none: unset = lessons are not recorded, nothing else changes.
    */
