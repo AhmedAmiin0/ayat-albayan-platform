@@ -18,13 +18,15 @@ export interface ProposeFormProps {
   tz: string;
   onBack: () => void;
   onDone: (message: string) => void;
+  /** Inside a Dialog (phones): the dialog carries the title and the frame. */
+  bare?: boolean;
 }
 
 /**
  * «اقترح ميعاد تاني» (R-SCH-08): a native date + a time select in the teacher's zone (never free
  * text, rule 6) and an optional note. The admin approves it as a reschedule, conflicts checked there.
  */
-export function ProposeForm({ lesson, tz, onBack, onDone }: ProposeFormProps) {
+export function ProposeForm({ lesson, tz, onBack, onDone, bare }: ProposeFormProps) {
   const queryClient = useQueryClient();
   const start = zonedParts(new Date(lesson.starts_at), tz);
   const [date, setDate] = useState(start.date);
@@ -49,13 +51,13 @@ export function ProposeForm({ lesson, tz, onBack, onDone }: ProposeFormProps) {
     <form
       noValidate
       aria-label={t.teacherDash.propose.title}
-      className="grid gap-3 rounded-md bg-sunk px-4 py-3.5"
+      className={bare ? 'grid gap-3' : 'grid gap-3 rounded-md bg-sunk px-4 py-3.5'}
       onSubmit={(e) => {
         e.preventDefault();
         send.mutate();
       }}
     >
-      <h4 ref={title} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>
+      {!bare && <h4 ref={title} tabIndex={-1} className="font-semibold outline-none">{t.teacherDash.propose.title}</h4>}
       <div className="grid gap-3 sm:grid-cols-2">
         <Field label={t.teacherDash.propose.date}>
           {(p) => <Input {...p} type="date" dir="ltr" min={today} value={date} onChange={(e) => setDate(e.target.value)} />}

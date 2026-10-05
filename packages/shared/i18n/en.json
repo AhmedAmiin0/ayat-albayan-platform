@@ -1244,6 +1244,8 @@
     }
   },
   "payments": {
+    "filters": "Filter payments",
+    "showResults": "Show results",
     "title": "Payments",
     "record": "Record payment",
     "subscription": "Subscription",
@@ -1643,6 +1645,8 @@
     "mediaNotDownloaded": "Viewing files isn't available here yet",
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
+    "leadSheet": "Lead details & registration",
+    "subscriptionSheet": "Children & packages",
     "statusSaved": "Status updated",
     "registerStudent": "Register the student",
     "editLeadData": "Edit details",

@@ -26,6 +26,7 @@ export function SubmitTemplateDialog({ template: tpl, busy, onConfirm, onClose }
       glyph={{ tone: 'act', shape: 'hollow' }}
       description={t.templates.submitConfirm.replace('{name}', name)}
       onClose={onClose}
+      layout="center"
       actions={
         <>
           <Button variant="ghost" onClick={onClose}>

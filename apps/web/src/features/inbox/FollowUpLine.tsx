@@ -75,6 +75,7 @@ export function FollowUpLine({ lead, onDone }: FollowUpLineProps) {
           title={f.resumeLeadTitle}
           glyph={{ tone: 'act', shape: 'hollow' }}
           onClose={() => setConfirming(false)}
+          compact
           actions={
             <>
               <Button variant="secondary" onClick={() => setConfirming(false)}>

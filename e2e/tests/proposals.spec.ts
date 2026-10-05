@@ -62,7 +62,8 @@ test.describe('lesson proposal — teacher proposes, admin approves (R-SCH-08)',
     await teacher.getByRole('tab', { name: ar.teacherDash.week }).click();
     const card = teacher.getByRole('article', { name: /ريم/ });
     await card.getByRole('button', { name: ar.teacherDash.proposeReschedule }).click();
-    const form = card.getByRole('form', { name: ar.teacherDash.propose.title });
+    // The form sits in the card from 640px and in a full-screen dialog on a phone: find it by name.
+    const form = teacher.getByRole('form', { name: ar.teacherDash.propose.title });
     const time = form.getByLabel(ar.teacherDash.propose.time);
     await expect(time).toHaveValue(cairoClock(startsAt));
     await time.selectOption(cairoClock(movedTo));

@@ -16,7 +16,7 @@ export function ReceiptDialog({ payment, onClose }: { payment: PaymentView; onCl
   const pdf = payment.receipt_path?.endsWith('.pdf') ?? false;
 
   return (
-    <Dialog title={t.payments.receipt} description={studentLabel(payment.student)} onClose={onClose}>
+    <Dialog title={t.payments.receipt} description={studentLabel(payment.student)} onClose={onClose} layout="center">
       {signed.isError && <FormAlert>{apiErrorText(signed.error, t.payments.error)}</FormAlert>}
       {signed.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {signed.data &&

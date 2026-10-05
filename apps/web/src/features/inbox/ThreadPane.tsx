@@ -4,6 +4,7 @@ import { useEffect, useId, useState } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Toast } from '@/components/ui/toast';
+import { usePhone } from '@/components/ui/use-narrow';
 import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
@@ -17,6 +18,7 @@ import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
 import { sendErrorText } from './TextComposer';
 import { ThreadHeader } from './ThreadHeader';
+import { ThreadSideSheet } from './ThreadSideSheet';
 
 export interface ThreadPaneProps {
   phone: string;
@@ -27,12 +29,15 @@ export interface ThreadPaneProps {
  * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the message log, the reply box and beside it
  * (below it under 1280px) the lead's qualification panel, or the guardian's children and packages.
  * Teacher mode: the log and the reply box only; their own chat with the academy is read-only.
+ * Phones (< 640px): the panel is a full-screen sheet opened from the thread header instead.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
   const headingId = useId();
   // The lead panel's toasts live here: «تسجيل الطالب» turns the aside into the family's panel.
   const [notice, setNotice] = useState<LeadNotice | null>(null);
+  const phoneView = usePhone();
+  const [sheet, setSheet] = useState(false);
   const detail = useInfiniteQuery(threadQuery(phone));
   const templates = useQuery(templatesQuery);
   const th = detail.data?.pages[0]?.thread ?? null;
@@ -60,13 +65,38 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
     lessons: detail.data.pages[0]?.lessons ?? [],
   };
   const people = admin ? (detail.data.pages[0]?.people ?? null) : null;
-  const aside = isLead || !!people?.guardian;
+  const panel = isLead || !!people?.guardian;
+  const aside = panel && !phoneView;
+  const side = (
+    <>
+      {isLead && <LeadPanel phone={phone} onNotice={setNotice} />}
+      {people?.guardian && <SubscribePanel people={people} />}
+    </>
+  );
+  const sheetLabel = isLead ? t.inbox.leadSheet : t.inbox.subscriptionSheet;
+  const sheetOpen = sheet && panel && phoneView;
+  // An open phone sheet covers the pane: its toast shows inside the sheet (it stays open, like the aside).
+  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />;
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   return (
     <section aria-labelledby={headingId} className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col">
-      <ThreadHeader thread={th} listSearch={listSearch} headingId={headingId} badge={people && threadBadge(people)} />
+      <ThreadHeader
+        thread={th}
+        listSearch={listSearch}
+        headingId={headingId}
+        badge={people && threadBadge(people)}
+        action={
+          panel &&
+          phoneView && (
+            <ThreadSideSheet label={sheetLabel} open={sheet} onOpenChange={setSheet}>
+              {side}
+              {sheetOpen && toast}
+            </ThreadSideSheet>
+          )
+        }
+      />
       <div
         className={cn(
           'grid gap-6 shell:min-h-0 shell:flex-1',
@@ -92,10 +122,9 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
             <Composer key={phone} thread={th} context={context} />
           )}
         </div>
-        {isLead && <LeadPanel phone={phone} onNotice={setNotice} />}
-        {people?.guardian && <SubscribePanel people={people} />}
+        {aside && side}
       </div>
-      {notice && <Toast {...notice} onDismiss={() => setNotice(null)} />}
+      {!sheetOpen && toast}
     </section>
   );
 }

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { resetAbrar, seedFamily, seedLesson } from '../support/schedule';
+import { restingBox } from '../support/settle';
 import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Responsive guard (owner, 2026-10-05: "fix the responsive issues"): the main screens never scroll
@@ -60,8 +61,14 @@ test.describe('no horizontal overflow on the main screens', () => {
       // A dialog never runs off the screen: its body scrolls inside the panel.
       await settle(admin, `/admin/students/${studentId}`);
       await admin.getByRole('button', { name: ar.subscriptions.new }).first().click();
-      const box = await admin.getByRole('dialog', { name: ar.subscriptions.new }).boundingBox();
-      expect.soft((box?.y ?? 0) + (box?.height ?? 0), `dialog bottom @${width}px`).toBeLessThanOrEqual(844);
+      const dialog = admin.getByRole('dialog', { name: ar.subscriptions.new });
+      const box = await restingBox(dialog);
+      // Polled: a slow runner can still be easing the sheet in (845.6 once on CI, at rest 844).
+      const bottom = async () => {
+        const b = await dialog.boundingBox();
+        return (b?.y ?? 0) + (b?.height ?? 0);
+      };
+      await expect.soft.poll(bottom, { message: `dialog bottom @${width}px` }).toBeLessThanOrEqual(844.5);
       expect.soft((box?.x ?? 0) + (box?.width ?? 0), `dialog right @${width}px`).toBeLessThanOrEqual(width);
 
       await settle(teacher, '/teacher');

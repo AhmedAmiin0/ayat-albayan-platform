@@ -1,12 +1,11 @@
-import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { StudentPicker } from '@/features/subscriptions/StudentPicker';
+import { Dialog } from '@/components/ui/dialog';
+import { Icon } from '@/components/ui/icon';
+import { usePhone } from '@/components/ui/use-narrow';
 import { t } from '@/lib/i18n';
-import type { PaymentFilters } from './api';
+import { filterParams, type PaymentFilters } from './api';
+import { PaymentFilterFields } from './PaymentFilterFields';
 
 type Props = {
   value: PaymentFilters;
@@ -16,42 +15,34 @@ type Props = {
 };
 
 /**
- * Student (search), date range and kind; the method filter sits with the table's column filters.
- * Every value lives in the URL, so a reload or a shared link keeps them.
+ * Student, date range and kind (every value in the URL, so a reload or a shared link keeps them),
+ * inline from 640px; on phones (owner, 2026-10-05: no form bars) a «تصفية المدفوعات» button with
+ * the active count opens the same fields in a full-screen Dialog.
  */
 export function PaymentFiltersBar({ value, studentName, onChange }: Props) {
+  const phone = usePhone();
+  const [open, setOpen] = useState(false);
   const [picked, setPicked] = useState<string | null>(null);
   const name = picked ?? studentName ?? '';
+  const fields = <PaymentFilterFields value={value} onChange={onChange} name={name} setPicked={setPicked} />;
+  if (!phone) return fields;
+  const active = Object.keys(filterParams(value)).length;
   return (
-    <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] sm:items-end">
-      {value.studentId ? (
-        <p className="flex min-h-11 items-center gap-2 text-sm">
-          <span className="font-semibold text-ink">{name}</span>
-          <Button type="button" variant="ghost" size="sm" onClick={() => (setPicked(null), onChange({ studentId: undefined }))}>
-            {t.finance.allStudents}
-          </Button>
-        </p>
-      ) : (
-        <StudentPicker onPick={(s) => (setPicked(s.name), onChange({ studentId: s.id }))} />
+    <div className="mb-4">
+      <Button variant="secondary" aria-haspopup="dialog" className="w-full" onClick={() => setOpen(true)}>
+        <Icon name="sliders" />
+        {t.payments.filters}
+        {active > 0 && <span className="tabular-nums">({active})</span>}
+      </Button>
+      {open && (
+        <Dialog
+          title={t.payments.filters}
+          onClose={() => setOpen(false)}
+          actions={<Button onClick={() => setOpen(false)}>{t.payments.showResults}</Button>}
+        >
+          {fields}
+        </Dialog>
       )}
-      <Field label={t.finance.from}>
-        {(p) => <Input {...p} type="date" dir="ltr" value={value.from ?? ''} onChange={(e) => onChange({ from: e.target.value || undefined })} />}
-      </Field>
-      <Field label={t.finance.to}>
-        {(p) => <Input {...p} type="date" dir="ltr" value={value.to ?? ''} onChange={(e) => onChange({ to: e.target.value || undefined })} />}
-      </Field>
-      <Field label={t.finance.kind}>
-        {(p) => (
-          <Select {...p} value={value.kind ?? ''} onChange={(e) => onChange({ kind: (e.target.value || undefined) as PaymentKind | undefined })}>
-            <option value="">{t.finance.all}</option>
-            {PAYMENT_KINDS.map((k) => (
-              <option key={k} value={k}>
-                {t.enums.paymentKind[k]}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
     </div>
   );
 }

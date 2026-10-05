@@ -44,7 +44,7 @@ export function MergeDialog({ kept, merged, onConfirm, onCancel }: MergeDialogPr
   );
 
   return (
-    <Dialog title={t.students.mergeTitle} onClose={onCancel} actions={actions} className="max-w-[560px]">
+    <Dialog title={t.students.mergeTitle} onClose={onCancel} actions={actions} className="max-w-[560px]" compact>
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 border-y border-rule py-3 text-sm">
         {([
           [t.students.mergeKeep, kept],

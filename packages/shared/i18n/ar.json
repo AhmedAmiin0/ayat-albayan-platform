@@ -1244,6 +1244,8 @@
     }
   },
   "payments": {
+    "filters": "تصفية المدفوعات",
+    "showResults": "عرض النتائج",
     "title": "المدفوعات",
     "record": "تسجيل دفعة",
     "subscription": "الاشتراك",
@@ -1643,6 +1645,8 @@
     "mediaNotDownloaded": "عرض الملفات غير متاح هنا بعد",
     "sendFailed": "لم تُرسل الرسالة، حاول مرة أخرى",
     "leadPanel": "العميل",
+    "leadSheet": "بيانات العميل والتسجيل",
+    "subscriptionSheet": "الأبناء والاشتراكات",
     "statusSaved": "تم تغيير الحالة",
     "registerStudent": "تسجيل الطالب",
     "editLeadData": "تعديل البيانات",

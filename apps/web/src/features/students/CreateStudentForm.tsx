@@ -80,7 +80,7 @@ export function CreateStudentForm({ onSubmit, onCancel, error, initial, title }:
   );
 
   return (
-    <Dialog title={title ?? t.students.add} onClose={onCancel} actions={actions} className="max-w-[640px]">
+    <Dialog title={title ?? t.students.add} onClose={onCancel} actions={actions} className="max-w-[640px]" wide>
       <form
         id={formId}
         noValidate

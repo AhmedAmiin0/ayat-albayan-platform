@@ -15,7 +15,7 @@ import { VoidPaymentDialog } from './VoidPaymentDialog';
 function Receipt({ scope, payment, onClose }: { scope: Scope; payment: TeacherPaymentView; onClose: () => void }) {
   const signed = useQuery({ queryKey: ['teacher-receipt', payment.id], queryFn: () => receiptUrl(scope, payment.id), staleTime: 30 * 60_000 });
   return (
-    <Dialog title={t.payments.receipt} onClose={onClose}>
+    <Dialog title={t.payments.receipt} onClose={onClose} layout="center">
       {signed.isError && <FormAlert>{apiErrorText(signed.error, t.earnings.error)}</FormAlert>}
       {signed.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {signed.data && (

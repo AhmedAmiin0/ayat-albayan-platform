@@ -4,6 +4,7 @@ import { resetAbrar, seedFamily, setAvailability, withSql } from '../support/sch
 import { fillStable } from '../support/fill';
 import { uploadInvoice } from '../support/invoice';
 import { stubInbound, stubReset } from '../support/wa-stub';
+import { sidePanel } from '../support/thread-panel';
 
 // Subscribe from the chat (R-SUB-01, R-LEAD-02, R-LEAD-06): a new lead writes on WhatsApp → the
 // thread says «غير مشترك» → «اشترك» books a regular package (new guardian + student) → «اعمل
@@ -50,7 +51,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await expect(thread.locator('header').getByText(badge.none, { exact: true })).toBeVisible();
 
     // «اشترك» opens the wizard with the lead and a regular package (not the trial).
-    await thread.getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
+    await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=.*pkg=/);
     await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
     await admin.getByRole('button', { name: ar.booking.next }).click();
@@ -78,7 +79,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     // Back in the chat: the family is subscribed, and the child's package is beside the chat.
     await admin.getByRole('link', { name: ar.inbox.subscription.backToChat }).click();
     await expect(thread.locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
-    const family = admin.getByRole('complementary', { name: ar.inbox.subscription.title });
+    const family = await sidePanel(admin, 'family');
     await expect(family.getByText(student, { exact: true })).toBeVisible();
     await expect(family.getByRole('button', { name: new RegExp(ar.subscriptions.new) })).toBeVisible();
   });
@@ -96,7 +97,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     await admin.getByRole('link', { name: openThread(guardian) }).click({ timeout: 30_000 });
     const thread = pane(admin, guardian);
     await expect(thread.locator('header').getByText(badge.none, { exact: true })).toBeVisible();
-    await thread.getByRole('button', { name: `${ar.subscriptions.new} — ${student}` }).click();
+    await (await sidePanel(admin, 'family')).getByRole('button', { name: `${ar.subscriptions.new} — ${student}` }).click();
     await saveSubscription(admin, student);
     await expect(thread.locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
 
@@ -117,7 +118,7 @@ test.describe('subscribe from the chat (R-SUB-01)', () => {
     const admin = await asRole('admin');
     await admin.goto('/admin/inbox');
     await admin.getByRole('link', { name: openThread(guardian) }).click({ timeout: 30_000 });
-    await pane(admin, guardian).getByRole('button', { name: `${ar.subscriptions.new} — هند` }).click();
+    await (await sidePanel(admin, 'family')).getByRole('button', { name: `${ar.subscriptions.new} — هند` }).click();
     await saveSubscription(admin, 'هند');
     await expect(pane(admin, guardian).locator('header').getByText(badge.subscribed, { exact: true })).toBeVisible();
     const lead = await withSql((sql) => sql<{ status: string }[]>`select status from public.leads where phone_e164 = ${phone}`);

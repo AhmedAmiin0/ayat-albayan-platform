@@ -1,5 +1,6 @@
 import { formatPhone, type SubscriptionBadge, type ThreadView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
+import type { ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
@@ -18,10 +19,12 @@ export interface ThreadHeaderProps {
   headingId: string;
   /** The family's subscription (threadBadge); null for a teacher or an unknown number. */
   badge: SubscriptionBadge | null;
+  /** Phones: the opener of the side panel's sheet (ThreadSideSheet), on its own row at the end. */
+  action?: ReactNode;
 }
 
 /** Name, phone, who the number is (lead status chip / guardian / teacher), «مشترك» and the source. */
-export function ThreadHeader({ thread: th, listSearch, headingId, badge }: ThreadHeaderProps) {
+export function ThreadHeader({ thread: th, listSearch, headingId, badge, action }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   return (
@@ -49,6 +52,7 @@ export function ThreadHeader({ thread: th, listSearch, headingId, badge }: Threa
         {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         <span>{timesInText()}</span>
       </span>
+      {action}
     </header>
   );
 }
