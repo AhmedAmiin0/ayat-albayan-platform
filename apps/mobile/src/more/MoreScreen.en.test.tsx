@@ -15,7 +15,7 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 test('an LTR run reads en.json, and «اللغة» offers العربية', async () => {
   expect(locale).toBe('en');
-  expect(t).toBe(en);
+  expect(t).toEqual(en);
   await render(<MoreScreen />);
   expect(screen.getByRole('header', { name: en.mobile.more })).toBeTruthy();
   expect(screen.getByRole('header', { name: en.language.label })).toBeTruthy();

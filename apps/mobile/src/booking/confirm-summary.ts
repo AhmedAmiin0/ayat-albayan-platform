@@ -1,10 +1,11 @@
-import { formatPhone, normalizePhone } from '@ab/shared';
+import { formatPhone, normalizePhone, teacherName } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { ltr } from '@/ui/Ltr';
 import type { InvoiceDraft } from './contract';
 import type { TrialDraft } from './draft';
 import type { MakeupDraft } from './makeup-draft';
 import { whenText } from './slots';
+import { locale } from '@/lib/locale';
 
 export type SummaryRow = [label: string, value: string];
 
@@ -27,7 +28,7 @@ export function summary(d: TrialDraft): SummaryRow[] {
       `${d.guardianName.trim()} · ${ltr(formatPhone(phone.ok ? phone.e164 : d.phone))}`,
     ],
   ];
-  if (d.teacher) rows.push([t.booking.steps.teacher, d.teacher.display_name_ar]);
+  if (d.teacher) rows.push([t.booking.steps.teacher, teacherName(d.teacher, locale)]);
   if (d.pkg !== 'trial') rows.push([t.booking.steps.package, t.enums.packageSize[d.pkg]]);
   if (d.startsAt) rows.push([t.booking.startsOn, whenText(d.startsAt, d.tz)]);
   rows.push([t.booking.pickDuration, durationText(d.durationMin)]);

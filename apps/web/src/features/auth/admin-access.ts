@@ -23,6 +23,7 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/finance', 'dashboard.read'],
   ['/admin/pricing', 'pricing.read'],
   ['/admin/settings', 'settings.read'],
+  ['/admin/translations', 'translations.manage'],
   ['/admin/activity', 'activity.read'],
   ['/admin/roles', 'roles.manage'],
 ];

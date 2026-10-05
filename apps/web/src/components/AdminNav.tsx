@@ -32,6 +32,7 @@ const GROUPS = [
   [
     { key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe', permission: 'pricing.read' },
     { key: 'settings', to: '/admin/settings', label: t.settings.title, icon: 'sliders', permission: 'settings.read' },
+    { key: 'translations', to: '/admin/translations', label: t.translations.nav, icon: 'template', permission: 'translations.manage' },
     { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock', permission: 'activity.read' },
     { key: 'roles', to: '/admin/roles', label: t.nav.roles, icon: 'users', permission: 'roles.manage' },
   ],

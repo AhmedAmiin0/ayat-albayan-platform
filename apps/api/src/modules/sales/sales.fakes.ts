@@ -10,6 +10,8 @@ import { SalesAssignQueries } from './sales-assign.queries';
 import type { SalesLessonRow } from './sales-lessons';
 import type { SalesOwnership } from './sales-ownership';
 import { SalesQueries, type SalesSubscriptionRow } from './sales.queries';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 export const A = 'a1000000-0000-4000-8000-00000000000a';
 export const B = 'b1000000-0000-4000-8000-00000000000b';
@@ -61,6 +63,7 @@ export async function salesApp() {
     .overrideProvider(SalesQueries).useValue(sales)
     .overrideProvider(SalesAssignQueries).useValue(assign)
     .overrideProvider(AuditService).useValue(audit)
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

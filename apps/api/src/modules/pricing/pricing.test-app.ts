@@ -7,6 +7,8 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { fakeFx } from '../fx/fx.fakes';
 import { FX_FETCHER } from '../fx/fx.fetcher';
 import { FxQueries } from '../fx/fx.queries';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'admin@x.com', role: 'admin' },
@@ -27,6 +29,7 @@ export async function pricingApp() {
     .useValue(fx.fetcher)
     .overrideProvider(FxQueries)
     .useValue(fx.queries)
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

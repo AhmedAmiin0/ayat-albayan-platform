@@ -1,17 +1,17 @@
 import { SAR_PER_USD_PEG, type FxRate } from '@ab/shared';
 import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
+import { SettingsService } from '../../common/settings/settings.service';
 import { FX_FETCHER, type FxFetcher, type FxSnapshot } from './fx.fetcher';
 import { FxQueries, type FxRow } from './fx.queries';
 
 const HOUR_MS = 3_600_000;
-const FRESH_MS = 24 * HOUR_MS;
 /** After a failed call the provider is left alone this long (it is rate-limited: docs/08 §4). */
 const RETRY_MS = 30 * 60_000;
 /** SAR is pegged at 3.75 per USD; a provider USD rate further off than this is a provider fault. */
 const USD_TOLERANCE = 0.05;
 
 /**
- * SAR→X rates (docs/08 §4): a rate fetched < 24 h ago is reused; otherwise the API is read and
+ * SAR→X rates (docs/08 §4): a rate fetched < settings.fx_fresh_hours (24) ago is reused; otherwise the API is read and
  * stored; if it fails, the newest stored rate (with its age); if none, USD falls back to the peg.
  * A failed call (or a failed save) is not retried for RETRY_MS: quotes use the fallbacks meanwhile.
  */
@@ -24,11 +24,13 @@ export class FxService {
   constructor(
     @Inject(FX_FETCHER) private readonly fetcher: FxFetcher,
     private readonly queries: FxQueries,
+    private readonly settings: SettingsService,
   ) {}
 
   async rateSarTo(quote: string): Promise<FxRate> {
     const stored = await this.queries.newest(quote);
-    if (stored && Date.now() - Date.parse(stored.fetched_at) < FRESH_MS) return fromRow(stored, false);
+    const freshMs = (await this.settings.all()).fx_fresh_hours * HOUR_MS;
+    if (stored && Date.now() - Date.parse(stored.fetched_at) < freshMs) return fromRow(stored, false);
     try {
       const snap = await this.refresh();
       const rate = snap.rates[quote];

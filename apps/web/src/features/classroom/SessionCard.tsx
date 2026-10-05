@@ -9,6 +9,7 @@ import { CopyLinkButton } from './CopyLinkButton';
 import { SendLinkButton } from './SendLinkButton';
 import { sessionChip, type SessionGroup } from './sessions';
 import { StaffJoinButton } from './StaffJoinButton';
+import { teacherLabel } from '@/lib/teacher-label';
 
 /** Times in the viewer's own zone (the browser's), 24-hour, Western digits. */
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
@@ -36,10 +37,10 @@ export function SessionCard({ lesson, group }: { lesson: LessonView; group: Sess
         </p>
         <p className="font-semibold">
           <span className="text-xs font-normal text-ink-3">{t.classroom.admin.students} </span>
-          {lesson.students.map((s) => s.name).join('، ')}
+          {lesson.students.map((s) => s.name).join(t.common.listSeparator)}
         </p>
         <p className="text-sm text-ink-2">
-          {t.classroom.admin.teacher} {lesson.teacher.display_name_ar}
+          {t.classroom.admin.teacher} {teacherLabel(lesson.teacher)}
         </p>
       </div>
       <div className="grid justify-items-start gap-2 sm:justify-items-end">

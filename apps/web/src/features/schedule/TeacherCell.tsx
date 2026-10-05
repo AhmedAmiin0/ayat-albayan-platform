@@ -20,7 +20,7 @@ export interface TeacherCellProps {
  * the admin's work, so no saffron), and any time off in the window as one marginal note each.
  */
 export function TeacherCell({ teacher, now }: TeacherCellProps) {
-  const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.teachers.listSeparator);
+  const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   const load = { students: teacher.students_count, max_students: teacher.max_students };
   return (
     <div className="grid min-w-0 gap-1 text-start">

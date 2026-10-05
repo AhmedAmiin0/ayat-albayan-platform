@@ -7,7 +7,7 @@ import { settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } 
 export interface SettingsFormState {
   form: SettingsForm;
   errors: SettingsErrors;
-  set: (patch: Partial<SettingsForm>) => void;
+  set: (patch: SettingsForm) => void;
   /** Validates every field, then one PATCH /settings (audited); errors stay on their fields. */
   submit: () => void;
   saving: boolean;
@@ -27,10 +27,12 @@ export function useSettingsForm(settings: AcademySettings, onSaved: () => void):
     mutationFn: updateSettings,
     onSuccess: (next) => {
       queryClient.setQueryData(['settings'], next);
+      // The public subset (join window, upload limit, …) other screens read.
+      void queryClient.invalidateQueries({ queryKey: ['settings', 'public'] });
       onSaved();
     },
   });
-  const set = (patch: Partial<SettingsForm>) => setForm((f) => ({ ...f, ...patch }));
+  const set = (patch: SettingsForm) => setForm((f) => ({ ...f, ...patch }));
   const submit = () => {
     const result = settingsUpdate(form);
     if (!result.ok) return setErrors(result.errors);

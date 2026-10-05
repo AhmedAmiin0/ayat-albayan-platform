@@ -43,7 +43,7 @@ export function quoteSummary(q: Quote): string {
   const head = `${packageCopy(q.package).name} (${sessionsOf(q)}): ${money(q.price)}`;
   if (q.students === 1 && q.discount === 0) return head;
   const label = q.discount > 0 ? t.pricing.afterDiscount : t.pricing.total;
-  return `${head}${t.common.listJoiner}${label}: ${money(q.afterDiscount)}`;
+  return `${head}${t.common.listSeparator}${label}: ${money(q.afterDiscount)}`;
 }
 
 /** wa.me with no number: WhatsApp asks whom to send the offer to. */

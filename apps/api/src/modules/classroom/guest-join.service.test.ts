@@ -95,4 +95,10 @@ describe('the name, the switch and the limit', () => {
     for (let i = 0; i < 10; i++) await join({ svc });
     expect((await fail(join({ svc }))).getStatus()).toBe(429);
   });
+
+  it('the window comes from the settings: 90 minutes before lets the early guest in', async () => {
+    expect((await fail(join({ now: EARLY }))).getStatus()).toBe(403);
+    q.joinWindow.mockResolvedValue({ opensBeforeMin: 90, closesAfterMin: 120 });
+    expect(await join({ now: EARLY })).toMatchObject({ role: 'guest' });
+  });
 });

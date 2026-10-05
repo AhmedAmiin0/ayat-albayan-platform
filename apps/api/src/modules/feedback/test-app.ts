@@ -14,6 +14,8 @@ import { FEEDBACK_CONFIG } from './feedback.config';
 import { ADMIN, GUARDIAN, listRow, OTHER_TEACHER, SECRET, TEACHER, TEACHER_ID } from './feedback.fakes';
 import { FeedbackQueries } from './feedback.queries';
 import { FeedbackReadQueries } from './feedback.read.queries';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -46,6 +48,7 @@ export async function feedbackApp(secret: string | null = SECRET) {
     .overrideProvider(TemplateRegistry).useValue(m.templates)
     .overrideProvider(Outbox).useValue(m.outbox)
     .overrideProvider(FEEDBACK_CONFIG).useValue({ secret })
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

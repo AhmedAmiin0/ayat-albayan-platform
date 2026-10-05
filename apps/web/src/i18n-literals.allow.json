@@ -1,0 +1,4 @@
+{
+  "_comment": "Files under src/ whose .tsx may hold Arabic outside comments, each with its reason. Keep it empty: UI copy goes in packages/shared/i18n/ar.json + en.json (i18n-literals.test.ts).",
+  "files": {}
+}

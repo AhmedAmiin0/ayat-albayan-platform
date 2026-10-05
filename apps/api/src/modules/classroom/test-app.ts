@@ -25,6 +25,8 @@ import { studentLinkQueries } from './student-link.fakes';
 import { StudentLinkQueries } from './student-link.queries';
 import { StorageService } from '../../common/storage/storage.service';
 import { AuditService } from '../../common/audit/audit.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, sales: SALES, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -80,6 +82,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(InternalMeetingsQueries).useValue(m.meetings)
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   registerLivekitWebhookParser(app);

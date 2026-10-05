@@ -6,6 +6,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { whenRiyadh } from './format';
 import type { PendingReportRow } from './types';
+import { teacherLabel } from '@/lib/teacher-label';
 
 export const workItem = 'flex flex-wrap items-center gap-x-3 gap-y-1 border-b border-rule py-2.5 last:border-b-0';
 export const workLink = 'ms-auto text-xs font-semibold text-lapis underline-offset-4 hover:underline';
@@ -21,7 +22,7 @@ export function PendingReportsList({ items }: { items: readonly PendingReportRow
           <span className="font-semibold">{r.student.name}</span>
           {r.student.code && <Ltr className="text-2xs text-ink-3">{r.student.code}</Ltr>}
           <span className="text-xs text-ink-2">
-            {t.students.withTeacher.replace('{teacher}', r.teacher.display_name_ar)} · {whenRiyadh(r.starts_at)}
+            {t.students.withTeacher.replace('{teacher}', teacherLabel(r.teacher))} · {whenRiyadh(r.starts_at)}
           </span>
           <StatusChip {...lessonStatusStyle[r.status]} label={t.enums.lessonStatus[r.status]} size="sm" />
           <Link

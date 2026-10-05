@@ -3,6 +3,7 @@ import {
   joinWindow,
   pickStudentLesson,
   studentJoinSchema,
+  type JoinWindowConfig,
   type RoomJoinResult,
   type StudentLinkView,
 } from '@ab/shared';
@@ -19,7 +20,7 @@ const MS = 1000;
 const ONE_DAY_S = 86_400;
 
 export type PublicCall = { token: string; ip: string };
-type Resolved = { student: { id: string; name: string }; lesson: StudentLesson | null };
+type Resolved = { student: { id: string; name: string }; lesson: StudentLesson | null; win: JoinWindowConfig };
 
 /**
  * The student's own link (/s/<token>, no login): «حلقتك القادمة …» and «ادخل الحلقة» for whichever
@@ -38,13 +39,13 @@ export class StudentLinkService {
 
   /** GET /public/student/:token. 404 link_invalid, 429. */
   async view(call: PublicCall, now = new Date()): Promise<StudentLinkView> {
-    const { student, lesson } = await this.resolve(call, now);
+    const { student, lesson, win } = await this.resolve(call, now);
     const view = lesson && {
       id: lesson.id,
       starts_at: lesson.starts_at,
       ends_at: lesson.ends_at,
       teacher_name: lesson.teacher_name,
-      window: joinWindow(lesson, now),
+      window: joinWindow(lesson, now, win),
     };
     return { first_name: firstName(student.name), lesson: view };
   }
@@ -54,11 +55,11 @@ export class StudentLinkService {
     this.limit.assert({ ip: call.ip, token: call.token }, now.getTime());
     this.admission.livekit();
     const { name } = parseOrThrow(studentJoinSchema, call.body ?? {});
-    const { student, lesson } = await this.resolve(call, now, false);
+    const { student, lesson, win } = await this.resolve(call, now, false);
     if (!lesson) throw notFound('no_lesson');
-    assertWindowOpen(lesson, now);
+    assertWindowOpen(lesson, now, win);
     const joinLinkId = await this.queries.lessonLinkId({ lesson, studentId: student.id });
-    const closesS = Math.floor(Date.parse(joinWindow(lesson, now).closes_at) / MS) - Math.floor(now.getTime() / MS);
+    const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
     const shown = (name ?? (firstName(student.name) || student.name)).slice(0, 30);
     return this.admission.admit(
       { lessonId: lesson.id, role: 'guest', name: shown, principal: { joinLinkId }, ttlSeconds: Math.min(closesS, ONE_DAY_S) },
@@ -75,7 +76,8 @@ export class StudentLinkService {
     if (link.revoked_at) throw new HttpException({ code: 'link_expired', message: 'link_expired' }, HttpStatus.GONE);
     const student = await this.queries.student(link.student_id);
     if (!student) throw notFound('link_invalid');
-    const lesson = pickStudentLesson(await this.queries.lessonsAhead(student.id, now), now);
-    return { student, lesson };
+    const win = await this.queries.joinWindow();
+    const lesson = pickStudentLesson(await this.queries.lessonsAhead(student.id, now), now, win);
+    return { student, lesson, win };
   }
 }

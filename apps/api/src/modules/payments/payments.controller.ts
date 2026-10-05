@@ -2,6 +2,7 @@ import {
   paymentCreateSchema,
   paymentUpdateSchema,
   receiptUploadSchema,
+  uploadMaxBytes,
   type PaymentView,
   type SignedDownload,
   type SignedUpload,
@@ -9,6 +10,7 @@ import {
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
+import { SettingsService } from '../../common/settings/settings.service';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
 import { paymentFilter, paymentListQuery } from './payments.dto';
@@ -25,12 +27,14 @@ export class PaymentsController {
   constructor(
     private readonly payments: PaymentsService,
     private readonly receipts: ReceiptsService,
+    private readonly settings: SettingsService,
   ) {}
 
   @Get()
   @Permissions('payments.read')
-  list(@Query() query: unknown): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
-    return this.payments.list(paymentFilter(parseOrThrow(paymentListQuery, query)));
+  async list(@Query() query: unknown): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
+    const { academy_timezone: tz } = await this.settings.all();
+    return this.payments.list(paymentFilter(parseOrThrow(paymentListQuery, query), tz));
   }
 
   @Post()
@@ -41,8 +45,9 @@ export class PaymentsController {
   /** Static segment, declared before `:id`. */
   @Post('receipt-upload-url')
   @HttpCode(200)
-  receiptUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
-    return this.receipts.uploadUrl(parseOrThrow(receiptUploadSchema, body));
+  async receiptUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
+    const input = parseOrThrow(receiptUploadSchema, body);
+    return this.receipts.uploadUrl(input, uploadMaxBytes(await this.settings.all()));
   }
 
   @Get(':id')

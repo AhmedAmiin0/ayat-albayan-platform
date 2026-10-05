@@ -53,6 +53,12 @@ describe('parseDay — one local day (docs/10 route 2)', () => {
     expect(d.to.toISOString()).toBe('2026-10-29T22:00:00.000Z');
   });
 
+  it('no tz → the academy zone it is given (settings.academy_timezone)', () => {
+    const d = parseDay({ date: '2026-10-04' }, 'Africa/Cairo');
+    expect(d.from.toISOString()).toBe('2026-10-03T21:00:00.000Z');
+    expect(parseDay({ date: '2026-12-04' }, 'Africa/Cairo').from.toISOString()).toBe('2026-12-03T22:00:00.000Z');
+  });
+
   it('rejects a bad date or an unknown zone', () => {
     expect(caught(() => parseDay({ date: '04/10/2026' }))).toMatchObject({ message: 'validation_failed' });
     expect(caught(() => parseDay({ date: '2026-10-04', tz: 'Mars/Base' }))).toMatchObject({

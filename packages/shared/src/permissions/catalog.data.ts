@@ -89,6 +89,7 @@ export const PERMISSION_ROWS = [
   { key: 'activity.read', area: 'system', grants: [] },
   { key: 'roles.manage', area: 'system', grants: [] },
   { key: 'notifications.push', area: 'system', grants: [] },
+  { key: 'translations.manage', area: 'system', grants: [] },
   // Scope, not grants: the "my …" pages of a base role (teachers/me/*, sales/*, assistants/me/*).
   // Every role with that base role holds it; nobody else does (the admin neither, as before).
   { key: 'self.teacher', area: 'self', grants: T },

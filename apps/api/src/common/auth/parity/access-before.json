@@ -151,6 +151,7 @@
   "ScheduleRulesController.refresh": ["admin"],
   "SettingsController.get": ["admin"],
   "SettingsController.update": ["admin"],
+  "SettingsPublicController.get": "public",
   "StudentBalanceController.balance": ["admin","teacher"],
   "StudentLessonsController.list": ["admin"],
   "StudentLinkAdminController.issue": ["admin"],
@@ -201,6 +202,10 @@
   "ThreadsController.list": ["admin","sales","teacher"],
   "ThreadsController.template": ["admin","sales","teacher"],
   "ThreadsController.text": ["admin","sales","teacher"],
+  "TranslationsController.keys": ["admin"],
+  "TranslationsController.overrides": "public",
+  "TranslationsController.restore": ["admin"],
+  "TranslationsController.save": ["admin"],
   "WebhookController.challenge": "public",
   "WebhookController.receive": "public"
 }

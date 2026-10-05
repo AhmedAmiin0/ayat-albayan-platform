@@ -7,6 +7,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
+import { teacherLabel } from '@/lib/teacher-label';
 
 const col = createColumnHelper<DataTableFeatures, Teacher>();
 
@@ -46,7 +47,7 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
     }),
     col.accessor('programs', {
       header: () => t.teachers.programs,
-      cell: (c) => c.getValue().map((p) => t.enums.program[p]).join(t.teachers.listSeparator),
+      cell: (c) => c.getValue().map((p) => t.enums.program[p]).join(t.common.listSeparator),
       meta: {
         className: 'max-sm:order-3 max-sm:text-xs max-sm:text-ink-3',
         sortKey: 'programs',
@@ -81,7 +82,7 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
             to="/admin/teachers/$teacherId/earnings"
             params={{ teacherId: c.row.original.id }}
             className={buttonVariants({ variant: 'ghost', size: 'sm' })}
-            aria-label={`${t.earnings.open} ${c.row.original.display_name_ar}`}
+            aria-label={`${t.earnings.open} ${teacherLabel(c.row.original)}`}
             onClick={(e) => e.stopPropagation()}
           >
             {t.earnings.open}
@@ -89,7 +90,7 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
           <Button
             variant="secondary"
             size="sm"
-            aria-label={`${t.common.edit} ${c.row.original.display_name_ar}`}
+            aria-label={`${t.common.edit} ${teacherLabel(c.row.original)}`}
             onClick={(e) => {
               e.stopPropagation();
               onEdit(c.row.original);

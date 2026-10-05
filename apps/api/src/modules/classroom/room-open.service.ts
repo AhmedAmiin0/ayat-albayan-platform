@@ -23,12 +23,13 @@ export class RoomOpenService {
     const { lesson, role } = await this.roles.resolve(input.user, input.lessonId);
     if (role !== 'admin' && role !== 'teacher') throw new ForbiddenException();
     if (!isOpenLesson(lesson.status)) throw conflict('lesson_not_open', { status: lesson.status });
-    if (joinWindow(lesson, now).state === 'closed') {
+    const win = await this.queries.joinWindow();
+    if (joinWindow(lesson, now, win).state === 'closed') {
       throw new HttpException({ code: 'join_closed', message: 'join_closed' }, HttpStatus.GONE);
     }
     const opened = lesson.room_opened_at ? lesson : await this.queries.openRoom(lesson.id, now.toISOString());
     if (!opened) throw notFound('lesson_not_found');
     const at = opened.room_opened_at ?? now.toISOString();
-    return { ...joinWindow({ ...opened, room_opened_at: at }, now), room_opened_at: at };
+    return { ...joinWindow({ ...opened, room_opened_at: at }, now, win), room_opened_at: at };
   }
 }

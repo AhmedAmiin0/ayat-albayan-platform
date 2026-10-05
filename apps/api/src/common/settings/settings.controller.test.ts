@@ -17,7 +17,7 @@ const verify: TokenVerifier = async (token) => {
   if (!user) throw new Error('bad token');
   return user;
 };
-const settings = { all: vi.fn(), write: vi.fn() };
+const settings = { all: vi.fn(), write: vi.fn(), publicView: vi.fn() };
 const audit = { record: vi.fn() };
 
 describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH-02)', () => {
@@ -85,5 +85,19 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     );
     expect((await call('PATCH', 'admin', { reportingCurrency: 'sar' })).statusCode).toBe(400);
     expect((await call('PATCH', 'admin', { reportTeacherEditHours: 169 })).statusCode).toBe(400);
+  });
+
+  it('GET /settings/public needs no login and returns only the public keys', async () => {
+    settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
+    const res = await app.inject({ method: 'GET', url: '/settings/public' });
+    expect([res.statusCode, res.json()]).toEqual([200, { join_opens_before_min: 10 }]);
+    expect(res.headers['cache-control']).toBe('public, max-age=60');
+  });
+
+  it('PATCH validates the new keys from the registry (E.164, min/max)', async () => {
+    expect((await call('PATCH', 'admin', { academyWhatsappE164: '0566101447' })).statusCode).toBe(400);
+    expect((await call('PATCH', 'admin', { joinOpensBeforeMin: 181 })).statusCode).toBe(400);
+    expect((await call('PATCH', 'admin', { joinOpensBeforeMin: 30 })).statusCode).toBe(200);
+    expect(settings.write).toHaveBeenCalledWith({ join_opens_before_min: 30 }, USERS['admin']?.id);
   });
 });

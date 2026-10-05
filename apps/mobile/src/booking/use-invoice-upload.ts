@@ -1,6 +1,6 @@
-import { RECEIPT_MAX_BYTES } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
+import { useUploadMaxBytes } from '@/lib/public-config';
 import { isOffline } from '@/payments/payment-errors';
 import { pickReceipt, type Receipt, type ReceiptSource } from '@/payments/receipt';
 import type { InvoiceDraft } from './contract';
@@ -13,6 +13,7 @@ import { uploadInvoice } from './invoice-upload';
  */
 export function useInvoiceUpload(requestId: string, onUploaded: (invoice: InvoiceDraft) => void) {
   const [pending, setPending] = useState<Receipt | null>(null);
+  const maxBytes = useUploadMaxBytes();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -36,7 +37,7 @@ export function useInvoiceUpload(requestId: string, onUploaded: (invoice: Invoic
     try {
       const picked = await pickReceipt(source);
       if (!picked) return;
-      if (picked.size > RECEIPT_MAX_BYTES) setError(t.booking.error.invoice_too_large);
+      if (picked.size > maxBytes) setError(t.booking.error.invoice_too_large);
       else await upload(picked);
     } catch {
       setError(t.common.error);

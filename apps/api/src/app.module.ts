@@ -38,6 +38,7 @@ import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeacherStudentsModule } from './modules/teacher-students/teacher-students.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
+import { TranslationsModule } from './modules/translations/translations.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
 
@@ -48,6 +49,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     AuthModule,
     ActivityModule,
     SettingsModule,
+    TranslationsModule,
     StorageModule,
     LessonEventsModule,
     PushModule,

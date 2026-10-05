@@ -12,6 +12,7 @@ import { categoriesQuery, saveExpense, uploadExpenseReceipt, type ExpenseView } 
 import { AddCategory } from './AddCategory';
 import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
 import { ExpenseFields } from './ExpenseFields';
+import { useUploadMaxBytes } from '@/lib/public-config';
 
 type Props = { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void };
 
@@ -20,6 +21,7 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
   const categories = useQuery(categoriesQuery);
+  const maxBytes = useUploadMaxBytes();
   const [form, setForm] = useState<ExpenseForm>(() => expenseForm(expense, expense ? '' : paidAtDay()));
   const [amountError, setAmountError] = useState<string | undefined>();
   const [file, setFile] = useState<File | null>(null);
@@ -41,7 +43,7 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   });
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const bad = receiptProblem(file);
+    const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);
     const r = expenseBody(form, expense?.month ?? month);
     setAmountError(r.ok ? undefined : r.errors.amount);

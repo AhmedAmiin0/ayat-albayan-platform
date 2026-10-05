@@ -68,7 +68,7 @@ join (values
     'subscriptions.write', 'invoices.read', 'receivables.read', 'payouts.read', 'payouts.write',
     'payouts.approve', 'earnings.read', 'earnings.write', 'expenses.read', 'expenses.write',
     'exports.read', 'settings.read', 'settings.write', 'activity.read', 'roles.manage',
-    'notifications.push']),
+    'notifications.push', 'translations.manage']),
   ('teacher', array['students.balance', 'availability.read', 'availability.write', 'lessons.status',
     'classroom.join', 'classroom.kick', 'classroom.moderate', 'classroom.host', 'recordings.read',
     'meetings.read', 'meetings.write', 'reports.read', 'reports.write', 'inbox.read', 'inbox.send',
