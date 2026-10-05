@@ -1,4 +1,4 @@
-import { bookingKindOf, isSingleLesson, type BookingRequest, type Conflict } from '@ab/shared';
+import { bookingKindOf, isSingleLesson, uploadMaxBytes, type BookingRequest, type Conflict } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { SettingsService } from '../../common/settings/settings.service';
 import { ConflictChecker } from '../scheduling/conflict-checker';
@@ -15,6 +15,8 @@ export type Prepared = {
   conflicts: Conflict[];
   /** E.164 of every booked guardian: the only chats an invoice may be saved from (R-MSG-06). */
   phones: string[];
+  /** settings.upload_max_mb in bytes: the invoice file must not be larger. */
+  invoiceMaxBytes: number;
 };
 
 /**
@@ -60,7 +62,8 @@ export class BookingPlanner {
     });
     const payload = bookingPayload({ req, kind, teacher, who, lead, plan, first, conflicts, meetingLink, makeupOf });
     const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
-    return { payload, conflicts, phones: [...new Set(phones)] };
+    const invoiceMaxBytes = uploadMaxBytes(await this.settings.all());
+    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes };
   }
 
   /**

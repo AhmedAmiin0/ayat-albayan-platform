@@ -12,6 +12,7 @@ export * from './reports/index.js';
 export * from './roles.js';
 export * from './running-head.js';
 export * from './schemas/index.js';
+export * from './settings/index.js';
 export * from './status-style.js';
 export * from './theme.js';
 export * from './locale.js';

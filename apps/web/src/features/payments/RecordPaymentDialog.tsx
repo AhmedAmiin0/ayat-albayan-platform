@@ -13,6 +13,7 @@ import { PaymentFields, type PaymentForm } from './PaymentFields';
 import { ReceiptField, receiptProblem } from './ReceiptField';
 import { SubscriptionPicker } from './SubscriptionPicker';
 import { useRecordPayment } from './use-record-payment';
+import { useUploadMaxBytes } from '@/lib/public-config';
 
 type Props = {
   subscription?: SubscriptionView;
@@ -32,6 +33,7 @@ const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riy
 /** «تسجيل دفعة» / «استرداد» (R-PAY-01): package, amount (any currency with a rate), method, date, receipt. */
 export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment', student: preset, onClose, onSaved }: Props) {
   const formId = useId();
+  const maxBytes = useUploadMaxBytes();
   const [student, setStudent] = useState<PickedStudent | null>(preset ?? null);
   const [picked, setPicked] = useState<SubscriptionView | null>(subscription ?? null);
   const [form, setForm] = useState<PaymentForm>({ amount: subscription ? defaultAmount(subscription, kind) : '', method: 'bank', day: today(), note: '' });
@@ -47,7 +49,7 @@ export function RecordPaymentDialog({ subscription, invoiceId, kind = 'payment',
   };
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const bad = receiptProblem(file);
+    const bad = receiptProblem(file, maxBytes);
     setProblem(bad && t.payments.error[bad]);
     const amountOk = parseAmount(form.amount) !== null;
     setAmountError(amountOk ? null : form.amount.trim() ? t.payments.mobile.amountInvalid : t.common.required);

@@ -1,8 +1,8 @@
-import { RECEIPT_MAX_BYTES } from '@ab/shared';
 import { useState } from 'react';
 import { Image, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { useUploadMaxBytes } from '@/lib/public-config';
 import { shape, useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { FormLabel } from './FormLabel';
@@ -20,6 +20,7 @@ export interface ReceiptPickerProps {
 export function ReceiptPicker({ receipt, onChange }: ReceiptPickerProps) {
   const { color } = useTheme();
   const [error, setError] = useState<string>();
+  const maxBytes = useUploadMaxBytes();
   const m = t.payments.mobile;
 
   async function pick(source: ReceiptSource) {
@@ -27,7 +28,7 @@ export function ReceiptPicker({ receipt, onChange }: ReceiptPickerProps) {
     try {
       const picked = await pickReceipt(source);
       if (!picked) return;
-      if (picked.size > RECEIPT_MAX_BYTES) setError(t.payments.error.receipt_too_large);
+      if (picked.size > maxBytes) setError(t.payments.error.receipt_too_large);
       else onChange(picked);
     } catch {
       setError(t.common.error);

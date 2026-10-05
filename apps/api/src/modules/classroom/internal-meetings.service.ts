@@ -1,4 +1,4 @@
-import { createMeetingSchema, DEFAULT_MEETING_TITLE, meetingRoomName, meetingState, type MeetingCreated, type MeetingView } from '@ab/shared';
+import { createMeetingSchema, meetingRoomName, meetingState, type MeetingCreated, type MeetingView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
@@ -27,7 +27,7 @@ export class InternalMeetingsService {
   async create(input: { user: AuthUser; body: unknown }): Promise<MeetingCreated> {
     const { title } = parseOrThrow(createMeetingSchema, input.body ?? {});
     const token = newMeetingToken();
-    const row = await this.queries.insert({ title: title ?? DEFAULT_MEETING_TITLE, createdBy: input.user.id, hash: hashMeetingToken(token) });
+    const row = await this.queries.insert({ title: title ?? (await this.queries.defaultTitle()), createdBy: input.user.id, hash: hashMeetingToken(token) });
     return { id: row.id, url: this.urlOf(token) };
   }
 

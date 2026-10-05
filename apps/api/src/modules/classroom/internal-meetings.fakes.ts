@@ -29,5 +29,6 @@ export function meetingQueries() {
     end: vi.fn(async (_id: string, at: string) => meetingRow({ ends_at: at })),
     rotate: vi.fn().mockResolvedValue(undefined),
     profileName: vi.fn().mockResolvedValue('نور'),
+    defaultTitle: vi.fn().mockResolvedValue('اجتماع'),
   };
 }

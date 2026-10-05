@@ -1,5 +1,6 @@
 import { normalizeArabic, type BookingRequest } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { SettingsService } from '../../common/settings/settings.service';
 import { detectDuplicates } from '../students/duplicate-detector';
 import { domainError } from './booking.errors';
 import type { BookingPayload } from './booking.mapper';
@@ -19,7 +20,10 @@ const notFound = (code: string) => domainError(HttpStatus.NOT_FOUND, code);
 /** Teacher, lead and students of a POST /booking (docs/10 §5 #14, R-LEAD-06, R-STU-03). */
 @Injectable()
 export class BookingParties {
-  constructor(private readonly queries: BookingQueries) {}
+  constructor(
+    private readonly queries: BookingQueries,
+    private readonly settings: SettingsService,
+  ) {}
 
   /** 404 teacher_not_found / lead_not_found. */
   async lookup(req: BookingRequest) {
@@ -38,7 +42,8 @@ export class BookingParties {
     const lessonId = req.makeupOfLessonId;
     const studentId = 'studentIds' in req ? req.studentIds[0] : undefined;
     if (!lessonId || !studentId) throw domainError(HttpStatus.BAD_REQUEST, 'makeup_student');
-    return missedLesson(this.queries, { lessonId, studentId, now: new Date() });
+    const { makeup_window_days: windowDays } = await this.settings.all();
+    return missedLesson(this.queries, { lessonId, studentId, now: new Date(), windowDays });
   }
 
   /**

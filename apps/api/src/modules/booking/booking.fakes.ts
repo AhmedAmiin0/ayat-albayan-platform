@@ -10,6 +10,7 @@ import { BookingParties } from './booking.parties';
 import { BookingPlanner } from './booking.planner';
 import type { BookingQueries, BookingStudent } from './booking.queries';
 import { ConflictContext } from './conflict-context';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 
 export const IDS = {
   teacher: '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11',
@@ -99,9 +100,9 @@ export function fakePlanner() {
     availability as unknown as AvailabilityQueries,
     projection as unknown as RuleProjectionQueries,
   );
-  const settings = { bookingHorizonWeeks: vi.fn().mockResolvedValue(5) };
+  const settings = fakeSettings();
   const planner = new BookingPlanner(
-    new BookingParties(queries as unknown as BookingQueries),
+    new BookingParties(queries as unknown as BookingQueries, fakeSettings()),
     checker,
     settings as unknown as SettingsService,
   );
