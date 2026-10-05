@@ -9,7 +9,9 @@ import { ar, expect, test } from '../support/fixtures';
 
 type Dict = typeof ar;
 const switchTo = (page: Page, dict: Dict, target: 'ar' | 'en') =>
-  page.getByRole('button', { name: new RegExp(`${dict.language.label}\\s*${dict.language[target]}`) });
+  page.getByRole('button', {
+    name: new RegExp(`${dict.language.label}\\s*${dict.language[target]}`),
+  });
 
 async function expectDocument(page: Page, lang: 'ar' | 'en'): Promise<void> {
   await expect(page.locator('html')).toHaveAttribute('lang', lang);
@@ -23,11 +25,15 @@ test.describe('language switch (English LTR, Arabic default)', () => {
     const page = await asRole('admin');
     await page.goto('/admin');
     await expectDocument(page, 'ar');
-    await expect(page.getByRole('heading', { level: 1, name: ar.admin.dashboardTitle })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: ar.admin.dashboardTitle }),
+    ).toBeVisible();
 
     await switchTo(page, ar, 'en').click();
     await expectDocument(page, 'en');
-    await expect(page.getByRole('heading', { level: 1, name: en.admin.dashboardTitle })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: en.admin.dashboardTitle }),
+    ).toBeVisible();
     const nav = page.getByRole('navigation', { name: en.nav.label });
     // Anchored: «Owed by students» (finance) also contains the word.
     await expect(nav.getByRole('link', { name: new RegExp(`^${en.nav.students}`) })).toBeVisible();
@@ -37,8 +43,12 @@ test.describe('language switch (English LTR, Arabic default)', () => {
     await page.goto('/admin/pricing');
     await expectDocument(page, 'en');
     await expect(page.getByRole('heading', { level: 1, name: en.pricing.title })).toBeVisible();
-    await expect(page.getByRole('group', { name: en.pricing.steps.country, exact: true })).toBeVisible();
-    await expect(page.getByRole('group', { name: en.pricing.steps.duration, exact: true })).toBeVisible();
+    await expect(
+      page.getByRole('group', { name: en.pricing.steps.country, exact: true }),
+    ).toBeVisible();
+    await expect(
+      page.getByRole('group', { name: en.pricing.steps.duration, exact: true }),
+    ).toBeVisible();
 
     await switchTo(page, en, 'ar').click();
     await expectDocument(page, 'ar');
@@ -50,10 +60,14 @@ test.describe('language switch (English LTR, Arabic default)', () => {
     await page.goto('/teacher');
     await switchTo(page, ar, 'en').click();
     await expectDocument(page, 'en');
-    await expect(page.getByRole('heading', { level: 1, name: en.teacher.dashboardTitle })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: en.teacher.dashboardTitle }),
+    ).toBeVisible();
     await switchTo(page, en, 'ar').click();
     await expectDocument(page, 'ar');
-    await expect(page.getByRole('heading', { level: 1, name: ar.teacher.dashboardTitle })).toBeVisible();
+    await expect(
+      page.getByRole('heading', { level: 1, name: ar.teacher.dashboardTitle }),
+    ).toBeVisible();
   });
 
   test('the login page switches to English and back', async ({ page }) => {
