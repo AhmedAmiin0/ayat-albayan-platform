@@ -51,7 +51,7 @@ function AdminLayout({ nav, page }: { nav: ReactNode; page: ReactNode }) {
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
   return (
     <div className="min-h-screen shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
-      <aside ref={aside} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3 shell:flex-nowrap shell:gap-y-0 shell:sticky shell:top-0 shell:h-screen shell:flex-col shell:items-stretch shell:gap-[26px] shell:overflow-y-auto shell:pt-[22px] shell:pb-4">
+      <aside ref={aside} className="flex flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3 shell:flex-nowrap shell:gap-y-0 shell:sticky shell:top-0 shell:h-screen shell:flex-col shell:items-stretch shell:gap-[26px] shell:overflow-y-auto shell:border-e shell:border-rule shell:bg-cover shell:pt-[22px] shell:pb-4">
         <Link
           to="/admin"
           activeOptions={{ exact: true }}

@@ -1,31 +1,35 @@
 // The ONE source of colour values (docs/07 §3, §12); apps/web/src/styles/tokens.css carries the same
-// hex (tokens.test.ts there diffs the two). Owner, 2026-10-03: stay around green and black, readable,
-// with a green/gold primary button. Green-black surfaces and ink, deep GREEN for actions (gold text on
-// the light primary, a gold edge on every primary), teal for «done/ok», amber only for «دورك», red for
-// errors, gold for the primary edge and ornament. `lapis*` is the action token's historical name.
+// hex (tokens.test.ts there diffs the two). Owner, 2026-10-05 («Emerald Mint»): white pages, an emerald
+// action with white text on its fill, a light mint sidebar (dark green text) in light, a SOFT
+// green-grey dark mode (never near-black), no beige/cream. Green for «done/ok», amber only for «دورك»,
+// red for errors, gold for small ornament only. `lapis*` is the action token's historical name:
+// `lapis` is the action as TEXT (links, ghost buttons, focus), `lapisFill` the primary button's fill
+// and `lapisHover` its hover. The sidebar and login cover use cover/leather* with coverInk/goldOnCover.
 // theme.contrast.test.ts checks every text pair (AA).
 export type ThemeName = 'light' | 'dark';
 
 const light = {
-  margin: '#eef3f0', page: '#ffffff', raised: '#ffffff', sunk: '#f3f7f4', ink: '#0b1410', ink2: '#2f3b35',
-  ink3: '#4a5750', rule: '#e0e8e3', ruleStrong: '#c5d2ca', ruleInput: '#77857d', gold: '#b7891f',
-  goldSoft: '#e4c97e', goldWash: '#faf2dc', lapis: '#166534', lapisHover: '#0f4a26', lapisWash: '#e6f4ea',
-  onLapis: '#f3d58a', ok: '#0f766e', okSoft: '#e0f4f1', act: '#a14b06', actSoft: '#fdf1e1', bad: '#b91c1c',
-  badSoft: '#fde8e8', badSolid: '#b91c1c', onBad: '#ffffff', neutralSoft: '#ebf0ed', inverse: '#0b1410',
-  onInverse: '#f5f8f6', inverseGold: '#e4c97e', cover: '#0d1a13', leather: '#12301f', leatherDeep: '#0c2416',
-  leatherLift: '#1a4029', goldOnCover: '#ecd18c', coverInk: '#f8fafc', scrim: 'rgba(5, 12, 8, 0.5)',
+  margin: '#f3f7f5', page: '#ffffff', raised: '#ffffff', sunk: '#f1f5f3', ink: '#17201c', ink2: '#2f3a35',
+  ink3: '#4f5b55', rule: '#e2e8e5', ruleStrong: '#c8d2cd', ruleInput: '#77857d', gold: '#b7891f',
+  goldSoft: '#e4c97e', goldWash: '#eef7f1', lapis: '#047857', lapisFill: '#047857', lapisHover: '#065f46',
+  lapisWash: '#ecfdf5', onLapis: '#ffffff', ok: '#15803d', okSoft: '#eaf7ee', act: '#a14b06', actSoft: '#fdf1e1',
+  bad: '#b91c1c', badSoft: '#fde8e8', badSolid: '#b91c1c', onBad: '#ffffff', neutralSoft: '#ebf0ed',
+  inverse: '#17201c', onInverse: '#f5f8f6', inverseGold: '#e4c97e', cover: '#ecfdf5', leather: '#ecfdf5',
+  leatherDeep: '#d1fae5', leatherLift: '#f0fdf8', goldOnCover: '#064e3b', coverInk: '#064e3b',
+  scrim: 'rgba(15, 30, 22, 0.42)',
 };
 
 export type Palette = Record<keyof typeof light, string>;
 
 const dark: Palette = {
-  margin: '#050906', page: '#0a0f0c', raised: '#111a15', sunk: '#070c09', ink: '#edf3ef', ink2: '#c4d0c9',
-  ink3: '#9fb0a6', rule: '#1f2c25', ruleStrong: '#2d3f35', ruleInput: '#64776c', gold: '#e0b95a',
-  goldSoft: '#6b5523', goldWash: '#2a2210', lapis: '#4fc285', lapisHover: '#7fd9a6', lapisWash: '#10281b',
-  onLapis: '#06100a', ok: '#5eead4', okSoft: '#0b2a26', act: '#fd9f68', actSoft: '#33200f', bad: '#fca5a5',
-  badSoft: '#3a1717', badSolid: '#dc4b4b', onBad: '#06100a', neutralSoft: '#18221d', inverse: '#e2ebe5',
-  onInverse: '#0a0f0c', inverseGold: '#8a6a1c', cover: '#0b1510', leather: '#0f2418', leatherDeep: '#0a1b11',
-  leatherLift: '#173322', goldOnCover: '#ecd18c', coverInk: '#f8fafc', scrim: 'rgba(0, 0, 0, 0.65)',
+  margin: '#1a211e', page: '#1e2623', raised: '#27312d', sunk: '#222b27', ink: '#e9efec', ink2: '#cfd8d3',
+  ink3: '#adbab3', rule: '#35413c', ruleStrong: '#45524c', ruleInput: '#74837c', gold: '#e0b95a',
+  goldSoft: '#6b5a2c', goldWash: '#2a3a31', lapis: '#5eead4', lapisFill: '#047857', lapisHover: '#065f46',
+  lapisWash: '#213a2c', onLapis: '#ffffff', ok: '#7ee2a6', okSoft: '#20372b', act: '#fd9f68', actSoft: '#3d2b1c',
+  bad: '#fca5a5', badSoft: '#432628', badSolid: '#dc4b4b', onBad: '#0f1512', neutralSoft: '#2c3632',
+  inverse: '#e2ebe5', onInverse: '#1e2623', inverseGold: '#8a6a1c', cover: '#18201d', leather: '#18201d',
+  leatherDeep: '#141b18', leatherLift: '#26302c', goldOnCover: '#ecd18c', coverInk: '#e9efec',
+  scrim: 'rgba(10, 16, 13, 0.5)',
 };
 
 export const palette: Record<ThemeName, Palette> = { light, dark };
@@ -44,9 +48,9 @@ export const elevation: Record<ThemeName, Elevation> = {
     toast: '0 12px 28px -12px rgba(5, 20, 12, 0.4)',
   },
   dark: {
-    page: '0 18px 40px -16px rgba(0, 0, 0, 0.65)',
-    pop: '0 30px 60px -20px rgba(0, 0, 0, 0.7)',
-    toast: '0 12px 28px -12px rgba(0, 0, 0, 0.6)',
+    page: '0 18px 40px -16px rgba(0, 0, 0, 0.4)',
+    pop: '0 30px 60px -20px rgba(0, 0, 0, 0.5)',
+    toast: '0 12px 28px -12px rgba(0, 0, 0, 0.45)',
   },
 };
 
