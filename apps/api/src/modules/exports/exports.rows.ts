@@ -8,7 +8,7 @@ import {
   type Program,
   type StudentStatus,
 } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import { ar } from '../../common/i18n/server-text';
 import { riyadhDate } from '../dashboard/range';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
@@ -29,13 +29,13 @@ export interface StudentIn {
   teacher: { display_name_ar: string } | null;
 }
 
-export const STUDENT_HEADER: Cell[] = [
+export const studentHeader = (): Cell[] => [
   S.code, S.name, S.status, S.program, S.age, S.teacher, S.guardian, S.guardianPhone, G.country, G.source, S.tz, S.createdAt,
 ];
 
 export function studentRows(rows: readonly StudentIn[]): Cell[][] {
   return [
-    STUDENT_HEADER,
+    studentHeader(),
     ...rows.map((s) => [
       s.code ?? '',
       safeText(s.name),
@@ -61,7 +61,7 @@ export interface LessonIn {
   lesson_students: { attendance: Attendance | null; chargeable: boolean; student: { code: string | null; name: string } | null }[];
 }
 
-export const LESSON_HEADER: Cell[] = [
+export const lessonHeader = (): Cell[] => [
   X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus, X.columns.attendance, X.columns.chargeable,
 ];
 
@@ -75,7 +75,7 @@ function durationLabel(l: Pick<LessonIn, 'starts_at' | 'ends_at'>): Cell {
 /** One row per (lesson, student), the owner's sheet grain; a lesson without students keeps one row. */
 export function lessonRows(rows: readonly LessonIn[]): Cell[][] {
   return [
-    LESSON_HEADER,
+    lessonHeader(),
     ...rows.flatMap((l) => {
       const at = new Date(l.starts_at);
       const head: Cell[] = [riyadhDate(l.starts_at), clockTime(at, RIYADH_TZ), durationLabel(l), safeText(l.teacher?.display_name_ar)];

@@ -1,6 +1,7 @@
-import { DURATIONS, type Duration, type LessonView } from '@ab/shared';
+import { DURATIONS, teacherName, type Duration, type LessonView } from '@ab/shared';
 import type { InvoiceDraft } from './contract';
 import { DEFAULT_MINUTES } from './package-choice';
+import { locale } from '@/lib/locale';
 
 /** The missed lesson a makeup is for, as the schedule row hands it over (route params). */
 export interface MakeupSource {
@@ -47,7 +48,7 @@ export function makeupParams(
     missedAt: lesson.starts_at,
     durationMin: String(lengthOf(lesson)),
     teacherId: lesson.teacher.id,
-    teacherName: lesson.teacher.display_name_ar,
+    teacherName: teacherName(lesson.teacher, locale),
   };
 }
 

@@ -17,6 +17,7 @@ import { EarningsCards } from './EarningsCards';
 import { PayDialog } from './PayDialog';
 import { PaymentsHistory } from './PaymentsHistory';
 import { SessionsPanel } from './SessionsPanel';
+import { teacherLabel } from '@/lib/teacher-label';
 
 /**
  * /admin/teachers/:teacherId/earnings «مستحقات المعلم»: balance cards, the sessions with ticks, a
@@ -38,7 +39,7 @@ export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
   return (
     <>
       <PageHead className="mb-3.5">
-        <Cartouche>{`${t.earnings.title} · ${data.teacher.display_name_ar}`}</Cartouche>
+        <Cartouche>{`${t.earnings.title} · ${teacherLabel(data.teacher)}`}</Cartouche>
         <div className="ms-auto flex flex-wrap gap-2.5">
           <Link to="/admin/teachers/$teacherId" params={{ teacherId }} className="self-center text-sm text-lapis underline underline-offset-4">
             {t.earnings.back}
@@ -57,7 +58,7 @@ export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
       <PaymentsHistory scope={scope} />
       {paying && (
         <PayDialog
-          teacher={{ id: teacherId, name: data.teacher.display_name_ar }}
+          teacher={{ id: teacherId, name: teacherLabel(data.teacher) }}
           selected={selected}
           outstanding={data.outstanding}
           onClose={() => setPaying(false)}

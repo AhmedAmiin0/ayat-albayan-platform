@@ -1,4 +1,5 @@
 import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
+import { ar } from '../../common/i18n/server-text';
 import type { SalesLessonRow } from './sales-lessons';
 import type { SalesSubscriptionRow } from './sales.queries';
 
@@ -30,7 +31,7 @@ export function toSalesMeeting(row: SalesLessonRow, at: { now: Date; win?: JoinW
     ends_at: row.ends_at,
     status: row.status,
     teacher_name: row.teacher?.display_name_ar ?? null,
-    lead_or_student_name: row.rule?.lead?.name ?? (students.join('، ') || null),
+    lead_or_student_name: row.rule?.lead?.name ?? (students.join(ar.common.listSeparator) || null),
     joinable_window: joinWindow(row, now, win),
   };
 }

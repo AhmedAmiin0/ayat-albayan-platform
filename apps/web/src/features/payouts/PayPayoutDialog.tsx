@@ -12,6 +12,7 @@ import { apiErrorText, moneyText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import type { PayoutView } from './api';
 import { usePayPayout } from './use-pay-payout';
+import { teacherLabel } from '@/lib/teacher-label';
 import { useUploadMaxBytes } from '@/lib/public-config';
 
 type Props = { payout: PayoutView; onClose: () => void; onSaved: () => void };
@@ -38,7 +39,7 @@ export function PayPayoutDialog({ payout, onClose, onSaved }: Props) {
   };
   return (
     <Dialog
-      title={t.finance.payPayoutTitle.replace('{teacher}', payout.teacher.display_name_ar)}
+      title={t.finance.payPayoutTitle.replace('{teacher}', teacherLabel(payout.teacher))}
       onClose={onClose}
       actions={
         <>

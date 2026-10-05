@@ -8,6 +8,7 @@ import { useJoinWindow } from '@/lib/public-config';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from './Bar';
 import { isLiveNow, todaysLessons } from './today';
+import { teacherLabel } from '@/lib/teacher-label';
 
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
@@ -22,9 +23,9 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
         {live && <span title={t.dashboard.home.live} className="size-2 rounded-full bg-ok motion-safe:animate-pulse" />}
       </span>
       <div className="grid min-w-0 gap-1">
-        <p className="truncate font-semibold">{lesson.students.map((s) => s.name).join('، ')}</p>
+        <p className="truncate font-semibold">{lesson.students.map((s) => s.name).join(t.common.listSeparator)}</p>
         <p className="text-sm text-ink-2">
-          {t.dashboard.home.teacher.replace('{name}', lesson.teacher.display_name_ar)}
+          {t.dashboard.home.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         </p>
         <span>
           <StatusChip size="sm" tone={style.tone} glyph={style.glyph} label={t.enums.lessonStatus[lesson.status]} />

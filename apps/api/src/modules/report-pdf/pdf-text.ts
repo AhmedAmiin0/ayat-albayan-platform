@@ -1,5 +1,5 @@
 import { clockTime } from '@ab/shared';
-import ar from '@ab/shared/i18n/ar.json';
+import { ar } from '../../common/i18n/server-text';
 import { localDay, weekdayOf } from '../teachers/availability/zoned-time';
 
 // Text helpers for the report template (R-REP-03). Every Arabic word comes from ar.json; LTR

@@ -1,4 +1,4 @@
-import { teacherStatusStyle } from '@ab/shared';
+import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
@@ -14,6 +14,7 @@ import { TeacherContact } from './TeacherContact';
 import type { Teacher } from './types';
 import { UpcomingTimeOff } from './UpcomingTimeOff';
 import { WeeklyAvailability } from './WeeklyAvailability';
+import { locale } from '@/lib/locale';
 
 /**
  * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), phone +
@@ -46,7 +47,7 @@ export function TeacherDetailScreen() {
         style={{ flex: 1, marginHorizontal: -16 }}
         contentContainerStyle={{ gap: 20, paddingHorizontal: 16, paddingBottom: 32 }}
       >
-        <ScreenHeader title={data.display_name_ar} trailing={back} />
+        <ScreenHeader title={teacherName(data, locale)} trailing={back} />
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
         <Button
           variant="secondary"
