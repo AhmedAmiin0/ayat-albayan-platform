@@ -32,6 +32,7 @@ describe('GuestJoinPage', () => {
     fireEvent.click(screen.getByRole('button', { name: t.classroom.guest.join }));
     expect(screen.getByText(t.common.required)).toBeTruthy();
     expect(fetchMock).not.toHaveBeenCalled();
+    expect(screen.getByText(t.classroom.recordedNotice)).toBeTruthy();
   });
 
   it('posts the trimmed name to the link and opens the room', async () => {

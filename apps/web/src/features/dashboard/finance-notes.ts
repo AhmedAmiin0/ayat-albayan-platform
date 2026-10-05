@@ -28,7 +28,7 @@ export function financeNotes(f: Finance): { text: string; warn: boolean }[] {
     },
   ];
   if (f.fx_missing.length > 0) {
-    const currencies = f.fx_missing.join(t.common.listJoiner);
+    const currencies = f.fx_missing.join(t.common.listSeparator);
     notes.push({ text: t.dashboard.fxMissing.replace('{currencies}', currencies), warn: true });
   }
   if (f.unrated_lessons > 0) notes.push({ text: counted(t.dashboard.unrated, f.unrated_lessons), warn: true });

@@ -1,7 +1,8 @@
-import { invoiceUploadSchema, type MakeupCandidate, type SignedUpload } from '@ab/shared';
+import { invoiceUploadSchema, uploadMaxBytes, type MakeupCandidate, type SignedUpload } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../common/auth/decorators';
+import { SettingsService } from '../../common/settings/settings.service';
 import { parseOrThrow } from '../teachers/http';
 import { makeupCandidatesQuery } from './booking.dto';
 import { BookingInvoices } from './booking.invoice';
@@ -16,6 +17,7 @@ export class BookingExtrasController {
   constructor(
     private readonly invoices: BookingInvoices,
     private readonly makeup: MakeupCandidates,
+    private readonly settings: SettingsService,
   ) {}
 
   /** R-SCH-10: the student's missed lessons that a «حجز تعويضي» can replace. */
@@ -27,7 +29,8 @@ export class BookingExtrasController {
   /** R-PAY-03: a signed PUT for the invoice file; register its path in POST /booking `invoice`. */
   @Post('invoice-upload-url')
   @HttpCode(200)
-  invoiceUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
-    return this.invoices.uploadUrl(parseOrThrow(invoiceUploadSchema, body));
+  async invoiceUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
+    const input = parseOrThrow(invoiceUploadSchema, body);
+    return this.invoices.uploadUrl(input, uploadMaxBytes(await this.settings.all()));
   }
 }

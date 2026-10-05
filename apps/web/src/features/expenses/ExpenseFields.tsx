@@ -5,7 +5,7 @@ import { Select } from '@/components/ui/select';
 import { CheckField } from '@/features/messaging/SettingsFields';
 import { currencySymbol } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
-import type { ExpenseCategoryView } from './api';
+import { categoryLabel, type ExpenseCategoryView } from './api';
 import type { ExpenseForm } from './expense-form';
 
 /** The owner's tracker is in EGP; the site currencies are there for things paid abroad. */
@@ -27,7 +27,7 @@ export function ExpenseFields({ form, set, categories, amountError }: Props) {
           <Select {...p} value={form.category} onChange={(e) => set({ category: e.target.value })}>
             {categories.filter((c) => c.active || c.key === form.category).map((c) => (
               <option key={c.key} value={c.key}>
-                {c.label_ar}
+                {categoryLabel(categories, c.key)}
               </option>
             ))}
           </Select>

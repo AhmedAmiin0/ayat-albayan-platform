@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { SettingsService } from '../../common/settings/settings.service';
 import { loadEnv } from '../../env';
 import { InboxModule } from '../inbox/inbox.module';
 import { TeachersModule } from '../teachers/teachers.module';
@@ -23,7 +24,7 @@ import { FeedbackSender } from './feedback.sender';
   controllers: [FeedbackController, FeedbackPublicController],
   providers: [
     { provide: FEEDBACK_CONFIG, useFactory: (): FeedbackConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null }) },
-    { provide: PublicFeedbackLimit, useFactory: () => new PublicFeedbackLimit() },
+    { provide: PublicFeedbackLimit, useFactory: (s: SettingsService) => new PublicFeedbackLimit(s), inject: [SettingsService] },
     FeedbackQueries,
     FeedbackReadQueries,
     FeedbackSender,

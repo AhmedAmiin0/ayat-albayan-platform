@@ -8,7 +8,7 @@ afterEach(() => jest.restoreAllMocks());
 test('an RTL run is Arabic, the default: t is ar.json', () => {
   expect(bootLocale()).toBe('ar');
   expect(locale).toBe('ar');
-  expect(t).toBe(ar);
+  expect(t).toEqual(ar);
 });
 
 test('an LTR run (English chosen) boots in English', () => {

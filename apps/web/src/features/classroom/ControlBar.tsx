@@ -3,6 +3,7 @@ import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 import type { BoardController } from './board/use-board';
 import { RoomButton } from './RoomButton';
+import { RequestButton } from './share/RequestButton';
 import { ShareButton } from './share/ShareButton';
 import type { ShareRequests } from './share/use-share-requests';
 import type { RoomController } from './use-room';
@@ -38,6 +39,7 @@ export function ControlBar({ room, board, role, share, onPeople, onRecordings }:
       <RoomButton icon="cam" on={snap.camOn} label={snap.camOn ? t.classroom.camOff : t.classroom.camOn} onClick={room.toggleCamera} />
       <ShareButton room={room} role={role} share={share} />
       <RoomButton icon="board" on={board.visible} label={t.classroom.board.toggle} onClick={board.toggleVisible} />
+      {!board.state.open && <RequestButton share={share} what="open" />}
       <RoomButton icon="people" label={t.classroom.people} onClick={onPeople} />
       {onRecordings && <RoomButton icon="film" label={t.classroom.recordings.title} onClick={onRecordings} />}
       <RoomButton icon="leave" variant="danger" label={t.classroom.leave} onClick={room.leave} />

@@ -13,6 +13,7 @@ import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { useJoinWindow } from '@/lib/public-config';
 import { adminDayQuery, dayAround } from './api';
 import { SessionCard } from './SessionCard';
 import { groupSessions, SESSION_GROUPS, type SessionGroup } from './sessions';
@@ -71,9 +72,10 @@ function DaySwitcher({ offset, onOffset, day }: { offset: number; onOffset: (n: 
 export function AdminSessions({ actions }: { actions?: ReactNode }) {
   const [offset, setOffset] = useState(0);
   const now = useNow();
+  const win = useJoinWindow();
   const day = dayAround(new Date(), offset);
   const lessons = useQuery(adminDayQuery(day));
-  const groups = groupSessions(lessons.data ?? [], now);
+  const groups = groupSessions(lessons.data ?? [], now, win);
   const none = SESSION_GROUPS.every((g) => groups[g].length === 0);
   let body: ReactNode = <ListSkeleton />;
   if (lessons.isError) body = <FormAlert>{t.common.error}</FormAlert>;

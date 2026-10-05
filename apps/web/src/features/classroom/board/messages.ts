@@ -13,8 +13,10 @@ export type BoardMessage =
   | { t: 'clear' }
   | { t: 'perm'; studentsCanDraw: boolean }
   | { t: 'open'; open: boolean }
+  /** «سماح» / «إيقاف كتابة {name}»: one guest may (or may no longer) draw. */
+  | { t: 'allow'; who: string; allow: boolean }
   | { t: 'sync-request' }
-  | { t: 'sync'; strokes: Stroke[]; studentsCanDraw: boolean; open: boolean };
+  | { t: 'sync'; strokes: Stroke[]; studentsCanDraw: boolean; open: boolean; allowed: string[] };
 
 const encoder = new TextEncoder();
 const decoder = new TextDecoder();
@@ -35,12 +37,22 @@ function asStroke(v: unknown): Stroke | null {
   return { id, by, color: color as PenColor, width: width as number, erase, pts: pts as number[] };
 }
 
+/** A list of identities; absent (an older client) reads as none. */
+function asIdentities(v: unknown): string[] | null {
+  if (v === undefined) return [];
+  return Array.isArray(v) && v.every((x) => typeof x === 'string') ? (v as string[]) : null;
+}
+
 function asSync(v: Obj): BoardMessage | null {
   if (!Array.isArray(v.strokes) || typeof v.studentsCanDraw !== 'boolean' || typeof v.open !== 'boolean') return null;
   const strokes = v.strokes.map(asStroke);
-  if (strokes.some((s) => s === null)) return null;
-  return { t: 'sync', strokes: strokes as Stroke[], studentsCanDraw: v.studentsCanDraw, open: v.open };
+  const allowed = asIdentities(v.allowed);
+  if (strokes.some((s) => s === null) || allowed === null) return null;
+  return { t: 'sync', strokes: strokes as Stroke[], studentsCanDraw: v.studentsCanDraw, open: v.open, allowed };
 }
+
+const asAllow = (v: Obj): BoardMessage | null =>
+  typeof v.who === 'string' && typeof v.allow === 'boolean' ? { t: 'allow', who: v.who, allow: v.allow } : null;
 
 function asMessage(v: unknown): BoardMessage | null {
   if (!isObj(v)) return null;
@@ -59,6 +71,8 @@ function asMessage(v: unknown): BoardMessage | null {
       return typeof v.studentsCanDraw === 'boolean' ? { t: 'perm', studentsCanDraw: v.studentsCanDraw } : null;
     case 'open':
       return typeof v.open === 'boolean' ? { t: 'open', open: v.open } : null;
+    case 'allow':
+      return asAllow(v);
     case 'sync':
       return asSync(v);
     default:
@@ -80,7 +94,7 @@ export const MAX_SYNC_BYTES = 12_000;
 
 /** The whole board as `sync` messages of at most ~maxBytes each (a lone huge stroke goes alone). */
 export function syncMessages(state: BoardState, maxBytes = MAX_SYNC_BYTES): BoardMessage[] {
-  const flags = { studentsCanDraw: state.studentsCanDraw, open: state.open };
+  const flags = { studentsCanDraw: state.studentsCanDraw, open: state.open, allowed: state.allowed };
   const out: BoardMessage[] = [];
   let batch: Stroke[] = [];
   let size = 0;

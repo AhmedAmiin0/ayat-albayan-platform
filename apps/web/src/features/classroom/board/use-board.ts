@@ -22,6 +22,10 @@ export interface BoardController {
   undo: () => void;
   clear: () => void;
   setStudentsCanDraw: (on: boolean) => void;
+  /** «سماح» / «إيقاف كتابة {name}» for one guest (staff). */
+  allowDrawer: (identity: string, allow: boolean) => void;
+  /** Opens the board for everyone (staff, after «اطلب فتح السبورة»). */
+  openForAll: () => void;
   toggleVisible: () => void;
 }
 
@@ -61,7 +65,7 @@ export function useBoard({ room, role }: { room: RoomController; role: JoinRole 
   return {
     state,
     visible,
-    canDraw: canDraw(role, state.studentsCanDraw),
+    canDraw: canDraw(me, state),
     canManage: manage,
     canAllow: canAllowStudents(role),
     tool,
@@ -75,6 +79,8 @@ export function useBoard({ room, role }: { room: RoomController; role: JoinRole 
     },
     clear: () => act({ t: 'clear' }),
     setStudentsCanDraw: (on) => act({ t: 'perm', studentsCanDraw: on }),
+    allowDrawer: (who, allow) => act({ t: 'allow', who, allow }),
+    openForAll: () => act({ t: 'open', open: true }),
     toggleVisible: () => (manage ? act({ t: 'open', open: !visible }) : setOverride(!visible)),
   };
 }

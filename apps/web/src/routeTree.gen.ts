@@ -36,6 +36,7 @@ import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
+import { Route as AdminTranslationsRouteImport } from './routes/admin/translations'
 import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
@@ -196,6 +197,11 @@ const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
 const AdminTeachersRoute = AdminTeachersRouteImport.update({
   id: '/teachers',
   path: '/teachers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTranslationsRoute = AdminTranslationsRouteImport.update({
+  id: '/translations',
+  path: '/translations',
   getParentRoute: () => AdminRoute,
 } as any)
 const AssistantIndexRoute = AssistantIndexRouteImport.update({
@@ -359,6 +365,7 @@ export interface FileRoutesByFullPath {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/translations': typeof AdminTranslationsRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -410,6 +417,7 @@ export interface FileRoutesByTo {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/translations': typeof AdminTranslationsRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -466,6 +474,7 @@ export interface FileRoutesById {
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/translations': typeof AdminTranslationsRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -523,6 +532,7 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/admin/translations'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -574,6 +584,7 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/admin/translations'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -629,6 +640,7 @@ export interface FileRouteTypes {
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/admin/translations'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -863,6 +875,13 @@ declare module '@tanstack/react-router' {
       path: '/teachers'
       fullPath: '/admin/teachers'
       preLoaderRoute: typeof AdminTeachersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/translations': {
+      id: '/admin/translations'
+      path: '/translations'
+      fullPath: '/admin/translations'
+      preLoaderRoute: typeof AdminTranslationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/assistant/': {
@@ -1114,6 +1133,7 @@ interface AdminRouteChildren {
   AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
+  AdminTranslationsRoute: typeof AdminTranslationsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -1137,6 +1157,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminStudentsRoute: AdminStudentsRouteWithChildren,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminTeachersRoute: AdminTeachersRouteWithChildren,
+  AdminTranslationsRoute: AdminTranslationsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

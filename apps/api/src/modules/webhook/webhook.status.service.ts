@@ -1,4 +1,4 @@
-import ar from '@ab/shared/i18n/ar.json';
+import { ar } from '../../common/i18n/server-text';
 import { Injectable } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import type { StatusEvent } from './webhook.events';

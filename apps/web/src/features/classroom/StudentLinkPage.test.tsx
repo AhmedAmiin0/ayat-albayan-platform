@@ -44,6 +44,7 @@ describe('StudentLinkPage /s/:token', () => {
     expect(screen.getByRole('heading', { name: t.studentLink.page.next })).toBeTruthy();
     expect(screen.getByText(t.studentLink.page.with.replace('{teacher}', 'أبرار'))).toBeTruthy();
     expect(screen.getByRole('button', { name: t.studentLink.page.enter })).toHaveProperty('disabled', true);
+    expect(screen.getByText(t.classroom.recordedNotice)).toBeTruthy();
     expect(String(fetchMock.mock.calls[0]?.[0])).toContain('/public/student/tok-1');
   });
 

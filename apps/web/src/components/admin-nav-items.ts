@@ -30,6 +30,7 @@ export const ADMIN_NAV_GROUPS = [
   [
     { key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' },
     { key: 'settings', to: '/admin/settings', label: t.settings.title, icon: 'sliders' },
+    { key: 'translations', to: '/admin/translations', label: t.translations.nav, icon: 'template' },
     { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock' },
   ],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];

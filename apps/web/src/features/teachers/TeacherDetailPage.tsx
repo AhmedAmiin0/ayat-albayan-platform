@@ -21,6 +21,7 @@ import { TeacherMeta } from './TeacherMeta';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from './TimeOffList';
 import { HeadActions } from '@/components/ui/head-actions';
+import { teacherLabel } from '@/lib/teacher-label';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';
 // «المستحقات» is its own page (the earnings button in the head).
@@ -69,7 +70,7 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   return (
     <>
       <PageHead className="mb-3.5">
-        <Cartouche>{data.display_name_ar}</Cartouche>
+        <Cartouche>{teacherLabel(data)}</Cartouche>
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
         <HeadActions
           primary={

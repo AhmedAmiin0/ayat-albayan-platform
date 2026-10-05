@@ -9,7 +9,7 @@ export function TeacherFacts({ teacher }: { teacher: Teacher }) {
     [t.teachers.displayNameAr, teacher.display_name_ar],
     [t.teachers.displayNameEn, teacher.display_name_en && <Ltr>{teacher.display_name_en}</Ltr>],
     [t.teachers.gender, t.teachers.genderLabel[teacher.gender]],
-    [t.teachers.programs, teacher.programs.map((p) => t.enums.program[p]).join(t.teachers.listSeparator)],
+    [t.teachers.programs, teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator)],
     [t.teachers.phone, teacher.phone_e164 && <Ltr>{teacher.phone_e164}</Ltr>],
     [t.teachers.meetingLink, teacher.meeting_link && <bdi dir="ltr" className="break-all">{teacher.meeting_link}</bdi>],
     [t.teachers.tz, <Ltr key="tz">{teacher.tz}</Ltr>],

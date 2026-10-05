@@ -28,7 +28,12 @@ import { LivekitWebhookController } from './livekit-webhook.controller';
 import { LivekitWebhookService } from './livekit-webhook.service';
 import { ModerationController } from './moderation.controller';
 import { ModerationQueries } from './moderation.queries';
-import { RecordingListService } from './recording-list.service';
+import { MuteLimit } from './mute-limit';
+import { LessonMuteController, MeetingMuteController } from './mute.controller';
+import { MeetingMuteService, MuteService } from './mute.service';
+import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recording-list.service';
+import { MeetingRecordingsController, RecordingStatusController } from './recordings.controller';
+import { RecordingLifecycle } from './recording.lifecycle';
 import { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
 import { RoomAdmission } from './room-admission';
@@ -58,6 +63,10 @@ import { StudentLinkService } from './student-link.service';
     JoinLinkStaffController,
     LessonShareController,
     MeetingShareController,
+    LessonMuteController,
+    MeetingRecordingsController,
+    RecordingStatusController,
+    MeetingMuteController,
     ClassroomPublicController,
     AssistantsController,
     ModerationController,
@@ -74,6 +83,7 @@ import { StudentLinkService } from './student-link.service';
     { provide: RECORDING_CONFIG, useFactory: (): RecordingConfig => recordingEnv(loadEnv()) },
     { provide: LIVEKIT_HTTP, useValue: ((url, init) => fetch(url, init)) satisfies HttpPost },
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
+    { provide: MuteLimit, useFactory: () => new MuteLimit() },
     ClassroomQueries,
     AssistantsQueries,
     AssistantLessonsQueries,
@@ -87,6 +97,8 @@ import { StudentLinkService } from './student-link.service';
     JoinLinkStaffService,
     ShareGrantService,
     MeetingShareGrantService,
+    MuteService,
+    MeetingMuteService,
     JoinLinkCopyService,
     AssistantsService,
     LessonRoleService,
@@ -94,9 +106,12 @@ import { StudentLinkService } from './student-link.service';
     RecordingQueries,
     LivekitApi,
     RecordingStarter,
+    RecordingLifecycle,
     RoomAdmission,
     KickService,
     RecordingListService,
+    RecordingViews,
+    MeetingRecordingListService,
     LivekitWebhookService,
     InternalMeetingsQueries,
     InternalMeetingsService,

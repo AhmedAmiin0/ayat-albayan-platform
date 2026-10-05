@@ -24,7 +24,7 @@ export function conflictText(c: Conflict, teacherTz?: string): string {
   let when = lessonWhenText(at, RIYADH_TZ, locale);
   if (teacherTz && teacherTz !== RIYADH_TZ && TEACHER_SIDE.has(c.kind)) {
     const city = tzCity(teacherTz) ?? teacherTz;
-    when += `${t.common.listJoiner}${t.booking.teacherClock.replace('{time}', clockTime(at, teacherTz)).replace('{city}', city)}`;
+    when += `${t.common.listSeparator}${t.booking.teacherClock.replace('{time}', clockTime(at, teacherTz)).replace('{city}', city)}`;
   }
   return t.booking.conflict[c.kind].replace('{when}', when);
 }

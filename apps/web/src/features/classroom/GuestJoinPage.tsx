@@ -12,6 +12,7 @@ import { t } from '@/lib/i18n';
 import { joinAsGuest } from './api';
 import { ClassroomRoom } from './ClassroomRoom';
 import { classroomErrorText, opensAtOf } from './errors';
+import { RecordedNotice } from './recordings/RecordedNotice';
 import type { RoomClient } from './room-types';
 import { opensAtText } from './window-hint';
 
@@ -61,6 +62,7 @@ export function GuestJoinPage({ linkToken, make, joinWith = joinAsGuest, title =
           )}
         </Field>
         {join.isError && <FormAlert>{problemText(join.error)}</FormAlert>}
+        <RecordedNotice />
         <Button type="submit" size="lg" disabled={join.isPending}>
           {join.isPending ? t.classroom.joining : t.classroom.guest.join}
         </Button>

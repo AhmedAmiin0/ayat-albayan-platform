@@ -26,9 +26,11 @@ export interface BoardState {
   studentsCanDraw: boolean;
   /** The staff opened the board for everyone. */
   open: boolean;
+  /** Guests a staff «سماح» let draw (after «اطلب الكتابة على السبورة»), by identity. */
+  allowed: string[];
 }
 
-export const EMPTY_BOARD: BoardState = { strokes: [], studentsCanDraw: false, open: false };
+export const EMPTY_BOARD: BoardState = { strokes: [], studentsCanDraw: false, open: false, allowed: [] };
 
 /** The canvas' own pixel size (CSS scales it); also the size of the shared-board video. */
 export const BOARD_SIZE = { width: 1600, height: 900 } as const;
@@ -38,10 +40,19 @@ export const ERASER_WIDTH = 0.03;
 
 const STAFF: ReadonlySet<JoinRole> = new Set<JoinRole>(['teacher', 'admin', 'assistant']);
 
-/** Teacher, admin and assistant always; a guest (student / guardian) only when allowed; sales never. */
-export function canDraw(role: JoinRole | null, studentsCanDraw: boolean): boolean {
-  if (role === null) return false;
-  return STAFF.has(role) || (role === 'guest' && studentsCanDraw);
+export interface Drawer {
+  identity: string;
+  role: JoinRole | null;
+}
+
+/**
+ * Teacher, admin and assistant always; a guest (student / guardian) when every student may
+ * («السماح للطلاب بالكتابة») or this one was allowed by name; sales never.
+ */
+export function canDraw(who: Drawer, perms: Pick<BoardState, 'studentsCanDraw' | 'allowed'>): boolean {
+  if (who.role === null) return false;
+  if (STAFF.has(who.role)) return true;
+  return who.role === 'guest' && (perms.studentsCanDraw || perms.allowed.includes(who.identity));
 }
 
 /** Opens / closes the board for everyone and clears it. */

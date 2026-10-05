@@ -1,6 +1,7 @@
 import { DisconnectReason, Room, RoomEvent, type Participant, type Track } from 'livekit-client';
 import { boardSharer } from './livekit-board-share';
 import { listenData, sendData } from './livekit-data';
+import { watchModeration } from './livekit-moderated';
 import { attachTrack } from './media-attach';
 import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from './room-types';
 import { stopRevokedShare } from './share/stop-revoked';
@@ -68,6 +69,7 @@ export function createLivekitRoom(): RoomClient {
     // The same token opened elsewhere: stay out, rejoining would kick that window back.
     .on(RoomEvent.Disconnected, (reason) => setStatus(closingStatus(reason)));
   const setBoard = boardSharer(room);
+  const moderation = watchModeration(room);
 
   const attempt = async (device: MediaFailure['device'], on: () => Promise<unknown>): Promise<MediaFailure[]> => {
     try {
@@ -96,8 +98,9 @@ export function createLivekitRoom(): RoomClient {
       listeners.add(listener);
       return () => void listeners.delete(listener);
     },
-    setMic: async (on) => void (await room.localParticipant.setMicrophoneEnabled(on)),
-    setCamera: async (on) => void (await room.localParticipant.setCameraEnabled(on)),
+    setMic: (on) => moderation.self(async () => void (await room.localParticipant.setMicrophoneEnabled(on))),
+    setCamera: (on) => moderation.self(async () => void (await room.localParticipant.setCameraEnabled(on))),
+    onModerated: (listener) => moderation.on(listener),
     setShare: async (on) => {
       if (on && last.boardShareOn) await setBoard(null);
       await room.localParticipant.setScreenShareEnabled(on);

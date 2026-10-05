@@ -1,3 +1,4 @@
+import { teacherName } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
@@ -12,6 +13,7 @@ import { subscriptionHref } from './package-choice';
 import { stepsFor, type Step } from './steps';
 import { useBookTrial } from './use-book-trial';
 import { WizardStep } from './WizardStep';
+import { locale } from '@/lib/locale';
 
 const stepNames = (): Record<Step, string> => ({
   contact: t.booking.steps.students,
@@ -80,7 +82,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
         {book.isSuccess ? (
           <BookedPanel
             result={book.data}
-            teacherName={draft.teacher?.display_name_ar ?? ''}
+            teacherName={draft.teacher ? teacherName(draft.teacher, locale) : ''}
             tz={draft.tz}
             onDone={leave}
             next={subscriptionHref(draft, book.data)}

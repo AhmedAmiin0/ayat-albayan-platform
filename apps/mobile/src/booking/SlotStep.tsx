@@ -75,7 +75,7 @@ function SlotButton({
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={local ? `${riyadh}${t.common.listJoiner}${local}` : riyadh}
+      accessibilityLabel={local ? `${riyadh}${t.common.listSeparator}${local}` : riyadh}
       onPress={() => onPick(slot.starts_at)}
       style={({ pressed }) => ({
         minHeight: shape.control.touch,

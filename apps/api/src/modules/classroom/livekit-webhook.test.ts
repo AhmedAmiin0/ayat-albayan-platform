@@ -43,11 +43,12 @@ const ended = (info: object, event = 'egress_ended') => egressOutcome({ event, e
 
 describe('egressOutcome', () => {
   it('complete (or limit reached) = done, with LiveKit’s end time (ns)', () => {
-    expect(ended({ egressId: 'EG_1', status: 'EGRESS_COMPLETE', endedAt: '1791219600000000000' })).toEqual({
+    expect(ended({ egressId: 'EG_1', status: 'EGRESS_COMPLETE', endedAt: '1791219600000000000', roomName: 'lesson-1' })).toEqual({
       egressId: 'EG_1',
       status: 'done',
       endedAt: '2026-10-05T17:00:00.000Z',
       error: null,
+      room: 'lesson-1',
     });
     expect(ended({ egressId: 'EG_1', status: 'EGRESS_LIMIT_REACHED' })?.status).toBe('done');
   });
