@@ -1,4 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
+import { openNav } from '../support/nav';
 import { withSql } from '../support/schedule';
 
 // «الترجمات» (owner, 2026-10-05: dynamic translations): an admin overrides a nav label in
@@ -26,9 +27,11 @@ test.describe('translations («الترجمات»)', () => {
     await editor.getByRole('button', { name: ar.translations.save }).click();
     await expect(page.getByRole('status').filter({ hasText: ar.translations.saved })).toBeVisible();
 
-    const nav = page.getByRole('navigation', { name: ar.nav.label });
+    // The nav: the sidebar, or the «القائمة» sheet below 900px (closed again with Esc).
+    const nav = async () => (await openNav(page)).getByRole('navigation', { name: ar.nav.label });
     await page.reload();
-    await expect(nav.getByRole('link', { name: EDITED })).toBeVisible();
+    await expect((await nav()).getByRole('link', { name: EDITED })).toBeVisible();
+    await page.keyboard.press('Escape');
 
     await page.getByLabel(ar.translations.search, { exact: true }).fill(KEY);
     await expect(page.getByRole('row').filter({ hasText: ar.translations.overridden })).toHaveCount(1);
@@ -37,7 +40,7 @@ test.describe('translations («الترجمات»)', () => {
     await expect(page.getByRole('status').filter({ hasText: ar.translations.restored })).toBeVisible();
 
     await page.reload();
-    await expect(nav.getByRole('link', { name: new RegExp(`^${ar.nav.leads}`) })).toBeVisible();
-    await expect(nav.getByRole('link', { name: EDITED })).toHaveCount(0);
+    await expect((await nav()).getByRole('link', { name: new RegExp(`^${ar.nav.leads}`) })).toBeVisible();
+    await expect((await nav()).getByRole('link', { name: EDITED })).toHaveCount(0);
   });
 });
