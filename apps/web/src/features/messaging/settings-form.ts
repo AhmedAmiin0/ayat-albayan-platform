@@ -33,7 +33,7 @@ export const flag = (form: SettingsForm, key: string): boolean => form[key] === 
 
 function formValue(def: SettingDef, v: AcademySettings[SettingKey]): string | boolean {
   if (typeof v === 'boolean') return v;
-  if (Array.isArray(v)) return v.join(t.common.listJoiner);
+  if (Array.isArray(v)) return v.join(t.common.listSeparator);
   if (v === null) return String(def.type === 'int' ? (def.onValue ?? def.min) : '');
   return String(v);
 }

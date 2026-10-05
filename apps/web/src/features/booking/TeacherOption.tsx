@@ -25,9 +25,9 @@ export function TeacherOption({ option, checked, onPick }: TeacherOptionProps) {
   const full = option.max_students !== null && option.students_count >= option.max_students;
   const meta = [
     t.teachers.genderLabel[option.gender],
-    option.programs.map((p) => t.enums.program[p]).join(t.teachers.listSeparator),
+    option.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator),
     tzCity(option.tz) ?? option.tz,
-  ].join(t.teachers.listSeparator);
+  ].join(t.common.listSeparator);
 
   return (
     <label

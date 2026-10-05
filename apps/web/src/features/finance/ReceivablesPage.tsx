@@ -35,7 +35,7 @@ export function ReceivablesPage() {
             <span className="text-sm text-ink-3">{t.finance.owedTotal}</span>
             <Amount amount={v.total} currency={v.currency} className="text-xl font-semibold" />
           </p>
-          {v.fx_missing.length > 0 && <p className="text-xs text-act">{t.finance.fxMissing.replace('{currencies}', v.fx_missing.join('، '))}</p>}
+          {v.fx_missing.length > 0 && <p className="text-xs text-act">{t.finance.fxMissing.replace('{currencies}', v.fx_missing.join(t.common.listSeparator))}</p>}
           {v.totals.map((x) => (
             <p key={x.currency} className="flex flex-wrap gap-x-4 text-xs text-ink-2">
               <Amount amount={x.owed} currency={x.currency} className="font-semibold" />

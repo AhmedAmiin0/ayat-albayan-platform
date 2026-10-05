@@ -21,7 +21,7 @@ export function SlotButton({ startsAt, tz, selected, onPick }: SlotButtonProps) 
     <Pressable
       accessibilityRole="radio"
       accessibilityState={{ checked: selected }}
-      accessibilityLabel={local ? `${riyadh}${t.common.listJoiner}${local}` : riyadh}
+      accessibilityLabel={local ? `${riyadh}${t.common.listSeparator}${local}` : riyadh}
       onPress={() => onPick(startsAt)}
       style={({ pressed }) => ({
         minHeight: shape.control.touch,
