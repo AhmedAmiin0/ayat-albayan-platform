@@ -5,9 +5,9 @@ import { uploadTeacherReceipt } from '@/earnings/upload-receipt';
 import { apiSend } from '@/lib/api';
 import { payBody, type PayDraft } from './payout-actions';
 
-/** Money moved: the month list, the teacher's ledger and the summaries all re-read. */
+/** Money moved: the month list, the teacher's ledger, the summaries and the money lists (payments, receivables) all re-read. */
 export const refreshMoney = (client: QueryClient) =>
-  Promise.all(['payouts', 'teacher-earnings', 'dashboard'].map((key) => client.invalidateQueries({ queryKey: [key] })));
+  Promise.all(['payouts', 'teacher-earnings', 'dashboard', 'payments', 'receivables'].map((key) => client.invalidateQueries({ queryKey: [key] })));
 
 export type PayoutMove = { id: string; move: 'approve' | 'reopen' } | { id: string; move: 'unpay'; reason: string };
 

@@ -8,7 +8,7 @@ export const activeMonths = (months: readonly MonthFinance[]): MonthFinance[] =>
 /** Warnings under the cards: currencies with no rate (left out of the totals) and lessons with no rate. */
 export function summaryWarnings(f: FinanceSummary['finance']): string[] {
   const lines: string[] = [];
-  if (f.fx_missing.length > 0) lines.push(t.finance.fxMissing.replace('{currencies}', f.fx_missing.join(t.teachers.listSeparator)));
+  if (f.fx_missing.length > 0) lines.push(t.finance.fxMissing.replace('{currencies}', f.fx_missing.join(t.common.listSeparator)));
   if (f.unrated_lessons > 0) lines.push(t.mobileFinance.summary.noRates.replace('{count}', String(f.unrated_lessons)));
   return lines;
 }

@@ -10,7 +10,7 @@ export interface Card {
 }
 
 const DASH = '—';
-const money = (n: number | undefined, currency: string) => (n === undefined ? DASH : wholeText(n, currency));
+const money = (n: number | undefined, currency?: string) => (n === undefined ? DASH : wholeText(n, currency));
 
 /** The six cards: the year's four totals (reporting currency), owed to teachers (EGP), owed by students. */
 export function summaryCards(
@@ -19,7 +19,7 @@ export function summaryCards(
   owed: ReceivablesView | undefined,
 ): Card[] {
   const f: Partial<FinanceSummary['finance']> = finance ?? {};
-  const cur = f.currency ?? 'EGP';
+  const cur = f.currency ?? owed?.currency; // a figure shows only once its currency came with it
   const loss = (f.gross_margin ?? 0) < 0;
   return [
     { label: t.dashboard.revenue, value: money(f.revenue, cur), tone: 'ink' },

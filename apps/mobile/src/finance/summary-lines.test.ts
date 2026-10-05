@@ -17,6 +17,6 @@ test('months without money are dropped and the rest run newest first', () => {
 
 test('warnings for a currency without a rate and for lessons without a calculated rate', () => {
   expect(summaryWarnings(finance())).toEqual([]);
-  expect(summaryWarnings(finance({ fx_missing: ['KWD', 'OMR'] }))[0]).toBe(t.finance.fxMissing.replace('{currencies}', `KWD${t.teachers.listSeparator}OMR`));
+  expect(summaryWarnings(finance({ fx_missing: ['KWD', 'OMR'] }))[0]).toBe(t.finance.fxMissing.replace('{currencies}', `KWD${t.common.listSeparator}OMR`));
   expect(summaryWarnings(finance({ unrated_lessons: 3 }))).toEqual([t.mobileFinance.summary.noRates.replace('{count}', '3')]);
 });

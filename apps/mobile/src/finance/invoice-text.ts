@@ -6,7 +6,7 @@ const kinds: Record<InvoiceView['kind'], string> = { package: t.finance.invoiceP
 
 /** The students of a booking invoice, «سهيلة، محمد», or «بدون طالب». */
 export const invoiceStudents = (i: Pick<InvoiceView, 'students'>): string =>
-  i.students.map((s) => s.name).join(t.teachers.listSeparator) || t.mobileFinance.invoices.noStudents;
+  i.students.map((s) => s.name).join(t.common.listSeparator) || t.mobileFinance.invoices.noStudents;
 
 /** «باقة · رُفعت من الجهاز»: what it is and how it arrived. */
 export function invoiceKind(i: Pick<InvoiceView, 'kind' | 'source'>): string {

@@ -19,9 +19,9 @@ const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
 
-test('an English run reads en.json: the «Accounts» section on More', async () => {
+test('an English run reads en.json: the «Payouts and expenses» section on More', async () => {
   expect(locale).toBe('en');
-  expect(t).toBe(en);
+  expect(t.mobileFinance.section).toBe(en.mobileFinance.section); // t is a lookup over en.json, not the object itself
   await render(<FinanceSection />);
   expect(screen.getByRole('header', { name: en.mobileFinance.section })).toBeTruthy();
   expect(screen.getByRole('button', { name: en.mobileFinance.rows.expenses })).toBeTruthy();

@@ -14,3 +14,9 @@ test('before anything loads every card is a dash; a loss is marked', () => {
   expect(cards.map((c) => c.tone)).toEqual(['ink', 'ink', 'ink', 'bad', 'ink', 'ink']);
   expect(cards[3]?.label).toBe(t.dashboard.grossMargin);
 });
+
+test('the totals use the API reporting currency, not a hard-coded one; receivables carry their own', () => {
+  const sar = { ...finance, currency: 'SAR' } as FinanceSummary['finance'];
+  expect(summaryCards(sar, undefined, undefined).slice(0, 4).every((c) => c.value.endsWith('ر.س'))).toBe(true);
+  expect(summaryCards(undefined, undefined, owed).map((c) => c.value)).toEqual([...Array(5).fill('—'), '⁦20⁩ ر.س']);
+});

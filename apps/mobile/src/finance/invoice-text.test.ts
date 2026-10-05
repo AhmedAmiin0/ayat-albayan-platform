@@ -4,7 +4,7 @@ import { invoiceKind, invoiceStudents, invoiceSubtitle } from './invoice-text';
 
 test('students are joined, a booking without one says so', () => {
   const two = INVOICE(1, { students: [{ id: 'a', name: 'سهيلة', code: 'AB-1' }, { id: 'b', name: 'محمد', code: 'AB-2' }] });
-  expect(invoiceStudents(two)).toBe(`سهيلة${t.teachers.listSeparator}محمد`);
+  expect(invoiceStudents(two)).toBe(`سهيلة${t.common.listSeparator}محمد`);
   expect(invoiceStudents(INVOICE(2, { students: [] }))).toBe(t.mobileFinance.invoices.noStudents);
 });
 

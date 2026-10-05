@@ -1696,7 +1696,7 @@
     "allStatuses": "All statuses"
   },
   "mobileFinance": {
-    "section": "Accounts",
+    "section": "Payouts and expenses",
     "rows": {
       "payouts": "Monthly teacher payouts",
       "expenses": "Expenses",
@@ -1728,7 +1728,8 @@
       "withReceipt": "Receipt attached",
       "addTitle": "New expense",
       "categoryRequired": "Choose a category",
-      "save": "Save expense"
+      "save": "Save expense",
+      "currencyNote": "Currency: Egyptian pounds (EGP) only. For an expense in another currency, use the admin website."
     },
     "invoices": {
       "empty": "No invoices",

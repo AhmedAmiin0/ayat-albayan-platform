@@ -19,7 +19,7 @@ export function SummaryCards({ finance }: { finance: FinanceSummary['finance'] |
           <KpiCard key={c.label} {...c} />
         ))}
       </View>
-      {[...(finance ? summaryWarnings(finance) : []), ...(missing.length ? [t.finance.fxMissing.replace('{currencies}', missing.join(t.teachers.listSeparator))] : [])].map((w) => (
+      {[...(finance ? summaryWarnings(finance) : []), ...(missing.length ? [t.finance.fxMissing.replace('{currencies}', missing.join(t.common.listSeparator))] : [])].map((w) => (
         <Note key={w}>{w}</Note>
       ))}
     </View>

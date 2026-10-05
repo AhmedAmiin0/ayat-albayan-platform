@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { Note } from '@/more/Note';
 import { AmountField } from '@/payments/AmountField';
 import { FormLabel } from '@/payments/FormLabel';
 import { PaidDayPicker } from '@/payments/PaidDayPicker';
@@ -46,6 +47,7 @@ export function ExpenseForm({ categories, onDone }: ExpenseFormProps) {
         {shown.category ? <ErrorLine message={shown.category} /> : null}
       </View>
       <AmountField value={draft.amountText} onChange={(amountText) => set({ amountText })} currency="EGP" {...(shown.amount ? { error: shown.amount } : {})} />
+      <Note>{t.mobileFinance.expenses.currencyNote}</Note>
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
       <Field label={t.finance.vendor} value={draft.vendor} onChangeText={(vendor) => set({ vendor })} maxLength={200} />
       <View style={{ gap: 6 }}>
