@@ -10,6 +10,10 @@ export type StudentListRow = Pick<
   Student,
   'id' | 'code' | 'name' | 'status' | 'program' | 'tz' | 'created_at'
 > & {
+  /** Newest package's remaining lessons; null without a package (v_student_list). */
+  package_remaining: number | null;
+  /** On an active weekly schedule rule. */
+  has_weekly: boolean;
   guardian: { name: string; phone_e164: string };
   teacher: { display_name_ar: string } | null;
 };

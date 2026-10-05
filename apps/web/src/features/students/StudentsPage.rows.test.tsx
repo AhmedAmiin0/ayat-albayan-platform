@@ -21,7 +21,9 @@ const ROW = {
 };
 
 function renderPage(page: { items: object[]; total: number }, search = '') {
-  apiFetch.mockResolvedValue({ ...page, page: 1, pageSize: 20 });
+  apiFetch.mockImplementation((path: string) =>
+    Promise.resolve(path.startsWith('/students?') ? { ...page, page: 1, pageSize: 20 } : []),
+  );
   const onOpen = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -37,7 +39,7 @@ describe('StudentsPage rows (docs/07 §6 Data table)', () => {
     expect(screen.getByRole('heading', { level: 1, name: t.students.title })).toBeTruthy();
     expect(await screen.findByText(t.students.count.replace('{n}', '45'))).toBeTruthy();
     expect(screen.getByText('AB-0183').getAttribute('dir')).toBe('ltr');
-    expect(screen.getByText(t.enums.studentStatus.trial).closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
+    expect(within(screen.getByRole('table')).getByText(t.enums.studentStatus.trial).closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
   });
 
   it('no teacher: «يحتاج معلم/ة» in the hamish column and folded under the name', async () => {

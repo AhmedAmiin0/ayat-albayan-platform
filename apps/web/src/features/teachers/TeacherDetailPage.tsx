@@ -17,13 +17,15 @@ import { RatesTable } from './RatesTable';
 import { TeacherDialog } from './TeacherDialog';
 import { TeacherFacts } from './TeacherFacts';
 import { TeacherMeta } from './TeacherMeta';
+import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from './TimeOffList';
 
-type Tab = 'data' | 'availability';
-// TODO(R-TCH-03, R-TCH-04): «الطلاب» and «المستحقات» tabs once their data exists.
+type Tab = 'data' | 'availability' | 'students';
+// «المستحقات» is its own page (the earnings button in the head).
 const TABS: { value: Tab; label: string }[] = [
   { value: 'data', label: t.teachers.tabData },
   { value: 'availability', label: t.availability.title },
+  { value: 'students', label: t.teachers.tabStudents },
 ];
 
 /** «المواعيد المتاحة» tab: the weekly editor, then time-off beside the rates (docs/07 §8). */
@@ -78,7 +80,13 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
       <TeacherMeta teacher={data} />
       <Tabs label={t.teachers.profile} tabs={TABS} value={tab} onChange={setTab} />
       <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>
-        {tab === 'availability' ? <AvailabilityPanel teacher={data} /> : <TeacherFacts teacher={data} />}
+        {tab === 'availability' ? (
+          <AvailabilityPanel teacher={data} />
+        ) : tab === 'students' ? (
+          <TeacherStudentsPanel teacherId={data.id} />
+        ) : (
+          <TeacherFacts teacher={data} />
+        )}
       </div>
       {editing && <TeacherDialog teacher={data} onClose={() => setEditing(false)} />}
     </>
