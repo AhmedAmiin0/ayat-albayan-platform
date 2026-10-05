@@ -31,16 +31,16 @@ jobs:
       PGPORT: '5432'
       PGUSER: postgres.${{ vars.SUPABASE_PROJECT_REF || 'knxfwiimjcifwckhwbim' }}
       PGDATABASE: postgres
-      SUPABASE_URL: ${{ vars.SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
+      SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
       ACTION: ${{ inputs.action }}
     steps:
       - name: Check the develop environment (names only, never values)
         # Secrets only on the steps that need them (not on checkout / install).
         env:
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
           TEST_TEACHER_EMAIL: ${{ vars.TEST_TEACHER_EMAIL || secrets.TEST_TEACHER_EMAIL }}
           TEST_ACCOUNT_PASSWORD: ${{ secrets.TEST_ACCOUNT_PASSWORD }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           for v in TEST_ACCOUNT_PASSWORD TEST_TEACHER_EMAIL PGPASSWORD; do
             if [ -n "${!v}" ]; then echo "::add-mask::${!v}"; fi
@@ -63,10 +63,10 @@ jobs:
         run: pnpm turbo build --filter=@ab/shared
       - name: Run seed-test-account on staging
         env:
-          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
+          PGPASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
           TEST_TEACHER_EMAIL: ${{ vars.TEST_TEACHER_EMAIL || secrets.TEST_TEACHER_EMAIL }}
           TEST_ACCOUNT_PASSWORD: ${{ secrets.TEST_ACCOUNT_PASSWORD }}
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
         run: |
           if [ -n "$SUPABASE_SERVICE_ROLE_KEY" ]; then echo "account via: Supabase Admin API"; else echo "account via: SQL (no SUPABASE_SERVICE_ROLE_KEY)"; fi
           flags="--allow-remote-staging"
