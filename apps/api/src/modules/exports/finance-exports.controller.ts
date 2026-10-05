@@ -2,7 +2,7 @@ import { monthParam } from '@ab/shared';
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { rangeWindow, riyadhDate } from '../dashboard/range';
 import { ReceivablesService } from '../receivables/receivables.service';
 import { parseOrThrow } from '../teachers/http';
@@ -34,7 +34,7 @@ function monthWindow(month: string) {
 /** Finance CSVs (owner, 2026-10-05): expenses, the teacher ledger, receivables. Admin only. */
 @ApiTags('exports')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('exports.read')
 @Controller('exports')
 export class FinanceExportsController {
   constructor(

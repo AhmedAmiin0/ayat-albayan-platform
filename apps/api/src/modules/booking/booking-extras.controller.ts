@@ -1,7 +1,7 @@
 import { invoiceUploadSchema, type MakeupCandidate, type SignedUpload } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { parseOrThrow } from '../teachers/http';
 import { makeupCandidatesQuery } from './booking.dto';
 import { BookingInvoices } from './booking.invoice';
@@ -10,7 +10,7 @@ import { MakeupCandidates } from './makeup-candidates.service';
 /** The invoice and the makeup half of the booking wizard API (R-PAY-03, R-SCH-10). Admin only. */
 @ApiTags('booking')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('booking.write')
 @Controller('booking')
 export class BookingExtrasController {
   constructor(

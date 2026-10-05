@@ -2,7 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
 import { AuditModule } from '../../common/audit/audit.service';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import { AuthModule } from '../../common/auth/auth.module';
 import { DB, DbModule } from '../../common/db/db.module';
 import { fakeDb, type FakeResult } from '../guardians/fake-db';
@@ -25,7 +25,7 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     const mod = await Test.createTestingModule({ imports: [DbModule, AuditModule, AuthModule, StudentsModule] })
       .overrideProvider(DB)
       .useValue(fake.db)
-      .overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

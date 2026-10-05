@@ -1,7 +1,7 @@
 import type { LessonView, ScheduleOverview } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { parseDay, parseWindow } from './lesson-queries.schema';
 import { LessonViews } from './lesson-views';
 import { OverviewService } from './overview/overview.service';
@@ -12,7 +12,7 @@ import { OverviewService } from './overview/overview.service';
  */
 @ApiTags('lessons')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('lessons.read')
 @Controller('lessons')
 export class LessonsController {
   constructor(

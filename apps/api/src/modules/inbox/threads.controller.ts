@@ -3,7 +3,7 @@ import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/com
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { AuditService } from '../../common/audit/audit.service';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { phoneParam } from './phone-param';
@@ -28,7 +28,7 @@ type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope
  */
 @ApiTags('inbox')
 @ApiBearerAuth()
-@Roles('admin', 'teacher', 'sales')
+@Permissions('inbox.read')
 @Controller('threads')
 export class ThreadsController {
   constructor(
@@ -49,6 +49,7 @@ export class ThreadsController {
 
   @Post(':phone/text')
   @HttpCode(201)
+  @Permissions('inbox.send')
   async text(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTextSchema, body);
     const { scope, sales } = await this.scopes(user);
@@ -58,6 +59,7 @@ export class ThreadsController {
 
   @Post(':phone/template')
   @HttpCode(201)
+  @Permissions('inbox.send')
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
     const { scope, sales } = await this.scopes(user);

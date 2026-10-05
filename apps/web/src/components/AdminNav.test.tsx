@@ -28,14 +28,15 @@ describe('AdminNav', () => {
     [t.finance.invoicesTitle, '/admin/invoices'],
     [t.finance.receivablesTitle, '/admin/receivables'],
     [t.finance.summaryTitle, '/admin/finance'],
+    [t.nav.roles, '/admin/roles'],
   ])('links %s to %s', (label, href) => {
     render(<AdminNav />);
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);
   });
 
-  it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox, settings and the activity log', () => {
+  it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox, settings, activity and roles', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(18);
+    expect(screen.getAllByRole('link')).toHaveLength(19);
   });
 
   it('groups the money pages under «المالية»', () => {

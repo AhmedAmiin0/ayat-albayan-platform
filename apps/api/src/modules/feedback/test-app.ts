@@ -5,7 +5,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -39,7 +39,7 @@ function mocks() {
 export async function feedbackApp(secret: string | null = SECRET) {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(FeedbackQueries).useValue(m.queries)
     .overrideProvider(FeedbackReadQueries).useValue(m.reads)
     .overrideProvider(TeachersQueries).useValue(m.teachers)

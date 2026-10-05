@@ -7,7 +7,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
@@ -19,7 +19,7 @@ import { TeacherOptionsService } from './teacher-options.service';
 /** Booking wizard API (R-SCH-06, R-SCH-04, R-LEAD-06; docs/10 §5 #12–14). Admin only. */
 @ApiTags('booking')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('booking.write')
 @Controller('booking')
 export class BookingController {
   constructor(

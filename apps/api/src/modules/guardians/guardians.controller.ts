@@ -12,7 +12,7 @@ import {
   Query,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { GuardiansService } from './guardians.service';
 import { blankToNull, listQuerySchema, parse } from './http';
@@ -20,17 +20,19 @@ import { blankToNull, listQuerySchema, parse } from './http';
 /** Admin-only guardians CRUD (R-STU-02, R-STU-04). */
 @ApiTags('guardians')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('guardians.write')
 @Controller('guardians')
 export class GuardiansController {
   constructor(private readonly guardians: GuardiansService) {}
 
   @Get()
+  @Permissions('guardians.read')
   list(@Query() query: unknown) {
     return this.guardians.list(parse(listQuerySchema, query));
   }
 
   @Get(':id')
+  @Permissions('guardians.read')
   get(@Param('id', ParseUUIDPipe) id: string) {
     return this.guardians.get(id);
   }

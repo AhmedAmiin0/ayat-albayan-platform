@@ -12,7 +12,7 @@ import {
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly } from '../teachers/http';
 import { ExpenseYearService } from './expense-year.service';
@@ -24,7 +24,7 @@ const yearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') }
 /** Expenses (X1–X4, R-RPT-02, issue E4; owner 2026-10-05): list, year table, CRUD, receipts. Admin only, audited. */
 @ApiTags('expenses')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('expenses.write')
 @Controller('expenses')
 export class ExpensesController {
   constructor(
@@ -35,6 +35,7 @@ export class ExpensesController {
 
   /** `?month=YYYY-MM` or `?year=YYYY`; drafts included (flagged). */
   @Get()
+  @Permissions('expenses.read')
   async list(@Query() query: unknown): Promise<ExpenseView[]> {
     const q = parseOrThrow(expenseListQuery, query);
     const [first, last] = 'month' in q ? [monthStart(q.month), monthStart(q.month)] : [`${q.year}-01-01`, `${q.year}-12-01`];
@@ -43,6 +44,7 @@ export class ExpensesController {
 
   /** The 12-month table in the reporting currency. Static segment, before `:id`. */
   @Get('year')
+  @Permissions('expenses.read')
   year(@Query() query: unknown): Promise<ExpenseYearView> {
     return this.years.year(parseOrThrow(yearQuery, query).year);
   }
@@ -59,6 +61,7 @@ export class ExpensesController {
   }
 
   @Get(':id/receipt')
+  @Permissions('expenses.read')
   receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
     return this.service.receipt(id);
   }

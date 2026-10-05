@@ -13,6 +13,7 @@ function env(name: string): string {
  * message_templates (migration 141) and expense_categories (20261005000204) are reference data
  * seeded by their migrations (like an enum), so they survive; a journey that changes a template's
  * status puts it back, and a category an e2e adds is harmless (its key is unique per run).
+ * The five system roles and their grants (20261005000220) survive too; custom roles are dropped.
  */
 export async function resetDb(): Promise<void> {
   const url = env('DATABASE_URL');
@@ -21,9 +22,11 @@ export async function resetDb(): Promise<void> {
   try {
     const rows = await sql<{ t: string }[]>`
       select format('%I.%I', schemaname, tablename) as t from pg_tables
-      where schemaname = 'public' and tablename not in ('message_templates', 'expense_categories')`;
+      where schemaname = 'public'
+        and tablename not in ('message_templates', 'expense_categories', 'roles', 'role_permissions')`;
     if (rows.length) await sql.unsafe(`truncate ${rows.map((r) => r.t).join(', ')} restart identity cascade`);
     await sql`delete from auth.users`;
+    await sql`delete from public.roles where not is_system`;
   } finally {
     await sql.end();
   }

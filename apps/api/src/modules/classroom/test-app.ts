@@ -4,7 +4,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -63,7 +63,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     meetings: meetingQueries(),
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ClassroomQueries).useValue(m.queries)
     .overrideProvider(AssistantsQueries).useValue(m.assistants)
     .overrideProvider(AssistantLessonsQueries).useValue(m.assistantLessons)

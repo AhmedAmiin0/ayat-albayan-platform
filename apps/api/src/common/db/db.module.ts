@@ -9,7 +9,7 @@ export type Db = SupabaseClient<Database>;
 
 /**
  * Typed service-role supabase-js client, global so feature modules only inject `DB`.
- * It bypasses RLS: every route must be guarded (@Roles / ownership checks) — rule 9, R-NFR-02.
+ * It bypasses RLS: every route must be guarded (@Permissions / ownership checks) — rule 9, R-NFR-02.
  */
 @Global()
 @Module({

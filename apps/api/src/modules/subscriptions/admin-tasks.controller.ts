@@ -2,7 +2,7 @@ import type { AdminTaskView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { parseOrThrow, type Page } from '../teachers/http';
@@ -12,7 +12,7 @@ import { adminTaskListQuery } from './subscriptions.dto';
 /** Admin tasks raised by the R-SUB-02 alerts: renewal due, package unpaid (S7, S8). */
 @ApiTags('admin-tasks')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('tasks.manage')
 @Controller('admin-tasks')
 export class AdminTasksController {
   constructor(

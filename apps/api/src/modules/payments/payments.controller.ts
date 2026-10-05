@@ -8,7 +8,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
 import { paymentFilter, paymentListQuery } from './payments.dto';
@@ -19,7 +19,7 @@ import { ReceiptsService } from './receipts.service';
 /** Payments + receipts (P1–P7, R-PAY-01, R-MOB-02). Admin only. */
 @ApiTags('payments')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('payments.write')
 @Controller('payments')
 export class PaymentsController {
   constructor(
@@ -28,6 +28,7 @@ export class PaymentsController {
   ) {}
 
   @Get()
+  @Permissions('payments.read')
   list(@Query() query: unknown): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
     return this.payments.list(paymentFilter(parseOrThrow(paymentListQuery, query)));
   }
@@ -45,11 +46,13 @@ export class PaymentsController {
   }
 
   @Get(':id')
+  @Permissions('payments.read')
   get(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentView> {
     return this.payments.get(id);
   }
 
   @Get(':id/receipt')
+  @Permissions('payments.read')
   receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
     return this.payments.receipt(id);
   }

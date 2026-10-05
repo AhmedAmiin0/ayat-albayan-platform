@@ -1,7 +1,7 @@
 import { ruleCancelRequestSchema, type LessonView } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { LessonCancelService } from './lesson-cancel.service';
@@ -13,7 +13,7 @@ export type RuleCancelResult = { rule_id: string; cancelled: LessonView[] };
 /** POST /schedule-rules/:id/cancel — ends a rule and cancels its open lessons (R-SCH-07). */
 @ApiTags('schedule-rules')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('lessons.write')
 @Controller('schedule-rules')
 export class RuleCancelController {
   constructor(

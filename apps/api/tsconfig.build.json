@@ -1,5 +1,5 @@
 {
   "extends": "./tsconfig.json",
   "compilerOptions": { "noEmit": false },
-  "exclude": ["src/**/*.test.ts", "src/**/*.fakes.ts", "src/**/test-app.ts", "src/**/fake-db.ts"]
+  "exclude": ["src/**/*.test.ts", "src/**/*.fakes.ts", "src/**/test-app.ts", "src/**/fake-db.ts", "src/**/*.test-util.ts"]
 }

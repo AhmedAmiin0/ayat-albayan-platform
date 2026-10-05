@@ -1,4 +1,4 @@
-import { isUserRole, type UserRole } from '@ab/shared';
+import { isUserRole, type Permission, type UserRole } from '@ab/shared';
 import { createRemoteJWKSet, decodeProtectedHeader, jwtVerify, type JWTVerifyGetKey } from 'jose';
 
 export type Role = UserRole;
@@ -8,6 +8,8 @@ export interface AuthUser {
   email: string | null;
   /** From the `user_role` claim added by public.custom_access_token_hook; null until a profile exists. */
   role: Role | null;
+  /** Effective permissions, set by the AuthGuard from the user's role (never from the token). */
+  permissions?: readonly Permission[];
 }
 
 export interface VerifierOptions {

@@ -10,7 +10,7 @@ import {
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { badRequest } from '../scheduling/errors';
 import { parseOrThrow } from '../teachers/http';
@@ -22,7 +22,7 @@ import { PayoutsService } from './payouts.service';
 /** Teacher payouts per month (Y1–Y4, R-PAY-02, R-TCH-04). Admin only. CSV: /exports (B4). */
 @ApiTags('payouts')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('payouts.write')
 @Controller('payouts')
 export class PayoutsController {
   constructor(
@@ -32,6 +32,7 @@ export class PayoutsController {
   ) {}
 
   @Get()
+  @Permissions('payouts.read')
   async month(@Query() query: unknown): Promise<PayoutView[]> {
     return this.ledger.annotate(await this.payouts.month(parseOrThrow(monthQuery, query).month));
   }
@@ -45,6 +46,7 @@ export class PayoutsController {
 
   @Post(':id/approve')
   @HttpCode(200)
+  @Permissions('payouts.approve')
   approve(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PayoutView> {
     return this.payouts.approve(id, user.id);
   }
@@ -67,7 +69,7 @@ export class PayoutsController {
 /** Y4 «تم الدفع» and its receipt: settlement + status in one transaction (PayoutsPayment). */
 @ApiTags('payouts')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('payouts.read')
 @Controller('payouts')
 export class PayoutPaymentController {
   constructor(private readonly payment: PayoutsPayment) {}
@@ -79,6 +81,7 @@ export class PayoutPaymentController {
 
   @Post(':id/pay')
   @HttpCode(200)
+  @Permissions('payouts.write')
   pay(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView> {
     return this.payment.pay(id, parseOrThrow(payoutPaySchema, body ?? {}), user.id);
   }
@@ -89,7 +92,7 @@ const mineQuery = z.object({ month: monthParam.optional() });
 /** Y5 GET /teachers/me/payouts?month — the signed-in teacher's own (R-TCH-04). */
 @ApiTags('teachers')
 @ApiBearerAuth()
-@Roles('teacher')
+@Permissions('self.teacher')
 @Controller('teachers/me/payouts')
 export class TeacherPayoutsController {
   constructor(
