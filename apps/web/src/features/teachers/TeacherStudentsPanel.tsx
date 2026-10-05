@@ -86,6 +86,7 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
         columns={teacherStudentColumns}
         sort={{ key: sort.sort, dir: sort.dir, onChange: onSort }}
         filters={{ values: columns, onChange: onFilter, onClear: onClearFilters }}
+        toolbar={{ total: list.data?.total }}
         data={list.data?.items ?? []}
         getRowId={(r) => r.id}
         emptyText={list.data ? t.teachers.studentsEmpty : t.common.loading}

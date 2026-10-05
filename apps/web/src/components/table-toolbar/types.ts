@@ -36,6 +36,11 @@ export interface TableToolbarOptions {
   /** The page's own search (e.g. name / phone / code); else a column text filter is the search. */
   search?: ReactNode;
   extra?: ExtraFilters;
+  /**
+   * The rows the filters leave, for «عرض النتائج (14)» and the screen-reader summary: a server
+   * list's `total` (DataTable cannot know it). A `clientFilter` table counts its own rows.
+   */
+  total?: number | undefined;
   /** After the «تصفية» button, at the inline-end. */
   end?: ReactNode;
 }

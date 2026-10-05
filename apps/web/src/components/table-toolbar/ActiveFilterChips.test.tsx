@@ -20,4 +20,24 @@ describe('ActiveFilterChips', () => {
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(onClearAll).toHaveBeenCalledOnce();
   });
+
+  it('a chip is 44px tall on phones (32px from 640px) with a visible × target, logical padding only', () => {
+    render(<ActiveFilterChips chips={[{ id: 'k', label: 'النوع', value: 'استرداد', onRemove: vi.fn() }]} onClearAll={vi.fn()} />);
+    const chip = screen.getByRole('button', { name: new RegExp(t.table.removeFilter.split('{')[0] ?? '') });
+    expect(chip.className).toContain('max-sm:min-h-11');
+    expect(chip.className).toContain('min-h-8');
+    expect(chip.className).toMatch(/\bps-3\b/);
+    expect(chip.className).not.toMatch(/\b(?:pl|pr|ml|mr)-/);
+    const x = chip.querySelector('[aria-hidden="true"]');
+    expect(x?.className).toContain('size-5');
+    expect(x?.querySelector('svg')).not.toBeNull();
+  });
+
+  it('a long value truncates inside the chip instead of widening the row', () => {
+    render(<ActiveFilterChips chips={[{ id: 'k', label: 'المعلم', value: 'عبد الرحمن بن محمد الأنصاري الحسيني', onRemove: vi.fn() }]} onClearAll={vi.fn()} />);
+    const chip = screen.getByRole('button', { name: new RegExp(t.table.removeFilter.split('{')[0] ?? '') });
+    expect(chip.className).toContain('max-w-full');
+    expect(chip.querySelector('.truncate')?.textContent).toContain('الحسيني');
+    expect(chip.closest('li')?.className).toContain('min-w-0');
+  });
 });

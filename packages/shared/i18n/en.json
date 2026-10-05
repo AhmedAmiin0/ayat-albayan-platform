@@ -2705,7 +2705,16 @@
     "clearAll": "Clear all",
     "activeFilter": "{label}: {value}",
     "removeFilter": "Remove filter {filter}",
-    "activeFilters": "Active filters"
+    "activeFilters": "Active filters",
+    "showResultsCount": "Show results ({n})",
+    "resultCount": {
+      "one": "1 result",
+      "two": "2 results",
+      "few": "{n} results",
+      "other": "{n} results"
+    },
+    "filtersSummary": "{active}, {results}",
+    "noFilters": "No filters applied"
   },
   "activity": {
     "title": "Activity log",

@@ -2705,7 +2705,16 @@
     "clearAll": "مسح الكل",
     "activeFilter": "{label}: {value}",
     "removeFilter": "إزالة التصفية {filter}",
-    "activeFilters": "التصفية المفعّلة"
+    "activeFilters": "التصفية المفعّلة",
+    "showResultsCount": "عرض النتائج ({n})",
+    "resultCount": {
+      "one": "نتيجة واحدة",
+      "two": "نتيجتان",
+      "few": "{n} نتائج",
+      "other": "{n} نتيجة"
+    },
+    "filtersSummary": "{active}، {results}",
+    "noFilters": "لا توجد تصفية مفعّلة"
   },
   "activity": {
     "title": "سجل النشاط",

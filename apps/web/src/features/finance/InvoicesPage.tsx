@@ -55,7 +55,7 @@ export function InvoicesPage({ search, onSearch }: Props) {
           emptyText={t.finance.noInvoices}
           sort={{ key: q.sort.sort, dir: q.sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
           filters={{ values: filterValues, onChange: (key, v) => reset(toFilterSearch(key, v)), onClear: (keys) => reset(clearFilterSearch(keys)) }}
-          toolbar={{ extra }}
+          toolbar={{ extra, total: list.data?.total }}
         />
       )}
       {list.data && <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />}

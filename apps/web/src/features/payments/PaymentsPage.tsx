@@ -79,7 +79,7 @@ export function PaymentsPage({ search, onSearch }: Props) {
             emptyText={t.payments.empty}
             sort={{ key: sort.sort, dir: sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
             filters={{ values: { method: search.f_method ?? '' }, onChange: (_, v) => reset({ f_method: (v || undefined) as PaymentFilters['method'] }) }}
-            toolbar={{ extra }}
+            toolbar={{ extra, total: list.data?.total }}
           />
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
         </>
