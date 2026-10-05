@@ -50,6 +50,11 @@ describe('AdminLayout sidebar', () => {
     expect(container.querySelector('aside a')?.className).toContain('shell:px-3');
   });
 
+  it('the logo link is a 44px touch target on phones (the compact top row)', () => {
+    const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
+    expect(container.querySelector('aside a')?.className).toContain('min-h-11');
+  });
+
   it('centres the current section in the compact strip', () => {
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;

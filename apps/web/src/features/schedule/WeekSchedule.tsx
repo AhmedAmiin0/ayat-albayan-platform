@@ -61,7 +61,8 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
         {overview.data && <ScheduleCounts shown={shown} />}
         <div className="ms-auto flex flex-wrap gap-2">
           <SyncScheduleButton onDone={setNotice} />
-          <NewMeetingMenu />
+          {/* «حجز حلقة» is the page's one filled primary. */}
+          <NewMeetingMenu variant="secondary" />
           <Link to="/admin/book" className={buttonVariants()}>
             {t.schedule.book}
           </Link>

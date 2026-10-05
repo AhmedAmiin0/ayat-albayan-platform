@@ -38,7 +38,7 @@ export function AdminLayout({ nav, children }: { nav: ReactNode; children: React
           'shell:h-dvh shell:flex-col shell:flex-nowrap shell:items-stretch shell:gap-y-6 shell:scroll-pb-44 shell:overflow-y-auto shell:border-e shell:border-rule shell:bg-cover shell:pt-6 shell:pb-0',
         )}
       >
-        <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="shrink-0 rounded-md px-1.5 no-underline shell:px-3">
+        <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="flex min-h-11 shrink-0 items-center rounded-md px-1.5 no-underline shell:min-h-0 shell:px-3">
           <Logo collapse />
         </Link>
         {nav}

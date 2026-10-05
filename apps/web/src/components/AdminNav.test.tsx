@@ -70,10 +70,11 @@ describe('AdminNav', () => {
     expect(cls).not.toMatch(/border-s-|\b(?:pl|pr|ml|mr)-/);
   });
 
-  it('a long label truncates in the sidebar and scrolls whole in the compact strip', () => {
+  it('a long label wraps in the sidebar (never an ellipsis, English «Your opinion matters») and scrolls whole in the compact strip', () => {
     render(<AdminNav />);
     const label = screen.getByText(t.nav.students);
-    expect(label.className).toContain('shell:truncate');
+    expect(label.className).toContain('shell:whitespace-normal');
+    expect(label.className).not.toContain('truncate');
     expect(label.closest('li')?.className).toContain('shrink-0');
   });
 

@@ -88,7 +88,7 @@ export function AdminNav({ counts = {} }: AdminNavProps) {
               <li key={item.key} className="shrink-0 shell:min-w-0 shell:shrink">
                 <Link to={item.to} className={LINK}>
                   <Icon name={item.icon} className="text-ink-3 shell:text-cover-ink group-aria-[current=page]:text-lapis" />
-                  <span className="shell:min-w-0 shell:truncate">{item.label}</span>
+                  <span className="shell:min-w-0 shell:whitespace-normal shell:py-1 shell:leading-snug">{item.label}</span>
                   {count && (
                     <>
                       {' '}
