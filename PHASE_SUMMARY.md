@@ -1682,3 +1682,11 @@ Owner request: every online meeting is recorded; a student-teacher lesson goes i
 - **Web**: `StudentRecordings` (profile + teacher's student page): player, date/teacher filters (shared table toolbar), states, status chips, visibility toggle, admin delete with confirm; «تسجيل الحلقة» link on the report history rows. i18n namespace `studentRecordings`.
 - **Not verified (cloud, no DB)**: `supabase db reset`, `gen:types` diff (types.ts hand-edited), the new SQL spec `e2e/tests/student-recordings-rls.sql.spec.ts`, e2e, a real recording and playback, the PostgREST nested filter on `lessons.lesson_students` against a real database.
 - **Findings**: there is no recording view log in the codebase (only the activity log of mutating requests), so views are not logged; ~5 TypeScript paths still write an external `meeting_link` onto lessons (occurrence generator, booking payload / `create_booking`, series reschedule `rule-plan`, single reschedule, plus SQL `generate_rule_lessons` / `apply_lesson_changes`); untouched by design.
+
+## Integration: admin suite (integrate/admin-suite)
+
+- Merged fix/config, fix/recordings, fix/mobile-money, fix/mobile-ops, fix/mobile-finance, feat/web-polish. fix/roles was merged with strategy `ours`: it carried a second implementation of dynamic roles superseded by #50 on develop; its review hardening was ported onto #50 (migration 225, `permission_not_held`, guard resilience, `e2e/tests/roles-permissions.sql.spec.ts`).
+- `/config/meta` and `/config/custom` use `@Permissions('settings.read'|'settings.write')`; frozen parity table updated.
+- `packages/db/src/types.ts` was NOT fully regenerated: the local CLI marks every view column nullable, which breaks 4 API call sites; the four missing function signatures were added by hand.
+- Mobile: one `useReceivables` (money/queries), `riyadhToday` from calendar/week, the finance summary has its own cache key.
+- Open: assistants cannot reach the student recordings routes by default (system assistant lacks `recordings.read`).

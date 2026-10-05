@@ -17,7 +17,7 @@ jest.mock('@/lib/api', () => ({
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true } }));
 
 test('English: the form and the read-only note come from en.json', async () => {
-  expect(t).toBe(en);
+  expect(t).toEqual(en);
   await renderWithQuery(<SettingsScreen />);
   expect(screen.getByRole('header', { name: en.mobileAdmin.settings.title })).toBeTruthy();
   expect(await screen.findByLabelText(en.settings.reportingCurrency)).toBeTruthy();

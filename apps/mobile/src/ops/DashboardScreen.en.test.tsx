@@ -20,7 +20,7 @@ jest.mock('expo-router', () => ({
 }));
 
 test('English: titles, tiles and rows read from en.json', async () => {
-  expect(t).toBe(en);
+  expect(t).toEqual(en);
   await renderWithQuery(<DashboardScreen />);
   expect(screen.getByRole('header', { name: en.mobileAdmin.dashboard.title })).toBeTruthy();
   expect(

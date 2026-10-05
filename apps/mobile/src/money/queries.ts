@@ -15,7 +15,6 @@ export function useReceivables() {
   return useQuery({
     queryKey: pathKey('/receivables'),
     queryFn: () => apiFetch<ReceivablesView>('/receivables'),
-    staleTime: MINUTE,
   });
 }
 
