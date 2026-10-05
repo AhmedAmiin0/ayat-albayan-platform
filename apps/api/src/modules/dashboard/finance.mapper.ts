@@ -1,4 +1,4 @@
-import type { ExpenseCategory, LeadSource } from '@ab/shared';
+import type { LeadSource } from '@ab/shared';
 import type { SourceKey } from './dashboard.types';
 import type { CostFact, ExpenseFact, PaymentFact } from './finance';
 import { riyadhMonth } from './range';
@@ -25,7 +25,7 @@ export interface CostLessonIn {
 export type LessonSourceIn = { lesson_id: string; student: { guardian: Source } | null };
 export interface ExpenseIn {
   month: string;
-  category: ExpenseCategory;
+  category: string;
   amount: number;
   currency: string;
 }

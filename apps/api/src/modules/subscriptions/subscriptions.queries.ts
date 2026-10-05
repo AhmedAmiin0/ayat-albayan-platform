@@ -95,19 +95,23 @@ export class SubscriptionsQueries {
     return (count ?? 0) > 0;
   }
 
-  /** Sum of each package's payments in its own currency (v1: the API refuses other currencies). */
+  /**
+   * Net paid per package in its own currency: payments − refunds. A payment sent in another
+   * currency is stored converted (original kept apart), so every row is in the package currency.
+   */
   async paid(subs: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<Map<string, number>> {
     const sums = new Map(subs.map((s) => [s.id, 0]));
     if (subs.length === 0) return sums;
     const { data, error } = await this.db
       .from('payments')
-      .select('subscription_id, amount, currency')
+      .select('subscription_id, amount, currency, kind')
       .in('subscription_id', [...sums.keys()]);
     if (error) throw dbError(error);
     const currency = new Map(subs.map((s) => [s.id, s.currency]));
     for (const p of data) {
       if (currency.get(p.subscription_id) !== p.currency) continue;
-      sums.set(p.subscription_id, cents(sums.get(p.subscription_id) ?? 0, Number(p.amount)));
+      const signed = p.kind === 'refund' ? -Number(p.amount) : Number(p.amount);
+      sums.set(p.subscription_id, cents(sums.get(p.subscription_id) ?? 0, signed));
     }
     return sums;
   }

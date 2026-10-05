@@ -1,7 +1,9 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
+import { netPaid, type PaymentKind, type PaymentMethod } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { StudentRef } from '../subscriptions/subscriptions.queries';
+import { readAll } from '../scheduling/read-all';
 import { dbError, type Page, type PageQuery } from '../teachers/http';
 
 export type PaymentRow = Tables<'payments'> & {
@@ -13,7 +15,10 @@ export type PaymentFilter = PageQuery & {
   /** ISO instants, half-open [from, to). */
   from?: string;
   to?: string;
+  method?: PaymentMethod;
+  kind?: PaymentKind;
 };
+export type PeriodTotal = { currency: string; net: number; payments: number; refunds: number };
 export type PaymentSubscription = { id: string; student_id: string; currency: string };
 
 const SELECT = '*, subscription:subscriptions!inner(student_id, currency, student:students(id, code, name))';
@@ -25,17 +30,36 @@ export class PaymentsQueries {
 
   async list(f: PaymentFilter): Promise<Page<PaymentRow>> {
     const from = (f.page - 1) * f.pageSize;
-    let q = this.db.from('payments').select(SELECT, { count: 'exact' });
-    if (f.subscriptionId) q = q.eq('subscription_id', f.subscriptionId);
-    if (f.studentId) q = q.eq('subscription.student_id', f.studentId);
-    if (f.from) q = q.gte('paid_at', f.from);
-    if (f.to) q = q.lt('paid_at', f.to);
-    const { data, count, error } = await q
+    const { data, count, error } = await filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f)
       .order('paid_at', { ascending: false })
       .order('id')
       .range(from, from + f.pageSize - 1);
     if (error) throw dbError(error);
     return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+  }
+
+  /** The filter's totals per currency (net = payments − refunds), for the period line on the page. */
+  async totals(f: PaymentFilter): Promise<PeriodTotal[]> {
+    const rows = await readAll((a, b) =>
+      filtered(this.db.from('payments').select('id, amount, currency, kind, subscription:subscriptions!inner(student_id)'), f)
+        .order('id')
+        .range(a, b),
+    );
+    const by = new Map<string, { amount: number; kind: PaymentKind }[]>();
+    for (const r of rows) by.set(r.currency, [...(by.get(r.currency) ?? []), { amount: Number(r.amount), kind: r.kind }]);
+    return [...by.entries()].sort().map(([currency, list]) => ({
+      currency,
+      net: netPaid(list),
+      payments: netPaid(list.filter((r) => r.kind === 'payment')),
+      refunds: netPaid(list.filter((r) => r.kind === 'refund').map((r) => ({ ...r, kind: 'payment' as const }))),
+    }));
+  }
+
+  /** Net paid on one package (payments − refunds): a refund may not take it below zero. */
+  async netPaid(subscriptionId: string): Promise<number> {
+    const { data, error } = await this.db.from('payments').select('amount, kind').eq('subscription_id', subscriptionId);
+    if (error) throw dbError(error);
+    return netPaid(data.map((r) => ({ amount: Number(r.amount), kind: r.kind })));
   }
 
   async get(id: string): Promise<PaymentRow | null> {
@@ -59,6 +83,13 @@ export class PaymentsQueries {
       .select(SELECT)
       .eq('client_request_id', clientRequestId)
       .maybeSingle();
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The payment already recorded from this invoice («سجّل كدفعة» once), or null. */
+  async byInvoice(invoiceId: string): Promise<{ id: string } | null> {
+    const { data, error } = await this.db.from('payments').select('id').eq('invoice_id', invoiceId).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
@@ -92,4 +123,16 @@ export class PaymentsQueries {
     if (error) throw dbError(error);
     return new Map(data.map((p) => [p.id, p.full_name]));
   }
+}
+
+/** The list filters, shared by the page and its totals (embedded package for the student filter). */
+function filtered<Q extends { eq: (c: string, v: string) => Q; gte: (c: string, v: string) => Q; lt: (c: string, v: string) => Q }>(q: Q, f: PaymentFilter): Q {
+  let out = q;
+  if (f.subscriptionId) out = out.eq('subscription_id', f.subscriptionId);
+  if (f.studentId) out = out.eq('subscription.student_id', f.studentId);
+  if (f.from) out = out.gte('paid_at', f.from);
+  if (f.to) out = out.lt('paid_at', f.to);
+  if (f.method) out = out.eq('method', f.method);
+  if (f.kind) out = out.eq('kind', f.kind);
+  return out;
 }

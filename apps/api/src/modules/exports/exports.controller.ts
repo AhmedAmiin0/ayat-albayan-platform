@@ -1,4 +1,6 @@
-import { monthQuery } from '@ab/shared';
+import { monthQuery, PAYMENT_KINDS, PAYMENT_METHODS } from '@ab/shared';
+import { z } from 'zod';
+import { parseOrThrow } from '../teachers/http';
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Roles } from '../../common/auth/decorators';
@@ -20,6 +22,12 @@ function send(reply: HeaderReply, file: CsvFile): string {
   return file.csv;
 }
 
+const paymentFilter = z.object({
+  studentId: z.uuid().optional(),
+  method: z.enum(PAYMENT_METHODS).optional(),
+  kind: z.enum(PAYMENT_KINDS).optional(),
+});
+
 /** CSV exports (R-RPT-03, R-TCH-04). Admin only. `/payouts/:month.csv` can't be routed in Fastify. */
 @ApiTags('exports')
 @ApiBearerAuth()
@@ -40,7 +48,7 @@ export class ExportsController {
 
   @Get('payments.csv')
   async payments(@Query() query: unknown, @Res({ passthrough: true }) reply: HeaderReply) {
-    return send(reply, await this.exports.payments(parseRange(query)));
+    return send(reply, await this.exports.payments(parseRange(query), parseOrThrow(paymentFilter, query)));
   }
 
   /** `?month=YYYY-MM` → 400 invalid_month otherwise. */

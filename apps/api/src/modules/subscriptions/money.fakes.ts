@@ -58,6 +58,11 @@ export function paymentRow(patch: Partial<PaymentRow> = {}): PaymentRow {
     note: null,
     created_at: '2026-10-01T09:00:00Z',
     updated_at: '2026-10-01T09:00:00Z',
+    kind: 'payment',
+    original_amount: null,
+    original_currency: null,
+    fx_rate: null,
+    invoice_id: null,
     ...patch,
   };
 }
@@ -98,6 +103,13 @@ export function expenseRow(patch: Partial<ExpenseRow> = {}): ExpenseRow {
     created_at: '2026-10-01T09:00:00Z',
     updated_at: '2026-10-01T09:00:00Z',
     created_by: null,
+    paid_on: '2026-09-01',
+    vendor: null,
+    method: null,
+    receipt_path: null,
+    recurring: false,
+    is_draft: false,
+    template_id: null,
     ...patch,
   };
 }

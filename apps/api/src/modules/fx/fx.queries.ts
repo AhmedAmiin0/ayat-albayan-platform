@@ -26,6 +26,21 @@ export class FxQueries {
     return data;
   }
 
+  /** The SAR→quote rate in force at `at`: the newest provider update not after it (payments in another currency). */
+  async atOrBefore(quote: string, at: string): Promise<FxRow | null> {
+    const { data, error } = await this.db
+      .from('fx_rates')
+      .select('*')
+      .eq('base', 'SAR')
+      .eq('quote', quote)
+      .lte('provider_updated_at', at)
+      .order('provider_updated_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (error) throw new Error(`db: ${error.message}`);
+    return data;
+  }
+
   /**
    * Stores every rate of a provider update. Re-reading an update already stored only bumps
    * fetched_at, so the next refresh waits a full day again (docs/08 §4: fetch once per window).

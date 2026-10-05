@@ -1929,7 +1929,11 @@
       "content": "محتوى",
       "tools": "أدوات واشتراكات",
       "operations": "تشغيل",
-      "other": "أخرى"
+      "other": "أخرى",
+      "rent": "إيجار",
+      "salaries": "رواتب",
+      "platform_fees": "رسوم المنصات",
+      "marketing_tools": "أدوات تسويق"
     },
     "adminTaskKind": {
       "renewal_due": "تجديد باقة",
@@ -1963,6 +1967,10 @@
       "report_submitted": "تقرير حلقة جديد",
       "reminder_failed": "رسالة لم تُرسل",
       "payment_due": "باقة تحتاج إلى دفع أو تجديد"
+    },
+    "paymentKind": {
+      "payment": "دفعة",
+      "refund": "استرداد"
     }
   },
   "settings": {
@@ -2361,7 +2369,39 @@
     "oldestUnpaid": "أقدم حلقة غير مدفوعة: {date}",
     "error": {
       "already_voided": "أُلغيت هذه الدفعة من قبل",
-      "reason_required": "اكتب سبب الإلغاء"
+      "reason_required": "اكتب سبب الإلغاء",
+      "fx_unavailable": "لا يوجد سعر صرف لعملة {currency} في هذا التاريخ، سجّل الدفعة بعملة الباقة",
+      "invoice_mismatch": "هذه الفاتورة لا تخص طالب هذه الباقة",
+      "invoice_used": "سُجّلت دفعة من هذه الفاتورة من قبل",
+      "refund_exceeds_paid": "مبلغ الاسترداد أكبر من المدفوع على هذه الباقة",
+      "category_exists": "يوجد بند بهذا الرمز من قبل",
+      "invalid_category": "اكتب رمز البند بحروف إنجليزية صغيرة وأرقام فقط",
+      "month_required": "اختر الشهر أو تاريخ الدفع",
+      "invalid_year": "اختر السنة من القائمة"
+    },
+    "kind": "النوع",
+    "originalAmount": "المبلغ المرسل بعملته",
+    "paidOn": "تاريخ الدفع",
+    "vendor": "الجهة",
+    "recurring": "تكرار شهري",
+    "draft": "مسودة",
+    "yes": "نعم",
+    "ledgerSessions": "الحلقات المحسوبة",
+    "ledgerPayments": "الدفعات للمعلمين",
+    "voidedColumn": "ملغاة",
+    "guardian": "ولي الأمر",
+    "phone": "الهاتف",
+    "packageFrom": "بداية الباقة",
+    "price": "السعر",
+    "paid": "المدفوع",
+    "owed": "المتبقي",
+    "daysOverdue": "أيام التأخير",
+    "agingBucket": "فئة التأخير",
+    "aging": {
+      "0_30": "حتى 30 يومًا",
+      "31_60": "31–60 يومًا",
+      "61_90": "61–90 يومًا",
+      "90_plus": "أكثر من 90 يومًا"
     }
   }
 }

@@ -56,6 +56,7 @@ export class FinanceQueries {
       this.db
         .from('expenses')
         .select('id, month, category, amount, currency')
+        .eq('is_draft', false)
         .gte('month', `${first}-01`)
         .lte('month', `${last}-01`)
         .order('month')

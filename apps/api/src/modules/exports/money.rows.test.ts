@@ -11,13 +11,18 @@ describe('paymentRows (C3)', () => {
         currency: 'SAR',
         method: 'bank',
         note: 'تحويل الراجحي',
+        kind: 'payment',
+        original_amount: null,
+        original_currency: null,
         subscription: { package: '4', lessons_total: 4, student: { code: 'AB-0183', name: 'سهيلة' } },
       },
-      { paid_at: '2026-10-01T09:15:00.000Z', amount: 50, currency: 'USD', method: 'other', note: null, subscription: { package: null, lessons_total: 6, student: null } },
+      { paid_at: '2026-10-01T09:15:00.000Z', amount: 50, currency: 'USD', method: 'other', note: null, kind: 'refund', original_amount: 190, original_currency: 'SAR', subscription: { package: null, lessons_total: 6, student: null } },
     ]);
     expect(rows[0]?.[0]).toBe(ar.payments.paidAt);
-    expect(rows[1]).toEqual(['2026-10-01 12:15', 'AB-0183', 'سهيلة', ar.enums.packageSize[4], 4, 145, 'SAR', ar.enums.paymentMethod.bank, 'تحويل الراجحي']);
-    expect(rows[2]).toEqual(['2026-10-01 12:15', '', '', '', 6, 50, 'USD', ar.enums.paymentMethod.other, '']);
+    const pay = ar.enums.paymentKind;
+    expect(rows[1]).toEqual(['2026-10-01 12:15', 'AB-0183', 'سهيلة', ar.enums.packageSize[4], 4, pay.payment, 145, 'SAR', ar.enums.paymentMethod.bank, '', 'تحويل الراجحي']);
+    // A refund is negative (a column sum is the net); the amount sent in another currency is kept.
+    expect(rows[2]).toEqual(['2026-10-01 12:15', '', '', '', 6, pay.refund, -50, 'USD', ar.enums.paymentMethod.other, '190 SAR', '']);
   });
 });
 
@@ -55,7 +60,11 @@ describe('payoutRows (C4, R-TCH-04)', () => {
     expect(payoutLines(null)).toEqual([]);
     expect(payoutLines({ lines: 'x' })).toEqual([]);
     expect(
-      payoutLines({ lines: [{ duration: 60, lessons: 1, rate: null, amount: 0 }, { duration: 50, lessons: 1, amount: 1 }, 'bad'] }),
-    ).toEqual([{ duration: 60, lessons: 1, rate: null, amount: 0 }]);
+      payoutLines({ lines: [{ duration: 60, lessons: 1, rate: null, amount: 0 }, { duration: 50, lessons: 1, amount: 1 }, { duration: -5, lessons: 1, amount: 1 }, 'bad'] }),
+    ).toEqual([
+      { duration: 60, lessons: 1, rate: null, amount: 0 },
+      // a pro-rated length (pay-rule) is a real line now
+      { duration: 50, lessons: 1, rate: null, amount: 1 },
+    ]);
   });
 });

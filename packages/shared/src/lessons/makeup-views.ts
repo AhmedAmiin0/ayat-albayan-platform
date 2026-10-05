@@ -23,6 +23,8 @@ export interface InvoiceView {
   source: 'upload' | 'whatsapp';
   created_at: string;
   students: { id: string; name: string; code: string }[];
+  /** GET /invoices/recent only: the payment recorded from it («سجّل كدفعة»), if any. */
+  payment_id?: string | null;
 }
 
 /** GET /threads/:phone/media: an inbound image or PDF of that chat (metadata only, nothing downloaded). */

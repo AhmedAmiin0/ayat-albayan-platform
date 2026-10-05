@@ -42,6 +42,13 @@ export class FxService {
     }
   }
 
+  /** The rate in force at `at` (a stored rate, else today's); SAR itself is 1. */
+  async rateSarAt(quote: string, at: string): Promise<FxRate> {
+    if (quote === 'SAR') return { quote, rate: 1, date: null, provider: 'self', fallback: false, ageHours: null };
+    const stored = await this.queries.atOrBefore(quote, at);
+    return stored ? fromRow(stored, false) : this.rateSarTo(quote);
+  }
+
   /** One API call at a time: concurrent stale quotes share the same in-flight request. */
   private refresh(): Promise<FxSnapshot> {
     if (Date.now() - this.failedAt < RETRY_MS) {

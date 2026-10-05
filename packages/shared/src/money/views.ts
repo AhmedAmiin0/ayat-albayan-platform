@@ -4,6 +4,7 @@ import type {
   ExpenseCategory,
   LessonStatus,
   PackageSize,
+  PaymentKind,
   PaymentMethod,
   PayoutStatus,
   SubscriptionStatus,
@@ -79,6 +80,12 @@ export interface PaymentView {
   recorded_by: { id: string; full_name: string } | null;
   note: string | null;
   created_at: string;
+  /** 'refund' («استرداد») counts against what was paid. */
+  kind: PaymentKind;
+  /** What the family sent when it was another currency (amount/currency are the package's). */
+  original: { amount: number; currency: string; fx_rate: number } | null;
+  /** Recorded from the booking's invoice («سجّل كدفعة»): the invoice is the receipt. */
+  invoice_id: string | null;
 }
 
 export interface ExpenseView {
@@ -89,6 +96,32 @@ export interface ExpenseView {
   currency: string;
   note: string | null;
   created_at: string;
+  paid_on: string | null;
+  vendor: string | null;
+  method: PaymentMethod | null;
+  has_receipt: boolean;
+  recurring: boolean;
+  /** A recurring copy pre-created for the month, not counted until confirmed. */
+  is_draft: boolean;
+}
+
+/** GET /expenses/year: 12 months in the reporting currency (confirmed expenses only). */
+export interface ExpenseYearView {
+  year: string;
+  currency: string;
+  months: { month: string; total: number; by_category: Record<string, number> }[];
+  categories: string[];
+  total: number;
+  /** Currencies with no stored rate: their amounts are left out. */
+  fx_missing: string[];
+  fx_date: string | null;
+}
+
+export interface ExpenseCategoryView {
+  key: string;
+  label_ar: string;
+  label_en: string | null;
+  active: boolean;
 }
 
 export interface PayoutView {

@@ -1,28 +1,29 @@
 import type { TablesUpdate } from '@ab/db';
 import type { PaymentCreate, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { badRequest, notFound } from '../scheduling/errors';
+import { conflict, notFound } from '../scheduling/errors';
 import { MoneyWrites } from '../subscriptions/money-writes';
 import type { Page } from '../teachers/http';
 import { toPaymentView } from './payments.mapper';
-import { PaymentsQueries, type PaymentFilter, type PaymentRow } from './payments.queries';
-import { ReceiptsService } from './receipts.service';
+import { PaymentsQueries, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.queries';
+import { PaymentInputs } from './payment-inputs';
 
 /**
- * Manual transfers recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited, then the
+ * Manual transfers and refunds recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited, then the
  * package statuses and alerts are recomputed: a full payment turns an unpaid package active.
  */
 @Injectable()
 export class PaymentsService {
   constructor(
     private readonly payments: PaymentsQueries,
-    private readonly receipts: ReceiptsService,
+    private readonly inputs: PaymentInputs,
     private readonly writes: MoneyWrites,
   ) {}
 
-  async list(f: PaymentFilter): Promise<Page<PaymentView>> {
-    const page = await this.payments.list(f);
-    return { ...page, items: await this.views(page.items) };
+  /** P1 plus the filter's totals per currency (net of refunds). */
+  async list(f: PaymentFilter): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
+    const [page, totals] = await Promise.all([this.payments.list(f), this.payments.totals(f)]);
+    return { ...page, items: await this.views(page.items), totals };
   }
 
   async get(id: string): Promise<PaymentView> {
@@ -36,13 +37,17 @@ export class PaymentsService {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return replay;
     const sub = await this.receipts.subscription(input.subscriptionId);
-    // TODO(R-PAY-01) owner: payments in another currency than the package's.
-    if (input.currency !== sub.currency) throw badRequest('currency_mismatch', { currency: sub.currency });
     if (input.receiptPath) await this.receipts.check(sub.id, input.receiptPath);
+    if (input.invoiceId) await this.inputs.checkInvoice(input.invoiceId, sub.student_id);
+    if (input.invoiceId && (await this.payments.byInvoice(input.invoiceId))) throw conflict('invoice_used');
+    const converted = await this.inputs.convert(input, sub);
+    if (input.kind === 'refund' && converted.amount > (await this.payments.netPaid(sub.id)))
+      throw conflict('refund_exceeds_paid');
     const row = await this.payments.insert({
       subscription_id: sub.id,
-      amount: input.amount,
-      currency: input.currency,
+      ...converted,
+      kind: input.kind,
+      invoice_id: input.invoiceId ?? null,
       method: input.method,
       paid_at: input.paidAt,
       receipt_path: input.receiptPath ?? null,
@@ -84,9 +89,13 @@ export class PaymentsService {
     await this.receipts.discard(before.receipt_path);
   }
 
-  /** P7. */
+  /** P7: the receipt, or the booking invoice it was recorded from. */
   async receipt(id: string) {
-    return this.receipts.download((await this.row(id)).receipt_path);
+    return this.inputs.receipt(await this.row(id));
+  }
+
+  private get receipts() {
+    return this.inputs.receipts;
   }
 
   private async replayOf(clientRequestId: string | undefined): Promise<PaymentView | null> {

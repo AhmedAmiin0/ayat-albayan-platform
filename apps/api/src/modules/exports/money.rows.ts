@@ -1,4 +1,4 @@
-import { DURATIONS, type Duration, type PackageSize, type PaymentMethod, type PayoutStatus } from '@ab/shared';
+import { DURATIONS, type PackageSize, type PaymentKind, type PaymentMethod, type PayoutStatus } from '@ab/shared';
 import type { Json } from '@ab/db';
 import ar from '@ab/shared/i18n/ar.json';
 import { riyadhStamp, safeText, type Cell } from './csv';
@@ -13,10 +13,13 @@ export interface PaymentIn {
   currency: string;
   method: PaymentMethod;
   note: string | null;
+  kind: PaymentKind;
+  original_amount: number | null;
+  original_currency: string | null;
   subscription: { package: PackageSize | null; lessons_total: number; student: { code: string | null; name: string } | null } | null;
 }
 
-export const PAYMENT_HEADER: Cell[] = [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, P.amount, P.currency, P.method, P.note];
+export const PAYMENT_HEADER: Cell[] = [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note];
 
 export function paymentRows(rows: readonly PaymentIn[]): Cell[][] {
   return [
@@ -29,9 +32,12 @@ export function paymentRows(rows: readonly PaymentIn[]): Cell[][] {
         safeText(sub?.student?.name),
         sub?.package ? ar.enums.packageSize[sub.package] : '',
         sub?.lessons_total ?? '',
-        Number(p.amount),
+        ar.enums.paymentKind[p.kind],
+        // A refund is money back: negative in the file, so a column sum is the net.
+        p.kind === 'refund' ? -Number(p.amount) : Number(p.amount),
         p.currency,
         ar.enums.paymentMethod[p.method],
+        p.original_amount === null ? '' : `${Number(p.original_amount)} ${p.original_currency ?? ''}`,
         safeText(p.note),
       ];
     }),
@@ -50,7 +56,8 @@ export interface PayoutIn {
 }
 
 interface Line {
-  duration: Duration;
+  /** Minutes: 30/45/60/90 or a pro-rated length (pay-rule.ts). */
+  duration: number;
   lessons: number;
   rate: number | null;
   amount: number;
@@ -64,9 +71,8 @@ export function payoutLines(breakdown: Json): Line[] {
   if (!Array.isArray(lines)) return [];
   return lines.flatMap((l) => {
     if (!isRecord(l)) return [];
-    const duration = DURATIONS.find((d) => d === l['duration']);
-    const { lessons, rate, amount } = l;
-    if (duration === undefined || typeof lessons !== 'number' || typeof amount !== 'number') return [];
+    const { duration, lessons, rate, amount } = l;
+    if (typeof duration !== 'number' || duration <= 0 || typeof lessons !== 'number' || typeof amount !== 'number') return [];
     return [{ duration, lessons, rate: typeof rate === 'number' ? rate : null, amount }];
   });
 }
@@ -83,7 +89,7 @@ export function payoutRows(rows: readonly PayoutIn[]): Cell[][] {
       const total: Cell[] = [...lead, X.total, p.lessons_count, '', Number(p.amount), p.currency, riyadhStamp(p.paid_at)];
       const lines = payoutLines(p.breakdown).map((l): Cell[] => [
         ...lead,
-        ar.enums.duration[l.duration],
+        durationText(l.duration),
         l.lessons,
         l.rate,
         l.amount,
@@ -93,4 +99,10 @@ export function payoutRows(rows: readonly PayoutIn[]): Cell[][] {
       return [total, ...lines];
     }),
   ];
+}
+
+/** «45 دقيقة» from the enum labels; a pro-rated length reads «50 دقيقة». */
+function durationText(minutes: number): string {
+  const standard = DURATIONS.find((d) => d === minutes);
+  return standard === undefined ? ar.earnings.minutes.replace('{count}', String(minutes)) : ar.enums.duration[standard];
 }

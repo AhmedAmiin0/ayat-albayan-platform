@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { rangeWindow, riyadhDate } from '../dashboard/range';
 import { toCsv } from './csv';
 import { lessonRows, studentRows } from './exports.rows';
-import { ExportsQueries } from './exports.queries';
+import { ExportsQueries, type PaymentCsvFilter } from './exports.queries';
 import { paymentRows, payoutRows } from './money.rows';
 
 export interface CsvFile {
@@ -29,8 +29,8 @@ export class ExportsService {
     return { filename: `lessons-${span(range)}.csv`, csv: toCsv(lessonRows(rows)) };
   }
 
-  async payments(range: DateRangeQuery): Promise<CsvFile> {
-    const rows = await this.queries.payments(rangeWindow(range));
+  async payments(range: DateRangeQuery, filter: PaymentCsvFilter = {}): Promise<CsvFile> {
+    const rows = await this.queries.payments(rangeWindow(range), filter);
     return { filename: `payments-${span(range)}.csv`, csv: toCsv(paymentRows(rows)) };
   }
 

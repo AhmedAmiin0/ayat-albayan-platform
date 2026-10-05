@@ -1,7 +1,6 @@
 import type {
   AdminTaskView,
   DashboardSummary,
-  ExpenseCategory,
   LessonStatus,
   PackageSize,
   SourceRow,
@@ -25,7 +24,7 @@ export interface MonthFinance {
 export type DashboardResponse = DashboardSummary & {
   finance: DashboardSummary['finance'] & {
     by_month: MonthFinance[];
-    expenses_by_category: Record<ExpenseCategory, number>;
+    expenses_by_category: Record<string, number>;
     /** Units of each currency per 1 reporting unit, as used (the reporting currency is 1). */
     fx_rates: Record<string, number>;
     /** Paid lessons whose teacher has no rate for that duration: their cost is not counted. */
