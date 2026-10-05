@@ -1,0 +1,109 @@
+name: claude-tasks
+# Runs Claude Code in GitHub (replaces the Anthropic cloud routines that ran from the owner's account).
+# Starts ONLY from: Actions → claude-tasks → Run workflow (a `prompt`), or a comment containing @claude on
+# an issue / PR / PR review. THE REPO IS PUBLIC, so strangers' text must never reach the model:
+#  - the actor must be the repository owner, and the comment author, the issue/PR author and (checked by
+#    the gate job through the API) every other commenter on the thread must be the owner too;
+#  - a PR must come from this repository, not a fork;
+#  - no pull_request_target, no environment, and NO deploy / production / WhatsApp / Supabase secrets are
+#    referenced here: the only secret is the Anthropic credential.
+# Claude works on a branch and opens a pull request into develop. It cannot push to develop or main (branch
+# protection) and the GITHUB_TOKEN cannot change workflow files. Docs: docs/09-deployment.md «GitHub Actions».
+on:
+  workflow_dispatch:
+    inputs:
+      prompt:
+        description: What Claude should do (it opens a pull request into develop)
+        type: string
+        required: true
+  issue_comment:
+    types: [created]
+  pull_request_review_comment:
+    types: [created]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: claude-tasks-${{ github.event.issue.number || github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: false
+
+jobs:
+  # Cheap, secret-free: is every voice in this thread the owner's?
+  gate:
+    if: >-
+      github.actor == github.repository_owner && (
+        github.event_name == 'workflow_dispatch' ||
+        (github.event_name == 'issue_comment' &&
+         github.event.comment.user.login == github.repository_owner &&
+         github.event.issue.user.login == github.repository_owner &&
+         contains(github.event.comment.body, '@claude')) ||
+        (github.event_name == 'pull_request_review_comment' &&
+         github.event.comment.user.login == github.repository_owner &&
+         github.event.pull_request.user.login == github.repository_owner &&
+         github.event.pull_request.head.repo.full_name == github.repository &&
+         contains(github.event.comment.body, '@claude')))
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    permissions:
+      contents: read
+      issues: read
+      pull-requests: read
+    steps:
+      - name: Owner-only thread
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          OWNER: ${{ github.repository_owner }}
+          EVENT: ${{ github.event_name }}
+          REF: ${{ github.ref }}
+          NUMBER: ${{ github.event.issue.number || github.event.pull_request.number }}
+          IS_PR: ${{ github.event.issue.pull_request != null || github.event_name == 'pull_request_review_comment' }}
+        run: |
+          if [ "$EVENT" = workflow_dispatch ]; then
+            test "$REF" = refs/heads/develop || { echo "::error::start this workflow on develop"; exit 1; }
+            exit 0
+          fi
+          # Only numbers reach the API paths below.
+          case "$NUMBER" in ''|*[!0-9]*) echo "::error::bad number"; exit 1;; esac
+          authors=$(gh api --paginate "repos/$REPO/issues/$NUMBER/comments" --jq '.[].user.login')
+          if [ "$IS_PR" = true ]; then
+            authors="$authors
+          $(gh api --paginate "repos/$REPO/pulls/$NUMBER/comments" --jq '.[].user.login')
+          $(gh api --paginate "repos/$REPO/pulls/$NUMBER/reviews" --jq '.[].user.login')"
+            head=$(gh api "repos/$REPO/pulls/$NUMBER" --jq '.head.repo.full_name')
+            test "$head" = "$REPO" || { echo "::error::pull request from another repository"; exit 1; }
+          fi
+          others=$(printf '%s\n' "$authors" | grep -v '^$' | grep -vxF -e "$OWNER" -e 'claude[bot]' -e 'github-actions[bot]' || true)
+          if [ -n "$others" ]; then
+            echo "::error::someone other than the owner commented on this thread, so it is not given to the model"
+            exit 1
+          fi
+
+  claude:
+    needs: gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    # contents/pull-requests/issues write: branches, pull requests and comments. Nothing else.
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      # v1.0.241
+      - uses: anthropics/claude-code-action@cab360f6565aa35a51d6ce9e43f1f4287c0a32ea
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          github_token: ${{ github.token }}
+          prompt: ${{ inputs.prompt }}
+          base_branch: develop
+          trigger_phrase: '@claude'
+          claude_args: >-
+            --max-turns 60
+            --append-system-prompt "Follow CLAUDE.md. Open pull requests into develop only; never push to develop or main.
+            Never edit .github/workflows, never switch WhatsApp sending on or change the WhatsApp phone number setting, never touch the CRM
+            cut-over or /opt/wacrm, never print or write secrets. You have no database, server or deploy access."

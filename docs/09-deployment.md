@@ -35,11 +35,11 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env-merge.mjs`):
 
 | Kind | Name | What |
 |---|---|---|
-| secret | `SSH_PRIVATE_KEY` | A key used only for deploys; its public half in `~/.ssh/authorized_keys` of the deploy user on the VPS |
+| secret | `SSH_PRIVATE_KEY` (or `VPS_SSH_PRIVATE_KEY`) | A key used only for deploys; its public half in `~/.ssh/authorized_keys` of the deploy user on the VPS |
 | secret | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD` | Supabase CLI token and the staging database password (migrations) |
 | variable | `VITE_SUPABASE_ANON_KEY` | Staging anon key (public by design) for the web build |
 
-**Built-in defaults** (a variable of the same name overrides): `SSH_HOST` 148.230.116.195, `SSH_USER` root, `DEPLOY_DIR` /opt/ayat-albayan-staging, `SUPABASE_PROJECT_REF` knxfwiimjcifwckhwbim, `API_URL` and `VITE_API_URL` https://api.ayatalbayan.com, `VITE_SUPABASE_URL` https://knxfwiimjcifwckhwbim.supabase.co, `WA_API_BASE` https://graph.facebook.com, `WA_PHONE_NUMBER_ID` 1111735608697582 and `WA_WABA_ID` 1302549868709212 (Meta **test** number +1 555 663 0046), `MESSAGING_ENABLED` false.
+**Built-in defaults** (a variable of the same name overrides): `SSH_HOST` 148.230.116.195, `SSH_USER` root, `DEPLOY_DIR` /opt/ayat-albayan-staging, `SUPABASE_PROJECT_REF` knxfwiimjcifwckhwbim, `API_URL` and `VITE_API_URL` https://api.ayatalbayan.com, `VITE_SUPABASE_URL` https://knxfwiimjcifwckhwbim.supabase.co, `WA_API_BASE` https://graph.facebook.com. The workflow no longer sets the WhatsApp phone number id or the messaging switch at all (see «GitHub Actions» below).
 
 **Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
 
@@ -176,3 +176,69 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 2. Meta App Dashboard: put back the callback URL and verify token from 3.1 (or re-subscribe the CRM's app to the WABA and unsubscribe ours).
 3. Turn the CRM's automations back on.
 4. Messages that reached us during the window are only in our database: list them for the owner with `select phone_e164, body, created_at from messages where direction = 'inbound' and created_at > '<cut-over time>' order by created_at;`.
+
+## GitHub Actions
+
+Owner request 2026-10-05: deploys, mobile builds/OTA, database migrations and the Claude routines run from GitHub, not from a PC. Files: `.github/workflows/`. Guarded by `tools/scripts/workflows.test.mjs` (every secret below must stay in this table).
+
+> **THE REPOSITORY IS PUBLIC (the owner wants it private).** Strangers can open PRs and issues, and read every workflow and every log. So: no workflow uses `pull_request_target`; every workflow has `permissions: contents: read` at the top; deploys run only on push to `develop` (through `ci`) or by hand; secrets are only bound to jobs that name a protected environment; logs show key *names*, ids and counts, never values. **Make the repository private as soon as you can**, and set Settings → Actions → General → *Fork pull request workflows* → «Require approval for all outside collaborators». Repository-level secrets are readable by any workflow in the repo, so prefer creating them as **environment** secrets (table below) and restricting each environment's *Deployment branches* to `develop`.
+
+### Workflows
+
+| Workflow | Trigger | What it does | Environment | If a stranger opens a PR |
+|---|---|---|---|---|
+| `ci` | push, PR, manual | lint, typecheck, unit, e2e | none | runs without secrets (forks get none) |
+| `deploy-staging` | `ci` green on a push to `develop`; manual | migrations (via `db-migrate`), env merge, API image, web swap, health check, auto rollback | `develop` (+ `staging-db` for the migration job) | never triggered by a PR |
+| `db-migrate` | PR touching migrations; manual `apply`; called by `deploy-staging` | PR: read-only name/SQL check, plus `db push --dry-run` on the owner's own non-fork PRs. Apply: `db push` to staging | PR dry-run: `staging-db-check`; apply: `staging-db` | check only, no secrets |
+| `mobile` | manual, on `develop` | `build-android-apk` (EAS preview), `ota-update` (`eas update`), or `both`; OTA is refused if native deps/plugins/app.json native fields changed since the last build unless `force_ota` | `mobile` | never triggered by a PR |
+| `claude-tasks` | manual with a `prompt`; `@claude` comment | Claude Code opens a PR into `develop` | none (no deploy secrets) | ignored: needs the owner as actor, as author of the issue/PR and of every comment in the thread |
+| `roster-report`, `staging-test-account` | manual | read-only roster CSV; test teacher + student on staging | `develop` | never triggered by a PR |
+
+Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. An automatic deploy of `develop` therefore pauses at «waiting for review» whenever migrations are pending; approve it after reading the diff. Manual runs apply only from `develop`. Untick `migrate` on `deploy-staging` to deploy code only.
+
+### What you must add (Settings → Secrets and variables → Actions, and Settings → Environments)
+
+**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `staging-db-check` (no reviewer, no branch limit; it only lets the owner's PR dry-run read the database), `mobile` (branches `develop`; optional reviewer).
+
+| Secret | Where to get it | Used by |
+|---|---|---|
+| `VPS_SSH_PRIVATE_KEY` (or `SSH_PRIVATE_KEY`) | A deploy-only key; public half in `authorized_keys` of the deploy user | `deploy-staging` |
+| `VPS_HOST`, `VPS_USER` | The VPS address and login (variables `SSH_HOST`, `SSH_USER` win if set) | `deploy-staging` |
+| `SSH_KNOWN_HOSTS` | **Recommended, not yet created:** `ssh-keyscan -t ed25519 <host>` from your PC, paste the line. Without it the run warns and uses `ssh-keyscan` | `deploy-staging` |
+| `STAGING_SUPABASE_URL` | Supabase → Project Settings → API | `deploy-staging`, `staging-test-account` |
+| `STAGING_SUPABASE_ANON_KEY` (or `VITE_SUPABASE_ANON_KEY`) | Same page, `anon` key (public by design) | `deploy-staging` (web build) |
+| `STAGING_SUPABASE_SERVICE_ROLE_KEY` (or `SUPABASE_SERVICE_ROLE_KEY`) | Same page, `service_role` | `deploy-staging` (server .env), `staging-test-account` |
+| `STAGING_DATABASE_URL` | Supabase → Connect → **Session pooler** URI (GitHub runners have no IPv6, so not the `db.` host) | `db-migrate` |
+| `STAGING_DB_PASSWORD` (or `SUPABASE_DB_PASSWORD`) | Supabase → Database settings | `db-migrate` (fallback path), `roster-report`, `staging-test-account` |
+| `SUPABASE_ACCESS_TOKEN` | **Not created yet, optional:** supabase.com → Account → Access Tokens. Only needed if you do not set `STAGING_DATABASE_URL` | `db-migrate` |
+| `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET` | Optional; empty keeps the server's value | `deploy-staging` |
+| `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN` | Meta app; optional, empty keeps the server's value | `deploy-staging` |
+| `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | LiveKit project; optional | `deploy-staging` |
+| `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN` | Optional server keys | `deploy-staging` |
+| `EXPO_TOKEN` | expo.dev → Account → Access tokens | `mobile` |
+| `GOOGLE_SERVICES_JSON` | Firebase `google-services.json` content; optional if the EAS `preview` environment already holds it | `mobile` (OTA) |
+| `ANTHROPIC_API_KEY` or `CLAUDE_CODE_OAUTH_TOKEN` | console.anthropic.com key, or `claude setup-token` | `claude-tasks` (the only secret it sees) |
+| `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
+| `TURBO_TOKEN` | Optional Turborepo remote cache | `ci` |
+
+Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `TURBO_TEAM`. Also create, in **Settings → Branches**, protection for `develop` and `main` (PR required) so `claude-tasks` can only open PRs.
+
+Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them.
+
+Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` by themselves (a GitHub rule): close and reopen the PR in the UI, or run `ci` by hand on its branch. It reads the whole issue/PR thread, so a thread where anyone but you commented is refused. Comments on a PR from a fork are ignored.
+
+### Roll back
+
+- **Staging deploy:** automatic. If `/health` fails after the swap the workflow restores `src.old` and `web.old` (kept as `src.bad` / `web.bad`). By hand see «Roll back» above.
+- **A good deploy you do not want:** revert the commit on `develop`; the next deploy replaces it.
+- **Migrations:** forward-only, no automatic undo. Write a new migration that reverses the change, or restore the Supabase backup (dashboard → Database → Backups).
+- **OTA:** run `mobile` with `ota-update` on a `develop` that is reverted, or on expo.dev → Updates → republish an older update to the branch.
+- **Server `.env`:** `deploy-staging` leaves `.env.bak-*` next to it.
+
+### Deliberately NOT automated
+
+- `WA_PHONE_NUMBER_ID` and `MESSAGING_ENABLED`: no workflow sets them. `deploy-staging` fails if a repository variable `MESSAGING_ENABLED` is `true`. Delete such a variable; switch sending on by hand (cut-over runbook).
+- The WhatsApp CRM cut-over, and anything on `/opt/wacrm` (live CRM on the same VPS). The only Docker clean-up is `docker image prune` limited to the label `com.docker.compose.project=ayat-albayan-staging`.
+- Production: no production deploy, import (docs/06) or `production` EAS profile.
+- iOS / Apple builds, signing and store submission.
+- Creating, rotating or reading secrets.

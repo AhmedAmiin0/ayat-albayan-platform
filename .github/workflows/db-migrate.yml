@@ -1,0 +1,138 @@
+name: db-migrate
+# Staging database migrations (docs/09-deployment.md «GitHub Actions»). Staging holds the owner's REAL
+# data, so nothing is applied by surprise:
+#  - pull_request (migrations touched): a READ-ONLY check only: numbering, light SQL lint and, on
+#    the owner's own non-fork PRs when the staging secrets exist, `supabase db push --dry-run`.
+#  - apply: only workflow_dispatch with apply=true on develop, or the call from deploy-staging.yml
+#    (push to develop → ci green → deploy-staging → here), always inside the environment `staging-db`,
+#    where the owner adds a REQUIRED REVIEWER, so every apply waits for an approval click.
+# Forward-only: there is no automatic undo (docs/09 «Roll back»). The repo is public: no
+# pull_request_target, and the secrets are only bound to environment jobs.
+on:
+  pull_request:
+    paths:
+      - packages/db/supabase/migrations/**
+      - .github/workflows/db-migrate.yml
+  workflow_dispatch:
+    inputs:
+      apply:
+        description: Apply pending migrations to STAGING (waits for the staging-db reviewer). Off = check only.
+        type: boolean
+        default: false
+  workflow_call:
+    inputs:
+      apply:
+        type: boolean
+        default: false
+      ref:
+        description: Commit to read the migrations from
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: db-migrate-staging
+  cancel-in-progress: false
+
+jobs:
+  # No secrets, no environment: safe for any PR, including forks.
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+          fetch-depth: 0
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - name: Numbering and SQL sanity (read-only)
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || '' }}
+        run: node tools/scripts/migration-check.mjs $BASE_REF
+
+  # Owner's own same-repo PRs only: a stranger's or a fork's PR never reaches the database password.
+  dry-run:
+    needs: check
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.head.repo.full_name == github.repository &&
+      github.event.pull_request.user.login == github.repository_owner
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: staging-db-check
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: supabase db push --dry-run (lists pending migrations, changes nothing)
+        env:
+          DB_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
+          PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF || 'knxfwiimjcifwckhwbim' }}
+        run: |
+          if [ -z "$DB_URL" ] && { [ -z "$SUPABASE_ACCESS_TOKEN" ] || [ -z "$DB_PASSWORD" ]; }; then
+            echo "::notice::dry-run skipped: add STAGING_DATABASE_URL (or SUPABASE_ACCESS_TOKEN + STAGING_DB_PASSWORD)"; exit 0
+          fi
+          pnpm i --frozen-lockfile --filter @ab/db
+          cd packages/db
+          if [ -n "$DB_URL" ]; then
+            echo "::add-mask::$DB_URL"
+            pnpm exec supabase db push --dry-run --db-url "$DB_URL"
+          else
+            pnpm exec supabase link --project-ref "$PROJECT_REF" -p "$DB_PASSWORD" >/dev/null
+            pnpm exec supabase db push --dry-run -p "$DB_PASSWORD"
+          fi
+
+  apply:
+    needs: check
+    if: ${{ inputs.apply }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: staging-db
+    steps:
+      - name: Only develop may change the database
+        env:
+          REF: ${{ github.ref }}
+          EVENT: ${{ github.event_name }}
+        run: |
+          # A manual run must be started on develop; a workflow_run call has already been limited to develop.
+          if [ "$EVENT" = workflow_dispatch ] && [ "$REF" != refs/heads/develop ]; then
+            echo "::error::migrations are applied from develop only (this run is on $REF)"; exit 1
+          fi
+      - uses: actions/checkout@v5
+        with:
+          ref: ${{ inputs.ref || github.sha }}
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: supabase db push (staging)
+        env:
+          DB_URL: ${{ secrets.STAGING_DATABASE_URL }}
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD || secrets.STAGING_DB_PASSWORD }}
+          PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF || 'knxfwiimjcifwckhwbim' }}
+        run: |
+          if [ -z "$DB_URL" ] && { [ -z "$SUPABASE_ACCESS_TOKEN" ] || [ -z "$DB_PASSWORD" ]; }; then
+            echo "::error::add the secret STAGING_DATABASE_URL (session pooler URL), or SUPABASE_ACCESS_TOKEN + STAGING_DB_PASSWORD"; exit 1
+          fi
+          pnpm i --frozen-lockfile --filter @ab/db
+          cd packages/db
+          if [ -n "$DB_URL" ]; then
+            echo "::add-mask::$DB_URL"
+            pnpm exec supabase db push --dry-run --db-url "$DB_URL"
+            pnpm exec supabase db push --yes --db-url "$DB_URL"
+          else
+            pnpm exec supabase link --project-ref "$PROJECT_REF" -p "$DB_PASSWORD" >/dev/null
+            pnpm exec supabase db push --dry-run -p "$DB_PASSWORD"
+            pnpm exec supabase db push --yes -p "$DB_PASSWORD"
+          fi

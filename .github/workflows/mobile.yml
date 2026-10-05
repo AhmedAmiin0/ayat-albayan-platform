@@ -1,0 +1,123 @@
+name: mobile
+# Android preview APK and over-the-air (OTA) updates from GitHub instead of the owner's PC
+# (docs/09-deployment.md «GitHub Actions»). Manual only: Actions → mobile → Run workflow, on develop.
+# Never production, never iOS/Apple. The repo is public: no pull_request trigger; EXPO_TOKEN lives
+# in the environment `mobile` (restrict it to develop). An OTA replaces JavaScript only, so it is
+# refused when a native dependency, plugin or app.json native field changed since the last build.
+on:
+  workflow_dispatch:
+    inputs:
+      action:
+        description: What to do
+        type: choice
+        options: [build-android-apk, ota-update, both]
+        default: ota-update
+      branch:
+        description: EAS update branch and environment (the preview APK listens to preview)
+        type: choice
+        options: [preview, development]
+        default: preview
+      force_ota:
+        description: "I confirm: ship the OTA although a native change was found (the installed app may crash until a new APK is installed)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: mobile
+  cancel-in-progress: false
+
+env:
+  EAS_CLI: eas-cli@24.10.0
+
+jobs:
+  build:
+    if: ${{ inputs.action == 'build-android-apk' || inputs.action == 'both' }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: mobile
+    steps:
+      - name: Develop only
+        env:
+          REF: ${{ github.ref }}
+        run: test "$REF" = refs/heads/develop || { echo "::error::run this workflow on develop (it is on $REF)"; exit 1; }
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+      - name: Never re-add forcesRTL
+        run: "! grep -n forcesRTL apps/mobile/app.json apps/mobile/app.config.ts"
+      - name: EAS build (Android preview APK, built on Expo's servers)
+        working-directory: apps/mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+        run: |
+          test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
+          npx --yes "$EAS_CLI" build --platform android --profile preview --non-interactive
+
+  ota:
+    needs: build
+    # Runs after a successful build (action=both) or alone (ota-update); never after a failed or skipped-by-mistake one.
+    if: ${{ !cancelled() && (inputs.action == 'ota-update' || (inputs.action == 'both' && needs.build.result == 'success')) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment: mobile
+    steps:
+      - name: Develop only
+        env:
+          REF: ${{ github.ref }}
+        run: test "$REF" = refs/heads/develop || { echo "::error::run this workflow on develop (it is on $REF)"; exit 1; }
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - name: Never re-add forcesRTL
+        run: "! grep -n forcesRTL apps/mobile/app.json apps/mobile/app.config.ts"
+      - name: Native-change guard (OTA = JavaScript only)
+        working-directory: apps/mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          FORCE: ${{ inputs.force_ota }}
+        run: |
+          test -n "$EXPO_TOKEN" || { echo "::error::add the secret EXPO_TOKEN to the environment mobile"; exit 1; }
+          last=$(npx --yes "$EAS_CLI" build:list --platform android --build-profile preview --status finished --limit 1 --json --non-interactive \
+            | node -e 'let s="";process.stdin.on("data",d=>s+=d).on("end",()=>{const b=JSON.parse(s)[0];console.log(b&&b.gitCommitHash||"")})')
+          cd ../..
+          if [ -z "$last" ]; then
+            echo "::warning::no finished preview build found, so a native change cannot be ruled out"
+            rc=1
+          else
+            rc=0; node tools/scripts/native-changes.mjs "$last" || rc=$?
+          fi
+          if [ "$rc" != 0 ] && [ "$FORCE" != true ]; then
+            echo "::error::native change (or unknown last build): an OTA would not reach it. Build a new APK (action build-android-apk), or tick force_ota to ship anyway."
+            exit 1
+          fi
+          if [ "$rc" != 0 ]; then echo "::warning::force_ota ticked: shipping the OTA despite the native change"; fi
+      - run: pnpm i --frozen-lockfile
+      - name: Write the Firebase file (only if the secret exists)
+        env:
+          GOOGLE_SERVICES_JSON_SECRET: ${{ secrets.GOOGLE_SERVICES_JSON }}
+        run: |
+          if [ -n "$GOOGLE_SERVICES_JSON_SECRET" ]; then
+            printf '%s' "$GOOGLE_SERVICES_JSON_SECRET" > "$RUNNER_TEMP/google-services.json"
+            echo "GOOGLE_SERVICES_JSON=$RUNNER_TEMP/google-services.json" >> "$GITHUB_ENV"
+          fi
+      - name: EAS update
+        working-directory: apps/mobile
+        env:
+          EXPO_TOKEN: ${{ secrets.EXPO_TOKEN }}
+          EAS_BRANCH: ${{ inputs.branch }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          npx --yes "$EAS_CLI" update --branch "$EAS_BRANCH" --environment "$EAS_BRANCH" \
+            --message "OTA from GitHub ${COMMIT:0:7}" --non-interactive
+      - name: Remove the Firebase file
+        if: always()
+        run: rm -f "$RUNNER_TEMP/google-services.json"

@@ -1,9 +1,12 @@
 name: deploy-staging
 # Deploy staging from GitHub (docs/09-deployment.md §GitHub deploy): Actions → deploy-staging → Run workflow.
-# Every value comes from the GitHub environment "develop" (Settings → Environments → develop):
-# secrets for anything private. The public staging values below are defaults; a variable of the same
-# name overrides one. Nothing is read from a laptop.
+# Every value comes from the GitHub environment "develop" (Settings → Environments → develop) or the
+# repository secrets: secrets for anything private. The public staging values below are defaults; a
+# variable of the same name overrides one. Nothing is read from a laptop.
 # The server's .env is MERGED, not replaced: a key left empty in GitHub keeps the server's value.
+# SAFETY: this workflow never sets MESSAGING_ENABLED or WA_PHONE_NUMBER_ID (the WhatsApp cut-over is the
+# owner's, by hand), never touches /opt/wacrm, and only runs on develop (push → ci → here) or by hand.
+# The repo is public: no pull_request trigger, no pull_request_target, secrets only in environment jobs.
 on:
   # Automatic: every merge into develop, once ci has passed on it (a red develop never ships).
   workflow_run:
@@ -22,6 +25,9 @@ on:
         type: boolean
         default: false
 
+permissions:
+  contents: read
+
 concurrency:
   group: deploy-staging
   cancel-in-progress: false
@@ -33,6 +39,7 @@ jobs:
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+       && github.event.workflow_run.head_branch == 'develop'
        && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 2
@@ -40,25 +47,54 @@ jobs:
     outputs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
+      - name: Refuse to run while the messaging flag is on
+        if: ${{ vars.MESSAGING_ENABLED == 'true' }}
+        run: |
+          echo "::error::the repository variable for the messaging flag is 'true'. Automation never switches WhatsApp sending on: set it by hand on the server (cut-over runbook) and delete the variable."
+          exit 1
       - id: check
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY || secrets.VPS_SSH_PRIVATE_KEY }}
         run: |
           if [ -n "$SSH_PRIVATE_KEY" ]; then echo "ready=true" >> "$GITHUB_OUTPUT"; exit 0; fi
           echo "ready=false" >> "$GITHUB_OUTPUT"
-          msg="staging deploy skipped: add the secret SSH_PRIVATE_KEY (and SUPABASE_ACCESS_TOKEN, SUPABASE_DB_PASSWORD, variable VITE_SUPABASE_ANON_KEY) to the develop environment"
+          msg="staging deploy skipped: add the secret VPS_SSH_PRIVATE_KEY (or SSH_PRIVATE_KEY) and the STAGING_* secrets, see docs/09-deployment.md «GitHub Actions»"
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "::error::$msg"; exit 1; fi
           echo "::warning::$msg"
 
-  deploy:
+  # Database first (environment staging-db: the owner's required reviewer gates it), then the API.
+  migrate:
     needs: preflight
-    if: needs.preflight.outputs.ready == 'true'
+    if: >-
+      needs.preflight.outputs.ready == 'true' &&
+      (github.event_name == 'workflow_run' || (inputs.migrate && !inputs.env_only))
+    permissions:
+      contents: read
+    uses: ./.github/workflows/db-migrate.yml
+    with:
+      apply: true
+      ref: ${{ github.event.workflow_run.head_sha || github.sha }}
+    secrets: inherit
+
+  deploy:
+    needs: [preflight, migrate]
+    # A skipped migrate (env_only / migrate unticked) is fine; a failed or declined one stops the deploy.
+    if: ${{ !cancelled() && needs.preflight.outputs.ready == 'true' && (needs.migrate.result == 'success' || needs.migrate.result == 'skipped') }}
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: develop
+    permissions:
+      contents: read
     env:
       DEST: ${{ vars.DEPLOY_DIR || '/opt/ayat-albayan-staging' }}
+      SSH_HOST: ${{ vars.SSH_HOST || secrets.VPS_HOST || '148.230.116.195' }}
+      SSH_USER: ${{ vars.SSH_USER || secrets.VPS_USER || 'root' }}
     steps:
+      - name: Refuse to run while the messaging flag is on
+        if: ${{ vars.MESSAGING_ENABLED == 'true' }}
+        run: |
+          echo "::error::the repository variable for the messaging flag is 'true'. Automation never switches WhatsApp sending on."
+          exit 1
       - uses: actions/checkout@v5
         with:
           # The exact commit ci passed on (auto), or the chosen branch (by hand).
@@ -73,32 +109,39 @@ jobs:
         if: ${{ !inputs.env_only }}
         env:
           VITE_API_URL: ${{ vars.VITE_API_URL || 'https://api.ayatalbayan.com' }}
-          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
+          VITE_SUPABASE_URL: ${{ vars.VITE_SUPABASE_URL || secrets.STAGING_SUPABASE_URL || 'https://knxfwiimjcifwckhwbim.supabase.co' }}
           # Public by design; accepted as a variable or a secret.
-          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_ANON_KEY: ${{ vars.VITE_SUPABASE_ANON_KEY || secrets.VITE_SUPABASE_ANON_KEY || secrets.STAGING_SUPABASE_ANON_KEY }}
         run: |
-          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add VITE_SUPABASE_ANON_KEY (staging anon key) to the develop environment, as a variable or a secret"; exit 1; }
+          test -n "$VITE_SUPABASE_ANON_KEY" || { echo "::error::add STAGING_SUPABASE_ANON_KEY (secret) or VITE_SUPABASE_ANON_KEY (variable)"; exit 1; }
           pnpm i --frozen-lockfile
           pnpm --filter @ab/db --filter @ab/shared build >/dev/null
           pnpm --filter web build
 
       - name: SSH key
         env:
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY || secrets.VPS_SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
         run: |
-          test -n "$SSH_PRIVATE_KEY" || { echo "::error::add the secret SSH_PRIVATE_KEY to the develop environment"; exit 1; }
+          test -n "$SSH_PRIVATE_KEY" || { echo "::error::add the secret VPS_SSH_PRIVATE_KEY (or SSH_PRIVATE_KEY)"; exit 1; }
+          echo "::add-mask::$SSH_HOST"
           install -d -m 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
-          if [ -n "$SSH_KNOWN_HOSTS" ]; then printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts; else ssh-keyscan -H "${{ vars.SSH_HOST || '148.230.116.195' }}" > ~/.ssh/known_hosts; fi
-          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n' \
-            "${{ vars.SSH_HOST || '148.230.116.195' }}" "${{ vars.SSH_USER || 'root' }}" > ~/.ssh/config
+          if [ -n "$SSH_KNOWN_HOSTS" ]; then
+            printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          else
+            echo "::warning::SSH_KNOWN_HOSTS is not set: the host key is fetched with ssh-keyscan on every run, so a man-in-the-middle on the runner network would go unnoticed. Pin it: ssh-keyscan -t ed25519 <host> and save the line as the secret SSH_KNOWN_HOSTS."
+            ssh-keyscan -H "$SSH_HOST" > ~/.ssh/known_hosts
+          fi
+          printf 'Host target\n  HostName %s\n  User %s\n  IdentityFile ~/.ssh/id_deploy\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n' \
+            "$SSH_HOST" "$SSH_USER" > ~/.ssh/config
           ssh target "test -d $DEST" || { echo "::error::$DEST missing on the server"; exit 1; }
 
       - name: Merge the server .env (key names only are logged)
-        # API .env keys (apps/api/src/env.ts), scoped to this step only.
+        # API .env keys (apps/api/src/env.ts), scoped to this step only. The WhatsApp phone number id and
+        # the messaging switch are deliberately NOT here: they stay whatever the server has.
         env:
-          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY || secrets.STAGING_SUPABASE_SERVICE_ROLE_KEY }}
           SUPABASE_JWT_SECRET: ${{ secrets.SUPABASE_JWT_SECRET }}
           WA_ACCESS_TOKEN: ${{ secrets.WA_ACCESS_TOKEN }}
           WA_APP_SECRET: ${{ secrets.WA_APP_SECRET }}
@@ -110,14 +153,12 @@ jobs:
           RECORDING_S3_SECRET: ${{ secrets.RECORDING_S3_SECRET }}
           EXPO_ACCESS_TOKEN: ${{ secrets.EXPO_ACCESS_TOKEN }}
           # … and variables:
-          SUPABASE_URL: ${{ vars.SUPABASE_URL }}
+          SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
           WEB_ORIGIN: ${{ vars.WEB_ORIGIN }}
           WA_API_BASE: ${{ vars.WA_API_BASE || 'https://graph.facebook.com' }}
           WA_API_VERSION: ${{ vars.WA_API_VERSION }}
-          WA_PHONE_NUMBER_ID: ${{ vars.WA_PHONE_NUMBER_ID || '1111735608697582' }} # Meta test number +1 555 663 0046
-          WA_WABA_ID: ${{ vars.WA_WABA_ID || '1302549868709212' }} # its test WABA
+          WA_WABA_ID: ${{ vars.WA_WABA_ID }}
           WA_APP_ID: ${{ vars.WA_APP_ID }}
-          MESSAGING_ENABLED: ${{ vars.MESSAGING_ENABLED || 'false' }} # sending stays off unless the variable says true
           LIVEKIT_URL: ${{ vars.LIVEKIT_URL }}
           RECORDING_S3_ENDPOINT: ${{ vars.RECORDING_S3_ENDPOINT }}
           RECORDING_S3_REGION: ${{ vars.RECORDING_S3_REGION }}
@@ -129,7 +170,7 @@ jobs:
           # Missing file = start empty; present but unreadable = stop (never write a partial .env).
           ssh target "if [ -e $DEST/.env ]; then cat $DEST/.env; fi" > current.env
           keys="SUPABASE_URL SUPABASE_SERVICE_ROLE_KEY SUPABASE_JWT_SECRET WEB_ORIGIN WA_API_BASE WA_API_VERSION
-            WA_PHONE_NUMBER_ID WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN MESSAGING_ENABLED
+            WA_WABA_ID WA_ACCESS_TOKEN WA_APP_ID WA_APP_SECRET WA_VERIFY_TOKEN
             FEEDBACK_TOKEN_SECRET LIVEKIT_URL LIVEKIT_API_KEY LIVEKIT_API_SECRET RECORDING_S3_ENDPOINT RECORDING_S3_REGION
             RECORDING_S3_BUCKET RECORDING_S3_ACCESS_KEY RECORDING_S3_SECRET EXPO_ACCESS_TOKEN EXPO_API_BASE FX_API_URL"
           node tools/scripts/env-merge.mjs current.env $keys > new.env
@@ -138,17 +179,6 @@ jobs:
             echo "server .env updated (backup kept next to it)"; fi
           rm -f current.env new.env
 
-      - name: Database migrations
-        if: ${{ github.event_name == 'workflow_run' || (inputs.migrate && !inputs.env_only) }}
-        env:
-          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
-          SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}
-        run: |
-          pnpm i --frozen-lockfile --filter @ab/db
-          cd packages/db
-          pnpm exec supabase link --project-ref "${{ vars.SUPABASE_PROJECT_REF || 'knxfwiimjcifwckhwbim' }}" -p "$SUPABASE_DB_PASSWORD" >/dev/null
-          pnpm exec supabase db push -p "$SUPABASE_DB_PASSWORD" --yes
-
       - name: Ship the API and rebuild its container
         if: ${{ !inputs.env_only }}
         run: |
@@ -156,7 +186,8 @@ jobs:
           git archive --format=tar HEAD | ssh target "tar --no-same-owner -x -C $DEST/src.new"
           scp -q deploy/staging/docker-compose.yml "target:$DEST/docker-compose.yml"
           ssh target "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
-            && docker compose up -d --build --remove-orphans && docker image prune -f >/dev/null"
+            && docker compose up -d --build --remove-orphans \
+            && docker image prune -f --filter 'label=com.docker.compose.project=ayat-albayan-staging' >/dev/null"
 
       - name: Restart the API with the new .env
         if: ${{ inputs.env_only }}
@@ -171,8 +202,10 @@ jobs:
 
       - name: Health check
         id: health
+        env:
+          API_URL: ${{ vars.API_URL || 'https://api.ayatalbayan.com' }}
         run: |
-          url="${{ vars.API_URL || 'https://api.ayatalbayan.com' }}"
+          url="${API_URL}"
           if [ -z "$url" ]; then ssh target "curl -fsS --retry 30 --retry-delay 5 --retry-all-errors http://127.0.0.1:3110/health"
           else curl -fsS --retry 30 --retry-delay 5 --retry-all-errors "$url/health"; fi
           echo; echo "staging is up"
@@ -189,6 +222,8 @@ jobs:
 
       - name: Summary
         if: always()
+        env:
+          API_URL: ${{ vars.API_URL }}
         run: |
           {
             echo "### Staging deploy: ${{ job.status }}"
@@ -198,7 +233,7 @@ jobs:
             echo "| Commit | \`$(git rev-parse --short HEAD)\` $(git log -1 --format=%s | head -c 90) |"
             echo "| Trigger | ${{ github.event_name }} |"
             echo "| Web | https://app.ayatalbayan.com |"
-            echo "| API | ${{ vars.API_URL || 'https://api.ayatalbayan.com' }}/health |"
+            echo "| API | ${API_URL:-https://api.ayatalbayan.com}/health |"
           } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Remove the key

@@ -27,7 +27,8 @@ ssh "$SSH_HOST" "rm -rf $DEST/src.new && mkdir -p $DEST/src.new"
 git -C "$ROOT" archive --format=tar HEAD | ssh "$SSH_HOST" "tar --no-same-owner -x -C $DEST/src.new"
 scp -q "$ROOT/deploy/staging/docker-compose.yml" "$SSH_HOST:$DEST/docker-compose.yml"
 ssh "$SSH_HOST" "cd $DEST && rm -rf src.old && { [ ! -d src ] || mv src src.old; } && mv src.new src \
-  && docker compose up -d --build && docker image prune -f >/dev/null"
+  && docker compose up -d --build \
+  && docker image prune -f --filter 'label=com.docker.compose.project=ayat-albayan-staging' >/dev/null"
 
 step "3/5 web build against staging"
 set -a; . "$ART/web.env"; set +a
