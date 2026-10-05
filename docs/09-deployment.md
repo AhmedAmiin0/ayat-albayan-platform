@@ -27,7 +27,7 @@ Pushes migrations, ships the committed `HEAD` with `git archive` (never `node_mo
 
 ### From GitHub (no laptop secrets)
 
-**Automatic:** every merge into `develop` deploys staging once `ci` has passed on that commit (a failed `ci` deploys nothing). **By hand:** GitHub → **Actions → deploy-staging → Run workflow** (`.github/workflows/deploy-staging.yml`). Both do the same five steps from a GitHub runner, reading every value from the repository environment **staging** (Settings → Environments → staging). Tick **env_only** to change only the server `.env` (e.g. a new WhatsApp token) and restart the API.
+**Automatic:** every merge into `develop` deploys staging once `ci` has passed on that commit (a failed `ci` deploys nothing). **By hand:** GitHub → **Actions → deploy-staging → Run workflow** (`.github/workflows/deploy-staging.yml`). Both do the same five steps from a GitHub runner, reading every value from the repository environment **develop** (Settings → Environments → develop). Tick **env_only** to change only the server `.env` (e.g. a new WhatsApp token) and restart the API.
 
 The server `.env` is **merged**, never replaced (`tools/scripts/env-merge.mjs`): a key that is empty or missing in GitHub keeps the server's value, a timestamped `.env.bak-*` is left next to it, and the log names the keys it set, never their values.
 
@@ -42,7 +42,7 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env-merge.mjs`):
 | variable | `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_BASE`, `WA_API_VERSION`, `WA_PHONE_NUMBER_ID`, `WA_WABA_ID`, `WA_APP_ID`, `MESSAGING_ENABLED`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL` | API `.env` non-secret values |
 | variable | `VITE_API_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Web build (the anon key is public by design) |
 
-Protect the environment (Settings → Environments → staging → Required reviewers / deployment branches = `develop`) so only the owner can run it.
+Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
 
 Mobile preview APK: `cd apps/mobile && npx eas-cli build --platform android --profile preview` (EAS keeps the Android keystore). Install link: the build page on expo.dev.
 

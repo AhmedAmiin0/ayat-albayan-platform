@@ -1,6 +1,6 @@
 name: deploy-staging
 # Deploy staging from GitHub (docs/09-deployment.md §GitHub deploy): Actions → deploy-staging → Run workflow.
-# Every value comes from the GitHub environment "staging" (Settings → Environments → staging):
+# Every value comes from the GitHub environment "develop" (Settings → Environments → develop):
 # secrets for anything private, variables for the rest. Nothing is read from a laptop.
 # The server's .env is MERGED, not replaced: a key left empty in GitHub keeps the server's value.
 on:
@@ -34,7 +34,7 @@ jobs:
        && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 30
-    environment: staging
+    environment: develop
     env:
       DEST: ${{ vars.DEPLOY_DIR || '/opt/ayat-albayan-staging' }}
     steps:
@@ -53,7 +53,7 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           SSH_KNOWN_HOSTS: ${{ secrets.SSH_KNOWN_HOSTS }}
         run: |
-          test -n "$SSH_PRIVATE_KEY" -a -n "${{ vars.SSH_HOST }}" || { echo "::error::set secret SSH_PRIVATE_KEY and variable SSH_HOST in the staging environment"; exit 1; }
+          test -n "$SSH_PRIVATE_KEY" -a -n "${{ vars.SSH_HOST }}" || { echo "::error::set secret SSH_PRIVATE_KEY and variable SSH_HOST in the develop environment"; exit 1; }
           install -d -m 700 ~/.ssh
           printf '%s\n' "$SSH_PRIVATE_KEY" > ~/.ssh/id_deploy && chmod 600 ~/.ssh/id_deploy
           if [ -n "$SSH_KNOWN_HOSTS" ]; then printf '%s\n' "$SSH_KNOWN_HOSTS" > ~/.ssh/known_hosts; else ssh-keyscan -H "${{ vars.SSH_HOST }}" > ~/.ssh/known_hosts; fi
