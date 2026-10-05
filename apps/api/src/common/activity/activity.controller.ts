@@ -28,7 +28,8 @@ function tooMany(): HttpException {
 /**
  * Sign-in happens against Supabase Auth from the browser, so the web reports it here; the
  * ActivityInterceptor writes the row (authSession.login / .logout / .loginFailed). The handlers do
- * nothing else. No body is read: a failed sign-in stores no email, only IP and user agent.
+ * nothing else. No body is expected, and values are never stored: a failed sign-in keeps no email,
+ * only IP and user agent (plus the names of any fields a client did send).
  * Rate-limited per user (30) and, for failures, per IP (20), each per 10 minutes.
  */
 @ApiTags('activity')
