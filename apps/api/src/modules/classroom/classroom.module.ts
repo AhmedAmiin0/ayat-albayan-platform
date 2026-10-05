@@ -27,17 +27,33 @@ import { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
 import { RoomAdmission } from './room-admission';
 import { RoomJoinService } from './room-join.service';
+import { RoomOpenController } from './room-open.controller';
+import { RoomOpenService } from './room-open.service';
+import { StudentLinkAdminService } from './student-link.admin.service';
+import { StudentLinkAdminController, StudentLinkPublicController } from './student-link.controller';
+import { StudentLinkQueries } from './student-link.queries';
+import { StudentLinkService } from './student-link.service';
 
 /**
  * Online classrooms on the self-hosted LiveKit (docs/09, tools/livekit): staff join with their
  * login (POST /lessons/:id/room/join), the family with a one-lesson link (POST /public/join/:token,
  * sent by «ابعت لينك الحلقة» through the inbox Outbox), and the admin assigns teaching assistants
  * per student. Staff may remove someone from the room (blocked for that lesson), every lesson is
- * recorded (LiveKit egress into the `recordings` bucket, POST /livekit/webhook). TemplateRegistry comes from the global WhatsappModule.
+ * recorded (LiveKit egress into the `recordings` bucket, POST /livekit/webhook). Staff may open the room
+ * early (POST /lessons/:id/room/open) and a student has a long-lived link (/public/student/:token). TemplateRegistry comes from the global WhatsappModule.
  */
 @Module({
   imports: [InboxModule, TeachersModule],
-  controllers: [ClassroomController, ClassroomPublicController, AssistantsController, ModerationController, LivekitWebhookController],
+  controllers: [
+    ClassroomController,
+    ClassroomPublicController,
+    AssistantsController,
+    ModerationController,
+    LivekitWebhookController,
+    RoomOpenController,
+    StudentLinkPublicController,
+    StudentLinkAdminController,
+  ],
   providers: [
     { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfig => livekitEnv(loadEnv()) },
     { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => (loadEnv().WEB_ORIGIN.split(',')[0] ?? '').trim().replace(/\/+$/, '') },
@@ -48,6 +64,10 @@ import { RoomJoinService } from './room-join.service';
     AssistantsQueries,
     AssistantLessonsQueries,
     RoomJoinService,
+    RoomOpenService,
+    StudentLinkQueries,
+    StudentLinkService,
+    StudentLinkAdminService,
     GuestJoinService,
     JoinLinkService,
     JoinLinkCopyService,

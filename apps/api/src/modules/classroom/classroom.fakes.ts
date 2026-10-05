@@ -21,6 +21,8 @@ export const LESSON: JoinLesson = {
   teacher_id: TEACHER_ID,
   starts_at: '2026-10-05T16:00:00.000Z',
   ends_at: '2026-10-05T17:00:00.000Z',
+  status: 'scheduled',
+  room_opened_at: null,
 };
 export const OPEN = new Date('2026-10-05T16:05:00Z');
 export const EARLY = new Date('2026-10-05T15:00:00Z');
@@ -41,6 +43,7 @@ export const linkRow = (over: Partial<JoinLinkRow> = {}): JoinLinkRow => ({
   revoked_at: null,
   created_by: ADMIN.id,
   created_at: '2026-10-05T09:00:00.000Z',
+  student_id: null,
   ...over,
 });
 
@@ -58,6 +61,7 @@ export function queries() {
     }),
     insertLink: vi.fn().mockResolvedValue(linkRow()),
     linkByHash: vi.fn().mockResolvedValue(linkRow()),
+    openRoom: vi.fn(async (_id: string, at: string) => ({ ...LESSON, room_opened_at: at })),
   };
 }
 

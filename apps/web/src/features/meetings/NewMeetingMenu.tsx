@@ -1,0 +1,50 @@
+import { useRef, useState } from 'react';
+import { buttonVariants } from '@/components/ui/button';
+import { Icon } from '@/components/ui/icon';
+import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
+import { InstantLessonDialog } from './InstantLessonDialog';
+
+const item = 'flex min-h-11 w-full items-center rounded-sm px-3 text-start text-sm hover:bg-sunk sm:min-h-9';
+
+/**
+ * «اجتماع جديد» on the admin schedule and classrooms pages: «ابدأ الآن» starts an instant lesson
+ * (dialog, then straight into /classroom/$lessonId), «جدولة» opens the booking wizard. A native
+ * disclosure: keyboard and screen reader for free. Plain links, like «ادخل الحلقة»: no router needed.
+ */
+export function NewMeetingMenu() {
+  const [instant, setInstant] = useState(false);
+  const menu = useRef<HTMLDetailsElement>(null);
+  const close = () => menu.current?.removeAttribute('open');
+  return (
+    <>
+      <details ref={menu} className="relative">
+        <summary className={cn(buttonVariants({ variant: 'primary' }), 'cursor-pointer list-none [&::-webkit-details-marker]:hidden')}>
+          <Icon name="plus" />
+          {t.meetings.new}
+        </summary>
+        <div role="group" aria-label={t.meetings.new} className="absolute end-0 z-20 mt-1 grid w-max min-w-full gap-0.5 rounded-md border border-rule bg-raised p-1.5 shadow-md">
+          <button
+            type="button"
+            className={item}
+            onClick={() => {
+              close();
+              setInstant(true);
+            }}
+          >
+            {t.meetings.startNow}
+          </button>
+          <a href="/admin/book" className={item}>
+            {t.meetings.schedule}
+          </a>
+        </div>
+      </details>
+      {instant && (
+        <InstantLessonDialog
+          onClose={() => setInstant(false)}
+          onStarted={(lessonId) => window.location.assign(`/classroom/${lessonId}`)}
+        />
+      )}
+    </>
+  );
+}

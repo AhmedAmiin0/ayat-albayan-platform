@@ -47,6 +47,9 @@ export interface LessonView {
   override_reason: string | null;
   confirmed_at: string | null;
   rescheduled_from_id: string | null;
+  /** «افتح الحلقة الآن»: the room opened early (joinWindow); «حلقة فورية»: never consumes a package. */
+  room_opened_at?: string | null;
+  instant?: boolean;
   students: LessonStudentView[];
   /** allowedLessonEvents(status) minus what the caller's role may not do. */
   allowed_events: LessonEvent[];

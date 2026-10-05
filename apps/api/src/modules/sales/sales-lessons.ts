@@ -10,6 +10,8 @@ export interface SalesLessonRow {
   id: string;
   starts_at: string;
   ends_at: string;
+  /** «افتح الحلقة الآن» (migration 190): widens joinable_window. */
+  room_opened_at?: string | null;
   status: LessonStatus;
   teacher: { display_name_ar: string } | null;
   rule: { created_from_lead_id: string | null; package: string | null; lead: { name: string | null } | null } | null;
@@ -18,7 +20,7 @@ export interface SalesLessonRow {
 
 const RULE = 'rule:schedule_rules!lessons_rule_id_fkey(created_from_lead_id, package, lead:leads!schedule_rules_created_from_lead_id_fkey(name))';
 const select = (inner: boolean) =>
-  `id, starts_at, ends_at, status, teacher:teachers(display_name_ar), ${RULE}, lesson_students${inner ? '!inner' : ''}(student_id, student:students(name))`;
+  `id, starts_at, ends_at, room_opened_at, status, teacher:teachers(display_name_ar), ${RULE}, lesson_students${inner ? '!inner' : ''}(student_id, student:students(name))`;
 
 /**
  * THE rule of the sales scope, for the meetings list and the classroom alike: a lesson is theirs when

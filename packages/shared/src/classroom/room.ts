@@ -28,5 +28,7 @@ export const CLASSROOM_ERRORS = [
   'removed_from_room',
   'participant_not_found',
   'cannot_remove',
+  'no_lesson',
+  'lesson_not_open',
 ] as const;
 export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];

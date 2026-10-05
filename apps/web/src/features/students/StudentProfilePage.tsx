@@ -9,6 +9,7 @@ import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
 import { Toast } from '@/components/ui/toast';
 import { AssistantsManager } from '@/features/classroom/AssistantsManager';
+import { StudentJoinLink } from '@/features/classroom/StudentJoinLink';
 import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -84,6 +85,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <StudentInvoices studentId={student.id} />
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />
+      <StudentJoinLink studentId={student.id} />
       <SiblingMerge student={student} siblings={student.siblings} />
       {editGuardian && (
         <GuardianEditDialog

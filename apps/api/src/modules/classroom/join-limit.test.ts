@@ -30,4 +30,11 @@ describe('PublicJoinLimit', () => {
     for (let i = 0; i < 10; i++) limit.assert({ ip: '4.4.4.4', token: 'a' }, T0);
     expect(() => limit.assert({ ip: '4.4.4.4', token: 'a' }, T0 + 10 * 60_000 + 1)).not.toThrow();
   });
+
+  it('page reads have their own looser buckets: 60 per link and IP, and do not touch the join budget', () => {
+    const limit = new PublicJoinLimit();
+    for (let i = 0; i < 60; i++) limit.assertRead({ ip: '5.5.5.5', token: 'a' }, T0);
+    expect(() => limit.assertRead({ ip: '5.5.5.5', token: 'a' }, T0)).toThrow(HttpException);
+    expect(() => limit.assert({ ip: '5.5.5.5', token: 'a' }, T0)).not.toThrow();
+  });
 });

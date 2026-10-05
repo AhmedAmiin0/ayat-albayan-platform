@@ -2181,7 +2181,9 @@
       "unknown": "Something went wrong, try again",
       "removed_from_room": "You were removed from the lesson and cannot rejoin it",
       "participant_not_found": "This participant is no longer in the lesson",
-      "cannot_remove": "You are not allowed to remove this participant"
+      "cannot_remove": "You are not allowed to remove this participant",
+      "no_lesson": "There is no upcoming lesson for this student",
+      "lesson_not_open": "This lesson cannot be opened: it was cancelled or already held"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2245,7 +2247,10 @@
         "done": "Ready",
         "failed": "Failed"
       }
-    }
+    },
+    "openNow": "Open the room now",
+    "opening": "Opening the room…",
+    "openedHint": "The room is open; everyone can join now"
   },
   "sales": {
     "title": "Sales",
@@ -2292,5 +2297,44 @@
     },
     "loadFailed": "Could not load the data, try again",
     "retry": "Try again"
+  },
+  "meetings": {
+    "new": "New meeting",
+    "startNow": "Start now",
+    "schedule": "Schedule",
+    "dialogTitle": "Instant lesson",
+    "dialogHint": "The lesson starts now with its room open, and it does not use the student's package.",
+    "students": "Students",
+    "noStudents": "Pick at least one student",
+    "remove": "Remove {name}",
+    "teacher": "Teacher",
+    "pickTeacher": "Pick a teacher",
+    "noTeacher": "Pick a teacher",
+    "duration": "Duration",
+    "start": "Start the lesson",
+    "starting": "Starting…",
+    "conflict": "This time clashes with another lesson of the teacher or a student. Give a reason to start anyway.",
+    "overrideReason": "Reason to start anyway",
+    "error": "Could not start the lesson, try again"
+  },
+  "studentLink": {
+    "title": "Student join link",
+    "hint": "A lasting link the student uses to join each lesson on time, without logging in. A new link replaces the previous one.",
+    "create": "Create and copy the link",
+    "creating": "Preparing the link…",
+    "copied": "Link copied, send it to the student",
+    "shown": "Student link",
+    "error": "Could not create the link, try again",
+    "page": {
+      "greeting": "Hello {name}",
+      "next": "Your next lesson",
+      "now": "Your lesson now",
+      "with": "with {teacher}",
+      "none": "No upcoming lesson right now; contact the academy to book one.",
+      "enter": "Join the lesson",
+      "name": "Your name (optional)",
+      "autoHint": "The button turns on by itself when the room opens",
+      "loadError": "Could not load the page, try again"
+    }
   }
 }

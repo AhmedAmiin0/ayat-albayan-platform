@@ -28,6 +28,8 @@ export interface PackageLesson {
   trial: boolean;
   /** A حجز تعويضي (lessons.makeup_of_id): replaces a charged miss, so it never consumes a unit. */
   makeup: boolean;
+  /** A حلقة فورية (lessons.instant, migration 190): an ad-hoc lesson, never consumes a unit. */
+  instant?: boolean;
 }
 
 export interface PackageSubscription {
@@ -52,9 +54,9 @@ export interface SubscriptionBalance {
   projectedEndAt: string | null;
 }
 
-/** Rules 1–3 of migration 123 plus 172: chargeable, has an outcome, not a trial or a makeup. */
-export function consumesPackage(l: Pick<PackageLesson, 'status' | 'chargeable' | 'trial' | 'makeup'>): boolean {
-  return l.chargeable && !l.trial && !l.makeup && (CONSUMING_LESSON_STATUSES as readonly string[]).includes(l.status);
+/** Rules 1–3 of migration 123 plus 172 and 190: chargeable, has an outcome, not a trial, makeup or instant lesson. */
+export function consumesPackage(l: Pick<PackageLesson, 'status' | 'chargeable' | 'trial' | 'makeup' | 'instant'>): boolean {
+  return l.chargeable && !l.trial && !l.makeup && !l.instant && (CONSUMING_LESSON_STATUSES as readonly string[]).includes(l.status);
 }
 
 const byTime = (a: PackageLesson, b: PackageLesson) =>
@@ -76,7 +78,7 @@ export function subscriptionBalances(input: {
   const subs = [...input.subscriptions].sort(byStart);
   const first = subs[0]?.startsOn;
   if (first === undefined) return [];
-  const counted = input.lessons.filter((l) => l.localDate >= first && !l.trial && !l.makeup && l.chargeable);
+  const counted = input.lessons.filter((l) => l.localDate >= first && !l.trial && !l.makeup && !l.instant && l.chargeable);
   const used = counted.filter(consumesPackage).sort(byTime);
   const booked = counted.filter((l) => BOOKED.includes(l.status)).sort(byTime);
   let capFrom = 0;
