@@ -4,6 +4,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
 import { useNow } from '@/features/classroom/use-now';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from './Bar';
 import { isLiveNow, todaysLessons } from './today';
@@ -41,6 +42,7 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
  */
 export function TodayLessons({ lessons, className }: { lessons: LessonView[] | undefined; className?: string }) {
   const now = useNow();
+  const win = useJoinWindow();
   const list = lessons ? todaysLessons(lessons) : undefined;
   return (
     <section aria-labelledby="dash-today" className={cn('grid content-start gap-2 rounded-md border border-rule p-4', className)}>
@@ -57,7 +59,7 @@ export function TodayLessons({ lessons, className }: { lessons: LessonView[] | u
       {list && list.length > 0 && (
         <ul className="max-h-[520px] overflow-y-auto overscroll-contain pe-1">
           {list.map((l) => (
-            <LessonItem key={l.id} lesson={l} live={isLiveNow(l, now)} />
+            <LessonItem key={l.id} lesson={l} live={isLiveNow(l, now, win)} />
           ))}
         </ul>
       )}

@@ -5,13 +5,13 @@ import { CheckField, NumberField } from './SettingsFields';
 import { sectionId, SETTINGS_SECTIONS, SettingsNav } from './SettingsNav';
 
 describe('SettingsNav (/admin/settings section index)', () => {
-  it('lists the six sections in page order, the first one current', () => {
+  it('lists the registry sections in page order, the first one current', () => {
     render(<SettingsNav />);
     const nav = screen.getByRole('navigation', { name: t.settings.nav });
     const links = within(nav).getAllByRole('link');
     expect(links.map((a) => a.textContent)).toEqual(SETTINGS_SECTIONS.map((s) => t.settings.sections[s]));
     expect(links[0]?.getAttribute('aria-current')).toBe('true');
-    expect(links[2]?.getAttribute('href')).toBe(`#${sectionId('reports')}`);
+    expect(links[2]?.getAttribute('href')).toBe(`#${sectionId('classroom')}`);
   });
 
   it('jumps to a section inside the page and marks it current', () => {

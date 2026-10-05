@@ -1,6 +1,5 @@
-import { CURRENCY_ISOS, type AcademySettings } from '@ab/shared';
+import { settingDef, type AcademySettings } from '@ab/shared';
 import { useId, type ReactNode } from 'react';
-import { Select } from '@/components/ui/select';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { SalesAutoAssignSwitch } from '@/features/sales/SalesAutoAssignSwitch';
 import { TemplateHealth } from '@/features/templates/TemplateHealth';
@@ -8,12 +7,10 @@ import { t } from '@/lib/i18n';
 import { AutoMessagesSwitch } from './AutoMessagesSwitch';
 import { FeedbackModeSwitch } from './FeedbackModeSwitch';
 import { MessagingSwitch } from './MessagingSwitch';
-import { CheckField, NumberField, SettingRow } from './SettingsFields';
+import { RegistryField } from './RegistryField';
+import { FORM_KEYS } from './settings-form';
 import { sectionId, type SettingsSection } from './SettingsNav';
 import type { SettingsFormState } from './use-settings-form';
-
-const msg = t.templates.settings;
-const h = t.settings.hints;
 
 /** One section of /admin/settings: its title, then its rows (scroll-margin keeps it under the pinned head). */
 export function Section({ id, children }: { id: SettingsSection; children: ReactNode }) {
@@ -27,20 +24,28 @@ export function Section({ id, children }: { id: SettingsSection; children: React
   );
 }
 
-/** «الرسائل والواتساب»: sending, automatic messages, template health, reminder and follow-up timing. */
+/** The registry's form fields of one section, in registry order (nothing when it has none). */
+export function SectionFields({ id, state }: { id: SettingsSection; state: SettingsFormState }) {
+  const keys = FORM_KEYS.filter((k) => settingDef(k).section === id);
+  if (keys.length === 0) return null;
+  return (
+    <div>
+      {keys.map((k) => (
+        <RegistryField key={k} settingKey={k} state={state} />
+      ))}
+    </div>
+  );
+}
+
+/** «الرسائل والواتساب»: the switches that save on their own, the timing fields, template health. */
 export function MessagingSection({ settings, state }: { settings: AcademySettings; state: SettingsFormState }) {
   const templates = useId();
-  const { form, errors, set } = state;
   return (
     <Section id="messaging">
       <MessagingSwitch settings={settings} />
       <AutoMessagesSwitch settings={settings} />
       <FeedbackModeSwitch settings={settings} />
-      <div>
-        <NumberField label={msg.reminderMinutesBefore} hint={h.reminderMinutesBefore} value={form.reminderMinutesBefore} error={errors.reminderMinutesBefore} onChange={(v) => set({ reminderMinutesBefore: v })} />
-        <CheckField label={msg.reminder24hEnabled} hint={msg.reminder24hHint} checked={form.reminder24hEnabled} onChange={(v) => set({ reminder24hEnabled: v })} />
-        <NumberField list label={msg.followUpHours} hint={msg.followUpHoursHint} value={form.followUpHours} error={errors.followUpHours} onChange={(v) => set({ followUpHours: v })} />
-      </div>
+      <SectionFields id="messaging" state={state} />
       <div className="min-w-0">
         <TemplateHealth headingId={templates} />
       </div>
@@ -48,53 +53,11 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
   );
 }
 
-/** «الجدول والحلقات»: the booking horizon and late cancellation. */
-export function ScheduleSection({ state: { form, errors, set } }: { state: SettingsFormState }) {
+/** Any section made only of registry fields: schedule, classroom, reports, accounts, uploads, academy. */
+export function FieldsSection({ id, state }: { id: SettingsSection; state: SettingsFormState }) {
   return (
-    <Section id="schedule">
-      <div>
-        <NumberField label={t.settings.bookingHorizonWeeks} hint={h.bookingHorizonWeeks} value={form.bookingHorizonWeeks} error={errors.bookingHorizonWeeks} onChange={(v) => set({ bookingHorizonWeeks: v })} />
-        <CheckField label={t.settings.lateCancel} hint={t.settings.lateCancelHint} checked={form.lateCancelOn} onChange={(v) => set({ lateCancelOn: v })} />
-        <NumberField label={t.settings.lateCancelHours} disabled={!form.lateCancelOn} value={form.lateCancelHours} error={errors.lateCancelHours} onChange={(v) => set({ lateCancelHours: v })} />
-      </div>
-    </Section>
-  );
-}
-
-/** «التقارير»: how long a teacher may still edit a sent report. */
-export function ReportsSection({ state: { form, errors, set } }: { state: SettingsFormState }) {
-  return (
-    <Section id="reports">
-      <div>
-        <NumberField label={t.settings.reportTeacherEditHours} hint={h.reportTeacherEditHours} value={form.reportTeacherEditHours} error={errors.reportTeacherEditHours} onChange={(v) => set({ reportTeacherEditHours: v })} />
-      </div>
-    </Section>
-  );
-}
-
-/** «الحسابات والدفعات»: dashboard currency, renewal alerts, unpaid flags and payout rules. */
-export function AccountsSection({ state: { form, errors, set } }: { state: SettingsFormState }) {
-  return (
-    <Section id="accounts">
-      <div>
-        <SettingRow label={t.settings.reportingCurrency} hint={h.reportingCurrency} error={errors.reportingCurrency}>
-          {(p) => (
-            <Select {...p} className="w-[140px]" value={form.reportingCurrency} onChange={(e) => set({ reportingCurrency: e.target.value })}>
-              {/* A stored code outside the list stays selectable, so saving never changes it. */}
-              {[...new Set([form.reportingCurrency, ...CURRENCY_ISOS])].map((c) => (
-                <option key={c} value={c}>
-                  {c}
-                </option>
-              ))}
-            </Select>
-          )}
-        </SettingRow>
-        <NumberField label={t.settings.renewalAlertRemaining} hint={h.renewalAlertRemaining} value={form.renewalAlertRemaining} error={errors.renewalAlertRemaining} onChange={(v) => set({ renewalAlertRemaining: v })} />
-        <CheckField label={t.settings.flagFutureLessonsWhenUnpaid} hint={h.flagFutureLessonsWhenUnpaid} checked={form.flagFutureLessonsWhenUnpaid} onChange={(v) => set({ flagFutureLessonsWhenUnpaid: v })} />
-        <CheckField label={t.settings.payoutCountLate} hint={h.payoutCountLate} checked={form.payoutCountLate} onChange={(v) => set({ payoutCountLate: v })} />
-        <CheckField label={t.settings.payoutCountNoShow} hint={h.payoutCountNoShow} checked={form.payoutCountNoShow} onChange={(v) => set({ payoutCountNoShow: v })} />
-        <CheckField label={t.settings.payoutCountTrials} checked={form.payoutCountTrials} onChange={(v) => set({ payoutCountTrials: v })} />
-      </div>
+    <Section id={id}>
+      <SectionFields id={id} state={state} />
     </Section>
   );
 }

@@ -1,4 +1,6 @@
-import { cleanup, render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { cleanup, render as rtlRender, screen } from '@testing-library/react';
+import type { ReactElement } from 'react';
 import { act } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { lesson } from '@/features/schedule/lesson-fixture';
@@ -7,6 +9,8 @@ import { JoinButton } from './JoinButton';
 
 const L = lesson({ id: 'l-5', status: 'confirmed', starts_at: '2026-10-03T16:00:00.000Z', minutes: 60 });
 const at = (iso: string) => vi.setSystemTime(new Date(iso));
+/** The window comes from GET /settings/public; with no answer yet, the registry defaults (15 / 120 min). */
+const render = (ui: ReactElement) => rtlRender(<QueryClientProvider client={new QueryClient()}>{ui}</QueryClientProvider>);
 
 describe('JoinButton «ادخل الحلقة»', () => {
   beforeEach(() => vi.useFakeTimers({ toFake: ['Date', 'setInterval', 'clearInterval'] }));
