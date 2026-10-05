@@ -38,6 +38,10 @@ describe('Button (docs/07 §6)', () => {
     for (const variant of all) expect(buttonVariants({ variant })).not.toMatch(/-(gold|act)\b/);
   });
 
+  it('presses in by 2% only when motion is welcome and the button is enabled', () => {
+    expect(buttonVariants().split(' ')).toContain('motion-safe:active:not-disabled:scale-[0.98]');
+  });
+
   it('ghost uses the link-green text token, not the fill', () => {
     expect(buttonVariants({ variant: 'ghost' }).split(' ')).toContain('text-lapis');
   });

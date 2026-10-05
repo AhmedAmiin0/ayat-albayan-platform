@@ -10,6 +10,7 @@ import { Pager } from '@/components/ui/pager';
 import { t } from '@/lib/i18n';
 import { teachersPageQuery, type Page, type Teacher } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { teacherColumns } from './teacher-columns';
 import { TeacherDialog } from './TeacherDialog';
 
@@ -52,7 +53,7 @@ export function TeachersPage({ page, onPage, onOpen }: Props) {
         </div>
       </PageHead>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.data && <TeachersTable data={list.data} columns={columns} onOpen={onOpen} onPage={onPage} />}
       {editing && (
         <TeacherDialog teacher={editing === 'new' ? null : editing} onClose={() => setEditing(null)} />

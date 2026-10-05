@@ -8,6 +8,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { currentMonth } from '@/features/payouts/api';
 import { MonthSelect } from '@/features/payouts/MonthSelect';
 import { MONEY_KEY } from '@/features/subscriptions/api';
@@ -47,7 +48,7 @@ export function ExpensesPage({ month, onMonth }: Props) {
         </div>
       </PageHead>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.isSuccess && rows.length === 0 && <EmptyState title={t.expenses.empty} />}
       <ul className="grid divide-y divide-rule">
         {rows.map((e) => (

@@ -11,7 +11,7 @@ import { toneClass } from './status-chip';
 import { useFocusTrap } from './use-focus-trap';
 
 export interface DialogProps {
-  /** Amiri title; also the dialog's accessible name. */
+  /** Bold title; also the dialog's accessible name. */
   title: string;
   onClose: () => void;
   children: ReactNode;
@@ -47,7 +47,7 @@ export function Dialog({ title, onClose, children, description, glyph, actions, 
   }, []);
 
   return createPortal(
-    <div className="fixed inset-0 z-50 overflow-y-auto bg-scrim px-3 py-16 sm:grid sm:place-items-center sm:p-6">
+    <div className="fixed inset-0 z-50 animate-fade-in overflow-y-auto bg-scrim px-3 py-16 sm:grid sm:place-items-center sm:p-6">
       <div
         ref={ref}
         role="dialog"
@@ -55,7 +55,7 @@ export function Dialog({ title, onClose, children, description, glyph, actions, 
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className={cn(jadwalClass, 'relative mx-auto w-full max-w-[740px] px-4 pt-5 pb-4 shadow-pop sm:px-7 sm:pt-[26px] sm:pb-[22px]', className)}
+        className={cn(jadwalClass, 'relative mx-auto w-full max-w-[740px] animate-pop-in px-4 pt-5 pb-4 shadow-pop sm:px-7 sm:pt-[26px] sm:pb-[22px]', className)}
       >
         <div
           className={cn(

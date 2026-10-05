@@ -35,7 +35,7 @@ export function Toast({ message, onDismiss, action, tone = 'info', duration = 50
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       className={cn(
-        'fixed bottom-4 end-4 z-50 flex max-w-[min(460px,calc(100vw-2rem))] items-center gap-3 rounded-lg py-2.5 ps-3.5 pe-2.5 text-sm',
+        'fixed bottom-4 end-4 z-50 flex max-w-[min(460px,calc(100vw-2rem))] animate-toast-in items-center gap-3 rounded-lg py-2.5 ps-3.5 pe-2.5 text-sm',
         error
           ? 'bg-danger-soft text-ink shadow-[inset_0_0_0_1px_color-mix(in_oklab,var(--cinnabar)_40%,transparent)]'
           : 'bg-inverse text-on-inverse shadow-toast',

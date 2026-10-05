@@ -9,6 +9,7 @@ import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { paymentsQuery, type PaymentView } from './api';
 import { paymentColumns } from './payment-columns';
@@ -37,7 +38,7 @@ export function PaymentsPage({ page, onPage }: Props) {
         </div>
       </PageHead>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.data?.total === 0 && <EmptyState title={t.payments.empty} />}
       {list.data && list.data.total > 0 && (
         <>

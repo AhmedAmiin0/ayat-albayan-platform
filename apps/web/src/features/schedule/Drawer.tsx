@@ -29,14 +29,14 @@ export function Drawer({ title, onClose, children }: DrawerProps) {
   }, []);
 
   return createPortal(
-    <div className="fixed inset-0 z-50 bg-scrim" onClick={(e) => e.target === e.currentTarget && onClose()}>
+    <div className="fixed inset-0 z-50 animate-fade-in bg-scrim" onClick={(e) => e.target === e.currentTarget && onClose()}>
       <div
         ref={ref}
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="fixed inset-y-0 end-0 flex w-full max-w-[460px] flex-col overflow-y-auto border-s border-rule-strong bg-card shadow-pop"
+        className="fixed inset-y-0 end-0 flex w-full max-w-[460px] animate-drawer-in flex-col overflow-y-auto overscroll-contain border-s border-rule bg-card pb-[env(safe-area-inset-bottom)] shadow-pop"
       >
         <div className="sticky top-0 z-20 flex items-start gap-3 border-b border-rule bg-card px-5 pt-5 pb-3">
           <h2 id={titleId} className="min-w-0 flex-1 font-display text-[22px] font-bold leading-normal">

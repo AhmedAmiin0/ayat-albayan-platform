@@ -6,6 +6,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { apiErrorText } from '@/features/subscriptions/format';
@@ -73,7 +74,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
       {error && <FormAlert>{apiErrorText(error, t.payouts.error)}</FormAlert>}
       {csv.isError && <FormAlert>{t.common.error}</FormAlert>}
       <MissingRates items={missing} />
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.isSuccess && rows.length === 0 && <EmptyState title={t.payouts.empty} />}
       {rows.length > 0 && (

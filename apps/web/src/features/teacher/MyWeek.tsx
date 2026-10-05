@@ -8,6 +8,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { Drawer } from '@/features/schedule/Drawer';
 import { studentNames } from '@/features/schedule/lessons';
 import { currentWeekStart } from '@/features/schedule/slots';
@@ -81,7 +82,7 @@ interface BodyProps {
 
 function Body({ lessons, week, today, onOpen }: BodyProps) {
   if (lessons.isError) return <FormAlert>{t.teacherDash.loadError}</FormAlert>;
-  if (!lessons.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  if (!lessons.data) return <ListSkeleton />;
   if (lessons.data.length === 0) return <EmptyState title={t.teacherDash.noLessonsWeek}>{t.teacherDash.emptyHint}</EmptyState>;
   return (
     <div aria-busy={lessons.isPlaceholderData || undefined} className={cn(lessons.isPlaceholderData && 'opacity-60')}>

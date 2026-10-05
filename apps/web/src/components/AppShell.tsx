@@ -10,6 +10,7 @@ import { meQuery } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { Crumbs } from './shell/Crumbs';
+import { RouteFade } from './RouteFade';
 import { LanguageSwitch } from './shell/LanguageSwitch';
 import { LogoutButton } from './shell/LogoutButton';
 import { SideFoot } from './shell/SideFoot';
@@ -30,7 +31,7 @@ export interface AppShellProps {
  */
 export function AppShell({ title, nav, topNav }: AppShellProps) {
   const isHome = useChildMatches().length === 0;
-  const content = isHome ? <Cartouche>{title}</Cartouche> : <Outlet />;
+  const content = <RouteFade>{isHome ? <Cartouche>{title}</Cartouche> : <Outlet />}</RouteFade>;
   if (!nav && topNav) return <FixedTopBarLayout topNav={topNav}>{content}</FixedTopBarLayout>;
   const page = (
     <main className="min-w-0">

@@ -11,6 +11,7 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Select } from '@/components/ui/select';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { t } from '@/lib/i18n';
 import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
@@ -76,7 +77,7 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
         </div>
       </PageHead>
       {(list.isError || pause.isError) && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.data?.total === 0 && <EmptyState title={t.subscriptions.emptyList} />}
       {list.data && list.data.total > 0 && (
         <>

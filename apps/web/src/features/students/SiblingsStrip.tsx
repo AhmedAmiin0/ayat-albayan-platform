@@ -12,7 +12,7 @@ export function SiblingsStrip({ siblings }: { siblings: StudentRef[] }) {
       {siblings.map((s) => (
         <span
           key={s.id}
-          className="inline-flex items-center gap-2 rounded-md border border-rule bg-raised py-[5px] ps-1.5 pe-2.5 font-semibold text-ink"
+          className="ab-lift inline-flex items-center gap-2 rounded-md border border-rule bg-raised py-[5px] ps-1.5 pe-2.5 font-semibold text-ink"
         >
           <StatusChip {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} size="sm" />
           <span>{s.name}</span>

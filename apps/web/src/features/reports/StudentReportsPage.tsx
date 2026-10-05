@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { studentReportsQuery } from './api';
@@ -35,7 +36,7 @@ export function StudentReportsPage({ studentId, name, role, tz }: StudentReports
     const forbidden = reports.error instanceof ApiError && reports.error.status === 403;
     return <>{head}<FormAlert>{forbidden ? t.common.forbidden : t.common.error}</FormAlert></>;
   }
-  if (!reports.data) return <>{head}<p className="py-6 text-center text-ink-3">{t.common.loading}</p></>;
+  if (!reports.data) return <>{head}<ListSkeleton /></>;
   const data = reports.data;
   if (data.total === 0) return <>{head}<EmptyState title={t.reports.noReports} /></>;
 

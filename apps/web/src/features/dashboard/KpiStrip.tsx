@@ -14,7 +14,7 @@ export interface KpiStripProps {
 }
 
 const tile =
-  'flex h-full flex-col gap-1.5 rounded-xs px-3 py-3 no-underline transition-colors duration-[120ms] hover:bg-sunk/75';
+  'ab-lift flex h-full flex-col gap-1.5 rounded-md px-3 py-3 no-underline hover:bg-sunk/75';
 
 function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
   return (
