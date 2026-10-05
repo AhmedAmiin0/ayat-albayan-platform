@@ -7,8 +7,9 @@ const R = t.studentRecordings;
 
 /**
  * The file as it is: an audio player for a sound file (the room's MP3, every recording since
- * 2026-10-06), a video player for an older MP4 room video, plus a download link. `preload="none"` so a page of ten recordings fetches nothing until
- * play; the signed link is good for an hour (the list refetches before it runs out).
+ * 2026-10-06), a video player for an older MP4 room video, plus a download link.
+ * `preload="none"` so a page of ten recordings fetches nothing until play; the signed link is
+ * good for an hour (the list refetches before it runs out).
  */
 export function RecordingPlayer({ rec, when }: { rec: StudentRecordingView; when: string }) {
   if (!rec.url) return null;

@@ -25,6 +25,11 @@ Any join of a lesson or an internal meeting (staff or guest) makes the API creat
 
 No Chrome: an audio-only room composite with no `layout` and no `custom_base_url` uses egress's SDK source, which subscribes to the room's audio tracks and mixes them in GStreamer (egress `pkg/config/pipeline.go` `ShouldUseSDKSource`; docs.livekit.io «Leave `layout` and `custom_base_url` parameters unset … Setting either parameter routes the recording through the video pipeline»). Never add a `layout` to the request: it brings Chrome back.
 
+**Before deploying the audio-only API** (a wrong version fails silently: joins still work, every recording row turns `failed`, and the code has no fallback to the video request):
+- [ ] `docker exec livekit-server livekit-server --version`: a build from after 2025-09 (protocol #1220 knows `file_type: MP3`; an older server answers the start with 400). Upgrade first if older.
+- [ ] The egress image tag (`docker inspect livekit-egress --format '{{.Config.Image}}'`, then its version in `docker logs livekit-egress`): v1.13.0 or newer (older than v1.11 has no MP3; v1.11–v1.12 without `enable_room_composite_sdk_source: true` still launches Chrome). Upgrade first if older.
+- [ ] Migration 260 applied to the database **before** the API deploy (else every upload is refused).
+
 Needed on the VPS, next to `livekit-server`:
 
 1. **Redis** — egress talks to the server through it. Add the same Redis to the server's `livekit.yaml`:
@@ -32,7 +37,7 @@ Needed on the VPS, next to `livekit-server`:
    redis:
      address: 127.0.0.1:6379
    ```
-2. **The egress service** (`livekit/egress` Docker image, **v1.13.0 or newer**: MP3 for audio-only came in v1.11.0, its duration/CBR fix and the always-on SDK source for audio-only room composites in v1.13.0; on v1.9–v1.12 add `enable_room_composite_sdk_source: true` to `egress.yaml` or Chrome is still launched. The LiveKit server must be a build from after 2025-09, whose protocol knows `file_type: MP3`). No Chrome, so no 2–4 GB per room: one recording is a GStreamer mixer plus an MP3 encoder. Admission: egress reserves `sdk_audio_room_composite_cpu_cost` (default 1 CPU) for 15 s per start and accepts only up to 80 % of the CPUs, so on 2 vCPUs a second lesson starting within those 15 s is refused (LiveKit answers the start with an error, the row turns `failed`, the next join of that room tries again). For lessons starting together, lower the reservation in `egress.yaml` (`cpu_cost: { sdk_audio_room_composite_cpu_cost: 0.5 }`) after checking `docker stats livekit-egress` during a real lesson. `egress.yaml` (placeholders only — real values live on the server, never in git):
+2. **The egress service** (`livekit/egress` Docker image, **v1.13.0 or newer**: MP3 for audio-only came in v1.11.0, its duration/CBR fix and the always-on SDK source for audio-only room composites in v1.13.0; on v1.9–v1.12 add `enable_room_composite_sdk_source: true` to `egress.yaml` or Chrome is still launched. The LiveKit server must be a build from after 2025-09, whose protocol knows `file_type: MP3`). No Chrome, so no 2–4 GB per room: one recording is a GStreamer mixer plus an MP3 encoder. Admission: egress reserves `sdk_audio_room_composite_cpu_cost` (default 1 CPU) for 15 s per start and accepts only up to 80 % of the CPUs, so with the default a second lesson starting within those 15 s on 2 vCPUs is refused (LiveKit answers the start with an error, the row turns `failed`; a later join of that room tries again, but if everyone has already joined none does and that lesson goes unrecorded). Lessons often start on the hour, so the template below lowers the reservation to 0.5 CPU; tune it after `docker stats livekit-egress` during real lessons. `egress.yaml` (placeholders only — real values live on the server, never in git):
    ```yaml
    api_key: <LIVEKIT_API_KEY>
    api_secret: <LIVEKIT_API_SECRET>
@@ -41,6 +46,8 @@ Needed on the VPS, next to `livekit-server`:
      address: 127.0.0.1:6379
    health_port: 8080
    log_level: info
+   cpu_cost:
+     sdk_audio_room_composite_cpu_cost: 0.5   # default 1: two lessons starting together on 2 vCPUs
    # Upload target: the API sends the S3 settings with every request, nothing needed here.
    ```
    ```bash
