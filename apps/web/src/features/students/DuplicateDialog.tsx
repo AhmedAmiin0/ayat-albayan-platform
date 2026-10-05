@@ -53,6 +53,7 @@ export function DuplicateDialog(props: DuplicateDialogProps) {
       onClose={onClose}
       hint={t.students.duplicateHint}
       actions={actions}
+      layout="center"
     >
       {candidates.length > 1 && (
         <SegmentedControl

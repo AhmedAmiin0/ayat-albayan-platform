@@ -23,7 +23,7 @@ export function InvoiceDialog({ invoice, onClose }: { invoice: InvoiceView; onCl
     staleTime: 30 * 60_000,
   });
   return (
-    <Dialog title={title(invoice)} onClose={onClose}>
+    <Dialog title={title(invoice)} onClose={onClose} layout="center">
       {signed.isError && <FormAlert>{t.common.error}</FormAlert>}
       {signed.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {signed.data &&

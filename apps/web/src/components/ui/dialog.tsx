@@ -2,7 +2,7 @@ import type { Glyph, Tone } from '@ab/shared';
 import { useEffect, useId, useRef, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { cn } from '@/lib/utils';
-import { compactLayout, sheetLayout } from './dialog-classes';
+import { pickLayout } from './dialog-classes';
 import { DialogHeader } from './dialog-header';
 import { jadwalClass } from './page';
 import { useFocusTrap } from './use-focus-trap';
@@ -25,9 +25,16 @@ export interface DialogProps {
   className?: string;
   /**
    * A short confirm with no fields (delete, void, yes / no): on phones it stays a floating card at
-   * the top instead of the full-screen sheet that forms get. Same card from 640px either way.
+   * the top instead of the full-screen sheet that forms get; the centred card from 640px.
    */
   compact?: boolean;
+  /**
+   * From 640px: `aside` (default) is a full-height panel at the inline-end for forms; `center` the
+   * floating card, for wide or visual content (side-by-side comparison, receipt, media picker).
+   */
+  layout?: 'aside' | 'center';
+  /** Aside only: a 720px panel instead of 520px, for big two-column forms. */
+  wide?: boolean;
 }
 
 /**
@@ -35,12 +42,12 @@ export interface DialogProps {
  * named by its title, focus trapped, Esc closes, focus returns on close. Render it conditionally.
  * On phones (< 640px, owner 2026-10-05) it is a full-screen sheet: the title bar stays on top, the
  * actions are a full-width bar at the bottom (primary on top, above the home indicator) and only
- * the body scrolls between them; `compact` confirms stay a floating card. From `sm` on it is the
- * floating card, capped at the viewport.
+ * the body scrolls between them; `compact` confirms stay a floating card. From `sm` on a form is an
+ * aside panel at the inline-end (owner 2026-10-05), `layout="center"` and compact the floating card.
  */
 export function Dialog(props: DialogProps) {
-  const { title, onClose, children, description, glyph, actions, hint, className, compact } = props;
-  const l = compact ? compactLayout : sheetLayout;
+  const { title, onClose, children, description, glyph, actions, hint, className } = props;
+  const l = pickLayout(props);
   const ref = useRef<HTMLDivElement>(null);
   const titleId = useId();
   const descId = useId();

@@ -25,7 +25,7 @@ export interface ChatMediaPickerProps {
 export function ChatMediaPicker({ phone, onPick, onClose }: ChatMediaPickerProps) {
   const list = useQuery(threadMediaQuery(phone));
   return (
-    <Dialog title={t.booking.invoice.chatTitle} onClose={onClose}>
+    <Dialog title={t.booking.invoice.chatTitle} onClose={onClose} layout="center">
       {list.isError && <FormAlert>{t.booking.invoice.chatError}</FormAlert>}
       {list.isPending && <p className="text-ink-3">{t.common.loading}</p>}
       {list.data?.length === 0 && <p className="text-sm text-ink-2">{t.booking.invoice.chatEmpty}</p>}

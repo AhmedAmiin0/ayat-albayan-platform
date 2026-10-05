@@ -4,11 +4,12 @@ import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Owner, 2026-10-05: "on the mobile view of the dashboard don't make the bars for the forms; keep
 // them all as full-screen modals". On a phone (390×844) a form dialog fills the screen and its
-// primary button is on screen without scrolling; from 640px the dialog stays the floating card.
+// primary button is on screen without scrolling; from 640px a form is an aside: a full-height
+// panel at the inline-end (the left edge in RTL), «حفظ» in its bottom bar.
 
 const PHONE = { width: 390, height: 844 } as const;
 
-// Waits out the entrance (fade-up on phones, pop-in from 640px) so a box is read at rest. A string
+// Waits out the entrance (fade-up on phones, drawer-in / pop-in from 640px) so a box is read at rest. A string
 // (the e2e tsconfig has no DOM lib); infinite animations (skeleton shimmer) are skipped.
 const SETTLE =
   '(el) => Promise.all(el.getAnimations({ subtree: true })' +
@@ -40,12 +41,16 @@ test.describe('forms on a phone open as full-screen sheets', () => {
     expect((saveBox?.y ?? 0) + (saveBox?.height ?? 0)).toBeGreaterThan(PHONE.height / 2);
     await expect(dialog.getByRole('button', { name: ar.common.close })).toBeInViewport({ ratio: 1 });
 
-    // From 640px the same dialog is the floating card again.
+    // From 640px the same dialog is an aside: full height, 520px wide, at the inline-end (left).
     await page.setViewportSize({ width: 1024, height: 768 });
     await settled(dialog);
-    const card = await dialog.boundingBox();
-    expect(card?.width ?? 0).toBeLessThan(1024);
-    expect(card?.height ?? 0).toBeLessThan(768);
+    const aside = await dialog.boundingBox();
+    expect(aside?.x ?? -1).toBeLessThanOrEqual(1);
+    expect(aside?.y ?? -1).toBeLessThanOrEqual(1);
+    expect(aside?.height ?? 0).toBeGreaterThanOrEqual(766);
+    expect(aside?.width ?? 0).toBeLessThanOrEqual(530);
+    await expect(save).toBeInViewport({ ratio: 1 });
+    await expect(dialog.getByRole('button', { name: ar.common.close })).toBeInViewport({ ratio: 1 });
   });
 
   test('inbox: the lead panel is a header button that opens a full-screen sheet', async ({ asRole }) => {

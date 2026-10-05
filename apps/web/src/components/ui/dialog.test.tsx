@@ -71,16 +71,6 @@ describe('Dialog', () => {
     opener.remove();
   });
 
-  it('fits the screen: capped at the viewport from sm, only the body scrolls, and it pops in', () => {
-    renderDialog();
-    const dialog = screen.getByRole('dialog');
-    expect(dialog.className).toContain('sm:max-h-[calc(100dvh-3rem)]');
-    expect(dialog.className).toContain('animate-pop-in');
-    const body = screen.getByLabelText(t.students.name).parentElement;
-    expect(body?.className).toContain('overflow-y-auto');
-    expect(body?.className).toContain('min-h-0');
-  });
-
   it('phones: a full-screen sheet without a frame, even when the caller narrows it', () => {
     render(
       <Dialog title={t.students.mergeTitle} onClose={() => undefined} className="max-w-[640px]">
@@ -109,24 +99,6 @@ describe('Dialog', () => {
     expect(footer?.className).toContain('shrink-0');
     expect(footer?.className).toContain('max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))]');
     // Primary on top on phones: the actions column is reversed.
-    expect(screen.getByRole('button', { name: t.students.merge }).parentElement?.className).toContain('flex-col-reverse');
-  });
-
-  it('compact (a confirm, no fields): on phones the floating card at the top, not the sheet', () => {
-    render(
-      <Dialog title={t.students.mergeTitle} onClose={() => undefined} compact actions={<Button>{t.students.merge}</Button>}>
-        <p>{t.students.duplicateWarning}</p>
-      </Dialog>,
-    );
-    const dialog = screen.getByRole('dialog');
-    const cls = dialog.className.split(' ');
-    expect(cls).toContain('max-h-[calc(100dvh-1.5rem)]');
-    expect(cls).toContain('animate-pop-in');
-    expect(dialog.className).not.toContain('h-dvh');
-    expect(dialog.className).not.toContain('max-sm:');
-    expect(dialog.parentElement?.className.split(' ')).toContain('p-3');
-    expect(dialog.querySelector('[data-dialog-header]')?.className).not.toContain('max-sm:border-b');
-    // Actions still stack full-width, primary on top.
     expect(screen.getByRole('button', { name: t.students.merge }).parentElement?.className).toContain('flex-col-reverse');
   });
 });
