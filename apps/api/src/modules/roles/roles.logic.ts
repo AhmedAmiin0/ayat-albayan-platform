@@ -24,6 +24,13 @@ export function permissionsOf(state: RoleState, profile: ProfileRecord): Permiss
   return effectivePermissions({ baseRole: profile.role, granted: role.permissions, allGrantable: isSystemAdmin(role) });
 }
 
+/** First of `wanted` the actor does not hold (null = all held): nobody grants beyond their own reach. */
+export function missingGrant(state: RoleState, actorId: string, wanted: readonly Permission[]): Permission | null {
+  const actor = state.profiles.find((p) => p.id === actorId);
+  const held = actor ? permissionsOf(state, actor) : [];
+  return wanted.find((w) => !held.includes(w)) ?? null;
+}
+
 export type ManagerProblem = 'last_admin' | 'self_lockout';
 
 /**

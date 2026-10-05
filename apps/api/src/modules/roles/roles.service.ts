@@ -1,8 +1,8 @@
-import type { RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/shared';
+import type { Permission, RoleCreate, RoleUpdate, RoleView, StaffUserView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { PermissionCache } from '../../common/auth/permission.cache';
-import { badRequest, conflict, notFound } from '../scheduling/errors';
-import { cleanGrants, customKey, isSystemAdmin, managerProblem, roleView, staffUserView, type RoleState } from './roles.logic';
+import { badRequest, conflict, forbidden, notFound } from '../scheduling/errors';
+import { cleanGrants, customKey, isSystemAdmin, managerProblem, missingGrant, roleView, staffUserView, type RoleState } from './roles.logic';
 import { ROLE_STORE, type ProfileRecord, type RoleRecord, type RoleStore } from './roles.store';
 
 /**
@@ -28,14 +28,16 @@ export class RolesService {
     return state.profiles.map((p) => staffUserView(state, p));
   }
 
-  async create(input: RoleCreate): Promise<RoleView> {
+  async create(input: RoleCreate, actorId: string): Promise<RoleView> {
+    const permissions = cleanGrants(input.permissions);
+    this.assertHolds(await this.state(), actorId, permissions);
     const id = await this.store.insertRole({
       key: customKey(),
       name_ar: input.name_ar,
       name_en: input.name_en ?? null,
       base_role: input.base_role,
     });
-    await this.store.setPermissions(id, cleanGrants(input.permissions));
+    await this.store.setPermissions(id, permissions);
     return this.view(id);
   }
 
@@ -45,6 +47,7 @@ export class RolesService {
     if (input.permissions) {
       if (isSystemAdmin(role)) throw badRequest('admin_role_fixed');
       const permissions = cleanGrants(input.permissions);
+      this.assertHolds(state, input.actorId, permissions.filter((p) => !role.permissions.includes(p)));
       const next = { ...state, roles: state.roles.map((r) => (r.id === id ? { ...r, permissions } : r)) };
       this.assertManagers(next, input.actorId);
       await this.store.setPermissions(id, permissions);
@@ -68,6 +71,7 @@ export class RolesService {
     const role = this.find(state, input.roleId);
     const profile = state.profiles.find((p) => p.id === input.userId);
     if (!profile || role.base_role === 'guardian') throw badRequest('not_staff');
+    this.assertHolds(state, input.actorId, roleView(state, role).permissions);
     const change = { role: role.base_role, role_id: role.is_system ? null : role.id };
     const moved: ProfileRecord = { ...profile, ...change };
     const next = { ...state, profiles: state.profiles.map((p) => (p.id === profile.id ? moved : p)) };
@@ -75,6 +79,12 @@ export class RolesService {
     await this.store.setProfileRole(profile.id, change);
     this.cache.clear();
     return staffUserView(next, moved);
+  }
+
+  /** 403 permission_not_held: a role (or its holder) never gets more than the actor holds. */
+  private assertHolds(state: RoleState, actorId: string, wanted: readonly Permission[]): void {
+    const missing = missingGrant(state, actorId, wanted);
+    if (missing) throw forbidden('permission_not_held', { permission: missing });
   }
 
   private assertManagers(next: RoleState, actorId: string): void {

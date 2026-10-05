@@ -1,9 +1,4 @@
-import { monthLabel, monthRange, recentMonths, riyadhToday } from './months';
-
-test('the Riyadh day, not the UTC one, after 21:00 UTC', () => {
-  expect(riyadhToday(new Date('2026-09-30T22:30:00Z'))).toBe('2026-10-01');
-  expect(riyadhToday(new Date('2026-10-05T10:00:00Z'))).toBe('2026-10-05');
-});
+import { monthLabel, monthRange, recentMonths } from './months';
 
 test('recent months run newest first across a year end', () => {
   expect(recentMonths('2026-02-10', 4)).toEqual(['2026-02', '2026-01', '2025-12', '2025-11']);

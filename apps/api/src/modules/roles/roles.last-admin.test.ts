@@ -45,7 +45,7 @@ describe('RolesService — last admin and self lock-out', () => {
   });
 
   it('a custom manager role cannot drop roles.manage when its holders are the only managers', async () => {
-    const boss = await svc.create({ name_ar: 'مشرف', base_role: 'admin', permissions: ['roles.manage', 'students.read'] });
+    const boss = await svc.create({ name_ar: 'مشرف', base_role: 'admin', permissions: ['roles.manage', 'students.read'] }, 'owner');
     await svc.assign({ userId: 't1', roleId: boss.id, actorId: 'owner' });
     await svc.assign({ userId: 'owner', roleId: boss.id, actorId: 't1' });
     expect(await codeOf(svc.update(boss.id, { permissions: ['students.read'], actorId: 'owner' }))).toBe('last_admin');
@@ -53,7 +53,7 @@ describe('RolesService — last admin and self lock-out', () => {
   });
 
   it('the system admin role always keeps every permission, so its holders stay managers', async () => {
-    const acc = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read'] });
+    const acc = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read'] }, 'owner');
     expect(await codeOf(svc.assign({ userId: 'owner', roleId: acc.id, actorId: 'owner' }))).toBe('last_admin');
   });
 });

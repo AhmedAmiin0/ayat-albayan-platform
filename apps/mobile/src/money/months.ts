@@ -1,10 +1,5 @@
-import { intlLocale, RIYADH_TZ } from '@ab/shared';
+import { intlLocale } from '@ab/shared';
 import { locale } from '@/lib/locale';
-
-/** The Riyadh calendar day (YYYY-MM-DD) of an instant: the app's clock (docs/07 §12). */
-export function riyadhToday(now: Date = new Date()): string {
-  return now.toLocaleDateString('en-CA', { timeZone: RIYADH_TZ });
-}
 
 /** The newest `count` months ending with the one `today` is in, as YYYY-MM, newest first. */
 export function recentMonths(today: string, count = 6): string[] {

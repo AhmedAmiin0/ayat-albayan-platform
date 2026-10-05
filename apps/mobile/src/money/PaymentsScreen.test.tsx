@@ -1,12 +1,13 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Linking } from 'react-native';
+import { riyadhToday } from '@/calendar/week';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
 import { payment } from '@/payments/fixtures';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
 import { PaymentsScreen } from './PaymentsScreen';
-import { monthLabel, monthRange, recentMonths, riyadhToday } from './months';
+import { monthLabel, monthRange, recentMonths } from './months';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -52,7 +53,7 @@ test('type and month chips filter on the server', async () => {
   await screen.findByText('يوسف');
   await fireEvent.press(screen.getByRole('tab', { name: t.enums.paymentKind.refund }));
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/payments?kind=refund&page=1&pageSize=25'));
-  const month = recentMonths(riyadhToday())[1] ?? '';
+  const month = recentMonths(riyadhToday(new Date()))[1] ?? '';
   const { from, to } = monthRange(month);
   await fireEvent.press(screen.getByRole('tab', { name: monthLabel(month) }));
   await waitFor(() =>

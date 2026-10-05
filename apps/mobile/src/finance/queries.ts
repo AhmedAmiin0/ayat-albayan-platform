@@ -1,4 +1,4 @@
-import type { ExpenseCategoryView, ExpenseView, InvoiceView, PayoutView, ReceivablesView, TeacherEarningsSummaryView } from '@ab/shared';
+import type { ExpenseCategoryView, ExpenseView, InvoiceView, PayoutView, TeacherEarningsSummaryView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { listKey, pathKey } from '@/lib/query-keys';
@@ -25,7 +25,8 @@ export const useInvoices = () => usePagedList<InvoiceView>({ path: '/invoices/re
 
 export const useFinanceSummary = (range: { from: string; to: string }) =>
   useQuery({
-    queryKey: [...pathKey('/dashboard/summary'), range],
+    // 'finance': its own cache entry (other staleTime and projection than the dashboard's useSummary).
+    queryKey: [...pathKey('/dashboard/summary'), 'finance', range],
     queryFn: () => apiFetch<FinanceSummary>(`/dashboard/summary?from=${range.from}&to=${range.to}`),
     staleTime: 60_000,
   });
@@ -36,6 +37,3 @@ export const useTeacherDues = () =>
     queryFn: () => apiFetch<TeacherEarningsSummaryView>('/teacher-earnings/summary'),
     staleTime: 60_000,
   });
-
-export const useReceivables = () =>
-  useQuery({ queryKey: pathKey('/receivables'), queryFn: () => apiFetch<ReceivablesView>('/receivables'), staleTime: 60_000 });

@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../audit/audit.service';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
 import type { AuthUser } from '../auth/verify-token';
 import { SettingsService } from '../settings/settings.service';
 import { SETTING_DEFAULTS } from '../settings/settings.values';
@@ -30,6 +30,7 @@ describe('new settings over PATCH /settings, and GET /config/meta', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(SettingsService).useValue(settings)
       .overrideProvider(AuditService).useValue(audit)
       .overrideProvider(ConfigAdminQueries).useValue(queries)

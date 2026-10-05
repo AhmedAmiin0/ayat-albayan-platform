@@ -3247,6 +3247,7 @@
         "admin_role_fixed": "The system admin's permissions are fixed.",
         "last_admin": "At least one user must keep the roles and permissions right.",
         "self_lockout": "You cannot remove your own roles and permissions right.",
+        "permission_not_held": "You cannot grant a permission you do not hold.",
         "not_staff": "This user is not staff.",
         "generic": "Could not save, try again."
       }

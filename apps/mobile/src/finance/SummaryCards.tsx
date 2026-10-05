@@ -1,8 +1,9 @@
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { useReceivables } from '@/money/queries';
 import { Note } from '@/more/Note';
 import { KpiCard } from './KpiCard';
-import { useReceivables, useTeacherDues } from './queries';
+import { useTeacherDues } from './queries';
 import { summaryCards } from './summary-cards';
 import { summaryWarnings } from './summary-lines';
 import type { FinanceSummary } from './summary-types';

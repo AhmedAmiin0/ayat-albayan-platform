@@ -5,8 +5,7 @@ import type { NewRole, ProfileRecord, RoleNames, RoleRecord, RoleStore } from '.
 
 /**
  * RoleStore on the service-role client (roles / role_permissions are API-written only, migration
- * 20261005000220). ponytail: setPermissions is delete-then-insert, not one transaction; a failure
- * between the two leaves the role with fewer grants (fail closed) and the admin saves again.
+ * 20261005000220; migration 225 keeps clients off profiles.role / role_id too).
  */
 @Injectable()
 export class RolesQueries implements RoleStore {
@@ -44,12 +43,9 @@ export class RolesQueries implements RoleStore {
     if (error) throw dbError(error);
   }
 
+  /** One transaction (set_role_permissions, service role only): never a half-written grant set. */
   async setPermissions(id: string, permissions: readonly string[]): Promise<void> {
-    const del = await this.db.from('role_permissions').delete().eq('role_id', id);
-    if (del.error) throw dbError(del.error);
-    if (permissions.length === 0) return;
-    const rows = permissions.map((permission) => ({ role_id: id, permission }));
-    const { error } = await this.db.from('role_permissions').insert(rows);
+    const { error } = await this.db.rpc('set_role_permissions', { role_id: id, perms: [...permissions] });
     if (error) throw dbError(error);
   }
 
