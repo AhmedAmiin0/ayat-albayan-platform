@@ -1,10 +1,10 @@
 import type { Json, Tables } from '@ab/db';
-import type { EarningStatus } from '@ab/shared';
+import type { EarningsListQuery, TeacherPaymentListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError, type Page } from '../teachers/http';
 import { ledgerError } from './earnings.errors';
-import { lessonNames } from './earnings.names';
+import { paymentsPage, sessionsPage } from './earnings.lists';
 
 export type EarningRow = Tables<'teacher_session_earnings'>;
 export type SessionRow = EarningRow & {
@@ -13,7 +13,7 @@ export type SessionRow = EarningRow & {
 export type PaymentRow = Tables<'teacher_payments'> & { items: { earning_id: string }[] };
 export type MoneyRow = Pick<EarningRow, 'id' | 'amount' | 'paid_amount'>;
 export type RecordResult = { payment_id: string; replayed: boolean };
-export type SessionFilter = { status?: EarningStatus | 'unpaid'; page: number; pageSize: number };
+export type SessionFilter = EarningsListQuery;
 
 // Reads (balance, sessions, allocation) go through the view of migration 183: only sessions of
 // subscribed students (not trial, a student with status 'active'). The table is only written by the DB.
@@ -52,19 +52,7 @@ export class EarningsQueries {
   }
 
   async sessions(teacherId: string, f: SessionFilter): Promise<Page<SessionRow>> {
-    const from = (f.page - 1) * f.pageSize;
-    let q = this.db.from(COUNTABLE).select('*', { count: 'exact' }).eq('teacher_id', teacherId);
-    if (f.status === 'unpaid') q = q.in('status', [...STATUSES.unpaid]);
-    else if (f.status) q = q.eq('status', f.status);
-    const { data, count, error } = await q
-      .order('starts_at', { ascending: false })
-      .order('id')
-      .range(from, from + f.pageSize - 1)
-      .returns<EarningRow[]>();
-    if (error) throw dbError(error);
-    const names = await lessonNames(this.db, data.map((r) => r.lesson_id));
-    const items = data.map((r) => ({ ...r, lesson: { lesson_students: names.get(r.lesson_id) ?? [] } }));
-    return { items, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+    return sessionsPage(this.db, { teacherId, filter: f });
   }
 
   /** The teacher's own earnings among `ids`, or all of those with something outstanding. */
@@ -76,17 +64,8 @@ export class EarningsQueries {
     return data;
   }
 
-  async payments(teacherId: string, f: { page: number; pageSize: number }): Promise<Page<PaymentRow>> {
-    const from = (f.page - 1) * f.pageSize;
-    const { data, count, error } = await this.db
-      .from('teacher_payments')
-      .select(PAYMENT, { count: 'exact' })
-      .eq('teacher_id', teacherId)
-      .order('paid_at', { ascending: false })
-      .order('id')
-      .range(from, from + f.pageSize - 1);
-    if (error) throw dbError(error);
-    return { items: data, total: count ?? 0, page: f.page, pageSize: f.pageSize };
+  async payments(teacherId: string, f: TeacherPaymentListQuery): Promise<Page<PaymentRow>> {
+    return paymentsPage(this.db, { teacherId, filter: f });
   }
 
   async payment(id: string): Promise<PaymentRow | null> {

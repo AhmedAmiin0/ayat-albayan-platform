@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { MyStudents } from './MyStudents';
@@ -11,7 +11,7 @@ describe('MyStudents', () => {
   it('home tab: with the account status; the report history leaves it out', () => {
     const { rerender } = render(<MyStudents students={KIDS} />);
     expect(screen.getByRole('columnheader', { name: t.students.status })).toBeTruthy();
-    expect(screen.getByText(t.enums.studentStatus.active)).toBeTruthy();
+    expect(within(screen.getByRole('table')).getByText(t.enums.studentStatus.active)).toBeTruthy();
     rerender(<MyStudents students={KIDS} showStatus={false} />);
     expect(screen.queryByRole('columnheader', { name: t.students.status })).toBeNull();
     expect(screen.queryByText(t.enums.studentStatus.active)).toBeNull();

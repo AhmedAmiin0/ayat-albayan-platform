@@ -11,7 +11,7 @@ import {
   Post,
   Query,
 } from '@nestjs/common';
-import { studentListFiltersSchema } from '@ab/shared';
+import { studentColumnQueryShape, studentListFiltersSchema } from '@ab/shared';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
@@ -23,8 +23,11 @@ import { countStudentsByStatus, getStudentProfile, listStudents, listTeacherOpti
 import { StudentsService } from './students.service';
 
 const Uuid = new ParseUUIDPipe();
-/** Search + paging + filters (R-STU-01): ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=. */
-const studentListQuerySchema = listQuerySchema.extend(studentListFiltersSchema.shape);
+/**
+ * Search + paging + filters (R-STU-01): ?status=trial,active&teacher=<id>|none&program=&package=&weekly=&tz=,
+ * column text filters ?code=&name=&guardian= and ?sort=&dir= (R-NFR-08).
+ */
+const studentListQuerySchema = listQuerySchema.extend({ ...studentListFiltersSchema.shape, ...studentColumnQueryShape });
 
 /** Admin-only students CRUD + merge (R-STU-01..05). */
 @ApiTags('students')

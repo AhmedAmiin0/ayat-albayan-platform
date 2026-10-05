@@ -58,6 +58,14 @@ describe('feedbackRequestSchema and feedbackQuerySchema', () => {
     expect(feedbackQuerySchema.parse({ lesson: '00000000-0000-4000-8000-0000000000d1' }).lesson).toBeDefined();
     expect(feedbackQuerySchema.safeParse({ from: 'yesterday' }).success).toBe(false);
   });
+
+  it('column filters and an allowlisted sort (R-NFR-08)', () => {
+    const q = { recommend: 'no', quick_rating: 'good', student: ' سهيلة ', note: 'ممتاز', sort: 'teacher', dir: 'desc' };
+    expect(feedbackQuerySchema.parse(q)).toEqual({ ...q, student: 'سهيلة' });
+    for (const bad of [{ sort: 'token_hash' }, { dir: 'up' }, { recommend: 'sure' }, { quick_rating: 'bad' }, { student: '  ' }]) {
+      expect(feedbackQuerySchema.safeParse(bad).success).toBe(false);
+    }
+  });
 });
 
 describe('feedbackEligible', () => {

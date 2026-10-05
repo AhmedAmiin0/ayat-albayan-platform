@@ -1,5 +1,6 @@
 import {
   earningsListQuery,
+  teacherPaymentListQuery,
   type SignedDownload,
   type TeacherEarningsBalanceView,
   type TeacherEarningView,
@@ -10,7 +11,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
-import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
+import { parseOrThrow, type Page } from '../teachers/http';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { EarningsService } from './earnings.service';
 
@@ -40,7 +41,7 @@ export class TeacherMyEarningsController {
 
   @Get('payments')
   async payments(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherPaymentView>> {
-    return this.earnings.payments(await this.me(user), parseOrThrow(pageQuerySchema, query));
+    return this.earnings.payments(await this.me(user), parseOrThrow(teacherPaymentListQuery, query));
   }
 
   @Get('payments/:id/receipt')

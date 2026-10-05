@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import type { ListUrlState } from '@/lib/list-url';
 import type { Teacher } from './api';
 import { TeachersPage } from './TeachersPage';
 
@@ -26,16 +27,18 @@ const FATMA: Teacher = {
   max_students: 12,
 };
 
-function renderPage(page: { items: Teacher[]; total: number }) {
+const LIST: ListUrlState = { page: 1, sort: {}, filters: {} };
+
+function renderPage(page: { items: Teacher[]; total: number }, list: ListUrlState = LIST) {
   apiFetch.mockResolvedValue({ ...page, page: 1, pageSize: 25 });
   const onOpen = vi.fn();
-  const onPage = vi.fn();
+  const onList = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <TeachersPage page={1} onOpen={onOpen} onPage={onPage} />
+      <TeachersPage list={list} onOpen={onOpen} onList={onList} />
     </QueryClientProvider>,
   );
-  return { onOpen, onPage };
+  return { onOpen, onList };
 }
 
 describe('TeachersPage (R-TCH-01, docs/07 §6)', () => {
@@ -75,9 +78,9 @@ describe('TeachersPage (R-TCH-01, docs/07 §6)', () => {
   });
 
   it('pages through the shared Pager', async () => {
-    const { onPage } = renderPage({ items: [FATMA], total: 60 });
+    const { onList } = renderPage({ items: [FATMA], total: 60 });
     fireEvent.click(await screen.findByRole('button', { name: t.common.nextPage }));
-    expect(onPage).toHaveBeenCalledWith(2);
+    expect(onList).toHaveBeenCalledWith({ ...LIST, page: 2 });
   });
 
   it('an empty list shows the empty state, and «إضافة معلم/ة» opens the create dialog', async () => {

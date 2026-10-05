@@ -8,6 +8,7 @@ import type {
 } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
+import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list-search';
 
 // apps/api/src/modules/subscriptions (docs/11 §6). The client never prices: the price shown and
 // stored both come from the API's catalog quote.
@@ -18,11 +19,16 @@ export type Page<T> = { items: T[]; total: number; page: number; pageSize: numbe
 export const MONEY_KEY = ['money'] as const;
 export const PAGE_SIZE = 20;
 
-export const subscriptionsQuery = (q: { status?: SubscriptionStatus | 'partial'; page: number }) =>
+type SubscriptionsListQuery = { status?: SubscriptionStatus | 'partial' | undefined; page: number; sort?: SortSearch; filters?: FilterSearch };
+
+/** GET /subscriptions: one page, filtered and (R-NFR-08) sorted server-side; default newest first. */
+export const subscriptionsQuery = (q: SubscriptionsListQuery) =>
   queryOptions({
     queryKey: [...MONEY_KEY, 'subscriptions', q],
     queryFn: () => {
-      const qs = new URLSearchParams({ page: String(q.page), pageSize: String(PAGE_SIZE) });
+      const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
+      qs.set('page', String(q.page));
+      qs.set('pageSize', String(PAGE_SIZE));
       if (q.status === 'partial') qs.set('paid', 'partial');
       else if (q.status) qs.set('status', q.status);
       return apiFetch<Page<SubscriptionView>>(`/subscriptions?${qs}`);

@@ -7,12 +7,13 @@ import {
   type TeacherEarningsBalanceView,
   type TeacherEarningView,
   type TeacherPaymentCreate,
+  type TeacherPaymentListQuery,
   type TeacherPaymentResult,
   type TeacherPaymentView,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '../scheduling/errors';
-import type { Page, PageQuery } from '../teachers/http';
+import type { Page } from '../teachers/http';
 import { toEarningView, toPaymentView } from './earnings.mapper';
 import { EarningsQueries, type PaymentRow } from './earnings.queries';
 import { EarningsReceipts } from './earnings.receipts';
@@ -42,7 +43,7 @@ export class EarningsService {
     return { ...page, items: page.items.map(toEarningView) };
   }
 
-  async payments(teacherId: string, q: PageQuery): Promise<Page<TeacherPaymentView>> {
+  async payments(teacherId: string, q: TeacherPaymentListQuery): Promise<Page<TeacherPaymentView>> {
     const page = await this.queries.payments(teacherId, q);
     return { ...page, items: page.items.map(toPaymentView) };
   }

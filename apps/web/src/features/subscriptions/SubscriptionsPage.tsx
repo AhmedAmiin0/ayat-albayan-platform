@@ -15,22 +15,30 @@ import { Toast } from '@/components/ui/toast';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { t } from '@/lib/i18n';
+import { toFilterSearch, toSortSearch } from '@/lib/list-search';
 import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
 import { OpenTasks } from './OpenTasks';
-import type { SubscriptionFilter } from './search';
+import { subscriptionsTable, type SubscriptionFilter, type SubscriptionsUrlSearch } from './search';
 import { subscriptionColumns } from './subscription-columns';
 
-export type SubscriptionsSearch = { status?: SubscriptionFilter; page: number };
-type Props = SubscriptionsSearch & {
-  onChange: (next: SubscriptionsSearch) => void;
+type Props = {
+  search: SubscriptionsUrlSearch;
+  /** A patch of the URL search (the route re-validates it); filter and sort changes pass `page: undefined`. */
+  onSearch: (patch: Record<string, unknown>) => void;
   onOpenStudent: (studentId: string) => void;
 };
 
-/** /admin/subscriptions (R-SUB-01/02): packages by status, new from the calculator, pay, tasks. */
-export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Props) {
+/** /admin/subscriptions (R-SUB-01/02): packages by status, sort + filters (URL), new, pay, tasks. */
+export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
   const queryClient = useQueryClient();
-  const list = useQuery(subscriptionsQuery({ status, page }));
+  const { status, page = 1 } = search;
+  const table = subscriptionsTable(search);
+  const list = useQuery(subscriptionsQuery({ status, page, ...table }));
+  const reset = (patch: Record<string, unknown>) => onSearch({ ...patch, page: undefined });
+  const filterValues = { student: search.f_student ?? '', package: search.f_package ?? '' };
+  // A column filter that matches nothing keeps the table (and its filter row) on screen.
+  const bare = list.data?.total === 0 && Object.keys(table.filters).length === 0;
   const [creating, setCreating] = useState(false);
   const [paying, setPaying] = useState<{ sub: SubscriptionView; kind: 'payment' | 'refund' } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -62,7 +70,7 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
           aria-label={t.subscriptions.status}
           className="w-auto"
           value={status ?? ''}
-          onChange={(e) => onChange({ status: (e.target.value || undefined) as SubscriptionFilter | undefined, page: 1 })}
+          onChange={(e) => reset({ status: (e.target.value || undefined) as SubscriptionFilter | undefined })}
         >
           <option value="">{t.subscriptions.allStatuses}</option>
           {SUBSCRIPTION_STATUSES.map((s) => (
@@ -81,11 +89,20 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
       </PageHead>
       {(list.isError || pause.isError) && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
-      {list.data?.total === 0 && <TableBox center><EmptyState title={t.subscriptions.emptyList} /></TableBox>}
-      {list.data && list.data.total > 0 && (
+      {bare && <TableBox center><EmptyState title={t.subscriptions.emptyList} /></TableBox>}
+      {list.data && !bare && (
         <>
-          <DataTable fill stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
-          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onChange({ status, page: p })} />
+          <DataTable
+            fill
+            stacked
+            columns={columns}
+            data={list.data.items}
+            getRowId={(r) => r.id}
+            emptyText={t.subscriptions.emptyList}
+            sort={{ key: table.sort.sort, dir: table.sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
+            filters={{ values: filterValues, onChange: (key, v) => reset(toFilterSearch(key, v)) }}
+          />
+          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
         </>
       )}
       <OpenTasks />

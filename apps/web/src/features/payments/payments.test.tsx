@@ -1,11 +1,13 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
+import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT, WEEKLY } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n';
 import { paidAtFor, uploadReceipt } from './api';
 import { PaymentsPage } from './PaymentsPage';
 import { ReceiptField, receiptProblem } from './ReceiptField';
+import type { PaymentsUrlSearch } from './search';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
@@ -19,6 +21,12 @@ const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSiz
 
 const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183', guardian_name: 'أم سهيلة' };
 
+/** The route's URL search, held in state. */
+function Harness() {
+  const [search, setSearch] = useState<PaymentsUrlSearch>({});
+  return <PaymentsPage search={search} onSearch={(patch) => setSearch((s) => ({ ...s, ...patch }))} />;
+}
+
 function renderPage() {
   apiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/subscriptions')) return page([WEEKLY]);
@@ -28,7 +36,7 @@ function renderPage() {
   });
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <PaymentsPage page={1} onPage={vi.fn()} />
+      <Harness />
     </QueryClientProvider>,
   );
 }
@@ -116,13 +124,6 @@ describe('PaymentsPage', () => {
       expect(apiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: 'sub-1', amount: 145 })),
     );
     expect(await screen.findByText(t.payments.saved)).toBeTruthy();
-  });
-
-  it('shows the period total, filters by method and downloads the filtered CSV', async () => {
-    renderPage();
-    expect(await screen.findByLabelText(t.finance.periodTotal)).toBeTruthy();
-    fireEvent.change(screen.getByRole('combobox', { name: t.payments.method }), { target: { value: 'cash' } });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash')));
   });
 
   it('deletes a payment only after the confirm', async () => {

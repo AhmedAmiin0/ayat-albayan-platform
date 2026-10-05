@@ -1,6 +1,7 @@
 import type { PaymentKind, PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
+import { sortFilterParams, type SortSearch } from '@/lib/list-search';
 import { supabase } from '@/lib/supabase';
 import { MONEY_KEY, PAGE_SIZE, type Page } from '@/features/subscriptions/api';
 
@@ -16,13 +17,16 @@ export function filterParams(f: PaymentFilters): Record<string, string> {
   return Object.fromEntries(Object.entries(f).filter((e): e is [string, string] => typeof e[1] === 'string' && e[1] !== ''));
 }
 
-export const paymentsQuery = (page: number, filters: PaymentFilters = {}) =>
+/** GET /payments: one page, filtered and (R-NFR-08) sorted server-side; default newest paid first. */
+export const paymentsQuery = (page: number, filters: PaymentFilters = {}, sort: SortSearch = {}) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'payments', page, filters],
-    queryFn: () =>
-      apiFetch<Page<PaymentView> & { totals: PeriodTotal[] }>(
-        `/payments?${new URLSearchParams({ ...filterParams(filters), page: String(page), pageSize: String(PAGE_SIZE) })}`,
-      ),
+    queryKey: [...MONEY_KEY, 'payments', page, filters, sort],
+    queryFn: () => {
+      const qs = new URLSearchParams([...Object.entries(filterParams(filters)), ...sortFilterParams(sort)]);
+      qs.set('page', String(page));
+      qs.set('pageSize', String(PAGE_SIZE));
+      return apiFetch<Page<PaymentView> & { totals: PeriodTotal[] }>(`/payments?${qs}`);
+    },
     placeholderData: keepPreviousData,
   });
 

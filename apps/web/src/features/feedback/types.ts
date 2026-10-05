@@ -1,4 +1,4 @@
-import type { FeedbackKind, FeedbackRating, FeedbackRecommend, FeedbackRowView, TeacherFeedbackRowView } from '@ab/shared';
+import type { FeedbackRating, FeedbackRecommend, FeedbackRowView, TeacherFeedbackRowView } from '@ab/shared';
 
 // «رأيك يهمّنا» (student feedback): the contract is packages/shared/src/schemas/feedback.ts.
 export {
@@ -37,11 +37,4 @@ export interface FeedbackPage {
   total: number;
   page: number;
   pageSize: number;
-}
-
-export interface FeedbackFilters {
-  teacherId?: string | undefined;
-  kind?: FeedbackKind | undefined;
-  rating?: number | undefined;
-  page: number;
 }

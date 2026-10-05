@@ -71,7 +71,7 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       {templates.isPending ? (
         <p className="text-sm text-ink-3">{t.common.loading}</p>
       ) : (
-        <DataTable columns={columns} data={rows} getRowId={(r) => r.key} stacked emptyText={t.common.empty} />
+        <DataTable columns={columns} data={rows} getRowId={(r) => r.key} stacked clientSort clientFilter emptyText={t.common.empty} />
       )}
       {submitting && (
         <SubmitTemplateDialog

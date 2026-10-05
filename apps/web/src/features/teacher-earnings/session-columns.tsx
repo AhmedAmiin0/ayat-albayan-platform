@@ -57,13 +57,18 @@ const pickColumn = col.display({
   meta: { className: 'w-px max-sm:order-0' },
 });
 
-/** Sessions: date, students, length, amount, paid, outstanding, status (+ ticks for the admin). */
+/**
+ * Sessions: date, students, length, amount, paid, outstanding, status (+ ticks for the admin).
+ * Server sort (R-NFR-08) on date, length, amount, paid and status; the status filter is the
+ * panel's segmented control. Students (read after the page) and outstanding (amount − paid) are
+ * derived, so they do not sort server-side.
+ */
 export function sessionColumns(selectable: boolean) {
   const body = col.columns([
     col.accessor('starts_at', {
       header: () => t.earnings.date,
       cell: (c) => <span className="font-semibold tabular-nums text-ink">{formatDateTime(c.getValue())}</span>,
-      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
+      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', sortKey: 'starts_at' },
     }),
     col.accessor('students', {
       header: () => t.earnings.students,
@@ -73,17 +78,17 @@ export function sessionColumns(selectable: boolean) {
     col.accessor('minutes', {
       header: () => t.earnings.duration,
       cell: (c) => <span className="tabular-nums">{t.earnings.minutes.replace('{count}', String(c.getValue()))}</span>,
-      meta: { className: 'max-sm:order-4 max-sm:text-xs' },
+      meta: { className: 'max-sm:order-4 max-sm:text-xs', sortKey: 'minutes' },
     }),
     col.accessor('amount', {
       header: () => t.earnings.amount,
       cell: (c) => <Amount amount={c.getValue()} currency="EGP" />,
-      meta: { className: 'max-sm:order-5' },
+      meta: { className: 'max-sm:order-5', sortKey: 'amount' },
     }),
     col.accessor('paid_amount', {
       header: () => t.earnings.paidAmount,
       cell: (c) => <Amount amount={c.getValue()} currency="EGP" />,
-      meta: { className: 'max-sm:hidden' },
+      meta: { className: 'max-sm:hidden', sortKey: 'paid_amount' },
     }),
     col.accessor('outstanding', {
       header: () => t.earnings.left,
@@ -93,7 +98,7 @@ export function sessionColumns(selectable: boolean) {
     col.accessor('status', {
       header: () => t.earnings.status,
       cell: (c) => <StatusChip size="sm" {...earningStatusStyle[c.getValue()]} label={t.earnings.statusName[c.getValue()]} />,
-      meta: { className: 'max-sm:order-2' },
+      meta: { className: 'max-sm:order-2', sortKey: 'status' },
     }),
   ]);
   return selectable ? [pickColumn, ...body] : body;

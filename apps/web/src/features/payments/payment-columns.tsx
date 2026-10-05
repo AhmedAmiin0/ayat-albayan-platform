@@ -1,3 +1,4 @@
+import { PAYMENT_METHODS } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
@@ -13,7 +14,13 @@ const col = createColumnHelper<DataTableFeatures, PaymentView>();
 export type PaymentAction = 'receipt' | 'edit' | 'delete';
 type Handlers = { onAction: (p: PaymentView, action: PaymentAction) => void };
 
-/** Payments list (R-PAY-01): student, amount (a refund in red, the amount sent in another currency), method, date, who, actions. */
+const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
+
+/**
+ * Payments list (R-PAY-01): student, amount (a refund in red, the amount sent in another currency),
+ * method, date, who, actions. Server sort (R-NFR-08) on amount, method and date; the student is
+ * filtered by the bar's picker, «سجّلها» is a name read after the page (neither sorts server-side).
+ */
 export function paymentColumns({ onAction }: Handlers) {
   return col.columns([
     col.accessor('student', {
@@ -40,17 +47,17 @@ export function paymentColumns({ onAction }: Handlers) {
           </div>
         );
       },
-      meta: { className: 'max-sm:order-2' },
+      meta: { className: 'max-sm:order-2', sortKey: 'amount' },
     }),
     col.accessor('method', {
       header: () => t.payments.method,
       cell: (c) => t.enums.paymentMethod[c.getValue()],
-      meta: { className: 'max-sm:order-3 max-sm:text-xs' },
+      meta: { className: 'max-sm:order-3 max-sm:text-xs', sortKey: 'method', filter: { kind: 'select', options: methodOptions } },
     }),
     col.accessor('paid_at', {
       header: () => t.payments.paidAt,
       cell: (c) => <span className="tabular-nums">{formatDate(c.getValue())}</span>,
-      meta: { className: 'max-sm:order-4 max-sm:text-xs' },
+      meta: { className: 'max-sm:order-4 max-sm:text-xs', sortKey: 'paid_at' },
     }),
     col.accessor('recorded_by', {
       header: () => t.payments.recordedByColumn,

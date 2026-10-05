@@ -3,6 +3,7 @@ import { Icon } from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
+import { LeadOrderFilters } from './LeadOrderFilters';
 import type { LeadSearch } from './types';
 
 export interface LeadsToolbarProps {
@@ -12,8 +13,8 @@ export interface LeadsToolbarProps {
 }
 
 /**
- * Search by name / phone (Enter submits) and the source filter, both server-side (GET /leads q,
- * source). TODO(R-LEAD-05): «مسؤول المتابعة» filter once the API filters by assignee.
+ * Search by name / phone (Enter submits), the source and «مسؤول المبيعات» filters and the order,
+ * all server-side (GET /leads q, source, assignee, sort / dir).
  */
 export function LeadsToolbar({ search, onFilter }: LeadsToolbarProps) {
   return (
@@ -54,6 +55,7 @@ export function LeadsToolbar({ search, onFilter }: LeadsToolbarProps) {
           </option>
         ))}
       </Select>
+      <LeadOrderFilters search={search} onFilter={onFilter} />
     </div>
   );
 }

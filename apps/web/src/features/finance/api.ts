@@ -1,6 +1,7 @@
 import type { InvoiceView, ReceivablesView, SignedDownload } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list-search';
 import { MONEY_KEY, type Page } from '@/features/subscriptions/api';
 
 // The «المالية» pages (owner, 2026-10-05): receivables, invoices, the yearly P&L (dashboard summary).
@@ -15,12 +16,16 @@ export const receivablesQuery = queryOptions({
 
 export const INVOICE_PAGE_SIZE = 25;
 
-/** GET /invoices/recent?from&to&page: every booking invoice, newest first, with its payment if recorded. */
-export const invoicesQuery = (q: { page: number; from?: string; to?: string }) =>
+type InvoicesList = { page: number; from?: string; to?: string; sort?: SortSearch; filters?: FilterSearch };
+
+/** GET /invoices/recent?from&to&kind&student&sort&dir&page: booking invoices (newest first unless sorted), with their payment. */
+export const invoicesQuery = (q: InvoicesList) =>
   queryOptions({
     queryKey: [...MONEY_KEY, 'invoices', q],
     queryFn: () => {
-      const qs = new URLSearchParams({ page: String(q.page), pageSize: String(INVOICE_PAGE_SIZE) });
+      const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
+      qs.set('page', String(q.page));
+      qs.set('pageSize', String(INVOICE_PAGE_SIZE));
       if (q.from) qs.set('from', q.from);
       if (q.to) qs.set('to', q.to);
       return apiFetch<Page<InvoiceView>>(`/invoices/recent?${qs}`);

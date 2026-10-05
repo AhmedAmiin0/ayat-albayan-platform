@@ -12,10 +12,13 @@ import { TeacherCell } from './TeacherCell';
 import type { StudentListItem } from './types';
 
 const col = createColumnHelper<DataTableFeatures, StudentListItem>();
-const quiet = (phone: string) => ({ className: `text-xs text-ink-2 ${phone}` });
+const quiet = (phone: string) => `text-xs text-ink-2 ${phone}`;
+const text = { kind: 'text' } as const;
 
 /**
- * Students list columns (docs/07 §6 Data table, R-STU-01: the code is shown, never typed). The
+ * Students list columns (docs/07 §6 Data table, R-STU-01: the code is shown, never typed). Every
+ * data column sorts server-side (`sortKey`, R-NFR-08); code, name and guardian have a column
+ * filter, program / teacher / status are filtered by StudentFilterBar above the table. The
  * hamish note folds under the name when the page is 940px or narrower. The name is a button: the
  * keyboard / screen-reader path to the profile at every width (the row click is for pointers).
  */
@@ -24,7 +27,7 @@ export function studentColumns(onOpen: (studentId: string) => void) {
     col.accessor('code', {
       header: () => t.students.code,
       cell: (c) => <Ltr>{c.getValue() ?? '—'}</Ltr>,
-      meta: quiet(stacked.code),
+      meta: { className: quiet(stacked.code), sortKey: 'code', filter: text },
     }),
     col.accessor('name', {
       header: () => t.students.name,
@@ -44,7 +47,7 @@ export function studentColumns(onOpen: (studentId: string) => void) {
           <StudentNote text={studentNote(c.row.original)} className="mt-[3px] hidden text-2xs @max-[940px]:block" />
         </>
       ),
-      meta: { className: stacked.name },
+      meta: { className: stacked.name, sortKey: 'name', filter: text },
     }),
     col.accessor('guardian_name', {
       header: () => t.students.guardian,
@@ -56,22 +59,22 @@ export function studentColumns(onOpen: (studentId: string) => void) {
           </span>
         </>
       ),
-      meta: { className: stacked.guardian },
+      meta: { className: stacked.guardian, sortKey: 'guardian', filter: text, filterKey: 'guardian' },
     }),
     col.accessor('program', {
       header: () => t.students.program,
       cell: (c) => t.enums.program[c.getValue()],
-      meta: quiet(stacked.program),
+      meta: { className: quiet(stacked.program), sortKey: 'program' },
     }),
     col.accessor('teacher_name', {
       header: () => t.students.teacher,
       cell: (c) => <TeacherCell row={c.row.original} onOpen={onOpen} />,
-      meta: quiet(stacked.teacher),
+      meta: { className: quiet(stacked.teacher), sortKey: 'teacher' },
     }),
     col.accessor('status', {
       header: () => t.students.status,
       cell: (c) => <StatusChip {...studentStatusStyle[c.getValue()]} label={t.enums.studentStatus[c.getValue()]} />,
-      meta: { className: stacked.status },
+      meta: { className: stacked.status, sortKey: 'status' },
     }),
     col.display({
       id: 'actions',

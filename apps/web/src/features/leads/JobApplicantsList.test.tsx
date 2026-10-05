@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { JobApplicantsList } from './JobApplicantsList';
@@ -24,7 +24,7 @@ function renderList(items: JobApplicantRow[]) {
   apiFetch.mockResolvedValue({ items, total: items.length, page: 1, pageSize: 25 });
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <JobApplicantsList search={{ page: 1 }} onSearch={vi.fn()} />
+      <JobApplicantsList search={{ page: 1, sort: {}, filters: {} }} onSearch={vi.fn()} />
     </QueryClientProvider>,
   );
 }
@@ -39,7 +39,7 @@ describe('JobApplicantsList (R-LEAD-04)', () => {
     expect(screen.getByText(t.jobApplicants.count.replace('{n}', '1'))).toBeTruthy();
     expect(screen.getByText('+20 10 0123 4567').getAttribute('dir')).toBe('ltr');
     // A new applicant is not the admin's «دورك»: neutral, never saffron (docs/07 §6).
-    const chip = screen.getByText(t.enums.jobApplicantStatus.new).closest('[data-tone]');
+    const chip = within(screen.getByRole('table')).getByText(t.enums.jobApplicantStatus.new).closest('[data-tone]');
     expect(chip?.getAttribute('data-tone')).toBe('neutral');
     expect(screen.getByRole('link', { name: t.jobApplicants.cv }).getAttribute('href')).toBe(
       'https://example.com/cv.pdf',

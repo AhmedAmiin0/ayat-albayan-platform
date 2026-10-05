@@ -13,14 +13,17 @@ import { Toast } from '@/components/ui/toast';
 import { downloadCsv } from '@/features/exports/api';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
+import { toSortSearch } from '@/lib/list-search';
 import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } from './api';
 import { paymentColumns, type PaymentAction } from './payment-columns';
 import { PaymentDialogs } from './PaymentDialogs';
 import { PaymentFiltersBar } from './PaymentFiltersBar';
 import { PeriodTotals } from './PeriodTotals';
 import { RecordPaymentDialog } from './RecordPaymentDialog';
+import { paymentsView, type PaymentsUrlSearch } from './search';
 
-type Props = { page: number; onPage: (page: number) => void };
+/** A filter or sort change goes back to page 1 (the route drops `page: undefined`). */
+type Props = { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlSearch>) => void };
 
 /** «yyyy-01-01 … today»: a CSV needs a range; the filter's own, else this year so far. */
 function csvRange(f: PaymentFilters): { from: string; to: string } {
@@ -29,10 +32,11 @@ function csvRange(f: PaymentFilters): { from: string; to: string } {
   return { from: f.from ?? `${to.slice(0, 4)}-01-01`, to };
 }
 
-/** /admin/payments (R-PAY-01): filters, the period total, CSV, record / edit / delete, receipts. */
-export function PaymentsPage({ page, onPage }: Props) {
-  const [filters, setFilters] = useState<PaymentFilters>({});
-  const list = useQuery(paymentsQuery(page, filters));
+/** /admin/payments (R-PAY-01): filters and sort (URL), the period total, CSV, record / edit / delete, receipts. */
+export function PaymentsPage({ search, onSearch }: Props) {
+  const page = search.page ?? 1;
+  const { filters, sort } = paymentsView(search);
+  const list = useQuery(paymentsQuery(page, filters, sort));
   const [recording, setRecording] = useState(false);
   const [open, setOpen] = useState<{ payment: PaymentView; action: PaymentAction } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -40,10 +44,10 @@ export function PaymentsPage({ page, onPage }: Props) {
     mutationFn: () => downloadCsv({ kind: 'payments', params: { ...filterParams(filters), ...csvRange(filters) } }),
   });
   const columns = useMemo(() => paymentColumns({ onAction: (payment, action) => setOpen({ payment, action }) }), []);
-  const onFilters = (next: PaymentFilters) => {
-    setFilters(next);
-    onPage(1);
-  };
+  const reset = (patch: Partial<PaymentsUrlSearch>) => onSearch({ ...patch, page: undefined });
+  const items = list.data?.items ?? [];
+  // A column filter that matches nothing keeps the table (and its filter row) on screen.
+  const bare = list.data?.total === 0 && !search.f_method;
 
   return (
     <>
@@ -59,15 +63,24 @@ export function PaymentsPage({ page, onPage }: Props) {
           </Button>
         </div>
       </PageHead>
-      <PaymentFiltersBar value={filters} onChange={onFilters} />
+      <PaymentFiltersBar value={filters} studentName={items[0]?.student.name} onChange={reset} />
       {list.data && <PeriodTotals totals={list.data.totals} />}
       {(list.isError || csv.isError) && <FormAlert>{t.common.error}</FormAlert>}
       {list.isPending && <ListSkeleton />}
-      {list.data?.total === 0 && <TableBox center><EmptyState title={t.payments.empty} /></TableBox>}
-      {list.data && list.data.total > 0 && (
+      {bare && <TableBox center><EmptyState title={t.payments.empty} /></TableBox>}
+      {list.data && !bare && (
         <>
-          <DataTable fill stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
-          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={onPage} />
+          <DataTable
+            fill
+            stacked
+            columns={columns}
+            data={items}
+            getRowId={(r) => r.id}
+            emptyText={t.payments.empty}
+            sort={{ key: sort.sort, dir: sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
+            filters={{ values: { method: search.f_method ?? '' }, onChange: (_, v) => reset({ f_method: (v || undefined) as PaymentFilters['method'] }) }}
+          />
+          <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
         </>
       )}
       {recording && (

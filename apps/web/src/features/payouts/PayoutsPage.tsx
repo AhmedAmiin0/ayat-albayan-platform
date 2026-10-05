@@ -52,18 +52,19 @@ export function PayoutsPage({ month, onMonth }: Props) {
   const csv = useMutation({ mutationFn: downloadPayoutsCsv });
   const ledger = useMutation({ mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month } }) });
   const [approve, openReceipt] = [move.mutate, receipt.mutate];
+  const rows = useMemo(() => list.data ?? [], [list.data]);
   const columns = useMemo(
     () =>
       payoutColumns({
+        teachers: [...new Set(rows.map((p) => p.teacher.display_name_ar))].map((n) => ({ value: n, label: n })),
         onAction: (p, action) => {
           if (action === 'approve') approve(p.id);
           else if (action === 'receipt') openReceipt(p.id);
           else setDialog({ payout: p, kind: action });
         },
       }),
-    [approve, openReceipt],
+    [rows, approve, openReceipt],
   );
-  const rows = list.data ?? [];
   const total = rows.reduce((n, p) => n + p.amount, 0);
   const error = generate.error ?? move.error ?? receipt.error;
 
@@ -94,7 +95,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
       {list.isSuccess && rows.length === 0 && <TableBox center><EmptyState title={t.payouts.empty} /></TableBox>}
       {rows.length > 0 && (
         <>
-          <DataTable fill stacked columns={columns} data={rows} getRowId={(r) => r.id} />
+          <DataTable fill stacked clientSort clientFilter columns={columns} data={rows} getRowId={(r) => r.id} />
           <p className="mt-3 flex justify-end gap-2 text-sm">
             <span className="text-ink-3">{t.expenses.total}</span>
             <Amount amount={total} currency="EGP" className="font-semibold" />

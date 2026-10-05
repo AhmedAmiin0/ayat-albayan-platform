@@ -24,4 +24,12 @@ describe('parseInboxSearch', () => {
     expect(parseInboxSearch({ page: 0 })).toEqual({ page: 1 });
     expect(parseInboxSearch({ page: 2.5 })).toEqual({ page: 1 });
   });
+
+  it('keeps a known sort and lead status (R-NFR-08)', () => {
+    expect(parseInboxSearch({ sort: 'unread', f_status: 'new' })).toEqual({ sort: 'unread', f_status: 'new', page: 1 });
+  });
+
+  it('drops an unknown sort or status', () => {
+    expect(parseInboxSearch({ sort: 'phone_e164', f_status: 'nope' })).toEqual({ page: 1 });
+  });
 });

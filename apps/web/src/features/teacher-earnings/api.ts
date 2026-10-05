@@ -10,6 +10,7 @@ import type {
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { MONEY_KEY, type Page } from '@/features/subscriptions/api';
 import { apiFetch, apiSend } from '@/lib/api';
+import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list-search';
 import { supabase } from '@/lib/supabase';
 
 // apps/api/src/modules/teacher-earnings (docs/11 §10). Teacher money is EGP.
@@ -26,21 +27,32 @@ export const earningsKey = (s: Scope) => [...MONEY_KEY, 'teacher-earnings', s.ki
 export const balanceQuery = (s: Scope) =>
   queryOptions({ queryKey: [...earningsKey(s), 'balance'], queryFn: () => apiFetch<TeacherEarningsBalanceView>(base(s)) });
 
-export const sessionsQuery = (s: Scope, q: { status: SessionFilter; page: number }) =>
+/** One page of sessions, sorted server-side (R-NFR-08); no sort = newest first. */
+export const sessionsQuery = (s: Scope, q: { status: SessionFilter; page: number; sort?: SortSearch }) =>
   queryOptions({
     queryKey: [...earningsKey(s), 'sessions', q],
     queryFn: () => {
-      const qs = new URLSearchParams({ page: String(q.page), pageSize: String(EARNINGS_PAGE_SIZE) });
+      const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}));
+      qs.set('page', String(q.page));
+      qs.set('pageSize', String(EARNINGS_PAGE_SIZE));
       if (q.status !== 'all') qs.set('status', q.status);
       return apiFetch<Page<TeacherEarningView>>(`${base(s)}/sessions?${qs}`);
     },
     placeholderData: keepPreviousData,
   });
 
-export const paymentsQuery = (s: Scope, page: number) =>
+export type PaymentsList = { page: number; sort?: SortSearch; filters?: FilterSearch };
+
+/** One page of payments, sorted and filtered (method, voided, note) server-side; no sort = newest first. */
+export const paymentsQuery = (s: Scope, q: PaymentsList) =>
   queryOptions({
-    queryKey: [...earningsKey(s), 'payments', page],
-    queryFn: () => apiFetch<Page<TeacherPaymentView>>(`${base(s)}/payments?page=${page}&pageSize=${EARNINGS_PAGE_SIZE}`),
+    queryKey: [...earningsKey(s), 'payments', q],
+    queryFn: () => {
+      const qs = new URLSearchParams(sortFilterParams(q.sort ?? {}, q.filters));
+      qs.set('page', String(q.page));
+      qs.set('pageSize', String(EARNINGS_PAGE_SIZE));
+      return apiFetch<Page<TeacherPaymentView>>(`${base(s)}/payments?${qs}`);
+    },
     placeholderData: keepPreviousData,
   });
 

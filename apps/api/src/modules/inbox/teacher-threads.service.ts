@@ -6,6 +6,7 @@ import { assertPhone, type TeacherScope } from './teacher-scope';
 import { forTeacher, teacherPeople } from './teacher-threads';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { toThreadView, type ThreadRow } from './threads.mapper';
+import { teacherListFilter } from './threads.list';
 import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
 import type { ThreadPageQuery } from './threads.service';
 
@@ -33,7 +34,7 @@ export class TeacherThreadsService {
     const phones = f.unread ? all.filter((p) => (unread.get(p) ?? 0) > 0) : all;
     if (phones.length === 0) return empty;
     // ponytail: the scope goes in the URL (.in); a teacher has tens of families, fine until hundreds.
-    const { items, total } = await this.queries.list({ ...f, unread: false, phones });
+    const { items, total } = await this.queries.list(teacherListFilter(f, phones));
     return { items: items.map((r) => forTeacher(toThreadView(r, now), unread)), total, page: f.page, pageSize: f.pageSize };
   }
 

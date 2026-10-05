@@ -38,11 +38,24 @@ describe('PayoutsPage (R-PAY-02, R-TCH-04, E3)', () => {
 
   it('a month of rows: teacher, lessons, breakdown line, EGP amount, status', async () => {
     renderPage();
-    const row = (await screen.findByText(t.enums.payoutStatus.draft)).closest('tr');
+    // `td *`: the status filter's <option> has the same text.
+    const row = (await screen.findByText(t.enums.payoutStatus.draft, { selector: 'td *' })).closest('tr');
     if (!row) throw new Error('row missing');
     expect(apiFetch).toHaveBeenCalledWith('/payouts?month=2026-09');
     expect(within(row).getByText('45 دقيقة: 12 × 70 = 840 ج.م')).toBeTruthy();
     expect(within(row).getByText(t.enums.payoutStatus.draft)).toBeTruthy();
+  });
+
+  it('sorts by amount and filters by teacher and status on the loaded month', async () => {
+    renderPage([PAYOUT, { ...PAYOUT, id: 'po-2', amount: 100, teacher: { id: 't2', display_name_ar: 'سارة' }, status: 'approved' }]);
+    const names = () => screen.getAllByRole('row').slice(1).map((r) => r.querySelector('td')?.textContent);
+    fireEvent.click(await screen.findByRole('button', { name: t.payouts.amount }));
+    expect(names()).toEqual(['سارة', 'أبرار']);
+    const by = (col: string) => t.table.filterBy.replace('{col}', col);
+    fireEvent.change(screen.getByRole('combobox', { name: by(t.subscriptions.status) }), { target: { value: 'draft' } });
+    expect(names()).toEqual(['أبرار']);
+    fireEvent.change(screen.getByRole('combobox', { name: by(t.payouts.teacher) }), { target: { value: 'سارة' } });
+    expect(screen.getByText(t.common.empty)).toBeTruthy();
   });
 
   it('the dues summary: total owed and each teacher linked to their earnings page', async () => {

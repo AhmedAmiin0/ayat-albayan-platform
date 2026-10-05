@@ -32,7 +32,7 @@ describe('FeedbackReadQueries', () => {
 
   it('mine: the teacher id comes from the caller, never a filter', async () => {
     const { db, calls } = fakeDb({ [T]: [{ data: [listRow()], count: 1 }] });
-    await new FeedbackReadQueries(db).mine(TEACHER_ID, { page: 1, pageSize: 25 });
+    await new FeedbackReadQueries(db).mine(TEACHER_ID, { filter: { teacher: 'someone-else' }, page: { page: 1, pageSize: 25 } });
     expect(calls.find((c) => c.method === 'eq')?.args).toEqual(['teacher_id', TEACHER_ID]);
   });
 
