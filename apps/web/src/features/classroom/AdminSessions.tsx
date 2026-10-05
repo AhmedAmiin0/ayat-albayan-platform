@@ -1,4 +1,4 @@
-import type { LessonView } from '@ab/shared';
+import { intlLocale, type LessonView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState, type ReactNode } from 'react';
 import { TableBox } from '@/components/TableBox';
@@ -11,12 +11,14 @@ import { PageHead } from '@/components/ui/page';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n';
+import { locale } from '@/lib/locale';
 import { adminDayQuery, dayAround } from './api';
 import { SessionCard } from './SessionCard';
 import { groupSessions, SESSION_GROUPS, type SessionGroup } from './sessions';
 import { useNow } from './use-now';
 
-const DAY = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
+// The day in the UI language with Western digits («الاثنين 5 أكتوبر»), not English.
+const DAY = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'long', day: 'numeric', month: 'long' });
 
 function Group({ group, lessons }: { group: SessionGroup; lessons: LessonView[] }) {
   const id = `sessions-${group}`;

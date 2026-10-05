@@ -2003,7 +2003,29 @@
     "reportingCurrency": "Dashboard currency",
     "payoutCountLate": "Count lessons where the student was late toward teacher payouts",
     "payoutCountNoShow": "Count lessons where the student was absent without notice toward teacher payouts",
-    "notAscending": "Hours must go from smallest to largest, for example 24, 72"
+    "notAscending": "Hours must go from smallest to largest, for example 24, 72",
+    "nav": "Settings sections",
+    "sections": {
+      "messaging": "Messages & WhatsApp",
+      "schedule": "Schedule & lessons",
+      "reports": "Reports",
+      "accounts": "Accounts & payments",
+      "sales": "Assistants & sales",
+      "appearance": "Appearance"
+    },
+    "hints": {
+      "reminderMinutesBefore": "The guardian gets the reminder this many minutes before the lesson starts.",
+      "bookingHorizonWeeks": "How many weeks of recurring lessons are created ahead.",
+      "reportTeacherEditHours": "After this the report is locked and only an admin can edit it.",
+      "renewalAlertRemaining": "A renewal task appears when the package balance reaches this number.",
+      "reportingCurrency": "Revenue and expense figures on the dashboard are converted to it.",
+      "flagFutureLessonsWhenUnpaid": "The student's upcoming lessons show an «unpaid package» mark.",
+      "payoutCountLate": "When off, this lesson is not counted for the teacher.",
+      "payoutCountNoShow": "When off, this lesson is not counted for the teacher."
+    },
+    "theme": "Interface theme",
+    "themeHint": "Light, dark or the device setting; saved for this browser.",
+    "saveBar": "Changes to the fields are only saved with «Save»."
   },
   "language": {
     "label": "Language",
