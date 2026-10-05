@@ -1,5 +1,6 @@
 import type { Locator } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
+import { settled } from '../support/settle';
 import { stubInbound, stubReset } from '../support/wa-stub';
 
 // Owner, 2026-10-05: "on the mobile view of the dashboard don't make the bars for the forms; keep
@@ -9,19 +10,14 @@ import { stubInbound, stubReset } from '../support/wa-stub';
 
 const PHONE = { width: 390, height: 844 } as const;
 
-// Waits out the entrance (fade-up on phones, drawer-in / pop-in from 640px) so a box is read at rest. A string
-// (the e2e tsconfig has no DOM lib); infinite animations (skeleton shimmer) are skipped.
-const SETTLE =
-  '(el) => Promise.all(el.getAnimations({ subtree: true })' +
-  '.filter((a) => a.effect?.getComputedTiming().iterations !== Infinity).map((a) => a.finished)).then(() => null)';
-const settled = (dialog: Locator) => dialog.evaluate(SETTLE);
 
 async function expectFullScreen(dialog: Locator): Promise<void> {
   await expect(dialog).toBeVisible();
   await settled(dialog);
+  // Polled: on a slow runner the entrance can still be starting when the box is first read.
+  await expect.poll(async () => (await dialog.boundingBox())?.y ?? -1).toBeLessThanOrEqual(1);
   const box = await dialog.boundingBox();
   expect(box?.x ?? -1).toBeLessThanOrEqual(1);
-  expect(box?.y ?? -1).toBeLessThanOrEqual(1);
   expect(box?.width ?? 0).toBeGreaterThanOrEqual(PHONE.width - 2);
   expect(box?.height ?? 0).toBeGreaterThanOrEqual(PHONE.height - 2);
 }
