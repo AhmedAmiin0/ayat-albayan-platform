@@ -153,7 +153,8 @@
     "expenses": "المصروفات",
     "inbox": "الرسائل",
     "templates": "قوالب واتساب",
-    "feedback": "رأيك يهمّنا"
+    "feedback": "رأيك يهمّنا",
+    "activity": "سجل النشاط"
   },
   "students": {
     "title": "الطلاب",
@@ -2647,5 +2648,95 @@
     "all": "الكل",
     "clearFilters": "مسح التصفية",
     "searchPlaceholder": "ابحث…"
+  },
+  "activity": {
+    "title": "سجل النشاط",
+    "profileTitle": "النشاط",
+    "count": "{n} عملية",
+    "empty": "لا يوجد نشاط مسجَّل بعد.",
+    "profileEmpty": "لا يوجد نشاط مسجَّل على هذا الملف.",
+    "at": "الوقت",
+    "user": "المستخدم",
+    "action": "الإجراء",
+    "entity": "العنصر",
+    "result": "النتيجة",
+    "duration": "المدة",
+    "ms": "{n} ملّي ثانية",
+    "ok": "نجح",
+    "error": "فشل ({status})",
+    "results": {
+      "ok": "ناجحة",
+      "error": "فاشلة"
+    },
+    "unknownUser": "غير معروف",
+    "roles": {
+      "admin": "الإدارة",
+      "teacher": "معلم/ة",
+      "guardian": "ولي الأمر",
+      "assistant": "مساعد/ة",
+      "sales": "المبيعات",
+      "public": "زائر",
+      "unknown": "دون دور"
+    },
+    "entities": {
+      "students": "طالب",
+      "teachers": "معلم/ة",
+      "lessons": "حلقة",
+      "payments": "دفعة",
+      "expenses": "مصروف",
+      "subscriptions": "باقة",
+      "leads": "عميل جديد",
+      "guardians": "ولي الأمر",
+      "reports": "تقرير الحلقة",
+      "payouts": "مستحقات معلم",
+      "invoices": "فاتورة",
+      "settings": "الإعدادات",
+      "booking": "حجز",
+      "threads": "محادثة",
+      "activity": "جلسة الدخول"
+    },
+    "verbs": {
+      "create": "إضافة",
+      "update": "تعديل",
+      "remove": "حذف",
+      "cancel": "إلغاء",
+      "confirm": "تأكيد",
+      "submit": "إرسال",
+      "changeStatus": "تغيير حالة",
+      "merge": "دمج",
+      "draft": "حفظ مسودة"
+    },
+    "actions": {
+      "authSession": {
+        "login": "تسجيل الدخول",
+        "logout": "تسجيل الخروج",
+        "loginFailed": "محاولة دخول فاشلة"
+      },
+      "students": {
+        "create": "إضافة طالب",
+        "update": "تعديل بيانات طالب",
+        "merge": "دمج طالبين"
+      },
+      "teachers": {
+        "create": "إضافة معلم/ة",
+        "update": "تعديل بيانات معلم/ة"
+      },
+      "expenses": {
+        "create": "إضافة مصروف",
+        "update": "تعديل مصروف",
+        "remove": "حذف مصروف"
+      },
+      "payments": {
+        "create": "تسجيل دفعة",
+        "update": "تعديل دفعة",
+        "remove": "حذف دفعة"
+      },
+      "booking": {
+        "book": "حجز حلقات"
+      },
+      "settings": {
+        "update": "تعديل الإعدادات"
+      }
+    }
   }
 }

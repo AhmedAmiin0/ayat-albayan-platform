@@ -3,6 +3,7 @@ import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
 import { meQuery } from './me';
+import { reportSession } from './session-activity';
 
 export interface Credentials {
   email: string;
@@ -14,7 +15,10 @@ export type SignInResult = { ok: true; home: string } | { ok: false; error: stri
 /** Password sign-in, then asks the API who we are and where to land. */
 export async function signIn(creds: Credentials, queryClient: QueryClient): Promise<SignInResult> {
   const { error } = await supabase.auth.signInWithPassword(creds);
-  if (error) return { ok: false, error: t.auth.invalidCredentials };
+  if (error) {
+    void reportSession('login-failed');
+    return { ok: false, error: t.auth.invalidCredentials };
+  }
 
   queryClient.removeQueries({ queryKey: meQuery.queryKey });
   const me = await queryClient.fetchQuery(meQuery);
@@ -22,10 +26,12 @@ export async function signIn(creds: Credentials, queryClient: QueryClient): Prom
     await supabase.auth.signOut();
     return { ok: false, error: t.auth.noRole };
   }
+  void reportSession('login');
   return { ok: true, home: HOME_BY_ROLE[me.role] };
 }
 
 export async function signOut(queryClient: QueryClient): Promise<void> {
+  await reportSession('logout');
   await supabase.auth.signOut();
   queryClient.clear();
 }

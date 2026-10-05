@@ -169,3 +169,14 @@ Patterns to stay under limits: options objects instead of positional params; one
 | Web e2e | **Playwright** (`e2e/`), seeded DB, mocked WhatsApp API (MSW/local stub) | the 6 journeys in `03-requirements.md §5`, RTL screenshots, mobile viewport | all green |
 | Mobile | jest-expo + React Native Testing Library | screens render, query hooks, optimistic updates | all green |
 | Contract | OpenAPI snapshot diff | api ↔ api-client | no breaking change without bump |
+
+## 10. Activity log («سجل النشاط»)
+
+Owner, 2026-10-05: "add user tracker/logger for all the actions". Table `public.activity_log` (migration `20261005000205_activity_log.sql`), shown at `/admin/activity` and as «النشاط» on the student profile and the teacher profile tab. `audit_log` (before/after of money, merges, reports) is unchanged and separate.
+
+- **What is logged**: every mutating API request (POST / PUT / PATCH / DELETE) by the global `ActivityInterceptor` (`apps/api/src/common/activity/`), after the handler answers or throws: actor (`auth.users` id, null for public calls), role (`public` without a login), action key `${controller}.${handler}` (e.g. `expenses.create`), method, route **pattern** (`/students/:id`), entity + entity id (from an `:id` / `:fooId` param, or the `id` of a created row), HTTP status, duration, IP, user agent (≤ 200 chars) and `meta.fields` (top-level field **names** of the body). Sign-in, sign-out and failed sign-ins: the web signs in against Supabase directly, then calls `POST /activity/session/login|logout|login-failed` (no body; rate-limited). Mobile mutations are logged through the API like any other; the mobile app does not report its sign-ins yet (deferred).
+- **What is skipped**: GET / HEAD / OPTIONS; `/health`, `/webhooks/whatsapp`, `/livekit/webhook` (`SKIPPED_ROUTES`); throttled (429) calls without a login; requests the AuthGuard refuses (401/403) — they never reach interceptors.
+- **Never stored**: body or response values, query strings, raw URLs, passwords, tokens (`:token`, `:linkToken` params never become the entity id), phone numbers (`:phone` likewise), message text, file contents, emails of failed sign-ins.
+- **Writes** are fire-and-forget: queued in memory and inserted in batches every 3 s (`ActivityWriter`); a failed insert is logged and dropped, never failing or slowing the request.
+- **Access**: RLS, admins select (`is_admin()`); `v_activity_log` (security invoker) adds the actor's name. Append-only: no insert/update/delete for clients, no update/delete even for the service role.
+- **Retention**: 180 days. `prune_activity_log()` runs daily from the API (`ActivityRetentionJob`; pg_cron is not enabled), idempotent.

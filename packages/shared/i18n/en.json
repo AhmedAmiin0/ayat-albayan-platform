@@ -153,7 +153,8 @@
     "expenses": "Expenses",
     "inbox": "Messages",
     "templates": "WhatsApp templates",
-    "feedback": "Your opinion matters"
+    "feedback": "Your opinion matters",
+    "activity": "Activity log"
   },
   "students": {
     "title": "Students",
@@ -2647,5 +2648,95 @@
     "all": "All",
     "clearFilters": "Clear filters",
     "searchPlaceholder": "Search…"
+  },
+  "activity": {
+    "title": "Activity log",
+    "profileTitle": "Activity",
+    "count": "{n} actions",
+    "empty": "No activity recorded yet.",
+    "profileEmpty": "No activity recorded on this profile.",
+    "at": "Time",
+    "user": "User",
+    "action": "Action",
+    "entity": "Item",
+    "result": "Result",
+    "duration": "Duration",
+    "ms": "{n} ms",
+    "ok": "OK",
+    "error": "Failed ({status})",
+    "results": {
+      "ok": "Succeeded",
+      "error": "Failed"
+    },
+    "unknownUser": "Unknown",
+    "roles": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "guardian": "Guardian",
+      "assistant": "Assistant",
+      "sales": "Sales",
+      "public": "Visitor",
+      "unknown": "No role"
+    },
+    "entities": {
+      "students": "Student",
+      "teachers": "Teacher",
+      "lessons": "Lesson",
+      "payments": "Payment",
+      "expenses": "Expense",
+      "subscriptions": "Package",
+      "leads": "Lead",
+      "guardians": "Guardian",
+      "reports": "Lesson report",
+      "payouts": "Teacher payout",
+      "invoices": "Invoice",
+      "settings": "Settings",
+      "booking": "Booking",
+      "threads": "Conversation",
+      "activity": "Sign-in session"
+    },
+    "verbs": {
+      "create": "Create",
+      "update": "Edit",
+      "remove": "Delete",
+      "cancel": "Cancel",
+      "confirm": "Confirm",
+      "submit": "Submit",
+      "changeStatus": "Change status",
+      "merge": "Merge",
+      "draft": "Save draft"
+    },
+    "actions": {
+      "authSession": {
+        "login": "Signed in",
+        "logout": "Signed out",
+        "loginFailed": "Failed sign-in"
+      },
+      "students": {
+        "create": "Added a student",
+        "update": "Edited a student",
+        "merge": "Merged two students"
+      },
+      "teachers": {
+        "create": "Added a teacher",
+        "update": "Edited a teacher"
+      },
+      "expenses": {
+        "create": "Added an expense",
+        "update": "Edited an expense",
+        "remove": "Deleted an expense"
+      },
+      "payments": {
+        "create": "Recorded a payment",
+        "update": "Edited a payment",
+        "remove": "Deleted a payment"
+      },
+      "booking": {
+        "book": "Booked lessons"
+      },
+      "settings": {
+        "update": "Edited settings"
+      }
+    }
   }
 }

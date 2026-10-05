@@ -17,6 +17,7 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SalesRouteImport } from './routes/sales'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminActivityRouteImport } from './routes/admin/activity'
 import { Route as AdminBookRouteImport } from './routes/admin/book'
 import { Route as AdminClassroomsRouteImport } from './routes/admin/classrooms'
 import { Route as AdminExpensesRouteImport } from './routes/admin/expenses'
@@ -100,6 +101,11 @@ const TeacherRoute = TeacherRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminActivityRoute = AdminActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminBookRoute = AdminBookRouteImport.update({
@@ -334,6 +340,7 @@ export interface FileRoutesByFullPath {
   '/portal': typeof PortalRoute
   '/sales': typeof SalesRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
   '/admin/expenses': typeof AdminExpensesRoute
@@ -384,6 +391,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
   '/admin/expenses': typeof AdminExpensesRoute
@@ -439,6 +447,7 @@ export interface FileRoutesById {
   '/portal': typeof PortalRoute
   '/sales': typeof SalesRouteWithChildren
   '/teacher': typeof TeacherRouteWithChildren
+  '/admin/activity': typeof AdminActivityRoute
   '/admin/book': typeof AdminBookRoute
   '/admin/classrooms': typeof AdminClassroomsRoute
   '/admin/expenses': typeof AdminExpensesRoute
@@ -495,6 +504,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/sales'
     | '/teacher'
+    | '/admin/activity'
     | '/admin/book'
     | '/admin/classrooms'
     | '/admin/expenses'
@@ -545,6 +555,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/portal'
+    | '/admin/activity'
     | '/admin/book'
     | '/admin/classrooms'
     | '/admin/expenses'
@@ -599,6 +610,7 @@ export interface FileRouteTypes {
     | '/portal'
     | '/sales'
     | '/teacher'
+    | '/admin/activity'
     | '/admin/book'
     | '/admin/classrooms'
     | '/admin/expenses'
@@ -718,6 +730,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/activity': {
+      id: '/admin/activity'
+      path: '/activity'
+      fullPath: '/admin/activity'
+      preLoaderRoute: typeof AdminActivityRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/book': {
@@ -1076,6 +1095,7 @@ const AdminTeachersRouteWithChildren = AdminTeachersRoute._addFileChildren(
 )
 
 interface AdminRouteChildren {
+  AdminActivityRoute: typeof AdminActivityRoute
   AdminBookRoute: typeof AdminBookRoute
   AdminClassroomsRoute: typeof AdminClassroomsRoute
   AdminExpensesRoute: typeof AdminExpensesRoute
@@ -1098,6 +1118,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminActivityRoute: AdminActivityRoute,
   AdminBookRoute: AdminBookRoute,
   AdminClassroomsRoute: AdminClassroomsRoute,
   AdminExpensesRoute: AdminExpensesRoute,

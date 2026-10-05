@@ -8,6 +8,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
 import { Toast } from '@/components/ui/toast';
+import { EntityActivity } from '@/features/activity/EntityActivity';
 import { AssistantsManager } from '@/features/classroom/AssistantsManager';
 import { StudentJoinLink } from '@/features/classroom/StudentJoinLink';
 import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';
@@ -89,6 +90,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <AssistantsManager studentId={student.id} />
       <StudentJoinLink studentId={student.id} />
       <SiblingMerge student={student} siblings={student.siblings} />
+      <EntityActivity entity="students" entityId={student.id} hideEmpty />
       {editGuardian && (
         <GuardianEditDialog
           guardianId={student.guardian_id}
