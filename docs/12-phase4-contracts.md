@@ -51,6 +51,7 @@ The single source for the Phase 4 builders (API B1–B3, web, mobile), so they c
 | `renewal_due` | same | not_submitted | student / «فاضل حلقتين» | — |
 | `follow_up_slots` | same | not_submitted (marketing) | slot / slot / tz city | quick reply «وقف الرسايل» → stop |
 | `lesson_reminder_24h` | same | not_submitted | names / «17:00» | quick replies confirm, reschedule |
+| `lesson_rating` (migration 195) | same | not_submitted | student(s) / «الأحد 4 أكتوبر» (`lesson_date`) | quick replies «ممتازة» / «جيدة» / «تحتاج تحسينًا» → `rate_excellent` / `rate_good` / `rate_needs_work` |
 
 - The approved bodies are the shapes we were given, not Meta's exact text: `last_checked_at` is null until the first health check copies Meta's BODY / FOOTER / BUTTONS over them (§3.4).
 - `report_ready` and `renewal_due` keep the variables the Phase 3 producers already queue (`report-ready.ts`, `alerts.service.ts`); builders never rename params.
@@ -69,6 +70,7 @@ Dedup keys (rule 8; `insert … on conflict (dedup_key) do nothing`):
 | teacher reminder | `teacher_lesson_reminder:{lesson}:{teacher}` | lesson start |
 | follow-up | `follow_up_slots:{lead}:{cycle}:{stage}` (cycle = epoch ms of the lead's last inbound, else created_at) | the first proposed slot |
 | report / renewal (existing) | `report_ready:{report}` / `renewal_due:{subscription}` | null |
+| lesson rating (job) | `lesson_rating:{lesson}:{guardian}` | lesson start + 72 h |
 | admin session text / template | `admin:{clientRequestId}` (null without one) | null |
 
 ## 3. WhatsApp: env, gate, client, sender, webhook
@@ -187,3 +189,12 @@ Journey #1 (docs/03 §5) runs against the e2e stub (`:4110`, started by `playwri
 - **Routes:** `GET /messages/gate` → `SendGateView { open, reason: env_off | not_configured | switch_off | null, queued }`; `POST /messages/:id/hand-off` (M3): an outbound queued / failed row → `failed` / `handed_off` (the sender never reads failed rows) until M2 (sent by hand) or M1 (back to the queue); audited. `ThreadDetail.lessons` (first page): the guardian's / teacher's next open lessons in the recipient's tz; template composers fill `lesson_when` / `lesson_time` / `lesson_slot` from the picked lesson (rule 6) and send its `lessonId`; teacher templates only on teacher threads.
 - **Push:** `lesson_needs_confirmation` at the same-day reminder time (§6). `EXPO_API_BASE` (no default; production `https://exp.host`) — unset = pushes recorded, never sent. A reschedule request's push is titled «طلب تغيير ميعاد من {name}».
 - **Settings:** `crm_cutover_done` (PATCH `crmCutoverDone`) retires the CRM warning after the cut-over.
+
+## 12. Lesson rating by WhatsApp buttons (owner 2026-10-05, migration 195)
+- **Why:** the guardian's quick-reply tap is an inbound message, so it reopens the 24 h window («المحادثة مغلقة» → open); the `lesson_feedback_request` web link never does.
+- **Template** `lesson_rating` (utility, `not_submitted`; the owner submits it from `/admin/settings`). Payloads `rate_<value>:<lessonId>` (`lessonRatingMessage`, `QUICK_REPLY_INTENTS` gained the three `rate_*`). The generic template composer refuses it (400 `use_rating_button`): only the job and the inbox button send it.
+- **Job** (`modules/lesson-rating`): on `LessonEvents` after a status change, plus a 5-minute sweep over lessons that started in the last 36 h; status `completed | late`, students who attended (`feedbackEligible`), one row per guardian. Queues only when `settings.feedback_mode = 'buttons'` (PATCH `feedbackMode`, default `buttons`; `link` = nothing automatic), `auto_messages_enabled` is ON and the template is approved; `lesson_rating` is in `AUTOMATIC_KEYS` (held `auto_off` when job-made). The send gate is never bypassed.
+- **Route** `POST /threads/:phone/rating` `{ clientRequestId }` (admin) → 201 `MessageView`; 404 `not_a_guardian` / `no_completed_lesson`, 409 `template_not_approved`; dedup `admin:{phone}:rating:{clientRequestId}`; audited `thread_rating`.
+- **Webhook:** `ratingOf(m)` = the `rate_*` payload, else the exact button text of a template `button` message. The lesson = the payload's (only if the guardian's child's), else the `lesson_rating` row that `context.id` answers — never the 48 h guess. The row is stored as any inbound (window, thread, push); then `RatingStore.record` writes `lesson_feedback.quick_rating / quick_rated_at / quick_rating_wa_id` for each of the guardian's children on the lesson (a missing row is created with `source = whatsapp_button`, `token_hash` null). Replays stop at the wamid; a failed write unstores the row (500, Meta re-sends).
+- **UI:** thread header «المحادثة مفتوحة — تبقّى ‎Xس» / «المحادثة مغلقة — أرسل قالبًا أو تقييمًا لإعادة فتحها»; «إرسال تقييم الحلقة» under the closed composer (guardian threads, admin); «التقييم: جيدة» chip on the tap; «تقييم واتساب» column in the feedback lists (admin and teacher); the «بعد انتهاء الحلقة» choice in `/admin/settings`. Teacher averages still count form answers only.
+

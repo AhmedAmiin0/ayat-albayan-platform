@@ -19,6 +19,7 @@ export const TEMPLATE_KEYS = [
   'follow_up_slots',
   'lesson_feedback_request',
   'lesson_join_link',
+  'lesson_rating',
 ] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
 

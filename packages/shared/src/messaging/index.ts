@@ -3,6 +3,7 @@ export * from './lesson-params.js';
 export * from './meeting-link.js';
 export * from './params.js';
 export * from './quick-reply.js';
+export * from './rating.js';
 export * from './render.js';
 export * from './reply-note.js';
 export * from './schemas.js';

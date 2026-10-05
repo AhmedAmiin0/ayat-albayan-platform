@@ -1,6 +1,6 @@
 import type { AcademySettings } from '@ab/shared';
 
-/** The seeded defaults (migrations 073, 123, 142, 162). Tests only. */
+/** The seeded defaults (migrations 073, 123, 142, 162, 195). Tests only. */
 export const SETTINGS: AcademySettings = {
   late_cancel_hours: null,
   booking_horizon_weeks: 5,
@@ -17,4 +17,5 @@ export const SETTINGS: AcademySettings = {
   auto_messages_enabled: false,
   crm_cutover_done: false,
   sales_auto_assign: true,
+  feedback_mode: 'buttons',
 };

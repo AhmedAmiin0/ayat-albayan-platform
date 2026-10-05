@@ -6,6 +6,7 @@ import { cn } from '@/lib/utils';
 import { fullTime, mediaKind, stampText, templateLine } from './format';
 import { MessageActions } from './MessageActions';
 import { useInboxMode } from './mode';
+import { RatingChip } from './RatingChip';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 
 export interface MessageBubbleProps {
@@ -53,6 +54,7 @@ function Content({ message: m }: { message: MessageView }) {
       )}
       {empty && <p className="text-xs text-ink-3">{t.inbox.media.other}</p>}
       <ReplyLine message={m} />
+      <RatingChip message={m} />
     </>
   );
 }

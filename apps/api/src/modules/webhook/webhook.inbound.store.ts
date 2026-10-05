@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { LeadsService } from '../leads/leads.service';
+import { RatingStore } from '../lesson-rating/rating.store';
+import type { RatingTap } from '../lesson-rating/rating.rows';
 import type { InboundEvent } from './webhook.events';
 import { inboundRow, orderedAt, type RowInput } from './webhook.inbound';
 import { WebhookQueries, type Contact } from './webhook.queries';
@@ -17,12 +19,13 @@ export interface Sender {
   lead: LeadLink;
 }
 
-/** Who wrote (guardian / teacher / lead, R-LEAD-01) and the stored inbound row. */
+/** Who wrote (guardian / teacher / lead, R-LEAD-01), the stored inbound row and a rating tap. */
 @Injectable()
 export class InboundStore {
   constructor(
     private readonly queries: WebhookQueries,
     private readonly leads: LeadsService,
+    private readonly ratings: RatingStore,
   ) {}
 
   /**
@@ -51,6 +54,11 @@ export class InboundStore {
       await this.queries.updateLead(input.leadId, { follow_up_stage: 0 });
     }
     return stored;
+  }
+
+  /** A guardian's lesson_rating tap on lesson_feedback (migration 195); runs only for a new wamid. */
+  async rate(tap: RatingTap): Promise<void> {
+    await this.ratings.record(tap);
   }
 
   /** Undoes save() when the side effects failed, so Meta's re-send of the wamid runs them again. */

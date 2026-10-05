@@ -7,12 +7,12 @@ import type { FeedbackRow } from './feedback.queries';
 
 /** Every column but the link hash and the guardian: those never leave the API. */
 const LIST_COLUMNS =
-  'id, lesson_id, student_id, teacher_id, kind, requested_at, expires_at, rating, recommend, note, contact_phone, submitted_at' as const;
+  'id, lesson_id, student_id, teacher_id, kind, requested_at, expires_at, rating, recommend, note, contact_phone, submitted_at, quick_rating, quick_rated_at' as const;
 
 export type FeedbackListRow = Pick<
   FeedbackRow,
   | 'id' | 'lesson_id' | 'student_id' | 'teacher_id' | 'kind' | 'requested_at' | 'expires_at'
-  | 'rating' | 'recommend' | 'note' | 'contact_phone' | 'submitted_at'
+  | 'rating' | 'recommend' | 'note' | 'contact_phone' | 'submitted_at' | 'quick_rating' | 'quick_rated_at'
 >;
 export type FeedbackPage = { rows: FeedbackListRow[]; total: number };
 export type AverageRow = FeedbackAverage & { teacher_id: string };

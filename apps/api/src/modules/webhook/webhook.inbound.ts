@@ -1,5 +1,13 @@
 import type { TablesInsert } from '@ab/db';
-import { payloadRef, quickReplyIntent, type PushKind, type QuickReplyIntent } from '@ab/shared';
+import {
+  payloadRef,
+  quickReplyIntent,
+  ratingOfIntent,
+  ratingOfText,
+  type LessonRating,
+  type PushKind,
+  type QuickReplyIntent,
+} from '@ab/shared';
 import ar from '@ab/shared/i18n/ar.json';
 import { z } from 'zod';
 import type { PushEvent } from '../../common/push/push.service';
@@ -16,6 +24,14 @@ export const PUSH_BUCKET_MS = 10 * 60_000;
 export function intentOf(m: InboundEvent): QuickReplyIntent | null {
   const input = m.replyKey ?? m.body;
   return input ? quickReplyIntent(input) : null;
+}
+
+/**
+ * A lesson_rating tap (migration 195): our «rate_<value>:<lesson>» payload, else — a template
+ * button Meta sent with its text only — the exact text of one of the three buttons. Never typed text.
+ */
+export function ratingOf(m: InboundEvent): LessonRating | null {
+  return ratingOfIntent(intentOf(m)) ?? (m.type === 'button' ? ratingOfText(m.body) : null);
 }
 
 /**

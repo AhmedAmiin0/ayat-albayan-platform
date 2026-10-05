@@ -28,7 +28,7 @@ function worker() {
   return w;
 }
 
-describe('isAutomatic: job-made reminders, follow-ups and renewals', () => {
+describe('isAutomatic: job-made reminders, follow-ups, renewals and lesson ratings', () => {
   it.each([
     'lesson_reminder',
     'lesson_reminder_meet',
@@ -38,6 +38,7 @@ describe('isAutomatic: job-made reminders, follow-ups and renewals', () => {
     'teacher_lesson_reminder_meet',
     'follow_up_slots',
     'renewal_due',
+    'lesson_rating',
   ])('%s queued by a job (created_by null) is automatic; sent by an admin it is not', (key) => {
     expect(isAutomatic({ template_key: key, created_by: null })).toBe(true);
     expect(isAutomatic({ template_key: key, created_by: ADMIN })).toBe(false);

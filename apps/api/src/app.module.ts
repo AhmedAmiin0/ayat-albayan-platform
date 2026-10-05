@@ -19,6 +19,7 @@ import { InboxModule } from './modules/inbox/inbox.module';
 import { InvoicesModule } from './modules/invoices/invoices.module';
 import { JobApplicantsModule } from './modules/job-applicants/job-applicants.module';
 import { LeadsModule } from './modules/leads/leads.module';
+import { LessonRatingModule } from './modules/lesson-rating/lesson-rating.module';
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { MeModule } from './modules/me/me.module';
 import { MessagingJobsModule } from './modules/messaging-jobs/messaging-jobs.module';
@@ -72,6 +73,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     WhatsappModule,
     InboxModule,
     FeedbackModule,
+    LessonRatingModule,
     ClassroomModule,
     MessagingJobsModule,
     WebhookModule,

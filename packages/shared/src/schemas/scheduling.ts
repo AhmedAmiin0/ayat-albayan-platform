@@ -118,25 +118,7 @@ export const lessonProposalRequestSchema = z.object({
 /** POST /lesson-proposals/:id/approve — the move is a reschedule, so a clash needs a reason. */
 export const proposalApproveSchema = z.object({ override: overrideSchema.optional() });
 
-/** PATCH /settings (admin). late_cancel_hours null = OFF (R-SCH-07, docs/05 q2). Phase 3: docs/11. */
-export const settingsUpdateSchema = z.object({
-  lateCancelHours: z.int().min(1).max(168).nullable().optional(),
-  bookingHorizonWeeks: z.int().min(1).max(12).optional(),
-  renewalAlertRemaining: z.int().min(0).max(10).optional(),
-  flagFutureLessonsWhenUnpaid: z.boolean().optional(),
-  reportTeacherEditHours: z.int().min(0).max(168).optional(),
-  reportingCurrency: z.string().regex(/^[A-Z]{3}$/).optional(),
-  payoutCountLate: z.boolean().optional(),
-  payoutCountNoShow: z.boolean().optional(),
-  followUpHours: z.array(z.int().min(1).max(720)).min(1).max(5)
-    .refine((h) => h.every((v, i) => i === 0 || v > (h[i - 1] ?? 0)), 'not_ascending').optional(),
-  reminderMinutesBefore: z.int().min(5).max(720).optional(),
-  reminder24hEnabled: z.boolean().optional(),
-  messagingEnabled: z.boolean().optional(),
-  autoMessagesEnabled: z.boolean().optional(),
-  crmCutoverDone: z.boolean().optional(),
-  salesAutoAssign: z.boolean().optional(),
-});
+export { settingsUpdateSchema, type SettingsUpdate } from './settings.js';
 
 export type BookingRequest = z.infer<typeof bookingRequestSchema>;
 export type RescheduleRequest = z.infer<typeof rescheduleRequestSchema>;
@@ -147,4 +129,3 @@ export type LessonStatusRequest = z.infer<typeof lessonStatusRequestSchema>;
 export type WeeklyRule = z.infer<typeof weeklyRuleSchema>;
 export type LessonProposalRequest = z.infer<typeof lessonProposalRequestSchema>;
 export type ProposalApprove = z.infer<typeof proposalApproveSchema>;
-export type SettingsUpdate = z.infer<typeof settingsUpdateSchema>;

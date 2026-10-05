@@ -1,4 +1,4 @@
-import { forAudience, type TemplateView, type ThreadLesson } from '@ab/shared';
+import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { FlatList, Modal } from 'react-native';
@@ -15,12 +15,15 @@ import type { Outgoing } from './use-thread';
 
 const PATH = '/messaging/templates';
 
-/** GET /messaging/templates (docs/12 T1), kept to what Meta has approved: nothing else can go out. */
+/**
+ * GET /messaging/templates (docs/12 T1), kept to what Meta has approved: nothing else can go out.
+ * lesson_rating is left out: only the web inbox's «إرسال تقييم الحلقة» picks its lesson and buttons.
+ */
 export function useApprovedTemplates(enabled: boolean) {
   return useQuery({
     queryKey: pathKey(PATH),
     queryFn: () => apiFetch<TemplateView[]>(PATH),
-    select: (rows) => rows.filter((row) => row.status === 'approved'),
+    select: (rows) => rows.filter((row) => row.status === 'approved' && row.key !== RATING_TEMPLATE),
     enabled,
   });
 }
