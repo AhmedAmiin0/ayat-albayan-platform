@@ -7,8 +7,9 @@ import {
   type FeedbackRating,
   type FeedbackRecommend,
 } from '../enums/index.js';
-import type { LessonRating } from '../messaging/rating.js';
+import { LESSON_RATINGS, type LessonRating } from '../messaging/rating.js';
 import { phoneE164 } from './common.js';
+import { listSortShape } from './list-sort.js';
 import type { Attendance, LessonStatus } from '../enums/index.js';
 
 // «رأيك يهمّنا» (docs/13-forms-spec.md form 3). camelCase commands, snake_case responses like the
@@ -43,7 +44,11 @@ export const feedbackRequestSchema = z.object({
 });
 export type FeedbackRequest = z.output<typeof feedbackRequestSchema>;
 
-/** GET /feedback filters (paged like every list). */
+/** GET /feedback (and /teachers/me/feedback) sort keys (R-NFR-08); none = newest request first. */
+export const FEEDBACK_SORT_KEYS = ['teacher', 'kind', 'quick_rating', 'rating', 'recommend', 'note'] as const;
+export type FeedbackSortKey = (typeof FEEDBACK_SORT_KEYS)[number];
+
+/** GET /feedback filters (paged like every list); `student` and `note` are «contains» text. */
 export const feedbackQuerySchema = z.object({
   teacher: z.uuid().optional(),
   /** One lesson's rows: the «اتبعت» state of its send button survives a reload. */
@@ -52,6 +57,11 @@ export const feedbackQuerySchema = z.object({
   rating: z.coerce.number().int().min(1).max(5).optional(),
   from: z.iso.date().optional(),
   to: z.iso.date().optional(),
+  recommend: z.enum(FEEDBACK_RECOMMEND).optional(),
+  quick_rating: z.enum(LESSON_RATINGS).optional(),
+  student: z.string().trim().min(1).max(100).optional(),
+  note: z.string().trim().min(1).max(100).optional(),
+  ...listSortShape(FEEDBACK_SORT_KEYS),
 });
 export type FeedbackQuery = z.output<typeof feedbackQuerySchema>;
 

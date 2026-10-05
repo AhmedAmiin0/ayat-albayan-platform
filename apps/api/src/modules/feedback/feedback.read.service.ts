@@ -20,7 +20,7 @@ export class FeedbackReadService {
     private readonly teachers: TeachersQueries,
   ) {}
 
-  /** GET /feedback (admin): filtered, newest request first. */
+  /** GET /feedback (admin): filtered, newest request first unless sorted. */
   async list(filter: FeedbackQuery, page: PageQuery): Promise<Page<FeedbackRowView>> {
     const { rows, total } = await this.queries.page({ filter, page });
     const people = await this.people(rows);
@@ -34,12 +34,13 @@ export class FeedbackReadService {
     return averages.map((a) => toSummary(a, people)).sort((a, b) => b.avg_rating - a.avg_rating || b.n - a.n);
   }
 
-  /** GET /teachers/me/feedback: own rows plus the teacher's own average. The login is the scope. */
-  async mine(user: AuthUser, page: PageQuery): Promise<TeacherFeedbackView> {
+  /** GET /teachers/me/feedback: own rows (sorted/filtered like the admin's) plus the teacher's own average. The login is the scope. */
+  async mine(user: AuthUser, input: { filter: FeedbackQuery; page: PageQuery }): Promise<TeacherFeedbackView> {
+    const { page } = input;
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
     const [{ rows, total }, [average]] = await Promise.all([
-      this.queries.mine(teacherId, page),
+      this.queries.mine(teacherId, input),
       this.queries.averages(teacherId),
     ]);
     const people = await this.people(rows);

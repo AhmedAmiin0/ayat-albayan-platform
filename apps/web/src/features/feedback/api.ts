@@ -3,9 +3,10 @@ import { errorCode } from '@/features/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { env } from '@/lib/env';
 import { t } from '@/lib/i18n';
+import { sortFilterParams } from '@/lib/list-search';
+import type { ServerListState } from '@/lib/server-list-search';
 import {
   FEEDBACK_KINDS,
-  type FeedbackFilters,
   type FeedbackFormView,
   type FeedbackPage,
   type FeedbackSubmitBody,
@@ -76,17 +77,15 @@ export function publicProblem(error: unknown): PublicProblem {
 
 // ---- Admin and teacher ----
 
-/** GET /feedback (admin): newest first, filtered and paged on the server. */
-export const feedbackListQuery = (f: FeedbackFilters) =>
+/** `?page&pageSize` plus the URL's sort and column filters (their keys are the API's params). */
+const listParams = (s: ServerListState): URLSearchParams =>
+  new URLSearchParams([['page', String(s.page)], ['pageSize', String(FEEDBACK_PAGE_SIZE)], ...sortFilterParams(s.sort, s.filters)]);
+
+/** GET /feedback (admin): newest first unless sorted; filtered and paged on the server (R-NFR-08). */
+export const feedbackListQuery = (s: ServerListState) =>
   queryOptions({
-    queryKey: [...FEEDBACK_KEY, 'list', f],
-    queryFn: () => {
-      const qs = new URLSearchParams({ page: String(f.page), pageSize: String(FEEDBACK_PAGE_SIZE) });
-      if (f.teacherId) qs.set('teacher', f.teacherId);
-      if (f.kind) qs.set('kind', f.kind);
-      if (f.rating) qs.set('rating', String(f.rating));
-      return apiFetch<FeedbackPage>(`/feedback?${qs}`);
-    },
+    queryKey: [...FEEDBACK_KEY, 'list', s],
+    queryFn: () => apiFetch<FeedbackPage>(`/feedback?${listParams(s)}`),
     placeholderData: keepPreviousData,
   });
 
@@ -96,11 +95,13 @@ export const feedbackSummaryQuery = queryOptions({
   queryFn: () => apiFetch<TeacherFeedbackSummary[]>('/feedback/summary'),
 });
 
-/** GET /teachers/me/feedback: only my rows, and my own average. */
-export const myFeedbackQuery = queryOptions({
-  queryKey: [...FEEDBACK_KEY, 'mine'],
-  queryFn: () => apiFetch<TeacherFeedbackView>('/teachers/me/feedback'),
-});
+/** GET /teachers/me/feedback: only my rows (sorted, filtered, paged like the admin's) and my own average. */
+export const myFeedbackQuery = (s: ServerListState) =>
+  queryOptions({
+    queryKey: [...FEEDBACK_KEY, 'mine', s],
+    queryFn: () => apiFetch<TeacherFeedbackView>(`/teachers/me/feedback?${listParams(s)}`),
+    placeholderData: keepPreviousData,
+  });
 
 /** POST /lessons/:id/feedback-request (admin): queues the «رأيك يهمّنا» WhatsApp template. */
 export const requestFeedback = ({ lessonId, studentId }: { lessonId: string; studentId: string }) =>

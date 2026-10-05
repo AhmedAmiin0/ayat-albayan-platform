@@ -1,13 +1,31 @@
-import type { FeedbackAverage, FeedbackQuery } from '@ab/shared';
+import type { FeedbackAverage, FeedbackQuery, FeedbackSortKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
+import { applySort, ilikeContains, type SortSpec } from '../../common/list-sort';
+import { orSafe } from '../guardians/http';
 import { dbError, type PageQuery } from '../teachers/http';
 import type { FeedbackRow } from './feedback.queries';
 
-/** Every column but the link hash and the guardian: those never leave the API. */
+/**
+ * Every column but the link hash and the guardian: those never leave the API. The teacher's name
+ * is embedded so the list can order by it (to-one: `order=teachers(display_name_ar)`).
+ */
 const LIST_COLUMNS =
-  'id, lesson_id, student_id, teacher_id, kind, requested_at, expires_at, rating, recommend, note, contact_phone, submitted_at, quick_rating, quick_rated_at' as const;
+  'id, lesson_id, student_id, teacher_id, kind, requested_at, expires_at, rating, recommend, note, contact_phone, submitted_at, quick_rating, quick_rated_at, teachers(display_name_ar)' as const;
+
+/** R-NFR-08: allowlisted keys; unanswered rows (null) last either way; ties newest request first. */
+export const FEEDBACK_SORT: SortSpec<FeedbackSortKey> = {
+  columns: {
+    teacher: { column: 'teachers(display_name_ar)' },
+    kind: { column: 'kind' },
+    quick_rating: { column: 'quick_rating', nullsFirst: false },
+    rating: { column: 'rating', nullsFirst: false },
+    recommend: { column: 'recommend', nullsFirst: false },
+    note: { column: 'note', nullsFirst: false },
+  },
+  fallback: { column: 'requested_at', ascending: false },
+};
 
 export type FeedbackListRow = Pick<
   FeedbackRow,
@@ -20,6 +38,9 @@ export type AverageRow = FeedbackAverage & { teacher_id: string };
 const DAY_MS = 86_400_000;
 
 const bounds = (p: PageQuery): [number, number] => [(p.page - 1) * p.pageSize, p.page * p.pageSize - 1];
+const EMPTY: FeedbackPage = { rows: [], total: 0 };
+/** A student-name search matches at most this many students (their ids go in the URL). */
+const STUDENT_MATCH_LIMIT = 200;
 
 function rows(res: { data: FeedbackListRow[] | null; count: number | null; error: PostgrestError | null }): FeedbackPage {
   if (res.error) throw dbError(res.error);
@@ -31,23 +52,45 @@ function rows(res: { data: FeedbackListRow[] | null; count: number | null; error
 export class FeedbackReadQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Newest request first. `from`/`to` are UTC days of the request; a rating filter means answered only. */
+  /**
+   * Newest request first unless `sort` says otherwise. `from`/`to` are UTC days of the request; a
+   * rating filter means answered only; `student` matches the name or code (no FK to students, so
+   * their ids first), `note` contains the text.
+   */
   async page(input: { filter: FeedbackQuery; page: PageQuery }): Promise<FeedbackPage> {
     const { filter, page } = input;
+    const students = filter.student ? await this.studentIds(filter.student) : null;
+    if (students?.length === 0) return EMPTY;
     let q = this.db.from('lesson_feedback').select(LIST_COLUMNS, { count: 'exact' });
     if (filter.teacher) q = q.eq('teacher_id', filter.teacher);
     if (filter.lesson) q = q.eq('lesson_id', filter.lesson);
     if (filter.kind) q = q.eq('kind', filter.kind);
     if (filter.rating) q = q.eq('rating', filter.rating);
+    if (filter.recommend) q = q.eq('recommend', filter.recommend);
+    if (filter.quick_rating) q = q.eq('quick_rating', filter.quick_rating);
+    if (filter.note) q = q.ilike('note', ilikeContains(filter.note));
+    if (students) q = q.in('student_id', students);
     if (filter.from) q = q.gte('requested_at', `${filter.from}T00:00:00Z`);
     if (filter.to) q = q.lt('requested_at', new Date(Date.parse(`${filter.to}T00:00:00Z`) + DAY_MS).toISOString());
-    return rows(await q.order('requested_at', { ascending: false }).range(...bounds(page)));
+    return rows(await applySort(q, filter, FEEDBACK_SORT).range(...bounds(page)));
   }
 
-  /** A teacher's own rows: the filter is the login, never a request parameter. */
-  async mine(teacherId: string, page: PageQuery): Promise<FeedbackPage> {
-    const q = this.db.from('lesson_feedback').select(LIST_COLUMNS, { count: 'exact' }).eq('teacher_id', teacherId);
-    return rows(await q.order('requested_at', { ascending: false }).range(...bounds(page)));
+  /** A teacher's own rows: the teacher filter is the login, never a request parameter. */
+  mine(teacherId: string, input: { filter: FeedbackQuery; page: PageQuery }): Promise<FeedbackPage> {
+    return this.page({ filter: { ...input.filter, teacher: teacherId }, page: input.page });
+  }
+
+  /** Students whose name or code contains the term; null = no usable term (no filter). */
+  private async studentIds(term: string): Promise<string[] | null> {
+    const safe = orSafe(term);
+    if (!safe) return null;
+    const { data, error } = await this.db
+      .from('students')
+      .select('id')
+      .or(`name.ilike.*${safe}*,code.ilike.*${safe}*`)
+      .limit(STUDENT_MATCH_LIMIT);
+    if (error) throw dbError(error);
+    return data.map((r) => r.id);
   }
 
   /** Per-teacher averages over answered rows (v_teacher_feedback_avg); `teacherId` limits to one. */

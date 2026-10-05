@@ -67,7 +67,7 @@ describe('feedback lists', () => {
       h.reads.averages.mockResolvedValue([{ teacher_id: TEACHER_ID, avg_rating: 4.5, n: 2, recommend_yes_pct: 100 }]);
       const res = await h.call({ method: 'GET', url: '/teachers/me/feedback?page=1&pageSize=5', token: 'teacher' });
       expect(res.statusCode).toBe(200);
-      expect(h.reads.mine).toHaveBeenCalledWith(TEACHER_ID, { page: 1, pageSize: 5 });
+      expect(h.reads.mine).toHaveBeenCalledWith(TEACHER_ID, { filter: {}, page: { page: 1, pageSize: 5 } });
       expect(h.reads.averages).toHaveBeenCalledWith(TEACHER_ID);
       const body = res.json();
       expect(body.average).toEqual({ avg_rating: 4.5, n: 2, recommend_yes_pct: 100 });
@@ -79,7 +79,7 @@ describe('feedback lists', () => {
     it('another teacher gets their own scope, never the first one’s rows', async () => {
       h.reads.mine.mockResolvedValue({ rows: [], total: 0 });
       const res = await h.call({ method: 'GET', url: '/teachers/me/feedback', token: 'other' });
-      expect(h.reads.mine).toHaveBeenCalledWith('other-teacher', { page: 1, pageSize: 25 });
+      expect(h.reads.mine).toHaveBeenCalledWith('other-teacher', { filter: {}, page: { page: 1, pageSize: 25 } });
       expect(res.json()).toMatchObject({ items: [], total: 0, average: null });
     });
 
