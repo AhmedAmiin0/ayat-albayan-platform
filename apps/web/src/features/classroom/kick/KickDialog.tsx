@@ -15,6 +15,7 @@ export function KickDialog({ kick }: { kick: KickController }) {
           description={t.classroom.kick.body}
           glyph={{ tone: 'bad', shape: 'struck' }}
           onClose={kick.cancel}
+          compact
           actions={
             <>
               <Button type="button" variant="ghost" onClick={kick.cancel}>

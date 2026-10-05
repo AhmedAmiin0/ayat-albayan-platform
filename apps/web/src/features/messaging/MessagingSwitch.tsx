@@ -79,6 +79,7 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
           glyph={{ tone: 'act', shape: 'hollow' }}
           description={s.enableConfirm}
           onClose={() => setConfirming(false)}
+          compact
           actions={
             <>
               <Button variant="secondary" data-autofocus onClick={() => setConfirming(false)}>

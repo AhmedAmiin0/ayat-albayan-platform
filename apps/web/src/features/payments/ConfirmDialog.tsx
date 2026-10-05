@@ -33,6 +33,7 @@ export function ConfirmDialog({ title, children, confirmLabel, withReason, pendi
     <Dialog
       title={title}
       onClose={onClose}
+      compact={!withReason}
       actions={
         <>
           <Button type="button" variant="ghost" onClick={onClose}>

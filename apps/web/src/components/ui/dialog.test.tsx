@@ -111,4 +111,22 @@ describe('Dialog', () => {
     // Primary on top on phones: the actions column is reversed.
     expect(screen.getByRole('button', { name: t.students.merge }).parentElement?.className).toContain('flex-col-reverse');
   });
+
+  it('compact (a confirm, no fields): on phones the floating card at the top, not the sheet', () => {
+    render(
+      <Dialog title={t.students.mergeTitle} onClose={() => undefined} compact actions={<Button>{t.students.merge}</Button>}>
+        <p>{t.students.duplicateWarning}</p>
+      </Dialog>,
+    );
+    const dialog = screen.getByRole('dialog');
+    const cls = dialog.className.split(' ');
+    expect(cls).toContain('max-h-[calc(100dvh-1.5rem)]');
+    expect(cls).toContain('animate-pop-in');
+    expect(dialog.className).not.toContain('h-dvh');
+    expect(dialog.className).not.toContain('max-sm:');
+    expect(dialog.parentElement?.className.split(' ')).toContain('p-3');
+    expect(dialog.querySelector('[data-dialog-header]')?.className).not.toContain('max-sm:border-b');
+    // Actions still stack full-width, primary on top.
+    expect(screen.getByRole('button', { name: t.students.merge }).parentElement?.className).toContain('flex-col-reverse');
+  });
 });
