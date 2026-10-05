@@ -58,6 +58,10 @@ export type PayBody = {
 export const payTeacher = (teacherId: string, body: PayBody) =>
   apiSend<TeacherPaymentResult>('POST', `/teacher-earnings/${teacherId}/payments`, body);
 
+/** A wrong transfer is voided with a reason (admin); it stays in the history struck through. */
+export const voidTeacherPayment = (paymentId: string, reason: string) =>
+  apiSend<TeacherPaymentView>('POST', `/teacher-earnings/payments/${paymentId}/void`, { reason });
+
 export const receiptUrl = (s: Scope, paymentId: string) =>
   apiFetch<SignedDownload>(s.kind === 'admin' ? `/teacher-earnings/payments/${paymentId}/receipt` : `${base(s)}/payments/${paymentId}/receipt`);
 

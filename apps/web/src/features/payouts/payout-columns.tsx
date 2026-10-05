@@ -1,10 +1,10 @@
 import { payoutStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
 import { StatusChip } from '@/components/ui/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { LedgerPaid } from './LedgerPaid';
+import { PayoutActions } from './PayoutActions';
 import { Amount } from '@/features/subscriptions/Amount';
 import { durationLabel } from '@/features/pricing/format';
 import { moneyText } from '@/features/subscriptions/format';
@@ -13,7 +13,8 @@ import type { PayoutView } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
-type Handlers = { onApprove: (p: PayoutView) => void; onPay: (p: PayoutView) => void };
+export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
+type Handlers = { onAction: (p: PayoutView, action: PayoutAction) => void };
 
 /** «45 دقيقة: 10 × 70 = 700» per duration line (the breakdown generate stored). */
 export function breakdownLines(p: PayoutView): string[] {
@@ -27,7 +28,7 @@ export function breakdownLines(p: PayoutView): string[] {
 }
 
 /** Payouts of one month (R-PAY-02, E3): draft → اعتماد → اتدفعت; approved and paid are frozen. */
-export function payoutColumns({ onApprove, onPay }: Handlers) {
+export function payoutColumns({ onAction }: Handlers) {
   return col.columns([
     col.accessor('teacher', {
       header: () => t.payouts.teacher,
@@ -80,19 +81,7 @@ export function payoutColumns({ onApprove, onPay }: Handlers) {
       header: () => t.common.actions,
       cell: (c) => {
         const p = c.row.original;
-        if (p.status === 'draft')
-          return (
-            <Button type="button" variant="secondary" size="sm" onClick={() => onApprove(p)}>
-              {t.payouts.approve}
-            </Button>
-          );
-        if (p.status === 'approved')
-          return (
-            <Button type="button" variant="secondary" size="sm" onClick={() => onPay(p)}>
-              {t.payouts.markPaid}
-            </Button>
-          );
-        return null;
+        return <PayoutActions payout={p} onAction={(a) => onAction(p, a)} />;
       },
       meta: { className: 'w-px max-sm:order-6' },
     }),

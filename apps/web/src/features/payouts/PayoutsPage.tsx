@@ -15,17 +15,19 @@ import {
   currentMonth,
   downloadPayoutsCsv,
   generatePayouts,
+  payoutReceiptUrl,
   payoutsQuery,
-  payPayout,
   type PayoutGenerateResult,
 } from './api';
 import { MissingRates } from './MissingRates';
 import { MonthSelect } from './MonthSelect';
 import { payoutColumns } from './payout-columns';
+import { PayoutDialogs, type PayoutDialog } from './PayoutDialogs';
+import { TeacherDuesSummary } from './TeacherDuesSummary';
 
 type Props = { month: string; onMonth: (month: string) => void };
 
-/** /admin/payouts (R-PAY-02, R-TCH-04, E3): a month's drafts, approve, mark paid, CSV. */
+/** /admin/payouts (R-PAY-02, R-TCH-04, E3): what every teacher is owed, then a month's drafts, approve, pay, correct, CSV. */
 export function PayoutsPage({ month, onMonth }: Props) {
   const queryClient = useQueryClient();
   const list = useQuery(payoutsQuery(month));
@@ -38,26 +40,32 @@ export function PayoutsPage({ month, onMonth }: Props) {
       await refresh();
     },
   });
-  const move = useMutation({
-    mutationFn: ({ id, to }: { id: string; to: 'approve' | 'pay' }) => (to === 'approve' ? approvePayout(id) : payPayout(id)),
-    onSuccess: refresh,
+  const move = useMutation({ mutationFn: approvePayout, onSuccess: refresh });
+  const receipt = useMutation({
+    mutationFn: payoutReceiptUrl,
+    onSuccess: (r) => void window.open(r.url, '_blank', 'noopener'),
   });
+  const [dialog, setDialog] = useState<PayoutDialog | null>(null);
   const csv = useMutation({ mutationFn: downloadPayoutsCsv });
-  const moveMutate = move.mutate;
+  const [approve, openReceipt] = [move.mutate, receipt.mutate];
   const columns = useMemo(
     () =>
       payoutColumns({
-        onApprove: (p) => moveMutate({ id: p.id, to: 'approve' }),
-        onPay: (p) => moveMutate({ id: p.id, to: 'pay' }),
+        onAction: (p, action) => {
+          if (action === 'approve') approve(p.id);
+          else if (action === 'receipt') openReceipt(p.id);
+          else setDialog({ payout: p, kind: action });
+        },
       }),
-    [moveMutate],
+    [approve, openReceipt],
   );
   const rows = list.data ?? [];
   const total = rows.reduce((n, p) => n + p.amount, 0);
-  const error = generate.error ?? move.error;
+  const error = generate.error ?? move.error ?? receipt.error;
 
   return (
     <>
+      <TeacherDuesSummary />
       <PageHead>
         <Cartouche>{t.payouts.title}</Cartouche>
         <MonthSelect label={t.payouts.month} value={month} latest={currentMonth()} onChange={onMonth} />
@@ -70,7 +78,8 @@ export function PayoutsPage({ month, onMonth }: Props) {
           </Button>
         </div>
       </PageHead>
-      {error && <FormAlert>{apiErrorText(error, t.payouts.error)}</FormAlert>}
+      {error && <FormAlert>{apiErrorText(error, { ...t.payouts.error, ...t.earnings.error })}</FormAlert>}
+      {dialog && <PayoutDialogs open={dialog} onClose={() => setDialog(null)} />}
       {csv.isError && <FormAlert>{t.common.error}</FormAlert>}
       <MissingRates items={missing} />
       {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}

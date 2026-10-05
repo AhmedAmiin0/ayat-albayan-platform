@@ -2337,5 +2337,31 @@
       "autoHint": "The button turns on by itself when the room opens",
       "loadError": "Could not load the page, try again"
     }
+  },
+  "finance": {
+    "nav": "Finance",
+    "reason": "Reason",
+    "reasonRequired": "Write the reason (at least three letters)",
+    "payPayoutTitle": "Confirm paying {teacher}",
+    "payPayoutDue": "Still to pay for {month}: {amount}",
+    "confirmPaid": "Confirm payment",
+    "reopen": "Reopen",
+    "reopenTitle": "Reopen {teacher}'s payout",
+    "reopenBody": "The payout ({amount}) goes back to draft: calculate it again, then approve it.",
+    "unpay": "Undo payment",
+    "unpayTitle": "Undo paying {teacher}",
+    "unpayBody": "The payment recorded for this payout ({amount}) is voided and its lessons are owed again; it stays in the history struck through.",
+    "voidPayment": "Void payment",
+    "voidTitle": "Void a teacher payment",
+    "voidBody": "This payment ({amount}) is voided and its lessons are owed again; it stays in the history struck through with the reason.",
+    "voided": "Voided: {reason}",
+    "duesTitle": "Teacher dues to date",
+    "owedTotal": "Total owed",
+    "teachersOwed": "{count} teachers are owed money",
+    "oldestUnpaid": "Oldest unpaid lesson: {date}",
+    "error": {
+      "already_voided": "This payment was already voided",
+      "reason_required": "Write the reason"
+    }
   }
 }
