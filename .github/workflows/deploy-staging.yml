@@ -4,6 +4,12 @@ name: deploy-staging
 # secrets for anything private, variables for the rest. Nothing is read from a laptop.
 # The server's .env is MERGED, not replaced: a key left empty in GitHub keeps the server's value.
 on:
+  # Automatic: every merge into develop, once ci has passed on it (a red develop never ships).
+  workflow_run:
+    workflows: [ci]
+    types: [completed]
+    branches: [develop]
+  # By hand: Actions → deploy-staging → Run workflow.
   workflow_dispatch:
     inputs:
       migrate:
@@ -21,6 +27,11 @@ concurrency:
 
 jobs:
   deploy:
+    # A ci run on develop that failed, or that came from a fork/PR, deploys nothing.
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push'
+       && github.event.workflow_run.head_repository.full_name == github.repository)
     runs-on: ubuntu-latest
     timeout-minutes: 30
     environment: staging
@@ -28,6 +39,9 @@ jobs:
       DEST: ${{ vars.DEPLOY_DIR || '/opt/ayat-albayan-staging' }}
     steps:
       - uses: actions/checkout@v4
+        with:
+          # The exact commit ci passed on (auto), or the chosen branch (by hand).
+          ref: ${{ github.event.workflow_run.head_sha || github.sha }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v4
         with:
@@ -91,7 +105,7 @@ jobs:
           rm -f current.env new.env
 
       - name: Database migrations
-        if: ${{ inputs.migrate && !inputs.env_only }}
+        if: ${{ github.event_name == 'workflow_run' || (inputs.migrate && !inputs.env_only) }}
         env:
           SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
           SUPABASE_DB_PASSWORD: ${{ secrets.SUPABASE_DB_PASSWORD }}

@@ -27,7 +27,7 @@ Pushes migrations, ships the committed `HEAD` with `git archive` (never `node_mo
 
 ### From GitHub (no laptop secrets)
 
-GitHub → **Actions → deploy-staging → Run workflow** (`.github/workflows/deploy-staging.yml`) does the same five steps from a GitHub runner, reading every value from the repository environment **staging** (Settings → Environments → staging). Tick **env_only** to change only the server `.env` (e.g. a new WhatsApp token) and restart the API.
+**Automatic:** every merge into `develop` deploys staging once `ci` has passed on that commit (a failed `ci` deploys nothing). **By hand:** GitHub → **Actions → deploy-staging → Run workflow** (`.github/workflows/deploy-staging.yml`). Both do the same five steps from a GitHub runner, reading every value from the repository environment **staging** (Settings → Environments → staging). Tick **env_only** to change only the server `.env` (e.g. a new WhatsApp token) and restart the API.
 
 The server `.env` is **merged**, never replaced (`tools/scripts/env-merge.mjs`): a key that is empty or missing in GitHub keeps the server's value, a timestamped `.env.bak-*` is left next to it, and the log names the keys it set, never their values.
 
