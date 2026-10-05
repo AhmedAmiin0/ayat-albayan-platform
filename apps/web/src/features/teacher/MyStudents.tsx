@@ -16,7 +16,7 @@ export function MyStudents({ students, showStatus = true }: { students: TeacherM
   return (
     <table aria-label={t.teacherDash.myStudents} className="w-full text-sm">
       <thead>
-        <tr className="border-b-[3px] border-double border-gold text-xs text-ink-3">
+        <tr className="border-b border-rule text-xs text-ink-3">
           <th scope="col" className="px-2 py-2 text-start font-semibold">{t.students.name}</th>
           <th scope="col" className="px-2 py-2 text-start font-semibold">{t.students.code}</th>
           <th scope="col" className="hidden px-2 py-2 text-start font-semibold sm:table-cell">{t.students.tz}</th>

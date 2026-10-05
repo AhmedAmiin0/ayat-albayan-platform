@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Tabs } from '@/components/ui/tabs';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { teacherStudentsQuery } from './api';
 import { StudentRow } from './StudentRow';
@@ -30,7 +31,7 @@ export function TeacherStudents() {
       </PageHead>
       <Tabs label={t.teacherStudents.kinds} tabs={KINDS()} value={kind} onChange={setKind} />
       <div role="tabpanel" aria-label={t.teacherStudents[kind]}>
-        {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+        {list.isPending && <ListSkeleton />}
         {list.isError && (
           <FormAlert>
             {t.teacherStudents.loadFailed}{' '}

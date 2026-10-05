@@ -2,6 +2,7 @@ import { SUBSCRIPTION_STATUSES } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
+import { TableBox } from '@/components/TableBox';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -11,6 +12,7 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Select } from '@/components/ui/select';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { t } from '@/lib/i18n';
 import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
@@ -78,11 +80,11 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
         </div>
       </PageHead>
       {(list.isError || pause.isError) && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
-      {list.data?.total === 0 && <EmptyState title={t.subscriptions.emptyList} />}
+      {list.isPending && <ListSkeleton />}
+      {list.data?.total === 0 && <TableBox center><EmptyState title={t.subscriptions.emptyList} /></TableBox>}
       {list.data && list.data.total > 0 && (
         <>
-          <DataTable stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
+          <DataTable fill stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onChange({ status, page: p })} />
         </>
       )}

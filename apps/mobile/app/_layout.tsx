@@ -1,8 +1,7 @@
-import { Amiri_700Bold } from '@expo-google-fonts/amiri/700Bold';
-import { IBMPlexSansArabic_400Regular } from '@expo-google-fonts/ibm-plex-sans-arabic/400Regular';
-import { IBMPlexSansArabic_500Medium } from '@expo-google-fonts/ibm-plex-sans-arabic/500Medium';
-import { IBMPlexSansArabic_600SemiBold } from '@expo-google-fonts/ibm-plex-sans-arabic/600SemiBold';
-import { IBMPlexSansArabic_700Bold } from '@expo-google-fonts/ibm-plex-sans-arabic/700Bold';
+import { NotoSansArabic_400Regular } from '@expo-google-fonts/noto-sans-arabic/400Regular';
+import { NotoSansArabic_500Medium } from '@expo-google-fonts/noto-sans-arabic/500Medium';
+import { NotoSansArabic_600SemiBold } from '@expo-google-fonts/noto-sans-arabic/600SemiBold';
+import { NotoSansArabic_700Bold } from '@expo-google-fonts/noto-sans-arabic/700Bold';
 import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client';
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
@@ -14,13 +13,12 @@ import { persistOptions, queryClient } from '@/lib/query-client';
 import { restoreAppearance } from '@/more/appearance';
 import { useTheme } from '@/theme';
 
-// Bundled files (docs/07 §2: Amiri 700 for titles, Plex for everything else); names match theme.type.
+// Bundled files: Noto Sans Arabic for everything, titles at 700 (owner, 2026-10-05); names match theme.type.
 const fonts = {
-  Amiri_700Bold,
-  IBMPlexSansArabic_400Regular,
-  IBMPlexSansArabic_500Medium,
-  IBMPlexSansArabic_600SemiBold,
-  IBMPlexSansArabic_700Bold,
+  NotoSansArabic_400Regular,
+  NotoSansArabic_500Medium,
+  NotoSansArabic_600SemiBold,
+  NotoSansArabic_700Bold,
 };
 
 /**

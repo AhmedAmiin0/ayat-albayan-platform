@@ -1,6 +1,7 @@
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
+import { TableBox } from '@/components/TableBox';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -10,6 +11,7 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Toast } from '@/components/ui/toast';
 import { downloadCsv } from '@/features/exports/api';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { filterParams, paymentsQuery, type PaymentFilters, type PaymentView } from './api';
 import { paymentColumns, type PaymentAction } from './payment-columns';
@@ -60,11 +62,11 @@ export function PaymentsPage({ page, onPage }: Props) {
       <PaymentFiltersBar value={filters} onChange={onFilters} />
       {list.data && <PeriodTotals totals={list.data.totals} />}
       {(list.isError || csv.isError) && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
-      {list.data?.total === 0 && <EmptyState title={t.payments.empty} />}
+      {list.isPending && <ListSkeleton />}
+      {list.data?.total === 0 && <TableBox center><EmptyState title={t.payments.empty} /></TableBox>}
       {list.data && list.data.total > 0 && (
         <>
-          <DataTable stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
+          <DataTable fill stacked columns={columns} data={list.data.items} getRowId={(r) => r.id} />
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={onPage} />
         </>
       )}

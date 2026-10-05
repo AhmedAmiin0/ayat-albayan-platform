@@ -7,6 +7,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
 import { breakdownLines } from '@/features/payouts/payout-columns';
@@ -75,7 +76,7 @@ export function MyPayouts() {
       <PageHead>
         <Cartouche>{t.teacherNav.statements}</Cartouche>
       </PageHead>
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.data?.length === 0 && <EmptyState title={t.payouts.mineEmpty} />}
       {list.data && list.data.length > 0 && <DataTable stacked columns={COLUMNS} data={list.data} getRowId={(r) => r.id} />}

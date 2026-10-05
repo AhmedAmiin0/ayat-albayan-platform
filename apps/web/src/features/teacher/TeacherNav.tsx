@@ -40,7 +40,8 @@ export function TeacherNav() {
               )}
             >
               <Icon name={item.icon} className="text-ink-3 group-aria-[current=page]:text-lapis" />
-              <span className="max-w-full truncate">{item.label}</span>
+              {/* 7 tabs share 360–390px: 11px words, two lines at most, never cut with an ellipsis. */}
+              <span className="line-clamp-2 max-w-full text-center text-[11px] leading-[1.25] [overflow-wrap:anywhere] sm:text-base sm:leading-normal">{item.label}</span>
             </Link>
           </li>
         ))}

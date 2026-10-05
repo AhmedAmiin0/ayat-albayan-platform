@@ -17,4 +17,11 @@ describe('TeacherNav on a phone', () => {
     expect(screen.getByRole('link', { name: t.teacherNav.statements }).closest('li')?.className).toContain('max-sm:hidden');
     for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-14');
   });
+
+  it('never cuts a tab word with an ellipsis at 360–390px: it wraps to two short lines instead', () => {
+    render(<TeacherNav />);
+    const label = screen.getByText(t.teacherNav.payouts);
+    expect(label.className).not.toContain('truncate');
+    expect(label.className).toContain('line-clamp-2');
+  });
 });

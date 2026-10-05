@@ -105,12 +105,9 @@ importers:
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@expo-google-fonts/amiri':
-        specifier: ^0.4.1
-        version: 0.4.1
-      '@expo-google-fonts/ibm-plex-sans-arabic':
-        specifier: ^0.4.2
-        version: 0.4.2
+      '@expo-google-fonts/noto-sans-arabic':
+        specifier: ^0.4.3
+        version: 0.4.3
       '@react-native-async-storage/async-storage':
         specifier: 2.2.0
         version: 2.2.0(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))
@@ -208,10 +205,7 @@ importers:
       '@ab/shared':
         specifier: workspace:*
         version: link:../../packages/shared
-      '@fontsource/amiri':
-        specifier: ^5.3.0
-        version: 5.3.0
-      '@fontsource/ibm-plex-sans-arabic':
+      '@fontsource/noto-sans-arabic':
         specifier: ^5.3.0
         version: 5.3.0
       '@radix-ui/react-label':
@@ -1039,14 +1033,11 @@ packages:
       '@noble/hashes':
         optional: true
 
-  '@expo-google-fonts/amiri@0.4.1':
-    resolution: {integrity: sha512-JTZUZ4olyqGeXu5UBWVEerrbym/MD9U3wU8qzSg8z4qEtHFKAI3uPg2DuytfeRmJ6EppaHLYsYqpGerMOrpJeA==}
-
-  '@expo-google-fonts/ibm-plex-sans-arabic@0.4.2':
-    resolution: {integrity: sha512-Cx24iSo/4pWBKHVf69tbVLDUiHWCSTHrhKPw/+SYWLDnyiX10WXh+amNWRSo9N3ruwd+qk9AQgDaIY1KO0u1Ig==}
-
   '@expo-google-fonts/material-symbols@0.4.48':
     resolution: {integrity: sha512-aZztj44PyA/sj3TXSwwpLJwqMlTUJ49okbZJYURzEcuERxMQB0KbX7RrLBi8WJnuWz5HFOLlTRxORrJfNnUPNQ==}
+
+  '@expo-google-fonts/noto-sans-arabic@0.4.3':
+    resolution: {integrity: sha512-YvtxyuegxPegu2g5urXJ+gQxRp8i798nQswTmEjwXOWR/fqy0Gvey6h5IoNRBrc43SxRxPezqCiR9ivpfPAXSg==}
 
   '@expo/cli@57.0.27':
     resolution: {integrity: sha512-Jauk4chxmpVG5ElrMLTCwjFP20jbYU7PB4l3LYV8j+4e/3HU5jdl7qTQ4eVy1AaDUE9Ia2NCQ5A9kar2V1gaLg==}
@@ -1269,6 +1260,9 @@ packages:
 
   '@fontsource/ibm-plex-sans-arabic@5.3.0':
     resolution: {integrity: sha512-ZZ4g+JDgQY0NqSh4o0MNWU1sHQmtcee1g++aKAwyJvZxnT5y51JXsN1cIXnaQaMd40dcbK6QFYa+Z1LbaiNuqA==}
+
+  '@fontsource/noto-sans-arabic@5.3.0':
+    resolution: {integrity: sha512-i3t6GR0LOReyJVEk+YfYCnxv53wuIelg7Y9NGNvOq4Diq/EP0YszaGXkQwfQNigLjfO4POrLaPGM0sNliGYk7A==}
 
   '@humanfs/core@0.19.2':
     resolution: {integrity: sha512-UhXNm+CFMWcbChXywFwkmhqjs3PRCmcSa/hfBgLIb7oQ5HNb1wS0icWsGtSAUNgefHeI+eBrA8I1fxmbHsGdvA==}
@@ -7527,11 +7521,9 @@ snapshots:
     optionalDependencies:
       '@noble/hashes': 1.8.0
 
-  '@expo-google-fonts/amiri@0.4.1': {}
-
-  '@expo-google-fonts/ibm-plex-sans-arabic@0.4.2': {}
-
   '@expo-google-fonts/material-symbols@0.4.48': {}
+
+  '@expo-google-fonts/noto-sans-arabic@0.4.3': {}
 
   '@expo/cli@57.0.27(@expo/dom-webview@57.0.1)(@expo/metro-runtime@57.0.16)(expo-constants@57.0.20)(expo-font@57.0.4)(expo-router@57.0.24)(expo@57.0.26)(react-dom@18.3.1(react@19.2.3))(react-native@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(@react-native/jest-preset@0.86.3(@babel/core@7.29.7(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1))(@react-native/metro-config@0.87.1(@babel/core@7.29.7(supports-color@8.1.1))(supports-color@8.1.1))(@types/react@19.2.18)(react@19.2.3)(supports-color@8.1.1))(react@19.2.3)(supports-color@8.1.1)(typescript@6.0.3)':
     dependencies:
@@ -7968,6 +7960,8 @@ snapshots:
   '@fontsource/amiri@5.3.0': {}
 
   '@fontsource/ibm-plex-sans-arabic@5.3.0': {}
+
+  '@fontsource/noto-sans-arabic@5.3.0': {}
 
   '@humanfs/core@0.19.2':
     dependencies:

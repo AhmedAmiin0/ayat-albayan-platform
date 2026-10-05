@@ -10,6 +10,7 @@ import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
 import { downloadCsv } from '@/features/exports/api';
 import { currentMonth } from '@/features/payouts/api';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
@@ -30,7 +31,7 @@ export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
   const ledger = useMutation({ mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month: currentMonth(), teacherId } }) });
 
   if (balance.isError) return <FormAlert>{t.common.notFound}</FormAlert>;
-  if (!balance.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  if (!balance.data) return <ListSkeleton />;
   const data = balance.data;
   const canPay = data.outstanding > 0;
 

@@ -8,7 +8,7 @@ const base = 'flex min-w-0 flex-wrap items-center gap-x-1.5 gap-y-0.5 px-2.5 py-
 
 /** Cell classes of the duplicate compare grid (docs/design ink-and-gold.html `.compare`). */
 export const cell = {
-  head: cn(base, 'border-b-[3px] border-double border-b-gold-soft bg-sunk text-xs font-semibold text-ink-3'),
+  head: cn(base, 'border-b border-b-rule bg-sunk text-xs font-semibold text-ink-3'),
   existing: 'bg-gold-wash/45',
 };
 

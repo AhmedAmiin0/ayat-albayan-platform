@@ -12,10 +12,13 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-moc
 
 const DUES = { currency: 'EGP', rows: [], totals: { earned: 900, paid: 300, owed: 600, teachers_owed: 2 } };
 const OWED = { rows: [], totals: [], total: 450, currency: 'SAR', fx_missing: [] };
+/** The dashboard's reads: work queue, today's lessons, the latest threads, money, else a summary. */
 function answer(path: string): unknown {
   if (path === '/dashboard/work') return WORK;
   if (path === '/teacher-earnings/summary') return DUES;
   if (path === '/receivables') return OWED;
+  if (path.startsWith('/lessons')) return [];
+  if (path.startsWith('/threads')) return { items: [], total: 0, page: 1, pageSize: 30 };
   return SUMMARY;
 }
 
@@ -85,6 +88,17 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
     apiFetch.mockRejectedValue(new Error('down'));
     renderPage();
     expect(await screen.findByRole('alert')).toHaveProperty('textContent', t.dashboard.loadFailed);
+  });
+
+  it('opens with today: four numbers, today\'s lessons, the work queue and the latest messages', async () => {
+    renderPage();
+    const today = await screen.findByRole('region', { name: t.dashboard.home.today });
+    expect(await within(today).findByRole('link', { name: `${t.dashboard.home.lessonsToday} 0` })).toBeTruthy();
+    expect(within(today).getByRole('link', { name: `${t.dashboard.unpaidSubscriptions} 2` }).getAttribute('href')).toBe('/admin?work=unpaid');
+    expect(screen.getByRole('heading', { name: t.dashboard.home.todayList })).toBeTruthy();
+    expect(await screen.findByText(t.dashboard.home.todayEmpty)).toBeTruthy();
+    expect(await screen.findByText(t.dashboard.home.inboxEmpty)).toBeTruthy();
+    expect(screen.getByRole('group', { name: t.dashboard.home.quick })).toBeTruthy();
   });
 
   it('payouts export defaults to the month that just ended', () => {

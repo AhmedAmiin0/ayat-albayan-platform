@@ -9,6 +9,7 @@ import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
 import { downloadCsv } from '@/features/exports/api';
 import { ConfirmDialog } from '@/features/payments/ConfirmDialog';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { currentMonth } from '@/features/payouts/api';
 import { MonthSelect } from '@/features/payouts/MonthSelect';
 import { MONEY_KEY } from '@/features/subscriptions/api';
@@ -18,6 +19,7 @@ import { categoriesQuery, categoryLabel, confirmDraft, deleteExpense, expenseRec
 import { ExpenseDialog } from './ExpenseDialog';
 import { ExpenseRow, type ExpenseAction } from './ExpenseRow';
 import { ExpenseYearTable } from './ExpenseYearTable';
+import { TableBox } from '@/components/TableBox';
 
 type Props = { month: string; onMonth: (month: string) => void };
 
@@ -67,15 +69,23 @@ export function ExpensesPage({ month, onMonth }: Props) {
         <ExpenseYearTable year={month.slice(0, 4)} />
       ) : (
         <>
-          {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
-          {list.isSuccess && rows.length === 0 && <EmptyState title={t.expenses.empty} />}
-          <ul className="grid divide-y divide-rule">
-            {rows.map((e) => (
-              <ExpenseRow key={e.id} expense={e} label={label(e.category)} onAction={onAction} />
-            ))}
-          </ul>
+          {list.isPending && <ListSkeleton />}
+          {list.isSuccess && rows.length === 0 && (
+            <TableBox center>
+              <EmptyState title={t.expenses.empty} />
+            </TableBox>
+          )}
           {rows.length > 0 && (
-            <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t-[3px] border-double border-gold pt-3 text-sm">
+            <TableBox>
+              <ul className="grid divide-y divide-rule px-3">
+                {rows.map((e) => (
+                  <ExpenseRow key={e.id} expense={e} label={label(e.category)} onAction={onAction} />
+                ))}
+              </ul>
+            </TableBox>
+          )}
+          {rows.length > 0 && (
+            <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t border-rule pt-3 text-sm">
               <span className="text-ink-3">{t.expenses.total}</span>
               {totalsByCurrency(rows).map(([currency, amount]) => (
                 <Amount key={currency} amount={amount} currency={currency} className="font-semibold" />

@@ -1,6 +1,7 @@
 import { tableFeatures, useTable, type ColumnDef, type RowData } from '@tanstack/react-table';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { tableBoxClass } from './TableBox';
 
 /** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
 export interface DataTableColumnMeta {
@@ -17,7 +18,7 @@ export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableColumn<T extends RowData> = ColumnDef<DataTableFeatures, T>;
 
 /** Hamish (marginal note) column: after a double gold-soft rule; folds away in narrow pages. */
-const hamishHeadClass = 'border-s-[3px] border-double border-s-gold-soft ps-3.5 @max-[940px]:hidden';
+const hamishHeadClass = 'border-s border-s-rule ps-3.5 @max-[940px]:hidden';
 const hamishClass = `${hamishHeadClass} text-xs text-ink-2`;
 /** The hamish column's `meta`: the double rule sits on the head and on the cells. */
 export const hamishMeta: DataTableColumnMeta = { className: hamishClass, headClassName: hamishHeadClass };
@@ -46,6 +47,8 @@ export interface DataTableProps<T extends RowData> {
   emptyText?: string;
   /** Stacked rows under 640px instead of horizontal scroll. */
   stacked?: boolean;
+  /** A list screen's main table: a fixed-height box (TableBox) that scrolls inside itself. */
+  fill?: boolean;
 }
 
 /**
@@ -60,6 +63,7 @@ export function DataTable<T extends RowData>({
   onRowClick,
   emptyText,
   stacked,
+  fill,
 }: DataTableProps<T>) {
   const table = useTable({
     features: dataTableFeatures,
@@ -71,8 +75,9 @@ export function DataTable<T extends RowData>({
 
   return (
     // `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width).
-    <div className={cn('relative overflow-x-auto', stacked && stackedClass)}>
-      <table className="w-full border-collapse text-sm">
+    <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
+      {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
+      <table className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
         <thead>
           {table.getHeaderGroups().map((group) => (
             <tr key={group.id}>
@@ -81,7 +86,7 @@ export function DataTable<T extends RowData>({
                   key={header.id}
                   scope="col"
                   className={cn(
-                    'border-b-[3px] border-double border-gold px-2 py-[9px] text-start text-xs font-semibold whitespace-nowrap text-ink-3',
+                    'border-b border-rule px-2 py-[9px] text-start text-xs font-semibold whitespace-nowrap text-ink-3',
                     header.column.columnDef.meta?.headClassName,
                   )}
                 >

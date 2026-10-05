@@ -32,7 +32,7 @@ export function TeacherOption({ option, checked, onPick }: TeacherOptionProps) {
   return (
     <label
       className={cn(
-        'flex min-h-11 cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5',
+        'ab-lift flex min-h-11 cursor-pointer items-start gap-3 rounded-md border px-3 py-2.5',
         checked ? 'border-lapis bg-accent' : 'border-rule hover:bg-sunk',
         unavailable && 'cursor-not-allowed bg-sunk/60 hover:bg-sunk/60',
       )}
