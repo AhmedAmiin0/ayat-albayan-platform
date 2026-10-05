@@ -1658,3 +1658,16 @@ Owner request: "online sessions between teacher, student and assistant". Built i
 - **Classroom:** «الحلقة أونلاين» block at the top of the admin drawer with «انسخ لينك الطالب» (`POST /lessons/:id/join-link/url`, admin or the lesson's teacher, no WhatsApp template needed); teacher cards got the same button and the Jitsi link is relabelled «لينك الاجتماع».
 - **Teacher layout:** a viewport-high frame; only the page content scrolls (sticky title row and table header).
 - **Not verified:** SQL (183 and the fix script) never ran; no browser check of the fixed-height layout; e2e not run.
+
+## Finance re-managed (cloud branch `cloud/finance`, 2026-10-05)
+
+Owner: "payments, teacher payments and expenses need to be re-managed". Contract: docs/11 §13. Migrations `20261005000200`–`204` (applied locally with psql, recorded in `schema_migrations`; types.ts hand-edited).
+
+- **One pay rule** for the ledger, the monthly payout, the dashboard teacher cost and the settlement; trials only with `payout_count_trials`; never the student's current status; odd lengths pro-rated.
+- **Corrections:** void a teacher payment (history kept, struck through), reopen / un-pay a payout, «تم الدفع» in one transaction with method, note and receipt.
+- **Student money:** refunds, payments in another currency (converted, original kept), invoices as receipts («سجّل كدفعة»), «مدفوع جزئيًا», payments filters / period total / CSV / edit / delete, a package picker over every open package, payments on the student profile.
+- **Expenses:** categories table (admin can add), paid day / vendor / method / receipt, monthly-repeat drafts (job), 12-month table in the reporting currency, CSV.
+- **Overview:** «مستحقات المعلمين» summary, receivables with aging, dashboard KPIs, `/admin/finance` yearly P&L, teacher-ledger and receivables CSV, «المالية» nav section, teacher nav «أرباحي» / «كشوف الشهر».
+- **Verified:** `pnpm turbo lint typecheck test` green; SQL specs (pay-rule, teacher-corrections, teacher-earnings, teacher-payments, RLS) and desktop e2e (payouts, payments-receipt, subscriptions, journey-2/3, expenses, exports, dashboard, settings, booking-makeup-invoice, lead-to-subscription, student-profile, teachers-admin, teacher-mode, edit-session-time, new teacher-earnings-ui and finance-money) green on the local stack.
+- **Shared-DB note:** `e2e/support/db.ts` now keeps `expense_categories` on reset; a branch without this change truncates it and then cannot insert expenses (FK) until the 9 seed rows are put back.
+- **Not done / left:** mobile shows voided teacher payments without the struck-through style; no mobile screens for refunds or other currencies (the API accepts the old body unchanged).

@@ -30,7 +30,7 @@ export class PayoutsGenerator {
     const missing: PayoutGenerateResult['missing_rates'] = [];
     for (const teacher of await this.payouts.teachers()) {
       const window = monthWindow(month, teacher.tz);
-      const lessons = await this.payouts.lessons({ teacherId: teacher.id, ...window, statuses });
+      const lessons = await this.payouts.lessons({ teacherId: teacher.id, ...window });
       const action = planPayout({ teacher, lessons, existing: existing.get(teacher.id), statuses });
       if (action.kind === 'missing')
         missing.push({ teacher_id: teacher.id, display_name_ar: teacher.display_name_ar, durations: action.durations });

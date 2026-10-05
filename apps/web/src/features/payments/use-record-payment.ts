@@ -1,11 +1,20 @@
-import { parseAmount } from '@ab/shared';
+import { parseAmount, type PaymentKind } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { MONEY_KEY, type SubscriptionView } from '@/features/subscriptions/api';
 import { paidAtFor, recordPayment, uploadReceipt } from './api';
 import type { PaymentForm } from './PaymentFields';
 
-export type SaveInput = { sub: SubscriptionView; form: PaymentForm; file: File | null };
+export type SaveInput = {
+  sub: SubscriptionView;
+  form: PaymentForm;
+  file: File | null;
+  /** What was sent; another currency than the package's is converted by the API (fx at paid_at). */
+  currency: string;
+  kind: PaymentKind;
+  /** «سجّل كدفعة»: the booking's invoice is the receipt (no upload). */
+  invoiceId?: string;
+};
 
 /**
  * The «تسجيل دفعة» save (R-PAY-01). One clientRequestId per open dialog, re-sent on every retry,
@@ -28,13 +37,15 @@ export function useRecordPayment(onSaved: () => void) {
   }
 
   return useMutation({
-    mutationFn: async ({ sub, form, file }: SaveInput) => {
+    mutationFn: async ({ sub, form, file, currency, kind, invoiceId }: SaveInput) => {
       const amount = parseAmount(form.amount);
       if (amount === null) throw new Error('amount');
       return recordPayment({
         subscriptionId: sub.id,
         amount,
-        currency: sub.currency,
+        currency,
+        kind,
+        ...(invoiceId ? { invoiceId } : {}),
         method: form.method,
         paidAt: paidAtFor(form.day),
         receiptPath: await receiptPath(sub, file),

@@ -39,6 +39,18 @@ export class InvoicesService {
     return (await this.queries.byRules(ruleIds)).map(view);
   }
 
+  /** The admin list page: newest first, with the payment recorded from each (if any). */
+  async recent(f: { from?: string; to?: string; page: number; pageSize: number }) {
+    const { rows, total } = await this.queries.recent(f);
+    const paid = await this.queries.paymentsOf(rows.map((r) => r.id));
+    return { items: rows.map((r) => ({ ...view(r), payment_id: paid.get(r.id) ?? null })), total, page: f.page, pageSize: f.pageSize };
+  }
+
+  async one(id: string): Promise<InvoiceView | null> {
+    const row = await this.queries.get(id);
+    return row ? view(row) : null;
+  }
+
   /** A signed URL for 1 hour; the browser saves it as «AB-0183_فاتورة.png». 404 invoice_not_found. */
   async download(id: string): Promise<SignedDownload> {
     const row = await this.queries.get(id);

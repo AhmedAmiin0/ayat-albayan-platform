@@ -1,9 +1,9 @@
 import type {
   AdminTaskKind,
   Duration,
-  ExpenseCategory,
   LessonStatus,
   PackageSize,
+  PaymentKind,
   PaymentMethod,
   PayoutStatus,
   SubscriptionStatus,
@@ -79,16 +79,12 @@ export interface PaymentView {
   recorded_by: { id: string; full_name: string } | null;
   note: string | null;
   created_at: string;
-}
-
-export interface ExpenseView {
-  id: string;
-  month: string;
-  category: ExpenseCategory;
-  amount: number;
-  currency: string;
-  note: string | null;
-  created_at: string;
+  /** 'refund' («استرداد») counts against what was paid. */
+  kind: PaymentKind;
+  /** What the family sent when it was another currency (amount/currency are the package's). */
+  original: { amount: number; currency: string; fx_rate: number } | null;
+  /** Recorded from the booking's invoice («سجّل كدفعة»): the invoice is the receipt. */
+  invoice_id: string | null;
 }
 
 export interface PayoutView {
@@ -104,13 +100,17 @@ export interface PayoutView {
   breakdown: { lines: PayoutLine[]; lesson_ids: string[]; statuses: LessonStatus[] };
   /** Open payouts only: already paid per session in the ledger (docs/11 §10), so due = amount − ledger_paid. */
   ledger_paid?: number;
+  /** How a paid payout was paid (migration 20261005000201). */
+  method?: PaymentMethod | null;
+  note?: string | null;
+  has_receipt?: boolean;
 }
 
 /** POST /payouts/:month/generate: draft rows written, and teachers skipped for a missing rate. */
 export interface PayoutGenerateResult {
   month: string;
   payouts: PayoutView[];
-  missing_rates: { teacher_id: string; display_name_ar: string; durations: Duration[] }[];
+  missing_rates: { teacher_id: string; display_name_ar: string; durations: number[] }[];
 }
 
 export interface AdminTaskView {

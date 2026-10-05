@@ -1,35 +1,27 @@
-import {
-  DURATIONS,
-  payoutFor,
-  type Duration,
-  type LessonStatus,
-  type PayoutLine,
-  type PayoutStatus,
-} from '@ab/shared';
-import { MINUTE, zonedToUtc } from '../teachers/availability/zoned-time';
+import type { LessonStatus, PayoutLine, PayoutStatus } from '@ab/shared';
+import { zonedToUtc } from '../teachers/availability/zoned-time';
 
-// Pure payout decisions (R-PAY-02, R-TCH-04, issue E3): which lessons count, the month window in
-// the teacher's tz, and what generate does with a teacher's row.
+// Pure payout decisions (R-PAY-02, R-TCH-04, issue E3): the month window in the teacher's tz, and
+// what generate does with a teacher's row. WHICH lessons count and WHAT each pays is not decided
+// here: the rows come from v_teacher_payable_lessons (migration 20261005000200), the same rule and
+// the same frozen ledger amounts as the per-session earnings and the dashboard.
 
 export interface PayoutTeacher {
   id: string;
   tz: string;
-  rate_30: number | null;
-  rate_45: number | null;
-  rate_60: number | null;
-  rate_90: number | null;
 }
+/** One v_teacher_payable_lessons row: amount null = the teacher has no rate to price it. */
 export interface PayoutLesson {
   id: string;
-  starts_at: string;
-  ends_at: string;
+  minutes: number;
+  amount: number | null;
   status: LessonStatus;
 }
 export interface PayoutBreakdown {
   lines: PayoutLine[];
   lesson_ids: string[];
   statuses: LessonStatus[];
-  /** Lessons whose length is not 30/45/60/90: no rate slot, left out (TODO(R-PAY-02) owner). */
+  /** Kept for rows written before 20261005000200; odd lengths are now pro-rated, never skipped. */
   skipped_lesson_ids: string[];
 }
 
@@ -44,21 +36,18 @@ export function monthWindow(month: string, tz: string): { from: string; to: stri
   };
 }
 
-/** Paid lessons per duration; lengths outside DURATIONS are returned apart, never rounded. */
-export function byDuration(lessons: readonly PayoutLesson[]) {
-  const counts: Partial<Record<Duration, number>> = {};
-  const counted: string[] = [];
-  const skipped: string[] = [];
+/** One line per (length, per-lesson amount); amounts summed in cents. */
+export function linesOf(lessons: readonly PayoutLesson[]): PayoutLine[] {
+  const lines = new Map<string, PayoutLine>();
   for (const l of lessons) {
-    const minutes = Math.round((Date.parse(l.ends_at) - Date.parse(l.starts_at)) / MINUTE);
-    const d = DURATIONS.find((x) => x === minutes);
-    if (d === undefined) skipped.push(l.id);
-    else {
-      counts[d] = (counts[d] ?? 0) + 1;
-      counted.push(l.id);
-    }
+    if (l.amount === null) continue;
+    const key = `${l.minutes}:${l.amount}`;
+    const line = lines.get(key) ?? { duration: l.minutes, lessons: 0, rate: l.amount, amount: 0 };
+    line.lessons += 1;
+    line.amount = Math.round(line.amount * 100 + l.amount * 100) / 100;
+    lines.set(key, line);
   }
-  return { counts, counted, skipped };
+  return [...lines.values()].sort((a, b) => a.duration - b.duration || (a.rate ?? 0) - (b.rate ?? 0));
 }
 
 export type ApproveBlock = 'month_not_over' | 'reports_pending' | 'payout_stale';
@@ -78,32 +67,30 @@ export function approveBlock(input: { monthEnd: string; now: Date; pendingReport
 export type PayoutAction =
   | { kind: 'frozen' }
   | { kind: 'clear'; deleteId: string | null }
-  | { kind: 'missing'; durations: Duration[]; deleteId: string | null }
+  | { kind: 'missing'; durations: number[]; deleteId: string | null }
   | { kind: 'draft'; id: string | null; lessonsCount: number; amount: number; breakdown: PayoutBreakdown };
 
 export interface PlanInput {
   teacher: PayoutTeacher;
   lessons: readonly PayoutLesson[];
   existing: { id: string; status: PayoutStatus } | undefined;
+  /** The statuses the settings count, recorded in the breakdown. */
   statuses: LessonStatus[];
 }
 
 /**
- * Approved and paid rows are frozen; no paid lessons → no row (a stale draft is deleted); a
- * duration taught without a rate → the teacher is skipped and listed; otherwise a draft.
+ * Approved and paid rows are frozen; no counted lessons → no row (a stale draft is deleted); a
+ * lesson the teacher has no rate for → the teacher is skipped and listed; otherwise a draft.
  */
 export function planPayout(input: PlanInput): PayoutAction {
-  const { existing } = input;
+  const { existing, lessons } = input;
   if (existing && existing.status !== 'draft') return { kind: 'frozen' };
   const draftId = existing?.id ?? null;
-  const paid = input.lessons.filter((l) => input.statuses.includes(l.status));
-  const { counts, counted, skipped } = byDuration(paid);
-  const t = input.teacher;
-  const rates = { 30: t.rate_30, 45: t.rate_45, 60: t.rate_60, 90: t.rate_90 };
-  const calc = payoutFor({ lessons: counts, rates });
-  if (calc.missingRates.length > 0) return { kind: 'missing', durations: calc.missingRates, deleteId: draftId };
-  if (calc.lessonsCount === 0 && skipped.length === 0) return { kind: 'clear', deleteId: draftId };
-  const breakdown = { lines: calc.lines, lesson_ids: counted, statuses: input.statuses, skipped_lesson_ids: skipped };
-  return { kind: 'draft', id: draftId, lessonsCount: calc.lessonsCount, amount: calc.amount, breakdown };
+  const unrated = [...new Set(lessons.filter((l) => l.amount === null).map((l) => l.minutes))].sort((a, b) => a - b);
+  if (unrated.length > 0) return { kind: 'missing', durations: unrated, deleteId: draftId };
+  if (lessons.length === 0) return { kind: 'clear', deleteId: draftId };
+  const lines = linesOf(lessons);
+  const amount = Math.round(lines.reduce((n, l) => n + l.amount * 100, 0)) / 100;
+  const breakdown = { lines, lesson_ids: lessons.map((l) => l.id), statuses: input.statuses, skipped_lesson_ids: [] };
+  return { kind: 'draft', id: draftId, lessonsCount: lessons.length, amount, breakdown };
 }
-

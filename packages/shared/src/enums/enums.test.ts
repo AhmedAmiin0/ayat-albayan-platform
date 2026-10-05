@@ -23,6 +23,7 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['paymentMethod', E.PAYMENT_METHODS],
   ['payoutStatus', E.PAYOUT_STATUSES],
   ['expenseCategory', E.EXPENSE_CATEGORIES],
+  ['paymentKind', E.PAYMENT_KINDS],
   ['adminTaskKind', E.ADMIN_TASK_KINDS],
   ['messageStatus', E.MESSAGE_STATUSES],
   ['templateStatus', E.TEMPLATE_STATUSES],

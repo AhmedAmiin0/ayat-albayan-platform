@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { EXPENSE_CATEGORIES, PAYMENT_METHODS } from '../enums/index.js';
+import { PAYMENT_KINDS, PAYMENT_METHODS } from '../enums/index.js';
 import {
   CUSTOM_COUNT_MAX,
   CUSTOM_COUNT_MIN,
@@ -71,11 +71,18 @@ export const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 3
   message: 'paid_at_future',
 });
 
-/** POST /payments (R-PAY-01). receiptPath comes from POST /payments/receipt-upload-url. */
+/**
+ * POST /payments (R-PAY-01). receiptPath comes from POST /payments/receipt-upload-url. `currency`
+ * may differ from the package's when an fx rate exists (stored converted, original kept);
+ * kind 'refund' («استرداد»): a positive amount counted against what was paid. invoiceId: the
+ * booking's invoice is the receipt («سجّل كدفعة»).
+ */
 export const paymentCreateSchema = z.object({
   subscriptionId: z.uuid(),
   amount: moneyAmount,
   currency: currencyIso,
+  kind: z.enum(PAYMENT_KINDS).default('payment'),
+  invoiceId: z.uuid().optional(),
   method: z.enum(PAYMENT_METHODS),
   paidAt: pastInstant,
   receiptPath: z.string().min(1).nullish(),
@@ -107,25 +114,8 @@ export const receiptUploadSchema = z.object({
   size: z.int().min(1).max(RECEIPT_MAX_BYTES, { message: 'receipt_too_large' }),
 });
 
-/** POST /expenses (R-RPT-02). The owner's tracker is in EGP. */
-export const expenseCreateSchema = z.object({
-  month: monthParam,
-  category: z.enum(EXPENSE_CATEGORIES),
-  amount: moneyAmount,
-  currency: currencyIso.default('EGP'),
-  note: optionalText,
-});
-
-export const expenseUpdateSchema = z.object({
-  month: monthParam.optional(),
-  category: z.enum(EXPENSE_CATEGORIES).optional(),
-  amount: moneyAmount.optional(),
-  currency: currencyIso.optional(),
-  note: optionalText,
-});
-
 /** POST /payouts/:id/pay. Approve takes no body. */
-export const payoutPaySchema = z.object({ paidAt: pastInstant.optional() });
+export const payoutPaySchema = z.object({ paidAt: pastInstant.optional(), method: z.enum(PAYMENT_METHODS).optional(), note: optionalText, receiptPath: z.string().min(1).nullish() });
 
 /** `?from&to` local days (Asia/Riyadh), inclusive, at most a year (else range_too_large). */
 export const dateRangeQuery = z
@@ -144,7 +134,5 @@ export type SubscriptionUpdate = z.output<typeof subscriptionUpdateSchema>;
 export type PaymentCreate = z.output<typeof paymentCreateSchema>;
 export type PaymentUpdate = z.output<typeof paymentUpdateSchema>;
 export type ReceiptUpload = z.output<typeof receiptUploadSchema>;
-export type ExpenseCreate = z.output<typeof expenseCreateSchema>;
-export type ExpenseUpdate = z.output<typeof expenseUpdateSchema>;
 export type PayoutPay = z.output<typeof payoutPaySchema>;
 export type DateRangeQuery = z.output<typeof dateRangeQuery>;

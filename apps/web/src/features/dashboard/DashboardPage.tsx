@@ -5,6 +5,7 @@ import { PageHead } from '@/components/ui/page';
 import { adminDayQuery, dayAround } from '@/features/classroom/api';
 import { useNow } from '@/features/classroom/use-now';
 import { ExportsPanel } from '@/features/exports/ExportsPanel';
+import { MoneyKpis } from '@/features/finance/MoneyKpis';
 import { t } from '@/lib/i18n';
 import { summaryQuery, workQuery } from './api';
 import { KpiStrip } from './KpiStrip';
@@ -63,6 +64,7 @@ export function DashboardPage({ search, onSearch }: DashboardPageProps) {
           needsConfirmation={weekQ.data?.needs_confirmation}
           unpaid={weekQ.data?.unpaid_subscriptions}
         />
+        <MoneyKpis />
         <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
           <TodayLessons lessons={dayQ.data} className="md:col-span-2 xl:col-span-1 xl:row-span-2" />
           <section aria-label={t.dashboard.home.work} className={`grid content-start gap-4 ${card}`}>

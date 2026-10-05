@@ -10,9 +10,13 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./link-mock')).Link }));
 
-/** The dashboard's reads: work queue, today's lessons, the latest threads, else a summary. */
+const DUES = { currency: 'EGP', rows: [], totals: { earned: 900, paid: 300, owed: 600, teachers_owed: 2 } };
+const OWED = { rows: [], totals: [], total: 450, currency: 'SAR', fx_missing: [] };
+/** The dashboard's reads: work queue, today's lessons, the latest threads, money, else a summary. */
 function answer(path: string): unknown {
   if (path === '/dashboard/work') return WORK;
+  if (path === '/teacher-earnings/summary') return DUES;
+  if (path === '/receivables') return OWED;
   if (path.startsWith('/lessons')) return [];
   if (path.startsWith('/threads')) return { items: [], total: 0, page: 1, pageSize: 30 };
   return SUMMARY;
@@ -44,6 +48,14 @@ describe('DashboardPage (/admin, R-RPT-01/02/03)', () => {
     expect(paths).toContain('/dashboard/summary?from=2026-09-26&to=2026-10-02');
     expect(paths).toContain('/dashboard/summary?from=2026-05-01&to=2026-10-02');
     expect(paths).toContain('/dashboard/work');
+  });
+
+  it('money KPIs: owed to teachers (ledger) and owed by students, each linking to its page', async () => {
+    renderPage();
+    const kpis = await screen.findByRole('list', { name: t.finance.moneyKpis });
+    expect(within(kpis).getByRole('link', { name: new RegExp(t.finance.teachersOwedKpi) }).getAttribute('href')).toBe('/admin/payouts');
+    expect(within(kpis).getByRole('link', { name: new RegExp(t.finance.receivablesKpi) }).getAttribute('href')).toBe('/admin/receivables');
+    expect(await within(kpis).findByText('600')).toBeTruthy();
   });
 
   it('KPI strip: Amiri numerals, saffron only where there is work, each a filter link', async () => {

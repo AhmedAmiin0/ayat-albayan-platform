@@ -10,6 +10,7 @@ export const SETTINGS: AcademySettings = {
   reporting_currency: 'SAR',
   payout_count_late: false,
   payout_count_no_show: false,
+  payout_count_trials: false,
   follow_up_hours: [24, 72],
   reminder_minutes_before: 60,
   reminder_24h_enabled: false,

@@ -5,6 +5,7 @@ import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { RIYADH_TZ, weekStart, zonedParts } from '@/features/schedule/tz';
+import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
 import { CreateSubscriptionDialog } from '@/features/subscriptions/CreateSubscriptionDialog';
 import { t } from '@/lib/i18n';
 import { invoicesQuery } from './api.invoice';
@@ -39,6 +40,8 @@ function firstLesson(result: BookingResult) {
 export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
   const [dialog, setDialog] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
+  const [paying, setPaying] = useState(false);
+  const [paid, setPaid] = useState(false);
   const { first, week } = firstLesson(result);
   const offer = !!subscribeFor && !subscribed;
   const invoices = useQuery({ ...invoicesQuery({ ruleId: result.rule_id }), enabled: !!kind && kind !== 'trial' });
@@ -69,10 +72,10 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
           {t.booking.openSchedule}
         </Link>
         {invoice && <InvoiceButton invoice={invoice} />}
-        {kind === 'package' && subscribed && (
-          <Link to="/admin/payments" className={buttonVariants({ variant: 'secondary' })}>
-            {t.booking.invoice.recordPayment}
-          </Link>
+        {kind === 'package' && subscribed && invoice && subscribeFor && !paid && (
+          <Button type="button" variant="secondary" onClick={() => setPaying(true)}>
+            {t.finance.recordFromInvoice}
+          </Button>
         )}
         {chatPhone && (
           <Link to="/admin/inbox" search={{ phone: chatPhone, page: 1 }} className={buttonVariants({ variant: 'ghost' })}>
@@ -80,6 +83,15 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
           </Link>
         )}
       </div>
+      {paying && invoice && subscribeFor && (
+        <RecordPaymentDialog
+          invoiceId={invoice.id}
+          student={subscribeFor}
+          onClose={() => setPaying(false)}
+          onSaved={() => (setPaying(false), setPaid(true))}
+        />
+      )}
+      {paid && <p className="font-semibold text-ok">{t.payments.saved}</p>}
       {dialog && subscribeFor && (
         <CreateSubscriptionDialog
           student={subscribeFor}

@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
   dateRangeQuery,
-  expenseCreateSchema,
   monthParam,
   monthStart,
   paymentCreateSchema,
@@ -10,6 +9,7 @@ import {
   subscriptionCreateSchema,
   subscriptionUpdateSchema,
 } from './schemas.js';
+import { expenseCreateSchema } from './expense-schemas.js';
 
 const SUB = '00000000-0000-4000-8000-000000000001';
 const payment = { subscriptionId: SUB, amount: 120, currency: 'SAR', method: 'bank', paidAt: '2026-10-01T09:00:00Z' };

@@ -68,6 +68,9 @@ export function payment(over: Partial<PaymentView> = {}): PaymentView {
     recorded_by: { id: 'u1', full_name: 'الإدارة' },
     note: null,
     created_at: '2026-09-29T09:05:00.000Z',
+    kind: 'payment',
+    original: null,
+    invoice_id: null,
     ...over,
   };
 }

@@ -84,6 +84,7 @@ export interface AcademySettings {
   reporting_currency: string;
   payout_count_late: boolean;
   payout_count_no_show: boolean;
+  payout_count_trials: boolean; // trial lessons count toward teacher pay (migration 20261005000200)
   /** Phase 4 (docs/12 §2): R-LEAD-05 hours after the last inbound message, ascending. */
   follow_up_hours: number[];
   reminder_minutes_before: number;
@@ -96,8 +97,7 @@ export interface AcademySettings {
   crm_cutover_done: boolean;
   /** A new lead goes to the salesperson with the fewest open leads (migration 187). */
   sales_auto_assign: boolean;
-  /** After a completed lesson: lesson_rating buttons (default) or nothing automatic (migration 195). */
-  feedback_mode: 'buttons' | 'link';
+  feedback_mode: 'buttons' | 'link'; // after a lesson: lesson_rating buttons or no auto message (195)
 }
 
 /** GET /teachers/me (R-TCH-03). */

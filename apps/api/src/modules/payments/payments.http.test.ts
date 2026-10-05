@@ -34,11 +34,18 @@ describe('payments routes (P1–P7, R-PAY-01)', () => {
     expect(res.json()).toMatchObject({ id: PAYMENT_ID, student: { name: 'سهيلة' }, recorded_by: { full_name: 'مدير' } });
   });
 
-  it('P2: 400 currency_mismatch with the package currency', async () => {
-    const res = await call({ method: 'POST', url: '/payments', body: { ...body, currency: 'EGP' } });
-    expect(res.statusCode).toBe(400);
-    expect(res.json()).toMatchObject({ code: 'currency_mismatch', currency: 'SAR' });
-    expect(m.payments.insert).not.toHaveBeenCalled();
+  it('P2: another currency is converted at the rate of paid_at, the original kept; no rate → 400 fx_unavailable', async () => {
+    m.fx.rateSarAt.mockImplementation(async (quote: string) => ({ quote, rate: quote === 'EGP' ? 13 : 1 }));
+    m.payments.insert.mockResolvedValue(paymentRow());
+    await call({ method: 'POST', url: '/payments', body: { ...body, amount: 1300, currency: 'EGP' } });
+    expect(m.fx.rateSarAt).toHaveBeenCalledWith('EGP', body.paidAt);
+    expect(m.payments.insert).toHaveBeenCalledWith(
+      expect.objectContaining({ amount: 100, currency: 'SAR', original_amount: 1300, original_currency: 'EGP', kind: 'payment' }),
+    );
+    const { ServiceUnavailableException } = await import('@nestjs/common');
+    m.fx.rateSarAt.mockRejectedValue(new ServiceUnavailableException({ code: 'fx_unavailable' }));
+    const res = await call({ method: 'POST', url: '/payments', body: { ...body, currency: 'AED' } });
+    expect(res.json()).toMatchObject({ code: 'fx_unavailable', currency: 'AED' });
   });
 
   it('P2: a receipt path of another package, or never uploaded → 400 receipt_path', async () => {

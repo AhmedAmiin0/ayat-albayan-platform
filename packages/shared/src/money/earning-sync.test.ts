@@ -26,10 +26,19 @@ describe('planEarningSync: which lessons count (payout_count_late / payout_count
     expect(planEarningSync(input({ status: 'late', countNoShow: true }))).toEqual({ kind: 'none' });
   });
 
-  it('other statuses never count; no rate or an unusual length: nothing', () => {
+  it('other statuses never count; a standard length without a rate: nothing', () => {
     for (const status of ['scheduled', 'confirmed', 'cancelled', 'excused']) expect(planEarningSync(input({ status }))).toEqual({ kind: 'none' });
     expect(planEarningSync(input({ minutes: 90 }))).toEqual({ kind: 'none' });
-    expect(planEarningSync(input({ minutes: 50 }))).toEqual({ kind: 'none' });
+  });
+
+  it('an unusual length is pro-rated from the nearest rate (R-PAY-02)', () => {
+    expect(planEarningSync(input({ minutes: 50 }))).toEqual({ kind: 'insert', rate: 77.78, amount: 77.78 });
+  });
+
+  it('a trial lesson counts only with payout_count_trials', () => {
+    const trial = input();
+    expect(planEarningSync({ ...trial, lesson: { ...trial.lesson, isTrial: true } })).toEqual({ kind: 'none' });
+    expect(planEarningSync({ ...trial, countTrials: true, lesson: { ...trial.lesson, isTrial: true } })).toMatchObject({ kind: 'insert' });
   });
 });
 

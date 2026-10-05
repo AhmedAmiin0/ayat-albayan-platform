@@ -27,6 +27,7 @@ import { PaymentsModule } from './modules/payments/payments.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
 import { TeacherEarningsModule } from './modules/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/pricing/pricing.module';
+import { ReceivablesModule } from './modules/receivables/receivables.module';
 import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { SalesModule } from './modules/sales/sales.module';
@@ -60,6 +61,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     SchedulingModule,
     BookingModule,
     InvoicesModule,
+    ReceivablesModule,
     LessonsModule,
     ReportsModule,
     ReportPdfModule,

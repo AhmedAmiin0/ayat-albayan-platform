@@ -68,6 +68,17 @@ export class EarningsService {
     return { payment: toPaymentView(payment), replayed: result.replayed };
   }
 
+  /** resync_teacher_earnings: after a rate or a payout_count_* setting changed. */
+  resync(teacherId: string | undefined): Promise<number> {
+    return this.queries.resync(teacherId);
+  }
+
+  async payment(id: string): Promise<TeacherPaymentView> {
+    const row = await this.queries.payment(id);
+    if (!row) throw notFound('payment_not_found');
+    return toPaymentView(row);
+  }
+
   /** A payment's signed receipt URL; `teacherId` set → only if it is that teacher's. */
   async receipt(id: string, teacherId?: string) {
     const row = await this.queries.payment(id);

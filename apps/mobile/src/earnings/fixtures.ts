@@ -44,6 +44,8 @@ export const PAYMENT: TeacherPaymentView = {
   has_receipt: true,
   payout_id: null,
   sessions: 2,
+  voided_at: null,
+  void_reason: null,
 };
 
 export const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 25 });

@@ -12,6 +12,7 @@ import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
 import { paymentFilter, paymentListQuery } from './payments.dto';
+import type { PeriodTotal } from './payments.queries';
 import { PaymentsService } from './payments.service';
 import { ReceiptsService } from './receipts.service';
 
@@ -27,7 +28,7 @@ export class PaymentsController {
   ) {}
 
   @Get()
-  list(@Query() query: unknown): Promise<Page<PaymentView>> {
+  list(@Query() query: unknown): Promise<Page<PaymentView> & { totals: PeriodTotal[] }> {
     return this.payments.list(paymentFilter(parseOrThrow(paymentListQuery, query)));
   }
 

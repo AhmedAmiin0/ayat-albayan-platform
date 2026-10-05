@@ -19,7 +19,7 @@ export interface UnpaidIn {
   currency: string;
   starts_on: string;
   student: Student;
-  payments: { amount: number }[];
+  payments: { amount: number; kind?: 'payment' | 'refund' }[];
 }
 export interface TaskIn {
   id: string;
@@ -63,7 +63,8 @@ export function unpaidList(rows: readonly UnpaidIn[]): WorkList<UnpaidRow> {
       if (!s) return [];
       const { id, package: pkg, lessons_total, currency, starts_on } = r;
       const price = Number(r.price);
-      const paid = round2(r.payments.reduce((n, p) => n + Number(p.amount), 0));
+      // net of refunds («استرداد»), like the package status
+      const paid = round2(r.payments.reduce((n, p) => n + (p.kind === 'refund' ? -1 : 1) * Number(p.amount), 0));
       const owed = round2(Math.max(0, price - paid));
       const reason = owed > 0 ? 'owes' : 'renewal_due';
       return [{ id, student: s, package: pkg, lessons_total, price, paid, owed, reason, currency, starts_on } as const];

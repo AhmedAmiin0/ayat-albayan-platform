@@ -1,32 +1,39 @@
-import { CURRENCY_ISOS, EXPENSE_CATEGORIES, type ExpenseCategory } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useState, type FormEvent } from 'react';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useId, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
-import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
+import { paidAtDay } from '@/features/payments/pay-day';
+import { ReceiptField, receiptProblem } from '@/features/payments/ReceiptField';
 import { MONEY_KEY } from '@/features/subscriptions/api';
-import { apiErrorText, currencySymbol } from '@/features/subscriptions/format';
+import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
-import { saveExpense, type ExpenseView } from './api';
-
-/** The owner's tracker is in EGP; the site currencies are there for ads paid abroad. */
-const CURRENCIES = ['EGP', ...CURRENCY_ISOS] as const;
+import { categoriesQuery, saveExpense, uploadExpenseReceipt, type ExpenseView } from './api';
+import { AddCategory } from './AddCategory';
+import { expenseBody, expenseForm, type ExpenseForm } from './expense-form';
+import { ExpenseFields } from './ExpenseFields';
 
 type Props = { month: string; expense: ExpenseView | null; onClose: () => void; onSaved: () => void };
 
-/** Add or edit one month's expense (R-RPT-02): category, amount, currency, note. */
+/** Add or edit an expense (R-RPT-02): category, amount, currency, paid day, vendor, method, receipt, note, repeat. */
 export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
-  const [category, setCategory] = useState<ExpenseCategory>(expense?.category ?? 'ads');
-  const [amount, setAmount] = useState(expense ? String(expense.amount) : '');
-  const [currency, setCurrency] = useState(expense?.currency ?? 'EGP');
-  const [note, setNote] = useState(expense?.note ?? '');
+  const categories = useQuery(categoriesQuery);
+  const [form, setForm] = useState<ExpenseForm>(() => expenseForm(expense, expense ? '' : paidAtDay()));
+  const [amountError, setAmountError] = useState<string | undefined>();
+  const [file, setFile] = useState<File | null>(null);
+  const [problem, setProblem] = useState<string | null>(null);
+  const uploaded = useRef<{ file: File; path: string } | null>(null);
   const save = useMutation({
-    mutationFn: saveExpense,
+    mutationFn: async (body: Parameters<typeof saveExpense>[0]['body']) => {
+      let receiptPath: string | undefined;
+      if (file) {
+        receiptPath = uploaded.current?.file === file ? uploaded.current.path : await uploadExpenseReceipt(file);
+        uploaded.current = { file, path: receiptPath };
+      }
+      return saveExpense({ id: expense?.id ?? null, body: { ...body, ...(receiptPath ? { receiptPath } : {}) } });
+    },
     onSuccess: async () => {
       await queryClient.invalidateQueries({ queryKey: MONEY_KEY });
       onSaved();
@@ -34,8 +41,11 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
   });
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const body = { month: expense?.month ?? month, category, amount: Number(amount), currency, note: note.trim() || null };
-    if (body.amount > 0) save.mutate({ id: expense?.id ?? null, body });
+    const bad = receiptProblem(file);
+    setProblem(bad && t.payments.error[bad]);
+    const r = expenseBody(form, expense?.month ?? month);
+    setAmountError(r.ok ? undefined : r.errors.amount);
+    if (r.ok && !bad) save.mutate(r.body);
   };
 
   return (
@@ -53,36 +63,11 @@ export function ExpenseDialog({ month, expense, onClose, onSaved }: Props) {
         </>
       }
     >
-      <form id={formId} className="grid gap-4 sm:grid-cols-2" onSubmit={submit} noValidate>
-        <Field label={t.expenses.category}>
-          {(p) => (
-            <Select {...p} value={category} onChange={(e) => setCategory(e.target.value as ExpenseCategory)}>
-              {EXPENSE_CATEGORIES.map((c) => (
-                <option key={c} value={c}>
-                  {t.enums.expenseCategory[c]}
-                </option>
-              ))}
-            </Select>
-          )}
-        </Field>
-        <Field label={t.expenses.amount}>
-          {(p) => (
-            <Input {...p} type="number" inputMode="decimal" dir="ltr" min={0} step="0.01" value={amount} onChange={(e) => setAmount(e.target.value)} required />
-          )}
-        </Field>
-        <Field label={t.expenses.currency}>
-          {(p) => (
-            <Select {...p} value={currency} onChange={(e) => setCurrency(e.target.value)}>
-              {CURRENCIES.map((c) => (
-                <option key={c} value={c}>
-                  {`${currencySymbol(c)} (${c})`}
-                </option>
-              ))}
-            </Select>
-          )}
-        </Field>
-        <Field label={t.expenses.note}>{(p) => <Input {...p} value={note} onChange={(e) => setNote(e.target.value)} />}</Field>
-        {save.isError && <FormAlert className="sm:col-span-2">{apiErrorText(save.error, t.expenses.error)}</FormAlert>}
+      <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
+        <ExpenseFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} categories={categories.data ?? []} amountError={amountError} />
+        <AddCategory onAdded={(key) => setForm((f) => ({ ...f, category: key }))} />
+        <ReceiptField file={file} onChange={setFile} error={problem} />
+        {save.isError && <FormAlert>{apiErrorText(save.error, { ...t.expenses.error, ...t.finance.error, ...t.payments.error })}</FormAlert>}
       </form>
     </Dialog>
   );

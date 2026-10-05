@@ -2,7 +2,9 @@ import {
   monthParam,
   monthQuery,
   payoutPaySchema,
+  voidReasonSchema,
   type PayoutGenerateResult,
+  type SignedDownload,
   type PayoutView,
 } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
@@ -14,6 +16,7 @@ import { badRequest } from '../scheduling/errors';
 import { parseOrThrow } from '../teachers/http';
 import { PayoutsGenerator } from './payouts.generate';
 import { PayoutsLedger } from './payouts.ledger';
+import { PayoutsPayment } from './payouts.payment';
 import { PayoutsService } from './payouts.service';
 
 /** Teacher payouts per month (Y1–Y4, R-PAY-02, R-TCH-04). Admin only. CSV: /exports (B4). */
@@ -46,14 +49,38 @@ export class PayoutsController {
     return this.payouts.approve(id, user.id);
   }
 
+  /** approved → draft («إعادة فتح»): only while not paid. */
+  @Post(':id/reopen')
+  @HttpCode(200)
+  reopen(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PayoutView> {
+    return this.ledger.reopen(id, user.id);
+  }
+
+  /** paid → approved («إلغاء الدفع»): voids the settlement payment, with a reason. */
+  @Post(':id/unpay')
+  @HttpCode(200)
+  unpay(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView> {
+    return this.ledger.unpay(id, { ...parseOrThrow(voidReasonSchema, body ?? {}), actorId: user.id });
+  }
+}
+
+/** Y4 «تم الدفع» and its receipt: settlement + status in one transaction (PayoutsPayment). */
+@ApiTags('payouts')
+@ApiBearerAuth()
+@Roles('admin')
+@Controller('payouts')
+export class PayoutPaymentController {
+  constructor(private readonly payment: PayoutsPayment) {}
+
+  @Get(':id/receipt')
+  receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
+    return this.payment.receipt(id);
+  }
+
   @Post(':id/pay')
   @HttpCode(200)
-  pay(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<PayoutView> {
-    return this.ledger.pay(id, parseOrThrow(payoutPaySchema, body ?? {}), user.id);
+  pay(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<PayoutView> {
+    return this.payment.pay(id, parseOrThrow(payoutPaySchema, body ?? {}), user.id);
   }
 }
 

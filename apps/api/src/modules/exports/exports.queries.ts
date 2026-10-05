@@ -1,3 +1,4 @@
+import type { PaymentKind, PaymentMethod } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { Window } from '../dashboard/finance.queries';
@@ -8,7 +9,10 @@ const STUDENT =
 const LESSON =
   'id, starts_at, ends_at, status, teacher:teachers(display_name_ar), lesson_students(attendance, chargeable, student:students(code, name))';
 const PAYMENT =
-  'id, paid_at, amount, currency, method, note, subscription:subscriptions(package, lessons_total, student:students(code, name))';
+  'id, paid_at, amount, currency, method, note, kind, original_amount, original_currency, subscription:subscriptions!inner(student_id, package, lessons_total, student:students(code, name))';
+
+/** payments.csv filters besides the range (the payments page's own filters). */
+export type PaymentCsvFilter = { studentId?: string; method?: PaymentMethod; kind?: PaymentKind };
 const PAYOUT =
   'id, month, lessons_count, amount, currency, status, paid_at, breakdown, teacher:teachers(display_name_ar)';
 
@@ -36,18 +40,18 @@ export class ExportsQueries {
     );
   }
 
-  /** Payments with paid_at in the window. */
-  payments(w: Window) {
-    return readAll((from, to) =>
-      this.db
-        .from('payments')
-        .select(PAYMENT)
-        .gte('paid_at', w.from.toISOString())
-        .lt('paid_at', w.to.toISOString())
+  /** Payments with paid_at in the window, narrowed like the payments page. */
+  payments(w: Window, f: PaymentCsvFilter = {}) {
+    return readAll((from, to) => {
+      let q = this.db.from('payments').select(PAYMENT).gte('paid_at', w.from.toISOString()).lt('paid_at', w.to.toISOString());
+      if (f.studentId) q = q.eq('subscription.student_id', f.studentId);
+      if (f.method) q = q.eq('method', f.method);
+      if (f.kind) q = q.eq('kind', f.kind);
+      return q
         .order('paid_at')
         .order('id')
-        .range(from, to),
-    );
+        .range(from, to);
+    });
   }
 
   /** The month's payout rows (`month` = its first day), as B3 generated them. */

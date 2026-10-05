@@ -1,7 +1,8 @@
 import { formatPhone, teacherStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
+import { Link } from '@tanstack/react-router';
+import { Button, buttonVariants } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
@@ -66,17 +67,28 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
       header: () => t.common.actions,
       meta: { className: 'w-px text-end max-sm:order-5 max-sm:ms-auto', headClassName: 'text-end' },
       cell: (c) => (
-        <Button
-          variant="secondary"
-          size="sm"
-          aria-label={`${t.common.edit} ${c.row.original.display_name_ar}`}
-          onClick={(e) => {
-            e.stopPropagation();
-            onEdit(c.row.original);
-          }}
-        >
-          {t.common.edit}
-        </Button>
+        <div className="flex justify-end gap-1.5">
+          <Link
+            to="/admin/teachers/$teacherId/earnings"
+            params={{ teacherId: c.row.original.id }}
+            className={buttonVariants({ variant: 'ghost', size: 'sm' })}
+            aria-label={`${t.earnings.open} ${c.row.original.display_name_ar}`}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {t.earnings.open}
+          </Link>
+          <Button
+            variant="secondary"
+            size="sm"
+            aria-label={`${t.common.edit} ${c.row.original.display_name_ar}`}
+            onClick={(e) => {
+              e.stopPropagation();
+              onEdit(c.row.original);
+            }}
+          >
+            {t.common.edit}
+          </Button>
+        </div>
       ),
     }),
   ]);

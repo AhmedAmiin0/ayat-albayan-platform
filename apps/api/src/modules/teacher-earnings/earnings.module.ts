@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { TeachersModule } from '../teachers/teachers.module';
 import { TeacherMyEarningsController } from './earnings.mine.controller';
 import { TeacherEarningsController } from './earnings.controller';
+import { CorrectionsQueries } from './corrections.queries';
 import { EarningsQueries } from './earnings.queries';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
@@ -14,7 +15,7 @@ import { EarningsService } from './earnings.service';
 @Module({
   imports: [TeachersModule],
   controllers: [TeacherEarningsController, TeacherMyEarningsController],
-  providers: [EarningsQueries, EarningsReceipts, EarningsService],
-  exports: [EarningsQueries],
+  providers: [CorrectionsQueries, EarningsQueries, EarningsReceipts, EarningsService],
+  exports: [CorrectionsQueries, EarningsQueries, EarningsReceipts],
 })
 export class TeacherEarningsModule {}

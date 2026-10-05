@@ -1,4 +1,4 @@
-import type { PayoutGenerateResult, PayoutView } from '@ab/shared';
+import type { PaymentMethod, PayoutGenerateResult, PayoutView, SignedDownload, TeacherEarningsSummaryView } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { MONEY_KEY } from '@/features/subscriptions/api';
@@ -17,7 +17,23 @@ export const generatePayouts = (month: string) =>
 
 export const approvePayout = (id: string) => apiSend<PayoutView>('POST', `/payouts/${id}/approve`);
 
-export const payPayout = (id: string) => apiSend<PayoutView>('POST', `/payouts/${id}/pay`, {});
+export type PayPayoutBody = { paidAt: string; method: PaymentMethod; note: string | null; receiptPath: string | null };
+
+/** Settlement in the ledger + paid, one transaction (POST /payouts/:id/pay). */
+export const payPayout = (id: string, body: PayPayoutBody) => apiSend<PayoutView>('POST', `/payouts/${id}/pay`, body);
+
+export const reopenPayout = (id: string) => apiSend<PayoutView>('POST', `/payouts/${id}/reopen`);
+
+export const unpayPayout = (id: string, reason: string) => apiSend<PayoutView>('POST', `/payouts/${id}/unpay`, { reason });
+
+export const payoutReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/payouts/${id}/receipt`);
+
+/** «مستحقات المعلمين»: earned / paid / owed per teacher from the ledger. */
+export const earningsSummaryQuery = () =>
+  queryOptions({
+    queryKey: [...MONEY_KEY, 'teacher-earnings', 'summary'],
+    queryFn: () => apiFetch<TeacherEarningsSummaryView>('/teacher-earnings/summary'),
+  });
 
 /**
  * The month's CSV (GET /exports/payouts.csv, docs/11 §9) through the authorised fetch, saved via a

@@ -3,9 +3,11 @@ import {
   teacherPaymentCreateSchema,
   teacherReceiptUploadSchema,
   teacherResyncSchema,
+  voidReasonSchema,
   type SignedDownload,
   type SignedUpload,
   type TeacherEarningsBalanceView,
+  type TeacherEarningsSummaryView,
   type TeacherEarningView,
   type TeacherPaymentResult,
   type TeacherPaymentView,
@@ -15,9 +17,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
-import { EarningsQueries } from './earnings.queries';
+import { CorrectionsQueries } from './corrections.queries';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
+import { toSummaryView } from './earnings.summary';
 
 /** Admin: a teacher's balance, sessions and payments; record a payment (docs/11 §10). */
 @ApiTags('teacher-earnings')
@@ -28,15 +31,30 @@ export class TeacherEarningsController {
   constructor(
     private readonly earnings: EarningsService,
     private readonly receipts: EarningsReceipts,
-    private readonly queries: EarningsQueries,
+    private readonly corrections: CorrectionsQueries,
   ) {}
+
+  /** «مستحقات المعلمين»: earned / paid / owed per teacher (static segment, before `:teacherId`). */
+  @Get('summary')
+  async summary(): Promise<TeacherEarningsSummaryView> {
+    return toSummaryView(await this.corrections.summary());
+  }
 
   /** Static segment, declared before `:teacherId`. After a rate or a payout_count_* setting changes. */
   @Post('resync')
   @HttpCode(200)
   async resync(@Body() body: unknown): Promise<{ lessons: number }> {
     const { teacherId } = parseOrThrow(teacherResyncSchema, body ?? {});
-    return { lessons: await this.queries.resync(teacherId) };
+    return { lessons: await this.earnings.resync(teacherId) };
+  }
+
+  /** A wrong transfer is voided with a reason (never deleted); its sessions are owed again. */
+  @Post('payments/:id/void')
+  @HttpCode(200)
+  async void(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
+    const { reason } = parseOrThrow(voidReasonSchema, body ?? {});
+    await this.corrections.voidPayment({ paymentId: id, actorId: user.id, reason });
+    return this.earnings.payment(id);
   }
 
   @Get('payments/:id/receipt')

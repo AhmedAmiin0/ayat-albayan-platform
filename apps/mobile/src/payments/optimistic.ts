@@ -36,6 +36,9 @@ export function pendingPayment(input: PaymentInput): PaymentView {
     recorded_by: null,
     note: null,
     created_at: input.paidAt,
+    kind: 'payment',
+    original: null,
+    invoice_id: null,
   };
 }
 

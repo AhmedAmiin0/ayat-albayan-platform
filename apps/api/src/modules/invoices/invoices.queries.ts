@@ -40,6 +40,25 @@ export class InvoicesQueries {
     return data ? (toRow(data)[0] ?? null) : null;
   }
 
+  /** Every invoice, newest first, in a created_at window (the admin list page). */
+  async recent(f: { from?: string; to?: string; page: number; pageSize: number }): Promise<{ rows: InvoiceRowOut[]; total: number }> {
+    const start = (f.page - 1) * f.pageSize;
+    let q = this.db.from('invoices').select(SELECT, { count: 'exact' });
+    if (f.from) q = q.gte('created_at', f.from);
+    if (f.to) q = q.lt('created_at', f.to);
+    const { data, count, error } = await q.order('created_at', { ascending: false }).order('id').range(start, start + f.pageSize - 1);
+    if (error) throw dbError(error);
+    return { rows: data.flatMap(toRow), total: count ?? 0 };
+  }
+
+  /** invoice id → the payment recorded from it. */
+  async paymentsOf(invoiceIds: readonly string[]): Promise<Map<string, string>> {
+    if (invoiceIds.length === 0) return new Map();
+    const { data, error } = await this.db.from('payments').select('id, invoice_id').in('invoice_id', [...invoiceIds]);
+    if (error) throw dbError(error);
+    return new Map(data.flatMap((p) => (p.invoice_id ? [[p.invoice_id, p.id] as const] : [])));
+  }
+
   /** The rules a student is on (their bookings). */
   async ruleIdsOf(studentId: string): Promise<string[]> {
     const { data, error } = await this.db.from('schedule_rule_students').select('rule_id').eq('student_id', studentId);

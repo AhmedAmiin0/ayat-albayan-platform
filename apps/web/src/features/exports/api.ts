@@ -5,7 +5,7 @@ import { supabase } from '@/lib/supabase';
 // CSV downloads (docs/11 §9 C1–C4, R-RPT-03). apiFetch parses JSON, so a file is fetched here with
 // the same bearer token and handed to the browser as a download.
 
-export type ExportKind = 'students' | 'lessons' | 'payments' | 'payouts';
+export type ExportKind = 'students' | 'lessons' | 'payments' | 'payouts' | 'expenses' | 'teacher-ledger' | 'receivables';
 
 export interface ExportRequest {
   kind: ExportKind;

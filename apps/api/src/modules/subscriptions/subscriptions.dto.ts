@@ -3,10 +3,14 @@ import { z } from 'zod';
 import { pageQuerySchema } from '../teachers/http';
 import type { QuoteQuery } from '../pricing/pricing.dto';
 
-/** GET /subscriptions?status&studentId&page&pageSize (S1). */
+/**
+ * GET /subscriptions?status&studentId&paid&page&pageSize (S1). `paid=partial` («مدفوع جزئيًا»):
+ * unpaid packages with at least one payment (the exact 0 < paid < price is derived per row).
+ */
 export const subscriptionListQuery = pageQuerySchema.extend({
   status: z.enum(SUBSCRIPTION_STATUSES).optional(),
   studentId: z.uuid().optional(),
+  paid: z.enum(['partial']).optional(),
 });
 
 /** POST /subscriptions/quote: the price S2 would store, for the create dialog (never typed). */

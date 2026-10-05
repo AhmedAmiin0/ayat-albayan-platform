@@ -1,5 +1,5 @@
 import type { TeacherEarningView } from '@ab/shared';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -8,6 +8,8 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { downloadCsv } from '@/features/exports/api';
+import { currentMonth } from '@/features/payouts/api';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { balanceQuery, type Scope } from './api';
@@ -26,6 +28,7 @@ export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
   const [selected, setSelected] = useState<Map<string, TeacherEarningView>>(new Map());
   const [paying, setPaying] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
+  const ledger = useMutation({ mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month: currentMonth(), teacherId } }) });
 
   if (balance.isError) return <FormAlert>{t.common.notFound}</FormAlert>;
   if (!balance.data) return <ListSkeleton />;
@@ -40,6 +43,9 @@ export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
           <Link to="/admin/teachers/$teacherId" params={{ teacherId }} className="self-center text-sm text-lapis underline underline-offset-4">
             {t.earnings.back}
           </Link>
+          <Button type="button" variant="secondary" disabled={ledger.isPending} onClick={() => ledger.mutate()}>
+            {t.finance.ledgerCsv}
+          </Button>
           <Button disabled={!canPay} onClick={() => setPaying(true)}>
             <Icon name="wallet" />
             {selected.size > 0 ? t.earnings.payChosen.replace('{count}', String(selected.size)) : t.earnings.pay}

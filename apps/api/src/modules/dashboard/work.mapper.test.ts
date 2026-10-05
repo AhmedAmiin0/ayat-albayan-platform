@@ -55,6 +55,11 @@ describe('unpaidList', () => {
     const [item] = unpaidList([{ ...row, payments: [{ amount: 100 }, { amount: 45 }] }]).items;
     expect(item).toMatchObject({ paid: 145, owed: 0, reason: 'renewal_due' });
   });
+
+  it('a refund («استرداد») counts against what was paid', () => {
+    const [item] = unpaidList([{ ...row, payments: [{ amount: 145 }, { amount: 45, kind: 'refund' }] }]).items;
+    expect(item).toMatchObject({ paid: 100, owed: 45, reason: 'owes' });
+  });
 });
 
 describe('taskList', () => {

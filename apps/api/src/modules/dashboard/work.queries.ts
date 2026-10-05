@@ -9,7 +9,7 @@ export const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'co
 const PENDING =
   'lesson_id, student_id, student:students(id, code, name), lesson:lessons!inner(id, starts_at, status, teacher:teachers(id, display_name_ar)), lesson_reports(id)';
 const UNPAID =
-  'id, package, lessons_total, price, currency, starts_on, created_at, student:students(id, code, name), payments(amount)';
+  'id, package, lessons_total, price, currency, starts_on, created_at, student:students(id, code, name), payments(amount, kind)';
 const TASK = 'id, kind, subject_type, subject_id, title, due_at, done_at, created_at';
 
 /** The admin's queue (GET /dashboard/work). Service role; the controller is admin-only. */

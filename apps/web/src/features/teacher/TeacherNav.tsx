@@ -11,8 +11,10 @@ const ITEMS = [
   { to: '/teacher/students', label: t.teacherNav.students, icon: 'users', exact: false },
   { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', exact: false },
   { to: '/teacher/earnings', label: t.teacherNav.payouts, icon: 'wallet', exact: false },
+  // «كشوف الشهر»: from sm up only; on the phone bar it is one tap in from «أرباحي».
+  { to: '/teacher/payouts', label: t.teacherNav.statements, icon: 'receipt', exact: false, wide: true },
   { to: '/teacher/feedback', label: t.teacherNav.feedback, icon: 'star', exact: false },
-] as const satisfies readonly { to: string; label: string; icon: IconName; exact: boolean }[];
+] as const satisfies readonly { to: string; label: string; icon: IconName; exact: boolean; wide?: boolean }[];
 
 /**
  * A fixed bottom bar on phones (seven icon + word tabs, 56px, like the mobile app), a row of 48px
@@ -26,7 +28,7 @@ export function TeacherNav() {
     >
       <ul className="grid grid-cols-7 sm:flex sm:gap-1">
         {ITEMS.map((item) => (
-          <li key={item.to} className="min-w-0">
+          <li key={item.to} className={cn('min-w-0', 'wide' in item && 'max-sm:hidden')}>
             <Link
               to={item.to}
               activeOptions={{ exact: item.exact }}

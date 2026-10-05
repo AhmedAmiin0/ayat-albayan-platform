@@ -9,7 +9,12 @@ type NumberKey =
   | 'renewalAlertRemaining'
   | 'reportTeacherEditHours'
   | 'reminderMinutesBefore';
-type FlagKey = 'flagFutureLessonsWhenUnpaid' | 'payoutCountLate' | 'payoutCountNoShow' | 'reminder24hEnabled';
+type FlagKey =
+  | 'flagFutureLessonsWhenUnpaid'
+  | 'payoutCountLate'
+  | 'payoutCountNoShow'
+  | 'payoutCountTrials'
+  | 'reminder24hEnabled';
 
 export type SettingsForm = Record<NumberKey, string> &
   Record<FlagKey, boolean> & {
@@ -35,6 +40,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
     reportingCurrency: s.reporting_currency,
     payoutCountLate: s.payout_count_late,
     payoutCountNoShow: s.payout_count_no_show,
+    payoutCountTrials: s.payout_count_trials,
     reminderMinutesBefore: String(s.reminder_minutes_before),
     reminder24hEnabled: s.reminder_24h_enabled,
     followUpHours: s.follow_up_hours.join(t.common.listJoiner),
@@ -57,6 +63,7 @@ export function settingsUpdate(form: SettingsForm): SettingsResult {
     reportingCurrency: form.reportingCurrency,
     payoutCountLate: form.payoutCountLate,
     payoutCountNoShow: form.payoutCountNoShow,
+    payoutCountTrials: form.payoutCountTrials,
     reminderMinutesBefore: num(form.reminderMinutesBefore),
     reminder24hEnabled: form.reminder24hEnabled,
     followUpHours: hours(form.followUpHours),

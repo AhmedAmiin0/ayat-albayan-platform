@@ -12,13 +12,15 @@ describe('expenses routes (X1–X4, R-RPT-02)', () => {
   afterAll(() => app.close());
   beforeEach(() => resetMocks(m));
 
-  it('X1: a month of expenses; a bad month is 400', async () => {
-    m.expenses.forMonth.mockResolvedValue([expenseRow()]);
+  it('X1: a month (or a year) of expenses; a bad month is 400', async () => {
+    m.expenses.between.mockResolvedValue([expenseRow()]);
     const res = await call({ method: 'GET', url: '/expenses?month=2026-09' });
-    expect(m.expenses.forMonth).toHaveBeenCalledWith('2026-09-01');
+    expect(m.expenses.between).toHaveBeenCalledWith('2026-09-01', '2026-09-01');
     expect(res.json()).toEqual([
-      { id: EXPENSE_ID, month: '2026-09', category: 'ads', amount: 8000, currency: 'EGP', note: null, created_at: '2026-10-01T09:00:00Z' },
+      expect.objectContaining({ id: EXPENSE_ID, month: '2026-09', category: 'ads', amount: 8000, paid_on: '2026-09-01', is_draft: false, has_receipt: false }),
     ]);
+    await call({ method: 'GET', url: '/expenses?year=2026' });
+    expect(m.expenses.between).toHaveBeenLastCalledWith('2026-01-01', '2026-12-01');
     expect((await call({ method: 'GET', url: '/expenses?month=2026-9' })).statusCode).toBe(400);
   });
 

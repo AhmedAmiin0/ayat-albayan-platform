@@ -3,12 +3,16 @@ import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { Roles } from '../../common/auth/decorators';
+import { paymentFilter, paymentListQuery } from '../payments/payments.dto';
 import { parseOrThrow } from '../teachers/http';
 import { InvoicesService } from './invoices.service';
 
 const listQuery = z
   .object({ ruleId: z.uuid().optional(), studentId: z.uuid().optional() })
   .refine((q) => (q.ruleId === undefined) !== (q.studentId === undefined), { message: 'rule_or_student', path: ['ruleId'] });
+
+/** Same page + Riyadh-day range as the payments list. */
+const recentQuery = paymentListQuery;
 
 /** Invoices of bookings (R-PAY-03). Admin only: a teacher never sees a payment proof (rule 9). */
 @ApiTags('invoices')
@@ -22,6 +26,12 @@ export class InvoicesController {
   @Get()
   list(@Query() query: unknown): Promise<InvoiceView[]> {
     return this.invoices.list(parseOrThrow(listQuery, query));
+  }
+
+  /** `?from&to` (Riyadh days, inclusive) `&page&pageSize`: every invoice, newest first. */
+  @Get('recent')
+  recent(@Query() query: unknown) {
+    return this.invoices.recent(paymentFilter(parseOrThrow(recentQuery, query)));
   }
 
   @Get(':id/download')

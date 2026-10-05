@@ -1,5 +1,4 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { REPORTABLE_STATUSES } from '../reports/report-history.queries';
@@ -9,7 +8,7 @@ import type { PayoutLesson, PayoutTeacher } from './payouts.plan';
 export type PayoutRow = Tables<'teacher_payouts'> & {
   teacher: { id: string; display_name_ar: string; tz: string } | null;
 };
-export type LessonWindow = { teacherId: string; from: string; to: string; statuses: LessonStatus[] };
+export type LessonWindow = { teacherId: string; from: string; to: string };
 
 const SELECT = '*, teacher:teachers(id, display_name_ar, tz)';
 const byTeacherName = (a: PayoutRow, b: PayoutRow) =>
@@ -22,31 +21,30 @@ export class PayoutsQueries {
 
   /** Every teacher, whatever the status: one who left mid-month is still paid for that month. */
   async teachers(): Promise<(PayoutTeacher & { display_name_ar: string })[]> {
-    const { data, error } = await this.db
-      .from('teachers')
-      .select('id, tz, display_name_ar, rate_30, rate_45, rate_60, rate_90');
+    const { data, error } = await this.db.from('teachers').select('id, tz, display_name_ar');
     if (error) throw dbError(error);
     return data;
   }
 
+  /** The ONE pay rule (v_teacher_payable_lessons, migration 20261005000200), with ledger amounts. */
   async lessons(w: LessonWindow): Promise<PayoutLesson[]> {
     const { data, error } = await this.db
-      .from('lessons')
-      .select('id, starts_at, ends_at, status')
+      .from('v_teacher_payable_lessons')
+      .select('lesson_id, minutes, amount, status')
       .eq('teacher_id', w.teacherId)
       .gte('starts_at', w.from)
       .lt('starts_at', w.to)
-      .in('status', w.statuses)
-      .order('starts_at');
+      .order('starts_at')
+      .order('lesson_id');
     if (error) throw dbError(error);
-    return data;
+    return data.map((r) => ({ id: r.lesson_id, minutes: r.minutes, amount: r.amount, status: r.status }));
   }
 
   /**
    * (lesson, student) pairs of the teacher's reportable lessons in the window still missing a
    * submitted report (docs/11 R11's anti-join: the embed keeps submitted reports, `is.null` the rest).
    */
-  async pendingReports(w: Omit<LessonWindow, 'statuses'>): Promise<number> {
+  async pendingReports(w: LessonWindow): Promise<number> {
     const { count, error } = await this.db
       .from('lesson_students')
       .select('lesson_id, lesson:lessons!inner(teacher_id, starts_at, status), lesson_reports(id)', {
@@ -64,7 +62,7 @@ export class PayoutsQueries {
   }
 
   /** The teacher's lessons in the window whose time was edited after `since` (the draft's last calculation). */
-  async editedSince(w: Omit<LessonWindow, 'statuses'> & { since: string }): Promise<number> {
+  async editedSince(w: LessonWindow & { since: string }): Promise<number> {
     const { count, error } = await this.db
       .from('lessons')
       .select('id', { count: 'exact', head: true })

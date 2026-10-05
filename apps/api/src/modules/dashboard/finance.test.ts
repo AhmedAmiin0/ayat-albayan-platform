@@ -30,7 +30,7 @@ describe('financeTotals (R-RPT-02)', () => {
       { month: '2026-10', revenue: 290, teacher_cost: 10, expenses: 0, gross_margin: 280 },
     ]);
     expect(t).toMatchObject({ revenue: 435, teacher_cost: 10, expenses: 100, gross_margin: 325 });
-    expect(t.expenses_by_category).toEqual({ ads: 100, content: 0, tools: 0, operations: 0, other: 0 });
+    expect(t.expenses_by_category).toEqual({ ads: 100 });
   });
 
   it('a currency without a rate is left out everywhere', () => {

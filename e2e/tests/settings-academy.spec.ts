@@ -9,7 +9,7 @@ import { restoreSettings, settingText, snapshotSettings } from '../support/setti
 
 const KEYS = [
   'late_cancel_hours', 'booking_horizon_weeks', 'renewal_alert_remaining', 'flag_future_lessons_when_unpaid',
-  'report_teacher_edit_hours', 'reporting_currency', 'payout_count_late', 'payout_count_no_show',
+  'report_teacher_edit_hours', 'reporting_currency', 'payout_count_late', 'payout_count_no_show', 'payout_count_trials',
   'follow_up_hours', 'reminder_minutes_before', 'reminder_24h_enabled',
 ];
 

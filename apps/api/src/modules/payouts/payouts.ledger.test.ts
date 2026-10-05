@@ -1,63 +1,55 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { PAYOUT_ID, payoutRow } from '../subscriptions/money.fakes';
-import { moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
+import { PAYOUT_ID, payoutRow, TEACHER_ID } from '../subscriptions/money.fakes';
+import { ADMIN, moneyApp, resetMocks, type Mocks } from '../subscriptions/test-app';
 
-// The rule against double counting (docs/11 §10): the ledger is the record of what was paid.
+// The rule against double counting (docs/11 §12): the ledger is the record of what was paid, and
+// marking a payout paid settles it in the SAME transaction (pay_payout, migration 20261005000201).
 
 describe('monthly payouts × per-session ledger', () => {
   let app: NestFastifyApplication;
   let m: Mocks;
   let call: Awaited<ReturnType<typeof moneyApp>>['call'];
-  const order: string[] = [];
 
   beforeAll(async () => ({ app, m, call } = await moneyApp()));
   afterAll(() => app.close());
   beforeEach(() => {
     resetMocks(m);
-    order.length = 0;
-    m.earnings.settlePayout.mockImplementation(async () => void order.push('settle'));
-    m.payouts.update.mockImplementation(async () => {
-      order.push('update');
-      return payoutRow({ status: 'paid', paid_at: '2026-10-01T09:00:00Z' });
-    });
+    m.payouts.get.mockResolvedValueOnce(payoutRow({ status: 'approved' }));
+    m.payouts.get.mockResolvedValue(payoutRow({ status: 'paid', paid_at: '2026-10-01T09:00:00Z', method: 'bank' }));
   });
 
-  it('marking a payout paid first settles what is still outstanding on its lessons, then moves it', async () => {
-    m.payouts.get.mockResolvedValue(payoutRow({ status: 'approved' }));
-    const res = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: { paidAt: '2026-10-01T09:00:00Z' } });
+  it('«تم الدفع» is one RPC: settlement + status, with the transfer details', async () => {
+    const body = { paidAt: '2026-10-01T09:00:00Z', method: 'bank', note: 'تحويل', receiptPath: `${TEACHER_ID}/r.jpg` };
+    m.storage.exists.mockResolvedValue(true);
+    const res = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body });
     expect(res.statusCode).toBe(200);
-    expect(order).toEqual(['settle', 'update']);
-    expect(m.earnings.settlePayout).toHaveBeenCalledWith({
+    expect(res.json()).toMatchObject({ status: 'paid', method: 'bank' });
+    expect(m.corrections.payPayout).toHaveBeenCalledWith({
       payoutId: PAYOUT_ID,
-      actorId: 'a0000000-0000-4000-8000-000000000001',
+      actorId: ADMIN.id,
       paidAt: '2026-10-01T09:00:00Z',
+      method: 'bank',
+      note: 'تحويل',
+      receiptPath: `${TEACHER_ID}/r.jpg`,
     });
+    expect(m.payouts.update).not.toHaveBeenCalled();
   });
 
-  it('a draft or an already paid payout is refused before the ledger is touched', async () => {
+  it('a receipt outside the teacher folder is 400 receipt_path, before any money moves', async () => {
+    const res = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: { receiptPath: 'other/r.jpg' } });
+    expect(res.json().code).toBe('receipt_path');
+    expect(m.corrections.payPayout).not.toHaveBeenCalled();
+  });
+
+  it('a draft or an already paid payout is refused before the ledger is touched; unknown is 404', async () => {
     for (const status of ['draft', 'paid'] as const) {
-      m.payouts.get.mockResolvedValue(payoutRow({ status }));
-      const res = await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: {} });
-      expect(res.statusCode).toBe(409);
+      m.payouts.get.mockReset().mockResolvedValue(payoutRow({ status }));
+      expect((await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: {} })).statusCode).toBe(409);
     }
-    expect(m.earnings.settlePayout).not.toHaveBeenCalled();
-  });
-
-  it('an unknown payout is 404 and does not settle', async () => {
-    m.payouts.get.mockResolvedValue(null);
+    m.payouts.get.mockReset().mockResolvedValue(null);
     expect((await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: {} })).statusCode).toBe(404);
-    expect(m.earnings.settlePayout).not.toHaveBeenCalled();
-  });
-
-  it('a retry after the settle succeeded and the move failed settles again harmlessly (idempotent per payout)', async () => {
-    m.payouts.get.mockResolvedValue(payoutRow({ status: 'approved' }));
-    m.payouts.update.mockResolvedValueOnce(null);
-    expect((await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: {} })).statusCode).toBe(409);
-    m.payouts.update.mockResolvedValue(payoutRow({ status: 'paid', paid_at: '2026-10-01T09:00:00Z' }));
-    expect((await call({ method: 'POST', url: `/payouts/${PAYOUT_ID}/pay`, body: {} })).statusCode).toBe(200);
-    expect(m.earnings.settlePayout).toHaveBeenCalledTimes(2);
-    expect(m.earnings.settlePayout.mock.calls[0]?.[0]).toMatchObject({ payoutId: PAYOUT_ID });
+    expect(m.corrections.payPayout).not.toHaveBeenCalled();
   });
 
   it('an open payout shows ledger_paid (what per-session payments already covered); a paid one does not', async () => {

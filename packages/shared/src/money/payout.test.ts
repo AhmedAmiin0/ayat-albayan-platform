@@ -1,42 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { canTransitionPayout, payoutFor, payoutStatuses, PAYOUT_TRANSITIONS } from './payout.js';
-
-const RATES = { 30: 50, 45: 70, 60: 90, 90: 130 } as const;
-
-describe('payoutFor (R-PAY-02, R-TCH-04: counted lessons × rate, EGP)', () => {
-  it('sums each duration line', () => {
-    const calc = payoutFor({ lessons: { 45: 10, 30: 3 }, rates: RATES });
-    expect(calc).toEqual({
-      lessonsCount: 13,
-      amount: 3 * 50 + 10 * 70,
-      lines: [
-        { duration: 30, lessons: 3, rate: 50, amount: 150 },
-        { duration: 45, lessons: 10, rate: 70, amount: 700 },
-      ],
-      missingRates: [],
-    });
-  });
-
-  it('no lessons → zero and no lines', () => {
-    expect(payoutFor({ lessons: {}, rates: RATES })).toEqual({
-      lessonsCount: 0,
-      amount: 0,
-      lines: [],
-      missingRates: [],
-    });
-  });
-
-  it('a duration taught without a rate is surfaced, not silently paid 0', () => {
-    const calc = payoutFor({ lessons: { 60: 2, 45: 1 }, rates: { ...RATES, 60: null } });
-    expect(calc.missingRates).toEqual([60]);
-    expect(calc.amount).toBe(70);
-    expect(calc.lessonsCount).toBe(3);
-  });
-
-  it('a missing rate for a duration not taught is fine', () => {
-    expect(payoutFor({ lessons: { 45: 1 }, rates: { ...RATES, 90: null } }).missingRates).toEqual([]);
-  });
-});
+import { canTransitionPayout, payoutStatuses, PAYOUT_CORRECTIONS, PAYOUT_TRANSITIONS } from './payout.js';
 
 describe('payoutStatuses (R-PAY-02 `completed`; late / no-show are owner settings, OFF)', () => {
   it.each([
@@ -63,5 +26,16 @@ describe('payout status flow: draft → approved → paid (issue E3)', () => {
 
   it('paid is terminal', () => {
     expect(PAYOUT_TRANSITIONS.paid).toEqual([]);
+  });
+});
+
+describe('payout corrections (one step back)', () => {
+  it('approved reopens to draft, paid un-pays to approved, a draft has nothing to undo', () => {
+    expect(PAYOUT_CORRECTIONS).toEqual({ approved: 'draft', paid: 'approved' });
+    expect(PAYOUT_CORRECTIONS.draft).toBeUndefined();
+  });
+  it('the forward flow never goes back by itself', () => {
+    expect(canTransitionPayout('paid', 'approved')).toBe(false);
+    expect(canTransitionPayout('approved', 'draft')).toBe(false);
   });
 });

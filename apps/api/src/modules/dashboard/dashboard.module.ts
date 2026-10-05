@@ -16,5 +16,6 @@ import { WorkQueries } from './work.queries';
   imports: [FxModule],
   controllers: [DashboardController],
   providers: [DashboardService, DashboardQueries, FinanceService, FinanceQueries, WorkQueries, FxConverter],
+  exports: [FxConverter],
 })
 export class DashboardModule {}

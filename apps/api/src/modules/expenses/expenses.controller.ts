@@ -1,21 +1,27 @@
-import type { TablesUpdate } from '@ab/db';
 import {
   expenseCreateSchema,
+  expenseListQuery,
+  expenseReceiptUploadSchema,
   expenseUpdateSchema,
-  monthQuery,
   monthStart,
   type ExpenseView,
+  type ExpenseYearView,
+  type SignedDownload,
+  type SignedUpload,
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { AuditService } from '../../common/audit/audit.service';
+import { z } from 'zod';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { notFound } from '../scheduling/errors';
 import { parseOrThrow, sentOnly } from '../teachers/http';
+import { ExpenseYearService } from './expense-year.service';
 import { ExpensesQueries, toExpenseView } from './expenses.queries';
+import { ExpensesService } from './expenses.service';
 
-/** Ads / content / tools spend per month (X1–X4, R-RPT-02, issue E4). Admin only, audited. */
+const yearQuery = z.object({ year: z.string().regex(/^\d{4}$/, 'invalid_year') });
+
+/** Expenses (X1–X4, R-RPT-02, issue E4; owner 2026-10-05): list, year table, CRUD, receipts. Admin only, audited. */
 @ApiTags('expenses')
 @ApiBearerAuth()
 @Roles('admin')
@@ -23,60 +29,48 @@ import { ExpensesQueries, toExpenseView } from './expenses.queries';
 export class ExpensesController {
   constructor(
     private readonly expenses: ExpensesQueries,
-    private readonly audit: AuditService,
+    private readonly service: ExpensesService,
+    private readonly years: ExpenseYearService,
   ) {}
 
+  /** `?month=YYYY-MM` or `?year=YYYY`; drafts included (flagged). */
   @Get()
   async list(@Query() query: unknown): Promise<ExpenseView[]> {
-    const { month } = parseOrThrow(monthQuery, query);
-    return (await this.expenses.forMonth(monthStart(month))).map(toExpenseView);
+    const q = parseOrThrow(expenseListQuery, query);
+    const [first, last] = 'month' in q ? [monthStart(q.month), monthStart(q.month)] : [`${q.year}-01-01`, `${q.year}-12-01`];
+    return (await this.expenses.between(first, last)).map(toExpenseView);
+  }
+
+  /** The 12-month table in the reporting currency. Static segment, before `:id`. */
+  @Get('year')
+  year(@Query() query: unknown): Promise<ExpenseYearView> {
+    return this.years.year(parseOrThrow(yearQuery, query).year);
+  }
+
+  @Post('receipt-upload-url')
+  @HttpCode(200)
+  receiptUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
+    return this.service.receipts.uploadUrl(parseOrThrow(expenseReceiptUploadSchema, body).mime);
   }
 
   @Post()
-  async create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ExpenseView> {
-    const input = parseOrThrow(expenseCreateSchema, body);
-    const row = await this.expenses.insert({
-      month: monthStart(input.month),
-      category: input.category,
-      amount: input.amount,
-      currency: input.currency,
-      note: input.note ?? null,
-      created_by: user.id,
-    });
-    await this.audit.record({ actorId: user.id, entity: 'expenses', entityId: row.id, action: 'create', after: row });
-    return toExpenseView(row);
+  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ExpenseView> {
+    return this.service.create(parseOrThrow(expenseCreateSchema, body), user.id);
+  }
+
+  @Get(':id/receipt')
+  receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
+    return this.service.receipt(id);
   }
 
   @Patch(':id')
-  async update(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<ExpenseView> {
-    const patch = sentOnly(parseOrThrow(expenseUpdateSchema, body), body);
-    const before = await this.row(id);
-    const write: TablesUpdate<'expenses'> = {};
-    if (patch.month !== undefined) write.month = monthStart(patch.month);
-    if (patch.category !== undefined) write.category = patch.category;
-    if (patch.amount !== undefined) write.amount = patch.amount;
-    if (patch.currency !== undefined) write.currency = patch.currency;
-    if (patch.note !== undefined) write.note = patch.note;
-    const after = Object.keys(write).length > 0 ? await this.expenses.update(id, write) : before;
-    await this.audit.record({ actorId: user.id, entity: 'expenses', entityId: id, action: 'update', before, after });
-    return toExpenseView(after);
+  update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<ExpenseView> {
+    return this.service.update(id, sentOnly(parseOrThrow(expenseUpdateSchema, body), body), user.id);
   }
 
   @Delete(':id')
   @HttpCode(204)
   async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
-    const before = await this.row(id);
-    await this.expenses.remove(id);
-    await this.audit.record({ actorId: user.id, entity: 'expenses', entityId: id, action: 'delete', before });
-  }
-
-  private async row(id: string) {
-    const row = await this.expenses.get(id);
-    if (!row) throw notFound('expense_not_found');
-    return row;
+    await this.service.remove(id, user.id);
   }
 }

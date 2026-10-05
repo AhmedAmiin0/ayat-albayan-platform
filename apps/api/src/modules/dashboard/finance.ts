@@ -1,4 +1,3 @@
-import { EXPENSE_CATEGORIES, type ExpenseCategory } from '@ab/shared';
 import { convert, round2, type Conversion } from './conversion';
 import type { MonthFinance, SourceKey } from './dashboard.types';
 
@@ -15,7 +14,7 @@ interface Money {
 export type PaymentFact = Money & { source: SourceKey };
 /** One lesson's cost, split equally between its students' sources (none → unknown). */
 export type CostFact = Money & { sources: SourceKey[] };
-export type ExpenseFact = Money & { category: ExpenseCategory };
+export type ExpenseFact = Money & { category: string };
 
 export interface FinanceFacts {
   conversion: Conversion;
@@ -33,7 +32,8 @@ export interface FinanceTotals {
   expenses: number;
   gross_margin: number;
   by_month: MonthFinance[];
-  expenses_by_category: Record<ExpenseCategory, number>;
+  /** Every category met in the range (keys of expense_categories). */
+  expenses_by_category: Record<string, number>;
   by_source: SourceMoney;
 }
 
@@ -41,7 +41,7 @@ type MonthKey = 'revenue' | 'teacher_cost' | 'expenses';
 
 export function financeTotals(f: FinanceFacts): FinanceTotals {
   const months = new Map(f.months.map((m) => [m, { month: m, revenue: 0, teacher_cost: 0, expenses: 0 }]));
-  const categories = Object.fromEntries(EXPENSE_CATEGORIES.map((c) => [c, 0])) as Record<ExpenseCategory, number>;
+  const categories: Record<string, number> = {};
   const bySource: SourceMoney = new Map();
   const source = (key: SourceKey) => {
     const row = bySource.get(key) ?? { revenue: 0, teacher_cost: 0 };
@@ -67,7 +67,7 @@ export function financeTotals(f: FinanceFacts): FinanceTotals {
   }
   for (const e of f.expenses) {
     const v = book(e, 'expenses');
-    if (v !== null) categories[e.category] += v;
+    if (v !== null) categories[e.category] = (categories[e.category] ?? 0) + v;
   }
   const by_month = [...months.values()].map((m) => ({
     month: m.month,
@@ -84,9 +84,7 @@ export function financeTotals(f: FinanceFacts): FinanceTotals {
     expenses: round2(expenses),
     gross_margin: round2(revenue - teacher_cost - expenses),
     by_month,
-    expenses_by_category: Object.fromEntries(
-      EXPENSE_CATEGORIES.map((c) => [c, round2(categories[c])]),
-    ) as Record<ExpenseCategory, number>,
+    expenses_by_category: Object.fromEntries(Object.entries(categories).map(([c, v]) => [c, round2(v)])),
     by_source: bySource,
   };
 }

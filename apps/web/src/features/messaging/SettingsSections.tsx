@@ -93,6 +93,7 @@ export function AccountsSection({ state: { form, errors, set } }: { state: Setti
         <CheckField label={t.settings.flagFutureLessonsWhenUnpaid} hint={h.flagFutureLessonsWhenUnpaid} checked={form.flagFutureLessonsWhenUnpaid} onChange={(v) => set({ flagFutureLessonsWhenUnpaid: v })} />
         <CheckField label={t.settings.payoutCountLate} hint={h.payoutCountLate} checked={form.payoutCountLate} onChange={(v) => set({ payoutCountLate: v })} />
         <CheckField label={t.settings.payoutCountNoShow} hint={h.payoutCountNoShow} checked={form.payoutCountNoShow} onChange={(v) => set({ payoutCountNoShow: v })} />
+        <CheckField label={t.settings.payoutCountTrials} checked={form.payoutCountTrials} onChange={(v) => set({ payoutCountTrials: v })} />
       </div>
     </Section>
   );

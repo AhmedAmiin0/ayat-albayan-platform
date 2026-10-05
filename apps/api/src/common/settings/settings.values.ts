@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import type { AcademySettings, SettingsUpdate } from '@ab/shared';
 
-/** Used when a row is missing or malformed; migrations 073, 123, 142, 162 and 195 seed the same values. */
+/** Used when a row is missing or malformed; migrations 073, 123, 142, 162, 195 and 20261005000200 seed the same values. */
 export const SETTING_DEFAULTS: AcademySettings = {
   late_cancel_hours: null,
   booking_horizon_weeks: 5,
@@ -11,6 +11,7 @@ export const SETTING_DEFAULTS: AcademySettings = {
   reporting_currency: 'SAR',
   payout_count_late: false,
   payout_count_no_show: false,
+  payout_count_trials: false,
   follow_up_hours: [24, 72],
   reminder_minutes_before: 60,
   reminder_24h_enabled: false,
@@ -40,6 +41,7 @@ const VALID: { [K in SettingKey]: (v: Json | undefined) => boolean } = {
   reporting_currency: (v) => typeof v === 'string' && /^[A-Z]{3}$/.test(v),
   payout_count_late: bool,
   payout_count_no_show: bool,
+  payout_count_trials: bool,
   follow_up_hours: hours,
   reminder_minutes_before: int(1),
   reminder_24h_enabled: bool,
@@ -66,6 +68,7 @@ export function readSettings(rows: readonly { key: string; value: Json }[]): Aca
     reporting_currency: pick('reporting_currency'),
     payout_count_late: pick('payout_count_late'),
     payout_count_no_show: pick('payout_count_no_show'),
+    payout_count_trials: pick('payout_count_trials'),
     follow_up_hours: pick('follow_up_hours'),
     reminder_minutes_before: pick('reminder_minutes_before'),
     reminder_24h_enabled: pick('reminder_24h_enabled'),
@@ -86,6 +89,7 @@ const KEY_OF: { [K in keyof Required<SettingsUpdate>]: SettingKey } = {
   reportingCurrency: 'reporting_currency',
   payoutCountLate: 'payout_count_late',
   payoutCountNoShow: 'payout_count_no_show',
+  payoutCountTrials: 'payout_count_trials',
   followUpHours: 'follow_up_hours',
   reminderMinutesBefore: 'reminder_minutes_before',
   reminder24hEnabled: 'reminder_24h_enabled',

@@ -206,10 +206,47 @@ export type Database = {
           },
         ];
       };
+      expense_categories: {
+        Row: {
+          active: boolean;
+          created_at: string;
+          created_by: string | null;
+          key: string;
+          label_ar: string;
+          label_en: string | null;
+          sort: number;
+        };
+        Insert: {
+          active?: boolean;
+          created_at?: string;
+          created_by?: string | null;
+          key: string;
+          label_ar: string;
+          label_en?: string | null;
+          sort?: number;
+        };
+        Update: {
+          active?: boolean;
+          created_at?: string;
+          created_by?: string | null;
+          key?: string;
+          label_ar?: string;
+          label_en?: string | null;
+          sort?: number;
+        };
+        Relationships: [];
+      };
       expenses: {
         Row: {
+          is_draft: boolean;
+          method: Database['public']['Enums']['payment_method'] | null;
+          paid_on: string | null;
+          receipt_path: string | null;
+          recurring: boolean;
+          template_id: string | null;
+          vendor: string | null;
           amount: number;
-          category: Database['public']['Enums']['expense_category'];
+          category: string;
           created_at: string;
           created_by: string | null;
           currency: string;
@@ -219,8 +256,15 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          is_draft?: boolean;
+          method?: Database['public']['Enums']['payment_method'] | null;
+          paid_on?: string | null;
+          receipt_path?: string | null;
+          recurring?: boolean;
+          template_id?: string | null;
+          vendor?: string | null;
           amount: number;
-          category: Database['public']['Enums']['expense_category'];
+          category: string;
           created_at?: string;
           created_by?: string | null;
           currency?: string;
@@ -230,8 +274,15 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          is_draft?: boolean;
+          method?: Database['public']['Enums']['payment_method'] | null;
+          paid_on?: string | null;
+          receipt_path?: string | null;
+          recurring?: boolean;
+          template_id?: string | null;
+          vendor?: string | null;
           amount?: number;
-          category?: Database['public']['Enums']['expense_category'];
+          category?: string;
           created_at?: string;
           created_by?: string | null;
           currency?: string;
@@ -240,7 +291,15 @@ export type Database = {
           note?: string | null;
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'expenses_category_fkey';
+            columns: ['category'];
+            isOneToOne: false;
+            referencedRelation: 'expense_categories';
+            referencedColumns: ['key'];
+          },
+        ];
       };
       fx_rates: {
         Row: {
@@ -1507,6 +1566,11 @@ export type Database = {
       };
       payments: {
         Row: {
+          fx_rate: number | null;
+          invoice_id: string | null;
+          kind: Database['public']['Enums']['payment_kind'];
+          original_amount: number | null;
+          original_currency: string | null;
           amount: number;
           client_request_id: string | null;
           created_at: string;
@@ -1521,6 +1585,11 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          fx_rate?: number | null;
+          invoice_id?: string | null;
+          kind?: Database['public']['Enums']['payment_kind'];
+          original_amount?: number | null;
+          original_currency?: string | null;
           amount: number;
           client_request_id?: string | null;
           created_at?: string;
@@ -1535,6 +1604,11 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          fx_rate?: number | null;
+          invoice_id?: string | null;
+          kind?: Database['public']['Enums']['payment_kind'];
+          original_amount?: number | null;
+          original_currency?: string | null;
           amount?: number;
           client_request_id?: string | null;
           created_at?: string;
@@ -2220,6 +2294,9 @@ export type Database = {
       };
       teacher_payments: {
         Row: {
+          void_reason: string | null;
+          voided_at: string | null;
+          voided_by: string | null;
           amount: number;
           client_request_id: string | null;
           created_at: string;
@@ -2234,6 +2311,9 @@ export type Database = {
           teacher_id: string;
         };
         Insert: {
+          void_reason?: string | null;
+          voided_at?: string | null;
+          voided_by?: string | null;
           amount: number;
           client_request_id?: string | null;
           created_at?: string;
@@ -2248,6 +2328,9 @@ export type Database = {
           teacher_id: string;
         };
         Update: {
+          void_reason?: string | null;
+          voided_at?: string | null;
+          voided_by?: string | null;
           amount?: number;
           client_request_id?: string | null;
           created_at?: string;
@@ -2287,6 +2370,9 @@ export type Database = {
       };
       teacher_payouts: {
         Row: {
+          method: Database['public']['Enums']['payment_method'] | null;
+          note: string | null;
+          receipt_path: string | null;
           amount: number;
           approved_at: string | null;
           approved_by: string | null;
@@ -2304,6 +2390,9 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          method?: Database['public']['Enums']['payment_method'] | null;
+          note?: string | null;
+          receipt_path?: string | null;
           amount: number;
           approved_at?: string | null;
           approved_by?: string | null;
@@ -2321,6 +2410,9 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          method?: Database['public']['Enums']['payment_method'] | null;
+          note?: string | null;
+          receipt_path?: string | null;
           amount?: number;
           approved_at?: string | null;
           approved_by?: string | null;
@@ -2685,6 +2777,34 @@ export type Database = {
           },
         ];
       };
+      v_teacher_payable_lessons: {
+        Row: {
+          amount: number | null;
+          earning_id: string | null;
+          is_trial: boolean;
+          lesson_id: string;
+          minutes: number;
+          paid_amount: number;
+          rate: number | null;
+          starts_at: string;
+          status: Database['public']['Enums']['lesson_status'];
+          teacher_id: string;
+        };
+        Relationships: [];
+      };
+      v_teacher_earnings_summary: {
+        Row: {
+          display_name_ar: string;
+          earned: number;
+          oldest_unpaid_at: string | null;
+          owed: number;
+          paid: number;
+          sessions: number;
+          teacher_id: string;
+          unpaid_sessions: number;
+        };
+        Relationships: [];
+      };
       v_teacher_countable_earnings: {
         Row: {
           amount: number | null;
@@ -2859,6 +2979,17 @@ export type Database = {
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
+      create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
+      void_teacher_payment: {
+        Args: { p_actor: string; p_payment: string; p_reason: string };
+        Returns: Json;
+      };
+      pay_payout: { Args: { p: Json; p_actor: string; p_payout: string }; Returns: Json };
+      unpay_payout: {
+        Args: { p_actor: string; p_payout: string; p_reason: string };
+        Returns: Json;
+      };
+      reopen_payout: { Args: { p_actor: string; p_payout: string }; Returns: Json };
       settle_payout_in_ledger: {
         Args: { p_actor: string; p_paid_at: string; p_payout: string };
         Returns: string;
@@ -2888,7 +3019,7 @@ export type Database = {
       admin_task_kind: 'renewal_due' | 'subscription_unpaid';
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
       booking_kind: 'trial' | 'package' | 'makeup';
-      expense_category: 'ads' | 'content' | 'tools' | 'operations' | 'other';
+      payment_kind: 'payment' | 'refund';
       feedback_kind: 'trial' | 'subscription';
       feedback_quick_rating: 'excellent' | 'good' | 'needs_work';
       feedback_recommend: 'yes' | 'maybe' | 'no';
@@ -3059,7 +3190,7 @@ export const Constants = {
       admin_task_kind: ['renewal_due', 'subscription_unpaid'],
       attendance: ['on_time', 'late', 'excused', 'absent'],
       booking_kind: ['trial', 'package', 'makeup'],
-      expense_category: ['ads', 'content', 'tools', 'operations', 'other'],
+      payment_kind: ['payment', 'refund'],
       feedback_kind: ['trial', 'subscription'],
       feedback_quick_rating: ['excellent', 'good', 'needs_work'],
       feedback_recommend: ['yes', 'maybe', 'no'],

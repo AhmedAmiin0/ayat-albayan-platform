@@ -10,8 +10,9 @@ function env(name: string): string {
 
 /**
  * Wipes every public table and all auth users. Local/CI database only (R-NFR-04).
- * message_templates is reference data seeded by migration 141 (like an enum), so it survives;
- * a journey that changes a template's status puts it back.
+ * message_templates (migration 141) and expense_categories (20261005000204) are reference data
+ * seeded by their migrations (like an enum), so they survive; a journey that changes a template's
+ * status puts it back, and a category an e2e adds is harmless (its key is unique per run).
  */
 export async function resetDb(): Promise<void> {
   const url = env('DATABASE_URL');
@@ -20,7 +21,7 @@ export async function resetDb(): Promise<void> {
   try {
     const rows = await sql<{ t: string }[]>`
       select format('%I.%I', schemaname, tablename) as t from pg_tables
-      where schemaname = 'public' and tablename <> 'message_templates'`;
+      where schemaname = 'public' and tablename not in ('message_templates', 'expense_categories')`;
     if (rows.length) await sql.unsafe(`truncate ${rows.map((r) => r.t).join(', ')} restart identity cascade`);
     await sql`delete from auth.users`;
   } finally {
@@ -56,6 +57,7 @@ export async function seedSettings(): Promise<void> {
         ('renewal_alert_remaining', '2'::jsonb), ('flag_future_lessons_when_unpaid', 'true'::jsonb),
         ('report_teacher_edit_hours', '24'::jsonb), ('reporting_currency', '"SAR"'::jsonb),
         ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb),
+        ('payout_count_trials', 'false'::jsonb),
         ('auto_messages_enabled', 'true'::jsonb)
       on conflict (key) do update set value = excluded.value`;
   } finally {

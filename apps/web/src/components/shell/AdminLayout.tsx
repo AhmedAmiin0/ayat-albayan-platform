@@ -24,9 +24,10 @@ export function AdminLayout({ nav, children }: { nav: ReactNode; children: React
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
   return (
     <div className="flex h-dvh flex-col overflow-hidden shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
+      {/* `relative`: absolutely positioned sr-only text in a long sidebar stays inside its scroll clip. */}
       <aside
         ref={aside}
-        className="flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3 shell:h-dvh shell:flex-col shell:flex-nowrap shell:items-stretch shell:gap-[26px] shell:gap-y-0 shell:overflow-y-auto shell:border-e shell:border-rule shell:bg-cover shell:pt-[22px] shell:pb-4"
+        className="relative flex shrink-0 flex-wrap items-center gap-x-3 gap-y-1 px-3 pt-3 shell:h-dvh shell:flex-col shell:flex-nowrap shell:items-stretch shell:gap-[26px] shell:gap-y-0 shell:overflow-y-auto shell:border-e shell:border-rule shell:bg-cover shell:pt-[22px] shell:pb-4"
       >
         <Link to="/admin" activeOptions={{ exact: true }} aria-label={t.app.name} className="shrink-0 rounded-md px-1.5 no-underline">
           <Logo collapse />

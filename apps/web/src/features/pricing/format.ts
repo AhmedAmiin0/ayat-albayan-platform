@@ -9,7 +9,8 @@ const durations: Readonly<Record<string, string>> = t.pricing.durations;
 
 /** «45 دقيقة»; weekly comes back as 90. */
 export function durationLabel(minutes: number): string {
-  return durations[String(minutes)] ?? String(minutes);
+  // a pro-rated payout line (pay-rule) can be any length: «50 دقيقة»
+  return durations[String(minutes)] ?? t.earnings.minutes.replace('{count}', String(minutes));
 }
 
 /** «12 حلقة», or the counted form for a custom count («حلقتان», «7 حلقات»). */

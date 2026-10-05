@@ -18,5 +18,11 @@ export function toPaymentView(row: PaymentRow, recorders: ReadonlyMap<string, st
       row.recorded_by !== null && recorder !== undefined ? { id: row.recorded_by, full_name: recorder } : null,
     note: row.note,
     created_at: row.created_at,
+    kind: row.kind,
+    original:
+      row.original_amount !== null && row.original_currency !== null && row.fx_rate !== null
+        ? { amount: Number(row.original_amount), currency: row.original_currency, fx_rate: Number(row.fx_rate) }
+        : null,
+    invoice_id: row.invoice_id,
   };
 }

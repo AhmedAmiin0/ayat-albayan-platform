@@ -7,7 +7,7 @@ import { readChunked } from '../scheduling/read-all';
 
 export type StudentRef = { id: string; code: string | null; name: string };
 export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };
-export type SubListQuery = PageQuery & { status?: SubscriptionStatus; studentId?: string };
+export type SubListQuery = PageQuery & { status?: SubscriptionStatus; studentId?: string; paid?: 'partial' };
 
 const SELECT = '*, student:students(id, code, name)';
 
@@ -18,7 +18,10 @@ export class SubscriptionsQueries {
 
   async list(q: SubListQuery): Promise<Page<SubRow>> {
     const from = (q.page - 1) * q.pageSize;
-    let query = this.db.from('subscriptions').select(SELECT, { count: 'exact' });
+    // «مدفوع جزئيًا»: an inner embed keeps only packages with a payment (the extra field is unused).
+    const select = (q.paid === 'partial' ? `${SELECT}, paid_rows:payments!inner(id)` : SELECT) as typeof SELECT;
+    let query = this.db.from('subscriptions').select(select, { count: 'exact' });
+    if (q.paid === 'partial') query = query.eq('status', 'unpaid');
     if (q.status) query = query.eq('status', q.status);
     if (q.studentId) query = query.eq('student_id', q.studentId);
     const { data, count, error } = await query
@@ -95,19 +98,23 @@ export class SubscriptionsQueries {
     return (count ?? 0) > 0;
   }
 
-  /** Sum of each package's payments in its own currency (v1: the API refuses other currencies). */
+  /**
+   * Net paid per package in its own currency: payments − refunds. A payment sent in another
+   * currency is stored converted (original kept apart), so every row is in the package currency.
+   */
   async paid(subs: readonly Pick<SubRow, 'id' | 'currency'>[]): Promise<Map<string, number>> {
     const sums = new Map(subs.map((s) => [s.id, 0]));
     if (subs.length === 0) return sums;
     const { data, error } = await this.db
       .from('payments')
-      .select('subscription_id, amount, currency')
+      .select('subscription_id, amount, currency, kind')
       .in('subscription_id', [...sums.keys()]);
     if (error) throw dbError(error);
     const currency = new Map(subs.map((s) => [s.id, s.currency]));
     for (const p of data) {
       if (currency.get(p.subscription_id) !== p.currency) continue;
-      sums.set(p.subscription_id, cents(sums.get(p.subscription_id) ?? 0, Number(p.amount)));
+      const signed = p.kind === 'refund' ? -Number(p.amount) : Number(p.amount);
+      sums.set(p.subscription_id, cents(sums.get(p.subscription_id) ?? 0, signed));
     }
     return sums;
   }

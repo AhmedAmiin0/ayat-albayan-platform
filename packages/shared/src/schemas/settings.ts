@@ -16,6 +16,7 @@ export const settingsUpdateSchema = z.object({
   reportingCurrency: z.string().regex(/^[A-Z]{3}$/).optional(),
   payoutCountLate: z.boolean().optional(),
   payoutCountNoShow: z.boolean().optional(),
+  payoutCountTrials: z.boolean().optional(),
   followUpHours: z.array(z.int().min(1).max(720)).min(1).max(5)
     .refine((h) => h.every((v, i) => i === 0 || v > (h[i - 1] ?? 0)), 'not_ascending').optional(),
   reminderMinutesBefore: z.int().min(5).max(720).optional(),
