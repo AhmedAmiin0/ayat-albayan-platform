@@ -1985,7 +1985,8 @@
     "reportingCurrency": "Dashboard currency",
     "payoutCountLate": "Count lessons where the student was late toward teacher payouts",
     "payoutCountNoShow": "Count lessons where the student was absent without notice toward teacher payouts",
-    "notAscending": "Hours must go from smallest to largest, for example 24, 72"
+    "notAscending": "Hours must go from smallest to largest, for example 24, 72",
+    "payoutCountTrials": "Count trial lessons toward teacher payouts"
   },
   "language": {
     "label": "Language",

@@ -1,4 +1,4 @@
-import { canTransitionPayout, monthStart, type PayoutPay, type PayoutView } from '@ab/shared';
+import { canTransitionPayout, monthStart, type PayoutView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { conflict, notFound } from '../scheduling/errors';
@@ -7,7 +7,7 @@ import { toPayoutView } from './payouts.mapper';
 import { approveBlock, monthWindow } from './payouts.plan';
 import { PayoutsQueries, type PayoutRow } from './payouts.queries';
 
-/** Y1, Y3, Y4, Y5: list a month, approve, mark paid (draft → approved → paid), a teacher's own. */
+/** Y1, Y3, Y5: list a month, approve (draft → approved), a teacher's own. Pay / un-pay / reopen: PayoutsLedger. */
 @Injectable()
 export class PayoutsService {
   constructor(
@@ -34,11 +34,6 @@ export class PayoutsService {
     return this.move({ before, actorId, to: 'approved', write: { approved_at: now, approved_by: actorId } });
   }
 
-  async pay(id: string, body: PayoutPay, actorId: string): Promise<PayoutView> {
-    const paidAt = body.paidAt ?? new Date().toISOString();
-    return this.move({ before: await this.row(id), actorId, to: 'paid', write: { paid_at: paidAt, paid_by: actorId } });
-  }
-
   /** Y5: the signed-in teacher's rows, newest month first. */
   async mine(profileId: string, month?: string): Promise<PayoutView[]> {
     const teacherId = await this.teachers.idByProfile(profileId);
@@ -55,7 +50,7 @@ export class PayoutsService {
   private async move(input: {
     before: PayoutRow;
     actorId: string;
-    to: 'approved' | 'paid';
+    to: 'approved';
     write: Record<string, string>;
   }): Promise<PayoutView> {
     const { before } = input;
@@ -66,7 +61,7 @@ export class PayoutsService {
       actorId: input.actorId,
       entity: 'teacher_payouts',
       entityId: before.id,
-      action: input.to === 'approved' ? 'approve' : 'pay',
+      action: 'approve',
       before: { status: before.status },
       after: { status: after.status, ...input.write },
     });

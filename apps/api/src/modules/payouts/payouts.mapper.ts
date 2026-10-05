@@ -30,5 +30,8 @@ export function toPayoutView(row: PayoutRow): PayoutView {
     approved_at: row.approved_at,
     paid_at: row.paid_at,
     breakdown: readBreakdown(row.breakdown),
+    method: row.method,
+    note: row.note,
+    has_receipt: row.receipt_path !== null,
   };
 }

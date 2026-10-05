@@ -13,6 +13,7 @@ import { StorageService } from '../../common/storage/storage.service';
 import { ExpensesQueries } from '../expenses/expenses.queries';
 import { PaymentsQueries } from '../payments/payments.queries';
 import { PayoutsQueries } from '../payouts/payouts.queries';
+import { CorrectionsQueries } from '../teacher-earnings/corrections.queries';
 import { EarningsQueries } from '../teacher-earnings/earnings.queries';
 import { PricingService } from '../pricing/pricing.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -61,6 +62,7 @@ function mocks() {
       teacher: vi.fn(), money: vi.fn(), sessions: vi.fn(), forPayment: vi.fn(), payments: vi.fn(), payment: vi.fn(),
       byRequest: vi.fn(), record: vi.fn(), settlePayout: vi.fn(), resync: vi.fn(), paidOnLessons: vi.fn(),
     },
+    corrections: { voidPayment: vi.fn(), payPayout: vi.fn(), unpayPayout: vi.fn(), reopenPayout: vi.fn(), summary: vi.fn() },
     expenses: { forMonth: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn() },
     teachers: { idByProfile: vi.fn() },
     access: { check: vi.fn() },
@@ -105,6 +107,7 @@ export async function moneyApp() {
     .overrideProvider(PaymentsQueries).useValue(m.payments)
     .overrideProvider(PayoutsQueries).useValue(m.payouts)
     .overrideProvider(EarningsQueries).useValue(m.earnings)
+    .overrideProvider(CorrectionsQueries).useValue(m.corrections)
     .overrideProvider(ExpensesQueries).useValue(m.expenses)
     .overrideProvider(TeachersQueries).useValue(m.teachers)
     .overrideProvider(StudentAccess).useValue(m.access)

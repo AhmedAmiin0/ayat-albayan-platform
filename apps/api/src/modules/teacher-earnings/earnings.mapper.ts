@@ -32,5 +32,7 @@ export function toPaymentView(row: PaymentRow): TeacherPaymentView {
     has_receipt: row.receipt_path !== null,
     payout_id: row.payout_id,
     sessions: row.items.length,
+    voided_at: row.voided_at,
+    void_reason: row.void_reason,
   };
 }

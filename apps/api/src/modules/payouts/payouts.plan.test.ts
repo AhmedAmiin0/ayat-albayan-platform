@@ -1,18 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { approveBlock, byDuration, monthWindow, planPayout, type PayoutLesson, type PlanInput } from './payouts.plan';
+import { approveBlock, linesOf, monthWindow, planPayout, type PayoutLesson, type PlanInput } from './payouts.plan';
 
-const MIN = 60_000;
 let seq = 0;
-const lesson = (minutes: number, status: PayoutLesson['status'] = 'completed'): PayoutLesson => {
-  const start = Date.parse('2026-09-10T15:00:00Z') + (seq += 1) * 86_400_000;
-  return {
-    id: `l${seq}`,
-    starts_at: new Date(start).toISOString(),
-    ends_at: new Date(start + minutes * MIN).toISOString(),
-    status,
-  };
-};
-const teacher = { id: 't1', tz: 'Africa/Cairo', rate_30: 50, rate_45: 70, rate_60: 90, rate_90: 130 };
+const lesson = (minutes: number, amount: number | null, status: PayoutLesson['status'] = 'completed'): PayoutLesson => ({
+  id: `l${(seq += 1)}`,
+  minutes,
+  amount,
+  status,
+});
+const teacher = { id: 't1', tz: 'Africa/Cairo' };
 const base = (patch: Partial<PlanInput> = {}): PlanInput => ({
   teacher,
   lessons: [],
@@ -37,24 +33,21 @@ describe('monthWindow (a lesson month is its local date in the teacher tz)', () 
   });
 });
 
-describe('byDuration', () => {
-  it('counts each standard length and sets odd lengths apart, never rounded', () => {
-    const a = lesson(45);
-    const b = lesson(45);
-    const c = lesson(30);
-    const odd = lesson(50);
-    const r = byDuration([a, b, c, odd]);
-    expect(r.counts).toEqual({ 45: 2, 30: 1 });
-    expect(r.counted).toEqual([a.id, b.id, c.id]);
-    expect(r.skipped).toEqual([odd.id]);
+describe('linesOf (one line per length and frozen ledger amount)', () => {
+  it('groups by (minutes, amount) and keeps a pro-rated length apart', () => {
+    const lines = linesOf([lesson(45, 70), lesson(45, 70), lesson(45, 60), lesson(50, 77.78), lesson(30, null)]);
+    expect(lines).toEqual([
+      { duration: 45, lessons: 1, rate: 60, amount: 60 },
+      { duration: 45, lessons: 2, rate: 70, amount: 140 },
+      { duration: 50, lessons: 1, rate: 77.78, amount: 77.78 },
+    ]);
   });
 });
 
-describe('planPayout (R-PAY-02: completed lessons × rate, EGP; E3 frozen once approved)', () => {
+describe('planPayout (R-PAY-02: payable lessons × their ledger amount, EGP; E3 frozen once approved)', () => {
   it('a draft with the lines, the counted lesson ids and the statuses used', () => {
-    const lessons = [lesson(45), lesson(45), lesson(90)];
-    const plan = planPayout(base({ lessons }));
-    expect(plan).toEqual({
+    const lessons = [lesson(45, 70), lesson(45, 70), lesson(90, 130)];
+    expect(planPayout(base({ lessons }))).toEqual({
       kind: 'draft',
       id: null,
       lessonsCount: 3,
@@ -72,36 +65,27 @@ describe('planPayout (R-PAY-02: completed lessons × rate, EGP; E3 frozen once a
   });
 
   it('regenerating a draft keeps its id (idempotent upsert)', () => {
-    const plan = planPayout(base({ lessons: [lesson(45)], existing: { id: 'p1', status: 'draft' } }));
+    const plan = planPayout(base({ lessons: [lesson(45, 70)], existing: { id: 'p1', status: 'draft' } }));
     expect(plan).toMatchObject({ kind: 'draft', id: 'p1', amount: 70 });
   });
 
   it.each(['approved', 'paid'] as const)('%s rows are frozen', (status) => {
-    expect(planPayout(base({ lessons: [lesson(45)], existing: { id: 'p1', status } }))).toEqual({ kind: 'frozen' });
+    expect(planPayout(base({ lessons: [lesson(45, 70)], existing: { id: 'p1', status } }))).toEqual({ kind: 'frozen' });
   });
 
-  it('late / no-show are left out unless the settings count them', () => {
-    const lessons = [lesson(45), lesson(45, 'late'), lesson(45, 'no_show')];
-    expect(planPayout(base({ lessons }))).toMatchObject({ lessonsCount: 1 });
-    expect(planPayout(base({ lessons, statuses: ['completed', 'late'] }))).toMatchObject({ lessonsCount: 2 });
-  });
-
-  it('no paid lessons → no row; a stale draft is deleted', () => {
+  it('no payable lessons → no row; a stale draft is deleted', () => {
     expect(planPayout(base())).toEqual({ kind: 'clear', deleteId: null });
-    const stale = planPayout(base({ lessons: [lesson(45, 'cancelled_by_teacher')], existing: { id: 'p1', status: 'draft' } }));
-    expect(stale).toEqual({ kind: 'clear', deleteId: 'p1' });
+    expect(planPayout(base({ existing: { id: 'p1', status: 'draft' } }))).toEqual({ kind: 'clear', deleteId: 'p1' });
   });
 
-  it('a duration taught without a rate skips the teacher (never paid 0)', () => {
-    const plan = planPayout(base({ teacher: { ...teacher, rate_60: null }, lessons: [lesson(60), lesson(45)] }));
+  it('a lesson the teacher has no rate for skips the teacher (never paid 0)', () => {
+    const plan = planPayout(base({ lessons: [lesson(60, null), lesson(45, 70), lesson(60, null)] }));
     expect(plan).toEqual({ kind: 'missing', durations: [60], deleteId: null });
   });
 
-  it('only odd-length lessons → a zero draft that lists them for the admin', () => {
-    const odd = lesson(50);
-    const plan = planPayout(base({ lessons: [odd] }));
-    expect(plan).toMatchObject({ kind: 'draft', lessonsCount: 0, amount: 0 });
-    expect(plan.kind === 'draft' && plan.breakdown.skipped_lesson_ids).toEqual([odd.id]);
+  it('an odd length is paid at its pro-rated ledger amount (no more skipped lessons)', () => {
+    const plan = planPayout(base({ lessons: [lesson(50, 77.78), lesson(45, 70)] }));
+    expect(plan).toMatchObject({ kind: 'draft', lessonsCount: 2, amount: 147.78 });
   });
 });
 

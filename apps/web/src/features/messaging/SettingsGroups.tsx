@@ -106,6 +106,7 @@ export function MoneyGroup({ form, errors, set }: GroupProps) {
         <CheckField label={t.settings.flagFutureLessonsWhenUnpaid} checked={form.flagFutureLessonsWhenUnpaid} onChange={(v) => set({ flagFutureLessonsWhenUnpaid: v })} />
         <CheckField label={t.settings.payoutCountLate} checked={form.payoutCountLate} onChange={(v) => set({ payoutCountLate: v })} />
         <CheckField label={t.settings.payoutCountNoShow} checked={form.payoutCountNoShow} onChange={(v) => set({ payoutCountNoShow: v })} />
+        <CheckField label={t.settings.payoutCountTrials} checked={form.payoutCountTrials} onChange={(v) => set({ payoutCountTrials: v })} />
       </div>
     </fieldset>
   );

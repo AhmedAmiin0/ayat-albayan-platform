@@ -104,13 +104,17 @@ export interface PayoutView {
   breakdown: { lines: PayoutLine[]; lesson_ids: string[]; statuses: LessonStatus[] };
   /** Open payouts only: already paid per session in the ledger (docs/11 §10), so due = amount − ledger_paid. */
   ledger_paid?: number;
+  /** How a paid payout was paid (migration 20261005000201). */
+  method?: PaymentMethod | null;
+  note?: string | null;
+  has_receipt?: boolean;
 }
 
 /** POST /payouts/:month/generate: draft rows written, and teachers skipped for a missing rate. */
 export interface PayoutGenerateResult {
   month: string;
   payouts: PayoutView[];
-  missing_rates: { teacher_id: string; display_name_ar: string; durations: Duration[] }[];
+  missing_rates: { teacher_id: string; display_name_ar: string; durations: number[] }[];
 }
 
 export interface AdminTaskView {

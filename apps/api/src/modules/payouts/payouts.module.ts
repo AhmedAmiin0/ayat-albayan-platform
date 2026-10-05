@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TeacherEarningsModule } from '../teacher-earnings/earnings.module';
 import { TeachersModule } from '../teachers/teachers.module';
-import { PayoutsController, TeacherPayoutsController } from './payouts.controller';
+import { PayoutPaymentController, PayoutsController, TeacherPayoutsController } from './payouts.controller';
 import { PayoutsGenerator } from './payouts.generate';
 import { PayoutsLedger } from './payouts.ledger';
+import { PayoutsPayment } from './payouts.payment';
 import { PayoutsQueries } from './payouts.queries';
 import { PayoutsService } from './payouts.service';
 
@@ -13,8 +14,8 @@ import { PayoutsService } from './payouts.service';
  */
 @Module({
   imports: [TeachersModule, TeacherEarningsModule],
-  controllers: [PayoutsController, TeacherPayoutsController],
-  providers: [PayoutsGenerator, PayoutsLedger, PayoutsQueries, PayoutsService],
+  controllers: [PayoutsController, PayoutPaymentController, TeacherPayoutsController],
+  providers: [PayoutsGenerator, PayoutsLedger, PayoutsPayment, PayoutsQueries, PayoutsService],
   exports: [PayoutsQueries, PayoutsService],
 })
 export class PayoutsModule {}

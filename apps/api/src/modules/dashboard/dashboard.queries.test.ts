@@ -36,12 +36,12 @@ describe('DashboardQueries (counts from statuses)', () => {
 });
 
 describe('FinanceQueries', () => {
-  it('paid lessons by status in the window; expenses by month bounds', async () => {
-    const { db, calls } = fakeDb({ lessons: [{ data: [] }], expenses: [{ data: [] }] });
+  it('payable lessons (the one pay rule) in the window; expenses by month bounds', async () => {
+    const { db, calls } = fakeDb({ v_teacher_payable_lessons: [{ data: [] }], expenses: [{ data: [] }] });
     const q = new FinanceQueries(db);
-    await q.paidLessons(W, ['completed']);
+    await q.payableLessons(W);
     await q.expenses('2026-09', '2026-10');
-    expect(calls).toContainEqual({ table: 'lessons', method: 'in', args: ['status', ['completed']] });
+    expect(calls).toContainEqual({ table: 'v_teacher_payable_lessons', method: 'gte', args: ['starts_at', W.from.toISOString()] });
     expect(calls).toContainEqual({ table: 'expenses', method: 'gte', args: ['month', '2026-09-01'] });
     expect(calls).toContainEqual({ table: 'expenses', method: 'lte', args: ['month', '2026-10-01'] });
   });

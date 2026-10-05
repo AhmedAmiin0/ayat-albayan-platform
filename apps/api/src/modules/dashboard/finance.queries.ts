@@ -1,15 +1,11 @@
-import type { LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { readAll } from '../scheduling/read-all';
-import { dbError } from '../teachers/http';
+import { readAll, readChunked } from '../scheduling/read-all';
 
 export type Window = { from: Date; to: Date };
 
 const PAYMENT =
   'id, amount, currency, paid_at, subscription:subscriptions(fx_rate, student:students(guardian:guardians(source)))';
-const COST_LESSON =
-  'id, starts_at, ends_at, teacher:teachers(rate_30, rate_45, rate_60, rate_90), lesson_students(student:students(guardian:guardians(source)))';
 
 /** Finance reads for the dashboard (service role; the controller is admin-only). Paged (R-NFR-08). */
 @Injectable()
@@ -30,34 +26,28 @@ export class FinanceQueries {
     );
   }
 
-  /** Lessons starting in the window whose status is paid to the teacher (payoutStatuses). */
-  paidLessons(w: Window, statuses: readonly LessonStatus[]) {
+  /**
+   * Lessons starting in the window that count toward teacher pay, with their frozen ledger amount
+   * (v_teacher_payable_lessons: the ONE rule of migration 20261005000200; null = no rate).
+   */
+  payableLessons(w: Window) {
     return readAll((from, to) =>
       this.db
-        .from('lessons')
-        .select(COST_LESSON)
-        .in('status', [...statuses])
+        .from('v_teacher_payable_lessons')
+        .select('lesson_id, starts_at, amount')
         .gte('starts_at', w.from.toISOString())
         .lt('starts_at', w.to.toISOString())
         .order('starts_at')
-        .order('id')
+        .order('lesson_id')
         .range(from, to),
     );
   }
 
-  /**
-   * Approved and paid payouts of the months `first`…`last` ("YYYY-MM-01") for their frozen rates
-   * (breakdown.lines and lesson_ids). Few rows: one per teacher per month.
-   */
-  async frozenPayouts(first: string, last: string) {
-    const { data, error } = await this.db
-      .from('teacher_payouts')
-      .select('breakdown')
-      .in('status', ['approved', 'paid'])
-      .gte('month', first)
-      .lte('month', last);
-    if (error) throw dbError(error);
-    return data;
+  /** The guardian source of every student on these lessons (a lesson's cost is split between them). */
+  lessonSources(lessonIds: readonly string[]) {
+    return readChunked(lessonIds, (chunk) =>
+      this.db.from('lesson_students').select('lesson_id, student:students(guardian:guardians(source))').in('lesson_id', chunk),
+    );
   }
 
   /** Expenses of the months `first`…`last` ("YYYY-MM"), inclusive. */
@@ -76,5 +66,4 @@ export class FinanceQueries {
 }
 
 export type PaymentRow = Awaited<ReturnType<FinanceQueries['payments']>>[number];
-export type CostLessonRow = Awaited<ReturnType<FinanceQueries['paidLessons']>>[number];
 export type ExpenseRow = Awaited<ReturnType<FinanceQueries['expenses']>>[number];

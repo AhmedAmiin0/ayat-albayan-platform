@@ -56,6 +56,7 @@ export async function seedSettings(): Promise<void> {
         ('renewal_alert_remaining', '2'::jsonb), ('flag_future_lessons_when_unpaid', 'true'::jsonb),
         ('report_teacher_edit_hours', '24'::jsonb), ('reporting_currency', '"SAR"'::jsonb),
         ('payout_count_late', 'false'::jsonb), ('payout_count_no_show', 'false'::jsonb),
+        ('payout_count_trials', 'false'::jsonb),
         ('auto_messages_enabled', 'true'::jsonb)
       on conflict (key) do update set value = excluded.value`;
   } finally {

@@ -84,6 +84,8 @@ export interface AcademySettings {
   reporting_currency: string;
   payout_count_late: boolean;
   payout_count_no_show: boolean;
+  /** Trial lessons count toward teacher pay (migration 20261005000200; default false). */
+  payout_count_trials: boolean;
   /** Phase 4 (docs/12 §2): R-LEAD-05 hours after the last inbound message, ascending. */
   follow_up_hours: number[];
   reminder_minutes_before: number;

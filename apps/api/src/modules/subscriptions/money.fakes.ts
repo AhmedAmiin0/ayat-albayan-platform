@@ -80,6 +80,9 @@ export function payoutRow(patch: Partial<PayoutRow> = {}): PayoutRow {
     created_at: '2026-10-01T09:00:00Z',
     updated_at: '2026-10-01T09:00:00Z',
     created_by: null,
+    method: null,
+    note: null,
+    receipt_path: null,
     ...patch,
   };
 }

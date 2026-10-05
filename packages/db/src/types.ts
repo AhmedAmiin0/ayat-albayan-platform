@@ -2163,6 +2163,9 @@ export type Database = {
       };
       teacher_payments: {
         Row: {
+          void_reason: string | null;
+          voided_at: string | null;
+          voided_by: string | null;
           amount: number;
           client_request_id: string | null;
           created_at: string;
@@ -2177,6 +2180,9 @@ export type Database = {
           teacher_id: string;
         };
         Insert: {
+          void_reason?: string | null;
+          voided_at?: string | null;
+          voided_by?: string | null;
           amount: number;
           client_request_id?: string | null;
           created_at?: string;
@@ -2191,6 +2197,9 @@ export type Database = {
           teacher_id: string;
         };
         Update: {
+          void_reason?: string | null;
+          voided_at?: string | null;
+          voided_by?: string | null;
           amount?: number;
           client_request_id?: string | null;
           created_at?: string;
@@ -2223,6 +2232,9 @@ export type Database = {
       };
       teacher_payouts: {
         Row: {
+          method: Database['public']['Enums']['payment_method'] | null;
+          note: string | null;
+          receipt_path: string | null;
           amount: number;
           approved_at: string | null;
           approved_by: string | null;
@@ -2240,6 +2252,9 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          method?: Database['public']['Enums']['payment_method'] | null;
+          note?: string | null;
+          receipt_path?: string | null;
           amount: number;
           approved_at?: string | null;
           approved_by?: string | null;
@@ -2257,6 +2272,9 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          method?: Database['public']['Enums']['payment_method'] | null;
+          note?: string | null;
+          receipt_path?: string | null;
           amount?: number;
           approved_at?: string | null;
           approved_by?: string | null;
@@ -2579,6 +2597,34 @@ export type Database = {
           },
         ];
       };
+      v_teacher_payable_lessons: {
+        Row: {
+          amount: number | null;
+          earning_id: string | null;
+          is_trial: boolean;
+          lesson_id: string;
+          minutes: number;
+          paid_amount: number;
+          rate: number | null;
+          starts_at: string;
+          status: Database['public']['Enums']['lesson_status'];
+          teacher_id: string;
+        };
+        Relationships: [];
+      };
+      v_teacher_earnings_summary: {
+        Row: {
+          display_name_ar: string;
+          earned: number;
+          oldest_unpaid_at: string | null;
+          owed: number;
+          paid: number;
+          sessions: number;
+          teacher_id: string;
+          unpaid_sessions: number;
+        };
+        Relationships: [];
+      };
       v_teacher_countable_earnings: {
         Row: {
           amount: number | null;
@@ -2747,6 +2793,16 @@ export type Database = {
       submit_report: { Args: { p: Json }; Returns: Json };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
+      void_teacher_payment: {
+        Args: { p_actor: string; p_payment: string; p_reason: string };
+        Returns: Json;
+      };
+      pay_payout: { Args: { p: Json; p_actor: string; p_payout: string }; Returns: Json };
+      unpay_payout: {
+        Args: { p_actor: string; p_payout: string; p_reason: string };
+        Returns: Json;
+      };
+      reopen_payout: { Args: { p_actor: string; p_payout: string }; Returns: Json };
       settle_payout_in_ledger: {
         Args: { p_actor: string; p_paid_at: string; p_payout: string };
         Returns: string;

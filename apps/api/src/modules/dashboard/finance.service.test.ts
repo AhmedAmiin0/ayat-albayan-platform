@@ -5,19 +5,18 @@ import type { FinanceQueries } from './finance.queries';
 import { FinanceService } from './finance.service';
 import type { FxConverter } from './fx-converter';
 
-const RATES = { rate_30: 130, rate_45: null, rate_60: null, rate_90: null };
-const at = { starts_at: '2026-10-01T16:00:00Z', ends_at: '2026-10-01T16:30:00Z' };
+const at = '2026-10-01T16:00:00Z';
 
 function service(over: { countLate?: boolean } = {}) {
   const money = {
     payments: vi.fn().mockResolvedValue([
       { amount: 145, currency: 'SAR', paid_at: '2026-10-01T10:00:00Z', subscription: { fx_rate: null, student: { guardian: { source: 'facebook_ad' } } } },
     ]),
-    paidLessons: vi.fn().mockResolvedValue([
-      { ...at, id: 'l1', teacher: RATES, lesson_students: [] },
-      { ...at, id: 'l2', ends_at: '2026-10-01T17:00:00Z', teacher: RATES, lesson_students: [] },
+    payableLessons: vi.fn().mockResolvedValue([
+      { lesson_id: 'l1', starts_at: at, amount: 130 },
+      { lesson_id: 'l2', starts_at: at, amount: null },
     ]),
-    frozenPayouts: vi.fn().mockResolvedValue([]),
+    lessonSources: vi.fn().mockResolvedValue([]),
     expenses: vi.fn().mockResolvedValue([{ id: 'e', month: '2026-10-01', category: 'ads', amount: 260, currency: 'EGP' }]),
   };
   const fx = {
@@ -58,11 +57,11 @@ describe('FinanceService.finance (R-RPT-02)', () => {
     expect(f.by_source[0]).toMatchObject({ source: 'facebook_ad', leads: 2, converted: 1, revenue: 145 });
   });
 
-  it('paid lessons follow the payout settings; expenses span the range months', async () => {
+  it('teacher cost reads the one pay rule (payable lessons); sources only for costed lessons', async () => {
     const { svc, money } = service({ countLate: true });
     await svc.finance({ range: { from: '2026-09-15', to: '2026-10-02' }, leads: [] });
-    expect(money.paidLessons.mock.calls[0]?.[1]).toEqual(['completed', 'late']);
+    expect(money.payableLessons).toHaveBeenCalledTimes(1);
+    expect(money.lessonSources).toHaveBeenCalledWith(['l1']);
     expect(money.expenses).toHaveBeenCalledWith('2026-09', '2026-10');
-    expect(money.frozenPayouts).toHaveBeenCalledWith('2026-08-01', '2026-11-01');
   });
 });

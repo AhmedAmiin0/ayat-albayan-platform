@@ -63,11 +63,11 @@ test.describe('teacher_session_earnings follows the lessons (migration 177)', ()
     });
   });
 
-  test('lengths outside 30/45/60/90 never get an earning', async () => {
+  test('lengths outside 30/45/60/90 are pro-rated from the nearest rate (20261005000200)', async () => {
     await rolledBack(async (tx) => {
       const t = await teacherWithRates(tx);
       const odd = await pastLesson(tx, { teacher: t.id, minutes: 50, status: 'completed', daysAgo: 3 });
-      expect(await earningOf(tx, odd)).toBeUndefined();
+      expect(await earningOf(tx, odd)).toMatchObject({ minutes: 50, amount: '77.78' });
     });
   });
 });

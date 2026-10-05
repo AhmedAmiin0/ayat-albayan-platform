@@ -19,6 +19,7 @@ describe('settings form (docs/10, docs/11, docs/12 §2)', () => {
         reportingCurrency: 'SAR',
         payoutCountLate: false,
         payoutCountNoShow: false,
+        payoutCountTrials: false,
         reminderMinutesBefore: 60,
         reminder24hEnabled: false,
         followUpHours: [24, 72],
