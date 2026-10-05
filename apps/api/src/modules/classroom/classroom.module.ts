@@ -12,6 +12,11 @@ import { ClassroomController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
 import { GuestJoinService } from './guest-join.service';
+import { InternalMeetingsController, InternalMeetingsPublicController } from './internal-meetings.controller';
+import { InternalMeetingJoinService } from './internal-meetings.join.service';
+import { InternalMeetingKickService } from './internal-meetings.kick.service';
+import { InternalMeetingsQueries } from './internal-meetings.queries';
+import { InternalMeetingsService } from './internal-meetings.service';
 import { PublicJoinLimit } from './join-limit';
 import { JoinLinkCopyService } from './join-link.copy.service';
 import { JoinLinkService } from './join-link.service';
@@ -40,7 +45,8 @@ import { StudentLinkService } from './student-link.service';
  * sent by «ابعت لينك الحلقة» through the inbox Outbox), and the admin assigns teaching assistants
  * per student. Staff may remove someone from the room (blocked for that lesson), every lesson is
  * recorded (LiveKit egress into the `recordings` bucket, POST /livekit/webhook). Staff may open the room
- * early (POST /lessons/:id/room/open) and a student has a long-lived link (/public/student/:token). TemplateRegistry comes from the global WhatsappModule.
+ * early (POST /lessons/:id/room/open) and a student has a long-lived link (/public/student/:token). «اجتماع داخلي» is a
+ * standalone room with no lesson (/meetings, /public/meetings/:token). TemplateRegistry comes from the global WhatsappModule.
  */
 @Module({
   imports: [InboxModule, TeachersModule],
@@ -53,6 +59,8 @@ import { StudentLinkService } from './student-link.service';
     RoomOpenController,
     StudentLinkPublicController,
     StudentLinkAdminController,
+    InternalMeetingsController,
+    InternalMeetingsPublicController,
   ],
   providers: [
     { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfig => livekitEnv(loadEnv()) },
@@ -81,6 +89,10 @@ import { StudentLinkService } from './student-link.service';
     KickService,
     RecordingListService,
     LivekitWebhookService,
+    InternalMeetingsQueries,
+    InternalMeetingsService,
+    InternalMeetingJoinService,
+    InternalMeetingKickService,
   ],
 })
 export class ClassroomModule {}

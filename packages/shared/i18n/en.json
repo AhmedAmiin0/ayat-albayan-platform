@@ -2183,7 +2183,9 @@
       "participant_not_found": "This participant is no longer in the lesson",
       "cannot_remove": "You are not allowed to remove this participant",
       "no_lesson": "There is no upcoming lesson for this student",
-      "lesson_not_open": "This lesson cannot be opened: it was cancelled or already held"
+      "lesson_not_open": "This lesson cannot be opened: it was cancelled or already held",
+      "meeting_ended": "This meeting has ended",
+      "meeting_not_found": "Meeting not found"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2315,7 +2317,37 @@
     "starting": "Starting…",
     "conflict": "This time clashes with another lesson of the teacher or a student. Give a reason to start anyway.",
     "overrideReason": "Reason to start anyway",
-    "error": "Could not start the lesson, try again"
+    "error": "Could not start the lesson, try again",
+    "internal": {
+      "item": "Internal meeting",
+      "dialogTitle": "Internal meeting",
+      "dialogHint": "A standalone meeting room for internal talks: no students, no lesson, no WhatsApp messages. Share the link with anyone you like.",
+      "title": "Meeting title (optional)",
+      "titlePlaceholder": "Meeting",
+      "create": "Create meeting",
+      "creating": "Creating the meeting…",
+      "ready": "The meeting is ready. Copy the link and share it with the participants.",
+      "link": "Meeting link",
+      "copy": "Copy link",
+      "copied": "Link copied",
+      "enter": "Enter the meeting",
+      "error": "Could not create the meeting, try again",
+      "list": "Internal meetings",
+      "empty": "No internal meetings yet",
+      "open": "Open",
+      "ended": "Ended",
+      "end": "End meeting",
+      "newLink": "New link",
+      "newLinkHint": "Creates and copies a new link; the previous link stops working",
+      "actionError": "Could not complete the request, try again",
+      "guest": {
+        "title": "Internal meeting",
+        "intro": "Type your name, then enter the meeting.",
+        "ended": "This meeting has ended and can no longer be joined.",
+        "invalid": "This link is invalid or was replaced by a new one.",
+        "loading": "Loading…"
+      }
+    }
   },
   "studentLink": {
     "title": "Student join link",

@@ -6,6 +6,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n';
 import { adminDayQuery, dayAround } from './api';
@@ -60,6 +61,7 @@ export function AdminSessions() {
           <Row key={l.id} lesson={l} />
         ))}
       </ul>
+      <InternalMeetingsList />
     </section>
   );
 }

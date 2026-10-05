@@ -3,6 +3,11 @@ const PREFIX = 'lesson-';
 /** The LiveKit room of a lesson (migration 181: derived, not stored). */
 export const lessonRoomName = (lessonId: string): string => `${PREFIX}${lessonId}`;
 
+const MEETING_PREFIX = 'meeting-';
+
+/** The LiveKit room of an internal meeting («اجتماع داخلي», migration 193): derived, not stored. */
+export const meetingRoomName = (meetingId: string): string => `${MEETING_PREFIX}${meetingId}`;
+
 /** Who a token was minted for. Staff roles join with their own login, `guest` with a link. */
 export const JOIN_ROLES = ['teacher', 'admin', 'assistant', 'sales', 'guest'] as const;
 export type JoinRole = (typeof JOIN_ROLES)[number];
@@ -30,5 +35,7 @@ export const CLASSROOM_ERRORS = [
   'cannot_remove',
   'no_lesson',
   'lesson_not_open',
+  'meeting_ended',
+  'meeting_not_found',
 ] as const;
 export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];

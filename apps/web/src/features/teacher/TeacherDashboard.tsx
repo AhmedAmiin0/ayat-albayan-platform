@@ -7,6 +7,8 @@ import { PageHead } from '@/components/ui/page';
 import { Tabs } from '@/components/ui/tabs';
 import { Toast } from '@/components/ui/toast';
 import { errorCode } from '@/features/schedule/api';
+import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
+import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { PendingReports } from '@/features/reports/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
@@ -31,6 +33,9 @@ export function TeacherDashboard() {
   const head = (
     <PageHead>
       <Cartouche>{t.teacher.dashboardTitle}</Cartouche>
+      <div className="ms-auto">
+        <InternalMeetingButton />
+      </div>
     </PageHead>
   );
   if (me.isError) {
@@ -38,7 +43,7 @@ export function TeacherDashboard() {
     return <>{head}<FormAlert>{text}</FormAlert></>;
   }
   if (!me.data) return <>{head}<p className="py-6 text-center text-ink-3">{t.common.loading}</p></>;
-  return <>{head}<Dashboard me={me.data} /></>;
+  return <>{head}<Dashboard me={me.data} /><InternalMeetingsList /></>;
 }
 
 /**

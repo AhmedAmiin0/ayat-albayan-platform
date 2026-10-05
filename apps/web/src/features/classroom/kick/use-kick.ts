@@ -23,6 +23,7 @@ export interface KickController {
 }
 
 export interface KickOptions {
+  /** The lesson (or internal meeting, with its own `remove`) whose room this is; null: no «إخراج». */
   lessonId: string | null;
   role: JoinRole;
   /** Test seam: the API call. */

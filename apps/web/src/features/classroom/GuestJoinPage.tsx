@@ -21,11 +21,21 @@ function problemText(error: unknown): string {
   return opens ? opensAtText(opens) : classroomErrorText(error);
 }
 
-/** /join/:linkToken for a student or guardian: a name, then the room. No login, no app shell. */
-export function GuestJoinPage({ linkToken, make }: { linkToken: string; make?: () => RoomClient }) {
+interface Props {
+  linkToken: string;
+  make?: () => RoomClient;
+  /** The public join call: the lesson link's by default, an internal meeting's (/m/:token) otherwise. */
+  joinWith?: typeof joinAsGuest;
+  /** Heading and intro; the lesson's words by default. */
+  title?: string;
+  intro?: string;
+}
+
+/** /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room. No login, no app shell. */
+export function GuestJoinPage({ linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro }: Props) {
   const [name, setName] = useState('');
   const [missing, setMissing] = useState(false);
-  const join = useMutation({ mutationFn: joinAsGuest });
+  const join = useMutation({ mutationFn: joinWith });
 
   if (join.data) {
     return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={() => join.reset()} />;
@@ -43,8 +53,8 @@ export function GuestJoinPage({ linkToken, make }: { linkToken: string; make?: (
           <Logo />
           <LanguageSwitch />
         </div>
-        <Cartouche>{t.classroom.guest.title}</Cartouche>
-        <p className="text-body text-ink-2">{t.classroom.guest.intro}</p>
+        <Cartouche>{title}</Cartouche>
+        <p className="text-body text-ink-2">{intro}</p>
         <Field label={t.classroom.guest.name} required {...(missing && { error: t.common.required })}>
           {(p) => (
             <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />

@@ -36,6 +36,8 @@ import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
 import { Route as JoinLinkTokenRouteImport } from './routes/join.$linkToken'
+import { Route as MTokenRouteImport } from './routes/m.$token'
+import { Route as MeetingIdRouteImport } from './routes/meeting.$id'
 import { Route as STokenRouteImport } from './routes/s.$token'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
 import { Route as SalesInboxRouteImport } from './routes/sales/inbox'
@@ -192,6 +194,16 @@ const JoinLinkTokenRoute = JoinLinkTokenRouteImport.update({
   path: '/join/$linkToken',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MTokenRoute = MTokenRouteImport.update({
+  id: '/m/$token',
+  path: '/m/$token',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MeetingIdRoute = MeetingIdRouteImport.update({
+  id: '/meeting/$id',
+  path: '/meeting/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const STokenRoute = STokenRouteImport.update({
   id: '/s/$token',
   path: '/s/$token',
@@ -322,6 +334,8 @@ export interface FileRoutesByFullPath {
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
+  '/m/$token': typeof MTokenRoute
+  '/meeting/$id': typeof MeetingIdRoute
   '/s/$token': typeof STokenRoute
   '/sales/inbox': typeof SalesInboxRoute
   '/sales/meetings': typeof SalesMeetingsRoute
@@ -367,6 +381,8 @@ export interface FileRoutesByTo {
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
+  '/m/$token': typeof MTokenRoute
+  '/meeting/$id': typeof MeetingIdRoute
   '/s/$token': typeof STokenRoute
   '/sales/inbox': typeof SalesInboxRoute
   '/sales/meetings': typeof SalesMeetingsRoute
@@ -417,6 +433,8 @@ export interface FileRoutesById {
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
+  '/m/$token': typeof MTokenRoute
+  '/meeting/$id': typeof MeetingIdRoute
   '/s/$token': typeof STokenRoute
   '/sales/inbox': typeof SalesInboxRoute
   '/sales/meetings': typeof SalesMeetingsRoute
@@ -468,6 +486,8 @@ export interface FileRouteTypes {
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/m/$token'
+    | '/meeting/$id'
     | '/s/$token'
     | '/sales/inbox'
     | '/sales/meetings'
@@ -513,6 +533,8 @@ export interface FileRouteTypes {
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/m/$token'
+    | '/meeting/$id'
     | '/s/$token'
     | '/sales/inbox'
     | '/sales/meetings'
@@ -562,6 +584,8 @@ export interface FileRouteTypes {
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
+    | '/m/$token'
+    | '/meeting/$id'
     | '/s/$token'
     | '/sales/inbox'
     | '/sales/meetings'
@@ -597,6 +621,8 @@ export interface RootRouteChildren {
   ClassroomLessonIdRoute: typeof ClassroomLessonIdRoute
   FeedbackTokenRoute: typeof FeedbackTokenRoute
   JoinLinkTokenRoute: typeof JoinLinkTokenRoute
+  MTokenRoute: typeof MTokenRoute
+  MeetingIdRoute: typeof MeetingIdRoute
   STokenRoute: typeof STokenRoute
 }
 
@@ -789,6 +815,20 @@ declare module '@tanstack/react-router' {
       path: '/join/$linkToken'
       fullPath: '/join/$linkToken'
       preLoaderRoute: typeof JoinLinkTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/m/$token': {
+      id: '/m/$token'
+      path: '/m/$token'
+      fullPath: '/m/$token'
+      preLoaderRoute: typeof MTokenRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/meeting/$id': {
+      id: '/meeting/$id'
+      path: '/meeting/$id'
+      fullPath: '/meeting/$id'
+      preLoaderRoute: typeof MeetingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/s/$token': {
@@ -1086,6 +1126,8 @@ const rootRouteChildren: RootRouteChildren = {
   ClassroomLessonIdRoute: ClassroomLessonIdRoute,
   FeedbackTokenRoute: FeedbackTokenRoute,
   JoinLinkTokenRoute: JoinLinkTokenRoute,
+  MTokenRoute: MTokenRoute,
+  MeetingIdRoute: MeetingIdRoute,
   STokenRoute: STokenRoute,
 }
 export const routeTree = rootRouteImport
