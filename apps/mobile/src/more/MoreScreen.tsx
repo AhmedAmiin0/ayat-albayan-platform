@@ -7,6 +7,7 @@ import { Button } from '@/ui/Button';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { AdminOpsSection } from './AdminOpsSection';
 import { AppearancePicker } from './AppearancePicker';
 import { LanguageRow } from './LanguageRow';
 import { MoneySection } from './MoneySection';
@@ -34,6 +35,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
         {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
       </View>
       <MoneySection />
+      <AdminOpsSection />
       <AppearancePicker />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>

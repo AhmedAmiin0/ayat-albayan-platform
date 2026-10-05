@@ -1954,6 +1954,63 @@
       "tz_city": "الرياض"
     }
   },
+  "mobileAdmin": {
+    "section": "الإدارة",
+    "rows": {
+      "dashboard": "لوحة المتابعة",
+      "settings": "إعدادات الأكاديمية",
+      "activity": "سجل النشاط"
+    },
+    "dashboard": {
+      "title": "لوحة المتابعة",
+      "activeStudents": "طلاب مشتركون",
+      "needsAttention": "تحتاج إلى متابعة",
+      "openStudent": "افتح ملف {name}",
+      "openAll": "فتح الطالب"
+    },
+    "reports": {
+      "button": "سجل التقارير",
+      "detailTitle": "تقرير الحلقة",
+      "noContent": "لم يُكتب شيء في هذا الحقل"
+    },
+    "settings": {
+      "title": "إعدادات الأكاديمية",
+      "subtitle": "تُطبَّق على كل الحلقات والمعلمين",
+      "lateCancelOn": "مفعّل",
+      "lateCancelOff": "مغلق",
+      "hours": "ساعة",
+      "weeks": "أسبوع",
+      "lessons": "حلقة",
+      "followUpHours": "ساعات المتابعة بعد آخر رسالة",
+      "followUpHint": "اكتب الساعات من الأصغر إلى الأكبر، مثلًا 24، 72",
+      "currencyHint": "ثلاثة أحرف كبيرة، مثل SAR أو EGP",
+      "unsaved": "لديك تغييرات غير محفوظة",
+      "discard": "تراجع عن التغييرات",
+      "serverRejected": "رفض الخادم هذه القيم، راجع الحقول المعلّمة",
+      "readOnlyTitle": "تُدار من الموقع فقط",
+      "readOnlyNote": "لتغيير هذه الإعدادات استخدم لوحة الإدارة على الويب.",
+      "messagingEnabled": "إرسال الرسائل عبر واتساب",
+      "autoMessagesEnabled": "الرسائل التلقائية",
+      "crmCutoverDone": "اكتمل الانتقال إلى النظام الجديد",
+      "on": "مفعّل",
+      "off": "مغلق"
+    },
+    "activity": {
+      "filters": "التصفية",
+      "role": "المستخدم",
+      "entity": "العنصر",
+      "from": "من تاريخ",
+      "to": "إلى تاريخ",
+      "all": "الكل",
+      "datePlaceholder": "2026-10-05",
+      "dateInvalid": "اكتب التاريخ بصيغة 2026-10-05",
+      "dateOrder": "يجب ألا يسبق تاريخ البداية تاريخ النهاية",
+      "clear": "مسح التصفية",
+      "by": "بواسطة {name}",
+      "loadingMore": "جارٍ تحميل المزيد…",
+      "emptyFiltered": "لا يوجد نشاط يطابق هذه التصفية"
+    }
+  },
   "messages": {
     "log": "سجل الرسائل",
     "retry": "حاول مرة أخرى",

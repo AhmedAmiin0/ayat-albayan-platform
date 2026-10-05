@@ -10,8 +10,8 @@ import type { AvailabilityRow } from '@/more/types';
 const ME = '/teachers/me';
 
 /** GET /teachers/me: name, tz, link, students. 404 `teacher_not_linked` without a teachers row. */
-export function useTeacherMe() {
-  return useQuery({ queryKey: pathKey(ME), queryFn: () => apiFetch<TeacherMe>(ME) });
+export function useTeacherMe(enabled = true) {
+  return useQuery({ queryKey: pathKey(ME), queryFn: () => apiFetch<TeacherMe>(ME), enabled });
 }
 
 export function isNotLinked(error: unknown): boolean {
