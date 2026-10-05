@@ -15,6 +15,8 @@ export interface PaymentIn {
   amount: number;
   currency: string;
   paid_at: string;
+  /** A refund («استرداد») is money back: negative revenue. Absent = a payment. */
+  kind?: 'payment' | 'refund';
   subscription: { fx_rate: number | null; student: { guardian: Source } | null } | null;
 }
 export interface CostLessonIn {
@@ -36,8 +38,9 @@ export function paymentFacts(rows: readonly PaymentIn[]): PaymentFact[] {
   return rows.map((p) => {
     const fx = p.subscription?.fx_rate ? Number(p.subscription.fx_rate) : null;
     const quoted = fx !== null && p.currency !== 'SAR';
+    const signed = p.kind === 'refund' ? -Number(p.amount) : Number(p.amount);
     return {
-      amount: quoted ? Number(p.amount) / fx : Number(p.amount),
+      amount: quoted ? signed / fx : signed,
       currency: quoted ? 'SAR' : p.currency,
       month: riyadhMonth(p.paid_at),
       source: sourceOf(p.subscription?.student?.guardian ?? null),

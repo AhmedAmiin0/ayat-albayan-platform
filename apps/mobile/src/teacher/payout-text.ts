@@ -26,7 +26,8 @@ export function breakdownLines(p: PayoutView): string[] {
       .replace('{lessons}', String(line.lessons))
       .replace('{rate}', line.rate === null ? '—' : String(line.rate))
       .replace('{amount}', String(line.amount));
-    return `${durations[String(line.duration)] ?? line.duration}: ${sum}`;
+    const length = durations[String(line.duration)] ?? t.earnings.minutes.replace('{count}', String(line.duration));
+    return `${length}: ${sum}`;
   });
 }
 

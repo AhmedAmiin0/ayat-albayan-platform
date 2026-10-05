@@ -45,6 +45,13 @@ describe('paymentFacts / expenseFacts / currenciesOf', () => {
     expect(fact).toEqual({ amount: 160, currency: 'SAR', month: '2026-10', source: 'unknown' });
   });
 
+  it('a refund is negative revenue (it counts against what was paid)', () => {
+    const [fact] = paymentFacts([
+      { amount: 45, currency: 'SAR', paid_at: '2026-10-02T09:00:00.000Z', kind: 'refund', subscription: null },
+    ]);
+    expect(fact?.amount).toBe(-45);
+  });
+
   it('an expense month "2026-09-01" becomes "2026-09"', () => {
     expect(expenseFacts([{ month: '2026-09-01', category: 'ads', amount: 17000, currency: 'EGP' }])).toEqual([
       { amount: 17000, currency: 'EGP', month: '2026-09', category: 'ads' },

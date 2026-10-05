@@ -39,7 +39,7 @@ function PayoutCard({ payout }: { payout: PayoutView }) {
 }
 
 /**
- * «مستحقاتي» (R-TCH-04): my months newest first, each with its lessons, the amount in EGP, its
+ * «كشوف الشهر» (R-TCH-04): my months newest first, each with its lessons, the amount in EGP, its
  * state (مسودة / اتعتمدت / اتدفعت) and the breakdown by lesson length. Read-only.
  */
 export function MyPayoutsScreen() {
@@ -47,7 +47,7 @@ export function MyPayoutsScreen() {
   return (
     <Screen>
       <ScreenHeader
-        title={t.teacherNav.payouts}
+        title={t.earnings.monthly}
         trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <FlatList

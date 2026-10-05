@@ -5,7 +5,7 @@ import { readAll, readChunked } from '../scheduling/read-all';
 export type Window = { from: Date; to: Date };
 
 const PAYMENT =
-  'id, amount, currency, paid_at, subscription:subscriptions(fx_rate, student:students(guardian:guardians(source)))';
+  'id, amount, currency, paid_at, kind, subscription:subscriptions(fx_rate, student:students(guardian:guardians(source)))';
 
 /** Finance reads for the dashboard (service role; the controller is admin-only). Paged (R-NFR-08). */
 @Injectable()
