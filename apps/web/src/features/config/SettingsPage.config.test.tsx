@@ -30,7 +30,7 @@ afterEach(() => {
 describe('settings page: custom-config additions', () => {
   it('shows the new settings, the custom panel and its index entry', async () => {
     renderPage();
-    for (const label of [t.config.defaultLessonMinutes, t.config.activityRetentionDays, t.config.recordingRetentionDays, t.config.academyContact, t.config.recordingConsentNotice]) {
+    for (const label of [t.config.activityRetentionDays, t.config.recordingRetentionDays, t.config.academyContact, t.config.recordingConsentNotice]) {
       expect((await screen.findAllByText(label)).length).toBeGreaterThan(0);
     }
     const nav = screen.getByRole('navigation', { name: t.settings.nav });

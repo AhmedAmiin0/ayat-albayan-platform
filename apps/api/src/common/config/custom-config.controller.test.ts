@@ -51,13 +51,13 @@ describe('/config/custom (admin CRUD)', () => {
     const res = await call('PUT', '/config/custom/promo', { payload: { value: 'hi', isPublic: true } });
     expect(res.statusCode).toBe(200);
     expect(custom.upsert).toHaveBeenCalledWith('promo', { value: 'hi', isPublic: true }, USERS['admin']?.id);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', action: 'create', before: null, after: VIEW }));
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'custom_config', action: 'create:promo', before: null, after: VIEW }));
   });
 
   it('PUT over an existing entry audits before and after as an update', async () => {
     custom.find.mockResolvedValue({ ...VIEW, value: 'old' });
     await call('PUT', '/config/custom/promo', { payload: { value: 'hi' } });
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'update', before: { ...VIEW, value: 'old' }, after: VIEW }));
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'update:promo', before: { ...VIEW, value: 'old' }, after: VIEW }));
   });
 
   it.each([
@@ -76,7 +76,7 @@ describe('/config/custom (admin CRUD)', () => {
     custom.find.mockResolvedValue(VIEW);
     custom.remove.mockResolvedValue(true);
     expect((await call('DELETE', '/config/custom/promo')).statusCode).toBe(204);
-    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'delete', before: VIEW, after: null }));
+    expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'delete:promo', before: VIEW, after: null }));
     audit.record.mockClear();
     custom.find.mockResolvedValue(null);
     expect((await call('DELETE', '/config/custom/promo')).statusCode).toBe(404);

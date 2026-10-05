@@ -5,6 +5,7 @@ import { AppModule } from '../../app.module';
 import { AuditService } from '../audit/audit.service';
 import { TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
 import type { AuthUser } from '../auth/verify-token';
+import { CustomConfigService } from '../config/custom-config.service';
 import { SettingsService } from './settings.service';
 import { SETTING_DEFAULTS } from './settings.values';
 
@@ -18,6 +19,7 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 const settings = { all: vi.fn(), write: vi.fn(), publicView: vi.fn() };
+const custom = { publicRows: vi.fn() };
 const audit = { record: vi.fn() };
 
 describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH-02)', () => {
@@ -29,6 +31,7 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SettingsService).useValue(settings)
+      .overrideProvider(CustomConfigService).useValue(custom)
       .overrideProvider(AuditService).useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -39,6 +42,7 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
   beforeEach(() => {
     vi.resetAllMocks();
     settings.all.mockResolvedValue(SETTING_DEFAULTS);
+    custom.publicRows.mockResolvedValue([]);
   });
 
   it('admins read them; late-cancel is OFF (null) by default; teachers get 403', async () => {
@@ -90,8 +94,19 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
   it('GET /settings/public needs no login and returns only the public keys', async () => {
     settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
     const res = await app.inject({ method: 'GET', url: '/settings/public' });
-    expect([res.statusCode, res.json()]).toEqual([200, { join_opens_before_min: 10 }]);
+    expect([res.statusCode, res.json()]).toEqual([200, { join_opens_before_min: 10, custom: {} }]);
     expect(res.headers['cache-control']).toBe('public, max-age=60');
+  });
+
+  it('GET /settings/public adds the custom entries flagged public, never a private or shadowing row', async () => {
+    settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
+    custom.publicRows.mockResolvedValue([
+      { key: 'promo', value: { text: 'hi' }, is_public: true },
+      { key: 'internal.note', value: 'x', is_public: false },
+      { key: 'messaging_enabled', value: 'shadow', is_public: true },
+    ]);
+    const res = await app.inject({ method: 'GET', url: '/settings/public' });
+    expect(res.json()).toEqual({ join_opens_before_min: 10, custom: { promo: { text: 'hi' } } });
   });
 
   it('PATCH validates the new keys from the registry (E.164, min/max)', async () => {

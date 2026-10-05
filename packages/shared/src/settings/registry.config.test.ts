@@ -7,19 +7,24 @@ import { readSettings } from './validate.js';
 const ok = (b: object) => settingsUpdateSchema.safeParse(b).success;
 
 describe('custom-config settings (2026-10-05)', () => {
-  it('defaults: keep recordings forever, 180 days of activity, 45-minute lessons, no consent notice', () => {
+  it('defaults: keep recordings forever, 180 days of activity, no consent notice, one WhatsApp number', () => {
     expect(SETTING_DEFAULTS).toMatchObject({
       recording_retention_days: null,
       activity_retention_days: 180,
-      default_lesson_minutes: 45,
       recording_consent_notice: null,
-      academy_contact: { site: 'ayatalbayan.com', whatsapp: '+966566101447' },
+      academy_contact: { site: 'ayatalbayan.com' },
     });
+    expect(SETTING_DEFAULTS.academy_contact).not.toHaveProperty('whatsapp');
   });
 
-  it('the contact and the consent notice are public; the retention and lesson settings are not', () => {
+  it('object defaults are frozen: no caller can change the registry', () => {
+    expect(Object.isFrozen(SETTING_DEFAULTS.academy_contact)).toBe(true);
+    expect(Object.isFrozen(readSettings([]).academy_contact)).toBe(true);
+  });
+
+  it('the contact and the consent notice are public; the retention settings are not', () => {
     expect(PUBLIC_SETTING_KEYS).toEqual(expect.arrayContaining(['academy_contact', 'recording_consent_notice']));
-    for (const k of ['recording_retention_days', 'activity_retention_days', 'default_lesson_minutes'] as const) {
+    for (const k of ['recording_retention_days', 'activity_retention_days'] as const) {
       expect(PUBLIC_SETTING_KEYS).not.toContain(k);
       expect(settingDef(k)).not.toHaveProperty('public');
     }
@@ -33,18 +38,15 @@ describe('custom-config settings (2026-10-05)', () => {
     ['activityRetentionDays', 365, true],
     ['activityRetentionDays', null, false],
     ['activityRetentionDays', 0, false],
-    ['defaultLessonMinutes', 60, true],
-    ['defaultLessonMinutes', 4, false],
-    ['defaultLessonMinutes', 241, false],
     ['recordingConsentNotice', null, true],
     ['recordingConsentNotice', { ar: 'نص', en: 'text' }, true],
     ['recordingConsentNotice', { fr: 'x' }, false],
     ['recordingConsentNotice', 'plain', false],
-    ['academyContact', { site: 'example.org', whatsapp: '+201001234567', email: 'a@b.co' }, true],
-    ['academyContact', { whatsapp: '0566101447' }, false],
+    ['academyContact', { site: 'example.org', email: 'a@b.co' }, true],
+    ['academyContact', { whatsapp: '+201001234567' }, false],
     ['academyContact', { email: 'nope' }, false],
     ['academyContact', { site: 'not a host' }, false],
-    ['academyContact', { whatsapp: '' }, false],
+    ['academyContact', { site: '' }, false],
     ['academyContact', null, false],
   ])('PATCH %s = %j → %s', (field, value, valid) => {
     expect(ok({ [field]: value })).toBe(valid);
@@ -56,16 +58,14 @@ describe('custom-config settings (2026-10-05)', () => {
       { key: 'recording_retention_days', value: 'x' },
       { key: 'academy_contact', value: { email: 'a@b.co' } },
       { key: 'recording_consent_notice', value: { ar: 'نص' } },
-      { key: 'default_lesson_minutes', value: 0 },
     ]);
     expect(s).toMatchObject({
       activity_retention_days: 30,
       recording_retention_days: null,
       academy_contact: { email: 'a@b.co' },
       recording_consent_notice: { ar: 'نص' },
-      default_lesson_minutes: 45,
     });
-    expect(readSettings([{ key: 'academy_contact', value: { whatsapp: 'bad' } }]).academy_contact).toEqual(SETTING_DEFAULTS.academy_contact);
+    expect(readSettings([{ key: 'academy_contact', value: { site: 'not a host' } }]).academy_contact).toEqual(SETTING_DEFAULTS.academy_contact);
     expect(readSettings([{ key: 'activity_retention_days', value: 0 }]).activity_retention_days).toBe(180);
   });
 

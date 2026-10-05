@@ -1,7 +1,7 @@
 import type { Json } from '@ab/db';
 import { z } from 'zod';
-import { publicSettings, type PublicSettings } from './public.js';
-import { isSettingKey, type AcademySettings } from './registry.js';
+import type { PublicSettings } from './public.js';
+import { isSettingKey } from './registry.js';
 
 /** Free-form entries (`custom_config` table): the key shape the table's check enforces. */
 export const CUSTOM_KEY_RE = /^[a-z][a-z0-9_.-]{1,63}$/;
@@ -42,11 +42,8 @@ export interface CustomConfigView {
   updatedBy: string | null;
 }
 
-/** GET /config (no login): the public settings by row key, custom entries flagged public by key. */
-export interface PublicConfig {
-  settings: PublicSettings;
-  custom: Record<string, Json>;
-}
+/** GET /settings/public (no login): the public settings by row key, plus `custom`: the entries flagged public. */
+export type PublicConfig = PublicSettings & { custom: Record<string, Json> };
 
 interface CustomRow {
   key: string;
@@ -54,11 +51,7 @@ interface CustomRow {
   is_public: boolean;
 }
 
-/**
- * The whitelist: the registry's `public: true` settings plus custom rows flagged is_public. Any
- * other setting, private custom row or custom row shadowing a setting key is dropped.
- */
-export function buildPublicConfig(all: AcademySettings, custom: readonly CustomRow[]): PublicConfig {
-  const entries = custom.filter((r) => r.is_public && !isSettingKey(r.key)).map((r) => [r.key, r.value]);
-  return { settings: publicSettings(all), custom: Object.fromEntries(entries) };
+/** The public custom entries by key; a private row, or one shadowing a registry setting, is dropped. */
+export function publicCustom(rows: readonly CustomRow[]): Record<string, Json> {
+  return Object.fromEntries(rows.filter((r) => r.is_public && !isSettingKey(r.key)).map((r) => [r.key, r.value]));
 }

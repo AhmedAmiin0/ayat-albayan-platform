@@ -5,7 +5,7 @@ import { ornament } from './template.header';
 
 const r = AR.reports;
 
-/** The built-in contact: used when settings.academy_contact has no site or number. */
+/** The built-in contact: used when the settings cannot be read, or academy_contact has no site. */
 export const CONTACT = { site: 'ayatalbayan.com', whatsapp: '+966 56 610 1447' } as const;
 
 /** A «۞ title» section rule. */

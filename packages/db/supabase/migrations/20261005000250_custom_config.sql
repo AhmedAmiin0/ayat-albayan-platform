@@ -15,16 +15,15 @@ drop trigger if exists custom_config_updated_at on public.custom_config;
 create trigger custom_config_updated_at before update on public.custom_config
   for each row execute function public.set_updated_at();
 
--- RLS (rule 9): admins read and write; nothing is readable directly by anyone else. Public entries
--- are served by the API's GET /config (service role), which whitelists is_public itself.
+-- RLS (rule 9): admins read; the API (service role) writes, like public.settings. Nothing is
+-- readable directly by anyone else; public entries are served by the API's GET /settings/public
+-- (service role), which whitelists is_public itself.
 alter table public.custom_config enable row level security;
 revoke all on public.custom_config from anon;
 drop policy if exists custom_config_admin_read on public.custom_config;
 create policy custom_config_admin_read on public.custom_config for select to authenticated
   using (public.is_admin());
 drop policy if exists custom_config_admin_write on public.custom_config;
-create policy custom_config_admin_write on public.custom_config for all to authenticated
-  using (public.is_admin()) with check (public.is_admin());
 
 -- Retention: settings.activity_retention_days (default 180 when the row is missing or malformed,
 -- the old fixed value). Same contract as before: deleting by cutoff twice deletes nothing the

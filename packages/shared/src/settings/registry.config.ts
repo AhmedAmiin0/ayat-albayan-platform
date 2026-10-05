@@ -1,22 +1,19 @@
 import type { SettingDef } from './types.js';
 
 /**
- * Custom-config request (2026-10-05): the defaults the code used to hard-code, the public contact
- * and consent notice, and data retention. Retention of recordings is OFF (null = keep forever):
+ * Custom-config request (2026-10-05): the public contact and consent notice, and data retention.
+ * The consent notice and the recording retention have no consumer yet (the recordings PR adds them). Retention of recordings is OFF (null = keep forever):
  * deleting them is the owner's decision, never on by default.
  */
 export const CONFIG_SETTINGS = {
-  /** The starting length of a new lesson (consumers may adopt it; today 45 is typed where lessons are made). */
-  default_lesson_minutes: {
-    section: 'schedule', type: 'int', default: 45, min: 5, max: 240,
-    labelKey: 'config.defaultLessonMinutes', hintKey: 'config.defaultLessonMinutesHint',
-  },
-  /** Printed in the footer of every lesson report (falls back to the built-in contact for a missing field). */
+  /**
+   * Printed in the footer of every lesson report (a missing site keeps the built-in one). The
+   * WhatsApp number is academy_whatsapp_e164 (one source), not a field here.
+   */
   academy_contact: {
-    section: 'academy', type: 'json', default: { site: 'ayatalbayan.com', whatsapp: '+966566101447' }, public: true,
+    section: 'academy', type: 'json', default: { site: 'ayatalbayan.com' }, public: true,
     shape: [
       { name: 'site', kind: 'string', format: 'host', max: 100 },
-      { name: 'whatsapp', kind: 'string', format: 'e164', max: 16 },
       { name: 'email', kind: 'string', format: 'email', max: 120 },
     ],
     labelKey: 'config.academyContact', hintKey: 'config.academyContactHint',

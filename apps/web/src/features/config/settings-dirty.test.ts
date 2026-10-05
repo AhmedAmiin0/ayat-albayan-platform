@@ -23,7 +23,7 @@ describe('settings form: dirty tracking and reset-to-default', () => {
   it('knows which fields stand behind a setting', () => {
     expect(fieldIds('booking_horizon_weeks')).toEqual(['bookingHorizonWeeks']);
     expect(fieldIds('late_cancel_hours')).toEqual(['lateCancelHours', 'lateCancelHoursOn']);
-    expect(fieldIds('academy_contact')).toEqual(['academyContact.site', 'academyContact.whatsapp', 'academyContact.email']);
+    expect(fieldIds('academy_contact')).toEqual(['academyContact.site', 'academyContact.email']);
   });
 
   it('a value is at its default or not; reset puts every field back, switch and boxes included', () => {
@@ -36,7 +36,6 @@ describe('settings form: dirty tracking and reset-to-default', () => {
     expect(isDefault('late_cancel_hours', { ...late, ...resetPatch('late_cancel_hours') })).toBe(true);
     expect(resetPatch('academy_contact')).toEqual({
       'academyContact.site': 'ayatalbayan.com',
-      'academyContact.whatsapp': '+966566101447',
       'academyContact.email': '',
     });
   });

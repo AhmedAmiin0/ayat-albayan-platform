@@ -53,7 +53,7 @@ describe('new settings over PATCH /settings, and GET /config/meta', () => {
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'settings', before: SETTING_DEFAULTS, after }));
   });
 
-  it.each([{ activityRetentionDays: 0 }, { recordingRetentionDays: 0 }, { defaultLessonMinutes: 500 }, { academyContact: { whatsapp: '0566' } }])(
+  it.each([{ activityRetentionDays: 0 }, { recordingRetentionDays: 0 }, { academyContact: { site: 'not a host' } }, { academyContact: { whatsapp: '+966566101447' } }])(
     'rejects %j with 400',
     async (payload) => {
       expect((await call('PATCH', '/settings', { payload })).statusCode).toBe(400);

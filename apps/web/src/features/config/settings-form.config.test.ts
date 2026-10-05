@@ -13,11 +13,10 @@ describe('settings form: the custom-config settings', () => {
   it('the defaults round-trip: contact kept, no consent notice, recordings kept forever', () => {
     expect(form['recordingRetentionDaysOn']).toBe(false);
     expect(sent(form)).toMatchObject({
-      academyContact: { site: 'ayatalbayan.com', whatsapp: '+966566101447' },
+      academyContact: { site: 'ayatalbayan.com' },
       recordingConsentNotice: null,
       recordingRetentionDays: null,
       activityRetentionDays: 180,
-      defaultLessonMinutes: 45,
     });
   });
 
@@ -27,10 +26,10 @@ describe('settings form: the custom-config settings', () => {
     expect(sent({ ...on, recordingRetentionDays: '0' })).toEqual({ recordingRetentionDays: t.settings.invalid });
   });
 
-  it('contact: empty boxes are left out; a bad number or email is refused on the setting', () => {
+  it('contact: empty boxes are left out; a bad site or email is refused on the setting', () => {
     const f = { ...form, 'academyContact.email': ' a@b.co ', 'academyContact.site': '' };
-    expect(sent(f)).toMatchObject({ academyContact: { whatsapp: '+966566101447', email: 'a@b.co' } });
-    expect(sent({ ...f, 'academyContact.whatsapp': '0566101447' })).toEqual({ academyContact: t.settings.invalidText });
+    expect(sent(f)).toMatchObject({ academyContact: { email: 'a@b.co' } });
+    expect(sent({ ...f, 'academyContact.site': 'not a host' })).toEqual({ academyContact: t.settings.invalidText });
     expect(sent({ ...f, 'academyContact.email': 'nope' })).toEqual({ academyContact: t.settings.invalidText });
   });
 

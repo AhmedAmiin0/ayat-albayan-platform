@@ -44,10 +44,11 @@ export const SETTING_KEY_OF = Object.fromEntries(SETTING_KEYS.map((k) => [camelK
   SettingKey
 >;
 
-/** A fresh copy of a default (lists are copied so a caller never mutates the registry). */
+/** A default safe to share: lists are copied, objects (academy_contact...) frozen so a caller never mutates the registry. */
 function defaultOf(key: SettingKey): AcademySettings[SettingKey] {
   const d: unknown = SETTINGS_REGISTRY[key].default;
-  return (Array.isArray(d) ? [...d] : d) as AcademySettings[SettingKey];
+  const v = Array.isArray(d) ? [...d] : d !== null && typeof d === 'object' ? Object.freeze({ ...d }) : d;
+  return v as AcademySettings[SettingKey];
 }
 
 /** Used when a row is missing or malformed; the migrations seed the same values. */

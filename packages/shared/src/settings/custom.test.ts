@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_KEYS } from './public.js';
-import { SETTING_DEFAULTS, SETTING_KEYS } from './registry.js';
-import { buildPublicConfig, CUSTOM_VALUE_MAX_BYTES, customConfigUpsertSchema, customKeySchema } from './custom.js';
+import { publicCustom, CUSTOM_VALUE_MAX_BYTES, customConfigUpsertSchema, customKeySchema } from './custom.js';
 
 describe('custom entry validation', () => {
   it.each(['promo.banner', 'a1', 'site-name', 'x_y.z-9'])('accepts the key %s', (k) => {
@@ -31,30 +29,20 @@ describe('custom entry validation', () => {
   });
 });
 
-describe('public /config whitelist', () => {
-  const all = { ...SETTING_DEFAULTS, messaging_enabled: true, late_cancel_hours: 6, academy_contact: { site: 'x.org' } };
-  const custom = [
+describe('public custom entries (GET /settings/public)', () => {
+  const rows = [
     { key: 'promo', value: 'hi', is_public: true },
     { key: 'internal.note', value: 'private', is_public: false },
     { key: 'messaging_enabled', value: 'shadow', is_public: true },
   ];
 
-  it('returns the public settings and the public custom entries, nothing else', () => {
-    const out = buildPublicConfig(all, custom);
-    expect(Object.keys(out.settings).sort()).toEqual([...PUBLIC_SETTING_KEYS].sort());
-    expect(out.settings).toMatchObject({ academy_contact: { site: 'x.org' }, recording_consent_notice: null });
-    expect(out.custom).toEqual({ promo: 'hi' });
+  it('keeps only the rows flagged public that do not shadow a setting', () => {
+    expect(publicCustom(rows)).toEqual({ promo: 'hi' });
+    expect(publicCustom([])).toEqual({});
   });
 
-  it('never leaks a non-public key, in any form', () => {
-    const text = JSON.stringify(buildPublicConfig(all, custom));
-    for (const leak of ['messaging_enabled', 'late_cancel_hours', 'internal.note', 'private', 'shadow', 'crm_cutover_done', 'follow_up_hours']) {
-      expect(text).not.toContain(leak);
-    }
-  });
-
-  it('every registry key is either public (returned) or hidden: the whitelist is the registry flag', () => {
-    const out = buildPublicConfig(all, []);
-    for (const k of SETTING_KEYS) expect(k in out.settings).toBe((PUBLIC_SETTING_KEYS as string[]).includes(k));
+  it('never leaks a private row or a setting key, in any form', () => {
+    const text = JSON.stringify(publicCustom(rows));
+    for (const leak of ['messaging_enabled', 'internal.note', 'private', 'shadow']) expect(text).not.toContain(leak);
   });
 });
