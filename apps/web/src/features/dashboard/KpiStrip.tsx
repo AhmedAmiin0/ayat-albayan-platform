@@ -21,7 +21,7 @@ function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
     <>
       <span
         data-act={kpi.act || undefined}
-        className={cn('font-display text-[40px] leading-none font-bold', loading ? 'text-ink-3' : kpi.act ? 'text-act' : 'text-ink')}
+        className={cn('font-display text-[28px] leading-none font-bold', loading ? 'text-ink-3' : kpi.act ? 'text-act' : 'text-ink')}
       >
         {loading ? '—' : kpi.value}
       </span>{' '}
@@ -31,7 +31,7 @@ function Figure({ kpi, loading }: { kpi: Kpi; loading: boolean }): ReactNode {
 }
 
 /**
- * docs/07 §6: four numbers between two 3px double gold rules, Amiri 40px, Western digits; each a
+ * The work column's switcher (docs/07 §6): four counts in a 2×2 grid, Western digits; each a
  * filter link: «يحتاج تأكيد» opens the schedule filtered to it, the other three pick the queue below.
  */
 export function KpiStrip({ summary, work }: KpiStripProps) {
@@ -39,7 +39,7 @@ export function KpiStrip({ summary, work }: KpiStripProps) {
   const kpis = kpisOf(counts);
   return (
     <nav aria-label={t.dashboard.kpiStrip} className="border-y border-rule py-1.5">
-      <ul className="grid grid-cols-2 gap-1 sm:grid-cols-4">
+      <ul className="grid grid-cols-2 gap-1">
         {kpis.map((k) => (
           <li key={k.key}>
             {k.key === 'needsConfirm' ? (

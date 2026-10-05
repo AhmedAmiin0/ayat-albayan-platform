@@ -1455,6 +1455,24 @@
     "error": {
       "invalid_range": "The end date must be after the start date",
       "range_too_large": "The period is too long. Choose a year or less"
+    },
+    "home": {
+      "today": "Today at a glance",
+      "lessonsToday": "Lessons today",
+      "openNow": "Open now",
+      "live": "Live now",
+      "todayList": "Today's lessons",
+      "todayEmpty": "No lessons today",
+      "todayEmptyHint": "Today's lessons will show here with their times and join buttons.",
+      "work": "Tasks",
+      "inbox": "Latest messages",
+      "inboxEmpty": "No messages yet",
+      "inboxEmptyHint": "The latest WhatsApp conversations will show here.",
+      "inboxAll": "All messages",
+      "quick": "Quick actions",
+      "addStudent": "Add student",
+      "book": "Book a lesson",
+      "teacher": "Teacher: {name}"
     }
   },
   "exports": {
@@ -2190,7 +2208,21 @@
       "title": "Online classrooms",
       "empty": "No lessons on this day",
       "teacher": "Teacher",
-      "students": "Students"
+      "students": "Students",
+      "groups": {
+        "now": "Now",
+        "upcoming": "Coming up",
+        "ended": "Ended"
+      },
+      "groupEmpty": {
+        "now": "No room is open right now.",
+        "upcoming": "No more lessons on this day.",
+        "ended": "No lesson has ended yet."
+      },
+      "live": "Started",
+      "ended": "Ended",
+      "more": "More options",
+      "time": "{from} – {to}"
     },
     "sectionTitle": "Online classroom",
     "sectionHint": "Join yourself, or send/copy the link for the student",
