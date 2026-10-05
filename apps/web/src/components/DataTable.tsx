@@ -1,21 +1,22 @@
-import { tableFeatures, useTable, type ColumnDef, type RowData } from '@tanstack/react-table';
+import { useTable, type RowData } from '@tanstack/react-table';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { ColumnFilters } from './ColumnFilters';
+import {
+  collatorSortFn,
+  dataTableFeatures,
+  metaFilterFn,
+  sortFilterOptions,
+  type DataTableColumn,
+  type DataTableColumnMeta,
+  type DataTableFilters,
+  type DataTableSort,
+} from './data-table-features';
+import { DataTableHead } from './DataTableHead';
+import { filterControls } from './filter-controls';
 import { tableBoxClass } from './TableBox';
 
-/** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
-export interface DataTableColumnMeta {
-  className?: string;
-  headClassName?: string;
-}
-
-/**
- * Core-only table features: sorting/filtering/pagination are server-side (R-NFR-08), so feature
- * pages keep that state in the route search params and pass the current page as `data`.
- */
-export const dataTableFeatures = tableFeatures({ columnMeta: {} as DataTableColumnMeta });
-export type DataTableFeatures = typeof dataTableFeatures;
-export type DataTableColumn<T extends RowData> = ColumnDef<DataTableFeatures, T>;
+export * from './data-table-features';
 
 /** Hamish (marginal note) column: after a double gold-soft rule; folds away in narrow pages. */
 const hamishHeadClass = 'border-s border-s-rule ps-3.5 @max-[940px]:hidden';
@@ -49,6 +50,16 @@ export interface DataTableProps<T extends RowData> {
   stacked?: boolean;
   /** A list screen's main table: a fixed-height box (TableBox) that scrolls inside itself. */
   fill?: boolean;
+  /** Server sort (paginated lists, R-NFR-08): header clicks report `{ key, dir }`; rows keep their order. */
+  sort?: DataTableSort;
+  /** Sort the loaded rows locally: every accessor column, Arabic collation. */
+  clientSort?: boolean;
+  /** Server column filters (`meta.filter` columns), shown above the table. */
+  filters?: DataTableFilters;
+  /** Filter the loaded rows locally (`meta.filter` columns). */
+  clientFilter?: boolean;
+  /** The table's accessible name (`aria-label`), when no heading names it. */
+  label?: string;
 }
 
 /**
@@ -64,68 +75,62 @@ export function DataTable<T extends RowData>({
   emptyText,
   stacked,
   fill,
+  sort,
+  clientSort,
+  filters,
+  clientFilter,
+  label,
 }: DataTableProps<T>) {
   const table = useTable({
     features: dataTableFeatures,
     columns,
     data,
     getRowId,
+    ...sortFilterOptions({ sort, clientSort, filters, clientFilter }),
+    defaultColumn: { sortFn: collatorSortFn, filterFn: metaFilterFn },
   });
   const rows = table.getRowModel().rows;
+  const controls = filterControls(table, { filters, clientFilter });
 
   return (
-    // `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width).
-    <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
-      {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
-      <table className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
-        <thead>
-          {table.getHeaderGroups().map((group) => (
-            <tr key={group.id}>
-              {group.headers.map((header) => (
-                <th
-                  key={header.id}
-                  scope="col"
-                  className={cn(
-                    'border-b border-rule px-2 py-[9px] text-start text-xs font-semibold whitespace-nowrap text-ink-3',
-                    header.column.columnDef.meta?.headClassName,
-                  )}
-                >
-                  {header.isPlaceholder ? null : <table.FlexRender header={header} />}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody>
-          {rows.length === 0 ? (
-            <tr>
-              <td colSpan={columns.length} className="px-2 py-6 text-center text-ink-3">
-                {emptyText ?? t.common.empty}
-              </td>
-            </tr>
-          ) : (
-            rows.map((row) => (
-              <tr
-                key={row.id}
-                onClick={onRowClick ? () => onRowClick(row.original) : undefined}
-                className={cn('transition-colors duration-[120ms] hover:bg-sunk/75', onRowClick && 'cursor-pointer')}
-              >
-                {row.getAllCells().map((cell) => (
-                  <td
-                    key={cell.id}
-                    className={cn(
-                      'border-b border-rule px-2 py-2.5 align-middle leading-[1.4] whitespace-nowrap',
-                      cell.column.columnDef.meta?.className,
-                    )}
-                  >
-                    <table.FlexRender cell={cell} />
-                  </td>
-                ))}
+    <>
+      {controls.length > 0 && <ColumnFilters controls={controls} />}
+      {/* `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width). */}
+      <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
+        {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}
+        <table aria-label={label} className={cn('w-full border-collapse text-sm', fill && rows.length === 0 && 'h-full')}>
+          <DataTableHead table={table} sort={sort} />
+          <tbody>
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="px-2 py-6 text-center text-ink-3">
+                  {emptyText ?? t.common.empty}
+                </td>
               </tr>
-            ))
-          )}
-        </tbody>
-      </table>
-    </div>
+            ) : (
+              rows.map((row) => (
+                <tr
+                  key={row.id}
+                  onClick={onRowClick ? () => onRowClick(row.original) : undefined}
+                  className={cn('transition-colors duration-[120ms] hover:bg-sunk/75', onRowClick && 'cursor-pointer')}
+                >
+                  {row.getAllCells().map((cell) => (
+                    <td
+                      key={cell.id}
+                      className={cn(
+                        'border-b border-rule px-2 py-2.5 align-middle leading-[1.4] whitespace-nowrap',
+                        cell.column.columnDef.meta?.className,
+                      )}
+                    >
+                      <table.FlexRender cell={cell} />
+                    </td>
+                  ))}
+                </tr>
+              ))
+            )}
+          </tbody>
+        </table>
+      </div>
+    </>
   );
 }

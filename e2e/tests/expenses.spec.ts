@@ -16,7 +16,7 @@ async function rowsInDb(): Promise<{ category: string; amount: number; currency:
 }
 
 const total = (page: Page) => page.locator('p', { hasText: ar.expenses.total });
-const row = (page: Page) => page.getByRole('listitem').filter({ hasText: NOTE });
+const row = (page: Page) => page.getByRole('row').filter({ hasText: NOTE });
 
 test.describe('expenses (R-RPT-02)', () => {
   test.beforeEach(async () => {

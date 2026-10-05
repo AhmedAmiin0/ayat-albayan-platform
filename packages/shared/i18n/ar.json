@@ -337,6 +337,17 @@
     }
   },
   "leads": {
+    "sortBy": "الترتيب",
+    "assigneeAll": "المسؤول: الكل",
+    "sort": {
+      "recent": "آخر رسالة واردة أولًا",
+      "waiting": "أقدم رسالة واردة أولًا",
+      "newest": "الأحدث إضافةً",
+      "oldest": "الأقدم إضافةً",
+      "name": "الاسم (أ–ي)",
+      "status": "الحالة",
+      "source": "المصدر"
+    },
     "title": "كل المحادثات",
     "phone": "الرقم",
     "name": "الاسم",
@@ -405,7 +416,9 @@
     "fromLead": "وارد من المحادثات",
     "empty": "لا توجد طلبات توظيف",
     "createdAt": "تاريخ الطلب",
-    "count": "{n} طلب"
+    "count": "{n} طلب",
+    "present": "موجود",
+    "missing": "غير موجود"
   },
   "schedule": {
     "title": "جدول الحلقات",
@@ -1169,7 +1182,11 @@
     "submittedTitle": "تقارير مُرسلة",
     "noSubmitted": "لا توجد تقارير مُرسلة بعد",
     "mobileAttachHint": "من الهاتف يمكنك رفع الصور فقط، أما ملفات PDF والتسجيلات الصوتية فمن الموقع",
-    "offlineNotSent": "لا يوجد اتصال بالإنترنت، لذا لم يُرسل التقرير. أرسله مرة أخرى فور عودة الإنترنت"
+    "offlineNotSent": "لا يوجد اتصال بالإنترنت، لذا لم يُرسل التقرير. أرسله مرة أخرى فور عودة الإنترنت",
+    "studentCol": "الطالب",
+    "submittedAtCol": "تاريخ الإرسال",
+    "gradeCol": "التقدير",
+    "actionsCol": "الإجراء"
   },
   "subscriptions": {
     "title": "الاشتراكات",
@@ -1670,7 +1687,15 @@
       "noLesson": "لا توجد حلقة مكتملة لأبناء ولي الأمر هذا بعد",
       "notApproved": "لم تعتمد ميتا قالب تقييم الحلقة بعد",
       "chip": "التقييم: {rating}"
-    }
+    },
+    "sort": {
+      "label": "ترتيب المحادثات",
+      "latest": "الأحدث رسالةً",
+      "unread": "غير المقروءة أولًا",
+      "name": "حسب الاسم"
+    },
+    "statusFilter": "حالة العميل",
+    "allStatuses": "كل الحالات"
   },
   "templates": {
     "title": "قوالب واتساب",
@@ -2110,6 +2135,9 @@
     "statements": "كشوف الشهر"
   },
   "teacherStudents": {
+    "levelCol": "المستوى",
+    "ageCol": "العمر",
+    "nextLessonCol": "الحلقة القادمة",
     "title": "الطلاب",
     "kinds": "نوع الطلاب",
     "subscribed": "مشتركون",
@@ -2398,14 +2426,17 @@
       "list": "قائمة الاشتراكات",
       "kinds": "نوع الاشتراكات",
       "lessons": "{n} حلقة",
-      "startsOn": "تبدأ {date}"
+      "startsOn": "تبدأ {date}",
+      "lessonsCol": "الحلقات",
+      "startsCol": "تاريخ البدء"
     },
     "schedule": {
       "title": "مواعيد الاجتماعات",
       "empty": "لا توجد اجتماعات في هذا اليوم",
       "lead": "العميل",
       "list": "قائمة الاجتماعات",
-      "teacher": "المعلم/ة"
+      "teacher": "المعلم/ة",
+      "time": "الموعد"
     },
     "assign": {
       "label": "مسؤول المبيعات",
@@ -2597,6 +2628,21 @@
     "year": "السنة",
     "studentPayments": "المدفوعات",
     "netPaid": "الصافي: {amount}",
-    "ledgerCsv": "كشف الحلقات والدفعات CSV"
+    "ledgerCsv": "كشف الحلقات والدفعات CSV",
+    "invoiceDate": "تاريخ الفاتورة",
+    "invoiceStudents": "الطلاب",
+    "invoicePayment": "الدفعة",
+    "confirmed": "مؤكَّد",
+    "notVoided": "سارية",
+    "status": "الحالة"
+  },
+  "table": {
+    "sortAsc": "ترتيب تصاعدي",
+    "sortDesc": "ترتيب تنازلي",
+    "sortNone": "بدون ترتيب",
+    "filterBy": "تصفية حسب {col}",
+    "all": "الكل",
+    "clearFilters": "مسح التصفية",
+    "searchPlaceholder": "ابحث…"
   }
 }

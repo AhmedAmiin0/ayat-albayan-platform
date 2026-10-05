@@ -9,16 +9,11 @@ import { isSalesLesson } from '../sales/sales-lessons';
 import { upcomingLessons } from './thread-lessons';
 import { familyTagsOf, threadPeople } from './thread-people';
 import type { FamilyTag } from './thread-people.mapper';
+import { applySort } from '../../common/list-sort';
+import { THREAD_SORT, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
 
-export interface ThreadListFilter {
-  page: number;
-  pageSize: number;
-  search?: string;
-  unread?: boolean;
-  /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
-  phones?: readonly string[];
-}
+export type { ThreadListFilter } from './threads.list';
 
 function check(error: { message: string } | null, what: string): asserts error is null {
   if (error) throw new Error(`${what} failed: ${error.message}`);
@@ -33,16 +28,16 @@ export class ThreadsQueries {
     private readonly balances: BalanceQueries,
   ) {}
 
+  /** H1: one page of v_threads; filters, then the requested order (default newest message first). */
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
     let query = this.db.from('v_threads').select('*', { count: 'exact' });
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
+    if (f.status) query = query.eq('lead_status', f.status);
     const search = f.search ? threadSearchFilter(f.search) : null;
     if (search) query = query.or(search);
     const from = (f.page - 1) * f.pageSize;
-    const { data, error, count } = await query
-      .order('last_message_at', { ascending: false })
-      .range(from, from + f.pageSize - 1);
+    const { data, error, count } = await applySort(query, f, THREAD_SORT).range(from, from + f.pageSize - 1);
     check(error, 'threads read');
     return { items: data ?? [], total: count ?? 0 };
   }

@@ -337,6 +337,17 @@
     }
   },
   "leads": {
+    "sortBy": "Sort",
+    "assigneeAll": "Owner: all",
+    "sort": {
+      "recent": "Latest message first",
+      "waiting": "Oldest message first",
+      "newest": "Newest added",
+      "oldest": "Oldest added",
+      "name": "Name (A–Z)",
+      "status": "Status",
+      "source": "Source"
+    },
     "title": "All conversations",
     "phone": "Number",
     "name": "Name",
@@ -405,7 +416,9 @@
     "fromLead": "Came from conversations",
     "empty": "No job applications",
     "createdAt": "Applied on",
-    "count": "{n} total"
+    "count": "{n} total",
+    "present": "Attached",
+    "missing": "Missing"
   },
   "schedule": {
     "title": "Lesson schedule",
@@ -1169,7 +1182,11 @@
     "submittedTitle": "Sent reports",
     "noSubmitted": "No sent reports yet",
     "mobileAttachHint": "From the phone you can add photos only; PDFs and voice notes from the website",
-    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online"
+    "offlineNotSent": "No connection, so the report was not sent. Send it again once you are back online",
+    "studentCol": "Student",
+    "submittedAtCol": "Sent on",
+    "gradeCol": "Grade",
+    "actionsCol": "Action"
   },
   "subscriptions": {
     "title": "Subscriptions",
@@ -1670,7 +1687,15 @@
       "noLesson": "This guardian's children have no completed lesson yet",
       "notApproved": "Meta has not approved the lesson rating template yet",
       "chip": "Rating: {rating}"
-    }
+    },
+    "sort": {
+      "label": "Sort conversations",
+      "latest": "Latest message",
+      "unread": "Unread first",
+      "name": "By name"
+    },
+    "statusFilter": "Lead status",
+    "allStatuses": "All statuses"
   },
   "templates": {
     "title": "WhatsApp templates",
@@ -2110,6 +2135,9 @@
     "statements": "Monthly statements"
   },
   "teacherStudents": {
+    "levelCol": "Level",
+    "ageCol": "Age",
+    "nextLessonCol": "Next lesson",
     "title": "Students",
     "kinds": "Student type",
     "subscribed": "Subscribed",
@@ -2398,14 +2426,17 @@
       "list": "Subscriptions list",
       "kinds": "Subscription kind",
       "lessons": "{n} lessons",
-      "startsOn": "Starts {date}"
+      "startsOn": "Starts {date}",
+      "lessonsCol": "Lessons",
+      "startsCol": "Start date"
     },
     "schedule": {
       "title": "Meetings schedule",
       "empty": "No meetings on this day",
       "lead": "Lead",
       "list": "Meetings list",
-      "teacher": "Teacher"
+      "teacher": "Teacher",
+      "time": "Time"
     },
     "assign": {
       "label": "Sales owner",
@@ -2597,6 +2628,21 @@
     "year": "Year",
     "studentPayments": "Payments",
     "netPaid": "Net: {amount}",
-    "ledgerCsv": "Lessons & payments CSV"
+    "ledgerCsv": "Lessons & payments CSV",
+    "invoiceDate": "Invoice date",
+    "invoiceStudents": "Students",
+    "invoicePayment": "Payment",
+    "confirmed": "Confirmed",
+    "notVoided": "Standing",
+    "status": "Status"
+  },
+  "table": {
+    "sortAsc": "Sort ascending",
+    "sortDesc": "Sort descending",
+    "sortNone": "Not sorted",
+    "filterBy": "Filter by {col}",
+    "all": "All",
+    "clearFilters": "Clear filters",
+    "searchPlaceholder": "Search…"
   }
 }

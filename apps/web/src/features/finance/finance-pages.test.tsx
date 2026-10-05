@@ -55,7 +55,7 @@ describe('finance pages', () => {
   });
 
   it('invoices: «سجّل كدفعة» only for an invoice without a payment; it opens the payment dialog for that student', async () => {
-    show(<InvoicesPage />);
+    show(<InvoicesPage search={{}} onSearch={vi.fn()} />);
     const buttons = await screen.findAllByRole('button', { name: t.finance.recordFromInvoice });
     expect(buttons).toHaveLength(1);
     expect(screen.getByText(t.finance.invoicePaid)).toBeTruthy();

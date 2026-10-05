@@ -1,56 +1,44 @@
-import { PAYMENT_KINDS, PAYMENT_METHODS, type PaymentKind, type PaymentMethod } from '@ab/shared';
+import { PAYMENT_KINDS, type PaymentKind } from '@ab/shared';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
-import { StudentPicker, type PickedStudent } from '@/features/subscriptions/StudentPicker';
+import { StudentPicker } from '@/features/subscriptions/StudentPicker';
 import { t } from '@/lib/i18n';
 import type { PaymentFilters } from './api';
 
 export interface PaymentFilterFieldsProps {
   value: PaymentFilters;
-  onChange: (next: PaymentFilters) => void;
-  /** The picked student, held by PaymentFiltersBar so it survives the phone sheet closing. */
-  student: PickedStudent | null;
-  setStudent: (student: PickedStudent | null) => void;
+  onChange: (patch: Partial<PaymentFilters>) => void;
+  /** The filtered student's name (picked here, or from the page when opened from a link). */
+  name: string;
+  /** Remembers the picked name in PaymentFiltersBar, so it survives the phone sheet closing. */
+  setPicked: (name: string | null) => void;
 }
 
-/** Student (search), date range, method and kind; each change goes back to page 1. */
-export function PaymentFilterFields({ value, onChange, student, setStudent }: PaymentFilterFieldsProps) {
-  const set = (patch: Partial<PaymentFilters>) => onChange({ ...value, ...patch });
+/** Student (search), date range and kind; the method filter sits with the table's column filters. */
+export function PaymentFilterFields({ value, onChange, name, setPicked }: PaymentFilterFieldsProps) {
   return (
-    <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))] sm:items-end">
-      {student ? (
+    <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,2fr)_repeat(3,minmax(0,1fr))] sm:items-end">
+      {value.studentId ? (
         <p className="flex min-h-11 items-center gap-2 text-sm">
-          <span className="font-semibold text-ink">{student.name}</span>
-          <Button type="button" variant="ghost" size="sm" onClick={() => (setStudent(null), set({ studentId: undefined }))}>
+          <span className="font-semibold text-ink">{name}</span>
+          <Button type="button" variant="ghost" size="sm" onClick={() => (setPicked(null), onChange({ studentId: undefined }))}>
             {t.finance.allStudents}
           </Button>
         </p>
       ) : (
-        <StudentPicker onPick={(s) => (setStudent(s), set({ studentId: s.id }))} />
+        <StudentPicker onPick={(s) => (setPicked(s.name), onChange({ studentId: s.id }))} />
       )}
       <Field label={t.finance.from}>
-        {(p) => <Input {...p} type="date" dir="ltr" value={value.from ?? ''} onChange={(e) => set({ from: e.target.value || undefined })} />}
+        {(p) => <Input {...p} type="date" dir="ltr" value={value.from ?? ''} onChange={(e) => onChange({ from: e.target.value || undefined })} />}
       </Field>
       <Field label={t.finance.to}>
-        {(p) => <Input {...p} type="date" dir="ltr" value={value.to ?? ''} onChange={(e) => set({ to: e.target.value || undefined })} />}
-      </Field>
-      <Field label={t.payments.method}>
-        {(p) => (
-          <Select {...p} value={value.method ?? ''} onChange={(e) => set({ method: (e.target.value || undefined) as PaymentMethod | undefined })}>
-            <option value="">{t.finance.all}</option>
-            {PAYMENT_METHODS.map((m) => (
-              <option key={m} value={m}>
-                {t.enums.paymentMethod[m]}
-              </option>
-            ))}
-          </Select>
-        )}
+        {(p) => <Input {...p} type="date" dir="ltr" value={value.to ?? ''} onChange={(e) => onChange({ to: e.target.value || undefined })} />}
       </Field>
       <Field label={t.finance.kind}>
         {(p) => (
-          <Select {...p} value={value.kind ?? ''} onChange={(e) => set({ kind: (e.target.value || undefined) as PaymentKind | undefined })}>
+          <Select {...p} value={value.kind ?? ''} onChange={(e) => onChange({ kind: (e.target.value || undefined) as PaymentKind | undefined })}>
             <option value="">{t.finance.all}</option>
             {PAYMENT_KINDS.map((k) => (
               <option key={k} value={k}>

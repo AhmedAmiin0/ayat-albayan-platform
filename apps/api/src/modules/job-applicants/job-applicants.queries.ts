@@ -1,15 +1,15 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { applySort } from '../../common/list-sort';
 import { guardianSearchFilter } from '../guardians/guardians.mapper';
 import { pageRange, throwIfDbError, type PageQuery } from '../leads/http';
 import type { ApplicantStatus } from './applicant-state-machine';
+import { APPLICANT_SORT, applyApplicantFilters, type ApplicantColumnQuery } from './job-applicants.list';
 
 export type JobApplicantRow = Tables<'job_applicants'>;
 
-export interface ApplicantListFilter extends PageQuery {
-  status?: ApplicantStatus;
-}
+export type ApplicantListFilter = PageQuery & ApplicantColumnQuery & { status?: ApplicantStatus | undefined };
 
 export interface ApplicantMove {
   id: string;
@@ -79,13 +79,11 @@ export class JobApplicantsQueries {
   }
 
   async list(f: ApplicantListFilter): Promise<{ items: JobApplicantRow[]; total: number }> {
-    let query = this.db.from('job_applicants').select('*', { count: 'exact' });
+    let query = applyApplicantFilters(this.db.from('job_applicants').select('*', { count: 'exact' }), f);
     if (f.status) query = query.eq('status', f.status);
     const search = f.q ? guardianSearchFilter(f.q) : null;
     if (search) query = query.or(search);
-    const { data, error, count } = await query
-      .order('created_at', { ascending: false })
-      .range(...pageRange(f));
+    const { data, error, count } = await applySort(query, f, APPLICANT_SORT).range(...pageRange(f));
     throwIfDbError(error);
     return { items: data ?? [], total: count ?? 0 };
   }

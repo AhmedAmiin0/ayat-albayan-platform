@@ -55,6 +55,6 @@ export class FeedbackController {
   @Get('teachers/me/feedback')
   @Roles('teacher')
   mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<TeacherFeedbackView> {
-    return this.reads.mine(user, parseOrThrow(pageQuerySchema, query));
+    return this.reads.mine(user, { filter: parseOrThrow(feedbackQuerySchema, query), page: parseOrThrow(pageQuerySchema, query) });
   }
 }

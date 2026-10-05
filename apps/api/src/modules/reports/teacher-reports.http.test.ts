@@ -27,7 +27,7 @@ describe('GET /teachers/me/reports (teacher mode «التقارير», R-REP-02,
   it('my submitted reports only, in the query’s newest-first order, as a page', async () => {
     const res = await h.call({ method: 'GET', url: '/teachers/me/reports?page=2&pageSize=10' });
     expect(res.statusCode).toBe(200);
-    expect(h.mine.page).toHaveBeenCalledWith({ teacherId: TEACHER_ID, page: { page: 2, pageSize: 10 } });
+    expect(h.mine.page).toHaveBeenCalledWith({ teacherId: TEACHER_ID, filter: {}, page: { page: 2, pageSize: 10 } });
     const body = res.json();
     expect(body).toMatchObject({ total: 12, page: 2, pageSize: 10 });
     expect(body.items.map((i: { id: string }) => i.id)).toEqual([REPORT_ID, 'r-old']);
@@ -49,7 +49,7 @@ describe('GET /teachers/me/reports (teacher mode «التقارير», R-REP-02,
 
   it("another teacher reads only their own (scoped by the login, no id to tamper with)", async () => {
     await h.call({ method: 'GET', url: '/teachers/me/reports', token: 'other' });
-    expect(h.mine.page).toHaveBeenCalledWith({ teacherId: 'other', page: { page: 1, pageSize: 25 } });
+    expect(h.mine.page).toHaveBeenCalledWith({ teacherId: 'other', filter: {}, page: { page: 1, pageSize: 25 } });
   });
 
   it('teacher only: admin and guardian 403; page params validated', async () => {

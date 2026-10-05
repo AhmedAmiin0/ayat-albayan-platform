@@ -9,13 +9,12 @@ export const Route = createFileRoute('/admin/subscriptions')({
 });
 
 function SubscriptionsRoute() {
-  const { status, page = 1 } = Route.useSearch();
+  const search = Route.useSearch();
   const navigate = Route.useNavigate();
   return (
     <SubscriptionsPage
-      status={status}
-      page={page}
-      onChange={(next) => void navigate({ search: { status: next.status, page: next.page > 1 ? next.page : undefined } })}
+      search={search}
+      onSearch={(patch) => void navigate({ search: parseSubscriptionsSearch({ ...search, ...patch }) })}
       onOpenStudent={(studentId) => void navigate({ to: '/admin/students/$studentId', params: { studentId } })}
     />
   );

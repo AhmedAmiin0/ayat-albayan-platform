@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import type { ServerListSearch } from '@/lib/server-list-search';
 import { ROW_DONE, ROW_PENDING, SUMMARY } from './feedback-fixture';
 import { FeedbackPage } from './FeedbackPage';
 
@@ -16,14 +17,18 @@ function routes(path: string): unknown {
   return [];
 }
 
-function open() {
+function open(search: ServerListSearch = {}) {
   apiFetch.mockImplementation(async (path: string) => routes(path));
+  const onSearch = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <FeedbackPage />
+      <FeedbackPage search={search} onSearch={onSearch} />
     </QueryClientProvider>,
   );
+  return onSearch;
 }
+
+const filterBy = (col: string) => t.table.filterBy.replace('{col}', col);
 
 describe('FeedbackPage (admin)', () => {
   afterEach(() => apiFetch.mockReset());
@@ -59,19 +64,39 @@ describe('FeedbackPage (admin)', () => {
     expect(done?.querySelector('[data-glyph="fill"]')).toBeTruthy();
   });
 
-  it('the empty rating option says «كل التقييمات»', async () => {
+  it('the rating filter lists each score after «الكل»', async () => {
     open();
     await screen.findAllByRole('row');
-    expect(within(screen.getByLabelText(t.feedback.rating)).getByRole('option', { name: t.feedback.allRatings })).toBeTruthy();
+    const select = screen.getByLabelText(filterBy(t.feedback.rating));
+    expect(within(select).getByRole('option', { name: t.table.all })).toBeTruthy();
+    expect(within(select).getByRole('option', { name: t.feedback.outOf.replace('{n}', '5') })).toBeTruthy();
   });
 
-  it('filters go to the API: teacher, kind and rating, back on page 1', async () => {
-    open();
+  it('column filters and header sorts go to the URL, back on page 1', async () => {
+    const onSearch = open({ page: 3 });
     await screen.findAllByRole('row');
-    fireEvent.change(screen.getByLabelText(t.feedback.kind), { target: { value: 'trial' } });
-    fireEvent.change(screen.getByLabelText(t.feedback.rating), { target: { value: '5' } });
+    fireEvent.change(screen.getByLabelText(filterBy(t.feedback.kind)), { target: { value: 'trial' } });
+    expect(onSearch).toHaveBeenLastCalledWith({ f_kind: 'trial', page: undefined });
+    fireEvent.click(screen.getByRole('button', { name: t.feedback.teacher }));
+    expect(onSearch).toHaveBeenLastCalledWith({ sort: 'teacher', dir: undefined, page: undefined });
+  });
+
+  it('the URL state goes to the API under its plain keys', async () => {
+    open({ page: 2, sort: 'rating', dir: 'desc', f_kind: 'trial', f_rating: '5', f_teacher: 't-abrar' });
     await screen.findAllByRole('row');
     const calls = apiFetch.mock.calls.map(([p]) => String(p));
-    expect(calls.some((p) => p.includes('kind=trial') && p.includes('rating=5') && p.includes('page=1'))).toBe(true);
+    expect(calls).toContain('/feedback?page=2&pageSize=20&sort=rating&dir=desc&teacher=t-abrar&kind=trial&rating=5');
+    expect(screen.getByRole('columnheader', { name: new RegExp(t.feedback.rating) }).getAttribute('aria-sort')).toBe('descending');
+  });
+
+  it('a filter that matches nothing keeps the table, so it can be cleared', async () => {
+    apiFetch.mockImplementation(async (path: string) => (path.startsWith('/feedback?') ? { items: [], total: 0, page: 1, pageSize: 20 } : routes(path)));
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <FeedbackPage search={{ f_kind: 'trial' }} onSearch={vi.fn()} />
+      </QueryClientProvider>,
+    );
+    expect(await screen.findByText(t.feedback.empty)).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.table.clearFilters })).toBeTruthy();
   });
 });

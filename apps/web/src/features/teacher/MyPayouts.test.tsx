@@ -1,5 +1,5 @@
 import type { PayoutView } from '@ab/shared';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { monthLabel } from '@/features/payouts/MonthSelect';
@@ -32,7 +32,12 @@ describe('«مستحقاتي» (R-TCH-04)', () => {
     expect(await screen.findByText(monthLabel('2026-09'))).toBeTruthy();
     expect(screen.getByText(monthLabel('2026-08'))).toBeTruthy();
     expect(screen.getAllByText(/10 × 70/)).toHaveLength(2);
-    expect(screen.getByText(t.enums.payoutStatus.paid)).toBeTruthy();
+    expect(screen.getByText(t.enums.payoutStatus.paid, { selector: 'td *' })).toBeTruthy();
+    const by = t.table.filterBy.replace('{col}', t.subscriptions.status);
+    fireEvent.change(screen.getByRole('combobox', { name: by }), { target: { value: 'draft' } });
+    expect(screen.queryByText(monthLabel('2026-09'))).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.payouts.month }));
+    expect(screen.getByText(monthLabel('2026-08'))).toBeTruthy();
     expect(screen.queryByRole('button', { name: t.payouts.approve })).toBeNull();
     expect(screen.queryByRole('button', { name: t.payouts.markPaid })).toBeNull();
     expect(apiFetch).toHaveBeenCalledWith('/teachers/me/payouts');

@@ -1,4 +1,5 @@
-import { LEAD_SOURCES, LEAD_STATUSES, type LeadSource, type LeadStatus } from '@ab/shared';
+import { LEAD_SOURCES, LEAD_STATUSES, NO_ASSIGNEE, type LeadSource, type LeadStatus } from '@ab/shared';
+import { parseLeadSort, type LeadSort } from './lead-sort';
 
 // Row shapes returned by the API (`type`, not `interface`, for DataTable's RowData).
 export type LeadRow = {
@@ -34,8 +35,13 @@ export type Page<T> = {
   pageSize: number;
 };
 
-/** Inbox URL state: status tab, source filter, name/phone search, page (server-side, R-NFR-08). */
-export type LeadSearch = { status?: LeadStatus; source?: LeadSource; q?: string; page: number };
+/**
+ * Inbox URL state: status tab, source and «مسؤول المبيعات» filters, name/phone search, order and
+ * page (server-side, R-NFR-08). `assignee` is a profile id or `none`.
+ */
+export type LeadSearch = LeadSort & { status?: LeadStatus; source?: LeadSource; q?: string; assignee?: string; page: number };
+
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 export type PageSearch = { page: number };
 
 function toPage(value: unknown): number {
@@ -43,9 +49,11 @@ function toPage(value: unknown): number {
   return Number.isInteger(n) && n > 1 ? n : 1;
 }
 
-/** Route `validateSearch`: unknown status/source → all, blank search dropped, bad page → 1. */
+/** Route `validateSearch`: unknown status/source/assignee/sort → all, blank search dropped, bad page → 1. */
 export function parseLeadSearch(s: Record<string, unknown>): LeadSearch {
-  const out: LeadSearch = { page: toPage(s['page']) };
+  const out: LeadSearch = { page: toPage(s['page']), ...parseLeadSort(s['sort'], s['dir']) };
+  const assignee = s['assignee'];
+  if (typeof assignee === 'string' && (assignee === NO_ASSIGNEE || UUID.test(assignee))) out.assignee = assignee;
   const status = LEAD_STATUSES.find((x) => x === s['status']);
   const source = LEAD_SOURCES.find((x) => x === s['source']);
   const q = typeof s['q'] === 'string' ? s['q'].trim() : '';

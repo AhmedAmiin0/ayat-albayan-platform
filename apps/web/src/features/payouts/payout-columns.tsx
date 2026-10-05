@@ -1,6 +1,6 @@
-import { payoutStatusStyle } from '@ab/shared';
+import { PAYOUT_STATUSES, payoutStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
-import type { DataTableFeatures } from '@/components/DataTable';
+import type { DataTableFeatures, FilterOption } from '@/components/DataTable';
 import { StatusChip } from '@/components/ui/status-chip';
 import { formatDate } from '@/features/leads/format';
 import { LedgerPaid } from './LedgerPaid';
@@ -14,7 +14,14 @@ import type { PayoutView } from './api';
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
 export type PayoutAction = 'approve' | 'pay' | 'reopen' | 'unpay' | 'receipt';
-type Handlers = { onAction: (p: PayoutView, action: PayoutAction) => void };
+type Handlers = {
+  onAction: (p: PayoutView, action: PayoutAction) => void;
+  /** The «المعلم/ة» filter: the month's teachers. */
+  teachers: FilterOption[];
+};
+
+/** «الحالة» filter (also the teacher's own statements). */
+export const payoutStatusOptions: FilterOption[] = PAYOUT_STATUSES.map((s) => ({ value: s, label: t.enums.payoutStatus[s] }));
 
 /** «45 دقيقة: 10 × 70 = 700» per duration line (the breakdown generate stored). */
 export function breakdownLines(p: PayoutView): string[] {
@@ -27,13 +34,17 @@ export function breakdownLines(p: PayoutView): string[] {
   );
 }
 
-/** Payouts of one month (R-PAY-02, E3): draft → اعتماد → اتدفعت; approved and paid are frozen. */
-export function payoutColumns({ onAction }: Handlers) {
+/**
+ * Payouts of one month (R-PAY-02, E3): draft → اعتماد → اتدفعت; approved and paid are frozen.
+ * Client sort + filter (the month is loaded whole); the breakdown lines neither sort nor filter.
+ */
+export function payoutColumns({ onAction, teachers }: Handlers) {
   return col.columns([
-    col.accessor('teacher', {
+    col.accessor((p) => p.teacher.display_name_ar, {
+      id: 'teacher',
       header: () => t.payouts.teacher,
-      cell: (c) => <span className="font-semibold text-ink">{c.getValue().display_name_ar}</span>,
-      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
+      cell: (c) => <span className="font-semibold text-ink">{c.getValue()}</span>,
+      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', filter: { kind: 'select', options: teachers } },
     }),
     col.accessor('lessons_count', {
       header: () => t.payouts.lessons,
@@ -74,7 +85,7 @@ export function payoutColumns({ onAction }: Handlers) {
           </div>
         );
       },
-      meta: { className: 'max-sm:order-2' },
+      meta: { className: 'max-sm:order-2', filter: { kind: 'select', options: payoutStatusOptions } },
     }),
     col.display({
       id: 'actions',

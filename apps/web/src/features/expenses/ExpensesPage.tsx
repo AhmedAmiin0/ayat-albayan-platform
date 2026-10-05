@@ -1,5 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -17,13 +18,14 @@ import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { categoriesQuery, categoryLabel, confirmDraft, deleteExpense, expenseReceiptUrl, expensesQuery, totalsByCurrency, type ExpenseView } from './api';
 import { ExpenseDialog } from './ExpenseDialog';
-import { ExpenseRow, type ExpenseAction } from './ExpenseRow';
+import type { ExpenseAction } from './ExpenseActions';
+import { expenseColumns } from './expense-columns';
 import { ExpenseYearTable } from './ExpenseYearTable';
 import { TableBox } from '@/components/TableBox';
 
 type Props = { month: string; onMonth: (month: string) => void };
 
-/** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm), or the 12-month table; CSV. */
+/** /admin/expenses (R-RPT-02, E4): a month's expenses (drafts to confirm; every column sorts/filters), or the 12-month table; CSV. */
 export function ExpensesPage({ month, onMonth }: Props) {
   const queryClient = useQueryClient();
   const list = useQuery(expensesQuery(month));
@@ -37,14 +39,20 @@ export function ExpensesPage({ month, onMonth }: Props) {
   const confirm = useMutation({ mutationFn: confirmDraft, onSuccess: refresh });
   const receipt = useMutation({ mutationFn: expenseReceiptUrl, onSuccess: (r) => void window.open(r.url, '_blank', 'noopener') });
   const csv = useMutation({ mutationFn: () => downloadCsv({ kind: 'expenses', params: year ? { year: month.slice(0, 4) } : { month } }) });
-  const onAction = (e: ExpenseView, action: ExpenseAction) => {
-    if (action === 'edit') setEditing(e);
-    else if (action === 'delete') setRemoving(e);
-    else if (action === 'confirm') confirm.mutate(e.id);
-    else receipt.mutate(e.id);
-  };
-  const rows = list.data ?? [];
+  const rows = useMemo(() => list.data ?? [], [list.data]);
   const label = (key: string) => categoryLabel(categories.data, key);
+  const [confirmDraftOf, openReceipt] = [confirm.mutate, receipt.mutate];
+  const columns = useMemo(() => {
+    const name = (key: string) => categoryLabel(categories.data, key);
+    const labels = [...new Set(rows.map((e) => name(e.category)))].map((l) => ({ value: l, label: l }));
+    const act = (e: ExpenseView, action: ExpenseAction) => {
+      if (action === 'edit') setEditing(e);
+      else if (action === 'delete') setRemoving(e);
+      else if (action === 'confirm') confirmDraftOf(e.id);
+      else openReceipt(e.id);
+    };
+    return expenseColumns({ label: name, categories: labels, onAction: act });
+  }, [rows, categories.data, confirmDraftOf, openReceipt]);
 
   return (
     <>
@@ -76,13 +84,7 @@ export function ExpensesPage({ month, onMonth }: Props) {
             </TableBox>
           )}
           {rows.length > 0 && (
-            <TableBox>
-              <ul className="grid divide-y divide-rule px-3">
-                {rows.map((e) => (
-                  <ExpenseRow key={e.id} expense={e} label={label(e.category)} onAction={onAction} />
-                ))}
-              </ul>
-            </TableBox>
+            <DataTable fill stacked clientSort clientFilter columns={columns} data={rows} getRowId={(e) => e.id} />
           )}
           {rows.length > 0 && (
             <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t border-rule pt-3 text-sm">

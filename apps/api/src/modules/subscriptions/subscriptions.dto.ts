@@ -1,16 +1,27 @@
-import { SUBSCRIPTION_STATUSES, subscriptionPricingSchema, type SubscriptionPricing } from '@ab/shared';
+import {
+  listSortShape,
+  PACKAGE_SIZES,
+  SUBSCRIPTION_SORT_KEYS,
+  SUBSCRIPTION_STATUSES,
+  subscriptionPricingSchema,
+  type SubscriptionPricing,
+} from '@ab/shared';
 import { z } from 'zod';
 import { pageQuerySchema } from '../teachers/http';
 import type { QuoteQuery } from '../pricing/pricing.dto';
 
 /**
- * GET /subscriptions?status&studentId&paid&page&pageSize (S1). `paid=partial` («مدفوع جزئيًا»):
- * unpaid packages with at least one payment (the exact 0 < paid < price is derived per row).
+ * GET /subscriptions?status&studentId&paid&student&package&sort&dir&page&pageSize (S1, R-NFR-08).
+ * `paid=partial` («مدفوع جزئيًا»): unpaid packages with at least one payment (the exact
+ * 0 < paid < price is derived per row). `student`: part of the student's name.
  */
 export const subscriptionListQuery = pageQuerySchema.extend({
   status: z.enum(SUBSCRIPTION_STATUSES).optional(),
   studentId: z.uuid().optional(),
   paid: z.enum(['partial']).optional(),
+  student: z.string().trim().min(1).max(100).optional(),
+  package: z.enum(PACKAGE_SIZES).optional(),
+  ...listSortShape(SUBSCRIPTION_SORT_KEYS),
 });
 
 /** POST /subscriptions/quote: the price S2 would store, for the create dialog (never typed). */

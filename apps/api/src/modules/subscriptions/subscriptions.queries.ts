@@ -1,15 +1,15 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import type { SubscriptionStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { dbError, type Page, type PageQuery } from '../teachers/http';
+import { applySort, ilikeContains } from '../../common/list-sort';
+import { dbError, type Page } from '../teachers/http';
 import { readChunked } from '../scheduling/read-all';
+import { listSelect, SELECT, SUB_SORT, type SubListQuery } from './subscriptions.list-query';
+
+export type { SubListQuery } from './subscriptions.list-query';
 
 export type StudentRef = { id: string; code: string | null; name: string };
 export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };
-export type SubListQuery = PageQuery & { status?: SubscriptionStatus; studentId?: string; paid?: 'partial' };
-
-const SELECT = '*, student:students(id, code, name)';
 
 /** All supabase access for `subscriptions` (service role; the controllers guard). R-SUB-01. */
 @Injectable()
@@ -18,14 +18,13 @@ export class SubscriptionsQueries {
 
   async list(q: SubListQuery): Promise<Page<SubRow>> {
     const from = (q.page - 1) * q.pageSize;
-    // «مدفوع جزئيًا»: an inner embed keeps only packages with a payment (the extra field is unused).
-    const select = (q.paid === 'partial' ? `${SELECT}, paid_rows:payments!inner(id)` : SELECT) as typeof SELECT;
-    let query = this.db.from('subscriptions').select(select, { count: 'exact' });
+    let query = this.db.from('subscriptions').select(listSelect(q), { count: 'exact' });
     if (q.paid === 'partial') query = query.eq('status', 'unpaid');
     if (q.status) query = query.eq('status', q.status);
     if (q.studentId) query = query.eq('student_id', q.studentId);
-    const { data, count, error } = await query
-      .order('created_at', { ascending: false })
+    if (q.student) query = query.ilike('student.name', ilikeContains(q.student));
+    if (q.package) query = query.eq('package', q.package);
+    const { data, count, error } = await applySort(query, q, SUB_SORT)
       .order('id')
       .range(from, from + q.pageSize - 1);
     if (error) throw dbError(error);

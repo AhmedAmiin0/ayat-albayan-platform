@@ -1,4 +1,4 @@
-import type { PendingReportView, ReportFormResponse, StudentReportsResponse, TeacherReportView } from '@ab/shared';
+import { teacherReportsQuerySchema, type PendingReportView, type ReportFormResponse, type StudentReportsResponse, type TeacherReportView } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
@@ -51,6 +51,6 @@ export class ReportEntryController {
   @Get('teachers/me/reports')
   @Roles('teacher')
   mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherReportView>> {
-    return this.mineService.mine(user, parseOrThrow(pageQuerySchema, query));
+    return this.mineService.mine(user, { filter: parseOrThrow(teacherReportsQuerySchema, query), page: parseOrThrow(pageQuerySchema, query) });
   }
 }

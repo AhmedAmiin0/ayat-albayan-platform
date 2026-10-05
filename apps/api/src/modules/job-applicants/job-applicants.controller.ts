@@ -1,4 +1,4 @@
-import { jobApplicantCreateSchema, jobApplicantUpdateSchema } from '@ab/shared';
+import { applicantColumnQueryShape, jobApplicantCreateSchema, jobApplicantUpdateSchema } from '@ab/shared';
 import {
   Body,
   Controller,
@@ -19,7 +19,12 @@ import { pageQueryShape, parseOr400 } from '../leads/http';
 import { APPLICANT_STATUSES } from './applicant-state-machine';
 import { JobApplicantsService } from './job-applicants.service';
 
-const listQuery = z.object({ status: z.enum(APPLICANT_STATUSES).optional(), ...pageQueryShape });
+/** Paging + `q`, status, column filters and `sort`/`dir` (R-NFR-08). */
+const listQuery = z.object({
+  status: z.preprocess((v) => (v === '' ? undefined : v), z.enum(APPLICANT_STATUSES).optional()),
+  ...pageQueryShape,
+  ...applicantColumnQueryShape,
+});
 // Status moves only via PATCH :id/status; from_lead_id is set only by lead reclassify.
 const createBody = jobApplicantCreateSchema.omit({ status: true, from_lead_id: true });
 const updateBody = jobApplicantUpdateSchema
