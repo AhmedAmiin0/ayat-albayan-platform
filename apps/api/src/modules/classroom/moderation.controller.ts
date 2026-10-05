@@ -1,12 +1,11 @@
 import type { LessonRecordingView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { KickService } from './kick.service';
 import { RecordingListService } from './recording-list.service';
-import { ShareGrantService } from './share-grant.service';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
@@ -19,22 +18,7 @@ export class ModerationController {
   constructor(
     private readonly kicks: KickService,
     private readonly recordings: RecordingListService,
-    private readonly shares: ShareGrantService,
   ) {}
-
-  /** {allow}: «سماح» / «إيقاف مشاركة» a guest's screen share. 204; 403 cannot_grant_share, 404, 503, 502. */
-  @Post('room/participants/:identity/share')
-  @Roles('admin', 'teacher', 'assistant')
-  @HttpCode(204)
-  async share(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Param('identity') identity: string,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<void> {
-    if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
-    await this.shares.lesson({ user, id, identity, body });
-  }
 
   /**
    * «إخراج من الحلقة»: disconnects the participant and keeps their login / link out of this

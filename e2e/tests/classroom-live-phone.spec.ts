@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { BOARD, boardInk, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot, touchStroke } from '../support/classroom-live';
+import { BOARD, boardInk, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, pageScrollWidth, roomPage, shot, touchStroke } from '../support/classroom-live';
 
 // The live classroom on a phone (390×844, touch), against a real LiveKit: see classroom-live.spec.ts.
 
@@ -30,8 +30,7 @@ test('phone: the teacher draws with a finger, the tools and the control bar stay
   const bar = phone.getByRole('toolbar', { name: C.controls });
   await expect(bar).toBeInViewport({ ratio: 1 });
   await expect(phone.getByRole('button', { name: C.leave })).toBeInViewport();
-  const scrollWidth = await phone.evaluate(() => document.documentElement.scrollWidth);
-  expect(scrollWidth).toBeLessThanOrEqual(390);
+  expect(await pageScrollWidth(phone)).toBeLessThanOrEqual(390);
   await shot(phone, 'phone-board');
   await shot(admin, 'admin-sees-phone-stroke');
   await admin.context().close();

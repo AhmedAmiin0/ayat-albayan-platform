@@ -1,4 +1,4 @@
-import type { Browser, BrowserContextOptions, Page } from '@playwright/test';
+import type { Browser, BrowserContextOptions, Locator, Page } from '@playwright/test';
 import { ar, expect } from './fixtures';
 import { authFile, USERS } from './users';
 
@@ -45,11 +45,26 @@ export async function expectConnected(page: Page, n: number): Promise<void> {
   await expect(page.getByText(ar.classroom.reconnecting)).toHaveCount(0);
 }
 
+// The e2e tsconfig has no DOM lib: the slices of the DOM read inside the page.
+interface CanvasLike {
+  width: number;
+  height: number;
+  getContext(kind: '2d'): { getImageData(x: number, y: number, w: number, h: number): { data: ArrayLike<number> } } | null;
+}
+
+/** Decoded width of the <video> in `tile` (0 until frames arrive). */
+export const videoWidth = (tile: Locator): Promise<number> =>
+  tile.locator('video').first().evaluate((v) => (v as unknown as { videoWidth: number }).videoWidth);
+
+/** The page's scroll width (no sideways scroll on a phone). */
+export const pageScrollWidth = (page: Page): Promise<number> =>
+  page.evaluate(() => (globalThis as unknown as { document: { documentElement: { scrollWidth: number } } }).document.documentElement.scrollWidth);
+
 /** The board canvas' inked pixels (anything not fully transparent or white). */
 export function boardInk(page: Page): Promise<number> {
   return page.getByRole('img', { name: BOARD.title }).evaluate((el) => {
-    const c = el as HTMLCanvasElement;
-    const data = c.getContext('2d')?.getImageData(0, 0, c.width, c.height).data ?? new Uint8ClampedArray();
+    const c = el as unknown as CanvasLike;
+    const data = c.getContext('2d')?.getImageData(0, 0, c.width, c.height).data ?? [];
     let n = 0;
     for (let i = 0; i < data.length; i += 4) if ((data[i + 3] ?? 0) > 0 && (data[i] ?? 255) < 128) n += 1;
     return n;

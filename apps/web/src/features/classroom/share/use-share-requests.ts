@@ -61,9 +61,6 @@ export function useShareRequests({ room, role, grant }: ShareRequestOptions): Sh
     if (!snap.shareAllowed && allowedBefore.current) setNotice(null);
     allowedBefore.current = snap.shareAllowed;
   }, [snap.shareAllowed, role]);
-  useEffect(() => {
-    if (state.mine === 'denied') setNotice(t.classroom.shareRequest.denied);
-  }, [state.mine]);
 
   const canGrant = grant !== null && canGrantShare(role, 'guest');
   const others = cameraTiles(snap.tiles);
@@ -77,7 +74,7 @@ export function useShareRequests({ room, role, grant }: ShareRequestOptions): Sh
     pending: canGrant ? others.filter((x) => state.pending.includes(x.identity) && !x.shareAllowed) : [],
     granted: canGrant ? others.filter((x) => x.role === 'guest' && x.shareAllowed) : [],
     mine: state.mine,
-    notice,
+    notice: notice ?? (state.mine === 'denied' ? t.classroom.shareRequest.denied : null),
     request: () => {
       setNotice(null);
       dispatch({ kind: 'asked' });
@@ -89,6 +86,9 @@ export function useShareRequests({ room, role, grant }: ShareRequestOptions): Sh
       send({ t: 'deny', who: tile.identity });
     },
     revoke: (tile) => call(tile, false),
-    dismiss: () => setNotice(null),
+    dismiss: () => {
+      setNotice(null);
+      dispatch({ kind: 'dismissed' });
+    },
   };
 }

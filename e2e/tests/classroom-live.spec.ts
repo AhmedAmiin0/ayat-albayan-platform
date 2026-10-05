@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { BOARD, boardInk, drawStroke, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot } from '../support/classroom-live';
+import { BOARD, boardInk, drawStroke, expectConnected, LIVE, MEDIA_FLAGS, newMeeting, roomPage, shot, videoWidth } from '../support/classroom-live';
 
 // The classroom against a real LiveKit (owner, 2026-10-05: «السبورة ومشاركة الشاشة لا تعملان»). Runs only
 // with LIVEKIT_URL (+ key/secret) in the env, e.g. `docker run … livekit/livekit-server --dev` and
@@ -42,7 +42,7 @@ test('staff via the shared link: connected, the pen, strokes, board share, scree
   await expect(admin.getByRole('button', { name: C.shareOff })).toBeVisible();
   const screenTile = teacher.getByRole('listitem', { name: C.screenOf.replace('{name}', ADMIN) });
   await expect(screenTile).toBeVisible({ timeout: 15_000 });
-  await expect.poll(() => screenTile.locator('video').evaluate((v) => (v as HTMLVideoElement).videoWidth), { timeout: 15_000 }).toBeGreaterThan(0);
+  await expect.poll(() => videoWidth(screenTile), { timeout: 15_000 }).toBeGreaterThan(0);
   await teacher.getByRole('button', { name: C.stage.maximize }).click();
   const stage = teacher.getByRole('button', { name: C.stage.minimize });
   await expect(stage).toBeVisible();
@@ -98,7 +98,7 @@ test('a guest asks to share the screen, the teacher allows it, then stops it', a
   await expect(guest.getByText(BOARD.readOnly)).toBeVisible();
   await guest.getByRole('button', { name: BOARD.toggle, exact: true }).click();
   await expect(guest.getByRole('listitem', { name: C.boardOf.replace('{name}', 'أبرار') })).toBeVisible({ timeout: 15_000 });
-  await expect.poll(() => guest.locator('[data-maximized] video').evaluate((v) => (v as HTMLVideoElement).videoWidth)).toBeGreaterThan(0);
+  await expect.poll(() => videoWidth(guest.locator('[data-maximized]'))).toBeGreaterThan(0);
   await shot(guest, 'guest-sees-board-share');
   await teacher.context().close();
   await guest.context().close();

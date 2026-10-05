@@ -37,6 +37,8 @@ describe('shareReducer', () => {
     const denied = shareReducer({ ...asked, pending: ['me'] }, msg({ t: 'deny', who: 'me' }, teacher));
     expect(denied).toEqual({ pending: [], mine: 'denied' });
     expect(shareReducer(asked, msg({ t: 'deny', who: 'other' }, teacher)).mine).toBe('pending');
+    expect(shareReducer(denied, { kind: 'dismissed' }).mine).toBe('idle');
+    expect(shareReducer(asked, { kind: 'dismissed' })).toBe(asked);
   });
 
   it('only staff may deny: a guest or a salesperson forging «رفض» is ignored', () => {

@@ -7,7 +7,6 @@ import { notFound } from '../scheduling/errors';
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
 import { InternalMeetingKickService } from './internal-meetings.kick.service';
 import { InternalMeetingsService } from './internal-meetings.service';
-import { ShareGrantService } from './share-grant.service';
 
 /** LiveKit identities the API mints: `<role>-<12 hex>` (newIdentity). */
 const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
@@ -22,7 +21,6 @@ export class InternalMeetingsController {
     private readonly meetings: InternalMeetingsService,
     private readonly joins: InternalMeetingJoinService,
     private readonly kicks: InternalMeetingKickService,
-    private readonly shares: ShareGrantService,
   ) {}
 
   /** 201 {id, url}: the link /m/<token> is shown once. */
@@ -70,19 +68,6 @@ export class InternalMeetingsController {
   async remove(@Param('id', ParseUUIDPipe) id: string, @Param('identity') identity: string, @CurrentUser() user: AuthUser): Promise<void> {
     if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
     await this.kicks.remove({ user, id, identity });
-  }
-
-  /** {allow}: «سماح» / «إيقاف مشاركة» a guest's screen share. 204; 403 cannot_grant_share, 404, 503, 502. */
-  @Post(':id/participants/:identity/share')
-  @HttpCode(204)
-  async share(
-    @Param('id', ParseUUIDPipe) id: string,
-    @Param('identity') identity: string,
-    @Body() body: unknown,
-    @CurrentUser() user: AuthUser,
-  ): Promise<void> {
-    if (!IDENTITY.test(identity)) throw notFound('participant_not_found');
-    await this.shares.meeting({ user, id, identity, body });
   }
 }
 

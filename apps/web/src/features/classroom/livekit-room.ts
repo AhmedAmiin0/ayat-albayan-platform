@@ -3,6 +3,7 @@ import { boardSharer } from './livekit-board-share';
 import { listenData, sendData } from './livekit-data';
 import { attachTrack } from './media-attach';
 import { EMPTY_SNAPSHOT, type MediaFailure, type RoomClient, type RoomSnapshot, type RoomStatus } from './room-types';
+import { stopRevokedShare } from './share/stop-revoked';
 import { snapshotOf } from './snapshot';
 
 const REFRESH: readonly RoomEvent[] = [
@@ -61,6 +62,7 @@ export function createLivekitRoom(): RoomClient {
       speaking = new Set(list.map((s) => s.identity));
       emit();
     })
+    .on(RoomEvent.ParticipantPermissionsChanged, () => stopRevokedShare(room.localParticipant))
     .on(RoomEvent.Reconnecting, () => setStatus('reconnecting'))
     .on(RoomEvent.Reconnected, () => setStatus('connected'))
     // The same token opened elsewhere: stay out, rejoining would kick that window back.

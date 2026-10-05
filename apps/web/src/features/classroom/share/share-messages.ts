@@ -34,6 +34,8 @@ export type ShareInput =
   | { kind: 'message'; msg: ShareMessage; from: { identity: string; role: JoinRole | null }; me: string }
   | { kind: 'asked' }
   | { kind: 'granted' }
+  /** The guest closed the «رُفض…» line. */
+  | { kind: 'dismissed' }
   | { kind: 'settled'; identity: string };
 
 const without = (list: string[], id: string): string[] => list.filter((x) => x !== id);
@@ -45,8 +47,12 @@ const without = (list: string[], id: string): string[] => list.filter((x) => x !
 export function shareReducer(state: ShareState, input: ShareInput): ShareState {
   if (input.kind === 'asked') return state.mine === 'pending' ? state : { ...state, mine: 'pending' };
   if (input.kind === 'granted') return { ...state, mine: 'idle' };
+  if (input.kind === 'dismissed') return state.mine === 'denied' ? { ...state, mine: 'idle' } : state;
   if (input.kind === 'settled') return { ...state, pending: without(state.pending, input.identity) };
-  const { msg, from, me } = input;
+  return onMessage(state, input);
+}
+
+function onMessage(state: ShareState, { msg, from, me }: Extract<ShareInput, { kind: 'message' }>): ShareState {
   if (msg.t === 'request') {
     if (from.role !== 'guest' || state.pending.includes(from.identity)) return state;
     return { ...state, pending: [...state.pending, from.identity] };

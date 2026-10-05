@@ -54,6 +54,7 @@ describe('screen share grant routes', () => {
     const staff = await h.call({ method: 'POST', url: meeting('teacher-0123456789ab'), token: 'admin', body: { allow: true } });
     expect([staff.statusCode, staff.json().code]).toEqual([403, 'cannot_grant_share']);
     expect((await h.call({ method: 'POST', url: meeting(), token: 'sales', body: { allow: true } })).statusCode).toBe(403);
+    expect((await h.call({ method: 'POST', url: '/meetings/nope/participants/guest-0123456789ab/share', body: { allow: true } })).statusCode).toBe(400);
     h.meetings.byId.mockResolvedValueOnce(null);
     expect((await h.call({ method: 'POST', url: meeting(), body: { allow: true } })).statusCode).toBe(404);
   });
