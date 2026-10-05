@@ -7,6 +7,7 @@ import { t } from '@/lib/i18n';
 import { teacherOptionsQuery } from './api';
 import { selectedStatuses, setFilter, toggleStatus, type StudentsFilters } from './filters';
 import { StatusChips } from './StatusChips';
+import { teacherLabel } from '@/lib/teacher-label';
 
 export interface StudentFiltersProps {
   value: StudentsFilters;
@@ -17,12 +18,12 @@ const s = t.students;
 type SelectKey = Exclude<keyof StudentsFilters, 'status'>;
 
 /** Each select filter's options, «الكل» first (value '' = no filter); the teachers come from the API. */
-export function studentFilterOptions(teachers: { id: string; display_name_ar: string }[], tz = ''): Record<SelectKey, FilterOption[]> {
+export function studentFilterOptions(teachers: { id: string; display_name_ar: string; display_name_en?: string | null }[], tz = ''): Record<SelectKey, FilterOption[]> {
   return {
     teacher: [
       { value: '', label: s.teacherAll },
       { value: NO_TEACHER, label: s.teacherNone },
-      ...teachers.map((x) => ({ value: x.id, label: x.display_name_ar })),
+      ...teachers.map((x) => ({ value: x.id, label: teacherLabel(x) })),
     ],
     program: [{ value: '', label: s.programAll }, ...PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }))],
     package: [{ value: '', label: s.packageAll }, ...STUDENT_PACKAGE_FILTERS.map((p) => ({ value: p, label: s.packageFilter[p] }))],

@@ -25,6 +25,8 @@ import { BookingQueries } from './booking.queries';
 const bad = (code: string) => domainError(HttpStatus.BAD_REQUEST, code);
 type Kind = InvoiceRow['kind'];
 type Saved = Pick<InvoiceRow, 'path' | 'mime' | 'size_bytes'>;
+/** The booked families' phones, and settings.upload_max_mb in bytes. */
+export type InvoiceScope = { phones: readonly string[]; maxBytes: number };
 
 /**
  * The فاتورة of a non-trial booking (R-PAY-03, R-MSG-06): a file in the private `invoices` bucket,
@@ -40,8 +42,9 @@ export class BookingInvoices {
     private readonly queries: BookingQueries,
   ) {}
 
-  /** POST /booking/invoice-upload-url: a signed PUT for invoices/{clientRequestId}/{uuid}.{ext}. */
-  uploadUrl(input: InvoiceUpload): Promise<SignedUpload> {
+  /** POST /booking/invoice-upload-url: a signed PUT for invoices/{clientRequestId}/{uuid}.{ext}; 400 invoice_too_large over maxBytes. */
+  uploadUrl(input: InvoiceUpload, maxBytes = INVOICE_MAX_BYTES): Promise<SignedUpload> {
+    if (input.size > maxBytes) return Promise.reject(bad('invoice_too_large'));
     const path = invoicePath({ requestId: input.clientRequestId, name: uploadName(input.mime) });
     return this.storage.signedUpload({ bucket: BUCKETS.invoices, path });
   }
@@ -51,7 +54,7 @@ export class BookingInvoices {
    * request_id_required / invoice_path / invoice_message / invoice_type, 410 media_expired, 413.
    * A replay (the request already stored its invoice) returns that row and copies nothing.
    */
-  async resolve(req: BookingRequest, phones: readonly string[]): Promise<InvoiceRow | null> {
+  async resolve(req: BookingRequest, scope: InvoiceScope): Promise<InvoiceRow | null> {
     const kind = bookingKindOf(req);
     if (kind === 'trial') return null;
     if (!req.invoice) throw bad('invoice_required');
@@ -60,15 +63,15 @@ export class BookingInvoices {
     const stored = await this.queries.invoiceByRequest(requestId);
     if (stored) return stored;
     return req.invoice.source === 'upload'
-      ? this.fromUpload({ input: req.invoice, requestId, kind })
-      : this.fromChat({ input: req.invoice, requestId, kind, phones });
+      ? this.fromUpload({ input: req.invoice, requestId, kind, maxBytes: scope.maxBytes })
+      : this.fromChat({ input: req.invoice, requestId, kind, ...scope });
   }
 
-  private async fromUpload(a: { input: Extract<InvoiceInput, { source: 'upload' }>; requestId: string; kind: Kind }): Promise<InvoiceRow> {
+  private async fromUpload(a: { input: Extract<InvoiceInput, { source: 'upload' }>; requestId: string; kind: Kind; maxBytes: number }): Promise<InvoiceRow> {
     if (!isPathOf(a.input.path, a.requestId)) throw bad('invoice_path');
     const info = await this.storage.info({ bucket: BUCKETS.invoices, path: a.input.path });
     if (!info) throw bad('invoice_path');
-    const saved = this.checked({ path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size });
+    const saved = this.checked({ path: a.input.path, mime: baseMime(info.contentType), size_bytes: info.size }, a.maxBytes);
     // Storage trusts the Content-Type the browser PUT with: the bytes must agree with it.
     const head = await this.storage.head({ bucket: BUCKETS.invoices, path: a.input.path }, SNIFF_BYTES);
     if (!head || sniffMime(head) !== saved.mime) throw bad('invoice_type');
@@ -80,6 +83,7 @@ export class BookingInvoices {
     requestId: string;
     kind: Kind;
     phones: readonly string[];
+    maxBytes: number;
   }): Promise<InvoiceRow> {
     const msg = await this.media.load(a.input.messageId);
     // Only the booked family's own chat: never copy another family's file (R-NFR-02).
@@ -89,14 +93,14 @@ export class BookingInvoices {
     await this.storage.copy({ from: { bucket: from.bucket, path: from.path }, to: { bucket: BUCKETS.invoices, path } });
     const info = await this.storage.info({ bucket: BUCKETS.invoices, path });
     if (!info) throw new Error('invoice copy is missing after copy');
-    const saved = this.checked({ path, mime: from.mime, size_bytes: info.size });
+    const saved = this.checked({ path, mime: from.mime, size_bytes: info.size }, a.maxBytes);
     return { ...saved, kind: a.kind, source: 'whatsapp', message_id: msg.id };
   }
 
-  /** What Storage reports must be an image / PDF of 1 byte to 10 MB. */
-  private checked(file: Saved): Saved {
+  /** What Storage reports must be an image / PDF of 1 byte to maxBytes (settings.upload_max_mb). */
+  private checked(file: Saved, maxBytes: number): Saved {
     if (!(INVOICE_MIMES as readonly string[]).includes(file.mime)) throw bad('invoice_type');
-    if (file.size_bytes < 1 || file.size_bytes > INVOICE_MAX_BYTES) throw bad('invoice_too_large');
+    if (file.size_bytes < 1 || file.size_bytes > Math.min(maxBytes, INVOICE_MAX_BYTES)) throw bad('invoice_too_large');
     return file;
   }
 }

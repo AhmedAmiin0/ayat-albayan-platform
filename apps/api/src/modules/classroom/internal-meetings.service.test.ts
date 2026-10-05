@@ -32,6 +32,12 @@ describe('InternalMeetingsService', () => {
     expect(post).not.toHaveBeenCalled();
   });
 
+  it('create: the untitled default follows settings.default_meeting_title', async () => {
+    mq.defaultTitle.mockResolvedValue('اجتماع المعلمين');
+    await service().create({ user: TEACHER, body: {} });
+    expect(mq.insert).toHaveBeenCalledWith(expect.objectContaining({ title: 'اجتماع المعلمين' }));
+  });
+
   it('create: 400 for a bad title', async () => {
     expect((await fail(service().create({ user: TEACHER, body: { title: 'x'.repeat(61) } }))).getStatus()).toBe(400);
   });

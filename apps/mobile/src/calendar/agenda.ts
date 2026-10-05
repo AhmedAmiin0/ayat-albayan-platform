@@ -60,7 +60,7 @@ export function availabilityLine(
     .sort((a, b) => a.start_time.localeCompare(b.start_time));
   if (day.length === 0) return null;
   return t.calendar.available
-    .replace('{ranges}', day.map((r) => ltr(slotRange(r))).join(t.common.listJoiner))
+    .replace('{ranges}', day.map((r) => ltr(slotRange(r))).join(t.common.listSeparator))
     .replace('{city}', cityOf(gridTz(rows, teacherTz)));
 }
 

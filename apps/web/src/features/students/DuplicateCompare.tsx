@@ -2,6 +2,7 @@ import { formatPhone, normalizePhone } from '@ab/shared';
 import { HighlightDiff } from '@/components/ui/highlight-diff';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { nameMatch, textMatch } from './compare';
 import type { CreateStudentValues } from './create-student';
 import { CompareRow, cell } from './CompareRow';
@@ -23,7 +24,7 @@ const sub = 'w-full text-2xs font-normal text-ink-3';
 export function DuplicateCompare({ typed, candidate, profile }: DuplicateCompareProps) {
   const phone = normalizePhone(typed.guardianPhone);
   const e164 = phone.ok ? phone.e164 : typed.guardianPhone;
-  const teacher = profile?.teacher?.display_name_ar;
+  const teacher = profile?.teacher && teacherLabel(profile.teacher);
 
   return (
     <div

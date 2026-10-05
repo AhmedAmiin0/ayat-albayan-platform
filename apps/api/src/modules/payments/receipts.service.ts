@@ -1,4 +1,4 @@
-import type { ReceiptUpload, SignedDownload, SignedUpload } from '@ab/shared';
+import { RECEIPT_MAX_BYTES, type ReceiptUpload, type SignedDownload, type SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, receiptPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -16,8 +16,9 @@ export class ReceiptsService {
     private readonly storage: StorageService,
   ) {}
 
-  /** P6 (404 subscription_not_found). */
-  async uploadUrl(input: ReceiptUpload): Promise<SignedUpload> {
+  /** P6 (404 subscription_not_found; 400 receipt_too_large over maxBytes = settings.upload_max_mb). */
+  async uploadUrl(input: ReceiptUpload, maxBytes = RECEIPT_MAX_BYTES): Promise<SignedUpload> {
+    if (input.size > maxBytes) throw badRequest('receipt_too_large');
     const sub = await this.subscription(input.subscriptionId);
     return this.storage.signedUpload({
       bucket: BUCKETS.receipts,

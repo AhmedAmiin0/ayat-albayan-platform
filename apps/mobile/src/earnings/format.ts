@@ -20,5 +20,5 @@ export const sessionWhen = (iso: string): string => `${instantDay(iso)} · ${clo
 /** «45 دقيقة · سهيلة، محمد». */
 export function sessionDetail(row: Pick<TeacherEarningView, 'minutes' | 'students'>): string {
   const minutes = t.earnings.minutes.replace('{count}', String(row.minutes));
-  return [minutes, row.students.join(t.teachers.listSeparator)].filter(Boolean).join(' · ');
+  return [minutes, row.students.join(t.common.listSeparator)].filter(Boolean).join(' · ');
 }

@@ -11,7 +11,7 @@ import { canShow } from './invoice-file';
 
 /** «الفاتورة · <student> · <date>»: the title names whose invoice and when it was saved. */
 function title(invoice: InvoiceView): string {
-  const who = invoice.students.map((s) => s.name).join(t.teachers.listSeparator);
+  const who = invoice.students.map((s) => s.name).join(t.common.listSeparator);
   return [t.booking.invoice.label, who, fullTime(invoice.created_at)].filter(Boolean).join(' · ');
 }
 

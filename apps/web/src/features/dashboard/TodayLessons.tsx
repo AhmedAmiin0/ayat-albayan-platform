@@ -4,9 +4,11 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { StaffJoinButton } from '@/features/classroom/StaffJoinButton';
 import { useNow } from '@/features/classroom/use-now';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { cn } from '@/lib/utils';
 import { sectionTitle } from './Bar';
 import { isLiveNow, todaysLessons } from './today';
+import { teacherLabel } from '@/lib/teacher-label';
 
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
@@ -21,9 +23,9 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
         {live && <span title={t.dashboard.home.live} className="size-2 rounded-full bg-ok motion-safe:animate-pulse" />}
       </span>
       <div className="grid min-w-0 gap-1">
-        <p className="truncate font-semibold">{lesson.students.map((s) => s.name).join('، ')}</p>
+        <p className="truncate font-semibold">{lesson.students.map((s) => s.name).join(t.common.listSeparator)}</p>
         <p className="text-sm text-ink-2">
-          {t.dashboard.home.teacher.replace('{name}', lesson.teacher.display_name_ar)}
+          {t.dashboard.home.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         </p>
         <span>
           <StatusChip size="sm" tone={style.tone} glyph={style.glyph} label={t.enums.lessonStatus[lesson.status]} />
@@ -41,6 +43,7 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
  */
 export function TodayLessons({ lessons, className }: { lessons: LessonView[] | undefined; className?: string }) {
   const now = useNow();
+  const win = useJoinWindow();
   const list = lessons ? todaysLessons(lessons) : undefined;
   return (
     <section aria-labelledby="dash-today" className={cn('grid content-start gap-2 rounded-md border border-rule p-4', className)}>
@@ -57,7 +60,7 @@ export function TodayLessons({ lessons, className }: { lessons: LessonView[] | u
       {list && list.length > 0 && (
         <ul className="max-h-[520px] overflow-y-auto overscroll-contain pe-1">
           {list.map((l) => (
-            <LessonItem key={l.id} lesson={l} live={isLiveNow(l, now)} />
+            <LessonItem key={l.id} lesson={l} live={isLiveNow(l, now, win)} />
           ))}
         </ul>
       )}

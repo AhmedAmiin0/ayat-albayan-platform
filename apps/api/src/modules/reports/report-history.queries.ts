@@ -62,7 +62,7 @@ export class ReportHistoryQueries {
     for (let i = 0; i < ids.length; i += CHUNK) {
       const { data, error } = await this.db
         .from('lessons')
-        .select('id, starts_at, teacher:teachers(id, display_name_ar)')
+        .select('id, starts_at, teacher:teachers(id, display_name_ar, display_name_en)')
         .in('id', ids.slice(i, i + CHUNK));
       if (error) throw dbError(error);
       out.push(...data);

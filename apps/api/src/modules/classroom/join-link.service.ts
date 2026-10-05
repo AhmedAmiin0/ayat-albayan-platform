@@ -32,7 +32,7 @@ export class JoinLinkService {
     const ctx = await this.queries.sendContext(lessonId, body.studentId);
     if (!ctx) throw notFound('student_not_in_lesson');
     const token = newLinkToken();
-    const expires_at = linkExpiry(lesson);
+    const expires_at = linkExpiry(lesson, await this.queries.joinWindow());
     await this.queries.insertLink({ lesson_id: lessonId, token_hash: hashLinkToken(token), expires_at, created_by: input.actorId });
     // ponytail: a double press inside five minutes replays the first message; its second link row
     // is simply never used and dies with the lesson window.

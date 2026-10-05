@@ -10,6 +10,7 @@ import { ChatMediaPicker } from './ChatMediaPicker';
 import type { InvoiceDraft } from './draft';
 import { InvoiceChosen } from './InvoiceChosen';
 import { canShow, invoiceMime, invoiceProblem } from './invoice-file';
+import { useUploadMaxBytes } from '@/lib/public-config';
 
 export interface InvoiceFieldProps {
   value: InvoiceDraft | null;
@@ -29,6 +30,7 @@ const FOCUS = 'has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offse
  */
 export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceFieldProps) {
   const id = useId();
+  const maxBytes = useUploadMaxBytes();
   const [chat, setChat] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
   const upload = useMutation({
@@ -45,7 +47,7 @@ export function InvoiceField({ value, requestId, chatPhone, onChange }: InvoiceF
 
   function pick(file: File | null) {
     if (!file) return;
-    const bad = invoiceProblem(file);
+    const bad = invoiceProblem(file, maxBytes);
     setProblem(bad ? t.booking.error[bad] : null);
     if (bad) return;
     upload.mutate(file);

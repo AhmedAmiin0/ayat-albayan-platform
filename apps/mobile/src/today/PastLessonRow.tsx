@@ -1,3 +1,4 @@
+import { teacherName } from '@ab/shared';
 import type { LessonView } from '@ab/shared';
 import { View } from 'react-native';
 import { EditTimeIconButton } from '@/edit-time/EditTimeIconButton';
@@ -6,6 +7,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { riyadhTime, studentNames } from './lesson-text';
 import { TimelineRow } from './TimelineRow';
+import { locale } from '@/lib/locale';
 
 /**
  * A lesson that has ended: one 42pt line on a dashed rule, names, teacher and the status word, and
@@ -32,7 +34,7 @@ export function PastLessonRow({ lesson, onEditTime }: { lesson: LessonView; onEd
           numberOfLines={1}
           style={{ ...text, flex: 1, fontFamily: type.ui[500], color: color.ink2 }}
         >
-          {`${studentNames(lesson)} ${t.today.withTeacher.replace('{teacher}', lesson.teacher.display_name_ar)}`}
+          {`${studentNames(lesson)} ${t.today.withTeacher.replace('{teacher}', teacherName(lesson.teacher, locale))}`}
         </AppText>
         <AppText style={{ ...text, fontFamily: type.ui[500], color: color.ink3 }}>
           {t.enums.lessonStatus[lesson.status]}

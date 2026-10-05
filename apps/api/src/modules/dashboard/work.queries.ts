@@ -7,7 +7,7 @@ import { readAll, readChunked } from '../scheduling/read-all';
 export const REPORTABLE: readonly LessonStatus[] = [...OPEN_LESSON_STATUSES, 'completed', 'late', 'excused', 'no_show'];
 
 const PENDING =
-  'lesson_id, student_id, student:students(id, code, name), lesson:lessons!inner(id, starts_at, status, teacher:teachers(id, display_name_ar)), lesson_reports(id)';
+  'lesson_id, student_id, student:students(id, code, name), lesson:lessons!inner(id, starts_at, status, teacher:teachers(id, display_name_ar, display_name_en)), lesson_reports(id)';
 const UNPAID =
   'id, package, lessons_total, price, currency, starts_on, created_at, student:students(id, code, name), payments(amount, kind)';
 const TASK = 'id, kind, subject_type, subject_id, title, due_at, done_at, created_at';
