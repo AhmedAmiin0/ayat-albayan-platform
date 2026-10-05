@@ -1,8 +1,9 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
+import { useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import type { SalesSubscription } from './api';
+import type { SalesSubscription, SubscriptionKind } from './api';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -20,11 +21,17 @@ const sub = (over: Partial<SalesSubscription>): SalesSubscription => ({
 const PENDING = [sub({})];
 const CONFIRMED = [sub({ id: 'p2', student: { id: 's2', code: 'AB-0190', name: 'يوسف' }, status: 'active' })];
 
+/** The route's `kind` as local state, so the tabs swap the list as they do on /sales/subscriptions. */
+function Harness() {
+  const [kind, setKind] = useState<SubscriptionKind>('pending');
+  return <SalesSubscriptions kind={kind} onKind={setKind} />;
+}
+
 function open(rows: Record<string, SalesSubscription[]> = { pending: PENDING, confirmed: CONFIRMED }) {
   apiFetch.mockImplementation(async (path: string) => rows[path.split('kind=')[1] ?? ''] ?? []);
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <SalesSubscriptions />
+      <Harness />
     </QueryClientProvider>,
   );
 }
@@ -65,7 +72,7 @@ describe('SalesSubscriptions «الاشتراكات»', () => {
     apiFetch.mockRejectedValue(new Error('down'));
     render(
       <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-        <SalesSubscriptions />
+        <Harness />
       </QueryClientProvider>,
     );
     expect(await screen.findByText(t.sales.retry)).toBeTruthy();

@@ -7,6 +7,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { canSubmit } from './api';
+import { categoryOptions, qualityOptions, statusOptions } from './template-filters';
 
 const col = createColumnHelper<DataTableFeatures, TemplateView>();
 const NAMES: Record<string, string | undefined> = t.templates.names;
@@ -17,18 +18,23 @@ export const templateName = (key: string): string => NAMES[key] ?? key;
 /** Stacked rows (< 640px) drop the table head: each value keeps its label inline. */
 const Label = ({ text }: { text: string }) => <span className="text-ink-3 sm:hidden">{text}: </span>;
 
-/** R-MSG-01 health table: name + Meta name, category, status (+ Meta's reason), quality, checked. */
+/**
+ * R-MSG-01 health table: name + Meta name, category, status (+ Meta's reason), quality, checked.
+ * The whole registry is loaded, so it sorts and filters locally (clientSort / clientFilter).
+ */
 export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) => void }) {
   return col.columns([
-    col.accessor('key', {
+    // The value is the shown name, so it sorts and filters by what the row says.
+    col.accessor((r) => templateName(r.key), {
+      id: 'key',
       header: () => t.templates.name,
       cell: (c) => (
         <span className="grid gap-0.5">
-          <span className="font-semibold text-ink">{templateName(c.getValue())}</span>
+          <span className="font-semibold text-ink">{c.getValue()}</span>
           <Ltr className="text-2xs text-ink-3">{c.row.original.meta_name}</Ltr>
         </span>
       ),
-      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_100%]' },
+      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_100%]', filter: { kind: 'text' } },
     }),
     col.accessor('category', {
       header: () => t.templates.category,
@@ -38,7 +44,7 @@ export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) =>
           {t.enums.templateCategory[c.getValue()]}
         </span>
       ),
-      meta: { className: 'max-sm:order-3' },
+      meta: { className: 'max-sm:order-3', filter: { kind: 'select', options: categoryOptions() } },
     }),
     col.accessor('status', {
       header: () => t.templates.status,
@@ -50,7 +56,7 @@ export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) =>
           )}
         </span>
       ),
-      meta: { className: 'max-sm:order-2' },
+      meta: { className: 'max-sm:order-2', filter: { kind: 'select', options: statusOptions() } },
     }),
     col.accessor('quality', {
       header: () => t.templates.quality,
@@ -61,7 +67,7 @@ export function templateColumns({ onSubmit }: { onSubmit: (tpl: TemplateView) =>
           {c.row.original.status === 'approved' ? (QUALITY[c.getValue() ?? 'UNKNOWN'] ?? c.getValue()) : '—'}
         </span>
       ),
-      meta: { className: 'max-sm:order-4' },
+      meta: { className: 'max-sm:order-4', filter: { kind: 'select', options: qualityOptions() } },
     }),
     col.accessor('last_checked_at', {
       header: () => t.templates.lastChecked,

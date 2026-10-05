@@ -1,5 +1,5 @@
 import type { PendingReportView, TeacherMe, TeacherReportView } from '@ab/shared';
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
@@ -46,11 +46,11 @@ describe('/teacher/reports (R-REP-01/02/05)', () => {
       ['/teachers/me/reports', { items: [OPEN, CLOSED], total: 2, page: 1, pageSize: 20 }],
       ['/teachers/me', ME],
     ]);
-    renderWithClient(<MyReports />);
+    renderWithClient(<MyReports search={{}} onSearch={vi.fn()} />);
     const pending = await screen.findByRole('region', { name: t.reports.pending });
     expect(within(pending).getByRole('link', { name: t.reports.open }).getAttribute('href')).toBe('/teacher/report/l-9');
     const sentList = await screen.findByRole('region', { name: t.reports.submittedTitle });
-    const [open, closed] = within(sentList).getAllByRole('listitem');
+    const [open, closed] = within(sentList).getAllByRole('row').slice(1);
     expect(within(open as HTMLElement).getByRole('link', { name: t.reports.edit }).getAttribute('href')).toBe('/teacher/report/l-1');
     expect(within(open as HTMLElement).getByText(/يمكنك تعديل التقرير حتى/)).toBeTruthy();
     expect(within(open as HTMLElement).getByRole('button', { name: t.reports.downloadPdf })).toBeTruthy();
@@ -66,7 +66,26 @@ describe('/teacher/reports (R-REP-01/02/05)', () => {
       ['/teachers/me/reports', { items: [], total: 0, page: 1, pageSize: 20 }],
       ['/teachers/me', ME],
     ]);
-    renderWithClient(<MyReports />);
+    renderWithClient(<MyReports search={{}} onSearch={vi.fn()} />);
     expect(await screen.findByText(t.reports.noSubmitted)).toBeTruthy();
+  });
+
+  it('sent reports sort and filter on the server; a change goes back to page 1 (R-NFR-08)', async () => {
+    routeFetch(apiFetch, [
+      ['/teachers/me/pending-reports', []],
+      ['/teachers/me/reports', { items: [OPEN], total: 1, page: 2, pageSize: 20 }],
+      ['/teachers/me', ME],
+    ]);
+    const onSearch = vi.fn();
+    renderWithClient(<MyReports search={{ page: 2, sort: 'grade', dir: 'desc', f_attendance: 'late' }} onSearch={onSearch} />);
+    const sentList = await screen.findByRole('region', { name: t.reports.submittedTitle });
+    await within(sentList).findAllByRole('row');
+    expect(apiFetch).toHaveBeenCalledWith('/teachers/me/reports?page=2&pageSize=20&sort=grade&dir=desc&attendance=late');
+    expect(within(sentList).getByRole('columnheader', { name: new RegExp(t.reports.gradeCol) }).getAttribute('aria-sort')).toBe('descending');
+    fireEvent.click(within(sentList).getByRole('button', { name: t.reports.submittedAtCol }));
+    expect(onSearch).toHaveBeenLastCalledWith({ sort: 'submitted', dir: undefined, page: undefined });
+    fireEvent.change(within(sentList).getByLabelText(t.table.filterBy.replace('{col}', t.reports.gradeCol)), { target: { value: 'good' } });
+    expect(onSearch).toHaveBeenLastCalledWith({ f_grade: 'good', page: undefined });
+    expect(within(sentList).queryByRole('button', { name: t.reports.date })).toBeNull();
   });
 });

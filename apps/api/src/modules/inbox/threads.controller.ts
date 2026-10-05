@@ -5,18 +5,15 @@ import { z } from 'zod';
 import { AuditService } from '../../common/audit/audit.service';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow } from '../teachers/http';
+import { parseOrThrow } from '../teachers/http';
 import { phoneParam } from './phone-param';
 import type { SalesScope } from '../sales/sales-scope';
 import type { TeacherScope } from './teacher-scope';
 import { ThreadReads } from './thread-reads';
+import { threadListQuery } from './threads.list';
 import type { Sent } from './outbox';
 import { ThreadSendService } from './thread-send.service';
 
-const listQuery = pageQuerySchema.extend({
-  search: z.string().trim().max(100).optional(),
-  unread: z.enum(['true', 'false']).optional().transform((v) => v === 'true'),
-});
 const detailQuery = z.object({
   before: z.iso.datetime({ offset: true }).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
@@ -42,7 +39,7 @@ export class ThreadsController {
 
   @Get()
   list(@Query() query: unknown, @CurrentUser() user: AuthUser) {
-    return this.reads.list(parseOrThrow(listQuery, query), user);
+    return this.reads.list(parseOrThrow(threadListQuery, query), user);
   }
 
   @Get(':phone')

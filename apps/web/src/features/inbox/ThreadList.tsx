@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { t } from '@/lib/i18n';
 import type { InboxSearch } from './search';
+import { ThreadListControls } from './ThreadListControls';
 import { ThreadRow } from './ThreadRow';
 
 export interface ThreadListProps {
@@ -14,7 +15,7 @@ export interface ThreadListProps {
   onFilter: (patch: Record<string, unknown>) => void;
 }
 
-/** Search (name / phone, server-side) + الكل | مش مقروءة, then the conversations, newest first. */
+/** Search (name / phone, server-side) + الكل | غير مقروءة, order and status, then the conversations. */
 export function ThreadList({ search, threads, onFilter }: ThreadListProps) {
   return (
     <>
@@ -47,6 +48,7 @@ export function ThreadList({ search, threads, onFilter }: ThreadListProps) {
             { value: 'unread', label: t.inbox.filterUnread },
           ]}
         />
+        <ThreadListControls search={search} onFilter={onFilter} />
       </div>
       {threads.length === 0 ? (
         <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />

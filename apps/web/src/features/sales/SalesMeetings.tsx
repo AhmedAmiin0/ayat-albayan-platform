@@ -1,24 +1,28 @@
 import { isOpenLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
+import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
-import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { dayAround } from '@/features/classroom/api';
 import { t } from '@/lib/i18n';
 import { salesMeetingsQuery } from './api';
-import { MeetingRow } from './MeetingRow';
+import { salesMeetingColumns, teacherOptionsOf } from './sales-meeting-columns';
 
 const DAY = new Intl.DateTimeFormat('en-GB', { weekday: 'long', day: 'numeric', month: 'long' });
 
-/** /sales/meetings «مواعيدي»: my meetings of one day, each with «ادخل الحلقة» (15 min before to 2 h after). */
+/**
+ * /sales/meetings «مواعيدي»: my meetings of one day, each with «ادخل الحلقة» (15 min before to 2 h
+ * after). The day is loaded whole: time, who and teacher sort, who and teacher filter, locally.
+ */
 export function SalesMeetings() {
   const [offset, setOffset] = useState(0);
   const day = dayAround(new Date(), offset);
   const meetings = useQuery(salesMeetingsQuery(day));
-  const rows = (meetings.data ?? []).filter((m) => isOpenLesson(m.status));
+  const rows = useMemo(() => (meetings.data ?? []).filter((m) => isOpenLesson(m.status)), [meetings.data]);
+  const columns = useMemo(() => salesMeetingColumns(teacherOptionsOf(rows)), [rows]);
   return (
     <section aria-label={t.sales.schedule.title}>
       <PageHead>
@@ -39,12 +43,17 @@ export function SalesMeetings() {
           </Button>
         </FormAlert>
       )}
-      {meetings.isSuccess && rows.length === 0 && <EmptyState title={t.sales.schedule.empty} />}
-      <ul aria-label={t.sales.schedule.list}>
-        {rows.map((m) => (
-          <MeetingRow key={m.lesson_id} meeting={m} />
-        ))}
-      </ul>
+      {meetings.isSuccess && (
+        <DataTable
+          stacked
+          clientSort
+          clientFilter
+          columns={columns}
+          data={rows}
+          getRowId={(m) => m.lesson_id}
+          emptyText={t.sales.schedule.empty}
+        />
+      )}
     </section>
   );
 }

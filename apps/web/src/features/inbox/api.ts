@@ -24,6 +24,10 @@ export const threadsQuery = (s: InboxSearch) => {
   const params = new URLSearchParams({ page: String(s.page), pageSize: String(THREADS_PAGE_SIZE) });
   if (s.q) params.set('search', s.q);
   if (s.unread) params.set('unread', 'true');
+  // «غير المقروءة أولًا» = most unread first; names A→ي.
+  if (s.sort) params.set('sort', s.sort);
+  if (s.sort === 'unread') params.set('dir', 'desc');
+  if (s.f_status) params.set('status', s.f_status);
   return queryOptions({
     queryKey: ['threads', 'list', params.toString()],
     queryFn: () => apiFetch<Page<ThreadView>>(`/threads?${params}`),

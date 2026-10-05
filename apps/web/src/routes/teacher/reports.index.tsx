@@ -1,5 +1,16 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { MyReports } from '@/features/teacher/MyReports';
+import { MY_REPORTS_LIST_KEYS } from '@/features/teacher/SubmittedReports';
+import { parseServerListSearch } from '@/lib/server-list-search';
 
-/** /teacher/reports — pending, sent (edit window) and my students' history (R-REP-01/02/05). */
-export const Route = createFileRoute('/teacher/reports/')({ component: MyReports });
+/** /teacher/reports?page&sort&dir&f_<key> — pending, sent (edit window) and my students' history (R-REP-01/02/05). */
+export const Route = createFileRoute('/teacher/reports/')({
+  validateSearch: (s: Record<string, unknown>) => parseServerListSearch(s, MY_REPORTS_LIST_KEYS),
+  component: MyReportsRoute,
+});
+
+function MyReportsRoute() {
+  const search = Route.useSearch();
+  const navigate = Route.useNavigate();
+  return <MyReports search={search} onSearch={(patch) => void navigate({ search: (prev) => ({ ...prev, ...patch }) })} />;
+}

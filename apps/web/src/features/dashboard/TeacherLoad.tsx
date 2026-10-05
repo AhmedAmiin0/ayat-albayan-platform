@@ -2,6 +2,8 @@ import type { DashboardSummary } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { t } from '@/lib/i18n';
 import { Bar } from './Bar';
+import { useHandSort } from './hand-sort';
+import { SortableTh } from './SortableTh';
 
 type Load = DashboardSummary['teacher_load'][number];
 
@@ -12,25 +14,29 @@ export function loadLabel(l: Pick<Load, 'students' | 'max_students'>): string {
     : t.dashboard.ofMax.replace('{n}', String(l.students)).replace('{max}', String(l.max_students));
 }
 
+type LoadKey = 'name' | 'students' | 'lessons';
+const valueOf = (l: Load, key: LoadKey): unknown => (key === 'name' ? l.display_name_ar : l[key]);
+
 /**
  * Teacher load (R-RPT-01): assigned trial/active students against the teacher's maximum (a meter:
  * the bar fills toward max_students) and this week's lessons. Neutral ink; a full teacher is not
- * the admin's work, so no saffron.
+ * the admin's work, so no saffron. A short summary: every column sorts (students by count), none filters.
  */
 export function TeacherLoad({ rows }: { rows: readonly Load[] }) {
+  const sorter = useHandSort(rows, valueOf);
   if (rows.length === 0) return <p className="text-sm text-ink-2">{t.teachers.empty}</p>;
   return (
     <table className="w-full border-collapse text-sm">
       <caption className="sr-only">{t.dashboard.teacherLoad}</caption>
       <thead>
         <tr className="border-b border-rule text-xs font-semibold text-ink-3">
-          <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.payouts.teacher}</th>
-          <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.teachers.studentsCount}</th>
-          <th scope="col" className="py-2 text-end font-semibold">{t.dashboard.weekLessons}</th>
+          <SortableTh label={t.payouts.teacher} sortKey="name" sorter={sorter} className="text-start" />
+          <SortableTh label={t.teachers.studentsCount} sortKey="students" sorter={sorter} className="text-start" />
+          <SortableTh label={t.dashboard.weekLessons} sortKey="lessons" sorter={sorter} className="pe-0 text-end" />
         </tr>
       </thead>
       <tbody>
-        {rows.map((r) => (
+        {sorter.rows.map((r) => (
           <tr key={r.teacher_id} className="border-b border-rule last:border-b-0">
             <th scope="row" className="py-2 pe-3 text-start font-semibold whitespace-nowrap">
               <Link to="/admin/teachers/$teacherId" params={{ teacherId: r.teacher_id }} className="text-ink hover:text-lapis">
