@@ -19,7 +19,7 @@ jest.mock('@/lib/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 test('an English run reads en.json: title, count, days late, English currency', async () => {
-  expect(t).toBe(en);
+  expect(t).toEqual(en);
   mockApiFetch.mockResolvedValue(receivablesView([receivable()]));
   await renderWithQuery(<ReceivablesScreen />);
   expect(await screen.findByRole('header', { name: en.mobileMoney.receivablesTitle })).toBeTruthy();

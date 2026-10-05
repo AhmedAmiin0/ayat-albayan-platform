@@ -18,7 +18,7 @@ jest.mock('@/lib/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 test('an English run reads en.json: title, view tabs, status chips, renewal flag', async () => {
-  expect(t).toBe(en);
+  expect(t).toEqual(en);
   mockApiFetch.mockImplementation(async (path: string) =>
     path === '/settings' ? { renewal_alert_remaining: 2 } : page([subscription({ status: 'active', paid: 145 })]),
   );

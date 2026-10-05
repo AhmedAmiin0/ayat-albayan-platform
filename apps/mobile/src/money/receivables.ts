@@ -27,5 +27,5 @@ export function isSevere(days: number): boolean {
 /** «لا يوجد سعر صرف لـUSD، …» or null when every currency was converted. */
 export function fxMissingText(currencies: readonly string[]): string | null {
   if (currencies.length === 0) return null;
-  return t.mobileMoney.fxMissing.replace('{currencies}', currencies.join('، '));
+  return t.mobileMoney.fxMissing.replace('{currencies}', currencies.join(t.common.listSeparator));
 }

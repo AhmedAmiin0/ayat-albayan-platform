@@ -18,7 +18,7 @@ jest.mock('@/lib/api', () => ({
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
 test('an English run reads en.json: title, count, chips, method, receipt button', async () => {
-  expect(t).toBe(en);
+  expect(t).toEqual(en);
   mockApiFetch.mockResolvedValue({
     items: [payment({ receipt_path: 'a/b.jpg' })],
     total: 1,

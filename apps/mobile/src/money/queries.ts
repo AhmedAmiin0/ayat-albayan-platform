@@ -6,6 +6,10 @@ import type { PeriodTotal } from './types';
 
 const MINUTE = 60_000;
 
+// A signed URL expires, so `noPersist` keeps it off the disk cache (lib/query-client): a restart
+// would show a dead receipt.
+const meta = { noPersist: true };
+
 /** GET /receivables: every package that still owes, in one answer (no paging), oldest debt first. */
 export function useReceivables() {
   return useQuery({
@@ -24,6 +28,7 @@ export function useReceiptUrl(paymentId: string, enabled: boolean) {
     queryFn: () => apiFetch<SignedDownload>(`/payments/${paymentId}/receipt`),
     enabled,
     staleTime: 30 * MINUTE,
+    meta,
   });
 }
 

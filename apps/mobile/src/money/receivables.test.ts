@@ -33,5 +33,5 @@ test('late text and the 60-day line', () => {
 
 test('the FX gap is worded only when a currency is missing', () => {
   expect(fxMissingText([])).toBeNull();
-  expect(fxMissingText(['EGP', 'USD'])).toContain('EGP، USD');
+  expect(fxMissingText(['EGP', 'USD'])).toContain(`EGP${t.common.listSeparator}USD`);
 });
