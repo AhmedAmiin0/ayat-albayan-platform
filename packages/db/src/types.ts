@@ -257,6 +257,33 @@ export type Database = {
           },
         ];
       };
+      custom_config: {
+        Row: {
+          description: string | null;
+          is_public: boolean;
+          key: string;
+          updated_at: string;
+          updated_by: string | null;
+          value: NonNullable<Json>;
+        };
+        Insert: {
+          description?: string | null;
+          is_public?: boolean;
+          key: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value: NonNullable<Json>;
+        };
+        Update: {
+          description?: string | null;
+          is_public?: boolean;
+          key?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value?: NonNullable<Json>;
+        };
+        Relationships: [];
+      };
       expense_categories: {
         Row: {
           active: boolean;

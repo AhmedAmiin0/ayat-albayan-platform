@@ -25,6 +25,14 @@ export interface ReportPdfModel {
   nextPlan: string | null;
   /** Render time, for the «تقرير صادر آليًا» stamp. */
   generatedAt: Date;
+  /** The footer's contact line (settings.academy_contact); absent = the built-in CONTACT. */
+  contact?: PdfContact;
+}
+
+/** Already display-ready: the site as typed, the WhatsApp number grouped («+966 56 610 1447»). */
+export interface PdfContact {
+  site?: string;
+  whatsapp?: string;
 }
 
 export interface PackageSlot {

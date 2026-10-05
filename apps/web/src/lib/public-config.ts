@@ -3,6 +3,7 @@ import {
   PUBLIC_SETTING_DEFAULTS,
   uploadMaxBytes,
   type JoinWindowConfig,
+  type PublicConfig,
   type PublicSettings,
 } from '@ab/shared';
 import { queryOptions, useQuery } from '@tanstack/react-query';
@@ -15,7 +16,7 @@ import { apiFetch } from './api';
  */
 export const publicConfigQuery = queryOptions({
   queryKey: ['settings', 'public'],
-  queryFn: () => apiFetch<PublicSettings>('/settings/public'),
+  queryFn: () => apiFetch<PublicConfig>('/settings/public'),
   staleTime: 5 * 60_000,
 });
 

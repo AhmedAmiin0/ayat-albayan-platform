@@ -5,6 +5,7 @@ import {
   settingDef,
   settingsUpdateSchema,
   type AcademySettings,
+  type JsonDef,
   type SettingDef,
   type SettingField,
   type SettingKey,
@@ -31,6 +32,14 @@ export const str = (form: SettingsForm, key: string): string => {
 };
 export const flag = (form: SettingsForm, key: string): boolean => form[key] === true;
 
+/** The id of one field of a json setting's object (`academyContact.site`). */
+export const shapeId = (field: string, name: string): string => `${field}.${name}`;
+
+function shapeFields(field: string, def: JsonDef, v: AcademySettings[SettingKey]): SettingsForm {
+  const obj: Record<string, string> = v !== null && typeof v === 'object' && !Array.isArray(v) ? (v as Record<string, string>) : {};
+  return Object.fromEntries(def.shape.map((f) => [shapeId(field, f.name), obj[f.name] ?? '']));
+}
+
 function formValue(def: SettingDef, v: AcademySettings[SettingKey]): string | boolean {
   if (typeof v === 'boolean') return v;
   if (Array.isArray(v)) return v.join(t.common.listSeparator);
@@ -43,6 +52,10 @@ export function settingsForm(s: AcademySettings): SettingsForm {
   for (const key of FORM_KEYS) {
     const def = settingDef(key);
     const field = SETTING_FIELD_OF[key];
+    if (def.type === 'json') {
+      Object.assign(form, shapeFields(field, def, s[key]));
+      continue;
+    }
     form[field] = formValue(def, s[key]);
     if (def.type === 'int' && def.nullable) form[onKey(field)] = s[key] !== null;
   }
@@ -59,7 +72,18 @@ const phone = (v: string): string => {
   return r.ok ? r.e164 : v;
 };
 
+/** A json setting's object: the filled boxes only; null (unset) when the setting may be and none is filled. */
+function shapeValue(def: JsonDef, input: { form: SettingsForm; field: string }): Record<string, string> | null {
+  const out: Record<string, string> = {};
+  for (const f of def.shape) {
+    const v = str(input.form, shapeId(input.field, f.name)).trim();
+    if (v !== '') out[f.name] = v;
+  }
+  return def.nullable && Object.keys(out).length === 0 ? null : out;
+}
+
 function bodyValue(def: SettingDef, input: { form: SettingsForm; field: string }): unknown {
+  if (def.type === 'json') return shapeValue(def, input);
   const raw = input.form[input.field];
   if (def.type === 'bool') return raw === true;
   const text = typeof raw === 'string' ? raw : '';
@@ -72,7 +96,7 @@ function bodyValue(def: SettingDef, input: { form: SettingsForm; field: string }
 function errorText(def: SettingDef, message: string): string {
   if (message === 'not_ascending') return t.settings.notAscending;
   if (def.type === 'e164') return t.settings.invalidPhone;
-  if (def.type === 'string' || def.type === 'tz' || def.type === 'enum') return t.settings.invalidText;
+  if (def.type === 'string' || def.type === 'tz' || def.type === 'enum' || def.type === 'json') return t.settings.invalidText;
   return t.settings.invalid;
 }
 
