@@ -1,30 +1,38 @@
-import { searchDigits } from '@ab/shared';
+import { STUDENT_STATUSES, searchDigits, type StudentListFilters, type StudentStatus } from '@ab/shared';
 import { NotFoundException } from '@nestjs/common';
 import type { Db } from '../../common/db/db.module';
 import { dbError, pageRange, type ListQuery, type Page } from '../guardians/http';
+import { applyStudentFilters } from './students.filters';
 import {
   studentNameOrCodeFilter,
   studentPhoneOrCodeFilter,
   toListItem,
   toProfile,
   type StudentListItem,
+  type StudentListRow,
   type StudentProfile,
 } from './students.mapper';
 
 // One literal each: supabase-js infers the row type from the select string.
-const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
+const LIST_COLUMNS = `id, code, name, status, program, tz, created_at, package_remaining, has_weekly, guardian:guardians!inner(name, phone_e164), teacher:teachers(display_name_ar)`;
 const PROFILE_COLUMNS = `*, guardian:guardians!inner(id, name, phone_e164, students(id, code, name, status)), teacher:teachers(id, display_name_ar, meeting_link)`;
 
-/** Paginated list, searchable by name / code / guardian phone (R-STU-01, R-NFR-08). */
-export async function listStudents(db: Db, q: ListQuery): Promise<Page<StudentListItem>> {
-  let query = db
-    .from('students')
-    .select(LIST_COLUMNS, { count: 'exact' })
-    .order('created_at', { ascending: false });
+export type StudentListQuery = ListQuery & StudentListFilters;
+
+/**
+ * Paginated list (v_student_list), searchable by name / code / guardian phone and filtered by
+ * status, teacher, program, package, weekly lesson, tz (R-STU-01, R-NFR-08).
+ */
+export async function listStudents(db: Db, q: StudentListQuery): Promise<Page<StudentListItem>> {
+  let query = applyStudentFilters(
+    db.from('v_student_list').select(LIST_COLUMNS, { count: 'exact' }),
+    q,
+  ).order('created_at', { ascending: false });
   const filter = await searchFilter(db, q.search);
   if (filter) query = query.or(filter);
   const [from, to] = pageRange(q);
-  const { data, error, count } = await query.range(from, to);
+  // The view's columns read as nullable; the base columns (and has_weekly's exists) never are.
+  const { data, error, count } = await query.range(from, to).overrideTypes<StudentListRow[], { merge: false }>();
   if (error) throw dbError(error);
   return { items: data.map(toListItem), total: count ?? 0, page: q.page, pageSize: q.pageSize };
 }
@@ -41,6 +49,22 @@ async function searchFilter(db: Db, term: string): Promise<string | null> {
   const { data, error } = await db.from('guardians').select('id').ilike('phone_e164', `%${digits}%`).limit(100);
   if (error) throw dbError(error);
   return studentPhoneOrCodeFilter(data.map((g) => g.id), digits);
+}
+
+export type StatusCounts = Record<StudentStatus, number>;
+
+/** Students per status under the other filters, e.g. one teacher's «١٢ مشترك · ٣ تجريبي». */
+export async function countStudentsByStatus(db: Db, f: StudentListFilters): Promise<StatusCounts> {
+  const rest: StudentListFilters = { ...f, status: undefined };
+  const counts = await Promise.all(
+    STUDENT_STATUSES.map(async (status) => {
+      const base = db.from('v_student_list').select('id', { count: 'exact', head: true });
+      const { error, count } = await applyStudentFilters(base, rest).eq('status', status);
+      if (error) throw dbError(error);
+      return [status, count ?? 0] as const;
+    }),
+  );
+  return Object.fromEntries(counts) as StatusCounts;
 }
 
 /** Profile with guardian (+ siblings) and teacher (R-STU-04, R-STU-05). */

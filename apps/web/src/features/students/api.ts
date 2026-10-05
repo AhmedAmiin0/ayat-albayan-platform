@@ -1,6 +1,7 @@
-import type { Gender, LeadSource } from '@ab/shared';
+import type { Gender, LeadSource, StudentStatus } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
+import { filterParams, type StudentsFilters } from './filters';
 import type {
   DuplicateBody,
   Page,
@@ -15,14 +16,29 @@ export const PAGE_SIZE = 20;
 /** Invalidate this after any write. */
 export const STUDENTS_KEY = ['students'] as const;
 
-export const studentListQuery = (search: string, page: number) =>
+/** GET /students: search + page, and the list filters (R-STU-01) when given. */
+export const studentListQuery = (search: string, page: number, filters: StudentsFilters = {}) =>
   queryOptions({
-    queryKey: [...STUDENTS_KEY, 'list', { search, page }],
+    queryKey: [...STUDENTS_KEY, 'list', { search, page, ...filters }],
     queryFn: () => {
-      const qs = new URLSearchParams({ search, page: String(page), pageSize: String(PAGE_SIZE) });
+      const qs = new URLSearchParams([
+        ['search', search],
+        ['page', String(page)],
+        ['pageSize', String(PAGE_SIZE)],
+        ...filterParams(filters),
+      ]);
       return apiFetch<Page<StudentListItem>>(`/students?${qs}`);
     },
     placeholderData: keepPreviousData,
+  });
+
+export type StatusCounts = Record<StudentStatus, number>;
+
+/** Students per status under the other filters (status itself ignored), e.g. one teacher's. */
+export const studentStatusCountsQuery = (filters: StudentsFilters) =>
+  queryOptions({
+    queryKey: [...STUDENTS_KEY, 'status-counts', filters],
+    queryFn: () => apiFetch<StatusCounts>(`/students/status-counts?${new URLSearchParams(filterParams(filters))}`),
   });
 
 export const studentQuery = (id: string) =>

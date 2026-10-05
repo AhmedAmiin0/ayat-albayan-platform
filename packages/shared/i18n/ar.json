@@ -215,7 +215,30 @@
     "withTeacher": "مع {teacher}",
     "duplicateHint": "ينقل الدمج كل الحلقات والتقارير والمدفوعات، ويُحفظ السجل القديم في السجل التاريخي.",
     "emptyHint": "سيظهر هنا فور تحويل محادثة إلى طالب أو إضافة طالب بنفسك.",
-    "ageInvalid": "اكتب العمر بالأرقام (من 3 إلى 99)"
+    "ageInvalid": "اكتب العمر بالأرقام (من 3 إلى 99)",
+    "filters": "فلاتر",
+    "filtersTitle": "تصفية الطلاب",
+    "clearFilters": "مسح الفلاتر",
+    "teacherAll": "كل المعلمين",
+    "teacherNone": "بدون معلم",
+    "programAll": "كل البرامج",
+    "package": "الباقة",
+    "packageAll": "كل الباقات",
+    "packageFilter": {
+      "active": "لها باقة سارية",
+      "none": "بدون باقة",
+      "low": "الرصيد منخفض",
+      "unpaid": "غير مدفوعة"
+    },
+    "weekly": "له حلقة أسبوعية",
+    "weeklyAll": "الحلقة الأسبوعية: الكل",
+    "tzAll": "كل المناطق الزمنية",
+    "remaining": "المتبقي",
+    "remainingN": "{n} حلقة متبقية",
+    "noPackage": "بدون باقة",
+    "weeklyYes": "له حلقة أسبوعية",
+    "weeklyNo": "بدون حلقة أسبوعية",
+    "showResults": "عرض النتائج"
   },
   "guardians": {
     "title": "أولياء الأمور",
@@ -269,7 +292,13 @@
     "invalidNumber": "اكتب رقمًا صحيحًا",
     "listSeparator": "، ",
     "count": "{n} معلم/ة",
-    "tabData": "البيانات"
+    "tabData": "البيانات",
+    "tabStudents": "الطلاب",
+    "studentsTitle": "طلاب المعلم/ة",
+    "studentsShowAll": "عرض كل الحالات",
+    "studentsShowCurrent": "المشتركون والتجريبيون فقط",
+    "studentsViewAll": "عرض الكل في صفحة الطلاب",
+    "studentsEmpty": "لا يوجد طلاب بهذه الحالة"
   },
   "availability": {
     "title": "المواعيد المتاحة",

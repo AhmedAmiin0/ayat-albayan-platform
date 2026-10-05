@@ -215,7 +215,30 @@
     "withTeacher": "With {teacher}",
     "duplicateHint": "Merging moves all lessons, reports, and payments, and the old record is kept in the history.",
     "emptyHint": "As soon as you convert a conversation into a student or add one yourself, they'll show up here.",
-    "ageInvalid": "Write the age in digits (3 to 99)"
+    "ageInvalid": "Write the age in digits (3 to 99)",
+    "filters": "Filters",
+    "filtersTitle": "Filter students",
+    "clearFilters": "Clear filters",
+    "teacherAll": "All teachers",
+    "teacherNone": "No teacher",
+    "programAll": "All programs",
+    "package": "Package",
+    "packageAll": "All packages",
+    "packageFilter": {
+      "active": "Has a valid package",
+      "none": "No package",
+      "low": "Low balance",
+      "unpaid": "Unpaid"
+    },
+    "weekly": "Has a weekly lesson",
+    "weeklyAll": "Weekly lesson: all",
+    "tzAll": "All time zones",
+    "remaining": "Remaining",
+    "remainingN": "{n} lessons left",
+    "noPackage": "No package",
+    "weeklyYes": "Has a weekly lesson",
+    "weeklyNo": "No weekly lesson",
+    "showResults": "Show results"
   },
   "guardians": {
     "title": "Guardians",
@@ -269,7 +292,13 @@
     "invalidNumber": "Enter a valid number",
     "listSeparator": ", ",
     "count": "{n} total",
-    "tabData": "Details"
+    "tabData": "Details",
+    "tabStudents": "Students",
+    "studentsTitle": "Teacher's students",
+    "studentsShowAll": "Show all statuses",
+    "studentsShowCurrent": "Subscribed and trial only",
+    "studentsViewAll": "View all on the students page",
+    "studentsEmpty": "No students with this status"
   },
   "availability": {
     "title": "Available times",

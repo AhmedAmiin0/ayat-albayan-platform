@@ -14,4 +14,9 @@ describe('parseStudentsSearch (R-NFR-08)', () => {
   it('floors a fractional page', () => {
     expect(parseStudentsSearch({ page: 2.7 }).page).toBe(2);
   });
+
+  it('carries the filters, so a shared or reloaded URL keeps them (R-STU-01)', () => {
+    const url = { search: 'سهيلة', page: '2', status: 'active,trial', teacher: 'none', package: 'low', weekly: 'no', junk: 'x' };
+    expect(parseStudentsSearch(url)).toEqual({ search: 'سهيلة', page: 2, status: 'trial,active', teacher: 'none', package: 'low', weekly: 'no' });
+  });
 });

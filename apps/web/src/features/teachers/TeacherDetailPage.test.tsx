@@ -82,6 +82,14 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     expect(screen.queryByRole('table', { name: t.availability.title })).toBeNull();
   });
 
+  it('«الطلاب» tab: her students from the students list API, teacher fixed (R-TCH-03)', async () => {
+    renderPage();
+    fireEvent.click(await screen.findByRole('tab', { name: t.teachers.tabStudents }));
+    const panel = screen.getByRole('tabpanel', { name: t.teachers.tabStudents });
+    expect(within(panel).getByRole('heading', { name: t.teachers.studentsTitle })).toBeTruthy();
+    expect(apiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=t1');
+  });
+
   it('links to «مستحقات المعلم» for this teacher', async () => {
     renderPage();
     const link = await screen.findByRole('link', { name: t.earnings.title });

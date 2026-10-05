@@ -2558,6 +2558,41 @@ export type Database = {
           },
         ];
       };
+      v_student_list: {
+        Row: {
+          code: string | null;
+          created_at: string | null;
+          guardian_id: string | null;
+          has_package: boolean | null;
+          has_weekly: boolean | null;
+          id: string | null;
+          low_balance: boolean | null;
+          name: string | null;
+          name_normalized: string | null;
+          package_remaining: number | null;
+          package_unpaid: boolean | null;
+          program: Database['public']['Enums']['program'] | null;
+          status: Database['public']['Enums']['student_status'] | null;
+          teacher_id: string | null;
+          tz: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'students_guardian_id_fkey';
+            columns: ['guardian_id'];
+            isOneToOne: false;
+            referencedRelation: 'guardians';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'students_teacher_id_fkey';
+            columns: ['teacher_id'];
+            isOneToOne: false;
+            referencedRelation: 'teachers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       v_subscription_balance: {
         Row: {
           ended_at: string | null;

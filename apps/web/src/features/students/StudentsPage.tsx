@@ -11,25 +11,30 @@ import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { studentListQuery } from './api';
 import { CreateStudentDialog } from './CreateStudentDialog';
+import { activeFilterCount, type StudentsFilters } from './filters';
+import { StudentFilterBar } from './StudentFilterBar';
 import { studentColumns } from './studentColumns';
 import { StudentSearch } from './StudentSearch';
 
-export type StudentsSearch = { search: string; page: number };
+export type StudentsSearch = { search: string; page: number; filters?: StudentsFilters };
 
 type StudentsPageProps = StudentsSearch & {
-  /** Writes search/page to the URL (server-side paging, R-NFR-08). */
+  /** Writes search/page/filters to the URL (server-side paging, R-NFR-08). */
   onChange: (next: StudentsSearch) => void;
   onOpen: (studentId: string) => void;
 };
 
-/** Students list: search by name / phone / code, paginate, add (R-STU-01..03). Inside the shell's Page. */
-export function StudentsPage({ search, page, onChange, onOpen }: StudentsPageProps) {
-  const { data, isError } = useQuery(studentListQuery(search, page));
+/**
+ * Students list: search by name / phone / code, filter, paginate, add (R-STU-01..03). Inside the
+ * shell's Page. Any search or filter change goes back to page 1.
+ */
+export function StudentsPage({ search, page, filters = {}, onChange, onOpen }: StudentsPageProps) {
+  const { data, isError } = useQuery(studentListQuery(search, page, filters));
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const dismiss = useCallback(() => setNotice(null), []);
   const columns = useMemo(() => studentColumns(onOpen), [onOpen]);
-  const none = data?.total === 0 && !search;
+  const none = data?.total === 0 && !search && activeFilterCount(filters) === 0;
 
   return (
     <>
@@ -48,9 +53,8 @@ export function StudentsPage({ search, page, onChange, onOpen }: StudentsPagePro
         </div>
       </PageHead>
       <div className="mb-3.5 flex flex-wrap items-center gap-2.5">
-        <StudentSearch initial={search} onSearch={(term) => onChange({ search: term, page: 1 })} />
-        {/* TODO(R-STU-01): البرنامج / المعلم/ة selects and the status SegmentedControl with counts,
-            once GET /students filters by program, teacher_id and status. */}
+        <StudentSearch initial={search} onSearch={(term) => onChange({ search: term, page: 1, filters })} />
+        <StudentFilterBar value={filters} onChange={(next) => onChange({ search, page: 1, filters: next })} />
       </div>
       {isError && (
         <p role="alert" className="mb-3 text-sm text-danger">
@@ -71,7 +75,7 @@ export function StudentsPage({ search, page, onChange, onOpen }: StudentsPagePro
         />
       )}
       {data && (
-        <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ search, page: p })} />
+        <Pager page={page} total={data.total} pageSize={data.pageSize} onPage={(p) => onChange({ search, page: p, filters })} />
       )}
       {adding && (
         <CreateStudentDialog
