@@ -62,6 +62,8 @@ export interface EgressOutcome {
   error: string | null;
   /** The egress' room (`lesson-<id>` / `meeting-<id>`), to record again if people are still in it. */
   room: string | null;
+  /** The uploaded file's size in bytes, when the egress result carries it. */
+  sizeBytes?: number;
 }
 
 const DONE = new Set(['EGRESS_COMPLETE', 'EGRESS_LIMIT_REACHED', '3', '6']);
@@ -88,6 +90,14 @@ function egressInfoOf(event: unknown): Record<string, unknown> | null {
   return info && typeof info === 'object' ? (info as Record<string, unknown>) : null;
 }
 
+/** The first file result's size (LiveKit sends int64 as a JSON string); undefined when absent. */
+function sizeOf(info: Record<string, unknown>): { sizeBytes: number } | Record<string, never> {
+  const files = info.fileResults ?? info.file_results;
+  const first: unknown = Array.isArray(files) ? files[0] : undefined;
+  const raw = first && typeof first === 'object' ? str((first as Record<string, unknown>).size) : null;
+  return raw !== null && /^\d+$/.test(raw) && Number.isSafeInteger(Number(raw)) ? { sizeBytes: Number(raw) } : {};
+}
+
 /** egress_ended / egress_updated with a terminal status; camelCase (LiveKit) and snake_case read. */
 export function egressOutcome(event: unknown, now: Date): EgressOutcome | null {
   const info = egressInfoOf(event) ?? {};
@@ -97,5 +107,5 @@ export function egressOutcome(event: unknown, now: Date): EgressOutcome | null {
   if (!egressId || !kind) return null;
   const error = kind === 'failed' ? (str(info.error) ?? status).slice(0, 500) : null;
   const room = str(info.roomName ?? info.room_name);
-  return { egressId, status: kind, endedAt: endedAtOf(info.endedAt ?? info.ended_at, now), error, room };
+  return { egressId, status: kind, endedAt: endedAtOf(info.endedAt ?? info.ended_at, now), error, room, ...(kind === 'done' ? sizeOf(info) : {}) };
 }

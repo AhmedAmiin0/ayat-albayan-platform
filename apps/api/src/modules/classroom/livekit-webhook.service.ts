@@ -35,7 +35,8 @@ export class LivekitWebhookService {
     }
     const outcome = egressOutcome(event, now);
     if (!outcome) return;
-    await this.recordings.finishByEgress(outcome.egressId, { status: outcome.status, endedAt: outcome.endedAt, error: outcome.error });
+    const { egressId, status, endedAt, error, sizeBytes } = outcome;
+    await this.recordings.finishByEgress(egressId, { status, endedAt, error, ...(sizeBytes !== undefined && { sizeBytes }) });
     await this.lifecycle.afterEgressEnded({ room: outcome.room, status: outcome.status });
   }
 }

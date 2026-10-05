@@ -1059,6 +1059,53 @@
       "fallback": "No exchange rate is available right now, so prices use the SAR–USD peg (3.75)"
     }
   },
+  "studentRecordings": {
+    "title": "Lesson recordings",
+    "hint": "Every lesson held in the online room is recorded automatically and listed here for review.",
+    "error": "Could not load the recordings. Try again.",
+    "retry": "Try again",
+    "empty": "This student has no recordings yet.",
+    "emptyFiltered": "No recordings match the filter.",
+    "status": {
+      "recording": "Recording",
+      "done": "Ready",
+      "failed": "Recording failed",
+      "deleted": "Deleted"
+    },
+    "lessonAt": "Lesson {when}",
+    "teacher": "Teacher",
+    "duration": "Duration",
+    "size": "Size",
+    "unknown": "—",
+    "sizeMb": "{n} MB",
+    "sizeGb": "{n} GB",
+    "player": "Play the recording of the lesson {when}",
+    "download": "Download",
+    "downloadOf": "Download the recording of the lesson {when}",
+    "filters": {
+      "from": "From date",
+      "to": "To date",
+      "teacher": "Teacher",
+      "teacherAll": "All teachers"
+    },
+    "visible": {
+      "label": "Show to the student",
+      "on": "Ready to show to the student and guardian once their portal is on.",
+      "off": "Hidden from the student and guardian.",
+      "failed": "Could not change the visibility. Try again.",
+      "groupLesson": "A group lesson's recording cannot be shown to a student: it holds the lesson of more than one student."
+    },
+    "delete": {
+      "action": "Delete recording",
+      "title": "Delete the lesson recording?",
+      "body": "The recording file will be deleted for good and cannot be restored. The deletion record is kept.",
+      "confirm": "Delete for good",
+      "failed": "Could not delete the recording. Try again.",
+      "inProgress": "A recording that is still running cannot be deleted."
+    },
+    "reportLink": "Lesson recording",
+    "reportLinkOf": "Open the recording of the lesson {when}"
+  },
   "reports": {
     "title": "Lesson reports",
     "formTitle": "Lesson report",
@@ -1526,7 +1573,7 @@
     "recordingConsentNoticeHint": "Any visitor can read it. It is not shown in the classroom yet; it will be shown to the student and guardian before a recorded lesson once recording is switched on.",
     "recordingRetentionDays": "Keep lesson recordings for (days)",
     "recordingRetentionOn": "Delete recordings after a period",
-    "recordingRetentionHint": "When off, recordings are kept without deleting. Deleting them is the owner's decision and is never on by default. Deletion is not applied yet.",
+    "recordingRetentionHint": "When off, recordings are kept without deleting. Deleting them is the owner's decision and is never on by default. When on, the files of lesson recordings and of internal-meeting recordings older than this are deleted; their records are kept.",
     "activityRetentionDays": "Keep the activity log for (days)",
     "activityRetentionDaysHint": "Activity records older than this are deleted daily.",
     "sections": {

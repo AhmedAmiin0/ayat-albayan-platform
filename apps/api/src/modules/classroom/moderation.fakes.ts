@@ -43,6 +43,9 @@ export const recordingRow = (over: Partial<RecordingRow> = {}): RecordingRow => 
   started_at: '2026-10-05T16:00:00.000Z',
   ended_at: '2026-10-05T17:00:00.000Z',
   error: null,
+  size_bytes: null,
+  visible_to_student: false,
+  deleted_at: null,
   ...over,
 });
 

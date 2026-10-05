@@ -118,5 +118,7 @@ import { StudentLinkService } from './student-link.service';
     InternalMeetingJoinService,
     InternalMeetingKickService,
   ],
+  // The student file's recordings (modules/student-recordings) sign links and read rows the same way.
+  exports: [RecordingViews, RecordingQueries],
 })
 export class ClassroomModule {}
