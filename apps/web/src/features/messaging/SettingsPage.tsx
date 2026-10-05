@@ -31,7 +31,8 @@ export function SettingsPage() {
       </PageHead>
       {settings.isError && <FormAlert>{t.common.error}</FormAlert>}
       {settings.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
-      <div className="grid gap-10">
+      {/* minmax(0,1fr): the templates table scrolls inside its own box instead of widening the page (768px). */}
+      <div className="grid grid-cols-[minmax(0,1fr)] gap-10">
         {settings.data && (
           <section aria-labelledby={ids.sending}>
             <h2 id={ids.sending} className={h2}>

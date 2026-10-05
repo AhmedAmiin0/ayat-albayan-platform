@@ -24,7 +24,7 @@ export interface TabsProps<V extends string> {
 // 44px touch targets below the `shell:` breakpoint (docs/07 §4).
 const tabClass = {
   horizontal:
-    '-mb-px min-h-11 whitespace-nowrap border-b-2 border-transparent px-3.5 pt-2 pb-2.5 font-medium text-ink-2 transition-[color,border-color] duration-200 ease-out hover:text-ink aria-selected:border-lapis aria-selected:font-semibold aria-selected:text-ink',
+    '-mb-px min-h-11 shrink-0 whitespace-nowrap border-b-2 border-transparent px-2.5 pt-2 pb-2.5 sm:px-3.5 font-medium text-ink-2 transition-[color,border-color] duration-200 ease-out hover:text-ink aria-selected:border-lapis aria-selected:font-semibold aria-selected:text-ink',
   vertical:
     'flex min-h-11 items-center gap-1.5 whitespace-nowrap shell:min-h-0 shell:items-baseline rounded-sm border border-rule px-2.5 py-[7px] text-xs text-ink-2 hover:bg-sunk transition-colors duration-150 ease-out aria-selected:bg-accent aria-selected:font-semibold aria-selected:text-ink shell:border-transparent',
 };
@@ -77,7 +77,7 @@ export function Tabs<V extends string>({
         'flex overflow-x-auto',
         vertical
           ? '-m-1 gap-1.5 p-1 shell:flex-col shell:gap-px shell:self-start' // p-1: room for the focus ring
-          : 'mb-5 gap-1 border-b border-rule',
+          : 'mb-5 gap-0 border-b border-rule sm:gap-1',
         className,
       )}
     >

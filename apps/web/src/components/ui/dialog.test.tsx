@@ -70,4 +70,14 @@ describe('Dialog', () => {
     expect(document.activeElement).toBe(opener);
     opener.remove();
   });
+
+  it('fits the screen: capped at the viewport height, only the body scrolls, and it pops in', () => {
+    renderDialog();
+    const dialog = screen.getByRole('dialog');
+    expect(dialog.className).toContain('max-h-[calc(100dvh-1.5rem)]');
+    expect(dialog.className).toContain('animate-pop-in');
+    const body = screen.getByLabelText(t.students.name).parentElement;
+    expect(body?.className).toContain('overflow-y-auto');
+    expect(body?.className).toContain('min-h-0');
+  });
 });

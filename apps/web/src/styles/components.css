@@ -41,3 +41,16 @@
     mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 40px), transparent);
   }
 }
+
+/* Touch tablets (≥640px with a coarse pointer, e.g. an iPad at 768px): the 40/32px desktop control
+   sizes come back up to the 44px touch floor. Unlayered on purpose so it wins over `sm:min-h-*`. */
+@media (pointer: coarse) {
+  button,
+  select,
+  input:not([type='checkbox'], [type='radio'], [type='range'], [type='hidden']),
+  [role='tab'],
+  a.inline-flex[class*='rounded-md'],
+  a[class*='min-h-11'] {
+    min-height: 44px;
+  }
+}

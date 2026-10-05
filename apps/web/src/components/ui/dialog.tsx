@@ -31,7 +31,8 @@ export interface DialogProps {
 /**
  * Accessible modal in a jadwal frame on the scrim (docs/07 §6 Dialog): role=dialog, aria-modal,
  * named by its title, focus trapped, Esc closes, focus returns on close. Render it conditionally.
- * On phones it flows from the top and the actions stack full-width, primary on top.
+ * On phones it sits at the top and the actions stack full-width, primary on top; a body taller
+ * than the screen scrolls inside the panel so the title and actions never leave the viewport.
  */
 export function Dialog({ title, onClose, children, description, glyph, actions, hint, className }: DialogProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -47,7 +48,7 @@ export function Dialog({ title, onClose, children, description, glyph, actions, 
   }, []);
 
   return createPortal(
-    <div className="fixed inset-0 z-50 animate-fade-in overflow-y-auto bg-scrim px-3 py-16 sm:grid sm:place-items-center sm:p-6">
+    <div className="fixed inset-0 z-50 grid animate-fade-in place-items-start overflow-y-auto bg-scrim p-3 pt-[max(0.75rem,env(safe-area-inset-top))] sm:place-items-center sm:p-6">
       <div
         ref={ref}
         role="dialog"
@@ -55,11 +56,11 @@ export function Dialog({ title, onClose, children, description, glyph, actions, 
         aria-labelledby={titleId}
         aria-describedby={description ? descId : undefined}
         tabIndex={-1}
-        className={cn(jadwalClass, 'relative mx-auto w-full max-w-[740px] animate-pop-in px-4 pt-5 pb-4 shadow-pop sm:px-7 sm:pt-[26px] sm:pb-[22px]', className)}
+        className={cn(jadwalClass, 'relative mx-auto flex max-h-[calc(100dvh-1.5rem)] w-full max-w-[740px] animate-pop-in flex-col px-4 pt-5 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-pop sm:max-h-[calc(100dvh-3rem)] sm:px-7 sm:pt-[26px] sm:pb-[22px]', className)}
       >
         <div
           className={cn(
-            'grid items-start gap-x-3.5 gap-y-1',
+            'grid shrink-0 items-start gap-x-3.5 gap-y-1',
             // Phones: the glyph tile shares the first row with the close button, the title gets
             // the full width under them (docs/07 §6 Dialog, phone crop).
             'grid-cols-[minmax(0,1fr)_auto]',
@@ -99,9 +100,10 @@ export function Dialog({ title, onClose, children, description, glyph, actions, 
             </div>
           )}
         </div>
-        <div className="mt-5">{children}</div>
+        {/* Taller than the screen: only the body scrolls, title and actions stay in view. */}
+        <div className="-mx-1 mt-5 min-h-0 flex-1 overflow-y-auto overscroll-contain px-1">{children}</div>
         {(actions || hint) && (
-          <div className="mt-5 flex flex-wrap items-center justify-between gap-x-5 gap-y-3.5 border-t border-rule pt-[18px]">
+          <div className="mt-5 flex shrink-0 flex-wrap items-center justify-between gap-x-5 gap-y-3.5 border-t border-rule pt-[18px]">
             <div className="max-w-[32ch] text-xs text-ink-3">{hint}</div>
             <div className="flex w-full flex-col-reverse gap-2.5 sm:w-auto sm:flex-row [&>*]:max-sm:min-h-11">{actions}</div>
           </div>
