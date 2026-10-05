@@ -2594,5 +2594,14 @@
     "studentPayments": "المدفوعات",
     "netPaid": "الصافي: {amount}",
     "ledgerCsv": "كشف الحلقات والدفعات CSV"
+  },
+  "table": {
+    "sortAsc": "ترتيب تصاعدي",
+    "sortDesc": "ترتيب تنازلي",
+    "sortNone": "بدون ترتيب",
+    "filterBy": "تصفية حسب {col}",
+    "all": "الكل",
+    "clearFilters": "مسح التصفية",
+    "searchPlaceholder": "ابحث…"
   }
 }

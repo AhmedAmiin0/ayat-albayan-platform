@@ -2594,5 +2594,14 @@
     "studentPayments": "Payments",
     "netPaid": "Net: {amount}",
     "ledgerCsv": "Lessons & payments CSV"
+  },
+  "table": {
+    "sortAsc": "Sort ascending",
+    "sortDesc": "Sort descending",
+    "sortNone": "Not sorted",
+    "filterBy": "Filter by {col}",
+    "all": "All",
+    "clearFilters": "Clear filters",
+    "searchPlaceholder": "Search…"
   }
 }
