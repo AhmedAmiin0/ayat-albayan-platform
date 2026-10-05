@@ -1666,7 +1666,15 @@
       "noLesson": "This guardian's children have no completed lesson yet",
       "notApproved": "Meta has not approved the lesson rating template yet",
       "chip": "Rating: {rating}"
-    }
+    },
+    "sort": {
+      "label": "Sort conversations",
+      "latest": "Latest message",
+      "unread": "Unread first",
+      "name": "By name"
+    },
+    "statusFilter": "Lead status",
+    "allStatuses": "All statuses"
   },
   "templates": {
     "title": "WhatsApp templates",
