@@ -1,5 +1,5 @@
 import { createHash, randomBytes } from 'node:crypto';
-import { JOIN_CLOSES_AFTER_MIN } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW, roomClosesAt, type JoinWindowConfig } from '@ab/shared';
 
 // The family's one-lesson guest link: a random 192-bit token (32 chars, it rides in the WhatsApp
 // URL button), of which only the sha256 is stored (lesson_join_links.token_hash), so a database
@@ -14,9 +14,9 @@ export const looksLikeLinkToken = (token: string): boolean => TOKEN_RE.test(toke
 
 export const hashLinkToken = (token: string): string => createHash('sha256').update(token).digest('hex');
 
-/** A link dies when its classroom closes (2 hours after the lesson ends). */
-export const linkExpiry = (lesson: { ends_at: string }): string =>
-  new Date(Date.parse(lesson.ends_at) + JOIN_CLOSES_AFTER_MIN * 60_000).toISOString();
+/** A link dies when its classroom closes (settings.join_closes_after_min after the lesson ends, at creation). */
+export const linkExpiry = (lesson: { ends_at: string }, win: JoinWindowConfig = DEFAULT_JOIN_WINDOW): string =>
+  roomClosesAt(lesson, win);
 
 export type LinkCheck = 'ok' | 'revoked' | 'expired';
 

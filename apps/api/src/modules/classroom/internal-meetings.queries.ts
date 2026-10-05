@@ -1,6 +1,7 @@
 import type { Tables } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { SettingsService } from '../../common/settings/settings.service';
 import { dbError } from '../teachers/http';
 
 export type MeetingRow = Pick<Tables<'meetings'>, 'id' | 'title' | 'created_by' | 'created_at' | 'ends_at' | 'revoked'>;
@@ -11,7 +12,15 @@ const LIST_LIMIT = 20;
 /** Reads and writes of «اجتماع داخلي» (service role; the services guard, migration 193). */
 @Injectable()
 export class InternalMeetingsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
+
+  /** settings.default_meeting_title: the title of a meeting created without one. */
+  async defaultTitle(): Promise<string> {
+    return (await this.settings.all()).default_meeting_title;
+  }
 
   async insert(row: { title: string; createdBy: string; hash: string }): Promise<MeetingRow> {
     const { data, error } = await this.db

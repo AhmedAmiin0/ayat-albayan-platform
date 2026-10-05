@@ -23,7 +23,7 @@ export class BookingWriter {
   ) {}
 
   async write({ req, prepared, actorId }: BookingWrite): Promise<BookingResult> {
-    const invoice = await this.invoices.resolve(req, prepared.phones);
+    const invoice = await this.invoices.resolve(req, { phones: prepared.phones, maxBytes: prepared.invoiceMaxBytes });
     const result = await this.queries.createBooking(withInvoice(prepared.payload, invoice), actorId);
     void this.sender.kick();
     return result;

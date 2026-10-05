@@ -1,3 +1,4 @@
+import { teacherName } from '@ab/shared';
 import type { TeacherEarningView } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
@@ -12,6 +13,7 @@ import { EarningsHeader, type Tab } from './EarningsHeader';
 import { PaymentsList, SessionsList } from './EarningsList';
 import { PayForm } from './PayForm';
 import { useEarningsBalance, type SessionFilter } from './queries';
+import { locale } from '@/lib/locale';
 
 /**
  * «مستحقات» of a teacher (admin: More > المعلمين > teacher): the balance, the sessions with ticks,
@@ -33,7 +35,7 @@ export function TeacherEarningsScreen() {
       return next;
     });
   const back = <Button variant="ghost" label={t.common.back} onPress={() => (paying ? setPaying(false) : router.back())} />;
-  const title = balance.data ? `${t.earnings.title} · ${balance.data.teacher.display_name_ar}` : t.earnings.title;
+  const title = balance.data ? `${t.earnings.title} · ${teacherName(balance.data.teacher, locale)}` : t.earnings.title;
 
   if (paying && balance.data) {
     return (

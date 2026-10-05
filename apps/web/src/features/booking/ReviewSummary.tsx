@@ -52,7 +52,7 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
       </Row>
       {kind !== 'makeup' && (
         <Row label={t.booking.pickDays}>
-          {days.map((d) => weekday[String(d)]).join(t.teachers.listSeparator)} ({counted(t.booking.perWeek, days.length)})
+          {days.map((d) => weekday[String(d)]).join(t.common.listSeparator)} ({counted(t.booking.perWeek, days.length)})
           {note && <p className={`mt-1 ${PACKAGE_NOTE_CLASS}`}>{note}</p>}
         </Row>
       )}

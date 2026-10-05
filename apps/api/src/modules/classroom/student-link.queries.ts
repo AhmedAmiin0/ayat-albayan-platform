@@ -1,7 +1,8 @@
 import type { Tables } from '@ab/db';
-import { JOIN_CLOSES_AFTER_MIN, OPEN_LESSON_STATUSES } from '@ab/shared';
+import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { SettingsService } from '../../common/settings/settings.service';
 import { dbError } from '../teachers/http';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
@@ -19,7 +20,15 @@ const AHEAD = 20;
 /** Reads and writes of the student's long-lived link (migration 191; service role, the services guard). */
 @Injectable()
 export class StudentLinkQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
+
+  /** The classroom window from settings (join_opens_before_min / join_closes_after_min, cached). */
+  async joinWindow(): Promise<JoinWindowConfig> {
+    return joinWindowConfig(await this.settings.all());
+  }
 
   async student(id: string): Promise<{ id: string; name: string } | null> {
     const { data, error } = await this.db.from('students').select('id, name').eq('id', id).maybeSingle();
@@ -40,9 +49,10 @@ export class StudentLinkQueries {
     return data;
   }
 
-  /** The student's open lessons whose room has not closed yet (ended at most 2 hours ago), by start. */
+  /** The student's open lessons whose room has not closed yet (ended at most closesAfterMin ago), by start. */
   async lessonsAhead(studentId: string, now: Date): Promise<StudentLesson[]> {
-    const since = new Date(now.getTime() - JOIN_CLOSES_AFTER_MIN * 60_000).toISOString();
+    const { closesAfterMin } = await this.joinWindow();
+    const since = new Date(now.getTime() - closesAfterMin * 60_000).toISOString();
     const { data, error } = await this.db
       .from('lessons')
       .select('id, starts_at, ends_at, room_opened_at, teacher:teachers(display_name_ar), lesson_students!inner(student_id)')
@@ -74,7 +84,7 @@ export class StudentLinkQueries {
       lesson_id: input.lesson.id,
       student_id: input.studentId,
       token_hash: hashLinkToken(newLinkToken()),
-      expires_at: linkExpiry(input.lesson),
+      expires_at: linkExpiry(input.lesson, await this.joinWindow()),
     };
     const { data, error } = await this.db.from('lesson_join_links').insert(row).select('id').single();
     if (!error) return data.id;

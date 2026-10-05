@@ -8,6 +8,7 @@ import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { useEffect } from 'react';
 import { useAuthGate } from '@/auth/use-auth-gate';
+import { useOverridesReady } from '@/lib/i18n-overrides';
 import { useLocaleReady } from '@/lib/locale-switch';
 import { persistOptions, queryClient } from '@/lib/query-client';
 import { restoreAppearance } from '@/more/appearance';
@@ -22,8 +23,8 @@ const fonts = {
 };
 
 /**
- * Fonts + language + session gate, then one stack: admins get (tabs), teachers get /teacher (their
- * own lessons, chats, reports and payouts; a real segment, so its tabs never share a URL with the
+ * Fonts + language + translation overrides + session gate, then one stack: admins get (tabs),
+ * teachers get /teacher (their own lessons, chats, reports and payouts; a real segment, so its tabs never share a URL with the
  * admin's), everyone else only /login.
  * When the gate flips, Stack.Protected moves the screen by itself: no screen navigates after sign-in/out.
  */
@@ -32,13 +33,15 @@ export default function RootLayout() {
   const gate = useAuthGate();
   // The saved language before any screen: a mismatch reloads, so nothing paints in the wrong one.
   const localeReady = useLocaleReady();
+  // The admins' translation overrides saved by the last run, in `t` before the first screen.
+  const overridesReady = useOverridesReady();
   const { color } = useTheme();
   // «المظهر»: the saved light/dark override, re-applied while fonts and the session load.
   useEffect(() => {
     void restoreAppearance();
   }, []);
   // On a font error fall through: the system Arabic font is better than a blank app.
-  const ready = (loaded || error) && localeReady && gate !== 'booting';
+  const ready = (loaded || error) && localeReady && overridesReady && gate !== 'booting';
   return (
     <PersistQueryClientProvider client={queryClient} persistOptions={persistOptions}>
       {ready ? (

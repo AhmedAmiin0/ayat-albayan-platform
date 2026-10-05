@@ -10,7 +10,7 @@ export type PayoutRow = Tables<'teacher_payouts'> & {
 };
 export type LessonWindow = { teacherId: string; from: string; to: string };
 
-const SELECT = '*, teacher:teachers(id, display_name_ar, tz)';
+const SELECT = '*, teacher:teachers(id, display_name_ar, display_name_en, tz)';
 const byTeacherName = (a: PayoutRow, b: PayoutRow) =>
   (a.teacher?.display_name_ar ?? '').localeCompare(b.teacher?.display_name_ar ?? '', 'ar') || a.id.localeCompare(b.id);
 

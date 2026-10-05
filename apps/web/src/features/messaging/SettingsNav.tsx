@@ -1,10 +1,11 @@
+import { SETTINGS_SECTIONS, type SettingsSectionId } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
-/** The sections of /admin/settings, in page order. */
-export const SETTINGS_SECTIONS = ['messaging', 'schedule', 'reports', 'accounts', 'sales', 'appearance'] as const;
-export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
+/** The sections of /admin/settings, in page order (the settings registry's). */
+export { SETTINGS_SECTIONS };
+export type SettingsSection = SettingsSectionId;
 
 export const sectionId = (s: SettingsSection) => `settings-${s}`;
 

@@ -57,7 +57,7 @@ export function BindingCover() {
       <div className="relative grid justify-items-center gap-1.5 text-center">
         <Mandorla />
         <b className="font-display text-[28px] leading-[1.4] text-gold-on-cover shell:text-[40px]">{t.app.brand}</b>
-        <small className="text-sm opacity-90">{PROGRAMS.map((p) => t.enums.program[p]).join(t.teachers.listSeparator)}</small>
+        <small className="text-sm opacity-90">{PROGRAMS.map((p) => t.enums.program[p]).join(t.common.listSeparator)}</small>
       </div>
     </div>
   );

@@ -26,6 +26,13 @@ describe('FxService.rateSarTo (docs/08 §4)', () => {
     expect(fx.fetcher.latest).not.toHaveBeenCalled();
   });
 
+  it('settings.fx_fresh_hours: with 6 h, a 23 h old rate is fetched again', async () => {
+    const short = fakeFx({ fx_fresh_hours: 6 });
+    short.queries.newest.mockResolvedValue(fxRow({ fetched_at: hoursAgo(23) }));
+    expect((await short.service.rateSarTo('USD')).rate).toBe(0.2666);
+    expect(short.fetcher.latest).toHaveBeenCalledTimes(1);
+  });
+
   it('refreshes a stale rate and stores the whole provider update', async () => {
     fx.queries.newest.mockResolvedValue(fxRow({ fetched_at: hoursAgo(25) }));
     const rate = await fx.service.rateSarTo('USD');

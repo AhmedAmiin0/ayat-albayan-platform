@@ -1,79 +1,94 @@
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../db/db.module';
-import { SettingsService } from './settings.service';
+import { SETTING_DEFAULTS, SettingsService } from './settings.service';
 
-function service(result: { data: { value: unknown } | null; error: { message: string } | null }) {
-  const maybeSingle = vi.fn().mockResolvedValue(result);
-  const eq = vi.fn().mockReturnValue({ maybeSingle });
-  const select = vi.fn().mockReturnValue({ eq });
-  const from = vi.fn().mockReturnValue({ select });
-  return { svc: new SettingsService({ from } as unknown as Db), from, eq };
+type Rows = { key: string; value: unknown }[];
+
+/** A db whose select('key, value') answers `rows` (or an error), counting the reads. */
+function service(rows: Rows | { error: string }, ttlMs = 30_000) {
+  const result = Array.isArray(rows) ? { data: rows, error: null } : { data: null, error: { message: rows.error } };
+  const select = vi.fn().mockResolvedValue(result);
+  const eq = vi.fn().mockResolvedValue({ error: null });
+  const upsert = vi.fn().mockResolvedValue({ error: null });
+  const del = vi.fn().mockReturnValue({ eq });
+  const from = vi.fn().mockReturnValue({ select, upsert, delete: del });
+  return { svc: new SettingsService({ from } as unknown as Db, ttlMs), select, upsert, eq };
 }
-const row = (value: unknown) => ({ data: { value }, error: null });
 
-describe('SettingsService.lateCancelHours (R-SCH-07)', () => {
-  it('reads the stored number', async () => {
-    const { svc, from, eq } = service(row(12));
+describe('SettingsService accessors (R-SCH-07, R-SCH-02)', () => {
+  it('reads the stored values', async () => {
+    const { svc } = service([{ key: 'late_cancel_hours', value: 12 }, { key: 'booking_horizon_weeks', value: 8 }]);
     expect(await svc.lateCancelHours()).toBe(12);
-    expect(from).toHaveBeenCalledWith('settings');
-    expect(eq).toHaveBeenCalledWith('key', 'late_cancel_hours');
+    expect(await svc.bookingHorizonWeeks()).toBe(8);
+    expect(await svc.get('join_opens_before_min')).toBe(15);
   });
 
   it.each([
-    ['JSON null (seeded: policy off)', row(null)],
-    ['a missing row', { data: null, error: null }],
-    ['a string', row('12')],
-    ['a negative number', row(-1)],
-  ])('is null (off) for %s', async (_name, result) => {
-    expect(await service(result).svc.lateCancelHours()).toBeNull();
+    ['a missing row', []],
+    ['a string', [{ key: 'late_cancel_hours', value: '12' }]],
+    ['a negative number', [{ key: 'late_cancel_hours', value: -1 }]],
+  ])('late cancel is null (off) for %s', async (_name, rows) => {
+    expect(await service(rows).svc.lateCancelHours()).toBeNull();
+  });
+
+  it('horizon falls back to 5 for zero; sales auto-assign defaults to true', async () => {
+    const { svc } = service([{ key: 'booking_horizon_weeks', value: 0 }]);
+    expect(await svc.bookingHorizonWeeks()).toBe(5);
+    expect(await svc.salesAutoAssign()).toBe(true);
+  });
+
+  it('throws on a DB error instead of guessing, and does not cache the failure', async () => {
+    const { svc, select } = service({ error: 'boom' });
+    await expect(svc.bookingHorizonWeeks()).rejects.toThrow(/boom/);
+    select.mockResolvedValue({ data: [], error: null });
+    expect(await svc.bookingHorizonWeeks()).toBe(5);
   });
 });
 
-describe('SettingsService.bookingHorizonWeeks (R-SCH-02)', () => {
-  it('reads the stored number of weeks', async () => {
-    expect(await service(row(8)).svc.bookingHorizonWeeks()).toBe(8);
+describe('SettingsService cache', () => {
+  it('one query serves every read within the TTL; after it, the rows are read again', async () => {
+    const { svc, select } = service([{ key: 'upload_max_mb', value: 4 }], 1_000);
+    expect((await svc.all(0)).upload_max_mb).toBe(4);
+    await svc.all(999);
+    expect(select).toHaveBeenCalledTimes(1);
+    await svc.all(1_000);
+    expect(select).toHaveBeenCalledTimes(2);
   });
 
-  it.each([
-    ['a missing row', { data: null, error: null }],
-    ['zero', row(0)],
-    ['a fraction', row(2.5)],
-  ])('falls back to 5 for %s', async (_name, result) => {
-    expect(await service(result).svc.bookingHorizonWeeks()).toBe(5);
+  it('a write invalidates at once: the next read sees the new value', async () => {
+    const { svc, select } = service([{ key: 'join_closes_after_min', value: 120 }]);
+    expect(await svc.get('join_closes_after_min')).toBe(120);
+    select.mockResolvedValue({ data: [{ key: 'join_closes_after_min', value: 30 }], error: null });
+    expect(await svc.get('join_closes_after_min')).toBe(120); // still cached
+    await svc.write({ join_closes_after_min: 30 }, 'admin-1');
+    expect(await svc.get('join_closes_after_min')).toBe(30);
   });
 
-  it('throws on a DB error instead of guessing', async () => {
-    const { svc } = service({ data: null, error: { message: 'boom' } });
-    await expect(svc.bookingHorizonWeeks()).rejects.toThrow(/boom/);
+  it('TTL 0 (e2e) reads every time; callers get a copy they may change', async () => {
+    const { svc, select } = service([], 0);
+    const a = await svc.all();
+    a.upload_max_mb = 1;
+    expect((await svc.all()).upload_max_mb).toBe(10);
+    expect(select).toHaveBeenCalledTimes(2);
+  });
+
+  it('publicView returns only the public keys', async () => {
+    const view = await service([{ key: 'academy_whatsapp_e164', value: '+201001234567' }]).svc.publicView();
+    expect(view).toMatchObject({ academy_whatsapp_e164: '+201001234567', join_opens_before_min: 15 });
+    expect(view).not.toHaveProperty('messaging_enabled');
   });
 });
 
 describe('SettingsService.write (PATCH /settings)', () => {
-  it('upserts numbers stamped with the admin; null deletes the row (reads back as OFF)', async () => {
-    const eq = vi.fn().mockResolvedValue({ error: null });
-    const del = vi.fn().mockReturnValue({ eq });
-    const upsert = vi.fn().mockResolvedValue({ error: null });
-    const from = vi.fn().mockReturnValue({ upsert, delete: del });
-    const svc = new SettingsService({ from } as unknown as Db);
+  it('upserts values stamped with the admin; null deletes the row (reads back as OFF)', async () => {
+    const { svc, upsert, eq } = service([]);
     await svc.write({ booking_horizon_weeks: 6, late_cancel_hours: null }, 'admin-1');
     expect(upsert).toHaveBeenCalledWith({ key: 'booking_horizon_weeks', value: 6, updated_by: 'admin-1' });
     expect(eq).toHaveBeenCalledWith('key', 'late_cancel_hours');
   });
-});
 
-describe('SettingsService.all (docs/11 §2)', () => {
-  it('reads every row in one query and fills defaults', async () => {
-    const select = vi.fn().mockResolvedValue({ data: [{ key: 'renewal_alert_remaining', value: 3 }], error: null });
-    const from = vi.fn().mockReturnValue({ select });
-    const all = await new SettingsService({ from } as unknown as Db).all();
-    expect(select).toHaveBeenCalledWith('key, value');
-    expect(all.renewal_alert_remaining).toBe(3);
-    expect(all.report_teacher_edit_hours).toBe(24);
-  });
-
-  it('throws on a DB error', async () => {
-    const select = vi.fn().mockResolvedValue({ data: null, error: { message: 'down' } });
-    const svc = new SettingsService({ from: vi.fn().mockReturnValue({ select }) } as unknown as Db);
-    await expect(svc.all()).rejects.toThrow(/down/);
+  it('all() fills defaults (docs/11 §2)', async () => {
+    const all = await service([{ key: 'renewal_alert_remaining', value: 3 }]).svc.all();
+    expect(all).toEqual({ ...SETTING_DEFAULTS, renewal_alert_remaining: 3 });
   });
 });
