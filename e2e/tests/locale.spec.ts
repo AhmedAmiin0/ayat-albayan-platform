@@ -29,7 +29,8 @@ test.describe('language switch (English LTR, Arabic default)', () => {
     await expectDocument(page, 'en');
     await expect(page.getByRole('heading', { level: 1, name: en.admin.dashboardTitle })).toBeVisible();
     const nav = page.getByRole('navigation', { name: en.nav.label });
-    await expect(nav.getByRole('link', { name: en.nav.students })).toBeVisible();
+    // Anchored: «Owed by students» (finance) also contains the word.
+    await expect(nav.getByRole('link', { name: new RegExp(`^${en.nav.students}`) })).toBeVisible();
     await expect(nav.getByRole('link', { name: en.nav.expenses })).toBeVisible();
 
     // A form on another page, after a fresh navigation: the saved choice still applies.
