@@ -68,10 +68,10 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
         </div>
       </PageHead>
       <ProposalsPanel onOpen={(l) => setOpenId(l.id)} />
-      <div className="mb-4 grid gap-3">
+      <div className="mb-3">
         <ScheduleNav search={search} today={today} onSearch={patch} />
-        <ScheduleFilters search={search} teachers={all} onSearch={patch} />
       </div>
+      <ScheduleFilters search={search} teachers={all} onSearch={patch} resultCount={overview.data ? shown.length : undefined} />
       <Body
         query={overview}
         rows={boardRows(teachers, shown)}

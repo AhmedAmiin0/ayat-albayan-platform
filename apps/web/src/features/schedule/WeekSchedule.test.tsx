@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { FATMA, lesson } from './lesson-fixture';
 import { overview } from './overview-fixture';
 import type { ScheduleSearch } from './search';
@@ -78,6 +79,7 @@ describe('WeekSchedule (R-SCH-01, R-SCH-03)', () => {
     expect(within(grid).getByText(t.enums.lessonStatus.rescheduled)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.schedule.nextWeek }));
     expect(onSearch).toHaveBeenCalledWith({ closed: true, week: '2026-10-10' });
+    openFilters();
     fireEvent.change(screen.getByLabelText(t.schedule.statusFilter), { target: { value: 'confirmed' } });
     expect(onSearch).toHaveBeenLastCalledWith({ closed: true, status: 'confirmed' });
     fireEvent.change(screen.getByLabelText(t.teachers.gender), { target: { value: 'male' } });

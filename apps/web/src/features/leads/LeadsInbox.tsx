@@ -60,7 +60,7 @@ export function LeadsInbox({ search, onSearch }: LeadsInboxProps) {
           <span className="text-sm text-ink-3 tabular-nums">{countLabel(leads.data.total, search.status)}</span>
         )}
       </PageHead>
-      <LeadsToolbar search={search} onFilter={filter} />
+      <LeadsToolbar search={search} onFilter={filter} total={leads.data?.total} />
       <div className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[420px] shell:grid-cols-[196px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]">
         <LeadStatusTabs value={search.status} onChange={(status) => filter({ status })} />
         <div

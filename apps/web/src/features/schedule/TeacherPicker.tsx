@@ -10,6 +10,8 @@ export interface TeacherPickerProps {
   /** Picked ids; empty = everyone. */
   value: readonly string[];
   onChange: (ids: string[]) => void;
+  /** In the «تصفية» panel: the list opens in the flow, pushing the fields below it, instead of floating over them. */
+  inline?: boolean;
 }
 
 /** «كل المعلمين», the one name picked, or «3 معلمين» (counted forms). */
@@ -23,7 +25,7 @@ export function pickedLabel(teachers: TeacherPickerProps['teachers'], value: rea
  * Teacher multi-select (R-SCH-01) as a native disclosure: a checkbox per teacher, keyboard and
  * screen reader for free, no dependency. Unticking everyone means everyone.
  */
-export function TeacherPicker({ teachers, value, onChange }: TeacherPickerProps) {
+export function TeacherPicker({ teachers, value, onChange, inline = false }: TeacherPickerProps) {
   const toggle = (id: string, on: boolean) => onChange(on ? [...value, id] : value.filter((x) => x !== id));
   return (
     <div className="grid min-w-0 gap-1.5 sm:w-auto">
@@ -38,7 +40,12 @@ export function TeacherPicker({ teachers, value, onChange }: TeacherPickerProps)
           <span className="sr-only">{t.schedule.teacherFilter}: </span>
           <span className="truncate">{pickedLabel(teachers, value)}</span>
         </summary>
-        <fieldset className="absolute z-20 mt-1 grid max-h-72 w-max min-w-full gap-0.5 overflow-y-auto rounded-md border border-rule bg-raised p-1.5 shadow-md">
+        <fieldset
+          className={cn(
+            'mt-1 grid gap-0.5 overflow-y-auto rounded-md border border-rule bg-raised p-1.5',
+            inline ? 'max-h-56' : 'absolute z-20 max-h-72 w-max min-w-full shadow-md',
+          )}
+        >
           <legend className="sr-only">{t.schedule.teacherFilter}</legend>
           {teachers.map((x) => (
             <label key={x.id} className="flex min-h-11 items-center gap-2 rounded-sm px-2 text-sm hover:bg-sunk sm:min-h-9">
