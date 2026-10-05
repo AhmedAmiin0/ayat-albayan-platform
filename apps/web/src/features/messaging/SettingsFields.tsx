@@ -1,8 +1,19 @@
 import { useId, type ReactNode } from 'react';
 import { Input } from '@/components/ui/input';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { cn } from '@/lib/utils';
 
-export interface SettingRowProps {
+/** What the settings page adds to a row: a notes line, a reset button and danger styling. */
+export interface RowExtras {
+  /** Under the hint: «معدَّل», who changed it last. */
+  extra?: ReactNode;
+  /** Beside the control: the per-field reset. */
+  actions?: ReactNode;
+  /** A wrong value reaches families or hides a warning. */
+  danger?: boolean;
+}
+
+export interface SettingRowProps extends RowExtras {
   label: string;
   hint?: string;
   error?: string;
@@ -14,11 +25,17 @@ export interface SettingRowProps {
  * One setting as a row (owner, 2026-10-05): the label and a one-line hint at the inline-start, the
  * control at the inline-end; on phones the control drops under the words.
  */
-export function SettingRow({ label, hint, error, children }: SettingRowProps) {
+export function SettingRow({ label, hint, error, extra, actions, danger, children }: SettingRowProps) {
   const id = useId();
   const describedBy = [hint && `${id}-hint`, error && `${id}-error`].filter(Boolean).join(' ');
   return (
-    <div className="grid gap-x-6 gap-y-2 border-b border-rule py-4 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center">
+    <div
+      data-danger={danger ? 'true' : undefined}
+      className={cn(
+        'grid gap-x-6 gap-y-2 border-b border-rule py-4 last:border-b-0 sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center',
+        danger && 'border-s-[3px] border-s-danger bg-danger-soft ps-3',
+      )}
+    >
       <div className="grid gap-0.5">
         <label htmlFor={id} className="text-sm font-semibold text-ink">
           {label}
@@ -28,6 +45,7 @@ export function SettingRow({ label, hint, error, children }: SettingRowProps) {
             {hint}
           </p>
         )}
+        {extra}
         {error && (
           <p id={`${id}-error`} role="alert" className="flex items-center gap-1.5 text-xs text-danger">
             <NuqtaGlyph shape="struck" />
@@ -35,14 +53,15 @@ export function SettingRow({ label, hint, error, children }: SettingRowProps) {
           </p>
         )}
       </div>
-      <div className="sm:justify-self-end">
+      <div className="flex items-center gap-2 sm:justify-self-end">
+        {actions}
         {children({ id, ...(describedBy ? { 'aria-describedby': describedBy } : {}), ...(error ? { 'aria-invalid': true as const } : {}) })}
       </div>
     </div>
   );
 }
 
-export interface NumberFieldProps {
+export interface NumberFieldProps extends RowExtras {
   label: string;
   value: string;
   onChange: (value: string) => void;
@@ -54,9 +73,9 @@ export interface NumberFieldProps {
 }
 
 /** A count (hours, weeks, lessons, minutes): LTR digits, never a time of day (rule 6). */
-export function NumberField({ label, value, onChange, hint, error, list, disabled }: NumberFieldProps) {
+export function NumberField({ label, value, onChange, hint, error, list, disabled, ...row }: NumberFieldProps) {
   return (
-    <SettingRow label={label} hint={hint} error={error}>
+    <SettingRow label={label} hint={hint} error={error} {...row}>
       {(p) => (
         <Input
           {...p}
@@ -73,7 +92,7 @@ export function NumberField({ label, value, onChange, hint, error, list, disable
   );
 }
 
-export interface CheckFieldProps {
+export interface CheckFieldProps extends RowExtras {
   label: string;
   checked: boolean;
   onChange: (checked: boolean) => void;
@@ -81,9 +100,9 @@ export interface CheckFieldProps {
 }
 
 /** An on/off setting: a checkbox drawn as a switch (still a checkbox to assistive tech and tests). */
-export function CheckField({ label, checked, onChange, hint }: CheckFieldProps) {
+export function CheckField({ label, checked, onChange, hint, ...row }: CheckFieldProps) {
   return (
-    <SettingRow label={label} hint={hint}>
+    <SettingRow label={label} hint={hint} {...row}>
       {(p) => (
         // A real checkbox (role, name, keyboard) laid invisibly over a drawn track and knob.
         <span className="relative inline-flex">
