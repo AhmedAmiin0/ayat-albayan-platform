@@ -1,7 +1,7 @@
 import { teacherStudentsQuerySchema, type TeacherStudentView } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { TeacherStudentsService } from './teacher-students.service';
@@ -12,7 +12,7 @@ import { TeacherStudentsService } from './teacher-students.service';
  */
 @ApiTags('teachers')
 @ApiBearerAuth()
-@Roles('teacher')
+@Permissions('self.teacher')
 @Controller('teachers/me/students')
 export class TeacherStudentsController {
   constructor(private readonly students: TeacherStudentsService) {}

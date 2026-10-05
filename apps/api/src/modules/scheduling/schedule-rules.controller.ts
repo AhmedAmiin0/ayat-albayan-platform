@@ -1,7 +1,7 @@
 import { ruleExtendRequestSchema } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { HorizonJob, type RunSummary } from './horizon.job';
@@ -10,7 +10,7 @@ import { RuleExtendService, type ExtendResult } from './rule-extend.service';
 /** POST /schedule-rules/:id/extend (docs/10 route 11, R-SCH-02) and /refresh. Admin only. */
 @ApiTags('schedule-rules')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('lessons.write')
 @Controller('schedule-rules')
 export class ScheduleRulesController {
   constructor(

@@ -1,7 +1,7 @@
 import { lessonProposalRequestSchema, proposalApproveSchema, type LessonView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { LessonProposeService, ProposalDecisionService } from './lesson-proposals.service';
@@ -13,6 +13,7 @@ import { LessonViews } from './lesson-views';
  */
 @ApiTags('lessons')
 @ApiBearerAuth()
+@Permissions('lessons.write')
 @Controller()
 export class LessonProposalsController {
   constructor(
@@ -23,7 +24,7 @@ export class LessonProposalsController {
 
   /** 201: the lesson, now with its pending proposal. */
   @Post('lessons/:id/propose')
-  @Roles('teacher')
+  @Permissions('self.teacher')
   async propose(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,
@@ -35,7 +36,6 @@ export class LessonProposalsController {
 
   /** Lessons waiting for an answer (still open: a closed lesson's proposal is moot). */
   @Get('lesson-proposals')
-  @Roles('admin')
   async pending(): Promise<LessonView[]> {
     const lessons = await this.views.many(await this.deciding.pendingLessonIds(), 'admin');
     return lessons.filter((l) => l.pending_proposal !== null);
@@ -43,7 +43,6 @@ export class LessonProposalsController {
 
   /** 200: the moved lesson. 409 conflict (retry with override.reason), 409 proposal_decided. */
   @Post('lesson-proposals/:id/approve')
-  @Roles('admin')
   @HttpCode(200)
   async approve(
     @Param('id', ParseUUIDPipe) id: string,
@@ -55,7 +54,6 @@ export class LessonProposalsController {
   }
 
   @Post('lesson-proposals/:id/reject')
-  @Roles('admin')
   @HttpCode(200)
   async reject(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonView> {
     return this.views.one(await this.deciding.reject({ proposalId: id, actor: user }), 'admin');

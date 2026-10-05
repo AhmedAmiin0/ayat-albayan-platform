@@ -1,7 +1,8 @@
 import { isTeacherTemplate, type TemplateView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
+import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { TemplateRegistry } from './template.registry';
 
@@ -15,16 +16,16 @@ const teacherMay = (t: TemplateView): boolean =>
  */
 @ApiTags('messaging')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('templates.manage')
 @Controller('messaging/templates')
 export class TemplatesController {
   constructor(private readonly registry: TemplateRegistry) {}
 
   @Get()
-  @Roles('admin', 'teacher')
+  @Permissions('messages.read')
   async list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
     const all = await this.registry.list();
-    return user.role === 'admin' ? all : all.filter(teacherMay);
+    return can(user, 'templates.manage') ? all : all.filter(teacherMay);
   }
 
   /** Reads Meta's list and syncs status, quality and text. 503 not_configured, 502 meta_error. */

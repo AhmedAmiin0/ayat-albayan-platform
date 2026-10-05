@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, HttpCode, Param, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { MeService } from './me.service';
@@ -9,7 +9,7 @@ import { pushTokenBody, pushTokenSchema } from './push-tokens';
 /** The admin app's device registration (R-MOB-01). Always the caller's own profile, never an id. */
 @ApiTags('me')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('notifications.push')
 @Controller('me/push-tokens')
 export class MeController {
   constructor(private readonly me: MeService) {}

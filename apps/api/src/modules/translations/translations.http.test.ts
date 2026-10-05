@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { ActivityWriter } from '../../common/activity/activity.writer';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { TranslationsQueries } from './translations.queries';
 
@@ -36,7 +36,7 @@ describe('/i18n — dynamic translations', () => {
   beforeAll(async () => {
     queries.all.mockResolvedValue([]);
     const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(TranslationsQueries).useValue(queries)
       .overrideProvider(ActivityWriter).useValue(activity)
       .compile();

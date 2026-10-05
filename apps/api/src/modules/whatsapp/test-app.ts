@@ -5,7 +5,7 @@ import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
 import { MessageSender } from './message.sender';
@@ -38,7 +38,7 @@ function mocks() {
 export async function whatsappApp() {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(MessagesQueries).useValue(m.messages)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)

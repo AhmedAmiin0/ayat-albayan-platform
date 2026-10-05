@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { studentColumnQueryShape, studentListFiltersSchema } from '@ab/shared';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { DB, type Db } from '../../common/db/db.module';
 import { blankToNull, listQuerySchema, parse } from '../guardians/http';
@@ -32,7 +32,7 @@ const studentListQuerySchema = listQuerySchema.extend({ ...studentListFiltersSch
 /** Admin-only students CRUD + merge (R-STU-01..05). */
 @ApiTags('students')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('students.read')
 @Controller('students')
 export class StudentsController {
   constructor(
@@ -64,23 +64,27 @@ export class StudentsController {
 
   /** 409 `{ message: 'duplicate_student', candidates }` unless `force: true` (R-STU-03). */
   @Post()
+  @Permissions('students.write')
   create(@Body() body: unknown, @CurrentUser() user: AuthUser) {
     return this.students.create(parse(studentCreateRequestSchema, blankToNull(body)), user.id);
   }
 
   @Patch(':id')
+  @Permissions('students.write')
   update(@Param('id', Uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     return this.students.update(id, parse(studentPatchSchema, blankToNull(body)), user.id);
   }
 
   @Delete(':id')
   @HttpCode(204)
+  @Permissions('students.write')
   remove(@Param('id', Uuid) id: string, @CurrentUser() user: AuthUser) {
     return this.students.remove(id, user.id);
   }
 
   /** Folds `merged_id` into `:id`, which is kept (R-STU-03). */
   @Post(':id/merge')
+  @Permissions('students.write')
   merge(@Param('id', Uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const { merged_id } = parse(mergeRequestSchema, body);
     return this.merges.merge({ keptId: id, mergedId: merged_id, actorId: user.id });

@@ -10,6 +10,7 @@ export * from './plural.js';
 export * from './pricing/index.js';
 export * from './reports/index.js';
 export * from './roles.js';
+export * from './permissions/index.js';
 export * from './running-head.js';
 export * from './schemas/index.js';
 export * from './settings/index.js';

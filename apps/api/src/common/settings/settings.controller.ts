@@ -3,7 +3,7 @@ import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
 import { AuditService } from '../audit/audit.service';
-import { CurrentUser, Roles } from '../auth/decorators';
+import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { SettingsService } from './settings.service';
 import { settingsChanges } from './settings.values';
@@ -18,7 +18,7 @@ const SETTINGS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
  */
 @ApiTags('settings')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('settings.read')
 @Controller('settings')
 export class SettingsController {
   constructor(
@@ -32,6 +32,7 @@ export class SettingsController {
   }
 
   @Patch()
+  @Permissions('settings.write')
   async update(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AcademySettings> {
     const req = parseOrThrow(settingsUpdateSchema, body);
     const before = await this.get();

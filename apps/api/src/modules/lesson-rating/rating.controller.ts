@@ -2,7 +2,7 @@ import { threadRatingSchema, type MessageView } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { phoneParam } from '../inbox/phone-param';
 import { parseOrThrow } from '../teachers/http';
@@ -14,7 +14,7 @@ import { RatingSendService } from './rating.send.service';
  */
 @ApiTags('inbox')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('feedback.write')
 @Controller('threads')
 export class RatingController {
   constructor(

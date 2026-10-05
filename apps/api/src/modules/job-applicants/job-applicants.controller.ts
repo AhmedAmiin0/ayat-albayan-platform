@@ -13,7 +13,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQueryShape, parseOr400 } from '../leads/http';
 import { APPLICANT_STATUSES } from './applicant-state-machine';
@@ -36,17 +36,19 @@ const uuid = new ParseUUIDPipe();
 /** Admin CRUD for job applicants (R-LEAD-04). */
 @ApiTags('job-applicants')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('applicants.write')
 @Controller('job-applicants')
 export class JobApplicantsController {
   constructor(private readonly applicants: JobApplicantsService) {}
 
   @Get()
+  @Permissions('applicants.read')
   list(@Query() query: unknown) {
     return this.applicants.list(parseOr400(listQuery, query));
   }
 
   @Get(':id')
+  @Permissions('applicants.read')
   get(@Param('id', uuid) id: string) {
     return this.applicants.get(id);
   }

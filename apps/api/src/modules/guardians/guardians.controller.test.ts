@@ -1,7 +1,7 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import { AuthModule } from '../../common/auth/auth.module';
 import { DB, DbModule } from '../../common/db/db.module';
 import { fakeDb, type FakeResult } from './fake-db';
@@ -19,7 +19,7 @@ describe('GuardiansController is admin-only (R-STU-02, R-NFR-02)', () => {
     const mod = await Test.createTestingModule({ imports: [DbModule, AuthModule, GuardiansModule] })
       .overrideProvider(DB)
       .useValue(fake.db)
-      .overrideProvider(TOKEN_VERIFIER)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
       .useValue(verify)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

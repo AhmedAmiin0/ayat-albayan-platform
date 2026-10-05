@@ -1,7 +1,7 @@
 import type { MeetingCreated, MeetingView, PublicMeetingView, RoomJoinResult } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Ip, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Public, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions, Public } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { InternalMeetingJoinService } from './internal-meetings.join.service';
@@ -14,8 +14,8 @@ const IDENTITY = /^[a-z]+-[0-9a-f]{12}$/;
 /** «اجتماع داخلي», staff side: any staff login creates, lists, joins; the creator or an admin ends it. */
 @ApiTags('classroom')
 @ApiBearerAuth()
+@Permissions('meetings.write')
 @Controller('meetings')
-@Roles('admin', 'teacher', 'assistant', 'sales')
 export class InternalMeetingsController {
   constructor(
     private readonly meetings: InternalMeetingsService,
@@ -31,12 +31,14 @@ export class InternalMeetingsController {
 
   /** The newest 20: all of them for an admin, else the caller's own. */
   @Get()
+  @Permissions('meetings.read')
   list(@CurrentUser() user: AuthUser): Promise<MeetingView[]> {
     return this.meetings.list(user);
   }
 
   /** {id} of the meeting behind /m/<token>: a signed-in staff member enters as staff. 404 link_invalid. */
   @Get('by-link/:token')
+  @Permissions('meetings.read')
   byLink(@Param('token') token: string, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
     return this.joins.idByLink({ user, token });
   }

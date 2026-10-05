@@ -1,7 +1,7 @@
 import type { ThreadMediaItem } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { phoneParam } from './phone-param';
 import { ThreadMediaService, type ThreadFile } from './thread-media.service';
 
@@ -11,7 +11,7 @@ import { ThreadMediaService, type ThreadFile } from './thread-media.service';
  */
 @ApiTags('inbox')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('inbox.media')
 @Controller('threads')
 export class ThreadMediaController {
   constructor(private readonly media: ThreadMediaService) {}

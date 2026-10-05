@@ -7,7 +7,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, Headers, HttpCode, Param, Put, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Public, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions, Public } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { TranslationsService } from './translations.service';
@@ -46,14 +46,14 @@ export class TranslationsController {
   }
 
   @ApiBearerAuth()
-  @Roles('admin')
+  @Permissions('translations.manage')
   @Get('keys')
   keys(@Query() query: unknown): TranslationKeysPage {
     return this.translations.keys(parseOrThrow(translationKeysQuerySchema, query));
   }
 
   @ApiBearerAuth()
-  @Roles('admin')
+  @Permissions('translations.manage')
   @Put(':locale/:key')
   @HttpCode(204)
   async save(
@@ -67,7 +67,7 @@ export class TranslationsController {
   }
 
   @ApiBearerAuth()
-  @Roles('admin')
+  @Permissions('translations.manage')
   @Delete(':locale/:key')
   @HttpCode(204)
   async restore(@Param('locale') locale: string, @Param('key') key: string): Promise<void> {

@@ -1709,6 +1709,7 @@ export type Database = {
           phone_e164: string | null;
           push_tokens: string[];
           role: Database['public']['Enums']['user_role'];
+          role_id: string | null;
           tz: string;
           updated_at: string;
         };
@@ -1720,6 +1721,7 @@ export type Database = {
           phone_e164?: string | null;
           push_tokens?: string[];
           role: Database['public']['Enums']['user_role'];
+          role_id?: string | null;
           tz?: string;
           updated_at?: string;
         };
@@ -1731,10 +1733,19 @@ export type Database = {
           phone_e164?: string | null;
           push_tokens?: string[];
           role?: Database['public']['Enums']['user_role'];
+          role_id?: string | null;
           tz?: string;
           updated_at?: string;
         };
-        Relationships: [];
+        Relationships: [
+          {
+            foreignKeyName: 'profiles_role_id_fk';
+            columns: ['role_id', 'role'];
+            isOneToOne: false;
+            referencedRelation: 'roles';
+            referencedColumns: ['id', 'base_role'];
+          },
+        ];
       };
       push_notifications: {
         Row: {
@@ -1823,6 +1834,59 @@ export type Database = {
             referencedColumns: ['id'];
           },
         ];
+      };
+      role_permissions: {
+        Row: {
+          permission: string;
+          role_id: string;
+        };
+        Insert: {
+          permission: string;
+          role_id: string;
+        };
+        Update: {
+          permission?: string;
+          role_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'role_permissions_role_id_fkey';
+            columns: ['role_id'];
+            isOneToOne: false;
+            referencedRelation: 'roles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      roles: {
+        Row: {
+          base_role: Database['public']['Enums']['user_role'];
+          created_at: string;
+          id: string;
+          is_system: boolean;
+          key: string;
+          name_ar: string;
+          name_en: string | null;
+        };
+        Insert: {
+          base_role: Database['public']['Enums']['user_role'];
+          created_at?: string;
+          id?: string;
+          is_system?: boolean;
+          key: string;
+          name_ar: string;
+          name_en?: string | null;
+        };
+        Update: {
+          base_role?: Database['public']['Enums']['user_role'];
+          created_at?: string;
+          id?: string;
+          is_system?: boolean;
+          key?: string;
+          name_ar?: string;
+          name_en?: string | null;
+        };
+        Relationships: [];
       };
       schedule_rule_students: {
         Row: {

@@ -1,3 +1,4 @@
+import type { Permission } from '@ab/shared';
 import { useQueries } from '@tanstack/react-query';
 import type { AdminNavProps } from '@/components/AdminNav';
 import { apiFetch } from '@/lib/api';
@@ -7,7 +8,8 @@ type Total = { total: number };
 
 /** `total` of a paged list endpoint at pageSize=1. Keys sit under each feature's prefix, so the
  *  features' own invalidateQueries(['students']) etc. refresh the counts too. */
-const countQuery = (prefix: string, path: string) => ({
+const countQuery = (prefix: string, path: string, enabled: boolean) => ({
+  enabled,
   queryKey: [prefix, 'nav-count', path],
   queryFn: () => apiFetch<Total>(path),
   staleTime: 60_000,
@@ -19,15 +21,16 @@ const countQuery = (prefix: string, path: string) => ({
  * work («دورك»), so that count is saffron and only shown when non-zero.
  * TODO(R-SCH-03, R-REP-05, R-SUB-02): الجدول / التقارير / الاشتراكات counts when those land.
  */
-export function useNavCounts(): NonNullable<AdminNavProps['counts']> {
+export function useNavCounts(can: (p: Permission) => boolean = () => true): NonNullable<AdminNavProps['counts']> {
   const [students, teachers, newLeads, applicants, unread] = useQueries({
     queries: [
-      countQuery('students', '/students?page=1&pageSize=1'),
-      countQuery('teachers', '/teachers?page=1&pageSize=1'),
-      countQuery('leads', '/leads?status=new&page=1&pageSize=1'),
-      countQuery('job-applicants', '/job-applicants?page=1&pageSize=1'),
+      // Only what the user may read (dynamic roles): no 403s for a custom role.
+      countQuery('students', '/students?page=1&pageSize=1', can('students.read')),
+      countQuery('teachers', '/teachers?page=1&pageSize=1', can('teachers.read')),
+      countQuery('leads', '/leads?status=new&page=1&pageSize=1', can('leads.read')),
+      countQuery('job-applicants', '/job-applicants?page=1&pageSize=1', can('applicants.read')),
       // Threads with a message no admin has opened (Phase 4 H1), also the admin's turn.
-      countQuery('threads', '/threads?unread=true&page=1&pageSize=1'),
+      countQuery('threads', '/threads?unread=true&page=1&pageSize=1', can('inbox.read')),
     ],
   });
   const counts: NonNullable<AdminNavProps['counts']> = {};

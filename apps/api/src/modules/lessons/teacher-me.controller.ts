@@ -1,7 +1,7 @@
 import type { LessonView, TeacherMe } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { LessonAccess } from './lesson-access';
@@ -16,7 +16,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
  */
 @ApiTags('teachers')
 @ApiBearerAuth()
-@Roles('teacher')
+@Permissions('self.teacher')
 @Controller('teachers/me')
 export class TeacherMeController {
   constructor(

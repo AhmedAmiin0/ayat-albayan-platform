@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { SalesService } from './sales.service';
@@ -14,7 +14,7 @@ import { SalesService } from './sales.service';
 /** The salesperson's portal: my subscriptions (no money) and my meetings. Chats are /threads. */
 @ApiTags('sales')
 @ApiBearerAuth()
-@Roles('sales')
+@Permissions('self.sales')
 @Controller('sales')
 export class SalesController {
   constructor(private readonly sales: SalesService) {}

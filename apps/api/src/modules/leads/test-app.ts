@@ -3,7 +3,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { JobApplicantsModule } from '../job-applicants/job-applicants.module';
 import { JobApplicantsQueries } from '../job-applicants/job-applicants.queries';
@@ -32,7 +32,7 @@ export interface InjectArgs {
 export async function testApp() {
   const deps = fakeDeps();
   const mod = await Test.createTestingModule({ imports: [AppModule, LeadsModule, JobApplicantsModule] })
-    .overrideProvider(TOKEN_VERIFIER)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(verify)
     .overrideProvider(LeadsQueries)
     .useValue(deps.leads)
