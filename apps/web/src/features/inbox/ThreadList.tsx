@@ -1,59 +1,56 @@
 import type { ThreadView } from '@ab/shared';
+import { ColumnFilterText } from '@/components/ColumnFilterText';
+import { TableToolbar } from '@/components/table-toolbar/TableToolbar';
 import { EmptyState } from '@/components/ui/empty-state';
-import { Icon } from '@/components/ui/icon';
-import { Input } from '@/components/ui/input';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { t } from '@/lib/i18n';
+import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
-import { ThreadListControls } from './ThreadListControls';
+import { ThreadFilterFields } from './ThreadFilterFields';
 import { ThreadRow } from './ThreadRow';
+import { CLEAR_THREAD_FILTERS, threadFilterChips } from './thread-filters';
 
 export interface ThreadListProps {
   search: InboxSearch;
   threads: ThreadView[];
   /** A filter patch; the page resets to 1 and blank values drop (parseInboxSearch). */
   onFilter: (patch: Record<string, unknown>) => void;
+  /** The conversations the filters leave: «عرض النتائج (14)». */
+  total?: number | undefined;
 }
 
-/** Search (name / phone, server-side) + الكل | غير مقروءة, order and status, then the conversations. */
-export function ThreadList({ search, threads, onFilter }: ThreadListProps) {
+/**
+ * The shared table toolbar (search by name / phone, «تصفية» with the order and the lead status, their
+ * chips), the الكل | غير مقروءة tabs, then the conversations.
+ */
+export function ThreadList({ search, threads, onFilter, total }: ThreadListProps) {
+  const options = { search, mode: useInboxMode(), onFilter };
   return (
     <>
-      <div className="mb-3 grid gap-2.5 max-sm:mb-2 max-sm:gap-2">
-        <form
-          role="search"
-          key={search.q ?? ''}
-          className="relative"
-          onSubmit={(e) => {
-            e.preventDefault();
-            onFilter({ q: new FormData(e.currentTarget).get('q') });
-          }}
-        >
-          <Icon name="search" className="pointer-events-none absolute start-[11px] top-1/2 -translate-y-1/2 text-ink-3" />
-          <Input
-            type="search"
-            name="q"
-            defaultValue={search.q}
-            aria-label={t.common.search}
+      <TableToolbar
+        search={
+          <ColumnFilterText
+            ariaLabel={t.common.search}
             placeholder={t.inbox.searchPlaceholder}
-            className="ps-9"
+            value={search.q ?? ''}
+            onChange={(q) => onFilter({ q })}
           />
-        </form>
-        {/* Phones: the filters on one compact row under the search. */}
-        <div className="grid gap-2.5 max-sm:flex max-sm:items-center max-sm:gap-1.5">
-          <SegmentedControl
-            label={t.inbox.title}
-            value={search.unread ? 'unread' : 'all'}
-            onChange={(v) => onFilter({ unread: v === 'unread' })}
-            options={[
-              { value: 'all', label: t.inbox.filterAll },
-              { value: 'unread', label: t.inbox.filterUnread },
-            ]}
-            className="max-sm:shrink-0"
-          />
-          <ThreadListControls search={search} onFilter={onFilter} />
-        </div>
-      </div>
+        }
+        fields={<ThreadFilterFields {...options} />}
+        chips={threadFilterChips(options)}
+        onClearAll={() => onFilter(CLEAR_THREAD_FILTERS)}
+        resultCount={total}
+      />
+      <SegmentedControl
+        label={t.inbox.title}
+        value={search.unread ? 'unread' : 'all'}
+        onChange={(v) => onFilter({ unread: v === 'unread' })}
+        options={[
+          { value: 'all', label: t.inbox.filterAll },
+          { value: 'unread', label: t.inbox.filterUnread },
+        ]}
+        className="mb-3"
+      />
       {threads.length === 0 ? (
         <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />
       ) : (

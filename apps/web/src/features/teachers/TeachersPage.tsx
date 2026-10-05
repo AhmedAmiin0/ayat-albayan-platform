@@ -39,6 +39,7 @@ function TeachersTable({ data, columns, list, onList, onOpen }: TableProps) {
         emptyText={t.common.notFound}
         sort={{ key: list.sort.sort, dir: list.sort.dir, onChange: (next) => onList(withSort(list, next)) }}
         filters={{ values: list.filters, onChange: (key, value) => onList(withFilter(list, { key, value })), onClear: (keys) => onList(withoutFilters(list, keys)) }}
+        toolbar={{ total: data.total }}
       />
       <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={(page) => onList({ ...list, page })} />
     </>

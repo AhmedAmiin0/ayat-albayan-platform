@@ -23,7 +23,7 @@ export function ExpensesByCategory({ byCategory }: { byCategory: Record<string, 
       <tbody>
         {rows.map(([c, v]) => (
           <tr key={c} className="border-b border-rule last:border-b-0">
-            <th scope="row" className="w-0 py-2 pe-3 text-start font-semibold whitespace-nowrap">{seeded[c] ?? c}</th>
+            <th scope="row" className="w-2/5 min-w-24 py-2 pe-3 text-start font-semibold [overflow-wrap:anywhere]">{seeded[c] ?? c}</th>
             <td className="py-2">
               <span className="flex items-center gap-2">
                 <Bar value={v} max={max} />

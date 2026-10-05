@@ -28,14 +28,17 @@ export function StatusChip({ tone, label, glyph, pips, size = 'md', className }:
     <span
       data-tone={tone}
       className={cn(
-        'inline-flex items-center gap-1.5 whitespace-nowrap rounded-full border text-xs font-semibold leading-none',
+        'inline-flex max-w-full items-center gap-1.5 whitespace-nowrap rounded-full border text-xs font-semibold leading-none',
         size === 'md' ? 'h-[26px] ps-[9px] pe-[11px]' : 'h-[22px] ps-[7px] pe-[9px]',
         toneClass[tone],
         className,
       )}
     >
       {pips === undefined ? <NuqtaGlyph shape={glyph ?? 'fill'} /> : <GradePips pips={pips} />}
-      <span>{label}</span>
+      {/* A long label (English «Interested, no time yet» in a 156px column) ends in an ellipsis, whole in the tooltip. */}
+      <span title={label} className="min-w-0 truncate">
+        {label}
+      </span>
     </span>
   );
 }

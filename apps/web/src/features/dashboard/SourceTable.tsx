@@ -1,4 +1,5 @@
 import type { SourceRow } from '@ab/shared';
+import { ScrollX } from '@/components/ui/scroll-x';
 import { t } from '@/lib/i18n';
 import { Bar } from './Bar';
 import { amount, percent } from './format';
@@ -23,8 +24,8 @@ export function SourceTable({ rows }: { rows: readonly SourceRow[] }) {
   const max = Math.max(0, ...rows.map((r) => r.revenue));
   const num = 'py-2 pe-3 text-end tabular-nums';
   return (
-    <figure className="grid gap-2">
-      <div className="overflow-x-auto">
+    <figure className="grid grid-cols-1 gap-2">
+      <ScrollX label={t.dashboard.bySource}>
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <caption className="sr-only">{t.dashboard.bySource}</caption>
           <thead>
@@ -63,7 +64,7 @@ export function SourceTable({ rows }: { rows: readonly SourceRow[] }) {
             ))}
           </tbody>
         </table>
-      </div>
+      </ScrollX>
       <figcaption className="text-xs text-pretty text-ink-3">{t.dashboard.adSpendNote}</figcaption>
     </figure>
   );

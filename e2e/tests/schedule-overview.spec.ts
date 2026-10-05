@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
+import { openFilters, showResults } from '../support/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../support/schedule';
 
 // All-teachers calendar (R-SCH-01, research-calendar item 15): rows come from the teachers table,
@@ -80,7 +81,9 @@ test.describe('all-teachers calendar (R-SCH-01)', () => {
       await expect(row(page, 'أبرار')).toContainText(`${ar.schedule.dayOff} · سفر`);
 
       // Gender filter hides the male teacher; «اليوم» goes back to today.
-      await page.getByLabel(ar.teachers.gender).selectOption('female');
+      const panel = await openFilters(page); // the shared «تصفية» panel
+      await panel.getByLabel(ar.teachers.gender).selectOption('female');
+      await showResults(panel);
       await expect(row(page, OTHER)).toHaveCount(0);
       await page.getByRole('button', { name: ar.schedule.today, exact: true }).click();
       await expect(page).not.toHaveURL(/day=/);

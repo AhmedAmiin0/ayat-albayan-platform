@@ -2,7 +2,7 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { openFilters } from '@/test/open-filters';
+import { closeFilters, openFilters } from '@/test/open-filters';
 import { FILTER_DEBOUNCE_MS } from './ColumnFilterText';
 import { DataTable, type DataTableFeatures } from './DataTable';
 
@@ -53,7 +53,7 @@ describe('DataTable filters', () => {
     fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), { target: { value: 'paused' } });
     expect(names()).toEqual(['فاطمه علي']);
     // «مسح الكل» clears the panel's filters; the search box keeps its text.
-    fireEvent.click(screen.getByRole('button', { name: t.table.showResults }));
+    closeFilters();
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(names()).toEqual(['فاطمة', 'فاطمه علي']);
   });
@@ -69,6 +69,23 @@ describe('DataTable filters', () => {
     expect(onChange).toHaveBeenCalledWith('name', 'أحمد');
     fireEvent.change(screen.getByRole('combobox'), { target: { value: 'paused' } });
     expect(onChange).toHaveBeenLastCalledWith('st', 'paused');
+  });
+
+  it('the panel names the rows left: a client table counts its own, a server list brings `toolbar.total`', () => {
+    const { unmount } = render(<DataTable clientFilter columns={columns} data={DATA} getRowId={(r) => r.id} />);
+    openFilters();
+    fireEvent.change(screen.getByRole('combobox', { name: by('الحالة') }), { target: { value: 'paused' } });
+    expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '2') })).toBeTruthy();
+    unmount();
+    render(<DataTable columns={columns} data={DATA} filters={{ values: {}, onChange: vi.fn() }} toolbar={{ total: 41 }} />);
+    openFilters();
+    expect(screen.getByRole('button', { name: t.table.showResultsCount.replace('{n}', '41') })).toBeTruthy();
+  });
+
+  it('a server list without a total says only «عرض النتائج» (the page is not the result)', () => {
+    render(<DataTable columns={columns} data={DATA} filters={{ values: { st: 'active' }, onChange: vi.fn() }} />);
+    openFilters();
+    expect(screen.getByRole('button', { name: t.table.showResults })).toBeTruthy();
   });
 
   it('server «مسح الكل» calls onClear once with the panel keys', () => {

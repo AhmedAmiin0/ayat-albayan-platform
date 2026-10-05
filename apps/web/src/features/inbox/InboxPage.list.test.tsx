@@ -68,7 +68,7 @@ describe('InboxPage thread list (R-LEAD-02)', () => {
     expect(onSearch).toHaveBeenLastCalledWith({ phone: '+966501234567', unread: true, page: 1 });
     const box = screen.getByRole('searchbox', { name: t.common.search });
     fireEvent.change(box, { target: { value: ' 0501 ' } });
-    fireEvent.submit(box);
+    fireEvent.keyDown(box, { key: 'Enter' });
     expect(onSearch).toHaveBeenLastCalledWith({ phone: '+966501234567', q: '0501', page: 1 });
   });
 

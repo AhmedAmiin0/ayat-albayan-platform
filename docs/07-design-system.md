@@ -613,13 +613,15 @@ Arabic agreement rules for `remainingLabel`:
 └──────────────────────────────────────────────────────────────────────┘
 ```
 
-- **Sidebar = fihris (surah index):** 236px in the margin, with no panel.
-  - Groups are separated by 14px of space only: dashboard / المحادثات + طلبات التوظيف / الطلاب, المعلمين, الجدول, التقارير, الاشتراكات.
-  - Each item: icon (18) + label, a dotted leader (`border-top: 1.5px dotted var(--rule-strong)`, flex 1) and a count.
+- **Sidebar = fihris (surah index):** 236px, the Emerald Mint sidebar (`--cover` mint, a green-grey in dark) with a hairline at its inline-end (`border-e border-rule`), no panel.
+  - **Rhythm (4px grid, logical properties only):** 24 above the logo, 24 logo → fihris, 16 between groups, 8 from a group label to its list, 4 between items. 12px of padding each side of the sidebar and 12px inside an item put the icon edge 24px from the sidebar edge; the logo, the group label («المالية») and the foot content all start on that same edge.
+  - Each item: 40px tall (44 on phones and `pointer: coarse`), icon (18) + 8px + label. A label too long for 236px wraps to a second line (English «Your opinion matters»), never an ellipsis; a dotted leader (`border-top: 1.5px dotted var(--rule-strong)`, flex 1) and a count follow it.
   - Counts are 12px `ink-3`. When the count is work for the admin it is saffron 700 and says what it is: «11 جديدة», «3 يحتاج تأكيد», «2 ما اتبعتش», «3 مش مدفوع».
-  - Active: `aria-current="page"`, `bg-page` tile with a `rule-strong` ring, green icon, weight 600.
+  - Active: `aria-current="page"`, a `bg-page` tile, green icon, weight 600, and a 4px green bar (`--lapis`) inset 8px top and bottom at the inline-start edge. Hover is `leather-deep`; focus is the global 2px green outline.
+  - **Foot** (theme, language, account, logout): `sticky` at the bottom of the sidebar's own scroll area on the sidebar background, with a hairline above it, so it stays on screen on viewports under 1000px tall; it owns the 24px of bottom padding. The sidebar has `scroll-padding-block-end` of 176px (`shell:scroll-pb-44`, more than the foot is tall), so a focused or current link scrolls clear of the foot (WCAG 2.4.11).
+- **Work page:** it scrolls inside `[data-page-scroll]` (PageFrame), never the document. That box has 4px of inline padding with a matching negative margin, so a full-width control keeps its whole focus ring (2px outline + 2px offset) instead of being clipped at the edge. A table wider than its column scrolls inside a `ScrollX` region: focusable, named by the table's caption, so the keyboard reaches it and the arrow keys scroll it. One filled primary per screen: on the schedule it is «حجز حلقة», and «اجتماع جديد» is an outline button.
 - **Running head** (`text-xs text-ink-3`): breadcrumbs at the start; at the end the Gregorian date, Hijri date, a 1px divider, then `الرياض 15:20` and `القاهرة 15:20` with the times in ink-2 600. Add a third clock only when a relevant zone differs. It is hidden below 640px.
-- **Under 900px:** the sidebar becomes a top row (mark + horizontally scrolling nav, with a mask fade at the inline-end as the "more" cue). Only saffron counts stay; leaders and the user block hide.
+- **Under 900px:** the sidebar becomes a top row (mark + horizontally scrolling nav). The strip fades at both edges (20px at the start, 40px at the end, flipped in LTR) as the "more" cue, items are 44px tall and never truncate, and the current item is scrolled to the centre of the strip when the route changes. Only saffron counts stay; leaders and the user block hide.
 - **Under 640px:** the admin web is usable but secondary. The Expo app is the mobile admin surface.
 - Teacher and guardian shells use the same margin/page/cartouche, without the fihris. They use a top bar with the mark, title and logout, controls at the 48px size, and `text-body` copy.
 

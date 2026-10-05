@@ -46,6 +46,27 @@ export function DateFilterField({ label, value, onChange }: DateFilterFieldProps
   );
 }
 
+export interface CheckboxFilterFieldProps {
+  label: string;
+  checked: boolean;
+  onChange: (checked: boolean) => void;
+}
+
+/** A yes / no page filter in the panel: a bordered row, 44px on phones, whose whole label toggles it. */
+export function CheckboxFilterField({ label, checked, onChange }: CheckboxFilterFieldProps) {
+  return (
+    <label className="flex min-h-11 cursor-pointer items-center gap-2.5 rounded-md border border-rule px-3 text-sm hover:bg-sunk sm:min-h-10">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="size-4 shrink-0 accent-[var(--lapis)]"
+      />
+      <span>{label}</span>
+    </label>
+  );
+}
+
 /** The chip of one page filter when it is set (`text` = what the chip shows); none when unset. */
 export function chipIfSet(chip: Omit<FilterChip, 'value'> & { value: string | undefined; text?: string | undefined }): FilterChip[] {
   if (!chip.value) return [];

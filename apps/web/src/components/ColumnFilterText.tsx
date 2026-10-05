@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { t } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
-import { Input } from './ui/input';
+import { SearchInput } from './ui/search-input';
 
 export const FILTER_DEBOUNCE_MS = 300;
 
@@ -47,14 +46,20 @@ export function ColumnFilterText({ ariaLabel, value, onChange, placeholder, clas
   };
 
   return (
-    <Input
-      type="search"
+    <SearchInput
       aria-label={ariaLabel}
       placeholder={placeholder ?? t.table.searchPlaceholder}
+      enterKeyHint="search"
       value={draft}
       onChange={(e) => change(e.target.value)}
       onBlur={() => timer.current !== undefined && send(draft)}
-      className={cn('min-h-10 sm:min-h-9', className)}
+      // Enter applies a pending draft at once (the same box on every list; no form around it).
+      onKeyDown={(e) => {
+        if (e.key !== 'Enter') return;
+        e.preventDefault();
+        if (draft.trim() !== sent) send(draft);
+      }}
+      className={className}
     />
   );
 }

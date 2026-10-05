@@ -32,6 +32,26 @@ describe('ColumnFilterText', () => {
     expect(onChange).toHaveBeenCalledExactlyOnceWith('هدى');
   });
 
+  it('Enter applies the draft at once; Enter on an unchanged box does nothing', () => {
+    const onChange = vi.fn();
+    render(<ColumnFilterText ariaLabel="الاسم" value="" onChange={onChange} />);
+    const box = screen.getByRole('searchbox');
+    fireEvent.keyDown(box, { key: 'Enter' });
+    expect(onChange).not.toHaveBeenCalled();
+    fireEvent.change(box, { target: { value: ' هدى ' } });
+    fireEvent.keyDown(box, { key: 'Enter' });
+    expect(onChange).toHaveBeenCalledExactlyOnceWith('هدى');
+    act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS * 2));
+    expect(onChange).toHaveBeenCalledOnce();
+  });
+
+  it('the stock control height with a leading magnifier: level with the «تصفية» button (no sm:min-h-9)', () => {
+    const { container } = render(<ColumnFilterText ariaLabel="الاسم" value="" onChange={vi.fn()} />);
+    expect(screen.getByRole('searchbox').className).not.toContain('min-h-9');
+    expect(screen.getByRole('searchbox').className).toContain('sm:min-h-10');
+    expect(container.querySelector('svg')).not.toBeNull();
+  });
+
   it('an outside change replaces the draft; its own echo does not', () => {
     const onChange = vi.fn();
     const { rerender } = render(<ColumnFilterText ariaLabel="الاسم" value="" onChange={onChange} placeholder="بحث" />);

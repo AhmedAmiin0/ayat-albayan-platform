@@ -16,11 +16,12 @@ export function FinanceTotals({ finance }: { finance: DashboardData['finance'] }
   ];
   return (
     <div className="grid gap-3">
-      <dl className="grid grid-cols-2 gap-x-6 gap-y-3 @2xl:grid-cols-4">
+      {/* One column in a narrow page (a 7-digit amount + currency does not fit two across), two, then four. */}
+      <dl className="grid grid-cols-1 gap-x-6 gap-y-3 @sm:grid-cols-2 @2xl:grid-cols-4">
         {items.map((i) => (
-          <div key={i.label} className="grid gap-0.5">
+          <div key={i.label} className="grid min-w-0 gap-0.5">
             <dt className="text-xs text-ink-2">{i.label}</dt>
-            <dd className="text-lg font-semibold whitespace-nowrap text-ink">
+            <dd className="text-lg font-semibold text-ink">
               <bdi dir="ltr">{amount(i.value)}</bdi> {cur}
             </dd>
           </div>
