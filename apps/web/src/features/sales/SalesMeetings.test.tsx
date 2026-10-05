@@ -39,7 +39,7 @@ describe('SalesMeetings «مواعيدي»', () => {
     vi.setSystemTime(new Date('2026-10-03T11:00:00.000Z'));
     open();
     expect(await screen.findByText('أم سهيلة')).toBeTruthy();
-    expect(screen.getByText(/أبرار/)).toBeTruthy();
+    expect(screen.getByRole('cell', { name: 'أبرار' })).toBeTruthy();
     expect(String(apiFetch.mock.calls[0]?.[0])).toMatch(/^\/sales\/meetings\?from=.+&to=.+/);
     expect(screen.getByRole('button', { name: t.classroom.enter })).toHaveProperty('disabled', true);
     expect(screen.queryByRole('link', { name: t.classroom.enter })).toBeNull();

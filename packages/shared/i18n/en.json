@@ -2402,14 +2402,17 @@
       "list": "Subscriptions list",
       "kinds": "Subscription kind",
       "lessons": "{n} lessons",
-      "startsOn": "Starts {date}"
+      "startsOn": "Starts {date}",
+      "lessonsCol": "Lessons",
+      "startsCol": "Start date"
     },
     "schedule": {
       "title": "Meetings schedule",
       "empty": "No meetings on this day",
       "lead": "Lead",
       "list": "Meetings list",
-      "teacher": "Teacher"
+      "teacher": "Teacher",
+      "time": "Time"
     },
     "assign": {
       "label": "Sales owner",
