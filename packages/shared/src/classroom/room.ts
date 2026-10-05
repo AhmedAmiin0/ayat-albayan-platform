@@ -37,5 +37,6 @@ export const CLASSROOM_ERRORS = [
   'lesson_not_open',
   'meeting_ended',
   'meeting_not_found',
+  'cannot_grant_share',
 ] as const;
 export type ClassroomError = (typeof CLASSROOM_ERRORS)[number];

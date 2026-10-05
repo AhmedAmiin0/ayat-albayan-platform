@@ -32,6 +32,16 @@ export function canRemove(actor: JoinRole, target: JoinRole): boolean {
   return false;
 }
 
+const SHARE_GRANTORS: ReadonlySet<JoinRole> = new Set<JoinRole>(['teacher', 'admin', 'assistant']);
+
+/**
+ * «اطلب مشاركة الشاشة»: a guest's join token allows camera and microphone only; the teacher, an
+ * admin or an assistant may let one guest share their screen for this session (and stop it).
+ */
+export function canGrantShare(actor: JoinRole | null, target: JoinRole | null): boolean {
+  return actor !== null && SHARE_GRANTORS.has(actor) && target === 'guest';
+}
+
 /** A lesson's recording (LiveKit egress, room composite MP4 in Supabase Storage). */
 export interface LessonRecordingView {
   id: string;

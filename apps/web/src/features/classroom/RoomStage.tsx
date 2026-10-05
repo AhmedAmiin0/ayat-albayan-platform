@@ -1,7 +1,10 @@
-import type { ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import type { TileSlots } from './ParticipantGrid';
+import { RoomButton } from './RoomButton';
 import type { TileView } from './room-types';
+import { StageScreen } from './stage/StageScreen';
 import { VideoTile } from './VideoTile';
 
 interface Props extends TileSlots {
@@ -12,36 +15,47 @@ interface Props extends TileSlots {
 }
 
 /**
- * A screen share or the board takes the stage; the cameras line up in a strip: under it on phones
- * and narrow windows (scrolls sideways), beside it from `lg` (scrolls down). Logical sides only.
+ * A screen share or the board takes the largest area; the cameras line up in a slim strip that
+ * can be hidden: under the stage on phones and narrow windows (scrolls sideways), beside it from
+ * `lg` (scrolls down). A shared screen can be maximised to the whole viewport (StageScreen).
  */
 export function RoomStage({ stage, board, strip, attach, actionFor }: Props) {
+  const [stripOpen, setStripOpen] = useState(true);
+  const S = t.classroom.stage;
   return (
-    <div className="flex min-h-0 flex-1 flex-col gap-2 sm:gap-3 lg:flex-row">
+    <div className="flex min-h-0 flex-1 flex-col gap-2 lg:flex-row">
       <div className="min-h-0 flex-1">
-        {stage ? (
-          <ul className="size-full" aria-label={t.classroom.title}>
-            <VideoTile tile={stage} attach={attach} action={actionFor(stage)} className="size-full min-h-56" />
-          </ul>
-        ) : (
-          board
-        )}
+        {stage ? <StageScreen screen={stage} strip={strip} attach={attach} actionFor={actionFor} /> : board}
       </div>
       {strip.length > 0 && (
-        <ul
-          aria-label={t.classroom.people}
-          className="flex shrink-0 gap-2 overflow-x-auto pb-1 lg:w-64 lg:flex-col lg:overflow-x-visible lg:overflow-y-auto lg:pb-0"
-        >
-          {strip.map((tile) => (
-            <VideoTile
-              key={tile.key}
-              tile={tile}
-              attach={attach}
-              action={actionFor(tile)}
-              className="aspect-video min-h-0 w-40 shrink-0 sm:w-52 lg:w-full"
-            />
-          ))}
-        </ul>
+        <div className="flex shrink-0 items-start gap-2 lg:flex-col">
+          <RoomButton
+            icon="people"
+            on={stripOpen}
+            aria-expanded={stripOpen}
+            label={stripOpen ? S.hideStrip : S.showStrip}
+            onClick={() => setStripOpen(!stripOpen)}
+            className="shrink-0"
+          />
+          <ul
+            aria-label={t.classroom.people}
+            hidden={!stripOpen}
+            className={cn(
+              'flex min-w-0 gap-2 overflow-x-auto pb-1 lg:w-48 lg:flex-col lg:overflow-x-visible lg:overflow-y-auto lg:pb-0',
+              !stripOpen && 'hidden',
+            )}
+          >
+            {strip.map((tile) => (
+              <VideoTile
+                key={tile.key}
+                tile={tile}
+                attach={attach}
+                action={actionFor(tile)}
+                className="aspect-video min-h-0 w-32 shrink-0 sm:w-40 lg:w-full"
+              />
+            ))}
+          </ul>
+        </div>
       )}
     </div>
   );

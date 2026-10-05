@@ -1,11 +1,12 @@
 import { joinLinkRequestSchema, type JoinLinkResult, type JoinLinkUrl, type RoomJoinResult } from '@ab/shared';
-import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { JoinLinkCopyService } from './join-link.copy.service';
 import { JoinLinkService } from './join-link.service';
+import { JoinLinkStaffService } from './join-link.staff.service';
 import { RoomJoinService } from './room-join.service';
 
 /** Online classroom, staff side. The service decides who may enter (admin, the lesson's teacher, an assigned assistant). */
@@ -41,5 +42,20 @@ export class ClassroomController {
   @HttpCode(200)
   linkUrl(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<JoinLinkUrl> {
     return this.copies.url({ lessonId: id, user });
+  }
+}
+
+/** A family link opened by a signed-in staff member: where their own staff room is. */
+@ApiTags('classroom')
+@ApiBearerAuth()
+@Controller('join-links')
+@Roles('admin', 'teacher', 'assistant', 'sales')
+export class JoinLinkStaffController {
+  constructor(private readonly links: JoinLinkStaffService) {}
+
+  /** {lessonId}; 404 link_invalid / lesson_not_found, 403 not their lesson. */
+  @Get(':token/lesson')
+  lessonOf(@Param('token') token: string, @CurrentUser() user: AuthUser): Promise<{ lessonId: string }> {
+    return this.links.lessonOf({ user, token });
   }
 }

@@ -72,6 +72,18 @@ export class LivekitApi {
   }
 
   /**
+   * «سماح» / «إيقاف مشاركة»: a guest's publish sources with or without the screen (UpdateParticipant
+   * replaces the whole permission, so subscribe and data stay on). Taking the screen away makes
+   * LiveKit unpublish a running share.
+   */
+  async setScreenShare(input: { room: string; identity: string; allow: boolean }): Promise<void> {
+    const sources = ['CAMERA', 'MICROPHONE', ...(input.allow ? ['SCREEN_SHARE', 'SCREEN_SHARE_AUDIO'] : [])];
+    const permission = { can_subscribe: true, can_publish: true, can_publish_data: true, can_publish_sources: sources };
+    const body = { room: input.room, identity: input.identity, permission };
+    await this.call({ method: 'livekit.RoomService/UpdateParticipant', body, grant: { roomAdmin: true, room: input.room } });
+  }
+
+  /**
    * Creates the room ahead of its first participant (an egress needs an existing room). Returns
    * the existing room when it is already there. Ten empty minutes before LiveKit closes it.
    */

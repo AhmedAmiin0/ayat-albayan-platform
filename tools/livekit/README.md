@@ -13,6 +13,10 @@ Every join token carries `metadata = {"role": "<teacher|admin|assistant|sales|gu
 
 `POST /lessons/:id/room/participants/:identity/remove` (staff login) checks the same rule on the server, writes a `classroom_blocks` row for the login (staff) or the guest link (family), audits `participant_removed`, and calls LiveKit `POST https://<LIVEKIT host>/twirp/livekit.RoomService/RemoveParticipant` with a short-lived server token (`video: {roomAdmin: true, room}`). Later joins of that lesson by the same login / link answer 403 `removed_from_room`. Nothing extra to deploy.
 
+## Screen share for guests («اطلب مشاركة الشاشة»)
+
+A guest token allows `camera` and `microphone` only. A guest asks on the data topic `share-request`; the teacher, an admin or an assistant answers «سماح» → `POST /lessons/:id/room/participants/:identity/share` (or `/meetings/:id/participants/:identity/share`) `{allow}` → `RoomService/UpdateParticipant` with `can_publish_sources` + `SCREEN_SHARE`, `SCREEN_SHARE_AUDIO` (back to camera + microphone on «إيقاف مشاركة», which makes LiveKit unpublish the share). Per session, nothing stored; the same server token as RemoveParticipant (`roomAdmin`). Nothing extra to deploy.
+
 ## Recording (every lesson, in full)
 
 The first staff join of a lesson (teacher, admin, assistant or sales) makes the API create the room (`RoomService/CreateRoom`, so an egress can attach before anyone connects) and start a **room-composite egress** (`Egress/StartRoomCompositeEgress`, layout `grid`, one MP4) that uploads straight to the private Supabase Storage bucket `recordings` at `lessons/<lesson id>/<UTC timestamp>.mp4`. A `lesson_recordings` row (migration 189) is claimed first; a unique partial index allows one `recording` row per lesson, so concurrent joins start one egress. If the room closes and opens again, the next staff join starts a new file. `GET /lessons/:id/recordings` (admin, the lesson's teacher) lists them with 1-hour signed links.

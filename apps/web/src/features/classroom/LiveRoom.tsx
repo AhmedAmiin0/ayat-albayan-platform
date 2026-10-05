@@ -13,6 +13,9 @@ import { ParticipantGrid, type TileSlots } from './ParticipantGrid';
 import { RecordingsPanel } from './recordings/RecordingsPanel';
 import { RoomHeader } from './RoomHeader';
 import { RoomStage } from './RoomStage';
+import { grantShareFor } from './share/share-api';
+import { ShareRequestsPanel } from './share/ShareRequestsPanel';
+import { useShareRequests } from './share/use-share-requests';
 import { layoutOf } from './stage';
 import type { RoomController } from './use-room';
 
@@ -28,6 +31,7 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
   const board = useBoard({ room, role: join.role });
   const lessonId = lessonIdOfRoom(join.room);
   const kick = useKick({ ...kickScope(join.room), role: join.role });
+  const share = useShareRequests({ room, role: join.role, grant: grantShareFor(join.room) });
   const [panel, setPanel] = useState<Panel>(null);
   const close = () => setPanel(null);
   const recordingsFor = lessonId !== null && (join.role === 'teacher' || join.role === 'admin') ? lessonId : null;
@@ -44,6 +48,7 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
       {room.notes.map((n) => (
         <FormAlert key={n}>{n}</FormAlert>
       ))}
+      <ShareRequestsPanel share={share} />
       {layout.mode === 'grid' ? (
         <ParticipantGrid tiles={layout.tiles} {...slots} />
       ) : (
@@ -52,6 +57,8 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
       <ControlBar
         room={room}
         board={board}
+        role={join.role}
+        share={share}
         onPeople={() => setPanel('people')}
         onRecordings={recordingsFor === null ? undefined : () => setPanel('recordings')}
       />

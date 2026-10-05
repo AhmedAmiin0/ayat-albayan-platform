@@ -1,12 +1,17 @@
+import type { JoinRole } from '@ab/shared';
 import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 import type { BoardController } from './board/use-board';
 import { RoomButton } from './RoomButton';
+import { ShareButton } from './share/ShareButton';
+import type { ShareRequests } from './share/use-share-requests';
 import type { RoomController } from './use-room';
 
 interface Props {
   room: RoomController;
   board: BoardController;
+  role: JoinRole;
+  share: ShareRequests;
   onPeople: () => void;
   /** «التسجيلات», for the admin and the teacher only. */
   onRecordings?: (() => void) | undefined;
@@ -16,7 +21,7 @@ interface Props {
  * Pinned to the bottom of the room above the phone's home bar (safe-area padding). Each toggle
  * names its action and shows its state with aria-pressed + a filled look, never colour alone.
  */
-export function ControlBar({ room, board, onPeople, onRecordings }: Props) {
+export function ControlBar({ room, board, role, share, onPeople, onRecordings }: Props) {
   const { snap } = room;
   return (
     <div
@@ -31,7 +36,7 @@ export function ControlBar({ room, board, onPeople, onRecordings }: Props) {
       )}
       <RoomButton icon="mic" on={snap.micOn} label={snap.micOn ? t.classroom.micOff : t.classroom.micOn} onClick={room.toggleMic} />
       <RoomButton icon="cam" on={snap.camOn} label={snap.camOn ? t.classroom.camOff : t.classroom.camOn} onClick={room.toggleCamera} />
-      <RoomButton icon="screen" on={snap.shareOn} label={snap.shareOn ? t.classroom.shareOff : t.classroom.shareOn} onClick={room.toggleShare} />
+      <ShareButton room={room} role={role} share={share} />
       <RoomButton icon="board" on={board.visible} label={t.classroom.board.toggle} onClick={board.toggleVisible} />
       <RoomButton icon="people" label={t.classroom.people} onClick={onPeople} />
       {onRecordings && <RoomButton icon="film" label={t.classroom.recordings.title} onClick={onRecordings} />}

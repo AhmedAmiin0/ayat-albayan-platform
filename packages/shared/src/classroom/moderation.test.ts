@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { canRemove, participantMeta, roleOfMeta } from './moderation.js';
+import { shareGrantSchema } from './schemas.js';
+import { canGrantShare, canRemove, participantMeta, roleOfMeta } from './moderation.js';
 
 describe('classroom moderation', () => {
   it('admin removes anyone but an admin; the teacher removes guests, assistants and sales', () => {
@@ -21,5 +22,15 @@ describe('classroom moderation', () => {
     expect(roleOfMeta('')).toBeNull();
     expect(roleOfMeta('{oops')).toBeNull();
     expect(roleOfMeta(undefined)).toBeNull();
+  });
+
+  it('only the teacher, an admin or an assistant may let a guest share the screen', () => {
+    expect(['teacher', 'admin', 'assistant'].map((a) => canGrantShare(a as 'teacher', 'guest'))).toEqual([true, true, true]);
+    expect(canGrantShare('sales', 'guest')).toBe(false);
+    expect(canGrantShare('guest', 'guest')).toBe(false);
+    expect(canGrantShare('teacher', 'assistant')).toBe(false);
+    expect(canGrantShare(null, 'guest')).toBe(false);
+    expect(shareGrantSchema.safeParse({ allow: true }).success).toBe(true);
+    expect(shareGrantSchema.safeParse({ allow: 'yes' }).success).toBe(false);
   });
 });

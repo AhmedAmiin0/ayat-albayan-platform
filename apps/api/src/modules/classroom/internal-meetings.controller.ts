@@ -35,6 +35,12 @@ export class InternalMeetingsController {
     return this.meetings.list(user);
   }
 
+  /** {id} of the meeting behind /m/<token>: a signed-in staff member enters as staff. 404 link_invalid. */
+  @Get('by-link/:token')
+  byLink(@Param('token') token: string, @CurrentUser() user: AuthUser): Promise<{ id: string }> {
+    return this.joins.idByLink({ user, token });
+  }
+
   /** 204; 404 meeting_not_found, 403 not the creator nor an admin. */
   @Post(':id/end')
   @HttpCode(204)

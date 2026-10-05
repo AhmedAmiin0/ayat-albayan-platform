@@ -7,6 +7,10 @@ export const guestJoinSchema = z.object({
 });
 export type GuestJoin = z.output<typeof guestJoinSchema>;
 
+/** POST …/participants/:identity/share: «سماح» (true) or «إيقاف مشاركة» (false) for a guest's screen. */
+export const shareGrantSchema = z.object({ allow: z.boolean() });
+export type ShareGrant = z.output<typeof shareGrantSchema>;
+
 /** POST /students/:id/assistants (admin). The profile must have role = assistant. */
 export const assignAssistantSchema = z.object({ profileId: z.uuid() });
 export type AssignAssistant = z.output<typeof assignAssistantSchema>;

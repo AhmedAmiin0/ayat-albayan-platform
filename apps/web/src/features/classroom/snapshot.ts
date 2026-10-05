@@ -9,6 +9,12 @@ export interface PublicationLike {
   track?: { sid?: string | undefined; mediaStreamTrack: { id: string } } | undefined;
 }
 
+/** livekit-client's ParticipantPermission: `canPublishSources` empty = every source. */
+export interface PermissionLike {
+  canPublish: boolean;
+  canPublishSources: readonly number[];
+}
+
 export interface ParticipantLike {
   identity: string;
   name?: string | undefined;
@@ -19,6 +25,7 @@ export interface ParticipantLike {
   isCameraEnabled: boolean;
   isScreenShareEnabled: boolean;
   trackPublications: Map<string, PublicationLike>;
+  permissions?: PermissionLike | undefined;
 }
 
 export interface RoomLike {
@@ -38,13 +45,33 @@ export function pubOf(p: ParticipantLike, source: string): PublicationLike | und
   return [...p.trackPublications.values()].find((x) => x.source === source);
 }
 
+/** TrackSource.SCREEN_SHARE in LiveKit's protocol. */
+const SCREEN_SHARE_SOURCE = 3;
+
+/**
+ * May this participant publish a screen share? Read off LiveKit's live permission (a guest's token
+ * allows camera + microphone only, until a staff «سماح» updates it); before the server has sent
+ * one, a guest may not and everyone else may.
+ */
+export function mayShareScreen(p: Pick<ParticipantLike, 'permissions' | 'metadata'>): boolean {
+  const perm = p.permissions;
+  if (!perm) return roleOfMeta(p.metadata) !== 'guest';
+  return perm.canPublish && (perm.canPublishSources.length === 0 || perm.canPublishSources.includes(SCREEN_SHARE_SOURCE));
+}
+
 const isBoardPub = (pub: PublicationLike | undefined): boolean => pub?.trackName === BOARD_TRACK_NAME;
 
 /** The camera tile (always) and, while someone shares, a screen tile for them. */
 export function tilesOf(p: ParticipantLike, speakingIds: ReadonlySet<string>): TileView[] {
   const cam = pubOf(p, 'camera');
   const screen = pubOf(p, 'screen_share');
-  const base = { identity: p.identity, name: p.name || p.identity, isLocal: p.isLocal, role: roleOfMeta(p.metadata) };
+  const base = {
+    identity: p.identity,
+    name: p.name || p.identity,
+    isLocal: p.isLocal,
+    role: roleOfMeta(p.metadata),
+    shareAllowed: mayShareScreen(p),
+  };
   const tiles: TileView[] = [
     {
       ...base,
@@ -86,5 +113,6 @@ export function snapshotOf(room: RoomLike, status: RoomStatus, speakingIds: Read
     shareOn: me.isScreenShareEnabled && !boardShareOn,
     boardShareOn,
     isRecording: room.isRecording ?? false,
+    shareAllowed: mayShareScreen(me),
   };
 }
