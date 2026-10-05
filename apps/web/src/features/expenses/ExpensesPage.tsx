@@ -65,7 +65,7 @@ export function ExpensesPage({ month, onMonth }: Props) {
         ))}
       </ul>
       {rows.length > 0 && (
-        <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t-[3px] border-double border-gold pt-3 text-sm">
+        <p className="mt-3 flex flex-wrap justify-end gap-x-4 border-t border-rule pt-3 text-sm">
           <span className="text-ink-3">{t.expenses.total}</span>
           {totalsByCurrency(rows).map(([currency, amount]) => (
             <Amount key={currency} amount={amount} currency={currency} className="font-semibold" />

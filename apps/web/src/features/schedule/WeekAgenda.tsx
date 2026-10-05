@@ -34,7 +34,7 @@ export function WeekAgenda({ days, today, rows, onOpen }: WeekAgendaProps) {
         const active = rows.filter((r) => (r.days.get(day) ?? []).length > 0);
         return (
           <section key={day} aria-label={label} aria-current={day === today ? 'date' : undefined}>
-            <h3 className={cn('border-b-[3px] border-double border-gold pb-1.5 font-display text-h4 font-bold', day === today && 'bg-gold-wash/40')}>
+            <h3 className={cn('border-b border-rule pb-1.5 font-display text-h4 font-bold', day === today && 'bg-gold-wash/40')}>
               {day === today ? `${label} · ${t.schedule.today}` : label}
             </h3>
             {active.length === 0 && <p className="py-2 text-sm text-ink-3">{t.schedule.noLessons}</p>}

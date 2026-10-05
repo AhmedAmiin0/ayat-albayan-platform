@@ -77,7 +77,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
             waitingKeys={waiting}
           />
           {ownThread ? (
-            <p className="mt-4 border-t-[3px] border-double border-gold pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>
+            <p className="mt-4 border-t border-rule pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>
           ) : (
             <Composer key={phone} thread={th} context={context} />
           )}

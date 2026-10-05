@@ -38,7 +38,7 @@ export function KpiStrip({ summary, work }: KpiStripProps) {
   const counts = summary ?? { needs_confirmation: 0, pending_reports: 0, unpaid_subscriptions: 0, open_tasks: 0 };
   const kpis = kpisOf(counts);
   return (
-    <nav aria-label={t.dashboard.kpiStrip} className="border-y-[3px] border-double border-gold py-1.5">
+    <nav aria-label={t.dashboard.kpiStrip} className="border-y border-rule py-1.5">
       <ul className="grid grid-cols-2 gap-1 sm:grid-cols-4">
         {kpis.map((k) => (
           <li key={k.key}>

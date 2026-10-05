@@ -11,7 +11,7 @@ export interface GroupProps {
   set: (patch: Partial<SettingsForm>) => void;
 }
 
-const legend = 'mb-3 border-b-[3px] border-double border-gold pb-1.5 font-semibold';
+const legend = 'mb-3 border-b border-rule pb-1.5 font-semibold';
 const grid = 'grid gap-x-6 gap-y-4 sm:grid-cols-2';
 const msg = t.templates.settings;
 

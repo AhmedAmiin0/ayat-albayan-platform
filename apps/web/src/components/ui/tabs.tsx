@@ -13,7 +13,7 @@ export interface TabsProps<V extends string> {
   value: V;
   onChange: (value: V) => void;
   /**
-   * horizontal: profile tabs, the selected one sits on a 3px double gold rule (docs/07 .tabs).
+   * horizontal: profile tabs, the selected one sits on a 2px green underline that fades in (docs/07 .tabs).
    * vertical: a fihris filter (inbox status) with dotted leaders and counts like page numbers;
    * it turns into horizontal chips below 900px.
    */
@@ -24,9 +24,9 @@ export interface TabsProps<V extends string> {
 // 44px touch targets below the `shell:` breakpoint (docs/07 §4).
 const tabClass = {
   horizontal:
-    '-mb-px min-h-11 whitespace-nowrap border-b-[3px] border-double border-transparent px-3.5 pt-2 pb-2.5 font-medium text-ink-2 aria-selected:border-gold aria-selected:font-semibold aria-selected:text-ink',
+    '-mb-px min-h-11 whitespace-nowrap border-b-2 border-transparent px-3.5 pt-2 pb-2.5 font-medium text-ink-2 transition-[color,border-color] duration-200 ease-out hover:text-ink aria-selected:border-lapis aria-selected:font-semibold aria-selected:text-ink',
   vertical:
-    'flex min-h-11 items-center gap-1.5 whitespace-nowrap shell:min-h-0 shell:items-baseline rounded-sm border border-rule px-2.5 py-[7px] text-xs text-ink-2 hover:bg-sunk aria-selected:bg-gold-wash aria-selected:font-semibold aria-selected:text-ink aria-selected:shadow-[inset_0_0_0_1px_var(--gold-soft)] shell:border-transparent',
+    'flex min-h-11 items-center gap-1.5 whitespace-nowrap shell:min-h-0 shell:items-baseline rounded-sm border border-rule px-2.5 py-[7px] text-xs text-ink-2 hover:bg-sunk transition-colors duration-150 ease-out aria-selected:bg-accent aria-selected:font-semibold aria-selected:text-ink shell:border-transparent',
 };
 
 // The vertical fihris is a chip row below `shell:` (56.25rem), so say so to assistive tech.

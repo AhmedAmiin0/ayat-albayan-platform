@@ -63,7 +63,7 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       </div>
       <p className="mb-3 max-w-[70ch] text-sm text-ink-2">{t.templates.intro}</p>
       {rows.some((r) => r.status !== 'approved') && (
-        <p className="mb-3 border-s-[3px] border-double border-s-gold-soft ps-3 text-xs font-semibold text-act">
+        <p className="mb-3 border-s border-s-rule ps-3 text-xs font-semibold text-act">
           {t.templates.needsAttention}
         </p>
       )}

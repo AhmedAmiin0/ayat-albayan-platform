@@ -34,7 +34,7 @@ export function FinanceByMonth({ months, currency }: { months: readonly MonthFin
       <table className="w-full min-w-[640px] border-collapse text-sm">
         <caption className="sr-only">{`${t.dashboard.byMonth} (${currency})`}</caption>
         <thead>
-          <tr className="border-b-[3px] border-double border-gold text-xs text-ink-3">
+          <tr className="border-b border-rule text-xs text-ink-3">
             <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.dashboard.month}</th>
             {MEASURES.map((x) => (
               <th key={x.key} scope="col" className="py-2 pe-3 text-start font-semibold">{x.label}</th>

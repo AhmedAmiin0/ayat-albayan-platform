@@ -15,4 +15,4 @@ export function packageDaysNote(pkg: PackageSize, days: number): string | null {
 }
 
 /** The hamish line (docs/07: double gold-soft rule), in act because it is the admin's to fix. */
-export const PACKAGE_NOTE_CLASS = 'border-s-[3px] border-double border-s-gold-soft ps-3 text-xs font-semibold text-act';
+export const PACKAGE_NOTE_CLASS = 'border-s border-s-rule ps-3 text-xs font-semibold text-act';

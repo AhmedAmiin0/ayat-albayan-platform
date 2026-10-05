@@ -21,7 +21,7 @@ export function LeadList({ leads, confirmId, busy, onConfirm, onMove }: LeadList
       <div
         aria-hidden="true"
         className={cn(
-          'hidden gap-x-3 border-b-[3px] border-double border-gold px-2.5 pb-2 text-2xs font-semibold text-ink-3 sm:grid',
+          'hidden gap-x-3 border-b border-rule px-2.5 pb-2 text-2xs font-semibold text-ink-3 sm:grid',
           leadGridClass,
         )}
       >

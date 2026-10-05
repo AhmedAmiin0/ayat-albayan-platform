@@ -18,7 +18,7 @@ export function FunnelChart({ funnel }: { funnel: Record<LeadStatus, number> }) 
       <table className="w-full border-collapse text-sm">
         <caption className="sr-only">{t.dashboard.funnel}</caption>
         <thead>
-          <tr className="border-b-[3px] border-double border-gold text-xs text-ink-3">
+          <tr className="border-b border-rule text-xs text-ink-3">
             <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.dashboard.stage}</th>
             <th scope="col" className="py-2 pe-3 text-start font-semibold">{t.dashboard.leads}</th>
             <th scope="col" className="py-2 text-end font-semibold">{t.dashboard.conversion}</th>

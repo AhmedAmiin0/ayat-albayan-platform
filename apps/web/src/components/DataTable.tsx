@@ -17,7 +17,7 @@ export type DataTableFeatures = typeof dataTableFeatures;
 export type DataTableColumn<T extends RowData> = ColumnDef<DataTableFeatures, T>;
 
 /** Hamish (marginal note) column: after a double gold-soft rule; folds away in narrow pages. */
-const hamishHeadClass = 'border-s-[3px] border-double border-s-gold-soft ps-3.5 @max-[940px]:hidden';
+const hamishHeadClass = 'border-s border-s-rule ps-3.5 @max-[940px]:hidden';
 const hamishClass = `${hamishHeadClass} text-xs text-ink-2`;
 /** The hamish column's `meta`: the double rule sits on the head and on the cells. */
 export const hamishMeta: DataTableColumnMeta = { className: hamishClass, headClassName: hamishHeadClass };
@@ -81,7 +81,7 @@ export function DataTable<T extends RowData>({
                   key={header.id}
                   scope="col"
                   className={cn(
-                    'border-b-[3px] border-double border-gold px-2 py-[9px] text-start text-xs font-semibold whitespace-nowrap text-ink-3',
+                    'border-b border-rule px-2 py-[9px] text-start text-xs font-semibold whitespace-nowrap text-ink-3',
                     header.column.columnDef.meta?.headClassName,
                   )}
                 >

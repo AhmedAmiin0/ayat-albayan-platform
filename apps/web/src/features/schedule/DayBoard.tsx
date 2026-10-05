@@ -28,7 +28,7 @@ const rowGrid = 'grid gap-x-4 gap-y-2 md:grid-cols-[184px_minmax(0,1fr)]';
  */
 export function DayBoard({ day, rows, now, onOpen }: DayBoardProps) {
   return (
-    <section aria-label={t.schedule.dayBoard} className="border-t-[3px] border-double border-gold">
+    <section aria-label={t.schedule.dayBoard} className="border-t border-rule">
       <div aria-hidden="true" className={cn(rowGrid, 'sticky top-0 z-10 border-b border-rule bg-page py-1.5')}>
         <span className="max-md:hidden" />
         <span className="flex justify-between text-2xs text-ink-3 tabular-nums">

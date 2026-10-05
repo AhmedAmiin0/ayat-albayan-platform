@@ -54,17 +54,18 @@ export const elevation: Record<ThemeName, Elevation> = {
   },
 };
 
-/** Font family names as registered with expo-font. Amiri: titles ≥ 20px only. */
+/** Font family names as registered with expo-font: Noto Sans Arabic only (owner, 2026-10-05: easier
+ *  to read); titles are its 700 weight. */
 export const type = {
-  display: 'Amiri_700Bold',
+  display: 'NotoSansArabic_700Bold',
   ui: {
-    400: 'IBMPlexSansArabic_400Regular',
-    500: 'IBMPlexSansArabic_500Medium',
-    600: 'IBMPlexSansArabic_600SemiBold',
-    700: 'IBMPlexSansArabic_700Bold',
+    400: 'NotoSansArabic_400Regular',
+    500: 'NotoSansArabic_500Medium',
+    600: 'NotoSansArabic_600SemiBold',
+    700: 'NotoSansArabic_700Bold',
   },
   size: { '2xs': 12, xs: 13, sm: 14, body: 15, base: 16, lg: 18, h4: 20, h3: 23, h2: 28, h1: 32 },
-  /** Arabic line-heights: 1.5 for Amiri titles, 1.6 for Plex UI text. */
+  /** Arabic line-heights: 1.5 for titles, 1.6 for UI text. */
   lineHeight: (size: number, display = false) => Math.round(size * (display ? 1.5 : 1.6)),
 };
 

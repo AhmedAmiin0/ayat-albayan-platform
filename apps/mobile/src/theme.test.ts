@@ -41,7 +41,7 @@ test('both themes define the same tokens', () => {
   expect(Object.keys(palette.dark).sort()).toEqual(Object.keys(palette.light).sort());
 });
 
-test('Arabic line-heights: 1.5 Amiri, 1.6 Plex', () => {
+test('Arabic line-heights: 1.5 titles, 1.6 UI text', () => {
   expect(type.lineHeight(type.size.h1, true)).toBe(48);
   expect(type.lineHeight(type.size.base)).toBe(26);
 });
