@@ -33,6 +33,7 @@ import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { SalesModule } from './modules/sales/sales.module';
 import { SchedulingModule } from './modules/scheduling/scheduling.module';
+import { StudentRecordingsModule } from './modules/student-recordings/student-recordings.module';
 import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeacherStudentsModule } from './modules/teacher-students/teacher-students.module';
@@ -79,6 +80,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     FeedbackModule,
     LessonRatingModule,
     ClassroomModule,
+    StudentRecordingsModule,
     MessagingJobsModule,
     WebhookModule,
   ],

@@ -55,4 +55,8 @@ Needed on the VPS, next to `livekit-server`:
 4. **API env** (docs/09): `RECORDING_S3_ENDPOINT` (`https://<project>.supabase.co/storage/v1/s3`), `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET=recordings`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET` (Supabase → Storage → S3 Connection → new access key). All five or none; unset = nothing is recorded and joins work as before.
 5. **Upload size** — the `recordings` bucket has no limit of its own; raise the project's global upload limit (Supabase → Storage → Settings) above the longest lesson (an hour of 720p grid ≈ 300–600 MB).
 
+### Recordings in the student file (migration 240)
+
+`GET /students/:id/recordings` (paginated, newest first; admin, the teacher of the lesson or of the currently assigned student, an assigned assistant) lists each lesson recording on every attending student's file with duration, size (from the egress result) and a 1-hour signed link; the web shows it as «تسجيلات الحلقات» on the student profile and on the teacher's student page. `PATCH /recordings/:id/visibility` (admin, the lesson's teacher) sets `visible_to_student` (default false; no student/guardian route exists yet, the RLS policy `lesson_recordings_guardian_read` is ready). `DELETE /recordings/:id` (admin) removes the file and keeps the row as `deleted`, with an audit row. An hourly job marks rows stuck in `recording` for over 6 hours as `failed` and, **only if** the setting `recording_retention_days` is a positive whole number, deletes the files of older recordings; unset = keep forever.
+
 Check: start a lesson as the teacher (or open an internal meeting), then `docker logs livekit-egress` shows the egress; after the last person leaves the row turns `done` and the file is in the bucket.

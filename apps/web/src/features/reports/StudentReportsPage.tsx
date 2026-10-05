@@ -10,6 +10,7 @@ import { ListSkeleton } from '@/components/ui/skeleton';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { studentReportsQuery } from './api';
+import { useRecordedLessons } from './use-recorded-lessons';
 import { GradeChart } from './GradeChart';
 import { ReportHistoryList } from './ReportHistoryList';
 import { TableBox } from '@/components/TableBox';
@@ -28,6 +29,7 @@ export interface StudentReportsPageProps {
 export function StudentReportsPage({ studentId, name, role, tz }: StudentReportsPageProps) {
   const [page, setPage] = useState(1);
   const reports = useQuery({ ...studentReportsQuery(studentId, page), placeholderData: keepPreviousData });
+  const recorded = useRecordedLessons(studentId);
   const head = (
     <PageHead>
       <Cartouche>{t.reports.history}</Cartouche>
@@ -52,7 +54,7 @@ export function StudentReportsPage({ studentId, name, role, tz }: StudentReports
       <section aria-label={t.reports.title} className={cn('flex flex-auto flex-col gap-2', reports.isPlaceholderData && 'opacity-60')}>
         <h2 className="font-display text-h3 font-bold">{t.reports.title}</h2>
         <TableBox className="px-3">
-          <ReportHistoryList items={data.items} role={role} tz={tz} />
+          <ReportHistoryList items={data.items} role={role} tz={tz} studentId={studentId} recorded={recorded} />
         </TableBox>
         <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={setPage} />
       </section>

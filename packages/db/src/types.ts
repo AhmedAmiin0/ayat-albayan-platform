@@ -981,6 +981,7 @@ export type Database = {
       };
       lesson_recordings: {
         Row: {
+          deleted_at: string | null;
           egress_id: string | null;
           ended_at: string | null;
           error: string | null;
@@ -988,10 +989,13 @@ export type Database = {
           id: string;
           lesson_id: string | null;
           meeting_id: string | null;
+          size_bytes: number | null;
           started_at: string;
           status: string;
+          visible_to_student: boolean;
         };
         Insert: {
+          deleted_at?: string | null;
           egress_id?: string | null;
           ended_at?: string | null;
           error?: string | null;
@@ -999,10 +1003,13 @@ export type Database = {
           id?: string;
           lesson_id?: string | null;
           meeting_id?: string | null;
+          size_bytes?: number | null;
           started_at?: string;
           status?: string;
+          visible_to_student?: boolean;
         };
         Update: {
+          deleted_at?: string | null;
           egress_id?: string | null;
           ended_at?: string | null;
           error?: string | null;
@@ -1010,8 +1017,10 @@ export type Database = {
           id?: string;
           lesson_id?: string | null;
           meeting_id?: string | null;
+          size_bytes?: number | null;
           started_at?: string;
           status?: string;
+          visible_to_student?: boolean;
         };
         Relationships: [
           {

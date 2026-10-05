@@ -54,7 +54,8 @@ export class SettingsService {
     }
   }
 
-  private async read(key: string): Promise<Json | undefined> {
+  /** One raw setting by key (undefined when unset); for keys the registry does not know yet. */
+  async read(key: string): Promise<Json | undefined> {
     const { data, error } = await this.db
       .from('settings')
       .select('value')

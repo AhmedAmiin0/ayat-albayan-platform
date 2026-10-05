@@ -1059,6 +1059,55 @@
       "fallback": "No exchange rate is available right now, so prices use the SAR–USD peg (3.75)"
     }
   },
+  "studentRecordings": {
+    "title": "Lesson recordings",
+    "hint": "Every lesson held in the online room is recorded automatically and listed here for review.",
+    "loading": "Loading recordings…",
+    "error": "Could not load the recordings. Try again.",
+    "retry": "Try again",
+    "empty": "This student has no recordings yet.",
+    "emptyFiltered": "No recordings match the filter.",
+    "forbidden": "You are not allowed to view this student's recordings.",
+    "status": {
+      "recording": "Recording",
+      "done": "Ready",
+      "failed": "Recording failed",
+      "deleted": "Deleted"
+    },
+    "lessonAt": "Lesson {when}",
+    "teacher": "Teacher",
+    "duration": "Duration",
+    "size": "Size",
+    "unknown": "—",
+    "sizeMb": "{n} MB",
+    "sizeGb": "{n} GB",
+    "player": "Play the recording of the lesson {when}",
+    "download": "Download",
+    "downloadOf": "Download the recording of the lesson {when}",
+    "noFile": "The file is not available to play.",
+    "filters": {
+      "from": "From date",
+      "to": "To date",
+      "teacher": "Teacher",
+      "teacherAll": "All teachers"
+    },
+    "visible": {
+      "label": "Show to the student",
+      "on": "Ready to show to the student and guardian once their portal is on.",
+      "off": "Hidden from the student and guardian.",
+      "failed": "Could not change the visibility. Try again."
+    },
+    "delete": {
+      "action": "Delete recording",
+      "title": "Delete the lesson recording?",
+      "body": "The recording file will be deleted for good and cannot be restored. The deletion record is kept.",
+      "confirm": "Delete for good",
+      "failed": "Could not delete the recording. Try again.",
+      "inProgress": "A recording that is still running cannot be deleted."
+    },
+    "reportLink": "Lesson recording",
+    "reportLinkOf": "Open the recording of the lesson {when}"
+  },
   "reports": {
     "title": "Lesson reports",
     "formTitle": "Lesson report",
