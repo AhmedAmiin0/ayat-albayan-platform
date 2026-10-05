@@ -21,10 +21,15 @@ export class RecordingLifecycle {
     private readonly starter: RecordingStarter,
   ) {}
 
-  /** After egress_ended: record again if anyone is still there. */
-  async afterEgressEnded(room: string | null): Promise<'restarted' | 'idle'> {
+  /**
+   * After an egress ended normally (complete, limit reached): record again if anyone is still there.
+   * A failed egress is not retried, so a broken recorder cannot loop (the row shows «فشل التسجيل»;
+   * the next join tries again).
+   */
+  async afterEgressEnded(input: { room: string | null; status: 'done' | 'failed' }): Promise<'restarted' | 'idle'> {
+    const { room } = input;
     const target = targetOfRoom(room);
-    if (!target || !room || !this.starter.configured) return 'idle';
+    if (input.status !== 'done' || !target || !room || !this.starter.configured) return 'idle';
     try {
       if ((await this.people(room)).length === 0) return 'idle';
       return (await this.starter.startFor(target)) === 'started' ? 'restarted' : 'idle';

@@ -106,9 +106,13 @@ export function useShareRequests({ room, role, grant, board }: ShareRequestOptio
     },
     allow: ({ tile, what }) => {
       if (what === 'screen') return share(tile, true);
-      settle(tile.identity, what);
-      if (what === 'draw') board.allowDrawer(tile.identity, true);
-      else board.openForAll();
+      if (what === 'draw') {
+        settle(tile.identity, what);
+        return board.allowDrawer(tile.identity, true);
+      }
+      // Opening the board answers every «اطلب فتح السبورة» at once.
+      state.pending.filter((p) => p.what === 'open').forEach((p) => settle(p.identity, 'open'));
+      board.openForAll();
     },
     deny: ({ tile, what }) => {
       settle(tile.identity, what);

@@ -29,18 +29,23 @@ beforeEach(() => {
 
 describe('RecordingLifecycle', () => {
   it('an egress that ended while people remain is started again (the claim keeps it to one)', async () => {
-    expect(await life().afterEgressEnded(ROOM)).toBe('restarted');
+    expect(await life().afterEgressEnded({ room: ROOM, status: 'done' })).toBe('restarted');
     expect(starter.startFor).toHaveBeenCalledWith({ kind: 'lesson', id: LESSON_ID });
+  });
+
+  it('a failed egress is not retried (no restart loop)', async () => {
+    expect(await life().afterEgressEnded({ room: ROOM, status: 'failed' })).toBe('idle');
+    expect(starter.startFor).not.toHaveBeenCalled();
   });
 
   it('…but not in an empty room, an unknown room, or without recording set up', async () => {
     people = [EGRESS];
-    expect(await life().afterEgressEnded(ROOM)).toBe('idle');
-    expect(await life().afterEgressEnded('somewhere')).toBe('idle');
-    expect(await life().afterEgressEnded(null)).toBe('idle');
+    expect(await life().afterEgressEnded({ room: ROOM, status: 'done' })).toBe('idle');
+    expect(await life().afterEgressEnded({ room: 'somewhere', status: 'done' })).toBe('idle');
+    expect(await life().afterEgressEnded({ room: null, status: 'done' })).toBe('idle');
     starter.configured = false;
     people = [{ identity: 'guest-0123456789ab' }];
-    expect(await life().afterEgressEnded(ROOM)).toBe('idle');
+    expect(await life().afterEgressEnded({ room: ROOM, status: 'done' })).toBe('idle');
     expect(starter.startFor).not.toHaveBeenCalled();
   });
 

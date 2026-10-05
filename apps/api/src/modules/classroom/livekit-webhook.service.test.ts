@@ -30,7 +30,7 @@ describe('LivekitWebhookService', () => {
   it('an egress ending with its room checks whether to record again; a participant leaving whether to stop', async () => {
     const info = { egressId: 'EG_1', status: 'EGRESS_COMPLETE', roomName: 'meeting-1' };
     await service().handle(post({ event: 'egress_ended', egressInfo: info }), NOW);
-    expect(life.afterEgressEnded).toHaveBeenCalledWith('meeting-1');
+    expect(life.afterEgressEnded).toHaveBeenCalledWith({ room: 'meeting-1', status: 'done' });
     await service().handle(post({ event: 'participant_left', room: { name: 'lesson-1' }, participant: { identity: 'guest-1' } }), NOW);
     expect(life.afterLeft).toHaveBeenCalledWith({ room: 'lesson-1', identity: 'guest-1' });
   });
