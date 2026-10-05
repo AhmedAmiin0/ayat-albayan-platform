@@ -1519,6 +1519,66 @@
       "teacher": "Teacher: {name}"
     }
   },
+  "config": {
+    "defaultLessonMinutes": "Default lesson length (minutes)",
+    "defaultLessonMinutesHint": "Used as the starting length when a new lesson is created; each lesson can change it.",
+    "academyContact": "Academy contact details",
+    "academyContactHint": "Printed in the footer of lesson reports; any visitor can read it.",
+    "recordingConsentNotice": "Recording consent notice",
+    "recordingConsentNoticeHint": "Shown to the student and guardian before a recorded lesson; any visitor can read it.",
+    "recordingRetentionDays": "Keep lesson recordings for (days)",
+    "recordingRetentionOn": "Delete recordings after a period",
+    "recordingRetentionHint": "When off, recordings are kept without deleting. Deleting them is the owner's decision and is never on by default.",
+    "activityRetentionDays": "Keep the activity log for (days)",
+    "activityRetentionDaysHint": "Activity records older than this are deleted daily.",
+    "sections": {
+      "custom": "Custom values"
+    },
+    "fields": {
+      "site": "Website",
+      "whatsapp": "WhatsApp number (international format)",
+      "email": "Email",
+      "ar": "Arabic text",
+      "en": "English text"
+    },
+    "search": {
+      "label": "Search settings",
+      "placeholder": "Search by name or key",
+      "none": "No settings match your search."
+    },
+    "reset": "Reset to default",
+    "resetFor": "Reset to default: {name}",
+    "dirty": "Edited",
+    "danger": "Sensitive setting: it directly affects messages or warnings.",
+    "changed": "Last changed: {at}",
+    "changedBy": "Last changed: {at} by {name}",
+    "custom": {
+      "hint": "Free-form values you add yourself. A public value can be read by any visitor from the public interface, so keep private data out of it.",
+      "empty": "No custom values yet.",
+      "loadError": "Could not load the custom values.",
+      "add": "Add a value",
+      "edit": "Edit",
+      "delete": "Delete",
+      "key": "Key",
+      "keyHint": "Lowercase English letters, digits and . _ - starting with a letter, 2 to 64 characters.",
+      "value": "Value (JSON)",
+      "description": "Description",
+      "isPublic": "Public (shown without signing in)",
+      "public": "Public",
+      "private": "Private",
+      "save": "Save value",
+      "cancel": "Cancel",
+      "deleteConfirm": "Delete the value «{key}» for good?",
+      "deleteYes": "Yes, delete it",
+      "invalidKey": "The key is not valid",
+      "reservedKey": "This key is reserved for an academy setting",
+      "invalidJson": "The value is not valid JSON",
+      "nullValue": "The value cannot be null",
+      "tooLarge": "The value is larger than 8 KB",
+      "saved": "Value saved",
+      "deleted": "Value deleted"
+    }
+  },
   "exports": {
     "title": "Export data",
     "students": "Students",

@@ -36,7 +36,10 @@ describe('readSettings', () => {
 describe('public settings', () => {
   it('only the public keys go out, with their defaults before the API answers', () => {
     expect([...PUBLIC_SETTING_KEYS].sort()).toEqual(
-      ['academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min', 'makeup_window_days', 'upload_max_mb'].sort(),
+      [
+        'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min',
+        'makeup_window_days', 'recording_consent_notice', 'upload_max_mb',
+      ].sort(),
     );
     expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);
     expect(PUBLIC_SETTING_DEFAULTS).not.toHaveProperty('messaging_enabled');
