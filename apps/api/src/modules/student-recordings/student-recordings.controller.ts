@@ -12,7 +12,7 @@ import { RecordingDeleteService } from './recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
 
-/** «تسجيلات الحلقات» on the teacher-student file. The permission is the coarse gate (recordings.read: admin and teacher by default); the services decide who may see which student, and DELETE stays admin-only there. */
+/** «تسجيلات الحلقات» on the teacher-student file. The permission is the coarse gate (recordings.read for the reads, recordings.manage for show/hide and delete: admin and teacher by default); the services decide who may see which student, and DELETE stays admin-only there. */
 @ApiTags('classroom')
 @ApiBearerAuth()
 @Permissions('recordings.read')
@@ -42,6 +42,7 @@ export class StudentRecordingsController {
 
   /** Show or hide one recording from the student (off by default); admin, or the lesson's teacher. */
   @Patch('recordings/:id/visibility')
+  @Permissions('recordings.manage')
   visibility(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,
@@ -52,6 +53,7 @@ export class StudentRecordingsController {
 
   /** Admin only: removes the file, keeps the row as `deleted`, writes an audit row. */
   @Delete('recordings/:id')
+  @Permissions('recordings.manage')
   @HttpCode(204)
   async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
     await this.deletion.remove({ user, id });

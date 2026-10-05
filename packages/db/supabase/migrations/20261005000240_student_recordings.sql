@@ -29,3 +29,12 @@ create index if not exists lesson_recordings_retention_idx on public.lesson_reco
 -- one an earlier run of this migration created: it exposed a whole group file and its egress id.
 -- Staff reads and writes go through the API (service role); no write policy.
 drop policy if exists lesson_recordings_guardian_read on public.lesson_recordings;
+
+-- recordings.manage (show/hide a recording to the student, delete it): a write permission apart
+-- from recordings.read, so a read-only role cannot delete files. Today's access: the admin and
+-- the teacher (parity with the old @Roles); deleting stays admin-base in the service. Seeded here,
+-- not in 220, so a database that already ran 220 gets it too (the system admin holds every key in
+-- the API whatever its rows say).
+insert into public.role_permissions (role_id, permission)
+select r.id, 'recordings.manage' from public.roles r where r.is_system and r.key in ('admin', 'teacher')
+on conflict do nothing;

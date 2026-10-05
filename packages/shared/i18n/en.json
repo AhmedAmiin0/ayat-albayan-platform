@@ -3174,6 +3174,7 @@
       "classroom.host": "Open the room early and copy the join link",
       "classroom.links": "Send join links to students",
       "recordings.read": "Watch lesson recordings",
+      "recordings.manage": "Show, hide and delete lesson recordings (deleting is for admin-base roles only)",
       "meetings.read": "View internal meetings",
       "meetings.write": "Create and run internal meetings",
       "reports.read": "View lesson reports",

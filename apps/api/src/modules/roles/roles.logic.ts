@@ -24,6 +24,9 @@ export function permissionsOf(state: RoleState, profile: ProfileRecord): Permiss
   return effectivePermissions({ baseRole: profile.role, granted: role.permissions, allGrantable: isSystemAdmin(role) });
 }
 
+/** The catalog keys a profile holds: self.* scope keys (they come with the base role, not a grant) left out. */
+export const grantsOf = (state: RoleState, profile: ProfileRecord): Permission[] => permissionsOf(state, profile).filter(isGrantable);
+
 /** First of `wanted` the actor does not hold (null = all held): nobody grants beyond their own reach. */
 export function missingGrant(state: RoleState, actorId: string, wanted: readonly Permission[]): Permission | null {
   const actor = state.profiles.find((p) => p.id === actorId);

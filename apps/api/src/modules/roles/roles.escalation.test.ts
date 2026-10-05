@@ -56,9 +56,30 @@ describe('RolesService — no escalation past the actor’s own permissions', ()
     expect(store.profilesData.find((p) => p.id === 'lim')?.role_id).toBe(limited);
   });
 
-  it('lets the actor assign a role inside its own permissions', async () => {
+  it('lets the actor assign a role inside its own permissions to a user inside them', async () => {
+    const small = await svc.create({ name_ar: 'ص', base_role: 'teacher', permissions: ['payments.read'] }, 'owner');
+    await svc.assign({ userId: 't2', roleId: small.id, actorId: 'owner' });
     const out = await svc.assign({ userId: 't2', roleId: limited, actorId: 'lim' });
     expect(out.role_id).toBe(limited);
+  });
+
+  it('refuses re-roling a user who holds more than the actor, even to a powerless role', async () => {
+    const none = await svc.create({ name_ar: 'ص', base_role: 'admin', permissions: [] }, 'lim');
+    expect(await codeOf(svc.assign({ userId: 'owner', roleId: none.id, actorId: 'lim' }))).toEqual({ status: 403, code: 'permission_not_held' });
+    expect(await codeOf(svc.assign({ userId: 't2', roleId: none.id, actorId: 'lim' }))).toMatchObject({ code: 'permission_not_held' });
+    expect(store.profilesData.find((p) => p.id === 'owner')?.role_id).toBeNull();
+  });
+
+  it('passes the outrank check for the actor itself (only the lockout guard stops it)', async () => {
+    const none = await svc.create({ name_ar: 'ص', base_role: 'admin', permissions: [] }, 'lim');
+    expect(await codeOf(svc.assign({ userId: 'lim', roleId: none.id, actorId: 'lim' }))).toMatchObject({ code: 'self_lockout' });
+  });
+
+  it('refuses stripping a role that holds more than the actor, but lets the owner do it', async () => {
+    const rich = await svc.create({ name_ar: 'ص', base_role: 'admin', permissions: ['payments.read', 'payouts.write'] }, 'owner');
+    expect(await codeOf(svc.update(rich.id, { permissions: ['payments.read'], actorId: 'lim' }))).toEqual({ status: 403, code: 'permission_not_held' });
+    expect(await codeOf(svc.update(rich.id, { permissions: [], actorId: 'lim' }))).toMatchObject({ code: 'permission_not_held' });
+    expect((await svc.update(rich.id, { permissions: ['payments.read'], actorId: 'owner' })).permissions).toEqual(['payments.read']);
   });
 
   it('treats an actor without a staff profile as holding nothing', async () => {

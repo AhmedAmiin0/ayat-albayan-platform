@@ -84,6 +84,20 @@ test.describe('dynamic roles (migrations 220, 225)', () => {
     });
   });
 
+  test('a client cannot delete a profile or insert one back with the admin role (no PostgREST route round the guard)', async () => {
+    await rolledBack(async (tx) => {
+      const admin = await userId(tx, USERS.admin.email);
+      const teacher = await userId(tx, USERS.teacher.email);
+      const adminRole = await role(tx, 'admin');
+      const run = (q: () => Promise<unknown>) => code(tx, () => as(tx, admin, q));
+      expect(await run(() => tx`delete from public.profiles where id = ${teacher}`)).toBe('42501');
+      expect(await run(() => tx`insert into public.profiles (id, role, role_id, full_name) values (${teacher}, 'admin', ${adminRole}, 'x')`)).toBe('42501');
+      expect(await run(() => tx`insert into public.profiles (id, role, full_name) values (gen_random_uuid(), 'teacher', 'x')`)).toBe('42501');
+      await clearClaims(tx);
+      expect((await profile(tx, teacher))?.role).toBe('teacher');
+    });
+  });
+
   test('an admin still edits other profile fields and reads the roles; anon sees nothing', async () => {
     await rolledBack(async (tx) => {
       const admin = await userId(tx, USERS.admin.email);

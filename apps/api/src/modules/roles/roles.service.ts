@@ -2,7 +2,7 @@ import type { Permission, RoleCreate, RoleUpdate, RoleView, StaffUserView } from
 import { Inject, Injectable } from '@nestjs/common';
 import { PermissionCache } from '../../common/auth/permission.cache';
 import { badRequest, conflict, forbidden, notFound } from '../scheduling/errors';
-import { cleanGrants, customKey, isSystemAdmin, managerProblem, missingGrant, roleView, staffUserView, type RoleState } from './roles.logic';
+import { cleanGrants, customKey, grantsOf, isSystemAdmin, managerProblem, missingGrant, roleView, staffUserView, type RoleState } from './roles.logic';
 import { ROLE_STORE, type ProfileRecord, type RoleRecord, type RoleStore } from './roles.store';
 
 /**
@@ -47,7 +47,9 @@ export class RolesService {
     if (input.permissions) {
       if (isSystemAdmin(role)) throw badRequest('admin_role_fixed');
       const permissions = cleanGrants(input.permissions);
-      this.assertHolds(state, input.actorId, permissions.filter((p) => !role.permissions.includes(p)));
+      // The actor must hold every grant being added AND every grant the role has today: a limited
+      // manager cannot strip a role that carries more than it does.
+      this.assertHolds(state, input.actorId, [...cleanGrants(role.permissions), ...permissions]);
       const next = { ...state, roles: state.roles.map((r) => (r.id === id ? { ...r, permissions } : r)) };
       this.assertManagers(next, input.actorId);
       await this.store.setPermissions(id, permissions);
@@ -71,7 +73,9 @@ export class RolesService {
     const role = this.find(state, input.roleId);
     const profile = state.profiles.find((p) => p.id === input.userId);
     if (!profile || role.base_role === 'guardian') throw badRequest('not_staff');
-    this.assertHolds(state, input.actorId, roleView(state, role).permissions);
+    // The actor must outrank the target: it holds the new role's grants AND the target's current
+    // ones, so a limited manager cannot demote the system admin or anyone above it.
+    this.assertHolds(state, input.actorId, [...roleView(state, role).permissions, ...grantsOf(state, profile)]);
     const change = { role: role.base_role, role_id: role.is_system ? null : role.id };
     const moved: ProfileRecord = { ...profile, ...change };
     const next = { ...state, profiles: state.profiles.map((p) => (p.id === profile.id ? moved : p)) };
@@ -81,7 +85,7 @@ export class RolesService {
     return staffUserView(next, moved);
   }
 
-  /** 403 permission_not_held: a role (or its holder) never gets more than the actor holds. */
+  /** 403 permission_not_held: nobody is given, or changed beyond, what the actor itself holds. */
   private assertHolds(state: RoleState, actorId: string, wanted: readonly Permission[]): void {
     const missing = missingGrant(state, actorId, wanted);
     if (missing) throw forbidden('permission_not_held', { permission: missing });

@@ -4,6 +4,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -11,7 +12,10 @@ import { RecordingAdminQueries } from './recording-admin.queries';
 import { ADMIN, ASSISTANT, GUARDIAN, joinRow, OTHER_TEACHER, recording, REC_ID, SALES, STUDENT, studentQueries, TEACHER, TEACHER_ID, teachersFake } from './student-recordings.fakes';
 import { StudentRecordingQueries } from './student-recordings.queries';
 
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, guardian: GUARDIAN, sales: SALES };
+const READ_ONLY: AuthUser = { ...ADMIN, id: 'read-only-admin' };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, guardian: GUARDIAN, sales: SALES, readOnly: READ_ONLY };
+/** A custom admin-base role that holds recordings.read and nothing else. */
+const resolver: PermissionResolver = async (user) => (user.id === READ_ONLY.id ? ['recordings.read'] : systemResolver(user));
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -31,7 +35,7 @@ describe('student recordings routes', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
-      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(resolver)
       .overrideProvider(TeachersQueries).useValue(teachersFake())
       .overrideProvider(StudentRecordingQueries).useValue(sq)
       .overrideProvider(RecordingAdminQueries).useValue(admin)
@@ -93,6 +97,14 @@ describe('student recordings routes', () => {
     expect((await call('PATCH', url, { token: 'admin', payload: { visible: 'yes' } })).statusCode).toBe(400);
     admin.attendeeCount.mockResolvedValue(3);
     expect((await call('PATCH', url, { token: 'admin', payload: { visible: true } })).json().code).toBe('recording_group_lesson');
+  });
+
+  it('a read-only admin-base role lists recordings but can neither show/hide nor delete one', async () => {
+    expect((await call('GET', list, { token: 'readOnly' })).statusCode).toBe(200);
+    const patch = await call('PATCH', `/recordings/${REC_ID}/visibility`, { token: 'readOnly', payload: { visible: true } });
+    expect(patch.statusCode).toBe(403);
+    expect((await call('DELETE', `/recordings/${REC_ID}`, { token: 'readOnly' })).statusCode).toBe(403);
+    expect(admin.byId).not.toHaveBeenCalled(); // refused at the gate, before the service looked at the row
   });
 
   it('DELETE is admin only: 204 with an audit row; a teacher is 403 and nothing is removed', async () => {

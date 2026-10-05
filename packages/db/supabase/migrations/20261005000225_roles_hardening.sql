@@ -4,6 +4,9 @@
 --    PostgREST, including their own role_id: a limited custom role could move itself to the system
 --    admin role. The Nest API writes profiles.role / role_id with the SERVICE ROLE, so a client
 --    session (anon / authenticated) never needs to change them: refuse it here, whatever the policy.
+--    The same hole existed through INSERT and DELETE (delete a profile, insert it back as an admin
+--    holding the system admin role): a client session may only UPDATE other profile fields. Profiles
+--    are created and deleted by the API / scripts with the service role.
 -- 2. A role's permission set is replaced in ONE transaction (the API's only write path).
 
 -- True for a client session (PostgREST as anon / authenticated). Reads the JWT claim as well as
@@ -17,16 +20,27 @@ $$;
 create or replace function public.profiles_guard_role() returns trigger
   language plpgsql set search_path = '' as $$
 begin
-  if (new.role is distinct from old.role or new.role_id is distinct from old.role_id)
-     and public.is_client_session() then
-    raise exception 'profiles.role and profiles.role_id can only be changed by the API' using errcode = '42501';
+  if public.is_client_session() then
+    if tg_op = 'INSERT' then
+      raise exception 'profiles can only be created by the API' using errcode = '42501';
+    end if;
+    if new.role is distinct from old.role or new.role_id is distinct from old.role_id then
+      raise exception 'profiles.role and profiles.role_id can only be changed by the API' using errcode = '42501';
+    end if;
   end if;
   return new;
 end $$;
 
 drop trigger if exists profiles_guard_role_trg on public.profiles;
-create trigger profiles_guard_role_trg before update of role, role_id on public.profiles
+create trigger profiles_guard_role_trg before insert or update of role, role_id on public.profiles
   for each row execute function public.profiles_guard_role();
+
+-- Update-only for an admin (select stays with profiles_self_read); no client INSERT / DELETE at all.
+drop policy if exists profiles_admin_write on public.profiles;
+drop policy if exists profiles_admin_update on public.profiles;
+create policy profiles_admin_update on public.profiles for update to authenticated
+  using (public.is_admin()) with check (public.is_admin());
+revoke insert, delete on public.profiles from authenticated, anon;
 
 create or replace function public.set_role_permissions(role_id uuid, perms text[]) returns void
   language plpgsql set search_path = '' as $$
