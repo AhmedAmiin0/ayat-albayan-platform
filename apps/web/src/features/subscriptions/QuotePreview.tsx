@@ -28,7 +28,7 @@ export function QuotePreview({ studentId, pricing }: Props) {
     <figure
       aria-live="polite"
       aria-busy={quote.isFetching}
-      className="grid gap-1.5 border-y-[3px] border-double border-gold py-3.5"
+      className="grid gap-1.5 border-y border-rule py-3.5"
     >
       <figcaption className="text-xs text-ink-3">{t.subscriptions.price}</figcaption>
       {q ? (

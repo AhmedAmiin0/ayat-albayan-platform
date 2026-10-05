@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Pager } from '@/components/ui/pager';
 import { SegmentedControl } from '@/components/ui/segmented-control';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { sessionsQuery, type Scope, type SessionFilter } from './api';
 import { PickContext, sessionColumns, type Pick } from './session-columns';
@@ -59,7 +60,7 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
         />
       </div>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
-      {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {list.isPending && <ListSkeleton />}
       {list.data?.total === 0 && <EmptyState title={status === 'all' ? t.earnings.empty : t.earnings.emptyFilter} />}
       {list.data && list.data.total > 0 && (
         <>

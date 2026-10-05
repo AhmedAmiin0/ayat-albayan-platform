@@ -6,6 +6,7 @@ import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Tabs } from '@/components/ui/tabs';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { salesSubscriptionsQuery, type SubscriptionKind } from './api';
 import { SubscriptionRow } from './SubscriptionRow';
@@ -29,7 +30,7 @@ export function SalesSubscriptions() {
       </PageHead>
       <Tabs label={t.sales.subscriptions.kinds} tabs={KINDS()} value={kind} onChange={setKind} />
       <div role="tabpanel" aria-label={t.sales.subscriptions[kind]}>
-        {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+        {list.isPending && <ListSkeleton />}
         {list.isError && (
           <FormAlert>
             {t.sales.loadFailed}{' '}

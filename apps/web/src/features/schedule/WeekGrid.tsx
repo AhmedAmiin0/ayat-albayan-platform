@@ -54,7 +54,7 @@ export function WeekGrid({ week, today, lessons, onOpen, teachers, now = new Dat
     <div className="ab-fade-end -mx-1 overflow-x-auto ps-5 pe-10 lg:px-1 lg:[mask-image:none]">
       <table aria-label={t.schedule.grid} className={cn('w-full table-fixed border-collapse text-sm', teachers ? 'min-w-[1100px]' : 'min-w-[920px]')}>
         <thead>
-          <tr className="border-t-[3px] border-b-[3px] border-double border-gold">
+          <tr className="border-y border-rule">
             <th scope="col" className={cn('px-2 py-2 text-start text-xs font-semibold text-ink-3', teachers ? 'w-[184px]' : 'w-[132px]')}>
               {t.schedule.teacher}
             </th>

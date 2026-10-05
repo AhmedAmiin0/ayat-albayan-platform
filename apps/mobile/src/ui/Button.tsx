@@ -24,13 +24,16 @@ type Palette = ReturnType<typeof useTheme>['color'];
 
 function look(variant: ButtonVariant, color: Palette, pressed: boolean) {
   if (variant === 'primary') {
-    return { bg: pressed ? color.lapisHover : color.lapis, ink: color.onLapis, edge: 1, edgeColor: color.gold };
+    return { bg: pressed ? color.lapisHover : color.lapisFill, ink: color.onLapis, edge: 1, edgeColor: 'transparent' };
   }
   if (variant === 'secondary') return { bg: pressed ? color.sunk : color.raised, ink: color.ink, edge: 1, edgeColor: color.ruleInput };
   return { bg: pressed ? color.lapisWash : 'transparent', ink: color.lapis, edge: 0, edgeColor: color.ruleInput };
 }
 
-/** docs/07 §6 Button, at the 44pt mobile touch size. Green fill with a gold edge; never saffron. */
+/** Press feedback: a 2% shrink while held (a state, not an animation), never when off. */
+export const pressScale = (pressed: boolean, off: boolean) => (pressed && !off ? 0.98 : 1);
+
+/** docs/07 §6 Button, at the 44pt mobile touch size. White text on the green fill; never saffron. */
 export function Button({ label, onPress, variant = 'primary', busy = false, ...p }: ButtonProps) {
   const { color } = useTheme();
   const off = busy || p.disabled === true;
@@ -51,6 +54,7 @@ export function Button({ label, onPress, variant = 'primary', busy = false, ...p
         justifyContent: 'center',
         opacity: off ? 0.45 : 1,
         backgroundColor: look(variant, color, pressed).bg,
+        transform: [{ scale: pressScale(pressed, off) }],
       })}
     >
       <AppText

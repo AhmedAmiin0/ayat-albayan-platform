@@ -34,7 +34,7 @@ function slug(route: string): string {
 
 async function settle(page: Page): Promise<void> {
   await page.waitForLoadState('networkidle');
-  await page.waitForFunction('document.fonts.status === "loaded"'); // Amiri/Plex, not fallbacks
+  await page.waitForFunction('document.fonts.status === "loaded"'); // Noto Sans Arabic, not fallbacks
 }
 
 async function newPage(run: Run, opts: { variant: Variant; state?: BrowserContextOptions['storageState'] }) {

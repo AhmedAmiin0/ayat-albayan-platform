@@ -51,3 +51,33 @@ describe('AdminSessions (/admin/classrooms)', () => {
     expect(today).toHaveProperty('disabled', true);
   });
 });
+
+describe('AdminSessions groups and cards', () => {
+  afterEach(() => apiFetch.mockReset());
+
+  it('groups the day into «الآن», «قادمة» and «انتهت», each saying when it is empty', async () => {
+    open([lesson('l-open', 5), lesson('l-later', 400)]);
+    const now = await screen.findByRole('region', { name: new RegExp(`^${t.classroom.admin.groups.now}`) });
+    expect(now.textContent).toContain('سهيلة');
+    expect(now.textContent).toContain(t.classroom.admin.live);
+    const ended = screen.getByRole('region', { name: new RegExp(`^${t.classroom.admin.groups.ended}`) });
+    expect(ended.textContent).toContain(t.classroom.admin.groupEmpty.ended);
+    const upcoming = screen.getByRole('region', { name: new RegExp(`^${t.classroom.admin.groups.upcoming}`) });
+    expect(upcoming.textContent).toContain(t.enums.lessonStatus.confirmed);
+  });
+
+  it('folds the link actions behind «خيارات أخرى» on phones; the header keeps a slot for more actions', async () => {
+    apiFetch.mockImplementation(async (path: string) => (path.startsWith('/lessons?') ? [lesson('l-open', 5)] : []));
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <AdminSessions actions={<button type="button">اجتماع داخلي</button>} />
+      </QueryClientProvider>,
+    );
+    const more = await screen.findByRole('button', { name: t.classroom.admin.more });
+    expect(more.getAttribute('aria-expanded')).toBe('false');
+    expect(screen.getByRole('button', { name: t.classroom.copyLink }).closest('.max-sm\\:hidden')).toBeTruthy();
+    fireEvent.click(more);
+    expect(screen.getByRole('button', { name: t.classroom.copyLink }).closest('.max-sm\\:hidden')).toBeNull();
+    expect(screen.getByRole('button', { name: 'اجتماع داخلي' }).closest('[data-slot=header-actions]')).toBeTruthy();
+  });
+});

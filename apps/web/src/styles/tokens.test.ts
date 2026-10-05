@@ -26,7 +26,7 @@ const THEME_KEY: Record<string, keyof Palette> = {
   '--ink': 'ink', '--ink-2': 'ink2', '--ink-3': 'ink3',
   '--rule': 'rule', '--rule-strong': 'ruleStrong', '--rule-input': 'ruleInput',
   '--gold': 'gold', '--gold-soft': 'goldSoft', '--gold-wash': 'goldWash',
-  '--lapis': 'lapis', '--lapis-hover': 'lapisHover', '--lapis-wash': 'lapisWash', '--on-lapis': 'onLapis',
+  '--lapis': 'lapis', '--lapis-fill': 'lapisFill', '--lapis-hover': 'lapisHover', '--lapis-wash': 'lapisWash', '--on-lapis': 'onLapis',
   '--verdigris': 'ok', '--verdigris-wash': 'okSoft',
   '--saffron': 'act', '--saffron-wash': 'actSoft',
   '--cinnabar': 'bad', '--cinnabar-solid': 'badSolid', '--cinnabar-wash': 'badSoft', '--on-cinnabar': 'onBad',
@@ -43,10 +43,10 @@ describe('tokens.css (docs/07 §3)', () => {
     expect(media).toEqual(block(DARK));
   });
 
-  it('dark overrides every themed light token except the cover gold and cover ink', () => {
+  it('dark overrides every themed light token (the mint sidebar turns dark too)', () => {
     const light = block(LIGHT).map(name);
     const dark = new Set(block(DARK).map(name));
-    expect(light.filter((n) => !dark.has(n))).toEqual(['--cover-ink', '--gold-on-cover']);
+    expect(light.filter((n) => !dark.has(n))).toEqual([]);
   });
 
   it.each([

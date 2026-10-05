@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { RIYADH_TZ } from '@/features/schedule/tz';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -33,7 +34,7 @@ export function ReportFormPage({ lessonId, role, studentId }: ReportFormPageProp
     </PageHead>
   );
   if (form.isError) return <>{head}<FormAlert>{loadError(form.error)}</FormAlert></>;
-  if (!form.data) return <>{head}<p className="py-6 text-center text-ink-3">{t.common.loading}</p></>;
+  if (!form.data) return <>{head}<ListSkeleton /></>;
 
   const data = form.data;
   const entries = studentId ? data.entries.filter((e) => e.student.id === studentId) : data.entries;

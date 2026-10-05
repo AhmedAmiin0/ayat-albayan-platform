@@ -8,6 +8,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
 import { balanceQuery, type Scope } from './api';
 import { EarningsCards } from './EarningsCards';
@@ -27,7 +28,7 @@ export function TeacherEarningsPage({ teacherId }: { teacherId: string }) {
   const [toast, setToast] = useState<string | null>(null);
 
   if (balance.isError) return <FormAlert>{t.common.notFound}</FormAlert>;
-  if (!balance.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+  if (!balance.data) return <ListSkeleton />;
   const data = balance.data;
   const canPay = data.outstanding > 0;
 

@@ -56,7 +56,7 @@ export function FollowUpLine({ lead, onDone }: FollowUpLineProps) {
   return (
     <div className="grid gap-2">
       <h3 className="text-sm font-semibold">{f.title}</h3>
-      <div className="border-s-[3px] border-double border-s-gold-soft ps-3 text-xs text-ink-2">
+      <div className="border-s border-s-rule ps-3 text-xs text-ink-2">
         {followUpText(lead, settings.data?.follow_up_hours.length).map((line) => (
           <p key={line}>{line}</p>
         ))}
