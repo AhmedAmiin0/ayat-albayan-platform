@@ -12,6 +12,8 @@ import { t } from '@/lib/i18n';
 import { studentReportsQuery } from './api';
 import { GradeChart } from './GradeChart';
 import { ReportHistoryList } from './ReportHistoryList';
+import { TableBox } from '@/components/TableBox';
+import { cn } from '@/lib/utils';
 
 export interface StudentReportsPageProps {
   studentId: string;
@@ -47,9 +49,11 @@ export function StudentReportsPage({ studentId, name, role, tz }: StudentReports
         <h2 className="font-display text-h3 font-bold">{t.reports.progress}</h2>
         <GradeChart series={data.series} tz={tz} />
       </section>
-      <section aria-label={t.reports.title} className={reports.isPlaceholderData ? 'opacity-60' : undefined}>
+      <section aria-label={t.reports.title} className={cn('flex flex-auto flex-col gap-2', reports.isPlaceholderData && 'opacity-60')}>
         <h2 className="font-display text-h3 font-bold">{t.reports.title}</h2>
-        <ReportHistoryList items={data.items} role={role} tz={tz} />
+        <TableBox className="px-3">
+          <ReportHistoryList items={data.items} role={role} tz={tz} />
+        </TableBox>
         <Pager page={data.page} total={data.total} pageSize={data.pageSize} onPage={setPage} />
       </section>
     </>

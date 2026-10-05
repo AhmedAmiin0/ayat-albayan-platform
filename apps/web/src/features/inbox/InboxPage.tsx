@@ -44,7 +44,7 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
           list, the log and the side panel each scroll on their own. Phones: one pane, it flows. */}
       <div
         data-testid="inbox-layout"
-        className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[420px] shell:grid-cols-[320px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
+        className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[600px] shell:grid-cols-[320px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
       >
         <div
           className={cn(

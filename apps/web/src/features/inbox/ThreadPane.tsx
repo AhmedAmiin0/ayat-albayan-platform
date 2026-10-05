@@ -70,19 +70,21 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
       <div
         className={cn(
           'grid gap-6 shell:min-h-0 shell:flex-1',
+          // With the side panel: one scrolling column below 1280px, three columns from it.
           aside
-            ? 'shell:grid-rows-[minmax(0,3fr)_minmax(0,2fr)] xl:grid-cols-[minmax(0,1fr)_340px] xl:grid-rows-[minmax(0,1fr)]'
+            ? 'shell:overflow-y-auto shell:overscroll-contain xl:grid-cols-[minmax(0,1fr)_340px] xl:grid-rows-[minmax(0,1fr)] xl:overflow-visible'
             : 'shell:grid-rows-[minmax(0,1fr)]',
         )}
       >
         {/* The log scrolls, the reply box stays pinned under it. */}
-        <div className="min-w-0 shell:flex shell:min-h-0 shell:flex-col">
+        <div className={cn('min-w-0', aside ? 'xl:flex xl:min-h-0 xl:flex-col' : 'shell:flex shell:min-h-0 shell:flex-col')}>
           <MessageLog
             messages={messages}
             hasMore={detail.hasNextPage}
             loadingOlder={detail.isFetchingNextPage}
             onOlder={() => void detail.fetchNextPage()}
             waitingKeys={waiting}
+            fill={aside ? 'xl' : 'shell'}
           />
           {ownThread ? (
             <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2">{t.inbox.ownThreadReadOnly}</p>

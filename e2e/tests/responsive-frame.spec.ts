@@ -23,7 +23,7 @@ test.describe('viewport-high admin frame', () => {
       await stubInbound({ from: digits, name: guardian, text: `رسالة رقم ${i}: السلام عليكم، أريد الاستفسار عن مواعيد الحلقات المسائية` });
     }
     const admin = await asRole('admin');
-    for (const [width, height] of [[1280, 800], [390, 844]] as const) {
+    for (const [width, height] of [[1280, 800], [1024, 768], [390, 844]] as const) {
       await admin.setViewportSize({ width, height });
       await admin.goto('/admin/inbox');
       await admin.getByRole('link', { name: ar.inbox.openThread.replace('{name}', guardian) }).click({ timeout: 30_000 });
@@ -31,6 +31,11 @@ test.describe('viewport-high admin frame', () => {
       await expect(log.getByText('رسالة رقم 30', { exact: false })).toBeVisible();
       await admin.waitForTimeout(300);
       expect(await pageOverflow(admin), `inbox @${width}`).toBeLessThanOrEqual(0);
+      // The reply box never sits on top of the log (no collapsed log under a tall composer).
+      const logBox = await log.evaluate((el) => el.parentElement?.getBoundingClientRect().bottom ?? 0);
+      const reply = await admin.getByRole('textbox').last().boundingBox();
+      expect(reply?.y ?? 0, `reply under the log @${width}`).toBeGreaterThanOrEqual(logBox - 1);
+      expect(await log.evaluate((el) => el.parentElement?.clientHeight ?? 0), `log height @${width}`).toBeGreaterThanOrEqual(150);
       if (width === 1280) {
         // The log's own box scrolls; the reply box is on screen without scrolling anything.
         const scrolls = await log.evaluate((el) => {
