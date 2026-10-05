@@ -3,6 +3,7 @@ import { View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { useMinuteClock } from '@/classroom/use-minute-clock';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { shape, type, useTheme } from '@/theme';
 import { riyadhTime, studentNames } from '@/today/lesson-text';
 import { AppText } from '@/ui/AppText';
@@ -46,7 +47,7 @@ function LiveRow({ item, showTeacher }: { item: LiveLesson; showTeacher: boolean
 export function LiveSessions({ lessons, showTeacher = false }: { lessons: readonly LessonView[]; showTeacher?: boolean }) {
   const { color } = useTheme();
   const now = useMinuteClock();
-  const items = liveLessons(lessons, now);
+  const items = liveLessons(lessons, now, useJoinWindow());
   if (items.length === 0) return null;
   return (
     <View
