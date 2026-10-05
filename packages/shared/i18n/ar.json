@@ -1696,6 +1696,53 @@
     "statusFilter": "حالة العميل",
     "allStatuses": "كل الحالات"
   },
+  "mobileFinance": {
+    "section": "الحسابات",
+    "rows": {
+      "payouts": "مستحقات المعلمين الشهرية",
+      "expenses": "المصروفات",
+      "invoices": "الفواتير",
+      "summary": "الملخص المالي"
+    },
+    "month": { "prev": "الشهر السابق", "next": "الشهر التالي" },
+    "stale": "تعذّر التحديث، تُعرض آخر بيانات محفوظة",
+    "loadFailed": "تعذّر تحميل البيانات، حاول مرة أخرى",
+    "offline": "لا يوجد اتصال بالإنترنت، حاول مرة أخرى",
+    "payouts": {
+      "lessonsAmount": "{lessons} حلقة · {amount}",
+      "due": "المتبقي للدفع: {amount}",
+      "approveAsk": "اعتماد مستحقات {teacher} عن شهر {month} بمبلغ {amount}؟",
+      "method": "طريقة الدفع: {method}",
+      "note": "ملاحظة: {note}",
+      "receiptFailed": "تعذّر فتح الإيصال",
+      "done": {
+        "approve": "اعتُمدت المستحقات",
+        "reopen": "أُعيد فتح المستحقات",
+        "unpay": "أُلغي الدفع",
+        "pay": "سُجّل الدفع"
+      }
+    },
+    "expenses": {
+      "monthTotal": "إجمالي الشهر: {amount}",
+      "byCategory": "حسب البند",
+      "draftNote": "المسودات الشهرية المتكررة لا تدخل في الإجمالي قبل تأكيدها في لوحة الإدارة",
+      "withReceipt": "إيصال مرفق",
+      "addTitle": "مصروف جديد",
+      "categoryRequired": "اختر البند",
+      "save": "حفظ المصروف"
+    },
+    "invoices": {
+      "empty": "لا توجد فواتير",
+      "noStudents": "بدون طالب",
+      "sourceUpload": "رُفعت من الجهاز",
+      "sourceWhatsapp": "واردة من واتساب",
+      "notRecorded": "لم تُسجَّل دفعتها",
+      "summary": "{kind} · {source}"
+    },
+    "summary": {
+      "noRates": "{count} حلقة بلا سعر محسوب"
+    }
+  },
   "templates": {
     "title": "قوالب واتساب",
     "intro": "لا تُرسل أي رسالة لولي أمر أو عميل دون قالب معتمد من ميتا، إلا إن راسلنا خلال آخر 24 ساعة.",

@@ -1696,6 +1696,53 @@
     "statusFilter": "Lead status",
     "allStatuses": "All statuses"
   },
+  "mobileFinance": {
+    "section": "Accounts",
+    "rows": {
+      "payouts": "Monthly teacher payouts",
+      "expenses": "Expenses",
+      "invoices": "Invoices",
+      "summary": "Finance summary"
+    },
+    "month": { "prev": "Previous month", "next": "Next month" },
+    "stale": "Could not refresh, showing the last saved data",
+    "loadFailed": "Could not load the data, try again",
+    "offline": "No internet connection, try again",
+    "payouts": {
+      "lessonsAmount": "{lessons} lessons · {amount}",
+      "due": "Left to pay: {amount}",
+      "approveAsk": "Approve {teacher}'s payout for {month}, {amount}?",
+      "method": "Paid by: {method}",
+      "note": "Note: {note}",
+      "receiptFailed": "Could not open the receipt",
+      "done": {
+        "approve": "Payout approved",
+        "reopen": "Payout reopened",
+        "unpay": "Payment cancelled",
+        "pay": "Payment recorded"
+      }
+    },
+    "expenses": {
+      "monthTotal": "Month total: {amount}",
+      "byCategory": "By category",
+      "draftNote": "Repeating monthly drafts are not in the total until they are confirmed in the admin dashboard",
+      "withReceipt": "Receipt attached",
+      "addTitle": "New expense",
+      "categoryRequired": "Choose a category",
+      "save": "Save expense"
+    },
+    "invoices": {
+      "empty": "No invoices",
+      "noStudents": "No student",
+      "sourceUpload": "Uploaded from a device",
+      "sourceWhatsapp": "Received on WhatsApp",
+      "notRecorded": "Payment not recorded",
+      "summary": "{kind} · {source}"
+    },
+    "summary": {
+      "noRates": "{count} lessons without a calculated rate"
+    }
+  },
   "templates": {
     "title": "WhatsApp templates",
     "intro": "No message goes to a guardian or lead without a Meta-approved template, unless they messaged us in the last 24 hours.",
