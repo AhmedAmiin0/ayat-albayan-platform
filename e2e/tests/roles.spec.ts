@@ -38,7 +38,7 @@ test.describe('roles and permissions («الأدوار والصلاحيات»)',
     await dialog.getByRole('checkbox', { name: ar.permissions.items['payments.read'], exact: true }).check();
     await dialog.getByRole('button', { name: P.save }).click();
     await expect(dialog).toBeHidden();
-    await expect(admin.getByRole('cell', { name: ROLE_NAME })).toBeVisible();
+    await expect(admin.getByRole('button', { name: `${P.edit} ${ROLE_NAME}` })).toBeVisible();
 
     const select = admin.getByRole('combobox', { name: `${P.role}: ${STAFF.fullName}` });
     await select.selectOption({ label: ROLE_NAME });
