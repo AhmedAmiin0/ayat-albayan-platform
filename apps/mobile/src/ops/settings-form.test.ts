@@ -8,7 +8,7 @@ test('late cancel off shows the 24 h default; the lists read as «24، 72»', ()
   expect(saved).toMatchObject({
     lateCancelOn: false,
     lateCancelHours: '24',
-    followUpHours: `24${t.common.listJoiner}72`,
+    followUpHours: `24${t.common.listSeparator}72`,
     reportingCurrency: 'SAR',
   });
 });

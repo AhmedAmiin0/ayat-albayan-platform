@@ -1,5 +1,7 @@
+import { ACTIVITY_ROLES } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import type { ListParams } from '@/lib/query-keys';
+import { ascii } from './ascii-digits';
 
 /** The server's filters of GET /activity that fit a phone: who (role), what (entity), when (days). */
 export interface ActivityFilters {
@@ -12,13 +14,10 @@ export interface ActivityFilters {
 export const ALL = 'all';
 export const NO_FILTERS: ActivityFilters = { role: ALL, entity: ALL, from: '', to: '' };
 
-export const ROLES = ['admin', 'teacher', 'guardian', 'assistant', 'sales', 'public'] as const;
+export const ROLES = ACTIVITY_ROLES;
 export const ENTITIES = Object.keys(t.activity.entities);
 
 const DAY = /^\d{4}-\d{2}-\d{2}$/;
-/** Western digits in, however they were typed. */
-const ascii = (v: string): string =>
-  v.replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).trim();
 
 export const isDay = (v: string): boolean => {
   const s = ascii(v);

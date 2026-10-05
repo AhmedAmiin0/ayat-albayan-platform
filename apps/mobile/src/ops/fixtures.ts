@@ -1,4 +1,4 @@
-import type { AcademySettings, ActivityView, ReportView } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings, type ActivityView, type ReportView } from '@ab/shared';
 import type { DashboardWork, Summary } from './dashboard-types';
 
 export const summary: Summary = {
@@ -57,24 +57,14 @@ export const work: DashboardWork = {
   },
 };
 
+/** The registry's defaults (so a new setting never leaves this stale) plus the values the tests read. */
 export const settings: AcademySettings = {
+  ...SETTING_DEFAULTS,
   late_cancel_hours: null,
   booking_horizon_weeks: 5,
   renewal_alert_remaining: 2,
-  flag_future_lessons_when_unpaid: true,
-  report_teacher_edit_hours: 24,
-  reporting_currency: 'SAR',
-  payout_count_late: false,
-  payout_count_no_show: false,
-  payout_count_trials: false,
   follow_up_hours: [24, 72],
-  reminder_minutes_before: 60,
-  reminder_24h_enabled: false,
   messaging_enabled: true,
-  auto_messages_enabled: false,
-  crm_cutover_done: false,
-  sales_auto_assign: true,
-  feedback_mode: 'buttons',
 };
 
 export const activityRow = (over: Partial<ActivityView> = {}): ActivityView => ({

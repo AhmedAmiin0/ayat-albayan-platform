@@ -1,5 +1,6 @@
 import { settingsUpdateSchema, type AcademySettings, type SettingsUpdate } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { ascii } from './ascii-digits';
 
 // «إعدادات الأكاديمية» on the phone: the six settings the owner asked for (docs/10, docs/11 §2).
 // The messaging switches stay on the web. Numbers are typed counts (hours, weeks, lessons).
@@ -24,7 +25,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
     lateCancelOn: s.late_cancel_hours !== null,
     lateCancelHours: String(s.late_cancel_hours ?? 24),
     bookingHorizonWeeks: String(s.booking_horizon_weeks),
-    followUpHours: s.follow_up_hours.join(t.common.listJoiner),
+    followUpHours: s.follow_up_hours.join(t.common.listSeparator),
     renewalAlertRemaining: String(s.renewal_alert_remaining),
     reportTeacherEditHours: String(s.report_teacher_edit_hours),
     reportingCurrency: s.reporting_currency,
@@ -38,8 +39,8 @@ export function isDirty(form: SettingsForm, saved: SettingsForm): boolean {
 
 /** Western digits for typed Arabic-Indic ones; a blank box is not 0, it fails validation. */
 const num = (v: string): number => {
-  const ascii = v.replace(/[٠-٩]/g, (d) => String('٠١٢٣٤٥٦٧٨٩'.indexOf(d))).trim();
-  return ascii === '' ? Number.NaN : Number(ascii);
+  const w = ascii(v);
+  return w === '' ? Number.NaN : Number(w);
 };
 /** «24، 72», «24, 72» or «24 72». */
 const hours = (v: string): number[] =>
