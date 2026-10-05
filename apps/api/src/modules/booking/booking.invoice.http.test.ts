@@ -8,6 +8,8 @@ import { IDS } from './booking.fakes';
 import { BookingInvoices } from './booking.invoice';
 import { BookingService } from './booking.service';
 import { MakeupCandidates } from './makeup-candidates.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 const REQ = 'c1111111-1111-4111-8111-111111111111';
 const USERS: Record<string, AuthUser> = {
@@ -40,6 +42,7 @@ describe('booking routes for the invoice and the makeup (R-PAY-03, R-SCH-10)', (
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(BookingInvoices).useValue(invoices)
       .overrideProvider(MakeupCandidates).useValue(makeup)
+      .overrideProvider(SettingsService).useValue(fakeSettings())
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -62,7 +65,7 @@ describe('booking routes for the invoice and the makeup (R-PAY-03, R-SCH-10)', (
     const res = await call({ method: 'POST', url: '/booking/invoice-upload-url', payload });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toMatchObject({ bucket: 'invoices' });
-    expect(invoices.uploadUrl).toHaveBeenCalledWith(payload);
+    expect(invoices.uploadUrl).toHaveBeenCalledWith(payload, 10 * 1024 * 1024);
   });
 
   it.each([

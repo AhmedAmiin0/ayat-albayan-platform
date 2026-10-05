@@ -1,37 +1,11 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import type { MessageStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
+import { SettingsService } from '../../common/settings/settings.service';
+import type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
-/** Who a phone is. Each is matched by phone_e164 (unique on all three tables). */
-export interface Contact {
-  guardian: { id: string; name: string } | null;
-  teacher: { id: string; name: string } | null;
-  lead: { id: string; name: string | null; follow_up_stage: number } | null;
-}
-
-/** The outbound row a status or a reply refers to (by Meta's wamid). */
-export interface OutboundRow {
-  id: string;
-  status: MessageStatus;
-  phone_e164: string;
-  lesson_id: string | null;
-  template_key: string | null;
-  body: string | null;
-  sent_at: string | null;
-  delivered_at: string | null;
-  read_at: string | null;
-  guardians: { name: string } | null;
-  leads: { name: string | null } | null;
-}
-
-export interface StatusMove {
-  id: string;
-  /** Compare-and-set: only when the row still has this status. */
-  from: MessageStatus;
-  patch: TablesUpdate<'messages'>;
-}
+export type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
 function check(error: PostgrestError | null): void {
   if (error) throw new Error(`db: ${error.message}`);
@@ -40,7 +14,15 @@ function check(error: PostgrestError | null): void {
 /** Thin supabase-js access for the WhatsApp webhook; the rules live in the services. */
 @Injectable()
 export class WebhookQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
+
+  /** settings.quick_reply_window_hours in ms: how far back a typed «نعم» looks for our lesson message. */
+  async replyWindowMs(): Promise<number> {
+    return (await this.settings.all()).quick_reply_window_hours * 3_600_000;
+  }
 
   async identify(phone: string): Promise<Contact> {
     const [g, t, l] = await Promise.all([

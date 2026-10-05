@@ -6,9 +6,6 @@ import type { InboundEvent } from './webhook.events';
 import { payloadLesson } from './webhook.inbound';
 import { WebhookQueries, type Contact } from './webhook.queries';
 
-/** A typed «نعم» counts only for a lesson we messaged them about this recently (docs/12 §3.5). */
-const REPLY_WINDOW_MS = 48 * 60 * 60_000;
-
 /** Audit trail marker for what the webhook does on a guardian's / lead's behalf. */
 export const WHATSAPP_ACTOR = 'system:whatsapp';
 
@@ -36,7 +33,7 @@ export class QuickReplies {
   /**
    * The lesson a guardian's reply is about (docs/12 §3.5): our button payload (only if that lesson
    * is theirs), else the lesson of the outbound message it answers (Meta's context.id, same phone),
-   * else the latest lesson-linked message we sent them in the last 48 h whose lesson is still open.
+   * else the latest lesson-linked message we sent them within settings.quick_reply_window_hours whose lesson is still open.
    * Anyone else, or nothing found → null: the message is only stored and the admin reads it.
    * A rating tap (lesson_rating, migration 195) takes only the first two: its payload, or the
    * lesson_rating message it answers.
@@ -51,7 +48,9 @@ export class QuickReplies {
     }
     const answered = await this.answeredLesson({ m, phone, rating });
     if (answered || rating) return answered; // a rating only ever answers our lesson_rating message, never a guess
-    return this.queries.recentLessonOutbound({ phone, since: new Date(m.at.getTime() - REPLY_WINDOW_MS) });
+    // A typed «نعم» counts only for a lesson we messaged them about this recently (docs/12 §3.5).
+    const windowMs = await this.queries.replyWindowMs();
+    return this.queries.recentLessonOutbound({ phone, since: new Date(m.at.getTime() - windowMs) });
   }
 
   /** The lesson of the outbound message this replies to (same phone; a rating: only lesson_rating). */
