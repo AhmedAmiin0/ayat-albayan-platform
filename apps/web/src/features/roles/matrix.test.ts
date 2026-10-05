@@ -1,4 +1,4 @@
-import { PERMISSION_MODULES } from '@ab/shared';
+import { EDITOR_MODULES } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import {
   allState, columnState, grantedCount, hasWildcard, isGranted, moduleState, normalize,
@@ -41,11 +41,11 @@ describe('module, column and overall selection', () => {
 
   it('setColumn(view) selects every module view; setColumn(manage) also selects every view', () => {
     const view = setColumn([], 'view', true);
-    expect(view).toHaveLength(PERMISSION_MODULES.length);
+    expect(view).toHaveLength(EDITOR_MODULES.length);
     expect(columnState(view, 'view')).toBe('all');
     expect(columnState(view, 'manage')).toBe('none');
     const manage = setColumn([], 'manage', true);
-    expect(manage).toHaveLength(PERMISSION_MODULES.length * 2);
+    expect(manage).toHaveLength(EDITOR_MODULES.length * 2);
     expect(columnState(manage, 'view')).toBe('all');
   });
 

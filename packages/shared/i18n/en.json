@@ -1125,6 +1125,9 @@
       "duplicate": "This key is already in use.",
       "systemImmutable": "This part of a system role cannot be changed.",
       "adminWildcard": "The admin role always keeps every permission.",
+      "wildcardReserved": "The all-access permission belongs to the admin role only.",
+      "notHeld": "You cannot grant a permission you do not hold.",
+      "ownRole": "You cannot edit the role you hold yourself.",
       "hasUsers": "The base role of a role that has users cannot change.",
       "validation": "Check the fields and try again.",
       "generic": "The action failed. Try again."

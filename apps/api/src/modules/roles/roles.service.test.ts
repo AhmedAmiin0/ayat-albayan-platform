@@ -22,11 +22,10 @@ function setup(over: { roles?: RoleRow[]; perms?: Record<string, string[]>; coun
     insert: vi.fn(async (r: Partial<RoleRow>) => ({ ...ROLE, ...r, id: 'new' })),
     update: vi.fn(async () => undefined),
     remove: vi.fn(async () => undefined),
-    addPermissions: vi.fn(async () => undefined),
-    removePermissions: vi.fn(async () => undefined),
+    setPermissions: vi.fn(async () => undefined),
   };
   const audit = { record: vi.fn(async () => undefined) };
-  const resolver = { invalidate: vi.fn() };
+  const resolver = { invalidate: vi.fn(), resolve: vi.fn(async () => ({ roleKey: 'admin', permissions: new Set(['*']) })) };
   const svc = new RolesService(q as unknown as RolesQueries, audit as unknown as AuditService, resolver as unknown as PermissionResolver);
   return { svc, q, audit, resolver };
 }
@@ -66,24 +65,23 @@ describe('RolesService', () => {
     const { svc, q, audit } = setup();
     const view = await svc.create(valid, 'actor');
     expect(q.insert).toHaveBeenCalledWith({ key: 'auditor', name_ar: 'مراجع', name_en: 'Auditor', base_role: 'admin' });
-    expect(q.addPermissions).toHaveBeenCalledWith('new', ['payments.view']);
+    expect(q.setPermissions).toHaveBeenCalledWith('new', ['payments.view']);
     expect(view).toMatchObject({ id: 'new', is_system: false, user_count: 0 });
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: 'actor', entity: 'roles', action: 'role_create' }));
   });
 
   it('create rolls the role back when its permissions cannot be written', async () => {
     const { svc, q } = setup();
-    q.addPermissions.mockRejectedValueOnce(new Error('boom'));
+    q.setPermissions.mockRejectedValueOnce(new Error('boom'));
     await expect(svc.create(valid, 'u')).rejects.toThrow('boom');
     expect(q.remove).toHaveBeenCalledWith('new');
   });
 
-  it('update writes only the changed permissions, drops the cache and audits', async () => {
+  it('update replaces the permission set in one call, drops the cache and audits', async () => {
     const { svc, q, resolver, audit } = setup();
     await svc.update('r1', { name_en: 'Accountant', permissions: ['payments.view'] }, 'u');
     expect(q.update).toHaveBeenCalledWith('r1', { name_en: 'Accountant' });
-    expect(q.addPermissions).toHaveBeenCalledWith('r1', ['payments.view']);
-    expect(q.removePermissions).toHaveBeenCalledWith('r1', ['leads.view']);
+    expect(q.setPermissions).toHaveBeenCalledWith('r1', ['payments.view']);
     expect(resolver.invalidate).toHaveBeenCalled();
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'role_update' }));
   });
@@ -91,8 +89,14 @@ describe('RolesService', () => {
   it('update leaves permissions alone when none are sent', async () => {
     const { svc, q } = setup();
     await svc.update('r1', { name_ar: 'جديد' }, 'u');
-    expect(q.addPermissions).not.toHaveBeenCalled();
-    expect(q.removePermissions).not.toHaveBeenCalled();
+    expect(q.setPermissions).not.toHaveBeenCalled();
+  });
+
+  it('update drops the cache even when the write fails', async () => {
+    const { svc, q, resolver } = setup();
+    q.setPermissions.mockRejectedValueOnce(new Error('boom'));
+    await expect(svc.update('r1', { permissions: ['payments.view'] }, 'u')).rejects.toThrow('boom');
+    expect(resolver.invalidate).toHaveBeenCalled();
   });
 
   it('the admin system role cannot lose the wildcard or change key', async () => {
@@ -100,7 +104,7 @@ describe('RolesService', () => {
     await expect(svc.update('sys', { permissions: ['leads.view'] }, 'u')).rejects.toBeInstanceOf(ConflictException);
     await expect(svc.update('sys', { key: 'boss' }, 'u')).rejects.toBeInstanceOf(ConflictException);
     expect(q.update).not.toHaveBeenCalled();
-    expect(q.removePermissions).not.toHaveBeenCalled();
+    expect(q.setPermissions).not.toHaveBeenCalled();
   });
 
   it('delete: a role with users is 409 with the count', async () => {
@@ -123,13 +127,12 @@ describe('RolesService', () => {
     const { svc, q } = setup({ roles: [ROLE, { ...ROLE, id: 'r2', key: 'clerk_copy' }] });
     await svc.duplicate('r1', undefined, 'u');
     expect(q.insert).toHaveBeenCalledWith({ key: 'clerk_copy2', name_ar: 'محاسب (نسخة)', name_en: 'Clerk (copy)', base_role: 'admin' });
-    expect(q.addPermissions).toHaveBeenCalledWith('new', ['leads.view']);
+    expect(q.setPermissions).toHaveBeenCalledWith('new', ['leads.view']);
   });
 
-  it('duplicate accepts new names and a key, and works on a system role', async () => {
-    const { svc, q } = setup();
+  it('duplicate accepts new names and a key, and works on a system role without the wildcard', async () => {
+    const { svc, q } = setup({ perms: { r1: ['leads.view'], sys: ['leads.view'] } });
     await svc.duplicate('sys', { key: 'super', name_ar: 'مدير مساعد', name_en: 'Deputy' }, 'u');
     expect(q.insert).toHaveBeenCalledWith({ key: 'super', name_ar: 'مدير مساعد', name_en: 'Deputy', base_role: 'admin' });
-    expect(q.addPermissions).toHaveBeenCalledWith('new', ['*']);
   });
 });

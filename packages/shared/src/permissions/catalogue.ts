@@ -1,4 +1,4 @@
-// The permission catalogue (owner, 2026-10-05; docs/04 §11). One `view` and one `manage` per module,
+// The permission catalogue (owner, 2026-10-05; docs/04 §12). One `view` and one `manage` per module,
 // plus the wildcard. `manage` implies `view` of the same module (see can()).
 // CEILING: RLS stays keyed on the base role; these are enforced in the API and the UI only.
 
@@ -45,9 +45,17 @@ export const ALL_PERMISSIONS: readonly Permission[] = [
   WILDCARD,
 ];
 
+/** Catalogued but without routes yet (the users module is coming): hidden from the role editor. */
+export const RESERVED_MODULES: readonly PermissionModule[] = ['users'];
+
+/** The modules an admin can grant today: the catalogue minus the reserved ones. */
+export const EDITOR_MODULES: readonly PermissionModule[] = PERMISSION_MODULES.filter(
+  (m) => !RESERVED_MODULES.includes(m),
+);
+
 /** The catalogue grouped for the editor: `{ module, view, manage }` rows. */
 export const PERMISSION_GROUPS: readonly { module: PermissionModule; view: ModulePermission; manage: ModulePermission }[] =
-  PERMISSION_MODULES.map((module) => ({
+  EDITOR_MODULES.map((module) => ({
     module,
     view: permissionKey(module, 'view'),
     manage: permissionKey(module, 'manage'),

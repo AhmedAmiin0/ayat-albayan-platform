@@ -30,6 +30,8 @@ export const ROUTE_PERMISSIONS: readonly RouteRule[] = [
   ...pair('/lessons/:id/join-link', 'classrooms'),
   ...pair('/join-links', 'classrooms'),
   ...pair('/meetings', 'classrooms'),
+  // A staff member opening /m/<token> only enters the room; it must not fall into the recordings rule.
+  readOnly('GET', '/meetings/by-link/:token', 'classrooms'),
   ...pair('/assistants', 'classrooms'),
   ...pair('/students/:id/assistants', 'classrooms'),
   ...pair('/students/:id/join-link', 'classrooms'),
@@ -56,12 +58,14 @@ export const ROUTE_PERMISSIONS: readonly RouteRule[] = [
   ...pair('/lessons/:id/recordings', 'recordings'),
   ...pair('/meetings/:id/recordings', 'recordings'),
   ...pair('/roles', 'roles'),
+  ...pair('/i18n', 'translations'),
   ...pair('/users', 'users'),
   ...pair('/exports/students.csv', 'students'),
   ...pair('/exports/lessons.csv', 'schedule'),
   ...pair('/exports/payments.csv', 'payments'),
   ...pair('/exports/payouts.csv', 'payouts'),
-  ...pair('/exports/teacher-ledger.csv', 'payouts'),
-  ...pair('/exports/expenses.csv', 'expenses'),
-  ...pair('/exports/receivables.csv', 'receivables'),
+  // The finance CSVs (FinanceExportsController): the money overview, one permission for the three.
+  ...pair('/exports/teacher-ledger.csv', 'finance'),
+  ...pair('/exports/expenses.csv', 'finance'),
+  ...pair('/exports/receivables.csv', 'finance'),
 ];

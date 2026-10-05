@@ -65,16 +65,9 @@ export class RolesQueries {
     if (error) throw dbError(error);
   }
 
-  async addPermissions(roleId: string, perms: readonly Permission[]): Promise<void> {
-    if (perms.length === 0) return;
-    const rows = perms.map((permission) => ({ role_id: roleId, permission }));
-    const { error } = await this.db.from('role_permissions').insert(rows);
-    if (error) throw dbError(error);
-  }
-
-  async removePermissions(roleId: string, perms: readonly string[]): Promise<void> {
-    if (perms.length === 0) return;
-    const { error } = await this.db.from('role_permissions').delete().eq('role_id', roleId).in('permission', [...perms]);
+  /** One transaction in SQL (set_role_permissions): the role ends with exactly `perms`. */
+  async setPermissions(roleId: string, perms: readonly Permission[]): Promise<void> {
+    const { error } = await this.db.rpc('set_role_permissions', { role_id: roleId, perms: [...perms] });
     if (error) throw dbError(error);
   }
 }

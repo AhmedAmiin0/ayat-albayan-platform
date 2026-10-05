@@ -25,6 +25,9 @@ const KNOWN: Record<string, string> = {
   system_immutable: t.roles.error.systemImmutable,
   key_immutable: t.roles.error.systemImmutable,
   admin_wildcard: t.roles.error.adminWildcard,
+  wildcard_reserved: t.roles.error.wildcardReserved,
+  permission_not_held: t.roles.error.notHeld,
+  own_role: t.roles.error.ownRole,
   validation_failed: t.roles.error.validation,
 };
 

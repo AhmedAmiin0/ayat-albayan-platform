@@ -3122,6 +3122,7 @@ export type Database = {
           isSetofReturn: true;
         };
       };
+      is_client_session: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_my_assisted_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
@@ -3174,6 +3175,7 @@ export type Database = {
         Returns: string;
       };
       submit_report: { Args: { p: Json }; Returns: Json };
+      set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
       sync_teacher_earning: { Args: { p_lesson: string }; Returns: undefined };
       teacher_has_student: {
         Args: { p_student_id: string; p_teacher_id: string };

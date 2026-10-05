@@ -1,7 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
-import { ALL_PERMISSIONS, can, canAny, isPermission, PERMISSION_GROUPS, PERMISSION_MODULES } from './catalogue.js';
+import {
+  ALL_PERMISSIONS,
+  can,
+  canAny,
+  EDITOR_MODULES,
+  isPermission,
+  PERMISSION_GROUPS,
+  PERMISSION_MODULES,
+  RESERVED_MODULES,
+} from './catalogue.js';
 
 type Dict = { roles: { module: Record<string, string>; perm: Record<string, Record<string, string>> } };
 
@@ -21,8 +30,14 @@ describe('catalogue', () => {
   });
 
   it('groups the catalogue as view/manage rows', () => {
-    expect(PERMISSION_GROUPS).toHaveLength(PERMISSION_MODULES.length);
+    expect(PERMISSION_GROUPS).toHaveLength(EDITOR_MODULES.length);
     expect(PERMISSION_GROUPS[0]).toEqual({ module: 'leads', view: 'leads.view', manage: 'leads.manage' });
+  });
+
+  it('hides the reserved users module from the editor but keeps it in the catalogue', () => {
+    expect(RESERVED_MODULES).toEqual(['users']);
+    expect(PERMISSION_GROUPS.map((g) => g.module)).not.toContain('users');
+    expect(ALL_PERMISSIONS).toContain('users.manage');
   });
 
   it('isPermission accepts catalogue keys only', () => {

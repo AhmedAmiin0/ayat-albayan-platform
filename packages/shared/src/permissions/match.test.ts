@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { EDITOR_MODULES } from './catalogue.js';
 import { isExemptRoute, permissionForRoute } from './match.js';
 import { ROUTE_PERMISSIONS } from './route-permissions.js';
 import { pair } from './route-rules.js';
@@ -27,6 +28,25 @@ describe('permissionForRoute', () => {
   it('a method-specific rule beats an any-method one at the same depth', () => {
     expect(permissionForRoute('POST', '/subscriptions/quote')).toBe('subscriptions.view');
     expect(permissionForRoute('POST', '/subscriptions')).toBe('subscriptions.manage');
+  });
+
+  it('opening a meeting link needs the classroom view, even for a token that looks like a sub-path', () => {
+    expect(permissionForRoute('GET', '/meetings/by-link/abc123')).toBe('classrooms.view');
+    expect(permissionForRoute('GET', '/meetings/by-link/recordings')).toBe('classrooms.view');
+    expect(permissionForRoute('GET', '/meetings/m1/recordings')).toBe('recordings.view');
+  });
+
+  it('the translations editor routes need translations.view / manage', () => {
+    expect(permissionForRoute('GET', '/i18n/keys')).toBe('translations.view');
+    expect(permissionForRoute('PUT', '/i18n/ar/nav.leads')).toBe('translations.manage');
+    expect(permissionForRoute('DELETE', '/i18n/en/nav.leads')).toBe('translations.manage');
+  });
+
+  it('the finance CSVs need the finance permission', () => {
+    for (const f of ['expenses', 'teacher-ledger', 'receivables']) {
+      expect(permissionForRoute('GET', `/exports/${f}.csv`)).toBe('finance.view');
+    }
+    expect(permissionForRoute('GET', '/exports/payments.csv')).toBe('payments.view');
   });
 
   it('returns null for an unmapped route', () => {
@@ -72,5 +92,11 @@ describe('ROUTE_PERMISSIONS', () => {
       if (r.method === 'GET') expect(r.permission.endsWith('.view')).toBe(true);
       if (r.method === undefined) expect(r.permission.endsWith('.manage')).toBe(true);
     }
+  });
+
+  it('every module the role editor offers has at least one route; users stays hidden until it has', () => {
+    const used = new Set(ROUTE_PERMISSIONS.map((r) => r.permission.split('.')[0]));
+    expect(EDITOR_MODULES.filter((m) => !used.has(m))).toEqual([]);
+    expect(EDITOR_MODULES).not.toContain('users');
   });
 });

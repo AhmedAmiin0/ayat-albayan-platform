@@ -1,4 +1,4 @@
-import type { Permission } from '@ab/shared';
+import { EDITOR_MODULES, type Permission } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
@@ -11,11 +11,18 @@ function Harness({ start = [], onChange = vi.fn() }: { start?: Permission[]; onC
 }
 const cell = (module: 'leads' | 'students', action: 'view' | 'manage') => screen.getByRole('checkbox', { name: t.roles.perm[module][action] }) as HTMLInputElement;
 
+const N = EDITOR_MODULES.length;
+
 describe('PermissionMatrix', () => {
   it('has a labelled checkbox for every permission cell, plus module, column and overall boxes', () => {
     render(<Harness />);
-    expect(screen.getAllByRole('checkbox')).toHaveLength(23 * 2 + 23 + 2 + 1);
+    expect(screen.getAllByRole('checkbox')).toHaveLength(N * 2 + N + 2 + 1);
     expect(screen.getByRole('table')).toBeTruthy();
+  });
+
+  it('does not offer the reserved users module', () => {
+    render(<Harness />);
+    expect(screen.queryByRole('checkbox', { name: t.roles.perm.users.view })).toBeNull();
   });
 
   it('manage turns view on, view off turns manage off', () => {
@@ -45,13 +52,13 @@ describe('PermissionMatrix', () => {
     expect(cell('students', 'view').checked).toBe(true);
     expect(cell('students', 'manage').checked).toBe(false);
     fireEvent.click(screen.getByRole('checkbox', { name: t.roles.matrix.selectAll }));
-    expect(onChange.mock.lastCall?.[0]).toHaveLength(46);
+    expect(onChange.mock.lastCall?.[0]).toHaveLength(N * 2);
     expect(cell('students', 'manage').checked).toBe(true);
   });
 
   it('counts the granted cells', () => {
     render(<Harness start={['leads.view']} />);
-    expect(screen.getByText(t.roles.matrix.selected.replace('{count}', '1').replace('{total}', '46'))).toBeTruthy();
+    expect(screen.getByText(t.roles.matrix.selected.replace('{count}', '1').replace('{total}', String(N * 2)))).toBeTruthy();
   });
 
   it('is keyboard operable: a checkbox is focusable and Space-toggle is native', () => {

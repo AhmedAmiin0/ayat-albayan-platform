@@ -1,7 +1,7 @@
 import {
   ALL_PERMISSIONS,
   PERMISSION_GROUPS,
-  PERMISSION_MODULES,
+  EDITOR_MODULES,
   WILDCARD,
   permissionKey,
   type Permission,
@@ -54,14 +54,14 @@ export const moduleState = (perms: readonly string[], module: PermissionModule):
   );
 
 export const columnState = (perms: readonly string[], action: PermissionAction): CheckState =>
-  state(PERMISSION_MODULES.filter((m) => isGranted(perms, m, action)).length, PERMISSION_MODULES.length);
+  state(EDITOR_MODULES.filter((m) => isGranted(perms, m, action)).length, EDITOR_MODULES.length);
 
 export function setModule(perms: readonly string[], module: PermissionModule, on: boolean): Permission[] {
   return setPermission(setPermission(perms, { module, action: 'view' }, on), { module, action: 'manage' }, on);
 }
 
 export function setColumn(perms: readonly string[], action: PermissionAction, on: boolean): Permission[] {
-  return PERMISSION_MODULES.reduce<Permission[]>((acc, m) => setPermission(acc, { module: m, action }, on), normalize(perms));
+  return EDITOR_MODULES.reduce<Permission[]>((acc, m) => setPermission(acc, { module: m, action }, on), normalize(perms));
 }
 
 export const setAll = (on: boolean): Permission[] => (on ? PERMISSION_GROUPS.flatMap((g) => [g.view, g.manage]) : []);

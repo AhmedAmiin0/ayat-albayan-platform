@@ -9,7 +9,8 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { PermissionResolver } from '../../common/auth/permission-resolver';
 import { parseOrThrow, sentOnly } from '../teachers/http';
-import { copyKey, diffPermissions, toView, type RoleRow } from './roles.mapper';
+import { assertGrantable, assertNotOwnRole } from './roles.access';
+import { copyKey, copyName, diffPermissions, toView, type RoleRow } from './roles.mapper';
 import { RolesQueries } from './roles.queries';
 import { assertDeletable, assertUpdatable } from './roles.rules';
 
@@ -34,7 +35,10 @@ export class RolesService {
   }
 
   async create(body: unknown, actorId: string): Promise<RoleView> {
-    const view = await this.insert(parseOrThrow(roleCreateSchema, body));
+    const input = parseOrThrow(roleCreateSchema, body);
+    const actor = await this.resolver.resolve(actorId);
+    assertGrantable({ actor, target: null, requested: input.permissions, added: input.permissions });
+    const view = await this.insert(input);
     await this.record({ actorId, action: 'create', after: view });
     return view;
   }
@@ -42,15 +46,21 @@ export class RolesService {
   async update(id: string, body: unknown, actorId: string): Promise<RoleView> {
     const patch: RoleUpdateInput = sentOnly(parseOrThrow(roleUpdateSchema, body), body);
     const before = await this.get(id);
-    assertUpdatable(await this.find(id), patch, before.user_count);
+    const role = await this.find(id);
+    assertUpdatable(role, patch, before.user_count);
+    const actor = await this.resolver.resolve(actorId);
+    assertNotOwnRole(actor, role);
     const { permissions, ...fields } = patch;
-    await this.q.update(id, fields);
     if (permissions) {
-      const { add, remove } = diffPermissions(before.permissions, permissions);
-      await this.q.addPermissions(id, add);
-      await this.q.removePermissions(id, remove);
+      const added = diffPermissions(before.permissions, permissions).add;
+      assertGrantable({ actor, target: role, requested: permissions, added });
     }
-    this.resolver.invalidate();
+    try {
+      await this.q.update(id, fields);
+      if (permissions) await this.q.setPermissions(id, permissions);
+    } finally {
+      this.resolver.invalidate();
+    }
     const after = await this.get(id);
     await this.record({ actorId, action: 'update', before, after });
     return after;
@@ -59,8 +69,11 @@ export class RolesService {
   async remove(id: string, actorId: string): Promise<void> {
     const before = await this.get(id);
     assertDeletable(await this.find(id), before.user_count);
-    await this.q.remove(id);
-    this.resolver.invalidate();
+    try {
+      await this.q.remove(id);
+    } finally {
+      this.resolver.invalidate();
+    }
     await this.record({ actorId, action: 'delete', before });
   }
 
@@ -71,11 +84,13 @@ export class RolesService {
     const over = parseOrThrow(roleCreateSchema.partial(), body ?? {});
     const input: RoleCreateInput = {
       key: over.key ?? copyKey(source.key, taken),
-      name_ar: over.name_ar ?? `${source.name_ar} (نسخة)`,
-      name_en: over.name_en ?? `${source.name_en} (copy)`,
+      name_ar: over.name_ar ?? copyName('ar', source.name_ar),
+      name_en: over.name_en ?? copyName('en', source.name_en),
       base_role: source.base_role,
       permissions: source.permissions,
     };
+    const actor = await this.resolver.resolve(actorId);
+    assertGrantable({ actor, target: null, requested: input.permissions, added: input.permissions });
     const view = await this.insert(input);
     await this.record({ actorId, action: 'duplicate', before: source, after: view });
     return view;
@@ -85,7 +100,7 @@ export class RolesService {
     const { permissions, ...fields } = input;
     const row = await this.q.insert(fields);
     try {
-      await this.q.addPermissions(row.id, permissions);
+      await this.q.setPermissions(row.id, permissions);
     } catch (error) {
       await this.q.remove(row.id);
       throw error;

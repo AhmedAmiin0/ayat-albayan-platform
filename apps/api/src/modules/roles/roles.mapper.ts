@@ -1,6 +1,8 @@
 import type { Tables } from '@ab/db';
 import { isPermission, type Permission, type RoleView } from '@ab/shared';
 
+import { BUNDLES, ar } from '../../common/i18n/server-text';
+
 export type RoleRow = Tables<'roles'>;
 
 export function toView(row: RoleRow, perms: readonly string[], userCount: number): RoleView {
@@ -36,3 +38,7 @@ export function diffPermissions(
   const want = new Set<string>(next);
   return { add: next.filter((p) => !have.has(p)), remove: current.filter((p) => !want.has(p)) };
 }
+
+/** «{name} (نسخة)» / «{name} (copy)»: the suffix comes from the i18n bundles, never from code. */
+export const copyName = (locale: 'ar' | 'en', name: string): string =>
+  (locale === 'ar' ? ar.roles.copyName : BUNDLES.en.roles.copyName).replace('{name}', name);
