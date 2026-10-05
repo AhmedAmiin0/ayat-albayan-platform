@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { Bar } from './Bar';
 import { useHandSort } from './hand-sort';
 import { SortableTh } from './SortableTh';
+import { teacherLabel } from '@/lib/teacher-label';
 
 type Load = DashboardSummary['teacher_load'][number];
 
@@ -40,7 +41,7 @@ export function TeacherLoad({ rows }: { rows: readonly Load[] }) {
           <tr key={r.teacher_id} className="border-b border-rule last:border-b-0">
             <th scope="row" className="py-2 pe-3 text-start font-semibold whitespace-nowrap">
               <Link to="/admin/teachers/$teacherId" params={{ teacherId: r.teacher_id }} className="text-ink hover:text-lapis">
-                {r.display_name_ar}
+                {teacherLabel(r)}
               </Link>
             </th>
             <td className="py-2 pe-3">

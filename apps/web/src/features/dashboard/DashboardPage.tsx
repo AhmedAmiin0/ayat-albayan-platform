@@ -7,6 +7,7 @@ import { useNow } from '@/features/classroom/use-now';
 import { ExportsPanel } from '@/features/exports/ExportsPanel';
 import { MoneyKpis } from '@/features/finance/MoneyKpis';
 import { t } from '@/lib/i18n';
+import { useJoinWindow } from '@/lib/public-config';
 import { summaryQuery, workQuery } from './api';
 import { KpiStrip } from './KpiStrip';
 import { PeriodSection } from './PeriodSection';
@@ -41,6 +42,7 @@ const card = 'rounded-md border border-rule p-4';
  */
 export function DashboardPage({ search, onSearch }: DashboardPageProps) {
   const now = useNow();
+  const win = useJoinWindow();
   const today = riyadhToday();
   const week = thisWeek(today);
   const period = periodOf(search, today);
@@ -60,7 +62,7 @@ export function DashboardPage({ search, onSearch }: DashboardPageProps) {
       <div className="grid gap-8">
         {failed && <FormAlert>{t.dashboard.loadFailed}</FormAlert>}
         <TodayKpis
-          today={todayCounts(dayQ.data, now)}
+          today={todayCounts(dayQ.data, now, win)}
           needsConfirmation={weekQ.data?.needs_confirmation}
           unpaid={weekQ.data?.unpaid_subscriptions}
         />

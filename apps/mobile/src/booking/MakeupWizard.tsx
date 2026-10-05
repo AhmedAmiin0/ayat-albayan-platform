@@ -1,3 +1,4 @@
+import { teacherName } from '@ab/shared';
 import type { Gender, Program } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
@@ -16,6 +17,7 @@ import { SlotStep } from './SlotStep';
 import { stepsFor, type Step } from './steps';
 import { TeacherStep } from './TeacherStep';
 import { useBookMakeup } from './use-book-makeup';
+import { locale } from '@/lib/locale';
 
 type Filter = { program: Program; gender: Gender | null };
 
@@ -79,7 +81,7 @@ export function MakeupWizard({ source }: { source: MakeupSource }) {
               {...filter}
               onFilter={(f) => setFilter((old) => ({ ...old, ...f }))}
               onPick={(teacher) => {
-                patch({ teacher: { id: teacher.id, name: teacher.display_name_ar }, startsAt: null });
+                patch({ teacher: { id: teacher.id, name: teacherName(teacher, locale) }, startsAt: null });
                 onward();
               }}
             />

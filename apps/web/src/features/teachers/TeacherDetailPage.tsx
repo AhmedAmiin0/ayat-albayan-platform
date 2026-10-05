@@ -20,6 +20,7 @@ import { TeacherFacts } from './TeacherFacts';
 import { TeacherMeta } from './TeacherMeta';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from './TimeOffList';
+import { teacherLabel } from '@/lib/teacher-label';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';
 // «المستحقات» is its own page (the earnings button in the head).
@@ -68,7 +69,7 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
   return (
     <>
       <PageHead className="mb-3.5">
-        <Cartouche>{data.display_name_ar}</Cartouche>
+        <Cartouche>{teacherLabel(data)}</Cartouche>
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
         <div className="ms-auto flex gap-2.5">
           <Link to="/admin/teachers/$teacherId/earnings" params={{ teacherId }} className={buttonVariants({ variant: 'secondary' })}>

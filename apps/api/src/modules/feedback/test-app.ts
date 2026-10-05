@@ -5,7 +5,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -14,6 +14,8 @@ import { FEEDBACK_CONFIG } from './feedback.config';
 import { ADMIN, GUARDIAN, listRow, OTHER_TEACHER, SECRET, TEACHER, TEACHER_ID } from './feedback.fakes';
 import { FeedbackQueries } from './feedback.queries';
 import { FeedbackReadQueries } from './feedback.read.queries';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -39,13 +41,14 @@ function mocks() {
 export async function feedbackApp(secret: string | null = SECRET) {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(FeedbackQueries).useValue(m.queries)
     .overrideProvider(FeedbackReadQueries).useValue(m.reads)
     .overrideProvider(TeachersQueries).useValue(m.teachers)
     .overrideProvider(TemplateRegistry).useValue(m.templates)
     .overrideProvider(Outbox).useValue(m.outbox)
     .overrideProvider(FEEDBACK_CONFIG).useValue({ secret })
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

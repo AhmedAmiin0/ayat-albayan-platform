@@ -4,7 +4,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { Outbox } from '../inbox/outbox';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -25,6 +25,8 @@ import { studentLinkQueries } from './student-link.fakes';
 import { StudentLinkQueries } from './student-link.queries';
 import { StorageService } from '../../common/storage/storage.service';
 import { AuditService } from '../../common/audit/audit.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, other: OTHER_TEACHER, assistant: ASSISTANT, sales: SALES, guardian: GUARDIAN };
 const verify: TokenVerifier = async (token) => {
@@ -63,7 +65,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     meetings: meetingQueries(),
   };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ClassroomQueries).useValue(m.queries)
     .overrideProvider(AssistantsQueries).useValue(m.assistants)
     .overrideProvider(AssistantLessonsQueries).useValue(m.assistantLessons)
@@ -80,6 +82,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(InternalMeetingsQueries).useValue(m.meetings)
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   registerLivekitWebhookParser(app);

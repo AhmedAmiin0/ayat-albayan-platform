@@ -1,4 +1,5 @@
 // Test fixtures for the student's long-lived link (not shipped; excluded from the build by *.fakes.ts).
+import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { vi } from 'vitest';
 import { LESSON, STUDENT_ID } from './classroom.fakes';
 import { hashLinkToken } from './join-link.token';
@@ -31,6 +32,7 @@ export function studentLinkQueries() {
       hash === hashLinkToken(STUDENT_TOKEN) ? ({ id: 'sl1', student_id: STUDENT_ID, revoked_at: null as string | null }) : null,
     ),
     lessonsAhead: vi.fn().mockResolvedValue([STUDENT_LESSON, LATER_LESSON]),
+    joinWindow: vi.fn().mockResolvedValue(DEFAULT_JOIN_WINDOW),
     lessonLinkId: vi.fn().mockResolvedValue(LESSON_LINK_ID),
   };
 }

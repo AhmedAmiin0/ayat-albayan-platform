@@ -79,7 +79,7 @@ export function whenText(startsAt: string, tz: string): string {
   const local = t.schedule.inCity
     .replace('{time}', lessonWhenText(at, tz, locale))
     .replace('{city}', cityOf(tz));
-  return `${riyadh}${t.common.listJoiner}${t.booking.studentLocal.replace('{time}', local)}`;
+  return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
 /** The legend over the slots: whose clock is big and whose is small. */

@@ -31,11 +31,13 @@ import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
 import { Route as AdminPayoutsRouteImport } from './routes/admin/payouts'
 import { Route as AdminPricingRouteImport } from './routes/admin/pricing'
 import { Route as AdminReceivablesRouteImport } from './routes/admin/receivables'
+import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminScheduleRouteImport } from './routes/admin/schedule'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
+import { Route as AdminTranslationsRouteImport } from './routes/admin/translations'
 import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
@@ -173,6 +175,11 @@ const AdminReceivablesRoute = AdminReceivablesRouteImport.update({
   path: '/receivables',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminRolesRoute = AdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminScheduleRoute = AdminScheduleRouteImport.update({
   id: '/schedule',
   path: '/schedule',
@@ -196,6 +203,11 @@ const AdminSubscriptionsRoute = AdminSubscriptionsRouteImport.update({
 const AdminTeachersRoute = AdminTeachersRouteImport.update({
   id: '/teachers',
   path: '/teachers',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminTranslationsRoute = AdminTranslationsRouteImport.update({
+  id: '/translations',
+  path: '/translations',
   getParentRoute: () => AdminRoute,
 } as any)
 const AssistantIndexRoute = AssistantIndexRouteImport.update({
@@ -354,11 +366,13 @@ export interface FileRoutesByFullPath {
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/receivables': typeof AdminReceivablesRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/translations': typeof AdminTranslationsRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -405,11 +419,13 @@ export interface FileRoutesByTo {
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/receivables': typeof AdminReceivablesRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/translations': typeof AdminTranslationsRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -461,11 +477,13 @@ export interface FileRoutesById {
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/receivables': typeof AdminReceivablesRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
+  '/admin/translations': typeof AdminTranslationsRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -518,11 +536,13 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/receivables'
+    | '/admin/roles'
     | '/admin/schedule'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/admin/translations'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -569,11 +589,13 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/receivables'
+    | '/admin/roles'
     | '/admin/schedule'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/admin/translations'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -624,11 +646,13 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/receivables'
+    | '/admin/roles'
     | '/admin/schedule'
     | '/admin/settings'
     | '/admin/students'
     | '/admin/subscriptions'
     | '/admin/teachers'
+    | '/admin/translations'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -830,6 +854,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminReceivablesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/roles': {
+      id: '/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminRolesRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/schedule': {
       id: '/admin/schedule'
       path: '/schedule'
@@ -863,6 +894,13 @@ declare module '@tanstack/react-router' {
       path: '/teachers'
       fullPath: '/admin/teachers'
       preLoaderRoute: typeof AdminTeachersRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/translations': {
+      id: '/admin/translations'
+      path: '/translations'
+      fullPath: '/admin/translations'
+      preLoaderRoute: typeof AdminTranslationsRouteImport
       parentRoute: typeof AdminRoute
     }
     '/assistant/': {
@@ -1109,11 +1147,13 @@ interface AdminRouteChildren {
   AdminPayoutsRoute: typeof AdminPayoutsRoute
   AdminPricingRoute: typeof AdminPricingRoute
   AdminReceivablesRoute: typeof AdminReceivablesRoute
+  AdminRolesRoute: typeof AdminRolesRoute
   AdminScheduleRoute: typeof AdminScheduleRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
+  AdminTranslationsRoute: typeof AdminTranslationsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -1132,11 +1172,13 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPayoutsRoute: AdminPayoutsRoute,
   AdminPricingRoute: AdminPricingRoute,
   AdminReceivablesRoute: AdminReceivablesRoute,
+  AdminRolesRoute: AdminRolesRoute,
   AdminScheduleRoute: AdminScheduleRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminStudentsRoute: AdminStudentsRouteWithChildren,
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminTeachersRoute: AdminTeachersRouteWithChildren,
+  AdminTranslationsRoute: AdminTranslationsRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

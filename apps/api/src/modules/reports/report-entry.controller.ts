@@ -1,7 +1,7 @@
 import { teacherReportsQuerySchema, type PendingReportView, type ReportFormResponse, type StudentReportsResponse, type TeacherReportView } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
 import { ReportHistoryService } from './report-history.service';
@@ -14,6 +14,7 @@ import { TeacherReportsService } from './teacher-reports.service';
  */
 @ApiTags('reports')
 @ApiBearerAuth()
+@Permissions('self.teacher')
 @Controller()
 export class ReportEntryController {
   constructor(
@@ -24,14 +25,14 @@ export class ReportEntryController {
 
   /** R1 (R-REP-01): identity read-only, one draft per student created on first open. */
   @Get('lessons/:id/report-form')
-  @Roles('admin', 'teacher')
+  @Permissions('reports.read')
   form(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<ReportFormResponse> {
     return this.reports.form(id, user);
   }
 
   /** R5 (R-REP-05): submitted reports newest first + the grade series. */
   @Get('students/:id/reports')
-  @Roles('admin', 'teacher')
+  @Permissions('reports.read')
   student(
     @Param('id', ParseUUIDPipe) id: string,
     @Query() query: unknown,
@@ -42,14 +43,12 @@ export class ReportEntryController {
 
   /** R11 (R-TCH-03): started lessons still missing a submitted report. */
   @Get('teachers/me/pending-reports')
-  @Roles('teacher')
   pending(@CurrentUser() user: AuthUser): Promise<PendingReportView[]> {
     return this.history.pending(user);
   }
 
   /** Teacher mode «تقارير اتبعتت» (R-REP-02): my submitted reports, newest first, with the edit window. */
   @Get('teachers/me/reports')
-  @Roles('teacher')
   mine(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<Page<TeacherReportView>> {
     return this.mineService.mine(user, { filter: parseOrThrow(teacherReportsQuerySchema, query), page: parseOrThrow(pageQuerySchema, query) });
   }

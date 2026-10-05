@@ -8,7 +8,7 @@ import {
 } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { parseOrThrow, type Page } from '../teachers/http';
@@ -21,7 +21,7 @@ import { EarningsService } from './earnings.service';
  */
 @ApiTags('teachers')
 @ApiBearerAuth()
-@Roles('teacher')
+@Permissions('self.teacher')
 @Controller('teachers/me/earnings')
 export class TeacherMyEarningsController {
   constructor(

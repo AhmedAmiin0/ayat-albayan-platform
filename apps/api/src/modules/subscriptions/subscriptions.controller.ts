@@ -8,7 +8,8 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
+import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly, type Page } from '../teachers/http';
 import { toTeacherBalance } from './balance.teacher';
@@ -21,7 +22,7 @@ import { SubscriptionsService } from './subscriptions.service';
 /** Packages (S1–S5, R-SUB-01). Admin only; the price comes from the catalog, never the body. */
 @ApiTags('subscriptions')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('subscriptions.read')
 @Controller('subscriptions')
 export class SubscriptionsController {
   constructor(
@@ -35,6 +36,7 @@ export class SubscriptionsController {
   }
 
   @Post()
+  @Permissions('subscriptions.write')
   create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SubscriptionView> {
     return this.creator.create(parseOrThrow(subscriptionCreateSchema, body), user.id);
   }
@@ -52,6 +54,7 @@ export class SubscriptionsController {
   }
 
   @Patch(':id')
+  @Permissions('subscriptions.write')
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,
@@ -62,6 +65,7 @@ export class SubscriptionsController {
 
   @Delete(':id')
   @HttpCode(204)
+  @Permissions('subscriptions.write')
   async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
     await this.subs.remove(id, user.id);
   }
@@ -70,7 +74,7 @@ export class SubscriptionsController {
 /** GET /students/:id/balance (S6, R-SUB-01/03): admin, or the student's teacher. */
 @ApiTags('students')
 @ApiBearerAuth()
-@Roles('admin', 'teacher')
+@Permissions('students.balance')
 @Controller('students/:id/balance')
 export class StudentBalanceController {
   constructor(
@@ -85,6 +89,7 @@ export class StudentBalanceController {
   ): Promise<StudentBalanceView | TeacherBalanceView> {
     await this.access.check(user, id);
     const balance = await this.packages.studentBalance(id);
-    return user.role === 'teacher' ? toTeacherBalance(balance) : balance;
+    // Permission, not scope: who may see the full package money view (the admin; a teacher not).
+    return can(user, 'subscriptions.read') ? balance : toTeacherBalance(balance);
   }
 }

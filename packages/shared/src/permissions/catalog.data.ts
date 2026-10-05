@@ -1,0 +1,98 @@
+// The permission catalog (owner, 2026-10-05: "add dynamic roles and permissions"). One stable
+// `resource.action` key per group of API endpoints that had the same @Roles set before roles became
+// dynamic, so the five system roles keep exactly today's access (the API's parity test checks it).
+// `grants` = the non-admin system roles that hold the permission by default (seeded in migration
+// 20261005000220); the system admin always holds every grantable permission.
+// Adding a permission: add a row here, its labels in i18n (permissions.items), a seed row in a new
+// migration for the system roles that should get it, then use it in @Permissions('…').
+
+/** Matrix sections, in display order. `self` is never shown: it follows the base role. */
+export const PERMISSION_AREAS = [
+  'people',
+  'students',
+  'teachers',
+  'schedule',
+  'classroom',
+  'reports',
+  'messaging',
+  'finance',
+  'system',
+  'self',
+] as const;
+export type PermissionArea = (typeof PERMISSION_AREAS)[number];
+
+type Grant = 'teacher' | 'assistant' | 'sales';
+const T: Grant[] = ['teacher'];
+const TS: Grant[] = ['teacher', 'sales'];
+const TA: Grant[] = ['teacher', 'assistant'];
+const TAS: Grant[] = ['teacher', 'assistant', 'sales'];
+
+export const PERMISSION_ROWS = [
+  { key: 'leads.read', area: 'people', grants: [] },
+  { key: 'leads.write', area: 'people', grants: [] },
+  { key: 'leads.assign', area: 'people', grants: [] },
+  { key: 'applicants.read', area: 'people', grants: [] },
+  { key: 'applicants.write', area: 'people', grants: [] },
+  { key: 'students.read', area: 'students', grants: [] },
+  { key: 'students.write', area: 'students', grants: [] },
+  { key: 'students.balance', area: 'students', grants: T },
+  { key: 'guardians.read', area: 'students', grants: [] },
+  { key: 'guardians.write', area: 'students', grants: [] },
+  { key: 'assistants.read', area: 'students', grants: [] },
+  { key: 'assistants.write', area: 'students', grants: [] },
+  { key: 'teachers.read', area: 'teachers', grants: [] },
+  { key: 'teachers.write', area: 'teachers', grants: [] },
+  { key: 'availability.read', area: 'teachers', grants: T },
+  { key: 'availability.write', area: 'teachers', grants: T },
+  { key: 'dashboard.read', area: 'schedule', grants: [] },
+  { key: 'lessons.read', area: 'schedule', grants: [] },
+  { key: 'lessons.status', area: 'schedule', grants: T },
+  { key: 'lessons.write', area: 'schedule', grants: [] },
+  { key: 'booking.write', area: 'schedule', grants: [] },
+  { key: 'pricing.read', area: 'schedule', grants: [] },
+  { key: 'tasks.manage', area: 'schedule', grants: [] },
+  { key: 'classroom.join', area: 'classroom', grants: TAS },
+  { key: 'classroom.kick', area: 'classroom', grants: TAS },
+  { key: 'classroom.moderate', area: 'classroom', grants: TA },
+  { key: 'classroom.host', area: 'classroom', grants: T },
+  { key: 'classroom.links', area: 'classroom', grants: [] },
+  { key: 'recordings.read', area: 'classroom', grants: T },
+  { key: 'meetings.read', area: 'classroom', grants: TAS },
+  { key: 'meetings.write', area: 'classroom', grants: TAS },
+  { key: 'reports.read', area: 'reports', grants: T },
+  { key: 'reports.write', area: 'reports', grants: T },
+  { key: 'reports.resend', area: 'reports', grants: [] },
+  { key: 'feedback.read', area: 'reports', grants: [] },
+  { key: 'feedback.write', area: 'reports', grants: [] },
+  { key: 'inbox.read', area: 'messaging', grants: TS },
+  { key: 'inbox.send', area: 'messaging', grants: TS },
+  { key: 'inbox.media', area: 'messaging', grants: [] },
+  { key: 'messages.read', area: 'messaging', grants: T },
+  { key: 'messages.manage', area: 'messaging', grants: [] },
+  { key: 'templates.manage', area: 'messaging', grants: [] },
+  { key: 'payments.read', area: 'finance', grants: [] },
+  { key: 'payments.write', area: 'finance', grants: [] },
+  { key: 'subscriptions.read', area: 'finance', grants: [] },
+  { key: 'subscriptions.write', area: 'finance', grants: [] },
+  { key: 'invoices.read', area: 'finance', grants: [] },
+  { key: 'receivables.read', area: 'finance', grants: [] },
+  { key: 'payouts.read', area: 'finance', grants: [] },
+  { key: 'payouts.write', area: 'finance', grants: [] },
+  { key: 'payouts.approve', area: 'finance', grants: [] },
+  { key: 'earnings.read', area: 'finance', grants: [] },
+  { key: 'earnings.write', area: 'finance', grants: [] },
+  { key: 'expenses.read', area: 'finance', grants: [] },
+  { key: 'expenses.write', area: 'finance', grants: [] },
+  { key: 'exports.read', area: 'finance', grants: [] },
+  { key: 'settings.read', area: 'system', grants: [] },
+  { key: 'settings.write', area: 'system', grants: [] },
+  { key: 'activity.read', area: 'system', grants: [] },
+  { key: 'roles.manage', area: 'system', grants: [] },
+  { key: 'notifications.push', area: 'system', grants: [] },
+  { key: 'translations.manage', area: 'system', grants: [] },
+  // Scope, not grants: the "my …" pages of a base role (teachers/me/*, sales/*, assistants/me/*).
+  // Every role with that base role holds it; nobody else does (the admin neither, as before).
+  { key: 'self.teacher', area: 'self', grants: T },
+  { key: 'self.sales', area: 'self', grants: ['sales'] },
+  { key: 'self.assistant', area: 'self', grants: ['assistant'] },
+] as const satisfies readonly { key: string; area: PermissionArea; grants: readonly Grant[] }[];

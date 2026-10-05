@@ -25,7 +25,7 @@ export function invoiceColumns({ onAction }: Handlers) {
       cell: (c) => <span className="tabular-nums text-ink-2">{formatDate(c.getValue())}</span>,
       meta: { className: 'max-sm:order-2 max-sm:text-xs', sortKey: 'created_at' },
     }),
-    col.accessor((i) => i.students.map((s) => s.name).join('، '), {
+    col.accessor((i) => i.students.map((s) => s.name).join(t.common.listSeparator), {
       id: 'student',
       header: () => t.finance.invoiceStudents,
       cell: (c) => <span className="font-semibold text-ink">{c.getValue() || '—'}</span>,

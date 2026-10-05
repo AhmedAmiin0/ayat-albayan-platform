@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { PdfAction } from './PdfAction';
 import { RecordingLink } from './RecordingLink';
+import { teacherLabel } from '@/lib/teacher-label';
 
 export interface ReportHistoryListProps {
   items: ReportSummaryView[];
@@ -29,7 +30,7 @@ export function ReportHistoryList({ items, role, tz, studentId, recorded }: Repo
               {r.lesson_no !== null && (
                 <span className="text-xs text-ink-3">{t.reports.lessonNoShort.replace('{n}', String(r.lesson_no))}</span>
               )}
-              <span className="text-xs text-ink-2">{r.teacher.display_name_ar}</span>
+              <span className="text-xs text-ink-2">{teacherLabel(r.teacher)}</span>
             </p>
             <p className="flex flex-wrap items-center gap-2 text-sm text-ink-2">
               {r.attendance && <span>{t.enums.attendance[r.attendance]}</span>}

@@ -5,7 +5,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
-import { TOKEN_VERIFIER } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../../common/auth/auth.guard';
 import { PushService } from '../../common/push/push.service';
 import { LeadsService } from '../leads/leads.service';
 import { LessonStatusService } from '../lessons/lesson-status.service';
@@ -24,7 +24,7 @@ export const sign = (body: string, secret = SECRET) =>
 export async function webhookApp(config: Partial<WebhookConfig> = {}) {
   const deps = fakeDeps();
   const mod = await Test.createTestingModule({ imports: [AppModule, WebhookModule] })
-    .overrideProvider(TOKEN_VERIFIER)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER)
     .useValue(async () => {
       throw new Error('no users in webhook tests');
     })

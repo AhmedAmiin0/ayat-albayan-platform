@@ -2,7 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMediaQueries, type MediaMessage } from '../whatsapp/inbound-media.queries';
 import { WHATSAPP_CLIENT } from '../whatsapp/whatsapp.types';
@@ -40,7 +40,7 @@ describe('thread media routes (R-MSG-06): admin only', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InboundMediaQueries).useValue(queries)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
       .overrideProvider(StorageService).useValue(storage)

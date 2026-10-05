@@ -1,14 +1,14 @@
 import type { LessonView } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
 import { LessonViews } from './lesson-views';
 
 /** GET /students/:id/lessons — newest first with the lesson number (R-LES-03). Admin only. */
 @ApiTags('students')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('students.read')
 @Controller('students/:id/lessons')
 export class StudentLessonsController {
   constructor(private readonly views: LessonViews) {}

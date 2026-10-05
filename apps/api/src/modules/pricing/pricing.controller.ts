@@ -1,6 +1,6 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { parseOr400 } from '../leads/http';
 import { catalogQuery, quoteQuery } from './pricing.dto';
 import { PricingService } from './pricing.service';
@@ -8,7 +8,7 @@ import { PricingService } from './pricing.service';
 /** Staff price calculator (docs/08): the site's catalog and quotes, in the guardian's currency. */
 @ApiTags('pricing')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('pricing.read')
 @Controller('pricing')
 export class PricingController {
   constructor(private readonly pricing: PricingService) {}

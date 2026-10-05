@@ -3,12 +3,13 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { ADMIN, ASSISTANT, CLOSED, CONFIG, decode, EARLY, GUARDIAN, LESSON_ID, OPEN, OTHER_TEACHER, queries, TEACHER, TEACHER_ID } from './classroom.fakes';
 import { admissionOf, moderation, recorder, rolesOf } from './moderation.fakes';
 import { RoomJoinService } from './room-join.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 
 let q: ReturnType<typeof queries>;
 let teachers: { idByProfile: ReturnType<typeof vi.fn> };
 let mod: ReturnType<typeof moderation>;
 let rec: ReturnType<typeof recorder>;
-const service = (config: typeof CONFIG | null = CONFIG) => new RoomJoinService(rolesOf({ q, teachers }), admissionOf({ q, mod, rec, config }));
+const service = (config: typeof CONFIG | null = CONFIG) => new RoomJoinService(rolesOf({ q, teachers }), admissionOf({ q, mod, rec, config }), fakeSettings());
 const join = (user = TEACHER, now = OPEN, svc = service()) => svc.join({ user, lessonId: LESSON_ID }, now);
 const code = async (p: Promise<unknown>) => ((await p.catch((e: HttpException) => e)) as HttpException).getResponse();
 

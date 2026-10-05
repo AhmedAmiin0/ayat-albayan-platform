@@ -1,6 +1,7 @@
 import {
   GENDERS,
   PROGRAMS,
+  teacherName,
   type BookingTeacherOption,
   type Gender,
   type Program,
@@ -14,6 +15,7 @@ import { FilterPills } from '@/ui/FilterPills';
 import { ListRow } from '@/ui/ListRow';
 import { type, useTheme } from '@/theme';
 import { useBookingTeachers } from './queries';
+import { locale } from '@/lib/locale';
 
 export interface TeacherStepProps {
   program: Program;
@@ -75,7 +77,7 @@ export function TeacherStep({ program, gender, onFilter, onPick }: TeacherStepPr
         {teachers.data?.map((option) => (
           <ListRow
             key={option.id}
-            title={option.display_name_ar}
+            title={teacherName(option, locale)}
             subtitle={option.has_availability ? teacherLoad(option) : t.booking.noAvailabilityWhy}
             trailing={
               option.has_availability ? null : (

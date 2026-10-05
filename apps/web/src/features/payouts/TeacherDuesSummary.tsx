@@ -5,6 +5,7 @@ import { formatDate } from '@/features/leads/format';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { earningsSummaryQuery } from './api';
+import { teacherLabel } from '@/lib/teacher-label';
 
 /**
  * «مستحقات المعلمين» overview (ledger, all months): the total still owed, then per teacher what
@@ -35,7 +36,7 @@ export function TeacherDuesSummary() {
               params={{ teacherId: r.teacher.id }}
               className="min-w-40 font-semibold text-ink underline-offset-4 hover:underline"
             >
-              {r.teacher.display_name_ar}
+              {teacherLabel(r.teacher)}
             </Link>
             <span className="text-ink-3">
               {t.earnings.earned}: <Amount amount={r.earned} currency="EGP" />

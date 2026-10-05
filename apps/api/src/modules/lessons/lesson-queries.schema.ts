@@ -1,4 +1,4 @@
-import { instant, localDate, timeZone } from '@ab/shared';
+import { instant, localDate, SETTING_DEFAULTS, timeZone } from '@ab/shared';
 import { z } from 'zod';
 import { badRequest } from '../scheduling/errors';
 import { addDays, startOfLocalDay } from '../scheduling/horizon';
@@ -12,7 +12,7 @@ const windowSchema = z
   .object({ from: instant, to: instant, teacherId: z.uuid().optional() })
   .refine((q) => Date.parse(q.to) > Date.parse(q.from), { message: 'to_before_from', path: ['to'] });
 
-const daySchema = z.object({ date: localDate, tz: timeZone.default('Asia/Riyadh') });
+const daySchema = z.object({ date: localDate, tz: timeZone.optional() });
 
 /** `?from&to[&teacherId]` → [from, to); 400 validation_failed / range_too_large. */
 export function parseWindow(query: unknown): LessonWindow {
@@ -22,8 +22,11 @@ export function parseWindow(query: unknown): LessonWindow {
   return w;
 }
 
-/** `?date&tz` → that local day, [00:00, next 00:00) in tz (DST days are 23 or 25 h). */
-export function parseDay(query: unknown): LessonWindow {
-  const { date, tz } = parseOrThrow(daySchema, query);
+/**
+ * `?date&tz` → that local day, [00:00, next 00:00) in tz (DST days are 23 or 25 h). No `tz` →
+ * `defaultTz` (settings.academy_timezone).
+ */
+export function parseDay(query: unknown, defaultTz: string = SETTING_DEFAULTS.academy_timezone): LessonWindow {
+  const { date, tz = defaultTz } = parseOrThrow(daySchema, query);
   return { from: startOfLocalDay(date, tz), to: startOfLocalDay(addDays(date, 1), tz) };
 }
