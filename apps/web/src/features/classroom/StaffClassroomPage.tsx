@@ -1,3 +1,4 @@
+import type { RoomJoinResult } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,11 +11,14 @@ import { classroomErrorText, opensAtOf } from './errors';
 import type { RoomClient } from './room-types';
 import { opensAtText } from './window-hint';
 
+/** Who mints the token: the lesson's room by default, an internal meeting's (joinMeeting) otherwise. */
+type Joiner = (id: string) => Promise<RoomJoinResult>;
+
 /** One token per attempt (never cached, never refetched on focus): a fresh identity each time. */
-function useJoin(lessonId: string, attempt: number) {
+function useJoin(lessonId: string, attempt: number, join: Joiner) {
   return useQuery({
     queryKey: [...CLASSROOM_KEY, 'join', lessonId, attempt],
-    queryFn: () => joinRoom(lessonId),
+    queryFn: () => join(lessonId),
     retry: false,
     gcTime: 0,
     staleTime: Infinity,
@@ -34,11 +38,17 @@ function Notice({ children, onRetry }: { children: string; onRetry: () => void }
   );
 }
 
-/** /classroom/:lessonId for admin, the lesson's teacher and the assigned assistant. */
-export function StaffClassroomPage({ lessonId, make }: { lessonId: string; make?: () => RoomClient }) {
+interface Props {
+  lessonId: string;
+  make?: () => RoomClient;
+  join?: Joiner;
+}
+
+/** /classroom/:lessonId for admin, the lesson's teacher and the assigned assistant; /meeting/:id with `join`. */
+export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom }: Props) {
   const [attempt, setAttempt] = useState(0);
   const queryClient = useQueryClient();
-  const join = useJoin(lessonId, attempt);
+  const join = useJoin(lessonId, attempt, joiner);
   const retry = () => {
     queryClient.removeQueries({ queryKey: [...CLASSROOM_KEY, 'join', lessonId] });
     setAttempt((n) => n + 1);

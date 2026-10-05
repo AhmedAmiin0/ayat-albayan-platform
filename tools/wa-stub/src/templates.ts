@@ -1,6 +1,7 @@
 // Template create (POST /{waba}/message_templates) and edit (POST /{template id}) with the checks a
 // real submission fails on: a media header without an uploaded sample's handle, a body variable
-// without an example, a variable at the very start or end of the body.
+// without an example, a variable at the very start or end of the body, a quick-reply text over 25
+// characters.
 import { randomUUID } from 'node:crypto';
 import { ERR, type Json, type StubTemplate } from './meta.ts';
 import type { Reply, StubState } from './state.ts';
@@ -28,9 +29,23 @@ function bodyError(c: Json): Json | null {
   return ok ? null : ERR.invalid(`component of type BODY needs example.body_text with ${vars} values`);
 }
 
+/** Meta's button limits: at most 10, a QUICK_REPLY text 1..25 characters (lesson_rating has 3). */
+function buttonsError(c: Json): Json | null {
+  const buttons = Array.isArray(c['buttons']) ? (c['buttons'] as Json[]) : [];
+  if (buttons.length > 10) return ERR.invalid('a template can have at most 10 buttons');
+  const bad = buttons.find((b) => b['type'] === 'QUICK_REPLY' && !/^.{1,25}$/u.test(String(b['text'] ?? '')));
+  return bad ? ERR.invalid(`button text "${String(bad['text'] ?? '')}" must be 1-25 characters`) : null;
+}
+
+function componentError(s: StubState, c: Json): Json | null {
+  if (c['type'] === 'HEADER') return headerError(s, c);
+  if (c['type'] === 'BODY') return bodyError(c);
+  return c['type'] === 'BUTTONS' ? buttonsError(c) : null;
+}
+
 function componentsError(s: StubState, components: Json[]): Json | null {
   for (const c of components) {
-    const err = c['type'] === 'HEADER' ? headerError(s, c) : c['type'] === 'BODY' ? bodyError(c) : null;
+    const err = componentError(s, c);
     if (err) return err;
   }
   return null;

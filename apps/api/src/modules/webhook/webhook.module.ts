@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { loadEnv } from '../../env';
 import { LeadsModule } from '../leads/leads.module';
+import { LessonRatingModule } from '../lesson-rating/lesson-rating.module';
 import { LessonsModule } from '../lessons/lessons.module';
 import { WebhookController } from './webhook.controller';
 import { InboundService } from './webhook.inbound.service';
@@ -15,7 +16,7 @@ import { StatusService } from './webhook.status.service';
  * the send gate. PushService and AuditService are global.
  */
 @Module({
-  imports: [LeadsModule, LessonsModule],
+  imports: [LeadsModule, LessonsModule, LessonRatingModule],
   controllers: [WebhookController],
   providers: [
     {

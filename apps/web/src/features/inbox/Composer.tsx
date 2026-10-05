@@ -7,6 +7,7 @@ import { meQuery } from '@/features/auth/me';
 import { sendGateQuery } from '@/features/messaging/api';
 import { t } from '@/lib/i18n';
 import { sessionUntil } from './format';
+import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
 import type { PrefillContext } from './template-params';
@@ -46,10 +47,13 @@ export function Composer({ thread, context }: { thread: ThreadView; context: Pre
           />
         </div>
       ) : (
-        <p className="flex items-center gap-2 text-sm font-semibold text-ink">
-          <NuqtaGlyph shape="hollow" className="text-ink-3" />
-          <span>{t.inbox.sessionClosed}</span>
-        </p>
+        <>
+          <p className="flex items-center gap-2 text-sm font-semibold text-ink">
+            <NuqtaGlyph shape="hollow" className="text-ink-3" />
+            <span>{t.inbox.sessionClosed}</span>
+          </p>
+          <SendRatingButton thread={thread} />
+        </>
       )}
       {open && mode === 'text' ? (
         <TextComposer phone={thread.phone_e164} />

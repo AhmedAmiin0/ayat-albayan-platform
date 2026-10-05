@@ -7,6 +7,7 @@ import {
   type FeedbackRating,
   type FeedbackRecommend,
 } from '../enums/index.js';
+import type { LessonRating } from '../messaging/rating.js';
 import { phoneE164 } from './common.js';
 import type { Attendance, LessonStatus } from '../enums/index.js';
 
@@ -76,6 +77,9 @@ export interface FeedbackRowView {
   recommend: FeedbackRecommend | null;
   note: string | null;
   submitted_at: string | null;
+  /** The guardian's WhatsApp button answer (lesson_rating, migration 195); null until they tap. Absent in an old cache. */
+  quick_rating?: LessonRating | null;
+  quick_rated_at?: string | null;
   /** Admin only: the family's contact number; never in a teacher's view. */
   contact_phone: string | null;
 }

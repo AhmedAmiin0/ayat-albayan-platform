@@ -96,6 +96,8 @@ export interface AcademySettings {
   crm_cutover_done: boolean;
   /** A new lead goes to the salesperson with the fewest open leads (migration 187). */
   sales_auto_assign: boolean;
+  /** After a completed lesson: lesson_rating buttons (default) or nothing automatic (migration 195). */
+  feedback_mode: 'buttons' | 'link';
 }
 
 /** GET /teachers/me (R-TCH-03). */

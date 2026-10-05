@@ -3,7 +3,8 @@ import { lessonDuration, overrideSchema } from '../schemas/scheduling.js';
 import type { JoinWindow } from './join-window.js';
 
 // «حلقة فورية» (instant lesson), «افتح الحلقة الآن» (open the room early) and the student's own
-// long-lived link («رابط دخول الطالب», /s/<token>). A meeting is always a lesson: no separate entity.
+// long-lived link («رابط دخول الطالب», /s/<token>). A meeting with students is always a lesson;
+// the one exception is «اجتماع داخلي» (internal-meetings.ts): a standalone room with no lesson.
 
 const uniqueIds = z
   .array(z.uuid())

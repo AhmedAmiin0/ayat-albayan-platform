@@ -71,11 +71,12 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
 }
 
 /**
- * What the jobs queue on their own: reminders, follow-ups and renewal reminders (migration 162).
+ * What the jobs queue on their own: reminders, follow-ups and renewal reminders (migration 162), and
+ * the lesson_rating after a completed lesson (migration 195; the admin's «إرسال تقييم الحلقة» is not).
  * Every other TEMPLATE_KEYS key goes out because someone acted: a booking, a submitted report
  * (message.worker.auto.test checks the split).
  */
-export const AUTOMATIC_KEYS: readonly TemplateKey[] = [...REMINDER_KEYS, 'follow_up_slots', 'renewal_due'];
+export const AUTOMATIC_KEYS: readonly TemplateKey[] = [...REMINDER_KEYS, 'follow_up_slots', 'renewal_due', 'lesson_rating'];
 const AUTOMATIC: ReadonlySet<string> = new Set(AUTOMATIC_KEYS);
 
 /** The hold of an automatic row while the switch is OFF (failed, no push). */
