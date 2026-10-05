@@ -1287,7 +1287,7 @@
   },
   "earnings": {
     "title": "مستحقات المعلم",
-    "mineTitle": "مستحقاتي",
+    "mineTitle": "أرباحي",
     "back": "العودة إلى ملف المعلم/ة",
     "open": "مستحقات",
     "currency": "ج.م",
@@ -1338,7 +1338,7 @@
     "viewReceipt": "عرض الإيصال",
     "fromPayout": "من كشف شهري",
     "paymentSessions": "{count} حلقة",
-    "monthly": "كشوف الشهور",
+    "monthly": "كشوف الشهر",
     "ledgerPaid": "دُفع منها بالحلقات: {amount}",
     "mobile": {
       "payments": "الدفعات",
@@ -2008,10 +2008,11 @@
     "today": "اليوم",
     "calendar": "جدولي",
     "reports": "التقارير",
-    "payouts": "مستحقاتي",
+    "payouts": "أرباحي",
     "feedback": "الآراء",
     "chats": "المحادثات",
-    "students": "الطلاب"
+    "students": "الطلاب",
+    "statements": "كشوف الشهر"
   },
   "teacherStudents": {
     "title": "الطلاب",
@@ -2448,6 +2449,7 @@
     "recordFromInvoice": "سجّل كدفعة",
     "year": "السنة",
     "studentPayments": "المدفوعات",
-    "netPaid": "الصافي: {amount}"
+    "netPaid": "الصافي: {amount}",
+    "ledgerCsv": "كشف الحلقات والدفعات CSV"
   }
 }

@@ -2,14 +2,14 @@
 // purpose: the August «Expenses Tracker» and column G «ADS» itemise the same money (the summary
 // «Ads» row is their sum), so reading them too would double count. «Staff Expenses» are teacher
 // payouts, not expenses; zero rows are skipped (expenses.amount > 0). Pure.
-import type { Enums } from '@ab/db';
 import type { EntityModule, SourceBundle } from '../../entities/contract.ts';
 import { keys } from '../../keys.ts';
 import { num, text } from '../../sources/sheets/cells.ts';
 import { accepted } from '../../sources/sheets/issues.ts';
 import type { Mapped, SourceRow } from '../../types.ts';
 
-const CATEGORY: Record<string, Enums<'expense_category'>> = {
+/** Keys of expense_categories (seeded by migration 20261005000204). */
+const CATEGORY: Record<string, string> = {
   Ads: 'ads',
   Followers: 'ads', // bought followers: marketing spend
   Content: 'content',

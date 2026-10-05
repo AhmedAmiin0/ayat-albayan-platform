@@ -12,7 +12,9 @@ describe('TeacherNav on a phone', () => {
     expect(nav.className).toMatch(/fixed .*bottom-0/);
     expect(nav.className).toContain('sm:static');
     expect(nav.querySelector('ul')?.className).toContain('grid-cols-7');
-    expect(screen.getAllByRole('link')).toHaveLength(7);
+    // «كشوف الشهر» is the eighth link, hidden on the phone bar (one tap in from «أرباحي»)
+    expect(screen.getAllByRole('link')).toHaveLength(8);
+    expect(screen.getByRole('link', { name: t.teacherNav.statements }).closest('li')?.className).toContain('max-sm:hidden');
     for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-14');
   });
 });

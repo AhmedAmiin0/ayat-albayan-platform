@@ -67,13 +67,13 @@ const COLUMNS = col.columns([
   }),
 ]);
 
-/** /teacher/payouts «مستحقاتي» (R-TCH-04): every month calculated for me, newest first, in EGP. */
+/** /teacher/payouts «كشوف الشهر» (R-TCH-04): every month calculated for me, newest first, in EGP. */
 export function MyPayouts() {
   const list = useQuery(myPayoutsQuery);
   return (
     <>
       <PageHead>
-        <Cartouche>{t.payouts.mine}</Cartouche>
+        <Cartouche>{t.teacherNav.statements}</Cartouche>
       </PageHead>
       {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}

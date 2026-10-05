@@ -2008,10 +2008,11 @@
     "today": "Today",
     "calendar": "Schedule",
     "reports": "Reports",
-    "payouts": "Pay",
+    "payouts": "My earnings",
     "feedback": "Feedback",
     "chats": "Chats",
-    "students": "Students"
+    "students": "Students",
+    "statements": "Monthly statements"
   },
   "teacherStudents": {
     "title": "Students",
@@ -2448,6 +2449,7 @@
     "recordFromInvoice": "Record as payment",
     "year": "Year",
     "studentPayments": "Payments",
-    "netPaid": "Net: {amount}"
+    "netPaid": "Net: {amount}",
+    "ledgerCsv": "Lessons & payments CSV"
   }
 }

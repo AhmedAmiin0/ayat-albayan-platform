@@ -16,4 +16,5 @@ export * from './tiers.js';
 export * from './usage.js';
 export type * from './dashboard-views.js';
 export type * from './earnings-views.js';
+export type * from './expense-views.js';
 export type * from './views.js';

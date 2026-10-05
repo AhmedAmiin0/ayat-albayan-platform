@@ -6,6 +6,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { downloadCsv } from '@/features/exports/api';
 import { MONEY_KEY } from '@/features/subscriptions/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { apiErrorText } from '@/features/subscriptions/format';
@@ -47,6 +48,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
   });
   const [dialog, setDialog] = useState<PayoutDialog | null>(null);
   const csv = useMutation({ mutationFn: downloadPayoutsCsv });
+  const ledger = useMutation({ mutationFn: () => downloadCsv({ kind: 'teacher-ledger', params: { month } }) });
   const [approve, openReceipt] = [move.mutate, receipt.mutate];
   const columns = useMemo(
     () =>
@@ -73,6 +75,9 @@ export function PayoutsPage({ month, onMonth }: Props) {
           <Button type="button" variant="secondary" disabled={rows.length === 0 || csv.isPending} onClick={() => csv.mutate(month)}>
             {t.payouts.exportCsv}
           </Button>
+          <Button type="button" variant="secondary" disabled={ledger.isPending} onClick={() => ledger.mutate()}>
+            {t.finance.ledgerCsv}
+          </Button>
           <Button type="button" disabled={generate.isPending} onClick={() => generate.mutate(month)}>
             {rows.length > 0 ? t.payouts.regenerate : t.payouts.generate}
           </Button>
@@ -80,7 +85,7 @@ export function PayoutsPage({ month, onMonth }: Props) {
       </PageHead>
       {error && <FormAlert>{apiErrorText(error, { ...t.payouts.error, ...t.earnings.error })}</FormAlert>}
       {dialog && <PayoutDialogs open={dialog} onClose={() => setDialog(null)} />}
-      {csv.isError && <FormAlert>{t.common.error}</FormAlert>}
+      {(csv.isError || ledger.isError) && <FormAlert>{t.common.error}</FormAlert>}
       <MissingRates items={missing} />
       {list.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
