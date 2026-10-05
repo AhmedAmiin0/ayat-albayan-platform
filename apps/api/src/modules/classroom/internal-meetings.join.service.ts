@@ -37,6 +37,17 @@ export class InternalMeetingJoinService {
     return this.mint({ meeting, role, name }, now);
   }
 
+  /**
+   * GET /meetings/by-link/:token (staff login): the meeting behind a shared link, so a signed-in
+   * staff member who opens /m/<token> enters with their own role (pen, board, screen share), never
+   * as a guest. 404 link_invalid, 403 no staff role in it.
+   */
+  async idByLink(input: { user: AuthUser; token: string }): Promise<{ id: string }> {
+    const meeting = await this.byToken(input.token);
+    if (!meetingRoleOf(input.user, meeting)) throw new ForbiddenException();
+    return { id: meeting.id };
+  }
+
   /** GET /public/meetings/:token (no login): 404 link_invalid, 429. Never touches LiveKit. */
   async view(input: { token: string; ip: string }, now = new Date()): Promise<PublicMeetingView> {
     this.limit.assertRead({ ip: input.ip, token: input.token }, now.getTime());

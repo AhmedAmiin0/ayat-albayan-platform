@@ -8,7 +8,7 @@ import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
 import { AssistantsService } from './assistants.service';
 import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG, type ClassroomConfig, type RecordingConfig } from './classroom.config';
-import { ClassroomController } from './classroom.controller';
+import { ClassroomController, JoinLinkStaffController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
 import { GuestJoinService } from './guest-join.service';
@@ -20,6 +20,7 @@ import { InternalMeetingsService } from './internal-meetings.service';
 import { PublicJoinLimit } from './join-limit';
 import { JoinLinkCopyService } from './join-link.copy.service';
 import { JoinLinkService } from './join-link.service';
+import { JoinLinkStaffService } from './join-link.staff.service';
 import { KickService } from './kick.service';
 import { LessonRoleService } from './lesson-role.service';
 import { LIVEKIT_HTTP, LivekitApi, type HttpPost } from './livekit-api';
@@ -52,6 +53,7 @@ import { StudentLinkService } from './student-link.service';
   imports: [InboxModule, TeachersModule],
   controllers: [
     ClassroomController,
+    JoinLinkStaffController,
     ClassroomPublicController,
     AssistantsController,
     ModerationController,
@@ -78,6 +80,7 @@ import { StudentLinkService } from './student-link.service';
     StudentLinkAdminService,
     GuestJoinService,
     JoinLinkService,
+    JoinLinkStaffService,
     JoinLinkCopyService,
     AssistantsService,
     LessonRoleService,
