@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { backdateInbound, bubble, lastOutbound, openThread, roleOf } from '../support/inbox';
+import { backdateInbound, bubble, lastOutbound, roleOf } from '../support/inbox';
 import { resetAbrar, seedFamily, seedLesson, withSql } from '../support/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, stubStatus } from '../support/wa-stub';
 
@@ -38,7 +38,11 @@ test.describe('inbox — closed session template and delivery chips (R-MSG-01, R
     await backdateInbound({ phone, hoursAgo: 25 });
 
     const admin = await asRole('admin');
-    const log = await openThread(admin, guardian);
+    // 25 h old, it sorts behind every newer thread (25 a page): once a full run has made many, it
+    // is off page 1. Open it by its phone, the link's own URL, instead of by its row in the list.
+    await admin.goto(`/admin/inbox?page=1&phone=${encodeURIComponent(phone)}`);
+    const log = admin.getByRole('log', { name: ar.messages.log });
+    await expect(log).toBeVisible();
     await expect(admin.getByText(ar.inbox.sessionClosed)).toBeVisible();
     await expect(admin.getByRole('textbox', { name: ar.inbox.composer.messageLabel })).toHaveCount(0);
     await expect(admin.getByRole('button', { name: field.send, exact: true })).toHaveCount(0);

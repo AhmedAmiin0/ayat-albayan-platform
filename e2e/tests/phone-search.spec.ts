@@ -65,6 +65,8 @@ test.describe('phone search (searchDigits)', () => {
   });
 
   test('inbox, leads and students boxes: Arabic digits, 00 and + prefixes, partial and name', async ({ asRole }) => {
+    // 18 page loads: ~20 s on a fresh DB, near 30 s once a full two-project run has filled it.
+    test.setTimeout(90_000);
     const page = await asRole('admin');
     const boxes = [
       { url: '/admin/inbox', role: 'searchbox', who: person('lead') },

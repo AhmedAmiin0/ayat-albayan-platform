@@ -83,6 +83,7 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
       </div>
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       <DataTable
+        stacked
         columns={teacherStudentColumns}
         sort={{ key: sort.sort, dir: sort.dir, onChange: onSort }}
         filters={{ values: columns, onChange: onFilter, onClear: onClearFilters }}

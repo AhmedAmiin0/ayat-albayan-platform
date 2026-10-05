@@ -21,6 +21,7 @@ import { SiblingMerge } from './SiblingMerge';
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
+import { HeadActions } from '@/components/ui/head-actions';
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -59,21 +60,23 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <PageHead className="mb-3">
         <Cartouche>{student.name}</Cartouche>
         <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
-        <div className="ms-auto flex flex-wrap gap-2.5">
-          <Link
-            to="/admin/students/$studentId/reports"
-            params={{ studentId: student.id }}
-            className={buttonVariants({ variant: 'secondary' })}
-          >
-            {t.reports.history}
-          </Link>
-          <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
-            {t.booking.open}
-          </Link>
-          <Button type="button" variant="secondary" onClick={() => setEditGuardian(true)}>
-            {t.guardians.edit}
-          </Button>
-        </div>
+        <HeadActions
+          primary={
+            <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
+              {t.booking.open}
+            </Link>
+          }
+          more={
+            <>
+              <Link to="/admin/students/$studentId/reports" params={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
+                {t.reports.history}
+              </Link>
+              <Button type="button" variant="secondary" onClick={() => setEditGuardian(true)}>
+                {t.guardians.edit}
+              </Button>
+            </>
+          }
+        />
       </PageHead>
       <dl className="mb-6 flex flex-wrap gap-x-7 gap-y-2 border-b border-rule pb-4 text-sm">
         {meta.map(([term, value]) => (

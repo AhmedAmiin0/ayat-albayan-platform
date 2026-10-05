@@ -12,7 +12,8 @@ export interface LeadOrderFiltersProps {
   onFilter: (patch: Record<string, unknown>) => void;
 }
 
-const selectClass = 'w-auto min-w-0 flex-1 sm:min-w-[150px] sm:flex-none';
+// Phones: two selects per row (40% + 40% + gaps), the third on a row of its own; never cut short.
+const selectClass = 'w-auto min-w-0 flex-1 max-sm:basis-[40%] sm:min-w-[150px] sm:flex-none';
 
 /**
  * The inbox is a card list, not a table: its «الترتيب» select (server-side, R-NFR-08) and the

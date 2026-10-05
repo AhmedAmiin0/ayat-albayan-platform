@@ -135,7 +135,8 @@
     "pages": "الصفحات",
     "showing": "عرض {shown} من {total}",
     "breadcrumbs": "مسار الصفحة",
-    "listJoiner": "، "
+    "listJoiner": "، ",
+    "more": "المزيد"
   },
   "nav": {
     "dashboard": "لوحة التحكم",
@@ -145,6 +146,7 @@
     "conversations": "المحادثات",
     "jobApplicants": "طلبات التوظيف",
     "label": "القائمة",
+    "menu": "القائمة",
     "newLeads": "{n} جديدة",
     "unread": "{n} غير مقروءة",
     "reports": "التقارير",

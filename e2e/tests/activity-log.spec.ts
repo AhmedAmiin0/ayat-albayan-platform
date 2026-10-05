@@ -1,6 +1,7 @@
 import { ar, expect, test } from '../support/fixtures';
 import { apiStatus } from '../support/messages';
 import { thisMonthStart } from '../support/money-extra';
+import { openNav } from '../support/nav';
 import { withSql } from '../support/schedule';
 
 // «سجل النشاط» (owner, 2026-10-05): the admin adds an expense; the API's ActivityInterceptor logs
@@ -36,7 +37,7 @@ test.describe('activity log («سجل النشاط»)', () => {
     // Written fire-and-forget in batches: give the writer its few seconds.
     await expect.poll(loggedCreates, { timeout: 15_000 }).toBeGreaterThan(before);
 
-    await page.getByRole('link', { name: ar.nav.activity }).click();
+    await (await openNav(page)).getByRole('link', { name: ar.nav.activity }).click();
     await expect(page).toHaveURL(/\/admin\/activity$/);
     await expect(page.getByRole('heading', { level: 1, name: ar.activity.title })).toBeVisible();
     const row = page.getByRole('row').filter({ hasText: ar.activity.actions.expenses.create }).first();

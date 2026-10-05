@@ -21,6 +21,7 @@ import { PeriodTotals } from './PeriodTotals';
 import { RecordPaymentDialog } from './RecordPaymentDialog';
 import { paymentsView, type PaymentsUrlSearch } from './search';
 import { usePaymentFilters } from './use-payment-filters';
+import { HeadActions } from '@/components/ui/head-actions';
 
 /** A filter or sort change goes back to page 1 (the route drops `page: undefined`). */
 type Props = { search: PaymentsUrlSearch; onSearch: (patch: Partial<PaymentsUrlSearch>) => void };
@@ -54,15 +55,19 @@ export function PaymentsPage({ search, onSearch }: Props) {
     <>
       <PageHead>
         <Cartouche>{t.payments.title}</Cartouche>
-        <div className="ms-auto flex flex-wrap gap-2.5">
-          <Button type="button" variant="secondary" disabled={csv.isPending} onClick={() => csv.mutate()}>
-            {t.payouts.exportCsv}
-          </Button>
-          <Button onClick={() => setRecording(true)}>
-            <Icon name="plus" />
-            {t.payments.record}
-          </Button>
-        </div>
+        <HeadActions
+          primary={
+            <Button onClick={() => setRecording(true)}>
+              <Icon name="plus" />
+              {t.payments.record}
+            </Button>
+          }
+          more={
+            <Button type="button" variant="secondary" disabled={csv.isPending} onClick={() => csv.mutate()}>
+              {t.payouts.exportCsv}
+            </Button>
+          }
+        />
       </PageHead>
       {list.data && <PeriodTotals totals={list.data.totals} />}
       {(list.isError || csv.isError) && <FormAlert>{t.common.error}</FormAlert>}

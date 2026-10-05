@@ -16,12 +16,11 @@ describe('SalesNav', () => {
     ]);
   });
 
-  it('is a fixed bottom bar of three 56px tabs on a phone, a top row from sm up', () => {
+  it('no fixed bottom bar: a vertical list of 44px rows (the sheet), a row from 900px', () => {
     render(<SalesNav />);
     const nav = screen.getByRole('navigation');
-    expect(nav.className).toMatch(/fixed .*bottom-0/);
-    expect(nav.className).toContain('sm:static');
-    expect(nav.querySelector('ul')?.className).toContain('grid-cols-3');
-    for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-14');
+    expect(nav.className).not.toMatch(/fixed/);
+    expect(nav.querySelector('ul')?.className).toContain('shell:flex-row');
+    for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-11');
   });
 });

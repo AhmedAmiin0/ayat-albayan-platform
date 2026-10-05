@@ -6,5 +6,5 @@ import { t } from '@/lib/i18n';
 /** /assistant: a teaching assistant's own page (no nav: one list). */
 export const Route = createFileRoute('/assistant')({
   beforeLoad: ({ context }) => requireRole(context.queryClient, 'assistant'),
-  component: () => <AppShell title={t.classroom.assistants.homeTitle} />,
+  component: () => <AppShell title={t.classroom.assistants.homeTitle} home="/assistant" />,
 });

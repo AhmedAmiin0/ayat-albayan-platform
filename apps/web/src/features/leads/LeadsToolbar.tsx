@@ -46,7 +46,7 @@ export function LeadsToolbar({ search, onFilter }: LeadsToolbarProps) {
         aria-label={t.leads.source}
         value={search.source ?? ''}
         onChange={(e) => onFilter({ source: e.target.value })}
-        className="w-auto min-w-0 flex-1 sm:min-w-[150px] sm:flex-none"
+        className="w-auto min-w-0 flex-1 max-sm:basis-[40%] sm:min-w-[150px] sm:flex-none"
       >
         <option value="">{t.leads.sourceAll}</option>
         {LEAD_SOURCES.map((s) => (

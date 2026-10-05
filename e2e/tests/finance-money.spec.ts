@@ -2,6 +2,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { openFilters, showResults } from '../support/filters';
 import { seedPackageStudent } from '../support/money';
 import { uniqueName } from '../support/money-extra';
+import { openNav } from '../support/nav';
 import { resetAbrar, withSql } from '../support/schedule';
 
 // «المالية» (owner, 2026-10-05): a part payment shows «مدفوع جزئيًا» and is found by that filter,
@@ -53,9 +54,10 @@ test.describe('finance: part payments, receivables, refunds', () => {
   test('the money pages are grouped under «المالية»; the summary shows the year by month', async ({ asRole }) => {
     const page = await asRole('admin');
     await page.goto('/admin/finance');
-    const money = page.getByRole('list', { name: ar.finance.nav, exact: true });
+    const money = (await openNav(page)).getByRole('list', { name: ar.finance.nav, exact: true });
     for (const name of [ar.payments.title, ar.nav.subscriptions, ar.nav.payouts, ar.nav.expenses, ar.finance.invoicesTitle, ar.finance.receivablesTitle, ar.finance.summaryTitle])
       await expect(money.getByRole('link', { name, exact: true })).toBeVisible();
+    await page.keyboard.press('Escape'); // the «القائمة» sheet on phones; nothing on desktop
     await expect(page.getByRole('heading', { name: ar.finance.summaryTitle })).toBeVisible();
     await expect(page.getByText(ar.dashboard.grossMargin).first()).toBeVisible();
     await expect(page.getByRole('list', { name: ar.finance.moneyKpis }).getByRole('link', { name: new RegExp(ar.finance.receivablesKpi) })).toBeVisible();

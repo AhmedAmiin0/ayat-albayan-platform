@@ -9,6 +9,7 @@ const PATHS = {
   plus: 'M10 4.5v11M4.5 10h11',
   minus: 'M4.5 10h11',
   more: 'M10 4.8h.01M10 10h.01M10 15.2h.01',
+  menu: 'M3.5 5.5h13M3.5 10h13M3.5 14.5h13',
   'chevron-left': 'M12.5 5 7.5 10l5 5',
   'chevron-right': 'm7.5 5 5 5-5 5',
   x: 'm5.5 5.5 9 9M14.5 5.5l-9 9',

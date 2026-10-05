@@ -20,6 +20,7 @@ import { TeacherFacts } from './TeacherFacts';
 import { TeacherMeta } from './TeacherMeta';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from './TimeOffList';
+import { HeadActions } from '@/components/ui/head-actions';
 
 type Tab = 'data' | 'availability' | 'students' | 'activity';
 // «المستحقات» is its own page (the earnings button in the head).
@@ -70,14 +71,18 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
       <PageHead className="mb-3.5">
         <Cartouche>{data.display_name_ar}</Cartouche>
         <StatusChip {...teacherStatusStyle[data.status]} label={t.enums.teacherStatus[data.status]} />
-        <div className="ms-auto flex gap-2.5">
-          <Link to="/admin/teachers/$teacherId/earnings" params={{ teacherId }} className={buttonVariants({ variant: 'secondary' })}>
-            {t.earnings.title}
-          </Link>
-          <Button variant="secondary" onClick={() => setEditing(true)}>
-            {t.teachers.edit}
-          </Button>
-        </div>
+        <HeadActions
+          primary={
+            <Button variant="secondary" onClick={() => setEditing(true)}>
+              {t.teachers.edit}
+            </Button>
+          }
+          more={
+            <Link to="/admin/teachers/$teacherId/earnings" params={{ teacherId }} className={buttonVariants({ variant: 'secondary' })}>
+              {t.earnings.title}
+            </Link>
+          }
+        />
       </PageHead>
       <TeacherMeta teacher={data} />
       <Tabs label={t.teachers.profile} tabs={TABS} value={tab} onChange={setTab} />

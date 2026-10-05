@@ -1,6 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { HeadActions } from '@/components/ui/head-actions';
 import { Icon } from '@/components/ui/icon';
 import { Toast } from '@/components/ui/toast';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
@@ -9,22 +10,30 @@ import { t } from '@/lib/i18n';
 
 /**
  * The dashboard's quick actions (owner, 2026-10-05): «اجتماع جديد» (the one primary), «إضافة طالب»
- * (the students page's own dialog, right here) and «حجز حلقة» (the booking wizard).
+ * (the students page's own dialog, right here) and «حجز حلقة» (the booking wizard); on phones the
+ * two secondary ones sit behind «⋯» (HeadActions).
  */
 export function QuickActions() {
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   return (
-    <div role="group" aria-label={t.dashboard.home.quick} className="ms-auto flex flex-wrap items-center gap-2.5 max-sm:w-full">
-      <NewMeetingMenu />
-      <Button type="button" variant="secondary" onClick={() => setAdding(true)}>
-        <Icon name="users" />
-        {t.dashboard.home.addStudent}
-      </Button>
-      <Link to="/admin/book" className={buttonVariants({ variant: 'secondary' })}>
-        <Icon name="calendar" />
-        {t.dashboard.home.book}
-      </Link>
+    <>
+      <HeadActions
+        label={t.dashboard.home.quick}
+        primary={<NewMeetingMenu />}
+        more={
+          <>
+            <Button type="button" variant="secondary" onClick={() => setAdding(true)}>
+              <Icon name="users" />
+              {t.dashboard.home.addStudent}
+            </Button>
+            <Link to="/admin/book" className={buttonVariants({ variant: 'secondary' })}>
+              <Icon name="calendar" />
+              {t.dashboard.home.book}
+            </Link>
+          </>
+        }
+      />
       {adding && (
         <CreateStudentDialog
           onClose={() => setAdding(false)}
@@ -35,6 +44,6 @@ export function QuickActions() {
         />
       )}
       {notice && <Toast message={notice} onDismiss={() => setNotice(null)} />}
-    </div>
+    </>
   );
 }

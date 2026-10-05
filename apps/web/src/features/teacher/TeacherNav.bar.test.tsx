@@ -5,23 +5,20 @@ import { TeacherNav } from './TeacherNav';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
-describe('TeacherNav on a phone', () => {
-  it('is a fixed bottom bar of seven equal tabs (56px) that turns into the top row from sm up', () => {
+describe('TeacherNav layout (owner, 2026-10-05: one compact bar on phones)', () => {
+  it('no fixed bottom bar: a vertical list (the «القائمة» sheet) that becomes a row from 900px', () => {
     render(<TeacherNav />);
     const nav = screen.getByRole('navigation', { name: t.teacherNav.label });
-    expect(nav.className).toMatch(/fixed .*bottom-0/);
-    expect(nav.className).toContain('sm:static');
-    expect(nav.querySelector('ul')?.className).toContain('grid-cols-7');
-    // «كشوف الشهر» is the eighth link, hidden on the phone bar (one tap in from «أرباحي»)
-    expect(screen.getAllByRole('link')).toHaveLength(8);
-    expect(screen.getByRole('link', { name: t.teacherNav.statements }).closest('li')?.className).toContain('max-sm:hidden');
-    for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-14');
+    expect(nav.className).not.toMatch(/fixed/);
+    const list = nav.querySelector('ul')?.className ?? '';
+    expect(list).toContain('flex-col');
+    expect(list).toContain('shell:flex-row');
   });
 
-  it('never cuts a tab word with an ellipsis at 360–390px: it wraps to two short lines instead', () => {
+  it('every link, «كشوف الشهر» included, is a 44px tap target with its whole word', () => {
     render(<TeacherNav />);
-    const label = screen.getByText(t.teacherNav.payouts);
-    expect(label.className).not.toContain('truncate');
-    expect(label.className).toContain('line-clamp-2');
+    expect(screen.getAllByRole('link')).toHaveLength(8);
+    for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-11');
+    expect(screen.getByText(t.teacherNav.payouts).className).not.toContain('truncate');
   });
 });
