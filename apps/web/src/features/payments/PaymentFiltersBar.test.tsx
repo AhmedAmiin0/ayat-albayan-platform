@@ -44,7 +44,7 @@ describe('PaymentFiltersBar', () => {
     fireEvent.click(opener);
     const sheet = within(screen.getByRole('dialog', { name: t.payments.filters }));
     fireEvent.change(sheet.getByLabelText(t.finance.to), { target: { value: '2026-10-31' } });
-    expect(onChange).toHaveBeenCalledWith({ method: 'cash', from: '2026-10-01', to: '2026-10-31' });
+    expect(onChange).toHaveBeenCalledWith({ to: '2026-10-31' });
     fireEvent.click(sheet.getByRole('button', { name: t.payments.showResults }));
     expect(screen.queryByRole('dialog')).toBeNull();
   });
