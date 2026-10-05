@@ -18,6 +18,8 @@ const REFRESH: readonly RoomEvent[] = [
   RoomEvent.AudioPlaybackStatusChanged,
   RoomEvent.RecordingStatusChanged,
   RoomEvent.ParticipantMetadataChanged,
+  // A staff «سماح» / «إيقاف مشاركة» (UpdateParticipant) changes who may share the screen.
+  RoomEvent.ParticipantPermissionsChanged,
 ];
 
 /** Kicked (RemoveParticipant) and opened elsewhere get their own screens; anything else is «خرجت». */

@@ -8,6 +8,7 @@ export const tile = (o: Partial<TileView> & { key: string }): TileView => ({
   identity: o.key,
   role: null,
   isBoard: false,
+  shareAllowed: false,
   isLocal: false,
   kind: 'camera',
   speaking: false,
@@ -32,7 +33,8 @@ export interface FakeClient extends RoomClient {
 }
 
 export function fakeClient(initial: Partial<RoomSnapshot> = {}, failures: MediaFailure[] = []): FakeClient {
-  let snap: RoomSnapshot = { ...EMPTY_SNAPSHOT, status: 'connected', ...initial };
+  // Staff by default: may share the screen (a guest's test passes shareAllowed: false).
+  let snap: RoomSnapshot = { ...EMPTY_SNAPSHOT, status: 'connected', shareAllowed: true, ...initial };
   const listeners = new Set<(s: RoomSnapshot) => void>();
   const data = new Set<(p: DataPacketIn) => void>();
   const client: FakeClient = {

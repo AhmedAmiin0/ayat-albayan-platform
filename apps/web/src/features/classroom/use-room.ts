@@ -1,8 +1,8 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { connectFailureText } from './connect-failure';
 import { mediaErrorText } from './errors';
 import { EMPTY_SNAPSHOT, type DataPacketIn, type DataSendOptions, type RoomClient, type RoomSnapshot } from './room-types';
-import { t } from '@/lib/i18n';
 
 export interface RoomController {
   snap: RoomSnapshot;
@@ -39,7 +39,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
     const offData = c.onData((packet) => data.current.forEach((l) => l(packet)));
     c.connect(join.url, join.token)
       .then((fails) => live && setNotes(fails.map((f) => mediaErrorText(f.device, f.error))))
-      .catch(() => live && setFailure(t.classroom.error.connect_failed));
+      .catch((error: unknown) => live && setFailure(connectFailureText({ url: join.url, error, pageProtocol: window.location.protocol })));
     return () => {
       live = false;
       off();

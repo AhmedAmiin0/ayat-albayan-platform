@@ -22,6 +22,8 @@ export interface TileView {
   videoRev: string;
   /** A screen tile that carries someone's shared whiteboard, not their screen. */
   isBoard: boolean;
+  /** Their token (or a staff «سماح») lets them publish a screen share. */
+  shareAllowed: boolean;
 }
 
 export interface RoomSnapshot {
@@ -35,6 +37,8 @@ export interface RoomSnapshot {
   boardShareOn: boolean;
   /** LiveKit egress is recording the room. */
   isRecording: boolean;
+  /** This participant may publish a screen share now (staff always; a guest after «سماح»). */
+  shareAllowed: boolean;
 }
 
 export type MediaDevice = 'mic' | 'cam';
@@ -83,4 +87,5 @@ export const EMPTY_SNAPSHOT: RoomSnapshot = {
   shareOn: false,
   boardShareOn: false,
   isRecording: false,
+  shareAllowed: false,
 };

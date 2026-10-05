@@ -2324,7 +2324,10 @@
       "no_lesson": "There is no upcoming lesson for this student",
       "lesson_not_open": "This lesson cannot be opened: it was cancelled or already held",
       "meeting_ended": "This meeting has ended",
-      "meeting_not_found": "Meeting not found"
+      "meeting_not_found": "Meeting not found",
+      "cannot_grant_share": "You cannot allow this participant to share the screen",
+      "insecure_url": "The classroom server address starts with ws:// while this page uses https, so the browser blocks it. An administrator must set LIVEKIT_URL to a wss:// address",
+      "server_unreachable": "The classroom server could not be reached. Check your connection; if it keeps happening, ask the administrators to check the server settings"
     },
     "admin": {
       "nav": "Online classrooms",
@@ -2405,7 +2408,25 @@
     },
     "openNow": "Open the room now",
     "opening": "Opening the room…",
-    "openedHint": "The room is open; everyone can join now"
+    "openedHint": "The room is open; everyone can join now",
+    "shareRequest": {
+      "request": "Ask to share screen",
+      "pending": "Waiting for approval…",
+      "asks": "{name} asks to share their screen",
+      "allow": "Allow",
+      "deny": "Decline",
+      "allowed": "You may now share your screen",
+      "denied": "Your request to share the screen was declined",
+      "stop": "Stop {name}’s sharing",
+      "title": "Screen share requests"
+    },
+    "stage": {
+      "maximize": "Maximise screen",
+      "minimize": "Minimise",
+      "hideStrip": "Hide participants",
+      "showStrip": "Show participants",
+      "rotateHint": "Turn your phone sideways to see the screen better"
+    }
   },
   "sales": {
     "title": "Sales",

@@ -35,6 +35,7 @@ import { RoomAdmission } from './room-admission';
 import { RoomJoinService } from './room-join.service';
 import { RoomOpenController } from './room-open.controller';
 import { RoomOpenService } from './room-open.service';
+import { ShareGrantService } from './share-grant.service';
 import { StudentLinkAdminService } from './student-link.admin.service';
 import { StudentLinkAdminController, StudentLinkPublicController } from './student-link.controller';
 import { StudentLinkQueries } from './student-link.queries';
@@ -81,6 +82,7 @@ import { StudentLinkService } from './student-link.service';
     GuestJoinService,
     JoinLinkService,
     JoinLinkStaffService,
+    ShareGrantService,
     JoinLinkCopyService,
     AssistantsService,
     LessonRoleService,

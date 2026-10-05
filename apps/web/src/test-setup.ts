@@ -6,3 +6,8 @@ import { afterEach } from 'vitest';
 configure({ asyncUtilTimeout: 4000 });
 
 afterEach(cleanup);
+
+// jsdom has no screen capture; a desktop browser does. Specs about phones delete it to hide the buttons.
+if (typeof navigator !== 'undefined' && !navigator.mediaDevices) {
+  Object.defineProperty(navigator, 'mediaDevices', { configurable: true, value: { getDisplayMedia: () => Promise.reject(new Error('jsdom')) } });
+}
