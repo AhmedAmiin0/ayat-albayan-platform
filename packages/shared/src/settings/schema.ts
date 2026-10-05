@@ -2,6 +2,7 @@ import { z } from 'zod';
 import { E164_RE } from '../phone.js';
 import { timeZone } from '../schemas/common.js';
 import { SETTING_FIELD_OF, SETTING_KEY_OF, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingField, type SettingsUpdate } from './registry.js';
+import { shapeZod } from './shape.js';
 import type { SettingDef } from './types.js';
 
 /** One entry's PATCH field. The follow-up list keeps its 'not_ascending' message (the web names it). */
@@ -29,6 +30,8 @@ export function settingZod(def: SettingDef): z.ZodType {
         .refine((h) => h.every((v, i) => i === 0 || v > (h[i - 1] ?? 0)), 'not_ascending');
     case 'enum':
       return z.enum(def.options as [string, ...string[]]);
+    case 'json':
+      return def.nullable ? shapeZod(def.shape).nullable() : shapeZod(def.shape);
   }
 }
 

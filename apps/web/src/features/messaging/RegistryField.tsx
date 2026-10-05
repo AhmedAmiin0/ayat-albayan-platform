@@ -2,8 +2,12 @@ import { CURRENCY_ISOS, SETTING_FIELD_OF, settingDef, type SettingKey } from '@a
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
+import { ResetButton } from '../config/ResetButton';
+import { RowNotes } from '../config/RowNotes';
+import { useSettingsView } from '../config/settings-view';
+import { ShapeRow } from '../config/ShapeRow';
 import { flag, onKey, str } from './settings-form';
-import { CheckField, NumberField, SettingRow, type SettingRowProps } from './SettingsFields';
+import { CheckField, NumberField, SettingRow, type RowExtras, type SettingRowProps } from './SettingsFields';
 import { settingText } from './setting-text';
 import type { SettingsFormState } from './use-settings-form';
 
@@ -28,28 +32,34 @@ function CodeSelect(p: { control: ControlProps; value: string; options: readonly
  */
 export function RegistryField({ settingKey, state }: { settingKey: SettingKey; state: SettingsFormState }) {
   const { form, errors, set } = state;
+  const { meta } = useSettingsView();
   const def = settingDef(settingKey);
   const field = SETTING_FIELD_OF[settingKey];
   const words = settingText(settingKey);
+  const extras: RowExtras = {
+    extra: <RowNotes dirty={state.dirty(settingKey)} meta={meta[settingKey]} />,
+    actions: state.atDefault(settingKey) ? null : <ResetButton name={words.label} onClick={() => state.reset(settingKey)} />,
+  };
+  if (def.type === 'json') return <ShapeRow settingKey={settingKey} state={state} extras={extras} />;
   const value = str(form, field);
   const setText = (v: string) => set({ [field]: v });
   const error = errors[field];
   if (def.type === 'bool') {
-    return <CheckField label={words.label} hint={words.hint} checked={flag(form, field)} onChange={(v) => set({ [field]: v })} />;
+    return <CheckField {...extras} label={words.label} hint={words.hint} checked={flag(form, field)} onChange={(v) => set({ [field]: v })} />;
   }
   if (def.type === 'int' || def.type === 'int_list') {
     const on = def.type === 'int' && def.nullable ? flag(form, onKey(field)) : null;
     return (
       <>
         {on !== null && (
-          <CheckField label={words.toggle ?? words.label} hint={words.toggleHint} checked={on} onChange={(v) => set({ [onKey(field)]: v })} />
+          <CheckField {...extras} label={words.toggle ?? words.label} hint={words.toggleHint} checked={on} onChange={(v) => set({ [onKey(field)]: v })} />
         )}
-        <NumberField list={def.type === 'int_list'} label={words.label} hint={words.hint} disabled={on === false} value={value} error={error} onChange={setText} />
+        <NumberField {...(on === null ? extras : {})} list={def.type === 'int_list'} label={words.label} hint={words.hint} disabled={on === false} value={value} error={error} onChange={setText} />
       </>
     );
   }
   return (
-    <SettingRow label={words.label} hint={words.hint} error={error}>
+    <SettingRow {...extras} label={words.label} hint={words.hint} error={error}>
       {(p) =>
         def.type === 'currency' || def.type === 'enum' ? (
           <CodeSelect control={p} value={value} options={def.type === 'enum' ? def.options : CURRENCY_ISOS} onValue={setText} />

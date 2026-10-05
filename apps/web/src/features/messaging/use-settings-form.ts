@@ -1,11 +1,18 @@
-import type { AcademySettings } from '@ab/shared';
+import type { AcademySettings, SettingKey } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { isDefault, isDirty, resetPatch } from '../config/settings-dirty';
 import { updateSettings } from './api';
 import { settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
 
 export interface SettingsFormState {
   form: SettingsForm;
+  /** The last saved values (what «معدَّل» compares against). */
+  initial: SettingsForm;
+  dirty: (key: SettingKey) => boolean;
+  atDefault: (key: SettingKey) => boolean;
+  /** Back to the setting's default (unsaved until «حفظ»). */
+  reset: (key: SettingKey) => void;
   errors: SettingsErrors;
   set: (patch: SettingsForm) => void;
   /** Validates every field, then one PATCH /settings (audited); errors stay on their fields. */
@@ -21,7 +28,8 @@ export interface SettingsFormState {
  */
 export function useSettingsForm(settings: AcademySettings, onSaved: () => void): SettingsFormState {
   const queryClient = useQueryClient();
-  const [form, setForm] = useState<SettingsForm>(() => settingsForm(settings));
+  const [initial, setInitial] = useState<SettingsForm>(() => settingsForm(settings));
+  const [form, setForm] = useState<SettingsForm>(initial);
   const [errors, setErrors] = useState<SettingsErrors>({});
   const save = useMutation({
     mutationFn: updateSettings,
@@ -29,6 +37,7 @@ export function useSettingsForm(settings: AcademySettings, onSaved: () => void):
       queryClient.setQueryData(['settings'], next);
       // The public subset (join window, upload limit, …) other screens read.
       void queryClient.invalidateQueries({ queryKey: ['settings', 'public'] });
+      void queryClient.invalidateQueries({ queryKey: ['config', 'meta'] });
       onSaved();
     },
   });
@@ -37,7 +46,19 @@ export function useSettingsForm(settings: AcademySettings, onSaved: () => void):
     const result = settingsUpdate(form);
     if (!result.ok) return setErrors(result.errors);
     setErrors({});
-    save.mutate(result.value);
+    const sent = form;
+    save.mutate(result.value, { onSuccess: () => setInitial(sent) });
   };
-  return { form, errors, set, submit, saving: save.isPending, failed: save.isError };
+  return {
+    form,
+    initial,
+    dirty: (key) => isDirty(key, form, initial),
+    atDefault: (key) => isDefault(key, form),
+    reset: (key) => set(resetPatch(key)),
+    errors,
+    set,
+    submit,
+    saving: save.isPending,
+    failed: save.isError,
+  };
 }
