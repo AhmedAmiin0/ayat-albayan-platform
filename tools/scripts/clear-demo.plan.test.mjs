@@ -3,11 +3,15 @@ import { test } from 'node:test';
 import {
   allowedTarget,
   DELETE_ORDER,
+  DEMO_DATA,
   demoSelection,
   STAGING_REF,
   studentKey,
 } from './clear-demo.plan.mjs';
-import { APPLICANTS, DEMO_NOTE, FAMILIES, LEADS, TEACHERS } from './seed-demo.data.mjs';
+import { DEMO_NOTE, TEACHERS } from './seed-demo.data.mjs';
+import { TEST_FAMILY, TEST_TEACHER } from './seed-test-account.data.mjs';
+
+const { APPLICANTS, FAMILIES, LEADS } = DEMO_DATA;
 
 const E164 = /^\+[1-9]\d{6,14}$/;
 const local = 'postgresql://postgres:postgres@127.0.0.1:54322/postgres';
@@ -20,7 +24,7 @@ test('selects every row the seed writes, by the same phones it upserts on', () =
   const s = demoSelection();
   assert.deepEqual(
     s.teacherPhones,
-    TEACHERS.map((t) => t.phone),
+    DEMO_DATA.TEACHERS.map((t) => t.phone),
   );
   assert.deepEqual(
     s.guardianPhones,
@@ -44,6 +48,16 @@ test('selects every row the seed writes, by the same phones it upserts on', () =
   ]) {
     assert.match(phone, E164);
   }
+});
+
+test('also selects the staging test account (seed-test-account.mjs)', () => {
+  const s = demoSelection();
+  assert.deepEqual(DEMO_DATA.TEACHERS.slice(0, TEACHERS.length), TEACHERS);
+  assert.ok(s.teacherPhones.includes(TEST_TEACHER.phone));
+  assert.ok(TEST_TEACHER.en.endsWith(s.teacherNameSuffix));
+  assert.ok(s.guardianPhones.includes(TEST_FAMILY.phone));
+  assert.ok(s.studentKeys.includes(studentKey(TEST_FAMILY.phone, TEST_FAMILY.student.name)));
+  assert.equal(TEST_FAMILY.note, s.note);
 });
 
 test('carries the seed markers, so a real row sharing a phone is never selected', () => {

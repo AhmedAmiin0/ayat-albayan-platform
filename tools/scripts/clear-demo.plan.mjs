@@ -2,6 +2,15 @@
 // Each table is matched by the key the seed upserts on (phone; guardian phone + student name) AND
 // by the seed's marker, so a real row that happens to share a phone is never selected.
 import { APPLICANTS, DEMO_NOTE, FAMILIES, LEADS, TEACHERS } from './seed-demo.data.mjs';
+import { TEST_FAMILY, TEST_TEACHER } from './seed-test-account.data.mjs';
+
+/** seed-demo's rows plus the test account's (seed-test-account.mjs; its login stays: --remove). */
+export const DEMO_DATA = {
+  APPLICANTS,
+  LEADS,
+  TEACHERS: [...TEACHERS, TEST_TEACHER],
+  FAMILIES: [...FAMILIES, { phone: TEST_FAMILY.phone, students: [TEST_FAMILY.student] }],
+};
 
 /** Hosted STAGING project (same pooler/user as tools/migrate/src/config.ts). */
 export const STAGING_REF = 'knxfwiimjcifwckhwbim';
@@ -53,7 +62,7 @@ export const DELETE_ORDER = [
 /** Student key as the delete compares it: `${guardian phone}|${student name}`. */
 export const studentKey = (phone, name) => `${phone}|${name}`;
 
-export function demoSelection(data = { APPLICANTS, FAMILIES, LEADS, TEACHERS }) {
+export function demoSelection(data = DEMO_DATA) {
   return {
     note: DEMO_NOTE,
     teacherNameSuffix: ' (DEMO)',

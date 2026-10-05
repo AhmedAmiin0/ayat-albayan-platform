@@ -16,6 +16,7 @@
     "env:local": "node tools/scripts/write-local-env.mjs",
     "seed:demo": "node --env-file-if-exists=e2e/.env tools/scripts/seed-demo.mjs",
     "clear:demo": "node --env-file-if-exists=e2e/.env tools/scripts/clear-demo.mjs",
+    "seed:test-account": "node --env-file-if-exists=e2e/.env tools/scripts/seed-test-account.mjs",
     "migrate": "pnpm --filter @ab/migrate cli",
     "migrate:dry": "pnpm --filter @ab/migrate cli dry-run",
     "migrate:apply": "pnpm --filter @ab/migrate cli apply",
