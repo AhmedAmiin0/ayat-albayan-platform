@@ -47,6 +47,11 @@ jobs:
     outputs:
       ready: ${{ steps.check.outputs.ready }}
     steps:
+      - name: Manual runs must be started on develop
+        if: ${{ github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/develop' }}
+        run: |
+          echo "::error::staging is deployed from develop only (this run is on ${{ github.ref }})"
+          exit 1
       - name: Refuse to run while the messaging flag is on
         if: ${{ vars.MESSAGING_ENABLED == 'true' }}
         run: |
@@ -90,6 +95,13 @@ jobs:
       SSH_HOST: ${{ vars.SSH_HOST || secrets.VPS_HOST || '148.230.116.195' }}
       SSH_USER: ${{ vars.SSH_USER || secrets.VPS_USER || 'root' }}
     steps:
+      - name: Only the staging directory may be deployed to
+        run: |
+          case "$DEST" in
+            /opt/ayat-albayan-staging*) ;;
+            *) echo "::error::DEPLOY_DIR must be /opt/ayat-albayan-staging (got $DEST)"; exit 1 ;;
+          esac
+          case "$DEST" in *..*|*' '*|*';'*) echo "::error::DEPLOY_DIR has unsafe characters"; exit 1 ;; esac
       - name: Refuse to run while the messaging flag is on
         if: ${{ vars.MESSAGING_ENABLED == 'true' }}
         run: |
@@ -155,7 +167,7 @@ jobs:
           # … and variables:
           SUPABASE_URL: ${{ vars.SUPABASE_URL || secrets.STAGING_SUPABASE_URL }}
           WEB_ORIGIN: ${{ vars.WEB_ORIGIN }}
-          WA_API_BASE: ${{ vars.WA_API_BASE || 'https://graph.facebook.com' }}
+          WA_API_BASE: ${{ vars.WA_API_BASE }}
           WA_API_VERSION: ${{ vars.WA_API_VERSION }}
           WA_WABA_ID: ${{ vars.WA_WABA_ID }}
           WA_APP_ID: ${{ vars.WA_APP_ID }}

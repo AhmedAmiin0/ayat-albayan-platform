@@ -189,16 +189,18 @@ Owner request 2026-10-05: deploys, mobile builds/OTA, database migrations and th
 |---|---|---|---|---|
 | `ci` | push, PR, manual | lint, typecheck, unit, e2e | none | runs without secrets (forks get none) |
 | `deploy-staging` | `ci` green on a push to `develop`; manual | migrations (via `db-migrate`), env merge, API image, web swap, health check, auto rollback | `develop` (+ `staging-db` for the migration job) | never triggered by a PR |
-| `db-migrate` | PR touching migrations; manual `apply`; called by `deploy-staging` | PR: read-only name/SQL check, plus `db push --dry-run` on the owner's own non-fork PRs. Apply: `db push` to staging | PR dry-run: `staging-db-check`; apply: `staging-db` | check only, no secrets |
+| `db-migrate` | PR touching migrations; manual `apply` (+ `include_all`); called by `deploy-staging` | PR: read-only name/SQL check, no secrets (no database dry-run on PRs: a PR run uses the PR's own workflow and lockfile). Apply: `db push` to staging; manual runs may tick `include_all` | apply: `staging-db` | check only, no secrets |
 | `mobile` | manual, on `develop` | `build-android-apk` (EAS preview), `ota-update` (`eas update`), or `both`; OTA is refused if native deps/plugins/app.json native fields changed since the last build unless `force_ota` | `mobile` | never triggered by a PR |
 | `claude-tasks` | manual with a `prompt`; `@claude` comment | Claude Code opens a PR into `develop` | none (no deploy secrets) | ignored: needs the owner as actor, as author of the issue/PR and of every comment in the thread |
 | `roster-report`, `staging-test-account` | manual | read-only roster CSV; test teacher + student on staging | `develop` | never triggered by a PR |
 
-Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. An automatic deploy of `develop` therefore pauses at «waiting for review» whenever migrations are pending; approve it after reading the diff. Manual runs apply only from `develop`. Untick `migrate` on `deploy-staging` to deploy code only.
+Migrations are **never applied by surprise**: the `apply` job waits in `staging-db` for the required reviewer. **Every** apply pauses at «waiting for review», whether or not migrations are pending (the job is gated before it can look); approve it after reading the diff. Manual runs apply only from `develop` (`deploy-staging` also refuses a manual run on any other branch). Untick `migrate` on `deploy-staging` to deploy code only.
+
+**`include_all`** (manual `db-migrate` run only, default off): adds `--include-all` to `supabase db push`. Staging has migration 212 applied while 206 and 213 are pending, so a plain push fails «out of order». Run `db-migrate` once with `apply` and `include_all` ticked, then leave it off. The automatic deploy never forces order.
 
 ### What you must add (Settings → Secrets and variables → Actions, and Settings → Environments)
 
-**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `staging-db-check` (no reviewer, no branch limit; it only lets the owner's PR dry-run read the database), `mobile` (branches `develop`; optional reviewer).
+**Environments:** `develop` (exists; Deployment branches = `develop`), `staging-db` (**add a required reviewer = you**; branches `develop`), `mobile` (branches `develop`; optional reviewer).
 
 | Secret | Where to get it | Used by |
 |---|---|---|
@@ -221,9 +223,26 @@ Migrations are **never applied by surprise**: the `apply` job waits in `staging-
 | `TEST_ACCOUNT_PASSWORD`, `TEST_TEACHER_EMAIL` | Your choice (see «Test teacher on staging») | `staging-test-account` |
 | `TURBO_TOKEN` | Optional Turborepo remote cache | `ci` |
 
-Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `TURBO_TEAM`. Also create, in **Settings → Branches**, protection for `develop` and `main` (PR required) so `claude-tasks` can only open PRs.
+Variables (all optional, defaults in the workflows): `SUPABASE_PROJECT_REF`, `SUPABASE_URL`, `DEPLOY_DIR`, `SSH_HOST`, `SSH_USER`, `API_URL`, `VITE_API_URL`, `WEB_ORIGIN`, `RUN_E2E`, `TURBO_TEAM`. **`develop` is NOT branch-protected today** (and neither is `main`): `claude-tasks` can only open PRs by convention, not by rule. Enabling protection (PR required) is an owner step, see the checklist.
 
 Already created but **not used by any workflow yet:** `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`, other `WA_*`, `LIVEKIT_*` beyond the two above, `GOOGLE_SERVICES_JSON` outside `mobile`. They sit unused until a workflow names them.
+
+### Owner checklist (before and after merging the Actions PR)
+
+Before merging:
+
+1. Settings → Environments: create **`staging-db`** (required reviewer = you; deployment branches = `develop`) and **`mobile`** (deployment branches = `develop`). Without them the jobs wait or fail.
+2. Apply the pending migrations **206 and 213** once: Actions → `db-migrate` → Run workflow on `develop` with `apply` and `include_all` ticked, approve in `staging-db`.
+3. Compare `/opt/ayat-albayan-staging/.env` with the secrets that will overwrite it (`STAGING_SUPABASE_URL`, `STAGING_SUPABASE_SERVICE_ROLE_KEY`, `LIVEKIT_API_KEY`/`LIVEKIT_API_SECRET`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`): a secret that is set replaces the server's value, an empty one keeps it. Also check `MESSAGING_ENABLED` and `WA_PHONE_NUMBER_ID` on the server: no workflow touches them.
+4. Create the secret **`SSH_KNOWN_HOSTS`** (`ssh-keyscan -t ed25519 <host>`).
+
+After merging:
+
+5. Settings → Branches: protect **`develop`** and **`main`** (PR required, `ci` must pass).
+6. Settings → Actions → General → Fork pull request workflows: «Require approval for all outside collaborators».
+7. Delete the unused repository secrets `CRM_*`, `MEETING_CODE`, `FCM_SERVICE_ACCOUNT_JSON`.
+
+Plan note: a **private** repository on the GitHub **Free** plan loses environment protection (required reviewers and deployment-branch rules), so the `staging-db` gate would no longer pause anything. Keep the repository public, or move to a paid plan, before relying on it.
 
 Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` by themselves (a GitHub rule): close and reopen the PR in the UI, or run `ci` by hand on its branch. It reads the whole issue/PR thread, so a thread where anyone but you commented is refused. Comments on a PR from a fork are ignored.
 

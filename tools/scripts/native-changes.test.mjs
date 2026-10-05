@@ -10,8 +10,20 @@ test('identical snapshots have no native change', () => {
   assert.deepEqual(nativeChanges(snap(base, { expo: '~57.0.0' }), snap(base, { expo: '~57.0.0' })), []);
 });
 
-test('a non-native field (name, extra) is ignored', () => {
-  assert.deepEqual(nativeChanges(snap(base), snap({ ...base, name: 'other', extra: { a: 1 } })), []);
+test('a non-native field (description, extra) is ignored', () => {
+  assert.deepEqual(nativeChanges(snap(base), snap({ ...base, description: 'x', extra: { a: 1 } })), []);
+});
+
+test('app name, icon, splash, orientation, theme, notification, status bar and updates are native', () => {
+  const after = snap({ ...base, name: 'm', icon: './a.png', splash: { image: 'b' }, orientation: 'portrait',
+    userInterfaceStyle: 'dark', notification: { color: '#fff' }, androidStatusBar: { barStyle: 'x' }, updates: { url: 'u' } });
+  assert.deepEqual(nativeChanges(snap(base), after).map((f) => f.replace('app.json: expo.', '')),
+    ['name', 'icon', 'splash', 'orientation', 'userInterfaceStyle', 'notification', 'androidStatusBar', 'updates']);
+});
+
+test('changed asset or eas.json files are reported', () => {
+  const found = nativeChanges(snap(base), snap(base), ['apps/mobile/assets/icon.png', 'apps/mobile/eas.json']);
+  assert.deepEqual(found, ['apps/mobile/assets/icon.png changed', 'apps/mobile/eas.json changed']);
 });
 
 test('plugins, android fields and version are native', () => {
