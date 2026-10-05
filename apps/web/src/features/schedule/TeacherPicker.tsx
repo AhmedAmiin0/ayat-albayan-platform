@@ -34,7 +34,7 @@ export function TeacherPicker({ teachers, value, onChange, inline = false }: Tea
         <summary
           className={cn(
             controlClass,
-            'ab-select flex h-10 cursor-pointer list-none items-center pe-8 sm:min-w-[160px] [&::-webkit-details-marker]:hidden',
+            'ab-select flex cursor-pointer list-none items-center pe-8 sm:min-w-[160px] [&::-webkit-details-marker]:hidden',
           )}
         >
           <span className="sr-only">{t.schedule.teacherFilter}: </span>

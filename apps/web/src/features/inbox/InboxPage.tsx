@@ -59,7 +59,7 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
           {threads.isPending && <ListSkeleton rows={6} />}
           {threads.data && (
             <>
-              <ThreadList search={search} threads={threads.data.items} onFilter={filter} total={threads.data.total} />
+              <ThreadList search={search} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
               <Pager
                 page={search.page}
                 total={threads.data.total}

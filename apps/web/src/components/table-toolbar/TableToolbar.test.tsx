@@ -91,4 +91,14 @@ describe('TableToolbar', () => {
     expect(screen.queryByRole('button', { name: new RegExp(`^${t.table.filter}`) })).toBeNull();
     expect(screen.getByRole('button', { name: 'إضافة' })).toBeTruthy();
   });
+
+  it('removing the last chip, or «مسح الكل» in the row, moves focus to «تصفية» (the removed button is gone)', () => {
+    render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} onClearAll={vi.fn()} />);
+    const button = screen.getByRole('button', { name: new RegExp(`^${t.table.filter}`) });
+    fireEvent.click(screen.getByRole('button', { name: chipName }));
+    expect(document.activeElement).toBe(button);
+    button.blur();
+    fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
+    expect(document.activeElement).toBe(button);
+  });
 });

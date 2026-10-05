@@ -63,7 +63,12 @@ describe('dashboard layout never grows past the page', () => {
     await renderPage();
     const names = [`${t.dashboard.byMonth} (${SUMMARY.finance.currency})`, t.dashboard.bySource, t.dashboard.teacherLoad];
     for (const name of names) {
-      expect(screen.getByRole('table', { name }).closest('.ab-scroll-x'), name).not.toBeNull();
+      const box = screen.getByRole('table', { name }).closest('.ab-scroll-x');
+      expect(box, name).not.toBeNull();
+      // Reachable by keyboard and named (axe scrollable-region-focusable): Tab lands on it, arrows scroll it.
+      expect(box?.getAttribute('tabindex'), name).toBe('0');
+      expect(box?.getAttribute('role'), name).toBe('region');
+      expect(box?.getAttribute('aria-label'), name).toBe(name);
     }
   });
 

@@ -25,4 +25,11 @@ describe('TeacherPicker (teacher multi-select)', () => {
     fireEvent.click(screen.getByRole('checkbox', { name: 'نور' }));
     expect(onChange).toHaveBeenLastCalledWith(['t-abrar']);
   });
+
+  it('the summary keeps the control floor (44px on phones, 40px from 640px): no fixed height overrides it', () => {
+    render(<TeacherPicker teachers={ALL} value={[]} onChange={vi.fn()} />);
+    const summary = screen.getByText(t.schedule.allTeachers).closest('summary');
+    expect(summary?.className).toContain('min-h-11');
+    expect(summary?.className).not.toMatch(/(?:^|\s)h-\d/);
+  });
 });

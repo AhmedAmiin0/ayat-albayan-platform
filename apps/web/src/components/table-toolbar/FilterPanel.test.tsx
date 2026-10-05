@@ -53,4 +53,14 @@ describe('FilterPanel', () => {
     expect(footer?.className).toContain('max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))]');
     expect(panel.className).toContain('max-sm:h-dvh');
   });
+
+  it('«مسح الكل» moves focus to the primary button before it goes away, so the dialog keeps focus', () => {
+    const onClearAll = vi.fn();
+    render(<FilterPanel onClose={vi.fn()} onClearAll={onClearAll}>{null}</FilterPanel>);
+    const clear = screen.getByRole('button', { name: t.table.clearAll });
+    clear.focus();
+    fireEvent.click(clear);
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: t.table.showResults }));
+    expect(onClearAll).toHaveBeenCalledOnce();
+  });
 });

@@ -40,6 +40,11 @@ describe('AdminLayout sidebar', () => {
     for (const c of ['shell:gap-y-6', 'shell:pt-6', 'shell:pb-0', 'shell:overflow-y-auto']) expect(cls).toContain(c);
   });
 
+  it('scrolls a focused or current link clear of the sticky foot (scroll-padding at least its height)', () => {
+    const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
+    expect(container.querySelector('aside')?.className).toContain('shell:scroll-pb-44');
+  });
+
   it('aligns the logo with the icon edge of the items (24px from the sidebar edge)', () => {
     const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
     expect(container.querySelector('aside a')?.className).toContain('shell:px-3');

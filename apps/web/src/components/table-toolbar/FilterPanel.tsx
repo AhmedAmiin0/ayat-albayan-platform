@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import { useRef, type ReactNode } from 'react';
 import { t } from '@/lib/i18n';
 import { Button } from '../ui/button';
 import { Dialog } from '../ui/dialog';
@@ -21,6 +21,12 @@ export interface FilterPanelProps {
  * how many rows they leave and only closes.
  */
 export function FilterPanel({ onClose, onClearAll, count = 0, resultCount, children }: FilterPanelProps) {
+  const primary = useRef<HTMLButtonElement>(null);
+  // «مسح الكل» leaves with the last filter: focus moves to the primary button first, not to the page behind the dialog.
+  const clear = () => {
+    primary.current?.focus();
+    onClearAll?.();
+  };
   return (
     <Dialog
       title={t.table.filter}
@@ -31,11 +37,11 @@ export function FilterPanel({ onClose, onClearAll, count = 0, resultCount, child
       actions={
         <>
           {onClearAll && (
-            <Button type="button" variant="ghost" onClick={onClearAll}>
+            <Button type="button" variant="ghost" onClick={clear}>
               {t.table.clearAll}
             </Button>
           )}
-          <Button type="button" onClick={onClose}>
+          <Button ref={primary} type="button" onClick={onClose}>
             {resultCount === undefined ? t.table.showResults : t.table.showResultsCount.replace('{n}', String(resultCount))}
           </Button>
         </>

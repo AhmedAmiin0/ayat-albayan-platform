@@ -1,3 +1,4 @@
+import { ScrollX } from '@/components/ui/scroll-x';
 import { dayMonthLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { sectionTitle } from './Bar';
@@ -24,9 +25,9 @@ export function WeekSection({ week, data }: { week: DayRange; data: DashboardDat
           </div>
           <div className="grid grid-cols-1 content-start gap-2">
             <h3 className="text-sm font-semibold text-ink-2">{t.dashboard.teacherLoad}</h3>
-            <div className="ab-scroll-x">
+            <ScrollX label={t.dashboard.teacherLoad}>
               <TeacherLoad rows={data.teacher_load} />
-            </div>
+            </ScrollX>
           </div>
         </div>
       ) : (

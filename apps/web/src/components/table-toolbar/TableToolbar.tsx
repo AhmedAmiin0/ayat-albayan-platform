@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { Button } from '../ui/button';
@@ -48,6 +48,8 @@ const APPLIED = 'border-lapis bg-accent text-ink enabled:hover:bg-accent [&_svg]
  */
 export function TableToolbar({ search, fields, chips, onClearAll, resultCount, end }: TableToolbarProps) {
   const [open, setOpen] = useState(false);
+  // Where focus lands when a chip or «مسح الكل» takes the chip row away (WCAG 2.4.3).
+  const filterButton = useRef<HTMLButtonElement>(null);
   // Clearing remounts the panel's search boxes, dropping a pending debounced keystroke.
   const [round, setRound] = useState(0);
   const clear = () => {
@@ -64,6 +66,7 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
         {search && <div className="min-w-0 flex-1 basis-44 sm:max-w-[340px]">{search}</div>}
         {fields && (
           <Button
+            ref={filterButton}
             type="button"
             variant="secondary"
             aria-haspopup="dialog"
@@ -79,7 +82,7 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
         {end && <div className="ms-auto flex gap-2.5">{end}</div>}
       </div>
       {fields && <FilterSummary count={count} resultCount={resultCount} />}
-      <ActiveFilterChips chips={chips} onClearAll={clear} />
+      <ActiveFilterChips chips={chips} onClearAll={clear} onEmpty={() => filterButton.current?.focus()} />
       {open && fields && (
         <FilterPanel onClose={() => setOpen(false)} onClearAll={count > 0 ? clear : undefined} count={count} resultCount={resultCount}>
           <div key={round} className="contents">

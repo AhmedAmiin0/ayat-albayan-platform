@@ -1,3 +1,4 @@
+import { ScrollX } from '@/components/ui/scroll-x';
 import { t } from '@/lib/i18n';
 import { Bar } from './Bar';
 import { amount, monthLabel } from './format';
@@ -37,7 +38,7 @@ export function FinanceByMonth({ months, currency }: { months: readonly MonthFin
   const sorter = useHandSort(months, valueOf);
   const max = Math.max(0, ...months.flatMap((m) => MEASURES.map((x) => m[x.key])));
   return (
-    <div className="ab-scroll-x">
+    <ScrollX label={`${t.dashboard.byMonth} (${currency})`}>
       <table className="w-full min-w-[640px] border-collapse text-sm">
         <caption className="sr-only">{`${t.dashboard.byMonth} (${currency})`}</caption>
         <thead>
@@ -63,6 +64,6 @@ export function FinanceByMonth({ months, currency }: { months: readonly MonthFin
           ))}
         </tbody>
       </table>
-    </div>
+    </ScrollX>
   );
 }

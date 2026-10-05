@@ -40,4 +40,32 @@ describe('ActiveFilterChips', () => {
     expect(chip.querySelector('.truncate')?.textContent).toContain('الحسيني');
     expect(chip.closest('li')?.className).toContain('min-w-0');
   });
+
+  describe('focus survives a removal (WCAG 2.4.3)', () => {
+    const chip = (id: string, label: string, onRemove = vi.fn()) => ({ id, label, value: 'س', onRemove });
+    const remove = (label: string) => screen.getByRole('button', { name: t.table.removeFilter.replace('{filter}', label + ': س') });
+    const three = () => [chip('a', 'أ'), chip('b', 'ب'), chip('c', 'ج')];
+
+    it('a removed chip hands focus to the next chip', () => {
+      render(<ActiveFilterChips chips={three()} onClearAll={vi.fn()} />);
+      fireEvent.click(remove('أ'));
+      expect(document.activeElement).toBe(remove('ب'));
+    });
+
+    it('the last chip hands it to the previous one, not to «مسح الكل»', () => {
+      render(<ActiveFilterChips chips={three()} onClearAll={vi.fn()} />);
+      fireEvent.click(remove('ج'));
+      expect(document.activeElement).toBe(remove('ب'));
+    });
+
+    it('the only chip, and «مسح الكل», hand it out of the row to onEmpty', () => {
+      const onEmpty = vi.fn();
+      const { rerender } = render(<ActiveFilterChips chips={[chip('a', 'أ')]} onClearAll={vi.fn()} onEmpty={onEmpty} />);
+      fireEvent.click(remove('أ'));
+      expect(onEmpty).toHaveBeenCalledTimes(1);
+      rerender(<ActiveFilterChips chips={three()} onClearAll={vi.fn()} onEmpty={onEmpty} />);
+      fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
+      expect(onEmpty).toHaveBeenCalledTimes(2);
+    });
+  });
 });
