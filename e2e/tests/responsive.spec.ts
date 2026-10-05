@@ -62,7 +62,8 @@ test.describe('no horizontal overflow on the main screens', () => {
       await settle(admin, `/admin/students/${studentId}`);
       await admin.getByRole('button', { name: ar.subscriptions.new }).first().click();
       const box = await restingBox(admin.getByRole('dialog', { name: ar.subscriptions.new }));
-      expect.soft((box?.y ?? 0) + (box?.height ?? 0), `dialog bottom @${width}px`).toBeLessThanOrEqual(844);
+      // A full-height sheet: allow sub-pixel rounding (844.4 on an 844px screen), not a real overflow.
+      expect.soft((box?.y ?? 0) + (box?.height ?? 0), `dialog bottom @${width}px`).toBeLessThanOrEqual(845);
       expect.soft((box?.x ?? 0) + (box?.width ?? 0), `dialog right @${width}px`).toBeLessThanOrEqual(width);
 
       await settle(teacher, '/teacher');
