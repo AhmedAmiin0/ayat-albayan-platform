@@ -43,6 +43,8 @@ The server `.env` is **merged**, never replaced (`tools/scripts/env-merge.mjs`):
 
 **Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
 
+On every run: the web app is built on the runner before anything on the server changes; if `/health` fails after the swap, the previous API code and web build are restored automatically (migrations are not undone); the run summary shows the commit and links.
+
 Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
 
 Mobile preview APK: `cd apps/mobile && npx eas-cli build --platform android --profile preview` (EAS keeps the Android keystore). Install link: the build page on expo.dev.
