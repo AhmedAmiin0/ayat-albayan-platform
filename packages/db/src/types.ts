@@ -23,6 +23,57 @@ export type Database = {
   };
   public: {
     Tables: {
+      activity_log: {
+        Row: {
+          action: string;
+          actor_id: string | null;
+          actor_role: string;
+          at: string;
+          duration_ms: number;
+          entity: string | null;
+          entity_id: string | null;
+          id: string;
+          ip: unknown;
+          meta: Json;
+          method: string;
+          route: string;
+          status: number;
+          user_agent: string | null;
+        };
+        Insert: {
+          action: string;
+          actor_id?: string | null;
+          actor_role?: string;
+          at?: string;
+          duration_ms?: number;
+          entity?: string | null;
+          entity_id?: string | null;
+          id?: string;
+          ip?: unknown;
+          meta?: Json;
+          method: string;
+          route: string;
+          status: number;
+          user_agent?: string | null;
+        };
+        Update: {
+          action?: string;
+          actor_id?: string | null;
+          actor_role?: string;
+          at?: string;
+          duration_ms?: number;
+          entity?: string | null;
+          entity_id?: string | null;
+          id?: string;
+          ip?: unknown;
+          meta?: Json;
+          method?: string;
+          route?: string;
+          status?: number;
+          user_agent?: string | null;
+        };
+        Relationships: [];
+      };
       admin_tasks: {
         Row: {
           created_at: string;
@@ -2673,6 +2724,24 @@ export type Database = {
       };
     };
     Views: {
+      v_activity_log: {
+        Row: {
+          action: string | null;
+          actor_id: string | null;
+          actor_name: string | null;
+          actor_role: string | null;
+          at: string | null;
+          duration_ms: number | null;
+          entity: string | null;
+          entity_id: string | null;
+          id: string | null;
+          meta: Json | null;
+          method: string | null;
+          route: string | null;
+          status: number | null;
+        };
+        Relationships: [];
+      };
       v_lesson_sequence: {
         Row: {
           lesson_id: string | null;
@@ -2976,6 +3045,7 @@ export type Database = {
           phone_e164: string;
         }[];
       };
+      prune_activity_log: { Args: Record<PropertyKey, never>; Returns: number };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };

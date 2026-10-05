@@ -7,6 +7,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
 import { Tabs } from '@/components/ui/tabs';
+import { EntityActivity } from '@/features/activity/EntityActivity';
 import { t } from '@/lib/i18n';
 import { availabilityQuery, teacherQuery, type Teacher } from './api';
 import { AvailabilityGrid } from './AvailabilityGrid';
@@ -20,12 +21,13 @@ import { TeacherMeta } from './TeacherMeta';
 import { TeacherStudentsPanel } from './TeacherStudentsPanel';
 import { TimeOffList } from './TimeOffList';
 
-type Tab = 'data' | 'availability' | 'students';
+type Tab = 'data' | 'availability' | 'students' | 'activity';
 // «المستحقات» is its own page (the earnings button in the head).
 const TABS: { value: Tab; label: string }[] = [
   { value: 'data', label: t.teachers.tabData },
   { value: 'availability', label: t.availability.title },
   { value: 'students', label: t.teachers.tabStudents },
+  { value: 'activity', label: t.activity.profileTitle },
 ];
 
 /** «المواعيد المتاحة» tab: the weekly editor, then time-off beside the rates (docs/07 §8). */
@@ -84,6 +86,8 @@ export function TeacherDetailPage({ teacherId }: { teacherId: string }) {
           <AvailabilityPanel teacher={data} />
         ) : tab === 'students' ? (
           <TeacherStudentsPanel teacherId={data.id} />
+        ) : tab === 'activity' ? (
+          <EntityActivity entity="teachers" entityId={data.id} />
         ) : (
           <TeacherFacts teacher={data} />
         )}

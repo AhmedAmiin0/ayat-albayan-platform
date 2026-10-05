@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ActivityModule } from './common/activity/activity.module';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { DbModule } from './common/db/db.module';
@@ -44,6 +45,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     DbModule,
     AuditModule,
     AuthModule,
+    ActivityModule,
     SettingsModule,
     StorageModule,
     LessonEventsModule,

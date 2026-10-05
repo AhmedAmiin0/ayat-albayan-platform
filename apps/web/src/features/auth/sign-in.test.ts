@@ -1,7 +1,7 @@
 import { QueryClient } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { signIn } from './sign-in';
+import { signIn, signOut } from './sign-in';
 
 const auth = vi.hoisted(() => ({
   signInWithPassword: vi.fn(),
@@ -9,9 +9,11 @@ const auth = vi.hoisted(() => ({
   getSession: vi.fn(),
 }));
 const apiFetch = vi.hoisted(() => vi.fn());
+const reportSession = vi.hoisted(() => vi.fn());
 
 vi.mock('@/lib/supabase', () => ({ supabase: { auth } }));
 vi.mock('@/lib/api', () => ({ apiFetch }));
+vi.mock('./session-activity', () => ({ reportSession }));
 
 const creds = { email: 'admin@ab.local', password: 'secret-123' };
 
@@ -25,6 +27,7 @@ describe('signIn (R-AUTH-01)', () => {
     auth.signInWithPassword.mockResolvedValue({ error: null });
     apiFetch.mockResolvedValue({ id: 'u1', email: creds.email, role: 'teacher' });
     await expect(signIn(creds, new QueryClient())).resolves.toEqual({ ok: true, home: '/teacher' });
+    expect(reportSession).toHaveBeenCalledWith('login');
   });
 
   it('shows the Arabic error on bad credentials', async () => {
@@ -32,6 +35,7 @@ describe('signIn (R-AUTH-01)', () => {
     const result = await signIn(creds, new QueryClient());
     expect(result).toEqual({ ok: false, error: t.auth.invalidCredentials });
     expect(apiFetch).not.toHaveBeenCalled();
+    expect(reportSession).toHaveBeenCalledWith('login-failed');
   });
 
   it('signs out users without a profile role', async () => {
@@ -40,5 +44,14 @@ describe('signIn (R-AUTH-01)', () => {
     const result = await signIn(creds, new QueryClient());
     expect(result).toEqual({ ok: false, error: t.auth.noRole });
     expect(auth.signOut).toHaveBeenCalled();
+  });
+
+  it('reports the sign-out before the token is dropped («سجل النشاط»)', async () => {
+    const order: string[] = [];
+    reportSession.mockImplementation(async () => void order.push('report'));
+    auth.signOut.mockImplementation(async () => void order.push('signOut'));
+    await signOut(new QueryClient());
+    expect(reportSession).toHaveBeenCalledWith('logout');
+    expect(order).toEqual(['report', 'signOut']);
   });
 });
