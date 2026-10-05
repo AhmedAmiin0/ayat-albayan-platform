@@ -9,6 +9,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { AdminOpsSection } from './AdminOpsSection';
 import { AppearancePicker } from './AppearancePicker';
+import { FinanceSection } from './FinanceSection';
 import { LanguageRow } from './LanguageRow';
 import { MoneySection } from './MoneySection';
 import { signOutDevice } from './sign-out';
@@ -36,6 +37,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
       </View>
       <MoneySection />
       <AdminOpsSection />
+      <FinanceSection />
       <AppearancePicker />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>
