@@ -1,6 +1,6 @@
 import { DURATIONS, type PackageSize, type PaymentKind, type PaymentMethod, type PayoutStatus } from '@ab/shared';
 import type { Json } from '@ab/db';
-import ar from '@ab/shared/i18n/ar.json';
+import { ar } from '../../common/i18n/server-text';
 import { riyadhStamp, safeText, type Cell } from './csv';
 
 // Payments and payouts CSV rows (R-RPT-03, R-TCH-04). Money as numbers, in the row's currency.
@@ -19,11 +19,11 @@ export interface PaymentIn {
   subscription: { package: PackageSize | null; lessons_total: number; student: { code: string | null; name: string } | null } | null;
 }
 
-export const PAYMENT_HEADER: Cell[] = [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note];
+export const paymentHeader = (): Cell[] => [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note];
 
 export function paymentRows(rows: readonly PaymentIn[]): Cell[][] {
   return [
-    PAYMENT_HEADER,
+    paymentHeader(),
     ...rows.map((p) => {
       const sub = p.subscription;
       return [
@@ -77,13 +77,13 @@ export function payoutLines(breakdown: Json): Line[] {
   });
 }
 
-export const PAYOUT_HEADER: Cell[] = [Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt];
+export const payoutHeader = (): Cell[] => [Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt];
 
 /** One total row per teacher (by name), then one row per breakdown line. */
 export function payoutRows(rows: readonly PayoutIn[]): Cell[][] {
   const sorted = [...rows].sort((a, b) => (a.teacher?.display_name_ar ?? '').localeCompare(b.teacher?.display_name_ar ?? '', 'ar'));
   return [
-    PAYOUT_HEADER,
+    payoutHeader(),
     ...sorted.flatMap((p) => {
       const lead: Cell[] = [safeText(p.teacher?.display_name_ar), p.month.slice(0, 7), ar.enums.payoutStatus[p.status]];
       const total: Cell[] = [...lead, X.total, p.lessons_count, '', Number(p.amount), p.currency, riyadhStamp(p.paid_at)];

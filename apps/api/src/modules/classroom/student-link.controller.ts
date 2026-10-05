@@ -1,7 +1,7 @@
 import type { RoomJoinResult, StudentJoinLinkUrl, StudentLinkView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Ip, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Public, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions, Public } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StudentLinkAdminService } from './student-link.admin.service';
 import { StudentLinkService } from './student-link.service';
@@ -30,7 +30,7 @@ export class StudentLinkPublicController {
 /** «رابط دخول الطالب» (admin): create or rotate the student's long-lived link. */
 @ApiTags('classroom')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('classroom.links')
 @Controller('students/:id/join-link')
 export class StudentLinkAdminController {
   constructor(private readonly links: StudentLinkAdminService) {}

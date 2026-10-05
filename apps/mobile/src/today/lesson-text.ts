@@ -1,6 +1,7 @@
-import { clockTime, RIYADH_TZ, type LessonView } from '@ab/shared';
+import { clockTime, type LessonView, RIYADH_TZ, teacherName } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { ltr } from '@/ui/Ltr';
+import { locale } from '@/lib/locale';
 
 // Card lines for a lesson (R-SCH-01: Riyadh time on the spine, the student's own clock beside it
 // when it differs). Western digits, 24h, wall-clock from the UTC instants the API returns.
@@ -31,7 +32,7 @@ export function studentTimes(lesson: LessonView): string[] {
 
 /** «مع أبرار · 45 دقيقة · 18:00 بتوقيت مسقط». */
 export function lessonSubtitle(lesson: LessonView): string {
-  const teacher = t.today.withTeacher.replace('{teacher}', lesson.teacher.display_name_ar);
+  const teacher = t.today.withTeacher.replace('{teacher}', teacherName(lesson.teacher, locale));
   return [teacher, durationLabel(lesson), ...studentTimes(lesson)]
     .filter((part): part is string => part !== undefined)
     .join(' · ');
@@ -39,5 +40,5 @@ export function lessonSubtitle(lesson: LessonView): string {
 
 /** «جودى خالد، يوسف أحمد» for the compact past row. */
 export function studentNames(lesson: LessonView): string {
-  return lesson.students.map((s) => s.name).join(t.common.listJoiner);
+  return lesson.students.map((s) => s.name).join(t.common.listSeparator);
 }

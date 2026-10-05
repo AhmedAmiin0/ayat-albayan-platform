@@ -1,3 +1,4 @@
+import type { Permission } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
@@ -5,29 +6,29 @@ import { cn } from '@/lib/utils';
 
 // The teacher's own pages (R-TCH-03), the same order as the mobile tabs.
 const ITEMS = [
-  { to: '/teacher', label: t.teacherNav.today, icon: 'clock', exact: true },
-  { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', exact: false },
-  { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', exact: false },
-  { to: '/teacher/students', label: t.teacherNav.students, icon: 'users', exact: false },
-  { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', exact: false },
-  { to: '/teacher/earnings', label: t.teacherNav.payouts, icon: 'wallet', exact: false },
+  { to: '/teacher', label: t.teacherNav.today, icon: 'clock', exact: true, permission: 'self.teacher' },
+  { to: '/teacher/calendar', label: t.teacherNav.calendar, icon: 'calendar', exact: false, permission: 'self.teacher' },
+  { to: '/teacher/inbox', label: t.teacherNav.chats, icon: 'chat', exact: false, permission: 'inbox.read' },
+  { to: '/teacher/students', label: t.teacherNav.students, icon: 'users', exact: false, permission: 'self.teacher' },
+  { to: '/teacher/reports', label: t.teacherNav.reports, icon: 'receipt', exact: false, permission: 'self.teacher' },
+  { to: '/teacher/earnings', label: t.teacherNav.payouts, icon: 'wallet', exact: false, permission: 'self.teacher' },
   // «كشوف الشهر»: from sm up only; on the phone bar it is one tap in from «أرباحي».
-  { to: '/teacher/payouts', label: t.teacherNav.statements, icon: 'receipt', exact: false, wide: true },
-  { to: '/teacher/feedback', label: t.teacherNav.feedback, icon: 'star', exact: false },
-] as const satisfies readonly { to: string; label: string; icon: IconName; exact: boolean; wide?: boolean }[];
+  { to: '/teacher/payouts', label: t.teacherNav.statements, icon: 'receipt', exact: false, wide: true, permission: 'self.teacher' },
+  { to: '/teacher/feedback', label: t.teacherNav.feedback, icon: 'star', exact: false, permission: 'self.teacher' },
+] as const satisfies readonly { to: string; label: string; icon: IconName; exact: boolean; wide?: boolean; permission: Permission }[];
 
 /**
  * A fixed bottom bar on phones (seven icon + word tabs, 56px, like the mobile app), a row of 48px
  * links under the logo from sm up (docs/07 §7). TopBarLayout leaves room under the page for it.
  */
-export function TeacherNav() {
+export function TeacherNav({ can = () => true }: { can?: (permission: Permission) => boolean }) {
   return (
     <nav
       aria-label={t.teacherNav.label}
       className="fixed inset-x-0 bottom-0 z-20 border-t border-rule-strong bg-page pb-[env(safe-area-inset-bottom)] sm:static sm:z-auto sm:border-0 sm:bg-transparent sm:pb-0"
     >
       <ul className="grid grid-cols-7 sm:flex sm:gap-1">
-        {ITEMS.map((item) => (
+        {ITEMS.filter((item) => can(item.permission)).map((item) => (
           <li key={item.to} className={cn('min-w-0', 'wide' in item && 'max-sm:hidden')}>
             <Link
               to={item.to}

@@ -2,7 +2,7 @@ import { LEAD_SOURCES, LEAD_STATUSES, leadColumnQueryShape, leadFollowUpSchema, 
 import { Body, Controller, Get, Param, ParseUUIDPipe, Patch, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { pageQueryShape, parseOr400 } from './http';
 import { LeadProfileService } from './lead-profile.service';
@@ -20,7 +20,7 @@ const statusBody = z.object({ status: z.enum(LEAD_STATUSES) });
 /** Admin lead inbox (R-LEAD-01, R-LEAD-04). Upsert-by-phone has no route: the webhook calls it. */
 @ApiTags('leads')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('leads.write')
 @Controller('leads')
 export class LeadsController {
   constructor(
@@ -29,6 +29,7 @@ export class LeadsController {
   ) {}
 
   @Get()
+  @Permissions('leads.read')
   list(@Query() query: unknown) {
     return this.leads.list(parseOr400(listQuery, query));
   }

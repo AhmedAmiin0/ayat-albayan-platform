@@ -1,7 +1,7 @@
 import { leadAssignSchema, type SalesPersonView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { SalesAssignService } from './sales-assign.service';
@@ -9,7 +9,7 @@ import { SalesAssignService } from './sales-assign.service';
 /** The admin's side of the sales portal: who owns which lead. */
 @ApiTags('sales')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('leads.assign')
 @Controller()
 export class SalesAdminController {
   constructor(private readonly assigns: SalesAssignService) {}

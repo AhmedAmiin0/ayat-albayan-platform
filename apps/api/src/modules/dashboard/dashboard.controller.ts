@@ -1,13 +1,13 @@
 import { Controller, Get, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { DashboardService } from './dashboard.service';
 import { parseRange } from './range';
 
 /** The /admin home (R-RPT-01, R-RPT-02). Admin only: it reads every teacher's and family's numbers. */
 @ApiTags('dashboard')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('dashboard.read')
 @Controller('dashboard')
 export class DashboardController {
   constructor(private readonly dashboard: DashboardService) {}

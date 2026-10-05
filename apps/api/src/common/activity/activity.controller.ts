@@ -3,14 +3,14 @@ import { Controller, Get, HttpCode, HttpException, HttpStatus, Ip, Post, Query }
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
 import { WindowCounter } from '../../modules/feedback/feedback.rate-limit';
-import { CurrentUser, Public, Roles } from '../auth/decorators';
+import { CurrentUser, Permissions, Public, SignedIn } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { ActivityQueries } from './activity.queries';
 
 /** «سجل النشاط»: GET /activity, admin only, paged + filtered + sorted (R-NFR-08). */
 @ApiTags('activity')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('activity.read')
 @Controller('activity')
 export class ActivityController {
   constructor(private readonly activity: ActivityQueries) {}
@@ -33,6 +33,7 @@ function tooMany(): HttpException {
  * Rate-limited per user (30) and, for failures, per IP (20), each per 10 minutes.
  */
 @ApiTags('activity')
+@SignedIn()
 @Controller('activity/session')
 export class AuthSessionController {
   private readonly perUser = new WindowCounter(30);

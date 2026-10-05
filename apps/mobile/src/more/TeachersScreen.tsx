@@ -1,4 +1,4 @@
-import { teacherStatusStyle } from '@ab/shared';
+import { teacherName, teacherStatusStyle } from '@ab/shared';
 import { router } from 'expo-router';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
@@ -10,6 +10,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { StatusChip } from '@/ui/StatusChip';
 import type { Teacher } from './types';
+import { locale } from '@/lib/locale';
 
 /**
  * «المعلمين», read-only (R-TCH-01). GET /teachers pages by name and has no search or status filter
@@ -27,7 +28,7 @@ export function TeachersScreen() {
         keyExtractor={(teacher) => teacher.id}
         renderItem={({ item }) => (
           <ListRow
-            title={item.display_name_ar}
+            title={teacherName(item, locale)}
             trailing={
               <StatusChip
                 {...teacherStatusStyle[item.status]}

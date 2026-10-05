@@ -1,7 +1,7 @@
 import { lessonTimeEditSchema, type TimeEditResult } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { LessonViews } from './lesson-views';
@@ -10,7 +10,7 @@ import { LessonTimeService } from './time-edit.service';
 /** PATCH /lessons/:id/time (docs/10 route 22, R-SCH-11 «عدّل الوقت»): admin only; teachers propose. */
 @ApiTags('lessons')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('lessons.write')
 @Controller('lessons')
 export class LessonTimeController {
   constructor(

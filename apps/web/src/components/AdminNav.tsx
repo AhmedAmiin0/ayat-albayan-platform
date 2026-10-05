@@ -1,3 +1,4 @@
+import type { Permission } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
@@ -7,33 +8,35 @@ import { cn } from '@/lib/utils';
 // لوحة التحكم is the logo link (/admin); student reports open from the student profile.
 const GROUPS = [
   [
-    { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'phone' },
-    { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'chat' },
-    { key: 'jobApplicants', to: '/admin/job-applicants', label: t.nav.jobApplicants, icon: 'brief' },
+    { key: 'leads', to: '/admin/leads', label: t.nav.leads, icon: 'phone', permission: 'leads.read' },
+    { key: 'inbox', to: '/admin/inbox', label: t.nav.inbox, icon: 'chat', permission: 'inbox.read' },
+    { key: 'jobApplicants', to: '/admin/job-applicants', label: t.nav.jobApplicants, icon: 'brief', permission: 'applicants.read' },
   ],
   [
-    { key: 'students', to: '/admin/students', label: t.nav.students, icon: 'users' },
-    { key: 'teachers', to: '/admin/teachers', label: t.nav.teachers, icon: 'teacher' },
-    { key: 'schedule', to: '/admin/schedule', label: t.schedule.nav, icon: 'calendar' },
-    { key: 'classrooms', to: '/admin/classrooms', label: t.classroom.admin.nav, icon: 'chat' },
-    { key: 'feedback', to: '/admin/feedback', label: t.nav.feedback, icon: 'star' },
+    { key: 'students', to: '/admin/students', label: t.nav.students, icon: 'users', permission: 'students.read' },
+    { key: 'teachers', to: '/admin/teachers', label: t.nav.teachers, icon: 'teacher', permission: 'teachers.read' },
+    { key: 'schedule', to: '/admin/schedule', label: t.schedule.nav, icon: 'calendar', permission: 'lessons.read' },
+    { key: 'classrooms', to: '/admin/classrooms', label: t.classroom.admin.nav, icon: 'chat', permission: 'lessons.read' },
+    { key: 'feedback', to: '/admin/feedback', label: t.nav.feedback, icon: 'star', permission: 'feedback.read' },
   ],
   // «المالية» (owner, 2026-10-05): every money page in one section, titled (see MONEY_GROUP).
   [
-    { key: 'payments', to: '/admin/payments', label: t.payments.title, icon: 'card' },
-    { key: 'subscriptions', to: '/admin/subscriptions', label: t.nav.subscriptions, icon: 'box' },
-    { key: 'payouts', to: '/admin/payouts', label: t.nav.payouts, icon: 'wallet' },
-    { key: 'expenses', to: '/admin/expenses', label: t.nav.expenses, icon: 'receipt' },
-    { key: 'invoices', to: '/admin/invoices', label: t.finance.invoicesTitle, icon: 'download' },
-    { key: 'receivables', to: '/admin/receivables', label: t.finance.receivablesTitle, icon: 'clock' },
-    { key: 'finance', to: '/admin/finance', label: t.finance.summaryTitle, icon: 'grid' },
+    { key: 'payments', to: '/admin/payments', label: t.payments.title, icon: 'card', permission: 'payments.read' },
+    { key: 'subscriptions', to: '/admin/subscriptions', label: t.nav.subscriptions, icon: 'box', permission: 'subscriptions.read' },
+    { key: 'payouts', to: '/admin/payouts', label: t.nav.payouts, icon: 'wallet', permission: 'payouts.read' },
+    { key: 'expenses', to: '/admin/expenses', label: t.nav.expenses, icon: 'receipt', permission: 'expenses.read' },
+    { key: 'invoices', to: '/admin/invoices', label: t.finance.invoicesTitle, icon: 'download', permission: 'invoices.read' },
+    { key: 'receivables', to: '/admin/receivables', label: t.finance.receivablesTitle, icon: 'clock', permission: 'receivables.read' },
+    { key: 'finance', to: '/admin/finance', label: t.finance.summaryTitle, icon: 'grid', permission: 'dashboard.read' },
   ],
   [
-    { key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe' },
-    { key: 'settings', to: '/admin/settings', label: t.settings.title, icon: 'sliders' },
-    { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock' },
+    { key: 'pricing', to: '/admin/pricing', label: t.pricing.title, icon: 'globe', permission: 'pricing.read' },
+    { key: 'settings', to: '/admin/settings', label: t.settings.title, icon: 'sliders', permission: 'settings.read' },
+    { key: 'translations', to: '/admin/translations', label: t.translations.nav, icon: 'template', permission: 'translations.manage' },
+    { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock', permission: 'activity.read' },
+    { key: 'roles', to: '/admin/roles', label: t.nav.roles, icon: 'users', permission: 'roles.manage' },
   ],
-] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName }[])[];
+] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName; permission: Permission }[])[];
 
 /** The group whose first key this is gets the «المالية» title. */
 const MONEY_GROUP = 'payments';
@@ -53,10 +56,17 @@ export type NavCount = { text: string; act?: boolean };
 export interface AdminNavProps {
   /** Counts only where real data exists; a missing key renders no count. */
   counts?: Partial<Record<NavKey, NavCount>>;
+  /** Dynamic roles: an item shows only when the user holds its permission (default: all shown). */
+  can?: (permission: Permission) => boolean;
+}
+
+/** The groups with only the items `can` allows; empty groups dropped. */
+export function visibleGroups(can: (permission: Permission) => boolean) {
+  return GROUPS.map((group) => group.filter((item) => can(item.permission))).filter((group) => group.length > 0);
 }
 
 /** Sidebar list ≥900px (dot leaders + counts); a scrolling top row below (saffron counts only). */
-export function AdminNav({ counts = {} }: AdminNavProps) {
+export function AdminNav({ counts = {}, can = () => true }: AdminNavProps) {
   return (
     <nav
       aria-label={t.nav.label}
@@ -69,13 +79,13 @@ export function AdminNav({ counts = {} }: AdminNavProps) {
         'shell:my-0 shell:flex-none shell:flex-col shell:gap-3.5 shell:overflow-visible shell:p-0 shell:[mask-image:none]',
       )}
     >
-      {GROUPS.map((group) => (
+      {visibleGroups(can).map((group) => (
         <ul
-          key={group[0].key}
-          aria-label={group[0].key === MONEY_GROUP ? t.finance.nav : undefined}
+          key={group[0]?.key}
+          aria-label={group[0]?.key === MONEY_GROUP ? t.finance.nav : undefined}
           className="flex gap-0.5 shell:flex-col"
         >
-          {group[0].key === MONEY_GROUP && (
+          {group[0]?.key === MONEY_GROUP && (
             <li aria-hidden="true" className="hidden px-2.5 pt-1 text-2xs font-semibold text-ink-3 shell:block shell:text-cover-ink shell:opacity-70">
               {t.finance.nav}
             </li>

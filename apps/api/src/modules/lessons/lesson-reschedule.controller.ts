@@ -1,7 +1,7 @@
 import { rescheduleRequestSchema, type LessonView } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { LessonViews } from './lesson-views';
@@ -11,7 +11,7 @@ import { RescheduleRuleService } from './reschedule-rule.service';
 /** POST /lessons/:id/reschedule (docs/10 route 8, R-SCH-07): one occurrence or the whole rule. */
 @ApiTags('lessons')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('lessons.write')
 @Controller('lessons')
 export class LessonRescheduleController {
   constructor(

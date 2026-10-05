@@ -1,22 +1,29 @@
-import { Controller, Get, Module } from '@nestjs/common';
+import { Controller, Get, Global, Module } from '@nestjs/common';
 import { APP_GUARD } from '@nestjs/core';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { loadEnv } from '../../env';
+import { DB, type Db } from '../db/db.module';
 import { AuthGuard, TOKEN_VERIFIER } from './auth.guard';
-import { CurrentUser } from './decorators';
+import { dbPermissionResolver } from './db-permission.resolver';
+import { CurrentUser, SignedIn } from './decorators';
+import { PermissionCache } from './permission.cache';
+import { PERMISSION_RESOLVER } from './permissions';
 import { createTokenVerifier, type AuthUser } from './verify-token';
 
 @ApiTags('auth')
 @ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
-  /** Who am I — used by web/mobile after login to route by role. */
+  /** Who am I — used by web/mobile after login to route by role and gate pages by permission. */
   @Get('me')
-  me(@CurrentUser() user: AuthUser): AuthUser {
-    return user;
+  @SignedIn()
+  me(@CurrentUser() user: AuthUser): AuthUser & { permissions: readonly string[] } {
+    return { ...user, permissions: user.permissions ?? [] };
   }
 }
 
+/** Global so the roles module can clear the permission cache after a change. */
+@Global()
 @Module({
   controllers: [AuthController],
   providers: [
@@ -27,7 +34,14 @@ export class AuthController {
         return createTokenVerifier({ supabaseUrl: env.SUPABASE_URL, jwtSecret: env.SUPABASE_JWT_SECRET });
       },
     },
+    { provide: PermissionCache, useFactory: () => new PermissionCache() },
+    {
+      provide: PERMISSION_RESOLVER,
+      inject: [DB, PermissionCache],
+      useFactory: (db: Db, cache: PermissionCache) => dbPermissionResolver({ db, cache }),
+    },
     { provide: APP_GUARD, useClass: AuthGuard },
   ],
+  exports: [PermissionCache],
 })
 export class AuthModule {}

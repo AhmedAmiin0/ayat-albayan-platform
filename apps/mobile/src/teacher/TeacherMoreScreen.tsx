@@ -1,3 +1,4 @@
+import { teacherName } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
@@ -8,6 +9,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { useTeacherMe } from './queries';
 import { SignOutButton } from './SignOutButton';
+import { locale } from '@/lib/locale';
 
 /**
  * The teacher's «المزيد» (R-TCH-02, R-TCH-04, R-MOB-02): my students (subscribed and trial), my earnings per lesson (monthly statements one tap in), my weekly
@@ -18,7 +20,7 @@ export function TeacherMoreScreen() {
   const me = useTeacherMe();
   return (
     <Screen>
-      <ScreenHeader title={t.mobile.more} subtitle={me.data?.display_name_ar} />
+      <ScreenHeader title={t.mobile.more} subtitle={me.data && teacherName(me.data, locale)} />
       <View style={{ marginHorizontal: -16 }}>
         <ListRow title={t.teacherNav.students} onPress={() => router.push('/teacher/more/students')} />
         <ListRow title={t.teacherNav.payouts} onPress={() => router.push('/teacher/more/earnings')} />

@@ -1,3 +1,4 @@
+import type { Permission } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
@@ -14,7 +15,7 @@ import { signOutDevice } from './sign-out';
  * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab («الجدول» is its own tab now),
  * the price calculator, the appearance, the language, sign-out.
  */
-export function MoreScreen() {
+export function MoreScreen({ can = () => true }: { can?: (permission: Permission) => boolean }) {
   const [leaving, setLeaving] = useState(false);
   const logout = () => {
     setLeaving(true);
@@ -25,10 +26,11 @@ export function MoreScreen() {
     <Screen>
       <ScreenHeader title={t.mobile.more} />
       <View style={{ marginHorizontal: -16 }}>
-        <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />
-        <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />
-        <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />
-        <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />
+        {/* Dynamic roles: each list shows only when the held role grants it. */}
+        {can('teachers.read') && <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />}
+        {can('applicants.read') && <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />}
+        {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
+        {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
       </View>
       <AppearancePicker />
       <LanguageRow />

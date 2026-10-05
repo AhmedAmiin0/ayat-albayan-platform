@@ -2,7 +2,7 @@ import type { MessageView, SendGateView } from '@ab/shared';
 import { Controller, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { AuditService } from '../../common/audit/audit.service';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { MessagesService, type MessageChange } from './messages.service';
 import { SendGate } from './send-gate';
@@ -10,7 +10,7 @@ import { SendGate } from './send-gate';
 /** M1–M3 (docs/12 §4): what the admin does with an outbound message that did not go out. */
 @ApiTags('messaging')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('messages.manage')
 @Controller('messages')
 export class MessagesController {
   constructor(
@@ -24,7 +24,7 @@ export class MessagesController {
    * Read only, so a teacher's composer (teacher mode) shows the same «الإرسال متوقف» note.
    */
   @Get('gate')
-  @Roles('admin', 'teacher')
+  @Permissions('messages.read')
   gate(): Promise<SendGateView> {
     return this.sendGate.view();
   }

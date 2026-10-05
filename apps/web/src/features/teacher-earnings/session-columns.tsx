@@ -72,7 +72,7 @@ export function sessionColumns(selectable: boolean) {
     }),
     col.accessor('students', {
       header: () => t.earnings.students,
-      cell: (c) => c.getValue().join(t.teachers.listSeparator) || '—',
+      cell: (c) => c.getValue().join(t.common.listSeparator) || '—',
       meta: { className: 'text-ink-2 max-sm:order-3 max-sm:basis-full max-sm:text-xs' },
     }),
     col.accessor('minutes', {

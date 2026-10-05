@@ -31,7 +31,7 @@ export function MoneyKpis() {
             <span className="text-ink-3">—</span>
           )}
           {owed.data && owed.data.fx_missing.length > 0 && (
-            <span className="text-2xs text-act">{t.finance.fxMissing.replace('{currencies}', owed.data.fx_missing.join('، '))}</span>
+            <span className="text-2xs text-act">{t.finance.fxMissing.replace('{currencies}', owed.data.fx_missing.join(t.common.listSeparator))}</span>
           )}
         </Link>
       </li>
