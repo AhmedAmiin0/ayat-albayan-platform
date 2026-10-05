@@ -24,7 +24,7 @@ export function LessonsByStatus({ counts }: { counts: Record<LessonStatus, numbe
       <tbody>
         {rows.map((s) => (
           <tr key={s} className="border-b border-rule last:border-b-0">
-            <th scope="row" className="w-0 py-2 pe-3 text-start font-normal whitespace-nowrap">
+            <th scope="row" className="w-0 py-2 pe-3 text-start font-normal">
               <StatusChip {...lessonStatusStyle[s]} label={t.enums.lessonStatus[s]} size="sm" />
             </th>
             <td className="py-2">

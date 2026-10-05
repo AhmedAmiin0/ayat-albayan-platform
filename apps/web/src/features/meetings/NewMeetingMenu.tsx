@@ -13,8 +13,9 @@ const item = 'flex min-h-11 w-full items-center rounded-sm px-3 text-start text-
  * (a link to share, no lesson), «ابدأ الآن» starts an instant lesson
  * (dialog, then straight into /classroom/$lessonId), «جدولة» opens the booking wizard. A native
  * disclosure: keyboard and screen reader for free. Plain links, like «ادخل الحلقة»: no router needed.
+ * One filled primary per screen (docs/07 §6): it is the primary except beside another one («حجز حلقة»).
  */
-export function NewMeetingMenu() {
+export function NewMeetingMenu({ variant = 'primary' }: { variant?: 'primary' | 'secondary' }) {
   const [instant, setInstant] = useState(false);
   const [internal, setInternal] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
@@ -22,7 +23,7 @@ export function NewMeetingMenu() {
   return (
     <>
       <details ref={menu} className="relative">
-        <summary className={cn(buttonVariants({ variant: 'primary' }), 'cursor-pointer list-none [&::-webkit-details-marker]:hidden')}>
+        <summary className={cn(buttonVariants({ variant }), 'cursor-pointer list-none [&::-webkit-details-marker]:hidden')}>
           <Icon name="plus" />
           {t.meetings.new}
         </summary>

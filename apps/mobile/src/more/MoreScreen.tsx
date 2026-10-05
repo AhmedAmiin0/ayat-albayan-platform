@@ -7,8 +7,11 @@ import { Button } from '@/ui/Button';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { AdminOpsSection } from './AdminOpsSection';
 import { AppearancePicker } from './AppearancePicker';
+import { FinanceSection } from './FinanceSection';
 import { LanguageRow } from './LanguageRow';
+import { MoneySection } from './MoneySection';
 import { signOutDevice } from './sign-out';
 
 /**
@@ -32,6 +35,9 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
         {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
         {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
       </View>
+      <MoneySection />
+      <AdminOpsSection />
+      <FinanceSection />
       <AppearancePicker />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>

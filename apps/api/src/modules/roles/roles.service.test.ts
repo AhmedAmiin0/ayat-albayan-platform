@@ -34,13 +34,13 @@ describe('RolesService — CRUD', () => {
   });
 
   it('creates a custom role with clean grants (unknown and self.* dropped)', async () => {
-    const created = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read', 'payments.read'] });
+    const created = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read', 'payments.read'] }, 'owner');
     expect(created).toMatchObject({ name_ar: 'محاسب', base_role: 'admin', is_system: false, permissions: ['payments.read'], users: 0 });
     expect(created.key).toMatch(/^custom-[0-9a-f]{8}$/);
   });
 
   it('renames and re-grants a role, clearing the permission cache', async () => {
-    const created = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read'] });
+    const created = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read'] }, 'owner');
     const clear = vi.spyOn(cache, 'clear');
     const out = await svc.update(created.id, { name_en: 'Accountant', permissions: ['payments.read', 'expenses.read'], actorId: 'owner' });
     expect(out).toMatchObject({ name_ar: 'محاسب', name_en: 'Accountant', permissions: ['payments.read', 'expenses.read'] });
@@ -54,7 +54,7 @@ describe('RolesService — CRUD', () => {
   });
 
   it('deletes an unused custom role only', async () => {
-    const created = await svc.create({ name_ar: 'x', base_role: 'teacher', permissions: [] });
+    const created = await svc.create({ name_ar: 'x', base_role: 'teacher', permissions: [] }, 'owner');
     await svc.assign({ userId: 't1', roleId: created.id, actorId: 'owner' });
     expect(await codeOf(svc.remove(created.id))).toBe('role_in_use');
     expect(await codeOf(svc.remove('sys-sales'))).toBe('system_role');
@@ -77,7 +77,7 @@ describe('RolesService — assignment', () => {
   });
 
   it('assigning a custom role sets profiles.role to its base role and role_id to it', async () => {
-    const acc = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read'] });
+    const acc = await svc.create({ name_ar: 'محاسب', base_role: 'admin', permissions: ['payments.read'] }, 'owner');
     const out = await svc.assign({ userId: 't1', roleId: acc.id, actorId: 'owner' });
     expect(out).toEqual({ id: 't1', full_name: 't1', role: 'admin', role_id: acc.id });
     expect(store.profilesData.find((p) => p.id === 't1')).toMatchObject({ role: 'admin', role_id: acc.id });

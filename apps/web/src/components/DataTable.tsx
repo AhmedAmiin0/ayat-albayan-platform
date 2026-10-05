@@ -98,7 +98,10 @@ export function DataTable<T extends RowData>({
 
   return (
     <>
-      {(controls.length > 0 || toolbar) && <DataTableToolbar controls={controls} filters={filters} options={toolbar} />}
+      {(controls.length > 0 || toolbar) && (
+        // A client-filtered table knows its own count; a server list brings `toolbar.total`.
+        <DataTableToolbar controls={controls} filters={filters} options={toolbar} resultCount={clientFilter && !filters ? rows.length : undefined} />
+      )}
       {/* `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width). */}
       <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
         {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}

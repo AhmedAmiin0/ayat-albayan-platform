@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { chipIfSet, DateFilterField, SelectFilterField } from './fields';
+import { CheckboxFilterField, chipIfSet, DateFilterField, SelectFilterField } from './fields';
 
 describe('page filter fields', () => {
   it('a select field: labelled, reports the picked value', () => {
@@ -21,6 +21,18 @@ describe('page filter fields', () => {
     expect(box.getAttribute('dir')).toBe('ltr');
     fireEvent.change(box, { target: { value: '' } });
     expect(onChange).toHaveBeenCalledWith(undefined);
+  });
+
+  it('a checkbox field: the whole labelled row toggles it and reports the new state', () => {
+    const onChange = vi.fn();
+    const { rerender } = render(<CheckboxFilterField label="إظهار الملغاة" checked={false} onChange={onChange} />);
+    const box = screen.getByRole('checkbox', { name: 'إظهار الملغاة' });
+    expect(box).toHaveProperty('checked', false);
+    fireEvent.click(screen.getByText('إظهار الملغاة'));
+    expect(onChange).toHaveBeenLastCalledWith(true);
+    rerender(<CheckboxFilterField label="إظهار الملغاة" checked onChange={onChange} />);
+    expect(screen.getByRole('checkbox', { name: 'إظهار الملغاة' })).toHaveProperty('checked', true);
+    expect(box.closest('label')?.className).toContain('min-h-11');
   });
 
   it('a chip only for a set value, showing its display text', () => {

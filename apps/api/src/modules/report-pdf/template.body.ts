@@ -5,7 +5,7 @@ import { ornament } from './template.header';
 
 const r = AR.reports;
 
-/** The academy's public contact, as the Brand library prints it on every report. */
+/** The built-in contact: used when the settings cannot be read, or academy_contact has no site. */
 export const CONTACT = { site: 'ayatalbayan.com', whatsapp: '+966 56 610 1447' } as const;
 
 /** A «۞ title» section rule. */
@@ -64,8 +64,8 @@ export function packageLine(m: Pick<ReportPdfModel, 'slot'>): string {
 export function footerHtml(m: ReportPdfModel): string {
   const contact = [
     esc(AR.app.name),
-    ltr(CONTACT.site),
-    `<span>${esc(r.pdf.whatsapp)}: ${ltr(CONTACT.whatsapp)}</span>`,
+    ltr(m.contact?.site ?? CONTACT.site),
+    `<span>${esc(r.pdf.whatsapp)}: ${ltr(m.contact?.whatsapp ?? CONTACT.whatsapp)}</span>`,
   ].join(' · ');
   return [
     '<footer class="foot">',

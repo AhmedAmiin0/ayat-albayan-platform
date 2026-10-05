@@ -22,7 +22,7 @@ export function WorkPanel({ tab, work }: { tab: WorkTab; work: DashboardWork | u
   const { title, list, view } = TABS[tab];
   const more = work ? list(work).total - list(work).items.length : 0;
   return (
-    <section aria-labelledby="dash-work" aria-live="polite" className="grid gap-1">
+    <section aria-labelledby="dash-work" aria-live="polite" className="grid grid-cols-1 gap-1">
       <h2 id="dash-work" className={sectionTitle}>
         {title}
       </h2>

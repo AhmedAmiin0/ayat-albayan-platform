@@ -85,7 +85,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
           emptyText={data ? t.common.notFound : t.common.loading}
           sort={controls.sort}
           filters={controls.filters}
-          toolbar={{ search: <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />, extra }}
+          toolbar={{ search: <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />, extra, total: data?.total }}
         />
       )}
       {data && (

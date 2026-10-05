@@ -1,6 +1,7 @@
 import { E164_RE } from '../phone.js';
 import { isTimeZone } from '../schemas/common.js';
 import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingKey } from './registry.js';
+import { shapeValid } from './shape.js';
 import type { SettingDef } from './types.js';
 
 const CURRENCY_RE = /^[A-Z]{3}$/;
@@ -27,6 +28,7 @@ const CHECKS: Checks = {
   currency: (_def, v) => isString(v) && CURRENCY_RE.test(v),
   int_list: (def, v) => ascending(v, def),
   enum: (def, v) => isString(v) && def.options.includes(v),
+  json: (def, v) => (def.nullable === true && v === null) || shapeValid(def.shape, v),
 };
 
 /** Is the stored JSON a valid value for this entry? Same rules as the PATCH schema. */

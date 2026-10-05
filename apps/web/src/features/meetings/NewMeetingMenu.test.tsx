@@ -39,4 +39,18 @@ describe('NewMeetingMenu «اجتماع جديد»', () => {
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
     expect(screen.queryByRole('dialog')).toBeNull();
   });
+
+  it('is the filled primary by default, and an outline button beside another primary', () => {
+    const { unmount } = show();
+    expect(screen.getByText(t.meetings.new).closest('summary')?.className).toContain('bg-primary');
+    unmount();
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <NewMeetingMenu variant="secondary" />
+      </QueryClientProvider>,
+    );
+    const summary = screen.getByText(t.meetings.new).closest('summary');
+    expect(summary?.className).toContain('bg-secondary');
+    expect(summary?.className).not.toContain('bg-primary');
+  });
 });

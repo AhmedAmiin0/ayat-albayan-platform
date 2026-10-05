@@ -113,10 +113,16 @@ export async function ruleStateOf(ruleId: string): Promise<RuleState | undefined
   });
 }
 
-/** Opens the week's lesson chip of a student: the drawer is the dialog named after them. */
-export async function openLessonDrawer(page: Page, input: { week: string; teacherId: string; name: string }): Promise<Locator> {
+/**
+ * Opens the week's lesson chip of a student: the drawer is the dialog named after them. A seeded
+ * student also has a completed lesson three days back, which lands in the same Riyadh week from
+ * Tuesday on: `at` picks the chip showing that Riyadh wall clock instead of the first one.
+ */
+export async function openLessonDrawer(page: Page, input: { week: string; teacherId: string; name: string; at?: Date }): Promise<Locator> {
   await page.goto(`/admin/schedule?week=${input.week}&teacher=${input.teacherId}`);
-  await weekGrid(page).getByRole('button', { name: new RegExp(input.name) }).first().click();
+  const chips = weekGrid(page).getByRole('button', { name: new RegExp(input.name) });
+  const clock = input.at && new Date(input.at.getTime() + 3 * HOUR).toISOString().slice(11, 16);
+  await (clock ? chips.filter({ hasText: clock }) : chips).first().click();
   const drawer = page.getByRole('dialog', { name: input.name });
   await expect(drawer).toBeVisible();
   return drawer;

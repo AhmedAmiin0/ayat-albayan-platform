@@ -9,6 +9,10 @@ import InboxIndex from '../../app/(tabs)/inbox/index';
 import SubscribeRoute from '../../app/(tabs)/inbox/subscribe';
 import ThreadRoute from '../../app/(tabs)/inbox/thread/[phone]';
 import Login from '../../app/login';
+import FinanceExpenses from '../../app/(tabs)/more/finance/expenses';
+import FinanceInvoices from '../../app/(tabs)/more/finance/invoices';
+import FinancePayouts from '../../app/(tabs)/more/finance/payouts';
+import FinanceSummary from '../../app/(tabs)/more/finance/summary';
 import MoreLayout from '../../app/(tabs)/more/_layout';
 import MoreIndex from '../../app/(tabs)/more/index';
 import TeacherRoute from '../../app/(tabs)/more/teachers/[id]';
@@ -41,6 +45,10 @@ export const routes = {
   '(tabs)/students/payment/[id]': PaymentRoute,
   '(tabs)/more/_layout': MoreLayout,
   '(tabs)/more/index': MoreIndex,
+  '(tabs)/more/finance/payouts': FinancePayouts,
+  '(tabs)/more/finance/expenses': FinanceExpenses,
+  '(tabs)/more/finance/invoices': FinanceInvoices,
+  '(tabs)/more/finance/summary': FinanceSummary,
   '(tabs)/more/teachers/index': TeachersIndex,
   '(tabs)/more/teachers/[id]': TeacherRoute,
   '(tabs)/more/teachers/calendar/[id]': TeacherCalendar,

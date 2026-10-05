@@ -30,4 +30,12 @@ describe('StatusChip', () => {
   it('bad uses the danger utilities (there is no text-bad)', () => {
     expect(toneClass.bad).toBe('bg-danger-soft text-danger border-danger/25');
   });
+
+  it('a long label stays inside its cell: the chip is capped at the cell width and the word ends in an ellipsis', () => {
+    render(<StatusChip tone="neutral" label="Interested, no time yet" />);
+    const word = screen.getByText('Interested, no time yet');
+    expect(word.className).toContain('truncate');
+    expect(word.getAttribute('title')).toBe('Interested, no time yet');
+    expect(word.parentElement?.className).toContain('max-w-full');
+  });
 });

@@ -1,6 +1,7 @@
 import type { Page } from '@playwright/test';
 import { dropTeacher, insertLesson, insertTeacher, setStudentTz } from '../support/admin-extra';
 import { ar, expect, test } from '../support/fixtures';
+import { openFilters, showResults } from '../support/filters';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily } from '../support/schedule';
 
 // R-SCH-01/03, all-teachers week (schedule-overview.spec.ts has the day board, the gender filter
@@ -57,8 +58,11 @@ test.describe('all-teachers week schedule (R-SCH-01/03)', () => {
     await open(page);
     await expectOnly(page, [STUDENTS.abrar, STUDENTS.quran, STUDENTS.arabic]);
     for (const name of Object.values(NAMES)) await expect(grid(page).getByText(name, { exact: true })).toBeVisible();
-    await page.getByLabel(ar.schedule.showClosed).check();
+    // The schedule filters live in the shared «تصفية» panel (owner, 2026-10-05).
+    const panel = await openFilters(page);
+    await panel.getByLabel(ar.schedule.showClosed).check();
     await expect(page).toHaveURL(/closed=true/);
+    await showResults(panel);
     await expectOnly(page, Object.values(STUDENTS));
   });
 
@@ -69,19 +73,27 @@ test.describe('all-teachers week schedule (R-SCH-01/03)', () => {
     await expect(grid(page).getByText(NAMES.arabic, { exact: true })).toHaveCount(0);
 
     await open(page);
-    await page.locator('summary').filter({ hasText: ar.schedule.teacherFilter }).click();
-    await page.getByRole('checkbox', { name: NAMES.arabic }).check();
+    let panel = await openFilters(page);
+    await panel.locator('summary').filter({ hasText: ar.schedule.teacherFilter }).click();
+    await panel.getByRole('checkbox', { name: NAMES.arabic }).check();
     await expect(page).toHaveURL(/teachers=/);
+    await showResults(panel);
     await expectOnly(page, [STUDENTS.arabic]);
+    // The set filter is a chip under the toolbar, and the button counts it.
+    await expect(page.getByRole('list', { name: ar.table.activeFilters })).toContainText(ar.schedule.teacherFilter);
 
     await open(page);
-    await page.getByLabel(ar.schedule.programFilter, { exact: true }).selectOption('arabic');
+    panel = await openFilters(page);
+    await panel.getByLabel(ar.schedule.programFilter, { exact: true }).selectOption('arabic');
     await expect(page).toHaveURL(/program=arabic/);
+    await showResults(panel);
     await expectOnly(page, [STUDENTS.arabic]);
 
     await open(page);
-    await page.getByLabel(ar.schedule.statusFilter, { exact: true }).selectOption('confirmed');
+    panel = await openFilters(page);
+    await panel.getByLabel(ar.schedule.statusFilter, { exact: true }).selectOption('confirmed');
     await expect(page).toHaveURL(/status=confirmed/);
+    await showResults(panel);
     await expectOnly(page, [STUDENTS.abrar, STUDENTS.arabic]);
   });
 

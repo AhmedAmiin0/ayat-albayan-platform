@@ -3,19 +3,23 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { PdfAction } from './PdfAction';
+import { RecordingLink } from './RecordingLink';
 import { teacherLabel } from '@/lib/teacher-label';
 
 export interface ReportHistoryListProps {
   items: ReportSummaryView[];
   role: UserRole;
   tz: string;
+  /** The student, and the lessons that have a finished recording to link to. */
+  studentId: string;
+  recorded: ReadonlySet<string>;
 }
 
 /**
  * The student's submitted reports, newest lesson first (R-REP-05, issue D2: replaces the
  * per-student sheets): when, which lesson, who taught, attendance, overall grade, the PDF.
  */
-export function ReportHistoryList({ items, role, tz }: ReportHistoryListProps) {
+export function ReportHistoryList({ items, role, tz, studentId, recorded }: ReportHistoryListProps) {
   return (
     <ol className="grid">
       {items.map((r) => (
@@ -36,7 +40,12 @@ export function ReportHistoryList({ items, role, tz }: ReportHistoryListProps) {
               {r.version > 1 && <span className="text-xs text-ink-3">{t.reports.version.replace('{n}', String(r.version))}</span>}
             </p>
           </div>
-          <PdfAction report={r} role={role} />
+          <div className="flex flex-wrap items-center gap-2">
+            {recorded.has(r.lesson_id) && (
+              <RecordingLink studentId={studentId} lessonId={r.lesson_id} role={role} when={lessonWhenText(new Date(r.starts_at), tz, locale)} />
+            )}
+            <PdfAction report={r} role={role} />
+          </div>
         </li>
       ))}
     </ol>

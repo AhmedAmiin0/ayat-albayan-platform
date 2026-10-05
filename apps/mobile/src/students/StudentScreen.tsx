@@ -57,6 +57,11 @@ export function StudentScreen() {
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <StatusChanger student={student} />
+        <Button
+          variant="secondary"
+          label={t.mobileAdmin.reports.button}
+          onPress={() => router.push(`/students/reports/${student.id}`)}
+        />
         <BalanceCard studentId={student.id} />
         <StudentFacts student={student} />
         <GuardianCard guardian={student.guardian} />

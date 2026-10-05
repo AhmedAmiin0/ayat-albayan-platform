@@ -7,7 +7,13 @@ import { cn } from '@/lib/utils';
 export { SETTINGS_SECTIONS };
 export type SettingsSection = SettingsSectionId;
 
-export const sectionId = (s: SettingsSection) => `settings-${s}`;
+export const sectionId = (s: string) => `settings-${s}`;
+
+/** A section added after the registry's (the custom values panel). */
+export interface ExtraSection {
+  id: string;
+  label: string;
+}
 
 const reduceMotion = () =>
   typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -17,12 +23,13 @@ const reduceMotion = () =>
  * above them on phones. A link jumps to its section inside the page frame (smooth unless the
  * viewer asked for less motion) and is marked current.
  */
-export function SettingsNav({ className }: { className?: string }) {
-  const [current, setCurrent] = useState<SettingsSection>('messaging');
+export function SettingsNav({ className, extra = [] }: { className?: string; extra?: readonly ExtraSection[] }) {
+  const [current, setCurrent] = useState<string>('messaging');
+  const items: ExtraSection[] = [...SETTINGS_SECTIONS.map((id) => ({ id, label: t.settings.sections[id] })), ...extra];
   return (
     <nav aria-label={t.settings.nav} className={className}>
       <ul className="-mx-1 flex gap-1.5 overflow-x-auto px-1 pb-1 shell:mx-0 shell:flex-col shell:gap-0.5 shell:overflow-visible shell:p-0">
-        {SETTINGS_SECTIONS.map((s) => (
+        {items.map(({ id: s, label }) => (
           <li key={s} className="shrink-0">
             <a
               href={`#${sectionId(s)}`}
@@ -38,7 +45,7 @@ export function SettingsNav({ className }: { className?: string }) {
                 'aria-[current=true]:bg-accent aria-[current=true]:font-semibold aria-[current=true]:text-ink shell:aria-[current=true]:border-s-lapis',
               )}
             >
-              {t.settings.sections[s]}
+              {label}
             </a>
           </li>
         ))}

@@ -57,6 +57,7 @@ export const PERMISSION_ROWS = [
   { key: 'classroom.host', area: 'classroom', grants: T },
   { key: 'classroom.links', area: 'classroom', grants: [] },
   { key: 'recordings.read', area: 'classroom', grants: T },
+  { key: 'recordings.manage', area: 'classroom', grants: T },
   { key: 'meetings.read', area: 'classroom', grants: TAS },
   { key: 'meetings.write', area: 'classroom', grants: TAS },
   { key: 'reports.read', area: 'reports', grants: T },
