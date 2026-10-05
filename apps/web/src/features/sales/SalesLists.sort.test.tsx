@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import type { SalesMeeting, SalesSubscription } from './api';
 import { SalesMeetings } from './SalesMeetings';
 import { SalesSubscriptions } from './SalesSubscriptions';
@@ -43,6 +44,7 @@ describe('sales lists sort and filter locally (R-NFR-08)', () => {
     await screen.findByText('يوسف');
     fireEvent.click(screen.getByRole('button', { name: t.sales.subscriptions.student }));
     expect(firstCells().map((c) => c.replace(/AB-\d+/, ''))).toEqual(['أحمد', 'سهيلة', 'يوسف']);
+    openFilters();
     fireEvent.change(screen.getByLabelText(filterBy(t.sales.subscriptions.status)), { target: { value: 'unpaid' } });
     expect(firstCells()).toHaveLength(2);
     expect(screen.queryByText('يوسف')).toBeNull();
@@ -75,6 +77,7 @@ describe('sales lists sort and filter locally (R-NFR-08)', () => {
       </QueryClientProvider>,
     );
     await screen.findByText('أم سهيلة');
+    openFilters();
     const teacher = screen.getByLabelText(filterBy(t.sales.schedule.teacher));
     expect([...teacher.querySelectorAll('option')].map((o) => o.textContent)).toEqual([t.table.all, 'أبرار', 'هبة']);
     fireEvent.click(screen.getByRole('button', { name: t.sales.schedule.time }));

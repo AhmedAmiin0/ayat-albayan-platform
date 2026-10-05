@@ -3,6 +3,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { WEEKLY } from './money-fixture';
 import { parseSubscriptionsSearch, type SubscriptionsUrlSearch } from './search';
 import { SubscriptionsPage } from './SubscriptionsPage';
@@ -59,9 +60,11 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     expect(await screen.findByText('باقة سهيلة قاربت على الانتهاء')).toBeTruthy();
   });
 
-  it('filters by status from the first page', async () => {
+  it('filters by status (in the «تصفية» panel) from the first page', async () => {
     const { onChange } = renderPage();
-    fireEvent.change(await screen.findByRole('combobox', { name: t.subscriptions.status }), { target: { value: 'unpaid' } });
+    await screen.findByRole('button', { name: t.subscriptions.price });
+    openFilters();
+    fireEvent.change(screen.getByRole('combobox', { name: t.subscriptions.status }), { target: { value: 'unpaid' } });
     expect(onChange).toHaveBeenCalledWith({ status: 'unpaid', page: undefined });
   });
 
@@ -70,6 +73,7 @@ describe('SubscriptionsPage (R-SUB-01/02)', () => {
     fireEvent.click(await screen.findByRole('button', { name: t.subscriptions.price }));
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?sort=price&page=1&pageSize=20'));
     const by = t.table.filterBy.replace('{col}', t.subscriptions.package);
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by }), { target: { value: '8' } });
     expect(onChange).toHaveBeenLastCalledWith({ f_package: '8', page: undefined });
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?sort=price&package=8&page=1&pageSize=20'));

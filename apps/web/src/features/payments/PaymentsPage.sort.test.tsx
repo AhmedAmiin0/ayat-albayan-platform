@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { PaymentsPage } from './PaymentsPage';
 import { parsePaymentsSearch, paymentsView, type PaymentsUrlSearch } from './search';
 
@@ -47,12 +48,29 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
     expect(screen.queryByRole('combobox', { name: by(t.payments.method) })).toBeNull();
   });
 
-  it('filters by method from the column filter row', async () => {
+  it('filters by method in the «تصفية» panel', async () => {
     renderPage();
-    fireEvent.change(await screen.findByRole('combobox', { name: by(t.payments.method) }), { target: { value: 'cash' } });
+    await screen.findByRole('button', { name: t.payments.amount });
+    openFilters();
+    fireEvent.change(screen.getByRole('combobox', { name: by(t.payments.method) }), { target: { value: 'cash' } });
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash')));
     expect(onSearch).toHaveBeenLastCalledWith({ f_method: 'cash', page: undefined });
     expect(screen.getByRole('combobox', { name: by(t.payments.method) })).toBeTruthy();
+  });
+
+  it('date range and kind sit in the same panel; set ones become chips, «مسح الكل» drops them in one change', async () => {
+    renderPage();
+    await screen.findByRole('button', { name: t.payments.amount });
+    openFilters();
+    fireEvent.change(screen.getByLabelText(t.finance.from), { target: { value: '2026-10-01' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.finance.kind }), { target: { value: 'refund' } });
+    expect(onSearch).toHaveBeenLastCalledWith({ kind: 'refund', page: undefined });
+    fireEvent.click(screen.getByRole('button', { name: t.table.showResults }));
+    const chips = screen.getByRole('list', { name: t.table.activeFilters });
+    expect(chips.textContent).toContain(`${t.finance.from}: 2026-10-01`);
+    expect(chips.textContent).toContain(`${t.finance.kind}: ${t.enums.paymentKind.refund}`);
+    fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
+    expect(onSearch).toHaveBeenLastCalledWith({ studentId: undefined, from: undefined, to: undefined, kind: undefined, f_method: undefined, page: undefined });
   });
 
   it('the URL is parsed against allowlists', () => {

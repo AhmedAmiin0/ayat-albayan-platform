@@ -48,6 +48,10 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
     setColumns(setColumnFilter(columns, { key, value }));
     setPage(1);
   };
+  const onClearFilters = (keys: string[]) => {
+    setColumns((c) => Object.fromEntries(Object.entries(c).filter(([k]) => !keys.includes(k))));
+    setPage(1);
+  };
   const toggle = (s: StudentStatus) => pick(statuses.includes(s) ? statuses.filter((x) => x !== s) : [...statuses, s]);
   const all = statuses.length === 0;
 
@@ -81,7 +85,7 @@ export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {
       <DataTable
         columns={teacherStudentColumns}
         sort={{ key: sort.sort, dir: sort.dir, onChange: onSort }}
-        filters={{ values: columns, onChange: onFilter }}
+        filters={{ values: columns, onChange: onFilter, onClear: onClearFilters }}
         data={list.data?.items ?? []}
         getRowId={(r) => r.id}
         emptyText={list.data ? t.teachers.studentsEmpty : t.common.loading}

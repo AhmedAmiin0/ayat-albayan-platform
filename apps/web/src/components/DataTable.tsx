@@ -1,7 +1,6 @@
 import { useTable, type RowData } from '@tanstack/react-table';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { ColumnFilters } from './ColumnFilters';
 import {
   collatorSortFn,
   dataTableFeatures,
@@ -14,6 +13,8 @@ import {
 } from './data-table-features';
 import { DataTableHead } from './DataTableHead';
 import { filterControls } from './filter-controls';
+import { DataTableToolbar } from './table-toolbar/DataTableToolbar';
+import type { TableToolbarOptions } from './table-toolbar/types';
 import { tableBoxClass } from './TableBox';
 
 export * from './data-table-features';
@@ -54,12 +55,14 @@ export interface DataTableProps<T extends RowData> {
   sort?: DataTableSort;
   /** Sort the loaded rows locally: every accessor column, Arabic collation. */
   clientSort?: boolean;
-  /** Server column filters (`meta.filter` columns), shown above the table. */
+  /** Server column filters (`meta.filter` columns): the toolbar's search box and «تصفية» panel. */
   filters?: DataTableFilters;
   /** Filter the loaded rows locally (`meta.filter` columns). */
   clientFilter?: boolean;
   /** The table's accessible name (`aria-label`), when no heading names it. */
   label?: string;
+  /** The page's own search box / filters / action in the toolbar above the table. */
+  toolbar?: TableToolbarOptions;
 }
 
 /**
@@ -80,6 +83,7 @@ export function DataTable<T extends RowData>({
   filters,
   clientFilter,
   label,
+  toolbar,
 }: DataTableProps<T>) {
   const table = useTable({
     features: dataTableFeatures,
@@ -94,7 +98,7 @@ export function DataTable<T extends RowData>({
 
   return (
     <>
-      {controls.length > 0 && <ColumnFilters controls={controls} />}
+      {(controls.length > 0 || toolbar) && <DataTableToolbar controls={controls} filters={filters} options={toolbar} />}
       {/* `relative` keeps absolutely positioned sr-only text inside the scroll clip (phone width). */}
       <div data-table-box={fill || undefined} className={cn('relative overflow-x-auto', fill && tableBoxClass, stacked && stackedClass)}>
         {/* An empty fixed-height box: the one «nothing here» row fills it, its text centred. */}

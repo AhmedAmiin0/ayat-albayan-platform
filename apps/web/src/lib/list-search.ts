@@ -37,6 +37,11 @@ export function toFilterSearch(key: string, value: string): Record<string, strin
   return { [filterParam(key)]: value.trim() === '' ? undefined : value.trim() };
 }
 
+/** «مسح الكل» → route search patch dropping every `f_<key>` of these keys. */
+export function clearFilterSearch(keys: readonly string[]): Record<string, undefined> {
+  return Object.fromEntries(keys.map((key) => [filterParam(key), undefined]));
+}
+
 /** The API query entries: `sort`, `dir` (only when desc) and each filter under its plain key. */
 export function sortFilterParams(sort: SortSearch, filters: FilterSearch = {}): [string, string][] {
   const out: [string, string][] = [];

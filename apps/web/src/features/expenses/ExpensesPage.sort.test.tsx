@@ -4,6 +4,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/ColumnFilterText';
 import { t } from '@/lib/i18n';
+import { clearAllFilters, openFilters } from '@/test/open-filters';
 import { ExpensesPage } from './ExpensesPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -51,11 +52,12 @@ describe('ExpensesPage sort + filter (client: the month is loaded whole)', () =>
     await screen.findByText('فيسبوك');
     fireEvent.click(screen.getByRole('button', { name: t.expenses.amount }));
     expect(notes()).toEqual(['زوم', 'فيسبوك', 'المكتب']);
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: by(t.finance.status) }), { target: { value: 'confirmed' } });
     expect(notes()).toEqual(['فيسبوك', 'المكتب']);
     fireEvent.change(screen.getByRole('combobox', { name: by(t.expenses.category) }), { target: { value: 'إيجار' } });
     expect(notes()).toEqual(['المكتب']);
-    fireEvent.click(screen.getByRole('button', { name: t.table.clearFilters }));
+    clearAllFilters();
     fireEvent.change(screen.getByRole('searchbox', { name: by(t.expenses.note) }), { target: { value: 'زوم' } });
     act(() => vi.advanceTimersByTime(FILTER_DEBOUNCE_MS));
     expect(notes()).toEqual(['زوم']);

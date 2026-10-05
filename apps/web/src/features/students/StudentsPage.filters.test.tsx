@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import type { StudentsFilters } from './filters';
 import { StudentsPage } from './StudentsPage';
 
@@ -28,8 +29,10 @@ describe('StudentsPage filters (R-STU-01)', () => {
     expect(apiFetch).toHaveBeenCalledWith(`/students?${qs}`);
   });
 
-  it('a filter change keeps the search and goes back to page 1', () => {
+  it('a filter change keeps the search and goes back to page 1', async () => {
     const onChange = renderPage({ teacher: 'none' });
+    await screen.findByText(t.common.notFound);
+    openFilters();
     fireEvent.click(screen.getByRole('checkbox', { name: t.enums.studentStatus.paused }));
     expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: { teacher: 'none', status: 'paused' } });
   });
@@ -39,5 +42,14 @@ describe('StudentsPage filters (R-STU-01)', () => {
     expect(await screen.findByText(t.students.count.replace('{n}', '0'))).toBeTruthy();
     expect(screen.queryByText(t.students.empty)).toBeNull();
     expect(screen.getByText(t.common.notFound)).toBeTruthy();
+  });
+
+  it('set filters show as chips; «مسح الكل» drops them all and keeps the search', async () => {
+    const onChange = renderPage({ teacher: 'none', status: 'paused' });
+    const chips = await screen.findByRole('list', { name: t.table.activeFilters });
+    expect(chips.textContent).toContain(`${t.students.teacher}: ${t.students.teacherNone}`);
+    expect(screen.getByRole('button', { name: new RegExp(`^${t.table.filter}`) }).textContent).toContain('2');
+    fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
+    expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: {}, columns: {} });
   });
 });

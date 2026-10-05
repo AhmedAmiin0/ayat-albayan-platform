@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listUrlValidator, parseListUrl, toListUrl, withFilter, withSort } from './list-url';
+import { listUrlValidator, parseListUrl, toListUrl, withFilter, withoutFilters, withSort } from './list-url';
 
 const KEYS = { sortKeys: ['name', 'status'], filterKeys: ['name', 'status'] };
 
@@ -25,5 +25,10 @@ describe('list URL state (R-NFR-08)', () => {
     expect(withSort(state, {})).toEqual({ ...state, page: 1, sort: {} });
     expect(withFilter(state, { key: 'status', value: '' })).toEqual({ ...state, page: 1, filters: {} });
     expect(withFilter(state, { key: 'name', value: ' x ' }).filters).toEqual({ status: 'active', name: 'x' });
+  });
+
+  it('withoutFilters drops several keys at once, back to page 1', () => {
+    const state = { page: 4, sort: {}, filters: { status: 'active', name: 'x', role: 'admin' } };
+    expect(withoutFilters(state, ['status', 'role'])).toEqual({ page: 1, sort: {}, filters: { name: 'x' } });
   });
 });

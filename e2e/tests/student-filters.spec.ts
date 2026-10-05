@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
+import { openFilters, showResults } from '../support/filters';
 import { dropFilterStudents, filterSeed, seedFilterStudents, type FilterSeed } from '../support/student-filters';
 
 // R-STU-01: the students list filters live in the URL (shareable, survive a reload) and are applied
@@ -27,25 +28,29 @@ test.describe('students filters', () => {
     if (state.seed) await dropFilterStudents(state.seed);
   });
 
-  test('filter by teacher and status: URL carries them, a reload keeps them, «مسح الفلاتر» drops them', async ({ asRole }, info) => {
-    test.skip(info.project.name === 'mobile', 'the inline filter bar is the wide layout');
+  test('filter by teacher and status: URL carries them, a reload keeps them, «مسح الكل» drops them', async ({ asRole }, info) => {
+    test.skip(info.project.name === 'mobile', 'the URL round trip runs once; the phone sheet has its own test');
     const { teacherId, names } = seeded();
     const page = await asRole('admin');
     await page.goto('/admin/students');
-    await page.getByRole('combobox', { name: ar.students.teacher }).selectOption(teacherId);
+    const panel = await openFilters(page);
+    await panel.getByRole('combobox', { name: ar.students.teacher }).selectOption(teacherId);
     await expect(page).toHaveURL(new RegExp(`teacher=${teacherId}`));
     await expectNames(page, [names.active, names.trial, names.paused], [names.unassigned]);
     await expect(page.getByText(ar.students.count.replace('{n}', '3'))).toBeVisible();
 
-    await page.getByText(E.active, { exact: true }).first().click();
+    await panel.getByText(E.active, { exact: true }).click();
     await expect(page).toHaveURL(/status=active/);
+    await showResults(panel);
     await expectNames(page, [names.active], [names.trial, names.paused]);
 
     await page.reload();
-    await expect(page.getByRole('checkbox', { name: E.active })).toBeChecked();
+    const chips = page.getByRole('list', { name: ar.table.activeFilters });
+    await expect(chips).toContainText(ar.table.activeFilter.replace('{label}', ar.students.status).replace('{value}', E.active));
+    await expect((await openFilters(page)).getByRole('checkbox', { name: E.active })).toBeChecked();
     await expectNames(page, [names.active], [names.trial, names.paused]);
 
-    await page.getByRole('button', { name: ar.students.clearFilters }).click();
+    await page.getByRole('dialog').getByRole('button', { name: ar.table.clearAll }).click();
     await expect(page).not.toHaveURL(/teacher=|status=/);
     await expect(page.getByText(names.unassigned, { exact: true }).first()).toBeVisible();
   });
@@ -60,15 +65,14 @@ test.describe('students filters', () => {
     await expectNames(page, [], [names.unassigned]);
   });
 
-  test('phones: «فلاتر» opens the sheet; a status chip there filters the list', async ({ asRole }, info) => {
+  test('phones: «تصفية» opens the sheet; a status chip there filters the list', async ({ asRole }, info) => {
     test.skip(info.project.name !== 'mobile', 'the sheet is the phone layout');
     const { teacherId, names } = seeded();
     const page = await asRole('admin');
     await page.goto(`/admin/students?teacher=${teacherId}`);
-    await page.getByRole('button', { name: new RegExp(`^${ar.students.filters}`) }).click();
-    const sheet = page.getByRole('dialog', { name: ar.students.filtersTitle });
+    const sheet = await openFilters(page);
     await sheet.getByText(E.trial, { exact: true }).click();
-    await sheet.getByRole('button', { name: ar.students.showResults }).click();
+    await showResults(sheet);
     await expect(page).toHaveURL(/status=trial/);
     await expectNames(page, [names.trial], [names.active, names.paused]);
   });

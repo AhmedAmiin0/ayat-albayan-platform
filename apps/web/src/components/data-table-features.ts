@@ -12,7 +12,7 @@ import { compareValues, matchesFilter } from './client-sort';
 
 export type SortDir = 'asc' | 'desc';
 export type FilterOption = { value: string; label: string };
-/** A column's filter control (ColumnFilters): a debounced search box, or a select with «الكل». */
+/** A column's filter control (table toolbar): a debounced search box, or a select with «الكل». */
 export type ColumnFilterDef = { kind: 'text' } | { kind: 'select'; options: FilterOption[] };
 
 /** Per-column classes: `className` styles the body cells, `headClassName` the <th>. */
@@ -21,8 +21,10 @@ export interface DataTableColumnMeta {
   headClassName?: string;
   /** Server sort key (the API's `sort=` value); in `clientSort` tables any accessor column sorts. */
   sortKey?: string;
-  /** A filter control above the table for this column. */
+  /** A filter for this column: in the «تصفية» panel, or the toolbar's search box (`search`). */
   filter?: ColumnFilterDef;
+  /** This text filter is the toolbar's search box (default: the first text filter). */
+  search?: boolean;
   /** Server filter key (`f_<key>` in the URL); defaults to the column id. */
   filterKey?: string;
 }
@@ -54,6 +56,8 @@ export interface DataTableSort {
 export interface DataTableFilters {
   values: Record<string, string>;
   onChange: (key: string, value: string) => void;
+  /** «مسح الكل»: drops these keys in one change (one URL navigation instead of one per key). */
+  onClear?: (keys: string[]) => void;
 }
 
 /** Table options for the sort/filter mode: local sorting/filtering only in client mode, one column at a time. */

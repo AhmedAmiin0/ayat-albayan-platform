@@ -1,5 +1,5 @@
 import type { Header, ReactTable, RowData } from '@tanstack/react-table';
-import type { ColumnFilterControl } from './ColumnFilters';
+import type { ColumnFilterControl } from './table-toolbar/types';
 import type { DataTableFeatures, DataTableFilters } from './data-table-features';
 
 /** A header's plain text (`header: () => t.x` or a string), for filter labels; else the column id. */
@@ -25,14 +25,14 @@ export function filterControls<T extends RowData>(
     const { column } = header;
     const filter = column.columnDef.meta?.filter;
     if (!filter || header.isPlaceholder) return [];
-    const label = headerText(header);
+    const base = { id: column.id, label: headerText(header), filter, search: column.columnDef.meta?.search };
     if (filters) {
       const key = column.columnDef.meta?.filterKey ?? column.id;
       const onChange = (value: string) => filters.onChange(key, value);
-      return [{ id: column.id, label, filter, value: filters.values[key] ?? '', onChange }];
+      return [{ ...base, key, value: filters.values[key] ?? '', onChange }];
     }
     const current = column.getFilterValue();
     const onChange = (value: string) => column.setFilterValue(value === '' ? undefined : value);
-    return [{ id: column.id, label, filter, value: typeof current === 'string' ? current : '', onChange }];
+    return [{ ...base, key: column.id, value: typeof current === 'string' ? current : '', onChange }];
   });
 }

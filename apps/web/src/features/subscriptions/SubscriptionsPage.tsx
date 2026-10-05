@@ -1,4 +1,3 @@
-import { SUBSCRIPTION_STATUSES } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
@@ -10,7 +9,6 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
-import { Select } from '@/components/ui/select';
 import { Toast } from '@/components/ui/toast';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { RecordPaymentDialog } from '@/features/payments/RecordPaymentDialog';
@@ -19,8 +17,9 @@ import { toFilterSearch, toSortSearch } from '@/lib/list-search';
 import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
 import { OpenTasks } from './OpenTasks';
-import { subscriptionsTable, type SubscriptionFilter, type SubscriptionsUrlSearch } from './search';
+import { subscriptionsTable, type SubscriptionsUrlSearch } from './search';
 import { subscriptionColumns } from './subscription-columns';
+import { useSubscriptionFilters } from './use-subscription-filters';
 
 type Props = {
   search: SubscriptionsUrlSearch;
@@ -37,8 +36,9 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
   const list = useQuery(subscriptionsQuery({ status, page, ...table }));
   const reset = (patch: Record<string, unknown>) => onSearch({ ...patch, page: undefined });
   const filterValues = { student: search.f_student ?? '', package: search.f_package ?? '' };
-  // A column filter that matches nothing keeps the table (and its filter row) on screen.
-  const bare = list.data?.total === 0 && Object.keys(table.filters).length === 0;
+  const extra = useSubscriptionFilters({ status, onChange: reset });
+  // A filter that matches nothing keeps the table (its toolbar and chips) on screen.
+  const bare = list.data?.total === 0 && !status && Object.keys(table.filters).length === 0;
   const [creating, setCreating] = useState(false);
   const [paying, setPaying] = useState<{ sub: SubscriptionView; kind: 'payment' | 'refund' } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
@@ -66,20 +66,6 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
     <>
       <PageHead>
         <Cartouche>{t.subscriptions.title}</Cartouche>
-        <Select
-          aria-label={t.subscriptions.status}
-          className="w-auto"
-          value={status ?? ''}
-          onChange={(e) => reset({ status: (e.target.value || undefined) as SubscriptionFilter | undefined })}
-        >
-          <option value="">{t.subscriptions.allStatuses}</option>
-          {SUBSCRIPTION_STATUSES.map((s) => (
-            <option key={s} value={s}>
-              {t.enums.subscriptionStatus[s]}
-            </option>
-          ))}
-          <option value="partial">{t.finance.partiallyPaid}</option>
-        </Select>
         <div className="ms-auto">
           <Button onClick={() => setCreating(true)}>
             <Icon name="plus" />
@@ -101,6 +87,7 @@ export function SubscriptionsPage({ search, onSearch, onOpenStudent }: Props) {
             emptyText={t.subscriptions.emptyList}
             sort={{ key: table.sort.sort, dir: table.sort.dir, onChange: (next) => reset(toSortSearch(next)) }}
             filters={{ values: filterValues, onChange: (key, v) => reset(toFilterSearch(key, v)) }}
+            toolbar={{ extra }}
           />
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={(p) => onSearch({ page: p > 1 ? p : undefined })} />
         </>

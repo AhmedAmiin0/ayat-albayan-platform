@@ -55,3 +55,9 @@ export function withFilter(state: ListUrlState, change: { key: string; value: st
   const value = change.value.trim();
   return { ...state, page: 1, filters: value === '' ? rest : { ...rest, [change.key]: value } };
 }
+
+/** «مسح الكل» → the state on page 1 without these filters. */
+export function withoutFilters(state: ListUrlState, keys: readonly string[]): ListUrlState {
+  const filters = Object.fromEntries(Object.entries(state.filters).filter(([k]) => !keys.includes(k)));
+  return { ...state, page: 1, filters };
+}

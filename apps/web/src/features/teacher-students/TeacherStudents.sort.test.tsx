@@ -4,6 +4,7 @@ import { act, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { FILTER_DEBOUNCE_MS } from '@/components/ColumnFilterText';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { TeacherStudents } from './TeacherStudents';
 
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
@@ -47,6 +48,7 @@ describe('TeacherStudents sort + filters (R-TCH-03, R-NFR-08)', () => {
 
   it('the program select and the name box filter the rows', async () => {
     await open();
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: label(t.students.program) }), {
       target: { value: t.enums.program.arabic },
     });
