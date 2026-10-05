@@ -77,7 +77,7 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
     expect(screen.getAllByRole('article')).toHaveLength(2);
     fireEvent.click(screen.getByRole('tab', { name: t.teacherDash.myStudents }));
     const table = screen.getByRole('table', { name: t.teacherDash.myStudents });
-    expect(within(table).getByRole('rowheader', { name: 'سهيلة' })).toBeTruthy();
+    expect(within(table).getByRole('cell', { name: 'سهيلة' })).toBeTruthy();
     // Each name opens the student's «سجل التقارير» (R-REP-05).
     expect(within(table).getByRole('link', { name: 'سهيلة' }).getAttribute('href')).toBe('/teacher/reports/s-1');
     expect(within(table).getByText(t.enums.studentStatus.active)).toBeTruthy();

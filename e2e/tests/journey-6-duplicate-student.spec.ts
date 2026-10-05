@@ -48,10 +48,11 @@ test.describe('journey 6 — duplicate student (R-STU-03)', () => {
     await expect(rows.nth(1)).toContainText(/AB-\d{4,}/);
 
     // The keyboard path to the profile exists at every width, Pixel 7 included: Tab from the
-    // search passes the filters and reaches the name (a button); Enter opens the profile.
+    // search passes the filters, the column filters and sortable headers, and reaches the name
+    // (a button); Enter opens the profile.
     const name = rows.nth(1).getByRole('button', { name: 'سهيلة', exact: true });
     await page.getByRole('button', { name: ar.common.search, exact: true }).focus();
-    for (let i = 0; i < 20 && !(await name.evaluate((el) => el.matches(':focus'))); i++) {
+    for (let i = 0; i < 40 && !(await name.evaluate((el) => el.matches(':focus'))); i++) {
       await page.keyboard.press('Tab');
     }
     await expect(name).toBeFocused();

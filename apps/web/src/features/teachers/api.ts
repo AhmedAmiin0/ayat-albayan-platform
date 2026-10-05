@@ -1,6 +1,8 @@
 import type { AvailabilitySlot, TeacherCreate } from '@ab/shared';
-import { queryOptions } from '@tanstack/react-query';
+import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { sortFilterParams } from '@/lib/list-search';
+import type { ListUrlState } from '@/lib/list-url';
 
 // Shapes returned by apps/api/src/modules/teachers (R-TCH-01, R-TCH-02).
 export type Teacher = TeacherCreate & { id: string };
@@ -10,10 +12,15 @@ export type TimeOff = { id: string; starts_at: string; ends_at: string; reason: 
 
 export const PAGE_SIZE = 25;
 
-export const teachersPageQuery = (page: number) =>
+/** GET /teachers: the page, column sort and filters (R-NFR-08). */
+export const teachersPageQuery = ({ page, sort, filters }: ListUrlState) =>
   queryOptions({
-    queryKey: ['teachers', 'list', page],
-    queryFn: () => apiFetch<Page<Teacher>>(`/teachers?page=${page}&pageSize=${PAGE_SIZE}`),
+    queryKey: ['teachers', 'list', page, sort, filters],
+    queryFn: () => {
+      const qs = new URLSearchParams([['page', String(page)], ['pageSize', String(PAGE_SIZE)], ...sortFilterParams(sort, filters)]);
+      return apiFetch<Page<Teacher>>(`/teachers?${qs}`);
+    },
+    placeholderData: keepPreviousData,
   });
 
 export const teacherQuery = (id: string) =>

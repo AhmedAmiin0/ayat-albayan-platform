@@ -10,3 +10,4 @@ export * from './booking-extras.js';
 export * from './teacher-students.js';
 export * from './student-filters.js';
 export * from './list-sort.js';
+export * from './people-sort.js';

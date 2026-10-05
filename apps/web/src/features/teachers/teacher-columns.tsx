@@ -1,4 +1,4 @@
-import { formatPhone, teacherStatusStyle } from '@ab/shared';
+import { formatPhone, PROGRAMS, TEACHER_STATUSES, teacherStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Link } from '@tanstack/react-router';
@@ -12,10 +12,15 @@ const col = createColumnHelper<DataTableFeatures, Teacher>();
 
 type Handlers = { onEdit: (teacher: Teacher) => void; onOpen: (teacherId: string) => void };
 
+const text = { kind: 'text' } as const;
+const programOptions = () => PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }));
+const statusOptions = () => TEACHER_STATUSES.map((st) => ({ value: st, label: t.enums.teacherStatus[st] }));
+
 /**
  * Teacher list columns (R-TCH-01, docs/07 §6). The name is a button (keyboard path to the
  * profile); «تعديل» opens the dialog without following the row link. Under 640px the rows stack:
- * name + status, programs, phone, تعديل (DataTable `stacked`).
+ * name + status, programs, phone, تعديل (DataTable `stacked`). Every data column sorts server-side;
+ * name / phone have a search box, programs / status a select (R-NFR-08).
  * TODO(R-TCH-03): students-per-teacher count beside the max once the list API returns it.
  */
 export function teacherColumns({ onEdit, onOpen }: Handlers) {
@@ -37,12 +42,16 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
           <span className="text-2xs text-ink-3">{t.teachers.genderLabel[c.row.original.gender]}</span>
         </div>
       ),
-      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
+      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', sortKey: 'name', filter: text, filterKey: 'name' },
     }),
     col.accessor('programs', {
       header: () => t.teachers.programs,
       cell: (c) => c.getValue().map((p) => t.enums.program[p]).join(t.teachers.listSeparator),
-      meta: { className: 'max-sm:order-3 max-sm:text-xs max-sm:text-ink-3' },
+      meta: {
+        className: 'max-sm:order-3 max-sm:text-xs max-sm:text-ink-3',
+        sortKey: 'programs',
+        filter: { kind: 'select', options: programOptions() },
+      },
     }),
     col.accessor('phone_e164', {
       header: () => t.teachers.phone,
@@ -50,17 +59,17 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
         const phone = c.getValue();
         return phone && <Ltr className="text-ink-2">{formatPhone(phone)}</Ltr>;
       },
-      meta: { className: 'max-sm:order-4 max-sm:text-xs' },
+      meta: { className: 'max-sm:order-4 max-sm:text-xs', sortKey: 'phone', filter: text, filterKey: 'phone' },
     }),
     col.accessor('max_students', {
       header: () => t.teachers.maxStudents,
       cell: (c) => <span className="tabular-nums">{c.getValue()}</span>,
-      meta: { className: 'max-sm:hidden' },
+      meta: { className: 'max-sm:hidden', sortKey: 'max_students' },
     }),
     col.accessor('status', {
       header: () => t.teachers.status,
       cell: (c) => <StatusChip {...teacherStatusStyle[c.getValue()]} label={t.enums.teacherStatus[c.getValue()]} />,
-      meta: { className: 'max-sm:order-2' },
+      meta: { className: 'max-sm:order-2', sortKey: 'status', filter: { kind: 'select', options: statusOptions() } },
     }),
     col.display({
       id: 'actions',

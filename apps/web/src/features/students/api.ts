@@ -1,6 +1,7 @@
 import type { Gender, LeadSource, StudentStatus } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
+import { sortFilterParams, type FilterSearch, type SortSearch } from '@/lib/list-search';
 import { filterParams, type StudentsFilters } from './filters';
 import type {
   DuplicateBody,
@@ -16,16 +17,20 @@ export const PAGE_SIZE = 20;
 /** Invalidate this after any write. */
 export const STUDENTS_KEY = ['students'] as const;
 
-/** GET /students: search + page, and the list filters (R-STU-01) when given. */
-export const studentListQuery = (search: string, page: number, filters: StudentsFilters = {}) =>
+/** The list filters (R-STU-01), the column sort and text filters (R-NFR-08) of GET /students. */
+export type StudentListView = { filters?: StudentsFilters; sort?: SortSearch; columns?: FilterSearch };
+
+/** GET /students: search + page, and the filters / sort when given. */
+export const studentListQuery = (search: string, page: number, view: StudentListView = {}) =>
   queryOptions({
-    queryKey: [...STUDENTS_KEY, 'list', { search, page, ...filters }],
+    queryKey: [...STUDENTS_KEY, 'list', { search, page, ...view.filters, ...view.sort, columns: view.columns }],
     queryFn: () => {
       const qs = new URLSearchParams([
         ['search', search],
         ['page', String(page)],
         ['pageSize', String(PAGE_SIZE)],
-        ...filterParams(filters),
+        ...filterParams(view.filters ?? {}),
+        ...sortFilterParams(view.sort ?? {}, view.columns),
       ]);
       return apiFetch<Page<StudentListItem>>(`/students?${qs}`);
     },

@@ -337,6 +337,17 @@
     }
   },
   "leads": {
+    "sortBy": "Sort",
+    "assigneeAll": "Owner: all",
+    "sort": {
+      "recent": "Latest message first",
+      "waiting": "Oldest message first",
+      "newest": "Newest added",
+      "oldest": "Oldest added",
+      "name": "Name (A–Z)",
+      "status": "Status",
+      "source": "Source"
+    },
     "title": "All conversations",
     "phone": "Number",
     "name": "Name",
@@ -405,7 +416,9 @@
     "fromLead": "Came from conversations",
     "empty": "No job applications",
     "createdAt": "Applied on",
-    "count": "{n} total"
+    "count": "{n} total",
+    "present": "Attached",
+    "missing": "Missing"
   },
   "schedule": {
     "title": "Lesson schedule",
@@ -2106,6 +2119,9 @@
     "statements": "Monthly statements"
   },
   "teacherStudents": {
+    "levelCol": "Level",
+    "ageCol": "Age",
+    "nextLessonCol": "Next lesson",
     "title": "Students",
     "kinds": "Student type",
     "subscribed": "Subscribed",
