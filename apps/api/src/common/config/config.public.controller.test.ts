@@ -2,7 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER } from '../auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER } from '../auth/auth.guard';
 import { PublicConfigService } from './config.public.service';
 
 const service = { read: vi.fn() };
@@ -14,6 +14,7 @@ describe('GET /config (public)', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(TOKEN_VERIFIER).useValue(async () => { throw new Error('no token expected'); })
       .overrideProvider(PublicConfigService).useValue(service)
       .compile();

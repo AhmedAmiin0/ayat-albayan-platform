@@ -3,7 +3,7 @@ import { Body, Controller, Delete, Get, HttpCode, NotFoundException, Param, Put 
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
 import { AuditService } from '../audit/audit.service';
-import { CurrentUser, Roles } from '../auth/decorators';
+import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { CustomConfigService } from './custom-config.service';
 
@@ -13,7 +13,7 @@ const CUSTOM_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 /** Admin CRUD of the free-form entries. Every change is audited with the old and new value. */
 @ApiTags('config')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('settings.read')
 @Controller('config/custom')
 export class CustomConfigController {
   constructor(
@@ -28,6 +28,7 @@ export class CustomConfigController {
 
   /** 400 on a bad key (or one reserved by a registry setting), a null or a value over 8 KB. */
   @Put(':key')
+  @Permissions('settings.write')
   async put(@Param('key') rawKey: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<CustomConfigView> {
     const key = parseOrThrow(customKeySchema, rawKey);
     const input = parseOrThrow(customConfigUpsertSchema, body);
@@ -45,6 +46,7 @@ export class CustomConfigController {
   }
 
   @Delete(':key')
+  @Permissions('settings.write')
   @HttpCode(204)
   async remove(@Param('key') rawKey: string, @CurrentUser() user: AuthUser): Promise<void> {
     const key = parseOrThrow(customKeySchema, rawKey);
