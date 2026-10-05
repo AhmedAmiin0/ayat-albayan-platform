@@ -1,7 +1,6 @@
 import type {
   AdminTaskView,
   DashboardSummary,
-  ExpenseCategory,
   LessonStatus,
   PackageSize,
 } from '@ab/shared';
@@ -15,7 +14,7 @@ export type MonthFinance = { month: string; revenue: number; teacher_cost: numbe
 export type DashboardData = DashboardSummary & {
   finance: DashboardSummary['finance'] & {
     by_month: MonthFinance[];
-    expenses_by_category: Record<ExpenseCategory, number>;
+    expenses_by_category: Record<string, number>;
     fx_rates: Record<string, number>;
     unrated_lessons: number;
   };

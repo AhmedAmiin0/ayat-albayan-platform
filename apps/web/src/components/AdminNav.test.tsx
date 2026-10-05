@@ -24,6 +24,9 @@ describe('AdminNav', () => {
     [t.nav.feedback, '/admin/feedback'],
     [t.classroom.admin.nav, '/admin/classrooms'],
     [t.settings.title, '/admin/settings'],
+    [t.finance.invoicesTitle, '/admin/invoices'],
+    [t.finance.receivablesTitle, '/admin/receivables'],
+    [t.finance.summaryTitle, '/admin/finance'],
   ])('links %s to %s', (label, href) => {
     render(<AdminNav />);
     expect(screen.getByRole('link', { name: label }).getAttribute('href')).toBe(href);
@@ -31,7 +34,13 @@ describe('AdminNav', () => {
 
   it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox and settings', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(14);
+    expect(screen.getAllByRole('link')).toHaveLength(17);
+  });
+
+  it('groups the money pages under «المالية»', () => {
+    render(<AdminNav />);
+    const money = screen.getByRole('list', { name: t.finance.nav });
+    expect(money.querySelectorAll('a')).toHaveLength(7);
   });
 
   it('shows real counts; work counts are saffron and say what they are', () => {

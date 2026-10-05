@@ -1,4 +1,4 @@
-import { SUBSCRIPTION_STATUSES, type SubscriptionStatus } from '@ab/shared';
+import { SUBSCRIPTION_STATUSES } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useMemo, useState } from 'react';
 import { DataTable } from '@/components/DataTable';
@@ -16,9 +16,10 @@ import { t } from '@/lib/i18n';
 import { MONEY_KEY, setPaused, subscriptionsQuery, type SubscriptionView } from './api';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
 import { OpenTasks } from './OpenTasks';
+import type { SubscriptionFilter } from './search';
 import { subscriptionColumns } from './subscription-columns';
 
-export type SubscriptionsSearch = { status?: SubscriptionStatus; page: number };
+export type SubscriptionsSearch = { status?: SubscriptionFilter; page: number };
 type Props = SubscriptionsSearch & {
   onChange: (next: SubscriptionsSearch) => void;
   onOpenStudent: (studentId: string) => void;
@@ -29,7 +30,7 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
   const queryClient = useQueryClient();
   const list = useQuery(subscriptionsQuery({ status, page }));
   const [creating, setCreating] = useState(false);
-  const [paying, setPaying] = useState<SubscriptionView | null>(null);
+  const [paying, setPaying] = useState<{ sub: SubscriptionView; kind: 'payment' | 'refund' } | null>(null);
   const [toast, setToast] = useState<string | null>(null);
   const pause = useMutation({
     mutationFn: setPaused,
@@ -39,7 +40,7 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
   const columns = useMemo(
     () =>
       subscriptionColumns({
-        onPay: setPaying,
+        onPay: (sub, kind) => setPaying({ sub, kind }),
         onPause: (s, paused) => pauseMutate({ id: s.id, paused }),
         onOpen: onOpenStudent,
       }),
@@ -59,7 +60,7 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
           aria-label={t.subscriptions.status}
           className="w-auto"
           value={status ?? ''}
-          onChange={(e) => onChange({ status: (e.target.value || undefined) as SubscriptionStatus | undefined, page: 1 })}
+          onChange={(e) => onChange({ status: (e.target.value || undefined) as SubscriptionFilter | undefined, page: 1 })}
         >
           <option value="">{t.subscriptions.allStatuses}</option>
           {SUBSCRIPTION_STATUSES.map((s) => (
@@ -67,6 +68,7 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
               {t.enums.subscriptionStatus[s]}
             </option>
           ))}
+          <option value="partial">{t.finance.partiallyPaid}</option>
         </Select>
         <div className="ms-auto">
           <Button onClick={() => setCreating(true)}>
@@ -86,7 +88,9 @@ export function SubscriptionsPage({ status, page, onChange, onOpenStudent }: Pro
       )}
       <OpenTasks />
       {creating && <CreateSubscriptionDialog onClose={() => setCreating(false)} onSaved={saved(t.subscriptions.saved)} />}
-      {paying && <RecordPaymentDialog subscription={paying} onClose={() => setPaying(null)} onSaved={saved(t.payments.saved)} />}
+      {paying && (
+        <RecordPaymentDialog subscription={paying.sub} kind={paying.kind} onClose={() => setPaying(null)} onSaved={saved(t.payments.saved)} />
+      )}
       {toast && <Toast message={toast} onDismiss={() => setToast(null)} />}
     </>
   );

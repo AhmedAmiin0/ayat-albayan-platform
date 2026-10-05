@@ -17,11 +17,14 @@ const SIGNED = { bucket: 'receipts', path: 'sub-1/abc.jpg', token: 'tok', signed
 const file = (type: string, size = 2048) => new File([new Uint8Array(size)], 'receipt.jpg', { type });
 const page = <T,>(items: T[]) => ({ items, total: items.length, page: 1, pageSize: 20 });
 
+const STUDENT = { id: 'stu-1', name: 'سهيلة', code: 'AB-0183', guardian_name: 'أم سهيلة' };
+
 function renderPage() {
   apiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/subscriptions')) return page([WEEKLY]);
+    if (path.startsWith('/students')) return page([STUDENT]);
     if (path.endsWith('/receipt')) return { url: 'https://signed/receipt.jpg', expires_at: '2026-10-02T10:00:00Z' };
-    return page([PAYMENT]);
+    return { ...page([PAYMENT]), totals: [{ currency: 'SAR', net: 145, payments: 145, refunds: 0 }] };
   });
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -88,7 +91,7 @@ describe('PaymentsPage', () => {
 
   it('lists payments and previews a receipt through a signed URL', async () => {
     renderPage();
-    const row = (await screen.findByText('سهيلة')).closest('tr');
+    const row = (await screen.findByText(t.enums.paymentMethod.bank, { selector: 'td' })).closest('tr');
     if (!row) throw new Error('row missing');
     expect(within(row).getByText(t.enums.paymentMethod.bank)).toBeTruthy();
     expect(within(row).getByText('مدير')).toBeTruthy();
@@ -98,13 +101,14 @@ describe('PaymentsPage', () => {
     expect(apiFetch).toHaveBeenCalledWith('/payments/pay-1/receipt');
   });
 
-  it('records a payment for a package picked from the unpaid list', async () => {
+  it('records a payment: search the student, their open package is chosen', async () => {
     renderPage();
     fireEvent.click(await screen.findByRole('button', { name: t.payments.record }));
     const dialog = await screen.findByRole('dialog');
-    const picker = within(dialog).getByRole('combobox', { name: t.payments.mobile.chooseSubscription });
-    await within(dialog).findByRole('option', { name: /سهيلة/ });
-    fireEvent.change(picker, { target: { value: 'sub-1' } });
+    fireEvent.change(within(dialog).getByRole('searchbox', { name: t.payments.mobile.chooseStudent }), { target: { value: 'سهيلة' } });
+    fireEvent.click(await within(dialog).findByRole('button', { name: /سهيلة/ }));
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?studentId=stu-1&pageSize=100'));
+    await within(dialog).findByRole('option', { name: /\d/ });
     expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('145');
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
@@ -112,5 +116,21 @@ describe('PaymentsPage', () => {
       expect(apiSend).toHaveBeenCalledWith('POST', '/payments', expect.objectContaining({ subscriptionId: 'sub-1', amount: 145 })),
     );
     expect(await screen.findByText(t.payments.saved)).toBeTruthy();
+  });
+
+  it('shows the period total, filters by method and downloads the filtered CSV', async () => {
+    renderPage();
+    expect(await screen.findByLabelText(t.finance.periodTotal)).toBeTruthy();
+    fireEvent.change(screen.getByRole('combobox', { name: t.payments.method }), { target: { value: 'cash' } });
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith(expect.stringContaining('method=cash')));
+  });
+
+  it('deletes a payment only after the confirm', async () => {
+    renderPage();
+    fireEvent.click(await screen.findByRole('button', { name: `${t.common.delete} سهيلة` }));
+    const dialog = await screen.findByRole('dialog', { name: t.finance.deletePaymentTitle });
+    apiSend.mockResolvedValue(undefined);
+    fireEvent.click(within(dialog).getByRole('button', { name: t.common.delete }));
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledWith('DELETE', '/payments/pay-1'));
   });
 });

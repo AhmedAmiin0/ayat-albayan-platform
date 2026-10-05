@@ -50,6 +50,9 @@ export const PAYMENT: PaymentView = {
   recorded_by: { id: 'a1', full_name: 'مدير' },
   note: null,
   created_at: '2026-10-01T09:00:00Z',
+  kind: 'payment',
+  original: null,
+  invoice_id: null,
 };
 
 export const PAYOUT: PayoutView = {

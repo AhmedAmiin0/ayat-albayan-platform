@@ -18,6 +18,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { BalanceCard } from '@/features/subscriptions/BalanceCard';
 import { SiblingMerge } from './SiblingMerge';
 import { StudentInvoices } from './StudentInvoices';
+import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 
 /**
@@ -82,6 +83,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         ))}
       </dl>
       <BalanceCard student={student} />
+      <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />

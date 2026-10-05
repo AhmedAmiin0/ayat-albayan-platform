@@ -18,22 +18,24 @@ export type Page<T> = { items: T[]; total: number; page: number; pageSize: numbe
 export const MONEY_KEY = ['money'] as const;
 export const PAGE_SIZE = 20;
 
-export const subscriptionsQuery = (q: { status?: SubscriptionStatus; page: number }) =>
+export const subscriptionsQuery = (q: { status?: SubscriptionStatus | 'partial'; page: number }) =>
   queryOptions({
     queryKey: [...MONEY_KEY, 'subscriptions', q],
     queryFn: () => {
       const qs = new URLSearchParams({ page: String(q.page), pageSize: String(PAGE_SIZE) });
-      if (q.status) qs.set('status', q.status);
+      if (q.status === 'partial') qs.set('paid', 'partial');
+      else if (q.status) qs.set('status', q.status);
       return apiFetch<Page<SubscriptionView>>(`/subscriptions?${qs}`);
     },
     placeholderData: keepPreviousData,
   });
 
-/** Packages waiting for money, for the record-payment picker. */
-export const unpaidSubscriptionsQuery = queryOptions({
-  queryKey: [...MONEY_KEY, 'subscriptions', 'unpaid-picker'],
-  queryFn: () => apiFetch<Page<SubscriptionView>>('/subscriptions?status=unpaid&pageSize=100'),
-});
+/** One student's packages (every status; the picker hides the ended ones). */
+export const studentSubscriptionsQuery = (studentId: string) =>
+  queryOptions({
+    queryKey: [...MONEY_KEY, 'subscriptions', 'student', studentId],
+    queryFn: () => apiFetch<Page<SubscriptionView>>(`/subscriptions?studentId=${studentId}&pageSize=100`),
+  });
 
 export const studentBalanceQuery = (studentId: string) =>
   queryOptions({

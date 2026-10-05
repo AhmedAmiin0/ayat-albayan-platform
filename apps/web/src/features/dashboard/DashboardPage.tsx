@@ -3,6 +3,7 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { ExportsPanel } from '@/features/exports/ExportsPanel';
+import { MoneyKpis } from '@/features/finance/MoneyKpis';
 import { t } from '@/lib/i18n';
 import { summaryQuery, workQuery } from './api';
 import { KpiStrip } from './KpiStrip';
@@ -47,6 +48,7 @@ export function DashboardPage({ search, onSearch }: DashboardPageProps) {
         {failed && <FormAlert>{t.dashboard.loadFailed}</FormAlert>}
         <div className="grid gap-4">
           <KpiStrip summary={weekQ.data} work={tab} />
+          <MoneyKpis />
           <WorkPanel tab={tab} work={workQ.data} />
         </div>
         <WeekSection week={week} data={weekQ.data} />

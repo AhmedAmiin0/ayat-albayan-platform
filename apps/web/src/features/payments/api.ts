@@ -1,4 +1,4 @@
-import type { PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentKind, PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
@@ -7,17 +7,39 @@ import { MONEY_KEY, PAGE_SIZE, type Page } from '@/features/subscriptions/api';
 // apps/api/src/modules/payments (docs/11 §7, R-PAY-01).
 export type { PaymentView } from '@ab/shared';
 
-export const paymentsQuery = (page: number) =>
+/** The payments page filters (all optional); from/to are Riyadh days, inclusive. */
+export type PaymentFilters = { studentId?: string; from?: string; to?: string; method?: PaymentMethod; kind?: PaymentKind };
+export type PeriodTotal = { currency: string; net: number; payments: number; refunds: number };
+
+/** Only the set filters, as query parameters (shared by the list and its CSV). */
+export function filterParams(f: PaymentFilters): Record<string, string> {
+  return Object.fromEntries(Object.entries(f).filter((e): e is [string, string] => typeof e[1] === 'string' && e[1] !== ''));
+}
+
+export const paymentsQuery = (page: number, filters: PaymentFilters = {}) =>
   queryOptions({
-    queryKey: [...MONEY_KEY, 'payments', page],
-    queryFn: () => apiFetch<Page<PaymentView>>(`/payments?page=${page}&pageSize=${PAGE_SIZE}`),
+    queryKey: [...MONEY_KEY, 'payments', page, filters],
+    queryFn: () =>
+      apiFetch<Page<PaymentView> & { totals: PeriodTotal[] }>(
+        `/payments?${new URLSearchParams({ ...filterParams(filters), page: String(page), pageSize: String(PAGE_SIZE) })}`,
+      ),
     placeholderData: keepPreviousData,
   });
+
+export type PaymentPatch = { amount?: number; method?: PaymentMethod; paidAt?: string; note?: string | null };
+
+/** PATCH /payments/:id (audited; the package status is recomputed). */
+export const updatePayment = (id: string, patch: PaymentPatch) => apiSend<PaymentView>('PATCH', `/payments/${id}`, patch);
+
+/** DELETE /payments/:id (audited; the receipt is removed). */
+export const deletePayment = (id: string) => apiSend('DELETE', `/payments/${id}`);
 
 export type RecordPaymentBody = {
   subscriptionId: string;
   amount: number;
   currency: string;
+  kind: PaymentKind;
+  invoiceId?: string;
   method: PaymentMethod;
   paidAt: string;
   receiptPath: string | null;

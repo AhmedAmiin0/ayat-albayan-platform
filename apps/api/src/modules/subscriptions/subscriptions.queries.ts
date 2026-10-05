@@ -7,7 +7,7 @@ import { readChunked } from '../scheduling/read-all';
 
 export type StudentRef = { id: string; code: string | null; name: string };
 export type SubRow = Tables<'subscriptions'> & { student: StudentRef | null };
-export type SubListQuery = PageQuery & { status?: SubscriptionStatus; studentId?: string };
+export type SubListQuery = PageQuery & { status?: SubscriptionStatus; studentId?: string; paid?: 'partial' };
 
 const SELECT = '*, student:students(id, code, name)';
 
@@ -18,7 +18,10 @@ export class SubscriptionsQueries {
 
   async list(q: SubListQuery): Promise<Page<SubRow>> {
     const from = (q.page - 1) * q.pageSize;
-    let query = this.db.from('subscriptions').select(SELECT, { count: 'exact' });
+    // «مدفوع جزئيًا»: an inner embed keeps only packages with a payment (the extra field is unused).
+    const select = (q.paid === 'partial' ? `${SELECT}, paid_rows:payments!inner(id)` : SELECT) as typeof SELECT;
+    let query = this.db.from('subscriptions').select(select, { count: 'exact' });
+    if (q.paid === 'partial') query = query.eq('status', 'unpaid');
     if (q.status) query = query.eq('status', q.status);
     if (q.studentId) query = query.eq('student_id', q.studentId);
     const { data, count, error } = await query

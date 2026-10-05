@@ -12,10 +12,9 @@ vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<objec
 vi.mock('@/lib/supabase', () => ({ supabase: { storage: { from: () => ({ uploadToSignedUrl }) } } }));
 
 const SIGNED = { bucket: 'receipts', path: 'sub-1/abc.jpg', token: 'tok', signed_url: 'https://x' };
-const TWIN = { ...WEEKLY, id: 'sub-2', student: { id: 'stu-2', code: 'AB-0210', name: 'سهيلة' } };
 
 function open(subscription?: typeof WEEKLY) {
-  apiFetch.mockResolvedValue({ items: [WEEKLY, TWIN], total: 2, page: 1, pageSize: 100 });
+  apiFetch.mockResolvedValue({ items: [WEEKLY], total: 1, page: 1, pageSize: 100 });
   const onSaved = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -37,13 +36,33 @@ describe('RecordPaymentDialog (R-PAY-01)', () => {
     uploadToSignedUrl.mockReset();
   });
 
-  it('two students with the same name are told apart by their code', async () => {
-    const { dialog } = open();
-    const options = await within(dialog).findAllByRole('option', { name: /سهيلة/ });
-    expect(options.map((o) => o.textContent)).toEqual([
-      expect.stringContaining('AB-0183'),
-      expect.stringContaining('AB-0210'),
-    ]);
+  it('a refund defaults to what was paid and posts kind refund; another currency is sent as is', async () => {
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <RecordPaymentDialog subscription={{ ...WEEKLY, paid: 100 }} kind="refund" onClose={vi.fn()} onSaved={vi.fn()} />
+      </QueryClientProvider>,
+    );
+    const dialog = screen.getByRole('dialog', { name: t.finance.refundTitle });
+    expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('100');
+    fireEvent.change(within(dialog).getByRole('combobox', { name: t.payments.currency }), { target: { value: 'USD' } });
+    expect(within(dialog).getByText(t.finance.convertedHint.replace('{currency}', WEEKLY.currency))).toBeTruthy();
+    apiSend.mockResolvedValue(PAYMENT);
+    fireEvent.click(within(dialog).getByRole('button', { name: t.finance.refund }));
+    await vi.waitFor(() => expect(posts()[0]?.[2]).toMatchObject({ kind: 'refund', currency: 'USD', amount: 100 }));
+  });
+
+  it('from a booking invoice: no receipt to upload, the invoice id is sent', async () => {
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <RecordPaymentDialog subscription={WEEKLY} invoiceId="inv-1" onClose={vi.fn()} onSaved={vi.fn()} />
+      </QueryClientProvider>,
+    );
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText(t.finance.invoiceAsReceipt)).toBeTruthy();
+    expect(within(dialog).queryByLabelText(t.payments.addReceipt)).toBeNull();
+    apiSend.mockResolvedValue(PAYMENT);
+    fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
+    await vi.waitFor(() => expect(posts()[0]?.[2]).toMatchObject({ invoiceId: 'inv-1', receiptPath: null, kind: 'payment' }));
   });
 
   it('Arabic digits are read («١٤٥» → 145)', async () => {

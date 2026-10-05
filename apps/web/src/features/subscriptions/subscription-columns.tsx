@@ -1,4 +1,4 @@
-import { subscriptionStatusStyle } from '@ab/shared';
+import { paymentState, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
@@ -13,7 +13,7 @@ import { moneyText, packageName, progressOf } from './format';
 const col = createColumnHelper<DataTableFeatures, SubscriptionView>();
 
 type Handlers = {
-  onPay: (s: SubscriptionView) => void;
+  onPay: (s: SubscriptionView, kind: 'payment' | 'refund') => void;
   onPause: (s: SubscriptionView, paused: boolean) => void;
   onOpen: (studentId: string) => void;
 };
@@ -67,7 +67,12 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
     }),
     col.accessor('status', {
       header: () => t.subscriptions.status,
-      cell: (c) => <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />,
+      cell: (c) => (
+        <div className="grid justify-items-start gap-0.5">
+          <StatusChip size="sm" {...subscriptionStatusStyle[c.getValue()]} label={t.enums.subscriptionStatus[c.getValue()]} />
+          {paymentState(c.row.original) === 'partial' && <span className="text-2xs font-semibold text-act">{t.finance.partiallyPaid}</span>}
+        </div>
+      ),
       meta: { className: 'max-sm:order-2' },
     }),
     col.display({
@@ -78,8 +83,13 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
         return (
           <div className="flex gap-2">
             {s.paid < s.price && (
-              <Button type="button" variant="secondary" size="sm" onClick={() => onPay(s)}>
+              <Button type="button" variant="secondary" size="sm" onClick={() => onPay(s, 'payment')}>
                 {t.payments.record}
+              </Button>
+            )}
+            {s.paid > 0 && (
+              <Button type="button" variant="ghost" size="sm" onClick={() => onPay(s, 'refund')}>
+                {t.finance.refund}
               </Button>
             )}
             <Button type="button" variant="ghost" size="sm" onClick={() => onPause(s, s.status !== 'paused')}>

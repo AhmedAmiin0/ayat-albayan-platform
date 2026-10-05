@@ -97,10 +97,13 @@ describe('BookedPanel invoice and makeup (R-SCH-10, R-PAY-03)', () => {
     );
     renderPanel({ kind: 'package', subscribeFor: { id: 's-new', name: 'جود', code: null } });
     expect(await screen.findByRole('button', { name: t.booking.invoice.view })).toBeTruthy();
-    expect(screen.queryByRole('link', { name: t.booking.invoice.recordPayment })).toBeNull();
+    expect(screen.queryByRole('button', { name: t.finance.recordFromInvoice })).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: t.inbox.subscription.make }));
     fireEvent.click(within(screen.getByRole('dialog', { name: t.subscriptions.new })).getByRole('button', { name: t.common.save }));
-    const pay = await screen.findByRole('link', { name: t.booking.invoice.recordPayment });
-    expect(pay.getAttribute('href')).toBe('/admin/payments?');
+    // «سجّل كدفعة»: the payment dialog opens on this student, with the invoice as the receipt
+    fireEvent.click(await screen.findByRole('button', { name: t.finance.recordFromInvoice }));
+    const dialog = await screen.findByRole('dialog');
+    expect(within(dialog).getByText(t.finance.invoiceAsReceipt)).toBeTruthy();
+    expect(within(dialog).getByText('جود')).toBeTruthy();
   });
 });

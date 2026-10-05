@@ -3,7 +3,9 @@ import { SUBSCRIPTION_STATUSES, type SubscriptionStatus } from '@ab/shared';
 // URL search of the money pages; defaults (no filter, page 1, this month) stay out of the URL.
 
 export type PagedUrlSearch = { page?: number };
-export type SubscriptionsUrlSearch = PagedUrlSearch & { status?: SubscriptionStatus };
+/** `partial` is the derived «مدفوع جزئيًا» filter, not a stored status. */
+export type SubscriptionFilter = SubscriptionStatus | 'partial';
+export type SubscriptionsUrlSearch = PagedUrlSearch & { status?: SubscriptionFilter };
 export type MonthUrlSearch = { month?: string };
 
 export function parsePage(s: Record<string, unknown>): PagedUrlSearch {
@@ -11,7 +13,7 @@ export function parsePage(s: Record<string, unknown>): PagedUrlSearch {
 }
 
 export function parseSubscriptionsSearch(s: Record<string, unknown>): SubscriptionsUrlSearch {
-  const status = SUBSCRIPTION_STATUSES.find((x) => x === s['status']);
+  const status = [...SUBSCRIPTION_STATUSES, 'partial' as const].find((x) => x === s['status']);
   return { ...parsePage(s), status };
 }
 
