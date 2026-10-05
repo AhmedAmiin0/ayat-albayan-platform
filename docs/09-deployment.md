@@ -31,16 +31,17 @@ Pushes migrations, ships the committed `HEAD` with `git archive` (never `node_mo
 
 The server `.env` is **merged**, never replaced (`tools/scripts/env-merge.mjs`): a key that is empty or missing in GitHub keeps the server's value, a timestamped `.env.bak-*` is left next to it, and the log names the keys it set, never their values.
 
+**Required (only these):**
+
 | Kind | Name | What |
 |---|---|---|
 | secret | `SSH_PRIVATE_KEY` | A key used only for deploys; its public half in `~/.ssh/authorized_keys` of the deploy user on the VPS |
-| secret | `SSH_KNOWN_HOSTS` | Optional: `ssh-keyscan -H 148.230.116.195` output (pinned host key; without it the runner scans) |
-| secret | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD` | Supabase CLI login token and the staging database password (migrations) |
-| secret | `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `FEEDBACK_TOKEN_SECRET`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN` | API `.env` secrets (table below) |
-| variable | `SSH_HOST` (`148.230.116.195`), `SSH_USER` (default `root`), `DEPLOY_DIR` (default `/opt/ayat-albayan-staging`), `API_URL` (public API base for the health check; empty = check on the VPS) | Where to deploy |
-| variable | `SUPABASE_PROJECT_REF` (`knxfwiimjcifwckhwbim`) | Migrations target |
-| variable | `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_BASE`, `WA_API_VERSION`, `WA_PHONE_NUMBER_ID`, `WA_WABA_ID`, `WA_APP_ID`, `MESSAGING_ENABLED`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL` | API `.env` non-secret values |
-| variable | `VITE_API_URL`, `VITE_SUPABASE_URL`, `VITE_SUPABASE_ANON_KEY` | Web build (the anon key is public by design) |
+| secret | `SUPABASE_ACCESS_TOKEN`, `SUPABASE_DB_PASSWORD` | Supabase CLI token and the staging database password (migrations) |
+| variable | `VITE_SUPABASE_ANON_KEY` | Staging anon key (public by design) for the web build |
+
+**Built-in defaults** (a variable of the same name overrides): `SSH_HOST` 148.230.116.195, `SSH_USER` root, `DEPLOY_DIR` /opt/ayat-albayan-staging, `SUPABASE_PROJECT_REF` knxfwiimjcifwckhwbim, `API_URL` and `VITE_API_URL` https://api.ayatalbayan.com, `VITE_SUPABASE_URL` https://knxfwiimjcifwckhwbim.supabase.co, `WA_API_BASE` https://graph.facebook.com, `WA_PHONE_NUMBER_ID` 1111735608697582 and `WA_WABA_ID` 1302549868709212 (Meta **test** number +1 555 663 0046), `MESSAGING_ENABLED` false.
+
+**Optional** (empty = the server keeps its value): secrets `SSH_KNOWN_HOSTS`, `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `SUPABASE_SERVICE_ROLE_KEY`, `SUPABASE_JWT_SECRET`, `FEEDBACK_TOKEN_SECRET`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET`, `EXPO_ACCESS_TOKEN`; variables `SUPABASE_URL`, `WEB_ORIGIN`, `WA_API_VERSION`, `WA_APP_ID`, `LIVEKIT_URL`, `RECORDING_S3_ENDPOINT`, `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET`, `EXPO_API_BASE`, `FX_API_URL`.
 
 Protect the environment: Settings → Environments → develop → Deployment branches = `develop` only, so no other branch can use its secrets. (Required reviewers would make every automatic deploy wait for an approval click.)
 
