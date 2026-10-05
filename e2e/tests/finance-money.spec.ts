@@ -31,7 +31,7 @@ test.describe('finance: part payments, receivables, refunds', () => {
 
     // What is left is owed, with its aging.
     await page.goto('/admin/receivables');
-    const owed = page.getByRole('listitem').filter({ hasText: student });
+    const owed = page.getByRole('row').filter({ hasText: student });
     await expect(owed).toContainText(String(seed.price - 100));
 
     // «استرداد» 40 of the 100: stored as kind refund, counted against what was paid.

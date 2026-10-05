@@ -8,6 +8,7 @@ import { Pager } from '@/components/ui/pager';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
+import type { SortSearch } from '@/lib/list-search';
 import { sessionsQuery, type Scope, type SessionFilter } from './api';
 import { PickContext, sessionColumns, type Pick } from './session-columns';
 
@@ -20,11 +21,16 @@ type Props = {
 
 const FILTERS: SessionFilter[] = ['all', 'unpaid', 'paid'];
 
-/** The sessions table with a status filter, a pager and (admin) ticks for the pay dialog. */
+/**
+ * The sessions table with a status filter, server sort, a pager and (admin) ticks for the pay
+ * dialog. Sort/filter/page stay in component state: the page holds two server tables (sessions and
+ * payments), and one URL `sort` could not serve both.
+ */
 export function SessionsPanel({ scope, selected, onSelected }: Props) {
   const [status, setStatus] = useState<SessionFilter>('all');
   const [page, setPage] = useState(1);
-  const list = useQuery(sessionsQuery(scope, { status, page }));
+  const [sort, setSort] = useState<SortSearch>({});
+  const list = useQuery(sessionsQuery(scope, { status, page, sort }));
   const rows = useMemo(() => list.data?.items ?? [], [list.data]);
 
   const pick: Pick | undefined = useMemo(() => {
@@ -65,7 +71,13 @@ export function SessionsPanel({ scope, selected, onSelected }: Props) {
       {list.data && list.data.total > 0 && (
         <>
           <PickContext.Provider value={pick ?? null}>
-            <DataTable stacked columns={columns} data={rows} getRowId={(r) => r.id} />
+            <DataTable
+              stacked
+              columns={columns}
+              data={rows}
+              getRowId={(r) => r.id}
+              sort={{ key: sort.sort, dir: sort.dir, onChange: (next) => (setSort(next.key ? { sort: next.key, ...(next.dir ? { dir: next.dir } : {}) } : {}), setPage(1)) }}
+            />
           </PickContext.Provider>
           <Pager page={list.data.page} total={list.data.total} pageSize={list.data.pageSize} onPage={setPage} />
         </>

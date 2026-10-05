@@ -10,7 +10,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { formatDate } from '@/features/leads/format';
 import { monthLabel } from '@/features/payouts/MonthSelect';
-import { breakdownLines } from '@/features/payouts/payout-columns';
+import { breakdownLines, payoutStatusOptions } from '@/features/payouts/payout-columns';
 import { LedgerPaid } from '@/features/payouts/LedgerPaid';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
@@ -18,7 +18,7 @@ import { myPayoutsQuery } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PayoutView>();
 
-/** The admin's payout columns without approve / pay: month, lessons, breakdown, amount, status. */
+/** The admin's payout columns without approve / pay: month, lessons, breakdown, amount, status (sortable; status filters). */
 const COLUMNS = col.columns([
   col.accessor('month', {
     header: () => t.payouts.month,
@@ -64,11 +64,11 @@ const COLUMNS = col.columns([
         </div>
       );
     },
-    meta: { className: 'max-sm:order-2' },
+    meta: { className: 'max-sm:order-2', filter: { kind: 'select', options: payoutStatusOptions } },
   }),
 ]);
 
-/** /teacher/payouts «كشوف الشهر» (R-TCH-04): every month calculated for me, newest first, in EGP. */
+/** /teacher/payouts «كشوف الشهر» (R-TCH-04): every month calculated for me, newest first, in EGP; client sort + filter. */
 export function MyPayouts() {
   const list = useQuery(myPayoutsQuery);
   return (
@@ -79,7 +79,7 @@ export function MyPayouts() {
       {list.isPending && <ListSkeleton />}
       {list.isError && <FormAlert>{t.common.error}</FormAlert>}
       {list.data?.length === 0 && <EmptyState title={t.payouts.mineEmpty} />}
-      {list.data && list.data.length > 0 && <DataTable stacked columns={COLUMNS} data={list.data} getRowId={(r) => r.id} />}
+      {list.data && list.data.length > 0 && <DataTable stacked clientSort clientFilter columns={COLUMNS} data={list.data} getRowId={(r) => r.id} />}
     </>
   );
 }

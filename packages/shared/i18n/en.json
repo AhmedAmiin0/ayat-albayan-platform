@@ -2593,7 +2593,13 @@
     "year": "Year",
     "studentPayments": "Payments",
     "netPaid": "Net: {amount}",
-    "ledgerCsv": "Lessons & payments CSV"
+    "ledgerCsv": "Lessons & payments CSV",
+    "invoiceDate": "Invoice date",
+    "invoiceStudents": "Students",
+    "invoicePayment": "Payment",
+    "confirmed": "Confirmed",
+    "notVoided": "Standing",
+    "status": "Status"
   },
   "table": {
     "sortAsc": "Sort ascending",

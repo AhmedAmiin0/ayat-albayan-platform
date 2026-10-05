@@ -1,5 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { earningsListQuery, teacherPaymentCreateSchema, teacherReceiptUploadSchema } from './earnings-schemas.js';
+import {
+  earningsListQuery,
+  teacherPaymentCreateSchema,
+  teacherPaymentListQuery,
+  teacherReceiptUploadSchema,
+} from './earnings-schemas.js';
 
 const ID = '5a000000-0000-4000-8000-000000000001';
 const base = { amount: 100, method: 'bank', paidAt: '2026-10-01T09:00:00Z' };
@@ -28,5 +33,21 @@ describe('receipt and list queries', () => {
     expect(earningsListQuery.parse({})).toEqual({ page: 1, pageSize: 25 });
     expect(earningsListQuery.parse({ status: 'unpaid', page: '2' })).toMatchObject({ status: 'unpaid', page: 2 });
     expect(earningsListQuery.safeParse({ status: 'x' }).success).toBe(false);
+  });
+
+  it('sessions: an allowlisted sort key and dir (R-NFR-08)', () => {
+    expect(earningsListQuery.parse({ sort: 'amount', dir: 'desc' })).toMatchObject({ sort: 'amount', dir: 'desc' });
+    expect(earningsListQuery.safeParse({ sort: 'outstanding' }).success).toBe(false);
+  });
+
+  it('payments: method, voided and sort filters; bad values rejected', () => {
+    expect(teacherPaymentListQuery.parse({})).toEqual({ page: 1, pageSize: 25 });
+    expect(teacherPaymentListQuery.parse({ method: 'cash', voided: 'false', sort: 'amount' })).toMatchObject({
+      method: 'cash',
+      voided: 'false',
+      sort: 'amount',
+    });
+    expect(teacherPaymentListQuery.safeParse({ voided: 'yes' }).success).toBe(false);
+    expect(teacherPaymentListQuery.safeParse({ sort: 'sessions' }).success).toBe(false);
   });
 });

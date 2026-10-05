@@ -1,6 +1,6 @@
 import { AGING_BUCKETS } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Link } from '@tanstack/react-router';
+import { DataTable } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
@@ -10,8 +10,9 @@ import { downloadCsv } from '@/features/exports/api';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { receivablesQuery } from './api';
+import { receivableColumns } from './receivable-columns';
 
-/** /admin/receivables «مستحق على الطلاب»: who owes, how much, days since the package started, aging; CSV. */
+/** /admin/receivables «مستحق على الطلاب»: who owes, how much, days since the package started, aging; CSV; every column sorts and filters. */
 export function ReceivablesPage() {
   const q = useQuery(receivablesQuery);
   const csv = useMutation({ mutationFn: () => downloadCsv({ kind: 'receivables' }) });
@@ -48,23 +49,9 @@ export function ReceivablesPage() {
         </section>
       )}
       {v?.rows.length === 0 && <EmptyState title={t.finance.noReceivables} />}
-      <ul className="grid divide-y divide-rule">
-        {v?.rows.map((r) => (
-          <li key={r.id} className="flex flex-wrap items-center gap-x-5 gap-y-1 py-2.5 text-sm">
-            <Link to="/admin/students/$studentId" params={{ studentId: r.student.id }} className="min-w-40 font-semibold text-ink hover:underline">
-              {r.student.name}
-            </Link>
-            <span className="text-ink-3">{r.guardian?.name}</span>
-            <span>
-              {t.finance.owed}: <Amount amount={r.owed} currency={r.currency} className="font-semibold" />
-            </span>
-            <span className="text-ink-3">{t.payments.paidOf.replace('{paid}', String(r.paid)).replace('{price}', String(r.price))}</span>
-            <span className={r.days_overdue > 60 ? 'font-semibold text-act' : 'text-ink-2'}>
-              {t.finance.daysLate.replace('{count}', String(r.days_overdue))} · {t.finance.aging[r.bucket]}
-            </span>
-          </li>
-        ))}
-      </ul>
+      {v && v.rows.length > 0 && (
+        <DataTable stacked clientSort clientFilter columns={receivableColumns} data={v.rows} getRowId={(r) => r.id} />
+      )}
     </>
   );
 }

@@ -1,5 +1,6 @@
 import {
   earningsListQuery,
+  teacherPaymentListQuery,
   teacherPaymentCreateSchema,
   teacherReceiptUploadSchema,
   teacherResyncSchema,
@@ -16,7 +17,7 @@ import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } fr
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Roles } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { pageQuerySchema, parseOrThrow, type Page } from '../teachers/http';
+import { parseOrThrow, type Page } from '../teachers/http';
 import { CorrectionsQueries } from './corrections.queries';
 import { EarningsReceipts } from './earnings.receipts';
 import { EarningsService } from './earnings.service';
@@ -74,7 +75,7 @@ export class TeacherEarningsController {
 
   @Get(':teacherId/payments')
   payments(@Param('teacherId', ParseUUIDPipe) teacherId: string, @Query() query: unknown): Promise<Page<TeacherPaymentView>> {
-    return this.earnings.payments(teacherId, parseOrThrow(pageQuerySchema, query));
+    return this.earnings.payments(teacherId, parseOrThrow(teacherPaymentListQuery, query));
   }
 
   @Post(':teacherId/payments')

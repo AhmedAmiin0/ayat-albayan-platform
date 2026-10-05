@@ -12,7 +12,7 @@ import {
 } from './format';
 import { WEEKLY } from './money-fixture';
 import { pricingBody, todayIn, INITIAL_PRICING } from './pricing-form';
-import { parseMonthSearch, parsePage, parseSubscriptionsSearch } from './search';
+import { parseMonthSearch, parsePage, parseSubscriptionsSearch, subscriptionsTable } from './search';
 
 describe('money text (docs/07 §6, Western digits)', () => {
   it('currency symbols, EGP for teacher money, ISO otherwise', () => {
@@ -93,5 +93,13 @@ describe('URL search', () => {
     expect(parseSubscriptionsSearch({ status: 'gold' })).toEqual({ page: undefined, status: undefined });
     expect(parseMonthSearch({ month: '2026-09' })).toEqual({ month: '2026-09' });
     expect(parseMonthSearch({ month: '2026-13' })).toEqual({ month: undefined });
+  });
+
+  it('subscriptions: allowlisted sort and column filters → the API keys', () => {
+    const s = parseSubscriptionsSearch({ sort: 'price', dir: 'desc', f_student: ' سهيلة ', f_package: '8' });
+    expect(s).toMatchObject({ sort: 'price', dir: 'desc', f_student: 'سهيلة', f_package: '8' });
+    expect(subscriptionsTable(s)).toEqual({ sort: { sort: 'price', dir: 'desc' }, filters: { student: 'سهيلة', package: '8' } });
+    const bad = parseSubscriptionsSearch({ sort: 'balance', f_package: 'gold' });
+    expect(subscriptionsTable(bad)).toEqual({ sort: {}, filters: {} });
   });
 });

@@ -1,6 +1,8 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { applySort, ilikeContains, type SortSpec } from '../../common/list-sort';
 import { dbError } from '../teachers/http';
+import type { InvoiceSortKey, RecentFilter } from './invoices.dto';
 
 export type InvoiceRowOut = {
   id: string;
@@ -16,6 +18,11 @@ export type InvoiceRowOut = {
 
 const SELECT =
   'id, rule_id, kind, storage_path, mime, size_bytes, source, created_at, rule:schedule_rules(schedule_rule_students(student:students(id, name, code)))';
+
+const RECENT_SORT: SortSpec<InvoiceSortKey> = {
+  columns: { created_at: { column: 'created_at' }, kind: { column: 'kind' } },
+  fallback: { column: 'created_at', ascending: false },
+};
 
 /** The invoices table (service role; the controller is admin-only, and RLS has no other policy). */
 @Injectable()
@@ -40,15 +47,30 @@ export class InvoicesQueries {
     return data ? (toRow(data)[0] ?? null) : null;
   }
 
-  /** Every invoice, newest first, in a created_at window (the admin list page). */
-  async recent(f: { from?: string; to?: string; page: number; pageSize: number }): Promise<{ rows: InvoiceRowOut[]; total: number }> {
+  /** Every invoice in a created_at window, newest first unless sorted (the admin list page). */
+  async recent(f: RecentFilter): Promise<{ rows: InvoiceRowOut[]; total: number }> {
     const start = (f.page - 1) * f.pageSize;
+    const rules = f.student === undefined ? undefined : await this.ruleIdsNamed(f.student);
+    if (rules?.length === 0) return { rows: [], total: 0 };
     let q = this.db.from('invoices').select(SELECT, { count: 'exact' });
     if (f.from) q = q.gte('created_at', f.from);
     if (f.to) q = q.lt('created_at', f.to);
-    const { data, count, error } = await q.order('created_at', { ascending: false }).order('id').range(start, start + f.pageSize - 1);
+    if (f.kind) q = q.eq('kind', f.kind);
+    if (rules) q = q.in('rule_id', rules);
+    const { data, count, error } = await applySort(q, f, RECENT_SORT).order('id').range(start, start + f.pageSize - 1);
     if (error) throw dbError(error);
     return { rows: data.flatMap(toRow), total: count ?? 0 };
+  }
+
+  /** The bookings with a student whose name contains `name` (the «الطلاب» filter). */
+  private async ruleIdsNamed(name: string): Promise<string[]> {
+    const { data, error } = await this.db
+      .from('schedule_rule_students')
+      .select('rule_id, student:students!inner(name)')
+      .ilike('student.name', ilikeContains(name))
+      .limit(500);
+    if (error) throw dbError(error);
+    return [...new Set(data.map((r) => r.rule_id))];
   }
 
   /** invoice id → the payment recorded from it. */

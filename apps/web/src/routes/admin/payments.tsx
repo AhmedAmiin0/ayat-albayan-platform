@@ -1,15 +1,15 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { PaymentsPage } from '@/features/payments/PaymentsPage';
-import { parsePage } from '@/features/subscriptions/search';
+import { parsePaymentsSearch } from '@/features/payments/search';
 
-/** /admin/payments — payments with their receipts (R-PAY-01). */
+/** /admin/payments — payments with their receipts (R-PAY-01); filters and sort live in the URL. */
 export const Route = createFileRoute('/admin/payments')({
-  validateSearch: parsePage,
+  validateSearch: parsePaymentsSearch,
   component: PaymentsRoute,
 });
 
 function PaymentsRoute() {
-  const { page = 1 } = Route.useSearch();
+  const search = Route.useSearch();
   const navigate = Route.useNavigate();
-  return <PaymentsPage page={page} onPage={(p) => void navigate({ search: { page: p > 1 ? p : undefined } })} />;
+  return <PaymentsPage search={search} onSearch={(patch) => void navigate({ search: parsePaymentsSearch({ ...search, ...patch }) })} />;
 }

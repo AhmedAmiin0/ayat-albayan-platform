@@ -4,6 +4,7 @@ import { Injectable } from '@nestjs/common';
 import { BUCKETS, extFor } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { notFound } from '../scheduling/errors';
+import type { RecentFilter } from './invoices.dto';
 import { InvoicesQueries, type InvoiceRowOut } from './invoices.queries';
 
 export type InvoiceFilter = { ruleId?: string | undefined; studentId?: string | undefined };
@@ -39,8 +40,8 @@ export class InvoicesService {
     return (await this.queries.byRules(ruleIds)).map(view);
   }
 
-  /** The admin list page: newest first, with the payment recorded from each (if any). */
-  async recent(f: { from?: string; to?: string; page: number; pageSize: number }) {
+  /** The admin list page (newest first unless sorted), with the payment recorded from each (if any). */
+  async recent(f: RecentFilter) {
     const { rows, total } = await this.queries.recent(f);
     const paid = await this.queries.paymentsOf(rows.map((r) => r.id));
     return { items: rows.map((r) => ({ ...view(r), payment_id: paid.get(r.id) ?? null })), total, page: f.page, pageSize: f.pageSize };

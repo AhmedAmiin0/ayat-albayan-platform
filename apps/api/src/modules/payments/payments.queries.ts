@@ -1,22 +1,17 @@
 import type { Tables, TablesInsert, TablesUpdate } from '@ab/db';
-import { netPaid, type PaymentKind, type PaymentMethod } from '@ab/shared';
+import { netPaid, type PaymentKind } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { applySort } from '../../common/list-sort';
 import type { StudentRef } from '../subscriptions/subscriptions.queries';
 import { readAll } from '../scheduling/read-all';
-import { dbError, type Page, type PageQuery } from '../teachers/http';
+import { dbError, type Page } from '../teachers/http';
+import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
+
+export type { PaymentFilter } from './payments.list-query';
 
 export type PaymentRow = Tables<'payments'> & {
   subscription: { student_id: string; currency: string; student: StudentRef | null } | null;
-};
-export type PaymentFilter = PageQuery & {
-  subscriptionId?: string;
-  studentId?: string;
-  /** ISO instants, half-open [from, to). */
-  from?: string;
-  to?: string;
-  method?: PaymentMethod;
-  kind?: PaymentKind;
 };
 export type PeriodTotal = { currency: string; net: number; payments: number; refunds: number };
 export type PaymentSubscription = { id: string; student_id: string; currency: string };
@@ -30,8 +25,8 @@ export class PaymentsQueries {
 
   async list(f: PaymentFilter): Promise<Page<PaymentRow>> {
     const from = (f.page - 1) * f.pageSize;
-    const { data, count, error } = await filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f)
-      .order('paid_at', { ascending: false })
+    const query = filtered(this.db.from('payments').select(SELECT, { count: 'exact' }), f);
+    const { data, count, error } = await applySort(query, f, PAYMENT_SORT)
       .order('id')
       .range(from, from + f.pageSize - 1);
     if (error) throw dbError(error);
@@ -123,16 +118,4 @@ export class PaymentsQueries {
     if (error) throw dbError(error);
     return new Map(data.map((p) => [p.id, p.full_name]));
   }
-}
-
-/** The list filters, shared by the page and its totals (embedded package for the student filter). */
-function filtered<Q extends { eq: (c: string, v: string) => Q; gte: (c: string, v: string) => Q; lt: (c: string, v: string) => Q }>(q: Q, f: PaymentFilter): Q {
-  let out = q;
-  if (f.subscriptionId) out = out.eq('subscription_id', f.subscriptionId);
-  if (f.studentId) out = out.eq('subscription.student_id', f.studentId);
-  if (f.from) out = out.gte('paid_at', f.from);
-  if (f.to) out = out.lt('paid_at', f.to);
-  if (f.method) out = out.eq('method', f.method);
-  if (f.kind) out = out.eq('kind', f.kind);
-  return out;
 }

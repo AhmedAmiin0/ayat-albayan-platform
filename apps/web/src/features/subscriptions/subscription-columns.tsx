@@ -1,4 +1,4 @@
-import { paymentState, subscriptionStatusStyle } from '@ab/shared';
+import { PACKAGE_SIZES, paymentState, subscriptionStatusStyle } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
@@ -18,7 +18,15 @@ type Handlers = {
   onOpen: (studentId: string) => void;
 };
 
-/** Packages list (R-SUB-01): student, package, price/paid, the package line, status, actions. */
+/** «الباقة» filter: the catalog sizes (a trial is never a package). */
+const packageOptions = PACKAGE_SIZES.filter((p) => p !== 'trial').map((p) => ({ value: p, label: t.enums.packageSize[p] }));
+
+/**
+ * Packages list (R-SUB-01): student, package, price/paid, the package line, status, actions.
+ * Server sort (R-NFR-08) on package, price and status; filters: the student's name and the
+ * package here, the status in the page head. The student (an embedded name) and the package line
+ * (derived from the lessons) do not sort server-side.
+ */
 export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
   return col.columns([
     col.accessor('student', {
@@ -31,12 +39,12 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
           <Ltr className="text-2xs text-ink-3">{c.getValue().code}</Ltr>
         </div>
       ),
-      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]' },
+      meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', filter: { kind: 'text' } },
     }),
     col.accessor('package', {
       header: () => t.subscriptions.package,
       cell: (c) => packageName(c.row.original),
-      meta: { className: 'max-sm:order-3 max-sm:text-xs' },
+      meta: { className: 'max-sm:order-3 max-sm:text-xs', sortKey: 'package', filter: { kind: 'select', options: packageOptions } },
     }),
     col.accessor('price', {
       header: () => t.subscriptions.price,
@@ -55,7 +63,7 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
           </div>
         );
       },
-      meta: { className: 'max-sm:order-4' },
+      meta: { className: 'max-sm:order-4', sortKey: 'price' },
     }),
     col.accessor('balance', {
       header: () => t.subscriptions.balance,
@@ -73,7 +81,7 @@ export function subscriptionColumns({ onPay, onPause, onOpen }: Handlers) {
           {paymentState(c.row.original) === 'partial' && <span className="text-2xs font-semibold text-act">{t.finance.partiallyPaid}</span>}
         </div>
       ),
-      meta: { className: 'max-sm:order-2' },
+      meta: { className: 'max-sm:order-2', sortKey: 'status' },
     }),
     col.display({
       id: 'actions',

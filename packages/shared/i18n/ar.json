@@ -2593,7 +2593,13 @@
     "year": "السنة",
     "studentPayments": "المدفوعات",
     "netPaid": "الصافي: {amount}",
-    "ledgerCsv": "كشف الحلقات والدفعات CSV"
+    "ledgerCsv": "كشف الحلقات والدفعات CSV",
+    "invoiceDate": "تاريخ الفاتورة",
+    "invoiceStudents": "الطلاب",
+    "invoicePayment": "الدفعة",
+    "confirmed": "مؤكَّد",
+    "notVoided": "سارية",
+    "status": "الحالة"
   },
   "table": {
     "sortAsc": "ترتيب تصاعدي",
