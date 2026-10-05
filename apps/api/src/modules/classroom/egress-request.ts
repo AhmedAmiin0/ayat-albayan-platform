@@ -1,12 +1,13 @@
 import type { RecordingEnv } from '../../env.recording';
+import type { RoomTarget } from './recording-target';
 
 /**
- * Object name of a recording in the `recordings` bucket: lessons/<lesson id>/<UTC timestamp>.mp4
- * (a lesson may have several when the room closed and opened again).
+ * Object name of a recording in the `recordings` bucket: lessons/<lesson id>/<UTC timestamp>.mp4,
+ * or meetings/<meeting id>/… (a room may have several when it closed and opened again).
  */
-export function recordingPath(lessonId: string, now: Date): string {
+export function recordingPath(target: RoomTarget, now: Date): string {
   const stamp = now.toISOString().replace(/[:.]/g, '-');
-  return `lessons/${lessonId}/${stamp}.mp4`;
+  return `${target.kind}s/${target.id}/${stamp}.mp4`;
 }
 
 /**

@@ -21,7 +21,8 @@ describe('board messages', () => {
       { t: 'perm', studentsCanDraw: true },
       { t: 'open', open: false },
       { t: 'sync-request' },
-      { t: 'sync', strokes: [stroke('s1'), stroke('s2')], studentsCanDraw: false, open: true },
+      { t: 'allow', who: 'guest-1', allow: true },
+      { t: 'sync', strokes: [stroke('s1'), stroke('s2')], studentsCanDraw: false, open: true, allowed: ['guest-1'] },
     ];
     for (const msg of all) expect(decodeMessage(encodeMessage(msg))).toEqual(msg);
   });
@@ -39,10 +40,19 @@ describe('board messages', () => {
     expect(decodeMessage(raw({ t: 'draw', stroke: { ...stroke('x'), erase: 1 } }))).toBeNull();
     expect(decodeMessage(raw({ t: 'sync', strokes: [{}], studentsCanDraw: false, open: false }))).toBeNull();
     expect(decodeMessage(raw({ t: 'sync', strokes: 'x', studentsCanDraw: false, open: false }))).toBeNull();
+    expect(decodeMessage(raw({ t: 'sync', strokes: [], studentsCanDraw: false, open: false, allowed: [1] }))).toBeNull();
+    expect(decodeMessage(raw({ t: 'allow', who: 'g' }))).toBeNull();
+    expect(decodeMessage(raw({ t: 'allow', allow: true }))).toBeNull();
+  });
+
+  it('a sync from an older client (no `allowed`) reads as nobody allowed by name', () => {
+    expect(decodeMessage(raw({ t: 'sync', strokes: [], studentsCanDraw: true, open: true }))).toEqual({
+      t: 'sync', strokes: [], studentsCanDraw: true, open: true, allowed: [],
+    });
   });
 
   it('an empty board still syncs its flags in one message', () => {
-    expect(syncMessages({ ...EMPTY_BOARD, open: true })).toEqual([{ t: 'sync', strokes: [], studentsCanDraw: false, open: true }]);
+    expect(syncMessages({ ...EMPTY_BOARD, open: true })).toEqual([{ t: 'sync', strokes: [], studentsCanDraw: false, open: true, allowed: [] }]);
   });
 
   it('a busy board is split into packets under the size limit, every stroke once, in order', () => {

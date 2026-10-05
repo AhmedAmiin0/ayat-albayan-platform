@@ -986,7 +986,8 @@ export type Database = {
           error: string | null;
           file_path: string;
           id: string;
-          lesson_id: string;
+          lesson_id: string | null;
+          meeting_id: string | null;
           started_at: string;
           status: string;
         };
@@ -996,7 +997,8 @@ export type Database = {
           error?: string | null;
           file_path: string;
           id?: string;
-          lesson_id: string;
+          lesson_id?: string | null;
+          meeting_id?: string | null;
           started_at?: string;
           status?: string;
         };
@@ -1006,7 +1008,8 @@ export type Database = {
           error?: string | null;
           file_path?: string;
           id?: string;
-          lesson_id?: string;
+          lesson_id?: string | null;
+          meeting_id?: string | null;
           started_at?: string;
           status?: string;
         };
@@ -1016,6 +1019,13 @@ export type Database = {
             columns: ['lesson_id'];
             isOneToOne: false;
             referencedRelation: 'lessons';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'lesson_recordings_meeting_id_fkey';
+            columns: ['meeting_id'];
+            isOneToOne: false;
+            referencedRelation: 'meetings';
             referencedColumns: ['id'];
           },
         ];

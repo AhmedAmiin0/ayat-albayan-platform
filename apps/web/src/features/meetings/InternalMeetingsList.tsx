@@ -1,7 +1,9 @@
 import type { MeetingView } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
+import { RecordingsPanel } from '@/features/classroom/recordings/RecordingsPanel';
 import { t } from '@/lib/i18n';
 import { copyText, endMeeting, meetingsQuery, MEETINGS_KEY, newMeetingLink } from './internal-api';
 import { MeetingLinkBox } from './MeetingLinkBox';
@@ -20,6 +22,7 @@ function Row({ meeting }: { meeting: MeetingView }) {
       return made.url;
     },
   });
+  const [recordings, setRecordings] = useState(false);
   const open = meeting.state === 'open';
   const manage = open && meeting.can_manage;
   return (
@@ -44,15 +47,24 @@ function Row({ meeting }: { meeting: MeetingView }) {
               {L.end}
             </Button>
           )}
+          {meeting.can_manage && (
+            <Button type="button" variant="secondary" onClick={() => setRecordings(true)}>
+              {t.classroom.recordings.title}
+            </Button>
+          )}
         </div>
       </div>
       {link.data && <MeetingLinkBox url={link.data} note={L.copied} />}
       {(end.isError || link.isError) && <FormAlert>{L.actionError}</FormAlert>}
+      {recordings && <RecordingsPanel source={{ kind: 'meeting', id: meeting.id }} onClose={() => setRecordings(false)} />}
     </li>
   );
 }
 
-/** «الاجتماعات الداخلية»: the newest 20 (all for an admin, else my own), each with enter, a new link and end. */
+/**
+ * «الاجتماعات الداخلية»: the newest 20 (all for an admin, else my own), each with enter, a new link,
+ * end, and «التسجيلات» (every meeting is recorded; the admin and the creator download them).
+ */
 export function InternalMeetingsList() {
   const meetings = useQuery(meetingsQuery);
   return (

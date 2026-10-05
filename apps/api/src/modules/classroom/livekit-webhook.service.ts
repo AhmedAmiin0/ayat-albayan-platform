@@ -1,6 +1,8 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
 import { CLASSROOM_CONFIG, type ClassroomConfig } from './classroom.config';
 import { egressOutcome, verifyWebhook } from './livekit-webhook';
+import { leftEventOf } from './livekit-webhook.room';
+import { RecordingLifecycle } from './recording.lifecycle';
 import { RecordingQueries } from './recording.queries';
 
 export interface WebhookPost {
@@ -11,21 +13,30 @@ export interface WebhookPost {
 
 /**
  * POST /livekit/webhook: LiveKit's events. 401 (nothing changes) unless signed by our API secret
- * over these bytes. Only egress endings matter (the recording is done or failed); every other
- * event, and an egress we never started, is acknowledged and ignored so LiveKit does not retry.
+ * over these bytes. An egress ending marks the recording done or failed (and records again if
+ * people are still in the room); a participant leaving an emptied room stops its recording. Every
+ * other event, and an egress we never started, is acknowledged and ignored so LiveKit does not retry.
  */
 @Injectable()
 export class LivekitWebhookService {
   constructor(
     @Inject(CLASSROOM_CONFIG) private readonly config: ClassroomConfig,
     private readonly recordings: RecordingQueries,
+    private readonly lifecycle: RecordingLifecycle,
   ) {}
 
   async handle(post: WebhookPost, now = new Date()): Promise<void> {
     if (!this.config || !verifyWebhook({ ...post, config: this.config, now })) throw new UnauthorizedException();
-    const outcome = egressOutcome(parse(post.rawBody), now);
+    const event = parse(post.rawBody);
+    const left = leftEventOf(event);
+    if (left) {
+      await this.lifecycle.afterLeft(left);
+      return;
+    }
+    const outcome = egressOutcome(event, now);
     if (!outcome) return;
     await this.recordings.finishByEgress(outcome.egressId, { status: outcome.status, endedAt: outcome.endedAt, error: outcome.error });
+    await this.lifecycle.afterEgressEnded({ room: outcome.room, status: outcome.status });
   }
 }
 

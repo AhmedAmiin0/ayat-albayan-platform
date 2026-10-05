@@ -14,7 +14,7 @@ describe('RecordingsPanel', () => {
     const onClose = vi.fn();
     render(
       <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-        <RecordingsPanel lessonId="L1" onClose={onClose} />
+        <RecordingsPanel source={{ kind: 'lesson', id: 'L1' }} onClose={onClose} />
       </QueryClientProvider>,
     );
     expect(await screen.findByText(t.classroom.recordings.error)).toBeTruthy();

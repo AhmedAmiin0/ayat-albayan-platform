@@ -21,7 +21,7 @@ describe('classroom routes: who gets in', () => {
   it.each(['admin', 'teacher', 'assistant'] as const)('POST room/join as %s answers {url, token, room, role}', async (token) => {
     const res = await h.call({ method: 'POST', url: join, token });
     expect(res.statusCode).toBe(200);
-    expect(Object.keys(res.json()).sort()).toEqual(['role', 'room', 'token', 'url']);
+    expect(Object.keys(res.json()).sort()).toEqual(['recording', 'role', 'room', 'token', 'url']);
     expect(res.json().role).toBe(token);
     expect(decode(res.json().token).validSignature).toBe(true);
   });

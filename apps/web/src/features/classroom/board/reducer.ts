@@ -37,7 +37,14 @@ function undo(state: BoardState, own: { id: string; by: string }): BoardState {
 function sync(state: BoardState, { msg, from }: BoardInput): BoardState {
   if (msg.t !== 'sync' || from.role === null) return state;
   const merged = merge(state, msg.strokes);
-  return canManageBoard(from.role) ? { ...merged, studentsCanDraw: msg.studentsCanDraw, open: msg.open } : merged;
+  if (!canManageBoard(from.role)) return merged;
+  return { ...merged, studentsCanDraw: msg.studentsCanDraw, open: msg.open, allowed: msg.allowed };
+}
+
+/** «سماح» adds one guest to the drawers, «إيقاف كتابة» takes them out (staff only). */
+function allowOne(state: BoardState, { who, allow }: { who: string; allow: boolean }): BoardState {
+  const others = state.allowed.filter((x) => x !== who);
+  return { ...state, allowed: allow ? [...others, who] : others };
 }
 
 /**
@@ -48,7 +55,7 @@ function sync(state: BoardState, { msg, from }: BoardInput): BoardState {
 export function boardReducer(state: BoardState, { msg, from }: BoardInput): BoardState {
   switch (msg.t) {
     case 'draw':
-      return msg.stroke.by === from.identity && canDraw(from.role, state.studentsCanDraw) ? draw(state, msg.stroke) : state;
+      return msg.stroke.by === from.identity && canDraw(from, state) ? draw(state, msg.stroke) : state;
     case 'undo':
       return undo(state, { id: msg.id, by: from.identity });
     case 'clear':
@@ -57,6 +64,8 @@ export function boardReducer(state: BoardState, { msg, from }: BoardInput): Boar
       return canAllowStudents(from.role) ? { ...state, studentsCanDraw: msg.studentsCanDraw } : state;
     case 'open':
       return canManageBoard(from.role) ? { ...state, open: msg.open } : state;
+    case 'allow':
+      return canManageBoard(from.role) ? allowOne(state, msg) : state;
     case 'sync':
       return sync(state, { msg, from });
     default:
@@ -66,5 +75,5 @@ export function boardReducer(state: BoardState, { msg, from }: BoardInput): Boar
 
 /** Answer a late joiner's sync-request? Anyone holding strokes; the staff also for the flags alone. */
 export function shouldAnswerSync(state: BoardState, role: JoinRole | null): boolean {
-  return state.strokes.length > 0 || (canManageBoard(role) && (state.open || state.studentsCanDraw));
+  return state.strokes.length > 0 || (canManageBoard(role) && (state.open || state.studentsCanDraw || state.allowed.length > 0));
 }

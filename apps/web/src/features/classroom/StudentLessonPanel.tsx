@@ -8,6 +8,7 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { classroomErrorText, opensAtOf } from './errors';
 import { isLessonNow, viewerTz, windowStateAt } from './student-link';
+import { RecordedNotice } from './recordings/RecordedNotice';
 import { opensAtText } from './window-hint';
 
 interface Props {
@@ -41,6 +42,7 @@ export function StudentLessonPanel({ lesson, firstName, now, pending, error, onJ
         {(p) => <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={firstName} onChange={(e) => setName(e.target.value)} />}
       </Field>
       {error !== null && <FormAlert>{problemText(error)}</FormAlert>}
+      <RecordedNotice />
       <Button type="button" size="lg" disabled={state !== 'open' || pending} onClick={() => onJoin(name.trim())}>
         {pending ? t.classroom.joining : t.studentLink.page.enter}
       </Button>

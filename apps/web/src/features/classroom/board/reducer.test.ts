@@ -48,15 +48,29 @@ describe('boardReducer', () => {
 
   it('sync merges by id (longer copy wins, idempotent); flags only from the staff', () => {
     const mine = run(EMPTY_BOARD, { msg: { t: 'draw', stroke: stroke('t1', 't', [0.1, 0.1]) }, from: teacher });
-    const msg: BoardMessage = { t: 'sync', strokes: [stroke('t1', 't', [0.1, 0.1, 0.2, 0.2]), stroke('a1', 'a')], studentsCanDraw: true, open: true };
+    const strokes = [stroke('t1', 't', [0.1, 0.1, 0.2, 0.2]), stroke('a1', 'a')];
+    const msg: BoardMessage = { t: 'sync', strokes, studentsCanDraw: true, open: true, allowed: ['g'] };
     const once = run(mine, { msg, from: teacher });
     expect(once.strokes.map((x) => [x.id, x.pts.length])).toEqual([['t1', 4], ['a1', 2]]);
-    expect(once).toMatchObject({ studentsCanDraw: true, open: true });
+    expect(once).toMatchObject({ studentsCanDraw: true, open: true, allowed: ['g'] });
     expect(run(once, { msg, from: teacher }).strokes).toHaveLength(2);
     const fromGuest = run(EMPTY_BOARD, { msg, from: guest });
-    expect(fromGuest).toMatchObject({ studentsCanDraw: false, open: false });
+    expect(fromGuest).toMatchObject({ studentsCanDraw: false, open: false, allowed: [] });
     expect(fromGuest.strokes).toHaveLength(2);
     expect(run(EMPTY_BOARD, { msg, from: { identity: 'z', role: null } })).toBe(EMPTY_BOARD);
+  });
+
+  it('«سماح» lets one guest draw; «إيقاف كتابة» takes it back; only the staff decide', () => {
+    const msg = { t: 'draw', stroke: stroke('g1', 'g') } as const;
+    const allow = (allowed: boolean, by: BoardInput['from']): BoardInput => ({ msg: { t: 'allow', who: 'g', allow: allowed }, from: by });
+    expect(run(EMPTY_BOARD, allow(true, guest), { msg, from: guest }).strokes).toHaveLength(0);
+    const allowed = run(EMPTY_BOARD, allow(true, assistant), allow(true, teacher));
+    expect(allowed.allowed).toEqual(['g']);
+    expect(run(allowed, { msg, from: guest }).strokes).toHaveLength(1);
+    expect(run(allowed, { msg, from: { identity: 'g2', role: 'guest' } }).strokes).toHaveLength(0);
+    const revoked = run(allowed, allow(false, teacher));
+    expect(revoked.allowed).toEqual([]);
+    expect(run(revoked, { msg, from: guest }).strokes).toHaveLength(0);
   });
 
   it('ignores sync-request (the hook answers it)', () => {
@@ -69,6 +83,7 @@ describe('shouldAnswerSync', () => {
     expect(shouldAnswerSync(EMPTY_BOARD, 'teacher')).toBe(false);
     expect(shouldAnswerSync({ ...EMPTY_BOARD, open: true }, 'teacher')).toBe(true);
     expect(shouldAnswerSync({ ...EMPTY_BOARD, open: true }, 'guest')).toBe(false);
+    expect(shouldAnswerSync({ ...EMPTY_BOARD, allowed: ['g'] }, 'assistant')).toBe(true);
     expect(shouldAnswerSync({ ...EMPTY_BOARD, strokes: [stroke('t1', 't')] }, 'guest')).toBe(true);
   });
 });
