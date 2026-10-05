@@ -20,9 +20,14 @@ describe('RecordingRetentionQueries', () => {
   });
 
   it('markDeleted never touches a running or an already deleted row, and hides it from students', async () => {
-    const f = fakeDb({ lesson_recordings: [{}] });
-    await new RecordingAdminQueries(f.db).markDeleted('R', 'T');
+    const f = fakeDb({ lesson_recordings: [{ data: [{ id: 'R' }] }] });
+    expect(await new RecordingAdminQueries(f.db).markDeleted('R', 'T')).toBe(1);
     expect(f.argsOf('lesson_recordings', 'update')?.[0]).toEqual({ status: 'deleted', deleted_at: 'T', visible_to_student: false });
     expect(f.calls.filter((c) => c.method === 'neq').map((c) => c.args)).toEqual([['status', 'deleted'], ['status', 'recording']]);
+  });
+
+  it('markDeleted says 0 when nothing changed (already deleted by someone else)', async () => {
+    const f = fakeDb({ lesson_recordings: [{ data: [] }] });
+    expect(await new RecordingAdminQueries(f.db).markDeleted('R', 'T')).toBe(0);
   });
 });

@@ -26,11 +26,13 @@ describe('StudentRecordingQueries.page', () => {
     expect(f.argsOf('lesson_recordings', 'lt')).toEqual(['lessons.starts_at', '2026-11-01T00:00:00.000Z']);
   });
 
-  it('the guardian view adds visible + finished + not deleted', async () => {
-    const f = fakeDb({ lesson_recordings: [{ data: [] }] });
-    await new StudentRecordingQueries(f.db).page({ studentId: STUDENT, onlyTeacherId: null, guardianView: true, query });
-    expect(eqs(f)).toEqual([['lessons.lesson_students.student_id', STUDENT], ['visible_to_student', true], ['status', 'done']]);
-    expect(f.argsOf('lesson_recordings', 'is')).toEqual(['deleted_at', null]);
+});
+
+describe('StudentRecordingQueries.doneLessonIds', () => {
+  it('finished recordings of this student, one id per lesson, narrowed to a teacher’s own lessons', async () => {
+    const f = fakeDb({ lesson_recordings: [{ data: [{ lesson_id: 'L1' }, { lesson_id: 'L1' }, { lesson_id: null }, { lesson_id: 'L2' }] }] });
+    expect(await new StudentRecordingQueries(f.db).doneLessonIds({ studentId: STUDENT, onlyTeacherId: 'T1' })).toEqual(['L1', 'L2']);
+    expect(eqs(f)).toEqual([['lessons.lesson_students.student_id', STUDENT], ['status', 'done'], ['lessons.teacher_id', 'T1']]);
   });
 });
 

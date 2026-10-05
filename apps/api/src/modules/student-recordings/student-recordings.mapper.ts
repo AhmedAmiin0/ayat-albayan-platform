@@ -6,7 +6,7 @@ export type RecordingJoinRow = RecordingRow & {
   lessons: {
     starts_at: string;
     teacher_id: string;
-    teachers: { id: string; display_name_ar: string } | null;
+    teachers: { id: string; display_name_ar: string; display_name_en: string | null } | null;
   } | null;
 };
 

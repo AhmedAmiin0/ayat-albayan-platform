@@ -21,6 +21,7 @@ const service = () =>
 beforeEach(() => {
   vi.resetAllMocks();
   q.byId.mockResolvedValue(row());
+  q.markDeleted.mockResolvedValue(1);
 });
 
 describe('admin delete', () => {
@@ -57,5 +58,19 @@ describe('admin delete', () => {
     await expect(service().remove({ user: ADMIN, id: REC_ID })).rejects.toThrow('storage remove failed');
     expect(q.markDeleted).not.toHaveBeenCalled();
     expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('an audit failure after the file is gone is logged; the delete still succeeds', async () => {
+    audit.record.mockRejectedValue(new Error('audit_log insert failed'));
+    await expect(service().remove({ user: ADMIN, id: REC_ID }, NOW)).resolves.toBeUndefined();
+    expect(storage.remove).toHaveBeenCalledTimes(1);
+    expect(q.markDeleted).toHaveBeenCalledTimes(1);
+  });
+
+  it('a double delete that races past the status check audits once: the loser changes 0 rows', async () => {
+    q.markDeleted.mockResolvedValueOnce(1).mockResolvedValueOnce(0);
+    await Promise.all([service().remove({ user: ADMIN, id: REC_ID }, NOW), service().remove({ user: ADMIN, id: REC_ID }, NOW)]);
+    expect(q.markDeleted).toHaveBeenCalledTimes(2);
+    expect(audit.record).toHaveBeenCalledTimes(1);
   });
 });

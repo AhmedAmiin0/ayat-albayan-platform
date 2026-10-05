@@ -24,6 +24,8 @@ describe('StudentRecordings, English', () => {
     expect(screen.getAllByText('50 MB')).toHaveLength(2);
     expect(screen.getByRole('checkbox', { name: 'Show to the student' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Delete recording' })).toBeTruthy();
+    expect(screen.getAllByText('Ms. Mona')).toHaveLength(2);
+    expect(screen.queryByText('أ. منى')).toBeNull();
     expect(screen.getByText('Hidden from the student and guardian.')).toBeTruthy();
   });
 });

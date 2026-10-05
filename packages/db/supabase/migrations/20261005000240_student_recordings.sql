@@ -1,8 +1,9 @@
 -- Recordings in the teacher-student file (owner, 2026-10-05): a lesson's recording (189, 212) is
 -- listed on each attending student's file for the admin, the teacher and the assigned assistants
 -- (API, service role). Additive and re-runnable:
---  * visible_to_student: OFF by default; the future student/guardian access reads only rows where
---    it is true (the policy below is the DB half, the API has no student route yet);
+--  * visible_to_student: OFF by default; the future student/guardian portal will read only rows
+--    where it is true. No guardian policy yet: a group lesson's file is one file for every
+--    student, so exposing it is a portal decision (the API also refuses to show a group recording);
 --  * size_bytes: from the egress result (null for older rows); deleted_at + status 'deleted':
 --    the admin's delete and the retention job (recording_retention_days, null = keep forever)
 --    remove the file and keep the row for the record.
@@ -24,14 +25,7 @@ create index if not exists lesson_recordings_running_idx on public.lesson_record
 create index if not exists lesson_recordings_retention_idx on public.lesson_recordings (ended_at)
   where status in ('done', 'failed');
 
--- A guardian reads only a finished, undeleted recording of a lesson of their own child that the
--- staff made visible. Staff writes and reads go through the API (service role); no write policy.
+-- No guardian read policy yet (the portal task adds it, with its own privacy rules). Drops the
+-- one an earlier run of this migration created: it exposed a whole group file and its egress id.
+-- Staff reads and writes go through the API (service role); no write policy.
 drop policy if exists lesson_recordings_guardian_read on public.lesson_recordings;
-create policy lesson_recordings_guardian_read on public.lesson_recordings for select
-  to authenticated using (
-    visible_to_student
-    and status = 'done'
-    and deleted_at is null
-    and lesson_id is not null
-    and public.is_my_child_lesson(lesson_id)
-  );

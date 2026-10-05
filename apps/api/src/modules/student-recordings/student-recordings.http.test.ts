@@ -3,7 +3,7 @@ import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
@@ -20,7 +20,7 @@ const verify: TokenVerifier = async (token) => {
 
 describe('student recordings routes', () => {
   const sq = studentQueries();
-  const admin = { byId: vi.fn(), setVisible: vi.fn(), markDeleted: vi.fn() };
+  const admin = { byId: vi.fn(), setVisible: vi.fn(), markDeleted: vi.fn(), attendeeCount: vi.fn() };
   const storage = { signedDownload: vi.fn(), remove: vi.fn() };
   const audit = { record: vi.fn() };
   let app: NestFastifyApplication;
@@ -31,6 +31,7 @@ describe('student recordings routes', () => {
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver)
       .overrideProvider(TeachersQueries).useValue(teachersFake())
       .overrideProvider(StudentRecordingQueries).useValue(sq)
       .overrideProvider(RecordingAdminQueries).useValue(admin)
@@ -48,6 +49,8 @@ describe('student recordings routes', () => {
     sq.assists.mockImplementation(async ({ profileId }: { profileId: string }) => profileId === ASSISTANT.id);
     storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
     admin.byId.mockResolvedValue({ ...recording(), lessons: { teacher_id: TEACHER_ID } });
+    admin.attendeeCount.mockResolvedValue(1);
+    admin.markDeleted.mockResolvedValue(1);
   });
 
   it('GET lists a page; the signed link is the one-hour link and no raw path leaks', async () => {
@@ -59,12 +62,17 @@ describe('student recordings routes', () => {
     expect(sq.page).toHaveBeenCalledWith(expect.objectContaining({ query: expect.objectContaining({ page: 2, pageSize: 5, from: '2026-10-01' }) }));
   });
 
-  it('GET: other teacher, unassigned assistant, guardian and sales are 403; the assigned assistant reads', async () => {
-    for (const token of ['other', 'guardian', 'sales']) expect((await call('GET', list, { token })).statusCode).toBe(403);
-    sq.assists.mockResolvedValue(false);
-    expect((await call('GET', list, { token: 'assistant' })).statusCode).toBe(403);
-    sq.assists.mockResolvedValue(true);
-    expect((await call('GET', list, { token: 'assistant' })).statusCode).toBe(200);
+  it('GET: other teacher, guardian and sales are 403; an assistant needs the recordings.read grant (not default)', async () => {
+    for (const token of ['other', 'guardian', 'sales', 'assistant']) expect((await call('GET', list, { token })).statusCode).toBe(403);
+    expect(sq.page).not.toHaveBeenCalled();
+  });
+
+  it('GET recorded-lesson-ids: the same access, plain ids, nothing signed', async () => {
+    const url = `/students/${STUDENT}/recorded-lesson-ids`;
+    const res = await call('GET', url, { token: 'teacher' });
+    expect([res.statusCode, res.json()]).toEqual([200, ['les-1']]);
+    expect(storage.signedDownload).not.toHaveBeenCalled();
+    expect((await call('GET', url, { token: 'guardian' })).statusCode).toBe(403);
   });
 
   it('GET: 404 for an unknown student, 400 for a bad id or a bad filter', async () => {
@@ -83,6 +91,8 @@ describe('student recordings routes', () => {
     expect((await call('PATCH', url, { token: 'assistant', payload: { visible: true } })).statusCode).toBe(403);
     expect((await call('PATCH', url, { token: 'guardian', payload: { visible: true } })).statusCode).toBe(403);
     expect((await call('PATCH', url, { token: 'admin', payload: { visible: 'yes' } })).statusCode).toBe(400);
+    admin.attendeeCount.mockResolvedValue(3);
+    expect((await call('PATCH', url, { token: 'admin', payload: { visible: true } })).json().code).toBe('recording_group_lesson');
   });
 
   it('DELETE is admin only: 204 with an audit row; a teacher is 403 and nothing is removed', async () => {

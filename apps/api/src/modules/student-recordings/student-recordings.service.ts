@@ -1,5 +1,5 @@
 import { type StudentRecordingsPage, type StudentRecordingsQuery } from '@ab/shared';
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { RecordingViews } from '../classroom/recording-list.service';
 import { StudentRecordingAccess } from './student-recordings.access';
@@ -22,15 +22,10 @@ export class StudentRecordingsService {
     return { items: await this.signed(rows, manage), total, page: input.query.page, pageSize: input.query.pageSize };
   }
 
-  /**
-   * Not routed yet (owner: the student/guardian portal comes later): a guardian's page for one of
-   * their own children, only recordings staff made visible. Any other login is refused.
-   */
-  async listForGuardian(input: { user: AuthUser; studentId: string; query: StudentRecordingsQuery }): Promise<StudentRecordingsPage> {
-    const own = input.user.role === 'guardian' ? await this.queries.studentIdsOfGuardian(input.user.id) : [];
-    if (!own.includes(input.studentId)) throw new ForbiddenException();
-    const { rows, total } = await this.queries.page({ studentId: input.studentId, onlyTeacherId: null, guardianView: true, query: input.query });
-    return { items: await this.signed(rows, 'none'), total, page: input.query.page, pageSize: input.query.pageSize };
+  /** GET /students/:id/recorded-lesson-ids: same access as list(), but no link is signed. */
+  async recordedLessonIds(input: { user: AuthUser; studentId: string }): Promise<string[]> {
+    const { onlyTeacherId } = await this.access.scopeFor(input.user, input.studentId);
+    return this.queries.doneLessonIds({ studentId: input.studentId, onlyTeacherId });
   }
 
   private signed(rows: RecordingJoinRow[], manage: ManageRule) {

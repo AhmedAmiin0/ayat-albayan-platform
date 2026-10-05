@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pageOf, recordingView } from './recordings-fixture';
 import { StudentRecordings } from './StudentRecordings';
@@ -35,6 +36,13 @@ describe('visible-to-student toggle', () => {
     fireEvent.click(box);
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/recordings/rec-1/visibility', { visible: true }));
     await waitFor(() => expect(apiFetch.mock.calls.filter(([p]) => String(p).includes('/recordings')).length).toBeGreaterThan(1));
+  });
+
+  it('a group lesson’s recording is refused with its own explanation', async () => {
+    renderList('admin');
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'recording_group_lesson' }));
+    fireEvent.click(await screen.findByRole('checkbox', { name: R.visible.label }));
+    expect(await screen.findByText(R.visible.groupLesson)).toBeTruthy();
   });
 
   it('someone who may not manage it only reads the state', async () => {

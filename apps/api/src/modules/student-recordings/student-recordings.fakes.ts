@@ -37,7 +37,7 @@ export const recording = (over: Partial<RecordingRow> = {}): RecordingRow => ({
 
 export const joinRow = (over: Partial<RecordingRow> = {}, teacherId = TEACHER_ID): RecordingJoinRow => ({
   ...recording(over),
-  lessons: { starts_at: '2026-10-05T16:00:00.000Z', teacher_id: teacherId, teachers: { id: teacherId, display_name_ar: 'أ. منى' } },
+  lessons: { starts_at: '2026-10-05T16:00:00.000Z', teacher_id: teacherId, teachers: { id: teacherId, display_name_ar: 'أ. منى', display_name_en: 'Ms. Mona' } },
 });
 
 /** Mocked StudentRecordingQueries: student s1 assigned to TEACHER_ID, one recording. */
@@ -46,7 +46,7 @@ export function studentQueries() {
     student: vi.fn().mockResolvedValue({ id: STUDENT, teacher_id: TEACHER_ID }),
     taughtBy: vi.fn().mockResolvedValue(false),
     assists: vi.fn().mockResolvedValue(false),
-    studentIdsOfGuardian: vi.fn().mockResolvedValue([]),
+    doneLessonIds: vi.fn().mockResolvedValue(['les-1']),
     page: vi.fn().mockResolvedValue({ rows: [joinRow()], total: 1 }),
   };
 }

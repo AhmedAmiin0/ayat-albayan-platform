@@ -16,7 +16,7 @@ export interface RecordingScope {
  * Who may open a student's recordings (rule 9, the API being the gate): any admin; a teacher for
  * the lessons THEY taught, and for every lesson of a student currently assigned to them; an
  * assistant only for students assigned to them (student_assistants). Nobody else: another
- * teacher's student, an unassigned assistant, sales, guardians (no portal route yet).
+ * teacher's student, an unassigned assistant, sales and guardians (the portal will add its own route and RLS policy).
  */
 @Injectable()
 export class StudentRecordingAccess {
@@ -43,18 +43,4 @@ export class StudentRecordingAccess {
     if (await this.queries.taughtBy({ teacherId, studentId: student.id })) return { onlyTeacherId: teacherId, manage };
     throw new ForbiddenException();
   }
-}
-
-/**
- * The guardian rule, ready for the future student/guardian route (not exposed yet): a guardian
- * reads a recording only of their own child, and only once staff made it visible, finished and
- * not deleted. The DB policy lesson_recordings_guardian_read (migration 240) says the same.
- */
-export function guardianMayRead(input: {
-  ownStudentIds: readonly string[];
-  studentId: string;
-  recording: { visible_to_student: boolean; status: string };
-}): boolean {
-  const { recording } = input;
-  return input.ownStudentIds.includes(input.studentId) && recording.visible_to_student && recording.status === 'done';
 }

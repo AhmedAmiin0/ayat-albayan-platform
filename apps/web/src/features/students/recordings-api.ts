@@ -32,6 +32,14 @@ export const studentRecordingsQuery = (input: { studentId: string; filters: Reco
     staleTime: 30 * 60_000,
   });
 
+/** GET /students/:id/recorded-lesson-ids: the lessons with a finished recording (no signed links). */
+export const recordedLessonIdsQuery = (studentId: string) =>
+  queryOptions({
+    queryKey: [...RECORDINGS_KEY, studentId, 'recorded-lesson-ids'],
+    queryFn: () => apiFetch<string[]>(`/students/${studentId}/recorded-lesson-ids`),
+    staleTime: 5 * 60_000,
+  });
+
 /** PATCH /recordings/:id/visibility: admin, or the lesson's teacher. */
 export const setRecordingVisible = (input: { id: string; visible: boolean }) =>
   apiSend<{ id: string; visible_to_student: boolean }>('PATCH', `/recordings/${input.id}/visibility`, { visible: input.visible });

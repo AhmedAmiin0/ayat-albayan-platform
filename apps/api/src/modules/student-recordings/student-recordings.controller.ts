@@ -5,16 +5,17 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Patch, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { RecordingDeleteService } from './recording-delete.service';
 import { RecordingVisibilityService } from './recording-visibility.service';
 import { StudentRecordingsService } from './student-recordings.service';
 
-/** «تسجيلات الحلقات» on the teacher-student file. Guards are the services' (the @Roles are the coarse gate). */
+/** «تسجيلات الحلقات» on the teacher-student file. The permission is the coarse gate (recordings.read: admin and teacher by default); the services decide who may see which student, and DELETE stays admin-only there. */
 @ApiTags('classroom')
 @ApiBearerAuth()
+@Permissions('recordings.read')
 @Controller()
 export class StudentRecordingsController {
   constructor(
@@ -25,7 +26,6 @@ export class StudentRecordingsController {
 
   /** Newest first, paginated; admin, the teacher (own lessons or assigned student), an assigned assistant. */
   @Get('students/:id/recordings')
-  @Roles('admin', 'teacher', 'assistant')
   list(
     @Param('id', ParseUUIDPipe) id: string,
     @Query() query: unknown,
@@ -34,9 +34,14 @@ export class StudentRecordingsController {
     return this.recordings.list({ user, studentId: id, query: parseOrThrow(studentRecordingsQuerySchema, query) });
   }
 
+  /** Lesson ids with a finished recording, for the report history's links: no signed URLs. Same access as the list. */
+  @Get('students/:id/recorded-lesson-ids')
+  recordedLessonIds(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<string[]> {
+    return this.recordings.recordedLessonIds({ user, studentId: id });
+  }
+
   /** Show or hide one recording from the student (off by default); admin, or the lesson's teacher. */
   @Patch('recordings/:id/visibility')
-  @Roles('admin', 'teacher')
   visibility(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,
@@ -48,7 +53,6 @@ export class StudentRecordingsController {
   /** Admin only: removes the file, keeps the row as `deleted`, writes an audit row. */
   @Delete('recordings/:id')
   @HttpCode(204)
-  @Roles('admin')
   async remove(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
     await this.deletion.remove({ user, id });
   }

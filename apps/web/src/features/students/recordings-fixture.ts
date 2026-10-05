@@ -7,7 +7,7 @@ export const recordingView = (over: Partial<StudentRecordingView> = {}): Student
   lesson_id: 'les-1',
   lesson_starts_at: '2026-10-05T16:00:00.000Z',
   started_at: '2026-10-05T16:00:00.000Z',
-  teacher: { id: 't-1', display_name_ar: 'أ. منى' },
+  teacher: { id: 't-1', display_name_ar: 'أ. منى', display_name_en: 'Ms. Mona' },
   status: 'done',
   duration_seconds: 3600,
   size_bytes: 52_428_800,

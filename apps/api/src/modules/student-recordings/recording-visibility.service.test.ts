@@ -7,7 +7,7 @@ import { RecordingVisibilityService } from './recording-visibility.service';
 import { ADMIN, ASSISTANT, OTHER_TEACHER, recording, REC_ID, TEACHER, TEACHER_ID, teachersFake } from './student-recordings.fakes';
 
 const row = (over: Partial<RecordingWithTeacher> = {}): RecordingWithTeacher => ({ ...recording(), lessons: { teacher_id: TEACHER_ID }, ...over });
-const q = { byId: vi.fn(), setVisible: vi.fn() };
+const q = { byId: vi.fn(), setVisible: vi.fn(), attendeeCount: vi.fn() };
 const audit = { record: vi.fn() };
 const service = () =>
   new RecordingVisibilityService(q as unknown as RecordingAdminQueries, teachersFake() as unknown as TeachersQueries, audit as unknown as AuditService);
@@ -15,6 +15,7 @@ const service = () =>
 beforeEach(() => {
   vi.resetAllMocks();
   q.byId.mockResolvedValue(row());
+  q.attendeeCount.mockResolvedValue(1);
 });
 
 describe('visibility toggle ownership', () => {
@@ -48,5 +49,15 @@ describe('visibility toggle ownership', () => {
     await expect(service().setVisibility({ user: ADMIN, id: REC_ID, visible: true })).rejects.toBeInstanceOf(NotFoundException);
     q.byId.mockResolvedValueOnce(row({ status: 'deleted', deleted_at: '2026-10-06T08:00:00.000Z' }));
     await expect(service().setVisibility({ user: ADMIN, id: REC_ID, visible: true })).rejects.toBeInstanceOf(ConflictException);
+  });
+
+  it('a group lesson’s recording cannot be shown (409 recording_group_lesson); hiding it is still allowed', async () => {
+    q.attendeeCount.mockResolvedValue(2);
+    await expect(service().setVisibility({ user: ADMIN, id: REC_ID, visible: true })).rejects.toMatchObject({ response: { code: 'recording_group_lesson' } });
+    await expect(service().setVisibility({ user: TEACHER, id: REC_ID, visible: true })).rejects.toBeInstanceOf(ConflictException);
+    expect(q.setVisible).not.toHaveBeenCalled();
+    q.byId.mockResolvedValue(row({ visible_to_student: true }));
+    await service().setVisibility({ user: ADMIN, id: REC_ID, visible: false });
+    expect(q.setVisible).toHaveBeenCalledWith(REC_ID, false);
   });
 });

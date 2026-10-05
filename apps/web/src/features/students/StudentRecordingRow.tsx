@@ -2,6 +2,7 @@ import type { StudentRecordingView, UserRole } from '@ab/shared';
 import { StatusChip } from '@/components/ui/status-chip';
 import { recordingTime, RECORDING_TONE } from '@/features/classroom/recordings/recording-format';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { durationText, sizeText } from './recording-format';
 import { RecordingDelete } from './RecordingDelete';
 import { RecordingPlayer } from './RecordingPlayer';
@@ -29,7 +30,7 @@ export function StudentRecordingRow({ rec, role }: { rec: StudentRecordingView; 
         <StatusChip tone={TONE[rec.status]} label={R.status[rec.status]} size="sm" />
       </div>
       <dl className="flex flex-wrap gap-x-5 gap-y-1 text-sm">
-        <Fact label={R.teacher} value={rec.teacher?.display_name_ar ?? R.unknown} />
+        <Fact label={R.teacher} value={rec.teacher ? teacherLabel(rec.teacher) : R.unknown} />
         <Fact label={R.duration} value={durationText(rec.duration_seconds)} />
         <Fact label={R.size} value={sizeText(rec.size_bytes)} />
       </dl>

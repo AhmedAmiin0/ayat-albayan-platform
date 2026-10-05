@@ -18,7 +18,7 @@ export interface StudentRecordingView {
   /** The lesson's start (UTC); the recording itself started at `started_at`. */
   lesson_starts_at: string;
   started_at: string;
-  teacher: { id: string; display_name_ar: string } | null;
+  teacher: { id: string; display_name_ar: string; display_name_en: string | null } | null;
   status: StudentRecordingStatus;
   duration_seconds: number | null;
   size_bytes: number | null;

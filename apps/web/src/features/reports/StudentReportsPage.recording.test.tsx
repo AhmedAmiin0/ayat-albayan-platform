@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { pageOf, recordingView } from '@/features/students/recordings-fixture';
 import { StudentReportsPage } from './StudentReportsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -28,7 +27,7 @@ const DATA: StudentReportsResponse = { items: [item('a'), item('b')], total: 2, 
 
 function renderPage(role: 'admin' | 'teacher', recordings: unknown) {
   apiFetch.mockImplementation(async (path: string) => {
-    if (path.includes('/recordings')) {
+    if (path.includes('/recorded-lesson-ids')) {
       if (recordings instanceof Error) throw recordings;
       return recordings;
     }
@@ -45,16 +44,22 @@ afterEach(() => apiFetch.mockReset());
 
 describe('report history → the lesson’s recording', () => {
   it('only the report whose lesson has a finished recording links to it (admin: the student profile)', async () => {
-    renderPage('admin', pageOf([recordingView({ lesson_id: 'l-a' }), recordingView({ id: 'r2', lesson_id: 'l-b', status: 'failed', url: null })]));
+    renderPage('admin', ['l-a']);
     const link = await screen.findByRole('link', { name: LINK });
     expect(link.getAttribute('href')).toBe('/admin/students/s-1');
     expect(screen.getAllByRole('link', { name: LINK })).toHaveLength(1);
   });
 
   it('a teacher’s link stays on their own student page', async () => {
-    renderPage('teacher', pageOf([recordingView({ lesson_id: 'l-b' })]));
+    renderPage('teacher', ['l-b']);
     const link = await screen.findByRole('link', { name: LINK });
     expect(link.getAttribute('href')).toBe('/teacher/reports/s-1');
+  });
+
+  it('asks only for the ids: no signed recording list is requested', async () => {
+    renderPage('admin', ['l-a']);
+    await screen.findByRole('link', { name: LINK });
+    expect(apiFetch.mock.calls.map(([p]) => String(p)).filter((p) => p.includes('/recordings'))).toEqual([]);
   });
 
   it('no recordings, or a refused request: no links and the history still shows', async () => {

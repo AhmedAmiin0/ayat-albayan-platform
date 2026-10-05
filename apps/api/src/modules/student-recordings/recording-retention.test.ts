@@ -9,7 +9,7 @@ import { RecordingRetention, RETENTION_KEY } from './recording-retention';
 import type { RecordingRetentionQueries } from './recording-retention.queries';
 
 const NOW = new Date('2026-10-05T12:00:00.000Z');
-const settings = { read: vi.fn() };
+const settings = { get: vi.fn() };
 const q = { failStuck: vi.fn(), expired: vi.fn() };
 const admin = { markDeleted: vi.fn() };
 const storage = { remove: vi.fn() };
@@ -24,30 +24,31 @@ const OLD = [{ id: 'R1', file_path: 'lessons/L/1.mp4' }, { id: 'R2', file_path: 
 
 beforeEach(() => {
   vi.resetAllMocks();
-  settings.read.mockResolvedValue(undefined);
+  settings.get.mockResolvedValue(undefined);
   q.failStuck.mockResolvedValue(0);
   q.expired.mockResolvedValue([]);
+  admin.markDeleted.mockResolvedValue(1);
 });
 
 describe('retention: recording_retention_days', () => {
   it('unset, null, zero, fractional or text = keep forever: no query, no delete', async () => {
     for (const v of [undefined, null, 0, -3, 1.5, '30', true]) {
-      settings.read.mockResolvedValue(v);
+      settings.get.mockResolvedValue(v);
       expect(await retention().purgeExpired(NOW)).toBe(0);
     }
     expect(q.expired).not.toHaveBeenCalled();
     expect(storage.remove).not.toHaveBeenCalled();
-    expect(settings.read).toHaveBeenCalledWith(RETENTION_KEY);
+    expect(settings.get).toHaveBeenCalledWith(RETENTION_KEY);
   });
 
   it('an unreadable setting keeps the recordings too', async () => {
-    settings.read.mockRejectedValue(new Error('db down'));
+    settings.get.mockRejectedValue(new Error('db down'));
     expect(await retention().purgeExpired(NOW)).toBe(0);
     expect(q.expired).not.toHaveBeenCalled();
   });
 
   it('with 30 days: files older than the cutoff are removed, rows marked deleted, audited by the system', async () => {
-    settings.read.mockResolvedValue(30);
+    settings.get.mockResolvedValue(30);
     q.expired.mockResolvedValueOnce(OLD);
     expect(await retention().purgeExpired(NOW)).toBe(2);
     expect(q.expired).toHaveBeenCalledWith({ cutoff: '2026-09-05T12:00:00.000Z', limit: 100 });
@@ -57,7 +58,7 @@ describe('retention: recording_retention_days', () => {
   });
 
   it('is idempotent: a second run finds nothing left and changes nothing', async () => {
-    settings.read.mockResolvedValue(30);
+    settings.get.mockResolvedValue(30);
     q.expired.mockResolvedValueOnce(OLD).mockResolvedValue([]);
     expect(await retention().purgeExpired(NOW)).toBe(2);
     storage.remove.mockClear();
@@ -66,7 +67,7 @@ describe('retention: recording_retention_days', () => {
   });
 
   it('a failing file stays for the next run; the others still go', async () => {
-    settings.read.mockResolvedValue(7);
+    settings.get.mockResolvedValue(7);
     q.expired.mockResolvedValueOnce(OLD);
     storage.remove.mockRejectedValueOnce(new Error('boom')).mockResolvedValue(undefined);
     expect(await retention().purgeExpired(NOW)).toBe(1);
@@ -84,7 +85,7 @@ describe('stuck sweeper', () => {
 
 describe('RecordingMaintenanceJob.runOnce', () => {
   it('runs both sweeps and reports the counts', async () => {
-    settings.read.mockResolvedValue(30);
+    settings.get.mockResolvedValue(30);
     q.failStuck.mockResolvedValue(1);
     q.expired.mockResolvedValueOnce([OLD[0]]);
     expect(await new RecordingMaintenanceJob(retention()).runOnce(NOW)).toEqual({ stuck: 1, purged: 1 });
@@ -92,7 +93,7 @@ describe('RecordingMaintenanceJob.runOnce', () => {
 
   it('never throws: a failing sweep counts 0 and the other still runs', async () => {
     q.failStuck.mockRejectedValue(new Error('db'));
-    settings.read.mockResolvedValue(30);
+    settings.get.mockResolvedValue(30);
     q.expired.mockResolvedValueOnce([OLD[0]]);
     expect(await new RecordingMaintenanceJob(retention()).runOnce(NOW)).toEqual({ stuck: 0, purged: 1 });
   });

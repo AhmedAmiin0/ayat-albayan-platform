@@ -12,7 +12,7 @@ const DAY_MS = 86_400_000;
 
 /**
  * Recording clean-up: marks rows stuck in `recording` for over 6 hours as failed, and (only when
- * the owner set `recording_retention_days`) deletes the files of older recordings and keeps the
+ * the owner set `recording_retention_days`) deletes the files of older recordings (internal-meeting recordings too) and keeps the
  * rows as `deleted`. Idempotent: both sweeps select only rows they have not handled.
  */
 @Injectable()
@@ -28,7 +28,7 @@ export class RecordingRetention {
   /** Whole days, or null = keep forever (unset, not a positive integer, or unreadable). Never throws. */
   async days(): Promise<number | null> {
     try {
-      const v = await this.settings.read(RETENTION_KEY);
+      const v = await this.settings.get(RETENTION_KEY);
       return typeof v === 'number' && Number.isInteger(v) && v >= 1 ? v : null;
     } catch (e) {
       this.log.warn(`${RETENTION_KEY} unreadable, keeping recordings: ${String(e)}`);
@@ -59,14 +59,13 @@ export class RecordingRetention {
   /** A failed storage call leaves the row alone: the next run tries it again. */
   private async purgeOne(row: { id: string; file_path: string }, ctx: { days: number; now: Date }): Promise<boolean> {
     try {
-      await this.eraser.erase({
+      return await this.eraser.erase({
         id: row.id,
         filePath: row.file_path,
         actorId: null,
         now: ctx.now,
         audit: { action: 'retention_delete', after: { retention_days: ctx.days } },
       });
-      return true;
     } catch (e) {
       this.log.error(`recording ${row.id} not purged: ${String(e)}`);
       return false;

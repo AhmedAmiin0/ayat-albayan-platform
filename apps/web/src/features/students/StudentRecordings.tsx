@@ -8,6 +8,7 @@ import { Pager } from '@/components/ui/pager';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { teacherLabel } from '@/lib/teacher-label';
 import { RecordingFiltersBar, type TeacherChoice } from './RecordingFiltersBar';
 import { studentRecordingsQuery, type RecordingFilters } from './recordings-api';
 import { StudentRecordingRow } from './StudentRecordingRow';
@@ -18,7 +19,7 @@ const R = t.studentRecordings;
 /** The teachers to filter by: every teacher for an admin, else those on the loaded page (plus the chosen one). */
 function choices(items: StudentRecordingView[], all: TeacherChoice[]): TeacherChoice[] {
   const seen = new Map(all.map((x) => [x.id, x.name]));
-  for (const i of items) if (i.teacher) seen.set(i.teacher.id, i.teacher.display_name_ar);
+  for (const i of items) if (i.teacher) seen.set(i.teacher.id, teacherLabel(i.teacher));
   return [...seen].map(([id, name]) => ({ id, name }));
 }
 
@@ -32,7 +33,7 @@ export function StudentRecordings({ studentId, role }: { studentId: string; role
   const [page, setPage] = useState(1);
   const list = useQuery(studentRecordingsQuery({ studentId, filters, page }));
   const teachers = useQuery({ ...teacherOptionsQuery, enabled: role === 'admin' });
-  const all = (teachers.data ?? []).map((x) => ({ id: x.id, name: x.display_name_ar }));
+  const all = (teachers.data ?? []).map((x) => ({ id: x.id, name: teacherLabel(x) }));
   const filtered = Object.values(filters).some(Boolean);
   const change = (next: RecordingFilters) => {
     setFilters(next);

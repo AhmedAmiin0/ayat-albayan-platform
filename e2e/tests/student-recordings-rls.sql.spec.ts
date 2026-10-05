@@ -2,9 +2,9 @@ import { expect, test } from '@playwright/test';
 import { as, family, rolledBack, userId, type Tx } from '../support/rls';
 import { USERS } from '../support/users';
 
-// Migration 240: a guardian reads a lesson recording only when it is finished, not deleted, made
-// visible by staff (visible_to_student), and the lesson is one of their own child's. The default
-// is hidden; the admin still reads everything; the status 'deleted' needs deleted_at.
+// Migration 240: no guardian policy on lesson_recordings (a group lesson's file would expose every
+// student's session, its path and egress id). A guardian reads nothing, visible or not; the admin
+// still reads everything; hidden is the default; the status 'deleted' needs deleted_at.
 // Not run in the cloud session that wrote it: the owner runs it after `supabase db reset`.
 
 async function lessonOf(tx: Tx, input: { teacherId: string; studentId: string }): Promise<string> {
@@ -26,26 +26,21 @@ async function recording(tx: Tx, over: { lessonId: string; tag: string; visible?
 test.describe('lesson_recordings for guardians (migration 240)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('only a visible, finished, undeleted recording of their own child’s lesson', async () => {
+  test('a guardian cannot read any recording, not even a visible one of their own child', async () => {
     await rolledBack(async (tx) => {
       const login = await userId(tx, USERS.teacher.email);
       const admin = await userId(tx, USERS.admin.email);
       const [t] = await tx<{ id: string }[]>`select id from public.teachers where profile_id = ${login}`;
       if (!t) throw new Error('teacher row missing (global setup)');
       const mine = await family(tx, { phone: '+966500000240', teacherId: t.id });
-      const theirs = await family(tx, { phone: '+966500000241', teacherId: t.id });
       await tx`update public.guardians set profile_id = ${login} where phone_e164 = '+966500000240'`;
       const myLesson = await lessonOf(tx, { teacherId: t.id, studentId: mine });
-      const theirLesson = await lessonOf(tx, { teacherId: t.id, studentId: theirs });
       await recording(tx, { lessonId: myLesson, tag: 'shown', visible: true });
       await recording(tx, { lessonId: myLesson, tag: 'hidden' });
-      await recording(tx, { lessonId: myLesson, tag: 'failed', visible: true, status: 'failed' });
-      await recording(tx, { lessonId: myLesson, tag: 'deleted', visible: true, status: 'deleted' });
-      await recording(tx, { lessonId: theirLesson, tag: 'other-family', visible: true });
       const seen = (uid: string) =>
-        as(tx, uid, () => tx<{ file_path: string }[]>`select file_path from public.lesson_recordings where file_path like '%rls240-%' order by file_path`);
-      expect((await seen(login)).map((r) => r.file_path.split('rls240-')[1])).toEqual(['shown.mp4']);
-      expect(await seen(admin)).toHaveLength(5);
+        as(tx, uid, () => tx<{ file_path: string }[]>`select file_path from public.lesson_recordings where file_path like '%rls240-%'`);
+      expect(await seen(login)).toHaveLength(0);
+      expect(await seen(admin)).toHaveLength(2);
     });
   });
 

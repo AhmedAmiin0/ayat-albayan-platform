@@ -5,7 +5,10 @@ import { conflict, notFound } from '../scheduling/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { RecordingAdminQueries, type RecordingWithTeacher } from './recording-admin.queries';
 
-/** PATCH /recordings/:id/visibility: admin any recording; a teacher only their own lessons'. */
+/**
+ * PATCH /recordings/:id/visibility: admin any recording; a teacher only their own lessons'. A group
+ * lesson's recording is one file of every student's session: it cannot be shown (409 recording_group_lesson).
+ */
 @Injectable()
 export class RecordingVisibilityService {
   constructor(
@@ -20,6 +23,7 @@ export class RecordingVisibilityService {
     await this.assertMay(input.user, row);
     if (row.status === 'deleted') throw conflict('recording_deleted');
     if (row.visible_to_student !== input.visible) {
+      if (input.visible && row.lesson_id && (await this.queries.attendeeCount(row.lesson_id)) > 1) throw conflict('recording_group_lesson');
       await this.queries.setVisible(row.id, input.visible);
       await this.audit.record({
         actorId: input.user.id,

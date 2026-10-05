@@ -1,7 +1,7 @@
 import { ForbiddenException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RecordingViews } from '../classroom/recording-list.service';
-import { guardianMayRead, StudentRecordingAccess } from './student-recordings.access';
+import { StudentRecordingAccess } from './student-recordings.access';
 import { StudentRecordingsService } from './student-recordings.service';
 import type { StudentRecordingQueries } from './student-recordings.queries';
 import type { TeachersQueries } from '../teachers/teachers.queries';
@@ -32,7 +32,7 @@ describe('GET /students/:id/recordings', () => {
           lesson_id: joinRow().lesson_id,
           lesson_starts_at: '2026-10-05T16:00:00.000Z',
           started_at: '2026-10-05T16:00:00.000Z',
-          teacher: { id: TEACHER_ID, display_name_ar: 'أ. منى' },
+          teacher: { id: TEACHER_ID, display_name_ar: 'أ. منى', display_name_en: 'Ms. Mona' },
           status: 'done',
           duration_seconds: 3600,
           size_bytes: 52_428_800,
@@ -103,29 +103,20 @@ describe('group lessons: the same recording is in EACH attending student’s fil
   });
 });
 
-describe('a guardian can only ever read visible recordings of their own children', () => {
-  it('cannot read an invisible recording (pure rule)', () => {
-    const ownStudentIds = [STUDENT];
-    expect(guardianMayRead({ ownStudentIds, studentId: STUDENT, recording: { visible_to_student: false, status: 'done' } })).toBe(false);
-    expect(guardianMayRead({ ownStudentIds, studentId: STUDENT, recording: { visible_to_student: true, status: 'done' } })).toBe(true);
+describe('GET /students/:id/recorded-lesson-ids', () => {
+  it('returns the ids without signing a single link, under the same access rules', async () => {
+    expect(await service().recordedLessonIds({ user: TEACHER, studentId: STUDENT })).toEqual(['les-1']);
+    expect(q.doneLessonIds).toHaveBeenCalledWith({ studentId: STUDENT, onlyTeacherId: null });
+    expect(views.urlOf).not.toHaveBeenCalled();
+    q.doneLessonIds.mockClear();
+    await expect(service().recordedLessonIds({ user: GUARDIAN, studentId: STUDENT })).rejects.toBeInstanceOf(ForbiddenException);
+    expect(q.doneLessonIds).not.toHaveBeenCalled();
   });
+});
 
-  it('not before it is finished, not another family’s child', () => {
-    const ok = { visible_to_student: true, status: 'done' };
-    expect(guardianMayRead({ ownStudentIds: [STUDENT], studentId: STUDENT, recording: { ...ok, status: 'recording' } })).toBe(false);
-    expect(guardianMayRead({ ownStudentIds: [STUDENT], studentId: SIBLING, recording: ok })).toBe(false);
-  });
-
-  it('the service asks the DB for visible, finished rows only, for the guardian’s own child', async () => {
-    q.studentIdsOfGuardian.mockResolvedValue([STUDENT]);
-    await service().listForGuardian({ user: GUARDIAN, studentId: STUDENT, query });
-    expect(q.page).toHaveBeenCalledWith({ studentId: STUDENT, onlyTeacherId: null, guardianView: true, query });
-  });
-
-  it('another family’s child, or a non-guardian login, is refused without touching recordings', async () => {
-    q.studentIdsOfGuardian.mockResolvedValue([STUDENT]);
-    await expect(service().listForGuardian({ user: GUARDIAN, studentId: SIBLING, query })).rejects.toBeInstanceOf(ForbiddenException);
-    await expect(service().listForGuardian({ user: TEACHER, studentId: STUDENT, query })).rejects.toBeInstanceOf(ForbiddenException);
+describe('a guardian has no recordings route', () => {
+  it('is refused before any recording query (the portal will add its own)', async () => {
+    await expect(service().list({ user: GUARDIAN, studentId: STUDENT, query })).rejects.toBeInstanceOf(ForbiddenException);
     expect(q.page).not.toHaveBeenCalled();
   });
 });
