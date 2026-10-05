@@ -1,28 +1,31 @@
 @import 'tailwindcss';
 @import './styles/tokens.css';
 @import './styles/components.css';
+@import './styles/motion.css';
 
-/* Ink & Gold on the academy brand (docs/07): gold decorates, green acts. RTL: logical utilities only.
+/* Emerald Mint (docs/07, owner 2026-10-05): simple, flat, green acts. RTL: logical utilities only.
    `dark:` follows <html data-theme>, which the boot script in index.html always sets. */
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
 
 /* ---------- theme-independent tokens ---------- */
 @theme {
-  --font-sans: 'IBM Plex Sans Arabic', 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
-  --font-display: 'Amiri', 'Noto Naskh Arabic', serif;
+  /* One legible face for everything (owner, 2026-10-05): titles are the same sans at 700. */
+  --font-sans: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
+  --font-display: 'Noto Sans Arabic', 'Segoe UI', Tahoma, sans-serif;
 
-  --text-2xs: 12px;     --text-2xs--line-height: 1.5;
-  --text-xs: 13px;      --text-xs--line-height: 1.5;
-  --text-sm: 14px;      --text-sm--line-height: 1.6;
-  --text-body: 15px;    --text-body--line-height: 1.6;
-  --text-base: 16px;    --text-base--line-height: 1.6;
+  /* Noto Sans Arabic reads larger and needs air: 16px body, 1.65 line-height (owner, 2026-10-05). */
+  --text-2xs: 12px;     --text-2xs--line-height: 1.55;
+  --text-xs: 13px;      --text-xs--line-height: 1.6;
+  --text-sm: 15px;      --text-sm--line-height: 1.65;
+  --text-body: 16px;    --text-body--line-height: 1.65;
+  --text-base: 16px;    --text-base--line-height: 1.65;
   --text-lg: 18px;      --text-lg--line-height: 1.6;
-  --text-h4: 20px;      --text-h4--line-height: 1.5;
-  --text-h3: 23px;      --text-h3--line-height: 1.5;
-  --text-h2: 28px;      --text-h2--line-height: 1.5;
-  --text-h1: 34px;      --text-h1--line-height: 1.5;
-  --text-display: 46px; --text-display--line-height: 1.5;
-  --text-hero: 68px;    --text-hero--line-height: 1.45;
+  --text-h4: 19px;      --text-h4--line-height: 1.5;
+  --text-h3: 22px;      --text-h3--line-height: 1.45;
+  --text-h2: 26px;      --text-h2--line-height: 1.4;
+  --text-h1: 30px;      --text-h1--line-height: 1.4;
+  --text-display: 40px; --text-display--line-height: 1.35;
+  --text-hero: 56px;    --text-hero--line-height: 1.3;
 
   --radius-xs: 2px;  /* the jadwal page, dialogs */
   --radius-sm: 6px;  /* small tabs, fihris items */
@@ -44,7 +47,7 @@
   --color-card-foreground: var(--ink);
   --color-popover: var(--raised);
   --color-popover-foreground: var(--ink);
-  --color-primary: var(--lapis);
+  --color-primary: var(--lapis-fill);
   --color-primary-hover: var(--lapis-hover);
   --color-primary-foreground: var(--on-lapis);
   --color-secondary: var(--raised);
@@ -77,6 +80,7 @@
   --color-gold-wash: var(--gold-wash);
   /* action: the brand green (historical token name lapis) */
   --color-lapis: var(--lapis);
+  --color-lapis-fill: var(--lapis-fill);
   --color-lapis-wash: var(--lapis-wash);
   /* status families: text/border + soft background */
   --color-ok: var(--verdigris);
@@ -105,7 +109,7 @@
 
 @layer base {
   body {
-    @apply bg-background text-foreground font-sans text-sm antialiased;
+    @apply bg-background text-foreground font-sans text-base antialiased;
   }
   :focus-visible {
     outline: 2px solid var(--lapis);

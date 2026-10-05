@@ -12,13 +12,24 @@ export interface MessageLogProps {
   onOlder: () => void;
   /** Template keys not approved on Meta yet (their queued rows wait). */
   waitingKeys: ReadonlySet<string>;
+  /**
+   * From which width the log fills its column (the reply box pinned under it): `shell` (900px)
+   * when nothing sits beside the thread, `xl` when the lead/family panel does. Below that width
+   * the log is a capped box and the thread scrolls as one column.
+   */
+  fill?: 'shell' | 'xl';
 }
+
+const BOX = {
+  shell: 'min-h-[240px] shell:min-h-0 shell:flex-1 shell:overflow-y-auto shell:overscroll-contain shell:pe-1',
+  xl: 'min-h-[240px] shell:max-h-[min(62vh,620px)] shell:overflow-y-auto shell:overscroll-contain shell:pe-1 xl:max-h-none xl:min-h-0 xl:flex-1',
+};
 
 /**
  * The thread as a live log (role=log: new messages are announced). Stays scrolled to the newest
  * message; «رسايل أقدم» pages back. Scrolls inside itself from 900px, with the page below that.
  */
-export function MessageLog({ messages, hasMore, loadingOlder, onOlder, waitingKeys }: MessageLogProps) {
+export function MessageLog({ messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell' }: MessageLogProps) {
   const box = useRef<HTMLDivElement>(null);
   const newest = messages.at(-1)?.id;
   useEffect(() => {
@@ -28,7 +39,7 @@ export function MessageLog({ messages, hasMore, loadingOlder, onOlder, waitingKe
   const now = new Date();
 
   return (
-    <div ref={box} className="min-h-[240px] shell:max-h-[min(62vh,620px)] shell:overflow-y-auto shell:pe-1">
+    <div ref={box} className={BOX[fill]}>
       {hasMore && (
         <div className="mb-3 flex justify-center">
           <Button size="sm" variant="ghost" disabled={loadingOlder} onClick={onOlder}>

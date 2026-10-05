@@ -1455,6 +1455,24 @@
     "error": {
       "invalid_range": "The end date must be after the start date",
       "range_too_large": "The period is too long. Choose a year or less"
+    },
+    "home": {
+      "today": "Today at a glance",
+      "lessonsToday": "Lessons today",
+      "openNow": "Open now",
+      "live": "Live now",
+      "todayList": "Today's lessons",
+      "todayEmpty": "No lessons today",
+      "todayEmptyHint": "Today's lessons will show here with their times and join buttons.",
+      "work": "Tasks",
+      "inbox": "Latest messages",
+      "inboxEmpty": "No messages yet",
+      "inboxEmptyHint": "The latest WhatsApp conversations will show here.",
+      "inboxAll": "All messages",
+      "quick": "Quick actions",
+      "addStudent": "Add student",
+      "book": "Book a lesson",
+      "teacher": "Teacher: {name}"
     }
   },
   "exports": {
@@ -2007,7 +2025,29 @@
     "reportingCurrency": "Dashboard currency",
     "payoutCountLate": "Count lessons where the student was late toward teacher payouts",
     "payoutCountNoShow": "Count lessons where the student was absent without notice toward teacher payouts",
-    "notAscending": "Hours must go from smallest to largest, for example 24, 72"
+    "notAscending": "Hours must go from smallest to largest, for example 24, 72",
+    "nav": "Settings sections",
+    "sections": {
+      "messaging": "Messages & WhatsApp",
+      "schedule": "Schedule & lessons",
+      "reports": "Reports",
+      "accounts": "Accounts & payments",
+      "sales": "Assistants & sales",
+      "appearance": "Appearance"
+    },
+    "hints": {
+      "reminderMinutesBefore": "The guardian gets the reminder this many minutes before the lesson starts.",
+      "bookingHorizonWeeks": "How many weeks of recurring lessons are created ahead.",
+      "reportTeacherEditHours": "After this the report is locked and only an admin can edit it.",
+      "renewalAlertRemaining": "A renewal task appears when the package balance reaches this number.",
+      "reportingCurrency": "Revenue and expense figures on the dashboard are converted to it.",
+      "flagFutureLessonsWhenUnpaid": "The student's upcoming lessons show an «unpaid package» mark.",
+      "payoutCountLate": "When off, this lesson is not counted for the teacher.",
+      "payoutCountNoShow": "When off, this lesson is not counted for the teacher."
+    },
+    "theme": "Interface theme",
+    "themeHint": "Light, dark or the device setting; saved for this browser.",
+    "saveBar": "Changes to the fields are only saved with «Save»."
   },
   "language": {
     "label": "Language",
@@ -2218,7 +2258,21 @@
       "title": "Online classrooms",
       "empty": "No lessons on this day",
       "teacher": "Teacher",
-      "students": "Students"
+      "students": "Students",
+      "groups": {
+        "now": "Now",
+        "upcoming": "Coming up",
+        "ended": "Ended"
+      },
+      "groupEmpty": {
+        "now": "No room is open right now.",
+        "upcoming": "No more lessons on this day.",
+        "ended": "No lesson has ended yet."
+      },
+      "live": "Started",
+      "ended": "Ended",
+      "more": "More options",
+      "time": "{from} – {to}"
     },
     "sectionTitle": "Online classroom",
     "sectionHint": "Join yourself, or send/copy the link for the student",

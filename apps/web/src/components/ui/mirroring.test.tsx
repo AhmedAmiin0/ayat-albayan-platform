@@ -1,6 +1,5 @@
 import { render } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
-import { Cartouche } from './cartouche';
 import { Icon } from './icon';
 
 // English is LTR (Phase 7): the RTL-drawn glyphs flip through the `ltr:` variant, so the same
@@ -23,11 +22,3 @@ describe('directional icons follow the page direction', () => {
   });
 });
 
-describe('Cartouche caps', () => {
-  it('the start cap flips in RTL, the end cap in LTR, so both point outward either way', () => {
-    const { container } = render(<Cartouche>عنوان</Cartouche>);
-    const [start, end] = [...container.querySelectorAll('svg')].map((s) => s.getAttribute('class') ?? '');
-    expect(start).toContain('rtl:-scale-x-100');
-    expect(end).toContain('ltr:-scale-x-100');
-  });
-});

@@ -30,7 +30,7 @@ export function SubmittedReports({ tz }: { tz: string }) {
       {list.data?.items.length === 0 && <EmptyState title={t.reports.noSubmitted} />}
       {list.data && list.data.items.length > 0 && (
         <>
-          <ol className="grid border-t-[3px] border-double border-gold">
+          <ol className="grid border-t border-rule">
             {list.data.items.map((r) => (
               <Row key={r.id} report={r} tz={tz} />
             ))}

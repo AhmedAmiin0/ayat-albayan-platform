@@ -34,8 +34,8 @@ const PAIRS: [Key, Key][] = [
   // body text on every wash (tinted rows, the error toast, the selected fihris tile)
   ...WASHES.flatMap((w): [Key, Key][] => [['ink', w], ['ink2', w]]),
   ['ink3', 'neutralSoft'],
-  // text on fills: primary + hover, destructive-solid, the inverse toast
-  ['onLapis', 'lapis'],
+  // text on fills: the primary (its own fill token) + hover, destructive-solid, the inverse toast
+  ['onLapis', 'lapisFill'],
   ['onLapis', 'lapisHover'],
   ['onBad', 'badSolid'],
   ['onInverse', 'inverse'],

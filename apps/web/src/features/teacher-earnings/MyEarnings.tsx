@@ -3,6 +3,7 @@ import { Link } from '@tanstack/react-router';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { balanceQuery, type Scope } from './api';
@@ -23,7 +24,7 @@ export function MyEarnings() {
           {t.earnings.monthly}
         </Link>
       </PageHead>
-      {balance.isPending && <p className="py-6 text-center text-ink-3">{t.common.loading}</p>}
+      {balance.isPending && <ListSkeleton />}
       {balance.isError && <FormAlert>{apiErrorText(balance.error, t.earnings.error)}</FormAlert>}
       {balance.data && <EarningsCards balance={balance.data} />}
       {balance.data && <SessionsPanel scope={MINE} />}

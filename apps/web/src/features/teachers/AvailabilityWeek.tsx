@@ -62,7 +62,7 @@ export const AvailabilityWeek = forwardRef<HTMLDivElement, Props>(function Avail
   const clock = wallClock(useMinuteClock(), tz);
   return (
     <>
-      <div ref={ref} role="table" aria-label={t.availability.title} className="border-t-[3px] border-b border-double border-t-gold border-b-rule">
+      <div ref={ref} role="table" aria-label={t.availability.title} className="border-y border-rule">
         <div role="row" className={weekRowClass}>
           <span role="columnheader" className={cn(cellClass, headClass, 'hidden @min-[640px]:flex')}>
             {t.availability.weekday}

@@ -57,7 +57,7 @@ export function QuoteResult({ quote: q, stale }: QuoteResultProps) {
       </div>
       <figure
         aria-labelledby={captionId}
-        className="grid gap-2 border-y-[3px] border-double border-gold py-3.5"
+        className="grid gap-2 border-y border-rule py-3.5"
       >
         <figcaption id={captionId} className="text-xs font-semibold text-ink-3">
           {t.pricing.packagePrice}

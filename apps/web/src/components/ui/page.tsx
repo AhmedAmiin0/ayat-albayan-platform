@@ -1,16 +1,16 @@
 import type { HTMLAttributes } from 'react';
 import { cn } from '@/lib/utils';
 
-// The work page (docs/07 §6 Card/Page): a jadwal frame, ink rule + gold outline 4px outside,
-// never rounded beyond 2px, never nested, nothing boxed inside it (group with space and rules).
+// The work page (docs/07 §6 Card/Page): a flat card, 1px rule and an 8px radius with a hairline
+// shadow (owner, 2026-10-05: simplify; no gold outline). Never nested, nothing boxed inside it.
 // `@container` so tables can fold the hamish column with `@max-[940px]:` variants.
 export const jadwalClass =
-  'border border-rule-strong bg-card outline-[1.5px] outline-offset-4 outline-gold outline-solid rounded-xs';
+  'rounded-md border border-rule bg-card shadow-page';
 
 export function Page({ className, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
     <div
-      className={cn('@container relative m-1.5 min-w-0 px-4 pt-[18px] pb-3.5 shell:px-6 shell:pt-[22px] shell:pb-[18px]', jadwalClass, className)}
+      className={cn('@container relative m-1.5 min-w-0 px-4 pt-5 pb-4 shell:px-7 shell:pt-6 shell:pb-6', jadwalClass, className)}
       {...props}
     />
   );

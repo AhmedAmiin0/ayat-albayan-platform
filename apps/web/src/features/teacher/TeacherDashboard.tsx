@@ -6,6 +6,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { PageHead } from '@/components/ui/page';
 import { Tabs } from '@/components/ui/tabs';
 import { Toast } from '@/components/ui/toast';
+import { ListSkeleton } from '@/components/ui/skeleton';
 import { errorCode } from '@/features/schedule/api';
 import { PendingReports } from '@/features/reports/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lessons';
@@ -37,7 +38,7 @@ export function TeacherDashboard() {
     const text = errorCode(me.error) === 'teacher_not_linked' ? t.teacherDash.notLinked : t.teacherDash.loadError;
     return <>{head}<FormAlert>{text}</FormAlert></>;
   }
-  if (!me.data) return <>{head}<p className="py-6 text-center text-ink-3">{t.common.loading}</p></>;
+  if (!me.data) return <>{head}<ListSkeleton /></>;
   return <>{head}<Dashboard me={me.data} /></>;
 }
 
@@ -54,7 +55,7 @@ function Dashboard({ me }: { me: TeacherMe }) {
   const [notice, setNotice] = useState<string | null>(null);
   const list = (which: 'today' | 'week') => {
     if (lessons.isError) return <FormAlert>{t.teacherDash.loadError}</FormAlert>;
-    if (!lessons.data) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
+    if (!lessons.data) return <ListSkeleton />;
     const shown = which === 'today' ? lessonsOnDay(lessons.data, { date: today, tz: me.tz }) : lessons.data;
     const empty = which === 'today' ? t.teacherDash.noLessonsToday : t.teacherDash.noLessonsWeek;
     return (

@@ -3,12 +3,12 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-// Self-hosted fonts (no Google Fonts at runtime): Amiri 700 titles, Plex Arabic UI.
-import '@fontsource/amiri/700.css';
-import '@fontsource/ibm-plex-sans-arabic/400.css';
-import '@fontsource/ibm-plex-sans-arabic/500.css';
-import '@fontsource/ibm-plex-sans-arabic/600.css';
-import '@fontsource/ibm-plex-sans-arabic/700.css';
+// Self-hosted fonts (no Google Fonts at runtime): Noto Sans Arabic for all UI text and titles
+// (owner, 2026-10-05: an easier font to read; the PDF report keeps its own faces).
+import '@fontsource/noto-sans-arabic/400.css';
+import '@fontsource/noto-sans-arabic/500.css';
+import '@fontsource/noto-sans-arabic/600.css';
+import '@fontsource/noto-sans-arabic/700.css';
 import './index.css';
 import { t } from './lib/i18n';
 import { locale } from './lib/locale';
