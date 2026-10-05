@@ -63,9 +63,11 @@ describe('InternalMeetingsService', () => {
     expect(mq.end).not.toHaveBeenCalled();
   });
 
-  it('newLink: replaces the hash with a fresh link; 403 for others', async () => {
+  it('newLink: replaces the hash with a fresh link; 403 for others, 410 once ended', async () => {
     const r = await service().newLink({ user: ADMIN, id: MEETING_ID });
     expect(mq.rotate).toHaveBeenCalledWith(MEETING_ID, hashMeetingToken(tokenOf(r.url)));
     expect((await fail(service().newLink({ user: OTHER_TEACHER, id: MEETING_ID }))).getStatus()).toBe(403);
+    mq.byId.mockResolvedValueOnce(meetingRow({ ends_at: '2026-10-05T09:30:00Z' }));
+    expect((await fail(service().newLink({ user: ADMIN, id: MEETING_ID }, NOW))).getResponse()).toMatchObject({ code: 'meeting_ended' });
   });
 });

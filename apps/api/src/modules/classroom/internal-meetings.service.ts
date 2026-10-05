@@ -4,6 +4,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { parseOrThrow } from '../teachers/http';
 import { CLASSROOM_WEB_ORIGIN } from './classroom.config';
+import { meetingEnded } from './internal-meetings.join.service';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { canManageMeeting, hashMeetingToken, newMeetingToken } from './internal-meetings.token';
 import { LivekitApi } from './livekit-api';
@@ -55,9 +56,10 @@ export class InternalMeetingsService {
       .catch((e: unknown) => this.log.warn(`delete room ${room}: ${String(e)}`));
   }
 
-  /** «رابط جديد»: a fresh link replaces the old one (only the hash is stored, so the URL cannot be shown again). */
-  async newLink(input: { user: AuthUser; id: string }): Promise<MeetingCreated> {
-    await this.managed(input);
+  /** «رابط جديد»: a fresh link replaces the old one (only the hash is stored, so the URL cannot be shown again). 410 once ended. */
+  async newLink(input: { user: AuthUser; id: string }, now = new Date()): Promise<MeetingCreated> {
+    const row = await this.managed(input);
+    if (meetingState(row, now) === 'ended') throw meetingEnded();
     const token = newMeetingToken();
     await this.queries.rotate(input.id, hashMeetingToken(token));
     return { id: input.id, url: this.urlOf(token) };
