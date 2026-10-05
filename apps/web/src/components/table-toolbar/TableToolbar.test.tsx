@@ -68,6 +68,14 @@ describe('TableToolbar', () => {
     expect(liveSummary().textContent).toBe(t.table.noFilters);
   });
 
+  it('exactly one live region while the panel is open: a change inside is announced once', () => {
+    render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />);
+    expect(document.querySelectorAll('[aria-live]')).toHaveLength(1);
+    openFilters();
+    expect(document.querySelectorAll('[aria-live]')).toHaveLength(1);
+    expect(screen.getByRole('dialog').textContent).toContain(t.table.activeCount.replace('{n}', '1')); // the visible footer note
+  });
+
   it('the panel\'s primary button names the rows the filters leave', () => {
     const { rerender } = render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} resultCount={14} onClearAll={vi.fn()} />);
     openFilters();

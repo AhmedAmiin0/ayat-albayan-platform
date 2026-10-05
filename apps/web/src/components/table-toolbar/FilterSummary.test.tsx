@@ -38,6 +38,13 @@ describe('FilterSummary', () => {
     expect(liveSummary().textContent).toBe(t.table.noFilters);
   });
 
+  it('`live={false}` (the panel footer\'s copy) is plain text: no live region, so nothing is announced twice', () => {
+    const { container } = render(<FilterSummary visible live={false} count={2} resultCount={14} />);
+    expect(container.querySelector('[aria-live]')).toBeNull();
+    expect(container.querySelector('[data-filter-summary]')).toBeNull();
+    expect(container.textContent).toBe(filterSummary(2, 14));
+  });
+
   it('visible (the panel footer): small text while a filter is set, hidden from sight when none is', () => {
     const { rerender } = render(<FilterSummary visible count={2} resultCount={14} />);
     expect(liveSummary().className).toContain('text-xs');

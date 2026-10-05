@@ -25,7 +25,9 @@ export function FilterPanel({ onClose, onClearAll, count = 0, resultCount, child
     <Dialog
       title={t.table.filter}
       onClose={onClose}
-      hint={<FilterSummary visible count={count} resultCount={resultCount} />}
+      // A visible note only while a filter is set (an empty hint collapses on phones); the toolbar's own
+      // summary stays the one live region, so changes made in here are announced once.
+      hint={count > 0 ? <FilterSummary visible live={false} count={count} resultCount={resultCount} /> : undefined}
       actions={
         <>
           {onClearAll && (

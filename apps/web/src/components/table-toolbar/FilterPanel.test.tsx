@@ -1,7 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { liveSummary } from '@/test/open-filters';
 import { FilterPanel } from './FilterPanel';
 
 describe('FilterPanel', () => {
@@ -30,12 +29,20 @@ describe('FilterPanel', () => {
     expect(onClose).toHaveBeenCalledOnce();
   });
 
-  it('the footer says how many filters are set and how many rows they leave, politely announced', () => {
+  it('the footer says how many filters are set and how many rows they leave (visible, not a second live region)', () => {
     render(<FilterPanel onClose={vi.fn()} count={2} resultCount={14}>{null}</FilterPanel>);
-    const live = liveSummary();
-    expect(live.textContent).toContain(t.table.activeCount.replace('{n}', '2'));
-    expect(live.textContent).toContain('14');
-    expect(live.className).not.toContain('sr-only');
+    const note = screen.getByText(new RegExp(t.table.activeCount.replace('{n}', '2')));
+    expect(note.textContent).toContain('14');
+    expect(note.className).not.toContain('sr-only');
+    expect(note.getAttribute('aria-live')).toBeNull();
+    expect(document.querySelector('[data-filter-summary]')).toBeNull();
+  });
+
+  it('no filter set: the footer note is absent, so an empty hint collapses on phones', () => {
+    render(<FilterPanel onClose={vi.fn()} count={0} resultCount={14}>{null}</FilterPanel>);
+    const footer = screen.getByRole('dialog').querySelector('[data-dialog-footer]');
+    expect(footer?.firstElementChild?.childElementCount).toBe(0);
+    expect(footer?.firstElementChild?.className).toContain('max-sm:empty:hidden');
   });
 
   it('is the full-screen sheet on phones: a pinned footer bar and the sheet\'s safe-area padding', () => {

@@ -17,6 +17,11 @@ export interface FilterSummaryProps {
   resultCount?: number | undefined;
   /** Shown as small text (the panel's footer); else only announced to screen readers. */
   visible?: boolean;
+  /**
+   * The polite live region. Exactly one per toolbar: the panel's visible copy passes `false`, so a
+   * change made inside the open panel is announced once (by the toolbar's own, still mounted).
+   */
+  live?: boolean;
 }
 
 /**
@@ -24,9 +29,10 @@ export interface FilterSummaryProps {
  * everywhere). Always mounted, so a change from «2 مفعّلة» to none is announced too; it stays
  * screen-reader-only unless `visible` and a filter is set.
  */
-export function FilterSummary({ count, resultCount, visible = false }: FilterSummaryProps) {
+export function FilterSummary({ count, resultCount, visible = false, live = true }: FilterSummaryProps) {
+  const liveProps = live ? ({ 'data-filter-summary': '', 'aria-live': 'polite', 'aria-atomic': true } as const) : {};
   return (
-    <p data-filter-summary aria-live="polite" aria-atomic="true" className={cn(visible && count > 0 ? 'text-xs text-ink-3 tabular-nums' : 'sr-only')}>
+    <p {...liveProps} className={cn(visible && count > 0 ? 'text-xs text-ink-3 tabular-nums' : 'sr-only')}>
       {filterSummary(count, resultCount)}
     </p>
   );
