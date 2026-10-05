@@ -38,6 +38,10 @@ const PATHS = {
   'arrow-up': 'M10 15.5v-11M5.5 9 10 4.5 14.5 9',
   'arrow-down': 'M10 4.5v11M5.5 11 10 15.5 14.5 11',
   'arrows-up-down': 'M7 15.5v-11M4 7.5l3-3 3 3M13 4.5v11M10 12.5l3 3 3-3',
+  // The chat composer (phones): send (drawn for LTR), the client sheet, the template mode.
+  send: 'M3.5 10 16.5 4l-4 12.5-2.8-5.2L3.5 10ZM9.7 11.3 16.5 4',
+  person: 'M13 6.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0ZM4 16.5c1.1-2.9 3.3-4.3 6-4.3s4.9 1.4 6 4.3',
+  template: 'M5.5 3.5h9v13h-9v-13ZM8 7.5h4M8 10.5h4M8 13.5h2',
   sliders:
     'M3.5 6h8M14.5 6h2M13 4.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM3.5 14h2M8.5 14h8M7 12.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z',
 } as const;
@@ -50,6 +54,7 @@ const MIRROR: Partial<Record<IconName, string>> = {
   'chevron-right': 'ltr:-scale-x-100',
   logout: 'ltr:-scale-x-100',
   reply: 'rtl:-scale-x-100',
+  send: 'rtl:-scale-x-100',
 };
 
 export interface IconProps extends Omit<SVGProps<SVGSVGElement>, 'name'> {

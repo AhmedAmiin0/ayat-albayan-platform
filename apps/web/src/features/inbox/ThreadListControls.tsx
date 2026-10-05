@@ -20,7 +20,7 @@ export function ThreadListControls({ search, onFilter }: ThreadListControlsProps
   const mode = useInboxMode();
   const sorts = mode === 'teacher' ? THREAD_SORTS.filter((s) => s !== 'unread') : THREAD_SORTS;
   return (
-    <div className="flex gap-2">
+    <div className="flex min-w-0 gap-2 max-sm:flex-1 max-sm:gap-1.5">
       <Select
         aria-label={t.inbox.sort.label}
         value={search.sort ?? ''}

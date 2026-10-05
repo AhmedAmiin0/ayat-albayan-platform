@@ -32,7 +32,7 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
 
   return (
     <>
-      <PageHead>
+      <PageHead className="max-sm:mb-3">
         <Cartouche>{mode !== 'admin' ? t.nav.conversations : t.inbox.title}</Cartouche>
         {threads.data && (
           <span className="text-sm text-ink-3 tabular-nums">

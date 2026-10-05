@@ -74,7 +74,10 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
       <article
         className={cn(
           'max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
-          outbound ? 'bg-sunk' : 'border border-rule bg-raised',
+          // Phones (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
+          outbound
+            ? 'bg-sunk max-sm:rounded-ee-sm max-sm:border max-sm:border-lapis/25 max-sm:bg-lapis-wash'
+            : 'border border-rule bg-raised max-sm:rounded-es-sm',
           m.status === 'failed' && 'shadow-[inset_0_0_0_1px_var(--color-act)]',
         )}
       >

@@ -5,7 +5,9 @@ import { Logo } from '@/components/ui/mark';
 import { RunningHead } from '@/components/ui/running-head';
 import { meQuery } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { Crumbs } from './Crumbs';
+import { INBOX_PAGE, isInboxPath } from './inbox-route';
 import { PageFrame, PhoneTheme } from './PageFrame';
 import { SideFoot } from './SideFoot';
 
@@ -22,6 +24,7 @@ export function AdminLayout({ nav, children }: { nav: ReactNode; children: React
     // Compact top row (<900px): keep the current section in view, clear of the fade.
     aside.current?.querySelector('nav [aria-current="page"]')?.scrollIntoView?.({ block: 'nearest', inline: 'nearest' });
   }, [pathname, nav]); // nav changes when its counts arrive (they shift the items)
+  const inbox = isInboxPath(pathname);
   return (
     <div className="flex h-dvh flex-col overflow-hidden shell:grid shell:grid-cols-[236px_minmax(0,1fr)]">
       {/* `relative`: absolutely positioned sr-only text in a long sidebar stays inside its scroll clip. */}
@@ -39,7 +42,9 @@ export function AdminLayout({ nav, children }: { nav: ReactNode; children: React
         <div className="shrink-0">
           <RunningHead crumbs={<Crumbs />} />
         </div>
-        <PageFrame footer={<PhoneTheme className="shell:hidden" />}>{children}</PageFrame>
+        <PageFrame pageClassName={inbox ? INBOX_PAGE : undefined} footer={<PhoneTheme className={cn('shell:hidden', inbox && 'max-sm:hidden')} />}>
+          {children}
+        </PageFrame>
       </div>
     </div>
   );

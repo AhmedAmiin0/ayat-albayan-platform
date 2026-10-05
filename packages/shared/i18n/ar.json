@@ -1551,6 +1551,9 @@
     }
   },
   "inbox": {
+    "dayToday": "اليوم",
+    "dayYesterday": "أمس",
+    "noticeMore": "عرض التنبيه كاملًا",
     "title": "الرسائل",
     "searchPlaceholder": "ابحث بالاسم أو الرقم",
     "filterAll": "الكل",
