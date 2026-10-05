@@ -3,21 +3,38 @@ import { APP_GUARD } from '@nestjs/core';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { loadEnv } from '../../env';
 import { AuthGuard, TOKEN_VERIFIER } from './auth.guard';
+import type { MeView } from '@ab/shared';
 import { CurrentUser } from './decorators';
+import { PermissionResolver } from './permission-resolver';
+import { PermissionsModule } from './permissions.module';
 import { createTokenVerifier, type AuthUser } from './verify-token';
 
 @ApiTags('auth')
 @ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
-  /** Who am I — used by web/mobile after login to route by role. */
+  constructor(private readonly permissions: PermissionResolver) {}
+
+  /**
+   * Who am I: used by web/mobile after login to route by role. `role` is the base role (the JWT
+   * claim); `permissions` is resolved now, so a role change shows up on the next call.
+   */
   @Get('me')
-  me(@CurrentUser() user: AuthUser): AuthUser {
-    return user;
+  async me(@CurrentUser() user: AuthUser): Promise<MeView> {
+    const access = await this.permissions.resolve(user.id);
+    return {
+      ...user,
+      fullName: access.fullName,
+      locale: access.locale,
+      tz: access.tz,
+      roleKey: access.roleKey,
+      permissions: [...access.permissions].sort(),
+    };
   }
 }
 
 @Module({
+  imports: [PermissionsModule],
   controllers: [AuthController],
   providers: [
     {

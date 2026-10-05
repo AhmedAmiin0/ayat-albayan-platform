@@ -931,6 +931,206 @@
     "America/Los_Angeles": "Los Angeles",
     "America/Toronto": "Toronto"
   },
+  "roles": {
+    "title": "Roles and permissions",
+    "intro": "Create custom roles and choose what each role may do. Changes apply immediately.",
+    "newRole": "New role",
+    "list": {
+      "name": "Role",
+      "base": "Base role",
+      "type": "Type",
+      "users": "Users",
+      "actions": "Actions"
+    },
+    "type": {
+      "system": "System",
+      "custom": "Custom"
+    },
+    "base": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "guardian": "Guardian",
+      "assistant": "Assistant",
+      "sales": "Sales"
+    },
+    "action": {
+      "duplicate": "Duplicate",
+      "create": "Create role",
+      "confirmDelete": "Yes, delete the role",
+      "editRole": "Edit the role {name}",
+      "duplicateRole": "Duplicate the role {name}",
+      "deleteRole": "Delete the role {name}"
+    },
+    "form": {
+      "nameAr": "Arabic name",
+      "nameEn": "English name",
+      "key": "Key",
+      "keyHint": "Lowercase letters, digits and underscores. It cannot change after creation.",
+      "baseRole": "Base role",
+      "baseHint": "It decides which section the user enters and the data access rules."
+    },
+    "matrix": {
+      "heading": "Permissions",
+      "module": "Module",
+      "view": "View",
+      "manage": "Manage",
+      "selectAll": "Select all permissions",
+      "selectModule": "Select the {module} permissions",
+      "selectColumn": "Select the {column} column",
+      "selected": "{count} of {total} permissions",
+      "manageImpliesView": "Manage includes view.",
+      "wildcard": "All permissions",
+      "wildcardHint": "This role holds every current and future permission; it cannot be edited."
+    },
+    "module": {
+      "leads": "Leads",
+      "inbox": "Inbox",
+      "job_applicants": "Job applicants",
+      "students": "Students",
+      "teachers": "Teachers",
+      "schedule": "Schedule and lessons",
+      "classrooms": "Live classrooms",
+      "feedback": "Parent feedback",
+      "subscriptions": "Packages and subscriptions",
+      "payments": "Payments",
+      "payouts": "Teacher payouts",
+      "expenses": "Expenses",
+      "invoices": "Invoices",
+      "receivables": "Receivables",
+      "finance": "Financial reports",
+      "pricing": "Pricing",
+      "settings": "Settings",
+      "dashboard": "Dashboard",
+      "activity": "Activity log",
+      "users": "Users",
+      "roles": "Roles and permissions",
+      "translations": "Translations",
+      "recordings": "Recordings"
+    },
+    "perm": {
+      "leads": {
+        "view": "View: Leads",
+        "manage": "Manage: Leads"
+      },
+      "inbox": {
+        "view": "View: Inbox",
+        "manage": "Manage: Inbox"
+      },
+      "job_applicants": {
+        "view": "View: Job applicants",
+        "manage": "Manage: Job applicants"
+      },
+      "students": {
+        "view": "View: Students",
+        "manage": "Manage: Students"
+      },
+      "teachers": {
+        "view": "View: Teachers",
+        "manage": "Manage: Teachers"
+      },
+      "schedule": {
+        "view": "View: Schedule and lessons",
+        "manage": "Manage: Schedule and lessons"
+      },
+      "classrooms": {
+        "view": "View: Live classrooms",
+        "manage": "Manage: Live classrooms"
+      },
+      "feedback": {
+        "view": "View: Parent feedback",
+        "manage": "Manage: Parent feedback"
+      },
+      "subscriptions": {
+        "view": "View: Packages and subscriptions",
+        "manage": "Manage: Packages and subscriptions"
+      },
+      "payments": {
+        "view": "View: Payments",
+        "manage": "Manage: Payments"
+      },
+      "payouts": {
+        "view": "View: Teacher payouts",
+        "manage": "Manage: Teacher payouts"
+      },
+      "expenses": {
+        "view": "View: Expenses",
+        "manage": "Manage: Expenses"
+      },
+      "invoices": {
+        "view": "View: Invoices",
+        "manage": "Manage: Invoices"
+      },
+      "receivables": {
+        "view": "View: Receivables",
+        "manage": "Manage: Receivables"
+      },
+      "finance": {
+        "view": "View: Financial reports",
+        "manage": "Manage: Financial reports"
+      },
+      "pricing": {
+        "view": "View: Pricing",
+        "manage": "Manage: Pricing"
+      },
+      "settings": {
+        "view": "View: Settings",
+        "manage": "Manage: Settings"
+      },
+      "dashboard": {
+        "view": "View: Dashboard",
+        "manage": "Manage: Dashboard"
+      },
+      "activity": {
+        "view": "View: Activity log",
+        "manage": "Manage: Activity log"
+      },
+      "users": {
+        "view": "View: Users",
+        "manage": "Manage: Users"
+      },
+      "roles": {
+        "view": "View: Roles and permissions",
+        "manage": "Manage: Roles and permissions"
+      },
+      "translations": {
+        "view": "View: Translations",
+        "manage": "Manage: Translations"
+      },
+      "recordings": {
+        "view": "View: Recordings",
+        "manage": "Manage: Recordings"
+      }
+    },
+    "notes": {
+      "ceiling": "Fine-grained permissions are enforced in the app and its API; the database relies on the base role.",
+      "systemLocked": "System roles cannot change their key or base role, or be deleted."
+    },
+    "delete": {
+      "title": "Delete the role?",
+      "body": "The role \"{name}\" will be deleted permanently.",
+      "blocked": "This role cannot be deleted because {count} users still hold it. Move them to another role first."
+    },
+    "copyName": "{name} (copy)",
+    "state": {
+      "loading": "Loading roles…",
+      "empty": "There are no roles yet.",
+      "error": "The roles could not be loaded."
+    },
+    "toast": {
+      "created": "The role was created.",
+      "saved": "The role was saved.",
+      "deleted": "The role was deleted.",
+      "duplicated": "The role was duplicated."
+    },
+    "error": {
+      "duplicate": "This key is already in use.",
+      "systemImmutable": "This part of a system role cannot be changed.",
+      "adminWildcard": "The admin role always keeps every permission.",
+      "hasUsers": "The base role of a role that has users cannot change.",
+      "validation": "Check the fields and try again.",
+      "generic": "The action failed. Try again."
+    }
+  },
   "pricing": {
     "title": "Price calculator",
     "kicker": "For staff",

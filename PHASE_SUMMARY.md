@@ -1671,3 +1671,13 @@ Owner: "payments, teacher payments and expenses need to be re-managed". Contract
 - **Verified:** `pnpm turbo lint typecheck test` green; SQL specs (pay-rule, teacher-corrections, teacher-earnings, teacher-payments, RLS) and desktop e2e (payouts, payments-receipt, subscriptions, journey-2/3, expenses, exports, dashboard, settings, booking-makeup-invoice, lead-to-subscription, student-profile, teachers-admin, teacher-mode, edit-session-time, new teacher-earnings-ui and finance-money) green on the local stack.
 - **Shared-DB note:** `e2e/support/db.ts` now keeps `expense_categories` on reset; a branch without this change truncates it and then cannot insert expenses (FK) until the 9 seed rows are put back.
 - **Not done / left:** mobile shows voided teacher payments without the struck-through style; no mobile screens for refunds or other currencies (the API accepts the old body unchanged).
+
+## Dynamic roles and permissions (cloud branch `cloud/roles-permissions`, 2026-10-05)
+
+Owner request: admins create custom roles, pick permissions, assign them later. Design and contract: docs/04 §11. Built in a cloud run with no database: **not verified end to end** (see the PR).
+
+- **DB (migrations `20261005000220`–`224`):** `roles`, `role_permissions` (+ guard triggers: system roles immutable, admin keeps `*`, no re-basing a role that has users), seed of the 5 system roles, `profiles.role_id` + `profiles_sync_role` trigger (role ⇄ role_id stay consistent; old writers that set only `role` keep working; backfill), RLS (admin write, own role readable), `v_role_user_counts`. RLS stays base-role based; permissions are enforced in the API and UI. `types.ts` hand-edited.
+- **Shared:** `permissions/` catalogue (23 modules × view/manage + `*`), `can()`, `ROUTE_PERMISSIONS` + matcher, role zod schemas, `roles` i18n namespace (ar + en).
+- **API:** `PermissionResolver` (30 s cache, cleared on role change), `AuthGuard` enforces the map for admin-base callers on every route that admits admins (unmapped = denied to non-wildcard), `@RequirePermission`, `GET /auth/me` extended, `modules/roles` CRUD + duplicate + audit. A scanner test fails when a new admin route has no rule. HTTP tests get a wildcard resolver from `src/test/permissions.setup.ts`.
+- **Web:** `/admin/roles` (list, editor with the permission matrix, duplicate, delete), `usePermissions()`, `<Can>`. No nav entry (another task). **Mobile:** `Me` type widened, the gate still reads only the base role.
+- **Not done / later:** assigning a role to a user, nav filtering, SideFoot name+role, `users` and `translations` routes (the wildcard admin still passes the `/translations` and `/i18n` routes of `cloud/dynamic-translations`; a custom role is denied them until they get a rule).

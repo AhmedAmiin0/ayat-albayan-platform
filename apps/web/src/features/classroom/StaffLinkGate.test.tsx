@@ -7,7 +7,9 @@ import { StaffLinkGate } from './StaffLinkGate';
 
 vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: vi.fn() } } }));
 
-const me = (role: Me['role']): Me => ({ id: 'u1', email: null, role });
+const me = (role: Me['role']): Me => ({
+  id: 'u1', email: null, role, fullName: null, locale: null, tz: null, roleKey: role, permissions: [],
+});
 
 function gate(opts: { who: () => Promise<Me | null>; resolve: () => Promise<string> }) {
   const go = vi.fn();

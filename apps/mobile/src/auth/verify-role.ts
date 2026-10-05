@@ -3,8 +3,14 @@ import { ApiError, apiFetch } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 import { appRole, roleClaim, type AppRole } from './role-claim';
 
+/** GET /auth/me: only `role` (the BASE role) gates the app; the rest is read by screens that need it. */
 export interface Me {
   role: string | null;
+  fullName?: string | null;
+  locale?: string | null;
+  tz?: string | null;
+  roleKey?: string | null;
+  permissions?: string[];
 }
 
 /**

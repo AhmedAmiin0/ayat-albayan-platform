@@ -31,6 +31,7 @@ import { PricingModule } from './modules/pricing/pricing.module';
 import { ReceivablesModule } from './modules/receivables/receivables.module';
 import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reports/reports.module';
+import { RolesModule } from './modules/roles/roles.module';
 import { SalesModule } from './modules/sales/sales.module';
 import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentsModule } from './modules/students/students.module';
@@ -81,6 +82,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     ClassroomModule,
     MessagingJobsModule,
     WebhookModule,
+    RolesModule,
   ],
   controllers: [HealthController],
 })

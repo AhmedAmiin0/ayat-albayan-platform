@@ -64,7 +64,8 @@ describe('AuthGuard + routes (R-AUTH-01, R-NFR-07)', () => {
   it('GET /auth/me returns the verified user', async () => {
     const res = await get('/auth/me', 'admin-token');
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual(USERS['admin-token']);
+    expect(res.json()).toMatchObject(USERS['admin-token'] ?? {});
+    expect(res.json()).toHaveProperty('permissions', ['*']);
   });
 
   it('@Roles blocks other roles with 403 and admits the role', async () => {

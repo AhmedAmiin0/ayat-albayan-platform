@@ -4,10 +4,16 @@ import { redirect } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 
+/** GET /auth/me. `role` is the BASE role (app section, RLS); `permissions` is resolved by the API per request. */
 export interface Me {
   id: string;
   email: string | null;
   role: UserRole | null;
+  fullName: string | null;
+  locale: string | null;
+  tz: string | null;
+  roleKey: string | null;
+  permissions: string[];
 }
 
 /** Current user as seen by the API (verified JWT), or null when signed out. */

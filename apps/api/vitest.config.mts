@@ -6,6 +6,7 @@ export default defineConfig({
   plugins: [swc.vite({ module: { type: 'es6' } })],
   test: {
     include: ['src/**/*.test.ts'],
+    setupFiles: ['src/test/permissions.setup.ts'],
     // Dummy values so AppModule boots in tests; createClient makes no network call on construction.
     env: {
       SUPABASE_URL: 'http://127.0.0.1:54321',
