@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { AdminNav } from '../AdminNav';
 import { MenuBar } from './MenuBar';
 
 const path = vi.hoisted(() => ({ current: '/admin/students' }));
@@ -49,5 +50,16 @@ describe('MenuBar — the compact bar under 900px', () => {
     fireEvent.click(screen.getByRole('button', { name: t.nav.menu }));
     fireEvent.click(screen.getByRole('link', { name: t.nav.teachers }));
     expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('the sheet renders the same permission-filtered nav as the sidebar (dynamic roles)', () => {
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <MenuBar home="/admin" title={t.payments.title} nav={<AdminNav can={(p) => p === 'payments.read'} />} />
+      </QueryClientProvider>,
+    );
+    fireEvent.click(screen.getByRole('button', { name: t.nav.menu }));
+    const nav = within(screen.getByRole('dialog', { name: t.nav.menu })).getByRole('navigation', { name: t.nav.label });
+    expect(within(nav).getAllByRole('link').map((a) => a.textContent)).toEqual([t.payments.title]);
   });
 });

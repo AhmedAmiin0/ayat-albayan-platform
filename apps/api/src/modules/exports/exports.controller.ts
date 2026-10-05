@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { parseOrThrow } from '../teachers/http';
 import { Controller, Get, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { parseRange } from '../dashboard/range';
 import { badRequest } from '../scheduling/errors';
 import { attachment } from './csv';
@@ -31,7 +31,7 @@ const paymentFilter = z.object({
 /** CSV exports (R-RPT-03, R-TCH-04). Admin only. `/payouts/:month.csv` can't be routed in Fastify. */
 @ApiTags('exports')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('exports.read')
 @Controller('exports')
 export class ExportsController {
   constructor(private readonly exports: ExportsService) {}

@@ -7,7 +7,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Delete, Get, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { ReportFilesService } from './report-files.service';
@@ -18,7 +18,7 @@ import { ReportFilesService } from './report-files.service';
  */
 @ApiTags('reports')
 @ApiBearerAuth()
-@Roles('admin', 'teacher')
+@Permissions('reports.write')
 @Controller('reports/:id/attachments')
 export class ReportAttachmentsController {
   constructor(private readonly files: ReportFilesService) {}
@@ -57,6 +57,7 @@ export class ReportAttachmentsController {
 
   /** R10: 1 h signed download URL. */
   @Get(':attachmentId/url')
+  @Permissions('reports.read')
   url(
     @Param('id', ParseUUIDPipe) id: string,
     @Param('attachmentId', ParseUUIDPipe) attachmentId: string,

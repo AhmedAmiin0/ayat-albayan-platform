@@ -31,6 +31,7 @@ import { Route as AdminPaymentsRouteImport } from './routes/admin/payments'
 import { Route as AdminPayoutsRouteImport } from './routes/admin/payouts'
 import { Route as AdminPricingRouteImport } from './routes/admin/pricing'
 import { Route as AdminReceivablesRouteImport } from './routes/admin/receivables'
+import { Route as AdminRolesRouteImport } from './routes/admin/roles'
 import { Route as AdminScheduleRouteImport } from './routes/admin/schedule'
 import { Route as AdminSettingsRouteImport } from './routes/admin/settings'
 import { Route as AdminStudentsRouteImport } from './routes/admin/students'
@@ -172,6 +173,11 @@ const AdminPricingRoute = AdminPricingRouteImport.update({
 const AdminReceivablesRoute = AdminReceivablesRouteImport.update({
   id: '/receivables',
   path: '/receivables',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminRolesRoute = AdminRolesRouteImport.update({
+  id: '/roles',
+  path: '/roles',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminScheduleRoute = AdminScheduleRouteImport.update({
@@ -360,6 +366,7 @@ export interface FileRoutesByFullPath {
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/receivables': typeof AdminReceivablesRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
@@ -412,6 +419,7 @@ export interface FileRoutesByTo {
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/receivables': typeof AdminReceivablesRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
@@ -469,6 +477,7 @@ export interface FileRoutesById {
   '/admin/payouts': typeof AdminPayoutsRoute
   '/admin/pricing': typeof AdminPricingRoute
   '/admin/receivables': typeof AdminReceivablesRoute
+  '/admin/roles': typeof AdminRolesRoute
   '/admin/schedule': typeof AdminScheduleRoute
   '/admin/settings': typeof AdminSettingsRoute
   '/admin/students': typeof AdminStudentsRouteWithChildren
@@ -527,6 +536,7 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/receivables'
+    | '/admin/roles'
     | '/admin/schedule'
     | '/admin/settings'
     | '/admin/students'
@@ -579,6 +589,7 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/receivables'
+    | '/admin/roles'
     | '/admin/schedule'
     | '/admin/settings'
     | '/admin/students'
@@ -635,6 +646,7 @@ export interface FileRouteTypes {
     | '/admin/payouts'
     | '/admin/pricing'
     | '/admin/receivables'
+    | '/admin/roles'
     | '/admin/schedule'
     | '/admin/settings'
     | '/admin/students'
@@ -840,6 +852,13 @@ declare module '@tanstack/react-router' {
       path: '/receivables'
       fullPath: '/admin/receivables'
       preLoaderRoute: typeof AdminReceivablesRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/roles': {
+      id: '/admin/roles'
+      path: '/roles'
+      fullPath: '/admin/roles'
+      preLoaderRoute: typeof AdminRolesRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/schedule': {
@@ -1128,6 +1147,7 @@ interface AdminRouteChildren {
   AdminPayoutsRoute: typeof AdminPayoutsRoute
   AdminPricingRoute: typeof AdminPricingRoute
   AdminReceivablesRoute: typeof AdminReceivablesRoute
+  AdminRolesRoute: typeof AdminRolesRoute
   AdminScheduleRoute: typeof AdminScheduleRoute
   AdminSettingsRoute: typeof AdminSettingsRoute
   AdminStudentsRoute: typeof AdminStudentsRouteWithChildren
@@ -1152,6 +1172,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminPayoutsRoute: AdminPayoutsRoute,
   AdminPricingRoute: AdminPricingRoute,
   AdminReceivablesRoute: AdminReceivablesRoute,
+  AdminRolesRoute: AdminRolesRoute,
   AdminScheduleRoute: AdminScheduleRoute,
   AdminSettingsRoute: AdminSettingsRoute,
   AdminStudentsRoute: AdminStudentsRouteWithChildren,

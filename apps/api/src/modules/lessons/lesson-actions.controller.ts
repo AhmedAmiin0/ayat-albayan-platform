@@ -1,7 +1,7 @@
 import { cancelRequestSchema, lessonStatusRequestSchema, type LessonView } from '@ab/shared';
 import { Body, Controller, HttpCode, Param, ParseUUIDPipe, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { LessonCancelService } from './lesson-cancel.service';
@@ -14,6 +14,7 @@ import { LessonViews } from './lesson-views';
  */
 @ApiTags('lessons')
 @ApiBearerAuth()
+@Permissions('lessons.status')
 @Controller('lessons')
 export class LessonActionsController {
   constructor(
@@ -23,14 +24,12 @@ export class LessonActionsController {
   ) {}
 
   @Post(':id/confirm')
-  @Roles('admin', 'teacher')
   @HttpCode(200)
   async confirm(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<LessonView> {
     return this.views.one(await this.status.confirm({ lessonId: id, actor: user }), user.role);
   }
 
   @Post(':id/status')
-  @Roles('admin', 'teacher')
   @HttpCode(200)
   async changeStatus(
     @Param('id', ParseUUIDPipe) id: string,
@@ -43,8 +42,8 @@ export class LessonActionsController {
 
   /** Every lesson cancelled (one, or this and the rest of its rule). */
   @Post(':id/cancel')
-  @Roles('admin')
   @HttpCode(200)
+  @Permissions('lessons.write')
   async cancel(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,

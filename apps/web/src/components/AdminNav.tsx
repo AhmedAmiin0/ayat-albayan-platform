@@ -1,10 +1,11 @@
+import type { Permission } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { ADMIN_NAV_GROUPS, MONEY_GROUP, type NavKey } from './admin-nav-items';
+import { MONEY_GROUP, visibleGroups, type NavKey } from './admin-nav-items';
 
-export type { NavKey } from './admin-nav-items';
+export { visibleGroups, type NavKey } from './admin-nav-items';
 
 // One vertical list: in the «القائمة» sheet (< 900px) on the card, ≥ 900px the fihris on the mint
 // (dark: green-grey) sidebar in cover ink. The current item is a white tile with an emerald marker
@@ -21,19 +22,21 @@ export type NavCount = { text: string; act?: boolean };
 export interface AdminNavProps {
   /** Counts only where real data exists; a missing key renders no count. */
   counts?: Partial<Record<NavKey, NavCount>>;
+  /** Dynamic roles: an item shows only when the user holds its permission (default: all shown). */
+  can?: (permission: Permission) => boolean;
 }
 
 /** The admin nav: section lists with dot leaders + counts (sidebar) or end-aligned counts (sheet). */
-export function AdminNav({ counts = {} }: AdminNavProps) {
+export function AdminNav({ counts = {}, can = () => true }: AdminNavProps) {
   return (
     <nav aria-label={t.nav.label} className="flex flex-col gap-3 shell:gap-3.5">
-      {ADMIN_NAV_GROUPS.map((group) => (
+      {visibleGroups(can).map((group) => (
         <ul
-          key={group[0].key}
-          aria-label={group[0].key === MONEY_GROUP ? t.finance.nav : undefined}
+          key={group[0]?.key}
+          aria-label={group[0]?.key === MONEY_GROUP ? t.finance.nav : undefined}
           className="flex flex-col gap-0.5 border-t border-rule pt-3 first:border-0 first:pt-0 shell:border-0 shell:pt-0"
         >
-          {group[0].key === MONEY_GROUP && (
+          {group[0]?.key === MONEY_GROUP && (
             <li aria-hidden="true" className="px-2.5 pt-1 text-2xs font-semibold text-ink-3 shell:text-cover-ink shell:opacity-70">
               {t.finance.nav}
             </li>

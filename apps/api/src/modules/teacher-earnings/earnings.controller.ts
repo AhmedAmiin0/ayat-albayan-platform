@@ -15,7 +15,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, type Page } from '../teachers/http';
 import { CorrectionsQueries } from './corrections.queries';
@@ -26,7 +26,7 @@ import { toSummaryView } from './earnings.summary';
 /** Admin: a teacher's balance, sessions and payments; record a payment (docs/11 §10). */
 @ApiTags('teacher-earnings')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('earnings.read')
 @Controller('teacher-earnings')
 export class TeacherEarningsController {
   constructor(
@@ -44,6 +44,7 @@ export class TeacherEarningsController {
   /** Static segment, declared before `:teacherId`. After a rate or a payout_count_* setting changes. */
   @Post('resync')
   @HttpCode(200)
+  @Permissions('earnings.write')
   async resync(@Body() body: unknown): Promise<{ lessons: number }> {
     const { teacherId } = parseOrThrow(teacherResyncSchema, body ?? {});
     return { lessons: await this.earnings.resync(teacherId) };
@@ -52,6 +53,7 @@ export class TeacherEarningsController {
   /** A wrong transfer is voided with a reason (never deleted); its sessions are owed again. */
   @Post('payments/:id/void')
   @HttpCode(200)
+  @Permissions('earnings.write')
   async void(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const { reason } = parseOrThrow(voidReasonSchema, body ?? {});
     await this.corrections.voidPayment({ paymentId: id, actorId: user.id, reason });
@@ -80,6 +82,7 @@ export class TeacherEarningsController {
 
   @Post(':teacherId/payments')
   @HttpCode(200)
+  @Permissions('earnings.write')
   record(
     @Param('teacherId', ParseUUIDPipe) teacherId: string,
     @Body() body: unknown,
@@ -90,6 +93,7 @@ export class TeacherEarningsController {
 
   @Post(':teacherId/receipt-upload-url')
   @HttpCode(200)
+  @Permissions('earnings.write')
   receiptUploadUrl(@Param('teacherId', ParseUUIDPipe) teacherId: string, @Body() body: unknown): Promise<SignedUpload> {
     return this.receipts.uploadUrl(teacherId, parseOrThrow(teacherReceiptUploadSchema, body));
   }

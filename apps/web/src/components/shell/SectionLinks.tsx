@@ -1,3 +1,4 @@
+import type { Permission } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { Icon, type IconName } from '@/components/ui/icon';
 import { cn } from '@/lib/utils';
@@ -8,17 +9,26 @@ export interface SectionLink {
   icon: IconName;
   /** Active only on this exact path (a section home such as /teacher). */
   exact?: boolean;
+  /** Dynamic roles: the permission that opens the page. */
+  permission: Permission;
+}
+
+export interface SectionLinksProps {
+  label: string;
+  items: readonly SectionLink[];
+  /** Shows only the items whose permission the user holds (default: all). */
+  can?: (permission: Permission) => boolean;
 }
 
 /**
  * A role's own pages (teacher, sales) as ONE list: a vertical list of 44px rows in the «القائمة»
  * sheet (< 900px), a row of links under the logo from 900px (docs/07 §7).
  */
-export function SectionLinks({ label, items }: { label: string; items: readonly SectionLink[] }) {
+export function SectionLinks({ label, items, can = () => true }: SectionLinksProps) {
   return (
     <nav aria-label={label}>
       <ul className="flex flex-col gap-0.5 shell:flex-row shell:flex-wrap shell:gap-1">
-        {items.map((item) => (
+        {items.filter((item) => can(item.permission)).map((item) => (
           <li key={item.to} className="min-w-0">
             <Link
               to={item.to}

@@ -13,7 +13,7 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../../common/auth/decorators';
 import type { AuthUser } from '../../../common/auth/verify-token';
 import { orNotFound, parseOrThrow } from '../http';
 import { OwnTeacherGuard } from '../own-teacher.guard';
@@ -24,13 +24,14 @@ const uuid = new ParseUUIDPipe();
 /** Weekly grid + time-off (R-TCH-02). Admin for anyone; a teacher only for their own row. */
 @ApiTags('teachers')
 @ApiBearerAuth()
-@Roles('admin', 'teacher')
 @UseGuards(OwnTeacherGuard)
+@Permissions('availability.write')
 @Controller('teachers/:id')
 export class AvailabilityController {
   constructor(private readonly availability: AvailabilityQueries) {}
 
   @Get('availability')
+  @Permissions('availability.read')
   grid(@Param('id', uuid) id: string): Promise<AvailabilityRow[]> {
     return this.availability.listSlots(id);
   }
@@ -47,6 +48,7 @@ export class AvailabilityController {
   }
 
   @Get('time-off')
+  @Permissions('availability.read')
   timeOff(@Param('id', uuid) id: string): Promise<TimeOff[]> {
     return this.availability.listTimeOff(id);
   }

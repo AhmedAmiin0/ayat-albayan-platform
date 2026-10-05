@@ -2,7 +2,7 @@ import type { InvoiceView, SignedDownload } from '@ab/shared';
 import { Controller, Get, Param, ParseUUIDPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { Roles } from '../../common/auth/decorators';
+import { Permissions } from '../../common/auth/decorators';
 import { SettingsService } from '../../common/settings/settings.service';
 import { parseOrThrow } from '../teachers/http';
 import { invoiceRecentQuery, recentFilter } from './invoices.dto';
@@ -15,7 +15,7 @@ const listQuery = z
 /** Invoices of bookings (R-PAY-03). Admin only: a teacher never sees a payment proof (rule 9). */
 @ApiTags('invoices')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('invoices.read')
 @Controller('invoices')
 export class InvoicesController {
   constructor(

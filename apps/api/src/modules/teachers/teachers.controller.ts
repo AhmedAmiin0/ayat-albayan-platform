@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from './http';
 import { TeachersQueries, type Teacher } from './teachers.queries';
@@ -25,17 +25,19 @@ const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).op
 /** Admin-only teacher CRUD (R-TCH-01). */
 @ApiTags('teachers')
 @ApiBearerAuth()
-@Roles('admin')
+@Permissions('teachers.write')
 @Controller('teachers')
 export class TeachersController {
   constructor(private readonly teachers: TeachersQueries) {}
 
   @Get()
+  @Permissions('teachers.read')
   list(@Query() query: unknown): Promise<Page<Teacher>> {
     return this.teachers.list(parseOrThrow(listQuery, query));
   }
 
   @Get(':id')
+  @Permissions('teachers.read')
   async get(@Param('id', ParseUUIDPipe) id: string): Promise<Teacher> {
     return orNotFound(await this.teachers.get(id));
   }

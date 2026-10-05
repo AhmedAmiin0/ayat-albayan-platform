@@ -6,7 +6,7 @@ import {
 } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, ParseUUIDPipe, Post, Put } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { CurrentUser, Roles } from '../../common/auth/decorators';
+import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, sentOnly } from '../teachers/http';
 import { ReportFilesService } from './report-files.service';
@@ -19,7 +19,7 @@ import { ReportsService } from './reports.service';
  */
 @ApiTags('reports')
 @ApiBearerAuth()
-@Roles('admin', 'teacher')
+@Permissions('reports.read')
 @Controller('reports')
 export class ReportsController {
   constructor(
@@ -35,6 +35,7 @@ export class ReportsController {
 
   /** R2 autosave: only the fields sent are written; 409 already_submitted after a submit. */
   @Put(':id/draft')
+  @Permissions('reports.write')
   draft(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,
@@ -47,6 +48,7 @@ export class ReportsController {
   /** R3: 400 validation_failed (missing_attendance / missing_grades), 409 version / window / lesson. */
   @Post(':id/submit')
   @HttpCode(200)
+  @Permissions('reports.write')
   submit(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() body: unknown,
@@ -63,8 +65,8 @@ export class ReportsController {
 
   /** R12: failed → pending; 409 pdf_not_failed. */
   @Post(':id/pdf/retry')
-  @Roles('admin')
   @HttpCode(200)
+  @Permissions('reports.resend')
   retry(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<ReportView> {
     return this.submits.retryPdf({ id, user });
   }

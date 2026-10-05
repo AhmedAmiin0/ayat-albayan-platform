@@ -2,7 +2,7 @@ import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fa
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
-import { TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
 import { InvoicesQueries, type InvoiceRowOut } from './invoices.queries';
@@ -42,7 +42,7 @@ describe('invoice routes (R-PAY-03): admin only', () => {
 
   beforeAll(async () => {
     const mod = await Test.createTestingModule({ imports: [AppModule] })
-      .overrideProvider(TOKEN_VERIFIER).useValue(verify)
+      .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InvoicesQueries).useValue(queries)
       .overrideProvider(StorageService).useValue(storage)
       .compile();
