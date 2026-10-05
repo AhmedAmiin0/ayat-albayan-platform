@@ -4,6 +4,7 @@ import { openThread } from '../support/inbox';
 import { freshDigits } from '../support/messages';
 import { withSql } from '../support/schedule';
 import { stubInbound, stubReset } from '../support/wa-stub';
+import { sidePanel } from '../support/thread-panel';
 
 // Lead qualification in the thread (R-LEAD-03, L1) and the funnel's state machine (R-LEAD-01):
 // every «بيانات الطالب» question by its registration-form label lands in leads.qualification, and
@@ -24,7 +25,7 @@ async function moveTo(page: Page, status: keyof typeof ar.enums.leadStatus): Pro
 
 /** «تعديل البيانات» in the aside → the titled dialog holding the full qualification form. */
 async function openEdit(page: Page): Promise<Locator> {
-  const panel = page.getByRole('complementary', { name: ar.inbox.leadPanel });
+  const panel = await sidePanel(page, 'lead');
   await panel.getByRole('button', { name: ar.inbox.editLeadData, exact: true }).click({ timeout: 30_000 });
   const form = page.getByRole('dialog', { name: ar.inbox.editLeadDataTitle });
   await expect(form).toBeVisible();
@@ -44,7 +45,7 @@ test.describe('lead qualification and status (R-LEAD-03, R-LEAD-01)', () => {
     expect((await stubInbound({ from: digits, name, text: 'عايز أسجل ابني' })).status).toBe(200);
     const admin = await asRole('admin');
     await openThread(admin, name);
-    const panel = admin.getByRole('complementary', { name: ar.inbox.leadPanel });
+    const panel = await sidePanel(admin, 'lead');
     // The aside is short: a summary, then «تعديل البيانات» opens every question in a dialog.
     await expect(panel.getByText(ar.inbox.noLeadData, exact)).toBeVisible({ timeout: 30_000 });
     let form = await openEdit(admin);

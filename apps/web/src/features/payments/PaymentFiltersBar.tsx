@@ -1,61 +1,42 @@
-import { PAYMENT_KINDS, PAYMENT_METHODS, type PaymentKind, type PaymentMethod } from '@ab/shared';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
-import { Field } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
-import { StudentPicker, type PickedStudent } from '@/features/subscriptions/StudentPicker';
+import { Dialog } from '@/components/ui/dialog';
+import { Icon } from '@/components/ui/icon';
+import { usePhone } from '@/components/ui/use-narrow';
+import type { PickedStudent } from '@/features/subscriptions/StudentPicker';
 import { t } from '@/lib/i18n';
-import type { PaymentFilters } from './api';
+import { filterParams, type PaymentFilters } from './api';
+import { PaymentFilterFields } from './PaymentFilterFields';
 
 type Props = { value: PaymentFilters; onChange: (next: PaymentFilters) => void };
 
-/** Student (search), date range, method and kind; each change goes back to page 1. */
+/**
+ * The payments filters inline from 640px; on phones (owner, 2026-10-05: no form bars) a
+ * «تصفية المدفوعات» button (with the active count) opens the same fields in a full-screen Dialog.
+ */
 export function PaymentFiltersBar({ value, onChange }: Props) {
+  const phone = usePhone();
+  const [open, setOpen] = useState(false);
   const [student, setStudent] = useState<PickedStudent | null>(null);
-  const set = (patch: Partial<PaymentFilters>) => onChange({ ...value, ...patch });
+  const fields = <PaymentFilterFields value={value} onChange={onChange} student={student} setStudent={setStudent} />;
+  if (!phone) return fields;
+  const active = Object.keys(filterParams(value)).length;
   return (
-    <div className="mb-4 grid gap-3 sm:grid-cols-[minmax(0,2fr)_repeat(4,minmax(0,1fr))] sm:items-end">
-      {student ? (
-        <p className="flex min-h-11 items-center gap-2 text-sm">
-          <span className="font-semibold text-ink">{student.name}</span>
-          <Button type="button" variant="ghost" size="sm" onClick={() => (setStudent(null), set({ studentId: undefined }))}>
-            {t.finance.allStudents}
-          </Button>
-        </p>
-      ) : (
-        <StudentPicker onPick={(s) => (setStudent(s), set({ studentId: s.id }))} />
+    <div className="mb-4">
+      <Button variant="secondary" aria-haspopup="dialog" className="w-full" onClick={() => setOpen(true)}>
+        <Icon name="sliders" />
+        {t.payments.filters}
+        {active > 0 && <span className="tabular-nums">({active})</span>}
+      </Button>
+      {open && (
+        <Dialog
+          title={t.payments.filters}
+          onClose={() => setOpen(false)}
+          actions={<Button onClick={() => setOpen(false)}>{t.payments.showResults}</Button>}
+        >
+          {fields}
+        </Dialog>
       )}
-      <Field label={t.finance.from}>
-        {(p) => <Input {...p} type="date" dir="ltr" value={value.from ?? ''} onChange={(e) => set({ from: e.target.value || undefined })} />}
-      </Field>
-      <Field label={t.finance.to}>
-        {(p) => <Input {...p} type="date" dir="ltr" value={value.to ?? ''} onChange={(e) => set({ to: e.target.value || undefined })} />}
-      </Field>
-      <Field label={t.payments.method}>
-        {(p) => (
-          <Select {...p} value={value.method ?? ''} onChange={(e) => set({ method: (e.target.value || undefined) as PaymentMethod | undefined })}>
-            <option value="">{t.finance.all}</option>
-            {PAYMENT_METHODS.map((m) => (
-              <option key={m} value={m}>
-                {t.enums.paymentMethod[m]}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
-      <Field label={t.finance.kind}>
-        {(p) => (
-          <Select {...p} value={value.kind ?? ''} onChange={(e) => set({ kind: (e.target.value || undefined) as PaymentKind | undefined })}>
-            <option value="">{t.finance.all}</option>
-            {PAYMENT_KINDS.map((k) => (
-              <option key={k} value={k}>
-                {t.enums.paymentKind[k]}
-              </option>
-            ))}
-          </Select>
-        )}
-      </Field>
     </div>
   );
 }

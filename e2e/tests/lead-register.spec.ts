@@ -3,6 +3,7 @@ import { openThread } from '../support/inbox';
 import { freshDigits } from '../support/messages';
 import { withSql } from '../support/schedule';
 import { stubInbound, stubReset } from '../support/wa-stub';
+import { sidePanel } from '../support/thread-panel';
 
 // «تسجيل الطالب» from the thread's short aside (R-LEAD-06, R-STU-02): the essentials pre-filled
 // from the lead, the thread's number as the guardian's; the lead is converted and linked to the
@@ -30,7 +31,7 @@ test.describe('register the student from the inbox (R-LEAD-06)', () => {
     expect((await stubInbound({ from: digits, name, text: 'أريد تسجيل ابني' })).status).toBe(200);
     const admin = await asRole('admin');
     await openThread(admin, name);
-    const panel = admin.getByRole('complementary', { name: ar.inbox.leadPanel });
+    const panel = await sidePanel(admin, 'lead');
     await panel.getByRole('button', { name: ar.inbox.registerStudent, exact: true }).click({ timeout: 30_000 });
 
     const dialog = admin.getByRole('dialog', { name: ar.inbox.registerStudent });

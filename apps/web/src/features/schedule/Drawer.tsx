@@ -14,7 +14,8 @@ export interface DrawerProps {
 
 /**
  * Side panel at the inline-end (the lesson drawer): modal like Dialog (focus trapped, Esc closes,
- * focus returns), full width on phones. Render it conditionally.
+ * focus returns), full width and full height on phones with the title bar pinned on top while the
+ * body (and the action buttons at its end) scrolls under it. Render it conditionally.
  */
 export function Drawer({ title, onClose, children }: DrawerProps) {
   const ref = useRef<HTMLDivElement>(null);
@@ -36,9 +37,9 @@ export function Drawer({ title, onClose, children }: DrawerProps) {
         aria-modal="true"
         aria-labelledby={titleId}
         tabIndex={-1}
-        className="fixed inset-y-0 end-0 flex w-full max-w-[460px] animate-drawer-in flex-col overflow-y-auto overscroll-contain border-s border-rule bg-card pb-[env(safe-area-inset-bottom)] shadow-pop"
+        className="fixed inset-y-0 end-0 flex h-dvh w-full max-w-[460px] animate-drawer-in flex-col overflow-y-auto overscroll-contain border-s border-rule bg-card pb-[env(safe-area-inset-bottom)] shadow-pop max-sm:border-s-0 max-sm:shadow-none"
       >
-        <div className="sticky top-0 z-20 flex items-start gap-3 border-b border-rule bg-card px-5 pt-5 pb-3">
+        <div className="sticky top-0 z-20 flex shrink-0 items-start gap-3 border-b border-rule bg-card px-5 pt-[max(1.25rem,env(safe-area-inset-top))] pb-3">
           <h2 id={titleId} className="min-w-0 flex-1 font-display text-[22px] font-bold leading-normal">
             {title}
           </h2>

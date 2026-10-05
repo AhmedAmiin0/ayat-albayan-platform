@@ -3,6 +3,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { fillStable } from '../support/fill';
 import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, seedLesson, setAvailability, withSql } from '../support/schedule';
 import { STUB_URL, stubInbound, stubReset } from '../support/wa-stub';
+import { sidePanel } from '../support/thread-panel';
 // Booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06): a trial needs none; a package and a makeup do
 // (uploaded, or saved from the family's chat); only the admin sees it. «Meta» = wa-stub.
 const API = 'http://localhost:3100';
@@ -66,7 +67,7 @@ test.describe('booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06)', ()
     const admin = await asRole('admin');
     const trial = `ياسمين${digits().slice(-3)}`;
     await openLead(admin, { name: `أم ${trial}`, from: digits() });
-    await admin.getByRole('link', { name: ar.booking.trialTitle }).click();
+    await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.booking.trialTitle }).click();
     await toSlot(admin, trial);
     await expect(admin.getByText(ar.booking.invoice.label, { exact: true })).toHaveCount(0);
     await book(admin);
@@ -76,7 +77,7 @@ test.describe('booking types and the invoice (R-SCH-10, R-PAY-03, R-MSG-06)', ()
     await reset(); // the trial took the first slot
     const student = `مريم${digits().slice(-3)}`;
     await openLead(admin, { name: `أم ${student}`, from: digits(1) });
-    await admin.getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
+    await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.inbox.subscription.subscribe, exact: true }).click();
     await toSlot(admin, student);
     await expect(admin.getByText(ar.booking.invoice.hint)).toBeVisible();
     await expect(admin.getByRole('button', { name: ar.booking.next })).toBeDisabled();

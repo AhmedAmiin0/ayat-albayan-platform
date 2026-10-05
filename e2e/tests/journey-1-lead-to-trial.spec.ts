@@ -2,6 +2,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { fillStable } from '../support/fill';
 import { addDays, lessonsOf, nextWeekSaturday, resetAbrar, riyadh, setAvailability, withSql } from '../support/schedule';
 import { setMessaging, stubInbound, stubReset, stubSent, type StubSent } from '../support/wa-stub';
+import { sidePanel } from '../support/thread-panel';
 
 // Journey 1 (docs/03 §5): a lead writes on WhatsApp → appears in the inbox → the admin replies →
 // books a trial through the wizard → the confirmation goes out → the lesson is on the teacher's
@@ -59,7 +60,7 @@ test.describe('journey 1 — WhatsApp lead to trial (R-LEAD-02, R-MSG-01, R-SCH-
       .toBe(1);
 
     // «حجز حلقة تجريبية» opens the Phase 2 wizard with the lead (phone + name prefilled).
-    await admin.getByRole('link', { name: ar.booking.trialTitle }).click();
+    await (await sidePanel(admin, 'lead')).getByRole('link', { name: ar.booking.trialTitle }).click();
     await expect(admin).toHaveURL(/\/admin\/book\?.*leadId=/);
     await fillStable(admin.getByLabel(ar.leads.studentName, { exact: true }), student);
     await expect(admin.getByLabel(ar.guardians.name, { exact: true })).toHaveValue(guardian);
