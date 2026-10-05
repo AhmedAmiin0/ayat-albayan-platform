@@ -17,9 +17,9 @@ Every join token carries `metadata = {"role": "<teacher|admin|assistant|sales|gu
 
 A guest token allows `camera` and `microphone` only. A guest asks on the data topic `share-request`; the teacher, an admin or an assistant answers «سماح» → `POST /lessons/:id/room/participants/:identity/share` (or `/meetings/:id/participants/:identity/share`) `{allow}` → `RoomService/UpdateParticipant` with `can_publish_sources` + `SCREEN_SHARE`, `SCREEN_SHARE_AUDIO` (back to camera + microphone on «إيقاف مشاركة», which makes LiveKit unpublish the share). Per session, nothing stored; the same server token as RemoveParticipant (`roomAdmin`). Nothing extra to deploy.
 
-## Recording (every lesson, in full)
+## Recording (every room, in full: lessons and internal meetings)
 
-The first staff join of a lesson (teacher, admin, assistant or sales) makes the API create the room (`RoomService/CreateRoom`, so an egress can attach before anyone connects) and start a **room-composite egress** (`Egress/StartRoomCompositeEgress`, layout `grid`, one MP4) that uploads straight to the private Supabase Storage bucket `recordings` at `lessons/<lesson id>/<UTC timestamp>.mp4`. A `lesson_recordings` row (migration 189) is claimed first; a unique partial index allows one `recording` row per lesson, so concurrent joins start one egress. If the room closes and opens again, the next staff join starts a new file. `GET /lessons/:id/recordings` (admin, the lesson's teacher) lists them with 1-hour signed links.
+Any join of a lesson or an internal meeting (staff or guest) makes the API create the room (`RoomService/CreateRoom`, so an egress can attach before anyone connects) and start a **room-composite egress** (`Egress/StartRoomCompositeEgress`, layout `grid`, one MP4) that uploads straight to the private Supabase Storage bucket `recordings` at `lessons/<lesson id>/<UTC timestamp>.mp4` or `meetings/<meeting id>/<UTC timestamp>.mp4`. A `lesson_recordings` row (migrations 189, 212: exactly one of `lesson_id` / `meeting_id`) is claimed first; unique partial indexes allow one `recording` row per lesson and per meeting, so concurrent joins start one egress. Through the webhook, an egress that ends while people are still in the room is started again, and the last person leaving stops the running egress (`Egress/StopEgress`). `GET /lessons/:id/recordings` (admin, the lesson's teacher) and `GET /meetings/:id/recordings` (admin, the meeting's creator) list them with 1-hour signed links; `GET /recordings/status` tells the panels whether the server can record at all («التسجيل غير مفعّل على الخادم» otherwise). Everyone in a recorded room sees «جارٍ التسجيل», and the guest join pages say «تُسجَّل هذه الجلسة».
 
 Needed on the VPS, next to `livekit-server`:
 
@@ -51,8 +51,8 @@ Needed on the VPS, next to `livekit-server`:
      urls:
        - https://<api host>/livekit/webhook
    ```
-   LiveKit signs each POST (`Authorization`: HS256 JWT with the API secret, claim `sha256` = base64 of sha256(body), content type `application/webhook+json`); the API answers 401 to anything else. Only `egress_ended` / `egress_updated` with a final status change a row; every other event is acknowledged and ignored.
+   LiveKit signs each POST (`Authorization`: HS256 JWT with the API secret, claim `sha256` = base64 of sha256(body), content type `application/webhook+json`); the API answers 401 to anything else. `egress_ended` / `egress_updated` with a final status change a row (and restart the recording if people remain); `participant_left` stops the recording of a room that is now empty; every other event is acknowledged and ignored.
 4. **API env** (docs/09): `RECORDING_S3_ENDPOINT` (`https://<project>.supabase.co/storage/v1/s3`), `RECORDING_S3_REGION`, `RECORDING_S3_BUCKET=recordings`, `RECORDING_S3_ACCESS_KEY`, `RECORDING_S3_SECRET` (Supabase → Storage → S3 Connection → new access key). All five or none; unset = nothing is recorded and joins work as before.
 5. **Upload size** — the `recordings` bucket has no limit of its own; raise the project's global upload limit (Supabase → Storage → Settings) above the longest lesson (an hour of 720p grid ≈ 300–600 MB).
 
-Check: start a lesson as the teacher, then `docker logs livekit-egress` shows the egress; after the room closes the row turns `done` and the file is in the bucket.
+Check: start a lesson as the teacher (or open an internal meeting), then `docker logs livekit-egress` shows the egress; after the last person leaves the row turns `done` and the file is in the bucket.

@@ -6,6 +6,7 @@ import { notConfigured } from './join-gate';
 import { mintToken, newIdentity } from './livekit-token';
 import { ModerationQueries, principalColumns, type Principal } from './moderation.queries';
 import { RecordingStarter } from './recording.starter';
+import { lessonTarget, type RoomTarget } from './recording-target';
 
 export interface Admission {
   lessonId: string;
@@ -22,7 +23,7 @@ export const removedFromRoom = (): HttpException =>
 /**
  * The last step of every join, staff and guest alike, once the caller is known to belong: refuse
  * a removed principal, mint the token (fresh identity), record the participant (a removal finds
- * them by identity), and on a staff join make sure the lesson is being recorded.
+ * them by identity), and make sure the lesson is being recorded.
  */
 @Injectable()
 export class RoomAdmission {
@@ -54,12 +55,20 @@ export class RoomAdmission {
       joined_at: now.toISOString(),
       ...principalColumns(input.principal),
     });
-    if (input.role !== 'guest') this.record(input.lessonId, now);
-    return { url: config.url, token, room, role: input.role };
+    this.record(lessonTarget(input.lessonId), now);
+    return { url: config.url, token, room, role: input.role, recording: this.recordingState };
   }
 
-  /** Fire and forget: the join never waits for (or fails on) the recording. */
-  private record(lessonId: string, now: Date): void {
-    this.recorder.startFor(lessonId, now).catch((e: unknown) => this.log.warn(`recording: ${String(e)}`));
+  /** 'off' when RECORDING_S3_* or LiveKit are missing: the room warns the admin. */
+  get recordingState(): 'on' | 'off' {
+    return this.recorder.configured ? 'on' : 'off';
+  }
+
+  /**
+   * Any join (staff or guest, lesson or meeting) makes sure the room is being recorded; idempotent
+   * (one running row per room). Fire and forget: the join never waits for (or fails on) it.
+   */
+  record(target: RoomTarget, now: Date): void {
+    this.recorder.startFor(target, now).catch((e: unknown) => this.log.warn(`recording: ${String(e)}`));
   }
 }

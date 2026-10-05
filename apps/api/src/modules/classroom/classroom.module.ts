@@ -31,7 +31,9 @@ import { ModerationQueries } from './moderation.queries';
 import { MuteLimit } from './mute-limit';
 import { LessonMuteController, MeetingMuteController } from './mute.controller';
 import { MeetingMuteService, MuteService } from './mute.service';
-import { RecordingListService } from './recording-list.service';
+import { MeetingRecordingListService, RecordingListService, RecordingViews } from './recording-list.service';
+import { MeetingRecordingsController, RecordingStatusController } from './recordings.controller';
+import { RecordingLifecycle } from './recording.lifecycle';
 import { RecordingQueries } from './recording.queries';
 import { RecordingStarter } from './recording.starter';
 import { RoomAdmission } from './room-admission';
@@ -62,6 +64,8 @@ import { StudentLinkService } from './student-link.service';
     LessonShareController,
     MeetingShareController,
     LessonMuteController,
+    MeetingRecordingsController,
+    RecordingStatusController,
     MeetingMuteController,
     ClassroomPublicController,
     AssistantsController,
@@ -102,9 +106,12 @@ import { StudentLinkService } from './student-link.service';
     RecordingQueries,
     LivekitApi,
     RecordingStarter,
+    RecordingLifecycle,
     RoomAdmission,
     KickService,
     RecordingListService,
+    RecordingViews,
+    MeetingRecordingListService,
     LivekitWebhookService,
     InternalMeetingsQueries,
     InternalMeetingsService,

@@ -2409,7 +2409,10 @@
         "recording": "Recording",
         "done": "Ready",
         "failed": "Failed"
-      }
+      },
+      "notConfigured": "Recording is not enabled on the server",
+      "notConfiguredHint": "Sessions are not recorded until an administrator sets up recording (RECORDING_S3_* and LiveKit Egress).",
+      "emptyMeeting": "No recordings for this meeting yet"
     },
     "openNow": "Open the room now",
     "opening": "Opening the room…",
@@ -2461,7 +2464,8 @@
         "allowed": "The board is open",
         "denied": "Your request to open the board was declined"
       }
-    }
+    },
+    "recordedNotice": "This session is recorded"
   },
   "sales": {
     "title": "Sales",

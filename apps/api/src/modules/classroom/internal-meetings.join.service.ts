@@ -7,6 +7,7 @@ import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.qu
 import { hashMeetingToken, looksLikeMeetingToken, meetingRoleOf } from './internal-meetings.token';
 import { PublicJoinLimit } from './join-limit';
 import { mintToken, newIdentity } from './livekit-token';
+import { meetingTarget } from './recording-target';
 import { RoomAdmission } from './room-admission';
 
 /** 410 meeting_ended: «إنهاء» was pressed, or the row was revoked. */
@@ -15,7 +16,8 @@ export const meetingEnded = (): HttpException => new HttpException({ code: 'meet
 /**
  * Entering «اجتماع داخلي»: staff with their login (POST /meetings/:id/join), anyone with the link
  * and a name (POST /public/meetings/:token/join, as a guest). A fresh identity per call, like the
- * lesson rooms. Nothing is recorded and nobody is blocked: no classroom_participants row.
+ * lesson rooms. Every join makes sure the meeting is recorded (like a lesson, migration 212); nobody
+ * is blocked: no classroom_participants row.
  */
 @Injectable()
 export class InternalMeetingJoinService {
@@ -77,6 +79,7 @@ export class InternalMeetingJoinService {
     const room = meetingRoomName(input.meeting.id);
     const identity = newIdentity(input.role);
     const token = mintToken(config, { room, role: input.role, name: input.name, identity }, now);
-    return { url: config.url, token, room, role: input.role };
+    this.admission.record(meetingTarget(input.meeting.id), now);
+    return { url: config.url, token, room, role: input.role, recording: this.admission.recordingState };
   }
 }

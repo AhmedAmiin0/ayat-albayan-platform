@@ -6,7 +6,8 @@ const LESSON = '00000000-0000-4000-8000-0000000000d1';
 
 describe('recordingPath', () => {
   it('is lessons/<lesson>/<UTC timestamp>.mp4, safe as an object name', () => {
-    expect(recordingPath(LESSON, new Date('2026-10-05T16:01:02.345Z'))).toBe(`lessons/${LESSON}/2026-10-05T16-01-02-345Z.mp4`);
+    expect(recordingPath({ kind: 'lesson', id: LESSON }, new Date('2026-10-05T16:01:02.345Z'))).toBe(`lessons/${LESSON}/2026-10-05T16-01-02-345Z.mp4`);
+    expect(recordingPath({ kind: 'meeting', id: LESSON }, new Date('2026-10-05T16:01:02.345Z'))).toBe(`meetings/${LESSON}/2026-10-05T16-01-02-345Z.mp4`);
   });
 });
 

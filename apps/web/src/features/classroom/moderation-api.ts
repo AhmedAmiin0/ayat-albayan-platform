@@ -1,4 +1,4 @@
-import type { LessonRecordingView } from '@ab/shared';
+import type { LessonRecordingView, RecordingStatus } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { removeMeetingParticipant } from '@/features/meetings/internal-api';
@@ -35,9 +35,33 @@ export function kickScope(room: string): { lessonId: string | null; remove?: typ
   return { lessonId: meetingId, remove: ({ identity }) => removeMeetingParticipant({ meetingId, identity }) };
 }
 
-/** GET /lessons/:id/recordings (admin, the lesson's teacher): newest first as the API sends them. */
-export const recordingsQuery = (lessonId: string) =>
+/** Whose «التسجيلات»: a lesson's or an internal meeting's. */
+export interface RecordingSource {
+  kind: 'lesson' | 'meeting';
+  id: string;
+}
+
+/**
+ * GET /lessons/:id/recordings (admin, the lesson's teacher) or /meetings/:id/recordings (admin, the
+ * creator): newest first as the API sends them.
+ */
+export const recordingsQuery = (source: RecordingSource) =>
   queryOptions({
-    queryKey: [...CLASSROOM_KEY, 'recordings', lessonId],
-    queryFn: () => apiFetch<LessonRecordingView[]>(`/lessons/${lessonId}/recordings`),
+    queryKey: [...CLASSROOM_KEY, 'recordings', source.kind, source.id],
+    queryFn: () => apiFetch<LessonRecordingView[]>(`/${source.kind}s/${source.id}/recordings`),
   });
+
+/** GET /recordings/status: can the server record at all (RECORDING_S3_* + LiveKit)? */
+export const recordingStatusQuery = queryOptions({
+  queryKey: [...CLASSROOM_KEY, 'recording-status'],
+  queryFn: () => apiFetch<RecordingStatus>('/recordings/status'),
+  staleTime: 5 * 60_000,
+});
+
+/** The recordings of this room: `lesson-<id>` or `meeting-<id>`; null for any other room. */
+export function recordingSourceOf(room: string): RecordingSource | null {
+  const meetingId = meetingIdOfRoom(room);
+  if (meetingId !== null) return { kind: 'meeting', id: meetingId };
+  const lessonId = lessonIdOfRoom(room);
+  return lessonId === null ? null : { kind: 'lesson', id: lessonId };
+}

@@ -58,6 +58,11 @@ export function canMute(actor: JoinRole | null, target: JoinRole | null): boolea
 /** «كتم الجميع» (every guest's microphone) is the teacher's or an admin's. */
 export const canMuteAll = (actor: JoinRole | null): boolean => actor === 'teacher' || actor === 'admin';
 
+/** GET /recordings/status: false = RECORDING_S3_* or LiveKit missing, rooms are not recorded. */
+export interface RecordingStatus {
+  configured: boolean;
+}
+
 /** A lesson's recording (LiveKit egress, room composite MP4 in Supabase Storage). */
 export interface LessonRecordingView {
   id: string;

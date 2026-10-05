@@ -8,13 +8,13 @@ import { KickButton } from './kick/KickButton';
 import { KickDialog } from './kick/KickDialog';
 import { ParticipantsSheet } from './kick/ParticipantsSheet';
 import { useKick } from './kick/use-kick';
-import { kickScope, lessonIdOfRoom } from './moderation-api';
+import { kickScope, recordingSourceOf } from './moderation-api';
 import { muteFor } from './mute/mute-api';
 import { MuteButtons } from './mute/MuteButtons';
 import { MuteToasts } from './mute/MuteToasts';
 import { useMute } from './mute/use-mute';
 import { ParticipantGrid, type TileSlots } from './ParticipantGrid';
-import { RecordingsPanel } from './recordings/RecordingsPanel';
+import { RecordingOffAlert, RecordingsPanel } from './recordings/RecordingsPanel';
 import { RoomHeader } from './RoomHeader';
 import { RoomStage } from './RoomStage';
 import { grantShareFor } from './share/share-api';
@@ -28,18 +28,17 @@ type Panel = 'people' | 'recordings' | null;
 /**
  * The call itself, one screen tall: header, stage + strip (or the balanced grid), and the control
  * bar pinned at the bottom. The board, «إخراج من الحلقة» and «التسجيلات» hang off it (an internal
- * meeting's room, `meeting-<id>`, has the board and «إخراج» but no recordings).
+ * meeting's room, `meeting-<id>`, has all of them too: its «التسجيلات» are the meeting's).
  */
 export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinResult }) {
   const { snap } = room;
   const board = useBoard({ room, role: join.role });
-  const lessonId = lessonIdOfRoom(join.room);
   const kick = useKick({ ...kickScope(join.room), role: join.role });
   const share = useShareRequests({ room, role: join.role, grant: grantShareFor(join.room), board });
   const mute = useMute({ role: join.role, tiles: snap.tiles, call: muteFor(join.room) });
   const [panel, setPanel] = useState<Panel>(null);
   const close = () => setPanel(null);
-  const recordingsFor = lessonId !== null && (join.role === 'teacher' || join.role === 'admin') ? lessonId : null;
+  const recordingsFor = join.role === 'teacher' || join.role === 'admin' ? recordingSourceOf(join.room) : null;
 
   const layout = layoutOf(snap.tiles, board.visible);
   const slots: TileSlots = {
@@ -56,6 +55,7 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
   return (
     <main className="flex h-dvh flex-col gap-2 overflow-hidden bg-page px-3 pt-3 sm:gap-3 sm:px-4 sm:pt-4">
       <RoomHeader snap={snap} />
+      {join.role === 'admin' && join.recording === 'off' && <RecordingOffAlert />}
       {room.notes.map((n) => (
         <FormAlert key={n}>{n}</FormAlert>
       ))}
@@ -74,7 +74,7 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
         onRecordings={recordingsFor === null ? undefined : () => setPanel('recordings')}
       />
       {panel === 'people' && !kick.target && <ParticipantsSheet tiles={snap.tiles} kick={kick} mute={mute} onClose={close} />}
-      {panel === 'recordings' && recordingsFor !== null && <RecordingsPanel lessonId={recordingsFor} onClose={close} />}
+      {panel === 'recordings' && recordingsFor !== null && <RecordingsPanel source={recordingsFor} onClose={close} />}
       <KickDialog kick={kick} />
       <MuteToasts room={room} mute={mute} />
     </main>
