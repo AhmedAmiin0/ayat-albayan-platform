@@ -14,7 +14,7 @@ export function FunnelChart({ funnel }: { funnel: Record<LeadStatus, number> }) 
   const steps = funnelSteps(funnel);
   const max = steps[0]?.reached ?? 0;
   return (
-    <figure className="grid gap-2">
+    <figure className="grid grid-cols-1 gap-2">
       <table className="w-full border-collapse text-sm">
         <caption className="sr-only">{t.dashboard.funnel}</caption>
         <thead>

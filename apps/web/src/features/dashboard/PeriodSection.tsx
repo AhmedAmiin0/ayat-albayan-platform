@@ -22,17 +22,17 @@ const sub = 'text-sm font-semibold text-ink-2';
 /** The period block: one filter row, then funnel, money by month / source, and expenses (R-RPT-01/02). */
 export function PeriodSection({ period, onPeriod, data, stale }: PeriodSectionProps) {
   return (
-    <section aria-labelledby="dash-period" className="grid gap-5">
-      <header className="grid gap-3">
+    <section aria-labelledby="dash-period" className="grid grid-cols-1 gap-5">
+      <header className="grid grid-cols-1 gap-3">
         <h2 id="dash-period" className={sectionTitle}>
           {t.dashboard.range}
         </h2>
         <PeriodFilter key={`${period.from}_${period.to}`} value={period} onChange={onPeriod} />
       </header>
       {data ? (
-        <div className={cn('grid gap-8 transition-opacity', stale && 'opacity-60')} aria-busy={stale || undefined}>
-          <div className="grid gap-6 @3xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
-            <div className="grid content-start gap-2">
+        <div className={cn('grid grid-cols-1 gap-8 transition-opacity', stale && 'opacity-60')} aria-busy={stale || undefined}>
+          <div className="grid grid-cols-1 gap-6 @3xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+            <div className="grid grid-cols-1 content-start gap-2">
               <h3 className={sub}>
                 {t.dashboard.funnel}
                 <span className="ms-3 font-normal text-ink-3">
@@ -41,17 +41,17 @@ export function PeriodSection({ period, onPeriod, data, stale }: PeriodSectionPr
               </h3>
               <FunnelChart funnel={data.funnel} />
             </div>
-            <div className="grid content-start gap-2">
+            <div className="grid grid-cols-1 content-start gap-2">
               <h3 className={sub}>{t.dashboard.expensesByCategory}</h3>
               <ExpensesByCategory byCategory={data.finance.expenses_by_category} />
             </div>
           </div>
           <FinanceTotals finance={data.finance} />
-          <div className="grid gap-2">
+          <div className="grid grid-cols-1 gap-2">
             <h3 className={sub}>{t.dashboard.byMonth}</h3>
             <FinanceByMonth months={data.finance.by_month} currency={data.finance.currency} />
           </div>
-          <div className="grid gap-2">
+          <div className="grid grid-cols-1 gap-2">
             <h3 className={sub}>{t.dashboard.bySource}</h3>
             <SourceTable rows={data.finance.by_source} />
           </div>

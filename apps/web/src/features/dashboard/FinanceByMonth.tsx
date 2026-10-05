@@ -37,7 +37,7 @@ export function FinanceByMonth({ months, currency }: { months: readonly MonthFin
   const sorter = useHandSort(months, valueOf);
   const max = Math.max(0, ...months.flatMap((m) => MEASURES.map((x) => m[x.key])));
   return (
-    <div className="overflow-x-auto">
+    <div className="ab-scroll-x">
       <table className="w-full min-w-[640px] border-collapse text-sm">
         <caption className="sr-only">{`${t.dashboard.byMonth} (${currency})`}</caption>
         <thead>

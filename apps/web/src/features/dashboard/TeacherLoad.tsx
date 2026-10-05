@@ -38,7 +38,7 @@ export function TeacherLoad({ rows }: { rows: readonly Load[] }) {
       <tbody>
         {sorter.rows.map((r) => (
           <tr key={r.teacher_id} className="border-b border-rule last:border-b-0">
-            <th scope="row" className="py-2 pe-3 text-start font-semibold whitespace-nowrap">
+            <th scope="row" className="min-w-24 py-2 pe-3 text-start font-semibold [overflow-wrap:anywhere]">
               <Link to="/admin/teachers/$teacherId" params={{ teacherId: r.teacher_id }} className="text-ink hover:text-lapis">
                 {r.display_name_ar}
               </Link>

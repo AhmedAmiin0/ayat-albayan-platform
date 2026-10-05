@@ -22,7 +22,8 @@ export function PageFrame({ children, footer, pageClassName }: { children: React
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col">
       <Page className={cn('flex min-h-0 flex-1 flex-col', pageClassName)}>
-        <div ref={scroll} className={SCROLL}>
+        {/* data-page-scroll: the e2e probes read this box (horizontal overflow stays inside it, not the document). */}
+        <div ref={scroll} data-page-scroll className={SCROLL}>
           {children}
           {footer}
         </div>

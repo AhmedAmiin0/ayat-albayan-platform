@@ -23,8 +23,8 @@ export function SourceTable({ rows }: { rows: readonly SourceRow[] }) {
   const max = Math.max(0, ...rows.map((r) => r.revenue));
   const num = 'py-2 pe-3 text-end tabular-nums';
   return (
-    <figure className="grid gap-2">
-      <div className="overflow-x-auto">
+    <figure className="grid grid-cols-1 gap-2">
+      <div className="ab-scroll-x">
         <table className="w-full min-w-[640px] border-collapse text-sm">
           <caption className="sr-only">{t.dashboard.bySource}</caption>
           <thead>
