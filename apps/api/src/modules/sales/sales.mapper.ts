@@ -1,4 +1,5 @@
-import { joinWindow, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
+import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindowConfig, type SalesMeetingView, type SalesSubscriptionView } from '@ab/shared';
+import { ar } from '../../common/i18n/server-text';
 import type { SalesLessonRow } from './sales-lessons';
 import type { SalesSubscriptionRow } from './sales.queries';
 
@@ -20,7 +21,9 @@ export function toSalesSubscription(row: SalesSubscriptionRow): SalesSubscriptio
   };
 }
 
-export function toSalesMeeting(row: SalesLessonRow, now: Date): SalesMeetingView {
+/** `win`: the classroom window from settings (default: the registry's 15 / 120 minutes). */
+export function toSalesMeeting(row: SalesLessonRow, at: { now: Date; win?: JoinWindowConfig }): SalesMeetingView {
+  const { now, win = DEFAULT_JOIN_WINDOW } = at;
   const students = row.lesson_students.flatMap((s) => (s.student ? [s.student.name] : []));
   return {
     lesson_id: row.id,
@@ -28,7 +31,7 @@ export function toSalesMeeting(row: SalesLessonRow, now: Date): SalesMeetingView
     ends_at: row.ends_at,
     status: row.status,
     teacher_name: row.teacher?.display_name_ar ?? null,
-    lead_or_student_name: row.rule?.lead?.name ?? (students.join('، ') || null),
-    joinable_window: joinWindow(row, now),
+    lead_or_student_name: row.rule?.lead?.name ?? (students.join(ar.common.listSeparator) || null),
+    joinable_window: joinWindow(row, now, win),
   };
 }

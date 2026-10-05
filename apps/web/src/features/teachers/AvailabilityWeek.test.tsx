@@ -50,7 +50,7 @@ describe('AvailabilityWeek (R-TCH-02, docs/07 §8)', () => {
     expect(monday.querySelectorAll('[data-bar]')).toHaveLength(2);
     expect(monday.querySelectorAll('[data-clash]')).toHaveLength(1);
     const span = t.availability.overlapSpan.replace('{from}', '17:30').replace('{to}', '18:00');
-    expect(within(monday).getByRole('alert').textContent).toBe(`${t.availability.overlap}${t.teachers.listSeparator}${span}`);
+    expect(within(monday).getByRole('alert').textContent).toBe(`${t.availability.overlap}${t.common.listSeparator}${span}`);
   });
 
   it('axis hours centre toward the inline-start in either direction (LTR mirror)', () => {

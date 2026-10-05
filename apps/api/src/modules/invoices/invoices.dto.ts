@@ -1,4 +1,4 @@
-import { INVOICE_SORT_KEYS, listSortShape, localDate, type ListSort } from '@ab/shared';
+import { INVOICE_SORT_KEYS, listSortShape, localDate, SETTING_DEFAULTS, type ListSort } from '@ab/shared';
 import { z } from 'zod';
 import { utcWindow } from '../payments/payments.dto';
 import { pageQuerySchema, type PageQuery } from '../teachers/http';
@@ -26,7 +26,8 @@ export type RecentFilter = PageQuery &
     student?: string;
   };
 
-export function recentFilter(q: z.output<typeof invoiceRecentQuery>): RecentFilter {
+/** `tz`: settings.academy_timezone (the days are the academy's). */
+export function recentFilter(q: z.output<typeof invoiceRecentQuery>, tz: string = SETTING_DEFAULTS.academy_timezone): RecentFilter {
   const { from, to, ...rest } = q;
-  return { ...rest, ...utcWindow({ from, to }) };
+  return { ...rest, ...utcWindow({ from, to }, tz) };
 }

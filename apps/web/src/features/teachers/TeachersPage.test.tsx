@@ -55,7 +55,7 @@ describe('TeachersPage (R-TCH-01, docs/07 §6)', () => {
     if (!row) throw new Error('row missing');
     const cells = within(row);
     expect(cells.getByText(t.teachers.genderLabel.female)).toBeTruthy();
-    expect(cells.getByText(`${t.enums.program.quran}${t.teachers.listSeparator}${t.enums.program.islamic_studies}`)).toBeTruthy();
+    expect(cells.getByText(`${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.islamic_studies}`)).toBeTruthy();
     expect(cells.getByText('+20 10 6612 3049').getAttribute('dir')).toBe('ltr');
     const chip = cells.getByText(t.enums.teacherStatus.inactive).parentElement;
     expect(chip?.querySelector('[data-glyph="struck"]')).toBeTruthy();

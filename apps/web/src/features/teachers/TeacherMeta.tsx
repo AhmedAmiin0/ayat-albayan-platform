@@ -23,7 +23,7 @@ export function TeacherMeta({ teacher }: { teacher: Teacher }) {
   return (
     <ul className="mb-[18px] flex flex-wrap gap-x-[22px] gap-y-1.5 text-xs text-ink-2">
       <Item icon="teacher">
-        <span>{role.join(t.teachers.listSeparator)}</span>
+        <span>{role.join(t.common.listSeparator)}</span>
       </Item>
       {teacher.phone_e164 && (
         <Item icon="phone">

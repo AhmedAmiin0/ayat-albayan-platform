@@ -1,4 +1,5 @@
 // Test fixtures for the classroom tests (not shipped; excluded from the build by *.fakes.ts).
+import { DEFAULT_JOIN_WINDOW } from '@ab/shared';
 import { createHmac } from 'node:crypto';
 import { vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
@@ -62,6 +63,7 @@ export function queries() {
     insertLink: vi.fn().mockResolvedValue(linkRow()),
     linkByHash: vi.fn().mockResolvedValue(linkRow()),
     openRoom: vi.fn(async (_id: string, at: string) => ({ ...LESSON, room_opened_at: at })),
+    joinWindow: vi.fn().mockResolvedValue(DEFAULT_JOIN_WINDOW),
   };
 }
 

@@ -6,11 +6,12 @@ import { GuestJoinService } from './guest-join.service';
 import { PublicJoinLimit } from './join-limit';
 import { admissionOf, moderation, recorder, rolesOf } from './moderation.fakes';
 import { RoomJoinService } from './room-join.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 
 let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder() });
-const staffJoin = (user = TEACHER) => new RoomJoinService(rolesOf(deps()), admissionOf(deps())).join({ user, lessonId: LESSON_ID }, OPEN);
+const staffJoin = (user = TEACHER) => new RoomJoinService(rolesOf(deps()), admissionOf(deps()), fakeSettings()).join({ user, lessonId: LESSON_ID }, OPEN);
 const guestJoin = () =>
   new GuestJoinService(q as unknown as ClassroomQueries, new PublicJoinLimit(), admissionOf(deps())).join(
     { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },

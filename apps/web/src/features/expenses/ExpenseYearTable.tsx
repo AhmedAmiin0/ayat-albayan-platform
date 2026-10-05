@@ -52,7 +52,7 @@ export function ExpenseYearTable({ year }: { year: string }) {
   if (!v) return <p className="py-6 text-center text-ink-3">{t.common.loading}</p>;
   return (
     <div className="grid gap-3">
-      {v.fx_missing.length > 0 && <FormAlert>{t.finance.fxMissing.replace('{currencies}', v.fx_missing.join('، '))}</FormAlert>}
+      {v.fx_missing.length > 0 && <FormAlert>{t.finance.fxMissing.replace('{currencies}', v.fx_missing.join(t.common.listSeparator))}</FormAlert>}
       <p className="text-xs text-ink-3">{t.finance.convertedTo.replace('{currency}', v.currency)}</p>
       <DataTable clientSort columns={columns} data={v.months} getRowId={(m) => m.month} />
       <p className="flex justify-end gap-2 border-t-[3px] border-double border-gold pt-2 text-sm">

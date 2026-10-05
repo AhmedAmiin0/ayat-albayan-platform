@@ -60,7 +60,7 @@ All tables: `id uuid pk default gen_random_uuid()`, `created_at`, `updated_at`, 
 
 ```sql
 -- identity
-profiles(id uuid pk refs auth.users, role user_role /* BASE role: admin|teacher|guardian|assistant|sales; app section + RLS */, role_id uuid refs roles /* the user's (possibly custom) role, §11 */, full_name, phone_e164 unique, locale default 'ar', tz default 'Asia/Riyadh')
+profiles(id uuid pk refs auth.users, role user_role /* BASE role: admin|teacher|guardian|assistant|sales; app section + RLS */, role_id uuid refs roles /* the user's (possibly custom) role, §12 */, full_name, phone_e164 unique, locale default 'ar', tz default 'Asia/Riyadh')
 roles(id, key unique, name_ar, name_en, base_role user_role, is_system, created_at, updated_at)   -- 5 system roles seeded, admins add custom ones
 role_permissions(role_id, permission text, pk(role_id, permission))                              -- '*' or '<module>.view|manage'
 
@@ -183,7 +183,19 @@ Owner, 2026-10-05: "add user tracker/logger for all the actions". Table `public.
 - **Access**: RLS, admins select (`is_admin()`); `v_activity_log` (security invoker) adds the actor's name. Append-only: no insert/update/delete for clients, no update/delete even for the service role.
 - **Retention**: 180 days. `prune_activity_log()` runs daily from the API (`ActivityRetentionJob`; pg_cron is not enabled), idempotent.
 
-## 11. Roles and permissions (owner request, 2026-10-05)
+## 11. Translations («الترجمات»)
+
+Owner, 2026-10-05: "add dynamic translations; don't leave any content static or dynamic untranslated; dynamic content can be optionally not translated."
+
+- **Bundle = defaults + offline fallback.** `packages/shared/i18n/ar.json` and `en.json` (same key tree, same `{placeholders}`: `i18n-parity.test.ts`) ship in every app and are always complete. A failed or slow override fetch never leaves a blank text.
+- **Overrides in the DB.** `public.translation_overrides (key, locale, value, updated_by, updated_at)`, primary key `(key, locale)`, migration `20261005000213_translation_overrides.sql`. `key` is the dotted path of a string leaf (`nav.leads`). RLS: anon + authenticated may SELECT key, locale, value and updated_at (public UI copy, needed on the login page; never `updated_by`), only the API (service role) writes. Clients read through the API, not PostgREST.
+- **API** (`apps/api/src/modules/translations/`): `GET /i18n/:locale/overrides` (public, `{ key: value }`, `Cache-Control: max-age=60` + ETag → 304); admin `GET /i18n/keys?search=&section=&page=&pageSize=` (every bundle key with ar/en defaults and overrides), `PUT /i18n/:locale/:key { value }` (404 for a key not in the bundle; 400 `placeholders_missing` when the value drops a `{name}` / `{{n}}` slot of the default) and `DELETE /i18n/:locale/:key` (restore). Writes are logged by the ActivityInterceptor. `TranslationsService` holds the overrides in memory (loaded 1 s after boot, after every save, every 5 min) and merges the Arabic ones **in place** into `common/i18n/server-text` `ar`, which every server text producer reads (report PDF, WhatsApp, exports, push, alerts, follow-ups, invoices, template review samples). Parent-facing output stays Arabic.
+- **Web**: `main.tsx` fetches the current locale's overrides (≤ 1.5 s, `cache: 'no-cache'` so a saved edit shows on the next reload) and merges them into `t` (a copy of the bundle, same type) **before** `boot.tsx` loads the router and the screens. Edit at `/admin/translations`; changes apply on the next page load.
+- **Mobile**: `app/_layout` applies the overrides saved by the last run (AsyncStorage `ab.i18n.overrides.<locale>`) before the first screen, then refreshes from the API in the background (≤ 1.5 s) and saves for the next start. No editor on mobile.
+- **Adding a key**: add it to `ar.json` (clear MSA) and `en.json` at the same path, read it as `t.section.key`; it appears in the editor automatically. Never hard-code UI text: `apps/web/src/i18n-literals.test.ts` and `apps/mobile/src/i18n-literals.test.ts` fail on Arabic in any `.tsx` outside comments (exceptions, with a reason, in the `i18n-literals.allow.json` next to them). Lists join with `t.common.listSeparator`.
+- **Dynamic names** (admin-entered data) are not overridden: teachers (`display_name_ar` / `display_name_en`) and expense categories (`label_ar` / `label_en`) show the English name in the English UI when it is set, else the Arabic one (`localizedName` / `teacherName` in `@ab/shared`). Other admin-entered content (student names, notes, meeting titles) is shown as typed.
+
+## 12. Roles and permissions (owner request, 2026-10-05)
 
 - **Two layers.** `profiles.role` is the **base role** (`admin|teacher|guardian|assistant|sales`, the `user_role` enum): it decides the app section, the JWT claim `user_role` and **all RLS**. `profiles.role_id` points to a row of `roles`: either the **system role** of the same name (seeded, immutable key/base role, cannot be deleted; `admin` always keeps `*`) or a **custom role** an admin created, which has a base role and a set of permissions. A trigger (`profiles_sync_role`, migration 222) keeps the two consistent: setting `role_id` sets `role` to its base role; setting only `role` selects the system role.
 - **Ceiling.** RLS stays base-role based. Fine-grained permissions are enforced **in the API and the UI only**; they never widen what the database lets a base role read. A custom role therefore can only take away from, never add to, its base role's data access.

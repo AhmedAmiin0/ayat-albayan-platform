@@ -35,8 +35,9 @@ export class GuestJoinService {
     if (checkLink(link, now) !== 'ok') throw new HttpException({ code: 'link_expired', message: 'link_expired' }, HttpStatus.GONE);
     const lesson = await this.queries.lesson(link.lesson_id);
     if (!lesson) throw notFound('link_invalid');
-    assertWindowOpen(lesson, now);
-    const closesS = Math.floor(Date.parse(joinWindow(lesson, now).closes_at) / MS) - Math.floor(now.getTime() / MS);
+    const win = await this.queries.joinWindow();
+    assertWindowOpen(lesson, now, win);
+    const closesS = Math.floor(Date.parse(joinWindow(lesson, now, win).closes_at) / MS) - Math.floor(now.getTime() / MS);
     const ttlSeconds = Math.min(closesS, ONE_DAY_S);
     return this.admission.admit({ lessonId: lesson.id, role: 'guest', name, principal: { joinLinkId: link.id }, ttlSeconds }, now);
   }

@@ -31,7 +31,7 @@ function problemText(problem: 'endBeforeStart' | 'overlap', ranges: readonly Ran
   const clash = overlaps(ranges)[0];
   if (!clash) return t.availability.overlap;
   const span = t.availability.overlapSpan.replace('{from}', clash.start).replace('{to}', clash.end);
-  return `${t.availability.overlap}${t.teachers.listSeparator}${span}`;
+  return `${t.availability.overlap}${t.common.listSeparator}${span}`;
 }
 
 /** One weekday row: ranges as selects + add/remove, the 08–24 track, and its error line. R-TCH-02. */
