@@ -4,16 +4,19 @@ import { Icon } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { InstantLessonDialog } from './InstantLessonDialog';
+import { InternalMeetingDialog } from './InternalMeetingDialog';
 
 const item = 'flex min-h-11 w-full items-center rounded-sm px-3 text-start text-sm hover:bg-sunk sm:min-h-9';
 
 /**
- * «اجتماع جديد» on the admin schedule and classrooms pages: «ابدأ الآن» starts an instant lesson
+ * «اجتماع جديد» on the admin schedule and classrooms pages: «اجتماع داخلي» makes a standalone room
+ * (a link to share, no lesson), «ابدأ الآن» starts an instant lesson
  * (dialog, then straight into /classroom/$lessonId), «جدولة» opens the booking wizard. A native
  * disclosure: keyboard and screen reader for free. Plain links, like «ادخل الحلقة»: no router needed.
  */
 export function NewMeetingMenu() {
   const [instant, setInstant] = useState(false);
+  const [internal, setInternal] = useState(false);
   const menu = useRef<HTMLDetailsElement>(null);
   const close = () => menu.current?.removeAttribute('open');
   return (
@@ -29,6 +32,16 @@ export function NewMeetingMenu() {
             className={item}
             onClick={() => {
               close();
+              setInternal(true);
+            }}
+          >
+            {t.meetings.internal.item}
+          </button>
+          <button
+            type="button"
+            className={item}
+            onClick={() => {
+              close();
               setInstant(true);
             }}
           >
@@ -39,6 +52,7 @@ export function NewMeetingMenu() {
           </a>
         </div>
       </details>
+      {internal && <InternalMeetingDialog onClose={() => setInternal(false)} />}
       {instant && (
         <InstantLessonDialog
           onClose={() => setInstant(false)}

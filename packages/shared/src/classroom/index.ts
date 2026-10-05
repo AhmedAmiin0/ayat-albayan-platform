@@ -4,3 +4,4 @@ export * from './schemas.js';
 export * from './moderation.js';
 export * from './meetings.js';
 export * from './student-lesson.js';
+export * from './internal-meetings.js';

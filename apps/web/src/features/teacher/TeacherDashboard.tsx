@@ -8,6 +8,8 @@ import { Tabs } from '@/components/ui/tabs';
 import { Toast } from '@/components/ui/toast';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { errorCode } from '@/features/schedule/api';
+import { InternalMeetingButton } from '@/features/meetings/InternalMeetingButton';
+import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { PendingReports } from '@/features/reports/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
@@ -32,6 +34,9 @@ export function TeacherDashboard() {
   const head = (
     <PageHead>
       <Cartouche>{t.teacher.dashboardTitle}</Cartouche>
+      <div className="ms-auto">
+        <InternalMeetingButton />
+      </div>
     </PageHead>
   );
   if (me.isError) {
@@ -39,7 +44,7 @@ export function TeacherDashboard() {
     return <>{head}<FormAlert>{text}</FormAlert></>;
   }
   if (!me.data) return <>{head}<ListSkeleton /></>;
-  return <>{head}<Dashboard me={me.data} /></>;
+  return <>{head}<Dashboard me={me.data} /><InternalMeetingsList /></>;
 }
 
 /**

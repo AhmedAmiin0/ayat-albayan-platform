@@ -70,7 +70,7 @@ describe('AdminSessions groups and cards', () => {
     apiFetch.mockImplementation(async (path: string) => (path.startsWith('/lessons?') ? [lesson('l-open', 5)] : []));
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <AdminSessions actions={<button type="button">اجتماع داخلي</button>} />
+        <AdminSessions actions={<button type="button">إجراء إضافي</button>} />
       </QueryClientProvider>,
     );
     const more = await screen.findByRole('button', { name: t.classroom.admin.more });
@@ -78,6 +78,6 @@ describe('AdminSessions groups and cards', () => {
     expect(screen.getByRole('button', { name: t.classroom.copyLink }).closest('.max-sm\\:hidden')).toBeTruthy();
     fireEvent.click(more);
     expect(screen.getByRole('button', { name: t.classroom.copyLink }).closest('.max-sm\\:hidden')).toBeNull();
-    expect(screen.getByRole('button', { name: 'اجتماع داخلي' }).closest('[data-slot=header-actions]')).toBeTruthy();
+    expect(screen.getByRole('button', { name: 'إجراء إضافي' }).closest('[data-slot=header-actions]')).toBeTruthy();
   });
 });

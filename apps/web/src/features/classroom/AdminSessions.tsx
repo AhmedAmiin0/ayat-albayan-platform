@@ -9,6 +9,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { PageHead } from '@/components/ui/page';
 import { ListSkeleton } from '@/components/ui/skeleton';
+import { InternalMeetingsList } from '@/features/meetings/InternalMeetingsList';
 import { NewMeetingMenu } from '@/features/meetings/NewMeetingMenu';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
@@ -91,6 +92,7 @@ export function AdminSessions({ actions }: { actions?: ReactNode }) {
       <TableBox center={lessons.isSuccess && none} className="gap-6 border-0 p-0.5">
         {body}
       </TableBox>
+      <InternalMeetingsList />
     </section>
   );
 }
