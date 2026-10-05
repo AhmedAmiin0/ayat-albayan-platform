@@ -59,9 +59,9 @@ jobs:
   # not stop the others (fail-fast off), so one run shows every red spec.
   e2e:
     needs: changes
-    # e2e is paused (owner's call): it runs only when started by hand, or once the repository variable
-    # RUN_E2E is set to 'true' (Settings → Secrets and variables → Actions → Variables). No code change needed.
-    if: needs.changes.outputs.e2e == 'true' && (github.event_name == 'workflow_dispatch' || vars.RUN_E2E == 'true')
+    # On again (owner, 2026-10-05) now that the suite is fast. To pause it without a code change, set the
+    # repository variable RUN_E2E to 'false' (Settings → Secrets and variables → Actions → Variables).
+    if: needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 45
     strategy:
