@@ -47,11 +47,13 @@ test.describe('journey 6 — duplicate student (R-STU-03)', () => {
     await expect(rows.nth(1)).toContainText('سهيلة');
     await expect(rows.nth(1)).toContainText(/AB-\d{4,}/);
 
-    // The keyboard path to the profile exists at every width, Pixel 7 included: the name is a
-    // button right after the search, and Enter opens the merged student's profile.
+    // The keyboard path to the profile exists at every width, Pixel 7 included: Tab from the
+    // search passes the filters and reaches the name (a button); Enter opens the profile.
     const name = rows.nth(1).getByRole('button', { name: 'سهيلة', exact: true });
     await page.getByRole('button', { name: ar.common.search, exact: true }).focus();
-    await page.keyboard.press('Tab');
+    for (let i = 0; i < 20 && !(await name.evaluate((el) => el.matches(':focus'))); i++) {
+      await page.keyboard.press('Tab');
+    }
     await expect(name).toBeFocused();
     await page.keyboard.press('Enter');
     await expect(page).toHaveURL(/\/admin\/students\/[^/?]+$/);
