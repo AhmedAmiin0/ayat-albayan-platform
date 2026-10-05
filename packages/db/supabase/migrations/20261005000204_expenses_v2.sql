@@ -13,7 +13,7 @@ create table public.expense_categories (
   label_en text,
   sort int not null default 100,
   active boolean not null default true,
-  created_by uuid references auth.users (id),
+  created_by uuid references auth.users (id) on delete set null,
   created_at timestamptz not null default now()
 );
 insert into public.expense_categories (key, label_ar, label_en, sort) values

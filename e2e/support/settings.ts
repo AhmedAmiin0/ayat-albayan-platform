@@ -17,7 +17,9 @@ export async function restoreSettings(input: { keys: string[]; rows: { key: stri
     for (const key of input.keys) {
       const row = input.rows.find((r) => r.key === key);
       if (row) {
-        await sql`insert into public.settings (key, value) values (${key}, ${sql.json(row.value as never)})
+        // A JSON null (late_cancel_hours OFF) must stay the jsonb 'null', not an SQL NULL.
+        const value = row.value === null ? 'null' : JSON.stringify(row.value);
+        await sql`insert into public.settings (key, value) values (${key}, ${value}::jsonb)
           on conflict (key) do update set value = excluded.value`;
       } else {
         await sql`delete from public.settings where key = ${key}`;

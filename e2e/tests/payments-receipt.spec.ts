@@ -23,11 +23,14 @@ async function paymentsOf(subscriptionId: string): Promise<Paid[]> {
     from public.payments p where p.subscription_id = ${subscriptionId}`);
 }
 
-async function openForm(page: Page, subscriptionId: string): Promise<Locator> {
+/** «تسجيل دفعة»: search the student, then their package (every open one, not only the unpaid list). */
+async function openForm(page: Page, seed: { subscriptionId: string; student: string }): Promise<Locator> {
   await page.goto('/admin/payments');
   await page.getByRole('button', { name: ar.payments.record }).click();
   const dialog = page.getByRole('dialog');
-  await dialog.getByLabel(ar.payments.mobile.chooseSubscription, { exact: true }).selectOption(subscriptionId);
+  await dialog.getByRole('searchbox', { name: ar.payments.mobile.chooseStudent }).fill(seed.student);
+  await dialog.getByRole('button', { name: new RegExp(seed.student) }).click();
+  await dialog.getByLabel(ar.payments.mobile.chooseSubscription, { exact: true }).selectOption(seed.subscriptionId);
   await dialog.locator('input[type=file]').setInputFiles({ name: 'receipt.png', mimeType: 'image/png', buffer: RECEIPT_PNG });
   await expect(dialog.getByRole('img', { name: ar.payments.receipt })).toBeVisible(); // local preview
   return dialog;
@@ -40,7 +43,7 @@ test.describe('payments page and receipts (R-PAY-01)', () => {
     const student = uniqueName('هدى');
     const seed = await seedPackageStudent({ teacherId: await resetAbrar(), paid: false, guardian: 'أم هدى', student });
     const page = await asRole('admin');
-    const dialog = await openForm(page, seed.subscriptionId);
+    const dialog = await openForm(page, { subscriptionId: seed.subscriptionId, student });
     await expect(dialog.getByLabel(new RegExp(ar.payments.amount))).toHaveValue(String(seed.price));
     await submit(dialog).click();
     await expect(page.getByRole('status')).toHaveText(ar.payments.saved);
@@ -70,7 +73,7 @@ test.describe('payments page and receipts (R-PAY-01)', () => {
     const student = uniqueName('سلمى');
     const seed = await seedPackageStudent({ teacherId: await resetAbrar(), paid: false, guardian: 'أم سلمى', student });
     const page = await asRole('admin');
-    const dialog = await openForm(page, seed.subscriptionId);
+    const dialog = await openForm(page, { subscriptionId: seed.subscriptionId, student });
     await page.route(UPLOAD, (route) => route.abort());
     await submit(dialog).click();
 

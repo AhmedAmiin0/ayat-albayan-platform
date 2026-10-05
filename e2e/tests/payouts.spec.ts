@@ -119,11 +119,15 @@ test.describe('payouts — last month from submitted reports → approve → pai
     await expect(total).toContainText(`230 ${ar.payouts.currency}`);
     expect(await payoutOf(teacherId, month)).toEqual({ status: 'draft', lessons_count: 3, amount: 230 });
 
-    // «اعتماد» → «اتدفعت»: frozen, nothing left to press.
+    // «اعتماد» → «دُفعت» asks to confirm (date, method, receipt) → paid; only «إلغاء الدفع» is left.
     await row.getByRole('button', { name: ar.payouts.approve }).click();
     await expect(row.getByText(ar.enums.payoutStatus.approved)).toBeVisible();
     await row.getByRole('button', { name: ar.payouts.markPaid }).click();
-    await expect(row.getByRole('button')).toHaveCount(0);
+    const confirm = admin.getByRole('dialog');
+    await confirm.getByLabel(ar.payments.method, { exact: true }).selectOption('cash');
+    await confirm.getByRole('button', { name: ar.finance.confirmPaid }).click();
+    await expect(row.getByRole('button')).toHaveCount(1);
+    await expect(row.getByRole('button', { name: ar.finance.unpay })).toBeVisible();
     await expect(row.getByText(ar.enums.payoutStatus.paid)).toBeVisible();
     await expect(total).toContainText(`230 ${ar.payouts.currency}`);
     expect(await payoutOf(teacherId, month)).toEqual({ status: 'paid', lessons_count: 3, amount: 230 });

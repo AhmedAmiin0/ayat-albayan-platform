@@ -13,7 +13,7 @@ const { students: S, guardians: G, payments: P, payouts: Y, subscriptions: SUB, 
 const HEADERS = {
   students: [S.code, S.name, S.status, S.program, S.age, S.teacher, S.guardian, S.guardianPhone, G.country, G.source, S.tz, S.createdAt],
   lessons: [X.columns.date, X.columns.time, SUB.duration, S.teacher, S.code, S.name, X.columns.lessonStatus, X.columns.attendance, X.columns.chargeable],
-  payments: [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, P.amount, P.currency, P.method, P.note],
+  payments: [P.paidAt, S.code, S.name, SUB.package, SUB.lessonsTotal, ar.finance.kind, P.amount, P.currency, P.method, ar.finance.originalAmount, P.note],
   payouts: [Y.teacher, Y.month, S.status, SUB.duration, Y.lessons, Y.rate, Y.amount, P.currency, P.paidAt],
 };
 const STAMP = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/;
@@ -93,7 +93,7 @@ test.describe('CSV exports (R-RPT-03)', () => {
     expect(payments.text.startsWith(BOM)).toBe(true);
     expect(payments.rows[0]).toEqual(HEADERS.payments);
     const pay = payments.rows.find((r) => r[1] === facts.code);
-    expect(pay).toEqual([facts.paid, facts.code, student, ar.enums.packageSize['4'], '4', String(seed.price), 'SAR', ar.enums.paymentMethod.bank, 'e2e seed']);
+    expect(pay).toEqual([facts.paid, facts.code, student, ar.enums.packageSize['4'], '4', ar.enums.paymentKind.payment, String(seed.price), 'SAR', ar.enums.paymentMethod.bank, '', 'e2e seed']);
 
     // Payouts: the panel starts on last month; the file has the header whatever was approved.
     const payouts = await download(page, 'payouts');
