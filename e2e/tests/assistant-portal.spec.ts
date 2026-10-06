@@ -4,6 +4,7 @@ import { leadOf } from '../support/assistant-api';
 import { seedUser } from '../support/db';
 import { ar, expect, test } from '../support/fixtures';
 import { fillStable } from '../support/fill';
+import { openNav } from '../support/nav';
 import { resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { USERS } from '../support/users';
 
@@ -24,6 +25,9 @@ async function signIn(page: Page, email: string): Promise<void> {
   await page.getByRole('button', { name: ar.auth.submit }).click();
   await page.waitForURL('**/sales/**');
 }
+
+/** The assistant's section nav: in the page from 900px, in the opened «القائمة» sheet below it. */
+const salesNav = async (page: Page) => (await openNav(page)).getByRole('navigation', { name: ar.sales.nav.label });
 
 /** A sales login whose terms are 10 % of a first paid subscription and 2000 SAR a month. */
 async function seedAssistant(tag: number): Promise<{ email: string; id: string }> {
@@ -62,10 +66,10 @@ test.describe('assistant portal', () => {
     const page = await (await browser.newContext({ locale: 'ar' })).newPage();
     await signIn(page, email);
 
-    const nav = page.getByRole('navigation', { name: ar.sales.nav.label });
-    for (const label of Object.values(ar.assistantPortal.nav)) await expect(nav.getByRole('link', { name: label })).toBeVisible();
+    // Below 900px the section nav sits behind «القائمة»: salesNav opens it (the mobile project is a Pixel 7).
+    for (const label of Object.values(ar.assistantPortal.nav)) await expect((await salesNav(page)).getByRole('link', { name: label })).toBeVisible();
 
-    await nav.getByRole('link', { name: ar.assistantPortal.nav.students }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.students }).click();
     const paid = page.getByRole('row').filter({ hasText: names.paid });
     await expect(paid).toContainText(ar.assistantPortal.students.paid);
     await expect(paid).toContainText(ar.assistantPortal.commission.earned);
@@ -73,12 +77,12 @@ test.describe('assistant portal', () => {
     await expect(page.getByRole('row').filter({ hasText: names.unpaid })).toContainText(ar.assistantPortal.students.unpaid);
     await expect(page.getByText(names.other)).toHaveCount(0);
 
-    await nav.getByRole('link', { name: ar.assistantPortal.nav.payments }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.payments }).click();
     await expect(page.getByRole('row').filter({ hasText: names.paid })).toContainText('1,000');
     await expect(page.getByText(names.other)).toHaveCount(0);
     await expect(page.getByText('777')).toHaveCount(0);
 
-    await nav.getByRole('link', { name: ar.assistantPortal.nav.earnings }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.earnings }).click();
     await expect(page.getByRole('heading', { name: ar.assistantPortal.earnings.terms })).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.commissionPercent.replace('{value}', '10'))).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.statementsEmpty)).toBeVisible();
@@ -92,7 +96,7 @@ test.describe('assistant portal', () => {
     await signIn(page, email);
 
     // Without a chat the page points to the inbox: the API books a new family only from her own lead.
-    await page.getByRole('navigation', { name: ar.sales.nav.label }).getByRole('link', { name: ar.assistantPortal.nav.register }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.register }).click();
     await expect(page.getByRole('heading', { level: 1, name: ar.assistantPortal.register.title })).toBeVisible();
     await expect(page.getByRole('link', { name: ar.assistantPortal.register.openInbox })).toBeVisible();
     const leadId = await leadOf(id, phone(2, 1));
