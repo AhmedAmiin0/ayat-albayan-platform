@@ -1480,6 +1480,7 @@
       "enable": "Enable account",
       "resetPassword": "Reset password",
       "signOut": "Sign out everywhere",
+      "signOutHint": "The user's open sessions are ended. An access token issued a moment ago may keep working for up to one hour, unless the account is disabled.",
       "delete": "Delete user"
     },
     "disable": {
@@ -1490,6 +1491,7 @@
     },
     "reset": {
       "title": "Reset password",
+      "hint": "Typing or generating a password ends the user's open sessions; an invite link does not. An access token issued a moment ago may keep working for up to one hour, unless the account is disabled.",
       "confirm": "Reset"
     },
     "delete": {
@@ -1503,7 +1505,7 @@
       "saved": "Changes saved",
       "disabled": "Account disabled",
       "enabled": "Account enabled",
-      "signedOut": "The user was signed out everywhere",
+      "signedOut": "The user's sessions were ended; the current access token may work for up to one hour",
       "deleted": "User deleted"
     },
     "account": {
@@ -1533,6 +1535,17 @@
       "role_change_linked": "The role of an account linked to a record cannot change.",
       "permission_not_held": "You cannot grant a role or permission you do not hold.",
       "password_too_short": "The password is shorter than allowed.",
+      "password_blank": "Type a password.",
+      "password_too_long": "The password is longer than allowed.",
+      "self_lockout": "You cannot do this to your own account: it could lock you out of managing users.",
+      "phone_taken": "This phone number is already used by another record.",
+      "link_target_not_found": "The record to link was not found.",
+      "unknown_role": "The chosen role does not exist.",
+      "role_mismatch": "The chosen role does not belong to the selected base role.",
+      "system_admin_only": "Only a system admin can change a system admin account.",
+      "admin_role_only": "Only an admin can give an admin role.",
+      "invalid_email": "Enter a valid email address.",
+      "user_not_found": "The user was not found.",
       "account_disabled": "This account is disabled.",
       "validation_failed": "Check the entered data and try again.",
       "users_has_history": "A user with linked records cannot be deleted.",

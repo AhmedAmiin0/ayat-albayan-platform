@@ -46,6 +46,21 @@ describe('signIn (R-AUTH-01)', () => {
     expect(auth.signOut).toHaveBeenCalled();
   });
 
+  it('signs out and says so when the account is disabled (403 account_disabled)', async () => {
+    auth.signInWithPassword.mockResolvedValue({ error: null });
+    apiFetch.mockRejectedValue(Object.assign(new Error('API 403'), { status: 403, body: { code: 'account_disabled' } }));
+    const result = await signIn(creds, new QueryClient());
+    expect(result).toEqual({ ok: false, error: t.users.errors.account_disabled });
+    expect(auth.signOut).toHaveBeenCalled();
+  });
+
+  it('lets any other API failure through', async () => {
+    auth.signInWithPassword.mockResolvedValue({ error: null });
+    apiFetch.mockRejectedValue(Object.assign(new Error('API 500'), { status: 500, body: null }));
+    await expect(signIn(creds, new QueryClient())).rejects.toThrow('API 500');
+    expect(auth.signOut).not.toHaveBeenCalled();
+  });
+
   it('reports the sign-out before the token is dropped («سجل النشاط»)', async () => {
     const order: string[] = [];
     reportSession.mockImplementation(async () => void order.push('report'));

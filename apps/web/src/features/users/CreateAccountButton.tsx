@@ -1,7 +1,9 @@
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { t } from '@/lib/i18n';
+import { candidatesQuery } from './api';
 import { CreateUserDialog } from './CreateUserDialog';
 
 export interface CreateAccountButtonProps {
@@ -9,13 +11,16 @@ export interface CreateAccountButtonProps {
 }
 
 /**
- * «إنشاء حساب» on the student profile (users.write): the create dialog with the student's own
- * record already picked. A student who already has a login is refused by the API (link_taken).
+ * «إنشاء حساب» on the student profile (users.write + students.write): the create dialog with the
+ * student's own record already picked. Shown only while the student has no login: the link
+ * candidates are the students without one, so a student that is not among them already has it.
  */
 export function CreateAccountButton({ student }: CreateAccountButtonProps) {
   const { can } = usePermissions();
   const [open, setOpen] = useState(false);
-  if (!can('users.write')) return null;
+  const allowed = can('users.write');
+  const free = useQuery({ ...candidatesQuery('student', student.code ?? student.name), enabled: allowed });
+  if (!allowed || !free.data?.some((c) => c.id === student.id)) return null;
   return (
     <>
       <Button type="button" variant="secondary" onClick={() => setOpen(true)}>

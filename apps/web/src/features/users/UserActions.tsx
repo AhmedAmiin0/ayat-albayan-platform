@@ -50,6 +50,7 @@ export function UserActions({ user, onMode, onDone }: UserActionsProps) {
           {A.delete}
         </Button>
       </div>
+      <p className="text-xs text-pretty text-ink-3">{A.signOutHint}</p>
       {failed && <FormAlert>{userErrorText(failed)}</FormAlert>}
     </section>
   );

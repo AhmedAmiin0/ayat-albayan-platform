@@ -52,6 +52,7 @@ export function ResetPasswordDialog({ user, onBack, onClose }: ResetPasswordDial
     >
       <form id={formId} className="grid gap-4" onSubmit={submit} noValidate>
         <CredentialPicker name="reset-credential" mode={mode} password={password} error={error} onMode={setMode} onPassword={setPassword} />
+        <p className="text-xs text-pretty text-ink-3">{R.hint}</p>
         {reset.error && <FormAlert>{userErrorText(reset.error)}</FormAlert>}
       </form>
     </Dialog>

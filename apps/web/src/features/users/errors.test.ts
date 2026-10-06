@@ -9,6 +9,15 @@ describe('user errors', () => {
     expect(userErrorText(new ApiError(409, { code: 'link_taken' }))).toBe(t.users.errors.link_taken);
     expect(userErrorText(new ApiError(403, { code: 'permission_not_held' }))).toBe(t.users.errors.permission_not_held);
   });
+  it('has a message for every code the users API answers', () => {
+    const codes = ['self_lockout', 'phone_taken', 'password_blank', 'password_too_short', 'password_too_long', 'link_target_not_found', 'unknown_role',
+      'role_mismatch', 'system_admin_only', 'admin_role_only', 'invalid_email', 'user_not_found', 'account_disabled', 'cannot_delete_self'];
+    for (const code of codes) {
+      const text = userErrorText(new ApiError(409, { code }));
+      expect(text).toBe(t.users.errors[code as keyof typeof t.users.errors]);
+      expect(text).not.toBe(t.users.errors.generic);
+    }
+  });
   it('falls back to the generic message', () => {
     expect(userErrorText(new ApiError(500, { code: 'weird' }))).toBe(t.users.errors.generic);
     expect(userErrorText(new ApiError(500, null))).toBe(t.users.errors.generic);

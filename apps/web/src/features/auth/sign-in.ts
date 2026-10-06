@@ -2,7 +2,7 @@ import { HOME_BY_ROLE } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
-import { meQuery } from './me';
+import { isAccountDisabled, meQuery } from './me';
 import { reportSession } from './session-activity';
 
 export interface Credentials {
@@ -21,7 +21,11 @@ export async function signIn(creds: Credentials, queryClient: QueryClient): Prom
   }
 
   queryClient.removeQueries({ queryKey: meQuery.queryKey });
-  const me = await queryClient.fetchQuery(meQuery);
+  const me = await queryClient.fetchQuery(meQuery).catch((error: unknown) => {
+    if (isAccountDisabled(error)) return 'disabled' as const;
+    throw error;
+  });
+  if (me === 'disabled') return { ok: false, error: t.users.errors.account_disabled };
   if (!me?.role) {
     await supabase.auth.signOut();
     return { ok: false, error: t.auth.noRole };
