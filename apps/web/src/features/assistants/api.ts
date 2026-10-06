@@ -2,6 +2,7 @@ import type {
   AssistantCommissionView,
   AssistantStatementView,
   AssistantTermsInput,
+  AssistantTermsRow,
   AssistantTermsView,
   BroughtByInput,
   PaymentMethod,
@@ -22,9 +23,13 @@ export const ASSISTANTS_KEY = ['assistant-pay'] as const;
 /** One assistant of the list: the profile and its terms (null parts are not set yet). */
 export type AssistantRow = { id: string; name: string; terms: AssistantTermsView };
 
+/** GET /assistant-pay/terms: every assistant (base role sales) with their terms, reshaped to the list's row. */
 export const assistantsQuery = queryOptions({
   queryKey: [...ASSISTANTS_KEY, 'assistants'],
-  queryFn: () => apiFetch<AssistantRow[]>('/assistant-pay/assistants'),
+  queryFn: async (): Promise<AssistantRow[]> => {
+    const rows = await apiFetch<AssistantTermsRow[]>('/assistant-pay/terms');
+    return rows.map(({ name, ...terms }) => ({ id: terms.assistant_id, name, terms }));
+  },
 });
 
 export const saveTerms = (input: { assistantId: string; body: AssistantTermsInput }) =>
@@ -37,14 +42,22 @@ const qs = (params: Record<string, string>) => {
   return q.size ? `?${q}` : '';
 };
 
+// ponytail: the ledger filters by `from`/`to` instants; a month is cut at UTC midnight (statements cut it
+// in the assistant's zone), so a commission at a month's edge can show in the neighbouring month here.
+const monthRange = (month: string): Record<string, string> => {
+  if (!month) return {};
+  const [y = 0, m = 1] = month.split('-').map(Number);
+  return { from: `${month}-01T00:00:00.000Z`, to: new Date(Date.UTC(y, m, 1)).toISOString() };
+};
+
 export const commissionsQuery = (f: LedgerFilter) =>
   queryOptions({
     queryKey: [...ASSISTANTS_KEY, 'commissions', f],
-    queryFn: () => apiFetch<AssistantCommissionView[]>(`/assistant-pay/commissions${qs(f)}`),
+    queryFn: () => apiFetch<AssistantCommissionView[]>(`/assistant-pay/commissions${qs({ assistantId: f.assistantId, status: f.status, ...monthRange(f.month) })}`),
   });
 
 export const voidCommission = (input: { id: string; reason: string }) =>
-  apiSend<AssistantCommissionView>('POST', `/assistant-pay/commissions/${input.id}/void`, { reason: input.reason });
+  apiSend<{ id: string }>('POST', `/assistant-pay/commissions/${input.id}/void`, { reason: input.reason });
 
 export type StatementFilter = { assistantId: string; month: string; status: '' | PayoutStatus };
 
@@ -71,8 +84,8 @@ export const payStatement = (input: { id: string; body: PayStatementBody }) => a
 export const statementReceiptUrl = (id: string) => apiFetch<SignedDownload>(`/assistant-pay/statements/${id}/receipt`);
 
 /** Straight to the private bucket through a one-off signed URL; the path is then sent with the pay. */
-export async function uploadStatementReceipt(file: File): Promise<string> {
-  const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', { mime: file.type, size: file.size });
+export async function uploadStatementReceipt(file: File, assistantId: string): Promise<string> {
+  const signed = await apiSend<SignedUpload>('POST', '/assistant-pay/receipt-upload-url', { assistantId, mime: file.type, size: file.size });
   const { error } = await supabase.storage.from(signed.bucket).uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type });
   if (error) throw error;
   return signed.path;

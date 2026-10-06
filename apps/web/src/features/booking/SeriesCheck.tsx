@@ -4,8 +4,7 @@ import { conflictText } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';
 import { bookingCheckQuery } from './api';
 import type { BookingBody } from './contract';
-import type { BookingDraft } from './draft';
-import { requestFor } from './draft.sales';
+import { toBookingRequest, type BookingDraft } from './draft';
 import { useBookingMode } from './mode';
 
 /** How many clashes are listed under the count. */
@@ -19,7 +18,7 @@ const SHOWN = 4;
  */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
   const mode = useBookingMode();
-  const body = requestFor(mode, draft);
+  const body = toBookingRequest(draft);
   const check = useQuery({ ...bookingCheckQuery(body ?? emptyBody, mode), enabled: body !== null });
   if (!body || check.isError) return null;
   if (!check.data) return <p className="text-xs text-ink-3">{t.booking.seriesChecking}</p>;

@@ -16,6 +16,17 @@ export class TermsQueries {
     return data.sort((a, b) => a.full_name.localeCompare(b.full_name, 'ar') || a.id.localeCompare(b.id));
   }
 
+  /** null when the student does not exist. */
+  async broughtBy(studentId: string): Promise<{ brought_by: string | null; brought_at: string | null; name: string | null } | null> {
+    const { data, error } = await this.db.from('students').select('brought_by, brought_at').eq('id', studentId).maybeSingle();
+    if (error) throw dbError(error);
+    if (!data) return null;
+    if (!data.brought_by) return { ...data, name: null };
+    const person = await this.db.from('profiles').select('full_name').eq('id', data.brought_by).maybeSingle();
+    if (person.error) throw dbError(person.error);
+    return { ...data, name: person.data?.full_name ?? null };
+  }
+
   async isAssistant(id: string): Promise<boolean> {
     const { data, error } = await this.db.from('profiles').select('id').eq('id', id).eq('role', 'sales').maybeSingle();
     if (error) throw dbError(error);

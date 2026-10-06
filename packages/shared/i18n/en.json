@@ -1241,7 +1241,8 @@
     },
     "register": {
       "title": "Register a student",
-      "intro": "Register the guardian and the student, then pick the teacher and the time of the trial lesson. The student is credited to you automatically.",
+      "intro": "Registration starts from the student's chat: open the chat from the inbox and press «Register the student from this chat», then pick the teacher and the time of the trial lesson. The student is credited to you automatically.",
+      "openInbox": "Open the inbox",
       "newStudent": "Student and guardian details",
       "fromChat": "Register the student from this chat",
       "openMyStudents": "Open my students"

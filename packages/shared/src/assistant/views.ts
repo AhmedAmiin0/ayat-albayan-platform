@@ -22,6 +22,12 @@ export interface BroughtByResult {
   changed: number;
 }
 
+/** GET /assistant-pay/brought-by/:studentId: who brought a student and when (both null when nobody did). */
+export interface BroughtByView {
+  assistant: { id: string; name: string } | null;
+  brought_at: string | null;
+}
+
 /** GET /assistant-pay/commissions (admin ledger, all assistants). */
 export interface AssistantCommissionView {
   id: string;

@@ -48,3 +48,6 @@ export const STATEMENT: AssistantStatementView = {
   note: null,
   has_receipt: false,
 };
+
+/** What GET /assistant-pay/terms answers for an assistant of the list. */
+export const termsRowOf = ({ name, terms }: AssistantRow) => ({ ...terms, name });

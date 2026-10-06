@@ -1,4 +1,4 @@
-import type { AssistantTermsInput, AssistantTermsRow, AssistantTermsView } from '@ab/shared';
+import type { AssistantTermsInput, BroughtByView, AssistantTermsRow, AssistantTermsView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { notFound } from '../scheduling/errors';
@@ -20,6 +20,14 @@ export class TermsService {
     const [people, rows] = await Promise.all([this.queries.assistants(), this.queries.all()]);
     const byId = new Map(rows.map((r) => [r.assistant_id, r]));
     return people.map((p) => ({ ...toTermsView(p.id, byId.get(p.id) ?? null), name: p.full_name }));
+  }
+
+  /** 404 student_not_found. */
+  async broughtBy(studentId: string): Promise<BroughtByView> {
+    const row = await this.queries.broughtBy(studentId);
+    if (!row) throw notFound('student_not_found');
+    const assistant = row.brought_by ? { id: row.brought_by, name: row.name ?? '' } : null;
+    return { assistant, brought_at: row.brought_at };
   }
 
   async get(assistantId: string): Promise<AssistantTermsView> {

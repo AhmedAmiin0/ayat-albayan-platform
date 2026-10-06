@@ -22,12 +22,13 @@ const RESULT = {
 };
 
 /** The sales mirror of the booking routes; any other path (admin booking, pricing) rejects. */
+const LEAD = '7d3f2a10-1b2c-4d5e-8f90-123456789abc';
 const FETCH: [string, unknown][] = [
   ['/sales/booking/teachers', [ABRAR]],
   ['/sales/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [{ starts_at: SLOT, ends_at: SLOT, conflicts: [] }] }],
 ];
 
-function open() {
+function open(search: Parameters<typeof SalesRegister>[0]['search'] = {}) {
   apiFetch.mockImplementation((path: string) => {
     const hit = FETCH.find(([prefix]) => path.startsWith(prefix));
     return hit ? Promise.resolve(hit[1]) : Promise.reject(new Error(`unmocked ${path}`));
@@ -37,7 +38,7 @@ function open() {
   );
   render(
     <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
-      <SalesRegister search={{}} />
+      <SalesRegister search={search} />
     </QueryClientProvider>,
   );
 }
@@ -56,17 +57,24 @@ describe('SalesRegister «تسجيل طالب» (R-ASST-01)', () => {
     apiSend.mockReset();
   });
 
-  it('opens on the new student form: no booking type, no student search, no package', () => {
+  it('without a chat it points to the inbox: the API books a new family only from her own lead', () => {
     open();
     expect(screen.getByRole('heading', { level: 1, name: t.assistantPortal.register.title })).toBeTruthy();
-    expect(screen.getByRole('heading', { name: t.assistantPortal.register.newStudent })).toBeTruthy();
+    expect(screen.getByRole('link', { name: t.assistantPortal.register.openInbox }).getAttribute('href')).toBe('/sales/inbox');
+    expect(screen.queryByText(t.booking.next)).toBeNull();
+    expect(apiFetch).not.toHaveBeenCalled();
+  });
+
+  it('from a chat it opens on the new student form: no booking type, no student search, no package', () => {
+    open({ leadId: LEAD });
+    expect(screen.getByRole('heading', { level: 1, name: t.assistantPortal.register.title })).toBeTruthy();
     expect(screen.queryByText(t.booking.kind.label)).toBeNull();
     expect(screen.queryByText(t.booking.pickStudents)).toBeNull();
     expect((screen.getByRole('button', { name: t.booking.next }) as HTMLButtonElement).disabled).toBe(true);
   });
 
   it('guardian + student → teacher → trial length → slot → review → booked, all through /sales/booking, no price, no invoice', async () => {
-    open();
+    open({ leadId: LEAD });
     type(t.leads.studentName, 'سهيلة');
     type(t.guardians.phone, '+966501234567');
     type(t.guardians.name, 'أم سهيلة');
@@ -89,7 +97,7 @@ describe('SalesRegister «تسجيل طالب» (R-ASST-01)', () => {
       newStudent: { name: 'سهيلة' },
       guardian: { name: 'أم سهيلة', phone_e164: '+966501234567' },
     });
-    expect(post?.[2]).not.toHaveProperty('leadId');
+    expect(post?.[2]).toHaveProperty('leadId', LEAD);
     expect(post?.[2]).not.toHaveProperty('invoice');
     // Nothing of the admin's booking or pricing routes was used.
     for (const [path] of apiFetch.mock.calls) expect(String(path)).toMatch(/^\/sales\/booking\//);

@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { BroughtByField } from './BroughtByField';
 import { BulkAssign } from './BulkAssign';
-import { ASSISTANT } from './fixtures';
+import { ASSISTANT, termsRowOf } from './fixtures';
 import type { StudentPick } from './use-student-pick';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -25,7 +25,7 @@ beforeEach(() => {
   apiSend.mockResolvedValue({ changed: 1 });
   held.list = ['assistantpay.read', 'assistantpay.write'];
   broughtBy = { assistant: null, brought_at: null };
-  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/assistant-pay/brought-by') ? broughtBy : [ASSISTANT]));
+  apiFetch.mockImplementation(async (path: string) => (path.startsWith('/assistant-pay/brought-by') ? broughtBy : [termsRowOf(ASSISTANT)]));
 });
 
 describe('BroughtByField on the student profile (R-ASST-01)', () => {

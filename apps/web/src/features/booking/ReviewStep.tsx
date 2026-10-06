@@ -9,8 +9,7 @@ import { ConflictNotice } from '@/features/schedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/students/api';
 import { t } from '@/lib/i18n';
 import { createBooking } from './api';
-import type { BookingDraft } from './draft';
-import { requestFor } from './draft.sales';
+import { toBookingRequest, type BookingDraft } from './draft';
 import { DuplicateNotice } from './DuplicateNotice';
 import { useBookingMode } from './mode';
 import { ReviewSummary } from './ReviewSummary';
@@ -38,7 +37,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
   const mode = useBookingMode();
   const book = useMutation({
     mutationFn: (override?: string) => {
-      const body = requestFor(mode, draft, override);
+      const body = toBookingRequest(draft, override);
       if (!body) throw new Error('incomplete draft');
       return createBooking(body, mode);
     },

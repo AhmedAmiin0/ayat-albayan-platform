@@ -56,7 +56,7 @@ describe('CommissionLedger (R-ASST-02, R-ASST-05)', () => {
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1'));
     fireEvent.change(screen.getByLabelText(t.assistants.ledger.month), { target: { value: '2026-09' } });
     fireEvent.change(screen.getByLabelText(t.assistants.ledger.statusLabel), { target: { value: 'voided' } });
-    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1&month=2026-09&status=voided'));
+    await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/assistant-pay/commissions?assistantId=a1&status=voided&from=2026-09-01T00%3A00%3A00.000Z&to=2026-10-01T00%3A00%3A00.000Z'));
   });
 
   it('voiding needs a reason, then posts it', async () => {

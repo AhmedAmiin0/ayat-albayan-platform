@@ -27,7 +27,7 @@ export function PayStatementDialog({ statement, onClose }: Props) {
   const [note, setNote] = useState('');
   const [file, setFile] = useState<File | null>(null);
   const [problem, setProblem] = useState<string | null>(null);
-  const save = usePayStatement(statement.id, onClose);
+  const save = usePayStatement(statement.id, statement.assistant.id, onClose);
   const amounts = Object.entries(statement.totals).map(([c, v]) => moneyText(v.total, c)).join(t.common.listSeparator);
   const submit = (e: FormEvent) => {
     e.preventDefault();

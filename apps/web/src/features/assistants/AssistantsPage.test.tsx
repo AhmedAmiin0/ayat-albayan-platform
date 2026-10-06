@@ -4,7 +4,7 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { AssistantDetailPage } from './AssistantDetailPage';
 import { AssistantsPage } from './AssistantsPage';
-import { ASSISTANT, COMMISSION, STATEMENT } from './fixtures';
+import { ASSISTANT, COMMISSION, STATEMENT, termsRowOf } from './fixtures';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const held = vi.hoisted(() => ({ list: [] as string[] }));
@@ -18,7 +18,7 @@ const NEW = { id: 'a2', name: 'سارة', terms: { assistant_id: 'a2', salary: n
 
 function wrap(ui: React.ReactNode) {
   apiFetch.mockImplementation(async (path: string) => {
-    if (path.startsWith('/assistant-pay/assistants')) return [ASSISTANT, NEW];
+    if (path.startsWith('/assistant-pay/terms')) return [ASSISTANT, NEW].map(termsRowOf);
     if (path.startsWith('/assistant-pay/commissions')) return [COMMISSION];
     return [STATEMENT];
   });

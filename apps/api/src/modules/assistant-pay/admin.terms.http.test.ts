@@ -76,6 +76,17 @@ describe('terms, ledger, void, adjustment and attribution (admin)', () => {
     expect(t.terms.upsert).not.toHaveBeenCalled();
   });
 
+  it('GET /brought-by/:studentId: who brought the student and when; nobody gives nulls; an unknown student is 404', async () => {
+    const url = `/assistant-pay/brought-by/${STUDENT}`;
+    t.terms.broughtBy.mockResolvedValueOnce({ brought_by: A, brought_at: '2026-10-03T10:00:00Z', name: 'الزهراء' });
+    expect((await t.call({ method: 'GET', url, token: 'admin' })).json()).toEqual({ assistant: { id: A, name: 'الزهراء' }, brought_at: '2026-10-03T10:00:00Z' });
+    t.terms.broughtBy.mockResolvedValueOnce({ brought_by: null, brought_at: null, name: null });
+    expect((await t.call({ method: 'GET', url, token: 'admin' })).json()).toEqual({ assistant: null, brought_at: null });
+    t.terms.broughtBy.mockResolvedValueOnce(null);
+    const res = await t.call({ method: 'GET', url, token: 'admin' });
+    expect([res.statusCode, res.json().code]).toEqual([404, 'student_not_found']);
+  });
+
   it('GET /commissions passes the filters; an unknown status or a bad date is 400', async () => {
     t.ledger.list.mockResolvedValue([]);
     const url = `/assistant-pay/commissions?assistantId=${A}&status=voided&from=2026-10-01T00:00:00Z`;

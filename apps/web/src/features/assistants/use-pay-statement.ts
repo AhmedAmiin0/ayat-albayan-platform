@@ -7,14 +7,14 @@ import { ASSISTANTS_KEY, payStatement, uploadStatementReceipt } from './api';
 export type PayStatementInput = { day: string; method: PaymentMethod; note: string; file: File | null };
 
 /** «تأكيد الدفع»: the receipt goes up once per file, then POST /assistant-pay/statements/:id/pay. */
-export function usePayStatement(statementId: string, onSaved: () => void) {
+export function usePayStatement(statementId: string, assistantId: string, onSaved: () => void) {
   const queryClient = useQueryClient();
   const uploaded = useRef<{ file: File; path: string } | null>(null);
 
   async function receiptPath(file: File | null): Promise<string | null> {
     if (!file) return null;
     if (uploaded.current?.file === file) return uploaded.current.path;
-    const path = await uploadStatementReceipt(file);
+    const path = await uploadStatementReceipt(file, assistantId);
     uploaded.current = { file, path };
     return path;
   }

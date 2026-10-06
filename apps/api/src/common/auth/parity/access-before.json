@@ -4,6 +4,7 @@
   "AdminTasksController.list": ["admin"],
   "AssistantPayController.adjust": ["admin"],
   "AssistantPayController.broughtBy": ["admin"],
+  "AssistantPayController.broughtByOf": ["admin"],
   "AssistantPayController.get": ["admin"],
   "AssistantPayController.ledger": ["admin"],
   "AssistantPayController.list": ["admin"],
