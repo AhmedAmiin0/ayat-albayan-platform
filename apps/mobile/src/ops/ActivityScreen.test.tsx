@@ -59,7 +59,8 @@ test('role and item pills filter on the server and reset to page 1', async () =>
   // «معلم/ة» is both a role and an item: the role pills come first.
   await fireEvent.press(screen.getAllByRole('tab', { name: t.activity.roles.teacher })[0] as never);
   await waitFor(() => expect(lastUrl()).toBe('/activity?role=teacher&page=1&pageSize=25'));
-  await fireEvent.press(screen.getByRole('tab', { name: t.activity.entities.students }));
+  // «طالب» is also a role now (the item pills come last).
+  await fireEvent.press(screen.getAllByRole('tab', { name: t.activity.entities.students }).at(-1) as never);
   await waitFor(() => expect(lastUrl()).toContain('entity=students'));
 });
 
