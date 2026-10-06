@@ -4,13 +4,7 @@
 alter table public.students add column if not exists profile_id uuid references public.profiles (id) on delete set null;
 create unique index if not exists students_profile_id_key on public.students (profile_id) where profile_id is not null;
 
--- Guardians already have profile_id unique (people migration); keep it explicit and idempotent.
-create unique index if not exists guardians_profile_id_key on public.guardians (profile_id) where profile_id is not null;
-
--- A student reads their own row (the portal task widens this).
-drop policy if exists students_self_read on public.students;
-create policy students_self_read on public.students for select to authenticated
-  using (profile_id = (select auth.uid()));
+-- A student reads their own record through the whitelisted view of migration 288 (no row policy: it would expose notes etc.).
 
 -- The system role of the new base role: no permissions yet. Same shape as the other system roles.
 insert into public.roles (key, name_ar, name_en, base_role, is_system)

@@ -2,8 +2,9 @@ import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../support/rls';
 import { USERS } from '../support/users';
 
-// Migrations 280-285 (users control): the student base role, one login per student, the disabled
-// columns, and the service-role-only admin_list_users / user_references / revoke_user_sessions.
+// Migrations 280-285 + 288 (users control): the student base role, one login per student, the disabled
+// columns, the service-role-only admin_list_users / user_references / revoke_user_sessions, and the
+// whitelisted student_self view. (Disabled logins and the last-admin guard: profiles-disabled.sql.spec.ts.)
 
 const code = (tx: Tx, q: () => Promise<unknown>) => tx.savepoint(q).then(() => 'ok', (e: { code?: string }) => e.code);
 
@@ -27,7 +28,7 @@ async function student(tx: Tx, phone: string): Promise<{ id: string; code: strin
   return s;
 }
 
-test.describe('users control (migrations 280-285)', () => {
+test.describe('users control (migrations 280-288)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('the student system role exists, holds no permission, and the enum accepts it', async () => {
@@ -97,6 +98,23 @@ test.describe('users control (migrations 280-285)', () => {
       expect(await code(tx, () => as(tx, admin, () => tx`select public.auth_user_id_by_email('x@y.z')`))).toBe('42501');
       const n = await asService(tx, () => tx<{ n: number }[]>`select public.revoke_user_sessions(gen_random_uuid()) as n`);
       expect(n[0]?.n).toBe(0);
+    });
+  });
+
+  test('a student reads their own record only through student_self (no notes, no direct table access)', async () => {
+    await rolledBack(async (tx) => {
+      const admin = await userId(tx, USERS.admin.email);
+      const teacher = await userId(tx, USERS.teacher.email);
+      const s = await student(tx, '+966500000405');
+      await tx`update public.teachers set profile_id = null where profile_id = ${teacher}`;
+      await tx`update public.students set profile_id = ${teacher}, notes = 'ملاحظة داخلية' where id = ${s.id}`;
+      const own = await as(tx, teacher, () => tx<Record<string, unknown>[]>`select * from public.student_self`);
+      expect(own).toHaveLength(1);
+      expect(own[0]).toMatchObject({ id: s.id, code: s.code });
+      const columns = Object.keys(own[0] ?? {});
+      for (const hidden of ['notes', 'meeting_link_override', 'created_by', 'guardian_id']) expect(columns).not.toContain(hidden);
+      expect(await as(tx, teacher, () => tx`select id from public.students where id = ${s.id}`)).toHaveLength(0);
+      expect(await as(tx, admin, () => tx`select id from public.student_self`)).toHaveLength(0);
     });
   });
 });
