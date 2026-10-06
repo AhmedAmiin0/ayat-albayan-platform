@@ -2478,7 +2478,6 @@
       "tabsLabel": "Section",
       "paymentsEmpty": "This student has no payments yet.",
       "invoicesEmpty": "This student has no invoices yet.",
-      "net": "Net: {amount}",
       "viewInvoice": "Open invoice",
       "invoiceFailed": "Couldn't open the invoice. Please try again.",
       "error": "Couldn't load the data. Please try again."
@@ -2507,7 +2506,10 @@
       "confirm": "The new link cancels any earlier link for this student. Continue?",
       "confirmAction": "Create a new link",
       "share": "{name}'s lesson link: {url}",
-      "error": "Couldn't create the link. Please try again."
+      "error": "Couldn't create the link. Please try again.",
+      "shareFailed": "Couldn't share the link, but it was created and won't be shown again. Copy it below or share it again.",
+      "shareAgain": "Share the link again",
+      "newLink": "The new link (shown this time only):"
     }
   },
   "teacherNav": {

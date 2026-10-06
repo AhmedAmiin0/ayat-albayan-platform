@@ -1,4 +1,4 @@
-import { isFiltered, NO_FILTERS, presetRange, recordingParams } from './recording-filters';
+import { isFiltered, utcToday, NO_FILTERS, presetRange, recordingParams } from './recording-filters';
 
 test('presets map to inclusive day ranges', () => {
   expect(presetRange('all', '2026-10-06')).toEqual({});
@@ -19,4 +19,9 @@ test('params carry only what is set', () => {
 test('isFiltered', () => {
   expect(isFiltered(NO_FILTERS)).toBe(false);
   expect(isFiltered({ preset: 'all', teacherId: 't1' })).toBe(true);
+});
+
+test('today is the UTC date and follows the clock (Riyadh is already tomorrow after 21:00 UTC)', () => {
+  expect(utcToday(new Date('2026-10-06T22:30:00Z'))).toBe('2026-10-06');
+  expect(utcToday(new Date('2026-10-07T00:00:00Z'))).toBe('2026-10-07');
 });

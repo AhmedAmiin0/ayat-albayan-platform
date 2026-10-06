@@ -53,7 +53,7 @@ export function RecordingRow({ rec, studentId, tz = RIYADH_TZ, canManage, canDel
       {rec.status !== 'deleted' ? (
         <RecordingVisibility rec={rec} studentId={studentId} editable={canManage && rec.can_manage} />
       ) : null}
-      {canDelete && rec.status !== 'deleted' && rec.status !== 'recording' ? (
+      {canDelete && rec.can_manage && rec.status !== 'deleted' && rec.status !== 'recording' ? (
         <RecordingDelete id={rec.id} studentId={studentId} />
       ) : null}
     </View>

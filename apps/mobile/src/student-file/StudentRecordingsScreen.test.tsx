@@ -61,17 +61,7 @@ test('play refetches for a fresh signed link and opens it in the system player',
   serve([recording({ url: 'https://files.test/fresh.mp3?t=2' })]);
   await fireEvent.press(screen.getByText(R.play));
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://files.test/fresh.mp3?t=2'));
-  expect(recordingCalls().length).toBeGreaterThan(0);
-});
-
-test('a play that cannot get a link says so', async () => {
-  serve();
-  await renderWithQuery(<StudentRecordingsScreen />);
-  await screen.findByText(R.status.done);
-  serve([recording({ url: null })]);
-  await fireEvent.press(screen.getByText(R.play));
-  expect(await screen.findByText(R.playFailed)).toBeTruthy();
-  expect(openURL).not.toHaveBeenCalled();
+  expect(recordingCalls()).toEqual(['/students/s1/recordings?page=1&pageSize=10']);
 });
 
 test('the switch PATCHes the visibility; a 409 group lesson shows its message', async () => {

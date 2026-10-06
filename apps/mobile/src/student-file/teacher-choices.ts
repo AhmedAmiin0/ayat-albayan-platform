@@ -1,5 +1,6 @@
 import type { StudentRecordingView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
+import { useMemo, useState } from 'react';
 import { apiFetch } from '@/lib/api';
 import { teacherLabel } from './recording-format';
 import type { TeacherChoice } from './RecordingFiltersBar';
@@ -13,6 +14,12 @@ export function mergeChoices(rows: StudentRecordingView[], all: Option[]): Teach
   return [...seen].map(([id, name]) => ({ id, name }));
 }
 
+/** `a` then whatever `b` adds; the same list back when `b` adds nothing (no state churn). */
+export function unionChoices(a: TeacherChoice[], b: TeacherChoice[]): TeacherChoice[] {
+  const extra = b.filter((c) => !a.some((x) => x.id === c.id));
+  return extra.length ? [...a, ...extra] : a;
+}
+
 export function useTeacherChoices(rows: StudentRecordingView[], admin: boolean): TeacherChoice[] {
   const options = useQuery({
     queryKey: ['students', 'teacher-options'],
@@ -20,5 +27,11 @@ export function useTeacherChoices(rows: StudentRecordingView[], admin: boolean):
     enabled: admin,
     staleTime: 10 * 60_000,
   });
-  return mergeChoices(rows, options.data ?? []);
+  const current = useMemo(() => mergeChoices(rows, options.data ?? []), [rows, options.data]);
+  // The server filters the rows: once one teacher is picked they hold only that teacher, so the
+  // choices seen so far are remembered and the filter can be cleared again.
+  const [seen, setSeen] = useState<TeacherChoice[]>([]);
+  const next = unionChoices(seen, current);
+  if (next !== seen) setSeen(next);
+  return next;
 }

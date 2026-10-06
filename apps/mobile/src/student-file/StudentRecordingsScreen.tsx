@@ -1,8 +1,7 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
-import { riyadhToday } from '@/calendar/week';
 import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
@@ -14,10 +13,10 @@ import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
-import { isFiltered, NO_FILTERS, recordingParams, type RecordingFilters } from './recording-filters';
+import { isFiltered, NO_FILTERS, recordingParams, utcToday, type RecordingFilters } from './recording-filters';
 import { RecordingFiltersBar } from './RecordingFiltersBar';
 import { RecordingRow } from './RecordingRow';
-import { freshRecordingUrl, useRecordings } from './recordings-queries';
+import { useRecordings } from './recordings-queries';
 import { useTeacherChoices } from './teacher-choices';
 
 const R = t.mobileStudentFile.recordings;
@@ -35,7 +34,7 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
   const adminName = useStudentName(id, admin);
   const name = adminName ?? me.data?.students.find((s) => s.id === id)?.name;
   const [filters, setFilters] = useState<RecordingFilters>(NO_FILTERS);
-  const params = useMemo(() => recordingParams(filters, riyadhToday(new Date())), [filters]);
+  const params = recordingParams(filters, utcToday());
   const list = useRecordings(id, params);
   const teachers = useTeacherChoices(list.items, admin);
   const manage = can('recordings.manage');
@@ -61,8 +60,8 @@ export function StudentRecordingsScreen({ admin = true }: { admin?: boolean }) {
                 studentId={id}
                 tz={me.data?.tz ?? RIYADH_TZ}
                 canManage={manage}
-                canDelete={admin && manage}
-                getUrl={() => freshRecordingUrl(list.refetch, item.id)}
+                canDelete={admin && manage && item.can_manage}
+                getUrl={() => list.freshUrl(item.id)}
               />
             )}
             onEndReached={list.loadMore}

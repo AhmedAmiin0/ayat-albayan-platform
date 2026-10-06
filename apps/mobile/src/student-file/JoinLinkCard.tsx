@@ -4,10 +4,11 @@ import { Share, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { Note } from '@/more/Note';
 import { SectionLabel } from '@/students/SectionLabel';
+import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { InlineConfirm } from '@/ui/InlineConfirm';
-import { Note } from '@/more/Note';
 
 const J = t.mobileStudentFile.joinLink;
 
@@ -18,14 +19,26 @@ export function issueJoinLink(studentId: string): Promise<{ url: string }> {
 
 /**
  * «رابط دخول الطالب» (web: StudentJoinLink): there is no clipboard module, so the link goes through
- * the system share sheet (WhatsApp, messages, copy from there). Only the hash is stored: it can't be shown again.
+ * the system share sheet. Only the hash is stored and the old link is already revoked, so the new
+ * link stays on screen (selectable, with a re-share button) until the card goes away.
  */
 export function JoinLinkCard({ studentId, studentName }: { studentId: string; studentName: string }) {
   const [asking, setAsking] = useState(false);
+  const [url, setUrl] = useState<string | null>(null);
+  const [shareFailed, setShareFailed] = useState(false);
+  const share = async (link: string) => {
+    setShareFailed(false);
+    try {
+      await Share.share({ message: J.share.replace('{name}', studentName).replace('{url}', link) });
+    } catch {
+      setShareFailed(true);
+    }
+  };
   const make = useMutation({
-    mutationFn: async () => {
-      const { url } = await issueJoinLink(studentId);
-      await Share.share({ message: J.share.replace('{name}', studentName).replace('{url}', url) });
+    mutationFn: () => issueJoinLink(studentId),
+    onSuccess: (made) => {
+      setUrl(made.url);
+      void share(made.url);
     },
     onSettled: () => setAsking(false),
   });
@@ -47,6 +60,14 @@ export function JoinLinkCard({ studentId, studentName }: { studentId: string; st
         </View>
       )}
       {make.isError ? <ErrorLine message={J.error} /> : null}
+      {url ? (
+        <View style={{ gap: 6, alignItems: 'flex-start' }}>
+          <Note>{J.newLink}</Note>
+          <AppText selectable style={{ writingDirection: 'ltr' }}>{url}</AppText>
+          <Button variant="secondary" label={J.shareAgain} onPress={() => void share(url)} />
+        </View>
+      ) : null}
+      {shareFailed ? <ErrorLine message={J.shareFailed} /> : null}
     </View>
   );
 }

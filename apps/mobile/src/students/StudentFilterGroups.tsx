@@ -1,9 +1,9 @@
-import { NO_TEACHER, PROGRAMS, STUDENT_PACKAGE_FILTERS, tzChoices, tzOptionLabel } from '@ab/shared';
+import { NO_TEACHER, teacherName, PROGRAMS, STUDENT_PACKAGE_FILTERS, tzChoices, tzOptionLabel } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { FilterPills } from '@/ui/FilterPills';
 import { SectionLabel } from './SectionLabel';
-import { teacherLabel } from '@/student-file/recording-format';
+import { locale } from '@/lib/locale';
 import { SORT_CHOICES, type FilterKey, type StudentFilters } from './student-filters';
 import type { TeacherOption } from './use-student-list-data';
 
@@ -15,7 +15,7 @@ type Pill = { value: string; label: string };
 /** Each select filter's options, «الكل» first (value '' = no filter), as the web's studentFilterOptions. */
 export function filterOptions(teachers: TeacherOption[], tz: string): Record<Exclude<FilterKey, 'status'>, Pill[]> {
   return {
-    teacher: [{ value: '', label: S.teacherAll }, { value: NO_TEACHER, label: S.teacherNone }, ...teachers.map((x) => ({ value: x.id, label: teacherLabel(x) }))],
+    teacher: [{ value: '', label: S.teacherAll }, { value: NO_TEACHER, label: S.teacherNone }, ...teachers.map((x) => ({ value: x.id, label: teacherName(x, locale) }))],
     program: [{ value: '', label: S.programAll }, ...PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p] }))],
     package: [{ value: '', label: S.packageAll }, ...STUDENT_PACKAGE_FILTERS.map((p) => ({ value: p, label: S.packageFilter[p] }))],
     weekly: [{ value: '', label: S.weeklyAll }, { value: 'yes', label: S.weeklyYes }, { value: 'no', label: S.weeklyNo }],

@@ -45,3 +45,18 @@ test('cancel closes the question without a request', async () => {
   expect(screen.getByText(J.create)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
+
+test('a dismissed or failed share keeps the new link on screen to copy or share again', async () => {
+  mockApiSend.mockResolvedValue({ url: 'https://app.test/s/abc' });
+  share.mockRejectedValueOnce(new Error('no share'));
+  await renderWithQuery(<JoinLinkCard studentId="s1" studentName="هدى" />);
+  await fireEvent.press(screen.getByText(J.create));
+  await fireEvent.press(screen.getByText(J.confirmAction));
+  expect(await screen.findByText(J.shareFailed)).toBeTruthy();
+  expect(screen.queryByText(J.error)).toBeNull();
+  expect(screen.getByText('https://app.test/s/abc')).toBeTruthy();
+  await fireEvent.press(screen.getByText(J.shareAgain));
+  await waitFor(() => expect(share).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(screen.queryByText(J.shareFailed)).toBeNull());
+  expect(mockApiSend).toHaveBeenCalledTimes(1);
+});
