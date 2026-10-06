@@ -2,7 +2,7 @@ import type { BookingTeacherOption, Duration, Gender, PackageSize, Program } fro
 import { RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
-import { leadParts, newStudentReady, type NewStudentDraft } from './new-student';
+import { isNewStudent, leadParts, newStudentReady, type NewStudentDraft } from './new-student';
 
 export type { NewStudentDraft } from './new-student';
 export type { InvoiceDraft, MissedPick } from './draft.invoice';
@@ -100,7 +100,7 @@ export function stepReady(d: BookingDraft, step: StepKey): boolean {
   switch (step) {
     case 'students':
       if (d.kind === 'makeup') return d.students.length === 1 && !d.leadId;
-      return d.leadId && d.students.length === 0 ? newStudentReady(d.newStudent) : d.students.length > 0;
+      return isNewStudent(d) && d.students.length === 0 ? newStudentReady(d.newStudent) : d.students.length > 0;
     case 'missed':
       return d.missed !== null;
     case 'invoice':

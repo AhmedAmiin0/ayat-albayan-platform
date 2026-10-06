@@ -1231,6 +1231,81 @@
     "reportLink": "تسجيل الحلقة",
     "reportLinkOf": "فتح تسجيل حلقة {when}"
   },
+  "assistantPortal": {
+    "title": "مساعد/ة",
+    "nav": {
+      "register": "تسجيل طالب",
+      "students": "طلابي",
+      "earnings": "أرباحي",
+      "payments": "مدفوعاتي"
+    },
+    "register": {
+      "title": "تسجيل طالب",
+      "intro": "سجّل ولي الأمر والطالب، ثم اختر المعلم/ة وموعد الحلقة التجريبية. يُنسب الطالب إليك تلقائيًا.",
+      "newStudent": "بيانات الطالب وولي الأمر",
+      "fromChat": "سجّل الطالب من المحادثة",
+      "openMyStudents": "افتح طلابي"
+    },
+    "students": {
+      "title": "طلابي",
+      "list": "قائمة طلابي",
+      "empty": "لم تسجّل أي طالب بعد",
+      "emptyHint": "يظهر هنا كل طالب سجّلته، مع تاريخ التسجيل وحالة سداد أول اشتراك له.",
+      "student": "الطالب",
+      "broughtAt": "تاريخ التسجيل",
+      "firstPaid": "أول اشتراك",
+      "paid": "مسدد",
+      "unpaid": "غير مسدد بعد",
+      "commission": "عمولتي"
+    },
+    "commission": {
+      "earned": "مستحقة",
+      "voided": "ملغاة"
+    },
+    "earnings": {
+      "title": "أرباحي",
+      "terms": "شروطي",
+      "noTerms": "لم تُحدَّد شروط راتبك وعمولتك بعد. تواصل مع الإدارة.",
+      "salary": "الراتب الشهري",
+      "salaryFrom": "{amount} شهريًا، اعتبارًا من {date}",
+      "commission": "العمولة",
+      "commissionPercent": "{value}% من سعر الاشتراك",
+      "commissionFixed": "{amount} عن كل طالب",
+      "commissionNote": "تُحسب العمولة مرة واحدة لكل طالب، عند سداد أول اشتراك له بالكامل، اعتبارًا من {date}.",
+      "noCommission": "لا توجد عمولة في شروطك.",
+      "thisMonth": "هذا الشهر حتى الآن",
+      "commissionsTotal": "إجمالي عمولاتك المستحقة",
+      "statements": "كشوف الشهور",
+      "statementsEmpty": "لا توجد كشوف بعد",
+      "statementsEmptyHint": "يظهر الكشف هنا بعد أن تعدّه الإدارة.",
+      "totals": {
+        "salary": "الراتب",
+        "commissions": "العمولات",
+        "adjustments": "التسويات",
+        "total": "الإجمالي"
+      },
+      "lines": "بنود الكشف",
+      "line": {
+        "salary": "الراتب",
+        "commission": "عمولة {student}",
+        "adjustment": "تسوية: {reason}"
+      },
+      "approvedAt": "اعتُمد {date}",
+      "paidAt": "دُفع {date}"
+    },
+    "payments": {
+      "title": "مدفوعاتي",
+      "list": "قائمة مدفوعاتي",
+      "empty": "لم تسجّل أي دفعة بعد",
+      "emptyHint": "لا تظهر هنا إلا الدفعات التي سجّلتها أنت.",
+      "student": "الطالب",
+      "kind": "النوع",
+      "amount": "المبلغ",
+      "method": "الطريقة",
+      "paidAt": "تاريخ الدفع",
+      "note": "ملاحظة"
+    }
+  },
   "reports": {
     "title": "تقارير الحلقات",
     "formTitle": "تقرير الحلقة",

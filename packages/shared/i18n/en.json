@@ -1231,6 +1231,81 @@
     "reportLink": "Lesson recording",
     "reportLinkOf": "Open the recording of the lesson {when}"
   },
+  "assistantPortal": {
+    "title": "Assistant",
+    "nav": {
+      "register": "Register a student",
+      "students": "My students",
+      "earnings": "My earnings",
+      "payments": "My payments"
+    },
+    "register": {
+      "title": "Register a student",
+      "intro": "Register the guardian and the student, then pick the teacher and the time of the trial lesson. The student is credited to you automatically.",
+      "newStudent": "Student and guardian details",
+      "fromChat": "Register the student from this chat",
+      "openMyStudents": "Open my students"
+    },
+    "students": {
+      "title": "My students",
+      "list": "My students list",
+      "empty": "You have not registered any students yet",
+      "emptyHint": "Every student you register shows here, with the date and whether their first subscription is paid.",
+      "student": "Student",
+      "broughtAt": "Registered on",
+      "firstPaid": "First subscription",
+      "paid": "Paid",
+      "unpaid": "Not paid yet",
+      "commission": "My commission"
+    },
+    "commission": {
+      "earned": "Earned",
+      "voided": "Voided"
+    },
+    "earnings": {
+      "title": "My earnings",
+      "terms": "My terms",
+      "noTerms": "Your salary and commission terms are not set yet. Contact the administration.",
+      "salary": "Monthly salary",
+      "salaryFrom": "{amount} a month, from {date}",
+      "commission": "Commission",
+      "commissionPercent": "{value}% of the subscription price",
+      "commissionFixed": "{amount} per student",
+      "commissionNote": "The commission is earned once per student, when their first subscription is paid in full, from {date}.",
+      "noCommission": "Your terms include no commission.",
+      "thisMonth": "This month so far",
+      "commissionsTotal": "Total commissions earned",
+      "statements": "Monthly statements",
+      "statementsEmpty": "No statements yet",
+      "statementsEmptyHint": "A statement shows here once the administration prepares it.",
+      "totals": {
+        "salary": "Salary",
+        "commissions": "Commissions",
+        "adjustments": "Adjustments",
+        "total": "Total"
+      },
+      "lines": "Statement lines",
+      "line": {
+        "salary": "Salary",
+        "commission": "Commission for {student}",
+        "adjustment": "Adjustment: {reason}"
+      },
+      "approvedAt": "Approved {date}",
+      "paidAt": "Paid {date}"
+    },
+    "payments": {
+      "title": "My payments",
+      "list": "My payments list",
+      "empty": "You have not recorded any payments yet",
+      "emptyHint": "Only the payments you recorded yourself show here.",
+      "student": "Student",
+      "kind": "Type",
+      "amount": "Amount",
+      "method": "Method",
+      "paidAt": "Paid on",
+      "note": "Note"
+    }
+  },
   "reports": {
     "title": "Lesson reports",
     "formTitle": "Lesson report",

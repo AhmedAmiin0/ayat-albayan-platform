@@ -8,6 +8,7 @@ import { ReclassifyConfirm } from '@/features/leads/ReclassifyConfirm';
 import { t } from '@/lib/i18n';
 import type { InboxLead } from './api';
 import { LeadStatusChange } from './LeadStatusChange';
+import { useInboxMode } from './mode';
 
 export interface QuickActionsProps {
   lead: InboxLead;
@@ -38,16 +39,19 @@ export function QuickActions({ lead, onDone }: QuickActionsProps) {
   const subscribe = lead.status !== 'lost';
   const book = { leadId: lead.id, phone: lead.phone_e164, name: lead.name ?? undefined };
 
+  const sales = useInboxMode() === 'sales';
+
   return (
     <div className="grid gap-3">
       <h3 className="text-sm font-semibold">{t.common.actions}</h3>
       {open && (
-        <Link to="/admin/book" search={book} className={linkClass}>
+        <Link to={sales ? '/sales/register' : '/admin/book'} search={book} className={linkClass}>
           <Icon name="calendar" />
-          {t.booking.trialTitle}
+          {sales ? t.assistantPortal.register.fromChat : t.booking.trialTitle}
         </Link>
       )}
-      {subscribe && (
+      {/* An assistant registers the student and a trial; a paid package and its proof are the admin's. */}
+      {subscribe && !sales && (
         <Link to="/admin/book" search={{ ...book, pkg: '8' }} className={linkClass}>
           <Icon name="card" />
           {t.inbox.subscription.subscribe}

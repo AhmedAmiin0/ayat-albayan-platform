@@ -12,6 +12,7 @@ import { invoicesQuery } from './api.invoice';
 import type { BookingKind } from './contract';
 import type { PickedStudent } from './draft';
 import { InvoiceButton } from './InvoiceDialog';
+import { useBookingMode } from './mode';
 import { pickedText } from './SlotStep';
 
 export interface BookedPanelProps {
@@ -38,6 +39,7 @@ function firstLesson(result: BookingResult) {
  * regular package, and the way to the week (or back to the chat).
  */
 export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
+  const sales = useBookingMode() === 'sales';
   const [dialog, setDialog] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [paying, setPaying] = useState(false);
@@ -64,13 +66,19 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
             {t.inbox.subscription.make}
           </Button>
         )}
-        <Link
-          to="/admin/schedule"
-          search={{ week, teachers: [teacherId] }}
-          className={buttonVariants({ variant: offer ? 'secondary' : 'primary' })}
-        >
-          {t.booking.openSchedule}
-        </Link>
+        {sales ? (
+          <Link to="/sales/students" className={buttonVariants()}>
+            {t.assistantPortal.register.openMyStudents}
+          </Link>
+        ) : (
+          <Link
+            to="/admin/schedule"
+            search={{ week, teachers: [teacherId] }}
+            className={buttonVariants({ variant: offer ? 'secondary' : 'primary' })}
+          >
+            {t.booking.openSchedule}
+          </Link>
+        )}
         {invoice && <InvoiceButton invoice={invoice} />}
         {kind === 'package' && subscribed && invoice && subscribeFor && !paid && (
           <Button type="button" variant="secondary" onClick={() => setPaying(true)}>
@@ -78,7 +86,7 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
           </Button>
         )}
         {chatPhone && (
-          <Link to="/admin/inbox" search={{ phone: chatPhone, page: 1 }} className={buttonVariants({ variant: 'ghost' })}>
+          <Link to={sales ? '/sales/inbox' : '/admin/inbox'} search={{ phone: chatPhone, page: 1 }} className={buttonVariants({ variant: 'ghost' })}>
             {t.inbox.subscription.backToChat}
           </Link>
         )}

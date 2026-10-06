@@ -1,5 +1,6 @@
 import type { BookingResult } from '@ab/shared';
 import type { StudentRef } from '@/features/students/types';
+import { t } from '@/lib/i18n';
 import { mediaPhone } from './booked';
 import type { BookingDraft, PickedStudent, StepKey } from './draft';
 import { teacherPatch, type BookHint } from './hint';
@@ -7,6 +8,8 @@ import { InvoiceStep } from './InvoiceStep';
 import { KindStep } from './KindStep';
 import { LeadStudentStep } from './LeadStudentStep';
 import { MissedLessonStep } from './MissedLessonStep';
+import { useBookingMode } from './mode';
+import { isNewStudent } from './new-student';
 import { PackageStep } from './PackageStep';
 import { guardianCountry } from './price';
 import { ReviewStep } from './ReviewStep';
@@ -31,16 +34,18 @@ export interface WizardBodyProps {
 
 /** The body of the current step (the wizard owns the chrome: step list, «التالي» and «رجوع»). */
 export function WizardBody({ step, draft, patch, primary, siblings, onOpenStudent, hint, missedLessonId, onGoto, onBooked }: WizardBodyProps) {
+  const mode = useBookingMode();
   switch (step) {
     case 'students': {
-      const leadPath = !!draft.leadId && !primary;
+      const leadPath = isNewStudent(draft) && !primary;
       return (
         <div className="grid gap-6">
-          <KindStep draft={draft} leadPath={leadPath} onChange={patch} />
+          {mode === 'admin' && <KindStep draft={draft} leadPath={leadPath} onChange={patch} />}
           {leadPath ? (
             <LeadStudentStep
               value={draft.newStudent ?? { name: '', guardianName: '', guardianPhone: '' }}
               tz={draft.tz}
+              title={draft.leadId ? undefined : t.assistantPortal.register.newStudent}
               onChange={({ newStudent, ...rest }) =>
                 patch({
                   ...rest,
