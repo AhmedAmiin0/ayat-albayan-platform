@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { focusManager, QueryCache, QueryClient } from '@tanstack/react-query';
+import { focusManager, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
@@ -37,6 +37,7 @@ focusManager.setEventListener((setFocused) => {
 
 export const queryClient = new QueryClient({
   queryCache: new QueryCache({ onError: signOutOnAuthError }),
+  mutationCache: new MutationCache({ onError: signOutOnAuthError }),
   // gcTime must be ≥ the persist maxAge, or restored queries are collected before a screen reads them.
   defaultOptions: { queries: { gcTime: DAY, retry: shouldRetry } },
 });

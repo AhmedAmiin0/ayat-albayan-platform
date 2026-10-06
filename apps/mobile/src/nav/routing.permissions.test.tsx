@@ -1,6 +1,7 @@
 import { act, renderRouter, screen, waitFor } from 'expo-router/testing-library';
 import { Text } from 'react-native';
 import { t } from '@/lib/i18n';
+import { pathKey } from '@/lib/query-keys';
 import { queryClient } from '@/lib/query-client';
 import { TabStack } from '@/nav/TabStack';
 import TabsLayout from '../../app/(tabs)/_layout';
@@ -63,6 +64,18 @@ test('an accountant (payments only) keeps «المزيد» and loses the four ad
   mockMe.answer = { role: 'admin', permissions: ['payments.read'] };
   await renderRouter(app, { initialUrl: '/more' });
   await waitFor(() => expect(labels()).toEqual([t.mobile.more]));
+});
+
+test('seeded permissions (verifyRole) hide the tabs on the very first render, starting at the root', async () => {
+  queryClient.setQueryData(pathKey('/auth/me'), { role: 'admin', permissions: ['payments.read'] });
+  await renderRouter(app, { initialUrl: '/' });
+  expect(labels()).toEqual([t.mobile.more]); // never all five first
+});
+
+test('a role with leads.read only keeps the Inbox tab (it hosts the leads list)', async () => {
+  mockMe.answer = { role: 'admin', permissions: ['leads.read'] };
+  await renderRouter(app, { initialUrl: '/more' });
+  await waitFor(() => expect(labels()).toEqual([t.nav.conversations, t.mobile.more]));
 });
 
 test('a role with inbox.read and students.read keeps those tabs only (plus «المزيد»)', async () => {

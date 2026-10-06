@@ -1,5 +1,5 @@
 import { PERMISSIONS } from '@ab/shared';
-import { allowedRows, canOpen, ROUTE_PERMISSION, type RouteKey } from './route-permissions';
+import { allowedRows, canOpen, ROUTE_PERMISSION, type RouteKey, tabOpen } from './route-permissions';
 
 test('every route needs a permission that exists in the catalog', () => {
   for (const permission of Object.values(ROUTE_PERMISSION)) expect(PERMISSIONS).toContain(permission);
@@ -32,4 +32,12 @@ test('allowedRows keeps only what the role may open, in order', () => {
   expect(allowedRows((p) => p !== 'payouts.read', rows)).toEqual([rows[0], rows[2]]);
   expect(allowedRows(() => false, rows)).toEqual([]);
   expect(allowedRows(() => true, rows)).toHaveLength(3);
+});
+
+test('the Inbox tab stays for leads.read alone (it hosts the leads list); other tabs follow their route', () => {
+  expect(tabOpen((p) => p === 'leads.read', 'inbox')).toBe(true);
+  expect(tabOpen((p) => p === 'inbox.read', 'inbox')).toBe(true);
+  expect(tabOpen((p) => p === 'payments.read', 'inbox')).toBe(false);
+  expect(tabOpen((p) => p === 'leads.read', 'students')).toBe(false);
+  expect(tabOpen((p) => p === 'students.read', 'students')).toBe(true);
 });

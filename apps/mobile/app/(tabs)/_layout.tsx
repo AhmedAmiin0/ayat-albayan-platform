@@ -1,4 +1,4 @@
-import { canOpen } from '@/auth/route-permissions';
+import { tabOpen } from '@/auth/route-permissions';
 import { type Can, usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { useInboxBadge } from '@/nav/use-inbox-badge';
@@ -9,10 +9,10 @@ import { AppNativeTabs, type TabItem } from '@/ui/AppNativeTabs';
 // role cannot read is hidden (`can` allows all while /auth/me loads: no flicker); المحادثات carries the
 // unread + new-leads count (R-MOB-02). «المزيد» is always there (sign-out, language).
 const tabItems = (can: Can, inboxBadge?: string): TabItem[] => [
-  { name: 'index', title: t.mobile.today, icon: 'today', hidden: !canOpen(can, 'today') },
-  { name: 'schedule', title: t.schedule.nav, icon: 'schedule', hidden: !canOpen(can, 'schedule') },
-  { name: 'inbox', title: t.nav.conversations, icon: 'inbox', hidden: !canOpen(can, 'inbox'), badge: inboxBadge },
-  { name: 'students', title: t.nav.students, icon: 'students', hidden: !canOpen(can, 'students') },
+  { name: 'index', title: t.mobile.today, icon: 'today', hidden: !tabOpen(can, 'today') },
+  { name: 'schedule', title: t.schedule.nav, icon: 'schedule', hidden: !tabOpen(can, 'schedule') },
+  { name: 'inbox', title: t.nav.conversations, icon: 'inbox', hidden: !tabOpen(can, 'inbox'), badge: inboxBadge },
+  { name: 'students', title: t.nav.students, icon: 'students', hidden: !tabOpen(can, 'students') },
   { name: 'more', title: t.mobile.more, icon: 'more' },
 ];
 

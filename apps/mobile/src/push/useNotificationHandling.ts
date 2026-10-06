@@ -1,7 +1,8 @@
 import { useQueryClient } from '@tanstack/react-query';
 import * as Notifications from 'expo-notifications';
 import { router } from 'expo-router';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePermissions } from '@/auth/use-permissions';
 import { threadKey } from '@/inbox/thread-cache';
 import { pushKind, pushPhone, routeFor } from './notification-route';
 
@@ -34,6 +35,12 @@ function takeLastResponse(): Notifications.NotificationResponse | null {
  */
 export function useNotificationHandling(): void {
   const client = useQueryClient();
+  // The tap handler outlives renders: read the role's permissions as they are at tap time.
+  const can = usePermissions();
+  const canRef = useRef(can);
+  useEffect(() => {
+    canRef.current = can;
+  }, [can]);
 
   useEffect(() => {
     Notifications.setNotificationHandler({ handleNotification: async () => FOREGROUND });
@@ -44,6 +51,7 @@ export function useNotificationHandling(): void {
       const kind = pushKind(data);
       if (kind === 'new_lead' || kind === 'new_message') {
         void client.invalidateQueries({ queryKey: ['leads'] });
+        void client.invalidateQueries({ queryKey: ['threads', 'nav-count'] }); // the tab badge
       }
     });
     return () => {
@@ -55,7 +63,7 @@ export function useNotificationHandling(): void {
   useEffect(() => {
     const open = (response: Notifications.NotificationResponse | null) => {
       // Read defensively: the native module hands over plain JSON.
-      const href = routeFor(response?.notification?.request?.content?.data);
+      const href = routeFor(response?.notification?.request?.content?.data, canRef.current);
       if (href) router.push(href);
     };
     open(takeLastResponse()); // the tap that started the app, if any

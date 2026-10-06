@@ -30,6 +30,13 @@ export function canOpen(can: Can, route: RouteKey): boolean {
   return can(ROUTE_PERMISSION[route]);
 }
 
+export type TabRoute = 'today' | 'schedule' | 'inbox' | 'students';
+
+/** Is this bottom tab in the bar? The Inbox tab also hosts the leads list, so leads.read keeps it. */
+export function tabOpen(can: Can, tab: TabRoute): boolean {
+  return tab === 'inbox' ? canOpen(can, 'inbox') || can('leads.read') : canOpen(can, tab);
+}
+
 /** The rows `can` allows; a section whose list comes back empty is not drawn at all. */
 export function allowedRows<R extends { route: RouteKey }>(can: Can, rows: readonly R[]): R[] {
   return rows.filter((row) => canOpen(can, row.route));

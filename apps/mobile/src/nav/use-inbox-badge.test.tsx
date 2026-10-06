@@ -7,7 +7,6 @@ const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const THREADS = '/threads?unread=true&page=1&pageSize=1';
-const LEADS = '/leads?status=new&page=1&pageSize=1';
 
 beforeEach(() => {
   mockApiFetch.mockReset();
@@ -16,20 +15,20 @@ beforeEach(() => {
 
 const wrapper = (): (({ children }: { children: ReactNode }) => ReactNode) => queryWrapper(createTestQueryClient());
 
-test('sums unread threads and new leads from the count endpoints (pageSize=1)', async () => {
+test('shows the unread threads only: a new lead is already one of them (no double count)', async () => {
   const { result } = await renderHook(() => useInboxBadge(() => true), { wrapper: wrapper() });
-  await waitFor(() => expect(result.current).toBe('5'));
+  await waitFor(() => expect(result.current).toBe('3'));
   expect(mockApiFetch).toHaveBeenCalledWith(THREADS);
-  expect(mockApiFetch).toHaveBeenCalledWith(LEADS);
+  expect(mockApiFetch).toHaveBeenCalledTimes(1);
 });
 
-test('skips a count the role cannot read (no 403)', async () => {
+test('a leads-only role has no badge and requests no count (no 403)', async () => {
   const { result } = await renderHook(() => useInboxBadge((p) => p === 'leads.read'), { wrapper: wrapper() });
-  await waitFor(() => expect(result.current).toBe('2'));
-  expect(mockApiFetch).not.toHaveBeenCalledWith(THREADS);
+  expect(result.current).toBeUndefined();
+  expect(mockApiFetch).not.toHaveBeenCalled();
 });
 
-test('reads nothing and shows no badge when neither is allowed', async () => {
+test('reads nothing and shows no badge when inbox.read is not allowed', async () => {
   const { result } = await renderHook(() => useInboxBadge(() => false), { wrapper: wrapper() });
   expect(result.current).toBeUndefined();
   expect(mockApiFetch).not.toHaveBeenCalled();
@@ -38,6 +37,6 @@ test('reads nothing and shows no badge when neither is allowed', async () => {
 test('zero counts: no badge', async () => {
   mockApiFetch.mockResolvedValue({ total: 0 });
   const { result } = await renderHook(() => useInboxBadge(() => true), { wrapper: wrapper() });
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(2));
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(1));
   expect(result.current).toBeUndefined();
 });

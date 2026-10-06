@@ -1,4 +1,6 @@
 import { PUSH_KINDS, type PushKind } from '@ab/shared';
+import { tabOpen, type TabRoute } from '@/auth/route-permissions';
+import type { Can } from '@/auth/use-permissions';
 import { threadHref } from '@/inbox/thread-cache';
 
 // Where a tapped admin push opens (R-MOB-01). `data` is PushService's { kind, ...event.data }
@@ -46,8 +48,15 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   payment_due: toStudent,
 };
 
-/** The screen a tapped push opens; null for anything that is not an admin push (stay put). */
-export function routeFor(data: unknown): string | null {
+const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
+
+/**
+ * The screen a tapped push opens; null for anything that is not an admin push (stay put). A push
+ * into a tab the role cannot see (it is hidden, a push there goes nowhere) opens «المزيد» instead.
+ */
+export function routeFor(data: unknown, can: Can = () => true): string | null {
   const kind = pushKind(data);
-  return kind ? ROUTES[kind](data) : null;
+  if (!kind) return null;
+  const href = ROUTES[kind](data);
+  return tabOpen(can, tabOf(href)) ? href : '/more';
 }

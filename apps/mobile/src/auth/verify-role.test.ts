@@ -2,6 +2,8 @@ import type { Session } from '@supabase/supabase-js';
 import { renderHook } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { pathKey } from '@/lib/query-keys';
+import { queryClient } from '@/lib/query-client';
 import { setLoginNotice, useLoginNotice } from './login-notice';
 import { verifyRole } from './verify-role';
 
@@ -18,6 +20,7 @@ const session = (role: string | null) => ({ access_token: claim(role) }) as Sess
 
 beforeEach(() => {
   jest.clearAllMocks();
+  queryClient.clear();
   setLoginNotice(null);
 });
 
@@ -69,4 +72,17 @@ test('a disabled account (403 account_disabled) is signed out with its reason', 
   expect(await verifyRole(session('admin'))).toBe('out');
   expect(mockSignOut).toHaveBeenCalled();
   expect(await shownNotice()).toBe(t.mobileNav.accountDisabled);
+});
+
+test('the permissions of /auth/me are cached before the tabs first render (no flash of all five)', async () => {
+  const me = { role: 'admin', permissions: ['payments.read'] };
+  mockApiFetch.mockResolvedValue(me);
+  await verifyRole(session('admin'));
+  expect(queryClient.getQueryData(pathKey('/auth/me'))).toEqual(me);
+});
+
+test('a refused role seeds nothing', async () => {
+  mockApiFetch.mockResolvedValue({ role: 'guardian', permissions: [] });
+  await verifyRole(session('admin'));
+  expect(queryClient.getQueryData(pathKey('/auth/me'))).toBeUndefined();
 });
