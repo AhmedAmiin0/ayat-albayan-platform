@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { AssistantStatementView, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { call, dayOffset, family, makeAssistant, paymentBy, thisMonth, tokenOf, type Assistant, type Family } from '../support/assistant-api';
-import { ledger, payIn, subscribe } from '../support/assistant-money';
+import { money } from '../support/assistant-money';
 import { USERS } from '../support/users';
 
 // The month's statement and the assistant's own pages through the REAL API and database (R-ASST-03,
@@ -28,6 +28,7 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
   test.beforeAll(async ({ playwright }) => {
     const request = await playwright.request.newContext();
     admin = await tokenOf(USERS.admin.email, USERS.admin.password);
+    const m = money(request, admin);
     p = await makeAssistant('p');
     q = await makeAssistant('q');
     const startsOn = dayOffset(-1);
@@ -36,18 +37,19 @@ test.describe.serial('assistant statement and own pages (API + DB)', () => {
     sar = await family(p.id, 'سارة');
     usd = await family(p.id, 'يوسف');
     other = await family(q.id, 'ليان');
-    const pounds = await subscribe(request, admin, sar.student, 'SA');
-    await payIn(request, admin, pounds, pounds.price);
-    const dollars = await subscribe(request, admin, usd.student, 'US');
-    await payIn(request, admin, dollars, dollars.price);
-    const extra = await subscribe(request, admin, sar.student, 'SA');
+    const pounds = await m.subscribe(sar.student, 'SA');
+    await m.payIn(pounds, pounds.price);
+    const dollars = await m.subscribe(usd.student, 'US');
+    await m.payIn(dollars, dollars.price);
+    const extra = await m.subscribe(sar.student, 'SA');
     await paymentBy(extra.id, p.id, 10);
-    const hers = await subscribe(request, admin, other.student, 'SA');
+    const hers = await m.subscribe(other.student, 'SA');
     await paymentBy(hers.id, q.id, 25);
   });
 
   test('the ledger: one commission in SAR (10 percent of 120) and one in USD (10 percent of the dollar price), never mixed', async ({ request }) => {
-    const rows = await ledger(request, admin, need(p).id);
+    const m = money(request, admin);
+    const rows = await m.ledger(need(p).id);
     expect(rows.map((r) => [r.currency, r.status]).sort()).toEqual([['SAR', 'earned'], ['USD', 'earned']]);
     expect(rows.find((r) => r.currency === 'SAR')?.amount).toBe(12);
     expect(rows.find((r) => r.currency === 'USD')?.amount).toBe(Math.round((rows.find((r) => r.currency === 'USD')?.base_amount ?? 0) * 10) / 100);

@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { ThreadDetail, ThreadView } from '@ab/shared';
 import { call, family, makeAssistant, message, tokenOf, type Assistant, type Family } from '../support/assistant-api';
-import { subscribe } from '../support/assistant-money';
+import { money } from '../support/assistant-money';
 import { USERS } from '../support/users';
 
 // What an assistant may NOT see or do, through the REAL API and database (R-ASST-04): the money routes
@@ -23,12 +23,13 @@ test.describe.serial('assistant scope: money routes and chats (API + DB)', () =>
   test.beforeAll(async ({ playwright }) => {
     const request = await playwright.request.newContext();
     admin = await tokenOf(USERS.admin.email, USERS.admin.password);
+    const m = money(request, admin);
     mine = await makeAssistant('m');
     theirs = await makeAssistant('t');
     own = await family(mine.id, 'هدى');
     foreign = await family(theirs.id, 'نور');
     stranger = await family(null, 'مها');
-    await subscribe(request, admin, own.student, 'SA');
+    await m.subscribe(own.student, 'SA');
     for (const f of [own, foreign, stranger]) await message({ phone: f.phone, guardian: f.guardian, direction: 'inbound', body: 'السلام عليكم' });
     await message({ phone: own.phone, guardian: own.guardian, direction: 'outbound', body: 'رابط الدخول', template: 'lesson_join_link' });
     await message({ phone: own.phone, guardian: own.guardian, direction: 'outbound', body: 'حان موعد التجديد', template: 'renewal_due' });

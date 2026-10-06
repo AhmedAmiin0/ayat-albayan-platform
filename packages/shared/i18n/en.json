@@ -1045,7 +1045,7 @@
       "select": "Assistant",
       "noneOption": "No assistant",
       "broughtAt": "Date brought (optional)",
-      "save": "Save",
+      "save": "Set assistant",
       "saved": "Assistant saved",
       "bulk": "Assign assistant ({count})",
       "bulkTitle": "Assign an assistant to {count} students",

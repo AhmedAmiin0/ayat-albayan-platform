@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test';
 import type { AssistantCommissionView, BookingResult } from '@ab/shared';
 import { call, dayOffset, freshPhone, leadOf, makeAssistant, tokenOf, trialBody, type Assistant } from '../support/assistant-api';
-import { cents, ledger, payIn, subscribe } from '../support/assistant-money';
+import { cents, money } from '../support/assistant-money';
 import { resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { USERS } from '../support/users';
 
@@ -71,50 +71,55 @@ test.describe.serial('assistant money: registration and commission (API + DB)', 
   });
 
   test('10 percent: a partial payment earns nothing; the final payment earns exactly one commission in the package currency', async ({ request }) => {
+    const m = money(request, admin);
     const me = need(a);
-    const sub = await subscribe(request, admin, need(regA).student, 'SA');
+    const sub = await m.subscribe(need(regA).student, 'SA');
     const partial = cents(sub.price * 0.4);
-    const first = await payIn(request, admin, sub, partial);
-    expect(await ledger(request, admin, me.id)).toEqual([]);
-    const last = await payIn(request, admin, sub, sub.price - partial);
+    const first = await m.payIn(sub, partial);
+    expect(await m.ledger(me.id)).toEqual([]);
+    const last = await m.payIn(sub, sub.price - partial);
     subs.push({ ...sub, payments: [first, last] });
-    const rows = await ledger(request, admin, me.id);
+    const rows = await m.ledger(me.id);
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ status: 'earned', type: 'percent', rate: 10, base_amount: sub.price, base_currency: sub.currency, currency: 'SAR', subscription_id: sub.id, amount: Math.round(sub.price * 10) / 100 });
   });
 
   test('a second package of the same student, paid in full later, earns no second commission', async ({ request }) => {
-    const sub = await subscribe(request, admin, need(regA).student, 'SA');
-    subs.push({ ...sub, payments: [await payIn(request, admin, sub, sub.price)] });
-    expect(await ledger(request, admin, need(a).id)).toHaveLength(1);
+    const m = money(request, admin);
+    const sub = await m.subscribe(need(regA).student, 'SA');
+    subs.push({ ...sub, payments: [await m.payIn(sub, sub.price)] });
+    expect(await m.ledger(need(a).id)).toHaveLength(1);
   });
 
   test('deleting the first payment: the first package is no longer full, so the commission moves to the next full one (same row, 10 percent of that price)', async ({ request }) => {
+    const m = money(request, admin);
     const [one, two] = [need(subs[0]), need(subs[1])];
     const del = await call(request, { token: admin, method: 'DELETE', path: `/payments/${need(one.payments[0])}` });
     expect(del.status).toBe(204);
-    const rows = await ledger(request, admin, need(a).id);
+    const rows = await m.ledger(need(a).id);
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ status: 'earned', subscription_id: two.id, base_amount: two.price, amount: Math.round(two.price * 10) / 100 });
   });
 
   test('deleting the payment of the only other full package voids the commission (automatic, kept for a later full payment)', async ({ request }) => {
+    const m = money(request, admin);
     const two = need(subs[1]);
     expect((await call(request, { token: admin, method: 'DELETE', path: `/payments/${need(two.payments[0])}` })).status).toBe(204);
-    const rows = await ledger(request, admin, need(a).id);
+    const rows = await m.ledger(need(a).id);
     expect(rows.map((r: AssistantCommissionView) => r.status)).toEqual(['voided']);
     const [auto] = await withSql((sql) => sql<{ void_auto: boolean }[]>`select void_auto from public.assistant_commissions where student_id = ${need(regA).student}`);
     expect(auto?.void_auto).toBe(true);
   });
 
   test('fixed 50 SAR: C registers a student; partial = nothing; final = exactly 50 SAR, whatever the price', async ({ request }) => {
+    const m = money(request, admin);
     const me = need(c);
     const reg = await register(request, me, '19:00');
-    const sub = await subscribe(request, admin, reg.student, 'SA');
-    await payIn(request, admin, sub, cents(sub.price * 0.3));
-    expect(await ledger(request, admin, me.id)).toEqual([]);
-    await payIn(request, admin, sub, sub.price - cents(sub.price * 0.3));
-    const rows = await ledger(request, admin, me.id);
+    const sub = await m.subscribe(reg.student, 'SA');
+    await m.payIn(sub, cents(sub.price * 0.3));
+    expect(await m.ledger(me.id)).toEqual([]);
+    await m.payIn(sub, sub.price - cents(sub.price * 0.3));
+    const rows = await m.ledger(me.id);
     expect(rows).toHaveLength(1);
     expect(rows[0]).toMatchObject({ status: 'earned', type: 'fixed', rate: 50, amount: 50, currency: 'SAR', base_amount: sub.price });
   });
