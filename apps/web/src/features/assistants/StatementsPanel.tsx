@@ -67,7 +67,7 @@ export function StatementsPanel({ assistants, assistantId = '', can }: Props) {
       <div className="flex flex-wrap items-end justify-between gap-3">
         <FilterBar label={t.assistants.statements.filters} value={filter} onChange={setFilter} statuses={STATUSES} assistants={assistantId ? undefined : assistants} />
         {can.write && (
-          <Button type="button" className="mb-4" disabled={generate.isPending || assistants.length === 0} onClick={() => generate.mutate()}>
+          <Button type="button" variant="secondary" className="mb-4" disabled={generate.isPending || assistants.length === 0} onClick={() => generate.mutate()}>
             {rows.length > 0 ? t.assistants.statements.regenerate : t.assistants.statements.generate}
           </Button>
         )}
