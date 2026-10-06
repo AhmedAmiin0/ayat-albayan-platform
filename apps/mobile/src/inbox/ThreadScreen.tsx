@@ -13,6 +13,7 @@ import { Composer } from './Composer';
 import { clockAt, kindLabel } from './format';
 import { MessageBubble } from './MessageBubble';
 import { OwnThreadNote } from './OwnThreadNote';
+import { SendRating } from './rating/SendRating';
 import { SubscriptionPanel } from './subscription/SubscriptionPanel';
 import { threadMessages } from './thread-cache';
 import { isOwnThread, threadBase, useThreadMode } from './thread-mode';
@@ -88,6 +89,7 @@ export function ThreadScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {mode.kind === 'admin' ? <SubscriptionPanel data={query.data} phone={phone} /> : null}
+      {mode.kind === 'admin' && thread?.guardian_id ? <SendRating thread={thread} /> : null}
       {query.data ? (
         <KeyboardAvoidingView
           style={{ flex: 1, gap: 8 }}

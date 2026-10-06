@@ -2108,6 +2108,26 @@
     },
     "cancelManual": "لا، ليس بعد"
   },
+  "mobileLeads": {
+    "filter": "تصفية",
+    "filterCount": "تصفية ({n})",
+    "filterTitle": "تصفية المحادثات",
+    "clearFilters": "مسح التصفية",
+    "showResults": "عرض النتائج ({n})",
+    "assignedTo": "المسؤول: {name}",
+    "assignTitle": "مسؤول المبيعات",
+    "assignRowSaved": "حُفظ المسؤول",
+    "peopleFailed": "تعذّر تحميل قائمة مسؤولي المبيعات",
+    "assignAllConfirm": "سيُوزَّع كل العملاء الذين بلا مسؤول على مسؤولي المبيعات. هل تريد المتابعة؟",
+    "assignAllNone": "لا يوجد عملاء بلا مسؤول",
+    "ratingHint": "يُرسل الطلب عن آخر حلقة مكتملة لأبناء ولي الأمر",
+    "openCv": "فتح السيرة الذاتية",
+    "openRecitation": "فتح تسجيل التلاوة",
+    "linkFailed": "تعذّر فتح الرابط",
+    "applicantsFilter": "حالة الطلب",
+    "applicantsSort": "ترتيب الطلبات",
+    "noMatch": "لا توجد نتائج مطابقة"
+  },
   "followUps": {
     "title": "المتابعة",
     "next": "المتابعة القادمة {time}",

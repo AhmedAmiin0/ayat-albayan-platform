@@ -13,8 +13,11 @@ import { ltr } from '@/ui/Ltr';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
-import { clockAt, initialOf, leadAge } from './format';
-import { leadSourceWord, leadStatusChip } from './lead-words';
+import { clockAt, initialOf } from './format';
+import { leadListParams, NO_FILTERS, type LeadFilters } from './leads/lead-filters';
+import { LeadsFilterBar } from './leads/LeadsFilterBar';
+import { leadRowSubtitle } from './leads/lead-row';
+import { leadStatusChip } from './lead-words';
 import type { Lead } from './types';
 
 type Filter = 'all' | LeadStatus;
@@ -25,16 +28,14 @@ const filterPills = (): FilterPill<Filter>[] => [
 ];
 
 /**
- * The leads pipeline (R-MOB-02 inbox, R-MOB-03 offline): GET /leads by status and name/phone search,
- * newest inbound first. The API returns only the selected filter's total, so only that pill counts.
+ * The leads pipeline (R-MOB-02 inbox, R-MOB-03 offline): GET /leads by status, name/phone search,
+ * source, owner and order (default newest inbound first). The API returns only the selected filter's total, so only that pill counts.
  */
 export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [q, setQ] = useState('');
   const [status, setStatus] = useState<Filter>('all');
-  const list = usePagedList<Lead>({
-    path: '/leads',
-    params: { q, status: status === 'all' ? undefined : status },
-  });
+  const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
+  const list = usePagedList<Lead>({ path: '/leads', params: leadListParams({ q, status, filters }) });
   const loaded = list.data !== undefined;
   const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
   const showing = t.common.showing
@@ -53,6 +54,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
       <ScreenHeader title={t.leads.title} subtitle={subtitle} />
       {switcher}
       <SearchField onSearch={setQ} label={t.leads.searchPlaceholder} />
+      <LeadsFilterBar filters={filters} onChange={setFilters} total={loaded ? list.total : undefined} />
       <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.leads.status} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
@@ -65,7 +67,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
               leading={<Avatar letter={initialOf(item.name)} />}
               title={item.name ?? ltr(phone)}
               meta={item.name ? phone : undefined}
-              subtitle={`${leadSourceWord(item.source)} · ${leadAge(item.created_at)}`}
+              subtitle={leadRowSubtitle(item)}
               trailing={<StatusChip {...leadStatusChip(item.status)} size="sm" />}
               onPress={() => router.push(`/inbox/${item.id}`)}
             />

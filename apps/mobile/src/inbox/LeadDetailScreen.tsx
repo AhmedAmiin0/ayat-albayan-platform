@@ -10,6 +10,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { LeadFacts } from './LeadFacts';
 import { LeadReclassify } from './LeadReclassify';
+import { LeadAssign } from './leads/LeadAssign';
 import { LeadStatusChanger } from './LeadStatusChanger';
 import { LeadProfileSection } from './qualification/LeadProfileSection';
 import { threadHref } from './thread-cache';
@@ -50,6 +51,7 @@ export function LeadDetailScreen() {
         <ScreenHeader title={name ?? ltr(formatPhone(phone))} />
         <LeadFacts lead={lead.data} />
         <LeadStatusChanger lead={lead.data} />
+        <LeadAssign lead={lead.data} />
         <Button
           label={t.inbox.openThread.replace('{name}', name ?? ltr(formatPhone(phone)))}
           onPress={() => router.push(threadHref(phone))}
