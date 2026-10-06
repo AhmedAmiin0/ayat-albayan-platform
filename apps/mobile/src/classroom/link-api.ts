@@ -14,6 +14,6 @@ export const joinLinkUrl = (lessonId: string) => apiSend<JoinLinkUrl>('POST', `/
 export function linkError(error: unknown): string {
   const body = error instanceof ApiError ? error.body : null;
   const coded = typeof body === 'object' && body !== null && 'code' in body;
-  if (error instanceof ApiError && error.status === 403 && !coded) return t.classroom.error.forbidden;
+  if (error instanceof ApiError && error.status === 403 && !coded) return t.mobileClassroom.linkForbidden;
   return joinError(error);
 }

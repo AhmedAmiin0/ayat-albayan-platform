@@ -24,7 +24,7 @@ test('a press asks first; cancel sends nothing', async () => {
 });
 
 test('confirming POSTs the student, then says «أُرسل الرابط» and the button stays off', async () => {
-  mockApiSend.mockResolvedValue({ expires_at: 'x', replayed: false, message_status: 'queued' });
+  mockApiSend.mockResolvedValue({ expires_at: 'x', replayed: false, message_status: 'sent' });
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named />);
   await press(`${t.classroom.sendLink} ${t.classroom.sendLinkTo.replace('{name}', yusuf.name)}`);
   await press(t.mobileClassroom.sendConfirmAction);
@@ -49,8 +49,9 @@ test.each([
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named={false} />);
   await press(t.classroom.sendLink);
   await press(t.mobileClassroom.sendConfirmAction);
-  const text: Record<string, string> = t.classroom.error;
-  expect(await screen.findByText(text[code] ?? text['unknown'] ?? '')).toBeTruthy();
+  const text: Record<string, string | undefined> = t.classroom.error;
+  expect(text[code]).toBeTruthy(); // every code has its own sentence, no fallback
+  expect(await screen.findByText(text[code] ?? '')).toBeTruthy();
   await waitFor(() => expect(screen.getByRole('button', { name: t.classroom.sendLink })).toBeTruthy());
 });
 
@@ -59,5 +60,5 @@ test('a 403 without a code reads «غير مسموح»', async () => {
   await renderWithQuery(<SendLinkAction lessonId="l-1" student={yusuf} named={false} />);
   await press(t.classroom.sendLink);
   await press(t.mobileClassroom.sendConfirmAction);
-  expect(await screen.findByText(t.classroom.error.forbidden)).toBeTruthy();
+  expect(await screen.findByText(t.mobileClassroom.linkForbidden)).toBeTruthy();
 });

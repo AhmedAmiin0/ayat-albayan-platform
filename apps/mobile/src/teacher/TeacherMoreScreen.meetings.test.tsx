@@ -5,7 +5,7 @@ import { renderWithQuery } from '@/test/query';
 import { TeacherMoreScreen } from './TeacherMoreScreen';
 
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: jest.fn().mockResolvedValue({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] }) }));
-jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() }, useSegments: () => ['teacher'] }));
 jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
 test('«اجتماعات داخلية» in the teacher’s More opens the meetings list', async () => {

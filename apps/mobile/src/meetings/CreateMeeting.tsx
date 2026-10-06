@@ -1,6 +1,7 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { usePermissions } from '@/auth/use-permissions';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
@@ -21,6 +22,8 @@ export function CreateMeeting() {
     onSuccess: () => client.invalidateQueries({ queryKey: ['meetings'] }),
   });
   const enter = useEnterMeeting();
+  const can = usePermissions();
+  if (!can('meetings.write')) return null;
   if (!open) return <Button label={t.meetings.new} onPress={() => setOpen(true)} />;
   const made = create.data;
   return (

@@ -10,7 +10,9 @@ export function ClassroomSection({ can = () => true }: { can?: (permission: Perm
   return (
     <Section title={t.mobileClassroom.section}>
       <View style={{ marginHorizontal: -16 }}>
-        <ListRow title={t.mobileClassroom.title} onPress={() => router.push('/more/live')} />
+        {can('lessons.read') && (
+          <ListRow title={t.mobileClassroom.title} onPress={() => router.push('/more/live')} />
+        )}
         {can('meetings.read') && (
           <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/more/live/meetings')} />
         )}

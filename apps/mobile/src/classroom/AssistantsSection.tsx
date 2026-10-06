@@ -25,7 +25,7 @@ export const freeAssistants = (all: readonly AssistantView[], mine: readonly Ass
 export function AssistantsSection({ studentId }: { studentId: string }) {
   const can = usePermissions();
   const client = useQueryClient();
-  const mine = useStudentAssistants(studentId);
+  const mine = useStudentAssistants(studentId, can('assistants.read'));
   const all = useAllAssistants(can('assistants.write'));
   const refresh = () => client.invalidateQueries({ queryKey: pathKey(`/students/${studentId}/assistants`) });
   const add = useMutation({ mutationFn: assignAssistant, onSuccess: refresh });

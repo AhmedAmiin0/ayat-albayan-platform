@@ -7,8 +7,9 @@ import { pathKey } from '@/lib/query-keys';
 const asList = (data: AssistantView[]): AssistantView[] => (Array.isArray(data) ? data : []);
 
 /** GET /students/:id/assistants. */
-export const useStudentAssistants = (studentId: string) =>
+export const useStudentAssistants = (studentId: string, enabled = true) =>
   useQuery({
+    enabled,
     queryKey: pathKey(`/students/${studentId}/assistants`),
     queryFn: () => apiFetch<AssistantView[]>(`/students/${studentId}/assistants`),
     select: asList,

@@ -1,4 +1,4 @@
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { Share } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -33,7 +33,7 @@ test('an API refusal shows its message and opens no sheet', async () => {
   mockApiSend.mockRejectedValue(new ApiError(403, null));
   await renderWithQuery(<CopyLinkAction lessonId="l-1" />);
   await press();
-  expect(await screen.findByText(t.classroom.error.forbidden)).toBeTruthy();
+  expect(await screen.findByText(t.mobileClassroom.linkForbidden)).toBeTruthy();
   expect(share).not.toHaveBeenCalled();
 });
 
@@ -43,4 +43,14 @@ test('a share sheet that fails says so', async () => {
   await renderWithQuery(<CopyLinkAction lessonId="l-1" />);
   await press();
   expect(await screen.findByText(t.mobileClassroom.linkShareFailed)).toBeTruthy();
+});
+
+test('a dismissed share sheet is not a success: no «link window» note', async () => {
+  mockApiSend.mockResolvedValue({ url: 'u', expires_at: 'x' });
+  share.mockResolvedValue({ action: Share.dismissedAction });
+  await renderWithQuery(<CopyLinkAction lessonId="l-1" />);
+  await press();
+  await waitFor(() => expect(share).toHaveBeenCalled());
+  expect(screen.queryByText(t.classroom.linkWindow)).toBeNull();
+  expect(screen.queryByText(t.mobileClassroom.linkShareFailed)).toBeNull();
 });

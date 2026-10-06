@@ -25,7 +25,7 @@ export function MeetingsScreen() {
   return (
     <Screen>
       <ScreenHeader title={t.mobileClassroom.meetingsRow} trailing={back} />
-      <ScrollView style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
+      <ScrollView keyboardShouldPersistTaps="handled" style={{ flex: 1 }} contentContainerStyle={{ paddingBottom: 32 }}>
         <View style={{ gap: 16 }}>
           <CreateMeeting />
           {body}

@@ -14,7 +14,7 @@ export function MeetingLinkShare({ url, note }: { url: string; note: string }) {
       <Ltr selectable style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
         {url}
       </Ltr>
-      <Button variant="secondary" label={t.mobileClassroom.shareLink} onPress={() => void Share.share({ message: url })} />
+      <Button variant="secondary" label={t.mobileClassroom.shareLink} onPress={() => void Share.share({ message: url }).catch(() => undefined)} />
     </View>
   );
 }

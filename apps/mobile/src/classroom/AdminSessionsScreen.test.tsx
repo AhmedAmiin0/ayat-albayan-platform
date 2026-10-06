@@ -37,8 +37,9 @@ test('the day groups its lessons: now, upcoming, ended, each with its count and 
   expect(screen.getByRole('header', { name: `${t.classroom.admin.groups.upcoming} 1` })).toBeTruthy();
   expect(screen.getByRole('header', { name: `${t.classroom.admin.groups.ended} 1` })).toBeTruthy();
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(3);
-  expect(screen.getAllByRole('button', { name: t.classroom.sendLink })).toHaveLength(3);
-  expect(screen.getAllByRole('button', { name: t.classroom.copyLink })).toHaveLength(3);
+  // the ended lesson's link is past its expiry: nothing to send or copy there
+  expect(screen.getAllByRole('button', { name: t.classroom.sendLink })).toHaveLength(2);
+  expect(screen.getAllByRole('button', { name: t.classroom.copyLink })).toHaveLength(2);
 });
 
 test('«التسجيلات» opens that lesson’s recordings', async () => {

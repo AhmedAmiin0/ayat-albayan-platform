@@ -1,6 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
-import { renderWithQuery } from '@/test/query';
+import { pathKey } from '@/lib/query-keys';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { AssistantsSection, freeAssistants } from './AssistantsSection';
 
 const mockApiFetch = jest.fn();
@@ -58,8 +59,7 @@ test('every assistant already assigned says there is nobody left to add', async 
 test('a failed read with nothing cached leaves the section out (offline: the profile stays quiet)', async () => {
   mockApiFetch.mockRejectedValue(new Error('x'));
   await renderWithQuery(<AssistantsSection studentId="s-1" />);
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalled());
-  expect(screen.queryByRole('header', { name: A.title })).toBeNull();
+  await waitFor(() => expect(screen.queryByRole('header', { name: A.title })).toBeNull());
 });
 
 test('a refused change shows the error line', async () => {
@@ -67,4 +67,14 @@ test('a refused change shows the error line', async () => {
   mockApiSend.mockRejectedValue(new Error('x'));
   await fireEvent.press(await screen.findByRole('button', { name: `${A.remove} سارة` }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
+});
+
+test('without assistants.read nothing is fetched for the student', async () => {
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { permissions: [] } : mine));
+  const client = createTestQueryClient();
+  client.setQueryData(pathKey('/auth/me'), { permissions: [] }); // the signed-in session already knows its role
+  await renderWithQuery(<AssistantsSection studentId="s1" />, client);
+  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/auth/me'));
+  expect(mockApiFetch).not.toHaveBeenCalledWith('/students/s1/assistants');
+  expect(screen.queryByText(A.title)).toBeNull();
 });

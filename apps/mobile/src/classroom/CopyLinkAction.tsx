@@ -8,12 +8,14 @@ import { joinLinkUrl, linkError } from './link-api';
 
 /** A fresh URL every tap (it is a short-lived secret: never kept), handed to the share sheet, which has Copy. */
 class ShareFailed extends Error {}
+class Dismissed extends Error {}
 
 async function shareLink(lessonId: string): Promise<void> {
   const { url } = await joinLinkUrl(lessonId);
-  await Share.share({ message: url }).catch(() => {
+  const result = await Share.share({ message: url }).catch(() => {
     throw new ShareFailed();
   });
+  if (result.action === Share.dismissedAction) throw new Dismissed();
 }
 
 /** «انسخ رابط الطالب»: no WhatsApp message is sent; there is no clipboard module, so Share.share carries it. */
@@ -28,7 +30,7 @@ export function CopyLinkAction({ lessonId }: { lessonId: string }) {
         onPress={() => copy.mutate(lessonId)}
       />
       {copy.isSuccess ? <Note>{t.classroom.linkWindow}</Note> : null}
-      {copy.isError ? <ErrorLine message={copy.error instanceof ShareFailed ? t.mobileClassroom.linkShareFailed : linkError(copy.error)} /> : null}
+      {copy.isError && !(copy.error instanceof Dismissed) ? <ErrorLine message={copy.error instanceof ShareFailed ? t.mobileClassroom.linkShareFailed : linkError(copy.error)} /> : null}
     </View>
   );
 }

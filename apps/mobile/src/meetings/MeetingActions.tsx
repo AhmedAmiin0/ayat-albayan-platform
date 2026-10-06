@@ -1,6 +1,6 @@
 import type { MeetingView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { router } from 'expo-router';
+import { router, useSegments } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
@@ -26,6 +26,7 @@ export function MeetingActions({ meeting }: { meeting: MeetingView }) {
   const end = useMutation({ mutationFn: endMeeting, onSuccess: refresh, onSettled: () => setAsking(null) });
   const link = useMutation({ mutationFn: newMeetingLink, onSettled: () => setAsking(null) });
   const enter = useEnterMeeting();
+  const base = useSegments()[0] === 'teacher' ? '/teacher/more' : '/more/live';
   const manage = meeting.state === 'open' && meeting.can_manage;
   const failure = [end.error, link.error].find((e) => e);
   const confirm = asking === 'end'
@@ -35,16 +36,16 @@ export function MeetingActions({ meeting }: { meeting: MeetingView }) {
     <View style={{ gap: 8 }}>
       {meeting.state === 'open' ? <Button label={L.enter} busy={enter.pending} onPress={() => enter.run(meeting.id)} /> : null}
       {asking ? (
-        <InlineConfirm message={confirm.message} confirmLabel={confirm.label} busy={confirm.busy} onConfirm={confirm.run} onCancel={() => setAsking(null)} />
+        <InlineConfirm message={confirm.message} confirmLabel={confirm.label} busy={confirm.busy} onConfirm={confirm.run} onCancel={() => !confirm.busy && setAsking(null)} />
       ) : (
         <>
-          {manage ? <Button variant="secondary" label={L.newLink} onPress={() => setAsking('link')} /> : null}
-          {manage ? <Button variant="ghost" label={L.end} onPress={() => setAsking('end')} /> : null}
+          {manage ? <Button variant="secondary" label={L.newLink} onPress={() => { end.reset(); setAsking('link'); }} /> : null}
+          {manage ? <Button variant="ghost" label={L.end} onPress={() => { link.reset(); setAsking('end'); }} /> : null}
         </>
       )}
       {link.data ? <MeetingLinkShare url={link.data.url} note={t.mobileClassroom.newLinkReady} /> : null}
       {meeting.can_manage ? (
-        <Button variant="ghost" label={t.classroom.recordings.title} onPress={() => router.push(`/more/live/meetings/${meeting.id}`)} />
+        <Button variant="ghost" label={t.classroom.recordings.title} onPress={() => router.push(`${base}/meetings/${meeting.id}`)} />
       ) : null}
       {enter.error ? <ErrorLine message={enter.error} /> : null}
       {failure ? <ErrorLine message={meetingError(failure)} /> : null}

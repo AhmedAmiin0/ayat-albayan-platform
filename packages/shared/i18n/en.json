@@ -921,7 +921,9 @@
     "newLinkConfirm": "The previous link will stop working. Create a new link?",
     "newLinkAction": "Create link",
     "shareLink": "Share link",
-    "newLinkReady": "A new link is ready, share it with the participants."
+    "newLinkReady": "A new link is ready, share it with the participants.",
+    "linkForbidden": "You are not allowed to send or copy lesson links",
+    "sendFailed": "The message was not delivered, try again"
   },
   "alerts": {
     "needsTeacher": "Needs a teacher"
@@ -2626,6 +2628,7 @@
       "template_not_approved": "Meta has not approved the lesson link template yet",
       "lesson_not_found": "Lesson not found",
       "forbidden": "You are not allowed to join this lesson",
+      "student_not_in_lesson": "This student is not in this lesson",
       "duplicate": "You joined from another window, so this one was closed",
       "mic_denied": "Microphone is blocked, allow it in the browser settings",
       "cam_denied": "Camera is blocked, allow it in the browser settings",

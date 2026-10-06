@@ -7,7 +7,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const getConstants = () => ({ ...actual.getConstants(), isRTL: false });
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['(tabs)'] }));
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: jest.fn(async () => [

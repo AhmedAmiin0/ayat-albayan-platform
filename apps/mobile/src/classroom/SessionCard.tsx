@@ -42,7 +42,7 @@ export function SessionCard({ lesson, group }: { lesson: LessonView; group: Sess
       </View>
       <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.body, color: color.ink }}>{studentNames(lesson)}</AppText>
       <AppText style={small}>{`${t.classroom.admin.teacher} ${teacherName(lesson.teacher, locale)}`}</AppText>
-      <SessionActions lesson={lesson} />
+      <SessionActions lesson={lesson} group={group} />
     </View>
   );
 }

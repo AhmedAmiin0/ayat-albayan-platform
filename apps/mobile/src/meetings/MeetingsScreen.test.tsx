@@ -8,7 +8,7 @@ import { MeetingsScreen } from './MeetingsScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
-jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
+jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() }, useSegments: () => ['(tabs)'] }));
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: (...args: unknown[]) => mockApiFetch(...args),
@@ -66,7 +66,8 @@ test('ending asks first, then POSTs and refreshes the list', async () => {
   expect(mockApiSend).not.toHaveBeenCalled();
   await press(t.mobileClassroom.endAction);
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings/m1/end'));
-  await waitFor(() => expect(mockApiFetch).toHaveBeenCalledTimes(2));
+  const lists = () => mockApiFetch.mock.calls.filter(([p]) => p === '/meetings').length;
+  await waitFor(() => expect(lists()).toBe(2));
 });
 
 test('a new link asks first (the old one stops), then goes to the share sheet', async () => {
