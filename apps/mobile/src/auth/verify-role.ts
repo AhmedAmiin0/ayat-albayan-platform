@@ -1,6 +1,7 @@
 import type { Session } from '@supabase/supabase-js';
 import { ApiError, apiFetch } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
+import { isAccountDisabled, isOtherAppRole, setLoginNotice } from './login-notice';
 import { appRole, roleClaim, type AppRole } from './role-claim';
 
 export interface Me {
@@ -15,9 +16,12 @@ export interface Me {
  */
 export async function verifyRole(session: Session): Promise<AppRole | 'out'> {
   try {
-    const role = appRole((await apiFetch<Me>('/auth/me')).role);
+    const me = await apiFetch<Me>('/auth/me');
+    const role = appRole(me.role);
     if (role) return role;
+    if (isOtherAppRole(me.role)) setLoginNotice('wrongApp');
   } catch (error) {
+    if (isAccountDisabled(error)) setLoginNotice('accountDisabled');
     if (!(error instanceof ApiError) || error.status >= 500) {
       const claimed = roleClaim(session.access_token);
       if (claimed) return claimed;

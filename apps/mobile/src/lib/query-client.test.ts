@@ -9,10 +9,15 @@ import {
   persister,
   queryClient,
   shouldRetry,
-  signOutOn401,
+  signOutOnAuthError,
 } from './query-client';
 
 const mockSignOut = jest.fn();
+const mockSetNotice = jest.fn();
+jest.mock('@/auth/login-notice', () => ({
+  ...jest.requireActual('@/auth/login-notice'),
+  setLoginNotice: (n: unknown) => mockSetNotice(n),
+}));
 jest.mock('./supabase', () => ({ supabase: { auth: { signOut: () => mockSignOut() } } }));
 
 // query-client registers its AppState listener on import: keep it before clearAllMocks wipes it.
@@ -43,11 +48,24 @@ test('4xx is final, network errors and 5xx retry up to three times', () => {
   expect(shouldRetry(3, new TypeError('Network request failed'))).toBe(false);
 });
 
-test('only a 401 signs out', () => {
-  signOutOn401(new ApiError(403));
-  signOutOn401(new TypeError('offline'));
+test('a 403 account_disabled signs out and leaves the reason for the login screen', () => {
+  signOutOnAuthError(new ApiError(403, { code: 'account_disabled' }));
+  expect(mockSignOut).toHaveBeenCalledTimes(1);
+  expect(mockSetNotice).toHaveBeenCalledWith('accountDisabled');
+});
+
+test('a plain 403 (a permission the role lacks) or another 403 code keeps the session', () => {
+  signOutOnAuthError(new ApiError(403, { code: 'permission_not_held' }));
+  signOutOnAuthError(new ApiError(403, 'account_disabled'));
   expect(mockSignOut).not.toHaveBeenCalled();
-  signOutOn401(new ApiError(401));
+  expect(mockSetNotice).not.toHaveBeenCalled();
+});
+
+test('only a 401 or a disabled account signs out', () => {
+  signOutOnAuthError(new ApiError(403));
+  signOutOnAuthError(new TypeError('offline'));
+  expect(mockSignOut).not.toHaveBeenCalled();
+  signOutOnAuthError(new ApiError(401));
   expect(mockSignOut).toHaveBeenCalledTimes(1);
 });
 

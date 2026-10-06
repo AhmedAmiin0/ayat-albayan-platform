@@ -6,6 +6,7 @@ import { Children, isValidElement, type ReactElement, type ReactNode } from 'rea
 
 interface TriggerProps {
   name: string;
+  hidden?: boolean;
   children?: ReactNode;
 }
 
@@ -29,7 +30,7 @@ function NativeTabsMock({ children }: { children?: ReactNode }) {
     <Tabs screenOptions={{ headerShown: false }}>
       {triggers.map(({ props }) => {
         const title = labelOf(props.children);
-        return <Tabs.Screen key={props.name} name={props.name} options={{ title, tabBarAccessibilityLabel: title }} />;
+        return <Tabs.Screen key={props.name} name={props.name} options={{ title, tabBarAccessibilityLabel: title, href: props.hidden ? null : undefined }} />;
       })}
     </Tabs>
   );

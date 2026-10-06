@@ -1,17 +1,28 @@
 import { router } from 'expo-router';
 import { View } from 'react-native';
+import { allowedRows } from '@/auth/route-permissions';
+import type { Can } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { ListRow } from '@/ui/ListRow';
 import { Section } from './Section';
 
-/** «المالية» on «المزيد»: the three money lists that mirror the web's admin pages. */
-export function MoneySection() {
+const rows = () =>
+  [
+    { route: 'receivables', title: t.mobileMoney.receivablesTitle, href: '/more/money/receivables' },
+    { route: 'subscriptions', title: t.mobileMoney.subscriptionsTitle, href: '/more/money/subscriptions' },
+    { route: 'payments', title: t.mobileMoney.paymentsTitle, href: '/more/money/payments' },
+  ] as const;
+
+/** «المالية» on «المزيد»: the money lists that mirror the web's admin pages; only the rows `can` allows. */
+export function MoneySection({ can = () => true }: { can?: Can }) {
+  const shown = allowedRows(can, rows());
+  if (shown.length === 0) return null;
   return (
     <Section title={t.mobileMoney.section}>
       <View style={{ marginHorizontal: -16 }}>
-        <ListRow title={t.mobileMoney.receivablesTitle} onPress={() => router.push('/more/money/receivables')} />
-        <ListRow title={t.mobileMoney.subscriptionsTitle} onPress={() => router.push('/more/money/subscriptions')} />
-        <ListRow title={t.mobileMoney.paymentsTitle} onPress={() => router.push('/more/money/payments')} />
+        {shown.map((r) => (
+          <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
+        ))}
       </View>
     </Section>
   );

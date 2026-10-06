@@ -1,3 +1,4 @@
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { signIn } from './sign-in';
 
@@ -13,7 +14,7 @@ jest.mock('@/lib/supabase', () => ({
     },
   },
 }));
-jest.mock('@/lib/api', () => ({ apiFetch: (p: string) => mockApiFetch(p) }));
+jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 const creds = { email: 'a@b.c', password: 'x' };
 
@@ -24,10 +25,24 @@ test('wrong password shows Arabic error', async () => {
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.invalidCredentials });
 });
 
-test.each([['guardian'], [null]])('role %s is signed out again', async (role) => {
+test.each([['guardian'], ['student'], ['sales'], ['assistant']])('role %s is told this app is not theirs', async (role) => {
+  mockSignInWithPassword.mockResolvedValue({ error: null });
+  mockApiFetch.mockResolvedValue({ role });
+  expect(await signIn(creds)).toEqual({ ok: false, error: t.mobileNav.wrongApp });
+  expect(mockSignOut).toHaveBeenCalled();
+});
+
+test.each([[null], ['mystery']])('role %s (no role at all) keeps the not-activated message', async (role) => {
   mockSignInWithPassword.mockResolvedValue({ error: null });
   mockApiFetch.mockResolvedValue({ role });
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.noRole });
+  expect(mockSignOut).toHaveBeenCalled();
+});
+
+test('a disabled account (403 account_disabled) says so and signs out', async () => {
+  mockSignInWithPassword.mockResolvedValue({ error: null });
+  mockApiFetch.mockRejectedValue(new ApiError(403, { code: 'account_disabled' }));
+  expect(await signIn(creds)).toEqual({ ok: false, error: t.mobileNav.accountDisabled });
   expect(mockSignOut).toHaveBeenCalled();
 });
 
