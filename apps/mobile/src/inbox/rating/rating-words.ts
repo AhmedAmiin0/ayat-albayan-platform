@@ -16,9 +16,12 @@ export function ratingError(error: unknown): string {
   return (typeof code === 'string' ? ERRORS[code] : undefined) ?? r.failed;
 }
 
-/** queued = the send gate is closed, it waits; anything else went to WhatsApp. */
-export const ratingDone = (sent: MessageView | undefined): string | null =>
-  sent ? (sent.status === 'queued' ? r.queued : r.sent) : null;
+/** What the 201 row says: failed (Meta refused it) is an error; queued waits for the send gate. */
+export function ratingDone(sent: MessageView | undefined): { text: string; error: boolean } | null {
+  if (!sent) return null;
+  if (sent.status === 'failed') return { text: r.failed, error: true };
+  return { text: sent.status === 'queued' ? r.queued : r.sent, error: false };
+}
 
 /** Meta has approved lesson_rating (the only state it can be sent in); anything but a list is «not yet». */
 export const ratingApproved = (templates: readonly TemplateView[] | undefined): boolean =>

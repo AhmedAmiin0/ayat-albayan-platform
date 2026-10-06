@@ -23,9 +23,10 @@ test('the refusal codes are the web words, anything else is «لم يُرسل»'
   expect(ratingError(new Error('offline'))).toBe(t.inbox.rating.failed);
 });
 
-test('queued waits for the send gate, anything else went out', () => {
+test('queued waits for the send gate, failed is an error, anything else went out', () => {
   const sent = (status: MessageView['status']) => message({ id: 'm9', status });
-  expect(ratingDone(sent('queued'))).toBe(t.inbox.rating.queued);
-  expect(ratingDone(sent('sent'))).toBe(t.inbox.rating.sent);
+  expect(ratingDone(sent('queued'))).toEqual({ text: t.inbox.rating.queued, error: false });
+  expect(ratingDone(sent('sent'))).toEqual({ text: t.inbox.rating.sent, error: false });
+  expect(ratingDone(sent('failed'))).toEqual({ text: t.inbox.rating.failed, error: true });
   expect(ratingDone(undefined)).toBeNull();
 });

@@ -86,7 +86,7 @@ test('the status pill and the order go to GET /job-applicants as the web sends t
   await screen.findByText('أ. منى');
   await fireEvent.press(screen.getByRole('tab', { name: t.enums.jobApplicantStatus.interview }));
   await waitFor(() => expect(lastPath()).toContain('status=interview'));
-  await fireEvent.press(screen.getByRole('tab', { name: t.leads.sort.name }));
+  await fireEvent.press(screen.getByRole('radio', { name: t.leads.sort.name }));
   await waitFor(() => expect(lastPath()).toContain('sort=name'));
   expect(lastPath()).toContain('status=interview');
 });

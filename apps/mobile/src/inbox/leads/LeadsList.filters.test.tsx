@@ -64,3 +64,12 @@ test('a role without leads.assign gets no bulk button and no salespeople to filt
   expect(screen.getByRole('radio', { name: t.sales.assign.none })).toBeTruthy();
   expect(screen.queryByRole('radio', { name: 'سارة' })).toBeNull();
 });
+
+test('a filter with no results says «no match»; an empty inbox without filters says «no leads»', async () => {
+  mockApiFetch.mockImplementation(leadsBackend(['leads.assign'], []));
+  await renderWithQuery(<LeadsList switcher={null} />);
+  expect(await screen.findByRole('header', { name: t.leads.empty })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileLeads.filter }));
+  await fireEvent.press(screen.getByRole('radio', { name: t.sales.assign.none }));
+  expect(await screen.findByRole('header', { name: t.mobileLeads.noMatch })).toBeTruthy();
+});

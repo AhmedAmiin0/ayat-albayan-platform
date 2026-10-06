@@ -14,7 +14,7 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf } from './format';
-import { leadListParams, NO_FILTERS, type LeadFilters } from './leads/lead-filters';
+import { activeFilterCount, leadListParams, NO_FILTERS, type LeadFilters } from './leads/lead-filters';
 import { LeadsFilterBar } from './leads/LeadsFilterBar';
 import { leadRowSubtitle } from './leads/lead-row';
 import { leadStatusChip } from './lead-words';
@@ -36,6 +36,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
   const [status, setStatus] = useState<Filter>('all');
   const [filters, setFilters] = useState<LeadFilters>(NO_FILTERS);
   const list = usePagedList<Lead>({ path: '/leads', params: leadListParams({ q, status, filters }) });
+  const filtersOn = q !== '' || status !== 'all' || activeFilterCount(filters) > 0;
   const loaded = list.data !== undefined;
   const pills = filterPills().map((p) => (loaded && p.value === status ? { ...p, count: list.total } : p));
   const showing = t.common.showing
@@ -77,7 +78,7 @@ export function LeadsList({ switcher }: { switcher: ReactNode }) {
         refreshing={list.isRefetching}
         onRefresh={list.refresh}
         ListEmptyComponent={
-          list.isPending ? null : loaded ? <EmptyState title={t.leads.empty} /> : <ErrorState onRetry={list.refresh} />
+          list.isPending ? null : loaded ? <EmptyState title={filtersOn ? t.mobileLeads.noMatch : t.leads.empty} /> : <ErrorState onRetry={list.refresh} />
         }
       />
     </>

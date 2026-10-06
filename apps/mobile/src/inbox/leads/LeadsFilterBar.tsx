@@ -28,7 +28,7 @@ export function LeadsFilterBar({ filters, onChange, total }: LeadsFilterBarProps
         label={count ? t.mobileLeads.filterCount.replace('{n}', String(count)) : t.mobileLeads.filter}
         onPress={() => setOpen(true)}
       />
-      {canAssign ? <AssignUnassigned /> : null}
+      {canAssign ? <AssignUnassigned owners={people.length} /> : null}
       <LeadFilterSheet
         visible={open}
         filters={filters}

@@ -14,13 +14,14 @@ import { ErrorLine } from '../ErrorLine';
  * «عيّن العملاء الذين بلا مسؤول» (admin, leads.assign): POST /leads/assign-unassigned spreads every
  * ownerless lead over the salespeople. It asks first (it moves many rows), then says how many moved.
  */
-export function AssignUnassigned() {
+export function AssignUnassigned({ owners }: { owners: number }) {
   const { color } = useTheme();
   const client = useQueryClient();
   const [asking, setAsking] = useState(false);
   const run = useMutation({
     mutationFn: () => apiSend<{ assigned: number }>('POST', '/leads/assign-unassigned'),
-    onSuccess: () => {
+    // Settled, not success: the API assigns lead by lead, so even a 504 on a big backlog moved some.
+    onSettled: () => {
       setAsking(false);
       void client.invalidateQueries({ queryKey: pathKey('/leads') });
       void client.invalidateQueries({ queryKey: pathKey('/sales/people') });
@@ -34,9 +35,8 @@ export function AssignUnassigned() {
           confirmLabel={run.isPending ? t.common.saving : t.sales.assign.assignAll}
           busy={run.isPending}
           onConfirm={() => run.mutate()}
-          onCancel={() => setAsking(false)}
+          onCancel={() => !run.isPending && setAsking(false)}
         />
-        {run.isError ? <ErrorLine message={t.common.error} /> : null}
       </View>
     );
   }
@@ -51,12 +51,17 @@ export function AssignUnassigned() {
           setAsking(true);
         }}
       />
+      {run.isError ? <ErrorLine message={t.common.error} /> : null}
       {done ? (
         <AppText
           accessibilityRole="alert"
           style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}
         >
-          {done.assigned > 0 ? t.sales.assign.assignedN.replace('{n}', String(done.assigned)) : t.mobileLeads.assignAllNone}
+          {done.assigned > 0
+            ? t.sales.assign.assignedN.replace('{n}', String(done.assigned))
+            : owners === 0
+              ? t.mobileLeads.assignNoOwners
+              : t.mobileLeads.assignAllNone}
         </AppText>
       ) : null}
     </View>

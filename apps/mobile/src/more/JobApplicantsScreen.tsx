@@ -36,7 +36,7 @@ export function JobApplicantsScreen() {
     <Screen>
       <ScreenHeader title={t.nav.jobApplicants} />
       <FilterPills items={pills} value={status} onChange={setStatus} accessibilityLabel={t.mobileLeads.applicantsFilter} />
-      <FilterPills items={applicantSortChoices()} value={sort} onChange={setSort} accessibilityLabel={t.mobileLeads.applicantsSort} />
+      <FilterPills items={applicantSortChoices()} value={sort} onChange={setSort} accessibilityLabel={t.mobileLeads.applicantsSort} role="radiogroup" />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         data={list.items}

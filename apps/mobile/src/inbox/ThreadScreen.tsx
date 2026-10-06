@@ -1,4 +1,4 @@
-import { formatPhone, type MessageView } from '@ab/shared';
+import { formatPhone, type MessageView, sessionWindowOpen } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
@@ -89,13 +89,15 @@ export function ThreadScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {mode.kind === 'admin' ? <SubscriptionPanel data={query.data} phone={phone} /> : null}
-      {mode.kind === 'admin' && thread?.guardian_id ? <SendRating thread={thread} /> : null}
       {query.data ? (
         <KeyboardAvoidingView
           style={{ flex: 1, gap: 8 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <MessageList phone={phone} query={query} />
+          {mode.kind === 'admin' && thread?.guardian_id && !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
+            <SendRating thread={thread} />
+          ) : null}
           {isOwnThread(mode, thread) ? (
             <OwnThreadNote />
           ) : (

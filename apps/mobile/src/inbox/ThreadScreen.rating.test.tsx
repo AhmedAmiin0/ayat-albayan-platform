@@ -19,9 +19,11 @@ jest.mock('expo-router', () => ({
 
 const rating: TemplateView = { ...meetReminder, key: 'lesson_rating', status: 'approved' };
 const guardianThread = { ...thread, guardian_id: 'g-1', lead_id: null, lead_status: null };
+const closedThread = { ...guardianThread, last_inbound_at: '2026-10-01T08:00:00Z', session_open: false };
 
 function backend(row: ThreadView = guardianThread) {
   mockApiFetch.mockImplementation(async (p: string) => {
+    if (p.startsWith('/auth/me')) return { permissions: ['feedback.write'] };
     if (p.startsWith('/messaging/templates')) return [rating];
     return p.startsWith('/threads') ? detail([inbound], { thread: row }) : { open: true };
   });
@@ -32,21 +34,28 @@ beforeEach(() => {
   mockApiFetch.mockReset();
 });
 
-test('the admin’s guardian thread offers «إرسال تقييم الحلقة»', async () => {
-  backend();
+test('the admin’s guardian thread offers «إرسال تقييم الحلقة» once the 24 h window is closed', async () => {
+  backend(closedThread);
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByRole('button', { name: t.inbox.rating.send })).toBeTruthy();
 });
 
+test('while the 24 h window is open the button is not there (as on the web)', async () => {
+  backend();
+  await renderWithQuery(<ThreadScreen />);
+  await screen.findByText(inbound.body ?? '');
+  expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull();
+});
+
 test('a lead’s thread (no guardian) does not', async () => {
-  backend(thread);
+  backend({ ...thread, last_inbound_at: '2026-10-01T08:00:00Z' });
   await renderWithQuery(<ThreadScreen />);
   await screen.findByText(inbound.body ?? '');
   expect(screen.queryByRole('button', { name: t.inbox.rating.send })).toBeNull();
 });
 
 test('a teacher never sees it', async () => {
-  backend();
+  backend(closedThread);
   await renderWithQuery(
     <ThreadModeProvider value={{ kind: 'teacher', teacherId: 't-1' }}>
       <ThreadScreen />
