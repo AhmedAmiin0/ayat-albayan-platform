@@ -23,6 +23,7 @@ describe('AdminNav', () => {
     [t.nav.subscriptions, '/admin/subscriptions'],
     [t.payments.title, '/admin/payments'],
     [t.nav.payouts, '/admin/payouts'],
+    [t.assistants.nav, '/admin/assistants'],
     [t.nav.expenses, '/admin/expenses'],
     [t.nav.inbox, '/admin/inbox'],
     [t.nav.feedback, '/admin/feedback'],
@@ -41,13 +42,13 @@ describe('AdminNav', () => {
 
   it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox, settings, translations, activity and roles', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(20);
+    expect(screen.getAllByRole('link')).toHaveLength(21);
   });
 
   it('groups the money pages under «المالية»', () => {
     render(<AdminNav />);
     const money = screen.getByRole('list', { name: t.finance.nav });
-    expect(money.querySelectorAll('a')).toHaveLength(7);
+    expect(money.querySelectorAll('a')).toHaveLength(8);
   });
 
   it('rhythm: 4px grid, 40px items (44 on phones and touch), 16px between groups, 8px label to list', () => {

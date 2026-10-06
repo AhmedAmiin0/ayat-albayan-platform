@@ -23,6 +23,7 @@ export const ADMIN_NAV_GROUPS = [
     { key: 'payments', to: '/admin/payments', label: t.payments.title, icon: 'card', permission: 'payments.read' },
     { key: 'subscriptions', to: '/admin/subscriptions', label: t.nav.subscriptions, icon: 'box', permission: 'subscriptions.read' },
     { key: 'payouts', to: '/admin/payouts', label: t.nav.payouts, icon: 'wallet', permission: 'payouts.read' },
+    { key: 'assistants', to: '/admin/assistants', label: t.assistants.nav, icon: 'person', permission: 'assistantpay.read' },
     { key: 'expenses', to: '/admin/expenses', label: t.nav.expenses, icon: 'receipt', permission: 'expenses.read' },
     { key: 'invoices', to: '/admin/invoices', label: t.finance.invoicesTitle, icon: 'download', permission: 'invoices.read' },
     { key: 'receivables', to: '/admin/receivables', label: t.finance.receivablesTitle, icon: 'clock', permission: 'receivables.read' },

@@ -17,6 +17,7 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/payments', 'payments.read'],
   ['/admin/subscriptions', 'subscriptions.read'],
   ['/admin/payouts', 'payouts.read'],
+  ['/admin/assistants', 'assistantpay.read'],
   ['/admin/expenses', 'expenses.read'],
   ['/admin/invoices', 'invoices.read'],
   ['/admin/receivables', 'receivables.read'],

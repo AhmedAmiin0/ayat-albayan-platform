@@ -26,7 +26,7 @@ describe('AdminNav — dynamic roles', () => {
   });
 
   it('shows everything to the system admin (default)', () => {
-    expect(visibleGroups(() => true).flat()).toHaveLength(20);
+    expect(visibleGroups(() => true).flat()).toHaveLength(21);
   });
 
   it('gives every item the same permission the /admin route guard checks for its page', () => {
