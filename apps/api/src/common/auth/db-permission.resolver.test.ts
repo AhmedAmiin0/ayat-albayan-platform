@@ -3,7 +3,7 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb, type FakeResult } from '../../modules/guardians/fake-db';
 import { dbPermissionResolver } from './db-permission.resolver';
 import { PermissionCache } from './permission.cache';
-import { can } from './permissions';
+import { AccountDisabledError, can } from './permissions';
 import type { AuthUser } from './verify-token';
 
 const user = (role: AuthUser['role'], id = 'u1'): AuthUser => ({ id, email: null, role });
@@ -48,6 +48,11 @@ describe('dbPermissionResolver', () => {
     await expect(resolve(user(null))).resolves.toEqual([]);
     await expect(resolve(user('teacher', 'u2'))).resolves.toEqual([]);
     await expect(resolve(user('teacher', 'u3'))).rejects.toThrow('down');
+  });
+
+  it('throws AccountDisabledError for a disabled profile, whatever its role', async () => {
+    const { resolve } = setup({ profiles: [{ data: { role: 'admin', role_id: null, disabled_at: '2026-10-06T00:00:00Z' } }] });
+    await expect(resolve(user('admin'))).rejects.toBeInstanceOf(AccountDisabledError);
   });
 
   it('caches per user until cleared', async () => {

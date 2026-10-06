@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n';
 
 export const Route = createFileRoute('/sales')({
   beforeLoad: ({ context }) => requireRole(context.queryClient, 'sales'),
-  component: () => <AppShell title={t.sales.title} home="/sales" titles={SALES_NAV_ITEMS} topNav={<SalesNavGated />} />,
+  component: () => <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_NAV_ITEMS} topNav={<SalesNavGated />} />,
 });
 
 /** The nav shows only the pages the held role's permissions open (dynamic roles), row and sheet. */

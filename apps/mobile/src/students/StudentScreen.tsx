@@ -1,9 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
 import { router, useLocalSearchParams } from 'expo-router';
 import { ScrollView } from 'react-native';
+import { AssistantsSection } from '@/classroom/AssistantsSection';
 import { ApiError, apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
+import { StudentFileSections } from '@/student-file/StudentFileSections';
 import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
@@ -63,9 +65,11 @@ export function StudentScreen() {
           onPress={() => router.push(`/students/reports/${student.id}`)}
         />
         <BalanceCard studentId={student.id} />
+        <StudentFileSections student={student} />
         <StudentFacts student={student} />
         <GuardianCard guardian={student.guardian} />
         <SiblingsList siblings={student.siblings} />
+        <AssistantsSection studentId={student.id} />
       </ScrollView>
     </Screen>
   );

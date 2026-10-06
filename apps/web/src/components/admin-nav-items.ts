@@ -23,6 +23,7 @@ export const ADMIN_NAV_GROUPS = [
     { key: 'payments', to: '/admin/payments', label: t.payments.title, icon: 'card', permission: 'payments.read' },
     { key: 'subscriptions', to: '/admin/subscriptions', label: t.nav.subscriptions, icon: 'box', permission: 'subscriptions.read' },
     { key: 'payouts', to: '/admin/payouts', label: t.nav.payouts, icon: 'wallet', permission: 'payouts.read' },
+    { key: 'assistants', to: '/admin/assistants', label: t.assistants.nav, icon: 'person', permission: 'assistantpay.read' },
     { key: 'expenses', to: '/admin/expenses', label: t.nav.expenses, icon: 'receipt', permission: 'expenses.read' },
     { key: 'invoices', to: '/admin/invoices', label: t.finance.invoicesTitle, icon: 'download', permission: 'invoices.read' },
     { key: 'receivables', to: '/admin/receivables', label: t.finance.receivablesTitle, icon: 'clock', permission: 'receivables.read' },
@@ -34,6 +35,7 @@ export const ADMIN_NAV_GROUPS = [
     { key: 'translations', to: '/admin/translations', label: t.translations.nav, icon: 'template', permission: 'translations.manage' },
     { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock', permission: 'activity.read' },
     { key: 'roles', to: '/admin/roles', label: t.nav.roles, icon: 'users', permission: 'roles.manage' },
+    { key: 'users', to: '/admin/users', label: t.users.nav, icon: 'users', permission: 'users.read' },
   ],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName; permission: Permission }[])[];
 

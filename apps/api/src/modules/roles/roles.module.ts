@@ -8,5 +8,6 @@ import { ROLE_STORE } from './roles.store';
 @Module({
   controllers: [RolesController, StaffUsersController],
   providers: [RolesService, { provide: ROLE_STORE, useClass: RolesQueries }],
+  exports: [ROLE_STORE],
 })
 export class RolesModule {}

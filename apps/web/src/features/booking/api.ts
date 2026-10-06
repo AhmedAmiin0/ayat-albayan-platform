@@ -10,16 +10,17 @@ import {
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { BOOKING_KINDS, type BookingBody, type BookingKind } from './contract';
+import { bookingBase, type BookingMode } from './mode';
 
 // Booking routes (docs/10 §5, rows 12–14) + the guardian row for the quote currency.
 
 /** GET /booking/teachers?program&gender — active teachers by name, with load and availability. */
-export const bookingTeachersQuery = (f: { program: Program; gender: Gender | null }) => {
+export const bookingTeachersQuery = (f: { program: Program; gender: Gender | null }, mode: BookingMode = 'admin') => {
   const params = new URLSearchParams({ program: f.program });
   if (f.gender) params.set('gender', f.gender);
   return queryOptions({
-    queryKey: ['booking', 'teachers', params.toString()],
-    queryFn: () => apiFetch<BookingTeacherOption[]>(`/booking/teachers?${params}`),
+    queryKey: ['booking', mode, 'teachers', params.toString()],
+    queryFn: () => apiFetch<BookingTeacherOption[]>(`${bookingBase(mode)}/teachers?${params}`),
   });
 };
 
@@ -33,19 +34,20 @@ export const guardianQuery = (id: string) =>
   });
 
 /** POST /booking: one transaction (rule + lessons + queued confirmations). 409 = conflicts. */
-export const createBooking = (body: BookingBody) => apiSend<BookingResult>('POST', '/booking', body);
+export const createBooking = (body: BookingBody, mode: BookingMode = 'admin') =>
+  apiSend<BookingResult>('POST', bookingBase(mode), body);
 
 /**
  * POST /booking/check — the whole series' clashes for the slot step, before «احجز» (R-SCH-04),
  * including the weeks after a coming DST change. Keyed by the body minus its idempotency key.
  */
-export const bookingCheckQuery = (body: BookingBody) => {
+export const bookingCheckQuery = (body: BookingBody, mode: BookingMode = 'admin') => {
   const key: Partial<BookingBody> = { ...body };
   delete key.clientRequestId;
   delete key.invoice; // the check never needs the proof
   return queryOptions({
-    queryKey: ['booking', 'check', JSON.stringify(key)],
-    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', '/booking/check', body),
+    queryKey: ['booking', mode, 'check', JSON.stringify(key)],
+    queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/check`, body),
     retry: false,
   });
 };

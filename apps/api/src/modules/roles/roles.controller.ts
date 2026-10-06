@@ -33,6 +33,12 @@ export class RolesController {
     return this.roles.list();
   }
 
+  /** The staff profiles and their roles (GET /users is the full directory of the users module). */
+  @Get('roles/staff-users')
+  staffUsers(): Promise<StaffUserView[]> {
+    return this.roles.users();
+  }
+
   @Post('roles')
   create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<RoleView> {
     return this.roles.create(parseOrThrow(roleCreateSchema, body), user.id);
@@ -52,18 +58,13 @@ export class RolesController {
   }
 }
 
-/** The staff users (every profile but guardians) and the role each holds. */
+/** The staff users (every profile but guardians and students) and the role each holds. */
 @ApiTags('roles')
 @ApiBearerAuth()
 @Permissions('roles.manage')
 @Controller('users')
 export class StaffUsersController {
   constructor(private readonly roles: RolesService) {}
-
-  @Get()
-  list(): Promise<StaffUserView[]> {
-    return this.roles.users();
-  }
 
   /** Sets profiles.role to the role's base role. 400 not_staff, 403 permission_not_held, 409 last_admin / self_lockout. */
   @Patch(':id/role')

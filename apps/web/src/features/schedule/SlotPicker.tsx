@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
 import { tzCity } from '@/components/ui/time-zone-select';
+import { useBookingMode } from '@/features/booking/mode';
 import { t } from '@/lib/i18n';
 import { slotsQuery } from './api';
 import { SlotGrid, type SlotGridProps } from './SlotGrid';
@@ -41,7 +42,7 @@ export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, valu
   const [week, setWeek] = useState(() => openingWeek(value ?? near, first));
   const range = bookableWindow(week, now);
   const slots = useQuery({
-    ...slotsQuery({ teacherId, durationMin, studentIds, from: range?.from ?? now, to: range?.to ?? now }),
+    ...slotsQuery({ teacherId, durationMin, studentIds, from: range?.from ?? now, to: range?.to ?? now }, useBookingMode()),
     enabled: range !== null,
   });
   const legend =

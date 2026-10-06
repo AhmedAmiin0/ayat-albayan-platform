@@ -1,7 +1,7 @@
 import { effectivePermissions, type Permission } from '@ab/shared';
 import type { Db } from '../db/db.module';
 import type { PermissionCache } from './permission.cache';
-import type { PermissionResolver } from './permissions';
+import { AccountDisabledError, type PermissionResolver } from './permissions';
 import type { AuthUser } from './verify-token';
 
 const ROLE_COLUMNS = 'id, key, is_system, role_permissions(permission)';
@@ -16,14 +16,16 @@ interface RoleRow {
  * The app's PermissionResolver: profiles.role (the base scope) + the held role (profiles.role_id,
  * or the system role of profiles.role when null) → its role_permissions → effectivePermissions.
  * Read from the DB, never from the token, so a changed role applies within the cache TTL.
- * A user without a profile has no permissions (as with no role before).
+ * A user without a profile has no permissions (as with no role before). A disabled profile throws
+ * AccountDisabledError (never cached), so a still-valid JWT is refused within the cache TTL.
  */
 export function dbPermissionResolver(input: { db: Db; cache: PermissionCache }): PermissionResolver {
   const { db, cache } = input;
   const load = async (userId: string): Promise<readonly Permission[]> => {
-    const profile = await db.from('profiles').select('role, role_id').eq('id', userId).maybeSingle();
+    const profile = await db.from('profiles').select('role, role_id, disabled_at').eq('id', userId).maybeSingle();
     if (profile.error) throw new Error(`permissions: ${profile.error.message}`);
     if (!profile.data) return [];
+    if (profile.data.disabled_at) throw new AccountDisabledError();
     const { role, role_id } = profile.data;
     const query = db.from('roles').select(ROLE_COLUMNS);
     const held = await (role_id ? query.eq('id', role_id) : query.eq('is_system', true).eq('base_role', role)).maybeSingle();

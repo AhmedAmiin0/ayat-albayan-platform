@@ -1,4 +1,4 @@
-import { formatPhone, type MessageView } from '@ab/shared';
+import { formatPhone, type MessageView, sessionWindowOpen } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
@@ -13,6 +13,7 @@ import { Composer } from './Composer';
 import { clockAt, kindLabel } from './format';
 import { MessageBubble } from './MessageBubble';
 import { OwnThreadNote } from './OwnThreadNote';
+import { SendRating } from './rating/SendRating';
 import { SubscriptionPanel } from './subscription/SubscriptionPanel';
 import { threadMessages } from './thread-cache';
 import { isOwnThread, threadBase, useThreadMode } from './thread-mode';
@@ -94,6 +95,9 @@ export function ThreadScreen() {
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <MessageList phone={phone} query={query} />
+          {mode.kind === 'admin' && thread?.guardian_id && !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
+            <SendRating thread={thread} />
+          ) : null}
           {isOwnThread(mode, thread) ? (
             <OwnThreadNote />
           ) : (

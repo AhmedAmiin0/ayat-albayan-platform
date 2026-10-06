@@ -1,6 +1,7 @@
 import type { CancelRequest, Conflict, LessonView, RescheduleRequest, SlotsResponse, StatusRouteEvent, ScheduleOverview } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
+import { bookingBase, type BookingMode } from '@/features/booking/mode';
 import { t } from '@/lib/i18n';
 import type { LessonTimeEdit, TimeEditResult } from './edit-time.contract';
 
@@ -34,8 +35,8 @@ export interface SlotsParams extends Window {
   studentIds: readonly string[];
 }
 
-/** GET /booking/slots (≤ 14 days): the teacher's candidate starts, each with its conflicts. */
-export const slotsQuery = (p: SlotsParams) => {
+/** GET /booking/slots (≤ 14 days; the assistant's mirror under /sales/booking): the teacher's candidate starts, each with its conflicts. */
+export const slotsQuery = (p: SlotsParams, mode: BookingMode = 'admin') => {
   const params = new URLSearchParams({
     teacherId: p.teacherId,
     from: p.from.toISOString(),
@@ -44,8 +45,8 @@ export const slotsQuery = (p: SlotsParams) => {
   });
   if (p.studentIds.length > 0) params.set('studentIds', p.studentIds.join(','));
   return queryOptions({
-    queryKey: [...LESSONS_KEY, 'slots', params.toString()],
-    queryFn: () => apiFetch<SlotsResponse>(`/booking/slots?${params}`),
+    queryKey: [...LESSONS_KEY, 'slots', mode, params.toString()],
+    queryFn: () => apiFetch<SlotsResponse>(`${bookingBase(mode)}/slots?${params}`),
     placeholderData: keepPreviousData,
   });
 };

@@ -17,6 +17,7 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/payments', 'payments.read'],
   ['/admin/subscriptions', 'subscriptions.read'],
   ['/admin/payouts', 'payouts.read'],
+  ['/admin/assistants', 'assistantpay.read'],
   ['/admin/expenses', 'expenses.read'],
   ['/admin/invoices', 'invoices.read'],
   ['/admin/receivables', 'receivables.read'],
@@ -26,6 +27,7 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/translations', 'translations.manage'],
   ['/admin/activity', 'activity.read'],
   ['/admin/roles', 'roles.manage'],
+  ['/admin/users', 'users.read'],
 ];
 
 /** The /admin home is the dashboard. */
