@@ -64,6 +64,8 @@ test('Cancel does nothing while the request runs; a failed run still refetches t
   await renderWithQuery(<AssignUnassigned owners={2} />, client);
   await ask();
   await fireEvent.press(screen.getByRole('button', { name: t.sales.assign.assignAll }));
+  // The pending state renders on the next tick: cancel only once the confirm says it is saving.
+  await screen.findByRole('button', { name: t.common.saving });
   await fireEvent.press(screen.getByRole('button', { name: t.common.cancel }));
   expect(screen.getByText(t.mobileLeads.assignAllConfirm)).toBeTruthy();
   fail(new ApiError(504));
