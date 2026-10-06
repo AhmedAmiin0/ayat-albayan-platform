@@ -80,6 +80,9 @@ jobs:
           cache: pnpm
       - name: Never re-add forcesRTL
         run: "! grep -n forcesRTL apps/mobile/app.json apps/mobile/app.config.ts"
+      # Install BEFORE the guard: `eas build:list` loads the app config, which resolves the config plugins
+      # (expo-router ...) from node_modules. No secret is present in this step.
+      - run: pnpm i --frozen-lockfile
       - name: Native-change guard (OTA = JavaScript only)
         working-directory: apps/mobile
         env:
@@ -101,7 +104,6 @@ jobs:
             exit 1
           fi
           if [ "$rc" != 0 ]; then echo "::warning::force_ota ticked: shipping the OTA despite the native change"; fi
-      - run: pnpm i --frozen-lockfile
       - name: Write the Firebase file (only if the secret exists)
         env:
           GOOGLE_SERVICES_JSON_SECRET: ${{ secrets.GOOGLE_SERVICES_JSON }}
