@@ -57,10 +57,27 @@ describe('system roles', () => {
   });
 
   it('sales and assistant carry only their scope keys and the shared rooms/inbox', () => {
-    expect(selfPermissionsOf('sales')).toEqual(['self.sales']);
+    expect(selfPermissionsOf('sales')).toEqual(['self.sales', 'self.sales_students', 'self.sales_payments', 'self.sales_earnings']);
     expect(selfPermissionsOf('assistant')).toEqual(['self.assistant']);
     expect(systemPermissionsOf('sales')).toContain('inbox.read');
     expect(systemPermissionsOf('assistant')).not.toContain('inbox.read');
+  });
+});
+
+describe('assistant pay permissions', () => {
+  it('are admin-only grants (no system role but the admin holds them) and the scope keys only follow the sales base role', () => {
+    const keys = ['assistantpay.read', 'assistantpay.write', 'assistantpay.approve'] as const;
+    for (const k of keys) {
+      expect(isGrantable(k)).toBe(true);
+      expect(systemPermissionsOf('admin')).toContain(k);
+      for (const role of ['teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).not.toContain(k);
+    }
+    for (const k of ['self.sales_students', 'self.sales_payments', 'self.sales_earnings'] as const) {
+      expect(isGrantable(k)).toBe(false);
+      expect(systemPermissionsOf('sales')).toContain(k);
+      expect(systemPermissionsOf('admin')).not.toContain(k);
+      expect(systemPermissionsOf('teacher')).not.toContain(k);
+    }
   });
 });
 

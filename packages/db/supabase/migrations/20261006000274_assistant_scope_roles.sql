@@ -1,0 +1,65 @@
+-- Assistant (base role `sales`) scope, role names and permissions (owner, 2026-10-06). Idempotent.
+--
+-- 1. What a salesperson may read (RLS, the second wall; the API serves the portal with the service role):
+--    * students they BROUGHT (students.brought_by) and no other, with brought_at;
+--    * payments they RECORDED (payments.recorded_by) and no other payment: no policy on subscriptions,
+--      prices or anyone else's money stays hidden (migration 187);
+--    * the chats and lessons of those students' guardians, on top of their own leads (187's helpers).
+--    Their terms, commissions, adjustments and statements are in migration 271.
+-- 2. v_assistant_students: one row per brought student for the "my students" screen and the admin ledger
+--    (security_invoker: a sales user gets their own rows only; an admin all).
+-- 3. Role labels: the owner's "assistant" is the sales role; the classroom teaching assistant is renamed.
+-- 4. Permissions: the admin keys assistantpay.read / .write / .approve (the system admin holds every
+--    grantable key in the API; its rows are listed for readers and the seed test). The sales scope keys
+--    self.sales_students / self.sales_payments / self.sales_earnings follow the base role in the
+--    catalog (never stored), like self.sales.
+
+create or replace function public.my_sales_guardian_ids() returns setof uuid
+  language sql stable security definer set search_path = '' as $$
+  select converted_guardian_id from public.leads
+  where assigned_to = auth.uid() and converted_guardian_id is not null
+  union
+  select s.guardian_id from public.students s where s.brought_by = auth.uid()
+$$;
+
+-- The students of their lead guardians (as before) plus the ones they brought.
+create or replace function public.my_sales_student_ids() returns setof uuid
+  language sql stable security definer set search_path = '' as $$
+  select s.id from public.students s
+  where s.brought_by = auth.uid()
+     or s.guardian_id in (select l.converted_guardian_id from public.leads l
+                          where l.assigned_to = auth.uid() and l.converted_guardian_id is not null)
+$$;
+
+drop policy if exists students_sales_brought_read on public.students;
+create policy students_sales_brought_read on public.students for select to authenticated
+  using (brought_by = (select auth.uid()) and public.auth_role() = 'sales');
+
+drop policy if exists payments_sales_own_read on public.payments;
+create policy payments_sales_own_read on public.payments for select to authenticated
+  using (recorded_by = (select auth.uid()) and public.auth_role() = 'sales');
+
+create or replace view public.v_assistant_students with (security_invoker = true) as
+  select s.id as student_id, s.code, s.name, s.brought_by as assistant_id, s.brought_at,
+         (public.student_first_paid_at(s.id) is not null) as first_subscription_paid,
+         public.student_first_paid_at(s.id) as first_paid_at,
+         c.id as commission_id, c.status as commission_status, c.amount as commission_amount,
+         c.currency as commission_currency, c.earned_at as commission_earned_at
+  from public.students s
+  left join public.assistant_commissions c on c.student_id = s.id
+  where s.brought_by is not null;
+revoke all on public.v_assistant_students from anon;
+grant select on public.v_assistant_students to authenticated, service_role;
+
+update public.roles set name_ar = 'مساعد/ة', name_en = 'Assistant' where is_system and key = 'sales';
+update public.roles set name_ar = 'مساعد حلقة', name_en = 'Classroom assistant' where is_system and key = 'assistant';
+
+insert into public.role_permissions (role_id, permission)
+select r.id, 'assistantpay.read' from public.roles r where r.is_system and r.key in ('admin')
+on conflict do nothing;
+insert into public.role_permissions (role_id, permission)
+select r.id, 'assistantpay.write' from public.roles r where r.is_system and r.key in ('admin')
+on conflict do nothing;
+insert into public.role_permissions (role_id, permission)
+select r.id, 'assistantpay.approve' from public.roles r where r.is_system and r.key in ('admin')
+on conflict do nothing;

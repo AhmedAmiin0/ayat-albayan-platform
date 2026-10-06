@@ -4,6 +4,7 @@ export * from './highlight-diff.js';
 export * from './classroom/index.js';
 export * from './lessons/index.js';
 export * from './messaging/index.js';
+export * from './assistant/index.js';
 export * from './money/index.js';
 export * from './phone.js';
 export * from './plural.js';

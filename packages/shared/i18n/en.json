@@ -2569,9 +2569,9 @@
     "roles": {
       "teacher": "Teacher",
       "admin": "Admin",
-      "assistant": "Assistant",
+      "assistant": "Classroom assistant",
       "guest": "Guest",
-      "sales": "Sales"
+      "sales": "Assistant"
     },
     "guest": {
       "title": "Join the lesson",
@@ -3037,8 +3037,8 @@
       "admin": "Admin",
       "teacher": "Teacher",
       "guardian": "Guardian",
-      "assistant": "Assistant",
-      "sales": "Sales",
+      "assistant": "Classroom assistant",
+      "sales": "Assistant",
       "public": "Visitor",
       "unknown": "No role"
     },
@@ -3157,8 +3157,8 @@
       "students.balance": "View a student's package balance",
       "guardians.read": "View guardians",
       "guardians.write": "Manage guardians",
-      "assistants.read": "View assistants",
-      "assistants.write": "Assign assistants to students",
+      "assistants.read": "View classroom assistants",
+      "assistants.write": "Assign classroom assistants to students",
       "teachers.read": "View teachers",
       "teachers.write": "Add and edit teachers",
       "availability.read": "View teacher availability",
@@ -3199,6 +3199,9 @@
       "payouts.read": "View teacher payouts",
       "payouts.write": "Prepare and pay payouts",
       "payouts.approve": "Approve payouts",
+      "assistantpay.read": "View assistants' terms, commissions and statements",
+      "assistantpay.write": "Set assistants' terms, prepare and pay their statements",
+      "assistantpay.approve": "Approve assistants' statements",
       "earnings.read": "View teacher earnings",
       "earnings.write": "Record teacher payments",
       "expenses.read": "View expenses",
@@ -3211,8 +3214,11 @@
       "notifications.push": "Receive mobile app notifications",
       "translations.manage": "Edit interface text and translations",
       "self.teacher": "Teacher's own pages",
-      "self.sales": "Sales' own pages",
-      "self.assistant": "Assistant's own pages"
+      "self.sales": "Assistant's own pages",
+      "self.sales_students": "Students the assistant brought",
+      "self.sales_payments": "Payments the assistant recorded",
+      "self.sales_earnings": "Assistant's earnings and statements",
+      "self.assistant": "Classroom assistant's own pages"
     },
     "page": {
       "title": "Roles and permissions",
