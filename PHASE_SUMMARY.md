@@ -1690,3 +1690,14 @@ Owner request: every online meeting is recorded; a student-teacher lesson goes i
 - `packages/db/src/types.ts` was NOT fully regenerated: the local CLI marks every view column nullable, which breaks 4 API call sites; the four missing function signatures were added by hand.
 - Mobile: one `useReceivables` (money/queries), `riyadhToday` from calendar/week, the finance summary has its own cache key.
 - Open: assistants cannot reach the student recordings routes by default (system assistant lacks `recordings.read`).
+
+## Mobile classroom and meetings parity (cloud branch `cloud/mobile-classroom-meetings`, 2026-10-06)
+
+Owner rule (2026-10-06): every web feature is in sync with mobile. Built in a cloud run with no DB, secrets or device: **not verified on a device**.
+
+- **Admin board** «الحلقات المباشرة» (More → `/more/live`): day switcher, lessons grouped now / upcoming / ended, enter, send link (asks first), copy link (`Share.share`), recordings.
+- **Recordings** (`/more/live/recordings/:id`, `/more/live/meetings/:id`): list with status chips, play = refetch then `Linking.openURL(signed url)`, never persisted (`noPersist`).
+- **Internal meetings** (More → `/more/live/meetings`, teacher More → `/teacher/more/meetings`): list, create, enter, end (asks first), new link (asks first) + share.
+- **Assistants** on the student screen (`AssistantsSection`); `AssistantLessonsList` is written for the later assistant shell and mounted nowhere.
+- **Contract notes:** the URL copy and the meeting link are `POST` in the API (not GET); the meeting link is shown once and a new one replaces the old. Instant lesson (`POST /lessons/instant`) is not built: it needs a student search and a teacher picker with the 409 clash flow.
+- **Not verified:** a device run, OTA, a real browser hand-off to the classroom/meeting page, WhatsApp delivery of the link.

@@ -13,13 +13,16 @@ import { classroomUrl } from './web-origin';
 
 const text = t.classroom;
 
+/** What the button needs of a lesson (an assistant's session has no more than this). */
+export type JoinableLesson = Pick<LessonView, 'id' | 'status' | 'starts_at' | 'ends_at' | 'room_opened_at'>;
+
 /**
  * «ادخل الحلقة» on a lesson row (teacher and admin): live inside the settings' join window (15 minutes
  * before the start to 2 hours after the end by default) (re-checked every minute), else off with «بتفتح الساعة …». A press asks the
  * API first (POST /lessons/:id/room/join) so a refusal reads in the app, and only on success opens the
  * web classroom in the system browser (no native WebRTC here: the web page mints its own token).
  */
-export function JoinClassroomButton({ lesson }: { lesson: LessonView }) {
+export function JoinClassroomButton({ lesson }: { lesson: JoinableLesson }) {
   const now = useMinuteClock();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);

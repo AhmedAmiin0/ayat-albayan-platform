@@ -9,6 +9,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { AdminOpsSection } from './AdminOpsSection';
 import { AppearancePicker } from './AppearancePicker';
+import { ClassroomSection } from './ClassroomSection';
 import { FinanceSection } from './FinanceSection';
 import { LanguageRow } from './LanguageRow';
 import { MoneySection } from './MoneySection';
@@ -38,6 +39,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
       <MoneySection />
       <AdminOpsSection />
       <FinanceSection />
+      <ClassroomSection can={can} />
       <AppearancePicker />
       <LanguageRow />
       <View style={{ alignItems: 'flex-start' }}>

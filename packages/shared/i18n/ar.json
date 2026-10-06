@@ -904,6 +904,25 @@
     "restoreLength": "أعد المدة إلى {len}",
     "currentLength": "المدة الحالية: {len}"
   },
+  "mobileClassroom": {
+    "title": "الحلقات المباشرة",
+    "section": "الحلقات والاجتماعات",
+    "meetingsRow": "اجتماعات داخلية",
+    "sendConfirm": "سيصل رابط الحلقة إلى ولي أمر {name} عبر واتساب. هل تريد الإرسال؟",
+    "sendConfirmAction": "أرسل الآن",
+    "linkShareFailed": "تعذّر فتح قائمة المشاركة",
+    "play": "شغّل",
+    "playOf": "شغّل تسجيل {time}",
+    "playFailed": "تعذّر فتح التسجيل، حاول مرة أخرى",
+    "recordingsOf": "تسجيلات الحلقة",
+    "recordingsOfMeeting": "تسجيلات الاجتماع",
+    "endConfirm": "سينتهي الاجتماع للجميع. هل تريد إنهاءه؟",
+    "endAction": "أنهِ الآن",
+    "newLinkConfirm": "سيتوقف الرابط السابق عن العمل. هل تريد إنشاء رابط جديد؟",
+    "newLinkAction": "أنشئ الرابط",
+    "shareLink": "شارك الرابط",
+    "newLinkReady": "تم إنشاء رابط جديد، شاركه مع المشاركين."
+  },
   "alerts": {
     "needsTeacher": "يحتاج معلم/ة"
   },

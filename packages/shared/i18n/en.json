@@ -904,6 +904,25 @@
     "restoreLength": "Put the length back to {len}",
     "currentLength": "Current length: {len}"
   },
+  "mobileClassroom": {
+    "title": "Live lessons",
+    "section": "Lessons and meetings",
+    "meetingsRow": "Internal meetings",
+    "sendConfirm": "The lesson link will be sent to {name}'s guardian on WhatsApp. Send it?",
+    "sendConfirmAction": "Send now",
+    "linkShareFailed": "Could not open the share sheet",
+    "play": "Play",
+    "playOf": "Play the recording of {time}",
+    "playFailed": "Could not open the recording, try again",
+    "recordingsOf": "Lesson recordings",
+    "recordingsOfMeeting": "Meeting recordings",
+    "endConfirm": "The meeting will end for everyone. End it?",
+    "endAction": "End now",
+    "newLinkConfirm": "The previous link will stop working. Create a new link?",
+    "newLinkAction": "Create link",
+    "shareLink": "Share link",
+    "newLinkReady": "A new link is ready, share it with the participants."
+  },
   "alerts": {
     "needsTeacher": "Needs a teacher"
   },
