@@ -15,6 +15,7 @@ import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SalesRouteImport } from './routes/sales'
+import { Route as SetPasswordRouteImport } from './routes/set-password'
 import { Route as TeacherRouteImport } from './routes/teacher'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminActivityRouteImport } from './routes/admin/activity'
@@ -39,6 +40,7 @@ import { Route as AdminStudentsRouteImport } from './routes/admin/students'
 import { Route as AdminSubscriptionsRouteImport } from './routes/admin/subscriptions'
 import { Route as AdminTeachersRouteImport } from './routes/admin/teachers'
 import { Route as AdminTranslationsRouteImport } from './routes/admin/translations'
+import { Route as AdminUsersRouteImport } from './routes/admin/users'
 import { Route as AssistantIndexRouteImport } from './routes/assistant/index'
 import { Route as ClassroomLessonIdRouteImport } from './routes/classroom.$lessonId'
 import { Route as FeedbackTokenRouteImport } from './routes/feedback.$token'
@@ -99,6 +101,11 @@ const PortalRoute = PortalRouteImport.update({
 const SalesRoute = SalesRouteImport.update({
   id: '/sales',
   path: '/sales',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SetPasswordRoute = SetPasswordRouteImport.update({
+  id: '/set-password',
+  path: '/set-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TeacherRoute = TeacherRouteImport.update({
@@ -219,6 +226,11 @@ const AdminTeachersRoute = AdminTeachersRouteImport.update({
 const AdminTranslationsRoute = AdminTranslationsRouteImport.update({
   id: '/translations',
   path: '/translations',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUsersRoute = AdminUsersRouteImport.update({
+  id: '/users',
+  path: '/users',
   getParentRoute: () => AdminRoute,
 } as any)
 const AssistantIndexRoute = AssistantIndexRouteImport.update({
@@ -388,6 +400,7 @@ export interface FileRoutesByFullPath {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/sales': typeof SalesRouteWithChildren
+  '/set-password': typeof SetPasswordRoute
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/assistants': typeof AdminAssistantsRouteWithChildren
@@ -411,6 +424,7 @@ export interface FileRoutesByFullPath {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
   '/admin/translations': typeof AdminTranslationsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -448,6 +462,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
+  '/set-password': typeof SetPasswordRoute
   '/admin/activity': typeof AdminActivityRoute
   '/admin/assistants': typeof AdminAssistantsRouteWithChildren
   '/admin/book': typeof AdminBookRoute
@@ -470,6 +485,7 @@ export interface FileRoutesByTo {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
   '/admin/translations': typeof AdminTranslationsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -511,6 +527,7 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/portal': typeof PortalRoute
   '/sales': typeof SalesRouteWithChildren
+  '/set-password': typeof SetPasswordRoute
   '/teacher': typeof TeacherRouteWithChildren
   '/admin/activity': typeof AdminActivityRoute
   '/admin/assistants': typeof AdminAssistantsRouteWithChildren
@@ -534,6 +551,7 @@ export interface FileRoutesById {
   '/admin/subscriptions': typeof AdminSubscriptionsRoute
   '/admin/teachers': typeof AdminTeachersRouteWithChildren
   '/admin/translations': typeof AdminTranslationsRoute
+  '/admin/users': typeof AdminUsersRoute
   '/classroom/$lessonId': typeof ClassroomLessonIdRoute
   '/feedback/$token': typeof FeedbackTokenRoute
   '/join/$linkToken': typeof JoinLinkTokenRoute
@@ -576,6 +594,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/sales'
+    | '/set-password'
     | '/teacher'
     | '/admin/activity'
     | '/admin/assistants'
@@ -599,6 +618,7 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/teachers'
     | '/admin/translations'
+    | '/admin/users'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -636,6 +656,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/portal'
+    | '/set-password'
     | '/admin/activity'
     | '/admin/assistants'
     | '/admin/book'
@@ -658,6 +679,7 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/teachers'
     | '/admin/translations'
+    | '/admin/users'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -698,6 +720,7 @@ export interface FileRouteTypes {
     | '/login'
     | '/portal'
     | '/sales'
+    | '/set-password'
     | '/teacher'
     | '/admin/activity'
     | '/admin/assistants'
@@ -721,6 +744,7 @@ export interface FileRouteTypes {
     | '/admin/subscriptions'
     | '/admin/teachers'
     | '/admin/translations'
+    | '/admin/users'
     | '/classroom/$lessonId'
     | '/feedback/$token'
     | '/join/$linkToken'
@@ -762,6 +786,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   PortalRoute: typeof PortalRoute
   SalesRoute: typeof SalesRouteWithChildren
+  SetPasswordRoute: typeof SetPasswordRoute
   TeacherRoute: typeof TeacherRouteWithChildren
   ClassroomLessonIdRoute: typeof ClassroomLessonIdRoute
   FeedbackTokenRoute: typeof FeedbackTokenRoute
@@ -813,6 +838,13 @@ declare module '@tanstack/react-router' {
       path: '/sales'
       fullPath: '/sales'
       preLoaderRoute: typeof SalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/set-password': {
+      id: '/set-password'
+      path: '/set-password'
+      fullPath: '/set-password'
+      preLoaderRoute: typeof SetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/teacher': {
@@ -981,6 +1013,13 @@ declare module '@tanstack/react-router' {
       path: '/translations'
       fullPath: '/admin/translations'
       preLoaderRoute: typeof AdminTranslationsRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/users': {
+      id: '/admin/users'
+      path: '/users'
+      fullPath: '/admin/users'
+      preLoaderRoute: typeof AdminUsersRouteImport
       parentRoute: typeof AdminRoute
     }
     '/assistant/': {
@@ -1282,6 +1321,7 @@ interface AdminRouteChildren {
   AdminSubscriptionsRoute: typeof AdminSubscriptionsRoute
   AdminTeachersRoute: typeof AdminTeachersRouteWithChildren
   AdminTranslationsRoute: typeof AdminTranslationsRoute
+  AdminUsersRoute: typeof AdminUsersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -1308,6 +1348,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminSubscriptionsRoute: AdminSubscriptionsRoute,
   AdminTeachersRoute: AdminTeachersRouteWithChildren,
   AdminTranslationsRoute: AdminTranslationsRoute,
+  AdminUsersRoute: AdminUsersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 
@@ -1385,6 +1426,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   PortalRoute: PortalRoute,
   SalesRoute: SalesRouteWithChildren,
+  SetPasswordRoute: SetPasswordRoute,
   TeacherRoute: TeacherRouteWithChildren,
   ClassroomLessonIdRoute: ClassroomLessonIdRoute,
   FeedbackTokenRoute: FeedbackTokenRoute,

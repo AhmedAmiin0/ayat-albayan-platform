@@ -28,7 +28,7 @@ export class FakeRoleStore implements RoleStore {
   }
 
   async profiles(): Promise<ProfileRecord[]> {
-    return this.profilesData.filter((p) => p.role !== 'guardian').map((p) => ({ ...p }));
+    return this.profilesData.filter((p) => p.role !== 'guardian' && p.role !== 'student').map((p) => ({ ...p }));
   }
 
   async insertRole(row: NewRole): Promise<string> {

@@ -28,7 +28,7 @@ describe('RolesService — CRUD', () => {
 
   it('lists the system roles with user counts; the admin shows every grantable key', async () => {
     const roles = await svc.list();
-    expect(roles.map((r) => r.key)).toEqual(['admin', 'teacher', 'guardian', 'assistant', 'sales']);
+    expect(roles.map((r) => r.key)).toEqual(['admin', 'teacher', 'guardian', 'assistant', 'sales', 'student']);
     expect(roles[0]?.permissions).toEqual([...GRANTABLE_PERMISSIONS]);
     expect(roles.find((r) => r.key === 'teacher')?.users).toBe(1);
   });
@@ -92,5 +92,6 @@ describe('RolesService — assignment', () => {
   it('refuses guardians and the guardian role', async () => {
     expect(await codeOf(svc.assign({ userId: 'ghost', roleId: 'sys-sales', actorId: 'owner' }))).toBe('not_staff');
     expect(await codeOf(svc.assign({ userId: 't1', roleId: 'sys-guardian', actorId: 'owner' }))).toBe('not_staff');
+    expect(await codeOf(svc.assign({ userId: 't1', roleId: 'sys-student', actorId: 'owner' }))).toBe('not_staff');
   });
 });

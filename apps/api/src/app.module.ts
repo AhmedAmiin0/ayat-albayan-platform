@@ -40,6 +40,7 @@ import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeacherStudentsModule } from './modules/teacher-students/teacher-students.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
+import { UsersModule } from './modules/users/users.module';
 import { TranslationsModule } from './modules/translations/translations.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
@@ -72,6 +73,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     LessonsModule,
     ReportsModule,
     RolesModule,
+    UsersModule,
     ReportPdfModule,
     SubscriptionsModule,
     PaymentsModule,

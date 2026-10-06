@@ -42,7 +42,7 @@ describe('AdminNav', () => {
 
   it('links only the routes that exist: Phase 1 screens, schedule, money, pricing, inbox, settings, translations, activity and roles', () => {
     render(<AdminNav />);
-    expect(screen.getAllByRole('link')).toHaveLength(21);
+    expect(screen.getAllByRole('link')).toHaveLength(22);
   });
 
   it('groups the money pages under «المالية»', () => {

@@ -19,7 +19,7 @@ const GUARDIAN: RoleView = { ...ADMIN, id: 'sys-guardian', key: 'guardian', name
 const USERS: StaffUserView[] = [{ id: 'u2', full_name: 'سارة', role: 'teacher', role_id: 'sys-teacher' }];
 
 function renderPage() {
-  apiFetch.mockImplementation(async (path: string) => (path === '/users' ? USERS : [ADMIN, TEACHER, GUARDIAN]));
+  apiFetch.mockImplementation(async (path: string) => (path === '/roles/staff-users' ? USERS : [ADMIN, TEACHER, GUARDIAN]));
   render(
     <QueryClientProvider client={new QueryClient()}>
       <RolesPage />

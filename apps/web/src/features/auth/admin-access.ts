@@ -27,6 +27,7 @@ export const ADMIN_PAGES: readonly (readonly [prefix: string, permission: Permis
   ['/admin/translations', 'translations.manage'],
   ['/admin/activity', 'activity.read'],
   ['/admin/roles', 'roles.manage'],
+  ['/admin/users', 'users.read'],
 ];
 
 /** The /admin home is the dashboard. */

@@ -93,3 +93,18 @@ describe('effectivePermissions', () => {
     expect(effectivePermissions({ baseRole: null, granted: ['payments.read'], allGrantable: true })).toEqual([]);
   });
 });
+
+describe('student and guardian base roles', () => {
+  it('hold no permission at all until the portal task grants self.* keys', () => {
+    expect(systemPermissionsOf('student')).toEqual([]);
+    expect(systemPermissionsOf('guardian')).toEqual([]);
+    expect(defaultGrantsOf('student')).toEqual([]);
+  });
+  it('only the system admin holds the users permissions by default', () => {
+    expect(systemPermissionsOf('admin')).toEqual(expect.arrayContaining(['users.read', 'users.write']));
+    for (const role of ['teacher', 'assistant', 'sales', 'guardian', 'student'] as const) {
+      expect(systemPermissionsOf(role)).not.toContain('users.read');
+      expect(systemPermissionsOf(role)).not.toContain('users.write');
+    }
+  });
+});
