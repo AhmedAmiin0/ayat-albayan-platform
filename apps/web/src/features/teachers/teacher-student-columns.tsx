@@ -24,13 +24,14 @@ const weeklyOptions = () => [
 /**
  * One teacher's students (R-TCH-03): code, name (→ profile), status, package left, weekly lesson.
  * Every column sorts server-side (R-NFR-08); status is filtered by the chips above, package left
- * and weekly by the list's «الباقة» / «حلقة أسبوعية» filters.
+ * and weekly by the list's «الباقة» / «حلقة أسبوعية» filters. Phones (stacked): name + status, then
+ * code and package left.
  */
 export const teacherStudentColumns = col.columns([
   col.accessor('code', {
     header: () => s.code,
     cell: (c) => <Ltr>{c.getValue() ?? '—'}</Ltr>,
-    meta: { className: 'text-xs text-ink-2', sortKey: 'code', filter: text },
+    meta: { className: 'text-xs text-ink-2 max-sm:order-3', sortKey: 'code', filter: text },
   }),
   col.accessor('name', {
     header: () => s.name,
@@ -43,18 +44,18 @@ export const teacherStudentColumns = col.columns([
         {c.getValue()}
       </Link>
     ),
-    meta: { sortKey: 'name', filter: text, search: true },
+    meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%] max-sm:text-base', sortKey: 'name', filter: text, search: true },
   }),
   col.accessor('status', {
     header: () => s.status,
     cell: (c) => <StatusChip {...studentStatusStyle[c.getValue()]} label={t.enums.studentStatus[c.getValue()]} />,
-    meta: { sortKey: 'status' },
+    meta: { className: 'max-sm:order-2', sortKey: 'status' },
   }),
   col.accessor('package_remaining', {
     header: () => s.remaining,
     cell: (c) => <span className="tabular-nums">{remainingLabel(c.getValue())}</span>,
     meta: {
-      className: 'text-xs text-ink-2',
+      className: 'text-xs text-ink-2 max-sm:order-4',
       sortKey: 'remaining',
       filter: { kind: 'select', options: packageOptions() },
       filterKey: 'package',
@@ -64,7 +65,8 @@ export const teacherStudentColumns = col.columns([
     header: () => s.weekly,
     cell: (c) => (c.getValue() ? t.common.yes : t.common.no),
     meta: {
-      className: 'text-xs text-ink-2',
+      // A bare «نعم / لا» says nothing without its head: phones (stacked rows) leave it out.
+      className: 'text-xs text-ink-2 max-sm:hidden',
       sortKey: 'weekly',
       filter: { kind: 'select', options: weeklyOptions() },
       filterKey: 'weekly',

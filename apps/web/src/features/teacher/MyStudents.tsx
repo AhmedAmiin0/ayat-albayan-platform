@@ -15,6 +15,6 @@ export function MyStudents({ students, showStatus = true }: { students: TeacherM
   const columns = useMemo(() => myStudentColumns(showStatus), [showStatus]);
   if (students.length === 0) return <EmptyState title={t.teacherDash.noStudents} />;
   return (
-    <DataTable label={t.teacherDash.myStudents} clientSort clientFilter columns={columns} data={students} getRowId={(s) => s.id} />
+    <DataTable stacked label={t.teacherDash.myStudents} clientSort clientFilter columns={columns} data={students} getRowId={(s) => s.id} />
   );
 }

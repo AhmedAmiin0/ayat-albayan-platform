@@ -1,4 +1,5 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
+import { ADMIN_NAV_ITEMS } from '@/components/admin-nav-items';
 import { AdminNav } from '@/components/AdminNav';
 import { AppShell } from '@/components/AppShell';
 import { useNavCounts } from '@/components/shell/use-nav-counts';
@@ -18,8 +19,12 @@ export const Route = createFileRoute('/admin')({
 });
 
 // TODO(R-RPT-01): the /admin home becomes the dashboard (KPI strip) in Phase 5.
+// One permission-filtered AdminNav: the sidebar and the «القائمة» sheet render this same element.
 function AdminLayout() {
   const { can } = usePermissions();
   const counts = useNavCounts(can);
-  return <AppShell title={t.admin.dashboardTitle} nav={<AdminNav counts={counts} can={can} />} />;
+  return <AppShell title={t.admin.dashboardTitle} home="/admin" titles={TITLES} nav={<AdminNav counts={counts} can={can} />} />;
 }
+
+/** The compact bar's titles: every nav page, plus the booking wizard (opened from several pages). */
+const TITLES = [...ADMIN_NAV_ITEMS, { to: '/admin/book', label: t.booking.title }];

@@ -4,8 +4,8 @@ import { LanguageSwitch } from './LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 
 /**
- * Sidebar foot (docs/07 §7): theme, language, the signed-in account, logout. Below 900px the
- * language switch and the logout button stay (the compact top row), so both work on phones.
+ * Sidebar foot (docs/07 §7, ≥ 900px): theme, language, the signed-in account, logout. Below 900px
+ * the same controls sit at the foot of the «القائمة» sheet (MenuFoot).
  * TODO(R-AUTH-01): show the profile's full name + role once /auth/me returns them.
  */
 export function SideFoot({ email }: { email?: string | null }) {
@@ -19,7 +19,7 @@ export function SideFoot({ email }: { email?: string | null }) {
         'shell:sticky shell:bottom-0 shell:z-10 shell:-ms-3 shell:-me-3 shell:mt-auto shell:grid shell:grid-cols-[minmax(0,1fr)_auto] shell:gap-x-2 shell:gap-y-2 shell:border-t shell:border-rule shell:bg-cover shell:px-6 shell:pt-4 shell:pb-6',
       )}
     >
-      {/* Three short rows: theme; language + logout; the account. Compact row (<900px): language + logout. */}
+      {/* Three short rows: theme; language + logout; the account. The «القائمة» sheet has its own foot (MenuFoot). */}
       <ThemeToggle className="hidden shell:col-span-2 shell:inline-flex shell:justify-self-start" />
       <LanguageSwitch className="shell:justify-self-start" />
       <LogoutButton />

@@ -6,9 +6,10 @@ import { cn } from '@/lib/utils';
  * static height"): it takes the rest of the page frame (a flex column: toolbar auto, this box
  * `h-0 flex-auto`: basis = the 0 height, so the rows never size it; the pager under it) and never less than 320px; rows scroll inside it on both axes and
  * the header row stays pinned (PageFrame's `thead th` sticky rule). Few rows leave the space empty.
+ * Phones (< 640px, rows stacked as cards): no box-in-a-scrolling-page; the rows flow with the page.
  */
 export const tableBoxClass =
-  'relative flex h-0 min-h-[320px] flex-auto flex-col overflow-auto overscroll-contain rounded-md border border-rule';
+  'relative flex h-0 min-h-[320px] flex-auto flex-col overflow-auto overscroll-contain rounded-md border border-rule max-sm:h-auto max-sm:min-h-0 max-sm:flex-none max-sm:overflow-visible';
 
 export function TableBox({ children, center, className }: { children: ReactNode; center?: boolean; className?: string }) {
   return (

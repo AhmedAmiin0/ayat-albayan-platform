@@ -26,6 +26,7 @@ import type { ScheduleSearch } from './search';
 import { currentWeekStart } from './slots';
 import { RIYADH_TZ, weekWindow, zonedParts } from './tz';
 import { WeekGrid } from './WeekGrid';
+import { HeadActions } from '@/components/ui/head-actions';
 
 export interface WeekScheduleProps {
   search: ScheduleSearch;
@@ -59,14 +60,22 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <PageHead>
         <Cartouche>{t.schedule.title}</Cartouche>
         {overview.data && <ScheduleCounts shown={shown} />}
-        <div className="ms-auto flex flex-wrap gap-2">
-          <SyncScheduleButton onDone={setNotice} />
-          {/* «حجز حلقة» is the page's one filled primary. */}
-          <NewMeetingMenu variant="secondary" />
-          <Link to="/admin/book" className={buttonVariants()}>
-            {t.schedule.book}
-          </Link>
-        </div>
+        {/* «حجز حلقة» is the page's one filled primary; «اجتماع جديد» stays on the dashboard and «الحلقات عبر الإنترنت» on phones. */}
+        <HeadActions
+          primary={
+            <Link to="/admin/book" className={buttonVariants()}>
+              {t.schedule.book}
+            </Link>
+          }
+          more={
+            <>
+              <SyncScheduleButton onDone={setNotice} />
+              <div className="max-sm:hidden">
+                <NewMeetingMenu variant="secondary" />
+              </div>
+            </>
+          }
+        />
       </PageHead>
       <ProposalsPanel onOpen={(l) => setOpenId(l.id)} />
       <div className="mb-3">

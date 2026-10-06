@@ -1,6 +1,5 @@
 import type { ReactNode } from 'react';
 import { Page } from '@/components/ui/page';
-import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { cn } from '@/lib/utils';
 import { useRailBox } from '../use-rail-box';
 
@@ -9,8 +8,9 @@ import { useRailBox } from '../use-rail-box';
 // inbox, a fixed-height table) that then scrolls on its own. -mx-1 px-1: a scroll box clips what is
 // drawn outside its edge, and a full-width control's focus ring (2px outline + 2px offset) is
 // exactly that; the 4px of padding keeps the ring visible and the negative margin keeps the layout.
+// Phones: room under the last control, so a toast (fixed at the bottom) never sits on top of it.
 export const SCROLL = cn(
-  'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain -mx-1 px-1',
+  'flex min-h-0 flex-1 flex-col overflow-y-auto overscroll-contain -mx-1 px-1 max-sm:pb-16',
   '[&_[data-page-head]]:sticky [&_[data-page-head]]:top-0 [&_[data-page-head]]:z-10 [&_[data-page-head]]:bg-page',
   '[&_thead_th]:sticky [&_thead_th]:top-0 [&_thead_th]:z-[1] [&_thead_th]:bg-page',
 );
@@ -19,7 +19,7 @@ export const SCROLL = cn(
  * The work page inside a viewport-high layout (owner, 2026-10-05: "don't make the page scroll"):
  * the browser page never scrolls, only this frame's content does (and boxes inside it).
  */
-export function PageFrame({ children, footer, pageClassName }: { children: ReactNode; footer?: ReactNode; pageClassName?: string }) {
+export function PageFrame({ children, pageClassName }: { children: ReactNode; pageClassName?: string }) {
   const scroll = useRailBox<HTMLDivElement>();
   return (
     <main className="flex min-h-0 min-w-0 flex-1 flex-col">
@@ -27,18 +27,8 @@ export function PageFrame({ children, footer, pageClassName }: { children: React
         {/* data-page-scroll: the e2e probes read this box (horizontal overflow stays inside it, not the document). */}
         <div ref={scroll} data-page-scroll className={SCROLL}>
           {children}
-          {footer}
         </div>
       </Page>
     </main>
-  );
-}
-
-/** The theme choice under the page where the bar has no room for it (phones). */
-export function PhoneTheme({ className }: { className: string }) {
-  return (
-    <div className={cn('flex shrink-0 justify-center pt-4', className)}>
-      <ThemeToggle />
-    </div>
   );
 }

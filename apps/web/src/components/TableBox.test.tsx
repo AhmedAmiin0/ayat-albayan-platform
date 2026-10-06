@@ -13,6 +13,10 @@ describe('TableBox (a fixed-height table box)', () => {
     for (const cls of ['h-0', 'flex-auto', 'min-h-[320px]', 'overflow-auto']) expect(tableBoxClass.split(' ')).toContain(cls);
   });
 
+  it('on phones (stacked card rows) it flows with the page: no scroll box inside the scrolling page', () => {
+    for (const cls of ['max-sm:h-auto', 'max-sm:min-h-0', 'max-sm:overflow-visible']) expect(tableBoxClass.split(' ')).toContain(cls);
+  });
+
   it('centres an empty state in the box', () => {
     render(<TableBox center>لا شيء</TableBox>);
     const box = screen.getByText('لا شيء');

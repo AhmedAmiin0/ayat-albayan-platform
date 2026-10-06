@@ -14,6 +14,7 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 vi.mock('@/features/auth/me', () => ({ meQuery: {} }));
 vi.mock('./Crumbs', () => ({ Crumbs: () => null }));
+vi.mock('./MenuBar', () => ({ MenuBar: () => <header data-menu-bar /> }));
 vi.mock('./SideFoot', () => ({ SideFoot: () => <div data-side-foot /> }));
 vi.mock('@/components/ui/running-head', () => ({ RunningHead: () => null }));
 
@@ -32,7 +33,7 @@ afterEach(() => {
 
 describe('AdminLayout sidebar', () => {
   it('keeps the 4px rhythm: no dead gap override, 24 on top, the foot owns the bottom padding', () => {
-    const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     const aside = container.querySelector('aside');
     const cls = aside?.className ?? '';
     expect(cls).not.toContain('shell:gap-y-0');
@@ -41,24 +42,26 @@ describe('AdminLayout sidebar', () => {
   });
 
   it('scrolls a focused or current link clear of the sticky foot (scroll-padding at least its height)', () => {
-    const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     expect(container.querySelector('aside')?.className).toContain('shell:scroll-pb-44');
   });
 
   it('aligns the logo with the icon edge of the items (24px from the sidebar edge)', () => {
-    const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     expect(container.querySelector('aside a')?.className).toContain('shell:px-3');
   });
 
-  it('the logo link is a 44px touch target on phones (the compact top row)', () => {
-    const { container } = render(<AdminLayout nav={nav}>x</AdminLayout>);
-    expect(container.querySelector('aside a')?.className).toContain('min-h-11');
-  });
-
-  it('centres the current section in the compact strip', () => {
+  it('keeps the current section in view in the sidebar (scroll-padding clears the foot)', () => {
     const scrollIntoView = vi.fn();
     Element.prototype.scrollIntoView = scrollIntoView;
-    render(<AdminLayout nav={nav}>x</AdminLayout>);
-    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'center' });
+    render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
+    expect(scrollIntoView).toHaveBeenCalledWith({ block: 'nearest', inline: 'nearest' });
+  });
+
+  it('below 900px the sidebar is hidden and the compact bar takes over', () => {
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
+    expect(container.querySelector('aside')?.className.split(' ')).toContain('hidden');
+    expect(container.querySelector('aside')?.className).toContain('shell:flex');
+    expect(container.querySelector('[data-menu-bar]')).not.toBeNull();
   });
 });

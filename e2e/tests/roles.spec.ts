@@ -1,6 +1,7 @@
 import { seedUser } from '../support/db';
 import { ar, expect, test } from '../support/fixtures';
 import { apiStatus } from '../support/messages';
+import { openNav } from '../support/nav';
 import { withSql } from '../support/schedule';
 
 // «الأدوار والصلاحيات» (owner, 2026-10-05): the admin creates «محاسب» with payments.read only and
@@ -56,8 +57,10 @@ test.describe('roles and permissions («الأدوار والصلاحيات»)',
 
     // No dashboard.read: the admin home sends the user to their first page.
     await expect(page).toHaveURL(/\/admin\/payments/);
-    await expect(page.getByRole('link', { name: ar.payments.title })).toBeVisible();
-    await expect(page.getByRole('link', { name: ar.nav.students })).toHaveCount(0);
+    // The nav: the sidebar, or the «القائمة» sheet below 900px (the same filtered list).
+    const nav = (await openNav(page)).getByRole('navigation', { name: ar.nav.label });
+    await expect(nav.getByRole('link', { name: ar.payments.title })).toBeVisible();
+    await expect(nav.getByRole('link', { name: ar.nav.students })).toHaveCount(0);
     expect(await apiStatus(page, '/students')).toBe(403);
     expect(await apiStatus(page, '/payments')).toBe(200);
     await ctx.close();

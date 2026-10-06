@@ -1,4 +1,5 @@
 import { ar, expect, loginViaUi, test } from '../support/fixtures';
+import { openNav } from '../support/nav';
 import { USERS } from '../support/users';
 
 test.describe('login smoke (R-AUTH-01, R-NFR-01)', () => {
@@ -47,7 +48,7 @@ test.describe('login smoke (R-AUTH-01, R-NFR-01)', () => {
   test('logout returns to login', async ({ page }) => {
     await loginViaUi(page, 'admin');
     await expect(page).toHaveURL(/\/admin$/);
-    await page.getByRole('button', { name: ar.auth.logout }).click();
+    await (await openNav(page)).getByRole('button', { name: ar.auth.logout }).click();
     await expect(page).toHaveURL(/\/login$/);
   });
 });

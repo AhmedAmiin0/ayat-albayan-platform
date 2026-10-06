@@ -15,7 +15,7 @@ export function MoneyKpis() {
   const dues = useQuery(earningsSummaryQuery());
   const owed = useQuery(receivablesQuery);
   return (
-    <ul className="grid grid-cols-1 gap-1 sm:grid-cols-2" aria-label={t.finance.moneyKpis}>
+    <ul className="grid grid-cols-2 gap-1" aria-label={t.finance.moneyKpis}>
       <li>
         <Link to="/admin/payouts" className={tile}>
           <span className="text-xs text-ink-2">{t.finance.teachersOwedKpi}</span>
