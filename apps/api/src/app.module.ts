@@ -25,6 +25,7 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { MeModule } from './modules/me/me.module';
 import { MessagingJobsModule } from './modules/messaging-jobs/messaging-jobs.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { AssistantPayModule } from './modules/assistant-pay/assistant-pay.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
 import { TeacherEarningsModule } from './modules/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/pricing/pricing.module';
@@ -75,6 +76,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     SubscriptionsModule,
     PaymentsModule,
     PayoutsModule,
+    AssistantPayModule,
     TeacherEarningsModule,
     ExpensesModule,
     DashboardModule,

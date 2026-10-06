@@ -3617,7 +3617,7 @@ export type Database = {
         Returns: Json;
       };
       set_students_brought_by: {
-        Args: { p_actor: string; p_assistant: string; p_brought_at?: string; p_students: string[] };
+        Args: { p_actor: string; p_assistant: string | null; p_brought_at?: string; p_students: string[] };
         Returns: Json;
       };
       teacher_rate_for: {

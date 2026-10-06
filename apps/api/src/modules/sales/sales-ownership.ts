@@ -2,32 +2,43 @@ import type { Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
 
 /**
- * What a salesperson owns (migration 187, in TypeScript because the API runs as the service role):
- * leads.assigned_to = their profile -> leads.converted_guardian_id -> guardians -> students.
+ * What a salesperson owns (migrations 187 and 274, in TypeScript because the API runs as the service role):
+ * leads.assigned_to = their profile -> leads.converted_guardian_id -> guardians -> students, plus the
+ * students they BROUGHT (students.brought_by = their profile) and those students' guardians.
  */
 export interface SalesOwnership {
   leadIds: string[];
   guardianIds: string[];
   studentIds: string[];
-  /** E.164: their leads' phones plus the phones of the guardians those leads became. */
+  /** E.164: their leads' phones plus the phones of the guardians of their leads and of their brought students. */
   phones: string[];
 }
 
 export const NO_OWNERSHIP: SalesOwnership = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
 
-// ponytail: the chain goes in the URL (.in); a salesperson has tens to low hundreds of leads, fine until thousands.
+const uniq = (ids: readonly string[]): string[] => [...new Set(ids)];
+
+// ponytail: the chain goes in the URL (.in); a salesperson has tens to low hundreds of leads and students, fine until thousands.
 export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwnership> {
-  const leads = await db.from('leads').select('id, phone_e164, converted_guardian_id').eq('assigned_to', profileId);
+  const [leads, brought] = await Promise.all([
+    db.from('leads').select('id, phone_e164, converted_guardian_id').eq('assigned_to', profileId),
+    db.from('students').select('id, guardian_id').eq('brought_by', profileId),
+  ]);
   if (leads.error) throw dbError(leads.error);
-  const guardianIds = [...new Set(leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])))];
+  if (brought.error) throw dbError(brought.error);
+  const leadGuardians = uniq(leads.data.flatMap((l) => (l.converted_guardian_id ? [l.converted_guardian_id] : [])));
+  const guardianIds = uniq([...leadGuardians, ...brought.data.map((s) => s.guardian_id)]);
   const phones = new Set(leads.data.map((l) => l.phone_e164));
-  if (guardianIds.length === 0) return { ...NO_OWNERSHIP, leadIds: leads.data.map((l) => l.id), phones: [...phones] };
-  const [guardians, students] = await Promise.all([
+  const leadIds = leads.data.map((l) => l.id);
+  if (guardianIds.length === 0) return { ...NO_OWNERSHIP, leadIds, phones: [...phones] };
+  const [guardians, families] = await Promise.all([
     db.from('guardians').select('phone_e164').in('id', guardianIds),
-    db.from('students').select('id').in('guardian_id', guardianIds),
+    // Their lead families' children (as before); a brought student is theirs wherever the family came from.
+    leadGuardians.length > 0 ? db.from('students').select('id').in('guardian_id', leadGuardians) : { data: [], error: null },
   ]);
   if (guardians.error) throw dbError(guardians.error);
-  if (students.error) throw dbError(students.error);
+  if (families.error) throw dbError(families.error);
   for (const g of guardians.data) if (g.phone_e164) phones.add(g.phone_e164);
-  return { leadIds: leads.data.map((l) => l.id), guardianIds, studentIds: students.data.map((s) => s.id), phones: [...phones] };
+  const studentIds = uniq([...families.data.map((s) => s.id), ...brought.data.map((s) => s.id)]);
+  return { leadIds, guardianIds, studentIds, phones: [...phones] };
 }

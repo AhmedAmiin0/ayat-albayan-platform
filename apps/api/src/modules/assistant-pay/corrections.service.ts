@@ -1,0 +1,40 @@
+import type { AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
+import { Injectable } from '@nestjs/common';
+import type { CommissionsQuery } from './assistant-pay.dto';
+import { AssistantRpc } from './assistant-pay.rpc';
+import { toCommissionView } from './commissions.mapper';
+import { CommissionsQueries } from './commissions.queries';
+
+/**
+ * The admin's hands on the money (R-ASST-02, R-ASST-05): the commission ledger, voiding a commission, a
+ * manual +/- adjustment and who brought which student. Each write is one RPC (one transaction + audit row).
+ */
+@Injectable()
+export class CorrectionsService {
+  constructor(
+    private readonly queries: CommissionsQueries,
+    private readonly rpc: AssistantRpc,
+  ) {}
+
+  async ledger(q: CommissionsQuery): Promise<AssistantCommissionView[]> {
+    return (await this.queries.list(q)).map(toCommissionView);
+  }
+
+  /** A voided commission stays voided (an admin void is terminal); a paid statement gets a negative adjustment in the next open month. */
+  async voidCommission(input: { commissionId: string; reason: string; actorId: string }): Promise<{ id: string }> {
+    await this.rpc.voidCommission(input);
+    return { id: input.commissionId };
+  }
+
+  /** A repeat of the same adjustment within a minute returns the first one instead of adding a second. */
+  async adjust(input: { assistantId: string; amount: number; currency: string; reason: string; actorId: string }): Promise<{ id: string }> {
+    const first = await this.queries.recentAdjustment(input);
+    return { id: first ?? (await this.rpc.adjust(input)) };
+  }
+
+  /** One student or many; assistantId null clears it. 409 commission_exists while a live commission belongs to another assistant. */
+  async broughtBy(input: BroughtByInput, actorId: string): Promise<BroughtByResult> {
+    const changed = await this.rpc.broughtBy({ ...input, actorId, broughtAt: input.broughtAt });
+    return { changed };
+  }
+}
