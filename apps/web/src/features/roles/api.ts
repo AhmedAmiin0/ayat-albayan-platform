@@ -16,7 +16,7 @@ export const rolesQuery = queryOptions({
 
 export const staffUsersQuery = queryOptions({
   queryKey: [...ROLES_KEY, 'users'],
-  queryFn: () => apiFetch<StaffUserView[]>('/users'),
+  queryFn: () => apiFetch<StaffUserView[]>('/roles/staff-users'),
 });
 
 export function saveRole(input: { id: string | null; body: RoleCreate | RoleUpdate }): Promise<RoleView> {

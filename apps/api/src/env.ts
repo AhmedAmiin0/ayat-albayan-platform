@@ -75,6 +75,11 @@ const schema = z.object({
   SETTINGS_CACHE_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).default(30_000)),
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
+  /**
+   * Shortest password an admin may type for a login (POST /users, reset-password); generated ones
+   * are at least as long. Keep it >= the project's Auth setting (supabase config minimum_password_length).
+   */
+  AUTH_PASSWORD_MIN_LENGTH: z.preprocess(blankIsUnset, z.coerce.number().int().min(6).max(72).default(8)),
 });
 
 export type Env = z.infer<typeof schema>;

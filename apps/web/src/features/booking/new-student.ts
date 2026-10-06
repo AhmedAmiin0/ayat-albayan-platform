@@ -48,6 +48,10 @@ export function newStudentFromLead(
   return { student, tz: q.tz ?? lead?.tz ?? null };
 }
 
+/** A new guardian + student is typed in step 1: from a lead (R-LEAD-06) or an assistant's registration. */
+export const isNewStudent = (d: { leadId: string | null; newStudent: NewStudentDraft | null }): boolean =>
+  d.leadId !== null || d.newStudent !== null;
+
 /** Name, guardian name, a phone that becomes E.164 and, when typed, an age 3–99. */
 export function newStudentReady(s: NewStudentDraft | null): boolean {
   if (!s || !s.name.trim() || !s.guardianName.trim() || !normalizePhone(s.guardianPhone).ok) return false;

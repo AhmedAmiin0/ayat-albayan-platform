@@ -1,4 +1,4 @@
-import type { LessonStatus } from '@ab/shared';
+import type { LessonStatus, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 
@@ -43,7 +43,28 @@ export const salesMeetingsQuery = (day: { from: string; to: string }) =>
     queryFn: () => apiFetch<SalesMeeting[]>(`/sales/meetings?${new URLSearchParams(day)}`),
   });
 
-/** GET /sales/people (admin): the salespeople with their open-lead counts. */
+// The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,
+// payments they recorded, their commission and statements. Amounts stay per currency.
+
+/** GET /sales/me/students — the students I brought, newest first; no price, only «paid or not». */
+export const myStudentsQuery = queryOptions({
+  queryKey: ['sales', 'me', 'students'],
+  queryFn: () => apiFetch<MyStudentRow[]>('/sales/me/students'),
+});
+
+/** GET /sales/me/earnings — my terms, this month so far, commissions earned and my statements. */
+export const myEarningsQuery = queryOptions({
+  queryKey: ['sales', 'me', 'earnings'],
+  queryFn: () => apiFetch<MyEarnings>('/sales/me/earnings'),
+});
+
+/** GET /sales/me/payments — only the payments I recorded. */
+export const myPaymentsQuery = queryOptions({
+  queryKey: ['sales', 'me', 'payments'],
+  queryFn: () => apiFetch<MyPaymentRow[]>('/sales/me/payments'),
+});
+
+/** GET /sales/people (admin):the salespeople with their open-lead counts. */
 export const salesPeopleQuery = queryOptions({
   queryKey: ['sales', 'people'],
   queryFn: () => apiFetch<SalesPerson[]>('/sales/people'),

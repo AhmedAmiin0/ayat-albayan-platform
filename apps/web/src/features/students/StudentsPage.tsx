@@ -11,6 +11,8 @@ import { Pager } from '@/components/ui/pager';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { studentListQuery } from './api';
+import { BulkAssign } from '@/features/assistants/BulkAssign';
+import { useStudentPick } from '@/features/assistants/use-student-pick';
 import { CreateStudentDialog } from './CreateStudentDialog';
 import { isUnfiltered, studentTableControls, type StudentsSearch } from './search';
 import { studentColumns } from './studentColumns';
@@ -38,7 +40,8 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const dismiss = useCallback(() => setNotice(null), []);
-  const columns = useMemo(() => studentColumns(onOpen), [onOpen]);
+  const pick = useStudentPick();
+  const columns = useMemo(() => studentColumns(onOpen, pick.column), [onOpen, pick.column]);
   const view = { search, page: 1, filters, sort, columns: colFilters };
   const none = data?.total === 0 && isUnfiltered(view);
   const controls = studentTableControls(view, onChange);
@@ -58,6 +61,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
         )}
         <div className="ms-auto flex gap-2.5 max-sm:w-full max-sm:[&>*]:flex-1">
           {/* TODO(R-RPT-03): «تصدير» (students CSV) once the API has an export endpoint. */}
+          <BulkAssign pick={pick} onDone={setNotice} />
           <Button onClick={() => setAdding(true)}>
             <Icon name="plus" />
             {t.students.add}

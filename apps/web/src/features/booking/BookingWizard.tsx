@@ -9,6 +9,7 @@ import { BookedPanel } from './BookedPanel';
 import { GapChip } from './GapChip';
 import { stepReady, stepsFor, type BookingDraft, type PickedStudent, type StepKey } from './draft';
 import type { BookHint } from './hint';
+import { isNewStudent } from './new-student';
 import { WizardBody } from './WizardBody';
 import { WizardSteps } from './WizardSteps';
 
@@ -78,7 +79,7 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
           onBooked={setBooked}
         />
       </section>
-      {step === 'students' && draft.leadId && !primary && !stepReady(draft, step) && (
+      {step === 'students' && isNewStudent(draft) && !primary && !stepReady(draft, step) && (
         <p className="mt-3 text-xs text-ink-3">{t.booking.fillRequired}</p>
       )}
       <div className="mt-6 flex items-center justify-between gap-3 border-t border-rule pt-4">

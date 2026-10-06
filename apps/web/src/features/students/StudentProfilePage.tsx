@@ -9,6 +9,7 @@ import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
 import { Toast } from '@/components/ui/toast';
 import { EntityActivity } from '@/features/activity/EntityActivity';
+import { BroughtByField } from '@/features/assistants/BroughtByField';
 import { AssistantsManager } from '@/features/classroom/AssistantsManager';
 import { StudentJoinLink } from '@/features/classroom/StudentJoinLink';
 import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';
@@ -23,6 +24,7 @@ import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/head-actions';
 import { StudentRecordings } from './StudentRecordings';
+import { CreateAccountButton } from '@/features/users/CreateAccountButton';
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -75,6 +77,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               <Button type="button" variant="secondary" onClick={() => setEditGuardian(true)}>
                 {t.guardians.edit}
               </Button>
+              <CreateAccountButton student={student} />
             </>
           }
         />
@@ -93,6 +96,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <StudentRecordings studentId={student.id} role="admin" />
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />
+      <BroughtByField studentId={student.id} />
       <StudentJoinLink studentId={student.id} />
       <SiblingMerge student={student} siblings={student.siblings} />
       <EntityActivity entity="students" entityId={student.id} hideEmpty />

@@ -933,6 +933,133 @@
     "America/Los_Angeles": "Los Angeles",
     "America/Toronto": "Toronto"
   },
+  "assistants": {
+    "nav": "Assistants",
+    "title": "Assistants",
+    "tabs": {
+      "label": "Assistant sections",
+      "list": "Assistants",
+      "commissions": "Commissions",
+      "statements": "Monthly statements"
+    },
+    "name": "Name",
+    "salary": "Monthly salary",
+    "commission": "Commission",
+    "notSet": "Not set",
+    "commissionPercent": "{value}% of the subscription price",
+    "commissionFixed": "{amount} per student",
+    "startsOn": "from {date}",
+    "empty": "No assistants yet: give a user the «Assistant» role on the roles page",
+    "editTerms": "Edit terms",
+    "back": "Back to assistants",
+    "notFound": "This assistant does not exist",
+    "terms": {
+      "title": "Salary and commission terms",
+      "salaryAmount": "Monthly salary",
+      "salaryCurrency": "Salary currency",
+      "salaryStartsOn": "Salary starts on",
+      "commissionType": "Commission type",
+      "none": "No commission",
+      "percent": "Percent of the subscription price",
+      "fixed": "Fixed amount",
+      "valuePercent": "Percent (%)",
+      "valueFixed": "Commission amount",
+      "commissionCurrency": "Commission currency",
+      "commissionStartsOn": "Counts subscriptions paid from",
+      "hint": "A commission is earned once per student, when their first subscription is paid in full, and never retroactively. Leave the salary empty to clear it.",
+      "save": "Save terms",
+      "saving": "Saving",
+      "saved": "Terms saved"
+    },
+    "error": {
+      "invalid": "Check this value",
+      "percent_max_100": "The percent cannot exceed 100",
+      "currency_fixed_only": "A currency applies to a fixed amount only",
+      "too_many_decimals": "At most two decimals",
+      "assistant_not_found": "This assistant does not exist",
+      "invalid_assistant": "Choose a user with the «Assistant» role",
+      "student_not_found": "This student does not exist",
+      "commission_exists": "This student has a live commission for another assistant: void it first",
+      "commission_not_found": "This commission does not exist",
+      "already_voided": "This commission is already voided",
+      "reason_required": "Write the reason (at least three letters)",
+      "invalid_month": "Choose the month from the list",
+      "invalid_transition": "This statement cannot change from its current state",
+      "statement_not_found": "This statement does not exist",
+      "empty_statement": "This statement has no lines, it cannot be approved",
+      "reversal_in_later_statement": "A later statement carries a reversal: reopen or unpay it first",
+      "commission_start_in_past": "The commission cannot start on a past date",
+      "commission_start_earlier": "The commission start date cannot move earlier, only later",
+      "salary_start_in_past": "The salary cannot start on a past date",
+      "salary_start_earlier": "The salary start date cannot move earlier, only later"
+    },
+    "ledger": {
+      "filters": "Filter commissions",
+      "assistant": "Assistant",
+      "allAssistants": "All assistants",
+      "month": "Month",
+      "allMonths": "All months",
+      "statusLabel": "Status",
+      "allStatuses": "All statuses",
+      "student": "Student",
+      "base": "Subscription price",
+      "rate": "Rate",
+      "ratePercent": "{value}%",
+      "rateFixed": "Fixed",
+      "amount": "Commission",
+      "earnedAt": "Earned on",
+      "status": {
+        "earned": "Earned",
+        "voided": "Voided"
+      },
+      "voidedWhy": "Void reason: {reason}",
+      "void": "Void commission",
+      "voidTitle": "Void the commission of {student}",
+      "voidBody": "The commission of {amount} is voided and will not be earned again. If it is in an approved or paid statement, a deduction goes into the next one.",
+      "total": "Total earned commissions",
+      "empty": "No commissions match"
+    },
+    "statements": {
+      "filters": "Filter statements",
+      "generate": "Generate month statements",
+      "regenerate": "Recalculate",
+      "generated": "Statements calculated",
+      "noAssistants": "No assistants to calculate",
+      "assistant": "Assistant",
+      "month": "Month",
+      "total": "Total",
+      "totalLine": "Salary {salary} + commissions {commissions} + adjustments {adjustments} = {total}",
+      "empty": "No statements in this month",
+      "details": "Details",
+      "detailsTitle": "Statement of {assistant}, {month}",
+      "lineSalary": "Monthly salary",
+      "lineCommission": "Commission of {student}",
+      "lineAdjustment": "Adjustment: {reason}",
+      "payTitle": "Confirm payment of {assistant}’s statement",
+      "payDue": "Statement {month}: {amounts}",
+      "unpayTitle": "Undo payment of {assistant}’s statement",
+      "unpayBody": "The statement goes back to approved and its receipt is removed.",
+      "reopenTitle": "Reopen {assistant}’s statement",
+      "reopenBody": "The statement goes back to draft and can be recalculated."
+    },
+    "brought": {
+      "title": "Brought by",
+      "none": "Not set",
+      "since": "on {date}",
+      "select": "Assistant",
+      "noneOption": "No assistant",
+      "broughtAt": "Date brought (optional)",
+      "save": "Set assistant",
+      "saved": "Assistant saved",
+      "bulk": "Assign assistant ({count})",
+      "bulkTitle": "Assign an assistant to {count} students",
+      "bulkApply": "Assign",
+      "bulkDone": "Assistant assigned to {count} students",
+      "pick": "Select {name}",
+      "pickColumn": "Select",
+      "hint": "Changing the assistant after a commission is earned needs that commission voided first."
+    }
+  },
   "pricing": {
     "title": "Price calculator",
     "kicker": "For staff",
@@ -1107,6 +1234,86 @@
     },
     "reportLink": "Lesson recording",
     "reportLinkOf": "Open the recording of the lesson {when}"
+  },
+  "assistantReasons": {
+    "payment_voided": "Commission reversed: the subscription is no longer fully paid",
+    "student_merged": "Commission reversed: the student's record was merged into another record"
+  },
+  "assistantPortal": {
+    "title": "Assistant",
+    "nav": {
+      "register": "Register a student",
+      "students": "My students",
+      "earnings": "My earnings",
+      "payments": "My payments"
+    },
+    "register": {
+      "title": "Register a student",
+      "intro": "Registration starts from the student's chat: open the chat from the inbox and press «Register the student from this chat», then pick the teacher and the time of the trial lesson. The student is credited to you automatically.",
+      "openInbox": "Open the inbox",
+      "newStudent": "Student and guardian details",
+      "fromChat": "Register the student from this chat",
+      "openMyStudents": "Open my students"
+    },
+    "students": {
+      "title": "My students",
+      "list": "My students list",
+      "empty": "You have not registered any students yet",
+      "emptyHint": "Every student you register shows here, with the date and whether their first subscription is paid.",
+      "student": "Student",
+      "broughtAt": "Registered on",
+      "firstPaid": "First subscription",
+      "paid": "Paid",
+      "unpaid": "Not paid yet",
+      "commission": "My commission"
+    },
+    "commission": {
+      "earned": "Earned",
+      "voided": "Voided"
+    },
+    "earnings": {
+      "title": "My earnings",
+      "terms": "My terms",
+      "noTerms": "Your salary and commission terms are not set yet. Contact the administration.",
+      "salary": "Monthly salary",
+      "salaryFrom": "{amount} a month, from {date}",
+      "commission": "Commission",
+      "commissionPercent": "{value}% of the subscription price",
+      "commissionFixed": "{amount} per student",
+      "commissionNote": "The commission is earned once per student, when their first subscription is paid in full, from {date}.",
+      "noCommission": "Your terms include no commission.",
+      "thisMonth": "This month so far",
+      "commissionsTotal": "Total commissions earned",
+      "statements": "Monthly statements",
+      "statementsEmpty": "No statements yet",
+      "statementsEmptyHint": "A statement shows here once the administration prepares it.",
+      "totals": {
+        "salary": "Salary",
+        "commissions": "Commissions",
+        "adjustments": "Adjustments",
+        "total": "Total"
+      },
+      "lines": "Statement lines",
+      "line": {
+        "salary": "Salary",
+        "commission": "Commission for {student}",
+        "adjustment": "Adjustment: {reason}"
+      },
+      "approvedAt": "Approved {date}",
+      "paidAt": "Paid {date}"
+    },
+    "payments": {
+      "title": "My payments",
+      "list": "My payments list",
+      "empty": "You have not recorded any payments yet",
+      "emptyHint": "Only the payments you recorded yourself show here.",
+      "student": "Student",
+      "kind": "Type",
+      "amount": "Amount",
+      "method": "Method",
+      "paidAt": "Paid on",
+      "note": "Note"
+    }
   },
   "reports": {
     "title": "Lesson reports",
@@ -1377,6 +1584,202 @@
       "payout_stale": "A lesson's time was edited after this payout was calculated. Press \"Calculate this month's payouts\" again, then approve"
     },
     "mineEmpty": "No payouts calculated yet"
+  },
+  "users": {
+    "nav": "Users",
+    "title": "Users",
+    "count": "{n} users",
+    "new": "New user",
+    "searchPlaceholder": "Search by name, email or phone",
+    "empty": "No users yet",
+    "open": "Open",
+    "never": "Never signed in",
+    "filters": {
+      "role": "Role",
+      "status": "Status",
+      "all": "All"
+    },
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "kinds": {
+      "teacher": "Teacher",
+      "student": "Student",
+      "guardian": "Guardian"
+    },
+    "cols": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "linked": "Linked record",
+      "status": "Status",
+      "lastSignIn": "Last sign-in"
+    },
+    "form": {
+      "email": "Email",
+      "fullName": "Full name",
+      "phone": "Phone (optional)",
+      "role": "Base role",
+      "customRole": "Role",
+      "defaultRole": "Default role",
+      "notAssignable": "{name} (you cannot grant it)",
+      "locale": "Interface language",
+      "tz": "Time zone",
+      "roleLocked": "The role of an account linked to a record cannot change.",
+      "required": "* required"
+    },
+    "link": {
+      "label": "Linked record",
+      "placeholder": "Search by name or code such as AB-0001",
+      "empty": "No results. Only records without a login appear here.",
+      "searching": "Searching…",
+      "chosen": "Selected record",
+      "change": "Change",
+      "newTeacher": "New teacher",
+      "existingTeacher": "Existing teacher",
+      "hint": "The account is linked to an existing record; no new record is created.",
+      "none": "Not linked to a record"
+    },
+    "newTeacher": {
+      "nameAr": "Teacher name (Arabic)",
+      "nameEn": "Teacher name (English, optional)",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female"
+    },
+    "credential": {
+      "label": "Password",
+      "set": "I will type it",
+      "generate": "Generate a random password",
+      "link": "Send an invite link",
+      "password": "New password",
+      "hint": "At least {n} characters."
+    },
+    "create": {
+      "title": "New user",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "created": "Account created"
+    },
+    "result": {
+      "createdTitle": "Account created",
+      "resetTitle": "Password reset",
+      "once": "This is shown only once. Copy it now before closing; it will not appear again.",
+      "password": "Temporary password",
+      "link": "Invite link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "close": "Done, close",
+      "setDone": "The password you typed was saved."
+    },
+    "detail": {
+      "title": "User details",
+      "save": "Save changes",
+      "status": "Status",
+      "disabledReason": "Reason for disabling: {reason}",
+      "createdAt": "Created",
+      "readOnly": "You can view this information only."
+    },
+    "actions": {
+      "disable": "Disable account",
+      "enable": "Enable account",
+      "resetPassword": "Reset password",
+      "signOut": "Sign out everywhere",
+      "signOutHint": "The user's open sessions are ended. An access token issued a moment ago may keep working for up to one hour, unless the account is disabled.",
+      "delete": "Delete user"
+    },
+    "disable": {
+      "title": "Disable account",
+      "reason": "Reason (optional)",
+      "hint": "The user can no longer sign in; their data is kept.",
+      "confirm": "Disable"
+    },
+    "reset": {
+      "title": "Reset password",
+      "hint": "Typing or generating a password ends the user's open sessions; an invite link does not. An access token issued a moment ago may keep working for up to one hour, unless the account is disabled.",
+      "confirm": "Reset"
+    },
+    "delete": {
+      "title": "Delete user",
+      "body": "The account of {name} will be deleted permanently. This cannot be undone.",
+      "confirm": "Delete permanently",
+      "blocked": "This user cannot be deleted because records refer to them:",
+      "disableInstead": "Disable instead of deleting"
+    },
+    "toast": {
+      "saved": "Changes saved",
+      "disabled": "Account disabled",
+      "enabled": "Account enabled",
+      "signedOut": "The user's sessions were ended; the current access token may work for up to one hour",
+      "deleted": "User deleted"
+    },
+    "account": {
+      "create": "Create account"
+    },
+    "tables": {
+      "students": "Students",
+      "guardians": "Guardians",
+      "teachers": "Teachers",
+      "payments": "Payments",
+      "lessons": "Lessons",
+      "leads": "Leads",
+      "activity_log": "Activity log",
+      "audit_log": "Audit log",
+      "student_assistants": "Student assistants",
+      "subscriptions": "Subscriptions",
+      "expenses": "Expenses",
+      "lesson_reports": "Lesson reports",
+      "messages": "Messages"
+    },
+    "errors": {
+      "email_taken": "This email is already used by another account.",
+      "link_taken": "This record already has a login.",
+      "cannot_disable_self": "You cannot disable your own account.",
+      "cannot_delete_self": "You cannot delete your own account.",
+      "last_admin": "At least one active admin must remain.",
+      "role_change_linked": "The role of an account linked to a record cannot change.",
+      "permission_not_held": "You cannot grant a role or permission you do not hold.",
+      "password_too_short": "The password is shorter than allowed.",
+      "password_blank": "Type a password.",
+      "password_too_long": "The password is longer than allowed.",
+      "self_lockout": "You cannot do this to your own account: it could lock you out of managing users.",
+      "phone_taken": "This phone number is already used by another record.",
+      "link_target_not_found": "The record to link was not found.",
+      "unknown_role": "The chosen role does not exist.",
+      "role_mismatch": "The chosen role does not belong to the selected base role.",
+      "system_admin_only": "Only a system admin can change a system admin account.",
+      "admin_role_only": "Only an admin can give an admin role.",
+      "invalid_email": "Enter a valid email address.",
+      "user_not_found": "The user was not found.",
+      "account_disabled": "This account is disabled.",
+      "validation_failed": "Check the entered data and try again.",
+      "users_has_history": "A user with linked records cannot be deleted.",
+      "generic": "The request failed, try again."
+    },
+    "validation": {
+      "email": "Enter a valid email",
+      "name": "Enter the name (at least 2 characters)",
+      "phone": "The phone number is not valid, include the country code",
+      "passwordBlank": "Enter a password",
+      "passwordShort": "The password is too short: at least {n} characters",
+      "passwordLong": "The password is too long",
+      "linkRequired": "Pick the record the account will be linked to",
+      "teacherName": "Enter the teacher's Arabic name",
+      "mismatch": "The passwords do not match"
+    },
+    "setPassword": {
+      "title": "Set your password",
+      "intro": "Type the password you will use to sign in.",
+      "password": "Password",
+      "confirm": "Confirm password",
+      "submit": "Save and sign in",
+      "submitting": "Saving…",
+      "invalid": "The link is invalid or has expired. Ask the administration for a new one.",
+      "failed": "The password could not be saved; ask the administration for a new link.",
+      "checking": "Checking the link…"
+    }
   },
   "earnings": {
     "title": "Teacher earnings",
@@ -2569,9 +2972,9 @@
     "roles": {
       "teacher": "Teacher",
       "admin": "Admin",
-      "assistant": "Assistant",
+      "assistant": "Classroom assistant",
       "guest": "Guest",
-      "sales": "Sales"
+      "sales": "Assistant"
     },
     "guest": {
       "title": "Join the lesson",
@@ -3037,8 +3440,9 @@
       "admin": "Admin",
       "teacher": "Teacher",
       "guardian": "Guardian",
-      "assistant": "Assistant",
-      "sales": "Sales",
+      "assistant": "Classroom assistant",
+      "sales": "Assistant",
+      "student": "Student",
       "public": "Visitor",
       "unknown": "No role"
     },
@@ -3157,8 +3561,8 @@
       "students.balance": "View a student's package balance",
       "guardians.read": "View guardians",
       "guardians.write": "Manage guardians",
-      "assistants.read": "View assistants",
-      "assistants.write": "Assign assistants to students",
+      "assistants.read": "View classroom assistants",
+      "assistants.write": "Assign classroom assistants to students",
       "teachers.read": "View teachers",
       "teachers.write": "Add and edit teachers",
       "availability.read": "View teacher availability",
@@ -3199,6 +3603,9 @@
       "payouts.read": "View teacher payouts",
       "payouts.write": "Prepare and pay payouts",
       "payouts.approve": "Approve payouts",
+      "assistantpay.read": "View assistants' terms, commissions and statements",
+      "assistantpay.write": "Set assistants' terms, prepare and pay their statements",
+      "assistantpay.approve": "Approve assistants' statements",
       "earnings.read": "View teacher earnings",
       "earnings.write": "Record teacher payments",
       "expenses.read": "View expenses",
@@ -3210,9 +3617,14 @@
       "roles.manage": "Manage roles and permissions",
       "notifications.push": "Receive mobile app notifications",
       "translations.manage": "Edit interface text and translations",
+      "users.read": "View users and their accounts",
+      "users.write": "Create, edit, disable and delete users",
       "self.teacher": "Teacher's own pages",
-      "self.sales": "Sales' own pages",
-      "self.assistant": "Assistant's own pages"
+      "self.sales": "Assistant's own pages",
+      "self.sales_students": "Students the assistant brought",
+      "self.sales_payments": "Payments the assistant recorded",
+      "self.sales_earnings": "Assistant's earnings and statements",
+      "self.assistant": "Classroom assistant's own pages"
     },
     "page": {
       "title": "Roles and permissions",

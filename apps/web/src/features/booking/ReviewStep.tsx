@@ -11,6 +11,7 @@ import { t } from '@/lib/i18n';
 import { createBooking } from './api';
 import { toBookingRequest, type BookingDraft } from './draft';
 import { DuplicateNotice } from './DuplicateNotice';
+import { useBookingMode } from './mode';
 import { ReviewSummary } from './ReviewSummary';
 
 const INVOICE_ERRORS = new Set(['invoice_required', 'invoice_type', 'invoice_too_large', 'invoice_path', 'invoice_message', 'media_expired']);
@@ -33,11 +34,12 @@ export interface ReviewStepProps {
  */
 export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBooked, onPatch }: ReviewStepProps) {
   const queryClient = useQueryClient();
+  const mode = useBookingMode();
   const book = useMutation({
     mutationFn: (override?: string) => {
       const body = toBookingRequest(draft, override);
       if (!body) throw new Error('incomplete draft');
-      return createBooking(body);
+      return createBooking(body, mode);
     },
     onSuccess: async (result) => {
       await queryClient.invalidateQueries({ queryKey: LESSONS_KEY });

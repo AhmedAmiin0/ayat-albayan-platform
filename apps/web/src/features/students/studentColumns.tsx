@@ -3,6 +3,8 @@ import { createColumnHelper } from '@tanstack/react-table';
 import { hamishMeta, type DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
+import { pickColumn } from '@/features/assistants/pick-column';
+import type { PickColumn } from '@/features/assistants/use-student-pick';
 import { t } from '@/lib/i18n';
 import { stacked } from './stacked-rows';
 import { studentNote } from './student-note';
@@ -22,8 +24,9 @@ const text = { kind: 'text' } as const;
  * hamish note folds under the name when the page is 940px or narrower. The name is a button: the
  * keyboard / screen-reader path to the profile at every width (the row click is for pointers).
  */
-export function studentColumns(onOpen: (studentId: string) => void) {
+export function studentColumns(onOpen: (studentId: string) => void, pick?: PickColumn) {
   return col.columns([
+    ...(pick ? [pickColumn(pick)] : []),
     col.accessor('code', {
       header: () => t.students.code,
       cell: (c) => <Ltr>{c.getValue() ?? '—'}</Ltr>,

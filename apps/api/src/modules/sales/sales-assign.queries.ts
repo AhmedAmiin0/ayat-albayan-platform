@@ -9,9 +9,9 @@ import type { AssignedLead } from './sales-assign.mapper';
 export class SalesAssignQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Every salesperson (profiles.role = 'sales'). */
+  /** Every active salesperson (profiles.role = 'sales', not disabled: a disabled login must not receive or keep assignments). */
   async salespeople(): Promise<{ id: string; full_name: string }[]> {
-    const { data, error } = await this.db.from('profiles').select('id, full_name').eq('role', 'sales').order('full_name');
+    const { data, error } = await this.db.from('profiles').select('id, full_name').eq('role', 'sales').is('disabled_at', null).order('full_name');
     if (error) throw dbError(error);
     return data;
   }
@@ -30,7 +30,7 @@ export class SalesAssignQueries {
   }
 
   async isSalesperson(profileId: string): Promise<boolean> {
-    const { data, error } = await this.db.from('profiles').select('id').eq('id', profileId).eq('role', 'sales').maybeSingle();
+    const { data, error } = await this.db.from('profiles').select('id').eq('id', profileId).eq('role', 'sales').is('disabled_at', null).maybeSingle();
     if (error) throw dbError(error);
     return data !== null;
   }

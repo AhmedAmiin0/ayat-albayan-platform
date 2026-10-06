@@ -5,6 +5,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { t } from '@/lib/i18n';
 import { bookingTeachersQuery } from './api';
+import { useBookingMode } from './mode';
 import { TeacherOption } from './TeacherOption';
 
 export interface TeacherStepProps {
@@ -41,7 +42,7 @@ const PROGRAM_CHIPS = PROGRAMS.map((p) => ({ value: p, label: t.enums.program[p]
  */
 export function TeacherStep(props: TeacherStepProps) {
   const { program, genderPref, teacher, onChange } = props;
-  const teachers = useQuery(bookingTeachersQuery({ program, gender: genderPref }));
+  const teachers = useQuery(bookingTeachersQuery({ program, gender: genderPref }, useBookingMode()));
   useHintedTeacher(props, teachers.data);
 
   return (

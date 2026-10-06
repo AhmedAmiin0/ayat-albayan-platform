@@ -25,6 +25,7 @@ import { LessonsModule } from './modules/lessons/lessons.module';
 import { MeModule } from './modules/me/me.module';
 import { MessagingJobsModule } from './modules/messaging-jobs/messaging-jobs.module';
 import { PaymentsModule } from './modules/payments/payments.module';
+import { AssistantPayModule } from './modules/assistant-pay/assistant-pay.module';
 import { PayoutsModule } from './modules/payouts/payouts.module';
 import { TeacherEarningsModule } from './modules/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/pricing/pricing.module';
@@ -39,6 +40,7 @@ import { StudentsModule } from './modules/students/students.module';
 import { SubscriptionsModule } from './modules/subscriptions/subscriptions.module';
 import { TeacherStudentsModule } from './modules/teacher-students/teacher-students.module';
 import { TeachersModule } from './modules/teachers/teachers.module';
+import { UsersModule } from './modules/users/users.module';
 import { TranslationsModule } from './modules/translations/translations.module';
 import { WebhookModule } from './modules/webhook/webhook.module';
 import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
@@ -71,10 +73,12 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     LessonsModule,
     ReportsModule,
     RolesModule,
+    UsersModule,
     ReportPdfModule,
     SubscriptionsModule,
     PaymentsModule,
     PayoutsModule,
+    AssistantPayModule,
     TeacherEarningsModule,
     ExpensesModule,
     DashboardModule,

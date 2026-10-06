@@ -6,13 +6,17 @@ import { SalesNav } from './SalesNav';
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
 describe('SalesNav', () => {
-  it('has exactly my three pages in order: chats, subscriptions, meetings', () => {
+  it('has the assistant’s pages in order: chats, register, my students, subscriptions, meetings, payments, earnings', () => {
     render(<SalesNav />);
     const nav = screen.getByRole('navigation', { name: t.sales.nav.label });
     expect(within(nav).getAllByRole('link').map((a) => [a.textContent, a.getAttribute('href')])).toEqual([
       ['المحادثات', '/sales/inbox'],
+      ['تسجيل طالب', '/sales/register'],
+      ['طلابي', '/sales/students'],
       ['الاشتراكات', '/sales/subscriptions'],
       ['مواعيدي', '/sales/meetings'],
+      ['مدفوعاتي', '/sales/payments'],
+      ['أرباحي', '/sales/earnings'],
     ]);
   });
 

@@ -72,7 +72,7 @@ export class RolesService {
     const state = await this.state();
     const role = this.find(state, input.roleId);
     const profile = state.profiles.find((p) => p.id === input.userId);
-    if (!profile || role.base_role === 'guardian') throw badRequest('not_staff');
+    if (!profile || role.base_role === 'guardian' || role.base_role === 'student') throw badRequest('not_staff');
     // The actor must outrank the target: it holds the new role's grants AND the target's current
     // ones, so a limited manager cannot demote the system admin or anyone above it.
     this.assertHolds(state, input.actorId, [...roleView(state, role).permissions, ...grantsOf(state, profile)]);
