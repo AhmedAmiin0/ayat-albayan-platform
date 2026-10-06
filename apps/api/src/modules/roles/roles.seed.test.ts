@@ -8,7 +8,7 @@ import { describe, expect, it } from 'vitest';
 const MIGRATIONS = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const SQL = readFileSync(join(MIGRATIONS, '20261005000220_roles_permissions.sql'), 'utf8');
 // Keys added later by an idempotent insert: select r.id, '<key>' from public.roles r where ... r.key in ('admin', 'teacher')
-const LATER = readFileSync(join(MIGRATIONS, '20261005000240_student_recordings.sql'), 'utf8');
+const LATER = ['20261005000240_student_recordings.sql', '20261006000281_student_logins.sql'].map((f) => readFileSync(join(MIGRATIONS, f), 'utf8')).join('\n');
 
 function seeded(key: string): string[] {
   const block = SQL.match(new RegExp(`\\('${key}', array\\[([^\\]]*)\\]\\)`));
@@ -20,13 +20,18 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240)', () => {
+describe('migration 20261005000220 seed (+ 240, 281)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
 
   it('seeds recordings.manage for the admin and the teacher only', () => {
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('recordings.manage'))).toEqual(['admin', 'teacher']);
+  });
+
+  it('seeds users.read and users.write for the admin only', () => {
+    expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('users.write'))).toEqual(['admin']);
+    expect(addedLater('admin')).toEqual(expect.arrayContaining(['users.read', 'users.write']));
   });
 
   it('seeds nothing for guardians and only grantable keys', () => {

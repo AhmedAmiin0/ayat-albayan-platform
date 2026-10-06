@@ -38,10 +38,10 @@ const profile = async (tx: Tx, id: string) =>
 test.describe('dynamic roles (migrations 220, 225)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
-  test('the five system roles are seeded and every profile resolves to a role of its base role', async () => {
+  test('the six system roles are seeded and every profile resolves to a role of its base role', async () => {
     await rolledBack(async (tx) => {
       const keys = await tx<{ key: string }[]>`select key from public.roles where is_system order by key`;
-      expect(keys.map((k) => k.key)).toEqual(['admin', 'assistant', 'guardian', 'sales', 'teacher']);
+      expect(keys.map((k) => k.key)).toEqual(['admin', 'assistant', 'guardian', 'sales', 'student', 'teacher']);
       const [bad] = await tx<{ n: number }[]>`select count(*)::int n from public.profiles p
         left join public.roles r on r.id = coalesce(p.role_id, (select id from public.roles s where s.is_system and s.base_role = p.role))
         where r.id is null or r.base_role <> p.role`;

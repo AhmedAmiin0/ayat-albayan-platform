@@ -1739,6 +1739,9 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string;
+          disabled_at: string | null;
+          disabled_by: string | null;
+          disabled_reason: string | null;
           full_name: string;
           id: string;
           locale: string;
@@ -1751,6 +1754,9 @@ export type Database = {
         };
         Insert: {
           created_at?: string;
+          disabled_at?: string | null;
+          disabled_by?: string | null;
+          disabled_reason?: string | null;
           full_name: string;
           id: string;
           locale?: string;
@@ -1763,6 +1769,9 @@ export type Database = {
         };
         Update: {
           created_at?: string;
+          disabled_at?: string | null;
+          disabled_by?: string | null;
+          disabled_reason?: string | null;
           full_name?: string;
           id?: string;
           locale?: string;
@@ -2201,6 +2210,7 @@ export type Database = {
           name: string;
           name_normalized: string;
           notes: string | null;
+          profile_id: string | null;
           program: Database['public']['Enums']['program'];
           riwaya: string | null;
           status: Database['public']['Enums']['student_status'];
@@ -2225,6 +2235,7 @@ export type Database = {
           name: string;
           name_normalized: string;
           notes?: string | null;
+          profile_id?: string | null;
           program?: Database['public']['Enums']['program'];
           riwaya?: string | null;
           status?: Database['public']['Enums']['student_status'];
@@ -2249,6 +2260,7 @@ export type Database = {
           name?: string;
           name_normalized?: string;
           notes?: string | null;
+          profile_id?: string | null;
           program?: Database['public']['Enums']['program'];
           riwaya?: string | null;
           status?: Database['public']['Enums']['student_status'];
@@ -2258,6 +2270,13 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'students_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: true;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'students_guardian_id_fkey';
             columns: ['guardian_id'];
@@ -3098,6 +3117,34 @@ export type Database = {
       };
     };
     Functions: {
+      admin_list_users: {
+        Args: {
+          lim?: number;
+          off?: number;
+          q?: string;
+          role?: Database['public']['Enums']['user_role'];
+          status?: string;
+        };
+        Returns: {
+          banned_until: string | null;
+          created_at: string;
+          disabled_at: string | null;
+          email: string | null;
+          full_name: string;
+          id: string;
+          last_sign_in_at: string | null;
+          linked_code: string | null;
+          linked_id: string | null;
+          linked_kind: string | null;
+          linked_name: string | null;
+          phone_e164: string | null;
+          role: Database['public']['Enums']['user_role'];
+          role_id: string | null;
+          role_key: string | null;
+          total: number;
+        }[];
+      };
+      auth_user_id_by_email: { Args: { p_email: string }; Returns: string };
       apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
       auth_role: {
         Args: Record<PropertyKey, never>;
@@ -3189,10 +3236,15 @@ export type Database = {
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
+      revoke_user_sessions: { Args: { p_user: string }; Returns: number };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
       teacher_rate_for: {
         Args: { p_minutes: number; r30: number; r45: number; r60: number; r90: number };
         Returns: number;
+      };
+      user_references: {
+        Args: { user_id: string };
+        Returns: { kind: string; n: number; ref_column: string; ref_table: string }[];
       };
       void_teacher_payment: {
         Args: { p_actor: string; p_payment: string; p_reason: string };
@@ -3286,7 +3338,7 @@ export type Database = {
       template_category: 'utility' | 'marketing';
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
-      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales';
+      user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales' | 'student';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -3467,7 +3519,7 @@ export const Constants = {
         'disabled',
         'missing',
       ],
-      user_role: ['admin', 'teacher', 'guardian', 'assistant', 'sales'],
+      user_role: ['admin', 'teacher', 'guardian', 'assistant', 'sales', 'student'],
     },
   },
 } as const;

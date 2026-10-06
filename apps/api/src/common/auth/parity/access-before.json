@@ -214,6 +214,17 @@
   "TranslationsController.overrides": "public",
   "TranslationsController.restore": ["admin"],
   "TranslationsController.save": ["admin"],
+  "UsersController.candidates": ["admin"],
+  "UsersController.create": ["admin"],
+  "UsersController.disable": ["admin"],
+  "UsersController.enable": ["admin"],
+  "UsersController.list": ["admin"],
+  "UsersController.read": ["admin"],
+  "UsersController.remove": ["admin"],
+  "UsersController.resetPassword": ["admin"],
+  "UsersController.roleOptions": ["admin"],
+  "UsersController.signOut": ["admin"],
+  "UsersController.update": ["admin"],
   "WebhookController.challenge": "public",
   "WebhookController.receive": "public"
 }

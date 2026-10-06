@@ -1,6 +1,13 @@
 import { systemPermissionsOf, type Permission } from '@ab/shared';
 import type { AuthUser } from './verify-token';
 
+/** The user's profile is disabled: the guard answers 403 account_disabled, even with a valid JWT. */
+export class AccountDisabledError extends Error {
+  constructor() {
+    super('account_disabled');
+  }
+}
+
 /** The AuthGuard's source of a user's effective permission set (DB-backed in the app). */
 export const PERMISSION_RESOLVER = Symbol('PERMISSION_RESOLVER');
 export type PermissionResolver = (user: AuthUser) => Promise<readonly Permission[]>;

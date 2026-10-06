@@ -10,7 +10,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { IS_PUBLIC, PERMISSION, SIGNED_IN } from './decorators';
-import { PERMISSION_RESOLVER, type PermissionResolver } from './permissions';
+import { forbidden } from '../../modules/scheduling/errors';
+import { AccountDisabledError, PERMISSION_RESOLVER, type PermissionResolver } from './permissions';
 import type { AuthUser } from './verify-token';
 
 export { PERMISSION_RESOLVER, systemResolver } from './permissions';
@@ -63,6 +64,7 @@ export class AuthGuard implements CanActivate {
     try {
       return await this.resolve(user);
     } catch (e) {
+      if (e instanceof AccountDisabledError) throw forbidden('account_disabled');
       if (!signedIn || user.role === 'admin') throw e;
       this.log.warn(`permissions unavailable for ${user.id}: ${e instanceof Error ? e.message : 'unknown'}`);
       return [];

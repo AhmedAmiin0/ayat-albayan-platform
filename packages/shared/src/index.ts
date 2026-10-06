@@ -21,3 +21,4 @@ export * from './time-zone.js';
 export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './i18n/index.js';
+export * from './users/index.js';

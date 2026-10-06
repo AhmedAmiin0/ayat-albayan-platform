@@ -11,7 +11,7 @@ type Who = UserRole | null;
 const WHO: Who[] = [...USER_ROLES, null];
 
 /** Routes added with dynamic roles (absent from the frozen table). */
-const ADDED = /^(Roles|StaffUsers)Controller\./;
+const ADDED = /^(Roles|StaffUsers|Users)Controller\./;
 
 function allowedBefore(access: BeforeAccess, who: Who): boolean {
   if (access === 'public') return true;

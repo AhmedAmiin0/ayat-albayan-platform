@@ -1378,6 +1378,189 @@
     },
     "mineEmpty": "No payouts calculated yet"
   },
+  "users": {
+    "nav": "Users",
+    "title": "Users",
+    "count": "{n} users",
+    "new": "New user",
+    "searchPlaceholder": "Search by name, email or phone",
+    "empty": "No users yet",
+    "open": "Open",
+    "never": "Never signed in",
+    "filters": {
+      "role": "Role",
+      "status": "Status",
+      "all": "All"
+    },
+    "status": {
+      "active": "Active",
+      "disabled": "Disabled"
+    },
+    "kinds": {
+      "teacher": "Teacher",
+      "student": "Student",
+      "guardian": "Guardian"
+    },
+    "cols": {
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "role": "Role",
+      "linked": "Linked record",
+      "status": "Status",
+      "lastSignIn": "Last sign-in"
+    },
+    "form": {
+      "email": "Email",
+      "fullName": "Full name",
+      "phone": "Phone (optional)",
+      "role": "Base role",
+      "customRole": "Role",
+      "defaultRole": "Default role",
+      "notAssignable": "{name} (you cannot grant it)",
+      "locale": "Interface language",
+      "tz": "Time zone",
+      "roleLocked": "The role of an account linked to a record cannot change.",
+      "required": "* required"
+    },
+    "link": {
+      "label": "Linked record",
+      "placeholder": "Search by name or code such as AB-0001",
+      "empty": "No results. Only records without a login appear here.",
+      "searching": "Searching…",
+      "chosen": "Selected record",
+      "change": "Change",
+      "newTeacher": "New teacher",
+      "existingTeacher": "Existing teacher",
+      "hint": "The account is linked to an existing record; no new record is created.",
+      "none": "Not linked to a record"
+    },
+    "newTeacher": {
+      "nameAr": "Teacher name (Arabic)",
+      "nameEn": "Teacher name (English, optional)",
+      "gender": "Gender",
+      "male": "Male",
+      "female": "Female"
+    },
+    "credential": {
+      "label": "Password",
+      "set": "I will type it",
+      "generate": "Generate a random password",
+      "link": "Send an invite link",
+      "password": "New password",
+      "hint": "At least {n} characters."
+    },
+    "create": {
+      "title": "New user",
+      "submit": "Create account",
+      "submitting": "Creating…",
+      "created": "Account created"
+    },
+    "result": {
+      "createdTitle": "Account created",
+      "resetTitle": "Password reset",
+      "once": "This is shown only once. Copy it now before closing; it will not appear again.",
+      "password": "Temporary password",
+      "link": "Invite link",
+      "copy": "Copy",
+      "copied": "Copied",
+      "close": "Done, close",
+      "setDone": "The password you typed was saved."
+    },
+    "detail": {
+      "title": "User details",
+      "save": "Save changes",
+      "status": "Status",
+      "disabledReason": "Reason for disabling: {reason}",
+      "createdAt": "Created",
+      "readOnly": "You can view this information only."
+    },
+    "actions": {
+      "disable": "Disable account",
+      "enable": "Enable account",
+      "resetPassword": "Reset password",
+      "signOut": "Sign out everywhere",
+      "delete": "Delete user"
+    },
+    "disable": {
+      "title": "Disable account",
+      "reason": "Reason (optional)",
+      "hint": "The user can no longer sign in; their data is kept.",
+      "confirm": "Disable"
+    },
+    "reset": {
+      "title": "Reset password",
+      "confirm": "Reset"
+    },
+    "delete": {
+      "title": "Delete user",
+      "body": "The account of {name} will be deleted permanently. This cannot be undone.",
+      "confirm": "Delete permanently",
+      "blocked": "This user cannot be deleted because records refer to them:",
+      "disableInstead": "Disable instead of deleting"
+    },
+    "toast": {
+      "saved": "Changes saved",
+      "disabled": "Account disabled",
+      "enabled": "Account enabled",
+      "signedOut": "The user was signed out everywhere",
+      "deleted": "User deleted"
+    },
+    "account": {
+      "create": "Create account"
+    },
+    "tables": {
+      "students": "Students",
+      "guardians": "Guardians",
+      "teachers": "Teachers",
+      "payments": "Payments",
+      "lessons": "Lessons",
+      "leads": "Leads",
+      "activity_log": "Activity log",
+      "audit_log": "Audit log",
+      "student_assistants": "Student assistants",
+      "subscriptions": "Subscriptions",
+      "expenses": "Expenses",
+      "lesson_reports": "Lesson reports",
+      "messages": "Messages"
+    },
+    "errors": {
+      "email_taken": "This email is already used by another account.",
+      "link_taken": "This record already has a login.",
+      "cannot_disable_self": "You cannot disable your own account.",
+      "cannot_delete_self": "You cannot delete your own account.",
+      "last_admin": "At least one active admin must remain.",
+      "role_change_linked": "The role of an account linked to a record cannot change.",
+      "permission_not_held": "You cannot grant a role or permission you do not hold.",
+      "password_too_short": "The password is shorter than allowed.",
+      "account_disabled": "This account is disabled.",
+      "validation_failed": "Check the entered data and try again.",
+      "users_has_history": "A user with linked records cannot be deleted.",
+      "generic": "The request failed, try again."
+    },
+    "validation": {
+      "email": "Enter a valid email",
+      "name": "Enter the name (at least 2 characters)",
+      "phone": "The phone number is not valid, include the country code",
+      "passwordBlank": "Enter a password",
+      "passwordShort": "The password is too short: at least {n} characters",
+      "passwordLong": "The password is too long",
+      "linkRequired": "Pick the record the account will be linked to",
+      "teacherName": "Enter the teacher's Arabic name",
+      "mismatch": "The passwords do not match"
+    },
+    "setPassword": {
+      "title": "Set your password",
+      "intro": "Type the password you will use to sign in.",
+      "password": "Password",
+      "confirm": "Confirm password",
+      "submit": "Save and sign in",
+      "submitting": "Saving…",
+      "invalid": "The link is invalid or has expired. Ask the administration for a new one.",
+      "failed": "The password could not be saved; ask the administration for a new link.",
+      "checking": "Checking the link…"
+    }
+  },
   "earnings": {
     "title": "Teacher earnings",
     "mineTitle": "My earnings",
@@ -3039,6 +3222,7 @@
       "guardian": "Guardian",
       "assistant": "Assistant",
       "sales": "Sales",
+      "student": "Student",
       "public": "Visitor",
       "unknown": "No role"
     },
@@ -3210,6 +3394,8 @@
       "roles.manage": "Manage roles and permissions",
       "notifications.push": "Receive mobile app notifications",
       "translations.manage": "Edit interface text and translations",
+      "users.read": "View users and their accounts",
+      "users.write": "Create, edit, disable and delete users",
       "self.teacher": "Teacher's own pages",
       "self.sales": "Sales' own pages",
       "self.assistant": "Assistant's own pages"

@@ -25,7 +25,7 @@ export class RolesQueries implements RoleStore {
     const { data, error } = await this.db
       .from('profiles')
       .select('id, full_name, role, role_id')
-      .neq('role', 'guardian')
+      .not('role', 'in', '(guardian,student)')
       .order('full_name');
     if (error) throw dbError(error);
     return data;
