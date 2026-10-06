@@ -1,10 +1,10 @@
-import { seedTeacherRow, seedUser } from '../support/db';
+import { seedUser } from '../support/db';
 import { ar, expect, test } from '../support/fixtures';
 import { withSql } from '../support/schedule';
 import { dropLogins, openUser, profileOf, stamp } from '../support/users-control';
 
-// «المستخدمون»: a user without history is deleted for good; one with history (a teacher row of
-// its own) is refused, the tables are listed and «تعطيل بدلًا من الحذف» disables it instead.
+// «المستخدمون»: a user without history is deleted for good; one with history (a student it
+// created, students.created_by) is refused, the tables are listed and «تعطيل بدلًا من الحذف» disables it instead.
 
 const RUN = stamp();
 const PLAIN = { email: `plain-${RUN}@e2e.local`, password: `Plain-e2e-${RUN}`, fullName: `بلا سجل ${RUN}` };
@@ -15,11 +15,19 @@ test.describe('users control: delete', () => {
   test.beforeAll(async () => {
     await seedUser({ ...PLAIN, role: 'assistant' });
     const busyId = await seedUser({ ...BUSY, role: 'teacher' });
-    await seedTeacherRow(busyId, BUSY.fullName);
+    await withSql(async (sql) => {
+      const [g] = await sql<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz, created_by)
+        values (${`ولي ${RUN}`}, ${`+9665${RUN.replace(/\D/g, '').padStart(8, '0').slice(-8)}`}, 'SA', 'Asia/Riyadh', ${busyId}) returning id`;
+      await sql`insert into public.students (guardian_id, name, name_normalized, tz, created_by)
+        values (${g?.id ?? null}, ${`طالب ${RUN}`}, ${`طالب ${RUN}`}, 'Asia/Riyadh', ${busyId})`;
+    });
   });
 
   test.afterAll(async () => {
-    await withSql((sql) => sql`delete from public.teachers where display_name_ar = ${BUSY.fullName}`);
+    await withSql(async (sql) => {
+      await sql`delete from public.students where name = ${`طالب ${RUN}`}`;
+      await sql`delete from public.guardians where name = ${`ولي ${RUN}`}`;
+    });
     await dropLogins([PLAIN.email, BUSY.email]);
   });
 

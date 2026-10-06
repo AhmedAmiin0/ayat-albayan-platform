@@ -20,8 +20,9 @@ async function asService<T>(tx: Tx, q: () => Promise<T>): Promise<T> {
 async function student(tx: Tx, phone: string): Promise<{ id: string; code: string }> {
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر', ${phone}, 'SA', 'Asia/Riyadh') returning id`;
+  if (!g) throw new Error('guardian not written');
   const [s] = await tx<{ id: string; code: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz)
-    values (${g?.id}, 'طالب الحساب', 'طالب الحساب', 'Asia/Riyadh') returning id, code`;
+    values (${g.id}, 'طالب الحساب', 'طالب الحساب', 'Asia/Riyadh') returning id, code`;
   if (!s) throw new Error('student not written');
   return s;
 }
