@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
+import { openFilters, showResults } from '../support/filters';
 import { freshDigits, seedLead } from '../support/messages';
 import { riyadhToday, summaryOf, uniqueName } from '../support/money-extra';
 import { withSql } from '../support/schedule';
@@ -33,7 +34,7 @@ async function seedFour(tag: string): Promise<{ phones: string[]; names: string[
 }
 
 const search = async (page: Page, term: string) => {
-  const box = page.locator('form[role=search] input[name=q]');
+  const box = page.getByRole('searchbox', { name: ar.common.search, exact: true });
   await box.fill(term);
   await box.press('Enter');
 };
@@ -66,10 +67,15 @@ test.describe('leads list and job applicants (R-LEAD-01/04)', () => {
     await tab('new').click();
     await expect(page.getByText(byStatus(2, 'new'), { exact: true })).toBeVisible();
     await page.getByRole('tab', { name: ar.leads.filterAll, exact: true }).click();
-    await page.getByLabel(ar.leads.source, { exact: true }).selectOption('facebook_ad');
+    // The source filter lives in the shared «تصفية» panel (owner, 2026-10-05): the button counts it.
+    let panel = await openFilters(page);
+    await panel.getByLabel(ar.leads.source, { exact: true }).selectOption('facebook_ad');
+    await showResults(panel);
     await expect(page.getByText(count(2), { exact: true })).toBeVisible();
     await expect(page.getByRole('listitem').filter({ hasText: names[1] ?? '' })).toHaveCount(0);
-    await page.getByLabel(ar.leads.source, { exact: true }).selectOption('');
+    panel = await openFilters(page);
+    await panel.getByLabel(ar.leads.source, { exact: true }).selectOption('');
+    await showResults(panel);
 
     // Search by phone finds exactly that lead, with its E.164 number and status chip.
     await search(page, phone.slice(1));

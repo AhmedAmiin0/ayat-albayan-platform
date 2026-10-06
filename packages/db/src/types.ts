@@ -257,6 +257,33 @@ export type Database = {
           },
         ];
       };
+      custom_config: {
+        Row: {
+          description: string | null;
+          is_public: boolean;
+          key: string;
+          updated_at: string;
+          updated_by: string | null;
+          value: NonNullable<Json>;
+        };
+        Insert: {
+          description?: string | null;
+          is_public?: boolean;
+          key: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value: NonNullable<Json>;
+        };
+        Update: {
+          description?: string | null;
+          is_public?: boolean;
+          key?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value?: NonNullable<Json>;
+        };
+        Relationships: [];
+      };
       expense_categories: {
         Row: {
           active: boolean;
@@ -981,6 +1008,7 @@ export type Database = {
       };
       lesson_recordings: {
         Row: {
+          deleted_at: string | null;
           egress_id: string | null;
           ended_at: string | null;
           error: string | null;
@@ -988,10 +1016,13 @@ export type Database = {
           id: string;
           lesson_id: string | null;
           meeting_id: string | null;
+          size_bytes: number | null;
           started_at: string;
           status: string;
+          visible_to_student: boolean;
         };
         Insert: {
+          deleted_at?: string | null;
           egress_id?: string | null;
           ended_at?: string | null;
           error?: string | null;
@@ -999,10 +1030,13 @@ export type Database = {
           id?: string;
           lesson_id?: string | null;
           meeting_id?: string | null;
+          size_bytes?: number | null;
           started_at?: string;
           status?: string;
+          visible_to_student?: boolean;
         };
         Update: {
+          deleted_at?: string | null;
           egress_id?: string | null;
           ended_at?: string | null;
           error?: string | null;
@@ -1010,8 +1044,10 @@ export type Database = {
           id?: string;
           lesson_id?: string | null;
           meeting_id?: string | null;
+          size_bytes?: number | null;
           started_at?: string;
           status?: string;
+          visible_to_student?: boolean;
         };
         Relationships: [
           {
@@ -3113,6 +3149,7 @@ export type Database = {
         };
       };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_client_session: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_my_assisted_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_report: { Args: { p_report: string }; Returns: boolean };
@@ -3121,6 +3158,10 @@ export type Database = {
       is_my_report: { Args: { p_report: string }; Returns: boolean };
       is_my_report_pdf: { Args: { p_name: string }; Returns: boolean };
       is_my_sales_lesson: { Args: { p_lesson: string }; Returns: boolean };
+      lesson_counts_for_pay: {
+        Args: { p_rule: string; p_status: Database['public']['Enums']['lesson_status'] };
+        Returns: boolean;
+      };
       merge_students: {
         Args: { p_actor: string; p_kept: string; p_merged: string };
         Returns: string;
@@ -3148,6 +3189,11 @@ export type Database = {
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
+      set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
+      teacher_rate_for: {
+        Args: { p_minutes: number; r30: number; r45: number; r60: number; r90: number };
+        Returns: number;
+      };
       void_teacher_payment: {
         Args: { p_actor: string; p_payment: string; p_reason: string };
         Returns: Json;

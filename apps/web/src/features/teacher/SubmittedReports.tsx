@@ -52,6 +52,7 @@ export function SubmittedReports({ tz, search, onSearch }: SubmittedReportsProps
             emptyText={t.reports.noSubmitted}
             sort={table.sort}
             filters={table.filters}
+            toolbar={{ total: list.data.total }}
           />
           <Pager page={state.page} total={list.data.total} pageSize={list.data.pageSize} onPage={table.onPage} />
         </>

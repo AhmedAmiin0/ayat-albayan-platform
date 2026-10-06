@@ -34,11 +34,11 @@ export class RolesController {
   }
 
   @Post('roles')
-  create(@Body() body: unknown): Promise<RoleView> {
-    return this.roles.create(parseOrThrow(roleCreateSchema, body));
+  create(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<RoleView> {
+    return this.roles.create(parseOrThrow(roleCreateSchema, body), user.id);
   }
 
-  /** 400 admin_role_fixed (the system admin's grants), 409 last_admin / self_lockout. */
+  /** 400 admin_role_fixed, 403 permission_not_held (adding a grant the actor lacks), 409 last_admin / self_lockout. */
   @Patch('roles/:id')
   update(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<RoleView> {
     return this.roles.update(id, { ...parseOrThrow(roleUpdateSchema, body), actorId: user.id });
@@ -65,7 +65,7 @@ export class StaffUsersController {
     return this.roles.users();
   }
 
-  /** Sets profiles.role to the role's base role. 400 not_staff, 409 last_admin / self_lockout. */
+  /** Sets profiles.role to the role's base role. 400 not_staff, 403 permission_not_held, 409 last_admin / self_lockout. */
   @Patch(':id/role')
   assign(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<StaffUserView> {
     const { role_id } = parseOrThrow(roleAssignSchema, body);

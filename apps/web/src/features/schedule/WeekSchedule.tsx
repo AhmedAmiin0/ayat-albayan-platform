@@ -60,24 +60,28 @@ export function WeekSchedule({ search, onSearch }: WeekScheduleProps) {
       <PageHead>
         <Cartouche>{t.schedule.title}</Cartouche>
         {overview.data && <ScheduleCounts shown={shown} />}
+        {/* «حجز حلقة» is the page's one filled primary; «اجتماع جديد» stays on the dashboard and «الحلقات عبر الإنترنت» on phones. */}
         <HeadActions
           primary={
             <Link to="/admin/book" className={buttonVariants()}>
               {t.schedule.book}
             </Link>
           }
-          more={<SyncScheduleButton onDone={setNotice} />}
+          more={
+            <>
+              <SyncScheduleButton onDone={setNotice} />
+              <div className="max-sm:hidden">
+                <NewMeetingMenu variant="secondary" />
+              </div>
+            </>
+          }
         />
-        {/* Phones: «اجتماع جديد» stays on the dashboard and «الحلقات عبر الإنترنت»; one primary here. */}
-        <div className="max-sm:hidden">
-          <NewMeetingMenu />
-        </div>
       </PageHead>
       <ProposalsPanel onOpen={(l) => setOpenId(l.id)} />
-      <div className="mb-4 grid gap-3">
+      <div className="mb-3">
         <ScheduleNav search={search} today={today} onSearch={patch} />
-        <ScheduleFilters search={search} teachers={all} onSearch={patch} />
       </div>
+      <ScheduleFilters search={search} teachers={all} onSearch={patch} resultCount={overview.data ? shown.length : undefined} />
       <Body
         query={overview}
         rows={boardRows(teachers, shown)}

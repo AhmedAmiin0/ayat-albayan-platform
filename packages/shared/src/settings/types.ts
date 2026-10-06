@@ -69,20 +69,40 @@ export interface EnumDef extends Base {
   options: readonly string[];
 }
 
-export type SettingDef = IntDef | BoolDef | StringDef | FormatDef | IntListDef | EnumDef;
+/** One field of a `json` entry's object value (all optional; an empty box is left out). */
+export interface ShapeField {
+  name: string;
+  kind: 'string' | 'text';
+  format?: 'e164' | 'email' | 'host';
+  max?: number;
+}
+
+/** An object of short strings (contact block, bilingual notice); null = unset when nullable. */
+export interface JsonDef extends Base {
+  type: 'json';
+  default: Readonly<Record<string, string>> | null;
+  shape: readonly ShapeField[];
+  nullable?: boolean;
+}
+
+export type SettingDef = IntDef | BoolDef | StringDef | FormatDef | IntListDef | EnumDef | JsonDef;
 
 /** The stored value's TypeScript type for one entry. */
-export type SettingValue<D> = D extends { type: 'int'; nullable: true }
-  ? number | null
-  : D extends { type: 'int' }
-    ? number
-    : D extends { type: 'bool' }
-      ? boolean
-      : D extends { type: 'int_list' }
-        ? number[]
-        : D extends { type: 'enum'; options: readonly (infer O)[] }
-          ? O
-          : string;
+export type SettingValue<D> = D extends { type: 'json'; nullable: true }
+  ? Record<string, string> | null
+  : D extends { type: 'json' }
+    ? Record<string, string>
+    : D extends { type: 'int'; nullable: true }
+      ? number | null
+      : D extends { type: 'int' }
+        ? number
+        : D extends { type: 'bool' }
+          ? boolean
+          : D extends { type: 'int_list' }
+            ? number[]
+            : D extends { type: 'enum'; options: readonly (infer O)[] }
+              ? O
+              : string;
 
 /** snake_case row key → camelCase PATCH field ('reminder_24h_enabled' → 'reminder24hEnabled'). */
 export type CamelKey<S extends string> = S extends `${infer H}_${infer T}` ? `${H}${CamelKey<Capitalize<T>>}` : S;

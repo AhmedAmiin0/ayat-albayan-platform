@@ -46,6 +46,7 @@ export function JobApplicantsList({ search, onSearch }: JobApplicantsListProps) 
               emptyText={t.common.notFound}
               sort={{ key: search.sort.sort, dir: search.sort.dir, onChange: (next) => onSearch(withSort(search, next)) }}
               filters={{ values: search.filters, onChange: (key, value) => onSearch(withFilter(search, { key, value })), onClear: (keys) => onSearch(withoutFilters(search, keys)) }}
+              toolbar={{ total: data.total }}
             />
           )}
           <Pager

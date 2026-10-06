@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PAYMENT } from '@/features/subscriptions/money-fixture';
 import { t } from '@/lib/i18n';
-import { openFilters } from '@/test/open-filters';
+import { closeFilters, openFilters } from '@/test/open-filters';
 import { PaymentsPage } from './PaymentsPage';
 import { parsePaymentsSearch, paymentsView, type PaymentsUrlSearch } from './search';
 
@@ -65,7 +65,7 @@ describe('PaymentsPage sort + filters (R-NFR-08)', () => {
     fireEvent.change(screen.getByLabelText(t.finance.from), { target: { value: '2026-10-01' } });
     fireEvent.change(screen.getByRole('combobox', { name: t.finance.kind }), { target: { value: 'refund' } });
     expect(onSearch).toHaveBeenLastCalledWith({ kind: 'refund', page: undefined });
-    fireEvent.click(screen.getByRole('button', { name: t.table.showResults }));
+    closeFilters();
     const chips = screen.getByRole('list', { name: t.table.activeFilters });
     expect(chips.textContent).toContain(`${t.finance.from}: 2026-10-01`);
     expect(chips.textContent).toContain(`${t.finance.kind}: ${t.enums.paymentKind.refund}`);

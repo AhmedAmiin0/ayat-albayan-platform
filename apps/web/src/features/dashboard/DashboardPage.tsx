@@ -59,7 +59,7 @@ export function DashboardPage({ search, onSearch }: DashboardPageProps) {
         <Cartouche>{t.admin.dashboardTitle}</Cartouche>
         <QuickActions />
       </PageHead>
-      <div className="grid gap-8">
+      <div className="grid grid-cols-1 gap-8">
         {failed && <FormAlert>{t.dashboard.loadFailed}</FormAlert>}
         <TodayKpis
           today={todayCounts(dayQ.data, now, win)}
@@ -67,9 +67,9 @@ export function DashboardPage({ search, onSearch }: DashboardPageProps) {
           unpaid={weekQ.data?.unpaid_subscriptions}
         />
         <MoneyKpis />
-        <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-5 md:grid-cols-2 xl:grid-cols-3">
           <TodayLessons lessons={dayQ.data} className="md:col-span-2 xl:col-span-1 xl:row-span-2" />
-          <section aria-label={t.dashboard.home.work} className={`grid content-start gap-4 ${card}`}>
+          <section aria-label={t.dashboard.home.work} className={`grid grid-cols-1 content-start gap-4 ${card}`}>
             <KpiStrip summary={weekQ.data} work={tab} />
             <WorkPanel tab={tab} work={workQ.data} />
           </section>

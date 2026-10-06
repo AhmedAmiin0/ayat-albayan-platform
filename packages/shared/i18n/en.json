@@ -1061,6 +1061,53 @@
       "fallback": "No exchange rate is available right now, so prices use the SAR–USD peg (3.75)"
     }
   },
+  "studentRecordings": {
+    "title": "Lesson recordings",
+    "hint": "Every lesson held in the online room is recorded automatically and listed here for review.",
+    "error": "Could not load the recordings. Try again.",
+    "retry": "Try again",
+    "empty": "This student has no recordings yet.",
+    "emptyFiltered": "No recordings match the filter.",
+    "status": {
+      "recording": "Recording",
+      "done": "Ready",
+      "failed": "Recording failed",
+      "deleted": "Deleted"
+    },
+    "lessonAt": "Lesson {when}",
+    "teacher": "Teacher",
+    "duration": "Duration",
+    "size": "Size",
+    "unknown": "—",
+    "sizeMb": "{n} MB",
+    "sizeGb": "{n} GB",
+    "player": "Play the recording of the lesson {when}",
+    "download": "Download",
+    "downloadOf": "Download the recording of the lesson {when}",
+    "filters": {
+      "from": "From date",
+      "to": "To date",
+      "teacher": "Teacher",
+      "teacherAll": "All teachers"
+    },
+    "visible": {
+      "label": "Show to the student",
+      "on": "Ready to show to the student and guardian once their portal is on.",
+      "off": "Hidden from the student and guardian.",
+      "failed": "Could not change the visibility. Try again.",
+      "groupLesson": "A group lesson's recording cannot be shown to a student: it holds the lesson of more than one student."
+    },
+    "delete": {
+      "action": "Delete recording",
+      "title": "Delete the lesson recording?",
+      "body": "The recording file will be deleted for good and cannot be restored. The deletion record is kept.",
+      "confirm": "Delete for good",
+      "failed": "Could not delete the recording. Try again.",
+      "inProgress": "A recording that is still running cannot be deleted."
+    },
+    "reportLink": "Lesson recording",
+    "reportLinkOf": "Open the recording of the lesson {when}"
+  },
   "reports": {
     "title": "Lesson reports",
     "formTitle": "Lesson report",
@@ -1521,6 +1568,63 @@
       "teacher": "Teacher: {name}"
     }
   },
+  "config": {
+    "academyContact": "Academy contact details",
+    "academyContactHint": "Printed in the footer of lesson reports; any visitor can read it.",
+    "recordingConsentNotice": "Recording consent notice",
+    "recordingConsentNoticeHint": "Any visitor can read it. It is not shown in the classroom yet; it will be shown to the student and guardian before a recorded lesson once recording is switched on.",
+    "recordingRetentionDays": "Keep lesson recordings for (days)",
+    "recordingRetentionOn": "Delete recordings after a period",
+    "recordingRetentionHint": "When off, recordings are kept without deleting. Deleting them is the owner's decision and is never on by default. When on, the files of lesson recordings and of internal-meeting recordings older than this are deleted; their records are kept.",
+    "activityRetentionDays": "Keep the activity log for (days)",
+    "activityRetentionDaysHint": "Activity records older than this are deleted daily.",
+    "sections": {
+      "custom": "Custom values"
+    },
+    "fields": {
+      "site": "Website",
+      "email": "Email",
+      "ar": "Arabic text",
+      "en": "English text"
+    },
+    "search": {
+      "label": "Search settings",
+      "placeholder": "Search by name or key",
+      "none": "No settings match your search."
+    },
+    "reset": "Reset to default",
+    "resetFor": "Reset to default: {name}",
+    "dirty": "Edited",
+    "danger": "Sensitive setting: it directly affects messages or warnings.",
+    "changed": "Last changed: {at}",
+    "changedBy": "Last changed: {at} by {name}",
+    "custom": {
+      "hint": "Free-form values you add yourself. A public value can be read by anyone without signing in, so keep private data and secrets out of it.",
+      "empty": "No custom values yet.",
+      "loadError": "Could not load the custom values.",
+      "add": "Add a value",
+      "edit": "Edit",
+      "delete": "Delete",
+      "key": "Key",
+      "keyHint": "Lowercase English letters, digits and . _ - starting with a letter, 2 to 64 characters.",
+      "value": "Value (JSON)",
+      "description": "Description",
+      "isPublic": "Public (shown without signing in)",
+      "public": "Public",
+      "private": "Private",
+      "save": "Save value",
+      "cancel": "Cancel",
+      "deleteConfirm": "Delete the value «{key}» for good?",
+      "deleteYes": "Yes, delete it",
+      "invalidKey": "The key is not valid",
+      "reservedKey": "This key is reserved for an academy setting",
+      "invalidJson": "The value is not valid JSON",
+      "nullValue": "The value cannot be null",
+      "tooLarge": "The value is larger than 8 KB",
+      "saved": "Value saved",
+      "deleted": "Value deleted"
+    }
+  },
   "exports": {
     "title": "Export data",
     "students": "Students",
@@ -1547,6 +1651,48 @@
       "range_too_large": "The period is too long. Choose a year or less",
       "invalid_month": "Choose the month from the list"
     }
+  },
+  "mobileMoney": {
+    "section": "Finance",
+    "receivablesTitle": "Receivables",
+    "receivablesSearch": "Search by name, code or guardian",
+    "receivablesEmpty": "No student owes anything",
+    "receivablesCount": "{n} unpaid packages",
+    "owedTotal": "Total owed",
+    "fxMissing": "No exchange rate for {currencies}, so they are left out of the total",
+    "daysLate": "{n} days ago",
+    "payFor": "Record a payment for {student}",
+    "subscriptionsTitle": "Subscriptions and renewals",
+    "viewLabel": "View",
+    "viewPackages": "Packages",
+    "viewTasks": "Tasks",
+    "statusFilter": "Filter by package status",
+    "filterAll": "All",
+    "filterPartial": "Partly paid",
+    "searchStudent": "Search by student name",
+    "subscriptionsEmpty": "No packages",
+    "tasksEmpty": "No open tasks",
+    "renewalDue": "Needs renewal",
+    "recordPayment": "Record payment",
+    "taskRenewalDue": "Package almost used up",
+    "taskUnpaid": "Package ended and needs renewal",
+    "taskNeedsAction": "Needs action",
+    "paymentsTitle": "All payments",
+    "kindFilter": "Type",
+    "monthFilter": "Month",
+    "allMonths": "All months",
+    "paymentsCount": "{n} entries",
+    "paymentsEmpty": "No payments in this period",
+    "periodTotal": "Net for the period",
+    "refundsOf": "Refunds: {amount}",
+    "viewReceipt": "View receipt",
+    "hideReceipt": "Hide receipt",
+    "openPdf": "Open PDF file",
+    "receiptFailed": "The receipt could not be loaded",
+    "noReceipt": "No receipt",
+    "fromInvoice": "Receipt is the booking invoice",
+    "receiptA11y": "Receipt for {student}'s payment",
+    "webOnlyEdit": "Editing or voiding a payment is available on the web dashboard."
   },
   "inbox": {
     "dayToday": "Today",
@@ -1698,6 +1844,54 @@
     "statusFilter": "Lead status",
     "allStatuses": "All statuses"
   },
+  "mobileFinance": {
+    "section": "Payouts and expenses",
+    "rows": {
+      "payouts": "Monthly teacher payouts",
+      "expenses": "Expenses",
+      "invoices": "Invoices",
+      "summary": "Finance summary"
+    },
+    "month": { "prev": "Previous month", "next": "Next month" },
+    "stale": "Could not refresh, showing the last saved data",
+    "loadFailed": "Could not load the data, try again",
+    "offline": "No internet connection, try again",
+    "payouts": {
+      "lessonsAmount": "{lessons} lessons · {amount}",
+      "due": "Left to pay: {amount}",
+      "approveAsk": "Approve {teacher}'s payout for {month}, {amount}?",
+      "method": "Paid by: {method}",
+      "note": "Note: {note}",
+      "receiptFailed": "Could not open the receipt",
+      "done": {
+        "approve": "Payout approved",
+        "reopen": "Payout reopened",
+        "unpay": "Payment cancelled",
+        "pay": "Payment recorded"
+      }
+    },
+    "expenses": {
+      "monthTotal": "Month total: {amount}",
+      "byCategory": "By category",
+      "draftNote": "Repeating monthly drafts are not in the total until they are confirmed in the admin dashboard",
+      "withReceipt": "Receipt attached",
+      "addTitle": "New expense",
+      "categoryRequired": "Choose a category",
+      "save": "Save expense",
+      "currencyNote": "Currency: Egyptian pounds (EGP) only. For an expense in another currency, use the admin website."
+    },
+    "invoices": {
+      "empty": "No invoices",
+      "noStudents": "No student",
+      "sourceUpload": "Uploaded from a device",
+      "sourceWhatsapp": "Received on WhatsApp",
+      "notRecorded": "Payment not recorded",
+      "summary": "{kind} · {source}"
+    },
+    "summary": {
+      "noRates": "{count} lessons without a calculated rate"
+    }
+  },
   "templates": {
     "title": "WhatsApp templates",
     "intro": "No message goes to a guardian or lead without a Meta-approved template, unless they messaged us in the last 24 hours.",
@@ -1808,6 +2002,63 @@
       "slot_1": "Saturday 3 October 17:00",
       "slot_2": "Sunday 4 October 19:00",
       "tz_city": "Riyadh"
+    }
+  },
+  "mobileAdmin": {
+    "section": "Administration",
+    "rows": {
+      "dashboard": "Overview",
+      "settings": "Academy settings",
+      "activity": "Activity log"
+    },
+    "dashboard": {
+      "title": "Overview",
+      "activeStudents": "Active students",
+      "needsAttention": "Needs attention",
+      "openStudent": "Open {name}'s profile",
+      "openAll": "Open student"
+    },
+    "reports": {
+      "button": "Lesson reports",
+      "detailTitle": "Lesson report",
+      "noContent": "Nothing was written in this field"
+    },
+    "settings": {
+      "title": "Academy settings",
+      "subtitle": "Applies to every lesson and teacher",
+      "lateCancelOn": "On",
+      "lateCancelOff": "Off",
+      "hours": "hours",
+      "weeks": "weeks",
+      "lessons": "lessons",
+      "followUpHours": "Follow-up hours after the last message",
+      "followUpHint": "Ascending hours, for example 24, 72",
+      "currencyHint": "Three capital letters, such as SAR or EGP",
+      "unsaved": "You have unsaved changes",
+      "discard": "Discard changes",
+      "serverRejected": "The server rejected these values, check the marked fields",
+      "readOnlyTitle": "Managed on the web only",
+      "readOnlyNote": "To change these settings use the web admin.",
+      "messagingEnabled": "WhatsApp messaging",
+      "autoMessagesEnabled": "Automatic messages",
+      "crmCutoverDone": "Move to the new system is complete",
+      "on": "On",
+      "off": "Off"
+    },
+    "activity": {
+      "filters": "Filters",
+      "role": "User",
+      "entity": "Item",
+      "from": "From date",
+      "to": "To date",
+      "all": "All",
+      "datePlaceholder": "2026-10-05",
+      "dateInvalid": "Type the date as 2026-10-05",
+      "dateOrder": "The start date must not be after the end date",
+      "clear": "Clear filters",
+      "by": "By {name}",
+      "loadingMore": "Loading more…",
+      "emptyFiltered": "No activity matches these filters"
     }
   },
   "messages": {
@@ -2751,7 +3002,16 @@
     "clearAll": "Clear all",
     "activeFilter": "{label}: {value}",
     "removeFilter": "Remove filter {filter}",
-    "activeFilters": "Active filters"
+    "activeFilters": "Active filters",
+    "showResultsCount": "Show results ({n})",
+    "resultCount": {
+      "one": "1 result",
+      "two": "2 results",
+      "few": "{n} results",
+      "other": "{n} results"
+    },
+    "filtersSummary": "{active}, {results}",
+    "noFilters": "No filters applied"
   },
   "activity": {
     "title": "Activity log",
@@ -2916,6 +3176,7 @@
       "classroom.host": "Open the room early and copy the join link",
       "classroom.links": "Send join links to students",
       "recordings.read": "Watch lesson recordings",
+      "recordings.manage": "Show, hide and delete lesson recordings (deleting is for admin-base roles only)",
       "meetings.read": "View internal meetings",
       "meetings.write": "Create and run internal meetings",
       "reports.read": "View lesson reports",
@@ -2989,6 +3250,7 @@
         "admin_role_fixed": "The system admin's permissions are fixed.",
         "last_admin": "At least one user must keep the roles and permissions right.",
         "self_lockout": "You cannot remove your own roles and permissions right.",
+        "permission_not_held": "You cannot grant a permission you do not hold.",
         "not_staff": "This user is not staff.",
         "generic": "Could not save, try again."
       }

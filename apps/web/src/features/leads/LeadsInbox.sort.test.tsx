@@ -3,6 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { LeadsInbox } from './LeadsInbox';
 import type { LeadSearch } from './types';
 
@@ -49,6 +50,7 @@ describe('LeadsInbox order + assignee filter (R-NFR-08, R-LEAD-05)', () => {
   it('«الترتيب» picks an order on page 1, and back to the default clears it', async () => {
     const onSearch = renderInbox({ page: 3, status: 'new', sort: 'name' });
     await screen.findByText('أم سهيلة');
+    openFilters();
     const order = screen.getByRole('combobox', { name: t.leads.sortBy });
     expect((order as HTMLSelectElement).value).toBe('name');
     fireEvent.change(order, { target: { value: 'created_at:desc' } });
@@ -59,6 +61,7 @@ describe('LeadsInbox order + assignee filter (R-NFR-08, R-LEAD-05)', () => {
 
   it('the assignee filter lists «بدون مسؤول» and the salespeople', async () => {
     const onSearch = renderInbox({ page: 1 });
+    openFilters();
     await screen.findAllByRole('option', { name: SARA.name });
     const select = screen.getByRole('combobox', { name: t.sales.assign.label });
     fireEvent.change(select, { target: { value: SARA.id } });

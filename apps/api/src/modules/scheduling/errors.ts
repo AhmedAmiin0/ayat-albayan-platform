@@ -1,6 +1,7 @@
 import {
   BadRequestException,
   ConflictException,
+  ForbiddenException,
   HttpException,
   NotFoundException,
 } from '@nestjs/common';
@@ -15,6 +16,9 @@ export const conflict = (code: string, details: Details = {}) =>
 
 export const badRequest = (code: string, details: Details = {}) =>
   new BadRequestException({ code, message: code, ...details });
+
+export const forbidden = (code: string, details: Details = {}) =>
+  new ForbiddenException({ code, message: code, ...details });
 
 export const notFound = (code: string) => new NotFoundException({ code, message: code });
 

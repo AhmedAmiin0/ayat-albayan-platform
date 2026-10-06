@@ -6,8 +6,8 @@ import { meetingTarget } from './recording-target';
 describe('RecordingQueries for meetings (migration 212)', () => {
   it('a meeting’s claim fills meeting_id, never lesson_id', async () => {
     const f = fakeDb({ lesson_recordings: [{ data: { id: 'R1' } }] });
-    await new RecordingQueries(f.db).claim({ target: meetingTarget('M'), filePath: 'meetings/M/x.mp4', startedAt: 't' });
-    expect(f.argsOf('lesson_recordings', 'insert')?.[0]).toEqual({ meeting_id: 'M', file_path: 'meetings/M/x.mp4', started_at: 't' });
+    await new RecordingQueries(f.db).claim({ target: meetingTarget('M'), filePath: 'meetings/M/x.mp3', startedAt: 't' });
+    expect(f.argsOf('lesson_recordings', 'insert')?.[0]).toEqual({ meeting_id: 'M', file_path: 'meetings/M/x.mp3', started_at: 't' });
   });
 
   it('lists and finds the running egress by the meeting column', async () => {

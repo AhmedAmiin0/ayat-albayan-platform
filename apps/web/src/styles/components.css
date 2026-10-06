@@ -40,6 +40,18 @@
   [dir='ltr'] .ab-fade-end {
     mask-image: linear-gradient(to right, transparent, #000 20px, #000 calc(100% - 40px), transparent);
   }
+  /* A wide table scrolling in its own box (dashboard): a soft shadow at each edge that still has
+     more to scroll to, none once it is reached (paper-coloured covers that scroll with the content
+     hide the fixed shadows at the ends). Edges are physical on purpose: it is symmetric in RTL/LTR. */
+  .ab-scroll-x {
+    min-width: 0;
+    overflow-x: auto;
+    background:
+      linear-gradient(to right, var(--page) 30%, transparent) left center / 28px 100% no-repeat local,
+      linear-gradient(to left, var(--page) 30%, transparent) right center / 28px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%, color-mix(in oklab, var(--ink) 22%, transparent), transparent) left center / 10px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, color-mix(in oklab, var(--ink) 22%, transparent), transparent) right center / 10px 100% no-repeat scroll;
+  }
 }
 
 /* Touch tablets (≥640px with a coarse pointer, e.g. an iPad at 768px): the 40/32px desktop control

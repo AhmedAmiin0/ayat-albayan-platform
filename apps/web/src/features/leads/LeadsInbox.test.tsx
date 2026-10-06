@@ -3,6 +3,7 @@ import { cleanup, fireEvent, render, screen, within } from '@testing-library/rea
 import type { ReactNode } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { openFilters } from '@/test/open-filters';
 import { LeadsInbox } from './LeadsInbox';
 import type { LeadRow, LeadSearch } from './types';
 
@@ -71,13 +72,15 @@ describe('LeadsInbox (R-LEAD-01, R-LEAD-02)', () => {
     expect(onSearch).toHaveBeenLastCalledWith({ source: 'referral', page: 1 });
   });
 
-  it('search submits the trimmed term and the source select filters, both from page 1', async () => {
+  it('search applies the trimmed term (Enter) and the source select in «تصفية» filters, both from page 1', async () => {
     const { onSearch } = renderInbox({ status: 'new', page: 2 });
     await screen.findByText('أم سهيلة');
     const box = screen.getByRole('searchbox', { name: t.common.search });
     fireEvent.change(box, { target: { value: '  سهيلة ' } });
-    fireEvent.submit(box);
+    fireEvent.keyDown(box, { key: 'Enter' });
     expect(onSearch).toHaveBeenLastCalledWith({ status: 'new', q: 'سهيلة', page: 1 });
+    expect(screen.queryByRole('combobox', { name: t.leads.source })).toBeNull(); // in the panel, not the row
+    openFilters();
     fireEvent.change(screen.getByRole('combobox', { name: t.leads.source }), {
       target: { value: 'referral' },
     });

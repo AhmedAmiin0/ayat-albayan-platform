@@ -22,6 +22,7 @@ import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/head-actions';
+import { StudentRecordings } from './StudentRecordings';
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -89,6 +90,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <BalanceCard student={student} />
       <StudentPayments studentId={student.id} />
       <StudentInvoices studentId={student.id} />
+      <StudentRecordings studentId={student.id} role="admin" />
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />
       <StudentJoinLink studentId={student.id} />

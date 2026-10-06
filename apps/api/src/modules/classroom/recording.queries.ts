@@ -12,6 +12,8 @@ export interface FinishInput {
   status: 'done' | 'failed';
   endedAt: string;
   error?: string | null;
+  /** The finished file's size (egress result); omitted when LiveKit did not say. */
+  sizeBytes?: number;
 }
 
 /** lesson_recordings (service role; the services guard). */
@@ -49,12 +51,13 @@ export class RecordingQueries {
     await this.finishWhere({ column: 'egress_id', value: egressId }, input);
   }
 
-  /** The lesson's or the meeting's recordings, newest first. */
+  /** The lesson's or the meeting's recordings, newest first (removed ones are not listed). */
   async forTarget(target: RoomTarget): Promise<RecordingRow[]> {
     const { data, error } = await this.db
       .from('lesson_recordings')
       .select('*')
       .eq(target.kind === 'lesson' ? 'lesson_id' : 'meeting_id', target.id)
+      .neq('status', 'deleted')
       .order('started_at', { ascending: false });
     if (error) throw dbError(error);
     return data;
@@ -75,7 +78,12 @@ export class RecordingQueries {
   private async finishWhere(where: { column: 'id' | 'egress_id'; value: string }, input: FinishInput): Promise<void> {
     const { error } = await this.db
       .from('lesson_recordings')
-      .update({ status: input.status, ended_at: input.endedAt, error: input.error ?? null })
+      .update({
+        status: input.status,
+        ended_at: input.endedAt,
+        error: input.error ?? null,
+        ...(input.sizeBytes !== undefined && { size_bytes: input.sizeBytes }),
+      })
       .eq(where.column, where.value)
       .eq('status', 'recording');
     if (error) throw dbError(error);

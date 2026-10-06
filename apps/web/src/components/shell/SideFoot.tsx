@@ -1,4 +1,5 @@
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { cn } from '@/lib/utils';
 import { LanguageSwitch } from './LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 
@@ -9,17 +10,24 @@ import { LogoutButton } from './LogoutButton';
  */
 export function SideFoot({ email }: { email?: string | null }) {
   return (
-    <div className="mt-auto grid shrink-0 gap-3 border-t border-rule px-1.5 pt-3">
-      <ThemeToggle className="justify-self-start" />
-      <LanguageSwitch className="justify-self-start" />
-      <div className="flex min-w-0 items-center gap-2">
-        {email && (
-          <span dir="ltr" className="min-w-0 flex-1 truncate text-xs text-ink-2 rtl:text-end">
-            {email}
-          </span>
-        )}
-        <LogoutButton />
-      </div>
+    <div
+      data-side-foot
+      className={cn(
+        'ms-auto flex shrink-0 items-center gap-1',
+        // ≥900px: pinned to the bottom of the sidebar's scroll area on the sidebar's own background
+        // (it spans the full width, past the aside's 12px padding), content on the icon edge (24px).
+        'shell:sticky shell:bottom-0 shell:z-10 shell:-ms-3 shell:-me-3 shell:mt-auto shell:grid shell:grid-cols-[minmax(0,1fr)_auto] shell:gap-x-2 shell:gap-y-2 shell:border-t shell:border-rule shell:bg-cover shell:px-6 shell:pt-4 shell:pb-6',
+      )}
+    >
+      {/* Three short rows: theme; language + logout; the account. The «القائمة» sheet has its own foot (MenuFoot). */}
+      <ThemeToggle className="hidden shell:col-span-2 shell:inline-flex shell:justify-self-start" />
+      <LanguageSwitch className="shell:justify-self-start" />
+      <LogoutButton />
+      {email && (
+        <span dir="ltr" className="hidden min-w-0 truncate rtl:text-end text-xs text-ink-2 shell:col-span-2 shell:block">
+          {email}
+        </span>
+      )}
     </div>
   );
 }

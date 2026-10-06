@@ -3,6 +3,7 @@ import {
   ForbiddenException,
   Inject,
   Injectable,
+  Logger,
   UnauthorizedException,
   type CanActivate,
   type ExecutionContext,
@@ -30,6 +31,8 @@ interface AuthRequest {
  */
 @Injectable()
 export class AuthGuard implements CanActivate {
+  private readonly log = new Logger(AuthGuard.name);
+
   constructor(
     private readonly reflector: Reflector,
     @Inject(TOKEN_VERIFIER) private readonly verify: TokenVerifier,
@@ -42,13 +45,28 @@ export class AuthGuard implements CanActivate {
 
     const req = ctx.switchToHttp().getRequest<AuthRequest>();
     const user = await this.authenticate(req.headers['authorization']);
-    const permissions = await this.resolve(user);
+    const signedIn = this.reflector.getAllAndOverride<boolean>(SIGNED_IN, targets);
+    const permissions = await this.permissionsOf(user, signedIn);
     req.user = { ...user, permissions };
 
-    if (this.reflector.getAllAndOverride<boolean>(SIGNED_IN, targets)) return true;
+    if (signedIn) return true;
     const needed = this.reflector.getAllAndOverride<Permission | undefined>(PERMISSION, targets);
     if (!needed || !permissions.includes(needed)) throw new ForbiddenException();
     return true;
+  }
+
+  /**
+   * A resolver failure (DB down) must not lock a non-admin out of GET /auth/me: they sign in with
+   * no permissions. An admin's failure is rethrown, so the console never shows an empty admin.
+   */
+  private async permissionsOf(user: AuthUser, signedIn: boolean): Promise<readonly Permission[]> {
+    try {
+      return await this.resolve(user);
+    } catch (e) {
+      if (!signedIn || user.role === 'admin') throw e;
+      this.log.warn(`permissions unavailable for ${user.id}: ${e instanceof Error ? e.message : 'unknown'}`);
+      return [];
+    }
   }
 
   private async authenticate(header: string | string[] | undefined): Promise<AuthUser> {

@@ -6,6 +6,9 @@ on:
   # Run by hand from the Actions tab (e2e included).
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 # A new push to the same branch or PR cancels the run it replaces.
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
