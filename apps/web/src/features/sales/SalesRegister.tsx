@@ -24,7 +24,7 @@ export function SalesRegister({ search }: { search: BookSearch }) {
       {search.leadId ? (
         <LeadBooking key={search.leadId} search={search} hint={null} onOpenStudent={noop} />
       ) : (
-        <Link to="/sales/inbox" className="text-sm font-semibold text-brand underline">
+        <Link to="/sales/inbox" search={{ page: 1 }} className="text-sm font-semibold text-brand underline">
           {t.assistantPortal.register.openInbox}
         </Link>
       )}
