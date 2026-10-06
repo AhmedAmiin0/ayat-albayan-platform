@@ -51,12 +51,11 @@ export class UsersController {
     return this.users.roleOptions(actorOf(user));
   }
 
-  /** Teachers / students / guardians without a login, for the "link to" pickers. */
+  /** Teachers / students / guardians without a login, for the "link to" pickers (teachers.write / students.write / guardians.write of the kind). */
   @Get('link-candidates')
   @Permissions('users.write')
-  candidates(@Query() query: unknown): Promise<LinkCandidate[]> {
-    const { kind, q } = parseOrThrow(linkCandidatesQuery, query);
-    return this.users.candidates(kind, q);
+  candidates(@Query() query: unknown, @CurrentUser() user: AuthUser): Promise<LinkCandidate[]> {
+    return this.users.candidates(parseOrThrow(linkCandidatesQuery, query), actorOf(user));
   }
 
   @Get(':id')
@@ -73,7 +72,7 @@ export class UsersController {
     return this.creator.create(parseOrThrow(userCreateSchema, body), actorOf(user));
   }
 
-  /** 403 permission_not_held, 409 role_change_linked / last_admin / self_lockout / email_taken / phone_taken. */
+  /** 403 permission_not_held / system_admin_only / admin_role_only, 409 role_change_linked / last_admin / self_lockout / email_taken / phone_taken. */
   @Patch(':id')
   @Permissions('users.write')
   update(@Param('id', uuid) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<UserDetail> {
@@ -88,6 +87,7 @@ export class UsersController {
     return this.lifecycle.disable(id, parseOrThrow(userDisableSchema, body ?? {}), actorOf(user));
   }
 
+  /** 409 self_lockout (nobody re-enables themselves). */
   @Post(':id/enable')
   @HttpCode(200)
   @Permissions('users.write')

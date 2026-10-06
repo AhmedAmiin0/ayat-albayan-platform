@@ -1,6 +1,11 @@
 import type { Json } from '@ab/db';
 
-const SECRET_KEY = /pass|token|secret|link|credential|jwt/i;
+/**
+ * A secret key: pass / token / secret / jwt anywhere in the name, `link` or `credential` only as its
+ * LAST word (action_link, recoveryLink, credential), so audit keys such as `linked` and
+ * `credential_mode` survive.
+ */
+const SECRET_KEY = /pass|token|secret|jwt|link$|credential$/i;
 
 /** The audit trail never holds a secret: any key that looks like one is dropped, at any depth. */
 export function redact(value: Json): Json {

@@ -59,6 +59,39 @@ describe('PATCH /users/:id', () => {
     expect(await codeOf(two.users.update('admin1', { role: 'assistant' }, ADMIN_ACTOR))).toBe('self_lockout');
   });
 
+  it('is all or nothing: a taken phone changes neither the email, the name nor the teacher record (409 phone_taken)', async () => {
+    const { users, store, auth } = setupUsers(admins(), [teacherLink]);
+    store.rows = store.rows.map((r) => (r.id === 'sales1' ? { ...r, phone_e164: '+966501234567' } : r));
+    auth.users.set('t1', { email: 't1@example.com', banned: false });
+    const wanted = { email: 'fresh@example.com', full_name: 'اسم جديد', phone_e164: '+966501234567' };
+    expect(await codeOf(users.update('t1', wanted, ADMIN_ACTOR))).toBe('phone_taken');
+    expect(store.rows.find((r) => r.id === 't1')).toMatchObject({ full_name: 'User t1', phone_e164: null });
+    expect(store.synced).toEqual([]);
+    expect(auth.users.get('t1')?.email).toBe('t1@example.com');
+    expect(auth.calls).toEqual([]);
+  });
+
+  it('also refuses a phone held by another teacher record, before writing anything', async () => {
+    const { users, store, auth } = setupUsers(admins(), [teacherLink]);
+    store.otherTeacherPhones = ['+201001234567'];
+    expect(await codeOf(users.update('t1', { full_name: 'اسم جديد', phone_e164: '+201001234567' }, ADMIN_ACTOR))).toBe('phone_taken');
+    expect(store.rows.find((r) => r.id === 't1')?.full_name).toBe('User t1');
+    expect(store.synced).toEqual([]);
+    expect(auth.calls).toEqual([]);
+  });
+
+  it('changes the auth email last: a refused profile write leaves the email alone', async () => {
+    const { users, store, auth, cache } = setupUsers(admins());
+    const clear = vi.spyOn(cache, 'clear');
+    store.guardLost = true;
+    expect(await codeOf(users.update('sales1', { role: 'assistant', email: 'fresh@example.com' }, ADMIN_ACTOR))).toBe('last_admin');
+    expect(auth.calls).toEqual([]);
+    expect(clear).not.toHaveBeenCalled();
+    store.guardLost = false;
+    await users.update('sales1', { role: 'assistant', email: 'fresh@example.com' }, ADMIN_ACTOR);
+    expect(auth.patches).toEqual([{ id: 'sales1', patch: { email: 'fresh@example.com' } }]);
+  });
+
   it('answers 404 for an unknown user and 400 for an unknown role', async () => {
     const { users } = setupUsers(admins());
     expect(await codeOf(users.update('ghost', { full_name: 'x y' }, ADMIN_ACTOR))).toBe('user_not_found');

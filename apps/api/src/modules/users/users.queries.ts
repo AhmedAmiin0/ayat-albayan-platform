@@ -1,30 +1,41 @@
-import type { UsersListQuery } from '@ab/shared';
+import type { LinkKind, UsersListQuery } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
+import { guardedError, phoneAware } from './users.errors';
 import * as links from './users.links.queries';
 import { mapListRow } from './users.rows';
-import type { LinkKind } from '@ab/shared';
 import type { NewProfile, NewTeacher, ProfilePatch, RefRow, StaffProfile, UserRow, UserStore } from './users.store';
 
 const PROFILE = 'id, full_name, role, role_id, disabled_at, disabled_reason, phone_e164, locale, tz, created_at';
 const STAFF_ROLES = ['admin', 'teacher', 'assistant', 'sales'] as const;
 
-/** UserStore on the service-role client (migrations 20261006000281-285). */
+/** The admin_list_users arguments of one page (unset filters are left out). */
+const listArgs = (q: UsersListQuery, lim: number, off: number) => ({
+  ...(q.q && { q: q.q }),
+  ...(q.role && { role: q.role }),
+  ...(q.status && { status: q.status }),
+  lim,
+  off,
+});
+
+/** UserStore on the service-role client (migrations 20261006000281-288). */
 @Injectable()
 export class UsersQueries implements UserStore {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async list(query: UsersListQuery): Promise<{ rows: UserRow[]; total: number }> {
-    const { data, error } = await this.db.rpc('admin_list_users', {
-      ...(query.q && { q: query.q }),
-      ...(query.role && { role: query.role }),
-      ...(query.status && { status: query.status }),
-      lim: query.pageSize,
-      off: (query.page - 1) * query.pageSize,
-    });
+    const { data, error } = await this.db.rpc('admin_list_users', listArgs(query, query.pageSize, (query.page - 1) * query.pageSize));
     if (error) throw dbError(error);
-    return { rows: data.map(mapListRow), total: data[0]?.total ?? 0 };
+    return { rows: data.map(mapListRow), total: data[0]?.total ?? (await this.totalBeyond(query)) };
+  }
+
+  /** A page past the last has no row to carry the total: the first row of page 1 does. */
+  private async totalBeyond(query: UsersListQuery): Promise<number> {
+    if (query.page <= 1) return 0;
+    const { data, error } = await this.db.rpc('admin_list_users', listArgs(query, 1, 0));
+    if (error) throw dbError(error);
+    return data[0]?.total ?? 0;
   }
 
   async get(id: string): Promise<UserRow | null> {
@@ -69,7 +80,7 @@ export class UsersQueries implements UserStore {
 
   async updateProfile(id: string, patch: ProfilePatch): Promise<void> {
     const { error } = await this.db.from('profiles').update(patch).eq('id', id);
-    if (error) throw phoneAware(error);
+    if (error) throw guardedError(error);
   }
 
   async setDisabled(id: string, value: { by: string; reason: string | null } | null): Promise<void> {
@@ -77,7 +88,11 @@ export class UsersQueries implements UserStore {
       ? { disabled_at: new Date().toISOString(), disabled_by: value.by, disabled_reason: value.reason }
       : { disabled_at: null, disabled_by: null, disabled_reason: null };
     const { error } = await this.db.from('profiles').update(patch).eq('id', id);
-    if (error) throw dbError(error);
+    if (error) throw guardedError(error);
+  }
+
+  phoneTaken(phone: string, exceptProfile: string) {
+    return links.phoneTaken(this.db, { phone, except: exceptProfile });
   }
 
   linkTarget(kind: LinkKind, id: string) {
@@ -86,10 +101,6 @@ export class UsersQueries implements UserStore {
 
   link(kind: LinkKind, id: string, profileId: string) {
     return links.link(this.db, { kind, id, profileId });
-  }
-
-  unlink(profileId: string) {
-    return links.unlink(this.db, profileId);
   }
 
   async createTeacher(row: NewTeacher): Promise<string> {
@@ -118,11 +129,4 @@ export class UsersQueries implements UserStore {
     if (error) throw dbError(error);
     return data?.key ?? null;
   }
-}
-
-import { conflict } from '../scheduling/errors';
-
-/** A unique violation on a phone is the admin's mistake (409 phone_taken), not a server error. */
-function phoneAware(error: Parameters<typeof dbError>[0]): Error {
-  return error.code === '23505' ? conflict('phone_taken') : dbError(error);
 }

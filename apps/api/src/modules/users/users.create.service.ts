@@ -3,10 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { badRequest, conflict, notFound } from '../scheduling/errors';
 import { recordUser } from './users.audit';
 import { prepareCredential, withLink } from './users.credential';
-import { assertRoleAssignable, chooseRole } from './users.logic';
+import { chooseRole } from './users.logic';
 import { toUserDetail } from './users.mapper';
+import { generatePassword } from './users.password';
 import { UserEffects, UserPorts } from './users.ports';
-import type { Actor } from './users.service';
+import { assertMayAssign, type Actor } from './users.rules';
 
 /** Roles whose login belongs to an existing teachers / students / guardians row. */
 const LINK_KIND: Partial<Record<UserCreate['role'], LinkKind>> = { teacher: 'teacher', student: 'student', guardian: 'guardian' };
@@ -26,12 +27,12 @@ export class UsersCreateService {
     private readonly effects: UserEffects,
   ) {}
 
-  /** 403 permission_not_held, 409 email_taken / link_taken, 400 password_* / link_target_not_found / unknown_role / role_mismatch. */
+  /** 403 permission_not_held / system_admin_only / admin_role_only, 409 email_taken / link_taken, 400 password_* / link_target_not_found / unknown_role / role_mismatch. */
   async create(input: UserCreate, actor: Actor): Promise<UserWithCredential> {
     const state = await this.ports.access.state();
     const chosen = chooseRole(state.roles, input);
     if (typeof chosen === 'string' || chosen === null) throw badRequest(chosen ?? 'unknown_role');
-    assertRoleAssignable(actor.permissions, state, chosen.record);
+    assertMayAssign(actor, state, chosen.record);
     const kind = LINK_KIND[input.role];
     if (kind && input.linked_id) await this.assertLinkable(kind, input.linked_id);
     const prepared = prepareCredential({ mode: input.credential, password: input.password, min: this.effects.config.passwordMinLength });
@@ -50,12 +51,19 @@ export class UsersCreateService {
     return { user: toUserDetail(row), credential: issued };
   }
 
-  /** The auth user: new, or one left without a profile by a failed attempt (idempotent retry). */
+  /**
+   * The auth user: new, or one left without a profile by a failed attempt (idempotent retry). An
+   * adopted login is refreshed like a new one (confirmed email, name) and gets a password of this
+   * request (a random one in link mode) with its sessions revoked: whatever the failed attempt or its
+   * owner left behind no longer opens it.
+   */
   private async login(input: UserCreate, password: string | undefined): Promise<{ id: string; adopted: boolean }> {
     const existing = await this.ports.auth.findIdByEmail(input.email);
     if (!existing) return { id: await this.ports.auth.create({ email: input.email, password, fullName: input.full_name }), adopted: false };
     if (await this.ports.store.profile(existing)) throw conflict('email_taken');
-    if (password) await this.ports.auth.update(existing, { password });
+    const fresh = password ?? generatePassword(this.effects.config.passwordMinLength);
+    await this.ports.auth.update(existing, { password: fresh, fullName: input.full_name, confirmEmail: true });
+    await this.ports.auth.revokeSessions(existing);
     return { id: existing, adopted: true };
   }
 

@@ -70,12 +70,14 @@ export interface UserStore {
   staff(): Promise<StaffProfile[]>;
   profile(id: string): Promise<StaffProfile | null>;
   upsertProfile(row: NewProfile): Promise<void>;
+  /** Role / role_id changes and disabling are guarded in the DB too (migration 287): 409 last_admin. */
   updateProfile(id: string, patch: ProfilePatch): Promise<void>;
   setDisabled(id: string, value: { by: string; reason: string | null } | null): Promise<void>;
+  /** Is the phone on another profile or on a teacher record that is not this profile's? */
+  phoneTaken(phone: string, exceptProfile: string): Promise<boolean>;
   linkTarget(kind: LinkKind, id: string): Promise<LinkTarget | null>;
   /** Sets profile_id only while it is still null; false = somebody linked it first. */
   link(kind: LinkKind, id: string, profileId: string): Promise<boolean>;
-  unlink(profileId: string): Promise<void>;
   createTeacher(row: NewTeacher): Promise<string>;
   /** The linked teacher's display name / phone follow the profile. */
   syncTeacher(profileId: string, patch: { display_name_ar?: string; phone_e164?: string | null }): Promise<void>;
@@ -86,6 +88,9 @@ export interface UserStore {
 export interface AuthPatch {
   email?: string;
   password?: string;
+  fullName?: string;
+  /** Mark the email confirmed (an adopted login). */
+  confirmEmail?: boolean;
   /** true = ban for good (until enabled again), false = lift the ban. */
   banned?: boolean;
 }
@@ -95,6 +100,7 @@ export interface AuthAdmin {
   /** Without a password the login is passwordless until a recovery link is used. */
   create(input: { email: string; password?: string; fullName: string }): Promise<string>;
   update(id: string, patch: AuthPatch): Promise<void>;
+  /** Deletes the login; its profile goes with it and the linked records' profile_id are set null by their FKs. */
   remove(id: string): Promise<void>;
   recoveryLink(email: string): Promise<string>;
   revokeSessions(id: string): Promise<void>;

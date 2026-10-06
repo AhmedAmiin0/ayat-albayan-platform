@@ -47,7 +47,9 @@ export class SupabaseAuthAdmin implements AuthAdmin {
 
   async update(id: string, patch: AuthPatch): Promise<void> {
     const { error } = await this.db.auth.admin.updateUserById(id, {
-      ...(patch.email && { email: patch.email, email_confirm: true }),
+      ...((patch.email || patch.confirmEmail) && { email_confirm: true }),
+      ...(patch.email && { email: patch.email }),
+      ...(patch.fullName && { user_metadata: { full_name: patch.fullName } }),
       ...(patch.password && { password: patch.password }),
       ...(patch.banned !== undefined && { ban_duration: patch.banned ? BAN_FOREVER : 'none' }),
     });

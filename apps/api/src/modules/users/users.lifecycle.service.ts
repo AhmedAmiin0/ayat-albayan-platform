@@ -3,11 +3,11 @@ import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '../scheduling/errors';
 import { recordUser } from './users.audit';
 import { prepareCredential, withLink } from './users.credential';
-import { adminProblem, assertOutranks, disabledCopy, replaced, without } from './users.logic';
+import { adminProblem, disabledCopy, replaced, without } from './users.logic';
 import { toUserDetail } from './users.mapper';
 import { UserEffects, UserPorts } from './users.ports';
+import { assertMayTouch, type Actor } from './users.rules';
 import type { UserRow } from './users.store';
-import type { Actor } from './users.service';
 
 /** disable / enable / reset-password / sign-out / delete. Each one clears the permission cache. */
 @Injectable()
@@ -17,11 +17,11 @@ export class UsersLifecycleService {
     private readonly effects: UserEffects,
   ) {}
 
-  /** 409 cannot_disable_self / last_admin / self_lockout. The profile is marked first: the guard refuses at once, the ban follows. */
+  /** 409 cannot_disable_self / last_admin. The profile is marked first: the guard refuses at once, the ban follows. */
   async disable(id: string, input: UserDisable, actor: Actor): Promise<UserDetail> {
     if (id === actor.id) throw conflict('cannot_disable_self');
     const { state, target } = await this.ports.access.target(id);
-    assertOutranks(actor.permissions, state, target);
+    assertMayTouch(actor, state, target);
     const problem = adminProblem(replaced(state, disabledCopy(target)));
     if (problem) throw conflict(problem);
     const before = await this.row(id);
@@ -32,9 +32,11 @@ export class UsersLifecycleService {
     return this.done({ id, actor, action: 'disable', before });
   }
 
+  /** 409 self_lockout: nobody re-enables themselves (a disabled login cannot reach the API anyway). */
   async enable(id: string, actor: Actor): Promise<UserDetail> {
+    if (id === actor.id) throw conflict('self_lockout');
     const { state, target } = await this.ports.access.target(id);
-    assertOutranks(actor.permissions, state, target);
+    assertMayTouch(actor, state, target);
     const before = await this.row(id);
     await this.ports.auth.update(id, { banned: false });
     await this.ports.store.setDisabled(id, null);
@@ -45,7 +47,7 @@ export class UsersLifecycleService {
   /** A new password (typed or generated) or a recovery link; the secret is returned once, never stored. */
   async resetPassword(id: string, input: PasswordReset, actor: Actor): Promise<UserWithCredential> {
     const { state, target } = await this.ports.access.target(id);
-    assertOutranks(actor.permissions, state, target);
+    assertMayTouch(actor, state, target);
     const row = await this.row(id);
     const prepared = prepareCredential({ mode: input.credential, password: input.password, min: this.effects.config.passwordMinLength });
     if (prepared.password) await this.ports.auth.update(id, { password: prepared.password });
@@ -57,7 +59,7 @@ export class UsersLifecycleService {
 
   async signOut(id: string, actor: Actor): Promise<void> {
     const { state, target } = await this.ports.access.target(id);
-    assertOutranks(actor.permissions, state, target);
+    assertMayTouch(actor, state, target);
     await this.ports.auth.revokeSessions(id);
     await recordUser(this.effects.audit, { actorId: actor.id, userId: id, action: 'sign_out' });
   }
@@ -66,7 +68,7 @@ export class UsersLifecycleService {
   async remove(id: string, actor: Actor): Promise<void> {
     if (id === actor.id) throw conflict('cannot_delete_self');
     const { state, target } = await this.ports.access.target(id);
-    assertOutranks(actor.permissions, state, target);
+    assertMayTouch(actor, state, target);
     const problem = adminProblem(without(state, id));
     if (problem) throw conflict(problem);
     const history = (await this.ports.store.references(id)).filter((r) => r.kind === 'history');
@@ -77,7 +79,8 @@ export class UsersLifecycleService {
       });
     }
     const before = await this.row(id);
-    await this.ports.store.unlink(id);
+    // The auth user goes first; the profile row goes with it, and the teachers / guardians / students
+    // profile_id foreign keys (on delete set null) release the linked record: no separate unlink.
     await this.ports.auth.remove(id);
     this.effects.cache.clear();
     await recordUser(this.effects.audit, { actorId: actor.id, userId: id, action: 'delete', before });

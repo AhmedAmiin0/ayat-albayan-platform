@@ -43,6 +43,12 @@ describe('SupabaseAuthAdmin', () => {
     expect(api.updateUserById).toHaveBeenLastCalledWith('u1', { email: 'new@example.com', email_confirm: true });
   });
 
+  it('refreshes an adopted login: confirmed email, name in the metadata, new password', async () => {
+    const { svc, api } = admin();
+    await svc.update('u1', { confirmEmail: true, fullName: 'علي', password: 'long-enough-1' });
+    expect(api.updateUserById).toHaveBeenLastCalledWith('u1', { email_confirm: true, user_metadata: { full_name: 'علي' }, password: 'long-enough-1' });
+  });
+
   it('builds the recovery link to the web set-password page and never leaks an error body', async () => {
     const { svc, api } = admin();
     expect(await svc.recoveryLink('a@example.com')).toBe('https://link.example.test/x');

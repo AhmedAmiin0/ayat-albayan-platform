@@ -32,19 +32,36 @@ describe('disable / enable', () => {
     const { lifecycle } = setupUsers(people());
     expect(await codeOf(lifecycle.disable('admin1', {}, ADMIN_ACTOR))).toBe('cannot_disable_self');
     await lifecycle.disable('admin2', {}, ADMIN_ACTOR);
-    const other: Actor = { id: 't1', permissions: ADMIN_ACTOR.permissions };
+    const other: Actor = { id: 'admin2', permissions: ADMIN_ACTOR.permissions };
     expect(await codeOf(lifecycle.disable('admin1', {}, other))).toBe('last_admin');
   });
 
-  it('refuses disabling a user above the actor (403 permission_not_held)', async () => {
+  it('refuses disabling a user above the actor (403 permission_not_held; a system admin only by a system admin)', async () => {
     const { lifecycle } = setupUsers(people());
     const limited: Actor = { id: 'x', permissions: ['users.write'] };
-    expect(await codeOf(lifecycle.disable('admin2', {}, limited))).toBe('permission_not_held');
+    expect(await codeOf(lifecycle.disable('t1', {}, limited))).toBe('permission_not_held');
+    expect(await codeOf(lifecycle.disable('admin2', {}, limited))).toBe('system_admin_only');
   });
 
   it('disables a student login without touching the admins check', async () => {
     const { lifecycle } = setupUsers(people());
     expect((await lifecycle.disable('s1', {}, ADMIN_ACTOR)).status).toBe('disabled');
+  });
+
+  it('nobody enables themselves (409 self_lockout)', async () => {
+    const { lifecycle, auth } = setupUsers(people());
+    expect(await codeOf(lifecycle.enable('admin1', ADMIN_ACTOR))).toBe('self_lockout');
+    expect(auth.calls).toEqual([]);
+  });
+
+  it('answers 409 last_admin and bans nobody when the database guard wins a race the API check lost', async () => {
+    const { lifecycle, store, auth, cache } = setupUsers(people());
+    const clear = vi.spyOn(cache, 'clear');
+    store.guardLost = true;
+    expect(await codeOf(lifecycle.disable('t1', {}, ADMIN_ACTOR))).toBe('last_admin');
+    expect(store.rows.find((r) => r.id === 't1')?.disabled_at).toBeNull();
+    expect(auth.calls).toEqual([]);
+    expect(clear).not.toHaveBeenCalled();
   });
 });
 
@@ -78,12 +95,13 @@ describe('reset-password / sign-out', () => {
 });
 
 describe('DELETE /users/:id', () => {
-  it('deletes a user without history: unlinks the record first, then removes the login', async () => {
-    const { lifecycle, store, auth } = setupUsers(people(), [teacherLink]);
+  it('deletes the login and nothing else: the foreign keys release the linked record (no unlink step)', async () => {
+    const { lifecycle, store, auth, cache } = setupUsers(people(), [teacherLink]);
+    const clear = vi.spyOn(cache, 'clear');
     store.refs['t1'] = [{ ref_table: 'teachers', ref_column: 'profile_id', kind: 'link', n: 1 }];
     await lifecycle.remove('t1', ADMIN_ACTOR);
-    expect(store.links[0]?.profile_id).toBeNull();
-    expect(auth.calls).toContain('remove:t1');
+    expect(auth.calls).toEqual(['remove:t1']);
+    expect(clear).toHaveBeenCalledTimes(1);
   });
 
   it('refuses with 409 users_has_history, the table counts and a disable hint', async () => {
@@ -96,9 +114,9 @@ describe('DELETE /users/:id', () => {
   });
 
   it('cannot delete yourself or the last active admin', async () => {
-    const { lifecycle } = setupUsers([row('admin1', 'admin'), row('t1', 'teacher')]);
+    const { lifecycle } = setupUsers([row('admin1', 'admin'), row('admin2', 'admin', { disabled_at: 'now' })]);
     expect(await codeOf(lifecycle.remove('admin1', ADMIN_ACTOR))).toBe('cannot_delete_self');
-    const other: Actor = { id: 't1', permissions: ADMIN_ACTOR.permissions };
+    const other: Actor = { id: 'admin2', permissions: ADMIN_ACTOR.permissions };
     expect(await codeOf(lifecycle.remove('admin1', other))).toBe('last_admin');
   });
 

@@ -48,6 +48,19 @@ describe('POST /users', () => {
     expect(await codeOf(creator.create(base, ADMIN_ACTOR))).toBe('email_taken');
   });
 
+  it('refreshes an adopted login: confirmed email, name, a random password in link mode, sessions revoked', async () => {
+    const { creator, auth } = setupUsers();
+    auth.users.set('orphan', { email: 'new@example.com', password: 'left-by-a-failed-attempt', banned: false });
+    const out = await creator.create({ ...base, credential: 'link' }, ADMIN_ACTOR);
+    const password = auth.users.get('orphan')?.password ?? '';
+    expect(out.credential?.kind).toBe('link');
+    expect(password).not.toBe('left-by-a-failed-attempt');
+    expect(password.length).toBeGreaterThanOrEqual(16);
+    expect(out.credential?.value).not.toContain(password);
+    expect(auth.patches[0]).toMatchObject({ id: 'orphan', patch: { confirmEmail: true, fullName: 'علي أحمد' } });
+    expect(auth.calls).toContain('revoke:orphan');
+  });
+
   it('links an existing student to the new login and refuses one that already has a login (409 link_taken)', async () => {
     const { creator, store } = setupUsers([row('admin1', 'admin')], [student()]);
     const out = await creator.create({ ...base, role: 'student', linked_id: 's1' }, ADMIN_ACTOR);

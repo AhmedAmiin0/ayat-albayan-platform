@@ -25,6 +25,13 @@ describe('UsersQueries', () => {
     expect(out).toEqual({ rows: [], total: 0 });
   });
 
+  it('reports the real total for a page beyond the last (one more call for the first row of page 1)', async () => {
+    const { db, calls } = fakeDb({ 'rpc:admin_list_users': [{ data: [] }, { data: [listRow] }] });
+    const out = await new UsersQueries(db).list({ page: 9, pageSize: 10, status: 'active' });
+    expect(out).toEqual({ rows: [], total: 7 });
+    expect(calls.filter((c) => c.method === 'rpc').map((c) => c.args[0])).toEqual([{ status: 'active', lim: 10, off: 80 }, { status: 'active', lim: 1, off: 0 }]);
+  });
+
   it('maps user_references rows and tells links from history', async () => {
     const { db } = fakeDb({ 'rpc:user_references': [{ data: [
       { ref_table: 'teachers', ref_column: 'profile_id', kind: 'link', n: 1 },
@@ -41,6 +48,16 @@ describe('UsersQueries', () => {
     await expect(new UsersQueries(dup.db).updateProfile('u1', { phone_e164: '+966501234567' })).rejects.toMatchObject({ response: { code: 'phone_taken' } });
     const bad = fakeDb({ profiles: [{ error: { code: 'XX000', message: 'boom' } }] });
     await expect(new UsersQueries(bad.db).updateProfile('u1', { tz: 'Asia/Dubai' })).rejects.toThrow(/boom/);
+  });
+
+  it('turns the database last-admin guard (P0001 last_admin) into 409 on a role change and on disable', async () => {
+    const raised = { error: { code: 'P0001', message: 'last_admin' } };
+    const role = fakeDb({ profiles: [raised] });
+    await expect(new UsersQueries(role.db).updateProfile('u1', { role: 'sales', role_id: null })).rejects.toMatchObject({ response: { code: 'last_admin' } });
+    const off = fakeDb({ profiles: [raised] });
+    await expect(new UsersQueries(off.db).setDisabled('u1', { by: 'a1', reason: null })).rejects.toMatchObject({ response: { code: 'last_admin' } });
+    const other = fakeDb({ profiles: [{ error: { code: 'P0001', message: 'something_else' } }] });
+    await expect(new UsersQueries(other.db).setDisabled('u1', null)).rejects.toThrow(/something_else/);
   });
 
   it('stamps disabled_at / by / reason, and clears them on enable', async () => {

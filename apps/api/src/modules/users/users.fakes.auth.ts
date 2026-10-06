@@ -4,6 +4,8 @@ import type { AuthAdmin, AuthPatch } from './users.store';
 export class FakeAuthAdmin implements AuthAdmin {
   users = new Map<string, { email: string; password?: string | undefined; banned: boolean }>();
   calls: string[] = [];
+  /** What each update asked for (the secrets in it are the fake's own). */
+  patches: { id: string; patch: AuthPatch }[] = [];
   private seq = 0;
 
   async findIdByEmail(email: string) {
@@ -22,6 +24,7 @@ export class FakeAuthAdmin implements AuthAdmin {
     const u = this.users.get(id) ?? { email: '', banned: false };
     this.users.set(id, { ...u, ...(patch.email && { email: patch.email }), ...(patch.password && { password: patch.password }), ...(patch.banned !== undefined && { banned: patch.banned }) });
     this.calls.push(`update:${id}`);
+    this.patches.push({ id, patch });
   }
 
   async remove(id: string) {

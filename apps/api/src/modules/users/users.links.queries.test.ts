@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
-import { candidates, link, linkTarget, linkedOf } from './users.links.queries';
+import { candidates, link, linkTarget, linkedOf, phoneTaken } from './users.links.queries';
 
 describe('link queries', () => {
   it('finds a student by name or AB code, only without a login, with wildcards neutralised', async () => {
@@ -36,5 +36,17 @@ describe('link queries', () => {
   it('finds the record a profile is linked to', async () => {
     const { db } = fakeDb({ teachers: [{ data: null }], students: [{ data: { id: 's1', name: 'سارة', code: 'AB-0183' } }], guardians: [{ data: null }] });
     expect(await linkedOf(db, 'p1')).toEqual({ kind: 'student', id: 's1', name: 'سارة', code: 'AB-0183' });
+  });
+
+  it('sees a phone as taken by another profile, or by another teacher record when the profile owns one', async () => {
+    const ctx = { phone: '+966501234567', except: 'p1' };
+    const profile = fakeDb({ profiles: [{ data: [{ id: 'p2' }] }], teachers: [{ data: [] }, { data: null }] });
+    expect(await phoneTaken(profile.db, ctx)).toBe(true);
+    const teacher = fakeDb({ profiles: [{ data: [] }], teachers: [{ data: [{ profile_id: 'p3' }] }, { data: { id: 't1' } }] });
+    expect(await phoneTaken(teacher.db, ctx)).toBe(true);
+    const noRecord = fakeDb({ profiles: [{ data: [] }], teachers: [{ data: [{ profile_id: 'p3' }] }, { data: null }] });
+    expect(await phoneTaken(noRecord.db, ctx)).toBe(false);
+    const own = fakeDb({ profiles: [{ data: [{ id: 'p1' }] }], teachers: [{ data: [{ profile_id: 'p1' }] }, { data: { id: 't1' } }] });
+    expect(await phoneTaken(own.db, ctx)).toBe(false);
   });
 });

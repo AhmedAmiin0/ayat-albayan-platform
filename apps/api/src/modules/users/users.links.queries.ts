@@ -30,11 +30,21 @@ export async function link(db: Db, ctx: { kind: LinkKind; id: string; profileId:
   return data.length > 0;
 }
 
-export async function unlink(db: Db, profileId: string): Promise<void> {
-  for (const table of ['teachers', 'students', 'guardians'] as const) {
-    const { error } = await db.from(table).update({ profile_id: null }).eq('profile_id', profileId);
-    if (error) throw dbError(error);
-  }
+/**
+ * profiles.phone_e164 and teachers.phone_e164 are each unique (at most one row per phone). Taken =
+ * another profile has it, or another teacher record has it while the profile `except` owns a teacher
+ * record (the PATCH copies the phone to it).
+ */
+export async function phoneTaken(db: Db, ctx: { phone: string; except: string }): Promise<boolean> {
+  const [p, t, mine] = await Promise.all([
+    db.from('profiles').select('id').eq('phone_e164', ctx.phone),
+    db.from('teachers').select('profile_id').eq('phone_e164', ctx.phone),
+    db.from('teachers').select('id').eq('profile_id', ctx.except).maybeSingle(),
+  ]);
+  if (p.error) throw dbError(p.error);
+  if (t.error) throw dbError(t.error);
+  if (mine.error) throw dbError(mine.error);
+  return p.data.some((r) => r.id !== ctx.except) || (mine.data !== null && t.data.some((r) => r.profile_id !== ctx.except));
 }
 
 export async function syncTeacher(db: Db, ctx: { profileId: string; patch: { display_name_ar?: string; phone_e164?: string | null } }): Promise<void> {
