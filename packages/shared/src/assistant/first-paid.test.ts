@@ -6,7 +6,7 @@ const sub = (id: string, price: number, payments: PaymentFact[]): SubscriptionFa
   ({ id, price, currency: 'SAR', created_at: '2026-09-01T00:00:00Z', payments });
 const TERMS = { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' } as const;
 const plan = (subscriptions: SubscriptionFact[], over: Partial<Parameters<typeof planCommission>[0]> = {}) =>
-  planCommission({ broughtBy: 'a1', terms: TERMS, tz: 'Asia/Riyadh', subscriptions, ...over });
+  planCommission({ broughtBy: 'a1', broughtAt: '2026-09-15T10:00:00Z', terms: TERMS, tz: 'Asia/Riyadh', subscriptions, ...over });
 
 describe('subscriptionFullAt (twin of subscription_full_at)', () => {
   it('is null until the net paid reaches the price, then the date of the completing payment', () => {
@@ -71,9 +71,16 @@ describe('planCommission (twin of evaluate_assistant_commission)', () => {
     expect(plan([paid(250, '2026-09-30T21:30:00Z')])?.amount).toBe(25); // 00:30 on 1 Oct in Riyadh
   });
 
+  it('is nothing for a student who had already paid in full before they were brought (nothing is retroactive)', () => {
+    const s = [paid(250, '2026-10-05T10:00:00Z')];
+    expect(plan(s, { broughtAt: '2026-10-06T08:00:00Z' })).toBeNull();
+    expect(plan(s, { broughtAt: '2026-10-05T20:00:00Z' })?.amount).toBe(25); // the same day: it counts
+    expect(plan(s, { broughtAt: '2026-10-05T22:30:00Z' })).toBeNull(); // 01:30 on the 6th in Riyadh
+  });
+
   it('is nothing without brought_by, without terms, or for a free package', () => {
     const s = [paid(250, '2026-10-05T10:00:00Z')];
-    expect(plan(s, { broughtBy: null })).toBeNull();
+    expect(plan(s, { broughtBy: null, broughtAt: null })).toBeNull();
     expect(plan(s, { terms: null })).toBeNull();
     expect(plan([paid(0, '2026-10-05T10:00:00Z')])).toBeNull();
   });

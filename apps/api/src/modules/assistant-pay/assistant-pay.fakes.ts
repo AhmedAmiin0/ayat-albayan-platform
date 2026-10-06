@@ -32,12 +32,12 @@ const verify: TokenVerifier = async (token) => {
 
 export async function assistantApp() {
   const my = { students: vi.fn(), payments: vi.fn(), tz: vi.fn(), commissions: vi.fn(), adjustments: vi.fn() };
-  const terms = { assistants: vi.fn(), isAssistant: vi.fn(), all: vi.fn(), get: vi.fn(), upsert: vi.fn(), uncommissioned: vi.fn(), broughtBy: vi.fn() };
+  const terms = { assistants: vi.fn(), isAssistant: vi.fn(), all: vi.fn(), get: vi.fn(), uncommissioned: vi.fn(), broughtBy: vi.fn() };
   const statements = { list: vi.fn(), get: vi.fn() };
-  const ledger = { list: vi.fn(), recentAdjustment: vi.fn() };
+  const ledger = { list: vi.fn() };
   const rpc = {
     generate: vi.fn(), approve: vi.fn(), reopen: vi.fn(), pay: vi.fn(), unpay: vi.fn(),
-    adjust: vi.fn(), voidCommission: vi.fn(), broughtBy: vi.fn(), evaluate: vi.fn(),
+    adjust: vi.fn(), setTerms: vi.fn(), voidCommission: vi.fn(), broughtBy: vi.fn(), evaluate: vi.fn(),
   };
   const receipts = { check: vi.fn(), uploadUrl: vi.fn(), download: vi.fn() };
   const audit = { record: vi.fn() };

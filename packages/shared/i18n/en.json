@@ -987,7 +987,11 @@
       "invalid_transition": "This statement cannot change from its current state",
       "statement_not_found": "This statement does not exist",
       "empty_statement": "This statement has no lines, it cannot be approved",
-      "reversal_in_later_statement": "A later statement carries a reversal: reopen or unpay it first"
+      "reversal_in_later_statement": "A later statement carries a reversal: reopen or unpay it first",
+      "commission_start_in_past": "The commission cannot start on a past date",
+      "commission_start_earlier": "The commission start date cannot move earlier, only later",
+      "salary_start_in_past": "The salary cannot start on a past date",
+      "salary_start_earlier": "The salary start date cannot move earlier, only later"
     },
     "ledger": {
       "filters": "Filter commissions",
@@ -1230,6 +1234,10 @@
     },
     "reportLink": "Lesson recording",
     "reportLinkOf": "Open the recording of the lesson {when}"
+  },
+  "assistantReasons": {
+    "payment_voided": "Commission reversed: the subscription is no longer fully paid",
+    "student_merged": "Commission reversed: the student's record was merged into another record"
   },
   "assistantPortal": {
     "title": "Assistant",

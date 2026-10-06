@@ -7,7 +7,7 @@ import { COMMISSION_SELECT, type CommissionRow } from './commissions.mapper';
 /** The admin's ledger cap: the newest rows first; narrow by assistant, status or date for more. */
 export const LEDGER_LIMIT = 500;
 
-/** assistant_commissions and assistant_adjustments reads for the admin (service role; the controllers guard). */
+/** assistant_commissions reads for the admin (service role; the controllers guard). */
 @Injectable()
 export class CommissionsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -25,26 +25,5 @@ export class CommissionsQueries {
       .overrideTypes<CommissionRow[], { merge: false }>();
     if (error) throw dbError(error);
     return data;
-  }
-
-  /**
-   * The same manual adjustment by the same admin in the last minute: a double click or a retry. The RPC has no
-   * idempotency key, so this is the replay guard. null when there is none.
-   */
-  async recentAdjustment(a: { assistantId: string; amount: number; currency: string; reason: string; actorId: string }): Promise<string | null> {
-    const since = new Date(Date.now() - 60_000).toISOString();
-    const { data, error } = await this.db
-      .from('assistant_adjustments')
-      .select('id')
-      .eq('assistant_id', a.assistantId)
-      .eq('kind', 'manual')
-      .eq('amount', a.amount)
-      .eq('currency', a.currency)
-      .eq('reason', a.reason)
-      .eq('created_by', a.actorId)
-      .gte('created_at', since)
-      .limit(1);
-    if (error) throw dbError(error);
-    return data[0]?.id ?? null;
   }
 }

@@ -14,7 +14,7 @@ const commissionTerms = z
     /** percent: 0-100 points; fixed: an amount in `currency`. */
     value: z.number().positive().max(9_999_999_999).refine((v) => Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, 'too_many_decimals'),
     currency: currencyIso.nullish(),
-    /** No retroactive commission: only subscriptions fully paid on or after this day earn one. */
+    /** No retroactive commission: only subscriptions fully paid on or after this day earn one. A new part cannot start in the past and a saved day cannot move earlier (termStartError). */
     startsOn: localDate,
   })
   .refine((t) => (t.type === 'fixed' ? !!t.currency : !t.currency), { message: 'currency_fixed_only', path: ['currency'] })
@@ -51,6 +51,8 @@ export const assistantAdjustmentSchema = z.object({
     .refine((v) => v !== 0 && Math.abs(v) <= 9_999_999_999 && Math.abs(v * 100 - Math.round(v * 100)) < 1e-6, 'invalid_amount'),
   currency: currencyIso,
   reason: z.string().trim().min(3, 'reason_required').max(500),
+  /** Idempotency key (rule 8): the client makes one per submit and repeats it on a retry; a repeat returns the first row. */
+  requestId: z.uuid().optional(),
 });
 
 /** POST /assistant-pay/statements/:id/pay: the payout's body (paidAt, method, note, receiptPath). */

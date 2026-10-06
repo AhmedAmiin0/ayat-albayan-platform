@@ -987,7 +987,11 @@
       "invalid_transition": "لا يمكن تغيير حالة هذا الكشف من حالته الحالية",
       "statement_not_found": "هذا الكشف غير موجود",
       "empty_statement": "لا بنود في هذا الكشف، لا يمكن اعتماده",
-      "reversal_in_later_statement": "يوجد خصم في كشف لاحق، أعد فتح ذلك الكشف أو ألغِ دفعه أولًا"
+      "reversal_in_later_statement": "يوجد خصم في كشف لاحق، أعد فتح ذلك الكشف أو ألغِ دفعه أولًا",
+      "commission_start_in_past": "لا يجوز أن يبدأ احتساب العمولة في تاريخ مضى",
+      "commission_start_earlier": "لا يمكن تقديم تاريخ بدء العمولة، يمكن تأخيره فقط",
+      "salary_start_in_past": "لا يجوز أن يبدأ الراتب في تاريخ مضى",
+      "salary_start_earlier": "لا يمكن تقديم تاريخ بدء الراتب، يمكن تأخيره فقط"
     },
     "ledger": {
       "filters": "تصفية العمولات",
@@ -1230,6 +1234,10 @@
     },
     "reportLink": "تسجيل الحلقة",
     "reportLinkOf": "فتح تسجيل حلقة {when}"
+  },
+  "assistantReasons": {
+    "payment_voided": "أُلغيت العمولة لأن سداد الاشتراك لم يعد مكتملًا",
+    "student_merged": "أُلغيت العمولة لأن سجلّ الطالب دُمج مع سجلّ آخر"
   },
   "assistantPortal": {
     "title": "مساعد/ة",

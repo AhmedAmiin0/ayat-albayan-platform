@@ -54,16 +54,24 @@ export class AssistantRpc {
     if (error) throw assistantError(error);
   }
 
-  async adjust(input: { assistantId: string; amount: number; currency: string; reason: string; actorId: string }): Promise<string> {
+  /** A retry carries the same requestId (unique per assistant) and gets the first adjustment's id back. */
+  async adjust(input: { assistantId: string; amount: number; currency: string; reason: string; actorId: string; requestId?: string | undefined }): Promise<string> {
     const { data, error } = await this.db.rpc('add_assistant_adjustment', {
       p_assistant: input.assistantId,
       p_amount: input.amount,
       p_currency: input.currency,
       p_reason: input.reason,
       p_actor: input.actorId,
+      ...(input.requestId ? { p_request: input.requestId } : {}),
     });
     if (error) throw assistantError(error);
     return data;
+  }
+
+  /** Both parts of the terms in one transaction; the start days are checked there (commission_start_in_past, ..._earlier, salary_...). */
+  async setTerms(input: { assistantId: string; columns: Json; actorId: string }): Promise<void> {
+    const { error } = await this.db.rpc('set_assistant_terms', { p_assistant: input.assistantId, p: input.columns, p_actor: input.actorId });
+    if (error) throw assistantError(error);
   }
 
   async voidCommission(input: { commissionId: string; actorId: string; reason: string }): Promise<void> {

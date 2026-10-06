@@ -86,18 +86,24 @@ export interface PlannedCommission extends CommissionAmount {
 
 /**
  * The commission a student would earn: null unless somebody brought them, the assistant has terms, the
- * first fully paid subscription became fully paid on or after startsOn (in the assistant's tz) and the
- * amount is above zero. A later subscription never earns one: only the FIRST counts.
+ * first fully paid subscription became fully paid on or after BOTH startsOn and the day the student was
+ * brought (in the assistant's tz: nothing is retroactive, so attributing a student who already paid in
+ * full earns nothing) and the amount is above zero. A later subscription never earns one: only the
+ * FIRST counts.
  */
 export function planCommission(input: {
   broughtBy: string | null;
+  /** When the student was brought (students.brought_at, an instant). */
+  broughtAt: string | null;
   terms: CommissionTermsInput | null;
   tz: string;
   subscriptions: readonly SubscriptionFact[];
 }): PlannedCommission | null {
-  if (!input.broughtBy || !input.terms) return null;
+  if (!input.broughtBy || !input.broughtAt || !input.terms) return null;
   const first = firstFullyPaid(input.subscriptions);
-  if (!first || localDay(first.fullAt, input.tz) < input.terms.startsOn) return null;
+  if (!first) return null;
+  const day = localDay(first.fullAt, input.tz);
+  if (day < input.terms.startsOn || day < localDay(input.broughtAt, input.tz)) return null;
   const { price, currency, id } = first.subscription;
   const amount = computeCommission({ ...input.terms, base: price, baseCurrency: currency });
   return amount ? { ...amount, subscriptionId: id, fullAt: first.fullAt, base: price, baseCurrency: currency } : null;

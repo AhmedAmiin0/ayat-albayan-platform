@@ -1,4 +1,3 @@
-import type { TablesInsert } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { dbError } from '../teachers/http';
@@ -41,12 +40,6 @@ export class TermsQueries {
 
   async get(assistantId: string): Promise<TermsRow | null> {
     const { data, error } = await this.db.from('assistant_terms').select('*').eq('assistant_id', assistantId).maybeSingle();
-    if (error) throw dbError(error);
-    return data;
-  }
-
-  async upsert(row: TablesInsert<'assistant_terms'>): Promise<TermsRow> {
-    const { data, error } = await this.db.from('assistant_terms').upsert(row, { onConflict: 'assistant_id' }).select('*').single();
     if (error) throw dbError(error);
     return data;
   }

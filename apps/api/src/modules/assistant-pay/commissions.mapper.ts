@@ -1,5 +1,6 @@
 import type { Tables } from '@ab/db';
 import type { AssistantCommissionView } from '@ab/shared';
+import { reasonText } from './reasons';
 
 export type CommissionRow = Tables<'assistant_commissions'> & {
   assistant: { id: string; full_name: string } | null;
@@ -22,7 +23,7 @@ export function toCommissionView(row: CommissionRow): AssistantCommissionView {
     currency: row.currency,
     earned_at: row.earned_at,
     status: row.status,
-    void_reason: row.void_reason,
+    void_reason: reasonText(row.void_reason),
     voided_at: row.voided_at,
     statement_id: row.statement_id,
   };

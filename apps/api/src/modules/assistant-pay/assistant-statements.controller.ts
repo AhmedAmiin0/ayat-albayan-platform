@@ -18,6 +18,7 @@ import { StatementsService } from './statements.service';
 /**
  * The assistants' monthly statements (R-ASST-03, R-ASST-05): salary + commissions +/- adjustments per
  * currency, draft -> approved -> paid. Every transition answers 409 invalid_transition when repeated.
+ * approve, reopen and unpay need assistantpay.approve; reading and generating need read / write.
  */
 @ApiTags('assistant-pay')
 @ApiBearerAuth()
@@ -59,9 +60,10 @@ export class AssistantStatementsController {
     return this.statements.approve(id, user.id);
   }
 
-  /** approved -> draft. */
+  /** approved -> draft. Takes back an approval, so it needs the approver's permission (assistantpay.approve). */
   @Post('statements/:id/reopen')
   @HttpCode(200)
+  @Permissions('assistantpay.approve')
   reopen(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<AssistantStatementView> {
     return this.statements.reopen(id, user.id);
   }
@@ -73,9 +75,10 @@ export class AssistantStatementsController {
     return this.statements.pay(id, parseOrThrow(assistantStatementPaySchema, body ?? {}), user.id);
   }
 
-  /** paid -> approved, with a reason. */
+  /** paid -> approved, with a reason. Reverses a payout, so it needs assistantpay.approve as well. */
   @Post('statements/:id/unpay')
   @HttpCode(200)
+  @Permissions('assistantpay.approve')
   unpay(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<AssistantStatementView> {
     const { reason } = parseOrThrow(assistantReasonSchema, body ?? {});
     return this.statements.unpay({ id, reason, actorId: user.id });

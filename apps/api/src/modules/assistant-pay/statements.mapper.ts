@@ -1,5 +1,6 @@
 import type { Json, Tables } from '@ab/db';
 import type { AssistantStatementLineView, AssistantStatementView, CurrencyTotals, StatementLineKind } from '@ab/shared';
+import { reasonText } from './reasons';
 
 type LineRow = {
   kind: string;
@@ -32,7 +33,7 @@ export function readTotals(v: Json): Record<string, CurrencyTotals> {
   return out;
 }
 
-/** A whitelist of columns: the receipt path, the actors' ids and the row's links never leave. */
+/** A whitelist of columns: the receipt path, the actors' ids and the row's links never leave. A reason code of the database becomes text. */
 function toLine(l: LineRow & { kind: StatementLineKind }): AssistantStatementLineView {
   const student = l.commission?.student;
   return {
@@ -40,7 +41,7 @@ function toLine(l: LineRow & { kind: StatementLineKind }): AssistantStatementLin
     amount: Number(l.amount),
     currency: l.currency,
     student: student ? { code: student.code ?? '', name: student.name } : null,
-    reason: l.adjustment?.reason ?? null,
+    reason: reasonText(l.adjustment?.reason ?? null),
   };
 }
 

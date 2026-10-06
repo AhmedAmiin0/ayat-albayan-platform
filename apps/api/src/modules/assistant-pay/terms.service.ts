@@ -36,14 +36,17 @@ export class TermsService {
   }
 
   /**
-   * Replaces both parts (null clears one). Nothing is retroactive: the commission rule only looks at
-   * subscriptions fully paid on or after commission.startsOn, and each commission keeps the rate it was
-   * earned at. Students already brought and paid on or after that day are evaluated now.
+   * Replaces both parts (null clears one) in one RPC, which refuses a start day in the past for a new part
+   * and a start day moved earlier (400 commission_start_in_past / commission_start_earlier / salary_...).
+   * Nothing is retroactive: the commission rule only looks at subscriptions fully paid on or after
+   * commission.startsOn and the day the student was brought, and each commission keeps the rate it was
+   * earned at. Students already brought are evaluated now.
    */
   async set(input: { assistantId: string; terms: AssistantTermsInput; actorId: string }): Promise<AssistantTermsView> {
     const before = await this.get(input.assistantId);
-    const row = await this.queries.upsert(termsColumns(input.assistantId, input.terms, input.actorId));
-    const after = toTermsView(input.assistantId, row);
+    const columns = termsColumns(input.assistantId, input.terms, input.actorId);
+    await this.rpc.setTerms({ assistantId: input.assistantId, columns, actorId: input.actorId });
+    const after = toTermsView(input.assistantId, await this.queries.get(input.assistantId));
     await this.audit.record({ actorId: input.actorId, entity: 'assistant_terms', entityId: input.assistantId, action: 'set', before: { ...before }, after: { ...after } });
     if (after.commission) await this.evaluateBrought(input.assistantId);
     return after;

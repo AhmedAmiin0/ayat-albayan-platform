@@ -6,14 +6,18 @@ import type { SalesOwnership } from '../sales/sales-ownership';
 const all = (ids: readonly string[], allowed: readonly string[]): boolean => ids.every((id) => allowed.includes(id));
 
 /**
- * What an assistant (base role sales) may book (R-ASST-01): their own leads' families and their own students,
- * trial or package; never a makeup, never over a clash (the override is the admin's, R-SCH-04). A new guardian
- * must be the family of one of their leads (its phone is one of theirs): otherwise any phone could be typed in
- * to attach an existing family, and the student brought, to read its chat. 403 with the code.
+ * What an assistant (base role sales) may book (R-ASST-01): a free TRIAL for their own leads' families and their
+ * own students. Never a package or a makeup (they carry a price and an invoice: the admin's), never over a clash
+ * (the override is the admin's, R-SCH-04), never a custom meeting link or an invoice. A new guardian must be the
+ * family of one of their leads (its phone is one of theirs): otherwise any phone could be typed in to attach an
+ * existing family, and the student brought, to read its chat. 403 with the code: override_not_allowed,
+ * kind_not_allowed, meeting_link_not_allowed, invoice_not_allowed, not_your_lead, not_your_student, not_your_family.
  */
 export function assertBookingScope(req: BookingRequest, own: SalesOwnership): void {
   if (req.override) throw forbidden('override_not_allowed');
-  if (bookingKindOf(req) === 'makeup') throw forbidden('kind_not_allowed');
+  if (bookingKindOf(req) !== 'trial') throw forbidden('kind_not_allowed');
+  if (req.meetingLink) throw forbidden('meeting_link_not_allowed');
+  if (req.invoice) throw forbidden('invoice_not_allowed');
   if (req.leadId && !own.leadIds.includes(req.leadId)) throw forbidden('not_your_lead');
   if ('studentIds' in req) {
     if (!all(req.studentIds, own.studentIds)) throw forbidden('not_your_student');

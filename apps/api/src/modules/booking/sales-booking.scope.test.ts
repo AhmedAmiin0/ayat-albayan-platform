@@ -28,10 +28,24 @@ const code = (fn: () => void): string | null => {
 };
 
 describe('assertBookingScope: what an assistant may book', () => {
-  it('a new family of her own lead (its phone is hers) and her own students pass', () => {
+  it('a trial for a new family of her own lead (its phone is hers) and for her own students passes', () => {
     expect(code(() => assertBookingScope(fresh(), OWN))).toBeNull();
     expect(code(() => assertBookingScope(existing(), OWN))).toBeNull();
-    expect(code(() => assertBookingScope(existing({ package: '8', leadId: LEAD }), OWN))).toBeNull();
+    expect(code(() => assertBookingScope(existing({ leadId: LEAD }), OWN))).toBeNull();
+    expect(code(() => assertBookingScope(existing({ kind: 'trial' }), OWN))).toBeNull();
+  });
+
+  it('only a trial: a package (any size, either shape) carries a price and an invoice and is the admin', () => {
+    expect(code(() => assertBookingScope(existing({ package: '8', leadId: LEAD }), OWN))).toBe('kind_not_allowed');
+    expect(code(() => assertBookingScope(existing({ package: '12' }), OWN))).toBe('kind_not_allowed');
+    expect(code(() => assertBookingScope(fresh({ package: '8' }), OWN))).toBe('kind_not_allowed');
+  });
+
+  it('no custom meeting link and no invoice, even on a trial', () => {
+    expect(code(() => assertBookingScope(existing({ meetingLink: 'https://meet.example/own-room' }), OWN))).toBe('meeting_link_not_allowed');
+    expect(code(() => assertBookingScope(fresh({ meetingLink: 'https://meet.example/own-room' }), OWN))).toBe('meeting_link_not_allowed');
+    expect(code(() => assertBookingScope(existing({ invoice: { source: 'upload', path: 'invoices/x.pdf' } }), OWN))).toBe('invoice_not_allowed');
+    expect(code(() => assertBookingScope(existing({ meetingLink: null }), OWN))).toBeNull();
   });
 
   it('another assistant lead is not_your_lead, in both shapes', () => {

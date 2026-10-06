@@ -5,7 +5,6 @@ import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { domainError } from './booking.errors';
-import { BookingInvoices } from './booking.invoice';
 import { BookingService } from './booking.service';
 import { SalesQueries } from '../sales/sales.queries';
 import { SlotsService } from './slots.service';
@@ -41,7 +40,6 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
   const booking = { book: vi.fn(), check: vi.fn() };
   const slots = { slots: vi.fn() };
   const teachers = { list: vi.fn() };
-  const invoices = { uploadUrl: vi.fn() };
   const call = (o: { method?: 'GET' | 'POST'; url: string; token: string; body?: object }) =>
     app.inject({ method: o.method ?? 'GET', url: o.url, payload: o.body, headers: { authorization: `Bearer ${o.token}` } });
 
@@ -52,7 +50,6 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)
       .overrideProvider(TeacherOptionsService).useValue(teachers)
-      .overrideProvider(BookingInvoices).useValue(invoices)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();
@@ -72,7 +69,6 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
       { method: 'GET' as const, url: `/sales/booking/slots?teacherId=${TEACHER}&from=2026-10-11T00:00:00Z&to=2026-10-12T00:00:00Z&durationMin=45` },
       { method: 'POST' as const, url: '/sales/booking/check', body: NEW_FAMILY },
       { method: 'POST' as const, url: '/sales/booking', body: NEW_FAMILY },
-      { method: 'POST' as const, url: '/sales/booking/invoice-upload-url', body: {} },
     ];
     for (const r of routes) for (const token of ['admin', 'teacher', 'ta', 'guardian']) expect([r.url, token, (await call({ ...r, token })).statusCode]).toEqual([r.url, token, 403]);
     expect(sales.ownership).not.toHaveBeenCalled();
@@ -114,6 +110,15 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
     booking.book.mockRejectedValue(domainError(409, 'duplicate_student', { guardian_id: 'g1', candidates: [{ id: S1, name: 'ياسمين', notes: 'x' }, { id: S2, name: 'ياسمينة', notes: 'x' }] }));
     const res = await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: NEW_FAMILY });
     expect([res.statusCode, res.json()]).toEqual([409, { code: 'duplicate_student', message: 'duplicate_student', candidates: [{ id: S1, name: 'ياسمين' }] }]);
+  });
+
+  it('book: only a trial, no custom meeting link, no invoice: 403 with the code, nothing booked; no invoice upload route', async () => {
+    const refused = async (over: object) => (await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: { ...NEW_FAMILY, ...over } })).json().code;
+    expect(await refused({ package: '8' })).toBe('kind_not_allowed');
+    expect(await refused({ meetingLink: 'https://meet.example/x' })).toBe('meeting_link_not_allowed');
+    expect(await refused({ invoice: { source: 'upload', path: 'invoices/x.pdf' } })).toBe('invoice_not_allowed');
+    expect(booking.book).not.toHaveBeenCalled();
+    expect((await call({ method: 'POST', url: '/sales/booking/invoice-upload-url', token: 'salesA', body: {} })).statusCode).toBe(404);
   });
 
   it('check: the same scope, then the plain conflicts list', async () => {

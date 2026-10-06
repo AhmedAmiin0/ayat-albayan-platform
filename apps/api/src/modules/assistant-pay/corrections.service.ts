@@ -1,4 +1,4 @@
-import type { AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
+import type { AssistantAdjustmentInput, AssistantCommissionView, BroughtByInput, BroughtByResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { CommissionsQuery } from './assistant-pay.dto';
 import { AssistantRpc } from './assistant-pay.rpc';
@@ -26,10 +26,9 @@ export class CorrectionsService {
     return { id: input.commissionId };
   }
 
-  /** A repeat of the same adjustment within a minute returns the first one instead of adding a second. */
-  async adjust(input: { assistantId: string; amount: number; currency: string; reason: string; actorId: string }): Promise<{ id: string }> {
-    const first = await this.queries.recentAdjustment(input);
-    return { id: first ?? (await this.rpc.adjust(input)) };
+  /** A retry with the same requestId returns the first adjustment instead of adding a second (the RPC's unique key). */
+  async adjust(input: AssistantAdjustmentInput & { actorId: string }): Promise<{ id: string }> {
+    return { id: await this.rpc.adjust(input) };
   }
 
   /** One student or many; assistantId null clears it. 409 commission_exists while a live commission belongs to another assistant. */

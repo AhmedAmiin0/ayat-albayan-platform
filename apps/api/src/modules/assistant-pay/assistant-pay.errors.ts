@@ -2,7 +2,16 @@ import type { PostgrestError } from '@supabase/supabase-js';
 import { badRequest, conflict, notFound } from '../scheduling/errors';
 import { dbError } from '../teachers/http';
 
-const BAD = new Set(['invalid_month', 'invalid_amount', 'reason_required', 'invalid_assistant']);
+const BAD = new Set([
+  'invalid_month',
+  'invalid_amount',
+  'reason_required',
+  'invalid_assistant',
+  'commission_start_in_past',
+  'commission_start_earlier',
+  'salary_start_in_past',
+  'salary_start_earlier',
+]);
 const MISSING = new Set(['assistant_not_found', 'statement_not_found', 'commission_not_found', 'student_not_found']);
 const CONFLICT = new Set([
   'invalid_transition',

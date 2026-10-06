@@ -61,4 +61,11 @@ describe('statement and adjustment commands', () => {
     expect(assistantAdjustmentSchema.safeParse({ ...ok, amount: 1.234 }).success).toBe(false);
     expect(assistantAdjustmentSchema.safeParse({ ...ok, reason: ' ' }).success).toBe(false);
   });
+
+  it('carries an optional request key, which must be a uuid', () => {
+    const ok = { assistantId: ID, amount: -50, currency: 'SAR', reason: 'خصم' };
+    expect(assistantAdjustmentSchema.parse({ ...ok, requestId: ID }).requestId).toBe(ID);
+    expect(assistantAdjustmentSchema.parse(ok).requestId).toBeUndefined();
+    expect(assistantAdjustmentSchema.safeParse({ ...ok, requestId: 'not-a-uuid' }).success).toBe(false);
+  });
 });

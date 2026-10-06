@@ -171,7 +171,6 @@
   "SalesAdminController.people": ["admin"],
   "SalesBookingController.book": ["sales"],
   "SalesBookingController.check": ["sales"],
-  "SalesBookingController.invoiceUploadUrl": ["sales"],
   "SalesBookingOptionsController.slots": ["sales"],
   "SalesBookingOptionsController.teacherOptions": ["sales"],
   "SalesController.meetings": ["sales"],

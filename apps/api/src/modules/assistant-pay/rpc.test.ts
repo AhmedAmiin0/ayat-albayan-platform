@@ -4,7 +4,6 @@ import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
 import { assistantError } from './assistant-pay.errors';
 import { AssistantRpc } from './assistant-pay.rpc';
-import { CommissionsQueries } from './commissions.queries';
 import { TermsQueries } from './terms.queries';
 
 const pg = (code: string, message: string) => new PostgrestError({ message, details: '', hint: '', code });
@@ -15,6 +14,7 @@ const status = (e: Error): [number, unknown] => (e instanceof HttpException ? [e
 describe('assistantError: the RPC codes of migrations 272 / 273 become HTTP', () => {
   it.each([
     ['invalid_month', 400], ['invalid_amount', 400], ['reason_required', 400], ['invalid_assistant', 400],
+    ['commission_start_in_past', 400], ['commission_start_earlier', 400], ['salary_start_in_past', 400], ['salary_start_earlier', 400],
     ['assistant_not_found', 404], ['statement_not_found', 404], ['commission_not_found', 404], ['student_not_found', 404],
     ['invalid_transition', 409], ['empty_statement', 409], ['reversal_in_later_statement', 409], ['already_voided', 409], ['commission_exists', 409],
   ])('%s -> %i with the code', (code, http) => {
@@ -73,15 +73,24 @@ describe('TermsQueries.uncommissioned', () => {
   });
 });
 
-describe('CommissionsQueries.recentAdjustment: the replay guard', () => {
-  it('matches the same assistant, amount, currency, reason and admin in the last minute', async () => {
-    const { db, calls } = fakeDb({ assistant_adjustments: [{ data: [{ id: 'adj-1' }] }, { data: [] }] });
-    const q = new CommissionsQueries(db);
-    const input = { assistantId: 'a', amount: -5, currency: 'SAR', reason: 'خصم', actorId: 'adm' };
-    expect(await q.recentAdjustment(input)).toBe('adj-1');
-    expect(calls.filter((c) => c.method === 'eq').map((c) => c.args)).toEqual([
-      ['assistant_id', 'a'], ['kind', 'manual'], ['amount', -5], ['currency', 'SAR'], ['reason', 'خصم'], ['created_by', 'adm'],
+describe('AssistantRpc: terms and the adjustment request key', () => {
+  it('adjust sends p_request only when a key is given', async () => {
+    const { db, calls } = fakeDb({ 'rpc:add_assistant_adjustment': [{ data: 'adj-1' }, { data: 'adj-1' }] });
+    const rpc = new AssistantRpc(db);
+    const base = { assistantId: 'a', amount: -5, currency: 'SAR', reason: 'خصم', actorId: 'adm' };
+    expect(await rpc.adjust(base)).toBe('adj-1');
+    expect(await rpc.adjust({ ...base, requestId: 'req-1' })).toBe('adj-1');
+    expect(calls.map((c) => c.args[0])).toEqual([
+      { p_assistant: 'a', p_amount: -5, p_currency: 'SAR', p_reason: 'خصم', p_actor: 'adm' },
+      { p_assistant: 'a', p_amount: -5, p_currency: 'SAR', p_reason: 'خصم', p_actor: 'adm', p_request: 'req-1' },
     ]);
-    expect(await q.recentAdjustment(input)).toBeNull();
+  });
+
+  it('setTerms sends the columns as p and throws the start-day errors as 400', async () => {
+    const { db, argsOf } = fakeDb({ 'rpc:set_assistant_terms': [{ data: null }, err('salary_start_earlier')] });
+    const rpc = new AssistantRpc(db);
+    await rpc.setTerms({ assistantId: 'a', columns: { commission_type: null }, actorId: 'adm' });
+    expect(argsOf('rpc:set_assistant_terms', 'rpc')).toEqual([{ p_assistant: 'a', p: { commission_type: null }, p_actor: 'adm' }]);
+    expect(status(await thrown(rpc.setTerms({ assistantId: 'a', columns: {}, actorId: 'adm' })))).toEqual([400, 'salary_start_earlier']);
   });
 });
