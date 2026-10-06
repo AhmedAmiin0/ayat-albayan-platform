@@ -11,7 +11,7 @@ export interface RoleForm {
 
 export function roleForm(role: RoleView | null): RoleForm {
   if (!role) return { name_ar: '', name_en: '', base_role: 'admin', permissions: [] };
-  const base = role.base_role === 'guardian' ? 'admin' : role.base_role;
+  const base = role.base_role === 'guardian' || role.base_role === 'student' ? 'admin' : role.base_role;
   return { name_ar: role.name_ar, name_en: role.name_en ?? '', base_role: base, permissions: [...role.permissions] };
 }
 

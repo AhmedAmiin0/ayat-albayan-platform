@@ -23,6 +23,7 @@ import { StudentPayments } from './StudentPayments';
 import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/head-actions';
 import { StudentRecordings } from './StudentRecordings';
+import { CreateAccountButton } from '@/features/users/CreateAccountButton';
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -75,6 +76,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
               <Button type="button" variant="secondary" onClick={() => setEditGuardian(true)}>
                 {t.guardians.edit}
               </Button>
+              <CreateAccountButton student={student} />
             </>
           }
         />

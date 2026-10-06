@@ -34,6 +34,7 @@ export const ADMIN_NAV_GROUPS = [
     { key: 'translations', to: '/admin/translations', label: t.translations.nav, icon: 'template', permission: 'translations.manage' },
     { key: 'activity', to: '/admin/activity', label: t.nav.activity, icon: 'clock', permission: 'activity.read' },
     { key: 'roles', to: '/admin/roles', label: t.nav.roles, icon: 'users', permission: 'roles.manage' },
+    { key: 'users', to: '/admin/users', label: t.users.nav, icon: 'users', permission: 'users.read' },
   ],
 ] as const satisfies readonly (readonly { key: string; to: string; label: string; icon: IconName; permission: Permission }[])[];
 

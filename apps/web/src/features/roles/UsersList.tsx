@@ -15,7 +15,7 @@ export function UsersList({ users, roles }: { users: readonly StaffUserView[]; r
     mutationFn: assignRole,
     onSuccess: () => queryClient.invalidateQueries({ queryKey: ROLES_KEY }),
   });
-  const choices = roles.filter((r) => r.base_role !== 'guardian');
+  const choices = roles.filter((r) => r.base_role !== 'guardian' && r.base_role !== 'student');
   if (users.length === 0) return <p className="text-sm text-ink-3">{P.empty}</p>;
   return (
     <div className="grid gap-3">
