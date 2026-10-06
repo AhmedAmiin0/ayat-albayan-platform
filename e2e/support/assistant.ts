@@ -24,13 +24,13 @@ export async function assistant(tx: Tx, tag: string, terms?: Record<string, stri
   return u.id;
 }
 
-/** A guardian with one child; broughtBy = the sales profile (null: nobody brought them). */
-export async function student(tx: Tx, input: { phone: string; broughtBy?: string | null }): Promise<string> {
+/** A guardian with one child; broughtBy = the sales profile (null: nobody brought them), broughtAt = when (default now). */
+export async function student(tx: Tx, input: { phone: string; broughtBy?: string | null; broughtAt?: string }): Promise<string> {
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر', ${input.phone}, 'SA', 'Asia/Riyadh') returning id`;
   if (!g) throw new Error('guardian not written');
-  const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, brought_by)
-    values (${g.id}, 'طالب', 'طالب', 'Asia/Riyadh', ${input.broughtBy ?? null}) returning id`;
+  const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, brought_by, brought_at)
+    values (${g.id}, 'طالب', 'طالب', 'Asia/Riyadh', ${input.broughtBy ?? null}, ${input.broughtAt ?? null}) returning id`;
   if (!s) throw new Error('student not written');
   return s.id;
 }
@@ -69,10 +69,35 @@ export const commissionOf = async (tx: Tx, studentId: string): Promise<Commissio
   (await tx<CommissionRow[]>`select assistant_id, amount::text, currency, status, subscription_id, statement_id
     from public.assistant_commissions where student_id = ${studentId}`)[0];
 
-/** A one-student family: brought by `by`, one package of `price`, nothing paid yet. */
-export async function brought(tx: Tx, input: { by: string; phone: string; price: number; currency?: string }) {
-  const st = await student(tx, { phone: input.phone, broughtBy: input.by });
+/** A one-student family: brought by `by` (at `broughtAt`, default now), one package of `price`, nothing paid yet. */
+export async function brought(tx: Tx, input: { by: string; phone: string; price: number; currency?: string; broughtAt?: string }) {
+  const st = await student(tx, { phone: input.phone, broughtBy: input.by, ...(input.broughtAt ? { broughtAt: input.broughtAt } : {}) });
   return { student: st, sub: await subscription(tx, st, input) };
+}
+
+/** The first day (YYYY-MM-DD) of the month the next statement of `a` falls in: this month in Riyadh. */
+export const openMonth = async (tx: Tx, a: string): Promise<string> =>
+  one(await tx<{ m: string }[]>`select public.assistant_next_open_month(${a})::text as m`).m;
+
+/** The first day of last month in Riyadh: a statement a payment made 35 days ago belongs in. */
+export const lastMonth = async (tx: Tx): Promise<string> =>
+  one(await tx<{ m: string }[]>`select (date_trunc('month', now() at time zone 'Asia/Riyadh') - interval '1 month')::date::text as m`).m;
+
+/** Today in the academy's zone (Asia/Riyadh) plus `offset` days, YYYY-MM-DD. */
+export const riyadhDay = async (tx: Tx, offset: number): Promise<string> =>
+  one(await tx<{ d: string }[]>`select ((now() at time zone 'Asia/Riyadh')::date + ${offset}::int)::text as d`).d;
+
+/** Builds the draft of `month` for `a`: its id and totals. */
+export const generate = async (tx: Tx, a: string, month: string) =>
+  one(await tx<{ r: { statement_id: string; totals: Record<string, Record<string, number>> } }[]>`select
+    public.generate_assistant_statement(${a}, ${month}, null) as r`).r;
+
+/** Generates, approves and pays the statement of `month`; returns its id. */
+export async function paidStatement(tx: Tx, a: string, month: string): Promise<string> {
+  const { statement_id: id } = await generate(tx, a, month);
+  await tx`select public.approve_assistant_statement(${id}, null)`;
+  await tx`select public.pay_assistant_statement(${id}, null, '{}')`;
+  return id;
 }
 
 export const iso = (daysFromNow: number) => new Date(Date.now() + daysFromNow * 86_400_000).toISOString();

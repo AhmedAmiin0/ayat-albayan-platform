@@ -117,6 +117,7 @@ export type Database = {
         Row: {
           amount: number;
           assistant_id: string;
+          client_request_id: string | null;
           commission_id: string | null;
           created_at: string;
           created_by: string | null;
@@ -130,6 +131,7 @@ export type Database = {
         Insert: {
           amount: number;
           assistant_id: string;
+          client_request_id?: string | null;
           commission_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -143,6 +145,7 @@ export type Database = {
         Update: {
           amount?: number;
           assistant_id?: string;
+          client_request_id?: string | null;
           commission_id?: string | null;
           created_at?: string;
           created_by?: string | null;
@@ -3501,6 +3504,7 @@ export type Database = {
           p_assistant: string;
           p_currency: string;
           p_reason: string;
+          p_request?: string;
         };
         Returns: string;
       };
@@ -3611,6 +3615,7 @@ export type Database = {
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
+      set_assistant_terms: { Args: { p: Json; p_actor: string; p_assistant: string }; Returns: undefined };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
       set_student_brought_by: {
         Args: { p_actor: string; p_assistant: string; p_brought_at?: string; p_student: string };

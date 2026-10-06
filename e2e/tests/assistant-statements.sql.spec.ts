@@ -1,24 +1,22 @@
 import { expect, test } from '@playwright/test';
-import { assistant, brought, code, commissionOf, one, pay } from '../support/assistant';
-import { as, rolledBack, userId, type Tx } from '../support/rls';
-import { USERS } from '../support/users';
+import { assistant, brought, code, commissionOf, generate, iso, lastMonth, one, paidStatement, pay } from '../support/assistant';
+import { rolledBack, type Tx } from '../support/rls';
 
-// Assistant statements, reversals and visibility (migrations 271-274) against the real database:
-// salary + commissions + adjustments per currency, draft -> approved -> paid like teacher payouts,
-// a void after the statement was paid becomes an adjustment, and RLS keeps each salesperson to
-// their own rows. Each case is rolled back.
+// Assistant statements and reversals (migrations 271-274) against the real database: salary + commissions
+// + adjustments per currency, draft -> approved -> paid like teacher payouts, a void after the statement
+// was paid becomes an adjustment. Who may read what is assistant-scope.sql.spec.ts. Each case is rolled back.
 
 const TERMS = { commission_type: 'percent', commission_value: 10, commission_starts_on: '2000-01-01',
   salary_amount: 1000, salary_currency: 'EGP', salary_starts_on: '2000-01-01' } as const;
+const NO_SALARY = { ...TERMS, salary_amount: null, salary_currency: null, salary_starts_on: null };
 const thisMonth = async (tx: Tx) =>
   (await tx<{ m: string }[]>`select public.assistant_next_open_month(null)::text as m`)[0]?.m ?? '';
-const generate = async (tx: Tx, a: string, month: string) => one(
-  (await tx<{ r: { statement_id: string; totals: Record<string, Record<string, number>> } }[]>`select
-    public.generate_assistant_statement(${a}, ${month}, null) as r`)).r;
+const nextMonth = async (tx: Tx) =>
+  one(await tx<{ m: string }[]>`select (date_trunc('month', now() at time zone 'Asia/Riyadh') + interval '1 month')::date::text as m`).m;
 const statusOf = async (tx: Tx, id: string) =>
   (await tx<{ status: string }[]>`select status from public.assistant_statements where id = ${id}`)[0]?.status;
 
-test.describe('assistant statements and scope (20261006000271-274)', () => {
+test.describe('assistant statements (20261006000271-274)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('salary plus commission, per currency, never summed across them; regenerating a draft is idempotent', async () => {
@@ -39,7 +37,7 @@ test.describe('assistant statements and scope (20261006000271-274)', () => {
     });
   });
 
-  test('draft -> approved -> paid, back with unpay and reopen; a frozen statement is not regenerated', async () => {
+  test('draft -> approved -> paid, back with unpay and reopen; a frozen statement is not regenerated; a month that has not begun is refused', async () => {
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'flow', TERMS);
       const month = await thisMonth(tx);
@@ -57,12 +55,30 @@ test.describe('assistant statements and scope (20261006000271-274)', () => {
       await tx`select public.unpay_assistant_statement(${id}, null, 'wrong account')`;
       expect(await statusOf(tx, id)).toBe('approved');
       expect(await run(() => tx`select public.generate_assistant_statement(${a}, '2026-02-15', null)`)).toBe('invalid_month');
+      const future = await nextMonth(tx);
+      expect(await run(() => tx`select public.generate_assistant_statement(${a}, ${future}, null)`)).toBe('invalid_month');
     });
   });
 
-  test('a void inside a draft just drops out; after the statement was paid it becomes a negative adjustment next time', async () => {
+  test('approve recalculates a stale draft first: a commission earned after the draft was built is in what is frozen', async () => {
     await rolledBack(async (tx) => {
-      const a = await assistant(tx, 'void', { ...TERMS, salary_amount: null, salary_currency: null, salary_starts_on: null });
+      const a = await assistant(tx, 'stale', NO_SALARY);
+      const x = await brought(tx, { by: a, phone: '+966500000207', price: 100 });
+      await pay(tx, x.sub, 100);
+      const { statement_id: id, totals } = await generate(tx, a, await thisMonth(tx));
+      expect(totals).toEqual({ SAR: { salary: 0, commissions: 10, adjustments: 0, total: 10 } });
+      const y = await brought(tx, { by: a, phone: '+966500000208', price: 200 });
+      await pay(tx, y.sub, 200); // the draft does not know yet
+      await tx`select public.approve_assistant_statement(${id}, null)`;
+      const frozen = one(await tx<{ totals: unknown }[]>`select totals from public.assistant_statements where id = ${id}`);
+      expect(frozen.totals).toEqual({ SAR: { salary: 0, commissions: 30, adjustments: 0, total: 30 } });
+      expect((await tx`select 1 from public.assistant_statement_lines where statement_id = ${id}`).length).toBe(2);
+    });
+  });
+
+  test('a void inside a draft just drops out; after the statement was paid it becomes a negative adjustment for the next open month', async () => {
+    await rolledBack(async (tx) => {
+      const a = await assistant(tx, 'void', NO_SALARY);
       const month = await thisMonth(tx);
       const d = await brought(tx, { by: a, phone: '+966500000202', price: 200 });
       await pay(tx, d.sub, 200);
@@ -73,65 +89,21 @@ test.describe('assistant statements and scope (20261006000271-274)', () => {
       expect(rebuilt.totals).toEqual({});
       expect((await tx`select 1 from public.assistant_adjustments where assistant_id = ${a}`).length).toBe(0);
 
-      const p = await brought(tx, { by: a, phone: '+966500000203', price: 500 });
-      await pay(tx, p.sub, 500);
-      await generate(tx, a, month);
-      await tx`select public.approve_assistant_statement(${draft.statement_id}, null)`;
-      await tx`select public.pay_assistant_statement(${draft.statement_id}, null, '{}')`;
+      // A statement of LAST month (a month that has not begun cannot be built): a package paid 35 days ago.
+      const p = await brought(tx, { by: a, phone: '+966500000203', price: 500, broughtAt: iso(-40) });
+      await pay(tx, p.sub, { amount: 500, at: iso(-35) });
+      const paid = await paidStatement(tx, a, await lastMonth(tx));
       await pay(tx, p.sub, { amount: 100, kind: 'refund' });
       expect(await commissionOf(tx, p.student)).toMatchObject({ status: 'voided' });
-      expect(await statusOf(tx, draft.statement_id)).toBe('paid');
+      expect(await statusOf(tx, paid)).toBe('paid');
       const adj = one(await tx<{ amount: string; effective_month: string; statement_id: string | null }[]>`select amount::text,
         effective_month::text, statement_id from public.assistant_adjustments where assistant_id = ${a}`);
-      expect(adj).toMatchObject({ amount: '-50.00', statement_id: null });
-      expect(adj.effective_month > month).toBe(true);
-      const nextMonth = adj.effective_month;
-      const next = await generate(tx, a, nextMonth);
+      expect(adj).toEqual({ amount: '-50.00', effective_month: month, statement_id: null });
+      const next = await generate(tx, a, month);
       expect(next.totals).toEqual({ SAR: { salary: 0, commissions: 0, adjustments: -50, total: -50 } });
-      expect(await code(tx, () => tx`select public.reopen_assistant_statement(${draft.statement_id}, null)`)).toBe('invalid_transition');
-      await tx`select public.unpay_assistant_statement(${draft.statement_id}, null, 'check')`;
-      expect(await code(tx, () => tx`select public.reopen_assistant_statement(${draft.statement_id}, null)`)).toBe('reversal_in_later_statement');
-    });
-  });
-
-  test('a salesperson reads only their own terms, commissions, statements, brought students and recorded payments', async () => {
-    await rolledBack(async (tx) => {
-      const admin = await userId(tx, USERS.admin.email);
-      const count = async (who: string, table: string) =>
-        (await as(tx, who, () => tx.unsafe(`select count(*)::int n from public.${table}`)))[0]?.n ?? 0;
-      // Other specs share this database: the admin sees every row, so count what these two add.
-      const TABLES = ['assistant_terms', 'assistant_commissions', 'assistant_statements', 'payments'];
-      const before: Record<string, number> = {};
-      for (const t of TABLES) before[t] = (await tx.unsafe(`select count(*)::int n from public.${t}`))[0]?.n ?? 0; // as the owner: no role is set yet
-      const a = await assistant(tx, 'rls-a', TERMS);
-      const b = await assistant(tx, 'rls-b', TERMS);
-      const mine = await brought(tx, { by: a, phone: '+966500000204', price: 100 });
-      const theirs = await brought(tx, { by: b, phone: '+966500000205', price: 100 });
-      await pay(tx, mine.sub, { amount: 100, by: a });
-      await pay(tx, theirs.sub, { amount: 100, by: b });
-      await generate(tx, a, await thisMonth(tx));
-      await generate(tx, b, await thisMonth(tx));
-      for (const t of ['assistant_terms', 'assistant_commissions', 'assistant_statements']) {
-        expect(await count(a, t)).toBe(1);
-        expect(await count(admin, t)).toBe((before[t] ?? 0) + 2);
-      }
-      expect(await count(a, 'assistant_statement_lines')).toBe(2);
-      expect(await count(a, 'students')).toBe(1);
-      expect(await count(a, 'payments')).toBe(1);
-      expect(await count(admin, 'payments')).toBe((before['payments'] ?? 0) + 2);
-      expect(await count(a, 'subscriptions')).toBe(0);
-      await tx`insert into public.messages (direction, phone_e164, body) values
-        ('inbound', '+966500000204', 'مرحبا'), ('inbound', '+966500000205', 'مرحبا')`;
-      expect(await count(a, 'messages')).toBe(1); // the chat of the family they brought, not the other's
-      expect(await count(a, 'guardians')).toBe(1);
-      const rows = await as(tx, a, () => tx`select student_id, first_subscription_paid, commission_amount::text as amount
-        from public.v_assistant_students`);
-      expect(rows).toEqual([{ student_id: mine.student, first_subscription_paid: true, amount: '10.00' }]);
-      expect(await code(tx, () => as(tx, a, () => tx`update public.assistant_terms set salary_amount = 9999`))).toBe('42501');
-      expect(await code(tx, () => as(tx, a, () => tx`delete from public.assistant_commissions`))).toBe('42501');
-      await tx`set local role anon`;
-      expect(await code(tx, () => tx`select 1 from public.assistant_commissions`)).toBe('42501');
-      await tx`reset role`;
+      expect(await code(tx, () => tx`select public.reopen_assistant_statement(${paid}, null)`)).toBe('invalid_transition');
+      await tx`select public.unpay_assistant_statement(${paid}, null, 'check')`;
+      expect(await code(tx, () => tx`select public.reopen_assistant_statement(${paid}, null)`)).toBe('reversal_in_later_statement');
     });
   });
 });

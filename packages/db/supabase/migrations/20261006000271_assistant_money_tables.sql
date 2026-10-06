@@ -3,7 +3,8 @@
 -- paid, unique per (assistant, month), frozen once approved. Amounts are per currency, never summed
 -- across currencies (statements.totals is {currency: {salary, commissions, adjustments, total}}).
 -- Writes: service role only (the API / RPCs of migrations 272, 273). Reads: admin all; a sales user
--- only their own rows (RLS, rule 9). Additive and re-runnable.
+-- only their own rows, never a draft statement and never the subscription price (RLS, rule 9). Additive
+-- and re-runnable.
 --   assistant_terms        one row per assistant, set by an admin: commission (percent | fixed + value,
 --                          currency for fixed, commission_starts_on = no retroactive commission) and the
 --                          monthly salary (amount, currency, salary_starts_on). No history: a change
@@ -123,6 +124,10 @@ create table if not exists public.assistant_adjustments (
   created_at timestamptz not null default now(),
   created_by uuid references auth.users (id)
 );
+-- A retry of the same manual adjustment carries the same key and lands on the first row (add_assistant_adjustment).
+alter table public.assistant_adjustments add column if not exists client_request_id uuid;
+create unique index if not exists assistant_adjustments_request_uidx
+  on public.assistant_adjustments (assistant_id, client_request_id) where client_request_id is not null;
 create index if not exists assistant_adjustments_open_idx
   on public.assistant_adjustments (assistant_id, effective_month) where statement_id is null;
 create index if not exists assistant_adjustments_statement_idx
@@ -160,7 +165,7 @@ create policy assistant_statements_admin on public.assistant_statements for sele
   using (public.is_admin());
 drop policy if exists assistant_statements_own on public.assistant_statements;
 create policy assistant_statements_own on public.assistant_statements for select to authenticated
-  using (assistant_id = (select auth.uid()) and public.auth_role() = 'sales');
+  using (assistant_id = (select auth.uid()) and public.auth_role() = 'sales' and status <> 'draft');
 
 drop policy if exists assistant_commissions_admin on public.assistant_commissions;
 create policy assistant_commissions_admin on public.assistant_commissions for select to authenticated
@@ -181,10 +186,19 @@ create policy assistant_statement_lines_admin on public.assistant_statement_line
   using (public.is_admin());
 drop policy if exists assistant_statement_lines_own on public.assistant_statement_lines;
 create policy assistant_statement_lines_own on public.assistant_statement_lines for select to authenticated
-  using (statement_id in (select s.id from public.assistant_statements s));
+  using (public.auth_role() = 'sales' and statement_id in (
+    select s.id from public.assistant_statements s
+    where s.assistant_id = (select auth.uid()) and s.status <> 'draft'));
 
 revoke all on public.assistant_terms, public.assistant_statements, public.assistant_commissions,
   public.assistant_adjustments, public.assistant_statement_lines from anon;
 revoke insert, update, delete, truncate, references, trigger on public.assistant_terms,
   public.assistant_statements, public.assistant_commissions, public.assistant_adjustments,
   public.assistant_statement_lines from authenticated;
+
+-- The second wall hides the subscription's price: a sales user reading PostgREST directly gets the safe
+-- columns of her commissions only (no base_amount, base_currency, subscription_id or void_reason). The
+-- admin reads the full ledger through the API (service role).
+revoke select on public.assistant_commissions from authenticated;
+grant select (id, assistant_id, student_id, commission_type, rate, amount, currency, earned_at, status,
+  voided_at, statement_id, created_at, updated_at) on public.assistant_commissions to authenticated;

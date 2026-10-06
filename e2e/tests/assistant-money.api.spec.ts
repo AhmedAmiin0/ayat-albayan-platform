@@ -42,8 +42,8 @@ test.describe.serial('assistant money: registration and commission (API + DB)', 
   };
 
   test('terms: the admin sets 10 percent for A and a fixed 50 SAR for C; an assistant cannot', async ({ request }) => {
-    const startsOn = dayOffset(-1);
-    const putA = await call(request, { token: admin, method: 'PUT', path: `/assistant-pay/terms/${need(a).id}`, body: { commission: { type: 'percent', value: 10, startsOn }, salary: { amount: 1000, currency: 'SAR', startsOn: `${startsOn.slice(0, 7)}-01` } } });
+    const startsOn = dayOffset(0); // today in Riyadh: a start day cannot be in the past, nothing is retroactive
+    const putA = await call(request, { token: admin, method: 'PUT', path: `/assistant-pay/terms/${need(a).id}`, body: { commission: { type: 'percent', value: 10, startsOn }, salary: { amount: 1000, currency: 'SAR', startsOn } } });
     const putC = await call(request, { token: admin, method: 'PUT', path: `/assistant-pay/terms/${need(c).id}`, body: { commission: { type: 'fixed', value: 50, currency: 'SAR', startsOn }, salary: null } });
     expect([putA.status, putC.status]).toEqual([200, 200]);
     expect(putC.body).toMatchObject({ commission: { type: 'fixed', value: 50, currency: 'SAR' }, salary: null });

@@ -2,17 +2,22 @@
 -- payouts (migrations 121, 201): ONE transaction each with its audit row, service role only. Error
 -- codes (P0001) for the API: assistant_not_found, invalid_month, statement_not_found,
 -- invalid_transition, empty_statement, reversal_in_later_statement, student_not_found,
--- commission_exists, invalid_assistant, invalid_amount, reason_required.
+-- commission_exists, invalid_assistant, invalid_amount, reason_required, commission_start_in_past,
+-- commission_start_earlier, salary_start_in_past, salary_start_earlier.
 --
 --   statement = salary (a full month once salary_starts_on has come) + the earned commissions not yet in
 --   a statement whose month (their earned_at in the assistant's tz) is <= the statement's month (so a
 --   late-dated payment is not orphaned) + the unlinked adjustments with effective_month <= the month.
 --   Lines are per currency; totals = {currency: {salary, commissions, adjustments, total}}.
 --   generate_assistant_statement(assistant, month, actor): creates or REBUILDS the draft (idempotent);
---     an approved or paid statement is frozen ('invalid_transition').
---   approve_assistant_statement / pay_assistant_statement(.., p {paid_at, method, note, receipt_path}) /
+--     an approved or paid statement is frozen ('invalid_transition'); a month later than the current
+--     month in the assistant's tz is 'invalid_month'.
+--   approve_assistant_statement REBUILDS the draft first (a stale draft never freezes old lines), then
+--   approves; pay_assistant_statement(.., p {paid_at, method, note, receipt_path}) /
 --   unpay_assistant_statement(.., reason) / reopen_assistant_statement: draft -> approved -> paid and back.
---   add_assistant_adjustment: a manual +/- carried into the next open statement.
+--   add_assistant_adjustment: a manual +/- carried into the next open statement; the optional request
+--     key makes a retry land on the first row.
+--   set_assistant_terms: the admin's terms; a start day cannot be in the past on creation nor move earlier.
 --   set_student_brought_by / set_students_brought_by: admin attribution, audited; null clears it.
 
 -- (Re)fills a DRAFT statement from what is open now. Internal: callers hold the statement locked.
@@ -84,12 +89,17 @@ create or replace function public.generate_assistant_statement(p_assistant uuid,
 declare
   st record;
   v_totals jsonb;
+  v_tz text;
 begin
   if p_month is null or extract(day from p_month) <> 1 then
     raise exception 'invalid_month' using errcode = 'P0001';
   end if;
-  if not exists (select 1 from public.profiles p where p.id = p_assistant and p.role = 'sales') then
+  select coalesce(p.tz, 'Asia/Riyadh') into v_tz from public.profiles p where p.id = p_assistant and p.role = 'sales';
+  if not found then
     raise exception 'assistant_not_found' using errcode = 'P0001';
+  end if;
+  if p_month > date_trunc('month', now() at time zone v_tz)::date then
+    raise exception 'invalid_month' using errcode = 'P0001'; -- a month that has not begun has nothing to pay
   end if;
   perform pg_advisory_xact_lock(hashtextextended('assistant_statement:' || p_assistant, 0));
   insert into public.assistant_statements (assistant_id, month, created_by)
@@ -116,6 +126,8 @@ begin
   if st.status <> 'draft' then
     raise exception 'invalid_transition' using errcode = 'P0001';
   end if;
+  -- Recalculate first: a payment, refund or void since the draft was generated must not freeze old lines.
+  perform public.build_assistant_statement(p_statement);
   if not exists (select 1 from public.assistant_statement_lines l where l.statement_id = p_statement) then
     raise exception 'empty_statement' using errcode = 'P0001';
   end if;
@@ -123,7 +135,8 @@ begin
    where id = p_statement;
   insert into public.audit_log (actor_id, entity, entity_id, action, before, after)
   values (p_actor, 'assistant_statements', p_statement, 'approve', jsonb_build_object('status', 'draft'),
-          jsonb_build_object('status', 'approved', 'totals', st.totals));
+          jsonb_build_object('status', 'approved',
+                             'totals', (select s.totals from public.assistant_statements s where s.id = p_statement)));
   return jsonb_build_object('statement_id', p_statement);
 end $$;
 
@@ -173,8 +186,10 @@ begin
   return jsonb_build_object('statement_id', p_statement);
 end $$;
 
--- approved -> draft (calculate again before approving). Refused while a reversal of one of its
--- commissions already sits in a later statement: rebuilding would take that commission out twice.
+-- approved -> draft (calculate again before approving). Refused while a reversal of a commission on one of
+-- its LINES already sits in a later statement: rebuilding would take that commission out twice. A reversal
+-- still waiting for a statement is dropped: the lines are recomputed from the commissions as they are now,
+-- so a commission voided and earned again cannot make the reopened statement under-pay.
 create or replace function public.reopen_assistant_statement(p_statement uuid, p_actor uuid)
   returns jsonb language plpgsql security definer set search_path = '' as $$
 declare
@@ -187,11 +202,16 @@ begin
   if st.status <> 'approved' then
     raise exception 'invalid_transition' using errcode = 'P0001';
   end if;
-  if exists (select 1 from public.assistant_adjustments a
-             join public.assistant_commissions c on c.id = a.commission_id
-             where c.statement_id = p_statement and a.kind = 'reversal' and a.statement_id is not null) then
+  if exists (select 1 from public.assistant_statement_lines l
+             join public.assistant_adjustments a on a.commission_id = l.commission_id
+             where l.statement_id = p_statement and l.kind = 'commission'
+               and a.kind = 'reversal' and a.statement_id is not null and a.statement_id <> p_statement) then
     raise exception 'reversal_in_later_statement' using errcode = 'P0001';
   end if;
+  delete from public.assistant_adjustments a
+   where a.kind = 'reversal' and a.statement_id is null
+     and a.commission_id in (select l.commission_id from public.assistant_statement_lines l
+                              where l.statement_id = p_statement and l.kind = 'commission');
   update public.assistant_statements set status = 'draft', approved_at = null, approved_by = null
    where id = p_statement;
   insert into public.audit_log (actor_id, entity, entity_id, action, before, after)
@@ -200,13 +220,23 @@ begin
   return jsonb_build_object('statement_id', p_statement);
 end $$;
 
+-- p_request = the caller's idempotency key (unique per assistant): a retry returns the first row's id.
+drop function if exists public.add_assistant_adjustment(uuid, numeric, text, text, uuid);
 create or replace function public.add_assistant_adjustment(p_assistant uuid, p_amount numeric, p_currency text,
-  p_reason text, p_actor uuid) returns uuid language plpgsql security definer set search_path = '' as $$
+  p_reason text, p_actor uuid, p_request uuid default null) returns uuid
+  language plpgsql security definer set search_path = '' as $$
 declare
   v_id uuid;
 begin
   if not exists (select 1 from public.profiles p where p.id = p_assistant and p.role = 'sales') then
     raise exception 'assistant_not_found' using errcode = 'P0001';
+  end if;
+  if p_request is not null then
+    select a.id into v_id from public.assistant_adjustments a
+     where a.assistant_id = p_assistant and a.client_request_id = p_request;
+    if found then
+      return v_id;
+    end if;
   end if;
   if p_amount is null or p_amount = 0 or p_currency !~ '^[A-Z]{3}$' then
     raise exception 'invalid_amount' using errcode = 'P0001';
@@ -214,10 +244,17 @@ begin
   if p_reason is null or length(trim(p_reason)) = 0 then
     raise exception 'reason_required' using errcode = 'P0001';
   end if;
-  insert into public.assistant_adjustments (assistant_id, kind, amount, currency, reason, effective_month, created_by)
+  insert into public.assistant_adjustments (assistant_id, kind, amount, currency, reason, effective_month,
+                                            created_by, client_request_id)
   values (p_assistant, 'manual', round(p_amount, 2), p_currency, p_reason,
-          public.assistant_next_open_month(p_assistant), p_actor)
+          public.assistant_next_open_month(p_assistant), p_actor, p_request)
+  on conflict (assistant_id, client_request_id) where client_request_id is not null do nothing
   returning id into v_id;
+  if v_id is null then -- a concurrent retry with the same key won the race
+    select a.id into v_id from public.assistant_adjustments a
+     where a.assistant_id = p_assistant and a.client_request_id = p_request;
+    return v_id;
+  end if;
   insert into public.audit_log (actor_id, entity, entity_id, action, after)
   values (p_actor, 'assistant_adjustments', v_id, 'create',
           jsonb_build_object('assistant_id', p_assistant, 'amount', p_amount, 'currency', p_currency, 'reason', p_reason));
@@ -273,17 +310,61 @@ begin
   return jsonb_build_object('changed', v_changed);
 end $$;
 
+-- The admin's terms (commission and salary, replaced together; null clears a part). A start day is the
+-- day nothing before it is paid for: on creation it cannot be in the past (today in the academy's tz,
+-- settings.academy_timezone) and an existing one cannot move earlier (an admin may move it later), so
+-- no pay is ever made retroactive. Error codes: commission_start_in_past, commission_start_earlier,
+-- salary_start_in_past, salary_start_earlier. p = the assistant_terms columns as JSON.
+create or replace function public.set_assistant_terms(p_assistant uuid, p jsonb, p_actor uuid)
+  returns void language plpgsql security definer set search_path = '' as $$
+declare
+  o public.assistant_terms;
+  v_today date := (now() at time zone coalesce(
+    (select s.value #>> '{}' from public.settings s where s.key = 'academy_timezone'), 'Asia/Riyadh'))::date;
+  v_comm date := nullif(p ->> 'commission_starts_on', '')::date;
+  v_sal date := nullif(p ->> 'salary_starts_on', '')::date;
+begin
+  if not exists (select 1 from public.profiles x where x.id = p_assistant and x.role = 'sales') then
+    raise exception 'assistant_not_found' using errcode = 'P0001';
+  end if;
+  select * into o from public.assistant_terms where assistant_id = p_assistant for update;
+  if v_comm is not null and v_comm < coalesce(o.commission_starts_on, v_today) then
+    if o.commission_starts_on is null then
+      raise exception 'commission_start_in_past' using errcode = 'P0001';
+    end if;
+    raise exception 'commission_start_earlier' using errcode = 'P0001';
+  end if;
+  if v_sal is not null and v_sal < coalesce(o.salary_starts_on, v_today) then
+    if o.salary_starts_on is null then
+      raise exception 'salary_start_in_past' using errcode = 'P0001';
+    end if;
+    raise exception 'salary_start_earlier' using errcode = 'P0001';
+  end if;
+  insert into public.assistant_terms (assistant_id, commission_type, commission_value, commission_currency,
+      commission_starts_on, salary_amount, salary_currency, salary_starts_on, updated_by)
+  values (p_assistant, nullif(p ->> 'commission_type', '')::public.assistant_commission_type,
+      nullif(p ->> 'commission_value', '')::numeric, nullif(p ->> 'commission_currency', ''), v_comm,
+      nullif(p ->> 'salary_amount', '')::numeric, nullif(p ->> 'salary_currency', ''), v_sal, p_actor)
+  on conflict (assistant_id) do update set
+      commission_type = excluded.commission_type, commission_value = excluded.commission_value,
+      commission_currency = excluded.commission_currency, commission_starts_on = excluded.commission_starts_on,
+      salary_amount = excluded.salary_amount, salary_currency = excluded.salary_currency,
+      salary_starts_on = excluded.salary_starts_on, updated_by = excluded.updated_by;
+end $$;
+
 revoke execute on function public.build_assistant_statement(uuid),
   public.generate_assistant_statement(uuid, date, uuid), public.approve_assistant_statement(uuid, uuid),
   public.pay_assistant_statement(uuid, uuid, jsonb), public.unpay_assistant_statement(uuid, uuid, text),
   public.reopen_assistant_statement(uuid, uuid),
-  public.add_assistant_adjustment(uuid, numeric, text, text, uuid),
+  public.add_assistant_adjustment(uuid, numeric, text, text, uuid, uuid),
+  public.set_assistant_terms(uuid, jsonb, uuid),
   public.set_student_brought_by(uuid, uuid, uuid, timestamptz),
   public.set_students_brought_by(uuid[], uuid, uuid, timestamptz) from public, anon, authenticated;
 grant execute on function public.build_assistant_statement(uuid),
   public.generate_assistant_statement(uuid, date, uuid), public.approve_assistant_statement(uuid, uuid),
   public.pay_assistant_statement(uuid, uuid, jsonb), public.unpay_assistant_statement(uuid, uuid, text),
   public.reopen_assistant_statement(uuid, uuid),
-  public.add_assistant_adjustment(uuid, numeric, text, text, uuid),
+  public.add_assistant_adjustment(uuid, numeric, text, text, uuid, uuid),
+  public.set_assistant_terms(uuid, jsonb, uuid),
   public.set_student_brought_by(uuid, uuid, uuid, timestamptz),
   public.set_students_brought_by(uuid[], uuid, uuid, timestamptz) to service_role;
