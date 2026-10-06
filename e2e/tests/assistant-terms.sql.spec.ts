@@ -16,11 +16,12 @@ test.describe('assistant terms, merge and adjustment retries (20261006000272-273
     await rolledBack(async (tx) => {
       const a = await assistant(tx, 'terms');
       const [yesterday, today, tomorrow] = [await riyadhDay(tx, -1), await riyadhDay(tx, 0), await riyadhDay(tx, 1)];
-      const terms = (commission: string | null, salary: string, rate = 10) => JSON.stringify({
+      const terms = (commission: string | null, salary: string, rate = 10): Record<string, string | number | null> => ({
         commission_type: commission ? 'percent' : null, commission_value: commission ? rate : null, commission_currency: null,
         commission_starts_on: commission, salary_amount: 100, salary_currency: 'EGP', salary_starts_on: salary,
       });
-      const set = (p: string, who = a) => code(tx, () => tx`select public.set_assistant_terms(${who}, ${p}::jsonb, null)`);
+      // tx.json sends a real jsonb: a plain string parameter cast to jsonb would be stored as a JSON string, not an object.
+      const set = (p: Record<string, string | number | null>, who = a) => code(tx, () => tx`select public.set_assistant_terms(${who}, ${tx.json(p)}, null)`);
       expect(await set(terms(yesterday, today))).toBe('commission_start_in_past');
       expect(await set(terms(today, yesterday))).toBe('salary_start_in_past');
       expect(await set(terms(today, today))).toBe('ok'); // today is the first day a new part may start

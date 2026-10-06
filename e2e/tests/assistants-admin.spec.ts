@@ -100,7 +100,7 @@ test.describe('assistants — terms → commission → monthly statement (R-ASST
     const assistantId = await seedAssistant();
     const studentId = await withSql(async (sql) => {
       const [g] = await sql<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
-        values ('ولي أمر آخر', ${`${PHONE.slice(0, -1)}7`}, 'SA', 'Asia/Riyadh') returning id`;
+        values ('ولي أمر آخر', ${`${PHONE.slice(0, -1)}${PHONE.endsWith('7') ? '8' : '7'}`}, 'SA', 'Asia/Riyadh') returning id`;
       const [s] = await sql<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz)
         values (${g?.id ?? ''}, 'جود الاختبار', 'جود الاختبار', 'Asia/Riyadh') returning id`;
       return s?.id ?? '';
