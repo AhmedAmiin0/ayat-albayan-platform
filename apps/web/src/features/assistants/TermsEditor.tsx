@@ -2,11 +2,12 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
+import { paidAtDay } from '@/features/payments/pay-day';
 import { t } from '@/lib/i18n';
 import { ASSISTANTS_KEY, saveTerms, type AssistantRow } from './api';
 import { errorText } from './status';
 import { TermsFields } from './TermsFields';
-import { formOf, toInput, type TermsErrors, type TermsForm } from './terms-form';
+import { formOf, startMins, toInput, type TermsErrors, type TermsForm } from './terms-form';
 
 /**
  * The admin's per-assistant terms (R-ASST-02, R-ASST-03): monthly salary and the commission on a
@@ -17,6 +18,7 @@ export function TermsEditor({ assistant }: { assistant: AssistantRow }) {
   const [form, setForm] = useState(() => formOf(assistant.terms));
   const [errors, setErrors] = useState<TermsErrors>({});
   const [saved, setSaved] = useState(false);
+  const rules = { current: assistant.terms, today: paidAtDay() };
   const save = useMutation({
     mutationFn: saveTerms,
     onSuccess: async () => {
@@ -30,7 +32,7 @@ export function TermsEditor({ assistant }: { assistant: AssistantRow }) {
   };
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const result = toInput(form);
+    const result = toInput(form, rules);
     setErrors('errors' in result ? result.errors : {});
     if ('value' in result) save.mutate({ assistantId: assistant.id, body: result.value });
   };
@@ -38,7 +40,7 @@ export function TermsEditor({ assistant }: { assistant: AssistantRow }) {
   return (
     <form className="mb-8 grid max-w-3xl gap-6" onSubmit={submit} noValidate aria-label={t.assistants.terms.title}>
       <h2 className="font-display text-h4 font-bold">{t.assistants.terms.title}</h2>
-      <TermsFields form={form} errors={errors} set={set} />
+      <TermsFields form={form} errors={errors} set={set} mins={startMins(rules)} />
       <p className="text-xs text-ink-3">{t.assistants.terms.hint}</p>
       {save.isError && <FormAlert>{errorText(save.error)}</FormAlert>}
       <div className="flex items-center gap-3">

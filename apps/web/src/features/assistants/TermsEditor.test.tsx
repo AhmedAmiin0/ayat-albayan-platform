@@ -73,6 +73,26 @@ describe('TermsEditor (R-ASST-02, R-ASST-03, R-ASST-05)', () => {
     );
   });
 
+  it('a saved start day cannot move earlier, and a new part cannot start in the past: stops at the field, nothing is sent', async () => {
+    renderEditor();
+    fireEvent.change(screen.getByLabelText(T.salaryStartsOn), { target: { value: '2026-09-01' } });
+    save();
+    expect(await screen.findByText(t.assistants.error.salary_start_earlier)).toBeTruthy();
+    expect((screen.getByLabelText(T.salaryStartsOn) as HTMLInputElement).min).toBe('2026-10-01'); // the saved day
+    fireEvent.change(screen.getByLabelText(T.salaryStartsOn), { target: { value: '2026-10-01' } });
+    fireEvent.change(screen.getByLabelText(T.commissionStartsOn), { target: { value: '2026-10-02' } }); // later is fine
+    save();
+    await vi.waitFor(() => expect(apiSend).toHaveBeenCalledTimes(1));
+    expect(apiSend.mock.calls[0]?.[2]).toMatchObject({ commission: { startsOn: '2026-10-02' } });
+  });
+
+  it('the API refuses a start day: its code is shown in Arabic', async () => {
+    apiSend.mockRejectedValue(new ApiError(400, { code: 'commission_start_in_past' }));
+    renderEditor();
+    save();
+    expect(await screen.findByText(t.assistants.error.commission_start_in_past)).toBeTruthy();
+  });
+
   it('an API error code is shown in Arabic', async () => {
     apiSend.mockRejectedValue(new ApiError(400, { code: 'assistant_not_found' }));
     renderEditor();

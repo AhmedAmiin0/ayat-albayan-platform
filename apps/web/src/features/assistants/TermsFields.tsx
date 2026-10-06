@@ -7,12 +7,18 @@ import { CurrencySelect } from './CurrencySelect';
 import { fieldError } from './status';
 import type { TermsErrors, TermsForm } from './terms-form';
 
-type Props = { form: TermsForm; errors: TermsErrors; set: (patch: Partial<TermsForm>) => void };
+type Props = {
+  form: TermsForm;
+  errors: TermsErrors;
+  set: (patch: Partial<TermsForm>) => void;
+  /** The earliest start day of each part (a new part: today; a saved one: its day). */
+  mins?: { salary: string; commission: string };
+};
 
 const T = t.assistants.terms;
 
 /** The salary block, then the commission block (type, value, currency for a fixed one, start day). */
-export function TermsFields({ form, errors, set }: Props) {
+export function TermsFields({ form, errors, set, mins }: Props) {
   const fixed = form.commType === 'fixed';
   return (
     <>
@@ -23,7 +29,7 @@ export function TermsFields({ form, errors, set }: Props) {
         </Field>
         <CurrencySelect label={T.salaryCurrency} value={form.salaryCurrency} onChange={(salaryCurrency) => set({ salaryCurrency })} />
         <Field label={T.salaryStartsOn} error={fieldError(errors.salaryStartsOn)}>
-          {(p) => <Input {...p} type="date" dir="ltr" value={form.salaryStartsOn} onChange={(e) => set({ salaryStartsOn: e.target.value })} />}
+          {(p) => <Input {...p} type="date" dir="ltr" min={mins?.salary} value={form.salaryStartsOn} onChange={(e) => set({ salaryStartsOn: e.target.value })} />}
         </Field>
       </fieldset>
       <fieldset className="grid gap-4 sm:grid-cols-2">
@@ -50,7 +56,7 @@ export function TermsFields({ form, errors, set }: Props) {
         )}
         {form.commType !== '' && (
           <Field label={T.commissionStartsOn} error={fieldError(errors.commStartsOn)}>
-            {(p) => <Input {...p} type="date" dir="ltr" value={form.commStartsOn} onChange={(e) => set({ commStartsOn: e.target.value })} />}
+            {(p) => <Input {...p} type="date" dir="ltr" min={mins?.commission} value={form.commStartsOn} onChange={(e) => set({ commStartsOn: e.target.value })} />}
           </Field>
         )}
       </fieldset>

@@ -96,6 +96,16 @@ describe('StatementsPanel (R-ASST-03)', () => {
     expect(screen.getByRole('button', { name: t.assistants.statements.details })).toBeTruthy();
   });
 
+  it('a writer without the approve permission can pay but not reopen or un-pay (the API refuses both)', async () => {
+    renderPanel(
+      [{ ...STATEMENT, status: 'approved' }, { ...STATEMENT, id: 'st2', status: 'paid', paid_at: '2026-10-02T09:00:00Z' }],
+      { write: true, approve: false },
+    );
+    expect(await screen.findByRole('button', { name: t.payouts.markPaid })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.finance.reopen })).toBeNull();
+    expect(screen.queryByRole('button', { name: t.finance.unpay })).toBeNull();
+  });
+
   it('a month without statements says so', async () => {
     renderPanel([]);
     expect(await screen.findByText(t.assistants.statements.empty)).toBeTruthy();
