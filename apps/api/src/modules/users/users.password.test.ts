@@ -28,9 +28,9 @@ describe('generatePassword', () => {
 });
 
 describe('redact', () => {
-  it('drops password-like keys at any depth and keeps the rest', () => {
+  it('drops password-like keys at any depth and keeps the rest (credential_mode is an audit key, not a secret)', () => {
     const out = redact({ full_name: 'علي', password: 'x', nested: { new_password: 'y', ok: 1 }, list: [{ token: 't', role: 'admin' }], action_link: 'l', credential_mode: 'set' });
-    expect(out).toEqual({ full_name: 'علي', nested: { ok: 1 }, list: [{ role: 'admin' }] });
+    expect(out).toEqual({ full_name: 'علي', nested: { ok: 1 }, list: [{ role: 'admin' }], credential_mode: 'set' });
   });
   it('passes scalars and null through', () => {
     expect(redact(null)).toBeNull();
