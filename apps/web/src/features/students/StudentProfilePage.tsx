@@ -9,6 +9,7 @@ import { PageHead } from '@/components/ui/page';
 import { StatusChip } from '@/components/ui/status-chip';
 import { Toast } from '@/components/ui/toast';
 import { EntityActivity } from '@/features/activity/EntityActivity';
+import { BroughtByField } from '@/features/assistants/BroughtByField';
 import { AssistantsManager } from '@/features/classroom/AssistantsManager';
 import { StudentJoinLink } from '@/features/classroom/StudentJoinLink';
 import { GuardianEditDialog } from '@/features/guardians/GuardianEditForm';
@@ -93,6 +94,7 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       <StudentRecordings studentId={student.id} role="admin" />
       <StudentProfileForm key={student.id} student={student} />
       <AssistantsManager studentId={student.id} />
+      <BroughtByField studentId={student.id} />
       <StudentJoinLink studentId={student.id} />
       <SiblingMerge student={student} siblings={student.siblings} />
       <EntityActivity entity="students" entityId={student.id} hideEmpty />

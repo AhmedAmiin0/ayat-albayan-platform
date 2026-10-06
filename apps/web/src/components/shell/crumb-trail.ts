@@ -18,6 +18,7 @@ const SECTIONS: Record<string, { label: string; profile?: string }> = {
   subscriptions: { label: t.nav.subscriptions },
   payments: { label: t.payments.title },
   payouts: { label: t.nav.payouts },
+  assistants: { label: t.assistants.nav },
   expenses: { label: t.nav.expenses },
   inbox: { label: t.nav.inbox },
   settings: { label: t.settings.title },

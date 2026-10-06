@@ -1,0 +1,53 @@
+import { describe, expect, it } from 'vitest';
+import { ASSISTANT } from './fixtures';
+import { formOf, toInput, type TermsForm } from './terms-form';
+
+const TODAY = '2026-10-06';
+const blank = (patch: Partial<TermsForm> = {}): TermsForm => ({ ...formOf(null, TODAY), ...patch });
+
+describe('terms form (R-ASST-02, R-ASST-03)', () => {
+  it('a new assistant starts empty: EGP, today, no commission', () => {
+    expect(formOf(null, TODAY)).toEqual({
+      salaryAmount: '',
+      salaryCurrency: 'EGP',
+      salaryStartsOn: TODAY,
+      commType: '',
+      commValue: '',
+      commCurrency: 'EGP',
+      commStartsOn: TODAY,
+    });
+  });
+
+  it('round-trips the saved terms into the PUT body', () => {
+    expect(toInput(formOf(ASSISTANT.terms, TODAY))).toEqual({
+      value: {
+        salary: { amount: 3000, currency: 'EGP', startsOn: '2026-10-01' },
+        commission: { type: 'percent', value: 10, currency: null, startsOn: '2026-10-01' },
+      },
+    });
+  });
+
+  it('an empty salary and no commission type clear both parts', () => {
+    expect(toInput(blank())).toEqual({ value: { salary: null, commission: null } });
+  });
+
+  it('a fixed commission keeps its own currency; a percent sends none', () => {
+    const fixed = toInput(blank({ commType: 'fixed', commValue: '50', commCurrency: 'SAR' }));
+    expect(fixed).toEqual({ value: { salary: null, commission: { type: 'fixed', value: 50, currency: 'SAR', startsOn: TODAY } } });
+    const percent = toInput(blank({ commType: 'percent', commValue: '12.5', commCurrency: 'SAR' }));
+    expect(percent).toEqual({ value: { salary: null, commission: { type: 'percent', value: 12.5, currency: null, startsOn: TODAY } } });
+  });
+
+  it('a percent over 100, a zero or empty value and a third decimal are field errors', () => {
+    expect(toInput(blank({ commType: 'percent', commValue: '150' }))).toEqual({ errors: { commValue: 'percent_max_100' } });
+    expect('errors' in toInput(blank({ commType: 'fixed', commValue: '' }))).toBe(true);
+    expect('errors' in toInput(blank({ commType: 'fixed', commValue: '0' }))).toBe(true);
+    expect(toInput(blank({ commType: 'fixed', commValue: '1.234' }))).toEqual({ errors: { commValue: 'too_many_decimals' } });
+  });
+
+  it('a salary needs a positive amount', () => {
+    const r = toInput(blank({ salaryAmount: 'abc' }));
+    expect('errors' in r && r.errors.salaryAmount).toBeTruthy();
+    expect('errors' in toInput(blank({ salaryAmount: '-5' }))).toBe(true);
+  });
+});
