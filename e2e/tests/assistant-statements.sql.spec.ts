@@ -96,25 +96,29 @@ test.describe('assistant statements and scope (20261006000271-274)', () => {
 
   test('a salesperson reads only their own terms, commissions, statements, brought students and recorded payments', async () => {
     await rolledBack(async (tx) => {
+      const admin = await userId(tx, USERS.admin.email);
+      const count = async (who: string, table: string) =>
+        (await as(tx, who, () => tx.unsafe(`select count(*)::int n from public.${table}`)))[0]?.n ?? 0;
+      // Other specs share this database: the admin sees every row, so count what these two add.
+      const TABLES = ['assistant_terms', 'assistant_commissions', 'assistant_statements', 'payments'];
+      const before: Record<string, number> = {};
+      for (const t of TABLES) before[t] = (await tx.unsafe(`select count(*)::int n from public.${t}`))[0]?.n ?? 0; // as the owner: no role is set yet
       const a = await assistant(tx, 'rls-a', TERMS);
       const b = await assistant(tx, 'rls-b', TERMS);
-      const admin = await userId(tx, USERS.admin.email);
       const mine = await brought(tx, { by: a, phone: '+966500000204', price: 100 });
       const theirs = await brought(tx, { by: b, phone: '+966500000205', price: 100 });
       await pay(tx, mine.sub, { amount: 100, by: a });
       await pay(tx, theirs.sub, { amount: 100, by: b });
       await generate(tx, a, await thisMonth(tx));
       await generate(tx, b, await thisMonth(tx));
-      const count = async (who: string, table: string) =>
-        (await as(tx, who, () => tx.unsafe(`select count(*)::int n from public.${table}`)))[0]?.n;
       for (const t of ['assistant_terms', 'assistant_commissions', 'assistant_statements']) {
         expect(await count(a, t)).toBe(1);
-        expect(await count(admin, t)).toBe(2);
+        expect(await count(admin, t)).toBe((before[t] ?? 0) + 2);
       }
       expect(await count(a, 'assistant_statement_lines')).toBe(2);
       expect(await count(a, 'students')).toBe(1);
       expect(await count(a, 'payments')).toBe(1);
-      expect(await count(admin, 'payments')).toBe(2);
+      expect(await count(admin, 'payments')).toBe((before['payments'] ?? 0) + 2);
       expect(await count(a, 'subscriptions')).toBe(0);
       await tx`insert into public.messages (direction, phone_e164, body) values
         ('inbound', '+966500000204', 'مرحبا'), ('inbound', '+966500000205', 'مرحبا')`;

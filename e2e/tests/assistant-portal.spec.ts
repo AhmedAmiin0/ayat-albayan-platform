@@ -1,5 +1,6 @@
 import type { Page } from '@playwright/test';
 import { brought, one, pay, student, subscription } from '../support/assistant';
+import { leadOf } from '../support/assistant-api';
 import { seedUser } from '../support/db';
 import { ar, expect, test } from '../support/fixtures';
 import { fillStable } from '../support/fill';
@@ -90,8 +91,12 @@ test.describe('assistant portal', () => {
     const page = await (await browser.newContext({ locale: 'ar' })).newPage();
     await signIn(page, email);
 
+    // Without a chat the page points to the inbox: the API books a new family only from her own lead.
     await page.getByRole('navigation', { name: ar.sales.nav.label }).getByRole('link', { name: ar.assistantPortal.nav.register }).click();
     await expect(page.getByRole('heading', { level: 1, name: ar.assistantPortal.register.title })).toBeVisible();
+    await expect(page.getByRole('link', { name: ar.assistantPortal.register.openInbox })).toBeVisible();
+    const leadId = await leadOf(id, phone(2, 1));
+    await page.goto(`/sales/register?leadId=${leadId}&phone=${encodeURIComponent(phone(2, 1))}&name=${encodeURIComponent(name)}`);
     await expect(page.getByText(ar.booking.kind.label)).toHaveCount(0);
     await fillStable(page.getByLabel(ar.leads.studentName), name);
     await fillStable(page.getByLabel(ar.guardians.phone), phone(2, 1));
