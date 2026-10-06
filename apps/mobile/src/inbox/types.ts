@@ -9,4 +9,7 @@ export interface Lead {
   status: LeadStatus;
   created_at: string;
   last_inbound_at: string | null;
+  /** The salesperson's profile id and name; absent from an older API. */
+  assigned_to?: string | null;
+  assigned_to_name?: string | null;
 }

@@ -28,4 +28,7 @@ export interface JobApplicant {
   name: string | null;
   phone_e164: string;
   status: JobApplicantStatus;
+  /** Links the applicant sent; absent from an older API. */
+  cv_url?: string | null;
+  recitation_url?: string | null;
 }
