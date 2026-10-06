@@ -12,6 +12,16 @@ export interface AssistantTermsView {
   salary: { amount: number; currency: string; starts_on: string } | null;
 }
 
+/** GET /assistant-pay/terms rows: every assistant with their terms (both null until an admin sets them). */
+export interface AssistantTermsRow extends AssistantTermsView {
+  name: string;
+}
+
+/** POST /assistant-pay/brought-by. */
+export interface BroughtByResult {
+  changed: number;
+}
+
 /** GET /assistant-pay/commissions (admin ledger, all assistants). */
 export interface AssistantCommissionView {
   id: string;
