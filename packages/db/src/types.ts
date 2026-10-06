@@ -113,6 +113,364 @@ export type Database = {
         };
         Relationships: [];
       };
+      assistant_adjustments: {
+        Row: {
+          amount: number;
+          assistant_id: string;
+          commission_id: string | null;
+          created_at: string;
+          created_by: string | null;
+          currency: string;
+          effective_month: string;
+          id: string;
+          kind: string;
+          reason: string;
+          statement_id: string | null;
+        };
+        Insert: {
+          amount: number;
+          assistant_id: string;
+          commission_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          currency: string;
+          effective_month: string;
+          id?: string;
+          kind: string;
+          reason: string;
+          statement_id?: string | null;
+        };
+        Update: {
+          amount?: number;
+          assistant_id?: string;
+          commission_id?: string | null;
+          created_at?: string;
+          created_by?: string | null;
+          currency?: string;
+          effective_month?: string;
+          id?: string;
+          kind?: string;
+          reason?: string;
+          statement_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'assistant_adjustments_assistant_id_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_adjustments_commission_id_fkey';
+            columns: ['commission_id'];
+            isOneToOne: false;
+            referencedRelation: 'assistant_commissions';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_adjustments_commission_id_fkey';
+            columns: ['commission_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_assistant_students';
+            referencedColumns: ['commission_id'];
+          },
+          {
+            foreignKeyName: 'assistant_adjustments_statement_id_fkey';
+            columns: ['statement_id'];
+            isOneToOne: false;
+            referencedRelation: 'assistant_statements';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      assistant_commissions: {
+        Row: {
+          amount: number;
+          assistant_id: string;
+          base_amount: number;
+          base_currency: string;
+          commission_type: Database['public']['Enums']['assistant_commission_type'];
+          created_at: string;
+          currency: string;
+          earned_at: string;
+          id: string;
+          rate: number;
+          statement_id: string | null;
+          status: Database['public']['Enums']['assistant_commission_status'];
+          student_id: string;
+          subscription_id: string | null;
+          updated_at: string;
+          void_auto: boolean | null;
+          void_reason: string | null;
+          voided_at: string | null;
+        };
+        Insert: {
+          amount: number;
+          assistant_id: string;
+          base_amount: number;
+          base_currency: string;
+          commission_type: Database['public']['Enums']['assistant_commission_type'];
+          created_at?: string;
+          currency: string;
+          earned_at: string;
+          id?: string;
+          rate: number;
+          statement_id?: string | null;
+          status?: Database['public']['Enums']['assistant_commission_status'];
+          student_id: string;
+          subscription_id?: string | null;
+          updated_at?: string;
+          void_auto?: boolean | null;
+          void_reason?: string | null;
+          voided_at?: string | null;
+        };
+        Update: {
+          amount?: number;
+          assistant_id?: string;
+          base_amount?: number;
+          base_currency?: string;
+          commission_type?: Database['public']['Enums']['assistant_commission_type'];
+          created_at?: string;
+          currency?: string;
+          earned_at?: string;
+          id?: string;
+          rate?: number;
+          statement_id?: string | null;
+          status?: Database['public']['Enums']['assistant_commission_status'];
+          student_id?: string;
+          subscription_id?: string | null;
+          updated_at?: string;
+          void_auto?: boolean | null;
+          void_reason?: string | null;
+          voided_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'assistant_commissions_assistant_id_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_commissions_statement_id_fkey';
+            columns: ['statement_id'];
+            isOneToOne: false;
+            referencedRelation: 'assistant_statements';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_commissions_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_commissions_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_assistant_students';
+            referencedColumns: ['student_id'];
+          },
+          {
+            foreignKeyName: 'assistant_commissions_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_student_list';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_commissions_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: true;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_commissions_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: true;
+            referencedRelation: 'v_subscription_balance';
+            referencedColumns: ['subscription_id'];
+          },
+        ];
+      };
+      assistant_statement_lines: {
+        Row: {
+          adjustment_id: string | null;
+          amount: number;
+          commission_id: string | null;
+          created_at: string;
+          currency: string;
+          id: string;
+          kind: string;
+          statement_id: string;
+        };
+        Insert: {
+          adjustment_id?: string | null;
+          amount: number;
+          commission_id?: string | null;
+          created_at?: string;
+          currency: string;
+          id?: string;
+          kind: string;
+          statement_id: string;
+        };
+        Update: {
+          adjustment_id?: string | null;
+          amount?: number;
+          commission_id?: string | null;
+          created_at?: string;
+          currency?: string;
+          id?: string;
+          kind?: string;
+          statement_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'assistant_statement_lines_adjustment_id_fkey';
+            columns: ['adjustment_id'];
+            isOneToOne: false;
+            referencedRelation: 'assistant_adjustments';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_statement_lines_commission_id_fkey';
+            columns: ['commission_id'];
+            isOneToOne: false;
+            referencedRelation: 'assistant_commissions';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'assistant_statement_lines_commission_id_fkey';
+            columns: ['commission_id'];
+            isOneToOne: false;
+            referencedRelation: 'v_assistant_students';
+            referencedColumns: ['commission_id'];
+          },
+          {
+            foreignKeyName: 'assistant_statement_lines_statement_id_fkey';
+            columns: ['statement_id'];
+            isOneToOne: false;
+            referencedRelation: 'assistant_statements';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      assistant_statements: {
+        Row: {
+          approved_at: string | null;
+          approved_by: string | null;
+          assistant_id: string;
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          method: Database['public']['Enums']['payment_method'] | null;
+          month: string;
+          note: string | null;
+          paid_at: string | null;
+          paid_by: string | null;
+          receipt_path: string | null;
+          status: Database['public']['Enums']['payout_status'];
+          totals: NonNullable<Json>;
+          updated_at: string;
+        };
+        Insert: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          assistant_id: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          method?: Database['public']['Enums']['payment_method'] | null;
+          month: string;
+          note?: string | null;
+          paid_at?: string | null;
+          paid_by?: string | null;
+          receipt_path?: string | null;
+          status?: Database['public']['Enums']['payout_status'];
+          totals?: NonNullable<Json>;
+          updated_at?: string;
+        };
+        Update: {
+          approved_at?: string | null;
+          approved_by?: string | null;
+          assistant_id?: string;
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          method?: Database['public']['Enums']['payment_method'] | null;
+          month?: string;
+          note?: string | null;
+          paid_at?: string | null;
+          paid_by?: string | null;
+          receipt_path?: string | null;
+          status?: Database['public']['Enums']['payout_status'];
+          totals?: NonNullable<Json>;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'assistant_statements_assistant_id_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      assistant_terms: {
+        Row: {
+          assistant_id: string;
+          commission_currency: string | null;
+          commission_starts_on: string | null;
+          commission_type: Database['public']['Enums']['assistant_commission_type'] | null;
+          commission_value: number | null;
+          created_at: string;
+          salary_amount: number | null;
+          salary_currency: string | null;
+          salary_starts_on: string | null;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          assistant_id: string;
+          commission_currency?: string | null;
+          commission_starts_on?: string | null;
+          commission_type?: Database['public']['Enums']['assistant_commission_type'] | null;
+          commission_value?: number | null;
+          created_at?: string;
+          salary_amount?: number | null;
+          salary_currency?: string | null;
+          salary_starts_on?: string | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          assistant_id?: string;
+          commission_currency?: string | null;
+          commission_starts_on?: string | null;
+          commission_type?: Database['public']['Enums']['assistant_commission_type'] | null;
+          commission_value?: number | null;
+          created_at?: string;
+          salary_amount?: number | null;
+          salary_currency?: string | null;
+          salary_starts_on?: string | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'assistant_terms_assistant_id_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: true;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       audit_log: {
         Row: {
           action: string;
@@ -2187,6 +2545,8 @@ export type Database = {
       students: {
         Row: {
           age: number | null;
+          brought_at: string | null;
+          brought_by: string | null;
           code: string | null;
           code_seq: number;
           created_at: string;
@@ -2211,6 +2571,8 @@ export type Database = {
         };
         Insert: {
           age?: number | null;
+          brought_at?: string | null;
+          brought_by?: string | null;
           code?: never;
           code_seq?: never;
           created_at?: string;
@@ -2235,6 +2597,8 @@ export type Database = {
         };
         Update: {
           age?: number | null;
+          brought_at?: string | null;
+          brought_by?: string | null;
           code?: never;
           code_seq?: never;
           created_at?: string;
@@ -2258,6 +2622,13 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [
+          {
+            foreignKeyName: 'students_brought_by_fkey';
+            columns: ['brought_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'students_guardian_id_fkey';
             columns: ['guardian_id'];
@@ -2876,6 +3247,31 @@ export type Database = {
         };
         Relationships: [];
       };
+      v_assistant_students: {
+        Row: {
+          assistant_id: string | null;
+          brought_at: string | null;
+          code: string | null;
+          commission_amount: number | null;
+          commission_currency: string | null;
+          commission_earned_at: string | null;
+          commission_id: string | null;
+          commission_status: Database['public']['Enums']['assistant_commission_status'] | null;
+          first_paid_at: string | null;
+          first_subscription_paid: boolean | null;
+          name: string | null;
+          student_id: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'students_brought_by_fkey';
+            columns: ['assistant_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       v_lesson_sequence: {
         Row: {
           lesson_id: string | null;
@@ -3098,12 +3494,28 @@ export type Database = {
       };
     };
     Functions: {
+      add_assistant_adjustment: {
+        Args: {
+          p_actor: string;
+          p_amount: number;
+          p_assistant: string;
+          p_currency: string;
+          p_reason: string;
+        };
+        Returns: string;
+      };
       apply_lesson_changes: { Args: { p: Json }; Returns: undefined };
+      approve_assistant_statement: {
+        Args: { p_actor: string; p_statement: string };
+        Returns: Json;
+      };
+      assistant_next_open_month: { Args: { p_assistant: string }; Returns: string };
       auth_role: {
         Args: Record<PropertyKey, never>;
         Returns: Database['public']['Enums']['user_role'];
       };
       booking_result: { Args: { p_rule: string }; Returns: Json };
+      build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };
@@ -3112,6 +3524,11 @@ export type Database = {
         Returns: Database['public']['Enums']['teacher_earning_status'];
       };
       edit_lesson_time: { Args: { p: Json }; Returns: undefined };
+      evaluate_assistant_commission: { Args: { p_subscription: string }; Returns: string };
+      generate_assistant_statement: {
+        Args: { p_actor: string; p_assistant: string; p_month: string };
+        Returns: Json;
+      };
       generate_rule_lessons: {
         Args: { p_actor: string; p_lessons: Json; p_rule: string };
         Returns: {
@@ -3184,12 +3601,25 @@ export type Database = {
           phone_e164: string;
         }[];
       };
+      pay_assistant_statement: {
+        Args: { p: Json; p_actor: string; p_statement: string };
+        Returns: Json;
+      };
       prune_activity_log: { Args: Record<PropertyKey, never>; Returns: number };
       record_teacher_payment: { Args: { p: Json }; Returns: Json };
+      reopen_assistant_statement: { Args: { p_actor: string; p_statement: string }; Returns: Json };
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
+      set_student_brought_by: {
+        Args: { p_actor: string; p_assistant: string; p_brought_at?: string; p_student: string };
+        Returns: Json;
+      };
+      set_students_brought_by: {
+        Args: { p_actor: string; p_assistant: string; p_brought_at?: string; p_students: string[] };
+        Returns: Json;
+      };
       teacher_rate_for: {
         Args: { p_minutes: number; r30: number; r45: number; r60: number; r90: number };
         Returns: number;
@@ -3203,12 +3633,22 @@ export type Database = {
         Args: { p_actor: string; p_payout: string; p_reason: string };
         Returns: Json;
       };
+      void_assistant_commission: {
+        Args: { p_actor: string; p_commission: string; p_reason: string };
+        Returns: Json;
+      };
+      void_assistant_commission_row: {
+        Args: { p_actor: string; p_auto: boolean; p_commission: string; p_reason: string };
+        Returns: undefined;
+      };
       reopen_payout: { Args: { p_actor: string; p_payout: string }; Returns: Json };
       settle_payout_in_ledger: {
         Args: { p_actor: string; p_paid_at: string; p_payout: string };
         Returns: string;
       };
+      student_first_paid_at: { Args: { p_student: string }; Returns: string };
       submit_report: { Args: { p: Json }; Returns: Json };
+      subscription_full_at: { Args: { p_subscription: string }; Returns: string };
       sync_teacher_earning: { Args: { p_lesson: string }; Returns: undefined };
       teacher_has_student: {
         Args: { p_student_id: string; p_teacher_id: string };
@@ -3228,9 +3668,15 @@ export type Database = {
           unread: number;
         }[];
       };
+      unpay_assistant_statement: {
+        Args: { p_actor: string; p_reason: string; p_statement: string };
+        Returns: Json;
+      };
     };
     Enums: {
       admin_task_kind: 'renewal_due' | 'subscription_unpaid';
+      assistant_commission_status: 'earned' | 'voided';
+      assistant_commission_type: 'percent' | 'fixed';
       attendance: 'on_time' | 'late' | 'excused' | 'absent';
       booking_kind: 'trial' | 'package' | 'makeup';
       payment_kind: 'payment' | 'refund';
@@ -3402,6 +3848,8 @@ export const Constants = {
   public: {
     Enums: {
       admin_task_kind: ['renewal_due', 'subscription_unpaid'],
+      assistant_commission_status: ['earned', 'voided'],
+      assistant_commission_type: ['percent', 'fixed'],
       attendance: ['on_time', 'late', 'excused', 'absent'],
       booking_kind: ['trial', 'package', 'makeup'],
       payment_kind: ['payment', 'refund'],

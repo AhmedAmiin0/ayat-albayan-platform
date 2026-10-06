@@ -8,7 +8,9 @@ import { describe, expect, it } from 'vitest';
 const MIGRATIONS = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const SQL = readFileSync(join(MIGRATIONS, '20261005000220_roles_permissions.sql'), 'utf8');
 // Keys added later by an idempotent insert: select r.id, '<key>' from public.roles r where ... r.key in ('admin', 'teacher')
-const LATER = readFileSync(join(MIGRATIONS, '20261005000240_student_recordings.sql'), 'utf8');
+const LATER = ['20261005000240_student_recordings.sql', '20261006000274_assistant_scope_roles.sql']
+  .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
+  .join('\n');
 
 function seeded(key: string): string[] {
   const block = SQL.match(new RegExp(`\\('${key}', array\\[([^\\]]*)\\]\\)`));

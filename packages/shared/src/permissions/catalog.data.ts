@@ -80,6 +80,10 @@ export const PERMISSION_ROWS = [
   { key: 'payouts.read', area: 'finance', grants: [] },
   { key: 'payouts.write', area: 'finance', grants: [] },
   { key: 'payouts.approve', area: 'finance', grants: [] },
+  // The assistant's (base role sales) pay: terms, commission ledger, monthly statements, attribution.
+  { key: 'assistantpay.read', area: 'finance', grants: [] },
+  { key: 'assistantpay.write', area: 'finance', grants: [] },
+  { key: 'assistantpay.approve', area: 'finance', grants: [] },
   { key: 'earnings.read', area: 'finance', grants: [] },
   { key: 'earnings.write', area: 'finance', grants: [] },
   { key: 'expenses.read', area: 'finance', grants: [] },
@@ -95,5 +99,10 @@ export const PERMISSION_ROWS = [
   // Every role with that base role holds it; nobody else does (the admin neither, as before).
   { key: 'self.teacher', area: 'self', grants: T },
   { key: 'self.sales', area: 'self', grants: ['sales'] },
+  // The assistant's own pages (sales/me/*): the students they brought, the payments they recorded and
+  // their earnings (terms, commissions, statements). Never grantable: they follow the base role.
+  { key: 'self.sales_students', area: 'self', grants: ['sales'] },
+  { key: 'self.sales_payments', area: 'self', grants: ['sales'] },
+  { key: 'self.sales_earnings', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
 ] as const satisfies readonly { key: string; area: PermissionArea; grants: readonly Grant[] }[];

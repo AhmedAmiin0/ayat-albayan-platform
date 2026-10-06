@@ -2569,9 +2569,9 @@
     "roles": {
       "teacher": "معلم/ة",
       "admin": "إدارة",
-      "assistant": "مساعد/ة",
+      "assistant": "مساعد حلقة",
       "guest": "ضيف",
-      "sales": "مبيعات"
+      "sales": "مساعد/ة"
     },
     "guest": {
       "title": "ادخل الحلقة",
@@ -3037,8 +3037,8 @@
       "admin": "الإدارة",
       "teacher": "معلم/ة",
       "guardian": "ولي الأمر",
-      "assistant": "مساعد/ة",
-      "sales": "المبيعات",
+      "assistant": "مساعد حلقة",
+      "sales": "مساعد/ة",
       "public": "زائر",
       "unknown": "دون دور"
     },
@@ -3157,8 +3157,8 @@
       "students.balance": "عرض رصيد باقة الطالب",
       "guardians.read": "عرض أولياء الأمور",
       "guardians.write": "إدارة أولياء الأمور",
-      "assistants.read": "عرض المساعدين",
-      "assistants.write": "تعيين المساعدين للطلاب",
+      "assistants.read": "عرض مساعدي الحلقات",
+      "assistants.write": "تعيين مساعدي الحلقات للطلاب",
       "teachers.read": "عرض المعلمين",
       "teachers.write": "إضافة المعلمين وتعديلهم",
       "availability.read": "عرض أوقات إتاحة المعلم",
@@ -3199,6 +3199,9 @@
       "payouts.read": "عرض مستحقات المعلمين",
       "payouts.write": "إعداد المستحقات وصرفها",
       "payouts.approve": "اعتماد المستحقات",
+      "assistantpay.read": "عرض شروط المساعدين وعمولاتهم وكشوفهم",
+      "assistantpay.write": "تحديد شروط المساعدين وإعداد كشوفهم وصرفها",
+      "assistantpay.approve": "اعتماد كشوف المساعدين",
       "earnings.read": "عرض أرصدة المعلمين",
       "earnings.write": "تسجيل دفعات المعلمين",
       "expenses.read": "عرض المصروفات",
@@ -3211,8 +3214,11 @@
       "notifications.push": "تلقي إشعارات تطبيق الجوال",
       "translations.manage": "تعديل نصوص الواجهة والترجمة",
       "self.teacher": "صفحات المعلم الخاصة",
-      "self.sales": "صفحات المبيعات الخاصة",
-      "self.assistant": "صفحات المساعد الخاصة"
+      "self.sales": "صفحات المساعد/ة الخاصة",
+      "self.sales_students": "طلاب المساعد/ة الذين أحضرهم",
+      "self.sales_payments": "مدفوعات المساعد/ة التي سجّلها",
+      "self.sales_earnings": "أرباح المساعد/ة وكشوفه",
+      "self.assistant": "صفحات مساعد الحلقة الخاصة"
     },
     "page": {
       "title": "الأدوار والصلاحيات",
