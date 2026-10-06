@@ -46,8 +46,12 @@ import { Route as MTokenRouteImport } from './routes/m.$token'
 import { Route as MeetingIdRouteImport } from './routes/meeting.$id'
 import { Route as STokenRouteImport } from './routes/s.$token'
 import { Route as SalesIndexRouteImport } from './routes/sales/index'
+import { Route as SalesEarningsRouteImport } from './routes/sales/earnings'
 import { Route as SalesInboxRouteImport } from './routes/sales/inbox'
 import { Route as SalesMeetingsRouteImport } from './routes/sales/meetings'
+import { Route as SalesPaymentsRouteImport } from './routes/sales/payments'
+import { Route as SalesRegisterRouteImport } from './routes/sales/register'
+import { Route as SalesStudentsRouteImport } from './routes/sales/students'
 import { Route as SalesSubscriptionsRouteImport } from './routes/sales/subscriptions'
 import { Route as TeacherIndexRouteImport } from './routes/teacher/index'
 import { Route as TeacherCalendarRouteImport } from './routes/teacher/calendar'
@@ -250,6 +254,11 @@ const SalesIndexRoute = SalesIndexRouteImport.update({
   path: '/',
   getParentRoute: () => SalesRoute,
 } as any)
+const SalesEarningsRoute = SalesEarningsRouteImport.update({
+  id: '/earnings',
+  path: '/earnings',
+  getParentRoute: () => SalesRoute,
+} as any)
 const SalesInboxRoute = SalesInboxRouteImport.update({
   id: '/inbox',
   path: '/inbox',
@@ -258,6 +267,21 @@ const SalesInboxRoute = SalesInboxRouteImport.update({
 const SalesMeetingsRoute = SalesMeetingsRouteImport.update({
   id: '/meetings',
   path: '/meetings',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesPaymentsRoute = SalesPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesRegisterRoute = SalesRegisterRouteImport.update({
+  id: '/register',
+  path: '/register',
+  getParentRoute: () => SalesRoute,
+} as any)
+const SalesStudentsRoute = SalesStudentsRouteImport.update({
+  id: '/students',
+  path: '/students',
   getParentRoute: () => SalesRoute,
 } as any)
 const SalesSubscriptionsRoute = SalesSubscriptionsRouteImport.update({
@@ -379,8 +403,12 @@ export interface FileRoutesByFullPath {
   '/m/$token': typeof MTokenRoute
   '/meeting/$id': typeof MeetingIdRoute
   '/s/$token': typeof STokenRoute
+  '/sales/earnings': typeof SalesEarningsRoute
   '/sales/inbox': typeof SalesInboxRoute
   '/sales/meetings': typeof SalesMeetingsRoute
+  '/sales/payments': typeof SalesPaymentsRoute
+  '/sales/register': typeof SalesRegisterRoute
+  '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
@@ -432,8 +460,12 @@ export interface FileRoutesByTo {
   '/m/$token': typeof MTokenRoute
   '/meeting/$id': typeof MeetingIdRoute
   '/s/$token': typeof STokenRoute
+  '/sales/earnings': typeof SalesEarningsRoute
   '/sales/inbox': typeof SalesInboxRoute
   '/sales/meetings': typeof SalesMeetingsRoute
+  '/sales/payments': typeof SalesPaymentsRoute
+  '/sales/register': typeof SalesRegisterRoute
+  '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
@@ -490,8 +522,12 @@ export interface FileRoutesById {
   '/m/$token': typeof MTokenRoute
   '/meeting/$id': typeof MeetingIdRoute
   '/s/$token': typeof STokenRoute
+  '/sales/earnings': typeof SalesEarningsRoute
   '/sales/inbox': typeof SalesInboxRoute
   '/sales/meetings': typeof SalesMeetingsRoute
+  '/sales/payments': typeof SalesPaymentsRoute
+  '/sales/register': typeof SalesRegisterRoute
+  '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/teacher/calendar': typeof TeacherCalendarRoute
   '/teacher/earnings': typeof TeacherEarningsRoute
@@ -549,8 +585,12 @@ export interface FileRouteTypes {
     | '/m/$token'
     | '/meeting/$id'
     | '/s/$token'
+    | '/sales/earnings'
     | '/sales/inbox'
     | '/sales/meetings'
+    | '/sales/payments'
+    | '/sales/register'
+    | '/sales/students'
     | '/sales/subscriptions'
     | '/teacher/calendar'
     | '/teacher/earnings'
@@ -602,8 +642,12 @@ export interface FileRouteTypes {
     | '/m/$token'
     | '/meeting/$id'
     | '/s/$token'
+    | '/sales/earnings'
     | '/sales/inbox'
     | '/sales/meetings'
+    | '/sales/payments'
+    | '/sales/register'
+    | '/sales/students'
     | '/sales/subscriptions'
     | '/teacher/calendar'
     | '/teacher/earnings'
@@ -659,8 +703,12 @@ export interface FileRouteTypes {
     | '/m/$token'
     | '/meeting/$id'
     | '/s/$token'
+    | '/sales/earnings'
     | '/sales/inbox'
     | '/sales/meetings'
+    | '/sales/payments'
+    | '/sales/register'
+    | '/sales/students'
     | '/sales/subscriptions'
     | '/teacher/calendar'
     | '/teacher/earnings'
@@ -959,6 +1007,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesIndexRouteImport
       parentRoute: typeof SalesRoute
     }
+    '/sales/earnings': {
+      id: '/sales/earnings'
+      path: '/earnings'
+      fullPath: '/sales/earnings'
+      preLoaderRoute: typeof SalesEarningsRouteImport
+      parentRoute: typeof SalesRoute
+    }
     '/sales/inbox': {
       id: '/sales/inbox'
       path: '/inbox'
@@ -971,6 +1026,27 @@ declare module '@tanstack/react-router' {
       path: '/meetings'
       fullPath: '/sales/meetings'
       preLoaderRoute: typeof SalesMeetingsRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/payments': {
+      id: '/sales/payments'
+      path: '/payments'
+      fullPath: '/sales/payments'
+      preLoaderRoute: typeof SalesPaymentsRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/register': {
+      id: '/sales/register'
+      path: '/register'
+      fullPath: '/sales/register'
+      preLoaderRoute: typeof SalesRegisterRouteImport
+      parentRoute: typeof SalesRoute
+    }
+    '/sales/students': {
+      id: '/sales/students'
+      path: '/students'
+      fullPath: '/sales/students'
+      preLoaderRoute: typeof SalesStudentsRouteImport
       parentRoute: typeof SalesRoute
     }
     '/sales/subscriptions': {
@@ -1197,15 +1273,23 @@ const AssistantRouteWithChildren = AssistantRoute._addFileChildren(
 )
 
 interface SalesRouteChildren {
+  SalesEarningsRoute: typeof SalesEarningsRoute
   SalesInboxRoute: typeof SalesInboxRoute
   SalesMeetingsRoute: typeof SalesMeetingsRoute
+  SalesPaymentsRoute: typeof SalesPaymentsRoute
+  SalesRegisterRoute: typeof SalesRegisterRoute
+  SalesStudentsRoute: typeof SalesStudentsRoute
   SalesSubscriptionsRoute: typeof SalesSubscriptionsRoute
   SalesIndexRoute: typeof SalesIndexRoute
 }
 
 const SalesRouteChildren: SalesRouteChildren = {
+  SalesEarningsRoute: SalesEarningsRoute,
   SalesInboxRoute: SalesInboxRoute,
   SalesMeetingsRoute: SalesMeetingsRoute,
+  SalesPaymentsRoute: SalesPaymentsRoute,
+  SalesRegisterRoute: SalesRegisterRoute,
+  SalesStudentsRoute: SalesStudentsRoute,
   SalesSubscriptionsRoute: SalesSubscriptionsRoute,
   SalesIndexRoute: SalesIndexRoute,
 }

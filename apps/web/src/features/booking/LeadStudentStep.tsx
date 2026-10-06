@@ -13,6 +13,8 @@ export interface LeadStudentStepProps {
   value: NewStudentDraft;
   tz: string;
   onChange: (patch: { newStudent?: NewStudentDraft; tz?: string }) => void;
+  /** The heading; «طالب جديد من المحادثة» unless there is no chat behind it (an assistant's registration). */
+  title?: string | undefined;
 }
 
 /**
@@ -22,14 +24,14 @@ export interface LeadStudentStepProps {
  * the guardian) and the zone (every person has one, rule 6) follow. The program is picked with the
  * teacher in step 2. The zone applies to both and becomes the rule's zone.
  */
-export function LeadStudentStep({ value, tz, onChange }: LeadStudentStepProps) {
+export function LeadStudentStep({ value, tz, onChange, title }: LeadStudentStepProps) {
   const set = (patch: Partial<NewStudentDraft>) => onChange({ newStudent: { ...value, ...patch } });
   const phoneProblem = value.guardianPhone.trim() ? phoneError(value.guardianPhone) : undefined;
   const age = value.age ?? '';
 
   return (
     <div className="grid gap-x-5 gap-y-4 sm:grid-cols-2">
-      <h3 className="text-sm font-semibold sm:col-span-2">{t.booking.fromLead}</h3>
+      <h3 className="text-sm font-semibold sm:col-span-2">{title ?? t.booking.fromLead}</h3>
       <div className="sm:col-span-2">
         <RequiredLegend />
       </div>
