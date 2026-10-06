@@ -33,7 +33,8 @@ test('rows: name, LTR code, guardian, status word; «يحتاج معلم/ة» on
   expect(screen.getByText(t.students.count.replace('{n}', '3'))).toBeTruthy();
   expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
   expect(screen.getAllByText('أم هدى')).toHaveLength(3);
-  expect(screen.getByText(t.enums.studentStatus.churned)).toBeTruthy();
+  // The status pill and the row both say it.
+  expect(screen.getAllByText(t.enums.studentStatus.churned)).toHaveLength(2);
   // هدى (active, no teacher) only: يوسف churned, مريم has a teacher.
   expect(screen.getAllByText(t.alerts.needsTeacher)).toHaveLength(1);
 });

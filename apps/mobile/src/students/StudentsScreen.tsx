@@ -7,18 +7,22 @@ import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
+import { StudentFilterBar } from './StudentFilterBar';
+import { activeCount, listParams, NO_FILTERS, type StudentFilters } from './student-filters';
 import { StudentRow } from './StudentRow';
 import type { StudentListItem } from './types';
 
 /**
  * «الطلاب» tab (R-MOB-02): GET /students, searched server-side by name, phone in any format or code.
- * TODO(R-MOB-02): status FilterPills (with API counts) once GET /students takes ?status=
- * (the web carries the same gap as TODO(R-STU-01)); filtering loaded pages here would lie.
+ * Filters like the web (status with GET /students/status-counts, teacher, program, package, weekly,
+ * tz) and a server-side sort go to the same endpoint as query params.
  */
 export function StudentsScreen() {
   const [search, setSearch] = useState('');
-  const list = usePagedList<StudentListItem>({ path: '/students', params: { search } });
-  const empty = search ? t.common.notFound : t.students.empty;
+  const [filters, setFilters] = useState<StudentFilters>(NO_FILTERS);
+  const list = usePagedList<StudentListItem>({ path: '/students', params: { search, ...listParams(filters) } });
+  const filtered = search !== '' || activeCount(filters) > 0;
+  const empty = filtered ? t.common.notFound : t.students.empty;
   return (
     <Screen>
       <ScreenHeader
@@ -26,6 +30,7 @@ export function StudentsScreen() {
         subtitle={list.data ? t.students.count.replace('{n}', String(list.total)) : undefined}
       />
       <SearchField onSearch={setSearch} label={t.students.searchPlaceholder} />
+      <StudentFilterBar value={filters} onChange={setFilters} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         data={list.items}

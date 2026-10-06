@@ -2822,6 +2822,99 @@
     "restart": "The app will restart in the other language.",
     "restartManually": "Close the app and open it again to switch the language."
   },
+  "mobileStudentFile": {
+    "recordings": {
+      "title": "Lesson recordings",
+      "button": "Lesson recordings",
+      "hint": "Every lesson held in the online room is recorded automatically and listed here for review.",
+      "count": "Recordings: {n}",
+      "empty": "This student has no recordings yet.",
+      "emptyFiltered": "No recordings match the filter.",
+      "error": "Couldn't load the recordings. Please try again.",
+      "lessonAt": "Lesson {when}",
+      "teacher": "Teacher",
+      "duration": "Duration",
+      "size": "Size",
+      "unknown": "—",
+      "sizeMb": "{n} MB",
+      "sizeGb": "{n} GB",
+      "status": {
+        "recording": "Recording",
+        "done": "Ready",
+        "failed": "Recording failed",
+        "deleted": "Deleted"
+      },
+      "play": "Play",
+      "playOf": "Play the recording of lesson {when}",
+      "playFailed": "Couldn't open the recording. Please try again.",
+      "loadingMore": "Loading more…",
+      "filters": {
+        "dateLabel": "Date",
+        "teacherLabel": "Teacher",
+        "teacherAll": "All teachers",
+        "dateAll": "All dates",
+        "last7": "Last 7 days",
+        "last30": "Last 30 days",
+        "thisMonth": "This month"
+      },
+      "visible": {
+        "label": "Show to the student",
+        "on": "Ready to show to the student and guardian once their portal is on.",
+        "off": "Hidden from the student and guardian.",
+        "failed": "Couldn't change the visibility. Please try again.",
+        "groupLesson": "A group lesson's recording can't be shown to students, because the same file covers more than one student."
+      },
+      "delete": {
+        "action": "Delete recording",
+        "question": "The recording file will be deleted permanently and can't be restored; the deletion record is kept. Continue?",
+        "confirm": "Delete permanently",
+        "deleting": "Deleting…",
+        "failed": "Couldn't delete the recording. Please try again.",
+        "inProgress": "A recording that is still running can't be deleted."
+      }
+    },
+    "money": {
+      "button": "Payments and invoices",
+      "title": "Student payments and invoices",
+      "tabPayments": "Payments",
+      "tabInvoices": "Invoices",
+      "tabsLabel": "Section",
+      "paymentsEmpty": "This student has no payments yet.",
+      "invoicesEmpty": "This student has no invoices yet.",
+      "viewInvoice": "Open invoice",
+      "invoiceFailed": "Couldn't open the invoice. Please try again.",
+      "error": "Couldn't load the data. Please try again."
+    },
+    "list": {
+      "filtersShow": "Filter",
+      "filtersHide": "Hide filters",
+      "active": "Filters ({n})",
+      "clear": "Clear filters",
+      "statusAll": "All statuses",
+      "statusLabel": "Status",
+      "sortLabel": "Sort",
+      "sort": {
+        "newest": "Newest",
+        "name": "Name",
+        "code": "Code",
+        "remaining": "Remaining"
+      },
+      "filtersPanel": "Filter students"
+    },
+    "joinLink": {
+      "title": "Student join link",
+      "hint": "A permanent link the student uses to join their lesson on time without signing in. Creating a new link cancels the previous one.",
+      "create": "Create the link and share it",
+      "creating": "Preparing the link…",
+      "confirm": "The new link cancels any earlier link for this student. Continue?",
+      "confirmAction": "Create a new link",
+      "share": "{name}'s lesson link: {url}",
+      "error": "Couldn't create the link. Please try again.",
+      "shareFailed": "Couldn't share the link, but it was created and won't be shown again. Copy it below or share it again.",
+      "shareAgain": "Share the link again",
+      "newLink": "The new link (shown this time only):"
+    }
+  },
   "teacherNav": {
     "label": "Teacher sections",
     "today": "Today",
