@@ -1,9 +1,10 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister';
-import { focusManager, QueryCache, QueryClient } from '@tanstack/react-query';
+import { focusManager, MutationCache, QueryCache, QueryClient } from '@tanstack/react-query';
 import type { PersistQueryClientOptions } from '@tanstack/react-query-persist-client';
 import Constants from 'expo-constants';
 import { AppState } from 'react-native';
+import { isAccountDisabled, setLoginNotice } from '@/auth/login-notice';
 import { ApiError } from './api';
 import { supabase } from './supabase';
 
@@ -16,9 +17,15 @@ export function shouldRetry(failureCount: number, error: unknown): boolean {
   return failureCount < 3;
 }
 
-/** Expired or revoked session: sign out; the auth gate then shows /login and clears the caches. */
-export function signOutOn401(error: unknown): void {
-  if (error instanceof ApiError && error.status === 401) void supabase.auth.signOut();
+/**
+ * Expired or revoked session (401), or an account an admin disabled mid-session (403 `account_disabled`):
+ * sign out; the auth gate then shows /login and clears the caches. A disabled account leaves its reason
+ * for the login screen. Any other 403 (a permission the role lacks) keeps the session.
+ */
+export function signOutOnAuthError(error: unknown): void {
+  if (isAccountDisabled(error)) setLoginNotice('accountDisabled');
+  else if (!(error instanceof ApiError && error.status === 401)) return;
+  void supabase.auth.signOut();
 }
 
 // RN has no window focus event: back in the foreground, mounted stale lists refetch (tabs stay
@@ -29,7 +36,8 @@ focusManager.setEventListener((setFocused) => {
 });
 
 export const queryClient = new QueryClient({
-  queryCache: new QueryCache({ onError: signOutOn401 }),
+  queryCache: new QueryCache({ onError: signOutOnAuthError }),
+  mutationCache: new MutationCache({ onError: signOutOnAuthError }),
   // gcTime must be ≥ the persist maxAge, or restored queries are collected before a screen reads them.
   defaultOptions: { queries: { gcTime: DAY, retry: shouldRetry } },
 });

@@ -1,6 +1,7 @@
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
+import { isAccountDisabled, isOtherAppRole, noticeText } from './login-notice';
 import { appRole } from './role-claim';
 import type { Me } from './verify-role';
 
@@ -22,14 +23,15 @@ export async function signIn(creds: Credentials): Promise<SignInResult> {
   let me: Me;
   try {
     me = await apiFetch<Me>('/auth/me');
-  } catch {
+  } catch (error) {
     // Signed in but the role is unknown: don't leave a half-checked session behind.
     await supabase.auth.signOut();
-    return { ok: false, error: t.common.error };
+    return { ok: false, error: isAccountDisabled(error) ? noticeText('accountDisabled') : t.common.error };
   }
   if (!appRole(me.role)) {
     await supabase.auth.signOut();
-    return { ok: false, error: t.auth.noRole };
+    // A guardian/student/sales/assistant has an account: say this app is not theirs (noRole means no role).
+    return { ok: false, error: isOtherAppRole(me.role) ? noticeText('wrongApp') : t.auth.noRole };
   }
   return { ok: true };
 }

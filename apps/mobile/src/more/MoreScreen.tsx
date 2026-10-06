@@ -36,9 +36,9 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
         {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
         {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
       </View>
-      <MoneySection />
-      <AdminOpsSection />
-      <FinanceSection />
+      <MoneySection can={can} />
+      <AdminOpsSection can={can} />
+      <FinanceSection can={can} />
       <ClassroomSection can={can} />
       <AppearancePicker />
       <LanguageRow />

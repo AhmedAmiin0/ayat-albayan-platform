@@ -11,6 +11,11 @@ import RootLayout from '../../app/_layout';
 // The real root + tabs layouts with stub screens: proves the gate decides what can be reached.
 jest.mock('expo-font', () => ({ useFonts: () => [true, null] }));
 jest.mock('@/push/registerPush', () => ({ registerPush: jest.fn(async () => undefined) }));
+// Permissions and the inbox badge read the API: an admin whose /auth/me lists no permissions sees every tab.
+jest.mock('@/lib/api', () => ({
+  ...jest.requireActual('@/lib/api'),
+  apiFetch: async (path: string) => (path === '/auth/me' ? { role: 'admin' } : { total: 0 }),
+}));
 jest.mock('@/auth/use-auth-gate', () => {
   const { useState } = jest.requireActual('react');
   const gate = { initial: 'out', set: (() => undefined) as (mockStatus: string) => void };

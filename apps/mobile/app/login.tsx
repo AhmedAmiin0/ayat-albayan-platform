@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { KeyboardAvoidingView, Platform, ScrollView, View } from 'react-native';
+import { setLoginNotice, useLoginNotice } from '@/auth/login-notice';
 import { signIn } from '@/auth/sign-in';
 import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
@@ -17,10 +18,13 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  // Why the last session ended (account disabled, wrong app), until the next attempt.
+  const notice = useLoginNotice();
 
   const submit = async () => {
     setBusy(true);
     setError(null);
+    setLoginNotice(null);
     const res = await signIn({ email: email.trim(), password });
     // On success the auth gate swaps this screen for the tabs (Stack.Protected); stay busy till then.
     if (res.ok) return;
@@ -68,7 +72,7 @@ export default function Login() {
           value={password}
           onChangeText={setPassword}
         />
-        {error ? (
+        {error ?? notice ? (
           <View
             accessible
             accessibilityRole="alert"
@@ -94,7 +98,7 @@ export default function Login() {
                 color: color.ink,
               }}
             >
-              {error}
+              {error ?? notice}
             </AppText>
           </View>
         ) : null}

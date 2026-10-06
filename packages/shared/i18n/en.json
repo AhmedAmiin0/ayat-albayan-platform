@@ -2572,6 +2572,11 @@
     "resumeLeadYes": "Yes, resume follow-up",
     "noSlots": "No open times to suggest right now — the follow-up will try again"
   },
+  "mobileNav": {
+    "accountDisabled": "Your account has been disabled. Contact the admin team.",
+    "wrongApp": "This app is for admins and teachers. Use the web app for your role to sign in.",
+    "badgeOverflow": "{n}+"
+  },
   "notifications": {
     "new_lead": {
       "title": "Message from a new number",

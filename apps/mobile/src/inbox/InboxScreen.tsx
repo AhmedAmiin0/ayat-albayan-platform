@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { canOpen } from '@/auth/route-permissions';
+import { usePermissions } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
@@ -14,10 +16,18 @@ const views = (): FilterPill<View>[] => [
 
 /**
  * The «المحادثات» tab (R-MOB-02: leads + threads, reply, send a template): every WhatsApp thread
- * first — guardians and teachers included — and the new-leads pipeline one tap away.
+ * first — guardians and teachers included — and the new-leads pipeline one tap away. A role with
+ * only one of inbox.read / leads.read gets that list alone, without the switcher.
  */
 export function InboxScreen() {
-  const [view, setView] = useState<View>('threads');
-  const switcher = <FilterPills items={views()} value={view} onChange={setView} accessibilityLabel={t.nav.conversations} />;
+  const can = usePermissions();
+  const hasThreads = canOpen(can, 'inbox');
+  const hasLeads = can('leads.read');
+  const [picked, setPicked] = useState<View>('threads');
+  const view: View = hasThreads && (picked === 'threads' || !hasLeads) ? 'threads' : 'leads';
+  const switcher =
+    hasThreads && hasLeads ? (
+      <FilterPills items={views()} value={view} onChange={setPicked} accessibilityLabel={t.nav.conversations} />
+    ) : null;
   return <Screen>{view === 'threads' ? <ThreadsList switcher={switcher} /> : <LeadsList switcher={switcher} />}</Screen>;
 }

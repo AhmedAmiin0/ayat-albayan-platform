@@ -7,6 +7,10 @@ export interface TabItem {
   name: string;
   title: string;
   icon: TabIconName;
+  /** The held role lacks the permission: the tab leaves the bar (permission-aware nav). */
+  hidden?: boolean;
+  /** Count text on the tab (already formatted); none, no badge. */
+  badge?: string;
 }
 
 /**
@@ -27,9 +31,10 @@ export function AppNativeTabs({ tabs }: { tabs: readonly TabItem[] }) {
       }}
     >
       {tabs.map((tab) => (
-        <NativeTabs.Trigger key={tab.name} name={tab.name}>
+        <NativeTabs.Trigger key={tab.name} name={tab.name} hidden={tab.hidden === true}>
           <NativeTabs.Trigger.Icon sf={TAB_ICONS[tab.icon].sf} src={TAB_ICONS[tab.icon].src} />
           <NativeTabs.Trigger.Label>{tab.title}</NativeTabs.Trigger.Label>
+          {tab.badge ? <NativeTabs.Trigger.Badge>{tab.badge}</NativeTabs.Trigger.Badge> : null}
         </NativeTabs.Trigger>
       ))}
     </NativeTabs>

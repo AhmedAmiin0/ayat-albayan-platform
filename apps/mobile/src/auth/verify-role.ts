@@ -1,6 +1,9 @@
 import type { Session } from '@supabase/supabase-js';
 import { ApiError, apiFetch } from '@/lib/api';
+import { pathKey } from '@/lib/query-keys';
+import { queryClient } from '@/lib/query-client';
 import { supabase } from '@/lib/supabase';
+import { isAccountDisabled, isOtherAppRole, setLoginNotice } from './login-notice';
 import { appRole, roleClaim, type AppRole } from './role-claim';
 
 export interface Me {
@@ -15,9 +18,14 @@ export interface Me {
  */
 export async function verifyRole(session: Session): Promise<AppRole | 'out'> {
   try {
-    const role = appRole((await apiFetch<Me>('/auth/me')).role);
+    const me = await apiFetch<Me>('/auth/me');
+    const role = appRole(me.role);
+    // Seed the permissions the tab bar reads, so its first render already hides what the role lacks.
+    if (role) queryClient.setQueryData(pathKey('/auth/me'), me);
     if (role) return role;
+    if (isOtherAppRole(me.role)) setLoginNotice('wrongApp');
   } catch (error) {
+    if (isAccountDisabled(error)) setLoginNotice('accountDisabled');
     if (!(error instanceof ApiError) || error.status >= 500) {
       const claimed = roleClaim(session.access_token);
       if (claimed) return claimed;

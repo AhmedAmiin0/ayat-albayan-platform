@@ -1,6 +1,7 @@
 import { packageProgress, paymentState, subscriptionStatusStyle, type SubscriptionView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
+import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/lib/i18n';
 import { money, packageName, paidOf } from '@/payments/format';
 import { type, useTheme } from '@/theme';
@@ -25,6 +26,7 @@ export function subscriptionProgress(sub: SubscriptionView, threshold?: number) 
  */
 export function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; threshold?: number }) {
   const { color } = useTheme();
+  const toStudents = useTabOpen('students');
   const progress = subscriptionProgress(sub, threshold);
   const due = progress.tone === 'act' && sub.status !== 'paused' && sub.status !== 'trial';
   const partial = paymentState(sub) !== 'full';
@@ -33,7 +35,7 @@ export function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; th
       title={sub.student.name}
       meta={sub.student.code}
       subtitle={`${packageName(sub)} · ${money(sub.price, sub.currency)}`}
-      onPress={() => router.push(`/students/${sub.student.id}`)}
+      onPress={toStudents ? () => router.push(`/students/${sub.student.id}`) : undefined}
       tags={
         <>
           <AppText
@@ -46,7 +48,7 @@ export function SubscriptionItem({ sub, threshold }: { sub: SubscriptionView; th
             {due ? `${progress.remainingLabel} · ${t.mobileMoney.renewalDue}` : progress.remainingLabel}
           </AppText>
           {partial ? <AppText style={{ fontSize: type.size.xs, color: color.ink2 }}>{paidOf(sub)}</AppText> : null}
-          {partial ? (
+          {partial && toStudents ? (
             <Button
               variant="secondary"
               label={t.mobileMoney.recordPayment}

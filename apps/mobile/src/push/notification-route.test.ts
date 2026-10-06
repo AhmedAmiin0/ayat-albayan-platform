@@ -44,3 +44,13 @@ test('pushKind and pushPhone read only well-formed values', () => {
   expect(pushPhone({ phone: '+966 55 214' })).toBeNull();
   expect(pushPhone([])).toBeNull();
 });
+
+test('a push into a tab the role cannot see opens «المزيد» instead of nowhere', () => {
+  const only = (held: string) => (p: string) => p === held;
+  expect(routeFor({ kind: 'new_message', phone: PHONE }, only('students.read'))).toBe('/more');
+  expect(routeFor({ kind: 'report_submitted', studentId: 's-1' }, only('inbox.read'))).toBe('/more');
+  expect(routeFor({ kind: 'lesson_needs_confirmation' }, only('inbox.read'))).toBe('/more');
+  expect(routeFor({ kind: 'new_message', phone: PHONE }, only('leads.read'))).toBe(THREAD);
+  expect(routeFor({ kind: 'report_submitted', studentId: 's-1' }, only('students.read'))).toBe('/students/s-1');
+  expect(routeFor({ kind: 'nope' }, () => false)).toBeNull();
+});

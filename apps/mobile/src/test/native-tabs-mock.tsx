@@ -6,6 +6,7 @@ import { Children, isValidElement, type ReactElement, type ReactNode } from 'rea
 
 interface TriggerProps {
   name: string;
+  hidden?: boolean;
   children?: ReactNode;
 }
 
@@ -29,7 +30,12 @@ function NativeTabsMock({ children }: { children?: ReactNode }) {
     <Tabs screenOptions={{ headerShown: false }}>
       {triggers.map(({ props }) => {
         const title = labelOf(props.children);
-        return <Tabs.Screen key={props.name} name={props.name} options={{ title, tabBarAccessibilityLabel: title }} />;
+        // Like the real NativeTabs, a hidden trigger is a protected route: a push into it goes nowhere.
+        return (
+          <Tabs.Protected key={props.name} guard={!props.hidden}>
+            <Tabs.Screen name={props.name} options={{ title, tabBarAccessibilityLabel: title }} />
+          </Tabs.Protected>
+        );
       })}
     </Tabs>
   );

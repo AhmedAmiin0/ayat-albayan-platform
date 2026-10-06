@@ -48,7 +48,7 @@ test('the search narrows the loaded rows without another request', async () => {
   await fireEvent(field, 'submitEditing');
   await waitFor(() => expect(screen.queryByText('هدى')).toBeNull());
   expect(screen.getByText('يوسف')).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledTimes(1);
+  expect(mockApiFetch.mock.calls.filter(([path]) => path === '/receivables')).toHaveLength(1);
 });
 
 test('a row opens the existing payment form for that student', async () => {

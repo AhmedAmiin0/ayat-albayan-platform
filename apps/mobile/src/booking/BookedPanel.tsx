@@ -1,6 +1,7 @@
 import type { BookingResult } from '@ab/shared';
 import { router, type Href } from 'expo-router';
 import { View } from 'react-native';
+import { useTabOpen } from '@/auth/use-tab-open';
 import { t } from '@/lib/i18n';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
@@ -29,6 +30,7 @@ export interface BookedPanelProps {
  */
 export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: BookedPanelProps) {
   const { color } = useTheme();
+  const toSchedule = useTabOpen('schedule');
   const first = [...result.lessons].sort((a, b) => a.starts_at.localeCompare(b.starts_at))[0];
   const line = {
     fontFamily: type.ui[500],
@@ -67,7 +69,7 @@ export function BookedPanel({ result, teacherName, tz, onDone, next, makeup }: B
         <Button label={t.inbox.subscription.make} onPress={() => router.replace(next)} />
       ) : makeup ? (
         <View style={{ gap: 8 }}>
-          {first ? (
+          {first && toSchedule ? (
             <Button
               label={t.booking.openSchedule}
               onPress={() => router.replace({ pathname: '/schedule', params: { date: riyadhToday(new Date(first.starts_at)) } })}

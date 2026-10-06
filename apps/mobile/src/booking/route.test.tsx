@@ -9,6 +9,9 @@ import { lesson, yusuf } from '@/today/fixtures';
 
 // The makeup wizard is a screen of the Students tab's stack, so the root stack's admin gate
 // (Stack.Protected on (tabs)) covers it: a teacher never reaches it.
+// The tabs' permission and badge reads need the API: allow everything, no badge, in this routing test.
+jest.mock('@/auth/use-permissions', () => ({ usePermissions: () => () => true }));
+jest.mock('@/nav/use-inbox-badge', () => ({ useInboxBadge: () => undefined }));
 jest.mock('@/push/usePushRegistration', () => ({ usePushRegistration: () => undefined }));
 jest.mock('./MakeupWizard', () => ({
   MakeupWizard: ({ source }: { source: { studentName: string; durationMin: number } }) => {

@@ -1,6 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import Login from '../../app/login';
+import { setLoginNotice } from './login-notice';
 
 const mockSignIn = jest.fn();
 jest.mock('@/auth/sign-in', () => ({ signIn: (c: unknown) => mockSignIn(c) }));
@@ -52,4 +53,20 @@ test('brand mark and Amiri title are on the screen', async () => {
   await render(<Login />);
   expect(screen.getByLabelText(t.app.brand)).toBeTruthy();
   expect(screen.getByRole('header', { name: t.auth.loginTitle })).toBeTruthy();
+});
+
+test('after a mid-session sign-out the login screen says why (disabled account), then clears it on the next try', async () => {
+  mockSignIn.mockResolvedValue({ ok: true });
+  await act(async () => setLoginNotice('accountDisabled'));
+  await render(<Login />);
+  expect(await screen.findByRole('alert')).toHaveTextContent(t.mobileNav.accountDisabled);
+  await fireEvent.press(screen.getByRole('button'));
+  await waitFor(() => expect(screen.queryByRole('alert')).toBeNull());
+});
+
+test('the wrong-app message reads as an alert too', async () => {
+  mockSignIn.mockResolvedValue({ ok: false, error: t.mobileNav.wrongApp });
+  await render(<Login />);
+  await fireEvent.press(screen.getByRole('button'));
+  expect(await screen.findByRole('alert')).toHaveTextContent(t.mobileNav.wrongApp);
 });

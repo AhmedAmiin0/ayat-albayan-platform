@@ -3,6 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { FOREGROUND, useNotificationHandling } from './useNotificationHandling';
 
+jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: async () => ({}) }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
@@ -90,4 +91,19 @@ test('unmount removes both listeners and the foreground handler', async () => {
   await unmount();
   expect(mockRemove).toHaveBeenCalledTimes(2);
   expect(Notifications.setNotificationHandler).toHaveBeenLastCalledWith(null);
+});
+
+test('a message push also refreshes the tab badge count (its own query key)', async () => {
+  const { client } = await mount();
+  const spy = jest.spyOn(client, 'invalidateQueries');
+  await act(async () => mockListeners.received?.(notification({ kind: 'new_message', phone: PHONE })));
+  expect(spy).toHaveBeenCalledWith({ queryKey: ['threads', 'nav-count'] });
+});
+
+test('a tap into a hidden tab falls back to «المزيد» (a hidden tab goes nowhere)', async () => {
+  const client = createTestQueryClient();
+  client.setQueryData(['auth', 'me'], { role: 'admin', permissions: ['payments.read'] });
+  await renderHook(() => useNotificationHandling(), { wrapper: queryWrapper(client) });
+  await act(async () => mockListeners.response?.(tap({ kind: 'new_message', phone: PHONE })));
+  expect(mockPush).toHaveBeenCalledWith('/more');
 });
