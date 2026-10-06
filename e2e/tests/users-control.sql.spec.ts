@@ -54,6 +54,8 @@ test.describe('users control (migrations 280-285)', () => {
       const admin = await userId(tx, USERS.admin.email);
       const teacher = await userId(tx, USERS.teacher.email);
       const s = await student(tx, '+966500000403');
+      // The seeded teacher also has a teachers row: free the profile so the student is its only link.
+      await tx`update public.teachers set profile_id = null where profile_id = ${teacher}`;
       await tx`update public.students set profile_id = ${teacher} where id = ${s.id}`;
       expect(await code(tx, () => as(tx, admin, () => tx`select * from public.admin_list_users()`))).toBe('42501');
       const rows = await asService(tx, () => tx<{ linked_kind: string; linked_code: string; total: string }[]>`

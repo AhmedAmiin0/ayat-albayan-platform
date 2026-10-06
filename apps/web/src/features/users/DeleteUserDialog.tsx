@@ -19,9 +19,11 @@ export interface DeleteUserDialogProps {
 /** Confirms the delete; a user with history (409) lists the tables and offers to disable instead. */
 export function DeleteUserDialog({ user, onBack, onDone }: DeleteUserDialogProps) {
   const queryClient = useQueryClient();
-  const finish = async (message: string) => {
-    await queryClient.invalidateQueries({ queryKey: USERS_KEY });
+  // Close first: refetching the open detail of a deleted user would 404 and retry before the dialog could close.
+  const finish = (message: string) => {
     onDone(message);
+    queryClient.removeQueries({ queryKey: [...USERS_KEY, 'detail', user.id] });
+    void queryClient.invalidateQueries({ queryKey: USERS_KEY });
   };
   const remove = useMutation({ mutationFn: deleteUser, onSuccess: () => finish(t.users.toast.deleted) });
   const disable = useMutation({ mutationFn: disableUser, onSuccess: () => finish(t.users.toast.disabled) });

@@ -57,7 +57,8 @@ test.describe('users control: create and edit', () => {
 
     await dialog.getByPlaceholder(ar.users.link.placeholder).fill(STUDENT.name);
     await dialog.getByRole('button', { name: new RegExp(STUDENT.name) }).click();
-    await dialog.getByRole('radio', { name: ar.users.credential.set }).check();
+    // The radio is visually hidden (sr-only): click its label.
+    await dialog.locator('label', { hasText: ar.users.credential.set }).first().click();
     await dialog.getByLabel(ar.users.credential.password).fill(STUDENT.password);
     await dialog.getByRole('button', { name: ar.users.create.submit }).click();
     await expect(page.getByText(ar.users.result.setDone)).toBeVisible();
