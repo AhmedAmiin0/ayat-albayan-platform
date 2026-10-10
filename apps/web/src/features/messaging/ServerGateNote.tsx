@@ -10,6 +10,7 @@ export const queuedText = (n: number): string => (n === 0 ? s.queued.zero : coun
 /**
  * The gates the admin's switch can't open (docs/12 §3.1): MESSAGING_ENABLED off on the server,
  * or WhatsApp not configured there. With either closed, «الإرسال شغال» alone would mislead.
+ * `restricted`: the server's allow-list (WA_ALLOWED_RECIPIENTS, docs/12 §13.5) holds other numbers.
  */
 export function ServerGateNote({ gate }: { gate: SendGateView }) {
   const server = gate.reason === 'env_off' ? s.gateEnvOff : gate.reason === 'not_configured' ? s.gateNotConfigured : null;
@@ -22,6 +23,7 @@ export function ServerGateNote({ gate }: { gate: SendGateView }) {
         </p>
       )}
       <p className="text-ink-2">{queuedText(gate.queued)}</p>
+      {gate.restricted && <p className="text-ink-2">{s.recipientsRestricted}</p>}
     </div>
   );
 }

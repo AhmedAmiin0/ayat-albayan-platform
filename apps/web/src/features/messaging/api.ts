@@ -1,4 +1,4 @@
-import type { AcademySettings, SendGateView, SettingsUpdate } from '@ab/shared';
+import type { AcademySettings, LineCheckView, SendGateView, SettingsUpdate } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 
@@ -16,3 +16,6 @@ export const sendGateQuery = queryOptions({
 
 /** PATCH /settings (audited): only the keys sent change. */
 export const updateSettings = (body: SettingsUpdate) => apiSend<AcademySettings>('PATCH', '/settings', body);
+
+/** POST /messaging/lines/check (admin): both WhatsApp lines as Meta reports them now; never prefetched. */
+export const checkLines = () => apiSend<LineCheckView[]>('POST', '/messaging/lines/check');
