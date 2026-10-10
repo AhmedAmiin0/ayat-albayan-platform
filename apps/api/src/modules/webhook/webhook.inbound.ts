@@ -72,6 +72,8 @@ export function inboundRow({ m, phone, who, leadId, lessonId }: RowInput): Table
     media_mime: m.mediaMime,
     interactive_payload: m.payload,
     created_at: m.at.toISOString(),
+    // Only when stamped (docs/12 §13.2): a single-line insert carries no `line` key at all.
+    ...(m.line ? { line: m.line } : {}),
   };
 }
 

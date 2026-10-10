@@ -1,17 +1,18 @@
 import { Inject, Injectable, InternalServerErrorException, Logger } from '@nestjs/common';
+import type { LineNumbers } from '../../env';
 import { InboundService } from './webhook.inbound.service';
 import { parseWebhook } from './webhook.parse';
 import { StatusService } from './webhook.status.service';
 
-/** WhatsApp webhook settings from env (docs/12 §3.1); a token so tests can swap them. */
+/** WhatsApp webhook settings from env (docs/12 §3.1, §13.6); a token so tests can swap them. */
 export const WEBHOOK_CONFIG = Symbol('WEBHOOK_CONFIG');
 export interface WebhookConfig {
-  /** WA_APP_SECRET: X-Hub-Signature-256 key. Unset → every POST is 401. */
-  appSecret: string | undefined;
-  /** WA_VERIFY_TOKEN: GET subscribe handshake. Unset → 403. */
+  /** [WA_APP_SECRET, WA_CHAT_APP_SECRET]: X-Hub-Signature-256 keys, any may match. None → every POST is 401. */
+  appSecrets: readonly string[];
+  /** WA_VERIFY_TOKEN: GET subscribe handshake (one token for both Meta apps). Unset → 403. */
   verifyToken: string | undefined;
-  /** WA_PHONE_NUMBER_ID: changes for another number of the WABA are ignored. */
-  phoneNumberId: string | undefined;
+  /** Each line's phone-number id: changes for any other number are ignored. */
+  numbers: LineNumbers;
 }
 
 /**
@@ -43,6 +44,8 @@ export async function within(work: Promise<unknown>, ms: number): Promise<boolea
 @Injectable()
 export class WebhookService {
   private readonly log = new Logger(WebhookService.name);
+  /** phone_number_ids already warned about: one warning per distinct id per process. */
+  private readonly ignored = new Set<string>();
 
   constructor(
     @Inject(WEBHOOK_CONFIG) private readonly config: WebhookConfig,
@@ -52,13 +55,21 @@ export class WebhookService {
 
   async handle(body: unknown): Promise<void> {
     const now = new Date();
-    const batch = parseWebhook(body, { now, phoneNumberId: this.config.phoneNumberId });
+    const onIgnored = (id: string) => this.warnIgnored(id);
+    const batch = parseWebhook(body, { now, numbers: this.config.numbers, onIgnored });
     // When the controller stops waiting (within), so an item knows whether Meta can still re-send it.
     const deadline = now.getTime() + RESPONSE_BUDGET_MS;
     let failed = 0;
     for (const m of batch.messages) failed += await this.safely(m.waMessageId, () => this.inbound.handle(m, { deadline }));
     for (const s of batch.statuses) failed += await this.safely(s.waMessageId, () => this.statuses.handle(s));
     if (failed > 0) throw new InternalServerErrorException({ code: 'webhook_items_failed', failed });
+  }
+
+  /** The id only (no secrets): tells the owner which phone_number_id Meta really sends. */
+  private warnIgnored(id: string): void {
+    if (this.ignored.has(id)) return;
+    this.ignored.add(id);
+    this.log.warn(`webhook ignored a change for phone_number_id ${id}: it is neither line`);
   }
 
   /** 1 when the item failed (logged), else 0. */

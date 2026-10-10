@@ -1,4 +1,5 @@
 import type { Json } from '@ab/db';
+import type { WaLine } from '@ab/shared';
 
 // What the webhook reads out of Meta's envelope (webhook.parse.ts), one item per message / status.
 
@@ -23,6 +24,8 @@ export interface InboundEvent {
   mediaMime: string | null;
   /** messages.interactive_payload: everything but plain text, as Meta sent it. */
   payload: Json | null;
+  /** The receiving line; null unless the chat line is configured (docs/12 §13.2). */
+  line: WaLine | null;
 }
 
 export const DELIVERY_STATUSES = ['sent', 'delivered', 'read', 'failed'] as const;
