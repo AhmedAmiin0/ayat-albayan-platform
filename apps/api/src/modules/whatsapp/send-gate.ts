@@ -1,7 +1,7 @@
 import type { SendGateView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { loadEnv, sendingAllowed, whatsappEnv } from '../../env';
+import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv } from '../../env';
 import { SettingsService } from '../../common/settings/settings.service';
 
 /**
@@ -28,10 +28,13 @@ export class SendGate {
     return (await this.settings.all()).auto_messages_enabled;
   }
 
-  /** GET /messages/gate: which gate is closed, and the queue that goes out the moment all are open. */
+  /**
+   * GET /messages/gate: which gate is closed, and the queue that goes out the moment all are open.
+   * `restricted` only when WA_ALLOWED_RECIPIENTS is set (docs/12 §13.5): absent otherwise.
+   */
   async view(): Promise<SendGateView> {
     const [state, queued] = await Promise.all([this.state(), this.queuedCount()]);
-    return { ...state, queued };
+    return { ...state, queued, ...(allowedRecipients(this.env) ? { restricted: true } : {}) };
   }
 
   /** Which gate is closed, for the admin: the server's env, WhatsApp config, or their own switch. */
