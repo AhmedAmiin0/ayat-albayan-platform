@@ -6,6 +6,10 @@ export interface WebhookTarget {
   url: string;
   appSecret: string;
   phoneNumberId: string;
+  /** metadata.display_phone_number (default the notifications line's). */
+  displayPhone?: string;
+  /** entry[0].id (default the notifications line's 'stub-waba'). */
+  entryId?: string;
 }
 
 /** X-Hub-Signature-256: HMAC-SHA256 of the exact body bytes with the app secret. */
@@ -14,10 +18,10 @@ export function sign(body: string, secret: string): string {
 }
 
 function envelope(target: WebhookTarget, value: Json): string {
-  const metadata = { display_phone_number: '15550001111', phone_number_id: target.phoneNumberId };
+  const metadata = { display_phone_number: target.displayPhone ?? '15550001111', phone_number_id: target.phoneNumberId };
   return JSON.stringify({
     object: 'whatsapp_business_account',
-    entry: [{ id: 'stub-waba', changes: [{ field: 'messages', value: { messaging_product: 'whatsapp', metadata, ...value } }] }],
+    entry: [{ id: target.entryId ?? 'stub-waba', changes: [{ field: 'messages', value: { messaging_product: 'whatsapp', metadata, ...value } }] }],
   });
 }
 
@@ -48,6 +52,10 @@ export interface InboundSpec {
   context?: string;
   /** Unix seconds; defaults to now. */
   timestamp?: number;
+  /** The line it arrives on (default notifications); an unknown id is forwarded as given. */
+  phoneNumberId?: string;
+  /** Signs with this secret instead of the line's own (the bad-signature case). */
+  signWith?: string;
 }
 
 function messagePart(spec: InboundSpec, mediaId: string | null): Json {

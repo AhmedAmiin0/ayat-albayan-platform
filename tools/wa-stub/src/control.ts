@@ -1,17 +1,26 @@
 // Test-only control routes under /__stub (docs/12 §5): inspect what was sent, simulate inbound
 // messages / delivery statuses (signed webhooks), approve templates, inject send failures.
 import { randomUUID } from 'node:crypto';
+import { diagnosticControlRoutes, resetHealth } from './diagnostics.ts';
+import { lineOf, stubLines } from './lines.ts';
 import { defaultTemplates, metaError } from './meta.ts';
 import { digits, readJson, type Route, type StubState } from './state.ts';
 import { forward, inboundValue, statusValue, type InboundSpec, type StatusSpec, type WebhookTarget } from './webhook.ts';
 
-function target(s: StubState): WebhookTarget | null {
-  const { webhookUrl, appSecret, phoneNumberId } = s.opts;
-  return webhookUrl ? { url: webhookUrl, appSecret: appSecret ?? '', phoneNumberId: phoneNumberId ?? 'stub-phone' } : null;
+/**
+ * The webhook of the line `phoneNumberId` belongs to (default notifications): its secret, display
+ * number and entry id. An unknown id keeps the notifications identity with that id in metadata.
+ */
+function target(s: StubState, phoneNumberId?: string): WebhookTarget | null {
+  if (!s.opts.webhookUrl) return null;
+  const line = lineOf(s.opts, phoneNumberId) ?? stubLines(s.opts)[0];
+  const { appSecret, displayPhone, entryId } = line;
+  return { url: s.opts.webhookUrl, appSecret, phoneNumberId: phoneNumberId ?? line.phoneNumberId, displayPhone, entryId };
 }
 
 async function inbound(s: StubState, spec: InboundSpec) {
-  const t = target(s);
+  const line = target(s, spec.phoneNumberId);
+  const t = line && spec.signWith !== undefined ? { ...line, appSecret: spec.signWith } : line;
   if (!t) return [400, { error: 'webhookUrl not configured' }] as const;
   if (!digits(spec.from)) return [400, { error: 'from is required' }] as const;
   let mediaId: string | null = null;
@@ -26,10 +35,12 @@ async function inbound(s: StubState, spec: InboundSpec) {
 }
 
 async function deliveryStatus(s: StubState, spec: StatusSpec) {
-  const t = target(s);
-  if (!t) return [400, { error: 'webhookUrl not configured' }] as const;
+  if (!s.opts.webhookUrl) return [400, { error: 'webhookUrl not configured' }] as const;
   const msg = s.sent.find((m) => m.id === spec.id);
   if (!msg) return [404, { error: `no sent message ${spec.id}` }] as const;
+  // Meta reports a status on the line that sent the message (a path id of no line: notifications).
+  const t = target(s, lineOf(s.opts, msg.phoneNumberId)?.phoneNumberId);
+  if (!t) return [400, { error: 'webhookUrl not configured' }] as const;
   const status = await forward(t, statusValue(spec, msg.to));
   return [200, { forwarded: true, status }] as const;
 }
@@ -40,20 +51,24 @@ export const controlRoutes: Route[] = [
   ['DELETE', /^\/__stub\/messages$/, async (_r, _m, s) => {
     s.sent.length = 0;
     s.reads.length = 0;
+    s.readLog.length = 0;
     return [200, { cleared: true }];
   }],
   ['GET', /^\/__stub\/reads$/, async (_r, _m, s) => [200, s.reads]],
+  ['GET', /^\/__stub\/reads\/by-line$/, async (_r, _m, s) => [200, s.readLog]],
   ['GET', /^\/__stub\/templates$/, async (_r, _m, s) => [200, s.templates]],
   /** Whole reset between e2e tests: default templates, empty logs, media, windows, failures. */
   ['POST', /^\/__stub\/reset$/, async (_r, _m, s) => {
     s.templates = s.opts.templates ?? defaultTemplates();
     s.sent.length = 0;
     s.reads.length = 0;
+    s.readLog.length = 0;
     s.media.clear();
     s.lastInbound.clear();
     s.failNext.clear();
     s.uploads.clear();
     s.handles.clear();
+    resetHealth(s);
     return [200, { reset: true }];
   }],
   ['POST', /^\/__stub\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec))]],
@@ -78,4 +93,5 @@ export const controlRoutes: Route[] = [
     const media = s.media.get(m[1] ?? '');
     return media ? { status: 200, mime: media.mime, bytes: media.bytes } : [404, { error: 'no media' }];
   }],
+  ...diagnosticControlRoutes,
 ];

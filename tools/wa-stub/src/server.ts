@@ -1,13 +1,33 @@
 import { createServer } from 'node:http';
+import type { ChatLineOptions } from './state.ts';
 import { createStub } from './stub.ts';
 
 // Local/e2e only: WhatsappClient talks to this through WA_API_BASE, never to graph.facebook.com.
-const port = Number(process.env['WA_STUB_PORT'] ?? 4010);
+const env = (key: string): string | undefined => process.env[key] || undefined;
+const port = Number(env('WA_STUB_PORT') ?? 4010);
+
+/** The chat identity exists ONLY when WA_CHAT_PHONE_NUMBER_ID is set (docs/12 §13.12). */
+function chatLine(): ChatLineOptions | undefined {
+  const phoneNumberId = env('WA_CHAT_PHONE_NUMBER_ID');
+  if (!phoneNumberId) return undefined;
+  return {
+    phoneNumberId,
+    wabaId: env('WA_CHAT_WABA_ID'),
+    accessToken: env('WA_CHAT_ACCESS_TOKEN'),
+    appSecret: env('WA_CHAT_APP_SECRET'),
+    appId: env('WA_CHAT_APP_ID'),
+  };
+}
+
+const chat = chatLine();
 const stub = createStub({
-  webhookUrl: process.env['WA_WEBHOOK_URL'] ?? 'http://localhost:3000/webhooks/whatsapp',
-  appSecret: process.env['WA_APP_SECRET'] ?? 'local-app-secret',
-  phoneNumberId: process.env['WA_PHONE_NUMBER_ID'] ?? 'stub-phone',
-  ...(process.env['WA_ACCESS_TOKEN'] ? { accessToken: process.env['WA_ACCESS_TOKEN'] } : {}),
+  webhookUrl: env('WA_WEBHOOK_URL') ?? 'http://localhost:3000/webhooks/whatsapp',
+  appSecret: env('WA_APP_SECRET') ?? 'local-app-secret',
+  phoneNumberId: env('WA_PHONE_NUMBER_ID') ?? 'stub-phone',
+  ...(env('WA_ACCESS_TOKEN') ? { accessToken: env('WA_ACCESS_TOKEN') } : {}),
+  ...(env('WA_WABA_ID') ? { wabaId: env('WA_WABA_ID') } : {}),
+  ...(env('WA_APP_ID') ? { appId: env('WA_APP_ID') } : {}),
+  ...(chat ? { chat } : {}),
 });
 
 createServer((req, res) => {
