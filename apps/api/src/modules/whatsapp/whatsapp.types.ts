@@ -1,11 +1,13 @@
 import type { Tables } from '@ab/db';
-import type { TemplateParams } from '@ab/shared';
+import type { TemplateParams, WaLine } from '@ab/shared';
 
 // WhatsappClient contract (docs/12 §3). B1 implements it over WA_API_BASE (tools/wa-stub locally
 // and in e2e); B2/B3 inject it with `@Inject(WHATSAPP_CLIENT)` and fake it in unit tests.
 // Foundation-owned: change it only through the contract doc.
 
 export const WHATSAPP_CLIENT = Symbol('WHATSAPP_CLIENT');
+/** One client per line (docs/12 §13.4); WHATSAPP_CLIENT = its notifications client. */
+export const WHATSAPP_LINES = Symbol('WHATSAPP_LINES');
 
 /** One message_templates row. */
 export type TemplateRow = Tables<'message_templates'>;
@@ -74,6 +76,9 @@ export interface WhatsappClient {
   /** Downloads inbound media: metadata GET /{media_id}, then the bytes with the bearer. */
   getMedia(mediaId: string): Promise<{ bytes: Uint8Array; mime: string }>;
 }
+
+/** WHATSAPP_LINES: one client per line; an unconfigured line's client refuses every call. */
+export type WhatsappLines = Record<WaLine, WhatsappClient>;
 
 /** A failed Graph call. `code` = Meta's error code (132001, 131047, …) or null (network, 5xx). */
 export class WaError extends Error {

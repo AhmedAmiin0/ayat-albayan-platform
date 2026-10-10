@@ -14,3 +14,5 @@ export * from './thread-people.js';
 export * from './timing.js';
 export * from './wa.js';
 export type * from './views.js';
+export type * from './template-views.js';
+export type * from './line-views.js';

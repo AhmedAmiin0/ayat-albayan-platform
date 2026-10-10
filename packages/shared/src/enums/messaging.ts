@@ -36,9 +36,12 @@ export const PUSH_KINDS = [
   'reminder_failed',
   'payment_due',
 ] as const satisfies readonly Enums<'push_kind'>[];
+/** The two business WhatsApp numbers (docs/12 §13): templates always leave from notifications. */
+export const WA_LINES = ['notifications', 'chat'] as const satisfies readonly Enums<'wa_line'>[];
 
 export type MessageDirection = Enums<'message_direction'>;
 export type MessageStatus = Enums<'message_status'>;
 export type TemplateStatus = Enums<'template_status'>;
 export type TemplateCategory = Enums<'template_category'>;
 export type PushKind = Enums<'push_kind'>;
+export type WaLine = Enums<'wa_line'>;

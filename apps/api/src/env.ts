@@ -1,8 +1,20 @@
 import { z } from 'zod';
+import { parseAllowedRecipients } from './env.recipients';
+
+export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps } from './env.whatsapp';
+export { allowedRecipients, recipientAllowed, parseAllowedRecipients } from './env.whatsapp';
+export type { WhatsappEnv, LineEnvs, LineNumbers } from './env.whatsapp';
 
 /** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
 const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
 const optionalSecret = z.preprocess(blankIsUnset, z.string().trim().min(1).optional());
+/** Comma list → normalised E.164 list; any bad item fails the boot, naming it (fail closed). */
+const recipientList = z.string().transform((raw, ctx) => {
+  const { items, bad } = parseAllowedRecipients(raw);
+  if (bad === null) return items;
+  ctx.addIssue({ code: 'custom', message: `WA_ALLOWED_RECIPIENTS: not an E.164 number: ${bad}` });
+  return z.NEVER;
+});
 
 // Secrets only via env (rule 9). Fails fast at boot when something required is missing.
 // WhatsApp and Expo values are all optional: without them messaging stays off (docs/12 §3).
@@ -33,6 +45,20 @@ const schema = z.object({
   WA_APP_SECRET: optionalSecret,
   /** hub.verify_token answered by GET /webhooks/whatsapp. */
   WA_VERIFY_TOKEN: optionalSecret,
+  /** Chat line (docs/12 §13.1): its phone-number id ALONE makes the webhook accept that line. */
+  WA_CHAT_PHONE_NUMBER_ID: optionalSecret,
+  /** Chat line's WABA: needed to SEND from it. */
+  WA_CHAT_WABA_ID: optionalSecret,
+  /** Chat line's token; falls back to WA_ACCESS_TOKEN. */
+  WA_CHAT_ACCESS_TOKEN: optionalSecret,
+  /** Webhook secret of the chat line's Meta app; signatures may match either secret. */
+  WA_CHAT_APP_SECRET: optionalSecret,
+  /** Chat line's Meta app id: diagnostics only, no fallback to WA_APP_ID. */
+  WA_CHAT_APP_ID: optionalSecret,
+  /** Staging guard: only these E.164 numbers may receive anything; unset/blank = no restriction. */
+  WA_ALLOWED_RECIPIENTS: z.preprocess(blankIsUnset, recipientList.optional()),
+  /** false = the template sync and submit stop (Meta test credentials must not rewrite the registry). */
+  WA_TEMPLATE_SYNC: z.preprocess(blankIsUnset, z.stringbool().default(true)),
   /** Expo push access token (only when the Expo project enforces push security). */
   EXPO_ACCESS_TOKEN: optionalSecret,
   /**
@@ -86,34 +112,6 @@ export type Env = z.infer<typeof schema>;
 
 export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
   return schema.parse(source);
-}
-
-/** What WhatsappClient needs to reach Meta (or the stub). */
-export interface WhatsappEnv {
-  base: string;
-  version: string;
-  phoneNumberId: string;
-  wabaId: string;
-  accessToken: string;
-  /** WA_APP_ID; absent = no sample uploads, so a document-header template can't be submitted. */
-  appId?: string;
-}
-
-/** null = WhatsApp not configured: the client refuses every call and nothing is sent. */
-export function whatsappEnv(env: Env): WhatsappEnv | null {
-  const { WA_API_BASE: base, WA_PHONE_NUMBER_ID: phoneNumberId, WA_WABA_ID: wabaId, WA_ACCESS_TOKEN: accessToken } = env;
-  if (!base || !phoneNumberId || !wabaId || !accessToken) return null;
-  const conn = { base: base.replace(/\/+$/, ''), version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
-  return env.WA_APP_ID ? { ...conn, appId: env.WA_APP_ID } : conn;
-}
-
-/**
- * The one send gate (docs/12 §3) for the sender, the schedulers and the inbox: env
- * MESSAGING_ENABLED, WhatsApp configured, and the admin's kill switch (settings.messaging_enabled).
- * Any of them off → rows stay queued.
- */
-export function sendingAllowed(env: Env, messagingEnabledSetting: boolean): boolean {
-  return env.MESSAGING_ENABLED && whatsappEnv(env) !== null && messagingEnabledSetting;
 }
 
 /** What the classroom needs to mint a join token; null = not configured (503). */
