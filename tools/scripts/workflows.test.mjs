@@ -15,6 +15,8 @@ const docs = readFileSync(root('docs/09-deployment.md'), 'utf8');
 const section = docs.slice(docs.indexOf('## GitHub Actions'));
 const secretsIn = (x) => [...JSON.stringify(x).matchAll(/secrets\.([A-Za-z_][A-Za-z0-9_]*)/g)].map((m) => m[1]);
 const jobsOf = (w) => Object.entries(w.doc.jobs ?? {});
+/** Server-only messaging switches (docs/12 §13.13): set by hand on the server, never by a workflow. */
+const FLAGS = /\b(MESSAGING_ENABLED|WA_PHONE_NUMBER_ID|WA_CHAT_PHONE_NUMBER_ID|WA_ALLOWED_RECIPIENTS)\b/;
 
 test('every workflow parses and has jobs', () => {
   assert.ok(workflows.length >= 7);
@@ -30,15 +32,21 @@ test('every workflow has top-level permissions of contents: read only', () => {
   for (const w of workflows) assert.deepEqual(w.doc.permissions, { contents: 'read' }, w.file);
 });
 
-test('no workflow sets MESSAGING_ENABLED or WA_PHONE_NUMBER_ID (only the deploy guard may read the flag)', () => {
-  const flags = /\b(MESSAGING_ENABLED|WA_PHONE_NUMBER_ID)\b/;
+test('the flag guard catches every server-only messaging switch, as whole words only', () => {
+  for (const k of ['MESSAGING_ENABLED', 'WA_PHONE_NUMBER_ID', 'WA_CHAT_PHONE_NUMBER_ID', 'WA_ALLOWED_RECIPIENTS']) {
+    assert.ok(FLAGS.test(`echo "${k}=x" >> .env`), k);
+  }
+  assert.ok(!FLAGS.test('WA_ALLOWED_RECIPIENTS_LIST WA_TEMPLATE_SYNC WA_CHAT_WABA_ID'));
+});
+
+test('no workflow sets MESSAGING_ENABLED, WA_PHONE_NUMBER_ID, WA_CHAT_PHONE_NUMBER_ID or WA_ALLOWED_RECIPIENTS (only the deploy guard may read the flag)', () => {
   for (const w of workflows) {
     const steps = jobsOf(w).flatMap(([, j]) => [{ env: j.env }, ...(j.steps ?? [])]);
     for (const s of steps) {
-      assert.ok(!flags.test(Object.keys(s.env ?? {}).join(' ')), `${w.file}: env key`);
-      assert.ok(!flags.test(s.run ?? ''), `${w.file}: run script`);
-      assert.ok(!flags.test(JSON.stringify(s.with ?? {})), `${w.file}: with`);
-      if (s.if && flags.test(String(s.if))) {
+      assert.ok(!FLAGS.test(Object.keys(s.env ?? {}).join(' ')), `${w.file}: env key`);
+      assert.ok(!FLAGS.test(s.run ?? ''), `${w.file}: run script`);
+      assert.ok(!FLAGS.test(JSON.stringify(s.with ?? {})), `${w.file}: with`);
+      if (s.if && FLAGS.test(String(s.if))) {
         assert.equal(w.file, 'deploy-staging.yml');
         assert.match(String(s.if), /^\$\{\{ vars\.MESSAGING_ENABLED == 'true' \}\}$/);
       }
