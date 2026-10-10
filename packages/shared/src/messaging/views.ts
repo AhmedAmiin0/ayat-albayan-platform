@@ -4,10 +4,9 @@ import type {
   LessonStatus,
   MessageDirection,
   MessageStatus,
-  TemplateCategory,
-  TemplateStatus,
 } from '../enums/index.js';
-import type { TemplateButton, TemplateParams } from './templates.js';
+import type { WaLine } from '../enums/messaging.js';
+import type { TemplateParams } from './templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
 // Phase 4 responses (docs/12 §4): snake_case rows like every API response; instants ISO-8601 UTC.
@@ -44,6 +43,8 @@ export interface ThreadView {
   badge?: SubscriptionBadge | null;
   /** familyUnpaid: a running package still owes money, the «مش مدفوع» tag. Absent like `badge`. */
   unpaid?: boolean;
+  /** Line of the newest inbound (docs/12 §13); null = history or a single line. Absent in an old cache. */
+  last_inbound_line?: WaLine | null;
 }
 
 /** One messages row in a thread (R-MSG-05). */
@@ -75,6 +76,8 @@ export interface MessageView {
   sent_manually_at: string | null;
   /** The teacher who sent it from their inbox («بعتها»); null = the academy or a job. Absent in an old cache. */
   sent_by_teacher_name?: string | null;
+  /** Line received on / sent from (docs/12 §13); null = history or a single line. Absent in an old cache. */
+  line?: WaLine | null;
   created_at: string;
   /** R-MSG-03 wa.me link with the fallback text; only on outbound queued / failed rows. */
   click_to_chat: string | null;
@@ -114,35 +117,4 @@ export interface ThreadLesson {
   student_names: string[];
   /** The recipient's tz (the guardian's, or the teacher's). */
   tz: string;
-}
-
-/** GET /messaging/templates item: one message_templates row. */
-export interface TemplateView {
-  key: string;
-  meta_name: string;
-  language: string;
-  category: TemplateCategory;
-  header_format: 'document' | null;
-  body_ar: string;
-  footer_ar: string | null;
-  /** Names of {{1}}, {{2}}, … in order. */
-  params: string[];
-  buttons: TemplateButton[];
-  status: TemplateStatus;
-  quality: string | null;
-  meta_id: string | null;
-  last_checked_at: string | null;
-  last_error: string | null;
-  submitted_at: string | null;
-}
-
-/**
- * GET /messages/gate: can anything go out now (docs/12 §3.1), and if not, which gate is closed —
- * the server's MESSAGING_ENABLED (env_off), WhatsApp not configured, or the admin's switch.
- */
-export interface SendGateView {
-  open: boolean;
-  reason: 'env_off' | 'not_configured' | 'switch_off' | null;
-  /** Outbound rows waiting in the queue: they go out the moment the gate opens. */
-  queued: number;
 }

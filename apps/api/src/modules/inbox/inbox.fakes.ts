@@ -16,6 +16,7 @@ export function threadRow(over: Partial<ThreadRow> = {}): ThreadRow {
     last_media_mime: null,
     last_message_at: '2026-10-02T08:00:00Z',
     last_inbound_at: '2026-10-02T08:00:00Z',
+    last_inbound_line: null,
     unread_count: 1,
     lead_id: 'l0000000-0000-4000-8000-000000000001',
     lead_name: 'أم ياسمين',

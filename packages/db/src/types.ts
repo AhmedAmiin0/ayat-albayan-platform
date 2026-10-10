@@ -1882,6 +1882,7 @@ export type Database = {
           interactive_payload: Json | null;
           lead_id: string | null;
           lesson_id: string | null;
+          line: Database['public']['Enums']['wa_line'] | null;
           media_id: string | null;
           media_mime: string | null;
           media_path: string | null;
@@ -1917,6 +1918,7 @@ export type Database = {
           interactive_payload?: Json | null;
           lead_id?: string | null;
           lesson_id?: string | null;
+          line?: Database['public']['Enums']['wa_line'] | null;
           media_id?: string | null;
           media_mime?: string | null;
           media_path?: string | null;
@@ -1952,6 +1954,7 @@ export type Database = {
           interactive_payload?: Json | null;
           lead_id?: string | null;
           lesson_id?: string | null;
+          line?: Database['public']['Enums']['wa_line'] | null;
           media_id?: string | null;
           media_mime?: string | null;
           media_path?: string | null;
@@ -3498,6 +3501,7 @@ export type Database = {
           last_body: string | null;
           last_direction: Database['public']['Enums']['message_direction'] | null;
           last_inbound_at: string | null;
+          last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;
           last_message_at: string | null;
           last_message_id: string | null;
@@ -3790,6 +3794,7 @@ export type Database = {
       template_status:
         'not_submitted' | 'pending' | 'approved' | 'rejected' | 'paused' | 'disabled' | 'missing';
       user_role: 'admin' | 'teacher' | 'guardian' | 'assistant' | 'sales' | 'student';
+      wa_line: 'notifications' | 'chat';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -3973,6 +3978,7 @@ export const Constants = {
         'missing',
       ],
       user_role: ['admin', 'teacher', 'guardian', 'assistant', 'sales', 'student'],
+      wa_line: ['notifications', 'chat'],
     },
   },
 } as const;

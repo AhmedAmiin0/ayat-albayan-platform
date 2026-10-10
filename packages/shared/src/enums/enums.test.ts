@@ -29,6 +29,7 @@ const LABELLED: [keyof typeof ar.enums, readonly (string | number)[]][] = [
   ['templateStatus', E.TEMPLATE_STATUSES],
   ['templateCategory', E.TEMPLATE_CATEGORIES],
   ['pushKind', E.PUSH_KINDS],
+  ['waLine', E.WA_LINES],
   ['feedbackKind', E.FEEDBACK_KINDS],
   ['feedbackRecommend', E.FEEDBACK_RECOMMEND],
 ];

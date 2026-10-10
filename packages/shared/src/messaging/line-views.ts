@@ -1,0 +1,25 @@
+import type { WaLine } from '../enums/messaging.js';
+
+/**
+ * POST /messaging/lines/check item (docs/12 §13.8–13.9): one WhatsApp line as Meta reports it.
+ * Carries ids and URLs only, NEVER tokens or secrets. An unconfigured line has every field null.
+ */
+export interface LineCheckView {
+  line: WaLine;
+  configured: boolean;
+  phone_number_id: string | null;
+  waba_id: string | null;
+  /** The line's OWN Meta app id from env (WA_APP_ID / WA_CHAT_APP_ID): an id, not a secret. */
+  app_id: string | null;
+  display_phone_number: string | null;
+  verified_name: string | null;
+  quality_rating: string | null;
+  status: string | null;
+  name_status: string | null;
+  code_verification_status: string | null;
+  /** null = not asked / the call failed; [] = no app subscribed to the WABA (no webhook arrives). */
+  subscribed_apps: { id: string | null; name: string | null; override_callback_uri: string | null }[] | null;
+  /** One entry per failed Graph call (phone first, then subscribed_apps). */
+  errors: { step: 'phone' | 'subscribed_apps'; code: number | null; message: string }[];
+  checked_at: string;
+}
