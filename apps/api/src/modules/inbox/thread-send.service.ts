@@ -1,5 +1,6 @@
-import { isTeacherTemplate, sessionWindowOpen, type ThreadTemplate, type ThreadText } from '@ab/shared';
+import { isTeacherTemplate, sessionWindowOpen, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { lineEnvs, loadEnv } from '../../env';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import { assertSalesPhone, type SalesScope } from '../sales/sales-scope';
@@ -42,6 +43,17 @@ function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
 }
 
 /**
+ * The line a session text leaves from: the one of the customer's newest inbound (docs/12 §13.3;
+ * null = history / single-line = notifications, no stamp). Chat while the chat line cannot send is
+ * 503 line_not_configured; the env is read per request.
+ */
+function replyLine(thread: ThreadRow | null): WaLine | null {
+  const line = thread?.last_inbound_line ?? null;
+  if (line === 'chat' && !lineEnvs(loadEnv()).chat) throw waHttpError('line_not_configured', 503);
+  return line;
+}
+
+/**
  * H3/H4 (docs/12 §4, R-LEAD-02): the admin — or, in teacher mode, a teacher for their own families
  * (owner decision 2026-10-02) — writes from the inbox, from the academy number.
  */
@@ -53,17 +65,24 @@ export class ThreadSendService {
     private readonly outbox: Outbox,
   ) {}
 
-  /** H3: free text inside the 24 h window only (WhatsApp rejects it after: 131047). */
+  /**
+   * H3: free text inside the 24 h window only (WhatsApp rejects it after: 131047), stamped with the
+   * line of the customer's newest inbound (replyLine) after the window check, before the enqueue.
+   */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     if (s.sales) assertSalesPhone(s.sales, s.phone);
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     if (!sessionWindowOpen(thread?.last_inbound_at, now)) throw waHttpError('session_closed', 409);
-    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text });
+    const line = replyLine(thread);
+    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...(line ? { line } : {}) });
   }
 
-  /** H4: an approved template with every variable filled; a PDF template comes only from the PDF job. */
+  /**
+   * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
+   * No line stamp: templates always leave from the notifications line (the sender stamps at claim).
+   */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     if (s.sales) await this.salesMay(s.sales, s);

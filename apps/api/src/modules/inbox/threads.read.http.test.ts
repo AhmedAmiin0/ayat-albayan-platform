@@ -18,7 +18,9 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     vi.resetAllMocks();
     t.queries.list.mockResolvedValue({ items: [threadRow()], total: 1 });
     t.queries.thread.mockResolvedValue(threadRow());
-    t.queries.markInboundRead.mockResolvedValue('wamid.newest');
+    t.queries.markInboundRead.mockResolvedValue([{ waMessageId: 'wamid.newest', line: 'notifications' }]);
+    t.client.configured.mockReturnValue(true);
+    t.chatClient.configured.mockReturnValue(true);
     t.queries.people.mockResolvedValue(NO_PEOPLE);
     t.queries.familyTags.mockResolvedValue(new Map());
   });
@@ -89,6 +91,19 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     expect([body.has_more, body.thread.phone_e164]).toEqual([true, PHONE]);
     expect(t.queries.markInboundRead).toHaveBeenCalledWith(PHONE, expect.any(Date));
     expect(t.client.markRead).toHaveBeenCalledWith('wamid.newest');
+    expect(t.chatClient.markRead).not.toHaveBeenCalled();
+  });
+
+  it('H2 a thread with unread inbound on both lines: one receipt per line, on that line', async () => {
+    t.gate.open.mockResolvedValue(true);
+    t.queries.messages.mockResolvedValue([]);
+    t.queries.markInboundRead.mockResolvedValue([
+      { waMessageId: 'wamid.n', line: 'notifications' },
+      { waMessageId: 'wamid.c', line: 'chat' },
+    ]);
+    expect((await t.call({ method: 'GET', url: URL })).statusCode).toBe(200);
+    expect(t.client.markRead.mock.calls).toEqual([['wamid.n']]);
+    expect(t.chatClient.markRead.mock.calls).toEqual([['wamid.c']]);
   });
 
   it('H2 gate closed: stamps read but never calls Meta; an older page stamps nothing', async () => {
@@ -96,6 +111,7 @@ describe('H1/H2 threads (docs/12 §4, R-LEAD-02)', () => {
     t.queries.messages.mockResolvedValue([]);
     await t.call({ method: 'GET', url: URL });
     expect(t.client.markRead).not.toHaveBeenCalled();
+    expect(t.chatClient.markRead).not.toHaveBeenCalled();
     t.queries.markInboundRead.mockClear();
     await t.call({ method: 'GET', url: `${URL}?before=2026-10-02T08:00:00Z` });
     expect(t.queries.markInboundRead).not.toHaveBeenCalled();

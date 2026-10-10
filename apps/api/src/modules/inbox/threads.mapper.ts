@@ -23,6 +23,7 @@ export function toThreadView(row: ThreadRow, now: Date, tag: FamilyTag | null = 
     last_media_mime: row.last_media_mime,
     last_message_at: row.last_message_at ?? '',
     last_inbound_at: row.last_inbound_at,
+    last_inbound_line: row.last_inbound_line,
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
     lead_name: row.lead_name,

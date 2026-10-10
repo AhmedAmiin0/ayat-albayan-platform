@@ -5,7 +5,7 @@ import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMediaQueries, type MediaMessage } from '../whatsapp/inbound-media.queries';
-import { WHATSAPP_CLIENT } from '../whatsapp/whatsapp.types';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import { ADMIN, TEACHER } from './test-app';
 
 const PHONE = '+966552147730';
@@ -27,13 +27,15 @@ const row = (over: Partial<MediaMessage> = {}): MediaMessage => ({
   media_path: null,
   body: 'الفاتورة',
   created_at: new Date().toISOString(),
+  line: null,
   ...over,
 });
 
 describe('thread media routes (R-MSG-06): admin only', () => {
   let app: NestFastifyApplication;
   const queries = { message: vi.fn(), recent: vi.fn(), setPath: vi.fn() };
-  const client = { configured: () => false, getMedia: vi.fn() };
+  const client = { configured: vi.fn(() => true), getMedia: vi.fn() };
+  const chatClient = { configured: vi.fn(() => true), getMedia: vi.fn() };
   const storage = { upload: vi.fn(), signedDownload: vi.fn() };
   const call = (url: string, token = 'admin') =>
     app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
@@ -43,6 +45,7 @@ describe('thread media routes (R-MSG-06): admin only', () => {
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(InboundMediaQueries).useValue(queries)
       .overrideProvider(WHATSAPP_CLIENT).useValue(client)
+      .overrideProvider(WHATSAPP_LINES).useValue({ notifications: client, chat: chatClient })
       .overrideProvider(StorageService).useValue(storage)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -52,7 +55,10 @@ describe('thread media routes (R-MSG-06): admin only', () => {
   afterAll(() => app.close());
   beforeEach(() => {
     vi.resetAllMocks();
+    client.configured.mockReturnValue(true);
+    chatClient.configured.mockReturnValue(true);
     client.getMedia.mockResolvedValue({ bytes: new Uint8Array([1]), mime: 'image/jpeg' });
+    chatClient.getMedia.mockResolvedValue({ bytes: new Uint8Array([1]), mime: 'image/jpeg' });
     storage.signedDownload.mockResolvedValue({ url: 'http://signed', expires_at: '2026-10-03T11:00:00.000Z' });
   });
 
@@ -100,6 +106,16 @@ describe('thread media routes (R-MSG-06): admin only', () => {
     expect(res.statusCode).toBe(404);
     expect(res.json()).toMatchObject({ code: 'message_not_found' });
     expect(client.getMedia).not.toHaveBeenCalled();
+  });
+
+  it('a chat file is fetched with the chat line; chat unconfigured → 503 line_not_configured', async () => {
+    queries.message.mockResolvedValue(row({ line: 'chat' }));
+    expect((await call(`/threads/${URL_PHONE}/media/${M1}`)).statusCode).toBe(200);
+    expect([chatClient.getMedia.mock.calls, client.getMedia.mock.calls]).toEqual([[['meta-1']], []]);
+    chatClient.configured.mockReturnValue(false);
+    const res = await call(`/threads/${URL_PHONE}/media/${M1}`);
+    expect([res.statusCode, res.json().code]).toEqual([503, 'line_not_configured']);
+    expect(chatClient.getMedia).toHaveBeenCalledTimes(1);
   });
 
   it('an expired file is 410 media_expired', async () => {

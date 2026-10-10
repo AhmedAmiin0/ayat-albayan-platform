@@ -18,6 +18,14 @@ describe('toThreadView (H1/H2)', () => {
     const v = toThreadView(threadRow({ unread_count: null, display_name: null }), AT);
     expect([v.unread_count, v.display_name, v.phone_e164]).toEqual([0, null, '+966501234567']);
   });
+
+  it('passes last_inbound_line through; the 24 h window ignores the line (docs/12 §13.7)', () => {
+    expect(toThreadView(threadRow({ last_inbound_line: null }), AT).last_inbound_line).toBeNull();
+    const chat = toThreadView(threadRow({ last_inbound_line: 'chat' }), hours(23.9));
+    expect([chat.last_inbound_line, chat.session_open]).toEqual(['chat', true]);
+    expect(toThreadView(threadRow({ last_inbound_line: 'chat' }), hours(24)).session_open).toBe(false);
+    expect(toThreadView(threadRow({ last_inbound_line: 'notifications' }), AT).last_inbound_line).toBe('notifications');
+  });
 });
 
 describe('threadSearchFilter', () => {

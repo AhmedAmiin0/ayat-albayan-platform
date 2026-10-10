@@ -1,6 +1,7 @@
 // HTTP test harness for the inbox routes (test-only, excluded from the build). Real controllers,
-// guards, services, registry and MessageViews; the DB-facing queries, the client, the gate and
-// the sender are mocks.
+// guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
+// the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
+// configured by default; files that reset all mocks re-prime `configured` in beforeEach.
 import type { ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
@@ -13,13 +14,13 @@ import { SalesQueries } from '../sales/sales.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
 import { TemplatesQueries } from '../whatsapp/templates.queries';
-import { WHATSAPP_CLIENT } from '../whatsapp/whatsapp.types';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
 import type { FamilyTag } from './thread-people.mapper';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { ThreadsQueries } from './threads.queries';
 
 export const NO_PEOPLE: ThreadPeople = { guardian: null, lead: null, students: [] };
-export const ADMIN: AuthUser ={ id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
+export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 export const TEACHER: AuthUser = { id: 't1', email: null, role: 'teacher' };
 export const SALES: AuthUser = { id: 's1', email: null, role: 'sales' };
 const USERS: Record<string, AuthUser> = {
@@ -52,7 +53,8 @@ function mocks() {
     },
     sales: { ownership: vi.fn() },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
-    client: { configured: vi.fn(() => false), markRead: vi.fn() },
+    client: { configured: vi.fn(() => true), markRead: vi.fn() },
+    chatClient: { configured: vi.fn(() => true), markRead: vi.fn() },
     gate: { open: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
@@ -68,6 +70,7 @@ export async function inboxApp() {
     .overrideProvider(SalesQueries).useValue(m.sales)
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
+    .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(SendGate).useValue(m.gate)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(AuditService).useValue(m.audit)

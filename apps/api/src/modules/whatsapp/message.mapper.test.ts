@@ -69,4 +69,11 @@ describe('toTemplateView', () => {
     expect(toMessageView({ row: { ...messageRow(), sent_by_teacher: null }, template: booking }).sent_by_teacher_name).toBeNull();
     expect(toMessageView({ row: messageRow(), template: booking }).sent_by_teacher_name).toBeNull();
   });
+
+  it('passes the line through, null included (docs/12 §13.7)', () => {
+    expect(toMessageView({ row: messageRow({ line: null }), template: booking }).line).toBeNull();
+    const inbound = messageRow({ line: 'chat', direction: 'inbound', status: 'delivered', template_key: null, template_params: null });
+    expect(toMessageView({ row: inbound, template: null }).line).toBe('chat');
+    expect(toMessageView({ row: messageRow({ line: 'notifications' }), template: booking }).line).toBe('notifications');
+  });
 });
