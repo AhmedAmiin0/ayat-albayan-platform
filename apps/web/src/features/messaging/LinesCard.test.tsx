@@ -106,10 +106,10 @@ describe('LinesCard (docs/12 §13.9–13.10, R-MSG-05)', () => {
   });
 
   it('a failed Graph call is listed with Meta’s message', async () => {
-    const errors = [{ step: 'phone' as const, code: 190, message: 'Invalid OAuth access token' }];
+    const errors = [{ step: 'phone' as const, code: 4242, message: 'Invalid OAuth access token' }];
     await checkWith([view({ errors, status: null, quality_rating: null }), view({ line: 'chat' })]);
     const item = row('notifications').getByText('Invalid OAuth access token').closest('li');
-    expect(item?.textContent).toBe(s.callFailed.replace('{message}', 'Invalid OAuth access token'));
+    expect(item?.textContent).toBe(`${s.callFailed.replace('{message}', 'Invalid OAuth access token')}(4242)`);
   });
 
   it('a rejected check shows a Toast and no role=alert', async () => {

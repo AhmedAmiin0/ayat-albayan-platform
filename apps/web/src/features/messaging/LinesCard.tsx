@@ -1,4 +1,4 @@
-import { WA_LINES } from '@ab/shared';
+import { type LineCheckView, WA_LINES } from '@ab/shared';
 import { useMutation } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -15,12 +15,15 @@ import { LineRow } from './LineRow';
 export function LinesCard() {
   const s = t.templates.settings.lines;
   const [failed, setFailed] = useState(false);
+  // The last good answer stays (with its checked_at) while re-checking and after a failed re-check.
+  const [last, setLast] = useState<LineCheckView[]>();
   const check = useMutation({
     mutationFn: checkLines,
     onMutate: () => setFailed(false),
+    onSuccess: setLast,
     onError: () => setFailed(true),
   });
-  const views = check.data;
+  const views = check.data ?? last;
 
   return (
     <div className="min-w-0">
@@ -32,9 +35,12 @@ export function LinesCard() {
         </Button>
       </div>
       <p className="mb-2 max-w-[70ch] text-xs text-ink-2">{s.intro}</p>
-      {WA_LINES.map((line) => (
-        <LineRow key={line} line={line} view={views?.find((v) => v.line === line) ?? null} />
-      ))}
+      {/* Announces the result when a check finishes; no role (settings specs: strict getByRole('status')). */}
+      <div aria-live="polite" aria-busy={check.isPending}>
+        {WA_LINES.map((line) => (
+          <LineRow key={line} line={line} view={views?.find((v) => v.line === line) ?? null} />
+        ))}
+      </div>
       {failed && <Toast tone="error" message={s.checkFailed} onDismiss={() => setFailed(false)} />}
     </div>
   );

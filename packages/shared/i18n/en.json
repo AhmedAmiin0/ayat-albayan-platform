@@ -2416,6 +2416,7 @@
         "notChecked": "Not checked yet",
         "configured": "Configured",
         "notConfigured": "Not configured on the server",
+        "chatOptional": "Optional: without it, all messages are sent from the notifications line.",
         "phoneNumberId": "Phone number ID",
         "wabaId": "Account ID (WABA)",
         "displayPhone": "Number",
