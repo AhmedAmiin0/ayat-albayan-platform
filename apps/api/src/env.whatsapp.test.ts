@@ -101,6 +101,7 @@ describe('chatGaps (names only, never values)', () => {
     ['phone id only, WA_ACCESS_TOKEN present', { WA_ACCESS_TOKEN: 't', WA_CHAT_PHONE_NUMBER_ID: 'c' }, ['WA_CHAT_WABA_ID']],
     ['phone id only, no token at all', { WA_CHAT_PHONE_NUMBER_ID: 'c' }, ['WA_CHAT_WABA_ID', 'WA_CHAT_ACCESS_TOKEN']],
     ['fully set', CHAT, []],
+    ['chat phone id = notifications id', { ...WA, ...CHAT, WA_CHAT_PHONE_NUMBER_ID: 'stub-phone' }, ['WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)']],
   ])('%s', (_name, over, gaps) => {
     const out = chatGaps(env(over));
     expect(out).toEqual(gaps);

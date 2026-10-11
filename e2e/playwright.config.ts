@@ -25,6 +25,8 @@ const E2E_WA_CHAT = {
   WA_CHAT_WABA_ID: 'e2e-chat-waba',
   WA_CHAT_ACCESS_TOKEN: 'e2e-chat-token',
   WA_CHAT_APP_SECRET: 'e2e-chat-secret',
+  // The stub's chat app (subscribed_apps) = the API's: «افحص الخطوط» shows the chat webhook as ours.
+  WA_CHAT_APP_ID: 'e2e-chat-app',
 };
 
 export default defineConfig({

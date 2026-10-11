@@ -61,10 +61,12 @@ export function acceptedTokens(opts: StubOptions): Set<string> {
 /**
  * Graph takes the token as Bearer or OAuth (the scheme the resumable upload documents). With a chat
  * identity the bearer of ANY configured line passes: the path's phone id is not tied to a token.
+ * No WA_ACCESS_TOKEN = lenient, even with a chat token (single-line local dev, review C, S1).
  */
 export function authorized(req: IncomingMessage, opts: StubOptions): boolean {
   const token = /^(?:Bearer|OAuth) (\S+)$/.exec(req.headers.authorization ?? '')?.[1];
   if (token === undefined) return false;
+  if (!opts.accessToken) return true;
   const accepted = acceptedTokens(opts);
   return accepted.size === 0 || accepted.has(token);
 }

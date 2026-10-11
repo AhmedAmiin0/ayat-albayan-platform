@@ -83,7 +83,10 @@ export function lineNumbers(env: Env): LineNumbers {
   };
 }
 
-/** Names (never values) of the chat pieces SENDING still lacks, once any WA_CHAT_* key is set. */
+/**
+ * Names (never values) of the chat pieces SENDING still lacks, once any WA_CHAT_* key is set; a
+ * chat phone id equal to the notifications one turns the chat line off, so it is named too.
+ */
 export function chatGaps(env: Env): string[] {
   if (!CHAT_KEYS.some((k) => env[k] !== undefined)) return [];
   const present = {
@@ -91,7 +94,9 @@ export function chatGaps(env: Env): string[] {
     WA_CHAT_WABA_ID: env.WA_CHAT_WABA_ID,
     WA_CHAT_ACCESS_TOKEN: env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN,
   };
-  return Object.entries(present)
+  const gaps = Object.entries(present)
     .filter(([, v]) => v === undefined)
     .map(([k]) => k);
+  const same = env.WA_CHAT_PHONE_NUMBER_ID !== undefined && env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
+  return same ? [...gaps, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : gaps;
 }

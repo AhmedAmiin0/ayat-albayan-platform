@@ -5,7 +5,7 @@ afterEach(closeAll);
 
 const AUTH = { headers: bearer(TWO_LINES.accessToken) };
 const json = async <T>(res: Response) => (await res.json()) as T;
-type Apps = { data: { whatsapp_business_api_data: Record<string, string> }[] };
+type Apps = { data: { whatsapp_business_api_data: Record<string, string>; override_callback_uri?: string }[] };
 
 describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
   it('GET /{phone_number_id}?fields= answers only the requested fields, with the id', async () => {
@@ -29,6 +29,7 @@ describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
     const apps = await json<Apps>(await fetch(`${url}/v21.0/WABA-C/subscribed_apps`, AUTH));
     expect(apps.data).toHaveLength(1);
     expect(apps.data[0]?.whatsapp_business_api_data).toMatchObject({ id: 'APP-C', name: expect.any(String), link: expect.any(String) });
+    expect(apps.data[0]).not.toHaveProperty('override_callback_uri');
     expect(apps.data[0]?.whatsapp_business_api_data).not.toHaveProperty('override_callback_uri');
     expect((await fetch(`${url}/v21.0/WABA-X/subscribed_apps`, AUTH)).status).toBe(400);
   });
@@ -42,11 +43,12 @@ describe('wa-stub: line diagnostics (docs/12 §13.9, §13.12)', () => {
     expect(info).toEqual({ id: 'PN-N', status: 'FLAGGED', quality_rating: 'RED' });
     await post(`${url}/__stub/lines/PN-N`, { subscribed: true }, {});
     const back = await json<Apps>(await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH));
-    expect(back.data[0]?.whatsapp_business_api_data['override_callback_uri']).toBe('https://crm.example/hook');
+    expect(back.data[0]?.override_callback_uri).toBe('https://crm.example/hook');
+    expect(back.data[0]?.whatsapp_business_api_data).not.toHaveProperty('override_callback_uri');
     await post(`${url}/__stub/reset`, {});
     expect(await json<Record<string, string>>(await fetch(`${url}/v21.0/PN-N?fields=status`, AUTH))).toEqual({ id: 'PN-N', status: 'CONNECTED' });
     const reset = await json<Apps>(await fetch(`${url}/v21.0/WABA-N/subscribed_apps`, AUTH));
-    expect(reset.data[0]?.whatsapp_business_api_data).not.toHaveProperty('override_callback_uri');
+    expect(reset.data[0]).not.toHaveProperty('override_callback_uri');
     expect((await post(`${url}/__stub/lines/PN-X`, { subscribed: false }, {})).status).toBe(404);
   });
 

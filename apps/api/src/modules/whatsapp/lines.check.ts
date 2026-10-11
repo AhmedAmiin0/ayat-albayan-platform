@@ -57,10 +57,10 @@ async function phoneOf(conn: GraphConn): Promise<Phone> {
 async function appsOf(conn: GraphConn): Promise<Apps> {
   const path = `${encodeURIComponent(conn.env.wabaId)}/subscribed_apps`;
   const body = parsed(subscribedAppsSchema, await graphJson(conn, { path }));
-  return body.data.map(({ whatsapp_business_api_data: a }) => ({
+  return body.data.map(({ whatsapp_business_api_data: a, override_callback_uri: uri }) => ({
     id: a?.id ?? null,
     name: a?.name ?? null,
-    override_callback_uri: a?.override_callback_uri ?? null,
+    override_callback_uri: uri ?? a?.override_callback_uri ?? null,
   }));
 }
 
