@@ -38,12 +38,12 @@ export async function userId(tx: Tx, email: string): Promise<string> {
 }
 
 /** A guardian with one child, taught by `teacherId` (students.teacher_id). */
-export async function family(tx: Tx, input: { phone: string; teacherId: string }): Promise<string> {
+export async function family(tx: Tx, input: { phone: string; teacherId: string; status?: 'trial' | 'active' }): Promise<string> {
   const [g] = await tx<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
     values ('ولي أمر RLS', ${input.phone}, 'SA', 'Asia/Riyadh') returning id`;
   if (!g) throw new Error('guardian not written');
-  const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, teacher_id)
-    values (${g.id}, 'طالب RLS', 'طالب rls', 'Asia/Riyadh', ${input.teacherId}) returning id`;
+  const [s] = await tx<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, teacher_id, status)
+    values (${g.id}, 'طالب RLS', 'طالب rls', 'Asia/Riyadh', ${input.teacherId}, ${input.status ?? 'trial'}::public.student_status) returning id`;
   if (!s) throw new Error('student not written');
   return s.id;
 }

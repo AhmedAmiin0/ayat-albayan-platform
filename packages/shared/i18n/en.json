@@ -822,7 +822,8 @@
       "sent": "Proposal sent to the admin team",
       "pending": "You proposed {when}; waiting for the admin team's reply",
       "back": "Back"
-    }
+    },
+    "trialChatViaSales": "Contact with a trial student’s family goes through sales."
   },
   "today": {
     "title": "Today",
