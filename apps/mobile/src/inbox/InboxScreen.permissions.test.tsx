@@ -1,3 +1,4 @@
+import { systemPermissionsOf } from '@ab/shared';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
@@ -33,4 +34,10 @@ test('inbox.read without leads.read: threads only, no switcher', async () => {
 test('both: the switcher is there', async () => {
   await show(['inbox.read', 'leads.read']);
   expect(await screen.findByRole('tab', { name: t.nav.leads })).toBeTruthy();
+});
+
+test('the salesperson («المبيعات», docs/16): the threads list (every chat, the API widens the scope), no leads switcher', async () => {
+  await show(systemPermissionsOf('sales'));
+  expect(await screen.findByRole('header', { name: t.nav.conversations })).toBeTruthy();
+  expect(screen.queryByRole('tab', { name: t.nav.leads })).toBeNull();
 });

@@ -3440,6 +3440,11 @@
       "noChanges": "No recorded changes",
       "payments": "Linked payments",
       "noPayments": "No linked payments"
+    },
+    "mobile": {
+      "section": "Sales",
+      "guardianLine": "Guardian: {name}",
+      "studentsOf": "{name}'s students"
     }
   },
   "meetings": {

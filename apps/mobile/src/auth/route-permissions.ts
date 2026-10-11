@@ -21,6 +21,11 @@ export const ROUTE_PERMISSION = {
   settings: 'settings.read',
   activity: 'activity.read',
   chats: 'inbox.read',
+  // The salesperson's pages (docs/16), the web's SALES_NAV_ITEMS keys: base-role scopes, never grantable.
+  salesSubscriptions: 'self.sales',
+  salesTeachers: 'self.sales_academy',
+  salesStudents: 'self.sales_academy',
+  salesLive: 'self.sales_academy',
 } as const satisfies Record<string, Permission>;
 
 export type RouteKey = keyof typeof ROUTE_PERMISSION;

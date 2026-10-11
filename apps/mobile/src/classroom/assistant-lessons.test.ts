@@ -1,5 +1,5 @@
 import type { AssistantLessonView } from '@ab/shared';
-import { joinableOf } from './assistant-lessons';
+import { joinableOf, joinableRows } from './assistant-lessons';
 
 const base: AssistantLessonView = {
   lesson_id: 'l1',
@@ -17,4 +17,11 @@ test('an open session keeps what the join button needs', () => {
 test('a cancelled session or an unknown status has no entry', () => {
   expect(joinableOf({ ...base, status: 'cancelled_by_admin' })).toBeNull();
   expect(joinableOf({ ...base, status: 'from_the_future' })).toBeNull();
+});
+
+test('joinableRows keeps the open sessions in order, each with its entry data', () => {
+  const rows = joinableRows([base, { ...base, lesson_id: 'l2', status: 'completed' }, { ...base, lesson_id: 'l3' }]);
+  expect(rows.map((r) => r.view.lesson_id)).toEqual(['l1', 'l3']);
+  expect(rows[1]?.lesson.id).toBe('l3');
+  expect(joinableRows([])).toEqual([]);
 });

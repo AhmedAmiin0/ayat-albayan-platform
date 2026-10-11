@@ -7,3 +7,11 @@ export function joinableOf(l: AssistantLessonView): JoinableLesson | null {
   if (!status || !isOpenLesson(status)) return null;
   return { id: l.lesson_id, status, starts_at: l.starts_at, ends_at: l.ends_at };
 }
+
+/** The sessions still open, each with its entry data (cancelled/finished ones left out). */
+export function joinableRows(list: readonly AssistantLessonView[]): { view: AssistantLessonView; lesson: JoinableLesson }[] {
+  return list.flatMap((view) => {
+    const lesson = joinableOf(view);
+    return lesson ? [{ view, lesson }] : [];
+  });
+}

@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { SalesSection } from '@/sales/SalesSection';
 import { Button } from '@/ui/Button';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
@@ -36,6 +37,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
         {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
         {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
       </View>
+      <SalesSection can={can} />
       <MoneySection can={can} />
       <AdminOpsSection can={can} />
       <FinanceSection can={can} />

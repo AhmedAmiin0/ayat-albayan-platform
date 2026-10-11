@@ -3440,6 +3440,11 @@
       "noChanges": "لا تغييرات مسجلة",
       "payments": "الدفعات المرتبطة",
       "noPayments": "لا دفعات مرتبطة"
+    },
+    "mobile": {
+      "section": "المبيعات",
+      "guardianLine": "ولي الأمر: {name}",
+      "studentsOf": "طلاب {name}"
     }
   },
   "meetings": {
