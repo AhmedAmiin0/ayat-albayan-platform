@@ -19,9 +19,21 @@ const EDGE: Record<Tone, string> = {
 const INK: Record<Tone, string> = { ok: 'text-ok', act: 'text-act', bad: 'text-danger', neutral: 'text-ink-3' };
 const unpaid = subscriptionStatusStyle.unpaid;
 
-export interface LessonChipProps {
-  lesson: LessonView;
-  onOpen: (lesson: LessonView) => void;
+/**
+ * What a chip reads: the admin's LessonView, or a narrower read-only lesson (sales' schedule, which
+ * never carries flags, proposals or the student's zone).
+ */
+export type ChipLesson = Pick<LessonView, 'id' | 'starts_at' | 'status' | 'trial' | 'makeup' | 'time_edit'> & {
+  teacher: { display_name_ar: string; display_name_en?: string | null };
+  students: readonly { name: string; tz?: string; unpaid?: boolean }[];
+  conflicts?: readonly unknown[];
+  pending_proposal?: unknown;
+};
+
+export interface LessonChipProps<L extends ChipLesson> {
+  lesson: L;
+  /** Opens the lesson drawer; absent = read-only (a plain block, no button). */
+  onOpen?: ((lesson: L) => void) | undefined;
   /** Hide the teacher line (the row already names the teacher). */
   hideTeacher?: boolean;
 }
@@ -33,16 +45,17 @@ export interface LessonChipProps {
  * nothing left (R-SUB-02) or a teacher's pending proposal (R-SCH-08). A trial says «تجريبية», a
  * makeup (R-SCH-10) «تعويضية».
  */
-export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipProps) {
+export function LessonChip<L extends ChipLesson>({ lesson, onOpen, hideTeacher = true }: LessonChipProps<L>) {
   const style = lessonStatusStyle[lesson.status];
   const tz = lesson.students[0]?.tz ?? RIYADH_TZ;
   const local = zoneLabel(lesson.starts_at, { tz, base: RIYADH_TZ });
+  const Tag = onOpen ? 'button' : 'div';
   return (
-    <button
-      type="button"
-      onClick={() => onOpen(lesson)}
+    <Tag
+      {...(onOpen ? { type: 'button' as const, onClick: () => onOpen(lesson) } : {})}
       className={cn(
-        'grid w-full min-w-0 gap-0.5 overflow-hidden rounded-sm border border-rule border-s-[3px] bg-raised px-2 py-1.5 text-start text-xs transition-colors duration-[120ms] hover:bg-sunk',
+        'grid w-full min-w-0 gap-0.5 overflow-hidden rounded-sm border border-rule border-s-[3px] bg-raised px-2 py-1.5 text-start text-xs',
+        onOpen && 'transition-colors duration-[120ms] hover:bg-sunk',
         EDGE[style.tone],
       )}
     >
@@ -65,7 +78,7 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
           {t.schedule.studentTime.replace('{time}', t.schedule.inCity.replace('{time}', local).replace('{city}', tzCity(tz) ?? tz))}
         </span>
       )}
-      {lesson.conflicts.length > 0 && (
+      {(lesson.conflicts?.length ?? 0) > 0 && (
         <span className="flex items-center gap-1 text-danger">
           <NuqtaGlyph shape="struck" />
           <span>{t.schedule.needsReview}</span>
@@ -77,12 +90,12 @@ export function LessonChip({ lesson, onOpen, hideTeacher = true }: LessonChipPro
           <span>{t.subscriptions.unpaidFlag}</span>
         </span>
       )}
-      {lesson.pending_proposal && (
+      {Boolean(lesson.pending_proposal) && (
         <span className="flex items-center gap-1 text-act">
           <NuqtaGlyph shape="half" />
           <span>{t.schedule.hasProposal}</span>
         </span>
       )}
-    </button>
+    </Tag>
   );
 }

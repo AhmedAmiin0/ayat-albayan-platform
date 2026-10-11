@@ -11,7 +11,7 @@ const TAG = 'shrink-0 rounded-sm border border-gold px-1 text-2xs font-semibold 
  * «تجريبية» on a trial (R-SCH-09), «تعويضية» on a makeup (R-SCH-10). «اتعدّل الوقت» (R-SCH-11) is
  * a note, not a button: a nuqta and muted text without the pill, with «كان: …» as its tooltip.
  */
-export function LessonTags({ lesson }: { lesson: LessonView }) {
+export function LessonTags({ lesson }: { lesson: Pick<LessonView, 'trial' | 'makeup' | 'time_edit'> }) {
   const edited = timeEditInfo(lesson);
   return (
     <>

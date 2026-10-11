@@ -1,4 +1,4 @@
-import type { AssistantLessonView, SalesStudentView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
+import type { AssistantLessonView, SalesScheduleDay, SalesStudentView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 
@@ -39,6 +39,19 @@ export const salesLiveQuery = queryOptions({
   queryFn: () => apiFetch<AssistantLessonView[]>('/sales/live'),
   refetchInterval: LIVE_REFRESH_MS,
 });
+
+/** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only; re-read every minute (now moves). */
+export const salesScheduleQuery = (q: { date: string; teacherId?: string | undefined }) =>
+  queryOptions({
+    queryKey: ['sales', 'schedule', q.date, q.teacherId ?? ''],
+    queryFn: () => {
+      const params = new URLSearchParams({ date: q.date });
+      if (q.teacherId) params.set('teacherId', q.teacherId);
+      return apiFetch<SalesScheduleDay>(`/sales/schedule?${params}`);
+    },
+    placeholderData: keepPreviousData,
+    refetchInterval: LIVE_REFRESH_MS,
+  });
 
 /** GET /sales/subscriptions/:id/history — one of my subscriptions and its student's history. */
 export const subscriptionHistoryQuery = (id: string) =>

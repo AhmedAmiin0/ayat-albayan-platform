@@ -8,4 +8,4 @@ export type { BookingKind, InvoiceInput, InvoiceView, MakeupCandidate, ThreadMed
 /** POST /booking: the shared request (kind, invoice and the missed lesson; a makeup has no package). */
 export type BookingBody = BookingRequest;
 
-export const isMakeup = (lesson: LessonView): boolean => lesson.makeup === true;
+export const isMakeup = (lesson: Pick<LessonView, 'makeup'>): boolean => lesson.makeup === true;

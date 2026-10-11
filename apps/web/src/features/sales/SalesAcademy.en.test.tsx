@@ -1,7 +1,7 @@
 import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
-import { history, liveLesson, teacher } from './academy.fixtures';
+import { history, liveLesson, pupil, teacher } from './academy.fixtures';
 import { renderWithQuery } from './academy.test-utils';
 import { SalesLive } from './SalesLive';
 import { SalesTeachers } from './SalesTeachers';
@@ -15,7 +15,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 describe('the sales assistant side, English', () => {
   it('teachers, running lessons and a subscription history read in English', async () => {
     apiFetch.mockImplementation(async (path: string) => {
-      if (path === '/sales/teachers') return [teacher({ name: 'Abrar', students: [{ id: 's1', code: 'AB-0183', name: 'Suhaila' }] })];
+      if (path === '/sales/teachers') return [teacher({ name: 'Abrar', students: [pupil({ name: 'Suhaila' })] })];
       if (path === '/sales/live') return [liveLesson({ teacher_name: 'Abrar', student_names: ['Suhaila'] })];
       if (path.endsWith('/history')) return { ...history(), student: { id: 's1', code: 'AB-0183', name: 'Suhaila' } };
       return {};
