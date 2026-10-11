@@ -6,10 +6,12 @@ import { stub, stubSent, type StubSent } from './wa-stub';
 // E2E_WA / E2E_WA_CHAT), records which phone-number id every send and read used, and signs each
 // line's webhooks with that line's own app secret.
 
-/** = playwright.config.ts E2E_WA.WA_PHONE_NUMBER_ID / E2E_WA_CHAT.WA_CHAT_PHONE_NUMBER_ID. */
+/** = playwright.config.ts E2E_WA.WA_PHONE_NUMBER_ID / E2E_WA_CHAT_KEYS.WA_CHAT_PHONE_NUMBER_ID. */
 export const NOTIF_PN = 'e2e-phone';
 export const CHAT_PN = 'e2e-chat-phone';
 export const LINE_PN: Record<WaLine, string> = { notifications: NOTIF_PN, chat: CHAT_PN };
+/** E2E_LINES=single (playwright.config.ts): no chat line configured, so two-line specs skip. */
+export const SINGLE_LINE = process.env['E2E_LINES'] === 'single';
 
 export interface LineInbound {
   from: string;

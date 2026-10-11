@@ -2,7 +2,7 @@ import { ar, expect, test } from '../support/fixtures';
 import { openThread } from '../support/inbox';
 import { freshDigits } from '../support/messages';
 import { withSql } from '../support/schedule';
-import { messagesWithLine, stubInboundOn } from '../support/wa-lines';
+import { messagesWithLine, SINGLE_LINE, stubInboundOn } from '../support/wa-lines';
 import { stubReset } from '../support/wa-stub';
 
 // Two WhatsApp lines, inbound side (docs/12 §13.6, R-MSG-04, R-LEAD-01): the chat number's webhook
@@ -19,6 +19,7 @@ async function threadLines(phone: string): Promise<{ n: number; last: string | n
 }
 
 test.describe('two WhatsApp lines — inbound (R-MSG-04)', () => {
+  test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line is configured');
   test.beforeEach(async () => {
     await stubReset();
   });

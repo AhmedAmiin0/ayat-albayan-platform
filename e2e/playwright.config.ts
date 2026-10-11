@@ -19,8 +19,8 @@ const E2E_WA = {
   WA_APP_SECRET: 'e2e-app-secret',
   WA_VERIFY_TOKEN: 'e2e-verify',
 };
-/** The second Meta number (docs/12 §13.12): BOTH lines always run in e2e, with distinct credentials. */
-const E2E_WA_CHAT = {
+/** The second Meta number (docs/12 §13.12): both lines run in e2e, with distinct credentials. */
+const E2E_WA_CHAT_KEYS = {
   WA_CHAT_PHONE_NUMBER_ID: 'e2e-chat-phone', // = support/wa-lines.ts CHAT_PN
   WA_CHAT_WABA_ID: 'e2e-chat-waba',
   WA_CHAT_ACCESS_TOKEN: 'e2e-chat-token',
@@ -28,6 +28,8 @@ const E2E_WA_CHAT = {
   // The stub's chat app (subscribed_apps) = the API's: «افحص الخطوط» shows the chat webhook as ours.
   WA_CHAT_APP_ID: 'e2e-chat-app',
 };
+/** E2E_LINES=single = the production default (no WA_CHAT_* keys): the CI job «e2e (single line)». */
+const E2E_WA_CHAT = process.env['E2E_LINES'] === 'single' ? {} : E2E_WA_CHAT_KEYS;
 
 export default defineConfig({
   testDir: './tests',
