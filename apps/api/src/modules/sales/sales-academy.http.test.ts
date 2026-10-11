@@ -54,7 +54,7 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     expect(res.json()).toEqual([
       { lesson_id: 'les-1', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', teacher_name: 'أبرار', student_names: ['ياسمين'] },
     ]);
-    expect(t.academy.live.mock.calls[0]?.[0]).toBeInstanceOf(Date);
+    expect(t.academy.live).toHaveBeenCalledWith(expect.any(Date));
   });
 
   it('GET history: her subscription opens with status changes, lessons and payment dates, no money', async () => {

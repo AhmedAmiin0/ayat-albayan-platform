@@ -61,7 +61,7 @@ export const bundle = (): HistoryBundle =>
       { entity_id: SUB, at: '2026-09-01T11:00:00Z', before_status: 'unpaid', after_status: 'unpaid' },
       { entity_id: SUB, at: '2026-09-02T09:00:00Z', before_status: 'unpaid', after_status: 'active' },
     ],
-  }) as HistoryBundle;
+  }) as unknown as HistoryBundle;
 
 export async function academyApp() {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN_A : NONE)), subscriptions: vi.fn(), meetings: vi.fn(), ownsLesson: vi.fn() };
