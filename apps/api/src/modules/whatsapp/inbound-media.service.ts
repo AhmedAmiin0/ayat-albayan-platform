@@ -1,10 +1,10 @@
-import { INVOICE_MAX_BYTES, INVOICE_MIMES } from '@ab/shared';
+import { INVOICE_MAX_BYTES, INVOICE_MIMES, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMediaQueries, type MediaMessage } from './inbound-media.queries';
 import { waHttpError } from './template.mapper';
-import { WHATSAPP_CLIENT, WaError, type WhatsappClient } from './whatsapp.types';
+import { WHATSAPP_LINES, WaError, type WhatsappLines } from './whatsapp.types';
 
 /** Meta keeps a media id about 30 days; a day less, so a download never races the deadline. */
 export const MEDIA_FETCH_DAYS = 29;
@@ -26,13 +26,15 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * media id, so the first time an admin needs the file (a thumbnail, «من الشات» on a booking) it is
  * fetched from Meta and cached in the private `wa-media` bucket; later calls read the cache.
  * 404 message_not_found, 400 invoice_message (not inbound, or not an image / PDF), 410 media_expired
- * (older than 29 days, or Meta refuses the id), 413 invoice_too_large.
+ * (older than 29 days, or Meta refuses the id), 413 invoice_too_large. The file is fetched with the
+ * RECEIVING line's client (docs/12 §13.4): 503 line_not_configured for a chat message while the chat
+ * line is not configured, 502 meta_error when Meta refuses the line's token (190 / 10 / 200).
  */
 @Injectable()
 export class InboundMedia {
   constructor(
     private readonly queries: InboundMediaQueries,
-    @Inject(WHATSAPP_CLIENT) private readonly client: WhatsappClient,
+    @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
     private readonly storage: StorageService,
   ) {}
 
@@ -55,7 +57,7 @@ export class InboundMedia {
     const mime = baseMime(msg.media_mime);
     if (msg.media_path) return { bucket: BUCKETS.waMedia, path: msg.media_path, mime };
     if (mediaExpired(msg, new Date()) || !msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
-    const file = await this.download(msg.media_id);
+    const file = await this.download(msg, msg.media_id);
     if (file.bytes.byteLength > INVOICE_MAX_BYTES) {
       throw waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
     }
@@ -65,13 +67,16 @@ export class InboundMedia {
     return { bucket: BUCKETS.waMedia, path, mime };
   }
 
-  /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error. */
-  private async download(mediaId: string): Promise<{ bytes: Uint8Array }> {
+  /** A Meta 4xx means the id is gone (expired, deleted): 410, not a server error; a dead token is 502. */
+  private async download(msg: MediaMessage, mediaId: string): Promise<{ bytes: Uint8Array }> {
+    const client = this.lines[msg.line ?? 'notifications'];
+    if (msg.line === 'chat' && !client.configured()) throw waHttpError('line_not_configured', HttpStatus.SERVICE_UNAVAILABLE);
     try {
-      return await this.client.getMedia(mediaId);
+      return await client.getMedia(mediaId);
     } catch (e) {
-      const gone = e instanceof WaError && e.info.status >= 400 && e.info.status < 500;
-      if (gone) throw waHttpError('media_expired', HttpStatus.GONE);
+      if (!(e instanceof WaError)) throw e;
+      if (isWaAuthError(e.info.code)) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
+      if (e.info.status >= 400 && e.info.status < 500) throw waHttpError('media_expired', HttpStatus.GONE);
       throw e;
     }
   }

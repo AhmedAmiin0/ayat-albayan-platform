@@ -4,7 +4,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '../../common/storage/storage.service';
 import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
 import { baseMime, InboundMedia, mediaExpired } from './inbound-media.service';
-import { WaError, type WhatsappClient } from './whatsapp.types';
+import { WaError, type WhatsappLines } from './whatsapp.types';
 
 const NOW = new Date('2026-10-03T10:00:00Z');
 const day = (n: number) => new Date(NOW.getTime() - n * 86_400_000).toISOString();
@@ -17,6 +17,7 @@ const msg = (over: Partial<MediaMessage> = {}): MediaMessage => ({
   media_path: null,
   body: null,
   created_at: day(2),
+  line: null,
   ...over,
 });
 
@@ -24,9 +25,10 @@ function setup(row: MediaMessage | null) {
   const queries = { message: vi.fn().mockResolvedValue(row), setPath: vi.fn().mockResolvedValue(undefined) };
   const client = { getMedia: vi.fn().mockResolvedValue({ bytes: new Uint8Array([1, 2, 3]), mime: 'image/jpeg' }) };
   const storage = { upload: vi.fn().mockResolvedValue(undefined) };
+  const lines = { notifications: client, chat: client };
   const media = new InboundMedia(
     queries as unknown as InboundMediaQueries,
-    client as unknown as WhatsappClient,
+    lines as unknown as WhatsappLines,
     storage as unknown as StorageService,
   );
   return { media, queries, client, storage };
@@ -68,7 +70,7 @@ describe('InboundMedia.ensure (R-MSG-06)', () => {
     await expect(media.ensure('m1')).resolves.toMatchObject({ path: 'm1.jpg' });
   });
 
-  it('Meta refusing the media id (4xx) → 410; any other failure is an error', async () => {
+  it('Meta refusing the media id (a non-auth 4xx) → 410; any other failure is an error', async () => {
     const { media, client } = setup(msg());
     client.getMedia.mockRejectedValueOnce(new WaError('gone', { code: 100, status: 404 }));
     expect(await status(media.ensure('m1'))).toMatchObject({ status: 410, body: { code: 'media_expired' } });

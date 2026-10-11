@@ -1,3 +1,4 @@
+import type { WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 
@@ -12,8 +13,10 @@ export type MediaMessage = {
   /** The file's caption. */
   body: string | null;
   created_at: string;
+  /** The receiving line: its token is the only one that can fetch the media id (null = notifications). */
+  line: WaLine | null;
 };
-const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, created_at';
+const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, created_at, line';
 
 /** DB touches of InboundMedia and of the chat's file picker (service role; the callers are admin-only). */
 @Injectable()
