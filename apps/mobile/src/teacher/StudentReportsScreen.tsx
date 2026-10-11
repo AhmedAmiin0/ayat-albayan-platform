@@ -26,8 +26,9 @@ function summaryLine(r: ReportSummaryView): string {
   return [no, grade].filter((part): part is string => part !== null).join(' · ');
 }
 
-const teacherStudentName = (me: TeacherMe | undefined, id: string): string =>
-  me?.students.find((s) => s.id === id)?.name ?? t.reports.history;
+const teacherStudent = (me: TeacherMe | undefined, id: string) => me?.students.find((s) => s.id === id);
+const teacherStudentName = (me: TeacherMe | undefined, id: string): string => teacherStudent(me, id)?.name ?? t.reports.history;
+const teacherStudentStatus = (me: TeacherMe | undefined, id: string) => teacherStudent(me, id)?.status;
 
 /** A row's tap: the admin reads any report; a teacher opens only their own lesson's form. */
 function rowPress(r: ReportSummaryView, who: 'admin' | string | undefined): (() => void) | undefined {
@@ -52,7 +53,8 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   return (
     <Screen>
       <ScreenHeader title={name} subtitle={t.reports.history} trailing={<Button variant="ghost" label={t.common.back} onPress={back} />} />
-      {admin ? null : <TrialChatNote status={me.data?.students.find((s) => s.id === id)?.status} />}
+      {/* A teacher's trial student (the admin's view reads no /teachers/me, so never). */}
+      <TrialChatNote status={teacherStudentStatus(me.data, id)} />
       {admin ? null : <RecordingsButton href={`/teacher/reports/student/recordings/${id}`} />}
       {error ? <ErrorLine message={t.reports.error.pdf_not_ready} /> : null}
       <FlatList
