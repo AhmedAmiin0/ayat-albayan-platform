@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { guestJoinSchema } from './schemas.js';
-import { CLASSROOM_ERRORS, JOIN_ROLES, lessonRoomName } from './room.js';
+import { CHAT_TOPIC, chatOpen, CLASSROOM_ERRORS, dropsChat, JOIN_ROLES, lessonRoomName } from './room.js';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
 
@@ -33,5 +33,26 @@ describe('classroom wording', () => {
   it('keeps the owner wording of the two buttons', () => {
     expect(ar.classroom.enter).toBe('ادخل الحلقة');
     expect(ar.classroom.sendLink).toBe('أرسل رابط الحلقة');
+  });
+});
+
+describe('text chat in the room (owner, 2026-10-11: none in a trial lesson)', () => {
+  it('is open unless the join says chat: false', () => {
+    expect(chatOpen({ chat: false })).toBe(false);
+    expect(chatOpen({ chat: true })).toBe(true);
+    expect(chatOpen({})).toBe(true);
+  });
+
+  it('drops only chat-topic data, and only while chat is off', () => {
+    expect(dropsChat(false, CHAT_TOPIC)).toBe(true);
+    expect(dropsChat(false, 'board')).toBe(false);
+    expect(dropsChat(false, 'share-request')).toBe(false);
+    expect(dropsChat(false, undefined)).toBe(false);
+    expect(dropsChat(true, CHAT_TOPIC)).toBe(false);
+  });
+
+  it('the trial note reads in both languages', () => {
+    expect(ar.classroom.chatClosedTrial).toBe('المحادثة النصية مغلقة في الحلقات التجريبية.');
+    expect(en.classroom.chatClosedTrial).toBe('Text chat is closed in trial lessons.');
   });
 });

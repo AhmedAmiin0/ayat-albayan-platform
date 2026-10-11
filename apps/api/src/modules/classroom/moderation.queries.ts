@@ -43,6 +43,17 @@ export class ModerationQueries {
     if (error) throw dbError(error);
   }
 
+  /** A trial lesson (its rule's package is 'trial'): the room has no text chat (owner, 2026-10-11). */
+  async isTrialLesson(lessonId: string): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('lessons')
+      .select('rule:schedule_rules!lessons_rule_id_fkey(package)')
+      .eq('id', lessonId)
+      .maybeSingle();
+    if (error) throw dbError(error);
+    return data?.rule?.package === 'trial';
+  }
+
   /** The participant behind an identity, only within this lesson. */
   async participant(lessonId: string, identity: string): Promise<ParticipantRow | null> {
     const { data, error } = await this.db

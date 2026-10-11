@@ -1,6 +1,7 @@
-import type { RoomJoinResult } from '@ab/shared';
+import { chatOpen, type RoomJoinResult } from '@ab/shared';
 import { useState } from 'react';
 import { FormAlert } from '@/components/ui/form-alert';
+import { t } from '@/lib/i18n';
 import { BoardStage } from './board/BoardStage';
 import { useBoard } from './board/use-board';
 import { ControlBar } from './ControlBar';
@@ -28,7 +29,8 @@ type Panel = 'people' | 'recordings' | null;
 /**
  * The call itself, one screen tall: header, stage + strip (or the balanced grid), and the control
  * bar pinned at the bottom. The board, «إخراج من الحلقة» and «التسجيلات» hang off it (an internal
- * meeting's room, `meeting-<id>`, has all of them too: its «التسجيلات» are the meeting's).
+ * meeting's room, `meeting-<id>`, has all of them too: its «التسجيلات» are the meeting's). A trial
+ * lesson's room says it has no text chat (join.chat false; the data hook drops the chat topic).
  */
 export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinResult }) {
   const { snap } = room;
@@ -56,6 +58,7 @@ export function LiveRoom({ room, join }: { room: RoomController; join: RoomJoinR
     <main className="flex h-dvh flex-col gap-2 overflow-hidden bg-page px-3 pt-3 sm:gap-3 sm:px-4 sm:pt-4">
       <RoomHeader snap={snap} />
       {join.role === 'admin' && join.recording === 'off' && <RecordingOffAlert />}
+      {!chatOpen(join) && <p role="note" className="text-xs text-ink-2">{t.classroom.chatClosedTrial}</p>}
       {room.notes.map((n) => (
         <FormAlert key={n}>{n}</FormAlert>
       ))}

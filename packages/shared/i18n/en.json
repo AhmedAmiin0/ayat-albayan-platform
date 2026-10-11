@@ -3342,7 +3342,8 @@
         "denied": "Your request to open the board was declined"
       }
     },
-    "recordedNotice": "This session is recorded"
+    "recordedNotice": "This session is recorded",
+    "chatClosedTrial": "Text chat is closed in trial lessons."
   },
   "sales": {
     "title": "Sales",

@@ -20,7 +20,18 @@ export interface RoomJoinResult {
   role: JoinRole;
   /** 'off': RECORDING_S3_* or LiveKit Egress are not set up, so this room is not recorded (the admin is warned). */
   recording?: 'on' | 'off';
+  /** false: a trial lesson (owner, 2026-10-11): no text chat between the family and the teacher. */
+  chat?: boolean;
 }
+
+/** The data topic of the in-room text chat: never sent, and dropped on arrival, while chat is off. */
+export const CHAT_TOPIC = 'chat';
+
+/** Text chat is open unless the join says it is not (an older API, or a meeting, sends nothing). */
+export const chatOpen = (join: Pick<RoomJoinResult, 'chat'>): boolean => join.chat !== false;
+
+/** A data packet on the chat topic while chat is off: not sent, not delivered (the board and requests pass). */
+export const dropsChat = (chatOn: boolean, topic: string | undefined): boolean => !chatOn && topic === CHAT_TOPIC;
 
 /** Stable error codes of the classroom routes (the clients map them to ar/en messages). */
 export const CLASSROOM_ERRORS = [

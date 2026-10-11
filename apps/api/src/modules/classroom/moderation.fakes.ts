@@ -55,6 +55,7 @@ export function moderation() {
     addParticipant: vi.fn().mockResolvedValue(undefined),
     participant: vi.fn().mockResolvedValue(participantRow()),
     isBlocked: vi.fn().mockResolvedValue(false),
+    isTrialLesson: vi.fn().mockResolvedValue(false),
     block: vi.fn().mockResolvedValue(undefined),
   };
 }
