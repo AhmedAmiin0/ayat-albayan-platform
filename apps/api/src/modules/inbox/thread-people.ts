@@ -18,7 +18,10 @@ const STUDENTS = 'id, code, name, status, teacher:teachers(display_name_ar)';
  * GET /threads/:phone `people` (R-SUB-01): the v_threads row's guardian and lead, and every student
  * of the guardian (oldest first) with their newest package. No guardian → no students.
  */
-export async function threadPeople(deps: PeopleDeps, row: ThreadRow | null): Promise<ThreadPeople> {
+/** A thread's row, or a number with no message yet (KnownNumber). */
+export type PeopleOf = Pick<ThreadRow, 'guardian_id' | 'guardian_name' | 'lead_id' | 'lead_status'>;
+
+export async function threadPeople(deps: PeopleDeps, row: PeopleOf | null): Promise<ThreadPeople> {
   const guardian = row?.guardian_id ? { id: row.guardian_id, name: row.guardian_name ?? '' } : null;
   const lead = row?.lead_id && row.lead_status ? { id: row.lead_id, status: row.lead_status } : null;
   if (!guardian) return { guardian, lead, students: [] };

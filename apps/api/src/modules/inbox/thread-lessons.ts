@@ -21,6 +21,9 @@ const toLesson = (row: LessonRow, tz: string): ThreadLesson => ({
   tz,
 });
 
+/** What the lessons are looked up by: a thread, or a number with no message yet (KnownNumber). */
+export type LessonsOf = Pick<ThreadView, 'guardian_id' | 'guardian_tz' | 'teacher_id'>;
+
 type ReadBy = { select: string; column: string; id: string; now: Date; teacherId?: string | undefined };
 
 async function read(db: Db, by: ReadBy): Promise<LessonRow[]> {
@@ -48,7 +51,7 @@ const TEACHER_SELECT = 'id, starts_at, meeting_link, teacher:teachers(tz), lesso
  */
 export async function upcomingLessons(
   db: Db,
-  at: { thread: ThreadView; now: Date; teacherId?: string | undefined },
+  at: { thread: LessonsOf; now: Date; teacherId?: string | undefined },
 ): Promise<ThreadLesson[]> {
   const { thread, now, teacherId } = at;
   if (thread.guardian_id) {

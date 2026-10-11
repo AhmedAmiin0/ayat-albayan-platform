@@ -18,7 +18,7 @@ describe('starting a conversation, English', () => {
     renderWithClient(
       <InboxModeContext.Provider value="sales">
         <NewChatForm onOpen={() => undefined} />
-        <NewThread phone={PHONE} />
+        <NewThread phone={PHONE} lessons={[]} />
       </InboxModeContext.Provider>,
     );
     expect(screen.getByRole('button', { name: 'Open the chat' })).toBeTruthy();

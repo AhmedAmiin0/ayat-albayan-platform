@@ -1,12 +1,13 @@
 import type { TablesInsert } from '@ab/db';
-import type { ThreadLesson, ThreadPeople, ThreadView } from '@ab/shared';
+import type { ThreadLesson, ThreadPeople } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { BalanceQueries } from '../subscriptions/balance.queries';
 import { PackagesService } from '../subscriptions/packages.service';
 import { MESSAGE_SELECT, type MessageRow, type ThreadMessageRow } from '../whatsapp/message.mapper';
-import { upcomingLessons } from './thread-lessons';
-import { familyTagsOf, threadPeople } from './thread-people';
+import { knownNumber, type KnownNumber } from './known-number';
+import { upcomingLessons, type LessonsOf } from './thread-lessons';
+import { familyTagsOf, threadPeople, type PeopleOf } from './thread-people';
 import type { FamilyTag } from './thread-people.mapper';
 import { applySort } from '../../common/list-sort';
 import { THREAD_SORT, type ThreadListFilter } from './threads.list';
@@ -58,13 +59,18 @@ export class ThreadsQueries {
   }
 
   /** The guardian's / teacher's next open lessons (thread-lessons.ts); with `teacherId` only theirs. */
-  lessons(thread: ThreadView, now: Date, teacherId?: string): Promise<ThreadLesson[]> {
+  lessons(thread: LessonsOf, now: Date, teacherId?: string): Promise<ThreadLesson[]> {
     return upcomingLessons(this.db, { thread, now, teacherId });
   }
 
   /** The guardian, lead and the guardian's students with their packages (thread-people.ts). */
-  people(row: ThreadRow | null): Promise<ThreadPeople> {
+  people(row: PeopleOf | null): Promise<ThreadPeople> {
     return threadPeople({ db: this.db, packages: this.packages, balances: this.balances }, row);
+  }
+
+  /** A number with no message yet: who it is (known-number.ts), null when nobody. */
+  known(phone: string): Promise<KnownNumber | null> {
+    return knownNumber(this.db, phone);
   }
 
   /** The page's guardians' «مشترك» / «اشتراكه خلص» / «مش مدفوع» tags (thread-people.ts). */

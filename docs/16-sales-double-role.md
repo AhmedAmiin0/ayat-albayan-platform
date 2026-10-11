@@ -36,6 +36,15 @@ assistant's session row; new read-only routes under `/sales` with whitelisted co
 | GET | `/sales/live` | `self.sales_academy` | `AssistantLessonView[]` |
 | POST | `/lessons/:id/room/join` | `classroom.join` (unchanged) | sales → `sales` or `assistant` |
 
+## Owner report 2026-10-12: start a conversation, teachers, schedule (web + mobile)
+
+| # | Area | Decision |
+|---|---|---|
+| 9 | Start a conversation | Root cause: `messages.read` was a teacher-only grant, so `GET /messaging/templates` answered 403 for sales and the template picker stayed empty. `messages.read` is now a sales grant (catalog + migration `20261012000300_sales_messages_read.sql`). For sales the list is every approved template the thread send accepts (no PDF one, none of the three own-button templates: `lesson_feedback_request`, `lesson_join_link`, `lesson_rating`). It also opens `GET /messages/gate` (open or not, queue size). `messages.manage` and `templates.manage` stay admin-only. |
+| 9a | No thread yet | Admin and sales open a number by URL (`?phone=`, as a lead's or a booking's «افتح المحادثة») or the new «محادثة جديدة» form (web inbox list, mobile «المحادثات» header). A number with no message shows the first-template pane; `GET /threads/:phone` finds a booked family by its number (guardian / lead / teacher) so the template can name the family's next lesson (rule 6). |
+| 10 | Teachers | Master-detail. `GET /sales/teachers` adds `lessons_today`, `live_now` and, per student, `program`, `status` and `next_lesson_at` (the next open lesson in the coming 8 days). Web: list + side drawer; mobile: list screen + detail screen. The filter rules are shared (`@ab/shared` `filterSalesTeachers`). Still never pay, rates, phone or meeting link. |
+| 11 | Schedule | `GET /sales/schedule?date&teacherId` (`self.sales_academy`): one Riyadh day, whitelisted (time, status, trial, makeup, teacher, students; never a meeting link, reason, note, attendance or money). Web `/sales/schedule` «جدول الحلقات» reuses the admin `LessonChip` read-only; mobile reuses the day switcher and the agenda row's layout. A running lesson shows «ادخل الحلقة» (she joins as the classroom assistant, decision 5a). |
+
 ## Next step (not in this change)
 
 Mobile (`apps/mobile`): the same pages for the sales base role (all chats already follow the API), the

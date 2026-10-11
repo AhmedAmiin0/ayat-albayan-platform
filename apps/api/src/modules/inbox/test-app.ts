@@ -2,7 +2,7 @@
 // guards, services, registry and MessageViews; the DB-facing queries, the line clients, the gate and
 // the sender are mocks. `client` = notifications, `chatClient` = chat (docs/12 §13.16): both
 // configured by default; files that reset all mocks re-prime `configured` in beforeEach.
-import type { ThreadPeople } from '@ab/shared';
+import type { ThreadLesson, ThreadPeople } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -15,6 +15,7 @@ import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
 import { TemplatesQueries } from '../whatsapp/templates.queries';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES } from '../whatsapp/whatsapp.types';
+import type { KnownNumber } from './known-number';
 import type { FamilyTag } from './thread-people.mapper';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { ThreadsQueries } from './threads.queries';
@@ -42,7 +43,8 @@ function mocks() {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessonTeacher: vi.fn(),
-      lessons: vi.fn(async () => []),
+      known: vi.fn(async (): Promise<KnownNumber | null> => null),
+      lessons: vi.fn(async (): Promise<ThreadLesson[]> => []),
       people: vi.fn(async () => NO_PEOPLE),
       familyTags: vi.fn(async () => new Map<string, FamilyTag>()),
     },

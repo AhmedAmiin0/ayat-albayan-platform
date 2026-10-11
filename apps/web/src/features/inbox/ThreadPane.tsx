@@ -59,7 +59,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
 
   if (detail.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
   if (detail.isError) return <FormAlert>{sendErrorText(detail.error)}</FormAlert>;
-  if (!th) return <NewThread phone={phone} />;
+  if (!th) return <NewThread phone={phone} lessons={detail.data.pages[0]?.lessons ?? []} />;
   const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
   const context = {

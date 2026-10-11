@@ -40,7 +40,9 @@ export class ThreadsService {
     const first = !q.before;
     if (first) await this.receipts.open(q.phone, now);
     const row = await this.queries.thread(q.phone);
-    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.queries.people(row) : NO_PEOPLE]);
+    // A number with no message yet (a booked family, «محادثة جديدة»): its people and lessons, for the first template.
+    const who = row ?? (first ? await this.queries.known(q.phone) : null);
+    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.queries.people(who) : NO_PEOPLE]);
     const page = rows.slice(0, q.limit).reverse();
     const tag = first ? familyTag(people.students) : await this.tagOf(row);
     const thread = row ? toThreadView(row, now, tag) : null;
@@ -48,7 +50,7 @@ export class ThreadsService {
       thread,
       messages: await Promise.all(page.map((m) => this.views.view(m))),
       has_more: rows.length > q.limit,
-      lessons: thread && first ? await this.queries.lessons(thread, now) : [],
+      lessons: first && who ? await this.queries.lessons(thread ?? who, now) : [],
       people,
     };
   }

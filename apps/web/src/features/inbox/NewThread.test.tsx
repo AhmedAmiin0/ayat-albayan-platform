@@ -51,6 +51,21 @@ describe('starting a conversation (no thread yet)', () => {
     );
   });
 
+  it('a booked family: the template that needs a lesson picks it from the family’s next lessons (rule 6)', async () => {
+    const lesson = { id: 'l-1', starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
+    routeFetch(apiFetch, [[PATH, { ...EMPTY, lessons: [lesson] }], ['/messaging/templates', [template()]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);
+    renderWithClient(
+      <InboxModeContext.Provider value="sales">
+        <ThreadPane phone={PHONE} listSearch={{ page: 1 }} />
+      </InboxModeContext.Provider>,
+    );
+    fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'booking_confirmation_plain' } });
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.pickLesson }), { target: { value: 'l-1' } });
+    apiSend.mockResolvedValue(message({ id: 'm-2', direction: 'outbound', status: 'queued' }));
+    fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', `${PATH}/template`, expect.objectContaining({ key: 'booking_confirmation_plain', lessonId: 'l-1' })));
+  });
+
   it('the admin gets the same first template', async () => {
     renderNew('admin');
     expect(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate })).toBeTruthy();
@@ -70,6 +85,7 @@ describe('«محادثة جديدة» form', () => {
     renderWithClient(<NewChatForm onOpen={onOpen} />);
     const box = screen.getByLabelText(t.inbox.newChat.phone);
     expect(box.getAttribute('dir')).toBe('ltr');
+    expect(box.closest('details')?.open).toBe(false); // folded: the conversations list keeps the column
     fireEvent.change(box, { target: { value: 'abc' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.newChat.open }));
     expect(screen.getByText(t.common.phoneErrors.not_a_number)).toBeTruthy();
