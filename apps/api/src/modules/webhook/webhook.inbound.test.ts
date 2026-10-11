@@ -51,6 +51,13 @@ describe('inboundRow', () => {
       created_at: '2026-10-03T13:00:00.000Z',
     });
   });
+
+  it('carries no line key unless the event is stamped (docs/12 §13.2)', () => {
+    const input = { phone: PHONE, who: guardian, leadId: null, lessonId: null };
+    expect(inboundRow({ m: event(), ...input })).not.toHaveProperty('line');
+    expect(inboundRow({ m: event({ line: 'chat' }), ...input })).toMatchObject({ line: 'chat' });
+    expect(inboundRow({ m: event({ line: 'notifications' }), ...input }).line).toBe('notifications');
+  });
 });
 
 describe('pushPreview', () => {

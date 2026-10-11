@@ -1,7 +1,9 @@
 import { waIdToE164 } from '@ab/shared';
-import { describe, expect, it } from 'vitest';
+import { describe, expect, it, vi } from 'vitest';
+import type { LineNumbers } from '../../env';
 import {
   buttonPart,
+  CHAT_PHONE_NUMBER_ID,
   envelope,
   inboundValue,
   interactivePart,
@@ -14,8 +16,9 @@ import {
 import { metaTime, parseWebhook } from './webhook.parse';
 
 const NOW = new Date('2026-10-03T13:05:00Z');
-const parse = (value: object, phoneNumberId: string | null = PHONE_NUMBER_ID) =>
-  parseWebhook(envelope(value), { now: NOW, phoneNumberId });
+const ONE: LineNumbers = { notifications: PHONE_NUMBER_ID };
+const TWO: LineNumbers = { notifications: PHONE_NUMBER_ID, chat: CHAT_PHONE_NUMBER_ID };
+const parse = (value: object, numbers: LineNumbers = ONE) => parseWebhook(envelope(value), { now: NOW, numbers });
 
 describe('parseWebhook — inbound messages', () => {
   it('reads a text message with the profile name and Meta’s timestamp', () => {
@@ -32,6 +35,7 @@ describe('parseWebhook — inbound messages', () => {
       mediaId: null,
       mediaMime: null,
       payload: null,
+      line: null,
     });
   });
 
@@ -108,8 +112,30 @@ describe('parseWebhook — envelope', () => {
 
   it('ignores changes for another phone number of the WABA unless no number is configured', () => {
     const body = envelope(inboundValue(textPart('x')), 'someone-else');
-    expect(parseWebhook(body, { now: NOW, phoneNumberId: PHONE_NUMBER_ID }).messages).toEqual([]);
-    expect(parseWebhook(body, { now: NOW, phoneNumberId: null }).messages).toHaveLength(1);
+    expect(parseWebhook(body, { now: NOW, numbers: ONE }).messages).toEqual([]);
+    expect(parseWebhook(body, { now: NOW, numbers: {} }).messages).toHaveLength(1);
+  });
+
+  it('skips an unknown number for messages AND statuses and reports it via onIgnored', () => {
+    const onIgnored = vi.fn();
+    const value = { ...inboundValue(textPart('x')), ...statusValue({ status: 'read' }) };
+    expect(parseWebhook(envelope(value, 'someone-else'), { now: NOW, numbers: TWO, onIgnored })).toEqual({ messages: [], statuses: [] });
+    expect(onIgnored).toHaveBeenCalledExactlyOnceWith('someone-else');
+  });
+
+  it('accepts a change with no metadata phone_number_id (line null)', () => {
+    const body = { entry: [{ changes: [{ field: 'messages', value: inboundValue(textPart('x')) }] }] };
+    const onIgnored = vi.fn();
+    expect(parseWebhook(body, { now: NOW, numbers: TWO, onIgnored }).messages).toEqual([expect.objectContaining({ line: null })]);
+    expect(onIgnored).not.toHaveBeenCalled();
+  });
+
+  it('stamps the receiving line only while the chat line is configured', () => {
+    expect(parse(inboundValue(textPart('x')), TWO).messages[0]?.line).toBe('notifications');
+    const chat = parseWebhook(envelope(inboundValue(textPart('x')), CHAT_PHONE_NUMBER_ID), { now: NOW, numbers: TWO });
+    expect(chat.messages[0]?.line).toBe('chat');
+    expect(parse(statusValue({ status: 'read' }), TWO).statuses).toHaveLength(1);
+    expect(parse(inboundValue(textPart('x')), ONE).messages[0]?.line).toBeNull();
   });
 
   it('metaTime falls back to now for a missing or bad timestamp', () => {

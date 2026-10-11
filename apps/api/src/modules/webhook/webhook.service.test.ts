@@ -1,14 +1,16 @@
-import { describe, expect, it, vi } from 'vitest';
-import { envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
+import { Logger } from '@nestjs/common';
+import { afterEach, describe, expect, it, vi } from 'vitest';
+import { CHAT_PHONE_NUMBER_ID, envelope, inboundValue, PHONE_NUMBER_ID, statusValue, textPart } from './meta.fakes';
 import type { InboundService } from './webhook.inbound.service';
 import { RESPONSE_BUDGET_MS, WebhookService, within } from './webhook.service';
 import type { StatusService } from './webhook.status.service';
 
-function service(phoneNumberId: string | undefined = PHONE_NUMBER_ID) {
+function service(phoneNumberId: string | undefined = PHONE_NUMBER_ID, chat?: string) {
   const inbound = { handle: vi.fn().mockResolvedValue(undefined) };
   const statuses = { handle: vi.fn().mockResolvedValue(undefined) };
-  const config = { appSecret: 's', verifyToken: 't', phoneNumberId };
-  const svc = new WebhookService(config, inbound as unknown as InboundService, statuses as unknown as StatusService);
+  const config = { appSecrets: ['s'], verifyToken: 't', numbers: phoneNumberId ? { notifications: phoneNumberId } : {} };
+  const lines = chat ? { ...config, numbers: { ...config.numbers, chat } } : config;
+  const svc = new WebhookService(lines, inbound as unknown as InboundService, statuses as unknown as StatusService);
   return { svc, inbound, statuses };
 }
 
@@ -56,6 +58,33 @@ describe('WebhookService', () => {
     const { svc, inbound } = service();
     await svc.handle(envelope(both, 'other-number'));
     expect(inbound.handle).not.toHaveBeenCalled();
+  });
+});
+
+describe('WebhookService — two lines (docs/12 §13.6)', () => {
+  afterEach(() => vi.restoreAllMocks());
+
+  it('hands a notifications change and a chat change to inbound.handle with their line', async () => {
+    const { svc, inbound } = service(PHONE_NUMBER_ID, CHAT_PHONE_NUMBER_ID);
+    const chat = envelope(inboundValue(textPart('b'), { id: 'wamid.CHAT' }), CHAT_PHONE_NUMBER_ID) as { entry: object[] };
+    const notif = envelope(inboundValue(textPart('a'), { id: 'wamid.NOTIF' })) as { entry: object[] };
+    await svc.handle({ object: 'whatsapp_business_account', entry: [...notif.entry, ...chat.entry] });
+    const seen = inbound.handle.mock.calls.map(([m]) => [m.waMessageId, m.line]);
+    expect(seen).toEqual([['wamid.NOTIF', 'notifications'], ['wamid.CHAT', 'chat']]);
+  });
+
+  it('warns once per distinct ignored phone_number_id per process', async () => {
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    const { svc, inbound } = service();
+    await svc.handle(envelope(both, 'other-number'));
+    await svc.handle(envelope(both, 'other-number'));
+    await svc.handle(envelope(both, 'third-number'));
+    expect(inbound.handle).not.toHaveBeenCalled();
+    expect(warn).toHaveBeenCalledTimes(2);
+    expect(warn.mock.calls.map(([msg]) => String(msg))).toEqual([
+      expect.stringContaining('other-number'),
+      expect.stringContaining('third-number'),
+    ]);
   });
 });
 

@@ -8,28 +8,43 @@ const sig = (b: Buffer, s = secret) => `sha256=${createHmac('sha256', s).update(
 
 describe('verifySignature', () => {
   it('accepts the HMAC-SHA256 of the raw body', () => {
-    expect(verifySignature({ rawBody: body, header: sig(body), secret })).toBe(true);
+    expect(verifySignature({ rawBody: body, header: sig(body), secrets: [secret] })).toBe(true);
   });
 
   it('accepts an upper-case hex digest', () => {
-    expect(verifySignature({ rawBody: body, header: sig(body).toUpperCase(), secret })).toBe(true);
+    expect(verifySignature({ rawBody: body, header: sig(body).toUpperCase(), secrets: [secret] })).toBe(true);
   });
 
   it('rejects a signature made with another secret', () => {
-    expect(verifySignature({ rawBody: body, header: sig(body, 'other'), secret })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: sig(body, 'other'), secrets: [secret] })).toBe(false);
   });
 
   it('rejects a body changed after signing', () => {
     const header = sig(body);
-    expect(verifySignature({ rawBody: Buffer.from(`${body.toString()} `), header, secret })).toBe(false);
+    expect(verifySignature({ rawBody: Buffer.from(`${body.toString()} `), header, secrets: [secret] })).toBe(false);
   });
 
   it('rejects a missing header, a malformed header, a missing secret or a missing raw body', () => {
-    expect(verifySignature({ rawBody: body, header: undefined, secret })).toBe(false);
-    expect(verifySignature({ rawBody: body, header: 'sha256=abc', secret })).toBe(false);
-    expect(verifySignature({ rawBody: body, header: sig(body).slice(7), secret })).toBe(false);
-    expect(verifySignature({ rawBody: body, header: sig(body), secret: undefined })).toBe(false);
-    expect(verifySignature({ rawBody: undefined, header: sig(body), secret })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: undefined, secrets: [secret] })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: 'sha256=abc', secrets: [secret] })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: sig(body).slice(7), secrets: [secret] })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: sig(body), secrets: [undefined] })).toBe(false);
+    expect(verifySignature({ rawBody: undefined, header: sig(body), secrets: [secret] })).toBe(false);
+  });
+
+  it('accepts a body signed with the second of two secrets, rejects a third', () => {
+    const secrets = [secret, 'chat-secret'];
+    expect(verifySignature({ rawBody: body, header: sig(body, 'chat-secret'), secrets })).toBe(true);
+    expect(verifySignature({ rawBody: body, header: sig(body), secrets })).toBe(true);
+    expect(verifySignature({ rawBody: body, header: sig(body, 'third'), secrets })).toBe(false);
+  });
+
+  it('ignores undefined and blank secrets; an empty list fails closed', () => {
+    const header = sig(body);
+    expect(verifySignature({ rawBody: body, header, secrets: [undefined, '', '  ', secret] })).toBe(true);
+    expect(verifySignature({ rawBody: body, header: sig(body, ''), secrets: [''] })).toBe(false);
+    expect(verifySignature({ rawBody: body, header: sig(body, ' '), secrets: [' ', undefined] })).toBe(false);
+    expect(verifySignature({ rawBody: body, header, secrets: [] })).toBe(false);
   });
 });
 

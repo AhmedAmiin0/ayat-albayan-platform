@@ -16,6 +16,7 @@ import { WebhookQueries } from './webhook.queries';
 import { WEBHOOK_CONFIG, type WebhookConfig } from './webhook.service';
 
 export const SECRET = 'stub-app-secret';
+export const CHAT_SECRET = 'stub-chat-app-secret';
 export const VERIFY = 'local-verify-token';
 
 export const sign = (body: string, secret = SECRET) =>
@@ -29,7 +30,7 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       throw new Error('no users in webhook tests');
     })
     .overrideProvider(WEBHOOK_CONFIG)
-    .useValue({ appSecret: SECRET, verifyToken: VERIFY, phoneNumberId: PHONE_NUMBER_ID, ...config })
+    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, ...config })
     .overrideProvider(WebhookQueries)
     .useValue(deps.queries)
     .overrideProvider(LeadsService)

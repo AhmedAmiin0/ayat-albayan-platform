@@ -2,6 +2,7 @@
 // tools/wa-stub/src/webhook.ts inboundValue / statusValue, so unit tests and e2e agree.
 
 export const PHONE_NUMBER_ID = 'stub-phone-number-id';
+export const CHAT_PHONE_NUMBER_ID = 'stub-chat-phone-number-id';
 export const TS = 1_791_032_400; // 2026-10-03T13:00:00Z
 export const TS_DATE = new Date(TS * 1000);
 
