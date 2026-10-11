@@ -5,6 +5,7 @@ import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { StatusChip } from '@/ui/StatusChip';
+import { lineWord } from './line-words';
 import { MessageActions } from './MessageActions';
 import { mediaLine, queuedLine, stamp, templateLine } from './message-text';
 import { sentByName, useThreadMode } from './thread-mode';
@@ -38,7 +39,7 @@ function useSmall() {
   };
 }
 
-/** When, and for ours the status word; a row scheduled later says when it goes; a teacher's «بعتها». */
+/** When, the line it came in on or left from (a plain word), and for ours the status word; a row scheduled later says when it goes; a teacher's «بعتها». */
 function MessageMeta({ message: m }: { message: MessageView }) {
   const small = useSmall();
   const later = queuedLine(m);
@@ -48,6 +49,7 @@ function MessageMeta({ message: m }: { message: MessageView }) {
       {sender ? <AppText style={small}>{t.inbox.sentBy.replace('{name}', sender)}</AppText> : null}
       <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
         <AppText style={small}>{stamp(m.created_at)}</AppText>
+        {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
         {m.direction === 'outbound' ? (
           <StatusChip
             {...messageStatusStyle[m.status]}
