@@ -13,7 +13,7 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-uti
 
 const replyFrom = t.inbox.line.replyFrom.replace('{line}', t.enums.waLine.chat);
 const fresh = new Date(Date.now() - 3_600_000).toISOString();
-const CHAT = { last_inbound_line: 'chat' as const, last_inbound_at: fresh, session_open: true };
+const CHAT = { last_inbound_line: 'chat' as const, reply_line: 'chat' as const, last_inbound_at: fresh, session_open: true };
 const phoneProps = { context: {} as never, mode: 'text' as const, onMode: vi.fn(), teacher: false };
 
 afterEach(() => apiFetch.mockReset());

@@ -15,8 +15,9 @@ import {
 import { setMessaging, stubReset } from '../support/wa-stub';
 
 // Two WhatsApp lines, outbound side (docs/12 §13.3, R-MSG-01, R-MSG-02, R-LEAD-02): a session reply
-// leaves from the line of the customer's newest inbound and its row is stamped with it; a template
-// ALWAYS leaves from the notifications number; opening a thread marks it read on its own line.
+// prefers the chat line whenever its 24 h window is open, else the notifications line, and its row
+// is stamped with it; a template ALWAYS leaves from the notifications number; opening a thread
+// marks it read on its own line.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
 const KEY = 'booking_confirmation_plain';
@@ -24,11 +25,20 @@ const KEY = 'booking_confirmation_plain';
 const textsTo = async (pn: string, digits: string) =>
   (await sentVia(pn)).filter((m) => m.to === digits && m.type === 'text');
 
-/** A fresh contact writes on `line`; the admin answers from the thread. */
-async function replyAfter(input: { page: Parameters<typeof openThread>[0]; line: WaLine }) {
+/**
+ * A fresh contact writes on `line` (two minutes ago when `thenTap`, which then taps a reminder
+ * button on the notifications line one minute later); the admin answers from the thread.
+ */
+async function replyAfter(input: { page: Parameters<typeof openThread>[0]; line: WaLine; thenTap?: boolean }) {
   const digits = freshDigits();
   const name = `رد ${input.line} ${digits.slice(-4)}`;
-  expect((await stubInboundOn(input.line, { from: digits, name, text: 'السلام عليكم' })).status).toBe(200);
+  const now = Math.floor(Date.now() / 1000);
+  const first = { from: digits, name, text: 'السلام عليكم', ...(input.thenTap ? { timestamp: now - 120 } : {}) };
+  expect((await stubInboundOn(input.line, first)).status).toBe(200);
+  if (input.thenTap) {
+    const button = { text: 'شكرًا', payload: 'e2e:reminder' };
+    expect((await stubInboundOn('notifications', { from: digits, name, button, timestamp: now - 60 })).status).toBe(200);
+  }
   await openThread(input.page, name);
   const reply = `وعليكم السلام ${digits.slice(-4)}`;
   await input.page.getByRole('textbox', { name: ar.inbox.composer.messageLabel }).fill(reply);
@@ -62,6 +72,18 @@ test.describe('two WhatsApp lines — replies and reads (R-MSG-01, R-MSG-02)', (
     expect(await textsTo(CHAT_PN, r.digits)).toHaveLength(0);
     await expect.poll(async () => (await messagesWithLine(r.phone)).filter((m) => m.direction === 'outbound'), WAIT).toEqual([
       expect.objectContaining({ body: r.reply, line: 'notifications', status: 'sent' }),
+    ]);
+  });
+
+  test('chat, then a reminder tap on notifications a minute later: the reply still leaves via chat', async ({ asRole }) => {
+    test.setTimeout(120_000);
+    const r = await replyAfter({ page: await asRole('admin'), line: 'chat', thenTap: true });
+    await expect.poll(async () => (await textsTo(CHAT_PN, r.digits)).length, WAIT).toBe(1);
+    expect(await textsTo(NOTIF_PN, r.digits)).toHaveLength(0);
+    const rows = await messagesWithLine(r.phone);
+    expect(rows.filter((m) => m.direction === 'inbound').map((m) => m.line)).toEqual(['chat', 'notifications']);
+    await expect.poll(async () => (await messagesWithLine(r.phone)).filter((m) => m.direction === 'outbound'), WAIT).toEqual([
+      expect.objectContaining({ body: r.reply, line: 'chat', status: 'sent' }),
     ]);
   });
 

@@ -22,15 +22,15 @@ afterEach(() => {
 describe('ReplyFromNote', () => {
   it('an open chat window says the reply leaves from the chat line', async () => {
     const { t } = await import('@/lib/i18n');
-    render(<ReplyFromNote thread={thread({ session_open: true, last_inbound_line: 'chat' })} />);
+    render(<ReplyFromNote thread={thread({ session_open: true, reply_line: 'chat' })} />);
     expect(screen.getByText(t.inbox.line.replyFrom.replace('{line}', t.enums.waLine.chat)).tagName).toBe('P');
   });
 
   it('nothing for a closed window or an unknown line', () => {
     const { container } = render(
       <>
-        <ReplyFromNote thread={thread({ session_open: false, last_inbound_line: 'chat' })} />
-        <ReplyFromNote thread={thread({ session_open: true, last_inbound_line: null })} />
+        <ReplyFromNote thread={thread({ session_open: false, reply_line: 'chat' })} />
+        <ReplyFromNote thread={thread({ session_open: true, reply_line: null })} />
       </>,
     );
     expect(container.innerHTML).toBe('');
@@ -38,7 +38,7 @@ describe('ReplyFromNote', () => {
 
   it('in English', () => {
     lang.en = true;
-    render(<ReplyFromNote thread={thread({ session_open: true, last_inbound_line: 'notifications' })} />);
+    render(<ReplyFromNote thread={thread({ session_open: true, reply_line: 'notifications' })} />);
     expect(screen.getByText('Your reply will be sent via: Notifications line')).toBeTruthy();
   });
 });

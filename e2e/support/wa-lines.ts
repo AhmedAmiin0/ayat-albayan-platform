@@ -15,6 +15,10 @@ export interface LineInbound {
   from: string;
   name?: string;
   text?: string;
+  /** Template quick-reply tap (Meta type «button»): a guardian answering a reminder. */
+  button?: { text: string; payload: string };
+  /** Unix seconds (Meta's timestamp, stored as created_at); defaults to now. */
+  timestamp?: number;
   /** Overrides the line's phone-number id (an id that is neither line). */
   phoneNumberId?: string;
   /** Signs with this secret instead of the line's own (the API must answer 401). */

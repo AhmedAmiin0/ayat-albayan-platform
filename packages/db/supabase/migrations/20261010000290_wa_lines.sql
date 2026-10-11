@@ -19,10 +19,12 @@ alter table public.messages add column line public.wa_line;
 comment on column public.messages.line is
   'Business line of this row (inbound: received on, outbound: sent from). Written only while the chat line is configured; null = history / single line.';
 
--- v_threads + last_inbound_line (line of the newest inbound row, null when that row has no line).
+-- v_threads + last_inbound_line (line of the newest inbound row, null when that row has no line)
+-- + last_chat_inbound_at / last_notifications_inbound_at (newest inbound per line; a row without a
+-- line counts as notifications), the two 24 h windows of replyLine() (docs/12 §13.3 rule 2).
 -- create or replace keeps the 142 grants and may only APPEND columns, so the select list is
--- explicit (m.* would put a new CTE column in the middle) and the new column is LAST. The 20
--- existing columns keep name, type and order (types.ts v_threads.Row). array_agg keeps NULL lines,
+-- explicit (m.* would put a new CTE column in the middle) and the new columns are LAST, in this
+-- order. The 20 existing columns keep name, type and order (types.ts v_threads.Row). array_agg keeps NULL lines,
 -- so a newest inbound row without a line yields null (never an older row's line); the id tiebreak
 -- makes the pick deterministic for two inbound rows with the same created_at (Meta stamps seconds).
 create or replace view public.v_threads with (security_invoker = true) as
@@ -35,7 +37,9 @@ with last_message as (
 ), inbound as (
   select phone_e164, max(created_at) as last_inbound_at,
     (count(*) filter (where read_at is null))::int as unread_count,
-    (array_agg(line order by created_at desc, id desc))[1] as last_inbound_line
+    (array_agg(line order by created_at desc, id desc))[1] as last_inbound_line,
+    max(created_at) filter (where line = 'chat') as last_chat_inbound_at,
+    max(created_at) filter (where line is distinct from 'chat') as last_notifications_inbound_at
   from public.messages
   where direction = 'inbound'
   group by phone_e164
@@ -47,7 +51,7 @@ select m.phone_e164, m.last_message_id, m.last_direction, m.last_body, m.last_te
   g.id as guardian_id, g.name as guardian_name, g.tz as guardian_tz,
   t.id as teacher_id, t.display_name_ar as teacher_name,
   coalesce(g.name, l.name, t.display_name_ar) as display_name,
-  i.last_inbound_line
+  i.last_inbound_line, i.last_chat_inbound_at, i.last_notifications_inbound_at
 from last_message m
 left join inbound i on i.phone_e164 = m.phone_e164
 left join public.leads l on l.phone_e164 = m.phone_e164

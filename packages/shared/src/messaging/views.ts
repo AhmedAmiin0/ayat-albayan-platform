@@ -45,6 +45,12 @@ export interface ThreadView {
   unpaid?: boolean;
   /** Line of the newest inbound (docs/12 §13); null = history or a single line. Absent in an old cache. */
   last_inbound_line?: WaLine | null;
+  /** Newest inbound on the chat line (docs/12 §13.7). Absent in an old cache. */
+  last_chat_inbound_at?: string | null;
+  /** Newest inbound on the notifications line or without a line (history). Absent in an old cache. */
+  last_notifications_inbound_at?: string | null;
+  /** replyLine(): the line a session text leaves from; null when closed or on a single line. */
+  reply_line?: WaLine | null;
 }
 
 /** One messages row in a thread (R-MSG-05). */

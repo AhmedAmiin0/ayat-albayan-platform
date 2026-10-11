@@ -4,7 +4,12 @@ import type { ThreadRow } from './threads.mapper';
 
 export const PHONE = '+966501234567';
 
+/**
+ * A v_threads row. Its newest inbound counts as the notifications line's (history / single line)
+ * unless `over` sets the per-line columns, so `last_inbound_at` alone still opens the window.
+ */
 export function threadRow(over: Partial<ThreadRow> = {}): ThreadRow {
+  const inboundAt = over.last_inbound_at === undefined ? '2026-10-02T08:00:00Z' : over.last_inbound_at;
   return {
     phone_e164: PHONE,
     display_name: 'أم ياسمين',
@@ -17,6 +22,8 @@ export function threadRow(over: Partial<ThreadRow> = {}): ThreadRow {
     last_message_at: '2026-10-02T08:00:00Z',
     last_inbound_at: '2026-10-02T08:00:00Z',
     last_inbound_line: null,
+    last_chat_inbound_at: null,
+    last_notifications_inbound_at: inboundAt,
     unread_count: 1,
     lead_id: 'l0000000-0000-4000-8000-000000000001',
     lead_name: 'أم ياسمين',
