@@ -12,5 +12,6 @@ export * from './teacher-templates.js';
 export * from './templates.js';
 export * from './thread-people.js';
 export * from './timing.js';
+export * from './trial-chat.js';
 export * from './wa.js';
 export type * from './views.js';
