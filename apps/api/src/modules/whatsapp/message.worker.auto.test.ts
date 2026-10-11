@@ -12,7 +12,7 @@ import { templateRow } from './whatsapp.fakes';
 // The automatic-messages hold (settings.auto_messages_enabled, migration 162, docs/09 cut-over).
 
 const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn() };
-const dispatch = { send: vi.fn() };
+const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const ADMIN = 'a0000000-0000-4000-8000-000000000001';
@@ -61,6 +61,7 @@ describe('MessageWorker — automatic messages OFF', () => {
     queries.claim.mockResolvedValue(1);
     queries.sent.mockResolvedValue(true);
     dispatch.send.mockResolvedValue({ waMessageId: 'wamid.1' });
+    dispatch.ready.mockReturnValue(true);
   });
 
   it.each([
@@ -79,7 +80,7 @@ describe('MessageWorker — automatic messages OFF', () => {
     const row = reminder({ created_by: ADMIN, dedup_key: 'admin:5f0c' });
     await expect(worker().process({ row, template, now: NOW, autoOn: false })).resolves.toBe('sent');
     expect(queries.expire).not.toHaveBeenCalled();
-    expect(dispatch.send).toHaveBeenCalledWith(row, template);
+    expect(dispatch.send).toHaveBeenCalledWith(row, template, 'notifications');
   });
 
   it('booking confirmations and session texts are not automatic: they go', async () => {
