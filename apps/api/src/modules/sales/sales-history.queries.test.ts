@@ -23,7 +23,7 @@ describe('SalesHistoryQueries', () => {
     const out = await new SalesHistoryQueries(f.db).history('s1');
     expect(out?.subscriptions).toEqual(subs);
     expect(String(f.argsOf('subscriptions', 'select')?.[0])).not.toMatch(/price|currency|fx_|notes/);
-    expect(f.argsOf('payments', 'select')).toEqual(['id, subscription_id, paid_at, kind']);
+    expect(f.argsOf('payments', 'select')).toEqual(['id, subscription_id, paid_at, kind, amount, currency']);
     expect(f.argsOf('payments', 'in')).toEqual(['subscription_id', ['a', 'b']]);
     expect(f.argsOf('audit_log', 'select')).toEqual(['entity_id, at, before_status:before->>status, after_status:after->>status']);
     expect(f.argsOf('audit_log', 'eq')).toEqual(['entity', 'subscriptions']);

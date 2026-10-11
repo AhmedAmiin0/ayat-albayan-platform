@@ -57,14 +57,14 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     expect(t.academy.live).toHaveBeenCalledWith(expect.any(Date));
   });
 
-  it('GET history: her subscription opens with status changes, lessons and payment dates, no money', async () => {
+  it('GET history: her subscription opens with status changes, lessons and payment dates and amounts, no other money', async () => {
     const res = await t.get(`/sales/subscriptions/${SUB}/history`, 'salesA');
     const body = res.json();
     expect(body.subscription_id).toBe(SUB);
     expect(body.subscriptions.map((s: { id: string }) => s.id)).toEqual(['old', SUB]);
-    expect(body.subscriptions[1]).toMatchObject({ lessons_used: 3, lessons_remaining: 5, payments: [{ id: 'p1', paid_at: '2026-09-02T09:00:00Z', kind: 'payment' }] });
-    expect(keys(body).filter((k) => SECRET.test(k))).toEqual([]);
-    expect(res.body).not.toMatch(/290|SAR|bank/);
+    expect(body.subscriptions[1]).toMatchObject({ lessons_used: 3, lessons_remaining: 5, payments: [{ id: 'p1', paid_at: '2026-09-02T09:00:00Z', kind: 'payment', amount: 290, currency: 'SAR' }] });
+    expect(keys(body).filter((k) => SECRET.test(k)).sort()).toEqual(['amount', 'currency']);
+    expect(res.body).not.toMatch(/bank|price|سر/);
   });
 
   it('GET history: another salesperson, or an unknown id, is 404 subscription_not_found; a bad id is 400', async () => {
@@ -73,6 +73,7 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     const unknown = await t.get('/sales/subscriptions/c1000000-0000-4000-8000-0000000000ff/history', 'salesA');
     expect([unknown.statusCode, unknown.json().code]).toEqual([404, 'subscription_not_found']);
     expect(t.history.history).not.toHaveBeenCalled();
+    expect(other.body).not.toMatch(/290|SAR|amount/);
     expect((await t.get('/sales/subscriptions/nope/history', 'salesA')).statusCode).toBe(400);
   });
 });

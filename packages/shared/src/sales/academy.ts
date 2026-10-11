@@ -34,7 +34,7 @@ export const salesStudentsQuerySchema = z.object({
 });
 export type SalesStudentsQuery = z.output<typeof salesStudentsQuerySchema>;
 
-/** One subscription of the student over time, with its lessons and dated events; no money. */
+/** One subscription of the student over time, with its lessons, dated events and its payments' amounts; no price. */
 export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'> {
   renews_on: string | null;
   ended_at: string | null;
@@ -43,8 +43,8 @@ export interface SalesHistoryEntry extends Omit<SalesSubscriptionView, 'student'
   lessons_remaining: number;
   /** From the audit trail: when the status changed (`from` null = created). */
   status_changes: { at: string; from: SubscriptionStatus | null; to: SubscriptionStatus | null }[];
-  /** The payments linked to it: date and kind only (the sales lists show no amount). */
-  payments: { id: string; paid_at: string; kind: PaymentKind }[];
+  /** The payments linked to it: date, kind, amount and currency (owner 2026-10-11); never method, receipt or note. */
+  payments: { id: string; paid_at: string; kind: PaymentKind; amount: number; currency: string }[];
 }
 
 /** GET /sales/subscriptions/:id/history: the opened subscription and all its student's subscriptions, oldest first. */

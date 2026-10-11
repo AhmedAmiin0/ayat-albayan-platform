@@ -1,6 +1,7 @@
 import type { SalesHistoryEntry } from '@ab/shared';
 import { Ltr } from '@/components/ui/ltr';
 import { formatDate } from '@/features/leads/format';
+import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -9,7 +10,7 @@ const status = (s: string | null): string => (s ? (STATUS[s] ?? s) : '—');
 const fill = (text: string, values: Record<string, string>): string =>
   Object.entries(values).reduce((out, [k, v]) => out.replace(`{${k}}`, v), text);
 
-/** One subscription in the history: package, status, dates, lessons, status changes and payment dates (no money). */
+/** One subscription in the history: package, status, dates, lessons, status changes and payments (date, kind, amount). */
 export function HistoryEntryCard({ entry, current }: { entry: SalesHistoryEntry; current: boolean }) {
   const h = t.sales.history;
   return (
@@ -45,7 +46,7 @@ export function HistoryEntryCard({ entry, current }: { entry: SalesHistoryEntry;
         <ul>
           {entry.payments.map((p) => (
             <li key={p.id}>
-              {formatDate(p.paid_at)} — {t.enums.paymentKind[p.kind]}
+              {formatDate(p.paid_at)} — {t.enums.paymentKind[p.kind]} — <Amount amount={p.amount} currency={p.currency} />
             </li>
           ))}
         </ul>

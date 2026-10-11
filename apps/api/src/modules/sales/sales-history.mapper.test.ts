@@ -11,15 +11,15 @@ describe('sales subscription history mapper', () => {
     ]);
   });
 
-  it('toSalesHistory: every subscription with lessons, dates, changes and payment date/kind only', () => {
+  it('toSalesHistory: every subscription with lessons, dates, changes and payment date/kind/amount/currency', () => {
     const out = toSalesHistory(SUB, bundle());
     expect(out.student).toEqual({ id: 's1', code: 'AB-0101', name: 'ياسمين' });
     expect(out.subscriptions[0]).toEqual({
       id: 'old', package: '8', status: 'expired', starts_on: '2026-08-01', renews_on: null, ended_at: '2026-08-30T16:30:00Z',
       created_at: '2026-08-01T10:00:00Z', lessons_total: 8, lessons_used: 8, lessons_remaining: 0, status_changes: [], payments: [],
     });
-    expect(out.subscriptions[1]?.payments).toEqual([{ id: 'p1', paid_at: '2026-09-02T09:00:00Z', kind: 'payment' }]);
-    expect(JSON.stringify(out)).not.toMatch(/price|currency|amount|method|note|290|SAR/);
+    expect(out.subscriptions[1]?.payments).toEqual([{ id: 'p1', paid_at: '2026-09-02T09:00:00Z', kind: 'payment', amount: 290, currency: 'SAR' }]);
+    expect(JSON.stringify(out)).not.toMatch(/price|fx_|method|note|bank|سر/);
   });
 
   it('a subscription without a balance row: nothing used, all remaining', () => {
