@@ -1,34 +1,17 @@
-import { clockTime, normalizeArabic, type Gender, type Program, type SalesTeacherView } from '@ab/shared';
-import { t } from '@/lib/i18n';
+import { clockTime, type SalesTeacherFilter, type SalesTeacherView } from '@ab/shared';
 import { dayMonthLabel, RIYADH_TZ, weekdayOf, zonedParts } from '@/features/schedule/tz';
+import { t } from '@/lib/i18n';
 
-// «المعلمون» (sales, owner report 2026-10-12): the list's filters and the Riyadh time of a next lesson.
+// «المعلمون» (sales, owner report 2026-10-12). The filter rules live in @ab/shared (the mobile screen
+// uses the same ones); here: the web's names for them and the Riyadh time of a next lesson.
 
-export interface TeacherFilter {
-  q: string;
-  program: Program | '';
-  gender: Gender | '';
-}
-
-export const NO_FILTER: TeacherFilter = { q: '', program: '', gender: '' };
-
-/** Name (Arabic-normalised, or the English name) contains the search; program and gender match when picked. */
-export function filterTeachers(list: readonly SalesTeacherView[], f: TeacherFilter): SalesTeacherView[] {
-  const q = normalizeArabic(f.q.trim()).toLowerCase();
-  return list.filter(
-    (tc) =>
-      (!q || normalizeArabic(tc.name).includes(q) || (tc.name_en ?? '').toLowerCase().includes(q)) &&
-      (!f.program || tc.programs.includes(f.program)) &&
-      (!f.gender || tc.gender === f.gender),
-  );
-}
-
-/** The programs any teacher teaches, in the catalogue's order, for the program filter. */
-export function programsOf(list: readonly SalesTeacherView[], order: readonly Program[]): Program[] {
-  return order.filter((p) => list.some((tc) => tc.programs.includes(p)));
-}
-
-export const isFiltered = (f: TeacherFilter): boolean => Boolean(f.q.trim() || f.program || f.gender);
+export {
+  filterSalesTeachers as filterTeachers,
+  isTeacherFilterOn as isFiltered,
+  NO_TEACHER_FILTER as NO_FILTER,
+  teacherPrograms as programsOf,
+} from '@ab/shared';
+export type TeacherFilter = SalesTeacherFilter;
 
 const weekday: Record<string, string> = t.enums.weekday;
 

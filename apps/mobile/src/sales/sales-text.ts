@@ -1,4 +1,13 @@
-import { localizedName, RIYADH_TZ, type SalesHistoryEntry, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
+import {
+  clockTime,
+  intlLocale,
+  localizedName,
+  RIYADH_TZ,
+  type SalesHistoryEntry,
+  type SalesStudentView,
+  type SalesTeacherStudent,
+  type SalesTeacherView,
+} from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { money } from '@/payments/format';
@@ -11,6 +20,8 @@ import type { SalesSubscription } from './sales-api';
 const STATUS: Record<string, string | undefined> = t.enums.subscriptionStatus;
 const PACKAGE: Record<string, string | undefined> = t.enums.packageSize;
 const DAY = new Intl.DateTimeFormat('en-CA', { timeZone: RIYADH_TZ, year: 'numeric', month: '2-digit', day: '2-digit' });
+const DAY_MONTH = new Intl.DateTimeFormat(intlLocale(locale), { timeZone: RIYADH_TZ, day: 'numeric', month: 'long' });
+const WEEKDAY: Record<string, string> = t.enums.weekday;
 
 /** «{a} … {b}» → the values, every placeholder named once. */
 export function fill(text: string, values: Record<string, string>): string {
@@ -52,6 +63,25 @@ export function teacherLabel(teacher: SalesTeacherView): string {
 export function teacherSubtitle(teacher: SalesTeacherView): string {
   const programs = teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator);
   return programs ? `${t.enums.gender[teacher.gender]} · ${programs}` : t.enums.gender[teacher.gender];
+}
+
+/** «الطلاب: 4 · حلقات اليوم: 2» of a teacher row. */
+export function teacherCounts(teacher: SalesTeacherView): string {
+  const s = t.sales.teachers;
+  return `${s.studentsCount.replace('{n}', String(teacher.students.length))} · ${s.lessonsToday.replace('{n}', String(teacher.lessons_today))}`;
+}
+
+/** «الحلقة القادمة: الاثنين 12 أكتوبر 18:00» (Riyadh), or «لا حلقة خلال الأيام الثمانية القادمة». */
+export function nextLessonLine(student: Pick<SalesTeacherStudent, 'next_lesson_at'>): string {
+  const s = t.sales.teachers;
+  return student.next_lesson_at ? `${s.nextLesson}: ${riyadhWhen(student.next_lesson_at)}` : s.noNextLesson;
+}
+
+/** «الاثنين 12 أكتوبر 18:00»: weekday, day, month and the Riyadh clock, Western digits (the web's words). */
+export function riyadhWhen(iso: string): string {
+  const at = new Date(iso);
+  const weekday = new Date(`${riyadhDate(iso)}T00:00:00Z`).getUTCDay();
+  return `${WEEKDAY[String(weekday)] ?? ''} ${DAY_MONTH.format(at)} ${clockTime(at, RIYADH_TZ)}`;
 }
 
 /** «المعلم/ة · البرنامج» of a student (or «بلا معلم»). */

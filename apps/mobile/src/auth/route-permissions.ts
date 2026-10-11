@@ -26,6 +26,7 @@ export const ROUTE_PERMISSION = {
   salesTeachers: 'self.sales_academy',
   salesStudents: 'self.sales_academy',
   salesLive: 'self.sales_academy',
+  salesSchedule: 'self.sales_academy',
 } as const satisfies Record<string, Permission>;
 
 export type RouteKey = keyof typeof ROUTE_PERMISSION;

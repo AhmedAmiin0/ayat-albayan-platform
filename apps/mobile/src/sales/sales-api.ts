@@ -1,4 +1,4 @@
-import type { AssistantLessonView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
+import type { AssistantLessonView, SalesScheduleDay, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
@@ -53,5 +53,13 @@ export const useSalesLive = () =>
     queryKey: pathKey('/sales/live'),
     queryFn: () => apiFetch<AssistantLessonView[]>('/sales/live'),
     select: asList,
+    refetchInterval: LIVE_REFRESH_MS,
+  });
+
+/** GET /sales/schedule?date&teacherId — one Riyadh day of the academy, read-only, re-read every minute. */
+export const useSalesSchedule = (date: string, teacherId: string) =>
+  useQuery({
+    queryKey: [...pathKey('/sales/schedule'), date, teacherId],
+    queryFn: () => apiFetch<SalesScheduleDay>(`/sales/schedule?date=${date}${teacherId ? `&teacherId=${teacherId}` : ''}`),
     refetchInterval: LIVE_REFRESH_MS,
   });

@@ -11,20 +11,10 @@ const LIST = [
 const ids = (f: Parameters<typeof filterTeachers>[1]) => filterTeachers(LIST, f).map((tc) => tc.id);
 
 describe('teacher-view', () => {
-  it('filterTeachers: Arabic-normalised name (hamza forms), English name, program, gender', () => {
-    expect(ids(NO_FILTER)).toEqual(['a', 'b', 'c']);
+  it('the shared filter under the web names: name, program, gender; blank search is no filter', () => {
     expect(ids({ ...NO_FILTER, q: 'اسراء' })).toEqual(['b']);
-    expect(ids({ ...NO_FILTER, q: 'moh' })).toEqual(['c']);
-    expect(ids({ ...NO_FILTER, program: 'quran' })).toEqual(['a', 'c']);
     expect(ids({ ...NO_FILTER, program: 'quran', gender: 'female' })).toEqual(['a']);
-  });
-
-  it('isFiltered ignores a blank search', () => {
     expect(isFiltered({ ...NO_FILTER, q: '  ' })).toBe(false);
-    expect(isFiltered({ ...NO_FILTER, gender: 'male' })).toBe(true);
-  });
-
-  it('programsOf keeps the catalogue order and only programs someone teaches', () => {
     expect(programsOf(LIST, PROGRAMS)).toEqual(PROGRAMS.filter((p) => ['quran', 'arabic', 'islamic_studies'].includes(p)));
   });
 

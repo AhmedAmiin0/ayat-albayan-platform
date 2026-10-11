@@ -10,7 +10,7 @@ jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefin
 const only = (...keys: string[]) => (p: string) => keys.includes(p);
 const row = (name: string) => screen.queryByRole('button', { name });
 
-test('a salesperson (self.sales + self.sales_academy) gets the four rows, each opening its page', async () => {
+test('a salesperson (self.sales + self.sales_academy) gets the five rows, each opening its page', async () => {
   await render(<SalesSection can={only('self.sales', 'self.sales_academy')} />);
   expect(screen.getByRole('header', { name: t.sales.mobile.section })).toBeTruthy();
   const pages: [string, string][] = [
@@ -18,6 +18,7 @@ test('a salesperson (self.sales + self.sales_academy) gets the four rows, each o
     [t.sales.nav.allStudents, '/more/sales/students'],
     [t.sales.nav.teachers, '/more/sales/teachers'],
     [t.sales.nav.live, '/more/sales/live'],
+    [t.sales.nav.academySchedule, '/more/sales/schedule'],
   ];
   for (const [name, href] of pages) {
     const button = row(name);

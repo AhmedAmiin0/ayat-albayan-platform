@@ -19,7 +19,8 @@ const draftOf = (out: Outgoing): string => (out.kind === 'template' ? JSON.strin
 /**
  * Reply box (R-MOB-02, R-MSG-03). Within 24 h of their last message: free text, plus a template if
  * wanted. After that WhatsApp allows only an approved template, so the box says why
- * (inbox.sessionClosed, verbatim) and offers the template sheet. The window is checked against the
+ * (inbox.sessionClosed, verbatim; a number with no message yet says the first message is a template)
+ * and offers the template sheet. The window is checked against the
  * device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  */
 export function Composer({ phone, thread, lessons }: { phone: string; thread: ThreadView | null; lessons: ThreadLesson[] }) {
@@ -106,7 +107,7 @@ export function Composer({ phone, thread, lessons }: { phone: string; thread: Th
               color: color.ink,
             }}
           >
-            {t.inbox.sessionClosed}
+            {thread ? t.inbox.sessionClosed : t.inbox.newChat.firstTemplate}
           </AppText>
           <Button label={t.inbox.composer.sendTemplate} onPress={() => setPicking(true)} />
         </>

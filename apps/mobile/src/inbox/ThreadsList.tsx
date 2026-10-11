@@ -14,6 +14,7 @@ import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, kindLabel } from './format';
 import { threadPreview } from './message-text';
+import { NewChatSheet } from './NewChatSheet';
 import { threadLink, useThreadMode } from './thread-mode';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
@@ -38,7 +39,8 @@ function turnChip(th: ThreadView): ReactNode {
 /**
  * «المحادثات» (R-MOB-02): every WhatsApp thread — a guardian's reschedule request or a teacher's
  * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
- * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags.
+ * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
+ * sales (the same tabs) start a chat by number: «محادثة جديدة».
  */
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const mode = useThreadMode();
@@ -51,7 +53,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
 
   return (
     <>
-      <ScreenHeader title={t.nav.conversations} subtitle={subtitle} />
+      <ScreenHeader title={t.nav.conversations} subtitle={subtitle} trailing={mode.kind === 'admin' ? <NewChatSheet /> : undefined} />
       {switcher}
       <SearchField onSearch={setSearch} label={t.inbox.searchPlaceholder} />
       <FilterPills items={filterPills()} value={filter} onChange={setFilter} accessibilityLabel={t.inbox.title} />

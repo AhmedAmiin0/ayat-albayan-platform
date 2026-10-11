@@ -1,4 +1,11 @@
-import type { AssistantLessonView, SalesHistoryEntry, SalesStudentView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
+import type {
+  AssistantLessonView,
+  SalesHistoryEntry,
+  SalesScheduleLesson,
+  SalesStudentView,
+  SalesSubscriptionHistory,
+  SalesTeacherView,
+} from '@ab/shared';
 import type { SalesSubscription } from './sales-api';
 
 // Test data shaped like the sales API (docs/16): no price, phone or link anywhere.
@@ -47,10 +54,24 @@ export const teacher = (over: Partial<SalesTeacherView> = {}): SalesTeacherView 
   name_en: 'Abrar Mohamed',
   gender: 'female',
   programs: ['quran', 'arabic'],
+  lessons_today: 3,
+  live_now: false,
   students: [
-    { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' },
-    { id: 'st2', code: 'AB-0190', name: 'جنى علي' },
+    { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', program: 'quran', status: 'active', next_lesson_at: '2026-10-12T15:00:00.000Z' },
+    { id: 'st2', code: 'AB-0190', name: 'جنى علي', program: 'arabic', status: 'trial', next_lesson_at: null },
   ],
+  ...over,
+});
+
+export const scheduleLesson = (over: Partial<SalesScheduleLesson> = {}): SalesScheduleLesson => ({
+  id: 'l1',
+  starts_at: '2026-10-12T15:00:00.000Z',
+  ends_at: '2026-10-12T15:30:00.000Z',
+  status: 'confirmed',
+  trial: false,
+  makeup: false,
+  teacher: { id: 't1', display_name_ar: 'أبرار محمد', display_name_en: 'Abrar Mohamed' },
+  students: [{ id: 'st1', code: 'AB-0183', name: 'يوسف أحمد' }],
   ...over,
 });
 
