@@ -22,7 +22,7 @@ import { ThreadsService } from './threads.service';
  * client, the send gate, the sender, the registry and MessageViews. SubscriptionsModule brings the
  * package balances behind a thread's `people` and «مشترك» tag (R-SUB-01). Teacher mode (R-TCH-03):
  * ThreadReads picks the admin's or the teacher's reads per request (TeacherScopes); LessonsModule
- * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson's own leads' chats.
+ * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson every chat, redacted (docs/16).
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule],

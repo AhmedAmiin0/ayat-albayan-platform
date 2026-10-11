@@ -3312,7 +3312,10 @@
       "chats": "Chats",
       "subscriptions": "Subscriptions",
       "schedule": "My meetings",
-      "label": "Sales sections"
+      "label": "Sales sections",
+      "teachers": "Teachers",
+      "allStudents": "All students",
+      "live": "Running lessons"
     },
     "subscriptions": {
       "pending": "Pending",
@@ -3353,7 +3356,52 @@
       "autoDisable": "Turn off"
     },
     "loadFailed": "Could not load the data, try again",
-    "retry": "Try again"
+    "retry": "Try again",
+    "teachers": {
+      "title": "Teachers",
+      "empty": "No active teachers",
+      "emptyHint": "Every active teacher shows here with their students",
+      "name": "Teacher",
+      "gender": "Gender",
+      "programs": "Programs",
+      "students": "Students",
+      "noStudents": "No students yet"
+    },
+    "allStudents": {
+      "title": "All students",
+      "search": "Search by name or code",
+      "empty": "No matching students",
+      "student": "Student",
+      "teacher": "Teacher",
+      "program": "Program",
+      "status": "Status",
+      "guardian": "Guardian",
+      "noTeacher": "No teacher"
+    },
+    "live": {
+      "title": "Lessons running now",
+      "empty": "No lessons are running now",
+      "strip": "Lessons running now: {n}",
+      "open": "Show the running lessons"
+    },
+    "history": {
+      "open": "History",
+      "openFor": "History of {name}'s subscription",
+      "title": "{name}'s subscriptions",
+      "close": "Close the history",
+      "current": "The opened subscription",
+      "used": "{used} of {total} used",
+      "remaining": "Remaining: {n}",
+      "starts": "Starts: {date}",
+      "renews": "Renews: {date}",
+      "ended": "Ended: {date}",
+      "changes": "Status changes",
+      "created": "Created as {to}",
+      "changed": "From {from} to {to}",
+      "noChanges": "No recorded changes",
+      "payments": "Linked payments",
+      "noPayments": "No linked payments"
+    }
   },
   "meetings": {
     "new": "New meeting",
@@ -3768,6 +3816,7 @@
       "self.sales_students": "Students the salesperson brought",
       "self.sales_payments": "Payments the salesperson recorded",
       "self.sales_earnings": "Salesperson's earnings and statements",
+      "self.sales_academy": "Teachers, all students and running lessons (salesperson)",
       "self.assistant": "Classroom assistant's own pages"
     },
     "page": {

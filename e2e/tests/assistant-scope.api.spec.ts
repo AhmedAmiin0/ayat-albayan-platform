@@ -5,7 +5,7 @@ import { money } from '../support/assistant-money';
 import { USERS } from '../support/users';
 
 // What an assistant may NOT see or do, through the REAL API and database (R-ASST-04): the money routes
-// answer 403, and the chats are only those of the families she brought, with no money in them.
+// answer 403. Since docs/16 (owner 2026-10-11) she reads every chat, still with no money in it.
 
 test.describe.serial('assistant scope: money routes and chats (API + DB)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'API only: one run'));
@@ -53,14 +53,13 @@ test.describe.serial('assistant scope: money routes and chats (API + DB)', () =>
     expect((await call(request, { token, method: 'POST', path: '/assistant-pay/brought-by', body: brought })).status).toBe(403);
   });
 
-  test('chats: her list holds only the family she brought; the other chats are 403; the money flag is off', async ({ request }) => {
-    const list = await call<{ items: ThreadView[] }>(request, { token: need(mine).token, method: 'GET', path: '/threads' });
-    expect(list.status).toBe(200);
-    expect(list.body.items.map((t) => t.phone_e164)).toEqual([need(own).phone]);
-    expect(list.body.items.every((t) => t.unpaid === false)).toBe(true);
-    for (const f of [need(foreign), need(stranger)]) {
-      const res = await call(request, { token: need(mine).token, method: 'GET', path: `/threads/${encodeURIComponent(f.phone)}` });
-      expect([res.status, res.body]).toMatchObject([403, { code: 'not_your_thread' }]);
+  test('chats: every family opens to her (docs/16), with the money flag off', async ({ request }) => {
+    for (const f of [need(own), need(foreign), need(stranger)]) {
+      const path = `/threads?search=${f.phone.slice(1)}`;
+      const list = await call<{ items: ThreadView[] }>(request, { token: need(mine).token, method: 'GET', path });
+      expect(list.body.items.map((t) => [t.phone_e164, t.unpaid])).toEqual([[f.phone, false]]);
+      const res = await call<ThreadDetail>(request, { token: need(mine).token, method: 'GET', path: `/threads/${encodeURIComponent(f.phone)}` });
+      expect([f.phone, res.status]).toEqual([f.phone, 200]);
     }
   });
 
