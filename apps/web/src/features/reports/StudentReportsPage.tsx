@@ -1,6 +1,6 @@
 import type { UserRole } from '@ab/shared';
 import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { useState } from 'react';
+import { type ReactNode, useState } from 'react';
 import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
@@ -23,18 +23,23 @@ export interface StudentReportsPageProps {
   role: UserRole;
   /** The viewer's zone (the teacher's own; Riyadh for the admin). */
   tz: string;
+  /** A line under the heading (the teacher's «trial family → sales» note). */
+  notice?: ReactNode;
 }
 
 /** «سجل التقارير» of one student (R-REP-05, issue D2): the grade chart, then every report. */
-export function StudentReportsPage({ studentId, name, role, tz }: StudentReportsPageProps) {
+export function StudentReportsPage({ studentId, name, role, tz, notice }: StudentReportsPageProps) {
   const [page, setPage] = useState(1);
   const reports = useQuery({ ...studentReportsQuery(studentId, page), placeholderData: keepPreviousData });
   const recorded = useRecordedLessons(studentId);
   const head = (
-    <PageHead>
-      <Cartouche>{t.reports.history}</Cartouche>
-      {name && <span className="font-display text-h3 font-bold">{name}</span>}
-    </PageHead>
+    <>
+      <PageHead>
+        <Cartouche>{t.reports.history}</Cartouche>
+        {name && <span className="font-display text-h3 font-bold">{name}</span>}
+      </PageHead>
+      {notice}
+    </>
   );
   if (reports.isError) {
     const forbidden = reports.error instanceof ApiError && reports.error.status === 403;

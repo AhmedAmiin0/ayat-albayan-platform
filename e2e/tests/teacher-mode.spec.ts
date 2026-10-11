@@ -31,10 +31,13 @@ async function dropTeacher(id: string): Promise<void> {
   });
 }
 
-/** The child is this teacher's (students.teacher_id) and the guardian's phone, wa_id digits. */
+/**
+ * The child is this teacher's (students.teacher_id), active (a trial family is never in a teacher's
+ * chats: trial-no-teacher-chat.spec), and the guardian's phone, wa_id digits.
+ */
 async function assign(input: { studentId: string; guardianId: string; teacherId: string }): Promise<string> {
   return withSql(async (sql) => {
-    await sql`update public.students set teacher_id = ${input.teacherId} where id = ${input.studentId}`;
+    await sql`update public.students set teacher_id = ${input.teacherId}, status = 'active' where id = ${input.studentId}`;
     const [g] = await sql<{ phone_e164: string }[]>`select phone_e164 from public.guardians where id = ${input.guardianId}`;
     if (!g) throw new Error('guardian missing');
     return g.phone_e164;

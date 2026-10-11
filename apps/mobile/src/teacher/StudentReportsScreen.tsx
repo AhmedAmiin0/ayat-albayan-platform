@@ -17,6 +17,7 @@ import { RecordingsButton } from '@/student-file/RecordingsButton';
 import { useTeacherMe } from './queries';
 import { openSigned } from './report/api';
 import { reportFormHref } from './ReportRows';
+import { TrialChatNote } from './TrialChatNote';
 
 /** «الحلقة 12 · ممتاز»: the lesson number, then the overall grade or, without grades, the attendance. */
 function summaryLine(r: ReportSummaryView): string {
@@ -51,6 +52,7 @@ export function StudentReportsScreen({ admin = false }: { admin?: boolean }) {
   return (
     <Screen>
       <ScreenHeader title={name} subtitle={t.reports.history} trailing={<Button variant="ghost" label={t.common.back} onPress={back} />} />
+      {admin ? null : <TrialChatNote status={me.data?.students.find((s) => s.id === id)?.status} />}
       {admin ? null : <RecordingsButton href={`/teacher/reports/student/recordings/${id}`} />}
       {error ? <ErrorLine message={t.reports.error.pdf_not_ready} /> : null}
       <FlatList
