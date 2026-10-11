@@ -7,8 +7,8 @@ type Sub = Tables<'subscriptions'>;
 /** Whitelisted subscription columns: never price, currency, fx_*, price_source or notes. */
 export type HistorySubscriptionRow = Pick<Sub, 'id' | 'package' | 'status' | 'starts_on' | 'renews_on' | 'lessons_total' | 'created_at'>;
 export type HistoryBalanceRow = { subscription_id: string | null; lessons_used: number | null; remaining: number | null; ended_at: string | null };
-/** A payment as date and kind only: never amount, currency, method, receipt or note. */
-export type HistoryPaymentRow = Pick<Tables<'payments'>, 'id' | 'subscription_id' | 'paid_at' | 'kind'>;
+/** A payment as date, kind, amount and currency (owner 2026-10-11): never method, receipt, fx or note. */
+export type HistoryPaymentRow = Pick<Tables<'payments'>, 'id' | 'subscription_id' | 'paid_at' | 'kind' | 'amount' | 'currency'>;
 /** An audit row reduced to its date and the status before / after (json paths, nothing else of the row). */
 export type HistoryAuditRow = { entity_id: string; at: string; before_status: string | null; after_status: string | null };
 
@@ -49,7 +49,7 @@ export class SalesHistoryQueries {
     if (ids.length === 0) return { student: student.data, subscriptions: [], balances: [], payments: [], audit: [] };
     const [balances, payments, audit] = await Promise.all([
       this.db.from('v_subscription_balance').select('subscription_id, lessons_used, remaining, ended_at').in('subscription_id', ids),
-      this.db.from('payments').select('id, subscription_id, paid_at, kind').in('subscription_id', ids).order('paid_at'),
+      this.db.from('payments').select('id, subscription_id, paid_at, kind, amount, currency').in('subscription_id', ids).order('paid_at'),
       this.db
         .from('audit_log')
         .select('entity_id, at, before_status:before->>status, after_status:after->>status')

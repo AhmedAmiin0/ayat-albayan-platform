@@ -34,5 +34,6 @@ describe('the sales assistant side, English', () => {
     expect(await screen.findByText("Suhaila's subscriptions")).toBeTruthy();
     expect(screen.getByText('The opened subscription')).toBeTruthy();
     expect(screen.getAllByText('Linked payments')).toHaveLength(2);
+    expect(screen.getByText('1,290').closest('li')?.textContent).toMatch(/Payment.*1,290\s+SAR/);
   });
 });

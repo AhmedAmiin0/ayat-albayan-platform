@@ -25,11 +25,13 @@ function entry(sub: HistorySubscriptionRow, b: HistoryBundle): SalesHistoryEntry
     lessons_used: used,
     lessons_remaining: balance?.remaining ?? Math.max(sub.lessons_total - used, 0),
     status_changes: statusChanges(b.audit.filter((a) => a.entity_id === sub.id)),
-    payments: b.payments.filter((p) => p.subscription_id === sub.id).map((p) => ({ id: p.id, paid_at: p.paid_at, kind: p.kind })),
+    payments: b.payments
+      .filter((p) => p.subscription_id === sub.id)
+      .map((p) => ({ id: p.id, paid_at: p.paid_at, kind: p.kind, amount: p.amount, currency: p.currency })),
   };
 }
 
-/** Whitelist of the history: no price, currency, fx, note, amount, method or receipt ever leaves. */
+/** Whitelist of the history: payments carry amount + currency (owner 2026-10-11); no price, fx, note, method or receipt. */
 export function toSalesHistory(subscriptionId: string, b: HistoryBundle): SalesSubscriptionHistory {
   return {
     subscription_id: subscriptionId,

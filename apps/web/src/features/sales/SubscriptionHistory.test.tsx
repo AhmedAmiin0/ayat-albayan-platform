@@ -20,7 +20,7 @@ function Harness({ kind = 'confirmed' as const }: { kind?: 'confirmed' | 'pendin
 afterEach(() => apiFetch.mockReset());
 
 describe('a confirmed subscription’s history («السجل»)', () => {
-  it('opens from the row: every subscription of the student, lessons, status changes and payment dates, no money', async () => {
+  it('opens from the row: every subscription of the student, lessons, status changes and payments with their amount', async () => {
     apiFetch.mockImplementation(async (path: string) => (path.endsWith('/history') ? history() : CONFIRMED));
     renderWithQuery(<Harness />);
     fireEvent.click(await screen.findByRole('button', { name: t.sales.history.openFor.replace('{name}', 'سهيلة') }));
@@ -31,7 +31,8 @@ describe('a confirmed subscription’s history («السجل»)', () => {
     expect(within(section).getByText(/3/, { selector: 'p' }).textContent).toContain(t.sales.history.remaining.replace('{n}', '5'));
     expect(within(section).getByText(t.sales.history.changed.replace('{from}', t.enums.subscriptionStatus.unpaid).replace('{to}', t.enums.subscriptionStatus.active), { exact: false })).toBeTruthy();
     expect(within(section).getByText(t.enums.paymentKind.payment, { exact: false })).toBeTruthy();
-    expect(section.textContent).not.toMatch(/ر\.س|SAR|290/);
+    expect(within(section).getByText('1,290').closest('li')?.textContent).toMatch(/1,290\s+ر\.س/);
+    expect(section.textContent).not.toMatch(/SAR|١/);
     fireEvent.click(within(section).getByRole('button', { name: t.sales.history.close }));
     expect(screen.queryByRole('region', { name: t.sales.history.title.replace('{name}', 'سهيلة') })).toBeNull();
   });

@@ -30,7 +30,7 @@ export const history = (): SalesSubscriptionHistory => ({
       id: HISTORY_ID, package: '8', status: 'active', starts_on: '2026-09-01', renews_on: '2026-10-01', ended_at: null, created_at: '2026-09-01T10:00:00Z',
       lessons_total: 8, lessons_used: 3, lessons_remaining: 5,
       status_changes: [{ at: '2026-09-01T10:00:00Z', from: null, to: 'unpaid' }, { at: '2026-09-02T09:00:00Z', from: 'unpaid', to: 'active' }],
-      payments: [{ id: 'p1', paid_at: '2026-09-02T09:00:00Z', kind: 'payment' }],
+      payments: [{ id: 'p1', paid_at: '2026-09-02T09:00:00Z', kind: 'payment', amount: 1290, currency: 'SAR' }],
     },
   ],
 });
