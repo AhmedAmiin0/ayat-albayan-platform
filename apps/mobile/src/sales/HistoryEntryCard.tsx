@@ -9,7 +9,7 @@ import { SmallHeading } from './SmallHeading';
 
 /**
  * One subscription in the history: package and status, dates, lessons used / left, the status changes
- * and the linked payments as date + kind only (no money). The opened subscription is outlined in lapis.
+ * and the linked payments with date, kind and amount (owner, 2026-10-11). The opened subscription is outlined in lapis.
  */
 export function HistoryEntryCard({ entry, current }: { entry: SalesHistoryEntry; current: boolean }) {
   const { color } = useTheme();

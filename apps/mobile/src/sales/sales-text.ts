@@ -1,6 +1,7 @@
 import { localizedName, RIYADH_TZ, type SalesHistoryEntry, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
+import { money } from '@/payments/format';
 import { ltr } from '@/ui/Ltr';
 import type { SalesSubscription } from './sales-api';
 
@@ -71,7 +72,7 @@ export interface HistoryLines {
   payments: string[];
 }
 
-/** The lines of one subscription in the history card: package and status, dates, lessons, events (no money). */
+/** The lines of one subscription in the history card: package and status, dates, lessons, events, payments with their amount (owner, 2026-10-11). */
 export function historyLines(entry: SalesHistoryEntry): HistoryLines {
   const h = t.sales.history;
   const dates = [fill(h.starts, { date: ltr(entry.starts_on) })];
@@ -86,6 +87,6 @@ export function historyLines(entry: SalesHistoryEntry): HistoryLines {
       const what = c.from ? fill(h.changed, { from: statusLabel(c.from), to: statusLabel(c.to) }) : fill(h.created, { to: statusLabel(c.to) });
       return `${ltr(riyadhDate(c.at))} — ${what}`;
     }),
-    payments: entry.payments.map((p) => `${ltr(riyadhDate(p.paid_at))} — ${t.enums.paymentKind[p.kind]}`),
+    payments: entry.payments.map((p) => `${ltr(riyadhDate(p.paid_at))} — ${t.enums.paymentKind[p.kind]} — ${money(p.amount, p.currency)}`),
   };
 }

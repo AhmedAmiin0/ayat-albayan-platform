@@ -1,6 +1,7 @@
 import { screen } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
 import { history } from './fixtures';
@@ -18,7 +19,7 @@ jest.mock('expo-router', () => ({
 
 beforeEach(() => mockApiFetch.mockReset());
 
-test('the student’s subscriptions oldest first, the opened one marked; payments as date + kind only', async () => {
+test('the student’s subscriptions oldest first, the opened one marked; payments with date, kind and amount', async () => {
   mockApiFetch.mockResolvedValue(history());
   await renderWithQuery(<SubscriptionHistoryScreen />);
   expect(await screen.findByRole('header', { name: t.sales.history.title.replace('{name}', 'يوسف أحمد') })).toBeTruthy();
@@ -30,7 +31,7 @@ test('the student’s subscriptions oldest first, the opened one marked; payment
   expect(expired).toBeGreaterThan(-1);
   expect(active).toBeGreaterThan(expired);
   expect(screen.getAllByText(t.sales.history.current)).toHaveLength(1);
-  expect(screen.getByText(`${ltr('2026-09-30')} — ${t.enums.paymentKind.payment}`)).toBeTruthy();
+  expect(screen.getByText(`${ltr('2026-09-30')} — ${t.enums.paymentKind.payment} — ${money(145, 'SAR')}`)).toBeTruthy();
   expect(screen.getByText(t.sales.history.noPayments)).toBeTruthy();
   expect(screen.getByText(t.sales.history.noChanges)).toBeTruthy();
   expect(screen.queryByText(/SAR|USD|EGP|\+\d{6,}/)).toBeNull();

@@ -28,7 +28,7 @@ export const entry = (over: Partial<SalesHistoryEntry> = {}): SalesHistoryEntry 
     { at: '2026-09-30T10:00:00.000Z', from: null, to: 'unpaid' },
     { at: '2026-09-30T22:30:00.000Z', from: 'unpaid', to: 'active' },
   ],
-  payments: [{ id: 'p1', paid_at: '2026-09-30T12:00:00.000Z', kind: 'payment' }],
+  payments: [{ id: 'p1', paid_at: '2026-09-30T12:00:00.000Z', kind: 'payment', amount: 145, currency: 'SAR' }],
   ...over,
 });
 
