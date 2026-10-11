@@ -56,7 +56,7 @@ describe('POST /webhooks/whatsapp (W2) — signature', () => {
   });
 
   it('401 when no app secret is configured', async () => {
-    const { post } = await boot({ appSecret: undefined });
+    const { post } = await boot({ appSecrets: [] });
     expect((await post(text)).statusCode).toBe(401);
   });
 

@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { CHAT_PHONE_NUMBER_ID, envelope, PHONE_NUMBER_ID, statusValue } from './meta.fakes';
 import type { StatusEvent } from './webhook.events';
 import { outbound, services } from './webhook.fakes';
+import { parseWebhook } from './webhook.parse';
 import { failedLabel } from './webhook.status.service';
 
 const AT = new Date('2026-10-03T13:00:00Z');
@@ -60,6 +62,18 @@ describe('StatusService (R-MSG-05)', () => {
       vars: { template: 'تذكير حلقة اليوم — Jitsi', name: 'أم سهيلة' },
       data: { phone: '+966501234567', messageId: 'msg-out-1' },
     });
+  });
+
+  it('a status whose metadata number is the chat line still moves the row by wamid (docs/12 §13.6)', async () => {
+    const s = services();
+    s.queries.outboundByWaId.mockResolvedValue(outbound());
+    const numbers = { notifications: PHONE_NUMBER_ID, chat: CHAT_PHONE_NUMBER_ID };
+    const body = envelope(statusValue({ status: 'delivered' }), CHAT_PHONE_NUMBER_ID);
+    const [status] = parseWebhook(body, { now: AT, numbers }).statuses;
+    expect(status).toBeDefined();
+    if (status) await s.statuses.handle(status);
+    expect(s.queries.outboundByWaId).toHaveBeenCalledWith('wamid.OUT1');
+    expect(s.queries.moveStatus).toHaveBeenCalledWith(expect.objectContaining({ id: 'msg-out-1', from: 'sent' }));
   });
 
   it('a replayed status changes nothing', async () => {

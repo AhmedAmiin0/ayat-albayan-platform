@@ -2208,7 +2208,11 @@
       "not_your_thread": "This chat isn't one of yours",
       "own_thread_read_only": "This is your chat with the academy; it's read-only",
       "template_not_allowed": "Only the admin can send this template",
-      "not_your_lesson": "This lesson isn't one of yours"
+      "not_your_lesson": "This lesson isn't one of yours",
+      "line_not_configured": "The line the last message arrived on is not configured on the server"
+    },
+    "line": {
+      "replyFrom": "Your reply will be sent via: {line}"
     },
     "pickThread": "Choose a conversation from the list",
     "pickThreadHint": "New messages show up here automatically as soon as they arrive.",
@@ -2403,14 +2407,43 @@
       "feedbackButtonsHint": "The guardian gets «How was the lesson?» with three buttons; tapping one reopens the chat for 24 hours. Works with automatic messages on, once Meta approves the «Lesson rating (buttons)» template.",
       "feedbackLinkOnly": "Nothing is sent automatically; the form link is sent by hand from the lesson page.",
       "feedbackModeButtons": "WhatsApp rating buttons",
-      "feedbackModeLink": "Form link, by hand"
+      "feedbackModeLink": "Form link, by hand",
+      "recipientsRestricted": "Sending in this environment is limited to test numbers; messages to any other number stay in the queue.",
+      "lines": {
+        "title": "WhatsApp lines",
+        "intro": "The notifications line sends templates and automatic messages; the chat line is for regular conversations. Check them to see each number's status and whether incoming messages reach the platform.",
+        "check": "Check lines",
+        "checking": "Checking…",
+        "notChecked": "Not checked yet",
+        "configured": "Configured",
+        "notConfigured": "Not configured on the server",
+        "chatOptional": "Optional: without it, all messages are sent from the notifications line.",
+        "phoneNumberId": "Phone number ID",
+        "wabaId": "Account ID (WABA)",
+        "displayPhone": "Number",
+        "verifiedName": "Verified name",
+        "quality": "Number quality",
+        "status": "Number status",
+        "nameStatus": "Name status",
+        "codeVerification": "Code verification",
+        "webhook": "Incoming messages link",
+        "subscribed": "The app is linked to the account",
+        "notSubscribed": "No app is linked to the account, so incoming messages will not reach the platform",
+        "webhookOtherApp": "The app linked to the account is not the app configured on the server, so incoming messages will not reach the platform",
+        "webhookUnverified": "An app is linked to the account, but it could not be verified because the app ID is not configured on the server",
+        "callbackOverride": "Alternative callback address: {url}",
+        "checkedAt": "Last checked: {time}",
+        "checkFailed": "Could not check the lines",
+        "callFailed": "Query failed: {message}"
+      }
     },
     "error": {
       "not_submittable": "This template was already sent or is already approved",
       "not_configured": "WhatsApp details aren't set up on the server",
       "meta_error": "Meta rejected the request: {message}",
       "needs_app_id": "This template includes a PDF file. To send it to Meta, the Meta app ID (WA_APP_ID) has to be set on the server first.",
-      "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value."
+      "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
+      "template_sync_off": "Template sync with WhatsApp is turned off in this environment"
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",
@@ -2514,6 +2547,7 @@
       "470": "More than 24 hours have passed since their last message",
       "130429": "Meta paused sending for a while because of high message volume",
       "131026": "The number isn't on WhatsApp or can't receive messages",
+      "131030": "This number is not on the allowed recipients list of the test account",
       "131047": "More than 24 hours have passed since their last message",
       "131049": "Meta held back this message because the recipient has received too many messages — try later or send it yourself",
       "131051": "This message type isn't supported on WhatsApp",
@@ -2787,6 +2821,10 @@
     "paymentKind": {
       "payment": "Payment",
       "refund": "Refund"
+    },
+    "waLine": {
+      "notifications": "Notifications line",
+      "chat": "Chat line"
     }
   },
   "settings": {

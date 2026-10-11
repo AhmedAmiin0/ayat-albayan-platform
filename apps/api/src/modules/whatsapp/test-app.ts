@@ -8,11 +8,12 @@ import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
+import { LinesCheck } from './lines.check';
 import { MessageSender } from './message.sender';
 import { MessagesQueries } from './messages.queries';
 import { SendGate } from './send-gate';
 import { TemplatesQueries } from './templates.queries';
-import { WHATSAPP_CLIENT } from './whatsapp.types';
+import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
@@ -23,12 +24,23 @@ const verify: TokenVerifier = async (token) => {
   return user;
 };
 
+const clientMock = () => ({
+  configured: vi.fn(() => false),
+  getTemplates: vi.fn(),
+  submitTemplate: vi.fn(),
+  canUploadSamples: vi.fn(),
+  uploadSample: vi.fn(),
+});
+
 function mocks() {
   return {
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
     gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },
-    client: { configured: vi.fn(() => false), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() },
+    client: clientMock(),
+    /** A SEPARATE object (docs/12 §13.16): per-line calls can be told apart. */
+    chatClient: clientMock(),
+    lines: { check: vi.fn() },
     storage: { signedDownload: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
@@ -42,6 +54,8 @@ export async function whatsappApp() {
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(MessagesQueries).useValue(m.messages)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
+    .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
+    .overrideProvider(LinesCheck).useValue(m.lines)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(SendGate).useValue(m.gate)

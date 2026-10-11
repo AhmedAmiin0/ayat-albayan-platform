@@ -5,6 +5,7 @@ import { IconButton } from '@/components/ui/icon-button';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { sessionUntil } from './format';
+import { replyFromText } from './reply-from';
 import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
@@ -52,7 +53,10 @@ function Notices({ notes }: { notes: string[] }) {
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const windowNote = open ? (thread.last_inbound_at ? sessionUntil(thread.last_inbound_at) : null) : t.inbox.sessionClosed;
-  const notes = [open ? null : windowNote, gateNote, open ? windowNote : null].filter((n): n is string => !!n);
+  // The reply line before the open window's note (collapsed, only the first shows); templates
+  // always leave from the notifications line, so no reply line in template mode.
+  const replyFrom = mode === 'text' ? replyFromText(thread) : null;
+  const notes = [open ? null : windowNote, gateNote, replyFrom, open ? windowNote : null].filter((n): n is string => !!n);
   const template = !open || mode === 'template';
   const toggle = open && (
     <IconButton

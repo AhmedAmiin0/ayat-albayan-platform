@@ -8,7 +8,7 @@ import { REPORT_READY, templateRow } from './whatsapp.fakes';
 import { WaError } from './whatsapp.types';
 
 const queries = { claim: vi.fn(), sent: vi.fn(), failure: vi.fn(), expire: vi.fn() };
-const dispatch = { send: vi.fn() };
+const dispatch = { send: vi.fn(), ready: vi.fn(), multi: false };
 const push = { notifyAdmins: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const template = templateRow();
@@ -26,12 +26,13 @@ describe('MessageWorker — one queued row (docs/12 §3.3)', () => {
     queries.claim.mockResolvedValue(1);
     queries.sent.mockResolvedValue(true);
     dispatch.send.mockResolvedValue({ waMessageId: 'wamid.1' });
+    dispatch.ready.mockReturnValue(true);
   });
 
   it('claims (attempt +1) before calling Meta, then records sent with the wamid', async () => {
     await expect(worker().process({ row: dueMessage(), template, now: NOW, autoOn: true })).resolves.toBe('sent');
     expect(queries.claim).toHaveBeenCalledWith({ id: dueMessage().id, attempts: 0, now: NOW });
-    expect(dispatch.send).toHaveBeenCalledWith(dueMessage(), template);
+    expect(dispatch.send).toHaveBeenCalledWith(dueMessage(), template, 'notifications');
     expect(queries.sent).toHaveBeenCalledWith(expect.objectContaining({ row: dueMessage(), waMessageId: 'wamid.1' }));
     const [claim, send, sent] = [queries.claim, dispatch.send, queries.sent].map((f) => f.mock.invocationCallOrder[0] ?? 0);
     expect(claim).toBeLessThan(send ?? 0);

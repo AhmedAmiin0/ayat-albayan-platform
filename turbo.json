@@ -6,7 +6,7 @@
     "lint": { "dependsOn": ["^build"] },
     "typecheck": { "dependsOn": ["^build"] },
     "test": { "dependsOn": ["^build"] },
-    "e2e": { "dependsOn": ["^build"], "cache": false, "outputs": ["playwright-report/**", "test-results/**"] },
+    "e2e": { "dependsOn": ["^build"], "cache": false, "passThroughEnv": ["E2E_LINES"], "outputs": ["playwright-report/**", "test-results/**"] },
     "dev": { "dependsOn": ["^build"], "cache": false, "persistent": true }
   }
 }

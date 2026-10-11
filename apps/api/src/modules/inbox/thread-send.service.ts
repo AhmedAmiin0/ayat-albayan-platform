@@ -1,11 +1,12 @@
-import { isTeacherTemplate, sessionWindowOpen, type ThreadTemplate, type ThreadText } from '@ab/shared';
+import { isTeacherTemplate, type ThreadTemplate, type ThreadText } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
+import { lineEnvs, loadEnv } from '../../env';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
-import { missingParams, type ThreadRow } from './threads.mapper';
+import { missingParams, threadReplyLine, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
 export interface ThreadSend<T> {
@@ -42,8 +43,25 @@ function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
 }
 
 /**
+ * The line a session text leaves from (docs/12 §13.3 rule 2): replyLine() prefers the chat line
+ * whenever its window is open. Every window closed → 409; only the chat window open while the chat
+ * line cannot send → 503. Stamped only while the chat line is configured (13.2: a single line
+ * queues no line key). The env is read per request.
+ */
+function sendLine(thread: ThreadRow | null, now: Date): { line?: 'chat' | 'notifications' } {
+  const chatConfigured = Boolean(lineEnvs(loadEnv()).chat);
+  const line = thread ? threadReplyLine(thread, { chatConfigured, now }) : null;
+  if (!line) throw waHttpError('session_closed', 409);
+  if (!chatConfigured) {
+    if (line === 'chat') throw waHttpError('line_not_configured', 503);
+    return {};
+  }
+  return { line };
+}
+
+/**
  * H3/H4 (docs/12 §4, R-LEAD-02): the admin, a salesperson (any chat, docs/16) — or, in teacher mode,
- * a teacher for their own families (owner decision 2026-10-02) — writes from the inbox, from the academy number.
+ * a teacher for their own families (owner decision 2026-10-02) — writes from the inbox.
  */
 @Injectable()
 export class ThreadSendService {
@@ -53,16 +71,21 @@ export class ThreadSendService {
     private readonly outbox: Outbox,
   ) {}
 
-  /** H3: free text inside the 24 h window only (WhatsApp rejects it after: 131047). */
+  /**
+   * H3: free text inside a 24 h window only (WhatsApp rejects it after: 131047), from the chat line
+   * when its window is open, else from notifications (sendLine), decided before the enqueue.
+   */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
-    if (!sessionWindowOpen(thread?.last_inbound_at, now)) throw waHttpError('session_closed', 409);
-    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text });
+    return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...sendLine(thread, now) });
   }
 
-  /** H4: an approved template with every variable filled; a PDF template comes only from the PDF job. */
+  /**
+   * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
+   * No line stamp: templates always leave from the notifications line (the sender stamps at claim).
+   */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
     const key = dedupKey(s);

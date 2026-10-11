@@ -79,5 +79,6 @@ export function toMessageView(input: MessageViewInput): MessageView {
     created_at: row.created_at,
     click_to_chat: needsManualSend(row) ? clickToChatLink(row.phone_e164, text) : null,
     lesson: row.lesson ?? null,
+    line: row.line,
   };
 }

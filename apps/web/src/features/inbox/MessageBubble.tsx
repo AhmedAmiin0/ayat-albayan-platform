@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 import { fullTime, mediaKind, stampText, templateLine } from './format';
+import { LineBadge } from './LineBadge';
 import { MessageActions } from './MessageActions';
 import { useInboxMode } from './mode';
 import { RatingChip } from './RatingChip';
@@ -86,6 +87,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
           <p className="mt-1 text-2xs font-semibold text-ink-2">{t.inbox.sentBy.replace('{name}', m.sent_by_teacher_name)}</p>
         )}
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
+          <LineBadge line={m.line} />
           <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
             {stampText(m.created_at, now)}
           </time>

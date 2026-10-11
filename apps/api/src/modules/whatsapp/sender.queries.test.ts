@@ -19,6 +19,7 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
       'scheduled_for.is.null,scheduled_for.lte.2026-10-02T08:00:00.000Z',
       'next_attempt_at.is.null,next_attempt_at.lte.2026-10-02T08:00:00.000Z',
       'template_key.is.null,template_key.in.(booking_confirmation,lesson_reminder)',
+      'template_key.not.is.null,line.is.null,line.neq.chat', // no chat client here (review A, C1)
     ]);
     expect(calls.find((c) => c.method === 'limit')?.args).toEqual([50]);
   });
@@ -26,7 +27,7 @@ describe('SenderQueries — the outbound queue, compare-and-set (docs/12 §3.3)'
   it('due with no approved template reads session texts only', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     await new SenderQueries(db).due({ keys: [], now: NOW, limit: 50 });
-    expect(calls.filter((c) => c.method === 'or').at(-1)?.args).toEqual(['template_key.is.null']);
+    expect(calls.filter((c) => c.method === 'or').at(2)?.args).toEqual(['template_key.is.null']);
   });
 
   it('claim: attempts n → n+1 with a 2-minute lease, only while queued at n', async () => {

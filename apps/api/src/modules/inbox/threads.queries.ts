@@ -11,6 +11,7 @@ import type { FamilyTag } from './thread-people.mapper';
 import { applySort } from '../../common/list-sort';
 import { THREAD_SORT, type ThreadListFilter } from './threads.list';
 import { threadSearchFilter, type ThreadRow } from './threads.mapper';
+import { newestPerLine, type ReadMark } from './read-marks';
 
 export type { ThreadListFilter } from './threads.list';
 
@@ -71,18 +72,17 @@ export class ThreadsQueries {
     return familyTagsOf({ db: this.db, packages: this.packages, balances: this.balances }, guardianIds);
   }
 
-  /** Opening the thread reads its inbound messages; returns the newest stamped wamid. */
-  async markInboundRead(phone: string, at: Date): Promise<string | null> {
+  /** Opening the thread reads its inbound messages; returns the newest stamped wamid per line. */
+  async markInboundRead(phone: string, at: Date): Promise<ReadMark[]> {
     const { data, error } = await this.db
       .from('messages')
       .update({ read_at: at.toISOString() })
       .eq('phone_e164', phone)
       .eq('direction', 'inbound')
       .is('read_at', null)
-      .select('wa_message_id, created_at');
+      .select('wa_message_id, created_at, line');
     check(error, 'inbound read stamp');
-    const newest = [...(data ?? [])].sort((a, b) => b.created_at.localeCompare(a.created_at))[0];
-    return newest?.wa_message_id ?? null;
+    return newestPerLine(data);
   }
 
   /** Rule 8: a replayed dedup_key returns the first row, flagged `replayed` (nothing was written). */

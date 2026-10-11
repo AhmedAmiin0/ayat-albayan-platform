@@ -131,3 +131,56 @@ jobs:
             e2e/playwright-report
             e2e/test-results
           retention-days: 7
+
+  # The production configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys in the API or
+  # stub env (playwright.config.ts reads E2E_LINES). The six §5 journeys plus the template status and
+  # settings switch specs, desktop only; the two-line specs skip themselves. Same setup as e2e above.
+  e2e-single-line:
+    name: e2e (single line)
+    needs: changes
+    if: needs.changes.outputs.e2e == 'true' && vars.RUN_E2E != 'false'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm i --frozen-lockfile
+      - name: Start local Supabase
+        run: pnpm supabase start -x studio,imgproxy,mailpit,edge-runtime,logflare,vector,realtime,postgres-meta,supavisor
+      - run: pnpm env:local
+      - name: Playwright version
+        id: pw
+        run: echo "version=$(pnpm --filter e2e exec playwright --version | awk '{print $2}')" >> "$GITHUB_OUTPUT"
+      - name: Cache the Playwright browser
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-${{ runner.os }}-${{ steps.pw.outputs.version }}
+      - name: Install the browser (only on a cache miss)
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: pnpm --filter e2e exec playwright install --with-deps chromium
+      - name: Install the browser's system libraries (cache hit)
+        if: steps.pw-cache.outputs.cache-hit == 'true'
+        run: pnpm --filter e2e exec playwright install-deps chromium
+      - run: >-
+          pnpm turbo e2e --filter=e2e -- --project=desktop
+          tests/journey-1-lead-to-trial.spec.ts tests/journey-2-report.spec.ts
+          tests/journey-3-payment-renewal.spec.ts tests/journey-4-reschedule-conflict.spec.ts
+          tests/journey-5-availability-wizard.spec.ts tests/journey-6-duplicate-student.spec.ts
+          tests/inbox-template-status.spec.ts tests/settings-switches.spec.ts
+        env:
+          CI: 'true'
+          E2E_LINES: single
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report-single-line
+          path: |
+            e2e/playwright-report
+            e2e/test-results
+          retention-days: 7

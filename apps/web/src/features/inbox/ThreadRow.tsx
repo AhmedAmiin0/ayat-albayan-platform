@@ -8,6 +8,7 @@ import { initialOf } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from './format';
+import { LineBadge } from './LineBadge';
 import { inboxBase, showsPhone, useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { leadChip } from './subscription';
@@ -59,7 +60,8 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const failed = lastFailed(th);
   const kind = threadKind(th);
   const turn = failed ? t.inbox.failedLast : unread ? unreadLabel(th.unread_count) : '';
-  const label = [t.inbox.openThread.replace('{name}', name), turn]
+  const line = th.last_inbound_line ? t.enums.waLine[th.last_inbound_line] : '';
+  const label = [t.inbox.openThread.replace('{name}', name), turn, line]
     .filter(Boolean)
     .join(' — ');
 
@@ -110,6 +112,7 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
           )}
           {mode === 'admin' && <FamilyTags thread={th} />}
           {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
+          <LineBadge line={th.last_inbound_line} />
         </span>
       </Link>
     </li>

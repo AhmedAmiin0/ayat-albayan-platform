@@ -1,0 +1,119 @@
+import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
+import { Injectable } from '@nestjs/common';
+import { lineEnvs, loadEnv, type WhatsappEnv } from '../../env';
+import { graphJson, type FetchLike, type GraphConn } from './graph';
+import { parsed, phoneNumberSchema, subscribedAppsSchema } from './meta-shapes';
+import { WaError } from './whatsapp.types';
+
+type Phone = Pick<
+  LineCheckView,
+  'display_phone_number' | 'verified_name' | 'quality_rating' | 'status' | 'name_status' | 'code_verification_status'
+>;
+type Apps = NonNullable<LineCheckView['subscribed_apps']>;
+type Step = LineCheckView['errors'][number]['step'];
+type Outcome<T> = { ok: true; value: T } | { ok: false; error: LineCheckView['errors'][number] };
+
+export const PHONE_FIELDS = 'display_phone_number,verified_name,quality_rating,status,name_status,code_verification_status';
+
+const NO_PHONE: Phone = {
+  display_phone_number: null,
+  verified_name: null,
+  quality_rating: null,
+  status: null,
+  name_status: null,
+  code_verification_status: null,
+};
+
+interface LineInput {
+  line: WaLine;
+  env: WhatsappEnv | null;
+  appId: string | null;
+  checkedAt: string;
+}
+
+/** A rejected call becomes an errors[] entry; it never hides the other call or line. */
+async function attempt<T>(step: Step, call: () => Promise<T>): Promise<Outcome<T>> {
+  try {
+    return { ok: true, value: await call() };
+  } catch (e) {
+    const code = e instanceof WaError ? e.info.code : null;
+    return { ok: false, error: { step, code, message: e instanceof Error ? e.message : String(e) } };
+  }
+}
+
+async function phoneOf(conn: GraphConn): Promise<Phone> {
+  const path = `${encodeURIComponent(conn.env.phoneNumberId)}?fields=${PHONE_FIELDS}`;
+  const p = parsed(phoneNumberSchema, await graphJson(conn, { path }));
+  return {
+    display_phone_number: p.display_phone_number ?? null,
+    verified_name: p.verified_name ?? null,
+    quality_rating: p.quality_rating ?? null,
+    status: p.status ?? null,
+    name_status: p.name_status ?? null,
+    code_verification_status: p.code_verification_status ?? null,
+  };
+}
+
+async function appsOf(conn: GraphConn): Promise<Apps> {
+  const path = `${encodeURIComponent(conn.env.wabaId)}/subscribed_apps`;
+  const body = parsed(subscribedAppsSchema, await graphJson(conn, { path }));
+  return body.data.map(({ whatsapp_business_api_data: a, override_callback_uri: uri }) => ({
+    id: a?.id ?? null,
+    name: a?.name ?? null,
+    override_callback_uri: uri ?? a?.override_callback_uri ?? null,
+  }));
+}
+
+/**
+ * POST /messaging/lines/check (docs/12 §13.9): two read-only Graph GETs per configured line, both
+ * lines and both calls at once. Ids and URLs only: the result never carries a token or secret.
+ */
+@Injectable()
+export class LinesCheck {
+  /** Overridable in tests. */
+  fetch: FetchLike = fetch;
+  timeoutMs = 8000;
+
+  async check(): Promise<LineCheckView[]> {
+    const env = loadEnv();
+    const envs = lineEnvs(env);
+    const checkedAt = new Date().toISOString();
+    const appIds: Record<WaLine, string | undefined> = { notifications: env.WA_APP_ID, chat: env.WA_CHAT_APP_ID };
+    return Promise.all(
+      WA_LINES.map((line) => this.one({ line, env: envs[line], appId: appIds[line] ?? null, checkedAt })),
+    );
+  }
+
+  private async one(input: LineInput): Promise<LineCheckView> {
+    const { line, env, checkedAt } = input;
+    if (!env) return unconfigured(line, checkedAt);
+    const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
+    const [phone, apps] = await Promise.all([attempt('phone', () => phoneOf(conn)), attempt('subscribed_apps', () => appsOf(conn))]);
+    const errors = [phone, apps].flatMap((o) => (o.ok ? [] : [o.error]));
+    return {
+      line,
+      configured: true,
+      phone_number_id: env.phoneNumberId,
+      waba_id: env.wabaId,
+      app_id: input.appId,
+      ...(phone.ok ? phone.value : NO_PHONE),
+      subscribed_apps: apps.ok ? apps.value : null,
+      errors,
+      checked_at: checkedAt,
+    };
+  }
+}
+
+function unconfigured(line: WaLine, checkedAt: string): LineCheckView {
+  return {
+    line,
+    configured: false,
+    phone_number_id: null,
+    waba_id: null,
+    app_id: null,
+    ...NO_PHONE,
+    subscribed_apps: null,
+    errors: [],
+    checked_at: checkedAt,
+  };
+}

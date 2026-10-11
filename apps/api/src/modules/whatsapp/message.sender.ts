@@ -1,3 +1,4 @@
+import type { WaLine } from '@ab/shared';
 import {
   Injectable,
   Logger,
@@ -6,6 +7,7 @@ import {
 } from '@nestjs/common';
 import { loadEnv } from '../../env';
 import { MessageWorker, type SendOutcome } from './message.worker';
+import { lineOf } from './send-line';
 import { SendGate } from './send-gate';
 import { SenderQueries } from './sender.queries';
 import { senderTiming } from './sender-timing';
@@ -73,14 +75,21 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       // Automatic messages OFF: hold every job-made row first, read by due() or not (unapproved template).
       if (!(await this.gate.automaticOn())) summary.held += await this.queries.holdAutomatic();
       const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
+      // A broken token fails every row of ITS line the same way; the other line keeps sending.
+      // ponytail: a paused line's other rows stay in the batch, so a dead chat token with a backlog of
+      // ~80+ queued chat texts (BATCH 50, one 15-min hold per pass) can still starve notifications
+      // until the token is fixed. Upgrade path: hold the rest of the paused line's rows (docs/12 §13.17).
+      const paused = new Set<WaLine>();
       for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
+        const line = lineOf(row);
+        if (paused.has(line)) continue;
         // Both switches are read before every row, so OFF stops a long pass at once (docs/09).
         if (!(await this.gate.open())) break;
         const autoOn = await this.gate.automaticOn();
         const template = templates.get(row.template_key ?? '') ?? null;
         const outcome = await this.worker.process({ row, template, now, autoOn });
         summary[outcome] += 1;
-        if (outcome === 'paused') break; // a broken token fails every row the same way
+        if (outcome === 'paused') paused.add(line);
       }
     } catch (e) {
       this.log.error(`send pass aborted: ${e instanceof Error ? e.message : String(e)}`);

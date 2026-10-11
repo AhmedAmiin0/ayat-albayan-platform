@@ -1,5 +1,14 @@
 import type { Tables } from '@ab/db';
-import { searchDigits, sessionWindowOpen, type TemplateParamsInput, type TemplateView, type ThreadView } from '@ab/shared';
+import {
+  replyLine,
+  searchDigits,
+  sessionWindowOpen,
+  type TemplateParamsInput,
+  type TemplateView,
+  type ThreadView,
+  type WaLine,
+} from '@ab/shared';
+import { lineEnvs, loadEnv } from '../../env';
 import { orSafe } from '../guardians/http';
 import type { FamilyTag } from './thread-people.mapper';
 
@@ -23,6 +32,10 @@ export function toThreadView(row: ThreadRow, now: Date, tag: FamilyTag | null = 
     last_media_mime: row.last_media_mime,
     last_message_at: row.last_message_at ?? '',
     last_inbound_at: row.last_inbound_at,
+    last_inbound_line: row.last_inbound_line,
+    last_chat_inbound_at: row.last_chat_inbound_at,
+    last_notifications_inbound_at: row.last_notifications_inbound_at,
+    reply_line: shownReplyLine(row, now),
     unread_count: row.unread_count ?? 0,
     lead_id: row.lead_id,
     lead_name: row.lead_name,
@@ -36,6 +49,23 @@ export function toThreadView(row: ThreadRow, now: Date, tag: FamilyTag | null = 
     session_open: sessionWindowOpen(row.last_inbound_at, now),
     ...familyFields(row.guardian_id ? (tag ?? { badge: 'none', unpaid: false }) : null),
   };
+}
+
+/** replyLine() over the view's two per-line windows (docs/12 §13.3 rule 2). */
+export function threadReplyLine(row: ThreadRow, opts: { chatConfigured: boolean; now: Date }): WaLine | null {
+  const { last_chat_inbound_at: lastChatInboundAt, last_notifications_inbound_at: lastNotificationsInboundAt } = row;
+  return replyLine({ lastChatInboundAt, lastNotificationsInboundAt, ...opts });
+}
+
+/**
+ * The «replying from» line (13.10): the line ThreadSendService.text stamps, so null on a single
+ * line (no note, as before two lines) and 'chat' when only the chat window is open but its line
+ * cannot send (the reply answers 503).
+ */
+function shownReplyLine(row: ThreadRow, now: Date): WaLine | null {
+  const chatConfigured = Boolean(lineEnvs(loadEnv()).chat);
+  const line = threadReplyLine(row, { chatConfigured, now });
+  return chatConfigured || line === 'chat' ? line : null;
 }
 
 /** A guardian's tags («مش مشترك» without students); none for a lead, a teacher or a stranger. */

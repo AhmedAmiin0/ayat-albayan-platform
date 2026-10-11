@@ -4,7 +4,8 @@ import { withSql } from './schedule';
 // STUB_PORT) and signs every simulated webhook with the e2e app secret the API was started with.
 export const STUB_URL = 'http://localhost:4110';
 
-async function stub<T>(path: string, body?: unknown): Promise<T> {
+/** GET (no body) or POST to the stub's control API; throws on a non-2xx answer. */
+export async function stub<T>(path: string, body?: unknown): Promise<T> {
   const res = await fetch(`${STUB_URL}${path}`, {
     method: body === undefined ? 'GET' : 'POST',
     headers: { 'content-type': 'application/json' },
@@ -20,6 +21,8 @@ export interface StubSent {
   type: string;
   template?: string;
   body: unknown;
+  /** The phone-number id «Meta» was called on: which line the message left from. */
+  phoneNumberId?: string;
 }
 
 /** Everything the API sent to «Meta» since the last reset. */
@@ -35,6 +38,8 @@ export const stubInbound = (spec: {
   text?: string;
   button?: { text: string; payload: string };
   context?: string;
+  /** The line it arrives on (default the notifications line, e2e-phone). */
+  phoneNumberId?: string;
 }) => stub<{ id: string; status: number }>('/__stub/inbound', spec);
 
 /** Meta reports a delivery status for a wamid the stub accepted. */

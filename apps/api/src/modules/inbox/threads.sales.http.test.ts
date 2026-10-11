@@ -24,6 +24,7 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     t.queries.list.mockResolvedValue({ items: [threadRow({ guardian_id: 'g1', guardian_name: 'أم ياسمين' })], total: 1 });
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'g1', guardian_name: 'أم ياسمين' }));
     t.queries.messages.mockResolvedValue([]);
+    t.queries.markInboundRead.mockResolvedValue([]);
     t.queries.lessons.mockResolvedValue([]);
     t.queries.familyTags.mockResolvedValue(new Map([['g1', { badge: 'subscribed' as const, unpaid: true }]]));
     t.queries.people.mockResolvedValue({

@@ -1701,3 +1701,18 @@ Owner rule (2026-10-06): every web feature is in sync with mobile. Built in a cl
 - **Assistants** on the student screen (`AssistantsSection`); `AssistantLessonsList` is written for the later assistant shell and mounted nowhere.
 - **Contract notes:** the URL copy and the meeting link are `POST` in the API (not GET); the meeting link is shown once and a new one replaces the old. Instant lesson (`POST /lessons/instant`) is not built: it needs a student search and a teacher picker with the 409 clash flow.
 - **Not verified:** a device run, OTA, a real browser hand-off to the classroom/meeting page, WhatsApp delivery of the link.
+
+## Integration: two WhatsApp lines (cloud branch `cloud/wa-lines-integrate`, 2026-10-11)
+
+This was the first full check of `feat/whatsapp-two-lines` after the foundation and B1–B6b were merged (PRs #64–#71). It ran in the cloud with no database, no secrets and no docker.
+
+- `pnpm turbo lint typecheck test`: all 26 of 26 tasks green. Tests: api 3106 passed and 4 skipped (`pdf-renderer.smoke`, which needs the environment), web 1895, mobile 1377, shared 1676, migrate 292, wa-stub 45, scripts (`node --test`) 68. Lint reports 0 errors.
+- Nothing needed fixing. No changed file is over 150 lines (`types.ts` is exempt), and `max-params` passes.
+- No-database checks (docs/15 `integratorChecks`):
+  - `docs/12` and migration 290 are unchanged since step 0 (`372bf45`).
+  - No file on the untouchable list was changed.
+  - `types.ts` has exactly the six edits of §13.14.
+  - `WhatsappModule` is global and exports `WHATSAPP_LINES`; the only classes that inject it are `MessageDispatch`, `ReadReceipts` and `InboundMedia`.
+  - `meta-callers.guard`, permissions parity and coverage, i18n parity and `enums.test` are all green.
+  - None of the names §13 rules out (`last_line`, `reply_line`, `?line=`, `chatMissing`) appear, and no secret or `.env` file was committed.
+- **Not verified:** e2e/Playwright, the migration applied to a real database (and v_threads), a `pnpm gen:types` no-op, device runs, and the design review stage.

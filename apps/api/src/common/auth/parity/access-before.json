@@ -117,6 +117,7 @@
   "LessonsController.day": ["admin"],
   "LessonsController.list": ["admin"],
   "LessonsController.overview": ["admin"],
+  "LinesController.check": ["admin"],
   "LivekitWebhookController.receive": "public",
   "MeController.add": ["admin"],
   "MeController.remove": ["admin"],

@@ -19,6 +19,17 @@ const E2E_WA = {
   WA_APP_SECRET: 'e2e-app-secret',
   WA_VERIFY_TOKEN: 'e2e-verify',
 };
+/** The second Meta number (docs/12 §13.12): both lines run in e2e, with distinct credentials. */
+const E2E_WA_CHAT_KEYS = {
+  WA_CHAT_PHONE_NUMBER_ID: 'e2e-chat-phone', // = support/wa-lines.ts CHAT_PN
+  WA_CHAT_WABA_ID: 'e2e-chat-waba',
+  WA_CHAT_ACCESS_TOKEN: 'e2e-chat-token',
+  WA_CHAT_APP_SECRET: 'e2e-chat-secret',
+  // The stub's chat app (subscribed_apps) = the API's: «افحص الخطوط» shows the chat webhook as ours.
+  WA_CHAT_APP_ID: 'e2e-chat-app',
+};
+/** E2E_LINES=single = the production default (no WA_CHAT_* keys): the CI job «e2e (single line)». */
+const E2E_WA_CHAT = process.env['E2E_LINES'] === 'single' ? {} : E2E_WA_CHAT_KEYS;
 
 export default defineConfig({
   testDir: './tests',
@@ -59,6 +70,9 @@ export default defineConfig({
         WA_APP_SECRET: E2E_WA.WA_APP_SECRET,
         WA_PHONE_NUMBER_ID: E2E_WA.WA_PHONE_NUMBER_ID,
         WA_ACCESS_TOKEN: E2E_WA.WA_ACCESS_TOKEN,
+        WA_WABA_ID: E2E_WA.WA_WABA_ID,
+        WA_APP_ID: E2E_WA.WA_APP_ID,
+        ...E2E_WA_CHAT,
       },
       reuseExistingServer: !process.env['CI'],
     },
@@ -74,6 +88,10 @@ export default defineConfig({
         WEB_ORIGIN: WEB_URL,
         FX_API_URL: 'http://127.0.0.1:9/',
         ...E2E_WA,
+        ...E2E_WA_CHAT,
+        // Set explicitly so a developer shell or .env cannot restrict recipients or stop the sync.
+        WA_ALLOWED_RECIPIENTS: '',
+        WA_TEMPLATE_SYNC: 'true',
         MESSAGING_ENABLED: 'true',
         // One-second sender tick: specs that wait for a send wait ~1 s, not up to 30 s.
         MESSAGE_SENDER_POLL_MS: '1000',

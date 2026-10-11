@@ -34,6 +34,7 @@ export function event(over: Partial<InboundEvent> = {}): InboundEvent {
     mediaId: null,
     mediaMime: null,
     payload: null,
+    line: null,
     ...over,
   };
 }

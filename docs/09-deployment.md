@@ -107,11 +107,18 @@ The API talks to the WhatsApp Cloud API only through `WA_API_BASE`; there is **n
 |---|---|
 | `WA_API_BASE` | `https://graph.facebook.com` in production; the stub URL locally. Unset = WhatsApp off. |
 | `WA_API_VERSION` | Graph version, default `v21.0`. |
-| `WA_PHONE_NUMBER_ID`, `WA_WABA_ID` | The academy number's phone-number id and its WhatsApp Business Account id (Meta → WhatsApp → API Setup). The webhook ignores changes for any other phone-number id. |
+| `WA_PHONE_NUMBER_ID`, `WA_WABA_ID` | The academy number's phone-number id and its WhatsApp Business Account id (Meta → WhatsApp → API Setup). The webhook ignores changes for any id that is neither line (this one or `WA_CHAT_PHONE_NUMBER_ID`) and logs one warning per distinct unknown id. This is the **notifications** line: it sends every template. |
 | `WA_ACCESS_TOKEN` | Permanent System User token with `whatsapp_business_messaging` + `whatsapp_business_management`. |
 | `WA_APP_ID` | Id of the Meta app that issued `WA_ACCESS_TOKEN` (Meta app → Settings → Basic → App ID). Needed only to submit `report_ready` (PDF header: the sample PDF goes through Meta's Resumable Upload API); unset = that submit answers 409 `needs_app_id`. |
-| `WA_APP_SECRET` | Meta app → Settings → Basic → App secret. Signs every webhook POST; wrong or missing = every POST is 401 and nothing is stored. |
-| `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). |
+| `WA_APP_SECRET` | Meta app → Settings → Basic → App secret. Signs every webhook POST; wrong or missing = every POST is 401 and nothing is stored. A POST is accepted when it verifies with ANY of `WA_APP_SECRET` / `WA_CHAT_APP_SECRET`. |
+| `WA_VERIFY_TOKEN` | Any long random string; typed again in Meta's webhook form (GET handshake). ONE token for both lines: type the same value in both Meta apps. |
+| `WA_CHAT_PHONE_NUMBER_ID` | Phone-number id of the **chat** line (the second Meta number, in its own WABA; normal conversations). ALONE it makes the webhook receive, store and stamp that line's messages (`line = 'chat'`). Unset = single line, today's behaviour. Must differ from `WA_PHONE_NUMBER_ID`. |
+| `WA_CHAT_WABA_ID` | WABA of the chat line. Needed to SEND from it (with the phone-number id and a token). |
+| `WA_CHAT_ACCESS_TOKEN` | Token of the chat line; unset = `WA_ACCESS_TOKEN` is used. |
+| `WA_CHAT_APP_ID` | Id of the chat line's Meta app; diagnostics only («افحص الخطوط»), no fallback to `WA_APP_ID`. Set it equal to `WA_APP_ID` when both lines share one Meta app. |
+| `WA_CHAT_APP_SECRET` | App secret of the chat line's Meta app. Required when the chat number is on a SEPARATE Meta app (else its webhook POSTs are 401 and Meta retries them); not needed when both lines share one app. |
+| `WA_ALLOWED_RECIPIENTS` | Staging safety guard: comma list of E.164 numbers (`+20 100 123 4567`, `201001234567` are normalised). Set = nothing is sent to any other number: those rows stay `queued`, untouched, and read receipts to them are skipped. Unset or blank = unrestricted. Any invalid item, or a non-blank value with no items (`,`), stops the API at boot. |
+| `WA_TEMPLATE_SYNC` | Default `true`. `false` stops the boot template sync, «راجع حالة القوالب» and «أرسله إلى ميتا للاعتماد» (409 `template_sync_off`), so Meta TEST credentials cannot rewrite the template registry. |
 | `MESSAGING_ENABLED` | `true` opens the deployment's gate. Default `false`. |
 | `FEEDBACK_TOKEN_SECRET` | >= 32 random characters (`openssl rand -base64 48`). Signs the «رأيك يهمّنا» links (docs/13-forms-spec.md). Unset = «ابعت طلب الرأي» answers 503 and every public link is refused. Changing it invalidates links already sent. The template `lesson_feedback_request` also needs the web host in its button URL to be the final one before the admin submits it to Meta. |
 | `LIVEKIT_URL`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET` | The self-hosted LiveKit (`wss://livekit-staging.148-230-116-195.sslip.io`, tools/livekit/README.md). All three or none: unset = `POST /lessons/:id/room/join` and `POST /public/join/:token` answer 503 `classroom_not_configured`. The API signs join tokens (HS256) with the key and secret; values live only in the server's `.env` and the owner's secret stores. The template `lesson_join_link` (migration 182, `not_submitted`) is submitted to Meta only by the admin's explicit action, after its button host is the final one. |
@@ -126,6 +133,25 @@ At send time the sender also drops rows that are no longer true (`failed`, `erro
 **Automatic messages switch** (`settings.auto_messages_enabled`, migration 162, seeded `false`; «الرسايل التلقائية (تذكير الحلقات، المتابعة، التجديد)» next to the sending switch in `/admin/settings`). OFF: the reminder job queues no `lesson_reminder*` / `teacher_lesson_reminder*` / `lesson_reminder_24h` (the `lesson_needs_confirmation` push still goes), the follow-up job does nothing (no `follow_up_slots`, no stage advances), and a renewal raises its admin task and the `payment_due` push but queues no `renewal_due`. Rows of those kinds the jobs queued earlier are not left waiting (they would go out at a wrong time later): on every sender pass while the switch is OFF (and the send gate is open), every one still queued (`created_by` null) is marked `failed`, `error_code = 'auto_off'` (no push), whatever its template's approval status, so a row under a template Meta approves later never slips out on its own; the switch is read again before every row, so OFF also stops the rest of a pass. A row the sender already claimed (`sending`) is never held: the admin is asked instead. The admin sees held rows in the thread with «جرّب تاني»; while the switch is OFF it answers 409 `auto_off` (the row stays held), once ON it re-queues the row. A held `renewal_due` whose package is renewed or paid meanwhile turns `stale` (no retry). Not affected: the admin's own texts and templates from the inbox (`created_by` set, even a `lesson_reminder`), booking confirmations and `report_ready`. The three gates above still govern everything that is queued.
 
 **Lesson rating by buttons** (`lesson_rating`, migration 195, owner 2026-10-05 «so the chats don't get closed»). After a lesson is marked completed / late, the rating job queues one `lesson_rating` per guardian («كيف كانت حلقة {{1}} بتاريخ {{2}}؟ اختر تقييمك:» + quick replies «ممتازة» / «جيدة» / «تحتاج تحسينًا»; dedup `lesson_rating:{lesson}:{guardian}`, expires 72 h after the start) — only when `settings.feedback_mode = 'buttons'` (default; `'link'` = nothing automatic), automatic messages are ON and Meta approved the template; it is an automatic kind (held `auto_off` like reminders) and the three gates still govern it. A tap is an inbound message, so it **reopens the 24 h window**, and it is stored on `lesson_feedback.quick_rating`. In a closed chat the admin can press «إرسال تقييم الحلقة» (`POST /threads/:phone/rating`, the guardian's latest lesson that took place; not held by the automatic switch). **Owner action:** submit `lesson_rating` to Meta from `/admin/settings` («ابعته لميتا للموافقة», utility, no header) once the wording is confirmed; until Meta approves it nothing is queued and the inbox button stays disabled.
+
+**Two lines** (docs/12 §13, owner 2026-10-10). The **notifications** line (`WA_*`) sends EVERY template (booking, reminders, reports, renewals, follow-ups, rating, admin-picked templates); template health and submit stay on its WABA. The optional **chat** line (`WA_CHAT_*`) is for normal conversations. Both lines' inbound land in the SAME inbox, one merged thread per phone, each bubble labelled with its line. A session reply leaves from the line of the customer's NEWEST inbound (the composer says «سيصل ردّك عبر …»); if that is the chat line and the chat line cannot send (`WA_CHAT_WABA_ID` or a token missing) the reply answers 503 `line_not_configured`. Read receipts and media downloads use the line the message arrived on. A dead token holds only its own line (one push per line per day). The API logs ONE boot warning naming any missing `WA_CHAT_*` piece. Two Meta apps = **two webhook subscriptions** (each app: our callback URL, the `messages` field) + **two app secrets** (`WA_APP_SECRET`, `WA_CHAT_APP_SECRET`) + **the same `WA_VERIFY_TOKEN`** typed in both. «افحص الخطوط» in `/admin/settings` (`POST /messaging/lines/check`, admin) reads each line's number status and the WABA's subscribed apps from Meta (read-only).
+
+**Migration before API.** This release reads `messages.line` (migration `20261010000290_wa_lines`) in the sender, the media lookup and the thread list: ship it with the `deploy-staging` `migrate` input ticked, never with `migrate` unticked or `env_only`. The migration is expand-only (a code rollback needs no SQL; docs/12 §13.15).
+
+**`apps/api/.env.example` (the OWNER pastes these lines; agents never read or edit `.env` files):**
+
+```
+# Two WhatsApp lines (docs/12 §13): chat line (optional) and the staging guards
+# WA_CHAT_PHONE_NUMBER_ID=
+# WA_CHAT_WABA_ID=
+# WA_CHAT_ACCESS_TOKEN=
+# WA_CHAT_APP_ID=
+# WA_CHAT_APP_SECRET=
+# WA_ALLOWED_RECIPIENTS=
+# WA_TEMPLATE_SYNC=true
+```
+
+They are set by hand on the server like `WA_PHONE_NUMBER_ID` / `MESSAGING_ENABLED`: no workflow sets them and `deploy-staging` does not merge them.
 
 Independent of the gates: the webhook stores inbound messages and statuses, the jobs (reminders every 5 min, follow-ups every 5 min, push receipts every 15 min) keep **queuing** rows with dedup keys (reminders, follow-ups and renewals only while automatic messages are ON), and with WhatsApp configured the API runs one read-only template health check 5 s after boot (log only). Templates are submitted to Meta only when an admin presses «ابعته لميتا للموافقة» in `/admin/settings`; `report_ready` (PDF header) is submitted by hand in Business Manager.
 
@@ -166,7 +192,8 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 6. In `/admin/settings` press «نقلنا الرقم من الـCRM» (`settings.crm_cutover_done`): the «don't turn sending on» CRM warning goes away. On a rollback (5), press «الرقم رجع على الـCRM؟ رجّع التحذير» on the same page: the flag goes back to false and the warning returns.
 
 ### 4. Verify (10 minutes)
-- From a staff phone, write to the academy number: the thread shows in `/admin/inbox` within seconds. The API log shows `POST /webhooks/whatsapp` 200; a 401 means `WA_APP_SECRET` is wrong (nothing was stored).
+- `/admin/settings` → «افحص الخطوط»: each configured line shows its number, «CONNECTED», its quality and «التطبيق مربوط بالحساب». «لا يوجد تطبيق مربوط بالحساب» or «التطبيق المربوط بالحساب ليس التطبيق المضبوط على الخادم» = the webhook will not arrive (fix the subscription first: (e) under «Meta test credentials on staging»). A call error about the access token (the card names it) = a bad or expired token for that line.
+- From a staff phone, write to the academy number (and, with the chat line, to the chat number): the thread shows in `/admin/inbox` within seconds, the bubble labelled with its line. The API log shows `POST /webhooks/whatsapp` 200; a 401 means the app secret of that line's Meta app is wrong or missing (`WA_APP_SECRET` / `WA_CHAT_APP_SECRET`; nothing was stored). A 200 with a warning naming a `phone_number_id` = Meta sends an id that is neither line (fix `WA_PHONE_NUMBER_ID` / `WA_CHAT_PHONE_NUMBER_ID`).
 - Reply from the inbox: it arrives on the staff phone, and the bubble moves «اتبعتت» → «وصلت» → «اتقرت».
 - No new `failed` rows: `select error_code, count(*) from messages where status = 'failed' and created_at > now() - interval '1 hour' group by 1;`
 - The admin phone gets the `new_message` push (needs the FCM credentials, see above).
@@ -176,6 +203,21 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 2. Meta App Dashboard: put back the callback URL and verify token from 3.1 (or re-subscribe the CRM's app to the WABA and unsubscribe ours).
 3. Turn the CRM's automations back on.
 4. Messages that reached us during the window are only in our database: list them for the owner with `select phone_e164, body, created_at from messages where direction = 'inbound' and created_at > '<cut-over time>' order by created_at;`.
+
+## Meta test credentials on staging
+
+Staging may run on Meta TEST numbers (two test WABAs) so nothing reaches a real family. Content fixed by docs/12 §13.13.
+
+1. **(a) The deploy merge.** `deploy-staging`'s env-merge rewrites `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN` (secrets) and `WA_API_BASE`, `WA_API_VERSION`, `WA_WABA_ID`, `WA_APP_ID` (variables) from the GitHub environment `develop` on EVERY develop merge whenever they are NON-EMPTY there. So: FIRST deploy this feature with the new keys unset (behaviour changes only by: null `line` / `last_inbound_line` keys in reads; the sender and media selects reading the new column, hence the migration runs first; 502 `meta_error` instead of 410 for a media download refused with a Meta auth error; one warning per unknown `phone_number_id`); THEN switch the server to test credentials (with `WA_TEMPLATE_SYNC=false` already set, see (b)); and while test credentials are on the server, either put the same test values into the GitHub environment or empty those GitHub entries first. Otherwise the next deploy silently restores the real values next to the test phone-number id (auth errors, auth hold, webhook 401). `WA_PHONE_NUMBER_ID`, `MESSAGING_ENABLED` and all the new keys are not merged, so they survive a deploy.
+2. **(b) Order.** Set `WA_TEMPLATE_SYNC=false` (and `WA_ALLOWED_RECIPIENTS`) on the server BEFORE, or in the same edit and restart as, switching any `WA_*` credential to test values: the boot template sync runs whenever WhatsApp is configured, regardless of `MESSAGING_ENABLED`, and would mark every approved template that is not on the test WABA `missing`. Only then set `MESSAGING_ENABLED=true`.
+3. **(c) Templates on a test WABA.** Templates are per WABA; a Meta TEST WABA has `hello_world` only, so template sends to allowed recipients fail `132001` (not retryable) while session text works, and the platform pushes `reminder_failed`. With the sync off the registry still says `approved`. Keep the allow-list small.
+4. **(d) Before lifting the allow-list.** Rows for other recipients stay `queued`, untouched, and several kinds never expire (booking / renewal rows), so removing the list would send them in one burst. First read `GET /messages/gate` (`queued`) and review / clear the queue deliberately.
+5. **(e) Webhooks per app.** Each Meta app needs its OWN callback URL (ours), the SAME `WA_VERIFY_TOKEN`, the `messages` field subscribed, AND the app subscribed to its WABA (`POST /{WABA_ID}/subscribed_apps` with that line's token, or the dashboard's WABA subscription), verified by «افحص الخطوط» («التطبيق مربوط بالحساب»). The app-level subscription cannot be read with a WABA token; «افحص الخطوط» shows the WABA's subscribed apps and any WABA-level `override_callback_uri`; a phone-number-level override is visible only via `GET /{phone_number_id}?fields=webhook_configuration` or the Meta dashboard. A CRM app subscribed to the same WABA is the usual reason nothing arrives. The API log warns once per distinct unknown `phone_number_id`. A separate chat Meta app WITHOUT `WA_CHAT_APP_SECRET` makes its webhook POSTs 401, and Meta retries them.
+6. **(f) `WA_API_VERSION`.** Check it before enabling: the default `v21.0` is about two years old and Meta silently upgrades calls to an expired Graph version.
+7. **(g) Token expiry.** Meta test tokens expire in about 24 h: Graph 190 → auth hold (rows wait 15 min, nothing is lost) and ONE push per line per day (`whatsapp_auth:` / `whatsapp_auth:chat:`); the other line keeps sending.
+8. **(h) Recipients and wa.me.** Add (and verify) each test recipient in the Meta app's recipient list, else Meta answers 131030; list the same numbers in `WA_ALLOWED_RECIPIENTS`. `academy_whatsapp_e164` (wa.me links, PDF footer) should hold the CHAT number.
+9. **(i) `.env.example`.** The commented keys in «WhatsApp messaging (Phase 4)» above are for the owner to paste.
+10. **Migration first.** Never deploy this release with the `migrate` input unticked or with `env_only`: the API reads `messages.line` (see «Migration before API» above). Behaviour rollback (unset only `WA_CHAT_WABA_ID` + `WA_CHAT_ACCESS_TOKEN` to stop chat SENDING; never unset `WA_CHAT_PHONE_NUMBER_ID` / `WA_CHAT_APP_SECRET` before the chat app's webhook is repointed in Meta) is docs/12 §13.15.
 
 ## GitHub Actions
 
@@ -256,7 +298,7 @@ Notes on `claude-tasks`: PRs it opens with the built-in token do not start `ci` 
 
 ### Deliberately NOT automated
 
-- `WA_PHONE_NUMBER_ID` and `MESSAGING_ENABLED`: no workflow sets them. `deploy-staging` fails if a repository variable `MESSAGING_ENABLED` is `true`. Delete such a variable; switch sending on by hand (cut-over runbook).
+- `WA_PHONE_NUMBER_ID`, `MESSAGING_ENABLED`, `WA_CHAT_*`, `WA_ALLOWED_RECIPIENTS` and `WA_TEMPLATE_SYNC`: no workflow sets them (`tools/scripts/workflows.test.mjs` guards `WA_CHAT_PHONE_NUMBER_ID` and `WA_ALLOWED_RECIPIENTS` with the first two). `deploy-staging` fails if a repository variable `MESSAGING_ENABLED` is `true`. Delete such a variable; switch sending on by hand (cut-over runbook).
 - The WhatsApp CRM cut-over, and anything on `/opt/wacrm` (live CRM on the same VPS). The only Docker clean-up is `docker image prune` limited to the label `com.docker.compose.project=ayat-albayan-staging`.
 - Production: no production deploy, import (docs/06) or `production` EAS profile.
 - iOS / Apple builds, signing and store submission.

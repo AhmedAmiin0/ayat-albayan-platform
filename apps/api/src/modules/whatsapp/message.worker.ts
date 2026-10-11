@@ -1,13 +1,15 @@
+import type { WaLine } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import { retry, sleep } from '../report-pdf/retry';
 import { MessageDispatch } from './message.dispatch';
+import { lineOf } from './send-line';
 import { failurePlan, messageLabel, readyToSend, SENDING } from './send-plan';
 import { AUTO_OFF, dropReason, isAutomatic } from './send-stale';
 import { SenderQueries, type DueMessage } from './sender.queries';
 import { WaError, type TemplateRow, type WaSent } from './whatsapp.types';
 
-/** paused = the token is broken (auth error): the sender stops this pass. */
+/** paused = the line's token is broken (auth error): the sender skips that line for this pass. */
 /** held = a job-made reminder / follow-up / renewal while automatic messages are OFF (auto_off). */
 export type SendOutcome = 'sent' | 'retry' | 'failed' | 'expired' | 'stale' | 'held' | 'paused' | 'skipped';
 
@@ -61,25 +63,26 @@ export class MessageWorker {
   }
 
   private async run({ row, template, now, autoOn }: SendJob): Promise<SendOutcome> {
+    const line = lineOf(row);
     const drop = dropReason(row, now);
     if (drop) {
       await this.queries.expire(row.id, drop);
       return drop.code;
     }
-    if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now });
+    if (row.error_code === SENDING) return this.failed({ row, error: UNRECORDED, attempts: row.attempts, now, line });
     // Not left queued: it would go out at a wrong time once the switch is back ON. No push.
     if (!autoOn && isAutomatic(row)) {
       await this.queries.expire(row.id, AUTO_OFF);
       return 'held';
     }
     if (!readyToSend(row, template)) return 'skipped';
-    const attempts = await this.queries.claim({ id: row.id, attempts: row.attempts, now });
+    const attempts = await this.claim({ row, now, line });
     if (attempts === null) return 'skipped';
     let sent: WaSent;
     try {
-      sent = await this.dispatch.send(row, template);
+      sent = await this.dispatch.send(row, template, line);
     } catch (error) {
-      return this.failed({ row, error, attempts, now });
+      return this.failed({ row, error, attempts, now, line });
     }
     const record = () => this.queries.sent({ row, waMessageId: sent.waMessageId, at: new Date() });
     if (!(await retry(record, { delays: RECORD_DELAYS_MS, sleep: this.wait }))) {
@@ -88,14 +91,26 @@ export class MessageWorker {
     return 'sent';
   }
 
-  private async failed(input: { row: DueMessage; error: unknown; attempts: number; now: Date }): Promise<SendOutcome> {
-    const { row, now } = input;
+  /**
+   * null = not ours to send now: the line is unconfigured or the recipient is off the allow-list
+   * (the row waits untouched, docs/12 §13.3), or another worker claimed it first. The claim
+   * stamps the line only when two lines are in use (§13.2).
+   */
+  private async claim(input: { row: DueMessage; now: Date; line: WaLine }): Promise<number | null> {
+    const { row, now, line } = input;
+    if (!this.dispatch.ready(row, line)) return null;
+    return this.queries.claim({ id: row.id, attempts: row.attempts, now, ...(this.dispatch.multi ? { line } : {}) });
+  }
+
+  private async failed(input: { row: DueMessage; error: unknown; attempts: number; now: Date; line: WaLine }): Promise<SendOutcome> {
+    const { row, now, line } = input;
     const plan = failurePlan(input);
     await this.queries.failure(row.id, plan);
     if (plan.attempts !== undefined) {
       // The token, not the message: rows wait; one push a day (fixed in Business Manager).
       this.log.error(`WhatsApp refused the token (${plan.error_code}); sending paused: ${plan.error_text}`);
-      await this.alert(row, `whatsapp_auth:${now.toISOString().slice(0, 10)}`);
+      // One push per line per day; the notifications subject is unchanged.
+      await this.alert(row, `whatsapp_auth:${line === 'chat' ? 'chat:' : ''}${now.toISOString().slice(0, 10)}`);
       return 'paused';
     }
     if (plan.status === 'queued') return 'retry';

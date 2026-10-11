@@ -8,6 +8,7 @@ import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { ErrorLine } from './ErrorLine';
 import { GateNote } from './GateNote';
+import { LineNote } from './LineNote';
 import { sendError, sessionUntil } from './message-text';
 import { TemplatePicker } from './TemplatePicker';
 import { type Outgoing, useSendMessage } from './use-thread';
@@ -56,6 +57,7 @@ export function Composer({ phone, thread, lessons }: { phone: string; thread: Th
     <View style={{ gap: 8, paddingBottom: 12 }}>
       {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
       <GateNote />
+      <LineNote thread={thread} open={open} />
       {open ? (
         <>
           <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
