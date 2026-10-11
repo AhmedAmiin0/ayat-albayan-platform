@@ -1,9 +1,10 @@
 import { expect, test } from '@playwright/test';
 import { rolledBack, type Tx } from '../support/rls';
 
-// Migration 20261010000290 (two WhatsApp lines, docs/12 §13): messages.line and the ONE column
-// appended to v_threads, last_inbound_line = the line of the newest inbound row (null when that row
-// has none), against the real database in a transaction that is rolled back. Every row gets an
+// Migration 20261010000290 (two WhatsApp lines, docs/12 §13): messages.line and the columns
+// appended to v_threads; here last_inbound_line = the line of the newest inbound row (null when that
+// row has none; the per-line instants are in whatsapp-lines.windows.sql.spec.ts), against the real
+// database in a transaction that is rolled back. Every row gets an
 // explicit, DISTINCT created_at: rows inserted in one statement share now(), so «newest» would be
 // arbitrary and the null-newest case would flake.
 
@@ -86,12 +87,12 @@ test.describe('v_threads.last_inbound_line (migration 290, R-MSG-04)', () => {
     });
   });
 
-  test('the 20 old columns are intact, in order, and last_inbound_line is appended LAST', async () => {
+  test('the 20 old columns are intact, in order, and the three line columns are appended after them', async () => {
     await rolledBack(async (tx) => {
       const cols = await tx<{ column_name: string }[]>`
         select column_name from information_schema.columns
         where table_schema = 'public' and table_name = 'v_threads' order by ordinal_position`;
-      expect(cols.map((c) => c.column_name)).toEqual([...OLD_COLUMNS, 'last_inbound_line']);
+      expect(cols.map((c) => c.column_name)).toEqual([...OLD_COLUMNS, 'last_inbound_line', 'last_chat_inbound_at', 'last_notifications_inbound_at']);
       const [type] = await tx<{ udt_name: string; is_nullable: string; column_default: string | null }[]>`
         select udt_name, is_nullable, column_default from information_schema.columns
         where table_schema = 'public' and table_name = 'messages' and column_name = 'line'`;

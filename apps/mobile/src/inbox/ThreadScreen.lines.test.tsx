@@ -62,23 +62,29 @@ test('each bubble names its own line', async () => {
   expect(screen.getAllByText(NOTIFICATIONS)).toHaveLength(1);
 });
 
-test('open window, newest inbound on chat: the composer says the reply goes via the chat line', async () => {
-  await render({ messages: [{ ...inbound, line: 'chat' }], thread: { ...openWindow, last_inbound_line: 'chat' } });
+test('open window, reply_line chat: the composer says the reply goes via the chat line', async () => {
+  await render({ messages: [{ ...inbound, line: 'chat' }], thread: { ...openWindow, last_inbound_line: 'chat', reply_line: 'chat' } });
   expect(screen.getByText(replyFrom(CHAT))).toBeTruthy();
 });
 
 test('open window on the notifications line names that line', async () => {
-  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: 'notifications' } });
+  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: 'notifications', reply_line: 'notifications' } });
   expect(screen.getByText(replyFrom(NOTIFICATIONS))).toBeTruthy();
 });
 
-test('no note when the newest inbound has no line', async () => {
-  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: null } });
+test('a reminder tap after a chat message: the note follows reply_line (chat), not the newest line', async () => {
+  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: 'notifications', reply_line: 'chat' } });
+  expect(screen.getByText(replyFrom(CHAT))).toBeTruthy();
+  expect(screen.queryByText(replyFrom(NOTIFICATIONS))).toBeNull();
+});
+
+test('no note when there is no reply line (a single line)', async () => {
+  await render({ messages: [inbound], thread: { ...openWindow, last_inbound_line: null, reply_line: null } });
   expect(anyReplyFrom()).toHaveLength(0);
 });
 
 test('no note when the window is closed, even with a line', async () => {
-  await render({ messages: [inbound], thread: { ...closedWindow, last_inbound_line: 'chat' } });
+  await render({ messages: [inbound], thread: { ...closedWindow, last_inbound_line: 'chat', reply_line: 'chat' } });
   expect(screen.getByText(t.inbox.sessionClosed)).toBeTruthy();
   expect(anyReplyFrom()).toHaveLength(0);
 });
@@ -92,7 +98,7 @@ test('a thread with no line data (an old cache) renders as before: no word, no n
 
 test('teacher: the line is named, never a digit of the number', async () => {
   const family = { ...openWindow, guardian_id: 'g-1', lead_id: null, lead_status: null, lead_source: null };
-  const named = { ...family, display_name: 'أم يوسف', last_inbound_line: 'chat' as const };
+  const named = { ...family, display_name: 'أم يوسف', last_inbound_line: 'chat' as const, reply_line: 'chat' as const };
   await render({ messages: [{ ...inbound, line: 'chat' }], thread: named, teacher: true });
   expect(screen.getByText(CHAT)).toBeTruthy();
   expect(screen.getByText(replyFrom(CHAT))).toBeTruthy();

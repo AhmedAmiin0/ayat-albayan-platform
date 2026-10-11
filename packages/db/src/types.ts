@@ -3499,12 +3499,14 @@ export type Database = {
           guardian_name: string | null;
           guardian_tz: string | null;
           last_body: string | null;
+          last_chat_inbound_at: string | null;
           last_direction: Database['public']['Enums']['message_direction'] | null;
           last_inbound_at: string | null;
           last_inbound_line: Database['public']['Enums']['wa_line'] | null;
           last_media_mime: string | null;
           last_message_at: string | null;
           last_message_id: string | null;
+          last_notifications_inbound_at: string | null;
           last_status: Database['public']['Enums']['message_status'] | null;
           last_template_key: string | null;
           lead_id: string | null;

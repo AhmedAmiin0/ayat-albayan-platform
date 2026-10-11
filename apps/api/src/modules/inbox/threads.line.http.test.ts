@@ -36,16 +36,42 @@ describe('two lines on the inbox (docs/12 §13.3, §13.7; R-LEAD-02, R-MSG-05)',
     t.queries.get.mockResolvedValue(null);
     t.templates.get.mockResolvedValue(templateRow());
   });
+  /** One inbound on `line` at `at` (null = history: the notifications window). */
   const thread = (line: 'chat' | 'notifications' | null, at = FRESH) =>
-    t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: at, last_inbound_line: line }));
+    t.queries.thread.mockResolvedValue(
+      threadRow({
+        last_inbound_at: at,
+        last_inbound_line: line,
+        last_chat_inbound_at: line === 'chat' ? at : null,
+        last_notifications_inbound_at: line === 'chat' ? null : at,
+      }),
+    );
   const enqueued = () => t.queries.enqueue.mock.calls[0]?.[0] as Record<string, unknown>;
 
-  it('GET /threads and /threads/:phone carry last_inbound_line', async () => {
+  it('GET /threads and /threads/:phone carry last_inbound_line and reply_line', async () => {
     t.queries.list.mockResolvedValue({ items: [threadRow({ last_inbound_line: 'chat' }), threadRow({ phone_e164: '+966551112222' })], total: 2 });
     const items = (await t.call({ method: 'GET', url: '/threads' })).json().items;
     expect(items.map((i: { last_inbound_line: unknown }) => i.last_inbound_line)).toEqual(['chat', null]);
     thread('chat');
-    expect((await t.call({ method: 'GET', url: URL })).json().thread.last_inbound_line).toBe('chat');
+    expect((await t.call({ method: 'GET', url: URL })).json().thread).toMatchObject({ last_inbound_line: 'chat', reply_line: 'chat' });
+  });
+
+  it('H3 chat, then a reminder tap on notifications a minute later: the reply still leaves via chat', async () => {
+    chatConfigured();
+    const tap = new Date(Date.parse(FRESH) + 60_000).toISOString();
+    const row = { last_inbound_at: tap, last_inbound_line: 'notifications' as const, last_chat_inbound_at: FRESH, last_notifications_inbound_at: tap };
+    t.queries.thread.mockResolvedValue(threadRow(row));
+    expect((await t.call(TEXT)).statusCode).toBe(201);
+    expect(enqueued()).toMatchObject({ line: 'chat' });
+    expect((await t.call({ method: 'GET', url: URL })).json().thread).toMatchObject({ last_inbound_line: 'notifications', reply_line: 'chat' });
+  });
+
+  it('H3 the chat window closed, the notifications one open: notifications', async () => {
+    chatConfigured();
+    const row = { last_inbound_line: 'notifications' as const, last_chat_inbound_at: '2026-01-01T00:00:00Z', last_notifications_inbound_at: FRESH };
+    t.queries.thread.mockResolvedValue(threadRow({ ...row, last_inbound_at: FRESH }));
+    expect((await t.call(TEXT)).statusCode).toBe(201);
+    expect(enqueued()).toMatchObject({ line: 'notifications' });
   });
 
   it('H3 a thread whose newest inbound is on chat: the text is queued with line chat', async () => {
@@ -55,12 +81,14 @@ describe('two lines on the inbox (docs/12 §13.3, §13.7; R-LEAD-02, R-MSG-05)',
     expect(enqueued()).toMatchObject({ line: 'chat', body: 'أهلًا', dedup_key: `admin:${PHONE}:${REQ}` });
   });
 
-  it('H3 a notifications thread is stamped notifications; a null line queues no line key', async () => {
+  it('H3 a notifications thread is stamped notifications; a single line queues no line key', async () => {
+    chatConfigured();
     thread('notifications');
     expect((await t.call(TEXT)).statusCode).toBe(201);
     expect(enqueued()).toMatchObject({ line: 'notifications' });
     t.queries.enqueue.mockClear();
-    thread(null);
+    vi.stubEnv('WA_CHAT_WABA_ID', '');
+    thread('notifications');
     expect((await t.call(TEXT)).statusCode).toBe(201);
     expect(enqueued()).not.toHaveProperty('line');
   });

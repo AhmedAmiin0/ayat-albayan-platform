@@ -45,7 +45,7 @@ describe('two WhatsApp lines in the inbox (docs/12 §13.10, R-LEAD-02 / R-MSG-05
       message({ id: 'm-old', body: 'رسالة قديمة', line: null, created_at: '2026-10-01T09:00:00Z' }),
     ];
     routeFetch(apiFetch, [
-      [`/threads/${encodeURIComponent(PHONE)}`, detail(messages, { last_inbound_line: 'chat', last_inbound_at: fresh, session_open: true })],
+      [`/threads/${encodeURIComponent(PHONE)}`, detail(messages, { last_inbound_line: 'chat', reply_line: 'chat', last_inbound_at: fresh, session_open: true })],
       ['/messaging/templates', []],
       ['/messages/gate', { open: true, reason: null, queued: 0 }],
       ['/settings', SETTINGS],
@@ -84,7 +84,7 @@ describe('two WhatsApp lines in the inbox (docs/12 §13.10, R-LEAD-02 / R-MSG-05
   it('phones: the reply line joins the composer notices', () => {
     routeFetch(apiFetch, [['/messaging/templates', []]]);
     const props = { context: {} as never, gateNote: null, mode: 'text' as const, onMode: vi.fn(), teacher: false };
-    renderWithClient(<ComposerPhone thread={thread({ last_inbound_line: 'chat', last_inbound_at: fresh })} {...props} />);
+    renderWithClient(<ComposerPhone thread={thread({ last_inbound_line: 'chat', reply_line: 'chat', last_inbound_at: fresh })} {...props} />);
     const notices = screen.getByRole('button', { name: new RegExp(replyFrom) });
     fireEvent.click(notices);
     expect(within(notices).getByText(replyFrom)).toBeTruthy();
