@@ -43,6 +43,18 @@ export async function startHook() {
 
 export const AUTH = { authorization: 'Bearer test-token' };
 
+/** Two lines with DISTINCT ids, tokens and secrets (docs/12 §13.12). */
+export const TWO_LINES = {
+  phoneNumberId: 'PN-N',
+  wabaId: 'WABA-N',
+  appId: 'APP-N',
+  accessToken: 'notif-token',
+  appSecret: 'notif-secret',
+  chat: { phoneNumberId: 'PN-C', wabaId: 'WABA-C', appId: 'APP-C', accessToken: 'chat-token', appSecret: 'chat-secret' },
+} satisfies StubOptions;
+
+export const bearer = (token: string) => ({ authorization: `Bearer ${token}` });
+
 export function post(url: string, body: unknown, headers: Record<string, string> = AUTH) {
   return fetch(url, {
     method: 'POST',

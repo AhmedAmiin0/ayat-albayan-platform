@@ -2,6 +2,15 @@
 import type { IncomingMessage } from 'node:http';
 import type { Json, StubTemplate } from './meta.ts';
 
+/** The optional second Meta number (docs/12 §13.12): its own phone id, WABA, token and secret. */
+export interface ChatLineOptions {
+  phoneNumberId: string;
+  wabaId?: string;
+  accessToken?: string;
+  appSecret?: string;
+  appId?: string;
+}
+
 export interface StubOptions {
   templates?: StubTemplate[];
   /** API webhook that simulated inbound messages and statuses are POSTed to (signed). */
@@ -10,6 +19,12 @@ export interface StubOptions {
   phoneNumberId?: string;
   /** When set, the bearer token must equal it; otherwise any bearer passes. */
   accessToken?: string;
+  /** WABA of the notifications line (diagnostics: GET /{waba}/subscribed_apps). */
+  wabaId?: string;
+  /** Meta app subscribed to the notifications WABA (diagnostics). */
+  appId?: string;
+  /** Absent = single-line, exactly as before the chat line existed. */
+  chat?: ChatLineOptions;
   /** Free-form messages need an inbound from that number in the last 24 h (default true). */
   enforceWindow?: boolean;
 }
@@ -20,6 +35,26 @@ export interface SentMessage {
   type: string;
   template?: string;
   body: unknown;
+  /** The phone-number id of the Graph path the message was sent through (its line). */
+  phoneNumberId?: string;
+}
+
+/** A read receipt with the line (phone-number id) it was sent through. */
+export interface ReadMark {
+  phoneNumberId: string;
+  messageId: string;
+}
+
+/** What GET /{phone_number_id} and GET /{waba}/subscribed_apps answer for one line. */
+export interface LineHealth {
+  subscribed: boolean;
+  display_phone_number: string;
+  verified_name: string;
+  quality_rating: string;
+  status: string;
+  name_status: string;
+  code_verification_status: string;
+  override_callback_uri?: string;
 }
 
 export interface StubState {
@@ -28,6 +63,10 @@ export interface StubState {
   sent: SentMessage[];
   /** wamids marked read through POST /messages {status:'read'}. */
   reads: string[];
+  /** The same reads with their line: GET /__stub/reads/by-line. */
+  readLog: ReadMark[];
+  /** phone-number id → its diagnostics answer; POST /__stub/lines/{pn} edits, reset restores. */
+  health: Map<string, LineHealth>;
   media: Map<string, { mime: string; bytes: Buffer }>;
   /** digits → ms of the last simulated inbound message. */
   lastInbound: Map<string, number>;
