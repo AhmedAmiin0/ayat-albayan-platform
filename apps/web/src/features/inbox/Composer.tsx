@@ -9,6 +9,7 @@ import { sendGateQuery } from '@/features/messaging/api';
 import { t } from '@/lib/i18n';
 import { ComposerPhone, type ComposerMode as Mode } from './ComposerPhone';
 import { sessionUntil } from './format';
+import { ReplyFromNote } from './ReplyFromNote';
 import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
@@ -48,6 +49,7 @@ export function Composer({ thread, context }: { thread: ThreadView; context: Pre
       {open ? (
         <div className="flex flex-wrap items-center justify-between gap-2">
           {thread.last_inbound_at && <p className="text-xs text-ink-3">{sessionUntil(thread.last_inbound_at)}</p>}
+          <ReplyFromNote thread={thread} />
           <SegmentedControl<Mode>
             label={t.inbox.composer.sendTemplate}
             value={mode}

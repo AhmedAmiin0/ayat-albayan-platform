@@ -6,6 +6,7 @@ import { TemplateHealth } from '@/features/templates/TemplateHealth';
 import { t } from '@/lib/i18n';
 import { AutoMessagesSwitch } from './AutoMessagesSwitch';
 import { FeedbackModeSwitch } from './FeedbackModeSwitch';
+import { LinesCard } from './LinesCard';
 import { MessagingSwitch } from './MessagingSwitch';
 import { DangerFrame } from '../config/DangerFrame';
 import { matchesSetting, matchesText } from '../config/settings-search';
@@ -41,16 +42,17 @@ export function SectionFields({ id, state }: { id: SettingsSection; state: Setti
   );
 }
 
-/** «الرسائل والواتساب»: the switches that save on their own, the timing fields, template health. */
+/** «الرسائل والواتساب»: the switches that save on their own, the WhatsApp lines, the timing fields, template health. */
 export function MessagingSection({ settings, state }: { settings: AcademySettings; state: SettingsFormState }) {
   const templates = useId();
   const { query } = useSettingsView();
   const showSending = matchesSetting('messaging_enabled', query) || matchesSetting('crm_cutover_done', query);
   const showAuto = matchesSetting('auto_messages_enabled', query);
   const showFeedback = matchesSetting('feedback_mode', query);
+  const showLines = matchesText(`${t.templates.settings.lines.title} ${t.templates.settings.lines.intro}`, query);
   const hasFields = FORM_KEYS.some((k) => settingDef(k).section === 'messaging' && matchesSetting(k, query));
   const searching = query.trim() !== '';
-  if (searching && !showSending && !showAuto && !showFeedback && !hasFields) return null;
+  if (searching && !showSending && !showAuto && !showFeedback && !showLines && !hasFields) return null;
   return (
     <Section id="messaging">
       {showSending && (
@@ -64,6 +66,7 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
         </DangerFrame>
       )}
       {showFeedback && <FeedbackModeSwitch settings={settings} />}
+      {showLines && <LinesCard />}
       <SectionFields id="messaging" state={state} />
       {!searching && (
         <div className="min-w-0">
