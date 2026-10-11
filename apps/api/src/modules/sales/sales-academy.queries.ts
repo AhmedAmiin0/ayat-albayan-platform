@@ -5,7 +5,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { studentNameOrCodeFilter } from '../students/students.mapper';
 import { dbError } from '../teachers/http';
 
-type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status'>;
+type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 
 /** Whitelisted teacher columns: never rates, phone, meeting link, calendar or load. */
 export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs'> & {
@@ -37,7 +37,7 @@ export class SalesAcademyQueries {
   async teachers(): Promise<SalesTeacherRow[]> {
     const { data, error } = await this.db
       .from('teachers')
-      .select('id, display_name_ar, display_name_en, gender, programs, students(id, code, name, status)')
+      .select('id, display_name_ar, display_name_en, gender, programs, students(id, code, name, status, program)')
       .eq('status', 'active')
       .order('display_name_ar');
     if (error) throw dbError(error);

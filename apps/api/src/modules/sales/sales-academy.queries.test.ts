@@ -9,7 +9,7 @@ describe('SalesAcademyQueries (whitelisted selects)', () => {
     const f = fakeDb({ teachers: [{ data: [] }] });
     await new SalesAcademyQueries(f.db).teachers();
     const [select] = f.argsOf('teachers', 'select') ?? [];
-    expect(select).toBe('id, display_name_ar, display_name_en, gender, programs, students(id, code, name, status)');
+    expect(select).toBe('id, display_name_ar, display_name_en, gender, programs, students(id, code, name, status, program)');
     expect(f.argsOf('teachers', 'eq')).toEqual(['status', 'active']);
   });
 

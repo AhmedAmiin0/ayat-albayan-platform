@@ -5,14 +5,29 @@ import type { SalesSubscriptionView } from './views.js';
 // The salesperson's assistant side (owner 2026-10-11, docs/16): the academy's teachers, every student and
 // a confirmed subscription's history. Whitelists: never a price, rate, phone, note or meeting link.
 
-/** GET /sales/teachers rows: an active teacher and the students they teach. */
+/** A student of a teacher in «المعلمون»: who, which program and status (trial included), the next lesson. */
+export interface SalesTeacherStudent {
+  id: string;
+  code: string;
+  name: string;
+  program: Program;
+  status: StudentStatus;
+  /** The next open lesson (UTC instant, shown in Riyadh time); null when none is booked. */
+  next_lesson_at: string | null;
+}
+
+/** GET /sales/teachers rows: an active teacher, today's lessons and the students they teach. */
 export interface SalesTeacherView {
   id: string;
   name: string;
   name_en: string | null;
   gender: Gender;
   programs: Program[];
-  students: { id: string; code: string; name: string }[];
+  /** Lessons on today's Riyadh day that are not cancelled or moved away. */
+  lessons_today: number;
+  /** A lesson of theirs is running now (start <= now < end, still open). */
+  live_now: boolean;
+  students: SalesTeacherStudent[];
 }
 
 /** GET /sales/students/all rows: who, which teacher and program; no balance, package or note. */

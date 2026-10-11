@@ -1,18 +1,18 @@
-import type { AssistantLessonView, SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory, SalesTeacherView } from '@ab/shared';
+import type { AssistantLessonView, SalesStudentsQuery, SalesStudentView, SalesSubscriptionHistory } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import type { Page } from '../teachers/http';
-import { toSalesLive, toSalesStudent, toSalesTeacher } from './sales-academy.mapper';
+import { toSalesLive, toSalesStudent } from './sales-academy.mapper';
 import { SalesAcademyQueries } from './sales-academy.queries';
 import { toSalesHistory } from './sales-history.mapper';
 import { SalesHistoryQueries } from './sales-history.queries';
 import { SalesQueries } from './sales.queries';
 
 /**
- * The salesperson's assistant side and a subscription's history (docs/16). Read-only. Teachers,
- * students and running lessons are the academy's; the history is only for a subscription she made,
- * by the SAME ownership rule as «الاشتراكات» (SalesService.subscriptions).
+ * The salesperson's assistant side and a subscription's history (docs/16). Read-only. Students and
+ * running lessons are the academy's (teachers and the schedule: SalesScheduleService); the history is
+ * only for a subscription she made, by the SAME ownership rule as «الاشتراكات» (SalesService.subscriptions).
  */
 @Injectable()
 export class SalesAcademyService {
@@ -21,10 +21,6 @@ export class SalesAcademyService {
     private readonly histories: SalesHistoryQueries,
     private readonly sales: SalesQueries,
   ) {}
-
-  async teachers(): Promise<SalesTeacherView[]> {
-    return (await this.academy.teachers()).map(toSalesTeacher);
-  }
 
   async students(q: SalesStudentsQuery): Promise<Page<SalesStudentView>> {
     const { rows, total } = await this.academy.students(q);

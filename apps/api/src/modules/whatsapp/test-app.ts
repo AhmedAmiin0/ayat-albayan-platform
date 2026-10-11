@@ -17,7 +17,9 @@ import { WHATSAPP_CLIENT, WHATSAPP_LINES } from './whatsapp.types';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER };
+const SALES: AuthUser = { id: 's0000000-0000-4000-8000-000000000003', email: null, role: 'sales' };
+const ASSISTANT: AuthUser = { id: 's0000000-0000-4000-8000-000000000004', email: null, role: 'assistant' };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, sales: SALES, assistant: ASSISTANT };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');

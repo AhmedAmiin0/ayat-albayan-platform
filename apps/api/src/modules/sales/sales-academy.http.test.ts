@@ -5,7 +5,7 @@ type App = Awaited<ReturnType<typeof academyApp>>;
 const SECRET = /price|currency|fx_|amount|method|note|rate|phone|meeting|link|receipt|balance|remaining_amount|package_remaining|secret|سر/i;
 const keys = (v: unknown): string[] =>
   v && typeof v === 'object' ? Object.entries(v).flatMap(([k, x]) => [k, ...keys(x)]) : [];
-const ROUTES = ['/sales/teachers', '/sales/students/all', '/sales/live', `/sales/subscriptions/${SUB}/history`];
+const ROUTES = ['/sales/teachers', '/sales/students/all', '/sales/live', '/sales/schedule', `/sales/subscriptions/${SUB}/history`];
 
 describe('the sales assistant side over HTTP (docs/16)', () => {
   let t: App;
@@ -33,7 +33,10 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
   it('GET /sales/teachers: name, gender, programs and current students; never pay, phone or links', async () => {
     const res = await t.get('/sales/teachers', 'salesB');
     expect(res.json()).toEqual([
-      { id: 'tc1', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran'], students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين' }] },
+      {
+        id: 'tc1', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran'], lessons_today: 1, live_now: false,
+        students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', program: 'quran', status: 'active', next_lesson_at: '2026-10-12T15:00:00.000Z' }],
+      },
     ]);
     expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual([]);
   });

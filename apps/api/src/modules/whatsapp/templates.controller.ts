@@ -10,9 +10,19 @@ import { TemplateRegistry } from './template.registry';
 const teacherMay = (t: TemplateView): boolean =>
   t.status === 'approved' && t.header_format !== 'document' && isTeacherTemplate(t.key);
 
+/** Sent only by their own button (signed link, picked lesson): never from the picker (ThreadSendService). */
+const OWN_BUTTON: ReadonlySet<string> = new Set(['lesson_feedback_request', 'lesson_join_link', 'lesson_rating']);
+
+/**
+ * What a salesperson's composer may offer (docs/16: she answers every family, like the admin): every
+ * approved template the thread send accepts, so she can open or reopen any chat; never a PDF one.
+ */
+const salesMay = (t: TemplateView): boolean =>
+  t.status === 'approved' && t.header_format !== 'document' && !OWN_BUTTON.has(t.key);
+
 /**
  * T1–T3 (docs/12 §4): the template registry and its health (R-MSG-01). The health check and
- * submitting stay admin only; a teacher (teacher mode) lists only what they may send.
+ * submitting stay admin only; a teacher (teacher mode) or a salesperson lists only what they may send.
  */
 @ApiTags('messaging')
 @ApiBearerAuth()
@@ -25,7 +35,8 @@ export class TemplatesController {
   @Permissions('messages.read')
   async list(@CurrentUser() user: AuthUser): Promise<TemplateView[]> {
     const all = await this.registry.list();
-    return can(user, 'templates.manage') ? all : all.filter(teacherMay);
+    if (can(user, 'templates.manage')) return all;
+    return all.filter(user.role === 'sales' ? salesMay : teacherMay);
   }
 
   /** Reads Meta's list and syncs status, quality and text. 503 not_configured, 502 meta_error. */
