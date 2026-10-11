@@ -1,4 +1,4 @@
-import { ForbiddenException, HttpException } from '@nestjs/common';
+import type { HttpException } from '@nestjs/common';
 import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CLOSED, CONFIG, decode, EARLY, LESSON_ID, OPEN, queries, SALES } from './classroom.fakes';
 import { grantsFor } from './livekit-token';
@@ -26,9 +26,16 @@ describe('a salesperson joining a lesson (room-join)', () => {
     expect(q.teacherName).not.toHaveBeenCalled();
   });
 
-  it('outside their scope: 403, even inside the window', async () => {
+  it('any other lesson: she enters as the classroom assistant (docs/16), with the assistant grants', async () => {
     q.salesOwnsLesson.mockResolvedValue(false);
-    expect(await failure(join(OPEN))).toBeInstanceOf(ForbiddenException);
+    const r = await join(OPEN);
+    expect(r.role).toBe('assistant');
+    expect(decode(r.token)).toMatchObject({ video: grantsFor('assistant', `lesson-${LESSON_ID}`) });
+  });
+
+  it('as the assistant too, bound by the window (not admin-anytime)', async () => {
+    q.salesOwnsLesson.mockResolvedValue(false);
+    expect((await failure(join(EARLY))).getResponse()).toMatchObject({ code: 'join_not_open_yet' });
   });
 
   it('bound by the window like a teacher (not admin-anytime): early 403 join_not_open_yet, late 410 join_closed', async () => {
@@ -52,11 +59,12 @@ describe('sales over HTTP', () => {
   });
   afterEach(() => vi.useRealTimers());
 
-  it('POST room/join is allowed for sales in scope, 403 out of scope', async () => {
+  it('POST room/join: sales for her own trial, assistant for any other lesson', async () => {
     const ok = await h.call({ method: 'POST', url: `${url}/room/join`, token: 'sales' });
     expect([ok.statusCode, ok.json().role]).toEqual([200, 'sales']);
     h.queries.salesOwnsLesson.mockResolvedValue(false);
-    expect((await h.call({ method: 'POST', url: `${url}/room/join`, token: 'sales' })).statusCode).toBe(403);
+    const other = await h.call({ method: 'POST', url: `${url}/room/join`, token: 'sales' });
+    expect([other.statusCode, other.json().role]).toEqual([200, 'assistant']);
   });
 
   it('the join-link routes stay closed to sales (send: admin; url: admin + teacher)', async () => {

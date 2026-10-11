@@ -10,10 +10,10 @@ describe('sales thread helpers', () => {
     expect(visibleToSales({ template_key: 'lesson_feedback_request' })).toBe(false);
   });
 
-  it('salesPeople: only my students, packages and money removed, lead kept', () => {
+  it('salesPeople: every child of the family, packages and money removed, lead kept', () => {
     const people = { guardian: { id: 'g', name: 'x' }, lead: { id: 'l', status: 'converted' as const }, students: [threadStudent(), threadStudent({ id: 'z' })] };
-    const out = salesPeople(people, { salesId: 's', phones: new Set(), studentIds: new Set(['s1']) });
+    const out = salesPeople(people);
     expect(out.lead).toEqual(people.lead);
-    expect(out.students.map((s) => [s.id, s.subscription])).toEqual([['s1', null]]);
+    expect(out.students.map((s) => [s.id, s.subscription])).toEqual([['s1', null], ['z', null]]);
   });
 });

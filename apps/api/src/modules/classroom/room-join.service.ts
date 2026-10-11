@@ -9,7 +9,7 @@ import { RoomAdmission } from './room-admission';
 
 /**
  * POST /lessons/:id/room/join. Who may enter is LessonRoleService's rule (admin, the lesson's
- * teacher, an assigned assistant, the salesperson of a trial). The window (settings.join_opens_before_min
+ * teacher, an assigned assistant, a salesperson: her trial as sales, any other lesson as assistant). The window (settings.join_opens_before_min
  * before to join_closes_after_min after) binds teachers, assistants and salespeople; an admin may always enter, to supervise
  * or to help. Someone removed from this lesson's room is refused 403 removed_from_room.
  */

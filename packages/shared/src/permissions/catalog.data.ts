@@ -106,5 +106,8 @@ export const PERMISSION_ROWS = [
   { key: 'self.sales_students', area: 'self', grants: ['sales'] },
   { key: 'self.sales_payments', area: 'self', grants: ['sales'] },
   { key: 'self.sales_earnings', area: 'self', grants: ['sales'] },
+  // The assistant side of sales (owner 2026-10-11, docs/16): the academy's teachers, every student and
+  // the lessons running now (read-only, whitelisted). Follows the base role like the keys above.
+  { key: 'self.sales_academy', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },
 ] as const satisfies readonly { key: string; area: PermissionArea; grants: readonly Grant[] }[];

@@ -1,28 +1,20 @@
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { waHttpError } from '../whatsapp/template.mapper';
-import { SalesQueries } from './sales.queries';
 
-/** What a signed-in salesperson may see in the inbox: their leads' chats and the families those leads became. */
+/**
+ * A signed-in salesperson in the inbox. Owner, 2026-10-11 («sales are playing double roles: sales and
+ * assistant»): she sees and answers EVERY chat, so the scope no longer lists phones; it names who sends
+ * (dedup key, audit `sales_id`) and switches the inbox to the sales redactions (sales-threads.ts:
+ * no money flag, no packages, no signed links). Ownership (leads, brought_by) is SalesOwnership.
+ */
 export interface SalesScope {
   salesId: string;
-  phones: ReadonlySet<string>;
-  studentIds: ReadonlySet<string>;
 }
 
-/** 403 not_your_thread for any phone outside the salesperson's scope (rule 9, server-side). */
-export function assertSalesPhone(scope: SalesScope, phone: string): void {
-  if (!scope.phones.has(phone)) throw waHttpError('not_your_thread', 403);
-}
-
-/** Resolves a salesperson's scope once per request; null for everyone else. */
+/** Resolves a salesperson's scope; null for everyone else (rule 9: from the login, never a param). */
 @Injectable()
 export class SalesScopes {
-  constructor(private readonly queries: SalesQueries) {}
-
-  async of(user: AuthUser): Promise<SalesScope | null> {
-    if (user.role !== 'sales') return null;
-    const own = await this.queries.ownership(user.id);
-    return { salesId: user.id, phones: new Set(own.phones), studentIds: new Set(own.studentIds) };
+  of(user: AuthUser): Promise<SalesScope | null> {
+    return Promise.resolve(user.role === 'sales' ? { salesId: user.id } : null);
   }
 }
