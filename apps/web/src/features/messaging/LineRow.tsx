@@ -17,6 +17,10 @@ const WEBHOOK: Record<Shown, { tone: Tone; text: Label }> = {
   unverified: { tone: 'neutral', text: 'webhookUnverified' },
 };
 const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as const;
+/** Long app names / override URLs wrap at phone width (no horizontal page scroll). */
+const WRAP = 'whitespace-normal break-all';
+const known = (code: number | null): string | undefined =>
+  code === null ? undefined : (t.messages.errors as Record<string, string>)[String(code)];
 
 /** Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. */
 function Webhook({ view }: { view: LineCheckView }) {
@@ -34,11 +38,11 @@ function Webhook({ view }: { view: LineCheckView }) {
       </p>
       {(view.subscribed_apps ?? []).map((app, i) => (
         <p key={app.id ?? i} className="text-ink-2">
-          <Ltr>{[app.name, app.id].filter(Boolean).join(' · ')}</Ltr>
+          <Ltr className={WRAP}>{[app.name, app.id].filter(Boolean).join(' · ')}</Ltr>
           {app.override_callback_uri && (
             <span className="block">
               {before}
-              <Ltr>{app.override_callback_uri}</Ltr>
+              <Ltr className={WRAP}>{app.override_callback_uri}</Ltr>
               {after}
             </span>
           )}
@@ -48,7 +52,10 @@ function Webhook({ view }: { view: LineCheckView }) {
   );
 }
 
-/** Each failed Graph call: «تعذّر الاستعلام: …» with Meta's message as data (dir auto). */
+/**
+ * Each failed Graph call: «تعذّر الاستعلام: …» with a known Meta code in words (messages.errors),
+ * else Meta's message as data (dir auto); the code in an LTR island, Meta's raw text as the title.
+ */
 function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
   if (errors.length === 0) return null;
   const [before, after] = t.templates.settings.lines.callFailed.split('{message}');
@@ -57,10 +64,11 @@ function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
       {errors.map((e) => (
         <li key={e.step} className="flex items-start gap-1.5">
           <NuqtaGlyph shape="struck" className="mt-0.5" />
-          <span>
+          <span title={e.message}>
             {before}
-            <bdi dir="auto">{e.message}</bdi>
+            <bdi dir="auto">{known(e.code) ?? e.message}</bdi>
             {after}
+            {e.code !== null && <Ltr className="ms-1 text-2xs">({e.code})</Ltr>}
           </span>
         </li>
       ))}
@@ -70,7 +78,8 @@ function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
 
 /**
  * One WhatsApp line in «خطوط واتساب» (docs/12 §13.10): its name, and once checked whether the
- * server has it configured, Meta's facts, the webhook link, failed calls and when it was checked.
+ * server has it configured (an unconfigured notifications line is act: nothing can send; the chat
+ * line is optional, said in a hint), Meta's facts, the webhook link, failed calls and when it was checked.
  */
 export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | null }) {
   const s = t.templates.settings.lines;
@@ -81,11 +90,14 @@ export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | nu
         {view &&
           (view.configured ? (
             <StatusChip size="sm" tone="ok" glyph="fill" label={s.configured} />
+          ) : line === 'notifications' ? (
+            <StatusChip size="sm" tone="act" glyph="struck" label={s.notConfigured} />
           ) : (
             <StatusChip size="sm" tone="neutral" glyph="hollow" label={s.notConfigured} />
           ))}
         {view && <span className="ms-auto text-2xs text-ink-3">{s.checkedAt.replace('{time}', fullTime(view.checked_at))}</span>}
       </div>
+      {view && !view.configured && line === 'chat' && <p className="text-xs text-ink-3">{s.chatOptional}</p>}
       {view?.configured && (
         <>
           <LineFacts view={view} />

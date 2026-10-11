@@ -60,7 +60,8 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const failed = lastFailed(th);
   const kind = threadKind(th);
   const turn = failed ? t.inbox.failedLast : unread ? unreadLabel(th.unread_count) : '';
-  const label = [t.inbox.openThread.replace('{name}', name), turn]
+  const line = th.last_inbound_line ? t.enums.waLine[th.last_inbound_line] : '';
+  const label = [t.inbox.openThread.replace('{name}', name), turn, line]
     .filter(Boolean)
     .join(' — ');
 

@@ -49,7 +49,7 @@ export function Composer({ thread, context }: { thread: ThreadView; context: Pre
       {open ? (
         <div className="flex flex-wrap items-center justify-between gap-2">
           {thread.last_inbound_at && <p className="text-xs text-ink-3">{sessionUntil(thread.last_inbound_at)}</p>}
-          <ReplyFromNote thread={thread} />
+          {mode === 'text' && <ReplyFromNote thread={thread} />}
           <SegmentedControl<Mode>
             label={t.inbox.composer.sendTemplate}
             value={mode}

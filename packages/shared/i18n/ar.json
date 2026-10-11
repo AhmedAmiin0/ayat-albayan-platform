@@ -2416,6 +2416,7 @@
         "notChecked": "لم يُفحص بعد",
         "configured": "مضبوط",
         "notConfigured": "غير مضبوط على الخادم",
+        "chatOptional": "اختياري: بدونه تُرسَل كل الرسائل من خط الإشعارات.",
         "phoneNumberId": "معرّف الرقم",
         "wabaId": "معرّف الحساب",
         "displayPhone": "الرقم",

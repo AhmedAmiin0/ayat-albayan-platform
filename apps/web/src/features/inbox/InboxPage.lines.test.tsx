@@ -32,7 +32,11 @@ describe('two WhatsApp lines in the inbox (docs/12 §13.10, R-LEAD-02 / R-MSG-05
     expect(within(chat).getByText(t.enums.leadSource.facebook_ad).nextElementSibling).toBe(badge);
     const old = screen.getByRole('link', { name: new RegExp(t.inbox.openThread.replace('{name}', 'أم عمر')) });
     expect(within(old).queryByTestId('line-badge')).toBeNull();
-    expect(chat.getAttribute('aria-label')).not.toContain(t.enums.waLine.chat);
+    // Screen readers hear the line too (review W6): appended, the «open thread» prefix unchanged.
+    const label = chat.getAttribute('aria-label') ?? '';
+    expect(label.startsWith(t.inbox.openThread.replace('{name}', 'أم سهيلة'))).toBe(true);
+    expect(label.endsWith(` — ${t.enums.waLine.chat}`)).toBe(true);
+    expect(old.getAttribute('aria-label')).not.toContain(' — ');
   });
 
   it('bubbles carry their own line, the composer names the reply line, the window banner is unchanged', async () => {
