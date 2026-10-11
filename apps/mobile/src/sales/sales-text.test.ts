@@ -1,4 +1,5 @@
 import { t } from '@/lib/i18n';
+import { money } from '@/payments/format';
 import { ltr } from '@/ui/Ltr';
 import { entry, student, subscription, teacher } from './fixtures';
 import {
@@ -57,7 +58,7 @@ test('a student reads teacher · program (or «بلا معلم») and the guardi
   expect(guardianLine(student())).toBe(t.sales.mobile.guardianLine.replace('{name}', 'أحمد سالم'));
 });
 
-test('history lines: dates, lessons, status changes and payments as date + kind (no money)', () => {
+test('history lines: dates, lessons, status changes and payments with date, kind and amount', () => {
   const h = t.sales.history;
   const lines = historyLines(entry());
   expect(lines.heading).toBe(`${t.enums.packageSize['8']} · ${t.enums.subscriptionStatus.active}`);
@@ -67,7 +68,7 @@ test('history lines: dates, lessons, status changes and payments as date + kind 
     `${ltr('2026-09-30')} — ${h.created.replace('{to}', t.enums.subscriptionStatus.unpaid)}`,
     `${ltr('2026-10-01')} — ${fill(h.changed, { from: t.enums.subscriptionStatus.unpaid, to: t.enums.subscriptionStatus.active })}`,
   ]);
-  expect(lines.payments).toEqual([`${ltr('2026-09-30')} — ${t.enums.paymentKind.payment}`]);
+  expect(lines.payments).toEqual([`${ltr('2026-09-30')} — ${t.enums.paymentKind.payment} — ${money(145, 'SAR')}`]);
 });
 
 test('an ended subscription adds its end day', () => {
