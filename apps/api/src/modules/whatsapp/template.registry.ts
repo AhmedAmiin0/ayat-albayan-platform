@@ -8,6 +8,7 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
+import { loadEnv } from '../../env';
 import { SAMPLE_REPORT, templateProblem } from './template-review';
 import { findMeta, ourStatus, syncPatch } from './template-sync';
 import { toTemplateView, waHttpError } from './template.mapper';
@@ -19,6 +20,8 @@ const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 const SUBMITTABLE: ReadonlySet<TemplateStatus> = new Set(['not_submitted', 'rejected', 'missing']);
 /** Soon after boot, not at once: the e2e stub may still be starting. */
 const BOOT_CHECK_MS = 5_000;
+/** Read per call, so tests can vi.stubEnv it. */
+const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC !== false;
 
 /**
  * The template registry (R-MSG-01, issue C1, docs/12 §3.4). The health check reads Meta's list
@@ -38,7 +41,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
 
   /** Best-effort boot health check when WhatsApp is configured: log and continue, never block. */
   onApplicationBootstrap(): void {
-    if (!this.client.configured()) return;
+    if (!this.client.configured() || !syncOn()) return;
     this.timer = setTimeout(() => void this.bootCheck(), BOOT_CHECK_MS).unref();
   }
 
@@ -68,6 +71,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
 
   /** POST /messaging/templates/health: every row against Meta's list. */
   async verifyAll(now = new Date()): Promise<TemplateView[]> {
+    this.requireSync();
     this.requireConfigured();
     const meta = await this.fromMeta(() => this.client.getTemplates());
     const views: TemplateView[] = [];
@@ -84,6 +88,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
    * that needs WA_APP_ID (409 needs_app_id without it).
    */
   async submit(key: string, actorId: string): Promise<TemplateView> {
+    this.requireSync();
     const row = await this.queries.get(key);
     if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
     if (!SUBMITTABLE.has(row.status)) throw waHttpError('not_submittable', 409, { status: row.status });
@@ -111,6 +116,11 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
       after: { key, status, meta_id },
     });
     return toTemplateView(updated ?? row);
+  }
+
+  /** WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the registry. */
+  private requireSync(): void {
+    if (!syncOn()) throw waHttpError('template_sync_off', 409);
   }
 
   private requireConfigured(): void {

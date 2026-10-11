@@ -1,8 +1,8 @@
-import type { z } from 'zod';
-import type { WhatsappEnv } from '../../env';
+import { recipientAllowed, type WhatsappEnv } from '../../env';
 import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './graph';
 import {
   mediaSchema,
+  parsed,
   sentSchema,
   submitSchema,
   templatesPageSchema,
@@ -22,6 +22,12 @@ import {
 } from './whatsapp.types';
 
 export const DEFAULT_TIMEOUT_MS = 15_000;
+
+export interface ClientOpts {
+  fetch?: FetchLike;
+  timeoutMs?: number;
+  allowed?: readonly string[] | null;
+}
 /** ponytail: 20 × 100 templates; the academy has 12. */
 const MAX_TEMPLATE_PAGES = 20;
 const TEMPLATE_FIELDS = 'id,name,language,status,category,quality_score,components,rejected_reason';
@@ -33,9 +39,12 @@ const TEMPLATE_FIELDS = 'id,name,language,status,category,quality_score,componen
  */
 export class HttpWhatsappClient implements WhatsappClient {
   private readonly conn: GraphConn | null;
+  /** WA_ALLOWED_RECIPIENTS (docs/12 §13.5d); null = unrestricted. */
+  private readonly allowed: readonly string[] | null;
 
-  constructor(env: WhatsappEnv | null, opts: { fetch?: FetchLike; timeoutMs?: number } = {}) {
+  constructor(env: WhatsappEnv | null, opts: ClientOpts = {}) {
     this.conn = env ? { env, fetch: opts.fetch ?? fetch, timeoutMs: opts.timeoutMs ?? DEFAULT_TIMEOUT_MS } : null;
+    this.allowed = opts.allowed ?? null;
   }
 
   configured(): boolean {
@@ -43,15 +52,15 @@ export class HttpWhatsappClient implements WhatsappClient {
   }
 
   sendTemplate(input: TemplateSend): Promise<WaSent> {
-    return this.send(() => templateMessage(input));
+    return this.send(input.to, () => templateMessage(input));
   }
 
   sendText(input: { to: string; text: string; replyTo?: string | null }): Promise<WaSent> {
-    return this.send(() => textMessage(input));
+    return this.send(input.to, () => textMessage(input));
   }
 
   sendDocument(input: { to: string; url: string; filename: string; caption?: string | null }): Promise<WaSent> {
-    return this.send(() => documentMessage(input));
+    return this.send(input.to, () => documentMessage(input));
   }
 
   async markRead(waMessageId: string): Promise<void> {
@@ -67,7 +76,7 @@ export class HttpWhatsappClient implements WhatsappClient {
     for (let page = 0; page < MAX_TEMPLATE_PAGES; page += 1) {
       const cursor = after ? `&after=${encodeURIComponent(after)}` : '';
       const path = `${c.env.wabaId}/message_templates?limit=100&fields=${TEMPLATE_FIELDS}${cursor}`;
-      const body = this.parsed(templatesPageSchema, await graphJson(c, { path }));
+      const body = parsed(templatesPageSchema, await graphJson(c, { path }));
       all.push(...body.data.map(toMetaTemplate));
       after = body.paging?.next ? body.paging.cursors?.after : undefined;
       if (!after) break;
@@ -86,7 +95,7 @@ export class HttpWhatsappClient implements WhatsappClient {
       template.status === 'rejected' && template.meta_id
         ? { path: template.meta_id, method: 'POST', body: { category: payload['category'], components: payload['components'] } }
         : { path: `${c.env.wabaId}/message_templates`, method: 'POST', body: payload };
-    const res = this.parsed(submitSchema, await graphJson(c, req));
+    const res = parsed(submitSchema, await graphJson(c, req));
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
   }
 
@@ -103,24 +112,26 @@ export class HttpWhatsappClient implements WhatsappClient {
     if (!c.env.appId) throw new WaError('WA_APP_ID is not set', { code: null, status: 0 });
     const q = new URLSearchParams({ file_name: file.name, file_length: String(file.bytes.byteLength), file_type: file.mime });
     const start = await graphJson(c, { path: `${encodeURIComponent(c.env.appId)}/uploads?${q}`, method: 'POST' });
-    const session = this.parsed(uploadSessionSchema, start);
+    const session = parsed(uploadSessionSchema, start);
     const headers = { authorization: `OAuth ${c.env.accessToken}`, file_offset: '0' };
     const done = await graphJson(c, { path: session.id, method: 'POST', raw: file.bytes, headers });
-    return this.parsed(uploadHandleSchema, done).h;
+    return parsed(uploadHandleSchema, done).h;
   }
 
   /** Metadata (GET /{media id}), then the bytes from Meta's short-lived URL with the bearer. */
   async getMedia(mediaId: string): Promise<{ bytes: Uint8Array; mime: string }> {
     const c = this.connection();
-    const meta = this.parsed(mediaSchema, await graphJson(c, { path: encodeURIComponent(mediaId) }));
+    const meta = parsed(mediaSchema, await graphJson(c, { path: encodeURIComponent(mediaId) }));
     const res = await graphFetch(c, { path: meta.url });
     return { bytes: new Uint8Array(await res.arrayBuffer()), mime: meta.mime_type };
   }
 
-  private async send(build: () => GraphBody): Promise<WaSent> {
+  /** The allow-list check runs BEFORE any request; only a bug can reach it (after the claim). */
+  private async send(to: string, build: () => GraphBody): Promise<WaSent> {
     const c = this.connection();
+    if (!recipientAllowed(this.allowed, to)) throw new WaError('recipient not allowed', { code: 131030, status: 0 });
     const body = build();
-    const res = this.parsed(sentSchema, await graphJson(c, { path: `${c.env.phoneNumberId}/messages`, method: 'POST', body }));
+    const res = parsed(sentSchema, await graphJson(c, { path: `${c.env.phoneNumberId}/messages`, method: 'POST', body }));
     const id = res.messages[0]?.id;
     if (!id) throw new WaError('WhatsApp answered without a message id', { code: null, status: 200 });
     return { waMessageId: id };
@@ -129,11 +140,5 @@ export class HttpWhatsappClient implements WhatsappClient {
   private connection(): GraphConn {
     if (!this.conn) throw new WaError('WhatsApp is not configured', { code: null, status: 0 });
     return this.conn;
-  }
-
-  private parsed<S extends z.ZodType>(schema: S, json: unknown): z.output<S> {
-    const r = schema.safeParse(json);
-    if (!r.success) throw new WaError('Unexpected WhatsApp response', { code: null, status: 200, details: r.error.message.slice(0, 300) });
-    return r.data;
   }
 }
