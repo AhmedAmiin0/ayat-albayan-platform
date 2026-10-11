@@ -6,7 +6,7 @@ import { openNav } from '../support/nav';
 import { withSql } from '../support/schedule';
 
 // Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.
-// She reads a chat that is not hers, opens the history of a confirmed subscription she made (no money),
+// She reads a chat that is not hers, opens the history of a confirmed subscription she made (with its payment amounts),
 // sees the teachers and every student, and a lesson running now with «ادخل الحلقة».
 
 const PASSWORD = 'Assistant-e2e-123';
@@ -69,6 +69,6 @@ test.describe('sales double role', () => {
     const history = page.getByRole('region', { name: ar.sales.history.title.replace('{name}', names.mine) });
     await expect(history).toContainText(ar.sales.history.current);
     await expect(history).toContainText(ar.enums.paymentKind.payment);
-    await expect(history).not.toContainText('333');
+    await expect(history).toContainText(`333 ${ar.pricing.currencies.SAR}`);
   });
 });
