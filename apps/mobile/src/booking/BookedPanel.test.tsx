@@ -31,6 +31,8 @@ test('a booked makeup opens the schedule on its Riyadh day, or closes', async ()
 
 test('without lessons.read the Schedule tab is hidden: no «افتح الجدول» button, only close', async () => {
   const client = createTestQueryClient();
+  // Fresh forever: a mount refetch would answer the mocked `{}` (no permissions = hide nothing) and race the assertion.
+  client.setQueryDefaults(pathKey('/auth/me'), { staleTime: Infinity });
   client.setQueryData(pathKey('/auth/me'), { role: 'admin', permissions: ['inbox.read'] });
   await renderWithQuery(<BookedPanel makeup result={result} teacherName="أبرار" tz="Africa/Cairo" onDone={jest.fn()} />, client);
   expect(screen.queryByRole('button', { name: t.booking.openSchedule })).toBeNull();
