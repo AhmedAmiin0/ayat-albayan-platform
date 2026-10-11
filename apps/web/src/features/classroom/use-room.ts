@@ -1,4 +1,4 @@
-import type { RoomJoinResult } from '@ab/shared';
+import { chatOpen, dropsChat, type RoomJoinResult } from '@ab/shared';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { connectFailureText } from './connect-failure';
 import { mediaErrorText } from './errors';
@@ -33,13 +33,17 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
   const [failure, setFailure] = useState<string | null>(null);
   const data = useRef(new Set<(packet: DataPacketIn) => void>());
   const moderated = useRef(new Set<(e: ModeratedEvent) => void>());
+  // A trial lesson has no text chat (owner, 2026-10-11): chat-topic data is neither delivered nor sent.
+  const chat = chatOpen(join);
 
   useEffect(() => {
     let live = true;
     const c = make();
     client.current = c;
     const off = c.subscribe(setSnap);
-    const offData = c.onData((packet) => data.current.forEach((l) => l(packet)));
+    const offData = c.onData((packet) => {
+      if (!dropsChat(chat, packet.topic)) data.current.forEach((l) => l(packet));
+    });
     const offModerated = c.onModerated((e) => moderated.current.forEach((l) => l(e)));
     c.connect(join.url, join.token)
       .then((fails) => live && setNotes(fails.map((f) => mediaErrorText(f.device, f.error))))
@@ -52,7 +56,7 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
       c.disconnect();
       client.current = null;
     };
-  }, [join.url, join.token, make]);
+  }, [join.url, join.token, chat, make]);
 
   const run = useCallback((job: (c: RoomClient) => Promise<void>, device: 'mic' | 'cam' | 'share') => {
     const c = client.current;
@@ -63,9 +67,13 @@ export function useRoom(join: RoomJoinResult, make: () => RoomClient): RoomContr
 
   const attach = useCallback((key: string, el: HTMLVideoElement) => client.current?.attachVideo(key, el) ?? (() => undefined), []);
 
-  const sendData = useCallback((bytes: Uint8Array, opts: DataSendOptions) => {
-    client.current?.sendData(bytes, opts).catch(() => undefined);
-  }, []);
+  const sendData = useCallback(
+    (bytes: Uint8Array, opts: DataSendOptions) => {
+      if (dropsChat(chat, opts.topic)) return;
+      client.current?.sendData(bytes, opts).catch(() => undefined);
+    },
+    [chat],
+  );
   const onData = useCallback((listener: (packet: DataPacketIn) => void) => {
     data.current.add(listener);
     return () => void data.current.delete(listener);

@@ -46,6 +46,16 @@ describe('ModerationQueries', () => {
     expect(audit.record).not.toHaveBeenCalled();
   });
 
+  it('isTrialLesson reads the package of the lesson rule (no rule = not a trial)', async () => {
+    const trial = { data: { rule: { package: 'trial' } } };
+    const { q, argsOf } = setup({ lessons: [trial, { data: { rule: { package: 'p8' } } }, { data: { rule: null } }, { data: null }] });
+    expect(await q.isTrialLesson('L')).toBe(true);
+    expect(argsOf('lessons', 'eq')).toEqual(['id', 'L']);
+    expect(await q.isTrialLesson('L')).toBe(false);
+    expect(await q.isTrialLesson('L')).toBe(false);
+    expect(await q.isTrialLesson('L')).toBe(false);
+  });
+
   it('participant matches lesson and identity together', async () => {
     const { q, argsOf } = setup({ classroom_participants: [{ data: null }] });
     expect(await q.participant('L', 'guest-x')).toBeNull();

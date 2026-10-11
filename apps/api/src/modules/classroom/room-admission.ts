@@ -22,7 +22,7 @@ export const removedFromRoom = (): HttpException =>
 
 /**
  * The last step of every join, staff and guest alike, once the caller is known to belong: refuse
- * a removed principal, mint the token (fresh identity), record the participant (a removal finds
+ * a removed principal, tell a trial lesson's room it has no text chat, mint the token (fresh identity), record the participant (a removal finds
  * them by identity), and make sure the lesson is being recorded.
  */
 @Injectable()
@@ -43,7 +43,11 @@ export class RoomAdmission {
 
   async admit(input: Admission, now: Date): Promise<RoomJoinResult> {
     const config = this.livekit();
-    if (await this.moderation.isBlocked(input.lessonId, input.principal)) throw removedFromRoom();
+    const [blocked, trial] = await Promise.all([
+      this.moderation.isBlocked(input.lessonId, input.principal),
+      this.moderation.isTrialLesson(input.lessonId),
+    ]);
+    if (blocked) throw removedFromRoom();
     const room = lessonRoomName(input.lessonId);
     const identity = newIdentity(input.role);
     const token = mintToken(config, { room, role: input.role, name: input.name, identity, ttlSeconds: input.ttlSeconds }, now);
@@ -56,7 +60,8 @@ export class RoomAdmission {
       ...principalColumns(input.principal),
     });
     this.record(lessonTarget(input.lessonId), now);
-    return { url: config.url, token, room, role: input.role, recording: this.recordingState };
+    // chat: false in a trial lesson; the clients hide and drop the text chat (tools/livekit/README.md).
+    return { url: config.url, token, room, role: input.role, recording: this.recordingState, chat: !trial };
   }
 
   /** 'off' when RECORDING_S3_* or LiveKit are missing: the room warns the admin. */
