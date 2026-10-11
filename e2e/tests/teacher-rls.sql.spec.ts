@@ -25,10 +25,12 @@ async function seed(tx: Tx) {
   const [other] = await tx<{ id: string }[]>`insert into public.teachers (display_name_ar, gender, programs, tz)
     values ('معلمة RLS', 'female', '{quran}', 'Asia/Riyadh') returning id`;
   if (!abrar || !other) throw new Error('teachers missing');
-  await family(tx, { phone: PHONE.assigned, teacherId: abrar.id });
-  await lesson(tx, { teacherId: abrar.id, studentId: await family(tx, { phone: PHONE.recent, teacherId: other.id }), daysAgo: 10 });
-  await lesson(tx, { teacherId: abrar.id, studentId: await family(tx, { phone: PHONE.old, teacherId: other.id }), daysAgo: 91 });
-  await family(tx, { phone: PHONE.other, teacherId: other.id });
+  // Active students: a trial family is never in a teacher's chats (trial-no-teacher-chat.sql.spec).
+  const active = 'active' as const;
+  await family(tx, { phone: PHONE.assigned, teacherId: abrar.id, status: active });
+  await lesson(tx, { teacherId: abrar.id, studentId: await family(tx, { phone: PHONE.recent, teacherId: other.id, status: active }), daysAgo: 10 });
+  await lesson(tx, { teacherId: abrar.id, studentId: await family(tx, { phone: PHONE.old, teacherId: other.id, status: active }), daysAgo: 91 });
+  await family(tx, { phone: PHONE.other, teacherId: other.id, status: active });
   for (const phone of Object.values(PHONE)) {
     await tx`insert into public.messages (direction, phone_e164, body) values ('inbound', ${phone}, 'السلام عليكم')`;
   }

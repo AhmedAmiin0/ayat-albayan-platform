@@ -822,7 +822,8 @@
       "sent": "Proposal sent to the admin team",
       "pending": "You proposed {when}; waiting for the admin team's reply",
       "back": "Back"
-    }
+    },
+    "trialChatViaSales": "Contact with a trial student’s family goes through sales."
   },
   "today": {
     "title": "Today",
@@ -955,11 +956,11 @@
     "America/Toronto": "Toronto"
   },
   "assistants": {
-    "nav": "Assistants",
-    "title": "Assistants",
+    "nav": "Sales team",
+    "title": "Sales team",
     "tabs": {
-      "label": "Assistant sections",
-      "list": "Assistants",
+      "label": "Sales team sections",
+      "list": "Sales team",
       "commissions": "Commissions",
       "statements": "Monthly statements"
     },
@@ -970,10 +971,10 @@
     "commissionPercent": "{value}% of the subscription price",
     "commissionFixed": "{amount} per student",
     "startsOn": "from {date}",
-    "empty": "No assistants yet: give a user the «Assistant» role on the roles page",
+    "empty": "No salespeople yet: give a user the «Sales» role on the roles page",
     "editTerms": "Edit terms",
-    "back": "Back to assistants",
-    "notFound": "This assistant does not exist",
+    "back": "Back to the sales team",
+    "notFound": "This salesperson does not exist",
     "terms": {
       "title": "Salary and commission terms",
       "salaryAmount": "Monthly salary",
@@ -997,10 +998,10 @@
       "percent_max_100": "The percent cannot exceed 100",
       "currency_fixed_only": "A currency applies to a fixed amount only",
       "too_many_decimals": "At most two decimals",
-      "assistant_not_found": "This assistant does not exist",
-      "invalid_assistant": "Choose a user with the «Assistant» role",
+      "assistant_not_found": "This salesperson does not exist",
+      "invalid_assistant": "Choose a user with the «Sales» role",
       "student_not_found": "This student does not exist",
-      "commission_exists": "This student has a live commission for another assistant: void it first",
+      "commission_exists": "This student has a live commission for another salesperson: void it first",
       "commission_not_found": "This commission does not exist",
       "already_voided": "This commission is already voided",
       "reason_required": "Write the reason (at least three letters)",
@@ -1016,8 +1017,8 @@
     },
     "ledger": {
       "filters": "Filter commissions",
-      "assistant": "Assistant",
-      "allAssistants": "All assistants",
+      "assistant": "Salesperson",
+      "allAssistants": "All salespeople",
       "month": "Month",
       "allMonths": "All months",
       "statusLabel": "Status",
@@ -1045,8 +1046,8 @@
       "generate": "Generate month statements",
       "regenerate": "Recalculate",
       "generated": "Statements calculated",
-      "noAssistants": "No assistants to calculate",
-      "assistant": "Assistant",
+      "noAssistants": "No salespeople to calculate",
+      "assistant": "Salesperson",
       "month": "Month",
       "total": "Total",
       "totalLine": "Salary {salary} + commissions {commissions} + adjustments {adjustments} = {total}",
@@ -1067,18 +1068,18 @@
       "title": "Brought by",
       "none": "Not set",
       "since": "on {date}",
-      "select": "Assistant",
-      "noneOption": "No assistant",
+      "select": "Salesperson",
+      "noneOption": "No salesperson",
       "broughtAt": "Date brought (optional)",
-      "save": "Set assistant",
-      "saved": "Assistant saved",
-      "bulk": "Assign assistant ({count})",
-      "bulkTitle": "Assign an assistant to {count} students",
+      "save": "Set salesperson",
+      "saved": "Salesperson saved",
+      "bulk": "Assign salesperson ({count})",
+      "bulkTitle": "Assign a salesperson to {count} students",
       "bulkApply": "Assign",
-      "bulkDone": "Assistant assigned to {count} students",
+      "bulkDone": "Salesperson assigned to {count} students",
       "pick": "Select {name}",
       "pickColumn": "Select",
-      "hint": "Changing the assistant after a commission is earned needs that commission voided first."
+      "hint": "Changing the salesperson after a commission is earned needs that commission voided first."
     }
   },
   "pricing": {
@@ -1261,7 +1262,7 @@
     "student_merged": "Commission reversed: the student's record was merged into another record"
   },
   "assistantPortal": {
-    "title": "Assistant",
+    "title": "Sales",
     "nav": {
       "register": "Register a student",
       "students": "My students",
@@ -2857,7 +2858,7 @@
       "accounts": "Accounts & payments",
       "uploads": "Uploads",
       "academy": "Academy and contact",
-      "sales": "Assistants & sales",
+      "sales": "Sales team",
       "appearance": "Appearance"
     },
     "hints": {
@@ -3154,7 +3155,7 @@
       "admin": "Admin",
       "assistant": "Classroom assistant",
       "guest": "Guest",
-      "sales": "Assistant"
+      "sales": "Sales"
     },
     "guest": {
       "title": "Join the lesson",
@@ -3622,7 +3623,7 @@
       "teacher": "Teacher",
       "guardian": "Guardian",
       "assistant": "Classroom assistant",
-      "sales": "Assistant",
+      "sales": "Sales",
       "student": "Student",
       "public": "Visitor",
       "unknown": "No role"
@@ -3784,9 +3785,9 @@
       "payouts.read": "View teacher payouts",
       "payouts.write": "Prepare and pay payouts",
       "payouts.approve": "Approve payouts",
-      "assistantpay.read": "View assistants' terms, commissions and statements",
-      "assistantpay.write": "Set assistants' terms, prepare and pay their statements",
-      "assistantpay.approve": "Approve assistants' statements",
+      "assistantpay.read": "View salespeople's terms, commissions and statements",
+      "assistantpay.write": "Set salespeople's terms, prepare and pay their statements",
+      "assistantpay.approve": "Approve salespeople's statements",
       "earnings.read": "View teacher earnings",
       "earnings.write": "Record teacher payments",
       "expenses.read": "View expenses",
@@ -3801,10 +3802,10 @@
       "users.read": "View users and their accounts",
       "users.write": "Create, edit, disable and delete users",
       "self.teacher": "Teacher's own pages",
-      "self.sales": "Assistant's own pages",
-      "self.sales_students": "Students the assistant brought",
-      "self.sales_payments": "Payments the assistant recorded",
-      "self.sales_earnings": "Assistant's earnings and statements",
+      "self.sales": "Salesperson's own pages",
+      "self.sales_students": "Students the salesperson brought",
+      "self.sales_payments": "Payments the salesperson recorded",
+      "self.sales_earnings": "Salesperson's earnings and statements",
       "self.assistant": "Classroom assistant's own pages"
     },
     "page": {

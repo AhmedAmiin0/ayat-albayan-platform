@@ -1,13 +1,13 @@
 import { ar, expect, test } from '../support/fixtures';
 import { withSql } from '../support/schedule';
 
-// «المساعدون» (R-ASST-02, R-ASST-03, R-ASST-05, owner 2026-10-06): the admin sets an assistant's
+// «فريق المبيعات» (R-ASST-02, R-ASST-03, R-ASST-05, owner 2026-10-06): the admin sets an assistant's
 // terms (salary + 10 % commission), a student the assistant brought pays their first package in
 // full → the commission lands in the ledger, the month's statement carries salary and commission
 // per currency (EGP and SAR, never added), and goes draft → approved → paid with a receipt-less pay.
 
 const EMAIL = 'e2e-assistant-admin@e2e.local';
-const NAME = 'مساعدة الاختبار';
+const NAME = 'مسؤولة مبيعات الاختبار';
 const PHONE = `+9665${String(Date.now()).slice(-8)}`;
 
 /** The assistant (a base-role sales profile) with every earlier trace of this spec removed. */
@@ -50,7 +50,7 @@ test.describe('assistants — terms → commission → monthly statement (R-ASST
     const assistantId = await seedAssistant();
     const admin = await asRole('admin');
 
-    // «المساعدون» is in the money section of the nav and lists the assistant without terms.
+    // «فريق المبيعات» is in the money section of the nav and lists the assistant without terms.
     await admin.goto('/admin/assistants');
     const row = admin.getByRole('row').filter({ hasText: NAME });
     await expect(row).toContainText(ar.assistants.notSet);
