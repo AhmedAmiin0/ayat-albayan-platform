@@ -1,7 +1,6 @@
 import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId, useState } from 'react';
-import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Toast } from '@/components/ui/toast';
 import { usePhone } from '@/components/ui/use-narrow';
@@ -13,6 +12,7 @@ import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
 import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
+import { NewThread } from './NewThread';
 import { PhoneChat } from './PhoneChat';
 import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
@@ -59,7 +59,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
 
   if (detail.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
   if (detail.isError) return <FormAlert>{sendErrorText(detail.error)}</FormAlert>;
-  if (!th) return <EmptyState title={t.inbox.noThread} />;
+  if (!th) return <NewThread phone={phone} />;
   const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
   const context = {

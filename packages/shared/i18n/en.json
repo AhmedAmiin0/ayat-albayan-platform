@@ -2271,7 +2271,15 @@
       "name": "By name"
     },
     "statusFilter": "Lead status",
-    "allStatuses": "All statuses"
+    "allStatuses": "All statuses",
+    "newChat": {
+      "title": "New chat",
+      "phone": "Family's WhatsApp number",
+      "placeholder": "+966 5X XXX XXXX",
+      "open": "Open the chat",
+      "hint": "Type the number with its country code, then send a template to start the chat",
+      "firstTemplate": "To start the chat, send an approved template; WhatsApp allows no plain message before the family replies."
+    }
   },
   "mobileFinance": {
     "section": "Payouts and expenses",
@@ -3354,7 +3362,8 @@
       "label": "Sales sections",
       "teachers": "Teachers",
       "allStudents": "All students",
-      "live": "Running lessons"
+      "live": "Running lessons",
+      "academySchedule": "Lesson schedule"
     },
     "subscriptions": {
       "pending": "Pending",
@@ -3404,7 +3413,25 @@
       "gender": "Gender",
       "programs": "Programs",
       "students": "Students",
-      "noStudents": "No students yet"
+      "noStudents": "No students yet",
+      "search": "Search by teacher name",
+      "listLabel": "Teachers list",
+      "studentsCount": "Students: {n}",
+      "lessonsToday": "Lessons today: {n}",
+      "liveNow": "In a lesson now",
+      "noMatch": "No teacher matches the search",
+      "noMatchHint": "Change the search or clear the filters",
+      "clearFilters": "Clear filters",
+      "detailTitle": "{name}'s students",
+      "code": "Code",
+      "program": "Program",
+      "status": "Status",
+      "nextLesson": "Next lesson",
+      "noNextLesson": "No lesson in the next eight days",
+      "openSchedule": "Show the teacher's schedule today",
+      "pick": "Pick a teacher to see their students",
+      "allGenders": "Everyone",
+      "back": "Back to teachers"
     },
     "allStudents": {
       "title": "All students",
@@ -3445,6 +3472,16 @@
       "section": "Sales",
       "guardianLine": "Guardian: {name}",
       "studentsOf": "{name}'s students"
+    },
+    "academySchedule": {
+      "title": "Lesson schedule",
+      "readOnly": "View only: editing, cancelling and booking are done by the admin.",
+      "empty": "No lessons on this day",
+      "emptyTeacher": "No lessons for this teacher on this day",
+      "lessonsCount": "Lessons: {n}",
+      "liveNow": "Running now",
+      "makeupTag": "Makeup",
+      "lessonLabel": "Lesson at {time} with {teacher}"
     }
   },
   "meetings": {
