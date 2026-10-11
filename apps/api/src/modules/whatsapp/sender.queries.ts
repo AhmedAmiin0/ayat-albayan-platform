@@ -1,7 +1,7 @@
 import type { WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { allowedRecipients, loadEnv } from '../../env';
+import { allowedRecipients, lineEnvs, loadEnv } from '../../env';
 import { stampDelivered } from './delivered';
 import { CLAIM_LEASE_MS, SENDING, type FailurePlan } from './send-plan';
 import { AUTO_OFF, AUTOMATIC_KEYS } from './send-stale';
@@ -15,6 +15,8 @@ export type { DueMessage } from './sender.due';
 export class SenderQueries {
   /** WA_ALLOWED_RECIPIENTS, read once (docs/12 §13.5a): rows to other phones are never read. */
   readonly allowed = allowedRecipients(loadEnv());
+  /** Chat client configured, read once: without it chat-stamped texts can never send (review A, C1). */
+  readonly chatConfigured = lineEnvs(loadEnv()).chat !== null;
 
   constructor(@Inject(DB) private readonly db: Db) {}
 
@@ -27,7 +29,8 @@ export class SenderQueries {
   /**
    * Due rows, oldest first: queued outbound, scheduled_for and next_attempt_at reached, and a
    * session text or an approved template. Rows of other templates are not read at all, so a
-   * pile waiting for Meta's approval never starves the rest.
+   * pile waiting for Meta's approval never starves the rest. Nor are chat-stamped texts while the
+   * chat client is not configured (they would fill the batch forever).
    */
   async due(input: { keys: readonly string[]; now: Date; limit: number }): Promise<DueMessage[]> {
     const now = input.now.toISOString();
@@ -40,7 +43,8 @@ export class SenderQueries {
       .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
       .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`)
       .or(`template_key.is.null${approved}`);
-    const scoped = this.allowed ? query.in('phone_e164', [...this.allowed]) : query;
+    const sendable = this.chatConfigured ? query : query.or('template_key.not.is.null,line.is.null,line.neq.chat');
+    const scoped = this.allowed ? sendable.in('phone_e164', [...this.allowed]) : sendable;
     const { data, error } = await scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).limit(input.limit);
     if (error) throw new Error(`outbound queue read failed: ${error.message}`);
     return data;

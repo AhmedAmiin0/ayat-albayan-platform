@@ -76,6 +76,9 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       if (!(await this.gate.automaticOn())) summary.held += await this.queries.holdAutomatic();
       const templates = new Map((await this.queries.approvedTemplates()).map((t) => [t.key, t]));
       // A broken token fails every row of ITS line the same way; the other line keeps sending.
+      // ponytail: a paused line's other rows stay in the batch, so a dead chat token with a backlog of
+      // ~80+ queued chat texts (BATCH 50, one 15-min hold per pass) can still starve notifications
+      // until the token is fixed. Upgrade path: hold the rest of the paused line's rows (docs/12 §13.17).
       const paused = new Set<WaLine>();
       for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
         const line = lineOf(row);

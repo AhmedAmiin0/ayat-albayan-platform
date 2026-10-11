@@ -68,13 +68,17 @@ export const phoneNumberSchema = z.object({
   code_verification_status: optional,
 });
 
-/** GET /{waba_id}/subscribed_apps; override_callback_uri only when a WABA-level override is set. */
+/**
+ * GET /{waba_id}/subscribed_apps; override_callback_uri only when a WABA-level override is set.
+ * Meta puts it NEXT TO whatsapp_business_api_data (review B, F1); the nested one is a fallback.
+ */
 export const subscribedAppsSchema = z.object({
   data: z.array(
     z.object({
       whatsapp_business_api_data: z
         .object({ id: optional, name: optional, link: optional, override_callback_uri: optional })
         .optional(),
+      override_callback_uri: optional,
     }),
   ),
 });

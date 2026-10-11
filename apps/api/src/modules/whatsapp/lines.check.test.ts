@@ -98,6 +98,14 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
     expect(notifications?.errors).toEqual([{ step: 'subscribed_apps', code: null, message: 'Unexpected WhatsApp response' }]);
   });
 
+  it('override_callback_uri: the sibling (Meta) wins; the nested one is read as a fallback', async () => {
+    const app = (uri: string) => ({ id: 'a', name: 'A', override_callback_uri: uri });
+    const body = { data: [{ whatsapp_business_api_data: app('https://nested.test/x'), override_callback_uri: 'https://sibling.test/x' }, { whatsapp_business_api_data: app('https://nested.test/y') }] };
+    const { lines } = checker({ [N]: R.phone, [NW]: { status: 200, body }, [C]: R.chatPhone, [CW]: R.noneSubscribed });
+    const [notifications] = await lines.check();
+    expect(notifications?.subscribed_apps?.map((a) => a.override_callback_uri)).toEqual(['https://sibling.test/x', 'https://nested.test/y']);
+  });
+
   it('runs both lines and both calls concurrently (all four requests before any answer)', async () => {
     const pending: ((r: Response) => void)[] = [];
     const lines = new LinesCheck();

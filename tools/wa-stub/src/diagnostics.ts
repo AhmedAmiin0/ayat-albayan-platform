@@ -32,8 +32,10 @@ function subscribedApps(s: StubState, wabaId: string): Reply {
   const health = s.health.get(line.phoneNumberId);
   if (!health?.subscribed) return [200, { data: [] }];
   const app: Json = { id: line.appId, name: `Stub app ${line.appId}`, link: `https://stub.local/apps/${line.appId}` };
-  if (health.override_callback_uri) app['override_callback_uri'] = health.override_callback_uri;
-  return [200, { data: [{ whatsapp_business_api_data: app }] }];
+  // Meta's shape: the override sits NEXT TO whatsapp_business_api_data (review B, F1).
+  const item: Json = { whatsapp_business_api_data: app };
+  if (health.override_callback_uri) item['override_callback_uri'] = health.override_callback_uri;
+  return [200, { data: [item] }];
 }
 
 const V = String.raw`\/v\d+\.\d+`;

@@ -1,51 +1,7 @@
-import { readdirSync, readFileSync } from 'node:fs';
-import { basename, join, relative } from 'node:path';
+import { readFileSync } from 'node:fs';
+import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
-
-// docs/12 §13.5: only these files may call Meta. Everything else goes through MessageDispatch
-// (send), ReadReceipts (markRead) or InboundMedia (getMedia), so the per-line routing and the
-// WA_ALLOWED_RECIPIENTS guard cannot be bypassed.
-
-const WHITELIST = new Set([
-  'message.dispatch.ts',
-  'read-receipts.ts',
-  'inbound-media.service.ts',
-  'whatsapp.client.ts',
-  'graph.ts',
-  'lines.check.ts',
-  'template.registry.ts',
-]);
-
-const META_CALLS = ['.sendTemplate(', '.sendText(', '.sendDocument(', '.markRead(', '.getMedia(', 'graph.facebook.com', 'graphFetch(', 'graphJson('];
-
-/** What tsconfig.build.json leaves out of the build (tests and test helpers). */
-const NOT_BUILT = [/\.test\.ts$/, /\.fakes\.ts$/, /(^|\/)test-app\.ts$/, /(^|\/)fake-db\.ts$/, /\.test-util\.ts$/];
-
-/** Comments may mention Meta (doc links); a `//` inside `https://…` is not a comment. */
-export function stripComments(source: string): string {
-  return source.replace(/\/\*[\s\S]*?\*\//g, '').replace(/(^|\s)\/\/.*$/gm, '$1');
-}
-
-/** The Meta calls found in the CODE of one file. */
-export function metaCallsIn(source: string): string[] {
-  const code = stripComments(source);
-  return META_CALLS.filter((needle) => code.includes(needle));
-}
-
-/** `file: needle` for every non-whitelisted built source that calls Meta. */
-export function offenders(files: readonly { path: string; source: string }[]): string[] {
-  return files
-    .filter((f) => !WHITELIST.has(basename(f.path)) && !NOT_BUILT.some((re) => re.test(f.path)))
-    .flatMap((f) => metaCallsIn(f.source).map((needle) => `${f.path}: ${needle}`));
-}
-
-function sources(dir: string): string[] {
-  return readdirSync(dir, { withFileTypes: true }).flatMap((e) => {
-    const path = join(dir, e.name);
-    if (e.isDirectory()) return sources(path);
-    return e.name.endsWith('.ts') ? [path] : [];
-  });
-}
+import { metaCallsIn, offenders, sources, stripComments } from './meta-callers.test-util';
 
 /** apps/api/src (not import.meta.url: TS1470 under NodeNext + commonjs; not process.cwd()). */
 const SRC = join(__dirname, '../..');
@@ -66,9 +22,9 @@ describe('Meta callers guard (docs/12 §13.5)', () => {
     const source = [
       '/** Docs: https://graph.facebook.com/v21.0 and client.sendText( in a block. */',
       '// lines.notifications.sendTemplate( is called by MessageDispatch',
-      "const base = 'x'; // see graph.facebook.com",
+      "const base = 'x'; // see graph.facebook.com and WA_API_BASE",
       '/*',
-      ' * graphJson( across lines',
+      ' * graphJson( across lines, @Inject(WHATSAPP_LINES)',
       ' */',
     ].join('\n');
     expect(metaCallsIn(source)).toEqual([]);
@@ -80,7 +36,7 @@ describe('Meta callers guard (docs/12 §13.5)', () => {
     expect(offenders([{ path: 'modules/x/x.service.ts', source }])).toEqual(['modules/x/x.service.ts: graph.facebook.com']);
     const call = 'await this.client.sendText({ to, text });';
     expect(offenders([{ path: 'modules/inbox/thread-send.service.ts', source: call }])).toEqual([
-      'modules/inbox/thread-send.service.ts: .sendText(',
+      'modules/inbox/thread-send.service.ts: client method',
     ]);
   });
 
