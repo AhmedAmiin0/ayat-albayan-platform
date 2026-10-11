@@ -48,7 +48,7 @@ test.describe('sales double role', () => {
 
     // Another salesperson's family: the chat opens and reads (it was 403 before).
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(foreign.phone)}`);
-    await expect(page.getByText(names.says)).toBeVisible();
+    await expect(page.getByRole('log', { name: ar.messages.log }).getByText(names.says)).toBeVisible();
 
     // The landing's block of running lessons leads to /sales/live: my student's lesson, «ادخل الحلقة» open.
     await page.goto('/sales/inbox');
