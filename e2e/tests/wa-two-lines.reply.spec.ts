@@ -9,6 +9,7 @@ import {
   profileIdOf,
   queueTemplate,
   sentVia,
+  SINGLE_LINE,
   stubInboundOn,
   stubReadsByLine,
 } from '../support/wa-lines';
@@ -47,6 +48,7 @@ async function replyAfter(input: { page: Parameters<typeof openThread>[0]; line:
 }
 
 test.describe('two WhatsApp lines — replies and reads (R-MSG-01, R-MSG-02)', () => {
+  test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line is configured');
   test.beforeEach(async () => {
     await stubReset();
     await setMessaging(true);

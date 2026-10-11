@@ -1,5 +1,5 @@
 import { ar, expect, test } from '../support/fixtures';
-import { CHAT_PN, stubLineHealth } from '../support/wa-lines';
+import { CHAT_PN, SINGLE_LINE, stubLineHealth } from '../support/wa-lines';
 import { stubReset } from '../support/wa-stub';
 
 // «افحص الخطوط» end to end (docs/12 §13.9–13.10, R-MSG-05, review C S2): LinesController →
@@ -9,6 +9,7 @@ import { stubReset } from '../support/wa-stub';
 const s = ar.templates.settings.lines;
 
 test.describe('settings — WhatsApp lines check', () => {
+  test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line is configured');
   test.beforeEach(async () => {
     test.skip(test.info().project.name !== 'desktop', 'one run: the card has no phone-specific layout');
     await stubReset();
