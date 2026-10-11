@@ -13,7 +13,7 @@ export type StudentPick = {
   clear: () => void;
 };
 
-/** The students list's row selection for the bulk «تعيين مساعد» (kept while paging). */
+/** The students list's row selection for the bulk «تعيين مسؤول مبيعات» (kept while paging). */
 export function useStudentPick(): StudentPick {
   const enabled = usePermissions().can('assistantpay.write');
   const [picked, setPicked] = useState<ReadonlySet<string>>(new Set());

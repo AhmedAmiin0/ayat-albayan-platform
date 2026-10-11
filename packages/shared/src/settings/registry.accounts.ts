@@ -54,7 +54,7 @@ export const ACADEMY_SETTINGS = {
   },
 } as const satisfies Record<string, SettingDef>;
 
-/** «المساعدون والمبيعات» (migration 187): its own switch. */
+/** «فريق المبيعات» (migration 187): its own switch. */
 export const SALES_SETTINGS = {
   sales_auto_assign: { section: 'sales', type: 'bool', default: true, form: false, labelKey: 'sales.assign.auto', hintKey: 'sales.assign.autoHint' },
 } as const satisfies Record<string, SettingDef>;

@@ -8,7 +8,7 @@ import { openNav } from '../support/nav';
 import { resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { USERS } from '../support/users';
 
-// The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «مساعد/ة»): the pages
+// The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): the pages
 // «تسجيل طالب», «طلابي», «مدفوعاتي» and «أرباحي». The assistant sees the students they brought, only
 // the payments they recorded, and their own commission; no price, no other person's money.
 // Needs the API's /sales/me/* and /sales/booking/* routes (the assistant's API task).

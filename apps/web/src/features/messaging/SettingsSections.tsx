@@ -85,7 +85,7 @@ export function FieldsSection({ id, state }: { id: SettingsSection; state: Setti
   );
 }
 
-/** «المساعدون والمبيعات» and «المظهر». */
+/** «فريق المبيعات» and «المظهر». */
 export function SalesSection({ settings }: { settings: AcademySettings }) {
   const { query } = useSettingsView();
   if (!matchesSetting('sales_auto_assign', query)) return null;
