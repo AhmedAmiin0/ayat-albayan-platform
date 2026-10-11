@@ -38,13 +38,13 @@ test('the thread: who it is, their messages and ours with the status word', asyn
   expect(screen.getAllByText(new RegExp(Object.values(word).join('|')))).toHaveLength(1);
 });
 
-test('a number with no name or messages yet: titled by its phone, empty, template only', async () => {
+test('a number with no name or messages yet: titled by its phone, empty, the first template only', async () => {
   mockApiFetch.mockResolvedValue({ thread: null, messages: [], has_more: false });
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(t.inbox.empty)).toBeTruthy();
   expect(screen.getByRole('header', { name: ltr('+966 55 214 7730') })).toBeTruthy();
   expect(screen.getByText(t.inbox.unknownNumber)).toBeTruthy();
-  expect(screen.getByText(t.inbox.sessionClosed)).toBeTruthy();
+  expect(screen.getByText(t.inbox.newChat.firstTemplate)).toBeTruthy(); // the first message is a template (not «24 h ago»)
 });
 
 test('media: the kind as a link once the file is there; unsupported says so', async () => {
