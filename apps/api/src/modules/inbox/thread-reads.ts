@@ -10,8 +10,9 @@ import type { ThreadListFilter } from './threads.queries';
 import { ThreadsService, type ThreadPageQuery } from './threads.service';
 
 /**
- * H1/H2 for whoever is signed in: the admin's inbox (ThreadsService), or a teacher's own families
- * (TeacherThreadsService). The scope is resolved server-side on every request (rule 9).
+ * H1/H2 for whoever is signed in: the admin's inbox (ThreadsService), a salesperson's (every chat,
+ * redacted: SalesThreadsService) or a teacher's own families (TeacherThreadsService). The scope is
+ * resolved server-side on every request (rule 9).
  */
 @Injectable()
 export class ThreadReads {
@@ -30,21 +31,21 @@ export class ThreadReads {
     return this.scopes.of(user);
   }
 
-  /** A salesperson's scope (their leads' and converted families' phones); null for every other role. */
+  /** A salesperson's scope (every chat, sales redactions); null for every other role. */
   salesScope(user: AuthUser): Promise<SalesScope | null> {
     return this.salesScopes ? this.salesScopes.of(user) : Promise.resolve(null);
   }
 
   async list(f: ThreadListFilter, user: AuthUser): Promise<Page<ThreadView>> {
     const mine = await this.salesScope(user);
-    if (mine) return this.salesService().list(f, mine);
+    if (mine) return this.salesService().list(f);
     const scope = await this.scopes.of(user);
     return scope ? this.teacher.list(f, scope) : this.admin.list(f);
   }
 
   async detail(q: ThreadPageQuery, user: AuthUser): Promise<ThreadDetail> {
     const mine = await this.salesScope(user);
-    if (mine) return this.salesService().detail(q, mine);
+    if (mine) return this.salesService().detail(q);
     const scope = await this.scopes.of(user);
     return scope ? this.teacher.detail(q, scope) : this.admin.detail(q);
   }

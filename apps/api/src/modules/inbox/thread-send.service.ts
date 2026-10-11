@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { lineEnvs, loadEnv } from '../../env';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
-import { assertSalesPhone, type SalesScope } from '../sales/sales-scope';
+import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
 import { missingParams, threadReplyLine, type ThreadRow } from './threads.mapper';
@@ -15,7 +15,7 @@ export interface ThreadSend<T> {
   actorId: string;
   /** Teacher mode: the sending teacher's scope; null/absent = the admin. */
   scope?: TeacherScope | null;
-  /** Sales mode: the sending salesperson's scope (their leads' and families' chats). */
+  /** Sales mode: the sending salesperson (any chat, her own dedup space and audit). */
   sales?: SalesScope | null;
 }
 
@@ -60,8 +60,8 @@ function sendLine(thread: ThreadRow | null, now: Date): { line?: 'chat' | 'notif
 }
 
 /**
- * H3/H4 (docs/12 §4, R-LEAD-02): the admin — or, in teacher mode, a teacher for their own families
- * (owner decision 2026-10-02) — writes from the inbox, from the academy number.
+ * H3/H4 (docs/12 §4, R-LEAD-02): the admin, a salesperson (any chat, docs/16) — or, in teacher mode,
+ * a teacher for their own families (owner decision 2026-10-02) — writes from the inbox.
  */
 @Injectable()
 export class ThreadSendService {
@@ -77,7 +77,6 @@ export class ThreadSendService {
    */
   async text(s: ThreadSend<ThreadText>, now = new Date()): Promise<Sent> {
     if (s.scope) assertCanSend(s.scope, s.phone);
-    if (s.sales) assertSalesPhone(s.sales, s.phone);
     const key = dedupKey(s);
     const thread = await this.queries.thread(s.phone);
     return this.outbox.send({ ...outboundBase(s, thread), dedup_key: key, body: s.input.text, ...sendLine(thread, now) });
@@ -89,7 +88,6 @@ export class ThreadSendService {
    */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
-    if (s.sales) await this.salesMay(s.sales, s);
     const key = dedupKey(s);
     // Its link is signed per lesson and student by «ابعت طلب الرأي» (FeedbackModule); a hand-made button is a dead link.
     if (s.input.key === 'lesson_feedback_request') throw waHttpError('use_feedback_request', 400);
@@ -117,14 +115,6 @@ export class ThreadSendService {
     assertCanSend(scope, s.phone);
     if (!isTeacherTemplate(s.input.key)) throw waHttpError('template_not_allowed', 403);
     if (s.input.lessonId && (await this.queries.lessonTeacher(s.input.lessonId)) !== scope.teacherId) {
-      throw waHttpError('not_your_lesson', 403);
-    }
-  }
-
-  /** A salesperson: their leads' and families' chats only, and only lessons in their scope. */
-  private async salesMay(sales: SalesScope, s: ThreadSend<ThreadTemplate>): Promise<void> {
-    assertSalesPhone(sales, s.phone);
-    if (s.input.lessonId && !(await this.queries.salesOwnsLesson(sales.salesId, s.input.lessonId))) {
       throw waHttpError('not_your_lesson', 403);
     }
   }

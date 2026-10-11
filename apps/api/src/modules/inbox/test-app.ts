@@ -42,7 +42,6 @@ function mocks() {
     queries: {
       ...{ list: vi.fn(), thread: vi.fn(), messages: vi.fn(), markInboundRead: vi.fn(), enqueue: vi.fn(), get: vi.fn() },
       lessonTeacher: vi.fn(),
-      salesOwnsLesson: vi.fn(),
       lessons: vi.fn(async () => []),
       people: vi.fn(async () => NO_PEOPLE),
       familyTags: vi.fn(async () => new Map<string, FamilyTag>()),

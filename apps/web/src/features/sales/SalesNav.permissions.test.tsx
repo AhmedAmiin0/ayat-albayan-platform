@@ -27,6 +27,12 @@ describe('SalesNav / TeacherNav — dynamic roles', () => {
     expect(screen.getByRole('link', { name: t.assistantPortal.nav.register })).toBeTruthy();
   });
 
+  it('the assistant side (all students, teachers, running lessons) follows self.sales_academy', () => {
+    render(<SalesNav can={without('self.sales_academy')} />);
+    for (const label of [t.sales.nav.allStudents, t.sales.nav.teachers, t.sales.nav.live]) expect(screen.queryByRole('link', { name: label })).toBeNull();
+    expect(screen.getByRole('link', { name: t.assistantPortal.nav.students })).toBeTruthy();
+  });
+
   it('keeps the teacher’s own pages and drops only what is not granted', () => {
     render(<TeacherNav can={without('inbox.read')} />);
     expect(screen.queryByRole('link', { name: t.teacherNav.chats })).toBeNull();
