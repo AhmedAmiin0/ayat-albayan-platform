@@ -12,7 +12,7 @@ export async function assistant(tx: Tx, tag: string, terms?: Record<string, stri
   const [u] = await tx<{ id: string }[]>`insert into auth.users (id, email)
     values (gen_random_uuid(), ${`${tag}@e2e.local`}) returning id`;
   if (!u) throw new Error('auth user not written');
-  await tx`insert into public.profiles (id, role, full_name) values (${u.id}, 'sales', ${`مساعد ${tag}`})`;
+  await tx`insert into public.profiles (id, role, full_name) values (${u.id}, 'sales', ${`مسؤول مبيعات ${tag}`})`;
   if (terms) {
     const t = { commission_type: null, commission_value: null, commission_currency: null, commission_starts_on: null,
       salary_amount: null, salary_currency: null, salary_starts_on: null, ...terms };

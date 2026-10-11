@@ -14,7 +14,7 @@ import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { supabase } from '@/lib/supabase';
 
-// apps/api assistant-pay module (owner, 2026-10-06; the «مساعد/ة» is the base role sales). Reads need
+// apps/api assistant-pay module (owner, 2026-10-06; the salesperson, «مسؤول/ة المبيعات», is the base role sales). Reads need
 // assistantpay.read, writes assistantpay.write, approve assistantpay.approve. Amounts are per currency.
 export type { AssistantCommissionView, AssistantStatementView, AssistantTermsView } from '@ab/shared';
 

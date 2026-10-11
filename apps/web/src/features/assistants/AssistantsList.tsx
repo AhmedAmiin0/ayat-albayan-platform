@@ -9,7 +9,7 @@ import { t } from '@/lib/i18n';
 import { assistantsQuery } from './api';
 import { assistantColumns } from './assistant-columns';
 
-/** «المساعدون»: each assistant with their salary and commission terms (R-ASST-05). */
+/** «فريق المبيعات»: each salesperson with their salary and commission terms (R-ASST-05). */
 export function AssistantsList() {
   const list = useQuery(assistantsQuery);
   const columns = useMemo(() => assistantColumns(), []);

@@ -40,10 +40,10 @@ export interface Assistant {
   email: string;
 }
 
-/** A sales login (the «مساعد/ة» base role) with a real session. */
+/** A sales login (the «المبيعات» base role) with a real session. */
 export async function makeAssistant(tag: string): Promise<Assistant> {
   const email = `${tag}-${TAG}@e2e.local`;
-  const id = await seedUser({ email, password: PASSWORD, role: 'sales', fullName: `مساعدة ${tag}` });
+  const id = await seedUser({ email, password: PASSWORD, role: 'sales', fullName: `مسؤولة مبيعات ${tag}` });
   return { id, email, token: await tokenOf(email, PASSWORD) };
 }
 

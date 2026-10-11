@@ -36,7 +36,7 @@ function renderPage() {
   return { onOpen };
 }
 
-describe('students list: bulk «تعيين مساعد» (R-ASST-01)', () => {
+describe('students list: bulk «تعيين مسؤول مبيعات» (R-ASST-01)', () => {
   beforeEach(() => {
     apiFetch.mockReset();
   });
@@ -45,7 +45,7 @@ describe('students list: bulk «تعيين مساعد» (R-ASST-01)', () => {
     held.list = ['assistantpay.write'];
     const { onOpen } = renderPage();
     const tick = await screen.findByRole('checkbox', { name: t.assistants.brought.pick.replace('{name}', 'سهيلة') });
-    expect(screen.queryByRole('button', { name: /تعيين مساعد/ })).toBeNull();
+    expect(screen.queryByRole('button', { name: /تعيين مسؤول مبيعات/ })).toBeNull();
     fireEvent.click(tick);
     fireEvent.click(screen.getByRole('checkbox', { name: t.assistants.brought.pick.replace('{name}', 'جود') }));
     expect(screen.getByRole('button', { name: t.assistants.brought.bulk.replace('{count}', '2') })).toBeTruthy();
