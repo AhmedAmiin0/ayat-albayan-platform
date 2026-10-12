@@ -2,7 +2,9 @@ import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { history, teacher } from './fixtures';
+import { history, scheduleLesson, teacher } from './fixtures';
+import { SalesScheduleScreen } from './SalesScheduleScreen';
+import { SalesTeacherScreen } from './SalesTeacherScreen';
 import { SalesTeachersScreen } from './SalesTeachersScreen';
 import { SubscriptionHistoryScreen } from './SubscriptionHistoryScreen';
 
@@ -18,7 +20,7 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('expo-router', () => ({
   router: { push: jest.fn(), back: jest.fn() },
-  useLocalSearchParams: () => ({ id: 's1' }),
+  useLocalSearchParams: () => ({ id: 't1' }),
 }));
 
 test('an English run reads en.json: the teacher’s English name, gender and programs', async () => {
@@ -36,4 +38,18 @@ test('an English run of the history: title, statuses and the «Current» mark in
   expect(await screen.findByRole('header', { name: en.sales.history.title.replace('{name}', 'يوسف أحمد') })).toBeTruthy();
   expect(screen.getByText(en.sales.history.current)).toBeTruthy();
   expect(screen.getByText(`${en.enums.packageSize['8']} · ${en.enums.subscriptionStatus.expired}`)).toBeTruthy();
+});
+
+test('an English run of a teacher’s students and the read-only schedule', async () => {
+  mockApiFetch.mockImplementation(async (path: string) =>
+    path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: [scheduleLesson({ trial: true })] },
+  );
+  const first = await renderWithQuery(<SalesTeacherScreen />);
+  expect(await screen.findByRole('header', { name: "Abrar Mohamed's students" })).toBeTruthy();
+  expect(screen.getByText(en.enums.studentStatus.trial)).toBeTruthy();
+  expect(screen.getByRole('button', { name: "Show the teacher's schedule today" })).toBeTruthy();
+  await first.unmount();
+  await renderWithQuery(<SalesScheduleScreen />);
+  expect(await screen.findByText(en.sales.academySchedule.readOnly)).toBeTruthy();
+  expect(await screen.findByText(en.schedule.trialTag)).toBeTruthy();
 });

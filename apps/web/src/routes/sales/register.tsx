@@ -1,20 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { parseBookSearch, type BookSearch } from '@/features/booking/api';
-import { SalesRegister } from '@/features/sales/SalesRegister';
+import { createFileRoute, redirect } from '@tanstack/react-router';
+import { registerRedirect } from '@/features/sales/register-redirect';
 
-/** The assistant registers a trial for a new student: only the chat (lead, phone, name) is kept, never a package or a student. */
-const parseRegisterSearch = (s: Record<string, unknown>): BookSearch => {
-  const { leadId, phone, name } = parseBookSearch(s);
-  if (!leadId) return {};
-  return { leadId, ...(phone ? { phone } : {}), ...(name ? { name } : {}) };
-};
-
-/** /sales/register?leadId&phone&name «تسجيل طالب» — a guardian + student + trial, from a chat of mine or typed. */
+/** The old /sales/register page: registering now starts in the chat, so old links land on the inbox (that chat when known). */
 export const Route = createFileRoute('/sales/register')({
-  validateSearch: parseRegisterSearch,
-  component: RegisterRoute,
+  beforeLoad: ({ search }) => {
+    throw redirect(registerRedirect(search));
+  },
 });
-
-function RegisterRoute() {
-  return <SalesRegister search={Route.useSearch()} />;
-}

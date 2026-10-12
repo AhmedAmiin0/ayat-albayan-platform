@@ -1,7 +1,6 @@
 import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useId, useState } from 'react';
-import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Toast } from '@/components/ui/toast';
 import { usePhone } from '@/components/ui/use-narrow';
@@ -13,7 +12,9 @@ import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
 import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
+import { NewThread } from './NewThread';
 import { PhoneChat } from './PhoneChat';
+import { SalesRegisterAction } from './SalesRegisterAction';
 import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
@@ -28,16 +29,15 @@ export interface ThreadPaneProps {
 }
 
 /**
- * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the message log, the reply box and beside it
- * (below it under 1280px) the lead's qualification panel, or the guardian's children and packages.
- * Teacher mode: the log and the reply box only; their own chat with the academy is read-only.
- * Phones (< 640px): a full-screen chat (compact header, log, pinned composer); the panel is a
- * full-screen sheet opened from the header's icon button instead.
+ * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (below it under
+ * 1280px) the lead's panel or the family's packages; sales gets «تسجيل طالب جديد» in the header instead.
+ * Teacher mode: the log and the reply box only; their own chat with the academy is read-only. Phones
+ * (< 640px): a full-screen chat; the panel is a full-screen sheet opened from the header's icon button.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
   const headingId = useId();
-  // The lead panel's toasts live here: «تسجيل الطالب» turns the aside into the family's panel.
+  // The lead panel's toasts live here (after «تسجيل الطالب» the aside becomes the family's panel).
   const [notice, setNotice] = useState<LeadNotice | null>(null);
   const phoneView = usePhone();
   const [sheet, setSheet] = useState(false);
@@ -59,7 +59,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
 
   if (detail.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
   if (detail.isError) return <FormAlert>{sendErrorText(detail.error)}</FormAlert>;
-  if (!th) return <EmptyState title={t.inbox.noThread} />;
+  if (!th) return <NewThread phone={phone} lessons={detail.data.pages[0]?.lessons ?? []} />;
   const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
   const context = {
@@ -78,12 +78,12 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   );
   const sheetLabel = isLead ? t.inbox.leadSheet : t.inbox.subscriptionSheet;
   const sheetOpen = sheet && panel && phoneView;
-  // An open phone sheet covers the pane: its toast shows inside the sheet (it stays open, like the aside).
-  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />;
+  const toast = notice && <Toast {...notice} onDismiss={() => setNotice(null)} />; // inside an open phone sheet
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   const headerProps = { thread: th, listSearch, headingId, badge: people && threadBadge(people) };
+  const register = <SalesRegisterAction thread={th} />;
   const log = (fill: 'shell' | 'xl' | 'phone') => (
     <MessageLog
       messages={messages}
@@ -108,11 +108,13 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         <ThreadHeaderPhone
           {...headerProps}
           action={
-            panel && (
+            panel ? (
               <ThreadSideSheet compact label={sheetLabel} open={sheet} onOpenChange={setSheet}>
                 {side}
                 {sheetOpen && toast}
               </ThreadSideSheet>
+            ) : (
+              register
             )
           }
         />
@@ -125,7 +127,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
 
   return (
     <section aria-labelledby={headingId} className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col">
-      <ThreadHeader {...headerProps} />
+      <ThreadHeader {...headerProps} action={register} />
       <div
         className={cn(
           'grid gap-6 shell:min-h-0 shell:flex-1',

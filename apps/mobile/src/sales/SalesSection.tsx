@@ -12,11 +12,12 @@ const rows = () =>
     { route: 'salesStudents', title: t.sales.nav.allStudents, href: '/more/sales/students' },
     { route: 'salesTeachers', title: t.sales.nav.teachers, href: '/more/sales/teachers' },
     { route: 'salesLive', title: t.sales.nav.live, href: '/more/sales/live' },
+    { route: 'salesSchedule', title: t.sales.nav.academySchedule, href: '/more/sales/schedule' },
   ] as const;
 
 /**
  * «المبيعات» on «المزيد» (docs/16, web SALES_NAV_ITEMS): the salesperson's subscriptions with their
- * history, and the assistant side (all students, teachers, running lessons). Only the rows `can` allows;
+ * history, and the assistant side (all students, teachers, running lessons, the read-only schedule). Only the rows `can` allows;
  * the chats are the «المحادثات» tab. Nothing left → no section.
  */
 export function SalesSection({ can = () => true }: { can?: Can }) {

@@ -1,13 +1,18 @@
 import { createContext, useContext } from 'react';
 
-// Booking mode: the same wizard under /admin/book (admin) and /sales/register (the assistant, base
-// role sales). Admin is the default, so /admin/book needs no provider.
+// Booking mode: the same wizard under /admin/book (admin) and in a sales chat's «تسجيل طالب جديد»
+// dialog (the assistant, base role sales). Admin is the default, so /admin/book needs no provider.
 
 export type BookingMode = 'admin' | 'sales';
 
 export const BookingModeContext = createContext<BookingMode>('admin');
 
 export const useBookingMode = (): BookingMode => useContext(BookingModeContext);
+
+/** Opened inside a chat (the sales dialog): «ارجع للمحادثة» closes it instead of linking to the inbox. */
+export const ChatReturnContext = createContext<(() => void) | null>(null);
+
+export const useChatReturn = (): (() => void) | null => useContext(ChatReturnContext);
 
 /**
  * The booking routes of each mode (the one place to adjust at integration). The sales mirror takes

@@ -5,6 +5,7 @@ import { MessageViews } from '../whatsapp/message.views';
 import { ReadReceipts } from './read-receipts';
 import { forSales, salesLessons, salesPeople, visibleToSales, withoutLinks } from './sales-threads';
 import { toThreadView, type ThreadRow } from './threads.mapper';
+import type { PeopleOf } from './thread-people';
 import { ThreadsQueries, type ThreadListFilter } from './threads.queries';
 import type { ThreadPageQuery } from './threads.service';
 
@@ -36,19 +37,21 @@ export class SalesThreadsService {
     const first = !q.before;
     if (first) await this.receipts.open(q.phone, now);
     const row = await this.queries.thread(q.phone);
-    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.people(row) : NO_ONE]);
+    // A number with no message yet: who it is, so the first template can name the family's lesson.
+    const who = row ?? (first ? await this.queries.known(q.phone) : null);
+    const [rows, people] = await Promise.all([this.queries.messages(q), first ? this.people(who) : NO_ONE]);
     const page = rows.slice(0, q.limit).reverse().filter(visibleToSales);
     const thread = row ? forSales(toThreadView(row, now, null)) : null;
     return {
       thread,
       messages: await Promise.all(page.map(async (m) => withoutLinks(await this.views.view(m)))),
       has_more: rows.length > q.limit,
-      lessons: thread && first ? salesLessons(await this.queries.lessons(thread, now)) : [],
+      lessons: first && who ? salesLessons(await this.queries.lessons(thread ?? who, now)) : [],
       people,
     };
   }
 
-  private async people(row: ThreadRow | null): Promise<ThreadPeople> {
+  private async people(row: PeopleOf | null): Promise<ThreadPeople> {
     return salesPeople(await this.queries.people(row));
   }
 }

@@ -72,6 +72,12 @@ test('a makeup the API refuses says why, wherever the status', () => {
   });
 });
 
+test('a salesperson’s registration the API scopes out says why (not her lead, not her family)', () => {
+  for (const code of ['not_your_lead', 'not_your_family'] as const) {
+    expect(bookFailure(new ApiError(403, { code }))).toEqual({ kind: 'error', text: t.booking.error[code] });
+  }
+});
+
 test('anything else is the generic error', () => {
   const generic = { kind: 'error', text: t.common.error };
   expect(bookFailure(new ApiError(500, null))).toEqual(generic);

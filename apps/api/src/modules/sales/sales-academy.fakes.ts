@@ -9,6 +9,8 @@ import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-aca
 import { SalesAcademyQueries } from './sales-academy.queries';
 import type { HistoryBundle } from './sales-history.queries';
 import { SalesHistoryQueries } from './sales-history.queries';
+import type { SalesScheduleRow } from './sales-schedule.queries';
+import { SalesScheduleQueries } from './sales-schedule.queries';
 import { SalesQueries } from './sales.queries';
 import { A, B, NONE, OWN_A } from './sales.fakes';
 
@@ -32,7 +34,7 @@ export const teacherRow = (): SalesTeacherRow =>
   ({
     id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar', gender: 'female', programs: ['quran'],
     rate_60: 99, phone_e164: '+201001234567', meeting_link: 'https://meet/secret', notes: 'سر',
-    students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', notes: 'سر' }, { id: 's2', code: 'AB-0102', name: 'قديم', status: 'churned' }],
+    students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', notes: 'سر' }, { id: 's2', code: 'AB-0102', name: 'قديم', status: 'churned', program: 'quran' }],
   }) as SalesTeacherRow;
 
 export const studentRow = (): SalesStudentRow =>
@@ -46,6 +48,15 @@ export const liveRow = (): SalesLiveRow =>
     id: 'les-1', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', meeting_link: 'https://meet/secret',
     teacher: { display_name_ar: 'أبرار' }, lesson_students: [{ student: { name: 'ياسمين' } }, { student: null }],
   }) as SalesLiveRow;
+
+export const scheduleRow = (over: Partial<SalesScheduleRow> = {}): SalesScheduleRow =>
+  ({
+    id: 'les-2', starts_at: '2026-10-11T16:00:00.000Z', ends_at: '2026-10-11T16:30:00.000Z', status: 'confirmed', makeup_of_id: null,
+    meeting_link: 'https://meet/secret', cancel_reason: 'سر', rule: { package: 'trial', price: 99 },
+    teacher: { id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar', phone_e164: '+201001234567' },
+    lesson_students: [{ student: { id: 's1', code: 'AB-0101', name: 'ياسمين', notes: 'سر' } }, { student: null }],
+    ...over,
+  }) as SalesScheduleRow;
 
 export const bundle = (): HistoryBundle =>
   ({
@@ -66,16 +77,18 @@ export const bundle = (): HistoryBundle =>
 export async function academyApp() {
   const sales = { ownership: vi.fn(async (id: string) => (id === A ? OWN_A : NONE)), subscriptions: vi.fn(), meetings: vi.fn(), ownsLesson: vi.fn() };
   const academy = { teachers: vi.fn(async () => [teacherRow()]), students: vi.fn(async () => ({ rows: [studentRow()], total: 41 })), live: vi.fn(async () => [liveRow()]) };
+  const schedule = { day: vi.fn(async () => [scheduleRow()]), upcoming: vi.fn(async () => [{ starts_at: '2026-10-12T15:00:00.000Z', lesson_students: [{ student_id: 's1' }] }]) };
   const history = { studentOf: vi.fn(async (id: string) => (id === SUB ? 's1' : null)), history: vi.fn(async () => bundle()) };
   const mod = await Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SalesQueries).useValue(sales)
     .overrideProvider(SalesAcademyQueries).useValue(academy)
     .overrideProvider(SalesHistoryQueries).useValue(history)
+    .overrideProvider(SalesScheduleQueries).useValue(schedule)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
   const get = (url: string, token: keyof typeof USERS) => app.inject({ method: 'GET', url, headers: { authorization: `Bearer ${token}` } });
-  return { app, get, sales, academy, history };
+  return { app, get, sales, academy, history, schedule };
 }

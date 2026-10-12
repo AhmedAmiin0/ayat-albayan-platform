@@ -1,6 +1,8 @@
 import {
+  salesScheduleQuerySchema,
   salesStudentsQuerySchema,
   type AssistantLessonView,
+  type SalesScheduleDay,
   type SalesStudentView,
   type SalesSubscriptionHistory,
   type SalesTeacherView,
@@ -11,17 +13,22 @@ import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow, type Page } from '../teachers/http';
 import { SalesAcademyService } from './sales-academy.service';
+import { SalesScheduleService } from './sales-schedule.service';
 
 /**
  * Sales as the academy's assistant too (docs/16): teachers, every student and the lessons running now
- * (self.sales_academy), and the history of a subscription she made (self.sales, with «الاشتراكات»).
+ * and the academy's day, read-only (self.sales_academy), and the history of a subscription she made
+ * (self.sales, with «الاشتراكات»).
  * Read-only, whitelisted; the room itself is entered through POST /lessons/:id/room/join.
  */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Controller('sales')
 export class SalesAcademyController {
-  constructor(private readonly academy: SalesAcademyService) {}
+  constructor(
+    private readonly academy: SalesAcademyService,
+    private readonly schedule: SalesScheduleService,
+  ) {}
 
   @Get('subscriptions/:id/history')
   @Permissions('self.sales')
@@ -32,7 +39,14 @@ export class SalesAcademyController {
   @Get('teachers')
   @Permissions('self.sales_academy')
   teachers(): Promise<SalesTeacherView[]> {
-    return this.academy.teachers();
+    return this.schedule.teachers();
+  }
+
+  /** `?date=YYYY-MM-DD&teacherId=`: the day's lessons, no meeting link, note or money (400 on a bad date/id). */
+  @Get('schedule')
+  @Permissions('self.sales_academy')
+  day(@Query() query: unknown): Promise<SalesScheduleDay> {
+    return this.schedule.day(parseOrThrow(salesScheduleQuerySchema, query));
   }
 
   @Get('students/all')

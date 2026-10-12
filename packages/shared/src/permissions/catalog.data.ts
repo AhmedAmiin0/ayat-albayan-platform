@@ -68,7 +68,7 @@ export const PERMISSION_ROWS = [
   { key: 'inbox.read', area: 'messaging', grants: TS },
   { key: 'inbox.send', area: 'messaging', grants: TS },
   { key: 'inbox.media', area: 'messaging', grants: [] },
-  { key: 'messages.read', area: 'messaging', grants: T },
+  { key: 'messages.read', area: 'messaging', grants: TS },
   { key: 'messages.manage', area: 'messaging', grants: [] },
   { key: 'templates.manage', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },

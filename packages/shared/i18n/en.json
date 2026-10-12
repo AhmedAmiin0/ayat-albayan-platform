@@ -656,7 +656,9 @@
       "makeup_not_eligible": "This lesson cannot be made up",
       "makeup_exists": "This lesson already has a makeup booking",
       "makeup_student": "The student is not on the missed lesson",
-      "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule"
+      "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule",
+      "not_your_lead": "This lead is not assigned to you, so you cannot register it. Ask the admin to assign it to you.",
+      "not_your_family": "The guardian's number is not one of your leads' numbers; use the chat's number."
     }
   },
   "lessons": {
@@ -1264,17 +1266,12 @@
   "assistantPortal": {
     "title": "Sales",
     "nav": {
-      "register": "Register a student",
       "students": "My students",
       "earnings": "My earnings",
       "payments": "My payments"
     },
     "register": {
-      "title": "Register a student",
-      "intro": "Registration starts from the student's chat: open the chat from the inbox and press «Register the student from this chat», then pick the teacher and the time of the trial lesson. The student is credited to you automatically.",
-      "openInbox": "Open the inbox",
       "newStudent": "Student and guardian details",
-      "fromChat": "Register the student from this chat",
       "openMyStudents": "Open my students"
     },
     "students": {
@@ -2225,6 +2222,7 @@
     "subscriptionSheet": "Children & packages",
     "statusSaved": "Status updated",
     "registerStudent": "Register the student",
+    "registerNew": "Register a new student",
     "editLeadData": "Edit details",
     "editLeadDataTitle": "Edit student details",
     "noLeadData": "No details yet",
@@ -2271,7 +2269,15 @@
       "name": "By name"
     },
     "statusFilter": "Lead status",
-    "allStatuses": "All statuses"
+    "allStatuses": "All statuses",
+    "newChat": {
+      "title": "New chat",
+      "phone": "Family's WhatsApp number",
+      "placeholder": "+966 5X XXX XXXX",
+      "open": "Open the chat",
+      "hint": "Type the number with its country code, then send a template to start the chat",
+      "firstTemplate": "To start the chat, send an approved template; WhatsApp allows no plain message before the family replies."
+    }
   },
   "mobileFinance": {
     "section": "Payouts and expenses",
@@ -3350,11 +3356,12 @@
     "nav": {
       "chats": "Chats",
       "subscriptions": "Subscriptions",
-      "schedule": "My meetings",
+      "meetings": "Meetings",
       "label": "Sales sections",
       "teachers": "Teachers",
       "allStudents": "All students",
-      "live": "Running lessons"
+      "live": "Running lessons",
+      "academySchedule": "Lesson schedule"
     },
     "subscriptions": {
       "pending": "Pending",
@@ -3404,7 +3411,25 @@
       "gender": "Gender",
       "programs": "Programs",
       "students": "Students",
-      "noStudents": "No students yet"
+      "noStudents": "No students yet",
+      "search": "Search by teacher name",
+      "listLabel": "Teachers list",
+      "studentsCount": "Students: {n}",
+      "lessonsToday": "Lessons today: {n}",
+      "liveNow": "In a lesson now",
+      "noMatch": "No teacher matches the search",
+      "noMatchHint": "Change the search or clear the filters",
+      "clearFilters": "Clear filters",
+      "detailTitle": "{name}'s students",
+      "code": "Code",
+      "program": "Program",
+      "status": "Status",
+      "nextLesson": "Next lesson",
+      "noNextLesson": "No lesson in the next eight days",
+      "openSchedule": "Show the teacher's schedule today",
+      "pick": "Pick a teacher to see their students",
+      "allGenders": "Everyone",
+      "back": "Back to teachers"
     },
     "allStudents": {
       "title": "All students",
@@ -3445,6 +3470,16 @@
       "section": "Sales",
       "guardianLine": "Guardian: {name}",
       "studentsOf": "{name}'s students"
+    },
+    "academySchedule": {
+      "title": "Lesson schedule",
+      "readOnly": "View only: editing, cancelling and booking are done by the admin.",
+      "empty": "No lessons on this day",
+      "emptyTeacher": "No lessons for this teacher on this day",
+      "lessonsCount": "Lessons: {n}",
+      "liveNow": "Running now",
+      "makeupTag": "Makeup",
+      "lessonLabel": "Lesson at {time} with {teacher}"
     }
   },
   "meetings": {

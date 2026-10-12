@@ -62,6 +62,13 @@ describe('system roles', () => {
     expect(systemPermissionsOf('sales')).toContain('inbox.read');
     expect(systemPermissionsOf('assistant')).not.toContain('inbox.read');
   });
+
+  it('sales reads the templates and the send gate (start a conversation, 2026-10-12), never manages them', () => {
+    expect(systemPermissionsOf('sales')).toContain('messages.read');
+    expect(systemPermissionsOf('sales')).not.toContain('messages.manage');
+    expect(systemPermissionsOf('sales')).not.toContain('templates.manage');
+    expect(systemPermissionsOf('assistant')).not.toContain('messages.read');
+  });
 });
 
 describe('assistant pay permissions', () => {

@@ -12,7 +12,7 @@ import { invoicesQuery } from './api.invoice';
 import type { BookingKind } from './contract';
 import type { PickedStudent } from './draft';
 import { InvoiceButton } from './InvoiceDialog';
-import { useBookingMode } from './mode';
+import { useBookingMode, useChatReturn } from './mode';
 import { pickedText } from './SlotStep';
 
 export interface BookedPanelProps {
@@ -40,6 +40,7 @@ function firstLesson(result: BookingResult) {
  */
 export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPhone }: BookedPanelProps) {
   const sales = useBookingMode() === 'sales';
+  const backToChat = useChatReturn();
   const [dialog, setDialog] = useState(false);
   const [subscribed, setSubscribed] = useState(false);
   const [paying, setPaying] = useState(false);
@@ -85,7 +86,12 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
             {t.finance.recordFromInvoice}
           </Button>
         )}
-        {chatPhone && (
+        {backToChat && (
+          <Button type="button" variant="ghost" onClick={backToChat}>
+            {t.inbox.subscription.backToChat}
+          </Button>
+        )}
+        {chatPhone && !backToChat && (
           <Link to={sales ? '/sales/inbox' : '/admin/inbox'} search={{ phone: chatPhone, page: 1 }} className={buttonVariants({ variant: 'ghost' })}>
             {t.inbox.subscription.backToChat}
           </Link>

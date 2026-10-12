@@ -7,9 +7,10 @@ import { fillStable } from '../support/fill';
 import { openNav } from '../support/nav';
 import { resetAbrar, setAvailability, withSql } from '../support/schedule';
 import { USERS } from '../support/users';
+import { stubInbound } from '../support/wa-stub';
 
-// The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): the pages
-// «تسجيل طالب», «طلابي», «مدفوعاتي» and «أرباحي». The assistant sees the students they brought, only
+// The assistant's portal (R-ASST-01, 04, 05, 06; base role sales, shown «المبيعات»): «تسجيل طالب جديد»
+// in a chat, and the pages «طلابي», «مدفوعاتي» and «أرباحي». The assistant sees the students they brought, only
 // the payments they recorded, and their own commission; no price, no other person's money.
 // Needs the API's /sales/me/* and /sales/booking/* routes (the assistant's API task).
 
@@ -68,6 +69,7 @@ test.describe('assistant portal', () => {
 
     // Below 900px the section nav sits behind «القائمة»: salesNav opens it (the mobile project is a Pixel 7).
     for (const label of Object.values(ar.assistantPortal.nav)) await expect((await salesNav(page)).getByRole('link', { name: label })).toBeVisible();
+    await expect((await salesNav(page)).getByRole('link', { name: ar.sales.nav.meetings })).toHaveAttribute('href', '/sales/meetings');
 
     await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.students }).click();
     const paid = page.getByRole('row').filter({ hasText: names.paid });
@@ -88,43 +90,48 @@ test.describe('assistant portal', () => {
     await expect(page.getByText(ar.assistantPortal.earnings.statementsEmpty)).toBeVisible();
   });
 
-  test('«تسجيل طالب»: a guardian + student + trial with «أبرار»; the student is credited to me', async ({ browser }) => {
+  test('«تسجيل طالب جديد» from the chat: a guardian + student + trial with «أبرار»; credited to me; back on the chat', async ({ browser }) => {
     const { email, id } = await seedAssistant(2);
     await setAvailability(await resetAbrar(), [[0, '16:00', '18:00']]);
     const name = `ناشئة${stamp}`;
+    const number = phone(2, 1);
+    await leadOf(id, number);
+    expect((await stubInbound({ from: number.slice(1), name: `أم ${name}`, text: 'السلام عليكم' })).status).toBe(200);
     const page = await (await browser.newContext({ locale: 'ar' })).newPage();
     await signIn(page, email);
 
-    // Without a chat the page points to the inbox: the API books a new family only from her own lead.
-    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.register }).click();
-    await expect(page.getByRole('heading', { level: 1, name: ar.assistantPortal.register.title })).toBeVisible();
-    await expect(page.getByRole('link', { name: ar.assistantPortal.register.openInbox })).toBeVisible();
-    const leadId = await leadOf(id, phone(2, 1));
-    await page.goto(`/sales/register?leadId=${leadId}&phone=${encodeURIComponent(phone(2, 1))}&name=${encodeURIComponent(name)}`);
-    await expect(page.getByText(ar.booking.kind.label)).toHaveCount(0);
-    await fillStable(page.getByLabel(ar.leads.studentName), name);
-    await fillStable(page.getByLabel(ar.guardians.phone), phone(2, 1));
-    await fillStable(page.getByLabel(ar.guardians.name), `أم ${name}`);
-    const next = () => page.getByRole('button', { name: ar.booking.next }).click();
+    // The standalone page is gone: its old link lands on the sales inbox, on that chat.
+    await page.goto(`/sales/register?leadId=x&phone=${encodeURIComponent(number)}`);
+    await page.waitForURL(/\/sales\/inbox\?.*phone=/);
+    await page.getByRole('button', { name: ar.inbox.registerNew }).click();
+    const dialog = page.getByRole('dialog', { name: ar.inbox.registerNew });
+    await expect(dialog.getByText(ar.booking.kind.label)).toHaveCount(0);
+    await expect(dialog.getByLabel(ar.guardians.phone)).toHaveValue(number);
+    await fillStable(dialog.getByLabel(ar.leads.studentName), name);
+    await fillStable(dialog.getByLabel(ar.guardians.name), `أم ${name}`);
+    const next = () => dialog.getByRole('button', { name: ar.booking.next }).click();
     await next();
-    await page.getByRole('radio', { name: /أبرار/ }).check();
+    await dialog.getByRole('radio', { name: /أبرار/ }).check();
     await next();
-    await expect(page.getByText(ar.booking.trialFree)).toBeVisible();
-    await expect(page.getByText(/ر\.س|\$/)).toHaveCount(0); // no price anywhere
+    await expect(dialog.getByText(ar.booking.trialFree)).toBeVisible();
+    await expect(dialog.getByText(/ر\.س|\$/)).toHaveCount(0); // no price anywhere
     await next();
-    const step = page.getByRole('region', { name: ar.booking.steps.slot });
+    const step = dialog.getByRole('region', { name: ar.booking.steps.slot });
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
     await step.getByRole('region', { name: new RegExp(`^${ar.enums.weekday['0']} `) }).getByRole('button', { name: /16:00/ }).click();
     await next();
-    await page.getByRole('button', { name: ar.booking.submit }).click();
-    await expect(page.getByRole('heading', { name: ar.booking.booked })).toBeVisible();
+    await dialog.getByRole('button', { name: ar.booking.submit }).click();
+    await expect(dialog.getByRole('heading', { name: ar.booking.booked })).toBeVisible();
+    await dialog.getByRole('button', { name: ar.inbox.subscription.backToChat }).click();
+    await expect(dialog).toHaveCount(0);
+    expect(new URL(page.url()).searchParams.get('phone')).toBe(number);
 
     const rows = await withSql((sql) => sql<{ brought_by: string | null; has_at: boolean }[]>`
       select brought_by, brought_at is not null as has_at from public.students where name = ${name}`);
     expect(rows).toEqual([{ brought_by: id, has_at: true }]);
 
     // «طلابي» lists the new student, first subscription not paid yet.
-    await page.getByRole('link', { name: ar.assistantPortal.register.openMyStudents }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.students }).click();
     await expect(page.getByRole('row').filter({ hasText: name })).toContainText(ar.assistantPortal.students.unpaid);
   });
 });

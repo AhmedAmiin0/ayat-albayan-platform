@@ -22,5 +22,7 @@ export * from './time-zone.js';
 export * from './sales/pick-sales.js';
 export * from './sales/views.js';
 export * from './sales/academy.js';
+export * from './sales/schedule.js';
+export * from './sales/teacher-filter.js';
 export * from './i18n/index.js';
 export * from './users/index.js';

@@ -56,6 +56,7 @@ import { Route as SalesLiveRouteImport } from './routes/sales/live'
 import { Route as SalesMeetingsRouteImport } from './routes/sales/meetings'
 import { Route as SalesPaymentsRouteImport } from './routes/sales/payments'
 import { Route as SalesRegisterRouteImport } from './routes/sales/register'
+import { Route as SalesScheduleRouteImport } from './routes/sales/schedule'
 import { Route as SalesStudentsRouteImport } from './routes/sales/students'
 import { Route as SalesSubscriptionsRouteImport } from './routes/sales/subscriptions'
 import { Route as SalesTeachersRouteImport } from './routes/sales/teachers'
@@ -311,6 +312,11 @@ const SalesRegisterRoute = SalesRegisterRouteImport.update({
   path: '/register',
   getParentRoute: () => SalesRoute,
 } as any)
+const SalesScheduleRoute = SalesScheduleRouteImport.update({
+  id: '/schedule',
+  path: '/schedule',
+  getParentRoute: () => SalesRoute,
+} as any)
 const SalesStudentsRoute = SalesStudentsRouteImport.update({
   id: '/students',
   path: '/students',
@@ -456,6 +462,7 @@ export interface FileRoutesByFullPath {
   '/sales/meetings': typeof SalesMeetingsRoute
   '/sales/payments': typeof SalesPaymentsRoute
   '/sales/register': typeof SalesRegisterRoute
+  '/sales/schedule': typeof SalesScheduleRoute
   '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/sales/teachers': typeof SalesTeachersRoute
@@ -520,6 +527,7 @@ export interface FileRoutesByTo {
   '/sales/meetings': typeof SalesMeetingsRoute
   '/sales/payments': typeof SalesPaymentsRoute
   '/sales/register': typeof SalesRegisterRoute
+  '/sales/schedule': typeof SalesScheduleRoute
   '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/sales/teachers': typeof SalesTeachersRoute
@@ -589,6 +597,7 @@ export interface FileRoutesById {
   '/sales/meetings': typeof SalesMeetingsRoute
   '/sales/payments': typeof SalesPaymentsRoute
   '/sales/register': typeof SalesRegisterRoute
+  '/sales/schedule': typeof SalesScheduleRoute
   '/sales/students': typeof SalesStudentsRoute
   '/sales/subscriptions': typeof SalesSubscriptionsRoute
   '/sales/teachers': typeof SalesTeachersRoute
@@ -659,6 +668,7 @@ export interface FileRouteTypes {
     | '/sales/meetings'
     | '/sales/payments'
     | '/sales/register'
+    | '/sales/schedule'
     | '/sales/students'
     | '/sales/subscriptions'
     | '/sales/teachers'
@@ -723,6 +733,7 @@ export interface FileRouteTypes {
     | '/sales/meetings'
     | '/sales/payments'
     | '/sales/register'
+    | '/sales/schedule'
     | '/sales/students'
     | '/sales/subscriptions'
     | '/sales/teachers'
@@ -791,6 +802,7 @@ export interface FileRouteTypes {
     | '/sales/meetings'
     | '/sales/payments'
     | '/sales/register'
+    | '/sales/schedule'
     | '/sales/students'
     | '/sales/subscriptions'
     | '/sales/teachers'
@@ -1163,6 +1175,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SalesRegisterRouteImport
       parentRoute: typeof SalesRoute
     }
+    '/sales/schedule': {
+      id: '/sales/schedule'
+      path: '/schedule'
+      fullPath: '/sales/schedule'
+      preLoaderRoute: typeof SalesScheduleRouteImport
+      parentRoute: typeof SalesRoute
+    }
     '/sales/students': {
       id: '/sales/students'
       path: '/students'
@@ -1431,6 +1450,7 @@ interface SalesRouteChildren {
   SalesMeetingsRoute: typeof SalesMeetingsRoute
   SalesPaymentsRoute: typeof SalesPaymentsRoute
   SalesRegisterRoute: typeof SalesRegisterRoute
+  SalesScheduleRoute: typeof SalesScheduleRoute
   SalesStudentsRoute: typeof SalesStudentsRoute
   SalesSubscriptionsRoute: typeof SalesSubscriptionsRoute
   SalesTeachersRoute: typeof SalesTeachersRoute
@@ -1445,6 +1465,7 @@ const SalesRouteChildren: SalesRouteChildren = {
   SalesMeetingsRoute: SalesMeetingsRoute,
   SalesPaymentsRoute: SalesPaymentsRoute,
   SalesRegisterRoute: SalesRegisterRoute,
+  SalesScheduleRoute: SalesScheduleRoute,
   SalesStudentsRoute: SalesStudentsRoute,
   SalesSubscriptionsRoute: SalesSubscriptionsRoute,
   SalesTeachersRoute: SalesTeachersRoute,

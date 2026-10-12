@@ -1,50 +1,24 @@
-import type { Page } from '@playwright/test';
-import { family, makeAssistant, message, paymentBy, TAG } from '../support/assistant-api';
-import { one } from '../support/assistant';
+import { family, makeAssistant, message, TAG } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
-import { openNav } from '../support/nav';
-import { withSql } from '../support/schedule';
+import { lastOutbound } from '../support/inbox';
+import { salesNav, seedBooked, seedMine, signInSales } from '../support/sales-portal';
 
 // Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.
 // She reads a chat that is not hers, opens the history of a confirmed subscription she made (with its payment amounts),
-// sees the teachers and every student, and a lesson running now with «ادخل الحلقة».
+// sees the teachers (master-detail) and every student, the academy's day read-only, and a lesson running now
+// with «ادخل الحلقة». Owner report 2026-10-12: she starts a conversation with a template.
 
-const PASSWORD = 'Assistant-e2e-123';
-const salesNav = async (page: Page) => (await openNav(page)).getByRole('navigation', { name: ar.sales.nav.label });
-
-/** My student with a confirmed (active) package paid 333, taught by a fresh teacher, in a lesson running now. */
-async function seedMine(input: { salesId: string; name: string; teacher: string }): Promise<{ phone: string }> {
-  const mine = await family(input.salesId, input.name);
-  await withSql(async (sql) => {
-    const t = one(await sql<{ id: string }[]>`insert into public.teachers (display_name_ar, gender, programs, tz)
-      values (${input.teacher}, 'female', '{quran}', 'Asia/Riyadh') returning id`);
-    await sql`update public.students set teacher_id = ${t.id} where id = ${mine.student}`;
-    const sub = one(await sql<{ id: string }[]>`insert into public.subscriptions
-      (student_id, package, duration, lessons_total, price, currency, price_source, starts_on, status)
-      values (${mine.student}, '8', 30, 8, 333, 'SAR', '{}'::jsonb, current_date, 'active') returning id`);
-    await paymentBy(sub.id, input.salesId, 333);
-    const l = one(await sql<{ id: string }[]>`insert into public.lessons (teacher_id, starts_at, ends_at, status)
-      values (${t.id}, now() - interval '5 minutes', now() + interval '40 minutes', 'confirmed') returning id`);
-    await sql`insert into public.lesson_students (lesson_id, student_id) values (${l.id}, ${mine.student})`;
-  });
-  return { phone: mine.phone };
-}
+const composer = ar.inbox.composer;
 
 test.describe('sales double role', () => {
-  test('a chat that is not hers, a confirmed subscription history, teachers, all students and a running lesson', async ({ browser }) => {
+  test('a chat that is not hers, a confirmed subscription history, teachers, all students, the schedule and a running lesson', async ({ browser }) => {
     const me = await makeAssistant(`dr${test.info().project.name}`);
     const other = await makeAssistant(`do${test.info().project.name}`);
     const names = { mine: `مؤكدة${TAG}`, foreign: `نسرين${TAG}`, teacher: `معلمة${TAG}`, says: `سلام عليكم ${TAG}` };
     const foreign = await family(other.id, names.foreign);
     await message({ phone: foreign.phone, guardian: foreign.guardian, direction: 'inbound', body: names.says });
     await seedMine({ salesId: me.id, name: names.mine, teacher: names.teacher });
-
-    const page = await (await browser.newContext({ locale: 'ar' })).newPage();
-    await page.goto('/login');
-    await page.getByLabel(ar.auth.email).fill(me.email);
-    await page.getByLabel(ar.auth.password).fill(PASSWORD);
-    await page.getByRole('button', { name: ar.auth.submit }).click();
-    await page.waitForURL('**/sales/**');
+    const page = await signInSales(browser, me.email);
 
     // Another salesperson's family: the chat opens and reads (it was 403 before).
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(foreign.phone)}`);
@@ -57,8 +31,23 @@ test.describe('sales double role', () => {
     await expect(lesson).toContainText(names.teacher);
     await expect(lesson.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
 
+    // «المعلمون»: the teacher's row (in a lesson now), then the drawer with the student as a list item.
     await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.teachers }).click();
-    await expect(page.getByRole('row').filter({ hasText: names.teacher })).toContainText(names.mine);
+    await page.getByRole('searchbox', { name: ar.sales.teachers.search }).fill(names.teacher);
+    const row = page.getByRole('list', { name: ar.sales.teachers.listLabel }).getByRole('button', { name: new RegExp(names.teacher) });
+    await expect(row).toContainText(ar.sales.teachers.liveNow);
+    await row.click();
+    const drawer = page.getByRole('dialog', { name: ar.sales.teachers.detailTitle.replace('{name}', names.teacher) });
+    await expect(drawer.getByRole('listitem').filter({ hasText: names.mine })).toContainText(ar.enums.program.quran);
+
+    // «جدول الحلقات» from the drawer: that teacher's day, read-only, the running lesson with «ادخل الحلقة».
+    await drawer.getByRole('link', { name: ar.sales.teachers.openSchedule }).click();
+    await page.waitForURL('**/sales/schedule?teacherId=*');
+    const day = page.getByRole('region', { name: names.teacher });
+    await expect(day).toContainText(names.mine);
+    await expect(day).toContainText(ar.sales.academySchedule.liveNow);
+    await expect(day.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
+    await expect(page.getByRole('region', { name: ar.schedule.dayBoard }).getByRole('button', { disabled: false })).toHaveCount(0);
 
     await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.allStudents }).click();
     await page.getByRole('searchbox', { name: ar.sales.allStudents.search }).fill(names.foreign);
@@ -70,5 +59,39 @@ test.describe('sales double role', () => {
     await expect(history).toContainText(ar.sales.history.current);
     await expect(history).toContainText(ar.enums.paymentKind.payment);
     await expect(history).toContainText(`333 ${ar.pricing.currencies.SAR}`);
+  });
+
+  test('sales starts a conversation with a template', async ({ browser }) => {
+    const me = await makeAssistant(`dc${test.info().project.name}`);
+    const names = { student: `بداية${TAG}`, teacher: `معلمة بداية${TAG}`, reply: `وعليكم السلام ${TAG}` };
+    const booked = await seedBooked({ name: names.student, teacher: names.teacher });
+    const page = await signInSales(browser, me.email);
+
+    // «محادثة جديدة»: the family never wrote; the number opens the first-template pane (the templates load: no 403).
+    await page.goto('/sales/inbox');
+    await page.getByText(ar.inbox.newChat.title, { exact: true }).click();
+    await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);
+    await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
+    await expect(page.getByText(ar.inbox.newChat.firstTemplate)).toBeVisible();
+    await page.getByLabel(composer.chooseTemplate).selectOption({ label: ar.templates.names.booking_confirmation_plain });
+    await page.getByLabel(composer.pickLesson).selectOption({ index: 1 });
+    await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(names.student);
+    await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
+
+    // Queued as hers (sales dedup space); the thread now exists, its window closed: templates only.
+    const log = page.getByRole('log', { name: ar.messages.log });
+    await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names.booking_confirmation_plain));
+    await expect(page.getByText(ar.inbox.sessionClosed)).toBeVisible();
+    const sent = await lastOutbound(booked.phone);
+    expect([sent.template_key, sent.created_by]).toEqual(['booking_confirmation_plain', me.id]);
+    expect(sent.dedup_key).toMatch(new RegExp(`^sales:${me.id}:`));
+
+    // The family replies: inside the 24 h window she writes plain text.
+    await message({ phone: booked.phone, guardian: booked.guardian, direction: 'inbound', body: names.reply });
+    await page.reload();
+    await expect(log.getByText(names.reply)).toBeVisible();
+    await page.getByRole('textbox', { name: composer.messageLabel }).fill(`أهلًا ${TAG}`);
+    await page.getByRole('button', { name: composer.send, exact: true }).click();
+    await expect.poll(async () => (await lastOutbound(booked.phone)).body).toBe(`أهلًا ${TAG}`);
   });
 });

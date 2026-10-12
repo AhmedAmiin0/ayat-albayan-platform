@@ -30,7 +30,7 @@ export function filterLessons(lessons: readonly LessonView[], f: LessonFilter): 
 }
 
 /** «سهيلة وجود» for a group (attached و, as in the WhatsApp text), the name for one student. */
-export function studentNames(lesson: Pick<LessonView, 'students'>): string {
+export function studentNames(lesson: { students: readonly { name: string }[] }): string {
   return joinNames(lesson.students.map((s) => s.name), locale);
 }
 

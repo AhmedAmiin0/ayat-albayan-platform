@@ -9,6 +9,7 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';
 import { useInboxMode } from './mode';
+import { NewChatForm } from './NewChatForm';
 import { parseInboxSearch, type InboxSearch } from './search';
 import { ThreadList } from './ThreadList';
 import { ThreadPane } from './ThreadPane';
@@ -21,6 +22,7 @@ export interface InboxPageProps {
 /**
  * /admin/inbox (R-LEAD-02): every WhatsApp conversation, newest first, beside the open thread.
  * /teacher/inbox (teacher mode): the same page over the teacher's own families only (API-scoped).
+ * Admin and sales also start a chat by number («محادثة جديدة» → NewThread's first template).
  * Under 900px the list and the thread are separate screens (the thread has «رجوع»).
  */
 export function InboxPage({ search, onSearch }: InboxPageProps) {
@@ -55,6 +57,7 @@ export function InboxPage({ search, onSearch }: InboxPageProps) {
           )}
           aria-busy={threads.isPlaceholderData || undefined}
         >
+          {mode !== 'teacher' && <NewChatForm onOpen={(next) => onSearch({ ...search, phone: next })} />}
           {threads.isError && <p role="alert">{t.common.error}</p>}
           {threads.isPending && <ListSkeleton rows={6} />}
           {threads.data && (

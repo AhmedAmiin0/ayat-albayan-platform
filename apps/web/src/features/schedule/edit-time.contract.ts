@@ -10,4 +10,4 @@ export type EditableLesson = LessonView;
 export const timeEditMode = (lesson: LessonView): TimeEditMode | null => lesson.time_edit_mode ?? null;
 
 /** Who changed the time and from what, once it was edited. */
-export const timeEditInfo = (lesson: LessonView): LessonTimeEditView | null => lesson.time_edit ?? null;
+export const timeEditInfo = (lesson: Pick<LessonView, 'time_edit'>): LessonTimeEditView | null => lesson.time_edit ?? null;
