@@ -1,11 +1,18 @@
 import type { TablesInsert } from '@ab/db';
-import { BODY_SLOTS, TEMPLATE_CATEGORIES, TEMPLATE_KEY_PATTERN, type TemplateCategory } from '@ab/shared';
+import {
+  BODY_SLOTS,
+  RESTRICTED_TEMPLATE_DEFAULTS,
+  TEMPLATE_CATEGORIES,
+  TEMPLATE_KEY_PATTERN,
+  type TemplateCategory,
+} from '@ab/shared';
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
 import type { MetaTemplate, TemplateRow } from './whatsapp.types';
 
 // The health check per line, pure part (owner 2026-10-12, docs/12 §3.4): which Meta list a row is
 // checked against, and the chat line's import: an approved template on the chat WABA the registry
-// does not know becomes a row on line 'chat', offered to sales to start a chat (never a teacher_ one).
+// does not know becomes a row on line 'chat', on the restricted allow-list only when it is one of
+// RESTRICTED_TEMPLATE_DEFAULTS (owner 2026-10-12: free_trial_invite, welcome_greeting).
 // Only what the sender and the composers can send is imported; the rest is skipped with a reason.
 
 export type ImportRow = TablesInsert<'message_templates'>;
@@ -96,8 +103,8 @@ export function starterRow(meta: MetaTemplate, now: Date): ImportRow | string {
     meta_id: meta.id,
     last_checked_at: now.toISOString(),
     line: 'chat',
-    // Teacher templates go to teachers only (forAudience): never offered to sales.
-    sales_starter: !meta.name.startsWith('teacher_'),
+    // The allow-list's defaults only; after the import the admin's toggle decides (the sync never flags).
+    sales_starter: (RESTRICTED_TEMPLATE_DEFAULTS as readonly string[]).includes(meta.name),
   };
 }
 

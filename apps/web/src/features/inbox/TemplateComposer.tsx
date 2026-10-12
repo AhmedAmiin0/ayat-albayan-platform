@@ -1,10 +1,11 @@
-import { needsLesson, RATING_TEMPLATE } from '@ab/shared';
+import { needsLesson, RATING_TEMPLATE, sendsAllTemplates } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Select } from '@/components/ui/select';
+import { meQuery } from '@/features/auth/me';
 import { FEEDBACK_TEMPLATE } from '@/features/feedback/types';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
@@ -26,14 +27,17 @@ export interface TemplateComposerProps {
 
 /**
  * Any approved template for this person, from the thread (H4): the only way to write after the
- * 24 h window (a salesperson gets only the admin's starters: the API lists no other). Names are
+ * 24 h window. A restricted role (teacher, sales, any role without templates.send_all) gets only the
+ * admin's allow-list (owner 2026-10-12: the API lists no other), with «المتغير n» fields. Names are
  * prefilled, a lesson time comes from the lesson picked (rule 6), and the preview is what they
  * read. The lesson is sent too, so a «تمام» reply links to it.
  */
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
   const queryClient = useQueryClient();
   const templates = useQuery(templatesQuery);
-  const sales = useInboxMode() === 'sales';
+  const me = useQuery(meQuery).data;
+  // Teacher and sales modes are always restricted; in the admin inbox, a role without the permissions.
+  const restricted = useInboxMode() !== 'admin' || (me ? !sendsAllTemplates(me.permissions) : false);
   const approved = (templates.data ?? [])
     // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي»;
     // the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».
@@ -93,8 +97,8 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
         )}
       </Field>
       {templates.isSuccess && approved.length === 0 && (
-        // Sales list only the starters the admin ticked: none ticked is not «nothing approved».
-        <p className="text-xs text-ink-3">{sales ? t.inbox.composer.noStarters : t.inbox.composer.noApproved}</p>
+        // A restricted role lists only the allow-list: none ticked (or not imported yet) is not «nothing approved».
+        <p className="text-xs text-ink-3">{restricted ? t.inbox.composer.noAllowed : t.inbox.composer.noApproved}</p>
       )}
       {templates.isError && <FormAlert>{t.common.error}</FormAlert>}
       {withLesson && (

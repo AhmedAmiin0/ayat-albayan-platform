@@ -7,7 +7,7 @@ import { templateRow } from './whatsapp.fakes';
 import { WaError, type MetaTemplate, type WhatsappLines } from './whatsapp.types';
 
 // The health check per line (owner 2026-10-12, docs/12 §3.4): each row against its own line's list,
-// the chat line's new templates imported as sales starters, a chat row never submitted.
+// the chat line's new templates imported (only the restricted defaults flagged), a chat row never submitted.
 
 const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() };
 const client = () => ({ configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn() });
@@ -40,13 +40,22 @@ describe('TemplateRegistry — two lines', () => {
     queries.insert.mockImplementation(async (row: object) => ({ ...templateRow(), ...row }));
   });
 
-  it('notifications rows against notifications, chat rows against chat; new chat templates imported as starters', async () => {
+  it('notifications rows against notifications, chat rows against chat; new chat templates imported unflagged', async () => {
     const views = await registry().verifyAll(NOW);
     expect(patched('booking_confirmation')).toEqual([expect.objectContaining({ status: 'approved' })]);
     expect(patched('teacher_lesson_v2')).toEqual([expect.objectContaining({ status: 'paused' })]);
     expect(queries.insert).toHaveBeenCalledTimes(1);
-    expect(queries.insert).toHaveBeenCalledWith(expect.objectContaining({ key: 'academy_welcome', line: 'chat', sales_starter: true, status: 'approved' }));
+    expect(queries.insert).toHaveBeenCalledWith(expect.objectContaining({ key: 'academy_welcome', line: 'chat', sales_starter: false, status: 'approved' }));
     expect(views.map((v) => v.key)).toEqual(['booking_confirmation', 'teacher_lesson_v2', 'academy_welcome']);
+  });
+
+  it('welcome_greeting comes flagged; the sync never writes the flag of a known row (the admin’s toggle wins)', async () => {
+    const flagged = templateRow({ key: 'teacher_lesson_v2', meta_name: 'teacher_lesson_v2', line: 'chat', params: ['var_1'], sales_starter: true });
+    queries.all.mockResolvedValue([templateRow(), flagged]);
+    chat.getTemplates.mockResolvedValue([meta('teacher_lesson_v2'), meta('welcome_greeting')]);
+    await registry().verifyAll(NOW);
+    expect(queries.insert).toHaveBeenCalledWith(expect.objectContaining({ key: 'welcome_greeting', sales_starter: true }));
+    expect(queries.update.mock.calls.every(([, p]) => !('sales_starter' in (p as object)))).toBe(true);
   });
 
   it('an import that was already there (ignored duplicate) is not listed twice', async () => {

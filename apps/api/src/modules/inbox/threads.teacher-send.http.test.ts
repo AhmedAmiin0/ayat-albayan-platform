@@ -11,6 +11,7 @@ const REQ = 'c0000000-0000-4000-8000-000000000002';
 const LESSON = '00000000-0000-4000-8000-0000000000d1';
 const FRESH = new Date(Date.now() - 3_600_000).toISOString();
 const PARAMS = { '1': 'ياسمين', '2': 'الأحد 16:00', button: 'ayat-room' };
+const INVITE = templateRow({ key: 'free_trial_invite', meta_name: 'free_trial_invite', line: 'chat', sales_starter: true });
 const ME = { id: 'tch-1', display_name_ar: 'أبرار', phone_e164: OWN };
 const text = (over: { url?: string; token?: string } = {}) =>
   ({ method: 'POST' as const, url: `${over.url ?? URL}/text`, token: over.token ?? 'teacher', body: { text: 'أهلًا', clientRequestId: REQ } });
@@ -31,7 +32,7 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     t.queries.thread.mockResolvedValue(threadRow({ last_inbound_at: FRESH, guardian_id: 'g1' }));
     t.queries.enqueue.mockImplementation(async (row: object) => messageRow({ ...row, id: 'm9', status: 'queued' }));
     t.queries.get.mockImplementation(async () => ({ ...messageRow({ id: 'm9', status: 'sent', body: 'أهلًا', template_key: null }), sent_by_teacher: { display_name_ar: 'أبرار' } }));
-    t.templates.get.mockResolvedValue(templateRow({ key: 'lesson_reminder' }));
+    t.templates.get.mockResolvedValue(INVITE);
   });
 
   it('H3 in the window: 201, the row names the teacher, its own dedup key space, audited with the name', async () => {
@@ -70,22 +71,34 @@ describe('teacher mode H3/H4: reply from the academy number, attributed (R-MSG-0
     expect(t.queries.enqueue).not.toHaveBeenCalled();
   });
 
-  it('H4 403 template_not_allowed outside the reminder templates', async () => {
-    const res = await t.call(tpl({ key: 'booking_confirmation' }));
-    expect([res.statusCode, res.json().code]).toEqual([403, 'template_not_allowed']);
+  // Owner 2026-10-12: the restricted allow-list replaced the reminder templates (no manual reminders).
+  it('H4 403 template_not_allowed for a lesson reminder or any template outside the allow-list', async () => {
+    for (const key of ['lesson_reminder', 'booking_confirmation']) {
+      t.templates.get.mockResolvedValue(templateRow({ key }));
+      const res = await t.call(tpl({ key }));
+      expect([key, res.statusCode, res.json().code]).toEqual([key, 403, 'template_not_allowed']);
+    }
     expect(t.queries.enqueue).not.toHaveBeenCalled();
+  });
+
+  it('H4 free_trial_invite to my own family goes out attributed; my own chat stays read-only', async () => {
+    const res = await t.call(tpl({ key: 'free_trial_invite' }));
+    expect(res.statusCode).toBe(201);
+    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ template_key: 'free_trial_invite', sent_by_teacher_id: 'tch-1' }));
+    const own = await t.call({ ...tpl({ key: 'free_trial_invite' }), url: `/threads/${encodeURIComponent(OWN)}/template` });
+    expect([own.statusCode, own.json().code]).toEqual([403, 'own_thread_read_only']);
   });
 
   it("H4 403 not_your_lesson for another teacher's lesson; my lesson goes out attributed", async () => {
     t.queries.lessonTeacher.mockResolvedValueOnce('tch-other');
-    const theirs = await t.call(tpl({ key: 'lesson_reminder', lessonId: LESSON }));
+    const theirs = await t.call(tpl({ key: 'free_trial_invite', lessonId: LESSON }));
     expect([theirs.statusCode, theirs.json().code]).toEqual([403, 'not_your_lesson']);
     expect(t.queries.enqueue).not.toHaveBeenCalled();
-    const mine = await t.call(tpl({ key: 'lesson_reminder', lessonId: LESSON }));
+    const mine = await t.call(tpl({ key: 'free_trial_invite', lessonId: LESSON }));
     expect(mine.statusCode).toBe(201);
     expect(t.queries.lessonTeacher).toHaveBeenLastCalledWith(LESSON);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({
-      template_key: 'lesson_reminder', lesson_id: LESSON, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:tch-1:${PHONE}:${REQ}`,
+      template_key: 'free_trial_invite', lesson_id: LESSON, sent_by_teacher_id: 'tch-1', dedup_key: `teacher:tch-1:${PHONE}:${REQ}`,
     }));
   });
 

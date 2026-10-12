@@ -71,6 +71,9 @@ export const PERMISSION_ROWS = [
   { key: 'messages.read', area: 'messaging', grants: TS },
   { key: 'messages.manage', area: 'messaging', grants: [] },
   { key: 'templates.manage', area: 'messaging', grants: [] },
+  // Every template from the inbox (owner 2026-10-12); without it (or templates.manage) only the
+  // restricted allow-list: free_trial_invite and welcome_greeting by default (restricted-templates.ts).
+  { key: 'templates.send_all', area: 'messaging', grants: [] },
   { key: 'payments.read', area: 'finance', grants: [] },
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },

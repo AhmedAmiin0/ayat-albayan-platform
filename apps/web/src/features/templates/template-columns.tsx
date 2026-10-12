@@ -21,7 +21,7 @@ const Label = ({ text }: { text: string }) => <span className="text-ink-3 sm:hid
 
 export interface TemplateColumnsInput {
   onSubmit: (tpl: TemplateView) => void;
-  /** «قالب بدء محادثة للمبيعات» switched for one row (owner 2026-10-12). */
+  /** «متاح للمعلمين والمبيعات» (the restricted allow-list) switched for one row (owner 2026-10-12). */
   onStarter: (tpl: TemplateView, on: boolean) => void;
   /** The key whose starter flag is being saved: its switch waits. */
   saving: string | null;

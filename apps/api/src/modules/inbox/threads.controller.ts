@@ -1,4 +1,4 @@
-import { threadTemplateSchema, threadTextSchema, type MessageView } from '@ab/shared';
+import { sendsAllTemplates, threadTemplateSchema, threadTextSchema, type MessageView } from '@ab/shared';
 import { Body, Controller, Get, HttpCode, Param, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
@@ -63,7 +63,8 @@ export class ThreadsController {
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
     const { scope, sales } = await this.scopes(user);
-    const sent = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope, sales });
+    const restricted = !sendsAllTemplates(user.permissions);
+    const sent = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope, sales, restricted });
     return this.audited({ sent, action: 'thread_template', user, scope, sales });
   }
 
