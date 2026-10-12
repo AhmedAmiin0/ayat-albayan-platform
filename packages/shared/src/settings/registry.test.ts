@@ -35,6 +35,7 @@ describe('settings registry', () => {
       quick_reply_window_hours: 48, reminder_lookahead_hours: 25, follow_up_slots_from_hours: 12,
       follow_up_slots_to_days: 7, feedback_rate_window_min: 10, fx_fresh_hours: 24,
       academy_whatsapp_e164: '+966566101447', academy_timezone: 'Asia/Riyadh', default_meeting_title: 'اجتماع',
+      teachers_always_available: true,
     });
   });
 

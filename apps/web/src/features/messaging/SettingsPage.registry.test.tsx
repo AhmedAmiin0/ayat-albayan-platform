@@ -41,6 +41,7 @@ describe('/admin/settings fields from the registry', () => {
     expect(screen.getByLabelText(s.academyWhatsapp)).toHaveProperty('value', '+201001234567');
     expect(screen.getByLabelText(s.academyTimezone)).toHaveProperty('value', 'Asia/Riyadh');
     expect(screen.getByLabelText(s.makeupWindowDays)).toHaveProperty('value', '60');
+    expect(screen.getByLabelText(s.teachersAlwaysAvailable)).toHaveProperty('checked', true); // owner 2026-10-12
   });
 
   it('saves a changed join window and WhatsApp number in the one PATCH', async () => {

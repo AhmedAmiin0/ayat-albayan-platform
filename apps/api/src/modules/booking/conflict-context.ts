@@ -13,7 +13,7 @@ export type ContextQuery = Range & {
 export type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
 
 /**
- * Loads what findConflicts checks against (R-SCH-04, issue B3): the teacher's weekly grid and
+ * Loads what findConflicts checks against (R-SCH-04, issue B3): the teacher's bookable grid and
  * time-off, and the occupying lessons of the teacher and of the students overlapping `range`
  * (read page by page, never cut at PostgREST's max_rows). Used by the slot grid.
  */
@@ -27,7 +27,7 @@ export class ConflictContext {
   async load(q: ContextQuery): Promise<ConflictContextRows> {
     const range = { from: q.from, to: q.to };
     const [availability, timeOff, teacherLessons, studentLessons] = await Promise.all([
-      this.availability.listSlots(q.teacherId),
+      this.availability.bookableSlots(q.teacherId),
       this.availability.listTimeOff(q.teacherId, range),
       this.availability.listBusyLessons(q.teacherId, range),
       this.busy.studentLessons(q.studentIds, range),

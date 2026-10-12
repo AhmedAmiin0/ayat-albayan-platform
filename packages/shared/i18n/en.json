@@ -2891,7 +2891,8 @@
       "uploadMaxMb": "For receipts and booking invoices, up to 10 MB.",
       "academyWhatsapp": "International format, e.g. +966500000000; shown on public pages for guardians to reach us.",
       "academyTimezone": "Days in payment and invoice ranges, the day view and recurring expenses follow this zone.",
-      "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window."
+      "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
+      "teachersAlwaysAvailable": "When on, any teacher can be booked at any hour of any day, whatever their saved availability. Saved availability is kept and applies again when this is off; clashes with booked lessons and time off still block. Automatic follow-up messages only offer saved availability."
     },
     "theme": "Interface theme",
     "themeHint": "Light, dark or the device setting; saved for this browser.",
@@ -2910,7 +2911,8 @@
     "academyTimezone": "Academy time zone",
     "feedbackRateWindowMin": "Public feedback form rate-limit window (minutes)",
     "invalidPhone": "Enter the number in international format, e.g. +966500000000",
-    "invalidText": "Check this field"
+    "invalidText": "Check this field",
+    "teachersAlwaysAvailable": "All teachers can be booked around the clock, every day"
   },
   "language": {
     "label": "Language",

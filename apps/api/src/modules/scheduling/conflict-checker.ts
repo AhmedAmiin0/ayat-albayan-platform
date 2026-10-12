@@ -39,7 +39,7 @@ export class ConflictChecker {
     const [teacherLessons, studentLessons, availability, timeOff, projected] = await Promise.all([
       this.busy.teacherLessons(teacherId, span),
       this.busy.studentLessons(studentIds, span),
-      this.availability.listSlots(teacherId),
+      this.availability.bookableSlots(teacherId),
       this.availability.listTimeOff(teacherId, span),
       this.projection.busy({ teacherId, studentIds, span, excludeRuleIds: input.excludeRuleIds ?? [] }),
     ]);

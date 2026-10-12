@@ -51,6 +51,8 @@ Mobile preview APK: `cd apps/mobile && npx eas-cli build --platform android --pr
 
 Demo data: `DATABASE_URL=<staging session pooler, aws-1-eu-central-1> node tools/scripts/seed-demo.mjs --allow-remote-staging` (all rows marked DEMO; production is always refused).
 
+Teachers 24/7 (owner 2026-10-12): migration 320 seeds `settings.teachers_always_available = true`, so from that deploy every teacher can be booked at any hour (time off and booked lessons still block). The saved teacher grids are not changed; switch it off on /admin/settings → «الجدول والحلقات» to book inside them again. Lessons generated earlier with an `outside_availability` flag keep it.
+
 ## Report PDFs (Chromium in the API image)
 
 Lesson report PDFs (R-REP-03) are rendered in the API process by `playwright-core` (pinned to `1.63.0`, browser build chromium-1243, the same one the e2e suite installs). `chromium.launch()` takes no executable path: playwright-core finds the browser through `PLAYWRIGHT_BROWSERS_PATH`.

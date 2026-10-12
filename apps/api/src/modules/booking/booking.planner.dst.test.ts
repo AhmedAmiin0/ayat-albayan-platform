@@ -33,7 +33,7 @@ describe('BookingPlanner — clashes that only start after a DST change (R-SCH-0
 
   it("a Riyadh 17:00 lesson leaves a Cairo 17:00–21:00 grid once Cairo falls back", async () => {
     const { planner, availability } = fakePlanner();
-    availability.listSlots.mockResolvedValue([
+    availability.bookableSlots.mockResolvedValue([
       { weekday: 0, start_time: '17:00', end_time: '21:00', tz: 'Africa/Cairo' },
     ]);
     const req = bookingRequest({ startTimeLocal: '17:00', startsOn: '2026-09-01' });
