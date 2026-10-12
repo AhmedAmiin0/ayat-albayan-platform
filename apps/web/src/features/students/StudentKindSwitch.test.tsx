@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { StudentKindSwitch } from './StudentKindSwitch';
 
 const L = t.studentLists;
-const COUNTS = { trial: 4, active: 30, paused: 5, churned: 2 };
+const COUNTS = { trial: 4, active: 30, pending_renewal: 0, paused: 5, churned: 2 };
 
 function show(status: string | undefined, counts?: typeof COUNTS) {
   const onChange = vi.fn();

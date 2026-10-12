@@ -23,7 +23,7 @@ const ROW = {
   package_remaining: 3,
   has_weekly: true,
 };
-const COUNTS = { trial: 3, active: 12, paused: 0, churned: 5 };
+const COUNTS = { trial: 3, active: 12, pending_renewal: 0, paused: 0, churned: 5 };
 const E = t.enums.studentStatus;
 
 function renderPanel() {
@@ -66,7 +66,7 @@ describe('TeacherStudentsPanel (R-TCH-03)', () => {
   });
 
   it('statusSummary skips empty statuses; remainingLabel says «بدون باقة» without one', () => {
-    expect(statusSummary({ trial: 0, active: 2, paused: 1, churned: 0 })).toBe(`2 ${E.active} · 1 ${E.paused}`);
+    expect(statusSummary({ trial: 0, active: 2, pending_renewal: 0, paused: 1, churned: 0 })).toBe(`2 ${E.active} · 1 ${E.paused}`);
     expect(remainingLabel(null)).toBe(t.students.noPackage);
     expect(remainingLabel(0)).toBe(t.students.remainingN.replace('{n}', '0'));
   });
