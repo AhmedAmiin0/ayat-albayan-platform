@@ -2193,6 +2193,7 @@ export type Database = {
           id: string;
           kind: Database['public']['Enums']['push_kind'];
           profile_id: string;
+          read_at: string | null;
           sent_at: string | null;
           ticket_ids: string[];
           title: string;
@@ -2206,6 +2207,7 @@ export type Database = {
           id?: string;
           kind: Database['public']['Enums']['push_kind'];
           profile_id: string;
+          read_at?: string | null;
           sent_at?: string | null;
           ticket_ids?: string[];
           title: string;
@@ -2219,6 +2221,7 @@ export type Database = {
           id?: string;
           kind?: Database['public']['Enums']['push_kind'];
           profile_id?: string;
+          read_at?: string | null;
           sent_at?: string | null;
           ticket_ids?: string[];
           title?: string;
@@ -3279,6 +3282,41 @@ export type Database = {
         };
         Relationships: [];
       };
+      web_push_subscriptions: {
+        Row: {
+          auth: string;
+          created_at: string;
+          endpoint: string;
+          id: string;
+          p256dh: string;
+          profile_id: string;
+        };
+        Insert: {
+          auth: string;
+          created_at?: string;
+          endpoint: string;
+          id?: string;
+          p256dh: string;
+          profile_id: string;
+        };
+        Update: {
+          auth?: string;
+          created_at?: string;
+          endpoint?: string;
+          id?: string;
+          p256dh?: string;
+          profile_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'web_push_subscriptions_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
     };
     Views: {
       v_activity_log: {
@@ -3829,7 +3867,9 @@ export type Database = {
         | 'lesson_needs_confirmation'
         | 'report_submitted'
         | 'reminder_failed'
-        | 'payment_due';
+        | 'payment_due'
+        | 'new_student'
+        | 'meeting_invite';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
       student_status: 'trial' | 'active' | 'paused' | 'churned';
@@ -4006,6 +4046,8 @@ export const Constants = {
         'report_submitted',
         'reminder_failed',
         'payment_due',
+        'new_student',
+        'meeting_invite',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],

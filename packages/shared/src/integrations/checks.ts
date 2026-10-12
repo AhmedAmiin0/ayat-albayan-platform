@@ -14,6 +14,10 @@ const recipients = z
   .string()
   .max(INTEGRATION_VALUE_MAX)
   .refine((raw) => parseAllowedRecipients(raw).bad === null, 'not_e164');
+/** RFC 8292: the application server's P-256 public key, uncompressed (65 bytes), base64url. */
+export const vapidPublicKey = z.string().regex(/^[A-Za-z0-9_-]{87}$/);
+/** RFC 8292 `sub`: a mailto: address or an https: URL the push service may contact. */
+export const vapidSubject = z.string().max(200).regex(/^(mailto:[^\s@]+@[^\s@]+|https:\/\/[^\s]+)$/);
 
 export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = {
   WA_API_BASE: url,
@@ -28,6 +32,8 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WA_TEMPLATE_SYNC: z.stringbool(),
   LIVEKIT_URL: url,
   EXPO_API_BASE: url,
+  WEB_PUSH_VAPID_PUBLIC_KEY: vapidPublicKey,
+  WEB_PUSH_SUBJECT: vapidSubject,
   FX_API_URL: url,
 };
 

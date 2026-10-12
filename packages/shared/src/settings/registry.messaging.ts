@@ -13,6 +13,16 @@ export const MESSAGING_SETTINGS = {
     labelKey: `${tpl}.reminderMinutesBefore`, hintKey: 'settings.hints.reminderMinutesBefore',
   },
   reminder_24h_enabled: { section: 'messaging', type: 'bool', default: false, labelKey: `${tpl}.reminder24hEnabled`, hintKey: `${tpl}.reminder24hHint` },
+  /** R-NOT-03 (migration 382): WhatsApp teacher_new_student on a booking (once Meta approved it); the bell alert is always on. */
+  teacher_whatsapp_new_student: {
+    section: 'messaging', type: 'bool', default: true,
+    labelKey: `${tpl}.teacherWhatsappNewStudent`, hintKey: `${tpl}.teacherWhatsappNewStudentHint`,
+  },
+  /** R-NOT-03: the teacher's same-day teacher_lesson_reminder* (guardians' reminders are unchanged). */
+  teacher_whatsapp_lesson_reminder: {
+    section: 'messaging', type: 'bool', default: true,
+    labelKey: `${tpl}.teacherWhatsappLessonReminder`, hintKey: `${tpl}.teacherWhatsappLessonReminderHint`,
+  },
   follow_up_hours: {
     section: 'messaging', type: 'int_list', default: [24, 72], min: 1, max: 720, maxItems: 5,
     labelKey: `${tpl}.followUpHours`, hintKey: `${tpl}.followUpHoursHint`,

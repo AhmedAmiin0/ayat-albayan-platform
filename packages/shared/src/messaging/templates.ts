@@ -20,6 +20,7 @@ export const TEMPLATE_KEYS = [
   'lesson_feedback_request',
   'lesson_join_link',
   'lesson_rating',
+  'teacher_new_student',
 ] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
 
@@ -93,6 +94,7 @@ const LESSON_TIMED: ReadonlySet<string> = new Set<TemplateKey>([
   'teacher_lesson_reminder_meet',
   'lesson_reminder_24h',
   'lesson_join_link',
+  'teacher_new_student',
 ]);
 
 /** A template about an upcoming lesson: a booking confirmation or a reminder. */

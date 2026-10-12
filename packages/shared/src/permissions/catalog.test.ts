@@ -75,6 +75,11 @@ describe('system roles', () => {
     expect(systemPermissionsOf('admin')).toContain('templates.send_all');
     for (const role of ['teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).not.toContain('templates.send_all');
   });
+
+  it('notifications.push (the bell in every staff portal, 2026-10-12) is held by every staff system role', () => {
+    for (const role of ['admin', 'teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).toContain('notifications.push');
+    for (const role of ['guardian', 'student'] as const) expect(systemPermissionsOf(role)).not.toContain('notifications.push');
+  });
 });
 
 describe('assistant pay permissions', () => {
