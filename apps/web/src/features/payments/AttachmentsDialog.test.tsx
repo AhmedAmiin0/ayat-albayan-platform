@@ -26,8 +26,8 @@ describe('«عرض المرفقات»', () => {
   beforeEach(() => apiFetch.mockReset());
 
   it('admin list: a bank payment opens its attachments, the legacy receipt first, then numbered links', async () => {
-    apiFetch.mockImplementation(async (path: string) => {
-      if (path.endsWith('/attachments')) return [row('receipt', true), row('a1'), row('a2')];
+    apiFetch.mockImplementation(async (path: unknown) => {
+      if (String(path).endsWith('/attachments')) return [row('receipt', true), row('a1'), row('a2')];
       return { items: [PAYMENT], total: 1, page: 1, pageSize: 20, totals: [] };
     });
     wrap(<Harness />);
