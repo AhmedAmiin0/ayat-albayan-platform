@@ -19,13 +19,14 @@ beforeEach(() => {
   mockId = 't1';
 });
 
-test('the teacher’s students: name, code, program, status (trial), next lesson in Riyadh time', async () => {
+test('the teacher’s students: name, code, program, status, next lesson in Riyadh time', async () => {
   mockApiFetch.mockResolvedValue([teacher({ live_now: true })]);
   await renderWithQuery(<SalesTeacherScreen />);
   expect(await screen.findByRole('header', { name: t.sales.teachers.detailTitle.replace('{name}', 'أبرار محمد') })).toBeTruthy();
   expect(screen.getByText(ltr('AB-0183'))).toBeTruthy();
-  expect(screen.getByText(t.enums.studentStatus.trial)).toBeTruthy();
   expect(screen.getByText(`${t.sales.teachers.nextLesson}: الاثنين 12 أكتوبر 18:00`)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('tab', { name: `${t.studentLists.trial} 1` }));
+  expect(screen.getByText(t.enums.studentStatus.trial)).toBeTruthy();
   expect(screen.getByText(t.sales.teachers.noNextLesson)).toBeTruthy();
   expect(screen.getByText(t.sales.teachers.liveNow)).toBeTruthy();
   expect(screen.queryByText(/\+966|http/)).toBeNull();

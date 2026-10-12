@@ -4,18 +4,24 @@ import { DB, type Db } from '../../common/db/db.module';
 import { applySort } from '../../common/list-sort';
 import { readAll } from '../scheduling/read-all';
 import { dbError, type Page } from './http';
-import { applyTeacherFilters, TEACHER_SORT, type TeacherListQuery } from './teachers.list';
+import type { TeacherStudentCounts } from '@ab/shared';
+import { applyTeacherFilters, TEACHER_SORT, tallyKinds, type TeacherListQuery } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';
 
 export type Teacher = Tables<'teachers'>;
+/** A row of GET /teachers: the teacher and her «مشترك / تجريبي» counts (R-TCH-03, owner 2026-10-12). */
+export type TeacherListRow = Teacher & TeacherStudentCounts;
 
 /** All supabase access for `teachers` (service role — callers enforce roles). R-TCH-01. */
 @Injectable()
 export class TeachersQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Search, column filters, allowlisted sort (default: Arabic name), `id` as the last tiebreaker. */
-  async list(q: TeacherListQuery): Promise<Page<Teacher>> {
+  /**
+   * Search, column filters, allowlisted sort (default: Arabic name), `id` as the last tiebreaker; each
+   * row with its active / trial student counts.
+   */
+  async list(q: TeacherListQuery): Promise<Page<TeacherListRow>> {
     const { page, pageSize, search } = q;
     const from = (page - 1) * pageSize;
     let query = applyTeacherFilters(this.db.from('teachers').select('*', { count: 'exact' }), q);
@@ -25,7 +31,25 @@ export class TeachersQueries {
       .order('id')
       .range(from, from + pageSize - 1);
     if (error) throw dbError(error);
-    return { items: data, total: count ?? 0, page, pageSize };
+    const counts = await this.studentCounts(data.map((row) => row.id));
+    const none: TeacherStudentCounts = { active_count: 0, trial_count: 0 };
+    const items = data.map((row) => ({ ...row, ...(counts.get(row.id) ?? none) }));
+    return { items, total: count ?? 0, page, pageSize };
+  }
+
+  /** Active and trial students per teacher of one page (≤ 100 ids: one `.in()`), past max_rows. */
+  async studentCounts(teacherIds: readonly string[]): Promise<Map<string, TeacherStudentCounts>> {
+    if (teacherIds.length === 0) return new Map();
+    const rows = await readAll((from, to) =>
+      this.db
+        .from('students')
+        .select('teacher_id, status')
+        .in('teacher_id', [...teacherIds])
+        .in('status', ['trial', 'active'])
+        .order('id')
+        .range(from, to),
+    );
+    return tallyKinds(rows);
   }
 
   async get(id: string): Promise<Teacher | null> {

@@ -21,7 +21,7 @@ test('More → teachers → teacher → «جدول المعلم»: this week’s
   const { backend } = calendarBackend();
   const app = await renderApp({ url: '/more', backend });
   await press(t.nav.teachers);
-  await press(/أبرار/);
+  await press(/^أبرار/);
   expect(app.pathname()).toBe('/more/teachers/t1');
   await press(t.calendar.teacherCalendar);
   expect(app.pathname()).toBe('/more/teachers/calendar/t1');

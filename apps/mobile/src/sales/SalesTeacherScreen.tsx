@@ -1,8 +1,10 @@
-import { studentStatusStyle } from '@ab/shared';
+import { splitByStatus, studentStatusStyle, type StudentListKind } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
+import { useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { KIND_EMPTY } from '@/students/student-kinds';
 import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
@@ -12,18 +14,19 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { StatusChip } from '@/ui/StatusChip';
 import { useSalesTeachers } from './sales-api';
-import { useSalesHrefs } from './sales-href';
-import { nextLessonLine, teacherCounts, teacherLabel, teacherSubtitle } from './sales-text';
+import { SalesTeacherHeader } from './SalesTeacherHeader';
+import { nextLessonLine, teacherLabel, teacherSubtitle } from './sales-text';
 
 /**
  * One teacher's students (the detail of «المعلمون», web drawer parity): name, code, program, status
- * (trial included) and the next lesson in Riyadh time, plus their day in the read-only schedule.
+ * and the next lesson in Riyadh time, switched «مشترك · تجريبي · الكل» (default «مشترك»), plus their
+ * day in the read-only schedule and the teacher's fixed meeting link.
  */
 export function SalesTeacherScreen() {
   const { color } = useTheme();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const list = useSalesTeachers();
-  const href = useSalesHrefs();
+  const [kind, setKind] = useState<StudentListKind>('active');
   const teacher = list.data?.find((tc) => tc.id === id);
   const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
   if (!teacher) {
@@ -44,20 +47,11 @@ export function SalesTeacherScreen() {
   return (
     <Screen>
       <ScreenHeader title={t.sales.teachers.detailTitle.replace('{name}', name)} subtitle={teacherSubtitle(teacher)} trailing={back} />
-      <View style={{ gap: 8, paddingBottom: 8, alignItems: 'flex-start' }}>
-        <Note>{teacherCounts(teacher)}</Note>
-        {teacher.live_now ? <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.teachers.liveNow} /> : null}
-        <Button
-          variant="secondary"
-          label={t.sales.teachers.openSchedule}
-          onPress={() => router.push(href.schedule(teacher.id))}
-        />
-        <Note>{t.schedule.riyadhTime}</Note>
-      </View>
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         accessibilityLabel={t.sales.mobile.studentsOf.replace('{name}', name)}
-        data={teacher.students}
+        data={splitByStatus(teacher.students, kind)}
+        ListHeaderComponent={<SalesTeacherHeader teacher={teacher} kind={kind} onKind={setKind} />}
         keyExtractor={(s) => s.id}
         renderItem={({ item }) => (
           <ListRow
@@ -68,7 +62,11 @@ export function SalesTeacherScreen() {
             trailing={<StatusChip {...studentStatusStyle[item.status]} size="sm" label={t.enums.studentStatus[item.status]} />}
           />
         )}
-        ListEmptyComponent={<EmptyState title={t.sales.teachers.noStudents} />}
+        ListEmptyComponent={
+          <View style={{ paddingHorizontal: 16 }}>
+            <EmptyState title={teacher.students.length === 0 ? t.sales.teachers.noStudents : KIND_EMPTY[kind]} />
+          </View>
+        }
       />
     </Screen>
   );

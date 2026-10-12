@@ -40,6 +40,8 @@ test.describe('sales double role', () => {
     await expect(row).toContainText(ar.sales.teachers.liveNow);
     await row.click();
     const drawer = page.getByRole('dialog', { name: ar.sales.teachers.detailTitle.replace('{name}', names.teacher) });
+    // «مشترك» is the default segment (owner 2026-10-12); «الكل» shows the student whatever her status.
+    await drawer.getByRole('group', { name: ar.studentLists.kinds }).getByRole('button', { name: new RegExp(`^${ar.studentLists.all}`) }).click();
     await expect(drawer.getByRole('listitem').filter({ hasText: names.mine })).toContainText(ar.enums.program.quran);
 
     // «جدول الحلقات» from the drawer: that teacher's day, read-only, the running lesson with «ادخل الحلقة».

@@ -69,6 +69,12 @@ describe('TeachersController (R-TCH-01)', () => {
     expect(res.json()).toEqual({ items: [], total: 0, page: 1, pageSize: 25 });
   });
 
+  it('lists each teacher with her «مشترك / تجريبي» counts (R-TCH-03)', async () => {
+    teachers.list.mockResolvedValue({ items: [{ id: ID, display_name_ar: 'أ. سارة', active_count: 12, trial_count: 3 }], total: 1, page: 1, pageSize: 25 });
+    const res = await call('GET', '/teachers');
+    expect(res.json().items[0]).toMatchObject({ id: ID, active_count: 12, trial_count: 3 });
+  });
+
   it('passes ?search through, trimmed', async () => {
     teachers.list.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 25 });
     expect((await call('GET', `/teachers?search=${encodeURIComponent(' ٠١٠ ')}`)).statusCode).toBe(200);

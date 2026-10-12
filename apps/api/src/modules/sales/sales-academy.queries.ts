@@ -7,8 +7,11 @@ import { dbError } from '../teachers/http';
 
 type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'program'>;
 
-/** Whitelisted teacher columns: never rates, phone, meeting link, calendar or load. */
-export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs'> & {
+/**
+ * Whitelisted teacher columns: never rates, phone, calendar or load. The fixed meeting link is the one
+ * exception (owner 2026-10-12, docs/16 rows 3 and 10): «رابط الحلقة الثابت» in «المعلمون» only.
+ */
+export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs' | 'meeting_link'> & {
   students: Student[];
 };
 
@@ -37,7 +40,7 @@ export class SalesAcademyQueries {
   async teachers(): Promise<SalesTeacherRow[]> {
     const { data, error } = await this.db
       .from('teachers')
-      .select('id, display_name_ar, display_name_en, gender, programs, students(id, code, name, status, program)')
+      .select('id, display_name_ar, display_name_en, gender, programs, meeting_link, students(id, code, name, status, program)')
       .eq('status', 'active')
       .order('display_name_ar');
     if (error) throw dbError(error);
