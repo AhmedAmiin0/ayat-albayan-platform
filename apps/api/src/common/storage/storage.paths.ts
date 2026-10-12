@@ -13,6 +13,8 @@ export const BUCKETS = {
   waMedia: 'wa-media',
   /** Lesson recordings, written by the LiveKit egress through the S3 endpoint (migration 189). */
   recordings: 'recordings',
+  /** Profile photos (migration 20261012000350, R-ACC-05). */
+  avatars: 'avatars',
 } as const;
 export type Bucket = (typeof BUCKETS)[keyof typeof BUCKETS];
 
@@ -56,6 +58,11 @@ export function receiptPath(input: { subscriptionId: string; mime: string }): st
 /** receipts/{teacher_id}/{uuid}.{ext}: a payment to a teacher (per-session earnings). */
 export function teacherReceiptPath(input: { teacherId: string; mime: string }): string {
   return `${input.teacherId}/${randomUUID()}.${extFor(input.mime)}`;
+}
+
+/** avatars/{user_id}/avatar-{ms}.{ext}: a new object per photo, so a cached signed URL never shows a stale one. */
+export function avatarPath(input: { userId: string; mime: string; now?: number }): string {
+  return `${input.userId}/avatar-${input.now ?? Date.now()}.${extFor(input.mime)}`;
 }
 
 /** invoices/{client_request_id}/{name}: the booking's own folder, so a path proves whose it is. */

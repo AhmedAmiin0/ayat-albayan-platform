@@ -118,6 +118,9 @@ Coverage: FULL = UI + DB asserted end to end; PART = some steps only; NONE = uni
   - renewal_due sent: PART → B5
   - quick replies «نعم» confirm / «وقف الرسايل» stop / reschedule (R-SCH-03, R-MSG-04): unit only → B5
 
+### Account (every role)
+- AC1 «حسابي»: profile view, name, phone, email, password, photo; no self role change · R-ACC-01..05 · FULL (account.spec, account.credentials.spec, account.api.spec, avatars.sql.spec).
+
 ### System
 - S1 Webhook verify + signature · API http FULL.
 - S2 Reminders job + teacher reminder + lesson_needs_confirmation push · R-MSG-02 · NONE → A3 (needs A0).
