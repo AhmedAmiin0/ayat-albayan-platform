@@ -1,4 +1,12 @@
-import { searchDigits, type ListSort, type Program, type TEACHER_SORT_KEYS, type TeacherStatus } from '@ab/shared';
+import {
+  searchDigits,
+  type ListSort,
+  type Program,
+  type StudentStatus,
+  type TEACHER_SORT_KEYS,
+  type TeacherStatus,
+  type TeacherStudentCounts,
+} from '@ab/shared';
 import { ilikeContains, type SortSpec } from '../../common/list-sort';
 import type { PageQuery } from './http';
 
@@ -40,4 +48,17 @@ export function applyTeacherFilters<Q extends TeacherFilterable<Q>>(query: Q, f:
   if (f.programs) q = q.contains('programs', [f.programs]);
   if (f.status) q = q.eq('status', f.status);
   return q;
+}
+
+/** Students' (teacher_id, status) rows → «مشترك / تجريبي» counts by teacher id; other statuses ignored. */
+export function tallyKinds(rows: readonly { teacher_id: string | null; status: StudentStatus }[]): Map<string, TeacherStudentCounts> {
+  const out = new Map<string, TeacherStudentCounts>();
+  for (const { teacher_id: id, status } of rows) {
+    if (!id || (status !== 'active' && status !== 'trial')) continue;
+    const c = out.get(id) ?? { active_count: 0, trial_count: 0 };
+    if (status === 'active') c.active_count += 1;
+    else c.trial_count += 1;
+    out.set(id, c);
+  }
+  return out;
 }

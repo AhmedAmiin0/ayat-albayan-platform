@@ -33,7 +33,7 @@ const verify: TokenVerifier = async (token) => {
 export const teacherRow = (): SalesTeacherRow =>
   ({
     id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar', gender: 'female', programs: ['quran'],
-    rate_60: 99, phone_e164: '+201001234567', meeting_link: 'https://meet/secret', notes: 'سر',
+    rate_60: 99, phone_e164: '+201001234567', meeting_link: 'https://meet.example.org/abrar', notes: 'سر',
     students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', notes: 'سر' }, { id: 's2', code: 'AB-0102', name: 'قديم', status: 'churned', program: 'quran' }],
   }) as SalesTeacherRow;
 
