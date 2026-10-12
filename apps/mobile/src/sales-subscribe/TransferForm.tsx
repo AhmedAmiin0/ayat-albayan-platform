@@ -8,7 +8,6 @@ import { PaidDayPicker } from '@/payments/PaidDayPicker';
 import { useNow } from '@/today/use-day-lessons';
 import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
-import { CurrencyPills } from './CurrencyPills';
 import { SalesReceiptField } from './SalesReceiptField';
 import { salesErrorText } from './sales-errors';
 import { checkTransfer, draftFor, type TransferDraft } from './transfer-form';
@@ -21,8 +20,8 @@ export interface TransferFormProps {
 }
 
 /**
- * The bank transfer for one package: receipt (required), amount (the due, prefilled), currency,
- * day, note. Errors show once a save was tried; a refused save keeps everything entered.
+ * The bank transfer for one package: receipt (required), amount (the due, prefilled) in the
+ * package currency (shown, never asked), day, note. Errors show once a save was tried; a refused save keeps everything entered.
  */
 export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
   const now = useNow();
@@ -49,10 +48,9 @@ export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
       <AmountField
         value={draft.amountText}
         onChange={(amountText) => set({ amountText })}
-        currency={draft.currency}
+        currency={sub.currency}
         error={errors.amount}
       />
-      <CurrencyPills packageCurrency={sub.currency} value={draft.currency} onChange={(currency) => set({ currency })} />
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
       <Field label={m.note} value={draft.note} onChangeText={(note) => set({ note })} maxLength={500} multiline />
       {pay.isError ? <ErrorLine message={salesErrorText(pay.error)} /> : null}

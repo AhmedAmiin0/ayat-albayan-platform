@@ -39,6 +39,8 @@ const DISCOUNT_PILLS = DISCOUNTS.map((d) => {
 export interface PricingInputsProps {
   form: SubscribeForm;
   onChange: (patch: Partial<SubscribeForm>) => void;
+  /** false (sales): only the site's pills 0/5/10/15 %, no free number field. Default true (admin). */
+  freeDiscount?: boolean;
 }
 
 /**
@@ -46,7 +48,7 @@ export interface PricingInputsProps {
  * length, package (or a custom count) and discount. No students step: a family buys one package
  * per child. Built from the «حاسبة الأسعار» pieces; never a price.
  */
-export function PricingInputs({ form, onChange }: PricingInputsProps) {
+export function PricingInputs({ form, onChange, freeDiscount = true }: PricingInputsProps) {
   return (
     <>
       <Section title={s.country}>
@@ -97,7 +99,9 @@ export function PricingInputs({ form, onChange }: PricingInputsProps) {
           accessibilityLabel={s.discount}
           role="radiogroup"
         />
-        <DiscountField value={form.discount} onChange={(discount) => onChange({ discount })} />
+        {freeDiscount ? (
+          <DiscountField value={form.discount} onChange={(discount) => onChange({ discount })} />
+        ) : null}
       </Section>
     </>
   );

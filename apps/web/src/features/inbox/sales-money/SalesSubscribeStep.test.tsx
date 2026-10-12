@@ -31,7 +31,11 @@ describe('step 1 «اشتراك جديد» from a sales chat (R-ASST-01)', () =>
     apiSend.mockResolvedValue(SALES_QUOTE);
     const { dialog } = open();
     expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(OPEN_SUB.student.id);
-    fireEvent.change(dialog.getByRole('spinbutton', { name: t.subscriptions.discount }), { target: { value: '10' } });
+    const pills = within(dialog.getByRole('group', { name: t.subscriptions.discount })).getAllByRole('button');
+    expect(pills.map((b) => b.textContent)).toEqual(['0', '5', '10', '15'].map((d) => t.pricing.discounts[d as '0']));
+    expect(dialog.queryByRole('spinbutton', { name: t.subscriptions.discount })).toBeNull();
+    fireEvent.click(dialog.getByRole('button', { name: t.pricing.discounts['10'] }));
+    expect(dialog.getByRole('button', { name: t.pricing.discounts['10'] }).getAttribute('aria-pressed')).toBe('true');
     expect(await dialog.findByText(formatAmount(SALES_QUOTE.afterDiscount))).toBeTruthy();
     expect(dialog.getByText(t.salesMoney.price)).toBeTruthy();
     expect(dialog.getByText(t.salesMoney.priceHint)).toBeTruthy();

@@ -54,7 +54,7 @@ export function SalesSubscribeForm({ phone, tz, students, studentId: first }: Sa
   return (
     <>
       <ChildPills students={students} value={studentId} onChange={setPicked} />
-      <PricingInputs form={form} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+      <PricingInputs form={form} freeDiscount={false} onChange={(patch) => setForm((f) => ({ ...f, ...patch }))} />
       <SalesPriceSection quote={quote} />
       <StartDayPills days={startDays(now, tz)} today={today} value={day} onChange={setDay} />
       {save.isError ? <ErrorLine message={salesErrorText(save.error)} /> : null}

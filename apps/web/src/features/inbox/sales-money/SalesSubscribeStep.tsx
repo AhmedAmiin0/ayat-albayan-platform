@@ -1,4 +1,4 @@
-import type { SalesFamilyStudent, SalesMoneySubscriptionView } from '@ab/shared';
+import { DISCOUNTS, type SalesFamilyStudent, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useRef, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
@@ -66,7 +66,7 @@ export function SalesSubscribeStep({ students, onClose, onSaved }: Props) {
     >
       <form id={formId} className="grid gap-5" onSubmit={submit} noValidate>
         <ChildPicker students={students} value={studentId} onChange={setStudentId} />
-        <PricingFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
+        <PricingFields form={form} discounts={DISCOUNTS} set={(patch) => setForm((f) => ({ ...f, ...patch }))} />
         {studentId && <SalesQuotePreview studentId={studentId} pricing={pricing} />}
         <Field label={t.salesMoney.startsOn}>
           {(p) => (

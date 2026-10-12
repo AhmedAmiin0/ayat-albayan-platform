@@ -43,7 +43,7 @@ test('two owed packages: pick one → photo → sales upload once, one key acros
   mockApiSend.mockImplementation(async (_m: string, path: string) => {
     if (path === '/sales/payments/receipt-upload-url') return signed;
     posts += 1;
-    if (posts === 1) throw new ApiError(400, { code: 'fx_unavailable' });
+    if (posts === 1) throw new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' });
     return salesPayment('trial');
   });
   await renderWithQuery(<SalesTransferScreen />);
@@ -54,7 +54,7 @@ test('two owed packages: pick one → photo → sales upload once, one key acros
   expect(await screen.findByText(m.receiptChosen)).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
-  expect(await screen.findByText(m.error.fx_unavailable)).toBeTruthy();
+  expect(await screen.findByText(m.error.currency_mismatch.replace('{currency}', 'SAR'))).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   expect(await screen.findByText(m.transferSaved)).toBeTruthy();
 

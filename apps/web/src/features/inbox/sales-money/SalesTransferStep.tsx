@@ -24,7 +24,6 @@ type Props = {
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
 const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
   amount: s ? String(s.due || s.price) : '',
-  currency: s?.currency ?? '',
   day: today(),
   note: '',
 });

@@ -38,12 +38,13 @@ describe('step 2 with an uploaded receipt (R-ASST-04)', () => {
     let fail = true;
     apiSend.mockImplementation(async (_m: string, path: string) => {
       if (path === '/sales/payments/receipt-upload-url') return SIGNED;
-      if (fail) throw new ApiError(400, { code: 'fx_unavailable' });
+      if (fail) throw new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' });
       return paymentView();
     });
     const { dialog, save } = open();
     save();
-    expect(await dialog.findByText(t.salesMoney.error.fx_unavailable)).toBeTruthy();
+    expect(await dialog.findByText(t.salesMoney.error.currency_mismatch.replace('{currency}', 'SAR'))).toBeTruthy();
+    expect(dialog.queryByText(/\{currency\}/)).toBeNull();
     fail = false;
     save();
     expect(await screen.findByRole('dialog', { name: t.salesMoney.becameSubscribed })).toBeTruthy();
@@ -57,6 +58,9 @@ describe('step 2 with an uploaded receipt (R-ASST-04)', () => {
     const { dialog, save } = open();
     fireEvent.change(dialog.getByRole('textbox', { name: t.salesMoney.amount }), { target: { value: '0' } });
     save();
+    expect(dialog.queryByRole('combobox', { name: t.salesMoney.currency })).toBeNull();
+    const currency = dialog.getByRole<HTMLInputElement>('textbox', { name: t.salesMoney.currency });
+    expect([currency.value, currency.readOnly]).toEqual([OPEN_SUB.currency, true]);
     expect(dialog.getByText(t.salesMoney.error.amount)).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
   });

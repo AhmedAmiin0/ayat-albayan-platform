@@ -1,10 +1,11 @@
-import { CURRENCY_ISOS, parseAmount, type SalesMoneySubscriptionView } from '@ab/shared';
+import { parseAmount, type SalesMoneySubscriptionView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { paidAtFor } from '@/payments/paid-day';
 import type { Receipt } from '@/payments/receipt';
 
 // «سجّل تحويلًا بنكيًا» (R-ASST-04): what she entered, checked. Pure. The method is always the
-// bank's (the API sets it); the receipt is required, from the chat or a photo.
+// bank's (the API sets it), the currency always the package's (owner 2026-10-12); the receipt is
+// required, from the chat or a photo.
 
 /** From the chat: already copied under the package (its path). A photo: uploaded on save. */
 export type ReceiptChoice =
@@ -13,21 +14,15 @@ export type ReceiptChoice =
 
 export interface TransferDraft {
   amountText: string;
-  currency: string;
   /** Days back on the Riyadh calendar; 0 = today. */
   daysAgo: number;
   note: string;
   receipt: ReceiptChoice | null;
 }
 
-/** The amount still due, in the package currency, today. */
+/** The amount still due (in the package currency), today. */
 export function draftFor(sub: SalesMoneySubscriptionView): TransferDraft {
-  return { amountText: String(sub.due), currency: sub.currency, daysAgo: 0, note: '', receipt: null };
-}
-
-/** The package's currency first, then the others the API converts from. */
-export function currencyChoices(packageCurrency: string): string[] {
-  return [packageCurrency, ...CURRENCY_ISOS.filter((c) => c !== packageCurrency)];
+  return { amountText: String(sub.due), daysAgo: 0, note: '', receipt: null };
 }
 
 export interface TransferInput {
@@ -56,7 +51,7 @@ export function checkTransfer(draft: TransferDraft, context: { sub: SalesMoneySu
     input: {
       subscriptionId: context.sub.id,
       amount,
-      currency: draft.currency,
+      currency: context.sub.currency,
       paidAt: paidAtFor(context.now, draft.daysAgo).toISOString(),
       note: note === '' ? null : note,
       receipt: draft.receipt,

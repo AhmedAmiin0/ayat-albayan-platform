@@ -2736,6 +2736,7 @@
     "studentStatus": {
       "trial": "Trial",
       "active": "Active",
+      "pending_renewal": "Pending renewal",
       "paused": "Paused",
       "churned": "Stopped"
     },
@@ -3556,7 +3557,8 @@
       "media_expired": "This file has expired on WhatsApp.",
       "message_not_found": "This file is not from this family's chat.",
       "client_request_reused": "Close the dialog, open it again and retry.",
-      "fx_unavailable": "No exchange rate is available for this currency right now.",
+      "currency_mismatch": "Transfers are recorded in the package currency only ({currency}).",
+      "discount_not_allowed": "Only a 0, 5, 10 or 15 % discount is allowed.",
       "paid_at_future": "The transfer date cannot be in the future.",
       "amount": "Enter a valid amount above zero.",
       "generic": "Could not save; please try again."

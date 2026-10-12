@@ -23,6 +23,9 @@ jest.mock('expo-router', () => ({
 
 const m = t.salesMoney;
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
+/** The admin's free 0–100 discount input (a decimal pad), not the pills' group. */
+const freeDiscountFields = () =>
+  screen.queryAllByLabelText(t.pricing.steps.discount).filter((e) => e.props.keyboardType === 'decimal-pad');
 const saveButton = () => screen.findByRole('button', { name: m.saveSubscription, disabled: false });
 
 beforeEach(() => {
@@ -94,4 +97,18 @@ test('not her student (403): the API’s reason', async () => {
   await fireEvent.press(await saveButton());
   expect(await screen.findByText(m.error.not_your_student)).toBeTruthy();
   expect(mockReplace).not.toHaveBeenCalled();
+});
+
+test('discount: only the site pills 0/5/10/15 %, no free number field; a pill is what is sent', async () => {
+  await renderWithQuery(<SalesSubscribeScreen />);
+  expect(await screen.findByText(money(180, 'SAR'))).toBeTruthy();
+  for (const d of ['0', '5', '10', '15'] as const) expect(screen.getByRole('radio', { name: t.pricing.discounts[d] })).toBeTruthy();
+  expect(screen.getByRole('radio', { name: t.pricing.discounts['0'], checked: true })).toBeTruthy();
+  expect(freeDiscountFields()).toHaveLength(0);
+  await fireEvent.press(screen.getByRole('radio', { name: t.pricing.discounts['15'] }));
+  await waitFor(() =>
+    expect(sent('/sales/subscriptions/quote').at(-1)?.[2]).toMatchObject({ pricing: { discount: 15 } }),
+  );
+  await fireEvent.press(await saveButton());
+  await waitFor(() => expect(sent('/sales/subscriptions').at(-1)?.[2]).toMatchObject({ pricing: { discount: 15 } }));
 });

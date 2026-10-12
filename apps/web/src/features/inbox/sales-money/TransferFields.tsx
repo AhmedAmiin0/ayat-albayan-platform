@@ -1,7 +1,5 @@
-import { CURRENCY_ISOS } from '@ab/shared';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
-import { Select } from '@/components/ui/select';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import type { TransferForm } from './use-sales-payment';
@@ -9,13 +7,16 @@ import type { TransferForm } from './use-sales-payment';
 type Props = {
   form: TransferForm;
   set: (patch: Partial<TransferForm>) => void;
-  /** The package's currency, offered first (another one is converted by the API). */
+  /** The package's currency: the only one a sales transfer is recorded in (read-only). */
   packageCurrency: string;
   today: string;
   amountError?: string | null;
 };
 
-/** Amount, currency, transfer day (never in the future) and an optional note; the method is always «bank». */
+/**
+ * Amount, the package currency (fixed, owner 2026-10-12), transfer day (never in the future) and an
+ * optional note; the method is always «bank».
+ */
 export function TransferFields({ form, set, packageCurrency, today, amountError }: Props) {
   return (
     <div className="grid gap-4 sm:grid-cols-2">
@@ -25,15 +26,7 @@ export function TransferFields({ form, set, packageCurrency, today, amountError 
         )}
       </Field>
       <Field label={t.salesMoney.currency}>
-        {(p) => (
-          <Select {...p} value={form.currency} onChange={(e) => set({ currency: e.target.value })}>
-            {[...new Set([packageCurrency, ...CURRENCY_ISOS])].map((c) => (
-              <option key={c} value={c}>
-                {c}
-              </option>
-            ))}
-          </Select>
-        )}
+        {(p) => <Input {...p} dir="ltr" value={packageCurrency} readOnly />}
       </Field>
       <Field label={t.salesMoney.paidOn} hint={dateLabel(form.day)}>
         {(p) => <Input {...p} type="date" dir="ltr" max={today} value={form.day} onChange={(e) => set({ day: e.target.value })} />}

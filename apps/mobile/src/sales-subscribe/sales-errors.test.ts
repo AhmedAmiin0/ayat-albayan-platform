@@ -9,6 +9,14 @@ test('the API codes in her words', () => {
   expect(salesErrorText(new ApiError(409, { code: 'client_request_reused' }))).toBe(
     t.salesMoney.error.client_request_reused,
   );
+  expect(salesErrorText(new ApiError(400, { code: 'discount_not_allowed' }))).toBe(t.salesMoney.error.discount_not_allowed);
+});
+
+test('currency_mismatch names the package currency from the body', () => {
+  const text = salesErrorText(new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' }));
+  expect(text).toBe(t.salesMoney.error.currency_mismatch.replace('{currency}', 'SAR'));
+  expect(text).toContain('SAR');
+  expect(text).not.toContain('{currency}');
 });
 
 test('no answer, a failed upload, an unknown code', () => {

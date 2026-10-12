@@ -1,19 +1,18 @@
 import { t } from '@/lib/i18n';
 import { openSub, SUB } from './fixtures';
-import { checkTransfer, currencyChoices, draftFor, type ReceiptChoice } from './transfer-form';
+import { checkTransfer, draftFor, type ReceiptChoice } from './transfer-form';
 
 const NOW = new Date('2026-10-12T09:00:00Z');
 const sub = openSub({ due: 72.5 });
 const chat: ReceiptChoice = { kind: 'chat', messageId: 'm-1', path: `${SUB}/a.jpg` };
 
 test('prefilled: the due amount in the package currency, today, no receipt', () => {
-  expect(draftFor(sub)).toEqual({ amountText: '72.5', currency: 'SAR', daysAgo: 0, note: '', receipt: null });
+  expect(draftFor(sub)).toEqual({ amountText: '72.5', daysAgo: 0, note: '', receipt: null });
 });
 
-test('the package currency first, then the others once', () => {
-  expect(currencyChoices('SAR')).toEqual(['SAR', 'AED', 'QAR', 'KWD', 'OMR', 'USD']);
-  expect(currencyChoices('EGP')[0]).toBe('EGP');
-  expect(currencyChoices('EGP')).toHaveLength(7);
+test('always the package currency, never another', () => {
+  const egp = openSub({ currency: 'EGP' });
+  expect(checkTransfer({ ...draftFor(egp), receipt: chat }, { sub: egp, now: NOW }).input?.currency).toBe('EGP');
 });
 
 test('the receipt is required; a bad amount is refused', () => {

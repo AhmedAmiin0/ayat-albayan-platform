@@ -8,7 +8,6 @@ import type { ReceiptChoice } from './receipt';
 export interface TransferForm {
   /** Text while typing (Arabic digits too); parseAmount reads it on submit. */
   amount: string;
-  currency: string;
   /** Local day (YYYY-MM-DD, Riyadh); paidAtFor turns it into an instant. */
   day: string;
   note: string;
@@ -18,7 +17,8 @@ export type TransferInput = { sub: SalesMoneySubscriptionView; form: TransferFor
 
 /**
  * The «سجّل التحويل» save (R-ASST-04): one clientRequestId per open step, re-sent on every retry, and an
- * uploaded receipt sent to storage once per file (a chat receipt is already copied). Never kind / method.
+ * uploaded receipt sent to storage once per file (a chat receipt is already copied). Never kind / method;
+ * the currency is always the package's (owner 2026-10-12).
  */
 export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void) {
   const queryClient = useQueryClient();
@@ -41,7 +41,7 @@ export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void) {
       return recordSalesPayment({
         subscriptionId: sub.id,
         amount,
-        currency: form.currency || sub.currency,
+        currency: sub.currency,
         paidAt: paidAtFor(form.day),
         receiptPath: await receiptPath(sub, receipt),
         note: form.note.trim() || null,
