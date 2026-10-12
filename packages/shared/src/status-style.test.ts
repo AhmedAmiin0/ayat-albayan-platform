@@ -31,9 +31,9 @@ describe('status-style (docs/07 §6)', () => {
     expect(E.GRADES.map((g) => S.gradeStyle[g].pips)).toEqual([5, 4, 3, 2, 1]);
   });
 
-  it('covers 54 values across the 12 state enums', () => {
+  it('covers 55 values across the 12 state enums', () => {
     const n = STATE_ENUMS.reduce((sum, [, values]) => sum + values.length, 0) + E.GRADES.length;
-    expect(n).toBe(54);
+    expect(n).toBe(55);
   });
 
   it('saffron (act) only where an admin must act now', () => {
@@ -44,6 +44,7 @@ describe('status-style (docs/07 §6)', () => {
       'lead_status.new',
       'lesson_status.scheduled',
       'pdf_status.failed',
+      'student_status.pending_renewal', // «بانتظار التجديد»: renew now
       'subscription_status.expired',
       'subscription_status.unpaid',
     ]);
