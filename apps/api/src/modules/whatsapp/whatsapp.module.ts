@@ -15,6 +15,7 @@ import { MessagesQueries } from './messages.queries';
 import { MessagesService } from './messages.service';
 import { SendGate } from './send-gate';
 import { SenderQueries } from './sender.queries';
+import { TemplateStarters } from './template-starters';
 import { TemplateRegistry } from './template.registry';
 import { TemplatesController } from './templates.controller';
 import { TemplatesQueries } from './templates.queries';
@@ -46,6 +47,7 @@ function lines(): WhatsappLines {
     LinesCheck,
     TemplatesQueries,
     TemplateRegistry,
+    TemplateStarters,
     SendGate,
     SenderQueries,
     MessageDispatch,

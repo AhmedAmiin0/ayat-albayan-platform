@@ -23,6 +23,7 @@ describe('settings form (generated from the settings registry)', () => {
         academyWhatsappE164: '+966566101447',
         academyTimezone: 'Asia/Riyadh',
         defaultMeetingTitle: 'اجتماع',
+        meetingLinkAuto: false,
       }),
     });
   });

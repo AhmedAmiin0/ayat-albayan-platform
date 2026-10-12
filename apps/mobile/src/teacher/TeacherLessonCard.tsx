@@ -1,7 +1,9 @@
 import { applyLessonEvent, clockTime, isOpenLesson, lessonStatusStyle, type LessonView } from '@ab/shared';
 import { Linking, View } from 'react-native';
+import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { usePublicConfig } from '@/lib/public-config';
 import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today/lesson-text';
@@ -35,13 +37,15 @@ function timeLine(lesson: LessonView, tz: string): string {
 /**
  * One of my lessons today (R-TCH-03): students, status, my time, «ادخل الحلقة» while it is open,
  * «تأكيد» when the API offers it, and the report once it has started. No cancel or move here:
- * the API gives a teacher neither (the web has «اقترح ميعاد تاني»).
+ * the API gives a teacher neither (the web has «اقترح ميعاد تاني»). With settings.meeting_link_auto
+ * the way in is the platform classroom, not the lesson's fixed link.
  */
 export function TeacherLessonCard(p: TeacherLessonCardProps) {
   const { color } = useTheme();
   const { lesson } = p;
+  const auto = usePublicConfig().meeting_link_auto;
   const canConfirm = lesson.allowed_events.includes('confirm') && applyLessonEvent(lesson.status, 'confirm') !== null;
-  const link = isOpenLesson(lesson.status) ? lesson.meeting_link : null;
+  const link = !auto && isOpenLesson(lesson.status) ? lesson.meeting_link : null;
   const needsConfirm = lesson.status === 'scheduled';
   return (
     <View
@@ -71,6 +75,7 @@ export function TeacherLessonCard(p: TeacherLessonCardProps) {
         {timeLine(lesson, p.tz)}
       </AppText>
       {p.error ? <ErrorLine message={p.error} /> : null}
+      {auto ? <JoinClassroomButton lesson={lesson} /> : null}
       {link ? <Button variant="secondary" label={t.teacherDash.join} onPress={() => void Linking.openURL(link)} /> : null}
       {canConfirm ? <Button label={t.today.confirm} onPress={p.onConfirm} busy={p.busy} /> : null}
       {p.report ? (

@@ -5,7 +5,7 @@ import { ConflictChecker } from './conflict-checker';
 import type { RuleProjectionQueries } from './rule-projection.queries';
 
 const busy = { teacherLessons: vi.fn(), studentLessons: vi.fn() };
-const availability = { listSlots: vi.fn(), listTimeOff: vi.fn() };
+const availability = { bookableSlots: vi.fn(), listTimeOff: vi.fn() };
 const projection = { busy: vi.fn() };
 const checker = new ConflictChecker(
   busy as unknown as BusyQueries,
@@ -22,7 +22,7 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
     vi.resetAllMocks();
     busy.teacherLessons.mockResolvedValue([]);
     busy.studentLessons.mockResolvedValue([]);
-    availability.listSlots.mockResolvedValue(ALL_SUNDAY);
+    availability.bookableSlots.mockResolvedValue(ALL_SUNDAY);
     availability.listTimeOff.mockResolvedValue([]);
     projection.busy.mockResolvedValue({ teacher: [], students: [] });
   });
@@ -52,7 +52,7 @@ describe('ConflictChecker (R-SCH-04, issue B3)', () => {
   });
 
   it('maps time off rows and the weekly grid', async () => {
-    availability.listSlots.mockResolvedValue([]);
+    availability.bookableSlots.mockResolvedValue([]);
     availability.listTimeOff.mockResolvedValue([
       { starts_at: '2026-10-04T00:00:00Z', ends_at: '2026-10-05T00:00:00Z' },
     ]);

@@ -1,5 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 import type { SlotsQuery } from './booking.dto';
 import { fakeContext, IDS } from './booking.fakes';
 import type { BookingQueries } from './booking.queries';
@@ -13,9 +14,11 @@ const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
   durationMin: 60,
   ...over,
 });
+/** 24/7 off: these cases test the saved grid (slots.service.always.test.ts has it on). */
 function setup() {
   const deps = fakeContext();
-  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingQueries, deps.context) };
+  const settings = fakeSettings({ teachers_always_available: false });
+  return { ...deps, service: new SlotsService(deps.queries as unknown as BookingQueries, deps.context, settings) };
 }
 
 describe('SlotsService (R-SCH-06, R-SCH-04, docs/10 §5 #13)', () => {

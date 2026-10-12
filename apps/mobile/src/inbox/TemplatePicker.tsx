@@ -1,11 +1,13 @@
 import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
-import { FlatList, Modal } from 'react-native';
+import { FlatList, Modal, View } from 'react-native';
+import { useHolds } from '@/auth/use-permissions';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
 import { Button } from '@/ui/Button';
+import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
@@ -46,6 +48,8 @@ export interface TemplatePickerProps {
  */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
+  // A salesperson lists only the starters the admin ticked: none ticked is not «nothing approved».
+  const sales = useHolds('self.sales');
   const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
   const close = () => {
@@ -87,7 +91,13 @@ export function TemplatePicker(props: TemplatePickerProps) {
               />
             )}
             ListEmptyComponent={
-              templates.isError ? <ErrorState onRetry={() => void templates.refetch()} /> : null
+              templates.isError ? (
+                <ErrorState onRetry={() => void templates.refetch()} />
+              ) : templates.isSuccess ? (
+                <View style={{ padding: 16 }}>
+                  <EmptyState title={sales ? t.inbox.composer.noStarters : t.inbox.composer.noApproved} />
+                </View>
+              ) : null
             }
           />
         )}

@@ -38,6 +38,12 @@ describe('Graph message bodies (docs/12 §3.2)', () => {
     expect(body.template.name).toBe('lesson_reminder_v2');
   });
 
+  it('a chat template with four variables (CRM import / chat starter) sends all four in order', () => {
+    const t = templateRow({ key: 'teacher_lesson_v2', meta_name: 'teacher_lesson_v2', body_ar: '{{1}} {{2}} {{3}} {{4}}', buttons: [], line: 'chat' });
+    const body = templateMessage({ to: TO, template: t, params: { '1': 'أ', '2': 'ب', '3': 'ج', '4': 'د' } }) as { template: { components: unknown[] } };
+    expect(body.template.components).toEqual([{ type: 'body', parameters: ['أ', 'ب', 'ج', 'د'].map((text) => ({ type: 'text', text })) }]);
+  });
+
   it('quick replies carry the payloads by button index', () => {
     const payloads = ['confirm:l1', 'reschedule:l1'];
     const body = templateMessage({ to: TO, template: REMINDER_24H, params, payloads }) as { template: { components: unknown[] } };

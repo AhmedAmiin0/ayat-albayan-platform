@@ -1,6 +1,7 @@
 import { OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { SettingsService } from '../../common/settings/settings.service';
 import { readAll } from '../scheduling/read-all';
 import { dbError, type Page, type PageQuery } from '../teachers/http';
 import type { Contact } from './confirmation-messages';
@@ -14,7 +15,10 @@ export type SeqMap = ReadonlyMap<string, number>;
 /** Reads of lessons for the views and the write services (service role — callers guard). */
 @Injectable()
 export class LessonsQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
 
   async get(id: string): Promise<LessonRow | null> {
     const { data, error } = await this.db.from('lessons').select(LESSON_SELECT).eq('id', id).maybeSingle();
@@ -63,6 +67,11 @@ export class LessonsQueries {
     const rows = await this.byIds(data.map((r) => r.id));
     rows.sort((a, b) => (order.get(a.id) ?? 0) - (order.get(b.id) ?? 0));
     return { items: rows, total: count ?? 0, page, pageSize };
+  }
+
+  /** settings.meeting_link_auto: ON = a confirmation names no fixed link (forMessages). */
+  async meetingLinkAuto(): Promise<boolean> {
+    return (await this.settings.all()).meeting_link_auto;
   }
 
   /** Each student's name + guardian, for the queued confirmation (docs/10 §5.11). */

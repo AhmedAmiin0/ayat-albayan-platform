@@ -94,13 +94,29 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     expect([closed.statusCode, closed.json().code]).toEqual([409, 'session_closed']);
   });
 
-  it('H4 an approved template goes out for any lesson; the link templates stay refused', async () => {
+  // Owner 2026-10-12: sales send only the starters the admin ticked (templateRow: sales_starter false).
+  it('H4 a non-starter is 403 template_not_allowed; a starter goes out for any lesson; link templates stay refused', async () => {
     const send = (body: object) =>
       t.call({ method: 'POST', url: `${URL}/template`, token: 'salesB', body: { params: { '1': 'ياسمين', '2': 'الأحد 16:00', button: 'ayat-room' }, clientRequestId: REQ, ...body } });
+    const refused = await send({ key: 'lesson_reminder', lessonId: LESSON });
+    expect([refused.statusCode, refused.json().code]).toEqual([403, 'template_not_allowed']);
+    expect(t.queries.enqueue).not.toHaveBeenCalled();
+    t.templates.get.mockResolvedValue(templateRow({ key: 'lesson_reminder', sales_starter: true }));
     expect((await send({ key: 'lesson_reminder', lessonId: LESSON })).statusCode).toBe(201);
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ lesson_id: LESSON, created_by: 's2' }));
     expect((await send({ key: 'lesson_join_link' })).json().code).toBe('use_join_link');
     expect((await send({ key: 'lesson_feedback_request' })).json().code).toBe('use_feedback_request');
+  });
+
+  it('H4 a chat starter imported from Meta (key = its Meta name, four variables) is accepted and queued', async () => {
+    const starter = templateRow({ key: 'academy_welcome', meta_name: 'academy_welcome', body_ar: '{{1}} {{2}} {{3}} {{4}}', params: ['var_1', 'var_2', 'var_3', 'var_4'], buttons: [], line: 'chat', sales_starter: true });
+    t.templates.get.mockResolvedValue(starter);
+    const params = { '1': 'أ', '2': 'ب', '3': 'ج', '4': 'د' };
+    const res = await t.call({ method: 'POST', url: `${URL}/template`, token: 'sales', body: { key: 'academy_welcome', params, clientRequestId: REQ } });
+    expect(res.statusCode).toBe(201);
+    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ template_key: 'academy_welcome', template_params: params }));
+    const missing = await t.call({ method: 'POST', url: `${URL}/template`, token: 'sales', body: { key: 'academy_welcome', params: { '1': 'أ' }, clientRequestId: REQ } });
+    expect([missing.statusCode, missing.json().missing]).toEqual([400, ['2', '3', '4']]);
   });
 
   it('a teacher keeps her own scope: another family is still 403 not_your_thread', async () => {

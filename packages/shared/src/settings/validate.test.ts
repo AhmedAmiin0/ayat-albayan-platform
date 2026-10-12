@@ -23,6 +23,7 @@ describe('readSettings', () => {
     ['follow_up_hours', [72, 24]],
     ['feedback_mode', 'both'],
     ['reporting_currency', 'sar'],
+    ['meeting_link_auto', 'true'],
   ])('malformed %s = %j reads as the default', (key, value) => {
     expect(readSettings([{ key, value }])).toEqual(SETTING_DEFAULTS);
   });
@@ -38,7 +39,7 @@ describe('public settings', () => {
     expect([...PUBLIC_SETTING_KEYS].sort()).toEqual(
       [
         'academy_contact', 'academy_whatsapp_e164', 'join_closes_after_min', 'join_opens_before_min',
-        'makeup_window_days', 'recording_consent_notice', 'upload_max_mb',
+        'makeup_window_days', 'meeting_link_auto', 'recording_consent_notice', 'upload_max_mb',
       ].sort(),
     );
     expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);

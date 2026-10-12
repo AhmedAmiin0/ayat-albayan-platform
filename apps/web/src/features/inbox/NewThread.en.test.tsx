@@ -23,6 +23,6 @@ describe('starting a conversation, English', () => {
     );
     expect(screen.getByRole('button', { name: 'Open the chat' })).toBeTruthy();
     expect(screen.getByText(en.inbox.newChat.firstTemplate)).toBeTruthy();
-    expect(await screen.findByText(en.inbox.composer.noApproved)).toBeTruthy();
+    expect(await screen.findByText(en.inbox.composer.noStarters)).toBeTruthy(); // sales: no starter ticked yet
   });
 });

@@ -1,4 +1,4 @@
-import { needsLesson, RATING_TEMPLATE, TEMPLATE_KEYS } from '@ab/shared';
+import { needsLesson, RATING_TEMPLATE } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -10,6 +10,7 @@ import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { sendTemplate } from './api';
 import { LessonPicker } from './LessonPicker';
+import { useInboxMode } from './mode';
 import { TemplateParamFields } from './TemplateParamFields';
 import { forAudience, lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
 import { sendErrorText } from './TextComposer';
@@ -25,12 +26,14 @@ export interface TemplateComposerProps {
 
 /**
  * Any approved template for this person, from the thread (H4): the only way to write after the
- * 24 h window. Names are prefilled, a lesson time comes from the lesson picked (rule 6), and the
- * preview is what they read. The lesson is sent too, so a «تمام» reply links to it.
+ * 24 h window (a salesperson gets only the admin's starters: the API lists no other). Names are
+ * prefilled, a lesson time comes from the lesson picked (rule 6), and the preview is what they
+ * read. The lesson is sent too, so a «تمام» reply links to it.
  */
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
   const queryClient = useQueryClient();
   const templates = useQuery(templatesQuery);
+  const sales = useInboxMode() === 'sales';
   const approved = (templates.data ?? [])
     // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي»;
     // the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».
@@ -71,10 +74,10 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
       onSubmit={(e) => {
         e.preventDefault();
         setTried(true);
-        const known = TEMPLATE_KEYS.find((k) => k === tpl?.key);
-        if (!tpl || !known || missingParams(tpl, values).length > 0 || (withLesson && !lessonId)) return;
+        if (!tpl || missingParams(tpl, values).length > 0 || (withLesson && !lessonId)) return;
         const lesson = lessonId ? { lessonId } : {};
-        send.mutate({ phone, key: known, params: toParamsInput(tpl, values), clientRequestId: requestId.current, ...lesson });
+        // Any registry key (a producer's, or a starter imported from Meta): the API validates it.
+        send.mutate({ phone, key: tpl.key, params: toParamsInput(tpl, values), clientRequestId: requestId.current, ...lesson });
       }}
     >
       <Field label={t.inbox.composer.chooseTemplate}>
@@ -89,7 +92,10 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
           </Select>
         )}
       </Field>
-      {templates.isSuccess && approved.length === 0 && <p className="text-xs text-ink-3">{t.inbox.composer.noApproved}</p>}
+      {templates.isSuccess && approved.length === 0 && (
+        // Sales list only the starters the admin ticked: none ticked is not «nothing approved».
+        <p className="text-xs text-ink-3">{sales ? t.inbox.composer.noStarters : t.inbox.composer.noApproved}</p>
+      )}
       {templates.isError && <FormAlert>{t.common.error}</FormAlert>}
       {withLesson && (
         <LessonPicker

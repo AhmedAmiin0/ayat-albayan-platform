@@ -1,9 +1,11 @@
 import {
+  BODY_SLOTS,
   lessonParams,
   LESSON_TIME_PARAMS,
   lessonWhenText,
   needsLesson,
   renderTemplateBody,
+  type BodySlot,
   type TemplateParamsInput,
   type TemplateView,
   type ThreadLesson,
@@ -20,8 +22,8 @@ import { ErrorLine } from './ErrorLine';
 import { TemplatePreview } from './TemplatePreview';
 import type { Outgoing } from './use-thread';
 
-type Position = '1' | '2' | '3';
-const POSITIONS: readonly Position[] = ['1', '2', '3'];
+type Position = BodySlot;
+const POSITIONS: readonly Position[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
 export interface TemplateFormProps {

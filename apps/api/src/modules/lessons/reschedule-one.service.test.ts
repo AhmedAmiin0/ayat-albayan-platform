@@ -46,6 +46,16 @@ describe('RescheduleOneService — move one occurrence (R-SCH-07, docs/10 route 
     expect(record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'lessons', action: 'reschedule' }));
   });
 
+  it('settings.meeting_link_auto: the confirmation is plain while the new row keeps the fixed link', async () => {
+    const { service, writer, queries } = setup();
+    queries.meetingLinkAuto.mockResolvedValue(true);
+    await service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN });
+    const change = appliedChange(writer);
+    expect(change?.lessons[0]?.meeting_link).toBe('https://meet.jit.si/abrar');
+    expect(change?.messages[0]).toMatchObject({ template_key: 'booking_confirmation_plain' });
+    expect(change?.messages[0]?.template_params).not.toHaveProperty('button');
+  });
+
   it('checks conflicts without the lesson being moved', async () => {
     const { service } = setup();
     await service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN });

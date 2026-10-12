@@ -5,7 +5,7 @@ import { ConflictChecker } from '../scheduling/conflict-checker';
 import { badRequest, conflict } from '../scheduling/errors';
 import { addDays, localDateOf, startOfLocalDay } from '../scheduling/horizon';
 import { ruleStudents } from '../scheduling/schedule.queries';
-import { confirmationMessages } from './confirmation-messages';
+import { confirmationMessages, forMessages } from './confirmation-messages';
 import type { LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
 import { planLessons } from './rule-plan';
@@ -67,6 +67,7 @@ export class RescheduleRuleService {
     const [first] = lessons;
     if (!first) throw badRequest('no_occurrences');
     const contacts = await this.store.queries.contacts(plan.rule.student_ids);
+    const auto = await this.store.queries.meetingLinkAuto();
     await this.store.commit({
       change: {
         actor: actor.id,
@@ -74,7 +75,7 @@ export class RescheduleRuleService {
         changes: moved.map((m) => ({ id: m.id, from_status: m.status, to_status: 'rescheduled', chargeable: false })),
         new_rule: plan.rule,
         lessons,
-        messages: confirmationMessages(first, contacts),
+        messages: confirmationMessages(forMessages(first, auto), contacts),
       },
       audit: {
         entity: 'schedule_rules',

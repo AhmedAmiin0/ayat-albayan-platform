@@ -17,6 +17,8 @@ const COLUMNS = [
   ['buttons', '::jsonb'],
   ['status', '::public.template_status'],
   ['meta_id', ''],
+  // Inserted rows only (not SYNCED): a CRM template lives on the main number's WABA, the chat line.
+  ['line', '::public.wa_line'],
 ] as const;
 
 /** Columns Meta owns: synced onto an existing row. */

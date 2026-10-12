@@ -36,6 +36,7 @@ describe('staleReason (send-time check, docs/12 §3.3)', () => {
   it.each(['cancelled_by_teacher', 'cancelled_by_admin', 'rescheduled', 'completed', 'no_show'] as const)('lesson %s → stale', (status) => {
     expect(staleReason(booking(status))).toBe(`lesson ${status}`);
     expect(staleReason({ ...booking(status), template_key: 'lesson_reminder' })).toBe(`lesson ${status}`);
+    expect(staleReason({ ...booking(status), template_key: 'lesson_join_link' })).toBe(`lesson ${status}`);
   });
 
   it('a report for a completed lesson, a renewal and an admin text are not lesson-timed', () => {

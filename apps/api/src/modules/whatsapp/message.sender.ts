@@ -80,13 +80,14 @@ export class MessageSender implements OnApplicationBootstrap, OnModuleDestroy {
       // ~80+ queued chat texts (BATCH 50, one 15-min hold per pass) can still starve notifications
       // until the token is fixed. Upgrade path: hold the rest of the paused line's rows (docs/12 §13.17).
       const paused = new Set<WaLine>();
+      const chatOn = this.queries.chatConfigured;
       for (const row of await this.queries.due({ keys: [...templates.keys()], now, limit: BATCH })) {
-        const line = lineOf(row);
+        const template = templates.get(row.template_key ?? '') ?? null;
+        const line = lineOf(row, template, chatOn);
         if (paused.has(line)) continue;
         // Both switches are read before every row, so OFF stops a long pass at once (docs/09).
         if (!(await this.gate.open())) break;
         const autoOn = await this.gate.automaticOn();
-        const template = templates.get(row.template_key ?? '') ?? null;
         const outcome = await this.worker.process({ row, template, now, autoOn });
         summary[outcome] += 1;
         if (outcome === 'paused') paused.add(line);

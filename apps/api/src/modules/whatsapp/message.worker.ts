@@ -63,7 +63,7 @@ export class MessageWorker {
   }
 
   private async run({ row, template, now, autoOn }: SendJob): Promise<SendOutcome> {
-    const line = lineOf(row);
+    const line = lineOf(row, template, this.dispatch.multi);
     const drop = dropReason(row, now);
     if (drop) {
       await this.queries.expire(row.id, drop);

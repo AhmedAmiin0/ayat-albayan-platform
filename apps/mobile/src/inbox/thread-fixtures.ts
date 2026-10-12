@@ -92,6 +92,8 @@ export const plainReminder: TemplateView = {
   last_checked_at: null,
   last_error: null,
   submitted_at: null,
+  line: 'notifications',
+  sales_starter: false,
 };
 
 export const meetReminder: TemplateView = {

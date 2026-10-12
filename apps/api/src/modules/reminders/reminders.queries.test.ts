@@ -1,21 +1,30 @@
 import { describe, expect, it } from 'vitest';
 import { callsOf, chainDb } from './chain-db.fake';
-import { queueMessages, RemindersQueries } from './reminders.queries';
+import { queueMessages, REMINDER_KEYS, RemindersQueries } from './reminders.queries';
 
 describe('RemindersQueries', () => {
   it('upcoming: open lessons in (now, until], students flattened from lesson_students', async () => {
     const lesson = {
       id: 'l1',
       starts_at: '2026-10-04T14:00:00Z',
+      ends_at: '2026-10-04T14:45:00Z',
       status: 'scheduled',
       meeting_link: null,
       teacher: null,
-      lesson_students: [{ student: { name: 'سهيلة', guardian: null } }, { student: null }],
+      lesson_students: [{ student: { id: 's-1', name: 'سهيلة', guardian: null } }, { student: null }],
     };
     const { db, log } = chainDb({ lessons: [{ data: [lesson] }] });
     const rows = await new RemindersQueries(db).upcoming({ now: new Date('2026-10-04T13:00:00Z'), until: new Date('2026-10-05T14:00:00Z') });
     expect(rows).toEqual([
-      { id: 'l1', starts_at: lesson.starts_at, status: 'scheduled', meeting_link: null, teacher: null, students: [{ name: 'سهيلة', guardian: null }] },
+      {
+        id: 'l1',
+        starts_at: lesson.starts_at,
+        ends_at: lesson.ends_at,
+        status: 'scheduled',
+        meeting_link: null,
+        teacher: null,
+        students: [{ id: 's-1', name: 'سهيلة', guardian: null }],
+      },
     ]);
     expect(callsOf(log, 'lessons')).toEqual(
       expect.arrayContaining([
@@ -41,6 +50,9 @@ describe('RemindersQueries', () => {
     });
     expect(await new RemindersQueries(db).dropCancelled(new Date('2026-10-04T13:00:00Z'))).toBe(2);
     expect(callsOf(log, 'messages', 0)).toContainEqual(['gt', ['expires_at', '2026-10-04T13:00:00.000Z']]);
+    // The classroom links (job-made or «ابعت لينك الحلقة») of a cancelled lesson go too.
+    expect(callsOf(log, 'messages', 0)).toContainEqual(['in', ['template_key', [...REMINDER_KEYS]]]);
+    expect(REMINDER_KEYS).toContain('lesson_join_link');
     expect(callsOf(log, 'messages', 1)).toEqual([
       ['delete', []],
       ['in', ['id', ['m1', 'm3']]],
