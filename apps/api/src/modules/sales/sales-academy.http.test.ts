@@ -30,15 +30,18 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     }
   });
 
-  it('GET /sales/teachers: name, gender, programs and current students; never pay, phone or links', async () => {
+  it('GET /sales/teachers: name, gender, programs, counts, the fixed link and current students; never pay or phone', async () => {
     const res = await t.get('/sales/teachers', 'salesB');
     expect(res.json()).toEqual([
       {
         id: 'tc1', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran'], lessons_today: 1, live_now: false,
+        active_count: 1, trial_count: 0, meeting_link: 'https://meet.example.org/abrar',
         students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', program: 'quran', status: 'active', next_lesson_at: '2026-10-12T15:00:00.000Z' }],
       },
     ]);
-    expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual([]);
+    // The one exception to «never a link» (owner 2026-10-12, docs/16 rows 3 and 10): the teacher's fixed link.
+    expect(keys(res.json()).filter((k) => SECRET.test(k))).toEqual(['meeting_link']);
+    expect(res.body).not.toMatch(/rate_|phone|notes|max_students|calendar/);
   });
 
   it('GET /sales/students/all: paged and searchable, whitelisted columns only', async () => {

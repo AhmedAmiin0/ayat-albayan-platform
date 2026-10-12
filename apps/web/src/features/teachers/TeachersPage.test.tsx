@@ -3,14 +3,14 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import type { ListUrlState } from '@/lib/list-url';
-import type { Teacher } from './api';
+import type { TeacherListRow } from './api';
 import { TeachersPage } from './TeachersPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
-const FATMA: Teacher = {
+const FATMA: TeacherListRow = {
   id: 't1',
   display_name_ar: 'فاطمة الزهراء',
   display_name_en: null,
@@ -25,11 +25,13 @@ const FATMA: Teacher = {
   rate_60: null,
   rate_90: null,
   max_students: 12,
+  active_count: 0,
+  trial_count: 0,
 };
 
 const LIST: ListUrlState = { page: 1, sort: {}, filters: {} };
 
-function renderPage(page: { items: Teacher[]; total: number }, list: ListUrlState = LIST) {
+function renderPage(page: { items: TeacherListRow[]; total: number }, list: ListUrlState = LIST) {
   apiFetch.mockResolvedValue({ ...page, page: 1, pageSize: 25 });
   const onOpen = vi.fn();
   const onList = vi.fn();

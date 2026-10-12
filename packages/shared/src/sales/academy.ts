@@ -1,9 +1,11 @@
 import { z } from 'zod';
 import type { Gender, PaymentKind, Program, StudentStatus, SubscriptionStatus } from '../enums/index.js';
+import type { TeacherStudentCounts } from '../student-lists.js';
 import type { SalesSubscriptionView } from './views.js';
 
 // The salesperson's assistant side (owner 2026-10-11, docs/16): the academy's teachers, every student and
-// a confirmed subscription's history. Whitelists: never a price, rate, phone, note or meeting link.
+// a confirmed subscription's history. Whitelists: never a price, rate, phone or note. The one exception
+// (owner 2026-10-12): a teacher's fixed meeting link in «المعلمون», nowhere else (docs/16 rows 3, 10).
 
 /** A student of a teacher in «المعلمون»: who, which program and status (trial included), the next lesson. */
 export interface SalesTeacherStudent {
@@ -16,8 +18,11 @@ export interface SalesTeacherStudent {
   next_lesson_at: string | null;
 }
 
-/** GET /sales/teachers rows: an active teacher, today's lessons and the students they teach. */
-export interface SalesTeacherView {
+/**
+ * GET /sales/teachers rows: an active teacher, today's lessons, the students they teach and their counts
+ * (`active_count` / `trial_count`, «مشترك n · تجريبي n»), and their fixed meeting link.
+ */
+export interface SalesTeacherView extends TeacherStudentCounts {
   id: string;
   name: string;
   name_en: string | null;
@@ -27,6 +32,8 @@ export interface SalesTeacherView {
   lessons_today: number;
   /** A lesson of theirs is running now (start <= now < end, still open). */
   live_now: boolean;
+  /** teachers.meeting_link (owner 2026-10-12), null when unset; render it only when http(s). */
+  meeting_link: string | null;
   students: SalesTeacherStudent[];
 }
 

@@ -11,7 +11,8 @@ export interface SegmentedControlProps<V extends string> {
   /** Group name for assistive tech, e.g. t.students.status. */
   label: string;
   options: SegmentOption<V>[];
-  value: V;
+  /** The pressed segment; null = none (the state is one no segment stands for, e.g. two statuses). */
+  value: V | null;
   onChange: (value: V) => void;
   className?: string;
 }

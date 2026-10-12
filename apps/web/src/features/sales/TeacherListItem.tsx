@@ -12,9 +12,9 @@ export interface TeacherListItemProps {
 }
 
 /**
- * One teacher in «المعلمون»: name, «معلمة · القرآن الكريم», students and today's lessons as counts, and
- * «في حلقة الآن» (green chip: information, not the salesperson's job, so never saffron). The whole row
- * opens the teacher's students (≥ 44px tall).
+ * One teacher in «المعلمون»: name, «معلمة · القرآن الكريم», «مشترك n · تجريبي n» (owner 2026-10-12)
+ * and today's lessons as counts, and «في حلقة الآن» (green chip: information, not the salesperson's
+ * job, so never saffron). The whole row opens the teacher's students (≥ 44px tall).
  */
 export function TeacherListItem({ teacher, selected, onSelect }: TeacherListItemProps) {
   const name = teacherLabel({ display_name_ar: teacher.name, display_name_en: teacher.name_en });
@@ -36,7 +36,9 @@ export function TeacherListItem({ teacher, selected, onSelect }: TeacherListItem
         </span>
         <span className="text-xs text-ink-3">{`${t.teachers.genderLabel[teacher.gender]} · ${programList(teacher)}`}</span>
         <span className="flex flex-wrap gap-x-4 text-xs text-ink-2 tabular-nums">
-          <span>{t.sales.teachers.studentsCount.replace('{n}', String(teacher.students.length))}</span>
+          <span>
+            {t.studentLists.counts.replace('{active}', String(teacher.active_count)).replace('{trial}', String(teacher.trial_count))}
+          </span>
           <span>{t.sales.teachers.lessonsToday.replace('{n}', String(teacher.lessons_today))}</span>
         </span>
       </button>

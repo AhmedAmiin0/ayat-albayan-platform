@@ -1,5 +1,5 @@
 import en from '@ab/shared/i18n/en.json';
-import { screen } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { history, liveLesson, pupil, teacher } from './academy.fixtures';
 import { renderWithQuery } from './academy.test-utils';
@@ -11,6 +11,7 @@ vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
 describe('the sales assistant side, English', () => {
   it('teachers, running lessons and a subscription history read in English', async () => {
@@ -35,5 +36,17 @@ describe('the sales assistant side, English', () => {
     expect(screen.getByText('The opened subscription')).toBeTruthy();
     expect(screen.getAllByText('Linked payments')).toHaveLength(2);
     expect(screen.getByText('1,290').closest('li')?.textContent).toMatch(/Payment.*1,290\s+SAR/);
+  });
+
+  it('a teacher reads «Subscribed 1 · Trial 0», the drawer splits the students and shows the fixed link', async () => {
+    apiFetch.mockImplementation(async (path: string) => (path === '/sales/teachers' ? [teacher({ name: 'Abrar', students: [pupil({ name: 'Suhaila' })] })] : {}));
+    renderWithQuery(<SalesTeachers />);
+    fireEvent.click(await screen.findByRole('button', { name: /Subscribed 1 · Trial 0/ }));
+    const drawer = screen.getByRole('dialog');
+    expect(within(drawer).getByRole('group', { name: 'Student type' }).textContent).toBe('Subscribed1Trial0All1');
+    expect(within(drawer).getByText('Suhaila')).toBeTruthy();
+    expect(within(drawer).getByText('Fixed lesson link')).toBeTruthy();
+    expect(within(drawer).getByRole('link', { name: 'Open link' }).getAttribute('href')).toBe('https://meet.example.org/abrar-fixed');
+    expect(within(drawer).getByRole('button', { name: 'Copy link' })).toBeTruthy();
   });
 });

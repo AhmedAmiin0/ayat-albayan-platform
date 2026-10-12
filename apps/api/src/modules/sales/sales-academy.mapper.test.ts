@@ -3,14 +3,26 @@ import { liveRow, studentRow, teacherRow } from './sales-academy.fakes';
 import { toSalesLive, toSalesStudent, toSalesTeacher } from './sales-academy.mapper';
 
 describe('sales academy mappers (whitelists)', () => {
-  it('toSalesTeacher keeps name, gender, programs and the current students by name; drops pay, phone, link, notes', () => {
+  it('toSalesTeacher keeps name, gender, programs, the fixed link and the current students by name; drops pay, phone, notes', () => {
     const row = teacherRow();
     row.students = [{ id: 'b', code: null, name: 'يوسف', status: 'trial', program: 'arabic' }, { id: 'a', code: 'AB-1', name: 'أحمد', status: 'paused', program: 'quran' }, ...row.students];
     const out = toSalesTeacher(row);
-    expect(Object.keys(out).sort()).toEqual(['gender', 'id', 'lessons_today', 'live_now', 'name', 'name_en', 'programs', 'students']);
+    expect(Object.keys(out).sort()).toEqual([
+      'active_count', 'gender', 'id', 'lessons_today', 'live_now', 'meeting_link', 'name', 'name_en', 'programs', 'students', 'trial_count',
+    ]);
+    expect(Object.keys(out.students[0] ?? {}).sort()).toEqual(['code', 'id', 'name', 'next_lesson_at', 'program', 'status']);
+    expect([out.active_count, out.trial_count, out.meeting_link]).toEqual([1, 1, 'https://meet.example.org/abrar']);
     expect(out.students.map((s) => [s.id, s.code, s.status])).toEqual([['a', 'AB-1', 'paused'], ['s1', 'AB-0101', 'active'], ['b', '', 'trial']]);
     expect(out.students[2]).toEqual({ id: 'b', code: '', name: 'يوسف', program: 'arabic', status: 'trial', next_lesson_at: null });
     expect([out.lessons_today, out.live_now]).toEqual([0, false]);
+  });
+
+  it('toSalesTeacher counts current students only (churned dropped) and sends a blank link as null', () => {
+    const row = { ...teacherRow(), meeting_link: '  ' };
+    row.students = [...row.students, { id: 't1', code: 'AB-2', name: 'تجربة', status: 'trial', program: 'quran' }, { id: 't2', code: 'AB-3', name: 'ثانية', status: 'trial', program: 'quran' }];
+    const out = toSalesTeacher(row);
+    expect([out.active_count, out.trial_count, out.students.length, out.meeting_link]).toEqual([1, 2, 3, null]);
+    expect(toSalesTeacher({ ...teacherRow(), meeting_link: null }).meeting_link).toBeNull();
   });
 
   it('toSalesTeacher takes today’s facts by teacher and the next lesson by student', () => {

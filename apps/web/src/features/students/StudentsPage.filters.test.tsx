@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { openFilters } from '@/test/open-filters';
@@ -10,9 +10,10 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 function renderPage(filters: StudentsFilters, total = 0) {
-  apiFetch.mockImplementation((path: string) =>
-    Promise.resolve(path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : []),
-  );
+  apiFetch.mockImplementation((path: string) => {
+    if (path.startsWith('/students/status-counts')) return Promise.resolve({ trial: 2, active: 9, paused: 1, churned: 0 });
+    return Promise.resolve(path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : []);
+  });
   const onChange = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -51,5 +52,18 @@ describe('StudentsPage filters (R-STU-01)', () => {
     expect(screen.getByRole('button', { name: new RegExp(`^${t.table.filter}`) }).textContent).toContain('2');
     fireEvent.click(screen.getByRole('button', { name: t.table.clearAll }));
     expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: {}, columns: {} });
+  });
+
+  it('«الكل · مشترك · تجريبي» in the toolbar, without «تصفية»: on the status filter, counts under the other filters', async () => {
+    const onChange = renderPage({ teacher: 'none', status: 'paused' });
+    const group = screen.getByRole('group', { name: t.studentLists.kinds });
+    expect(screen.queryByRole('dialog')).toBeNull();
+    expect(group.querySelector('[aria-pressed="true"]')).toBeNull();
+    expect(apiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=none');
+    const active = await within(group).findByRole('button', { name: `${t.studentLists.active}9` });
+    fireEvent.click(active);
+    expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: { teacher: 'none', status: 'active' } });
+    fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.all}12` }));
+    expect(onChange).toHaveBeenLastCalledWith({ search: 'سهيلة', page: 1, filters: { teacher: 'none' } });
   });
 });
