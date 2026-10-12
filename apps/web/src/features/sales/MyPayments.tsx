@@ -4,7 +4,7 @@ import { myPaymentsQuery } from './api';
 import { myPaymentColumns } from './my-payment-columns';
 import { PortalList } from './PortalList';
 
-/** /sales/payments «مدفوعاتي»: the payments I recorded and no others (the API answers only for me). */
+/** «مدفوعاتي» on /sales/earnings: the payments I recorded and no others (the API answers only for me). */
 export function MyPayments() {
   return (
     <PortalList

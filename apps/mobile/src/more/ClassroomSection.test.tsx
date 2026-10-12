@@ -6,7 +6,7 @@ import { ClassroomSection } from './ClassroomSection';
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
 test('«الحلقات والاجتماعات» has the live board and the meetings, each opening its route', async () => {
-  await render(<ClassroomSection />);
+  await render(<ClassroomSection can={(p) => p !== 'self.sales'} />);
   expect(screen.getByRole('header', { name: t.mobileClassroom.section })).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobileClassroom.title }));
   expect(router.push).toHaveBeenLastCalledWith('/more/live');
@@ -21,7 +21,13 @@ test('a role without meetings.read does not see the meetings row', async () => {
 });
 
 test('a role without lessons.read does not see the live board row', async () => {
-  await render(<ClassroomSection can={(p) => p !== 'lessons.read'} />);
+  await render(<ClassroomSection can={(p) => p !== 'lessons.read' && p !== 'self.sales'} />);
   expect(screen.queryByRole('button', { name: t.mobileClassroom.title })).toBeNull();
   expect(screen.getByRole('button', { name: t.mobileClassroom.meetingsRow })).toBeTruthy();
+});
+
+test('a salesperson (self.sales) has no meetings row (owner 2026-10-12), only the live board', async () => {
+  await render(<ClassroomSection can={() => true} />);
+  expect(screen.getByRole('button', { name: t.mobileClassroom.title })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.mobileClassroom.meetingsRow })).toBeNull();
 });

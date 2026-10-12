@@ -60,7 +60,7 @@ async function seedFamilies(by: string, names: { paid: string; unpaid: string; o
 }
 
 test.describe('assistant portal', () => {
-  test('«طلابي», «مدفوعاتي» and «أرباحي» show only what is mine: no other family, no other payment, no price', async ({ browser }) => {
+  test('«طلابي» (in «الطلاب»), «مدفوعاتي» and «أرباحي» show only what is mine: no other family, no other payment, no price', async ({ browser }) => {
     const { email, id } = await seedAssistant(1);
     const names = { paid: `مسددة${stamp}`, unpaid: `منتظرة${stamp}`, other: `بعيدة${stamp}` };
     await seedFamilies(id, names);
@@ -68,10 +68,12 @@ test.describe('assistant portal', () => {
     await signIn(page, email);
 
     // Below 900px the section nav sits behind «القائمة»: salesNav opens it (the mobile project is a Pixel 7).
-    for (const label of Object.values(ar.assistantPortal.nav)) await expect((await salesNav(page)).getByRole('link', { name: label })).toBeVisible();
-    await expect((await salesNav(page)).getByRole('link', { name: ar.sales.nav.meetings })).toHaveAttribute('href', '/sales/meetings');
+    // Owner 2026-10-12: «طلابي» is a filter of «الطلاب», «مدفوعاتي» a filter of «أرباحي»; no meetings page.
+    for (const label of [ar.sales.nav.allStudents, ar.assistantPortal.nav.earnings]) await expect((await salesNav(page)).getByRole('link', { name: label })).toBeVisible();
+    for (const label of [ar.assistantPortal.nav.students, ar.assistantPortal.nav.payments]) await expect((await salesNav(page)).getByRole('link', { name: label })).toHaveCount(0);
 
-    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.students }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.allStudents }).click();
+    await page.getByRole('group', { name: ar.sales.views.students }).getByRole('button', { name: ar.assistantPortal.nav.students }).click();
     const paid = page.getByRole('row').filter({ hasText: names.paid });
     await expect(paid).toContainText(ar.assistantPortal.students.paid);
     await expect(paid).toContainText(ar.assistantPortal.commission.earned);
@@ -79,12 +81,14 @@ test.describe('assistant portal', () => {
     await expect(page.getByRole('row').filter({ hasText: names.unpaid })).toContainText(ar.assistantPortal.students.unpaid);
     await expect(page.getByText(names.other)).toHaveCount(0);
 
-    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.payments }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.earnings }).click();
+    const money = page.getByRole('group', { name: ar.sales.views.money });
+    await money.getByRole('button', { name: ar.assistantPortal.nav.payments }).click();
     await expect(page.getByRole('row').filter({ hasText: names.paid })).toContainText('1,000');
     await expect(page.getByText(names.other)).toHaveCount(0);
     await expect(page.getByText('777')).toHaveCount(0);
 
-    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.earnings }).click();
+    await money.getByRole('button', { name: ar.assistantPortal.nav.earnings }).click();
     await expect(page.getByRole('heading', { name: ar.assistantPortal.earnings.terms })).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.commissionPercent.replace('{value}', '10'))).toBeVisible();
     await expect(page.getByText(ar.assistantPortal.earnings.statementsEmpty)).toBeVisible();
@@ -134,7 +138,8 @@ test.describe('assistant portal', () => {
     // the app chrome (PhoneChat), so leave it through its «رجوع» first, as a person would.
     const chat = page.getByTestId('phone-chat');
     if (await chat.isVisible()) await chat.getByRole('link', { name: ar.common.back }).click();
-    await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.students }).click();
+    await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.allStudents }).click();
+    await page.getByRole('group', { name: ar.sales.views.students }).getByRole('button', { name: ar.assistantPortal.nav.students }).click();
     await expect(page.getByRole('row').filter({ hasText: name })).toContainText(ar.assistantPortal.students.unpaid);
   });
 });

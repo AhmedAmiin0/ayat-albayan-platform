@@ -51,7 +51,7 @@ describe('MyStudents «طلابي»', () => {
     open(ROWS);
     expect(await screen.findByText('سهيلة')).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith('/sales/me/students');
-    expect(screen.getByRole('heading', { level: 1, name: t.assistantPortal.students.title })).toBeTruthy();
+    expect(screen.getByRole('table', { name: t.assistantPortal.students.title })).toBeTruthy();
     expect(screen.getByText('AB-1001')).toBeTruthy();
     expect(screen.getAllByText(t.assistantPortal.students.unpaid)).toHaveLength(2);
     expect(screen.getAllByText(t.assistantPortal.students.paid)).toHaveLength(1);

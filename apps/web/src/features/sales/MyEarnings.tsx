@@ -1,9 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
-import { Cartouche } from '@/components/ui/cartouche';
 import { EmptyState } from '@/components/ui/empty-state';
 import { FormAlert } from '@/components/ui/form-alert';
-import { PageHead } from '@/components/ui/page';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { Amount } from '@/features/subscriptions/Amount';
 import { t } from '@/lib/i18n';
@@ -15,8 +13,9 @@ import { StatementCard } from './StatementCard';
 const p = t.assistantPortal.earnings;
 
 /**
- * /sales/earnings «أرباحي» (R-ASST-06), read-only: my terms, this month so far, the commissions I
- * earned and my monthly statements, every amount in its own currency (never summed across them).
+ * «أرباحي» on /sales/earnings (R-ASST-06; «مدفوعاتي» is the other view), read-only: my terms, this
+ * month so far, the commissions I earned and my monthly statements, every amount in its own currency
+ * (never summed across them).
  */
 export function MyEarnings() {
   const earnings = useQuery(myEarningsQuery);
@@ -24,9 +23,6 @@ export function MyEarnings() {
   const commissions = Object.entries(d?.commissions_total ?? {}).sort(([a], [b]) => a.localeCompare(b));
   return (
     <>
-      <PageHead>
-        <Cartouche>{p.title}</Cartouche>
-      </PageHead>
       {earnings.isPending && <ListSkeleton />}
       {earnings.isError && (
         <FormAlert>

@@ -3,8 +3,7 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { openFilters } from '@/test/open-filters';
-import type { SalesMeeting, SalesSubscription } from './api';
-import { SalesMeetings } from './SalesMeetings';
+import type { SalesSubscription } from './api';
 import { SalesSubscriptions } from './SalesSubscriptions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -17,14 +16,6 @@ const sub = (id: string, name: string, status: string): SalesSubscription => ({
   status,
   starts_on: '2026-10-05',
   lessons_total: 8,
-});
-const meeting = ({ id, who, teacher, at }: { id: string; who: string; teacher: string; at: string }): SalesMeeting => ({
-  lesson_id: id,
-  starts_at: at,
-  ends_at: at,
-  status: 'confirmed',
-  teacher_name: teacher,
-  lead_or_student_name: who,
 });
 
 const firstCells = () => screen.getAllByRole('row').slice(1).map((r) => r.querySelector('td')?.textContent ?? '');
@@ -64,25 +55,5 @@ describe('sales lists sort and filter locally (R-NFR-08)', () => {
     vi.useRealTimers();
     expect(screen.queryByText('يوسف')).toBeNull();
     expect(screen.getByText('أحمد')).toBeTruthy();
-  });
-
-  it('meetings: the teacher select lists the day’s teachers and filters; time sorts', async () => {
-    apiFetch.mockResolvedValue([
-      meeting({ id: 'l1', who: 'أم سهيلة', teacher: 'أبرار', at: '2026-10-03T14:00:00.000Z' }),
-      meeting({ id: 'l2', who: 'أبو يوسف', teacher: 'هبة', at: '2026-10-03T09:00:00.000Z' }),
-    ]);
-    render(
-      <QueryClientProvider client={client()}>
-        <SalesMeetings />
-      </QueryClientProvider>,
-    );
-    await screen.findByText('أم سهيلة');
-    openFilters();
-    const teacher = screen.getByLabelText(filterBy(t.sales.schedule.teacher));
-    expect([...teacher.querySelectorAll('option')].map((o) => o.textContent)).toEqual([t.table.all, 'أبرار', 'هبة']);
-    fireEvent.click(screen.getByRole('button', { name: t.sales.schedule.time }));
-    expect(screen.getAllByRole('row')[1]?.textContent).toContain('أبو يوسف');
-    fireEvent.change(teacher, { target: { value: 'أبرار' } });
-    expect(screen.queryByText('أبو يوسف')).toBeNull();
   });
 });

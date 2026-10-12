@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseSalesSubscriptionsSearch } from './search';
+import { parseMoneySearch, parseSalesSubscriptionsSearch, parseStudentsSearch } from './search';
 
 const ID = 'c1000000-0000-4000-8000-0000000000c1';
 
@@ -14,5 +14,15 @@ describe('parseSalesSubscriptionsSearch', () => {
     expect(parseSalesSubscriptionsSearch({ kind: 'confirmed', history: ID })).toEqual({ kind: 'confirmed', history: ID });
     expect(parseSalesSubscriptionsSearch({ kind: 'confirmed', history: 'x' })).toEqual({ kind: 'confirmed' });
     expect(parseSalesSubscriptionsSearch({ history: ID })).toEqual({});
+  });
+});
+
+describe('the view filters of «الطلاب» and «أرباحي»', () => {
+  it('keep only the non-default view in the URL', () => {
+    expect(parseStudentsSearch({ view: 'mine' })).toEqual({ view: 'mine' });
+    expect(parseStudentsSearch({ view: 'all' })).toEqual({});
+    expect(parseStudentsSearch({})).toEqual({});
+    expect(parseMoneySearch({ view: 'payments' })).toEqual({ view: 'payments' });
+    expect(parseMoneySearch({ view: 'mine' })).toEqual({});
   });
 });

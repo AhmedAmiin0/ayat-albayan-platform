@@ -1,4 +1,4 @@
-import type { LessonStatus, MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
+import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 
@@ -14,15 +14,6 @@ export interface SalesSubscription {
   lessons_total: number;
 }
 
-export interface SalesMeeting {
-  lesson_id: string;
-  starts_at: string;
-  ends_at: string;
-  status: LessonStatus;
-  teacher_name: string;
-  lead_or_student_name: string | null;
-}
-
 export interface SalesPerson {
   id: string;
   name: string;
@@ -34,13 +25,6 @@ export const salesSubscriptionsQuery = (kind: SubscriptionKind) =>
   queryOptions({
     queryKey: ['sales', 'subscriptions', kind],
     queryFn: () => apiFetch<SalesSubscription[]>(`/sales/subscriptions?kind=${kind}`),
-  });
-
-/** GET /sales/meetings?from&to — my meetings in [from, to). */
-export const salesMeetingsQuery = (day: { from: string; to: string }) =>
-  queryOptions({
-    queryKey: ['sales', 'meetings', day.from],
-    queryFn: () => apiFetch<SalesMeeting[]>(`/sales/meetings?${new URLSearchParams(day)}`),
   });
 
 // The assistant's own pages (R-ASST-06). The API answers only for the caller: students they brought,

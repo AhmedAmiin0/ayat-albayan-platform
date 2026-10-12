@@ -6,19 +6,16 @@ import { SalesNav } from './SalesNav';
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
 
 describe('SalesNav', () => {
-  it('has the salesperson’s pages in order: chats, my students, all students, teachers, running lessons, the schedule, subscriptions, meetings, payments, earnings', () => {
+  it('has the salesperson’s pages in order: chats, students, teachers, running lessons, the schedule, subscriptions, earnings (no meetings)', () => {
     render(<SalesNav />);
     const nav = screen.getByRole('navigation', { name: t.sales.nav.label });
     expect(within(nav).getAllByRole('link').map((a) => [a.textContent, a.getAttribute('href')])).toEqual([
       ['المحادثات', '/sales/inbox'],
-      ['طلابي', '/sales/students'],
-      ['كل الطلاب', '/sales/all-students'],
+      ['الطلاب', '/sales/students'],
       ['المعلمون', '/sales/teachers'],
       ['الحلقات الجارية', '/sales/live'],
       ['جدول الحلقات', '/sales/schedule'],
       ['الاشتراكات', '/sales/subscriptions'],
-      ['الاجتماعات', '/sales/meetings'],
-      ['مدفوعاتي', '/sales/payments'],
       ['أرباحي', '/sales/earnings'],
     ]);
   });
