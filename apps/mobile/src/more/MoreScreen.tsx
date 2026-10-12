@@ -2,6 +2,8 @@ import type { Permission } from '@ab/shared';
 import { router } from 'expo-router';
 import { useState } from 'react';
 import { View } from 'react-native';
+import { AccountHeaderAvatar } from '@/account/AccountHeaderAvatar';
+import { AccountRow } from '@/account/AccountRow';
 import { t } from '@/lib/i18n';
 import { SalesSection } from '@/sales/SalesSection';
 import { Button } from '@/ui/Button';
@@ -18,7 +20,7 @@ import { signOutDevice } from './sign-out';
 
 /**
  * «المزيد» (R-MOB-02): the read-only lists that don't earn a tab («الجدول» is its own tab now),
- * the price calculator, the appearance, the language, sign-out.
+ * the price calculator, «حسابي» (R-ACC-01), the appearance, the language, sign-out.
  */
 export function MoreScreen({ can = () => true }: { can?: (permission: Permission) => boolean }) {
   const [leaving, setLeaving] = useState(false);
@@ -29,8 +31,10 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
   };
   return (
     <Screen>
-      <ScreenHeader title={t.mobile.more} />
+      <ScreenHeader title={t.mobile.more} trailing={<AccountHeaderAvatar href="/more/account" />} />
       <View style={{ marginHorizontal: -16 }}>
+        {/* «حسابي» for every role (sales included: they share these tabs); the rest by permission. */}
+        <AccountRow href="/more/account" />
         {/* Dynamic roles: each list shows only when the held role grants it. */}
         {can('teachers.read') && <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />}
         {can('applicants.read') && <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />}

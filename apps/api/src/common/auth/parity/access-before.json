@@ -1,4 +1,11 @@
 {
+  "AccountController.avatarUploadUrl": "signed-in",
+  "AccountController.changeEmail": "signed-in",
+  "AccountController.changePassword": "signed-in",
+  "AccountController.profile": "signed-in",
+  "AccountController.removeAvatar": "signed-in",
+  "AccountController.setAvatar": "signed-in",
+  "AccountController.updateProfile": "signed-in",
   "ActivityController.list": ["admin"],
   "AdminTasksController.done": ["admin"],
   "AdminTasksController.list": ["admin"],

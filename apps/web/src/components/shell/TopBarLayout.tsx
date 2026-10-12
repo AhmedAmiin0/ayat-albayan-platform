@@ -6,6 +6,7 @@ import { RunningHead } from '@/components/ui/running-head';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { meQuery } from '@/features/auth/me';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
+import { AccountChip } from './AccountChip';
 import { LanguageSwitch } from './LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 import { MenuBar } from './MenuBar';
@@ -18,7 +19,7 @@ export interface BarProps {
   title: string;
 }
 
-/** The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, logout. */
+/** The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, «حسابي», logout. */
 export function WideHeader() {
   return (
     <header className="hidden shrink-0 items-center gap-3 px-1.5 pt-4 shell:flex">
@@ -27,6 +28,7 @@ export function WideHeader() {
         <NotificationBell />
         <LanguageSwitch />
         <ThemeToggle />
+        <AccountChip variant="inline" />
         <LogoutButton />
       </div>
     </header>

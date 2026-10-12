@@ -137,6 +137,14 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-ASST-05** Admin console «المساعدون»: terms, the commission ledger (filters, void with a reason), monthly statements (generate, approve, pay with receipt, reopen, un-pay), manual ± adjustments (idempotent by a request key) and «جُلب بواسطة» on the student profile plus bulk assignment; every money change is one RPC with its audit row.
 - **R-ASST-06** The assistant's own pages «طلابي، مدفوعاتي، أرباحي»: read-only lists of her brought students, the payments she recorded, and her terms, this month so far and statements.
 
+### 3.14 Account self-service «حسابي» (owner, 2026-10-06)
+Every signed-in login (any role, custom roles, students and guardians) manages its OWN account on `/account` (web) and «حسابي» (mobile More). Writes go through `/me/*` with a column whitelist (`full_name`, `phone_e164`, `avatar_path`); role, role_id and disabled_* are never self-writable, and there is no self-write RLS on `profiles`. The teacher, guardian and student rows families see stay admin-managed. Every change (a refused password included) writes an activity_log row with field names only; no audit_log row, so a login that edited itself can still be deleted.
+- **R-ACC-01** Profile view: name, email, phone, photo (short-lived signed URL or initials), role label.
+- **R-ACC-02** Name (trimmed, 2–80) and phone (E.164, unique → `phone_taken`); a phone change needs the current password.
+- **R-ACC-03** Email change with the current password; confirmed at once (no SMTP); `email_taken`.
+- **R-ACC-04** Password change with the current password and the existing rules (`AUTH_PASSWORD_MIN_LENGTH`); the current session stays signed in. A wrong current password → `wrong_password`.
+- **R-ACC-05** Photo: private `avatars` bucket (2 MB, JPEG/PNG/WebP), `<uid>/avatar-<ms>.<ext>`, uploaded through a signed URL and re-checked server-side (size, type, first bytes); the previous photo is deleted; remove. Storage RLS: own folder only, the admin reads all.
+
 ## 4. Non-functional requirements
 - **R-NFR-01** Arabic RTL UI, Arabic + English teacher names, Hijri date optional display; UI text in clear Modern Standard Arabic (owner, 2026-10-03); Meta-approved WhatsApp templates keep their approved text until resubmitted.
 - **R-NFR-02** Secrets only in environment / Supabase Vault; no keys in repo or Drive. RLS on every table; teachers see only own rows.

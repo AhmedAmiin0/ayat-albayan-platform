@@ -3,21 +3,26 @@ import type { FieldControlProps } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 
-type Props = FieldControlProps & { value: string; onValue: (value: string) => void };
+type Props = FieldControlProps & {
+  value: string;
+  onValue: (value: string) => void;
+  /** `new-password` for a new one (password managers offer to generate and save it). */
+  autoComplete?: 'current-password' | 'new-password';
+};
 
 /**
  * Password with «إظهار» at the inline-end (docs/design login, .pw): a toggle button
  * (aria-pressed) that shows the typed text, which matters most on touch keyboards. RTL like the
  * reference, so the button and the input's end padding sit on the same side.
  */
-export function PasswordInput({ value, onValue, ...field }: Props) {
+export function PasswordInput({ value, onValue, autoComplete = 'current-password', ...field }: Props) {
   const [shown, setShown] = useState(false);
   return (
     <div className="relative">
       <Input
         {...field}
         type={shown ? 'text' : 'password'}
-        autoComplete="current-password"
+        autoComplete={autoComplete}
         required
         className="pe-[72px]"
         value={value}

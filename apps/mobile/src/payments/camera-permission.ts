@@ -4,15 +4,23 @@ import { t } from '@/lib/i18n';
 
 const m = t.payments.mobile;
 
+/** Why the camera is needed and the button that opens it; the receipt's by default. */
+export interface CameraCopy {
+  rationale: string;
+  confirm: string;
+}
+
+const RECEIPT_COPY: CameraCopy = { rationale: m.cameraRationale, confirm: m.takePhoto };
+
 /** The OS prompt takes no custom text, so the Arabic reason comes first, in our own alert. */
-function confirmRationale(): Promise<boolean> {
+function confirmRationale(copy: CameraCopy): Promise<boolean> {
   return new Promise((resolve) => {
     Alert.alert(
       m.cameraTitle,
-      m.cameraRationale,
+      copy.rationale,
       [
         { text: t.common.cancel, style: 'cancel', onPress: () => resolve(false) },
-        { text: m.takePhoto, onPress: () => resolve(true) },
+        { text: copy.confirm, onPress: () => resolve(true) },
       ],
       { cancelable: true, onDismiss: () => resolve(false) },
     );
@@ -31,12 +39,12 @@ function explainDenied(): false {
 /**
  * true when the camera may open (R-MOB-02 receipt photo). Already granted: no question. Never asked:
  * the Arabic rationale, then the system prompt. Refused for good: say where to turn it back on.
- * The gallery needs none of this (the system photo picker asks nothing).
+ * The gallery needs none of this (the system photo picker asks nothing). The avatar passes its own copy.
  */
-export async function ensureCameraPermission(): Promise<boolean> {
+export async function ensureCameraPermission(copy: CameraCopy = RECEIPT_COPY): Promise<boolean> {
   const current = await ImagePicker.getCameraPermissionsAsync();
   if (current.granted) return true;
   if (!current.canAskAgain) return explainDenied();
-  if (!(await confirmRationale())) return false;
+  if (!(await confirmRationale(copy))) return false;
   return (await ImagePicker.requestCameraPermissionsAsync()).granted;
 }

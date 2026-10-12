@@ -2129,6 +2129,7 @@ export type Database = {
       };
       profiles: {
         Row: {
+          avatar_path: string | null;
           created_at: string;
           disabled_at: string | null;
           disabled_by: string | null;
@@ -2144,6 +2145,7 @@ export type Database = {
           updated_at: string;
         };
         Insert: {
+          avatar_path?: string | null;
           created_at?: string;
           disabled_at?: string | null;
           disabled_by?: string | null;
@@ -2159,6 +2161,7 @@ export type Database = {
           updated_at?: string;
         };
         Update: {
+          avatar_path?: string | null;
           created_at?: string;
           disabled_at?: string | null;
           disabled_by?: string | null;

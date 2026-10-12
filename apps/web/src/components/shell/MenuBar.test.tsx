@@ -13,6 +13,9 @@ vi.mock('@tanstack/react-router', async () => ({
   useNavigate: () => vi.fn(),
 }));
 
+const apiFetch = vi.hoisted(() => vi.fn(() => Promise.reject(new Error('offline'))));
+vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+
 const nav = (
   <nav aria-label={t.nav.label}>
     <a href="/admin/teachers">{t.nav.teachers}</a>
@@ -43,6 +46,7 @@ describe('MenuBar — the compact bar under 900px', () => {
     expect(within(sheet).getByRole('button', { name: t.auth.logout })).toBeTruthy();
     expect(within(sheet).getByRole('group', { name: t.theme.label })).toBeTruthy();
     expect(within(sheet).getByText('admin@example.com')).toBeTruthy();
+    expect(within(sheet).getByRole('link', { name: new RegExp(t.account.nav) }).getAttribute('href')).toBe('/account');
   });
 
   it('a link in the sheet closes it', () => {

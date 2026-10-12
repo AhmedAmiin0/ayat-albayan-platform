@@ -27,4 +27,5 @@ export * from './sales/teacher-filter.js';
 export * from './i18n/index.js';
 export * from './integrations/index.js';
 export * from './users/index.js';
+export * from './account/index.js';
 export * from './notifications/index.js';
