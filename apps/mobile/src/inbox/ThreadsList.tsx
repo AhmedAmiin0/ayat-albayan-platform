@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { type ReactNode, useState } from 'react';
 import { FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
+import { inTree, useTreeBase } from '@/nav/tree-base';
 import { Avatar } from '@/ui/Avatar';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -44,6 +45,7 @@ function turnChip(th: ThreadView): ReactNode {
  */
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const mode = useThreadMode();
+  const base = useTreeBase();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
   const list = useThreadList({ search, unread: filter === 'unread' });
@@ -72,7 +74,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
               subtitle={threadPreview(th)}
               tags={mode.kind === 'admin' ? <ThreadTags thread={th} /> : undefined}
               trailing={turnChip(th)}
-              onPress={() => router.push(threadLink(th.phone_e164, mode))}
+              onPress={() => router.push(inTree(base, threadLink(th.phone_e164, mode)))}
             />
           );
         }}

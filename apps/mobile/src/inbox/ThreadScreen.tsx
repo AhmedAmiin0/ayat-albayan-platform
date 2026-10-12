@@ -4,6 +4,7 @@ import { useRef } from 'react';
 import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
+import { inTree, useTreeBase } from '@/nav/tree-base';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -80,11 +81,12 @@ function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
   const mode = useThreadMode();
+  const base = useTreeBase();
   const teacher = mode.kind === 'teacher';
   const sales = useHolds('self.sales');
   const query = useThread(phone);
   const thread = query.data?.pages[0]?.thread ?? null;
-  const back = () => (router.canGoBack() ? router.back() : router.replace(threadBase(mode)));
+  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode))));
   return (
     <Screen>
       <ScreenHeader

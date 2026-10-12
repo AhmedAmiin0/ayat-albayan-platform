@@ -3024,6 +3024,15 @@
       "newLink": "The new link (shown this time only):"
     }
   },
+  "mobileRoles": {
+    "wrongApp": "This app is for the academy team: admins, teachers, sales and classroom assistants. Guardians and students follow the link they receive on WhatsApp or use the web app.",
+    "salesRole": "Sales",
+    "assistantRole": "Classroom assistant",
+    "lessonsTab": "My lessons",
+    "lessonsTitle": "Lessons you assist",
+    "dayEmpty": "No lessons for your students on this day",
+    "joinNote": "The lesson opens in the browser when its time starts."
+  },
   "teacherNav": {
     "label": "Teacher sections",
     "today": "Today",

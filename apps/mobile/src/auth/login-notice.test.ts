@@ -12,9 +12,9 @@ test('only a 403 with code account_disabled is a disabled account', () => {
   expect(isAccountDisabled(new TypeError('offline'))).toBe(false);
 });
 
-test('sales, assistant, guardian and student are other apps\' roles; admin, teacher, null and junk are not', () => {
-  for (const role of ['sales', 'assistant', 'guardian', 'student']) expect(isOtherAppRole(role)).toBe(true);
-  for (const role of ['admin', 'teacher', null, undefined, 'x']) expect(isOtherAppRole(role)).toBe(false);
+test('guardian and student are other apps\' roles; the four app roles, null and junk are not', () => {
+  for (const role of ['guardian', 'student']) expect(isOtherAppRole(role)).toBe(true);
+  for (const role of ['admin', 'teacher', 'sales', 'assistant', null, undefined, 'x']) expect(isOtherAppRole(role)).toBe(false);
 });
 
 test('the login screen sees the notice as soon as it is set, and loses it when cleared', async () => {
@@ -23,7 +23,7 @@ test('the login screen sees the notice as soon as it is set, and loses it when c
   await act(async () => setLoginNotice('accountDisabled'));
   expect(result.current).toBe(t.mobileNav.accountDisabled);
   await act(async () => setLoginNotice('wrongApp'));
-  expect(result.current).toBe(t.mobileNav.wrongApp);
+  expect(result.current).toBe(t.mobileRoles.wrongApp);
   await act(async () => setLoginNotice(null));
   expect(result.current).toBeNull();
 });

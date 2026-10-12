@@ -55,10 +55,20 @@ assistant's session row; new read-only routes under `/sales` with whitelisted co
 | 12b | Wording | Owner 2026-10-12: no meetings page for sales (`/sales/meetings` redirects to `/sales/schedule` «جدول الحلقات»; the mobile «اجتماعات داخلية» row is hidden for `self.sales`). «مدفوعاتي» is a view filter of «أرباحي» (`/sales/earnings?view=payments`; `/sales/payments` redirects there). |
 | 13 | Auto-assign OFF | Owner 2026-10-12: «if auto assign is turned off dont validate over it from the sales side». `SalesBookingScope` (`sales-booking.ownership.ts`) reads `sales_auto_assign` per call: ON = today's ownership (`ownershipOf`), OFF = `null`, so `/sales/booking` (check, book, teachers, slots) skips `not_your_lead`, `not_your_student` and `not_your_family`, and the `duplicate_student` 409 lists every child (id and name only). The trial-only rules always hold (no package, makeup, override, meeting link or invoice). `leads.assigned_to` is not changed; `students.brought_by` (trigger, migration 270) still credits the salesperson who booked. No migration, no client change; the switch's hint says what OFF means. e2e: `assistant-auto-assign-off.api.spec.ts` (restores ON). |
 
-## Next step (not in this change)
+## Mobile: the sales and classroom-assistant phone apps (owner 2026-10-12 20:05Z)
 
-Mobile (`apps/mobile`): the same pages for the sales base role (all chats already follow the API), the
-running-lessons list with «ادخل الحلقة», teachers and all students. Not part of this PR.
+The base role `sales` (the owner's «مساعد/ة») and the classroom `assistant` («مساعد حلقة») sign in to the
+Expo app, each to its own home matching its web pages (standing rule 2026-10-06: web and mobile in sync).
+JS only (ships by OTA): no dependency, no app.json change, no native module, no migration.
+
+| # | Area | Decision |
+|---|---|---|
+| M1 | Routing | `AppRole` = admin, teacher, sales, assistant (`apps/mobile/src/auth/role-claim.ts`); `/auth/me` first, the token's `user_role` claim offline. Admin and teacher (incl. the teacher-mode double role) unchanged; guardian, student and no role are refused («wrongApp» / «لم يُفعَّل حسابك»), a disabled account gets «accountDisabled». |
+| M2 | Sales tree `/sales` | Tabs in the web SalesNav order and gates: «المحادثات» (`inbox.read`; every chat, the thread in sales mode with «تسجيل طالب جديد» and the restricted templates, rows 1, 9, 12, 15), «الطلاب» (`self.sales_academy`; «طلابي» a filter), «جدول الحلقات» (`self.sales_academy`; read-only, «ادخل الحلقة» on a running lesson), «المزيد» («المعلمون» and «الحلقات الجارية» on `self.sales_academy`, «الاشتراكات» with «السجل» on `self.sales`, «أرباحي» with «مدفوعاتي» inside on `self.sales_earnings`, appearance, language, sign-out). No internal meetings (row 12b), no lead screen, no subscription panel, no rating send, no media picker. |
+| M3 | Assistant tree `/assistant` | «حلقاتي» (`self.assistant`): the open lessons of the students they assist (`GET /assistants/me/lessons`), today first and a Riyadh day at a time, «ادخل الحلقة» opening the room in the system browser; «اجتماعات داخلية» below (`meetings.read`: create, enter, share, end as `can_manage` allows). «المزيد»: appearance, language, sign-out. |
+| M4 | Reuse | The same screens as the admin tree's «المبيعات» section (`src/sales`, `src/sales-money`, `src/inbox`, `src/classroom`, `src/meetings`); `src/nav/tree-base.tsx` prefixes their links with the tree, and the admin routes stay for double-role admins. |
+| M5 | Push | Registered only when `/auth/me` lists `notifications.push` (admin-only by default): no OS prompt otherwise; a 403 from `PUT /me/push-tokens` is swallowed without a warning or UI. |
+| M6 | Account | No self-service account screen on the phone yet for any role; «المزيد» carries sign-out. |
 
 ## Owner request 2026-10-12: starter templates (web + mobile composer)
 

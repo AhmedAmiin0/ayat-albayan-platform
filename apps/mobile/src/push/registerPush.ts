@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { apiSend } from '@/lib/api';
+import { ApiError, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { ensurePushPermission } from './permission';
 
@@ -47,7 +47,9 @@ export async function registerPush(): Promise<void> {
     await AsyncStorage.setItem(TOKEN_KEY, token);
   } catch (error) {
     // Push is a convenience: no error UI. The next start registers again. A dev build says why
-    // (an Android build without android.googleServicesFile never gets a token).
+    // (an Android build without android.googleServicesFile never gets a token). A 403 is a role
+    // without notifications.push (sales, a classroom assistant): expected, so not even a warning.
+    if (error instanceof ApiError && error.status === 403) return;
     if (__DEV__) console.warn('registerPush', error);
   }
 }

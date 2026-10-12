@@ -1,6 +1,6 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { meetingError, meetingUrl, meetingWhen } from './meeting-text';
+import { meetingError, meetingsBase, meetingUrl, meetingWhen } from './meeting-text';
 
 test('the room url is the web origin plus /meeting/<id>', () => {
   expect(meetingUrl('m-1')).toBe('https://app.ayatalbayan.com/meeting/m-1');
@@ -16,4 +16,11 @@ test('a coded refusal reads in words; a bare 403 is «غير مسموح»; the r
   expect(meetingError(new ApiError(404, { code: 'meeting_not_found' }))).toBe(t.classroom.error.meeting_not_found);
   expect(meetingError(new ApiError(403, null))).toBe(t.classroom.error.forbidden);
   expect(meetingError(new Error('x'))).toBe(t.meetings.internal.actionError);
+});
+
+test('recordings open in the tree that shows the meeting', () => {
+  expect(meetingsBase('teacher')).toBe('/teacher/more');
+  expect(meetingsBase('assistant')).toBe('/assistant/lessons');
+  expect(meetingsBase('(tabs)')).toBe('/more/live');
+  expect(meetingsBase(undefined)).toBe('/more/live');
 });

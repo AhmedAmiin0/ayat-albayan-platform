@@ -25,10 +25,10 @@ test('wrong password shows Arabic error', async () => {
   expect(await signIn(creds)).toEqual({ ok: false, error: t.auth.invalidCredentials });
 });
 
-test.each([['guardian'], ['student'], ['sales'], ['assistant']])('role %s is told this app is not theirs', async (role) => {
+test.each([['guardian'], ['student']])('role %s is told this app is not theirs', async (role) => {
   mockSignInWithPassword.mockResolvedValue({ error: null });
   mockApiFetch.mockResolvedValue({ role });
-  expect(await signIn(creds)).toEqual({ ok: false, error: t.mobileNav.wrongApp });
+  expect(await signIn(creds)).toEqual({ ok: false, error: t.mobileRoles.wrongApp });
   expect(mockSignOut).toHaveBeenCalled();
 });
 
@@ -53,7 +53,7 @@ test('role check failing (offline) signs out again with the common error', async
   expect(mockSignOut).toHaveBeenCalled();
 });
 
-test.each([['admin'], ['teacher']])('%s signs in', async (role) => {
+test.each([['admin'], ['teacher'], ['sales'], ['assistant']])('%s signs in', async (role) => {
   mockSignInWithPassword.mockResolvedValue({ error: null });
   mockApiFetch.mockResolvedValue({ role });
   expect(await signIn(creds)).toEqual({ ok: true });

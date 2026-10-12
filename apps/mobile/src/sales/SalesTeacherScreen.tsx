@@ -12,6 +12,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { StatusChip } from '@/ui/StatusChip';
 import { useSalesTeachers } from './sales-api';
+import { useSalesHrefs } from './sales-href';
 import { nextLessonLine, teacherCounts, teacherLabel, teacherSubtitle } from './sales-text';
 
 /**
@@ -22,6 +23,7 @@ export function SalesTeacherScreen() {
   const { color } = useTheme();
   const { id = '' } = useLocalSearchParams<{ id: string }>();
   const list = useSalesTeachers();
+  const href = useSalesHrefs();
   const teacher = list.data?.find((tc) => tc.id === id);
   const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
   if (!teacher) {
@@ -48,7 +50,7 @@ export function SalesTeacherScreen() {
         <Button
           variant="secondary"
           label={t.sales.teachers.openSchedule}
-          onPress={() => router.push({ pathname: '/more/sales/schedule', params: { teacherId: teacher.id } })}
+          onPress={() => router.push(href.schedule(teacher.id))}
         />
         <Note>{t.schedule.riyadhTime}</Note>
       </View>

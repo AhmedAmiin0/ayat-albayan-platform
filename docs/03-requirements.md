@@ -16,6 +16,8 @@ Decisions already taken with the owner (2026-10-01):
 | `teacher` | See own schedule, own students, submit/edit own lesson reports, mark attendance, set own weekly availability, see own payout summary |
 | `guardian` (parent / adult student) | Read-only portal via WhatsApp magic link: upcoming lessons, reports (PDF), homework, remaining lessons, payment status |
 
+- **R-AUTH-01** Each role signs in with its own login and lands on its own home. Phone app (Expo, owner 2026-10-12): `admin`, `teacher`, `sales` («المبيعات») and the classroom `assistant` («مساعد حلقة») sign in, each to its own tree mirroring its web pages; `guardian` and `student` are told the app is not theirs («wrongApp»), a disabled account is told so, offline the token's `user_role` claim keeps the right tree open.
+
 ## 2. Domain model (entities)
 
 ```
@@ -112,8 +114,8 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-RPT-03** Exports: students, lessons, payments, payouts CSV.
 
 ### 3.10 Admin mobile app (Expo)
-- **R-MOB-01** Login (admin), push notifications for: new lead, lesson needing confirmation, report submitted, reminder failed, payment due.
-- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial. Also «الجدول»: the all-teachers agenda (R-SCH-09) for the admin, and a teacher tree (اليوم، جدولي، المحادثات، التقارير، المزيد) for a teacher login (R-TCH-03).
+- **R-MOB-01** Login (admin, teacher, sales, classroom assistant; R-AUTH-01), push notifications (to holders of `notifications.push`, admin by default; the sales and assistant trees register only when it is granted) for: new lead, lesson needing confirmation, report submitted, reminder failed, payment due.
+- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial. Also «الجدول»: the all-teachers agenda (R-SCH-09) for the admin, and a teacher tree (اليوم، جدولي، المحادثات، التقارير، المزيد) for a teacher login (R-TCH-03). A sales tree (المحادثات، الطلاب، جدول الحلقات، المزيد: the web SalesNav pages, docs/16 «Mobile») for a sales login, and an assistant tree (حلقاتي with internal meetings، المزيد: the web /assistant/ page) for a classroom-assistant login.
 - **R-MOB-03** Offline-tolerant reads (TanStack Query persist), optimistic status updates.
 
 ### 3.11 Migration from Google

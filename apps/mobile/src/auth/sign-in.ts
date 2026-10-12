@@ -13,7 +13,7 @@ export interface Credentials {
 export type SignInResult = { ok: true } | { ok: false; error: string };
 
 /**
- * Password sign-in, then only admins and teachers may stay signed in (R-AUTH-01). On success the
+ * Password sign-in, then only admins, teachers, sales and classroom assistants stay signed in (R-AUTH-01). On success the
  * auth gate (use-auth-gate) sees SIGNED_IN and opens their tabs; the screen does not navigate.
  */
 export async function signIn(creds: Credentials): Promise<SignInResult> {
@@ -30,7 +30,7 @@ export async function signIn(creds: Credentials): Promise<SignInResult> {
   }
   if (!appRole(me.role)) {
     await supabase.auth.signOut();
-    // A guardian/student/sales/assistant has an account: say this app is not theirs (noRole means no role).
+    // A guardian/student has an account: say this app is not theirs (noRole means no role).
     return { ok: false, error: isOtherAppRole(me.role) ? noticeText('wrongApp') : t.auth.noRole };
   }
   return { ok: true };

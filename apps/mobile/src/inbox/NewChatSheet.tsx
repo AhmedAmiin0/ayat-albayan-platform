@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Modal, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { inTree, useTreeBase } from '@/nav/tree-base';
 import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
 import { Screen } from '@/ui/Screen';
@@ -17,6 +18,7 @@ import { threadHref } from './thread-cache';
  */
 export function NewChatSheet() {
   const [open, setOpen] = useState(false);
+  const base = useTreeBase();
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | null>(null);
   const close = () => {
@@ -31,7 +33,7 @@ export function NewChatSheet() {
     }
     setValue('');
     close();
-    router.push(threadHref(phone.e164));
+    router.push(inTree(base, threadHref(phone.e164)));
   };
   return (
     <>
