@@ -7,9 +7,9 @@ const PAY = { subscriptionId: ID, amount: 290, currency: 'SAR', paidAt: '2026-10
 describe('sales money commands (R-ASST-01/04): narrower than the admin’s', () => {
   it('a bank transfer needs its receipt and a clientRequestId', () => {
     expect(salesPaymentCreateSchema.safeParse(PAY).success).toBe(true);
-    const { receiptPath: _r, ...noReceipt } = PAY;
+    const noReceipt = { ...PAY, receiptPath: undefined };
     expect(salesPaymentCreateSchema.safeParse(noReceipt).success).toBe(false);
-    const { clientRequestId: _c, ...noKey } = PAY;
+    const noKey = { ...PAY, clientRequestId: undefined };
     expect(salesPaymentCreateSchema.safeParse(noKey).success).toBe(false);
   });
 

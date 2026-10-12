@@ -10,7 +10,7 @@ import { waHttpError } from '../whatsapp/template.mapper';
 const isReceiptMime = (mime: string): boolean => (RECEIPT_MIMES as readonly string[]).includes(mime);
 
 /**
- * The images and PDFs ONE family sent in its chat, as receipt candidates (docs/16 row 15: the narrow
+ * The images and PDFs ONE family sent in its chat, as receipt candidates (docs/16 row 18: the narrow
  * exception to inbox.media). The caller has already resolved the phone from a student she owns; every
  * method is scoped to that phone, so another family's file is a 404 even with its message id.
  */

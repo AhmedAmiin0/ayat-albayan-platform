@@ -8,7 +8,7 @@ import type {
   SubscriptionView,
 } from '@ab/shared';
 
-// The whitelists of the salesperson's money responses (docs/16 row 14): explicit keys, never a spread of
+// The whitelists of the salesperson's money responses (docs/16 row 16): explicit keys, never a spread of
 // the admin's view, so a column added there never leaks here (fx rate, price_source, notes, recorder…).
 
 const cents = (n: number): number => Math.round(n * 100) / 100;

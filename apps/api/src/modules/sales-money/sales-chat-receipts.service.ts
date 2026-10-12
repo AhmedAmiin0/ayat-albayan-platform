@@ -6,7 +6,7 @@ import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoneyServices } from './sales-money.services';
 
 /**
- * «اختر صورة الإيصال من المحادثة» (owner 2026-10-12, docs/16 row 15): the receipt the family sent in its
+ * «اختر صورة الإيصال من المحادثة» (owner 2026-10-12, docs/16 row 18): the receipt the family sent in its
  * chat, for a student she owns only (403 not_your_student), never a general inbox.media grant.
  */
 @Injectable()

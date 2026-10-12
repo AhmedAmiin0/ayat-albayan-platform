@@ -112,7 +112,7 @@ export const PERMISSION_ROWS = [
   // The assistant side of sales (owner 2026-10-11, docs/16): the academy's teachers, every student and
   // the lessons running now (read-only, whitelisted). Follows the base role like the keys above.
   { key: 'self.sales_academy', area: 'self', grants: ['sales'] },
-  // Her money writes from the chat (owner 2026-10-12, docs/16 row 14): subscribe a student she owns and
+  // Her money writes from the chat (owner 2026-10-12, docs/16 row 16): subscribe a student she owns and
   // record the family's bank transfer with its receipt (/sales/subscriptions, /sales/payments, /sales/money).
   { key: 'self.sales_money', area: 'self', grants: ['sales'] },
   { key: 'self.assistant', area: 'self', grants: ['assistant'] },

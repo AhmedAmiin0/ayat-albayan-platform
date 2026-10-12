@@ -43,7 +43,7 @@ describe('POST /sales/payments: her bank transfer through the admin’s Payments
   });
 
   it('receipt required; kind, method or invoiceId from her body → 400; nothing recorded', async () => {
-    const { receiptPath: _r, ...noReceipt } = PAY;
+    const noReceipt = { ...PAY, receiptPath: undefined }; // dropped by JSON: no receiptPath at all
     for (const body of [noReceipt, { ...PAY, kind: 'refund' }, { ...PAY, method: 'cash' }, { ...PAY, invoiceId: REQ }])
       expect((await call({ method: 'POST', url: '/sales/payments', token: 'salesA', body })).statusCode).toBe(400);
     expect(m.payments.insert).not.toHaveBeenCalled();

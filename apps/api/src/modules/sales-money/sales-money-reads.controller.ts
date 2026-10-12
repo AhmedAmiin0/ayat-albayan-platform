@@ -13,7 +13,7 @@ import { parseOrThrow } from '../teachers/http';
 import { SalesChatReceipts } from './sales-chat-receipts.service';
 import { SalesMoney } from './sales-money.service';
 
-/** What the sales subscribe flow reads (docs/16 rows 14–15): her students of a chat and its receipt files. */
+/** What the sales subscribe flow reads (docs/16 rows 16–19): her students of a chat and its receipt files. */
 @ApiTags('sales')
 @ApiBearerAuth()
 @Permissions('self.sales_money')

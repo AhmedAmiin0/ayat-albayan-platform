@@ -11,7 +11,7 @@ export function assertOwnStudent(own: Pick<SalesOwnership, 'studentIds'>, studen
 }
 
 /**
- * Whose money a salesperson may write (docs/16 row 14): ownershipOf(...).studentIds, i.e. the students of
+ * Whose money a salesperson may write (docs/16 row 17): ownershipOf(...).studentIds, i.e. the students of
  * her leads' families and the students she brought (students.brought_by), whatever settings.sales_auto_assign
  * says. Never SalesBookingScope: its OFF rule (no ownership check, row 13) is for trial bookings only.
  */

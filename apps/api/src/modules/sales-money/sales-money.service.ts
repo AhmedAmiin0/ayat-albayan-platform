@@ -18,7 +18,7 @@ import { SalesMoneyServices } from './sales-money.services';
 import { SalesMoneyReads } from './sales-money.reads';
 
 /**
- * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 14): each one
+ * The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16 row 16): each one
  * checks the student is hers (403 not_your_student), then REUSES the admin's services with her as the actor
  * (SubscriptionCreator: catalog quote, replay, audit, lead conversion; PaymentsService: replay, receipt
  * path, fx, audit, recompute, trial → «مشترك»). It counts at once: no admin confirmation. Whitelisted views.

@@ -1,6 +1,6 @@
 import type { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { afterAll, beforeAll, beforeEach, describe, expect, it } from 'vitest';
-import { STUDENT_ID, SUB_ID, subRow } from '../subscriptions/money.fakes';
+import { STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from '../subscriptions/money.fakes';
 import { moneyApp, resetMocks, SALES_A, type Mocks } from '../subscriptions/test-app';
 import { CREATE, REQ, salesDefaults } from './sales-money.fakes';
 
@@ -19,7 +19,7 @@ describe('POST /sales/subscriptions(/quote): her student, the admin’s Subscrip
   });
 
   it('quote: the catalog quote of the guardian’s country, without the fx internals (she tells the family the price)', async () => {
-    m.pricing.quote.mockResolvedValue({ ...subRow().price_source, fx: { quote: 'USD', rate: 3.75, date: null, provider: 'peg', fallback: true, ageHours: null } });
+    m.pricing.quote.mockResolvedValue({ ...WEEKLY_SA, fx: { quote: 'USD', rate: 3.75, date: null, provider: 'peg', fallback: true, ageHours: null } });
     const res = await call({ method: 'POST', url: '/sales/subscriptions/quote', token: 'salesA', body: { studentId: STUDENT_ID, pricing: { tier: 'weekly' } } });
     expect(res.statusCode).toBe(200);
     expect(Object.keys(res.json()).sort()).toEqual(['afterDiscount', 'currency', 'discount', 'duration', 'lessons', 'package', 'perLesson']);
@@ -56,7 +56,7 @@ describe('POST /sales/subscriptions(/quote): her student, the admin’s Subscrip
   });
 
   it('a typed price, notes, a missing clientRequestId → 400, nothing created', async () => {
-    const { clientRequestId: _k, ...noKey } = CREATE;
+    const noKey = { ...CREATE, clientRequestId: undefined }; // dropped by JSON
     for (const body of [{ ...CREATE, price: 1 }, { ...CREATE, notes: 'x' }, noKey])
       expect((await call({ method: 'POST', url: '/sales/subscriptions', token: 'salesA', body })).statusCode).toBe(400);
     expect(m.subs.insert).not.toHaveBeenCalled();

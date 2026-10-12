@@ -21,7 +21,7 @@ import { SalesChatReceipts } from './sales-chat-receipts.service';
 import { SalesMoney } from './sales-money.service';
 
 /**
- * «اشتراك جديد» from a sales chat (owner 2026-10-12, R-ASST-01, docs/16 row 14): the price of the package
+ * «اشتراك جديد» from a sales chat (owner 2026-10-12, R-ASST-01, docs/16 row 16): the price of the package
  * she is creating (she tells the family how much to transfer), then the package itself, priced by the API
  * from the catalog like the admin's. 403 not_your_student for a student she does not own.
  */

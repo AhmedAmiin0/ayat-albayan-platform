@@ -237,6 +237,8 @@ Phase 2's conventions (docs/10 §3) still apply unless this file says otherwise.
 - v1 rule: `payment.currency === subscription.currency`, else 400 `currency_mismatch` (TODO(R-PAY-01) owner: payments in another currency).
 - `recorded_by = user.id`. Every write is audited and recomputes the package status. Journey 3: a full payment → `active`.
 - Mobile (R-MOB-02): pick the student, then the package (S1 `studentId`), amount and method, then the camera (`expo-image-picker` / `expo-camera`) → P6 → `uploadToSignedUrl` → P2. Strings are in `payments.mobile.*`.
+- **Trial → «مشترك» on payment (owner 2026-10-12).** When a payment (`kind = 'payment'`, amount > 0) is recorded on a package by ANYONE (the admin's P2 or the salesperson's `POST /sales/payments`), a student whose `students.status` is still `trial` becomes `active` in the same API flow (`MoneyWrites` → `MoneyFollowUps` → `StudentActivation`): compare-and-set on `status = 'trial'` (idempotent, a replay changes nothing), audited as `students` / `status_change` with the recorder as actor (`after.via = 'payment'`). `paused` and `churned` are never changed automatically, a refund never activates, and P4/P5 (edit, delete) never revert it: the admin edits the status by hand (`PATCH /students/:id`). Distinct from the package status above (`subscriptions.status`, a full payment → `active`).
+- **Salesperson's transfer (owner 2026-10-12, docs/16 rows 16–19).** `POST /sales/payments` reuses P2 (`PaymentsService.create`, `recorded_by` = her) with `kind = 'payment'` and `method = 'bank'` forced, the receipt required and her student only; it counts at once (no admin confirmation). The admin corrects or deletes a wrong one with P4/P5.
 
 ## 8. Payouts (B3; R-PAY-02, R-TCH-04, issue E3)
 
