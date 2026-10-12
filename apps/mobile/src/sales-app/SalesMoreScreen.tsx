@@ -18,12 +18,13 @@ const rows = () =>
     { route: 'salesLive', title: t.sales.nav.live, href: '/sales/more/live' },
     { route: 'salesSubscriptions', title: t.sales.nav.subscriptions, href: '/sales/more/subscriptions' },
     { route: 'salesEarnings', title: t.assistantPortal.nav.earnings, href: '/sales/more/earnings' },
+    { route: 'salesMeetings', title: t.mobileClassroom.meetingsRow, href: '/sales/more/meetings' },
   ] as const;
 
 /**
  * The salesperson's «المزيد»: the web SalesNav pages that do not earn a tab, in its order and with
  * its gates («المعلمون», «الحلقات الجارية», «الاشتراكات» with history, «أرباحي» with «مدفوعاتي»
- * inside) after «حسابي», then the appearance, the language and sign-out. No internal meetings (docs/16 row 12b).
+ * inside) and the meetings (meetings.read, owner 2026-10-12) after «حسابي», then the appearance, the language and sign-out.
  */
 export function SalesMoreScreen({ can }: { can: Can }) {
   return (

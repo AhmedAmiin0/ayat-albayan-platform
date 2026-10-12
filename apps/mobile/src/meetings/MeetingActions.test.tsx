@@ -16,7 +16,10 @@ jest.mock('@/lib/api', () => ({
   apiFetch: (...args: unknown[]) => mockApiFetch(...args),
 }));
 
-const meeting = { id: 'm1', title: 'x', state: 'open', can_manage: true, created_by: 'u', created_at: '2026-10-05T11:30:00.000Z', ends_at: null } as const;
+const meeting = {
+  id: 'm1', title: 'x', state: 'open', can_manage: true, can_join: true, created_by: 'u', created_at: '2026-10-05T11:30:00.000Z', ends_at: null,
+  starts_at: null, planned_end_at: null, cancelled_at: null, window: null, invitees_count: 0, my_invite: null,
+} as const;
 const press = (name: string) => fireEvent.press(screen.getByRole('button', { name }));
 beforeEach(() => {
   jest.clearAllMocks();
@@ -29,14 +32,14 @@ test.each([
   [['teacher'], '/teacher/more/meetings/m1'],
 ])('recordings opens the route of the current stack %j', async (segments, path) => {
   mockSegments = segments;
-  await renderWithQuery(<MeetingActions meeting={meeting} />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />);
   await press(t.classroom.recordings.title);
   expect(router.push).toHaveBeenCalledWith(path);
 });
 
 test('cancel is ignored while ending is in flight', async () => {
   mockApiSend.mockReturnValue(new Promise(() => undefined));
-  await renderWithQuery(<MeetingActions meeting={meeting} />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />);
   await press(t.meetings.internal.end);
   await press(t.mobileClassroom.endAction);
   await waitFor(() => expect(screen.getByRole('button', { name: t.mobileClassroom.endAction }).props.accessibilityState.busy).toBe(true));
@@ -46,7 +49,7 @@ test('cancel is ignored while ending is in flight', async () => {
 
 test('a failed end is cleared when a new link is asked for', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(500, null));
-  await renderWithQuery(<MeetingActions meeting={meeting} />);
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="Asia/Riyadh" />);
   await press(t.meetings.internal.end);
   await press(t.mobileClassroom.endAction);
   expect(await screen.findByText(t.meetings.internal.actionError)).toBeTruthy();

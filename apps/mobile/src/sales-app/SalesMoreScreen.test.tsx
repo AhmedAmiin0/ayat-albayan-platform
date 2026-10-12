@@ -17,17 +17,17 @@ const seeded = () => {
   return client;
 };
 
-const SALES: Permission[] = ['inbox.read', 'self.sales', 'self.sales_academy', 'self.sales_earnings'];
+const SALES: Permission[] = ['inbox.read', 'self.sales', 'self.sales_academy', 'self.sales_earnings', 'meetings.read'];
 const holds = (keys: Permission[]) => (p: Permission) => keys.includes(p);
-const rows = () => [t.sales.nav.teachers, t.sales.nav.live, t.sales.nav.subscriptions, t.assistantPortal.nav.earnings];
+const rows = () => [t.sales.nav.teachers, t.sales.nav.live, t.sales.nav.subscriptions, t.assistantPortal.nav.earnings, t.mobileClassroom.meetingsRow];
 
 beforeEach(() => jest.clearAllMocks());
 
-test('the full sales role: teachers, live lessons, subscriptions, earnings, each in the sales tree', async () => {
+test('the full sales role: teachers, live lessons, subscriptions, earnings, meetings, each in the sales tree', async () => {
   await renderWithQuery(<SalesMoreScreen can={holds(SALES)} />, seeded());
   expect(screen.getByRole('header', { name: t.mobile.more })).toBeTruthy();
   expect(screen.getByText(t.mobileRoles.salesRole)).toBeTruthy();
-  const hrefs = ['/sales/more/teachers', '/sales/more/live', '/sales/more/subscriptions', '/sales/more/earnings'];
+  const hrefs = ['/sales/more/teachers', '/sales/more/live', '/sales/more/subscriptions', '/sales/more/earnings', '/sales/more/meetings'];
   for (const [i, title] of rows().entries()) {
     await fireEvent.press(screen.getByRole('button', { name: title }));
     expect(router.push).toHaveBeenLastCalledWith(hrefs[i]);
@@ -37,14 +37,14 @@ test('the full sales role: teachers, live lessons, subscriptions, earnings, each
 test('without self.sales_earnings no «أرباحي»; without self.sales_academy no teachers or live lessons', async () => {
   await renderWithQuery(<SalesMoreScreen can={holds(['self.sales'])} />, seeded());
   expect(screen.getByRole('button', { name: t.sales.nav.subscriptions })).toBeTruthy();
-  for (const gone of [t.assistantPortal.nav.earnings, t.sales.nav.teachers, t.sales.nav.live]) {
+  for (const gone of [t.assistantPortal.nav.earnings, t.sales.nav.teachers, t.sales.nav.live, t.mobileClassroom.meetingsRow]) {
     expect(screen.queryByRole('button', { name: gone })).toBeNull();
   }
 });
 
-test('never the admin rows or internal meetings (docs/16 row 12b); sign-out is there', async () => {
+test('never the admin rows; sign-out is there', async () => {
   await renderWithQuery(<SalesMoreScreen can={holds(SALES)} />, seeded());
-  for (const gone of [t.mobileClassroom.meetingsRow, t.users.nav, t.pricing.title, t.nav.jobApplicants]) {
+  for (const gone of [t.users.nav, t.pricing.title, t.nav.jobApplicants]) {
     expect(screen.queryByRole('button', { name: gone })).toBeNull();
   }
   await fireEvent.press(screen.getByRole('button', { name: t.auth.logout }));

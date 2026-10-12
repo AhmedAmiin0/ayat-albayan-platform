@@ -7,10 +7,7 @@ import { env } from '@/lib/env';
 
 export const MEETINGS_KEY = ['internal-meetings'] as const;
 
-/** POST /meetings (any staff login): {id, url}; the link is shown once. */
-export const createMeeting = (title: string) => apiSend<MeetingCreated>('POST', '/meetings', title.trim() ? { title: title.trim() } : {});
-
-/** GET /meetings: the newest 20 (all for an admin, else the caller's own). */
+/** GET /meetings: the newest (all for an admin, else the ones I created or am invited to). POST: meeting-invites-api. */
 export const meetingsQuery = queryOptions({
   queryKey: [...MEETINGS_KEY, 'list'],
   queryFn: () => apiFetch<MeetingView[]>('/meetings'),

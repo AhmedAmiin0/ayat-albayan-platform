@@ -3626,6 +3626,93 @@
       }
     }
   },
+  "meetingInvites": {
+    "scheduledItem": "Scheduled meeting",
+    "instantHint": "A meeting room that starts now. Add invitees if you like, or share the link with anyone.",
+    "scheduleTitle": "Scheduled meeting",
+    "scheduleHint": "Pick the time and the invitees. The team gets an in-app notification; families and phone numbers get a WhatsApp chat message when their chat window is open.",
+    "title": "Meeting title (optional)",
+    "date": "Date",
+    "time": "Time",
+    "duration": "Duration",
+    "minutes": "{n} min",
+    "tzNote": "Times in {tz}",
+    "invitees": "Invitees",
+    "addInvitees": "Add invitees",
+    "tabs": {
+      "staff": "Team",
+      "students": "Students",
+      "phone": "Phone number"
+    },
+    "search": "Search by name or code",
+    "noOptions": "No results",
+    "phonePlaceholder": "+20…",
+    "addPhone": "Add number",
+    "invalidPhone": "Invalid phone number. Include the country code, e.g. +20 or +966",
+    "removeInvitee": "Remove {name}",
+    "maxInvitees": "At most 30 invitees per meeting",
+    "create": "Create meeting",
+    "creating": "Creating meeting…",
+    "save": "Save",
+    "saving": "Saving…",
+    "error": "Could not complete the request, try again",
+    "errors": {
+      "starts_in_past": "Pick a time in the future",
+      "too_far_ahead": "You cannot schedule more than 90 days ahead",
+      "invite_limit": "You reached today's limit of WhatsApp invitations (100). Try tomorrow or copy the links.",
+      "too_many_invitees": "At most 30 invitees per meeting",
+      "invalid_phone": "Invalid phone number",
+      "student_not_found": "Student not found or not yours to invite",
+      "staff_not_found": "Team member not found",
+      "meeting_cancelled": "This meeting was cancelled"
+    },
+    "results": {
+      "title": "Invitation results",
+      "sent": "Sent",
+      "inApp": "In-app notification sent",
+      "windowClosed": "Window closed",
+      "windowClosedHint": "Not sent because the 24-hour chat window is closed. Copy the link and invitation and send them yourself.",
+      "failed": "Could not send",
+      "pending": "Pending",
+      "cancelled": "Cancelled",
+      "copy": "Copy link and invitation",
+      "copied": "Link and invitation copied",
+      "share": "Share link and invitation",
+      "resend": "Resend",
+      "linkOnce": "The personal link is shown only once"
+    },
+    "list": {
+      "title": "Meetings",
+      "scheduledFor": "When: {when}",
+      "instant": "Instant meeting",
+      "inviteesCount": "{n} invited",
+      "invitedYou": "You are invited",
+      "cancelled": "Cancelled",
+      "opensAt": "Opens {when}",
+      "enter": "Enter",
+      "reschedule": "Reschedule",
+      "cancel": "Cancel meeting",
+      "cancelConfirm": "Cancel this meeting? The invitees' links will stop working.",
+      "invitees": "Invitees",
+      "close": "Close",
+      "keep": "Keep it",
+      "noInvitees": "No one is invited to this meeting"
+    },
+    "message": {
+      "invite": "Peace be upon you,\nYou are invited to “{title}” at Ayat Al-Bayan Academy.\nWhen: {when}\nJoin link: {link}",
+      "now": "now",
+      "cancelled": "Peace be upon you,\nSorry, “{title}” planned for {when} was cancelled."
+    },
+    "push": {
+      "rescheduled": "Meeting rescheduled",
+      "cancelled": "Meeting cancelled"
+    },
+    "mobile": {
+      "hour": "Hour",
+      "minute": "Minutes",
+      "today": "Today"
+    }
+  },
   "studentLink": {
     "title": "Student join link",
     "hint": "A lasting link the student uses to join each lesson on time, without logging in. A new link replaces the previous one.",

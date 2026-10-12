@@ -1790,32 +1790,127 @@ export type Database = {
           },
         ];
       };
+      meeting_invitees: {
+        Row: {
+          channel: string;
+          created_at: string;
+          created_by: string | null;
+          display_name: string;
+          error_code: string | null;
+          id: string;
+          kind: string;
+          meeting_id: string;
+          phone_e164: string | null;
+          profile_id: string | null;
+          sent_at: string | null;
+          status: string;
+          student_id: string | null;
+          token_hash: string | null;
+          tz: string;
+        };
+        Insert: {
+          channel: string;
+          created_at?: string;
+          created_by?: string | null;
+          display_name: string;
+          error_code?: string | null;
+          id?: string;
+          kind: string;
+          meeting_id: string;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+          sent_at?: string | null;
+          status?: string;
+          student_id?: string | null;
+          token_hash?: string | null;
+          tz?: string;
+        };
+        Update: {
+          channel?: string;
+          created_at?: string;
+          created_by?: string | null;
+          display_name?: string;
+          error_code?: string | null;
+          id?: string;
+          kind?: string;
+          meeting_id?: string;
+          phone_e164?: string | null;
+          profile_id?: string | null;
+          sent_at?: string | null;
+          status?: string;
+          student_id?: string | null;
+          token_hash?: string | null;
+          tz?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'meeting_invitees_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'meeting_invitees_meeting_id_fkey';
+            columns: ['meeting_id'];
+            isOneToOne: false;
+            referencedRelation: 'meetings';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'meeting_invitees_profile_id_fkey';
+            columns: ['profile_id'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'meeting_invitees_student_id_fkey';
+            columns: ['student_id'];
+            isOneToOne: false;
+            referencedRelation: 'students';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       meetings: {
         Row: {
+          cancelled_at: string | null;
+          client_request_id: string | null;
           created_at: string;
           created_by: string | null;
           ends_at: string | null;
           id: string;
           link_token_hash: string | null;
+          planned_end_at: string | null;
           revoked: boolean;
+          starts_at: string | null;
           title: string;
         };
         Insert: {
+          cancelled_at?: string | null;
+          client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           ends_at?: string | null;
           id?: string;
           link_token_hash?: string | null;
+          planned_end_at?: string | null;
           revoked?: boolean;
+          starts_at?: string | null;
           title?: string;
         };
         Update: {
+          cancelled_at?: string | null;
+          client_request_id?: string | null;
           created_at?: string;
           created_by?: string | null;
           ends_at?: string | null;
           id?: string;
           link_token_hash?: string | null;
+          planned_end_at?: string | null;
           revoked?: boolean;
+          starts_at?: string | null;
           title?: string;
         };
         Relationships: [
@@ -3709,6 +3804,8 @@ export type Database = {
       };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_client_session: { Args: Record<PropertyKey, never>; Returns: boolean };
+      is_meeting_creator: { Args: { p_meeting: string }; Returns: boolean };
+      is_meeting_invitee: { Args: { p_meeting: string }; Returns: boolean };
       is_my_assisted_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_lesson: { Args: { p_lesson: string }; Returns: boolean };
       is_my_child_report: { Args: { p_report: string }; Returns: boolean };

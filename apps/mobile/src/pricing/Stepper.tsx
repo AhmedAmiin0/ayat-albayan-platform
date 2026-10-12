@@ -3,6 +3,7 @@ import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Ltr } from '@/ui/Ltr';
+import { stepValue } from './step-value';
 
 export interface StepperProps {
   /** The step's name (t.pricing.studentsLabel…); also the buttons' hint for screen readers. */
@@ -11,6 +12,12 @@ export interface StepperProps {
   min: number;
   max: number;
   onChange: (value: number) => void;
+  /** Size of one step (default 1): 15 for minutes. */
+  step?: number;
+  /** Go round past an edge (a clock: 23 → 0) instead of stopping there. */
+  wrap?: boolean;
+  /** The readout (default the plain number): «14», «60 دقيقة». */
+  format?: (value: number) => string;
 }
 
 interface StepButtonProps {
@@ -57,20 +64,22 @@ function StepButton({ glyph, name, hint, disabled, onPress }: StepButtonProps) {
   );
 }
 
-/** − n + with 44pt targets (docs/07 §4), clamped to [min, max]. Western digits, LTR island. */
-export function Stepper({ label, value, min, max, onChange }: StepperProps) {
+/** − n + with 44pt targets (docs/07 §4), clamped to [min, max] (or wrapping). Western digits, LTR island. */
+export function Stepper({ label, value, min, max, onChange, ...o }: StepperProps) {
   const { color } = useTheme();
+  const range = { min, max, step: o.step ?? 1, wrap: o.wrap === true };
+  const shown = o.format ? o.format(value) : String(value);
   return (
     <View style={{ flexDirection: 'row', alignItems: 'center', gap: 12 }}>
       <StepButton
         glyph="−"
         name={t.pricing.decrease}
         hint={label}
-        disabled={value <= min}
-        onPress={() => onChange(Math.max(min, value - 1))}
+        disabled={!range.wrap && value <= min}
+        onPress={() => onChange(stepValue(value, -1, range))}
       />
       <Ltr
-        accessibilityLabel={`${label}: ${value}`}
+        accessibilityLabel={`${label}: ${shown}`}
         style={{
           minWidth: 32,
           textAlign: 'center',
@@ -80,14 +89,14 @@ export function Stepper({ label, value, min, max, onChange }: StepperProps) {
           color: color.ink,
         }}
       >
-        {String(value)}
+        {shown}
       </Ltr>
       <StepButton
         glyph="+"
         name={t.pricing.increase}
         hint={label}
-        disabled={value >= max}
-        onPress={() => onChange(Math.min(max, value + 1))}
+        disabled={!range.wrap && value >= max}
+        onPress={() => onChange(stepValue(value, 1, range))}
       />
     </View>
   );

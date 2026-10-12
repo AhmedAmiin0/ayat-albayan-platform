@@ -1,12 +1,12 @@
-import { restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
+import { restrictedMay, type ThreadTemplate, type ThreadText, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { lineEnvs, loadEnv } from '../../env';
 import { TemplateRegistry } from '../whatsapp/template.registry';
 import { waHttpError } from '../whatsapp/template.mapper';
 import type { SalesScope } from '../sales/sales-scope';
 import { Outbox, type Sent } from './outbox';
 import { assertCanSend, type TeacherScope } from './teacher-scope';
-import { missingParams, threadReplyLine, type ThreadRow } from './threads.mapper';
+import { pickSendLine } from './send-line';
+import { missingParams, type ThreadRow } from './threads.mapper';
 import { ThreadsQueries } from './threads.queries';
 
 export interface ThreadSend<T> {
@@ -47,21 +47,11 @@ function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
   };
 }
 
-/**
- * The line a session text leaves from (docs/12 §13.3 rule 2): replyLine() prefers the chat line
- * whenever its window is open. Every window closed → 409; only the chat window open while the chat
- * line cannot send → 503. Stamped only while the chat line is configured (13.2: a single line
- * queues no line key). The env is read per request.
- */
-function sendLine(thread: ThreadRow | null, now: Date): { line?: 'chat' | 'notifications' } {
-  const chatConfigured = Boolean(lineEnvs(loadEnv()).chat);
-  const line = thread ? threadReplyLine(thread, { chatConfigured, now }) : null;
-  if (!line) throw waHttpError('session_closed', 409);
-  if (!chatConfigured) {
-    if (line === 'chat') throw waHttpError('line_not_configured', 503);
-    return {};
-  }
-  return { line };
+/** pickSendLine as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured. */
+function sendLine(thread: ThreadRow | null, now: Date): { line?: WaLine } {
+  const picked = pickSendLine(thread, now);
+  if (!('code' in picked)) return picked;
+  throw picked.code === 'line_not_configured' ? waHttpError('line_not_configured', 503) : waHttpError('session_closed', 409);
 }
 
 /**

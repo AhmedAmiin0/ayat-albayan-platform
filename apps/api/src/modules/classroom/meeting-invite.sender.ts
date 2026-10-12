@@ -1,0 +1,95 @@
+import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
+import { Injectable, Logger } from '@nestjs/common';
+import { PushService } from '../../common/push/push.service';
+import { pickSendLine } from '../inbox/send-line';
+import { ThreadsQueries } from '../inbox/threads.queries';
+import { MessageSender } from '../whatsapp/message.sender';
+import type { StoredInvitee } from './meeting-invitees.queries';
+import { whenText } from './meeting-invite.text';
+
+/** What one delivery did; written on the invitee row by the caller. */
+export interface DeliveryOutcome {
+  status: MeetingInviteStatus;
+  channel: MeetingInviteChannel;
+  error_code: string | null;
+}
+
+export interface StaffNotice {
+  meeting: { id: string; title: string; starts_at: string | null };
+  invitee: StoredInvitee;
+  /** PushService subject (dedup): inviteSubject(), or `cancel:<meeting>`. */
+  subject: string;
+  /** Replaces «دعوة إلى اجتماع» (a reschedule, a cancellation). */
+  title?: string;
+}
+
+export interface ChatSend {
+  phone: string;
+  body: string;
+  dedupKey: string;
+  actorId: string;
+  /** The row is dropped (never sent late) after this instant. */
+  expiresAt: string;
+  now: Date;
+}
+
+/**
+ * The two channels of a meeting invitation (R-MEET-02). Staff: one bell row (+ push) through
+ * PushService.notifyProfiles, kind meeting_invite, keyed by subject (rule 8). Others: a WhatsApp
+ * SESSION TEXT queued like an inbox reply (the line replyLine picks, docs/12 §13.3); never a template.
+ * No thread or every window closed → window_closed, nothing queued. The queued row goes out through the
+ * usual sender and its gates (MESSAGING_ENABLED, WA_ALLOWED_RECIPIENTS, settings.messaging_enabled).
+ * Never throws: one recipient's failure never fails the others.
+ */
+@Injectable()
+export class MeetingInviteSender {
+  private readonly log = new Logger(MeetingInviteSender.name);
+
+  constructor(
+    private readonly push: PushService,
+    private readonly threads: ThreadsQueries,
+    private readonly sender: MessageSender,
+  ) {}
+
+  async staff(n: StaffNotice): Promise<DeliveryOutcome> {
+    if (!n.invitee.profile_id) return { status: 'failed', channel: 'in_app', error_code: 'no_profile' };
+    await this.push.notifyProfiles({
+      kind: 'meeting_invite',
+      subject: n.subject,
+      vars: { title: n.meeting.title, when: whenText(n.meeting.starts_at, n.invitee.tz) },
+      data: { meetingId: n.meeting.id },
+      profileIds: [n.invitee.profile_id],
+      ...(n.title ? { title: n.title } : {}),
+    });
+    return { status: 'sent', channel: 'in_app', error_code: null };
+  }
+
+  /** Queues the chat text when a window is open; the sender is kicked once by the caller (kick()). */
+  async chat(s: ChatSend): Promise<DeliveryOutcome> {
+    try {
+      const thread = await this.threads.thread(s.phone);
+      const picked = pickSendLine(thread, s.now);
+      if ('code' in picked) return { status: 'window_closed', channel: 'link', error_code: picked.code };
+      await this.threads.enqueue({
+        direction: 'outbound',
+        status: 'queued',
+        phone_e164: s.phone,
+        lead_id: thread?.lead_id ?? null,
+        guardian_id: thread?.guardian_id ?? null,
+        created_by: s.actorId,
+        dedup_key: s.dedupKey,
+        body: s.body,
+        expires_at: s.expiresAt,
+        ...picked,
+      });
+      return { status: 'sent', channel: 'whatsapp', error_code: null };
+    } catch (e) {
+      this.log.warn(`meeting invite chat failed: ${e instanceof Error ? e.message : String(e)}`);
+      return { status: 'failed', channel: 'link', error_code: 'send_failed' };
+    }
+  }
+
+  kick(): void {
+    void this.sender.kick();
+  }
+}

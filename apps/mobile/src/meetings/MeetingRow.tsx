@@ -4,15 +4,27 @@ import { t } from '@/lib/i18n';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { StatusChip } from '@/ui/StatusChip';
+import { opensLine, scheduleLine } from './invite-text';
 import { meetingWhen } from './meeting-text';
 import { MeetingActions } from './MeetingActions';
 
 const L = t.meetings.internal;
+const M = t.meetingInvites.list;
 
-/** One internal meeting: title, open/ended chip, creation time, and the actions the caller may take. */
-export function MeetingRow({ meeting }: { meeting: MeetingView }) {
+/** The second line: «الموعد: …» or «اجتماع فوري · 5 أكتوبر 14:30», then the invitees and «أنت مدعو». */
+function detailLine(meeting: MeetingView, tz: string): string {
+  const when = meeting.starts_at ? scheduleLine(meeting, tz) : `${M.instant} · ${meetingWhen(meeting.created_at, tz)}`;
+  const count = meeting.invitees_count > 0 ? M.inviteesCount.replace('{n}', String(meeting.invitees_count)) : null;
+  return [when, count, meeting.my_invite ? M.invitedYou : null].filter(Boolean).join(' · ');
+}
+
+/** One meeting (mine or one I am invited to): title, open/ended/cancelled chip, its time, and the actions I may take. */
+export function MeetingRow({ meeting, tz }: { meeting: MeetingView; tz: string }) {
   const { color } = useTheme();
-  const open = meeting.state === 'open';
+  const open = meeting.state === 'open' && !meeting.cancelled_at;
+  const chip = meeting.cancelled_at ? M.cancelled : open ? L.open : L.ended;
+  const opens = opensLine(meeting, tz);
+  const small = { fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums' as const] };
   return (
     <View
       style={{
@@ -28,17 +40,11 @@ export function MeetingRow({ meeting }: { meeting: MeetingView }) {
         <AppText numberOfLines={2} style={{ flex: 1, fontFamily: type.ui[700], fontSize: type.size.body, color: color.ink }}>
           {meeting.title}
         </AppText>
-        <StatusChip
-          tone={open ? 'ok' : 'neutral'}
-          glyph={open ? 'fill' : 'struck'}
-          label={open ? L.open : L.ended}
-          size="sm"
-        />
+        <StatusChip tone={open ? 'ok' : 'neutral'} glyph={open ? 'fill' : 'struck'} label={chip} size="sm" />
       </View>
-      <AppText style={{ fontFamily: type.ui[400], fontSize: type.size.xs, color: color.ink2, fontVariant: ['tabular-nums'] }}>
-        {meetingWhen(meeting.created_at)}
-      </AppText>
-      <MeetingActions meeting={meeting} />
+      <AppText style={small}>{detailLine(meeting, tz)}</AppText>
+      {opens ? <AppText style={small}>{opens}</AppText> : null}
+      <MeetingActions meeting={meeting} tz={tz} />
     </View>
   );
 }

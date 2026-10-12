@@ -4,21 +4,14 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { InternalMeetingsList } from './InternalMeetingsList';
+import { meetingRow } from './meeting-fixture';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const R = t.classroom.recordings;
-const row = (over: Partial<MeetingView> = {}): MeetingView => ({
-  id: 'm-1',
-  title: 'اجتماع الإدارة',
-  created_by: 'u-1',
-  created_at: '2026-10-05T09:00:00.000Z',
-  ends_at: '2026-10-05T10:00:00.000Z',
-  state: 'ended',
-  can_manage: true,
-  ...over,
-});
+const row = (over: Partial<MeetingView> = {}): MeetingView =>
+  meetingRow({ ends_at: '2026-10-05T10:00:00.000Z', state: 'ended', can_join: false, ...over });
 const REC: LessonRecordingView[] = [{ id: 'r1', status: 'done', started_at: '2026-10-05T09:01:00Z', ended_at: '2026-10-05T09:59:00Z', url: 'https://files.test/r1.mp4' }];
 
 function open(status: { configured: boolean }) {

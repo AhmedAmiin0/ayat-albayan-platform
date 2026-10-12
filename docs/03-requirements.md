@@ -147,6 +147,11 @@ Every signed-in login (any role, custom roles, students and guardians) manages i
 - **R-ACC-04** Password change with the current password and the existing rules (`AUTH_PASSWORD_MIN_LENGTH`); the current session stays signed in. A wrong current password → `wrong_password`.
 - **R-ACC-05** Photo: private `avatars` bucket (2 MB, JPEG/PNG/WebP), `<uid>/avatar-<ms>.<ext>`, uploaded through a signed URL and re-checked server-side (size, type, first bytes); the previous photo is deleted; remove. Storage RLS: own folder only, the admin reads all.
 
+### 3.15 Scheduled meetings and invitations (owner, 2026-10-12; docs/12 §14)
+- **R-MEET-01** Scheduling: any staff login with `meetings.write` (admin, teacher, classroom assistant, sales) creates an instant meeting or schedules one (future, ≤ 90 days, 15–240 minutes, times UTC, shown in the viewer's tz); joining follows the lesson join window; the creator or an admin reschedules (staff are notified again) or cancels (nobody joins, personal links stop working). The meetings list shows what the caller created or is invited to.
+- **R-MEET-02** Invitations: invitees are staff (in-app bell, kind `meeting_invite`), students (the guardian's phone, resolved server-side and never returned) or any typed E.164 phone; families and phones get a WhatsApp chat message only inside the 24 h window (no template); a closed window is reported per recipient with «انسخ الرابط والدعوة» (a personal link, hashed, shown once; resend rotates only that one). Idempotent by dedup keys; ≤ 30 invitees per meeting, ≤ 100 WhatsApp invitations per login per day.
+- **R-MEET-03** Sales get «الاجتماعات» back (web `/sales/meetings` and its nav entry, mobile where a sales tree exists), reversing docs/16 row 12b; the picker offers sales every staff member and every student of the `/sales/students/all` scope.
+
 ## 4. Non-functional requirements
 - **R-NFR-01** Arabic RTL UI, Arabic + English teacher names, Hijri date optional display; UI text in clear Modern Standard Arabic (owner, 2026-10-03); Meta-approved WhatsApp templates keep their approved text until resubmitted.
 - **R-NFR-02** Secrets only in environment / Supabase Vault; no keys in repo or Drive. RLS on every table; teachers see only own rows.

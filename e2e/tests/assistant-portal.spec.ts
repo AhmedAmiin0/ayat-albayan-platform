@@ -68,7 +68,7 @@ test.describe('assistant portal', () => {
     await signIn(page, email);
 
     // Below 900px the section nav sits behind «القائمة»: salesNav opens it (the mobile project is a Pixel 7).
-    // Owner 2026-10-12: «طلابي» is a filter of «الطلاب», «مدفوعاتي» a filter of «أرباحي»; no meetings page.
+    // Owner 2026-10-12: «طلابي» is a filter of «الطلاب», «مدفوعاتي» a filter of «أرباحي».
     for (const label of [ar.sales.nav.allStudents, ar.assistantPortal.nav.earnings]) await expect((await salesNav(page)).getByRole('link', { name: label })).toBeVisible();
     for (const label of [ar.assistantPortal.nav.students, ar.assistantPortal.nav.payments]) await expect((await salesNav(page)).getByRole('link', { name: label })).toHaveCount(0);
 

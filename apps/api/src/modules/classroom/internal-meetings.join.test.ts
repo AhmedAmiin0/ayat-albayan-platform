@@ -53,7 +53,7 @@ describe('internal meeting: staff join', () => {
 
 describe('internal meeting: the public link', () => {
   it('shows the title and state, found by the hash, without LiveKit', async () => {
-    expect(await service(null).view({ token: MEETING_TOKEN, ip: '1.1.1.1' }, NOW)).toEqual({ title: 'اجتماع الإدارة', state: 'open' });
+    expect(await service(null).view({ token: MEETING_TOKEN, ip: '1.1.1.1' }, NOW)).toEqual({ title: 'اجتماع الإدارة', state: 'open', starts_at: null, opens_at: null });
     expect(mq.byHash).toHaveBeenCalledWith(hashMeetingToken(MEETING_TOKEN));
     mq.byHash.mockResolvedValueOnce(meetingRow({ ends_at: NOW.toISOString() }));
     expect((await service().view({ token: MEETING_TOKEN, ip: '1.1.1.1' }, NOW)).state).toBe('ended');

@@ -5,13 +5,9 @@ import { apiFetch, apiSend } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
 import { meetingUrl } from './meeting-text';
 
-/** GET /meetings: the newest 20 (all for an admin, else the caller's own). Key ['meetings'] reaches every call below. */
+/** GET /meetings: all for an admin, else the caller's own and the ones they are invited to. Key ['meetings'] reaches every call below. */
 export const useMeetings = () =>
   useQuery({ queryKey: [...pathKey('/meetings'), 'list'], queryFn: () => apiFetch<MeetingView[]>('/meetings') });
-
-/** POST /meetings: the title is optional; the link comes back once (only its hash is stored). */
-export const createMeeting = (title: string) =>
-  apiSend<MeetingCreated>('POST', '/meetings', title.trim() ? { title: title.trim() } : {});
 
 /** POST /meetings/:id/end (creator or admin): 204. */
 export const endMeeting = (id: string) => apiSend('POST', `/meetings/${id}/end`);
