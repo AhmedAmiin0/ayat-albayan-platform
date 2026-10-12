@@ -67,6 +67,7 @@ export const GENDERS = ['male', 'female'] as const satisfies readonly Enums<'gen
 export const STUDENT_STATUSES = [
   'trial',
   'active',
+  'pending_renewal',
   'paused',
   'churned',
 ] as const satisfies readonly Enums<'student_status'>[];

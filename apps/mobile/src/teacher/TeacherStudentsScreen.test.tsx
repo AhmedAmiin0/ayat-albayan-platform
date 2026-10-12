@@ -35,6 +35,16 @@ test('opens on «مشتركون»: only subscribed students; a row opens their r
   expect(mockPush).toHaveBeenCalledWith('/teacher/reports/student/s1');
 });
 
+test('a pending_renewal student stays in «مشتركون» with its «بانتظار التجديد» chip; active rows carry none', async () => {
+  mockApiFetch.mockImplementation(async (p: string) =>
+    p === '/teachers/me' ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } : [row({}), row({ id: 's4', name: 'مريم', status: 'pending_renewal' })],
+  );
+  await renderWithQuery(<TeacherStudentsScreen />);
+  expect(await screen.findByText('مريم')).toBeTruthy();
+  expect(screen.getAllByText(t.enums.studentStatus.pending_renewal)).toHaveLength(1);
+  expect(screen.queryByText(t.enums.studentStatus.active)).toBeNull();
+});
+
 test('«تجريبي» swaps to the trial list, with the next lesson in her time zone; never mixed', async () => {
   await renderWithQuery(<TeacherStudentsScreen />);
   await screen.findByText('سهيلة');

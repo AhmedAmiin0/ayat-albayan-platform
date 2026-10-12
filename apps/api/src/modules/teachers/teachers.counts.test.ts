@@ -4,12 +4,13 @@ import { tallyKinds } from './teachers.list';
 import { TeachersQueries } from './teachers.queries';
 
 describe('GET /teachers «مشترك / تجريبي» counts (R-TCH-03, owner 2026-10-12)', () => {
-  it('tallyKinds counts active and trial per teacher; other statuses and no teacher are ignored', () => {
+  it('tallyKinds counts active and trial per teacher; pending_renewal (not «مشترك»), other statuses and no teacher are ignored', () => {
     const out = tallyKinds([
       { teacher_id: 't1', status: 'active' },
       { teacher_id: 't1', status: 'trial' },
       { teacher_id: 't1', status: 'active' },
       { teacher_id: 't2', status: 'paused' },
+      { teacher_id: 't1', status: 'pending_renewal' },
       { teacher_id: null, status: 'active' },
     ]);
     expect([...out]).toEqual([['t1', { active_count: 2, trial_count: 1 }]]);

@@ -26,13 +26,13 @@ const COLUMNS = 'id, code, name, status, program, level, age' as const;
 export class TeacherStudentsQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Students whose teacher_id is mine and whose status is `status`. */
-  async assigned(input: { teacherId: string; status: StudentStatus }): Promise<TeacherStudentRow[]> {
+  /** Students whose teacher_id is mine and whose status is one of `statuses`. */
+  async assigned(input: { teacherId: string; statuses: readonly StudentStatus[] }): Promise<TeacherStudentRow[]> {
     const { data, error } = await this.db
       .from('students')
       .select(COLUMNS)
       .eq('teacher_id', input.teacherId)
-      .eq('status', input.status);
+      .in('status', [...input.statuses]);
     if (error) throw dbError(error);
     return data;
   }
@@ -49,14 +49,14 @@ export class TeacherStudentsQueries {
     return data;
   }
 
-  /** Students by id, filtered to `status` (so paused / churned never come back). */
-  async byIds(input: { ids: readonly string[]; status: StudentStatus }): Promise<TeacherStudentRow[]> {
+  /** Students by id, filtered to `statuses` (so paused / churned never come back). */
+  async byIds(input: { ids: readonly string[]; statuses: readonly StudentStatus[] }): Promise<TeacherStudentRow[]> {
     if (input.ids.length === 0) return [];
     const { data, error } = await this.db
       .from('students')
       .select(COLUMNS)
       .in('id', [...input.ids])
-      .eq('status', input.status);
+      .in('status', [...input.statuses]);
     if (error) throw dbError(error);
     return data;
   }

@@ -18,7 +18,8 @@ const FIRST_RUN_MS = 5 * 60_000;
  * report) evaluates the lessons' students right away, awaited by the writer, so it stays one
  * balance read per student. The sweep (docs/11 §6) runs every 15 minutes over every student with
  * a package, so a missed event (a failed listener, a direct DB edit) still raises its alert.
- * Idempotent through the dedup keys.
+ * The sweep also moves a student whose renewal date passed to «بانتظار التجديد» (StudentRenewal), leaving a
+ * status the admin set by hand. Idempotent through the dedup keys and the compare-and-set.
  * ponytail: in-process timer on the single API instance, like HorizonJob; pg_cron when it scales.
  */
 @Injectable()
@@ -49,7 +50,7 @@ export class AlertsJob implements OnModuleInit, OnApplicationBootstrap, OnModule
   async runOnce(now = new Date()): Promise<{ students: number; failed: number }> {
     try {
       const ids = await this.queries.studentsWithPackages();
-      const failed = await this.alerts.evaluateStudents(ids, { now });
+      const failed = await this.alerts.evaluateStudents(ids, { now, cause: { via: 'sweep' } });
       return { students: ids.length, failed };
     } catch (e) {
       this.log.error(`alerts sweep aborted: ${String(e)}`);

@@ -57,7 +57,7 @@ describe('system roles', () => {
   });
 
   it('sales and assistant carry only their scope keys and the shared rooms/inbox', () => {
-    expect(selfPermissionsOf('sales')).toEqual(['self.sales', 'self.sales_students', 'self.sales_payments', 'self.sales_earnings', 'self.sales_academy']);
+    expect(selfPermissionsOf('sales')).toEqual(['self.sales', 'self.sales_students', 'self.sales_payments', 'self.sales_earnings', 'self.sales_academy', 'self.sales_money']);
     expect(selfPermissionsOf('assistant')).toEqual(['self.assistant']);
     expect(systemPermissionsOf('sales')).toContain('inbox.read');
     expect(systemPermissionsOf('assistant')).not.toContain('inbox.read');
@@ -90,7 +90,7 @@ describe('assistant pay permissions', () => {
       expect(systemPermissionsOf('admin')).toContain(k);
       for (const role of ['teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).not.toContain(k);
     }
-    for (const k of ['self.sales_students', 'self.sales_payments', 'self.sales_earnings', 'self.sales_academy'] as const) {
+    for (const k of ['self.sales_students', 'self.sales_payments', 'self.sales_earnings', 'self.sales_academy', 'self.sales_money'] as const) {
       expect(isGrantable(k)).toBe(false);
       expect(systemPermissionsOf('sales')).toContain(k);
       expect(systemPermissionsOf('admin')).not.toContain(k);

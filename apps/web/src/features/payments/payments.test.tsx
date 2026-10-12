@@ -117,7 +117,10 @@ describe('PaymentsPage', () => {
     fireEvent.click(await within(dialog).findByRole('button', { name: /سهيلة/ }));
     await vi.waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/subscriptions?studentId=stu-1&pageSize=100'));
     await within(dialog).findByRole('option', { name: /\d/ });
-    expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('145');
+    // The amount is prefilled after the package is chosen (an effect): wait for it, never read it once.
+    await vi.waitFor(() =>
+      expect((within(dialog).getByRole('textbox', { name: new RegExp(t.payments.amount) }) as HTMLInputElement).value).toBe('145'),
+    );
     apiSend.mockResolvedValue(PAYMENT);
     fireEvent.click(within(dialog).getByRole('button', { name: t.payments.record }));
     await vi.waitFor(() =>

@@ -53,6 +53,9 @@ test('pick the package → the API’s price → a day chip → «أنشئ ال�
 
   await radio(p.packages.premium.sessions);
   await radio(p.durations['60']);
+  // The admin keeps the free 0–100 field beside the pills.
+  const free = screen.getAllByLabelText(p.steps.discount).filter((e) => e.props.keyboardType === 'decimal-pad');
+  expect(free).toHaveLength(1);
   await radio(p.discounts['10']);
   await radio(p.countries.AE);
   const pricing = { duration: 60, discount: 10, country: 'AE', tier: 'premium' };
