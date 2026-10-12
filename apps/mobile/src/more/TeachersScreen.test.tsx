@@ -4,7 +4,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { TeachersScreen } from './TeachersScreen';
-import type { Teacher } from './types';
+import type { TeacherListItem } from './types';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -13,15 +13,17 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const teacher = (id: string, over: Partial<Teacher> = {}): Teacher => ({
+const teacher = (id: string, over: Partial<TeacherListItem> = {}): TeacherListItem => ({
   id,
   display_name_ar: 'أ. فاطمة الزهراء',
   phone_e164: '+966552147730',
   status: 'active',
   tz: 'Asia/Riyadh',
+  active_count: 0,
+  trial_count: 0,
   ...over,
 });
-const page = (items: Teacher[], total = items.length) => ({ items, total, page: 1, pageSize: 25 });
+const page = (items: TeacherListItem[], total = items.length) => ({ items, total, page: 1, pageSize: 25 });
 
 beforeEach(() => jest.clearAllMocks());
 
@@ -35,7 +37,7 @@ test('rows with name + status chip, the API total as the count; tap opens the te
   expect(screen.getByText(t.teachers.count.replace('{n}', '31'))).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.active)).toBeTruthy();
   expect(screen.getByText(t.enums.teacherStatus.inactive)).toBeTruthy();
-  await fireEvent.press(screen.getByRole('button', { name: /أ\. محمود/ }));
+  await fireEvent.press(screen.getByRole('button', { name: /^أ\. محمود/ }));
   expect(router.push).toHaveBeenCalledWith('/more/teachers/t2');
 });
 
@@ -51,4 +53,18 @@ test('failed with nothing cached: error + retry', async () => {
   expect(await screen.findByRole('alert')).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText('أ. فاطمة الزهراء')).toBeTruthy();
+});
+
+test('each row shows «مشترك n · تجريبي n»; a count opens the teacher on that list', async () => {
+  mockApiFetch.mockResolvedValue(page([teacher('t1', { active_count: 7, trial_count: 2 })]));
+  await renderWithQuery(<TeachersScreen />);
+  expect(await screen.findByText(`${t.studentLists.active} 7`)).toBeTruthy();
+  expect(screen.getByText(`${t.studentLists.trial} 2`)).toBeTruthy();
+  const label = (text: string, n: number) => text.replace('{name}', 'أ. فاطمة الزهراء').replace('{n}', String(n));
+  await fireEvent.press(screen.getByRole('button', { name: label(t.studentLists.activeLink, 7) }));
+  expect(router.push).toHaveBeenLastCalledWith('/more/teachers/t1?status=active');
+  await fireEvent.press(screen.getByRole('button', { name: label(t.studentLists.trialLink, 2) }));
+  expect(router.push).toHaveBeenLastCalledWith('/more/teachers/t1?status=trial');
+  await fireEvent.press(screen.getByRole('button', { name: /^أ\. فاطمة الزهراء/ }));
+  expect(router.push).toHaveBeenLastCalledWith('/more/teachers/t1');
 });

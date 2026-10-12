@@ -21,10 +21,12 @@ export function calendarBackend() {
   const state: { lessons: LessonView[]; slots: typeof SLOTS } = { lessons: [pending, muscat], slots: SLOTS };
   const within = (l: LessonView, from = '', to = '9') => l.starts_at >= from && l.starts_at < to;
   const backend = new FakeBackend()
-    .on('GET /teachers', () => ({ items: [TEACHER], total: 1, page: 1, pageSize: 25 }))
+    .on('GET /teachers', () => ({ items: [{ ...TEACHER, active_count: 0, trial_count: 0 }], total: 1, page: 1, pageSize: 25 }))
     .on('GET /teachers/:id', () => TEACHER)
     .on('GET /teachers/:id/availability', () => [])
     .on('GET /teachers/:id/time-off', () => [])
+    .on('GET /students/status-counts', () => ({ trial: 0, active: 0, paused: 0, churned: 0 }))
+    .on('GET /students', () => ({ items: [], total: 0, page: 1, pageSize: 50 }))
     .on('GET /settings', () => ({ renewal_alert_remaining: 2, follow_up_hours: [2, 24, 72] }))
     .on('GET /lessons', ({ query }) =>
       state.lessons.filter((l) => l.teacher.id === query['teacherId'] && within(l, query['from'], query['to'])),

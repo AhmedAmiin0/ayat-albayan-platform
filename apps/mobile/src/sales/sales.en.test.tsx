@@ -1,5 +1,5 @@
 import en from '@ab/shared/i18n/en.json';
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { history, scheduleLesson, teacher } from './fixtures';
@@ -30,6 +30,7 @@ test('an English run reads en.json: the teacher’s English name, gender and pro
   expect(await screen.findByText('Abrar Mohamed')).toBeTruthy();
   expect(screen.getByRole('header', { name: en.sales.teachers.title })).toBeTruthy();
   expect(screen.getByText(`Female · ${en.enums.program.quran}, ${en.enums.program.arabic}`)).toBeTruthy();
+  expect(screen.getByText(en.studentLists.counts.replace('{active}', '1').replace('{trial}', '1'))).toBeTruthy();
 });
 
 test('an English run of the history: title, statuses and the «Current» mark in English', async () => {
@@ -42,10 +43,15 @@ test('an English run of the history: title, statuses and the «Current» mark in
 
 test('an English run of a teacher’s students and the read-only schedule', async () => {
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/sales/teachers' ? [teacher()] : { date: '2026-10-12', lessons: [scheduleLesson({ trial: true })] },
+    path === '/sales/teachers'
+      ? [teacher({ meeting_link: 'https://meet.example.org/abrar-fixed' })]
+      : { date: '2026-10-12', lessons: [scheduleLesson({ trial: true })] },
   );
   const first = await renderWithQuery(<SalesTeacherScreen />);
   expect(await screen.findByRole('header', { name: "Abrar Mohamed's students" })).toBeTruthy();
+  expect(screen.getByText(en.studentLists.meetingLink)).toBeTruthy();
+  expect(screen.getByRole('button', { name: en.studentLists.shareLink })).toBeTruthy();
+  await fireEvent.press(screen.getByRole('tab', { name: `${en.studentLists.trial} 1` }));
   expect(screen.getByText(en.enums.studentStatus.trial)).toBeTruthy();
   expect(screen.getByRole('button', { name: "Show the teacher's schedule today" })).toBeTruthy();
   await first.unmount();

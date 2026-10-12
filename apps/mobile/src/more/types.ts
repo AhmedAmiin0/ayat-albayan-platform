@@ -1,4 +1,4 @@
-import type { AvailabilitySlot, JobApplicantStatus, TeacherStatus } from '@ab/shared';
+import type { AvailabilitySlot, JobApplicantStatus, TeacherStatus, TeacherStudentCounts } from '@ab/shared';
 
 // The fields of apps/api responses this tab shows (R-TCH-01, R-TCH-02, R-LEAD-04). Nothing else.
 
@@ -10,6 +10,9 @@ export interface Teacher {
   status: TeacherStatus;
   tz: string;
 }
+
+/** GET /teachers row: the teacher and their current students by kind («مشترك n · تجريبي n»). */
+export type TeacherListItem = Teacher & TeacherStudentCounts;
 
 /** GET /teachers/:id/availability: wall-clock «HH:MM» in `tz`, weekday 0 = الأحد. */
 export type AvailabilityRow = AvailabilitySlot & { id: string };
