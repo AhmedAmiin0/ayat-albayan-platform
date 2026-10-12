@@ -3386,7 +3386,7 @@
       "pick": "Pick an owner",
       "saved": "Assigned",
       "auto": "Auto-assign new leads",
-      "autoHint": "A new lead goes to the salesperson with the fewest leads, and only they can register it. When off, any salesperson can register any lead.",
+      "autoHint": "A new lead goes to the salesperson with the fewest leads, and only they can register it as a student. When off, new leads stay unassigned and any salesperson can register them.",
       "assignAll": "Assign leads without an owner",
       "assignedN": "{n} leads assigned",
       "rowLabel": "Sales owner for {name}",
