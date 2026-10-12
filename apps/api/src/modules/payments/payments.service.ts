@@ -1,5 +1,5 @@
 import type { TablesUpdate } from '@ab/db';
-import type { PaymentCreate, PaymentUpdate, PaymentView } from '@ab/shared';
+import type { PaymentAttachmentView, PaymentCreate, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { conflict, notFound } from '../scheduling/errors';
 import { MoneyWrites } from '../subscriptions/money-writes';
@@ -38,9 +38,9 @@ export class PaymentsService {
    */
   async create(input: PaymentCreate, actorId: string): Promise<PaymentView> {
     const replay = await this.replayOf(input.clientRequestId);
-    if (replay) return this.replayed(replay, actorId);
+    if (replay) return this.replayed(replay, input, actorId);
     const sub = await this.receipts.subscription(input.subscriptionId);
-    if (input.receiptPath) await this.receipts.check(sub.id, input.receiptPath);
+    const files = await this.files.check(sub.id, input);
     if (input.invoiceId) await this.inputs.checkInvoice(input.invoiceId, sub.student_id);
     if (input.invoiceId && (await this.payments.byInvoice(input.invoiceId))) throw conflict('invoice_used');
     const converted = await this.inputs.convert(input, sub);
@@ -62,8 +62,10 @@ export class PaymentsService {
       // Lost the race to a retry of the same form: that one recorded it.
       const raced = await this.replayOf(input.clientRequestId);
       if (!raced) throw notFound('payment_not_found');
+      if (raced.subscription_id === sub.id) await this.files.attachments.save(raced.id, files, actorId);
       return raced;
     }
+    await this.files.attachments.save(row.id, files, actorId);
     await this.writes.done({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, sub.student_id);
     return this.get(row.id);
   }
@@ -87,9 +89,16 @@ export class PaymentsService {
 
   async remove(id: string, actorId: string): Promise<void> {
     const before = await this.row(id);
+    const attached = await this.files.attachments.paths(id); // read first: the rows cascade
     await this.payments.remove(id);
     await this.writes.done({ actorId, entity: 'payments', entityId: id, action: 'delete', before }, studentOf(before));
     await this.receipts.discard(before.receipt_path);
+    await this.files.attachments.discard(attached);
+  }
+
+  /** «المرفقات»: the legacy receipt first, then the files, each signed for 1 h. */
+  async attachments(id: string): Promise<PaymentAttachmentView[]> {
+    return this.files.attachments.views(await this.row(id));
   }
 
   /** P7: the receipt, or the booking invoice it was recorded from. */
@@ -97,14 +106,21 @@ export class PaymentsService {
     return this.inputs.receipt(await this.row(id));
   }
 
-  private async replayed(view: PaymentView, actorId: string): Promise<PaymentView> {
+  /** A replay also saves the form's files a failure after the insert lost (idempotent on the path). */
+  private async replayed(view: PaymentView, input: PaymentCreate, actorId: string): Promise<PaymentView> {
     const row = await this.row(view.id);
+    if (row.subscription_id === input.subscriptionId && (input.attachments?.length ?? 0) > 0)
+      await this.files.attachments.save(row.id, await this.files.check(row.subscription_id, input), actorId);
     await this.writes.replayed({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, studentOf(row));
     return view;
   }
 
   private get receipts() {
-    return this.inputs.receipts;
+    return this.inputs.files.receipts;
+  }
+
+  private get files() {
+    return this.inputs.files;
   }
 
   private async replayOf(clientRequestId: string | undefined): Promise<PaymentView | null> {

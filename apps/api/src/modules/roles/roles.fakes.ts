@@ -1,4 +1,7 @@
 import { defaultGrantsOf, USER_ROLES } from '@ab/shared';
+import type { AuditEntry, AuditService } from '../../common/audit/audit.service';
+import { PermissionCache } from '../../common/auth/permission.cache';
+import { RolesService } from './roles.service';
 import type { NewRole, ProfileRecord, RoleNames, RoleRecord, RoleStore } from './roles.store';
 
 /** The five system roles as migration 20261005000220 seeds them, ids 'sys-<key>'. */
@@ -63,3 +66,22 @@ export const profile = (id: string, role: ProfileRecord['role'], role_id: string
   role,
   role_id,
 });
+
+/** AuditService stand-in: keeps the rows it was asked to write. */
+export class FakeAudit {
+  rows: AuditEntry[] = [];
+
+  async record(entry: AuditEntry): Promise<void> {
+    this.rows.push(entry);
+  }
+}
+
+/** The service on a fake store, a real cache and a fake audit. */
+export function rolesHarness(profiles: ProfileRecord[]): { store: FakeRoleStore; cache: PermissionCache; audit: FakeAudit; svc: RolesService } {
+  const store = new FakeRoleStore(undefined, profiles);
+  const cache = new PermissionCache();
+  const audit = new FakeAudit();
+  return { store, cache, audit, svc: new RolesService(store, cache, audit as unknown as AuditService) };
+}
+
+export const fakeAudit = (): AuditService => new FakeAudit() as unknown as AuditService;

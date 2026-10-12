@@ -71,4 +71,16 @@ describe('system-role parity with the old @Roles table', () => {
     expect(routes.filter((r) => r.permission === 'templates.send_all').map((r) => r.key)).toEqual([]);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('templates.send_all'))).toEqual(['admin']);
   });
+
+  // Owner 2026-10-12: the start date of POST /sales/subscriptions is an inline check; the registration
+  // check is its own route. Both are on for the system sales role (and the admin) by default.
+  it('subscriptions.set_start_date gates no route and is held by admin and sales only', () => {
+    expect(routes.filter((r) => r.permission === 'subscriptions.set_start_date').map((r) => r.key)).toEqual([]);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('subscriptions.set_start_date'))).toEqual(['admin', 'sales']);
+  });
+
+  it('students.check_registration gates the registration check only, for admin and sales', () => {
+    expect(routes.filter((r) => r.permission === 'students.check_registration').map((r) => r.key)).toEqual(['SalesRegistrationController.check']);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('students.check_registration'))).toEqual(['admin', 'sales']);
+  });
 });

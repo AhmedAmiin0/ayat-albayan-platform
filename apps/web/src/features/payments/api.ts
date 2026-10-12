@@ -1,4 +1,4 @@
-import type { PaymentKind, PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
+import type { PaymentAttachmentView, PaymentKind, PaymentMethod, PaymentView, SignedDownload, SignedUpload } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch, apiSend } from '@/lib/api';
 import { sortFilterParams, type SortSearch } from '@/lib/list-search';
@@ -47,6 +47,8 @@ export type RecordPaymentBody = {
   method: PaymentMethod;
   paidAt: string;
   receiptPath: string | null;
+  /** «المرفقات» (bank only, 0..5 uploaded paths); the API answers 400 attachments_not_allowed otherwise. */
+  attachments?: string[];
   note: string | null;
   /** One per payment form, re-sent on retries (the API returns the payment it already recorded). */
   clientRequestId: string;
@@ -55,6 +57,14 @@ export type RecordPaymentBody = {
 export const recordPayment = (body: RecordPaymentBody) => apiSend<PaymentView>('POST', '/payments', body);
 
 export const receiptUrl = (paymentId: string) => apiFetch<SignedDownload>(`/payments/${paymentId}/receipt`);
+
+/** A payment's «المرفقات», signed for 1 h: GET /payments/:id/attachments or /sales/me/payments/:id/attachments. */
+export const attachmentsQuery = (path: string) =>
+  queryOptions({
+    queryKey: ['payment-attachments', path],
+    queryFn: () => apiFetch<PaymentAttachmentView[]>(path),
+    staleTime: 30 * 60_000,
+  });
 
 /**
  * The receipt goes straight to the private bucket through a one-off signed URL (P6), then its

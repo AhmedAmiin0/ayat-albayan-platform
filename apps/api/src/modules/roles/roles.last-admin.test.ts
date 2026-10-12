@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { PermissionCache } from '../../common/auth/permission.cache';
 import { errorCode } from '../scheduling/errors';
 import { managerProblem } from './roles.logic';
-import { FakeRoleStore, profile, systemRoles } from './roles.fakes';
+import { fakeAudit, FakeRoleStore, profile, systemRoles } from './roles.fakes';
 import { RolesService } from './roles.service';
 
 async function codeOf(p: Promise<unknown>): Promise<string | undefined> {
@@ -29,7 +29,7 @@ describe('RolesService — last admin and self lock-out', () => {
   let svc: RolesService;
   beforeEach(() => {
     store = new FakeRoleStore(undefined, [profile('owner', 'admin'), profile('t1', 'teacher')]);
-    svc = new RolesService(store, new PermissionCache());
+    svc = new RolesService(store, new PermissionCache(), fakeAudit());
   });
 
   it('the only admin cannot move themself to another role', async () => {

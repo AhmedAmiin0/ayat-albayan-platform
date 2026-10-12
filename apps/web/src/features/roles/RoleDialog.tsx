@@ -1,4 +1,4 @@
-import { STAFF_ROLES } from '@ab/shared';
+import { isEditableSystemRole, STAFF_ROLES } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
@@ -11,6 +11,7 @@ import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { baseRoleLabel, deleteRole, ROLES_KEY, saveRole, type RoleView } from './api';
 import { PermissionMatrix } from './PermissionMatrix';
+import { RoleResetButton } from './RoleResetButton';
 import { roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
 
 type Props = { role: RoleView | null; onClose: () => void };
@@ -23,7 +24,10 @@ export function RoleDialog({ role, onClose }: Props) {
   const [form, setForm] = useState<RoleForm>(() => roleForm(role));
   const [nameError, setNameError] = useState<string | undefined>();
   const [confirming, setConfirming] = useState(false);
+  const [resetError, setResetError] = useState<unknown>(null);
   const fixedGrants = role?.is_system === true && role.key === 'admin';
+  // teacher / sales / assistant: editable, and «استعادة الافتراضي» brings back the default grants.
+  const resettable = role?.is_system === true && isEditableSystemRole(role.key) ? role : null;
   const done = async () => {
     await queryClient.invalidateQueries({ queryKey: ROLES_KEY });
     onClose();
@@ -36,20 +40,23 @@ export function RoleDialog({ role, onClose }: Props) {
     setNameError(r.ok ? undefined : P.nameRequired);
     if (r.ok) save.mutate({ id: role?.id ?? null, body: r.body });
   };
-  const failed = save.error ?? remove.error;
+  const failed = save.error ?? remove.error ?? resetError;
 
   return (
     <Dialog
       title={role ? P.editRole : P.newRole}
       onClose={onClose}
       wide
-      hint={fixedGrants ? P.adminAll : undefined}
+      hint={fixedGrants ? P.adminAll : resettable ? P.systemEditable : undefined}
       actions={
         <>
           {role && !role.is_system && (
             <Button type="button" variant={confirming ? 'danger' : 'danger-quiet'} disabled={remove.isPending} onClick={() => (confirming ? remove.mutate(role.id) : setConfirming(true))}>
               {confirming ? P.deleteConfirm : P.delete}
             </Button>
+          )}
+          {resettable && (
+            <RoleResetButton role={resettable} onReset={(view) => setForm((f) => ({ ...f, permissions: [...view.permissions] }))} onError={setResetError} />
           )}
           <Button type="button" variant="ghost" onClick={onClose}>
             {P.cancel}
@@ -87,7 +94,7 @@ export function RoleDialog({ role, onClose }: Props) {
           onToggle={(p) => setForm((f) => togglePermission(f, p))}
           onToggleGroup={(keys) => setForm((f) => toggleGroup(f, keys))}
         />
-        {failed && <FormAlert>{apiErrorText(failed, { ...P.errors })}</FormAlert>}
+        {failed ? <FormAlert>{apiErrorText(failed, { ...P.errors })}</FormAlert> : null}
       </form>
     </Dialog>
   );

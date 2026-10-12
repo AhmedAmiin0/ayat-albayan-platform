@@ -35,3 +35,6 @@ export function roleName(role: Pick<RoleView, 'name_ar' | 'name_en'>): string {
 
 /** «الإدارة», «معلم/ة», … for a base role. */
 export const baseRoleLabel = (role: RoleView['base_role']): string => t.activity.roles[role];
+
+/** «استعادة الافتراضي»: a system teacher / sales / assistant role back to its default grants. */
+export const resetRole = (id: string) => apiSend<RoleView>('POST', `/roles/${id}/reset`);

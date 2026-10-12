@@ -36,6 +36,7 @@ import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { RolesModule } from './modules/roles/roles.module';
 import { SalesModule } from './modules/sales/sales.module';
+import { SalesRegistrationModule } from './modules/sales-registration/sales-registration.module';
 import { SchedulingModule } from './modules/scheduling/scheduling.module';
 import { StudentRecordingsModule } from './modules/student-recordings/student-recordings.module';
 import { StudentsModule } from './modules/students/students.module';
@@ -65,6 +66,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     TeacherStudentsModule,
     LeadsModule,
     SalesModule,
+    SalesRegistrationModule,
     JobApplicantsModule,
     MeModule,
     FxModule,

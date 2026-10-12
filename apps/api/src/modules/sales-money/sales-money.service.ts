@@ -1,17 +1,19 @@
-import type {
-  ReceiptUpload,
-  SalesFamilyView,
-  SalesMoneySubscriptionView,
-  SalesPaymentCreate,
-  SalesPaymentView,
-  SalesQuote,
-  SalesQuoteView,
-  SalesSubscriptionCreate,
-  SignedUpload,
+import {
+  salesStartDate,
+  type ReceiptUpload,
+  type SalesFamilyView,
+  type SalesMoneySubscriptionView,
+  type SalesPaymentCreate,
+  type SalesPaymentView,
+  type SalesQuote,
+  type SalesQuoteView,
+  type SalesSubscriptionCreate,
+  type SignedUpload,
 } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { badRequest, conflict } from '../scheduling/errors';
+import { riyadhToday } from '../sales/sales-schedule.mapper';
+import { badRequest, conflict, forbidden } from '../scheduling/errors';
 import { toSalesPayment, toSalesQuote, toSalesSubscription } from './sales-money.mapper';
 import { assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 import { SalesMoneyServices } from './sales-money.services';
@@ -39,18 +41,26 @@ export class SalesMoney {
     return toSalesQuote(await this.services.creator.quote(input));
   }
 
-  async subscribe(input: SalesSubscriptionCreate, user: AuthUser): Promise<SalesMoneySubscriptionView> {
+  /**
+   * The start day (docs/16 row 24): today in Riyadh unless she holds subscriptions.set_start_date (403
+   * start_date_not_allowed); a past day only with alreadyStarted, at most a year back (400). Before pricing.
+   */
+  async subscribe(input: SalesSubscriptionCreate, user: AuthUser, now = new Date()): Promise<SalesMoneySubscriptionView> {
     await this.scope.assertOwns(user, input.studentId);
     assertSalesDiscount(input.pricing);
-    const view = await this.services.creator.create(input, user.id);
+    const canSet = user.permissions?.includes('subscriptions.set_start_date') ?? false;
+    const start = salesStartDate({ startsOn: input.startsOn, alreadyStarted: input.alreadyStarted, canSet, today: riyadhToday(now) });
+    if (!start.ok) throw start.code === 'start_date_not_allowed' ? forbidden(start.code) : badRequest(start.code);
+    const { studentId, pricing, clientRequestId } = input; // alreadyStarted is not a column
+    const view = await this.services.creator.create({ studentId, pricing, clientRequestId, startsOn: start.startsOn }, user.id);
     // A clientRequestId already used for another student replays that package: never show it here.
     if (view.student.id !== input.studentId) throw conflict('client_request_reused');
     return toSalesSubscription(view);
   }
 
   /**
-   * Kind 'payment' and method 'bank' always; the receipt path must be this package's and uploaded; the
-   * currency must be the package's (400 currency_mismatch; the field stays for client compatibility).
+   * Kind 'payment' and method 'bank' always; the receipt (optional) and «المرفقات» (0..5) must be this
+   * package's, uploaded files; the currency must be the package's (400 currency_mismatch; the field stays).
    */
   async pay(input: SalesPaymentCreate, user: AuthUser): Promise<SalesPaymentView> {
     const sub = await this.services.receipts.subscription(input.subscriptionId);

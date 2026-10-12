@@ -50,6 +50,13 @@ export class RolesController {
     return this.roles.update(id, { ...parseOrThrow(roleUpdateSchema, body), actorId: user.id });
   }
 
+  /** «استعادة الافتراضي» (system teacher / sales / assistant): 400 admin_role_fixed / not_system_role, 403, 409 as update. */
+  @Post('roles/:id/reset')
+  @HttpCode(200)
+  reset(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<RoleView> {
+    return this.roles.reset(id, user.id);
+  }
+
   /** 409 system_role, 409 role_in_use. */
   @Delete('roles/:id')
   @HttpCode(204)
