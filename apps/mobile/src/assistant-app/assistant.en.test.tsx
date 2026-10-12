@@ -13,7 +13,10 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   return { __esModule: true, default: { ...actual, isRTL: false, getConstants } };
 });
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: jest.fn(async () => []) }));
+// /me/profile answers a profile (the «More» header reads its name); every list answers empty.
+const PROFILE = { id: 'u1', full_name: 'Sara Ali', email: null, phone_e164: null, avatar_url: null, role: 'assistant' };
+const mockApiFetch = jest.fn(async (p: string) => (p === '/me/profile' ? PROFILE : []));
+jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
 
 afterEach(() => jest.useRealTimers());
 

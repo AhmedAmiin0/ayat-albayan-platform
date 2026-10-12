@@ -9,6 +9,7 @@ import { DaySwitcher } from '@/classroom/DaySwitcher';
 import { useMinuteClock } from '@/classroom/use-minute-clock';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { HeldBell } from '@/notifications/HeldBell';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
@@ -18,6 +19,7 @@ import { assistantDay } from './assistant-day';
  * «حلقاتي» (web /assistant/ AssistantHome): the open lessons of the students they assist, today
  * first and a day at a time, each with «ادخل الحلقة» (the room opens in the system browser, as
  * every mobile classroom entry does). Below, «اجتماعات داخلية» (meetings.read) as on the web page.
+ * The bell at the header's end (notifications.push).
  */
 export function AssistantHomeScreen({ can }: { can: Can }) {
   const today = riyadhToday(useMinuteClock());
@@ -25,7 +27,7 @@ export function AssistantHomeScreen({ can }: { can: Can }) {
   const isToday = date === today;
   return (
     <Screen>
-      <ScreenHeader title={t.mobileRoles.lessonsTitle} subtitle={t.schedule.riyadhTime} />
+      <ScreenHeader title={t.mobileRoles.lessonsTitle} subtitle={t.schedule.riyadhTime} trailing={<HeldBell tree="assistant" />} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         <DaySwitcher date={date} isToday={isToday} onStep={(n) => setDate(addDays(date, n))} onToday={() => setDate(today)} />
         <Note>{t.mobileRoles.joinNote}</Note>
