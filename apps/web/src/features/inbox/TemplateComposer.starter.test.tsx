@@ -29,7 +29,8 @@ describe('TemplateComposer — an imported starter', () => {
   it('shows its four variables and sends it with its own key and every value', async () => {
     routeFetch(apiFetch, [['/messaging/templates', [IMPORTED]]]);
     renderWithClient(<TemplateComposer phone={PHONE} context={{}} teacher={false} />);
-    fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'academy_welcome' } });
+    await screen.findByRole('option', { name: 'academy_welcome' }); // the list has loaded: the option exists
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'academy_welcome' } });
     ['1', '2', '3', '4'].forEach((n) => fireEvent.change(field(n), { target: { value: `v${n}` } }));
     apiSend.mockResolvedValue(message({ id: 'm-1', direction: 'outbound', status: 'queued' }));
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
@@ -45,7 +46,8 @@ describe('TemplateComposer — an imported starter', () => {
   it('a missing variable blocks the send', async () => {
     routeFetch(apiFetch, [['/messaging/templates', [IMPORTED]]]);
     renderWithClient(<TemplateComposer phone={PHONE} context={{}} teacher={false} />);
-    fireEvent.change(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'academy_welcome' } });
+    await screen.findByRole('option', { name: 'academy_welcome' }); // the list has loaded: the option exists
+    fireEvent.change(screen.getByRole('combobox', { name: t.inbox.composer.chooseTemplate }), { target: { value: 'academy_welcome' } });
     fireEvent.change(field('1'), { target: { value: 'v1' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.sendTemplate }));
     expect(await screen.findByText(t.inbox.composer.required.replace('{field}', t.inbox.composer.param.replace('{n}', '4')))).toBeTruthy();
