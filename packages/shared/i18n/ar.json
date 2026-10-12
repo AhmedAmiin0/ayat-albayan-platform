@@ -4116,6 +4116,33 @@
       }
     }
   },
+  "mobileSalesMoney": {
+    "tabs": {
+      "label": "أقسام صفحة مسؤول/ة المبيعات",
+      "terms": "الشروط"
+    },
+    "termsSummary": "الراتب: {salary} · العمولة: {commission}",
+    "oneMonth": "شهر محدد",
+    "monthBefore": "الشهر السابق",
+    "monthAfter": "الشهر التالي",
+    "earliest": "أقرب تاريخ مسموح: {date}",
+    "showLines": "عرض البنود",
+    "hideLines": "إخفاء البنود",
+    "approveAsk": "اعتماد كشف {assistant} لشهر {month}؟ لن يُعاد حسابه إلا بعد إعادة فتحه.",
+    "generateAsk": "حساب كشوف {month} لعدد {count} من مسؤولي المبيعات؟ لا تتغير الكشوف المعتمدة أو المدفوعة.",
+    "nothingToGenerate": "كل كشوف هذا الشهر معتمدة أو مدفوعة، فلا يوجد ما يُحسب.",
+    "voidedAt": "أُلغيت في {date}",
+    "earnedLine": "{rate} من {base} · {date}",
+    "done": {
+      "terms": "حُفظت الشروط",
+      "void": "أُلغيت العمولة",
+      "approve": "اعتُمد الكشف",
+      "reopen": "أُعيد فتح الكشف",
+      "pay": "سُجّل دفع الكشف",
+      "unpay": "أُلغي دفع الكشف",
+      "generate": "حُسبت كشوف الشهر"
+    }
+  },
   "mobileUsers": {
     "share": "مشاركة",
     "copyHint": "اضغط مطولًا على النص لتحديده ونسخه، أو شاركه.",
