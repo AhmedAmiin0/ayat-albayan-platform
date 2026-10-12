@@ -5,6 +5,7 @@ import { Page } from '@/components/ui/page';
 import { RunningHead } from '@/components/ui/running-head';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { meQuery } from '@/features/auth/me';
+import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { LanguageSwitch } from './LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 import { MenuBar } from './MenuBar';
@@ -17,12 +18,13 @@ export interface BarProps {
   title: string;
 }
 
-/** The wide header (≥ 900px) of the top-bar layouts: logo, language, theme, logout. */
+/** The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, logout. */
 export function WideHeader() {
   return (
     <header className="hidden shrink-0 items-center gap-3 px-1.5 pt-4 shell:flex">
       <Logo />
       <div className="ms-auto flex items-center gap-2">
+        <NotificationBell />
         <LanguageSwitch />
         <ThemeToggle />
         <LogoutButton />

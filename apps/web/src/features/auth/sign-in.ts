@@ -1,6 +1,7 @@
 import { HOME_BY_ROLE } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n';
+import { forgetWebPush } from '@/features/notifications/web-push';
 import { supabase } from '@/lib/supabase';
 import { isAccountDisabled, meQuery } from './me';
 import { reportSession } from './session-activity';
@@ -34,8 +35,12 @@ export async function signIn(creds: Credentials, queryClient: QueryClient): Prom
   return { ok: true, home: HOME_BY_ROLE[me.role] };
 }
 
+/**
+ * The activity report and dropping this browser's push subscription both need the token, are
+ * bounded and never throw: a dead API never blocks signing out.
+ */
 export async function signOut(queryClient: QueryClient): Promise<void> {
-  await reportSession('logout');
+  await Promise.all([reportSession('logout'), forgetWebPush()]);
   await supabase.auth.signOut();
   queryClient.clear();
 }

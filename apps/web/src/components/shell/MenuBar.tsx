@@ -3,6 +3,7 @@ import { useState, type MouseEvent, type ReactNode } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { Icon } from '@/components/ui/icon';
 import { Mark } from '@/components/ui/mark';
+import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { MenuFoot } from './MenuFoot';
@@ -20,9 +21,10 @@ export interface MenuBarProps {
 
 /**
  * Phones and tablets (< 900px, owner 2026-10-05: "make it simpler"): ONE compact bar (logo mark,
- * the page title, «القائمة»). The menu opens the full nav in the Dialog sheet with theme, language
- * and logout at its foot; following a link closes it. The title is a pseudo-element: the page's
- * own h1 names the page, the bar only echoes it (no second heading or text node).
+ * the page title, the bell for staff, «القائمة»). The menu opens the full nav in the Dialog sheet
+ * with theme, language and logout at its foot; following a link closes it. The title is a
+ * pseudo-element: the page's own h1 names the page, the bar only echoes it (no second heading
+ * or text node).
  */
 export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -46,6 +48,7 @@ export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
         data-bar-title={title}
         className="min-w-0 flex-1 truncate text-base font-bold text-ink before:content-[attr(data-bar-title)]"
       />
+      <NotificationBell />
       <button
         type="button"
         aria-expanded={open}

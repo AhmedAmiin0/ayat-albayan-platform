@@ -1,0 +1,67 @@
+import { deleteWebPush, saveWebPush } from './api';
+
+// This browser's push subscription (R-NOT-01): public/sw.js shows what arrives. Subscribing asks
+// for permission, so it only ever runs from a click («فعّل إشعارات المتصفح»), never on load.
+
+export const SW_URL = '/sw.js';
+/** Longest sign-out waits for the subscription to be forgotten. */
+export const FORGET_TIMEOUT_MS = 1_500;
+
+/** The VAPID public key (base64url) as the bytes pushManager.subscribe takes. */
+export function base64UrlToBytes(value: string): Uint8Array<ArrayBuffer> {
+  const padded = value.replace(/-/g, '+').replace(/_/g, '/') + '='.repeat((4 - (value.length % 4)) % 4);
+  return Uint8Array.from(atob(padded), (c) => c.charCodeAt(0));
+}
+
+/** The subscription of this browser, or null (no worker, never subscribed, no push support). */
+export async function currentSubscription(): Promise<PushSubscription | null> {
+  if (!('serviceWorker' in navigator)) return null;
+  const registration = await navigator.serviceWorker.getRegistration(SW_URL);
+  return (await registration?.pushManager.getSubscription()) ?? null;
+}
+
+export type SubscribeResult = 'subscribed' | NotificationPermission;
+
+/** Permission prompt → worker → subscription → PUT /me/web-push. Throws when a step fails. */
+export async function subscribeWebPush(publicKey: string): Promise<SubscribeResult> {
+  const permission = await Notification.requestPermission();
+  if (permission !== 'granted') return permission;
+  await navigator.serviceWorker.register(SW_URL);
+  const registration = await navigator.serviceWorker.ready;
+  const existing = await registration.pushManager.getSubscription();
+  const subscription =
+    existing ?? (await registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64UrlToBytes(publicKey) }));
+  await saveWebPush(subscription.toJSON());
+  return 'subscribed';
+}
+
+/** DELETE /me/web-push for this browser, then drop the subscription. Throws when the API fails. */
+export async function unsubscribeWebPush(): Promise<void> {
+  const subscription = await currentSubscription();
+  if (!subscription) return;
+  await deleteWebPush(subscription.endpoint);
+  await subscription.unsubscribe();
+}
+
+async function forget(): Promise<void> {
+  const subscription = await currentSubscription();
+  if (!subscription) return;
+  await deleteWebPush(subscription.endpoint).catch(() => undefined);
+  await subscription.unsubscribe();
+}
+
+/**
+ * Sign-out: the next person on this browser must not get this user's pushes. Best effort: never
+ * throws, never waits longer than FORGET_TIMEOUT_MS. Runs before supabase signOut (needs the token).
+ */
+export async function forgetWebPush(): Promise<void> {
+  let timer: ReturnType<typeof setTimeout> | undefined;
+  const timeout = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, FORGET_TIMEOUT_MS);
+  });
+  try {
+    await Promise.race([forget().catch(() => undefined), timeout]);
+  } finally {
+    clearTimeout(timer);
+  }
+}

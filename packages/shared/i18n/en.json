@@ -2684,8 +2684,6 @@
     "retry": "Try again",
     "markAll": "Mark all as read",
     "unread": "Unread",
-    "more": "Show more",
-    "close": "Close",
     "push": {
       "title": "Browser notifications",
       "enable": "Turn on browser notifications",
