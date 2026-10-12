@@ -11,14 +11,14 @@ import type { PaymentView } from './api';
 
 const col = createColumnHelper<DataTableFeatures, PaymentView>();
 
-export type PaymentAction = 'receipt' | 'edit' | 'delete';
+export type PaymentAction = 'receipt' | 'attachments' | 'edit' | 'delete';
 type Handlers = { onAction: (p: PaymentView, action: PaymentAction) => void };
 
 const methodOptions = PAYMENT_METHODS.map((m) => ({ value: m, label: t.enums.paymentMethod[m] }));
 
 /**
  * Payments list (R-PAY-01): student, amount (a refund in red, the amount sent in another currency),
- * method, date, who, actions. Server sort (R-NFR-08) on amount, method and date; the student is
+ * method, date, who, actions («عرض المرفقات» for a bank payment or one with a receipt). Server sort (R-NFR-08) on amount, method and date; the student is
  * filtered by the bar's picker, «سجّلها» is a name read after the page (neither sorts server-side).
  */
 export function paymentColumns({ onAction }: Handlers) {
@@ -75,6 +75,11 @@ export function paymentColumns({ onAction }: Handlers) {
             {(p.receipt_path || p.invoice_id) && (
               <Button type="button" variant="secondary" size="sm" onClick={() => onAction(p, 'receipt')}>
                 {t.payments.viewReceipt}
+              </Button>
+            )}
+            {(p.method === 'bank' || p.receipt_path) && (
+              <Button type="button" variant="secondary" size="sm" onClick={() => onAction(p, 'attachments')}>
+                {t.payments.viewAttachments}
               </Button>
             )}
             <Button type="button" variant="ghost" size="sm" aria-label={`${t.common.edit} ${name}`} onClick={() => onAction(p, 'edit')}>

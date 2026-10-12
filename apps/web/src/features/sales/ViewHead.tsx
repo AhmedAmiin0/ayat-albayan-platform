@@ -1,13 +1,18 @@
+import type { ReactNode } from 'react';
 import { Cartouche } from '@/components/ui/cartouche';
 import { PageHead } from '@/components/ui/page';
 import { SegmentedControl, type SegmentedControlProps } from '@/components/ui/segmented-control';
 
-/** A page title with its view filter beside it (owner 2026-10-12: «طلابي» and «مدفوعاتي» are filters, not pages). */
-export function ViewHead<V extends string>({ title, ...views }: { title: string } & SegmentedControlProps<V>) {
+/**
+ * A page title with its view filter beside it (owner 2026-10-12: «طلابي» and «مدفوعاتي» are filters, not
+ * pages); `children` are the page's actions at the inline-end.
+ */
+export function ViewHead<V extends string>({ title, children, ...views }: { title: string; children?: ReactNode } & SegmentedControlProps<V>) {
   return (
     <PageHead>
       <Cartouche>{title}</Cartouche>
       <SegmentedControl {...views} />
+      {children && <div className="ms-auto">{children}</div>}
     </PageHead>
   );
 }

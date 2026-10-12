@@ -3678,6 +3678,7 @@
       "query_too_short": "Type at least three letters.",
       "invalid_phone": "The phone number is not valid.",
       "one_of": "Enter a phone number or a name.",
+      "too_many_requests": "Too many checks; wait a little and try again.",
       "generic": "Could not check; try again."
     }
   },

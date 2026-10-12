@@ -52,8 +52,8 @@ test.describe.serial('sales registration check and start date (API + DB)', () =>
     expect(fresh.body).toEqual({ found: false, matches: [], more: false });
     const byName = await check(request, `q=${encodeURIComponent(name)}`);
     expect(byName.body.matches.map((m) => m.name)).toContain(name);
-    const short = await check(request, `q=${encodeURIComponent('ري')}`);
-    expect([short.status, short.body]).toMatchObject([400, { code: 'query_too_short' }]);
+    const short = await call<{ issues: { message: string }[] }>(request, { token: need(a).token, method: 'GET', path: `/sales/registration-check?q=${encodeURIComponent('ري')}` });
+    expect([short.status, short.body.issues.map((i) => i.message)]).toEqual([400, ['query_too_short']]);
   });
 
   test('with the option: a future day is kept, a past day needs «already started»', async ({ request }) => {

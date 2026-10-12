@@ -1,6 +1,7 @@
 import { t } from '@/lib/i18n';
 import { AllStudents } from './AllStudents';
 import { MyStudents } from './MyStudents';
+import { RegistrationCheckButton } from './RegistrationCheckButton';
 import { ViewHead } from './ViewHead';
 
 export type StudentsView = 'all' | 'mine';
@@ -18,7 +19,9 @@ export function SalesStudents({ view, onView }: { view: StudentsView; onView: (v
           { value: 'all', label: t.sales.allStudents.title },
           { value: 'mine', label: t.assistantPortal.nav.students },
         ]}
-      />
+      >
+        <RegistrationCheckButton />
+      </ViewHead>
       {view === 'mine' ? <MyStudents /> : <AllStudents />}
     </>
   );

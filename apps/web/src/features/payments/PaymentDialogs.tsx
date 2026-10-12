@@ -5,12 +5,13 @@ import { t } from '@/lib/i18n';
 import { deletePayment, type PaymentView } from './api';
 import { ConfirmDialog } from './ConfirmDialog';
 import { EditPaymentDialog } from './EditPaymentDialog';
+import { AttachmentsDialog } from './AttachmentsDialog';
 import type { PaymentAction } from './payment-columns';
 import { ReceiptDialog } from './ReceiptDialog';
 
 type Props = { payment: PaymentView; action: PaymentAction; onClose: () => void; onDone: (message: string) => void };
 
-/** The dialog behind a payment row action: receipt, edit, or delete after a confirm (audited by the API). */
+/** The dialog behind a payment row action: receipt, «المرفقات», edit, or delete after a confirm (audited by the API). */
 export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {
   const queryClient = useQueryClient();
   const remove = useMutation({
@@ -22,6 +23,9 @@ export function PaymentDialogs({ payment, action, onClose, onDone }: Props) {
     },
   });
   if (action === 'receipt') return <ReceiptDialog payment={payment} onClose={onClose} />;
+  if (action === 'attachments') {
+    return <AttachmentsDialog path={`/payments/${payment.id}/attachments`} description={studentLabel(payment.student)} onClose={onClose} />;
+  }
   if (action === 'edit') return <EditPaymentDialog payment={payment} onClose={onClose} />;
   return (
     <ConfirmDialog

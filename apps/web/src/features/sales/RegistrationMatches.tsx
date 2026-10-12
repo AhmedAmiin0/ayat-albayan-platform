@@ -18,7 +18,7 @@ export function RegistrationMatches({ view, by }: { view: RegistrationCheckView;
           <li key={m.code} className="grid gap-1 rounded-md border border-rule p-3 text-sm">
             <span className="inline-flex items-baseline gap-3">
               <span className="font-semibold text-ink">{m.name}</span>
-              <Ltr className="text-ink-2" aria-label={R.code}>{m.code}</Ltr>
+              <Ltr className="text-ink-2">{m.code}</Ltr>
             </span>
             <span className="text-ink-2">
               {R.status}: {t.enums.studentStatus[m.status]}
