@@ -25,8 +25,9 @@ export interface TemplateComposerProps {
 
 /**
  * Any approved template for this person, from the thread (H4): the only way to write after the
- * 24 h window (a salesperson gets only the admin's starters: the API lists no other). Names are prefilled, a lesson time comes from the lesson picked (rule 6), and the
- * preview is what they read. The lesson is sent too, so a «تمام» reply links to it.
+ * 24 h window (a salesperson gets only the admin's starters: the API lists no other). Names are
+ * prefilled, a lesson time comes from the lesson picked (rule 6), and the preview is what they
+ * read. The lesson is sent too, so a «تمام» reply links to it.
  */
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
   const queryClient = useQueryClient();

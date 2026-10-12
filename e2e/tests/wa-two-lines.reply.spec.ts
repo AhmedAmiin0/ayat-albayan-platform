@@ -17,7 +17,8 @@ import { setMessaging, stubReset } from '../support/wa-stub';
 
 // Two WhatsApp lines, outbound side (docs/12 §13.3, R-MSG-01, R-MSG-02, R-LEAD-02): a session reply
 // prefers the chat line whenever its 24 h window is open, else the notifications line, and its row
-// is stamped with it; a template ALWAYS leaves from the notifications number; opening a thread
+// is stamped with it; a producer template leaves from the notifications number (a chat starter from
+// the chat number: sales-starter.spec); opening a thread
 // marks it read on its own line.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };

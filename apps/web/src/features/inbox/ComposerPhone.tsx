@@ -53,8 +53,8 @@ function Notices({ notes }: { notes: string[] }) {
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const windowNote = open ? (thread.last_inbound_at ? sessionUntil(thread.last_inbound_at) : null) : t.inbox.sessionClosed;
-  // The reply line before the open window's note (collapsed, only the first shows); templates
-  // always leave from the notifications line, so no reply line in template mode.
+  // The reply line before the open window's note (collapsed, only the first shows); a template
+  // leaves from its own registry line (docs/12 §13.18), not reply_line: no reply line in template mode.
   const replyFrom = mode === 'text' ? replyFromText(thread) : null;
   const notes = [open ? null : windowNote, gateNote, replyFrom, open ? windowNote : null].filter((n): n is string => !!n);
   const template = !open || mode === 'template';
