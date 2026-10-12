@@ -9,13 +9,8 @@ import { FilterPills } from '@/ui/FilterPills';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { useAssistants } from './api';
-import { CommissionLedger } from './CommissionLedger';
+import { AssistantTabBody, type AssistantTab as Tab } from './AssistantTabBody';
 import { useStatementCan } from './statement-can';
-import { StatementsPanel } from './StatementsPanel';
-import { TermsEditor } from './TermsEditor';
-import { TermsView } from './TermsView';
-
-type Tab = 'terms' | 'commissions' | 'statements';
 
 const TABS = (): { value: Tab; label: string }[] => [
   { value: 'terms', label: t.mobileSalesMoney.tabs.terms },
@@ -49,10 +44,7 @@ export function AssistantDetailScreen() {
       <ScreenHeader title={assistant.name} trailing={back} />
       <FilterPills items={TABS()} value={tab} onChange={show} accessibilityLabel={t.mobileSalesMoney.tabs.label} />
       {notice ? <Note>{notice}</Note> : null}
-      {tab === 'terms' && can.write ? <TermsEditor key={assistant.id} assistant={assistant} onNotice={setNotice} /> : null}
-      {tab === 'terms' && !can.write ? <TermsView terms={assistant.terms} /> : null}
-      {tab === 'commissions' ? <CommissionLedger assistantId={assistant.id} canWrite={can.write} onNotice={setNotice} /> : null}
-      {tab === 'statements' ? <StatementsPanel assistants={[assistant]} assistantId={assistant.id} can={can} onNotice={setNotice} /> : null}
+      <AssistantTabBody tab={tab} assistant={assistant} can={can} onNotice={setNotice} />
     </Screen>
   );
 }

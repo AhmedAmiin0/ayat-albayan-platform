@@ -11,16 +11,16 @@ import { sumByCurrency } from './totals';
 const ALL = { write: true, approve: true };
 
 test.each([
-  ['draft', false, ALL, ['approve', 'details']],
-  ['draft', false, { write: true, approve: false }, ['details']],
-  ['approved', false, ALL, ['pay', 'reopen', 'details']],
-  ['approved', false, { write: true, approve: false }, ['pay', 'details']],
-  ['approved', false, { write: false, approve: true }, ['reopen', 'details']],
-  ['approved', false, { write: false, approve: false }, ['details']],
-  ['paid', true, ALL, ['receipt', 'details', 'unpay']],
-  ['paid', false, ALL, ['details', 'unpay']],
-  ['paid', true, { write: true, approve: false }, ['receipt', 'details']],
-] as const)('a %s statement (receipt %s) with %j offers %j, as the web StatementActions', (status, has_receipt, can, expected) => {
+  { status: 'draft', has_receipt: false, can: ALL, expected: ['approve', 'details'] },
+  { status: 'draft', has_receipt: false, can: { write: true, approve: false }, expected: ['details'] },
+  { status: 'approved', has_receipt: false, can: ALL, expected: ['pay', 'reopen', 'details'] },
+  { status: 'approved', has_receipt: false, can: { write: true, approve: false }, expected: ['pay', 'details'] },
+  { status: 'approved', has_receipt: false, can: { write: false, approve: true }, expected: ['reopen', 'details'] },
+  { status: 'approved', has_receipt: false, can: { write: false, approve: false }, expected: ['details'] },
+  { status: 'paid', has_receipt: true, can: ALL, expected: ['receipt', 'details', 'unpay'] },
+  { status: 'paid', has_receipt: false, can: ALL, expected: ['details', 'unpay'] },
+  { status: 'paid', has_receipt: true, can: { write: true, approve: false }, expected: ['receipt', 'details'] },
+] as const)('a $status statement (receipt $has_receipt) with $can offers $expected, as the web StatementActions', ({ status, has_receipt, can, expected }) => {
   expect(statementActions({ status, has_receipt }, can)).toEqual(expected);
 });
 
