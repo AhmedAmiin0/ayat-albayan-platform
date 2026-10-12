@@ -10,6 +10,7 @@ import { fakeDb, type FakeResult } from '../guardians/fake-db';
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'admin-1', email: 'a@x.com', role: 'admin' },
   teacher: { id: 'teacher-1', email: 't@x.com', role: 'teacher' },
+  guardian: { id: 'guardian-1', email: 'g@x.com', role: 'guardian' },
 };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
@@ -40,9 +41,9 @@ const call = ({ method, url, token = 'admin', body }: Call) =>
   app.inject({ method, url, headers: { authorization: `Bearer ${token}` }, payload: body });
 
 describe('/me/push-tokens HTTP (R-MOB-01)', () => {
-  it('is admin-only: a teacher gets 403, no token 401', async () => {
+  it('is staff-only (notifications.push, every staff role since the bell): a guardian gets 403, no token 401', async () => {
     const body = { token: TOKEN };
-    expect((await call({ method: 'PUT', url: '/me/push-tokens', token: 'teacher', body })).statusCode).toBe(403);
+    expect((await call({ method: 'PUT', url: '/me/push-tokens', token: 'guardian', body })).statusCode).toBe(403);
     expect((await call({ method: 'PUT', url: '/me/push-tokens', token: 'nope', body })).statusCode).toBe(401);
   });
 

@@ -1,11 +1,13 @@
 import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
 import { integrationOverlay } from './config/integration-overlay';
+import { WEB_PUSH_SHAPE } from './env.web-push';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps } from './env.whatsapp';
 export { allowedRecipients, recipientAllowed, parseAllowedRecipients } from './env.whatsapp';
 export type { WhatsappEnv, LineEnvs, LineNumbers } from './env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
+export { webPushEnv } from './env.web-push';
 
 /** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
 const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
@@ -71,6 +73,7 @@ const schema = z.object({
    * pushes are recorded but never leave the server (local, e2e), like WA_API_BASE.
    */
   EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
+  ...WEB_PUSH_SHAPE,
   /**
    * HMAC key of the «رأيك يهمّنا» links (>= 32 chars, via Vault). Unset = feedback requests are 503
    * not_configured and every public link is refused; nothing else depends on it.

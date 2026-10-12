@@ -22,7 +22,7 @@ export class AuthController {
   }
 }
 
-/** Global so the roles module can clear the permission cache after a change. */
+/** Global so the roles module can clear the permission cache after a change, and PushAudience can check a recipient's permissions. */
 @Global()
 @Module({
   controllers: [AuthController],
@@ -42,6 +42,6 @@ export class AuthController {
     },
     { provide: APP_GUARD, useClass: AuthGuard },
   ],
-  exports: [PermissionCache],
+  exports: [PermissionCache, PERMISSION_RESOLVER],
 })
 export class AuthModule {}

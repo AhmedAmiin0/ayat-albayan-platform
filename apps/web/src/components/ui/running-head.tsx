@@ -25,9 +25,9 @@ export function useMinuteClock(): Date {
  * docs/07 §7 running head (text-xs ink-3): crumbs at the start; Gregorian · Hijri | Riyadh · Cairo
  * at the end, times in ink-2 600. Clocks hide under 640px (the whole head when there are no
  * crumbs). Deliberately NOT a live region: the minute tick must not be announced (and the page
- * keeps a single role=status).
+ * keeps a single role=status). `end` (the bell) sits after the clocks, at the inline end.
  */
-export function RunningHead({ crumbs }: { crumbs?: ReactNode }) {
+export function RunningHead({ crumbs, end }: { crumbs?: ReactNode; end?: ReactNode }) {
   const head = formatRunningHead(useMinuteClock(), locale);
   return (
     <div
@@ -37,18 +37,21 @@ export function RunningHead({ crumbs }: { crumbs?: ReactNode }) {
       )}
     >
       <div className="min-w-0">{crumbs}</div>
-      <div className="hidden items-center gap-4 sm:flex">
-        <span className="tabular-nums">{head.gregorian}</span>
-        <span className="tabular-nums">{head.hijri}</span>
-        <i aria-hidden="true" className="h-3.5 w-px bg-rule-strong" />
-        <span>
-          {t.runningHead.riyadh}
-          <b className="ms-1 font-semibold text-ink-2 tabular-nums">{head.riyadhTime}</b>
-        </span>
-        <span>
-          {t.runningHead.cairo}
-          <b className="ms-1 font-semibold text-ink-2 tabular-nums">{head.cairoTime}</b>
-        </span>
+      <div className="ms-auto flex items-center gap-4">
+        <div className="hidden items-center gap-4 sm:flex">
+          <span className="tabular-nums">{head.gregorian}</span>
+          <span className="tabular-nums">{head.hijri}</span>
+          <i aria-hidden="true" className="h-3.5 w-px bg-rule-strong" />
+          <span>
+            {t.runningHead.riyadh}
+            <b className="ms-1 font-semibold text-ink-2 tabular-nums">{head.riyadhTime}</b>
+          </span>
+          <span>
+            {t.runningHead.cairo}
+            <b className="ms-1 font-semibold text-ink-2 tabular-nums">{head.cairoTime}</b>
+          </span>
+        </div>
+        {end}
       </div>
     </div>
   );

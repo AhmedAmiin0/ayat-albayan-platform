@@ -49,6 +49,20 @@ export function staleReason(row: StaleInput): string | null {
   return row.template_key === 'follow_up_slots' && row.lead_id ? followUpStale(row) : null;
 }
 
+/**
+ * teacher_new_student is queued with expires_at = the first lesson's start (TeacherAlert): a lesson
+ * moved since (edit_lesson_time) would announce the old time, so the row is dropped, like the
+ * reminders edit_lesson_time expires; the teacher still gets the bell row and the lesson reminder.
+ */
+function newStudentRetimed(row: {
+  template_key: string | null;
+  expires_at: string | null;
+  lesson: { starts_at: string } | null;
+}): boolean {
+  if (row.template_key !== 'teacher_new_student' || !row.expires_at || !row.lesson) return false;
+  return Date.parse(row.expires_at) !== Date.parse(row.lesson.starts_at);
+}
+
 /** A queued row the worker drops before claiming it: past its send window, or stale (above). */
 export function dropReason(
   row: StaleInput & { expires_at: string | null; lesson: { starts_at: string } | null },
@@ -58,6 +72,7 @@ export function dropReason(
   if (messageExpired({ templateKey: row.template_key, expiresAt: row.expires_at, lessonStartsAt, now })) {
     return { code: 'expired', text: 'expired before it was sent' };
   }
+  if (newStudentRetimed(row)) return { code: 'stale', text: 'lesson retimed' };
   const stale = staleReason(row);
   return stale ? { code: 'stale', text: stale } : null;
 }

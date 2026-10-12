@@ -13,6 +13,8 @@ jest.mock('@/lib/api', () => ({
 }));
 // The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
 jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
+// The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
+jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
 beforeEach(() => {
   mockApiFetch.mockReset();

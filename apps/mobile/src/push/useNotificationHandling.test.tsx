@@ -83,7 +83,7 @@ test('a message push refreshes that thread and the inbox, in the foreground', as
   expect(invalidate).toHaveBeenCalledWith({ queryKey: ['leads'] });
   invalidate.mockClear();
   await act(async () => mockListeners.received?.(notification({ kind: 'payment_due', studentId: 's1' })));
-  expect(invalidate).not.toHaveBeenCalled();
+  expect(invalidate.mock.calls).toEqual([[{ queryKey: ['notifications'] }]]); // only the bell
 });
 
 test('unmount removes both listeners and the foreground handler', async () => {
@@ -106,4 +106,11 @@ test('a tap into a hidden tab falls back to «المزيد» (a hidden tab goes 
   await renderHook(() => useNotificationHandling(), { wrapper: queryWrapper(client) });
   await act(async () => mockListeners.response?.(tap({ kind: 'new_message', phone: PHONE })));
   expect(mockPush).toHaveBeenCalledWith('/more');
+});
+
+test('the teacher tree opens her own screens', async () => {
+  const client = createTestQueryClient();
+  await renderHook(() => useNotificationHandling('teacher'), { wrapper: queryWrapper(client) });
+  await act(async () => mockListeners.response?.(tap({ kind: 'new_student', studentId: 's1', lessonId: 'l1' })));
+  expect(mockPush).toHaveBeenCalledWith('/teacher/schedule');
 });

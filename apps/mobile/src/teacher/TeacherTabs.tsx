@@ -20,7 +20,7 @@ const tabItems = (can: Can): TabItem[] => [
 /**
  * Teacher tabs. The shared chat screens run in teacher mode (her threads, no admin actions). A login
  * with no teachers row (404 `teacher_not_linked`) gets one screen that says so, and sign-out.
- * No push registration: pushes go to admins only (API /me/push-tokens is admin-only).
+ * Push registration is mounted by app/teacher/_layout.tsx (teachers hold notifications.push).
  */
 export function TeacherTabs() {
   const me = useTeacherMe();

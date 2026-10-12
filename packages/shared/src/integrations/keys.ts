@@ -4,7 +4,7 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'wa_safety', 'livekit', 'expo', 'fx'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -20,6 +20,8 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WA_TEMPLATE_SYNC',
   'LIVEKIT_URL',
   'EXPO_API_BASE',
+  'WEB_PUSH_VAPID_PUBLIC_KEY',
+  'WEB_PUSH_SUBJECT',
   'FX_API_URL',
 ] as const;
 
@@ -33,6 +35,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'LIVEKIT_API_KEY',
   'LIVEKIT_API_SECRET',
   'EXPO_ACCESS_TOKEN',
+  'WEB_PUSH_VAPID_PRIVATE_KEY',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -69,6 +72,9 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   LIVEKIT_API_SECRET: 'livekit',
   EXPO_API_BASE: 'expo',
   EXPO_ACCESS_TOKEN: 'expo',
+  WEB_PUSH_VAPID_PUBLIC_KEY: 'web_push',
+  WEB_PUSH_VAPID_PRIVATE_KEY: 'web_push',
+  WEB_PUSH_SUBJECT: 'web_push',
   FX_API_URL: 'fx',
 };
 

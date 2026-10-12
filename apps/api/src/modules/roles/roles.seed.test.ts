@@ -14,6 +14,7 @@ const LATER = [
   '20261006000281_student_logins.sql',
   '20261012000300_sales_messages_read.sql',
   '20261012000360_restricted_templates.sql',
+  '20261012000380_notification_bell.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -28,7 +29,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -44,6 +45,11 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360)', () => {
 
   it('seeds templates.send_all (every template, 2026-10-12) for the admin only', () => {
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('templates.send_all'))).toEqual(['admin']);
+  });
+
+  it('seeds notifications.push (the bell, 2026-10-12) for teacher, assistant and sales; the admin had it', () => {
+    expect(['teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('notifications.push'))).toEqual(['teacher', 'assistant', 'sales']);
+    expect(seeded('admin')).toContain('notifications.push');
   });
 
   it('seeds nothing for guardians and only grantable keys', () => {

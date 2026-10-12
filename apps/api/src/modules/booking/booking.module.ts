@@ -19,6 +19,8 @@ import { SalesBookingController, SalesBookingOptionsController } from './sales-b
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
 import { SlotsService } from './slots.service';
+import { TeacherAlertQueries } from './teacher-alert.queries';
+import { TeacherAlert, TeacherAlertDeps } from './teacher-alert.service';
 import { TeacherOptionsQueries } from './teacher-options.queries';
 import { TeacherOptionsService } from './teacher-options.service';
 
@@ -44,6 +46,9 @@ import { TeacherOptionsService } from './teacher-options.service';
     SalesBookingService,
     SalesBookingOptions,
     BookingWriter,
+    TeacherAlert,
+    TeacherAlertDeps,
+    TeacherAlertQueries,
     BookingInvoices,
     MakeupCandidates,
     InstantQueries,

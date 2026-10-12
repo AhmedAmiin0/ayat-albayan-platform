@@ -96,7 +96,8 @@ export const PERMISSION_ROWS = [
   { key: 'settings.write', area: 'system', grants: [] },
   { key: 'activity.read', area: 'system', grants: [] },
   { key: 'roles.manage', area: 'system', grants: [] },
-  { key: 'notifications.push', area: 'system', grants: [] },
+  // The bell (R-NOT-01, 2026-10-12): every staff portal reads its own notifications and registers its devices.
+  { key: 'notifications.push', area: 'system', grants: TAS },
   { key: 'translations.manage', area: 'system', grants: [] },
   { key: 'users.read', area: 'system', grants: [] },
   { key: 'users.write', area: 'system', grants: [] },

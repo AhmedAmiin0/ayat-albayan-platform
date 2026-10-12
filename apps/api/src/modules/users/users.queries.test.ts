@@ -68,6 +68,12 @@ describe('UsersQueries', () => {
     await new UsersQueries(off.db).setDisabled('u1', null);
     expect(off.argsOf('profiles', 'update')?.[0]).toEqual({ disabled_at: null, disabled_by: null, disabled_reason: null });
   });
+
+  it('forgetBrowsers deletes only that profile’s web push subscriptions', async () => {
+    const { db, argsOf } = fakeDb({ web_push_subscriptions: [{}] });
+    await new UsersQueries(db).forgetBrowsers('u1');
+    expect(argsOf('web_push_subscriptions', 'eq')).toEqual(['profile_id', 'u1']);
+  });
 });
 
 describe('mapListRow', () => {

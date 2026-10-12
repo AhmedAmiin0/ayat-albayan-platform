@@ -8,7 +8,7 @@ const people = () => [row('admin1', 'admin'), row('admin2', 'admin'), row('t1', 
 const teacherLink: Link = { kind: 'teacher', id: 'tt1', name: 'أحمد', code: null, profile_id: 't1' };
 
 describe('disable / enable', () => {
-  it('marks the profile, bans the login, revokes its sessions and clears the permission cache', async () => {
+  it('marks the profile, bans the login, revokes its sessions, forgets its browsers and clears the permission cache', async () => {
     const { lifecycle, store, auth, cache } = setupUsers(people());
     const clear = vi.spyOn(cache, 'clear');
     const out = await lifecycle.disable('t1', { reason: 'لم يحضر' }, ADMIN_ACTOR);
@@ -16,6 +16,7 @@ describe('disable / enable', () => {
     expect(store.rows.find((r) => r.id === 't1')?.disabled_at).not.toBeNull();
     expect(auth.users.get('t1')?.banned).toBe(true);
     expect(auth.calls).toContain('revoke:t1');
+    expect(store.browsersForgotten).toEqual(['t1']);
     expect(clear).toHaveBeenCalledTimes(1);
   });
 

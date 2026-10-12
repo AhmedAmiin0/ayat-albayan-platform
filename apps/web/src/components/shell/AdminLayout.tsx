@@ -4,6 +4,7 @@ import { useEffect, useRef, type ReactNode } from 'react';
 import { Logo } from '@/components/ui/mark';
 import { RunningHead } from '@/components/ui/running-head';
 import { meQuery } from '@/features/auth/me';
+import { NotificationBell } from '@/features/notifications/NotificationBell';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { Crumbs } from './Crumbs';
@@ -58,7 +59,15 @@ export function AdminLayout({ nav, title, children }: AdminLayoutProps) {
       </aside>
       <div className="flex min-h-0 min-w-0 flex-1 flex-col pb-[env(safe-area-inset-bottom)] sm:px-2 sm:pb-[max(0.625rem,env(safe-area-inset-bottom))] shell:h-dvh shell:px-4 shell:pb-5">
         <div className="shrink-0 max-sm:hidden">
-          <RunningHead crumbs={<Crumbs />} />
+          {/* The bell from 900px only: below it the compact bar carries it (640–900px show both). */}
+          <RunningHead
+            crumbs={<Crumbs />}
+            end={
+              <div className="hidden shell:block">
+                <NotificationBell />
+              </div>
+            }
+          />
         </div>
         <PageFrame pageClassName={inbox ? INBOX_PAGE : undefined}>{children}</PageFrame>
       </div>

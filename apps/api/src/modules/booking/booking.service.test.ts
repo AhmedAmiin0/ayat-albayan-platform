@@ -5,7 +5,7 @@ import type { InvoiceRow } from './booking.mapper';
 import type { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
-import type { MessageSender } from '../whatsapp/message.sender';
+import { fakeTeacherAlert } from './teacher-alert.fakes';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 const RESULT = {
@@ -27,13 +27,9 @@ const INVOICE: InvoiceRow = {
 function setup() {
   const deps = fakePlanner();
   deps.queries.createBooking.mockResolvedValue(RESULT);
-  const sender = { kick: vi.fn(async () => undefined) };
+  const { alert, sender } = fakeTeacherAlert();
   const invoices = { resolve: vi.fn().mockResolvedValue(INVOICE) };
-  const writer = new BookingWriter(
-    deps.queries as unknown as BookingQueries,
-    invoices as unknown as BookingInvoices,
-    sender as unknown as MessageSender,
-  );
+  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices as unknown as BookingInvoices, alert);
   const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries);
   return { ...deps, service, sender, invoices };
 }
