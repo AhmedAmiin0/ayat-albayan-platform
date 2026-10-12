@@ -40,6 +40,9 @@ describe('salesErrorText', () => {
   it('maps the API codes through salesMoney.error, anything else is the generic line', () => {
     expect(salesErrorText(new ApiError(403, { code: 'not_your_student' }))).toBe(t.salesMoney.error.not_your_student);
     expect(salesErrorText(new ApiError(410, { code: 'media_expired' }))).toBe(t.salesMoney.error.media_expired);
+    expect(salesErrorText(new ApiError(400, { code: 'start_date_past' }))).toBe(t.salesMoney.error.start_date_past);
+    expect(salesErrorText(new ApiError(403, { code: 'start_date_not_allowed' }))).toBe(t.salesMoney.error.start_date_not_allowed);
+    expect(salesErrorText(new ApiError(400, { code: 'attachment_type' }))).toBe(t.salesMoney.error.attachment_type);
     expect(salesErrorText(new ApiError(500, { code: 'boom' }))).toBe(t.salesMoney.error.generic);
     expect(salesErrorText(new TypeError('Failed to fetch'))).toBe(t.salesMoney.error.generic);
   });

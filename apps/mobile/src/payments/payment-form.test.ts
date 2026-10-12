@@ -1,6 +1,7 @@
 import { t } from '@/lib/i18n';
 import { balanceOf, OLD_SUB_ID, STUDENT, SUB_ID, subscription } from './fixtures';
-import { checkDraft, chosenPackage, defaultPackage, emptyDraft, payablePackages } from './payment-form';
+import { checkDraft, chosenPackage, defaultPackage, emptyDraft, payablePackages, withMethod } from './payment-form';
+import type { Receipt } from './receipt';
 
 const now = new Date('2026-10-01T13:20:00Z');
 const paidOld = subscription({ id: OLD_SUB_ID, starts_on: '2026-08-27', paid: 145, status: 'expired' });
@@ -53,4 +54,15 @@ test('valid: the package currency, the picked day, Arabic digits read', () => {
     },
   });
   expect(checkDraft({ ...draft, daysAgo: 0 }, { sub: current, now }).input?.paidAt).toBe(now.toISOString());
+});
+
+const slip: Receipt = { uri: 'file:///s.jpg', mime: 'image/jpeg', bytes: new ArrayBuffer(1), size: 1 };
+
+test('attachments are a bank transfer\'s only: the slip moves in, leaving the bank drops them', () => {
+  const bank = withMethod({ ...emptyDraft, receipt: slip }, 'bank');
+  expect(bank).toMatchObject({ method: 'bank', receipt: null, attachments: [{ kind: 'file', receipt: slip }] });
+  expect(withMethod(bank, 'cash')).toMatchObject({ method: 'cash', attachments: [] });
+  const input = checkDraft({ ...bank, amountText: '10' }, { sub: current, now }).input;
+  expect(input?.attachments).toEqual([{ kind: 'file', receipt: slip }]);
+  expect(checkDraft({ ...bank, amountText: '10', method: 'cash' }, { sub: current, now }).input).not.toHaveProperty('attachments');
 });
