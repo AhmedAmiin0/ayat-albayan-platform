@@ -130,7 +130,10 @@ test.describe('assistant portal', () => {
       select brought_by, brought_at is not null as has_at from public.students where name = ${name}`);
     expect(rows).toEqual([{ brought_by: id, has_at: true }]);
 
-    // «طلابي» lists the new student, first subscription not paid yet.
+    // «طلابي» lists the new student, first subscription not paid yet. On a phone the open chat covers
+    // the app chrome (PhoneChat), so leave it through its «رجوع» first, as a person would.
+    const chat = page.getByTestId('phone-chat');
+    if (await chat.isVisible()) await chat.getByRole('link', { name: ar.common.back }).click();
     await (await salesNav(page)).getByRole('link', { name: ar.assistantPortal.nav.students }).click();
     await expect(page.getByRole('row').filter({ hasText: name })).toContainText(ar.assistantPortal.students.unpaid);
   });
