@@ -10,12 +10,14 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
-import { studentListQuery } from './api';
+import { studentListQuery, studentStatusCountsQuery } from './api';
 import { BulkAssign } from '@/features/assistants/BulkAssign';
 import { useStudentPick } from '@/features/assistants/use-student-pick';
 import { CreateStudentDialog } from './CreateStudentDialog';
+import { setFilter } from './filters';
 import { isUnfiltered, studentTableControls, type StudentsSearch } from './search';
 import { studentColumns } from './studentColumns';
+import { StudentKindSwitch } from './StudentKindSwitch';
 import { StudentSearch } from './StudentSearch';
 import { useStudentFilters } from './use-student-filters';
 
@@ -33,10 +35,11 @@ type StudentsPageProps = StudentsSearch & {
 /**
  * Students list: search by name / phone / code, filter, sort by any column, paginate, add
  * (R-STU-01..03, R-NFR-08). Inside the shell's Page. Any search, filter or sort change goes back
- * to page 1.
+ * to page 1. «الكل · مشترك · تجريبي» sits in the toolbar, on the status filter (owner 2026-10-12).
  */
 export function StudentsPage({ search, page, filters = {}, sort, columns: colFilters, onChange, onOpen }: StudentsPageProps) {
   const { data, isError } = useQuery(studentListQuery(search, page, { filters, sort, columns: colFilters }));
+  const counts = useQuery(studentStatusCountsQuery({ ...filters, status: undefined }));
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const dismiss = useCallback(() => setNotice(null), []);
@@ -45,6 +48,9 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
   const view = { search, page: 1, filters, sort, columns: colFilters };
   const none = data?.total === 0 && isUnfiltered(view);
   const controls = studentTableControls(view, onChange);
+  const kinds = (
+    <StudentKindSwitch status={filters.status} counts={counts.data} onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })} />
+  );
   const extra = useStudentFilters({
     value: filters,
     onChange: (next) => onChange({ ...view, filters: next }),
@@ -89,7 +95,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
           emptyText={data ? t.common.notFound : t.common.loading}
           sort={controls.sort}
           filters={controls.filters}
-          toolbar={{ search: <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />, extra, total: data?.total }}
+          toolbar={{ search: <StudentSearch initial={search} onSearch={(term) => onChange({ ...view, search: term })} />, extra, total: data?.total, end: kinds }}
         />
       )}
       {data && (
