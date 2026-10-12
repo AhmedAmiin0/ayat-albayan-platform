@@ -45,6 +45,15 @@ assistant's session row; new read-only routes under `/sales` with whitelisted co
 | 10 | Teachers | Master-detail. `GET /sales/teachers` adds `lessons_today`, `live_now` and, per student, `program`, `status` and `next_lesson_at` (the next open lesson in the coming 8 days). Web: list + side drawer; mobile: list screen + detail screen. The filter rules are shared (`@ab/shared` `filterSalesTeachers`). Still never pay, rates, phone or meeting link. |
 | 11 | Schedule | `GET /sales/schedule?date&teacherId` (`self.sales_academy`): one Riyadh day, whitelisted (time, status, trial, makeup, teacher, students; never a meeting link, reason, note, attendance or money). Web `/sales/schedule` «جدول الحلقات» reuses the admin `LessonChip` read-only; mobile reuses the day switcher and the agenda row's layout. A running lesson shows «ادخل الحلقة» (she joins as the classroom assistant, decision 5a). |
 
+## Owner request 2026-10-12: register a new student from the chat (web + mobile)
+
+| # | Area | Decision |
+|---|---|---|
+| 12 | Registration | «تسجيل طالب جديد» lives in the chat: on a sales thread with a lead still in the funnel (not a family, a teacher, a converted or a lost lead), the web header opens the same booking wizard in sales mode in a dialog, and mobile pushes the trial wizard in sales mode (`/inbox/book?…&mode=register`). Both post to `/sales/booking`, so the new student is credited to the salesperson (`brought_by`) exactly as before. Prefill = what the thread carries: lead id, number, WhatsApp name, source (sales holds no `leads.read`, so the lead's qualification is not read). After booking, «ارجع للمحادثة» closes the dialog (web) or goes back (mobile) to the same chat. |
+| 12c | Scope | The API rule is unchanged: `/sales/booking` books only from the salesperson's **own** (assigned) lead. Every chat is visible (decision 1), so on a lead assigned to someone else the booking answers 403 `not_your_lead`; the wizard now says so in words («هذا العميل غير مسند إليك…», `booking.error.not_your_lead`, and `not_your_family`) instead of the generic error. Hiding the action on such leads needs the assignment in the thread payload (open question for the owner). |
+| 12a | Old page | `/sales/register` and its nav entry are removed; the route only redirects to `/sales/inbox` (on that chat when the old link carried `phone`). |
+| 12b | Wording | The nav entry for `/sales/meetings` reads «الاجتماعات» (`sales.nav.meetings`); «جدول الحلقات» is only `/sales/schedule`. |
+
 ## Next step (not in this change)
 
 Mobile (`apps/mobile`): the same pages for the sales base role (all chats already follow the API), the

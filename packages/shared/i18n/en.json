@@ -656,7 +656,9 @@
       "makeup_not_eligible": "This lesson cannot be made up",
       "makeup_exists": "This lesson already has a makeup booking",
       "makeup_student": "The student is not on the missed lesson",
-      "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule"
+      "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule",
+      "not_your_lead": "This lead is not assigned to you, so you cannot register it. Ask the admin to assign it to you.",
+      "not_your_family": "The guardian's number is not one of your leads' numbers; use the chat's number."
     }
   },
   "lessons": {
@@ -1264,17 +1266,12 @@
   "assistantPortal": {
     "title": "Sales",
     "nav": {
-      "register": "Register a student",
       "students": "My students",
       "earnings": "My earnings",
       "payments": "My payments"
     },
     "register": {
-      "title": "Register a student",
-      "intro": "Registration starts from the student's chat: open the chat from the inbox and press «Register the student from this chat», then pick the teacher and the time of the trial lesson. The student is credited to you automatically.",
-      "openInbox": "Open the inbox",
       "newStudent": "Student and guardian details",
-      "fromChat": "Register the student from this chat",
       "openMyStudents": "Open my students"
     },
     "students": {
@@ -2225,6 +2222,7 @@
     "subscriptionSheet": "Children & packages",
     "statusSaved": "Status updated",
     "registerStudent": "Register the student",
+    "registerNew": "Register a new student",
     "editLeadData": "Edit details",
     "editLeadDataTitle": "Edit student details",
     "noLeadData": "No details yet",
@@ -3358,7 +3356,7 @@
     "nav": {
       "chats": "Chats",
       "subscriptions": "Subscriptions",
-      "schedule": "My meetings",
+      "meetings": "Meetings",
       "label": "Sales sections",
       "teachers": "Teachers",
       "allStudents": "All students",

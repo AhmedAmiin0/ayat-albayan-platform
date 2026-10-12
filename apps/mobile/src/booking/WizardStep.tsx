@@ -1,6 +1,7 @@
 import { normalizePhone } from '@ab/shared';
 import { View } from 'react-native';
 import type { BookFailure } from './booking-errors';
+import { useBookingMode } from './booking-mode';
 import { ConfirmStep } from './ConfirmStep';
 import { ContactStep } from './ContactStep';
 import type { StudentChoice, TrialDraft } from './draft';
@@ -35,11 +36,13 @@ export interface WizardStepProps {
 /** The wizard's current step. A new package or length clears the slot (the slots depend on it). */
 export function WizardStep({ step, steps, draft, patch, go, requestId, booking }: WizardStepProps) {
   const next = steps[steps.indexOf(step) + 1] ?? 'confirm';
+  // A salesperson registers a trial only: no booking type to pick.
+  const sales = useBookingMode() === 'sales';
   if (step === 'contact') {
     // «المده» is asked here unless a package step follows (it asks the length with the package).
     return (
       <View style={{ gap: 16 }}>
-        <KindPills value={draft.kind} onChange={(kind) => patch(kindPatch(kind))} />
+        {sales ? null : <KindPills value={draft.kind} onChange={(kind) => patch(kindPatch(kind))} />}
         <ContactStep
           value={draft}
           withDuration={!steps.includes('package')}

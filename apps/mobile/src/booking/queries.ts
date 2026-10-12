@@ -2,13 +2,15 @@ import type { BookingTeacherOption, Gender, Program, SlotsResponse } from '@ab/s
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch, toQueryString } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
+import { bookingPath, useBookingMode } from './booking-mode';
 
-/** GET /booking/teachers?program&gender? (docs/10 route 12): active teachers by name, with load. */
+/** GET /booking/teachers?program&gender? (docs/10 route 12; sales: /sales/booking/teachers): active teachers by name, with load. */
 export function useBookingTeachers(f: { program: Program; gender: Gender | null }) {
   const params = { program: f.program, gender: f.gender ?? undefined };
+  const path = bookingPath(useBookingMode(), '/teachers');
   return useQuery({
-    queryKey: [...pathKey('/booking/teachers'), params],
-    queryFn: () => apiFetch<BookingTeacherOption[]>(`/booking/teachers${toQueryString(params)}`),
+    queryKey: [...pathKey(path), params],
+    queryFn: () => apiFetch<BookingTeacherOption[]>(`${path}${toQueryString(params)}`),
   });
 }
 
@@ -19,10 +21,11 @@ export interface SlotsParams {
   durationMin: number;
 }
 
-/** GET /booking/slots (docs/10 route 13): candidate starts, each with its clashes ([] = free). */
+/** GET /booking/slots (docs/10 route 13; sales: /sales/booking/slots): candidate starts, each with its clashes ([] = free). */
 export function useSlots(params: SlotsParams) {
+  const path = bookingPath(useBookingMode(), '/slots');
   return useQuery({
-    queryKey: [...pathKey('/booking/slots'), params],
-    queryFn: () => apiFetch<SlotsResponse>(`/booking/slots${toQueryString({ ...params })}`),
+    queryKey: [...pathKey(path), params],
+    queryFn: () => apiFetch<SlotsResponse>(`${path}${toQueryString({ ...params })}`),
   });
 }

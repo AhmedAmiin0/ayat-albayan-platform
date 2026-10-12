@@ -19,12 +19,12 @@ describe('SalesNav / TeacherNav — dynamic roles', () => {
     expect(screen.getByRole('link', { name: t.sales.nav.subscriptions })).toBeTruthy();
   });
 
-  it('the assistant’s own-data pages follow their scope keys; registering follows self.sales', () => {
+  it('the assistant’s own-data pages follow their scope keys; meetings follow self.sales', () => {
     render(<SalesNav can={(p) => !['self.sales_earnings', 'self.sales_payments'].includes(p)} />);
     expect(screen.queryByRole('link', { name: t.assistantPortal.nav.earnings })).toBeNull();
     expect(screen.queryByRole('link', { name: t.assistantPortal.nav.payments })).toBeNull();
     expect(screen.getByRole('link', { name: t.assistantPortal.nav.students })).toBeTruthy();
-    expect(screen.getByRole('link', { name: t.assistantPortal.nav.register })).toBeTruthy();
+    expect(screen.getByRole('link', { name: t.sales.nav.meetings })).toBeTruthy();
   });
 
   it('the assistant side (all students, teachers, running lessons) follows self.sales_academy', () => {

@@ -11,6 +11,7 @@ import { bookFailure } from './booking-errors';
 import { draftFromLead, type BookingLead, type StudentChoice, type TrialDraft } from './draft';
 import { subscriptionHref } from './package-choice';
 import { stepsFor, type Step } from './steps';
+import { useBookingMode } from './booking-mode';
 import { useBookTrial } from './use-book-trial';
 import { WizardStep } from './WizardStep';
 import { locale } from '@/lib/locale';
@@ -47,6 +48,8 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
   // The answer to a duplicate_student 409 sticks, so a retry after a dropped reply sends it again.
   const [choice, setChoice] = useState<StudentChoice>(null);
   const book = useBookTrial(requestId);
+  // A salesperson's registration from the chat is always a trial («تسجيل طالب جديد»).
+  const title = useBookingMode() === 'sales' ? t.inbox.registerNew : draft.kind === 'trial' ? t.booking.trialTitle : t.subscriptions.new;
   const patch = (p: Partial<TrialDraft>) => setDraft((d) => ({ ...d, ...p }));
   const at = steps.indexOf(step);
   const leave = () => (router.canGoBack() ? router.back() : router.replace(`/inbox/${lead.id}`));
@@ -67,7 +70,7 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
   return (
     <>
       <ScreenHeader
-        title={draft.kind === 'trial' ? t.booking.trialTitle : t.subscriptions.new}
+        title={title}
         subtitle={book.isSuccess ? undefined : `${position} · ${stepNames()[step]}`}
         trailing={
           <Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />

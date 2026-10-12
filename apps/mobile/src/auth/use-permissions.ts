@@ -24,3 +24,13 @@ export function usePermissions(): Can {
   const held = permissionsOf(me.data);
   return (permission) => held.includes(permission);
 }
+
+/**
+ * Strict: does /auth/me list this key? false until it answers. For a key that switches a screen to
+ * another role's view (self.sales: a salesperson's chat), where usePermissions' «hide nothing» would
+ * flash the wrong one.
+ */
+export function useHolds(permission: Permission): boolean {
+  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  return permissionsOf(me.data).includes(permission);
+}

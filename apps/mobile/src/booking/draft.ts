@@ -1,4 +1,5 @@
 import {
+  LEAD_SOURCES,
   normalizePhone,
   RIYADH_TZ,
   TZ_OPTIONS,
@@ -24,6 +25,9 @@ export type BookingLead = Pick<Lead, 'id' | 'name' | 'phone_e164'> & {
   /** leads.qualification (jsonb): «بيانات الطالب» prefill the child (R-LEAD-03). */
   qualification?: unknown;
 };
+
+/** A source from a route param (the chat's lead), checked against the enum. */
+export const isLeadSource = (v: unknown): v is LeadSource => LEAD_SOURCES.some((s) => s === v);
 
 export interface TrialDraft {
   leadId: string;
