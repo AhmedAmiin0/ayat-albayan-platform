@@ -7,7 +7,7 @@ import { PASSWORD_MAX } from '../users/validation.js';
 
 export const ACCOUNT_NAME_MIN = 2;
 export const ACCOUNT_NAME_MAX = 80;
-/** Same as the `avatars` bucket (migration 20261012000350). */
+/** Same as the `avatars` bucket (migration 20261012000370). */
 export const AVATAR_MIMES = ['image/jpeg', 'image/png', 'image/webp'] as const;
 export type AvatarMime = (typeof AVATAR_MIMES)[number];
 export const AVATAR_MAX_BYTES = 2 * 1024 * 1024;

@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test';
 import { as, rolledBack, userId, type Tx } from '../support/rls';
 import { USERS } from '../support/users';
 
-// Migration 20261012000350 (R-ACC-05, rule 9): the private 'avatars' bucket. A signed-in user
+// Migration 20261012000370 (R-ACC-05, rule 9): the private 'avatars' bucket. A signed-in user
 // writes and reads only under their own folder `<uid>/…`; an admin reads every avatar; anon reads
 // nothing. public.profiles has no self-write: a non-admin's UPDATE of their own row changes nothing.
 
@@ -20,7 +20,7 @@ async function names(tx: Tx): Promise<string[]> {
   return rows.map((r) => r.name);
 }
 
-test.describe('avatars storage + profiles self-write (migration 350)', () => {
+test.describe('avatars storage + profiles self-write (migration 370)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'database only: one run'));
 
   test('the avatars bucket exists, is private, 2 MB, images only', async () => {

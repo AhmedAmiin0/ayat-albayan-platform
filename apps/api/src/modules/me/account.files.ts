@@ -7,7 +7,7 @@ import type { AccountFiles } from './account.ports';
 /** Avatar URLs live for 15 minutes: the page asks again on its next load. */
 export const AVATAR_URL_SECONDS = 15 * 60;
 
-/** AccountFiles on the private `avatars` bucket (migration 20261012000350, R-ACC-05). */
+/** AccountFiles on the private `avatars` bucket (migration 20261012000370, R-ACC-05). */
 @Injectable()
 export class StorageAccountFiles implements AccountFiles {
   constructor(private readonly storage: StorageService) {}

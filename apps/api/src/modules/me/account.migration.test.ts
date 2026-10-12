@@ -2,16 +2,16 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migration 20261012000350 (R-ACC-05; rule 9): the avatars bucket and its own-folder policies, and
+// Migration 20261012000370 (R-ACC-05; rule 9): the avatars bucket and its own-folder policies, and
 // NO self-write policy on public.profiles.
 
 const sql = readFileSync(
-  join(__dirname, '../../../../../packages/db/supabase/migrations/20261012000350_profile_self_service.sql'),
+  join(__dirname, '../../../../../packages/db/supabase/migrations/20261012000370_profile_self_service.sql'),
   'utf8',
 );
 const code = sql.replace(/--.*$/gm, '');
 
-describe('migration 20261012000350 profile self-service', () => {
+describe('migration 20261012000370 profile self-service', () => {
   it('adds a length-checked avatar_path, idempotently', () => {
     expect(code).toMatch(/add column if not exists avatar_path text/);
     expect(code).toMatch(/drop constraint if exists profiles_avatar_path_len/);

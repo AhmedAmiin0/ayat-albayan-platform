@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { avatarPath, BUCKETS, isPathOf } from './storage.paths';
 
-// avatars/<user_id>/avatar-<ms>.<ext> (migration 20261012000350 parses the first segment; R-ACC-05).
+// avatars/<user_id>/avatar-<ms>.<ext> (migration 20261012000370 parses the first segment; R-ACC-05).
 
 describe('avatar path', () => {
   it('puts the photo in the user’s own folder with a timestamped name', () => {

@@ -13,7 +13,7 @@ export const BUCKETS = {
   waMedia: 'wa-media',
   /** Lesson recordings, written by the LiveKit egress through the S3 endpoint (migration 189). */
   recordings: 'recordings',
-  /** Profile photos (migration 20261012000350, R-ACC-05). */
+  /** Profile photos (migration 20261012000370, R-ACC-05). */
   avatars: 'avatars',
 } as const;
 export type Bucket = (typeof BUCKETS)[keyof typeof BUCKETS];
