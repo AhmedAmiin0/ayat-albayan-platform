@@ -27,6 +27,9 @@ export const ROUTE_PERMISSION = {
   salesStudents: 'self.sales_academy',
   salesLive: 'self.sales_academy',
   salesSchedule: 'self.sales_academy',
+  salesEarnings: 'self.sales_earnings',
+  // «فريق المبيعات» (web admin-nav-items 'assistants'): the sales staff's terms, commissions and statements.
+  assistants: 'assistantpay.read',
 } as const satisfies Record<string, Permission>;
 
 export type RouteKey = keyof typeof ROUTE_PERMISSION;
