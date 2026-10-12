@@ -64,6 +64,6 @@ running-lessons list with «ادخل الحلقة», teachers and all students. 
 
 | # | Area | Decision |
 |---|---|---|
-| 13 | Starters only | Sales list and send ONLY approved templates with `sales_starter` (docs/12 §13.18): `GET /messaging/templates` filters them, `POST /threads/:phone/template` answers 403 `template_not_allowed` for any other. The admin keeps every template. |
-| 13a | Where they come from | «راجع حالة القوالب» imports every approved template of the chat (main) number's WABA the registry does not know, ticked (a `teacher_` one unticked), sent from the chat number. The admin ticks or unticks any template with «قالب بدء محادثة للمبيعات» on the templates page (`PATCH /messaging/templates/:key/starter`, audited). |
-| 13b | Staging | The chat line is not configured on staging (Meta test credentials, `WA_TEMPLATE_SYNC=false`), so nothing is imported: sales see only the templates an admin ticks, none by default. Tick at least one approved template there, or sales cannot open a chat after 24 h. |
+| 14 | Starters only | Sales list and send ONLY approved templates with `sales_starter` (docs/12 §13.18): `GET /messaging/templates` filters them, `POST /threads/:phone/template` answers 403 `template_not_allowed` for any other. The admin keeps every template. |
+| 14a | Where they come from | «راجع حالة القوالب» imports every approved template of the chat (main) number's WABA the registry does not know, ticked (a `teacher_` one unticked), sent from the chat number. The admin ticks or unticks any template with «قالب بدء محادثة للمبيعات» on the templates page (`PATCH /messaging/templates/:key/starter`, audited). |
+| 14b | Staging | The chat line is not configured on staging (Meta test credentials, `WA_TEMPLATE_SYNC=false`), so nothing is imported: sales see only the templates an admin ticks, none by default. Tick at least one approved template there, or sales cannot open a chat after 24 h. |
