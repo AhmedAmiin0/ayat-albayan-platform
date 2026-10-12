@@ -8,6 +8,11 @@ describe('studentNote (hamish, docs/07 §6)', () => {
     expect(studentNote({ teacher_name: null, status: 'active' })).toBe(t.alerts.needsTeacher);
   });
 
+  it('a pending_renewal student is current: without a teacher it needs one too', () => {
+    expect(studentNote({ teacher_name: null, status: 'pending_renewal' })).toBe(t.alerts.needsTeacher);
+    expect(studentNote({ teacher_name: 'أ. هبة', status: 'pending_renewal' })).toBeNull();
+  });
+
   it('no note with a teacher, or for paused / churned students', () => {
     expect(studentNote({ teacher_name: 'أ. هبة', status: 'active' })).toBeNull();
     expect(studentNote({ teacher_name: null, status: 'paused' })).toBeNull();

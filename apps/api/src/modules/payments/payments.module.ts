@@ -16,5 +16,7 @@ import { ReceiptsService } from './receipts.service';
   imports: [SubscriptionsModule, FxModule, InvoicesModule],
   controllers: [PaymentsController],
   providers: [PaymentInputs, PaymentsQueries, PaymentsService, ReceiptsService],
+  // The salesperson's bank transfer from the chat reuses them (sales-money).
+  exports: [PaymentsService, ReceiptsService],
 })
 export class PaymentsModule {}

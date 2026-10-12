@@ -1,4 +1,4 @@
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
@@ -20,7 +20,9 @@ const VIEWS = (): { value: MoneyView; label: string }[] => [
  * or «مدفوعاتي» (the payments I recorded) as a filter of the same page. Read-only.
  */
 export function MyMoneyScreen() {
-  const [view, setView] = useState<MoneyView>('earnings');
+  // ?view=payments opens «مدفوعاتي» directly (the sales transfer's success screen links here).
+  const params = useLocalSearchParams<{ view?: string }>();
+  const [view, setView] = useState<MoneyView>(params.view === 'payments' ? 'payments' : 'earnings');
   return (
     <Screen>
       <ScreenHeader

@@ -1,4 +1,4 @@
-import { TEACHER_STUDENT_STATUS, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
+import { TEACHER_STUDENT_STATUSES, type TeacherStudentKind, type TeacherStudentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
@@ -12,7 +12,8 @@ const LOOKBACK_DAYS = 60;
 
 /**
  * GET /teachers/me/students (teacher tab «الطلاب»): my students of one kind. Mine = teacher_id is my
- * teachers row, or on one of my lessons (lesson_students). subscribed = status active, trial = trial.
+ * teachers row, or on one of my lessons (lesson_students). subscribed = status active or
+ * pending_renewal (lessons keep running until renewal), trial = trial.
  */
 @Injectable()
 export class TeacherStudentsService {
@@ -24,15 +25,15 @@ export class TeacherStudentsService {
   async mine(user: AuthUser, kind: TeacherStudentKind, now = new Date()): Promise<TeacherStudentView[]> {
     const teacherId = await this.teachers.idByProfile(user.id);
     if (!teacherId) throw notFound('teacher_not_linked');
-    const status = TEACHER_STUDENT_STATUS[kind];
+    const statuses = TEACHER_STUDENT_STATUSES[kind];
     const since = new Date(now.getTime() - LOOKBACK_DAYS * DAY).toISOString();
     const [assigned, lessons] = await Promise.all([
-      this.queries.assigned({ teacherId, status }),
+      this.queries.assigned({ teacherId, statuses }),
       this.queries.lessons({ teacherId, since }),
     ]);
     const known = new Set(assigned.map((s) => s.id));
     const ids = [...studentIdsOf(lessons)].filter((id) => !known.has(id));
-    const onLessons = await this.queries.byIds({ ids, status });
+    const onLessons = await this.queries.byIds({ ids, statuses });
     return toStudentViews([...assigned, ...onLessons], nextLessonByStudent(lessons, now));
   }
 }

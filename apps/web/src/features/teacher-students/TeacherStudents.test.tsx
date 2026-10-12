@@ -57,6 +57,18 @@ describe('TeacherStudents «الطلاب» (teacher)', () => {
     expect(screen.getByRole('tabpanel', { name: t.teacherStudents.trial })).toBeTruthy();
   });
 
+  it('a pending_renewal student stays in «مشتركون» with its «بانتظار التجديد» chip; active ones carry none', async () => {
+    apiFetch.mockResolvedValue([s({}), s({ id: 's4', name: 'مريم', status: 'pending_renewal' })]);
+    render(
+      <QueryClientProvider client={new QueryClient()}>
+        <TeacherStudents />
+      </QueryClientProvider>,
+    );
+    expect(await screen.findByText('مريم')).toBeTruthy();
+    expect(screen.getAllByText(t.enums.studentStatus.pending_renewal)).toHaveLength(1);
+    expect(screen.queryByText(t.enums.studentStatus.active)).toBeNull();
+  });
+
   it('says so when a kind is empty', async () => {
     apiFetch.mockResolvedValue([]);
     render(

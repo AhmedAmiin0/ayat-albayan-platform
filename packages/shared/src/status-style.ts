@@ -57,6 +57,7 @@ export const leadStatusStyle: Record<LeadStatus, StatusStyle> = {
 export const studentStatusStyle: Record<StudentStatus, StatusStyle> = {
   trial: { tone: 'neutral', glyph: 'hollow' },
   active: { tone: 'ok', glyph: 'fill' },
+  pending_renewal: { tone: 'act', glyph: 'half' },
   paused: { tone: 'neutral', glyph: 'half' },
   churned: { tone: 'neutral', glyph: 'struck' },
 };

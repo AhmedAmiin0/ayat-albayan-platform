@@ -12,7 +12,8 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
-jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
+const mockParams = jest.fn((): { view?: string } => ({}));
+jest.mock('expo-router', () => ({ router: { back: jest.fn() }, useLocalSearchParams: () => mockParams() }));
 
 test('an English run reads en.json: my earnings, terms, totals and statement status', async () => {
   expect(t).toEqual(en);

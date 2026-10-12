@@ -30,12 +30,13 @@ function setup(states: Record<string, StudentState | Error>, auto = true) {
   };
   const settings = { all: vi.fn(async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: auto })) };
   const push = { notifyAdmins: vi.fn(async () => undefined) };
+  const renewal = { apply: vi.fn(async () => null) };
   const service = new SubscriptionAlertsService(
     packages as unknown as PackagesService,
     queries as unknown as AlertsQueries,
-    { settings, push } as unknown as AlertsEnv,
+    { settings, push, renewal } as unknown as AlertsEnv,
   );
-  return { service, packages, queries, push };
+  return { service, packages, queries, push, renewal };
 }
 
 describe('SubscriptionAlertsService (R-SUB-02)', () => {

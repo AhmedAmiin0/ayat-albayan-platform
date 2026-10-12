@@ -2787,6 +2787,7 @@
     "studentStatus": {
       "trial": "Trial",
       "active": "Active",
+      "pending_renewal": "Pending renewal",
       "paused": "Paused",
       "churned": "Stopped"
     },
@@ -3577,6 +3578,54 @@
       "money": "Earnings and payments view"
     }
   },
+  "salesMoney": {
+    "newSubscription": "New subscription",
+    "recordTransfer": "Record a bank transfer",
+    "stepTransfer": "Record the bank transfer",
+    "pickChild": "Choose the student",
+    "noOwnStudents": "No student of this family is registered to you.",
+    "nothingDue": "None of your students in this family has a package with money due.",
+    "startsOn": "Start day",
+    "price": "Amount to transfer",
+    "priceHint": "The price comes from the price list; tell the family so they can transfer it.",
+    "saveSubscription": "Save the subscription",
+    "packageFor": "{student}'s package",
+    "due": "Due: {amount}",
+    "receipt": "Receipt",
+    "receiptFromChat": "Pick the receipt from the chat",
+    "receiptUpload": "Upload a receipt photo or file",
+    "receiptCamera": "Take a photo of the receipt",
+    "receiptLibrary": "Choose from photos",
+    "receiptChosen": "Receipt selected",
+    "receiptChange": "Change the receipt",
+    "receiptRequired": "Attach the receipt first.",
+    "noChatReceipts": "The family sent no images or files in the last 30 days.",
+    "receiptExpired": "This file has expired",
+    "amount": "Amount transferred",
+    "currency": "Currency",
+    "paidOn": "Transfer date",
+    "note": "Note (optional)",
+    "saveTransfer": "Record the transfer",
+    "saving": "Saving…",
+    "transferSaved": "Transfer recorded",
+    "becameSubscribed": "The student is now subscribed",
+    "openMyPayments": "My payments",
+    "done": "Done",
+    "error": {
+      "not_your_student": "This student is not one of yours.",
+      "receipt_path": "The receipt could not be used; attach it again.",
+      "receipt_type": "The receipt must be an image or a PDF.",
+      "receipt_too_large": "The receipt is larger than allowed.",
+      "media_expired": "This file has expired on WhatsApp.",
+      "message_not_found": "This file is not from this family's chat.",
+      "client_request_reused": "Close the dialog, open it again and retry.",
+      "currency_mismatch": "Transfers are recorded in the package currency only ({currency}).",
+      "discount_not_allowed": "Only a 0, 5, 10 or 15 % discount is allowed.",
+      "paid_at_future": "The transfer date cannot be in the future.",
+      "amount": "Enter a valid amount above zero.",
+      "generic": "Could not save; please try again."
+    }
+  },
   "meetings": {
     "new": "New meeting",
     "startNow": "Start now",
@@ -4079,6 +4128,7 @@
       "self.sales_payments": "Payments the salesperson recorded",
       "self.sales_earnings": "Salesperson's earnings and statements",
       "self.sales_academy": "Teachers, all students and running lessons (salesperson)",
+      "self.sales_money": "Subscribe own students and record their bank transfers (salesperson)",
       "self.assistant": "Classroom assistant's own pages"
     },
     "page": {

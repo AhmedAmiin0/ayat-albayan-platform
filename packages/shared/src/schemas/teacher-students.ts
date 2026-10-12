@@ -5,10 +5,14 @@ import type { Program, StudentStatus } from '../enums/index.js';
 export const TEACHER_STUDENT_KINDS = ['subscribed', 'trial'] as const;
 export type TeacherStudentKind = (typeof TEACHER_STUDENT_KINDS)[number];
 
-/** subscribed = students.status 'active', trial = 'trial'; paused / churned are in neither. */
-export const TEACHER_STUDENT_STATUS: Record<TeacherStudentKind, StudentStatus> = {
-  subscribed: 'active',
-  trial: 'trial',
+/**
+ * subscribed = students.status 'active' or 'pending_renewal' (owner 2026-10-12: the package ended but
+ * lessons keep running, so the teacher keeps the student; the row carries its status for the chip),
+ * trial = 'trial'; paused / churned are in neither.
+ */
+export const TEACHER_STUDENT_STATUSES: Record<TeacherStudentKind, readonly StudentStatus[]> = {
+  subscribed: ['active', 'pending_renewal'],
+  trial: ['trial'],
 };
 
 /** GET /teachers/me/students?kind=. */

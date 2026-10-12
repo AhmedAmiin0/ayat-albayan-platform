@@ -1,8 +1,9 @@
-import { PROGRAMS, type TeacherStudentView } from '@ab/shared';
+import { PROGRAMS, studentStatusStyle, type TeacherStudentView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable';
 import { Ltr } from '@/components/ui/ltr';
+import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { nextLessonText } from './next-lesson';
 
@@ -14,7 +15,8 @@ const programs: ColumnFilterDef = { kind: 'select', options: PROGRAMS.map((p) =>
 const fact = 'text-sm text-ink-2';
 
 /**
- * My students (R-TCH-03): name (opens the report history), code, program, level, age, next lesson.
+ * My students (R-TCH-03): name (opens the report history; a «بانتظار التجديد» chip on a
+ * pending_renewal student, owner 2026-10-12), code, program, level, age, next lesson.
  * Sorted and filtered locally (the whole list is loaded). Under 640px the row stacks like the old
  * card: name + code, then program · level · age, then the next lesson.
  */
@@ -22,14 +24,19 @@ export const teacherStudentColumns = col.columns([
   col.accessor('name', {
     header: () => t.students.name,
     cell: (c) => (
-      <Link
-        to="/teacher/reports/$studentId"
-        params={{ studentId: c.row.original.id }}
-        title={ts.openReports.replace('{name}', c.getValue())}
-        className="inline-flex min-h-11 items-center font-semibold text-lapis underline underline-offset-4"
-      >
-        {c.getValue()}
-      </Link>
+      <span className="inline-flex flex-wrap items-center gap-x-2">
+        <Link
+          to="/teacher/reports/$studentId"
+          params={{ studentId: c.row.original.id }}
+          title={ts.openReports.replace('{name}', c.getValue())}
+          className="inline-flex min-h-11 items-center font-semibold text-lapis underline underline-offset-4"
+        >
+          {c.getValue()}
+        </Link>
+        {c.row.original.status === 'pending_renewal' && (
+          <StatusChip size="sm" {...studentStatusStyle.pending_renewal} label={t.enums.studentStatus.pending_renewal} />
+        )}
+      </span>
     ),
     meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_60%]', filter: text },
   }),

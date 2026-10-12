@@ -4,7 +4,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { applySort } from '../../common/list-sort';
 import { readAll } from '../scheduling/read-all';
 import { dbError, type Page } from './http';
-import type { TeacherStudentCounts } from '@ab/shared';
+import { CURRENT_STUDENT_STATUSES, type TeacherStudentCounts } from '@ab/shared';
 import { applyTeacherFilters, TEACHER_SORT, tallyKinds, type TeacherListQuery } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';
 
@@ -83,14 +83,15 @@ export class TeachersQueries {
   }
 
   /**
-   * Current load: students with the teacher whose status is trial | active (booking options,
-   * the all-teachers calendar). No ids = every teacher.
+   * Current load: students with the teacher whose status is current (CURRENT_STUDENT_STATUSES:
+   * trial | active | pending_renewal, whose lessons keep running) for booking options and the
+   * all-teachers calendar. No ids = every teacher.
    * ponytail: counts rows in JS — fine for one academy; a grouped view if teachers get thousands.
    */
   async loads(teacherIds?: readonly string[]): Promise<Map<string, number>> {
     // readAll: more than max_rows (1000) students must not be cut off silently.
     const data = await readAll((from, to) => {
-      let query = this.db.from('students').select('teacher_id').in('status', ['trial', 'active']);
+      let query = this.db.from('students').select('teacher_id').in('status', [...CURRENT_STUDENT_STATUSES]);
       query = teacherIds ? query.in('teacher_id', [...teacherIds]) : query.not('teacher_id', 'is', null);
       return query.order('id').range(from, to);
     });
