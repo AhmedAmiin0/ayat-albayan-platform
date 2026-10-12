@@ -94,7 +94,7 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     expect([closed.statusCode, closed.json().code]).toEqual([409, 'session_closed']);
   });
 
-  // Owner 2026-10-12: sales send only the starters the admin ticked (templateRow: sales_starter false).
+  // Owner 2026-10-12: sales send only the allow-list the admin ticked (templateRow: sales_starter false).
   it('H4 a non-starter is 403 template_not_allowed; a starter goes out for any lesson; link templates stay refused', async () => {
     const send = (body: object) =>
       t.call({ method: 'POST', url: `${URL}/template`, token: 'salesB', body: { params: { '1': 'ياسمين', '2': 'الأحد 16:00', button: 'ayat-room' }, clientRequestId: REQ, ...body } });
@@ -106,6 +106,15 @@ describe('sales mode H1-H4: every chat, with the sales redactions (docs/16)', ()
     expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ lesson_id: LESSON, created_by: 's2' }));
     expect((await send({ key: 'lesson_join_link' })).json().code).toBe('use_join_link');
     expect((await send({ key: 'lesson_feedback_request' })).json().code).toBe('use_feedback_request');
+  });
+
+  it('H4 booking_confirmation is 403 template_not_allowed; free_trial_invite goes out', async () => {
+    const send = (key: string) => t.call({ method: 'POST', url: `${URL}/template`, token: 'sales', body: { key, params: { '1': 'أ', '2': 'ب', button: 'x' }, clientRequestId: REQ } });
+    const refused = await send('booking_confirmation');
+    expect([refused.statusCode, refused.json().code]).toEqual([403, 'template_not_allowed']);
+    t.templates.get.mockResolvedValue(templateRow({ key: 'free_trial_invite', meta_name: 'free_trial_invite', line: 'chat', sales_starter: true }));
+    expect((await send('free_trial_invite')).statusCode).toBe(201);
+    expect(t.queries.enqueue).toHaveBeenCalledWith(expect.objectContaining({ template_key: 'free_trial_invite' }));
   });
 
   it('H4 a chat starter imported from Meta (key = its Meta name, four variables) is accepted and queued', async () => {

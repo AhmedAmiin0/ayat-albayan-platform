@@ -5,7 +5,7 @@ import type { TemplatesQueries } from './templates.queries';
 import type { MetaTemplate, TemplateRow } from './whatsapp.types';
 
 // The health check's chat-line side (owner 2026-10-12, docs/12 §3.4), out of template.registry.ts
-// (150-line cap): the chat WABA's list, and its new templates imported as sales starters.
+// (150-line cap): the chat WABA's list, and its new templates imported (only the restricted defaults flagged).
 
 type Warn = { warn: (message: string) => void };
 

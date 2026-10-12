@@ -142,6 +142,8 @@ OpenAPI generated from Nest decorators → `packages/api-client`.
 - Push via expo-notifications; server stores Expo push tokens in `profiles.push_tokens`.
 - Camera for payment receipt → Supabase Storage signed upload.
 - Reuses `packages/api-client` and `packages/shared`.
+- **Web parity** (owner standing rule, 2026-10-06: every web feature is in sync with the mobile). «المستخدمون» (owner, 2026-10-12) is in «المزيد» behind `users.read` (`apps/mobile/src/users`, routes `app/(tabs)/more/users/*`): list with search, role and status filters and paging, detail, create (with the one-time credential: selectable text + the share sheet), edit, disable / enable, reset password, sign out everywhere, delete (or disable when the user has history); every write behind `users.write`, same endpoints, bodies and error messages as the web. The student file has «إنشاء حساب» as on the web.
+- **Mobile parity exemptions** (owner decision 2026-10-12): «الأدوار والصلاحيات» (roles & permissions) and «الترجمات» (the translations editor) stay **web-only**: rarely used and table-heavy. Any other web feature missing on the phone is a gap, not a decision.
 
 ## 7. Integrations
 

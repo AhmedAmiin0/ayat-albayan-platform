@@ -69,6 +69,12 @@ describe('system roles', () => {
     expect(systemPermissionsOf('sales')).not.toContain('templates.manage');
     expect(systemPermissionsOf('assistant')).not.toContain('messages.read');
   });
+
+  it('templates.send_all (every template, 2026-10-12) is grantable, the system admin only by default', () => {
+    expect(isGrantable('templates.send_all')).toBe(true);
+    expect(systemPermissionsOf('admin')).toContain('templates.send_all');
+    for (const role of ['teacher', 'assistant', 'sales'] as const) expect(systemPermissionsOf(role)).not.toContain('templates.send_all');
+  });
 });
 
 describe('assistant pay permissions', () => {

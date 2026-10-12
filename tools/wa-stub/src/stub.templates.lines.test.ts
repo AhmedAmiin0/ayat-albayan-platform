@@ -12,14 +12,14 @@ const names = async (url: string, waba: string) =>
   ((await (await fetch(`${url}/v21.0/${waba}/message_templates`, { headers: NOTIF })).json()) as TemplateList).data.map((t) => t.name);
 
 describe('wa-stub: templates per WABA (two lines)', () => {
-  it('the chat WABA lists its approved starter next to the shared 8; the notifications WABA does not', async () => {
+  it('the chat WABA lists its 3 approved templates next to the shared 8; the notifications WABA does not', async () => {
     const { url } = await startStub(TWO_LINES);
     const chat = await names(url, 'WABA-C');
-    expect(chat).toContain('academy_welcome');
-    expect(chat).toContain('booking_confirmation');
-    expect(chat).toHaveLength(9);
+    expect(chat).toEqual(expect.arrayContaining(['academy_welcome', 'free_trial_invite', 'welcome_greeting', 'booking_confirmation']));
+    expect(chat).toHaveLength(11);
     const notifications = await names(url, 'WABA-N');
     expect(notifications).not.toContain('academy_welcome');
+    expect(notifications).not.toContain('free_trial_invite');
     expect(notifications).toHaveLength(8);
   });
 

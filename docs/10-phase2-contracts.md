@@ -147,7 +147,7 @@ These supersede §2 and §5 where they differ.
 | 16 | `GET /threads?page&pageSize&search&unread` | admin, teacher (scope) | as H1 | `Page<ThreadView>` | 404 `teacher_not_linked` |
 | 17 | `GET /threads/:phone?before&limit` | admin, teacher (scope) | as H2 | `ThreadDetail` | 403 `not_your_thread` |
 | 18 | `POST /threads/:phone/text`, `/template` | admin, teacher (scope) | as H3/H4 | 201 `MessageView` | 403 `not_your_thread`, `own_thread_read_only`, `template_not_allowed`, `not_your_lesson`; 409 `session_closed` |
-| 19 | `GET /messaging/templates` | admin, teacher | — | `TemplateView[]` (teacher: approved `TEACHER_TEMPLATE_KEYS`, no document header) | — |
+| 19 | `GET /messaging/templates` | admin, teacher | — | `TemplateView[]` (teacher: approved `TEACHER_TEMPLATE_KEYS`, no document header; superseded 2026-10-12 by the restricted allow-list, docs/16 §15) | — |
 | 20 | `GET /messages/gate` | admin, teacher | — | `SendGateView` | — |
 | 21 | `GET /teachers/me/reports?page&pageSize` | teacher | page | `Page<TeacherReportView>`, newest `submitted_at` first | 404 `teacher_not_linked` |
 | 22 | `PATCH /lessons/:id/time` | admin | `{ expectedStartsAt, startsAt, durationMin: 30\|45\|60\|90, reason?: ≤300, notify?, override?: { reason } }` | 200 `TimeEditResult { lesson, notified, payout: 'none'\|'draft_stale', pdf_refresh }` | 400 `date_in_past`, `date_in_future`, `correction_cross_day`, `reason_required`; 404; 409 `time_edit_not_allowed`, `stale_time`, `conflict`, `payout_locked`, `slot_taken` |
