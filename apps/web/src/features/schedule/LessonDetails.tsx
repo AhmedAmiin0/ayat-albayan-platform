@@ -7,6 +7,7 @@ import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
+import { usePublicConfig } from '@/lib/public-config';
 import { lengthText } from './edit-time-text';
 import { EditTimeLink } from './EditTimeLink';
 import { durationMin, studentTimes, timeInCity } from './lessons';
@@ -24,7 +25,8 @@ function Row({ label, children }: { label: string; children: ReactNode }) {
 
 /**
  * What the drawer says about a lesson (R-SCH-01, R-LES-01): status, the time in Riyadh with every
- * student's and the teacher's own clock, the teacher, the copied meeting link, any reason, and the
+ * student's and the teacher's own clock, the teacher, the copied meeting link (or «via the classroom»
+ * while settings.meeting_link_auto is ON), any reason, and the
  * clashes the daily job found when it generated the lesson (R-SCH-04). `onEditTime` adds
  * «عدّل الوقت» under the time (R-SCH-11).
  */
@@ -32,6 +34,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
   const at = new Date(lesson.starts_at);
   const teacherTz = lesson.teacher.tz;
   const mins = durationMin(lesson);
+  const auto = usePublicConfig().meeting_link_auto;
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">
@@ -69,7 +72,9 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
           ))}
         </Row>
         <Row label={t.lessons.joinLink}>
-          {lesson.meeting_link ? (
+          {auto ? (
+            <span className="text-ink-2">{t.lessons.viaClassroom}</span>
+          ) : lesson.meeting_link ? (
             <a href={lesson.meeting_link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'sm' })}>
               {t.lessons.join}
               <Ltr className="text-2xs text-ink-3">{lesson.meeting_link.replace(/^https?:\/\//, '')}</Ltr>

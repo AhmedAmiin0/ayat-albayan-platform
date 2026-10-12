@@ -23,7 +23,8 @@ export type Prepared = {
  * Everything POST /booking decides before writing (docs/10 §5 #14, R-SCH-04, R-SCH-06, R-LEAD-06,
  * R-SCH-10): resolve students / lead, the missed lesson of a makeup, generate the horizon's
  * occurrences (one for a trial or a makeup), check every one for conflicts (409 unless
- * override.reason), pick the meeting link and draft one confirmation per guardian.
+ * override.reason), pick the meeting link and draft one confirmation per guardian (with no link
+ * while settings.meeting_link_auto is ON).
  * `conflicts` runs the same check for the wizard before its last step (nothing written).
  * The invoice is not here: it is a file, resolved by BookingInvoices after this plan holds.
  * ponytail: check-then-write, so two admins booking the same slot at the same second can both
@@ -55,15 +56,17 @@ export class BookingPlanner {
     if (conflicts.length > 0 && !req.override) {
       throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
+    const settings = await this.settings.all();
     const meetingLink = meetingLinkFor({
       requested: req.meetingLink,
       overrides: who.overrides,
       teacherLink: teacher.meeting_link,
     });
-    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, first, conflicts, meetingLink, makeupOf });
+    // The lessons keep the link either way; in auto mode the confirmation names none (no lesson id yet, so no classroom token).
+    const confirmationLink = settings.meeting_link_auto ? null : meetingLink;
+    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, first, conflicts, meetingLink, confirmationLink, makeupOf });
     const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
-    const invoiceMaxBytes = uploadMaxBytes(await this.settings.all());
-    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes };
+    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes: uploadMaxBytes(settings) };
   }
 
   /**

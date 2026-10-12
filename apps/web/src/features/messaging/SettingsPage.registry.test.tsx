@@ -37,6 +37,8 @@ describe('/admin/settings fields from the registry', () => {
     expect(within(classroom).getByLabelText(s.joinOpensBeforeMin)).toHaveProperty('value', '20');
     expect(within(classroom).getByLabelText(s.joinClosesAfterMin)).toHaveProperty('value', '120');
     expect(within(classroom).getByText(s.hints.joinOpensBeforeMin)).toBeTruthy();
+    // settings.meeting_link_auto: a plain switch of the section, OFF by default.
+    expect(within(classroom).getByLabelText(s.meetingLinkAuto)).toHaveProperty('checked', false);
     expect(screen.getByLabelText(s.uploadMaxMb)).toHaveProperty('value', '10');
     expect(screen.getByLabelText(s.academyWhatsapp)).toHaveProperty('value', '+201001234567');
     expect(screen.getByLabelText(s.academyTimezone)).toHaveProperty('value', 'Asia/Riyadh');

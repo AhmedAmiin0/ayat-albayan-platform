@@ -35,8 +35,8 @@ const FOLLOW_UP: readonly string[] = FOLLOW_UP_STATUSES;
 
 /**
  * Why this row must not go out any more, or null:
- * - a booking confirmation / reminder whose lesson was cancelled or moved (rescheduling makes a
- *   new lesson with its own confirmation);
+ * - a booking confirmation / reminder / classroom link whose lesson was cancelled or moved
+ *   (rescheduling makes a new lesson with its own confirmation);
  * - a follow-up to a lead who paused (or asked to stop), moved out of the follow-up statuses,
  *   or wrote again since it was queued (a new silence gets its own follow-up).
  * report_ready, renewal_due and admin texts are not lesson-timed and pass (renewal_due rows are
@@ -71,10 +71,11 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
 }
 
 /**
- * What the jobs queue on their own: reminders, follow-ups and renewal reminders (migration 162), and
- * the lesson_rating after a completed lesson (migration 195; the admin's «إرسال تقييم الحلقة» is not).
- * Every other TEMPLATE_KEYS key goes out because someone acted: a booking, a submitted report
- * (message.worker.auto.test checks the split).
+ * What the jobs queue on their own: reminders (with the classroom's lesson_join_link when
+ * settings.meeting_link_auto; the admin's «ابعت لينك الحلقة» carries created_by and is not held),
+ * follow-ups and renewal reminders (migration 162), and the lesson_rating after a completed lesson
+ * (migration 195; the admin's «إرسال تقييم الحلقة» is not). Every other TEMPLATE_KEYS key goes out
+ * because someone acted: a booking, a submitted report (message.worker.auto.test checks the split).
  */
 export const AUTOMATIC_KEYS: readonly TemplateKey[] = [...REMINDER_KEYS, 'follow_up_slots', 'renewal_due', 'lesson_rating'];
 const AUTOMATIC: ReadonlySet<string> = new Set(AUTOMATIC_KEYS);

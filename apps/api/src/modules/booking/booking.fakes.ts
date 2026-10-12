@@ -1,5 +1,5 @@
 // Test-only fakes for the booking module: one in-memory academy, every DB touch a vi.fn.
-import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
+import { bookingRequestSchema, type AcademySettings, type BookingRequest } from '@ab/shared';
 import { vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
 import type { BusyQueries } from '../scheduling/busy.queries';
@@ -91,8 +91,8 @@ export function fakeContext() {
   return { queries, availability, busy, context };
 }
 
-/** A real BookingPlanner + ConflictChecker over the fakes; 5-week horizon as seeded. */
-export function fakePlanner() {
+/** A real BookingPlanner + ConflictChecker over the fakes; 5-week horizon as seeded, `over` on the settings. */
+export function fakePlanner(over: Partial<AcademySettings> = {}) {
   const queries = fakeQueries();
   const availability = fakeAvailability();
   const { busy, projection } = fakeBusy();
@@ -101,7 +101,7 @@ export function fakePlanner() {
     availability as unknown as AvailabilityQueries,
     projection as unknown as RuleProjectionQueries,
   );
-  const settings = fakeSettings();
+  const settings = fakeSettings(over);
   const planner = new BookingPlanner(
     new BookingParties(queries as unknown as BookingQueries, fakeSettings()),
     checker,

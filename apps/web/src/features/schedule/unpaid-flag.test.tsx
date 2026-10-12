@@ -29,7 +29,7 @@ describe('«الباقة غير مدفوعة» on lessons (R-SUB-02)', () => {
   });
 
   it('the drawer flags the student, not the lesson', () => {
-    render(<LessonDetails lesson={flagged} />);
+    render(<QueryClientProvider client={new QueryClient()}><LessonDetails lesson={flagged} /></QueryClientProvider>);
     const chip = screen.getByText(FLAG);
     expect(chip.closest('span.me-3')?.textContent).toContain(SUHAILA.name);
     expect(chip.closest('span.me-3')?.textContent).not.toContain(JOUD.name);

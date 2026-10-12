@@ -62,6 +62,7 @@ export function fakeStore(row: LessonRow | null = lessonRow()) {
     get: vi.fn().mockResolvedValue(row),
     openOfRule: vi.fn().mockResolvedValue([]),
     contacts: vi.fn().mockResolvedValue([CONTACT]),
+    meetingLinkAuto: vi.fn().mockResolvedValue(false),
   };
   const record = vi.fn();
   const writer = {

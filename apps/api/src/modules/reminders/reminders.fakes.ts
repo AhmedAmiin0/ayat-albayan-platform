@@ -1,4 +1,12 @@
+import type { AcademySettings } from '@ab/shared';
+import { vi } from 'vitest';
+import type { PushService } from '../../common/push/push.service';
+import { SETTING_DEFAULTS, type SettingsService } from '../../common/settings/settings.service';
+import type { QueuedMessage } from './queued-row';
+import { RemindersJob } from './reminders.job';
+import type { RoomCandidate } from './reminders.links';
 import type { ReminderLesson } from './reminders.plan';
+import type { RemindersQueries } from './reminders.queries';
 
 // Invented sample data for the reminder tests: no real student, teacher or guardian.
 
@@ -12,13 +20,14 @@ export function sampleLesson(over: Partial<ReminderLesson> = {}): ReminderLesson
   return {
     id: 'lesson-1',
     starts_at: STARTS_AT,
+    ends_at: '2026-10-04T14:45:00Z',
     status: 'scheduled',
     meeting_link: 'https://meet.jit.si/ab-room-7',
     teacher: { id: 't-1', display_name_ar: 'هدى', phone_e164: '+966500000201', tz: 'Asia/Riyadh' },
     students: [
-      { name: 'سهيلة', guardian: RIYADH_GUARDIAN },
-      { name: 'مريم', guardian: RIYADH_GUARDIAN },
-      { name: 'ياسين', guardian: LONDON_GUARDIAN },
+      { id: 's-1', name: 'سهيلة', guardian: RIYADH_GUARDIAN },
+      { id: 's-2', name: 'مريم', guardian: RIYADH_GUARDIAN },
+      { id: 's-3', name: 'ياسين', guardian: LONDON_GUARDIAN },
     ],
     ...over,
   };
@@ -26,3 +35,34 @@ export function sampleLesson(over: Partial<ReminderLesson> = {}): ReminderLesson
 
 /** `at` as a Date (tests read better with ISO strings). */
 export const at = (iso: string) => new Date(iso);
+
+export type JobOpts = {
+  settings?: Partial<AcademySettings>;
+  approved?: string[];
+  pushed?: string[];
+  lessons?: ReminderLesson[];
+  /** What RoomLinks returns for a non-empty candidate list (the family links it minted). */
+  room?: QueuedMessage[];
+};
+
+/** A RemindersJob over mocked queries, settings and push; `queued` collects every queued row. */
+export function fakeJob(opts: JobOpts = {}) {
+  const queued: QueuedMessage[] = [];
+  const queries = {
+    dropCancelled: vi.fn(async () => 0),
+    upcoming: vi.fn(async () => opts.lessons ?? [sampleLesson()]),
+    approved: vi.fn(async () => new Set(opts.approved ?? [])),
+    queue: vi.fn(async (rows: readonly QueuedMessage[]) => queued.push(...rows)),
+    pushedSubjects: vi.fn(async () => new Set(opts.pushed ?? [])),
+    roomLinks: vi.fn(async (candidates: readonly RoomCandidate[]) => (candidates.length > 0 ? (opts.room ?? []) : [])),
+  };
+  // Automatic messages ON unless a test says otherwise (the default is OFF, migration 162).
+  const settings = { all: async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: true, ...opts.settings }) };
+  const push = { notifyAdmins: vi.fn(async () => undefined) };
+  const job = new RemindersJob(
+    queries as unknown as RemindersQueries,
+    settings as unknown as SettingsService,
+    push as unknown as PushService,
+  );
+  return { job, queries, queued, push };
+}

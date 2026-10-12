@@ -33,6 +33,14 @@ describe('«عدّل الوقت» guardian notice (admin action, R-MSG-01 bookin
     expect(retimed(writer).messages).toHaveLength(1);
   });
 
+  it('settings.meeting_link_auto: the notice names no fixed link (plain); the lesson keeps it', async () => {
+    const { run, writer, queries } = timeSetup();
+    queries.meetingLinkAuto.mockResolvedValue(true);
+    await run(body());
+    expect(retimed(writer).messages[0]).toMatchObject({ template_key: 'booking_confirmation_plain' });
+    expect(retimed(writer).messages[0]?.template_params).not.toHaveProperty('button');
+  });
+
   it('notify: false queues nothing and does not even load the contacts', async () => {
     const { run, writer, queries } = timeSetup();
     await run(body({ notify: false }));

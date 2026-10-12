@@ -27,7 +27,15 @@ describe('lesson_join_link template definition', () => {
     expect(sql).toContain('["student_name"]');
   });
 
-  it('is not a reminder: the expiry rule for lesson-timed messages does not apply', () => {
-    expect(isLessonTimed('lesson_join_link')).toBe(false);
+  it('is lesson-timed: a link to a cancelled or moved lesson is dropped as stale (its expires_at is the room close)', () => {
+    expect(isLessonTimed('lesson_join_link')).toBe(true);
+  });
+
+  it('migration 330 rewrites the body in Modern Standard Arabic only while it was never submitted', () => {
+    const msa = readFileSync(join(root, 'packages/db/supabase/migrations/20261012000330_meeting_link_auto.sql'), 'utf8');
+    expect(msa).toMatch(/where key = 'lesson_join_link'\s+and status = 'not_submitted'/);
+    expect(msa).toContain('{{1}}');
+    expect(msa).not.toContain('{{2}}');
+    expect(msa).not.toMatch(/ دي |على طول|من غير/);
   });
 });

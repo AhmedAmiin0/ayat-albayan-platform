@@ -22,6 +22,11 @@ export type PayloadInput = {
   conflicts: Conflict[];
   /** The resolved meeting link copied onto every lesson. */
   meetingLink: string | null;
+  /**
+   * The link the confirmation names: meetingLink, or null while settings.meeting_link_auto is ON
+   * (booking_confirmation_plain; the classroom link goes with the same-day reminder).
+   */
+  confirmationLink: string | null;
   /** The missed lesson, for a makeup. */
   makeupOf: string | null;
 };
@@ -58,7 +63,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
     messages: confirmationDrafts({
       students: who.booked,
       firstStart: input.first.starts_at,
-      meetingLink: input.meetingLink,
+      meetingLink: input.confirmationLink,
       kind,
     }),
     makeup_of: input.makeupOf,

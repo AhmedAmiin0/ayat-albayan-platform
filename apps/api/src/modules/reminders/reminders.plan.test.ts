@@ -68,7 +68,7 @@ describe('planReminders: same-day window (R-MSG-02)', () => {
 
   it('no teacher phone → guardians only; a student without guardian is skipped', () => {
     const teacher = { id: 't-1', display_name_ar: 'هدى', phone_e164: null, tz: 'Asia/Riyadh' };
-    const students = [{ name: 'سهيلة', guardian: RIYADH_GUARDIAN }, { name: 'بدون', guardian: null }];
+    const students = [{ id: 's-1', name: 'سهيلة', guardian: RIYADH_GUARDIAN }, { id: 's-9', name: 'بدون', guardian: null }];
     expect(keys(plan({ lessons: [sampleLesson({ teacher, students })] }))).toEqual(['lesson_reminder:lesson-1:g-riyadh']);
   });
 
@@ -113,7 +113,7 @@ describe('planReminders: day before (R-MSG-02, R-SCH-03)', () => {
 
   it('across the Cairo fall-back (30 Oct 2026) the guardian gets it at 17:00 local, 25 h before', () => {
     const cairo = { id: 'g-cairo', phone_e164: '+201000000103', tz: 'Africa/Cairo' };
-    const lesson = sampleLesson({ starts_at: '2026-10-30T15:00:00Z', students: [{ name: 'ياسين', guardian: cairo }] });
+    const lesson = sampleLesson({ starts_at: '2026-10-30T15:00:00Z', students: [{ id: 's-3', name: 'ياسين', guardian: cairo }] });
     const run = (now: string) => planReminders({ lessons: [lesson], minutesBefore: 60, dayBefore: true, now: at(now) });
     expect(run('2026-10-29T13:59:00Z')).toEqual([]);
     const [row] = run('2026-10-29T14:00:00Z');

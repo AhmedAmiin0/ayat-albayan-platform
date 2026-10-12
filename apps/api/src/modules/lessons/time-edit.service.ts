@@ -8,6 +8,7 @@ import { studentIdsOf, type LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
 import { TimeEditPayout } from './time-edit.payout';
 import { isSameTime, planTimeEdit, type TimeEditInput, type TimeEditPlan } from './time-edit.plan';
+import { forMessages } from './confirmation-messages';
 import { timeEditMessages } from './time-edit.messages';
 
 export type TimeEditArgs = { lessonId: string; body: LessonTimeEdit; actor: AuthUser };
@@ -60,10 +61,14 @@ export class LessonTimeService {
     );
   }
 
-  /** One confirmation per guardian for the NEW start (admin-initiated: queued even with auto messages off). */
+  /**
+   * One confirmation per guardian for the NEW start (admin-initiated: queued even with auto messages
+   * off), naming no fixed link while settings.meeting_link_auto is ON.
+   */
   private async notices(row: LessonRow, plan: TimeEditPlan): Promise<TimeEditChange['messages']> {
     const contacts = await this.store.queries.contacts(studentIdsOf(row));
-    return timeEditMessages({ ...row, starts_at: iso(plan.start) }, contacts);
+    const lesson = forMessages({ ...row, starts_at: iso(plan.start) }, await this.store.queries.meetingLinkAuto());
+    return timeEditMessages(lesson, contacts);
   }
 
   private async clashes(row: LessonRow, plan: TimeEditPlan): Promise<Conflict[]> {

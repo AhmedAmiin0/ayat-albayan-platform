@@ -76,9 +76,10 @@ export function teacherReminderTemplate(
 }
 
 /**
- * Keys that mean nothing once their lesson has started (docs/12 §3, expiry). Not here on purpose:
- * report_ready, renewal_due, lesson_join_link (an admin's send) and lesson_feedback_request (sent after the lesson; its link carries
- * its own messages.expires_at).
+ * Keys about one upcoming lesson (docs/12 §3): never sent once the lesson is cancelled or moved,
+ * and, when queued without expires_at, not after it started. lesson_join_link always carries its
+ * own expires_at (the room's close). Not here on purpose: report_ready, renewal_due and
+ * lesson_feedback_request (sent after the lesson; its link carries its own messages.expires_at).
  */
 const LESSON_TIMED: ReadonlySet<string> = new Set<TemplateKey>([
   'booking_confirmation',
@@ -90,6 +91,7 @@ const LESSON_TIMED: ReadonlySet<string> = new Set<TemplateKey>([
   'teacher_lesson_reminder',
   'teacher_lesson_reminder_meet',
   'lesson_reminder_24h',
+  'lesson_join_link',
 ]);
 
 /** A template about an upcoming lesson: a booking confirmation or a reminder. */

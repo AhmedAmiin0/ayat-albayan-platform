@@ -1,4 +1,4 @@
-import type { TeacherMe } from '@ab/shared';
+import { PUBLIC_SETTING_DEFAULTS, type TeacherMe } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -28,9 +28,11 @@ const ME: TeacherMe = {
 const TODAY = lesson({ id: 'a', starts_at: '2026-10-03T13:00:00.000Z', students: [{ ...SUHAILA, tz: 'Asia/Riyadh' }], meeting_link: null });
 const MONDAY = lesson({ id: 'b', starts_at: '2026-10-05T13:00:00.000Z', status: 'confirmed' });
 
-function renderDash(me: TeacherMe | Error = ME) {
+/** `auto`: settings.meeting_link_auto in GET /settings/public. */
+function renderDash(me: TeacherMe | Error = ME, auto = false) {
   apiFetch.mockImplementation((path: string) => {
     if (path === '/teachers/me') return me instanceof Error ? Promise.reject(me) : Promise.resolve(me);
+    if (path === '/settings/public') return Promise.resolve({ ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
     if (path.startsWith('/teachers/me/lessons')) return Promise.resolve([TODAY, MONDAY]);
     return Promise.resolve([]);
   });
@@ -99,5 +101,13 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   it('no fixed link says so', async () => {
     renderDash({ ...ME, meeting_link: null });
     expect(await screen.findByText(t.teacherDash.noLink)).toBeTruthy();
+  });
+
+  it('settings.meeting_link_auto: no fixed link at the top nor on the cards', async () => {
+    renderDash(ME, true);
+    const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
+    await waitFor(() => expect(screen.queryByRole('region', { name: t.teacherDash.joinLink })).toBeNull());
+    expect(within(card).queryByRole('link', { name: t.classroom.joinMeeting })).toBeNull();
+    expect(within(card).queryByText(t.lessons.noLink)).toBeNull();
   });
 });

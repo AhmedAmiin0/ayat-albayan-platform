@@ -13,6 +13,13 @@ export type ConfirmedLesson = { id: string; starts_at: string; meeting_link: str
 const names = new Intl.ListFormat('ar', { type: 'conjunction' });
 
 /**
+ * The lesson as its confirmation names it: with no link while settings.meeting_link_auto is ON
+ * (booking_confirmation_plain; the classroom link goes with the same-day reminder). The lesson row
+ * itself keeps its link.
+ */
+export const forMessages = <L extends ConfirmedLesson>(lesson: L, auto: boolean): L => (auto ? { ...lesson, meeting_link: null } : lesson);
+
+/**
  * One queued booking_confirmation* message per distinct guardian for a (re)booked lesson
  * (docs/10 §5.11, R-SCH-06, R-LES-02): template by the lesson's link host, {{1}} = that
  * guardian's students (Intl.ListFormat: «سارة ومريم»), {{2}} = start in the guardian's tz,
