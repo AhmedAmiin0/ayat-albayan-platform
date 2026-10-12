@@ -1,0 +1,30 @@
+import { Module } from '@nestjs/common';
+import { ThreadMediaService } from '../inbox/thread-media.service';
+import { PaymentsModule } from '../payments/payments.module';
+import { SalesModule } from '../sales/sales.module';
+import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
+import { SalesChatFiles } from './sales-chat-files';
+import { SalesChatReceipts } from './sales-chat-receipts.service';
+import { SalesFamilyQueries } from './sales-family.queries';
+import { SalesMoneyReadsController } from './sales-money-reads.controller';
+import { SalesPaymentsController, SalesSubscribeController } from './sales-money.controller';
+import { SalesMoneyReads } from './sales-money.reads';
+import { SalesMoneyScope } from './sales-money.scope';
+import { SalesMoney } from './sales-money.service';
+import { SalesMoneyServices } from './sales-money.services';
+
+/**
+ * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
+ * 2026-10-12, R-ASST-01/04, docs/16 rows 14–15), permission self.sales_money. Thin: the money logic is the
+ * admin's (SubscriptionCreator, PaymentsService, ReceiptsService), the ownership is SalesQueries.ownership,
+ * and the chat files are ThreadMediaService's (its deps are global: InboundMedia, StorageService).
+ */
+@Module({
+  imports: [SubscriptionsModule, PaymentsModule, SalesModule],
+  controllers: [SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
+  providers: [
+    ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyQueries],
+    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService],
+  ],
+})
+export class SalesMoneyModule {}
