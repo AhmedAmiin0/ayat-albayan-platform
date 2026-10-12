@@ -26,6 +26,18 @@ test('changed asset or eas.json files are reported', () => {
   assert.deepEqual(found, ['apps/mobile/assets/icon.png changed', 'apps/mobile/eas.json changed']);
 });
 
+test('images in an assets sub-folder are imported from JS and ship by OTA', () => {
+  const files = ['apps/mobile/assets/tabs/inbox.png', 'apps/mobile/assets/brand/mark.png', 'apps/mobile/assets/splash-icon.png'];
+  assert.deepEqual(nativeChanges(snap(base), snap(base), files), ['apps/mobile/assets/splash-icon.png changed']);
+});
+
+test('pure-JS packages (google fonts, tanstack, supabase-js, workspace) are not native', () => {
+  const before = snap(base, { '@expo-google-fonts/amiri': '^0.4.1', '@tanstack/react-query': '5.1', '@ab/shared': 'workspace:*' });
+  const after = snap(base, { '@expo-google-fonts/noto-sans-arabic': '^0.4.3', '@tanstack/react-query': '5.2', '@supabase/supabase-js': '2' });
+  assert.deepEqual(nativeChanges(before, after), []);
+  assert.deepEqual(nativeChanges(snap(base, {}), snap(base, { 'expo-camera': '1' })), ['dependency expo-camera: (none) -> 1']);
+});
+
 test('plugins, android fields and version are native', () => {
   const after = snap({ ...base, version: '0.2.0', plugins: ['expo-router', 'expo-camera'], android: { package: 'a.c' } });
   assert.deepEqual(nativeChanges(snap(base), after), ['app.json: expo.version', 'app.json: expo.plugins', 'app.json: expo.android']);

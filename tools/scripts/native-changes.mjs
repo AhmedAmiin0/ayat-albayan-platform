@@ -9,8 +9,15 @@ const MOBILE = 'apps/mobile';
 const NATIVE_KEYS = ['version', 'sdkVersion', 'plugins', 'android', 'ios', 'scheme', 'newArchEnabled',
   'jsEngine', 'runtimeVersion', 'owner', 'slug', 'name', 'icon', 'splash', 'orientation', 'userInterfaceStyle',
   'notification', 'androidStatusBar', 'updates'];
-// Bundled into the binary (icons, splash, fonts) or deciding how it is built: a change needs an APK.
+// Bundled into the binary (app.json icon/adaptive icon/splash = top-level assets) or deciding how it is
+// built: a change needs an APK. Images in assets/<folder>/ (tabs, brand) are imported from JS and travel
+// inside the OTA bundle, so they are not native.
 const NATIVE_PATHS = [`${MOBILE}/assets`, `${MOBILE}/eas.json`];
+const isNativePath = (f) => f === `${MOBILE}/eas.json` || /^apps\/mobile\/assets\/[^/]+$/.test(f);
+// Pure-JS packages (no native code, no config plugin): a version change ships by OTA.
+// Google fonts are .ttf files loaded at runtime by expo-font's useFonts, not embedded by its plugin.
+const JS_ONLY_DEPS = [/^@expo-google-fonts\//, /^@tanstack\//, /^@supabase\/supabase-js$/];
+const jsOnly = (name, version) => String(version).startsWith('workspace:') || JS_ONLY_DEPS.some((r) => r.test(name));
 
 const same = (a, b) => JSON.stringify(a ?? null) === JSON.stringify(b ?? null);
 
@@ -23,9 +30,10 @@ export function nativeChanges(before, after, changedFiles = []) {
   const da = JSON.parse(before.pkg || '{}').dependencies ?? {};
   const db = JSON.parse(after.pkg || '{}').dependencies ?? {};
   for (const name of new Set([...Object.keys(da), ...Object.keys(db)])) {
-    if (da[name] !== db[name]) found.push(`dependency ${name}: ${da[name] ?? '(none)'} -> ${db[name] ?? '(removed)'}`);
+    if (da[name] === db[name] || jsOnly(name, db[name] ?? da[name])) continue;
+    found.push(`dependency ${name}: ${da[name] ?? '(none)'} -> ${db[name] ?? '(removed)'}`);
   }
-  for (const f of changedFiles) found.push(`${f} changed`);
+  for (const f of changedFiles) if (isNativePath(f)) found.push(`${f} changed`);
   return found;
 }
 
