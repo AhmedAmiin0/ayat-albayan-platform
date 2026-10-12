@@ -5,6 +5,7 @@ import { Page } from '@/components/ui/page';
 import { RunningHead } from '@/components/ui/running-head';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { meQuery } from '@/features/auth/me';
+import { AccountChip } from './AccountChip';
 import { LanguageSwitch } from './LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
 import { MenuBar } from './MenuBar';
@@ -17,7 +18,7 @@ export interface BarProps {
   title: string;
 }
 
-/** The wide header (≥ 900px) of the top-bar layouts: logo, language, theme, logout. */
+/** The wide header (≥ 900px) of the top-bar layouts: logo, language, theme, «حسابي», logout. */
 export function WideHeader() {
   return (
     <header className="hidden shrink-0 items-center gap-3 px-1.5 pt-4 shell:flex">
@@ -25,6 +26,7 @@ export function WideHeader() {
       <div className="ms-auto flex items-center gap-2">
         <LanguageSwitch />
         <ThemeToggle />
+        <AccountChip variant="inline" />
         <LogoutButton />
       </div>
     </header>

@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AccountRouteImport } from './routes/account'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AssistantRouteImport } from './routes/assistant'
 import { Route as LoginRouteImport } from './routes/login'
@@ -17,6 +18,7 @@ import { Route as PortalRouteImport } from './routes/portal'
 import { Route as SalesRouteImport } from './routes/sales'
 import { Route as SetPasswordRouteImport } from './routes/set-password'
 import { Route as TeacherRouteImport } from './routes/teacher'
+import { Route as AccountIndexRouteImport } from './routes/account/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminActivityRouteImport } from './routes/admin/activity'
 import { Route as AdminAssistantsRouteImport } from './routes/admin/assistants'
@@ -82,6 +84,11 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AccountRoute = AccountRouteImport.update({
+  id: '/account',
+  path: '/account',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AdminRoute = AdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -116,6 +123,11 @@ const TeacherRoute = TeacherRouteImport.update({
   id: '/teacher',
   path: '/teacher',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AccountIndexRoute = AccountIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AccountRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
@@ -419,6 +431,7 @@ const AdminStudentsStudentIdReportsLessonIdRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
@@ -472,6 +485,7 @@ export interface FileRoutesByFullPath {
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
+  '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/assistant/': typeof AssistantIndexRoute
   '/sales/': typeof SalesIndexRoute
@@ -537,6 +551,7 @@ export interface FileRoutesByTo {
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
+  '/account': typeof AccountIndexRoute
   '/admin': typeof AdminIndexRoute
   '/assistant': typeof AssistantIndexRoute
   '/sales': typeof SalesIndexRoute
@@ -554,6 +569,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/account': typeof AccountRouteWithChildren
   '/admin': typeof AdminRouteWithChildren
   '/assistant': typeof AssistantRouteWithChildren
   '/login': typeof LoginRoute
@@ -607,6 +623,7 @@ export interface FileRoutesById {
   '/teacher/inbox': typeof TeacherInboxRoute
   '/teacher/payouts': typeof TeacherPayoutsRoute
   '/teacher/students': typeof TeacherStudentsRoute
+  '/account/': typeof AccountIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/assistant/': typeof AssistantIndexRoute
   '/sales/': typeof SalesIndexRoute
@@ -625,6 +642,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/account'
     | '/admin'
     | '/assistant'
     | '/login'
@@ -678,6 +696,7 @@ export interface FileRouteTypes {
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/teacher/students'
+    | '/account/'
     | '/admin/'
     | '/assistant/'
     | '/sales/'
@@ -743,6 +762,7 @@ export interface FileRouteTypes {
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/teacher/students'
+    | '/account'
     | '/admin'
     | '/assistant'
     | '/sales'
@@ -759,6 +779,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/account'
     | '/admin'
     | '/assistant'
     | '/login'
@@ -812,6 +833,7 @@ export interface FileRouteTypes {
     | '/teacher/inbox'
     | '/teacher/payouts'
     | '/teacher/students'
+    | '/account/'
     | '/admin/'
     | '/assistant/'
     | '/sales/'
@@ -829,6 +851,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AccountRoute: typeof AccountRouteWithChildren
   AdminRoute: typeof AdminRouteWithChildren
   AssistantRoute: typeof AssistantRouteWithChildren
   LoginRoute: typeof LoginRoute
@@ -851,6 +874,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/account': {
+      id: '/account'
+      path: '/account'
+      fullPath: '/account'
+      preLoaderRoute: typeof AccountRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/admin': {
@@ -901,6 +931,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/teacher'
       preLoaderRoute: typeof TeacherRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/account/': {
+      id: '/account/'
+      path: '/'
+      fullPath: '/account/'
+      preLoaderRoute: typeof AccountIndexRouteImport
+      parentRoute: typeof AccountRoute
     }
     '/admin/': {
       id: '/admin/'
@@ -1318,6 +1355,17 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AccountRouteChildren {
+  AccountIndexRoute: typeof AccountIndexRoute
+}
+
+const AccountRouteChildren: AccountRouteChildren = {
+  AccountIndexRoute: AccountIndexRoute,
+}
+
+const AccountRouteWithChildren =
+  AccountRoute._addFileChildren(AccountRouteChildren)
+
 interface AdminAssistantsRouteChildren {
   AdminAssistantsAssistantIdRoute: typeof AdminAssistantsAssistantIdRoute
 }
@@ -1505,6 +1553,7 @@ const TeacherRouteWithChildren =
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AccountRoute: AccountRouteWithChildren,
   AdminRoute: AdminRouteWithChildren,
   AssistantRoute: AssistantRouteWithChildren,
   LoginRoute: LoginRoute,

@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { TeacherMoreScreen } from './TeacherMoreScreen';
 
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: jest.fn().mockResolvedValue({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] }) }));
+jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: jest.fn(jest.requireActual('@/test/account').fetchWithProfile({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] })) }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), push: jest.fn() }, useSegments: () => ['teacher'] }));
 jest.mock('@/more/sign-out', () => ({ signOutDevice: jest.fn(async () => undefined) }));
 
