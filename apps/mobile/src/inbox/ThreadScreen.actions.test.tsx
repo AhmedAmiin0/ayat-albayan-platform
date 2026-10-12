@@ -8,9 +8,11 @@ import { ThreadScreen } from './ThreadScreen';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
+// The actions need messages.manage (the admin's): /auth/me grants it, every other GET is the thread.
+const mockAdminMe = { role: 'admin', permissions: ['inbox.read', 'inbox.send', 'messages.read', 'messages.manage'] };
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
-  apiFetch: (mockPath: string) => mockApiFetch(mockPath),
+  apiFetch: (mockPath: string) => (mockPath === '/auth/me' ? Promise.resolve(mockAdminMe) : mockApiFetch(mockPath)),
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 jest.mock('expo-router', () => ({

@@ -2626,7 +2626,6 @@
   },
   "mobileNav": {
     "accountDisabled": "Your account has been disabled. Contact the admin team.",
-    "wrongApp": "This app is for admins and teachers. Use the web app for your role to sign in.",
     "badgeOverflow": "{n}+"
   },
   "notifications": {
@@ -3025,7 +3024,7 @@
     }
   },
   "mobileRoles": {
-    "wrongApp": "This app is for the academy team: admins, teachers, sales and classroom assistants. Guardians and students follow the link they receive on WhatsApp or use the web app.",
+    "wrongApp": "This app is for the academy team: admins, teachers, sales and classroom assistants. Guardians and students follow the link they receive on WhatsApp.",
     "salesRole": "Sales",
     "assistantRole": "Classroom assistant",
     "lessonsTab": "My lessons",

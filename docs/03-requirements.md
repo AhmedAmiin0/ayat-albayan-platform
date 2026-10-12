@@ -16,7 +16,7 @@ Decisions already taken with the owner (2026-10-01):
 | `teacher` | See own schedule, own students, submit/edit own lesson reports, mark attendance, set own weekly availability, see own payout summary |
 | `guardian` (parent / adult student) | Read-only portal via WhatsApp magic link: upcoming lessons, reports (PDF), homework, remaining lessons, payment status |
 
-- **R-AUTH-01** Each role signs in with its own login and lands on its own home. Phone app (Expo, owner 2026-10-12): `admin`, `teacher`, `sales` («المبيعات») and the classroom `assistant` («مساعد حلقة») sign in, each to its own tree mirroring its web pages; `guardian` and `student` are told the app is not theirs («wrongApp»), a disabled account is told so, offline the token's `user_role` claim keeps the right tree open.
+- **R-AUTH-01** Each role signs in with its own login and lands on its own home. Phone app (Expo, owner 2026-10-12): `admin`, `teacher`, `sales` («المبيعات») and the classroom `assistant` («مساعد حلقة») sign in, each to its own tree mirroring its web pages; `guardian` and `student` are told the app is not theirs («wrongApp»: they follow the links they receive on WhatsApp; the guardian/student web portal `/portal` is not built yet, an empty shell (open question 4)), a disabled account is told so, offline the token's `user_role` claim keeps the right tree open.
 
 ## 2. Domain model (entities)
 

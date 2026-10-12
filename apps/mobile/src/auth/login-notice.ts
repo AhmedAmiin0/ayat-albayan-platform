@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 
 export type LoginNotice = 'accountDisabled' | 'wrongApp';
 
-/** Roles that exist but have no screens in this app: families use the web (sales and assistant have their trees). */
+/** Roles that exist but have no screens in this app: guardians and students (sales and assistant have their trees). */
 const OTHER_ROLES: readonly unknown[] = ['guardian', 'student'];
 
 /** The API's refusal for a disabled account: 403 with code `account_disabled`. */
@@ -20,7 +20,7 @@ export function isOtherAppRole(role: unknown): boolean {
 
 export function noticeText(notice: LoginNotice): string {
   // «wrongApp» names every staff role the app now serves (mobileRoles, owner 2026-10-12).
-  return notice === 'wrongApp' ? t.mobileRoles.wrongApp : t.mobileNav[notice];
+  return notice === 'wrongApp' ? t.mobileRoles.wrongApp : t.mobileNav.accountDisabled;
 }
 
 // Why the last session ended, shown once at the login screen (the screen mounts after the gate flips).

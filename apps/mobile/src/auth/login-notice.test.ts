@@ -1,3 +1,5 @@
+import ar from '@ab/shared/i18n/ar.json';
+import en from '@ab/shared/i18n/en.json';
 import { act, renderHook } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -26,4 +28,11 @@ test('the login screen sees the notice as soon as it is set, and loses it when c
   expect(result.current).toBe(t.mobileRoles.wrongApp);
   await act(async () => setLoginNotice(null));
   expect(result.current).toBeNull();
+});
+
+test('«wrongApp» sends guardians and students to their WhatsApp links, never to the unbuilt web portal', () => {
+  expect(ar.mobileRoles.wrongApp).not.toContain('الويب');
+  expect(en.mobileRoles.wrongApp).not.toMatch(/web/i);
+  expect(ar.mobileNav).not.toHaveProperty('wrongApp');
+  expect(en.mobileNav).not.toHaveProperty('wrongApp');
 });

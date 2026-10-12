@@ -41,7 +41,8 @@ function turnChip(th: ThreadView): ReactNode {
  * «المحادثات» (R-MOB-02): every WhatsApp thread — a guardian's reschedule request or a teacher's
  * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
  * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
- * sales (the same tabs) start a chat by number: «محادثة جديدة».
+ * sales (the same tabs) start a chat by number: «محادثة جديدة»; the lead / family tags stay in the admin
+ * tree (as the web, where /sales/inbox shows none).
  */
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const mode = useThreadMode();
@@ -72,7 +73,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
               title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
               meta={th.display_name && !teacher ? phone : undefined}
               subtitle={threadPreview(th)}
-              tags={mode.kind === 'admin' ? <ThreadTags thread={th} /> : undefined}
+              tags={mode.kind === 'admin' && !base ? <ThreadTags thread={th} /> : undefined}
               trailing={turnChip(th)}
               onPress={() => router.push(inTree(base, threadLink(th.phone_e164, mode)))}
             />

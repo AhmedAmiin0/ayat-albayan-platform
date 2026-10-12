@@ -13,7 +13,7 @@ export function permissionsOf(me: unknown): Permission[] {
 export type Can = (permission: Permission) => boolean;
 
 /**
- * Dynamic roles: the app stays role-gated (admin tabs / teacher tabs, verify-role.ts), and the
+ * Dynamic roles: the app stays role-gated (admin, teacher, sales and assistant trees, verify-role.ts), and the
  * admin screens that map to a permission hide what the held role does not grant. Until /auth/me
  * answers (offline, first paint) nothing is hidden: the API refuses anything not granted anyway.
  */
