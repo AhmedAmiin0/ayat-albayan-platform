@@ -1,6 +1,9 @@
 import en from '@ab/shared/i18n/en.json';
-import { render, screen } from '@testing-library/react-native';
+import { screen } from '@testing-library/react-native';
+import { PROFILE_KEY } from '@/account/queries';
 import { t } from '@/lib/i18n';
+import { profileFixture } from '@/test/account';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { SalesMoreScreen } from './SalesMoreScreen';
 
 // An English run: the native flag is LTR (jest.setup reports RTL, the Arabic default).
@@ -11,9 +14,15 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
+const seeded = () => {
+  const client = createTestQueryClient();
+  client.setQueryData(PROFILE_KEY, profileFixture);
+  return client;
+};
+
 test('the sales «More» reads en.json', async () => {
   expect(t).toEqual(en);
-  await render(<SalesMoreScreen can={() => true} />);
+  await renderWithQuery(<SalesMoreScreen can={() => true} />, seeded());
   expect(screen.getByRole('header', { name: en.mobile.more })).toBeTruthy();
   expect(screen.getByText(en.mobileRoles.salesRole)).toBeTruthy();
   expect(screen.getByRole('button', { name: en.sales.nav.teachers })).toBeTruthy();
