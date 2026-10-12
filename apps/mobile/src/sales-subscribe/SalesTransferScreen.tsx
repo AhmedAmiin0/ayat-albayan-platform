@@ -51,7 +51,7 @@ export function SalesTransferScreen() {
         ) : family.isError ? (
           <ErrorState onRetry={() => void family.refetch()} />
         ) : !family.data ? null : open.length === 0 ? (
-          <EmptyState title={family.data.students.length ? t.common.empty : t.salesMoney.noOwnStudents} />
+          <EmptyState title={family.data.students.length ? t.salesMoney.nothingDue : t.salesMoney.noOwnStudents} />
         ) : (
           <>
             <OpenPackagePicker packages={open} value={sub} onChange={setPicked} />

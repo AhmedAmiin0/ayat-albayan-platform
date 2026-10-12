@@ -13,8 +13,9 @@ jest.mock('@/lib/api', () => ({
   apiSend: (...mockArgs: unknown[]) => mockApiSend(...mockArgs),
 }));
 const mockBack = jest.fn();
+const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
-  router: { back: () => mockBack(), canGoBack: () => true, replace: jest.fn() },
+  router: { back: () => mockBack(), push: (h: string) => mockPush(h), canGoBack: () => true, replace: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966501112223', subscriptionId: '88888888-8888-4888-8888-888888888888' }),
 }));
 jest.mock('expo-image-picker', () => ({}));
@@ -73,6 +74,8 @@ test('a receipt from the chat → receipt-from-chat → POST /sales/payments wit
   });
   expect(body).not.toHaveProperty('kind');
   expect(body).not.toHaveProperty('method');
+  await fireEvent.press(screen.getByRole('button', { name: m.openMyPayments }));
+  expect(mockPush).toHaveBeenCalledWith('/more/sales/earnings?view=payments');
   await fireEvent.press(screen.getByRole('button', { name: m.done }));
   expect(mockBack).toHaveBeenCalledTimes(1);
 });

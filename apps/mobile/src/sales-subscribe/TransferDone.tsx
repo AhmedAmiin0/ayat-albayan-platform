@@ -1,4 +1,5 @@
 import type { SalesPaymentView } from '@ab/shared';
+import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { money } from '@/payments/format';
@@ -9,7 +10,7 @@ import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 
 /**
  * The transfer is recorded: «أصبح الطالب مشتركًا» when the student is now active (a paid trial),
- * else «تم تسجيل التحويل»; then «تم» back to the chat.
+ * else «تم تسجيل التحويل»; then «مدفوعاتي» (her recorded payments) or «تم» back to the chat.
  */
 export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; onDone: () => void }) {
   const { color } = useTheme();
@@ -33,6 +34,7 @@ export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; o
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}>
         {`${payment.student.name} · ${money(payment.amount, payment.currency)}`}
       </AppText>
+      <Button variant="secondary" label={m.openMyPayments} onPress={() => router.push('/more/sales/earnings?view=payments')} />
       <Button label={m.done} onPress={onDone} />
     </View>
   );

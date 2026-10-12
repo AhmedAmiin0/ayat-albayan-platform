@@ -6,7 +6,8 @@ import { MyMoneyScreen } from './MyMoneyScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: (p: string) => mockApiFetch(p) }));
-jest.mock('expo-router', () => ({ router: { back: jest.fn() } }));
+const mockParams = jest.fn((): { view?: string } => ({}));
+jest.mock('expo-router', () => ({ router: { back: jest.fn() }, useLocalSearchParams: () => mockParams() }));
 
 const p = t.assistantPortal.earnings;
 beforeEach(() => mockApiFetch.mockReset());
@@ -64,4 +65,12 @@ test('«مدفوعاتي» empty and failed states', async () => {
   const tabs = screen.getAllByRole('tab', { name: t.assistantPortal.nav.payments });
   await fireEvent.press(tabs[tabs.length - 1] as never);
   await waitFor(() => expect(screen.getAllByText(t.sales.loadFailed).length).toBeGreaterThan(0));
+});
+
+test('?view=payments (from the sales transfer’s success screen) opens «مدفوعاتي» directly', async () => {
+  mockParams.mockReturnValueOnce({ view: 'payments' });
+  mockApiFetch.mockImplementation((path: string) => Promise.resolve(path === '/sales/me/payments' ? [myPayment()] : earnings()));
+  await renderWithQuery(<MyMoneyScreen />);
+  expect(await screen.findByText('سهيلة')).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith('/sales/me/payments');
 });

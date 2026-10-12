@@ -3498,6 +3498,7 @@
     "stepTransfer": "Record the bank transfer",
     "pickChild": "Choose the student",
     "noOwnStudents": "No student of this family is registered to you.",
+    "nothingDue": "None of your students in this family has a package with money due.",
     "startsOn": "Start day",
     "price": "Amount to transfer",
     "priceHint": "The price comes from the price list; tell the family so they can transfer it.",
