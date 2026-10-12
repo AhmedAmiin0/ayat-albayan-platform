@@ -3,14 +3,13 @@ import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
-import { receiptProblem } from '@/features/payments/ReceiptField';
 import { moneyText, packageName, studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { useUploadMaxBytes } from '@/lib/public-config';
 import { salesErrorText } from './errors';
 import { PackagePicker } from './PackagePicker';
 import { ReceiptChooser } from './ReceiptChooser';
-import { receiptFor, type ReceiptChoice } from './receipt';
+import { receiptError, receiptFor, type ReceiptChoice } from './receipt';
 import { TransferFields } from './TransferFields';
 import { useSalesPayment, type TransferForm } from './use-sales-payment';
 
@@ -54,8 +53,8 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved }: Props) 
   const submit = (e: FormEvent) => {
     e.preventDefault();
     if (!sub || save.isPending) return;
-    const bad = receipt?.kind === 'file' ? receiptProblem(receipt.file, maxBytes) : null;
-    setProblem(receipt ? bad && t.salesMoney.error[bad] : t.salesMoney.receiptRequired);
+    const bad = receiptError(receipt, maxBytes);
+    setProblem(bad);
     const amountOk = (parseAmount(form.amount) ?? 0) > 0;
     setAmountError(amountOk ? null : t.salesMoney.error.amount);
     if (receipt && !bad && amountOk) save.mutate({ sub, form, receipt });

@@ -1,4 +1,5 @@
 import type { SalesChatReceipt } from '@ab/shared';
+import { receiptProblem } from '@/features/payments/ReceiptField';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 
@@ -21,4 +22,11 @@ export function chatReceiptLabel(r: SalesChatReceipt): string {
   const parts = [r.caption?.trim() || t.salesMoney.receipt, day];
   if (r.expired) parts.push(t.salesMoney.receiptExpired);
   return parts.join(' · ');
+}
+
+/** What blocks the save on the receipt: none chosen, or an uploaded file of the wrong type / too large. */
+export function receiptError(choice: ReceiptChoice | null, maxBytes: number): string | null {
+  if (!choice) return t.salesMoney.receiptRequired;
+  const bad = choice.kind === 'file' ? receiptProblem(choice.file, maxBytes) : null;
+  return bad && t.salesMoney.error[bad];
 }

@@ -3,7 +3,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { openPackages } from './SalesMoneyFlow';
 import { salesErrorText } from './errors';
-import { chatReceiptLabel, receiptFor } from './receipt';
+import { chatReceiptLabel, receiptError, receiptFor } from './receipt';
 import { CHAT_RECEIPTS, OPEN_SUB, student } from './sales-money-fixture';
 
 const chat = { kind: 'chat', messageId: 'm', subscriptionId: 'sub-a', path: 'receipts/sub-a/x.jpg' } as const;
@@ -21,6 +21,15 @@ describe('the transfer receipt (R-ASST-04)', () => {
     const [fresh, old] = CHAT_RECEIPTS;
     expect(fresh && chatReceiptLabel(fresh)).toMatch(/^تحويل · /);
     expect(old && chatReceiptLabel(old)).toMatch(new RegExp(`^${t.salesMoney.receipt} · .+ · ${t.salesMoney.receiptExpired}$`));
+  });
+
+  it('receiptError: required, and an uploaded file is checked for type and size', () => {
+    expect(receiptError(null, 100)).toBe(t.salesMoney.receiptRequired);
+    expect(receiptError(chat, 100)).toBeNull();
+    const pdf = new File([new Uint8Array(200)], 'r.pdf', { type: 'application/pdf' });
+    expect(receiptError({ kind: 'file', file: pdf }, 100)).toBe(t.salesMoney.error.receipt_too_large);
+    const txt = new File(['x'], 'r.txt', { type: 'text/plain' });
+    expect(receiptError({ kind: 'file', file: txt }, 100)).toBe(t.salesMoney.error.receipt_type);
   });
 
   it('the packages still owed, across her students', () => {
