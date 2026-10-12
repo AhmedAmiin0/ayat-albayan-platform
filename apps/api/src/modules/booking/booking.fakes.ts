@@ -63,9 +63,10 @@ export function fakeQueries() {
   };
 }
 
+/** bookableSlots answers the real GRID (24/7 off): the outside_availability cases need a grid. */
 export function fakeAvailability() {
   return {
-    listSlots: vi.fn().mockResolvedValue(GRID),
+    bookableSlots: vi.fn().mockResolvedValue(GRID),
     listTimeOff: vi.fn().mockResolvedValue([]),
     listBusyLessons: vi.fn().mockResolvedValue([]),
   };

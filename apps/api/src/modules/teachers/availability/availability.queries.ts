@@ -1,9 +1,11 @@
 import type { Tables } from '@ab/db';
-import { OCCUPYING_LESSON_STATUSES, type AvailabilitySlot, type TimeOffCreate } from '@ab/shared';
+import { OCCUPYING_LESSON_STATUSES, RIYADH_TZ, type AvailabilitySlot, type TimeOffCreate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
+import { SettingsService } from '../../../common/settings/settings.service';
 import type { BusyLesson } from '../../scheduling/conflicts';
 import { dbError } from '../http';
+import { allDayRows, type WeeklyRow } from './free-slots';
 
 export type AvailabilityRow = AvailabilitySlot & { id: string };
 export type TimeOff = Tables<'teacher_time_off'>;
@@ -15,7 +17,20 @@ const hhmm = (time: string) => time.slice(0, 5);
 /** Supabase access for teacher_availability + teacher_time_off. R-TCH-02. */
 @Injectable()
 export class AvailabilityQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
+
+  /**
+   * The grid booking checks against: every day 00:00–24:00 Riyadh (the clock the slot grid shows)
+   * while settings.teachers_always_available is on, else the saved rows. The editors and the
+   * follow-up proposals read listSlots, so they keep the real grid.
+   */
+  async bookableSlots(teacherId: string): Promise<WeeklyRow[]> {
+    if (await this.settings.get('teachers_always_available')) return allDayRows(RIYADH_TZ);
+    return this.listSlots(teacherId);
+  }
 
   async listSlots(teacherId: string): Promise<AvailabilityRow[]> {
     const { data, error } = await this.db

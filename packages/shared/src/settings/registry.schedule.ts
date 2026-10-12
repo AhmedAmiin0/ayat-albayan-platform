@@ -17,6 +17,14 @@ export const SCHEDULE_SETTINGS = {
     section: 'schedule', type: 'int', default: 60, min: 1, max: 365, public: true,
     labelKey: 'settings.makeupWindowDays', hintKey: 'settings.hints.makeupWindowDays',
   },
+  /**
+   * Owner 2026-10-12 (migration 320): booking treats every teacher as free 00:00–24:00 every day
+   * (AvailabilityQueries.bookableSlots). Lessons and time off still block; the saved grids stay.
+   */
+  teachers_always_available: {
+    section: 'schedule', type: 'bool', default: true,
+    labelKey: 'settings.teachersAlwaysAvailable', hintKey: 'settings.hints.teachersAlwaysAvailable',
+  },
 } as const satisfies Record<string, SettingDef>;
 
 export const CLASSROOM_SETTINGS = {

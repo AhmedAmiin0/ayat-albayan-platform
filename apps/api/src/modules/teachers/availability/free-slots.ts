@@ -23,6 +23,14 @@ const toInterval = (r: TimeRange): Interval => ({ start: r.start.getTime(), end:
 /** The availability UI's last option is 23:59; as an end it means "until midnight" (24:00). */
 const LAST_MINUTE = 23 * 60 + 59;
 
+/**
+ * Every day 00:00–24:00 in `tz` (settings.teachers_always_available): touching days merge into one
+ * window, so findConflicts never reports outside_availability and freeSlots steps from midnight.
+ */
+export function allDayRows(tz: string): WeeklyRow[] {
+  return [0, 1, 2, 3, 4, 5, 6].map((weekday) => ({ weekday, start_time: '00:00', end_time: '24:00', tz }));
+}
+
 /** Every occurrence of `row` whose local day is within `range` ±1 day (covers ±14h offsets). */
 export function expandRow(row: WeeklyRow, range: Interval): Interval[] {
   const startMin = toMinutes(row.start_time);
