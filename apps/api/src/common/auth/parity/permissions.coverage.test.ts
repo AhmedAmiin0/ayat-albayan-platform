@@ -6,7 +6,10 @@ import { walkRoutes, type RouteAccess } from './route-walk.test-util';
 // A new controller handler without @Permissions (or a typo'd key) fails here, before review.
 
 /** Signed-in only, on purpose: the client reads its permissions from /auth/me. */
-const SIGNED_IN_ONLY = ['AuthController.me', 'AuthSessionController.login', 'AuthSessionController.logout'];
+const SESSION = ['AuthController.me', 'AuthSessionController.login', 'AuthSessionController.logout'];
+/** «حسابي» (R-ACC-01..05): every login edits its own account, whatever its role. */
+const ACCOUNT = ['avatarUploadUrl', 'changeEmail', 'changePassword', 'profile', 'removeAvatar', 'setAvatar', 'updateProfile'].map((h) => `AccountController.${h}`);
+const SIGNED_IN_ONLY = [...SESSION, ...ACCOUNT];
 
 describe('permission coverage', () => {
   let routes: RouteAccess[];
@@ -23,7 +26,7 @@ describe('permission coverage', () => {
     expect(missing.map((r) => `${r.key} → ${String(r.permission)}`)).toEqual([]);
   });
 
-  it('keeps @SignedIn to the session routes', () => {
+  it('keeps @SignedIn to the session and own-account routes', () => {
     const signedIn = routes.filter((r) => r.signedIn && !r.isPublic).map((r) => r.key);
     expect(signedIn.sort()).toEqual([...SIGNED_IN_ONLY].sort());
   });
