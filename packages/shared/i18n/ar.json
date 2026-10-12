@@ -3512,7 +3512,7 @@
     "receiptChosen": "تم اختيار الإيصال",
     "receiptChange": "غيّر الإيصال",
     "receiptRequired": "أرفق الإيصال أولًا.",
-    "noChatReceipts": "لم ترسل الأسرة صورًا أو ملفات في آخر ٣٠ يومًا.",
+    "noChatReceipts": "لم ترسل الأسرة صورًا أو ملفات في آخر 30 يومًا.",
     "receiptExpired": "انتهت صلاحية هذا الملف",
     "amount": "المبلغ المحوَّل",
     "currency": "العملة",
