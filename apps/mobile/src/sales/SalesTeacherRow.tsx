@@ -5,6 +5,7 @@ import { Note } from '@/more/Note';
 import { countsLine } from '@/students/student-kinds';
 import { ListRow } from '@/ui/ListRow';
 import { StatusChip } from '@/ui/StatusChip';
+import { useSalesHrefs } from './sales-href';
 import { teacherCounts, teacherLabel, teacherSubtitle } from './sales-text';
 
 /**
@@ -14,6 +15,7 @@ import { teacherCounts, teacherLabel, teacherSubtitle } from './sales-text';
  * link only on the teacher's page.
  */
 export function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
+  const href = useSalesHrefs();
   return (
     <ListRow
       title={teacherLabel(teacher)}
@@ -25,7 +27,7 @@ export function SalesTeacherRow({ teacher }: { teacher: SalesTeacherView }) {
         </>
       }
       trailing={teacher.live_now ? <StatusChip tone="ok" glyph="fill" size="sm" label={t.sales.teachers.liveNow} /> : undefined}
-      onPress={() => router.push(`/more/sales/teachers/${teacher.id}`)}
+      onPress={() => router.push(href.teacher(teacher.id))}
     />
   );
 }

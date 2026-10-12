@@ -27,14 +27,14 @@ beforeEach(() => {
 /** The notice the login screen would show right now. */
 const shownNotice = async () => (await renderHook(useLoginNotice)).result.current;
 
-test.each([['admin'], ['teacher']])('%s stays in', async (role) => {
+test.each([['admin'], ['teacher'], ['sales'], ['assistant']])('%s stays in', async (role) => {
   mockApiFetch.mockResolvedValue({ role });
   expect(await verifyRole(session(role))).toBe(role);
   expect(mockApiFetch).toHaveBeenCalledWith('/auth/me');
   expect(mockSignOut).not.toHaveBeenCalled();
 });
 
-test.each([['guardian'], [null]])('role %s is signed out', async (role) => {
+test.each([['guardian'], ['student'], [null]])('role %s is signed out', async (role) => {
   mockApiFetch.mockResolvedValue({ role });
   expect(await verifyRole(session('admin'))).toBe('out');
   expect(mockSignOut).toHaveBeenCalled();
@@ -54,6 +54,12 @@ test('offline or a 5xx trusts the token claim, never assumes admin', async () =>
   expect(mockSignOut).not.toHaveBeenCalled();
 });
 
+test.each([['admin'], ['teacher'], ['sales'], ['assistant']])('offline, a %s claim opens its own tree', async (role) => {
+  mockApiFetch.mockRejectedValue(new TypeError('Network request failed'));
+  expect(await verifyRole(session(role))).toBe(role);
+  expect(mockSignOut).not.toHaveBeenCalled();
+});
+
 test('offline with a guardian or no claim is signed out', async () => {
   mockApiFetch.mockRejectedValue(new TypeError('Network request failed'));
   expect(await verifyRole(session('guardian'))).toBe('out');
@@ -64,7 +70,7 @@ test('offline with a guardian or no claim is signed out', async () => {
 test('a guardian is signed out and the login screen is told this app is not theirs', async () => {
   mockApiFetch.mockResolvedValue({ role: 'guardian' });
   expect(await verifyRole(session('guardian'))).toBe('out');
-  expect(await shownNotice()).toBe(t.mobileNav.wrongApp);
+  expect(await shownNotice()).toBe(t.mobileRoles.wrongApp);
 });
 
 test('a disabled account (403 account_disabled) is signed out with its reason', async () => {

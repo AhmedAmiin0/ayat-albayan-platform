@@ -65,8 +65,8 @@ test('after a mid-session sign-out the login screen says why (disabled account),
 });
 
 test('the wrong-app message reads as an alert too', async () => {
-  mockSignIn.mockResolvedValue({ ok: false, error: t.mobileNav.wrongApp });
+  mockSignIn.mockResolvedValue({ ok: false, error: t.mobileRoles.wrongApp });
   await render(<Login />);
   await fireEvent.press(screen.getByRole('button'));
-  expect(await screen.findByRole('alert')).toHaveTextContent(t.mobileNav.wrongApp);
+  expect(await screen.findByRole('alert')).toHaveTextContent(t.mobileRoles.wrongApp);
 });

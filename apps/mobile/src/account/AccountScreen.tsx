@@ -17,7 +17,7 @@ import { useMyProfile } from './queries';
 
 export interface AccountScreenProps {
   /** The «المزيد» this screen was opened from, for «رجوع» on a cold deep link. */
-  home: '/more' | '/teacher/more';
+  home: '/more' | '/teacher/more' | '/sales/more' | '/assistant/more';
 }
 
 /**

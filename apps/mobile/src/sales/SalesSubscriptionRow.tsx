@@ -3,6 +3,7 @@ import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
 import { ListRow } from '@/ui/ListRow';
 import type { SalesSubscription } from './sales-api';
+import { useSalesHrefs } from './sales-href';
 import { startsLine, subscriptionSubtitle } from './sales-text';
 import { Note } from '@/more/Note';
 
@@ -12,6 +13,7 @@ import { Note } from '@/more/Note';
  */
 export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscription; withHistory: boolean }) {
   const starts = startsLine(sub);
+  const href = useSalesHrefs();
   return (
     <ListRow
       title={sub.student.name}
@@ -24,7 +26,7 @@ export function SalesSubscriptionRow({ sub, withHistory }: { sub: SalesSubscript
             variant="secondary"
             label={t.sales.history.open}
             accessibilityLabel={t.sales.history.openFor.replace('{name}', sub.student.name)}
-            onPress={() => router.push(`/more/sales/history/${sub.id}`)}
+            onPress={() => router.push(href.history(sub.id))}
           />
         ) : undefined
       }

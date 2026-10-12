@@ -23,9 +23,10 @@ const DATE = /^\d{4}-\d{2}-\d{2}$/;
 /**
  * «جدول الحلقات» of the salesperson (web /sales/schedule): one Riyadh day of the academy, read-only,
  * a day at a time (the admin schedule's switcher) and one teacher or all; «ادخل الحلقة» on a running
- * lesson. `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day.
+ * lesson. `?teacherId=` opens it on a teacher (from «المعلمون»), `?date=` on a day. `asTab`: the sales
+ * tree's «جدول الحلقات» tab (no «رجوع»).
  */
-export function SalesScheduleScreen() {
+export function SalesScheduleScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
   const params = useLocalSearchParams<{ teacherId?: string; date?: string }>();
   const today = riyadhToday(useMinuteClock());
@@ -43,7 +44,7 @@ export function SalesScheduleScreen() {
       <ScreenHeader
         title={t.sales.academySchedule.title}
         subtitle={t.schedule.riyadhTime}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
       />
       <View style={{ gap: 8, paddingBottom: 8 }}>
         <Note>{t.sales.academySchedule.readOnly}</Note>
