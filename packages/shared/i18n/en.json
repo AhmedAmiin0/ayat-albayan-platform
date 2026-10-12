@@ -4067,5 +4067,32 @@
         "hint": "A URL returning the latest rates with the Saudi riyal as base."
       }
     }
+  },
+  "mobileSalesMoney": {
+    "tabs": {
+      "label": "Sales staff page sections",
+      "terms": "Terms"
+    },
+    "termsSummary": "Salary: {salary} · Commission: {commission}",
+    "oneMonth": "One month",
+    "monthBefore": "Previous month",
+    "monthAfter": "Next month",
+    "earliest": "Earliest allowed date: {date}",
+    "showLines": "Show lines",
+    "hideLines": "Hide lines",
+    "approveAsk": "Approve {assistant}'s statement for {month}? It is not recalculated unless it is reopened.",
+    "generateAsk": "Calculate the {month} statements for {count} sales staff? Approved or paid statements do not change.",
+    "nothingToGenerate": "Every statement of this month is approved or paid, so there is nothing to calculate.",
+    "voidedAt": "Voided on {date}",
+    "earnedLine": "{rate} of {base} · {date}",
+    "done": {
+      "terms": "Terms saved",
+      "void": "Commission voided",
+      "approve": "Statement approved",
+      "reopen": "Statement reopened",
+      "pay": "Statement payment recorded",
+      "unpay": "Statement payment cancelled",
+      "generate": "The month's statements were calculated"
+    }
   }
 }
