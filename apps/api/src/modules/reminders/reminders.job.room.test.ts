@@ -70,6 +70,15 @@ describe('RemindersJob — meeting link mode', () => {
     expect(none.queued[2]?.template_params['2']).toContain(ROOM);
   });
 
+  it('a failing family link never blocks the reminders nor the confirmation push', async () => {
+    livekit();
+    const { job, queries, queued, push } = fakeJob({ settings: { meeting_link_auto: true }, approved: ['lesson_join_link'] });
+    queries.roomLinks.mockRejectedValueOnce(new Error('lesson_join_links write failed'));
+    expect(await job.runOnce(NOW)).toMatchObject({ queued: 3, pushed: 1 });
+    expect(queued.map((r) => r.template_key)).toEqual(['lesson_reminder_plain', 'lesson_reminder_plain', 'teacher_lesson_reminder']);
+    expect(push.notifyAdmins).toHaveBeenCalledTimes(1);
+  });
+
   it('one template lookup for the day-before reminder and the family link', async () => {
     livekit();
     const { job, queries } = fakeJob({ settings: { reminder_24h_enabled: true } });

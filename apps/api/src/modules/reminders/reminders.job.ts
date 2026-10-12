@@ -4,7 +4,8 @@ import { PushService } from '../../common/push/push.service';
 import { SettingsService } from '../../common/settings/settings.service';
 import { livekitEnv, loadEnv } from '../../env';
 import { firstWebOrigin } from '../classroom/classroom.config';
-import { joinCandidates, sentLinks, type RoomContext } from './reminders.links';
+import type { QueuedMessage } from './queued-row';
+import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './reminders.links';
 import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './reminders.plan';
 import { RemindersQueries } from './reminders.queries';
 import { Ticker } from './ticker';
@@ -95,7 +96,17 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const dayBefore = approved.has('lesson_reminder_24h');
     const rows = planReminders({ lessons: sentLinks(lessons, ctx), minutesBefore, dayBefore, now });
     const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win: joinWindowConfig(settings) });
-    return this.queries.queue([...rows, ...(await this.queries.roomLinks(candidates, now))]);
+    return this.queries.queue([...rows, ...(await this.roomLinks(candidates, now))]);
+  }
+
+  /** The families' links on their own: a failure here never keeps the reminders from being queued (next tick retries). */
+  private async roomLinks(candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {
+    try {
+      return await this.queries.roomLinks(candidates, now);
+    } catch (e) {
+      this.log.warn(`family classroom links failed: ${e instanceof Error ? e.message : String(e)}`);
+      return [];
+    }
   }
 
   /** Cleanup on its own: a failure here never keeps reminders from being queued. */
