@@ -14,8 +14,8 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, kindLabel } from './format';
+import { InboxHeaderActions } from './InboxHeaderActions';
 import { threadPreview } from './message-text';
-import { NewChatSheet } from './NewChatSheet';
 import { threadLink, useThreadMode } from './thread-mode';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
@@ -56,7 +56,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
 
   return (
     <>
-      <ScreenHeader title={t.nav.conversations} subtitle={subtitle} trailing={mode.kind === 'admin' ? <NewChatSheet /> : undefined} />
+      <ScreenHeader title={t.nav.conversations} subtitle={subtitle} trailing={mode.kind === 'admin' ? <InboxHeaderActions base={base} /> : undefined} />
       {switcher}
       <SearchField onSearch={setSearch} label={t.inbox.searchPlaceholder} />
       <FilterPills items={filterPills()} value={filter} onChange={setFilter} accessibilityLabel={t.inbox.title} />
