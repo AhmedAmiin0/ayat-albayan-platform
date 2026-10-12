@@ -3962,7 +3962,7 @@
     "secretUnset": "Not set",
     "secretNote": "Secret values are never shown after saving. Enter a new value to replace one.",
     "secretPlaceholder": "New value",
-    "saveSecret": "Save",
+    "saveSecret": "Save value",
     "clearSecret": "Clear",
     "clearConfirm": "Clear {key} from settings? The server's value applies if it has one.",
     "saveValues": "Save integrations",

@@ -15,7 +15,7 @@ const s = t.integrations;
 
 /**
  * A secret (token, app secret, API key): never prefilled, never shown. A status chip, a password
- * field with «حفظ», and «مسح» (after a confirm) when it is saved in settings.
+ * field with «حفظ القيمة», and «مسح» (after a confirm) when it is saved in settings.
  */
 export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfigItem; onNote: (message: string) => void }) {
   const queryClient = useQueryClient();

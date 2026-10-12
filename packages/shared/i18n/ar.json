@@ -3962,7 +3962,7 @@
     "secretUnset": "غير مضبوط",
     "secretNote": "لا تُعرض القيم السرية بعد حفظها. أدخل قيمة جديدة لاستبدالها.",
     "secretPlaceholder": "قيمة جديدة",
-    "saveSecret": "حفظ",
+    "saveSecret": "حفظ القيمة",
     "clearSecret": "مسح",
     "clearConfirm": "مسح {key} من الإعدادات؟ ستُستخدم قيمة الخادم إن وُجدت.",
     "saveValues": "حفظ التكاملات",
