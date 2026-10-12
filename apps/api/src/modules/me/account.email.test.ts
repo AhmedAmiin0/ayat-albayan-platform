@@ -9,8 +9,6 @@ describe('PUT /me/email (R-ACC-03)', () => {
     const view = await kit.account.changeEmail(ME, body);
     expect(view.email).toBe('new@example.test');
     expect(kit.auth.updates).toEqual([{ id: 'user-1', patch: { email: 'new@example.test' } }]);
-    expect(kit.audits.at(-1)).toMatchObject({ action: 'account.email_change', after: { fields: ['email'] } });
-    expect(JSON.stringify(kit.audits)).not.toContain('new@example.test');
   });
 
   it('400 wrong_password changes nothing', async () => {

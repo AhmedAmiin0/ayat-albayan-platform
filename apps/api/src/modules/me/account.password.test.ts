@@ -4,12 +4,10 @@ import { accountKit, ME, PASSWORD } from './account.fakes';
 // R-ACC-04: the rules of users.password / AUTH_PASSWORD_MIN_LENGTH; the session is not revoked.
 
 describe('PUT /me/password (R-ACC-04)', () => {
-  it('sets the new password after checking the current one, and records no secret', async () => {
+  it('sets the new password after checking the current one', async () => {
     const kit = accountKit();
     await kit.account.changePassword(ME, { current_password: PASSWORD, new_password: 'Brand-new-9' });
     expect(kit.auth.updates).toEqual([{ id: 'user-1', patch: { password: 'Brand-new-9' } }]);
-    expect(kit.audits).toEqual([expect.objectContaining({ action: 'account.password_change', after: { fields: ['password'] } })]);
-    expect(JSON.stringify(kit.audits)).not.toMatch(/Brand-new-9|Current-pass-1/);
   });
 
   it('applies the configured minimum length', async () => {
@@ -32,12 +30,11 @@ describe('PUT /me/password (R-ACC-04)', () => {
     expect(await codeOf(PASSWORD)).toBe('password_same');
   });
 
-  it('400 wrong_password with an audit row, password untouched', async () => {
+  it('400 wrong_password, password untouched', async () => {
     const kit = accountKit();
     await expect(kit.account.changePassword(ME, { current_password: 'wrong-pass', new_password: 'Brand-new-9' })).rejects.toMatchObject({
       response: { code: 'wrong_password' },
     });
     expect(kit.auth.updates).toEqual([]);
-    expect(kit.audits.map((a) => a.action)).toEqual(['account.wrong_password']);
   });
 });

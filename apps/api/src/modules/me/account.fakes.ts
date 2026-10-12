@@ -1,4 +1,3 @@
-import type { AuditEntry } from '../../common/audit/audit.service';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { conflict } from '../scheduling/errors';
 import { AccountAvatarService } from './account.avatar.service';
@@ -80,13 +79,9 @@ export function accountKit(min = 8) {
   const store = new FakeAccountStore();
   const auth = new FakeAccountAuth();
   const files = new FakeAccountFiles();
-  const audits: AuditEntry[] = [];
-  const audit = { record: async (e: AuditEntry) => void audits.push(e) };
   const ports = new AccountPorts(store, auth, files);
   const config = { passwordMinLength: min, supabaseUrl: 'http://supabase.test', signInKey: 'test-key' };
-  // The services only call audit.record.
-  const auditService = audit as unknown as ConstructorParameters<typeof AccountService>[1];
-  const account = new AccountService(ports, auditService, config);
-  const avatar = new AccountAvatarService(ports, account, auditService);
-  return { store, auth, files, audits, account, avatar };
+  const account = new AccountService(ports, config);
+  const avatar = new AccountAvatarService(ports, account);
+  return { store, auth, files, account, avatar };
 }

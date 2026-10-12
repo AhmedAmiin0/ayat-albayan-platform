@@ -26,7 +26,6 @@ describe('avatar upload (R-ACC-05)', () => {
     const view = await kit.avatar.set(ME, PATH);
     expect(view.avatar_url).toBe(`https://storage.test/signed/${PATH}`);
     expect(kit.files.removed).toEqual(['user-1/avatar-1.png']);
-    expect(kit.audits.at(-1)).toMatchObject({ action: 'account.avatar_set', after: { fields: ['avatar'] } });
   });
 
   it('refuses a path outside the caller’s folder or not yet uploaded', async () => {
@@ -53,10 +52,8 @@ describe('avatar upload (R-ACC-05)', () => {
   it('remove clears the path and the object; without a photo it changes nothing', async () => {
     const kit = accountKit();
     expect((await kit.avatar.remove(ME)).avatar_url).toBeNull();
-    expect(kit.audits).toEqual([]);
     await kit.store.update(ME.id, { avatar_path: PATH });
     expect((await kit.avatar.remove(ME)).avatar_url).toBeNull();
     expect(kit.files.removed).toEqual([PATH]);
-    expect(kit.audits.at(-1)?.action).toBe('account.avatar_remove');
   });
 });

@@ -1,12 +1,10 @@
 import { AVATAR_MAX_BYTES, AVATAR_MIMES, type AccountProfile, type AvatarUpload, type SignedUpload } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { AuditService } from '../../common/audit/audit.service';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { avatarPath, isPathOf } from '../../common/storage/storage.paths';
 import { SNIFF_BYTES, sniffMime } from '../booking/invoice-sniff';
 import { badRequest, notFound } from '../scheduling/errors';
 import { baseMime } from '../whatsapp/inbound-media.service';
-import { recordAccount } from './account.audit';
 import { AccountPorts } from './account.ports.provider';
 import { AccountService } from './account.service';
 
@@ -22,7 +20,6 @@ export class AccountAvatarService {
   constructor(
     private readonly ports: AccountPorts,
     private readonly account: AccountService,
-    private readonly audit: AuditService,
   ) {}
 
   uploadUrl(user: AuthUser, input: AvatarUpload): Promise<SignedUpload> {
@@ -38,7 +35,6 @@ export class AccountAvatarService {
     const previous = await this.currentPath(user);
     await this.ports.store.update(user.id, { avatar_path: path });
     if (previous && previous !== path) await this.discard(previous);
-    await recordAccount(this.audit, { userId: user.id, action: 'avatar_set', fields: ['avatar'] });
     return this.account.profile(user);
   }
 
@@ -47,7 +43,6 @@ export class AccountAvatarService {
     if (previous) {
       await this.ports.store.update(user.id, { avatar_path: null });
       await this.discard(previous);
-      await recordAccount(this.audit, { userId: user.id, action: 'avatar_remove', fields: ['avatar'] });
     }
     return this.account.profile(user);
   }

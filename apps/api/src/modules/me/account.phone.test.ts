@@ -12,7 +12,6 @@ describe('PATCH /me/profile name and phone (R-ACC-02)', () => {
     const body = profileUpdateSchema.parse({ phone_e164: '0501234567', current_password: PASSWORD });
     const view = await kit.account.updateProfile(ME, body);
     expect(view.phone_e164).toBe('+966501234567');
-    expect(kit.audits.at(-1)).toMatchObject({ action: 'account.profile_update', after: { fields: ['phone_e164'] } });
   });
 
   it('refuses a name outside 2-80 characters and a bad number', () => {
@@ -30,15 +29,12 @@ describe('PATCH /me/profile name and phone (R-ACC-02)', () => {
     expect(kit.store.patches).toEqual([]);
   });
 
-  it('a wrong password writes an audit row naming the field, never the password', async () => {
+  it('a wrong password is a 400 and writes nothing (the activity log keeps the 400 row)', async () => {
     const kit = accountKit();
-    await expect(kit.account.updateProfile(ME, { phone_e164: '+966501234567', current_password: 'guess-123' })).rejects.toBeInstanceOf(
+    await expect(kit.account.updateProfile(ME, { phone_e164: '+966501234567', full_name: 'X Y', current_password: 'guess-123' })).rejects.toBeInstanceOf(
       BadRequestException,
     );
-    expect(kit.audits).toEqual([
-      expect.objectContaining({ action: 'account.wrong_password', after: { fields: ['phone_e164'] } }),
-    ]);
-    expect(JSON.stringify(kit.audits)).not.toContain('guess-123');
+    expect(kit.store.patches).toEqual([]);
   });
 
   it('409 phone_taken when another login holds the number', async () => {
@@ -60,6 +56,5 @@ describe('PATCH /me/profile name and phone (R-ACC-02)', () => {
   it('a name-only change needs no password', async () => {
     const kit = accountKit();
     expect((await kit.account.updateProfile(ME, { full_name: 'Huda Ali' })).full_name).toBe('Huda Ali');
-    expect(kit.audits.at(-1)?.after).toEqual({ fields: ['full_name'] });
   });
 });
