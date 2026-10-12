@@ -42,7 +42,7 @@ export function TeacherMeetingLink({ link }: { link: string | null }) {
           </View>
           {failed ? (
             <AppText accessibilityRole="alert" style={{ fontFamily: type.ui[500], fontSize: type.size.xs, color: color.ink2 }}>
-              {L.copyFailed}
+              {L.shareFailed}
             </AppText>
           ) : null}
         </>

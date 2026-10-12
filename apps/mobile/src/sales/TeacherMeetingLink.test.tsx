@@ -36,7 +36,7 @@ test('a failed share says to copy it by hand', async () => {
   await renderWithQuery(<TeacherMeetingLink link={URL} />);
   await fireEvent.press(screen.getByRole('button', { name: L.shareLink }));
   expect(await screen.findByRole('alert')).toBeTruthy();
-  expect(screen.getByText(L.copyFailed)).toBeTruthy();
+  expect(screen.getByText(L.shareFailed)).toBeTruthy();
 });
 
 test.each([null, '', 'javascript:alert(1)', 'meet now'])('no usable link (%p): the «no fixed link» line, no buttons', async (link) => {

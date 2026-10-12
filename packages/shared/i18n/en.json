@@ -3073,7 +3073,8 @@
     "copied": "Link copied",
     "copyFailed": "Could not copy: select the link and copy it by hand",
     "openLink": "Open link",
-    "shareLink": "Share link"
+    "shareLink": "Share link",
+    "shareFailed": "Could not open or share the link: select it and copy it by hand"
   },
   "feedback": {
     "title": "Your opinion matters",
