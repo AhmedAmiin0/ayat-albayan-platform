@@ -4067,5 +4067,13 @@
         "hint": "A URL returning the latest rates with the Saudi riyal as base."
       }
     }
+  },
+  "mobileUsers": {
+    "share": "Share",
+    "copyHint": "Long-press the text to select and copy it, or share it.",
+    "enableConfirm": "Enable {name}'s account? They will be able to sign in again.",
+    "signOutConfirm": "End all of {name}'s open sessions on every device?",
+    "roleFilter": "Filter by role",
+    "statusFilter": "Filter by status"
   }
 }
