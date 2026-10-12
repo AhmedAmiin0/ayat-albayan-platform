@@ -9,4 +9,10 @@ describe('TeachersQueries.loads', () => {
     const loads = await new TeachersQueries(db).loads();
     expect([...loads]).toEqual([['t1', 1000], ['t2', 2]]);
   });
+
+  it('a pending_renewal student is still on the teacher’s load (current: trial, active, pending_renewal)', async () => {
+    const f = fakeDb({ students: [{ data: [{ teacher_id: 't1' }] }] });
+    await new TeachersQueries(f.db).loads(['t1']);
+    expect(f.calls).toContainEqual({ table: 'students', method: 'in', args: ['status', ['trial', 'active', 'pending_renewal']] });
+  });
 });

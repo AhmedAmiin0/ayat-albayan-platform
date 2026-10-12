@@ -28,7 +28,8 @@ beforeEach(() => {
 test('every student status is offered; the current one is selected', async () => {
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  expect(screen.getAllByRole('radio')).toHaveLength(4);
+  expect(screen.getAllByRole('radio')).toHaveLength(5);
+  expect(pill(t.enums.studentStatus.pending_renewal)).toBeTruthy(); // the admin may set it by hand
   expect(selected()).toBe(pill(t.enums.studentStatus.active));
 });
 

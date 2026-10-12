@@ -65,7 +65,7 @@ describe('AlertsJob', () => {
     const now = new Date('2026-10-02T09:00:00Z');
     const ok = job(async () => ['s1', 's2']);
     expect(await ok.j.runOnce(now)).toEqual({ students: 2, failed: 1 });
-    expect(ok.alerts.evaluateStudents).toHaveBeenCalledWith(['s1', 's2'], { now });
+    expect(ok.alerts.evaluateStudents).toHaveBeenCalledWith(['s1', 's2'], { now, cause: { via: 'sweep' } });
     const broken = job(async () => Promise.reject(new Error('db down')));
     expect(await broken.j.runOnce(now)).toEqual({ students: 0, failed: 0 });
   });

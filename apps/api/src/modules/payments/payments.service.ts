@@ -32,10 +32,13 @@ export class PaymentsService {
     return view;
   }
 
-  /** A retry of the same form (clientRequestId) returns the payment it already recorded. */
+  /**
+   * A retry of the same form (clientRequestId) returns the payment it already recorded, and re-runs its
+   * follow-ups (idempotent): a trial → «مشترك» flip lost to a failure after the insert is applied then.
+   */
   async create(input: PaymentCreate, actorId: string): Promise<PaymentView> {
     const replay = await this.replayOf(input.clientRequestId);
-    if (replay) return replay;
+    if (replay) return this.replayed(replay, actorId);
     const sub = await this.receipts.subscription(input.subscriptionId);
     if (input.receiptPath) await this.receipts.check(sub.id, input.receiptPath);
     if (input.invoiceId) await this.inputs.checkInvoice(input.invoiceId, sub.student_id);
@@ -92,6 +95,12 @@ export class PaymentsService {
   /** P7: the receipt, or the booking invoice it was recorded from. */
   async receipt(id: string) {
     return this.inputs.receipt(await this.row(id));
+  }
+
+  private async replayed(view: PaymentView, actorId: string): Promise<PaymentView> {
+    const row = await this.row(view.id);
+    await this.writes.replayed({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, studentOf(row));
+    return view;
   }
 
   private get receipts() {

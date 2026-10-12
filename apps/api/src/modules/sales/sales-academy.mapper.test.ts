@@ -25,6 +25,14 @@ describe('sales academy mappers (whitelists)', () => {
     expect(toSalesTeacher({ ...teacherRow(), meeting_link: null }).meeting_link).toBeNull();
   });
 
+  it('toSalesTeacher keeps a pending_renewal student (its own status) but not in «مشترك»', () => {
+    const row = teacherRow();
+    row.students = [...row.students, { id: 'r1', code: 'AB-4', name: 'تجديد', status: 'pending_renewal', program: 'quran' }];
+    const out = toSalesTeacher(row);
+    expect([out.active_count, out.trial_count, out.students.length]).toEqual([1, 0, 2]);
+    expect(out.students.find((s) => s.id === 'r1')?.status).toBe('pending_renewal');
+  });
+
   it('toSalesTeacher takes today’s facts by teacher and the next lesson by student', () => {
     const facts = new Map([['tc1', { lessons_today: 3, live_now: true }]]);
     const out = toSalesTeacher(teacherRow(), { facts, next: new Map([['s1', '2026-10-12T15:00:00.000Z']]) });

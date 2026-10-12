@@ -11,7 +11,7 @@ vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<objec
 
 function renderPage(filters: StudentsFilters, total = 0) {
   apiFetch.mockImplementation((path: string) => {
-    if (path.startsWith('/students/status-counts')) return Promise.resolve({ trial: 2, active: 9, paused: 1, churned: 0 });
+    if (path.startsWith('/students/status-counts')) return Promise.resolve({ trial: 2, active: 9, pending_renewal: 0, paused: 1, churned: 0 });
     return Promise.resolve(path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : []);
   });
   const onChange = vi.fn();

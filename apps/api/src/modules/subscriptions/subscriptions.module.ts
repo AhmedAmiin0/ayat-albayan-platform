@@ -7,6 +7,7 @@ import { AlertsJob } from './alerts.job';
 import { AlertsQueries } from './alerts.queries';
 import { AlertsEnv, SubscriptionAlertsService } from './alerts.service';
 import { BalanceQueries } from './balance.queries';
+import { MoneyFollowUps } from './money-follow-ups';
 import { MoneyWrites } from './money-writes';
 import { PackagesService } from './packages.service';
 import { StudentAccess } from './student-access';
@@ -14,6 +15,10 @@ import { StudentBalanceController, SubscriptionsController } from './subscriptio
 import { SubscriptionsQueries } from './subscriptions.queries';
 import { LeadConversion } from './lead-conversion';
 import { SubscriptionCreator } from './subscription-creator';
+import { StudentActivation } from './student-activation';
+import { StudentDeactivation } from './student-deactivation';
+import { StudentRenewal } from './student-renewal';
+import { StudentStatusQueries } from './student-status.queries';
 import { SubscriptionsService } from './subscriptions.service';
 import { UnpaidFlags } from './unpaid-flags.service';
 
@@ -22,7 +27,8 @@ import { UnpaidFlags } from './unpaid-flags.service';
  * R-SUB-01/02/03. Routes S1–S8 (docs/11 §6).
  * Exports: MoneyWrites (payments: audit + recompute after a write), SubscriptionAlertsService
  * (reports/lessons may call evaluateLessons; AlertsJob already listens to LessonEvents),
- * PackagesService, BalanceQueries, and UnpaidFlags (the lesson views' «الباقة مش مدفوعة» flag).
+ * PackagesService, BalanceQueries, UnpaidFlags (the lesson views' «الباقة مش مدفوعة» flag) and
+ * SubscriptionCreator + SubscriptionsService (the salesperson's subscribe from the chat reuses them, sales-money).
  */
 @Module({
   imports: [PricingModule, TeachersModule],
@@ -33,9 +39,14 @@ import { UnpaidFlags } from './unpaid-flags.service';
     AlertsQueries,
     BalanceQueries,
     LeadConversion,
+    MoneyFollowUps,
     MoneyWrites,
     PackagesService,
     StudentAccess,
+    StudentActivation,
+    StudentDeactivation,
+    StudentRenewal,
+    StudentStatusQueries,
     SubscriptionAlertsService,
     AlertsEnv,
     SubscriptionsQueries,
@@ -43,6 +54,6 @@ import { UnpaidFlags } from './unpaid-flags.service';
     SubscriptionsService,
     UnpaidFlags,
   ],
-  exports: [BalanceQueries, MoneyWrites, PackagesService, SubscriptionAlertsService, UnpaidFlags],
+  exports: [BalanceQueries, MoneyWrites, PackagesService, SubscriptionAlertsService, SubscriptionCreator, SubscriptionsService, UnpaidFlags],
 })
 export class SubscriptionsModule {}

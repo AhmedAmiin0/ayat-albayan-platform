@@ -6,6 +6,8 @@ import LeadRoute from '../../app/(tabs)/inbox/[id]';
 import InboxLayout from '../../app/(tabs)/inbox/_layout';
 import BookRoute from '../../app/(tabs)/inbox/book';
 import InboxIndex from '../../app/(tabs)/inbox/index';
+import SalesSubscribeRoute from '../../app/(tabs)/inbox/sales-subscribe';
+import SalesTransferRoute from '../../app/(tabs)/inbox/sales-transfer';
 import SubscribeRoute from '../../app/(tabs)/inbox/subscribe';
 import ThreadRoute from '../../app/(tabs)/inbox/thread/[phone]';
 import Login from '../../app/login';
@@ -37,6 +39,8 @@ export const routes = {
   '(tabs)/inbox/[id]': LeadRoute,
   '(tabs)/inbox/book': BookRoute,
   '(tabs)/inbox/subscribe': SubscribeRoute,
+  '(tabs)/inbox/sales-subscribe': SalesSubscribeRoute,
+  '(tabs)/inbox/sales-transfer': SalesTransferRoute,
   '(tabs)/inbox/thread/[phone]': ThreadRoute,
   '(tabs)/students/_layout': StudentsLayout,
   '(tabs)/students/index': StudentsIndex,

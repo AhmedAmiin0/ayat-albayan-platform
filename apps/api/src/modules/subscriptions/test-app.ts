@@ -2,13 +2,11 @@
 // controllers, guards and services; every DB / storage / pricing facing class is a mock.
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import { StorageService } from '../../common/storage/storage.service';
 import { ExpensesQueries } from '../expenses/expenses.queries';
 import { FxService } from '../fx/fx.service';
@@ -18,17 +16,28 @@ import { PayoutsQueries } from '../payouts/payouts.queries';
 import { CorrectionsQueries } from '../teacher-earnings/corrections.queries';
 import { EarningsQueries } from '../teacher-earnings/earnings.queries';
 import { PricingService } from '../pricing/pricing.service';
+import { SalesQueries } from '../sales/sales.queries';
+import { SalesFamilyQueries } from '../sales-money/sales-family.queries';
+import { InboundMedia } from '../whatsapp/inbound-media.service';
+import { InboundMediaQueries } from '../whatsapp/inbound-media.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { AdminTasksQueries } from './admin-tasks.queries';
 import { AlertsQueries } from './alerts.queries';
 import { BalanceQueries } from './balance.queries';
 import { LeadConversion } from './lead-conversion';
 import { StudentAccess } from './student-access';
+import { StudentActivation } from './student-activation';
+import { StudentStatusQueries } from './student-status.queries';
 import { SubscriptionsQueries } from './subscriptions.queries';
+import { mocks } from './test-app.fakes';
+
+export { resetMocks, type Mocks } from './test-app.fakes';
 
 export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' };
 export const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER };
+export const SALES_A: AuthUser = { id: 'a1000000-0000-4000-8000-00000000000a', email: null, role: 'sales' };
+export const SALES_B: AuthUser = { id: 'b1000000-0000-4000-8000-00000000000b', email: null, role: 'sales' };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, salesA: SALES_A, salesB: SALES_B };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -36,72 +45,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
-export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teacher'; body?: object };
-
-function mocks() {
-  return {
-    subs: {
-      list: vi.fn(), get: vi.fn(), forStudent: vi.fn(), forStudents: vi.fn(), insert: vi.fn(),
-      update: vi.fn(), remove: vi.fn(), hasPayments: vi.fn(), paid: vi.fn(), studentForQuote: vi.fn(),
-      byRequest: vi.fn(),
-    },
-    leads: { afterPackage: vi.fn() },
-    balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
-    alerts: {
-      studentsOfLessons: vi.fn(), studentsWithPackages: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
-      queueRenewal: vi.fn(), closeTasks: vi.fn(),
-    },
-    tasks: { list: vi.fn(), done: vi.fn() },
-    payments: {
-      list: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), subscription: vi.fn(),
-      recorders: vi.fn(), byRequest: vi.fn(), byInvoice: vi.fn(), totals: vi.fn(), netPaid: vi.fn(),
-    },
-    payouts: {
-      teachers: vi.fn(), lessons: vi.fn(), forMonth: vi.fn(), forTeacher: vi.fn(), get: vi.fn(),
-      insert: vi.fn(), update: vi.fn(), removeDraft: vi.fn(), pendingReports: vi.fn(), editedSince: vi.fn(),
-    },
-    earnings: {
-      teacher: vi.fn(), money: vi.fn(), sessions: vi.fn(), forPayment: vi.fn(), payments: vi.fn(), payment: vi.fn(),
-      byRequest: vi.fn(), record: vi.fn(), settlePayout: vi.fn(), resync: vi.fn(), paidOnLessons: vi.fn(),
-    },
-    corrections: { voidPayment: vi.fn(), payPayout: vi.fn(), unpayPayout: vi.fn(), reopenPayout: vi.fn(), summary: vi.fn() },
-    expenses: {
-      between: vi.fn(), get: vi.fn(), insert: vi.fn(), update: vi.fn(), remove: vi.fn(), categories: vi.fn(),
-      addCategory: vi.fn(), createRecurringDrafts: vi.fn(),
-    },
-    fx: { rateSarAt: vi.fn(), rateSarTo: vi.fn() },
-    invoices: { get: vi.fn(), byRules: vi.fn(), ruleIdsOf: vi.fn() },
-    teachers: { idByProfile: vi.fn() },
-    access: { check: vi.fn() },
-    audit: { record: vi.fn() },
-    settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
-    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn() },
-    pricing: { quote: vi.fn(), catalog: vi.fn() },
-  };
-}
-export type Mocks = ReturnType<typeof mocks>;
-
-/** Defaults: an empty student, no payments, default settings. Call in beforeEach. */
-export function resetMocks(m: Mocks): void {
-  for (const group of Object.values(m)) for (const fn of Object.values(group)) fn.mockReset();
-  m.subs.forStudent.mockResolvedValue([]);
-  m.subs.forStudents.mockResolvedValue([]);
-  m.subs.paid.mockResolvedValue(new Map());
-  m.balances.forSubscriptions.mockResolvedValue(new Map());
-  m.balances.forStudents.mockResolvedValue([]);
-  m.payments.recorders.mockResolvedValue(new Map());
-  m.payouts.pendingReports.mockResolvedValue(0);
-  m.payouts.editedSince.mockResolvedValue(0);
-  m.payments.byRequest.mockResolvedValue(null);
-  m.payments.totals.mockResolvedValue([]);
-  m.payments.byInvoice.mockResolvedValue(null);
-  m.earnings.byRequest.mockResolvedValue(null);
-  m.earnings.settlePayout.mockResolvedValue(null);
-  m.earnings.paidOnLessons.mockResolvedValue(0);
-  m.subs.byRequest.mockResolvedValue(null);
-  m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
-  m.storage.remove.mockResolvedValue(undefined);
-}
+export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teacher' | 'salesA' | 'salesB'; body?: object };
 
 /** Boots AppModule with the mocks; `call` defaults to the admin token. */
 export async function moneyApp() {
@@ -111,6 +55,8 @@ export async function moneyApp() {
     .overrideProvider(SubscriptionsQueries).useValue(m.subs)
     .overrideProvider(BalanceQueries).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
+    .overrideProvider(StudentActivation).useValue(m.activation)
+    .overrideProvider(StudentStatusQueries).useValue(m.statuses)
     .overrideProvider(AlertsQueries).useValue(m.alerts)
     .overrideProvider(AdminTasksQueries).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)
@@ -126,6 +72,10 @@ export async function moneyApp() {
     .overrideProvider(SettingsService).useValue(m.settings)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(PricingService).useValue(m.pricing)
+    .overrideProvider(SalesQueries).useValue(m.sales)
+    .overrideProvider(SalesFamilyQueries).useValue(m.family)
+    .overrideProvider(InboundMedia).useValue(m.media)
+    .overrideProvider(InboundMediaQueries).useValue(m.mediaQueries)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
