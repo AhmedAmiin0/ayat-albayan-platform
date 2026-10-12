@@ -1,3 +1,4 @@
+import { CURRENT_STUDENT_STATUSES } from '@ab/shared';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
@@ -48,6 +49,7 @@ export class DashboardQueries {
     );
   }
 
+  /** «مشترك» = status active only: pending_renewal (بانتظار التجديد) is not counted (owner 2026-10-12). */
   activeStudents(): Promise<number> {
     return counted(this.db.from('students').select('id', { count: 'exact', head: true }).eq('status', 'active'));
   }
@@ -83,13 +85,13 @@ export class DashboardQueries {
     return data;
   }
 
-  /** Students on a teacher's load: assigned (teacher_id) and trial or active. */
+  /** Students on a teacher's load: assigned (teacher_id) and current (trial, active, pending_renewal). */
   loadStudents() {
     return readAll((from, to) =>
       this.db
         .from('students')
         .select('id, teacher_id')
-        .in('status', ['trial', 'active'])
+        .in('status', [...CURRENT_STUDENT_STATUSES])
         .not('teacher_id', 'is', null)
         .order('id')
         .range(from, to),

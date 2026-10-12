@@ -4,7 +4,7 @@ import { t } from '@/lib/i18n';
 import { StudentKindSwitch } from './StudentKindSwitch';
 
 const L = t.studentLists;
-const COUNTS = { trial: 4, active: 30, paused: 5, churned: 2 };
+const COUNTS = { trial: 4, active: 30, pending_renewal: 3, paused: 5, churned: 2 };
 
 function show(status: string | undefined, counts?: typeof COUNTS) {
   const onChange = vi.fn();
@@ -23,8 +23,8 @@ const pressed = (group: HTMLElement) =>
 describe('StudentKindSwitch «الكل · مشترك · تجريبي» (owner 2026-10-12)', () => {
   it('no status param: «الكل» pressed; segments in order all, active, trial with their counts', () => {
     const { group } = show(undefined, COUNTS);
-    expect(within(group).getAllByRole('button').map((b) => b.textContent)).toEqual([`${L.all}41`, `${L.active}30`, `${L.trial}4`]);
-    expect(pressed(group)).toEqual([`${L.all}41`]);
+    expect(within(group).getAllByRole('button').map((b) => b.textContent)).toEqual([`${L.all}44`, `${L.active}30`, `${L.trial}4`]);
+    expect(pressed(group)).toEqual([`${L.all}44`]);
   });
 
   it('?status=active presses «مشترك»', () => {
@@ -35,8 +35,14 @@ describe('StudentKindSwitch «الكل · مشترك · تجريبي» (owner 20
     expect(pressed(show('trial').group)).toEqual([L.trial]);
   });
 
-  it('another combination (trial,active / paused) presses none', () => {
+  it('another combination (trial,active / paused / pending_renewal) presses none', () => {
     expect(pressed(show('trial,active').group)).toEqual([]);
+  });
+
+  it('pending_renewal is never «مشترك»: counted under «الكل» only, ?status=pending_renewal presses none', () => {
+    const { group } = show('pending_renewal', { ...COUNTS, active: 0, trial: 0 });
+    expect(within(group).getAllByRole('button').map((b) => b.textContent)).toEqual([`${L.all}10`, `${L.active}0`, `${L.trial}0`]);
+    expect(pressed(group)).toEqual([]);
   });
 
   it('a click writes the status filter: the kind, or blank for «الكل»', () => {

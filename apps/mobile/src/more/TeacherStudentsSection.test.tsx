@@ -13,7 +13,7 @@ const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
 const L = t.studentLists;
-const COUNTS = { trial: 1, active: 2, paused: 1, churned: 0 };
+const COUNTS = { trial: 1, active: 2, pending_renewal: 1, paused: 1, churned: 0 };
 const ROWS = {
   active: [listItem({ id: 's1', name: 'هدى' }), listItem({ id: 's2', name: 'يوسف' })],
   trial: [listItem({ id: 's3', name: 'مريم', status: 'trial' })],
@@ -43,10 +43,10 @@ test('opens on «مشترك» with the API counts; «الكل» is every status'
   expect(mockApiFetch).toHaveBeenCalledWith('/students?teacher=t1&status=active&page=1&pageSize=50');
   expect(mockApiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=t1');
   expect(screen.getByRole('header', { name: L.section })).toBeTruthy();
-  await waitFor(() => expect(tab(L.all, 4)).toBeTruthy());
+  await waitFor(() => expect(tab(L.all, 5)).toBeTruthy());
   expect(tab(L.active, 2).props.accessibilityState).toMatchObject({ selected: true });
   expect(screen.queryByText('مريم')).toBeNull();
-  await fireEvent.press(tab(L.all, 4));
+  await fireEvent.press(tab(L.all, 5));
   expect(await screen.findByText('سلمى')).toBeTruthy();
   expect(mockApiFetch).toHaveBeenCalledWith('/students?teacher=t1&page=1&pageSize=50');
 });

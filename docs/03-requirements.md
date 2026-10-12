@@ -56,7 +56,12 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-STU-02** Phone numbers normalised to E.164 on write (`+966…`); country inferred; validation rejects handles/short numbers.
 - **R-STU-03** Duplicate detection on create: same phone + similar name (normalised Arabic: strip hamza/taa marbuta/ya variants) → warn and offer merge. Merge tool keeps history.
 - **R-STU-04** A guardian can have many students; each sibling is a separate student with own lessons, reports and package. A lesson can have many students (group lesson) via `lesson_students`.
-- **R-STU-05** Student profile: level, memorized (surah/juz), goal, riwaya, time zone, notes, program, status (`trial`/`active`/`paused`/`churned`), assigned teacher, meeting link (defaults to teacher's).
+- **R-STU-05** Student profile: level, memorized (surah/juz), goal, riwaya, time zone, notes, program, status (`trial`/`active`/`pending_renewal`/`paused`/`churned`), assigned teacher, meeting link (defaults to teacher's).
+  - **`pending_renewal` «بانتظار التجديد»** (owner 2026-10-12): the student's package has ended and no renewal is paid yet.
+    - *Automatic transitions (API):* `active → pending_renewal` when every package of the student has its lessons used up or its `renews_on` has passed (judged in the student's time zone) and there is no newer paid/active package; a renewal payment moves `pending_renewal → active`. Nothing moves `paused`, `churned` or `trial` automatically, except `trial → active` on the first payment. The admin may still set any status by hand (PATCH, audited).
+    - *Usage:* it is still a **current** student of the teacher: lessons keep running; it counts in the teacher's load (booking options, all-teachers calendar, dashboard load), in the admin teacher panel's default «current» view, in the teacher's own «مشتركون» list and in the sales teacher list, each time with its own chip; a current student without a teacher gets the «needs a teacher» note.
+    - It is **not** «مشترك»: the «مشترك / تجريبي / الكل» switches (web students list, sales teachers, mobile) and the `active_count` / dashboard «مشترك» numbers count `active` only; `pending_renewal` shows under «الكل» and in the admin status chips/filters and the status picker.
+    - It is **never a trial**: the trial chat rule (teacher ↔ family only through sales, `familyChatViaSales`, `teacher_thread_phones`) applies to `trial` only. Teacher pay does not read the student's status (`lesson_counts_for_pay`), so no SQL changed.
 - **R-STU-06** Student timeline: all lessons, reports, messages, payments in one view.
 
 ### 3.3 Scheduling

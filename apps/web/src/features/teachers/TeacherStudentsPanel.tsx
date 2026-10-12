@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES, type StudentStatus } from '@ab/shared';
+import { CURRENT_STUDENT_STATUSES, STUDENT_STATUSES, type StudentStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { useState } from 'react';
@@ -14,8 +14,8 @@ import type { FilterSearch, SortSearch } from '@/lib/list-search';
 import { teacherStudentColumns } from './teacher-student-columns';
 import { panelView } from './teacher-students-view';
 
-/** The default view: her current students, subscribed and trial. */
-export const CURRENT: readonly StudentStatus[] = ['trial', 'active'];
+/** The default view: her current students, trial, subscribed and pending renewal (lessons keep running). */
+export const CURRENT: readonly StudentStatus[] = CURRENT_STUDENT_STATUSES;
 
 /** «١٢ مشترك · ٣ تجريبي · ٥ متوقف»: every status she has students in, in enum order. */
 export function statusSummary(counts: StatusCounts): string {
@@ -26,7 +26,7 @@ export function statusSummary(counts: StatusCounts): string {
 
 /**
  * «طلاب المعلم/ة» (R-TCH-03): the students list API with teacher fixed to her, status chips
- * (default subscribed + trial, or every status), counts per status, and a link to the full list.
+ * (default trial + subscribed + pending renewal, or every status), counts per status, and a link to the full list.
  * Columns sort and filter server-side (R-NFR-08); the state is local (a tab of the profile).
  */
 export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {

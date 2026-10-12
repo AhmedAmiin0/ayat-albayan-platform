@@ -4,11 +4,24 @@ import { parseStatusList } from './schemas/student-filters.js';
 // «مشترك / تجريبي» (owner 2026-10-12): a teacher's students split by status, the same rules on the
 // web, the mobile app and the API mappers (sales «المعلمون», admin teachers and students lists).
 
-/** The quick switch: subscribed (active), trial, or every status (paused included). */
+/** The quick switch: subscribed (active), trial, or every status (pending_renewal and paused included). */
 export const STUDENT_LIST_KINDS = ['active', 'trial', 'all'] as const;
 export type StudentListKind = (typeof STUDENT_LIST_KINDS)[number];
 
 export type StudentKindCounts = Record<StudentListKind, number>;
+
+/**
+ * A teacher's CURRENT students (owner 2026-10-12): trial, subscribed, and «بانتظار التجديد»
+ * (pending_renewal: the package ended, lessons keep running until renewal). Teacher loads, the
+ * admin teacher panel's default view and the «needs a teacher» note read this. pending_renewal is
+ * still never «مشترك» in the switch below (it shows under «الكل») and never a trial.
+ */
+export const CURRENT_STUDENT_STATUSES = ['trial', 'active', 'pending_renewal'] as const satisfies readonly StudentStatus[];
+
+/** true for a current student of the teacher (see CURRENT_STUDENT_STATUSES). */
+export function isCurrentStudent(status: StudentStatus | null | undefined): boolean {
+  return CURRENT_STUDENT_STATUSES.some((s) => s === status);
+}
 
 /** «مشترك n · تجريبي n · الكل n» of a list of students. */
 export function countByKind(list: readonly { status: StudentStatus }[]): StudentKindCounts {

@@ -11,7 +11,7 @@ const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
 const ROW = { id: 's1', code: 'AB-0183', name: 'سهيلة', status: 'active', program: 'quran', package_remaining: 3, has_weekly: true };
-const COUNTS = { trial: 0, active: 1, paused: 0, churned: 0 };
+const COUNTS = { trial: 0, active: 1, pending_renewal: 0, paused: 0, churned: 0 };
 
 function renderPanel() {
   apiFetch.mockImplementation((path: string) =>
@@ -25,7 +25,7 @@ function renderPanel() {
 }
 
 const label = (col: string) => t.table.filterBy.replace('{col}', col);
-const BASE = '/students?search=&page=1&pageSize=20&status=trial%2Cactive&teacher=t1';
+const BASE = '/students?search=&page=1&pageSize=20&status=trial%2Cactive%2Cpending_renewal&teacher=t1';
 
 describe('TeacherStudentsPanel sort + column filters (R-TCH-03, R-NFR-08)', () => {
   it('every column sorts server-side', async () => {
