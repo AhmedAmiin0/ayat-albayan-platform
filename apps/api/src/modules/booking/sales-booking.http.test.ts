@@ -4,6 +4,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 import { domainError } from './booking.errors';
 import { BookingService } from './booking.service';
 import { SalesQueries } from '../sales/sales.queries';
@@ -47,6 +49,7 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SalesQueries).useValue(sales)
+      .overrideProvider(SettingsService).useValue(fakeSettings()) // sales_auto_assign ON (the default): ownership is checked
       .overrideProvider(BookingService).useValue(booking)
       .overrideProvider(SlotsService).useValue(slots)
       .overrideProvider(TeacherOptionsService).useValue(teachers)
