@@ -2888,7 +2888,7 @@
       "joinOpensBeforeMin": "Students and teachers can join from this time.",
       "joinClosesAfterMin": "After this nobody can join; guest links created from now on expire then.",
       "defaultMeetingTitle": "Used when a meeting is created without a title.",
-      "meetingLinkAuto": "When on, each lesson goes out with the platform's online classroom links instead of the teacher's fixed link: the guardian gets a personal join link and the teacher gets the lesson's classroom page. This needs the classroom server configured and the «Online classroom link» template approved by Meta; until then the reminder carries the time without a link.",
+      "meetingLinkAuto": "When on, the platform's online classroom links replace the teacher's fixed link: the guardian gets a personal join link with the reminder before the lesson, not with the booking confirmation, and the teacher gets the lesson's classroom page. Without the classroom server configured no link is sent; until Meta approves the «Online classroom link» template, the guardian's reminder carries no link.",
       "fxFreshHours": "After this, a new rate is fetched from the provider.",
       "uploadMaxMb": "For receipts and booking invoices, up to 10 MB.",
       "academyWhatsapp": "International format, e.g. +966500000000; shown on public pages for guardians to reach us.",
