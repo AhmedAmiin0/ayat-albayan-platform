@@ -8,6 +8,8 @@ import type { WebPushSubscriptionInput } from './web-push.endpoint';
 /** A retimed lesson's superseded rows (migration 174 appends «:old:<uuid>» to their dedup_key). */
 const SUPERSEDED = '%:old:%';
 const COLUMNS = 'id, kind, title, body, data, created_at, read_at';
+/** Browsers kept per profile (the newest): a script cannot grow one user's fan-out without bound. */
+export const WEB_PUSH_MAX_PER_PROFILE = 10;
 
 /**
  * The caller's bell (R-NOT-01) and browsers (R-NOT-02). Service role: EVERY query is scoped to
@@ -53,11 +55,40 @@ export class NotificationsQueries {
     if (error) throw dbError(error);
   }
 
-  /** One row per browser: a known endpoint moves to the caller (the browser signed in as someone else). */
+  /**
+   * One row per browser: a known endpoint moves to the caller (the browser signed in as someone
+   * else) and counts as new again. Then only the caller's newest WEB_PUSH_MAX_PER_PROFILE stay.
+   */
   async subscribe(profileId: string, sub: WebPushSubscriptionInput): Promise<void> {
-    const row = { profile_id: profileId, endpoint: sub.endpoint, p256dh: sub.keys.p256dh, auth: sub.keys.auth };
-    const { error } = await this.db.from('web_push_subscriptions').upsert(row, { onConflict: 'endpoint' });
+    const row = {
+      profile_id: profileId,
+      endpoint: sub.endpoint,
+      p256dh: sub.keys.p256dh,
+      auth: sub.keys.auth,
+      created_at: new Date().toISOString(),
+    };
+    const { error } = await this.db
+      .from('web_push_subscriptions')
+      .upsert(row, { onConflict: 'endpoint' });
     if (error) throw dbError(error);
+    const extra = await this.db
+      .from('web_push_subscriptions')
+      .select('id')
+      .eq('profile_id', profileId)
+      .order('created_at', { ascending: false })
+      .order('id', { ascending: false })
+      .range(WEB_PUSH_MAX_PER_PROFILE, WEB_PUSH_MAX_PER_PROFILE + 999);
+    if (extra.error) throw dbError(extra.error);
+    if (extra.data.length === 0) return;
+    const del = await this.db
+      .from('web_push_subscriptions')
+      .delete()
+      .eq('profile_id', profileId)
+      .in(
+        'id',
+        extra.data.map((r) => r.id),
+      );
+    if (del.error) throw dbError(del.error);
   }
 
   /** The caller's own row only; 204 even when there was none. */

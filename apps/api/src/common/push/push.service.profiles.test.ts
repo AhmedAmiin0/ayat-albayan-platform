@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePushDb, fakeWeb, okTickets } from './push.fakes';
-import { PushService, type PushTransport } from './push.service';
+import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from './push.fakes';
+import type { PushTransport } from './push.service';
 
 const STUDENT = '3f1c2a5e-8b7d-4c1e-9a2b-1d2e3f4a5b6c';
 const target = {
@@ -20,7 +20,8 @@ describe('PushService.notifyProfiles (R-NOT-01, R-NOT-03)', () => {
     const { db, writes } = fakePushDb(profiles);
     const transport = vi.fn<PushTransport>(async (m) => okTickets(m.length));
     const { web, send } = fakeWeb();
-    await new PushService(db, transport, web).notifyProfiles(target);
+    await pushService(db, { transport, web }).notifyProfiles(target);
+    await flushPushes();
     const rows = writes.filter((w) => w.op === 'upsert').map((w) => w.value);
     expect(rows).toEqual([
       expect.objectContaining({ profile_id: 't1', kind: 'new_student', dedup_key: 'new_student:lesson-1:t1', title: 'طالب جديد في حلقاتك' }),
@@ -36,7 +37,9 @@ describe('PushService.notifyProfiles (R-NOT-01, R-NOT-03)', () => {
 
   it('no profiles = no read at all', async () => {
     const { db } = fakePushDb(profiles);
-    await new PushService(db, vi.fn<PushTransport>(), fakeWeb().web).notifyProfiles({ ...target, profileIds: [] });
+    await pushService(db, { transport: vi.fn<PushTransport>(), web: fakeWeb().web }).notifyProfiles(
+      { ...target, profileIds: [] },
+    );
     expect(db.from).not.toHaveBeenCalled();
   });
 
@@ -44,7 +47,10 @@ describe('PushService.notifyProfiles (R-NOT-01, R-NOT-03)', () => {
     const { db, writes } = fakePushDb(profiles);
     const { web, send } = fakeWeb();
     send.mockRejectedValueOnce(new Error('boom'));
-    await expect(new PushService(db, vi.fn<PushTransport>(), web).notifyProfiles(target)).resolves.toBeUndefined();
+    await expect(
+      pushService(db, { transport: vi.fn<PushTransport>(), web }).notifyProfiles(target),
+    ).resolves.toBeUndefined();
+    await flushPushes();
     expect(writes.filter((w) => w.op === 'upsert')).toHaveLength(2);
     expect(send).toHaveBeenCalledTimes(2);
   });

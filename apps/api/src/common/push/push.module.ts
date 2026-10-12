@@ -3,11 +3,14 @@ import { loadEnv, webPushEnv } from '../../env';
 import { EXPO_PUSH_PATH, type ExpoMessage, type ExpoTicket } from './expo-push';
 import { NotificationsController, WebPushController } from './notifications.controller';
 import { NotificationsQueries } from './notifications.queries';
+import { PushAudience } from './push.audience';
+import { PushChannels } from './push.channels';
 import { PUSH_TRANSPORT, PushService, type PushTransport } from './push.service';
 import { fetchTransport, WEB_PUSH_KEYS, WEB_PUSH_TRANSPORT, WebPushSender, type WebPushKeysSource } from './web-push.sender';
 
 /** Expo's batch limit per request. */
 const EXPO_BATCH = 100;
+const EXPO_TIMEOUT_MS = 10_000;
 
 export interface ExpoConn {
   /** EXPO_API_BASE; unset = push off. */
@@ -33,6 +36,8 @@ function expoTransport({ base, accessToken }: ExpoConn): PushTransport {
           ...(accessToken ? { authorization: `Bearer ${accessToken}` } : {}),
         },
         body: JSON.stringify(messages.slice(i, i + EXPO_BATCH)),
+        // Off the request path (PushChannels), but a hung Expo must not pile up sends.
+        signal: AbortSignal.timeout(EXPO_TIMEOUT_MS),
       });
       if (!res.ok) throw new Error(`expo push HTTP ${res.status}`);
       tickets.push(...((await res.json()) as { data: ExpoTicket[] }).data);
@@ -50,6 +55,8 @@ function expoTransport({ base, accessToken }: ExpoConn): PushTransport {
   controllers: [NotificationsController, WebPushController],
   providers: [
     PushService,
+    PushAudience,
+    PushChannels,
     NotificationsQueries,
     WebPushSender,
     { provide: WEB_PUSH_TRANSPORT, useValue: fetchTransport },

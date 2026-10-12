@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
-import { fakePushDb, fakeWeb, okTickets } from './push.fakes';
-import { PushService, type PushTransport } from './push.service';
+import { fakePushDb, fakeWeb, flushPushes, okTickets, pushService } from './push.fakes';
+import type { PushTransport } from './push.service';
 
 const event = { subject: 'lead-1', vars: { name: 'أم سهيلة', text: 'السلام عليكم' }, data: { phone: '+966500000001' } };
 const admins = [
@@ -14,7 +14,8 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
     const { db, writes } = fakePushDb(admins);
     const transport = vi.fn<PushTransport>(async (m) => okTickets(m.length));
     const { web, send } = fakeWeb();
-    await new PushService(db, transport, web).notifyAdmins('new_lead', event);
+    await pushService(db, { transport, web }).notifyAdmins('new_lead', event);
+    await flushPushes();
     const rows = writes.filter((w) => w.op === 'upsert').map((w) => w.value);
     expect(rows).toEqual([
       expect.objectContaining({ profile_id: 'a1', kind: 'new_lead', dedup_key: 'new_lead:lead-1:a1', title: 'رسالة من رقم جديد' }),
@@ -31,7 +32,8 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
     const { db } = fakePushDb(admins, { duplicate: true });
     const transport = vi.fn<PushTransport>(async (m) => okTickets(m.length));
     const { web, send } = fakeWeb();
-    await new PushService(db, transport, web).notifyAdmins('new_lead', event);
+    await pushService(db, { transport, web }).notifyAdmins('new_lead', event);
+    await flushPushes();
     expect(transport).not.toHaveBeenCalled();
     expect(send).not.toHaveBeenCalled();
   });
@@ -42,8 +44,16 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
       { status: 'error', message: 'gone', details: { error: 'DeviceNotRegistered' } },
       { status: 'ok', id: 't1' },
     ];
-    await new PushService(db, transport, fakeWeb().web).notifyAdmins('reminder_failed', { subject: 'm1', vars: {} });
-    expect(writes).toContainEqual({ table: 'profiles', op: 'update', value: { push_tokens: ['ExponentPushToken[new]'] } });
+    await pushService(db, { transport, web: fakeWeb().web }).notifyAdmins('reminder_failed', {
+      subject: 'm1',
+      vars: {},
+    });
+    await flushPushes();
+    expect(writes).toContainEqual({
+      table: 'profiles',
+      op: 'update',
+      value: { push_tokens: ['ExponentPushToken[new]'] },
+    });
   });
 
   it('never throws: a transport failure is only logged', async () => {
@@ -51,13 +61,23 @@ describe('PushService.notifyAdmins (R-MOB-01, rule 8)', () => {
     const transport: PushTransport = async () => {
       throw new Error('expo down');
     };
-    await expect(new PushService(db, transport, fakeWeb().web).notifyAdmins('new_lead', event)).resolves.toBeUndefined();
+    await expect(
+      pushService(db, { transport, web: fakeWeb().web }).notifyAdmins('new_lead', event),
+    ).resolves.toBeUndefined();
+    await flushPushes();
   });
 
   it('an event title replaces the kind’s title (a reschedule request)', async () => {
     const { db, writes } = fakePushDb([{ id: 'a1', role: 'admin', push_tokens: [] }]);
     const titled = { ...event, title: 'طلب تغيير موعد من أم سهيلة' };
-    await new PushService(db, vi.fn<PushTransport>(), fakeWeb().web).notifyAdmins('new_message', titled);
-    expect(writes[0]?.value).toMatchObject({ title: 'طلب تغيير موعد من أم سهيلة', body: 'السلام عليكم' });
+    await pushService(db, { transport: vi.fn<PushTransport>(), web: fakeWeb().web }).notifyAdmins(
+      'new_message',
+      titled,
+    );
+    await flushPushes();
+    expect(writes[0]?.value).toMatchObject({
+      title: 'طلب تغيير موعد من أم سهيلة',
+      body: 'السلام عليكم',
+    });
   });
 });

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { Db } from '../db/db.module';
-import { NotificationsQueries } from './notifications.queries';
+import { NotificationsQueries, WEB_PUSH_MAX_PER_PROFILE } from './notifications.queries';
 
 type Call = [string, ...unknown[]];
 
@@ -58,12 +58,55 @@ describe('NotificationsQueries (R-NOT-01)', () => {
     expect(queries[1]).toContainEqual(['eq', 'profile_id', 'p1']);
   });
 
-  it('upserts a browser on its endpoint for the caller; deletes only the caller’s row', async () => {
-    const { db, queries } = recordingDb(() => ({ error: null }));
+  it('upserts a browser on its endpoint for the caller (newest again); deletes only the caller’s row', async () => {
+    const { db, queries } = recordingDb(() => ({ error: null, data: [] }));
     const q = new NotificationsQueries(db);
     await q.subscribe('p1', { endpoint: 'https://fcm.googleapis.com/x', keys: { p256dh: 'k', auth: 'a' } });
     await q.unsubscribe('p1', 'https://fcm.googleapis.com/x');
-    expect(queries[0]).toContainEqual(['upsert', { profile_id: 'p1', endpoint: 'https://fcm.googleapis.com/x', p256dh: 'k', auth: 'a' }, { onConflict: 'endpoint' }]);
-    expect(queries[1]).toEqual(expect.arrayContaining([['delete'], ['eq', 'profile_id', 'p1'], ['eq', 'endpoint', 'https://fcm.googleapis.com/x']]));
+    const row = {
+      profile_id: 'p1',
+      endpoint: 'https://fcm.googleapis.com/x',
+      p256dh: 'k',
+      auth: 'a',
+      created_at: expect.any(String),
+    };
+    expect(queries[0]).toContainEqual(['upsert', row, { onConflict: 'endpoint' }]);
+    // Nothing past the cap: no delete; then the unsubscribe.
+    expect(queries[1]).toContainEqual([
+      'range',
+      WEB_PUSH_MAX_PER_PROFILE,
+      WEB_PUSH_MAX_PER_PROFILE + 999,
+    ]);
+    expect(queries[2]).toEqual(
+      expect.arrayContaining([
+        ['delete'],
+        ['eq', 'profile_id', 'p1'],
+        ['eq', 'endpoint', 'https://fcm.googleapis.com/x'],
+      ]),
+    );
+  });
+
+  it('keeps only the caller’s newest 10 browsers: the rest are deleted after the upsert', async () => {
+    const { db, queries } = recordingDb((calls) => ({
+      error: null,
+      data: calls.some((c) => c[0] === 'range') ? [{ id: 's11' }, { id: 's12' }] : [],
+    }));
+    await new NotificationsQueries(db).subscribe('p1', {
+      endpoint: 'https://fcm.googleapis.com/y',
+      keys: { p256dh: 'k', auth: 'a' },
+    });
+    expect(queries[1]).toEqual(
+      expect.arrayContaining([
+        ['eq', 'profile_id', 'p1'],
+        ['order', 'created_at', { ascending: false }],
+      ]),
+    );
+    expect(queries[2]).toEqual(
+      expect.arrayContaining([
+        ['delete'],
+        ['eq', 'profile_id', 'p1'],
+        ['in', 'id', ['s11', 's12']],
+      ]),
+    );
   });
 });

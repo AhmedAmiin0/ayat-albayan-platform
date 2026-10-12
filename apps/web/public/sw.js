@@ -1,6 +1,7 @@
-// Web push worker (R-NOT-01). Registered only from «فعّل إشعارات المتصفح» (use-web-push); no
+// Web push worker (R-NOT-01). Registered only from the bell's browser-push switch (use-web-push); no
 // caching, no fetch handler: it shows what the API pushes and opens it on a click.
-// Payload: JSON { title, body, url, tag }. The url is opened only on this origin, else '/'.
+// Payload: JSON { title, body, url, tag }; the API always sends the title (no UI text lives here:
+// a bad payload falls back to the site's host name). The url is opened only on this origin, else '/'.
 
 const ICON = '/icon-192.png';
 
@@ -32,11 +33,13 @@ self.addEventListener('push', (event) => {
     body: text(data.body, ''),
     data: { url: safeUrl(data.url) },
     icon: ICON,
-    dir: 'rtl',
-    lang: 'ar',
+    // The API writes title and body in the recipient's language: let the platform pick the direction.
+    dir: 'auto',
   };
   if (typeof data.tag === 'string' && data.tag) options.tag = data.tag;
-  event.waitUntil(self.registration.showNotification(text(data.title, 'أكاديمية آيات البيان'), options));
+  event.waitUntil(
+    self.registration.showNotification(text(data.title, self.location.hostname), options),
+  );
 });
 
 async function openUrl(url) {

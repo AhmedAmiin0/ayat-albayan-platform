@@ -29,11 +29,18 @@ export const fetchTransport: WebPushTransport = async ({ url, headers, body }) =
   return { status: res.status };
 };
 
-const clip = (text: string) => (text.length > WEB_PUSH_BODY_MAX ? `${text.slice(0, WEB_PUSH_BODY_MAX - 1)}…` : text);
+/**
+ * The push service refuses this subscription for good: 404/410 gone, 400 malformed, 403 the VAPID
+ * key does not match the one it was made with, 413 too large. 401 (our JWT) and 429/5xx are kept.
+ */
+const GONE: ReadonlySet<number> = new Set([400, 403, 404, 410, 413]);
+
+const clip = (text: string) =>
+  text.length > WEB_PUSH_BODY_MAX ? `${text.slice(0, WEB_PUSH_BODY_MAX - 1)}…` : text;
 
 /**
  * Browser push (R-NOT-02): one encrypted POST per subscription of the profile. Off (no call at all)
- * until the three WEB_PUSH_* values are set. 404/410 = the browser unsubscribed: the row is deleted;
+ * until the three WEB_PUSH_* values are set. A GONE status: the row is deleted;
  * an endpoint off the allow-list is deleted unsent. Never throws.
  */
 @Injectable()
@@ -54,9 +61,8 @@ export class WebPushSender {
       const { data, error } = await this.db.from('web_push_subscriptions').select('id, endpoint, p256dh, auth').eq('profile_id', profileId);
       if (error) throw new Error(error.message);
       const body = Buffer.from(JSON.stringify({ ...payload, body: clip(payload.body) }));
-      let ok = 0;
-      for (const sub of data) if (await this.one({ sub, keys, body })) ok += 1;
-      return ok;
+      const sent = await Promise.allSettled(data.map((sub) => this.one({ sub, keys, body })));
+      return sent.filter((r) => r.status === 'fulfilled' && r.value).length;
     } catch (e) {
       this.log.warn(`web push to ${profileId} failed: ${e instanceof Error ? e.message : String(e)}`);
       return 0;
@@ -78,7 +84,7 @@ export class WebPushSender {
         },
         body: encryptPayload(input.body, { p256dh: sub.p256dh, auth: sub.auth }),
       });
-      if (res.status === 404 || res.status === 410) return this.drop(sub.id, false);
+      if (GONE.has(res.status)) return this.drop(sub.id, false);
       if (res.status >= 200 && res.status < 300) return true;
       this.log.warn(`web push HTTP ${res.status} (subscription ${sub.id} kept)`);
     } catch (e) {

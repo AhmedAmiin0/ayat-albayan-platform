@@ -15,7 +15,8 @@ export interface NotificationItemProps {
 
 /**
  * One bell row: title, body, time; an unread row carries the saffron dot (named for screen
- * readers). Opening it marks it read and goes where the push would (webNotificationPath).
+ * readers). Title and body are isolated (dir="auto"): a family's Latin name or message keeps its own
+ * direction inside the Arabic UI. Opening it marks it read and goes where the push would (webNotificationPath).
  */
 export function NotificationItem({ item, onPick }: NotificationItemProps) {
   const role = useQuery(meQuery).data?.role ?? null;
@@ -41,10 +42,18 @@ export function NotificationItem({ item, onPick }: NotificationItemProps) {
         <span className="grid min-w-0 gap-0.5">
           <span className={cn('text-sm text-ink', unread ? 'font-bold' : 'font-medium')}>
             {unread && <span className="sr-only">{`${t.bell.unread}: `}</span>}
-            {item.title}
+            <bdi dir="auto">{item.title}</bdi>
           </span>
-          {item.body && <span className="text-xs text-pretty text-ink-2">{item.body}</span>}
-          <time dateTime={item.created_at} title={notificationStamp(item.created_at)} className="text-2xs text-ink-3 tabular-nums">
+          {item.body && (
+            <span dir="auto" className="text-xs text-pretty text-ink-2">
+              {item.body}
+            </span>
+          )}
+          <time
+            dateTime={item.created_at}
+            title={notificationStamp(item.created_at)}
+            className="text-2xs text-ink-3 tabular-nums"
+          >
             {notificationTime(item.created_at)}
           </time>
         </span>

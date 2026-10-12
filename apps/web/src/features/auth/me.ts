@@ -2,6 +2,7 @@ import type { Permission, UserRole } from '@ab/shared';
 import { queryOptions, type QueryClient } from '@tanstack/react-query';
 import { redirect } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/api';
+import { forgetWebPush } from '@/features/notifications/web-push';
 import { supabase } from '@/lib/supabase';
 
 export interface Me {
@@ -32,7 +33,10 @@ export const meQuery = queryOptions({
       const me = await apiFetch<Me>('/auth/me');
       return { ...me, permissions: me.permissions ?? [] };
     } catch (error) {
-      if (isAccountDisabled(error)) await supabase.auth.signOut();
+      if (isAccountDisabled(error)) {
+        await forgetWebPush();
+        await supabase.auth.signOut();
+      }
       throw error;
     }
   },

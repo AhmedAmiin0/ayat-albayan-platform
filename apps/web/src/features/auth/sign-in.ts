@@ -13,8 +13,12 @@ export interface Credentials {
 
 export type SignInResult = { ok: true; home: string } | { ok: false; error: string };
 
-/** Password sign-in, then asks the API who we are and where to land. */
+/**
+ * Password sign-in, then asks the API who we are and where to land. A browser push subscription
+ * left from whoever used this browser before is dropped first: the new user opts in themselves.
+ */
 export async function signIn(creds: Credentials, queryClient: QueryClient): Promise<SignInResult> {
+  await forgetWebPush();
   const { error } = await supabase.auth.signInWithPassword(creds);
   if (error) {
     void reportSession('login-failed');
@@ -28,6 +32,7 @@ export async function signIn(creds: Credentials, queryClient: QueryClient): Prom
   });
   if (me === 'disabled') return { ok: false, error: t.users.errors.account_disabled };
   if (!me?.role) {
+    await forgetWebPush();
     await supabase.auth.signOut();
     return { ok: false, error: t.auth.noRole };
   }

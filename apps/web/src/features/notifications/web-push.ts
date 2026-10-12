@@ -43,6 +43,18 @@ export async function unsubscribeWebPush(): Promise<void> {
   await subscription.unsubscribe();
 }
 
+/**
+ * Drops this browser's subscription locally only (no API call: used once the session is gone).
+ * The server row then answers 404/410 on the next push and is deleted there. Never throws.
+ */
+export async function dropLocalWebPush(): Promise<void> {
+  try {
+    await (await currentSubscription())?.unsubscribe();
+  } catch {
+    // best effort
+  }
+}
+
 async function forget(): Promise<void> {
   const subscription = await currentSubscription();
   if (!subscription) return;
@@ -51,8 +63,10 @@ async function forget(): Promise<void> {
 }
 
 /**
- * Sign-out: the next person on this browser must not get this user's pushes. Best effort: never
- * throws, never waits longer than FORGET_TIMEOUT_MS. Runs before supabase signOut (needs the token).
+ * Sign-out and sign-in: the next person on this browser must not get the previous user's pushes,
+ * and must opt in again themselves (a leftover subscription is never re-sent for a new user).
+ * Best effort: never throws, never waits longer than FORGET_TIMEOUT_MS. Runs before supabase
+ * signOut / signInWithPassword (the DELETE needs the outgoing user's token).
  */
 export async function forgetWebPush(): Promise<void> {
   let timer: ReturnType<typeof setTimeout> | undefined;

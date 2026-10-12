@@ -1,13 +1,38 @@
 import { randomUUID } from 'node:crypto';
+import type { Page } from '@playwright/test';
 import { ar, expect, test } from '../support/fixtures';
 import { API, bearer, freshDigits } from '../support/messages';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../support/schedule';
+import { openNav } from '../support/nav';
+import {
+  addDays,
+  nextWeekSaturday,
+  resetAbrar,
+  riyadh,
+  seedFamily,
+  setAvailability,
+  withSql,
+} from '../support/schedule';
 import { USERS } from '../support/users';
 
 // The bell (R-NOT-01) and the teacher's new-student alert (R-NOT-03). WEB_PUSH_* stay unset here:
 // browser push is off, nothing leaves the server; the bell reads push_notifications rows only.
 
 const unread = (n: number) => ar.bell.openUnread.replace('{n}', String(n));
+const SHELL = 900;
+
+/**
+ * Opens the bell's list: the header bell from 900px; below it (owner 2026-10-05: one bar button)
+ * «القائمة», then the sheet's «الإشعارات» row. `name`: the bell's / the row's accessible name.
+ */
+async function openBell(page: Page, name: string | RegExp): Promise<void> {
+  if ((page.viewportSize()?.width ?? 1280) >= SHELL) {
+    await page.getByRole('button', { name }).first().click();
+    return;
+  }
+  await expect(page.getByRole('button', { name: ar.nav.menu, exact: true })).toBeVisible();
+  const sheet = await openNav(page);
+  await sheet.getByRole('button', { name }).click();
+}
 
 async function profileOf(email: string): Promise<string> {
   const [row] = await withSql((sql) => sql<{ id: string }[]>`select id from auth.users where email = ${email}`);
@@ -31,12 +56,29 @@ test.describe('notification bell', () => {
     await seedOneUnread(await profileOf(USERS.admin.email), phone);
     const page = await asRole('admin');
     await page.goto('/admin');
-    const bell = page.getByRole('button', { name: unread(1) });
-    await expect(bell).toBeVisible();
-    await bell.click();
-    await page.getByRole('button', { name: new RegExp(ar.notifications.new_lead.title) }).first().click();
-    await expect(page).toHaveURL(new RegExp(`/admin/inbox\\?phone=${encodeURIComponent(phone).replace('+', '\\+')}`));
-    await expect(page.getByRole('button', { name: ar.bell.open, exact: true }).first()).toBeVisible();
+    const wide = (page.viewportSize()?.width ?? 1280) >= SHELL;
+    // Below 900px the unread count is the description of «القائمة» (its name stays exact).
+    if (wide) await expect(page.getByRole('button', { name: unread(1) })).toBeVisible();
+    else
+      await expect(
+        page.getByRole('button', { name: ar.nav.menu, exact: true }),
+      ).toHaveAccessibleDescription(ar.bell.menuUnread.replace('{n}', '1'));
+    await openBell(page, unread(1));
+    await page
+      .getByRole('button', { name: new RegExp(ar.notifications.new_lead.title) })
+      .first()
+      .click();
+    await expect(page).toHaveURL(
+      new RegExp(`/admin/inbox\\?phone=${encodeURIComponent(phone).replace('+', '\\+')}`),
+    );
+    if (wide)
+      await expect(
+        page.getByRole('button', { name: ar.bell.open, exact: true }).first(),
+      ).toBeVisible();
+    else
+      await expect(
+        page.getByRole('button', { name: ar.nav.menu, exact: true }),
+      ).not.toHaveAttribute('aria-describedby');
   });
 
   test('a teacher sees a new_student row after an admin booking', async ({ asRole, isMobile }) => {
@@ -66,13 +108,19 @@ test.describe('notification bell', () => {
     });
     expect(res.status(), await res.text()).toBe(201);
     const { lessons } = (await res.json()) as { lessons: { id: string }[] };
-    const [row] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n from public.push_notifications
-      where kind = 'new_student' and data->>'lessonId' = ${lessons[0]?.id ?? ''}`);
-    expect(row?.n).toBe(1);
+    // The bell row is written before the booking returns; poll anyway (no assumption on timing).
+    const rows = async () => {
+      const [row] = await withSql(
+        (sql) => sql<{ n: number }[]>`select count(*)::int as n from public.push_notifications
+        where kind = 'new_student' and data->>'lessonId' = ${lessons[0]?.id ?? ''}`,
+      );
+      return row?.n;
+    };
+    await expect.poll(rows).toBe(1);
 
     const teacher = await asRole('teacher');
     await teacher.goto('/teacher');
-    await teacher.getByRole('button', { name: new RegExp(`^${ar.bell.open}`) }).first().click();
+    await openBell(teacher, new RegExp(`^${ar.bell.open}`));
     await expect(teacher.getByText(ar.notifications.new_student.title).first()).toBeVisible();
   });
 });

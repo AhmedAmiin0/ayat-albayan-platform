@@ -31,7 +31,9 @@ describe('NotificationItem', () => {
     row();
     const button = screen.getByRole('button');
     expect(button.textContent).toContain(`${t.bell.unread}: ${ITEM.title}`);
-    expect(screen.getByText(ITEM.body)).toBeTruthy();
+    expect(screen.getByText(ITEM.body).getAttribute('dir')).toBe('auto');
+    // A Latin name or message keeps its own direction: title and body are isolated.
+    expect(screen.getByText(ITEM.title).closest('bdi')?.getAttribute('dir')).toBe('auto');
     expect(button.querySelector('time')?.getAttribute('dateTime')).toBe(ITEM.created_at);
   });
 

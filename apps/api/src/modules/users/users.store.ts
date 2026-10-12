@@ -73,6 +73,8 @@ export interface UserStore {
   /** Role / role_id changes and disabling are guarded in the DB too (migration 287): 409 last_admin. */
   updateProfile(id: string, patch: ProfilePatch): Promise<void>;
   setDisabled(id: string, value: { by: string; reason: string | null } | null): Promise<void>;
+  /** Deletes the profile's browser push subscriptions (a disabled account gets nothing; app tokens stay). */
+  forgetBrowsers(id: string): Promise<void>;
   /** Is the phone on another profile or on a teacher record that is not this profile's? */
   phoneTaken(phone: string, exceptProfile: string): Promise<boolean>;
   linkTarget(kind: LinkKind, id: string): Promise<LinkTarget | null>;

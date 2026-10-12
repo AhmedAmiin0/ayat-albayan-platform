@@ -54,12 +54,16 @@ describe('WebPushSender (R-NOT-02)', () => {
     expect(shown.body).toHaveLength(240);
   });
 
-  it('404/410 deletes the subscription; 500 keeps it', async () => {
-    const subs = ['s404', 's410', 's500'].map((id) => ({ id, endpoint: `${FCM}/${id}`, ...browser().keys }));
+  it('400/403/404/410/413 delete the subscription; 401, 429 and 500 keep it', async () => {
+    const subs = ['s400', 's401', 's403', 's404', 's410', 's413', 's429', 's500'].map((id) => ({
+      id,
+      endpoint: `${FCM}/${id}`,
+      ...browser().keys,
+    }));
     const { db, deleted } = fakeDb(subs);
     const transport: WebPushTransport = async ({ url }) => ({ status: Number(url.slice(-3)) });
     expect(await new WebPushSender(db, transport, vapid).send('p1', PAYLOAD)).toBe(0);
-    expect(deleted).toEqual(['s404', 's410']);
+    expect([...deleted].sort()).toEqual(['s400', 's403', 's404', 's410', 's413']);
   });
 
   it('an endpoint off the allow-list is never contacted and is deleted', async () => {

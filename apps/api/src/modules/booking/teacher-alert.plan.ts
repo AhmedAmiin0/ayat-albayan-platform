@@ -6,7 +6,8 @@ import { queuedRow, type QueuedMessage } from '../reminders/queued-row';
 // R-NOT-03 (owner 2026-10-12): after a booking, the teacher hears about the new student in the bell
 // (always) and on WhatsApp (teacher_new_student, only while settings.teacher_whatsapp_new_student
 // is ON and Meta approved it). Pure: TeacherAlert reads, this plans, the dedup keys make a repeat a
-// no-op (rule 8).
+// no-op (rule 8). The WhatsApp row expires at the first lesson's start; a lesson retimed before it
+// is sent drops it (send-stale.ts), so the old time never goes out.
 
 export interface AlertTeacher {
   id: string;

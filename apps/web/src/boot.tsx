@@ -2,7 +2,9 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { createRouter, RouterProvider } from '@tanstack/react-router';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import { bindWebPushToSession } from './features/notifications/web-push-session';
 import { t } from './lib/i18n';
+import { supabase } from './lib/supabase';
 import { watchSystemTheme } from './lib/theme';
 import { routeTree } from './routeTree.gen';
 
@@ -18,6 +20,7 @@ declare module '@tanstack/react-router' {
 }
 
 watchSystemTheme();
+bindWebPushToSession(supabase.auth);
 document.title = t.app.name;
 
 const root = document.getElementById('root');

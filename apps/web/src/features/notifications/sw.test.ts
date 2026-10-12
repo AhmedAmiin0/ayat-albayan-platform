@@ -10,7 +10,7 @@ let worker: ReturnType<typeof fakeWorker>;
 
 function fakeWorker() {
   return {
-    location: { origin: ORIGIN },
+    location: { origin: ORIGIN, hostname: 'app.test' },
     registration: { showNotification: vi.fn(() => Promise.resolve()) },
     clients: { matchAll: vi.fn(), openWindow: vi.fn(() => Promise.resolve(null)) },
     addEventListener: (type: string, fn: Handler) => {
@@ -36,11 +36,14 @@ beforeEach(() => {
 });
 
 describe('sw.js push', () => {
-  it('shows title and body, RTL Arabic, with the same-origin url and the tag', async () => {
-    await fire('push', pushOf({ title: 'T', body: 'B', url: '/admin/inbox?phone=%2B966500000001', tag: 'lead-1' }));
+  it('shows title and body (direction from the text), with the same-origin url and the tag', async () => {
+    await fire(
+      'push',
+      pushOf({ title: 'T', body: 'B', url: '/admin/inbox?phone=%2B966500000001', tag: 'lead-1' }),
+    );
     const [title, options] = shown();
     expect(title).toBe('T');
-    expect(options).toMatchObject({ body: 'B', tag: 'lead-1', icon: '/icon-192.png', dir: 'rtl', lang: 'ar' });
+    expect(options).toMatchObject({ body: 'B', tag: 'lead-1', icon: '/icon-192.png', dir: 'auto' });
     expect(options.data).toEqual({ url: `${ORIGIN}/admin/inbox?phone=%2B966500000001` });
   });
 
@@ -56,6 +59,9 @@ describe('sw.js push', () => {
     await fire('push', {});
     expect(worker.registration.showNotification).toHaveBeenCalledTimes(2);
     expect(shown()[1]).toMatchObject({ body: '', data: { url: `${ORIGIN}/` } });
+    // No UI text in the worker: a payload without a title shows the host name.
+    expect(shown()[0]).toBe('app.test');
+    expect(source).not.toMatch(/[\u0600-\u06FF]/);
     expect(shown()[1]).not.toHaveProperty('tag');
   });
 });
