@@ -23,6 +23,7 @@ jest.mock('expo-image-picker', () => ({}));
 const m = t.salesMoney;
 const sent = (path: string) => mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === path);
 const PATH = `${SUB}/chat-1.jpg`;
+const FIRST = m.attachmentN.replace('{n}', '1');
 
 beforeEach(() => {
   jest.useFakeTimers({ now: new Date('2026-10-12T09:00:00Z'), advanceTimers: true });
@@ -39,15 +40,19 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('no receipt yet: «سجّل التحويل» says it is required and sends nothing', async () => {
+test('no attachment (optional now): «سجّل التحويل» posts without attachments or receiptPath', async () => {
   await renderWithQuery(<SalesTransferScreen />);
   expect(await screen.findByLabelText(t.payments.amount)).toHaveProp('value', '180');
+  expect(screen.getByText(m.attachments)).toBeTruthy();
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
-  expect(await screen.findByText(m.receiptRequired)).toBeTruthy();
-  expect(mockApiSend).not.toHaveBeenCalled();
+  expect(await screen.findByText(m.becameSubscribed)).toBeTruthy();
+  const body = sent('/sales/payments')[0]?.[2];
+  expect(body).toMatchObject({ subscriptionId: SUB, amount: 180, currency: 'SAR' });
+  expect(body).not.toHaveProperty('attachments');
+  expect(body).not.toHaveProperty('receiptPath');
 });
 
-test('a receipt from the chat → receipt-from-chat → POST /sales/payments with its path, no kind/method → «أصبح الطالب مشتركًا»', async () => {
+test('a file from the chat → receipt-from-chat → POST /sales/payments with it in attachments, no kind/method → «أصبح الطالب مشتركًا»', async () => {
   await renderWithQuery(<SalesTransferScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
   expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts?studentId=${KID}`);
@@ -56,7 +61,7 @@ test('a receipt from the chat → receipt-from-chat → POST /sales/payments wit
   expect(expired).toBeDisabled();
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith(`/sales/money/chat-receipts/${MSG}?studentId=${KID}`));
   await fireEvent.press(screen.getByRole('button', { name }));
-  expect(await screen.findByText(m.receiptChosen)).toBeTruthy();
+  expect(await screen.findByText(FIRST)).toBeTruthy();
   expect(sent('/sales/payments/receipt-from-chat')[0]?.[2]).toEqual({ subscriptionId: SUB, messageId: MSG });
 
   await fireEvent.changeText(screen.getByLabelText(m.note), 'تحويل الراجحي');
@@ -68,7 +73,7 @@ test('a receipt from the chat → receipt-from-chat → POST /sales/payments wit
     amount: 180,
     currency: 'SAR',
     paidAt: '2026-10-12T09:00:00.000Z',
-    receiptPath: PATH,
+    attachments: [PATH],
     note: 'تحويل الراجحي',
     clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
   });
@@ -87,5 +92,5 @@ test('an expired chat file (410): the reason, nothing chosen', async () => {
   await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
   await fireEvent.press(await screen.findByRole('button', { name: `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}` }));
   expect(await screen.findByText(m.error.media_expired)).toBeTruthy();
-  expect(screen.queryByText(m.receiptChosen)).toBeNull();
+  expect(screen.queryByText(FIRST)).toBeNull();
 });

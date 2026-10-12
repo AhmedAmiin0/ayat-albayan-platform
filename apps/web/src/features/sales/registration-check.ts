@@ -17,6 +17,6 @@ export function checkRequest(by: CheckBy, value: string): CheckRequest {
     const code = CODES.find((c) => c === message) ?? (by === 'phone' ? 'invalid_phone' : 'one_of');
     return { ok: false, code };
   }
-  const query = parsed.data.by === 'phone' ? { phone: parsed.data.phone } : { q: parsed.data.q };
+  const query: Record<string, string> = parsed.data.by === 'phone' ? { phone: parsed.data.phone } : { q: parsed.data.q };
   return { ok: true, by, path: `/sales/registration-check?${new URLSearchParams(query).toString()}` };
 }

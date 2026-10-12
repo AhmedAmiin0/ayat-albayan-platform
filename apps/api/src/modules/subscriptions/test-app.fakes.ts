@@ -41,8 +41,9 @@ export function mocks() {
     access: { check: vi.fn() },
     audit: { record: vi.fn() },
     settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
-    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), info: vi.fn(), copy: vi.fn() },
+    storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), info: vi.fn(), copy: vi.fn(), head: vi.fn() },
     pricing: { quote: vi.fn(), catalog: vi.fn() },
+    attachments: { forPayment: vi.fn(), save: vi.fn() }, // payment_attachments
     // The salesperson's money routes (sales-money): her ownership, her families, the chat files.
     sales: { ownership: vi.fn() },
     family: { studentsOfPhone: vi.fn(), familyPhone: vi.fn(), studentStatus: vi.fn() },
@@ -72,6 +73,7 @@ export function resetMocks(m: Mocks): void {
   m.subs.byRequest.mockResolvedValue(null);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
+  m.attachments.forPayment.mockResolvedValue([]);
   m.statuses.student.mockResolvedValue(null); // no student row: the status rules change nothing
   m.statuses.lastStatusChange.mockResolvedValue(null);
 }

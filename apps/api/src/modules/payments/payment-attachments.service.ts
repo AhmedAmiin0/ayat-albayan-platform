@@ -34,6 +34,7 @@ export class PaymentAttachments {
 
   /** Idempotent (unique path): safe on a replayed form. */
   async save(paymentId: string, files: readonly CheckedAttachment[], actorId: string): Promise<void> {
+    if (files.length === 0) return;
     await this.rows.save(files.map((f) => ({ payment_id: paymentId, path: f.path, mime: f.mime, size: f.size, created_by: actorId })));
   }
 

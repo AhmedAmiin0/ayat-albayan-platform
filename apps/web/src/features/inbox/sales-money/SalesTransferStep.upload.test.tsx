@@ -22,12 +22,12 @@ function open() {
   renderWithClient(<SalesMoneyFlow start="transfer" students={[student({ open: [OPEN_SUB] })]} onClose={vi.fn()} />);
   const dialog = within(screen.getByRole('dialog', { name: t.salesMoney.stepTransfer }));
   const receipt = new File([new Uint8Array(16)], 'r.jpg', { type: 'image/jpeg' });
-  fireEvent.change(dialog.getByLabelText(t.payments.addReceipt), { target: { files: [receipt] } });
+  fireEvent.change(dialog.getByLabelText(t.salesMoney.attachmentsAdd), { target: { files: [receipt] } });
   const save = () => fireEvent.click(dialog.getByRole('button', { name: t.salesMoney.saveTransfer }));
   return { dialog, save };
 }
 
-describe('step 2 with an uploaded receipt (R-ASST-04)', () => {
+describe('step 2 with uploaded attachments (R-ASST-04)', () => {
   afterEach(() => {
     apiFetch.mockReset();
     apiSend.mockReset();
@@ -51,7 +51,26 @@ describe('step 2 with an uploaded receipt (R-ASST-04)', () => {
     expect(apiSend).toHaveBeenCalledWith('POST', '/sales/payments/receipt-upload-url', { subscriptionId: OPEN_SUB.id, mime: 'image/jpeg', size: 16 });
     expect(uploadToSignedUrl).toHaveBeenCalledTimes(1);
     const [first, retry] = payments();
-    expect(retry).toMatchObject({ clientRequestId: first?.clientRequestId, receiptPath: SIGNED.path });
+    expect(retry).toMatchObject({ clientRequestId: first?.clientRequestId, attachments: [SIGNED.path] });
+  });
+
+  it('adds files to the list (a .txt refused), one removed; the rest are posted', async () => {
+    let n = 0;
+    apiSend.mockImplementation(async (_m: string, path: string) =>
+      path === '/sales/payments/receipt-upload-url' ? { ...SIGNED, path: `${OPEN_SUB.id}/${(n += 1)}.jpg` } : paymentView(),
+    );
+    const { dialog, save } = open();
+    const pdf = new File([new Uint8Array(8)], 'b.pdf', { type: 'application/pdf' });
+    const txt = new File(['x'], 'c.txt', { type: 'text/plain' });
+    fireEvent.change(dialog.getByLabelText(t.salesMoney.attachmentsAdd), { target: { files: [pdf, txt] } });
+    expect(dialog.getByText(t.salesMoney.error.receipt_type)).toBeTruthy();
+    expect(dialog.getByText('b.pdf')).toBeTruthy();
+    fireEvent.click(dialog.getByRole('button', { name: `${t.salesMoney.attachmentRemove} ${t.salesMoney.attachmentN.replace('{n}', '1')}` }));
+    expect(dialog.queryByText('r.jpg')).toBeNull();
+    save();
+    await vi.waitFor(() => expect(payments()).toHaveLength(1));
+    expect(payments()[0]).toMatchObject({ attachments: [`${OPEN_SUB.id}/1.jpg`] });
+    expect(uploadToSignedUrl).toHaveBeenCalledWith(`${OPEN_SUB.id}/1.jpg`, 'tok', pdf, { contentType: 'application/pdf' });
   });
 
   it('a bad amount says why and sends nothing', () => {

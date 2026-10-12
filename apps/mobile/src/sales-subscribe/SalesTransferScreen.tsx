@@ -3,6 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/lib/i18n';
+import { inTree, useTreeBase } from '@/nav/tree-base';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -17,8 +18,6 @@ import { TransferForm } from './TransferForm';
 /** The chat's number; the package (right after «احفظ الاشتراك»). */
 type Params = { phone?: string; subscriptionId?: string };
 
-const back = () => (router.canGoBack() ? router.back() : router.replace('/inbox'));
-
 /**
  * /inbox/sales-transfer?phone=…[&subscriptionId=…] (R-ASST-04, owner 2026-10-12): the family's bank
  * transfer for one of HER owed packages, with its receipt; it counts at once (POST /sales/payments)
@@ -32,6 +31,8 @@ export function SalesTransferScreen() {
   const [picked, setPicked] = useState(params.subscriptionId);
   const [done, setDone] = useState<SalesPaymentView | null>(null);
   const sub = chosenOpen(open, picked);
+  const base = useTreeBase();
+  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   return (
     <Screen>
       <ScrollView

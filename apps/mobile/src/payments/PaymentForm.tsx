@@ -7,11 +7,12 @@ import { useNow } from '@/today/use-day-lessons';
 import { Button } from '@/ui/Button';
 import { FilterPills, type FilterPill } from '@/ui/FilterPills';
 import { AmountField } from './AmountField';
+import { AttachmentsField } from './AttachmentsField';
 import { FormLabel } from './FormLabel';
 import { PackagePicker } from './PackagePicker';
 import { PaidDayPicker } from './PaidDayPicker';
 import { paymentErrorText } from './payment-errors';
-import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft } from './payment-form';
+import { checkDraft, chosenPackage, emptyDraft, payablePackages, type PaymentDraft, withMethod } from './payment-form';
 import { ReceiptPicker } from './ReceiptPicker';
 import { useRecordPayment } from './use-record-payment';
 
@@ -21,10 +22,10 @@ const methodPills = (): FilterPill<PaymentMethod | ''>[] => PAYMENT_METHODS.map(
   label: t.enums.paymentMethod[m],
 }));
 
-/** While saving: «بيترفع…» when a receipt goes up first, else «جاري الحفظ…». */
+/** While saving: «جارٍ الرفع…» when a photo goes up first, else «جارٍ الحفظ…». */
 function submitLabel(pending: boolean, draft: PaymentDraft): string {
   if (!pending) return t.payments.mobile.record;
-  return draft.receipt ? t.payments.uploading : t.common.saving;
+  return draft.receipt || draft.attachments.some((a) => a.kind === 'file') ? t.payments.uploading : t.common.saving;
 }
 
 export interface PaymentFormProps {
@@ -39,7 +40,8 @@ export interface PaymentFormProps {
 }
 
 /**
- * «سجّل دفعة» (R-PAY-01, R-MOB-02): package, amount in its currency, method, day, receipt photo.
+ * «سجّل دفعة» (R-PAY-01, R-MOB-02): package, amount in its currency, method, day, then a bank
+ * transfer's «المرفقات» (up to 5) or another method's receipt photo.
  * Errors show once a save was tried; a refused save keeps everything typed and picked.
  */
 export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: PaymentFormProps) {
@@ -82,12 +84,16 @@ export function PaymentForm({ studentId, balance, offline, onRetry, onDone }: Pa
           accessibilityLabel={t.payments.method}
           items={methodPills()}
           value={draft.method ?? ''}
-          onChange={(method) => (method ? set({ method }) : undefined)}
+          onChange={(method) => (method ? setDraft((d) => withMethod(d, method)) : undefined)}
         />
         {errors.method ? <ErrorLine message={errors.method} /> : null}
       </View>
       <PaidDayPicker daysAgo={draft.daysAgo} onChange={(daysAgo) => set({ daysAgo })} now={now} />
-      <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
+      {draft.method === 'bank' ? (
+        <AttachmentsField value={draft.attachments} onChange={(attachments) => set({ attachments })} />
+      ) : (
+        <ReceiptPicker receipt={draft.receipt} onChange={(receipt) => set({ receipt })} />
+      )}
       {failure ? <ErrorLine message={failure} /> : null}
       {offline ? (
         <Button variant="secondary" label={t.mobile.retry} onPress={onRetry} />

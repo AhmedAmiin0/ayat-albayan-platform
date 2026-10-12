@@ -3632,6 +3632,8 @@
     "attachmentRemove": "احذف المرفق",
     "attachmentN": "مرفق {n}",
     "attachmentsMax": "الحد الأقصى 5 مرفقات.",
+    "startedOn": "تاريخ بداية الاشتراك (YYYY-MM-DD)",
+    "startedOnInvalid": "اكتب التاريخ بالصيغة YYYY-MM-DD، مثل 2026-03-15.",
     "error": {
       "not_your_student": "هذا الطالب ليس من طلابك.",
       "receipt_path": "تعذّر استخدام الإيصال؛ أرفقه مرة أخرى.",

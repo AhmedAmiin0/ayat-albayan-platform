@@ -3632,6 +3632,8 @@
     "attachmentRemove": "Remove the attachment",
     "attachmentN": "Attachment {n}",
     "attachmentsMax": "At most 5 attachments.",
+    "startedOn": "Subscription start date (YYYY-MM-DD)",
+    "startedOnInvalid": "Type the date as YYYY-MM-DD, e.g. 2026-03-15.",
     "error": {
       "not_your_student": "This student is not one of yours.",
       "receipt_path": "The receipt could not be used; attach it again.",

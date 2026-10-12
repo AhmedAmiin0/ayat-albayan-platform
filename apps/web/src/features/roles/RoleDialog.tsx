@@ -1,4 +1,4 @@
-import { isEditableSystemRole, STAFF_ROLES } from '@ab/shared';
+import { STAFF_ROLES } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId, useState, type FormEvent } from 'react';
 import { Button } from '@/components/ui/button';
@@ -12,7 +12,7 @@ import { t } from '@/lib/i18n';
 import { baseRoleLabel, deleteRole, ROLES_KEY, saveRole, type RoleView } from './api';
 import { PermissionMatrix } from './PermissionMatrix';
 import { RoleResetButton } from './RoleResetButton';
-import { roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
+import { resettableRole, roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
 
 type Props = { role: RoleView | null; onClose: () => void };
 const P = t.permissions.page;
@@ -26,8 +26,7 @@ export function RoleDialog({ role, onClose }: Props) {
   const [confirming, setConfirming] = useState(false);
   const [resetError, setResetError] = useState<unknown>(null);
   const fixedGrants = role?.is_system === true && role.key === 'admin';
-  // teacher / sales / assistant: editable, and «استعادة الافتراضي» brings back the default grants.
-  const resettable = role?.is_system === true && isEditableSystemRole(role.key) ? role : null;
+  const resettable = resettableRole(role);
   const done = async () => {
     await queryClient.invalidateQueries({ queryKey: ROLES_KEY });
     onClose();

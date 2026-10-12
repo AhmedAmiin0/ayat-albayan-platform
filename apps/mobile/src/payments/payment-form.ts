@@ -1,5 +1,6 @@
 import { parseAmount, type PaymentMethod, type StudentBalanceView, type SubscriptionView } from '@ab/shared';
 import { t } from '@/lib/i18n';
+import { type Attachment, withAttachment } from './attachments';
 import type { PaymentInput } from './optimistic';
 import { paidAtFor } from './paid-day';
 import type { Receipt } from './receipt';
@@ -12,10 +13,23 @@ export interface PaymentDraft {
   method?: PaymentMethod;
   /** Days back on the Riyadh calendar; 0 = today (paid-day.ts). */
   daysAgo: number;
+  /** Any method but a bank transfer: one optional slip photo. */
   receipt: Receipt | null;
+  /** A bank transfer: «المرفقات», up to 5 (owner 2026-10-12). */
+  attachments: Attachment[];
 }
 
-export const emptyDraft: PaymentDraft = { amountText: '', daysAgo: 0, receipt: null };
+export const emptyDraft: PaymentDraft = { amountText: '', daysAgo: 0, receipt: null, attachments: [] };
+
+/**
+ * The method picked. Onto a bank transfer the slip already picked becomes its first attachment;
+ * away from it the attachments are dropped (the API takes them for a bank transfer only).
+ */
+export function withMethod(draft: PaymentDraft, method: PaymentMethod): PaymentDraft {
+  if (method !== 'bank') return { ...draft, method, attachments: [] };
+  const attachments = draft.receipt ? withAttachment(draft.attachments, { kind: 'file', receipt: draft.receipt }) : draft.attachments;
+  return { ...draft, method, receipt: null, attachments };
+}
 
 const owed = (p: SubscriptionView) => p.paid < p.price;
 
@@ -58,6 +72,7 @@ export function checkDraft(
   if (!draft.method) errors.method = t.common.required;
   if (amount === null || !draft.method) return { errors };
   const { sub, now } = context;
+  const bank = draft.method === 'bank';
   return {
     errors,
     input: {
@@ -67,7 +82,8 @@ export function checkDraft(
       currency: sub.currency,
       method: draft.method,
       paidAt: paidAtFor(now, draft.daysAgo).toISOString(),
-      receipt: draft.receipt,
+      receipt: bank ? null : draft.receipt,
+      ...(bank && draft.attachments.length ? { attachments: draft.attachments } : {}),
     },
   };
 }

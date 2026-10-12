@@ -46,19 +46,22 @@ export type SalesQuoteBody = { studentId: string; pricing: SubscriptionPricing }
 export const quoteSalesSubscription = (body: SalesQuoteBody) =>
   apiSend<SalesQuoteView>('POST', '/sales/subscriptions/quote', body);
 
-/** Strict body: no notes, no renewal day, never a price. */
-export type SalesSubscriptionBody = SalesQuoteBody & { startsOn: string; clientRequestId: string };
+/**
+ * Strict body: no notes, no renewal day, never a price. `startsOn` only with subscriptions.set_start_date
+ * (else the API's default day); `alreadyStarted` only when «بدأ الاشتراك سابقًا» is ticked.
+ */
+export type SalesSubscriptionBody = SalesQuoteBody & { startsOn?: string; alreadyStarted?: true; clientRequestId: string };
 
 export const createSalesSubscription = (body: SalesSubscriptionBody) =>
   apiSend<SalesMoneySubscriptionView>('POST', '/sales/subscriptions', body);
 
-/** Strict body: never kind / method / invoiceId (always a bank payment); the receipt is required. */
+/** Strict body: never kind / method / invoiceId (always a bank payment); «المرفقات» optional (0..5 paths). */
 export type SalesPaymentBody = {
   subscriptionId: string;
   amount: number;
   currency: string;
   paidAt: string;
-  receiptPath: string;
+  attachments: string[];
   note: string | null;
   clientRequestId: string;
 };

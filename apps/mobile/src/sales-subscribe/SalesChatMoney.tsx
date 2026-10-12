@@ -3,6 +3,7 @@ import { router } from 'expo-router';
 import { View } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
+import { inTree, useTreeBase } from '@/nav/tree-base';
 import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { openPackages, useSalesFamily } from './family';
@@ -15,6 +16,7 @@ import { openPackages, useSalesFamily } from './family';
 export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
   const { color } = useTheme();
   const allowed = useHolds('self.sales_money');
+  const base = useTreeBase();
   const phone = thread?.guardian_id ? thread.phone_e164 : '';
   const family = useSalesFamily(phone, allowed);
   if (phone === '' || !family.data?.students.length) return null;
@@ -34,13 +36,13 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
       <Button
         variant="secondary"
         label={t.salesMoney.newSubscription}
-        onPress={() => router.push({ pathname: '/inbox/sales-subscribe', params: { phone, ...(tz ? { tz } : {}) } })}
+        onPress={() => router.push(inTree(base, { pathname: '/inbox/sales-subscribe', params: { phone, ...(tz ? { tz } : {}) } }))}
       />
       {owed ? (
         <Button
           variant="secondary"
           label={t.salesMoney.recordTransfer}
-          onPress={() => router.push({ pathname: '/inbox/sales-transfer', params: { phone } })}
+          onPress={() => router.push(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone } }))}
         />
       ) : null}
     </View>

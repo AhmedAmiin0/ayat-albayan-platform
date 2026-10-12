@@ -33,7 +33,7 @@ function salesMoneyBackend() {
   return backend;
 }
 
-test('from a family chat: «اشتراك جديد» → saved → the transfer with a chat receipt → «أصبح الطالب مشتركًا» → back to the chat', async () => {
+test('from a family chat: «اشتراك جديد» → saved → the transfer with a chat file → «أصبح الطالب مشتركًا» → back to the chat', async () => {
   const backend = salesMoneyBackend();
   const app = await renderApp({ url: '/inbox', backend });
   await fireEvent.press(await screen.findByRole('button', { name: /أم يوسف/ }));
@@ -51,11 +51,11 @@ test('from a family chat: «اشتراك جديد» → saved → the transfer w
 
   await press('button', m.receiptFromChat);
   await press('button', `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}`);
-  expect(await screen.findByText(m.receiptChosen)).toBeTruthy();
+  expect(await screen.findByText(m.attachmentN.replace('{n}', '1'))).toBeTruthy();
   await press('button', m.saveTransfer);
   expect(await screen.findByText(m.becameSubscribed)).toBeTruthy();
   expect(backend.sent('POST /sales/payments/receipt-from-chat')[0]?.body).toEqual({ subscriptionId: SUB, messageId: MSG });
-  expect(backend.sent('POST /sales/payments')[0]?.body).toMatchObject({ subscriptionId: SUB, receiptPath: `${SUB}/c.jpg` });
+  expect(backend.sent('POST /sales/payments')[0]?.body).toMatchObject({ subscriptionId: SUB, attachments: [`${SUB}/c.jpg`] });
   expect(backend.sent('POST /payments')).toHaveLength(0);
 
   await press('button', m.done);

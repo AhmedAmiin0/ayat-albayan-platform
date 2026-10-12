@@ -1,10 +1,11 @@
 import { formatPhone, type MessageView, sessionWindowOpen } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
 import { useRef } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform } from 'react-native';
+import { FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
+import { CheckRegistrationButton } from '@/registration-check/CheckRegistrationButton';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
@@ -78,7 +79,8 @@ function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
  * Over the messages: whether the family is subscribed, and the button to subscribe (R-SUB-01).
  * A teacher (R-TCH-03) gets no subscription panel, and her own chat with the academy is read-only.
  * A salesperson (self.sales, docs/16) gets «تسجيل طالب جديد» on a lead's chat instead of the panel,
- * and on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا» (SalesChatMoney, R-ASST-01/04).
+ * and on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا» (SalesChatMoney, R-ASST-01/04); her header
+ * has «تحقق من التسجيل» for this number (students.check_registration).
  */
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
@@ -94,7 +96,14 @@ export function ThreadScreen() {
       <ScreenHeader
         title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
         subtitle={subtitleOf(phone, query, teacher)}
-        trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
+        trailing={
+          <View style={{ flexDirection: 'row' }}>
+            {mode.kind === 'admin' && sales ? (
+              <CheckRegistrationButton href={inTree(base, { pathname: '/inbox/registration-check', params: { phone } })} />
+            ) : null}
+            <Button variant="ghost" label={t.common.back} onPress={back} />
+          </View>
+        }
       />
       {mode.kind !== 'admin' ? null : sales ? (
         <>

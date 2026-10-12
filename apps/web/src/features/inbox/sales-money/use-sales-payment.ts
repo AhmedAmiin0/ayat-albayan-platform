@@ -1,7 +1,8 @@
 import { parseAmount, type SalesMoneySubscriptionView, type SalesPaymentView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { paidAtFor } from '@/features/payments/api';
+import { useUploadOnce } from '@/features/payments/attachments';
 import { recordSalesPayment, refreshAfterSalesWrite, uploadSalesReceipt } from './api';
 import type { ReceiptChoice } from './receipt';
 
@@ -13,29 +14,26 @@ export interface TransferForm {
   note: string;
 }
 
-export type TransferInput = { sub: SalesMoneySubscriptionView; form: TransferForm; receipt: ReceiptChoice };
+export type TransferInput = { sub: SalesMoneySubscriptionView; form: TransferForm; attachments: ReceiptChoice[] };
 
 /**
- * The «سجّل التحويل» save (R-ASST-04): one clientRequestId per open step, re-sent on every retry, and an
- * uploaded receipt sent to storage once per file (a chat receipt is already copied). Never kind / method;
- * the currency is always the package's (owner 2026-10-12).
+ * The «سجّل التحويل» save (R-ASST-04): one clientRequestId per open step, re-sent on every retry, and each
+ * uploaded attachment sent to storage once per file (a chat file is already copied). «المرفقات» are optional
+ * (owner 2026-10-12). Never kind / method; the currency is always the package's.
  */
 export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void) {
   const queryClient = useQueryClient();
   const [requestId] = useState(() => crypto.randomUUID());
-  const uploaded = useRef<{ file: File; subscriptionId: string; path: string } | null>(null);
+  const uploadOnce = useUploadOnce(uploadSalesReceipt);
 
-  async function receiptPath(sub: SalesMoneySubscriptionView, receipt: ReceiptChoice): Promise<string> {
-    if (receipt.kind === 'chat') return receipt.path;
-    const done = uploaded.current;
-    if (done?.file === receipt.file && done.subscriptionId === sub.id) return done.path;
-    const path = await uploadSalesReceipt({ subscriptionId: sub.id, file: receipt.file });
-    uploaded.current = { file: receipt.file, subscriptionId: sub.id, path };
-    return path;
+  async function attachmentPaths(sub: SalesMoneySubscriptionView, list: ReceiptChoice[]): Promise<string[]> {
+    const paths: string[] = [];
+    for (const c of list) paths.push(c.kind === 'chat' ? c.path : await uploadOnce(sub.id, c.file));
+    return [...new Set(paths)];
   }
 
   return useMutation({
-    mutationFn: async ({ sub, form, receipt }: TransferInput) => {
+    mutationFn: async ({ sub, form, attachments }: TransferInput) => {
       const amount = parseAmount(form.amount);
       if (amount === null) throw new Error('amount');
       return recordSalesPayment({
@@ -43,7 +41,7 @@ export function useSalesPayment(onSaved: (payment: SalesPaymentView) => void) {
         amount,
         currency: sub.currency,
         paidAt: paidAtFor(form.day),
-        receiptPath: await receiptPath(sub, receipt),
+        attachments: await attachmentPaths(sub, attachments),
         note: form.note.trim() || null,
         clientRequestId: requestId,
       });

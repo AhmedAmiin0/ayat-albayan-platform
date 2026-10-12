@@ -1,0 +1,35 @@
+import { studentStatusStyle, type RegistrationCheckView } from '@ab/shared';
+import { View } from 'react-native';
+import { t } from '@/lib/i18n';
+import { Note } from '@/more/Note';
+import { Section } from '@/more/Section';
+import { EmptyState } from '@/ui/EmptyState';
+import { ListRow } from '@/ui/ListRow';
+import { StatusChip } from '@/ui/StatusChip';
+import type { CheckBy } from './registration-check';
+
+/**
+ * The answer: «مسجّل: n طالب» and each child (name, code, status — pending_renewal and churned
+ * included —, teacher or «لم يُحدَّد معلم بعد»), «أول 10 نتائج فقط» when there were more; else
+ * «لا يوجد طالب…» for the mode searched.
+ */
+export function RegistrationResults({ view, by }: { view: RegistrationCheckView; by: CheckBy }) {
+  const rc = t.registrationCheck;
+  if (!view.found) return <EmptyState title={by === 'phone' ? rc.notFoundPhone : rc.notFoundName} />;
+  return (
+    <Section title={rc.found.replace('{n}', String(view.matches.length))}>
+      <View style={{ marginHorizontal: -16 }}>
+        {view.matches.map((m) => (
+          <ListRow
+            key={m.code}
+            title={m.name}
+            meta={m.code}
+            subtitle={`${rc.teacher}: ${m.teacher_name ?? rc.noTeacher}`}
+            trailing={<StatusChip {...studentStatusStyle[m.status]} label={t.enums.studentStatus[m.status]} size="sm" />}
+          />
+        ))}
+      </View>
+      {view.more ? <Note>{rc.more}</Note> : null}
+    </Section>
+  );
+}

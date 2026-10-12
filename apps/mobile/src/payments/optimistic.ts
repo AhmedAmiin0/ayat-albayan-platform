@@ -6,6 +6,7 @@ import {
   type SubscriptionView,
 } from '@ab/shared';
 import type { Page } from '@/lib/paging';
+import type { Attachment } from './attachments';
 import type { Receipt } from './receipt';
 
 /** One payment as the form hands it to the mutation. */
@@ -18,6 +19,8 @@ export interface PaymentInput {
   /** ISO instant, never ahead of now (paid-day.ts). */
   paidAt: string;
   receipt: Receipt | null;
+  /** A bank transfer's «المرفقات» (none otherwise). */
+  attachments?: Attachment[];
 }
 
 const PENDING = 'pending:';

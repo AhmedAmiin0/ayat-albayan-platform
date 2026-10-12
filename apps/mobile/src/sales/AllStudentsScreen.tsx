@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ActivityIndicator, FlatList } from 'react-native';
 import { t } from '@/lib/i18n';
 import { usePagedList } from '@/lib/use-paged-list';
+import { CheckRegistrationButton } from '@/registration-check/CheckRegistrationButton';
 import { MyStudentsView } from '@/sales-money/MyStudentsView';
 import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
@@ -26,7 +27,7 @@ const VIEWS = (): { value: StudentsView; label: string }[] => [
  * «كل الطلاب» of the salesperson (web /sales/students, SalesStudents): every student of the academy,
  * paged and searched on the server (name or code), read-only; «طلابي» is a filter of the same page
  * (GET /sales/me/students: the ones I brought, paid or not, my commission). Scrolling loads the next page.
- * `asTab`: the sales tree's «الطلاب» tab, a tab root with no «رجوع».
+ * `asTab`: the sales tree's «الطلاب» tab, a tab root with no «رجوع» («تحقق من التسجيل» there instead).
  */
 export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
   const { color } = useTheme();
@@ -39,7 +40,13 @@ export function AllStudentsScreen({ asTab = false }: { asTab?: boolean }) {
       <ScreenHeader
         title={t.sales.allStudents.title}
         subtitle={all && list.data ? t.students.count.replace('{n}', String(list.total)) : undefined}
-        trailing={asTab ? undefined : <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />}
+        trailing={
+          asTab ? (
+            <CheckRegistrationButton href="/sales/students/registration-check" />
+          ) : (
+            <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />
+          )
+        }
       />
       <FilterPills items={VIEWS()} value={view} onChange={(v) => {
           setView(v);

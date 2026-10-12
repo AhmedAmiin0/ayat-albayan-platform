@@ -60,6 +60,7 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
     setInvalid(null);
     setAsked(null);
   };
+  const error = invalid ? R.error[invalid] : undefined;
   return (
     <Dialog
       title={R.title}
@@ -86,11 +87,11 @@ export function RegistrationCheckDialog({ phone, onClose }: RegistrationCheckDia
           ]}
         />
         {by === 'phone' ? (
-          <Field label={R.phone} error={invalid ? R.error[invalid] : undefined}>
+          <Field label={R.phone} error={error}>
             {(p) => <Input {...p} dir="ltr" type="tel" inputMode="tel" value={value.phone} onChange={(e) => setValue({ ...value, phone: e.target.value })} />}
           </Field>
         ) : (
-          <Field label={R.query} hint={R.queryHint} error={invalid ? R.error[invalid] : undefined}>
+          <Field label={R.query} hint={R.queryHint} error={error}>
             {(p) => <Input {...p} value={value.name} onChange={(e) => setValue({ ...value, name: e.target.value })} />}
           </Field>
         )}

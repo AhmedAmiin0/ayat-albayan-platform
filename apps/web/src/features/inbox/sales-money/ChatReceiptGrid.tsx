@@ -1,3 +1,4 @@
+import type { SalesChatReceipt } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
@@ -9,7 +10,7 @@ import { chatReceiptLabel, type ReceiptChoice } from './receipt';
 
 type Props = {
   sub: { id: string; student: { id: string } };
-  onPicked: (choice: ReceiptChoice) => void;
+  onPicked: (choice: ReceiptChoice & { kind: 'chat' }) => void;
 };
 
 /**
@@ -19,8 +20,9 @@ type Props = {
 export function ChatReceiptGrid({ sub, onPicked }: Props) {
   const list = useQuery(chatReceiptsQuery(sub.student.id));
   const copy = useMutation({
-    mutationFn: (messageId: string) => receiptFromChat({ subscriptionId: sub.id, messageId }),
-    onSuccess: (res, messageId) => onPicked({ kind: 'chat', messageId, subscriptionId: sub.id, path: res.receipt_path }),
+    mutationFn: (r: SalesChatReceipt) => receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id }),
+    onSuccess: (res, r) =>
+      onPicked({ kind: 'chat', messageId: r.message_id, subscriptionId: sub.id, path: res.receipt_path, label: chatReceiptLabel(r) }),
   });
 
   if (list.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
@@ -35,7 +37,7 @@ export function ChatReceiptGrid({ sub, onPicked }: Props) {
               type="button"
               aria-label={chatReceiptLabel(r)}
               disabled={r.expired || copy.isPending}
-              onClick={() => copy.mutate(r.message_id)}
+              onClick={() => copy.mutate(r)}
               className={cn(
                 'grid w-full gap-1 rounded-sm border border-rule p-1 text-start',
                 r.expired ? 'cursor-not-allowed opacity-50' : 'hover:border-(--lapis)',

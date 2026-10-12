@@ -18,8 +18,10 @@ export function useSalesQuote(studentId: string, pricing: SubscriptionPricing) {
 export interface SalesSubscribeInput {
   studentId: string;
   pricing: SubscriptionPricing;
-  /** Local YYYY-MM-DD from the day chips. */
-  startsOn: string;
+  /** Local YYYY-MM-DD, only with subscriptions.set_start_date (else the API's default day). */
+  startsOn?: string;
+  /** «بدأ الاشتراك سابقًا»: sent only when on. */
+  alreadyStarted?: true;
 }
 
 /**

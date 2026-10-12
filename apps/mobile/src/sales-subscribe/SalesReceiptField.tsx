@@ -3,13 +3,13 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
-import { useUploadMaxBytes } from '@/lib/public-config';
 import { Note } from '@/more/Note';
+import { AttachmentRow } from '@/payments/AttachmentRow';
+import { attachmentsFull, withAttachment, withoutAttachment } from '@/payments/attachments';
 import { FormLabel } from '@/payments/FormLabel';
-import { pickReceipt, type ReceiptSource } from '@/payments/receipt';
+import { PhotoButtons } from '@/payments/PhotoButtons';
 import { Button } from '@/ui/Button';
 import { ChatReceiptList } from './ChatReceiptList';
-import { ChosenReceipt } from './ChosenReceipt';
 import { useCopyChatReceipt } from './chat-receipts';
 import { salesErrorText } from './sales-errors';
 import type { ReceiptChoice } from './transfer-form';
@@ -17,21 +17,20 @@ import type { ReceiptChoice } from './transfer-form';
 export interface SalesReceiptFieldProps {
   /** The package's student (whose family chat is listed) and the package (where the copy goes). */
   target: { studentId: string; subscriptionId: string };
-  value: ReceiptChoice | null;
-  onChange: (value: ReceiptChoice | null) => void;
-  error?: string | undefined;
+  value: readonly ReceiptChoice[];
+  onChange: (value: ReceiptChoice[]) => void;
 }
 
 /**
- * «الإيصال», required (R-ASST-04): one the family sent in the chat (copied under the package at once)
- * or a photo from the camera / gallery like the admin's payment form (uploaded on save).
+ * «المرفقات», optional, up to 5 (R-ASST-04, owner 2026-10-12): files the family sent in the chat
+ * (each copied under the package at once) and photos from the camera / gallery like the admin's
+ * payment form (uploaded on save). Each one is added to the list and can be removed.
  */
-export function SalesReceiptField({ target, value, onChange, error }: SalesReceiptFieldProps) {
+export function SalesReceiptField({ target, value, onChange }: SalesReceiptFieldProps) {
   const [browsing, setBrowsing] = useState(false);
-  const [pickError, setPickError] = useState<string>();
   const copy = useCopyChatReceipt();
-  const maxBytes = useUploadMaxBytes();
   const m = t.salesMoney;
+  const add = (item: ReceiptChoice) => onChange(withAttachment(value, item));
 
   const fromChat = (item: SalesChatReceipt) =>
     copy.mutate(
@@ -39,29 +38,26 @@ export function SalesReceiptField({ target, value, onChange, error }: SalesRecei
       {
         onSuccess: (r) => {
           setBrowsing(false);
-          onChange({ kind: 'chat', messageId: item.message_id, path: r.receipt_path });
+          add({ kind: 'chat', messageId: item.message_id, path: r.receipt_path });
         },
       },
     );
 
-  async function fromFile(source: ReceiptSource) {
-    setPickError(undefined);
-    try {
-      const picked = await pickReceipt(source);
-      if (!picked) return;
-      if (picked.size > maxBytes) setPickError(m.error.receipt_too_large);
-      else onChange({ kind: 'file', receipt: picked });
-    } catch {
-      setPickError(t.common.error);
-    }
-  }
-
-  const failure = copy.isError ? salesErrorText(copy.error) : (pickError ?? error);
   return (
     <View style={{ gap: 8 }}>
-      <FormLabel required>{m.receipt}</FormLabel>
-      {value ? (
-        <ChosenReceipt value={value} onClear={() => onChange(null)} />
+      <FormLabel>{m.attachments}</FormLabel>
+      <Note>{m.attachmentsHint}</Note>
+      {value.map((item, i) => (
+        <AttachmentRow
+          key={item.kind === 'chat' ? item.path : item.receipt.uri}
+          item={item}
+          n={i + 1}
+          text={m}
+          onRemove={() => onChange(withoutAttachment(value, i))}
+        />
+      ))}
+      {attachmentsFull(value) ? (
+        <Note>{m.attachmentsMax}</Note>
       ) : (
         <>
           <Button variant="secondary" label={m.receiptFromChat} onPress={() => setBrowsing((b) => !b)} />
@@ -73,17 +69,15 @@ export function SalesReceiptField({ target, value, onChange, error }: SalesRecei
             />
           ) : null}
           <Note>{m.receiptUpload}</Note>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <View style={{ flex: 1 }}>
-              <Button variant="secondary" label={m.receiptCamera} onPress={() => void fromFile('camera')} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Button variant="secondary" label={m.receiptLibrary} onPress={() => void fromFile('library')} />
-            </View>
-          </View>
+          <PhotoButtons
+            camera={m.receiptCamera}
+            library={m.receiptLibrary}
+            tooLarge={m.error.receipt_too_large}
+            onPicked={(receipt) => add({ kind: 'file', receipt })}
+          />
         </>
       )}
-      {failure ? <ErrorLine message={failure} /> : null}
+      {copy.isError ? <ErrorLine message={salesErrorText(copy.error)} /> : null}
     </View>
   );
 }
