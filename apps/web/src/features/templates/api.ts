@@ -20,8 +20,8 @@ export const submitTemplate = (key: string) =>
   apiSend<TemplateView>('POST', `/messaging/templates/${encodeURIComponent(key)}/submit`);
 
 /**
- * «قالب بدء محادثة للمبيعات» (owner 2026-10-12, docs/16): the admin offers a template to sales to start
- * a chat, or stops.
+ * «متاح للمعلمين والمبيعات» (the restricted allow-list, owner 2026-10-12, docs/16): the admin offers a
+ * template to teachers, sales and the other limited roles, or stops.
  */
 export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
   apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, { sales_starter: on });

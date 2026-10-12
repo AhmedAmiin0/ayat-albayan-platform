@@ -40,6 +40,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
         {can('applicants.read') && <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />}
         {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
         {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
+        {can('users.read') && <ListRow title={t.users.nav} onPress={() => router.push('/more/users')} />}
       </View>
       <SalesSection can={can} />
       <MoneySection can={can} />

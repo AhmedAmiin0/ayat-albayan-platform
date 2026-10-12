@@ -6,6 +6,7 @@ import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
 import { LinesCheck } from './lines.check';
@@ -19,7 +20,9 @@ export const ADMIN: AuthUser = { id: 'a0000000-0000-4000-8000-000000000001', ema
 const TEACHER: AuthUser = { id: 'p0000000-0000-4000-8000-000000000002', email: null, role: 'teacher' };
 const SALES: AuthUser = { id: 's0000000-0000-4000-8000-000000000003', email: null, role: 'sales' };
 const ASSISTANT: AuthUser = { id: 's0000000-0000-4000-8000-000000000004', email: null, role: 'assistant' };
-const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, sales: SALES, assistant: ASSISTANT };
+/** A custom role (base sales) for the dynamic-roles cases; its grants come from the test's resolver. */
+const CUSTOM: AuthUser = { id: 's0000000-0000-4000-8000-000000000005', email: null, role: 'sales' };
+const USERS: Record<string, AuthUser> = { admin: ADMIN, teacher: TEACHER, sales: SALES, assistant: ASSISTANT, custom: CUSTOM };
 const verify: TokenVerifier = async (token) => {
   const user = USERS[token];
   if (!user) throw new Error('bad token');
@@ -49,10 +52,10 @@ function mocks() {
   };
 }
 
-export async function whatsappApp() {
+export async function whatsappApp(resolver: PermissionResolver = systemResolver) {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(MessagesQueries).useValue(m.messages)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)

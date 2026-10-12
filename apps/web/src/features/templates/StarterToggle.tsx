@@ -9,7 +9,7 @@ export interface StarterToggleProps {
 }
 
 /**
- * «قالب بدء محادثة للمبيعات» for one template (owner 2026-10-12, docs/16): a checkbox drawn as a
+ * «متاح للمعلمين والمبيعات» (the restricted allow-list) for one template (owner 2026-10-12, docs/16): a checkbox drawn as a
  * switch (still a checkbox to assistive tech and tests), like the settings switches.
  */
 export function StarterToggle({ name, checked, disabled, onToggle }: StarterToggleProps) {

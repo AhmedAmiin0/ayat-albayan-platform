@@ -20,8 +20,8 @@ function lastChecked(rows: readonly TemplateView[]): string | null {
 /**
  * Template health (R-MSG-01, issue C1): every registry row with Meta's status. «راجع حالة
  * القوالب» reads Meta now (T2); a not-submitted / rejected / missing row can be sent to Meta for
- * review (T3), only after the explicit confirm dialog. «قالب بدء محادثة للمبيعات» picks the only
- * templates sales may send (owner 2026-10-12).
+ * review (T3), only after the explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted
+ * allow-list) picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const queryClient = useQueryClient();

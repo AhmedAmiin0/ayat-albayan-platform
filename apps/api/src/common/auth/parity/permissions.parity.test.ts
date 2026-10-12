@@ -64,4 +64,11 @@ describe('system-role parity with the old @Roles table', () => {
       expect([who, allowed]).toEqual([who, who === 'admin' ? added.length : 0]);
     }
   });
+
+  // Owner 2026-10-12: an inline check (TemplatesController.list, ThreadSendService), never a route
+  // gate, so the frozen table is unchanged; by default only the system admin sends every template.
+  it('templates.send_all gates no route and is held by the system admin only', () => {
+    expect(routes.filter((r) => r.permission === 'templates.send_all').map((r) => r.key)).toEqual([]);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('templates.send_all'))).toEqual(['admin']);
+  });
 });

@@ -23,7 +23,7 @@ function meta(over: Partial<MetaTemplate> = {}): MetaTemplate {
 }
 
 describe('starterRow — one chat-WABA template as a registry row', () => {
-  it('an approved text template → a chat row, a sales starter, var_1…var_n, Meta’s text and id', () => {
+  it('an approved text template → a chat row, var_1…var_n, Meta’s text and id; flagged only as a default', () => {
     expect(starterRow(meta(), NOW)).toEqual({
       key: 'academy_welcome',
       meta_name: 'academy_welcome',
@@ -38,11 +38,15 @@ describe('starterRow — one chat-WABA template as a registry row', () => {
       meta_id: 'meta-w1',
       last_checked_at: '2026-10-12T08:00:00.000Z',
       line: 'chat',
-      sales_starter: true,
+      sales_starter: false,
     });
   });
 
-  it('four variables (like teacher_lesson_v2) → var_1…var_4; a teacher_ template is never a starter', () => {
+  it.each(['free_trial_invite', 'welcome_greeting'])('%s (a restricted default) is imported flagged', (name) => {
+    expect(starterRow(meta({ name }), NOW)).toMatchObject({ key: name, sales_starter: true });
+  });
+
+  it('four variables (like teacher_lesson_v2) → var_1…var_4; not a default, so not flagged', () => {
     const row = starterRow(meta({ name: 'teacher_lesson_v2', components: [body('{{1}} و{{2}} في {{3}} مع {{4}}.')] }), NOW);
     expect(row).toMatchObject({ params: ['var_1', 'var_2', 'var_3', 'var_4'], sales_starter: false, footer_ar: null });
   });

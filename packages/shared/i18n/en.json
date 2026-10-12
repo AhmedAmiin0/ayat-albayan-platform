@@ -2174,7 +2174,7 @@
       "modeText": "Regular message",
       "modeTemplate": "Template",
       "noApproved": "No approved templates yet",
-      "noStarters": "The admin hasn't picked any sales chat starters yet",
+      "noAllowed": "No templates are available to you yet",
       "buttonUrl": "The link will be: {url}",
       "required": "Enter {field}",
       "pickLesson": "Choose lesson",
@@ -2355,11 +2355,11 @@
     "submitted": "Sent to Meta — waiting for approval",
     "needsAttention": "Some templates aren't ready — their messages will stay in the queue until they're approved",
     "line": "Line",
-    "salesStarter": "Sales chat starter",
-    "salesStarterFor": "{name}: sales chat starter",
-    "salesStarterIntro": "Sales see only the approved templates ticked in the “Sales chat starter” column, and use them to start a conversation or resume it 24 hours after the contact’s last message. “Check template status” adds new chat-line templates already ticked, except teacher templates; they are sent from the chat line, while booking and reminder templates always go from the notifications line.",
-    "starterOn": "Sales can now start a conversation with this template",
-    "starterOff": "Sales can no longer use this template",
+    "salesStarter": "Available to teachers and sales",
+    "salesStarterFor": "{name}: available to teachers and sales",
+    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without “Send every template” see only the approved templates ticked in the “Available to teachers and sales” column: free_trial_invite and welcome_greeting by default. They use them to start a conversation or resume it 24 hours after the contact’s last message. “Check template status” adds new chat-line templates and ticks only those two; it never changes your choice for an existing template. They are sent from the chat line, while booking and reminder templates always go from the notifications line; automatic reminders are not affected by this choice.",
+    "starterOn": "Teachers, sales and the other limited roles can now send this template",
+    "starterOff": "Teachers, sales and the other limited roles can no longer send this template",
     "qualityScore": {
       "GREEN": "High",
       "YELLOW": "Medium",
@@ -3875,6 +3875,7 @@
       "messages.read": "View WhatsApp templates and send status",
       "messages.manage": "Retry and resolve failed messages",
       "templates.manage": "Check and submit WhatsApp templates",
+      "templates.send_all": "Send every template",
       "payments.read": "View payments",
       "payments.write": "Record and edit payments",
       "subscriptions.read": "View packages",
@@ -4156,5 +4157,40 @@
     "web": {
       "newPasswordRequired": "Enter the new password."
     }
+  },
+  "mobileSalesMoney": {
+    "tabs": {
+      "label": "Sales staff page sections",
+      "terms": "Terms"
+    },
+    "termsSummary": "Salary: {salary} · Commission: {commission}",
+    "oneMonth": "One month",
+    "monthBefore": "Previous month",
+    "monthAfter": "Next month",
+    "earliest": "Earliest allowed date: {date}",
+    "showLines": "Show lines",
+    "hideLines": "Hide lines",
+    "approveAsk": "Approve {assistant}'s statement for {month}? It is not recalculated unless it is reopened.",
+    "generateAsk": "Calculate the {month} statements for {count} sales staff? Approved or paid statements do not change.",
+    "nothingToGenerate": "Every statement of this month is approved or paid, so there is nothing to calculate.",
+    "voidedAt": "Voided on {date}",
+    "earnedLine": "{rate} of {base} · {date}",
+    "done": {
+      "terms": "Terms saved",
+      "void": "Commission voided",
+      "approve": "Statement approved",
+      "reopen": "Statement reopened",
+      "pay": "Statement payment recorded",
+      "unpay": "Statement payment cancelled",
+      "generate": "The month's statements were calculated"
+    }
+  },
+  "mobileUsers": {
+    "share": "Share",
+    "copyHint": "Long-press the text to select and copy it, or share it.",
+    "enableConfirm": "Enable {name}'s account? They will be able to sign in again.",
+    "signOutConfirm": "End all of {name}'s open sessions on every device?",
+    "roleFilter": "Filter by role",
+    "statusFilter": "Filter by status"
   }
 }

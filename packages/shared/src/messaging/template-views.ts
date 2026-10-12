@@ -23,7 +23,7 @@ export interface TemplateView {
   submitted_at: string | null;
   /** The line (WABA) Meta approved it on: the sender sends it from there (docs/12 §13.3). */
   line: WaLine;
-  /** Offered to sales to start a chat: the only templates a salesperson may list or send (docs/16). */
+  /** On the restricted allow-list: the only templates a role without templates.send_all may list or send (docs/16 §15). */
   sales_starter: boolean;
 }
 
