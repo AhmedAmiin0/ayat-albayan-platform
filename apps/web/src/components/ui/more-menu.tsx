@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { useRef, useState, type ReactNode } from 'react';
 import { t } from '@/lib/i18n';
 import { Icon } from './icon';
 import { iconButtonClass } from './icon-button';
+import { useDismiss } from './use-dismiss';
 
 /**
  * «⋯ المزيد» (owner, 2026-10-05: one primary action per page head on phones): a plain disclosure
@@ -11,21 +12,7 @@ import { iconButtonClass } from './icon-button';
 export function MoreMenu({ children, label = t.common.more }: { children: ReactNode; label?: string }) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    if (!open) return;
-    const away = (e: PointerEvent) => {
-      if (e.target instanceof Node && !box.current?.contains(e.target)) setOpen(false);
-    };
-    const esc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setOpen(false);
-    };
-    document.addEventListener('pointerdown', away);
-    document.addEventListener('keydown', esc);
-    return () => {
-      document.removeEventListener('pointerdown', away);
-      document.removeEventListener('keydown', esc);
-    };
-  }, [open]);
+  useDismiss(box, { open, onDismiss: () => setOpen(false) });
   return (
     <div ref={box} className="relative">
       <button

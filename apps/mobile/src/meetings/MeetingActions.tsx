@@ -8,7 +8,7 @@ import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
 import { InlineConfirm } from '@/ui/InlineConfirm';
 import { endMeeting, newMeetingLink } from './api';
-import { meetingError } from './meeting-text';
+import { meetingError, meetingsBase } from './meeting-text';
 import { MeetingLinkShare } from './MeetingLinkShare';
 import { useEnterMeeting } from './use-enter-meeting';
 
@@ -26,7 +26,7 @@ export function MeetingActions({ meeting }: { meeting: MeetingView }) {
   const end = useMutation({ mutationFn: endMeeting, onSuccess: refresh, onSettled: () => setAsking(null) });
   const link = useMutation({ mutationFn: newMeetingLink, onSettled: () => setAsking(null) });
   const enter = useEnterMeeting();
-  const base = useSegments()[0] === 'teacher' ? '/teacher/more' : '/more/live';
+  const base = meetingsBase(useSegments()[0]);
   const manage = meeting.state === 'open' && meeting.can_manage;
   const failure = [end.error, link.error].find((e) => e);
   const confirm = asking === 'end'

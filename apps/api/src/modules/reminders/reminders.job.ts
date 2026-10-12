@@ -23,7 +23,7 @@ type QueueInput = { settings: AcademySettings; lessons: readonly ReminderLesson[
 /**
  * R-MSG-02 reminder scheduler (docs/12 §7): every 5 minutes, single flight. Queues the same-day
  * reminder to each guardian (template by meeting link, time in the guardian's tz) and to the
- * teacher (teacher's tz); the day-before one only when settings.reminder_24h_enabled and
+ * teacher (teacher's tz; not while settings.teacher_whatsapp_lesson_reminder is OFF); the day-before one only when settings.reminder_24h_enabled and
  * lesson_reminder_24h is approved; nothing while settings.auto_messages_enabled is OFF. The link is
  * chosen here (settings.meeting_link_auto, reminders.links.ts): our classroom adds one
  * lesson_join_link per student. Drops queued reminders of lessons cancelled since, and pushes
@@ -94,7 +94,8 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
     const ctx: RoomContext = { auto: settings.meeting_link_auto, livekit, joinOk: approved.has('lesson_join_link'), origin: firstWebOrigin(env.WEB_ORIGIN) };
     const minutesBefore = settings.reminder_minutes_before;
     const dayBefore = approved.has('lesson_reminder_24h');
-    const rows = planReminders({ lessons: sentLinks(lessons, ctx), minutesBefore, dayBefore, now });
+    const teacherReminders = settings.teacher_whatsapp_lesson_reminder;
+    const rows = planReminders({ lessons: sentLinks(lessons, ctx), minutesBefore, dayBefore, teacherReminders, now });
     const candidates = joinCandidates(lessons, ctx, { now, minutesBefore, win: joinWindowConfig(settings) });
     return this.queries.queue([...rows, ...(await this.roomLinks(candidates, now))]);
   }

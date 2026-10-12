@@ -78,4 +78,20 @@ describe('dropReason (before the claim)', () => {
     expect(dropReason(row('rescheduled', null), NOW)).toEqual({ code: 'stale', text: 'lesson rescheduled' });
     expect(dropReason(row('scheduled', null), NOW)).toBeNull();
   });
+
+  it('teacher_new_student whose lesson was retimed since it was queued → stale (never the old time)', () => {
+    const alert = {
+      ...row('scheduled', '2026-10-03T12:00:00Z'),
+      template_key: 'teacher_new_student',
+      dedup_key: 'teacher_new_student:l1:t1',
+    };
+    expect(dropReason(alert, NOW)).toBeNull();
+    const moved = {
+      ...alert,
+      lesson: { status: 'scheduled' as const, starts_at: '2026-10-03T15:00:00Z' },
+    };
+    expect(dropReason(moved, NOW)).toEqual({ code: 'stale', text: 'lesson retimed' });
+    // Only the alert: a reminder's expires_at is not its lesson's start.
+    expect(dropReason({ ...moved, template_key: 'lesson_reminder' }, NOW)).toBeNull();
+  });
 });

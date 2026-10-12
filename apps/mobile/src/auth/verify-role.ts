@@ -12,7 +12,7 @@ export interface Me {
 
 /**
  * With a session in hand: which app does this person get (R-AUTH-01)? Admins the admin tabs,
- * teachers the teacher tabs; anyone else (a guardian, no role, a dead session) is signed out.
+ * teachers the teacher tabs, sales and classroom assistants their own; anyone else (a guardian, a student, no role, a dead session) is signed out.
  * Offline or a 5xx falls back to the token's own `user_role` claim, so the cached reads stay
  * usable without a connection (R-MOB-03); the API still checks the role on every call.
  */

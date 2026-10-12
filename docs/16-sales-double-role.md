@@ -62,10 +62,20 @@ assistant's session row; new read-only routes under `/sales` with whitelisted co
 | 14 | Fixed link (exception to rows 3 and 10) | Owner 2026-10-12: «make a way to show the teacher static meeting link for the assistant». `GET /sales/teachers` adds `meeting_link` = `teachers.meeting_link` (null when unset), still whitelisted (never rates, phone, pay, calendar or max load). Shown **only** in the teacher detail of «المعلمون» as «رابط الحلقة الثابت» (LTR, copy / share and open; rendered as a link only when it is http(s)); none: «لا يوجد رابط ثابت لهذا المعلم»; while `meeting_link_auto` is ON a one-line hint says families get the platform link instead. Never in the sales schedule, chat or students lists. |
 | 15 | Active / trial | `GET /sales/teachers` adds `active_count` and `trial_count` per teacher (shared `countByKind`). The list rows show «مشترك n · تجريبي n»; the detail splits the students «مشترك · تجريبي · الكل» (default «مشترك»; «الكل» = the former list, paused included). The admin teachers and students lists and the mobile app have the same option. |
 
-## Next step (not in this change)
+## Mobile: the sales and classroom-assistant phone apps (owner 2026-10-12 20:05Z)
 
-Mobile (`apps/mobile`): the same pages for the sales base role (all chats already follow the API), the
-running-lessons list with «ادخل الحلقة», teachers and all students. Not part of this PR.
+The base role `sales` (the owner's «مساعد/ة») and the classroom `assistant` («مساعد حلقة») sign in to the
+Expo app, each to its own home matching its web pages (standing rule 2026-10-06: web and mobile in sync).
+JS only (ships by OTA): no dependency, no app.json change, no native module, no migration.
+
+| # | Area | Decision |
+|---|---|---|
+| M1 | Routing | `AppRole` = admin, teacher, sales, assistant (`apps/mobile/src/auth/role-claim.ts`); `/auth/me` first, the token's `user_role` claim offline. Admin and teacher (incl. the teacher-mode double role) unchanged; guardian, student and no role are refused («wrongApp» / «لم يُفعَّل حسابك»), a disabled account gets «accountDisabled». |
+| M2 | Sales tree `/sales` | Tabs in the web SalesNav order and gates: «المحادثات» (`inbox.read`; every chat and no leads list or lead / family tags, as the web `/sales/inbox`, even with `leads.read`; the thread in sales mode with «تسجيل طالب جديد» and the restricted templates, rows 1, 9, 12, 15), «الطلاب» (`self.sales_academy`; «طلابي» a filter), «جدول الحلقات» (`self.sales_academy`; read-only, «ادخل الحلقة» on a running lesson), «المزيد» («حسابي», «المعلمون» and «الحلقات الجارية» on `self.sales_academy`, «الاشتراكات» with «السجل» on `self.sales`, «أرباحي» with «مدفوعاتي» inside on `self.sales_earnings`, appearance, language, sign-out). No internal meetings (row 12b), no lead screen, no subscription panel, no rating send, no media picker, no retry / «ابعتها بنفسك» on a failed send (those need `messages.manage`, admin-only). Every link stays in `/sales` (`useSalesHrefs`, `inTree`): «جدولها» on a teacher opens `/sales/schedule`. |
+| M3 | Assistant tree `/assistant` | «حلقاتي» (`self.assistant`): the open lessons of the students they assist (`GET /assistants/me/lessons`), today first and a Riyadh day at a time, «ادخل الحلقة» opening the room in the system browser; «اجتماعات داخلية» below (`meetings.read`: create, enter, share, end as `can_manage` allows). «المزيد»: «حسابي», appearance, language, sign-out. |
+| M4 | Reuse | The same screens as the admin tree's «المبيعات» section (`src/sales`, `src/sales-money`, `src/inbox`, `src/classroom`, `src/meetings`); `src/nav/tree-base.tsx` prefixes their links with the tree, and the admin routes stay for double-role admins. |
+| M5 | Push | Registered only when `/auth/me` lists `notifications.push` (admin-only by default): no OS prompt otherwise; a 403 from `PUT /me/push-tokens` is swallowed without a warning or UI. |
+| M6 | Account | «حسابي» (R-ACC-01, the shared `AccountScreen`) heads both trees' «المزيد» (`/sales/more/account`, `/assistant/more/account`), with the header avatar; sign-out at the end. |
 
 ## Owner request 2026-10-12: starter templates (web + mobile composer)
 

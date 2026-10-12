@@ -17,8 +17,8 @@ const tabItems = (can: Can, inboxBadge?: string): TabItem[] => [
 ];
 
 export default function TabsLayout() {
-  // Admin-only tree: every sign-in and cold start registers this device (R-MOB-01).
-  usePushRegistration();
+  // Admin tree: every sign-in and cold start registers this device (R-MOB-01).
+  usePushRegistration('admin');
   const can = usePermissions();
   const badge = useInboxBadge(can);
   return <AppNativeTabs tabs={tabItems(can, badge)} />;

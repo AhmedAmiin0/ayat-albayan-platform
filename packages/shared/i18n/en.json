@@ -31,7 +31,7 @@
   },
   "mobile": {
     "pushTitle": "Turn on notifications",
-    "pushRationale": "We'll notify you as soon as a new message arrives or a lesson needs confirmation, so you don't miss anything.",
+    "pushRationale": "We'll notify you as soon as something concerns your work, such as a new message, a new student or a lesson that needs confirmation, so you don't miss anything.",
     "pushAllow": "Turn on notifications",
     "pushLater": "Not now",
     "pushChannel": "Admin alerts",
@@ -2381,7 +2381,8 @@
       "follow_up_slots": "Follow-up with two suggested times",
       "lesson_feedback_request": "Lesson feedback request",
       "lesson_join_link": "Online classroom link",
-      "lesson_rating": "Lesson rating (buttons)"
+      "lesson_rating": "Lesson rating (buttons)",
+      "teacher_new_student": "Teacher: new student alert"
     },
     "settings": {
       "title": "Sending settings",
@@ -2390,6 +2391,10 @@
       "reminderMinutesBefore": "Minutes before the lesson to send the reminder",
       "reminder24hEnabled": "Reminder one day before the lesson",
       "reminder24hHint": "Works once Meta approves the “Reminder one day before the lesson” template.",
+      "teacherWhatsappNewStudent": "WhatsApp the teacher when a new student is booked",
+      "teacherWhatsappNewStudentHint": "The teacher gets the student’s name and first lesson time once Meta approves the “Teacher: new student alert” template. The in-app alert (bell) is always sent.",
+      "teacherWhatsappLessonReminder": "WhatsApp lesson reminder to the teacher",
+      "teacherWhatsappLessonReminderHint": "When off, the teacher gets no lesson reminder; guardians’ reminders are unchanged.",
       "followUpHours": "Hours after the last message to follow up",
       "followUpHoursHint": "For example, 24 then 72",
       "crmWarning": "The academy number is still running on the other CRM system. Don't turn on sending here until the number moves to the platform, so guardians don't get the same message twice.",
@@ -2476,7 +2481,12 @@
       "remaining_label": "2 lessons left",
       "slot_1": "Saturday 3 October 17:00",
       "slot_2": "Sunday 4 October 19:00",
-      "tz_city": "Riyadh"
+      "tz_city": "Riyadh",
+      "lesson_kind": "Trial"
+    },
+    "teacherNewStudentKind": {
+      "trial": "Trial",
+      "subscription": "Subscription"
     }
   },
   "mobileAdmin": {
@@ -2626,7 +2636,6 @@
   },
   "mobileNav": {
     "accountDisabled": "Your account has been disabled. Contact the admin team.",
-    "wrongApp": "This app is for admins and teachers. Use the web app for your role to sign in.",
     "badgeOverflow": "{n}+"
   },
   "notifications": {
@@ -2654,8 +2663,50 @@
       "title": "Package needs payment or renewal",
       "body": "{student}'s package: {left}"
     },
+    "new_student": {
+      "title": "New student in your lessons",
+      "body": "{student}: first lesson {when}"
+    },
+    "meeting_invite": {
+      "title": "Meeting invitation",
+      "body": "{title}: {when}"
+    },
     "media": "Sent: {kind}",
     "rescheduleTitle": "Reschedule request from {name}"
+  },
+  "bell": {
+    "title": "Notifications",
+    "open": "Notifications",
+    "openUnread": "Notifications, {n} unread",
+    "menuUnread": "Unread notifications: {n}",
+    "empty": "No notifications yet.",
+    "loadError": "Couldn’t load notifications.",
+    "retry": "Try again",
+    "markAll": "Mark all as read",
+    "unread": "Unread",
+    "push": {
+      "title": "Browser notifications",
+      "enable": "Turn on browser notifications",
+      "disable": "Turn off browser notifications",
+      "working": "Working…",
+      "on": "This browser gets notifications even when the platform is closed.",
+      "off": "Turn them on to get notifications on this device even when the platform is closed.",
+      "unsupported": "This browser doesn’t support notifications.",
+      "iosInstall": "On iPhone and iPad: first add the platform to the Home Screen (Share, then “Add to Home Screen”), open it from there, then turn notifications on.",
+      "denied": "Notifications are blocked for this site. Allow them in the browser settings, then try again.",
+      "notConfigured": "Browser notifications aren’t set up on the server yet.",
+      "failed": "Couldn’t change browser notifications. Please try again."
+    },
+    "mobile": {
+      "screenTitle": "Notifications",
+      "markAll": "Mark all as read",
+      "empty": "No notifications yet.",
+      "loadError": "Couldn’t load notifications.",
+      "retry": "Try again",
+      "open": "Notifications",
+      "openUnread": "Notifications, {n} unread",
+      "unread": "Unread"
+    }
   },
   "enums": {
     "feedbackRecommend": {
@@ -2834,7 +2885,9 @@
       "lesson_needs_confirmation": "Lesson needs confirmation",
       "report_submitted": "New lesson report",
       "reminder_failed": "Message not sent",
-      "payment_due": "Package needs payment or renewal"
+      "payment_due": "Package needs payment or renewal",
+      "new_student": "New student",
+      "meeting_invite": "Meeting invitation"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -3024,6 +3077,15 @@
       "shareAgain": "Share the link again",
       "newLink": "The new link (shown this time only):"
     }
+  },
+  "mobileRoles": {
+    "wrongApp": "This app is for the academy team: admins, teachers, sales and classroom assistants. Guardians and students follow the link they receive on WhatsApp.",
+    "salesRole": "Sales",
+    "assistantRole": "Classroom assistant",
+    "lessonsTab": "My lessons",
+    "lessonsTitle": "Lessons you assist",
+    "dayEmpty": "No lessons for your students on this day",
+    "joinNote": "The lesson opens in the browser when its time starts."
   },
   "teacherNav": {
     "label": "Teacher sections",
@@ -3969,7 +4031,7 @@
       "settings.write": "Edit settings",
       "activity.read": "View the activity log",
       "roles.manage": "Manage roles and permissions",
-      "notifications.push": "Receive mobile app notifications",
+      "notifications.push": "Receive notifications (bell, browser and mobile app)",
       "translations.manage": "Edit interface text and translations",
       "users.read": "View users and their accounts",
       "users.write": "Create, edit, disable and delete users",
@@ -4033,6 +4095,7 @@
       "wa_safety": "Test environment safety",
       "livekit": "Online classrooms (LiveKit)",
       "expo": "Mobile push (Expo)",
+      "web_push": "Browser notifications (Web Push)",
       "fx": "Exchange rates"
     },
     "source": {
@@ -4139,6 +4202,18 @@
       "FX_API_URL": {
         "label": "Exchange rate provider URL",
         "hint": "A URL returning the latest rates with the Saudi riyal as base."
+      },
+      "WEB_PUSH_VAPID_PUBLIC_KEY": {
+        "label": "VAPID public key",
+        "hint": "Generated together with the private key by the command in docs/09. If any key of this group is empty, browser notifications stay off."
+      },
+      "WEB_PUSH_VAPID_PRIVATE_KEY": {
+        "label": "VAPID private key",
+        "hint": "Secret: stored in the Vault and never shown after saving."
+      },
+      "WEB_PUSH_SUBJECT": {
+        "label": "Contact for push services",
+        "hint": "mailto:name@example.com or an https:// URL the push services may contact about a problem."
       }
     }
   },

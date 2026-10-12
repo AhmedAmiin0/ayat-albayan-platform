@@ -1,11 +1,12 @@
 import { Link, useRouterState } from '@tanstack/react-router';
 import { useState, type MouseEvent, type ReactNode } from 'react';
 import { Dialog } from '@/components/ui/dialog';
-import { Icon } from '@/components/ui/icon';
 import { Mark } from '@/components/ui/mark';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { MenuBell } from './MenuBell';
 import { MenuFoot } from './MenuFoot';
+import { SheetBell } from './SheetBell';
 
 export interface MenuBarProps {
   /** The section home the logo mark links to (/admin, /teacher, …). */
@@ -20,9 +21,11 @@ export interface MenuBarProps {
 
 /**
  * Phones and tablets (< 900px, owner 2026-10-05: "make it simpler"): ONE compact bar (logo mark,
- * the page title, «القائمة»). The menu opens the full nav in the Dialog sheet with theme, language
- * and logout at its foot; following a link closes it. The title is a pseudo-element: the page's
- * own h1 names the page, the bar only echoes it (no second heading or text node).
+ * the page title, «القائمة» — with a saffron dot while staff have unread notifications). The menu
+ * opens the Dialog sheet: «الإشعارات» (staff), the full nav, then theme, language and logout at its
+ * foot; following a link or opening a notification closes it. The title is a
+ * pseudo-element: the page's own h1 names the page, the bar only echoes it (no second heading
+ * or text node).
  */
 export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -46,18 +49,11 @@ export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
         data-bar-title={title}
         className="min-w-0 flex-1 truncate text-base font-bold text-ink before:content-[attr(data-bar-title)]"
       />
-      <button
-        type="button"
-        aria-expanded={open}
-        onClick={() => setOpenOn(pathname)}
-        className="inline-flex min-h-11 shrink-0 items-center gap-1.5 rounded-md border border-rule-strong px-3 text-sm font-semibold text-ink hover:bg-sunk"
-      >
-        <Icon name="menu" />
-        {t.nav.menu}
-      </button>
+      <MenuBell open={open} onOpen={() => setOpenOn(pathname)} />
       {open && (
         <Dialog title={t.nav.menu} onClose={close}>
           <div onClickCapture={onPick}>
+            <SheetBell onPick={close} />
             {nav}
             <MenuFoot email={email} />
           </div>

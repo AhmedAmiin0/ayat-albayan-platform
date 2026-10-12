@@ -66,7 +66,7 @@ beforeEach(() => {
   mockApiFetch.mockResolvedValue({ id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] });
 });
 
-test('teacher: her five native tabs in RTL order, «اليوم» first, and no push registration', async () => {
+test('teacher: her five native tabs in RTL order, «اليوم» first, and this device registered for her pushes', async () => {
   mockGate.initial = 'teacher';
   const router = await open('/teacher');
   expect(screen.getByText('teacher-today')).toBeTruthy();
@@ -79,7 +79,7 @@ test('teacher: her five native tabs in RTL order, «اليوم» first, and no p
     t.teacherNav.reports,
     t.mobile.more,
   ]);
-  expect(registerPush).not.toHaveBeenCalled();
+  expect(registerPush).toHaveBeenCalledTimes(1);
 });
 
 test.each([['/'], ['/students'], ['/inbox'], ['/more'], ['/login']])(

@@ -11,6 +11,8 @@ test.each([
   [{ kind: 'lesson_needs_confirmation', lessonId: 'l1' }, '/'],
   [{ kind: 'report_submitted', studentId: 's-1' }, '/students/s-1'],
   [{ kind: 'payment_due', studentId: 's-1', subscriptionId: 'sub1' }, '/students/s-1'],
+  [{ kind: 'new_student', lessonId: 'l1', studentId: 's-1' }, '/students/s-1'],
+  [{ kind: 'meeting_invite', meetingId: 'm1' }, '/more/live/meetings'],
 ])('%j opens %s', (data, href) => {
   expect(routeFor(data)).toBe(href);
 });
@@ -22,6 +24,7 @@ test('without the id a kind needs: the matching list, never a broken route', () 
   expect(routeFor({ kind: 'payment_due', subscriptionId: 'sub1' })).toBe('/students');
   expect(routeFor({ kind: 'report_submitted', studentId: '../more' })).toBe('/students');
   expect(routeFor({ kind: 'report_submitted', studentId: '' })).toBe('/students');
+  expect(routeFor({ kind: 'new_student', studentId: '../more' })).toBe('/students');
 });
 
 test('every push kind has a destination', () => {
@@ -52,5 +55,7 @@ test('a push into a tab the role cannot see opens «المزيد» instead of no
   expect(routeFor({ kind: 'lesson_needs_confirmation' }, only('inbox.read'))).toBe('/more');
   expect(routeFor({ kind: 'new_message', phone: PHONE }, only('leads.read'))).toBe(THREAD);
   expect(routeFor({ kind: 'report_submitted', studentId: 's-1' }, only('students.read'))).toBe('/students/s-1');
+  expect(routeFor({ kind: 'meeting_invite' }, only('students.read'))).toBe('/more');
+  expect(routeFor({ kind: 'meeting_invite' }, only('meetings.read'))).toBe('/more/live/meetings');
   expect(routeFor({ kind: 'nope' }, () => false)).toBeNull();
 });

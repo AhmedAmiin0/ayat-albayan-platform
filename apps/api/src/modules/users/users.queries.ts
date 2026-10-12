@@ -91,6 +91,11 @@ export class UsersQueries implements UserStore {
     if (error) throw guardedError(error);
   }
 
+  async forgetBrowsers(id: string): Promise<void> {
+    const { error } = await this.db.from('web_push_subscriptions').delete().eq('profile_id', id);
+    if (error) throw guardedError(error);
+  }
+
   phoneTaken(phone: string, exceptProfile: string) {
     return links.phoneTaken(this.db, { phone, except: exceptProfile });
   }

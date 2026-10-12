@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useEffect, useRef } from 'react';
 import { usePermissions } from '@/auth/use-permissions';
 import { threadKey } from '@/inbox/thread-cache';
-import { pushKind, pushPhone, routeFor } from './notification-route';
+import { pushKind, pushPhone, routeIn, type PushTree } from './notification-route';
 
 /** An admin push in the foreground still shows: banner, notification list and sound. */
 export const FOREGROUND: Notifications.NotificationBehavior = {
@@ -15,7 +15,7 @@ export const FOREGROUND: Notifications.NotificationBehavior = {
 };
 
 /**
- * The last tapped push, forgotten as it is read, so a later mount of the admin tree (sign-in
+ * The last tapped push, forgotten as it is read, so a later mount of either tree (sign-in
  * again) never replays it. null when there is none or the native module can't say (Expo Go, jest).
  */
 function takeLastResponse(): Notifications.NotificationResponse | null {
@@ -29,11 +29,11 @@ function takeLastResponse(): Notifications.NotificationResponse | null {
 }
 
 /**
- * What admin pushes do in the app (R-MOB-01): show in the foreground, refresh the thread (and the
- * inbox) a message push is about, and open the right screen when one is tapped, also when the tap
- * started the app. Mounted once in the admin-only tree, through usePushRegistration.
+ * What pushes do in the app (R-MOB-01, R-NOT-01): show in the foreground, refresh the bell and the
+ * thread (and the inbox) a message push is about, and open the right screen of this tree when one
+ * is tapped, also when the tap started the app. Mounted once per tree, through usePushRegistration.
  */
-export function useNotificationHandling(): void {
+export function useNotificationHandling(tree: PushTree = 'admin'): void {
   const client = useQueryClient();
   // The tap handler outlives renders: read the role's permissions as they are at tap time.
   const can = usePermissions();
@@ -46,6 +46,7 @@ export function useNotificationHandling(): void {
     Notifications.setNotificationHandler({ handleNotification: async () => FOREGROUND });
     const sub = Notifications.addNotificationReceivedListener((notification) => {
       const data = notification.request.content.data;
+      void client.invalidateQueries({ queryKey: ['notifications'] }); // the bell's list and badge
       const phone = pushPhone(data);
       if (phone) void client.invalidateQueries({ queryKey: threadKey(phone) });
       const kind = pushKind(data);
@@ -63,7 +64,7 @@ export function useNotificationHandling(): void {
   useEffect(() => {
     const open = (response: Notifications.NotificationResponse | null) => {
       // Read defensively: the native module hands over plain JSON.
-      const href = routeFor(response?.notification?.request?.content?.data, canRef.current);
+      const href = routeIn(tree, response?.notification?.request?.content?.data, canRef.current);
       if (href) router.push(href);
     };
     open(takeLastResponse()); // the tap that started the app, if any
@@ -72,5 +73,5 @@ export function useNotificationHandling(): void {
       open(response);
     });
     return () => sub.remove();
-  }, []);
+  }, [tree]);
 }

@@ -29,3 +29,10 @@ export function meetingError(error: unknown): string {
   if (error instanceof ApiError && error.status === 403) return t.classroom.error.forbidden;
   return t.meetings.internal.actionError;
 }
+
+/** The stack a meeting's recordings open in: the teacher's «المزيد», the assistant's home, else the admin's «البث المباشر». */
+export function meetingsBase(segment: string | undefined): string {
+  if (segment === 'teacher') return '/teacher/more';
+  if (segment === 'assistant') return '/assistant/lessons';
+  return '/more/live';
+}

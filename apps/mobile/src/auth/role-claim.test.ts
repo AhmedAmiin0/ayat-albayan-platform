@@ -9,7 +9,10 @@ function token(payload: object): string {
 test.each([
   ['admin', 'admin'],
   ['teacher', 'teacher'],
+  ['sales', 'sales'],
+  ['assistant', 'assistant'],
   ['guardian', null],
+  ['student', null],
   [null, null],
 ])('user_role %s → %s', (role, expected) => {
   expect(roleClaim(token({ sub: 'u1', user_role: role }))).toBe(expected);
@@ -28,9 +31,12 @@ test('garbage is no role', () => {
   expect(roleClaim(`a.${btoa('"just a string"')}.c`)).toBeNull();
 });
 
-test('appRole keeps only the two app roles', () => {
+test('appRole keeps only the four app roles', () => {
   expect(appRole('admin')).toBe('admin');
   expect(appRole('teacher')).toBe('teacher');
+  expect(appRole('sales')).toBe('sales');
+  expect(appRole('assistant')).toBe('assistant');
   expect(appRole('guardian')).toBeNull();
+  expect(appRole('student')).toBeNull();
   expect(appRole(undefined)).toBeNull();
 });

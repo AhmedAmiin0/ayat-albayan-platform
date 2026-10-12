@@ -16,6 +16,8 @@ Decisions already taken with the owner (2026-10-01):
 | `teacher` | See own schedule, own students, submit/edit own lesson reports, mark attendance, set own weekly availability, see own payout summary |
 | `guardian` (parent / adult student) | Read-only portal via WhatsApp magic link: upcoming lessons, reports (PDF), homework, remaining lessons, payment status |
 
+- **R-AUTH-01** Each role signs in with its own login and lands on its own home. Phone app (Expo, owner 2026-10-12): `admin`, `teacher`, `sales` («المبيعات») and the classroom `assistant` («مساعد حلقة») sign in, each to its own tree mirroring its web pages; `guardian` and `student` are told the app is not theirs («wrongApp»: they follow the links they receive on WhatsApp; the guardian/student web portal `/portal` is not built yet, an empty shell (open question 4)), a disabled account is told so, offline the token's `user_role` claim keeps the right tree open.
+
 ## 2. Domain model (entities)
 
 ```
@@ -117,9 +119,12 @@ Key enums (store in `packages/shared/src/enums`):
 - **R-RPT-03** Exports: students, lessons, payments, payouts CSV.
 
 ### 3.10 Admin mobile app (Expo)
-- **R-MOB-01** Login (admin), push notifications for: new lead, lesson needing confirmation, report submitted, reminder failed, payment due.
-- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial. Also «الجدول»: the all-teachers agenda (R-SCH-09) for the admin, and a teacher tree (اليوم، جدولي، المحادثات، التقارير، المزيد) for a teacher login (R-TCH-03).
+- **R-MOB-01** Login (admin, teacher, sales, classroom assistant; R-AUTH-01), push notifications (to holders of `notifications.push`, admin by default; the sales and assistant trees register only when it is granted) for: new lead, lesson needing confirmation, report submitted, reminder failed, payment due.
+- **R-MOB-02** Screens: Inbox (leads + threads, reply, send template), Today (lessons across teachers, statuses), Student quick view, Approve/confirm lesson, Record payment (with camera receipt), Quick book trial. Also «الجدول»: the all-teachers agenda (R-SCH-09) for the admin, and a teacher tree (اليوم، جدولي، المحادثات، التقارير، المزيد) for a teacher login (R-TCH-03). A sales tree (المحادثات، الطلاب، جدول الحلقات، المزيد: the web SalesNav pages, docs/16 «Mobile») for a sales login, and an assistant tree (حلقاتي with internal meetings، المزيد: the web /assistant/ page) for a classroom-assistant login.
 - **R-MOB-03** Offline-tolerant reads (TanStack Query persist), optimistic status updates.
+- **R-NOT-01** In-app notification bell in every staff portal (admin, teacher, sales, classroom assistant; the web header from 900px and the mobile Today header): the caller's own `push_notifications` rows, newest first, unread badge (9+ cap), mark one / all read, a click opens the related page. Below 900px the compact bar keeps ONE button «القائمة» (owner 2026-10-05): a small saffron dot on it while anything is unread (its name stays «القائمة»; the count is its description), and a «الإشعارات» row at the top of the sheet opens the list inline. Permission `notifications.push` (all four staff system roles); checked again when sending: a disabled profile, or a role without `notifications.push` (and, for inbox events, `inbox.read`), gets no row and no push. Owner 2026-10-12.
+- **R-NOT-02** Browser push (Web Push, RFC 8291/8292) to staff who turn it on from the bell (never auto-prompted); off until the owner sets the three `WEB_PUSH_*` keys; endpoints restricted to the browsers' push services (SSRF guard). Owner 2026-10-12.
+- **R-NOT-03** On a new booking (admin or sales wizard; trial, package or makeup) the teacher gets a bell alert (`new_student`) and, when `settings.teacher_whatsapp_new_student` is ON and the `teacher_new_student` template is approved, a WhatsApp message. `settings.teacher_whatsapp_lesson_reminder` switches the teacher's WhatsApp lesson reminder off. Both switches in `/admin/settings`. Owner 2026-10-12.
 
 ### 3.11 Migration from Google
 - **R-MIG-01** One-off import scripts (`tools/migrate`) for: teachers (11), students (dedupe per A1 rules; review queue for ambiguous merges), schedule rules from «تقويم الحجوزات» rows with status مؤكد/مشترك, completed lessons + reports from «سجل تقارير الحلقات» (skip Lorem/test rows and dates outside 2026-08-01..today), subscriptions + payments from «Heart › subscription», leads from «كل المحادثات» (exclude توظيف → job_applicants, exclude جروب حلقة), existing PDFs copied into Storage by link.

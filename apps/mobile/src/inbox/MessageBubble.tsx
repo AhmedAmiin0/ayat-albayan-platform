@@ -1,5 +1,6 @@
 import { type MessageView, messageStatusStyle, replyNote } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
+import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
@@ -72,12 +73,14 @@ function MessageMeta({ message: m }: { message: MessageView }) {
 export function MessageBubble({ message: m, phone }: { message: MessageView; phone: string }) {
   const { color } = useTheme();
   const admin = useThreadMode().kind === 'admin';
+  // The sales tree has no thread mode either: the actions' endpoints need messages.manage (admin-only).
+  const manages = useHolds('messages.manage');
   const small = useSmall();
   const ours = m.direction === 'outbound';
   const media = mediaLine(m);
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
   const note = replyNote(m, locale);
-  const stuck = admin && ours && (m.status === 'failed' || m.click_to_chat !== null);
+  const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
   return (
     <View
       style={{

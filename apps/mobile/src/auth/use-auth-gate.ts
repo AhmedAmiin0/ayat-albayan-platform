@@ -2,9 +2,10 @@ import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import { useEffect, useState } from 'react';
 import { clearQueryCaches } from '@/lib/query-client';
 import { supabase } from '@/lib/supabase';
+import type { AppRole } from './role-claim';
 import { verifyRole } from './verify-role';
 
-export type GateStatus = 'booting' | 'admin' | 'teacher' | 'out';
+export type GateStatus = 'booting' | AppRole | 'out';
 
 /** Only these move the gate; TOKEN_REFRESHED / USER_UPDATED keep the current answer. */
 export function movesGate(event: AuthChangeEvent, session: Session | null): boolean {
@@ -23,7 +24,7 @@ export async function resolveGate(
 
 /**
  * Root-layout gate (R-MOB-01, R-AUTH-01): 'booting' until the stored session is restored and
- * checked, then 'admin', 'teacher' or 'out'. Every sign-out path (button, 401, failed refresh)
+ * checked, then the app role ('admin', 'teacher', 'sales', 'assistant') or 'out'. Every sign-out path (button, 401, failed refresh)
  * arrives here as SIGNED_OUT. Only the latest event may set the status, so a slow check can't reopen a signed-out app.
  */
 export function useAuthGate(): GateStatus {

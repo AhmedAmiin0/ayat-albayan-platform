@@ -39,6 +39,8 @@ export interface ReminderPlanInput {
   minutesBefore: number;
   /** settings.reminder_24h_enabled AND lesson_reminder_24h approved in the registry. */
   dayBefore: boolean;
+  /** settings.teacher_whatsapp_lesson_reminder (R-NOT-03); false = no teacher_lesson_reminder*. Default on. */
+  teacherReminders?: boolean;
   now: Date;
 }
 
@@ -100,14 +102,15 @@ function teacherRow(lesson: ReminderLesson, input: ReminderPlanInput): QueuedMes
 
 /**
  * Every reminder due at `now`: same-day to each guardian (wording and time in the guardian's tz)
- * and to the teacher (teacher's tz), plus the day-before one when enabled. Same-day ones expire at
+ * and to the teacher (teacher's tz; unless settings.teacher_whatsapp_lesson_reminder is OFF), plus
+ * the day-before one when enabled. Same-day ones expire at
  * the lesson start, the day-before one at the guardian's midnight before it, so a row the sender
  * could not send in time is never sent late.
  */
 export function planReminders(input: ReminderPlanInput): QueuedMessage[] {
   return input.lessons
     .filter((l) => isOpen(l.status) && Date.parse(l.starts_at) > input.now.getTime())
-    .flatMap((l) => [...guardianRows(l, input), ...teacherRow(l, input)]);
+    .flatMap((l) => [...guardianRows(l, input), ...(input.teacherReminders === false ? [] : teacherRow(l, input))]);
 }
 
 /**

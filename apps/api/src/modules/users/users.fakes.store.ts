@@ -38,6 +38,8 @@ export class FakeUserStore implements UserStore {
   otherTeacherPhones: string[] = [];
   failLink = false;
   guardLost = false;
+  /** Profiles whose browser push subscriptions were deleted. */
+  browsersForgotten: string[] = [];
 
   constructor(
     public rows: UserRow[] = [],
@@ -78,6 +80,10 @@ export class FakeUserStore implements UserStore {
   async setDisabled(id: string, value: { by: string; reason: string | null } | null) {
     if (this.guardLost && value) throw conflict('last_admin');
     this.rows = this.rows.map((r) => (r.id === id ? { ...r, disabled_at: value ? 'now' : null, disabled_reason: value?.reason ?? null } : r));
+  }
+
+  async forgetBrowsers(id: string) {
+    this.browsersForgotten.push(id);
   }
 
   async phoneTaken(phone: string, exceptProfile: string) {

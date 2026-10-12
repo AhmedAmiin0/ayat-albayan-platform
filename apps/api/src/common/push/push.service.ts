@@ -1,12 +1,12 @@
-import type { PushKind } from '@ab/shared';
+import { webNotificationPath, type PushKind } from '@ab/shared';
 import { Inject, Injectable, Logger } from '@nestjs/common';
-import { withoutPushToken } from '../../modules/me/push-tokens';
 import { DB, type Db } from '../db/db.module';
-import { expoMessages, pushText, readTickets, type ExpoMessage, type ExpoTicket } from './expo-push';
+import { pushText, type PushText } from './expo-push';
+import { PushAudience, type Recipient } from './push.audience';
+import { PushChannels } from './push.channels';
 
-/** Sends a batch to Expo and returns one ticket per message (injectable for tests). */
-export type PushTransport = (messages: ExpoMessage[]) => Promise<ExpoTicket[]>;
-export const PUSH_TRANSPORT = Symbol('PUSH_TRANSPORT');
+export type { PushTransport } from './expo-deliver';
+export { PUSH_TRANSPORT } from './push.channels';
 
 export interface PushEvent {
   /** What the event is about, for the dedup key: a lead id, message id, lesson id, … */
@@ -19,15 +19,26 @@ export interface PushEvent {
   title?: string;
 }
 
-interface AdminRow {
-  id: string;
-  push_tokens: string[];
+/** One event for the given profiles (a teacher's new student, …). */
+export interface PushTarget extends PushEvent {
+  kind: PushKind;
+  profileIds: readonly string[];
 }
 
+type Delivery = {
+  profile: Recipient;
+  target: PushTarget;
+  text: PushText;
+  data: Record<string, string>;
+};
+
 /**
- * Admin pushes (R-MOB-01, docs/12 §6). One push_notifications row per event per admin, keyed
- * `{kind}:{subject}:{profile_id}`, so a retried event never pushes twice (rule 8). Never throws:
- * a push failure must not fail the webhook, the sender or a job.
+ * The bell and its pushes (R-MOB-01, R-NOT-01, R-NOT-02; docs/12 §6). One push_notifications row per
+ * event per profile, keyed `{kind}:{subject}:{profile_id}` (written even with no device: the bell
+ * shows it), so a retried event never pushes twice (rule 8). Only enabled profiles permitted for the
+ * kind (PushAudience). The row is awaited; the browser and app pushes of a NEW row are not
+ * (PushChannels, off the request path). Never throws: a push failure must not fail the webhook, a
+ * booking, the sender or a job.
  */
 @Injectable()
 export class PushService {
@@ -35,56 +46,60 @@ export class PushService {
 
   constructor(
     @Inject(DB) private readonly db: Db,
-    @Inject(PUSH_TRANSPORT) private readonly transport: PushTransport,
+    private readonly audience: PushAudience,
+    private readonly channels: PushChannels,
   ) {}
 
+  /** Every enabled base-role admin (still filtered by permission per kind). */
   async notifyAdmins(kind: PushKind, event: PushEvent): Promise<void> {
     try {
-      const admins = await this.admins();
-      const text = { ...pushText(kind, event.vars), ...(event.title ? { title: event.title } : {}) };
-      const data = { kind, ...event.data };
-      for (const admin of admins) await this.notify({ admin, kind, event, text, data });
+      await this.notifyProfiles({ ...event, kind, profileIds: await this.audience.adminIds() });
     } catch (e) {
-      this.log.warn(`push ${kind}:${event.subject} failed: ${e instanceof Error ? e.message : String(e)}`);
+      this.warn(`${kind}:${event.subject}`, e);
     }
   }
 
-  private async admins(): Promise<AdminRow[]> {
-    const { data, error } = await this.db.from('profiles').select('id, push_tokens').eq('role', 'admin');
-    if (error) throw new Error(error.message);
-    return data;
+  async notifyProfiles(target: PushTarget): Promise<void> {
+    try {
+      const ids = [...new Set(target.profileIds)];
+      if (ids.length === 0) return;
+      const profiles = await this.audience.recipients(target.kind, ids);
+      const text = {
+        ...pushText(target.kind, target.vars),
+        ...(target.title ? { title: target.title } : {}),
+      };
+      const data = { kind: target.kind, ...target.data };
+      for (const profile of profiles) await this.deliver({ profile, target, text, data });
+    } catch (e) {
+      this.warn(`${target.kind}:${target.subject}`, e);
+    }
   }
 
-  private async notify(input: {
-    admin: AdminRow;
-    kind: PushKind;
-    event: PushEvent;
-    text: { title: string; body: string };
-    data: Record<string, string>;
-  }): Promise<void> {
-    const { admin, kind, text } = input;
-    const { data: inserted, error } = await this.db
-      .from('push_notifications')
-      .upsert(
-        { profile_id: admin.id, kind, ...text, data: input.data, dedup_key: `${kind}:${input.event.subject}:${admin.id}` },
-        { onConflict: 'dedup_key', ignoreDuplicates: true },
-      )
-      .select('id');
-    if (error) throw new Error(error.message);
-    const row = inserted[0];
-    if (!row || admin.push_tokens.length === 0) return; // already pushed, or no device yet
-    const tokens = admin.push_tokens;
-    const outcome = readTickets(tokens, await this.transport(expoMessages(tokens, text, input.data)));
-    await this.db
-      .from('push_notifications')
-      .update({ ticket_ids: outcome.ticketIds, error: outcome.error, sent_at: new Date().toISOString() })
-      .eq('id', row.id);
-    if (outcome.deadTokens.length) await this.prune(admin, outcome.deadTokens);
+  /** One profile: the row (awaited), then (new rows only) the browsers and the app, not awaited. */
+  private async deliver({ profile, target, text, data }: Delivery): Promise<void> {
+    try {
+      const { data: inserted, error } = await this.db
+        .from('push_notifications')
+        .upsert(
+          { profile_id: profile.id, kind: target.kind, ...text, data, dedup_key: `${target.kind}:${target.subject}:${profile.id}` },
+          { onConflict: 'dedup_key', ignoreDuplicates: true },
+        )
+        .select('id');
+      if (error) throw new Error(error.message);
+      const row = inserted[0];
+      if (!row) return; // already notified
+      const web = {
+        ...text,
+        url: webNotificationPath(data, profile.role),
+        tag: `${target.kind}:${target.subject}`,
+      };
+      void this.channels.send({ profile, rowId: row.id, text, data, web });
+    } catch (e) {
+      this.warn(`${target.kind}:${target.subject} → ${profile.id}`, e);
+    }
   }
 
-  /** Drops tokens Expo reports as DeviceNotRegistered (the TODO in me/push-tokens.ts). */
-  private async prune(admin: AdminRow, dead: readonly string[]): Promise<void> {
-    const kept = dead.reduce((tokens, t) => withoutPushToken(tokens, t), admin.push_tokens);
-    await this.db.from('profiles').update({ push_tokens: kept }).eq('id', admin.id);
+  private warn(what: string, e: unknown): void {
+    this.log.warn(`push ${what} failed: ${e instanceof Error ? e.message : String(e)}`);
   }
 }

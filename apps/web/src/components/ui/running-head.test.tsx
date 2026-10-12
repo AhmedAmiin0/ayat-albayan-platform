@@ -20,6 +20,13 @@ describe('RunningHead', () => {
     expect(screen.queryByRole('status')).toBeNull();
   });
 
+  it('renders the `end` slot after the clocks', () => {
+    render(<RunningHead end={<button type="button">{t.bell.open}</button>} />);
+    const bell = screen.getByRole('button', { name: t.bell.open });
+    const cairo = screen.getByText(t.runningHead.cairo);
+    expect(cairo.compareDocumentPosition(bell) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
+  });
+
   it('ticks on the minute boundary', () => {
     render(<RunningHead />);
     act(() => vi.advanceTimersByTime(30_000));

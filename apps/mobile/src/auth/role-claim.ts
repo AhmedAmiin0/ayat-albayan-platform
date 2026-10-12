@@ -1,8 +1,14 @@
-/** Who may use the app: admins get the admin tabs, teachers the teacher tabs (R-AUTH-01). */
-export type AppRole = 'admin' | 'teacher';
+/**
+ * Who may use the app, each with their own tree (R-AUTH-01): admins the admin tabs, teachers the
+ * teacher tabs, the salesperson (base role sales, «المبيعات») the sales tabs and the classroom
+ * assistant («مساعد حلقة») the assistant tabs (owner 2026-10-12, docs/16 «Mobile»).
+ */
+export const APP_ROLES = ['admin', 'teacher', 'sales', 'assistant'] as const;
+
+export type AppRole = (typeof APP_ROLES)[number];
 
 export function appRole(role: unknown): AppRole | null {
-  return role === 'admin' || role === 'teacher' ? role : null;
+  return APP_ROLES.find((r) => r === role) ?? null;
 }
 
 /**

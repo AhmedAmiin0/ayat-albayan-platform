@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { t } from '@/lib/i18n';
 import { requestId as newRequestId } from '@/lib/request-id';
+import { useTreeBase } from '@/nav/tree-base';
 import { Button } from '@/ui/Button';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { BookedPanel } from './BookedPanel';
@@ -48,11 +49,13 @@ export function TrialWizard({ lead, subscribe = false }: TrialWizardProps) {
   // The answer to a duplicate_student 409 sticks, so a retry after a dropped reply sends it again.
   const [choice, setChoice] = useState<StudentChoice>(null);
   const book = useBookTrial(requestId);
+  // The sales tree has no lead screen: a wizard opened without history falls back to its chats.
+  const base = useTreeBase();
   // A salesperson's registration from the chat is always a trial («تسجيل طالب جديد»).
   const title = useBookingMode() === 'sales' ? t.inbox.registerNew : draft.kind === 'trial' ? t.booking.trialTitle : t.subscriptions.new;
   const patch = (p: Partial<TrialDraft>) => setDraft((d) => ({ ...d, ...p }));
   const at = steps.indexOf(step);
-  const leave = () => (router.canGoBack() ? router.back() : router.replace(`/inbox/${lead.id}`));
+  const leave = () => (router.canGoBack() ? router.back() : router.replace(base ? `${base}/inbox` : `/inbox/${lead.id}`));
   const go = (next: Step) => {
     book.reset();
     setStep(next);

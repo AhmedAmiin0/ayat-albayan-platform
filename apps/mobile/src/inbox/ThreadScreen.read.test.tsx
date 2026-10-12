@@ -107,9 +107,9 @@ test('«رسائل أقدم» pages back from the oldest loaded message', async 
   await renderWithQuery(<ThreadScreen />);
   await fireEvent.press(await screen.findByRole('button', { name: t.inbox.loadOlder }));
   expect(await screen.findByText('رسالة قديمة')).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenLastCalledWith(
-    `/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}`,
-  );
+  // The last thread fetch (a new bubble may re-read /auth/me for messages.manage after it).
+  const threadCalls = mockApiFetch.mock.calls.filter(([p]) => String(p).startsWith('/threads'));
+  expect(threadCalls.at(-1)).toEqual([`/threads/%2B966552147730?before=${encodeURIComponent(inbound.created_at)}`]);
   expect(screen.queryByRole('button', { name: t.inbox.loadOlder })).toBeNull();
 });
 

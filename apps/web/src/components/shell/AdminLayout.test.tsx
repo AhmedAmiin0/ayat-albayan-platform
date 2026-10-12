@@ -16,7 +16,8 @@ vi.mock('@/features/auth/me', () => ({ meQuery: {} }));
 vi.mock('./Crumbs', () => ({ Crumbs: () => null }));
 vi.mock('./MenuBar', () => ({ MenuBar: () => <header data-menu-bar /> }));
 vi.mock('./SideFoot', () => ({ SideFoot: () => <div data-side-foot /> }));
-vi.mock('@/components/ui/running-head', () => ({ RunningHead: () => null }));
+vi.mock('@/components/ui/running-head', () => ({ RunningHead: ({ end }: { end?: ReactNode }) => <div data-running-head>{end}</div> }));
+vi.mock('@/features/notifications/NotificationBell', () => ({ NotificationBell: () => <button type="button" data-bell /> }));
 
 const nav = (
   <nav>
@@ -63,5 +64,10 @@ describe('AdminLayout sidebar', () => {
     expect(container.querySelector('aside')?.className.split(' ')).toContain('hidden');
     expect(container.querySelector('aside')?.className).toContain('shell:flex');
     expect(container.querySelector('[data-menu-bar]')).not.toBeNull();
+  });
+
+  it('puts the bell at the end of the running head (from 640px; the compact bar has its own)', () => {
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
+    expect(container.querySelector('[data-running-head] [data-bell]')).not.toBeNull();
   });
 });
