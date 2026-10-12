@@ -71,6 +71,14 @@ export const pastInstant = instant.refine((v) => Date.parse(v) <= Date.now() + 3
   message: 'paid_at_future',
 });
 
+/** «المرفقات» of a bank transfer (owner 2026-10-12): at most this many files per payment, all optional. */
+export const PAYMENT_ATTACHMENTS_MAX = 5;
+/**
+ * Paths from the receipt upload URL (receipts/{subscription_id}/…). Accepted ONLY when the method is 'bank'
+ * (the API answers 400 attachments_not_allowed otherwise); each must be the package's, uploaded and an image / PDF.
+ */
+export const paymentAttachmentPaths = z.array(z.string().min(1).max(200)).max(PAYMENT_ATTACHMENTS_MAX, { message: 'too_many_attachments' });
+
 /**
  * POST /payments (R-PAY-01). receiptPath comes from POST /payments/receipt-upload-url. `currency`
  * may differ from the package's when an fx rate exists (stored converted, original kept);
@@ -86,6 +94,7 @@ export const paymentCreateSchema = z.object({
   method: z.enum(PAYMENT_METHODS),
   paidAt: pastInstant,
   receiptPath: z.string().min(1).nullish(),
+  attachments: paymentAttachmentPaths.optional(),
   note: optionalText,
   /**
    * Made once per payment form and re-sent on every retry: a POST whose reply was lost returns

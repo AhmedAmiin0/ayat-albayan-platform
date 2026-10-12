@@ -5,10 +5,10 @@ const ID = '11111111-1111-4111-8111-111111111111';
 const PAY = { subscriptionId: ID, amount: 290, currency: 'SAR', paidAt: '2026-10-11T09:00:00Z', receiptPath: `${ID}/r.jpg`, clientRequestId: ID };
 
 describe('sales money commands (R-ASST-01/04): narrower than the admin’s', () => {
-  it('a bank transfer needs its receipt and a clientRequestId', () => {
+  it('a bank transfer needs a clientRequestId; the receipt is optional since 2026-10-12 (old students)', () => {
     expect(salesPaymentCreateSchema.safeParse(PAY).success).toBe(true);
     const noReceipt = { ...PAY, receiptPath: undefined };
-    expect(salesPaymentCreateSchema.safeParse(noReceipt).success).toBe(false);
+    expect(salesPaymentCreateSchema.safeParse(noReceipt).success).toBe(true);
     const noKey = { ...PAY, clientRequestId: undefined };
     expect(salesPaymentCreateSchema.safeParse(noKey).success).toBe(false);
   });
@@ -29,6 +29,20 @@ describe('sales money commands (R-ASST-01/04): narrower than the admin’s', () 
     expect(salesSubscriptionCreateSchema.safeParse({ ...body, price: 1 }).success).toBe(false);
     expect(salesSubscriptionCreateSchema.safeParse({ ...body, notes: 'x' }).success).toBe(false);
     expect(salesQuoteSchema.safeParse({ studentId: ID, pricing: { count: 8 } }).success).toBe(true);
+  });
+
+  it('attachments: 0..5 paths', () => {
+    const paths = (n: number) => Array.from({ length: n }, (_, i) => `${ID}/a${i}.jpg`);
+    expect(salesPaymentCreateSchema.safeParse({ ...PAY, attachments: paths(5) }).success).toBe(true);
+    expect(salesPaymentCreateSchema.safeParse({ ...PAY, attachments: [] }).success).toBe(true);
+    expect(salesPaymentCreateSchema.safeParse({ ...PAY, attachments: paths(6) }).success).toBe(false);
+  });
+
+  it('startsOn is optional and «already started» is a boolean', () => {
+    const body = { studentId: ID, pricing: { tier: 'standard' }, clientRequestId: ID };
+    expect(salesSubscriptionCreateSchema.safeParse(body).success).toBe(true);
+    expect(salesSubscriptionCreateSchema.safeParse({ ...body, startsOn: '2026-01-01', alreadyStarted: true }).success).toBe(true);
+    expect(salesSubscriptionCreateSchema.safeParse({ ...body, alreadyStarted: 'yes' }).success).toBe(false);
   });
 
   it('a chat receipt names the subscription and the message', () => {

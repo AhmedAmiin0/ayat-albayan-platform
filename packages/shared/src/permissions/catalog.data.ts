@@ -36,6 +36,9 @@ export const PERMISSION_ROWS = [
   { key: 'students.read', area: 'students', grants: [] },
   { key: 'students.write', area: 'students', grants: [] },
   { key: 'students.balance', area: 'students', grants: T },
+  // «التحقق من التسجيل» (owner 2026-10-12, docs/16 row 23): is this phone / name already a student? Name,
+  // code, status and teacher only. Sales by default; the admin may switch it off for the sales role.
+  { key: 'students.check_registration', area: 'students', grants: ['sales'] },
   { key: 'guardians.read', area: 'students', grants: [] },
   { key: 'guardians.write', area: 'students', grants: [] },
   { key: 'assistants.read', area: 'students', grants: [] },
@@ -78,6 +81,9 @@ export const PERMISSION_ROWS = [
   { key: 'payments.write', area: 'finance', grants: [] },
   { key: 'subscriptions.read', area: 'finance', grants: [] },
   { key: 'subscriptions.write', area: 'finance', grants: [] },
+  // «تحديد تاريخ بداية الاشتراك» (owner 2026-10-12, docs/16 row 24): an inline check of the sales subscribe
+  // (no route gate). Without it the package starts on the default day (today, Riyadh).
+  { key: 'subscriptions.set_start_date', area: 'finance', grants: ['sales'] },
   { key: 'invoices.read', area: 'finance', grants: [] },
   { key: 'receivables.read', area: 'finance', grants: [] },
   { key: 'payouts.read', area: 'finance', grants: [] },

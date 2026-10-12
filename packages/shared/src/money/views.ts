@@ -87,6 +87,19 @@ export interface PaymentView {
   invoice_id: string | null;
 }
 
+/**
+ * One file of a payment's «المرفقات» (owner 2026-10-12), signed for the UI (1 h). A payment recorded before
+ * attachments existed shows its receipt_path first, `legacy: true` (id 'receipt').
+ */
+export interface PaymentAttachmentView {
+  id: string;
+  mime: string | null;
+  size: number | null;
+  url: string;
+  expires_at: string;
+  legacy: boolean;
+}
+
 export interface PayoutView {
   id: string;
   teacher: { id: string; display_name_ar: string };

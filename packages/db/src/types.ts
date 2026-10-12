@@ -2052,6 +2052,44 @@ export type Database = {
           },
         ];
       };
+      payment_attachments: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          mime: string;
+          path: string;
+          payment_id: string;
+          size: number | null;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          mime: string;
+          path: string;
+          payment_id: string;
+          size?: number | null;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          mime?: string;
+          path?: string;
+          payment_id?: string;
+          size?: number | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'payment_attachments_payment_id_fkey';
+            columns: ['payment_id'];
+            isOneToOne: false;
+            referencedRelation: 'payments';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       payments: {
         Row: {
           fx_rate: number | null;
