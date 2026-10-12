@@ -8,3 +8,21 @@ import type { WebhookConfig } from './webhook.service';
 export function webhookConfig(env: Env): WebhookConfig {
   return { appSecrets: appSecrets(env), verifyToken: env.WA_VERIFY_TOKEN, numbers: lineNumbers(env) };
 }
+
+/**
+ * The provider's value: the same fields, read per access from `read()` (loadEnv: env + the
+ * database's integration config), so a secret or number the admin saves applies without a restart.
+ */
+export function liveWebhookConfig(read: () => Env): WebhookConfig {
+  return {
+    get appSecrets() {
+      return appSecrets(read());
+    },
+    get verifyToken() {
+      return read().WA_VERIFY_TOKEN;
+    },
+    get numbers() {
+      return lineNumbers(read());
+    },
+  };
+}

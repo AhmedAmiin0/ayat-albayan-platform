@@ -14,6 +14,7 @@ const s = t.settings;
 
 function renderPage() {
   routeFetch(apiFetch, [
+    ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, join_opens_before_min: 20, academy_whatsapp_e164: '+201001234567' }],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],

@@ -13,6 +13,7 @@ const s = t.sales.assign;
 
 function renderPage(on: boolean) {
   routeFetch(apiFetch, [
+    ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, sales_auto_assign: on }],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],

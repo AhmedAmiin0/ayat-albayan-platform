@@ -8,7 +8,8 @@
     "dev": "node --env-file-if-exists=.env --watch -r @swc-node/register src/main.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "config:import-env": "node --env-file-if-exists=.env dist/scripts/config-import-env.js"
   },
   "dependencies": {
     "@ab/db": "workspace:*",

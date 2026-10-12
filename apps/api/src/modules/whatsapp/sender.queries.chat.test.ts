@@ -41,12 +41,12 @@ describe('SenderQueries.due — chat rows without a chat client', () => {
     expect(ors(calls)).toHaveLength(3);
   });
 
-  it('the chat config is read at construction', async () => {
+  it('the chat config is read per call: a chat line configured after construction lifts the filter', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     const q = new SenderQueries(db);
     chatEnv();
     await q.due({ keys: [], now: NOW, limit: 50 });
-    expect(ors(calls)).toContain(CHAT_FILTER);
+    expect(ors(calls)).not.toContain(CHAT_FILTER);
   });
 
   it('the chat filter combines with the allow-list', async () => {

@@ -14,6 +14,7 @@ export const WHITELIST = new Set([
   'modules/whatsapp/lines.check.ts',
   'modules/whatsapp/message.dispatch.ts',
   'modules/whatsapp/template.registry.ts',
+  'modules/whatsapp/live-client.ts',
   'modules/whatsapp/whatsapp.client.ts',
   'modules/whatsapp/whatsapp.module.ts',
   'modules/whatsapp/whatsapp.types.ts',

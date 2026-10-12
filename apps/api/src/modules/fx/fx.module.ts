@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { loadEnv } from '../../env';
-import { FX_FETCHER, OpenErApiFetcher } from './fx.fetcher';
+import { FX_FETCHER, OpenErApiFetcher, type FxFetcher } from './fx.fetcher';
 import { FxQueries } from './fx.queries';
 import { FxService } from './fx.service';
 
@@ -9,7 +9,8 @@ import { FxService } from './fx.service';
   providers: [
     FxService,
     FxQueries,
-    { provide: FX_FETCHER, useFactory: () => new OpenErApiFetcher(loadEnv().FX_API_URL) },
+    // FX_API_URL read per fetch: the admin may change it in «التكاملات» (no restart).
+    { provide: FX_FETCHER, useFactory: (): FxFetcher => ({ latest: () => new OpenErApiFetcher(loadEnv().FX_API_URL).latest() }) },
   ],
   exports: [FxService],
 })

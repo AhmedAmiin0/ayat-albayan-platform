@@ -27,8 +27,10 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
  */
 @Injectable()
 export class MessageDispatch {
-  /** WA_ALLOWED_RECIPIENTS (docs/12 §13.5b), read once. */
-  readonly allowed = allowedRecipients(loadEnv());
+  /** WA_ALLOWED_RECIPIENTS (docs/12 §13.5b), read per call (the integration config may change). */
+  get allowed(): readonly string[] | null {
+    return allowedRecipients(loadEnv());
+  }
 
   constructor(
     @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,

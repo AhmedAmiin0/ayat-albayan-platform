@@ -17,11 +17,11 @@ import { sectionId, type SettingsSection } from './SettingsNav';
 import type { SettingsFormState } from './use-settings-form';
 
 /** One section of /admin/settings: its title, then its rows (scroll-margin keeps it under the pinned head). */
-export function Section({ id, children }: { id: SettingsSection | 'custom'; children: ReactNode }) {
+export function Section({ id, children }: { id: SettingsSection | 'custom' | 'integrations'; children: ReactNode }) {
   return (
     <section id={sectionId(id)} aria-labelledby={`${sectionId(id)}-title`} className="scroll-mt-24">
       <h2 id={`${sectionId(id)}-title`} className="mb-1 text-h4 font-bold">
-        {id === 'custom' ? t.config.sections.custom : t.settings.sections[id]}
+        {id === 'custom' ? t.config.sections.custom : id === 'integrations' ? t.integrations.title : t.settings.sections[id]}
       </h2>
       <div className="grid gap-4">{children}</div>
     </section>

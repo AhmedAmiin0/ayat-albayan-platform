@@ -916,6 +916,27 @@ export type Database = {
         };
         Relationships: [];
       };
+      integration_config: {
+        Row: {
+          key: string;
+          updated_at: string;
+          updated_by: string | null;
+          value: string;
+        };
+        Insert: {
+          key: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value: string;
+        };
+        Update: {
+          key?: string;
+          updated_at?: string;
+          updated_by?: string | null;
+          value?: string;
+        };
+        Relationships: [];
+      };
       invoices: {
         Row: {
           client_request_id: string;
@@ -3621,6 +3642,23 @@ export type Database = {
           isOneToOne: false;
           isSetofReturn: true;
         };
+      };
+      integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
+      integration_secret_key_ok: { Args: { p_key: string }; Returns: boolean };
+      integration_secret_set: { Args: { p_key: string; p_value: string }; Returns: undefined };
+      integration_secrets_read: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          key: string;
+          value: string;
+        }[];
+      };
+      integration_secrets_status: {
+        Args: Record<PropertyKey, never>;
+        Returns: {
+          key: string;
+          updated_at: string;
+        }[];
       };
       is_admin: { Args: Record<PropertyKey, never>; Returns: boolean };
       is_client_session: { Args: Record<PropertyKey, never>; Returns: boolean };

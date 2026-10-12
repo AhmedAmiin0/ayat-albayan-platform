@@ -3939,5 +3939,123 @@
         "generic": "Could not save, try again."
       }
     }
+  },
+  "integrations": {
+    "title": "Integrations",
+    "intro": "Connections to outside services. A value saved here wins over the server's; clear it and the server's value applies again.",
+    "groups": {
+      "wa_notifications": "WhatsApp notifications line",
+      "wa_chat": "WhatsApp chat line",
+      "wa_safety": "Test environment safety",
+      "livekit": "Online classrooms (LiveKit)",
+      "expo": "Mobile push (Expo)",
+      "fx": "Exchange rates"
+    },
+    "source": {
+      "db": "From settings",
+      "env": "From the server",
+      "unset": "Not set"
+    },
+    "clearHint": "Leave the field empty to use the server's value.",
+    "secretSaved": "Saved {at}",
+    "secretFromServer": "Set on the server",
+    "secretUnset": "Not set",
+    "secretNote": "Secret values are never shown after saving. Enter a new value to replace one.",
+    "secretPlaceholder": "New value",
+    "saveSecret": "Save",
+    "clearSecret": "Clear",
+    "clearConfirm": "Clear {key} from settings? The server's value applies if it has one.",
+    "saveValues": "Save integrations",
+    "saved": "Integrations saved",
+    "secretStored": "Secret saved",
+    "secretCleared": "Secret cleared",
+    "invalid": "Not a valid value for this field",
+    "loadError": "Could not load the integrations",
+    "keys": {
+      "WA_API_BASE": {
+        "label": "Graph API base URL",
+        "hint": "Meta's servers, or the stub's address in development."
+      },
+      "WA_API_VERSION": {
+        "label": "Graph API version",
+        "hint": "Like v21.0. Check it before going live: Meta retires old versions."
+      },
+      "WA_PHONE_NUMBER_ID": {
+        "label": "Phone number ID",
+        "hint": "The notifications line's number ID in Meta."
+      },
+      "WA_WABA_ID": {
+        "label": "WhatsApp Business account ID",
+        "hint": "The account that owns the templates and the notifications line."
+      },
+      "WA_APP_ID": {
+        "label": "Meta app ID",
+        "hint": "Needed to upload samples for templates with a document header."
+      },
+      "WA_ACCESS_TOKEN": {
+        "label": "Access token",
+        "hint": "The Meta app token the notifications line sends with."
+      },
+      "WA_APP_SECRET": {
+        "label": "App secret",
+        "hint": "The server checks the signature of Meta's incoming calls with it."
+      },
+      "WA_VERIFY_TOKEN": {
+        "label": "Webhook verify token",
+        "hint": "The same token set in Meta's webhook settings for both apps."
+      },
+      "WA_CHAT_PHONE_NUMBER_ID": {
+        "label": "Chat line phone number ID",
+        "hint": "Enough on its own to receive this line's messages."
+      },
+      "WA_CHAT_WABA_ID": {
+        "label": "Chat line account ID",
+        "hint": "Needed to send from the chat line."
+      },
+      "WA_CHAT_APP_ID": {
+        "label": "Chat line app ID",
+        "hint": "For the line check only; it never falls back to the notifications app ID."
+      },
+      "WA_CHAT_ACCESS_TOKEN": {
+        "label": "Chat line access token",
+        "hint": "When not set, the notifications line's token is used."
+      },
+      "WA_CHAT_APP_SECRET": {
+        "label": "Chat line app secret",
+        "hint": "Needed when the chat line has its own Meta app."
+      },
+      "WA_ALLOWED_RECIPIENTS": {
+        "label": "Allowed recipients",
+        "hint": "International numbers separated by commas. Leave empty for no restriction."
+      },
+      "WA_TEMPLATE_SYNC": {
+        "label": "Template sync with Meta",
+        "hint": "Write false while on Meta test credentials so the template registry is not changed."
+      },
+      "LIVEKIT_URL": {
+        "label": "Classroom server URL",
+        "hint": "Must start with wss://"
+      },
+      "LIVEKIT_API_KEY": {
+        "label": "LiveKit key",
+        "hint": "With the URL and the secret, online classrooms are on."
+      },
+      "LIVEKIT_API_SECRET": {
+        "label": "LiveKit secret",
+        "hint": "The server signs classroom join tokens with it."
+      },
+      "EXPO_API_BASE": {
+        "label": "Expo push service URL",
+        "hint": "In production: https://exp.host. Leave empty and pushes stay on the server."
+      },
+      "EXPO_ACCESS_TOKEN": {
+        "label": "Expo access token",
+        "hint": "Only needed when the Expo project enforces push security."
+      },
+      "FX_API_URL": {
+        "label": "Exchange rate provider URL",
+        "hint": "A URL returning the latest rates with the Saudi riyal as base."
+      }
+    }
   }
 }

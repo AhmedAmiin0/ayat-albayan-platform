@@ -206,7 +206,7 @@ Today the academy number (+966 56 610 1447) is served by the owner's CRM on the 
 
 ## Meta test credentials on staging
 
-Staging may run on Meta TEST numbers (two test WABAs) so nothing reaches a real family. Content fixed by docs/12 §13.13.
+Staging may run on Meta TEST numbers (two test WABAs) so nothing reaches a real family. Content fixed by docs/12 §13.13. Since 2026-10-12 these keys may live in the database instead (see «Integration config in the database»): a value saved there wins over the server `.env` and over the deploy merge.
 
 1. **(a) The deploy merge.** `deploy-staging`'s env-merge rewrites `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN` (secrets) and `WA_API_BASE`, `WA_API_VERSION`, `WA_WABA_ID`, `WA_APP_ID` (variables) from the GitHub environment `develop` on EVERY develop merge whenever they are NON-EMPTY there. So: FIRST deploy this feature with the new keys unset (behaviour changes only by: null `line` / `last_inbound_line` keys in reads; the sender and media selects reading the new column, hence the migration runs first; 502 `meta_error` instead of 410 for a media download refused with a Meta auth error; one warning per unknown `phone_number_id`); THEN switch the server to test credentials (with `WA_TEMPLATE_SYNC=false` already set, see (b)); and while test credentials are on the server, either put the same test values into the GitHub environment or empty those GitHub entries first. Otherwise the next deploy silently restores the real values next to the test phone-number id (auth errors, auth hold, webhook 401). `WA_PHONE_NUMBER_ID`, `MESSAGING_ENABLED` and all the new keys are not merged, so they survive a deploy.
 2. **(b) Order.** Set `WA_TEMPLATE_SYNC=false` (and `WA_ALLOWED_RECIPIENTS`) on the server BEFORE, or in the same edit and restart as, switching any `WA_*` credential to test values: the boot template sync runs whenever WhatsApp is configured, regardless of `MESSAGING_ENABLED`, and would mark every approved template that is not on the test WABA `missing`. Only then set `MESSAGING_ENABLED=true`.
@@ -218,6 +218,33 @@ Staging may run on Meta TEST numbers (two test WABAs) so nothing reaches a real 
 8. **(h) Recipients and wa.me.** Add (and verify) each test recipient in the Meta app's recipient list, else Meta answers 131030; list the same numbers in `WA_ALLOWED_RECIPIENTS`. `academy_whatsapp_e164` (wa.me links, PDF footer) should hold the CHAT number.
 9. **(i) `.env.example`.** The commented keys in «WhatsApp messaging (Phase 4)» above are for the owner to paste.
 10. **Migration first.** Never deploy this release with the `migrate` input unticked or with `env_only`: the API reads `messages.line` (see «Migration before API» above). Behaviour rollback (unset only `WA_CHAT_WABA_ID` + `WA_CHAT_ACCESS_TOKEN` to stop chat SENDING; never unset `WA_CHAT_PHONE_NUMBER_ID` / `WA_CHAT_APP_SECRET` before the chat app's webhook is repointed in Meta) is docs/12 §13.15.
+
+## Integration config in the database
+
+Owner request 2026-10-12: «try not to use .env and make most of the config in the db». The integration values are now edited by an admin in **`/admin/settings` → «التكاملات»** and stored in Postgres; the server `.env` keeps only bootstrap and infrastructure keys and stays the **fallback**.
+
+**Precedence: a non-empty database value wins over env.** Clearing a value in «التكاملات» (empty field, or «مسح» for a secret) brings the env value back. With neither, the key is unset, as before.
+
+| Kind | Keys | Stored in |
+|---|---|---|
+| Plain | `WA_API_BASE`, `WA_API_VERSION`, `WA_PHONE_NUMBER_ID`, `WA_WABA_ID`, `WA_APP_ID`, `WA_CHAT_PHONE_NUMBER_ID`, `WA_CHAT_WABA_ID`, `WA_CHAT_APP_ID`, `WA_ALLOWED_RECIPIENTS`, `WA_TEMPLATE_SYNC`, `LIVEKIT_URL`, `EXPO_API_BASE`, `FX_API_URL` | `public.integration_config` (admins read through RLS, only the API writes) |
+| Secret | `WA_ACCESS_TOKEN`, `WA_APP_SECRET`, `WA_VERIFY_TOKEN`, `WA_CHAT_ACCESS_TOKEN`, `WA_CHAT_APP_SECRET`, `LIVEKIT_API_KEY`, `LIVEKIT_API_SECRET`, `EXPO_ACCESS_TOKEN` | Supabase **Vault**, name `integration:<KEY>`, through service-role-only functions (`integration_secret_set` / `_clear` / `integration_secrets_read` / `integration_secrets_status`). Write-only in the app: never returned, logged or audited (audit rows hold key names only) |
+| Stays in env | `PORT`, `WEB_ORIGIN`, `SUPABASE_URL`, `SUPABASE_JWT_SECRET`, `SUPABASE_SERVICE_ROLE_KEY`, `SETTINGS_CACHE_MS`, `MESSAGE_SENDER_POLL_MS`, `AUTH_PASSWORD_MIN_LENGTH`, `FEEDBACK_TOKEN_SECRET`, `RECORDING_S3_*`, `MESSAGING_ENABLED` (the server kill switch; the admin switch is `settings.messaging_enabled`), `INTEGRATION_CONFIG_FROM_DB` | `.env` |
+
+**How the API applies it.** At boot (before any job or the template boot sync, never blocking: a failed read logs a warning and keeps env only), every `SETTINGS_CACHE_MS` (minimum 1 s) and right after an admin save, the API reads the database values, checks each one against the env schema (a bad one is dropped with one warning naming the key, never the value) and lays them over `process.env`. Every reader takes the config per call, so a change applies without a restart. `INTEGRATION_CONFIG_FROM_DB=false` makes the API ignore the database (env only; the unit tests use it).
+
+**Order on a server.** Migration `20261012000310_integration_config` first (the API works without it: the read fails, env applies). Then, once:
+
+```bash
+# On the VPS, in /opt/ayat-albayan-staging (the container reads .env through compose):
+docker compose exec ayat-api node dist/scripts/config-import-env.js            # keeps values already in the DB
+docker compose exec ayat-api node dist/scripts/config-import-env.js --overwrite # replaces them
+# Locally: pnpm --filter api build && pnpm --filter api config:import-env
+```
+
+It copies the **current non-empty** env values of the keys above into the table / Vault with the service role and prints only `KEY: imported` or `KEY: skipped (…)`, never a value. A value the env schema would refuse is skipped. After the import, check «التكاملات» (each field says «من الإعدادات» / «من الخادم»), then the moved keys may be removed from `.env` at your pace.
+
+**The GitHub env merge is now a fallback only.** `deploy-staging` still merges the WhatsApp / LiveKit / Expo / FX values from the GitHub environment `develop` into the server `.env`, but a value saved in «التكاملات» wins over it, so a deploy can no longer silently restore a token over the admin's choice (the risk in «Meta test credentials on staging» (a) is gone for any key kept in the database). To switch staging to Meta test credentials, save them in «التكاملات» (with `WA_TEMPLATE_SYNC=false` and `WA_ALLOWED_RECIPIENTS` saved first, same order as (b)). `deploy-staging` must still never set `MESSAGING_ENABLED`.
 
 ## GitHub Actions
 

@@ -15,6 +15,7 @@ function renderPage() {
   routeFetch(apiFetch, [
     ['/config/meta', { meta }],
     ['/config/custom', []],
+    ['/settings/integrations', []],
     ['/settings', SETTING_DEFAULTS],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],

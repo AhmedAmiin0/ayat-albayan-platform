@@ -6,6 +6,13 @@ export const CLASSROOM_CONFIG = Symbol('CLASSROOM_CONFIG');
 
 /** null = LIVEKIT_* not set: every join answers 503 classroom_not_configured. */
 export type ClassroomConfig = LivekitEnv | null;
+/**
+ * What CLASSROOM_CONFIG holds: a fixed config (tests) or a reader called on every use (the app:
+ * env + the database's integration config, so a LIVEKIT_* change applies without a restart).
+ */
+export type ClassroomConfigSource = ClassroomConfig | (() => ClassroomConfig);
+export const classroomConfigOf = (source: ClassroomConfigSource): ClassroomConfig =>
+  typeof source === 'function' ? source() : source;
 
 /** Injection token for the recording upload target (RECORDING_S3_*); null = lessons are not recorded. */
 export const RECORDING_CONFIG = Symbol('RECORDING_CONFIG');

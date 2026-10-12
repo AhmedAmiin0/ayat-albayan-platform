@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { CLASSROOM_CONFIG, type ClassroomConfig } from './classroom.config';
+import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from './classroom.config';
 import { mintServerToken, type ServerGrant } from './livekit-token';
 
 /** The slice of `fetch` the LiveKit calls use (stubbed in tests). */
@@ -39,20 +39,21 @@ export interface TwirpCall {
 @Injectable()
 export class LivekitApi {
   constructor(
-    @Inject(CLASSROOM_CONFIG) private readonly config: ClassroomConfig,
+    @Inject(CLASSROOM_CONFIG) private readonly source: ClassroomConfigSource,
     @Inject(LIVEKIT_HTTP) private readonly http: HttpPost,
   ) {}
 
   /** LIVEKIT_* are set. */
   get configured(): boolean {
-    return this.config !== null;
+    return classroomConfigOf(this.source) !== null;
   }
 
   async call(input: TwirpCall, now = new Date()): Promise<Record<string, unknown>> {
-    if (!this.config) throw new LivekitError(503, 'not_configured');
-    const res = await this.http(`${twirpBase(this.config.url)}/twirp/${input.method}`, {
+    const config = classroomConfigOf(this.source);
+    if (!config) throw new LivekitError(503, 'not_configured');
+    const res = await this.http(`${twirpBase(config.url)}/twirp/${input.method}`, {
       method: 'POST',
-      headers: { authorization: `Bearer ${mintServerToken(this.config, input.grant, now)}`, 'content-type': 'application/json' },
+      headers: { authorization: `Bearer ${mintServerToken(config, input.grant, now)}`, 'content-type': 'application/json' },
       body: JSON.stringify(input.body),
     });
     const text = await res.text();

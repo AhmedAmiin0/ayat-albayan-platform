@@ -3,7 +3,7 @@ import { loadEnv } from '../../env';
 import { LeadsModule } from '../leads/leads.module';
 import { LessonRatingModule } from '../lesson-rating/lesson-rating.module';
 import { LessonsModule } from '../lessons/lessons.module';
-import { webhookConfig } from './webhook.config';
+import { liveWebhookConfig } from './webhook.config';
 import { WebhookController } from './webhook.controller';
 import { InboundService } from './webhook.inbound.service';
 import { InboundStore } from './webhook.inbound.store';
@@ -22,7 +22,7 @@ import { StatusService } from './webhook.status.service';
   providers: [
     {
       provide: WEBHOOK_CONFIG,
-      useFactory: (): WebhookConfig => webhookConfig(loadEnv()),
+      useFactory: (): WebhookConfig => liveWebhookConfig(() => loadEnv()),
     },
     WebhookService,
     InboundService,

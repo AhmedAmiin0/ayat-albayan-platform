@@ -3,6 +3,7 @@ import { ActivityModule } from './common/activity/activity.module';
 import { AuditModule } from './common/audit/audit.service';
 import { AuthModule } from './common/auth/auth.module';
 import { DbModule } from './common/db/db.module';
+import { IntegrationConfigModule } from './common/integrations/integration-config.module';
 import { LessonEventsModule } from './common/events/lesson-events';
 import { PushModule } from './common/push/push.module';
 import { SettingsModule } from './common/settings/settings.module';
@@ -48,6 +49,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
 @Module({
   imports: [
     DbModule,
+    IntegrationConfigModule,
     AuditModule,
     AuthModule,
     ActivityModule,
