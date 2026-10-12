@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { ar, expect, test } from '../support/fixtures';
 import { API, bearer, freshDigits } from '../support/messages';
-import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, withSql } from '../support/schedule';
+import { addDays, nextWeekSaturday, resetAbrar, riyadh, seedFamily, setAvailability, withSql } from '../support/schedule';
 import { USERS } from '../support/users';
 
 // The bell (R-NOT-01) and the teacher's new-student alert (R-NOT-03). WEB_PUSH_* stay unset here:
@@ -42,6 +42,8 @@ test.describe('notification bell', () => {
   test('a teacher sees a new_student row after an admin booking', async ({ asRole, isMobile }) => {
     test.skip(isMobile, 'one booking per run: the desktop run covers it');
     const teacherId = await resetAbrar();
+    // resetAbrar clears her availability too: Sunday 16:00–19:00 Riyadh holds the 17:00 trial.
+    await setAvailability(teacherId, [[0, '16:00', '19:00']]);
     const admin = await asRole('admin');
     await admin.goto('/admin');
     const sunday = addDays(nextWeekSaturday(), 1);
@@ -62,7 +64,7 @@ test.describe('notification bell', () => {
         startsAt: riyadh(sunday, '17:00').toISOString(),
       },
     });
-    expect(res.status()).toBe(201);
+    expect(res.status(), await res.text()).toBe(201);
     const { lessons } = (await res.json()) as { lessons: { id: string }[] };
     const [row] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n from public.push_notifications
       where kind = 'new_student' and data->>'lessonId' = ${lessons[0]?.id ?? ''}`);
