@@ -37,12 +37,16 @@ export function templateColumns({ onSubmit, onStarter, saving }: TemplateColumns
     col.accessor((r) => templateName(r.key), {
       id: 'key',
       header: () => t.templates.name,
-      cell: (c) => (
-        <span className="grid gap-0.5">
-          <span className="font-semibold text-ink">{c.getValue()}</span>
-          <Ltr className="text-2xs text-ink-3">{c.row.original.meta_name}</Ltr>
-        </span>
-      ),
+      // A template imported from Meta has no Arabic name: its Meta name shows once, as an LTR island.
+      cell: (c) =>
+        c.getValue() === c.row.original.meta_name ? (
+          <Ltr className="font-semibold text-ink">{c.getValue()}</Ltr>
+        ) : (
+          <span className="grid gap-0.5">
+            <span className="font-semibold text-ink">{c.getValue()}</span>
+            <Ltr className="text-2xs text-ink-3">{c.row.original.meta_name}</Ltr>
+          </span>
+        ),
       meta: { className: 'max-sm:order-1 max-sm:flex-[1_1_100%]', filter: { kind: 'text' } },
     }),
     col.accessor('line', {

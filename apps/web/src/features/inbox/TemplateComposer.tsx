@@ -10,6 +10,7 @@ import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { sendTemplate } from './api';
 import { LessonPicker } from './LessonPicker';
+import { useInboxMode } from './mode';
 import { TemplateParamFields } from './TemplateParamFields';
 import { forAudience, lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
 import { sendErrorText } from './TextComposer';
@@ -32,6 +33,7 @@ export interface TemplateComposerProps {
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
   const queryClient = useQueryClient();
   const templates = useQuery(templatesQuery);
+  const sales = useInboxMode() === 'sales';
   const approved = (templates.data ?? [])
     // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي»;
     // the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».
@@ -90,7 +92,10 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
           </Select>
         )}
       </Field>
-      {templates.isSuccess && approved.length === 0 && <p className="text-xs text-ink-3">{t.inbox.composer.noApproved}</p>}
+      {templates.isSuccess && approved.length === 0 && (
+        // Sales list only the starters the admin ticked: none ticked is not «nothing approved».
+        <p className="text-xs text-ink-3">{sales ? t.inbox.composer.noStarters : t.inbox.composer.noApproved}</p>
+      )}
       {templates.isError && <FormAlert>{t.common.error}</FormAlert>}
       {withLesson && (
         <LessonPicker
