@@ -14,8 +14,8 @@ import { LeadPanel, type LeadNotice } from './LeadPanel';
 import { MessageLog } from './MessageLog';
 import { NewThread } from './NewThread';
 import { PhoneChat } from './PhoneChat';
-import { SalesRegisterAction } from './SalesRegisterAction';
 import { useInboxMode } from './mode';
+import { SalesChatActions } from './sales-money/SalesChatActions';
 import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
 import { sendErrorText } from './TextComposer';
@@ -30,7 +30,7 @@ export interface ThreadPaneProps {
 
 /**
  * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (below it under
- * 1280px) the lead's panel or the family's packages; sales gets «تسجيل طالب جديد» in the header instead.
+ * 1280px) the lead's panel or the family's packages; sales gets its chat actions in the header instead.
  * Teacher mode: the log and the reply box only; their own chat with the academy is read-only. Phones
  * (< 640px): a full-screen chat; the panel is a full-screen sheet opened from the header's icon button.
  */
@@ -83,7 +83,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   const headerProps = { thread: th, listSearch, headingId, badge: people && threadBadge(people) };
-  const register = <SalesRegisterAction thread={th} />;
+  const register = <SalesChatActions thread={th} />;
   const log = (fill: 'shell' | 'xl' | 'phone') => (
     <MessageLog
       messages={messages}

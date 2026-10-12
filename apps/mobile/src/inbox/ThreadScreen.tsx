@@ -15,6 +15,7 @@ import { clockAt, kindLabel } from './format';
 import { MessageBubble } from './MessageBubble';
 import { OwnThreadNote } from './OwnThreadNote';
 import { RegisterFromChat } from './RegisterFromChat';
+import { SalesChatMoney } from '@/sales-subscribe/SalesChatMoney';
 import { SendRating } from './rating/SendRating';
 import { SubscriptionPanel } from './subscription/SubscriptionPanel';
 import { threadMessages } from './thread-cache';
@@ -75,7 +76,8 @@ function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
  * it shows the saved thread and when it was fetched (R-MOB-03). Opened from a lead or a push.
  * Over the messages: whether the family is subscribed, and the button to subscribe (R-SUB-01).
  * A teacher (R-TCH-03) gets no subscription panel, and her own chat with the academy is read-only.
- * A salesperson (self.sales, docs/16) gets «تسجيل طالب جديد» on a lead's chat instead of the panel.
+ * A salesperson (self.sales, docs/16) gets «تسجيل طالب جديد» on a lead's chat instead of the panel,
+ * and on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا» (SalesChatMoney, R-ASST-01/04).
  */
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
@@ -93,7 +95,10 @@ export function ThreadScreen() {
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
       {mode.kind !== 'admin' ? null : sales ? (
-        <RegisterFromChat thread={thread} />
+        <>
+          <RegisterFromChat thread={thread} />
+          <SalesChatMoney thread={thread} />
+        </>
       ) : (
         <SubscriptionPanel data={query.data} phone={phone} />
       )}
