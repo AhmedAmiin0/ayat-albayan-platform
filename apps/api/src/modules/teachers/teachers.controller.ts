@@ -17,7 +17,7 @@ import { z } from 'zod';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from './http';
-import { TeachersQueries, type Teacher } from './teachers.queries';
+import { TeachersQueries, type Teacher, type TeacherListRow } from './teachers.queries';
 
 /** `?search=` name or phone in any format (teacherSearchFilter); column filters + `sort`/`dir` (R-NFR-08). */
 const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).optional(), ...teacherColumnQueryShape });
@@ -32,7 +32,7 @@ export class TeachersController {
 
   @Get()
   @Permissions('teachers.read')
-  list(@Query() query: unknown): Promise<Page<Teacher>> {
+  list(@Query() query: unknown): Promise<Page<TeacherListRow>> {
     return this.teachers.list(parseOrThrow(listQuery, query));
   }
 

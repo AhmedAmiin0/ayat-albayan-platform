@@ -3053,6 +3053,29 @@
     "retry": "Try again",
     "openReports": "Report history of {name}"
   },
+  "studentLists": {
+    "kinds": "Student type",
+    "active": "Subscribed",
+    "trial": "Trial",
+    "all": "All",
+    "counts": "Subscribed {active} · Trial {trial}",
+    "activeLink": "Subscribed students of {name}: {n}",
+    "trialLink": "Trial students of {name}: {n}",
+    "emptyActive": "No subscribed students",
+    "emptyTrial": "No trial students",
+    "emptyAll": "No students",
+    "section": "Teacher's students",
+    "viewAll": "View all students",
+    "meetingLink": "Fixed lesson link",
+    "meetingLinkNone": "This teacher has no fixed link",
+    "meetingLinkAuto": "Families currently receive the platform link instead of this one",
+    "copyLink": "Copy link",
+    "copied": "Link copied",
+    "copyFailed": "Could not copy: select the link and copy it by hand",
+    "openLink": "Open link",
+    "shareLink": "Share link",
+    "shareFailed": "Could not open or share the link: select it and copy it by hand"
+  },
   "feedback": {
     "title": "Your opinion matters",
     "teacher": "Teacher name",
@@ -4115,6 +4138,95 @@
         "label": "Exchange rate provider URL",
         "hint": "A URL returning the latest rates with the Saudi riyal as base."
       }
+    }
+  },
+  "account": {
+    "title": "My account",
+    "nav": "My account",
+    "subtitle": "Your personal details and how you sign in",
+    "role": "Role: {role}",
+    "loading": "Loading your account…",
+    "loadError": "Could not load your account. Please try again.",
+    "retry": "Try again",
+    "adminManagedHint": "The name and number families see in lessons and reports are managed by the administration and do not change here.",
+    "mobile": {
+      "cameraRationale": "We need the camera to take your profile photo.",
+      "emailNone": "No email on file.",
+      "newRequired": "Enter the new password.",
+      "open": "Open my account"
+    },
+    "currentPassword": "Current password",
+    "currentPasswordHint": "To confirm it is you before changing these details.",
+    "save": "Save",
+    "saving": "Saving…",
+    "cancel": "Cancel",
+    "avatar": {
+      "title": "Profile photo",
+      "alt": "Photo of {name}",
+      "choose": "Choose a photo",
+      "change": "Change photo",
+      "remove": "Remove photo",
+      "removing": "Removing…",
+      "uploading": "Uploading the photo…",
+      "hint": "A JPG, PNG or WebP image of at most 2 MB.",
+      "preview": "New photo preview",
+      "upload": "Upload photo",
+      "camera": "Take a photo",
+      "library": "Choose from library"
+    },
+    "name": {
+      "title": "Name",
+      "label": "Full name",
+      "hint": "{min} to {max} characters."
+    },
+    "phone": {
+      "title": "Phone number",
+      "label": "Phone number",
+      "hint": "Include the country code, e.g. +966501234567.",
+      "none": "No number",
+      "remove": "Remove number"
+    },
+    "email": {
+      "title": "Email",
+      "label": "New email",
+      "current": "Current email: {email}",
+      "hint": "You will sign in with the new email from now on."
+    },
+    "password": {
+      "title": "Password",
+      "new": "New password",
+      "confirm": "Confirm the new password",
+      "hint": "At least {n} characters. You stay signed in on this device.",
+      "mismatch": "The passwords do not match."
+    },
+    "toast": {
+      "name": "Name saved",
+      "phone": "Phone number saved",
+      "email": "Email changed",
+      "password": "Password changed",
+      "avatar": "Profile photo saved",
+      "avatarRemoved": "Profile photo removed"
+    },
+    "errors": {
+      "generic": "Could not save. Please try again.",
+      "wrong_password": "The current password is wrong.",
+      "password_required": "Enter your current password.",
+      "password_too_short": "The password is too short.",
+      "password_too_long": "The password is too long.",
+      "password_same": "The new password is the same as the current one.",
+      "phone_taken": "This number belongs to another account.",
+      "email_taken": "This email belongs to another account.",
+      "invalid_email": "The email is not valid.",
+      "invalid_phone": "The phone number is not valid. Include the country code.",
+      "avatar_type": "This file type is not supported. Choose a JPG, PNG or WebP image.",
+      "avatar_too_large": "The photo is larger than 2 MB.",
+      "avatar_path": "Could not save the photo. Upload it again.",
+      "name_too_short": "The name is too short.",
+      "name_too_long": "The name is too long.",
+      "permission": "Photos are not accessible. Allow access in the settings."
+    },
+    "web": {
+      "newPasswordRequired": "Enter the new password."
     }
   },
   "mobileSalesMoney": {

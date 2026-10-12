@@ -6,10 +6,11 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import type { Teacher } from './api';
+import type { Teacher, TeacherListRow } from './api';
+import { StudentCountLink } from './StudentCountLink';
 import { teacherLabel } from '@/lib/teacher-label';
 
-const col = createColumnHelper<DataTableFeatures, Teacher>();
+const col = createColumnHelper<DataTableFeatures, TeacherListRow>();
 
 type Handlers = { onEdit: (teacher: Teacher) => void; onOpen: (teacherId: string) => void };
 
@@ -21,8 +22,8 @@ const statusOptions = () => TEACHER_STATUSES.map((st) => ({ value: st, label: t.
  * Teacher list columns (R-TCH-01, docs/07 §6). The name is a button (keyboard path to the
  * profile); «تعديل» opens the dialog without following the row link. Under 640px the rows stack:
  * name + status, programs, phone, تعديل (DataTable `stacked`). Every data column sorts server-side;
- * name / phone have a search box, programs / status a select (R-NFR-08).
- * TODO(R-TCH-03): students-per-teacher count beside the max once the list API returns it.
+ * name / phone have a search box, programs / status a select (R-NFR-08). «مشترك» / «تجريبي» (R-TCH-03,
+ * owner 2026-10-12) are server counts, not sortable, each a link to the filtered students list.
  */
 export function teacherColumns({ onEdit, onOpen }: Handlers) {
   return col.columns([
@@ -66,6 +67,16 @@ export function teacherColumns({ onEdit, onOpen }: Handlers) {
       header: () => t.teachers.maxStudents,
       cell: (c) => <span className="tabular-nums">{c.getValue()}</span>,
       meta: { className: 'max-sm:hidden', sortKey: 'max_students' },
+    }),
+    col.accessor('active_count', {
+      header: () => t.studentLists.active,
+      cell: (c) => <StudentCountLink teacher={c.row.original} kind="active" />,
+      meta: { className: 'max-sm:order-4 max-sm:text-xs' },
+    }),
+    col.accessor('trial_count', {
+      header: () => t.studentLists.trial,
+      cell: (c) => <StudentCountLink teacher={c.row.original} kind="trial" />,
+      meta: { className: 'max-sm:order-4 max-sm:text-xs' },
     }),
     col.accessor('status', {
       header: () => t.teachers.status,

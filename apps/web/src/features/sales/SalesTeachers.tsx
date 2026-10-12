@@ -19,7 +19,8 @@ import { filterTeachers, isFiltered, NO_FILTER, programsOf } from './teacher-vie
 /**
  * /sales/teachers «المعلمون» (owner report 2026-10-12: master-detail instead of one crammed row): the
  * teachers list with search and program / gender filters; a teacher opens a side drawer with their
- * students. Read-only, no pay, rates, phone or meeting link.
+ * students. Read-only, no pay, rates or phone; the teacher's fixed meeting link is the one exception
+ * (owner 2026-10-12), shown in the drawer only.
  */
 export function SalesTeachers() {
   const query = useQuery(salesTeachersQuery);
@@ -73,7 +74,7 @@ export function SalesTeachers() {
           title={t.sales.teachers.detailTitle.replace('{name}', teacherLabel({ display_name_ar: open.name, display_name_en: open.name_en }))}
           onClose={() => setOpenId(null)}
         >
-          <TeacherDetail teacher={open} />
+          <TeacherDetail key={open.id} teacher={open} />
         </Drawer>
       )}
     </>

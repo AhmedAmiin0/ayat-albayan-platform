@@ -28,6 +28,8 @@ const schema = z.object({
   SUPABASE_JWT_SECRET: z.string().min(32).optional(),
   /** Server-only key for the DbModule client (bypasses RLS; Nest guards enforce access). */
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1),
+  /** Anon key: re-checks a current password on an isolated client (R-ACC-02..04); unset = service key. */
+  SUPABASE_ANON_KEY: optionalSecret,
   /** SAR-based latest-rates endpoint (docs/08 §4); a keyed ExchangeRate-API URL also works. */
   FX_API_URL: z.url().default('https://open.er-api.com/v6/latest/SAR'),
   /**

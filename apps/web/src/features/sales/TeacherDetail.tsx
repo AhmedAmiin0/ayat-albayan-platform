@@ -5,12 +5,14 @@ import { Icon } from '@/components/ui/icon';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { programList } from './teacher-view';
-import { TeacherStudentItem } from './TeacherStudentItem';
+import { TeacherMeetingLink } from './TeacherMeetingLink';
+import { TeacherStudentsByKind } from './TeacherStudentsByKind';
 
 /**
  * The drawer of one teacher in «المعلمون»: who they are, today's lessons, a link to their day in the
- * read-only schedule, then their students as a list. Never pay, rates, phone or meeting link (the API
- * does not send them).
+ * read-only schedule, the teacher's fixed link «رابط الحلقة الثابت», then their students split
+ * «مشترك · تجريبي · الكل». Never pay, rates or phone (the API does not send them); the fixed link is the
+ * one exception to «no meeting link in sales» (owner 2026-10-12), shown here only.
  */
 export function TeacherDetail({ teacher }: { teacher: SalesTeacherView }) {
   const { students } = teacher;
@@ -32,21 +34,8 @@ export function TeacherDetail({ teacher }: { teacher: SalesTeacherView }) {
           {t.sales.teachers.openSchedule}
         </Link>
       </div>
-      <section aria-label={t.sales.teachers.students} className="grid gap-1">
-        <h3 className="flex items-baseline justify-between gap-2 font-semibold">
-          {t.sales.teachers.students}
-          <span className="text-xs font-normal text-ink-3">{t.schedule.riyadhTime}</span>
-        </h3>
-        {students.length === 0 ? (
-          <p className="text-sm text-ink-3">{t.sales.teachers.noStudents}</p>
-        ) : (
-          <ul className="border-t border-rule">
-            {students.map((s) => (
-              <TeacherStudentItem key={s.id} student={s} />
-            ))}
-          </ul>
-        )}
-      </section>
+      <TeacherMeetingLink link={teacher.meeting_link} />
+      <TeacherStudentsByKind teacher={teacher} />
     </>
   );
 }

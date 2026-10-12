@@ -11,17 +11,19 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { StatusChip } from '@/ui/StatusChip';
 import { TeacherContact } from './TeacherContact';
+import { TeacherStudentsSection } from './TeacherStudentsSection';
 import type { Teacher } from './types';
 import { UpcomingTimeOff } from './UpcomingTimeOff';
 import { WeeklyAvailability } from './WeeklyAvailability';
 import { locale } from '@/lib/locale';
 
 /**
- * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), phone +
+ * A teacher, read-only (R-TCH-01, R-TCH-02): status, «جدول المعلم/ة» (the week's lessons), their
+ * students («مشترك · تجريبي · الكل», preset by `?status=`), phone +
  * WhatsApp, the weekly availability and upcoming time-off. Editing stays on the web.
  */
 export function TeacherDetailScreen() {
-  const { id = '' } = useLocalSearchParams<{ id: string }>();
+  const { id = '', status } = useLocalSearchParams<{ id: string; status?: string }>();
   const path = `/teachers/${id}`;
   const teacher = useQuery({ queryKey: pathKey(path), queryFn: () => apiFetch<Teacher>(path) });
   const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
@@ -59,6 +61,7 @@ export function TeacherDetailScreen() {
           label={t.earnings.open}
           onPress={() => router.push(`/more/teachers/earnings/${data.id}`)}
         />
+        <TeacherStudentsSection teacherId={data.id} status={status} />
         <TeacherContact teacher={data} />
         <WeeklyAvailability teacher={data} />
         <UpcomingTimeOff teacherId={data.id} />
