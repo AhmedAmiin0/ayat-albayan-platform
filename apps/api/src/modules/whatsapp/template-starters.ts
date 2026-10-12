@@ -5,8 +5,9 @@ import { REGISTRY_ENTITY_ID, toTemplateView } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
 
 /**
- * «قالب بدء محادثة للمبيعات» (owner 2026-10-12, docs/16): the admin offers a template to sales to start
- * (or reopen after 24 h) a chat, or stops offering it. Sales list and send only these. Audited.
+ * The restricted allow-list (owner 2026-10-12, docs/16): the admin offers a template to every role
+ * without templates.send_all (teachers, sales, the classroom assistant, custom roles), or stops
+ * offering it. Those roles list and send only these (restrictedMay). Audited.
  */
 @Injectable()
 export class TemplateStarters {

@@ -1,4 +1,4 @@
-import { isTeacherTemplate, type ThreadTemplate, type ThreadText } from '@ab/shared';
+import { restrictedMay, type ThreadTemplate, type ThreadText } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { lineEnvs, loadEnv } from '../../env';
 import { TemplateRegistry } from '../whatsapp/template.registry';
@@ -17,6 +17,11 @@ export interface ThreadSend<T> {
   scope?: TeacherScope | null;
   /** Sales mode: the sending salesperson (any chat, her own dedup space and audit). */
   sales?: SalesScope | null;
+  /**
+   * Neither templates.manage nor templates.send_all (owner 2026-10-12): only the restricted allow-list
+   * (restrictedMay, like GET /messaging/templates). Absent = every template (the admin).
+   */
+  restricted?: boolean;
 }
 
 /**
@@ -84,7 +89,8 @@ export class ThreadSendService {
 
   /**
    * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
-   * A salesperson sends only the starters the admin ticked (owner 2026-10-12). No line stamp here: the
+   * A restricted role (teacher, sales, any role without templates.send_all) sends only the allow-list
+   * (owner 2026-10-12): 403 template_not_allowed for any other. No line stamp here: the
    * sender picks the template's own line and stamps it at claim (docs/12 §13.3).
    */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
@@ -98,7 +104,7 @@ export class ThreadSendService {
     if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
-    if (s.sales && !template.sales_starter) throw waHttpError('template_not_allowed', 403);
+    if (s.restricted && !restrictedMay(template)) throw waHttpError('template_not_allowed', 403);
     if (template.header_format === 'document') throw waHttpError('needs_document', 400);
     const missing = missingParams(template, s.input.params);
     if (missing.length) throw waHttpError('missing_params', 400, { missing });
@@ -112,10 +118,9 @@ export class ThreadSendService {
     });
   }
 
-  /** A teacher: own families only, not their own chat, reminder templates only, own lessons only. */
+  /** A teacher: own families only, not their own chat, own lessons only (the allow-list is checked after). */
   private async teacherMay(scope: TeacherScope, s: ThreadSend<ThreadTemplate>): Promise<void> {
     assertCanSend(scope, s.phone);
-    if (!isTeacherTemplate(s.input.key)) throw waHttpError('template_not_allowed', 403);
     if (s.input.lessonId && (await this.queries.lessonTeacher(s.input.lessonId)) !== scope.teacherId) {
       throw waHttpError('not_your_lesson', 403);
     }

@@ -13,6 +13,7 @@ const LATER = [
   '20261006000274_assistant_scope_roles.sql',
   '20261006000281_student_logins.sql',
   '20261012000300_sales_messages_read.sql',
+  '20261012000360_restricted_templates.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -27,7 +28,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -39,6 +40,10 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300)', () => {
   it('seeds users.read and users.write for the admin only', () => {
     expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('users.write'))).toEqual(['admin']);
     expect(addedLater('admin')).toEqual(expect.arrayContaining(['users.read', 'users.write']));
+  });
+
+  it('seeds templates.send_all (every template, 2026-10-12) for the admin only', () => {
+    expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('templates.send_all'))).toEqual(['admin']);
   });
 
   it('seeds nothing for guardians and only grantable keys', () => {

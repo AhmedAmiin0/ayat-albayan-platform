@@ -27,8 +27,9 @@ const errText = (e: unknown): string => (e instanceof Error ? e.message : String
 /**
  * The template registry (R-MSG-01, issue C1, docs/12 §3.4). The health check reads each line's Meta
  * list (read-only), syncs every row against its own line's and imports the chat line's new templates
- * as sales starters; submitting creates a template on the notifications WABA and is only ever the
- * admin's explicit action (POST /messaging/templates/:key/submit), never at boot or from a job.
+ * (only the restricted defaults flagged); submitting creates a template on the notifications WABA and
+ * is only ever the admin's explicit action (POST /messaging/templates/:key/submit), never at boot or
+ * from a job.
  */
 @Injectable()
 export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy {

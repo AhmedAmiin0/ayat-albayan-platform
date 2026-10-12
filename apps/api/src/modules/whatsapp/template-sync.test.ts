@@ -87,4 +87,12 @@ describe('template health sync (docs/12 §3.4)', () => {
     const unclear = [{ type: 'BUTTONS', buttons: [{ type: 'QUICK_REPLY', text: 'شوف' }] }, 'garbage'];
     expect(syncPatch(templateRow({ buttons: [] }), meta({ components: unclear }), NOW)).not.toHaveProperty('buttons');
   });
+
+  it('never writes the allow-list flag: an admin’s manual flag (or unflag) survives every sync', () => {
+    for (const sales_starter of [true, false]) {
+      const row = templateRow({ sales_starter });
+      expect(syncPatch(row, findMeta(row, recorded), NOW)).not.toHaveProperty('sales_starter');
+      expect(syncPatch(row, undefined, NOW)).not.toHaveProperty('sales_starter');
+    }
+  });
 });

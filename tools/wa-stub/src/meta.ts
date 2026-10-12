@@ -53,13 +53,20 @@ export function defaultTemplates(): StubTemplate[] {
   ];
 }
 
+const WELCOME = 'أهلًا بك في أكاديمية آيات البيان يا {{1}}، يسعدنا تواصلك معنا. هل تودّ حجز حلقة تجريبية مجانية؟';
+const TRIAL = 'السلام عليكم {{1}}، ندعوكم إلى حلقة تجريبية مجانية مع أكاديمية آيات البيان. هل يناسبكم موعد قريب؟';
+
 /**
- * The chat line's approved starter (owner 2026-10-12): only on the chat WABA, so the API's health
- * check imports it as a sales starter, and only the chat number can send it.
+ * The chat line's approved templates (owner 2026-10-12): only on the chat WABA, so only the chat
+ * number can send them. The API's health check imports all three, and flags only the restricted
+ * defaults (free_trial_invite, welcome_greeting): academy_welcome arrives unflagged.
  */
 export function defaultChatTemplates(wabaId: string): StubTemplate[] {
-  const body = 'أهلًا بك في أكاديمية آيات البيان يا {{1}}، يسعدنا تواصلك معنا. هل تودّ حجز حلقة تجريبية مجانية؟';
-  return [{ ...approved('academy_welcome', body), category: 'MARKETING', wabaId }];
+  return [
+    { ...approved('academy_welcome', WELCOME), category: 'MARKETING', wabaId },
+    { ...approved('free_trial_invite', TRIAL), category: 'MARKETING', wabaId },
+    { ...approved('welcome_greeting', WELCOME), category: 'MARKETING', wabaId },
+  ];
 }
 
 /** GET /{waba}/message_templates item. */

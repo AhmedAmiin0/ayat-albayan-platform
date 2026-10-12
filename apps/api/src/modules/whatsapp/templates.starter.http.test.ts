@@ -2,7 +2,7 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { ADMIN, whatsappApp } from './test-app';
 import { templateRow } from './whatsapp.fakes';
 
-// PATCH /messaging/templates/:key/starter «قالب بدء محادثة للمبيعات» (owner 2026-10-12, docs/16).
+// PATCH /messaging/templates/:key/starter «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16).
 
 type App = Awaited<ReturnType<typeof whatsappApp>>;
 const STARTER_URL = '/messaging/templates/academy_welcome/starter';

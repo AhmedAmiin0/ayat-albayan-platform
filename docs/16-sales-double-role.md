@@ -67,3 +67,15 @@ running-lessons list with «ادخل الحلقة», teachers and all students. 
 | 14 | Starters only | Sales list and send ONLY approved templates with `sales_starter` (docs/12 §13.18): `GET /messaging/templates` filters them, `POST /threads/:phone/template` answers 403 `template_not_allowed` for any other. The admin keeps every template. |
 | 14a | Where they come from | «راجع حالة القوالب» imports every approved template of the chat (main) number's WABA the registry does not know, ticked (a `teacher_` one unticked), sent from the chat number. The admin ticks or unticks any template with «قالب بدء محادثة للمبيعات» on the templates page (`PATCH /messaging/templates/:key/starter`, audited). |
 | 14b | Staging | The chat line is not configured on staging (Meta test credentials, `WA_TEMPLATE_SYNC=false`), so nothing is imported: sales see only the templates an admin ticks, none by default. Tick at least one approved template there, or sales cannot open a chat after 24 h. |
+
+## Owner request 2026-10-12: restricted templates (teachers, sales and other limited roles)
+
+Owner: «for assistants keep only two templates which is free_trial_invite and welcome_greeting», then «this only applies for teacher and assistant», then «all roles except the ones allowed to have all templates». Contract: docs/12 §13.19.
+
+| # | Area | Decision |
+|---|---|---|
+| 15 | Who | Every role without `templates.manage` or the new `templates.send_all` («إرسال كل القوالب», admin-only by default, grantable to a custom role) lists and sends ONLY the restricted allow-list: teachers in teacher mode, sales (the owner's «assistant»), the classroom assistant and custom roles. Row 14 (sales starters only) is widened to all of them. |
+| 15a | The list | Approved rows flagged `sales_starter` (column name kept; it now means «allowed for restricted roles»), never a PDF one or an own-button one; by default exactly `free_trial_invite` and `welcome_greeting` (migration `20261012000360_restricted_templates.sql`, which resets earlier ticks). The admin changes it with the «متاح للمعلمين والمبيعات» switch on the templates page. Anything else: 403 `template_not_allowed`. |
+| 15b | Teachers | They lose the manual lesson reminders (`lesson_reminder*`); automatic reminders are unchanged. Own families only, never their own chat, `not_your_lesson` still apply. |
+| 15c | Import | «راجع حالة القوالب» flags a new chat-line template only when it is one of the two defaults (row 14a's «ticked» no longer applies); it never re-flags or unflags an existing row. |
+| 15d | Staging | No chat line, so the two templates are not imported: the restricted composers read «لا توجد قوالب متاحة لك بعد» until the chat line is configured and the sync imports them. |

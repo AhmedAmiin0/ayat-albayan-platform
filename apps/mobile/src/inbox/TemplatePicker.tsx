@@ -48,8 +48,11 @@ export interface TemplatePickerProps {
  */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
-  // A salesperson lists only the starters the admin ticked: none ticked is not «nothing approved».
-  const sales = useHolds('self.sales');
+  // Without templates.manage or templates.send_all only the admin's allow-list (owner 2026-10-12):
+  // none ticked (or not imported yet) is not «nothing approved».
+  const manages = useHolds('templates.manage');
+  const sendsAll = useHolds('templates.send_all');
+  const restricted = !manages && !sendsAll;
   const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
   const close = () => {
@@ -95,7 +98,7 @@ export function TemplatePicker(props: TemplatePickerProps) {
                 <ErrorState onRetry={() => void templates.refetch()} />
               ) : templates.isSuccess ? (
                 <View style={{ padding: 16 }}>
-                  <EmptyState title={sales ? t.inbox.composer.noStarters : t.inbox.composer.noApproved} />
+                  <EmptyState title={restricted ? t.inbox.composer.noAllowed : t.inbox.composer.noApproved} />
                 </View>
               ) : null
             }

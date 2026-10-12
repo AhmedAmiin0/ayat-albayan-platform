@@ -5,7 +5,7 @@ import { TemplateStarters } from './template-starters';
 import type { TemplatesQueries } from './templates.queries';
 import { templateRow } from './whatsapp.fakes';
 
-// «قالب بدء محادثة للمبيعات» (owner 2026-10-12, docs/16): the admin's per-template flag, audited.
+// «متاح للمعلمين والمبيعات» (the restricted allow-list) (owner 2026-10-12, docs/16): the admin's per-template flag, audited.
 
 const queries = { get: vi.fn(), update: vi.fn() };
 const audit = { record: vi.fn() };
