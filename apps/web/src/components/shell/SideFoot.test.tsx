@@ -1,10 +1,20 @@
-import { render, screen } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render as rtlRender, screen } from '@testing-library/react';
+import type { ReactElement } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { SideFoot } from './SideFoot';
+
+vi.mock('@tanstack/react-router', async () => ({ Link: (await import('@/features/dashboard/link-mock')).Link }));
+const apiFetch = vi.hoisted(() => vi.fn(() => Promise.reject(new Error('offline'))));
+vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 vi.mock('./LogoutButton', () => ({ LogoutButton: () => <button type="button">out</button> }));
 vi.mock('./LanguageSwitch', () => ({ LanguageSwitch: () => <button type="button">lang</button> }));
 vi.mock('@/components/ui/theme-toggle', () => ({ ThemeToggle: () => <button type="button">theme</button> }));
+
+// The «حسابي» chip reads ['me','profile']; here it fails, and the foot still shows the email.
+const render = (ui: ReactElement) =>
+  rtlRender(<QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>{ui}</QueryClientProvider>);
 
 describe('SideFoot', () => {
   it('stays pinned to the bottom of the sidebar on its own background (short viewports)', () => {
