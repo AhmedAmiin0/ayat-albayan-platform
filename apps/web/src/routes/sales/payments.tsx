@@ -1,5 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { MyPayments } from '@/features/sales/MyPayments';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/** /sales/payments «مدفوعاتي» — only the payments I recorded. */
-export const Route = createFileRoute('/sales/payments')({ component: MyPayments });
+/** The old /sales/payments page: «مدفوعاتي» is a filter of «أرباحي» now. */
+export const Route = createFileRoute('/sales/payments')({
+  beforeLoad: () => {
+    throw redirect({ to: '/sales/earnings', search: { view: 'payments' } });
+  },
+});

@@ -1,5 +1,8 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { AllStudents } from '@/features/sales/AllStudents';
+import { createFileRoute, redirect } from '@tanstack/react-router';
 
-/** /sales/all-students «كل الطلاب» — every student of the academy, next to «طلابي» (read-only, docs/16). */
-export const Route = createFileRoute('/sales/all-students')({ component: AllStudents });
+/** The old /sales/all-students page: «الطلاب» lives at /sales/students now. */
+export const Route = createFileRoute('/sales/all-students')({
+  beforeLoad: () => {
+    throw redirect({ to: '/sales/students' });
+  },
+});

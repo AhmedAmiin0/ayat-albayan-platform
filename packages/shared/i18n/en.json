@@ -2287,7 +2287,10 @@
       "invoices": "Invoices",
       "summary": "Finance summary"
     },
-    "month": { "prev": "Previous month", "next": "Next month" },
+    "month": {
+      "prev": "Previous month",
+      "next": "Next month"
+    },
     "stale": "Could not refresh, showing the last saved data",
     "loadFailed": "Could not load the data, try again",
     "offline": "No internet connection, try again",
@@ -3356,10 +3359,9 @@
     "nav": {
       "chats": "Chats",
       "subscriptions": "Subscriptions",
-      "meetings": "Meetings",
       "label": "Sales sections",
       "teachers": "Teachers",
-      "allStudents": "All students",
+      "allStudents": "Students",
       "live": "Running lessons",
       "academySchedule": "Lesson schedule"
     },
@@ -3377,14 +3379,6 @@
       "startsOn": "Starts {date}",
       "lessonsCol": "Lessons",
       "startsCol": "Start date"
-    },
-    "schedule": {
-      "title": "Meetings schedule",
-      "empty": "No meetings on this day",
-      "lead": "Lead",
-      "list": "Meetings list",
-      "teacher": "Teacher",
-      "time": "Time"
     },
     "assign": {
       "label": "Sales owner",
@@ -3480,6 +3474,10 @@
       "liveNow": "Running now",
       "makeupTag": "Makeup",
       "lessonLabel": "Lesson at {time} with {teacher}"
+    },
+    "views": {
+      "students": "Students view",
+      "money": "Earnings and payments view"
     }
   },
   "meetings": {

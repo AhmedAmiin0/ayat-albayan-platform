@@ -4,7 +4,7 @@ import { myStudentsQuery } from './api';
 import { myStudentColumns } from './my-student-columns';
 import { PortalList } from './PortalList';
 
-/** /sales/students «طلابي»: the students I brought, when, whether their first subscription is paid, and my commission on each. */
+/** «طلابي» on /sales/students: the students I brought, when, whether their first subscription is paid, and my commission on each. */
 export function MyStudents() {
   return (
     <PortalList

@@ -68,7 +68,7 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
           </Button>
         )}
         {sales ? (
-          <Link to="/sales/students" className={buttonVariants()}>
+          <Link to="/sales/students" search={{ view: 'mine' }} className={buttonVariants()}>
             {t.assistantPortal.register.openMyStudents}
           </Link>
         ) : (
