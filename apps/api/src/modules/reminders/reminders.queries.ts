@@ -4,12 +4,17 @@ import { DB, type Db } from '../../common/db/db.module';
 import { readAll } from '../scheduling/read-all';
 import { dbError } from '../teachers/http';
 import type { QueuedMessage } from './queued-row';
+import type { RoomCandidate } from './reminders.links';
 import { REMINDER_LESSON_STATUSES, type ReminderLesson } from './reminders.plan';
+import { roomLinkRows } from './reminders.room';
 
 const LESSON_SELECT =
-  'id, starts_at, status, meeting_link, teacher:teachers(id, display_name_ar, phone_e164, tz), lesson_students(student:students(name, guardian:guardians(id, phone_e164, tz)))' as const;
+  'id, starts_at, ends_at, status, meeting_link, teacher:teachers(id, display_name_ar, phone_e164, tz), lesson_students(student:students(id, name, guardian:guardians(id, phone_e164, tz)))' as const;
 
-/** Every key the reminder job queues: its rows for a lesson that was cancelled are dropped. */
+/**
+ * Every key the reminder job queues: its rows for a lesson that was cancelled are dropped. With
+ * lesson_join_link (settings.meeting_link_auto) the admin's «ابعت لينك الحلقة» rows are dropped too.
+ */
 export const REMINDER_KEYS = [
   'lesson_reminder',
   'lesson_reminder_meet',
@@ -17,6 +22,7 @@ export const REMINDER_KEYS = [
   'lesson_reminder_24h',
   'teacher_lesson_reminder',
   'teacher_lesson_reminder_meet',
+  'lesson_join_link',
 ] as const satisfies readonly TemplateKey[];
 
 /** Registry keys among `keys` that Meta approved (message_templates.status). */
@@ -67,6 +73,11 @@ export class RemindersQueries {
 
   queue(rows: readonly QueuedMessage[]): Promise<number> {
     return queueMessages(this.db, rows);
+  }
+
+  /** lesson_join_link rows for the candidates not queued yet, each token saved first (reminders.room.ts). */
+  roomLinks(candidates: readonly RoomCandidate[], now: Date): Promise<QueuedMessage[]> {
+    return roomLinkRows(this.db, candidates, now);
   }
 
   /**

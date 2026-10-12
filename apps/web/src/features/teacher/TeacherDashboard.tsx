@@ -14,6 +14,7 @@ import { PendingReports } from '@/features/reports/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
+import { usePublicConfig } from '@/lib/public-config';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { JoinLink } from './JoinLink';
 import { LessonDayList } from './LessonDayList';
@@ -58,6 +59,8 @@ function Dashboard({ me }: { me: TeacherMe }) {
   const range = t.teacherDash.weekRange.replace('{from}', dayMonthLabel(today)).replace('{to}', dayMonthLabel(addDays(today, 6)));
   const [tab, setTab] = useState<Tab>('today');
   const [notice, setNotice] = useState<string | null>(null);
+  // settings.meeting_link_auto: lessons are held in the platform classroom, the fixed link is not shown.
+  const auto = usePublicConfig().meeting_link_auto;
   const list = (which: 'today' | 'week') => {
     if (lessons.isError) return <FormAlert>{t.teacherDash.loadError}</FormAlert>;
     if (!lessons.data) return <ListSkeleton />;
@@ -73,7 +76,7 @@ function Dashboard({ me }: { me: TeacherMe }) {
 
   return (
     <>
-      <JoinLink link={me.meeting_link} />
+      {!auto && <JoinLink link={me.meeting_link} />}
       <PendingReports tz={me.tz} />
       <Tabs label={t.teacherDash.tabs} tabs={TABS} value={tab} onChange={setTab} />
       <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>

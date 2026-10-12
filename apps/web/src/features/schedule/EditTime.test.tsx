@@ -41,7 +41,7 @@ describe('«عدّل الوقت» on a scheduled lesson (R-SCH-11)', () => {
     const edited = lesson({
       time_edit: { at: '2026-10-03T08:00:00.000Z', reason: 'طلب ولي الأمر', was: { starts_at: '2026-10-04T13:00:00.000Z', ends_at: '2026-10-04T13:45:00.000Z' } },
     });
-    render(<LessonDetails lesson={edited} />);
+    render(<QueryClientProvider client={new QueryClient()}><LessonDetails lesson={edited} /></QueryClientProvider>);
     expect(screen.getByText(/كان: .* 16:00/)).toBeTruthy();
     expect(screen.getByText(t.lessons.timeEdit.reasonLine.replace('{reason}', 'طلب ولي الأمر'))).toBeTruthy();
     expect(screen.getAllByText(t.lessons.timeEdit.tag)).toHaveLength(1); // the tag chip; the note starts with the same words

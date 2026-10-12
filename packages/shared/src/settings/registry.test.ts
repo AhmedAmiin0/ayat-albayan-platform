@@ -24,7 +24,7 @@ describe('settings registry', () => {
       'join_opens_before_min', 'join_closes_after_min', 'makeup_window_days', 'upload_max_mb',
       'quick_reply_window_hours', 'reminder_lookahead_hours', 'follow_up_slots_from_hours',
       'follow_up_slots_to_days', 'feedback_rate_window_min', 'fx_fresh_hours', 'academy_whatsapp_e164',
-      'academy_timezone', 'default_meeting_title',
+      'academy_timezone', 'default_meeting_title', 'meeting_link_auto',
     ]));
   });
 
@@ -35,6 +35,7 @@ describe('settings registry', () => {
       quick_reply_window_hours: 48, reminder_lookahead_hours: 25, follow_up_slots_from_hours: 12,
       follow_up_slots_to_days: 7, feedback_rate_window_min: 10, fx_fresh_hours: 24,
       academy_whatsapp_e164: '+966566101447', academy_timezone: 'Asia/Riyadh', default_meeting_title: 'اجتماع',
+      meeting_link_auto: false,
     });
   });
 
@@ -65,6 +66,7 @@ describe('settings registry', () => {
     expectTypeOf<AcademySettings['follow_up_hours']>().toEqualTypeOf<number[]>();
     expectTypeOf<AcademySettings['feedback_mode']>().toEqualTypeOf<'buttons' | 'link'>();
     expectTypeOf<AcademySettings['academy_whatsapp_e164']>().toEqualTypeOf<string>();
+    expectTypeOf<AcademySettings['meeting_link_auto']>().toEqualTypeOf<boolean>();
     expectTypeOf<SettingsUpdate['joinOpensBeforeMin']>().toEqualTypeOf<number | undefined>();
   });
 });

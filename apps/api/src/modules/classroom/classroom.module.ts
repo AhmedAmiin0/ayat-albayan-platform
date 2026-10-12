@@ -7,7 +7,14 @@ import { AssistantsController } from './assistants.controller';
 import { AssistantLessonsQueries } from './assistants.lessons';
 import { AssistantsQueries } from './assistants.queries';
 import { AssistantsService } from './assistants.service';
-import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG, type ClassroomConfigSource, type RecordingConfig } from './classroom.config';
+import {
+  CLASSROOM_CONFIG,
+  CLASSROOM_WEB_ORIGIN,
+  firstWebOrigin,
+  RECORDING_CONFIG,
+  type ClassroomConfigSource,
+  type RecordingConfig,
+} from './classroom.config';
 import { ClassroomController, JoinLinkStaffController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
@@ -80,7 +87,7 @@ import { StudentLinkService } from './student-link.service';
   providers: [
     // Read per use: LIVEKIT_* may come from the database's integration config (no restart).
     { provide: CLASSROOM_CONFIG, useFactory: (): ClassroomConfigSource => () => livekitEnv(loadEnv()) },
-    { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => (loadEnv().WEB_ORIGIN.split(',')[0] ?? '').trim().replace(/\/+$/, '') },
+    { provide: CLASSROOM_WEB_ORIGIN, useFactory: (): string => firstWebOrigin(loadEnv().WEB_ORIGIN) },
     { provide: RECORDING_CONFIG, useFactory: (): RecordingConfig => recordingEnv(loadEnv()) },
     { provide: LIVEKIT_HTTP, useValue: ((url, init) => fetch(url, init)) satisfies HttpPost },
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },

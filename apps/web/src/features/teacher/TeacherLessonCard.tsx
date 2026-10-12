@@ -8,6 +8,7 @@ import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lessons';
 import { t } from '@/lib/i18n';
+import { usePublicConfig } from '@/lib/public-config';
 import { cn } from '@/lib/utils';
 import { TeacherProposal } from './TeacherProposal';
 
@@ -25,9 +26,11 @@ export interface TeacherLessonCardProps {
  * status, «الباقة مش مدفوعة» for a flagged student (R-SUB-02), «ادخل الحلقة» (open lessons only:
  * never on a moved / cancelled one), confirm / attendance
  * for open lessons, and «اقترح ميعاد تاني» (or the proposal waiting for the admin). 48px controls.
+ * With settings.meeting_link_auto the fixed link is not offered: the platform classroom is the way in.
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const style = lessonStatusStyle[lesson.status];
+  const auto = usePublicConfig().meeting_link_auto;
   const link = lesson.meeting_link ?? fallbackLink;
   return (
     <article
@@ -62,7 +65,7 @@ export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherL
         <StatusChip {...style} label={t.enums.lessonStatus[lesson.status]} className="ms-auto" />
       </div>
       <div className="flex flex-wrap items-start gap-3">
-        {!isOpenLesson(lesson.status) ? null : link ? (
+        {auto || !isOpenLesson(lesson.status) ? null : link ? (
           <a href={link} target="_blank" rel="noreferrer" className={buttonVariants({ variant: 'secondary', size: 'lg' })}>
             {t.classroom.joinMeeting}
           </a>

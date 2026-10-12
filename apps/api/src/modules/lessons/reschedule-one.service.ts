@@ -5,7 +5,7 @@ import type { AuthUser } from '../../common/auth/verify-token';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { conflict } from '../scheduling/errors';
 import { TeachersQueries } from '../teachers/teachers.queries';
-import { confirmationMessages } from './confirmation-messages';
+import { confirmationMessages, forMessages } from './confirmation-messages';
 import { studentIdsOf, type LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
 import { invalidTransition } from './transition';
@@ -56,12 +56,13 @@ export class RescheduleOneService {
       student_ids: studentIds,
     };
     const contacts = await this.store.queries.contacts(studentIds);
+    const auto = await this.store.queries.meetingLinkAuto();
     await this.store.commit({
       change: {
         actor: actor.id,
         changes: [{ id: old.id, from_status: old.status, to_status: 'rescheduled', chargeable: false }],
         lessons: [next],
-        messages: confirmationMessages(next, contacts),
+        messages: confirmationMessages(forMessages(next, auto), contacts),
       },
       audit: {
         entity: 'lessons',

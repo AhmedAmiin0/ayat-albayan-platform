@@ -1,7 +1,8 @@
-import { counted, type PendingReportView } from '@ab/shared';
+import { counted, PUBLIC_SETTING_DEFAULTS, type PendingReportView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
-import { renderWithQuery } from '@/test/query';
+import { publicConfigQuery } from '@/lib/public-config';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { jana, lesson, yusuf } from '@/today/fixtures';
 import { TeacherTodayScreen } from './TeacherTodayScreen';
 
@@ -80,4 +81,13 @@ test('a day without lessons says so', async () => {
   await renderWithQuery(<TeacherTodayScreen />);
   expect(await screen.findByText(t.teacherDash.noLessonsToday)).toBeTruthy();
   expect(screen.queryByText(t.reports.pending)).toBeNull();
+});
+
+test('settings.meeting_link_auto: every open lesson gets the platform classroom, not its fixed link', async () => {
+  const client = createTestQueryClient();
+  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: true });
+  await renderWithQuery(<TeacherTodayScreen />, client);
+  await screen.findByText(counted(t.reports.pendingCount, 1));
+  // JoinClassroomButton on both of today's open lessons (static mode: only the 20:00 one, by its link).
+  expect(await screen.findAllByRole('button', { name: t.classroom.enter })).toHaveLength(2);
 });

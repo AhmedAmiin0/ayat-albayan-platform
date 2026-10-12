@@ -28,7 +28,7 @@ function worker() {
   return w;
 }
 
-describe('isAutomatic: job-made reminders, follow-ups, renewals and lesson ratings', () => {
+describe('isAutomatic: job-made reminders, classroom links, follow-ups, renewals and lesson ratings', () => {
   it.each([
     'lesson_reminder',
     'lesson_reminder_meet',
@@ -36,6 +36,7 @@ describe('isAutomatic: job-made reminders, follow-ups, renewals and lesson ratin
     'lesson_reminder_24h',
     'teacher_lesson_reminder',
     'teacher_lesson_reminder_meet',
+    'lesson_join_link',
     'follow_up_slots',
     'renewal_due',
     'lesson_rating',
@@ -44,13 +45,14 @@ describe('isAutomatic: job-made reminders, follow-ups, renewals and lesson ratin
     expect(isAutomatic({ template_key: key, created_by: ADMIN })).toBe(false);
   });
 
-  it.each(['booking_confirmation', 'booking_confirmation_meet', 'report_ready', 'lesson_feedback_request', 'lesson_join_link', null])('%s is never automatic', (key) => {
+  it.each(['booking_confirmation', 'booking_confirmation_meet', 'report_ready', 'lesson_feedback_request', null])('%s is never automatic', (key) => {
     expect(isAutomatic({ template_key: key, created_by: null })).toBe(false);
   });
 
   it('every registry key is classified: a new key fails here until it is automatic or sent on an action', () => {
-    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «أرسل طلب الرأي» and «أرسل رابط الحلقة».
-    const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request', 'lesson_join_link'];
+    // Sent because someone acted in the app: a booking made, a report a teacher submitted, the admin's «أرسل طلب الرأي».
+    // lesson_join_link is both: the reminders job's (settings.meeting_link_auto) is automatic, the admin's send carries created_by.
+    const onAction = ['booking_confirmation', 'booking_confirmation_meet', 'booking_confirmation_plain', 'report_ready', 'lesson_feedback_request'];
     expect([...AUTOMATIC_KEYS, ...onAction].sort()).toEqual([...TEMPLATE_KEYS].sort());
   });
 });

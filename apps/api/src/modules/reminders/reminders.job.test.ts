@@ -1,36 +1,12 @@
-import type { AcademySettings } from '@ab/shared';
-import { describe, expect, it, vi } from 'vitest';
-import type { PushService } from '../../common/push/push.service';
-import { SETTING_DEFAULTS, type SettingsService } from '../../common/settings/settings.service';
-import type { QueuedMessage } from './queued-row';
-import { at, sampleLesson } from './reminders.fakes';
-import { RemindersJob } from './reminders.job';
-import { confirmationPush, needsConfirmation, type ReminderLesson } from './reminders.plan';
-import type { RemindersQueries } from './reminders.queries';
-
-type Opts = { settings?: Partial<AcademySettings>; approved?: string[]; pushed?: string[]; lessons?: ReminderLesson[] };
-
-function setup(opts: Opts = {}) {
-  const queued: QueuedMessage[] = [];
-  const queries = {
-    dropCancelled: vi.fn(async () => 0),
-    upcoming: vi.fn(async () => opts.lessons ?? [sampleLesson()]),
-    approved: vi.fn(async () => new Set(opts.approved ?? [])),
-    queue: vi.fn(async (rows: readonly QueuedMessage[]) => queued.push(...rows)),
-    pushedSubjects: vi.fn(async () => new Set(opts.pushed ?? [])),
-  };
-  // Automatic messages ON unless a test says otherwise (the default is OFF, migration 162).
-  const settings = { all: async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: true, ...opts.settings }) };
-  const push = { notifyAdmins: vi.fn(async () => undefined) };
-  const job = new RemindersJob(
-    queries as unknown as RemindersQueries,
-    settings as unknown as SettingsService,
-    push as unknown as PushService,
-  );
-  return { job, queries, queued, push };
-}
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { at, fakeJob as setup, sampleLesson } from './reminders.fakes';
+import { confirmationPush, needsConfirmation } from './reminders.plan';
 
 describe('RemindersJob.runOnce (R-MSG-02)', () => {
+  // LiveKit unset whatever the shell says (the classroom link mode: reminders.job.room.test.ts).
+  beforeEach(() => vi.stubEnv('LIVEKIT_URL', ''));
+  afterEach(() => vi.unstubAllEnvs());
+
   it('queues the same-day reminders, looking 25 h ahead', async () => {
     const { job, queries, queued } = setup();
     const summary = await job.runOnce(at('2026-10-04T13:10:00Z'));

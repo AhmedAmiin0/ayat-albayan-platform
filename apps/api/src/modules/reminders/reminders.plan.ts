@@ -25,10 +25,12 @@ export interface ReminderGuardian {
 export interface ReminderLesson {
   id: string;
   starts_at: string;
+  /** The classroom link's expiry (room close) is counted from it. */
+  ends_at: string;
   status: LessonStatus;
   meeting_link: string | null;
   teacher: { id: string; display_name_ar: string; phone_e164: string | null; tz: string } | null;
-  students: { name: string; guardian: ReminderGuardian | null }[];
+  students: { id: string; name: string; guardian: ReminderGuardian | null }[];
 }
 
 export interface ReminderPlanInput {
@@ -43,7 +45,7 @@ export interface ReminderPlanInput {
 /** Only these get reminders; a cancelled / rescheduled / past lesson never does. */
 export const REMINDER_LESSON_STATUSES = ['scheduled', 'confirmed'] as const satisfies readonly LessonStatus[];
 
-const isOpen = (status: LessonStatus) => (REMINDER_LESSON_STATUSES as readonly string[]).includes(status);
+export const isOpen = (status: LessonStatus): boolean => (REMINDER_LESSON_STATUSES as readonly string[]).includes(status);
 
 /** Each guardian of the lesson's students with their own children in it («سهيلة ومريم»). */
 function byGuardian(lesson: ReminderLesson): { guardian: ReminderGuardian; names: string[] }[] {

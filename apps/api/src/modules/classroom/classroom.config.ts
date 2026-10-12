@@ -20,3 +20,6 @@ export type RecordingConfig = RecordingEnv | null;
 
 /** Injection token for the web app's origin (the first of WEB_ORIGIN), the host of /join/:token. */
 export const CLASSROOM_WEB_ORIGIN = Symbol('CLASSROOM_WEB_ORIGIN');
+
+/** The first origin of WEB_ORIGIN (a comma list), without a trailing slash. */
+export const firstWebOrigin = (webOrigin: string): string => (webOrigin.split(',')[0] ?? '').trim().replace(/\/+$/, '');
