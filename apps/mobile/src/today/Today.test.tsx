@@ -13,6 +13,8 @@ jest.mock('@/lib/api', () => ({
 }));
 // The «جلسات مباشرة» section repeats the live card; it has its own tests (src/live).
 jest.mock('@/live/LiveSessions', () => ({ LiveSessions: () => null }));
+// The bell reads its own API (notifications/BellButton.test); here it would take the day's mocked answers.
+jest.mock('@/notifications/BellButton', () => ({ BellButton: () => null }));
 
 const dayKey = ['lessons', 'day', { date: '2026-10-01', tz: 'Asia/Riyadh' }];
 /** GET /lessons/day calls only (the cards also read each student's balance and the settings). */

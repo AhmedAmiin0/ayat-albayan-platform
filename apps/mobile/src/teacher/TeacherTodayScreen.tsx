@@ -6,6 +6,7 @@ import { clockAt } from '@/inbox/format';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { Note } from '@/more/Note';
+import { BellButton } from '@/notifications/BellButton';
 import { Notice } from '@/today/Notice';
 import { localDate } from '@/today/timeline';
 import { useNow } from '@/today/use-day-lessons';
@@ -53,6 +54,7 @@ export function TeacherTodayScreen() {
     <Screen>
       <ScreenHeader
         title={t.teacherNav.today}
+        trailing={<BellButton tree="teacher" />}
         subtitle={stale ? `${dateLine} · ${t.mobile.lastUpdated.replace('{time}', clockAt(day.dataUpdatedAt))}` : dateLine}
       />
       <LiveSessions lessons={lessons} />

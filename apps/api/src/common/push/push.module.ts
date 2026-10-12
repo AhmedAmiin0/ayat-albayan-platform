@@ -1,7 +1,10 @@
 import { Global, Module } from '@nestjs/common';
-import { loadEnv } from '../../env';
+import { loadEnv, webPushEnv } from '../../env';
 import { EXPO_PUSH_PATH, type ExpoMessage, type ExpoTicket } from './expo-push';
+import { NotificationsController, WebPushController } from './notifications.controller';
+import { NotificationsQueries } from './notifications.queries';
 import { PUSH_TRANSPORT, PushService, type PushTransport } from './push.service';
+import { fetchTransport, WEB_PUSH_KEYS, WEB_PUSH_TRANSPORT, WebPushSender, type WebPushKeysSource } from './web-push.sender';
 
 /** Expo's batch limit per request. */
 const EXPO_BATCH = 100;
@@ -38,11 +41,20 @@ function expoTransport({ base, accessToken }: ExpoConn): PushTransport {
   };
 }
 
-/** Global: the webhook, the sender and the jobs all inject PushService (docs/12 §6). */
+/**
+ * Global: the webhook, the sender, the booking and the jobs all inject PushService (docs/12 §6).
+ * Also the bell's own routes (/me/notifications, /me/web-push; R-NOT-01, R-NOT-02).
+ */
 @Global()
 @Module({
+  controllers: [NotificationsController, WebPushController],
   providers: [
     PushService,
+    NotificationsQueries,
+    WebPushSender,
+    { provide: WEB_PUSH_TRANSPORT, useValue: fetchTransport },
+    // WEB_PUSH_* read per send, like EXPO_*: all three unset (local, e2e) = browser push off.
+    { provide: WEB_PUSH_KEYS, useValue: ((): ReturnType<WebPushKeysSource> => webPushEnv(loadEnv())) satisfies WebPushKeysSource },
     {
       provide: PUSH_TRANSPORT,
       // EXPO_* read per call: the admin may change them in «التكاملات» (no restart).
