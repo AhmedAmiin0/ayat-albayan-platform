@@ -1,31 +1,16 @@
-import { PUSH_KINDS, type PushKind } from '@ab/shared';
+import type { PushKind } from '@ab/shared';
 import { canOpen, tabOpen, type TabRoute } from '@/auth/route-permissions';
 import type { Can } from '@/auth/use-permissions';
 import { threadHref } from '@/inbox/thread-cache';
+import { assistantRouteFor, salesRouteFor } from './notification-route.roles';
+import { pushField, pushKind, pushPhone } from './push-data';
 
-// Where a tapped push (or a bell row) opens (R-MOB-01, R-NOT-01). `data` is PushService's
-// { kind, ...event.data } (docs/12 §6): untrusted JSON, so every field is checked before it reaches a route.
+// Where a tapped push (or a bell row) opens (R-MOB-01, R-NOT-01); the data is checked in push-data.
 
-/** The app's two signed-in trees: admins get (tabs), teachers get /teacher (their own routes). */
-export type PushTree = 'admin' | 'teacher';
+/** The app's signed-in trees: admins get (tabs); teachers, sales and assistants their own routes. */
+export type PushTree = 'admin' | 'teacher' | 'sales' | 'assistant';
 
-const isRecord = (v: unknown): v is Record<string, unknown> => typeof v === 'object' && v !== null;
-
-export function pushKind(data: unknown): PushKind | null {
-  const kind = isRecord(data) ? data['kind'] : undefined;
-  return PUSH_KINDS.find((k) => k === kind) ?? null;
-}
-
-function field(data: unknown, key: string): string | null {
-  const value = isRecord(data) ? data[key] : undefined;
-  return typeof value === 'string' && value ? value : null;
-}
-
-/** The phone a message push is about, if it carries a usable one. */
-export function pushPhone(data: unknown): string | null {
-  const phone = field(data, 'phone');
-  return phone && /^\+\d{6,15}$/.test(phone) ? phone : null;
-}
+export { pushKind, pushPhone } from './push-data';
 
 const toThread = (data: unknown) => {
   const phone = pushPhone(data);
@@ -33,7 +18,7 @@ const toThread = (data: unknown) => {
 };
 
 const toStudent = (data: unknown) => {
-  const student = field(data, 'studentId');
+  const student = pushField(data, 'studentId');
   return student && /^[\w-]+$/.test(student) ? `/students/${student}` : '/students';
 };
 
@@ -106,12 +91,26 @@ export function teacherRouteFor(data: unknown, can: Can = () => true): string | 
   return kind ? TEACHER_ROUTES[kind](data, can) : null;
 }
 
-/** routeFor / teacherRouteFor by the tree the app is in. */
+const TREE_ROUTES: Record<PushTree, (data: unknown, can: Can) => string | null> = {
+  admin: routeFor,
+  teacher: teacherRouteFor,
+  sales: salesRouteFor,
+  assistant: assistantRouteFor,
+};
+
+/** The route map of the tree the app is in (no tree falls back to another's). */
 export function routeIn(tree: PushTree, data: unknown, can: Can = () => true): string | null {
-  return tree === 'teacher' ? teacherRouteFor(data, can) : routeFor(data, can);
+  return TREE_ROUTES[tree](data, can);
 }
+
+const NOTIFICATIONS: Record<PushTree, string> = {
+  admin: '/more/notifications',
+  teacher: '/teacher/today/notifications',
+  sales: '/sales/more/notifications',
+  assistant: '/assistant/more/notifications',
+};
 
 /** The bell's own screen in each tree (a stack screen, not a tab). */
 export function notificationsHref(tree: PushTree): string {
-  return tree === 'teacher' ? '/teacher/today/notifications' : '/more/notifications';
+  return NOTIFICATIONS[tree];
 }
