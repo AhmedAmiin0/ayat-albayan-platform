@@ -36,7 +36,7 @@ const clientMock = () => ({
 
 function mocks() {
   return {
-    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
+    templates: { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() },
     messages: { get: vi.fn(), requeue: vi.fn(), markSentManually: vi.fn(), handOff: vi.fn() },
     gate: { view: vi.fn(), open: vi.fn(), automaticOn: vi.fn(async () => true) },
     client: clientMock(),
@@ -66,7 +66,12 @@ export async function whatsappApp() {
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = (input: { method: 'GET' | 'POST'; url: string; token?: string }) =>
-    app.inject({ method: input.method, url: input.url, headers: { authorization: `Bearer ${input.token ?? 'admin'}` } });
+  const call = (input: { method: 'GET' | 'POST' | 'PATCH'; url: string; token?: string; body?: object }) =>
+    app.inject({
+      method: input.method,
+      url: input.url,
+      headers: { authorization: `Bearer ${input.token ?? 'admin'}` },
+      ...(input.body ? { payload: input.body } : {}),
+    });
   return { ...m, app, call };
 }

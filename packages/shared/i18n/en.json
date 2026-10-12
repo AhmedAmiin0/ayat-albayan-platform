@@ -2352,6 +2352,12 @@
     "submitConfirmYes": "Yes, send it",
     "submitted": "Sent to Meta — waiting for approval",
     "needsAttention": "Some templates aren't ready — their messages will stay in the queue until they're approved",
+    "line": "Line",
+    "salesStarter": "Sales chat starter",
+    "salesStarterFor": "{name}: sales chat starter",
+    "salesStarterIntro": "Sales see only the approved templates ticked in the “Sales chat starter” column, and use them to start a conversation or reopen it after 24 hours. New chat-line templates are added when you check the templates’ status and come ticked; they are sent from the chat line, while booking and reminder templates always go from the notifications line.",
+    "starterOn": "Sales can now start a conversation with this template",
+    "starterOff": "Sales can no longer use this template",
     "qualityScore": {
       "GREEN": "High",
       "YELLOW": "Medium",
@@ -2420,7 +2426,7 @@
       "recipientsRestricted": "Sending in this environment is limited to test numbers; messages to any other number stay in the queue.",
       "lines": {
         "title": "WhatsApp lines",
-        "intro": "The notifications line sends templates and automatic messages; the chat line is for regular conversations. Check them to see each number's status and whether incoming messages reach the platform.",
+        "intro": "The notifications line sends the booking and reminder templates and automatic messages; the chat line is for regular conversations and the chat starter templates. Check them to see each number's status and whether incoming messages reach the platform.",
         "check": "Check lines",
         "checking": "Checking…",
         "notChecked": "Not checked yet",

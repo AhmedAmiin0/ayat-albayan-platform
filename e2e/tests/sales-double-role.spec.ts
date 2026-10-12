@@ -1,12 +1,14 @@
+import type { Browser } from '@playwright/test';
 import { family, makeAssistant, message, TAG } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
 import { lastOutbound } from '../support/inbox';
-import { salesNav, seedBooked, seedMine, signInSales } from '../support/sales-portal';
+import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../support/sales-portal';
 
 // Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.
 // She reads a chat that is not hers, opens the history of a confirmed subscription she made (with its payment amounts),
 // sees the teachers (master-detail) and every student, the academy's day read-only, and a lesson running now
-// with «ادخل الحلقة». Owner report 2026-10-12: she starts a conversation with a template.
+// with «ادخل الحلقة». Owner report 2026-10-12: she starts a conversation with a template, one the
+// admin offers to sales («قالب بدء محادثة للمبيعات»; sales-starter.spec covers the chat line's own).
 
 const composer = ar.inbox.composer;
 
@@ -62,36 +64,47 @@ test.describe('sales double role', () => {
   });
 
   test('sales starts a conversation with a template', async ({ browser }) => {
-    const me = await makeAssistant(`dc${test.info().project.name}`);
-    const names = { student: `بداية${TAG}`, teacher: `معلمة بداية${TAG}`, reply: `وعليكم السلام ${TAG}` };
-    const booked = await seedBooked({ name: names.student, teacher: names.teacher });
-    const page = await signInSales(browser, me.email);
-
-    // «محادثة جديدة»: the family never wrote; the number opens the first-template pane (the templates load: no 403).
-    await page.goto('/sales/inbox');
-    await page.getByText(ar.inbox.newChat.title, { exact: true }).click();
-    await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);
-    await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
-    await expect(page.getByText(ar.inbox.newChat.firstTemplate)).toBeVisible();
-    await page.getByLabel(composer.chooseTemplate).selectOption({ label: ar.templates.names.booking_confirmation_plain });
-    await page.getByLabel(composer.pickLesson).selectOption({ index: 1 });
-    await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(names.student);
-    await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
-
-    // Queued as hers (sales dedup space); the thread now exists, its window closed: templates only.
-    const log = page.getByRole('log', { name: ar.messages.log });
-    await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names.booking_confirmation_plain));
-    await expect(page.getByText(ar.inbox.sessionClosed)).toBeVisible();
-    const sent = await lastOutbound(booked.phone);
-    expect([sent.template_key, sent.created_by]).toEqual(['booking_confirmation_plain', me.id]);
-    expect(sent.dedup_key).toMatch(new RegExp(`^sales:${me.id}:`));
-
-    // The family replies: inside the 24 h window she writes plain text.
-    await message({ phone: booked.phone, guardian: booked.guardian, direction: 'inbound', body: names.reply });
-    await page.reload();
-    await expect(log.getByText(names.reply)).toBeVisible();
-    await page.getByRole('textbox', { name: composer.messageLabel }).fill(`أهلًا ${TAG}`);
-    await page.getByRole('button', { name: composer.send, exact: true }).click();
-    await expect.poll(async () => (await lastOutbound(booked.phone)).body).toBe(`أهلًا ${TAG}`);
+    // Sales list and send only starters: offer this one for the test, then put it back.
+    await setSalesStarter('booking_confirmation_plain', true);
+    try {
+      await startsWithTemplate(browser);
+    } finally {
+      await setSalesStarter('booking_confirmation_plain', false);
+    }
   });
 });
+
+/** Owner report 2026-10-12: a family that never wrote; sales opens the chat with an approved starter. */
+async function startsWithTemplate(browser: Browser): Promise<void> {
+  const me = await makeAssistant(`dc${test.info().project.name}`);
+  const names = { student: `بداية${TAG}`, teacher: `معلمة بداية${TAG}`, reply: `وعليكم السلام ${TAG}` };
+  const booked = await seedBooked({ name: names.student, teacher: names.teacher });
+  const page = await signInSales(browser, me.email);
+
+  // «محادثة جديدة»: the family never wrote; the number opens the first-template pane (the templates load: no 403).
+  await page.goto('/sales/inbox');
+  await page.getByText(ar.inbox.newChat.title, { exact: true }).click();
+  await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);
+  await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
+  await expect(page.getByText(ar.inbox.newChat.firstTemplate)).toBeVisible();
+  await page.getByLabel(composer.chooseTemplate).selectOption({ label: ar.templates.names.booking_confirmation_plain });
+  await page.getByLabel(composer.pickLesson).selectOption({ index: 1 });
+  await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(names.student);
+  await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
+
+  // Queued as hers (sales dedup space); the thread now exists, its window closed: templates only.
+  const log = page.getByRole('log', { name: ar.messages.log });
+  await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names.booking_confirmation_plain));
+  await expect(page.getByText(ar.inbox.sessionClosed)).toBeVisible();
+  const sent = await lastOutbound(booked.phone);
+  expect([sent.template_key, sent.created_by]).toEqual(['booking_confirmation_plain', me.id]);
+  expect(sent.dedup_key).toMatch(new RegExp(`^sales:${me.id}:`));
+
+  // The family replies: inside the 24 h window she writes plain text.
+  await message({ phone: booked.phone, guardian: booked.guardian, direction: 'inbound', body: names.reply });
+  await page.reload();
+  await expect(log.getByText(names.reply)).toBeVisible();
+  await page.getByRole('textbox', { name: composer.messageLabel }).fill(`أهلًا ${TAG}`);
+  await page.getByRole('button', { name: composer.send, exact: true }).click();
+  await expect.poll(async () => (await lastOutbound(booked.phone)).body).toBe(`أهلًا ${TAG}`);
+}

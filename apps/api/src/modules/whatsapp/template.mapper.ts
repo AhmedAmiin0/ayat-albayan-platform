@@ -3,6 +3,9 @@ import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons } from './wa-json';
 import type { TemplateRow } from './whatsapp.types';
 
+/** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
+export const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
+
 export function toTemplateView(row: TemplateRow): TemplateView {
   return {
     key: row.key,
@@ -20,6 +23,8 @@ export function toTemplateView(row: TemplateRow): TemplateView {
     last_checked_at: row.last_checked_at,
     last_error: row.last_error,
     submitted_at: row.submitted_at,
+    line: row.line,
+    sales_starter: row.sales_starter,
   };
 }
 

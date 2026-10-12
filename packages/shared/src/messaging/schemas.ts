@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { leadQualificationSchema } from '../schemas/leads.js';
-import { TEMPLATE_KEYS } from './templates.js';
+import { BODY_SLOTS, type BodySlot } from './templates.js';
 
 // Phase 4 request bodies (docs/12 §4). Commands are camelCase, like every other request.
 
@@ -14,19 +14,21 @@ export const threadTextSchema = z.object({
   clientRequestId: z.uuid().optional(),
 });
 
-const paramText = z.string().trim().min(1).max(1024);
+const paramText = z.string().trim().min(1).max(1024).optional();
+const slotsShape = Object.fromEntries(BODY_SLOTS.map((s) => [s, paramText])) as Record<BodySlot, typeof paramText>;
 
-/** messages.template_params an admin can fill; documents and payloads are set by the API. */
+/** messages.template_params an admin can fill ({{1}}…{{9}}); documents and payloads are set by the API. */
 export const templateParamsInputSchema = z.object({
-  '1': paramText.optional(),
-  '2': paramText.optional(),
-  '3': paramText.optional(),
+  ...slotsShape,
   button: z.string().trim().min(1).max(200).optional(),
 });
 
-/** POST /threads/:phone/template: any approved template, from the inbox. */
+/** A registry key: a producer's (TEMPLATE_KEYS) or a template imported from Meta (key = its Meta name). */
+export const TEMPLATE_KEY_PATTERN = /^[a-z0-9_]{1,512}$/;
+
+/** POST /threads/:phone/template: any approved template, from the inbox (the API's registry validates the key). */
 export const threadTemplateSchema = z.object({
-  key: z.enum(TEMPLATE_KEYS),
+  key: z.string().trim().regex(TEMPLATE_KEY_PATTERN),
   params: templateParamsInputSchema,
   lessonId: z.uuid().optional(),
   clientRequestId: z.uuid().optional(),
@@ -34,6 +36,12 @@ export const threadTemplateSchema = z.object({
 
 /** POST /threads/:phone/rating «إرسال تقييم الحلقة»: the API picks the lesson; the id makes a retry safe. */
 export const threadRatingSchema = z.object({ clientRequestId: z.uuid() });
+
+/**
+ * PATCH /messaging/templates/:key/starter: the admin offers a template to sales to start a chat, or
+ * stops. Named like the TemplateView field it sets (decision 2026-10-12), not camelCase.
+ */
+export const templateStarterSchema = z.object({ sales_starter: z.boolean() });
 
 /** PATCH /leads/:id/qualification: merged into leads.qualification; null clears a field. */
 export const leadQualificationPatchSchema = leadQualificationSchema.partial();
@@ -45,5 +53,6 @@ export type ThreadText = z.infer<typeof threadTextSchema>;
 export type TemplateParamsInput = z.infer<typeof templateParamsInputSchema>;
 export type ThreadTemplate = z.infer<typeof threadTemplateSchema>;
 export type ThreadRating = z.infer<typeof threadRatingSchema>;
+export type TemplateStarter = z.infer<typeof templateStarterSchema>;
 export type LeadQualificationPatch = z.infer<typeof leadQualificationPatchSchema>;
 export type LeadFollowUp = z.infer<typeof leadFollowUpSchema>;

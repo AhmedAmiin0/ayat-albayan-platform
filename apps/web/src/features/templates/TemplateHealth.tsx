@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Toast, type ToastProps } from '@/components/ui/toast';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
-import { checkTemplateHealth, submitTemplate, templateErrorText, templatesQuery } from './api';
+import { checkTemplateHealth, setStarter, submitTemplate, templateErrorText, templatesQuery } from './api';
 import { SubmitTemplateDialog } from './SubmitTemplateDialog';
 import { templateColumns } from './template-columns';
 
@@ -20,7 +20,8 @@ function lastChecked(rows: readonly TemplateView[]): string | null {
 /**
  * Template health (R-MSG-01, issue C1): every registry row with Meta's status. «راجع حالة
  * القوالب» reads Meta now (T2); a not-submitted / rejected / missing row can be sent to Meta for
- * review (T3), only after the explicit confirm dialog.
+ * review (T3), only after the explicit confirm dialog. «قالب بدء محادثة للمبيعات» picks the only
+ * templates sales may send (owner 2026-10-12).
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
   const queryClient = useQueryClient();
@@ -44,7 +45,20 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
     onError: (e) => setNotice({ message: templateErrorText(e), tone: 'error' }),
     onSettled: () => setSubmitting(null),
   });
-  const columns = useMemo(() => templateColumns({ onSubmit: setSubmitting }), []);
+  const starter = useMutation({
+    mutationFn: setStarter,
+    onSuccess: (saved) => {
+      queryClient.setQueryData(templatesQuery.queryKey, (old) => old?.map((r) => (r.key === saved.key ? saved : r)));
+      setNotice({ message: saved.sales_starter ? t.templates.starterOn : t.templates.starterOff });
+    },
+    onError: (e) => setNotice({ message: templateErrorText(e), tone: 'error' }),
+  });
+  const saving = starter.isPending ? (starter.variables?.key ?? null) : null;
+  const { mutate: toggleStarter } = starter;
+  const columns = useMemo(
+    () => templateColumns({ onSubmit: setSubmitting, onStarter: (tpl, on) => toggleStarter({ key: tpl.key, on }), saving }),
+    [toggleStarter, saving],
+  );
   const rows = templates.data ?? [];
   const checked = lastChecked(rows);
 
@@ -61,7 +75,8 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
           {check.isPending ? t.templates.checking : t.templates.checkHealth}
         </Button>
       </div>
-      <p className="mb-3 max-w-[70ch] text-sm text-ink-2">{t.templates.intro}</p>
+      <p className="mb-1 max-w-[70ch] text-sm text-ink-2">{t.templates.intro}</p>
+      <p className="mb-3 max-w-[70ch] text-xs text-ink-3">{t.templates.salesStarterIntro}</p>
       {rows.some((r) => r.status !== 'approved') && (
         <p className="mb-3 border-s border-s-rule ps-3 text-xs font-semibold text-act">
           {t.templates.needsAttention}

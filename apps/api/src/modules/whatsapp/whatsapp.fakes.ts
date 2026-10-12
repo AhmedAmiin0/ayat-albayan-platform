@@ -109,6 +109,8 @@ const BASE_ROW: TemplateRow = {
   last_error: null,
   submitted_at: null,
   updated_at: '2026-10-01T00:00:00Z',
+  line: 'notifications',
+  sales_starter: false,
 };
 
 export function templateRow(over: Partial<TemplateRow> = {}): TemplateRow {

@@ -9,23 +9,25 @@ import {
 } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { loadEnv } from '../../env';
+import { listFor, type MetaLists } from './template-import';
+import { chatList, importStarters } from './template-lines';
 import { SAMPLE_REPORT, templateProblem } from './template-review';
 import { findMeta, ourStatus, syncPatch } from './template-sync';
-import { toTemplateView, waHttpError } from './template.mapper';
+import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
-import { WaError, WHATSAPP_CLIENT, type WhatsappClient } from './whatsapp.types';
+import { WaError, WHATSAPP_LINES, type WhatsappLines } from './whatsapp.types';
 
-/** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
-const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 const SUBMITTABLE: ReadonlySet<TemplateStatus> = new Set(['not_submitted', 'rejected', 'missing']);
 /** Soon after boot, not at once: the e2e stub may still be starting. */
 const BOOT_CHECK_MS = 5_000;
 /** Read per call, so tests can vi.stubEnv it. */
 const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC !== false;
+const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
 /**
- * The template registry (R-MSG-01, issue C1, docs/12 §3.4). The health check reads Meta's list
- * (read-only) and syncs every row; submitting creates a template on Meta and is only ever the
+ * The template registry (R-MSG-01, issue C1, docs/12 §3.4). The health check reads each line's Meta
+ * list (read-only), syncs every row against its own line's and imports the chat line's new templates
+ * as sales starters; submitting creates a template on the notifications WABA and is only ever the
  * admin's explicit action (POST /messaging/templates/:key/submit), never at boot or from a job.
  */
 @Injectable()
@@ -35,13 +37,13 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
 
   constructor(
     private readonly queries: TemplatesQueries,
-    @Inject(WHATSAPP_CLIENT) private readonly client: WhatsappClient,
+    @Inject(WHATSAPP_LINES) private readonly lines: WhatsappLines,
     private readonly audit: AuditService,
   ) {}
 
   /** Best-effort boot health check when WhatsApp is configured: log and continue, never block. */
   onApplicationBootstrap(): void {
-    if (!this.client.configured() || !syncOn()) return;
+    if (!this.lines.notifications.configured() || !syncOn()) return;
     this.timer = setTimeout(() => void this.bootCheck(), BOOT_CHECK_MS).unref();
   }
 
@@ -55,7 +57,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
       const notReady = views.filter((v) => v.status !== 'approved').map((v) => `${v.key}=${v.status}`);
       this.log.log(`templates checked: ${views.length - notReady.length} approved; ${notReady.join(', ') || 'all ready'}`);
     } catch (e) {
-      this.log.warn(`boot template check skipped: ${e instanceof Error ? e.message : String(e)}`);
+      this.log.warn(`boot template check skipped: ${errText(e)}`);
     }
   }
 
@@ -69,17 +71,21 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     return row?.status === 'approved' ? toTemplateView(row) : null;
   }
 
-  /** POST /messaging/templates/health: every row against Meta's list. */
+  /** POST /messaging/templates/health: every row against its line's Meta list, then the chat line's new templates. */
   async verifyAll(now = new Date()): Promise<TemplateView[]> {
     this.requireSync();
     this.requireConfigured();
-    const meta = await this.fromMeta(() => this.client.getTemplates());
+    const notifications = await this.fromMeta(() => this.lines.notifications.getTemplates());
+    const chat = this.lines.chat.configured() ? () => this.lines.chat.getTemplates() : null;
+    const lists: MetaLists = { notifications, ...(await chatList(chat, this.log)) };
+    const rows = await this.queries.all();
     const views: TemplateView[] = [];
-    for (const row of await this.queries.all()) {
-      const updated = await this.queries.update(row.key, syncPatch(row, findMeta(row, meta), now));
+    for (const row of rows) {
+      const meta = listFor(row, lists);
+      const updated = meta ? await this.queries.update(row.key, syncPatch(row, findMeta(row, meta), now)) : null;
       views.push(toTemplateView(updated ?? row));
     }
-    return views;
+    return [...views, ...(await importStarters({ queries: this.queries, known: rows, lists, now, log: this.log }))];
   }
 
   /**
@@ -91,14 +97,16 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     this.requireSync();
     const row = await this.queries.get(key);
     if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
-    if (!SUBMITTABLE.has(row.status)) throw waHttpError('not_submittable', 409, { status: row.status });
+    // A chat-WABA template is never posted to the notifications WABA (owner 2026-10-12).
+    if (!SUBMITTABLE.has(row.status) || row.line === 'chat') throw waHttpError('not_submittable', 409, { status: row.status });
     const problem = templateProblem(row);
     if (problem) throw waHttpError('invalid_template', 409, { reason: problem });
     this.requireConfigured();
     const document = row.header_format === 'document';
-    if (document && !this.client.canUploadSamples()) throw waHttpError('needs_app_id', 409);
-    const headerHandle = document ? await this.fromMeta(() => this.client.uploadSample(SAMPLE_REPORT)) : undefined;
-    const res = await this.fromMeta(() => this.client.submitTemplate(row, { headerHandle }));
+    const client = this.lines.notifications;
+    if (document && !client.canUploadSamples()) throw waHttpError('needs_app_id', 409);
+    const headerHandle = document ? await this.fromMeta(() => client.uploadSample(SAMPLE_REPORT)) : undefined;
+    const res = await this.fromMeta(() => client.submitTemplate(row, { headerHandle }));
     const status = ourStatus(res.status);
     const meta_id = res.metaId || row.meta_id;
     const updated = await this.queries.update(key, {
@@ -124,7 +132,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   }
 
   private requireConfigured(): void {
-    if (!this.client.configured()) throw waHttpError('not_configured', 503);
+    if (!this.lines.notifications.configured()) throw waHttpError('not_configured', 503);
   }
 
   /** A Graph failure → 502 meta_error with Meta's code and message for the admin. */

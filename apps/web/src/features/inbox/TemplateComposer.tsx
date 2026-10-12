@@ -1,4 +1,4 @@
-import { needsLesson, RATING_TEMPLATE, TEMPLATE_KEYS } from '@ab/shared';
+import { needsLesson, RATING_TEMPLATE } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -25,7 +25,7 @@ export interface TemplateComposerProps {
 
 /**
  * Any approved template for this person, from the thread (H4): the only way to write after the
- * 24 h window. Names are prefilled, a lesson time comes from the lesson picked (rule 6), and the
+ * 24 h window (a salesperson gets only the admin's starters: the API lists no other). Names are prefilled, a lesson time comes from the lesson picked (rule 6), and the
  * preview is what they read. The lesson is sent too, so a «تمام» reply links to it.
  */
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
@@ -71,10 +71,10 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
       onSubmit={(e) => {
         e.preventDefault();
         setTried(true);
-        const known = TEMPLATE_KEYS.find((k) => k === tpl?.key);
-        if (!tpl || !known || missingParams(tpl, values).length > 0 || (withLesson && !lessonId)) return;
+        if (!tpl || missingParams(tpl, values).length > 0 || (withLesson && !lessonId)) return;
         const lesson = lessonId ? { lessonId } : {};
-        send.mutate({ phone, key: known, params: toParamsInput(tpl, values), clientRequestId: requestId.current, ...lesson });
+        // Any registry key (a producer's, or a starter imported from Meta): the API validates it.
+        send.mutate({ phone, key: tpl.key, params: toParamsInput(tpl, values), clientRequestId: requestId.current, ...lesson });
       }}
     >
       <Field label={t.inbox.composer.chooseTemplate}>

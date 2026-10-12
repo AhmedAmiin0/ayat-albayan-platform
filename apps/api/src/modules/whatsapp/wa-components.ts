@@ -1,4 +1,4 @@
-import type { TemplateParams } from '@ab/shared';
+import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
 import { bodyExamples } from './template-review';
 import { templateButtons } from './wa-json';
 import { WaError, type TemplateRow, type TemplateSend } from './whatsapp.types';
@@ -13,8 +13,6 @@ export const waTo = (e164: string): string => e164.replace(/\D/g, '');
 /** A send we refuse before Meta does: counts as Meta's 132000 (bad parameters), never retried. */
 const badParams = (details: string) => new WaError('template parameters do not match', { code: 132000, status: 0, details });
 
-const BODY_KEYS = ['1', '2', '3'] as const;
-
 /** Highest {{n}} in the body: Meta's own text after the health check, else the seeded shape. */
 export function bodyVarCount(body: string): number {
   return Math.max(0, ...[...body.matchAll(/\{\{(\d+)\}\}/g)].map((m) => Number(m[1])));
@@ -22,7 +20,7 @@ export function bodyVarCount(body: string): number {
 
 function bodyParameters(row: TemplateRow, params: TemplateParams) {
   return Array.from({ length: bodyVarCount(row.body_ar) }, (_, i) => {
-    const key = BODY_KEYS[i];
+    const key = BODY_SLOTS[i];
     const text = key ? params[key]?.trim() : undefined;
     if (!text) throw badParams(`${row.key}: {{${i + 1}}} is empty`);
     return { type: 'text', text };

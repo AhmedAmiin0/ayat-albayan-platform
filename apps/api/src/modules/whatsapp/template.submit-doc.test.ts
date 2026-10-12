@@ -19,7 +19,8 @@ function submit(row: TemplateRow, env: typeof STUB_ENV, ...replies: Reply[]) {
   queries.get.mockResolvedValue(row);
   const f = scriptedFetch(...replies);
   const client = new HttpWhatsappClient(env, { fetch: f.fetch, timeoutMs: 1_000 });
-  const registry = new TemplateRegistry(queries as unknown as TemplatesQueries, client, audit as unknown as AuditService);
+  const lines = { notifications: client, chat: new HttpWhatsappClient(null) };
+  const registry = new TemplateRegistry(queries as unknown as TemplatesQueries, lines, audit as unknown as AuditService);
   const result = registry.submit(row.key, 'admin-1').then(
     (view) => ({ view, error: null }),
     (e: { getStatus: () => number; getResponse: () => unknown }) => ({ view: null, error: [e.getStatus(), e.getResponse()] }),

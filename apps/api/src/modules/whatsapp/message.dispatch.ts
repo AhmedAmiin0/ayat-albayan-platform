@@ -23,7 +23,8 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
 
 /**
  * Turns one queued row into one Graph call: a template, or a session text (B2's inbox replies).
- * Two lines (docs/12 §13.3): templates ALWAYS leave from notifications; a text from `line`.
+ * Two lines (docs/12 §13.3): both leave from `line` (lineOf: a template from its registry line, a
+ * chat starter from chat; a text from the line it was stamped with).
  */
 @Injectable()
 export class MessageDispatch {
@@ -52,7 +53,7 @@ export class MessageDispatch {
       const params = templateParams(row.template_params);
       const documentUrl = template.header_format === 'document' ? await documentLink(this.storage, params.document) : null;
       const ref = row.lesson_id ?? row.lead_id ?? row.id;
-      return this.lines.notifications.sendTemplate({
+      return this.lines[line].sendTemplate({
         to: row.phone_e164,
         template,
         params,

@@ -3,6 +3,7 @@ import {
   replyLine,
   searchDigits,
   sessionWindowOpen,
+  type BodySlot,
   type TemplateParamsInput,
   type TemplateView,
   type ThreadView,
@@ -86,7 +87,7 @@ export function threadSearchFilter(term: string): string | null {
  * suffix when its url has a {{1}} (the meeting code). Names are the TemplateParams keys.
  */
 export function missingParams(template: TemplateView, params: TemplateParamsInput): string[] {
-  const missing = template.params.map((_, i) => String(i + 1)).filter((k) => !params[k as '1' | '2' | '3']);
+  const missing = template.params.map((_, i) => String(i + 1)).filter((k) => !params[k as BodySlot]);
   const needsButton = template.buttons.some((b) => b.type === 'url' && b.url.includes('{{1}}'));
   return needsButton && !params.button ? [...missing, 'button'] : missing;
 }

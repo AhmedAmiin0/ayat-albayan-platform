@@ -1839,10 +1839,12 @@ export type Database = {
           language: string;
           last_checked_at: string | null;
           last_error: string | null;
+          line: Database['public']['Enums']['wa_line'];
           meta_id: string | null;
           meta_name: string;
           params: NonNullable<Json>;
           quality: string | null;
+          sales_starter: boolean;
           status: Database['public']['Enums']['template_status'];
           submitted_at: string | null;
           updated_at: string;
@@ -1857,10 +1859,12 @@ export type Database = {
           language?: string;
           last_checked_at?: string | null;
           last_error?: string | null;
+          line?: Database['public']['Enums']['wa_line'];
           meta_id?: string | null;
           meta_name: string;
           params?: NonNullable<Json>;
           quality?: string | null;
+          sales_starter?: boolean;
           status?: Database['public']['Enums']['template_status'];
           submitted_at?: string | null;
           updated_at?: string;
@@ -1875,10 +1879,12 @@ export type Database = {
           language?: string;
           last_checked_at?: string | null;
           last_error?: string | null;
+          line?: Database['public']['Enums']['wa_line'];
           meta_id?: string | null;
           meta_name?: string;
           params?: NonNullable<Json>;
           quality?: string | null;
+          sales_starter?: boolean;
           status?: Database['public']['Enums']['template_status'];
           submitted_at?: string | null;
           updated_at?: string;

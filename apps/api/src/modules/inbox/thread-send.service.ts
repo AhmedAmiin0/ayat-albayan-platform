@@ -84,7 +84,8 @@ export class ThreadSendService {
 
   /**
    * H4: an approved template with every variable filled; a PDF template comes only from the PDF job.
-   * No line stamp: templates always leave from the notifications line (the sender stamps at claim).
+   * A salesperson sends only the starters the admin ticked (owner 2026-10-12). No line stamp here: the
+   * sender picks the template's own line and stamps it at claim (docs/12 §13.3).
    */
   async template(s: ThreadSend<ThreadTemplate>): Promise<Sent> {
     if (s.scope) await this.teacherMay(s.scope, s);
@@ -97,6 +98,7 @@ export class ThreadSendService {
     if (s.input.key === 'lesson_rating') throw waHttpError('use_rating_button', 400);
     const template = await this.templates.approved(s.input.key);
     if (!template) throw waHttpError('template_not_approved', 409);
+    if (s.sales && !template.sales_starter) throw waHttpError('template_not_allowed', 403);
     if (template.header_format === 'document') throw waHttpError('needs_document', 400);
     const missing = missingParams(template, s.input.params);
     if (missing.length) throw waHttpError('missing_params', 400, { missing });

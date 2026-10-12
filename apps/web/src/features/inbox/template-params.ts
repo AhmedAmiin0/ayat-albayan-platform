@@ -1,24 +1,26 @@
 import {
+  BODY_SLOTS,
   forAudience as audienceOf,
   lessonParams,
   LESSON_TIME_PARAMS,
+  type BodySlot,
   type TemplateParamsInput,
   type TemplateView,
   type ThreadLesson,
 } from '@ab/shared';
 import { t } from '@/lib/i18n';
 
-// The inbox template composer's form (R-LEAD-02, docs/12 H4): {{1}}…{{3}} by position, plus the
+// The inbox template composer's form (R-LEAD-02, docs/12 H4): {{1}}…{{9}} by position, plus the
 // URL button's suffix (the Meet code / Jitsi room) when the template has one. Lesson times come
 // from a picked lesson, never typed (rule 6).
 
-export type ParamSlot = '1' | '2' | '3';
+export type ParamSlot = BodySlot;
 export type ParamValues = Partial<Record<ParamSlot | 'button', string>>;
 
-const SLOTS: readonly ParamSlot[] = ['1', '2', '3'];
+const SLOTS: readonly ParamSlot[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
-/** The body variables a template takes, by position, with their human names. */
+/** The body variables a template takes, by position, with their human names («المتغير n» for an imported var_n). */
 export function paramFields(tpl: Pick<TemplateView, 'params'>): { slot: ParamSlot; label: string; fromLesson: boolean }[] {
   return SLOTS.slice(0, tpl.params.length).map((slot, i) => {
     const name = tpl.params[i] ?? '';

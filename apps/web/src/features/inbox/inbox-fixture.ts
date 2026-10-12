@@ -117,6 +117,8 @@ export function template(patch: Partial<TemplateView> = {}): TemplateView {
     last_checked_at: '2026-10-01T09:00:00Z',
     last_error: null,
     submitted_at: null,
+    line: 'notifications',
+    sales_starter: false,
     ...patch,
   };
 }

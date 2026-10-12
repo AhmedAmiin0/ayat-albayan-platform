@@ -1,7 +1,7 @@
 import { clockTime } from '../running-head.js';
 import { joinNames, lessonWhenText } from './booking-confirmation.js';
 import { meetingLinkParts } from './meeting-link.js';
-import type { TemplateButton } from './templates.js';
+import { BODY_SLOTS, type BodySlot, type TemplateButton } from './templates.js';
 import type { ThreadLesson } from './views.js';
 
 // Template variables that come from a lesson (rule 6: never typed by hand). The inbox composer
@@ -47,21 +47,18 @@ export function lessonButtonSlug(lesson: ThreadLesson, buttonUrl: string): strin
   return host === 'meet' && buttonUrl.includes('meet.google.com') ? slug : null;
 }
 
-type Position = '1' | '2' | '3';
-const POSITIONS: readonly Position[] = ['1', '2', '3'];
-
 /**
- * A template's {{1}}…{{3}} and URL-button code filled from a lesson, by the variables' names (only
+ * A template's {{1}}…{{9}} and URL-button code filled from a lesson, by the variables' names (only
  * those a lesson answers): what the inbox composers (web and app) put in when a lesson is picked.
  */
 export function lessonParams(
   template: { params: readonly string[]; buttons: readonly TemplateButton[] },
   lesson: ThreadLesson,
-): Partial<Record<Position | 'button', string>> {
-  const out: Partial<Record<Position | 'button', string>> = {};
-  template.params.slice(0, POSITIONS.length).forEach((name, i) => {
+): Partial<Record<BodySlot | 'button', string>> {
+  const out: Partial<Record<BodySlot | 'button', string>> = {};
+  template.params.slice(0, BODY_SLOTS.length).forEach((name, i) => {
     const value = lessonParamValue(name, lesson);
-    const at = POSITIONS[i];
+    const at = BODY_SLOTS[i];
     if (value && at) out[at] = value;
   });
   const url = template.buttons.find((b) => b.type === 'url');
