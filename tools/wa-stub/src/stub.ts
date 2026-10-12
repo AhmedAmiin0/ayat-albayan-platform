@@ -4,10 +4,10 @@ import type { IncomingMessage, ServerResponse } from 'node:http';
 import { controlRoutes } from './control.ts';
 import { diagnosticRoutes, phoneInfo } from './diagnostics.ts';
 import { authorized, initialHealth } from './lines.ts';
-import { defaultTemplates, ERR, templateJson } from './meta.ts';
+import { ERR, onWaba, templateJson } from './meta.ts';
 import { postMessage } from './send.ts';
 import { readJson, type Reply, type Route, type StubOptions, type StubState } from './state.ts';
-import { createTemplate, editTemplate } from './templates.ts';
+import { createTemplate, editTemplate, initialTemplates } from './templates.ts';
 import { uploadRoutes } from './uploads.ts';
 
 export type { SentMessage, StubOptions } from './state.ts';
@@ -15,9 +15,10 @@ export type { SentMessage, StubOptions } from './state.ts';
 const V = String.raw`\/v\d+\.\d+`;
 const graphRoutes: Route[] = [
   ['POST', new RegExp(`^${V}/([^/]+)/messages$`), async (req, m, s) => postMessage(s, await readJson(req), m[1] ?? '')],
-  ['GET', new RegExp(`^${V}/[^/]+/message_templates$`), async (req, _m, s) => {
+  // Per WABA (docs/12 §13.12): the chat WABA's own starter is not on the notifications WABA.
+  ['GET', new RegExp(`^${V}/([^/]+)/message_templates$`), async (req, m, s) => {
     const name = new URL(req.url ?? '/', 'http://stub').searchParams.get('name');
-    const data = s.templates.filter((t) => !name || t.name === name).map(templateJson);
+    const data = s.templates.filter((t) => onWaba(t, m[1]) && (!name || t.name === name)).map(templateJson);
     return [200, { data, paging: { cursors: { before: 'stub', after: 'stub' } } }];
   }],
   ['POST', new RegExp(`^${V}/[^/]+/message_templates$`), async (req, _m, s) => createTemplate(s, await readJson(req))],
@@ -38,7 +39,7 @@ const graphRoutes: Route[] = [
 export function createStub(opts: StubOptions = {}) {
   const state: StubState = {
     opts,
-    templates: opts.templates ?? defaultTemplates(),
+    templates: initialTemplates(opts),
     sent: [],
     reads: [],
     readLog: [],

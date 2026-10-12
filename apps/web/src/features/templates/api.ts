@@ -19,9 +19,19 @@ export const checkTemplateHealth = () => apiSend<TemplateView[]>('POST', '/messa
 export const submitTemplate = (key: string) =>
   apiSend<TemplateView>('POST', `/messaging/templates/${encodeURIComponent(key)}/submit`);
 
-/** A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4). */
-export const canSubmit = (tpl: Pick<TemplateView, 'status'>): boolean =>
-  tpl.status === 'not_submitted' || tpl.status === 'rejected' || tpl.status === 'missing';
+/**
+ * «قالب بدء محادثة للمبيعات» (owner 2026-10-12, docs/16): the admin offers a template to sales to start
+ * a chat, or stops.
+ */
+export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
+  apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, { sales_starter: on });
+
+/**
+ * A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4). Never a chat-line one:
+ * submitting creates it on the notifications WABA (the API answers 409 not_submittable).
+ */
+export const canSubmit = (tpl: Pick<TemplateView, 'status' | 'line'>): boolean =>
+  tpl.line !== 'chat' && (tpl.status === 'not_submitted' || tpl.status === 'rejected' || tpl.status === 'missing');
 
 const ERRORS: Record<string, string | undefined> = t.templates.error;
 

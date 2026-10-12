@@ -23,6 +23,10 @@ export const TEMPLATE_KEYS = [
 ] as const;
 export type TemplateKey = (typeof TEMPLATE_KEYS)[number];
 
+/** Body variable positions {{1}}…{{9}}: the keys of messages.template_params a send may fill. */
+export const BODY_SLOTS = ['1', '2', '3', '4', '5', '6', '7', '8', '9'] as const;
+export type BodySlot = (typeof BODY_SLOTS)[number];
+
 /** The PDF a document-header template carries; the sender signs it (7 days) when it sends. */
 export interface TemplateDocument {
   bucket: string;
@@ -31,10 +35,7 @@ export interface TemplateDocument {
 }
 
 /** messages.template_params: body variables by position, plus the button and header parts. */
-export interface TemplateParams {
-  '1'?: string;
-  '2'?: string;
-  '3'?: string;
+export interface TemplateParams extends Partial<Record<BodySlot, string>> {
   /** URL-button suffix: the Meet code, the Jitsi room slug, the signed feedback token or the classroom guest token. */
   button?: string;
   /** Quick-reply payloads by button index, each quickReplyPayload(intent, ref). */

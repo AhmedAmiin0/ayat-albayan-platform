@@ -55,3 +55,13 @@ export async function seedBooked(input: { name: string; teacher: string }): Prom
   await teacherWithLesson({ student: booked.student, teacher: input.teacher, minutes: 24 * 60 });
   return { phone: booked.phone, guardian: booked.guardian };
 }
+
+/** «قالب بدء محادثة للمبيعات» set in the DB, as the admin's switch does (owner 2026-10-12): sales send only these. */
+export async function setSalesStarter(key: string, on: boolean): Promise<void> {
+  await withSql((sql) => sql`update public.message_templates set sales_starter = ${on} where key = ${key}`);
+}
+
+/** Removes a registry row the health check imported (no foreign key points at message_templates). */
+export async function dropTemplate(key: string): Promise<void> {
+  await withSql((sql) => sql`delete from public.message_templates where key = ${key}`);
+}

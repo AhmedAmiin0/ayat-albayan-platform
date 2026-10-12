@@ -1,9 +1,10 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import type { ImportRow } from './template-import';
 import type { TemplatePatch } from './template-sync';
 import type { TemplateRow } from './whatsapp.types';
 
-/** message_templates (R-MSG-01): the API is its only writer (health sync, explicit submit). */
+/** message_templates (R-MSG-01): the API is its only writer (health sync and import, submit, starter flag). */
 @Injectable()
 export class TemplatesQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
@@ -28,6 +29,20 @@ export class TemplatesQueries {
       .select('*')
       .maybeSingle();
     if (error) throw new Error(`template update failed: ${error.message}`);
+    return data;
+  }
+
+  /**
+   * A template imported from the chat WABA (template-import.ts). Idempotent (rule 8): a row with the same
+   * Meta name + language already there is left as it is, and null comes back.
+   */
+  async insert(row: ImportRow): Promise<TemplateRow | null> {
+    const { data, error } = await this.db
+      .from('message_templates')
+      .upsert(row, { onConflict: 'meta_name,language', ignoreDuplicates: true })
+      .select('*')
+      .maybeSingle();
+    if (error) throw new Error(`template insert failed: ${error.message}`);
     return data;
   }
 }

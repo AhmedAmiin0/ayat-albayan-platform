@@ -63,6 +63,7 @@ describe('mapTemplates', () => {
       category: 'marketing',
       params: ['var_1', 'var_2', 'var_3'],
       buttons: [],
+      line: 'chat',
     });
   });
 
@@ -109,7 +110,9 @@ describe('upsert', () => {
     );
     expect(q.text).not.toMatch(/set .*key = excluded/);
     expect(q.text).toContain('$9::jsonb');
-    expect(q.params).toHaveLength(11);
+    expect(q.params).toHaveLength(12);
+    expect(q.text).toContain('$12::public.wa_line');
+    expect(q.text).not.toMatch(/set .*line = excluded/);
     expect(q.params[0]).toBe('k');
     expect(q.params[2]).toBeNull();
   });

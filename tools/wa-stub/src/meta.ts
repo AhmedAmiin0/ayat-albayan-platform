@@ -13,7 +13,12 @@ export interface StubTemplate {
   /** GREEN | YELLOW | RED | UNKNOWN */
   quality: string;
   components: Json[];
+  /** Only on this WABA (the chat line's starters); absent = on every WABA, as the academy's 8 are. */
+  wabaId?: string;
 }
+
+/** The templates one WABA has: its own, plus those on every WABA (single line: all of them). */
+export const onWaba = (t: StubTemplate, wabaId: string | undefined): boolean => t.wabaId === undefined || t.wabaId === wabaId;
 
 const FOOTER = { type: 'FOOTER', text: 'أكاديمية آيات البيان' };
 const JITSI = 'https://meet.jit.si/{{1}}';
@@ -46,6 +51,15 @@ export function defaultTemplates(): StubTemplate[] {
     approved('teacher_lesson_reminder', TEACHER),
     approved('teacher_lesson_reminder_meet', TEACHER, MEET),
   ];
+}
+
+/**
+ * The chat line's approved starter (owner 2026-10-12): only on the chat WABA, so the API's health
+ * check imports it as a sales starter, and only the chat number can send it.
+ */
+export function defaultChatTemplates(wabaId: string): StubTemplate[] {
+  const body = 'أهلًا بك في أكاديمية آيات البيان يا {{1}}، يسعدنا تواصلك معنا. هل تودّ حجز حلقة تجريبية مجانية؟';
+  return [{ ...approved('academy_welcome', body), category: 'MARKETING', wabaId }];
 }
 
 /** GET /{waba}/message_templates item. */

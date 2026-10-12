@@ -5,7 +5,7 @@ import { dueMessage } from './sender.fakes';
 import { templateRow } from './whatsapp.fakes';
 import type { WhatsappLines } from './whatsapp.types';
 
-// Two lines (docs/12 §13.3, §13.5b): templates always from notifications; a text from its line.
+// Two lines (docs/12 §13.3, §13.5b): every row leaves from the line it is given (lineOf decides).
 
 const client = () => ({ configured: vi.fn(() => true), sendTemplate: vi.fn(), sendText: vi.fn() });
 let notifications = client();
@@ -22,14 +22,23 @@ describe('MessageDispatch — two lines', () => {
     notifications.sendTemplate.mockResolvedValue({ waMessageId: 'wamid.n' });
     notifications.sendText.mockResolvedValue({ waMessageId: 'wamid.n' });
     chat.sendText.mockResolvedValue({ waMessageId: 'wamid.c' });
+    chat.sendTemplate.mockResolvedValue({ waMessageId: 'wamid.c' });
   });
   afterEach(() => vi.unstubAllEnvs());
 
-  it('a template goes through notifications even when the row (and the line passed) say chat', async () => {
-    await dispatch().send(dueMessage({ line: 'chat' }), templateRow(), 'chat');
+  it('a producer template goes through notifications even when the row is stamped chat', async () => {
+    await dispatch().send(dueMessage({ line: 'chat' }), templateRow(), 'notifications');
     expect(notifications.sendTemplate).toHaveBeenCalledTimes(1);
     expect(chat.sendTemplate).not.toHaveBeenCalled();
     expect(chat.sendText).not.toHaveBeenCalled();
+  });
+
+  it('a chat starter goes through the chat client (owner 2026-10-12)', async () => {
+    const starter = templateRow({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', sales_starter: true });
+    const row = dueMessage({ template_key: 'academy_welcome', template_params: { '1': 'أم سارة' } });
+    await expect(dispatch().send(row, starter, 'chat')).resolves.toEqual({ waMessageId: 'wamid.c' });
+    expect(chat.sendTemplate).toHaveBeenCalledWith(expect.objectContaining({ template: starter, params: { '1': 'أم سارة' } }));
+    expect(notifications.sendTemplate).not.toHaveBeenCalled();
   });
 
   it('a chat text goes through the chat client', async () => {

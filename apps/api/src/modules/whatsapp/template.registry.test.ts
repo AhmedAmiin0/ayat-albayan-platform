@@ -5,17 +5,19 @@ import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
 import { RENEWAL_DUE_SEED, REPORT_READY_SEED } from './seed-templates.fakes';
 import { RECORDED, templateRow } from './whatsapp.fakes';
-import { WaError, type WhatsappClient } from './whatsapp.types';
+import { WaError, type WhatsappLines } from './whatsapp.types';
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn() };
+const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
+/** Not configured (reset mocks answer undefined): one line, as before the chat line (template.registry.lines.test). */
+const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
 const NOW = new Date('2026-10-02T08:00:00Z');
 const RENEWAL = RENEWAL_DUE_SEED;
 const recorded = RECORDED.templates.body.data.map((t) => toMetaTemplate({ ...t, components: [...t.components] }));
 
 const registry = () =>
-  new TemplateRegistry(queries as unknown as TemplatesQueries, client as unknown as WhatsappClient, audit as unknown as AuditService);
+  new TemplateRegistry(queries as unknown as TemplatesQueries, { notifications: client, chat: chatClient } as unknown as WhatsappLines, audit as unknown as AuditService);
 const status = (p: Promise<unknown>) => p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
 
 describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {

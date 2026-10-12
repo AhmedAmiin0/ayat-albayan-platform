@@ -3,8 +3,9 @@
 import { randomUUID } from 'node:crypto';
 import { diagnosticControlRoutes, resetHealth } from './diagnostics.ts';
 import { lineOf, stubLines } from './lines.ts';
-import { defaultTemplates, metaError } from './meta.ts';
+import { metaError } from './meta.ts';
 import { digits, readJson, type Route, type StubState } from './state.ts';
+import { initialTemplates } from './templates.ts';
 import { forward, inboundValue, statusValue, type InboundSpec, type StatusSpec, type WebhookTarget } from './webhook.ts';
 
 /**
@@ -57,9 +58,9 @@ export const controlRoutes: Route[] = [
   ['GET', /^\/__stub\/reads$/, async (_r, _m, s) => [200, s.reads]],
   ['GET', /^\/__stub\/reads\/by-line$/, async (_r, _m, s) => [200, s.readLog]],
   ['GET', /^\/__stub\/templates$/, async (_r, _m, s) => [200, s.templates]],
-  /** Whole reset between e2e tests: default templates, empty logs, media, windows, failures. */
+  /** Whole reset between e2e tests: default templates (and the chat starter), empty logs, media, windows, failures. */
   ['POST', /^\/__stub\/reset$/, async (_r, _m, s) => {
-    s.templates = s.opts.templates ?? defaultTemplates();
+    s.templates = initialTemplates(s.opts);
     s.sent.length = 0;
     s.reads.length = 0;
     s.readLog.length = 0;

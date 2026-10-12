@@ -26,12 +26,15 @@ export function ourStatus(metaStatus: string): TemplateStatus {
 
 const componentSchema = z.object({
   type: z.string(),
+  /** HEADER only: TEXT | IMAGE | VIDEO | DOCUMENT | LOCATION (the chat import skips all but TEXT). */
+  format: z.string().optional(),
   text: z.string().optional(),
   buttons: z.array(z.object({ type: z.string(), text: z.string().optional(), url: z.string().optional() })).optional(),
 });
-type Component = z.infer<typeof componentSchema>;
+export type Component = z.infer<typeof componentSchema>;
 
-function components(raw: readonly unknown[]): Component[] {
+/** Meta's components we model, type upper-cased; a malformed one is dropped. */
+export function components(raw: readonly unknown[]): Component[] {
   return raw.flatMap((c) => {
     const r = componentSchema.safeParse(c);
     return r.success ? [{ ...r.data, type: r.data.type.toUpperCase() }] : [];
@@ -53,7 +56,7 @@ function toButton(b: MetaButton, mine: TemplateButton | undefined): TemplateButt
   return intent ? { type: 'quick_reply', text: b.text, intent } : null;
 }
 
-function metaButtons(comps: readonly Component[], ours: readonly TemplateButton[]): TemplateButton[] | null {
+export function metaButtons(comps: readonly Component[], ours: readonly TemplateButton[]): TemplateButton[] | null {
   const raw = comps.find((c) => c.type === 'BUTTONS')?.buttons ?? [];
   const out = raw.map((b, i) => toButton(b, ours[i]));
   return out.every((b): b is TemplateButton => b !== null) ? out : null;

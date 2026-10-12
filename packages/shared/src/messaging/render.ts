@@ -1,4 +1,4 @@
-import type { TemplateButton, TemplateParams } from './templates.js';
+import { BODY_SLOTS, type BodySlot, type TemplateButton, type TemplateParams } from './templates.js';
 
 // Template text as the guardian reads it: the inbox shows outbound template rows with it, and the
 // R-MSG-03 wa.me fallback pre-fills it.
@@ -10,10 +10,12 @@ export interface RenderableTemplate {
   buttons: readonly TemplateButton[];
 }
 
+const isSlot = (n: string): n is BodySlot => (BODY_SLOTS as readonly string[]).includes(n);
+
 /** {{n}} → params[n]; a missing value keeps its {{n}} so the gap is visible, never blank. */
 export function renderTemplateBody(body: string, params: TemplateParams): string {
   return body.replace(/\{\{(\d+)\}\}/g, (whole, n: string) => {
-    const value = n === '1' || n === '2' || n === '3' ? params[n] : undefined;
+    const value = isSlot(n) ? params[n] : undefined;
     return value ?? whole;
   });
 }

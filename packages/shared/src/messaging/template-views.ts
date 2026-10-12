@@ -1,4 +1,4 @@
-import type { TemplateCategory, TemplateStatus } from '../enums/index.js';
+import type { TemplateCategory, TemplateStatus, WaLine } from '../enums/index.js';
 import type { TemplateButton } from './templates.js';
 
 // Moved out of views.ts (150-line cap, docs/12 §13.8).
@@ -21,6 +21,10 @@ export interface TemplateView {
   last_checked_at: string | null;
   last_error: string | null;
   submitted_at: string | null;
+  /** The line (WABA) Meta approved it on: the sender sends it from there (docs/12 §13.3). */
+  line: WaLine;
+  /** Offered to sales to start a chat: the only templates a salesperson may list or send (docs/16). */
+  sales_starter: boolean;
 }
 
 /**

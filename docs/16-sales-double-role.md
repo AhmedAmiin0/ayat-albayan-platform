@@ -40,7 +40,7 @@ assistant's session row; new read-only routes under `/sales` with whitelisted co
 
 | # | Area | Decision |
 |---|---|---|
-| 9 | Start a conversation | Root cause: `messages.read` was a teacher-only grant, so `GET /messaging/templates` answered 403 for sales and the template picker stayed empty. `messages.read` is now a sales grant (catalog + migration `20261012000300_sales_messages_read.sql`). For sales the list is every approved template the thread send accepts (no PDF one, none of the three own-button templates: `lesson_feedback_request`, `lesson_join_link`, `lesson_rating`). It also opens `GET /messages/gate` (open or not, queue size). `messages.manage` and `templates.manage` stay admin-only. |
+| 9 | Start a conversation | Root cause: `messages.read` was a teacher-only grant, so `GET /messaging/templates` answered 403 for sales and the template picker stayed empty. `messages.read` is now a sales grant (catalog + migration `20261012000300_sales_messages_read.sql`). For sales the list is the approved templates the thread send accepts (no PDF one, none of the three own-button templates: `lesson_feedback_request`, `lesson_join_link`, `lesson_rating`), and since row 13 only the admin's starters. It also opens `GET /messages/gate` (open or not, queue size). `messages.manage` and `templates.manage` stay admin-only. |
 | 9a | No thread yet | Admin and sales open a number by URL (`?phone=`, as a lead's or a booking's «افتح المحادثة») or the new «محادثة جديدة» form (web inbox list, mobile «المحادثات» header). A number with no message shows the first-template pane; `GET /threads/:phone` finds a booked family by its number (guardian / lead / teacher) so the template can name the family's next lesson (rule 6). |
 | 10 | Teachers | Master-detail. `GET /sales/teachers` adds `lessons_today`, `live_now` and, per student, `program`, `status` and `next_lesson_at` (the next open lesson in the coming 8 days). Web: list + side drawer; mobile: list screen + detail screen. The filter rules are shared (`@ab/shared` `filterSalesTeachers`). Still never pay, rates, phone or meeting link. |
 | 11 | Schedule | `GET /sales/schedule?date&teacherId` (`self.sales_academy`): one Riyadh day, whitelisted (time, status, trial, makeup, teacher, students; never a meeting link, reason, note, attendance or money). Web `/sales/schedule` «جدول الحلقات» reuses the admin `LessonChip` read-only; mobile reuses the day switcher and the agenda row's layout. A running lesson shows «ادخل الحلقة» (she joins as the classroom assistant, decision 5a). |
@@ -59,3 +59,11 @@ assistant's session row; new read-only routes under `/sales` with whitelisted co
 
 Mobile (`apps/mobile`): the same pages for the sales base role (all chats already follow the API), the
 running-lessons list with «ادخل الحلقة», teachers and all students. Not part of this PR.
+
+## Owner request 2026-10-12: starter templates (web + mobile composer)
+
+| # | Area | Decision |
+|---|---|---|
+| 13 | Starters only | Sales list and send ONLY approved templates with `sales_starter` (docs/12 §13.18): `GET /messaging/templates` filters them, `POST /threads/:phone/template` answers 403 `template_not_allowed` for any other. The admin keeps every template. |
+| 13a | Where they come from | «راجع حالة القوالب» imports every approved template of the chat (main) number's WABA the registry does not know, ticked (a `teacher_` one unticked), sent from the chat number. The admin ticks or unticks any template with «قالب بدء محادثة للمبيعات» on the templates page (`PATCH /messaging/templates/:key/starter`, audited). |
+| 13b | Staging | The chat line is not configured on staging (Meta test credentials, `WA_TEMPLATE_SYNC=false`), so nothing is imported: sales see only the templates an admin ticks, none by default. Tick at least one approved template there, or sales cannot open a chat after 24 h. |

@@ -1,5 +1,5 @@
 import type { Json } from '@ab/db';
-import { QUICK_REPLY_INTENTS, type TemplateButton, type TemplateParams } from '@ab/shared';
+import { BODY_SLOTS, QUICK_REPLY_INTENTS, type BodySlot, type TemplateButton, type TemplateParams } from '@ab/shared';
 import { z } from 'zod';
 
 // The jsonb columns the sender and the registry read (message_templates.params / buttons,
@@ -10,10 +10,11 @@ const buttonSchema = z.discriminatedUnion('type', [
   z.object({ type: z.literal('quick_reply'), text: z.string(), intent: z.enum(QUICK_REPLY_INTENTS) }),
 ]);
 
+const slot = z.string().optional();
+const slots = Object.fromEntries(BODY_SLOTS.map((s) => [s, slot])) as Record<BodySlot, typeof slot>;
+
 const paramsSchema = z.object({
-  '1': z.string().optional(),
-  '2': z.string().optional(),
-  '3': z.string().optional(),
+  ...slots,
   button: z.string().optional(),
   payloads: z.array(z.string()).optional(),
   document: z.object({ bucket: z.string(), path: z.string(), filename: z.string() }).optional(),

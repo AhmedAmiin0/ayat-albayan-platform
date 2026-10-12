@@ -63,6 +63,18 @@ describe('MessageWorker — the line of a row', () => {
     expect(dispatch.send).toHaveBeenCalledWith(row, template, 'notifications');
   });
 
+  it('two lines: a chat starter template is claimed and sent on chat; one line: on notifications', async () => {
+    const starter = templateRow({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', sales_starter: true });
+    const row = dueMessage({ template_key: 'academy_welcome' });
+    dispatch.multi = true;
+    await worker().process({ row, template: starter, now: NOW, autoOn: true });
+    expect(dispatch.send).toHaveBeenLastCalledWith(row, starter, 'chat');
+    dispatch.multi = false;
+    await worker().process({ row, template: starter, now: NOW, autoOn: true });
+    expect(dispatch.ready).toHaveBeenLastCalledWith(row, 'notifications');
+    expect(dispatch.send).toHaveBeenLastCalledWith(row, starter, 'notifications');
+  });
+
   it('an auth error on a chat row alerts once a day under whatsapp_auth:chat:<day>', async () => {
     dispatch.send.mockRejectedValue(authError);
     await expect(worker().process({ row: chatText, template: null, now: NOW, autoOn: true })).resolves.toBe('paused');

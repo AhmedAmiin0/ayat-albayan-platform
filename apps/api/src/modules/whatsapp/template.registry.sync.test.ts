@@ -4,13 +4,14 @@ import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
 import { RENEWAL_DUE_SEED } from './seed-templates.fakes';
 import { ADMIN, whatsappApp } from './test-app';
-import { type WhatsappClient } from './whatsapp.types';
+import { type WhatsappLines } from './whatsapp.types';
 
-const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn() };
+const queries = { all: vi.fn(), get: vi.fn(), update: vi.fn(), insert: vi.fn() };
 const client = { configured: vi.fn(), getTemplates: vi.fn(), submitTemplate: vi.fn(), canUploadSamples: vi.fn(), uploadSample: vi.fn() };
+const chatClient = { configured: vi.fn(), getTemplates: vi.fn() };
 const audit = { record: vi.fn() };
-const registry = () =>
-  new TemplateRegistry(queries as unknown as TemplatesQueries, client as unknown as WhatsappClient, audit as unknown as AuditService);
+const lines = { notifications: client, chat: chatClient } as unknown as WhatsappLines;
+const registry = () => new TemplateRegistry(queries as unknown as TemplatesQueries, lines, audit as unknown as AuditService);
 const status = (p: Promise<unknown>) =>
   p.then(() => 'ok', (e: { getStatus?: () => number; getResponse?: () => unknown }) => [e.getStatus?.(), e.getResponse?.()]);
 const OFF = [409, { code: 'template_sync_off', message: 'template_sync_off' }];
@@ -43,6 +44,7 @@ describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => 
     expect(client.configured).not.toHaveBeenCalled();
     expect(queries.get).not.toHaveBeenCalled();
     expect(client.getTemplates).not.toHaveBeenCalled();
+    expect(chatClient.getTemplates).not.toHaveBeenCalled();
     expect(client.submitTemplate).not.toHaveBeenCalled();
     expect(queries.update).not.toHaveBeenCalled();
   });

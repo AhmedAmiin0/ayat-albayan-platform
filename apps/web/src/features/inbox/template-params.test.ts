@@ -65,4 +65,12 @@ describe('template composer params (R-LEAD-02)', () => {
     expect(forAudience(jitsi, false)).toBe(true);
     expect(forAudience(jitsi, true)).toBe(false);
   });
+
+  it('a starter imported from Meta: var_1…var_4 → four «المتغير n» fields, all required, all sent', () => {
+    const imported = template({ key: 'academy_welcome', params: ['var_1', 'var_2', 'var_3', 'var_4'], line: 'chat', sales_starter: true });
+    const param = (n: string) => t.inbox.composer.param.replace('{n}', n);
+    expect(paramFields(imported).map((f) => f.label)).toEqual(['1', '2', '3', '4'].map(param));
+    expect(missingParams(imported, { '1': 'a', '2': 'b' })).toEqual(['3', '4']);
+    expect(toParamsInput(imported, { '1': 'a', '2': 'b', '3': 'c', '4': ' d ' })).toEqual({ '1': 'a', '2': 'b', '3': 'c', '4': 'd' });
+  });
 });

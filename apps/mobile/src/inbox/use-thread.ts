@@ -1,4 +1,4 @@
-import type { TemplateKey, TemplateParamsInput, ThreadDetail, MessageView } from '@ab/shared';
+import type { TemplateParamsInput, ThreadDetail, ThreadTemplate, MessageView } from '@ab/shared';
 import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { apiFetch, apiSend, toQueryString } from '@/lib/api';
 import {
@@ -26,10 +26,13 @@ export function useThread(phone: string) {
   });
 }
 
-/** What the composer sends: session text, or an approved template with its params (H3 / H4). */
+/**
+ * What the composer sends: session text, or an approved template with its params (H3 / H4). Any
+ * registry key: a producer's, or a chat starter imported from Meta (owner 2026-10-12).
+ */
 export type Outgoing =
   | { kind: 'text'; text: string }
-  | { kind: 'template'; key: TemplateKey; params: TemplateParamsInput; preview: string; lessonId?: string };
+  | { kind: 'template'; key: ThreadTemplate['key']; params: TemplateParamsInput; preview: string; lessonId?: string };
 
 export interface SendInput {
   out: Outgoing;

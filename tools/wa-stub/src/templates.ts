@@ -3,8 +3,15 @@
 // without an example, a variable at the very start or end of the body, a quick-reply text over 25
 // characters.
 import { randomUUID } from 'node:crypto';
-import { ERR, type Json, type StubTemplate } from './meta.ts';
-import type { Reply, StubState } from './state.ts';
+import { stubLines } from './lines.ts';
+import { defaultChatTemplates, defaultTemplates, ERR, type Json, type StubTemplate } from './meta.ts';
+import type { Reply, StubOptions, StubState } from './state.ts';
+
+/** createStub's and /__stub/reset's templates: the given (or default) ones, plus the chat line's starter. */
+export function initialTemplates(opts: StubOptions): StubTemplate[] {
+  const chat = stubLines(opts)[1];
+  return [...(opts.templates ?? defaultTemplates()), ...(chat ? defaultChatTemplates(chat.wabaId) : [])];
+}
 
 const MEDIA_HEADERS = new Set(['DOCUMENT', 'IMAGE', 'VIDEO']);
 

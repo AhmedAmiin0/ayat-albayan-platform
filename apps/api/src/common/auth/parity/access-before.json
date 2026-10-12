@@ -237,6 +237,7 @@
   "TeachersController.update": ["admin"],
   "TemplatesController.health": ["admin"],
   "TemplatesController.list": ["admin","sales","teacher"],
+  "TemplatesController.setStarter": ["admin"],
   "TemplatesController.submit": ["admin"],
   "ThreadMediaController.file": ["admin"],
   "ThreadMediaController.list": ["admin"],
