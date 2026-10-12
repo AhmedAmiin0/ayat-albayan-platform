@@ -15,6 +15,8 @@ import { CustomValuesPanel } from '../config/CustomValuesPanel';
 import { matchesSetting, matchesText } from '../config/settings-search';
 import { SettingsSearch } from '../config/SettingsSearch';
 import { SettingsViewContext } from '../config/settings-view';
+import { integrationsMatch } from '../integrations/integrations-form';
+import { IntegrationsPanel } from '../integrations/IntegrationsPanel';
 import { settingsQuery } from './api';
 import { SettingsNav, type ExtraSection } from './SettingsNav';
 import { AppearanceSection, FieldsSection, MessagingSection, SalesSection } from './SettingsSections';
@@ -22,7 +24,10 @@ import { useSettingsForm } from './use-settings-form';
 
 /** The sections made only of registry fields, in page order between messaging and sales. */
 const FIELD_SECTIONS = ['schedule', 'classroom', 'reports', 'accounts', 'uploads', 'academy'] as const;
-const CUSTOM_NAV: readonly ExtraSection[] = [{ id: 'custom', label: t.config.sections.custom }];
+const EXTRA_NAV: readonly ExtraSection[] = [
+  { id: 'integrations', label: t.integrations.title },
+  { id: 'custom', label: t.config.sections.custom },
+];
 
 interface BodyProps {
   settings: AcademySettings;
@@ -38,6 +43,7 @@ function useNothingMatches(query: string): boolean {
   return (
     !SETTING_KEYS.some((k) => matchesSetting(k, query)) &&
     !matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query) &&
+    !integrationsMatch(query) &&
     !(custom.data ?? []).some((e) => matchesCustom(e, query))
   );
 }
@@ -55,6 +61,7 @@ function SettingsBody({ settings, query, onSaved, onNote }: BodyProps) {
       ))}
       <SalesSection settings={settings} />
       <AppearanceSection />
+      <IntegrationsPanel query={query} onSaved={onNote} />
       <CustomValuesPanel query={query} onSaved={onNote} />
       <div className="sticky bottom-0 z-10 grid gap-2 border-t border-rule bg-page py-3">
         {state.failed && <FormAlert>{t.common.error}</FormAlert>}
@@ -90,7 +97,7 @@ export function SettingsPage() {
       {settings.isPending && <ListSkeleton rows={6} />}
       {/* minmax(0,1fr): a wide table scrolls inside its own box instead of widening the page (768px). */}
       <div className="grid grid-cols-[minmax(0,1fr)] gap-6 shell:grid-cols-[200px_minmax(0,1fr)] shell:gap-10">
-        <SettingsNav className="shell:sticky shell:top-20 shell:self-start" extra={CUSTOM_NAV} />
+        <SettingsNav className="shell:sticky shell:top-20 shell:self-start" extra={EXTRA_NAV} />
         {settings.data && (
           <div className="grid min-w-0 gap-6">
             <SettingsSearch value={query} onChange={setQuery} />

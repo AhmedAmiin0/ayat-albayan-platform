@@ -15,6 +15,7 @@ type Gate = { open: boolean; reason: 'env_off' | 'not_configured' | 'switch_off'
 
 function renderPage(messagingEnabled = false, gate: Gate = { open: messagingEnabled, reason: messagingEnabled ? null : 'switch_off', queued: 0 }) {
   routeFetch(apiFetch, [
+    ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, messaging_enabled: messagingEnabled }],
     ['/messages/gate', gate],
     ['/messaging/templates', []],
@@ -102,6 +103,7 @@ describe('academy settings form', () => {
 
   it('a rollback to the CRM turns the cut-over back off and the warning returns', async () => {
     routeFetch(apiFetch, [
+      ['/settings/integrations', []],
       ['/settings', { ...SETTINGS, crm_cutover_done: true }],
       ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
       ['/messaging/templates', []],

@@ -10,6 +10,8 @@ export default defineConfig({
     env: {
       SUPABASE_URL: 'http://127.0.0.1:54321',
       SUPABASE_SERVICE_ROLE_KEY: 'test-service-role-key',
+      // No database at boot: the integration-config load is tested on its own (common/integrations).
+      INTEGRATION_CONFIG_FROM_DB: 'false',
     },
   },
 });

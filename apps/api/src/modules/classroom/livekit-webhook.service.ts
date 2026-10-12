@@ -1,5 +1,5 @@
 import { Inject, Injectable, UnauthorizedException } from '@nestjs/common';
-import { CLASSROOM_CONFIG, type ClassroomConfig } from './classroom.config';
+import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from './classroom.config';
 import { egressOutcome, verifyWebhook } from './livekit-webhook';
 import { leftEventOf } from './livekit-webhook.room';
 import { RecordingLifecycle } from './recording.lifecycle';
@@ -20,13 +20,14 @@ export interface WebhookPost {
 @Injectable()
 export class LivekitWebhookService {
   constructor(
-    @Inject(CLASSROOM_CONFIG) private readonly config: ClassroomConfig,
+    @Inject(CLASSROOM_CONFIG) private readonly source: ClassroomConfigSource,
     private readonly recordings: RecordingQueries,
     private readonly lifecycle: RecordingLifecycle,
   ) {}
 
   async handle(post: WebhookPost, now = new Date()): Promise<void> {
-    if (!this.config || !verifyWebhook({ ...post, config: this.config, now })) throw new UnauthorizedException();
+    const config = classroomConfigOf(this.source);
+    if (!config || !verifyWebhook({ ...post, config, now })) throw new UnauthorizedException();
     const event = parse(post.rawBody);
     const left = leftEventOf(event);
     if (left) {

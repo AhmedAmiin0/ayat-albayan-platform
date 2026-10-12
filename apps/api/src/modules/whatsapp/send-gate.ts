@@ -1,7 +1,7 @@
 import type { SendGateView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv } from '../../env';
+import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '../../env';
 import { SettingsService } from '../../common/settings/settings.service';
 
 /**
@@ -11,12 +11,15 @@ import { SettingsService } from '../../common/settings/settings.service';
  */
 @Injectable()
 export class SendGate {
-  private readonly env = loadEnv();
-
   constructor(
     private readonly settings: SettingsService,
     @Inject(DB) private readonly db: Db,
   ) {}
+
+  /** Read per call: the integration config may change at runtime. */
+  private get env(): Env {
+    return loadEnv();
+  }
 
   async open(): Promise<boolean> {
     if (!sendingAllowed(this.env, true)) return false; // the deployment says no: skip the DB read

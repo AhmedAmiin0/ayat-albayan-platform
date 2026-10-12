@@ -45,7 +45,11 @@ function expoTransport({ base, accessToken }: ExpoConn): PushTransport {
     PushService,
     {
       provide: PUSH_TRANSPORT,
-      useFactory: () => expoTransport({ base: loadEnv().EXPO_API_BASE, accessToken: loadEnv().EXPO_ACCESS_TOKEN }),
+      // EXPO_* read per call: the admin may change them in «التكاملات» (no restart).
+      useFactory: (): PushTransport => (messages) => {
+        const env = loadEnv();
+        return expoTransport({ base: env.EXPO_API_BASE, accessToken: env.EXPO_ACCESS_TOKEN })(messages);
+      },
     },
   ],
   exports: [PushService],

@@ -146,6 +146,7 @@ OpenAPI generated from Nest decorators → `packages/api-client`.
 ## 7. Integrations
 
 - **WhatsApp Cloud API**: webhook `POST /webhooks/whatsapp` (verify `X-Hub-Signature-256`), `GET` challenge; outbound `messages` endpoint; templates created in Meta Business Manager and names stored in `message_templates`; startup `TemplateRegistry.verifyAll()` flags missing (fixes the 132001 errors for good).
+- **Config** (owner, 2026-10-12, migration `20261012000310`): the integration keys (WhatsApp lines, the staging guards, LiveKit, Expo, FX URL; registry `packages/shared/src/integrations`) are edited by an admin in `/admin/settings` → «التكاملات». Plain values live in `public.integration_config`, secrets in Supabase Vault (service-role functions, write-only from the app). The API (`common/integrations`, `config/integration-overlay.ts`) loads them at boot, every `SETTINGS_CACHE_MS` and after each save, checks each against the env schema and lays them over `process.env` in `loadEnv()`: a non-empty DB value wins, env is the fallback, and every reader takes the config per call (no restart). Bootstrap and infrastructure keys (`PORT`, `SUPABASE_*`, `WEB_ORIGIN`, `MESSAGING_ENABLED`, …) stay in env only. docs/09 «Integration config in the database».
 - **Google Calendar** (optional mirror): service account with calendar share; events keyed by `extendedProperties.private.lessonId`.
 - **PDF**: HTML (React) → Playwright Chromium in a worker; stored at `reports/{student_id}/{lesson_id}.pdf`; signed URLs 7 days for WhatsApp document template.
 

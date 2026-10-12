@@ -1,7 +1,7 @@
 import { lessonRoomName, type JoinRole, type RoomJoinResult } from '@ab/shared';
 import { HttpException, HttpStatus, Inject, Injectable, Logger } from '@nestjs/common';
 import type { LivekitEnv } from '../../env';
-import { CLASSROOM_CONFIG, type ClassroomConfig } from './classroom.config';
+import { CLASSROOM_CONFIG, classroomConfigOf, type ClassroomConfigSource } from './classroom.config';
 import { notConfigured } from './join-gate';
 import { mintToken, newIdentity } from './livekit-token';
 import { ModerationQueries, principalColumns, type Principal } from './moderation.queries';
@@ -30,15 +30,16 @@ export class RoomAdmission {
   private readonly log = new Logger(RoomAdmission.name);
 
   constructor(
-    @Inject(CLASSROOM_CONFIG) private readonly config: ClassroomConfig,
+    @Inject(CLASSROOM_CONFIG) private readonly source: ClassroomConfigSource,
     private readonly moderation: ModerationQueries,
     private readonly recorder: RecordingStarter,
   ) {}
 
   /** 503 classroom_not_configured when LIVEKIT_* are not set. */
   livekit(): LivekitEnv {
-    if (!this.config) throw notConfigured();
-    return this.config;
+    const config = classroomConfigOf(this.source);
+    if (!config) throw notConfigured();
+    return config;
   }
 
   async admit(input: Admission, now: Date): Promise<RoomJoinResult> {

@@ -24,12 +24,12 @@ describe('SenderQueries — allow-list and line', () => {
     expect(phoneFilter(calls)[1]).toEqual(['phone_e164', ['+201001234567', '+966551234567']]);
   });
 
-  it('the list is read at construction: stubbing after it changes nothing', async () => {
+  it('the list is read per call (integration config may change): a change after construction applies', async () => {
     const { db, calls } = fakeDb({ [M]: [{ data: [] }] });
     const q = new SenderQueries(db);
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+201001234567');
     await q.due({ keys: [], now: NOW, limit: 50 });
-    expect(phoneFilter(calls)).toEqual([]);
+    expect(phoneFilter(calls)).toEqual([['phone_e164', ['+201001234567']]]);
   });
 
   it('without an allow-list neither query filters by phone', async () => {

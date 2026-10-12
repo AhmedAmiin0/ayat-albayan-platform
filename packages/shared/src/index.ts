@@ -25,4 +25,5 @@ export * from './sales/academy.js';
 export * from './sales/schedule.js';
 export * from './sales/teacher-filter.js';
 export * from './i18n/index.js';
+export * from './integrations/index.js';
 export * from './users/index.js';

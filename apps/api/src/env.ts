@@ -1,9 +1,11 @@
+import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
-import { parseAllowedRecipients } from './env.recipients';
+import { integrationOverlay } from './config/integration-overlay';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps } from './env.whatsapp';
 export { allowedRecipients, recipientAllowed, parseAllowedRecipients } from './env.whatsapp';
 export type { WhatsappEnv, LineEnvs, LineNumbers } from './env.whatsapp';
+export { livekitEnv, type LivekitEnv } from './env.livekit';
 
 /** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
 const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
@@ -16,8 +18,9 @@ const recipientList = z.string().transform((raw, ctx) => {
   return z.NEVER;
 });
 
-// Secrets only via env (rule 9). Fails fast at boot when something required is missing.
+// Secrets via env or Vault (rule 9). Fails fast at boot when something required is missing.
 // WhatsApp and Expo values are all optional: without them messaging stays off (docs/12 §3).
+// The integration keys (@ab/shared INTEGRATION_KEYS) may also come from the database (loadEnv).
 const schema = z.object({
   PORT: z.coerce.number().default(3000),
   WEB_ORIGIN: z.string().default('http://localhost:5173'),
@@ -99,6 +102,8 @@ const schema = z.object({
    * e2e sets 0 (its specs write settings rows with SQL).
    */
   SETTINGS_CACHE_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).default(30_000)),
+  /** false = ignore the database's integration config (env only); vitest sets it so no boot reads it. */
+  INTEGRATION_CONFIG_FROM_DB: z.preprocess(blankIsUnset, z.stringbool().default(true)),
   /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
   MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
   /**
@@ -110,18 +115,31 @@ const schema = z.object({
 
 export type Env = z.infer<typeof schema>;
 
-export function loadEnv(source: NodeJS.ProcessEnv = process.env): Env {
-  return schema.parse(source);
+/**
+ * The API's config. Called with no argument (every reader in app code): process.env with the
+ * database's integration values on top (config/integration-overlay, a non-empty DB value wins).
+ * Called with an explicit source (tests, the import command): that source alone, nothing added.
+ * The overlay is pre-checked key by key, and should the merge still fail, env alone is used: a DB
+ * value never makes this throw.
+ */
+export function loadEnv(source?: NodeJS.ProcessEnv): Env {
+  if (source !== undefined) return schema.parse(source);
+  const overlay = integrationOverlay();
+  if (Object.keys(overlay).length === 0) return schema.parse(process.env);
+  const merged = schema.safeParse({ ...process.env, ...overlay });
+  return merged.success ? merged.data : schema.parse(process.env);
 }
 
-/** What the classroom needs to mint a join token; null = not configured (503). */
-export interface LivekitEnv {
-  url: string;
-  apiKey: string;
-  apiSecret: string;
-}
-
-export function livekitEnv(env: Env): LivekitEnv | null {
-  const { LIVEKIT_URL: url, LIVEKIT_API_KEY: apiKey, LIVEKIT_API_SECRET: apiSecret } = env;
-  return url && apiKey && apiSecret ? { url, apiKey, apiSecret } : null;
+/**
+ * The DB values that may go into the overlay: registry keys only, non-blank, each valid for its
+ * own key in this schema. A bad one is dropped and `onBad` gets its KEY (never the value).
+ */
+export function validOverlay(raw: Readonly<Record<string, string>>, onBad: (key: string) => void): Record<string, string> {
+  const out: Record<string, string> = {};
+  for (const [key, value] of Object.entries(raw)) {
+    if (!isIntegrationKey(key) || value.trim() === '') continue;
+    if (schema.shape[key].safeParse(value).success) out[key] = value;
+    else onBad(key);
+  }
+  return out;
 }

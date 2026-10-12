@@ -13,10 +13,14 @@ export type { DueMessage } from './sender.due';
 /** The outbound queue is `messages` itself (docs/12 §3.3); every state change is compare-and-set. */
 @Injectable()
 export class SenderQueries {
-  /** WA_ALLOWED_RECIPIENTS, read once (docs/12 §13.5a): rows to other phones are never read. */
-  readonly allowed = allowedRecipients(loadEnv());
-  /** Chat client configured, read once: without it chat-stamped texts can never send (review A, C1). */
-  readonly chatConfigured = lineEnvs(loadEnv()).chat !== null;
+  /** WA_ALLOWED_RECIPIENTS, read per call (docs/12 §13.5a): rows to other phones are never read. */
+  get allowed(): readonly string[] | null {
+    return allowedRecipients(loadEnv());
+  }
+  /** Chat client configured, read per call: without it chat-stamped texts can never send (review A, C1). */
+  get chatConfigured(): boolean {
+    return lineEnvs(loadEnv()).chat !== null;
+  }
 
   constructor(@Inject(DB) private readonly db: Db) {}
 
@@ -43,8 +47,9 @@ export class SenderQueries {
       .or(`scheduled_for.is.null,scheduled_for.lte.${now}`)
       .or(`next_attempt_at.is.null,next_attempt_at.lte.${now}`)
       .or(`template_key.is.null${approved}`);
+    const allowed = this.allowed;
     const sendable = this.chatConfigured ? query : query.or('template_key.not.is.null,line.is.null,line.neq.chat');
-    const scoped = this.allowed ? sendable.in('phone_e164', [...this.allowed]) : sendable;
+    const scoped = allowed ? sendable.in('phone_e164', [...allowed]) : sendable;
     const { data, error } = await scoped.order('scheduled_for', { ascending: true, nullsFirst: true }).limit(input.limit);
     if (error) throw new Error(`outbound queue read failed: ${error.message}`);
     return data;
@@ -65,7 +70,8 @@ export class SenderQueries {
       .is('created_by', null)
       .in('template_key', [...AUTOMATIC_KEYS])
       .or(`error_code.is.null,error_code.neq.${SENDING}`);
-    const scoped = this.allowed ? query.in('phone_e164', [...this.allowed]) : query;
+    const allowed = this.allowed;
+    const scoped = allowed ? query.in('phone_e164', [...allowed]) : query;
     const { data, error } = await scoped.select('id');
     if (error) throw new Error(`automatic hold failed: ${error.message}`);
     return data.length;

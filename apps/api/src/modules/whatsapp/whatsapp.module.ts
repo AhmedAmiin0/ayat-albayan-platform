@@ -1,7 +1,9 @@
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
-import { allowedRecipients, chatGaps, lineEnvs, loadEnv } from '../../env';
+import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
+import { chatGaps, loadEnv } from '../../env';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
+import { LiveWhatsappClient } from './live-client';
 import { LinesCheck } from './lines.check';
 import { LinesController } from './lines.controller';
 import { MessageDispatch } from './message.dispatch';
@@ -16,18 +18,14 @@ import { SenderQueries } from './sender.queries';
 import { TemplateRegistry } from './template.registry';
 import { TemplatesController } from './templates.controller';
 import { TemplatesQueries } from './templates.queries';
-import { HttpWhatsappClient } from './whatsapp.client';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
 
-/** One client per line (docs/12 §13.4); an unconfigured line's client refuses every call. */
+/**
+ * One client per line (docs/12 §13.4); an unconfigured line's client refuses every call. Each reads
+ * its config per call, so a value the admin saves in «التكاملات» applies without a restart.
+ */
 function lines(): WhatsappLines {
-  const env = loadEnv();
-  const envs = lineEnvs(env);
-  const allowed = allowedRecipients(env);
-  return {
-    notifications: new HttpWhatsappClient(envs.notifications, { allowed }),
-    chat: new HttpWhatsappClient(envs.chat, { allowed }),
-  };
+  return { notifications: new LiveWhatsappClient('notifications'), chat: new LiveWhatsappClient('chat') };
 }
 
 /**
@@ -39,6 +37,8 @@ function lines(): WhatsappLines {
  */
 @Global()
 @Module({
+  // Imported (though global) so the database's config is loaded before onModuleInit below.
+  imports: [IntegrationConfigModule],
   controllers: [TemplatesController, MessagesController, LinesController],
   providers: [
     { provide: WHATSAPP_LINES, useFactory: lines },

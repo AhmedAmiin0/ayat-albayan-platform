@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { loadEnv } from '../../env';
 import { PushReceiptsJob } from './push-receipts.job';
 import { PushReceiptsQueries } from './push-receipts.queries';
-import { expoReceiptsTransport, RECEIPTS_TRANSPORT } from './receipts.transport';
+import { expoReceiptsTransport, RECEIPTS_TRANSPORT, type ReceiptsTransport } from './receipts.transport';
 
 /**
  * R-MOB-01: Expo push receipts + DeviceNotRegistered pruning. Sending itself (PushService,
@@ -14,7 +14,11 @@ import { expoReceiptsTransport, RECEIPTS_TRANSPORT } from './receipts.transport'
     PushReceiptsJob,
     {
       provide: RECEIPTS_TRANSPORT,
-      useFactory: () => expoReceiptsTransport({ base: loadEnv().EXPO_API_BASE, accessToken: loadEnv().EXPO_ACCESS_TOKEN }),
+      // EXPO_* read per call: the admin may change them in «التكاملات» (no restart).
+      useFactory: (): ReceiptsTransport => (ids) => {
+        const env = loadEnv();
+        return expoReceiptsTransport({ base: env.EXPO_API_BASE, accessToken: env.EXPO_ACCESS_TOKEN })(ids);
+      },
     },
   ],
 })

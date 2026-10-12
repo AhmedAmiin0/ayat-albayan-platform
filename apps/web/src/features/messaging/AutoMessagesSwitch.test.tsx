@@ -13,6 +13,7 @@ const s = t.templates.settings;
 
 function renderPage(auto: boolean, cutover = false) {
   routeFetch(apiFetch, [
+    ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, auto_messages_enabled: auto, crm_cutover_done: cutover }],
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],
