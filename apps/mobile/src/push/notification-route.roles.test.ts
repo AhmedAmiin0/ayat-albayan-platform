@@ -27,7 +27,7 @@ test.each([
   [{ kind: 'new_student', studentId: 's-1' }, '/sales/students'],
   [{ kind: 'report_submitted', studentId: 's-1' }, '/sales/students'],
   [{ kind: 'payment_due', studentId: 's-1' }, '/sales/students'],
-  [{ kind: 'meeting_invite', meetingId: 'm1' }, '/sales/more'],
+  [{ kind: 'meeting_invite', meetingId: 'm1' }, '/sales/more/meetings'],
   [{ kind: 'lesson_needs_confirmation', lessonId: 'l1' }, '/sales/more'],
 ])('a salesperson tapping %j opens %s', (data, href) => {
   expect(salesRouteFor(data)).toBe(href);
@@ -38,6 +38,8 @@ test('without inbox.read a message opens «المزيد»; without self.sales_ac
   expect(salesRouteFor({ kind: 'new_message', phone: PHONE }, none)).toBe('/sales/more');
   expect(salesRouteFor({ kind: 'new_student' }, none)).toBe('/sales/more');
   expect(salesRouteFor({ kind: 'new_student' }, only('self.sales_academy'))).toBe('/sales/students');
+  expect(salesRouteFor({ kind: 'meeting_invite' }, none)).toBe('/sales/more');
+  expect(salesRouteFor({ kind: 'meeting_invite' }, only('meetings.read'))).toBe('/sales/more/meetings');
 });
 
 test.each([
