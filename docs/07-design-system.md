@@ -23,7 +23,7 @@ Amiri, the revival of Cairo's Bulaq/Amiriya press Naskh, sets titles. IBM Plex S
 ### Principles (the rules reviewers enforce)
 
 1. **Gold decorates, GREEN acts.** Gold (`--gold*`) never fills a button, a link or text. Anything clickable is the brand green (the `--lapis*` tokens, a historical name: their value is green), or neutral with a green focus ring. If you are reaching for gold to make something "important", use hierarchy instead. The `ok` status (brand green3 `#1E6B4C`) shares the green family on purpose, as in the brand's own reports («تم / حاضر»); it is never filled or underlined and always sits in a chip with its nuqta glyph, so it never reads as a link or a button.
-2. **Saffron means «دورك» and nothing else.** Saffron marks only things an admin must act on now: «يحتاج تأكيد», new lead «جديد», «محتاج معلم/ة», «الباقة خلصت», «مش مدفوع», «تقرير ما اتبعتش», «فاضل حلقتين». It is never a button, a focus ring or a decoration. If nobody has to do anything, it is not saffron.
+2. **Saffron means «دورك» and nothing else.** Saffron marks only things an admin must act on now: «يحتاج تأكيد», new lead «جديد», «محتاج معلم/ة», «الباقة خلصت», «بانتظار التجديد», «مش مدفوع», «تقرير ما اتبعتش», «فاضل حلقتين». It is never a button, a focus ring or a decoration. If nobody has to do anything, it is not saffron.
 3. **Shape carries state; colour only confirms it.** Every status shows a nuqta glyph (fill, half, hollow or struck) **and** the ar.json word. Colour is the third channel, so no state is ever communicated by colour alone.
 4. **One rosette, one cartouche, one filled button.** The verse-end rosette ۝ only ever holds a number (section, page, PDF page). It is never a status, never the logo and is never struck through. Each screen has exactly one cartouche (its title) and at most one filled primary button. The one exception is a list whose rows *are* the task: on the mobile «النهارده» screen every card that needs confirmation carries its own filled «تأكيد», because confirming is the only job on that screen.
 5. **Arabic first, one numeral system.**
@@ -520,6 +520,7 @@ Keep this map in `packages/shared/src/status-style.ts` and unit-test that every 
 | | lost | `enums.leadStatus.lost` | عميل ضايع / اعتذر | neutral | struck |
 | **student_status** | trial | `enums.studentStatus.trial` | تجريبي | neutral | hollow |
 | | active | `enums.studentStatus.active` | مشترك | ok | fill |
+| | pending_renewal | `enums.studentStatus.pending_renewal` | بانتظار التجديد | act | half |
 | | paused | `enums.studentStatus.paused` | متوقف مؤقتًا | neutral | half |
 | | churned | `enums.studentStatus.churned` | وقف | neutral | struck |
 | **subscription_status** | trial | `enums.subscriptionStatus.trial` | تجريبي | neutral | hollow |
