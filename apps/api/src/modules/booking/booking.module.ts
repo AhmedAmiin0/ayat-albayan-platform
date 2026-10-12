@@ -16,6 +16,7 @@ import { InstantQueries } from './instant.queries';
 import { InstantLessonService } from './instant.service';
 import { MakeupCandidates } from './makeup-candidates.service';
 import { SalesBookingController, SalesBookingOptionsController } from './sales-booking.controller';
+import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
 import { SlotsService } from './slots.service';
 import { TeacherOptionsQueries } from './teacher-options.queries';
@@ -39,6 +40,7 @@ import { TeacherOptionsService } from './teacher-options.service';
     BookingParties,
     BookingPlanner,
     BookingService,
+    SalesBookingScope,
     SalesBookingService,
     SalesBookingOptions,
     BookingWriter,
