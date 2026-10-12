@@ -9,7 +9,7 @@ import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { t } from '@/lib/i18n';
 import { withFilter, withoutFilters, withSort, type ListUrlState } from '@/lib/list-url';
-import { teachersPageQuery, type Page, type Teacher } from './api';
+import { teachersPageQuery, type Page, type Teacher, type TeacherListRow } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { teacherColumns } from './teacher-columns';
@@ -22,7 +22,7 @@ type Props = {
   onOpen: (teacherId: string) => void;
 };
 
-type TableProps = Props & { data: Page<Teacher>; columns: ReturnType<typeof teacherColumns> };
+type TableProps = Props & { data: Page<TeacherListRow>; columns: ReturnType<typeof teacherColumns> };
 
 function TeachersTable({ data, columns, list, onList, onOpen }: TableProps) {
   // No teacher at all (no filter): the empty state; a filter with no match keeps its controls.

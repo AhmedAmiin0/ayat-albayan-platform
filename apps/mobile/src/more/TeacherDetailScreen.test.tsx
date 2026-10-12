@@ -13,9 +13,10 @@ jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
+let mockParams: Record<string, string> = { id: 't1' };
 jest.mock('expo-router', () => ({
   router: { back: jest.fn(), push: jest.fn() },
-  useLocalSearchParams: () => ({ id: 't1' }),
+  useLocalSearchParams: () => mockParams,
 }));
 
 const DAY = 86_400_000;
@@ -45,7 +46,10 @@ function serve(routes: Record<string, unknown>) {
   });
 }
 
-beforeEach(() => jest.clearAllMocks());
+beforeEach(() => {
+  jest.clearAllMocks();
+  mockParams = { id: 't1' };
+});
 
 test('name, status, LTR phone, weekly grid by day with its zone, and only upcoming time-off', async () => {
   serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': GRID, '/teachers/t1/time-off': TIME_OFF });
@@ -111,4 +115,12 @@ test('a teacher that does not exist: «لم نجد ما تبحث عنه»', asyn
   serve({});
   await renderWithQuery(<TeacherDetailScreen />);
   expect(await screen.findByText(t.common.notFound)).toBeTruthy();
+});
+
+test('«طلاب المعلم/ة» opens on the list the `status` param names (a tapped count)', async () => {
+  mockParams = { id: 't1', status: 'trial' };
+  serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': [], '/teachers/t1/time-off': [] });
+  await renderWithQuery(<TeacherDetailScreen />);
+  expect(await screen.findByRole('header', { name: t.studentLists.section })).toBeTruthy();
+  expect(mockApiFetch).toHaveBeenCalledWith('/students?teacher=t1&status=trial&page=1&pageSize=50');
 });

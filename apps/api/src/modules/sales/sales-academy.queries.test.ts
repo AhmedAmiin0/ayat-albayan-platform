@@ -5,11 +5,12 @@ import { SalesAcademyQueries } from './sales-academy.queries';
 const NOW = new Date('2026-10-11T16:10:00.000Z');
 
 describe('SalesAcademyQueries (whitelisted selects)', () => {
-  it('teachers: active only, by name; the select names no pay, phone or link column', async () => {
+  it('teachers: active only, by name; the fixed link is the one link column, never pay or phone', async () => {
     const f = fakeDb({ teachers: [{ data: [] }] });
     await new SalesAcademyQueries(f.db).teachers();
     const [select] = f.argsOf('teachers', 'select') ?? [];
-    expect(select).toBe('id, display_name_ar, display_name_en, gender, programs, students(id, code, name, status, program)');
+    expect(select).toBe('id, display_name_ar, display_name_en, gender, programs, meeting_link, students(id, code, name, status, program)');
+    expect(String(select)).not.toMatch(/rate|phone|notes|max_students|calendar|meeting_link_override/);
     expect(f.argsOf('teachers', 'eq')).toEqual(['status', 'active']);
   });
 

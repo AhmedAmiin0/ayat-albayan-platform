@@ -1,4 +1,4 @@
-import type { AssistantLessonView, SalesStudentView, SalesTeacherView } from '@ab/shared';
+import { countByKind, type AssistantLessonView, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
 import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.queries';
 import type { TeacherDayFacts } from './sales-schedule.mapper';
 
@@ -13,11 +13,14 @@ const NO_CONTEXT: TeacherContext = { facts: new Map(), next: new Map() };
 // Whitelists, not omit-lists (docs/16): a column added to teachers or students later never reaches sales.
 
 /**
- * An active teacher with today's lesson count, whether one is running now, and the students they teach
- * now (a churned student is no longer theirs) by name, each with program, status and next lesson.
+ * An active teacher with today's lesson count, whether one is running now, the students they teach
+ * now (a churned student is no longer theirs) by name, each with program, status and next lesson, the
+ * «مشترك / تجريبي» counts of those, and their fixed meeting link (owner 2026-10-12; null when unset).
  */
 export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CONTEXT): SalesTeacherView {
   const today = ctx.facts.get(row.id);
+  const current = row.students.filter((s) => s.status !== 'churned');
+  const counts = countByKind(current);
   return {
     id: row.id,
     name: row.display_name_ar,
@@ -26,8 +29,10 @@ export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CO
     programs: row.programs,
     lessons_today: today?.lessons_today ?? 0,
     live_now: today?.live_now ?? false,
-    students: row.students
-      .filter((s) => s.status !== 'churned')
+    active_count: counts.active,
+    trial_count: counts.trial,
+    meeting_link: row.meeting_link?.trim() || null,
+    students: current
       .map((s) => ({ id: s.id, code: s.code ?? '', name: s.name, program: s.program, status: s.status, next_lesson_at: ctx.next.get(s.id) ?? null }))
       .sort((a, b) => a.name.localeCompare(b.name, 'ar')),
   };

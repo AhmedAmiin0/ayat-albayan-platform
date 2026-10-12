@@ -14,7 +14,9 @@ jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }
 
 const counts = (students: number, today: number) =>
   `${t.sales.teachers.studentsCount.replace('{n}', String(students))} · ${t.sales.teachers.lessonsToday.replace('{n}', String(today))}`;
-const TEACHERS = [teacher({ live_now: true }), teacher({ id: 't2', name: 'خالد', name_en: null, gender: 'male', programs: ['quran'], lessons_today: 0, students: [] })];
+const kinds = (active: number, trial: number) => t.studentLists.counts.replace('{active}', String(active)).replace('{trial}', String(trial));
+const KHALID = { id: 't2', name: 'خالد', name_en: null, gender: 'male' as const, programs: ['quran' as const], lessons_today: 0, students: [] };
+const TEACHERS = [teacher({ live_now: true, active_count: 4, trial_count: 2 }), teacher({ ...KHALID, active_count: 0, trial_count: 0 })];
 
 beforeEach(() => mockApiFetch.mockReset());
 
@@ -25,6 +27,8 @@ test('master list: name, gender · programs, counts and «في حلقة الآن
   expect(mockApiFetch).toHaveBeenCalledWith('/sales/teachers');
   expect(screen.getByText(counts(2, 3))).toBeTruthy();
   expect(screen.getByText(counts(0, 0))).toBeTruthy();
+  expect(screen.getByText(kinds(4, 2))).toBeTruthy();
+  expect(screen.getByText(kinds(0, 0))).toBeTruthy();
   expect(screen.getAllByText(t.sales.teachers.liveNow)).toHaveLength(1);
   expect(screen.getByText(`${t.enums.gender.female} · ${t.enums.program.quran}${t.common.listSeparator}${t.enums.program.arabic}`)).toBeTruthy();
   expect(screen.queryByText('جنى علي')).toBeNull();
