@@ -27,6 +27,7 @@ import { BalanceQueries } from './balance.queries';
 import { LeadConversion } from './lead-conversion';
 import { StudentAccess } from './student-access';
 import { StudentActivation } from './student-activation';
+import { StudentStatusQueries } from './student-status.queries';
 import { SubscriptionsQueries } from './subscriptions.queries';
 import { mocks } from './test-app.fakes';
 
@@ -55,6 +56,7 @@ export async function moneyApp() {
     .overrideProvider(BalanceQueries).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
+    .overrideProvider(StudentStatusQueries).useValue(m.statuses)
     .overrideProvider(AlertsQueries).useValue(m.alerts)
     .overrideProvider(AdminTasksQueries).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)

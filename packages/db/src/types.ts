@@ -3835,7 +3835,7 @@ export type Database = {
         | 'payment_due';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
-      student_status: 'trial' | 'active' | 'paused' | 'churned';
+      student_status: 'trial' | 'active' | 'pending_renewal' | 'paused' | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
       teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
@@ -4012,7 +4012,7 @@ export const Constants = {
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],
-      student_status: ['trial', 'active', 'paused', 'churned'],
+      student_status: ['trial', 'active', 'pending_renewal', 'paused', 'churned'],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
       teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],

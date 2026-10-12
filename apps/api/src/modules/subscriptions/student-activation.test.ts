@@ -1,42 +1,26 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AuditService } from '../../common/audit/audit.service';
-import { fakeDb, type FakeResult } from '../guardians/fake-db';
 import { activatesStudent, StudentActivation } from './student-activation';
+import type { StudentStatusQueries } from './student-status.queries';
 
-function setup(students: FakeResult[]) {
-  const t = fakeDb({ students });
-  const audit = { record: vi.fn() };
-  return { ...t, audit, activation: new StudentActivation(t.db, audit as unknown as AuditService) };
+function setup(moved: boolean) {
+  const statuses = { move: vi.fn(async () => moved) };
+  return { statuses, activation: new StudentActivation(statuses as unknown as StudentStatusQueries) };
 }
 
 describe('StudentActivation: a trial student becomes «مشترك» on its first payment', () => {
-  it('trial → active by compare-and-set on status = trial, audited as a status_change by the recorder', async () => {
-    const t = setup([{ data: { id: 's1' } }]);
-    expect(await t.activation.afterPayment('s1', 'sales1')).toBe(true);
-    expect(t.argsOf('students', 'update')).toEqual([{ status: 'active' }]);
-    expect(t.calls.filter((c) => c.table === 'students' && c.method === 'eq').map((c) => c.args)).toEqual([
-      ['id', 's1'],
-      ['status', 'trial'],
-    ]);
-    expect(t.audit.record).toHaveBeenCalledWith({
-      actorId: 'sales1',
-      entity: 'students',
-      entityId: 's1',
-      action: 'status_change',
-      before: { status: 'trial' },
-      after: { status: 'active', via: 'payment' },
-    });
+  it('trial → active by compare-and-set, audited by the recorder with the payment id', async () => {
+    const t = setup(true);
+    expect(await t.activation.afterPayment('s1', 'sales1', 'p1')).toBe(true);
+    expect(t.statuses.move).toHaveBeenCalledWith(
+      { studentId: 's1', from: 'trial', to: 'active' },
+      { actorId: 'sales1', after: { via: 'payment', payment_id: 'p1' } },
+    );
   });
 
-  it('not in trial (already active, paused, churned) or a replay → nothing changes, no audit', async () => {
-    const t = setup([{ data: null }]);
-    expect(await t.activation.afterPayment('s1', 'admin1')).toBe(false);
-    expect(t.audit.record).not.toHaveBeenCalled();
-  });
-
-  it('a db error is thrown', async () => {
-    const t = setup([{ error: { message: 'boom' } }]);
-    await expect(t.activation.afterPayment('s1', 'admin1')).rejects.toThrow();
+  it('not in trial (active, pending renewal, paused, churned) or a replay → the CAS misses, false', async () => {
+    const t = setup(false);
+    expect(await t.activation.afterPayment('s1', 'admin1', 'p1')).toBe(false);
+    expect(await t.activation.afterPayment('s1', 'admin1', 'p1')).toBe(false);
   });
 });
 

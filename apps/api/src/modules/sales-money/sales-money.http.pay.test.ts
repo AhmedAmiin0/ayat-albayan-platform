@@ -26,7 +26,7 @@ describe('POST /sales/payments: her bank transfer through the admin’s Payments
     );
     expect(m.storage.exists).toHaveBeenCalledWith({ bucket: 'receipts', path: RECEIPT });
     expect(m.audit.record).toHaveBeenCalledWith(expect.objectContaining({ actorId: SALES_A.id, entity: 'payments', action: 'create' }));
-    expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, SALES_A.id);
+    expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, SALES_A.id, PAYMENT_ID);
     expect(Object.keys(res.json()).sort()).toEqual(PAY_KEYS);
     expect(res.json()).toMatchObject({ id: PAYMENT_ID, method: 'bank', kind: 'payment', student: { id: STUDENT_ID, status: 'active' } });
   });
@@ -34,7 +34,7 @@ describe('POST /sales/payments: her bank transfer through the admin’s Payments
   it('the admin’s POST /payments activates a trial student too, with the admin as the actor; a refund does not', async () => {
     m.payments.insert.mockResolvedValue(paymentRow());
     expect((await call({ method: 'POST', url: '/payments', body: ADMIN_PAY })).statusCode).toBe(201);
-    expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, 'a0000000-0000-4000-8000-000000000001');
+    expect(m.activation.afterPayment).toHaveBeenCalledWith(STUDENT_ID, 'a0000000-0000-4000-8000-000000000001', PAYMENT_ID);
     m.activation.afterPayment.mockClear();
     m.payments.netPaid.mockResolvedValue(145);
     m.payments.insert.mockResolvedValue(paymentRow({ kind: 'refund' }));

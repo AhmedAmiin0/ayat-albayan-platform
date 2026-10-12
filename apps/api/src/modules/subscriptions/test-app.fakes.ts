@@ -11,6 +11,7 @@ export function mocks() {
     },
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
+    statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
     alerts: {
       studentsOfLessons: vi.fn(), studentsWithPackages: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
@@ -71,4 +72,6 @@ export function resetMocks(m: Mocks): void {
   m.subs.byRequest.mockResolvedValue(null);
   m.settings.all.mockResolvedValue(SETTING_DEFAULTS);
   m.storage.remove.mockResolvedValue(undefined);
+  m.statuses.student.mockResolvedValue(null); // no student row: the status rules change nothing
+  m.statuses.lastStatusChange.mockResolvedValue(null);
 }

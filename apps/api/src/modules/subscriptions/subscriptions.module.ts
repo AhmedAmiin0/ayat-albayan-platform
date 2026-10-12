@@ -16,6 +16,9 @@ import { SubscriptionsQueries } from './subscriptions.queries';
 import { LeadConversion } from './lead-conversion';
 import { SubscriptionCreator } from './subscription-creator';
 import { StudentActivation } from './student-activation';
+import { StudentDeactivation } from './student-deactivation';
+import { StudentRenewal } from './student-renewal';
+import { StudentStatusQueries } from './student-status.queries';
 import { SubscriptionsService } from './subscriptions.service';
 import { UnpaidFlags } from './unpaid-flags.service';
 
@@ -41,6 +44,9 @@ import { UnpaidFlags } from './unpaid-flags.service';
     PackagesService,
     StudentAccess,
     StudentActivation,
+    StudentDeactivation,
+    StudentRenewal,
+    StudentStatusQueries,
     SubscriptionAlertsService,
     AlertsEnv,
     SubscriptionsQueries,

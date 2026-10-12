@@ -2,7 +2,7 @@ import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
 import type { SalesQueries } from '../sales/sales.queries';
 import type { SalesFamilyQueries } from './sales-family.queries';
-import { assertOwnStudent, SalesMoneyScope } from './sales-money.scope';
+import { assertOwnStudent, assertSalesDiscount, SalesMoneyScope } from './sales-money.scope';
 
 const USER: AuthUser = { id: 'u1', email: null, role: 'sales' };
 const OWN = { leadIds: [], guardianIds: [], studentIds: ['s1'], phones: [] };
@@ -25,5 +25,24 @@ describe('SalesMoneyScope: ownershipOf(...).studentIds, never the booking switch
     expect(t.sales.ownership).toHaveBeenCalledWith('u1');
     await expect(t.scope.familyChat(USER, 's2')).rejects.toThrow();
     expect(t.family.familyPhone).toHaveBeenCalledTimes(1);
+  });
+});
+
+describe('assertSalesDiscount: the website pills only (owner 2026-10-12)', () => {
+  const code = (discount?: number) => {
+    try {
+      assertSalesDiscount({ discount });
+      return 'ok';
+    } catch (e) {
+      return (e as { response?: { code?: string } }).response?.code;
+    }
+  };
+
+  it('0, 5, 10, 15 and an omitted discount pass', () => {
+    expect([0, 5, 10, 15, undefined].map(code)).toEqual(['ok', 'ok', 'ok', 'ok', 'ok']);
+  });
+
+  it('anything else is 403 discount_not_allowed', () => {
+    expect([20, 12.5, 99.5, 100, 1].map(code)).toEqual(Array(5).fill('discount_not_allowed'));
   });
 });

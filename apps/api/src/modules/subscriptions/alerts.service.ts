@@ -6,8 +6,9 @@ import { SettingsService } from '../../common/settings/settings.service';
 import { AlertsQueries } from './alerts.queries';
 import { alertPlan, openTaskKeys, type AlertPlan } from './packages.plan';
 import { PackagesService } from './packages.service';
+import { StudentRenewal, type RenewalCause } from './student-renewal';
 
-export type EvaluateOptions = { actorId?: string | null; now?: Date };
+export type EvaluateOptions = { actorId?: string | null; now?: Date; cause?: RenewalCause };
 
 /**
  * R-SUB-02 «2 lessons remaining» → renewal reminder to the guardian + an admin task; at 0 the
@@ -18,12 +19,13 @@ export type EvaluateOptions = { actorId?: string | null; now?: Date };
  * every money write (MoneyWrites) and the sweep job. Idempotent: the task and the message carry
  * the same dedup key (rule 8).
  */
-/** What the alerts read (the threshold) and whom they tell (R-MOB-01 payment_due); max-params. */
+/** What the alerts read (the threshold), whom they tell (R-MOB-01 payment_due), the student status rule; max-params. */
 @Injectable()
 export class AlertsEnv {
   constructor(
     readonly settings: SettingsService,
     readonly push: PushService,
+    readonly renewal: StudentRenewal,
   ) {}
 }
 
@@ -41,18 +43,25 @@ export class SubscriptionAlertsService {
     await this.evaluateStudents(await this.queries.studentsOfLessons(lessonIds));
   }
 
-  /** Recompute statuses, then raise the alert. One student's failure never stops the others. */
+  /**
+   * Recompute statuses, then raise the alert, then the student's «بانتظار التجديد» rule (StudentRenewal).
+   * One student's failure never stops the others.
+   */
   async evaluateStudents(studentIds: readonly string[], opts: EvaluateOptions = {}): Promise<number> {
     if (studentIds.length === 0) return 0;
     const { renewal_alert_remaining: threshold, auto_messages_enabled: auto } = await this.env.settings.all();
+    const actorId = opts.actorId ?? null;
+    const cause = opts.cause ?? { via: 'event' };
     let failed = 0;
     for (const studentId of new Set(studentIds)) {
       try {
-        const { rows, ctx } = await this.packages.recompute(studentId, opts.actorId ?? null);
+        const state = await this.packages.recompute(studentId, actorId);
+        const { rows, ctx } = state;
         const plan = alertPlan({ subs: rows, balances: ctx.balances, threshold });
         const now = opts.now ?? new Date();
         if (plan) await this.raise({ studentId, plan, now, auto });
         await this.queries.closeTasks({ subjectIds: rows.map((r) => r.id), keep: openTaskKeys(plan), now });
+        await this.env.renewal.apply({ studentId, state, actorId, now, cause });
       } catch (e) {
         failed += 1;
         this.log.error(`alerts failed for student ${studentId}: ${e instanceof Error ? e.message : String(e)}`);

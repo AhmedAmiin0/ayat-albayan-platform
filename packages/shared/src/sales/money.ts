@@ -6,7 +6,9 @@ import { currencyIso, moneyAmount, pastInstant, receiptUploadSchema, subscriptio
 // The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
 // commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is always 'bank',
-// the receipt is required and every write carries its clientRequestId (rule 8). Strict objects: a field
+// the receipt is required and every write carries its clientRequestId (rule 8). The API narrows further
+// (docs/16 rows 20–22): only the site's discount pills (403 discount_not_allowed) and the package currency
+// (400 currency_mismatch; `currency` stays for client compatibility). Strict objects: a field
 // the admin's form has but hers does not (kind, method, invoiceId…) is a 400, never silently dropped.
 
 /** POST /sales/subscriptions/quote: the price the create would store, for the student she owns. */

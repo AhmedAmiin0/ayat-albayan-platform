@@ -36,7 +36,7 @@ export interface SalesPaymentView {
   id: string;
   subscription_id: string;
   student: SalesStudentRef & { status: StudentStatus };
-  /** In the package currency (converted by the API when the family sent another one). */
+  /** Always the package currency: her transfer is recorded in it only (400 currency_mismatch otherwise). */
   amount: number;
   currency: string;
   method: PaymentMethod;
