@@ -26,7 +26,11 @@ export function assertBookingScope(req: BookingRequest, own: BookingOwnership): 
   if (bookingKindOf(req) !== 'trial') throw forbidden('kind_not_allowed');
   if (req.meetingLink) throw forbidden('meeting_link_not_allowed');
   if (req.invoice) throw forbidden('invoice_not_allowed');
-  if (!own) return; // sales_auto_assign OFF: any lead, family or student
+  if (own) assertOwned(req, own); // null = sales_auto_assign OFF: any lead, family or student
+}
+
+// Split from assertBookingScope to stay under the complexity cap (10).
+function assertOwned(req: BookingRequest, own: SalesOwnership): void {
   if (req.leadId && !own.leadIds.includes(req.leadId)) throw forbidden('not_your_lead');
   if ('studentIds' in req) {
     if (!all(req.studentIds, own.studentIds)) throw forbidden('not_your_student');
