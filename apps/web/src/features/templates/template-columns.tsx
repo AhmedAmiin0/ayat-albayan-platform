@@ -1,4 +1,4 @@
-import { templateStatusStyle, type TemplateView } from '@ab/shared';
+import { restrictedOfferable, templateStatusStyle, type TemplateView } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { Button } from '@/components/ui/button';
@@ -113,18 +113,21 @@ export function templateColumns({ onSubmit, onStarter, saving }: TemplateColumns
     }),
     col.accessor('sales_starter', {
       header: () => t.templates.salesStarter,
-      cell: (c) => (
-        <span className="inline-flex items-center gap-2">
-          <Label text={t.templates.salesStarter} />
-          <StarterToggle
-            name={templateName(c.row.original.key)}
-            checked={c.getValue()}
-            disabled={saving === c.row.original.key}
-            onToggle={(on) => onStarter(c.row.original, on)}
-          />
-        </span>
-      ),
-      meta: { className: 'max-sm:order-6' },
+      // Never offerable (a booking or reminder, a PDF, an own-button one): no switch, not a disabled one
+      // (owner 2026-10-13); the empty cell (and its phone label) leaves the stacked row.
+      cell: (c) =>
+        restrictedOfferable(c.row.original) ? (
+          <span className="inline-flex items-center gap-2">
+            <Label text={t.templates.salesStarter} />
+            <StarterToggle
+              name={templateName(c.row.original.key)}
+              checked={c.getValue()}
+              disabled={saving === c.row.original.key}
+              onToggle={(on) => onStarter(c.row.original, on)}
+            />
+          </span>
+        ) : null,
+      meta: { className: 'max-sm:order-6 max-sm:empty:hidden' },
     }),
     col.display({
       id: 'actions',

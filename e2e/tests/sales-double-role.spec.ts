@@ -3,14 +3,17 @@ import { family, makeAssistant, message, TAG } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
 import { lastOutbound } from '../support/inbox';
 import { salesNav, seedBooked, seedMine, setSalesStarter, signInSales } from '../support/sales-portal';
+import { setTemplateStatus, templateRow } from '../support/settings';
 
 // Sales double role (owner 2026-10-11, docs/16): the salesperson also does the classroom assistant's job.
 // She reads a chat that is not hers, opens the history of a confirmed subscription she made (with its payment amounts),
 // sees the teachers (master-detail) and every student, the academy's day read-only, and a lesson running now
 // with «ادخل الحلقة». Owner report 2026-10-12: she starts a conversation with a template, one the
-// admin offers to sales («قالب بدء محادثة للمبيعات»; sales-starter.spec covers the chat line's own).
+// admin offers to sales («متاح للمعلمين والمبيعات»; sales-starter.spec covers the chat line's own).
+// Owner 2026-10-13: never a booking confirmation or lesson reminder, so the offered one is renewal_due.
 
 const composer = ar.inbox.composer;
+const STARTER = 'renewal_due';
 
 test.describe('sales double role', () => {
   test('a chat that is not hers, a confirmed subscription history, teachers, all students, the schedule and a running lesson', async ({ browser }) => {
@@ -66,12 +69,15 @@ test.describe('sales double role', () => {
   });
 
   test('sales starts a conversation with a template', async ({ browser }) => {
-    // Sales list and send only starters: offer this one for the test, then put it back.
-    await setSalesStarter('booking_confirmation_plain', true);
+    // Sales list and send only offerable starters: approve and offer this one for the test, then put it back.
+    const before = await templateRow(STARTER);
+    await setTemplateStatus({ key: STARTER, status: 'approved' });
+    await setSalesStarter(STARTER, true);
     try {
       await startsWithTemplate(browser);
     } finally {
-      await setSalesStarter('booking_confirmation_plain', false);
+      await setSalesStarter(STARTER, false);
+      await setTemplateStatus({ key: STARTER, status: before.status });
     }
   });
 });
@@ -89,17 +95,17 @@ async function startsWithTemplate(browser: Browser): Promise<void> {
   await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);
   await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
   await expect(page.getByText(ar.inbox.newChat.firstTemplate)).toBeVisible();
-  await page.getByLabel(composer.chooseTemplate).selectOption({ label: ar.templates.names.booking_confirmation_plain });
-  await page.getByLabel(composer.pickLesson).selectOption({ index: 1 });
-  await expect(page.getByLabel(composer.paramNames.student_names, { exact: true })).toHaveValue(names.student);
+  await page.getByLabel(composer.chooseTemplate).selectOption({ label: ar.templates.names.renewal_due });
+  await page.getByLabel(composer.paramNames.student_name, { exact: true }).fill(names.student);
+  await page.getByLabel(composer.paramNames.remaining_label, { exact: true }).fill(`حلقتان ${TAG}`);
   await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
 
   // Queued as hers (sales dedup space); the thread now exists, its window closed: templates only.
   const log = page.getByRole('log', { name: ar.messages.log });
-  await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names.booking_confirmation_plain));
+  await expect(log).toContainText(ar.inbox.templateLine.replace('{name}', ar.templates.names.renewal_due));
   await expect(page.getByText(ar.inbox.sessionClosed)).toBeVisible();
   const sent = await lastOutbound(booked.phone);
-  expect([sent.template_key, sent.created_by]).toEqual(['booking_confirmation_plain', me.id]);
+  expect([sent.template_key, sent.created_by]).toEqual([STARTER, me.id]);
   expect(sent.dedup_key).toMatch(new RegExp(`^sales:${me.id}:`));
 
   // The family replies: inside the 24 h window she writes plain text.

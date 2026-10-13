@@ -2372,7 +2372,7 @@
     "line": "Line",
     "salesStarter": "Available to teachers and sales",
     "salesStarterFor": "{name}: available to teachers and sales",
-    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without “Send every template” see only the approved templates ticked in the “Available to teachers and sales” column: free_trial_invite and welcome_greeting by default. They use them to start a conversation or resume it 24 hours after the contact’s last message. “Check template status” adds new chat-line templates and ticks only those two; it never changes your choice for an existing template. They are sent from the chat line, while booking and reminder templates always go from the notifications line; automatic reminders are not affected by this choice.",
+    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without “Send every template” see only the approved templates ticked in the “Available to teachers and sales” column: free_trial_invite and welcome_greeting by default. They use them to start a conversation or resume it 24 hours after the contact’s last message. “Check template status” adds new chat-line templates and ticks only those two; it never changes your choice for an existing template. They are sent from the chat line. Booking confirmations and lesson reminders are sent automatically by the system from the notifications line and are never offered to these roles, so they have no switch in this column, and neither do the PDF report template and the templates sent from their own button. Automatic reminders are not affected by this choice.",
     "starterOn": "Teachers, sales and the other limited roles can now send this template",
     "starterOff": "Teachers, sales and the other limited roles can no longer send this template",
     "qualityScore": {
@@ -2480,7 +2480,8 @@
       "meta_error": "Meta rejected the request: {message}",
       "needs_app_id": "This template includes a PDF file. To send it to Meta, the Meta app ID (WA_APP_ID) has to be set on the server first.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
-      "template_sync_off": "Template sync with WhatsApp is turned off in this environment"
+      "template_sync_off": "Template sync with WhatsApp is turned off in this environment",
+      "template_not_offerable": "This template can't be offered to teachers and sales: it is sent automatically or only from its own button"
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",

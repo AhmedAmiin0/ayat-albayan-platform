@@ -40,8 +40,9 @@ describe('the restricted allow-list (owner 2026-10-12)', () => {
     expect(restrictedMay(row({ key }))).toBe(false);
   });
 
-  it('the lesson reminders are refused unless the admin flags them', () => {
+  it('the lesson reminders are refused, flagged or not (owner 2026-10-13)', () => {
     expect(restrictedMay(row({ key: 'lesson_reminder', sales_starter: false }))).toBe(false);
+    expect(restrictedMay(row({ key: 'lesson_reminder' }))).toBe(false);
   });
 });
 

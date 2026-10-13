@@ -31,14 +31,15 @@ describe('WhatsApp templates for a salesperson (messages.read, docs/16)', () => 
   });
 
   // Owner 2026-10-12: the restricted allow-list only (the admin ticks it; only the two defaults come ticked).
-  it('T1: sales lists only the approved starters she may send (no PDF, no own-button one), not 403', async () => {
+  // 2026-10-13: never a booking confirmation or lesson reminder, ticked or not (the first row).
+  it('T1: sales lists only the approved starters she may send (no PDF, own-button or lesson one), not 403', async () => {
     const res = await t.call({ method: 'GET', url: '/messaging/templates', token: 'sales' });
     expect(res.statusCode).toBe(200);
-    expect(keys(res.json())).toEqual(['booking_confirmation', 'academy_welcome']);
+    expect(keys(res.json())).toEqual(['academy_welcome']);
   });
 
   it('a teacher gets the same allow-list; the admin list is unchanged; the classroom assistant stays 403', async () => {
-    expect(keys((await t.call({ method: 'GET', url: '/messaging/templates', token: 'teacher' })).json())).toEqual(['booking_confirmation', 'academy_welcome']);
+    expect(keys((await t.call({ method: 'GET', url: '/messaging/templates', token: 'teacher' })).json())).toEqual(['academy_welcome']);
     expect((await t.call({ method: 'GET', url: '/messaging/templates' })).json()).toHaveLength(9);
     expect((await t.call({ method: 'GET', url: '/messaging/templates', token: 'assistant' })).statusCode).toBe(403);
   });

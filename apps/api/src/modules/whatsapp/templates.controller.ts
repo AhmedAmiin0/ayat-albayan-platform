@@ -48,7 +48,11 @@ export class TemplatesController {
     return this.registry.submit(key, user.id);
   }
 
-  /** The allow-list: the admin offers a template to the restricted roles (teachers, sales…), or stops; audited. */
+  /**
+   * The allow-list: the admin offers a template to the restricted roles (teachers, sales…), or stops;
+   * audited. Turning on one never offerable (a booking confirmation or lesson reminder…) is 400
+   * template_not_offerable; turning off always works (owner 2026-10-13).
+   */
   @Patch(':key/starter')
   @HttpCode(200)
   setStarter(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {

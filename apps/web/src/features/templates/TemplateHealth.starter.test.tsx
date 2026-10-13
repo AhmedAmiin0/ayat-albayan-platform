@@ -13,6 +13,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 
 const BOOKING = template();
 const WELCOME = template({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat', sales_starter: true, status: 'missing' });
+const RENEWAL = template({ key: 'renewal_due', meta_name: 'renewal_due', status: 'pending' });
 const toggleOf = (name: string) => screen.getByRole('checkbox', { name: t.templates.salesStarterFor.replace('{name}', name) });
 const rowOf = (text: string) => {
   const row = screen.getAllByText(text)[0]?.closest('tr');
@@ -36,19 +37,19 @@ describe('template health — line and sales starters', () => {
     expect(screen.getByText(t.templates.salesStarterIntro)).toBeTruthy();
   });
 
-  it('one switch per template, each with its own name; ticking saves through PATCH and says so', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', [BOOKING, WELCOME]]]);
+  // A booking confirmation has no switch at all (owner 2026-10-13; TemplateHealth.offerable.test.tsx).
+  it('one switch per offerable template, each with its own name; ticking saves through PATCH and says so', async () => {
+    routeFetch(apiFetch, [['/messaging/templates', [BOOKING, WELCOME, RENEWAL]]]);
     renderWithClient(<TemplateHealth headingId="h" />);
-    await screen.findByText(t.templates.names.booking_confirmation_plain);
-    const booking = toggleOf(t.templates.names.booking_confirmation_plain);
-    expect((booking as HTMLInputElement).checked).toBe(false);
+    await screen.findByText(t.templates.names.renewal_due);
+    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    const renewal = toggleOf(t.templates.names.renewal_due);
+    expect((renewal as HTMLInputElement).checked).toBe(false);
     expect((toggleOf('academy_welcome') as HTMLInputElement).checked).toBe(true);
-    apiSend.mockResolvedValue({ ...BOOKING, sales_starter: true });
-    fireEvent.click(booking);
-    await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/booking_confirmation_plain/starter', { sales_starter: true }),
-    );
+    apiSend.mockResolvedValue({ ...RENEWAL, sales_starter: true });
+    fireEvent.click(renewal);
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/renewal_due/starter', { sales_starter: true }));
     expect((await screen.findByRole('status')).textContent).toContain(t.templates.starterOn);
-    await waitFor(() => expect((toggleOf(t.templates.names.booking_confirmation_plain) as HTMLInputElement).checked).toBe(true));
+    await waitFor(() => expect((toggleOf(t.templates.names.renewal_due) as HTMLInputElement).checked).toBe(true));
   });
 });
