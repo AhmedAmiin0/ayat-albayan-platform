@@ -20,7 +20,7 @@ import { useMeetingManage } from './use-meeting-manage';
 export function MeetingActions({ meeting, tz }: { meeting: MeetingView; tz: string }) {
   const [moving, setMoving] = useState(false);
   const m = useMeetingManage(meeting.id);
-  const enter = useEnterMeeting();
+  const enter = useEnterMeeting(tz);
   const base = meetingsBase(useSegments()[0]);
   const { manage, startsAt } = manageOf(meeting);
   if (moving && startsAt) return <RescheduleMeeting meeting={{ ...meeting, starts_at: startsAt }} tz={tz} onDone={() => setMoving(false)} />;

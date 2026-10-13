@@ -15,6 +15,8 @@ export interface InvitePolicy {
   /** admin / sales: every student, typed phones, a known guardian's name and the exact error codes. */
   seesAll: boolean;
   mayChat: (phone: string) => boolean;
+  /** messages.sent_by_teacher_id of the texts this caller queues: a teacher's own id, else null. */
+  teacherId: string | null;
 }
 
 export const CHAT_NOT_ALLOWED = 'chat_not_allowed';
@@ -40,7 +42,16 @@ export function visibleCode(code: string | null, seesAll: boolean): string | nul
   return !seesAll && code === 'no_thread' ? 'session_closed' : code;
 }
 
-export const visibleView = <T extends MeetingInviteeView>(view: T, seesAll: boolean): T => ({ ...view, error_code: visibleCode(view.error_code, seesAll) });
+/**
+ * What a non-'all' caller sees of an invitee: the masked error code, and no name on a typed phone (a
+ * known guardian's name, or the number itself; the clients show «رقم هاتف»). Masked on read only: the
+ * stored name is what inviteeWhen compares with the phone.
+ */
+export const visibleView = <T extends MeetingInviteeView>(view: T, seesAll: boolean): T => ({
+  ...view,
+  error_code: visibleCode(view.error_code, seesAll),
+  ...(!seesAll && view.kind === 'phone' ? { display_name: '' } : {}),
+});
 
 @Injectable()
 export class MeetingInvitePolicies {
@@ -48,10 +59,10 @@ export class MeetingInvitePolicies {
 
   async of(user: AuthUser): Promise<InvitePolicy> {
     const seesAll = mayInvitePhones(user.role);
-    if (!heldOf(user).includes('inbox.send')) return { seesAll, mayChat: () => false };
-    if (seesAll) return { seesAll, mayChat: () => true };
-    if (user.role !== 'teacher') return { seesAll, mayChat: () => false };
+    if (!heldOf(user).includes('inbox.send')) return { seesAll, mayChat: () => false, teacherId: null };
+    if (seesAll) return { seesAll, mayChat: () => true, teacherId: null };
+    if (user.role !== 'teacher') return { seesAll, mayChat: () => false, teacherId: null };
     const scope = await this.teachers.of(user).catch(() => null);
-    return { seesAll, mayChat: (phone) => scope !== null && teacherMaySend(scope, phone) };
+    return { seesAll, mayChat: (phone) => scope !== null && teacherMaySend(scope, phone), teacherId: scope?.teacherId ?? null };
   }
 }

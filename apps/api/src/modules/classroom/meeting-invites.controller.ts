@@ -38,7 +38,7 @@ export class MeetingInvitesController {
     await this.schedule.update({ user, id, body });
   }
 
-  /** 204: nobody joins any more, personal links stop working; staff and open-window families are told. */
+  /** 204: nobody joins any more, personal links stop working; staff and reached families are told. Twice: a no-op; 410 meeting_ended once ended. */
   @Post(':id/cancel')
   @HttpCode(204)
   async cancel(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {
@@ -50,14 +50,14 @@ export class MeetingInvitesController {
     return this.invites.list({ user, id });
   }
 
-  /** One result per new invitee (personal links once); 400 too_many_invitees, 409 invite_limit. */
+  /** One result per new invitee (personal links once; a recipient the race-safe cap stops: failed / invite_limit); 400 too_many_invitees, 409 invite_limit. */
   @Post(':id/invitees')
   @HttpCode(200)
   add(@Param('id', ParseUUIDPipe) id: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult[]> {
     return this.invites.add({ user, id, body });
   }
 
-  /** {clientRequestId}: a new personal link for that invitee only; 404 invitee_not_found, 409 invite_limit. */
+  /** {clientRequestId}: a new personal link for that invitee only; 403 phone_invite_not_allowed, 404 invitee_not_found | student_not_found, 409 invite_limit. */
   @Post(':id/invitees/:inviteeId/resend')
   @HttpCode(200)
   resend(@Param() params: Record<string, string>, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<MeetingInviteResult> {

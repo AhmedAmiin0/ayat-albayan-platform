@@ -3,19 +3,20 @@ import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, OTHER_TEACHER, SALES, TEACHER } from './classroom.fakes';
 import { MEETING_ID, NOW, scheduledRow } from './internal-meetings.fakes';
 import { hashMeetingToken } from './internal-meetings.token';
-import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, stored } from './meeting-invites.fakes';
+import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, STUDENT_A, stored } from './meeting-invites.fakes';
 import { meetingServices, ORIGIN, type MeetingServices } from './meeting-services.fakes';
 
 let s: MeetingServices;
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const REQ = '00000000-0000-4000-8000-0000000000bb';
-const family = stored({ meeting_id: MEETING_ID, kind: 'phone', phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'link', status: 'window_closed' });
+const family = stored({ meeting_id: MEETING_ID, kind: 'student', student_id: STUDENT_A, phone_e164: OPEN_PHONE, display_name: 'أم سهيلة', channel: 'link', status: 'window_closed' });
 const staff = stored({ meeting_id: MEETING_ID, kind: 'staff', profile_id: STAFF_ID, display_name: 'مريم', channel: 'in_app', status: 'sent' });
 const resend = (inviteeId: string, user = TEACHER) => s.invites.resend({ user, id: MEETING_ID, inviteeId, body: { clientRequestId: REQ } }, NOW);
 
 beforeEach(() => {
   s = meetingServices();
   s.mq.byId.mockResolvedValue(scheduledRow());
+  s.m.picks.teacherStudentIds.mockResolvedValue([STUDENT_A]);
   s.m.invitees.byId.mockImplementation(async (_m: string, id: string) => [family, staff].find((i) => i.id === id) ?? null);
   s.m.threads.thread.mockImplementation(async (phone: string) => openThread(phone, NOW));
 });

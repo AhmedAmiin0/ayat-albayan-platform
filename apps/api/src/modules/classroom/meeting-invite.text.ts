@@ -1,6 +1,6 @@
 import { lessonWhenText } from '@ab/shared';
 import { ar } from '../../common/i18n/server-text';
-import { fill } from '../report-pdf/pdf-text';
+import { cityOf, fill } from '../report-pdf/pdf-text';
 import { INVITE_DEDUP_PREFIX } from './meeting-invitees.queries';
 
 // R-MEET-02: the invitation's words (ar.json meetingInvites.message, read per call so the admins'
@@ -17,7 +17,7 @@ export const whenText = (startsAt: string | null, tz: string): string =>
 export function inviteeWhen(startsAt: string | null, i: { kind: string; tz: string; display_name: string; phone_e164: string | null }): string {
   const when = whenText(startsAt, i.tz);
   const unknown = i.kind === 'phone' && i.display_name === i.phone_e164;
-  return startsAt && unknown ? fill(ar.meetingInvites.message.inTz, { when, tz: i.tz }) : when;
+  return startsAt && unknown ? fill(ar.meetingInvites.message.inTz, { when, tz: cityOf(i.tz) }) : when;
 }
 
 /** The chat message (and the text the creator copies when the window is closed). */

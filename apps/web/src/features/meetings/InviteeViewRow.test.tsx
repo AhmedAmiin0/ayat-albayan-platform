@@ -25,7 +25,7 @@ describe('InviteeViewRow «أعد الإرسال»', () => {
     apiSend.mockResolvedValue({ ...ROW, link: 'https://x.test/m/1', invitation_text: 'نص https://x.test/m/1' });
     render(
       <QueryClientProvider client={new QueryClient()}>
-        <ul><InviteeViewRow meetingId="m-1" invitee={ROW} /></ul>
+        <ul><InviteeViewRow meetingId="m-1" invitee={ROW} mayInvitePhones={false} /></ul>
       </QueryClientProvider>,
     );
     expect(screen.getByText(R.linkOnly)).toBeTruthy();
@@ -40,5 +40,19 @@ describe('InviteeViewRow «أعد الإرسال»', () => {
     fireEvent.click(button);
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(3));
     expect(idOf(2)).not.toBe(idOf(1));
+  });
+
+  it('a phone row: no «أعد الإرسال» unless the caller may invite phones; a hidden name reads «رقم هاتف»', () => {
+    const phone: MeetingInviteeView = { ...ROW, kind: 'phone', display_name: '' };
+    const view = (may: boolean) => (
+      <QueryClientProvider client={new QueryClient()}>
+        <ul><InviteeViewRow meetingId="m-1" invitee={phone} mayInvitePhones={may} /></ul>
+      </QueryClientProvider>
+    );
+    const { rerender } = render(view(false));
+    expect(screen.getByText(t.meetingInvites.tabs.phone)).toBeTruthy();
+    expect(screen.queryByRole('button', { name: new RegExp(R.resend) })).toBeNull();
+    rerender(view(true));
+    expect(screen.getByRole('button', { name: `${R.resend} ${t.meetingInvites.tabs.phone}` })).toBeTruthy();
   });
 });

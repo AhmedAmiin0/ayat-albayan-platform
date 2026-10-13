@@ -21,10 +21,25 @@ export function meetingWhen(iso: string, timeZone = 'Asia/Riyadh'): string {
   }).format(new Date(iso));
 }
 
-/** The line for a refused meeting call: the API's `code` in words (meeting_ended, meeting_not_found, forbidden), else the generic one. */
-export function meetingError(error: unknown): string {
+const R = t.meetings.internal.refusal;
+
+/** A refused join in a meeting's words (never a lesson's): not open yet names when it opens on the viewer's clock. */
+function refusal(code: unknown, opensAt: unknown, tz: string): string | null {
+  if (code === 'join_not_open_yet') return typeof opensAt === 'string' ? R.notOpenAt.replace('{when}', meetingWhen(opensAt, tz)) : R.notOpen;
+  return code === 'join_closed' ? R.closed : null;
+}
+
+/**
+ * The line for a refused meeting call: a join refusal (refusal()), a bare 403 «غير مسموح لك بدخول هذا
+ * الاجتماع»; then the API's `code` in words (meeting_ended, meeting_not_found, forbidden), else the generic one.
+ */
+export function meetingError(error: unknown, tz = 'Asia/Riyadh'): string {
   const body = error instanceof ApiError ? error.body : null;
-  const code = typeof body === 'object' && body !== null ? (body as { code?: unknown }).code : undefined;
+  const read = (key: string): unknown => (typeof body === 'object' && body !== null ? Reflect.get(body, key) : undefined);
+  const code = read('code');
+  const meeting = refusal(code, read('opens_at'), tz);
+  if (meeting) return meeting;
+  if (code === undefined && error instanceof ApiError && error.status === 403) return R.forbidden;
   if (typeof code === 'string' && errors[code]) return errors[code];
   if (error instanceof ApiError && error.status === 403) return t.classroom.error.forbidden;
   return t.meetings.internal.actionError;

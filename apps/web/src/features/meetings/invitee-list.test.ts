@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copyPayload, inviteStatusText, notSentHint } from './invite-status';
+import { copyPayload, inviteeName, inviteStatusText, mayResend, nameDir, notSentHint } from './invite-status';
 import { addInvitee, fromOption, fromPhone, hasInvitee, isFull, removeInvitee, type PickedInvitee } from './invitee-list';
 import { t } from '@/lib/i18n';
 
@@ -34,6 +34,8 @@ describe('invite-status', () => {
     expect(inviteStatusText({ channel: 'link', status: 'failed' })).toBe(R.failed);
     expect(inviteStatusText({ channel: 'whatsapp', status: 'cancelled' })).toBe(R.cancelled);
     expect(inviteStatusText({ channel: 'link', status: 'window_closed', error_code: 'chat_not_allowed' })).toBe(R.linkOnly);
+    expect(inviteStatusText({ channel: 'link', status: 'failed', error_code: 'invite_limit' })).toBe(R.inviteLimit);
+    expect(inviteStatusText({ channel: 'link', status: 'failed', error_code: 'stale' })).toBe(R.failed);
   });
 
   it('explains why nothing went out: a closed window, or a creator who may not send WhatsApp', () => {
@@ -46,5 +48,14 @@ describe('invite-status', () => {
     expect(copyPayload({ link: 'https://x.test/m/1', invitation_text: 'نص https://x.test/m/1' })).toBe('نص https://x.test/m/1');
     expect(copyPayload({ link: 'https://x.test/m/1', invitation_text: null })).toBe('https://x.test/m/1');
     expect(copyPayload({ link: null, invitation_text: 'نص' })).toBeNull();
+  });
+
+  it('resend and names: phone rows for admin and sales only; a hidden name reads «رقم هاتف»', () => {
+    const phone = { kind: 'phone' as const, display_name: '', status: 'sent' as const };
+    expect([mayResend(phone, false), mayResend(phone, true)]).toEqual([false, true]);
+    expect(mayResend({ ...phone, kind: 'staff' }, true)).toBe(false);
+    expect(mayResend({ ...phone, kind: 'student', status: 'cancelled' }, true)).toBe(false);
+    expect([inviteeName(phone), nameDir(phone)]).toEqual([t.meetingInvites.tabs.phone, undefined]);
+    expect(nameDir({ ...phone, display_name: '+201000000101' })).toBe('ltr');
   });
 });

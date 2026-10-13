@@ -34,7 +34,8 @@ describe('whenKey and inviteeWhen (R-MEET-02 review 2026-10-13)', () => {
 
   it('an unknown typed number names the tz used; a known family or an instant meeting does not', () => {
     const unknown = { kind: 'phone', tz: 'Africa/Cairo', display_name: '+201000000101', phone_e164: '+201000000101' };
-    expect(inviteeWhen('2026-10-12T14:00:00Z', unknown)).toContain('(بتوقيت Africa/Cairo)');
+    expect(inviteeWhen('2026-10-12T14:00:00Z', unknown)).toContain('(بتوقيت القاهرة)');
+    expect(inviteeWhen('2026-10-12T14:00:00Z', { ...unknown, tz: 'Etc/GMT-3' })).toContain('Etc/GMT-3');
     expect(inviteeWhen('2026-10-12T14:00:00Z', { ...unknown, display_name: 'أم سهيلة' })).not.toContain('بتوقيت');
     expect(inviteeWhen('2026-10-12T14:00:00Z', { ...unknown, kind: 'student' })).not.toContain('بتوقيت');
     expect(inviteeWhen(null, unknown)).toBe('الآن');

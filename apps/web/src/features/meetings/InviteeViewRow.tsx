@@ -6,15 +6,25 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
 import { MEETINGS_KEY } from './internal-api';
 import { InviteResultRow } from './InviteResultRow';
-import { inviteStatusText } from './invite-status';
+import { inviteeName, inviteStatusText, mayResend, nameDir } from './invite-status';
 import { meetingErrorText, resendInvite } from './meeting-invites-api';
 
 const R = t.meetingInvites.results;
 
-/** One invitee with its status; a family or a phone gets «أعد الإرسال» (a new personal link and text, shown once). */
-export function InviteeViewRow({ meetingId, invitee }: { meetingId: string; invitee: MeetingInviteeView }) {
+interface Props {
+  meetingId: string;
+  invitee: MeetingInviteeView;
+  /** Admin / sales: a typed phone's row may be resent (the API answers 403 to anyone else). */
+  mayInvitePhones: boolean;
+}
+
+/**
+ * One invitee with its status; a family (or, for admin and sales, a phone) gets «أعد الإرسال» (a new
+ * personal link and text, shown once). A phone row without a name (hidden from the caller) reads «رقم هاتف».
+ */
+export function InviteeViewRow({ meetingId, invitee, mayInvitePhones }: Props) {
   const queryClient = useQueryClient();
-  // One id per click: a retry after a lost answer reuses it, a success starts a new one (like mobile).
+  // One id per click: a retry after a lost answer reuses it, a success starts a new one.
   const requestId = useRef(crypto.randomUUID());
   const resend = useMutation({
     mutationFn: resendInvite,
@@ -23,11 +33,14 @@ export function InviteeViewRow({ meetingId, invitee }: { meetingId: string; invi
       return queryClient.invalidateQueries({ queryKey: MEETINGS_KEY });
     },
   });
-  const canResend = invitee.kind !== 'staff' && invitee.status !== 'cancelled';
+  const canResend = mayResend(invitee, mayInvitePhones);
+  const name = inviteeName(invitee);
   return (
     <li className="grid gap-1.5 border-b border-rule py-2.5 last:border-b-0">
       <div className="flex flex-wrap items-center gap-2">
-        <span dir={invitee.kind === 'phone' ? 'ltr' : undefined} className="font-semibold">{invitee.display_name}</span>
+        <span dir={nameDir(invitee)} className="font-semibold">
+          {name}
+        </span>
         <span className="text-xs text-ink-2">{inviteStatusText(invitee)}</span>
         {canResend && (
           <Button
@@ -35,7 +48,7 @@ export function InviteeViewRow({ meetingId, invitee }: { meetingId: string; invi
             variant="secondary"
             size="sm"
             className="ms-auto"
-            aria-label={`${R.resend} ${invitee.display_name}`}
+            aria-label={`${R.resend} ${name}`}
             disabled={resend.isPending}
             onClick={() => resend.mutate({ meetingId, inviteeId: invitee.id, clientRequestId: requestId.current })}
           >

@@ -2,7 +2,7 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 410–414 (R-MEET-01..03). No database runs in unit tests: this pins their shape.
+// Migrations 410–415 (R-MEET-01..03). No database runs in unit tests: this pins their shape.
 const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const read = (file: string) => readFileSync(join(dir, file), 'utf8');
 const schedule = read('20261012000410_meeting_schedule.sql');
@@ -10,8 +10,9 @@ const invitees = read('20261012000411_meeting_invitees.sql');
 const rls = read('20261012000412_meeting_invitees_rls.sql');
 const limit = read('20261012000413_meeting_invite_limit.sql');
 const caps = read('20261012000414_meeting_invite_caps.sql');
+const hide = read('20261012000415_meeting_invitees_hide_columns.sql');
 
-describe('meeting migrations 410–414', () => {
+describe('meeting migrations 410–415', () => {
   it('live only in 20261012000410–419', () => {
     const ours = readdirSync(dir).filter((f) => /meeting_(schedule|invite)/.test(f));
     expect(ours.every((f) => /^202610120004(1\d)_/.test(f))).toBe(true);
@@ -65,5 +66,10 @@ describe('meeting migrations 410–414', () => {
     expect(caps).toContain("raise exception 'invite_limit' using errcode = 'P0001';");
     expect(caps).toContain('drop trigger if exists meeting_invitees_cap on public.meeting_invitees;');
     expect(caps).toContain('drop trigger if exists meeting_invite_daily_cap on public.messages;');
+  });
+
+  it('415: authenticated reads neither the name nor the phone of an invitee', () => {
+    expect(hide).toContain('revoke select (display_name, phone_e164) on public.meeting_invitees from authenticated;');
+    expect(hide).not.toMatch(/\bgrant\b/);
   });
 });

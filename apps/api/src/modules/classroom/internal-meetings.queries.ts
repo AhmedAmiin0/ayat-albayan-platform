@@ -102,9 +102,15 @@ export class InternalMeetingsQueries {
     if (error) throw dbError(error);
   }
 
-  /** Stamps cancelled_at once; false when it already was. */
+  /** Stamps cancelled_at once; false when it already was, or the meeting was ended («إنهاء») meanwhile. */
   async cancel(id: string, at: string): Promise<boolean> {
-    const { data, error } = await this.db.from('meetings').update({ cancelled_at: at }).eq('id', id).is('cancelled_at', null).select('id');
+    const { data, error } = await this.db
+      .from('meetings')
+      .update({ cancelled_at: at })
+      .eq('id', id)
+      .is('cancelled_at', null)
+      .is('ends_at', null)
+      .select('id');
     if (error) throw dbError(error);
     return data.length > 0;
   }

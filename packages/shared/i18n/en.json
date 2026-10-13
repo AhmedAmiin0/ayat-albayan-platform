@@ -3737,6 +3737,7 @@
       "share": "Share link and invitation",
       "resend": "Resend",
       "linkOnce": "The personal link is shown only once",
+      "inviteLimit": "Daily WhatsApp limit reached, copy the link and invitation",
       "linkOnly": "Link to copy",
       "linkOnlyHint": "Your invitations are not sent on WhatsApp. Copy the link and invitation and send them yourself."
     },

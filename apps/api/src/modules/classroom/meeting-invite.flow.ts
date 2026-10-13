@@ -43,8 +43,8 @@ export interface PersonalSend {
 
 /**
  * Invites people to a meeting (R-MEET-02): drops the ones already invited, enforces 30 invitees per
- * meeting (400 too_many_invitees) and 100 WhatsApp invitations per login per day (409 invite_limit;
- * fast checks here, race-safe triggers in migration 414),
+ * meeting (400 too_many_invitees) and 100 WhatsApp invitations per login per day (409 invite_limit
+ * from the fast check; migration 414's trigger fails only that recipient: failed / invite_limit + link),
  * stores one row each (non-staff: only the sha256 of a personal /m/<token>), delivers, and answers one
  * result per recipient; a non-staff result carries its link and invitation text, once.
  */
@@ -85,8 +85,8 @@ export class MeetingInviteFlow {
   }
 
   /**
-   * A fresh personal link (the previous one stops working), its chat text when the caller may chat
-   * (InvitePolicy) and a window is open; otherwise the link and the text to copy (chat_not_allowed).
+   * A fresh personal link (the old one stops working) and its chat text when the caller may chat and a
+   * window is open; the link and the text to copy come back either way (chat_not_allowed, invite_limit).
    */
   async personal(p: PersonalSend): Promise<MeetingInviteResult> {
     const { meeting, now } = p.run;
@@ -96,8 +96,9 @@ export class MeetingInviteFlow {
     const link = this.linkOf(token);
     const body = invitationText({ title: meeting.title, when: inviteeWhen(meeting.starts_at, p.invitee), link });
     const dedupKey = p.dedupKey ?? inviteDedupKey({ meetingId: meeting.id, phone, startsAt: meeting.starts_at });
-    const out = p.run.policy.mayChat(phone)
-      ? await this.sender.chat({ phone, body, dedupKey, actorId: p.run.actorId, expiresAt: this.expiry(p.run), now })
+    const { actorId, policy } = p.run;
+    const out = policy.mayChat(phone)
+      ? await this.sender.chat({ phone, body, dedupKey, actorId, teacherId: policy.teacherId, expiresAt: this.expiry(p.run), now })
       : LINK_ONLY;
     return { ...(await this.record(p.invitee, out, p.run)), link, invitation_text: body };
   }

@@ -24,6 +24,7 @@ test('each recipient outcome has its words', () => {
   expect(resultLabel({ status: 'sent', channel: 'whatsapp' })).toBe(I.results.sent);
   expect(resultLabel({ status: 'window_closed', channel: 'link' })).toBe(I.results.windowClosed);
   expect(resultLabel({ status: 'failed', channel: 'whatsapp' })).toBe(I.results.failed);
+  expect(resultLabel({ status: 'failed', channel: 'link', error_code: 'invite_limit' })).toBe(I.results.inviteLimit);
   expect(resultLabel({ status: 'cancelled', channel: 'whatsapp' })).toBe(I.results.cancelled);
   expect(resultLabel({ status: 'pending', channel: 'whatsapp' })).toBe(I.results.pending);
 });

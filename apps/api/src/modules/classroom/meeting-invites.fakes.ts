@@ -61,7 +61,8 @@ export const inviteesQueries = () => ({
   clearTokens: vi.fn().mockResolvedValue(undefined),
   whatsappSince: vi.fn().mockResolvedValue(0),
   queued: vi.fn().mockResolvedValue(false),
-  dropQueuedInvites: vi.fn().mockResolvedValue(0),
+  dropQueuedInvites: vi.fn().mockResolvedValue([]),
+  deliveredPhones: vi.fn().mockResolvedValue(new Set<string>()),
 });
 
 export const pickQueries = () => ({

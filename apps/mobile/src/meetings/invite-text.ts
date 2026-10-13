@@ -35,7 +35,7 @@ const linkOnly = (r: Outcome): boolean => r.error_code === 'chat_not_allowed';
 export function resultLabel(r: Outcome): string {
   if (r.status === 'sent') return r.channel === 'in_app' ? L.results.inApp : L.results.sent;
   if (r.status === 'window_closed') return linkOnly(r) ? L.results.linkOnly : L.results.windowClosed;
-  if (r.status === 'failed') return L.results.failed;
+  if (r.status === 'failed') return r.error_code === 'invite_limit' ? L.results.inviteLimit : L.results.failed;
   if (r.status === 'cancelled') return L.results.cancelled;
   return L.results.pending;
 }

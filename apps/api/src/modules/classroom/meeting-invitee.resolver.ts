@@ -58,6 +58,14 @@ export class MeetingInviteeResolver {
     return { kind: 'ids', ids: [] };
   }
 
+  /** «أعد الإرسال» reaches only whom the caller could invite: a typed phone (403), a student in scope (404). */
+  async assertMayReach(user: Pick<AuthUser, 'id' | 'role'>, invitee: { kind: string; student_id: string | null }): Promise<void> {
+    if (invitee.kind === 'phone' && !mayInvitePhones(user.role)) throw phoneNotAllowed();
+    if (invitee.kind !== 'student') return;
+    const scope = await this.scopeOf(user);
+    if (scope.kind !== 'all' && !scope.ids.includes(invitee.student_id ?? '')) throw notFound('student_not_found');
+  }
+
   async resolve(input: { user: Pick<AuthUser, 'id' | 'role'>; invitees: readonly MeetingInviteeInput[] }): Promise<ResolvedInvitee[]> {
     const { user, invitees } = input;
     if (invitees.length === 0) return [];

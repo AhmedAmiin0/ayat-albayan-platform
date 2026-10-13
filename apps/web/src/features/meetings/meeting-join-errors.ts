@@ -1,6 +1,7 @@
 import { classroomErrorText, opensAtOf } from '@/features/classroom/errors';
 import { viewerTz } from '@/features/classroom/student-link';
 import { errorCode } from '@/features/schedule/api';
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { whenText } from './meeting-when';
 
@@ -9,7 +10,8 @@ const R = t.meetings.internal.refusal;
 /**
  * A refused meeting join (/meeting/:id, /m/:token) in a meeting's words, never a lesson's: not open
  * yet names the day and time the room opens (opens_at, from the settings' window) on the viewer's
- * clock; closed and forbidden have their own lines; anything else the classroom's line.
+ * clock; closed and forbidden (also a bare 403: the guard or the join role check) have their own
+ * lines; anything else the classroom's line.
  */
 export function meetingJoinProblem(error: unknown, tz: string = viewerTz()): string {
   const code = errorCode(error);
@@ -18,6 +20,6 @@ export function meetingJoinProblem(error: unknown, tz: string = viewerTz()): str
     return opens ? R.notOpenAt.replace('{when}', whenText(opens, tz)) : R.notOpen;
   }
   if (code === 'join_closed') return R.closed;
-  if (code === 'forbidden') return R.forbidden;
+  if (code === 'forbidden' || (code === null && error instanceof ApiError && error.status === 403)) return R.forbidden;
   return classroomErrorText(error);
 }

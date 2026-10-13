@@ -1,6 +1,7 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { meQuery, type Me } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
 import { InternalMeetingsList } from './InternalMeetingsList';
 import { meetingRow } from './meeting-fixture';
@@ -14,12 +15,16 @@ const writeText = vi.fn();
 // Tomorrow 15:00 in Riyadh (12:00 UTC), 60 minutes.
 const SCHEDULED = meetingRow({ starts_at: '2026-10-13T12:00:00.000Z', planned_end_at: '2026-10-13T13:00:00.000Z', can_join: false, invitees_count: 1 });
 const INVITEE = { id: 'i-1', kind: 'phone', display_name: '+201000000101', channel: 'whatsapp', status: 'window_closed', error_code: 'session_closed', sent_at: null };
+const ADMIN_ME: Me = { id: 'u-1', email: null, role: 'admin', permissions: [] };
 const TEXT = 'ندعوكم… https://app.example.test/m/personal';
 
 function open() {
   api.fetch.mockImplementation(async (path: string) => (path === '/meetings' ? [SCHEDULED] : [INVITEE]));
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  // An admin: «أعد الإرسال» on a phone row is for admin and sales only.
+  client.setQueryData(meQuery.queryKey, ADMIN_ME);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={client}>
       <InternalMeetingsList tz="Asia/Riyadh" />
     </QueryClientProvider>,
   );
@@ -71,7 +76,7 @@ describe('InternalMeetingsList — the creator manages a scheduled meeting', () 
     const dialog = screen.getByRole('dialog', { name: M.invitees });
     expect(await within(dialog).findByText(R.windowClosed)).toBeTruthy();
     expect(api.fetch).toHaveBeenCalledWith('/meetings/m-1/invitees');
-    fireEvent.click(within(dialog).getByRole('button', { name: `${R.resend} +201000000101` }));
+    fireEvent.click(await within(dialog).findByRole('button', { name: `${R.resend} +201000000101` }));
     await waitFor(() => expect(api.send).toHaveBeenCalledWith('POST', '/meetings/m-1/invitees/i-1/resend', { clientRequestId: expect.any(String) }));
     fireEvent.click(await within(dialog).findByRole('button', { name: R.copy }));
     await waitFor(() => expect(writeText).toHaveBeenCalledWith(TEXT));

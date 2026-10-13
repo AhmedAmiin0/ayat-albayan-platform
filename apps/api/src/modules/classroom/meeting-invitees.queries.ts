@@ -17,6 +17,8 @@ export interface StoredInvitee extends InviteeRow {
 const COLUMNS = 'id, meeting_id, kind, profile_id, student_id, phone_e164, display_name, tz, channel, status, error_code, sent_at';
 /** Every meeting invitation's WhatsApp row carries this dedup prefix (the daily limit counts them). */
 export const INVITE_DEDUP_PREFIX = 'meeting_invite:';
+/** LIKE pattern of one meeting's invitation rows; `_` and `%` escaped (the prefix has a `_`). */
+export const invitesOf = (meetingId: string): string => `${INVITE_DEDUP_PREFIX}${meetingId}:`.replace(/[\\_%]/g, (c) => `\\${c}`) + '%';
 /** Migration 414's trigger: more than 30 live invitees on one meeting (a race the fast check missed). */
 const tooMany = (e: { message: string }) => /\btoo_many_invitees\b/.test(e.message);
 
@@ -79,18 +81,30 @@ export class MeetingInviteesQueries {
   /**
    * Cancel or a new time: this meeting's invitation texts still waiting in the queue are dropped
    * (failed / stale), never sent late with a dead link or the old time. A row the sender already
-   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic.
+   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic. Answers their phones.
    */
-  async dropQueuedInvites(meetingId: string): Promise<number> {
+  async dropQueuedInvites(meetingId: string): Promise<string[]> {
     const { data, error } = await this.db
       .from('messages')
       .update({ status: 'failed', error_code: 'stale', error_text: 'meeting changed', next_attempt_at: null })
       .eq('direction', 'outbound')
       .eq('status', 'queued')
-      .like('dedup_key', `${INVITE_DEDUP_PREFIX}${meetingId}:%`)
+      .like('dedup_key', invitesOf(meetingId))
       .or(`error_code.is.null,error_code.neq.${SENDING}`)
-      .select('id');
+      .select('phone_e164');
     if (error) throw dbError(error);
-    return data.length;
+    return [...new Set(data.map((r) => r.phone_e164))];
+  }
+
+  /** The phones this meeting's invitation texts reached or may still reach (any status but failed). */
+  async deliveredPhones(meetingId: string): Promise<Set<string>> {
+    const { data, error } = await this.db
+      .from('messages')
+      .select('phone_e164')
+      .eq('direction', 'outbound')
+      .neq('status', 'failed')
+      .like('dedup_key', invitesOf(meetingId));
+    if (error) throw dbError(error);
+    return new Set(data.map((r) => r.phone_e164));
   }
 }

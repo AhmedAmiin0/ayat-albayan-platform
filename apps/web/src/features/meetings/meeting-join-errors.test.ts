@@ -24,4 +24,9 @@ describe('meetingJoinProblem: a refused meeting join in a meeting’s words', ()
       expect(meetingJoinProblem(new ApiError(403, { code }), 'UTC')).not.toContain('الحلقة');
     }
   });
+
+  it('a bare 403 (no code: the guard or the join role check) reads forbidden', () => {
+    expect(meetingJoinProblem(new ApiError(403, { statusCode: 403, message: 'Forbidden' }), 'UTC')).toBe(R.forbidden);
+    expect(meetingJoinProblem(new ApiError(500, { statusCode: 500 }), 'UTC')).not.toBe(R.forbidden);
+  });
 });

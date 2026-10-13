@@ -1,4 +1,3 @@
-import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, ASSISTANT, TEACHER } from './classroom.fakes';
 import { MEETING_ID, NOW, scheduledRow } from './internal-meetings.fakes';
@@ -7,7 +6,6 @@ import { meetingServices, type MeetingServices } from './meeting-services.fakes'
 
 // The WhatsApp policy of invitations (owner 2026-10-13): who may queue a chat text, what the others get.
 let s: MeetingServices;
-const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const OTHER = '+201000000109';
 const pick = (phone: string) => ({ id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: phone, tz: 'Asia/Riyadh' } });
 const addStudent = (user = TEACHER) => s.invites.add({ user, id: MEETING_ID, body: { invitees: [{ kind: 'student', studentId: STUDENT_A }] } }, NOW);
@@ -67,9 +65,11 @@ describe('invitations: who may queue WhatsApp (R-MEET-02)', () => {
     expect(a?.error_code).toBe('no_thread');
   });
 
-  it('the race-safe daily cap (trigger) answers 409 invite_limit like the fast check', async () => {
-    s.m.threads.enqueue.mockRejectedValue(new Error('message enqueue failed: invite_limit'));
-    const e = await fail(addStudent());
-    expect([e.getStatus(), e.getResponse()]).toEqual([409, expect.objectContaining({ code: 'invite_limit' })]);
+  it('a teacher text names the teacher (sent_by_teacher_id), an admin text nobody', async () => {
+    await addStudent();
+    expect(s.m.threads.enqueue.mock.calls[0]?.[0]).toMatchObject({ sent_by_teacher_id: 't1' });
+    s.m.invitees.forMeeting.mockResolvedValue([]);
+    await s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: OTHER }] } }, NOW);
+    expect(s.m.threads.enqueue.mock.calls[1]?.[0]).toMatchObject({ sent_by_teacher_id: null });
   });
 });

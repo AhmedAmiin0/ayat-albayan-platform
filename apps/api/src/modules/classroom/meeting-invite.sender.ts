@@ -1,5 +1,5 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
-import { ConflictException, Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import { pickSendLine } from '../inbox/send-line';
 import { ThreadsQueries } from '../inbox/threads.queries';
@@ -28,6 +28,8 @@ export interface ChatSend {
   body: string;
   dedupKey: string;
   actorId: string;
+  /** A teacher's text names them (messages.sent_by_teacher_id, like an inbox reply); admin / sales: null. */
+  teacherId: string | null;
   /** The row is dropped (never sent late) after this instant. */
   expiresAt: string;
   now: Date;
@@ -77,6 +79,7 @@ export class MeetingInviteSender {
         lead_id: thread?.lead_id ?? null,
         guardian_id: thread?.guardian_id ?? null,
         created_by: s.actorId,
+        sent_by_teacher_id: s.teacherId,
         dedup_key: s.dedupKey,
         body: s.body,
         expires_at: s.expiresAt,
@@ -84,8 +87,8 @@ export class MeetingInviteSender {
       });
       return { status: 'sent', channel: 'whatsapp', error_code: null };
     } catch (e) {
-      // The race-safe daily cap (migration 414's trigger) answers like the fast check: 409 invite_limit.
-      if (e instanceof Error && /\binvite_limit\b/.test(e.message)) throw new ConflictException({ code: 'invite_limit', message: 'invite_limit' });
+      // The race-safe daily cap (migration 414's trigger): this recipient failed, the others go on.
+      if (e instanceof Error && /\binvite_limit\b/.test(e.message)) return { status: 'failed', channel: 'link', error_code: 'invite_limit' };
       this.log.warn(`meeting invite chat failed: ${e instanceof Error ? e.message : String(e)}`);
       return { status: 'failed', channel: 'link', error_code: 'send_failed' };
     }
