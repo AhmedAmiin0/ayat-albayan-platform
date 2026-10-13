@@ -111,10 +111,11 @@ export function templateColumns({ onSubmit, onStarter, saving }: TemplateColumns
       },
       meta: { className: 'max-sm:order-5' },
     }),
-    col.accessor('sales_starter', {
+    col.accessor((r) => restrictedOfferable(r) && r.sales_starter, {
+      id: 'sales_starter',
       header: () => t.templates.salesStarter,
       // Never offerable (a booking or reminder, a PDF, an own-button one): no switch, not a disabled one
-      // (owner 2026-10-13); the empty cell (and its phone label) leaves the stacked row.
+      // (owner 2026-10-13), and it sorts as off even with a stale flag; the empty cell leaves the phone row.
       cell: (c) =>
         restrictedOfferable(c.row.original) ? (
           <span className="inline-flex items-center gap-2">

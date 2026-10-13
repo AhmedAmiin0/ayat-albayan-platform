@@ -1,4 +1,4 @@
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { template } from '@/features/inbox/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
@@ -64,5 +64,17 @@ describe('template health — the switch only where a template can be offered', 
     const text = templateErrorText(new ApiError(400, { code: 'template_not_offerable' }));
     expect(text).toBe(t.templates.error.template_not_offerable);
     expect(text).not.toBe(t.common.error);
+  });
+
+  it('sorting by the column treats a stale flag on a never-offered row as off', async () => {
+    routeFetch(apiFetch, [['/messaging/templates', [BOOKING, RENEWAL, INVITE]]]);
+    renderWithClient(<TemplateHealth headingId="h" />);
+    await screen.findByText(t.templates.names.renewal_due);
+    const sortBy = () => fireEvent.click(screen.getByRole('button', { name: t.templates.salesStarter }));
+    const first = () => screen.getAllByRole('row')[1]?.querySelector('td')?.textContent ?? '';
+    sortBy(); // ascending: the rows switched off first, the stale-flagged booking among them
+    expect(first()).toContain(t.templates.names.booking_confirmation);
+    sortBy(); // descending: the only row offered and switched on comes first
+    expect(first()).toContain('free_trial_invite');
   });
 });
