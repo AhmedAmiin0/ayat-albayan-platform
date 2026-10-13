@@ -1,5 +1,6 @@
 import { feedbackEligible, type LessonView } from '@ab/shared';
 import { useMutation, useQuery } from '@tanstack/react-query';
+import { AppLink } from '@/components/ui/app-link';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { templatesQuery } from '@/features/templates/api';
@@ -58,9 +59,9 @@ export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
       {!approved && templates.isSuccess && (
         <p className="text-xs text-ink-3">
           {t.feedback.templateNotApproved}{' '}
-          <a href="/admin/settings" className="font-semibold text-lapis underline underline-offset-4">
+          <AppLink href="/admin/settings" className="font-semibold text-lapis underline underline-offset-4">
             {t.feedback.templateSettings}
-          </a>
+          </AppLink>
         </p>
       )}
     </div>

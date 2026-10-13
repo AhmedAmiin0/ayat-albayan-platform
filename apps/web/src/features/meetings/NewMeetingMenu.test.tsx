@@ -4,6 +4,10 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { NewMeetingMenu } from './NewMeetingMenu';
 
+vi.mock('@tanstack/react-router', async (orig) => ({
+  ...(await orig<object>()),
+  Link: (await import('@/features/dashboard/link-mock')).Link,
+}));
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => []) }));
 
 const show = () =>
@@ -24,6 +28,14 @@ describe('NewMeetingMenu «اجتماع جديد»', () => {
     expect(items[1]?.textContent).toBe(t.meetingInvites.scheduledItem);
     expect(screen.getByRole('button', { name: t.meetings.startNow })).toBeTruthy();
     expect(screen.getByRole('link', { name: t.meetings.schedule }).getAttribute('href')).toBe('/admin/book');
+  });
+
+  it('«جدولة» closes the menu as it routes to the booking wizard', () => {
+    show();
+    const menu = screen.getByText(t.meetings.new).closest('details');
+    menu?.setAttribute('open', '');
+    fireEvent.click(screen.getByRole('link', { name: t.meetings.schedule }));
+    expect(menu?.hasAttribute('open')).toBe(false);
   });
 
   it('«ابدأ الآن» opens the instant lesson dialog, and cancel closes it', () => {

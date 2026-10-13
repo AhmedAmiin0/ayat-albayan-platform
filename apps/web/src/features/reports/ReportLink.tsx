@@ -1,6 +1,7 @@
 import { useRouter } from '@tanstack/react-router';
 import type { MouseEvent, ReactNode } from 'react';
 import { buttonVariants } from '@/components/ui/button';
+import { isPlainClick } from '@/lib/plain-click';
 import { cn } from '@/lib/utils';
 
 export interface ReportLinkProps {
@@ -10,10 +11,7 @@ export interface ReportLinkProps {
   className?: string;
 }
 
-/** Plain left click → client-side navigation; ctrl / cmd / middle click keep the browser's. */
-export function isPlainClick(e: Pick<MouseEvent, 'button' | 'metaKey' | 'ctrlKey' | 'shiftKey' | 'altKey'>): boolean {
-  return e.button === 0 && !e.metaKey && !e.ctrlKey && !e.shiftKey && !e.altKey;
-}
+export { isPlainClick };
 
 /**
  * «تقرير الحلقة» from a lesson card or drawer. A real <a href> that navigates in-app when a

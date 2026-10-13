@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { useRef, useState } from 'react';
 import { buttonVariants } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
@@ -13,7 +14,7 @@ const item = 'flex min-h-11 w-full items-center rounded-sm px-3 text-start text-
  * «اجتماع جديد» on the admin schedule and classrooms pages: «اجتماع داخلي» makes a standalone room
  * (a link to share, no lesson), «اجتماع مجدول» the same room at a time with invitations, «ابدأ الآن» starts an instant lesson
  * (dialog, then straight into /classroom/$lessonId), «جدولة» opens the booking wizard. A native
- * disclosure: keyboard and screen reader for free. Plain links, like «ادخل الحلقة»: no router needed.
+ * disclosure: keyboard and screen reader for free. «جدولة» is a router Link (a plain <a> reloaded the app).
  * One filled primary per screen (docs/07 §6): it is the primary except beside another one («حجز حلقة»).
  */
 export function NewMeetingMenu({ variant = 'primary' }: { variant?: 'primary' | 'secondary' }) {
@@ -60,9 +61,9 @@ export function NewMeetingMenu({ variant = 'primary' }: { variant?: 'primary' | 
           >
             {t.meetings.startNow}
           </button>
-          <a href="/admin/book" className={item}>
+          <Link to="/admin/book" className={item} onClick={close}>
             {t.meetings.schedule}
-          </a>
+          </Link>
         </div>
       </details>
       {internal && <InternalMeetingDialog onClose={() => setInternal(false)} />}

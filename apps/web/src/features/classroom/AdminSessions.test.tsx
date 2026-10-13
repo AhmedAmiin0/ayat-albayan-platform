@@ -5,6 +5,10 @@ import { t } from '@/lib/i18n';
 import { AdminSessions } from './AdminSessions';
 
 const apiFetch = vi.hoisted(() => vi.fn());
+vi.mock('@tanstack/react-router', async (orig) => ({
+  ...(await orig<object>()),
+  Link: (await import('@/features/dashboard/link-mock')).Link, // the «جدولة» item in «اجتماع جديد»
+}));
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const iso = (min: number) => new Date(Date.now() + min * 60_000).toISOString();
