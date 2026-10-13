@@ -30,7 +30,7 @@ export function StudentsScreen() {
         subtitle={list.data ? t.students.count.replace('{n}', String(list.total)) : undefined}
       />
       <SearchField onSearch={setSearch} label={t.students.searchPlaceholder} />
-      <StudentFilterBar value={filters} onChange={setFilters} />
+      <StudentFilterBar value={filters} onChange={setFilters} searching={search !== ''} />
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         data={list.items}

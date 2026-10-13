@@ -61,3 +61,14 @@ test('a time zone pill filters by tz; the counts follow the other filters', asyn
   await waitFor(() => expect(listCalls().at(-1)).toContain('tz=Africa%2FCairo'));
   expect(mockApiFetch.mock.calls.some((c: unknown[]) => String(c[0]).startsWith('/students/status-counts') && String(c[0]).includes('tz=Africa%2FCairo'))).toBe(true);
 });
+
+test('under a search the pills show no counts (they know the filters only, not the search)', async () => {
+  serve();
+  await renderWithQuery(<StudentsScreen />);
+  expect(await screen.findByRole('tab', { name: `${t.enums.studentStatus.active} 5` })).toBeTruthy();
+  const field = screen.getByLabelText(t.students.searchPlaceholder);
+  await fireEvent.changeText(field, 'هدى');
+  await fireEvent(field, 'submitEditing');
+  expect(await screen.findByRole('tab', { name: t.enums.studentStatus.active })).toBeTruthy();
+  expect(screen.queryByRole('tab', { name: `${L.statusAll} 15` })).toBeNull();
+});

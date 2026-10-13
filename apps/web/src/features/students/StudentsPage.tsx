@@ -40,6 +40,8 @@ type StudentsPageProps = StudentsSearch & {
 export function StudentsPage({ search, page, filters = {}, sort, columns: colFilters, onChange, onOpen }: StudentsPageProps) {
   const { data, isError } = useQuery(studentListQuery(search, page, { filters, sort, columns: colFilters }));
   const counts = useQuery(studentStatusCountsQuery({ ...filters, status: undefined }));
+  // The counts know the R-STU-01 filters only: under a search or a column filter they would not match the list.
+  const narrowed = Boolean(search) || Object.values(colFilters ?? {}).some(Boolean);
   const [adding, setAdding] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
   const dismiss = useCallback(() => setNotice(null), []);
@@ -49,7 +51,7 @@ export function StudentsPage({ search, page, filters = {}, sort, columns: colFil
   const none = data?.total === 0 && isUnfiltered(view);
   const controls = studentTableControls(view, onChange);
   const kinds = (
-    <StudentKindSwitch status={filters.status} counts={counts.data} onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })} />
+    <StudentKindSwitch status={filters.status} counts={narrowed ? undefined : counts.data} onChange={(st) => onChange({ ...view, filters: setFilter(filters, 'status', st) })} />
   );
   const extra = useStudentFilters({
     value: filters,

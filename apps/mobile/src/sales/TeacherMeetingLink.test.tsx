@@ -4,7 +4,6 @@ import { Linking, Share } from 'react-native';
 import { t } from '@/lib/i18n';
 import { publicConfigQuery } from '@/lib/public-config';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
-import { ltr } from '@/ui/Ltr';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 
 jest.mock('@/lib/api', () => ({
@@ -22,7 +21,10 @@ test('an http(s) link: selectable LTR text, «شارك الرابط» opens the 
   const open = jest.spyOn(Linking, 'openURL').mockResolvedValue(true);
   await renderWithQuery(<TeacherMeetingLink link={` ${URL} `} />);
   expect(screen.getByText(L.meetingLink)).toBeTruthy();
-  expect(screen.getByText(ltr(URL)).props.selectable).toBe(true);
+  const text = screen.getByText(URL);
+  expect(text.props.selectable).toBe(true);
+  expect(text.props.children).toBe(URL); // exactly the URL: no LRI/PDI isolates for a long-press copy
+  expect(text.props.children).not.toMatch(/[\u2066\u2069]/);
   await fireEvent.press(screen.getByRole('button', { name: L.shareLink }));
   expect(share).toHaveBeenCalledWith({ message: URL });
   await fireEvent.press(screen.getByRole('button', { name: L.openLink }));

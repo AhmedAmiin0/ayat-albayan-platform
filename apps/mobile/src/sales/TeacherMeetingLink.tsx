@@ -7,7 +7,6 @@ import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
-import { Ltr } from '@/ui/Ltr';
 import { SmallHeading } from './SmallHeading';
 
 const L = t.studentLists;
@@ -33,9 +32,14 @@ export function TeacherMeetingLink({ link }: { link: string | null }) {
       <SmallHeading>{L.meetingLink}</SmallHeading>
       {url ? (
         <>
-          <Ltr selectable numberOfLines={2} style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}>
+          {/* No Ltr isolates (LRI/PDI) here: a long-press copy would paste them; a URL starts with Latin letters, so it reads LTR. */}
+          <AppText
+            selectable
+            numberOfLines={2}
+            style={{ writingDirection: 'ltr', textAlign: 'left', fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink }}
+          >
             {url}
-          </Ltr>
+          </AppText>
           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 8 }}>
             <Button variant="secondary" label={L.shareLink} onPress={() => share(url)} />
             <Button variant="secondary" label={L.openLink} onPress={() => void Linking.openURL(url).catch(() => setFailed(true))} />

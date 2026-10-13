@@ -45,6 +45,13 @@ describe('MeetingScheduleService.cancel (R-MEET-01)', () => {
     expect(s.m.threads.enqueue).not.toHaveBeenCalled();
   });
 
+  it('a family that got the invitation but whose later resend failed still gets the cancellation', async () => {
+    s.m.invitees.forMeeting.mockResolvedValue([family(OPEN_PHONE, 'failed')]);
+    await s.schedule.cancel({ user: ADMIN, id: MEETING_ID }, NOW);
+    expect(s.m.threads.enqueue).toHaveBeenCalledTimes(1);
+    expect(s.m.threads.enqueue.mock.calls[0]?.[0]).toMatchObject({ phone_e164: OPEN_PHONE, body: expect.stringContaining('أُلغي') });
+  });
+
   it('a family whose invitation found the window closed is tried too (its window may be open now)', async () => {
     s.m.invitees.forMeeting.mockResolvedValue([family(OPEN_PHONE, 'window_closed')]);
     await s.schedule.cancel({ user: ADMIN, id: MEETING_ID }, NOW);

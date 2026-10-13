@@ -10,10 +10,18 @@ import { useStatusCounts, useTeacherOptions } from './use-student-list-data';
 
 const L = t.mobileStudentFile.list;
 
+export interface StudentFilterBarProps {
+  value: StudentFilters;
+  onChange: (next: StudentFilters) => void;
+  /** A search is set: the counts know the filters only, so the pills show none (they would not match the list). */
+  searching?: boolean;
+}
+
 /** The students list filters (web StudentFilters): status pills with the API's counts, and a «تصفية» panel. */
-export function StudentFilterBar({ value, onChange }: { value: StudentFilters; onChange: (next: StudentFilters) => void }) {
+export function StudentFilterBar({ value, onChange, searching = false }: StudentFilterBarProps) {
   const [open, setOpen] = useState(false);
-  const counts = useStatusCounts(value);
+  const status = useStatusCounts(value);
+  const counts = searching ? { data: undefined } : status;
   const teachers = useTeacherOptions(open);
   const n = activeCount(value);
   const total = totalOf(counts.data);
