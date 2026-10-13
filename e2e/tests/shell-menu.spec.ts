@@ -8,6 +8,13 @@ import { openNav } from '../support/nav';
 
 const menu = (page: Page) => page.getByRole('button', { name: ar.nav.menu, exact: true });
 
+/**
+ * Owner 2026-10-13: a pick in the sheet reloaded the whole app (the URL was right afterwards, so
+ * only a marker on the page's global tells a client-side navigation from a document load).
+ */
+const markDocument = (page: Page) => page.evaluate(() => Reflect.set(globalThis, '__sameDocument', true));
+const sameDocument = (page: Page) => page.evaluate(() => Reflect.get(globalThis, '__sameDocument') === true);
+
 test.describe('the compact shell bar', () => {
   test('admin on a phone: one bar, the nav in the «القائمة» sheet, a pick closes it', async ({ asRole }) => {
     const page = await asRole('admin');
@@ -20,10 +27,12 @@ test.describe('the compact shell bar', () => {
     const sheet = await openNav(page);
     await expect(sheet.getByRole('list', { name: ar.finance.nav, exact: true })).toBeVisible();
     await expect(sheet.getByRole('button', { name: ar.auth.logout })).toBeVisible();
+    await markDocument(page);
     await sheet.getByRole('link', { name: ar.nav.teachers, exact: false }).first().click();
     await expect(page).toHaveURL(/\/admin\/teachers$/);
     await expect(sheet).toBeHidden();
     await expect(page.getByRole('heading', { level: 1, name: ar.teachers.title })).toBeVisible();
+    expect(await sameDocument(page)).toBe(true);
   });
 
   test('teacher on a phone: no bottom tab bar; the pages are in the sheet', async ({ asRole }) => {
@@ -32,9 +41,11 @@ test.describe('the compact shell bar', () => {
     await page.goto('/teacher');
     await expect(page.getByRole('navigation', { name: ar.teacherNav.label })).toHaveCount(0);
     const sheet = await openNav(page);
+    await markDocument(page);
     await sheet.getByRole('link', { name: ar.teacherNav.students }).click();
     await expect(page).toHaveURL(/\/teacher\/students$/);
     await expect(sheet).toBeHidden();
+    expect(await sameDocument(page)).toBe(true);
   });
 
   test('from 900px: the sidebar nav, no «القائمة»', async ({ asRole }) => {

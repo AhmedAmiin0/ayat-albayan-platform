@@ -34,6 +34,9 @@ export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
   const open = openOn === pathname;
   const close = () => setOpenOn(null);
   // A link to the page already shown changes no path: close on any link click in the sheet too.
+  // In the bubble phase, AFTER the link's own onClick: closing in the capture phase unmounted the
+  // sheet at a real tap's microtask checkpoint, so the link never cancelled the browser's
+  // navigation and the whole app reloaded (owner 2026-10-13; MenuBar.reload.test).
   const onPick = (e: MouseEvent) => {
     if (e.target instanceof Element && e.target.closest('a')) close();
   };
@@ -52,7 +55,7 @@ export function MenuBar({ home, title, nav, email, className }: MenuBarProps) {
       <MenuBell open={open} onOpen={() => setOpenOn(pathname)} />
       {open && (
         <Dialog title={t.nav.menu} onClose={close}>
-          <div onClickCapture={onPick}>
+          <div onClick={onPick}>
             <SheetBell onPick={close} />
             {nav}
             <MenuFoot email={email} />
