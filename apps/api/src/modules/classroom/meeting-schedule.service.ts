@@ -5,7 +5,6 @@ import { ar } from '../../common/i18n/server-text';
 import { parseOrThrow } from '../teachers/http';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { InternalMeetingsService } from './internal-meetings.service';
-import type { InvitePolicy } from './meeting-invite.policy';
 import { MeetingInviteSender } from './meeting-invite.sender';
 import { cancelDedupKey, cancellationText, inviteeWhen, inviteSubject } from './meeting-invite.text';
 import { MeetingInviteeResolver } from './meeting-invitee.resolver';
