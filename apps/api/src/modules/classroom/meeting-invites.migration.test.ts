@@ -2,15 +2,16 @@ import { readdirSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 410–413 (R-MEET-01..03). No database runs in unit tests: this pins their shape.
+// Migrations 410–414 (R-MEET-01..03). No database runs in unit tests: this pins their shape.
 const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const read = (file: string) => readFileSync(join(dir, file), 'utf8');
 const schedule = read('20261012000410_meeting_schedule.sql');
 const invitees = read('20261012000411_meeting_invitees.sql');
 const rls = read('20261012000412_meeting_invitees_rls.sql');
 const limit = read('20261012000413_meeting_invite_limit.sql');
+const caps = read('20261012000414_meeting_invite_caps.sql');
 
-describe('meeting migrations 410–413', () => {
+describe('meeting migrations 410–414', () => {
   it('live only in 20261012000410–419', () => {
     const ours = readdirSync(dir).filter((f) => /meeting_(schedule|invite)/.test(f));
     expect(ours.every((f) => /^202610120004(1\d)_/.test(f))).toBe(true);
@@ -50,5 +51,19 @@ describe('meeting migrations 410–413', () => {
 
   it('413: the daily limit index is partial on the invitation prefix', () => {
     expect(limit).toContain("where dedup_key like 'meeting_invite:%';");
+  });
+
+  it('414: race-safe caps — advisory-locked BEFORE INSERT triggers raising the API codes', () => {
+    expect(caps.match(/pg_advisory_xact_lock\(/g)).toHaveLength(2);
+    expect(caps).toMatch(/before insert on public\.meeting_invitees\s+for each row execute function public\.meeting_invitees_cap\(\)/);
+    expect(caps).toMatch(/before insert on public\.messages\s+for each row execute function public\.meeting_invite_daily_cap\(\)/);
+    expect(caps).toContain("status <> 'cancelled'");
+    expect(caps).toContain(') >= 30 then');
+    expect(caps).toContain(') >= 100 then');
+    expect(caps).toContain("created_at >= now() - interval '1 day'");
+    expect(caps).toContain("raise exception 'too_many_invitees' using errcode = 'P0001';");
+    expect(caps).toContain("raise exception 'invite_limit' using errcode = 'P0001';");
+    expect(caps).toContain('drop trigger if exists meeting_invitees_cap on public.meeting_invitees;');
+    expect(caps).toContain('drop trigger if exists meeting_invite_daily_cap on public.messages;');
   });
 });

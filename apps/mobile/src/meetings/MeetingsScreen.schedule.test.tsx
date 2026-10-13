@@ -33,7 +33,7 @@ let share: jest.SpyInstance;
 beforeEach(() => {
   jest.clearAllMocks();
   fakeNow(new Date('2026-10-12T10:07:00Z')); // 13:07 in Riyadh → the form opens at 13:30
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { permissions: ['meetings.read', 'meetings.write'] } : []));
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { role: 'sales', permissions: ['meetings.read', 'meetings.write'] } : []));
   share = jest.spyOn(Share, 'share').mockResolvedValue({ action: 'sharedAction' });
 });
 afterEach(() => jest.useRealTimers());
@@ -90,6 +90,13 @@ test('after create: each recipient outcome; a closed window has the hint and sha
   await press(`${I.results.share} — +201000000101`);
   expect(share).toHaveBeenCalledWith({ message: invitation });
   expect(screen.queryByRole('button', { name: `${I.results.share} — أبرار` })).toBeNull();
+});
+
+test('«رقم هاتف» is offered to admin and sales only', async () => {
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { role: 'teacher', permissions: ['meetings.write'] } : []));
+  await openForm();
+  expect(screen.getByRole('tab', { name: I.tabs.students })).toBeTruthy();
+  expect(screen.queryByRole('tab', { name: I.tabs.phone })).toBeNull();
 });
 
 test('a wrong phone is refused before any call; a coded refusal reads its own line', async () => {

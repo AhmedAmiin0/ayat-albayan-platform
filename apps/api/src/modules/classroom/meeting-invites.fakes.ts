@@ -3,6 +3,7 @@ import type { TablesInsert } from '@ab/db';
 import type { TestingModuleBuilder } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { PushService } from '../../common/push/push.service';
+import { TeacherScopes } from '../inbox/teacher-scope';
 import { ThreadsQueries } from '../inbox/threads.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import { meetingRow } from './internal-meetings.fakes';
@@ -60,6 +61,7 @@ export const inviteesQueries = () => ({
   clearTokens: vi.fn().mockResolvedValue(undefined),
   whatsappSince: vi.fn().mockResolvedValue(0),
   queued: vi.fn().mockResolvedValue(false),
+  dropQueuedInvites: vi.fn().mockResolvedValue(0),
 });
 
 export const pickQueries = () => ({
@@ -71,6 +73,11 @@ export const pickQueries = () => ({
   profileTz: vi.fn().mockResolvedValue('Africa/Cairo'),
 });
 
+/** A teacher's inbox scope: the two test families, not their own number. */
+export const teacherScopesFake = () => ({
+  of: vi.fn().mockResolvedValue({ teacherId: 't1', teacherName: 'مريم', phones: new Set([OPEN_PHONE, CLOSED_PHONE]), ownPhone: null }),
+});
+
 export const threadsFake = () => ({ thread: vi.fn().mockResolvedValue(null), enqueue: vi.fn().mockResolvedValue({ id: 'm1' }) });
 
 export function meetingInviteMocks() {
@@ -79,6 +86,7 @@ export function meetingInviteMocks() {
     invitees: inviteesQueries(),
     picks: pickQueries(),
     threads: threadsFake(),
+    teacherScopes: teacherScopesFake(),
     push: { notifyProfiles: vi.fn().mockResolvedValue(undefined), notifyAdmins: vi.fn() },
     sender: { kick: vi.fn().mockResolvedValue(undefined) },
   };
@@ -92,6 +100,7 @@ export const overrideMeetingInvites = (b: TestingModuleBuilder, m: MeetingInvite
     .overrideProvider(MeetingInviteesQueries).useValue(m.invitees)
     .overrideProvider(MeetingInviteeQueries).useValue(m.picks)
     .overrideProvider(ThreadsQueries).useValue(m.threads)
+    .overrideProvider(TeacherScopes).useValue(m.teacherScopes)
     .overrideProvider(PushService).useValue(m.push)
     .overrideProvider(MessageSender).useValue(m.sender);
 

@@ -25,6 +25,12 @@ export const DEFAULT_MEETING_DURATION = 60;
 /** A scheduled meeting starts at most 90 days ahead. */
 export const MEETING_MAX_AHEAD_DAYS = 90;
 
+/**
+ * Who may type any phone as an invitee and see every student (owner policy 2026-10-13): admin and
+ * sales only. Anyone else gets 403 phone_invite_not_allowed, and the clients hide «رقم هاتف».
+ */
+export const mayInvitePhones = (role: string | null | undefined): boolean => role === 'admin' || role === 'sales';
+
 /** One invitee as the client picks it: a staff profile, a student (→ the guardian) or a typed phone. */
 export const meetingInviteeInputSchema = z.discriminatedUnion('kind', [
   z.object({ kind: z.literal('staff'), profileId: z.uuid() }),

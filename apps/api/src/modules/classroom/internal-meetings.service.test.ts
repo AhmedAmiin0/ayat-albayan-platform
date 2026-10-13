@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, CONFIG, OTHER_TEACHER, TEACHER } from './classroom.fakes';
-import { MEETING_ID, meetingQueries, meetingRow, NOW } from './internal-meetings.fakes';
+import { MEETING_ID, meetingQueries, meetingRow, NOW, scheduledRow } from './internal-meetings.fakes';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { hashMeetingToken } from './internal-meetings.token';
@@ -37,6 +37,16 @@ describe('InternalMeetingsService', () => {
     mq.byId.mockResolvedValueOnce(null);
     expect((await fail(service().end({ user: ADMIN, id: MEETING_ID }, NOW))).getResponse()).toMatchObject({ code: 'meeting_not_found' });
     expect(mq.end).not.toHaveBeenCalled();
+  });
+
+  it('end: 409 meeting_not_started for a scheduled meeting before its window; inside it, it ends', async () => {
+    mq.byId.mockResolvedValueOnce(scheduledRow());
+    const e = await fail(service().end({ user: TEACHER, id: MEETING_ID }, NOW));
+    expect([e.getStatus(), e.getResponse()]).toEqual([409, expect.objectContaining({ code: 'meeting_not_started' })]);
+    expect(post).not.toHaveBeenCalled();
+    mq.byId.mockResolvedValueOnce(scheduledRow());
+    await service().end({ user: TEACHER, id: MEETING_ID }, new Date('2026-10-05T12:10:00Z'));
+    expect(mq.end).toHaveBeenCalledTimes(1);
   });
 
   it('newLink: replaces the hash with a fresh link; 403 for others, 410 once ended or cancelled', async () => {

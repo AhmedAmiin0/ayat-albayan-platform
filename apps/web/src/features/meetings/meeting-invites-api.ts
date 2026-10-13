@@ -36,9 +36,13 @@ export const meetingInviteesQuery = (id: string) =>
 export const addMeetingInvitees = ({ id, invitees }: { id: string; invitees: MeetingInviteeInput[] }) =>
   apiSend<MeetingInviteResult[]>('POST', `/meetings/${id}/invitees`, { invitees });
 
-/** POST /meetings/:id/invitees/:inviteeId/resend: a new personal link and invitation text. */
-export const resendInvite = ({ meetingId, inviteeId }: { meetingId: string; inviteeId: string }) =>
-  apiSend<MeetingInviteResult>('POST', `/meetings/${meetingId}/invitees/${inviteeId}/resend`, { clientRequestId: crypto.randomUUID() });
+/**
+ * POST /meetings/:id/invitees/:inviteeId/resend: a new personal link and invitation text. The caller
+ * keeps one clientRequestId per click (a retry reuses it, rule 8): a retried id whose text was
+ * already queued sends nothing again; one that queued nothing returns a fresh link.
+ */
+export const resendInvite = (v: { meetingId: string; inviteeId: string; clientRequestId: string }) =>
+  apiSend<MeetingInviteResult>('POST', `/meetings/${v.meetingId}/invitees/${v.inviteeId}/resend`, { clientRequestId: v.clientRequestId });
 
 /** GET /meetings/invitee-options?q=: staff by name and role, students by name and code. */
 export const inviteeOptionsQuery = (q: string) =>

@@ -1,5 +1,5 @@
 import type { MeetingInviteChannel, MeetingInviteStatus } from '@ab/shared';
-import { Injectable, Logger } from '@nestjs/common';
+import { ConflictException, Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
 import { pickSendLine } from '../inbox/send-line';
 import { ThreadsQueries } from '../inbox/threads.queries';
@@ -84,6 +84,8 @@ export class MeetingInviteSender {
       });
       return { status: 'sent', channel: 'whatsapp', error_code: null };
     } catch (e) {
+      // The race-safe daily cap (migration 414's trigger) answers like the fast check: 409 invite_limit.
+      if (e instanceof Error && /\binvite_limit\b/.test(e.message)) throw new ConflictException({ code: 'invite_limit', message: 'invite_limit' });
       this.log.warn(`meeting invite chat failed: ${e instanceof Error ? e.message : String(e)}`);
       return { status: 'failed', channel: 'link', error_code: 'send_failed' };
     }

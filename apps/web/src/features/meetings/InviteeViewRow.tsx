@@ -1,5 +1,6 @@
 import type { MeetingInviteeView } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
@@ -13,9 +14,14 @@ const R = t.meetingInvites.results;
 /** One invitee with its status; a family or a phone gets «أعد الإرسال» (a new personal link and text, shown once). */
 export function InviteeViewRow({ meetingId, invitee }: { meetingId: string; invitee: MeetingInviteeView }) {
   const queryClient = useQueryClient();
+  // One id per click: a retry after a lost answer reuses it, a success starts a new one (like mobile).
+  const requestId = useRef(crypto.randomUUID());
   const resend = useMutation({
     mutationFn: resendInvite,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: MEETINGS_KEY }),
+    onSuccess: () => {
+      requestId.current = crypto.randomUUID();
+      return queryClient.invalidateQueries({ queryKey: MEETINGS_KEY });
+    },
   });
   const canResend = invitee.kind !== 'staff' && invitee.status !== 'cancelled';
   return (
@@ -31,7 +37,7 @@ export function InviteeViewRow({ meetingId, invitee }: { meetingId: string; invi
             className="ms-auto"
             aria-label={`${R.resend} ${invitee.display_name}`}
             disabled={resend.isPending}
-            onClick={() => resend.mutate({ meetingId, inviteeId: invitee.id })}
+            onClick={() => resend.mutate({ meetingId, inviteeId: invitee.id, clientRequestId: requestId.current })}
           >
             {R.resend}
           </Button>

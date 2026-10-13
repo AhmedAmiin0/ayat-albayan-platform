@@ -42,6 +42,7 @@ test('my meetings and the ones I am invited to, each with its time and state', a
   expect(screen.getAllByRole('button', { name: t.meetings.internal.enter })).toHaveLength(2); // can_join only
   expect(screen.getAllByRole('button', { name: M.reschedule })).toHaveLength(1); // scheduled, mine, not cancelled
   expect(screen.getAllByRole('button', { name: M.cancel })).toHaveLength(1);
+  expect(screen.getAllByRole('button', { name: t.meetings.internal.end })).toHaveLength(1); // instant only, like web
 });
 
 test('reschedule: the same steppers, prefilled; PATCH the new UTC time, then the list refreshes', async () => {

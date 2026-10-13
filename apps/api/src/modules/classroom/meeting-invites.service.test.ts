@@ -1,6 +1,6 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { ASSISTANT, OTHER_TEACHER, SALES, TEACHER } from './classroom.fakes';
+import { ADMIN, ASSISTANT, OTHER_TEACHER, SALES, TEACHER } from './classroom.fakes';
 import { MEETING_ID, NOW, scheduledRow } from './internal-meetings.fakes';
 import { hashMeetingToken } from './internal-meetings.token';
 import { CLOSED_PHONE, OPEN_PHONE, openThread, STAFF_ID, stored } from './meeting-invites.fakes';
@@ -52,10 +52,10 @@ describe('MeetingInvitesService.add (R-MEET-02)', () => {
   it('skips who is already invited; 400 past 30 invitees', async () => {
     s.m.invitees.forMeeting.mockResolvedValue([family]);
     const body = { invitees: [{ kind: 'phone', phone: OPEN_PHONE }, { kind: 'phone', phone: CLOSED_PHONE }] };
-    const r = await s.invites.add({ user: TEACHER, id: MEETING_ID, body }, NOW);
+    const r = await s.invites.add({ user: ADMIN, id: MEETING_ID, body }, NOW);
     expect(r).toHaveLength(1);
     s.m.invitees.forMeeting.mockResolvedValue(Array.from({ length: 30 }, () => family));
-    const e = await fail(s.invites.add({ user: TEACHER, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: '+201000000104' }] } }, NOW));
+    const e = await fail(s.invites.add({ user: ADMIN, id: MEETING_ID, body: { invitees: [{ kind: 'phone', phone: '+201000000104' }] } }, NOW));
     expect(e.getResponse()).toMatchObject({ code: 'too_many_invitees' });
   });
 

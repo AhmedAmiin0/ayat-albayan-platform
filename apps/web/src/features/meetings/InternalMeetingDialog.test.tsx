@@ -2,6 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
+import { meQuery, type Me } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
 import { InternalMeetingDialog } from './InternalMeetingDialog';
 
@@ -18,8 +19,11 @@ const writeText = vi.fn();
 function open() {
   const onEnter = vi.fn();
   const onClose = vi.fn();
+  const client = new QueryClient();
+  const me: Me = { id: 'u-1', email: null, role: 'admin', permissions: [] };
+  client.setQueryData(meQuery.queryKey, me);
   render(
-    <QueryClientProvider client={new QueryClient()}>
+    <QueryClientProvider client={client}>
       <InternalMeetingDialog onClose={onClose} onEnter={onEnter} />
     </QueryClientProvider>,
   );

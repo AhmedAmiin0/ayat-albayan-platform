@@ -1,10 +1,11 @@
-import { createMeetingSchema, type MeetingCreateResult } from '@ab/shared';
+import { createMeetingSchema, mayInvitePhones, type MeetingCreateResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { hashMeetingToken, newMeetingToken } from './internal-meetings.token';
-import { MeetingInviteFlow } from './meeting-invite.flow';
+import { chatCount, MeetingInviteFlow } from './meeting-invite.flow';
+import { visibleView } from './meeting-invite.policy';
 import { MeetingInviteeResolver } from './meeting-invitee.resolver';
 import { MeetingInviteesQueries } from './meeting-invitees.queries';
 import { toInviteeView } from './meeting-invites.mapper';
@@ -39,23 +40,25 @@ export class MeetingCreateService {
     const times = scheduleTimes(body, now);
     const requestId = body.clientRequestId ?? null;
     const prior = requestId ? await this.queries.byRequest(user.id, requestId) : null;
-    if (prior) return this.replay(prior);
+    if (prior) return this.replay(prior, user);
     const invitees = await this.deps.resolver.resolve({ user, invitees: body.invitees ?? [] });
-    await this.deps.flow.assertDailyLimit({ actorId: user.id, now, adding: invitees.filter((i) => i.kind !== 'staff').length });
+    const policy = await this.deps.resolver.policy(user);
+    await this.deps.flow.assertDailyLimit({ actorId: user.id, now, adding: chatCount(invitees, policy) });
     const token = newMeetingToken();
     const title = body.title ?? (await this.queries.defaultTitle());
     const row = await this.queries.insert({ title, createdBy: user.id, hash: hashMeetingToken(token), ...times, clientRequestId: requestId });
-    if (!row) return this.replay(await this.byRequestOrFail(user.id, requestId));
+    if (!row) return this.replay(await this.byRequestOrFail(user.id, requestId), user);
     const win = await this.queries.joinWindow();
-    const results = await this.deps.flow.invite({ meeting: row, actorId: user.id, invitees, win, now });
+    const results = await this.deps.flow.invite({ meeting: row, actorId: user.id, invitees, win, now, policy });
     return { id: row.id, url: this.deps.flow.linkOf(token), invitees: results, replayed: false };
   }
 
-  private async replay(meeting: MeetingRow): Promise<MeetingCreateResult> {
+  private async replay(meeting: MeetingRow, user: AuthUser): Promise<MeetingCreateResult> {
     const token = newMeetingToken();
     await this.queries.rotate(meeting.id, hashMeetingToken(token));
     const rows = await this.deps.invitees.forMeeting(meeting.id);
-    const invitees = rows.map((r) => ({ ...toInviteeView(r), link: null, invitation_text: null }));
+    const seesAll = mayInvitePhones(user.role);
+    const invitees = rows.map((r) => ({ ...visibleView(toInviteeView(r), seesAll), link: null, invitation_text: null }));
     return { id: meeting.id, url: this.deps.flow.linkOf(token), invitees, replayed: true };
   }
 

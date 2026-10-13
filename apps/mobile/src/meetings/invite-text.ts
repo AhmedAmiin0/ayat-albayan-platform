@@ -27,14 +27,22 @@ export const tzNote = (tz: string): string => L.tzNote.replace('{tz}', cityOf(tz
 /** «60 دقيقة». */
 export const minutesText = (n: number): string => L.minutes.replace('{n}', String(n));
 
-/** One recipient's outcome in words: in-app, sent on WhatsApp, window closed, failed… */
-export function resultLabel(r: Pick<MeetingInviteResult, 'status' | 'channel'>): string {
+type Outcome = Pick<MeetingInviteResult, 'status' | 'channel'> & { error_code?: string | null };
+/** The creator may not send WhatsApp (owner policy 2026-10-13): the invitation is a link to share. */
+const linkOnly = (r: Outcome): boolean => r.error_code === 'chat_not_allowed';
+
+/** One recipient's outcome in words: in-app, sent on WhatsApp, window closed, a link to share, failed… */
+export function resultLabel(r: Outcome): string {
   if (r.status === 'sent') return r.channel === 'in_app' ? L.results.inApp : L.results.sent;
-  if (r.status === 'window_closed') return L.results.windowClosed;
+  if (r.status === 'window_closed') return linkOnly(r) ? L.results.linkOnly : L.results.windowClosed;
   if (r.status === 'failed') return L.results.failed;
   if (r.status === 'cancelled') return L.results.cancelled;
   return L.results.pending;
 }
+
+/** Why nothing went out on WhatsApp (a window_closed result), or null. */
+export const notSentHint = (r: Outcome): string | null =>
+  r.status !== 'window_closed' ? null : linkOnly(r) ? L.results.linkOnlyHint : L.results.windowClosedHint;
 
 /** A refused invite call: the API's `code` in words when there is one, else `fallback`. */
 export function inviteError(error: unknown, fallback: string = L.error): string {

@@ -3672,6 +3672,12 @@
         "ended": "This meeting has ended and can no longer be joined.",
         "invalid": "This link is invalid or was replaced by a new one.",
         "loading": "Loading…"
+      },
+      "refusal": {
+        "notOpen": "This meeting is not open yet.",
+        "notOpenAt": "This meeting is not open yet. It opens {when}.",
+        "closed": "This meeting's time is over; it can no longer be joined.",
+        "forbidden": "You are not allowed to join this meeting."
       }
     }
   },
@@ -3713,7 +3719,9 @@
       "invalid_phone": "Invalid phone number",
       "student_not_found": "Student not found or not yours to invite",
       "staff_not_found": "Team member not found",
-      "meeting_cancelled": "This meeting was cancelled"
+      "meeting_cancelled": "This meeting was cancelled",
+      "phone_invite_not_allowed": "You may not invite a phone number. Pick from the team or your students.",
+      "meeting_not_started": "This meeting has not started yet. Reschedule or cancel it instead of ending it."
     },
     "results": {
       "title": "Invitation results",
@@ -3728,7 +3736,9 @@
       "copied": "Link and invitation copied",
       "share": "Share link and invitation",
       "resend": "Resend",
-      "linkOnce": "The personal link is shown only once"
+      "linkOnce": "The personal link is shown only once",
+      "linkOnly": "Link to copy",
+      "linkOnlyHint": "Your invitations are not sent on WhatsApp. Copy the link and invitation and send them yourself."
     },
     "list": {
       "title": "Meetings",
@@ -3750,7 +3760,8 @@
     "message": {
       "invite": "Peace be upon you,\nYou are invited to “{title}” at Ayat Al-Bayan Academy.\nWhen: {when}\nJoin link: {link}",
       "now": "now",
-      "cancelled": "Peace be upon you,\nSorry, “{title}” planned for {when} was cancelled."
+      "cancelled": "Peace be upon you,\nSorry, “{title}” planned for {when} was cancelled.",
+      "inTz": "{when} ({tz} time)"
     },
     "push": {
       "rescheduled": "Meeting rescheduled",

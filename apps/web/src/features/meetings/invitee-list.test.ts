@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { copyPayload, inviteStatusText } from './invite-status';
+import { copyPayload, inviteStatusText, notSentHint } from './invite-status';
 import { addInvitee, fromOption, fromPhone, hasInvitee, isFull, removeInvitee, type PickedInvitee } from './invitee-list';
 import { t } from '@/lib/i18n';
 
@@ -33,6 +33,13 @@ describe('invite-status', () => {
     expect(inviteStatusText({ channel: 'whatsapp', status: 'window_closed' })).toBe(R.windowClosed);
     expect(inviteStatusText({ channel: 'link', status: 'failed' })).toBe(R.failed);
     expect(inviteStatusText({ channel: 'whatsapp', status: 'cancelled' })).toBe(R.cancelled);
+    expect(inviteStatusText({ channel: 'link', status: 'window_closed', error_code: 'chat_not_allowed' })).toBe(R.linkOnly);
+  });
+
+  it('explains why nothing went out: a closed window, or a creator who may not send WhatsApp', () => {
+    expect(notSentHint({ channel: 'link', status: 'window_closed', error_code: 'session_closed' })).toBe(R.windowClosedHint);
+    expect(notSentHint({ channel: 'link', status: 'window_closed', error_code: 'chat_not_allowed' })).toBe(R.linkOnlyHint);
+    expect(notSentHint({ channel: 'whatsapp', status: 'sent' })).toBeNull();
   });
 
   it('copies the invitation text (it carries the link), the link alone without one, nothing without a link', () => {

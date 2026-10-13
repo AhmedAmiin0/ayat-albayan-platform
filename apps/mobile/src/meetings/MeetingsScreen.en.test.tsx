@@ -29,7 +29,7 @@ test('the meetings screen reads in English', async () => {
   expect(await screen.findByText('Staff sync')).toBeTruthy();
   expect(screen.getByRole('header', { name: 'Internal meetings' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'New meeting' })).toBeTruthy();
-  expect(screen.getByRole('button', { name: 'End meeting' })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: 'End meeting' })).toBeNull(); // scheduled: reschedule or cancel instead
   expect(screen.getByRole('button', { name: 'Scheduled meeting' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Reschedule' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Cancel meeting' })).toBeTruthy();

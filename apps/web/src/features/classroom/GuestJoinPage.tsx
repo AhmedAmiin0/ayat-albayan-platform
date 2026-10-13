@@ -30,10 +30,13 @@ interface Props {
   /** Heading and intro; the lesson's words by default. */
   title?: string;
   intro?: string;
+  /** A refused join in the page's own words (a meeting's, meetingJoinProblem); the lesson's by default. */
+  problem?: (error: unknown) => string;
 }
 
 /** /join/:linkToken for a student or guardian (and /m/:token for a meeting): a name, then the room. No login, no app shell. */
-export function GuestJoinPage({ linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro }: Props) {
+export function GuestJoinPage(props: Props) {
+  const { linkToken, make, joinWith = joinAsGuest, title = t.classroom.guest.title, intro = t.classroom.guest.intro, problem = problemText } = props;
   const [name, setName] = useState('');
   const [missing, setMissing] = useState(false);
   const join = useMutation({ mutationFn: joinWith });
@@ -61,7 +64,7 @@ export function GuestJoinPage({ linkToken, make, joinWith = joinAsGuest, title =
             <Input {...p} value={name} maxLength={30} autoComplete="off" placeholder={t.classroom.guest.namePlaceholder} onChange={(e) => setName(e.target.value)} />
           )}
         </Field>
-        {join.isError && <FormAlert>{problemText(join.error)}</FormAlert>}
+        {join.isError && <FormAlert>{problem(join.error)}</FormAlert>}
         <RecordedNotice />
         <Button type="submit" size="lg" disabled={join.isPending}>
           {join.isPending ? t.classroom.joining : t.classroom.guest.join}

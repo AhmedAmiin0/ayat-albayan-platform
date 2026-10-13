@@ -10,7 +10,8 @@ const PICK_LIMIT = 20;
 
 /**
  * The students a login may already see, so may invite (R-MEET-02): admin and sales every student
- * (sales: the /sales/students/all scope), a teacher their own, an assistant the ones assigned to them.
+ * (sales: the /sales/students/all scope), a teacher their own non-trial ones (owner 2026-10-11, like
+ * teacher_thread_phones: sales manages a trial family), an assistant the ones assigned to them.
  */
 export type StudentScope = { kind: 'all' } | { kind: 'ids'; ids: readonly string[] };
 
@@ -58,12 +59,12 @@ export class MeetingInviteeQueries {
     return data;
   }
 
-  /** A teacher's own students' ids (students.teacher_id → teachers.profile_id). */
+  /** A teacher's own non-trial students' ids (students.teacher_id → teachers.profile_id; migration 20261007000001). */
   async teacherStudentIds(profileId: string): Promise<string[]> {
     const { data: teacher, error } = await this.db.from('teachers').select('id').eq('profile_id', profileId).maybeSingle();
     if (error) throw dbError(error);
     if (!teacher) return [];
-    const { data, error: e2 } = await this.db.from('students').select('id').eq('teacher_id', teacher.id);
+    const { data, error: e2 } = await this.db.from('students').select('id').eq('teacher_id', teacher.id).neq('status', 'trial');
     if (e2) throw dbError(e2);
     return data.map((r) => r.id);
   }

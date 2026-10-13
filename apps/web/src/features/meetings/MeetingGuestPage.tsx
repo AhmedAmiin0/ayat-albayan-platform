@@ -9,6 +9,7 @@ import type { RoomClient } from '@/features/classroom/room-types';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { joinMeetingAsGuest, publicMeetingQuery } from './internal-api';
+import { meetingJoinProblem } from './meeting-join-errors';
 import { guestScheduleText } from './meeting-when';
 
 const L = t.meetings.internal.guest;
@@ -45,5 +46,14 @@ export function MeetingGuestPage({ token, make }: { token: string; make?: () => 
   if (view.data.state === 'ended') return <Notice text={L.ended} />;
   const early = guestScheduleText(view.data, { now: new Date(), tz: viewerTz() });
   const intro = early ? `${early}. ${L.intro}` : L.intro;
-  return <GuestJoinPage linkToken={token} joinWith={joinMeetingAsGuest} title={view.data.title} intro={intro} {...(make && { make })} />;
+  return (
+    <GuestJoinPage
+      linkToken={token}
+      joinWith={joinMeetingAsGuest}
+      title={view.data.title}
+      intro={intro}
+      problem={(e) => meetingJoinProblem(e)}
+      {...(make && { make })}
+    />
+  );
 }

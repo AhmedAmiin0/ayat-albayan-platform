@@ -1,12 +1,16 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { SALES, TEACHER } from './classroom.fakes';
+import type { TeacherScopes } from '../inbox/teacher-scope';
+import { ADMIN, ASSISTANT, SALES, TEACHER } from './classroom.fakes';
+import { MeetingInvitePolicies } from './meeting-invite.policy';
 import type { MeetingInviteeQueries } from './meeting-invitee.queries';
 import { dedupeInvitees, MeetingInviteeResolver } from './meeting-invitee.resolver';
-import { OPEN_PHONE, pickQueries, STAFF_ID, STUDENT_A } from './meeting-invites.fakes';
+import { OPEN_PHONE, pickQueries, STAFF_ID, STUDENT_A, teacherScopesFake } from './meeting-invites.fakes';
 
 let picks: ReturnType<typeof pickQueries>;
-const resolver = () => new MeetingInviteeResolver(picks as unknown as MeetingInviteeQueries);
+const resolver = () =>
+  new MeetingInviteeResolver(picks as unknown as MeetingInviteeQueries, new MeetingInvitePolicies(teacherScopesFake() as unknown as TeacherScopes));
+const typed = [{ kind: 'phone' as const, phone: OPEN_PHONE }];
 const fail = async (p: Promise<unknown>) => (await p.catch((e: HttpException) => e)) as HttpException;
 const student = { id: STUDENT_A, name: 'سهيلة', code: 'AB-0001', guardian: { id: 'g1', name: 'أم سهيلة', phone_e164: OPEN_PHONE, tz: 'Asia/Riyadh' } };
 
@@ -49,5 +53,30 @@ describe('MeetingInviteeResolver (R-MEET-02)', () => {
   it('dedupeInvitees keeps the first of one phone or profile', () => {
     const a = { kind: 'student' as const, profileId: null, studentId: 'a', phone: OPEN_PHONE, displayName: 'a', tz: 'UTC' };
     expect(dedupeInvitees([a, { ...a, studentId: 'b' }, { ...a, kind: 'phone', studentId: null }])).toEqual([a]);
+  });
+
+  it('a typed phone: 403 phone_invite_not_allowed for a teacher or an assistant, before any guardian lookup', async () => {
+    for (const user of [TEACHER, ASSISTANT]) {
+      const e = await fail(resolver().resolve({ user, invitees: typed }));
+      expect([e.getStatus(), e.getResponse()]).toEqual([403, expect.objectContaining({ code: 'phone_invite_not_allowed' })]);
+    }
+    expect(picks.guardianByPhone).not.toHaveBeenCalled();
+  });
+
+  it('sales and admin may type a phone; only they learn a known guardian name', async () => {
+    picks.guardianByPhone.mockResolvedValue({ id: 'g1', name: 'أم سهيلة', tz: 'Asia/Riyadh' });
+    for (const user of [SALES, ADMIN]) {
+      const [one] = await resolver().resolve({ user, invitees: typed });
+      expect([one?.displayName, one?.tz]).toEqual(['أم سهيلة', 'Asia/Riyadh']);
+    }
+    expect(picks.guardianByPhone).toHaveBeenCalledTimes(2);
+  });
+
+  it('the scope is read once per resolve (a teacher: own non-trial students only)', async () => {
+    picks.teacherStudentIds.mockResolvedValue([STUDENT_A]);
+    picks.students.mockResolvedValue([student]);
+    const out = await resolver().resolve({ user: TEACHER, invitees: [{ kind: 'student', studentId: STUDENT_A }] });
+    expect(out).toHaveLength(1);
+    expect(picks.teacherStudentIds).toHaveBeenCalledTimes(1);
   });
 });

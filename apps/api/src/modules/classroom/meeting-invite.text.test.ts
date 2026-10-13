@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { cancelDedupKey, invitationText, inviteDedupKey, inviteSubject, resendDedupKey, whenText } from './meeting-invite.text';
+import { cancelDedupKey, invitationText, inviteDedupKey, inviteeWhen, inviteSubject, resendDedupKey, whenKey, whenText } from './meeting-invite.text';
 
 describe('meeting invitation text and keys (R-MEET-02)', () => {
   it('the time in the reader tz, «الآن» for an instant meeting', () => {
@@ -23,5 +23,20 @@ describe('meeting invitation text and keys (R-MEET-02)', () => {
     expect(resendDedupKey(v, 'r1')).toBe('meeting_invite:m1:+201000000101:instant:resend:r1');
     expect(inviteSubject('m1', null)).toBe('m1:instant');
     expect(cancelDedupKey('m1', '+201000000101')).toBe('meeting_cancel:m1:+201000000101');
+  });
+});
+
+describe('whenKey and inviteeWhen (R-MEET-02 review 2026-10-13)', () => {
+  it('a PostgREST "+00:00" start keys the same instant as its ISO form', () => {
+    expect(whenKey('2026-10-05T12:00:00+00:00')).toBe('2026-10-05T12:00:00.000Z');
+    expect(inviteSubject('m1', '2026-10-05T12:00:00+00:00')).toBe(inviteSubject('m1', '2026-10-05T12:00:00.000Z'));
+  });
+
+  it('an unknown typed number names the tz used; a known family or an instant meeting does not', () => {
+    const unknown = { kind: 'phone', tz: 'Africa/Cairo', display_name: '+201000000101', phone_e164: '+201000000101' };
+    expect(inviteeWhen('2026-10-12T14:00:00Z', unknown)).toContain('(بتوقيت Africa/Cairo)');
+    expect(inviteeWhen('2026-10-12T14:00:00Z', { ...unknown, display_name: 'أم سهيلة' })).not.toContain('بتوقيت');
+    expect(inviteeWhen('2026-10-12T14:00:00Z', { ...unknown, kind: 'student' })).not.toContain('بتوقيت');
+    expect(inviteeWhen(null, unknown)).toBe('الآن');
   });
 });

@@ -479,7 +479,7 @@ Owner: «for assistants keep only two templates which is free_trial_invite and w
 - **Defaults.** Migration 360 sets `sales_starter = key in ('free_trial_invite','welcome_greeting')` on every row (this resets earlier ticks) and comments the column. The chat line's import flags a new row only when its name is in `RESTRICTED_TEMPLATE_DEFAULTS`; the health sync never flags or unflags a known row, so the admin's toggle (`PATCH /messaging/templates/:key/starter`, «متاح للمعلمين والمبيعات») wins after the import.
 - **Staging.** No chat line there, so neither template is imported and the restricted composers read «لا توجد قوالب متاحة لك بعد» until the chat line is configured and the health check imports them (or an admin ticks an approved row).
 - **Stub / e2e.** The stub's chat WABA adds `free_trial_invite` and `welcome_greeting` next to `academy_welcome` (which now imports unflagged). e2e: `sales-starter.spec.ts`, `teacher-restricted-templates.spec.ts` (two lines).
-## 14. Scheduled meetings and invitations (owner 2026-10-12, migrations 20261012000410–413; R-MEET-01..03)
+## 14. Scheduled meetings and invitations (owner 2026-10-12, migrations 20261012000410–414; R-MEET-01..03)
 
 «اجتماع داخلي» (migration 193) may now be **instant** (as before) or **scheduled**, and either may have **invitees**. Anyone with `meetings.write` (admin, teacher, classroom assistant, sales) does it; the creator or an admin manages it.
 
@@ -492,15 +492,24 @@ Owner: «for assistants keep only two templates which is free_trial_invite and w
 |---|---|---|
 | `POST /meetings` `{title?, startsAt?, durationMin?, invitees? (≤ 30), clientRequestId?}` | staff | 201 `{id, url, invitees: MeetingInviteResult[], replayed}` |
 | `GET /meetings` | staff | created OR invited (admin: all); coming scheduled first by `starts_at`, then newest; `window`, `can_join`, `invitees_count`, `my_invite` |
-| `PATCH /meetings/:id` `{title?, startsAt?, durationMin?}` | creator / admin | 204; a new time re-notifies staff (new dedup subject) |
-| `POST /meetings/:id/cancel` | creator / admin | 204; idempotent |
+| `PATCH /meetings/:id` `{title?, startsAt?, durationMin?}` | creator / admin | 204; a real move (another instant, compared with `Date.parse`) drops the still-queued invitation texts and re-notifies staff (subject `…:moved:{now}`, unique per move); a duration-only change or a re-save rings nothing |
+| `POST /meetings/:id/cancel` | creator / admin | 204; idempotent; closes the LiveKit room and drops the still-queued invitation texts |
+| `POST /meetings/:id/end` | creator / admin | 204; 409 `meeting_not_started` for a scheduled meeting whose window has not opened (reschedule or cancel it) |
 | `GET /meetings/:id/invitees` | creator / admin | `MeetingInviteeView[]` (never a phone) |
 | `POST /meetings/:id/invitees` `{invitees}` | creator / admin | one result per new invitee |
-| `POST /meetings/:id/invitees/:inviteeId/resend` `{clientRequestId}` | creator / admin | a new personal link for that invitee only |
-| `GET /meetings/invitee-options?q=` | staff | staff `{id, name, role}`; students `{id, name, code}` within the caller's scope (admin / sales: all, the `/sales/students/all` scope; teacher: own; assistant: assigned) |
+| `POST /meetings/:id/invitees/:inviteeId/resend` `{clientRequestId}` | creator / admin | a new personal link for that invitee only (the WhatsApp policy below applies) |
+| `GET /meetings/invitee-options?q=` | staff | staff `{id, name, role}`; students `{id, name, code}` within the caller's scope (admin / sales: all, the `/sales/students/all` scope; teacher: own non-trial, like `teacher_thread_phones`; assistant: assigned) |
 
 **Channels.** Staff → `PushService.notifyProfiles` kind `meeting_invite`, data `{meetingId}`, subject `{meeting}:{startsAt|instant}` (row key `meeting_invite:{meeting}:{startsAt|instant}:{profile}`); cancel → subject `cancel:{meeting}`. Families / phones → a WhatsApp **session text** (never a template; the restricted-templates rule is unchanged), queued in `messages` like an inbox reply on the line `replyLine` picks (`inbox/send-line.ts`), dedup `meeting_invite:{meeting}:{phone}:{startsAt|instant}` (resend: `…:resend:{clientRequestId}`; cancel: `meeting_cancel:{meeting}:{phone}`), expiring after a day or when the room closes. It goes out through the usual sender and its gates (`MESSAGING_ENABLED`, `WA_ALLOWED_RECIPIENTS`, `settings.messaging_enabled`). No thread / every window closed / only the chat window open with no chat line → that invitee is `window_closed` with `error_code` `no_thread` | `session_closed` | `line_not_configured`; the request never fails for it. The text (ar.json `meetingInvites.message`, MSA): the title, the time in the guardian's tz (or «الآن»), the personal `/m/<token>` link.
 
-**Tokens.** Each non-staff invitee has its own guest link; only the hash is stored; the link and the invitation text are returned once to the creator («انسخ الرابط والدعوة»). Resend replaces only that invitee's hash; a retried resend id rotates nothing. Cancel clears every invitee hash. `/public/meetings/:token` accepts the shared link or a personal one.
+**Tokens.** Each non-staff invitee has its own guest link; only the hash is stored; the link and the invitation text are returned once to the creator («انسخ الرابط والدعوة»). Resend replaces only that invitee's hash; a retried resend id whose text was already queued sends and rotates nothing (no link in the answer); one that queued nothing (`window_closed`, `chat_not_allowed`) returns a fresh link. The web and mobile keep one `clientRequestId` per tap (reused on a retry, new after a success). Cancel clears every invitee hash. `/public/meetings/:token` accepts the shared link or a personal one.
 
-**Limits.** 30 invitees per meeting (400 `too_many_invitees`); 100 WhatsApp invitations per login per rolling day, resends included (409 `invite_limit`, counted on `messages` with the `meeting_invite:` prefix, migration 413).
+**Limits.** 30 invitees per meeting (400 `too_many_invitees`); 100 WhatsApp invitations per login per rolling day, resends included (409 `invite_limit`, counted on `messages` with the `meeting_invite:` prefix, migration 413). The API checks both first; migration 414's BEFORE INSERT triggers (`pg_advisory_xact_lock` per meeting / per login) make them race-safe and raise the same codes (P0001), which the API answers exactly like the fast checks. A row whose dedup key is already queued (a retry) never trips the daily cap.
+
+**Who may send WhatsApp through invitations (owner policy, review 2026-10-13).**
+| Caller | Typed phone («رقم هاتف») | Students | WhatsApp chat text |
+|---|---|---|---|
+| admin, sales (scope `all`) | yes; a known guardian lends name and tz | every student | any phone (with `inbox.send`) |
+| teacher | 403 `phone_invite_not_allowed` | own **non-trial** students only | only to a phone the inbox lets them write to (`assertCanSend` on `TeacherScopes`: their families, never their own chat) |
+| classroom assistant, any role without `inbox.send` | 403 `phone_invite_not_allowed` | assigned / in scope | never: the invitee is recorded `channel` link, `status` window_closed, `error_code` `chat_not_allowed`, and the creator gets the personal link and the invitation text to copy |
+The same gate applies to resend and to the cancellation message; staff invitations (the bell) are unchanged for every role. The web and mobile pickers hide «رقم هاتف» for anyone but admin and sales. Privacy: the guardian lookup of a typed number runs only for scope `all`; for every other caller `no_thread` reads as `session_closed` in responses. An invitation to an unknown number names the tz its time is written in (the creator's). Cancel also tries families whose invitation found the window closed (`pickSendLine` decides). A refused join on `/meeting/:id` and `/m/:token` reads in a meeting's words with the opening day and time from `opens_at` (the settings' window).

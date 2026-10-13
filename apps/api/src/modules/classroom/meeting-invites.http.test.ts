@@ -48,8 +48,11 @@ describe('scheduled meeting routes (R-MEET-01..03)', () => {
   it('invitees: list, add, resend for the creator or an admin; 400 bad ids', async () => {
     expect((await h.call({ method: 'GET', url: `${base}/invitees`, token: 'admin' })).statusCode).toBe(200);
     expect((await h.call({ method: 'GET', url: `${base}/invitees`, token: 'other' })).statusCode).toBe(403);
-    const add = await h.call({ method: 'POST', url: `${base}/invitees`, token: 'teacher', body: { invitees: [{ kind: 'phone', phone: '+201000000105' }] } });
+    const phone = { invitees: [{ kind: 'phone', phone: '+201000000105' }] };
+    const add = await h.call({ method: 'POST', url: `${base}/invitees`, token: 'admin', body: phone });
     expect([add.statusCode, add.json()[0].status]).toEqual([200, 'window_closed']);
+    const typed = await h.call({ method: 'POST', url: `${base}/invitees`, token: 'teacher', body: phone });
+    expect([typed.statusCode, typed.json().code]).toEqual([403, 'phone_invite_not_allowed']);
     const resend = await h.call({ method: 'POST', url: `${base}/invitees/${INVITEE.id}/resend`, token: 'teacher', body: REQ });
     expect(resend.statusCode).toBe(200);
     expect((await h.call({ method: 'POST', url: `${base}/invitees/nope/resend`, token: 'teacher', body: REQ })).statusCode).toBe(400);

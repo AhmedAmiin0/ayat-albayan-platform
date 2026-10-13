@@ -1,6 +1,7 @@
 import type { TablesInsert, TablesUpdate } from '@ab/db';
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { SENDING } from '../whatsapp/send-plan';
 import { dbError } from '../teachers/http';
 import type { InviteeRow } from './meeting-invites.mapper';
 
@@ -16,6 +17,8 @@ export interface StoredInvitee extends InviteeRow {
 const COLUMNS = 'id, meeting_id, kind, profile_id, student_id, phone_e164, display_name, tz, channel, status, error_code, sent_at';
 /** Every meeting invitation's WhatsApp row carries this dedup prefix (the daily limit counts them). */
 export const INVITE_DEDUP_PREFIX = 'meeting_invite:';
+/** Migration 414's trigger: more than 30 live invitees on one meeting (a race the fast check missed). */
+const tooMany = (e: { message: string }) => /\btoo_many_invitees\b/.test(e.message);
 
 /** public.meeting_invitees (migration 411; service role, the services guard). */
 @Injectable()
@@ -38,6 +41,7 @@ export class MeetingInviteesQueries {
   async insert(rows: TablesInsert<'meeting_invitees'>[]): Promise<StoredInvitee[]> {
     if (rows.length === 0) return [];
     const { data, error } = await this.db.from('meeting_invitees').insert(rows).select(COLUMNS);
+    if (error && tooMany(error)) throw new BadRequestException({ code: 'too_many_invitees', message: 'too_many_invitees' });
     if (error) throw dbError(error);
     return data;
   }
@@ -70,5 +74,23 @@ export class MeetingInviteesQueries {
     const { data, error } = await this.db.from('messages').select('id').eq('dedup_key', dedupKey).maybeSingle();
     if (error) throw dbError(error);
     return data !== null;
+  }
+
+  /**
+   * Cancel or a new time: this meeting's invitation texts still waiting in the queue are dropped
+   * (failed / stale), never sent late with a dead link or the old time. A row the sender already
+   * claimed (error_code SENDING) is left alone, like SenderQueries.holdAutomatic.
+   */
+  async dropQueuedInvites(meetingId: string): Promise<number> {
+    const { data, error } = await this.db
+      .from('messages')
+      .update({ status: 'failed', error_code: 'stale', error_text: 'meeting changed', next_attempt_at: null })
+      .eq('direction', 'outbound')
+      .eq('status', 'queued')
+      .like('dedup_key', `${INVITE_DEDUP_PREFIX}${meetingId}:%`)
+      .or(`error_code.is.null,error_code.neq.${SENDING}`)
+      .select('id');
+    if (error) throw dbError(error);
+    return data.length;
   }
 }

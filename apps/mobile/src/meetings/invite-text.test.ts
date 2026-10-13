@@ -1,6 +1,7 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { dayChipLabel, inviteError, opensLine, resultLabel, scheduleLine, tzNote } from './invite-text';
+import { dayChipLabel, inviteError, notSentHint, opensLine, resultLabel, scheduleLine, tzNote } from './invite-text';
+import { roleOf } from './use-may-invite-phones';
 
 const I = t.meetingInvites;
 
@@ -38,4 +39,18 @@ test('chips and the zone note', () => {
   expect(dayChipLabel('2026-10-12', true)).toBe(I.mobile.today);
   expect(dayChipLabel('2026-10-20', false)).toMatch(/20/);
   expect(tzNote('Asia/Riyadh')).toBe(I.tzNote.replace('{tz}', 'الرياض'));
+});
+
+test('a creator who may not send WhatsApp: «رابط للنسخ» and its own hint; a closed window keeps its words', () => {
+  const linkOnly = { status: 'window_closed', channel: 'link', error_code: 'chat_not_allowed' } as const;
+  expect(resultLabel(linkOnly)).toBe(I.results.linkOnly);
+  expect(notSentHint(linkOnly)).toBe(I.results.linkOnlyHint);
+  expect(notSentHint({ ...linkOnly, error_code: 'session_closed' })).toBe(I.results.windowClosedHint);
+  expect(notSentHint({ status: 'sent', channel: 'whatsapp' })).toBeNull();
+});
+
+test('roleOf reads /auth/me defensively', () => {
+  expect(roleOf({ role: 'sales' })).toBe('sales');
+  expect(roleOf({ permissions: [] })).toBeNull();
+  expect(roleOf(null)).toBeNull();
 });

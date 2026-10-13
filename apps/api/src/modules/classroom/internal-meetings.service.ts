@@ -1,5 +1,5 @@
-import { meetingRoomName, meetingState, type JoinWindowConfig, type MeetingCreated } from '@ab/shared';
-import { ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
+import { meetingRoomName, meetingState, meetingWindow, type JoinWindowConfig, type MeetingCreated } from '@ab/shared';
+import { ConflictException, ForbiddenException, Inject, Injectable, Logger } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { CLASSROOM_WEB_ORIGIN } from './classroom.config';
@@ -23,12 +23,23 @@ export class InternalMeetingsService {
     @Inject(CLASSROOM_WEB_ORIGIN) private readonly origin: string,
   ) {}
 
-  /** 404 meeting_not_found, 403 not the creator nor an admin. Idempotent; the room is closed for everyone inside. */
+  /**
+   * 404 meeting_not_found, 403 not the creator nor an admin, 409 meeting_not_started for a scheduled
+   * meeting whose window has not opened (reschedule or cancel it instead). Idempotent; the room is
+   * closed for everyone inside.
+   */
   async end(input: { user: AuthUser; id: string }, now = new Date()): Promise<void> {
-    await this.managed(input);
+    const row = await this.managed(input);
+    const early = !row.ends_at && !row.cancelled_at && meetingWindow(row, now, await this.queries.joinWindow())?.state === 'early';
+    if (early) throw new ConflictException({ code: 'meeting_not_started', message: 'meeting_not_started' });
     await this.queries.end(input.id, now.toISOString());
+    this.closeRoom(input.id, now);
+  }
+
+  /** Closes the LiveKit room for everyone inside («إنهاء», a cancellation); never throws, never waits. */
+  closeRoom(id: string, now: Date): void {
     if (!this.livekit.configured) return;
-    const room = meetingRoomName(input.id);
+    const room = meetingRoomName(id);
     this.livekit
       .call({ method: 'livekit.RoomService/DeleteRoom', body: { room }, grant: { roomCreate: true } }, now)
       .catch((e: unknown) => this.log.warn(`delete room ${room}: ${String(e)}`));

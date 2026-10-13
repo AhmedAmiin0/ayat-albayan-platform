@@ -2,6 +2,7 @@ import type { MeetingCreateResult } from '@ab/shared';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { meQuery, type Me } from '@/features/auth/me';
 import { t } from '@/lib/i18n';
 import { ScheduledMeetingDialog } from './ScheduledMeetingDialog';
 
@@ -23,10 +24,13 @@ const RESULT: MeetingCreateResult = {
   ],
 };
 
-function open() {
+function open(role: 'sales' | 'teacher' = 'sales') {
   const onClose = vi.fn();
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+  const me: Me = { id: 'u-1', email: null, role, permissions: [] };
+  client.setQueryData(meQuery.queryKey, me);
   render(
-    <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
+    <QueryClientProvider client={client}>
       <ScheduledMeetingDialog onClose={onClose} tz="Asia/Riyadh" />
     </QueryClientProvider>,
   );
@@ -93,6 +97,12 @@ describe('ScheduledMeetingDialog «اجتماع مجدول»', () => {
     fireEvent.click(screen.getByRole('button', { name: L.create }));
     expect(screen.getByText(L.errors.starts_in_past)).toBeTruthy();
     expect(api.send).not.toHaveBeenCalled();
+  });
+
+  it('«رقم هاتف» is offered to admin and sales only (a teacher picks from the team or their students)', () => {
+    open('teacher');
+    expect(screen.queryByRole('tab', { name: L.tabs.phone })).toBeNull();
+    expect(screen.getByRole('tab', { name: L.tabs.students })).toBeTruthy();
   });
 
   it('a wrong phone is not added', () => {

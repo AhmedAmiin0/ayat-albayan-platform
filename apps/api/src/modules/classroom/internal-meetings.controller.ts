@@ -62,7 +62,7 @@ export class InternalMeetingsController {
     return this.joins.idByLink({ user, token });
   }
 
-  /** 204; 404 meeting_not_found, 403 not the creator nor an admin. */
+  /** 204; 404 meeting_not_found, 403 not the creator nor an admin, 409 meeting_not_started (scheduled, window not open). */
   @Post(':id/end')
   @HttpCode(204)
   async end(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<void> {

@@ -41,7 +41,8 @@ import { ThreadsService } from './threads.service';
     ThreadMediaService,
   ],
   // The feedback module sends «ابعت طلب الرأي» through the same send-now path; meeting invitations
-  // (ClassroomModule) read the thread and queue their chat text (R-MEET-02).
-  exports: [Outbox, ThreadsQueries],
+  // (ClassroomModule) read the thread and queue their chat text (R-MEET-02), a teacher only to the
+  // families TeacherScopes lets them write to.
+  exports: [Outbox, ThreadsQueries, TeacherScopes],
 })
 export class InboxModule {}

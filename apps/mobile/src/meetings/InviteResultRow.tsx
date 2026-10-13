@@ -6,7 +6,7 @@ import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { StatusChip } from '@/ui/StatusChip';
-import { resultLabel } from './invite-text';
+import { notSentHint, resultLabel } from './invite-text';
 
 const R = t.meetingInvites.results;
 
@@ -19,6 +19,7 @@ export function InviteResultRow({ result }: { result: MeetingInviteResult }) {
   const ok = result.status === 'sent';
   const closed = result.status === 'window_closed';
   const text = result.invitation_text;
+  const hint = notSentHint(result);
   return (
     <View style={{ gap: 6, paddingVertical: 8, borderTopWidth: 1, borderColor: color.rule }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -27,7 +28,7 @@ export function InviteResultRow({ result }: { result: MeetingInviteResult }) {
         </AppText>
         <StatusChip tone={ok ? 'ok' : closed ? 'act' : 'neutral'} glyph={ok ? 'fill' : 'hollow'} label={resultLabel(result)} size="sm" />
       </View>
-      {closed ? <Note>{R.windowClosedHint}</Note> : null}
+      {hint ? <Note>{hint}</Note> : null}
       {text ? (
         <Button
           variant="secondary"
