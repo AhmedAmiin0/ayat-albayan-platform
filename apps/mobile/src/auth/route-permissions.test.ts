@@ -27,6 +27,7 @@ test.each<[RouteKey, string]>([
   ['salesLive', 'self.sales_academy'],
   ['salesSchedule', 'self.sales_academy'],
   ['salesEarnings', 'self.sales_earnings'],
+  ['salesMeetings', 'meetings.read'],
   ['assistants', 'assistantpay.read'],
   ['assistantLessons', 'self.assistant'],
   ['meetings', 'meetings.read'],

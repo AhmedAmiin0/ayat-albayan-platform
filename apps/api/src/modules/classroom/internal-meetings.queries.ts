@@ -1,15 +1,27 @@
 import type { Tables } from '@ab/db';
+import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { SettingsService } from '../../common/settings/settings.service';
 import { dbError } from '../teachers/http';
 
-export type MeetingRow = Pick<Tables<'meetings'>, 'id' | 'title' | 'created_by' | 'created_at' | 'ends_at' | 'revoked'>;
-/** Never the hash: it is only ever compared in the query. */
-const COLUMNS = 'id, title, created_by, created_at, ends_at, revoked';
-const LIST_LIMIT = 20;
+export type MeetingRow = Pick<
+  Tables<'meetings'>,
+  'id' | 'title' | 'created_by' | 'created_at' | 'ends_at' | 'revoked' | 'starts_at' | 'planned_end_at' | 'cancelled_at'
+>;
+/** Never the hash nor the request id: they are only ever compared in the query. */
+export const MEETING_COLUMNS = 'id, title, created_by, created_at, ends_at, revoked, starts_at, planned_end_at, cancelled_at';
 
-/** Reads and writes of «اجتماع داخلي» (service role; the services guard, migration 193). */
+export interface NewMeeting {
+  title: string;
+  createdBy: string;
+  hash: string;
+  startsAt: string | null;
+  plannedEndAt: string | null;
+  clientRequestId: string | null;
+}
+
+/** Reads and writes of «اجتماع داخلي» (service role; the services guard, migrations 193, 410). */
 @Injectable()
 export class InternalMeetingsQueries {
   constructor(
@@ -22,35 +34,59 @@ export class InternalMeetingsQueries {
     return (await this.settings.all()).default_meeting_title;
   }
 
-  async insert(row: { title: string; createdBy: string; hash: string }): Promise<MeetingRow> {
+  /** The lesson join window (settings.join_opens_before_min / join_closes_after_min). */
+  async joinWindow(): Promise<JoinWindowConfig> {
+    return joinWindowConfig(await this.settings.all());
+  }
+
+  /** null on a duplicate client_request_id (the caller reads the first row back). */
+  async insert(row: NewMeeting): Promise<MeetingRow | null> {
     const { data, error } = await this.db
       .from('meetings')
-      .insert({ title: row.title, created_by: row.createdBy, link_token_hash: row.hash })
-      .select(COLUMNS)
+      .insert({
+        title: row.title,
+        created_by: row.createdBy,
+        link_token_hash: row.hash,
+        starts_at: row.startsAt,
+        planned_end_at: row.plannedEndAt,
+        client_request_id: row.clientRequestId,
+      })
+      .select(MEETING_COLUMNS)
       .single();
+    if (error?.code === '23505' && row.clientRequestId) return null;
+    if (error) throw dbError(error);
+    return data;
+  }
+
+  /** The meeting a retried POST /meetings already created (rule 8). */
+  async byRequest(createdBy: string, clientRequestId: string): Promise<MeetingRow | null> {
+    const { data, error } = await this.db
+      .from('meetings')
+      .select(MEETING_COLUMNS)
+      .eq('created_by', createdBy)
+      .eq('client_request_id', clientRequestId)
+      .maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
 
   async byId(id: string): Promise<MeetingRow | null> {
-    const { data, error } = await this.db.from('meetings').select(COLUMNS).eq('id', id).maybeSingle();
+    const { data, error } = await this.db.from('meetings').select(MEETING_COLUMNS).eq('id', id).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
 
   async byHash(hash: string): Promise<MeetingRow | null> {
-    const { data, error } = await this.db.from('meetings').select(COLUMNS).eq('link_token_hash', hash).maybeSingle();
+    const { data, error } = await this.db.from('meetings').select(MEETING_COLUMNS).eq('link_token_hash', hash).maybeSingle();
     if (error) throw dbError(error);
     return data;
   }
 
-  /** The newest 20: everyone's for an admin (`createdBy` null), else the caller's own. */
-  async latest(createdBy: string | null): Promise<MeetingRow[]> {
-    let q = this.db.from('meetings').select(COLUMNS);
-    if (createdBy !== null) q = q.eq('created_by', createdBy);
-    const { data, error } = await q.order('created_at', { ascending: false }).limit(LIST_LIMIT);
+  /** The meeting behind an invitee's personal link (migration 411; cleared when cancelled). */
+  async byInviteHash(hash: string): Promise<MeetingRow | null> {
+    const { data, error } = await this.db.from('meeting_invitees').select('meeting_id').eq('token_hash', hash).maybeSingle();
     if (error) throw dbError(error);
-    return data;
+    return data ? this.byId(data.meeting_id) : null;
   }
 
   /** Stamps ends_at once (a second call keeps the first time). */
@@ -58,6 +94,25 @@ export class InternalMeetingsQueries {
     const { error } = await this.db.from('meetings').update({ ends_at: at }).eq('id', id).is('ends_at', null);
     if (error) throw dbError(error);
     return this.byId(id);
+  }
+
+  /** PATCH /meetings/:id: a new title and/or a new time. */
+  async update(id: string, patch: { title?: string; starts_at?: string; planned_end_at?: string }): Promise<void> {
+    const { error } = await this.db.from('meetings').update(patch).eq('id', id);
+    if (error) throw dbError(error);
+  }
+
+  /** Stamps cancelled_at once; false when it already was, or the meeting was ended («إنهاء») meanwhile. */
+  async cancel(id: string, at: string): Promise<boolean> {
+    const { data, error } = await this.db
+      .from('meetings')
+      .update({ cancelled_at: at })
+      .eq('id', id)
+      .is('cancelled_at', null)
+      .is('ends_at', null)
+      .select('id');
+    if (error) throw dbError(error);
+    return data.length > 0;
   }
 
   /** The name a staff login shows in the room. */

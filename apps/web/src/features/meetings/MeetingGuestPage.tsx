@@ -4,10 +4,13 @@ import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Logo } from '@/components/ui/mark';
 import { GuestJoinPage } from '@/features/classroom/GuestJoinPage';
+import { viewerTz } from '@/features/classroom/student-link';
 import type { RoomClient } from '@/features/classroom/room-types';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { joinMeetingAsGuest, publicMeetingQuery } from './internal-api';
+import { meetingJoinProblem } from './meeting-join-errors';
+import { guestScheduleText } from './meeting-when';
 
 const L = t.meetings.internal.guest;
 
@@ -29,6 +32,8 @@ function Notice({ text, alert }: { text: string; alert?: boolean }) {
 /**
  * /m/:token «اجتماع داخلي» for anyone with the link: the meeting's title, a name, then the room
  * as a guest (the lesson guest page, with the meeting's join). Ended or unknown: one line, no form.
+ * A scheduled one not open yet says when it starts and when the room opens (the guest's own clock);
+ * joining too early answers 403 join_not_open_yet with opens_at, which the join page reads out.
  */
 export function MeetingGuestPage({ token, make }: { token: string; make?: () => RoomClient }) {
   const view = useQuery(publicMeetingQuery(token));
@@ -39,5 +44,16 @@ export function MeetingGuestPage({ token, make }: { token: string; make?: () => 
     return <Notice text={gone ? L.invalid : t.common.error} alert />;
   }
   if (view.data.state === 'ended') return <Notice text={L.ended} />;
-  return <GuestJoinPage linkToken={token} joinWith={joinMeetingAsGuest} title={view.data.title} intro={L.intro} {...(make && { make })} />;
+  const early = guestScheduleText(view.data, { now: new Date(), tz: viewerTz() });
+  const intro = early ? `${early}. ${L.intro}` : L.intro;
+  return (
+    <GuestJoinPage
+      linkToken={token}
+      joinWith={joinMeetingAsGuest}
+      title={view.data.title}
+      intro={intro}
+      problem={(e) => meetingJoinProblem(e)}
+      {...(make && { make })}
+    />
+  );
 }

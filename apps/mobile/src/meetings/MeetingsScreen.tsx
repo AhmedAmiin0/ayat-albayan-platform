@@ -10,18 +10,21 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { useMeetings } from './api';
 import { CreateMeeting } from './CreateMeeting';
 import { MeetingRow } from './MeetingRow';
+import { useViewerTz } from './use-viewer-tz';
 
 /**
- * «الاجتماعات الداخلية» (admin and teacher): create, then the newest 20 (all for an admin, else my
- * own) with enter, share link, end and recordings. The room itself opens in the system browser.
+ * «الاجتماعات الداخلية» (admin, teacher, assistant, sales): create now or scheduled with invitees,
+ * then the newest (all for an admin, else mine and the ones I am invited to) with enter, share link,
+ * reschedule, cancel, end and recordings. Times read in the viewer's zone; the room opens in the browser.
  */
 export function MeetingsScreen() {
   const meetings = useMeetings();
+  const tz = useViewerTz();
   const back = <Button variant="ghost" label={t.common.back} onPress={() => router.back()} />;
   let body = <AppText>{t.common.loading}</AppText>;
   if (meetings.isError && !meetings.data) body = <ErrorState onRetry={() => void meetings.refetch()} />;
   else if (meetings.data && meetings.data.length === 0) body = <EmptyState title={t.meetings.internal.empty} />;
-  else if (meetings.data) body = <>{meetings.data.map((m) => <MeetingRow key={m.id} meeting={m} />)}</>;
+  else if (meetings.data) body = <>{meetings.data.map((m) => <MeetingRow key={m.id} meeting={m} tz={tz} />)}</>;
   return (
     <Screen>
       <ScreenHeader title={t.mobileClassroom.meetingsRow} trailing={back} />

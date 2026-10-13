@@ -28,6 +28,8 @@ export const ROUTE_PERMISSION = {
   salesLive: 'self.sales_academy',
   salesSchedule: 'self.sales_academy',
   salesEarnings: 'self.sales_earnings',
+  // Meetings for every staff role holding meetings.read (owner 2026-10-12).
+  salesMeetings: 'meetings.read',
   // «فريق المبيعات» (web admin-nav-items 'assistants'): the sales staff's terms, commissions and statements.
   assistants: 'assistantpay.read',
   // The classroom assistant's tree (web /assistant/): the lessons they assist and internal meetings.

@@ -1,5 +1,5 @@
 import type { Permission } from '@ab/shared';
-import { render, screen } from '@testing-library/react';
+import { cleanup, render, screen } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import { TeacherNav } from '@/features/teacher/TeacherNav';
@@ -23,6 +23,14 @@ describe('SalesNav / TeacherNav — dynamic roles', () => {
     render(<SalesNav can={without('self.sales_earnings')} />);
     expect(screen.queryByRole('link', { name: t.assistantPortal.nav.earnings })).toBeNull();
     expect(screen.getByRole('link', { name: t.sales.nav.subscriptions })).toBeTruthy();
+  });
+
+  it('«الاجتماعات» follows meetings.read', () => {
+    render(<SalesNav can={without('meetings.read')} />);
+    expect(screen.queryByRole('link', { name: t.meetingInvites.list.title })).toBeNull();
+    cleanup();
+    render(<SalesNav can={without('self.sales')} />);
+    expect(screen.getByRole('link', { name: t.meetingInvites.list.title }).getAttribute('href')).toBe('/sales/meetings');
   });
 
   it('the assistant side (students, teachers, running lessons) follows self.sales_academy', () => {

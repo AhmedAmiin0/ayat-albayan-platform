@@ -26,8 +26,8 @@ test('a role without lessons.read does not see the live board row', async () => 
   expect(screen.getByRole('button', { name: t.mobileClassroom.meetingsRow })).toBeTruthy();
 });
 
-test('a salesperson (self.sales) has no meetings row (owner 2026-10-12), only the live board', async () => {
+test('a salesperson (self.sales) with meetings.read sees the meetings too (owner 2026-10-12)', async () => {
   await render(<ClassroomSection can={() => true} />);
   expect(screen.getByRole('button', { name: t.mobileClassroom.title })).toBeTruthy();
-  expect(screen.queryByRole('button', { name: t.mobileClassroom.meetingsRow })).toBeNull();
+  expect(screen.getByRole('button', { name: t.mobileClassroom.meetingsRow })).toBeTruthy();
 });

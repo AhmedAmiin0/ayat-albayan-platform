@@ -19,11 +19,7 @@ import { ClassroomController, JoinLinkStaffController } from './classroom.contro
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
 import { GuestJoinService } from './guest-join.service';
-import { InternalMeetingsController, InternalMeetingsPublicController } from './internal-meetings.controller';
-import { InternalMeetingJoinService } from './internal-meetings.join.service';
-import { InternalMeetingKickService } from './internal-meetings.kick.service';
-import { InternalMeetingsQueries } from './internal-meetings.queries';
-import { InternalMeetingsService } from './internal-meetings.service';
+import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings.providers';
 import { PublicJoinLimit } from './join-limit';
 import { JoinLinkCopyService } from './join-link.copy.service';
 import { JoinLinkService } from './join-link.service';
@@ -61,7 +57,7 @@ import { StudentLinkService } from './student-link.service';
  * per student. Staff may remove someone from the room (blocked for that lesson), every lesson is
  * recorded (LiveKit egress into the `recordings` bucket, POST /livekit/webhook). Staff may open the room
  * early (POST /lessons/:id/room/open) and a student has a long-lived link (/public/student/:token). «اجتماع داخلي» is a
- * standalone room with no lesson (/meetings, /public/meetings/:token). TemplateRegistry comes from the global WhatsappModule.
+ * standalone room with no lesson (/meetings, /public/meetings/:token), instant or scheduled with invitees (R-MEET-01..03). TemplateRegistry comes from the global WhatsappModule.
  */
 @Module({
   imports: [InboxModule, TeachersModule],
@@ -81,8 +77,7 @@ import { StudentLinkService } from './student-link.service';
     RoomOpenController,
     StudentLinkPublicController,
     StudentLinkAdminController,
-    InternalMeetingsController,
-    InternalMeetingsPublicController,
+    ...INTERNAL_MEETING_CONTROLLERS,
   ],
   providers: [
     // Read per use: LIVEKIT_* may come from the database's integration config (no restart).
@@ -121,10 +116,7 @@ import { StudentLinkService } from './student-link.service';
     RecordingViews,
     MeetingRecordingListService,
     LivekitWebhookService,
-    InternalMeetingsQueries,
-    InternalMeetingsService,
-    InternalMeetingJoinService,
-    InternalMeetingKickService,
+    ...INTERNAL_MEETING_PROVIDERS,
   ],
   // The student file's recordings (modules/student-recordings) sign links and read rows the same way.
   exports: [RecordingViews, RecordingQueries],

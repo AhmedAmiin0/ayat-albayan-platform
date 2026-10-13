@@ -1,8 +1,10 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
-import { afterEach, describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { NewMeetingMenu } from './NewMeetingMenu';
+
+vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(async () => []) }));
 
 const show = () =>
   render(
@@ -14,11 +16,12 @@ const show = () =>
 describe('NewMeetingMenu «اجتماع جديد»', () => {
   afterEach(cleanup);
 
-  it('offers «اجتماع داخلي» first, then «ابدأ الآن» and «جدولة» (the booking wizard)', () => {
+  it('offers «اجتماع داخلي» first, then «اجتماع مجدول», «ابدأ الآن» and «جدولة» (the booking wizard)', () => {
     show();
     expect(screen.getByText(t.meetings.new)).toBeTruthy();
     const items = screen.getByRole('group', { name: t.meetings.new }).children;
     expect(items[0]?.textContent).toBe(t.meetings.internal.item);
+    expect(items[1]?.textContent).toBe(t.meetingInvites.scheduledItem);
     expect(screen.getByRole('button', { name: t.meetings.startNow })).toBeTruthy();
     expect(screen.getByRole('link', { name: t.meetings.schedule }).getAttribute('href')).toBe('/admin/book');
   });
@@ -35,7 +38,17 @@ describe('NewMeetingMenu «اجتماع جديد»', () => {
     show();
     fireEvent.click(screen.getByRole('button', { name: t.meetings.internal.item }));
     expect(screen.getByRole('dialog', { name: t.meetings.internal.dialogTitle })).toBeTruthy();
-    expect(screen.queryByText(t.meetings.students)).toBeNull();
+    expect(screen.queryByRole('region', { name: t.meetings.students })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
+    expect(screen.queryByRole('dialog')).toBeNull();
+  });
+
+  it('«اجتماع مجدول» opens the scheduled meeting dialog (date, time, duration, invitees)', () => {
+    show();
+    fireEvent.click(screen.getByRole('button', { name: t.meetingInvites.scheduledItem }));
+    expect(screen.getByRole('dialog', { name: t.meetingInvites.scheduleTitle })).toBeTruthy();
+    expect(screen.getByLabelText(t.meetingInvites.date)).toBeTruthy();
+    expect(screen.getByRole('region', { name: t.meetingInvites.invitees })).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.common.cancel }));
     expect(screen.queryByRole('dialog')).toBeNull();
   });

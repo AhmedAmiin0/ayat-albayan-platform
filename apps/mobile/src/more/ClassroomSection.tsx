@@ -6,8 +6,8 @@ import { ListRow } from '@/ui/ListRow';
 import { Section } from './Section';
 
 /**
- * «الحلقات والاجتماعات»: the live lessons board and the internal meetings (web parity). A salesperson
- * (self.sales) has no meetings page (owner 2026-10-12), like the web sales nav.
+ * «الحلقات والاجتماعات»: the live lessons board and the meetings (web parity). Every staff login
+ * holding meetings.read sees the meetings, a salesperson included (owner 2026-10-12).
  */
 export function ClassroomSection({ can = () => true }: { can?: (permission: Permission) => boolean }) {
   return (
@@ -16,7 +16,7 @@ export function ClassroomSection({ can = () => true }: { can?: (permission: Perm
         {can('lessons.read') && (
           <ListRow title={t.mobileClassroom.title} onPress={() => router.push('/more/live')} />
         )}
-        {can('meetings.read') && !can('self.sales') && (
+        {can('meetings.read') && (
           <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/more/live/meetings')} />
         )}
       </View>

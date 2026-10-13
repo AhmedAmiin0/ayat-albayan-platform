@@ -1,8 +1,9 @@
-import { guestJoinSchema, meetingRoomName, meetingState, type JoinRole, type PublicMeetingView, type RoomJoinResult } from '@ab/shared';
+import { guestJoinSchema, meetingRoomName, meetingState, meetingWindow, type JoinRole, type PublicMeetingView, type RoomJoinResult } from '@ab/shared';
 import { ForbiddenException, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { notFound } from '../scheduling/errors';
 import { parseOrThrow } from '../teachers/http';
+import { assertWindowOpen } from './join-gate';
 import { InternalMeetingsQueries, type MeetingRow } from './internal-meetings.queries';
 import { hashMeetingToken, looksLikeMeetingToken, meetingRoleOf } from './internal-meetings.token';
 import { PublicJoinLimit } from './join-limit';
@@ -34,7 +35,7 @@ export class InternalMeetingJoinService {
     if (!meeting) throw notFound('meeting_not_found');
     const role = meetingRoleOf(input.user, meeting);
     if (!role) throw new ForbiddenException();
-    if (meetingState(meeting, now) === 'ended') throw meetingEnded();
+    await this.assertOpen(meeting, now);
     const name = ((await this.queries.profileName(input.user.id)) ?? role).slice(0, 30);
     return this.mint({ meeting, role, name }, now);
   }
@@ -54,7 +55,9 @@ export class InternalMeetingJoinService {
   async view(input: { token: string; ip: string }, now = new Date()): Promise<PublicMeetingView> {
     this.limit.assertRead({ ip: input.ip, token: input.token }, now.getTime());
     const meeting = await this.byToken(input.token);
-    return { title: meeting.title, state: meetingState(meeting, now) };
+    const win = await this.queries.joinWindow();
+    const opens = meetingWindow(meeting, now, win)?.opens_at ?? null;
+    return { title: meeting.title, state: meetingState(meeting, now, win), starts_at: meeting.starts_at, opens_at: opens };
   }
 
   /** 429, 503 classroom_not_configured, 400 name, 404 link_invalid, 410 meeting_ended. */
@@ -63,13 +66,26 @@ export class InternalMeetingJoinService {
     this.admission.livekit();
     const { name } = parseOrThrow(guestJoinSchema, input.body);
     const meeting = await this.byToken(input.token);
-    if (meetingState(meeting, now) === 'ended') throw meetingEnded();
+    await this.assertOpen(meeting, now);
     return this.mint({ meeting, role: 'guest', name }, now);
   }
 
+  /**
+   * 410 meeting_ended once ended / cancelled / revoked; a scheduled meeting also follows the lesson
+   * window (R-MEET-01): 403 join_not_open_yet (with opens_at) before it, 410 join_closed after it.
+   */
+  private async assertOpen(meeting: MeetingRow, now: Date): Promise<void> {
+    if (meetingState({ ...meeting, starts_at: null, planned_end_at: null }, now) === 'ended') throw meetingEnded();
+    if (meeting.starts_at && meeting.planned_end_at) {
+      assertWindowOpen({ starts_at: meeting.starts_at, ends_at: meeting.planned_end_at }, now, await this.queries.joinWindow());
+    }
+  }
+
+  /** The shared link, or an invitee's personal link (migration 411). */
   private async byToken(token: string): Promise<MeetingRow> {
     if (!looksLikeMeetingToken(token)) throw notFound('link_invalid');
-    const meeting = await this.queries.byHash(hashMeetingToken(token));
+    const hash = hashMeetingToken(token);
+    const meeting = (await this.queries.byHash(hash)) ?? (await this.queries.byInviteHash(hash));
     if (!meeting) throw notFound('link_invalid');
     return meeting;
   }

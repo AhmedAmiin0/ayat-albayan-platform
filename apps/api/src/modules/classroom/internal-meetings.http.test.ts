@@ -49,7 +49,7 @@ describe('internal meeting routes', () => {
 
   it('public: GET the title with no login, POST join as a guest, 410 once ended', async () => {
     const view = await h.call({ method: 'GET', url: pub, token: null, ip: '3.3.3.1' });
-    expect([view.statusCode, view.json()]).toEqual([200, { title: 'اجتماع الإدارة', state: 'open' }]);
+    expect([view.statusCode, view.json()]).toEqual([200, { title: 'اجتماع الإدارة', state: 'open', starts_at: null, opens_at: null }]);
     const join = await h.call({ method: 'POST', url: `${pub}/join`, token: null, body: { name: 'ضيف' }, ip: '3.3.3.2' });
     expect(join.json()).toMatchObject({ role: 'guest', room: `meeting-${MEETING_ID}` });
     h.meetings.byHash.mockResolvedValueOnce(meetingRow({ revoked: true }));

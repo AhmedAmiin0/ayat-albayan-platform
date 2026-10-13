@@ -42,10 +42,18 @@ interface Props {
   lessonId: string;
   make?: () => RoomClient;
   join?: Joiner;
+  /** A refused join in the page's own words (a meeting's, meetingJoinProblem); the lesson's by default. */
+  problem?: (error: unknown) => string;
+}
+
+/** A 403 with opens_at reads «تُفتح الساعة …»; every other code has its own line. */
+function lessonProblem(error: unknown): string {
+  const opens = error instanceof ApiError && error.status === 403 ? opensAtOf(error) : null;
+  return opens !== null ? opensAtText(opens) : classroomErrorText(error);
 }
 
 /** /classroom/:lessonId for admin, the lesson's teacher and the assigned assistant; /meeting/:id with `join`. */
-export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom }: Props) {
+export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom, problem = lessonProblem }: Props) {
   const [attempt, setAttempt] = useState(0);
   const queryClient = useQueryClient();
   const join = useJoin(lessonId, attempt, joiner);
@@ -57,10 +65,6 @@ export function StaffClassroomPage({ lessonId, make, join: joiner = joinRoom }: 
   if (join.isPending) {
     return <main className="grid min-h-dvh place-items-center bg-page"><p role="status" className="text-sm text-ink-2">{t.classroom.joining}</p></main>;
   }
-  if (join.error) {
-    const opens = join.error instanceof ApiError ? opensAtOf(join.error) : null;
-    const early = opens !== null && join.error instanceof ApiError && join.error.status === 403;
-    return <Notice onRetry={retry}>{early ? opensAtText(opens) : classroomErrorText(join.error)}</Notice>;
-  }
+  if (join.error) return <Notice onRetry={retry}>{problem(join.error)}</Notice>;
   return <ClassroomRoom join={join.data} {...(make && { make })} onRejoin={retry} />;
 }

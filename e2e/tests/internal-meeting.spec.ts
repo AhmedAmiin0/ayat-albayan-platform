@@ -52,7 +52,7 @@ test.describe('internal meeting', () => {
     await expect(guest.getByText(L.guest.ended)).toBeVisible();
     await expect(guest.getByRole('button', { name: ar.classroom.guest.join })).toHaveCount(0);
     const gone = await guest.request.get(`${API}/public/meetings/${token}`);
-    expect(await gone.json()).toEqual({ title, state: 'ended' });
+    expect(await gone.json()).toEqual({ title, state: 'ended', starts_at: null, opens_at: null });
   });
 
   test('a teacher has «اجتماع داخلي» on the home page', async ({ asRole }) => {

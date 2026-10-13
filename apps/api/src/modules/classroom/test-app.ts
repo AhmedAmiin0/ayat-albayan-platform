@@ -15,6 +15,7 @@ import { CLASSROOM_CONFIG, CLASSROOM_WEB_ORIGIN, RECORDING_CONFIG } from './clas
 import { ADMIN, ASSISTANT, CONFIG, GUARDIAN, OTHER_TEACHER, queries, SALES, TEACHER, TEACHER_ID } from './classroom.fakes';
 import { ClassroomQueries } from './classroom.queries';
 import { meetingQueries } from './internal-meetings.fakes';
+import { meetingInviteMocks, overrideMeetingInvites, resetMeetingInvites } from './meeting-invites.fakes';
 import { InternalMeetingsQueries } from './internal-meetings.queries';
 import { LIVEKIT_HTTP } from './livekit-api';
 import { registerLivekitWebhookParser } from './livekit-webhook.controller';
@@ -36,7 +37,7 @@ const verify: TokenVerifier = async (token) => {
 };
 
 export type Call = {
-  method: 'GET' | 'POST' | 'DELETE';
+  method: 'GET' | 'POST' | 'PATCH' | 'DELETE';
   url: string;
   token?: keyof typeof USERS | null;
   body?: object | string;
@@ -63,8 +64,9 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     studentLinks: studentLinkQueries(),
     audit: { record: vi.fn() },
     meetings: meetingQueries(),
+    invites: meetingInviteMocks(),
   };
-  const mod = await Test.createTestingModule({ imports: [AppModule] })
+  const builder = Test.createTestingModule({ imports: [AppModule] })
     .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(ClassroomQueries).useValue(m.queries)
     .overrideProvider(AssistantsQueries).useValue(m.assistants)
@@ -82,8 +84,8 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     .overrideProvider(StudentLinkQueries).useValue(m.studentLinks)
     .overrideProvider(AuditService).useValue(m.audit)
     .overrideProvider(InternalMeetingsQueries).useValue(m.meetings)
-    .overrideProvider(SettingsService).useValue(fakeSettings())
-    .compile();
+    .overrideProvider(SettingsService).useValue(fakeSettings());
+  const mod = await overrideMeetingInvites(builder, m.invites).compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter(), { rawBody: true });
   registerLivekitWebhookParser(app);
   await app.init();
@@ -103,6 +105,7 @@ export async function classroomApp(config: typeof CONFIG | null = CONFIG) {
     Object.assign(m.recordings, recordingQueries());
     Object.assign(m.studentLinks, studentLinkQueries());
     Object.assign(m.meetings, meetingQueries());
+    resetMeetingInvites(m.invites);
     m.http.mockImplementation(http({ body: { egress_id: 'EG_new' } }));
     m.storage.signedDownload.mockResolvedValue({ url: 'https://signed.example.test/r.mp4', expires_at: '' });
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));

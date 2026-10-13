@@ -16,10 +16,10 @@ jest.mock('@/lib/api', () => ({
 }));
 
 const L = t.meetings.internal;
-const base = { created_by: 'u1', created_at: '2026-10-05T11:30:00.000Z', ends_at: null };
-const mine = { ...base, id: 'm1', title: 'اجتماع الإدارة', state: 'open', can_manage: true };
-const others = { ...base, id: 'm2', title: 'اجتماع المعلمين', state: 'open', can_manage: false };
-const over = { ...base, id: 'm3', title: 'اجتماع قديم', state: 'ended', can_manage: true };
+const base = { created_by: 'u1', created_at: '2026-10-05T11:30:00.000Z', ends_at: null, starts_at: null, planned_end_at: null, cancelled_at: null, window: null, invitees_count: 0, my_invite: null };
+const mine = { ...base, id: 'm1', title: 'اجتماع الإدارة', state: 'open', can_manage: true, can_join: true };
+const others = { ...base, id: 'm2', title: 'اجتماع المعلمين', state: 'open', can_manage: false, can_join: true };
+const over = { ...base, id: 'm3', title: 'اجتماع قديم', state: 'ended', can_manage: true, can_join: false };
 let openURL: jest.SpyInstance;
 let share: jest.SpyInstance;
 const press = (name: string) => fireEvent.press(screen.getByRole('button', { name }));
@@ -90,14 +90,14 @@ test('«التسجيلات» opens the meeting’s recordings', async () => {
 });
 
 test('creating: optional title, then the link to share and «ادخل الاجتماع»', async () => {
-  mockApiSend.mockResolvedValue({ id: 'm9', url: 'https://app/m/new' });
+  mockApiSend.mockResolvedValue({ id: 'm9', url: 'https://app/m/new', invitees: [], replayed: false });
   await renderWithQuery(<MeetingsScreen />);
   await screen.findByText('اجتماع الإدارة');
   await press(t.meetings.new);
   await fireEvent.changeText(screen.getByLabelText(L.title), '  لقاء الصباح ');
   await press(L.create);
   expect(await screen.findByText(L.ready)).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings', { title: 'لقاء الصباح' });
+  expect(mockApiSend).toHaveBeenCalledWith('POST', '/meetings', { title: 'لقاء الصباح', clientRequestId: expect.any(String) });
   await fireEvent.press(screen.getAllByRole('button', { name: L.enter })[0] as never);
   await waitFor(() => expect(openURL).toHaveBeenCalledWith('https://app.ayatalbayan.com/meeting/m9'));
 });

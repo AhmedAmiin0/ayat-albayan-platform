@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { ADMIN, CONFIG, OTHER_TEACHER, TEACHER } from './classroom.fakes';
-import { MEETING_ID, meetingQueries, meetingRow, NOW } from './internal-meetings.fakes';
+import { MEETING_ID, meetingQueries, meetingRow, NOW, scheduledRow } from './internal-meetings.fakes';
 import type { InternalMeetingsQueries } from './internal-meetings.queries';
 import { InternalMeetingsService } from './internal-meetings.service';
 import { hashMeetingToken } from './internal-meetings.token';
@@ -22,36 +22,6 @@ beforeEach(() => {
 });
 
 describe('InternalMeetingsService', () => {
-  it('create: a /m/<token> link, only its hash stored, the default title when none is typed', async () => {
-    const r = await service().create({ user: TEACHER, body: {} });
-    expect(r.id).toBe(MEETING_ID);
-    expect(r.url).toMatch(/^https:\/\/app\.example\.test\/m\/[A-Za-z0-9_-]{43}$/);
-    expect(mq.insert).toHaveBeenCalledWith({ title: 'اجتماع', createdBy: TEACHER.id, hash: hashMeetingToken(tokenOf(r.url)) });
-    await service().create({ user: ADMIN, body: { title: ' مراجعة الأسبوع ' } });
-    expect(mq.insert).toHaveBeenLastCalledWith(expect.objectContaining({ title: 'مراجعة الأسبوع' }));
-    expect(post).not.toHaveBeenCalled();
-  });
-
-  it('create: the untitled default follows settings.default_meeting_title', async () => {
-    mq.defaultTitle.mockResolvedValue('اجتماع المعلمين');
-    await service().create({ user: TEACHER, body: {} });
-    expect(mq.insert).toHaveBeenCalledWith(expect.objectContaining({ title: 'اجتماع المعلمين' }));
-  });
-
-  it('create: 400 for a bad title', async () => {
-    expect((await fail(service().create({ user: TEACHER, body: { title: 'x'.repeat(61) } }))).getStatus()).toBe(400);
-  });
-
-  it('list: everyone for an admin, the caller own otherwise, with state and can_manage', async () => {
-    mq.latest.mockResolvedValue([meetingRow(), meetingRow({ id: 'm2', created_by: ADMIN.id, ends_at: '2026-10-05T09:30:00Z' })]);
-    const all = await service().list(ADMIN, NOW);
-    expect(mq.latest).toHaveBeenCalledWith(null);
-    expect(all.map((m) => [m.state, m.can_manage])).toEqual([['open', true], ['ended', true]]);
-    const own = await service().list(TEACHER, NOW);
-    expect(mq.latest).toHaveBeenLastCalledWith(TEACHER.id);
-    expect(own.map((m) => m.can_manage)).toEqual([true, false]);
-  });
-
   it('end: the creator or an admin; stamps ends_at and closes the LiveKit room', async () => {
     await service().end({ user: TEACHER, id: MEETING_ID }, NOW);
     expect(mq.end).toHaveBeenCalledWith(MEETING_ID, NOW.toISOString());
@@ -69,11 +39,23 @@ describe('InternalMeetingsService', () => {
     expect(mq.end).not.toHaveBeenCalled();
   });
 
-  it('newLink: replaces the hash with a fresh link; 403 for others, 410 once ended', async () => {
+  it('end: 409 meeting_not_started for a scheduled meeting before its window; inside it, it ends', async () => {
+    mq.byId.mockResolvedValueOnce(scheduledRow());
+    const e = await fail(service().end({ user: TEACHER, id: MEETING_ID }, NOW));
+    expect([e.getStatus(), e.getResponse()]).toEqual([409, expect.objectContaining({ code: 'meeting_not_started' })]);
+    expect(post).not.toHaveBeenCalled();
+    mq.byId.mockResolvedValueOnce(scheduledRow());
+    await service().end({ user: TEACHER, id: MEETING_ID }, new Date('2026-10-05T12:10:00Z'));
+    expect(mq.end).toHaveBeenCalledTimes(1);
+  });
+
+  it('newLink: replaces the hash with a fresh link; 403 for others, 410 once ended or cancelled', async () => {
     const r = await service().newLink({ user: ADMIN, id: MEETING_ID });
     expect(mq.rotate).toHaveBeenCalledWith(MEETING_ID, hashMeetingToken(tokenOf(r.url)));
     expect((await fail(service().newLink({ user: OTHER_TEACHER, id: MEETING_ID }))).getStatus()).toBe(403);
     mq.byId.mockResolvedValueOnce(meetingRow({ ends_at: '2026-10-05T09:30:00Z' }));
     expect((await fail(service().newLink({ user: ADMIN, id: MEETING_ID }, NOW))).getResponse()).toMatchObject({ code: 'meeting_ended' });
+    mq.byId.mockResolvedValueOnce(meetingRow({ cancelled_at: '2026-10-05T09:30:00Z' }));
+    expect((await fail(service().newLink({ user: ADMIN, id: MEETING_ID }, NOW))).getStatus()).toBe(410);
   });
 });
