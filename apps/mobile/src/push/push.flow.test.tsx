@@ -1,5 +1,6 @@
 import { renderApp, resetApp } from '@/test/app-router'; // first: its jest.mock calls must precede the app
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { Session } from '@supabase/supabase-js';
 import { act, fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { supabase } from '@/lib/supabase';
@@ -83,10 +84,15 @@ test('sign out from «المزيد»: this device’s token is DELETEd first, th
   await waitFor(() => expect(tokens).toEqual([TOKEN]));
   await act(async () => undefined);
   expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN);
+  // The leaving session: the DELETE and the server sign-out both carry its own token.
+  const leaving = { access_token: 'jwt-leaving' } as Session;
+  jest.mocked(supabase.auth.getSession).mockResolvedValueOnce({ data: { session: leaving }, error: null });
   await fireEvent.press(screen.getByRole('button', { name: t.mobile.more }));
   await fireEvent.press(await screen.findByRole('button', { name: t.auth.logout }));
 
   await waitFor(() => expect(supabase.auth.signOut).toHaveBeenCalledTimes(1));
+  expect(supabase.auth.signOut).toHaveBeenCalledWith({ scope: 'local' });
+  expect(supabase.auth.admin.signOut).toHaveBeenCalledWith('jwt-leaving', 'local');
   await app.setGate('out'); // the auth listener's job: the gate follows the session
   await waitFor(() => expect(app.pathname()).toBe('/login'));
   expect(backend.sent('DELETE /me/push-tokens/:token')[0]?.path).toBe(

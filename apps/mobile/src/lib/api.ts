@@ -23,11 +23,16 @@ async function readJson(res: Response): Promise<unknown> {
   }
 }
 
-/** fetch against the Nest API with the current Supabase access token. */
+/**
+ * fetch against the Nest API with the current Supabase access token. A caller's own Authorization
+ * wins and the session is not read (sign-out's DELETE names the leaving session, never a later one).
+ */
 export async function apiFetch<T>(path: string, init: RequestInit = {}): Promise<T> {
-  const { data } = await supabase.auth.getSession();
   const headers = new Headers(init.headers);
-  if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
+  if (!headers.has('Authorization')) {
+    const { data } = await supabase.auth.getSession();
+    if (data.session) headers.set('Authorization', `Bearer ${data.session.access_token}`);
+  }
   const res = await fetch(`${env.apiUrl}${path}`, { ...init, headers });
   const body = await readJson(res);
   if (!res.ok) throw new ApiError(res.status, body ?? null);

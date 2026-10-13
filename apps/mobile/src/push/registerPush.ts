@@ -3,7 +3,7 @@ import Constants from 'expo-constants';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
-import { ApiError, apiSend } from '@/lib/api';
+import { ApiError, apiFetch, apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { ensurePushPermission } from './permission';
 
@@ -55,17 +55,25 @@ export async function registerPush(): Promise<void> {
 }
 
 /**
- * Takes this device's token off the profile. Call it BEFORE supabase.auth.signOut(): the DELETE
- * needs the session's bearer. Never throws; offline, the token stays until a later sign-out.
+ * Takes this device's token off the profile, with the leaving session's own bearer (the DELETE
+ * needs one, and the current session may already be a later sign-in's). Aborted after `ms`, so a
+ * late answer cannot drop the key a later sign-in stored. Never throws; offline or timed out, the
+ * token stays until a later sign-out.
  * TODO(R-MOB-01): a 401-forced sign-out skips this; sending will prune DeviceNotRegistered tokens.
  */
-export async function unregisterPush(): Promise<void> {
+export async function unregisterPush(bearer: string, ms: number): Promise<void> {
+  const abort = new AbortController();
+  const timer = setTimeout(() => abort.abort(), ms);
   try {
     const token = await AsyncStorage.getItem(TOKEN_KEY);
     if (!token) return;
-    await apiSend('DELETE', `/me/push-tokens/${encodeURIComponent(token)}`);
+    const headers = { Authorization: `Bearer ${bearer}` };
+    const path = `/me/push-tokens/${encodeURIComponent(token)}`;
+    await apiFetch(path, { method: 'DELETE', headers, signal: abort.signal });
     await AsyncStorage.removeItem(TOKEN_KEY);
   } catch {
     // Kept locally, so the next sign-out retries.
+  } finally {
+    clearTimeout(timer);
   }
 }

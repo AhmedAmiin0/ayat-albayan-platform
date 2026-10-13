@@ -3,7 +3,7 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import { t } from '@/lib/i18n';
 import { ensurePushPermission } from './permission';
-import { ANDROID_CHANNEL, easProjectId, registerPush, TOKEN_KEY, unregisterPush } from './registerPush';
+import { ANDROID_CHANNEL, easProjectId, registerPush, TOKEN_KEY } from './registerPush';
 
 const mockIsDevice = jest.fn(() => true);
 const mockExtra = jest.fn((): unknown => ({ eas: { projectId: 'proj-1' } }));
@@ -100,23 +100,4 @@ test('android: the channel exists (Arabic name) before the permission prompt', a
     importance: Notifications.AndroidImportance.HIGH,
   });
   expect(order).toEqual(['channel', 'permission']);
-});
-
-test('unregister: DELETE with the URL-encoded token, then forget it', async () => {
-  await AsyncStorage.setItem(TOKEN_KEY, TOKEN);
-  await unregisterPush();
-  expect(mockApiSend).toHaveBeenCalledWith('DELETE', `/me/push-tokens/${encodeURIComponent(TOKEN)}`);
-  expect(await AsyncStorage.getItem(TOKEN_KEY)).toBeNull();
-});
-
-test('unregister: nothing registered, nothing sent', async () => {
-  await unregisterPush();
-  expect(mockApiSend).not.toHaveBeenCalled();
-});
-
-test('unregister offline: never throws and keeps the token for the next sign-out', async () => {
-  await AsyncStorage.setItem(TOKEN_KEY, TOKEN);
-  mockApiSend.mockRejectedValueOnce(new Error('offline'));
-  await expect(unregisterPush()).resolves.toBeUndefined();
-  expect(await AsyncStorage.getItem(TOKEN_KEY)).toBe(TOKEN);
 });

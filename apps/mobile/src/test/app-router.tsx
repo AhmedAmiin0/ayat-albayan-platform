@@ -17,7 +17,9 @@ jest.mock('expo-notifications', () => jest.requireActual('./native-mocks').notif
 jest.mock('expo-image-picker', () => jest.requireActual('./native-mocks').imagePickerMock());
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
-  apiFetch: (url: string) => jest.requireActual('./fake-backend').currentBackend().fetch(url),
+  // apiFetch with a method of its own (sign-out's DELETE, which carries its own bearer) is a send.
+  apiFetch: (url: string, init?: RequestInit) =>
+    jest.requireActual('./fake-backend').currentBackend().send(init?.method ?? 'GET', url),
   apiSend: (method: string, url: string, body?: unknown) =>
     jest.requireActual('./fake-backend').currentBackend().send(method, url, body),
 }));
@@ -29,6 +31,8 @@ jest.mock('@/lib/supabase', () => ({
       // Records the call; the test then flips the gate (app.setGate('out')), as the real
       // onAuthStateChange would.
       signOut: jest.fn(async () => ({ error: null })),
+      // Sign-out ends the leaving session on the server by its own token.
+      admin: { signOut: jest.fn(async () => ({ data: null, error: null })) },
     },
     storage: {
       from: (bucket: string) => ({

@@ -1,13 +1,13 @@
 import { ApiError, apiFetch, apiSend, toQueryString } from './api';
 
-jest.mock('./supabase', () => ({
-  supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'tok' } } }) } },
-}));
+const mockGetSession = jest.fn(async () => ({ data: { session: { access_token: 'tok' } } }));
+jest.mock('./supabase', () => ({ supabase: { auth: { getSession: () => mockGetSession() } } }));
 jest.mock('./env', () => ({ env: { apiUrl: 'http://api' } }));
 
 const mockFetch = jest.fn();
 beforeEach(() => {
   mockFetch.mockReset();
+  mockGetSession.mockClear();
   globalThis.fetch = mockFetch;
 });
 
@@ -20,6 +20,14 @@ test('GET sends the bearer token and parses JSON', async () => {
   const [url, init] = mockFetch.mock.calls[0];
   expect(url).toBe('http://api/auth/me');
   expect(new Headers(init.headers).get('Authorization')).toBe('Bearer tok');
+});
+
+test("a caller's own bearer wins and the session is not read", async () => {
+  mockFetch.mockResolvedValue(reply(204));
+  await apiFetch('/me/push-tokens/x', { method: 'DELETE', headers: { Authorization: 'Bearer leaving' } });
+  const [, init] = mockFetch.mock.calls[0];
+  expect(new Headers(init.headers).get('Authorization')).toBe('Bearer leaving');
+  expect(mockGetSession).not.toHaveBeenCalled();
 });
 
 test('non-2xx throws ApiError with status and body', async () => {
