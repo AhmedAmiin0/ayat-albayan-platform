@@ -1,3 +1,4 @@
+import { normalizeArabic } from '@ab/shared';
 import type { APIRequestContext } from '@playwright/test';
 import { call } from './assistant-api';
 import { withSql } from './schedule';
@@ -14,7 +15,7 @@ export async function trialFamily(input: { broughtBy: string; phone: string; nam
     const [g] = await sql<{ id: string }[]>`insert into public.guardians (name, phone_e164, country, tz)
       values (${`أم ${input.name}`}, ${input.phone}, 'SA', 'Asia/Riyadh') returning id`;
     const [s] = await sql<{ id: string }[]>`insert into public.students (guardian_id, name, name_normalized, tz, brought_by, status)
-      values (${g?.id ?? ''}, ${input.name}, ${input.name}, 'Asia/Riyadh', ${input.broughtBy}, 'trial') returning id`;
+      values (${g?.id ?? ''}, ${input.name}, ${normalizeArabic(input.name)}, 'Asia/Riyadh', ${input.broughtBy}, 'trial') returning id`;
     if (!s) throw new Error('family not written');
     return s.id;
   });

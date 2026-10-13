@@ -31,7 +31,8 @@ async function openForm(page: Page, seed: { subscriptionId: string; student: str
   await dialog.getByRole('searchbox', { name: ar.payments.mobile.chooseStudent }).fill(seed.student);
   await dialog.getByRole('button', { name: new RegExp(seed.student) }).click();
   await dialog.getByLabel(ar.payments.mobile.chooseSubscription, { exact: true }).selectOption(seed.subscriptionId);
-  await dialog.locator('input[type=file]').setInputFiles({ name: 'receipt.png', mimeType: 'image/png', buffer: RECEIPT_PNG });
+  // The receipt's input; «المرفقات» (bank only, 2026-10-12) is the `multiple` one.
+  await dialog.locator('input[type=file]:not([multiple])').setInputFiles({ name: 'receipt.png', mimeType: 'image/png', buffer: RECEIPT_PNG });
   await expect(dialog.getByRole('img', { name: ar.payments.receipt })).toBeVisible(); // local preview
   return dialog;
 }
