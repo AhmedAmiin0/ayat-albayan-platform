@@ -6,7 +6,7 @@ import { AttachmentPicker } from '@/features/payments/AttachmentPicker';
 import { addAttachments, type AttachmentProblem } from '@/features/payments/attachments';
 import { t } from '@/lib/i18n';
 import { ChatReceiptGrid } from './ChatReceiptGrid';
-import { addChatChoice, attachmentItem, type ReceiptChoice } from './receipt';
+import { addChatChoice, attachmentItem, pickedMessages, type ReceiptChoice } from './receipt';
 
 type Props = {
   sub: { id: string; student: { id: string } };
@@ -50,6 +50,7 @@ export function ReceiptChooser({ sub, value, onChange, maxBytes }: Props) {
       {browsing && !full && (
         <ChatReceiptGrid
           sub={sub}
+          picked={pickedMessages(value, sub.id)}
           onPicked={(choice) => {
             setBrowsing(false);
             apply(addChatChoice(value, choice));

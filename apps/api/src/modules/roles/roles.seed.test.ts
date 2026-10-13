@@ -65,6 +65,15 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430)', 
     expect(custom.map((m) => m[1])).toEqual(['subscriptions.set_start_date']);
   });
 
+  it('433 removes any grant left on the system portal roles (guardian, student), idempotently', () => {
+    const sql = readFileSync(join(MIGRATIONS, '20261012000433_portal_role_grants_cleanup.sql'), 'utf8');
+    const del = sql.replace(/--[^\n]*\n/g, '').replace(/\s+/g, ' ').trim();
+    expect(del).toBe(
+      "delete from public.role_permissions rp using public.roles r where rp.role_id = r.id and r.is_system and r.key in ('guardian', 'student');",
+    );
+    expect(LATER).not.toMatch(/r\.key in \([^)]*'(guardian|student)'/);
+  });
+
   it('seeds nothing for guardians and only grantable keys', () => {
     expect(seeded('guardian')).toEqual([]);
     for (const key of ['admin', 'teacher', 'assistant', 'sales']) expect(seeded(key).every(isGrantable)).toBe(true);

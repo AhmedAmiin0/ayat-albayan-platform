@@ -26,6 +26,13 @@ describe('SalesRegistrationQueries', () => {
     expect(String(t.argsOf('students', 'select')?.[0])).not.toContain('guardian');
   });
 
+  it('byName: _ (ilike’s one-character wildcard) is searched as a space, never sent in a term', async () => {
+    const t = fakeDb({ students: [{ data: [] }] });
+    await new SalesRegistrationQueries(t.db).byName('um_ahmad');
+    expect(t.argsOf('students', 'or')).toEqual(['name_normalized.ilike.*um ahmad*,code.ilike.*um ahmad*']);
+    expect(await new SalesRegistrationQueries(fakeDb({}).db).byName('___')).toEqual([]);
+  });
+
   it('byName: a term with nothing searchable left reads nothing', async () => {
     const t = fakeDb({});
     expect(await new SalesRegistrationQueries(t.db).byName(',,,')).toEqual([]);

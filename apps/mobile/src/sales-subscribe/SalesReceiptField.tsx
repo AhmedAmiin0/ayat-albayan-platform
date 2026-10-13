@@ -32,7 +32,9 @@ export function SalesReceiptField({ target, value, onChange }: SalesReceiptField
   const m = t.salesMoney;
   const add = (item: ReceiptChoice) => onChange(withAttachment(value, item));
 
-  const fromChat = (item: SalesChatReceipt) =>
+  const fromChat = (item: SalesChatReceipt) => {
+    // Already in the list: another copy would only be a second object of the same file.
+    if (value.some((a) => a.kind === 'chat' && a.messageId === item.message_id)) return setBrowsing(false);
     copy.mutate(
       { subscriptionId: target.subscriptionId, messageId: item.message_id },
       {
@@ -42,6 +44,7 @@ export function SalesReceiptField({ target, value, onChange }: SalesReceiptField
         },
       },
     );
+  };
 
   return (
     <View style={{ gap: 8 }}>

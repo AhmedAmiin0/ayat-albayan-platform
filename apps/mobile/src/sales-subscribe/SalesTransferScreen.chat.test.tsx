@@ -94,3 +94,15 @@ test('an expired chat file (410): the reason, nothing chosen', async () => {
   expect(await screen.findByText(m.error.media_expired)).toBeTruthy();
   expect(screen.queryByText(FIRST)).toBeNull();
 });
+
+test('the same chat message picked again: no second copy, still one attachment', async () => {
+  await renderWithQuery(<SalesTransferScreen />);
+  const name = `${instantDay(chatImage.created_at)} · ${chatImage.caption ?? ''}`;
+  await fireEvent.press(await screen.findByRole('button', { name: m.receiptFromChat }));
+  await fireEvent.press(await screen.findByRole('button', { name }));
+  expect(await screen.findByText(FIRST)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: m.receiptFromChat }));
+  await fireEvent.press(await screen.findByRole('button', { name }));
+  expect(sent('/sales/payments/receipt-from-chat')).toHaveLength(1);
+  expect(screen.queryByText(m.attachmentN.replace('{n}', '2'))).toBeNull();
+});

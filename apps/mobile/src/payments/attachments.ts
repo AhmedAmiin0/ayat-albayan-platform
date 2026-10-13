@@ -10,7 +10,8 @@ export type Attachment =
   | { kind: 'chat'; messageId: string; path: string }
   | { kind: 'file'; receipt: Receipt };
 
-const keyOf = (a: Attachment) => (a.kind === 'chat' ? a.path : a.receipt.uri);
+// A chat file by its message: each pick is copied under a new path, so the path would let it in twice.
+const keyOf = (a: Attachment) => (a.kind === 'chat' ? `chat:${a.messageId}` : a.receipt.uri);
 
 export const attachmentsFull = (list: readonly Attachment[]) => list.length >= PAYMENT_ATTACHMENTS_MAX;
 

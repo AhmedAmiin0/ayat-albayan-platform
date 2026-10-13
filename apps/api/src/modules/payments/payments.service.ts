@@ -6,6 +6,7 @@ import { MoneyWrites } from '../subscriptions/money-writes';
 import type { Page } from '../teachers/http';
 import { toPaymentView } from './payments.mapper';
 import { PaymentsQueries, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.queries';
+import type { CheckedAttachment } from './payment-attachments.service';
 import { PaymentInputs } from './payment-inputs';
 
 /**
@@ -40,7 +41,12 @@ export class PaymentsService {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return this.replayed(replay, input, actorId);
     const sub = await this.receipts.subscription(input.subscriptionId);
-    const files = await this.files.check(sub.id, input);
+    let files: CheckedAttachment[];
+    try {
+      files = await this.files.check(sub.id, input);
+    } catch (e) {
+      return this.raced(input, actorId, e);
+    }
     if (input.invoiceId) await this.inputs.checkInvoice(input.invoiceId, sub.student_id);
     if (input.invoiceId && (await this.payments.byInvoice(input.invoiceId))) throw conflict('invoice_used');
     const converted = await this.inputs.convert(input, sub);
@@ -58,15 +64,9 @@ export class PaymentsService {
       note: input.note ?? null,
       client_request_id: input.clientRequestId ?? null,
     });
-    if (!row) {
-      // Lost the race to a retry of the same form: that one recorded it (its files: best effort on its row).
-      const raced = await this.replayOf(input.clientRequestId);
-      if (!raced) throw notFound('payment_not_found');
-      await this.files.saveLate(await this.row(raced.id), input, actorId);
-      return raced;
-    }
+    if (!row) return this.raced(input, actorId);
+    await this.files.saveBooked(row.id, files, actorId); // never throws: before the follow-ups, so none can drop them
     await this.writes.done({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, sub.student_id);
-    await this.files.saveBooked(row.id, files, actorId); // after the audit / recompute: never an error now
     return this.get(row.id);
   }
 
@@ -112,6 +112,13 @@ export class PaymentsService {
     await this.writes.replayed({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, studentOf(row));
     await this.files.saveLate(row, input, actorId);
     return view;
+  }
+
+  /** Another send of the form booked it (lost the insert race, or a 409 file check ran just after it): replay. */
+  private async raced(input: PaymentCreate, actorId: string, failure?: unknown): Promise<PaymentView> {
+    const raced = await this.replayOf(input.clientRequestId);
+    if (raced) return this.replayed(raced, input, actorId);
+    throw failure ?? notFound('payment_not_found');
   }
 
   private get receipts() {

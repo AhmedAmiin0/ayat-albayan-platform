@@ -63,9 +63,8 @@ describe('orSafe', () => {
     expect(orSafe('a,b(c)*%:"\\')).toBe('a b c');
   });
 
-  it('strips the ilike single-character wildcard _', () => {
-    expect(orSafe('a_b')).toBe('a b');
-    expect(orSafe('___')).toBe('');
+  it('keeps _: it matches itself, so names like um_ahmad still match', () => {
+    expect(orSafe('um_ahmad')).toBe('um_ahmad');
   });
 });
 

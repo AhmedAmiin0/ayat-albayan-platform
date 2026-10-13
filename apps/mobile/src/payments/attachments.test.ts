@@ -12,6 +12,8 @@ test('added at the end, the same file once, five at most; removed by position', 
   let list = withAttachment([], chat);
   list = withAttachment(list, chat);
   expect(list).toEqual([chat]);
+  expect(withAttachment(list, { ...chat, path: 'sub/wa-m1-second.jpg' })).toEqual([chat]); // same message, new copy
+  expect(withAttachment(list, { ...chat, messageId: 'm2' })).toHaveLength(2);
   for (let n = 1; n <= 6; n += 1) list = withAttachment(list, photo(n));
   expect(list).toHaveLength(5);
   expect(attachmentsFull(list)).toBe(true);

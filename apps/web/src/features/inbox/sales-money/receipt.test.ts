@@ -3,7 +3,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { openPackages } from './SalesMoneyFlow';
 import { salesErrorText } from './errors';
-import { addChatChoice, attachmentItem, attachmentsFor, chatReceiptLabel } from './receipt';
+import { addChatChoice, attachmentItem, attachmentsFor, chatReceiptLabel, pickedMessages } from './receipt';
 import { CHAT_RECEIPTS, OPEN_SUB, student } from './sales-money-fixture';
 
 const chat = { kind: 'chat', messageId: 'm', subscriptionId: 'sub-a', path: 'receipts/sub-a/x.jpg', label: 'تحويل' } as const;
@@ -18,8 +18,13 @@ describe('the transfer attachments (R-ASST-04)', () => {
     expect(attachmentItem(file, 1)).toEqual({ key: 'file-1-r.jpg', name: 'r.jpg' });
   });
 
-  it('a chat file is added once, never past five', () => {
+  it('a chat file is added once per message (a second pick is a new copy path), never past five', () => {
     expect(addChatChoice([chat], chat)).toEqual({ list: [chat], problem: null });
+    expect(addChatChoice([chat], { ...chat, path: 'receipts/sub-a/y.jpg' }).list).toEqual([chat]);
+    expect(addChatChoice([chat], { ...chat, subscriptionId: 'sub-b' }).list).toHaveLength(2);
+    expect(attachmentItem(chat, 0).key).toBe('chat-sub-a-m');
+    const file = { kind: 'file', file: new File([], 'r.jpg') } as const;
+    expect([...pickedMessages([chat, file, { ...chat, messageId: 'n', subscriptionId: 'sub-b' }], 'sub-a')]).toEqual(['m']);
     const five = Array.from({ length: 5 }, (_, i) => ({ ...chat, messageId: `m${i}`, path: `p${i}` }));
     expect(addChatChoice(five, chat)).toEqual({ list: five, problem: 'too_many_attachments' });
     expect(addChatChoice([], chat).list).toEqual([chat]);

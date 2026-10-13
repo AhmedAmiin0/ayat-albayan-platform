@@ -4389,7 +4389,7 @@
     "oneMonth": "شهر محدد",
     "monthBefore": "الشهر السابق",
     "monthAfter": "الشهر التالي",
-    "earliest": "أقرب تاريخ مسموح: {date}",
+    "earliest": "أول تاريخ مسموح: {date}",
     "showLines": "عرض البنود",
     "hideLines": "إخفاء البنود",
     "approveAsk": "اعتماد كشف {assistant} لشهر {month}؟ لن يُعاد حسابه إلا بعد إعادة فتحه.",

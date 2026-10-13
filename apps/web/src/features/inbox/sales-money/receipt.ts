@@ -16,19 +16,25 @@ export function attachmentsFor(list: readonly ReceiptChoice[], subscriptionId: s
   return list.filter((c) => c.kind === 'file' || c.subscriptionId === subscriptionId);
 }
 
-/** A chat file added once (the same message twice is kept once); none past the maximum. */
+/** A chat file added once per message (each pick is a new copy, so never by path); none past the maximum. */
 export function addChatChoice(
   list: readonly ReceiptChoice[],
   choice: ReceiptChoice & { kind: 'chat' },
 ): { list: ReceiptChoice[]; problem: 'too_many_attachments' | null } {
-  if (list.some((c) => c.kind === 'chat' && c.path === choice.path)) return { list: [...list], problem: null };
+  const same = (c: ReceiptChoice) => c.kind === 'chat' && c.messageId === choice.messageId && c.subscriptionId === choice.subscriptionId;
+  if (list.some(same)) return { list: [...list], problem: null };
   if (list.length >= PAYMENT_ATTACHMENTS_MAX) return { list: [...list], problem: 'too_many_attachments' };
   return { list: [...list, choice], problem: null };
 }
 
+/** The chat messages already picked for this package: picking one again would only make another copy. */
+export function pickedMessages(list: readonly ReceiptChoice[], subscriptionId: string): ReadonlySet<string> {
+  return new Set(list.flatMap((c) => (c.kind === 'chat' && c.subscriptionId === subscriptionId ? [c.messageId] : [])));
+}
+
 /** How a chosen attachment is listed: the chat file's label, or the picked file's name. */
 export function attachmentItem(c: ReceiptChoice, index: number): AttachmentItem {
-  return c.kind === 'chat' ? { key: `chat-${c.messageId}`, name: c.label } : { key: `file-${index}-${c.file.name}`, name: c.file.name };
+  return c.kind === 'chat' ? { key: `chat-${c.subscriptionId}-${c.messageId}`, name: c.label } : { key: `file-${index}-${c.file.name}`, name: c.file.name };
 }
 
 /** An accessible name for one chat file: its caption (else «الإيصال»), its day, and «expired» when so. */

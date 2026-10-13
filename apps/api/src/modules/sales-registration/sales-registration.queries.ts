@@ -35,7 +35,8 @@ export class SalesRegistrationQueries {
 
   /** An Arabic-normalised name or a code, as the admin's list searches (studentNameOrCodeFilter). */
   async byName(q: string): Promise<RegistrationMatch[]> {
-    const filter = studentNameOrCodeFilter(q);
+    // `_` is ilike's one-character wildcard: the check would match too much, so it searches it as a space.
+    const filter = studentNameOrCodeFilter(q.replace(/_/g, ' '));
     if (!filter) return [];
     const { data, error } = await this.db.from('students').select(COLUMNS).or(filter).order('name').limit(READ);
     if (error) throw dbError(error);

@@ -67,6 +67,20 @@ describe('step 2 «سجّل التحويل البنكي» with attachments from 
     expect(body).not.toHaveProperty('invoiceId');
   });
 
+  it('a message already picked is shown pressed and never copied again', async () => {
+    const { dialog } = open();
+    fireEvent.click(dialog.getByRole('button', { name: t.salesMoney.receiptFromChat }));
+    fireEvent.click(await dialog.findByRole('button', { name: (n) => n.startsWith('تحويل') }));
+    await dialog.findByText(t.salesMoney.attachmentN.replace('{n}', '1'));
+    fireEvent.click(dialog.getByRole('button', { name: t.salesMoney.receiptFromChat }));
+    const again = await dialog.findByRole('button', { name: (n) => n.startsWith('تحويل') });
+    expect(again.getAttribute('aria-pressed')).toBe('true');
+    fireEvent.click(again);
+    const copies = () => apiSend.mock.calls.filter(([, path]) => path === '/sales/payments/receipt-from-chat');
+    await vi.waitFor(() => expect(copies()).toHaveLength(1));
+    expect(dialog.queryByText(t.salesMoney.attachmentN.replace('{n}', '2'))).toBeNull();
+  });
+
   it('success: «أصبح الطالب مشتركًا» and a link to «مدفوعاتي»', async () => {
     const { dialog, save } = open('active');
     fireEvent.click(dialog.getByRole('button', { name: t.salesMoney.receiptFromChat }));

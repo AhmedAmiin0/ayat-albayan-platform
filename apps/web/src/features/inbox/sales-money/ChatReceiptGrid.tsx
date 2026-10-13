@@ -10,6 +10,8 @@ import { chatReceiptLabel, type ReceiptChoice } from './receipt';
 
 type Props = {
   sub: { id: string; student: { id: string } };
+  /** Messages already in the list: shown as picked, never copied again. */
+  picked: ReadonlySet<string>;
   onPicked: (choice: ReceiptChoice & { kind: 'chat' }) => void;
 };
 
@@ -17,7 +19,7 @@ type Props = {
  * «اختر صورة الإيصال من المحادثة»: the family's images / PDFs (newest first, as the API sends them);
  * an expired one is disabled. Picking copies it into the package's receipts (receipt-from-chat).
  */
-export function ChatReceiptGrid({ sub, onPicked }: Props) {
+export function ChatReceiptGrid({ sub, picked, onPicked }: Props) {
   const list = useQuery(chatReceiptsQuery(sub.student.id));
   const copy = useMutation({
     mutationFn: (r: SalesChatReceipt) => receiptFromChat({ subscriptionId: sub.id, messageId: r.message_id }),
@@ -36,11 +38,13 @@ export function ChatReceiptGrid({ sub, onPicked }: Props) {
             <button
               type="button"
               aria-label={chatReceiptLabel(r)}
+              aria-pressed={picked.has(r.message_id)}
               disabled={r.expired || copy.isPending}
-              onClick={() => copy.mutate(r)}
+              onClick={() => (picked.has(r.message_id) ? undefined : copy.mutate(r))}
               className={cn(
                 'grid w-full gap-1 rounded-sm border border-rule p-1 text-start',
                 r.expired ? 'cursor-not-allowed opacity-50' : 'hover:border-(--lapis)',
+                picked.has(r.message_id) && 'border-(--lapis)',
               )}
             >
               <ChatReceiptThumb studentId={sub.student.id} receipt={r} />
