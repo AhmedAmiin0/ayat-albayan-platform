@@ -7,6 +7,7 @@ import { LanguageRow } from '@/more/LanguageRow';
 import { SignOutButton } from '@/teacher/SignOutButton';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { ScreenScroll } from '@/ui/ScreenScroll';
 
 /** The classroom assistant's «المزيد»: «حسابي» (R-ACC-01), the appearance, the language and sign-out. */
 export function AssistantMoreScreen() {
@@ -17,12 +18,14 @@ export function AssistantMoreScreen() {
         subtitle={t.mobileRoles.assistantRole}
         trailing={<AccountHeaderAvatar href="/assistant/more/account" />}
       />
-      <View style={{ marginHorizontal: -16 }}>
-        <AccountRow href="/assistant/more/account" />
-      </View>
-      <AppearancePicker />
-      <LanguageRow />
-      <SignOutButton />
+      <ScreenScroll>
+        <View style={{ marginHorizontal: -16 }}>
+          <AccountRow href="/assistant/more/account" />
+        </View>
+        <AppearancePicker />
+        <LanguageRow />
+        <SignOutButton />
+      </ScreenScroll>
     </Screen>
   );
 }

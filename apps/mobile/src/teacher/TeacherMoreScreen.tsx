@@ -9,6 +9,7 @@ import { LanguageRow } from '@/more/LanguageRow';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { ScreenScroll } from '@/ui/ScreenScroll';
 import { useTeacherMe } from './queries';
 import { SignOutButton } from './SignOutButton';
 import { locale } from '@/lib/locale';
@@ -27,17 +28,19 @@ export function TeacherMoreScreen() {
         subtitle={me.data && teacherName(me.data, locale)}
         trailing={<AccountHeaderAvatar href="/teacher/more/account" />}
       />
-      <View style={{ marginHorizontal: -16 }}>
-        <AccountRow href="/teacher/more/account" />
-        <ListRow title={t.teacherNav.students} onPress={() => router.push('/teacher/more/students')} />
-        <ListRow title={t.teacherNav.payouts} onPress={() => router.push('/teacher/more/earnings')} />
-        <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/teacher/more/feedback')} />
-        <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/teacher/more/meetings')} />
-        <ListRow title={t.availability.title} onPress={() => router.push('/teacher/more/availability')} />
-      </View>
-      <AppearancePicker />
-      <LanguageRow />
-      <SignOutButton />
+      <ScreenScroll>
+        <View style={{ marginHorizontal: -16 }}>
+          <AccountRow href="/teacher/more/account" />
+          <ListRow title={t.teacherNav.students} onPress={() => router.push('/teacher/more/students')} />
+          <ListRow title={t.teacherNav.payouts} onPress={() => router.push('/teacher/more/earnings')} />
+          <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/teacher/more/feedback')} />
+          <ListRow title={t.mobileClassroom.meetingsRow} onPress={() => router.push('/teacher/more/meetings')} />
+          <ListRow title={t.availability.title} onPress={() => router.push('/teacher/more/availability')} />
+        </View>
+        <AppearancePicker />
+        <LanguageRow />
+        <SignOutButton />
+      </ScreenScroll>
     </Screen>
   );
 }

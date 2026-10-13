@@ -11,6 +11,7 @@ import { SignOutButton } from '@/teacher/SignOutButton';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { ScreenScroll } from '@/ui/ScreenScroll';
 
 const rows = () =>
   [
@@ -34,15 +35,17 @@ export function SalesMoreScreen({ can }: { can: Can }) {
         subtitle={t.mobileRoles.salesRole}
         trailing={<AccountHeaderAvatar href="/sales/more/account" />}
       />
-      <View style={{ marginHorizontal: -16 }}>
-        <AccountRow href="/sales/more/account" />
-        {allowedRows(can, rows()).map((r) => (
-          <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
-        ))}
-      </View>
-      <AppearancePicker />
-      <LanguageRow />
-      <SignOutButton />
+      <ScreenScroll>
+        <View style={{ marginHorizontal: -16 }}>
+          <AccountRow href="/sales/more/account" />
+          {allowedRows(can, rows()).map((r) => (
+            <ListRow key={r.href} title={r.title} onPress={() => router.push(r.href)} />
+          ))}
+        </View>
+        <AppearancePicker />
+        <LanguageRow />
+        <SignOutButton />
+      </ScreenScroll>
     </Screen>
   );
 }

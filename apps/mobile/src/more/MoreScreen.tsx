@@ -10,6 +10,7 @@ import { Button } from '@/ui/Button';
 import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { ScreenScroll } from '@/ui/ScreenScroll';
 import { AdminOpsSection } from './AdminOpsSection';
 import { AppearancePicker } from './AppearancePicker';
 import { ClassroomSection } from './ClassroomSection';
@@ -32,26 +33,28 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
   return (
     <Screen>
       <ScreenHeader title={t.mobile.more} trailing={<AccountHeaderAvatar href="/more/account" />} />
-      <View style={{ marginHorizontal: -16 }}>
-        {/* «حسابي» for every role (sales included: they share these tabs); the rest by permission. */}
-        <AccountRow href="/more/account" />
-        {/* Dynamic roles: each list shows only when the held role grants it. */}
-        {can('teachers.read') && <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />}
-        {can('applicants.read') && <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />}
-        {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
-        {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
-        {can('users.read') && <ListRow title={t.users.nav} onPress={() => router.push('/more/users')} />}
-      </View>
-      <SalesSection can={can} />
-      <MoneySection can={can} />
-      <AdminOpsSection can={can} />
-      <FinanceSection can={can} />
-      <ClassroomSection can={can} />
-      <AppearancePicker />
-      <LanguageRow />
-      <View style={{ alignItems: 'flex-start' }}>
-        <Button variant="ghost" label={t.auth.logout} onPress={logout} busy={leaving} />
-      </View>
+      <ScreenScroll>
+        <View style={{ marginHorizontal: -16 }}>
+          {/* «حسابي» for every role (sales included: they share these tabs); the rest by permission. */}
+          <AccountRow href="/more/account" />
+          {/* Dynamic roles: each list shows only when the held role grants it. */}
+          {can('teachers.read') && <ListRow title={t.nav.teachers} onPress={() => router.push('/more/teachers')} />}
+          {can('applicants.read') && <ListRow title={t.nav.jobApplicants} onPress={() => router.push('/more/job-applicants')} />}
+          {can('feedback.read') && <ListRow title={t.mobile.feedback.title} onPress={() => router.push('/more/feedback')} />}
+          {can('pricing.read') && <ListRow title={t.pricing.title} onPress={() => router.push('/more/pricing')} />}
+          {can('users.read') && <ListRow title={t.users.nav} onPress={() => router.push('/more/users')} />}
+        </View>
+        <SalesSection can={can} />
+        <MoneySection can={can} />
+        <AdminOpsSection can={can} />
+        <FinanceSection can={can} />
+        <ClassroomSection can={can} />
+        <AppearancePicker />
+        <LanguageRow />
+        <View style={{ alignItems: 'flex-start' }}>
+          <Button variant="ghost" label={t.auth.logout} onPress={logout} busy={leaving} />
+        </View>
+      </ScreenScroll>
     </Screen>
   );
 }
