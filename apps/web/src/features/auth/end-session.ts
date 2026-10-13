@@ -1,36 +1,53 @@
 import { supabase } from '@/lib/supabase';
 
-/** Longest one supabase signOut may take before this browser's session is dropped by hand. */
+/** Longest one sign-out step (revoking the token, then signing out locally) may take. */
 export const SIGN_OUT_TIMEOUT_MS = 3_000;
 
 /**
- * supabase.auth.signOut within SIGN_OUT_TIMEOUT_MS: true only when it answered without an error.
- * A hang (auth lock, dead network), a throw or an answer without its result all count as failed.
+ * Awaits `work` for at most SIGN_OUT_TIMEOUT_MS. Never throws: an { error } answer, a throw and a
+ * hang are all left behind, so only work that is harmless when it finishes later belongs here.
  */
-async function signOutWithin(): Promise<boolean> {
+async function settleWithin(work: () => Promise<unknown>): Promise<void> {
   let timer: ReturnType<typeof setTimeout> | undefined;
-  const timeout = new Promise<boolean>((resolve) => {
-    timer = setTimeout(() => resolve(false), SIGN_OUT_TIMEOUT_MS);
+  const timeout = new Promise<void>((resolve) => {
+    timer = setTimeout(resolve, SIGN_OUT_TIMEOUT_MS);
   });
   const call = (async () => {
     try {
-      const { error } = await supabase.auth.signOut();
-      return !error;
+      await work();
     } catch {
-      return false;
+      // the next step runs regardless
     }
   })();
   try {
-    return await Promise.race([call, timeout]);
+    await Promise.race([call, timeout]);
   } finally {
     clearTimeout(timer);
   }
 }
 
-/** Removes the stored session (the client's own storage key, read at runtime) from localStorage. */
-function dropStoredSession(): void {
+/** The client's own storage key, read at runtime (auth-js derives it from the project URL). */
+function storageKeyOf(): string | null {
   const key: unknown = Reflect.get(supabase.auth, 'storageKey');
-  if (typeof key !== 'string' || !key) return;
+  return typeof key === 'string' && key ? key : null;
+}
+
+/** The stored access token while it is still valid (auth-js keeps expires_at in seconds), else null. */
+function liveAccessToken(key: string): string | null {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(key) ?? 'null');
+    if (typeof stored !== 'object' || stored === null) return null;
+    if (!('access_token' in stored) || !('expires_at' in stored)) return null;
+    const { access_token: token, expires_at: expiresAt } = stored;
+    if (typeof token !== 'string' || typeof expiresAt !== 'number') return null;
+    return expiresAt * 1000 > Date.now() ? token : null;
+  } catch {
+    return null; // storage blocked or not JSON: nothing usable to revoke
+  }
+}
+
+/** Removes the stored session (and its user copy) from localStorage. */
+function dropStoredSession(key: string): void {
   try {
     localStorage.removeItem(key);
     localStorage.removeItem(`${key}-user`);
@@ -40,13 +57,21 @@ function dropStoredSession(): void {
 }
 
 /**
- * Ends this browser's session, always. With an expired token offline, auth-js answers signOut with
- * { error } and keeps the stored session (its refresh failed), so the browser would stay signed in;
- * on that error or a timeout the stored session is removed and signOut runs once more, which then
- * finds no session and tells the client's listeners SIGNED_OUT. Never throws; at most two timeouts.
+ * Ends this browser's session, always, and never anyone else's. supabase.auth.signOut is never
+ * handed a session: it refreshes an expired token first (retrying for ~25 s offline) and keeps the
+ * stored session on failure, and a call left behind at the timeout would finish later against
+ * whatever is stored then, possibly the next person's session, which it would revoke everywhere.
+ * So the stored token, while still valid, is revoked by itself (admin.signOut with that token: the
+ * same /logout auth-js sends, touching no storage, so if it finishes late it can only sign out the
+ * user who asked to leave); the stored session is then removed, and signOut finds none: it makes no
+ * request, clears the rest and tells the client's listeners SIGNED_OUT. At most two timeouts.
  */
 export async function endSession(): Promise<void> {
-  if (await signOutWithin()) return;
-  dropStoredSession();
-  await signOutWithin();
+  const key = storageKeyOf();
+  if (key) {
+    const token = liveAccessToken(key);
+    if (token) await settleWithin(() => supabase.auth.admin.signOut(token));
+    dropStoredSession(key);
+  }
+  await settleWithin(() => supabase.auth.signOut());
 }

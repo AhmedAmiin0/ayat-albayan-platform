@@ -53,7 +53,7 @@ describe('the /admin guard', () => {
     expect(queryClient.getQueryData(['auth', 'me'])).toBeUndefined();
   });
 
-  it('still goes to /login, signed out by hand, when supabase cannot sign out', async () => {
+  it('still goes to /login, the stored session removed, when supabase cannot sign out', async () => {
     localStorage.setItem('sb-test-auth-token', '{}');
     auth.signOut.mockResolvedValueOnce({ error: new Error('Failed to fetch') });
     await expect(outcome(signedInAs(), '/admin/students')).resolves.toBe('/login');
