@@ -75,6 +75,7 @@ test.describe('sales meetings', () => {
     const cancel = await sales.request.post(`${API}/meetings/${created.id}/cancel`, { headers: await bearer(sales) });
     expect(cancel.status()).toBe(204);
     expect((await sales.request.get(`${API}/public/meetings/${token}`)).status()).toBe(404);
-    await expect(sales.getByText(ar.meetingInvites.list.title).first()).toBeVisible();
+    // The page heading: on a phone the same word in the closed «القائمة» sheet comes first and is hidden.
+    await expect(sales.getByRole('heading', { level: 1, name: ar.meetingInvites.list.title })).toBeVisible();
   });
 });
