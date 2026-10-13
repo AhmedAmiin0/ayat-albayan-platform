@@ -6,6 +6,7 @@ import { quietExpectedErrors, renderFailingSection } from './app-error.test-util
 vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 vi.mock('@/features/auth/sign-in', () => ({ signOut: vi.fn(async () => undefined) }));
+vi.mock('@/features/auth/end-session', () => ({ hasStoredSession: () => true }));
 
 describe('the app error screen, English', () => {
   it('reads in English', async () => {

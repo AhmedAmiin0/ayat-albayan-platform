@@ -46,6 +46,19 @@ function liveAccessToken(key: string): string | null {
   }
 }
 
+/**
+ * Is a session stored in this browser? Read from storage, no network (so it answers even while
+ * /auth/me or the token refresh is failing): the error screen offers sign-out only then.
+ */
+export function hasStoredSession(): boolean {
+  const key = storageKeyOf();
+  try {
+    return key !== null && localStorage.getItem(key) !== null;
+  } catch {
+    return false; // storage blocked: nothing was stored there either
+  }
+}
+
 /** Removes the stored session (and its user copy) from localStorage. */
 function dropStoredSession(key: string): void {
   try {

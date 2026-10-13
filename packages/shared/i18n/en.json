@@ -20,6 +20,7 @@
     "appError": {
       "title": "This page couldn't open",
       "body": "Something went wrong while loading this page. Try again in a moment; if it keeps happening, sign out and sign in again.",
+      "bodyPublic": "Something went wrong while loading this page. Try again in a moment.",
       "retry": "Try again",
       "retrying": "Trying again…",
       "leaving": "Signing out…"

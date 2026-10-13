@@ -4,6 +4,7 @@ import { redirect } from '@tanstack/react-router';
 import { apiFetch } from '@/lib/api';
 import { forgetWebPush } from '@/features/notifications/web-push';
 import { supabase } from '@/lib/supabase';
+import { endSession } from './end-session';
 
 export interface Me {
   id: string;
@@ -35,7 +36,7 @@ export const meQuery = queryOptions({
     } catch (error) {
       if (isAccountDisabled(error)) {
         await forgetWebPush();
-        await supabase.auth.signOut();
+        await endSession(); // bounded, and always clears this browser's session
       }
       throw error;
     }

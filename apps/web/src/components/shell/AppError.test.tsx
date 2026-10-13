@@ -6,11 +6,14 @@ import { LOGIN_TEXT, PAGE_TEXT, quietExpectedErrors, renderFailingSection } from
 const E = ar.auth.appError;
 const signOut = vi.hoisted(() => vi.fn(async () => undefined));
 vi.mock('@/features/auth/sign-in', () => ({ signOut }));
+const stored = vi.hoisted(() => ({ session: true }));
+vi.mock('@/features/auth/end-session', () => ({ hasStoredSession: () => stored.session }));
 
 const apiDown = (): Promise<void> => Promise.reject(new Error('API 500'));
 
 beforeEach(() => {
   signOut.mockClear();
+  stored.session = true;
   quietExpectedErrors();
 });
 
@@ -48,5 +51,14 @@ describe('the app error screen (root errorComponent)', () => {
     expect(await screen.findByText(LOGIN_TEXT)).toBeTruthy();
     expect(signOut).toHaveBeenCalledWith(queryClient);
     expect(screen.queryByRole('heading', { name: E.title })).toBeNull();
+  });
+
+  it('a public page (no stored session): retry only, and no word about signing in', async () => {
+    stored.session = false;
+    renderFailingSection(apiDown);
+    expect(await screen.findByRole('heading', { name: E.title })).toBeTruthy();
+    expect(screen.getByRole('alert').textContent).toBe(E.bodyPublic);
+    expect(screen.getByRole('button', { name: E.retry })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: ar.auth.logout })).toBeNull();
   });
 });

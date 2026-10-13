@@ -5,6 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Logo } from '@/components/ui/mark';
+import { hasStoredSession } from '@/features/auth/end-session';
 import { signOut } from '@/features/auth/sign-in';
 import { t } from '@/lib/i18n';
 import { LanguageSwitch } from './LanguageSwitch';
@@ -16,13 +17,15 @@ type Busy = 'retry' | 'logout' | null;
  * The app's one error screen (the root route's errorComponent): a section guard or page that fails
  * with anything but a redirect (e.g. /auth/me down) lands here, never on the router's built-in
  * English box. «إعادة المحاولة» reloads the routes; «تسجيل الخروج» always ends this browser's
- * session (the bounded signOut) and opens /login.
+ * session (the bounded signOut) and opens /login. It shows only while a session is stored: the
+ * public pages (/join, /s, /m, /feedback) have no account to leave, so they get retry alone.
  */
 export function AppError({ reset }: ErrorComponentProps) {
   const router = useRouter();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [busy, setBusy] = useState<Busy>(null);
+  const signedIn = hasStoredSession();
 
   const run = async (kind: Exclude<Busy, null>, work: () => Promise<void>) => {
     setBusy(kind);
@@ -48,14 +51,16 @@ export function AppError({ reset }: ErrorComponentProps) {
           <LanguageSwitch />
         </div>
         <Cartouche>{E.title}</Cartouche>
-        <FormAlert>{E.body}</FormAlert>
+        <FormAlert>{signedIn ? E.body : E.bodyPublic}</FormAlert>
         <div className="flex flex-wrap gap-3">
           <Button disabled={busy !== null} onClick={() => void retry()}>
             {busy === 'retry' ? E.retrying : E.retry}
           </Button>
-          <Button variant="secondary" disabled={busy !== null} onClick={() => void logout()}>
-            {busy === 'logout' ? E.leaving : t.auth.logout}
-          </Button>
+          {signedIn && (
+            <Button variant="secondary" disabled={busy !== null} onClick={() => void logout()}>
+              {busy === 'logout' ? E.leaving : t.auth.logout}
+            </Button>
+          )}
         </div>
       </div>
     </main>

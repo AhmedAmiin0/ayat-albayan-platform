@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { endSession, SIGN_OUT_TIMEOUT_MS } from './end-session';
+import { endSession, hasStoredSession, SIGN_OUT_TIMEOUT_MS } from './end-session';
 
 const KEY = 'sb-test-auth-token';
 const auth = vi.hoisted(() => ({
@@ -102,5 +102,20 @@ describe('endSession always clears this browser’s session', () => {
     expect(auth.admin.signOut).not.toHaveBeenCalled();
     expect(auth.signOut).toHaveBeenCalledTimes(1);
     expect(localStorage.getItem(KEY)).not.toBeNull();
+  });
+});
+
+describe('hasStoredSession (the error screen offers sign-out only then)', () => {
+  it('true while a session is stored, even an expired one; false once it is gone', async () => {
+    stored(inSeconds(-60));
+    expect(hasStoredSession()).toBe(true);
+    await endSession();
+    expect(hasStoredSession()).toBe(false);
+  });
+
+  it('false without the client key (no network is needed to answer)', () => {
+    stored(inSeconds(3600));
+    auth.storageKey = undefined;
+    expect(hasStoredSession()).toBe(false);
   });
 });
