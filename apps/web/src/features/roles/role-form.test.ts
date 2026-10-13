@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import type { RoleView } from './api';
-import { groupState, roleBody, roleForm, toggleGroup, togglePermission } from './role-form';
+import { fixedGrantsOf, groupState, resettableRole, roleBody, roleForm, toggleGroup, togglePermission } from './role-form';
 
 const role = (over: Partial<RoleView> = {}): RoleView => ({
   id: 'r1',
@@ -47,5 +47,22 @@ describe('role form', () => {
     });
     expect(roleBody(form, { creating: false, fixedGrants: true })).toEqual({ ok: true, body: { name_ar: 'محاسب', name_en: null } });
     expect(roleBody({ ...form, name_ar: '  ' }, { creating: true, fixedGrants: false })).toEqual({ ok: false, error: 'name_required' });
+  });
+
+  it('only a system teacher / sales / assistant role can be reset', () => {
+    const sales = role({ key: 'sales', is_system: true, base_role: 'sales' });
+    expect(resettableRole(sales)).toBe(sales);
+    expect(resettableRole(role({ key: 'admin', is_system: true }))).toBeNull();
+    expect(resettableRole(role())).toBeNull();
+    expect(resettableRole(null)).toBeNull();
+  });
+
+  it('fixes the grants of the system admin, guardian and student roles only', () => {
+    expect(fixedGrantsOf(role({ is_system: true, key: 'admin' }))).toBe('admin');
+    expect(fixedGrantsOf(role({ is_system: true, key: 'guardian', base_role: 'guardian' }))).toBe('portal');
+    expect(fixedGrantsOf(role({ is_system: true, key: 'student', base_role: 'student' }))).toBe('portal');
+    expect(fixedGrantsOf(role({ is_system: true, key: 'sales', base_role: 'sales' }))).toBeNull();
+    expect(fixedGrantsOf(role())).toBeNull();
+    expect(fixedGrantsOf(null)).toBeNull();
   });
 });

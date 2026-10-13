@@ -2,6 +2,7 @@ import type { SalesPaymentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { useTreeBase } from '@/nav/tree-base';
 import { money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
@@ -15,6 +16,7 @@ import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; onDone: () => void }) {
   const { color } = useTheme();
   const m = t.salesMoney;
+  const more = useTreeBase() === '/sales' ? '/sales/more' : '/more/sales';
   return (
     <View style={{ gap: 12 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -34,7 +36,7 @@ export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; o
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}>
         {`${payment.student.name} · ${money(payment.amount, payment.currency)}`}
       </AppText>
-      <Button variant="secondary" label={m.openMyPayments} onPress={() => router.push('/more/sales/earnings?view=payments')} />
+      <Button variant="secondary" label={m.openMyPayments} onPress={() => router.push(`${more}/earnings?view=payments`)} />
       <Button label={m.done} onPress={onDone} />
     </View>
   );

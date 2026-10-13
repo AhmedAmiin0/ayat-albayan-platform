@@ -5,16 +5,20 @@ import { instantDay, money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Ltr } from '@/ui/Ltr';
-import { hasReceipt } from './receipt-file';
+import { AttachmentsViewer } from './AttachmentsViewer';
+import { hasAttachments } from './receipt-file';
 import { ReceiptViewer } from './ReceiptViewer';
 
 /**
  * One payment or refund: the amount (refunds struck in saffron-free ink with the «استرداد» word),
- * student + code, method and day, who recorded it, then the receipt if there is one.
+ * student + code, method and day, who recorded it, then its «المرفقات» (bank, or a stored receipt), the booking invoice, or «بلا إيصال».
  */
 export function PaymentItem({ payment }: { payment: PaymentView }) {
   const { color } = useTheme();
   const refund = payment.kind === 'refund';
+  // The booking invoice standing in for a receipt has its own viewer; any stored file is in «المرفقات».
+  const invoiceOnly = payment.invoice_id !== null && payment.receipt_path === null;
+  const files = hasAttachments(payment);
   const line = [
     t.enums.paymentMethod[payment.method],
     instantDay(payment.paid_at),
@@ -36,11 +40,9 @@ export function PaymentItem({ payment }: { payment: PaymentView }) {
       <Ltr style={{ ...small, alignSelf: 'flex-start' }}>{payment.student.code}</Ltr>
       <AppText style={small}>{line}</AppText>
       {payment.note ? <AppText style={small}>{payment.note}</AppText> : null}
-      {hasReceipt(payment) ? (
-        <ReceiptViewer payment={payment} />
-      ) : (
-        <AppText style={{ ...small, color: color.ink3 }}>{t.mobileMoney.noReceipt}</AppText>
-      )}
+      {invoiceOnly ? <ReceiptViewer payment={payment} /> : null}
+      {files ? <AttachmentsViewer path={`/payments/${payment.id}/attachments`} name={payment.student.name} /> : null}
+      {!files && !invoiceOnly ? <AppText style={{ ...small, color: color.ink3 }}>{t.mobileMoney.noReceipt}</AppText> : null}
     </View>
   );
 }

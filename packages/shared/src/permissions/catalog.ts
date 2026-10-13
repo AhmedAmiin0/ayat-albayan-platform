@@ -70,3 +70,14 @@ export function permissionGroups(): PermissionGroup[] {
     keys: ROWS.filter((r) => r.area === area).map((r) => r.key),
   }));
 }
+
+/**
+ * The built-in roles whose grants the admin may switch off (or on) and restore to defaultGrantsOf with
+ * «استعادة الافتراضي» (owner 2026-10-12). The system admin stays fixed; self.* keys are never grants.
+ */
+export const EDITABLE_SYSTEM_ROLES = ['teacher', 'assistant', 'sales'] as const satisfies readonly UserRole[];
+export type EditableSystemRole = (typeof EDITABLE_SYSTEM_ROLES)[number];
+
+export function isEditableSystemRole(key: string): key is EditableSystemRole {
+  return EDITABLE_SYSTEM_ROLES.some((r) => r === key);
+}

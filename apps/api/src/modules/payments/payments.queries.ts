@@ -5,6 +5,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { applySort } from '../../common/list-sort';
 import type { StudentRef } from '../subscriptions/subscriptions.queries';
 import { readAll } from '../scheduling/read-all';
+import { badRequest } from '../scheduling/errors';
 import { dbError, type Page } from '../teachers/http';
 import { filtered, PAYMENT_SORT, type PaymentFilter } from './payments.list-query';
 
@@ -91,6 +92,8 @@ export class PaymentsQueries {
 
   async update(id: string, patch: TablesUpdate<'payments'>): Promise<PaymentRow> {
     const { data, error } = await this.db.from('payments').update(patch).eq('id', id).select(SELECT).single();
+    // The backstop of migration 432: a payment with «المرفقات» stays a bank transfer.
+    if (error?.code === '23514' && error.message.includes('attachments')) throw badRequest('attachments_not_allowed');
     if (error) throw dbError(error);
     return data;
   }

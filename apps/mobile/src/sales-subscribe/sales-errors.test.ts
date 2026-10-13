@@ -12,6 +12,16 @@ test('the API codes in her words', () => {
   expect(salesErrorText(new ApiError(400, { code: 'discount_not_allowed' }))).toBe(t.salesMoney.error.discount_not_allowed);
 });
 
+test('the start-date and attachment codes, also as a validation issue', () => {
+  for (const code of ['start_date_not_allowed', 'start_date_past', 'start_date_too_old', 'attachment_path', 'attachment_type', 'attachment_in_use'] as const) {
+    expect(salesErrorText(new ApiError(400, { code }))).toBe(t.salesMoney.error[code]);
+  }
+  const issues = [{ path: 'x', message: 'nope' }, { path: 'attachments', message: 'too_many_attachments' }];
+  expect(salesErrorText(new ApiError(400, { message: 'validation_failed', issues }))).toBe(
+    t.salesMoney.error.too_many_attachments,
+  );
+});
+
 test('currency_mismatch names the package currency from the body', () => {
   const text = salesErrorText(new ApiError(400, { code: 'currency_mismatch', currency: 'SAR' }));
   expect(text).toBe(t.salesMoney.error.currency_mismatch.replace('{currency}', 'SAR'));

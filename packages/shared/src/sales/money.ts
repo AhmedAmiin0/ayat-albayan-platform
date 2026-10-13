@@ -1,12 +1,14 @@
 import { z } from 'zod';
 import { localDate } from '../schemas/scheduling.js';
 import { optionalText, phoneE164 } from '../schemas/common.js';
-import { currencyIso, moneyAmount, pastInstant, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
+import { currencyIso, moneyAmount, pastInstant, paymentAttachmentPaths, receiptUploadSchema, subscriptionPricingSchema } from '../money/schemas.js';
 
 // The salesperson's money writes from the chat (owner 2026-10-12, R-ASST-01/04, docs/16): she subscribes
 // a student she brought and records the family's bank transfer with its receipt. Same rules as the admin's
 // commands, narrower: no typed price ever, no notes, no refund, no invoice, the method is always 'bank',
-// the receipt is required and every write carries its clientRequestId (rule 8). The API narrows further
+// every write carries its clientRequestId (rule 8). Owner 2026-10-12 (docs/16 rows 24–25): the receipt is
+// OPTIONAL now (old students have none) and the files go in `attachments` (0..5); `startsOn` is honoured only
+// with subscriptions.set_start_date (salesStartDate), a past day only with `alreadyStarted`. The API narrows further
 // (docs/16 rows 20–22): only the site's discount pills (403 discount_not_allowed) and the package currency
 // (400 currency_mismatch; `currency` stays for client compatibility). Strict objects: a field
 // the admin's form has but hers does not (kind, method, invoiceId…) is a 400, never silently dropped.
@@ -18,17 +20,22 @@ export const salesQuoteSchema = z.strictObject({ studentId: z.uuid(), pricing: s
 export const salesSubscriptionCreateSchema = z.strictObject({
   studentId: z.uuid(),
   pricing: subscriptionPricingSchema,
-  startsOn: localDate,
+  /** Omitted = the default day (today, Riyadh). */
+  startsOn: localDate.optional(),
+  /** «بدأ الاشتراك سابقًا»: allows a past startsOn (subscriptions.set_start_date only). */
+  alreadyStarted: z.boolean().optional(),
   clientRequestId: z.uuid(),
 });
 
-/** POST /sales/payments: one bank transfer, receipt required (from the chat or uploaded). */
+/** POST /sales/payments: one bank transfer; its files (from the chat or uploaded) optional, in `attachments`. */
 export const salesPaymentCreateSchema = z.strictObject({
   subscriptionId: z.uuid(),
   amount: moneyAmount,
   currency: currencyIso,
   paidAt: pastInstant,
-  receiptPath: z.string().min(1),
+  /** Before 2026-10-12 clients sent the one receipt here; still accepted, stored as before. */
+  receiptPath: z.string().min(1).nullish(),
+  attachments: paymentAttachmentPaths.optional(),
   note: optionalText,
   clientRequestId: z.uuid(),
 });

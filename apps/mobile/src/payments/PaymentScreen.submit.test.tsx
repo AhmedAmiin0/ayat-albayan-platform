@@ -62,7 +62,7 @@ test('header names the student; the package, what is paid of it, and its currenc
   expect(screen.queryByRole('radio', { checked: true })).toBeNull();
 });
 
-test('photo → signed upload → POST /payments with its path → back; the list showed it at once', async () => {
+test('bank: a photo in «المرفقات» → signed upload → POST /payments with it in attachments → back; the list showed it at once', async () => {
   let answer: (v: unknown) => void = () => undefined;
   mockApiSend.mockImplementation((_method: string, path: string) =>
     path === '/payments/receipt-upload-url' ? Promise.resolve(signed) : new Promise((r) => (answer = r)),
@@ -73,8 +73,8 @@ test('photo → signed upload → POST /payments with its path → back; the lis
   await renderWithQuery(<PaymentScreen />, client);
   await fill('١٤٥');
   await fireEvent.press(screen.getByRole('button', { name: m.takePhoto }));
-  expect(await screen.findByLabelText(t.payments.receipt)).toBeTruthy();
-  expect(screen.getByRole('button', { name: m.retake })).toBeTruthy();
+  expect(await screen.findByLabelText(t.payments.attachmentN.replace('{n}', '1'))).toBeTruthy();
+  expect(screen.queryByText(t.payments.receipt)).toBeNull();
 
   await fireEvent.press(screen.getByRole('button', { name: m.record }));
   await waitFor(() => expect(mockApiSend).toHaveBeenCalledTimes(2));
@@ -94,7 +94,7 @@ test('photo → signed upload → POST /payments with its path → back; the lis
     currency: 'SAR',
     method: 'bank',
     paidAt: expect.any(String),
-    receiptPath: signed.path,
+    attachments: [signed.path],
   });
   answer(payment({ id: 'p2' }));
   await waitFor(() => expect(mockBack).toHaveBeenCalled());

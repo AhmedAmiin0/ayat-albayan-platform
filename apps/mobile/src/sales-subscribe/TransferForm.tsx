@@ -20,7 +20,7 @@ export interface TransferFormProps {
 }
 
 /**
- * The bank transfer for one package: receipt (required), amount (the due, prefilled) in the
+ * The bank transfer for one package: «المرفقات» (optional, up to 5), amount (the due, prefilled) in the
  * package currency (shown, never asked), day, note. Errors show once a save was tried; a refused save keeps everything entered.
  */
 export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
@@ -41,9 +41,8 @@ export function TransferForm({ sub, phone, onDone }: TransferFormProps) {
     <View style={{ gap: 20 }}>
       <SalesReceiptField
         target={{ studentId: sub.student.id, subscriptionId: sub.id }}
-        value={draft.receipt}
-        onChange={(receipt) => set({ receipt })}
-        error={errors.receipt}
+        value={draft.attachments}
+        onChange={(attachments) => set({ attachments })}
       />
       <AmountField
         value={draft.amountText}

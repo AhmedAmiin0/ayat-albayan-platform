@@ -51,7 +51,7 @@ test('two owed packages: pick one → photo → sales upload once, one key acros
   await fireEvent.press(await screen.findByRole('radio', { name: new RegExp('ريم') }));
   expect(screen.getByLabelText(t.payments.amount)).toHaveProp('value', '180');
   await fireEvent.press(screen.getByRole('button', { name: m.receiptLibrary }));
-  expect(await screen.findByText(m.receiptChosen)).toBeTruthy();
+  expect(await screen.findByText(m.attachmentN.replace('{n}', '1'))).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: m.saveTransfer }));
   expect(await screen.findByText(m.error.currency_mismatch.replace('{currency}', 'SAR'))).toBeTruthy();
@@ -63,8 +63,9 @@ test('two owed packages: pick one → photo → sales upload once, one key acros
   ]);
   expect(mockUpload).toHaveBeenCalledTimes(1);
   expect(sent('/payments/receipt-upload-url')).toHaveLength(0);
-  const [first, second] = sent('/sales/payments').map((c) => c[2] as { clientRequestId: string; receiptPath: string });
-  expect(first?.receiptPath).toBe(signed.path);
+  const [first, second] = sent('/sales/payments').map((c) => c[2] as { clientRequestId: string; attachments: string[] });
+  expect(first?.attachments).toEqual([signed.path]);
+  expect(first).not.toHaveProperty('receiptPath');
   expect(second?.clientRequestId).toBe(first?.clientRequestId);
 });
 

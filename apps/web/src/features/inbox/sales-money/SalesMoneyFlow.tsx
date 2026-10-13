@@ -18,7 +18,7 @@ export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscrip
 
 /**
  * The money flow of a sales chat: step 1 «اشتراك جديد» (calculator → saved at the API's price), step 2
- * «سجّل التحويل البنكي» (receipt required) for the new package or one still owed, then the result.
+ * «سجّل التحويل البنكي» (attachments optional) for the new package or one still owed, then the result.
  */
 export function SalesMoneyFlow({ start, students, onClose }: Props) {
   const [step, setStep] = useState<Step>(start === 'subscribe' ? { kind: 'subscribe' } : { kind: 'transfer', sub: null });

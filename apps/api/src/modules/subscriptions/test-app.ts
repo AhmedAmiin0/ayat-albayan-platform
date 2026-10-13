@@ -5,12 +5,14 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
+import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { SettingsService } from '../../common/settings/settings.service';
 import { StorageService } from '../../common/storage/storage.service';
 import { ExpensesQueries } from '../expenses/expenses.queries';
 import { FxService } from '../fx/fx.service';
 import { InvoicesQueries } from '../invoices/invoices.queries';
+import { PaymentAttachmentsQueries } from '../payments/payment-attachments.queries';
 import { PaymentsQueries } from '../payments/payments.queries';
 import { PayoutsQueries } from '../payouts/payouts.queries';
 import { CorrectionsQueries } from '../teacher-earnings/corrections.queries';
@@ -47,11 +49,11 @@ const verify: TokenVerifier = async (token) => {
 export type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE';
 export type InjectArgs = { method: Method; url: string; token?: 'admin' | 'teacher' | 'salesA' | 'salesB'; body?: object };
 
-/** Boots AppModule with the mocks; `call` defaults to the admin token. */
-export async function moneyApp() {
+/** Boots AppModule with the mocks; `call` defaults to the admin token. `resolver`: e.g. a role minus one key. */
+export async function moneyApp(resolver: PermissionResolver = systemResolver) {
   const m = mocks();
   const mod = await Test.createTestingModule({ imports: [AppModule] })
-    .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
+    .overrideProvider(PERMISSION_RESOLVER).useValue(resolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
     .overrideProvider(SubscriptionsQueries).useValue(m.subs)
     .overrideProvider(BalanceQueries).useValue(m.balances)
     .overrideProvider(LeadConversion).useValue(m.leads)
@@ -60,6 +62,7 @@ export async function moneyApp() {
     .overrideProvider(AlertsQueries).useValue(m.alerts)
     .overrideProvider(AdminTasksQueries).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)
+    .overrideProvider(PaymentAttachmentsQueries).useValue(m.attachments)
     .overrideProvider(PayoutsQueries).useValue(m.payouts)
     .overrideProvider(EarningsQueries).useValue(m.earnings)
     .overrideProvider(CorrectionsQueries).useValue(m.corrections)

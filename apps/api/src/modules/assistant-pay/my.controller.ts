@@ -1,8 +1,9 @@
-import type { MyEarnings, MyPaymentRow, MyStudentRow } from '@ab/shared';
-import { Controller, Get } from '@nestjs/common';
+import type { MyEarnings, MyPaymentRow, MyStudentRow, PaymentAttachmentView } from '@ab/shared';
+import { Controller, Get, Param, ParseUUIDPipe } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { PaymentAttachments } from '../payments/payment-attachments.service';
 import { MyService } from './my.service';
 
 /**
@@ -13,7 +14,10 @@ import { MyService } from './my.service';
 @ApiBearerAuth()
 @Controller('sales/me')
 export class MyController {
-  constructor(private readonly my: MyService) {}
+  constructor(
+    private readonly my: MyService,
+    private readonly attachments: PaymentAttachments,
+  ) {}
 
   @Get('students')
   @Permissions('self.sales_students')
@@ -31,5 +35,12 @@ export class MyController {
   @Permissions('self.sales_payments')
   payments(@CurrentUser() user: AuthUser): Promise<MyPaymentRow[]> {
     return this.my.payments(user);
+  }
+
+  /** «المرفقات» of a payment she recorded (recorded_by = her), else 404 payment_not_found. */
+  @Get('payments/:id/attachments')
+  @Permissions('self.sales_payments')
+  paymentAttachments(@Param('id', ParseUUIDPipe) id: string, @CurrentUser() user: AuthUser): Promise<PaymentAttachmentView[]> {
+    return this.attachments.ownViews(id, user.id);
   }
 }

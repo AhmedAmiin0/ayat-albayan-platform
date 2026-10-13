@@ -3,6 +3,7 @@ import {
   paymentUpdateSchema,
   receiptUploadSchema,
   uploadMaxBytes,
+  type PaymentAttachmentView,
   type PaymentView,
   type SignedDownload,
   type SignedUpload,
@@ -60,6 +61,13 @@ export class PaymentsController {
   @Permissions('payments.read')
   receipt(@Param('id', ParseUUIDPipe) id: string): Promise<SignedDownload> {
     return this.payments.receipt(id);
+  }
+
+  /** «المرفقات»: the legacy receipt first (id 'receipt'), then the files; signed for 1 h. */
+  @Get(':id/attachments')
+  @Permissions('payments.read')
+  attachments(@Param('id', ParseUUIDPipe) id: string): Promise<PaymentAttachmentView[]> {
+    return this.payments.attachments(id);
   }
 
   @Patch(':id')

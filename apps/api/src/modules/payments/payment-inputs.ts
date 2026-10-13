@@ -4,7 +4,8 @@ import { FxService } from '../fx/fx.service';
 import { InvoicesService } from '../invoices/invoices.service';
 import { badRequest, errorCode } from '../scheduling/errors';
 import type { PaymentRow, PaymentSubscription } from './payments.queries';
-import { ReceiptsService } from './receipts.service';
+import { PaymentFiles } from './payment-files';
+import type { ReceiptsService } from './receipts.service';
 
 export type Converted = {
   amount: number;
@@ -17,15 +18,19 @@ export type Converted = {
 /**
  * What a payment needs besides its row (owner, 2026-10-05): an amount sent in another currency
  * converted to the package's at the rate in force at paid_at (400 fx_unavailable when there is
- * none), a booking invoice used as the receipt (it must be one of the student's), and the receipts.
+ * none), a booking invoice used as the receipt (it must be one of the student's), and its files.
  */
 @Injectable()
 export class PaymentInputs {
   constructor(
     private readonly fx: FxService,
     private readonly invoices: InvoicesService,
-    readonly receipts: ReceiptsService,
+    readonly files: PaymentFiles,
   ) {}
+
+  get receipts(): ReceiptsService {
+    return this.files.receipts;
+  }
 
   async convert(input: PaymentCreate, sub: PaymentSubscription): Promise<Converted> {
     if (input.currency === sub.currency)

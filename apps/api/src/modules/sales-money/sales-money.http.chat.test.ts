@@ -43,12 +43,14 @@ describe('«اختر صورة الإيصال من المحادثة»: only her s
     expect(other.statusCode).toBe(404);
   });
 
-  it('copy: server-side into receipts/{subscription}/wa-{message}.jpg, the path to send with the payment', async () => {
+  it('copy: server-side into receipts/{subscription}/wa-{message}-{uuid}.jpg, a new object per pick', async () => {
     const res = await call({ method: 'POST', url: '/sales/payments/receipt-from-chat', token: 'salesA', body: COPY });
     expect(res.statusCode).toBe(200);
-    const path = `${SUB_ID}/wa-${MSG}.jpg`;
-    expect(res.json()).toEqual({ receipt_path: path });
+    const path: string = res.json().receipt_path;
+    expect(path).toMatch(new RegExp(`^${SUB_ID}/wa-${MSG}-[0-9a-f-]{36}\\.jpg$`));
     expect(m.storage.copy).toHaveBeenCalledWith({ from: { bucket: 'wa-media', path: `${MSG}.jpg` }, to: { bucket: 'receipts', path } });
+    const again = await call({ method: 'POST', url: '/sales/payments/receipt-from-chat', token: 'salesA', body: COPY });
+    expect(again.json().receipt_path).not.toBe(path);
   });
 
   it('copy: a message of another family’s chat → 404 and nothing copied', async () => {
@@ -62,6 +64,6 @@ describe('«اختر صورة الإيصال من المحادثة»: only her s
     m.storage.info.mockResolvedValue({ size: 500 * 1024 * 1024, contentType: 'image/jpeg' });
     const res = await call({ method: 'POST', url: '/sales/payments/receipt-from-chat', token: 'salesA', body: COPY });
     expect([res.statusCode, res.json().code]).toEqual([400, 'receipt_too_large']);
-    expect(m.storage.remove).toHaveBeenCalledWith({ bucket: 'receipts', path: `${SUB_ID}/wa-${MSG}.jpg` });
+    expect(m.storage.remove).toHaveBeenCalledWith({ bucket: 'receipts', path: expect.stringMatching(new RegExp(`^${SUB_ID}/wa-${MSG}-`)) });
   });
 });

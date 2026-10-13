@@ -11,7 +11,8 @@ export const RECEIPT = `${SUB_ID}/0f0e0d0c-0000-4000-8000-000000000001.jpg`;
 export const OWN_A = { leadIds: [], guardianIds: ['g1'], studentIds: [STUDENT_ID], phones: [FAMILY_PHONE] };
 export const NONE = { leadIds: [], guardianIds: [], studentIds: [], phones: [] };
 export const PAY = { subscriptionId: SUB_ID, amount: 145, currency: 'SAR', paidAt: '2026-10-11T09:00:00Z', receiptPath: RECEIPT, clientRequestId: REQ };
-export const CREATE = { studentId: STUDENT_ID, pricing: { tier: 'weekly' }, startsOn: '2026-10-12', clientRequestId: REQ };
+/** No startsOn: the default day (today, Riyadh); explicit days are in sales-money.http.start*.test.ts. */
+export const CREATE = { studentId: STUDENT_ID, pricing: { tier: 'weekly' }, clientRequestId: REQ };
 
 /** salesA owns STUDENT_ID (her family, +966551110000); salesB owns nothing; the student is still in trial. */
 export function salesDefaults(m: Mocks): void {

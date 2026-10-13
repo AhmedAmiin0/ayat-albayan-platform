@@ -1,4 +1,4 @@
-import { permissionGroups, type Permission, type RoleCreate, type RoleUpdate, type RoleView, type StaffRole } from '@ab/shared';
+import { isEditableSystemRole, permissionGroups, type Permission, type RoleCreate, type RoleUpdate, type RoleView, type StaffRole } from '@ab/shared';
 
 // The role dialog's state and its pure edits: one checkbox per permission, «تحديد الكل» per area.
 
@@ -55,4 +55,16 @@ export function roleBody(form: RoleForm, input: { creating: boolean; fixedGrants
   const name_en = form.name_en.trim() || null;
   if (input.creating) return { ok: true, body: { name_ar, name_en, base_role: form.base_role, permissions: form.permissions } };
   return { ok: true, body: input.fixedGrants ? { name_ar, name_en } : { name_ar, name_en, permissions: form.permissions } };
+}
+
+/** A system teacher / sales / assistant role: editable, with «استعادة الافتراضي»; else null. */
+export function resettableRole(role: RoleView | null): RoleView | null {
+  return role?.is_system === true && isEditableSystemRole(role.key) ? role : null;
+}
+
+/** A system admin / guardian / student role: its grants are fixed, the dialog sends the names only. */
+export function fixedGrantsOf(role: RoleView | null): 'admin' | 'portal' | null {
+  if (role?.is_system !== true) return null;
+  if (role.key === 'admin') return 'admin';
+  return role.key === 'guardian' || role.key === 'student' ? 'portal' : null;
 }

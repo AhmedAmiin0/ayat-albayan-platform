@@ -15,18 +15,22 @@ export interface StartDayPickerProps {
   day: string;
   /** The earliest day allowed now (startMins): never before it, nothing is retroactive. */
   min: string;
+  /** The latest day allowed (YYYY-MM-DD); none = open-ended. */
+  max?: string | undefined;
   onChange: (day: string) => void;
   error?: string | undefined;
 }
 
 /** A start day without typing (rule 6, no date-picker dependency): the day, then a day or a month back and forward. */
-export function StartDayPicker({ label, day, min, onChange, error }: StartDayPickerProps) {
+export function StartDayPicker({ label, day, min, max, onChange, error }: StartDayPickerProps) {
   const { color } = useTheme();
   const m = t.mobileSalesMoney;
   const step = (s: { days?: number; months?: number }) => {
     const next = shiftDay(day, s);
-    onChange(next < min ? min : next);
+    const capped = max !== undefined && next > max ? max : next;
+    onChange(capped < min ? min : capped);
   };
+  const atMax = max !== undefined && day >= max;
   const btn = (text: string, s: { days?: number; months?: number }, off = false) => (
     <View style={{ flex: 1 }}>
       <Button variant="secondary" label={text} disabled={off} onPress={() => step(s)} />
@@ -40,11 +44,11 @@ export function StartDayPicker({ label, day, min, onChange, error }: StartDayPic
       </AppText>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         {btn(t.payments.mobile.dayBefore, { days: -1 }, day <= min)}
-        {btn(t.payments.mobile.dayAfter, { days: 1 })}
+        {btn(t.payments.mobile.dayAfter, { days: 1 }, atMax)}
       </View>
       <View style={{ flexDirection: 'row', gap: 8 }}>
         {btn(m.monthBefore, { months: -1 }, day <= min)}
-        {btn(m.monthAfter, { months: 1 })}
+        {btn(m.monthAfter, { months: 1 }, atMax)}
       </View>
       <Note>{m.earliest.replace('{date}', localDay(min))}</Note>
       {error ? <ErrorLine message={error} /> : null}

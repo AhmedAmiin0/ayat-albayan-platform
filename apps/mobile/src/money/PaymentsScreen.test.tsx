@@ -16,9 +16,11 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
-const slip = payment({ id: 'p1', receipt_path: 'sub/slip.jpg' });
-const refund = payment({ id: 'p2', kind: 'refund', amount: 20, student: { id: 's2', code: 'AB-0201', name: 'يوسف' } });
-const pdf = payment({ id: 'p3', receipt_path: 'sub/slip.pdf', student: { id: 's3', code: 'AB-0202', name: 'مريم' } });
+// Cash paid against a booking invoice: the invoice is the receipt (ReceiptViewer); bank files are in
+// «المرفقات» (PaymentItem.attachments.test).
+const slip = payment({ id: 'p1', method: 'cash', invoice_id: 'inv1' });
+const refund = payment({ id: 'p2', method: 'cash', kind: 'refund', amount: 20, student: { id: 's2', code: 'AB-0201', name: 'يوسف' } });
+const pdf = payment({ id: 'p3', method: 'cash', invoice_id: 'inv3', student: { id: 's3', code: 'AB-0202', name: 'مريم' } });
 const totals = [{ currency: 'SAR', net: 250, payments: 270, refunds: 20 }];
 
 function backend(items = [slip, refund, pdf]) {

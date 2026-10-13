@@ -2,7 +2,7 @@ import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { PermissionCache } from '../../common/auth/permission.cache';
 import { errorCode } from '../scheduling/errors';
-import { FakeRoleStore, profile } from './roles.fakes';
+import { fakeAudit, FakeRoleStore, profile } from './roles.fakes';
 import { RolesService } from './roles.service';
 
 // A manager with a limited role must not be able to reach permissions it does not hold, through a
@@ -20,7 +20,7 @@ describe('RolesService — no escalation past the actor’s own permissions', ()
   let limited: string;
   beforeEach(async () => {
     store = new FakeRoleStore(undefined, [profile('owner', 'admin'), profile('lim', 'teacher'), profile('t2', 'teacher')]);
-    svc = new RolesService(store, new PermissionCache());
+    svc = new RolesService(store, new PermissionCache(), fakeAudit());
     const role = await svc.create({ name_ar: 'مشرف', base_role: 'admin', permissions: ['roles.manage', 'payments.read'] }, 'owner');
     limited = role.id;
     await svc.assign({ userId: 'lim', roleId: limited, actorId: 'owner' });

@@ -3,7 +3,7 @@ import { HttpException } from '@nestjs/common';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { PermissionCache } from '../../common/auth/permission.cache';
 import { errorCode } from '../scheduling/errors';
-import { FakeRoleStore, profile } from './roles.fakes';
+import { fakeAudit, FakeRoleStore, profile } from './roles.fakes';
 import { RolesService } from './roles.service';
 
 async function codeOf(p: Promise<unknown>): Promise<string | undefined> {
@@ -23,7 +23,7 @@ describe('RolesService — CRUD', () => {
   beforeEach(() => {
     store = new FakeRoleStore(undefined, [profile('owner', 'admin'), profile('t1', 'teacher'), profile('g1', 'guardian')]);
     cache = new PermissionCache();
-    svc = new RolesService(store, cache);
+    svc = new RolesService(store, cache, fakeAudit());
   });
 
   it('lists the system roles with user counts; the admin shows every grantable key', async () => {
@@ -73,7 +73,7 @@ describe('RolesService — assignment', () => {
   let svc: RolesService;
   beforeEach(() => {
     store = new FakeRoleStore(undefined, [profile('owner', 'admin'), profile('t1', 'teacher')]);
-    svc = new RolesService(store, new PermissionCache());
+    svc = new RolesService(store, new PermissionCache(), fakeAudit());
   });
 
   it('assigning a custom role sets profiles.role to its base role and role_id to it', async () => {

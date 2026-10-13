@@ -11,7 +11,8 @@ import { apiErrorText } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 import { baseRoleLabel, deleteRole, ROLES_KEY, saveRole, type RoleView } from './api';
 import { PermissionMatrix } from './PermissionMatrix';
-import { roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
+import { RoleResetButton } from './RoleResetButton';
+import { fixedGrantsOf, resettableRole, roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
 
 type Props = { role: RoleView | null; onClose: () => void };
 const P = t.permissions.page;
@@ -23,7 +24,10 @@ export function RoleDialog({ role, onClose }: Props) {
   const [form, setForm] = useState<RoleForm>(() => roleForm(role));
   const [nameError, setNameError] = useState<string | undefined>();
   const [confirming, setConfirming] = useState(false);
-  const fixedGrants = role?.is_system === true && role.key === 'admin';
+  const [resetError, setResetError] = useState<unknown>(null);
+  const fixed = fixedGrantsOf(role);
+  const fixedGrants = fixed !== null;
+  const resettable = resettableRole(role);
   const done = async () => {
     await queryClient.invalidateQueries({ queryKey: ROLES_KEY });
     onClose();
@@ -36,20 +40,23 @@ export function RoleDialog({ role, onClose }: Props) {
     setNameError(r.ok ? undefined : P.nameRequired);
     if (r.ok) save.mutate({ id: role?.id ?? null, body: r.body });
   };
-  const failed = save.error ?? remove.error;
+  const failed = save.error ?? remove.error ?? resetError;
 
   return (
     <Dialog
       title={role ? P.editRole : P.newRole}
       onClose={onClose}
       wide
-      hint={fixedGrants ? P.adminAll : undefined}
+      hint={fixed === 'admin' ? P.adminAll : fixed === 'portal' ? P.portalFixed : resettable ? P.systemEditable : undefined}
       actions={
         <>
           {role && !role.is_system && (
             <Button type="button" variant={confirming ? 'danger' : 'danger-quiet'} disabled={remove.isPending} onClick={() => (confirming ? remove.mutate(role.id) : setConfirming(true))}>
               {confirming ? P.deleteConfirm : P.delete}
             </Button>
+          )}
+          {resettable && (
+            <RoleResetButton role={resettable} onReset={(view) => setForm((f) => ({ ...f, permissions: [...view.permissions] }))} onError={setResetError} />
           )}
           <Button type="button" variant="ghost" onClick={onClose}>
             {P.cancel}
@@ -87,7 +94,7 @@ export function RoleDialog({ role, onClose }: Props) {
           onToggle={(p) => setForm((f) => togglePermission(f, p))}
           onToggleGroup={(keys) => setForm((f) => toggleGroup(f, keys))}
         />
-        {failed && <FormAlert>{apiErrorText(failed, { ...P.errors })}</FormAlert>}
+        {failed ? <FormAlert>{apiErrorText(failed, { ...P.errors })}</FormAlert> : null}
       </form>
     </Dialog>
   );

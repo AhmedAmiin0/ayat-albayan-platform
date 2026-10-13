@@ -62,6 +62,10 @@ describe('orSafe', () => {
   it('strips characters that break a PostgREST or() filter', () => {
     expect(orSafe('a,b(c)*%:"\\')).toBe('a b c');
   });
+
+  it('keeps _: it matches itself, so names like um_ahmad still match', () => {
+    expect(orSafe('um_ahmad')).toBe('um_ahmad');
+  });
 });
 
 describe('dbError', () => {

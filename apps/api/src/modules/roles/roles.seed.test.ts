@@ -15,6 +15,7 @@ const LATER = [
   '20261012000300_sales_messages_read.sql',
   '20261012000360_restricted_templates.sql',
   '20261012000380_notification_bell.sql',
+  '20261012000430_sales_check_start_permissions.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -29,7 +30,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -50,6 +51,27 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380)', () =>
   it('seeds notifications.push (the bell, 2026-10-12) for teacher, assistant and sales; the admin had it', () => {
     expect(['teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('notifications.push'))).toEqual(['teacher', 'assistant', 'sales']);
     expect(seeded('admin')).toContain('notifications.push');
+  });
+
+  it('seeds students.check_registration and subscriptions.set_start_date (2026-10-12) for admin and sales only', () => {
+    for (const perm of ['students.check_registration', 'subscriptions.set_start_date']) {
+      expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes(perm))).toEqual(['admin', 'sales']);
+    }
+  });
+
+  it('430 also grants subscriptions.set_start_date to existing custom roles based on sales (never check_registration)', () => {
+    const sql = readFileSync(join(MIGRATIONS, '20261012000430_sales_check_start_permissions.sql'), 'utf8');
+    const custom = [...sql.matchAll(/select r\.id, '([a-z_.]+)' from public\.roles r where not r\.is_system and r\.base_role = 'sales'\s+on conflict do nothing;/g)];
+    expect(custom.map((m) => m[1])).toEqual(['subscriptions.set_start_date']);
+  });
+
+  it('433 removes any grant left on the system portal roles (guardian, student), idempotently', () => {
+    const sql = readFileSync(join(MIGRATIONS, '20261012000433_portal_role_grants_cleanup.sql'), 'utf8');
+    const del = sql.replace(/--[^\n]*\n/g, '').replace(/\s+/g, ' ').trim();
+    expect(del).toBe(
+      "delete from public.role_permissions rp using public.roles r where rp.role_id = r.id and r.is_system and r.key in ('guardian', 'student');",
+    );
+    expect(LATER).not.toMatch(/r\.key in \([^)]*'(guardian|student)'/);
   });
 
   it('seeds nothing for guardians and only grantable keys', () => {

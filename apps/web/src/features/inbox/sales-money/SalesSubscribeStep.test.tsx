@@ -9,6 +9,7 @@ import { SalesMoneyFlow } from './SalesMoneyFlow';
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
+vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
 
 const creates = () => apiSend.mock.calls.filter(([, path]) => path === '/sales/subscriptions').map((c) => c[2] as Record<string, unknown>);
@@ -47,6 +48,13 @@ describe('step 1 «اشتراك جديد» from a sales chat (R-ASST-01)', () =>
     );
   });
 
+  it('without subscriptions.set_start_date: no date field, «تبدأ الباقة اليوم»', () => {
+    const { dialog } = open();
+    expect(dialog.queryByLabelText(t.salesMoney.startsOn)).toBeNull();
+    expect(dialog.queryByRole('checkbox', { name: new RegExp(t.salesMoney.alreadyStarted) })).toBeNull();
+    expect(dialog.getByText(new RegExp(t.salesMoney.startsOnDefault.split('(')[0] ?? ''))).toBeTruthy();
+  });
+
   it('two children: nothing is saved until she picks one', () => {
     const { dialog } = open([student(), student({ id: 'other', name: 'يوسف', code: 'AB-0190' })]);
     expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe('');
@@ -68,10 +76,11 @@ describe('step 1 «اشتراك جديد» from a sales chat (R-ASST-01)', () =>
     save();
     await vi.waitFor(() => expect(creates()).toHaveLength(2));
     const [first, retry] = creates();
-    expect(first).toMatchObject({ studentId: OPEN_SUB.student.id, pricing: { tier: 'standard' }, startsOn: expect.any(String) });
+    expect(first).toMatchObject({ studentId: OPEN_SUB.student.id, pricing: { tier: 'standard' } });
     expect(first?.clientRequestId).toMatch(/^[0-9a-f-]{36}$/);
     expect(retry?.clientRequestId).toBe(first?.clientRequestId);
-    expect(Object.keys(first ?? {}).sort()).toEqual(['clientRequestId', 'pricing', 'startsOn', 'studentId']);
+    // Without subscriptions.set_start_date: no startsOn (the API's default day), only today's line.
+    expect(Object.keys(first ?? {}).sort()).toEqual(['clientRequestId', 'pricing', 'studentId']);
     expect(await screen.findByRole('dialog', { name: t.salesMoney.stepTransfer })).toBeTruthy();
   });
 });

@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { PaymentsModule } from '../payments/payments.module';
 import { TeacherEarningsModule } from '../teacher-earnings/earnings.module';
 import { AssistantPayController } from './assistant-pay.controller';
 import { AssistantRpc } from './assistant-pay.rpc';
@@ -20,7 +21,7 @@ import { TermsService } from './terms.service';
  * (migrations 20261006000270..274); this module is the guarded door to them.
  */
 @Module({
-  imports: [TeacherEarningsModule],
+  imports: [TeacherEarningsModule, PaymentsModule], // PaymentsModule: her payments' «المرفقات»
   controllers: [AssistantPayController, AssistantStatementsController, MyController],
   providers: [
     AssistantRpc,

@@ -6,6 +6,8 @@ import { groupState, type GroupState } from './role-form';
 const BOX = 'size-4 shrink-0 accent-[var(--lapis)]';
 const items: Record<string, string> = t.permissions.items;
 const areas: Record<string, string> = t.permissions.areas;
+/** Only some keys explain themselves (what exactly the permission shows or allows). */
+const hints: Partial<Record<string, string>> = t.permissions.hints;
 
 function GroupBox({ state, label, onToggle, disabled }: { state: GroupState; label: string; onToggle: () => void; disabled: boolean }) {
   const ref = useRef<HTMLInputElement>(null);
@@ -45,11 +47,23 @@ export function PermissionMatrix({ value, onToggle, onToggleGroup, disabled = fa
             />
             <ul className="grid gap-1.5 sm:grid-cols-2">
               {group.keys.map((key) => (
-                <li key={key}>
+                <li key={key} className="grid gap-0.5">
                   <label className="flex items-start gap-2 text-sm text-ink-2">
-                    <input type="checkbox" className={`${BOX} mt-0.5`} checked={value.includes(key)} onChange={() => onToggle(key)} disabled={disabled} />
+                    <input
+                      type="checkbox"
+                      className={`${BOX} mt-0.5`}
+                      checked={value.includes(key)}
+                      onChange={() => onToggle(key)}
+                      disabled={disabled}
+                      aria-describedby={hints[key] ? `hint-${key}` : undefined}
+                    />
                     <span>{items[key] ?? key}</span>
                   </label>
+                  {hints[key] && (
+                    <p id={`hint-${key}`} className="ps-6 text-xs text-ink-3">
+                      {hints[key]}
+                    </p>
+                  )}
                 </li>
               ))}
             </ul>

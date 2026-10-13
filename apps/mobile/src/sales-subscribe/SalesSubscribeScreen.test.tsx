@@ -64,7 +64,6 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
   expect(first).toEqual({
     studentId: KID,
     pricing: { duration: 45, discount: 0, tier: 'standard' },
-    startsOn: '2026-10-12',
     clientRequestId: expect.stringMatching(/^[0-9a-f-]{36}$/),
   });
   expect(second?.clientRequestId).toBe(first?.clientRequestId);
