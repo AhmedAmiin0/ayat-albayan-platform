@@ -8,9 +8,11 @@ import { SalesRegistrationQueries } from './sales-registration.queries';
 export const REGISTRATION_CHECKS_PER_WINDOW = 60;
 
 /**
- * «التحقق من التسجيل»: is this family / child already a student? Anti-enumeration: a name needs 3
- * letters (schema), the answer lists at most 10 children and only name, code, status and teacher,
- * and each user has REGISTRATION_CHECKS_PER_WINDOW checks per window (429 too_many_requests).
+ * «التحقق من التسجيل»: is this family / child already a student? Anti-enumeration of THIS route: a name
+ * needs 3 letters or digits (schema; wildcards and punctuation do not count), the answer lists at most 10
+ * children and only name, code, status and teacher, and each user has REGISTRATION_CHECKS_PER_WINDOW checks
+ * per window (429 too_many_requests). Sales already see every student's name / code / status / teacher in
+ * «الطلاب» (self.sales_academy, code-only), so revoking the key removes the phone lookup and the button only.
  */
 @Injectable()
 export class SalesRegistrationService {

@@ -19,6 +19,11 @@ describe('registrationCheckQuerySchema', () => {
     expect(issue({ q: 'اح' })).toBe('query_too_short');
   });
 
+  it('counts letters and digits only (after normalising) for the 3-character minimum', () => {
+    for (const q of ['ا**', 'ـاـ', 'ا,,', '___', 'ا%%', 'اً ـ ـ']) expect(issue({ q })).toBe('query_too_short');
+    for (const q of ['سهيلة', 'AB-1', 'ali']) expect(parse({ q }).success).toBe(true);
+  });
+
   it('needs exactly one of phone and q, and a valid phone', () => {
     expect(issue({})).toBe('one_of');
     expect(issue({ phone: '0501234567', q: 'أحمد' })).toBe('one_of');

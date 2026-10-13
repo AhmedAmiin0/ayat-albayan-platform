@@ -45,6 +45,16 @@ describe('GET /payments/:id/attachments and delete (docs/11 §7)', () => {
     expect([none.statusCode, none.json().code]).toEqual([404, 'payment_not_found']);
   });
 
+  it('a file whose object is gone is skipped, never failing the list', async () => {
+    m.storage.signedDownload.mockImplementation(async (ref: { path: string }) => {
+      if (ref.path === attachment(1)) throw new Error('object not found');
+      return { url: `https://s/${ref.path}`, expires_at: EXPIRES };
+    });
+    const res = await call({ method: 'GET', url: `/payments/${PAYMENT_ID}/attachments` });
+    expect(res.statusCode).toBe(200);
+    expect(res.json().map((f: { id: string }) => f.id)).toEqual(['receipt', 'att-2']);
+  });
+
   it('teachers and salespeople are refused (payments.read)', async () => {
     for (const token of ['teacher', 'salesA'] as const)
       expect((await call({ method: 'GET', url: `/payments/${PAYMENT_ID}/attachments`, token })).statusCode).toBe(403);

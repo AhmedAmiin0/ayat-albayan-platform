@@ -3,7 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
 import { PermissionCache } from '../../common/auth/permission.cache';
 import { badRequest, conflict, forbidden, notFound } from '../scheduling/errors';
-import { cleanGrants, customKey, grantsOf, isSystemAdmin, managerProblem, missingGrant, roleView, staffUserView, type RoleState } from './roles.logic';
+import { cleanGrants, customKey, grantsOf, isPortalRole, isSystemAdmin, managerProblem, missingGrant, roleView, staffUserView, type RoleState } from './roles.logic';
 import { regrantAudit, resetGrants, type Regrant } from './roles.reset';
 import { ROLE_STORE, type ProfileRecord, type RoleRecord, type RoleStore } from './roles.store';
 
@@ -11,7 +11,7 @@ import { ROLE_STORE, type ProfileRecord, type RoleRecord, type RoleStore } from 
  * «الأدوار والصلاحيات» (owner, 2026-10-05). Roles carry permissions; profiles.role stays the base
  * scope and always equals the held role's base_role. Every change clears the permission cache, and
  * one that would leave nobody with roles.manage (409 last_admin) or take it from the actor
- * (409 self_lockout) is refused before it is written.
+ * (409 self_lockout) is refused before it is written. The admin, guardian and student grants are fixed (400).
  */
 @Injectable()
 export class RolesService {
@@ -49,6 +49,7 @@ export class RolesService {
     const role = this.find(state, id);
     if (input.permissions) {
       if (isSystemAdmin(role)) throw badRequest('admin_role_fixed');
+      if (isPortalRole(role)) throw badRequest('portal_role_fixed');
       const permissions = cleanGrants(input.permissions);
       await this.regrant({ state, role, permissions, actorId: input.actorId, action: 'permissions_update' });
     }

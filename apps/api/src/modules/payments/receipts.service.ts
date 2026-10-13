@@ -2,7 +2,8 @@ import { RECEIPT_MAX_BYTES, type ReceiptUpload, type SignedDownload, type Signed
 import { Injectable } from '@nestjs/common';
 import { BUCKETS, isPathOf, receiptPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
-import { badRequest, notFound } from '../scheduling/errors';
+import { badRequest, conflict, notFound } from '../scheduling/errors';
+import { PaymentAttachmentsQueries } from './payment-attachments.queries';
 import { PaymentsQueries, type PaymentSubscription } from './payments.queries';
 
 /**
@@ -14,6 +15,7 @@ export class ReceiptsService {
   constructor(
     private readonly payments: PaymentsQueries,
     private readonly storage: StorageService,
+    private readonly files: PaymentAttachmentsQueries,
   ) {}
 
   /** P6 (404 subscription_not_found; 400 receipt_too_large over maxBytes = settings.upload_max_mb). */
@@ -32,10 +34,16 @@ export class ReceiptsService {
     return this.storage.signedDownload({ bucket: BUCKETS.receipts, path });
   }
 
-  /** A client-sent path must be this package's and already uploaded (docs/11 §3), else 400. */
-  async check(subscriptionId: string, path: string): Promise<void> {
-    const ok = isPathOf(path, subscriptionId) && (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
+  /**
+   * A client-sent path must be this package's and already uploaded (docs/11 §3), else 400; 409
+   * attachment_in_use when another payment already holds it (paymentId: the one being edited may).
+   */
+  async check(input: { subscriptionId: string; path: string; paymentId?: string | undefined }): Promise<void> {
+    const { path } = input;
+    const ok = isPathOf(path, input.subscriptionId) && (await this.storage.exists({ bucket: BUCKETS.receipts, path }));
     if (!ok) throw badRequest('receipt_path');
+    const owners = await this.files.owners([path]);
+    if (owners.some((o) => o.paymentId !== input.paymentId)) throw conflict('attachment_in_use', { path });
   }
 
   /** Best effort: an orphaned object is harmless once its payment is gone. */

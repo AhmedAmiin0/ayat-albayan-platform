@@ -12,6 +12,9 @@ export interface RoleState {
 /** The system admin: every grantable permission, always (its rows are not consulted). */
 export const isSystemAdmin = (role: RoleRecord): boolean => role.is_system && role.key === 'admin';
 
+/** The system guardian / student roles: their grants are the family portal's, fixed (a rename only). */
+export const isPortalRole = (role: RoleRecord): boolean => role.is_system && (role.key === 'guardian' || role.key === 'student');
+
 /** profiles.role_id, or the system role of profiles.role when null. */
 export function heldRole(state: RoleState, profile: ProfileRecord): RoleRecord | null {
   if (profile.role_id) return state.roles.find((r) => r.id === profile.role_id) ?? null;

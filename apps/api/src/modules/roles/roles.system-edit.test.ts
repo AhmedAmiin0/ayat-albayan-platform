@@ -51,4 +51,13 @@ describe('RolesService — editing a system role’s grants', () => {
     await expect(h.svc.update('sys-admin', { permissions: [], actorId: 'owner' })).rejects.toThrow();
     expect(h.audit.rows).toEqual([]);
   });
+
+  it.each(['sys-guardian', 'sys-student'])('%s: permissions are fixed (400 portal_role_fixed), a rename still works', async (id) => {
+    const before = h.store.rolesData.find((r) => r.id === id)?.permissions;
+    await expect(h.svc.update(id, { permissions: [], actorId: 'owner' })).rejects.toMatchObject({ response: { code: 'portal_role_fixed' } });
+    expect(h.store.rolesData.find((r) => r.id === id)?.permissions).toEqual(before);
+    const out = await h.svc.update(id, { name_ar: 'الأسرة', actorId: 'owner' });
+    expect(out.name_ar).toBe('الأسرة');
+    expect(h.audit.rows).toEqual([]);
+  });
 });

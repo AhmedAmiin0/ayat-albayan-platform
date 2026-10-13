@@ -18,8 +18,6 @@ import { useSalesCreateSubscription, useSalesQuote } from './use-sales-subscribe
 
 export interface SalesSubscribeFormProps {
   phone: string;
-  /** The family's zone (the day chips). */
-  tz: string;
   /** Her students of the family (at least one). */
   students: readonly SalesFamilyStudent[];
   /** Preselected from the route. */
@@ -35,15 +33,15 @@ const firstChild = (students: readonly SalesFamilyStudent[], first: string | und
  * subscriptions.set_start_date, StartDateField), «احفظ الاشتراك»; once saved, on to recording the
  * family's transfer for that package (the screen is replaced).
  */
-export function SalesSubscribeForm({ phone, tz, students, studentId: first }: SalesSubscribeFormProps) {
+export function SalesSubscribeForm({ phone, students, studentId: first }: SalesSubscribeFormProps) {
   const [picked, setPicked] = useState(() => firstChild(students, first));
   const studentId = students.some((s) => s.id === picked) ? picked : '';
   const [form, setForm] = useState(INITIAL_FORM);
   const [now] = useState(() => new Date());
-  const today = localDate(now, tz);
+  // The academy's (Riyadh) day everywhere: the API checks the start against it, whatever the family's zone.
   const academyToday = localDate(now, RIYADH_TZ);
   const canSet = useHolds('subscriptions.set_start_date');
-  const [start, setStart] = useState<StartDraft>({ day: today, alreadyStarted: false, typed: academyToday });
+  const [start, setStart] = useState<StartDraft>({ day: academyToday, alreadyStarted: false, past: academyToday });
   const [tried, setTried] = useState(false);
   const starts = checkStart(start, { canSet, today: academyToday });
   const base = useTreeBase();
@@ -70,8 +68,7 @@ export function SalesSubscribeForm({ phone, tz, students, studentId: first }: Sa
       <SalesPriceSection quote={quote} />
       <StartDateField
         canSet={canSet}
-        days={startDays(now, tz)}
-        today={today}
+        days={startDays(now, RIYADH_TZ)}
         academyToday={academyToday}
         draft={start}
         onChange={(patch) => setStart((d) => ({ ...d, ...patch }))}

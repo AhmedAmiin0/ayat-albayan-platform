@@ -1,4 +1,4 @@
-import { normalizePhone, REGISTRATION_NAME_MIN, type RegistrationCheckView } from '@ab/shared';
+import { normalizePhone, REGISTRATION_NAME_MIN, searchChars, type RegistrationCheckView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { ApiError, apiFetch, toQueryString } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -16,7 +16,7 @@ export type SearchResult = { search: CheckSearch } | { error: CheckErrorCode };
 export function searchOf(by: CheckBy, text: string): SearchResult {
   const value = text.trim();
   if (value === '') return { error: 'one_of' };
-  if (by === 'name') return value.length < REGISTRATION_NAME_MIN ? { error: 'query_too_short' } : { search: { by, q: value } };
+  if (by === 'name') return searchChars(value) < REGISTRATION_NAME_MIN ? { error: 'query_too_short' } : { search: { by, q: value } };
   const phone = normalizePhone(value);
   return phone.ok ? { search: { by, phone: phone.e164 } } : { error: 'invalid_phone' };
 }

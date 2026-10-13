@@ -16,4 +16,9 @@ describe('checkRequest «التحقق من التسجيل»', () => {
     expect(checkRequest('name', '')).toEqual({ ok: false, code: 'one_of' });
     expect(checkRequest('phone', ' ')).toMatchObject({ ok: false });
   });
+
+  it('wildcards, tatweel and punctuation do not count toward the 3 characters', () => {
+    for (const q of ['ا**', 'ـاـ', 'ا,,', '___']) expect(checkRequest('name', q)).toEqual({ ok: false, code: 'query_too_short' });
+    expect(checkRequest('name', 'AB-1')).toMatchObject({ ok: true });
+  });
 });

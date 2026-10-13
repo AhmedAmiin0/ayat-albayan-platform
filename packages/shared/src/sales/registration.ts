@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { normalizeArabic } from '../arabic.js';
 import type { StudentStatus } from '../enums/index.js';
 import { phoneE164 } from '../schemas/common.js';
 
@@ -10,6 +11,11 @@ import { phoneE164 } from '../schemas/common.js';
 export const REGISTRATION_CHECK_MAX = 10;
 /** A name search needs at least this many letters (no enumeration with one or two). */
 export const REGISTRATION_NAME_MIN = 3;
+
+/** The letters and digits a search really matches on: tatweel, punctuation and wildcards do not count. */
+export function searchChars(q: string): number {
+  return normalizeArabic(q).replace(/[^\p{L}\p{N}]/gu, '').length;
+}
 
 /** `?phone=` or `?q=`, exactly one. 400 one_of, invalid_phone, query_too_short. */
 export const registrationCheckQuerySchema = z
@@ -27,7 +33,7 @@ export const registrationCheckQuerySchema = z
       return { by: 'phone' as const, phone: phone.data };
     }
     if (v.q && !v.phone) {
-      if (v.q.length < REGISTRATION_NAME_MIN) {
+      if (searchChars(v.q) < REGISTRATION_NAME_MIN) {
         ctx.addIssue({ code: 'custom', message: 'query_too_short', path: ['q'] });
         return z.NEVER;
       }

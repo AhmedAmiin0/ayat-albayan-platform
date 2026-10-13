@@ -1,4 +1,4 @@
-import type { ReceivablesView, SignedDownload } from '@ab/shared';
+import type { PaymentAttachmentView, ReceivablesView, SignedDownload } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
@@ -26,6 +26,20 @@ export function useReceiptUrl(paymentId: string, enabled: boolean) {
   return useQuery({
     queryKey: [...pathKey('/payments'), paymentId, 'receipt'],
     queryFn: () => apiFetch<SignedDownload>(`/payments/${paymentId}/receipt`),
+    enabled,
+    staleTime: 30 * MINUTE,
+    meta,
+  });
+}
+
+/**
+ * GET `path` (/payments/:id/attachments, or /sales/me/payments/:id/attachments for her own): the
+ * payment's «المرفقات», signed for an hour, so cached for 30 minutes. Only asked once opened (`enabled`).
+ */
+export function usePaymentAttachments(path: string, enabled: boolean) {
+  return useQuery({
+    queryKey: pathKey(path),
+    queryFn: () => apiFetch<PaymentAttachmentView[]>(path),
     enabled,
     staleTime: 30 * MINUTE,
     meta,

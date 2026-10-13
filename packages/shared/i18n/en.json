@@ -1544,6 +1544,7 @@
       "payment_not_found": "This payment doesn't exist",
       "receipt_not_found": "No receipt is recorded for this payment",
       "attachments_not_allowed": "Attachments are for bank transfers only",
+      "attachment_in_use": "This file is already attached to another payment; choose another file.",
       "attachment_path": "An attachment does not belong to this subscription; upload it again",
       "attachment_type": "An attachment must be an image or a PDF",
       "too_many_attachments": "At most 5 attachments"
@@ -2122,6 +2123,8 @@
     "refundsOf": "Refunds: {amount}",
     "viewReceipt": "View receipt",
     "hideReceipt": "Hide receipt",
+    "hideAttachments": "Hide attachments",
+    "attachmentsFailed": "The attachments could not be loaded",
     "openPdf": "Open PDF file",
     "receiptFailed": "The receipt could not be loaded",
     "noReceipt": "No receipt",
@@ -3632,8 +3635,7 @@
     "attachmentRemove": "Remove the attachment",
     "attachmentN": "Attachment {n}",
     "attachmentsMax": "At most 5 attachments.",
-    "startedOn": "Subscription start date (YYYY-MM-DD)",
-    "startedOnInvalid": "Type the date as YYYY-MM-DD, e.g. 2026-03-15.",
+    "startedOn": "Subscription start date",
     "error": {
       "not_your_student": "This student is not one of yours.",
       "receipt_path": "The receipt could not be used; attach it again.",
@@ -3651,6 +3653,7 @@
       "start_date_past": "A past date needs \"Subscription already started\".",
       "start_date_too_old": "The start date cannot be more than one year ago.",
       "attachments_not_allowed": "Attachments are for bank transfers only.",
+      "attachment_in_use": "This file is already attached to another payment; choose another file.",
       "attachment_path": "One attachment could not be used; attach it again.",
       "attachment_type": "An attachment must be an image or a PDF.",
       "too_many_attachments": "At most 5 attachments."
@@ -4142,10 +4145,12 @@
       "resetConfirm": "Restore this role's permissions to the defaults?",
       "resetDone": "Default permissions restored",
       "systemEditable": "You can switch this built-in role's permissions off or on, and restore the defaults at any time.",
+      "portalFixed": "This role's permissions are fixed for the family portal; you can only rename it.",
       "errors": {
         "role_in_use": "A role held by users cannot be deleted.",
         "system_role": "System roles cannot be deleted.",
         "admin_role_fixed": "The system admin's permissions are fixed.",
+        "portal_role_fixed": "Guardian and student permissions are fixed; only the name can change.",
         "last_admin": "At least one user must keep the roles and permissions right.",
         "self_lockout": "You cannot remove your own roles and permissions right.",
         "permission_not_held": "You cannot grant a permission you do not hold.",

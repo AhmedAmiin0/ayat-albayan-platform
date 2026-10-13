@@ -59,20 +59,20 @@ export class PaymentsService {
       client_request_id: input.clientRequestId ?? null,
     });
     if (!row) {
-      // Lost the race to a retry of the same form: that one recorded it.
+      // Lost the race to a retry of the same form: that one recorded it (its files: best effort on its row).
       const raced = await this.replayOf(input.clientRequestId);
       if (!raced) throw notFound('payment_not_found');
-      if (raced.subscription_id === sub.id) await this.files.attachments.save(raced.id, files, actorId);
+      await this.files.saveLate(await this.row(raced.id), input, actorId);
       return raced;
     }
-    await this.files.attachments.save(row.id, files, actorId);
     await this.writes.done({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, sub.student_id);
+    await this.files.saveBooked(row.id, files, actorId); // after the audit / recompute: never an error now
     return this.get(row.id);
   }
 
   async update(id: string, patch: Partial<PaymentUpdate>, actorId: string): Promise<PaymentView> {
     const before = await this.row(id);
-    if (patch.receiptPath) await this.receipts.check(before.subscription_id, patch.receiptPath);
+    await this.files.checkPatch(before, patch);
     const write: TablesUpdate<'payments'> = {};
     if (patch.amount !== undefined) write.amount = patch.amount;
     if (patch.method !== undefined) write.method = patch.method;
@@ -106,12 +106,11 @@ export class PaymentsService {
     return this.inputs.receipt(await this.row(id));
   }
 
-  /** A replay also saves the form's files a failure after the insert lost (idempotent on the path). */
+  /** A replay re-runs the follow-ups first, then saves (best effort) the form's files a failure lost. */
   private async replayed(view: PaymentView, input: PaymentCreate, actorId: string): Promise<PaymentView> {
     const row = await this.row(view.id);
-    if (row.subscription_id === input.subscriptionId && (input.attachments?.length ?? 0) > 0)
-      await this.files.attachments.save(row.id, await this.files.check(row.subscription_id, input), actorId);
     await this.writes.replayed({ actorId, entity: 'payments', entityId: row.id, action: 'create', after: row }, studentOf(row));
+    await this.files.saveLate(row, input, actorId);
     return view;
   }
 

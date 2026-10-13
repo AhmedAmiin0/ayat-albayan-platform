@@ -1,12 +1,14 @@
 import type { MyPaymentRow } from '@ab/shared';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { AttachmentsViewer } from '@/money/AttachmentsViewer';
+import { hasAttachments } from '@/money/receipt-file';
 import { instantDay, money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { Ltr } from '@/ui/Ltr';
 
-/** One payment I recorded (web my-payment-columns): student and code, amount in its currency, kind · method · day, note. */
+/** One payment I recorded (web my-payment-columns): student and code, amount in its currency, kind · method · day, note, then «المرفقات» of a bank transfer. */
 export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {
   const { color } = useTheme();
   const small = { fontFamily: type.ui[400], fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs), color: color.ink2 };
@@ -22,6 +24,9 @@ export function MyPaymentItem({ payment }: { payment: MyPaymentRow }) {
       <Ltr style={{ ...small, alignSelf: 'flex-start' }}>{payment.student.code}</Ltr>
       <AppText style={small}>{line}</AppText>
       {payment.note ? <AppText style={small}>{`${t.assistantPortal.payments.note}: ${payment.note}`}</AppText> : null}
+      {hasAttachments(payment) ? (
+        <AttachmentsViewer path={`/sales/me/payments/${payment.id}/attachments`} name={payment.student.name} />
+      ) : null}
     </View>
   );
 }

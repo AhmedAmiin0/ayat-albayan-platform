@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { dayLabel } from '@/booking/slots';
 import { t } from '@/lib/i18n';
-import { money } from '@/payments/format';
+import { localDay, money } from '@/payments/format';
 import { renderWithQuery } from '@/test/query';
 import { familyOf, kid, openSub, salesQuote } from './fixtures';
 import { SalesSubscribeScreen } from './SalesSubscribeScreen';
@@ -65,21 +65,25 @@ test('with it: the day chips (today on, no past day), sent as startsOn without a
   expect(lastBody()).not.toHaveProperty('alreadyStarted');
 });
 
-test('a past day only with «بدأ الاشتراك سابقًا»: a typed day, then alreadyStarted is sent', async () => {
+test('a past day only with «بدأ الاشتراك سابقًا»: picked with steppers (never typed), then alreadyStarted is sent', async () => {
   asSales('subscriptions.set_start_date');
   await open();
   await fireEvent(await screen.findByRole('switch', { name: m.alreadyStarted }), 'valueChange', true);
   expect(screen.queryByRole('radio', { name: t.mobile.today })).toBeNull();
-  const field = screen.getByLabelText(m.startedOn);
+  expect(screen.getByText(m.startedOn)).toBeTruthy();
+  expect(screen.queryByLabelText(m.startedOn)).toBeNull();
+  expect(screen.queryByDisplayValue('2026-10-12')).toBeNull();
+  expect(screen.queryByPlaceholderText('2026-10-12')).toBeNull();
+  expect(screen.getByRole('button', { name: t.payments.mobile.dayAfter, disabled: true })).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.mobileSalesMoney.monthAfter, disabled: true })).toBeTruthy();
 
-  await fireEvent.changeText(field, '2025-01-01');
-  await save();
-  expect(await screen.findByText(m.error.start_date_too_old)).toBeTruthy();
-  await fireEvent.changeText(field, '2026-13-01');
-  expect(await screen.findByText(m.startedOnInvalid)).toBeTruthy();
-  expect(sent('/sales/subscriptions')).toHaveLength(0);
+  for (let i = 0; i < 14; i += 1) await fireEvent.press(screen.getByRole('button', { name: t.mobileSalesMoney.monthBefore }));
+  expect(screen.getByRole('button', { name: t.payments.mobile.dayBefore, disabled: true })).toBeTruthy();
+  expect(screen.getByText(localDay('2025-10-12'))).toBeTruthy();
 
-  await fireEvent.changeText(field, '2026-03-15');
+  await fireEvent.press(screen.getByRole('button', { name: t.mobileSalesMoney.monthAfter }));
+  await fireEvent.press(screen.getByRole('button', { name: t.payments.mobile.dayAfter }));
   await save();
-  await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2026-03-15', alreadyStarted: true }));
+  await waitFor(() => expect(lastBody()).toMatchObject({ startsOn: '2025-11-13', alreadyStarted: true }));
+  expect(screen.queryByText(m.error.start_date_too_old)).toBeNull();
 });

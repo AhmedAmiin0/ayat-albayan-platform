@@ -1,4 +1,5 @@
 import {
+  daysBefore,
   salesStartDate,
   type ReceiptUpload,
   type SalesFamilyView,
@@ -44,12 +45,15 @@ export class SalesMoney {
   /**
    * The start day (docs/16 row 24): today in Riyadh unless she holds subscriptions.set_start_date (403
    * start_date_not_allowed); a past day only with alreadyStarted, at most a year back (400). Before pricing.
+   * Old apps sent the family's local day: without alreadyStarted, Riyadh's yesterday is read as today.
    */
   async subscribe(input: SalesSubscriptionCreate, user: AuthUser, now = new Date()): Promise<SalesMoneySubscriptionView> {
     await this.scope.assertOwns(user, input.studentId);
     assertSalesDiscount(input.pricing);
     const canSet = user.permissions?.includes('subscriptions.set_start_date') ?? false;
-    const start = salesStartDate({ startsOn: input.startsOn, alreadyStarted: input.alreadyStarted, canSet, today: riyadhToday(now) });
+    const today = riyadhToday(now);
+    const startsOn = input.alreadyStarted === undefined && input.startsOn === daysBefore(today, 1) ? today : input.startsOn;
+    const start = salesStartDate({ startsOn, alreadyStarted: input.alreadyStarted, canSet, today });
     if (!start.ok) throw start.code === 'start_date_not_allowed' ? forbidden(start.code) : badRequest(start.code);
     const { studentId, pricing, clientRequestId } = input; // alreadyStarted is not a column
     const view = await this.services.creator.create({ studentId, pricing, clientRequestId, startsOn: start.startsOn }, user.id);

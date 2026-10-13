@@ -21,6 +21,7 @@ test('API codes map to payments.error, the currency filled in', () => {
   expect(paymentErrorText(new ApiError(404, { code: 'subscription_not_found' }))).toBe(
     e.subscription_not_found,
   );
+  expect(paymentErrorText(new ApiError(409, { code: 'attachment_in_use' }))).toBe(e.attachment_in_use);
 });
 
 test('zod issues: the first one with a known message', () => {

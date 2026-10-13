@@ -1,5 +1,7 @@
 import type { PaymentAttachmentView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
+import { apiErrorText } from '@/features/subscriptions/format';
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { addAttachments, attachmentLabels } from './attachments';
 
@@ -28,5 +30,10 @@ describe('payment attachments «المرفقات»', () => {
       t.payments.attachmentN.replace('{n}', '1'),
       t.payments.attachmentN.replace('{n}', '2'),
     ]);
+  });
+
+  it('a file another payment holds (409 attachment_in_use) reads as its own line', () => {
+    const e = new ApiError(409, { code: 'attachment_in_use' });
+    expect(apiErrorText(e, { ...t.payments.error, ...t.finance.error })).toBe(t.payments.error.attachment_in_use);
   });
 });

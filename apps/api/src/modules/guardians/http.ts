@@ -41,9 +41,9 @@ export function pageRange(q: ListQuery): [number, number] {
   return [from, from + q.pageSize - 1];
 }
 
-/** Drops characters that would break a PostgREST `or=(...)` filter. */
+/** Drops characters that would break a PostgREST `or=(...)` filter, and the ilike wildcards `%` / `_`. */
 export function orSafe(term: string): string {
-  return term.replace(/[,()*%\\:"]/g, ' ').trim();
+  return term.replace(/[,()*%_\\:"]/g, ' ').trim();
 }
 
 type PgError = { code?: string; message: string };

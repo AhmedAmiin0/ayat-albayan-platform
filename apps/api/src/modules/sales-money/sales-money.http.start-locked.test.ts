@@ -32,13 +32,15 @@ describe('POST /sales/subscriptions without subscriptions.set_start_date: always
 
   const create = (patch: object) => call({ method: 'POST', url: URL, token: 'salesA', body: { ...CREATE, ...patch } });
 
-  it('no day sent (or today sent): today in Riyadh', async () => {
+  it("no day sent (or today, or an old app's family yesterday): today in Riyadh", async () => {
     expect((await create({})).statusCode).toBe(201);
     expect((await create({ startsOn: '2026-10-12' })).statusCode).toBe(201);
+    expect((await create({ startsOn: '2026-10-11' })).statusCode).toBe(201);
+    expect(m.subs.insert).not.toHaveBeenCalledWith(expect.objectContaining({ starts_on: '2026-10-11' }));
     expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ starts_on: '2026-10-12' }));
   });
 
-  it.each(['2026-10-20', '2026-10-11'])('an explicit other day %s → 403 start_date_not_allowed, nothing inserted', async (day) => {
+  it.each(['2026-10-20', '2026-10-10'])('an explicit other day %s → 403 start_date_not_allowed, nothing inserted', async (day) => {
     const res = await create({ startsOn: day });
     expect([res.statusCode, res.json().code]).toEqual([403, 'start_date_not_allowed']);
     expect(m.subs.insert).not.toHaveBeenCalled();

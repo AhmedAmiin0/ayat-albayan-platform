@@ -40,10 +40,20 @@ describe('POST /sales/subscriptions with subscriptions.set_start_date (docs/16 r
   });
 
   it('a past day without «بدأ الاشتراك سابقًا» → 400 start_date_past, nothing priced or inserted', async () => {
-    const res = await create({ startsOn: '2026-10-11' });
+    const res = await create({ startsOn: '2026-10-10' });
     expect([res.statusCode, res.json().code]).toEqual([400, 'start_date_past']);
     expect(m.pricing.quote).not.toHaveBeenCalled();
     expect(m.subs.insert).not.toHaveBeenCalled();
+  });
+
+  it("an old app's family day (Riyadh's yesterday, no alreadyStarted) is read as today", async () => {
+    expect((await create({ startsOn: '2026-10-11' })).statusCode).toBe(201);
+    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ starts_on: '2026-10-12' }));
+  });
+
+  it('yesterday with alreadyStarted stays yesterday', async () => {
+    expect((await create({ startsOn: '2026-10-11', alreadyStarted: true })).statusCode).toBe(201);
+    expect(m.subs.insert).toHaveBeenCalledWith(expect.objectContaining({ starts_on: '2026-10-11' }));
   });
 
   it('a past day with alreadyStarted is stored (no backfill: only the row)', async () => {

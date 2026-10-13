@@ -17,7 +17,7 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn(), back: jest.fn() } }));
 
-test('an English run reads en.json: title, count, chips, method, receipt button', async () => {
+test('an English run reads en.json: title, count, chips, method, attachments button', async () => {
   expect(t).toEqual(en);
   mockApiFetch.mockResolvedValue({
     items: [payment({ receipt_path: 'a/b.jpg' })],
@@ -31,5 +31,5 @@ test('an English run reads en.json: title, count, chips, method, receipt button'
   expect(await screen.findByText('1 entries')).toBeTruthy();
   expect(screen.getByRole('tab', { name: 'All months' })).toBeTruthy();
   expect(screen.getByText(/Bank transfer|bank/i)).toBeTruthy();
-  expect(screen.getByRole('button', { name: /View receipt/ })).toBeTruthy();
+  expect(screen.getByRole('button', { name: /View attachments/ })).toBeTruthy();
 });

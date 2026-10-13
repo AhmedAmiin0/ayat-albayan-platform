@@ -12,7 +12,7 @@ import { t } from '@/lib/i18n';
 import { baseRoleLabel, deleteRole, ROLES_KEY, saveRole, type RoleView } from './api';
 import { PermissionMatrix } from './PermissionMatrix';
 import { RoleResetButton } from './RoleResetButton';
-import { resettableRole, roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
+import { fixedGrantsOf, resettableRole, roleBody, roleForm, toggleGroup, togglePermission, type RoleForm } from './role-form';
 
 type Props = { role: RoleView | null; onClose: () => void };
 const P = t.permissions.page;
@@ -25,7 +25,8 @@ export function RoleDialog({ role, onClose }: Props) {
   const [nameError, setNameError] = useState<string | undefined>();
   const [confirming, setConfirming] = useState(false);
   const [resetError, setResetError] = useState<unknown>(null);
-  const fixedGrants = role?.is_system === true && role.key === 'admin';
+  const fixed = fixedGrantsOf(role);
+  const fixedGrants = fixed !== null;
   const resettable = resettableRole(role);
   const done = async () => {
     await queryClient.invalidateQueries({ queryKey: ROLES_KEY });
@@ -46,7 +47,7 @@ export function RoleDialog({ role, onClose }: Props) {
       title={role ? P.editRole : P.newRole}
       onClose={onClose}
       wide
-      hint={fixedGrants ? P.adminAll : resettable ? P.systemEditable : undefined}
+      hint={fixed === 'admin' ? P.adminAll : fixed === 'portal' ? P.portalFixed : resettable ? P.systemEditable : undefined}
       actions={
         <>
           {role && !role.is_system && (

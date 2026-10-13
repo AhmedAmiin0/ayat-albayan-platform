@@ -59,6 +59,12 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430)', 
     }
   });
 
+  it('430 also grants subscriptions.set_start_date to existing custom roles based on sales (never check_registration)', () => {
+    const sql = readFileSync(join(MIGRATIONS, '20261012000430_sales_check_start_permissions.sql'), 'utf8');
+    const custom = [...sql.matchAll(/select r\.id, '([a-z_.]+)' from public\.roles r where not r\.is_system and r\.base_role = 'sales'\s+on conflict do nothing;/g)];
+    expect(custom.map((m) => m[1])).toEqual(['subscriptions.set_start_date']);
+  });
+
   it('seeds nothing for guardians and only grantable keys', () => {
     expect(seeded('guardian')).toEqual([]);
     for (const key of ['admin', 'teacher', 'assistant', 'sales']) expect(seeded(key).every(isGrantable)).toBe(true);

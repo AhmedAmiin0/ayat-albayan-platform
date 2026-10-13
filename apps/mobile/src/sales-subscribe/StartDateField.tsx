@@ -1,4 +1,6 @@
+import { daysBefore, SALES_START_BACK_DAYS } from '@ab/shared';
 import { Switch, View } from 'react-native';
+import { StartDayPicker } from '@/assistants/StartDayPicker';
 import { dayLabel } from '@/booking/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
@@ -7,15 +9,13 @@ import { Section } from '@/more/Section';
 import { StartDayPills } from '@/subscribe/SubscribeParts';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
-import { Field } from '@/ui/Field';
 import type { StartDraft } from './start-date';
 
 export interface StartDateFieldProps {
   /** Holds subscriptions.set_start_date. */
   canSet: boolean;
-  /** The family's day chips and its today; `academyToday` (Riyadh) is the default day said. */
+  /** The day chips from the academy's (Riyadh) today, the day the API checks against. */
   days: readonly string[];
-  today: string;
   academyToday: string;
   draft: StartDraft;
   onChange: (patch: Partial<StartDraft>) => void;
@@ -24,9 +24,10 @@ export interface StartDateFieldProps {
 
 /**
  * «يوم البدء» of the sales subscribe (docs/16 row 24). Without the permission only «تبدأ الباقة اليوم
- * (…)». With it the day chips and «بدأ الاشتراك سابقًا»: on, a typed day (YYYY-MM-DD) replaces the chips.
+ * (…)». With it the day chips and «بدأ الاشتراك سابقًا»: on, a past day picked with steppers (rule 6, never
+ * typed) replaces the chips, from a year back up to today.
  */
-export function StartDateField({ canSet, days, today, academyToday, draft, onChange, error }: StartDateFieldProps) {
+export function StartDateField({ canSet, days, academyToday, draft, onChange, error }: StartDateFieldProps) {
   const { color } = useTheme();
   const m = t.salesMoney;
   if (!canSet) {
@@ -39,7 +40,7 @@ export function StartDateField({ canSet, days, today, academyToday, draft, onCha
   return (
     <View style={{ gap: 12 }}>
       {draft.alreadyStarted ? null : (
-        <StartDayPills days={days} today={today} value={draft.day} onChange={(day) => onChange({ day })} />
+        <StartDayPills days={days} today={academyToday} value={draft.day} onChange={(day) => onChange({ day })} />
       )}
       <View style={{ minHeight: 44, flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }}>
         <AppText style={{ flexShrink: 1, fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>
@@ -53,15 +54,12 @@ export function StartDateField({ canSet, days, today, academyToday, draft, onCha
       </View>
       <Note>{m.alreadyStartedHint}</Note>
       {draft.alreadyStarted ? (
-        <Field
+        <StartDayPicker
           label={m.startedOn}
-          value={draft.typed}
-          onChangeText={(typed) => onChange({ typed })}
-          ltr
-          placeholder={academyToday}
-          keyboardType="numbers-and-punctuation"
-          autoCorrect={false}
-          maxLength={10}
+          day={draft.past}
+          min={daysBefore(academyToday, SALES_START_BACK_DAYS)}
+          max={academyToday}
+          onChange={(past) => onChange({ past })}
         />
       ) : null}
       {error ? <ErrorLine message={error} /> : null}

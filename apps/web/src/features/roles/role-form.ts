@@ -61,3 +61,10 @@ export function roleBody(form: RoleForm, input: { creating: boolean; fixedGrants
 export function resettableRole(role: RoleView | null): RoleView | null {
   return role?.is_system === true && isEditableSystemRole(role.key) ? role : null;
 }
+
+/** A system admin / guardian / student role: its grants are fixed, the dialog sends the names only. */
+export function fixedGrantsOf(role: RoleView | null): 'admin' | 'portal' | null {
+  if (role?.is_system !== true) return null;
+  if (role.key === 'admin') return 'admin';
+  return role.key === 'guardian' || role.key === 'student' ? 'portal' : null;
+}
