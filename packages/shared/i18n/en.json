@@ -12,10 +12,18 @@
     "submitting": "Signing in…",
     "invalidCredentials": "Wrong email or password. Try again.",
     "noRole": "Your account isn't activated yet. Contact the admin team.",
+    "noPages": "Your role doesn't open any admin page yet. Contact the admin team.",
     "logout": "Sign out",
     "intro": "For admins and teachers. Sign in with the email and password the academy sent you.",
     "showPassword": "Show",
-    "guardiansNote": "Guardians don't need an account: they open the student's progress page from the link we send them on WhatsApp."
+    "guardiansNote": "Guardians don't need an account: they open the student's progress page from the link we send them on WhatsApp.",
+    "appError": {
+      "title": "This page couldn't open",
+      "body": "Something went wrong while loading this page. Try again in a moment; if it keeps happening, sign out and sign in again.",
+      "retry": "Try again",
+      "retrying": "Trying again…",
+      "leaving": "Signing out…"
+    }
   },
   "admin": {
     "dashboardTitle": "Dashboard",

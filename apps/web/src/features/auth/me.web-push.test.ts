@@ -4,7 +4,10 @@ import { signIn } from './sign-in';
 
 const order = vi.hoisted(() => [] as string[]);
 const auth = vi.hoisted(() => ({
-  signOut: vi.fn(async () => void order.push('signOut')),
+  signOut: vi.fn(async () => {
+    order.push('signOut');
+    return { error: null };
+  }),
   signInWithPassword: vi.fn(async () => ({ error: null })),
   getSession: vi.fn(async () => ({ data: { session: { access_token: 'tok' } } })),
 }));

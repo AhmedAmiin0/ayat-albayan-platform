@@ -1,15 +1,11 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { AdminShell } from '@/components/shell/SectionShells';
-import { adminRedirect } from '@/features/auth/admin-access';
-import { requireRole } from '@/features/auth/me';
+import { guardAdmin } from '@/features/auth/admin-guard';
 
 export const Route = createFileRoute('/admin')({
   // Base role admin gets the admin app; each page then needs its permission (features/auth/admin-access).
-  beforeLoad: async ({ context, location }) => {
-    const me = await requireRole(context.queryClient, 'admin');
-    const to = adminRedirect(me, location.pathname);
-    if (to && to !== location.pathname) throw redirect({ to });
-  },
+  // No page at all: signed out before /login, so the session cannot loop (features/auth/admin-guard).
+  beforeLoad: ({ context, location }) => guardAdmin(context.queryClient, location.pathname),
   // The permission-filtered sidebar / «القائمة» sheet (components/shell/SectionShells).
   component: AdminShell,
 });

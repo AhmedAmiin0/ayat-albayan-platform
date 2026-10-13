@@ -46,6 +46,23 @@ describe('signIn (R-AUTH-01)', () => {
     expect(auth.signOut).toHaveBeenCalled();
   });
 
+  it('signs out a base admin whose permissions open no /admin page, and says so', async () => {
+    auth.signInWithPassword.mockResolvedValue({ error: null });
+    auth.signOut.mockResolvedValue({ error: null });
+    apiFetch.mockResolvedValue({ id: 'u1', email: creds.email, role: 'admin', permissions: ['templates.manage'] });
+    const result = await signIn(creds, new QueryClient());
+    expect(result).toEqual({ ok: false, error: t.auth.noPages });
+    expect(auth.signOut).toHaveBeenCalledTimes(1);
+    expect(reportSession).not.toHaveBeenCalledWith('login');
+  });
+
+  it('lets in a custom admin role that opens at least one page («محاسب»)', async () => {
+    auth.signInWithPassword.mockResolvedValue({ error: null });
+    apiFetch.mockResolvedValue({ id: 'u1', email: creds.email, role: 'admin', permissions: ['payments.read'] });
+    await expect(signIn(creds, new QueryClient())).resolves.toEqual({ ok: true, home: '/admin' });
+    expect(auth.signOut).not.toHaveBeenCalled();
+  });
+
   it('signs out and says so when the account is disabled (403 account_disabled)', async () => {
     auth.signInWithPassword.mockResolvedValue({ error: null });
     apiFetch.mockRejectedValue(Object.assign(new Error('API 403'), { status: 403, body: { code: 'account_disabled' } }));
@@ -64,7 +81,10 @@ describe('signIn (R-AUTH-01)', () => {
   it('reports the sign-out before the token is dropped («سجل النشاط»)', async () => {
     const order: string[] = [];
     reportSession.mockImplementation(async () => void order.push('report'));
-    auth.signOut.mockImplementation(async () => void order.push('signOut'));
+    auth.signOut.mockImplementation(async () => {
+      order.push('signOut');
+      return { error: null };
+    });
     await signOut(new QueryClient());
     expect(reportSession).toHaveBeenCalledWith('logout');
     expect(order).toEqual(['report', 'signOut']);
