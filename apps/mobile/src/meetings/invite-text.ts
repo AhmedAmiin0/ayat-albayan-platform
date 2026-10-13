@@ -6,6 +6,8 @@ import { locale } from '@/lib/locale';
 
 const L = t.meetingInvites;
 const errors: Record<string, string | undefined> = L.errors;
+/** Codes the meetings API shares with the room (a 410 on a cancel after the meeting ended), like web EXTRA. */
+const extra: Record<string, string | undefined> = { meeting_ended: t.classroom.error.meeting_ended };
 
 /** «الأحد 4 أكتوبر 17:00» in the viewer's zone (Western digits). */
 export const whenText = (iso: string, tz: string): string => lessonWhenText(new Date(iso), tz, locale);
@@ -48,7 +50,7 @@ export const notSentHint = (r: Outcome): string | null =>
 export function inviteError(error: unknown, fallback: string = L.error): string {
   const body = error instanceof ApiError ? error.body : null;
   const code: unknown = typeof body === 'object' && body !== null ? Reflect.get(body, 'code') : undefined;
-  return (typeof code === 'string' ? errors[code] : undefined) ?? fallback;
+  return (typeof code === 'string' ? (errors[code] ?? extra[code]) : undefined) ?? fallback;
 }
 
 const chipFormat = new Intl.DateTimeFormat(intlLocale(locale), { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });

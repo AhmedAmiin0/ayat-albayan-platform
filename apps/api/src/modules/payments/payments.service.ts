@@ -1,13 +1,13 @@
 import type { TablesUpdate } from '@ab/db';
 import type { PaymentAttachmentView, PaymentCreate, PaymentUpdate, PaymentView } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { conflict, notFound } from '../scheduling/errors';
+import { notFound } from '../scheduling/errors';
 import { MoneyWrites } from '../subscriptions/money-writes';
 import type { Page } from '../teachers/http';
 import { toPaymentView } from './payments.mapper';
 import { PaymentsQueries, type PaymentFilter, type PaymentRow, type PeriodTotal } from './payments.queries';
-import type { CheckedAttachment } from './payment-attachments.service';
 import { PaymentInputs } from './payment-inputs';
+import { precheckPayment, type Prechecked } from './payment-precheck';
 
 /**
  * Manual transfers and refunds recorded by an admin (R-PAY-01, R-MOB-02). Every write is audited, then the
@@ -41,17 +41,13 @@ export class PaymentsService {
     const replay = await this.replayOf(input.clientRequestId);
     if (replay) return this.replayed(replay, input, actorId);
     const sub = await this.receipts.subscription(input.subscriptionId);
-    let files: CheckedAttachment[];
+    let checked: Prechecked;
     try {
-      files = await this.files.check(sub.id, input);
+      checked = await precheckPayment({ payments: this.payments, inputs: this.inputs }, { input, sub });
     } catch (e) {
-      return this.raced(input, actorId, e);
+      return this.raced(input, actorId, e); // a racing send of this form may have booked it: replay
     }
-    if (input.invoiceId) await this.inputs.checkInvoice(input.invoiceId, sub.student_id);
-    if (input.invoiceId && (await this.payments.byInvoice(input.invoiceId))) throw conflict('invoice_used');
-    const converted = await this.inputs.convert(input, sub);
-    if (input.kind === 'refund' && converted.amount > (await this.payments.netPaid(sub.id)))
-      throw conflict('refund_exceeds_paid');
+    const { files, converted } = checked;
     const row = await this.payments.insert({
       subscription_id: sub.id,
       ...converted,
@@ -114,7 +110,7 @@ export class PaymentsService {
     return view;
   }
 
-  /** Another send of the form booked it (lost the insert race, or a 409 file check ran just after it): replay. */
+  /** Another send of the form booked it (lost the insert race, or a pre-insert check refused it just after): replay. */
   private async raced(input: PaymentCreate, actorId: string, failure?: unknown): Promise<PaymentView> {
     const raced = await this.replayOf(input.clientRequestId);
     if (raced) return this.replayed(raced, input, actorId);

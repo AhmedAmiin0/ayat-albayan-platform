@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { router } from 'expo-router';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { CreateMeeting } from './CreateMeeting';
 import { MeetingActions } from './MeetingActions';
 
@@ -55,6 +55,25 @@ test('a failed end is cleared when a new link is asked for', async () => {
   expect(await screen.findByText(t.meetings.internal.actionError)).toBeTruthy();
   await press(t.meetings.internal.newLink);
   await waitFor(() => expect(screen.queryByText(t.meetings.internal.actionError)).toBeNull());
+});
+
+test('a cancel refused because the meeting ended says so and refreshes the list', async () => {
+  mockApiSend.mockRejectedValueOnce(new ApiError(410, { code: 'meeting_ended' }));
+  const client = createTestQueryClient();
+  const invalidate = jest.spyOn(client, 'invalidateQueries');
+  await renderWithQuery(<MeetingActions meeting={{ ...meeting, starts_at: '2026-10-20T14:00:00.000Z' }} tz="Asia/Riyadh" />, client);
+  await press(t.meetingInvites.list.cancel);
+  await press(t.meetingInvites.list.cancel);
+  expect(await screen.findByText(t.classroom.error.meeting_ended)).toBeTruthy();
+  expect(invalidate).toHaveBeenCalledWith({ queryKey: ['meetings'] });
+});
+
+test('a join refused as not open yet names the opening time on the viewer clock (UTC)', async () => {
+  mockApiSend.mockRejectedValueOnce(new ApiError(403, { code: 'join_not_open_yet', opens_at: '2026-10-05T11:30:00.000Z' }));
+  await renderWithQuery(<MeetingActions meeting={meeting} tz="UTC" />);
+  await press(t.meetings.internal.enter);
+  expect(await screen.findByText(/11:30/)).toBeTruthy();
+  expect(screen.queryByText(/14:30/)).toBeNull();
 });
 
 test('«اجتماع جديد» needs meetings.write', async () => {

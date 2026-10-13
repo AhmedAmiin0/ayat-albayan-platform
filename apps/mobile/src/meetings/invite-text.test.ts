@@ -32,6 +32,7 @@ test('each recipient outcome has its words', () => {
 test('a coded refusal reads its own line, anything else the fallback', () => {
   expect(inviteError(new ApiError(400, { code: 'starts_in_past' }))).toBe(I.errors.starts_in_past);
   expect(inviteError(new ApiError(409, { code: 'invite_limit' }))).toBe(I.errors.invite_limit);
+  expect(inviteError(new ApiError(410, { code: 'meeting_ended' }))).toBe(t.classroom.error.meeting_ended);
   expect(inviteError(new ApiError(400, { code: 'not_scheduled' }))).toBe(I.error);
   expect(inviteError(new Error('x'), 'fallback')).toBe('fallback');
 });

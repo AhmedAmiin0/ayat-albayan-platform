@@ -9,7 +9,7 @@ import { StudentsPage } from './StudentsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
-function renderPage(filters: StudentsFilters, total = 0) {
+function renderPage(filters: StudentsFilters, total = 0, search = 'سهيلة') {
   apiFetch.mockImplementation((path: string) => {
     if (path.startsWith('/students/status-counts')) return Promise.resolve({ trial: 2, active: 9, pending_renewal: 0, paused: 1, churned: 0 });
     return Promise.resolve(path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : []);
@@ -17,7 +17,7 @@ function renderPage(filters: StudentsFilters, total = 0) {
   const onChange = vi.fn();
   render(
     <QueryClientProvider client={new QueryClient()}>
-      <StudentsPage search="سهيلة" page={3} filters={filters} onChange={onChange} onOpen={vi.fn()} />
+      <StudentsPage search={search} page={3} filters={filters} onChange={onChange} onOpen={vi.fn()} />
     </QueryClientProvider>,
   );
   return onChange;
@@ -55,15 +55,23 @@ describe('StudentsPage filters (R-STU-01)', () => {
   });
 
   it('«الكل · مشترك · تجريبي» in the toolbar, without «تصفية»: on the status filter, counts under the other filters', async () => {
-    const onChange = renderPage({ teacher: 'none', status: 'paused' });
+    const onChange = renderPage({ teacher: 'none', status: 'paused' }, 0, '');
     const group = screen.getByRole('group', { name: t.studentLists.kinds });
     expect(screen.queryByRole('dialog')).toBeNull();
     expect(group.querySelector('[aria-pressed="true"]')).toBeNull();
     expect(apiFetch).toHaveBeenCalledWith('/students/status-counts?teacher=none');
     const active = await within(group).findByRole('button', { name: `${t.studentLists.active}9` });
     fireEvent.click(active);
-    expect(onChange).toHaveBeenCalledWith({ search: 'سهيلة', page: 1, filters: { teacher: 'none', status: 'active' } });
+    expect(onChange).toHaveBeenCalledWith({ search: '', page: 1, filters: { teacher: 'none', status: 'active' } });
     fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.all}12` }));
-    expect(onChange).toHaveBeenLastCalledWith({ search: 'سهيلة', page: 1, filters: { teacher: 'none' } });
+    expect(onChange).toHaveBeenLastCalledWith({ search: '', page: 1, filters: { teacher: 'none' } });
+  });
+
+  it('under a search the segments show no numbers (the counts would not match the list)', async () => {
+    renderPage({ teacher: 'none' });
+    await screen.findByText(t.common.notFound);
+    const group = screen.getByRole('group', { name: t.studentLists.kinds });
+    expect(within(group).getByRole('button', { name: t.studentLists.active })).toBeTruthy();
+    expect(group.textContent).not.toMatch(/\d/);
   });
 });

@@ -18,7 +18,8 @@ export function useMeetingManage(id: string) {
   const refresh = () => client.invalidateQueries({ queryKey: ['meetings'] });
   const settle = { onSettled: () => setAsking(null) };
   const end = useMutation({ mutationFn: endMeeting, onSuccess: refresh, ...settle });
-  const cancel = useMutation({ mutationFn: cancelMeeting, onSuccess: refresh, ...settle });
+  // A refused cancel (e.g. 410 meeting_ended) refreshes too, so the stale cancel button goes.
+  const cancel = useMutation({ mutationFn: cancelMeeting, onSuccess: refresh, onError: refresh, ...settle });
   const link = useMutation({ mutationFn: newMeetingLink, ...settle });
   const confirms = {
     end: { message: t.mobileClassroom.endConfirm, label: t.mobileClassroom.endAction, run: () => end.mutate(id), busy: end.isPending },

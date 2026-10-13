@@ -43,6 +43,12 @@ describe('SalesSchedule «جدول الحلقات» (read-only)', () => {
     expect(within(mohamed).queryByText(t.classroom.enter)).toBeNull();
   });
 
+  it("never shows a teacher's fixed link (docs/16 row 14), though /sales/teachers carries it", async () => {
+    renderDay({ date: '2026-10-12' });
+    await screen.findByRole('region', { name: t.schedule.dayBoard });
+    expect(document.body.textContent).not.toContain('meet.example.org');
+  });
+
   it('no edit, cancel, move, book or report action: lesson chips are not buttons', async () => {
     renderDay({ date: '2026-10-12' });
     const board = await screen.findByRole('region', { name: t.schedule.dayBoard });

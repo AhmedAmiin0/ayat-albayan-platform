@@ -20,7 +20,7 @@ const LESSONS = [
 
 function backend(lessons = LESSONS) {
   mockApiFetch.mockImplementation(async (path: string) =>
-    path === '/sales/teachers' ? [teacher(), teacher({ id: 't2', name: 'خالد', name_en: null })] : { date: '2026-10-12', lessons },
+    path === '/sales/teachers' ? [teacher({ meeting_link: 'https://meet.example.org/x' }), teacher({ id: 't2', name: 'خالد', name_en: null })] : { date: '2026-10-12', lessons },
   );
 }
 
@@ -43,6 +43,13 @@ test('today in Riyadh, read-only: time, students, teacher, status, trial / makeu
   expect(screen.getAllByRole('button', { name: t.classroom.enter })).toHaveLength(1);
   expect(screen.getByText(t.sales.academySchedule.readOnly)).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.lessons.rescheduleSubmit })).toBeNull();
+});
+
+test("never shows a teacher's fixed link (docs/16 row 14)", async () => {
+  backend();
+  await renderWithQuery(<SalesScheduleScreen />);
+  expect(await screen.findByText('سلمى')).toBeTruthy();
+  expect(screen.queryByText(/meet\.example\.org/)).toBeNull();
 });
 
 test('a teacher pill and the day arrows re-read the day', async () => {

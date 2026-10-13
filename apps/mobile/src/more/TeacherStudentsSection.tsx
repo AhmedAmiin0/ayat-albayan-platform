@@ -23,9 +23,11 @@ export interface TeacherStudentsSectionProps {
 }
 
 /**
- * «طلاب المعلم/ة» (web profile tab parity, owner 2026-10-12): «مشترك · تجريبي · الكل» with the API's
- * counts (GET /students/status-counts?teacher=), the list from GET /students?teacher=&status= («الكل»
- * sends no status: every status, paused and stopped too). A row opens the student's file.
+ * «طلاب المعلم/ة» (owner 2026-10-12): «مشترك · تجريبي · الكل» with the API's counts (GET
+ * /students/status-counts?teacher=), the list from GET /students?teacher=&status= («الكل» sends no
+ * status: every status, paused and stopped too). A row opens the student's file. Not the web admin
+ * panel's behaviour (TeacherStudentsPanel opens on trial + active with status chips): this opens on
+ * «مشترك»; aligning them awaits an owner decision.
  */
 export function TeacherStudentsSection({ teacherId, status }: TeacherStudentsSectionProps) {
   const [kind, setKind] = useState<StudentListKind>(() => presetKind(status));
