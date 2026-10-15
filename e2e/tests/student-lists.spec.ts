@@ -87,8 +87,9 @@ test.describe('student lists «مشترك / تجريبي»', () => {
     await expect(segment(kinds, L.all)).toHaveAttribute('aria-pressed', 'true');
     await expectNames(page, [names.active, names.trial, names.paused], []);
 
+    // «تجريبي» = not subscribed yet (owner 2026-10-15, docs/18): new, trial and pending_subscription.
     await segment(kinds, L.trial).click();
-    await expect(page).toHaveURL(/status=trial/);
+    await expect(page).toHaveURL(/status=new(,|%2C)trial(,|%2C)pending_subscription(&|$)/);
     await expect(page).toHaveURL(new RegExp(`teacher=${teacherId}`));
     await expectNames(page, [names.trial], [names.active, names.paused]);
 

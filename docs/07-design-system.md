@@ -518,11 +518,14 @@ Keep this map in `packages/shared/src/status-style.ts` and unit-test that every 
 | | converted | `enums.leadStatus.converted` | مشترك | ok | fill |
 | | no_reply | `enums.leadStatus.no_reply` | مردّش | neutral | hollow |
 | | lost | `enums.leadStatus.lost` | عميل ضايع / اعتذر | neutral | struck |
-| **student_status** | trial | `enums.studentStatus.trial` | تجريبي | neutral | hollow |
+| **student_status** (docs/18) | new | `enums.studentStatus.new` | جديد | act | hollow |
+| | trial | `enums.studentStatus.trial` | بانتظار الحلقة التجريبية | neutral | hollow |
+| | pending_subscription | `enums.studentStatus.pending_subscription` | بانتظار الاشتراك | act | half |
 | | active | `enums.studentStatus.active` | مشترك | ok | fill |
 | | pending_renewal | `enums.studentStatus.pending_renewal` | بانتظار التجديد | act | half |
+| | expired | `enums.studentStatus.expired` | انتهى الاشتراك | act | struck |
 | | paused | `enums.studentStatus.paused` | متوقف مؤقتًا | neutral | half |
-| | churned | `enums.studentStatus.churned` | وقف | neutral | struck |
+| | churned | `enums.studentStatus.churned` | توقف | neutral | struck |
 | **subscription_status** | trial | `enums.subscriptionStatus.trial` | تجريبي | neutral | hollow |
 | | active | `enums.subscriptionStatus.active` | مشترك | ok | fill |
 | | paused | `enums.subscriptionStatus.paused` | متوقف مؤقتًا | neutral | half |
