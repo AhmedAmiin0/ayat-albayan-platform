@@ -23,7 +23,7 @@ export type StudentCreateRequest = z.infer<typeof studentCreateRequestSchema>;
 
 /**
  * PATCH /students/:id. Shared `studentUpdateSchema` is `.partial()` over fields with defaults and
- * zod 4 still applies them: `{ level }` came back with status 'trial' / program 'quran', silently
+ * zod 4 still applies them: `{ level }` came back with status 'new' / program 'quran', silently
  * resetting an active student. Same fields here, without the defaults.
  */
 export const studentPatchSchema = studentCreateSchema

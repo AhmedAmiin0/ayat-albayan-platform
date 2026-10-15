@@ -1,4 +1,4 @@
-import type { StudentStatus, SubscriptionStatus } from '@ab/shared';
+import { STUDENT_STATUSES, type StudentStatus, type SubscriptionStatus } from '@ab/shared';
 
 // Pure rules of the student status «بانتظار التجديد» (owner 2026-10-12, docs/11 §7, R-STU-05).
 
@@ -27,14 +27,21 @@ export function subscriptionEnded(subs: readonly EndPackage[], today: string): b
   return paidSubs.some((s) => packageEnded(s, today)) && !paidSubs.some(live);
 }
 
-/** active ↔ pending_renewal only; trial, paused and churned are never moved by this rule. */
+/**
+ * active → pending_renewal when ended; pending_renewal / expired → active once it runs again (owner
+ * 2026-10-15, docs/11 §7: expired is renewed like pending_renewal; it only becomes expired via
+ * StudentExpiryJob). The not-subscribed statuses, paused and churned are never moved by this rule.
+ */
 export function renewalTarget(current: StudentStatus, ended: boolean): StudentStatus | null {
   if (current === 'active' && ended) return 'pending_renewal';
-  if (current === 'pending_renewal' && !ended) return 'active';
+  if ((current === 'pending_renewal' || current === 'expired') && !ended) return 'active';
   return null;
 }
 
-/** After the payment that flipped the student is deleted: no positive payment left → trial; else rule 5. */
+/**
+ * Older flips (before 2026-10-15) recorded no `from`: after the payment that flipped the student is
+ * deleted, no positive payment left → trial; else rule 5.
+ */
 export function revertTarget(input: { otherPayment: boolean; ended: boolean }): StudentStatus {
   if (!input.otherPayment) return 'trial';
   return input.ended ? 'pending_renewal' : 'active';
@@ -52,6 +59,17 @@ const field = (row: unknown, key: string): unknown =>
 /** The automatic flip (trial → active or pending_renewal → active) recorded for this payment. */
 export function isFlipBy(last: StatusChangeRow | null, paymentId: string): boolean {
   return field(last?.after, 'via') === 'payment' && field(last?.after, 'payment_id') === paymentId;
+}
+
+/** The from-status a payment flip recorded (after.from, owner 2026-10-15), or null on older rows. */
+export function recordedFrom(last: StatusChangeRow | null): StudentStatus | null {
+  const from = field(last?.after, 'from');
+  return STUDENT_STATUSES.find((s) => s === from) ?? null;
+}
+
+/** When the student became pending_renewal: the newest status_change's `at` when it set that status. */
+export function pendingSince(last: StatusChangeRow | null): string | null {
+  return last && field(last.after, 'status') === 'pending_renewal' ? last.at : null;
 }
 
 /**

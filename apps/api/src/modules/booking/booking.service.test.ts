@@ -27,11 +27,11 @@ const INVOICE: InvoiceRow = {
 function setup() {
   const deps = fakePlanner();
   deps.queries.createBooking.mockResolvedValue(RESULT);
-  const { alert, sender } = fakeTeacherAlert();
+  const { after, sender, trial } = fakeTeacherAlert();
   const invoices = { resolve: vi.fn().mockResolvedValue(INVOICE) };
-  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices as unknown as BookingInvoices, alert);
+  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices as unknown as BookingInvoices, after);
   const service = new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries);
-  return { ...deps, service, sender, invoices };
+  return { ...deps, service, sender, invoices, trial };
 }
 type Queries = ReturnType<typeof setup>['queries'];
 const sentAudit = (queries: Queries) => queries.createBooking.mock.calls[0]?.[0]?.audit;
@@ -105,5 +105,15 @@ describe('BookingService (R-SCH-06, R-SCH-04, R-NFR-03)', () => {
     await expect(service.book(bookingRequest(), ACTOR)).rejects.toThrow('invoice_required');
     expect(queries.createBooking).not.toHaveBeenCalled();
     expect(sender.kick).not.toHaveBeenCalled();
+  });
+
+  it('a trial booking evaluates its students’ status (new → trial) with the actor; a package booking does not', async () => {
+    const t = setup();
+    t.invoices.resolve.mockResolvedValue(null);
+    await t.service.book(bookingRequest({ package: 'trial', studentIds: [IDS.s1] }), ACTOR);
+    expect(t.trial.evaluate).toHaveBeenCalledWith(RESULT.student_ids, ACTOR);
+    const pkg = setup();
+    await pkg.service.book(bookingRequest(), ACTOR);
+    expect(pkg.trial.evaluate).not.toHaveBeenCalled();
   });
 });

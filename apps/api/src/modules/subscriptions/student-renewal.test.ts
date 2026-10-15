@@ -42,13 +42,21 @@ describe('StudentRenewal: active ↔ «بانتظار التجديد»', () => {
   it('a renewal payment → active, audited with the payment id; any other renewal → subscription_renewed', async () => {
     const t = setup({ status: 'pending_renewal' });
     expect(await run(t, state(), { via: 'payment', paymentId: 'p9' })).toBe('active');
-    expect(t.statuses.move).toHaveBeenCalledWith(expect.anything(), { actorId: null, after: { via: 'payment', payment_id: 'p9' } });
+    const after = { via: 'payment', payment_id: 'p9', from: 'pending_renewal', reason: 'payment' };
+    expect(t.statuses.move).toHaveBeenCalledWith(expect.anything(), { actorId: null, after });
     await run(t, state());
     expect(t.statuses.move).toHaveBeenLastCalledWith(expect.anything(), { actorId: null, after: { via: 'subscription_renewed' } });
   });
 
-  it('trial, paused and churned are never touched', async () => {
-    for (const status of ['trial', 'paused', 'churned']) {
+  it('expired → active once a renewal runs again (owner 2026-10-15); expired and still ended → nothing', async () => {
+    const t = setup({ status: 'expired' });
+    expect(await run(t, state())).toBe('active');
+    expect(t.statuses.move).toHaveBeenCalledWith({ studentId: 's1', from: 'expired', to: 'active' }, expect.anything());
+    expect(await run(setup({ status: 'expired' }), state({ remaining: 0 }))).toBeNull();
+  });
+
+  it('new, trial, pending_subscription, paused and churned are never touched', async () => {
+    for (const status of ['new', 'trial', 'pending_subscription', 'paused', 'churned']) {
       const t = setup({ status });
       expect(await run(t, state({ remaining: 0 }))).toBeNull();
       expect(t.statuses.move).not.toHaveBeenCalled();

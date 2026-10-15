@@ -55,10 +55,11 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
   });
 
   it('status-counts returns a count per status', async () => {
-    results['v_student_list'] = [{ count: 1 }, { count: 2 }, { count: 4 }, { count: 0 }, { count: 0 }];
+    const n = [1, 2, 4, 3, 5, 6, 0, 0];
+    results['v_student_list'] = n.map((count) => ({ count }));
     const res = await send({ method: 'GET', url: '/students/status-counts?teacher=none' });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ trial: 1, active: 2, pending_renewal: 4, paused: 0, churned: 0 });
+    expect(res.json()).toEqual({ new: 1, trial: 2, pending_subscription: 4, active: 3, pending_renewal: 5, expired: 6, paused: 0, churned: 0 });
   });
 
   it('rejects a handle instead of a phone with 400 (R-STU-02)', async () => {

@@ -24,19 +24,19 @@ describe('DashboardQueries (counts from statuses)', () => {
     await expect(q.activeStudents()).rejects.toThrow(/boom/);
   });
 
-  it('«مشترك» counts status active only (pending_renewal is not مشترك)', async () => {
+  it('«مشترك» counts status active only (pending_renewal / expired are not مشترك)', async () => {
     const { db, calls } = fakeDb({ students: [{ count: 4 }] });
     expect(await new DashboardQueries(db).activeStudents()).toBe(4);
     expect(calls).toContainEqual({ table: 'students', method: 'eq', args: ['status', 'active'] });
   });
 
-  it('leads are the ones created in the window; load students are current (trial/active/pending_renewal) with a teacher', async () => {
+  it('leads are the ones created in the window; load students are current (CURRENT_STUDENT_STATUSES, owner 2026-10-15) with a teacher', async () => {
     const { db, calls } = fakeDb({ leads: [{ data: [] }], students: [{ data: [] }] });
     const q = new DashboardQueries(db);
     await q.leads(W);
     await q.loadStudents();
     expect(calls).toContainEqual({ table: 'leads', method: 'gte', args: ['created_at', W.from.toISOString()] });
-    expect(calls).toContainEqual({ table: 'students', method: 'in', args: ['status', ['trial', 'active', 'pending_renewal']] });
+    expect(calls).toContainEqual({ table: 'students', method: 'in', args: ['status', ['new', 'trial', 'pending_subscription', 'active', 'pending_renewal', 'expired']] });
     expect(calls).toContainEqual({ table: 'students', method: 'not', args: ['teacher_id', 'is', null] });
   });
 });

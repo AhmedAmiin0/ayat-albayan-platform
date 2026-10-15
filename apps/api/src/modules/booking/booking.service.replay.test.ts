@@ -14,7 +14,7 @@ function setup() {
   const writer = new BookingWriter(
     deps.queries as unknown as BookingQueries,
     { resolve: vi.fn() } as unknown as BookingInvoices,
-    fakeTeacherAlert().alert,
+    fakeTeacherAlert().after,
   );
   return { ...deps, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries) };
 }

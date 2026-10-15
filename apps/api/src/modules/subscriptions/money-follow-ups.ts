@@ -10,9 +10,10 @@ const isDeletedPayment = (row: unknown): row is DeletedPayment =>
 
 /**
  * What a money write changes outside money (MoneyWrites, after the audit, before the recompute): a new
- * package converts the family's lead (R-LEAD-01); a new payment of a trial student makes it «مشترك» with
- * the payment's id (owner 2026-10-12); deleting that payment reverts it (StudentDeactivation, with the full
- * `before` row). Updates and refunds change nothing. Idempotent: a retried form runs it again safely.
+ * package converts the family's lead (R-LEAD-01); a new payment makes a student not subscribed yet or whose
+ * package ended «مشترك» with the payment's id and from-status (owner 2026-10-12, 2026-10-15); deleting that
+ * payment reverts it (StudentDeactivation, with the full `before` row). The recompute runs after this, so a
+ * renewal still part-paid moves a pending_renewal / expired student back to pending_renewal (StudentRenewal). Updates and refunds change nothing. Idempotent: a retried form runs it again safely.
  */
 @Injectable()
 export class MoneyFollowUps {

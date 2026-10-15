@@ -13,6 +13,7 @@ import { LessonWriter } from '../scheduling/lesson-writer';
 import { ruleRow } from '../scheduling/scheduling.fakes';
 import { ScheduleQueries } from '../scheduling/schedule.queries';
 import { AlertsQueries } from '../subscriptions/alerts.queries';
+import { StudentTrialQueries } from '../subscriptions/student-trial.queries';
 import { UnpaidFlags } from '../subscriptions/unpaid-flags.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { LessonProposalQueries } from './lesson-proposals.queries';
@@ -75,6 +76,8 @@ export async function lessonsApp() {
     .overrideProvider(LessonProposalQueries).useValue(m.proposals)
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
     .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
+    // LessonEvents → StudentTrialStatus listener (tested in subscriptions/student-trial-status.test.ts).
+    .overrideProvider(StudentTrialQueries).useValue({ studentsOfTrialLessons: async () => [], lessonsOf: async () => [] })
     .overrideProvider(UnpaidFlags).useValue(m.unpaid)
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());

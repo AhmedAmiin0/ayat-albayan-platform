@@ -2,12 +2,14 @@ import type { AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
 import { fakeSettings } from '../../common/settings/settings.fakes';
+import type { StudentTrialStatus } from '../subscriptions/student-trial-status';
 import type { MessageSender } from '../whatsapp/message.sender';
+import { BookingFollowUps } from './booking.follow-ups';
 import type { AlertLesson } from './teacher-alert.plan';
 import type { TeacherAlertQueries } from './teacher-alert.queries';
 import { TeacherAlert, TeacherAlertDeps } from './teacher-alert.service';
 
-/** Tests only: a real TeacherAlert over vi.fn reads, push, settings and sender. */
+/** Tests only: a real TeacherAlert over vi.fn reads, push, settings and sender; BookingFollowUps over it and a vi.fn trial status. */
 export function fakeTeacherAlert(over: { lessons?: AlertLesson[]; approved?: boolean; settings?: Partial<AcademySettings> } = {}) {
   const queries = {
     lessons: vi.fn(async () => over.lessons ?? []),
@@ -20,5 +22,7 @@ export function fakeTeacherAlert(over: { lessons?: AlertLesson[]; approved?: boo
   const settings = fakeSettings(over.settings);
   const deps = new TeacherAlertDeps(push as unknown as PushService, settings, sender as unknown as MessageSender);
   const alert = new TeacherAlert(queries as unknown as TeacherAlertQueries, deps);
-  return { alert, queries, push, sender };
+  const trial = { evaluate: vi.fn(async () => 0) };
+  const after = new BookingFollowUps(alert, trial as unknown as StudentTrialStatus);
+  return { alert, after, trial, queries, push, sender };
 }

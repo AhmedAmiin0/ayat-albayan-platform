@@ -6,13 +6,14 @@ import { TeacherThreadsQueries } from './teacher-threads.queries';
 
 /**
  * What a signed-in teacher may see in the inbox (owner decision 2026-10-02, R-TCH-03, R-MSG-05):
- * the chats of guardians whose children they teach, plus their own chat with the academy. A trial
- * student's family is not in it (owner 2026-10-11: sales or the system manages between them).
+ * the chats of guardians whose children they teach, plus their own chat with the academy. The family
+ * of a student not subscribed yet (new, trial, pending_subscription) is not in it (owner 2026-10-11,
+ * 2026-10-15: sales or the system manages between them).
  */
 export interface TeacherScope {
   teacherId: string;
   teacherName: string;
-  /** teacher_thread_phones (migrations 164, 165, 20261007000001), E.164. */
+  /** teacher_thread_phones (migrations 164, 165, 20261007000001, 20261015000441), E.164. */
   phones: ReadonlySet<string>;
   /** The teacher's own number: visible, read-only. */
   ownPhone: string | null;

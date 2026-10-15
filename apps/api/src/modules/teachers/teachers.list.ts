@@ -1,4 +1,5 @@
 import {
+  isNotSubscribed,
   searchDigits,
   type ListSort,
   type Program,
@@ -50,11 +51,14 @@ export function applyTeacherFilters<Q extends TeacherFilterable<Q>>(query: Q, f:
   return q;
 }
 
-/** Students' (teacher_id, status) rows → «مشترك / تجريبي» counts by teacher id; other statuses ignored. */
+/**
+ * Students' (teacher_id, status) rows → «مشترك / تجريبي» counts by teacher id: active, and not subscribed yet
+ * (new, trial, pending_subscription; owner 2026-10-15). Other statuses ignored.
+ */
 export function tallyKinds(rows: readonly { teacher_id: string | null; status: StudentStatus }[]): Map<string, TeacherStudentCounts> {
   const out = new Map<string, TeacherStudentCounts>();
   for (const { teacher_id: id, status } of rows) {
-    if (!id || (status !== 'active' && status !== 'trial')) continue;
+    if (!id || (status !== 'active' && !isNotSubscribed(status))) continue;
     const c = out.get(id) ?? { active_count: 0, trial_count: 0 };
     if (status === 'active') c.active_count += 1;
     else c.trial_count += 1;

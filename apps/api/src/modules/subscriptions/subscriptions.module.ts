@@ -19,6 +19,10 @@ import { StudentActivation } from './student-activation';
 import { StudentDeactivation } from './student-deactivation';
 import { StudentRenewal } from './student-renewal';
 import { StudentStatusQueries } from './student-status.queries';
+import { StudentExpiryJob } from './student-expiry.job';
+import { StudentExpiryQueries } from './student-expiry.queries';
+import { StudentTrialStatus } from './student-trial-status';
+import { StudentTrialQueries } from './student-trial.queries';
 import { SubscriptionsService } from './subscriptions.service';
 import { UnpaidFlags } from './unpaid-flags.service';
 
@@ -28,7 +32,8 @@ import { UnpaidFlags } from './unpaid-flags.service';
  * Exports: MoneyWrites (payments: audit + recompute after a write), SubscriptionAlertsService
  * (reports/lessons may call evaluateLessons; AlertsJob already listens to LessonEvents),
  * PackagesService, BalanceQueries, UnpaidFlags (the lesson views' «الباقة مش مدفوعة» flag) and
- * SubscriptionCreator + SubscriptionsService (the salesperson's subscribe from the chat reuses them, sales-money).
+ * SubscriptionCreator + SubscriptionsService (the salesperson's subscribe from the chat reuses them, sales-money),
+ * StudentTrialStatus (a trial booking moves new → trial, owner 2026-10-15). StudentExpiryJob: pending_renewal → expired.
  */
 @Module({
   imports: [PricingModule, TeachersModule],
@@ -47,6 +52,10 @@ import { UnpaidFlags } from './unpaid-flags.service';
     StudentDeactivation,
     StudentRenewal,
     StudentStatusQueries,
+    StudentExpiryJob,
+    StudentExpiryQueries,
+    StudentTrialQueries,
+    StudentTrialStatus,
     SubscriptionAlertsService,
     AlertsEnv,
     SubscriptionsQueries,
@@ -54,6 +63,15 @@ import { UnpaidFlags } from './unpaid-flags.service';
     SubscriptionsService,
     UnpaidFlags,
   ],
-  exports: [BalanceQueries, MoneyWrites, PackagesService, SubscriptionAlertsService, SubscriptionCreator, SubscriptionsService, UnpaidFlags],
+  exports: [
+    BalanceQueries,
+    MoneyWrites,
+    PackagesService,
+    StudentTrialStatus,
+    SubscriptionAlertsService,
+    SubscriptionCreator,
+    SubscriptionsService,
+    UnpaidFlags,
+  ],
 })
 export class SubscriptionsModule {}

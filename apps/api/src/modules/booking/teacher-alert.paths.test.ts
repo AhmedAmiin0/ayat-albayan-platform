@@ -17,7 +17,7 @@ function setup() {
   deps.queries.createBooking.mockResolvedValue(RESULT);
   const fake = fakeTeacherAlert({ lessons: [{ id: 'L1', starts_at: RESULT.lessons[0]?.starts_at ?? '', teacher: TEACHER }] });
   const invoices = { resolve: vi.fn().mockResolvedValue(null) } as unknown as BookingInvoices;
-  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices, fake.alert);
+  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, invoices, fake.after);
   const booking = new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries);
   return { ...fake, booking, bookingQueries: deps.queries };
 }

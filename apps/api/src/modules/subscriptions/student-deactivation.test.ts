@@ -23,7 +23,7 @@ const audited = (to: string) => [
   { actorId: 'admin1', after: { via: 'payment_deleted', payment_id: 'p1' } },
 ];
 
-describe('StudentDeactivation: deleting the payment that flipped the student reverts it', () => {
+describe('StudentDeactivation: an older flip (no recorded from) reverts by the old rules', () => {
   it('no positive payment left → trial, audited by the deleting admin with the payment id', async () => {
     const t = setup();
     expect(await t.d.afterDelete(PAYMENT, IDS)).toBe(true);
@@ -62,5 +62,30 @@ describe('StudentDeactivation: deleting the payment that flipped the student rev
     const t = setup({ status: 'trial' });
     expect(await t.d.afterDelete(PAYMENT, IDS)).toBe(false);
     expect(t.statuses.move).not.toHaveBeenCalled();
+  });
+});
+
+describe('StudentDeactivation: a flip that recorded its from-status goes back to it (owner 2026-10-15)', () => {
+  const flipFrom = (from: string) => ({ ...FLIP_P1, after: { ...FLIP_P1.after, from, reason: 'payment' } });
+
+  it('back to the recorded status while still active, audited payment_deleted with from active', async () => {
+    for (const from of ['new', 'trial', 'pending_subscription', 'pending_renewal', 'expired']) {
+      const t = setup({ last: flipFrom(from), other: true, ended: true });
+      expect(await t.d.afterDelete(PAYMENT, IDS)).toBe(true);
+      expect(t.statuses.move).toHaveBeenCalledWith(
+        { studentId: 's1', from: 'active', to: from },
+        { actorId: 'admin1', after: { via: 'payment_deleted', payment_id: 'p1', from: 'active', reason: 'payment_deleted' } },
+      );
+      expect(t.statuses.hasPositivePayment).not.toHaveBeenCalled();
+    }
+  });
+
+  it('no longer active (moved since), or an unknown from value: nothing', async () => {
+    const moved = setup({ last: flipFrom('trial'), status: 'pending_renewal' });
+    expect(await moved.d.afterDelete(PAYMENT, IDS)).toBe(false);
+    expect(moved.statuses.move).not.toHaveBeenCalled();
+    const odd = setup({ last: flipFrom('paused') });
+    expect(await odd.d.afterDelete(PAYMENT, IDS)).toBe(false);
+    expect(odd.statuses.move).not.toHaveBeenCalled();
   });
 });
