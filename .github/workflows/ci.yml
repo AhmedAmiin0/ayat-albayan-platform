@@ -131,6 +131,15 @@ jobs:
             e2e/playwright-report
             e2e/test-results
           retention-days: 7
+      # Journey 7's screenshots for the owner, on every run (fake data only). Only the shard that ran the
+      # spec has them; the others upload nothing.
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: assistant-journey-screens
+          path: e2e/test-results/**/journey-7-*/**/*.png
+          if-no-files-found: ignore
+          retention-days: 7
 
   # The production configuration (docs/12 §13.12): ONE WhatsApp line, no WA_CHAT_* keys in the API or
   # stub env (playwright.config.ts reads E2E_LINES). The six §5 journeys plus the template status and
