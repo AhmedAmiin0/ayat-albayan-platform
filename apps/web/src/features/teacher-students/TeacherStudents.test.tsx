@@ -57,8 +57,8 @@ describe('TeacherStudents «الطلاب» (teacher)', () => {
     expect(screen.getByRole('tabpanel', { name: t.teacherStudents.trial })).toBeTruthy();
   });
 
-  it('a pending_renewal student stays in «مشتركون» with its «بانتظار التجديد» chip; active ones carry none', async () => {
-    apiFetch.mockResolvedValue([s({}), s({ id: 's4', name: 'مريم', status: 'pending_renewal' })]);
+  it('a package-ended student stays in «مشتركون» with its «بانتظار التجديد» / «انتهى الاشتراك» chip; active ones carry none', async () => {
+    apiFetch.mockResolvedValue([s({}), s({ id: 's4', name: 'مريم', status: 'pending_renewal' }), s({ id: 's5', name: 'هند', status: 'expired' })]);
     render(
       <QueryClientProvider client={new QueryClient()}>
         <TeacherStudents />
@@ -66,6 +66,7 @@ describe('TeacherStudents «الطلاب» (teacher)', () => {
     );
     expect(await screen.findByText('مريم')).toBeTruthy();
     expect(screen.getAllByText(t.enums.studentStatus.pending_renewal)).toHaveLength(1);
+    expect(screen.getAllByText(t.enums.studentStatus.expired)).toHaveLength(1);
     expect(screen.queryByText(t.enums.studentStatus.active)).toBeNull();
   });
 

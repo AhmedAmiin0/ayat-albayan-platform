@@ -9,9 +9,11 @@ import { StudentsPage } from './StudentsPage';
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (importOriginal) => ({ ...(await importOriginal<object>()), apiFetch }));
 
+const COUNTS = { new: 1, trial: 2, pending_subscription: 1, active: 9, pending_renewal: 0, expired: 1, paused: 1, churned: 0 };
+
 function renderPage(filters: StudentsFilters, total = 0, search = 'سهيلة') {
   apiFetch.mockImplementation((path: string) => {
-    if (path.startsWith('/students/status-counts')) return Promise.resolve({ trial: 2, active: 9, pending_renewal: 0, paused: 1, churned: 0 });
+    if (path.startsWith('/students/status-counts')) return Promise.resolve(COUNTS);
     return Promise.resolve(path.startsWith('/students?') ? { items: [], total, page: 3, pageSize: 20 } : []);
   });
   const onChange = vi.fn();
@@ -63,7 +65,9 @@ describe('StudentsPage filters (R-STU-01)', () => {
     const active = await within(group).findByRole('button', { name: `${t.studentLists.active}9` });
     fireEvent.click(active);
     expect(onChange).toHaveBeenCalledWith({ search: '', page: 1, filters: { teacher: 'none', status: 'active' } });
-    fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.all}12` }));
+    fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.trial}4` }));
+    expect(onChange).toHaveBeenLastCalledWith({ search: '', page: 1, filters: { teacher: 'none', status: 'new,trial,pending_subscription' } });
+    fireEvent.click(within(group).getByRole('button', { name: `${t.studentLists.all}15` }));
     expect(onChange).toHaveBeenLastCalledWith({ search: '', page: 1, filters: { teacher: 'none' } });
   });
 

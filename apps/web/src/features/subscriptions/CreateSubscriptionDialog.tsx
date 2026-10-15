@@ -17,16 +17,18 @@ import { StudentPicker, type PickedStudent } from './StudentPicker';
 type Props = {
   /** Preset from the student profile; otherwise the admin picks one. */
   student?: PickedStudent;
+  /** The calculator's first inputs (a renewal starts from the last package); else the defaults. */
+  initial?: PricingForm;
   onClose: () => void;
   onSaved: () => void;
 };
 
 /** «اشتراك جديد» (R-SUB-01): calculator inputs → the API's quote → saved at that price. */
-export function CreateSubscriptionDialog({ student: preset, onClose, onSaved }: Props) {
+export function CreateSubscriptionDialog({ student: preset, initial, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
   const [student, setStudent] = useState<PickedStudent | null>(preset ?? null);
-  const [form, setForm] = useState<PricingForm>(INITIAL_PRICING);
+  const [form, setForm] = useState<PricingForm>(initial ?? INITIAL_PRICING);
   const [startsOn, setStartsOn] = useState(() => todayIn('Asia/Riyadh'));
   const [notes, setNotes] = useState('');
   const pricing = pricingBody(form);

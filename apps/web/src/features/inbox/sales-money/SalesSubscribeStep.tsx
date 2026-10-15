@@ -17,6 +17,8 @@ import { startBody } from './start-body';
 
 type Props = {
   students: SalesFamilyStudent[];
+  /** The student already picked (a renewal); else the only one, or none. */
+  picked?: string | undefined;
   onClose: () => void;
   onSaved: (sub: SalesMoneySubscriptionView) => void;
 };
@@ -26,10 +28,10 @@ type Props = {
  * first day (only with subscriptions.set_start_date, else the API's default) → POST /sales/subscriptions.
  * One clientRequestId per body: a retry gets the first package back.
  */
-export function SalesSubscribeStep({ students, onClose, onSaved }: Props) {
+export function SalesSubscribeStep({ students, picked, onClose, onSaved }: Props) {
   const queryClient = useQueryClient();
   const formId = useId();
-  const [studentId, setStudentId] = useState(() => (students.length === 1 ? (students[0]?.id ?? '') : ''));
+  const [studentId, setStudentId] = useState(() => picked ?? (students.length === 1 ? (students[0]?.id ?? '') : ''));
   const [form, setForm] = useState<PricingForm>(INITIAL_PRICING);
   const canSet = usePermissions().can('subscriptions.set_start_date');
   const [today] = useState(() => todayIn('Asia/Riyadh'));

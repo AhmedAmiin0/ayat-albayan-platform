@@ -1,3 +1,4 @@
+import { STUDENT_STATUSES } from '@ab/shared';
 import { QueryClient, QueryClientProvider, queryOptions } from '@tanstack/react-query';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
@@ -41,6 +42,15 @@ function renderForm() {
 
 describe('StudentProfileForm (R-STU-05)', () => {
   beforeEach(() => api.updateStudent.mockReset());
+
+  it('the admin status select offers all eight statuses in the display order (owner 2026-10-15)', async () => {
+    renderForm();
+    await screen.findByText('أبرار');
+    const select = screen.getByLabelText<HTMLSelectElement>(t.students.status);
+    expect(select.value).toBe('trial');
+    expect([...select.options].map((o) => o.value)).toEqual([...STUDENT_STATUSES]);
+    expect([...select.options].map((o) => o.textContent)).toEqual(STUDENT_STATUSES.map((st) => t.enums.studentStatus[st]));
+  });
 
   it('saves level, status and teacher as a PATCH', async () => {
     api.updateStudent.mockResolvedValue(STUDENT);

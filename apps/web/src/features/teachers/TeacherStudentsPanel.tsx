@@ -14,7 +14,7 @@ import type { FilterSearch, SortSearch } from '@/lib/list-search';
 import { teacherStudentColumns } from './teacher-student-columns';
 import { panelView } from './teacher-students-view';
 
-/** The default view: her current students, trial, subscribed and pending renewal (lessons keep running). */
+/** The default view: her current students, not subscribed yet, subscribed and package ended (lessons keep running). */
 export const CURRENT: readonly StudentStatus[] = CURRENT_STUDENT_STATUSES;
 
 /** «١٢ مشترك · ٣ تجريبي · ٥ متوقف»: every status she has students in, in enum order. */
@@ -26,7 +26,7 @@ export function statusSummary(counts: StatusCounts): string {
 
 /**
  * «طلاب المعلم/ة» (R-TCH-03): the students list API with teacher fixed to her, status chips
- * (default trial + subscribed + pending renewal, or every status), counts per status, and a link to the full list.
+ * (default: her current students, or every status), counts per status, and a link to the full list.
  * Columns sort and filter server-side (R-NFR-08); the state is local (a tab of the profile).
  */
 export function TeacherStudentsPanel({ teacherId }: { teacherId: string }) {

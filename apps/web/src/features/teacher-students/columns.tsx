@@ -1,4 +1,4 @@
-import { PROGRAMS, studentStatusStyle, type TeacherStudentView } from '@ab/shared';
+import { isPackageEnded, PROGRAMS, studentStatusStyle, type TeacherStudentView } from '@ab/shared';
 import { Link } from '@tanstack/react-router';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { ColumnFilterDef, DataTableFeatures } from '@/components/DataTable';
@@ -15,8 +15,8 @@ const programs: ColumnFilterDef = { kind: 'select', options: PROGRAMS.map((p) =>
 const fact = 'text-sm text-ink-2';
 
 /**
- * My students (R-TCH-03): name (opens the report history; a «بانتظار التجديد» chip on a
- * pending_renewal student, owner 2026-10-12), code, program, level, age, next lesson.
+ * My students (R-TCH-03): name (opens the report history; a «بانتظار التجديد» / «انتهى الاشتراك»
+ * chip when the package ended, owner 2026-10-12, 2026-10-15), code, program, level, age, next lesson.
  * Sorted and filtered locally (the whole list is loaded). Under 640px the row stacks like the old
  * card: name + code, then program · level · age, then the next lesson.
  */
@@ -33,8 +33,8 @@ export const teacherStudentColumns = col.columns([
         >
           {c.getValue()}
         </Link>
-        {c.row.original.status === 'pending_renewal' && (
-          <StatusChip size="sm" {...studentStatusStyle.pending_renewal} label={t.enums.studentStatus.pending_renewal} />
+        {isPackageEnded(c.row.original.status) && (
+          <StatusChip size="sm" {...studentStatusStyle[c.row.original.status]} label={t.enums.studentStatus[c.row.original.status]} />
         )}
       </span>
     ),
