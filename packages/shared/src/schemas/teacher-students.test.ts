@@ -10,13 +10,17 @@ describe('teacherStudentsQuerySchema', () => {
     expect(teacherStudentsQuerySchema.safeParse(q).success).toBe(false);
   });
 
-  it('maps subscribed to active + pending_renewal and trial to trial only', () => {
-    expect(TEACHER_STUDENT_STATUSES).toEqual({ subscribed: ['active', 'pending_renewal'], trial: ['trial'] });
+  it('maps subscribed to active + package ended and trial to the not-subscribed statuses', () => {
+    expect(TEACHER_STUDENT_STATUSES).toEqual({
+      subscribed: ['active', 'pending_renewal', 'expired'],
+      trial: ['new', 'trial', 'pending_subscription'],
+    });
   });
 
-  it('pending_renewal stays the teacher’s (subscribed list), paused / churned in neither list', () => {
+  it('pending_renewal / expired stay the teacher’s (subscribed list), paused / churned in neither list', () => {
     const all = Object.values(TEACHER_STUDENT_STATUSES).flat();
     expect(all).toContain('pending_renewal');
+    expect(all).toContain('expired');
     expect(all).not.toContain('paused');
     expect(all).not.toContain('churned');
   });

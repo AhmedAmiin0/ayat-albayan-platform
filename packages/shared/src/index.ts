@@ -17,6 +17,7 @@ export * from './schemas/index.js';
 export * from './settings/index.js';
 export * from './status-style.js';
 export * from './student-lists.js';
+export * from './students/index.js';
 export * from './theme.js';
 export * from './locale.js';
 export * from './time-zone.js';

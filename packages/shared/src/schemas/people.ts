@@ -34,7 +34,7 @@ export const studentCreateSchema = z.object({
   goal: optionalText,
   riwaya: optionalText,
   tz: timeZone,
-  status: z.enum(STUDENT_STATUSES).default('trial'),
+  status: z.enum(STUDENT_STATUSES).default('new'),
   teacher_id: z.uuid().nullish(),
   /** Teacher gender filter in the booking wizard (R-SCH-06); null = no preference. */
   teacher_gender_pref: z.enum(GENDERS).nullish(),
