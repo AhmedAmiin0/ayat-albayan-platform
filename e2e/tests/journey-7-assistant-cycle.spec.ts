@@ -12,7 +12,7 @@ import {
 } from '../support/assistant-journey';
 
 // Journey 7 (owner 2026-10-15): the WHOLE student cycle as an assistant (base role sales), docs/16 + docs/18.
-// A family writes in → the assistant checks the number, registers the child with a trial («جديد» →
+// A family writes in → the assistant checks the number, registers the child with a trial (written at once as
 // «بانتظار الحلقة التجريبية») → the trial is attended («بانتظار الاشتراك») → she subscribes the family and
 // records the bank transfer («مشترك», in «مدفوعاتي») → the package ends («بانتظار التجديد») → expired
 // («انتهى الاشتراك») → she renews from the chat («مشترك» again). The assistant's buttons in the web UI;
@@ -67,11 +67,13 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     });
 
     let ids = { studentId: '', lessonId: '' };
-    await test.step('3. registered from the chat with a trial: «جديد» → «بانتظار الحلقة التجريبية»', async () => {
+    await test.step('3. registered from the chat with a trial: «بانتظار الحلقة التجريبية»', async () => {
       await openChat(page, phone);
       await registerWithTrial(page, { name, guardian });
       ids = await childAndTrial(name);
-      await expectStatus(page, { ...family, studentId: ids.studentId }, { from: 'new', to: 'trial', reason: 'trial_booked' });
+      // A registration with a trial lesson writes the student as «بانتظار الحلقة التجريبية» at once
+      // (docs/18 transition 1: create_booking, not a later new → trial move), so no status_change row yet.
+      await expectStatus(page, { ...family, studentId: ids.studentId }, { from: null, to: 'trial', reason: null });
       await shot(page, info, '03-trial-booked');
       await expectQuietStub(phone);
     });

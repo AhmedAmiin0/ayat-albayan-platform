@@ -58,7 +58,8 @@ export const statusLine = (status: StudentStatus) => `${R.status}: ${ar.enums.st
 
 export interface Expected {
   to: StudentStatus;
-  from: StudentStatus;
+  /** null: no status_change row yet (a registration with a trial starts at `trial`, docs/18 transition 1). */
+  from: StudentStatus | null;
   reason: string | null;
   via?: string;
 }
@@ -70,7 +71,8 @@ export interface Expected {
 export async function expectStatus(page: Page, who: Family & { studentId: string }, want: Expected): Promise<void> {
   await expect.poll(() => studentStatusOf(who.studentId), { timeout: 20_000 }).toBe(want.to);
   const row = await lastStatusRow(who.studentId);
-  expect(row).toMatchObject({ from: want.from, to: want.to, reason: want.reason, ...(want.via ? { via: want.via } : {}) });
+  if (want.from === null) expect(row).toBeUndefined();
+  else expect(row).toMatchObject({ from: want.from, to: want.to, reason: want.reason, ...(want.via ? { via: want.via } : {}) });
   await openChat(page, who.phone);
   await checkRegistration(page, statusLine(want.to));
 }
