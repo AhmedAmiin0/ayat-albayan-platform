@@ -2,7 +2,7 @@ import { forAudience, RATING_TEMPLATE, type TemplateView, type ThreadLesson } fr
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { FlatList, Modal, View } from 'react-native';
-import { useHolds } from '@/auth/use-permissions';
+import { useSendsAllTemplates } from '@/auth/use-permissions';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
@@ -48,11 +48,9 @@ export interface TemplatePickerProps {
  */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
-  // Without templates.manage or templates.send_all only the admin's allow-list (owner 2026-10-12):
-  // none ticked (or not imported yet) is not «nothing approved».
-  const manages = useHolds('templates.manage');
-  const sendsAll = useHolds('templates.send_all');
-  const restricted = !manages && !sendsAll;
+  // Without templates.manage or templates.send_all, and always for an assistant, only the admin's
+  // allow-list (owner 2026-10-12 / 10-15): none ticked (or not imported yet) is not «nothing approved».
+  const restricted = !useSendsAllTemplates();
   const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
   const close = () => {

@@ -1,4 +1,4 @@
-import { isPermission, type Permission } from '@ab/shared';
+import { isPermission, sendsAllTemplates, type Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { pathKey } from '@/lib/query-keys';
@@ -33,4 +33,11 @@ export function usePermissions(): Can {
 export function useHolds(permission: Permission): boolean {
   const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
   return permissionsOf(me.data).includes(permission);
+}
+
+/** Every template from the picker (shared sendsAllTemplates: never an assistant); false until /auth/me answers. */
+export function useSendsAllTemplates(): boolean {
+  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  const role: unknown = typeof me.data === 'object' && me.data !== null ? Reflect.get(me.data, 'role') : null;
+  return sendsAllTemplates({ role: typeof role === 'string' ? role : null, permissions: permissionsOf(me.data) });
 }

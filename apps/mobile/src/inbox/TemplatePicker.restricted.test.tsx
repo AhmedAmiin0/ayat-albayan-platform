@@ -24,8 +24,8 @@ const INVITE: TemplateView = {
   sales_starter: true,
 };
 
-function show(rows: TemplateView[], permissions: string[]) {
-  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { id: 'u1', role: 'teacher', permissions } : rows));
+function show(rows: TemplateView[], permissions: string[], role = 'teacher') {
+  mockApiFetch.mockImplementation(async (path: string) => (path === '/auth/me' ? { id: 'u1', role, permissions } : rows));
   return renderWithQuery(<TemplatePicker visible lessons={[]} teacher={false} onClose={jest.fn()} onSend={jest.fn()} />);
 }
 
@@ -48,4 +48,10 @@ test('nothing on the list: «لا توجد قوالب متاحة لك بعد»',
 test('templates.send_all (or templates.manage) keeps the plain empty note', async () => {
   await show([], ['messages.read', 'templates.send_all']);
   expect(await screen.findByText(t.inbox.composer.noApproved)).toBeTruthy();
+});
+
+test('an assistant (sales) stays on the allow-list even when granted templates.manage (owner 2026-10-15)', async () => {
+  await show([], ['messages.read', 'templates.manage', 'templates.send_all'], 'sales');
+  expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
+  expect(screen.queryByText(t.inbox.composer.noApproved)).toBeNull();
 });
