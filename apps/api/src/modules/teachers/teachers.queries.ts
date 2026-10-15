@@ -4,7 +4,7 @@ import { DB, type Db } from '../../common/db/db.module';
 import { applySort } from '../../common/list-sort';
 import { readAll } from '../scheduling/read-all';
 import { dbError, type Page } from './http';
-import { CURRENT_STUDENT_STATUSES, type TeacherStudentCounts } from '@ab/shared';
+import { CURRENT_STUDENT_STATUSES, NOT_SUBSCRIBED_STATUSES, type TeacherStudentCounts } from '@ab/shared';
 import { applyTeacherFilters, TEACHER_SORT, tallyKinds, type TeacherListQuery } from './teachers.list';
 import { teacherSearchFilter } from './teachers.mapper';
 
@@ -37,7 +37,7 @@ export class TeachersQueries {
     return { items, total: count ?? 0, page, pageSize };
   }
 
-  /** Active and trial students per teacher of one page (≤ 100 ids: one `.in()`), past max_rows. */
+  /** «مشترك» (active) and «تجريبي» (new, trial, pending_subscription; owner 2026-10-15) students per teacher of one page (≤ 100 ids: one `.in()`), past max_rows. */
   async studentCounts(teacherIds: readonly string[]): Promise<Map<string, TeacherStudentCounts>> {
     if (teacherIds.length === 0) return new Map();
     const rows = await readAll((from, to) =>
@@ -45,7 +45,7 @@ export class TeachersQueries {
         .from('students')
         .select('teacher_id, status')
         .in('teacher_id', [...teacherIds])
-        .in('status', ['trial', 'active'])
+        .in('status', ['active', ...NOT_SUBSCRIBED_STATUSES])
         .order('id')
         .range(from, to),
     );
@@ -83,8 +83,8 @@ export class TeachersQueries {
   }
 
   /**
-   * Current load: students with the teacher whose status is current (CURRENT_STUDENT_STATUSES:
-   * trial | active | pending_renewal, whose lessons keep running) for booking options and the
+   * Current load: students with the teacher whose status is current (CURRENT_STUDENT_STATUSES: new |
+   * trial | pending_subscription | active | pending_renewal | expired, owner 2026-10-15) for booking options and the
    * all-teachers calendar. No ids = every teacher.
    * ponytail: counts rows in JS — fine for one academy; a grouped view if teachers get thousands.
    */

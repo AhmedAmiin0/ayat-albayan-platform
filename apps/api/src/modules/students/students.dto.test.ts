@@ -24,6 +24,6 @@ describe('students DTOs', () => {
   it('create normalises the guardian phone and defaults status/program/force (R-STU-02)', () => {
     const dto = studentCreateRequestSchema.parse({ name: 'سهيلة', tz: 'Asia/Riyadh', guardian: GUARDIAN });
     expect(dto.guardian?.phone_e164).toBe('+966501234567');
-    expect(dto).toMatchObject({ status: 'trial', program: 'quran', force: false });
+    expect(dto).toMatchObject({ status: 'new', program: 'quran', force: false });
   });
 });

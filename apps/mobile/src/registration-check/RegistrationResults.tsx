@@ -9,7 +9,7 @@ import { StatusChip } from '@/ui/StatusChip';
 import type { CheckBy } from './registration-check';
 
 /**
- * The answer: «مسجّل: n طالب» and each child (name, code, status — pending_renewal and churned
+ * The answer: «مسجّل: n طالب» and each child (name, code, status — any of the eight, expired and churned
  * included —, teacher or «لم يُحدَّد معلم بعد»), «أول 10 نتائج فقط» when there were more; else
  * «لا يوجد طالب…» for the mode searched.
  */

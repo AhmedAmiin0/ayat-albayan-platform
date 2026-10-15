@@ -59,7 +59,7 @@ describe('TeachersPage «مشترك · تجريبي» columns (R-TCH-03, owner 2
     renderPage();
     await screen.findByText('أبرار');
     expect(link('activeLink', 7).getAttribute('href')).toBe('/admin/students?teacher=t-abrar&status=active');
-    expect(link('trialLink', 2).getAttribute('href')).toBe('/admin/students?teacher=t-abrar&status=trial');
+    expect(link('trialLink', 2).getAttribute('href')).toBe('/admin/students?teacher=t-abrar&status=new%2Ctrial%2Cpending_subscription');
   });
 
   it('a count click follows its link, not the row (the row opens the profile)', async () => {

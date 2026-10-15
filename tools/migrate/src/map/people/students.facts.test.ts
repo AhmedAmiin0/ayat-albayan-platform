@@ -64,13 +64,13 @@ describe('students: what the lesson reports say', () => {
     expect(run.by('students')[0]?.record.columns['status']).toBe('active');
   });
 
-  it('a free trial lesson does not', () => {
+  it('an attended free trial lesson does not: pending_subscription', () => {
     const trial = reportRow({ lesson_number_text: 'التجريبيه' });
     const run = pipeline(
       bundleOf({ hub_students: [studentRow({})], hub_reports: [trial] }),
       MODULES,
     );
-    expect(run.by('students')[0]?.record.columns['status']).toBe('trial');
+    expect(run.by('students')[0]?.record.columns['status']).toBe('pending_subscription');
   });
 
   it('a stale registry teacher yields to the one teacher of every report, for review', () => {

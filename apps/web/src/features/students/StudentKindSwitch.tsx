@@ -1,4 +1,4 @@
-import { kindOfStatusParam, STUDENT_STATUSES, statusParamOfKind, type StudentListKind } from '@ab/shared';
+import { kindOfStatusParam, NOT_SUBSCRIBED_STATUSES, STUDENT_STATUSES, statusParamOfKind, type StudentListKind, type StudentStatus } from '@ab/shared';
 import { SegmentedControl } from '@/components/ui/segmented-control';
 import { t } from '@/lib/i18n';
 import type { StatusCounts } from './api';
@@ -6,7 +6,7 @@ import type { StatusCounts } from './api';
 const L = t.studentLists;
 
 export interface StudentKindSwitchProps {
-  /** The list's `status` URL filter as it is («active», «trial,active» …). */
+  /** The list's `status` URL filter as it is («active», «new,trial,pending_subscription» …). */
   status: string | undefined;
   /** Students per status under the other filters; no counts while loading. */
   counts?: StatusCounts | undefined;
@@ -17,10 +17,15 @@ export interface StudentKindSwitchProps {
 /** A real count, or none (loading, or an answer of another shape). */
 const num = (n: unknown): number | undefined => (typeof n === 'number' ? n : undefined);
 
+/** The sum of these statuses' counts, or none while any is missing. */
+function sumOf(counts: StatusCounts | undefined, statuses: readonly StudentStatus[]): number | undefined {
+  const each = statuses.map((s) => num(counts?.[s]));
+  return each.every((n) => n !== undefined) ? each.reduce<number>((sum, n) => sum + (n ?? 0), 0) : undefined;
+}
+
+/** «تجريبي» = not subscribed yet (new + trial + pending_subscription, owner 2026-10-15). */
 function kindCounts(counts: StatusCounts | undefined): Record<StudentListKind, number | undefined> {
-  const each = STUDENT_STATUSES.map((s) => num(counts?.[s]));
-  const all = each.every((n) => n !== undefined) ? each.reduce<number>((sum, n) => sum + (n ?? 0), 0) : undefined;
-  return { all, active: num(counts?.active), trial: num(counts?.trial) };
+  return { all: sumOf(counts, STUDENT_STATUSES), active: num(counts?.active), trial: sumOf(counts, NOT_SUBSCRIBED_STATUSES) };
 }
 
 /**

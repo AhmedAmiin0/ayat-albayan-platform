@@ -64,10 +64,14 @@ export const PACKAGE_SIZES = [
   '28',
 ] as const satisfies readonly Enums<'package_size'>[];
 export const GENDERS = ['male', 'female'] as const satisfies readonly Enums<'gender'>[];
+/** Display order everywhere (owner 2026-10-15): pills, filters, chips, selects. */
 export const STUDENT_STATUSES = [
+  'new',
   'trial',
+  'pending_subscription',
   'active',
   'pending_renewal',
+  'expired',
   'paused',
   'churned',
 ] as const satisfies readonly Enums<'student_status'>[];

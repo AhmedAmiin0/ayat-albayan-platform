@@ -35,13 +35,14 @@ test('opens on «مشتركون»: only subscribed students; a row opens their r
   expect(mockPush).toHaveBeenCalledWith('/teacher/reports/student/s1');
 });
 
-test('a pending_renewal student stays in «مشتركون» with its «بانتظار التجديد» chip; active rows carry none', async () => {
+test('a package-ended student (pending_renewal, expired) stays in «مشتركون» with its chip; active rows carry none', async () => {
   mockApiFetch.mockImplementation(async (p: string) =>
-    p === '/teachers/me' ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } : [row({}), row({ id: 's4', name: 'مريم', status: 'pending_renewal' })],
+    p === '/teachers/me' ? { id: 't1', display_name_ar: 'أبرار', tz: 'Africa/Cairo', students: [] } : [row({}), row({ id: 's4', name: 'مريم', status: 'pending_renewal' }), row({ id: 's5', name: 'زيد', status: 'expired' })],
   );
   await renderWithQuery(<TeacherStudentsScreen />);
   expect(await screen.findByText('مريم')).toBeTruthy();
   expect(screen.getAllByText(t.enums.studentStatus.pending_renewal)).toHaveLength(1);
+  expect(screen.getAllByText(t.enums.studentStatus.expired)).toHaveLength(1);
   expect(screen.queryByText(t.enums.studentStatus.active)).toBeNull();
 });
 

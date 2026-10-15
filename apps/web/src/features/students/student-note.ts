@@ -4,7 +4,7 @@ import type { StudentListItem } from './types';
 
 /**
  * The one hamish (marginal) note of a students row, docs/07 §6. Only what the Phase 1 list API can
- * back: a current student (trial / active / pending_renewal) with no teacher is the admin's job now («دورك», saffron).
+ * back: a current student (not subscribed yet / active / package ended) with no teacher is the admin's job now («دورك», saffron).
  * TODO(R-SUB-02, R-REP-03, R-SCH-02): «فاضل حلقتين» / «الباقة خلصت», «تقرير ما اتبعتش» and
  * «تجريبية النهارده» once packages, reports and lessons are in the list response.
  */

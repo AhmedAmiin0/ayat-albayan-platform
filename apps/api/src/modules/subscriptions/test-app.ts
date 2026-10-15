@@ -30,6 +30,7 @@ import { LeadConversion } from './lead-conversion';
 import { StudentAccess } from './student-access';
 import { StudentActivation } from './student-activation';
 import { StudentStatusQueries } from './student-status.queries';
+import { StudentTrialQueries } from './student-trial.queries';
 import { SubscriptionsQueries } from './subscriptions.queries';
 import { mocks } from './test-app.fakes';
 
@@ -59,6 +60,7 @@ export async function moneyApp(resolver: PermissionResolver = systemResolver) {
     .overrideProvider(LeadConversion).useValue(m.leads)
     .overrideProvider(StudentActivation).useValue(m.activation)
     .overrideProvider(StudentStatusQueries).useValue(m.statuses)
+    .overrideProvider(StudentTrialQueries).useValue(m.trials)
     .overrideProvider(AlertsQueries).useValue(m.alerts)
     .overrideProvider(AdminTasksQueries).useValue(m.tasks)
     .overrideProvider(PaymentsQueries).useValue(m.payments)

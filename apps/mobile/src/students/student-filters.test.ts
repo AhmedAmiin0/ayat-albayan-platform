@@ -23,11 +23,13 @@ test('active count excludes the sort', () => {
 });
 
 test('counts: numbers only, the total needs every status', () => {
-  const counts = { trial: 2, active: 5, pending_renewal: 4, paused: 1, churned: 3 };
+  const counts = { new: 6, trial: 2, pending_subscription: 7, active: 5, pending_renewal: 4, expired: 8, paused: 1, churned: 3 };
   expect(countOf(counts, 'active')).toBe(5);
   expect(countOf(counts, 'pending_renewal')).toBe(4);
-  expect(totalOf(counts)).toBe(15);
+  expect(totalOf(counts)).toBe(36);
   expect(totalOf({ ...counts, pending_renewal: undefined })).toBeUndefined();
+  expect(totalOf({ ...counts, expired: undefined })).toBeUndefined();
+  expect(totalOf({ ...counts, new: undefined })).toBeUndefined();
   expect(totalOf({ ...counts, paused: undefined })).toBeUndefined();
   expect(countOf({ items: [] }, 'trial')).toBeUndefined();
   expect(totalOf(undefined)).toBeUndefined();

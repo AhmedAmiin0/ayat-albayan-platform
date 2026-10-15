@@ -10,6 +10,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
+import { clientRequest } from './booking.payload';
 import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { BookingService } from './booking.service';
 import { withPackageSize } from './package-size';
@@ -53,6 +54,6 @@ export class BookingController {
   @Post()
   book(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BookingResult> {
     const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
-    return this.booking.book(req, user.id);
+    return this.booking.book(clientRequest(req, user.role), user.id);
   }
 }

@@ -44,11 +44,13 @@ describe('students queries (R-STU-01, R-NFR-08)', () => {
   });
 
   it('status counts: one head count per status, under the other filters', async () => {
-    const counts = [{ count: 12 }, { count: 3 }, { count: 2 }, { count: 0 }, { count: 5 }];
+    const counts = [12, 3, 2, 7, 1, 4, 0, 5].map((count) => ({ count }));
     const { db, calls } = fakeDb({ v_student_list: counts });
     const T = '11111111-1111-4111-8111-111111111111';
-    await expect(countStudentsByStatus(db, { teacher: T, status: ['trial'] })).resolves.toEqual({ trial: 12, active: 3, pending_renewal: 2, paused: 0, churned: 5 });
-    expect(calls.filter((c) => c.method === 'eq' && c.args[0] === 'teacher_id')).toHaveLength(5);
+    await expect(countStudentsByStatus(db, { teacher: T, status: ['trial'] })).resolves.toEqual({
+      new: 12, trial: 3, pending_subscription: 2, active: 7, pending_renewal: 1, expired: 4, paused: 0, churned: 5,
+    });
+    expect(calls.filter((c) => c.method === 'eq' && c.args[0] === 'teacher_id')).toHaveLength(8);
     expect(calls.some((c) => c.method === 'in')).toBe(false);
   });
 

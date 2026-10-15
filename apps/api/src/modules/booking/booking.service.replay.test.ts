@@ -11,12 +11,9 @@ const REQUEST = 'c0000000-0000-4000-8000-0000000000c1';
 
 function setup() {
   const deps = fakePlanner();
-  const writer = new BookingWriter(
-    deps.queries as unknown as BookingQueries,
-    { resolve: vi.fn() } as unknown as BookingInvoices,
-    fakeTeacherAlert().alert,
-  );
-  return { ...deps, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries) };
+  const alert = fakeTeacherAlert();
+  const writer = new BookingWriter(deps.queries as unknown as BookingQueries, { resolve: vi.fn() } as unknown as BookingInvoices, alert.after);
+  return { ...deps, alert, service: new BookingService(deps.planner, writer, deps.queries as unknown as BookingQueries) };
 }
 
 describe('BookingService replay (rule 8)', () => {
@@ -32,6 +29,21 @@ describe('BookingService replay (rule 8)', () => {
     expect(queries.replay).toHaveBeenCalledWith(REQUEST);
     expect(queries.createBooking).not.toHaveBeenCalled();
     expect(busy.teacherLessons).not.toHaveBeenCalled();
+  });
+
+  it('a replayed trial booking re-runs the idempotent trial evaluate only: no teacher alert, no push', async () => {
+    const { service, queries, alert } = setup();
+    queries.replay.mockResolvedValue(FIRST);
+    const req = bookingRequest({ clientRequestId: REQUEST, package: 'trial' });
+    expect(await service.book(req, 'actor')).toEqual(FIRST);
+    expect(alert.trial.evaluate).toHaveBeenCalledWith([IDS.s1], 'actor');
+    expect(alert.queries.lessons).not.toHaveBeenCalled();
+    expect(alert.push.notifyProfiles).not.toHaveBeenCalled();
+    expect(alert.sender.kick).not.toHaveBeenCalled();
+    const pkg = setup();
+    pkg.queries.replay.mockResolvedValue(FIRST);
+    await pkg.service.book(bookingRequest({ clientRequestId: REQUEST }), 'actor');
+    expect(pkg.alert.trial.evaluate).not.toHaveBeenCalled();
   });
 
   it('a request without an id, or a new one, is planned and written', async () => {

@@ -49,7 +49,7 @@ export class DashboardQueries {
     );
   }
 
-  /** «مشترك» = status active only: pending_renewal (بانتظار التجديد) is not counted (owner 2026-10-12). */
+  /** «مشترك» = status active only: pending_renewal / expired are not counted (owner 2026-10-12, 2026-10-15). */
   activeStudents(): Promise<number> {
     return counted(this.db.from('students').select('id', { count: 'exact', head: true }).eq('status', 'active'));
   }
@@ -85,7 +85,7 @@ export class DashboardQueries {
     return data;
   }
 
-  /** Students on a teacher's load: assigned (teacher_id) and current (trial, active, pending_renewal). */
+  /** Students on a teacher's load: assigned (teacher_id) and current (CURRENT_STUDENT_STATUSES, owner 2026-10-15). */
   loadStudents() {
     return readAll((from, to) =>
       this.db

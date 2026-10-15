@@ -60,7 +60,7 @@ describe('BookingRequest: lead conversion (R-LEAD-06)', () => {
       guardian: GUARDIAN,
     });
     expect('guardian' in r && r.guardian.phone_e164).toBe('+966501234567');
-    expect('newStudent' in r && r.newStudent.status).toBe('trial');
+    expect('newStudent' in r && r.newStudent.status).toBe('new');
   });
 
   it('rejects a lead without the new student', () => {

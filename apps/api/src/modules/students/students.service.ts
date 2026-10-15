@@ -60,24 +60,29 @@ export class StudentsService {
     return existing?.id ?? (await this.guardians.create(dto.guardian, actorId)).id;
   }
 
-  /** Status changes are audited (R-NFR-03). */
+  /**
+   * Status changes are audited (R-NFR-03). With `expected_status` the write is a compare-and-set on
+   * the status: a row that has moved since (payment, expiry, attendance) is left alone and the call
+   * answers 409 `status_changed`, so a stale form never undoes an automatic move (R-STU-05).
+   */
   async update(id: string, dto: StudentUpdate, actorId: string): Promise<Student> {
+    const { expected_status: expected, ...fields } = dto;
     const before = await this.getRow(id);
-    const { data, error } = await this.db
-      .from('students')
-      .update(toStudentPatch(dto))
-      .eq('id', id)
-      .select()
-      .single();
+    const base = this.db.from('students').update(toStudentPatch(fields)).eq('id', id);
+    const query = expected ? base.eq('status', expected) : base;
+    const { data, error } = await query.select().maybeSingle();
     if (error) throw dbError(error);
-    if (dto.status && dto.status !== before.status) {
+    if (!data && expected) throw new ConflictException({ code: 'status_changed', message: 'status_changed' });
+    if (!data) throw new NotFoundException();
+    const from = expected ?? before.status;
+    if (fields.status && fields.status !== from) {
       await this.audit.record({
         actorId,
         entity: 'students',
         entityId: id,
         action: 'status_change',
-        before: { status: before.status },
-        after: { status: dto.status },
+        before: { status: from },
+        after: { status: fields.status },
       });
     }
     return data;

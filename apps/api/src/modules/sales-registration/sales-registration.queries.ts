@@ -14,7 +14,7 @@ type Row = Pick<RegistrationMatch, 'name' | 'status'> & { code: string | null; t
 export const toMatch = (r: Row): RegistrationMatch => ({ name: r.name, code: r.code ?? '', status: r.status, teacher_name: r.teacher?.display_name_ar ?? null });
 
 /**
- * «التحقق من التسجيل» (docs/16 row 23), read with the service role: every status (trial, active,
+ * «التحقق من التسجيل» (docs/16 row 23), read with the service role: every status (new, trial, active, expired,
  * pending_renewal, churned, …), ordered by name, at most REGISTRATION_CHECK_MAX + 1 rows.
  */
 @Injectable()

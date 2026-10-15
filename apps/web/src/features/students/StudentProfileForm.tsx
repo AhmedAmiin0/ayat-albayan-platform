@@ -1,7 +1,7 @@
 import { GENDERS, PROGRAMS, STUDENT_STATUSES } from '@ab/shared';
 import { useForm } from '@tanstack/react-form';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
@@ -9,9 +9,10 @@ import { Select } from '@/components/ui/select';
 import { TimeZoneSelect } from '@/components/ui/time-zone-select';
 import { t } from '@/lib/i18n';
 import { teacherLabel } from '@/lib/teacher-label';
-import { STUDENTS_KEY, teacherOptionsQuery, updateStudent } from './api';
+import { teacherOptionsQuery } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
-import { PROFILE_LABELS, toProfileValues, toStudentPatch, type ProfileValues } from './profile-form';
+import { PROFILE_LABELS, toProfileValues, type ProfileValues } from './profile-form';
+import { saveProfile } from './save-profile';
 import { SavedNote } from './SavedNote';
 import type { StudentProfile } from './types';
 
@@ -43,20 +44,27 @@ export function StudentProfileForm({ student }: { student: StudentProfile }) {
     ],
   };
 
+  // The status the form shows as loaded (not picked by the admin): sent as expected_status (R-STU-05).
+  const loaded = useRef(student.status);
   const form = useForm({
     defaultValues: toProfileValues(student),
     onSubmit: async ({ value }) => {
-      const r = toStudentPatch(value);
-      if (!r.ok) return setMessage({ ok: false, text: r.error });
-      try {
-        await updateStudent(student.id, r.patch);
-        await queryClient.invalidateQueries({ queryKey: STUDENTS_KEY });
-        setMessage({ ok: true, text: t.students.updated });
-      } catch {
-        setMessage({ ok: false, text: t.common.error });
+      const r = await saveProfile({ student, values: value, loaded: loaded.current, queryClient });
+      setMessage(r.message);
+      if (r.saved) {
+        loaded.current = r.saved.status;
+        form.reset(r.saved, { keepDefaultValues: true });
+      }
+      if (r.current) {
+        loaded.current = r.current;
+        form.setFieldValue('status', r.current);
       }
     },
   });
+  // An untouched form follows a refetched student (useForm resets it from the new defaults first).
+  useEffect(() => {
+    if (!form.state.isTouched) loaded.current = student.status;
+  }, [student, form]);
 
   return (
     <form

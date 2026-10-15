@@ -28,6 +28,7 @@ describe('sales teachers and schedule, English', () => {
     expect(await screen.findByText('Trial')).toBeTruthy();
     fireEvent.click(await screen.findByRole('button', { name: /Abrar/ }));
     const drawer = screen.getByRole('dialog', { name: "Abrar's students" });
+    fireEvent.click(within(drawer).getByRole('button', { name: new RegExp(`^${en.studentLists.trial}`) }));
     expect(within(drawer).getByText(en.enums.studentStatus.trial)).toBeTruthy();
     expect(within(drawer).getByRole('link', { name: "Show the teacher's schedule today" })).toBeTruthy();
   });

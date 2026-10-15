@@ -16,6 +16,12 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
     expect(payload.rule).toMatchObject({ package: 'trial', ends_on: '2026-10-04' });
   });
 
+  it('a trial booking registers the new student as trial; an explicit other status is kept (owner 2026-10-15)', async () => {
+    const { planner } = fakePlanner();
+    const kept = await planner.prepare(leadRequest({ newStudent: { name: 'رِيم', tz: 'Asia/Riyadh', status: 'paused' } }));
+    expect(kept.payload.new_student?.status).toBe('paused');
+  });
+
   it('moves the lead to trial_booked and links the RPC-made guardian in the message', async () => {
     const { planner } = fakePlanner();
     const { payload } = await planner.prepare(leadRequest());
@@ -55,6 +61,7 @@ describe('BookingPlanner — lead → guardian + student + trial (R-LEAD-06)', (
     const { planner } = fakePlanner();
     const { payload } = await planner.prepare(leadRequest({ package: '8', invoice: { source: 'upload', path: 'req/a.png' } }));
     expect(payload.lead).toEqual({ id: IDS.lead, from: 'new', to: 'converted' });
+    expect(payload.new_student?.status).toBe('new');
     expect(payload.lessons).toHaveLength(5);
     expect(payload.rule.ends_on).toBeNull();
   });

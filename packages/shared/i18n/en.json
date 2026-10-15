@@ -187,6 +187,7 @@
     "empty": "No students yet",
     "created": "Student registered",
     "updated": "Student details updated",
+    "statusChanged": "The student's status changed before your change was saved, so nothing was saved. The current status is shown now; choose the status you want again.",
     "duplicateTitle": "This student looks already registered",
     "duplicateWarning": "There's a student with the same number and a similar name. Merge them instead of keeping two copies?",
     "duplicateCandidates": "Students who may be the same person",
@@ -239,7 +240,8 @@
     "remainingN": "{n} lessons left",
     "noPackage": "No package",
     "weeklyYes": "Has a weekly lesson",
-    "weeklyNo": "No weekly lesson"
+    "weeklyNo": "No weekly lesson",
+    "renew": "Renew subscription"
   },
   "guardians": {
     "title": "Guardians",
@@ -2800,9 +2802,12 @@
       "female": "Female"
     },
     "studentStatus": {
-      "trial": "Trial",
+      "new": "New",
+      "trial": "Awaiting trial lesson",
+      "pending_subscription": "Pending subscription",
       "active": "Active",
       "pending_renewal": "Pending renewal",
+      "expired": "Subscription expired",
       "paused": "Paused",
       "churned": "Stopped"
     },
@@ -2928,6 +2933,7 @@
     "lateCancelHint": "When off, no cancellation counts against the student",
     "bookingHorizonWeeks": "Weeks ahead that lessons are scheduled",
     "renewalAlertRemaining": "Renewal alert when this many lessons are left in the package",
+    "subscriptionExpiryDays": "Mark the subscription expired after this many days pending renewal",
     "flagFutureLessonsWhenUnpaid": "Flag upcoming lessons when the package has ended and isn't paid",
     "reportTeacherEditHours": "Hours after sending that a teacher can still edit the report",
     "reportingCurrency": "Dashboard currency",
@@ -2952,6 +2958,7 @@
       "bookingHorizonWeeks": "How many weeks of recurring lessons are created ahead.",
       "reportTeacherEditHours": "After this the report is locked and only an admin can edit it.",
       "renewalAlertRemaining": "A renewal task appears when the package balance reaches this number.",
+      "subscriptionExpiryDays": "A student still pending renewal this long with no new payment becomes «Subscription expired».",
       "reportingCurrency": "Revenue and expense figures on the dashboard are converted to it.",
       "flagFutureLessonsWhenUnpaid": "The student's upcoming lessons show an «unpaid package» mark.",
       "payoutCountLate": "When off, this lesson is not counted for the teacher.",

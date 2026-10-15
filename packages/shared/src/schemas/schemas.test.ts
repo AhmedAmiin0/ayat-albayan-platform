@@ -33,7 +33,7 @@ describe('people schemas (R-STU-02, R-STU-05, rule 6)', () => {
       tz: 'Africa/Cairo',
       code: 'AB-0001',
     });
-    expect(s).toMatchObject({ program: 'quran', status: 'trial' });
+    expect(s).toMatchObject({ program: 'quran', status: 'new' });
     expect(s).not.toHaveProperty('code');
   });
 });

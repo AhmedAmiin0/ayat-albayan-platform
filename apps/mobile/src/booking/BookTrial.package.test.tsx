@@ -93,7 +93,7 @@ test('a lead from the chat books a package: size, slot, the required invoice, we
     package: '12',
     leadId: 'a1',
     invoice: { source: 'upload', path: 'req/0b1c.jpg' },
-    newStudent: expect.objectContaining({ name: 'يوسف', status: 'active' }),
+    newStudent: expect.objectContaining({ name: 'يوسف', status: 'new' }),
     guardian: expect.objectContaining({ name: 'هدى سالم', phone_e164: '+966552147730' }),
   });
   // The invoice was uploaded under the very id the booking carries (the API checks the path).

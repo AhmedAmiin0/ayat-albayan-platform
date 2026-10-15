@@ -3,8 +3,8 @@ import { useState } from 'react';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { usePagedList } from '@/lib/use-paged-list';
-import { countOf, NO_FILTERS, totalOf } from '@/students/student-filters';
-import { KIND_EMPTY, kindPills, presetKind } from '@/students/student-kinds';
+import { NO_FILTERS } from '@/students/student-filters';
+import { KIND_EMPTY, kindCounts, kindPills, presetKind } from '@/students/student-kinds';
 import { StudentRow } from '@/students/StudentRow';
 import type { StudentListItem } from '@/students/types';
 import { useStatusCounts } from '@/students/use-student-list-data';
@@ -24,7 +24,7 @@ export interface TeacherStudentsSectionProps {
 
 /**
  * «طلاب المعلم/ة» (owner 2026-10-12): «مشترك · تجريبي · الكل» with the API's counts (GET
- * /students/status-counts?teacher=), the list from GET /students?teacher=&status= («الكل» sends no
+ * /students/status-counts?teacher=; «تجريبي» = new + trial + pending_subscription), the list from GET /students?teacher=&status= («الكل» sends no
  * status: every status, paused and stopped too). A row opens the student's file. Not the web admin
  * panel's behaviour (TeacherStudentsPanel opens on trial + active with status chips): this opens on
  * «مشترك»; aligning them awaits an owner decision.
@@ -37,10 +37,9 @@ export function TeacherStudentsSection({ teacherId, status }: TeacherStudentsSec
     params: { teacher: teacherId, status: statusParamOfKind(kind) },
     pageSize: 50,
   });
-  const n = { active: countOf(counts.data, 'active'), trial: countOf(counts.data, 'trial'), all: totalOf(counts.data) };
   return (
     <Section title={L.section}>
-      <FilterPills items={kindPills(n)} value={kind} onChange={setKind} accessibilityLabel={L.kinds} />
+      <FilterPills items={kindPills(kindCounts(counts.data))} value={kind} onChange={setKind} accessibilityLabel={L.kinds} />
       {list.data ? (
         list.items.length === 0 ? (
           <Note>{KIND_EMPTY[kind]}</Note>

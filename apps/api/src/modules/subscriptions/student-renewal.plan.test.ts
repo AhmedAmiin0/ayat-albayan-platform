@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isFlipBy, manualWins, packageEnded, renewalTarget, revertTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';
+import { isFlipBy, manualWins, packageEnded, recordedFrom, renewalTarget, revertTarget, subscriptionEnded, type EndPackage } from './student-renewal.plan';
 
 const pkg = (p: Partial<EndPackage> = {}): EndPackage => ({ status: 'active', renews_on: null, price: 290, paid: 290, remaining: 3, ...p });
 const TODAY = '2026-10-12';
@@ -33,21 +33,31 @@ describe('packageEnded / subscriptionEnded: lessons used up or the renewal date 
 });
 
 describe('renewalTarget / revertTarget', () => {
-  it('active ↔ pending_renewal; trial, paused, churned untouched', () => {
+  it('active ↔ pending_renewal, expired → active on renewal; not-subscribed, paused, churned untouched', () => {
     expect(renewalTarget('active', true)).toBe('pending_renewal');
     expect(renewalTarget('pending_renewal', false)).toBe('active');
+    expect(renewalTarget('expired', false)).toBe('active');
     expect(renewalTarget('active', false)).toBeNull();
     expect(renewalTarget('pending_renewal', true)).toBeNull();
-    for (const s of ['trial', 'paused', 'churned'] as const) {
+    expect(renewalTarget('expired', true)).toBeNull();
+    for (const s of ['new', 'trial', 'pending_subscription', 'paused', 'churned'] as const) {
       expect(renewalTarget(s, true)).toBeNull();
       expect(renewalTarget(s, false)).toBeNull();
     }
   });
 
-  it('no other positive payment → trial; another remains → active, or pending_renewal when ended', () => {
-    expect(revertTarget({ otherPayment: false, ended: true })).toBe('trial');
-    expect(revertTarget({ otherPayment: true, ended: false })).toBe('active');
-    expect(revertTarget({ otherPayment: true, ended: true })).toBe('pending_renewal');
+  it('another positive payment remains → active, or pending_renewal when ended (whatever the trial)', () => {
+    const facts = { open: true, attended: true, paid: true };
+    expect(revertTarget({ otherPayment: true, ended: false, facts })).toBe('active');
+    expect(revertTarget({ otherPayment: true, ended: true, facts })).toBe('pending_renewal');
+  });
+
+  it('none left → by the trial facts: attended → pending_subscription, open trial → trial, none → new', () => {
+    const at = (open: boolean, attended: boolean) => revertTarget({ otherPayment: false, ended: true, facts: { open, attended, paid: false } });
+    expect(at(false, true)).toBe('pending_subscription');
+    expect(at(true, true)).toBe('pending_subscription');
+    expect(at(true, false)).toBe('trial');
+    expect(at(false, false)).toBe('new');
   });
 });
 
@@ -60,6 +70,13 @@ describe('isFlipBy / manualWins: whose status change is the newest', () => {
     expect(isFlipBy(flip, 'p2')).toBe(false);
     expect(isFlipBy(manual, 'p1')).toBe(false);
     expect(isFlipBy(null, 'p1')).toBe(false);
+  });
+
+  it('recordedFrom: the flip’s from-status, null on older rows or unknown values', () => {
+    expect(recordedFrom({ ...flip, after: { ...flip.after, from: 'expired' } })).toBe('expired');
+    expect(recordedFrom(flip)).toBeNull();
+    expect(recordedFrom({ ...flip, after: { from: 'bogus' } })).toBeNull();
+    expect(recordedFrom(null)).toBeNull();
   });
 
   it('a manual change wins until a renewal date on or after its day passes', () => {

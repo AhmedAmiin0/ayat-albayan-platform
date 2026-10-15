@@ -11,7 +11,8 @@ type Step =
   | { kind: 'transfer'; sub: SalesMoneySubscriptionView | null }
   | { kind: 'done'; payment: SalesPaymentView };
 
-type Props = { start: FlowStart; students: SalesFamilyStudent[]; onClose: () => void };
+/** `studentId`: the student picked up front («جدّد الاشتراك» on one of them). */
+type Props = { start: FlowStart; studentId?: string | undefined; students: SalesFamilyStudent[]; onClose: () => void };
 
 /** Her packages still owed, across her students of the family (the transfer step's picker). */
 export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscriptionView[] => students.flatMap((s) => s.open);
@@ -20,10 +21,10 @@ export const openPackages = (students: SalesFamilyStudent[]): SalesMoneySubscrip
  * The money flow of a sales chat: step 1 «اشتراك جديد» (calculator → saved at the API's price), step 2
  * «سجّل التحويل البنكي» (attachments optional) for the new package or one still owed, then the result.
  */
-export function SalesMoneyFlow({ start, students, onClose }: Props) {
+export function SalesMoneyFlow({ start, studentId, students, onClose }: Props) {
   const [step, setStep] = useState<Step>(start === 'subscribe' ? { kind: 'subscribe' } : { kind: 'transfer', sub: null });
   if (step.kind === 'subscribe') {
-    return <SalesSubscribeStep students={students} onClose={onClose} onSaved={(sub) => setStep({ kind: 'transfer', sub })} />;
+    return <SalesSubscribeStep students={students} picked={studentId} onClose={onClose} onSaved={(sub) => setStep({ kind: 'transfer', sub })} />;
   }
   if (step.kind === 'transfer') {
     return (

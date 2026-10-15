@@ -12,6 +12,7 @@ export function mocks() {
     leads: { afterPackage: vi.fn() },
     activation: { afterPayment: vi.fn() },
     statuses: { student: vi.fn(), lastStatusChange: vi.fn(), hasPositivePayment: vi.fn(), move: vi.fn() },
+    trials: { studentsOfTrialLessons: vi.fn(), lessonsOf: vi.fn() },
     balances: { forSubscriptions: vi.fn(), forStudents: vi.fn() },
     alerts: {
       studentsOfLessons: vi.fn(), studentsWithPackages: vi.fn(), raiseTask: vi.fn(), recipient: vi.fn(),
@@ -77,4 +78,6 @@ export function resetMocks(m: Mocks): void {
   m.attachments.owners.mockResolvedValue([]); // no path held by another payment
   m.statuses.student.mockResolvedValue(null); // no student row: the status rules change nothing
   m.statuses.lastStatusChange.mockResolvedValue(null);
+  m.trials.studentsOfTrialLessons.mockResolvedValue([]);
+  m.trials.lessonsOf.mockResolvedValue([]); // no trial lesson
 }

@@ -1,4 +1,4 @@
-import type { BookingKind, BookingRequest, Conflict, LeadStatus, PackageSize } from '@ab/shared';
+import { bookingKindOf, registrationStatus, type BookingKind, type BookingRequest, type Conflict, type LeadStatus, type PackageSize } from '@ab/shared';
 import type { Occurrence, RuleTiming } from '../scheduling/occurrences';
 import {
   leadTarget,
@@ -35,6 +35,28 @@ export type PayloadInput = {
 export const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize | null =>
   kind === 'makeup' ? null : (req.package ?? null);
 
+/**
+ * The lead path's new student (owner 2026-10-15, docs/11 §7): booked with a trial lesson it starts as
+ * trial (registrationStatus), else as the request says (the schema default is new). create_booking
+ * keeps this explicit status.
+ */
+export function newStudentRow(who: Resolved, kind: BookingKind): Resolved['new_student'] {
+  const s = who.new_student;
+  if (!s || kind !== 'trial' || s.status !== 'new') return s;
+  return { ...s, status: registrationStatus(true) };
+}
+
+/**
+ * docs/18 row 1 (owner 2026-10-15): a lead booked straight onto a package starts `new` and becomes
+ * `active` only with a positive payment. Any status sent by a caller but an admin is ignored: it
+ * becomes the registration status (trial with a trial lesson, else new). Applied by both POST
+ * /booking controllers, where the caller's role is known.
+ */
+export function clientRequest(req: BookingRequest, role: string | null): BookingRequest {
+  if (role === 'admin' || !('newStudent' in req)) return req;
+  return { ...req, newStudent: { ...req.newStudent, status: registrationStatus(bookingKindOf(req) === 'trial') } };
+}
+
 /** What create_booking writes (docs/10 §5 #14), minus the invoice the service resolves afterwards. */
 export function bookingPayload(input: PayloadInput): BookingPayload {
   const { req, kind, teacher, who, lead, plan, conflicts } = input;
@@ -53,7 +75,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
     student_ids: who.student_ids,
     lead: lead && { id: lead.id, from: lead.status, to: leadTarget(lead.status, pkg) },
     new_guardian: who.new_guardian,
-    new_student: who.new_student,
+    new_student: newStudentRow(who, kind),
     lessons: lessonRows({
       occurrences: plan.occurrences,
       conflicts,

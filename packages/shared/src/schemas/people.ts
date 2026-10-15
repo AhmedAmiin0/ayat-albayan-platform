@@ -34,14 +34,21 @@ export const studentCreateSchema = z.object({
   goal: optionalText,
   riwaya: optionalText,
   tz: timeZone,
-  status: z.enum(STUDENT_STATUSES).default('trial'),
+  status: z.enum(STUDENT_STATUSES).default('new'),
   teacher_id: z.uuid().nullish(),
   /** Teacher gender filter in the booking wizard (R-SCH-06); null = no preference. */
   teacher_gender_pref: z.enum(GENDERS).nullish(),
   meeting_link_override: z.url().nullish(),
   notes: optionalText,
 });
-export const studentUpdateSchema = studentCreateSchema.omit({ guardian_id: true }).partial();
+/**
+ * PATCH /students/:id. `expected_status`: the status the client last saw; the API writes only while
+ * the row still has it, else 409 `status_changed` (R-STU-05: stale forms never undo automatic moves).
+ */
+export const studentUpdateSchema = studentCreateSchema
+  .omit({ guardian_id: true })
+  .partial()
+  .extend({ expected_status: z.enum(STUDENT_STATUSES).optional() });
 
 const rate = z.int().min(0).nullish();
 

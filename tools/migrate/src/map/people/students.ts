@@ -50,7 +50,7 @@ export function studentRecord(p: Person, paying: ReadonlySet<string>): Built {
     goal: f.goal,
     riwaya: f.riwaya,
     tz: personTz({ declared: f.tzCountry ?? f.country, phone: p.phone }),
-    status: p.active || paying.has(p.phone) ? 'active' : 'trial',
+    status: p.active || paying.has(p.phone) ? 'active' : 'new',
     notes: f.notes,
   };
   // Legacy AB-nnnn kept (docs/06 step 5): written with OVERRIDING SYSTEM VALUE (students.write.ts).
@@ -99,13 +99,15 @@ export function mapStudents(bundle: SourceBundle): Mapped[] {
     const id = keyId(p.key);
     const t = reportTeacher({ p, refs, slug: taught.teacher.get(id) });
     // Subscribed: «طالب حالي», a مشترك booking, a paying HEART phone, a chargeable reported
-    // lesson, or more than one lesson in SUBS. Otherwise still a trial.
+    // lesson, or more than one lesson in SUBS. Otherwise not subscribed (R-STU-05, docs/18): an
+    // attended trial report → pending_subscription, else new — never trial (bookings not imported).
     const active =
       columns['status'] === 'active' || taught.chargeable.has(id) || subs.active.has(id);
+    const waiting = taught.trialAttended.has(id) ? 'pending_subscription' : 'new';
     return accepted({
       key: p.key,
       ref: p.ref,
-      columns: { ...columns, status: active ? 'active' : 'trial' },
+      columns: { ...columns, status: active ? 'active' : waiting },
       refs: t.refs,
       issues: [...own, ...t.issues],
       aliases: p.aliases,

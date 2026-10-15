@@ -43,18 +43,18 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
     q.byIds.mockResolvedValue([student({ id: 's7', name: 'بلال', status: 'active' })]);
   });
 
-  it('subscribed = status active or pending_renewal: mine plus those on my lessons, merged and by name', async () => {
+  it('subscribed = status active, pending_renewal or expired: mine plus those on my lessons, merged and by name', async () => {
     const res = await get('/teachers/me/students?kind=subscribed');
     expect(res.statusCode).toBe(200);
-    expect(q.assigned).toHaveBeenCalledWith({ teacherId: TEACHER_ID, statuses: ['active', 'pending_renewal'] });
-    expect(q.byIds).toHaveBeenCalledWith({ ids: ['s7'], statuses: ['active', 'pending_renewal'] });
+    expect(q.assigned).toHaveBeenCalledWith({ teacherId: TEACHER_ID, statuses: ['active', 'pending_renewal', 'expired'] });
+    expect(q.byIds).toHaveBeenCalledWith({ ids: ['s7'], statuses: ['active', 'pending_renewal', 'expired'] });
     expect(res.json().map((s: { id: string }) => s.id)).toEqual(['s7', 's1']);
   });
 
-  it('trial asks only for status trial', async () => {
+  it('trial asks for the not-subscribed statuses (new, trial, pending_subscription; owner 2026-10-15)', async () => {
     await get('/teachers/me/students?kind=trial');
-    expect(q.assigned).toHaveBeenCalledWith({ teacherId: TEACHER_ID, statuses: ['trial'] });
-    expect(q.byIds).toHaveBeenCalledWith(expect.objectContaining({ statuses: ['trial'] }));
+    expect(q.assigned).toHaveBeenCalledWith({ teacherId: TEACHER_ID, statuses: ['new', 'trial', 'pending_subscription'] });
+    expect(q.byIds).toHaveBeenCalledWith(expect.objectContaining({ statuses: ['new', 'trial', 'pending_subscription'] }));
   });
 
   it('a pending_renewal student stays in my subscribed list, with its status for the chip', async () => {
@@ -65,7 +65,7 @@ describe('GET /teachers/me/students?kind= (teacher tab «الطلاب», R-TCH-0
 
   it("another teacher gets only their own: the id comes from the login, a teacherId param is ignored", async () => {
     const res = await get(`/teachers/me/students?kind=subscribed&teacherId=${TEACHER_ID}`, 'other');
-    expect(q.assigned).toHaveBeenCalledWith({ teacherId: OTHER_ID, statuses: ['active', 'pending_renewal'] });
+    expect(q.assigned).toHaveBeenCalledWith({ teacherId: OTHER_ID, statuses: ['active', 'pending_renewal', 'expired'] });
     expect(q.lessons).toHaveBeenCalledWith(expect.objectContaining({ teacherId: OTHER_ID }));
     expect(res.json().map((s: { id: string }) => s.id)).toContain('x9');
     expect(res.json().map((s: { id: string }) => s.id)).not.toContain('s1');

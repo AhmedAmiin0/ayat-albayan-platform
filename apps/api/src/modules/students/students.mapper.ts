@@ -51,7 +51,7 @@ export function toStudentInsert({ dto, guardianId, actorId }: InsertOpts): Table
   };
 }
 
-export function toStudentPatch(dto: StudentUpdate): TablesUpdate<'students'> {
+export function toStudentPatch(dto: Omit<StudentUpdate, 'expected_status'>): TablesUpdate<'students'> {
   return dto.name === undefined ? dto : { ...dto, name_normalized: normalizeArabic(dto.name) };
 }
 

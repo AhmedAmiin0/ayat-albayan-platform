@@ -2,7 +2,6 @@ import { subscriptionCreateSchema } from '@ab/shared';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import {
-  formFrom,
   INITIAL_FORM,
   pricingOf,
   startDayLabel,
@@ -30,17 +29,6 @@ test('a custom count, another country and an Arabic-keypad discount: a valid POS
   expect(pricing).toEqual({ duration: 60, discount: 12.5, country: 'AE', count: 10 });
   const body = { studentId: STUDENT, pricing, startsOn: '2026-10-03' };
   expect(subscriptionCreateSchema.safeParse(body).success).toBe(true);
-});
-
-test('after a booking: its package size and lesson length prefill the plan', () => {
-  expect(formFrom({ pkg: '12', minutes: '60' })).toMatchObject({
-    plan: 'standard',
-    duration: '60',
-  });
-  expect(formFrom({ pkg: '28', minutes: '30' })).toMatchObject({ plan: 'bulk', duration: '30' });
-  // 4 × 90 is «باقة الحلقة الأسبوعية»: its length is fixed, the pill keeps the default.
-  expect(formFrom({ pkg: '4', minutes: '90' })).toMatchObject({ plan: 'weekly', duration: '45' });
-  expect(formFrom({})).toEqual(INITIAL_FORM);
 });
 
 test('start days: today and the next 6 in the family zone; the booked day leads when outside', () => {

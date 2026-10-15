@@ -1,7 +1,7 @@
-import { formatPhone, studentStatusStyle } from '@ab/shared';
+import { formatPhone, isPackageEnded, studentStatusStyle } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Cartouche } from '@/components/ui/cartouche';
 import { Ltr } from '@/components/ui/ltr';
@@ -18,6 +18,7 @@ import { t } from '@/lib/i18n';
 import { studentQuery } from './api';
 import { FormAlert } from '@/components/ui/form-alert';
 import { BalanceCard } from '@/features/subscriptions/BalanceCard';
+import { RenewSubscriptionButton } from '@/features/subscriptions/RenewSubscriptionButton';
 import { SiblingMerge } from './SiblingMerge';
 import { StudentInvoices } from './StudentInvoices';
 import { StudentPayments } from './StudentPayments';
@@ -25,6 +26,10 @@ import { StudentProfileForm } from './StudentProfileForm';
 import { HeadActions } from '@/components/ui/head-actions';
 import { StudentRecordings } from './StudentRecordings';
 import { CreateAccountButton } from '@/features/users/CreateAccountButton';
+
+/** Once the package ended «جدّد الاشتراك» is the head's primary action and booking moves beside it. */
+const headOf = (ended: boolean, nodes: { renew: ReactNode; book: ReactNode }) =>
+  ended ? { primary: nodes.renew, extra: nodes.book } : { primary: nodes.book, extra: null };
 
 /**
  * Student profile (R-STU-04, R-STU-05) inside the shell's Page: the name is the cartouche, then
@@ -57,6 +62,12 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
       ),
     ],
   ] as const;
+  const book = (
+    <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
+      {t.booking.open}
+    </Link>
+  );
+  const head = headOf(isPackageEnded(student.status), { renew: <RenewSubscriptionButton student={student} primary />, book });
 
   return (
     <>
@@ -64,13 +75,10 @@ export function StudentProfilePage({ studentId }: { studentId: string }) {
         <Cartouche>{student.name}</Cartouche>
         <StatusChip {...studentStatusStyle[student.status]} label={t.enums.studentStatus[student.status]} />
         <HeadActions
-          primary={
-            <Link to="/admin/book" search={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
-              {t.booking.open}
-            </Link>
-          }
+          primary={head.primary}
           more={
             <>
+              {head.extra}
               <Link to="/admin/students/$studentId/reports" params={{ studentId: student.id }} className={buttonVariants({ variant: 'secondary' })}>
                 {t.reports.history}
               </Link>

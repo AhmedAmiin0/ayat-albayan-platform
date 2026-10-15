@@ -13,6 +13,7 @@ import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { BalanceCard } from './BalanceCard';
 import { GuardianCard } from './GuardianCard';
+import { RenewButton } from './RenewButton';
 import { SiblingsList } from './SiblingsList';
 import { StatusChanger } from './StatusChanger';
 import { StudentFacts } from './StudentFacts';
@@ -22,7 +23,7 @@ const back = () => (router.canGoBack() ? router.back() : router.replace('/studen
 
 /**
  * Student quick view (R-MOB-02) on GET /students/:id. The status changes here, and a payment is
- * recorded from the balance card; editing, adding and merging stay on the web.
+ * recorded from the balance card, «جدّد الاشتراك» once the package ended; editing, adding and merging stay on the web.
  * TODO(R-MOB-02): «حجز حلقة تجريبية» (quick book trial) with Phase 2.
  */
 export function StudentScreen() {
@@ -59,6 +60,7 @@ export function StudentScreen() {
       />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 20, paddingBottom: 32 }}>
         <StatusChanger student={student} />
+        <RenewButton student={student} />
         <Button
           variant="secondary"
           label={t.mobileAdmin.reports.button}

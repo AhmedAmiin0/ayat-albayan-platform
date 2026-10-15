@@ -37,7 +37,7 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     for (const k of Object.keys(results)) results[k] = [];
   });
 
-  const send = (opts: { method: 'GET' | 'POST'; url: string; payload?: object; token?: string }) =>
+  const send = (opts: { method: 'GET' | 'POST' | 'PATCH'; url: string; payload?: object; token?: string }) =>
     app.inject({ ...opts, headers: { authorization: `Bearer ${opts.token ?? 'admin'}` } });
 
   it('teachers get 403', async () => {
@@ -55,10 +55,11 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
   });
 
   it('status-counts returns a count per status', async () => {
-    results['v_student_list'] = [{ count: 1 }, { count: 2 }, { count: 4 }, { count: 0 }, { count: 0 }];
+    const n = [1, 2, 4, 3, 5, 6, 0, 0];
+    results['v_student_list'] = n.map((count) => ({ count }));
     const res = await send({ method: 'GET', url: '/students/status-counts?teacher=none' });
     expect(res.statusCode).toBe(200);
-    expect(res.json()).toEqual({ trial: 1, active: 2, pending_renewal: 4, paused: 0, churned: 0 });
+    expect(res.json()).toEqual({ new: 1, trial: 2, pending_subscription: 4, active: 3, pending_renewal: 5, expired: 6, paused: 0, churned: 0 });
   });
 
   it('rejects a handle instead of a phone with 400 (R-STU-02)', async () => {
@@ -81,6 +82,16 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     results['students'] = [{ data: { id: 's2', name: 'سهيله' } }];
     const res = await send({ method: 'POST', url: '/students', payload: { ...BODY, force: true } });
     expect(res.statusCode).toBe(201);
+  });
+
+  it('PATCH with a stale expected_status → 409 status_changed (R-STU-05)', async () => {
+    const id = '11111111-1111-4111-8111-111111111111';
+    results['students'] = [{ data: { id, status: 'pending_renewal' } }, { data: null }];
+    const res = await send({ method: 'PATCH', url: `/students/${id}`, payload: { status: 'paused', expected_status: 'active' } });
+    expect(res.statusCode).toBe(409);
+    expect(res.json()).toMatchObject({ code: 'status_changed', message: 'status_changed' });
+    const bad = await send({ method: 'PATCH', url: `/students/${id}`, payload: { expected_status: 'gone' } });
+    expect(bad.statusCode).toBe(400);
   });
 
   it('merge validates the ids and returns the merge id', async () => {

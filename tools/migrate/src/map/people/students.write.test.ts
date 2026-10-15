@@ -8,10 +8,10 @@ import type { PlanItem } from '../../types.ts';
 import { BUMP_CODE_SEQ, writeStudent } from './students.write.ts';
 
 function fakeTx(o: { taken?: boolean } = {}) {
-  const calls: (InsertSpec | SqlText | { update: string })[] = [];
+  const calls: (InsertSpec | SqlText | { update: string; columns: object })[] = [];
   const tx: TargetTx = {
     insert: async (spec) => (calls.push(spec), o.taken ? null : 'new-id'),
-    update: async (spec) => void calls.push({ update: spec.id }),
+    update: async (spec) => void calls.push({ update: spec.id, columns: spec.columns }),
     recordItem: async () => {},
     exec: async (q) => void calls.push(q),
   };
@@ -57,19 +57,19 @@ describe('writeStudent', () => {
     expect(calls).toHaveLength(1);
   });
 
-  it('a student without a legacy code takes the sequence and skips the bump', async () => {
+  it('a student without a legacy code takes the sequence, skips the bump, sets status', async () => {
     const { tx, calls } = fakeTx();
-    await writeStudent(ctx({ tx, item: item('create'), columns: { name: 'ليان' } }));
-    expect(calls).toEqual([{ table: 'students', columns: { name: 'ليان' } }]);
+    const columns = { name: 'ليان', status: 'pending_subscription' };
+    await writeStudent(ctx({ tx, item: item('create'), columns }));
+    expect(calls).toEqual([{ table: 'students', columns }]);
   });
 
-  it('an update never touches code_seq', async () => {
+  it('an update never touches code_seq nor status', async () => {
     const { tx, calls } = fakeTx();
-    const r = await writeStudent(
-      ctx({ tx, item: item('update', 's1'), columns: { name: 'ليان', code_seq: 12 } }),
-    );
+    const columns = { name: 'ليان', code_seq: 12, status: 'new' };
+    const r = await writeStudent(ctx({ tx, item: item('update', 's1'), columns }));
     expect(r.targetId).toBe('s1');
-    expect(calls).toEqual([{ update: 's1' }]);
+    expect(calls).toEqual([{ update: 's1', columns: { name: 'ليان' } }]);
     await expect(
       writeStudent(ctx({ tx, item: item('update'), columns: { name: 'x' } })),
     ).rejects.toThrow(/without target id/);

@@ -20,6 +20,14 @@ test('dirty tracking: any changed text or switch, and back again', () => {
   expect(isDirty({ ...saved, bookingHorizonWeeks: '5' }, saved)).toBe(false);
 });
 
+test('«أيام انتهاء الاشتراك» reads the saved days and PATCHes 1..90 only', () => {
+  const days = settingsForm({ ...settings, subscription_expiry_days: 7 });
+  expect(days.subscriptionExpiryDays).toBe('7');
+  expect(settingsUpdate({ ...days, subscriptionExpiryDays: '١٤' }, days)).toEqual({ ok: true, value: { subscriptionExpiryDays: 14 } });
+  const r = settingsUpdate({ ...days, subscriptionExpiryDays: '91' }, days);
+  expect(r.ok ? null : r.errors.subscriptionExpiryDays).toBe(t.settings.invalid);
+});
+
 test('the PATCH carries only what changed', () => {
   const r = settingsUpdate({ ...saved, bookingHorizonWeeks: '8', reportingCurrency: 'egp' }, saved);
   expect(r).toEqual({ ok: true, value: { bookingHorizonWeeks: 8, reportingCurrency: 'EGP' } });

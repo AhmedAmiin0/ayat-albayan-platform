@@ -1,8 +1,6 @@
 import {
   CUSTOM_COUNT_DEFAULT,
   DEFAULT_DURATION,
-  lessonsOf,
-  PACKAGE_IDS,
   parseDiscount,
   PRICING_DURATIONS,
   type PricingDuration,
@@ -38,17 +36,6 @@ export const INITIAL_FORM: SubscribeForm = {
   count: CUSTOM_COUNT_DEFAULT,
   discount: '0',
 };
-
-/** The route's prefill after a booking: its package size (8 → starter…) and lesson length. */
-export function formFrom(p: { pkg?: string; minutes?: string }): SubscribeForm {
-  const plan = PACKAGE_IDS.find((id) => String(lessonsOf(id)) === p.pkg);
-  const duration = PRICING_DURATIONS.find((d) => String(d) === p.minutes);
-  return {
-    ...INITIAL_FORM,
-    ...(plan ? { plan } : {}),
-    ...(duration ? { duration: `${duration}` as const } : {}),
-  };
-}
 
 /** The `pricing` of POST /subscriptions(/quote): `tier` xor `count`; no `country` = the guardian's. */
 export function pricingOf(f: SubscribeForm): SubscriptionPricing {

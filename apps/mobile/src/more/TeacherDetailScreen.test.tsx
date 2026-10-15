@@ -122,5 +122,5 @@ test('«طلاب المعلم/ة» opens on the list the `status` param names (a
   serve({ '/teachers/t1': TEACHER, '/teachers/t1/availability': [], '/teachers/t1/time-off': [] });
   await renderWithQuery(<TeacherDetailScreen />);
   expect(await screen.findByRole('header', { name: t.studentLists.section })).toBeTruthy();
-  expect(mockApiFetch).toHaveBeenCalledWith('/students?teacher=t1&status=trial&page=1&pageSize=50');
+  expect(mockApiFetch).toHaveBeenCalledWith('/students?teacher=t1&status=new%2Ctrial%2Cpending_subscription&page=1&pageSize=50');
 });

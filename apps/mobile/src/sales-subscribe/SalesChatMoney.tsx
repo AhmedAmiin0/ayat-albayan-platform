@@ -6,11 +6,12 @@ import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
-import { openPackages, useSalesFamily } from './family';
+import { openPackages, renewTargets, useSalesFamily } from './family';
 
 /**
  * Over a salesperson's chat with a family (R-ASST-01/04, owner 2026-10-12): «اشتراك جديد» when one
- * of the family's students is hers, and «سجّل تحويلًا بنكيًا» while one of their packages is owed.
+ * of the family's students is hers, «جدّد الاشتراك» for each of hers whose package ended (the same
+ * screen, that child picked; owner 2026-10-15), and «سجّل تحويلًا بنكيًا» while one of their packages is owed.
  * Needs self.sales_money; nothing on a lead's chat (RegisterFromChat is there) or another's family.
  */
 export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
@@ -22,6 +23,8 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
   if (phone === '' || !family.data?.students.length) return null;
   const tz = thread?.guardian_tz;
   const owed = openPackages(family.data).length > 0;
+  const subscribe = (studentId?: string) =>
+    router.push(inTree(base, { pathname: '/inbox/sales-subscribe', params: { phone, ...(studentId ? { studentId } : {}), ...(tz ? { tz } : {}) } }));
   return (
     <View
       style={{
@@ -36,8 +39,11 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
       <Button
         variant="secondary"
         label={t.salesMoney.newSubscription}
-        onPress={() => router.push(inTree(base, { pathname: '/inbox/sales-subscribe', params: { phone, ...(tz ? { tz } : {}) } }))}
+        onPress={() => subscribe()}
       />
+      {renewTargets(family.data).map((r) => (
+        <Button key={r.studentId} variant="secondary" label={r.label} onPress={() => subscribe(r.studentId)} />
+      ))}
       {owed ? (
         <Button
           variant="secondary"

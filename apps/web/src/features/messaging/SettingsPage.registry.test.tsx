@@ -46,6 +46,21 @@ describe('/admin/settings fields from the registry', () => {
     expect(screen.getByLabelText(s.teachersAlwaysAvailable)).toHaveProperty('checked', true); // owner 2026-10-12
   });
 
+  it('«الحسابات والدفعات» shows subscription_expiry_days (default 7) beside renewal_alert_remaining, and saves it', async () => {
+    renderPage();
+    const field = await screen.findByLabelText(s.subscriptionExpiryDays);
+    const accounts = document.getElementById(sectionId('accounts'));
+    if (!accounts) throw new Error('no accounts section');
+    expect(within(accounts).getByLabelText(s.subscriptionExpiryDays)).toBe(field);
+    expect(field).toHaveProperty('value', '7');
+    expect(within(accounts).getByLabelText(s.renewalAlertRemaining)).toBeTruthy();
+    expect(within(accounts).getByText(s.hints.subscriptionExpiryDays)).toBeTruthy();
+    fireEvent.change(field, { target: { value: '10' } });
+    apiSend.mockResolvedValue(SETTINGS);
+    fireEvent.click(screen.getByRole('button', { name: t.common.save }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', expect.objectContaining({ subscriptionExpiryDays: 10 })));
+  });
+
   it('saves a changed join window and WhatsApp number in the one PATCH', async () => {
     renderPage();
     fireEvent.change(await screen.findByLabelText(s.joinOpensBeforeMin), { target: { value: '30' } });

@@ -23,13 +23,15 @@ export type StudentCreateRequest = z.infer<typeof studentCreateRequestSchema>;
 
 /**
  * PATCH /students/:id. Shared `studentUpdateSchema` is `.partial()` over fields with defaults and
- * zod 4 still applies them: `{ level }` came back with status 'trial' / program 'quran', silently
+ * zod 4 still applies them: `{ level }` came back with status 'new' / program 'quran', silently
  * resetting an active student. Same fields here, without the defaults.
  */
 export const studentPatchSchema = studentCreateSchema
   .omit({ guardian_id: true })
   .extend({ program: z.enum(PROGRAMS), status: z.enum(STUDENT_STATUSES) })
-  .partial();
+  .partial()
+  /** Compare-and-set: written only while the row still has this status, else 409 `status_changed`. */
+  .extend({ expected_status: z.enum(STUDENT_STATUSES).optional() });
 
 /** POST /students/:id/merge — `merged_id` is folded into `:id` (kept). */
 export const mergeRequestSchema = z.object({ merged_id: z.uuid() });

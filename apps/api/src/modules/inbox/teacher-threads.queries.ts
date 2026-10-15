@@ -32,7 +32,7 @@ export class TeacherThreadsQueries {
     return data;
   }
 
-  /** teacher_thread_phones: their non-trial students' guardians (assigned or taught ≤ 90 days) + their own. */
+  /** teacher_thread_phones: their subscribed students' guardians (never new / trial / pending_subscription; assigned or taught ≤ 90 days) + their own. */
   async phones(teacherId: string): Promise<string[]> {
     const { data, error } = await this.db.rpc('teacher_thread_phones', { p_teacher_id: teacherId });
     if (error) throw dbError(error);

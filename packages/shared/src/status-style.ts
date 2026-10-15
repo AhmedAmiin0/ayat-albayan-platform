@@ -54,10 +54,14 @@ export const leadStatusStyle: Record<LeadStatus, StatusStyle> = {
   lost: { tone: 'neutral', glyph: 'struck' },
 };
 
+/** new: book a trial; pending_subscription: collect the payment; expired: renew (owner 2026-10-15). */
 export const studentStatusStyle: Record<StudentStatus, StatusStyle> = {
+  new: { tone: 'act', glyph: 'hollow' },
   trial: { tone: 'neutral', glyph: 'hollow' },
+  pending_subscription: { tone: 'act', glyph: 'half' },
   active: { tone: 'ok', glyph: 'fill' },
   pending_renewal: { tone: 'act', glyph: 'half' },
+  expired: { tone: 'act', glyph: 'struck' },
   paused: { tone: 'neutral', glyph: 'half' },
   churned: { tone: 'neutral', glyph: 'struck' },
 };

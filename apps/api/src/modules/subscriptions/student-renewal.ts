@@ -23,8 +23,9 @@ export function endPackages(state: StudentState): EndPackage[] {
 /**
  * «بانتظار التجديد» (owner 2026-10-12, docs/11 §7): after the package statuses are recomputed (every money
  * write, lesson change and the sweep), an `active` student whose subscription ended becomes
- * `pending_renewal`, and back to `active` once it runs again (a renewal payment). Never trial, paused or
- * churned. Compare-and-set + audit (via subscription_ended / payment + payment_id / subscription_renewed).
+ * `pending_renewal`, and back to `active` once it runs again (a renewal payment), from `expired` too (owner
+ * 2026-10-15). Runs after StudentActivation on a payment: a renewal still unpaid in part moves the student
+ * it just activated back to pending_renewal. Never the not-subscribed statuses, paused or churned. Compare-and-set + audit (via subscription_ended / payment + payment_id / subscription_renewed).
  * The sweep leaves a status the admin set by hand until the next automatic event (manualWins).
  */
 @Injectable()
@@ -44,7 +45,7 @@ export class StudentRenewal {
     if (!to) return null;
     if (input.cause.via === 'sweep' && (await this.manualWins(input.studentId, { pkgs, today, tz: student.tz }))) return null;
     const move = { studentId: input.studentId, from: student.status, to };
-    const moved = await this.statuses.move(move, { actorId: input.actorId, after: viaOf(to, input.cause) });
+    const moved = await this.statuses.move(move, { actorId: input.actorId, after: viaOf(move, input.cause) });
     return moved ? to : null;
   }
 
@@ -63,7 +64,9 @@ export class StudentRenewal {
   }
 }
 
-function viaOf(to: StudentStatus, cause: RenewalCause): Record<string, string> {
-  if (to === 'pending_renewal') return { via: 'subscription_ended' };
-  return cause.via === 'payment' ? { via: 'payment', payment_id: cause.paymentId } : { via: 'subscription_renewed' };
+/** A payment flip records its from-status, so deleting the payment reverts to it (StudentDeactivation). */
+function viaOf(m: { from: StudentStatus; to: StudentStatus }, cause: RenewalCause): Record<string, string> {
+  if (m.to === 'pending_renewal') return { via: 'subscription_ended' };
+  if (cause.via !== 'payment') return { via: 'subscription_renewed' };
+  return { via: 'payment', payment_id: cause.paymentId, from: m.from, reason: 'payment' };
 }
