@@ -98,8 +98,8 @@ describe('toBookingRequest (POST /booking)', () => {
     });
     expect(body).not.toHaveProperty('studentIds');
     expect(bookingRequestSchema.safeParse(body).success).toBe(true);
-    // «اشترك» from the chat: a regular package books an active student.
-    expect(toBookingRequest({ ...lead, kind: 'package', pkg: '8' })).toMatchObject({ package: '8', newStudent: { status: 'active' } });
+    // «اشترك» from the chat: a regular package books a «new» student; a payment makes it active.
+    expect(toBookingRequest({ ...lead, kind: 'package', pkg: '8' })).toMatchObject({ package: '8', newStudent: { status: 'new' } });
   });
 
   it('carries the idempotency key, the picked instant, and force on the lead path', () => {

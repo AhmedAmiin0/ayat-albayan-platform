@@ -40,7 +40,7 @@ test('a tap shows the new status at once and PATCHes /students/:id', async () =>
   await screen.findByRole('header', { name: 'هدى' });
   await fireEvent.press(pill(t.enums.studentStatus.paused));
   expect(await screen.findByRole('radio', { checked: true, name: t.enums.studentStatus.paused })).toBeTruthy();
-  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/students/s1', { status: 'paused' });
+  expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/students/s1', { status: 'paused', expected_status: 'active' });
 });
 
 test('a refused change rolls back and says so', async () => {
@@ -50,6 +50,16 @@ test('a refused change rolls back and says so', async () => {
   await fireEvent.press(pill(t.enums.studentStatus.churned));
   expect(await screen.findByRole('alert')).toHaveTextContent(t.common.error);
   expect(selected()).toBe(pill(t.enums.studentStatus.active));
+});
+
+test('409 status_changed: says the status moved and shows the refetched one (R-STU-05)', async () => {
+  mockApiSend.mockRejectedValue(new ApiError(409, { code: 'status_changed', message: 'status_changed' }));
+  await renderWithQuery(<StudentScreen />);
+  await screen.findByRole('header', { name: 'هدى' });
+  mockApiFetch.mockResolvedValue({ ...profile, status: 'pending_renewal' });
+  await fireEvent.press(pill(t.enums.studentStatus.churned));
+  expect(await screen.findByRole('alert')).toHaveTextContent(t.students.statusChanged);
+  expect(await screen.findByRole('radio', { checked: true, name: t.enums.studentStatus.pending_renewal })).toBeTruthy();
 });
 
 test('tapping the current status sends nothing', async () => {

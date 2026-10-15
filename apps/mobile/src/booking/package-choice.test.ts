@@ -15,7 +15,7 @@ test('weekdays: none before a slot; a trial only its day; a package its day plus
   expect(effectiveByday({ ...paid, byday: [2] })).toEqual([0, 2]);
 });
 
-test('a paid package: a weekly rule on its days, its length and size, the new child active', () => {
+test('a paid package: a weekly rule on its days, its length and size, the new child new until paid (docs/18 row 1)', () => {
   const body = toBookingRequest(paid, { requestId: REQ });
   expect(body).toMatchObject({
     teacherId: maryam.id,
@@ -27,7 +27,7 @@ test('a paid package: a weekly rule on its days, its length and size, the new ch
     package: '12',
     clientRequestId: REQ,
     startsAt: SUN_17,
-    newStudent: { status: 'active' },
+    newStudent: { status: 'new' },
   });
   expect(bookingRequestSchema.safeParse(body).success).toBe(true);
   expect(toBookingRequest(draft(), { requestId: REQ })).toMatchObject({

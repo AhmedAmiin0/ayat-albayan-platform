@@ -52,6 +52,17 @@ describe('«جدّد الاشتراك» in a sales chat (owner 2026-10-15)', () 
     expect(screen.getByRole('button', { name: t.salesMoney.newSubscription })).toBeTruthy();
   });
 
+  it('several children: each button shows the child it renews (visible text = accessible name)', async () => {
+    open([student({ status: 'pending_renewal' }), student({ id: JUD, name: 'جود', status: 'expired' })]);
+    expect((await screen.findByRole('button', renewOf('جود'))).textContent).toBe(`${t.students.renew} — جود`);
+    expect(screen.getByRole('button', renewOf('سهيلة')).textContent).toBe(`${t.students.renew} — سهيلة`);
+  });
+
+  it('a single student: the plain «جدّد الاشتراك»', async () => {
+    open([student({ status: 'expired' })]);
+    expect((await screen.findByRole('button', { name: t.students.renew })).textContent).toBe(t.students.renew);
+  });
+
   it.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('%s: no renewal', async (status) => {
     open([student({ status })]);
     await screen.findByRole('button', { name: t.salesMoney.newSubscription });

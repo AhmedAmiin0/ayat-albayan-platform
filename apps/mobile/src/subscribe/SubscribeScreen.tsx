@@ -15,12 +15,13 @@ import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { PricingInputs } from './PricingInputs';
-import { formFrom, pricingOf, startDays, subscribeErrorText } from './subscribe-form';
+import { formFrom, type FormPrefill } from './form-prefill';
+import { pricingOf, startDays, subscribeErrorText } from './subscribe-form';
 import { PriceSection, SavedPanel, StartDayPills, StudentPills } from './SubscribeParts';
 import { useCreateSubscription, useSubscriptionQuote } from './use-subscribe';
 
-/** studentId; after a booking also its package size, lesson minutes and first lesson's day; renew from «جدّد الاشتراك». */
-type Params = { studentId?: string; pkg?: string; minutes?: string; startsOn?: string; renew?: string };
+/** studentId, the form's prefill (form-prefill) and, after a booking, the first lesson's day; renew from «جدّد الاشتراك». */
+type Params = FormPrefill & { studentId?: string; startsOn?: string; renew?: string };
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/inbox'));
 

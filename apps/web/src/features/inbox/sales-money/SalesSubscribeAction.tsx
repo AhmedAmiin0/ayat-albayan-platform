@@ -15,7 +15,8 @@ type Opened = { start: FlowStart; studentId?: string };
  * mode, only on a family's chat, and only when the family has students she brought (GET
  * /sales/money/family); the transfer only while one of them has a package still owed. Each of them
  * whose package ended (pending_renewal / expired, owner 2026-10-15) gets «جدّد الاشتراك»: the same
- * subscribe step with that student already picked.
+ * subscribe step with that student already picked, naming the child when several of hers are listed
+ * (the visible text is the accessible name, as mobile renewTargets).
  */
 export function SalesSubscribeAction({ thread }: { thread: ThreadView }) {
   const sales = useInboxMode() === 'sales' && !!thread.guardian_id;
@@ -29,8 +30,8 @@ export function SalesSubscribeAction({ thread }: { thread: ThreadView }) {
   return (
     <span className="flex flex-wrap items-center gap-2">
       {ended.map((s) => (
-        <Button key={s.id} type="button" size="sm" aria-label={`${t.students.renew} — ${s.name}`} onClick={() => setOpened({ start: 'subscribe', studentId: s.id })}>
-          {t.students.renew}
+        <Button key={s.id} type="button" size="sm" onClick={() => setOpened({ start: 'subscribe', studentId: s.id })}>
+          {students.length > 1 ? `${t.students.renew} — ${s.name}` : t.students.renew}
         </Button>
       ))}
       <Button type="button" size="sm" variant={ended.length > 0 ? 'secondary' : 'primary'} onClick={() => setOpened({ start: 'subscribe' })}>

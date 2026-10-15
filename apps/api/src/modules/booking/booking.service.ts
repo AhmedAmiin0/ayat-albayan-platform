@@ -8,7 +8,8 @@ import { BookingWriter } from './booking.writer';
  * POST /booking (R-SCH-06, R-SCH-04, R-LEAD-06, R-SCH-10, R-PAY-03): plan + conflict check, then
  * ONE transaction (create_booking RPC) for guardian/student, rule, lessons, lead status, queued
  * messages, the invoice and the audit row with the override reason and the conflicts it overrode
- * (R-NFR-03). A replay with the same clientRequestId returns the first booking (rule 8). Every kind
+ * (R-NFR-03). A replay with the same clientRequestId returns the first booking (rule 8), re-running
+ * only the idempotent trial status follow-up (BookingWriter.replayed). Every kind
  * but trial stores its invoice (BookingWriter).
  */
 @Injectable()
@@ -28,7 +29,7 @@ export class BookingService {
     // The same request again (a retry, a double click) returns its booking before anything is
     // planned: its own lessons would otherwise show up as clashes.
     const first = req.clientRequestId ? await this.queries.replay(req.clientRequestId) : null;
-    if (first) return first;
+    if (first) return this.writer.replayed({ req, result: first, actorId });
     const prepared = await this.planner.prepare(req);
     return this.writer.write({ req, prepared, actorId });
   }

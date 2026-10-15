@@ -1,4 +1,4 @@
-import { normalizePhone } from '@ab/shared';
+import { normalizePhone, registrationStatus } from '@ab/shared';
 import type { BookingBody, InvoiceDraft, InvoiceInput } from './contract';
 import type { StudentChoice, TrialDraft } from './draft';
 import { effectiveByday } from './package-choice';
@@ -20,7 +20,8 @@ export function toInvoiceInput(invoice: InvoiceDraft): InvoiceInput {
 /**
  * POST /booking: a trial is one lesson, a rule on the slot's local day that ends on it (invariant
  * 4); a paid package repeats weekly from the slot on its days, with its invoice (a trial has none).
- * The new child is active when paid, and carries the form's age and gender; the guardian its
+ * The new child starts trial with a trial lesson, else new (registrationStatus, docs/18 row 1: only a
+ * positive payment makes it active), and carries the form's age and gender; the guardian its
  * «عرفت عننا منين؟». Unanswered optional questions are left out.
  */
 export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingBody | null {
@@ -64,7 +65,7 @@ function newStudent(d: TrialDraft) {
     ...(d.studentGender ? { gender: d.studentGender } : {}),
     program: d.program,
     tz: d.tz,
-    status: d.pkg === 'trial' ? ('trial' as const) : ('active' as const),
+    status: registrationStatus(d.pkg === 'trial'),
     teacher_gender_pref: d.gender,
   };
 }

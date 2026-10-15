@@ -1,4 +1,4 @@
-import type { StudentStatus } from '@ab/shared';
+import { quote, type StudentStatus } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -33,7 +33,8 @@ beforeEach(() => {
 });
 
 test.each(['pending_renewal', 'expired'] as const)('%s: «جدّد الاشتراك» opens the subscribe screen prefilled from the last package', async (status) => {
-  serve(status, balanceOf(subscription({ package: '8', duration: 60 })));
+  const source = { ...quote({ count: 14, duration: 60, country: 'AE', students: 1, discount: 10 }), fx: null };
+  serve(status, balanceOf(subscription({ package: null, duration: 60, lessons_total: 14, price_source: source })));
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
   await waitFor(() => expect(mockApiFetch).toHaveBeenCalledWith('/students/s1/balance'));
@@ -41,7 +42,7 @@ test.each(['pending_renewal', 'expired'] as const)('%s: «جدّد الاشتر�
   await fireEvent.press(await screen.findByRole('button', { name: t.students.renew }));
   expect(mockPush).toHaveBeenCalledWith({
     pathname: '/students/subscribe',
-    params: { studentId: 's1', renew: '1', pkg: '8', minutes: '60' },
+    params: { studentId: 's1', renew: '1', plan: 'custom', count: '14', minutes: '60', discount: '10', country: 'AE' },
   });
 });
 

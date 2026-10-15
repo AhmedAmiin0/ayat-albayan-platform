@@ -187,6 +187,7 @@
     "empty": "No students yet",
     "created": "Student registered",
     "updated": "Student details updated",
+    "statusChanged": "The student's status changed before your change was saved, so nothing was saved. The current status is shown now; choose the status you want again.",
     "duplicateTitle": "This student looks already registered",
     "duplicateWarning": "There's a student with the same number and a similar name. Merge them instead of keeping two copies?",
     "duplicateCandidates": "Students who may be the same person",

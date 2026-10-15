@@ -13,6 +13,7 @@ const message = (e: unknown) => (e instanceof Error ? e.message : String(e));
  * else booked (trialMove). Evaluated after a trial booking (BookingFollowUps) and on every lesson change
  * of a trial lesson (LessonEvents: attendance, cancel, move, a submitted report). Compare-and-set on the
  * status read, audited (via trial + from / to / reason): a status set by hand to anything else wins.
+ * An attended trial of a student who already paid moves nothing (paid, read only when attended).
  * Sends nothing (no WhatsApp, push or email). Never throws: the booking or lesson change is committed.
  */
 @Injectable()
@@ -57,7 +58,9 @@ export class StudentTrialStatus implements OnModuleInit {
   private async one(studentId: string, o: { facts: TrialFacts; actorId: string | null }): Promise<boolean> {
     try {
       const student = await this.statuses.student(studentId);
-      const plan = student ? trialMove(student.status, o.facts) : null;
+      if (!student) return false;
+      const paid = o.facts.attended && (await this.statuses.hasPositivePayment(studentId));
+      const plan = trialMove(student.status, { ...o.facts, paid });
       if (!plan) return false;
       const after = { via: 'trial', from: plan.from, to: plan.to, reason: plan.reason };
       return await this.statuses.move({ studentId, from: plan.from, to: plan.to }, { actorId: o.actorId, after });

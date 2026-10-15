@@ -1,4 +1,4 @@
-import { STUDENT_STATUSES, type StudentStatus, type SubscriptionStatus } from '@ab/shared';
+import { STUDENT_STATUSES, trialMove, type StudentStatus, type SubscriptionStatus, type TrialFacts } from '@ab/shared';
 
 // Pure rules of the student status «بانتظار التجديد» (owner 2026-10-12, docs/11 §7, R-STU-05).
 
@@ -39,12 +39,14 @@ export function renewalTarget(current: StudentStatus, ended: boolean): StudentSt
 }
 
 /**
- * Older flips (before 2026-10-15) recorded no `from`: after the payment that flipped the student is
- * deleted, no positive payment left → trial; else rule 5.
+ * After the payment that flipped the student is deleted: another positive payment remains → rule 5
+ * (active, or pending_renewal when ended). None left (older flips with no recorded `from`, owner
+ * 2026-10-15): the trial facts decide, as for a new student (attended → pending_subscription, an open
+ * trial → trial, none → new).
  */
-export function revertTarget(input: { otherPayment: boolean; ended: boolean }): StudentStatus {
-  if (!input.otherPayment) return 'trial';
-  return input.ended ? 'pending_renewal' : 'active';
+export function revertTarget(input: { otherPayment: boolean; ended: boolean; facts: TrialFacts }): StudentStatus {
+  if (input.otherPayment) return input.ended ? 'pending_renewal' : 'active';
+  return trialMove('new', { ...input.facts, paid: false })?.to ?? 'new';
 }
 
 /** The newest students status_change audit row, as written by StudentsService (manual) or the API flows. */

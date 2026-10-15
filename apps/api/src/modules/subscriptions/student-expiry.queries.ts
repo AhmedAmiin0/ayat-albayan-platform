@@ -1,31 +1,19 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { readAll } from '../scheduling/read-all';
 import { dbError } from '../teachers/http';
 
-/** The reads of StudentExpiryJob (owner 2026-10-15, docs/11 §7): pending_renewal students, package end, payments. */
+/** The reads of StudentExpiryJob (owner 2026-10-15, docs/11 §7): pending_renewal students, payments since. */
 @Injectable()
 export class StudentExpiryQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
-  /** Every student whose status is pending_renewal. */
+  /** Every student whose status is pending_renewal, page by page (never cut at max_rows). */
   async pendingRenewal(): Promise<string[]> {
-    const { data, error } = await this.db.from('students').select('id').eq('status', 'pending_renewal');
-    if (error) throw dbError(error);
-    return (data ?? []).map((r) => r.id);
-  }
-
-  /** The renewal date (YYYY-MM-DD) of the student's newest package (trial packages aside), or null. */
-  async packageEnd(studentId: string): Promise<string | null> {
-    const { data, error } = await this.db
-      .from('subscriptions')
-      .select('renews_on')
-      .eq('student_id', studentId)
-      .neq('status', 'trial')
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    if (error) throw dbError(error);
-    return data?.renews_on ?? null;
+    const rows = await readAll((from, to) =>
+      this.db.from('students').select('id').eq('status', 'pending_renewal').order('id').range(from, to),
+    );
+    return rows.map((r) => r.id);
   }
 
   /** A payment (kind payment, amount > 0) of any of the student's packages recorded at or after `since`. */

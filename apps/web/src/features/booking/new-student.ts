@@ -64,8 +64,8 @@ type Family = { program: Program; tz: string; pkg: PackageSize; genderPref: Gend
 
 const blankToNull = (v: string | null | undefined) => (v?.trim() ? v.trim() : null);
 
-/** POST /booking's newStudent + guardian. A trial lesson books a «trial» student
- * (registrationStatus), a regular package («اشترك») an active one. */
+/** POST /booking's newStudent + guardian. A trial lesson books a «trial» student, a regular package
+ * («اشترك») a «new» one (registrationStatus, docs/18 row 1): only a positive payment makes it active. */
 export function leadParts(s: NewStudentDraft, f: Family): LeadParts {
   const c = s.carried ?? {};
   return {
@@ -73,7 +73,7 @@ export function leadParts(s: NewStudentDraft, f: Family): LeadParts {
       name: s.name.trim(),
       program: f.program,
       tz: f.tz,
-      status: f.pkg === 'trial' ? registrationStatus(true) : 'active',
+      status: registrationStatus(f.pkg === 'trial'),
       teacher_gender_pref: f.genderPref,
       age: parseAge(s.age ?? '') ?? null,
       gender: s.gender || null,

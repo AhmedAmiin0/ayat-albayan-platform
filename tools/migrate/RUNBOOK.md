@@ -106,6 +106,7 @@ reports (PDF opens), a subscription balance, one lead's WhatsApp thread.
 
 Re-runs are idempotent: unchanged records are skipped, changed ones are updated, and a lesson
 report's lifecycle (version, send time) edited in the app is never rewound.
+Student statuses come from the importer (`active`, else `pending_subscription` after an attended trial report, else `new`; set on create only) — do not re-run migration `20261015000442` after an import.
 
 ## 8. Production (owner's explicit go only)
 

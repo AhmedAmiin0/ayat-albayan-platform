@@ -18,7 +18,15 @@ export class BookingFollowUps {
   ) {}
 
   async afterBooking({ req, result, actorId }: BookingDone): Promise<void> {
-    if (bookingKindOf(req) === 'trial') await this.trial.evaluate(result.student_ids, actorId);
+    await this.afterReplay({ req, result, actorId });
     await this.alert.afterBooking({ req, result });
+  }
+
+  /**
+   * A replayed booking (same clientRequestId): only the idempotent trial evaluation, so a first call
+   * that failed after its commit still moves its students; never the teacher alert or push again.
+   */
+  async afterReplay({ req, result, actorId }: BookingDone): Promise<void> {
+    if (bookingKindOf(req) === 'trial') await this.trial.evaluate(result.student_ids, actorId);
   }
 }

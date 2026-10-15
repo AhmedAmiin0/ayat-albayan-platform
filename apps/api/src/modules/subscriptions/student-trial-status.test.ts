@@ -8,14 +8,17 @@ import type { StudentTrialQueries } from './student-trial.queries';
 const trialLesson = (student_id: string, status: 'scheduled' | 'completed' | 'no_show'): TrialLessonRow => ({
   student_id,
   attendance: null,
-  lesson: { status, rule: { package: 'trial' } },
+  chargeable: true,
+  lesson: { status, rule_id: 'r1', instant: false, makeup_of_id: null, rule: { package: 'trial' } },
 });
 
-function setup(o: { statuses?: Record<string, string>; rows?: TrialLessonRow[]; moved?: boolean } = {}) {
+type SetupOpts = { statuses?: Record<string, string>; rows?: TrialLessonRow[]; moved?: boolean; paid?: boolean };
+function setup(o: SetupOpts = {}) {
   const map = o.statuses ?? { s1: 'new' };
   const statuses = {
     student: vi.fn(async (id: string) => (map[id] ? { status: map[id], tz: 'Asia/Riyadh' } : null)),
     move: vi.fn(async () => o.moved ?? true),
+    hasPositivePayment: vi.fn(async () => o.paid ?? false),
   };
   const queries = {
     studentsOfTrialLessons: vi.fn(async () => Object.keys(map)),
@@ -50,6 +53,16 @@ describe('StudentTrialStatus.evaluate: trialMove, compare-and-set and audited (o
       await t.s.evaluate(['s1'], 'a1');
       expect(t.statuses.move).toHaveBeenCalledWith(...audit({ from, to: 'pending_subscription', reason: 'trial_attended' }));
     }
+  });
+
+  it('attended but already paid → no move; the payment is read only for an attended trial', async () => {
+    const t = setup({ statuses: { s1: 'trial' }, rows: [trialLesson('s1', 'completed')], paid: true });
+    expect(await t.s.evaluate(['s1'], 'a1')).toBe(0);
+    expect(t.statuses.move).not.toHaveBeenCalled();
+    expect(t.statuses.hasPositivePayment).toHaveBeenCalledWith('s1');
+    const open = setup({ rows: [trialLesson('s1', 'scheduled')], paid: true });
+    expect(await open.s.evaluate(['s1'], 'a1')).toBe(1);
+    expect(open.statuses.hasPositivePayment).not.toHaveBeenCalled();
   });
 
   it('trial with its lesson missed and nothing else booked → new (trial_missed)', async () => {

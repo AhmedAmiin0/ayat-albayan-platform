@@ -64,9 +64,9 @@ describe('lead → student conversion carries «بيانات الطالب» and 
     expect(leadParts({ ...base, age: '' }, FAMILY).newStudent).toMatchObject({ age: null, gender: null, level: null });
   });
 
-  it('a trial booking registers a «trial» student, a regular package an active one (owner 2026-10-15)', () => {
+  it('a trial booking registers a «trial» student, a regular package a «new» one until paid (docs/18 row 1)', () => {
     const base = { name: 'جود', guardianName: 'منى', guardianPhone: '0501234567' };
     expect(leadParts(base, { ...FAMILY, pkg: 'trial' }).newStudent.status).toBe('trial');
-    expect(leadParts(base, { ...FAMILY, pkg: '8' }).newStudent.status).toBe('active');
+    expect(leadParts(base, { ...FAMILY, pkg: '8' }).newStudent.status).toBe('new');
   });
 });

@@ -77,7 +77,7 @@ test('a lead without a student: «اشترك» → camera invoice → POST /book
     package: '8',
     leadId: 'a1',
     invoice: { source: 'upload', path: 'req/0b1c.jpg' },
-    newStudent: { name: 'يوسف', status: 'active' },
+    newStudent: { name: 'يوسف', status: 'new' },
   });
   expect(backend.sent('POST /booking/invoice-upload-url')[0]?.body).toMatchObject({
     clientRequestId: post.clientRequestId,

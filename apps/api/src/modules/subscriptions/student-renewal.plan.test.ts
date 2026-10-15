@@ -46,10 +46,18 @@ describe('renewalTarget / revertTarget', () => {
     }
   });
 
-  it('no other positive payment → trial; another remains → active, or pending_renewal when ended', () => {
-    expect(revertTarget({ otherPayment: false, ended: true })).toBe('trial');
-    expect(revertTarget({ otherPayment: true, ended: false })).toBe('active');
-    expect(revertTarget({ otherPayment: true, ended: true })).toBe('pending_renewal');
+  it('another positive payment remains → active, or pending_renewal when ended (whatever the trial)', () => {
+    const facts = { open: true, attended: true, paid: true };
+    expect(revertTarget({ otherPayment: true, ended: false, facts })).toBe('active');
+    expect(revertTarget({ otherPayment: true, ended: true, facts })).toBe('pending_renewal');
+  });
+
+  it('none left → by the trial facts: attended → pending_subscription, open trial → trial, none → new', () => {
+    const at = (open: boolean, attended: boolean) => revertTarget({ otherPayment: false, ended: true, facts: { open, attended, paid: false } });
+    expect(at(false, true)).toBe('pending_subscription');
+    expect(at(true, true)).toBe('pending_subscription');
+    expect(at(true, false)).toBe('trial');
+    expect(at(false, false)).toBe('new');
   });
 });
 

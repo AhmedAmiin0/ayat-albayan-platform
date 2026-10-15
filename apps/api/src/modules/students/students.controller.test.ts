@@ -37,7 +37,7 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     for (const k of Object.keys(results)) results[k] = [];
   });
 
-  const send = (opts: { method: 'GET' | 'POST'; url: string; payload?: object; token?: string }) =>
+  const send = (opts: { method: 'GET' | 'POST' | 'PATCH'; url: string; payload?: object; token?: string }) =>
     app.inject({ ...opts, headers: { authorization: `Bearer ${opts.token ?? 'admin'}` } });
 
   it('teachers get 403', async () => {
@@ -82,6 +82,16 @@ describe('StudentsController (R-STU-02, R-STU-03)', () => {
     results['students'] = [{ data: { id: 's2', name: 'سهيله' } }];
     const res = await send({ method: 'POST', url: '/students', payload: { ...BODY, force: true } });
     expect(res.statusCode).toBe(201);
+  });
+
+  it('PATCH with a stale expected_status → 409 status_changed (R-STU-05)', async () => {
+    const id = '11111111-1111-4111-8111-111111111111';
+    results['students'] = [{ data: { id, status: 'pending_renewal' } }, { data: null }];
+    const res = await send({ method: 'PATCH', url: `/students/${id}`, payload: { status: 'paused', expected_status: 'active' } });
+    expect(res.statusCode).toBe(409);
+    expect(res.json()).toMatchObject({ code: 'status_changed', message: 'status_changed' });
+    const bad = await send({ method: 'PATCH', url: `/students/${id}`, payload: { expected_status: 'gone' } });
+    expect(bad.statusCode).toBe(400);
   });
 
   it('merge validates the ids and returns the merge id', async () => {

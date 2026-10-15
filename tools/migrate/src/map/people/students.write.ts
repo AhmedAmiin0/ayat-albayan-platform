@@ -3,7 +3,8 @@
 // student whose code the target already uses and raises a review (plan/codes.ts), so a conflict
 // here means the target changed after planning — the batch rolls back and the run fails; re-run.
 // Afterwards the sequence is bumped past the highest code (handbook gotcha 1), forward only: it
-// never rewinds below the AB-1000 start reserved by migration 161.
+// never rewinds below the AB-1000 start reserved by migration 161. `status` is only set on create:
+// in the app it moves by its own rules (docs/18), so a re-run never overwrites it.
 import type { WriteContext, WriteResult } from '../../entities/contract.ts';
 import type { ColumnValue } from '../../types.ts';
 
@@ -11,9 +12,11 @@ export const BUMP_CODE_SEQ = `select setval(s.seq, greatest(x.m, coalesce(pg_seq
   from (select pg_get_serial_sequence('public.students', 'code_seq')::regclass as seq) s,
        (select max(code_seq) as m from public.students) x where x.m >= 183`;
 
-function withoutCode(columns: Record<string, ColumnValue>): Record<string, ColumnValue> {
+/** Columns an update writes: never code_seq (generated) nor status (the app owns it). */
+export function updateColumns(columns: Record<string, ColumnValue>): Record<string, ColumnValue> {
   const rest = { ...columns };
   delete rest['code_seq'];
+  delete rest['status'];
   return rest;
 }
 
@@ -21,8 +24,8 @@ export async function writeStudent(ctx: WriteContext): Promise<WriteResult> {
   if (ctx.item.action !== 'create') {
     const id = ctx.item.targetId;
     if (!id) throw new Error('students update without target id');
-    // code_seq is generated: it can only be set on insert, so an update never touches it.
-    await ctx.tx.update({ table: 'students', id, columns: withoutCode(ctx.columns) });
+    // code_seq is generated (insert only); status is the app's once the student exists.
+    await ctx.tx.update({ table: 'students', id, columns: updateColumns(ctx.columns) });
     return { targetId: id };
   }
   const code = ctx.columns['code_seq'];

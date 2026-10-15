@@ -56,8 +56,12 @@ export function toProfileValues(p: StudentProfile): ProfileValues {
 
 export type PatchResult = { ok: true; patch: StudentUpdate } | { ok: false; error: string };
 
-/** Values → PATCH body, validated with the shared schema the API uses. */
-export function toStudentPatch(values: ProfileValues): PatchResult {
+/**
+ * Values → PATCH body, validated with the shared schema the API uses. `status` goes out only when the
+ * admin changed it from `loaded` (the status the form loaded), together with `expected_status: loaded`:
+ * a stale form must never undo an automatic move (payment, expiry, attendance) (R-STU-05).
+ */
+export function toStudentPatch(values: ProfileValues, loaded: StudentStatus): PatchResult {
   const age = parseAge(values.age);
   if (age === undefined) return { ok: false, error: t.students.ageInvalid };
   const raw: Record<string, unknown> = Object.fromEntries(
@@ -65,8 +69,18 @@ export function toStudentPatch(values: ProfileValues): PatchResult {
   );
   raw['age'] = age;
   const r = studentUpdateSchema.safeParse(raw);
-  if (r.success) return { ok: true, patch: r.data };
+  if (r.success) return { ok: true, patch: withStatus(r.data, { status: values.status, loaded }) };
   const key = String(r.error.issues[0]?.path[0] ?? '') as keyof ProfileValues;
   const field = PROFILE_LABELS[key] ?? key;
   return { ok: false, error: t.students.invalidField.replace('{field}', field) };
+}
+
+function withStatus(
+  parsed: StudentUpdate,
+  { status, loaded }: { status: StudentStatus; loaded: StudentStatus },
+): StudentUpdate {
+  const rest: StudentUpdate = { ...parsed };
+  delete rest.status;
+  delete rest.expected_status;
+  return status === loaded ? rest : { ...rest, status, expected_status: loaded };
 }

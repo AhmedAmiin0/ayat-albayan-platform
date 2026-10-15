@@ -4,6 +4,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
+import { clientRequest } from './booking.payload';
 import { slotsQuerySchema, teacherOptionsQuerySchema } from './booking.dto';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
 import { withPackageSize } from './package-size';
@@ -32,7 +33,8 @@ export class SalesBookingController {
   /** 201 BookingResult; 403 override_not_allowed | kind_not_allowed | meeting_link_not_allowed | invoice_not_allowed, and (sales_auto_assign ON only) not_your_lead | not_your_student | not_your_family. */
   @Post()
   book(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<BookingResult> {
-    return this.booking.book(parseOrThrow(bookingRequestSchema, withPackageSize(body)), user);
+    const req = parseOrThrow(bookingRequestSchema, withPackageSize(body));
+    return this.booking.book(clientRequest(req, user.role), user);
   }
 }
 

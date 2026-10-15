@@ -87,3 +87,10 @@ export function duplicateCandidates(error: unknown): StudentRef[] | null {
   const body = error.body as Partial<DuplicateBody> | null;
   return body?.message === 'duplicate_student' && body.candidates ? body.candidates : null;
 }
+
+/** 409 `status_changed`: the student's status moved since the client loaded it (R-STU-05). */
+export function isStatusChanged(error: unknown): boolean {
+  if (!(error instanceof ApiError) || error.status !== 409) return false;
+  const body = error.body as { code?: unknown } | null;
+  return body?.code === 'status_changed';
+}

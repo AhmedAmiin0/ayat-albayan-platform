@@ -41,7 +41,14 @@ export const studentCreateSchema = z.object({
   meeting_link_override: z.url().nullish(),
   notes: optionalText,
 });
-export const studentUpdateSchema = studentCreateSchema.omit({ guardian_id: true }).partial();
+/**
+ * PATCH /students/:id. `expected_status`: the status the client last saw; the API writes only while
+ * the row still has it, else 409 `status_changed` (R-STU-05: stale forms never undo automatic moves).
+ */
+export const studentUpdateSchema = studentCreateSchema
+  .omit({ guardian_id: true })
+  .partial()
+  .extend({ expected_status: z.enum(STUDENT_STATUSES).optional() });
 
 const rate = z.int().min(0).nullish();
 

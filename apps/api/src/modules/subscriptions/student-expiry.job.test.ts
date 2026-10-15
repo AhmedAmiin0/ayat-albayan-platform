@@ -7,10 +7,9 @@ import type { StudentStatusQueries } from './student-status.queries';
 const NOW = new Date('2026-10-15T06:00:00Z');
 const PENDING = (at: string) => ({ after: { status: 'pending_renewal', via: 'subscription_ended' }, at });
 
-function setup(o: { ids?: string[]; last?: unknown; end?: string | null; paid?: boolean; days?: number; moved?: boolean } = {}) {
+function setup(o: { ids?: string[]; last?: unknown; paid?: boolean; days?: number; moved?: boolean } = {}) {
   const queries = {
     pendingRenewal: vi.fn(async () => o.ids ?? ['s1']),
-    packageEnd: vi.fn(async () => (o.end === undefined ? null : o.end)),
     paidSince: vi.fn(async () => o.paid ?? false),
   };
   const statuses = {
@@ -32,7 +31,6 @@ describe('StudentExpiryJob.runOnce: pending_renewal → expired after N days (ow
     expect(await t.job.runOnce(NOW)).toEqual({ students: 1, expired: 1, failed: 0 });
     expect(t.statuses.move).toHaveBeenCalledWith(...EXPIRED);
     expect(t.queries.paidSince).toHaveBeenCalledWith('s1', '2026-10-07T06:00:00Z');
-    expect(t.queries.packageEnd).not.toHaveBeenCalled();
   });
 
   it('not yet N days, or a positive payment since → stays', async () => {
@@ -42,16 +40,24 @@ describe('StudentExpiryJob.runOnce: pending_renewal → expired after N days (ow
     expect(paid.statuses.move).not.toHaveBeenCalled();
   });
 
-  it('no pending_renewal audit row: since = the package end; no package end → skipped', async () => {
-    const t = setup({ last: { after: { status: 'pending_renewal' }, at: 'x' } });
-    await t.job.runOnce(NOW);
-    expect(t.queries.packageEnd).not.toHaveBeenCalled();
-    const fromEnd = setup({ last: { after: { status: 'active', via: 'payment' }, at: '2026-10-14T00:00:00Z' }, end: '2026-10-01' });
-    expect((await fromEnd.job.runOnce(NOW)).expired).toBe(1);
-    expect(fromEnd.queries.paidSince).toHaveBeenCalledWith('s1', '2026-10-01');
-    const none = setup({ last: null, end: null });
-    expect((await none.job.runOnce(NOW)).expired).toBe(0);
-    expect(none.queries.paidSince).not.toHaveBeenCalled();
+  it('no pending_renewal audit row: the clock starts now (audited CAS row), expired N days after that', async () => {
+    const CLOCK = [
+      { studentId: 's1', from: 'pending_renewal', to: 'pending_renewal' },
+      { actorId: null, after: { via: 'expiry_clock_started' } },
+    ];
+    for (const last of [null, { after: { status: 'active', via: 'payment' }, at: '2026-09-01T00:00:00Z' }]) {
+      const t = setup({ last });
+      expect((await t.job.runOnce(NOW)).expired).toBe(0);
+      expect(t.statuses.move).toHaveBeenCalledTimes(1);
+      expect(t.statuses.move).toHaveBeenCalledWith(...CLOCK);
+      expect(t.queries.paidSince).not.toHaveBeenCalled();
+    }
+    // the clock row it wrote reads back as pending_renewal since then
+    const clock = { after: { status: 'pending_renewal', via: 'expiry_clock_started' }, at: NOW.toISOString() };
+    expect((await setup({ last: clock }).job.runOnce(new Date('2026-10-21T06:00:00Z'))).expired).toBe(0);
+    const later = setup({ last: clock });
+    expect((await later.job.runOnce(new Date('2026-10-22T06:00:00Z'))).expired).toBe(1);
+    expect(later.statuses.move).toHaveBeenCalledWith(...EXPIRED);
   });
 
   it('idempotent: a CAS miss (already expired, or changed by hand) → not counted', async () => {

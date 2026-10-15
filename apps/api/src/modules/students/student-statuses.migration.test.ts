@@ -47,15 +47,24 @@ describe('migration 442: one-time reclassification', () => {
     expect(reclassify).not.toMatch(/\bdelete\b/i);
   });
 
+  it('a trial lesson: a platform trial rule, or an imported one (no rule, not instant / makeup, not chargeable)', () => {
+    expect(reclassify).toMatch(/left join public\.schedule_rules r on r\.id = l\.rule_id/);
+    expect(reclassify).not.toMatch(/\n\s*join public\.schedule_rules/);
+    expect(reclassify).toContain(
+      "where r.package = 'trial'\n      or (l.rule_id is null and not l.instant and l.makeup_of_id is null and not ls.chargeable)",
+    );
+  });
+
   it('attended trial lesson (completed / late, not absent / excused) and no positive payment → pending_subscription', () => {
-    expect(reclassify).toContain("l.status in ('completed', 'late')");
-    expect(reclassify).toContain("coalesce(ls.attendance::text, 'on_time') not in ('absent', 'excused')");
+    expect(reclassify).toContain("t.status in ('completed', 'late')");
+    expect(reclassify).toContain("coalesce(t.attendance::text, 'on_time') not in ('absent', 'excused')");
     expect(reclassify).toContain("p.kind = 'payment' and p.amount > 0");
     expect(reclassify).toContain("when f.attended and not f.paid then 'pending_subscription'");
   });
 
-  it('no trial lesson at all → new; everyone else unchanged', () => {
-    expect(reclassify).toContain("when not f.has_trial then 'new'");
+  it('no platform trial lesson and none attended → new (an imported missed trial too); everyone else unchanged', () => {
+    expect(reclassify).toMatch(/from trial_lessons t where t\.student_id = s\.id and t\.platform\s+\) as platform_trial/);
+    expect(reclassify).toContain("when not (f.platform_trial or f.attended) then 'new'");
     expect(reclassify.match(/r\.package = 'trial'/g)).toHaveLength(2);
     expect(reclassify).not.toMatch(/\belse\b/);
   });

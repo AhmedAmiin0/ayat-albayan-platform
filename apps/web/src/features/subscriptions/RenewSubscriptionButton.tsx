@@ -1,4 +1,4 @@
-import { isPackageEnded, type StudentStatus } from '@ab/shared';
+import { isPackageEnded, renewalPricing, type StudentStatus } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -6,7 +6,6 @@ import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
 import { studentBalanceQuery } from './api';
 import { CreateSubscriptionDialog } from './CreateSubscriptionDialog';
-import { renewalPricing } from './renewal-pricing';
 import type { PickedStudent } from './StudentPicker';
 
 export interface RenewSubscriptionButtonProps {

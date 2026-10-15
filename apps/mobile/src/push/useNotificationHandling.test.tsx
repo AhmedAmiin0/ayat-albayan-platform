@@ -1,9 +1,14 @@
-import { act, renderHook } from '@testing-library/react-native';
+import { act, renderHook, waitFor } from '@testing-library/react-native';
 import * as Notifications from 'expo-notifications';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
 import { FOREGROUND, useNotificationHandling } from './useNotificationHandling';
 
-jest.mock('@/lib/api', () => ({ ...jest.requireActual('@/lib/api'), apiFetch: async () => ({}) }));
+// GET /auth/me answers mockMe, so a mount refetch never swaps seeded permissions for «hide nothing».
+let mockMe: unknown = {};
+jest.mock('@/lib/api', () => ({
+  ...jest.requireActual('@/lib/api'),
+  apiFetch: async (path: string) => (path === '/auth/me' ? mockMe : {}),
+}));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({ router: { push: (mockHref: string) => mockPush(mockHref) } }));
 
@@ -37,6 +42,7 @@ async function mount() {
 
 beforeEach(() => {
   jest.clearAllMocks();
+  mockMe = {};
   lastResponse.mockReturnValue(null);
 });
 
@@ -102,8 +108,11 @@ test('a message push also refreshes the tab badge count (its own query key)', as
 
 test('a tap into a hidden tab falls back to «المزيد» (a hidden tab goes nowhere)', async () => {
   const client = createTestQueryClient();
-  client.setQueryData(['auth', 'me'], { role: 'admin', permissions: ['payments.read'] });
+  mockMe = { role: 'admin', permissions: ['payments.read'] };
+  client.setQueryData(['auth', 'me'], mockMe);
   await renderHook(() => useNotificationHandling(), { wrapper: queryWrapper(client) });
+  // The tap reads the permissions of the settled /auth/me (the mount refetch done, not in flight).
+  await waitFor(() => expect(client.isFetching({ queryKey: ['auth', 'me'] })).toBe(0));
   await act(async () => mockListeners.response?.(tap({ kind: 'new_message', phone: PHONE })));
   expect(mockPush).toHaveBeenCalledWith('/more');
 });

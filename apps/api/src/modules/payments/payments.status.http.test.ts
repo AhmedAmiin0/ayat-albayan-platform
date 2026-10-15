@@ -30,15 +30,25 @@ describe('payments and the student status', () => {
     expect(m.audit.record).not.toHaveBeenCalled();
   });
 
-  it('DELETE of the payment that flipped the student, none left → back to trial, audited by the admin', async () => {
+  it('DELETE of the payment that flipped the student, none left, no trial lesson → back to new, audited by the admin', async () => {
     m.statuses.lastStatusChange.mockResolvedValue(FLIP);
     m.statuses.student.mockResolvedValue({ status: 'active', tz: 'Asia/Riyadh' });
     m.statuses.hasPositivePayment.mockResolvedValue(false);
     expect((await call({ method: 'DELETE', url: `/payments/${PAYMENT_ID}` })).statusCode).toBeLessThan(300);
     expect(m.statuses.move).toHaveBeenCalledWith(
-      { studentId: STUDENT_ID, from: 'active', to: 'trial' },
+      { studentId: STUDENT_ID, from: 'active', to: 'new' },
       { actorId: ADMIN.id, after: { via: 'payment_deleted', payment_id: PAYMENT_ID } },
     );
+    expect(m.trials.lessonsOf).toHaveBeenCalledWith([STUDENT_ID]);
+  });
+
+  it('DELETE of a flip from trial while another positive payment remains → stays active (owner 2026-10-15)', async () => {
+    m.statuses.lastStatusChange.mockResolvedValue({ ...FLIP, after: { ...FLIP.after, from: 'trial', reason: 'payment' } });
+    m.statuses.student.mockResolvedValue({ status: 'active', tz: 'Asia/Riyadh' });
+    m.statuses.hasPositivePayment.mockResolvedValue(true);
+    m.subs.forStudent.mockResolvedValue([]);
+    expect((await call({ method: 'DELETE', url: `/payments/${PAYMENT_ID}` })).statusCode).toBeLessThan(300);
+    expect(m.statuses.move).not.toHaveBeenCalled();
   });
 
   it('DELETE of a flip that recorded its from-status (owner 2026-10-15) → back to it, e.g. expired', async () => {
