@@ -48,12 +48,12 @@ export function newStudentRow(who: Resolved, kind: BookingKind): Resolved['new_s
 
 /**
  * docs/18 row 1 (owner 2026-10-15): a lead booked straight onto a package starts `new` and becomes
- * `active` only with a positive payment. An explicit 'active' from any caller but an admin is ignored:
- * it becomes the registration status (trial with a trial lesson, else new). Applied by both POST
+ * `active` only with a positive payment. Any status sent by a caller but an admin is ignored: it
+ * becomes the registration status (trial with a trial lesson, else new). Applied by both POST
  * /booking controllers, where the caller's role is known.
  */
 export function clientRequest(req: BookingRequest, role: string | null): BookingRequest {
-  if (role === 'admin' || !('newStudent' in req) || req.newStudent.status !== 'active') return req;
+  if (role === 'admin' || !('newStudent' in req)) return req;
   return { ...req, newStudent: { ...req.newStudent, status: registrationStatus(bookingKindOf(req) === 'trial') } };
 }
 

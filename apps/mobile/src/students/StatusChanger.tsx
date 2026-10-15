@@ -22,10 +22,12 @@ const STATUS = { path: '/students', request };
 const statusChanged = (error: unknown): boolean =>
   error instanceof ApiError && error.status === 409 && (error.body as { code?: unknown } | null)?.code === 'status_changed';
 
-const statusPills = () => STUDENT_STATUSES.map((s) => ({
+/** While a change is saving the pills are off: a second tap would send a stale expected_status (false 409). */
+const statusPills = (saving: boolean) => STUDENT_STATUSES.map((s) => ({
   value: s,
   label: t.enums.studentStatus[s],
   ...studentStatusStyle[s],
+  disabled: saving,
 }));
 
 /**
@@ -37,13 +39,14 @@ export function StatusChanger({ student }: { student: StudentRef }) {
   const { color } = useTheme();
   const change = useOptimisticStatus<StudentStatus, StudentStatusChange>(STATUS);
   const set = (status: StudentStatus) => {
-    if (status !== student.status) change.mutate({ id: student.id, status, expected: student.status });
+    if (change.isPending || status === student.status) return;
+    change.mutate({ id: student.id, status, expected: student.status });
   };
   return (
     <View style={{ gap: 6 }}>
       <SectionLabel>{t.students.status}</SectionLabel>
       <FilterPills
-        items={statusPills()}
+        items={statusPills(change.isPending)}
         value={student.status}
         onChange={set}
         accessibilityLabel={t.students.status}

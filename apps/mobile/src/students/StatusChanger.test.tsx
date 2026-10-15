@@ -62,6 +62,17 @@ test('409 status_changed: says the status moved and shows the refetched one (R-S
   expect(await screen.findByRole('radio', { checked: true, name: t.enums.studentStatus.pending_renewal })).toBeTruthy();
 });
 
+test('while a change is saving the pills are off and a second tap sends nothing', async () => {
+  mockApiSend.mockReturnValue(new Promise(() => undefined));
+  await renderWithQuery(<StudentScreen />);
+  await screen.findByRole('header', { name: 'هدى' });
+  await fireEvent.press(pill(t.enums.studentStatus.paused));
+  await screen.findByRole('radio', { checked: true, name: t.enums.studentStatus.paused });
+  expect(pill(t.enums.studentStatus.churned).props.accessibilityState).toMatchObject({ disabled: true });
+  await fireEvent.press(pill(t.enums.studentStatus.churned));
+  expect(mockApiSend).toHaveBeenCalledTimes(1);
+});
+
 test('tapping the current status sends nothing', async () => {
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });

@@ -22,11 +22,12 @@ describe('clientRequest: a lead booked onto a package starts new (docs/18 row 1,
     expect(clientRequest(req, 'admin')).toBe(req);
   });
 
-  it('any other status, or no new student, is left as sent', () => {
-    const paused = onPackage('paused');
-    expect(clientRequest(paused, 'sales')).toBe(paused);
-    const fresh = onPackage('new');
-    expect(clientRequest(fresh, 'sales')).toBe(fresh);
+  it.each(['paused', 'churned', 'pending_renewal', 'expired', 'new'])('a non-admin %s on a package becomes new', (status) => {
+    expect(statusOf(clientRequest(onPackage(status), 'sales'))).toBe('new');
+  });
+
+  it('a non-admin churned on a trial becomes trial; no new student is left as sent', () => {
+    expect(statusOf(clientRequest(leadRequest({ newStudent: { ...student, status: 'churned' } }), 'sales'))).toBe('trial');
     const existing = bookingRequest();
     expect(clientRequest(existing, 'sales')).toBe(existing);
   });
