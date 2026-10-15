@@ -1,6 +1,7 @@
-import type { SalesFamilyView, SalesMoneySubscriptionView } from '@ab/shared';
+import { isPackageEnded, type SalesFamilyView, type SalesMoneySubscriptionView } from '@ab/shared';
 import { useQuery, type QueryClient } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
+import { t } from '@/lib/i18n';
 
 // GET /sales/money/family?phone (R-ASST-01): HER students in this chat's family, each with the
 // packages still owed. Only hers: an empty list means nothing of the family is hers to sell.
@@ -22,6 +23,17 @@ export function useSalesFamily(phone: string, enabled = true) {
 /** Every package still owed, over all her students of the family. */
 export function openPackages(family: SalesFamilyView | undefined): SalesMoneySubscriptionView[] {
   return family?.students.flatMap((s) => s.open) ?? [];
+}
+
+/**
+ * «جدّد الاشتراك» (owner 2026-10-15): one per student of hers whose package ended (pending_renewal,
+ * expired), naming the child when the family has several of hers.
+ */
+export function renewTargets(family: SalesFamilyView | undefined): { studentId: string; label: string }[] {
+  const students = family?.students ?? [];
+  return students
+    .filter((s) => isPackageEnded(s.status))
+    .map((s) => ({ studentId: s.id, label: students.length > 1 ? `${t.students.renew} — ${s.name}` : t.students.renew }));
 }
 
 /** The picked package while still owed, else the only one owed, else none yet. */

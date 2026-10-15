@@ -23,3 +23,18 @@ test('the chat’s «جدّد» link opens the subscribe screen with its student
   expect(screen.getByText('student=s-1')).toBeTruthy();
   expect(pending.getPathname()).toBe('/inbox/subscribe');
 });
+
+test('the student file’s «جدّد الاشتراك» opens the subscribe screen in the students tab, not a student id', async () => {
+  const pending = renderRouter(
+    {
+      'students/_layout': TabStack,
+      'students/index': () => <Text>students</Text>,
+      'students/[id]': () => <Text>student</Text>,
+      'students/subscribe': StudentParam,
+    },
+    { initialUrl: '/students/subscribe?studentId=s-1&renew=1&pkg=8&minutes=60' },
+  );
+  await pending;
+  expect(screen.getByText('student=s-1')).toBeTruthy();
+  expect(pending.getPathname()).toBe('/students/subscribe');
+});

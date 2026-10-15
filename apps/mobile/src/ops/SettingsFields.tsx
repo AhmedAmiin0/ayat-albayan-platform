@@ -41,7 +41,7 @@ function Typed({
   );
 }
 
-/** The six editable settings: late cancel (switch + hours), horizon, follow-up, renewal, edit window, currency. */
+/** The seven editable settings: late cancel (switch + hours), horizon, follow-up, renewal, expiry days, edit window, currency. */
 export function SettingsFields(p: SettingsFieldsProps) {
   const { form, set } = p;
   const s = t.settings;
@@ -84,6 +84,7 @@ export function SettingsFields(p: SettingsFieldsProps) {
         label={s.renewalAlertRemaining}
         hint={s.hints.renewalAlertRemaining}
       />
+      <Typed {...p} name="subscriptionExpiryDays" label={s.subscriptionExpiryDays} hint={s.hints.subscriptionExpiryDays} />
       <Typed
         {...p}
         name="reportTeacherEditHours"

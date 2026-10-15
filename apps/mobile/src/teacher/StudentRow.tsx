@@ -1,4 +1,4 @@
-import { clockTime, lessonWhenText, studentStatusStyle, type TeacherStudentView } from '@ab/shared';
+import { clockTime, isPackageEnded, lessonWhenText, studentStatusStyle, type TeacherStudentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
@@ -13,8 +13,9 @@ export function nextLessonLine(startsAt: string | null, tz: string): string {
 }
 
 /**
- * One of my students: facts and next lesson; a tap opens their «سجل التقارير». A pending_renewal
- * student (still mine, lessons keep running) carries its «بانتظار التجديد» chip (owner 2026-10-12).
+ * One of my students: facts and next lesson; a tap opens their «سجل التقارير». A package-ended
+ * student (pending_renewal or expired: still mine, lessons keep running) carries its status chip
+ * (owner 2026-10-12, 2026-10-15).
  */
 export function StudentRow({ student: s, tz }: { student: TeacherStudentView; tz: string }) {
   const facts = [
@@ -29,8 +30,8 @@ export function StudentRow({ student: s, tz }: { student: TeacherStudentView; tz
       subtitle={`${facts.join(' · ')}\n${nextLessonLine(s.next_lesson_at, tz)}`}
       onPress={() => router.push(`/teacher/reports/student/${s.id}`)}
       trailing={
-        s.status === 'pending_renewal' ? (
-          <StatusChip {...studentStatusStyle.pending_renewal} label={t.enums.studentStatus.pending_renewal} size="sm" />
+        isPackageEnded(s.status) ? (
+          <StatusChip {...studentStatusStyle[s.status]} label={t.enums.studentStatus[s.status]} size="sm" />
         ) : undefined
       }
     />

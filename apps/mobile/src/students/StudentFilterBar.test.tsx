@@ -12,7 +12,7 @@ jest.mock('@/lib/api', () => ({
 }));
 jest.mock('expo-router', () => ({ router: { push: jest.fn() } }));
 
-const counts = { trial: 2, active: 5, pending_renewal: 4, paused: 1, churned: 3 };
+const counts = { new: 6, trial: 2, pending_subscription: 7, active: 5, pending_renewal: 4, expired: 8, paused: 1, churned: 3 };
 function serve() {
   mockApiFetch.mockImplementation(async (path: string) => {
     if (path.startsWith('/students/status-counts')) return counts;
@@ -28,8 +28,10 @@ test('status pills show the API counts, and picking one filters the list on the 
   serve();
   await renderWithQuery(<StudentsScreen />);
   expect(await screen.findByRole('tab', { name: `${t.enums.studentStatus.active} 5` })).toBeTruthy();
-  expect(screen.getByRole('tab', { name: `${L.statusAll} 15` })).toBeTruthy();
+  expect(screen.getByRole('tab', { name: `${L.statusAll} 36` })).toBeTruthy();
   expect(screen.getByRole('tab', { name: `${t.enums.studentStatus.pending_renewal} 4` })).toBeTruthy();
+  expect(screen.getByRole('tab', { name: `${t.enums.studentStatus.expired} 8` })).toBeTruthy();
+  expect(screen.getByRole('tab', { name: `${t.enums.studentStatus.new} 6` })).toBeTruthy();
   await fireEvent.press(screen.getByRole('tab', { name: `${t.enums.studentStatus.trial} 2` }));
   await waitFor(() => expect(listCalls().some((p) => p.includes('status=trial'))).toBe(true));
 });
@@ -70,5 +72,5 @@ test('under a search the pills show no counts (they know the filters only, not t
   await fireEvent.changeText(field, 'هدى');
   await fireEvent(field, 'submitEditing');
   expect(await screen.findByRole('tab', { name: t.enums.studentStatus.active })).toBeTruthy();
-  expect(screen.queryByRole('tab', { name: `${L.statusAll} 15` })).toBeNull();
+  expect(screen.queryByRole('tab', { name: `${L.statusAll} 36` })).toBeNull();
 });

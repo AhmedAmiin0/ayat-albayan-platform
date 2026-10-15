@@ -2,7 +2,8 @@ import { settingsUpdateSchema, type AcademySettings, type SettingsUpdate } from 
 import { t } from '@/lib/i18n';
 import { ascii } from './ascii-digits';
 
-// «إعدادات الأكاديمية» on the phone: the six settings the owner asked for (docs/10, docs/11 §2).
+// «إعدادات الأكاديمية» on the phone: the seven settings the owner asked for (docs/10, docs/11 §2;
+// subscription_expiry_days owner 2026-10-15).
 // The messaging switches stay on the web. Numbers are typed counts (hours, weeks, lessons).
 
 export interface SettingsForm {
@@ -12,6 +13,8 @@ export interface SettingsForm {
   bookingHorizonWeeks: string;
   followUpHours: string;
   renewalAlertRemaining: string;
+  /** Days «بانتظار التجديد» lasts before «انتهى الاشتراك» (1..90). */
+  subscriptionExpiryDays: string;
   reportTeacherEditHours: string;
   reportingCurrency: string;
 }
@@ -27,6 +30,7 @@ export function settingsForm(s: AcademySettings): SettingsForm {
     bookingHorizonWeeks: String(s.booking_horizon_weeks),
     followUpHours: s.follow_up_hours.join(t.common.listSeparator),
     renewalAlertRemaining: String(s.renewal_alert_remaining),
+    subscriptionExpiryDays: String(s.subscription_expiry_days),
     reportTeacherEditHours: String(s.report_teacher_edit_hours),
     reportingCurrency: s.reporting_currency,
   };
@@ -55,6 +59,7 @@ function body(form: SettingsForm): SettingsUpdate {
     bookingHorizonWeeks: num(form.bookingHorizonWeeks),
     followUpHours: hours(form.followUpHours),
     renewalAlertRemaining: num(form.renewalAlertRemaining),
+    subscriptionExpiryDays: num(form.subscriptionExpiryDays),
     reportTeacherEditHours: num(form.reportTeacherEditHours),
     reportingCurrency: form.reportingCurrency.trim().toUpperCase(),
   };

@@ -46,6 +46,14 @@ test('editing marks it dirty, Save sends only the changed field, the saved note 
   expect(screen.queryByText(t.mobileAdmin.settings.unsaved)).toBeNull();
 });
 
+test('«أيام انتهاء الاشتراك» is offered with its hint and saves its days', async () => {
+  await renderWithQuery(<SettingsScreen />);
+  await fireEvent.changeText(await box(t.settings.subscriptionExpiryDays), '10');
+  expect(screen.getByText(t.settings.hints.subscriptionExpiryDays)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('button', { name: t.common.save }));
+  await waitFor(() => expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/settings', { subscriptionExpiryDays: 10 }));
+});
+
 test('a bad number is refused on the phone, nothing is sent; typing clears the line', async () => {
   await renderWithQuery(<SettingsScreen />);
   await fireEvent.changeText(await box(t.settings.renewalAlertRemaining), '99');

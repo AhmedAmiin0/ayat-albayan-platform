@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { thread } from '@/inbox/thread-fixtures';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { familyOf, familyThread, kid, openSub, PHONE } from './fixtures';
+import { familyOf, familyThread, KID, kid, openSub, PHONE } from './fixtures';
 import { SalesChatMoney } from './SalesChatMoney';
 
 const mockApiFetch = jest.fn();
@@ -37,6 +37,20 @@ test('nothing owed: only «اشتراك جديد»', async () => {
   await renderWithQuery(<SalesChatMoney thread={familyThread} />);
   expect(await screen.findByRole('button', { name: m.newSubscription })).toBeTruthy();
   expect(screen.queryByRole('button', { name: m.recordTransfer })).toBeNull();
+});
+
+test.each(['pending_renewal', 'expired'] as const)('her %s student: «جدّد الاشتراك» opens the chat subscribe flow on that child', async (status) => {
+  serve(familyOf(kid({ status })));
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />);
+  await fireEvent.press(await screen.findByRole('button', { name: t.students.renew }));
+  expect(mockPush).toHaveBeenLastCalledWith({ pathname: '/inbox/sales-subscribe', params: { phone: PHONE, studentId: KID, tz: 'Asia/Riyadh' } });
+});
+
+test.each(['new', 'trial', 'pending_subscription', 'active', 'paused', 'churned'] as const)('her %s student: no «جدّد الاشتراك»', async (status) => {
+  serve(familyOf(kid({ status })));
+  await renderWithQuery(<SalesChatMoney thread={familyThread} />);
+  expect(await screen.findByRole('button', { name: m.newSubscription })).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.students.renew })).toBeNull();
 });
 
 test('no student of hers in the family: no button', async () => {

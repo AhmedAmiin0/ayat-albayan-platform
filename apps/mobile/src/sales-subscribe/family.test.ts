@@ -1,4 +1,6 @@
-import { chosenOpen, familyPath, openPackages, withOpenPackage } from './family';
+import { STUDENT_STATUSES } from '@ab/shared';
+import { t } from '@/lib/i18n';
+import { chosenOpen, familyPath, openPackages, renewTargets, withOpenPackage } from './family';
 import { familyOf, KID2, kid, openSub, SUB } from './fixtures';
 
 test('the family path carries the E.164 number url-encoded', () => {
@@ -23,4 +25,13 @@ test('a just-created package joins its student once; nothing cached stays nothin
   expect(once?.students[1]?.open).toEqual([]);
   expect(withOpenPackage(once, openSub())?.students[0]?.open).toHaveLength(1);
   expect(withOpenPackage(undefined, openSub())).toBeUndefined();
+});
+
+test('«جدّد الاشتراك»: only her pending_renewal / expired students; the child named when she has several', () => {
+  const shown = STUDENT_STATUSES.filter((status) => renewTargets(familyOf(kid({ status }))).length > 0);
+  expect(shown).toEqual(['pending_renewal', 'expired']);
+  expect(renewTargets(familyOf(kid({ status: 'expired' })))).toEqual([{ studentId: kid().id, label: t.students.renew }]);
+  const two = familyOf(kid({ status: 'active' }), kid({ id: KID2, name: 'سلمى', status: 'pending_renewal' }));
+  expect(renewTargets(two)).toEqual([{ studentId: KID2, label: `${t.students.renew} — سلمى` }]);
+  expect(renewTargets(undefined)).toEqual([]);
 });

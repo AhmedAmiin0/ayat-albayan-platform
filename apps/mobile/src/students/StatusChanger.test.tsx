@@ -1,3 +1,4 @@
+import { STUDENT_STATUSES } from '@ab/shared';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -28,7 +29,7 @@ beforeEach(() => {
 test('every student status is offered; the current one is selected', async () => {
   await renderWithQuery(<StudentScreen />);
   await screen.findByRole('header', { name: 'هدى' });
-  expect(screen.getAllByRole('radio')).toHaveLength(5);
+  expect(screen.getAllByRole('radio')).toEqual(STUDENT_STATUSES.map((s) => pill(t.enums.studentStatus[s]))); // all 8, in order
   expect(pill(t.enums.studentStatus.pending_renewal)).toBeTruthy(); // the admin may set it by hand
   expect(selected()).toBe(pill(t.enums.studentStatus.active));
 });

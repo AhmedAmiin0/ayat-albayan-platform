@@ -21,7 +21,7 @@ test('an English run: the section, the switch and the student statuses in Englis
   expect(t).toEqual(en);
   mockApiFetch.mockImplementation(async (path: string) =>
     path.startsWith('/students/status-counts')
-      ? { trial: 0, active: 1, pending_renewal: 0, paused: 0, churned: 0 }
+      ? { new: 0, trial: 0, pending_subscription: 0, active: 1, pending_renewal: 0, expired: 0, paused: 0, churned: 0 }
       : { items: [listItem({ name: 'Huda' })], total: 1, page: 1, pageSize: 50 },
   );
   await renderWithQuery(<TeacherStudentsSection teacherId="t1" />);
