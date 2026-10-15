@@ -37,7 +37,7 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   const templates = useQuery(templatesQuery);
   const me = useQuery(meQuery).data;
   // Teacher and sales modes are always restricted; in the admin inbox, a role without the permissions.
-  const restricted = useInboxMode() !== 'admin' || (me ? !sendsAllTemplates(me.permissions) : false);
+  const restricted = useInboxMode() !== 'admin' || (me ? !sendsAllTemplates(me) : false);
   const approved = (templates.data ?? [])
     // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي»;
     // the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».

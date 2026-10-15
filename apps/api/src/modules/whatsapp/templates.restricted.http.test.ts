@@ -18,13 +18,13 @@ const ROWS = [
 ];
 const TWO = ['free_trial_invite', 'welcome_greeting'];
 
-/** The classroom assistant granted messages.read; the custom role (base sales) granted templates.send_all. */
+/** The classroom assistant granted messages.read; the custom role (base sales) and the teacher get customGrants. */
 let customGrants: Permission[] = [];
 const resolver: PermissionResolver = async (user) => {
   if (!user.role) return [];
   const base = systemPermissionsOf(user.role);
   if (user.role === 'assistant') return [...base, 'messages.read'];
-  return user.id.endsWith('5') ? [...base, ...customGrants] : base;
+  return user.id.endsWith('5') || user.role === 'teacher' ? [...base, ...customGrants] : base;
 };
 
 describe('GET /messaging/templates per role (restricted allow-list)', () => {
@@ -44,9 +44,15 @@ describe('GET /messaging/templates per role (restricted allow-list)', () => {
     expect(await list('admin')).toHaveLength(ROWS.length);
   });
 
-  it('a custom role granted templates.send_all lists every template', async () => {
+  it('a teacher granted templates.send_all lists every template', async () => {
     customGrants = ['templates.send_all'];
-    expect(await list('custom')).toHaveLength(ROWS.length);
+    expect(await list('teacher')).toHaveLength(ROWS.length);
+  });
+
+  // Owner 2026-10-15: «only allowed templates should be listed to the assistants», whatever they hold.
+  it('a custom role based on sales granted both keys still lists only the two', async () => {
+    customGrants = ['templates.send_all', 'templates.manage'];
+    expect(await list('custom')).toEqual(TWO);
   });
 
   it.each(['teacher', 'sales', 'assistant'])('%s lists only free_trial_invite and welcome_greeting', async (token) => {

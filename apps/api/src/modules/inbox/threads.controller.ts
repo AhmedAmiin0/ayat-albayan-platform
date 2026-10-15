@@ -63,7 +63,7 @@ export class ThreadsController {
   async template(@Param('phone') raw: string, @Body() body: unknown, @CurrentUser() user: AuthUser) {
     const input = parseOrThrow(threadTemplateSchema, body);
     const { scope, sales } = await this.scopes(user);
-    const restricted = !sendsAllTemplates(user.permissions);
+    const restricted = !sendsAllTemplates(user);
     const sent = await this.sends.template({ phone: phoneParam(raw), input, actorId: user.id, scope, sales, restricted });
     return this.audited({ sent, action: 'thread_template', user, scope, sales });
   }

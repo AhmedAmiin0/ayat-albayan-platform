@@ -15,9 +15,9 @@ vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: async () => (
 const INVITE = template({ key: 'free_trial_invite', meta_name: 'free_trial_invite', body_ar: 'أهلًا {{1}}، موعد {{2}}', params: ['var_1', 'var_2'], line: 'chat', sales_starter: true });
 const field = (n: string) => screen.getByLabelText(t.inbox.composer.param.replace('{n}', n), { exact: true });
 
-function show(input: { mode: InboxMode; rows: unknown[]; permissions?: string[] }) {
+function show(input: { mode: InboxMode; rows: unknown[]; permissions?: string[]; role?: string }) {
   routeFetch(apiFetch, [
-    ['/auth/me', { id: 'u1', email: null, role: input.mode === 'sales' ? 'sales' : input.mode, permissions: input.permissions ?? [] }],
+    ['/auth/me', { id: 'u1', email: null, role: input.role ?? input.mode, permissions: input.permissions ?? [] }],
     ['/messaging/templates', input.rows],
   ]);
   renderWithClient(
@@ -55,6 +55,11 @@ describe('TemplateComposer — restricted roles', () => {
 
   it('a limited role in the admin inbox (no templates.send_all) reads the same', async () => {
     show({ mode: 'admin', rows: [], permissions: ['messages.read'] });
+    expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
+  });
+
+  it('an assistant (sales) granted templates.manage still reads the allow-list note (owner 2026-10-15)', async () => {
+    show({ mode: 'admin', role: 'sales', rows: [], permissions: ['messages.read', 'templates.manage'] });
     expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
   });
 

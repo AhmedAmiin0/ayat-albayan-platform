@@ -15,9 +15,23 @@ export const OWN_BUTTON_TEMPLATES: readonly string[] = ['lesson_feedback_request
 /** The permissions that lift the allow-list: every template, as the admin. */
 export const ALL_TEMPLATES_PERMISSIONS = ['templates.manage', 'templates.send_all'] as const satisfies readonly Permission[];
 
-/** Does this permission set send every template? Otherwise only the allow-list (restrictedMay). */
-export function sendsAllTemplates(permissions: readonly string[] | null | undefined): boolean {
-  return ALL_TEMPLATES_PERMISSIONS.some((p) => permissions?.includes(p) ?? false);
+/**
+ * Owner 2026-10-15 («only allowed templates should be listed to the assistants»): a role based on sales
+ * or the classroom assistant lists and sends only the allow-list, whatever it was granted.
+ */
+export const ALLOW_LIST_ONLY_ROLES: readonly string[] = ['sales', 'assistant'];
+
+/** The signed-in user as the rule reads it: base role (profiles.role) and effective permissions. */
+export interface TemplateSender {
+  role?: string | null;
+  permissions?: readonly string[] | null;
+}
+
+/** Does this user send every template? Otherwise only the allow-list (restrictedMay). */
+export function sendsAllTemplates(who: TemplateSender | null | undefined): boolean {
+  if (!who || (who.role && ALLOW_LIST_ONLY_ROLES.includes(who.role))) return false;
+  const held = who.permissions ?? [];
+  return ALL_TEMPLATES_PERMISSIONS.some((p) => held.includes(p));
 }
 
 export type RestrictedCheck = Pick<TemplateView, 'key' | 'status' | 'sales_starter' | 'header_format'>;
