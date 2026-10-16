@@ -50,7 +50,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     expect((await stubInbound({ from: digits, name: guardian, text: 'السلام عليكم' })).status).toBe(200);
     const lead = await leadIdOf(phone);
     expect((await apiAs(admin, { method: 'POST', path: `/leads/${lead}/assign`, data: { profileId: assistantId } })).status).toBe(200);
-    const page = await signInSales(browser, email);
+    const page = await signInSales(browser, email, info.outputPath('video')); // the owner's video (CI artifact)
 
     await test.step('1. a family writes in: the chat is in the assistant’s «المحادثات»', async () => {
       await (await salesNav(page)).getByRole('link', { name: ar.sales.nav.chats }).click();
@@ -139,5 +139,6 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       await shot(page, info, '08b-active-again');
       await expectQuietStub(phone);
     });
+    await page.context().close(); // writes the video
   });
 });
