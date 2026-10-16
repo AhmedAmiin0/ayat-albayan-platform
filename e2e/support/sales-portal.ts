@@ -13,7 +13,7 @@ export const salesNav = async (page: Page) => (await openNav(page)).getByRole('n
 
 /** A salesperson's page, signed in through the login form (Arabic UI). `videoDir` records the page (saved on context close). */
 export async function signInSales(browser: Browser, email: string, videoDir?: string): Promise<Page> {
-  const recordVideo = videoDir ? { recordVideo: { dir: videoDir } } : {};
+  const recordVideo = videoDir ? { recordVideo: { dir: videoDir, size: { width: 1280, height: 720 } } } : {};
   const page = await (await browser.newContext({ locale: 'ar', ...recordVideo })).newPage();
   await page.goto('/login');
   await page.getByLabel(ar.auth.email).fill(email);
