@@ -131,13 +131,15 @@ jobs:
             e2e/playwright-report
             e2e/test-results
           retention-days: 7
-      # Journey 7's screenshots for the owner, on every run (fake data only). Only the shard that ran the
+      # Journey 7's screenshots and the assistant's video for the owner, on every run (fake data only). Only the shard that ran the
       # spec has them; the others upload nothing.
       - uses: actions/upload-artifact@v4
         if: always()
         with:
           name: assistant-journey-screens
-          path: e2e/test-results/**/journey-7-*/**/*.png
+          path: |
+            e2e/test-results/**/journey-7-*/**/*.png
+            e2e/test-results/**/journey-7-*/**/*.webm
           if-no-files-found: ignore
           retention-days: 7
 
