@@ -1,3 +1,4 @@
+import { isWaAuthError } from '@ab/shared';
 import { z } from 'zod';
 import type { WhatsappEnv } from '../../env';
 import { WaError } from './whatsapp.types';
@@ -62,6 +63,18 @@ export function waErrorFrom(status: number, text: string): WaError {
   return new WaError(e.message ?? `WhatsApp HTTP ${status}`, { code: e.code ?? null, status, details });
 }
 
+/**
+ * Kapso refusing its project key (HTTP 401 / 403 with no Meta code of its own) is a broken
+ * credential, like Meta's 190: tagged so, the sender holds the line's queue instead of failing
+ * every row, and media answers meta_error. Meta's own errors pass through unchanged.
+ */
+export function byDriver(env: WhatsappEnv, error: WaError): WaError {
+  const { status, code } = error.info;
+  if (env.provider !== 'kapso' || (status !== 401 && status !== 403) || isWaAuthError(code)) return error;
+  if (code !== null && code !== status) return error;
+  return new WaError(`Kapso refused the API key: ${error.message}`, { ...error.info, code: 190 });
+}
+
 /** Connection errors raised before any byte left: the request never reached Meta, so a retry is safe. */
 const NEVER_SENT = new Set(['ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN', 'ENETUNREACH', 'EHOSTUNREACH', 'UND_ERR_CONNECT_TIMEOUT']);
 
@@ -99,7 +112,7 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
     throw new WaError(message, { code: null, status: 0, uncertain: mayHaveReachedMeta(e) });
   }
   if (res.ok) return res;
-  throw waErrorFrom(res.status, await res.text().catch(() => ''));
+  throw byDriver(conn.env, waErrorFrom(res.status, await res.text().catch(() => '')));
 }
 
 /** graphFetch + the JSON body. */

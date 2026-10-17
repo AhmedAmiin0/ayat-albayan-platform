@@ -8,7 +8,7 @@ import {
   type OnModuleDestroy,
 } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { loadEnv } from '../../env';
+import { lineProvider, loadEnv } from '../../env';
 import { listFor, type MetaLists } from './template-import';
 import { chatList, importStarters } from './template-lines';
 import { SAMPLE_REPORT, templateProblem } from './template-review';
@@ -92,7 +92,7 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
   /**
    * POST /messaging/templates/:key/submit. A body Meta would reject is 409 invalid_template before
    * any call. A document header (report_ready) first uploads the sample PDF for Meta's reviewer:
-   * that needs WA_APP_ID (409 needs_app_id without it).
+   * that needs WA_APP_ID (409 needs_app_id without it; 409 needs_meta_driver on a kapso line).
    */
   async submit(key: string, actorId: string): Promise<TemplateView> {
     this.requireSync();
@@ -105,7 +105,9 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     this.requireConfigured();
     const document = row.header_format === 'document';
     const client = this.lines.notifications;
-    if (document && !client.canUploadSamples()) throw waHttpError('needs_app_id', 409);
+    // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching the line to meta.
+    const noSamples = lineProvider(loadEnv(), 'notifications') === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
+    if (document && !client.canUploadSamples()) throw waHttpError(noSamples, 409);
     const headerHandle = document ? await this.fromMeta(() => client.uploadSample(SAMPLE_REPORT)) : undefined;
     const res = await this.fromMeta(() => client.submitTemplate(row, { headerHandle }));
     const status = ourStatus(res.status);

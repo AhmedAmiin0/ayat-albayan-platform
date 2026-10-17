@@ -16,6 +16,7 @@ const WEBHOOK: Record<Shown, { tone: Tone; text: Label }> = {
   ours: { tone: 'ok', text: 'subscribed' },
   other: { tone: 'act', text: 'webhookOtherApp' },
   unverified: { tone: 'neutral', text: 'webhookUnverified' },
+  kapso: { tone: 'neutral', text: 'webhookKapso' },
 };
 const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as const;
 /** Long app names / override URLs wrap at phone width (no horizontal page scroll). */

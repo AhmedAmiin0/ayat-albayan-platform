@@ -134,10 +134,15 @@ const META_NOTIFICATION_KEYS = ['WA_API_BASE', 'WA_PHONE_NUMBER_ID', 'WA_WABA_ID
 
 /**
  * NAMES (never values) of what a line still lacks to send under its provider: kapso → kapsoGaps;
- * meta chat → chatGaps; meta notifications → whichever of its four required keys is unset.
+ * meta chat → chatGaps, plus WA_API_BASE (a kapso notifications line no longer needs it, so it can
+ * be unset); meta notifications → whichever of its four required keys is unset.
  */
 export function lineGaps(env: Env, line: WaLine): string[] {
   if (lineProvider(env, line) === 'kapso') return kapsoGaps(env, line);
-  if (line === 'chat') return chatGaps(env);
+  if (line === 'chat') {
+    const gaps = chatGaps(env);
+    const chatSet = gaps.length > 0 || env.WA_CHAT_PHONE_NUMBER_ID !== undefined;
+    return chatSet && env.WA_API_BASE === undefined ? ['WA_API_BASE', ...gaps] : gaps;
+  }
   return META_NOTIFICATION_KEYS.filter((k) => env[k] === undefined);
 }

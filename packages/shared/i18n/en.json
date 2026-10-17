@@ -2470,6 +2470,7 @@
         "notSubscribed": "No app is linked to the account, so incoming messages will not reach the platform",
         "webhookOtherApp": "The app linked to the account is not the app configured on the server, so incoming messages will not reach the platform",
         "webhookUnverified": "An app is linked to the account, but it could not be verified because the app ID is not configured on the server",
+        "webhookKapso": "This line runs through Kapso: inbound messages arrive from the Kapso webhook at /webhooks/kapso, so the WABA's subscribed apps are not compared with a Meta app on the server.",
         "callbackOverride": "Alternative callback address: {url}",
         "checkedAt": "Last checked: {time}",
         "checkFailed": "Could not check the lines",
@@ -2483,6 +2484,7 @@
       "not_configured": "WhatsApp details aren't set up on the server",
       "meta_error": "Meta rejected the request: {message}",
       "needs_app_id": "This template includes a PDF file. To send it to Meta, the Meta app ID (WA_APP_ID) has to be set on the server first.",
+      "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the notifications line's «Sending provider» to «Meta direct» in «Integrations», then try again.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
       "template_sync_off": "Template sync with WhatsApp is turned off in this environment"
     },
@@ -4303,7 +4305,7 @@
       "meta": "Meta direct",
       "kapso": "Kapso"
     },
-    "enumDefault": "Default: {value}",
+    "enumDefault": "Server value, or {value} if unset",
     "loadError": "Could not load the integrations",
     "keys": {
       "WA_PROVIDER": {

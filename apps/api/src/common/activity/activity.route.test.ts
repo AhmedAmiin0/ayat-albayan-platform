@@ -12,7 +12,7 @@ describe('shouldLog (activity log skip list)', () => {
     expect(shouldLog({ method, route: '/expenses' })).toBe(false);
   });
 
-  it.each(['/health', '/webhooks/whatsapp', '/livekit/webhook', '/webhooks/whatsapp/status'])(
+  it.each(['/health', '/webhooks/whatsapp', '/webhooks/kapso', '/livekit/webhook', '/webhooks/whatsapp/status'])(
     'skips %s even when it is a POST',
     (route) => {
       expect(shouldLog({ method: 'POST', route })).toBe(false);
