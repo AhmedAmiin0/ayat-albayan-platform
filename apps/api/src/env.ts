@@ -4,7 +4,7 @@ import { integrationOverlay } from './config/integration-overlay';
 import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 
-export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps, lineProvider } from './env.whatsapp';
+export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps, lineProvider, DUPLICATE_CHAT_PHONE } from './env.whatsapp';
 export { lineGaps, duplicatePhone } from './env.gaps';
 export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './env.whatsapp';
 export type { WhatsappEnv, MetaLineEnv, KapsoLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';

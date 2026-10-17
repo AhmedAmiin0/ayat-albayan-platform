@@ -44,7 +44,7 @@ describe('failurePlan — retry with backoff or fail for good (docs/12 §3.3)', 
     });
   });
 
-  it('a Kapso refused key (HTTP 401, body code 401) is an auth hold too: queued, try not counted', () => {
+  it('an untagged HTTP 401 (a proxy in front of Meta; Kapso is tagged kapso_auth by byDriver) is an auth hold too', () => {
     const kapso = new WaError('Invalid API key', { code: 401, status: 401 });
     expect(failurePlan({ error: kapso, attempts: 2, now: NOW })).toEqual({
       status: 'queued',

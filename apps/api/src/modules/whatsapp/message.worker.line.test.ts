@@ -87,7 +87,7 @@ describe('MessageWorker — the line of a row', () => {
     expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', expect.objectContaining({ subject: 'whatsapp_auth:2026-10-02' }));
   });
 
-  it('a Kapso 401 (body code 401) pauses the line: row queued, try not counted, one daily alert', async () => {
+  it('an untagged HTTP 401 (code 401, a proxy; Kapso arrives tagged) pauses the line: queued, not counted, one alert', async () => {
     dispatch.send.mockRejectedValue(new WaError('Invalid API key', { code: 401, status: 401 }));
     queries.claim.mockResolvedValue(1);
     await expect(worker().process({ row: dueMessage(), template, now: NOW, autoOn: true })).resolves.toBe('paused');

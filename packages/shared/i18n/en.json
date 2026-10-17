@@ -2595,6 +2595,7 @@
       "190": "The WhatsApp account's access has expired — it needs renewing from Business Manager, and messages are waiting in the queue",
       "200": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
       "kapso_auth": "Kapso refused the project API key — update KAPSO_API_KEY in «Integrations»; messages wait in the queue",
+      "http_401": "The access token or sending key was refused (HTTP 401) — check the credentials in «Integrations»; messages wait in the queue",
       "470": "More than 24 hours have passed since their last message",
       "130429": "Meta paused sending for a while because of high message volume",
       "131026": "The number isn't on WhatsApp or can't receive messages",

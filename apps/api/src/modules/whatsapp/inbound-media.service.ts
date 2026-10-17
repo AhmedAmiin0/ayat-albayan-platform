@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES, INVOICE_MIMES, isWaAuthFailure } from '@ab/shared';
+import { INVOICE_MAX_BYTES, INVOICE_MIMES, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -75,7 +75,9 @@ export class InboundMedia {
       return await client.getMedia(mediaId);
     } catch (e) {
       if (!(e instanceof WaError)) throw e;
-      if (isWaAuthFailure(e.info)) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
+      // A credential refusal (Meta's code, or a driver's tag on a request that carried the key); a bare
+      // 401 from Kapso's credential-free download_url is an expired link, not a refused key (docs/19).
+      if (isWaAuthError(e.info.code) || e.info.credential !== undefined) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
       if (e.info.status >= 400 && e.info.status < 500) throw waHttpError('media_expired', HttpStatus.GONE);
       throw e;
     }

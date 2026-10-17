@@ -128,11 +128,14 @@ export function chatKeyGaps(env: Env): string[] {
     .map(([k]) => k);
 }
 
+/** The boot log's words for a chat phone id equal to the notifications one (names only, never values). */
+export const DUPLICATE_CHAT_PHONE = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)';
+
 /**
  * chatKeyGaps, plus a sentence when the chat phone id equals the notifications one (that turns the
  * chat line off). «افحص الخطوط» uses lineGaps + duplicate_chat_phone instead (names only).
  */
 export function chatGaps(env: Env): string[] {
   const gaps = chatKeyGaps(env);
-  return duplicateChatPhone(env) ? [...gaps, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : gaps;
+  return duplicateChatPhone(env) ? [...gaps, DUPLICATE_CHAT_PHONE] : gaps;
 }
