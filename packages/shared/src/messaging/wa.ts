@@ -68,12 +68,20 @@ export function isWaAuthError(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && AUTH.has(code);
 }
 
+/** The fields of a WhatsApp error that say whether the credential was refused. */
+export interface WaAuthInfo {
+  code: number | null | undefined;
+  status?: number;
+  /** The API's tag for a driver's own refused credential ('kapso', docs/19). */
+  credential?: string;
+}
+
 /**
- * The credential was refused, by Meta's code or by HTTP 401 (Kapso answers a bad or rotated
- * project key with 401 and body code 401, docs/19). Meta's own 401s already carry 190.
+ * The credential was refused: Meta's code, HTTP 401 (Kapso answers a bad or rotated project key
+ * with 401 and body code 401, docs/19; Meta's own 401s already carry 190), or a driver's tag.
  */
-export function isWaAuthFailure(info: { code: number | null | undefined; status?: number } | null | undefined): boolean {
-  return !!info && (isWaAuthError(info.code) || info.status === 401);
+export function isWaAuthFailure(info: WaAuthInfo | null | undefined): boolean {
+  return !!info && (isWaAuthError(info.code) || info.status === 401 || info.credential !== undefined);
 }
 
 /**

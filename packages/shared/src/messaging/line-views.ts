@@ -14,6 +14,8 @@ export interface LineCheckView {
   gaps: string[];
   /** The chat line's phone id is the notifications one, so the chat line is off (shown in words, not as a key). */
   duplicate_chat_phone: boolean;
+  /** kapso lines only: is KAPSO_WEBHOOK_SECRET set (a boolean, never the value)? false = every inbound is refused. */
+  kapso_webhook_secret?: boolean;
   phone_number_id: string | null;
   waba_id: string | null;
   /** The line's OWN Meta app id from env (WA_APP_ID / WA_CHAT_APP_ID): an id, not a secret. */

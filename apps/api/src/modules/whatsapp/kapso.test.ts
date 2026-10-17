@@ -53,12 +53,16 @@ describe('byDriver: Kapso refusing its key is the credential class', () => {
   const err = (status: number, code: number | null) => new WaError('x', { code, status });
   const now = new Date('2026-10-17T12:00:00Z');
 
-  it('kapso 401/403 without a Meta code becomes 190, so the sender holds the queue', () => {
+  it('kapso 401/403 without a Meta code is tagged kapso (never Meta 190): the sender holds the queue as kapso_auth', () => {
     for (const e of [err(401, null), err(401, 401), err(403, null)]) {
       const tagged = byDriver(KAPSO_ENV, e);
-      expect(tagged.info.code).toBe(190);
-      expect(failurePlan({ error: tagged, attempts: 1, now })).toMatchObject({ status: 'queued', attempts: 0 });
+      expect(tagged.info).toMatchObject({ credential: 'kapso', code: e.info.code, status: e.info.status });
+      expect(tagged.message).toContain('Kapso refused the API key');
+      expect(failurePlan({ error: tagged, attempts: 1, now })).toMatchObject({ status: 'queued', attempts: 0, error_code: 'kapso_auth' });
     }
+    // An untagged 401 is still a refused credential (shared isWaAuthFailure): held, not failed.
+    const plain401 = failurePlan({ error: err(401, null), attempts: 1, now });
+    expect(plain401).toMatchObject({ status: 'queued', error_code: 'http_401', attempts: 0 });
   });
 
   it('Meta lines, other statuses and real Meta codes pass through unchanged', () => {
@@ -67,10 +71,15 @@ describe('byDriver: Kapso refusing its key is the credential class', () => {
     for (const e of [err(400, 131047), err(404, null), err(403, 10), err(401, 190), err(403, 131031)]) expect(byDriver(KAPSO_ENV, e)).toBe(e);
   });
 
-  it('graphFetch applies it to a Kapso 401 answer', async () => {
-    const f = kapsoFetch({ status: 401, body: { error: 'Unauthorized' } });
-    const e = await graphFetch({ env: KAPSO_ENV, fetch: f.fetch, timeoutMs: 1_000 }, { path: 'x' }).catch((x: unknown) => x);
+  it('graphFetch applies it to a keyed Kapso 401, never to the credential-free download_url', async () => {
+    const conn = (f: ReturnType<typeof kapsoFetch>) => ({ env: KAPSO_ENV, fetch: f.fetch, timeoutMs: 1_000 });
+    const keyed = kapsoFetch({ status: 401, body: { error: 'Unauthorized' } });
+    const e = await graphFetch(conn(keyed), { path: 'x' }).catch((x: unknown) => x);
     expect(e).toBeInstanceOf(WaError);
-    expect((e as WaError).info).toMatchObject({ code: 190, status: 401 });
+    expect((e as WaError).info).toMatchObject({ credential: 'kapso', code: null, status: 401 });
+    const download = kapsoFetch({ status: 403, body: { error: 'token expired' } });
+    const d = await graphFetch(conn(download), { path: 'https://files.example.test/m?token=t', auth: false }).catch((x: unknown) => x);
+    expect((d as WaError).info).toMatchObject({ code: null, status: 403 });
+    expect((d as WaError).info.credential).toBeUndefined();
   });
 });

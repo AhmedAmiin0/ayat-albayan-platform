@@ -11,8 +11,9 @@ const WRAP = 'whitespace-normal break-all';
  * NAMES of the keys it still lacks (env names, so English in an LTR island; never values), and in
  * words when the chat line's phone id is the notifications one.
  */
-export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> }) {
+export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> | null }) {
   const s = t.templates.settings.lines;
+  if (!view) return null;
   const [before, after = ''] = s.gaps.split('{keys}');
   return (
     <div className="grid gap-1 text-xs">

@@ -113,6 +113,7 @@ describe('token / permission errors and the admin retry button', () => {
     [{ code: null, status: 401 }, true],
     [{ code: 131026, status: 400 }, false],
     [{ code: null, status: 500 }, false],
+    [{ code: null, status: 403, credential: 'kapso' }, true],
     [null, false],
   ])('auth failure %j → %s (HTTP 401 counts: Kapso refused key)', (info, auth) => {
     expect(isWaAuthFailure(info)).toBe(auth);

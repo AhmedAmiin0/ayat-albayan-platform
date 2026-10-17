@@ -25,6 +25,7 @@ const kapsoView: LineCheckView = {
   subscribed_apps: [{ id: 'kapso-app', name: 'Kapso', override_callback_uri: null }],
   errors: [],
   checked_at: '2026-10-17T08:00:00Z',
+  kapso_webhook_secret: true,
 };
 
 describe('LineRow on a kapso line', () => {
@@ -34,5 +35,12 @@ describe('LineRow on a kapso line', () => {
     const note = screen.getByText(s.webhookKapso);
     expect(note.closest('[data-tone]')?.getAttribute('data-tone')).toBe('neutral');
     expect(screen.queryByText(s.webhookUnverified)).toBeNull();
+  });
+
+  it('KAPSO_WEBHOOK_SECRET unset: the webhook row asks the admin to act', () => {
+    render(<LineRow line="notifications" view={{ ...kapsoView, kapso_webhook_secret: false }} />);
+    const note = screen.getByText(s.webhookKapsoNoSecret);
+    expect(note.closest('[data-tone]')?.getAttribute('data-tone')).toBe('act');
+    expect(screen.queryByText(s.webhookKapso)).toBeNull();
   });
 });

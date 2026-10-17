@@ -31,7 +31,9 @@ describe('LinesCheck on a kapso line', () => {
     stubEnvs({ ...IDS, ...NO_CHAT, WA_PROVIDER: 'kapso', KAPSO_API_BASE: KAPSO_BASE, KAPSO_API_KEY: 'fake-kapso-key', WA_ACCESS_TOKEN: '' });
     const { lines, requests } = checker();
     const [notifications] = await lines.check();
-    expect(notifications).toMatchObject({ line: 'notifications', configured: true, provider: 'kapso', gaps: [], app_id: null, phone_number_id: 'n-phone' });
+    expect(notifications).toMatchObject({
+      line: 'notifications', configured: true, provider: 'kapso', gaps: [], app_id: null, phone_number_id: 'n-phone', kapso_webhook_secret: false,
+    });
     expect(requests.map((r) => r.url.split('?')[0])).toEqual([`${KAPSO_BASE}/v24.0/n-phone`, `${KAPSO_BASE}/v24.0/n-waba/subscribed_apps`]);
     for (const r of requests) {
       expect(r.headers['x-api-key']).toBe('fake-kapso-key');
@@ -45,6 +47,11 @@ describe('LinesCheck on a kapso line', () => {
     const { lines, requests } = checker();
     const [notifications] = await lines.check();
     expect(notifications).toMatchObject({ configured: false, provider: 'kapso', gaps: ['KAPSO_API_BASE'] });
+    stubEnvs({ KAPSO_WEBHOOK_SECRET: 'fake-kapso-webhook-secret' });
+    const [again, chat] = await lines.check();
+    expect(again?.kapso_webhook_secret).toBe(true);
+    expect(JSON.stringify(again)).not.toContain('fake-kapso-webhook-secret');
+    expect(chat).not.toHaveProperty('kapso_webhook_secret');
     expect(requests).toHaveLength(0);
   });
 });
