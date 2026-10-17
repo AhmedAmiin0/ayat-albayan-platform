@@ -1,5 +1,6 @@
 import { Logger } from '@nestjs/common';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { DUPLICATE_CHAT_PHONE } from '../../env';
 import { LinesCheck } from './lines.check';
 import { LINES_RECORDED as R, stubEnvs } from './whatsapp.lines.fakes';
 import { WhatsappModule } from './whatsapp.module';
@@ -76,5 +77,17 @@ describe('WhatsappModule boot warning on a kapso line', () => {
     expect(message).toContain('KAPSO_API_KEY');
     expect(message).not.toContain('n-phone');
     expect(message).not.toContain(KAPSO_BASE);
+  });
+
+  it('a chat phone id equal to the notifications one is named once, on either driver, never as a value', () => {
+    const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    for (const provider of ['meta', 'kapso']) {
+      warn.mockClear();
+      const chat = { WA_CHAT_PHONE_NUMBER_ID: 'n-phone', WA_CHAT_WABA_ID: 'c-waba', WA_CHAT_ACCESS_TOKEN: 'c-token' };
+      stubEnvs({ ...IDS, ...chat, WA_CHAT_PROVIDER: provider, WA_API_BASE: 'http://127.0.0.1:4010', KAPSO_API_BASE: KAPSO_BASE, KAPSO_API_KEY: 'k' });
+      new WhatsappModule().onModuleInit();
+      const messages = warn.mock.calls.map((c) => String(c[0]));
+      expect(messages).toEqual([`chat line (${provider}) cannot send yet, missing: ${DUPLICATE_CHAT_PHONE}`]);
+    }
   });
 });

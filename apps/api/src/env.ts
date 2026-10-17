@@ -5,7 +5,7 @@ import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 
 export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, lineProvider } from './env.whatsapp';
-export { lineGaps, duplicatePhone, bootGaps } from './env.gaps';
+export { lineGaps, duplicatePhone, bootGaps, DUPLICATE_CHAT_PHONE } from './env.gaps';
 export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './env.whatsapp';
 export type { WhatsappEnv, MetaLineEnv, KapsoLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
