@@ -40,14 +40,18 @@ export function lineTone(field: LineField, value: string): LineTone {
 /**
  * Will inbound webhooks reach us? From the WABA's subscribed apps and the line's own app id:
  * unknown (not asked / failed: row hidden), none (no app: act), ours (ok), other (act),
- * unverified (an app is there but the server has no app id to compare: neutral).
+ * unverified (an app is there but the server has no app id to compare: neutral), kapso (the line
+ * runs through Kapso, docs/19: inbound comes via /webhooks/kapso, no Meta app to compare: neutral).
  */
-export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified';
+export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified' | 'kapso';
 
-export function webhookState(view: Pick<LineCheckView, 'app_id' | 'subscribed_apps'>): WebhookState {
+type WebhookView = Pick<LineCheckView, 'app_id' | 'subscribed_apps'> & Partial<Pick<LineCheckView, 'provider'>>;
+
+export function webhookState(view: WebhookView): WebhookState {
   const apps = view.subscribed_apps;
   if (apps === null) return 'unknown';
   if (apps.length === 0) return 'none';
+  if (view.provider === 'kapso') return 'kapso';
   if (view.app_id === null) return 'unverified';
   return apps.some((a) => a.id === view.app_id) ? 'ours' : 'other';
 }

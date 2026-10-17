@@ -11,6 +11,8 @@ import { setMessaging, stubReset } from '../support/wa-stub';
 // arrives through POST /webhooks/kapso (Kapso-signed raw Meta payload) and shows in the inbox, and
 // a staff reply leaves through the stub's Kapso prefix with X-API-Key, never a bearer. A bad
 // signature is 401 and stores nothing. Provider meta is ALWAYS restored, so other specs are unaffected.
+// Messaging opens only AFTER the switch and closes BEFORE the switch back: a row an earlier spec left
+// queued can then only leave through Kapso, never through Meta inside this spec's window.
 
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
 const MESSAGES = `/${NOTIF_PN}/messages`;
@@ -32,9 +34,9 @@ test.describe('WhatsApp driver: Kapso on the notifications line', () => {
   });
   test.afterEach(async ({ asRole }) => {
     try {
-      await switchNotifications(await asRole('admin'), 'meta');
-    } finally {
       await setMessaging(false);
+    } finally {
+      await switchNotifications(await asRole('admin'), 'meta');
     }
   });
 

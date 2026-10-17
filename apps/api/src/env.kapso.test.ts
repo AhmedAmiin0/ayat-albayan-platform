@@ -69,6 +69,15 @@ describe('line providers', () => {
     expect(lineGaps(env({ WA_PHONE_NUMBER_ID: 'n', ...KAPSO, WA_PROVIDER: 'kapso' }), 'chat')).toEqual([]);
   });
 
+  it('a meta chat line next to a kapso notifications line names a missing WA_API_BASE', () => {
+    const chat = { ...CHAT, WA_CHAT_ACCESS_TOKEN: 'chat-token' };
+    const e = env({ WA_PHONE_NUMBER_ID: 'n-phone', WA_WABA_ID: 'n-waba', ...KAPSO, ...chat, WA_PROVIDER: 'kapso' });
+    expect(lineEnvs(e).chat).toBeNull();
+    expect(lineGaps(e, 'chat')).toEqual(['WA_API_BASE']);
+    expect(lineGaps(env({ ...WA, ...chat }), 'chat')).toEqual([]);
+    expect(lineGaps(env({ WA_PHONE_NUMBER_ID: 'n' }), 'chat')).toEqual([]);
+  });
+
   it('a provider outside meta | kapso fails the boot; blank means meta', () => {
     expect(() => env({ WA_PROVIDER: 'twilio' })).toThrow();
     expect(env({ WA_PROVIDER: ' ', WA_CHAT_PROVIDER: '' }).WA_PROVIDER).toBe('meta');

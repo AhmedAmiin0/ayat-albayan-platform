@@ -16,6 +16,7 @@ const WEBHOOK: Record<Shown, { tone: Tone; text: Label }> = {
   ours: { tone: 'ok', text: 'subscribed' },
   other: { tone: 'act', text: 'webhookOtherApp' },
   unverified: { tone: 'neutral', text: 'webhookUnverified' },
+  kapso: { tone: 'neutral', text: 'webhookKapso' },
 };
 const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as const;
 /** Long app names / override URLs wrap at phone width (no horizontal page scroll). */
@@ -23,13 +24,9 @@ const WRAP = 'whitespace-normal break-all';
 const known = (code: number | null): string | undefined =>
   code === null ? undefined : (t.messages.errors as Record<string, string>)[String(code)];
 
-/**
- * Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. A
- * kapso line receives through /webhooks/kapso, which Meta's subscribed apps cannot tell: a note instead.
- */
+/** Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. */
 function Webhook({ view }: { view: LineCheckView }) {
   const s = t.templates.settings.lines;
-  if (view.provider === 'kapso') return <p className="text-xs text-ink-3">{s.kapsoWebhook}</p>;
   const state = webhookState(view);
   if (state === 'unknown') return null;
   const { tone, text } = WEBHOOK[state];
