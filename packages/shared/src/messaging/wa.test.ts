@@ -5,6 +5,7 @@ import {
   clickToChatLink,
   isRetryableWaError,
   isWaAuthError,
+  isWaAuthFailure,
   MAX_SEND_ATTEMPTS,
   SESSION_WINDOW_MS,
   sessionWindowOpen,
@@ -104,6 +105,17 @@ describe('token / permission errors and the admin retry button', () => {
     [null, false],
   ])('Meta error %j is an auth error → %s', (code, auth) => {
     expect(isWaAuthError(code)).toBe(auth);
+  });
+
+  it.each([
+    [{ code: 190, status: 401 }, true],
+    [{ code: 401, status: 401 }, true],
+    [{ code: null, status: 401 }, true],
+    [{ code: 131026, status: 400 }, false],
+    [{ code: null, status: 500 }, false],
+    [null, false],
+  ])('auth failure %j → %s (HTTP 401 counts: Kapso refused key)', (info, auth) => {
+    expect(isWaAuthFailure(info)).toBe(auth);
   });
 
   it.each([

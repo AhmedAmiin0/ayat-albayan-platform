@@ -26,7 +26,7 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
     expect(chat).toEqual({
       line: 'chat', configured: false, phone_number_id: null, waba_id: null, app_id: null, provider: 'meta',
       // WA_CHAT_APP_SECRET is still set, so the chat pieces sending lacks are named (never values).
-      gaps: ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID'],
+      gaps: ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID'], duplicate_chat_phone: false,
       display_phone_number: null, verified_name: null, quality_rating: null, status: null,
       name_status: null, code_verification_status: null, subscribed_apps: null, errors: [],
       checked_at: expect.any(String),
@@ -47,7 +47,7 @@ describe('LinesCheck (docs/12 §13.9, R-MSG-05)', () => {
     const { lines } = checker({ [N]: R.phone, [NW]: R.subscribed, [C]: R.chatPhone, [CW]: R.noneSubscribed });
     const [notifications, chat] = await lines.check();
     expect(notifications).toEqual({
-      line: 'notifications', configured: true, provider: 'meta', gaps: [], phone_number_id: N, waba_id: STUB_ENV.wabaId, app_id: 'app-notifications',
+      line: 'notifications', configured: true, provider: 'meta', gaps: [], duplicate_chat_phone: false, phone_number_id: N, waba_id: STUB_ENV.wabaId, app_id: 'app-notifications',
       display_phone_number: '+1 555-000-1111', verified_name: 'Ayat Al-Bayan Test', quality_rating: 'GREEN',
       status: 'CONNECTED', name_status: 'APPROVED', code_verification_status: 'NOT_VERIFIED',
       subscribed_apps: [

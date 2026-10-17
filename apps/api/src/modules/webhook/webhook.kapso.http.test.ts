@@ -33,8 +33,9 @@ describe('POST /webhooks/kapso', () => {
     expect(queries.stored).toHaveLength(1);
   });
 
-  it('401, nothing stored, and only header NAMES logged for a bad, missing or Meta-secret signature', async () => {
+  it('401, nothing stored, and only header NAMES logged (debug, never warn) for a bad, missing or Meta-secret signature', async () => {
     const warn = vi.spyOn(Logger.prototype, 'warn').mockImplementation(() => undefined);
+    const debug = vi.spyOn(Logger.prototype, 'debug').mockImplementation(() => undefined);
     const { postKapso, queries, leads } = await boot();
     const bad = kapsoSign(text, 'another-secret');
     expect((await postKapso(text, { 'x-webhook-signature': bad })).statusCode).toBe(401);
@@ -42,7 +43,8 @@ describe('POST /webhooks/kapso', () => {
     expect((await postKapso(text, { 'x-hub-signature-256': sign(text) })).statusCode).toBe(401);
     expect(queries.stored).toEqual([]);
     expect(leads.upsertByPhone).not.toHaveBeenCalled();
-    const logged = warn.mock.calls.map((c) => String(c[0])).join('\n');
+    expect(warn.mock.calls.map((c) => String(c[0])).join('\n')).not.toContain('kapso webhook refused');
+    const logged = debug.mock.calls.map((c) => String(c[0])).join('\n');
     expect(logged).toContain('signature headers present: x-webhook-signature');
     expect(logged).toContain('signature headers present: none');
     expect(logged).not.toContain(bad);

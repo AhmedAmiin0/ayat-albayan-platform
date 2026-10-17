@@ -57,6 +57,8 @@ export interface SentMessage {
   body: unknown;
   /** The phone-number id of the Graph path the message was sent through (its line). */
   phoneNumberId?: string;
+  /** Through Meta's paths or the Kapso prefix (docs/19), so e2e can scope a send to its driver. */
+  via?: 'graph' | 'kapso';
 }
 
 /** A read receipt with the line (phone-number id) it was sent through. */

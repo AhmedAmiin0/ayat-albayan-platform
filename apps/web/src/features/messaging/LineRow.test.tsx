@@ -22,6 +22,7 @@ const view = (patch: Partial<LineCheckView> = {}): LineCheckView => ({
   checked_at: '2026-10-10T08:00:00Z',
   provider: 'meta',
   gaps: [],
+  duplicate_chat_phone: false,
   ...patch,
 });
 const unconfigured = (line: LineCheckView['line']) => view({ line, configured: false, phone_number_id: null, waba_id: null, app_id: null });
@@ -70,5 +71,19 @@ describe('LineRow (review W2, W4, W7)', () => {
       expect(island?.className).toContain('break-all');
       expect(island?.className).not.toContain('whitespace-nowrap');
     }
+  });
+
+  it('docs/19: a kapso line gets its own webhook note, never the Meta verdict blaming a missing app id', () => {
+    const apps = [{ id: 'meta-app', name: 'Kapso', override_callback_uri: null }];
+    render(<LineRow line="notifications" view={view({ provider: 'kapso', app_id: null, subscribed_apps: apps })} />);
+    expect(screen.getByText(s.kapsoWebhook)).toBeTruthy();
+    expect(screen.queryByText(s.webhookUnverified)).toBeNull();
+    expect(screen.queryByText(s.webhook)).toBeNull();
+  });
+
+  it('a meta line keeps the Meta verdict', () => {
+    render(<LineRow line="notifications" view={view({ app_id: null, subscribed_apps: [{ id: 'x', name: null, override_callback_uri: null }] })} />);
+    expect(screen.getByText(s.webhookUnverified)).toBeTruthy();
+    expect(screen.queryByText(s.kapsoWebhook)).toBeNull();
   });
 });

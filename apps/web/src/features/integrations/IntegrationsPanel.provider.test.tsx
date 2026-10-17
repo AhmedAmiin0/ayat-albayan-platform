@@ -15,8 +15,8 @@ const s = t.integrations;
 const ready = () => screen.findByRole('button', { name: s.saveValues });
 const select = (label: string) => screen.getByLabelText(label) as HTMLSelectElement;
 
-function renderPanel() {
-  routeFetch(apiFetch, [['/settings/integrations', integrationItems()]]);
+function renderPanel(items = integrationItems()) {
+  routeFetch(apiFetch, [['/settings/integrations', items]]);
   renderWithClient(<IntegrationsPanel query="" onSaved={vi.fn()} />);
 }
 
@@ -50,5 +50,20 @@ describe('«التكاملات»: the WhatsApp provider select', () => {
     apiSend.mockResolvedValue(integrationItems());
     fireEvent.click(screen.getByRole('button', { name: s.saveValues }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/settings/integrations', { values: { WA_PROVIDER: 'kapso' } }));
+  });
+
+  it('with the server on kapso (source env) the empty choice names the server value, not «Meta»', async () => {
+    const items = integrationItems().map((i) => (i.key === 'WA_PROVIDER' ? { ...i, value: 'kapso', set: true, source: 'env' as const } : i));
+    renderPanel(items);
+    await ready();
+    expect(select(s.keys.WA_PROVIDER.label).options[0]?.text).toBe(s.enumServer.replace('{value}', s.options.kapso));
+    expect(select(s.keys.WA_CHAT_PROVIDER.label).options[0]?.text).toBe(s.enumDefault.replace('{value}', s.options.meta));
+  });
+
+  it('the select shows Arabic labels without the monospace of the LTR text inputs', async () => {
+    renderPanel();
+    await ready();
+    expect(select(s.keys.WA_PROVIDER.label).className).not.toContain('font-mono');
+    expect(screen.getByLabelText(s.keys.KAPSO_API_BASE.label).className).toContain('font-mono');
   });
 });

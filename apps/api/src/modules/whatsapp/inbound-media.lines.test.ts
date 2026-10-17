@@ -98,4 +98,10 @@ describe('InboundMedia per line (docs/12 §13.4, R-MSG-06)', () => {
     chat.getMedia.mockRejectedValue(new WaError('token', { code: 190, status: 401 }));
     expect(await failure(media.ensure('m1'))).toMatchObject({ status: 502, body: { code: 'meta_error', meta_code: 190 } });
   });
+
+  it('a Kapso refused key (HTTP 401, body code 401) is 502 meta_error, not a 410 expired file', async () => {
+    const { media, notifications } = setup(msg());
+    notifications.getMedia.mockRejectedValue(new WaError('Invalid API key', { code: 401, status: 401 }));
+    expect(await failure(media.ensure('m1'))).toMatchObject({ status: 502, body: { code: 'meta_error', meta_code: 401 } });
+  });
 });

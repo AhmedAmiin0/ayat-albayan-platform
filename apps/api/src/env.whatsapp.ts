@@ -1,6 +1,6 @@
 import type { WaLine, WaProvider } from '@ab/shared';
 import type { Env } from './env';
-import { kapsoGaps, kapsoLine } from './env.kapso';
+import { duplicateChatPhone, kapsoLine } from './env.kapso';
 
 // WhatsApp lines (docs/12 §13.1): the notifications line (WA_*) and the optional chat line
 // (WA_CHAT_*). Type-only import of Env, so env.ts can re-export this file without a runtime cycle.
@@ -112,32 +112,27 @@ export function lineNumbers(env: Env): LineNumbers {
   };
 }
 
-/**
- * Names (never values) of the chat pieces SENDING still lacks, once any WA_CHAT_* key is set; a
- * chat phone id equal to the notifications one turns the chat line off, so it is named too.
- */
-export function chatGaps(env: Env): string[] {
-  if (!CHAT_KEYS.some((k) => env[k] !== undefined)) return [];
+/** Any WA_CHAT_* key set: the admin means to have a chat line. */
+export const hasChatKeys = (env: Env): boolean => CHAT_KEYS.some((k) => env[k] !== undefined);
+
+/** Key NAMES (never values) of the chat pieces SENDING still lacks, once any WA_CHAT_* key is set. */
+export function chatKeyGaps(env: Env): string[] {
+  if (!hasChatKeys(env)) return [];
   const present = {
     WA_CHAT_PHONE_NUMBER_ID: env.WA_CHAT_PHONE_NUMBER_ID,
     WA_CHAT_WABA_ID: env.WA_CHAT_WABA_ID,
     WA_CHAT_ACCESS_TOKEN: env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN,
   };
-  const gaps = Object.entries(present)
+  return Object.entries(present)
     .filter(([, v]) => v === undefined)
     .map(([k]) => k);
-  const same = env.WA_CHAT_PHONE_NUMBER_ID !== undefined && env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
-  return same ? [...gaps, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : gaps;
 }
 
-const META_NOTIFICATION_KEYS = ['WA_API_BASE', 'WA_PHONE_NUMBER_ID', 'WA_WABA_ID', 'WA_ACCESS_TOKEN'] as const;
-
 /**
- * NAMES (never values) of what a line still lacks to send under its provider: kapso → kapsoGaps;
- * meta chat → chatGaps; meta notifications → whichever of its four required keys is unset.
+ * chatKeyGaps, plus a sentence when the chat phone id equals the notifications one (that turns the
+ * chat line off). «افحص الخطوط» uses lineGaps + duplicate_chat_phone instead (names only).
  */
-export function lineGaps(env: Env, line: WaLine): string[] {
-  if (lineProvider(env, line) === 'kapso') return kapsoGaps(env, line);
-  if (line === 'chat') return chatGaps(env);
-  return META_NOTIFICATION_KEYS.filter((k) => env[k] === undefined);
+export function chatGaps(env: Env): string[] {
+  const gaps = chatKeyGaps(env);
+  return duplicateChatPhone(env) ? [...gaps, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : gaps;
 }

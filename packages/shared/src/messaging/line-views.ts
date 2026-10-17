@@ -12,6 +12,8 @@ export interface LineCheckView {
   provider: WaProvider;
   /** NAMES (never values) of the keys this line still lacks to send under its provider; [] = none. */
   gaps: string[];
+  /** The chat line's phone id is the notifications one, so the chat line is off (shown in words, not as a key). */
+  duplicate_chat_phone: boolean;
   phone_number_id: string | null;
   waba_id: string | null;
   /** The line's OWN Meta app id from env (WA_APP_ID / WA_CHAT_APP_ID): an id, not a secret. */

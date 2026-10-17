@@ -48,8 +48,9 @@ function refusal(s: StubState, send: { body: Json; to: string; phoneNumberId: st
   return s.opts.enforceWindow === false || windowOpen ? null : [400, ERR.window()];
 }
 
-/** `phoneNumberId` is the id in the Graph path (`/v*\/{phone_number_id}/messages`). */
-export function postMessage(s: StubState, body: Json, phoneNumberId: string): Reply {
+/** `phoneNumberId` is the id in the Graph path (`/v*\/{phone_number_id}/messages`); `via` its prefix. */
+export function postMessage(s: StubState, body: Json, at: { phoneNumberId: string; via: 'graph' | 'kapso' }): Reply {
+  const { phoneNumberId } = at;
   if (body['status'] === 'read') return markRead(s, body, phoneNumberId);
   const to = digits(body['to']);
   const refused = refusal(s, { body, to, phoneNumberId });
@@ -57,6 +58,6 @@ export function postMessage(s: StubState, body: Json, phoneNumberId: string): Re
   const id = `wamid.${randomUUID()}`;
   const type = String(body['type'] ?? 'text');
   const template = (body['template'] as { name?: string } | undefined)?.name;
-  s.sent.push({ id, to, type, ...(template ? { template } : {}), body, phoneNumberId });
+  s.sent.push({ id, to, type, ...(template ? { template } : {}), body, phoneNumberId, via: at.via });
   return [200, { messaging_product: 'whatsapp', contacts: [{ input: to, wa_id: to }], messages: [{ id }] }];
 }

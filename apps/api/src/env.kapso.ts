@@ -39,9 +39,10 @@ function idsOf(env: Env, line: KapsoLine) {
     : { WA_PHONE_NUMBER_ID: env.WA_PHONE_NUMBER_ID, WA_WABA_ID: env.WA_WABA_ID };
 }
 
-/** A chat id equal to the notifications one would make two lines of one number: refused, as under meta. */
-const sameNumber = (env: Env, line: KapsoLine) =>
-  line === 'chat' && env.WA_CHAT_PHONE_NUMBER_ID !== undefined && env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
+/** A chat id equal to the notifications one would make two lines of one number: refused under either driver. */
+export const duplicateChatPhone = (env: Env): boolean =>
+  env.WA_CHAT_PHONE_NUMBER_ID !== undefined && env.WA_CHAT_PHONE_NUMBER_ID === env.WA_PHONE_NUMBER_ID;
+const sameNumber = (env: Env, line: KapsoLine) => line === 'chat' && duplicateChatPhone(env);
 
 /**
  * A line on kapso: Kapso's base and version, the line's own ids, the project key; never an app id
@@ -55,13 +56,12 @@ export function kapsoLine(env: Env, line: KapsoLine): KapsoLineEnv | null {
   return { provider: 'kapso', base, version: env.KAPSO_API_VERSION, phoneNumberId, wabaId, apiKey };
 }
 
-/** NAMES (never values) of what a kapso line still lacks; [] = it can send. */
+/** NAMES (never values) of what a kapso line still lacks (a duplicate chat id is duplicateChatPhone, not a gap). */
 export function kapsoGaps(env: Env, line: KapsoLine): string[] {
   const present: Record<string, string | undefined> = {
     ...idsOf(env, line),
     KAPSO_API_BASE: env.KAPSO_API_BASE,
     KAPSO_API_KEY: env.KAPSO_API_KEY,
   };
-  const gaps = Object.keys(present).filter((k) => present[k] === undefined);
-  return sameNumber(env, line) ? [...gaps, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : gaps;
+  return Object.keys(present).filter((k) => present[k] === undefined);
 }

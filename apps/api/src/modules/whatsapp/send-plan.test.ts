@@ -44,6 +44,17 @@ describe('failurePlan — retry with backoff or fail for good (docs/12 §3.3)', 
     });
   });
 
+  it('a Kapso refused key (HTTP 401, body code 401) is an auth hold too: queued, try not counted', () => {
+    const kapso = new WaError('Invalid API key', { code: 401, status: 401 });
+    expect(failurePlan({ error: kapso, attempts: 2, now: NOW })).toEqual({
+      status: 'queued',
+      next_attempt_at: '2026-10-02T08:15:00.000Z',
+      error_code: '401',
+      error_text: 'Invalid API key',
+      attempts: 1,
+    });
+  });
+
   it('error codes: Meta code, http_<status>, network, internal; text capped at 500', () => {
     expect(errorCode(meta(131026))).toBe('131026');
     expect(errorCode(new WaError('x', { code: null, status: 502 }))).toBe('http_502');

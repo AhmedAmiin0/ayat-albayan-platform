@@ -10,6 +10,7 @@ const view = (line: LineCheckView['line'], configured: boolean): LineCheckView =
   configured,
   provider: 'meta',
   gaps: [],
+  duplicate_chat_phone: false,
   phone_number_id: configured ? `${line}-phone` : null,
   waba_id: configured ? `${line}-waba` : null,
   app_id: null,

@@ -69,6 +69,14 @@ export function isWaAuthError(code: number | null | undefined): boolean {
 }
 
 /**
+ * The credential was refused, by Meta's code or by HTTP 401 (Kapso answers a bad or rotated
+ * project key with 401 and body code 401, docs/19). Meta's own 401s already carry 190.
+ */
+export function isWaAuthFailure(info: { code: number | null | undefined; status?: number } | null | undefined): boolean {
+  return !!info && (isWaAuthError(info.code) || info.status === 401);
+}
+
+/**
  * messages.error_code values where the admin's «جرّب تاني» can't help: not on WhatsApp, the 24 h
  * window closed (a template is needed), too late for the lesson, no longer wanted, or already
  * handed to the admin's own WhatsApp (that prompt answers it).

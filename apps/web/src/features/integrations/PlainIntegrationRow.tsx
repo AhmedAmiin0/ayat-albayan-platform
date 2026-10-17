@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
 import { SettingRow } from '../messaging/SettingsFields';
-import { integrationText, optionText } from './integrations-form';
+import { enumEmptyLabel, integrationText, optionText } from './integrations-form';
 import { IntegrationSourceNote } from './IntegrationSourceNote';
 
 interface Props {
@@ -13,7 +13,9 @@ interface Props {
   onChange: (value: string) => void;
 }
 
+/** Free text is LTR code (ids, URLs): monospace. The select shows Arabic labels: never font-mono. */
 const fieldClass = 'w-full font-mono text-sm sm:w-[300px]';
+const selectClass = 'w-full text-sm sm:w-[300px]';
 
 /**
  * A plain integration value, prefilled with the value in use: free text (an id, a URL, a list) in
@@ -31,8 +33,8 @@ export function PlainIntegrationRow({ item, value, invalid, onChange }: Props) {
     >
       {(p) =>
         options ? (
-          <Select {...p} className={fieldClass} value={value} onChange={(e) => onChange(e.target.value)}>
-            <option value="">{t.integrations.enumDefault.replace('{value}', optionText(options[0] ?? ''))}</option>
+          <Select {...p} className={selectClass} value={value} onChange={(e) => onChange(e.target.value)}>
+            <option value="">{enumEmptyLabel(item, options[0] ?? '')}</option>
             {options.map((o) => (
               <option key={o} value={o}>
                 {optionText(o)}

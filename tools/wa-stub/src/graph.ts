@@ -8,7 +8,10 @@ import { createTemplate, editTemplate } from './templates.ts';
 
 export const V = String.raw`\/v\d+\.\d+`;
 
-export const messagesRoute: Route = ['POST', new RegExp(`^${V}/([^/]+)/messages$`), async (req, m, s) => postMessage(s, await readJson(req), m[1] ?? '')];
+export const messagesRoute: Route = ['POST', new RegExp(`^${V}/([^/]+)/messages$`), async (req, m, s) => {
+  const via = (req.url ?? '').startsWith('/kapso/') ? 'kapso' : 'graph';
+  return postMessage(s, await readJson(req), { phoneNumberId: m[1] ?? '', via });
+}];
 
 /** Per WABA (docs/12 §13.12): the chat WABA's own starter is not on the notifications WABA. */
 export const listTemplatesRoute: Route = ['GET', new RegExp(`^${V}/([^/]+)/message_templates$`), async (req, m, s) => {

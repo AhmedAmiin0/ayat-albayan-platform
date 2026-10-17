@@ -2475,7 +2475,9 @@
         "checkFailed": "Could not check the lines",
         "callFailed": "Query failed: {message}",
         "provider": "Sending provider",
-        "gaps": "This line still needs: {keys}"
+        "gaps": "This line still needs: {keys}",
+        "duplicateChatPhone": "The chat line's phone number id is the notifications line's, so the chat line is off",
+        "kapsoWebhook": "Inbound messages for this line arrive through the Kapso webhook (/webhooks/kapso), which is not checked here"
       }
     },
     "error": {
@@ -4304,11 +4306,13 @@
       "kapso": "Kapso"
     },
     "enumDefault": "Default: {value}",
+    "enumServer": "Server value: {value}",
+    "enumServerOrDefault": "The server value, else the default: {value}",
     "loadError": "Could not load the integrations",
     "keys": {
       "WA_PROVIDER": {
         "label": "Sending provider",
-        "hint": "«Meta direct» sends through Meta's API with the token and secret above; «Kapso» sends through Kapso with the project key in the Kapso section. A manual switch per line, never an automatic failover."
+        "hint": "«Meta direct» sends through Meta's API with the access token and app secret in this section; «Kapso» sends through Kapso with the project key in the Kapso section. A manual switch per line, never an automatic failover."
       },
       "WA_API_BASE": {
         "label": "Graph API base URL",
@@ -4344,7 +4348,7 @@
       },
       "WA_CHAT_PROVIDER": {
         "label": "Chat line sending provider",
-        "hint": "Chosen for the chat line alone; its phone and account ids below stay the same under either provider."
+        "hint": "Chosen for the chat line alone; its phone and account ids in this section stay the same under either provider."
       },
       "WA_CHAT_PHONE_NUMBER_ID": {
         "label": "Chat line phone number ID",
@@ -4380,7 +4384,7 @@
       },
       "KAPSO_WEBHOOK_SECRET": {
         "label": "Kapso webhook signing secret",
-        "hint": "In Kapso, create a webhook of kind meta to <API origin>/webhooks/kapso, then paste its secret here."
+        "hint": "In Kapso, create a webhook of kind meta to the API origin followed by /webhooks/kapso, then paste its secret here."
       },
       "WA_ALLOWED_RECIPIENTS": {
         "label": "Allowed recipients",

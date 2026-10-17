@@ -23,9 +23,13 @@ const WRAP = 'whitespace-normal break-all';
 const known = (code: number | null): string | undefined =>
   code === null ? undefined : (t.messages.errors as Record<string, string>)[String(code)];
 
-/** Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. */
+/**
+ * Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. A
+ * kapso line receives through /webhooks/kapso, which Meta's subscribed apps cannot tell: a note instead.
+ */
 function Webhook({ view }: { view: LineCheckView }) {
   const s = t.templates.settings.lines;
+  if (view.provider === 'kapso') return <p className="text-xs text-ink-3">{s.kapsoWebhook}</p>;
   const state = webhookState(view);
   if (state === 'unknown') return null;
   const { tone, text } = WEBHOOK[state];

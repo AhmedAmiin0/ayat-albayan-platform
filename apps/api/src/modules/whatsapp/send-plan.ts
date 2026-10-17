@@ -2,7 +2,7 @@ import type { Json } from '@ab/db';
 import {
   backoff,
   isRetryableWaError,
-  isWaAuthError,
+  isWaAuthFailure,
   MAX_SEND_ATTEMPTS,
   quickReplyPayload,
   type TemplateButton,
@@ -53,7 +53,7 @@ function errorText(error: unknown): string {
  * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, 131047
  * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
  * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
- * error (190 / 10 / 200) holds the row, uncounted: the token is broken, not the message.
+ * error (190 / 10 / 200, or HTTP 401: Kapso's refused key) holds the row, uncounted: the token is broken, not the message.
  * `attempts` counts this try.
  */
 export function failurePlan(input: { error: unknown; attempts: number; now: Date }): FailurePlan {
@@ -61,7 +61,7 @@ export function failurePlan(input: { error: unknown; attempts: number; now: Date
   const at = (ms: number) => new Date(input.now.getTime() + ms).toISOString();
   const error_text = errorText(input.error);
   if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
-  if (isWaAuthError(info?.code)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
+  if (isWaAuthFailure(info)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
   const retry = isRetryableWaError(info?.code ?? null) && input.attempts < MAX_SEND_ATTEMPTS;
   return {
     status: retry ? 'queued' : 'failed',

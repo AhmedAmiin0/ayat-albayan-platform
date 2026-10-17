@@ -38,7 +38,8 @@ export class KapsoWebhookController {
   async receive(@Req() req: RawRequest, @Headers() headers: KapsoSignedRequest['headers']): Promise<void> {
     if (!verifyKapsoSignature({ rawBody: req.rawBody, headers, secret: this.config.kapsoSecret })) {
       const names = presentSignatureHeaders(headers);
-      this.log.warn(`kapso webhook refused (401); signature headers present: ${names.length > 0 ? names.join(', ') : 'none'}`);
+      // Debug only, like the Meta route (silent on 401): a public URL gets probed; names, never values.
+      this.log.debug(`kapso webhook refused (401); signature headers present: ${names.length > 0 ? names.join(', ') : 'none'}`);
       throw new UnauthorizedException();
     }
     await within(this.webhook.handle(req.body), RESPONSE_BUDGET_MS);

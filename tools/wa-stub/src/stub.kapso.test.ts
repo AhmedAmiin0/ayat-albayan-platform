@@ -22,7 +22,7 @@ describe('wa-stub: the kapso prefix', () => {
     const { url, stub } = await setup();
     expect((await post(`${url}${MSG}`, templateBody('lesson_reminder_v2', 2), KEY)).status).toBe(200);
     expect((await post(`${url}/v21.0/PN1/messages`, text, bearer('t'))).status).toBe(200);
-    expect(stub.sent.map((m) => m.phoneNumberId)).toEqual(['PN1', 'PN1']);
+    expect(stub.sent.map((m) => [m.phoneNumberId, m.via])).toEqual([['PN1', 'kapso'], ['PN1', 'graph']]);
     expect(stub.state.requests.map((r) => [r.via, r.auth])).toEqual([['kapso', 'api-key'], ['graph', 'bearer']]);
     const log = (await (await fetch(`${url}/__stub/requests`)).json()) as unknown[];
     expect(log).toHaveLength(2);
@@ -62,8 +62,14 @@ describe('wa-stub: the kapso prefix', () => {
     expect(list.paging).not.toHaveProperty('next');
     const id = list.data[0]?.id ?? '';
     expect((await post(`${url}/kapso/v24.0/${id}`, { category: 'UTILITY' }, KEY)).status).toBe(404);
-    const edit = await post(`${url}/kapso/v24.0/stub-waba/message_templates?hsm_id=${id}`, { category: 'UTILITY', components: [] }, KEY);
-    expect(edit.status).not.toBe(404);
+    const before = stub.state.templates.length;
+    const target = stub.state.templates.find((t) => t.id === id);
+    if (target) target.status = 'REJECTED';
+    const edit = await post(`${url}/kapso/v24.0/stub-waba/message_templates?hsm_id=${id}`, { category: 'utility' }, KEY);
+    expect(edit.status).toBe(200);
+    expect(await edit.json()).toEqual({ success: true });
+    expect(stub.state.templates.find((t) => t.id === id)).toMatchObject({ status: 'PENDING', category: 'UTILITY' });
+    expect(stub.state.templates).toHaveLength(before);
     expect((await post(`${url}/kapso/v21.0/APP/uploads?file_name=a`, {}, KEY)).status).toBe(404);
     expect(stub.state.requests.every((r) => r.via === 'kapso')).toBe(true);
   });

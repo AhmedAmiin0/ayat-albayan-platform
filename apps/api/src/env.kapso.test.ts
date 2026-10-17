@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { lineEnvs, lineGaps, lineProvider, loadEnv, sendingAllowed } from './env';
+import { duplicatePhone, lineEnvs, lineGaps, lineProvider, loadEnv, sendingAllowed } from './env';
 
 // docs/19: each line resolves its own driver; default meta, so nothing changes until an admin switches.
 
@@ -49,7 +49,8 @@ describe('line providers', () => {
     expect(lineEnvs(e).chat).toMatchObject({ provider: 'kapso', phoneNumberId: 'c-phone', wabaId: 'c-waba' });
     const same = env({ ...WA, ...KAPSO, WA_CHAT_PHONE_NUMBER_ID: 'n-phone', WA_CHAT_WABA_ID: 'c-waba', WA_CHAT_PROVIDER: 'kapso' });
     expect(lineEnvs(same).chat).toBeNull();
-    expect(lineGaps(same, 'chat')).toEqual(['WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)']);
+    expect(lineGaps(same, 'chat')).toEqual([]);
+    expect([duplicatePhone(same, 'chat'), duplicatePhone(same, 'notifications')]).toEqual([true, false]);
     expect(lineGaps(env({ ...KAPSO, WA_CHAT_PROVIDER: 'kapso' }), 'chat')).toEqual(['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID']);
   });
 
@@ -57,6 +58,15 @@ describe('line providers', () => {
     expect(lineGaps(env(WA), 'notifications')).toEqual([]);
     expect(lineGaps(env({ WA_PHONE_NUMBER_ID: 'n' }), 'notifications')).toEqual(['WA_API_BASE', 'WA_WABA_ID', 'WA_ACCESS_TOKEN']);
     expect(lineGaps(env({ ...WA, WA_CHAT_PHONE_NUMBER_ID: 'c' }), 'chat')).toEqual(['WA_CHAT_WABA_ID']);
+    expect(lineGaps(env({ ...WA, WA_CHAT_PHONE_NUMBER_ID: 'n-phone', WA_CHAT_WABA_ID: 'w' }), 'chat')).toEqual([]);
+  });
+
+  it('notifications on kapso, WA_API_BASE unset: a full meta chat line names WA_API_BASE (else no gap)', () => {
+    const mix = { WA_PHONE_NUMBER_ID: 'n', WA_WABA_ID: 'w', ...KAPSO, WA_PROVIDER: 'kapso', ...CHAT, WA_CHAT_ACCESS_TOKEN: 't' };
+    expect(lineEnvs(env(mix)).chat).toBeNull();
+    expect(lineGaps(env(mix), 'chat')).toEqual(['WA_API_BASE']);
+    expect(lineGaps(env({ ...mix, WA_API_BASE: 'http://localhost:4010' }), 'chat')).toEqual([]);
+    expect(lineGaps(env({ WA_PHONE_NUMBER_ID: 'n', ...KAPSO, WA_PROVIDER: 'kapso' }), 'chat')).toEqual([]);
   });
 
   it('a provider outside meta | kapso fails the boot; blank means meta', () => {

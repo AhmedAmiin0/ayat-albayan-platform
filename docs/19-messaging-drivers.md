@@ -14,7 +14,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - **Per line.** `WA_PROVIDER` picks the notifications line's driver, `WA_CHAT_PROVIDER` the chat line's. Both default to `meta`, so nothing changes until an admin switches a line in «التكاملات» (/admin/settings → «مزوّد الإرسال»).
 - **The same ids.** A kapso line uses the same `WA_PHONE_NUMBER_ID` / `WA_WABA_ID` (chat: `WA_CHAT_*`) as under meta. It needs no Meta token and no `WA_API_BASE`.
 - **No automatic failover.** Switching is manual. A send whose answer was lost (timeout) may already have gone out; retrying it through the other driver could deliver it twice, so the engine never does that.
-- **Half-configured = off, loudly.** A line switched to kapso without `KAPSO_API_BASE`, `KAPSO_API_KEY` or its ids refuses every call (its rows stay `queued`, nothing fails). «افحص الخطوط» shows each line's driver and NAMES the missing keys (never values); the API logs the same names once at boot. The send gate requires the notifications line to be configured under its own driver.
+- **Half-configured = off, loudly.** A line switched to kapso without `KAPSO_API_BASE`, `KAPSO_API_KEY` or its ids refuses every call (its rows stay `queued`, nothing fails). «افحص الخطوط» shows each line's driver and NAMES the missing keys (never values; a meta chat line names `WA_API_BASE` too when it is unset), a chat phone id equal to the notifications one as its own flag (`duplicate_chat_phone`), and for a kapso line a note that inbound arrives via `/webhooks/kapso` instead of Meta's subscribed-app verdict; the API logs the same names once at boot. The send gate requires the notifications line to be configured under its own driver.
 - **Mobile:** there is no integrations screen in the Expo app; nothing changes there.
 
 ## Where Kapso differs from Meta (all handled in `apps/api/src/modules/whatsapp/kapso.ts`)
@@ -29,11 +29,12 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 | Inbound media | `GET /{media_id}` → `url`, downloaded with the bearer | `GET /{media_id}?phone_number_id=<line>` → `download_url` (token inside, ~4 min), downloaded with **no credential at all**; Kapso's `url` (Meta's lookaside) is never used |
 | Sample uploads (Resumable Upload API) | `/{app_id}/uploads` with `WA_APP_ID` | none: `canUploadSamples()` is false, so a document-header template (`report_ready`) is refused exactly as without `WA_APP_ID` |
 | Errors | `{error:{message,type,code,error_subcode}}` | same shape (same `WaError` mapping) |
+| Refused credential | `190` / `10` / `200` (with HTTP 401) | HTTP **401** with body code `401`: `isWaAuthFailure` (code or status 401) holds the queue uncounted and pauses the line exactly like Meta's 190; inbound media answers 502 `meta_error`, never 410 |
 
 ## Webhook
 
 - **`POST /webhooks/kapso`** (public, raw body). Kapso forwards Meta's **raw** payload (webhook kind `meta`), so the existing parser and the phone_number_id line routing apply unchanged.
-- Authenticated by **`KAPSO_WEBHOOK_SECRET` only**: `X-Webhook-Signature` = lowercase hex HMAC-SHA256 of the raw body, or `X-Hub-Signature-256` = `sha256=` + that hex. Constant-time compare. No secret set = every POST is 401. A 401 logs only which signature header NAMES were present.
+- Authenticated by **`KAPSO_WEBHOOK_SECRET` only**: `X-Webhook-Signature` = lowercase hex HMAC-SHA256 of the raw body, or `X-Hub-Signature-256` = `sha256=` + that hex. Constant-time compare. No secret set = every POST is 401. A 401 logs (debug level, like the silent Meta route) only which signature header NAMES were present. Never activity-logged (`SKIPPED_ROUTES`).
 - The Meta route `POST /webhooks/whatsapp` keeps verifying only `WA_APP_SECRET` / `WA_CHAT_APP_SECRET`; neither route ever accepts the other's secret.
 - Answered within 5 s (`RESPONSE_BUDGET_MS`); Kapso times out at 10 s, retries 3 times within ~50 s and pauses a webhook that fails ≥ 85 % of the time, so a webhook item that fails answers 500 for a retry like the Meta route.
 

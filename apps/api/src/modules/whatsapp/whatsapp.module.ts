@@ -1,7 +1,7 @@
 import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
-import { lineGaps, lineProvider, loadEnv } from '../../env';
+import { duplicatePhone, lineGaps, lineProvider, loadEnv } from '../../env';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
@@ -71,7 +71,8 @@ export class WhatsappModule implements OnModuleInit {
     const env = loadEnv();
     for (const line of WA_LINES) {
       const provider = lineProvider(env, line);
-      const gaps = line === 'notifications' && provider === 'meta' ? [] : lineGaps(env, line);
+      const names = line === 'notifications' && provider === 'meta' ? [] : lineGaps(env, line);
+      const gaps = duplicatePhone(env, line) ? [...names, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : names;
       if (gaps.length > 0) new Logger(WhatsappModule.name).warn(`${line} line (${provider}) cannot send yet, missing: ${gaps.join(', ')}`);
     }
   }
