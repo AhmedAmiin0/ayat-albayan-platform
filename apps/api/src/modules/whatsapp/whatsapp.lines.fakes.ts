@@ -1,11 +1,11 @@
 import { vi } from 'vitest';
-import type { WhatsappEnv } from '../../env';
+import type { MetaLineEnv } from '../../env';
 import { STUB_ENV, type Recorded } from './whatsapp.fakes';
 
 // Test-only (excluded from the build). The chat line (docs/12 §13.16 item 6) and the diagnostics
 // Graph bodies, in the shapes tools/wa-stub and Meta answer (ids invented, no real people).
 
-export const CHAT_ENV: WhatsappEnv = {
+export const CHAT_ENV: MetaLineEnv = {
   ...STUB_ENV,
   phoneNumberId: 'stub-chat-phone',
   wabaId: 'stub-chat-waba',

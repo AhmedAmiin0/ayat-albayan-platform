@@ -19,6 +19,13 @@ function chatLine(): ChatLineOptions | undefined {
   };
 }
 
+/** Kapso's Meta proxy under /kapso (docs/19); fake values only, never a real project key. */
+const kapso = {
+  ...(env('KAPSO_API_KEY') ? { apiKey: env('KAPSO_API_KEY') } : {}),
+  ...(env('WA_KAPSO_WEBHOOK_URL') ? { webhookUrl: env('WA_KAPSO_WEBHOOK_URL') } : {}),
+  ...(env('KAPSO_WEBHOOK_SECRET') ? { webhookSecret: env('KAPSO_WEBHOOK_SECRET') } : {}),
+};
+
 const chat = chatLine();
 const stub = createStub({
   webhookUrl: env('WA_WEBHOOK_URL') ?? 'http://localhost:3000/webhooks/whatsapp',
@@ -28,6 +35,7 @@ const stub = createStub({
   ...(env('WA_WABA_ID') ? { wabaId: env('WA_WABA_ID') } : {}),
   ...(env('WA_APP_ID') ? { appId: env('WA_APP_ID') } : {}),
   ...(chat ? { chat } : {}),
+  kapso,
 });
 
 createServer((req, res) => {

@@ -1,6 +1,6 @@
-import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
+import { WA_LINES, type LineCheckView, type WaLine, type WaProvider } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { lineEnvs, loadEnv, type WhatsappEnv } from '../../env';
+import { lineEnvs, lineGaps, lineProvider, loadEnv, type WhatsappEnv } from '../../env';
 import { graphJson, type FetchLike, type GraphConn } from './graph';
 import { parsed, phoneNumberSchema, subscribedAppsSchema } from './meta-shapes';
 import { WaError } from './whatsapp.types';
@@ -29,6 +29,8 @@ interface LineInput {
   env: WhatsappEnv | null;
   appId: string | null;
   checkedAt: string;
+  /** The line's driver and the NAMES of what it still lacks (docs/19). */
+  driver: { provider: WaProvider; gaps: string[] };
 }
 
 /** A rejected call becomes an errors[] entry; it never hides the other call or line. */
@@ -66,7 +68,8 @@ async function appsOf(conn: GraphConn): Promise<Apps> {
 
 /**
  * POST /messaging/lines/check (docs/12 §13.9): two read-only Graph GETs per configured line, both
- * lines and both calls at once. Ids and URLs only: the result never carries a token or secret.
+ * lines and both calls at once, through each line's driver. Ids, URLs and key NAMES only: the
+ * result never carries a token, key or secret.
  */
 @Injectable()
 export class LinesCheck {
@@ -80,19 +83,24 @@ export class LinesCheck {
     const checkedAt = new Date().toISOString();
     const appIds: Record<WaLine, string | undefined> = { notifications: env.WA_APP_ID, chat: env.WA_CHAT_APP_ID };
     return Promise.all(
-      WA_LINES.map((line) => this.one({ line, env: envs[line], appId: appIds[line] ?? null, checkedAt })),
+      WA_LINES.map((line) => {
+        const driver = { provider: lineProvider(env, line), gaps: lineGaps(env, line) };
+        const appId = driver.provider === 'kapso' ? null : (appIds[line] ?? null);
+        return this.one({ line, env: envs[line], appId, checkedAt, driver });
+      }),
     );
   }
 
   private async one(input: LineInput): Promise<LineCheckView> {
     const { line, env, checkedAt } = input;
-    if (!env) return unconfigured(line, checkedAt);
+    if (!env) return { ...unconfigured(line, checkedAt), ...input.driver };
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
     const [phone, apps] = await Promise.all([attempt('phone', () => phoneOf(conn)), attempt('subscribed_apps', () => appsOf(conn))]);
     const errors = [phone, apps].flatMap((o) => (o.ok ? [] : [o.error]));
     return {
       line,
       configured: true,
+      ...input.driver,
       phone_number_id: env.phoneNumberId,
       waba_id: env.wabaId,
       app_id: input.appId,
@@ -108,6 +116,8 @@ function unconfigured(line: WaLine, checkedAt: string): LineCheckView {
   return {
     line,
     configured: false,
+    provider: 'meta',
+    gaps: [],
     phone_number_id: null,
     waba_id: null,
     app_id: null,

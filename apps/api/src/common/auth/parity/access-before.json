@@ -129,6 +129,7 @@
   "LessonsController.list": ["admin"],
   "LessonsController.overview": ["admin"],
   "LinesController.check": ["admin"],
+  "KapsoWebhookController.receive": "public",
   "LivekitWebhookController.receive": "public",
   "MeController.add": ["admin","assistant","sales","teacher"],
   "MeController.remove": ["admin","assistant","sales","teacher"],

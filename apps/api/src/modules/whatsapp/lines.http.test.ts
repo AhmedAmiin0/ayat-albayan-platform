@@ -8,6 +8,8 @@ const URL = '/messaging/lines/check';
 const view = (line: LineCheckView['line'], configured: boolean): LineCheckView => ({
   line,
   configured,
+  provider: 'meta',
+  gaps: [],
   phone_number_id: configured ? `${line}-phone` : null,
   waba_id: configured ? `${line}-waba` : null,
   app_id: null,

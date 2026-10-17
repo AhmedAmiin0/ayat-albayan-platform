@@ -18,6 +18,10 @@ import { WEBHOOK_CONFIG, type WebhookConfig } from './webhook.service';
 export const SECRET = 'stub-app-secret';
 export const CHAT_SECRET = 'stub-chat-app-secret';
 export const VERIFY = 'local-verify-token';
+export const KAPSO_SECRET = 'stub-kapso-webhook-secret';
+
+/** Kapso's X-Webhook-Signature: lowercase hex HMAC-SHA256 of the raw body, no «sha256=» prefix. */
+export const kapsoSign = (body: string, secret = KAPSO_SECRET) => createHmac('sha256', secret).update(body).digest('hex');
 
 export const sign = (body: string, secret = SECRET) =>
   `sha256=${createHmac('sha256', secret).update(body).digest('hex')}`;
@@ -30,7 +34,7 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       throw new Error('no users in webhook tests');
     })
     .overrideProvider(WEBHOOK_CONFIG)
-    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, ...config })
+    .useValue({ appSecrets: [SECRET], verifyToken: VERIFY, numbers: { notifications: PHONE_NUMBER_ID }, kapsoSecret: KAPSO_SECRET, ...config })
     .overrideProvider(WebhookQueries)
     .useValue(deps.queries)
     .overrideProvider(LeadsService)
@@ -53,5 +57,8 @@ export async function webhookApp(config: Partial<WebhookConfig> = {}) {
       headers: { 'content-type': 'application/json', ...(signature === null ? {} : { 'x-hub-signature-256': signature }) },
       payload: body,
     });
-  return { ...deps, app, post };
+  /** POSTs `body` as given to /webhooks/kapso with exactly these headers (besides content-type). */
+  const postKapso = (body: string, headers: Record<string, string> = { 'x-webhook-signature': kapsoSign(body) }) =>
+    app.inject({ method: 'POST', url: '/webhooks/kapso', headers: { 'content-type': 'application/json', ...headers }, payload: body });
+  return { ...deps, app, post, postKapso };
 }

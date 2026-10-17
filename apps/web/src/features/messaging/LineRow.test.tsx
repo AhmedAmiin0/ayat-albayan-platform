@@ -20,6 +20,8 @@ const view = (patch: Partial<LineCheckView> = {}): LineCheckView => ({
   subscribed_apps: null,
   errors: [],
   checked_at: '2026-10-10T08:00:00Z',
+  provider: 'meta',
+  gaps: [],
   ...patch,
 });
 const unconfigured = (line: LineCheckView['line']) => view({ line, configured: false, phone_number_id: null, waba_id: null, app_id: null });

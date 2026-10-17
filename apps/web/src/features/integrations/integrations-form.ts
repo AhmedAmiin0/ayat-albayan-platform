@@ -5,6 +5,12 @@ import { matchesText } from '../config/settings-search';
 export type IntegrationDraft = Partial<Record<IntegrationPlainKey, string>>;
 export type IntegrationChanges = Partial<Record<IntegrationPlainKey, string | null>>;
 
+/** An enum key's value (meta, kapso, …) in the active language; an unknown one as written. */
+export function optionText(value: string): string {
+  const options: Readonly<Record<string, string>> = t.integrations.options;
+  return options[value] ?? value;
+}
+
 /** A key's words in the active language. */
 export const integrationText = (key: IntegrationKey): { label: string; hint: string } => t.integrations.keys[key];
 

@@ -5,6 +5,7 @@ import { StatusChip, toneClass } from '@/components/ui/status-chip';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { LineDriver } from './LineDriver';
 import { LineFacts } from './LineFacts';
 import { webhookState, type WebhookState } from './line-status';
 
@@ -97,6 +98,7 @@ export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | nu
           ))}
         {view && <span className="ms-auto text-2xs text-ink-3">{s.checkedAt.replace('{time}', fullTime(view.checked_at))}</span>}
       </div>
+      {view && <LineDriver view={view} />}
       {view && !view.configured && line === 'chat' && <p className="text-xs text-ink-3">{s.chatOptional}</p>}
       {view?.configured && (
         <>

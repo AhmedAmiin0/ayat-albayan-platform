@@ -2,7 +2,7 @@ import { z } from 'zod';
 import type { WhatsappEnv } from '../../env';
 import { WaError } from './whatsapp.types';
 
-// One Graph API call: bearer, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).
+// One Graph API call: auth by provider, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).
 
 export type FetchLike = (url: string, init: RequestInit) => Promise<Response>;
 
@@ -21,6 +21,13 @@ export interface GraphRequest {
   raw?: Uint8Array<ArrayBuffer>;
   /** Override or add headers (the upload's `authorization: OAuth …` and `file_offset`). */
   headers?: Record<string, string>;
+  /** false = no credential at all (Kapso's download_url carries its own token: never send ours there). */
+  auth?: false;
+}
+
+/** The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer). */
+export function authHeaders(env: WhatsappEnv): Record<string, string> {
+  return env.provider === 'kapso' ? { 'x-api-key': env.apiKey } : { authorization: `Bearer ${env.accessToken}` };
 }
 
 const metaErrorSchema = z.object({
@@ -80,7 +87,7 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
     res = await conn.fetch(url(conn.env, req.path), {
       method: req.method ?? 'GET',
       headers: {
-        authorization: `Bearer ${conn.env.accessToken}`,
+        ...(req.auth === false ? {} : authHeaders(conn.env)),
         ...(hasBody ? { 'content-type': 'application/json' } : {}),
         ...req.headers,
       },

@@ -33,7 +33,7 @@ describe('lineEnvs (docs/12 §13.1)', () => {
   });
 
   it('the chat token falls back to WA_ACCESS_TOKEN', () => {
-    expect(lineEnvs(env({ ...WA, ...CHAT, WA_CHAT_ACCESS_TOKEN: '' })).chat?.accessToken).toBe('local-token');
+    expect(lineEnvs(env({ ...WA, ...CHAT, WA_CHAT_ACCESS_TOKEN: '' })).chat).toMatchObject({ accessToken: 'local-token' });
   });
 
   it.each([

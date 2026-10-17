@@ -1,4 +1,5 @@
 import type { WaLine } from '../enums/messaging.js';
+import type { WaProvider } from '../integrations/keys.js';
 
 /**
  * POST /messaging/lines/check item (docs/12 §13.8–13.9): one WhatsApp line as Meta reports it.
@@ -7,6 +8,10 @@ import type { WaLine } from '../enums/messaging.js';
 export interface LineCheckView {
   line: WaLine;
   configured: boolean;
+  /** The line's driver (WA_PROVIDER / WA_CHAT_PROVIDER, docs/19): Meta directly or Kapso. */
+  provider: WaProvider;
+  /** NAMES (never values) of the keys this line still lacks to send under its provider; [] = none. */
+  gaps: string[];
   phone_number_id: string | null;
   waba_id: string | null;
   /** The line's OWN Meta app id from env (WA_APP_ID / WA_CHAT_APP_ID): an id, not a secret. */

@@ -7,10 +7,12 @@ import { join } from 'node:path';
 
 export const WHITELIST = new Set([
   'env.ts',
+  'env.kapso.ts',
   'env.whatsapp.ts',
   'modules/inbox/read-receipts.ts',
   'modules/whatsapp/graph.ts',
   'modules/whatsapp/inbound-media.service.ts',
+  'modules/whatsapp/kapso.ts',
   'modules/whatsapp/lines.check.ts',
   'modules/whatsapp/message.dispatch.ts',
   'modules/whatsapp/template.registry.ts',
@@ -30,6 +32,7 @@ const META_CALLS: readonly (readonly [string, RegExp])[] = [
   ['graph helper', /\bgraph(Fetch|Json)\b/],
   ['WA_API_BASE', /\bWA_API_BASE\b/],
   ['graph.facebook.com', /graph\.facebook\.com/],
+  ['KAPSO_API_BASE', /\bKAPSO_API_BASE\b/],
   ['client token', /\bWHATSAPP_(CLIENT|LINES)\b/],
   ['HttpWhatsappClient', /\bHttpWhatsappClient\b/],
 ];
@@ -48,12 +51,23 @@ export function metaCallsIn(source: string): string[] {
   return META_CALLS.filter(([, re]) => re.test(code)).map(([label]) => label);
 }
 
+/**
+ * Hosted API hosts no built source may name in code, whitelisted files included (docs/19): the
+ * base always comes from config (WA_API_BASE / KAPSO_API_BASE), so local and e2e hit tools/wa-stub.
+ */
+const HOSTS: readonly (readonly [string, RegExp])[] = [['api.kapso.ai', /api\.kapso\.ai/]];
+
 /** `path: label` for every non-whitelisted built source that calls Meta (path relative to src, `/`). */
 export function offenders(files: readonly { path: string; source: string }[]): string[] {
-  return files
-    .map((f) => ({ ...f, path: f.path.replace(/\\/g, '/') }))
-    .filter((f) => !WHITELIST.has(f.path) && !NOT_BUILT.some((re) => re.test(f.path)))
+  const built = files.map((f) => ({ ...f, path: f.path.replace(/\\/g, '/') })).filter((f) => !NOT_BUILT.some((re) => re.test(f.path)));
+  const calls = built
+    .filter((f) => !WHITELIST.has(f.path))
     .flatMap((f) => metaCallsIn(f.source).map((label) => `${f.path}: ${label}`));
+  const hosts = built.flatMap((f) => {
+    const code = stripComments(f.source);
+    return HOSTS.filter(([, re]) => re.test(code)).map(([label]) => `${f.path}: ${label}`);
+  });
+  return [...calls, ...hosts];
 }
 
 /** Every .ts file under dir (absolute paths). */

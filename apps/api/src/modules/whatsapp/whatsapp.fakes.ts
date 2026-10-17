@@ -1,10 +1,10 @@
-import type { WhatsappEnv } from '../../env';
+import type { MetaLineEnv } from '../../env';
 import type { TemplateRow } from './whatsapp.types';
 
 // Test-only (excluded from the build). Graph bodies recorded from tools/wa-stub on 2026-10-02
 // (`createStub` + real HTTP), trimmed; registry rows as migration 141 seeds them. No real people.
 
-export const STUB_ENV: WhatsappEnv = {
+export const STUB_ENV: MetaLineEnv = {
   base: 'http://127.0.0.1:4010',
   version: 'v21.0',
   phoneNumberId: 'stub-phone',

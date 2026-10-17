@@ -28,6 +28,11 @@ const E2E_WA_CHAT_KEYS = {
   // The stub's chat app (subscribed_apps) = the API's: «افحص الخطوط» shows the chat webhook as ours.
   WA_CHAT_APP_ID: 'e2e-chat-app',
 };
+/**
+ * The kapso driver (docs/19): fake key and webhook secret shared by the stub and the API (env
+ * fallback). Inert until a spec switches a line to kapso in the database (kapso-driver.spec.ts).
+ */
+const E2E_KAPSO = { KAPSO_API_KEY: 'e2e-kapso-key', KAPSO_WEBHOOK_SECRET: 'e2e-kapso-webhook-secret' };
 /** E2E_LINES=single = the production default (no WA_CHAT_* keys): the CI job «e2e (single line)». */
 const E2E_WA_CHAT = process.env['E2E_LINES'] === 'single' ? {} : E2E_WA_CHAT_KEYS;
 
@@ -73,6 +78,8 @@ export default defineConfig({
         WA_WABA_ID: E2E_WA.WA_WABA_ID,
         WA_APP_ID: E2E_WA.WA_APP_ID,
         ...E2E_WA_CHAT,
+        ...E2E_KAPSO,
+        WA_KAPSO_WEBHOOK_URL: `http://localhost:${API_PORT}/webhooks/kapso`,
       },
       reuseExistingServer: !process.env['CI'],
     },
@@ -89,8 +96,13 @@ export default defineConfig({
         FX_API_URL: 'http://127.0.0.1:9/',
         ...E2E_WA,
         ...E2E_WA_CHAT,
+        ...E2E_KAPSO,
         // Set explicitly so a developer shell or .env cannot restrict recipients or stop the sync.
         WA_ALLOWED_RECIPIENTS: '',
+        // Both lines start on meta and no Kapso base: only kapso-driver.spec.ts switches (in the DB).
+        WA_PROVIDER: '',
+        WA_CHAT_PROVIDER: '',
+        KAPSO_API_BASE: '',
         WA_TEMPLATE_SYNC: 'true',
         MESSAGING_ENABLED: 'true',
         // One-second sender tick: specs that wait for a send wait ~1 s, not up to 30 s.

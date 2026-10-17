@@ -2473,7 +2473,9 @@
         "callbackOverride": "Alternative callback address: {url}",
         "checkedAt": "Last checked: {time}",
         "checkFailed": "Could not check the lines",
-        "callFailed": "Query failed: {message}"
+        "callFailed": "Query failed: {message}",
+        "provider": "Sending provider",
+        "gaps": "This line still needs: {keys}"
       }
     },
     "error": {
@@ -4271,6 +4273,7 @@
     "groups": {
       "wa_notifications": "WhatsApp notifications line",
       "wa_chat": "WhatsApp chat line",
+      "kapso": "Kapso (alternative WhatsApp provider)",
       "wa_safety": "Test environment safety",
       "livekit": "Online classrooms (LiveKit)",
       "expo": "Mobile push (Expo)",
@@ -4296,8 +4299,17 @@
     "secretStored": "Secret saved",
     "secretCleared": "Secret cleared",
     "invalid": "Not a valid value for this field",
+    "options": {
+      "meta": "Meta direct",
+      "kapso": "Kapso"
+    },
+    "enumDefault": "Default: {value}",
     "loadError": "Could not load the integrations",
     "keys": {
+      "WA_PROVIDER": {
+        "label": "Sending provider",
+        "hint": "«Meta direct» sends through Meta's API with the token and secret above; «Kapso» sends through Kapso with the project key in the Kapso section. A manual switch per line, never an automatic failover."
+      },
       "WA_API_BASE": {
         "label": "Graph API base URL",
         "hint": "Meta's servers, or the stub's address in development."
@@ -4330,6 +4342,10 @@
         "label": "Webhook verify token",
         "hint": "The same token set in Meta's webhook settings for both apps."
       },
+      "WA_CHAT_PROVIDER": {
+        "label": "Chat line sending provider",
+        "hint": "Chosen for the chat line alone; its phone and account ids below stay the same under either provider."
+      },
       "WA_CHAT_PHONE_NUMBER_ID": {
         "label": "Chat line phone number ID",
         "hint": "Enough on its own to receive this line's messages."
@@ -4349,6 +4365,22 @@
       "WA_CHAT_APP_SECRET": {
         "label": "Chat line app secret",
         "hint": "Needed when the chat line has its own Meta app."
+      },
+      "KAPSO_API_BASE": {
+        "label": "Kapso API base URL",
+        "hint": "In production: https://api.kapso.ai/meta/whatsapp. Empty = no line switched to Kapso can send."
+      },
+      "KAPSO_API_VERSION": {
+        "label": "Kapso API version",
+        "hint": "Such as v24.0, the default."
+      },
+      "KAPSO_API_KEY": {
+        "label": "Kapso project API key",
+        "hint": "From the project settings in Kapso. Sent as the X-API-Key header; never shown after saving."
+      },
+      "KAPSO_WEBHOOK_SECRET": {
+        "label": "Kapso webhook signing secret",
+        "hint": "In Kapso, create a webhook of kind meta to <API origin>/webhooks/kapso, then paste its secret here."
       },
       "WA_ALLOWED_RECIPIENTS": {
         "label": "Allowed recipients",

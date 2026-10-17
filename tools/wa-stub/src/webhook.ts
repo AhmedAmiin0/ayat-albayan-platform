@@ -10,6 +10,8 @@ export interface WebhookTarget {
   displayPhone?: string;
   /** entry[0].id (default the notifications line's 'stub-waba'). */
   entryId?: string;
+  /** Kapso forwarding a raw Meta payload (docs/19): X-Webhook-Signature (bare hex) instead. */
+  kapso?: boolean;
 }
 
 /** X-Hub-Signature-256: HMAC-SHA256 of the exact body bytes with the app secret. */
@@ -25,14 +27,18 @@ function envelope(target: WebhookTarget, value: Json): string {
   });
 }
 
+/** X-Webhook-Signature: Kapso's lowercase hex HMAC-SHA256 of the exact body bytes, no prefix. */
+export function kapsoSign(body: string, secret: string): string {
+  return createHmac('sha256', secret).update(body).digest('hex');
+}
+
 /** POSTs one signed change to the API webhook; returns the API's HTTP status. */
 export async function forward(target: WebhookTarget, value: Json): Promise<number> {
   const body = envelope(target, value);
-  const res = await fetch(target.url, {
-    method: 'POST',
-    headers: { 'content-type': 'application/json', 'x-hub-signature-256': sign(body, target.appSecret) },
-    body,
-  });
+  const signature = target.kapso
+    ? { 'x-webhook-signature': kapsoSign(body, target.appSecret) }
+    : { 'x-hub-signature-256': sign(body, target.appSecret) };
+  const res = await fetch(target.url, { method: 'POST', headers: { 'content-type': 'application/json', ...signature }, body });
   return res.status;
 }
 

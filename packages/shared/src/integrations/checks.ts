@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { isIntegrationPlainKey, type IntegrationPlainKey } from './keys.js';
+import { isIntegrationPlainKey, WA_PROVIDERS, type IntegrationPlainKey } from './keys.js';
 import { parseAllowedRecipients } from './recipients.js';
 
 // The value checks of the plain keys, consistent with apps/api/src/env.ts (the API also re-checks
@@ -19,15 +19,22 @@ export const vapidPublicKey = z.string().regex(/^[A-Za-z0-9_-]{87}$/);
 /** RFC 8292 `sub`: a mailto: address or an https: URL the push service may contact. */
 export const vapidSubject = z.string().max(200).regex(/^(mailto:[^\s@]+@[^\s@]+|https:\/\/[^\s]+)$/);
 
+const version = z.string().regex(/^v\d+\.\d+$/);
+const provider = z.enum(WA_PROVIDERS);
+
 export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = {
+  WA_PROVIDER: provider,
   WA_API_BASE: url,
-  WA_API_VERSION: z.string().regex(/^v\d+\.\d+$/),
+  WA_API_VERSION: version,
   WA_PHONE_NUMBER_ID: id,
   WA_WABA_ID: id,
   WA_APP_ID: id,
   WA_CHAT_PHONE_NUMBER_ID: id,
   WA_CHAT_WABA_ID: id,
   WA_CHAT_APP_ID: id,
+  WA_CHAT_PROVIDER: provider,
+  KAPSO_API_BASE: url,
+  KAPSO_API_VERSION: version,
   WA_ALLOWED_RECIPIENTS: recipients,
   WA_TEMPLATE_SYNC: z.stringbool(),
   LIVEKIT_URL: url,

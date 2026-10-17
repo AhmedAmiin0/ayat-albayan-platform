@@ -1,11 +1,12 @@
 import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
 import { integrationOverlay } from './config/integration-overlay';
+import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 
-export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps } from './env.whatsapp';
-export { allowedRecipients, recipientAllowed, parseAllowedRecipients } from './env.whatsapp';
-export type { WhatsappEnv, LineEnvs, LineNumbers } from './env.whatsapp';
+export { whatsappEnv, sendingAllowed, lineEnvs, appSecrets, lineNumbers, chatGaps, lineGaps, lineProvider } from './env.whatsapp';
+export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebhookSecret } from './env.whatsapp';
+export type { WhatsappEnv, MetaLineEnv, KapsoLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
 
@@ -34,10 +35,7 @@ const schema = z.object({
   SUPABASE_ANON_KEY: optionalSecret,
   /** SAR-based latest-rates endpoint (docs/08 §4); a keyed ExchangeRate-API URL also works. */
   FX_API_URL: z.url().default('https://open.er-api.com/v6/latest/SAR'),
-  /**
-   * Graph API base. No default on purpose: local and e2e point it at tools/wa-stub, and only a
-   * deliberate production setting ever names graph.facebook.com.
-   */
+  /** Graph API base. No default: local/e2e = tools/wa-stub; only production names graph.facebook.com. */
   WA_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
   WA_API_VERSION: z.string().regex(/^v\d+\.\d+$/).default('v21.0'),
   WA_PHONE_NUMBER_ID: optionalSecret,
@@ -66,6 +64,7 @@ const schema = z.object({
   WA_ALLOWED_RECIPIENTS: z.preprocess(blankIsUnset, recipientList.optional()),
   /** false = the template sync and submit stop (Meta test credentials must not rewrite the registry). */
   WA_TEMPLATE_SYNC: z.preprocess(blankIsUnset, z.stringbool().default(true)),
+  ...KAPSO_SHAPE,
   /** Expo push access token (only when the Expo project enforces push security). */
   EXPO_ACCESS_TOKEN: optionalSecret,
   /**
@@ -87,10 +86,7 @@ const schema = z.object({
   LIVEKIT_URL: z.preprocess(blankIsUnset, z.url().optional()),
   LIVEKIT_API_KEY: optionalSecret,
   LIVEKIT_API_SECRET: optionalSecret,
-  /**
-   * The outbound sender's tick in ms (default 30 s). e2e sets ~1 s so a spec waits for one tick, not
-   * thirty seconds; production leaves it unset.
-   */
+  /** The outbound sender's tick in ms (default 30 s); e2e sets ~1 s, production leaves it unset. */
   MESSAGE_SENDER_POLL_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(200).optional()),
   /**
    * Lesson recordings (env.recording.ts): the Supabase Storage S3 endpoint the LiveKit egress
