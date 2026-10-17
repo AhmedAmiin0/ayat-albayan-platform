@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { appSecrets, chatGaps, lineEnvs, lineNumbers, loadEnv, sendingAllowed, whatsappEnv } from './env';
+import { appSecrets, bootGaps, duplicatePhone, lineEnvs, lineGaps, lineNumbers, loadEnv, sendingAllowed, whatsappEnv } from './env';
 
 const BASE = { SUPABASE_URL: 'http://127.0.0.1:54321', SUPABASE_SERVICE_ROLE_KEY: 'k' };
 const WA = {
@@ -91,21 +91,35 @@ describe('appSecrets', () => {
   });
 });
 
-describe('chatGaps (names only, never values)', () => {
+describe('lineGaps(chat) / duplicatePhone / bootGaps (names only, never values)', () => {
   const ALL = ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID', 'WA_CHAT_ACCESS_TOKEN'];
+  const SAME = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)';
   it.each<[string, Record<string, string>, string[]]>([
     ['nothing set', {}, []],
     ['only the notifications line', WA, []],
-    ['only WA_CHAT_APP_SECRET', { WA_CHAT_APP_SECRET: 'secret-value' }, ALL],
-    ['only WA_CHAT_APP_ID', { WA_CHAT_APP_ID: 'app-2' }, ALL],
-    ['phone id only, WA_ACCESS_TOKEN present', { WA_ACCESS_TOKEN: 't', WA_CHAT_PHONE_NUMBER_ID: 'c' }, ['WA_CHAT_WABA_ID']],
-    ['phone id only, no token at all', { WA_CHAT_PHONE_NUMBER_ID: 'c' }, ['WA_CHAT_WABA_ID', 'WA_CHAT_ACCESS_TOKEN']],
-    ['fully set', CHAT, []],
-    ['chat phone id = notifications id', { ...WA, ...CHAT, WA_CHAT_PHONE_NUMBER_ID: 'stub-phone' }, ['WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)']],
+    ['only WA_CHAT_APP_SECRET', { ...WA, WA_CHAT_APP_SECRET: 'secret-value' }, ALL.filter((k) => k !== 'WA_CHAT_ACCESS_TOKEN')],
+    ['only WA_CHAT_APP_ID, no token at all', { WA_API_BASE: WA.WA_API_BASE, WA_CHAT_APP_ID: 'app-2' }, ALL],
+    ['phone id only, WA_ACCESS_TOKEN present', { ...WA, WA_CHAT_PHONE_NUMBER_ID: 'c' }, ['WA_CHAT_WABA_ID']],
+    ['phone id only, no token, no base', { WA_CHAT_PHONE_NUMBER_ID: 'c' }, ['WA_API_BASE', 'WA_CHAT_WABA_ID', 'WA_CHAT_ACCESS_TOKEN']],
+    ['fully set', { ...WA, ...CHAT }, []],
   ])('%s', (_name, over, gaps) => {
-    const out = chatGaps(env(over));
-    expect(out).toEqual(gaps);
-    for (const v of Object.values(over)) expect(out.join(' ')).not.toContain(v);
+    const e = env(over);
+    expect(lineGaps(e, 'chat')).toEqual(gaps);
+    expect(bootGaps(e, 'chat')).toEqual(gaps);
+    expect(duplicatePhone(e, 'chat')).toBe(false);
+    for (const v of Object.values(over)) expect(bootGaps(e, 'chat').join(' ')).not.toContain(v);
+  });
+
+  it('chat phone id = notifications id: a flag for «افحص الخطوط», one sentence in the boot log', () => {
+    const e = env({ ...WA, ...CHAT, WA_CHAT_PHONE_NUMBER_ID: 'stub-phone' });
+    expect([lineGaps(e, 'chat'), duplicatePhone(e, 'chat'), duplicatePhone(e, 'notifications')]).toEqual([[], true, false]);
+    expect(bootGaps(e, 'chat')).toEqual([SAME]);
+    expect(bootGaps(e, 'notifications')).toEqual([]);
+  });
+
+  it('an unset meta notifications line is silent at boot (messaging off), a kapso one names its keys', () => {
+    expect(bootGaps(env(), 'notifications')).toEqual([]);
+    expect(bootGaps(env({ WA_PROVIDER: 'kapso' }), 'notifications')).toEqual(lineGaps(env({ WA_PROVIDER: 'kapso' }), 'notifications'));
   });
 });
 

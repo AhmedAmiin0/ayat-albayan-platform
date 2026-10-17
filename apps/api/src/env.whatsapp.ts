@@ -1,6 +1,6 @@
 import type { WaLine, WaProvider } from '@ab/shared';
 import type { Env } from './env';
-import { duplicateChatPhone, kapsoLine } from './env.kapso';
+import { kapsoLine } from './env.kapso';
 
 // WhatsApp lines (docs/12 §13.1): the notifications line (WA_*) and the optional chat line
 // (WA_CHAT_*). Type-only import of Env, so env.ts can re-export this file without a runtime cycle.
@@ -126,13 +126,4 @@ export function chatKeyGaps(env: Env): string[] {
   return Object.entries(present)
     .filter(([, v]) => v === undefined)
     .map(([k]) => k);
-}
-
-/**
- * chatKeyGaps, plus a sentence when the chat phone id equals the notifications one (that turns the
- * chat line off). «افحص الخطوط» uses lineGaps + duplicate_chat_phone instead (names only).
- */
-export function chatGaps(env: Env): string[] {
-  const gaps = chatKeyGaps(env);
-  return duplicateChatPhone(env) ? [...gaps, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : gaps;
 }

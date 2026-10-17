@@ -54,7 +54,7 @@ describe('line providers', () => {
     expect(lineGaps(env({ ...KAPSO, WA_CHAT_PROVIDER: 'kapso' }), 'chat')).toEqual(['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID']);
   });
 
-  it('meta gaps: the chat line keeps chatGaps; notifications names its four required keys', () => {
+  it('meta gaps: the chat line keeps chatKeyGaps; notifications names its four required keys', () => {
     expect(lineGaps(env(WA), 'notifications')).toEqual([]);
     expect(lineGaps(env({ WA_PHONE_NUMBER_ID: 'n' }), 'notifications')).toEqual(['WA_API_BASE', 'WA_WABA_ID', 'WA_ACCESS_TOKEN']);
     expect(lineGaps(env({ ...WA, WA_CHAT_PHONE_NUMBER_ID: 'c' }), 'chat')).toEqual(['WA_CHAT_WABA_ID']);

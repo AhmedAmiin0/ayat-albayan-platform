@@ -4,7 +4,9 @@ import type { MessageDispatch } from './message.dispatch';
 import { MessageWorker } from './message.worker';
 import { dueMessage } from './sender.fakes';
 import type { SenderQueries } from './sender.queries';
-import { templateRow } from './whatsapp.fakes';
+import { byDriver } from './graph';
+import { KAPSO_ENV } from './kapso.fakes';
+import { STUB_ENV, templateRow } from './whatsapp.fakes';
 import { WaError } from './whatsapp.types';
 
 // Two lines in the worker (docs/12 §13.3): ready before the claim, stamp only when multi, per-line alert.
@@ -87,12 +89,20 @@ describe('MessageWorker — the line of a row', () => {
     expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', expect.objectContaining({ subject: 'whatsapp_auth:2026-10-02' }));
   });
 
-  it('a Kapso 401 (body code 401) pauses the line: row queued, try not counted, one daily alert', async () => {
-    dispatch.send.mockRejectedValue(new WaError('Invalid API key', { code: 401, status: 401 }));
+  it('a refused Kapso key (tagged by byDriver) pauses the line: row queued as kapso_auth, try not counted, one daily alert', async () => {
+    dispatch.send.mockRejectedValue(byDriver(KAPSO_ENV, new WaError('Invalid API key', { code: 401, status: 401 })));
     queries.claim.mockResolvedValue(1);
     await expect(worker().process({ row: dueMessage(), template, now: NOW, autoOn: true })).resolves.toBe('paused');
-    expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'queued', attempts: 0, error_code: '401' }));
+    expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'queued', attempts: 0, error_code: 'kapso_auth' }));
     expect(push.notifyAdmins).toHaveBeenCalledWith('reminder_failed', expect.objectContaining({ subject: 'whatsapp_auth:2026-10-02' }));
+  });
+
+  it('a Meta HTTP 401 without 190 / 10 / 200 never pauses the line: an ordinary retry, as before the Kapso driver', async () => {
+    dispatch.send.mockRejectedValue(byDriver(STUB_ENV, new WaError('WhatsApp HTTP 401', { code: null, status: 401 })));
+    queries.claim.mockResolvedValue(1);
+    await expect(worker().process({ row: dueMessage(), template, now: NOW, autoOn: true })).resolves.toBe('retry');
+    expect(queries.failure).toHaveBeenCalledWith(dueMessage().id, expect.objectContaining({ status: 'queued', error_code: 'http_401' }));
+    expect(push.notifyAdmins).not.toHaveBeenCalled();
   });
 
   it('a chat row still marked SENDING is handed to the admin before ready() is asked', async () => {

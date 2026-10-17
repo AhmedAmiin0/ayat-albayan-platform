@@ -13,7 +13,7 @@ import { listFor, type MetaLists } from './template-import';
 import { chatList, importStarters } from './template-lines';
 import { SAMPLE_REPORT, templateProblem } from './template-review';
 import { findMeta, ourStatus, syncPatch } from './template-sync';
-import { REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
+import { graphHttpError, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
 import { WaError, WHATSAPP_LINES, type WhatsappLines } from './whatsapp.types';
 
@@ -138,13 +138,13 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     if (!this.lines.notifications.configured()) throw waHttpError('not_configured', 503);
   }
 
-  /** A Graph failure → 502 meta_error with Meta's code and message for the admin. */
+  /** A Graph failure → 502 meta_error with Meta's code and message, or kapso_auth (docs/19). */
   private async fromMeta<T>(call: () => Promise<T>): Promise<T> {
     try {
       return await call();
     } catch (e) {
       if (!(e instanceof WaError)) throw e;
-      throw waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
+      throw graphHttpError(e);
     }
   }
 }

@@ -28,7 +28,7 @@ export interface LineCheckView {
   code_verification_status: string | null;
   /** null = not asked / the call failed; [] = no app subscribed to the WABA (no webhook arrives). */
   subscribed_apps: { id: string | null; name: string | null; override_callback_uri: string | null }[] | null;
-  /** One entry per failed Graph call (phone first, then subscribed_apps). */
-  errors: { step: 'phone' | 'subscribed_apps'; code: number | null; message: string }[];
+  /** One entry per failed Graph call (phone first, then subscribed_apps); `credential: 'kapso'` = Kapso refused its key. */
+  errors: { step: 'phone' | 'subscribed_apps'; code: number | null; message: string; credential?: 'kapso' }[];
   checked_at: string;
 }

@@ -60,9 +60,10 @@ describe('byDriver: Kapso refusing its key is the credential class', () => {
       expect(tagged.message).toContain('Kapso refused the API key');
       expect(failurePlan({ error: tagged, attempts: 1, now })).toMatchObject({ status: 'queued', attempts: 0, error_code: 'kapso_auth' });
     }
-    // An untagged 401 is still a refused credential (shared isWaAuthFailure): held, not failed.
+    // Only the tag holds: an untagged 401 (Meta's, or the download_url's) is an ordinary error.
     const plain401 = failurePlan({ error: err(401, null), attempts: 1, now });
-    expect(plain401).toMatchObject({ status: 'queued', error_code: 'http_401', attempts: 0 });
+    expect(plain401).toMatchObject({ status: 'queued', error_code: 'http_401', next_attempt_at: '2026-10-17T12:01:00.000Z' });
+    expect(plain401).not.toHaveProperty('attempts');
   });
 
   it('Meta lines, other statuses and real Meta codes pass through unchanged', () => {

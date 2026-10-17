@@ -2485,6 +2485,7 @@
       "not_submittable": "This template was already sent or is already approved",
       "not_configured": "WhatsApp details aren't set up on the server",
       "meta_error": "Meta rejected the request: {message}",
+      "kapso_auth": "Kapso refused the project API key: update KAPSO_API_KEY in «Integrations», then try again.",
       "needs_app_id": "This template includes a PDF file. To send it to Meta, the Meta app ID (WA_APP_ID) has to be set on the server first.",
       "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the notifications line's «Sending provider» to «Meta direct» in «Integrations», then try again.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",

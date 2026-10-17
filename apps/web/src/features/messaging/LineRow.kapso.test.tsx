@@ -43,4 +43,11 @@ describe('LineRow on a kapso line', () => {
     expect(note.closest('[data-tone]')?.getAttribute('data-tone')).toBe('act');
     expect(screen.queryByText(s.webhookKapso)).toBeNull();
   });
+
+  it('Kapso refusing its key reads messages.errors.kapso_auth, never the raw English message', () => {
+    const errors: LineCheckView['errors'] = [{ step: 'phone', code: null, message: 'Kapso refused the API key: WhatsApp HTTP 401', credential: 'kapso' }];
+    render(<LineRow line="notifications" view={{ ...kapsoView, errors }} />);
+    expect(screen.getByText(t.messages.errors.kapso_auth)).toBeTruthy();
+    expect(screen.queryByText(/Kapso refused the API key/)).toBeNull();
+  });
 });

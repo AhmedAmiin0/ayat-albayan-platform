@@ -54,6 +54,15 @@ describe('LinesCheck on a kapso line', () => {
     expect(chat).not.toHaveProperty('kapso_webhook_secret');
     expect(requests).toHaveLength(0);
   });
+
+  it('Kapso refusing its key: each errors[] entry carries credential kapso (the web says kapso_auth), never the key', async () => {
+    stubEnvs({ ...IDS, ...NO_CHAT, WA_PROVIDER: 'kapso', KAPSO_API_BASE: KAPSO_BASE, KAPSO_API_KEY: 'fake-kapso-key', WA_ACCESS_TOKEN: '' });
+    const lines = new LinesCheck();
+    lines.fetch = async () => new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
+    const [notifications] = await lines.check();
+    expect(notifications?.errors.map((e) => [e.step, e.code, e.credential])).toEqual([['phone', null, 'kapso'], ['subscribed_apps', null, 'kapso']]);
+    expect(JSON.stringify(notifications)).not.toContain('fake-kapso-key');
+  });
 });
 
 describe('WhatsappModule boot warning on a kapso line', () => {

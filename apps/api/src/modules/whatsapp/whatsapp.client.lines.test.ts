@@ -74,7 +74,7 @@ describe('HttpWhatsappClient allow-list (WA_ALLOWED_RECIPIENTS, docs/12 §13.5d)
   });
 });
 
-describe('WhatsappModule boot warning (chatGaps, docs/12 §13.1)', () => {
+describe('WhatsappModule boot warning (bootGaps, docs/12 §13.1)', () => {
   afterEach(() => {
     stubEnvs(null);
     vi.restoreAllMocks();

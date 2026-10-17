@@ -2,7 +2,10 @@ import { HttpException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import type { StorageService } from '../../common/storage/storage.service';
 import type { InboundMediaQueries, MediaMessage } from './inbound-media.queries';
+import { byDriver, graphFetch } from './graph';
 import { InboundMedia } from './inbound-media.service';
+import { KAPSO_ENV, kapsoFetch } from './kapso.fakes';
+import { STUB_ENV } from './whatsapp.fakes';
 import { WaError, type WhatsappLines } from './whatsapp.types';
 
 // docs/12 §13.4: the media id only works with the RECEIVING line's token.
@@ -86,11 +89,11 @@ describe('InboundMedia per line (docs/12 §13.4, R-MSG-06)', () => {
     expect(storage.upload).not.toHaveBeenCalled();
   });
 
-  it('Kapso refusing its key (docs/19) → 502 meta_error, never 410 media_expired', async () => {
+  it('Kapso refusing its key (tagged by byDriver, docs/19) → 502 kapso_auth, never meta_error or 410', async () => {
     const { media, notifications, chat } = setup(msg());
     chat.configured.mockReturnValue(false);
-    notifications.getMedia.mockRejectedValue(new WaError('Kapso refused the API key', { code: null, status: 401, credential: 'kapso' }));
-    expect(await failure(media.ensure('m1'))).toMatchObject({ status: 502, body: { code: 'meta_error' } });
+    notifications.getMedia.mockRejectedValue(byDriver(KAPSO_ENV, new WaError('Invalid API key', { code: 401, status: 401 })));
+    expect(await failure(media.ensure('m1'))).toEqual({ status: 502, body: { code: 'kapso_auth', message: 'kapso_auth' } });
   });
 
   it.each([400, 404])('chat unset, any other Meta %i → 410 media_expired', async (status) => {
@@ -106,9 +109,17 @@ describe('InboundMedia per line (docs/12 §13.4, R-MSG-06)', () => {
     expect(await failure(media.ensure('m1'))).toMatchObject({ status: 502, body: { code: 'meta_error', meta_code: 190 } });
   });
 
-  it('a Kapso refused key (HTTP 401, body code 401) is 502 meta_error, not a 410 expired file', async () => {
+  it('a Meta 401 without 190 / 10 / 200 is 410 media_expired, as before the Kapso driver', async () => {
     const { media, notifications } = setup(msg());
-    notifications.getMedia.mockRejectedValue(new WaError('Invalid API key', { code: 401, status: 401 }));
-    expect(await failure(media.ensure('m1'))).toMatchObject({ status: 502, body: { code: 'meta_error', meta_code: 401 } });
+    notifications.getMedia.mockRejectedValue(byDriver(STUB_ENV, new WaError('no', { code: null, status: 401 })));
+    expect(await failure(media.ensure('m1'))).toMatchObject({ status: 410, body: { code: 'media_expired' } });
+  });
+
+  it('a 401 on Kapso\'s credential-free download_url is never tagged: 410 media_expired', async () => {
+    const { media, notifications } = setup(msg());
+    const f = kapsoFetch({ status: 401, body: { error: 'token expired' } });
+    const conn = { env: KAPSO_ENV, fetch: f.fetch, timeoutMs: 1_000 };
+    notifications.getMedia.mockImplementation(() => graphFetch(conn, { path: 'https://files.example.test/m?token=t', auth: false }));
+    expect(await failure(media.ensure('m1'))).toMatchObject({ status: 410, body: { code: 'media_expired' } });
   });
 });

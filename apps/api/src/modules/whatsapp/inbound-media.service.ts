@@ -1,8 +1,9 @@
-import { INVOICE_MAX_BYTES, INVOICE_MIMES, isWaAuthFailure } from '@ab/shared';
+import { INVOICE_MAX_BYTES, INVOICE_MIMES, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMediaQueries, type MediaMessage } from './inbound-media.queries';
+import { KAPSO_AUTH } from './send-plan';
 import { waHttpError } from './template.mapper';
 import { WHATSAPP_LINES, WaError, type WhatsappLines } from './whatsapp.types';
 
@@ -28,7 +29,8 @@ export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'
  * 404 message_not_found, 400 invoice_message (not inbound, or not an image / PDF), 410 media_expired
  * (older than 29 days, or Meta refuses the id), 413 invoice_too_large. The file is fetched with the
  * RECEIVING line's client (docs/12 §13.4): 503 line_not_configured for a chat message while the chat
- * line is not configured, 502 meta_error when Meta refuses the line's token (190 / 10 / 200).
+ * line is not configured, 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
+ * 502 kapso_auth when Kapso refuses the project key (docs/19).
  */
 @Injectable()
 export class InboundMedia {
@@ -75,7 +77,8 @@ export class InboundMedia {
       return await client.getMedia(mediaId);
     } catch (e) {
       if (!(e instanceof WaError)) throw e;
-      if (isWaAuthFailure(e.info)) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
+      if (e.info.credential === 'kapso') throw waHttpError(KAPSO_AUTH, HttpStatus.BAD_GATEWAY);
+      if (isWaAuthError(e.info.code)) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
       if (e.info.status >= 400 && e.info.status < 500) throw waHttpError('media_expired', HttpStatus.GONE);
       throw e;
     }

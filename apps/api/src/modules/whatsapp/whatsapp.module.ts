@@ -1,7 +1,7 @@
 import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
-import { duplicatePhone, lineGaps, lineProvider, loadEnv } from '../../env';
+import { bootGaps, lineProvider, loadEnv } from '../../env';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
@@ -64,16 +64,14 @@ function lines(): WhatsappLines {
 })
 export class WhatsappModule implements OnModuleInit {
   /**
-   * Once at boot: what each line still lacks to SEND under its driver, by name only (never values).
-   * An unset meta notifications line just means messaging is off (local dev): no warning, as before.
+   * Once at boot: what each line still lacks to SEND under its driver (env.gaps.ts bootGaps), by
+   * name only (never values).
    */
   onModuleInit(): void {
     const env = loadEnv();
     for (const line of WA_LINES) {
-      const provider = lineProvider(env, line);
-      const names = line === 'notifications' && provider === 'meta' ? [] : lineGaps(env, line);
-      const gaps = duplicatePhone(env, line) ? [...names, 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)'] : names;
-      if (gaps.length > 0) new Logger(WhatsappModule.name).warn(`${line} line (${provider}) cannot send yet, missing: ${gaps.join(', ')}`);
+      const gaps = bootGaps(env, line);
+      if (gaps.length > 0) new Logger(WhatsappModule.name).warn(`${line} line (${lineProvider(env, line)}) cannot send yet, missing: ${gaps.join(', ')}`);
     }
   }
 }

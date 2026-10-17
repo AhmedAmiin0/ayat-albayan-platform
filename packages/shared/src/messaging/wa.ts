@@ -77,11 +77,12 @@ export interface WaAuthInfo {
 }
 
 /**
- * The credential was refused: Meta's code, HTTP 401 (Kapso answers a bad or rotated project key
- * with 401 and body code 401, docs/19; Meta's own 401s already carry 190), or a driver's tag.
+ * The credential was refused: Meta's code (190 / 10 / 200), or a driver's tag (the API tags a
+ * Kapso 401 / 403 on a keyed request as 'kapso', docs/19). A bare HTTP status never counts: Meta
+ * stays code-only, and Kapso's credential-free download_url is never tagged (its 401 is expiry).
  */
 export function isWaAuthFailure(info: WaAuthInfo | null | undefined): boolean {
-  return !!info && (isWaAuthError(info.code) || info.status === 401 || info.credential !== undefined);
+  return !!info && (isWaAuthError(info.code) || info.credential !== undefined);
 }
 
 /**

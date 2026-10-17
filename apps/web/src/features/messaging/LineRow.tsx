@@ -22,8 +22,10 @@ const WEBHOOK: Record<Shown, { tone: Tone; text: Label }> = {
 const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as const;
 /** Long app names / override URLs wrap at phone width (no horizontal page scroll). */
 const WRAP = 'whitespace-normal break-all';
-const known = (code: number | null): string | undefined =>
-  code === null ? undefined : (t.messages.errors as Record<string, string>)[String(code)];
+const ERRORS: Record<string, string | undefined> = t.messages.errors;
+/** A known Meta code in words, or Kapso refusing its key in its own words (docs/19). */
+const known = (e: LineCheckView['errors'][number]): string | undefined =>
+  e.credential === 'kapso' ? t.messages.errors.kapso_auth : e.code === null ? undefined : ERRORS[String(e.code)];
 
 /** Do inbound messages reach us: one chip (wrapping, it is a sentence), then each subscribed app. */
 function Webhook({ view }: { view: LineCheckView }) {
@@ -56,7 +58,7 @@ function Webhook({ view }: { view: LineCheckView }) {
 }
 
 /**
- * Each failed Graph call: «تعذّر الاستعلام: …» with a known Meta code in words (messages.errors),
+ * Each failed Graph call: «تعذّر الاستعلام: …» with a known Meta code (or kapso_auth) in words (messages.errors),
  * else Meta's message as data (dir auto); the code in an LTR island, Meta's raw text as the title.
  */
 function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
@@ -69,7 +71,7 @@ function CallErrors({ errors }: { errors: LineCheckView['errors'] }) {
           <NuqtaGlyph shape="struck" className="mt-0.5" />
           <span title={e.message}>
             {before}
-            <bdi dir="auto">{known(e.code) ?? e.message}</bdi>
+            <bdi dir="auto">{known(e) ?? e.message}</bdi>
             {after}
             {e.code !== null && <Ltr className="ms-1 text-2xs">({e.code})</Ltr>}
           </span>

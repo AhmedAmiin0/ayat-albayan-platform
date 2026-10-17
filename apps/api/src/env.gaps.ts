@@ -31,3 +31,15 @@ export function lineGaps(env: Env, line: WaLine): string[] {
 export function duplicatePhone(env: Env, line: WaLine): boolean {
   return line === 'chat' && duplicateChatPhone(env);
 }
+
+/** The boot log's words for a duplicate chat phone id («افحص الخطوط» shows duplicate_chat_phone instead). */
+export const DUPLICATE_CHAT_PHONE = 'WA_CHAT_PHONE_NUMBER_ID (same as WA_PHONE_NUMBER_ID)';
+
+/**
+ * What the boot log names for a line: lineGaps plus the duplicate-id sentence. An unset meta
+ * notifications line just means messaging is off (local dev): nothing to name, as before.
+ */
+export function bootGaps(env: Env, line: WaLine): string[] {
+  const names = line === 'notifications' && lineProvider(env, line) === 'meta' ? [] : lineGaps(env, line);
+  return duplicatePhone(env, line) ? [...names, DUPLICATE_CHAT_PHONE] : names;
+}

@@ -56,7 +56,7 @@ function errorText(error: unknown): string {
  * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, 131047
  * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
  * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
- * error (190 / 10 / 200, HTTP 401, or Kapso refusing its key) holds the row, uncounted: the credential is broken.
+ * error (190 / 10 / 200, or Kapso refusing its key) holds the row, uncounted: the credential is broken.
  * `attempts` counts this try.
  */
 export function failurePlan(input: { error: unknown; attempts: number; now: Date }): FailurePlan {

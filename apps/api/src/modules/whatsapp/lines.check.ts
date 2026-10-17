@@ -39,7 +39,8 @@ async function attempt<T>(step: Step, call: () => Promise<T>): Promise<Outcome<T
     return { ok: true, value: await call() };
   } catch (e) {
     const code = e instanceof WaError ? e.info.code : null;
-    return { ok: false, error: { step, code, message: e instanceof Error ? e.message : String(e) } };
+    const tag = e instanceof WaError && e.info.credential ? { credential: e.info.credential } : {};
+    return { ok: false, error: { step, code, message: e instanceof Error ? e.message : String(e), ...tag } };
   }
 }
 
