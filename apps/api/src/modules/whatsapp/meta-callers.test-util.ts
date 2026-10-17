@@ -7,6 +7,7 @@ import { join } from 'node:path';
 
 export const WHITELIST = new Set([
   'env.ts',
+  'env.gaps.ts',
   'env.kapso.ts',
   'env.whatsapp.ts',
   'modules/inbox/read-receipts.ts',
