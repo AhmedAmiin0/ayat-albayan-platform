@@ -80,4 +80,11 @@ describe('webhookState', () => {
     expect(webhookState({ app_id: null, subscribed_apps: null, provider: 'kapso' })).toBe('unknown');
     expect(webhookState({ app_id: 'a1', subscribed_apps: [app('a1')], provider: 'meta' })).toBe('ours');
   });
+
+  it('a kapso line without KAPSO_WEBHOOK_SECRET → kapsoNoSecret (act), whatever the apps say', () => {
+    for (const subscribed_apps of [[app('kapso-app')], [], null]) {
+      expect(webhookState({ app_id: null, subscribed_apps, provider: 'kapso', kapso_webhook_secret: false })).toBe('kapsoNoSecret');
+    }
+    expect(webhookState({ app_id: null, subscribed_apps: [app('k')], provider: 'kapso', kapso_webhook_secret: true })).toBe('kapso');
+  });
 });

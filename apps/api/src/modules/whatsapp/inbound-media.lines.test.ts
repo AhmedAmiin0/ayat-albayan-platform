@@ -86,6 +86,13 @@ describe('InboundMedia per line (docs/12 §13.4, R-MSG-06)', () => {
     expect(storage.upload).not.toHaveBeenCalled();
   });
 
+  it('Kapso refusing its key (docs/19) → 502 meta_error, never 410 media_expired', async () => {
+    const { media, notifications, chat } = setup(msg());
+    chat.configured.mockReturnValue(false);
+    notifications.getMedia.mockRejectedValue(new WaError('Kapso refused the API key', { code: null, status: 401, credential: 'kapso' }));
+    expect(await failure(media.ensure('m1'))).toMatchObject({ status: 502, body: { code: 'meta_error' } });
+  });
+
   it.each([400, 404])('chat unset, any other Meta %i → 410 media_expired', async (status) => {
     const { media, notifications, chat } = setup(msg());
     chat.configured.mockReturnValue(false);

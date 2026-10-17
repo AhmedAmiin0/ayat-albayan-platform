@@ -17,6 +17,7 @@ const WEBHOOK: Record<Shown, { tone: Tone; text: Label }> = {
   other: { tone: 'act', text: 'webhookOtherApp' },
   unverified: { tone: 'neutral', text: 'webhookUnverified' },
   kapso: { tone: 'neutral', text: 'webhookKapso' },
+  kapsoNoSecret: { tone: 'act', text: 'webhookKapsoNoSecret' },
 };
 const GLYPH = { ok: 'fill', act: 'struck', bad: 'struck', neutral: 'half' } as const;
 /** Long app names / override URLs wrap at phone width (no horizontal page scroll). */
@@ -99,7 +100,7 @@ export function LineRow({ line, view }: { line: WaLine; view: LineCheckView | nu
           ))}
         {view && <span className="ms-auto text-2xs text-ink-3">{s.checkedAt.replace('{time}', fullTime(view.checked_at))}</span>}
       </div>
-      {view && <LineDriver view={view} />}
+      <LineDriver view={view} />
       {view && !view.configured && line === 'chat' && <p className="text-xs text-ink-3">{s.chatOptional}</p>}
       {view?.configured && (
         <>

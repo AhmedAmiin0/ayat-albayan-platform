@@ -7,8 +7,9 @@ import { optionText } from '../integrations/integrations-form';
  * The line's sending provider (docs/19: Meta directly or Kapso) and, when it cannot send yet, the
  * NAMES of the keys it still lacks (env names, so English in an LTR island; never values).
  */
-export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'gaps'> }) {
+export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'gaps'> | null }) {
   const s = t.templates.settings.lines;
+  if (!view) return null;
   const [before, after = ''] = s.gaps.split('{keys}');
   return (
     <div className="grid gap-1 text-xs">

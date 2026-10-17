@@ -75,7 +75,7 @@ export class InboundMedia {
       return await client.getMedia(mediaId);
     } catch (e) {
       if (!(e instanceof WaError)) throw e;
-      if (isWaAuthError(e.info.code)) throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
+      if (isWaAuthError(e.info.code) || e.info.credential === 'kapso') throw waHttpError('meta_error', HttpStatus.BAD_GATEWAY, { meta_code: e.info.code });
       if (e.info.status >= 400 && e.info.status < 500) throw waHttpError('media_expired', HttpStatus.GONE);
       throw e;
     }

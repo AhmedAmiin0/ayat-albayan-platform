@@ -1,4 +1,4 @@
-import { WA_LINES, type LineCheckView, type WaLine, type WaProvider } from '@ab/shared';
+import { WA_LINES, type LineCheckView, type WaLine } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { lineEnvs, lineGaps, lineProvider, loadEnv, type WhatsappEnv } from '../../env';
 import { graphJson, type FetchLike, type GraphConn } from './graph';
@@ -29,8 +29,8 @@ interface LineInput {
   env: WhatsappEnv | null;
   appId: string | null;
   checkedAt: string;
-  /** The line's driver and the NAMES of what it still lacks (docs/19). */
-  driver: { provider: WaProvider; gaps: string[] };
+  /** The line's driver, the NAMES of what it still lacks, whether Kapso can deliver inbound (docs/19). */
+  driver: Pick<LineCheckView, 'provider' | 'gaps' | 'kapso_webhook_secret'>;
 }
 
 /** A rejected call becomes an errors[] entry; it never hides the other call or line. */
@@ -84,8 +84,11 @@ export class LinesCheck {
     const appIds: Record<WaLine, string | undefined> = { notifications: env.WA_APP_ID, chat: env.WA_CHAT_APP_ID };
     return Promise.all(
       WA_LINES.map((line) => {
-        const driver = { provider: lineProvider(env, line), gaps: lineGaps(env, line) };
-        const appId = driver.provider === 'kapso' ? null : (appIds[line] ?? null);
+        const provider = lineProvider(env, line);
+        const gaps = lineGaps(env, line);
+        const driver: LineInput['driver'] =
+          provider === 'kapso' ? { provider, gaps, kapso_webhook_secret: env.KAPSO_WEBHOOK_SECRET !== undefined } : { provider, gaps };
+        const appId = provider === 'kapso' ? null : (appIds[line] ?? null);
         return this.one({ line, env: envs[line], appId, checkedAt, driver });
       }),
     );

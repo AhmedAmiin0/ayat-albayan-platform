@@ -12,6 +12,8 @@ export interface LineCheckView {
   provider: WaProvider;
   /** NAMES (never values) of the keys this line still lacks to send under its provider; [] = none. */
   gaps: string[];
+  /** kapso lines only: is KAPSO_WEBHOOK_SECRET set (a boolean, never the value)? false = every inbound is refused. */
+  kapso_webhook_secret?: boolean;
   phone_number_id: string | null;
   waba_id: string | null;
   /** The line's OWN Meta app id from env (WA_APP_ID / WA_CHAT_APP_ID): an id, not a secret. */

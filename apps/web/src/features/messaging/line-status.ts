@@ -41,13 +41,15 @@ export function lineTone(field: LineField, value: string): LineTone {
  * Will inbound webhooks reach us? From the WABA's subscribed apps and the line's own app id:
  * unknown (not asked / failed: row hidden), none (no app: act), ours (ok), other (act),
  * unverified (an app is there but the server has no app id to compare: neutral), kapso (the line
- * runs through Kapso, docs/19: inbound comes via /webhooks/kapso, no Meta app to compare: neutral).
+ * runs through Kapso, docs/19: inbound comes via /webhooks/kapso, no Meta app to compare: neutral),
+ * kapsoNoSecret (KAPSO_WEBHOOK_SECRET unset: every Kapso delivery is refused: act).
  */
-export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified' | 'kapso';
+export type WebhookState = 'unknown' | 'none' | 'ours' | 'other' | 'unverified' | 'kapso' | 'kapsoNoSecret';
 
-type WebhookView = Pick<LineCheckView, 'app_id' | 'subscribed_apps'> & Partial<Pick<LineCheckView, 'provider'>>;
+type WebhookView = Pick<LineCheckView, 'app_id' | 'subscribed_apps'> & Partial<Pick<LineCheckView, 'provider' | 'kapso_webhook_secret'>>;
 
 export function webhookState(view: WebhookView): WebhookState {
+  if (view.provider === 'kapso' && view.kapso_webhook_secret === false) return 'kapsoNoSecret';
   const apps = view.subscribed_apps;
   if (apps === null) return 'unknown';
   if (apps.length === 0) return 'none';

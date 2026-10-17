@@ -29,7 +29,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 | Inbound media | `GET /{media_id}` → `url`, downloaded with the bearer | `GET /{media_id}?phone_number_id=<line>` → `download_url` (token inside, ~4 min), downloaded with **no credential at all**; Kapso's `url` (Meta's lookaside) is never used |
 | Sample uploads (Resumable Upload API) | `/{app_id}/uploads` with `WA_APP_ID` | none: `canUploadSamples()` is false, so submitting a document-header template (`report_ready`) answers 409 `needs_meta_driver` («حوِّل مزوّد الإرسال إلى Meta مباشرة»), not `needs_app_id` |
 | Errors | `{error:{message,type,code,error_subcode}}` | same shape (same `WaError` mapping) |
-| A refused credential | Meta 190 / 10 / 200: the line's queue is held, not failed | Kapso's HTTP 401 / 403 without a Meta code of its own is tagged 190 too (`graph.ts` `byDriver`): a wrong or rotated `KAPSO_API_KEY` holds the queue instead of failing every row |
+| A refused credential | Meta 190 / 10 / 200: the line's queue is held, not failed | Kapso's HTTP 401 / 403 without a Meta code of its own, on a request that carried the key, is tagged `credential: 'kapso'` (`graph.ts` `byDriver`): the queue is held the same way, rows read `error_code = 'kapso_auth'` («رفض Kapso مفتاح المشروع — حدِّث KAPSO_API_KEY في «التكاملات»»), never Meta's Business Manager advice. The credential-free `download_url` is never tagged |
 
 ## Webhook
 
@@ -37,7 +37,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 - Authenticated by **`KAPSO_WEBHOOK_SECRET` only**: `X-Webhook-Signature` = lowercase hex HMAC-SHA256 of the raw body, or `X-Hub-Signature-256` = `sha256=` + that hex. Constant-time compare. No secret set = every POST is 401. A 401 logs only which signature header NAMES were present.
 - The Meta route `POST /webhooks/whatsapp` keeps verifying only `WA_APP_SECRET` / `WA_CHAT_APP_SECRET`; neither route ever accepts the other's secret.
 - Like the Meta route it is never written to the activity log (`SKIPPED_ROUTES`), so refused or high-volume deliveries cannot flood it.
-- «افحص الخطوط» on a kapso line says inbound arrives via the Kapso webhook (neutral) instead of comparing the WABA's subscribed apps with a Meta app id.
+- «افحص الخطوط» on a kapso line says inbound arrives via the Kapso webhook (neutral) instead of comparing the WABA's subscribed apps with a Meta app id; with `KAPSO_WEBHOOK_SECRET` unset it says every Kapso delivery is refused (act). It reports only whether the secret is set, never its value.
 - Answered within 5 s (`RESPONSE_BUDGET_MS`); Kapso times out at 10 s, retries 3 times within ~50 s and pauses a webhook that fails ≥ 85 % of the time, so a webhook item that fails answers 500 for a retry like the Meta route.
 
 ## Keys
