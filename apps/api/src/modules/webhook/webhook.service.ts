@@ -13,6 +13,8 @@ export interface WebhookConfig {
   verifyToken: string | undefined;
   /** Each line's phone-number id: changes for any other number are ignored. */
   numbers: LineNumbers;
+  /** KAPSO_WEBHOOK_SECRET: POST /webhooks/kapso only (docs/19). Unset → every Kapso POST is 401. */
+  kapsoSecret?: string;
 }
 
 /**

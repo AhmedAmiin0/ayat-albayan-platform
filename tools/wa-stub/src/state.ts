@@ -11,6 +11,24 @@ export interface ChatLineOptions {
   appId?: string;
 }
 
+/** Kapso's Meta proxy (docs/19): its project key, and where Kapso-signed webhooks go. */
+export interface KapsoOptions {
+  /** When set, X-API-Key must equal it; otherwise any key passes (never a bearer). */
+  apiKey?: string;
+  /** The API's POST /webhooks/kapso. */
+  webhookUrl?: string;
+  /** X-Webhook-Signature key (KAPSO_WEBHOOK_SECRET). */
+  webhookSecret?: string;
+}
+
+/** One Graph call as it arrived: through which prefix and with which credential kind. */
+export interface RequestLog {
+  via: 'graph' | 'kapso';
+  method: string;
+  path: string;
+  auth: 'api-key' | 'bearer' | 'oauth' | 'none';
+}
+
 export interface StubOptions {
   templates?: StubTemplate[];
   /** API webhook that simulated inbound messages and statuses are POSTed to (signed). */
@@ -27,6 +45,8 @@ export interface StubOptions {
   chat?: ChatLineOptions;
   /** Free-form messages need an inbound from that number in the last 24 h (default true). */
   enforceWindow?: boolean;
+  /** The kapso prefix's key and webhook (absent = any key passes, no Kapso webhook). */
+  kapso?: KapsoOptions;
 }
 
 export interface SentMessage {
@@ -37,6 +57,8 @@ export interface SentMessage {
   body: unknown;
   /** The phone-number id of the Graph path the message was sent through (its line). */
   phoneNumberId?: string;
+  /** Through Meta's paths or the Kapso prefix (docs/19), so e2e can scope a send to its driver. */
+  via?: 'graph' | 'kapso';
 }
 
 /** A read receipt with the line (phone-number id) it was sent through. */
@@ -76,6 +98,8 @@ export interface StubState {
   uploads: Map<string, { sig: string; length: number; type: string }>;
   /** Handles of finished uploads: the only header_handle values template creation accepts. */
   handles: Set<string>;
+  /** Every Graph call (not /__stub), Meta's paths and the kapso prefix: GET /__stub/requests. */
+  requests: RequestLog[];
 }
 
 export type Reply = [number, unknown] | { status: number; mime: string; bytes: Buffer };

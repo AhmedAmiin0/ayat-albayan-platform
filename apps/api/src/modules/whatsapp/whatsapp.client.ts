@@ -1,7 +1,7 @@
 import { recipientAllowed, type WhatsappEnv } from '../../env';
 import { graphFetch, graphJson, type FetchLike, type GraphConn, type GraphRequest } from './graph';
+import { fetchMedia, nextTemplateCursor, templateEditPath } from './kapso';
 import {
-  mediaSchema,
   parsed,
   sentSchema,
   submitSchema,
@@ -30,12 +30,13 @@ export interface ClientOpts {
 }
 /** ponytail: 20 × 100 templates; the academy has 12. */
 const MAX_TEMPLATE_PAGES = 20;
+const TEMPLATE_PAGE = 100;
 const TEMPLATE_FIELDS = 'id,name,language,status,category,quality_score,components,rejected_reason';
 
 /**
- * WhatsApp Cloud API over WA_API_BASE (docs/12 §3.2): tools/wa-stub locally and in e2e, Meta only
- * when production deliberately names graph.facebook.com. Without the env every call throws
- * WaError(code null, status 0) before any request.
+ * WhatsApp Cloud API over the line's base (docs/12 §3.2): tools/wa-stub locally and in e2e, Meta
+ * or Kapso's Meta proxy only when production names them (docs/19: the driver differences live in
+ * kapso.ts). Without the env every call throws WaError(code null, status 0) before any request.
  */
 export class HttpWhatsappClient implements WhatsappClient {
   private readonly conn: GraphConn | null;
@@ -68,17 +69,17 @@ export class HttpWhatsappClient implements WhatsappClient {
     await graphFetch(c, { path: `${c.env.phoneNumberId}/messages`, method: 'POST', body: readReceipt(waMessageId) });
   }
 
-  /** Every page, following Meta's cursor only while it says there is a next page. */
+  /** Every page, following the cursor while the driver says there is a next page (kapso.ts). */
   async getTemplates(): Promise<MetaTemplate[]> {
     const c = this.connection();
     const all: MetaTemplate[] = [];
     let after: string | undefined;
     for (let page = 0; page < MAX_TEMPLATE_PAGES; page += 1) {
       const cursor = after ? `&after=${encodeURIComponent(after)}` : '';
-      const path = `${c.env.wabaId}/message_templates?limit=100&fields=${TEMPLATE_FIELDS}${cursor}`;
+      const path = `${c.env.wabaId}/message_templates?limit=${TEMPLATE_PAGE}&fields=${TEMPLATE_FIELDS}${cursor}`;
       const body = parsed(templatesPageSchema, await graphJson(c, { path }));
       all.push(...body.data.map(toMetaTemplate));
-      after = body.paging?.next ? body.paging.cursors?.after : undefined;
+      after = nextTemplateCursor(c.env, { count: body.data.length, limit: TEMPLATE_PAGE, paging: body.paging });
       if (!after) break;
     }
     return all;
@@ -86,21 +87,22 @@ export class HttpWhatsappClient implements WhatsappClient {
 
   /**
    * Creates the template (status PENDING). A rejected one Meta already knows is edited in place
-   * (POST /{template id}): creating it again would be a duplicate name.
+   * (templateEditPath): creating it again would be a duplicate name.
    */
   async submitTemplate(template: TemplateRow, opts: { headerHandle?: string } = {}): Promise<{ metaId: string; status: string }> {
     const c = this.connection();
     const payload = submitPayload(template, opts.headerHandle);
     const req: GraphRequest =
       template.status === 'rejected' && template.meta_id
-        ? { path: template.meta_id, method: 'POST', body: { category: payload['category'], components: payload['components'] } }
+        ? { path: templateEditPath(c.env, template.meta_id), method: 'POST', body: { category: payload['category'], components: payload['components'] } }
         : { path: `${c.env.wabaId}/message_templates`, method: 'POST', body: payload };
     const res = parsed(submitSchema, await graphJson(c, req));
     return { metaId: res.id ?? template.meta_id ?? '', status: res.status ?? 'PENDING' };
   }
 
   canUploadSamples(): boolean {
-    return Boolean(this.conn?.env.appId);
+    const env = this.conn?.env;
+    return env !== undefined && env.provider !== 'kapso' && Boolean(env.appId);
   }
 
   /**
@@ -109,21 +111,20 @@ export class HttpWhatsappClient implements WhatsappClient {
    */
   async uploadSample(file: SampleFile): Promise<string> {
     const c = this.connection();
-    if (!c.env.appId) throw new WaError('WA_APP_ID is not set', { code: null, status: 0 });
+    const env = c.env;
+    // Kapso has no resumable upload: canUploadSamples() is false there, so only a bug gets here.
+    if (env.provider === 'kapso' || !env.appId) throw new WaError('WA_APP_ID is not set', { code: null, status: 0 });
     const q = new URLSearchParams({ file_name: file.name, file_length: String(file.bytes.byteLength), file_type: file.mime });
-    const start = await graphJson(c, { path: `${encodeURIComponent(c.env.appId)}/uploads?${q}`, method: 'POST' });
+    const start = await graphJson(c, { path: `${encodeURIComponent(env.appId)}/uploads?${q}`, method: 'POST' });
     const session = parsed(uploadSessionSchema, start);
-    const headers = { authorization: `OAuth ${c.env.accessToken}`, file_offset: '0' };
+    const headers = { authorization: `OAuth ${env.accessToken}`, file_offset: '0' };
     const done = await graphJson(c, { path: session.id, method: 'POST', raw: file.bytes, headers });
     return parsed(uploadHandleSchema, done).h;
   }
 
-  /** Metadata (GET /{media id}), then the bytes from Meta's short-lived URL with the bearer. */
-  async getMedia(mediaId: string): Promise<{ bytes: Uint8Array; mime: string }> {
-    const c = this.connection();
-    const meta = parsed(mediaSchema, await graphJson(c, { path: encodeURIComponent(mediaId) }));
-    const res = await graphFetch(c, { path: meta.url });
-    return { bytes: new Uint8Array(await res.arrayBuffer()), mime: meta.mime_type };
+  /** Metadata, then the bytes, as the line's driver serves them (kapso.ts fetchMedia). */
+  getMedia(mediaId: string): Promise<{ bytes: Uint8Array; mime: string }> {
+    return fetchMedia(this.connection(), mediaId);
   }
 
   /** The allow-list check runs BEFORE any request; only a bug can reach it (after the claim). */

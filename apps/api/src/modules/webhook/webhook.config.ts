@@ -1,4 +1,4 @@
-import { appSecrets, lineNumbers, type Env } from '../../env';
+import { appSecrets, kapsoWebhookSecret, lineNumbers, type Env } from '../../env';
 import type { WebhookConfig } from './webhook.service';
 
 /**
@@ -6,7 +6,7 @@ import type { WebhookConfig } from './webhook.service';
  * alone (lineNumbers), so a half-configured chat line still receives and stores its messages.
  */
 export function webhookConfig(env: Env): WebhookConfig {
-  return { appSecrets: appSecrets(env), verifyToken: env.WA_VERIFY_TOKEN, numbers: lineNumbers(env) };
+  return { appSecrets: appSecrets(env), verifyToken: env.WA_VERIFY_TOKEN, numbers: lineNumbers(env), kapsoSecret: kapsoWebhookSecret(env) };
 }
 
 /**
@@ -23,6 +23,9 @@ export function liveWebhookConfig(read: () => Env): WebhookConfig {
     },
     get numbers() {
       return lineNumbers(read());
+    },
+    get kapsoSecret() {
+      return kapsoWebhookSecret(read());
     },
   };
 }

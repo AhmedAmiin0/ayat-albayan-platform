@@ -1,6 +1,7 @@
+import { WA_LINES } from '@ab/shared';
 import { Global, Logger, Module, type OnModuleInit } from '@nestjs/common';
 import { IntegrationConfigModule } from '../../common/integrations/integration-config.module';
-import { chatGaps, loadEnv } from '../../env';
+import { bootGaps, lineProvider, loadEnv } from '../../env';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
@@ -62,9 +63,15 @@ function lines(): WhatsappLines {
   exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, MessageSender, MessageViews, InboundMedia, InboundMediaQueries],
 })
 export class WhatsappModule implements OnModuleInit {
-  /** Once at boot: the chat pieces SENDING still lacks, by name only (never values). */
+  /**
+   * Once at boot: what each line still lacks to SEND under its driver (env.gaps.ts bootGaps), by
+   * name only (never values).
+   */
   onModuleInit(): void {
-    const gaps = chatGaps(loadEnv());
-    if (gaps.length > 0) new Logger(WhatsappModule.name).warn(`chat line cannot send yet, missing: ${gaps.join(', ')}`);
+    const env = loadEnv();
+    for (const line of WA_LINES) {
+      const gaps = bootGaps(env, line);
+      if (gaps.length > 0) new Logger(WhatsappModule.name).warn(`${line} line (${lineProvider(env, line)}) cannot send yet, missing: ${gaps.join(', ')}`);
+    }
   }
 }

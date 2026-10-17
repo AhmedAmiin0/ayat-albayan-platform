@@ -90,6 +90,8 @@ export class WaError extends Error {
       details?: string;
       /** The request may have reached Meta (timeout, connection lost mid-call): a resend could duplicate it. */
       uncertain?: boolean;
+      /** Kapso refused the line's project key (docs/19): held like Meta's 190, but its own words. */
+      credential?: 'kapso';
     },
   ) {
     super(message);

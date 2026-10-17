@@ -24,6 +24,9 @@ const view = (line: LineCheckView['line']): LineCheckView => ({
   subscribed_apps: null,
   errors: [],
   checked_at: '2026-10-10T08:00:00Z',
+  provider: 'meta',
+  gaps: [],
+  duplicate_chat_phone: false,
 });
 const live = () => {
   const rows = screen.getAllByTestId('line-row');

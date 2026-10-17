@@ -27,7 +27,10 @@ const metaTemplateSchema = z.object({
 export const templatesPageSchema = z.object({
   data: z.array(metaTemplateSchema),
   paging: z
-    .object({ next: z.string().optional(), cursors: z.object({ after: z.string().optional() }).optional() })
+    .object({
+      next: z.string().optional(),
+      cursors: z.object({ before: z.string().optional(), after: z.string().optional() }).optional(),
+    })
     .optional(),
 });
 
@@ -49,6 +52,8 @@ export function toMetaTemplate(t: z.infer<typeof metaTemplateSchema>): MetaTempl
 export const submitSchema = z.object({ id: z.string().optional(), status: z.string().optional() });
 
 export const mediaSchema = z.object({ url: z.string().min(1), mime_type: z.string().min(1) });
+/** Kapso's GET /{media id}: its own absolute download_url (Meta's `url` is ignored, docs/19). */
+export const kapsoMediaSchema = z.object({ download_url: z.url(), mime_type: z.string().min(1) });
 
 /** Resumable Upload API: the session (`upload:…`, used verbatim as the next path), then the handle. */
 export const uploadSessionSchema = z.object({ id: z.string().regex(/^upload:[^/\s]+$/) });

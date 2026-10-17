@@ -72,6 +72,7 @@ describe('ActivityInterceptor', () => {
   it.each([
     { method: 'GET', routeOptions: { url: '/expenses' } },
     { method: 'POST', routeOptions: { url: '/webhooks/whatsapp' } },
+    { method: 'POST', routeOptions: { url: '/webhooks/kapso' } },
     { method: 'POST', routeOptions: { url: '/livekit/webhook' } },
     { method: 'POST', routeOptions: { url: '/health' } },
   ])('skips $method $routeOptions.url', async (req) => {

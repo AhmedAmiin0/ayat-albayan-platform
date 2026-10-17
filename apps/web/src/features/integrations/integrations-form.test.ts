@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { integrationItems } from './integrations.fixture';
-import { changesOf, draftOf, integrationsMatch, invalidKeys } from './integrations-form';
+import { t } from '@/lib/i18n';
+import { changesOf, draftOf, enumEmptyLabel, integrationsMatch, invalidKeys } from './integrations-form';
 
 describe('integrations form logic', () => {
   it('the draft holds plain keys only, prefilled with the value in use', () => {
@@ -25,5 +26,13 @@ describe('integrations form logic', () => {
     expect(integrationsMatch('wa_chat_app_secret')).toBe(true);
     expect(integrationsMatch('LiveKit')).toBe(true);
     expect(integrationsMatch('zzzz-nothing')).toBe(false);
+  });
+
+  it('the provider select’s empty choice names what clearing leads to: the server value, else the default', () => {
+    const s = t.integrations;
+    expect(enumEmptyLabel({ source: 'env', value: 'kapso' }, 'meta')).toBe(s.enumServer.replace('{value}', s.options.kapso));
+    expect(enumEmptyLabel({ source: 'unset', value: null }, 'meta')).toBe(s.enumDefault.replace('{value}', s.options.meta));
+    expect(enumEmptyLabel({ source: 'db', value: 'kapso' }, 'meta')).toBe(s.enumServerOrDefault.replace('{value}', s.options.meta));
+    expect(enumEmptyLabel({ source: 'env', value: 'meta' }, 'meta')).not.toBe(s.enumDefault.replace('{value}', s.options.meta));
   });
 });

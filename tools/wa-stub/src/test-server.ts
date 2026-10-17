@@ -23,6 +23,8 @@ export async function startStub(opts: StubOptions = {}) {
 
 export interface Received {
   sig: string | undefined;
+  /** X-Webhook-Signature (a Kapso-signed forward). */
+  kapsoSig?: string | undefined;
   body: string;
 }
 
@@ -33,7 +35,8 @@ export async function startHook() {
     let body = '';
     req.on('data', (c: Buffer) => (body += c.toString()));
     req.on('end', () => {
-      received.push({ sig: req.headers['x-hub-signature-256'] as string | undefined, body });
+      const kapsoSig = req.headers['x-webhook-signature'] as string | undefined;
+      received.push({ sig: req.headers['x-hub-signature-256'] as string | undefined, ...(kapsoSig ? { kapsoSig } : {}), body });
       res.writeHead(200).end();
     });
   });

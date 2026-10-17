@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest';
+import { byDriver } from './graph';
+import { KAPSO_ENV } from './kapso.fakes';
 import { errorCode, failurePlan, messageLabel, quickReplyPayloads, readyToSend, reportIdOf } from './send-plan';
-import { REMINDER_24H, REPORT_READY, templateRow } from './whatsapp.fakes';
+import { REMINDER_24H, REPORT_READY, STUB_ENV, templateRow } from './whatsapp.fakes';
 import { WaError } from './whatsapp.types';
 
 const NOW = new Date('2026-10-02T08:00:00Z');
@@ -42,6 +44,23 @@ describe('failurePlan — retry with backoff or fail for good (docs/12 §3.3)', 
       error_text: '(#x) meta says no — why',
       attempts: 1,
     });
+  });
+
+  it('a refused Kapso key (tagged by byDriver) is an auth hold too: queued as kapso_auth, try not counted', () => {
+    const kapso = byDriver(KAPSO_ENV, new WaError('Invalid API key', { code: 401, status: 401 }));
+    expect(failurePlan({ error: kapso, attempts: 2, now: NOW })).toEqual({
+      status: 'queued',
+      next_attempt_at: '2026-10-02T08:15:00.000Z',
+      error_code: 'kapso_auth',
+      error_text: 'Kapso refused the API key: Invalid API key',
+      attempts: 1,
+    });
+  });
+
+  it('a Meta HTTP 401 without 190 / 10 / 200 retries with the backoff and fails on the last try, as before the Kapso driver', () => {
+    const meta401 = byDriver(STUB_ENV, new WaError('WhatsApp HTTP 401', { code: null, status: 401 }));
+    expect(failurePlan({ error: meta401, attempts: 1, now: NOW })).toMatchObject({ status: 'queued', next_attempt_at: '2026-10-02T08:01:00.000Z', error_code: 'http_401' });
+    expect(failurePlan({ error: meta401, attempts: 3, now: NOW })).toMatchObject({ status: 'failed', next_attempt_at: null, error_code: 'http_401' });
   });
 
   it('error codes: Meta code, http_<status>, network, internal; text capped at 500', () => {

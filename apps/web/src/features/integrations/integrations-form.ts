@@ -5,6 +5,24 @@ import { matchesText } from '../config/settings-search';
 export type IntegrationDraft = Partial<Record<IntegrationPlainKey, string>>;
 export type IntegrationChanges = Partial<Record<IntegrationPlainKey, string | null>>;
 
+/** An enum key's value (meta, kapso, …) in the active language; an unknown one as written. */
+export function optionText(value: string): string {
+  const options: Readonly<Record<string, string>> = t.integrations.options;
+  return options[value] ?? value;
+}
+
+/**
+ * The select's empty choice says truthfully what clearing leads to: the server's value when it is
+ * the one in use (source env), the built-in default when the server has none (source unset), and
+ * either one when a saved value hides what the server has (source db).
+ */
+export function enumEmptyLabel(item: Pick<IntegrationConfigItem, 'source' | 'value'>, fallback: string): string {
+  const s = t.integrations;
+  if (item.source === 'env' && item.value) return s.enumServer.replace('{value}', optionText(item.value));
+  if (item.source === 'db') return s.enumServerOrDefault.replace('{value}', optionText(fallback));
+  return s.enumDefault.replace('{value}', optionText(fallback));
+}
+
 /** A key's words in the active language. */
 export const integrationText = (key: IntegrationKey): { label: string; hint: string } => t.integrations.keys[key];
 

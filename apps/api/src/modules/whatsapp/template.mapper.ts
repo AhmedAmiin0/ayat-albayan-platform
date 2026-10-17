@@ -1,7 +1,8 @@
 import type { RenderableTemplate, TemplateView } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { paramNames, templateButtons } from './wa-json';
-import type { TemplateRow } from './whatsapp.types';
+import { KAPSO_AUTH } from './send-plan';
+import type { TemplateRow, WaError } from './whatsapp.types';
 
 /** audit_log.entity_id is a uuid; the template key goes in before/after (as settings do). */
 export const REGISTRY_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
@@ -36,4 +37,10 @@ export function renderable(row: TemplateRow): RenderableTemplate {
 /** `{ code, message: code, …details }`, the API's error shape (docs/12 §1). */
 export function waHttpError(code: string, status: number, details: Record<string, unknown> = {}): HttpException {
   return new HttpException({ code, message: code, ...details }, status);
+}
+
+/** A Graph failure → 502: kapso_auth when Kapso refused its key (docs/19), else meta_error with Meta's code and message. */
+export function graphHttpError(e: WaError): HttpException {
+  if (e.info.credential === 'kapso') return waHttpError(KAPSO_AUTH, 502);
+  return waHttpError('meta_error', 502, { meta_code: e.info.code, meta_message: e.info.details ?? e.message });
 }

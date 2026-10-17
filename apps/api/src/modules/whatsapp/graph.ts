@@ -1,8 +1,9 @@
+import { isWaAuthError } from '@ab/shared';
 import { z } from 'zod';
 import type { WhatsappEnv } from '../../env';
 import { WaError } from './whatsapp.types';
 
-// One Graph API call: bearer, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).
+// One Graph API call: auth by provider, JSON, timeout, and Meta's error body → WaError (docs/12 §3.2).
 
 export type FetchLike = (url: string, init: RequestInit) => Promise<Response>;
 
@@ -21,6 +22,13 @@ export interface GraphRequest {
   raw?: Uint8Array<ArrayBuffer>;
   /** Override or add headers (the upload's `authorization: OAuth …` and `file_offset`). */
   headers?: Record<string, string>;
+  /** false = no credential at all (Kapso's download_url carries its own token: never send ours there). */
+  auth?: false;
+}
+
+/** The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer). */
+export function authHeaders(env: WhatsappEnv): Record<string, string> {
+  return env.provider === 'kapso' ? { 'x-api-key': env.apiKey } : { authorization: `Bearer ${env.accessToken}` };
 }
 
 const metaErrorSchema = z.object({
@@ -55,6 +63,19 @@ export function waErrorFrom(status: number, text: string): WaError {
   return new WaError(e.message ?? `WhatsApp HTTP ${status}`, { code: e.code ?? null, status, details });
 }
 
+/**
+ * Kapso refusing its project key (HTTP 401 / 403 with no Meta code of its own) is a broken
+ * credential: tagged `credential: 'kapso'` (never Meta's 190, whose words point at Business
+ * Manager), so the sender holds the line's queue instead of failing every row and the admin is
+ * told to fix KAPSO_API_KEY. Meta's own errors pass through unchanged.
+ */
+export function byDriver(env: WhatsappEnv, error: WaError): WaError {
+  const { status, code } = error.info;
+  if (env.provider !== 'kapso' || (status !== 401 && status !== 403) || isWaAuthError(code)) return error;
+  if (code !== null && code !== status) return error;
+  return new WaError(`Kapso refused the API key: ${error.message}`, { ...error.info, credential: 'kapso' });
+}
+
 /** Connection errors raised before any byte left: the request never reached Meta, so a retry is safe. */
 const NEVER_SENT = new Set(['ECONNREFUSED', 'ENOTFOUND', 'EAI_AGAIN', 'ENETUNREACH', 'EHOSTUNREACH', 'UND_ERR_CONNECT_TIMEOUT']);
 
@@ -80,7 +101,7 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
     res = await conn.fetch(url(conn.env, req.path), {
       method: req.method ?? 'GET',
       headers: {
-        authorization: `Bearer ${conn.env.accessToken}`,
+        ...(req.auth === false ? {} : authHeaders(conn.env)),
         ...(hasBody ? { 'content-type': 'application/json' } : {}),
         ...req.headers,
       },
@@ -92,7 +113,9 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
     throw new WaError(message, { code: null, status: 0, uncertain: mayHaveReachedMeta(e) });
   }
   if (res.ok) return res;
-  throw waErrorFrom(res.status, await res.text().catch(() => ''));
+  const error = waErrorFrom(res.status, await res.text().catch(() => ''));
+  // Only a request that carried the key can have the key refused (not Kapso's download_url).
+  throw req.auth === false ? error : byDriver(conn.env, error);
 }
 
 /** graphFetch + the JSON body. */

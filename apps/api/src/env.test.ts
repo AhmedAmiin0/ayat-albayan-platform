@@ -42,7 +42,7 @@ describe('env: WhatsApp is optional and off by default (docs/12 §3)', () => {
   });
 
   it('WA_APP_ID is optional: it only adds the app id for sample uploads (blank = unset)', () => {
-    expect(whatsappEnv(loadEnv({ ...BASE, ...WA, WA_APP_ID: '1234567890' }))?.appId).toBe('1234567890');
+    expect(whatsappEnv(loadEnv({ ...BASE, ...WA, WA_APP_ID: '1234567890' }))).toMatchObject({ appId: '1234567890' });
     expect(whatsappEnv(loadEnv({ ...BASE, ...WA, WA_APP_ID: ' ' }))).not.toHaveProperty('appId');
     expect(whatsappEnv(loadEnv({ ...BASE, WA_APP_ID: '1234567890' }))).toBeNull();
   });

@@ -4,10 +4,11 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
+  'WA_PROVIDER',
   'WA_API_BASE',
   'WA_API_VERSION',
   'WA_PHONE_NUMBER_ID',
@@ -16,6 +17,9 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WA_CHAT_PHONE_NUMBER_ID',
   'WA_CHAT_WABA_ID',
   'WA_CHAT_APP_ID',
+  'WA_CHAT_PROVIDER',
+  'KAPSO_API_BASE',
+  'KAPSO_API_VERSION',
   'WA_ALLOWED_RECIPIENTS',
   'WA_TEMPLATE_SYNC',
   'LIVEKIT_URL',
@@ -36,6 +40,8 @@ export const INTEGRATION_SECRET_KEYS = [
   'LIVEKIT_API_SECRET',
   'EXPO_ACCESS_TOKEN',
   'WEB_PUSH_VAPID_PRIVATE_KEY',
+  'KAPSO_API_KEY',
+  'KAPSO_WEBHOOK_SECRET',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -52,6 +58,7 @@ export interface IntegrationKeyDef {
 
 /** Each key's group, in the form's order inside the group. */
 const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
+  WA_PROVIDER: 'wa_notifications',
   WA_API_BASE: 'wa_notifications',
   WA_API_VERSION: 'wa_notifications',
   WA_PHONE_NUMBER_ID: 'wa_notifications',
@@ -60,11 +67,16 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   WA_ACCESS_TOKEN: 'wa_notifications',
   WA_APP_SECRET: 'wa_notifications',
   WA_VERIFY_TOKEN: 'wa_notifications',
+  WA_CHAT_PROVIDER: 'wa_chat',
   WA_CHAT_PHONE_NUMBER_ID: 'wa_chat',
   WA_CHAT_WABA_ID: 'wa_chat',
   WA_CHAT_APP_ID: 'wa_chat',
   WA_CHAT_ACCESS_TOKEN: 'wa_chat',
   WA_CHAT_APP_SECRET: 'wa_chat',
+  KAPSO_API_BASE: 'kapso',
+  KAPSO_API_VERSION: 'kapso',
+  KAPSO_API_KEY: 'kapso',
+  KAPSO_WEBHOOK_SECRET: 'kapso',
   WA_ALLOWED_RECIPIENTS: 'wa_safety',
   WA_TEMPLATE_SYNC: 'wa_safety',
   LIVEKIT_URL: 'livekit',
@@ -89,6 +101,20 @@ export const isIntegrationKey = (k: string): k is IntegrationKey => SECRET_SET.h
 export const INTEGRATION_KEYS: readonly IntegrationKeyDef[] = (Object.keys(GROUP_OF) as IntegrationKey[])
   .map((key) => ({ key, group: GROUP_OF[key], secret: SECRET_SET.has(key), i18n: `integrations.keys.${key}` as const }))
   .sort((a, b) => INTEGRATION_GROUPS.indexOf(a.group) - INTEGRATION_GROUPS.indexOf(b.group));
+
+/** WhatsApp drivers (docs/19): Meta's Cloud API directly, or through Kapso's Meta proxy. */
+export const WA_PROVIDERS = ['meta', 'kapso'] as const;
+export type WaProvider = (typeof WA_PROVIDERS)[number];
+
+/** Plain keys with a fixed set of values: the form renders a select, the API refuses anything else. */
+export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly string[]>> = {
+  WA_PROVIDER: WA_PROVIDERS,
+  WA_CHAT_PROVIDER: WA_PROVIDERS,
+};
+
+/** The allowed values of an enum key, or null for a free-text key. */
+export const integrationEnum = (key: IntegrationKey): readonly string[] | null =>
+  (isIntegrationPlainKey(key) ? INTEGRATION_ENUMS[key] : undefined) ?? null;
 
 export function integrationDef(key: IntegrationKey): IntegrationKeyDef {
   const def = INTEGRATION_KEYS.find((d) => d.key === key);

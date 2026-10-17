@@ -1,4 +1,5 @@
 import type { WaLine } from '../enums/messaging.js';
+import type { WaProvider } from '../integrations/keys.js';
 
 /**
  * POST /messaging/lines/check item (docs/12 §13.8–13.9): one WhatsApp line as Meta reports it.
@@ -7,6 +8,14 @@ import type { WaLine } from '../enums/messaging.js';
 export interface LineCheckView {
   line: WaLine;
   configured: boolean;
+  /** The line's driver (WA_PROVIDER / WA_CHAT_PROVIDER, docs/19): Meta directly or Kapso. */
+  provider: WaProvider;
+  /** NAMES (never values) of the keys this line still lacks to send under its provider; [] = none. */
+  gaps: string[];
+  /** The chat line's phone id is the notifications one, so the chat line is off (shown in words, not as a key). */
+  duplicate_chat_phone: boolean;
+  /** kapso lines only: is KAPSO_WEBHOOK_SECRET set (a boolean, never the value)? false = every inbound is refused. */
+  kapso_webhook_secret?: boolean;
   phone_number_id: string | null;
   waba_id: string | null;
   /** The line's OWN Meta app id from env (WA_APP_ID / WA_CHAT_APP_ID): an id, not a secret. */
@@ -19,7 +28,7 @@ export interface LineCheckView {
   code_verification_status: string | null;
   /** null = not asked / the call failed; [] = no app subscribed to the WABA (no webhook arrives). */
   subscribed_apps: { id: string | null; name: string | null; override_callback_uri: string | null }[] | null;
-  /** One entry per failed Graph call (phone first, then subscribed_apps). */
-  errors: { step: 'phone' | 'subscribed_apps'; code: number | null; message: string }[];
+  /** One entry per failed Graph call (phone first, then subscribed_apps); `credential: 'kapso'` = Kapso refused its key. */
+  errors: { step: 'phone' | 'subscribed_apps'; code: number | null; message: string; credential?: 'kapso' }[];
   checked_at: string;
 }

@@ -74,4 +74,17 @@ describe('webhookState', () => {
   ] as const)('%s', (state, view) => {
     expect(webhookState({ app_id: view.app_id, subscribed_apps: view.subscribed_apps ? [...view.subscribed_apps] : null })).toBe(state);
   });
+  it('a kapso line (docs/19): apps present → kapso (neutral, never «app id not set»); none or unknown as before', () => {
+    expect(webhookState({ app_id: null, subscribed_apps: [app('kapso-app')], provider: 'kapso' })).toBe('kapso');
+    expect(webhookState({ app_id: null, subscribed_apps: [], provider: 'kapso' })).toBe('none');
+    expect(webhookState({ app_id: null, subscribed_apps: null, provider: 'kapso' })).toBe('unknown');
+    expect(webhookState({ app_id: 'a1', subscribed_apps: [app('a1')], provider: 'meta' })).toBe('ours');
+  });
+
+  it('a kapso line without KAPSO_WEBHOOK_SECRET → kapsoNoSecret (act), whatever the apps say', () => {
+    for (const subscribed_apps of [[app('kapso-app')], [], null]) {
+      expect(webhookState({ app_id: null, subscribed_apps, provider: 'kapso', kapso_webhook_secret: false })).toBe('kapsoNoSecret');
+    }
+    expect(webhookState({ app_id: null, subscribed_apps: [app('k')], provider: 'kapso', kapso_webhook_secret: true })).toBe('kapso');
+  });
 });

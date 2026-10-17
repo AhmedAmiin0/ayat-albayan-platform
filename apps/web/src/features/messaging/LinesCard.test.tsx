@@ -37,6 +37,9 @@ const view = (patch: Partial<LineCheckView> = {}): LineCheckView => ({
   subscribed_apps: [app('ours')],
   errors: [],
   checked_at: '2026-10-10T08:00:00Z',
+  provider: 'meta',
+  gaps: [],
+  duplicate_chat_phone: false,
   ...patch,
 });
 const row = (line: 'notifications' | 'chat') => {

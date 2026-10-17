@@ -19,8 +19,14 @@ function target(s: StubState, phoneNumberId?: string): WebhookTarget | null {
   return { url: s.opts.webhookUrl, appSecret, phoneNumberId: phoneNumberId ?? line.phoneNumberId, displayPhone, entryId };
 }
 
-async function inbound(s: StubState, spec: InboundSpec) {
-  const line = target(s, spec.phoneNumberId);
+/** The same line identity, delivered as Kapso forwards it: its webhook URL and secret (docs/19). */
+function kapsoTarget(s: StubState, phoneNumberId?: string): WebhookTarget | null {
+  const line = target({ ...s, opts: { ...s.opts, webhookUrl: s.opts.kapso?.webhookUrl } }, phoneNumberId);
+  return line ? { ...line, appSecret: s.opts.kapso?.webhookSecret ?? '', kapso: true } : null;
+}
+
+async function inbound(s: StubState, spec: InboundSpec, viaKapso = false) {
+  const line = viaKapso ? kapsoTarget(s, spec.phoneNumberId) : target(s, spec.phoneNumberId);
   const t = line && spec.signWith !== undefined ? { ...line, appSecret: spec.signWith } : line;
   if (!t) return [400, { error: 'webhookUrl not configured' }] as const;
   if (!digits(spec.from)) return [400, { error: 'from is required' }] as const;
@@ -53,6 +59,7 @@ export const controlRoutes: Route[] = [
     s.sent.length = 0;
     s.reads.length = 0;
     s.readLog.length = 0;
+    s.requests.length = 0;
     return [200, { cleared: true }];
   }],
   ['GET', /^\/__stub\/reads$/, async (_r, _m, s) => [200, s.reads]],
@@ -69,10 +76,15 @@ export const controlRoutes: Route[] = [
     s.failNext.clear();
     s.uploads.clear();
     s.handles.clear();
+    s.requests.length = 0;
     resetHealth(s);
     return [200, { reset: true }];
   }],
   ['POST', /^\/__stub\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec))]],
+  /** The same inbound, forwarded by «Kapso» to its webhook URL with X-Webhook-Signature (docs/19). */
+  ['POST', /^\/__stub\/kapso\/inbound$/, async (req, _m, s) => [...(await inbound(s, (await readJson(req)) as unknown as InboundSpec, true))]],
+  /** Every Graph call with its prefix and credential kind (bearer / api-key / …). */
+  ['GET', /^\/__stub\/requests$/, async (_r, _m, s) => [200, s.requests]],
   ['POST', /^\/__stub\/status$/, async (req, _m, s) => [...(await deliveryStatus(s, (await readJson(req)) as unknown as StatusSpec))]],
   /** Meta's review result: {status: 'APPROVED' | 'REJECTED' | 'PAUSED' | 'DISABLED', quality?}. */
   ['POST', /^\/__stub\/templates\/([a-z0-9_]+)$/, async (req, m, s) => {

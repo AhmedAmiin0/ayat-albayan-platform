@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
+import { byDriver } from './graph';
+import { KAPSO_ENV } from './kapso.fakes';
 import { toMetaTemplate } from './meta-shapes';
 import { TemplateRegistry } from './template.registry';
 import type { TemplatesQueries } from './templates.queries';
@@ -78,6 +80,11 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
     expect((await status(registry().submit('renewal_due', 'a')))[0]).toBe(502);
     expect(client.submitTemplate).toHaveBeenCalledTimes(1);
     expect(audit.record).not.toHaveBeenCalled();
+  });
+
+  it('submit: Kapso refusing its key (tagged) → 502 kapso_auth, never meta_error (the web must not blame Meta)', async () => {
+    client.submitTemplate.mockRejectedValueOnce(byDriver(KAPSO_ENV, new WaError('Invalid API key', { code: null, status: 403 })));
+    expect(await status(registry().submit('renewal_due', 'a'))).toEqual([502, { code: 'kapso_auth', message: 'kapso_auth' }]);
   });
 
   it('rejected and missing templates can be submitted again', async () => {

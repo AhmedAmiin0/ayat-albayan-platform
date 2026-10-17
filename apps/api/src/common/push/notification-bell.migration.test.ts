@@ -29,10 +29,10 @@ describe('migration 380: the bell and browser push', () => {
     expect(bell).toContain('using (profile_id = (select auth.uid()));');
   });
 
-  it('integration_secret_key_ok lists exactly the shared secret keys', () => {
+  it('integration_secret_key_ok lists the shared secret keys of its day (the Kapso ones came in 450)', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(bell)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
-    expect(listed.sort()).toEqual([...INTEGRATION_SECRET_KEYS].sort());
+    expect(listed.sort()).toEqual(INTEGRATION_SECRET_KEYS.filter((k) => !k.startsWith('KAPSO_')).sort());
   });
 
   it('grants notifications.push to the teacher, assistant and sales system roles', () => {

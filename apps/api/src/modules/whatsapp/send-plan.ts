@@ -2,7 +2,7 @@ import type { Json } from '@ab/db';
 import {
   backoff,
   isRetryableWaError,
-  isWaAuthError,
+  isWaAuthFailure,
   MAX_SEND_ATTEMPTS,
   quickReplyPayload,
   type TemplateButton,
@@ -24,6 +24,8 @@ export const UNCERTAIN = 'uncertain';
 export const HANDED_OFF = 'handed_off';
 /** An expired / revoked token holds the queue this long before the next try (no attempt counted). */
 export const AUTH_HOLD_MS = 15 * 60_000;
+/** messages.error_code when Kapso refused the line's project key (docs/19): held like an auth error. */
+export const KAPSO_AUTH = 'kapso_auth';
 const ERROR_TEXT_MAX = 500;
 
 export interface FailurePlan {
@@ -38,6 +40,7 @@ export interface FailurePlan {
 /** messages.error_code: Meta's code («131026»), else what kind of failure it was. */
 export function errorCode(error: unknown): string {
   if (!(error instanceof WaError)) return 'internal';
+  if (error.info.credential === 'kapso') return KAPSO_AUTH;
   if (error.info.code !== null) return String(error.info.code);
   return error.info.status ? `http_${error.info.status}` : 'network';
 }
@@ -53,7 +56,7 @@ function errorText(error: unknown): string {
  * MAX_SEND_ATTEMPTS; anything else (131026 not on WhatsApp, 132001 template missing, 131047
  * window closed, bad parameters) fails at once. A timeout / dropped connection (`uncertain`: Meta
  * may have sent it) fails at once too, for the admin to check instead of a blind resend. An auth
- * error (190 / 10 / 200) holds the row, uncounted: the token is broken, not the message.
+ * error (190 / 10 / 200, or Kapso refusing its key) holds the row, uncounted: the credential is broken.
  * `attempts` counts this try.
  */
 export function failurePlan(input: { error: unknown; attempts: number; now: Date }): FailurePlan {
@@ -61,7 +64,7 @@ export function failurePlan(input: { error: unknown; attempts: number; now: Date
   const at = (ms: number) => new Date(input.now.getTime() + ms).toISOString();
   const error_text = errorText(input.error);
   if (info?.uncertain) return { status: 'failed', next_attempt_at: null, error_code: UNCERTAIN, error_text };
-  if (isWaAuthError(info?.code)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
+  if (isWaAuthFailure(info)) return authHold({ ...input, error_text, until: at(AUTH_HOLD_MS) });
   const retry = isRetryableWaError(info?.code ?? null) && input.attempts < MAX_SEND_ATTEMPTS;
   return {
     status: retry ? 'queued' : 'failed',

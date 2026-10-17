@@ -1,11 +1,11 @@
-import type { WhatsappEnv } from '../../env';
+import type { MetaLineEnv } from '../../env';
 import { STUB_ENV, templateRow } from './whatsapp.fakes';
 
 // Test-only (excluded from the build). The four templates migration 141 seeds as not_submitted,
 // copied byte for byte (template-review.test.ts checks them against the SQL), and the Resumable
 // Upload answers recorded from tools/wa-stub on 2026-10-02 (`createStub` + real HTTP).
 
-export const APP_ENV: WhatsappEnv = { ...STUB_ENV, appId: 'stub-app' };
+export const APP_ENV: MetaLineEnv = { ...STUB_ENV, appId: 'stub-app' };
 
 const FOOTER = 'أكاديمية آيات البيان';
 const fresh = { status: 'not_submitted', footer_ar: FOOTER } as const;

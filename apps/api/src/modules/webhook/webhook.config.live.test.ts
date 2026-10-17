@@ -18,4 +18,12 @@ describe('liveWebhookConfig', () => {
     setIntegrationOverlay({});
     expect(config.appSecrets).toEqual([]);
   });
+
+  it('the Kapso webhook secret applies at once and is never one of the Meta app secrets', () => {
+    const config = liveWebhookConfig(() => loadEnv());
+    expect(config.kapsoSecret).toBeUndefined();
+    setIntegrationOverlay({ KAPSO_WEBHOOK_SECRET: 'kapso-db', WA_APP_SECRET: 'secret-db' });
+    expect(config.kapsoSecret).toBe('kapso-db');
+    expect(config.appSecrets).toEqual(['secret-db']);
+  });
 });

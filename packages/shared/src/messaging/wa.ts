@@ -68,6 +68,23 @@ export function isWaAuthError(code: number | null | undefined): boolean {
   return code !== null && code !== undefined && AUTH.has(code);
 }
 
+/** The fields of a WhatsApp error that say whether the credential was refused. */
+export interface WaAuthInfo {
+  code: number | null | undefined;
+  status?: number;
+  /** The API's tag for a driver's own refused credential ('kapso', docs/19). */
+  credential?: string;
+}
+
+/**
+ * The credential was refused: Meta's code (190 / 10 / 200), or a driver's tag (the API tags a
+ * Kapso 401 / 403 on a keyed request as 'kapso', docs/19). A bare HTTP status never counts: Meta
+ * stays code-only, and Kapso's credential-free download_url is never tagged (its 401 is expiry).
+ */
+export function isWaAuthFailure(info: WaAuthInfo | null | undefined): boolean {
+  return !!info && (isWaAuthError(info.code) || info.credential !== undefined);
+}
+
 /**
  * messages.error_code values where the admin's «جرّب تاني» can't help: not on WhatsApp, the 24 h
  * window closed (a template is needed), too late for the lesson, no longer wanted, or already
