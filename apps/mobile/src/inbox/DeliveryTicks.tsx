@@ -2,10 +2,9 @@ import {
   type MessageStatus,
   messageTicks,
   TICK_PATHS,
-  tickHasWord,
-  type TickKind,
   tickTone,
   type TickTone,
+  tickWord,
 } from '@ab/shared';
 import { Pressable, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
@@ -28,11 +27,7 @@ export interface DeliveryTicksProps {
   inList?: boolean;
 }
 
-/** The word beside the glyph: failed says «لم تُرسل» (no reason otherwise), sent by hand «يدويًا». */
-function shownWord(kind: TickKind, inList: boolean): string | null {
-  if (kind === 'failed') return inList ? null : t.enums.messageStatus.failed;
-  return tickHasWord(kind) ? t.messages.manualTick : null;
-}
+const WORD = { failed: t.enums.messageStatus.failed, manual: t.messages.manualTick } as const;
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts), the web's DeliveryTicks drawn with
@@ -44,7 +39,8 @@ export function DeliveryTicks({ status, times, onLongPress, inList = false }: De
   const { color } = useTheme();
   const kind = messageTicks(status);
   const ink = color[INK[tickTone(kind)]];
-  const word = shownWord(kind, inList);
+  const wordKind = tickWord(kind, inList);
+  const word = wordKind ? WORD[wordKind] : null;
   const body = (
     <>
       <Svg
@@ -71,7 +67,8 @@ export function DeliveryTicks({ status, times, onLongPress, inList = false }: De
             fontFamily: type.ui[600],
             fontSize: type.size['2xs'],
             lineHeight: type.lineHeight(type.size['2xs']),
-            color: ink,
+            // Text needs AA, unlike the glyph: «يدويًا» in the muted text ink, «لم تُرسل» in saffron.
+            color: wordKind === 'manual' ? color.ink3 : ink,
           }}
         >
           {word}

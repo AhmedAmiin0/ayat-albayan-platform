@@ -23,8 +23,14 @@ export const messageTicks = (status: MessageStatus): TickKind => KIND[status];
 export const tickTone = (kind: TickKind): TickTone =>
   kind === 'read' ? 'read' : kind === 'failed' ? 'act' : 'muted';
 
-/** Only «يدويًا» keeps a word beside its ticks (t.messages.manualTick). */
-export const tickHasWord = (kind: TickKind): boolean => kind === 'manual';
+/**
+ * The word beside the glyph, on web and mobile alike: failed says «لم تُرسل» (t.enums.messageStatus.failed)
+ * except in a thread row, whose own word already says it; sent by hand «يدويًا» (t.messages.manualTick).
+ */
+export function tickWord(kind: TickKind, inList = false): 'failed' | 'manual' | null {
+  if (kind === 'failed') return inList ? null : 'failed';
+  return kind === 'manual' ? 'manual' : null;
+}
 
 // Stroked paths on the 20px / 1.6-stroke icon grid (web components/ui/icon.tsx). Ticks are not
 // directional: WhatsApp draws them the same way in Arabic and English.

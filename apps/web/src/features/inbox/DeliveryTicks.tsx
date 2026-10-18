@@ -1,4 +1,4 @@
-import { messageTicks, TICK_PATHS, tickHasWord, tickTone, type MessageStatus, type TickTone } from '@ab/shared';
+import { messageTicks, TICK_PATHS, tickTone, tickWord, type MessageStatus, type TickTone } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
@@ -10,18 +10,24 @@ export interface DeliveryTicksProps {
   status: MessageStatus;
   /** «أُرسلت … · وصلت … · قُرئت …» (deliveryTitle): the tooltip; else the status word. */
   times?: string;
+  /** In a thread row: its own «لم تُرسل» already says failed, so the ticks carry no word for it. */
+  inList?: boolean;
   className?: string;
 }
+
+// Text needs AA, unlike the glyph: «يدويًا» in the muted text ink, «لم تُرسل» inherits saffron.
+const WORD = { failed: { text: t.enums.messageStatus.failed, ink: '' }, manual: { text: t.messages.manualTick, ink: 'text-ink-3' } } as const;
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts): an image named by the status word,
  * the times on hover. As in WhatsApp, delivered vs read is the same two ticks told apart by colour
  * only (docs/07 principle 3 carve-out): the word goes to assistive tech and the hover title. Failed
- * has its own «!» shape; sent by hand keeps its short word «يدويًا».
+ * has its own «!» and says «لم تُرسل» (as on mobile); sent by hand keeps its short word «يدويًا».
  */
-export function DeliveryTicks({ status, times, className }: DeliveryTicksProps) {
+export function DeliveryTicks({ status, times, inList = false, className }: DeliveryTicksProps) {
   const kind = messageTicks(status);
   const word = t.enums.messageStatus[status];
+  const shown = tickWord(kind, inList);
   return (
     <span
       role="img"
@@ -43,9 +49,9 @@ export function DeliveryTicks({ status, times, className }: DeliveryTicksProps) 
       >
         <path d={TICK_PATHS[kind]} />
       </svg>
-      {tickHasWord(kind) && (
-        <span aria-hidden="true" className="text-2xs font-semibold">
-          {t.messages.manualTick}
+      {shown && (
+        <span aria-hidden="true" className={cn('text-2xs font-semibold', WORD[shown].ink)}>
+          {WORD[shown].text}
         </span>
       )}
     </span>
