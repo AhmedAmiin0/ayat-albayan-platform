@@ -50,9 +50,11 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
   const showAuto = matchesSetting('auto_messages_enabled', query);
   const showFeedback = matchesSetting('feedback_mode', query);
   const showLines = matchesText(`${t.templates.settings.lines.title} ${t.templates.settings.lines.intro}`, query);
+  const p = t.templates.perNumber;
+  const showTemplates = matchesText(`${t.templates.title} ${t.templates.intro} ${p.title} ${p.sync}`, query);
   const hasFields = FORM_KEYS.some((k) => settingDef(k).section === 'messaging' && matchesSetting(k, query));
   const searching = query.trim() !== '';
-  if (searching && !showSending && !showAuto && !showFeedback && !showLines && !hasFields) return null;
+  if (searching && !showSending && !showAuto && !showFeedback && !showLines && !hasFields && !showTemplates) return null;
   return (
     <Section id="messaging">
       {showSending && (
@@ -68,7 +70,7 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
       {showFeedback && <FeedbackModeSwitch settings={settings} />}
       {showLines && <LinesCard />}
       <SectionFields id="messaging" state={state} />
-      {!searching && (
+      {showTemplates && (
         <div className="min-w-0">
           <TemplateHealth headingId={templates} />
         </div>

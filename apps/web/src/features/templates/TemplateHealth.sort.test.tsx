@@ -4,6 +4,7 @@ import { template } from '@/features/inbox/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
 import { openFilters } from '@/test/open-filters';
+import { LINES } from './template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -21,7 +22,10 @@ afterEach(() => apiFetch.mockReset());
 
 describe('template health sort and filters (R-NFR-08, client-side)', () => {
   it('the name header sorts by the Arabic name, asc then desc', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', ROWS]]);
+    routeFetch(apiFetch, [
+      ['/messaging/templates/lines', LINES],
+      ['/messaging/templates', ROWS],
+    ]);
     renderWithClient(<TemplateHealth headingId="h" />);
     await screen.findByText(t.templates.names.renewal_due);
     const shown = ROWS.map((r) => t.templates.names[r.key as keyof typeof t.templates.names]);
@@ -33,7 +37,10 @@ describe('template health sort and filters (R-NFR-08, client-side)', () => {
   });
 
   it('status and category selects keep only the matching rows', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', ROWS]]);
+    routeFetch(apiFetch, [
+      ['/messaging/templates/lines', LINES],
+      ['/messaging/templates', ROWS],
+    ]);
     renderWithClient(<TemplateHealth headingId="h" />);
     await screen.findByText(t.templates.names.renewal_due);
     openFilters();
