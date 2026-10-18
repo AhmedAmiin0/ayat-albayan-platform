@@ -34,21 +34,22 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
   });
 
   it('health: syncs every row from Meta’s list; a never-submitted one Meta lacks stays not_submitted', async () => {
-    const views = await registry().verifyAll(NOW);
+    const { lines, templates } = await registry().verifyAll({ now: NOW });
     expect(queries.update).toHaveBeenCalledWith('booking_confirmation', expect.objectContaining({ status: 'approved', body_ar: 'تم حجز حلقة {{1}} — {{2}}', quality: 'GREEN' }));
     expect(queries.update).toHaveBeenCalledWith('renewal_due', { last_checked_at: '2026-10-02T08:00:00.000Z', status: 'not_submitted' });
-    expect(views.map((v) => [v.key, v.status])).toEqual([['booking_confirmation', 'approved'], ['renewal_due', 'not_submitted']]);
+    expect(lines).toEqual([expect.objectContaining({ line: 'notifications', ok: true, synced: 2, meta_count: recorded.length, checked_at: NOW.toISOString() })]);
+    expect(templates.map((v) => v.key)).toEqual(['booking_confirmation', 'renewal_due']);
     expect(client.submitTemplate).not.toHaveBeenCalled();
   });
 
-  it('health: 503 not_configured without WhatsApp env; 502 meta_error with Meta’s code on a Graph error', async () => {
+  it('health: 503 not_configured without WhatsApp env; a Graph error is the line’s meta_error with Meta’s message', async () => {
     client.configured.mockReturnValue(false);
-    expect(await status(registry().verifyAll())).toEqual([503, { code: 'not_configured', message: 'not_configured' }]);
+    expect(await status(registry().verifyAll())).toEqual([503, { code: 'not_configured', message: 'not_configured', line: 'notifications' }]);
     client.configured.mockReturnValue(true);
     client.getTemplates.mockRejectedValue(new WaError('(#190) Invalid OAuth access token', { code: 190, status: 401 }));
-    expect(await status(registry().verifyAll())).toEqual([502, {
-      code: 'meta_error', message: 'meta_error', meta_code: 190, meta_message: '(#190) Invalid OAuth access token',
-    }]);
+    const { lines } = await registry().verifyAll({ now: NOW });
+    expect(lines).toEqual([expect.objectContaining({ ok: false, error: 'meta_error', message: '(#190) Invalid OAuth access token', synced: 0 })]);
+    expect(queries.update).not.toHaveBeenCalled();
   });
 
   it('submit: creates on Meta, stores pending + meta id + submitted_at, audits it', async () => {
@@ -59,7 +60,7 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
     expect(view.status).toBe('pending');
     expect(audit.record).toHaveBeenCalledWith(expect.objectContaining({
       actorId: 'admin-1', entity: 'message_templates', action: 'template_submitted',
-      after: { key: 'renewal_due', status: 'pending', meta_id: 'meta-9' },
+      after: { key: 'renewal_due', status: 'pending', meta_id: 'meta-9', line: 'notifications' },
     }));
   });
 

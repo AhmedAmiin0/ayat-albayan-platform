@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { listFor, newStarters, starterRow } from './template-import';
+import { newStarters, starterRow } from './template-import';
 import { templateRow } from './whatsapp.fakes';
 import type { MetaTemplate } from './whatsapp.types';
 
@@ -97,16 +97,15 @@ describe('newStarters — the templates the registry does not know yet', () => {
   });
 });
 
-describe('listFor — the list a row is checked against', () => {
-  const lists = (chat: MetaTemplate[] | null, chatOn: boolean) => ({ notifications: [meta({ name: 'n' })], chat, chatOn });
-
-  it('notifications rows: notifications; chat rows: chat when configured, nothing when its read failed', () => {
-    expect(listFor({ line: 'notifications' }, lists([], true))?.[0]?.name).toBe('n');
-    expect(listFor({ line: 'chat' }, lists([meta()], true))?.[0]?.name).toBe('academy_welcome');
-    expect(listFor({ line: 'chat' }, lists(null, true))).toBeNull();
+describe('the notifications WABA’s import (owner 2026-10-18)', () => {
+  it('a row on line notifications, never flagged, even for a restricted default', () => {
+    expect(starterRow(meta({ name: 'free_trial_invite' }), NOW, 'notifications')).toMatchObject({ line: 'notifications', sales_starter: false });
+    expect(starterRow(meta({ name: 'trial_reschedule' }), NOW, 'chat')).toMatchObject({ line: 'chat', sales_starter: true });
   });
 
-  it('one line: a chat row is checked against notifications (the WABA it would leave from)', () => {
-    expect(listFor({ line: 'chat' }, lists(null, false))?.[0]?.name).toBe('n');
+  it('newStarters imports on the given line and skips a name known on the other line', () => {
+    const known = [templateRow({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat' })];
+    const plan = newStarters({ meta: [meta(), meta({ name: 'promo_offer', id: 'p1' })], known, now: NOW, line: 'notifications' });
+    expect(plan.rows.map((r) => [r.key, r.line, r.sales_starter])).toEqual([['promo_offer', 'notifications', false]]);
   });
 });

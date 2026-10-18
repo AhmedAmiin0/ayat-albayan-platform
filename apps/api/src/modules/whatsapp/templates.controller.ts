@@ -1,19 +1,29 @@
-import { restrictedMay, sendsAllTemplates, templateStarterSchema, type TemplateView } from '@ab/shared';
-import { Body, Controller, Get, HttpCode, Param, Patch, Post } from '@nestjs/common';
+import {
+  restrictedMay,
+  sendsAllTemplates,
+  templateHealthSchema,
+  templateLineSchema,
+  templateStarterSchema,
+  type TemplateHealthView,
+  type TemplateLineView,
+  type TemplateMoveView,
+  type TemplateView,
+} from '@ab/shared';
+import { Body, Controller, Get, HttpCode, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { parseOrThrow } from '../teachers/http';
+import { TemplateManagerGuard } from './template-manager.guard';
 import { TemplateStarters } from './template-starters';
 import { TemplateRegistry } from './template.registry';
 
 /**
- * T1–T3 (docs/12 §4): the template registry and its health (R-MSG-01). The health check and
- * submitting stay admin only. templates.manage or templates.send_all list every template; every other
- * role (teacher, sales, classroom assistant, custom) only the restricted allow-list (owner 2026-10-12):
- * restrictedMay, the same rule the thread send applies (403 template_not_allowed). A role based on
- * sales, the classroom assistant or teacher gets only the allow-list even when granted those keys
- * (owner 2026-10-15, 2026-10-18).
+ * T1–T3 (docs/12 §4): the template registry and its health (R-MSG-01), per number (owner 2026-10-18).
+ * Every route but the list is admin only: templates.manage, and never a role based on sales, the
+ * classroom assistant or teacher (TemplateManagerGuard, 403 allow_list_only). templates.manage or
+ * templates.send_all list every template; every other role (teacher, sales, classroom assistant, custom)
+ * only the restricted allow-list (owner 2026-10-12): restrictedMay, the rule the thread send applies.
  */
 @ApiTags('messaging')
 @ApiBearerAuth()
@@ -32,27 +42,48 @@ export class TemplatesController {
     return sendsAllTemplates(user) ? all : all.filter(restrictedMay);
   }
 
+  /** Each number: driver, WABA and phone ids (env only, no Meta call), its newest check and its last sync. */
+  @Get('lines')
+  @UseGuards(TemplateManagerGuard)
+  lines(): Promise<TemplateLineView[]> {
+    return this.registry.lineViews();
+  }
+
   /**
-   * Reads each line's Meta list, syncs status, quality and text, and imports the chat line's new
-   * templates (flagged only for RESTRICTED_TEMPLATE_DEFAULTS; a known row's flag is never touched).
-   * 503 not_configured, 502 meta_error.
+   * One number's sync with Meta (`line` in the body or the query), or every configured number: its rows'
+   * status, quality and text from its own WABA, and that WABA's new templates imported (flagged only for
+   * RESTRICTED_TEMPLATE_DEFAULTS from the chat WABA). A line's read failure is that line's error (200).
+   * 503 not_configured, 409 template_sync_off.
    */
   @Post('health')
   @HttpCode(200)
-  health(): Promise<TemplateView[]> {
-    return this.registry.verifyAll();
+  @UseGuards(TemplateManagerGuard)
+  health(@Body() body: unknown, @Query('line') line?: string): Promise<TemplateHealthView> {
+    const input = parseOrThrow(templateHealthSchema, body ?? (line ? { line } : {}));
+    return this.registry.verifyAll(input.line ? { line: input.line } : {});
   }
 
-  /** The only way a template reaches Meta: the admin's explicit, audited action. */
+  /** The only way a template reaches Meta: the admin's explicit, audited action, to the row's own number. */
   @Post(':key/submit')
   @HttpCode(200)
+  @UseGuards(TemplateManagerGuard)
   submit(@Param('key') key: string, @CurrentUser() user: AuthUser): Promise<TemplateView> {
     return this.registry.submit(key, user.id);
+  }
+
+  /** «نقل إلى الرقم الآخر»: the number this template goes from, then that number's sync; audited. */
+  @Patch(':key/line')
+  @HttpCode(200)
+  @UseGuards(TemplateManagerGuard)
+  setLine(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateMoveView> {
+    const input = parseOrThrow(templateLineSchema, body);
+    return this.registry.moveLine({ key, line: input.line }, user.id);
   }
 
   /** The allow-list: the admin offers a template to the restricted roles (teachers, sales…), or stops; audited. */
   @Patch(':key/starter')
   @HttpCode(200)
+  @UseGuards(TemplateManagerGuard)
   setStarter(@Param('key') key: string, @Body() body: unknown, @CurrentUser() user: AuthUser): Promise<TemplateView> {
     const input = parseOrThrow(templateStarterSchema, body);
     return this.starters.set(key, input.sales_starter, user.id);
