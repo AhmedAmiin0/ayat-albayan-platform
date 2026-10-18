@@ -18,8 +18,8 @@ const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', opensOn: '2026-10-11', en
 const RUNNING = { ...COURSE_VIEW, blocked: 'course_exists' as const, current: CURRENT };
 const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 const changeButton = () => screen.findByRole('button', { name: t.booking.courseChange.changeDays });
-const weekdayDay = (weekday: number, date: number) => new RegExp(`^${t.enums.weekday[weekday]} ${date} `);
-const day = (weekday: number, date: number) => screen.findByRole('region', { name: weekdayDay(weekday, date) });
+const weekdayDay = (weekday: 0 | 3, date: number) => new RegExp(`^${t.enums.weekday[weekday]} ${date} `);
+const day = (weekday: 0 | 3, date: number) => screen.findByRole('region', { name: weekdayDay(weekday, date) });
 
 /** routeRenewal plus this week's Sunday 4 October 17:00 among the free slots. */
 function routeWithToday(view: typeof RUNNING): void {
