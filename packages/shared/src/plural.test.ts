@@ -23,4 +23,9 @@ describe('pluralForm (Arabic)', () => {
       '27 حلقة',
     ]);
   });
+
+  it('fills every {n} of a form (a count named twice)', () => {
+    const forms = { one: 'يوم', two: 'يومان', few: '{n} أيام، لتصبح {n} أيام', other: '{n} يومًا' };
+    expect(counted(forms, 3)).toBe('3 أيام، لتصبح 3 أيام');
+  });
 });

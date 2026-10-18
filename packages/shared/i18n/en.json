@@ -733,10 +733,10 @@
       "pickOtherDays": "Pick other days",
       "continueHint": "The previous package's lessons: {days}. The new package starts on the same days and times from {date}.",
       "continueAdjust": {
-        "one": "Previous package's lessons: {days}. The new package is one day a week, so add or remove a day from the previous days",
-        "two": "Previous package's lessons: {days}. The new package is two days a week, so add or remove a day from the previous days",
-        "few": "Previous package's lessons: {days}. The new package is {n} days a week, so add or remove a day from the previous days",
-        "other": "Previous package's lessons: {days}. The new package is {n} days a week, so add or remove a day from the previous days"
+        "one": "Previous package's lessons: {days}. The new package is one day a week, so edit the previous days to one day",
+        "two": "Previous package's lessons: {days}. The new package is two days a week, so edit the previous days to two days",
+        "few": "Previous package's lessons: {days}. The new package is {n} days a week, so edit the previous days to {n} days",
+        "other": "Previous package's lessons: {days}. The new package is {n} days a week, so edit the previous days to {n} days"
       },
       "adjustDays": "Edit the previous days",
       "continueTaken": "The {day} time is no longer free; pick another time for that day",

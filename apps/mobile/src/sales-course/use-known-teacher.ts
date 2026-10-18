@@ -7,8 +7,14 @@ export interface KnownTeacher {
   name: string;
   /** The list is in and she is on it with free time: the only state «تابِع بنفس الأيام» is enabled in. */
   bookable: boolean;
-  /** The list failed, or she is not on it, or has no free time: said so, «تابِع بنفس الأيام» disabled. */
+  /** The list is still loading: «تابِع بنفس الأيام» is shown busy. */
+  pending: boolean;
+  /** The list failed to load: the error with a retry (refetch), never «unavailable». */
+  failed: boolean;
+  /** The list is in and she is not on it, or has no free time: said so, «تابِع بنفس الأيام» disabled. */
   unavailable: boolean;
+  /** Re-asks the list (the retry of failed). */
+  refetch: () => void;
 }
 
 /**
@@ -17,12 +23,15 @@ export interface KnownTeacher {
  */
 export function useKnownTeacher(program: Program, teacherId: string | undefined): KnownTeacher {
   const teachers = useBookingTeachers({ program, gender: null, enabled: teacherId !== undefined });
+  const known = teacherId !== undefined;
   const found = teachers.data?.find((o) => o.id === teacherId);
-  const bookable = teacherId !== undefined && teachers.isSuccess && found?.has_availability === true;
+  const bookable = known && teachers.isSuccess && found?.has_availability === true;
   return {
     name: found ? teacherName(found, locale) : '',
     bookable,
-    // Still loading is neither: nothing said yet, «تابِع» stays disabled until she is confirmed.
-    unavailable: teacherId !== undefined && (teachers.isError || (teachers.isSuccess && !bookable)),
+    pending: known && teachers.isPending,
+    failed: known && teachers.isError,
+    unavailable: known && teachers.isSuccess && !bookable,
+    refetch: () => void teachers.refetch(),
   };
 }

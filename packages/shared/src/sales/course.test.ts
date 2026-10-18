@@ -39,6 +39,7 @@ describe('courseOpensOn', () => {
     tz: 'Asia/Riyadh',
     endsOn: '2026-11-15',
     running: false,
+    opensOn: '2026-10-18',
     days: [],
     lessonsTotal: 8,
     perWeek: 2,

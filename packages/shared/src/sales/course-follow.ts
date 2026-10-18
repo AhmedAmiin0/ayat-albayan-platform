@@ -18,7 +18,10 @@ export interface BookedCourse {
   durationMin: Duration;
   /** The rules' zone (the family's when booked). */
   tz: string;
-  /** The first local day of its latest set of rules: a change never starts before it. */
+  /**
+   * The first local day of its latest set of rules (`days`): before it only the old rules of a pending
+   * change hold lessons, so the change form's prefill starts on it at the earliest (changePicks).
+   */
   startsOn: string;
   /** The course's last local day (its rules' ends_on). */
   endsOn: string;
@@ -27,6 +30,11 @@ export interface BookedCourse {
    * change saved earlier starts its latest set (startsOn) later. false = booked to start later.
    */
   running: boolean;
+  /**
+   * The first local day ≥ today any active rule of it may still hold a lesson on (server-computed): a
+   * course booked ahead whose pending change starts later keeps its old days before startsOn.
+   */
+  opensOn: string;
   /** Each weekday (0 = الأحد) with its "HH:MM", in weekday order. */
   days: DayTime[];
   /** subscriptions.lessons_total of the course's subscription. */

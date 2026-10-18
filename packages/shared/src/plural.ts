@@ -9,7 +9,7 @@ export function pluralForm(n: number): PluralForm {
   return rest >= 3 && rest <= 10 ? 'few' : 'other';
 }
 
-/** The ar.json form for n with `{n}` filled in. */
+/** The ar.json form for n with every `{n}` filled in. */
 export function counted(forms: Readonly<Record<PluralForm, string>>, n: number): string {
-  return forms[pluralForm(n)].replace('{n}', String(n));
+  return forms[pluralForm(n)].split('{n}').join(String(n));
 }

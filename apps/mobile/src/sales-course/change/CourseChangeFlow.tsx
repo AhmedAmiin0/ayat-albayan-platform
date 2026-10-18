@@ -1,4 +1,4 @@
-import { changeOpensOn, changePicks, type BookedCourse, type SalesCourseView } from '@ab/shared';
+import { changePicks, changePrefillFrom, type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure } from '@/booking/booking-errors';
@@ -28,9 +28,11 @@ export interface CourseChangeFlowProps {
 
 /**
  * «تغيير أيام الحلقات» (owner 2026-10-18): exactly the plan's days a week, prefilled with the course's
- * own from changeOpensOn (today while it runs, else its first day), the slots read from that day on
- * (SlotStep multi, the course's lessons not busy against themselves) → the review with the remaining
- * lessons and the clashes (unchanged days: the check's own no_change) → «احفظ الأيام الجديدة». The
+ * own from changePrefillFrom (the later of changeOpensOn and startsOn), its 7-day slot window opening
+ * on that same day (SlotStep multi, the course's lessons not busy against themselves) so every
+ * prefilled pick is shown checked → the review with the remaining lessons and the clashes (unchanged
+ * days: the check's own no_change) → «احفظ الأيام الجديدة». Trade-off: the window has no paging, so a
+ * pending change's old days before its startsOn cannot be picked here (web pages back to them). The
  * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
  */
 export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseChangeFlowProps) {
@@ -38,7 +40,7 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
   const [step, setStep] = useState<'slot' | 'review'>('slot');
   const [now] = useState(() => new Date());
   const [first] = useState(() => changePicks(course, now));
-  const [from] = useState(() => dayStartUtc(changeOpensOn(course, now), course.tz).toISOString());
+  const [from] = useState(() => dayStartUtc(changePrefillFrom(course, now), course.tz).toISOString());
   const [picks, setPicks] = useState(() => first.map((p) => p.at));
   const [requestId] = useState(newRequestId);
   const change = useChangeCourse();

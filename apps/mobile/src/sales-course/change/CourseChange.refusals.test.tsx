@@ -1,5 +1,6 @@
 import { screen, waitFor } from '@testing-library/react-native';
 import { slot } from '@/booking/fixtures';
+import { dayStartUtc } from '@/booking/slots';
 import { dayLine } from '@/booking/picks';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -8,7 +9,7 @@ import { renderWithQuery } from '@/test/query';
 import { isDisabled, press } from '../course-test-utils';
 import { CourseScreen } from '../CourseScreen';
 import { courseView } from '../fixtures';
-import { changeApi, changeSundayToMonday, NOW, runningCourse, THU_1, TZ, windowed } from './change-test-setup';
+import { changeApi, changeSundayToMonday, NOW, runningCourse, TZ, windowed } from './change-test-setup';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -62,7 +63,7 @@ test('the save refused with course_changed: its own line, nothing done', async (
 });
 
 test('a course booked ahead (a renewal) is changed from its own first week: the slots are read from it', async () => {
-  const ahead = { ...runningCourse, startsOn: '2026-10-11', endsOn: '2026-11-05', running: false };
+  const ahead = { ...runningCourse, startsOn: '2026-10-11', opensOn: '2026-10-11', endsOn: '2026-11-05', running: false };
   const api = changeApi(courseView({ blocked: 'course_exists', current: ahead }));
   // Its own week's slots: Sunday 11 Oct 17:00, Monday 12 Oct 19:00, Thursday 15 Oct 18:00 (Riyadh).
   api.api.slots.push(slot('2026-10-11T14:00:00.000Z'), slot('2026-10-12T16:00:00.000Z'), slot('2026-10-15T15:00:00.000Z'));
@@ -72,6 +73,7 @@ test('a course booked ahead (a renewal) is changed from its own first week: the 
   expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
   await press('button', t.booking.courseChange.changeDays);
   expect(await screen.findByText(dayLine('2026-10-11T14:00:00.000Z', TZ))).toBeTruthy(); // Sunday 11 Oct 17:00
+  expect(screen.getByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
   expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ))).toBeTruthy(); // Thursday 15 Oct 18:00
   const [read] = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith('/sales/booking/slots'));
   expect(new URLSearchParams(read?.split('?')[1]).get('from')).toBe('2026-10-10T21:00:00.000Z'); // 11 Oct 00:00 Riyadh
@@ -80,11 +82,46 @@ test('a course booked ahead (a renewal) is changed from its own first week: the 
   expect((check?.[2] as { startsOn: string }).startsOn >= ahead.startsOn).toBe(true);
 });
 
-test('a pending change (its new days start later, the old ones still run): running, changed again from today', async () => {
+const slotsFrom = () => {
+  const [read] = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith('/sales/booking/slots'));
+  return new URLSearchParams(read?.split('?')[1]).get('from');
+};
+
+test('booked ahead with a pending change: slots and picks from the new set\'s start, checked, unchanged = no_change', async () => {
+  // A renewal from Sun 11 Oct on Sun+Thu, Sunday swapped for Monday 19:00 from Mon 12 Oct before it starts: Sun 11 stays.
+  const days = [{ weekday: 1, startTimeLocal: '19:00' }, { weekday: 4, startTimeLocal: '18:00' }];
+  const ahead = { ...runningCourse, days, startsOn: '2026-10-12', opensOn: '2026-10-11', endsOn: '2026-11-05', running: false };
+  const api = changeApi(courseView({ blocked: 'course_exists', current: ahead }));
+  api.api.slots.push(slot('2026-10-11T14:00:00.000Z'), slot('2026-10-12T16:00:00.000Z'), slot('2026-10-15T15:00:00.000Z'));
+  mockApiFetch.mockImplementation(windowed(api.fetch));
+  mockApiSend.mockRejectedValue(new ApiError(400, { code: 'no_change', message: 'x' }));
+  await renderWithQuery(<CourseScreen />);
+  await press('button', t.booking.courseChange.changeDays);
+  expect(await screen.findByRole('checkbox', { name: '19:00', checked: true })).toBeTruthy(); // Monday 12 Oct
+  expect(screen.getByRole('checkbox', { name: '18:00', checked: true })).toBeTruthy(); // Thursday 15 Oct
+  expect(screen.queryByRole('checkbox', { name: '17:00' })).toBeNull(); // the old Sunday 11 Oct: web only
+  expect(slotsFrom()).toBe(dayStartUtc(ahead.startsOn, TZ).toISOString());
+  await press('button', t.booking.next);
+  expect(await screen.findByText(t.booking.error.no_change)).toBeTruthy();
+  const [check] = mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === `${CHANGE}/check`);
+  expect(check?.[2]).toMatchObject({ startsOn: '2026-10-12', byday: [1, 4], startTimeLocal: '19:00' });
+});
+
+test('a pending change (its new days start later, the old ones still run): running, slots and picks from the new set, checked', async () => {
   const pending = { ...runningCourse, startsOn: '2026-10-11', running: true };
-  mockApiFetch.mockImplementation(changeApi(courseView({ blocked: 'course_exists', current: pending })).fetch);
+  const api = changeApi(courseView({ blocked: 'course_exists', current: pending }));
+  api.api.slots.push(slot('2026-10-11T14:00:00.000Z'), slot('2026-10-15T15:00:00.000Z'));
+  mockApiFetch.mockImplementation(windowed(api.fetch));
+  mockApiSend.mockRejectedValue(new ApiError(400, { code: 'no_change', message: 'x' }));
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.booking.courseChange.running)).toBeTruthy();
   await press('button', t.booking.courseChange.changeDays);
-  expect(await screen.findByText(dayLine(THU_1, TZ))).toBeTruthy(); // today 18:00, not 15 Oct
+  expect(await screen.findByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy(); // Sunday 11 Oct
+  expect(screen.getByRole('checkbox', { name: '18:00', checked: true })).toBeTruthy(); // Thursday 15 Oct
+  expect(slotsFrom()).toBe(dayStartUtc(pending.startsOn, TZ).toISOString()); // not today
+  await press('button', t.booking.next);
+  expect(await screen.findByText(t.booking.error.no_change)).toBeTruthy();
+  const [check] = mockApiSend.mock.calls.filter((c: unknown[]) => c[1] === `${CHANGE}/check`);
+  // Sunday 11 Oct 17:00 first, not today 18:00 (an old-rule lesson).
+  expect(check?.[2]).toMatchObject({ startsOn: '2026-10-11', startsAt: '2026-10-11T14:00:00.000Z' });
 });

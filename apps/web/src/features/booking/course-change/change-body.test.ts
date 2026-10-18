@@ -1,4 +1,4 @@
-import { courseChangeSchema } from '@ab/shared';
+import { courseChangeSchema, sameDays } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { changeBody, currentPicks, picksReady } from './change-body';
 import { COURSE, MON, NOW, SUN, WED } from './change-fixture';
@@ -18,8 +18,17 @@ describe('«تغيير أيام الحلقات»: picks and body (owner 2026-10-
   });
 
   it('a course booked ahead (a renewal) opens on its own first week, never before it', () => {
-    const ahead = { ...COURSE, startsOn: '2026-10-25', running: false };
+    const ahead = { ...COURSE, startsOn: '2026-10-25', opensOn: '2026-10-25', running: false };
     expect(ats(ahead, NOW)).toEqual(['2026-10-25T14:00:00.000Z', '2026-10-28T16:30:00.000Z']);
+  });
+
+  it('a pending change (latest set from Wed 7 Oct): the unchanged picks start on it, the server’s no_change', () => {
+    const pending = { ...COURSE, startsOn: '2026-10-07' };
+    const prefilled = currentPicks(pending, new Date(NOW));
+    expect(prefilled.map((p) => p.at)).toEqual([WED, '2026-10-11T14:00:00.000Z']);
+    const body = changeBody({ course: pending, picks: prefilled.map((p) => p.at), prefilled, requestId: REQ });
+    expect(body?.startsOn).toBe('2026-10-07');
+    expect(body && sameDays(body, pending.days)).toBe(true);
   });
 
   it('needs exactly the plan’s days a week; a custom count at least one', () => {

@@ -40,10 +40,21 @@ const covers = (rows: readonly CourseRuleRow[], today: string): boolean =>
   rows.some((r) => r.status === 'active' && r.starts_on <= today && (r.ends_on ?? today) >= today);
 
 /**
+ * The first day ≥ today any active rule of `rows` may still hold a lesson on (greatest(starts_on, today)
+ * over those with ends_on null or ≥ today): a pending change keeps the old rules' days before its own
+ * start. today when none.
+ */
+const opensFrom = (rows: readonly CourseRuleRow[], today: string): string =>
+  rows
+    .filter((r) => r.status === 'active' && (r.ends_on ?? today) >= today)
+    .map((r) => (r.starts_on > today ? r.starts_on : today))
+    .sort()[0] ?? today;
+
+/**
  * A course from its rules: the latest set (the rules ending on its last day; a rescheduled or
  * changed rule ended earlier), led by the first one (no first_rule_id); `running` when one of its
- * active rules (of any set: a pending change keeps the old ones) covers today in its zone. null
- * without a capped rule.
+ * active rules (of any set: a pending change keeps the old ones) covers today in its zone; opensOn
+ * from opensFrom. null without a capped rule.
  */
 export function bookedCourse(rows: readonly CourseRuleRow[], now: Date): BookedCourse | null {
   const ends = rows.map((r) => r.ends_on).filter((d): d is string => d !== null);
@@ -55,6 +66,7 @@ export function bookedCourse(rows: readonly CourseRuleRow[], now: Date): BookedC
   const durationMin = DURATIONS.find((d) => d === head.duration_min);
   if (durationMin === undefined)
     throw new Error(`rule ${head.id} has duration ${head.duration_min}`);
+  const today = dayIn(now, head.tz);
   const days: DayTime[] = latest
     .flatMap((r) =>
       r.byday.map((weekday) => ({ weekday, startTimeLocal: hhmm(r.start_time_local) })),
@@ -68,7 +80,8 @@ export function bookedCourse(rows: readonly CourseRuleRow[], now: Date): BookedC
     tz: head.tz,
     startsOn: latest.map((r) => r.starts_on).sort()[0] ?? head.starts_on,
     endsOn,
-    running: covers(rows, dayIn(now, head.tz)),
+    running: covers(rows, today),
+    opensOn: opensFrom(rows, today),
     days,
     lessonsTotal: head.sub.lessons_total,
     perWeek: courseDaysPerWeek({

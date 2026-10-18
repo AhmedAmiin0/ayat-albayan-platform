@@ -8,6 +8,8 @@ const CHANGE = '/sales/booking/course/change';
 /**
  * POST …/course/change/check: the new days' clashes over the whole remaining course, how many lessons
  * are left and the new last day; nothing written. Keyed by the body minus its idempotency key; never retried.
+ * Dropped once unmounted (gcTime 0): the course refetch after a save does not reach it, so a kept answer
+ * would show the old summary when the same days are picked again.
  */
 export function useCourseChangeCheck(body: CourseChangeRequest | null) {
   const key: Partial<CourseChangeRequest> = { ...body };
@@ -17,6 +19,7 @@ export function useCourseChangeCheck(body: CourseChangeRequest | null) {
     queryFn: () => apiSend<CourseChangeCheck>('POST', `${CHANGE}/check`, body),
     enabled: body !== null,
     retry: false,
+    gcTime: 0,
   });
 }
 

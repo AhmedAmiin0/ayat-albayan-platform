@@ -22,7 +22,11 @@ export const courseChangeViewQuery = (subscriptionId: string) =>
 /** The check's key segment (left out of the refresh after a save). */
 export const CHECK_KEY = 'course-change-check';
 
-/** POST /…/change/check: the clashes over the remaining course and what is left; keyed without the request id. */
+/**
+ * POST /…/change/check: the clashes over the remaining course and what is left; keyed without the request id.
+ * Dropped once unmounted (gcTime 0): the refresh leaves it alone, so a kept answer would show the old summary
+ * and an enabled «احفظ» when the same days are picked again after a save.
+ */
 export const courseChangeCheckQuery = (body: CourseChangeBody, mode: BookingMode) => {
   const key: Partial<CourseChangeBody> = { ...body };
   delete key.clientRequestId;
@@ -31,6 +35,7 @@ export const courseChangeCheckQuery = (body: CourseChangeBody, mode: BookingMode
     queryKey: ['booking', mode, CHECK_KEY, JSON.stringify(key)],
     queryFn: () => apiSend<CourseChangeCheck>('POST', `${courseChangeBase(mode)}/change/check`, key),
     retry: false,
+    gcTime: 0,
   });
 };
 

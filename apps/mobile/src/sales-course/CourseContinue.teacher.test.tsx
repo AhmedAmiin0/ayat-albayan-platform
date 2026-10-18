@@ -1,8 +1,11 @@
+import { counted, type BookedCourse } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
-import { fakeCourseApi, isDisabled } from './course-test-utils';
+import { daysText } from './course-days';
+import { fakeCourseApi, isDisabled, press } from './course-test-utils';
+import { CourseContinue } from './CourseContinue';
 import { CourseScreen } from './CourseScreen';
 import { bookedCourse, courseView } from './fixtures';
 
@@ -30,20 +33,53 @@ beforeEach(() => {
 });
 afterEach(() => jest.useRealTimers());
 
-test('the teacher list still loading: «تابِع بنفس الأيام» waits (disabled), nothing said yet', async () => {
+const busy = (name: string) => screen.getByRole('button', { name }).props.accessibilityState?.busy === true;
+
+test('the teacher list still loading: «تابِع بنفس الأيام» waits, shown busy, nothing said yet', async () => {
   serve(() => new Promise(() => undefined));
   await renderWithQuery(<CourseScreen />);
   await screen.findByRole('button', { name: t.booking.courseChange.continueSameDays });
   await waitFor(() => expect(teachersRead()).toBe(true));
   expect(isDisabled(t.booking.courseChange.continueSameDays)).toBe(true);
+  expect(busy(t.booking.courseChange.continueSameDays)).toBe(true);
   expect(screen.queryByText(t.booking.courseChange.teacherUnavailable)).toBeNull();
   expect(isDisabled(t.booking.courseChange.pickOtherDays)).toBe(false);
 });
 
-test('the teacher list failed: counted as unavailable, said so, «تابِع» disabled', async () => {
-  serve(() => Promise.reject(new Error('offline')));
+test('the teacher list failed: the error with a retry, never «unavailable»; the retry brings «تابِع» back', async () => {
+  const api = fakeCourseApi(courseView({ previous: bookedCourse() }));
+  let fails = true;
+  serve(() => (fails ? Promise.reject(new Error('offline')) : api.fetch('/sales/booking/teachers')));
   await renderWithQuery(<CourseScreen />);
-  expect(await screen.findByText(t.booking.courseChange.teacherUnavailable)).toBeTruthy();
+  expect(await screen.findByText(t.common.error)).toBeTruthy();
+  expect(screen.queryByText(t.booking.courseChange.teacherUnavailable)).toBeNull();
   expect(isDisabled(t.booking.courseChange.continueSameDays)).toBe(true);
+  expect(busy(t.booking.courseChange.continueSameDays)).toBe(false);
   expect(isDisabled(t.booking.courseChange.pickOtherDays)).toBe(false);
+  fails = false;
+  await press('button', t.mobile.retry);
+  await waitFor(() => expect(isDisabled(t.booking.courseChange.continueSameDays)).toBe(false));
+  expect(screen.queryByText(t.common.error)).toBeNull();
+});
+
+const teacher = { bookable: true, pending: false, failed: false, unavailable: false, refetch: jest.fn() };
+const adjustHint = async (days: BookedCourse['days'], adjustTo: number) => {
+  const previous = bookedCourse({ days, perWeek: days.length });
+  const props = { previous, opensOn: '2026-10-11', teacher, adjustTo, onSame: jest.fn(), onOther: jest.fn() };
+  await renderWithQuery(<CourseContinue {...props} />);
+  return counted(t.booking.courseChange.continueAdjust, adjustTo).replace('{days}', daysText(days, previous.tz));
+};
+
+test('1 → 3 days a week: the target count, never «add or remove one day»', async () => {
+  const hint = await adjustHint([{ weekday: 0, startTimeLocal: '17:00' }], 3);
+  expect(screen.getByText(hint)).toBeTruthy();
+  expect(hint).toMatch(/الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام$/);
+});
+
+test('3 → 1 day a week: one day, in the singular', async () => {
+  const days = [0, 2, 4].map((weekday) => ({ weekday, startTimeLocal: '17:00' }));
+  const hint = await adjustHint(days, 1);
+  expect(screen.getByText(hint)).toBeTruthy();
+  expect(hint).toMatch(/الباقة الجديدة يوم واحد في الأسبوع، فعدّل الأيام السابقة لتصبح يومًا واحدًا$/);
+  expect(hint).not.toContain('أضف');
 });

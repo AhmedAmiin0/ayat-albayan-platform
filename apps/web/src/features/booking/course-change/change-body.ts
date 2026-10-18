@@ -6,9 +6,10 @@ import type { CourseChangeBody } from './api';
 
 /**
  * The current days as picks, each with its day's own time, in their first future week from
- * changeOpensOn (today while it runs, else its first day): a course booked ahead opens on its own week.
+ * the later of changeOpensOn (today while it runs, else its opensOn) and startsOn (changePicks): a
+ * course booked ahead opens on its own week, a pending change's picks on its new set's first day.
  */
-export const currentPicks = (course: Pick<BookedCourse, 'days' | 'tz' | 'startsOn' | 'running'>, now: Date): PrefilledPick[] =>
+export const currentPicks = (course: Pick<BookedCourse, 'days' | 'tz' | 'opensOn' | 'running' | 'startsOn'>, now: Date): PrefilledPick[] =>
   changePicks(course, now);
 
 /** Exactly the plan's days a week; a custom count (perWeek null) needs at least one. */
