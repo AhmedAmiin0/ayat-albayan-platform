@@ -1,14 +1,18 @@
-import type { TemplateView } from '@ab/shared';
+import type { TemplateLineView, TemplateView } from '@ab/shared';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
-import { templateName } from './template-columns';
+import { SubmitTarget } from './SubmitTarget';
+import { templateName } from './template-cells';
 
 const PARAM_NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
 export interface SubmitTemplateDialogProps {
   template: TemplateView;
+  /** The number the row goes to Meta from: its formatted phone (lines check) and the server's facts. */
+  phone: string | undefined;
+  facts: TemplateLineView | undefined;
   busy: boolean;
   onConfirm: () => void;
   onClose: () => void;
@@ -16,9 +20,9 @@ export interface SubmitTemplateDialogProps {
 
 /**
  * The explicit confirm before a template goes to Meta for review (T3): the admin sees the exact
- * text, footer, variables and buttons that will be submitted. Never automatic.
+ * text, footer, variables and buttons that will be submitted, and the number (WABA) it goes to. Never automatic.
  */
-export function SubmitTemplateDialog({ template: tpl, busy, onConfirm, onClose }: SubmitTemplateDialogProps) {
+export function SubmitTemplateDialog({ template: tpl, phone, facts, busy, onConfirm, onClose }: SubmitTemplateDialogProps) {
   const name = templateName(tpl.key);
   return (
     <Dialog
@@ -39,6 +43,7 @@ export function SubmitTemplateDialog({ template: tpl, busy, onConfirm, onClose }
       }
     >
       <dl className="grid gap-3 text-sm">
+        <SubmitTarget line={tpl.line} phone={phone} provider={facts?.provider} />
         <div className="grid gap-1">
           <dt className="text-xs font-semibold text-ink-3">{t.templates.body}</dt>
           <dd className="rounded-md bg-sunk px-3.5 py-2.5 whitespace-pre-wrap">{tpl.body_ar}</dd>

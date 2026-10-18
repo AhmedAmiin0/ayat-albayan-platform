@@ -1,82 +1,50 @@
-import type { TemplateView } from '@ab/shared';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useMemo, useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { DataTable } from '@/components/DataTable';
-import { Button } from '@/components/ui/button';
-import { Toast, type ToastProps } from '@/components/ui/toast';
-import { fullTime } from '@/features/inbox/format';
+import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
-import { checkTemplateHealth, setStarter, submitTemplate, templateErrorText, templatesQuery } from './api';
+import { otherLine, templatesQuery } from './api';
+import { MoveLineDialog } from './MoveLineDialog';
 import { SubmitTemplateDialog } from './SubmitTemplateDialog';
 import { templateColumns } from './template-columns';
-
-type Notice = Pick<ToastProps, 'message' | 'tone'>;
-
-/** The newest last_checked_at of the registry (one health check stamps every row). */
-function lastChecked(rows: readonly TemplateView[]): string | null {
-  return rows.reduce<string | null>((max, r) => (r.last_checked_at && (!max || r.last_checked_at > max) ? r.last_checked_at : max), null);
-}
+import { TemplateLines } from './TemplateLines';
+import { useTemplateActions } from './use-template-actions';
+import { useTemplateLines } from './use-template-lines';
 
 /**
- * Template health (R-MSG-01, issue C1): every registry row with Meta's status. «راجع حالة
- * القوالب» reads Meta now (T2); a not-submitted / rejected / missing row can be sent to Meta for
- * review (T3), only after the explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted
- * allow-list) picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
+ * Template health (R-MSG-01, issue C1): every registry row with Meta's status. Each number syncs
+ * with its own WABA from its block (owner 2026-10-18); a not-submitted / rejected / missing row can
+ * be sent to Meta for review from its own number (T3) and any row moved to the other number, each
+ * only after its explicit confirm dialog. «متاح للمعلمين والمبيعات» (the restricted allow-list)
+ * picks the only templates teachers, sales and other limited roles may send (owner 2026-10-12).
  */
 export function TemplateHealth({ headingId }: { headingId: string }) {
-  const queryClient = useQueryClient();
   const templates = useQuery(templatesQuery);
-  const [submitting, setSubmitting] = useState<TemplateView | null>(null);
-  const [notice, setNotice] = useState<Notice | null>(null);
-  const check = useMutation({
-    mutationFn: checkTemplateHealth,
-    onSuccess: (rows) => {
-      queryClient.setQueryData(templatesQuery.queryKey, rows);
-      setNotice({ message: t.templates.checkedNow });
-    },
-    onError: (e) => setNotice({ message: templateErrorText(e), tone: 'error' }),
-  });
-  const submit = useMutation({
-    mutationFn: submitTemplate,
-    onSuccess: async () => {
-      setNotice({ message: t.templates.submitted });
-      await queryClient.invalidateQueries({ queryKey: templatesQuery.queryKey });
-    },
-    onError: (e) => setNotice({ message: templateErrorText(e), tone: 'error' }),
-    onSettled: () => setSubmitting(null),
-  });
-  const starter = useMutation({
-    mutationFn: setStarter,
-    onSuccess: (saved) => {
-      queryClient.setQueryData(templatesQuery.queryKey, (old) => old?.map((r) => (r.key === saved.key ? saved : r)));
-      setNotice({ message: saved.sales_starter ? t.templates.starterOn : t.templates.starterOff });
-    },
-    onError: (e) => setNotice({ message: templateErrorText(e), tone: 'error' }),
-  });
-  const saving = starter.isPending ? (starter.variables?.key ?? null) : null;
-  const { mutate: toggleStarter } = starter;
+  const lines = useTemplateLines();
+  const a = useTemplateActions();
+  const { setSubmitting, setMoving, toggleStarter, savingStarter: saving } = a;
+  const { phones } = lines;
   const columns = useMemo(
-    () => templateColumns({ onSubmit: setSubmitting, onStarter: (tpl, on) => toggleStarter({ key: tpl.key, on }), saving }),
-    [toggleStarter, saving],
+    () =>
+      templateColumns({
+        onSubmit: setSubmitting,
+        onMove: setMoving,
+        onStarter: (tpl, on) => toggleStarter({ key: tpl.key, on }),
+        saving,
+        phones,
+      }),
+    [setSubmitting, setMoving, toggleStarter, saving, phones],
   );
   const rows = templates.data ?? [];
-  const checked = lastChecked(rows);
 
   return (
     <>
-      <div className="mb-2 flex flex-wrap items-center gap-x-4 gap-y-2">
-        <h2 id={headingId} className="font-display text-h4 font-bold">
-          {t.templates.title}
-        </h2>
-        <span className="text-xs text-ink-3">
-          {checked ? t.templates.checkedAt.replace('{time}', fullTime(checked)) : t.templates.neverChecked}
-        </span>
-        <Button variant="secondary" size="sm" className="ms-auto" disabled={check.isPending} onClick={() => check.mutate()}>
-          {check.isPending ? t.templates.checking : t.templates.checkHealth}
-        </Button>
-      </div>
+      <h2 id={headingId} className="mb-2 font-display text-h4 font-bold">
+        {t.templates.title}
+      </h2>
       <p className="mb-1 max-w-[70ch] text-sm text-ink-2">{t.templates.intro}</p>
       <p className="mb-3 max-w-[70ch] text-sm text-ink-2">{t.templates.salesStarterIntro}</p>
+      <TemplateLines lines={lines} onNotice={a.setNotice} />
       {rows.some((r) => r.status !== 'approved') && (
         <p className="mb-3 border-s border-s-rule ps-3 text-xs font-semibold text-act">
           {t.templates.needsAttention}
@@ -88,15 +56,25 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       ) : (
         <DataTable columns={columns} data={rows} getRowId={(r) => r.key} stacked clientSort clientFilter emptyText={t.common.empty} />
       )}
-      {submitting && (
+      {a.submitting && (
         <SubmitTemplateDialog
-          template={submitting}
-          busy={submit.isPending}
-          onConfirm={() => submit.mutate(submitting.key)}
+          template={a.submitting}
+          phone={phones[a.submitting.line]}
+          facts={lines.factsOf(a.submitting.line)}
+          busy={a.submit.isPending}
+          onConfirm={() => a.submitting && a.submit.mutate(a.submitting.key)}
           onClose={() => setSubmitting(null)}
         />
       )}
-      {notice && <Toast {...notice} onDismiss={() => setNotice(null)} />}
+      {a.moving && (
+        <MoveLineDialog
+          template={a.moving}
+          busy={a.move.isPending}
+          onConfirm={() => a.moving && a.move.mutate({ key: a.moving.key, line: otherLine(a.moving.line) })}
+          onClose={() => setMoving(null)}
+        />
+      )}
+      {a.notice && <Toast {...a.notice} onDismiss={() => a.setNotice(null)} />}
     </>
   );
 }

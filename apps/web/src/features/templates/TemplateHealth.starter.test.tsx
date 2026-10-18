@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { template } from '@/features/inbox/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
+import { LINES } from './template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -26,18 +27,24 @@ afterEach(() => {
 });
 
 describe('template health — line and sales starters', () => {
-  it('each row says its line; a chat row is never offered «أرسله إلى ميتا للاعتماد»', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', [BOOKING, WELCOME]]]);
+  it('each row says its number; a chat row is offered «أرسله إلى ميتا للاعتماد» too (its own WABA)', async () => {
+    routeFetch(apiFetch, [
+      ['/messaging/templates/lines', LINES],
+      ['/messaging/templates', [BOOKING, WELCOME]],
+    ]);
     renderWithClient(<TemplateHealth headingId="h" />);
     await screen.findByText(t.templates.names.booking_confirmation_plain);
     expect(rowOf(t.templates.names.booking_confirmation_plain).getByText(t.enums.waLine.notifications)).toBeTruthy();
     expect(rowOf('academy_welcome').getByText(t.enums.waLine.chat)).toBeTruthy();
-    expect(rowOf('academy_welcome').queryByRole('button', { name: t.templates.submit })).toBeNull();
+    expect(rowOf('academy_welcome').getByRole('button', { name: t.templates.submit })).toBeTruthy();
     expect(screen.getByText(t.templates.salesStarterIntro)).toBeTruthy();
   });
 
   it('one switch per template, each with its own name; ticking saves through PATCH and says so', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', [BOOKING, WELCOME]]]);
+    routeFetch(apiFetch, [
+      ['/messaging/templates/lines', LINES],
+      ['/messaging/templates', [BOOKING, WELCOME]],
+    ]);
     renderWithClient(<TemplateHealth headingId="h" />);
     await screen.findByText(t.templates.names.booking_confirmation_plain);
     const booking = toggleOf(t.templates.names.booking_confirmation_plain);

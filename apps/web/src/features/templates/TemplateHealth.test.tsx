@@ -4,6 +4,7 @@ import { template } from '@/features/inbox/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { LINES, lineSync } from './template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -24,7 +25,10 @@ const REJECTED = template({ key: 'follow_up_slots', status: 'rejected', last_err
 const PDF = template({ key: 'report_ready', status: 'not_submitted', header_format: 'document', params: ['student_name', 'lesson_when'] });
 
 function renderHealth() {
-  routeFetch(apiFetch, [['/messaging/templates', [APPROVED, DRAFT, REJECTED, PDF]]]);
+  routeFetch(apiFetch, [
+    ['/messaging/templates/lines', LINES],
+    ['/messaging/templates', [APPROVED, DRAFT, REJECTED, PDF]],
+  ]);
   renderWithClient(<TemplateHealth headingId="h" />);
 }
 
@@ -52,14 +56,17 @@ describe('template health (R-MSG-01, issue C1)', () => {
     expect(rowOf('follow_up_slots').getByRole('button', { name: t.templates.submit })).toBeTruthy();
   });
 
-  it('«راجع حالة القوالب» reads Meta now; not configured is said in words', async () => {
+  it('«مزامنة مع Meta» of the notifications number reads its WABA now; not configured is said in words', async () => {
     renderHealth();
-    apiSend.mockResolvedValueOnce([APPROVED]).mockRejectedValueOnce(new ApiError(503, { code: 'not_configured' }));
-    fireEvent.click(await screen.findByRole('button', { name: t.templates.checkHealth }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/health'));
-    expect((await screen.findByRole('status')).textContent).toContain(t.templates.checkedNow);
+    const sync = t.templates.perNumber.syncFor.replace('{line}', t.enums.waLine.notifications);
+    apiSend
+      .mockResolvedValueOnce({ lines: [lineSync()], templates: [APPROVED] })
+      .mockRejectedValueOnce(new ApiError(503, { code: 'not_configured' }));
+    fireEvent.click(await screen.findByRole('button', { name: sync }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/health', { line: 'notifications' }));
+    expect((await screen.findByRole('status')).textContent).toContain(t.templates.perNumber.synced.replace('{line}', t.enums.waLine.notifications));
     await waitFor(() => expect(screen.queryByText(t.templates.names.renewal_due)).toBeNull());
-    fireEvent.click(screen.getByRole('button', { name: t.templates.checkHealth }));
+    fireEvent.click(screen.getByRole('button', { name: sync }));
     await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.templates.error.not_configured));
   });
 
