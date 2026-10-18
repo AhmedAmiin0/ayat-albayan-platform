@@ -46,12 +46,12 @@ test('nothing on the list: «لا توجد قوالب متاحة لك بعد»',
 });
 
 test('templates.send_all (or templates.manage) keeps the plain empty note', async () => {
-  await show([], ['messages.read', 'templates.send_all']);
+  await show([], ['messages.read', 'templates.send_all'], 'admin');
   expect(await screen.findByText(t.inbox.composer.noApproved)).toBeTruthy();
 });
 
-test('an assistant (sales) stays on the allow-list even when granted templates.manage (owner 2026-10-15)', async () => {
-  await show([], ['messages.read', 'templates.manage', 'templates.send_all'], 'sales');
+test.each(['sales', 'teacher'])('%s stays on the allow-list even when granted templates.manage (owner 2026-10-15, 10-18)', async (role) => {
+  await show([], ['messages.read', 'templates.manage', 'templates.send_all'], role);
   expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
   expect(screen.queryByText(t.inbox.composer.noApproved)).toBeNull();
 });
