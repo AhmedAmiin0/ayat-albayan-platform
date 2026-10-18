@@ -20,7 +20,7 @@ export function LineNote({ thread, open }: { thread: ThreadView | null; open: bo
       testID="line-note"
       numberOfLines={1}
       accessibilityLabel={text}
-      style={{ ...note, flexShrink: 1 }}
+      style={{ ...note, flexShrink: 1, minWidth: 0 }}
     >
       {text}
     </AppText>

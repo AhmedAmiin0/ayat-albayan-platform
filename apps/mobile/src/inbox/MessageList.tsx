@@ -1,30 +1,26 @@
 import type { MessageView } from '@ab/shared';
-import { useEffect, useRef } from 'react';
-import { FlatList, Keyboard, View } from 'react-native';
+import { useRef } from 'react';
+import { FlatList, View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { Button } from '@/ui/Button';
 import { EmptyState } from '@/ui/EmptyState';
 import { messageGap } from './list-gap';
 import { MessageBubble } from './MessageBubble';
 import { threadMessages } from './thread-cache';
+import { useKeepEnd } from './use-keep-end';
 import type { useThread } from './use-thread';
 
 type ThreadQuery = ReturnType<typeof useThread>;
 
 /**
  * Oldest → newest; follows the newest message (first load, a send) but not older pages. When the
- * keyboard opens the newest stays in sight (the list shrinks under it on Android and iOS).
+ * list shrinks (the keyboard opens) while at the end, the newest stays in sight (useKeepEnd).
  */
 export function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
   const list = useRef<FlatList<MessageView>>(null);
   const newest = useRef<string | undefined>(undefined);
   const messages = threadMessages(query.data);
-  useEffect(() => {
-    const shown = Keyboard.addListener('keyboardDidShow', () =>
-      list.current?.scrollToEnd({ animated: true }),
-    );
-    return () => shown.remove();
-  }, []);
+  const keepEnd = useKeepEnd(list);
   const followNewest = () => {
     const last = messages[messages.length - 1]?.id;
     if (last === newest.current) return;
@@ -55,6 +51,9 @@ export function MessageList({ phone, query }: { phone: string; query: ThreadQuer
           <MessageBubble message={item} phone={phone} />
         </View>
       )}
+      onLayout={keepEnd.onLayout}
+      onScroll={keepEnd.onScroll}
+      scrollEventThrottle={64}
       onContentSizeChange={followNewest}
       maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
       refreshing={query.isRefetching && !query.isFetchingNextPage}

@@ -7,7 +7,8 @@ import { useNoteStyle } from './note-style';
 
 /**
  * Over an open reply box, in one 2xs row: which line the reply leaves from (LineNote) and until when
- * free text is allowed. Each is one line at most, cut with an ellipsis; nothing when neither applies.
+ * free text is allowed. The window's end is never cut (its time is the point); only the line's name
+ * gives way, with an ellipsis. Nothing when neither applies.
  */
 export function ComposerNotes({ thread, open }: { thread: ThreadView | null; open: boolean }) {
   const note = useNoteStyle();
@@ -20,9 +21,8 @@ export function ComposerNotes({ thread, open }: { thread: ThreadView | null; ope
       {until ? (
         <AppText
           testID="session-until"
-          numberOfLines={1}
           accessibilityLabel={until}
-          style={{ ...note, flexShrink: 1 }}
+          style={{ ...note, flexShrink: 0 }}
         >
           {until}
         </AppText>
