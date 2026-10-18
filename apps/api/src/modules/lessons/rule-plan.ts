@@ -17,20 +17,22 @@ export type RulePlan = { rule: NewRule; occurrences: Occurrence[] };
 /**
  * The replacement rule of a whole-rule reschedule (R-SCH-07, docs/10 route 8 `rule`): same
  * students, package and link (a new teacher drops the old rule's link so their own applies),
- * occurrences over the horizon; a trial keeps one lesson and ends on its day (invariant 4). A capped
- * rule (the assistant's course, owner 2026-10-18) keeps its last day, so it never becomes open-ended.
+ * occurrences over the horizon; a trial keeps one lesson and ends on its day (invariant 4). The
+ * assistant's course (owner 2026-10-18; its rules carry subscription_id) keeps its last day, so it
+ * never becomes open-ended; any other rule's replacement is open-ended, as before.
  */
 export function planNewRule({ old, next, now, weeks }: RulePlanInput): RulePlan {
   const sameTeacher = next.teacherId === old.teacher_id;
   const students = ruleStudents(old);
   const trial = old.package === 'trial';
+  const kept = old.subscription_id === null ? null : old.ends_on;
   const timing = {
     byday: next.byday,
     start_time_local: next.startTimeLocal,
     duration_min: next.durationMin,
     tz: next.tz,
     starts_on: next.startsOn,
-    ends_on: trial ? null : old.ends_on,
+    ends_on: trial ? null : kept,
   };
   const window = horizonWindow({ now, startsOn: next.startsOn, tz: next.tz, weeks });
   const all = ruleOccurrences(timing, window);
@@ -47,7 +49,7 @@ export function planNewRule({ old, next, now, weeks }: RulePlanInput): RulePlan 
       tz: next.tz,
       byday: next.byday,
       starts_on: next.startsOn,
-      ends_on: trial ? trialEnd : old.ends_on,
+      ends_on: trial ? trialEnd : kept,
       meeting_link: ruleLink,
       package: old.package,
       created_from_lead_id: old.created_from_lead_id,
