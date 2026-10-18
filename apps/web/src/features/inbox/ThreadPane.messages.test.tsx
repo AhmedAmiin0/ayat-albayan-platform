@@ -73,12 +73,13 @@ describe('message log (R-MSG-05, R-MSG-03)', () => {
     expect(bubble('تمام').getByText(t.inbox.quickReply.notConfirmed)).toBeTruthy();
   });
 
-  it('a failed send: saffron chip, the reason in words, retry puts it back in the queue', async () => {
+  it('a failed send: the red «!» named «لم تُرسل», the reason in words, retry puts it back in the queue', async () => {
     renderThread();
     await screen.findByRole('log');
     const failed = bubble('تذكير بالحلقة');
-    const chip = failed.getByText(t.enums.messageStatus.failed).closest('[data-tone]');
-    expect(chip?.getAttribute('data-tone')).toBe('act');
+    const ticks = failed.getByRole('img', { name: t.enums.messageStatus.failed });
+    expect(ticks.getAttribute('data-ticks')).toBe('failed');
+    expect(ticks.getAttribute('class')).toContain('text-danger');
     expect(failed.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
     apiSend.mockResolvedValue({ ...FAILED, status: 'queued' });
     fireEvent.click(failed.getByRole('button', { name: t.messages.retry }));

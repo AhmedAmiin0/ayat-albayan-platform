@@ -5,6 +5,7 @@
 // red for errors, gold for small ornament only. `lapis*` is the action token's historical name:
 // `lapis` is the action as TEXT (links, ghost buttons, focus), `lapisFill` the primary button's fill
 // and `lapisHover` its hover. The sidebar and login cover use cover/leather* with coverInk/goldOnCover.
+// `read` is the WhatsApp-like blue of read ticks (non-text, 3:1 on our bubble).
 // theme.contrast.test.ts checks every text pair (AA).
 export type ThemeName = 'light' | 'dark';
 
@@ -16,7 +17,7 @@ const light = {
   bad: '#b91c1c', badSoft: '#fde8e8', badSolid: '#b91c1c', onBad: '#ffffff', neutralSoft: '#ebf0ed',
   inverse: '#17201c', onInverse: '#f5f8f6', inverseGold: '#e4c97e', cover: '#ecfdf5', leather: '#ecfdf5',
   leatherDeep: '#d1fae5', leatherLift: '#f0fdf8', goldOnCover: '#064e3b', coverInk: '#064e3b',
-  scrim: 'rgba(15, 30, 22, 0.42)',
+  scrim: 'rgba(15, 30, 22, 0.42)', read: '#0284c7',
 };
 
 export type Palette = Record<keyof typeof light, string>;
@@ -29,7 +30,7 @@ const dark: Palette = {
   bad: '#fca5a5', badSoft: '#432628', badSolid: '#dc4b4b', onBad: '#0f1512', neutralSoft: '#2c3632',
   inverse: '#e2ebe5', onInverse: '#1e2623', inverseGold: '#8a6a1c', cover: '#18201d', leather: '#18201d',
   leatherDeep: '#141b18', leatherLift: '#26302c', goldOnCover: '#ecd18c', coverInk: '#e9efec',
-  scrim: 'rgba(10, 16, 13, 0.5)',
+  scrim: 'rgba(10, 16, 13, 0.5)', read: '#53bdeb',
 };
 
 export const palette: Record<ThemeName, Palette> = { light, dark };

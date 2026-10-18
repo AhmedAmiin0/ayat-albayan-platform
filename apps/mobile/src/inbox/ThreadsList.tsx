@@ -14,6 +14,7 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, kindLabel } from './format';
+import { DeliveryTicks } from './DeliveryTicks';
 import { InboxHeaderActions } from './InboxHeaderActions';
 import { threadPreview } from './message-text';
 import { threadLink, useThreadMode } from './thread-mode';
@@ -73,6 +74,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
               title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
               meta={th.display_name && !teacher ? phone : undefined}
               subtitle={threadPreview(th)}
+              subtitleLeading={th.last_direction === 'outbound' ? <DeliveryTicks status={th.last_status} /> : undefined}
               tags={mode.kind === 'admin' && !base ? <ThreadTags thread={th} /> : undefined}
               trailing={turnChip(th)}
               onPress={() => router.push(inTree(base, threadLink(th.phone_e164, mode)))}

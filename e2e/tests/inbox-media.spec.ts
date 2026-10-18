@@ -43,8 +43,8 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     await expect(bubble(log, photo)).toContainText(ar.inbox.mediaNotDownloaded);
     await expect(bubble(log, file)).toContainText(ar.inbox.media.document);
     await expect(bubble(log, file)).toContainText(ar.inbox.mediaNotDownloaded);
-    // Theirs, not ours: no delivery chip and no retry actions on an inbound bubble.
-    await expect(bubble(log, photo).getByText(ar.enums.messageStatus.sent, { exact: true })).toHaveCount(0);
+    // Theirs, not ours: no delivery ticks and no retry actions on an inbound bubble.
+    await expect(bubble(log, photo).getByRole('img', { name: ar.enums.messageStatus.sent, exact: true })).toHaveCount(0);
     await expect(bubble(log, file).getByRole('button')).toHaveCount(0);
 
     // The list preview names the kind, and a push row (one per phone per 10 minutes) exists.

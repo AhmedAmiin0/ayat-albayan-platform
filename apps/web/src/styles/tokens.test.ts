@@ -33,7 +33,7 @@ const THEME_KEY: Record<string, keyof Palette> = {
   '--neutral-wash': 'neutralSoft',
   '--inverse': 'inverse', '--on-inverse': 'onInverse', '--inverse-gold': 'inverseGold',
   '--cover': 'cover', '--leather': 'leather', '--leather-deep': 'leatherDeep', '--leather-lift': 'leatherLift',
-  '--gold-on-cover': 'goldOnCover', '--cover-ink': 'coverInk', '--scrim': 'scrim',
+  '--gold-on-cover': 'goldOnCover', '--cover-ink': 'coverInk', '--scrim': 'scrim', '--read': 'read',
 };
 
 describe('tokens.css (docs/07 §3)', () => {

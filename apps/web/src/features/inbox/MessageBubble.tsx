@@ -1,8 +1,8 @@
-import { messageStatusStyle, replyNote, type MessageView } from '@ab/shared';
-import { StatusChip } from '@/components/ui/status-chip';
+import { replyNote, type MessageView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
+import { DeliveryTicks } from './DeliveryTicks';
 import { fullTime, mediaKind, stampText, templateLine } from './format';
 import { LineBadge } from './LineBadge';
 import { MessageActions } from './MessageActions';
@@ -62,8 +62,8 @@ function Content({ message: m }: { message: MessageView }) {
 
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end; the time (with the day when
- * it is not today), and on ours the delivery status as glyph + word (docs/07 §1.3), the reason when
- * it failed and what to do next.
+ * it is not today), and on ours WhatsApp-style delivery ticks right after the time (DeliveryTicks), the
+ * reason when it failed and what to do next.
  */
 export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbleProps) {
   const outbound = m.direction === 'outbound';
@@ -91,11 +91,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
           <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
             {stampText(m.created_at, now)}
           </time>
-          {outbound && (
-            <span title={deliveryTitle(m) || undefined}>
-              <StatusChip size="sm" {...messageStatusStyle[m.status]} label={t.enums.messageStatus[m.status]} />
-            </span>
-          )}
+          {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m)} />}
         </footer>
         {notes.map((note) => (
           <p key={note} className="mt-1 text-2xs text-ink-2">

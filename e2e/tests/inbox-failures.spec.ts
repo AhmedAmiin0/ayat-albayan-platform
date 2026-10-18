@@ -33,7 +33,7 @@ async function failedReply(page: Page, label: string): Promise<Failed> {
   const row = bubble(log, reply);
   const reason = messages.errorLine.replace('{reason}', messages.errors[String(CODE) as '131049']);
   await expect(row).toContainText(reason);
-  await expect(row.getByText(ar.enums.messageStatus.failed, { exact: true })).toBeVisible();
+  await expect(row.getByRole('img', { name: ar.enums.messageStatus.failed, exact: true })).toBeVisible();
   return { page, log, phone: `+${digits}`, reply, row };
 }
 
@@ -68,7 +68,7 @@ test.describe('inbox — failed sends (R-MSG-03, R-MSG-05)', () => {
     await f.row.getByRole('button', { name: messages.retry }).click();
     await expect.poll(async () => (await lastOutbound(f.phone)).status, WAIT).toBe('sent');
     await expect.poll(async () => (await stubSent()).filter((m) => m.type === 'text').length, WAIT).toBe(1);
-    await expect(f.row.getByText(ar.enums.messageStatus.sent, { exact: true })).toBeVisible({ timeout: 30_000 });
+    await expect(f.row.getByRole('img', { name: ar.enums.messageStatus.sent, exact: true })).toBeVisible({ timeout: 30_000 });
   });
 
   test('failed → wa.me hand-off holds the row → «أرسلتها بنفسي» → sent manually', async ({ asRole }) => {
@@ -79,7 +79,7 @@ test.describe('inbox — failed sends (R-MSG-03, R-MSG-05)', () => {
     await expect.poll(async () => (await lastOutbound(f.phone)).status).toBe('sent_manually');
     const done = await lastOutbound(f.phone);
     expect(done.sent_manually_at).not.toBeNull();
-    await expect(f.row.getByText(ar.enums.messageStatus.sent_manually, { exact: true })).toBeVisible({ timeout: 30_000 });
+    await expect(f.row.getByRole('img', { name: ar.enums.messageStatus.sent_manually, exact: true })).toBeVisible({ timeout: 30_000 });
     expect((await stubSent()).filter((m) => m.type === 'text')).toHaveLength(0); // never sent by the platform
   });
 

@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { threadsQuery } from '@/features/inbox/api';
+import { DeliveryTicks } from '@/features/inbox/DeliveryTicks';
 import { listTime, previewText, threadName } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -29,8 +30,11 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
         <time dateTime={th.last_message_at} className="text-2xs text-ink-3 tabular-nums">
           {listTime(th.last_message_at)}
         </time>
-        <span dir="auto" className="col-span-2 truncate text-start text-sm text-ink-2">
-          {previewText(th)}
+        <span className="col-span-2 flex min-w-0 items-center gap-1 text-sm text-ink-2">
+          {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} />}
+          <span dir="auto" className="min-w-0 truncate text-start">
+            {previewText(th)}
+          </span>
         </span>
       </Link>
     </li>

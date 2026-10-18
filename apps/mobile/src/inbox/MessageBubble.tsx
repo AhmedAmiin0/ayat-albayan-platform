@@ -1,14 +1,14 @@
-import { type MessageView, messageStatusStyle, replyNote } from '@ab/shared';
+import { type MessageView, replyNote } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
+import { DeliveryTicks } from './DeliveryTicks';
 import { lineWord } from './line-words';
 import { MessageActions } from './MessageActions';
-import { mediaLine, queuedLine, stamp, templateLine } from './message-text';
+import { deliveryTimes, mediaLine, queuedLine, stamp, templateLine } from './message-text';
 import { sentByName, useThreadMode } from './thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
@@ -40,7 +40,7 @@ function useSmall() {
   };
 }
 
-/** When, the line it came in on or left from (a plain word), and for ours the status word; a row scheduled later says when it goes; a teacher's «بعتها». */
+/** When, the line it came in on or left from (a plain word), and for ours the delivery ticks; a row scheduled later says when it goes; a teacher's «بعتها». */
 function MessageMeta({ message: m }: { message: MessageView }) {
   const small = useSmall();
   const later = queuedLine(m);
@@ -48,16 +48,13 @@ function MessageMeta({ message: m }: { message: MessageView }) {
   return (
     <>
       {sender ? <AppText style={small}>{t.inbox.sentBy.replace('{name}', sender)}</AppText> : null}
-      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-        <AppText style={small}>{stamp(m.created_at)}</AppText>
+      {/* As WhatsApp: at the bubble's inline-end, the ticks right after the time (the web's order). */}
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'flex-end', flexWrap: 'wrap', gap: 8 }}>
         {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
-        {m.direction === 'outbound' ? (
-          <StatusChip
-            {...messageStatusStyle[m.status]}
-            label={t.enums.messageStatus[m.status]}
-            size="sm"
-          />
-        ) : null}
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 4 }}>
+          <AppText style={small}>{stamp(m.created_at)}</AppText>
+          {m.direction === 'outbound' ? <DeliveryTicks status={m.status} times={deliveryTimes(m)} /> : null}
+        </View>
       </View>
       {later ? <AppText style={small}>{later}</AppText> : null}
     </>
@@ -66,7 +63,7 @@ function MessageMeta({ message: m }: { message: MessageView }) {
 
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end, as WhatsApp lays out Arabic.
- * Ours carry the status word (في الطابور، اتبعتت، وصلت، اتقرت، متبعتتش، اتبعتت يدوي); a template
+ * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
  * row says which template, its body already rendered by the API. A row a teacher sent from the
  * academy number says who («بعتها: أبرار»); retry / sent-by-hand stay the admin's (R-MSG-05).
  */

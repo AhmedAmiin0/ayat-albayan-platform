@@ -90,6 +90,17 @@ export function queuedLine(m: Pick<MessageView, 'status' | 'scheduled_for'>, opt
   return t.messages.queuedFor.replace('{time}', stamp(m.scheduled_for, options));
 }
 
+/** «أُرسلت … · وصلت … · قُرئت …»: every delivery time Meta reported on ours (the web's deliveryTitle). */
+export function deliveryTimes(m: MessageView, options?: StampOptions): string {
+  if (m.direction !== 'outbound') return '';
+  const steps: [string, string | null][] = [
+    [t.messages.sentAt, m.sent_at],
+    [t.messages.deliveredAt, m.delivered_at],
+    [t.messages.readAt, m.read_at],
+  ];
+  return steps.flatMap(([text, iso]) => (iso ? [text.replace('{time}', stamp(iso, options))] : [])).join(' · ');
+}
+
 /** «السبب: …» from Meta's code (messages.errors), or the unknown line carrying the code. */
 export function errorLine(m: Pick<MessageView, 'error_code'>): string {
   const errors: Record<string, string> = t.messages.errors;

@@ -101,6 +101,7 @@
   --color-gold-on-cover: var(--gold-on-cover);
   --color-cover-ink: var(--cover-ink);
   --color-scrim: var(--scrim);
+  --color-read: var(--read);
   /* elevation: three levels only */
   --shadow-page: var(--elev-page);
   --shadow-pop: var(--elev-pop);

@@ -53,6 +53,8 @@ const EDGES: [Key, Key][] = [
   ['ruleInput', 'raised'],
   ['ruleInput', 'page'],
   ['inverseGold', 'inverse'],
+  // delivery ticks on our bubble (sunk on desktop, lapisWash on phones) and on a thread row
+  ...(['sunk', 'lapisWash', 'raised'] as Key[]).flatMap((bg): [Key, Key][] => [['read', bg], ['ink3', bg], ['bad', bg]]),
 ];
 
 describe.each(['light', 'dark'] as ThemeName[])('%s theme contrast (docs/07 §3)', (name) => {
