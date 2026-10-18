@@ -5,6 +5,7 @@ import { ltr } from '@/ui/Ltr';
 import { threadKey } from './thread-cache';
 import { cachedThread, delivered, detail, inbound, message, PHONE, thread } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
+import { ticksLabel } from './ticks.helpers';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -25,7 +26,7 @@ beforeEach(() => {
   mockReplace.mockReset();
 });
 
-test('the thread: who it is, their messages and ours with the status word', async () => {
+test('the thread: who it is, their messages and ours with its delivery ticks', async () => {
   mockApiFetch.mockResolvedValue(detail([inbound, delivered]));
   await renderWithQuery(<ThreadScreen />);
   expect(await screen.findByText(inbound.body ?? '')).toBeTruthy();
@@ -33,9 +34,9 @@ test('the thread: who it is, their messages and ours with the status word', asyn
   expect(screen.getByRole('header', { name: 'هدى سالم' })).toBeTruthy();
   expect(screen.getByText(`${t.inbox.kind.lead} · ${ltr('+966 55 214 7730')}`)).toBeTruthy();
   expect(screen.getByText(delivered.body ?? '')).toBeTruthy();
-  expect(screen.getByText(word.delivered)).toBeTruthy();
-  // Their message carries no status chip: only ours do.
-  expect(screen.getAllByText(new RegExp(Object.values(word).join('|')))).toHaveLength(1);
+  expect(screen.getByLabelText(ticksLabel(word.delivered))).toBeTruthy();
+  // Their message carries no ticks: only ours do.
+  expect(screen.getAllByLabelText(new RegExp(`^(${Object.values(word).join('|')})`))).toHaveLength(1);
 });
 
 test('a number with no name or messages yet: titled by its phone, empty, the first template only', async () => {

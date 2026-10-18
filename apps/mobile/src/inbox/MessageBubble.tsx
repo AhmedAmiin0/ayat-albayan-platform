@@ -1,15 +1,14 @@
-import { type MessageView, messageStatusStyle, replyNote } from '@ab/shared';
+import { type MessageView, replyNote } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
-import { StatusChip } from '@/ui/StatusChip';
-import { lineWord } from './line-words';
 import { MessageActions } from './MessageActions';
-import { mediaLine, queuedLine, stamp, templateLine } from './message-text';
-import { sentByName, useThreadMode } from './thread-mode';
+import { MessageMeta, useSmall } from './MessageMeta';
+import { errorLine, mediaLine, templateLine } from './message-text';
+import { useThreadMode } from './thread-mode';
 
 /** A file line: a link to the signed URL once the API has the file, else its kind and why not. */
 function MediaLine({ label, url, file }: { label: string; url: string | null; file: boolean }) {
@@ -29,46 +28,12 @@ function MediaLine({ label, url, file }: { label: string; url: string | null; fi
   );
 }
 
-function useSmall() {
-  const { color } = useTheme();
-  return {
-    fontFamily: type.ui[500],
-    fontSize: type.size['2xs'],
-    lineHeight: type.lineHeight(type.size['2xs']),
-    color: color.ink2,
-    fontVariant: ['tabular-nums' as const],
-  };
-}
-
-/** When, the line it came in on or left from (a plain word), and for ours the status word; a row scheduled later says when it goes; a teacher's «بعتها». */
-function MessageMeta({ message: m }: { message: MessageView }) {
-  const small = useSmall();
-  const later = queuedLine(m);
-  const sender = sentByName(m);
-  return (
-    <>
-      {sender ? <AppText style={small}>{t.inbox.sentBy.replace('{name}', sender)}</AppText> : null}
-      <View style={{ flexDirection: 'row', alignItems: 'center', flexWrap: 'wrap', gap: 8 }}>
-        <AppText style={small}>{stamp(m.created_at)}</AppText>
-        {m.line ? <AppText style={small}>{lineWord(m.line)}</AppText> : null}
-        {m.direction === 'outbound' ? (
-          <StatusChip
-            {...messageStatusStyle[m.status]}
-            label={t.enums.messageStatus[m.status]}
-            size="sm"
-          />
-        ) : null}
-      </View>
-      {later ? <AppText style={small}>{later}</AppText> : null}
-    </>
-  );
-}
-
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end, as WhatsApp lays out Arabic.
- * Ours carry the status word (في الطابور، اتبعتت، وصلت، اتقرت، متبعتتش، اتبعتت يدوي); a template
+ * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
  * row says which template, its body already rendered by the API. A row a teacher sent from the
- * academy number says who («بعتها: أبرار»); retry / sent-by-hand stay the admin's (R-MSG-05).
+ * academy number says who («بعتها: أبرار»). Why a send failed is for everyone (as the web's
+ * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
 export function MessageBubble({ message: m, phone }: { message: MessageView; phone: string }) {
   const { color } = useTheme();
@@ -81,6 +46,8 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
   const note = replyNote(m, locale);
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
+  // A hand-off asks «بعتّها؟» in MessageActions instead of a reason.
+  const why = ours && m.status === 'failed' && m.error_code !== 'handed_off';
   return (
     <View
       style={{
@@ -117,6 +84,7 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
         </AppText>
       ) : null}
       <MessageMeta message={m} />
+      {why ? <AppText style={{ ...small, fontSize: type.size.xs, lineHeight: type.lineHeight(type.size.xs) }}>{errorLine(m)}</AppText> : null}
       {stuck ? <MessageActions message={m} phone={phone} /> : null}
     </View>
   );

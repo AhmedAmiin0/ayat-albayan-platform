@@ -11,6 +11,7 @@ export * from './restricted-templates.js';
 export * from './schemas.js';
 export * from './status-style.js';
 export * from './templates.js';
+export * from './ticks.js';
 export * from './thread-people.js';
 export * from './timing.js';
 export * from './trial-chat.js';

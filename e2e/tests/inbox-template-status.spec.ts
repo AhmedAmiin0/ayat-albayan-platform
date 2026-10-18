@@ -67,8 +67,8 @@ test.describe('inbox — closed session template and delivery chips (R-MSG-01, R
     const wamid = (await lastOutbound(phone)).wa_message_id ?? '';
     expect(wamid).not.toBe('');
 
-    // Meta reports delivery, then the read: the chip follows (the open thread polls every 10 s).
-    const chip = (label: string) => bubble(log, ar.templates.names[KEY]).getByText(label, { exact: true });
+    // Meta reports delivery, then the read: the ticks follow (the open thread polls every 10 s).
+    const chip = (label: string) => bubble(log, ar.templates.names[KEY]).getByRole('img', { name: label, exact: true });
     await stubStatus({ id: wamid, status: 'delivered' });
     await expect(chip(status.delivered)).toBeVisible({ timeout: 30_000 });
     await stubStatus({ id: wamid, status: 'read' });

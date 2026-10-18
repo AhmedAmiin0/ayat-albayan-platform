@@ -14,6 +14,7 @@ import { ScreenHeader } from '@/ui/ScreenHeader';
 import { SearchField } from '@/ui/SearchField';
 import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, kindLabel } from './format';
+import { DeliveryTicks } from './DeliveryTicks';
 import { InboxHeaderActions } from './InboxHeaderActions';
 import { threadPreview } from './message-text';
 import { threadLink, useThreadMode } from './thread-mode';
@@ -35,6 +36,15 @@ function turnChip(th: ThreadView): ReactNode {
     return <StatusChip tone="act" glyph="fill" label={counted(t.inbox.unread, th.unread_count)} size="sm" />;
   }
   return null;
+}
+
+/**
+ * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
+ * failed is the row's «لم تُرسل» chip already.
+ */
+function ticksWord(th: ThreadView): string | undefined {
+  if (th.last_direction !== 'outbound' || th.last_status === 'failed') return undefined;
+  return `${t.enums.messageStatus[th.last_status]} · ${threadPreview(th)}`;
 }
 
 /**
@@ -67,12 +77,15 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         renderItem={({ item: th }) => {
           const phone = formatPhone(th.phone_e164);
           const teacher = mode.kind === 'teacher';
+          const ours = th.last_direction === 'outbound';
           return (
             <ListRow
               leading={<Avatar letter={initialOf(th.display_name)} />}
               title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
               meta={th.display_name && !teacher ? phone : undefined}
               subtitle={threadPreview(th)}
+              subtitleLeading={ours ? <DeliveryTicks status={th.last_status} inList /> : undefined}
+              subtitleLabel={ticksWord(th)}
               tags={mode.kind === 'admin' && !base ? <ThreadTags thread={th} /> : undefined}
               trailing={turnChip(th)}
               onPress={() => router.push(inTree(base, threadLink(th.phone_e164, mode)))}

@@ -2586,6 +2586,7 @@
     "sentAt": "Sent {time}",
     "deliveredAt": "Delivered {time}",
     "readAt": "Read {time}",
+    "manualTick": "manually",
     "attempts": "Attempts: {n} of {max}",
     "nextAttempt": "Next attempt {time}",
     "sendingNow": "Sending now",

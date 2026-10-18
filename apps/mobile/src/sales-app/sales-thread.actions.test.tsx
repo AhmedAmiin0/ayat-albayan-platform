@@ -34,6 +34,7 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
   );
   await screen.findByText(inbound.body ?? '');
   expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
+  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   expect(screen.queryByText(t.messages.handedOff)).toBeNull();

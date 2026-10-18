@@ -5,6 +5,7 @@ import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { threadKey, threadMessages, type ThreadCache } from './thread-cache';
 import { detail, inbound, message, PHONE, thread } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
+import { ticksLabel } from './ticks.helpers';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -53,14 +54,14 @@ test('inside 24 h: free text shows at once as queued, then becomes the API row',
     clientRequestId: UUID,
   });
   expect(await screen.findByText('أهلًا يا أم سلمى')).toBeTruthy();
-  expect(screen.getByText(t.enums.messageStatus.queued)).toBeTruthy();
+  expect(screen.getByLabelText(ticksLabel(t.enums.messageStatus.queued))).toBeTruthy();
   expect(box().props.value).toBe('');
 
   const after = detail([inbound, message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' })]);
   mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? { open: true, reason: null, queued: 0 } : after));
   answer(message({ id: 'srv', body: 'أهلًا يا أم سلمى', status: 'sent' }));
   await waitFor(() => expect(cached(client).map((m) => m.id)).toEqual(['m1', 'srv']));
-  expect(await screen.findByText(t.enums.messageStatus.sent)).toBeTruthy();
+  expect(await screen.findByLabelText(ticksLabel(t.enums.messageStatus.sent))).toBeTruthy();
 });
 
 test('a refused send rolls back: the row goes, the text comes back, the reason shows', async () => {

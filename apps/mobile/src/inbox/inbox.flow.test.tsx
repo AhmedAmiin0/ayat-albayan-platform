@@ -4,6 +4,7 @@ import { renderApp, resetApp } from '@/test/app-router';
 import { pullToRefresh } from '@/test/pull-refresh';
 import { GUARDIAN_PHONE, inboxBackend } from './flow-backend';
 import { inbound, PHONE } from './thread-fixtures';
+import { ticksLabel } from './ticks.helpers';
 
 beforeEach(resetApp);
 
@@ -34,7 +35,7 @@ test('list → lead thread → reply → back: tags show, the reply is sent once
     path: '/threads/%2B966552147730/text',
     body: { text: 'أهلًا يا هدى', clientRequestId: UUID },
   });
-  expect(await screen.findByText(t.enums.messageStatus.sent)).toBeTruthy();
+  expect(await screen.findByLabelText(ticksLabel(t.enums.messageStatus.sent))).toBeTruthy();
 
   await fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   expect(app.pathname()).toBe('/inbox');

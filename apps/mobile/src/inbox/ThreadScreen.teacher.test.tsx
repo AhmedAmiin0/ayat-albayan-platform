@@ -55,6 +55,7 @@ test('a guardian’s chat: messages, «بعتها», the composer; no subscripti
   expect(screen.queryByText(t.inbox.subscription.badge.none)).toBeNull();
   // A failed row: its status word, but retry / «بعتها يدوي» stay the admin's.
   expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
+  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
   expect(screen.queryByText(t.messages.retry)).toBeNull();
   await fireEvent.press(screen.getByText(t.common.back));
   expect(mockReplace).toHaveBeenCalledWith('/teacher/chats');

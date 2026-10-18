@@ -5,6 +5,7 @@ import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { delivered, detail, failed, inbound, message } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
+import { ticksLabel } from './ticks.helpers';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -54,7 +55,7 @@ test('«حاول مرة أخرى» puts it back in the queue and the row says so
   mockApiFetch.mockResolvedValue(detail([inbound, delivered, retried]));
   await fireEvent.press(screen.getByRole('button', { name: t.messages.retry }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
-  expect(await screen.findByText(word.queued)).toBeTruthy();
+  expect(await screen.findByLabelText(ticksLabel(word.queued))).toBeTruthy();
   expect(screen.queryByText(word.failed)).toBeNull();
 });
 
@@ -114,7 +115,7 @@ test('queued with sending off: hand-send offered, no retry; a later one says whe
 test('a row the sender is sending right now (no wa.me from the API): no hand-send, no retry', async () => {
   const claimed = message({ id: 'c', body: 'تذكير', status: 'queued', attempts: 1, error_code: 'sending', click_to_chat: null });
   await open([inbound, claimed]);
-  expect(screen.getByText(word.queued)).toBeTruthy();
+  expect(screen.getByLabelText(ticksLabel(word.queued))).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(mockApiSend).not.toHaveBeenCalled();

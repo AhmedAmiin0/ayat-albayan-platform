@@ -7,6 +7,7 @@ import { StatusChip } from '@/components/ui/status-chip';
 import { initialOf } from '@/features/leads/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { DeliveryTicks } from './DeliveryTicks';
 import { fullTime, listTime, previewText, threadKind, threadTitle, unreadLabel } from './format';
 import { LineBadge } from './LineBadge';
 import { inboxBase, showsPhone, useInboxMode } from './mode';
@@ -50,7 +51,7 @@ function PhoneTag({ phone }: { phone: string }) {
 
 /**
  * One conversation (docs/07 §9, R-LEAD-02): avatar · name (bold + saffron dot when unread) · phone
- * · time; the last message («إنت:» for ours), or «متبعتتش» when our last send failed; the lead's
+ * · time; the last message («أنت:» for ours, after its ticks), or «متبعتتش» when our last send failed; the lead's
  * status chip or who the number is, the family's package tags (FamilyTags), source.
  */
 export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
@@ -61,7 +62,9 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const kind = threadKind(th);
   const turn = failed ? t.inbox.failedLast : unread ? unreadLabel(th.unread_count) : '';
   const line = th.last_inbound_line ? t.enums.waLine[th.last_inbound_line] : '';
-  const label = [t.inbox.openThread.replace('{name}', name), turn, line]
+  // The link's label replaces the ticks' name: ours carries its status word (failed is in `turn`).
+  const status = th.last_direction === 'outbound' && !failed ? t.enums.messageStatus[th.last_status] : '';
+  const label = [t.inbox.openThread.replace('{name}', name), status, turn, line]
     .filter(Boolean)
     .join(' — ');
 
@@ -91,8 +94,11 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
         <time dateTime={th.last_message_at} title={fullTime(th.last_message_at)} className="text-2xs text-ink-3 tabular-nums">
           {listTime(th.last_message_at)}
         </time>
-        <span dir="auto" className={cn('col-start-2 truncate text-start text-xs', unread ? 'text-ink' : 'text-ink-2')}>
-          {previewText(th)}
+        <span className={cn('col-start-2 flex min-w-0 items-center gap-1 text-xs', unread ? 'text-ink' : 'text-ink-2')}>
+          {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} />}
+          <span dir="auto" className="min-w-0 truncate text-start">
+            {previewText(th)}
+          </span>
         </span>
         {failed ? (
           <span className="inline-flex items-center gap-1 text-2xs font-bold whitespace-nowrap text-act">

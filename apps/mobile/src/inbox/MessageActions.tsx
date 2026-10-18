@@ -2,16 +2,13 @@ import { canRetryCode, type MessageView } from '@ab/shared';
 import { Linking, View } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { InlineConfirm } from '@/ui/InlineConfirm';
 import { ErrorLine } from './ErrorLine';
-import { errorLine } from './message-text';
 import { useMessageAction } from './use-thread';
 
 /**
- * Under an outbound row that did not go out (R-MSG-03/05): why it failed and «جرّب تاني» (failed
+ * Under an outbound row that did not go out (R-MSG-03/05; why is MessageBubble's): «جرّب تاني» (failed
  * where trying again can help), «ابعتها بنفسك من واتساب» (the API's wa.me link with the text filled
  * in), which also tells the server: it holds the row so the sender never sends it too. The question
  * «بعتّها؟» then comes from the row itself (it survives closing the app): yes records the manual
@@ -19,7 +16,6 @@ import { useMessageAction } from './use-thread';
  * sender claimed it meanwhile (409 not_manual), it says the message is going out instead.
  */
 export function MessageActions({ message: m, phone }: { message: MessageView; phone: string }) {
-  const { color } = useTheme();
   const retry = useMessageAction(phone, 'retry');
   const manual = useMessageAction(phone, 'sent-manually');
   const handOff = useMessageAction(phone, 'hand-off');
@@ -30,18 +26,6 @@ export function MessageActions({ message: m, phone }: { message: MessageView; ph
   const sending = e instanceof ApiError && (e.body as { code?: unknown } | null)?.code === 'not_manual';
   return (
     <View style={{ gap: 6, marginTop: 4 }}>
-      {failed && !asking ? (
-        <AppText
-          style={{
-            fontFamily: type.ui[500],
-            fontSize: type.size.xs,
-            lineHeight: type.lineHeight(type.size.xs),
-            color: color.bad,
-          }}
-        >
-          {errorLine(m)}
-        </AppText>
-      ) : null}
       {failed && canRetryCode(m.error_code) ? (
         <Button
           variant="secondary"

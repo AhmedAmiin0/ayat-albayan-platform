@@ -96,6 +96,14 @@ describe('RecentInbox', () => {
     expect(screen.getByText('ولي أمر 1').className).toContain('font-bold');
   });
 
+  it('the link names our last status, since its label replaces the ticks\' own name', async () => {
+    const ours = { ...thread(1), last_direction: 'outbound', last_status: 'read' } as ThreadView;
+    apiFetch.mockResolvedValue({ items: [ours], total: 1, page: 1, pageSize: 30 });
+    wrap(<RecentInbox />);
+    const name = `${t.inbox.openThread.replace('{name}', 'ولي أمر 1')} — ${t.enums.messageStatus.read}`;
+    expect(await screen.findByRole('link', { name })).toBeTruthy();
+  });
+
   it('an empty inbox says so', async () => {
     apiFetch.mockResolvedValue({ items: [], total: 0, page: 1, pageSize: 30 });
     wrap(<RecentInbox />);

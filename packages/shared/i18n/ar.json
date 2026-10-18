@@ -2586,6 +2586,7 @@
     "sentAt": "أُرسلت {time}",
     "deliveredAt": "وصلت {time}",
     "readAt": "قُرئت {time}",
+    "manualTick": "يدويًا",
     "attempts": "المحاولات: {n} من {max}",
     "nextAttempt": "المحاولة القادمة {time}",
     "sendingNow": "تُرسل الآن",

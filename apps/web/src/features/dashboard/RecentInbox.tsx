@@ -3,6 +3,7 @@ import { useQuery } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { threadsQuery } from '@/features/inbox/api';
+import { DeliveryTicks } from '@/features/inbox/DeliveryTicks';
 import { listTime, previewText, threadName } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
@@ -10,6 +11,10 @@ import { sectionTitle } from './Bar';
 
 /** How many conversations the dashboard shows; the rest is one click away in the inbox. */
 export const RECENT_THREADS = 5;
+
+/** The link's label replaces the ticks' name, so it carries our last message's status word. */
+const ticksWord = (th: ThreadView): string =>
+  th.last_direction === 'outbound' ? t.enums.messageStatus[th.last_status] : '';
 
 function ThreadItem({ thread: th }: { thread: ThreadView }) {
   const unread = th.unread_count > 0;
@@ -19,7 +24,7 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
       <Link
         to="/admin/inbox"
         search={{ page: 1, phone: th.phone_e164 }}
-        aria-label={t.inbox.openThread.replace('{name}', name)}
+        aria-label={[t.inbox.openThread.replace('{name}', name), ticksWord(th)].filter(Boolean).join(' — ')}
         className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 rounded-sm px-2 py-2.5 text-ink no-underline transition-colors duration-150 hover:bg-sunk"
       >
         <span className="flex min-w-0 items-center gap-2">
@@ -29,8 +34,11 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
         <time dateTime={th.last_message_at} className="text-2xs text-ink-3 tabular-nums">
           {listTime(th.last_message_at)}
         </time>
-        <span dir="auto" className="col-span-2 truncate text-start text-sm text-ink-2">
-          {previewText(th)}
+        <span className="col-span-2 flex min-w-0 items-center gap-1 text-sm text-ink-2">
+          {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} />}
+          <span dir="auto" className="min-w-0 truncate text-start">
+            {previewText(th)}
+          </span>
         </span>
       </Link>
     </li>
