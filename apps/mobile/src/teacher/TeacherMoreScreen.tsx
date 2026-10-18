@@ -21,7 +21,7 @@ import { locale } from '@/lib/locale';
 export function TeacherMoreScreen() {
   const me = useTeacherMe();
   return (
-    <Screen>
+    <Screen scroll>
       <ScreenHeader
         title={t.mobile.more}
         subtitle={me.data && teacherName(me.data, locale)}

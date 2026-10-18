@@ -30,7 +30,7 @@ export function MoreScreen({ can = () => true }: { can?: (permission: Permission
     void signOutDevice().finally(() => setLeaving(false));
   };
   return (
-    <Screen>
+    <Screen scroll>
       <ScreenHeader title={t.mobile.more} trailing={<AccountHeaderAvatar href="/more/account" />} />
       <View style={{ marginHorizontal: -16 }}>
         {/* «حسابي» for every role (sales included: they share these tabs); the rest by permission. */}
