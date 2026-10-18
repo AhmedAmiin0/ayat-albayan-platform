@@ -15,10 +15,16 @@ export interface TemplateLineFacts {
   phone_number_id: string | null;
 }
 
-/** A Meta template one sync did not import, and why (the reason is the API's English, shown as data). */
+/** Why a sync did not import a template: a code (templates.perNumber.skipReasons.<code>) and its params. */
+export type TemplateSkipReason =
+  | { code: 'category'; category: string }
+  | { code: 'too_many_vars'; max: number }
+  | { code: 'bad_key' | 'media_header' | 'no_body' | 'named_vars' | 'button_value' | 'key_taken' };
+
+/** A Meta template one sync did not import (its name + language), and why. */
 export interface TemplateSkip {
   name: string;
-  reason: string;
+  reason: TemplateSkipReason;
 }
 
 /** One line's sync with Meta: only its own rows against its own WABA's list. */

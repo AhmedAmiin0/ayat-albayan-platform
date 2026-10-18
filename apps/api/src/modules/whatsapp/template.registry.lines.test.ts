@@ -48,7 +48,7 @@ describe('TemplateRegistry — per-number sync', () => {
       ['notifications', true, 2, 1, ['promo_offer']],
       ['chat', true, 3, 1, ['academy_welcome']],
     ]);
-    expect(lines[1]?.skipped).toEqual([{ name: 'copy_code (ar)', reason: 'no body' }]);
+    expect(lines[1]?.skipped).toEqual([{ name: 'copy_code (ar)', reason: { code: 'no_body' } }]);
   });
 
   it('line=chat: only chat rows, only the chat list; notifications is never read', async () => {

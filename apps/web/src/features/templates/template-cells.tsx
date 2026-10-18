@@ -1,4 +1,5 @@
-import type { TemplateView, WaLine } from '@ab/shared';
+import type { TemplateLineView, TemplateView, WaLine } from '@ab/shared';
+import { useId } from 'react';
 import { Button } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
@@ -41,13 +42,18 @@ export interface RowActionsProps {
   tpl: TemplateView;
   onSubmit: (tpl: TemplateView) => void;
   onMove: (tpl: TemplateView) => void;
+  /** The server's facts for the number the row would move to; undefined while loading. */
+  target: TemplateLineView | undefined;
 }
 
 /**
  * Submit to Meta (a not-submitted / rejected / missing row, on either number; a PDF-header template too:
- * the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog.
+ * the API uploads a sample PDF first) and «نقل إلى الرقم الآخر», each behind its own dialog. Moving to
+ * a number the server has no credentials for is disabled, with the reason beside it.
  */
-export function RowActions({ tpl, onSubmit, onMove }: RowActionsProps) {
+export function RowActions({ tpl, onSubmit, onMove, target }: RowActionsProps) {
+  const reason = useId();
+  const noTarget = target?.configured === false;
   return (
     <span className="flex flex-wrap gap-2">
       {canSubmit(tpl) && (
@@ -55,9 +61,21 @@ export function RowActions({ tpl, onSubmit, onMove }: RowActionsProps) {
           {t.templates.submit}
         </Button>
       )}
-      <Button size="sm" variant="ghost" aria-label={t.templates.moveFor.replace('{name}', templateName(tpl.key))} onClick={() => onMove(tpl)}>
+      <Button
+        size="sm"
+        variant="ghost"
+        aria-label={t.templates.moveFor.replace('{name}', templateName(tpl.key))}
+        aria-describedby={noTarget ? reason : undefined}
+        disabled={noTarget}
+        onClick={() => onMove(tpl)}
+      >
         {t.templates.move}
       </Button>
+      {noTarget && (
+        <span id={reason} className="self-center text-2xs text-ink-3">
+          {t.templates.moveUnavailable}
+        </span>
+      )}
     </span>
   );
 }

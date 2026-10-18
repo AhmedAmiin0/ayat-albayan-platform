@@ -47,20 +47,37 @@ export const canSubmit = (tpl: Pick<TemplateView, 'status'>): boolean =>
 export const otherLine = (line: WaLine): WaLine => (line === 'chat' ? 'notifications' : 'chat');
 
 const ERRORS: Record<string, string | undefined> = t.templates.error;
+/** The app id a line's sample upload needs (409 needs_app_id). */
+const APP_ID_KEY: Record<WaLine, string> = { notifications: 'WA_APP_ID', chat: 'WA_CHAT_APP_ID' };
 
-/** templates.error.<code> in words; meta_error carries Meta's own detail (or «—»). */
-function codeText(code: string | undefined, detail: unknown): string {
+interface CodeInput {
+  code: string | undefined;
+  /** Meta's own message or code (meta_error). */
+  detail: unknown;
+  /** The line the API named (not_configured, needs_app_id, needs_meta_driver); notifications when none. */
+  line: unknown;
+}
+
+/** templates.error.<code> in words: meta_error carries Meta's detail (or «—»), the rest name their line. */
+function codeText({ code, detail, line }: CodeInput): string {
   const text = code ? ERRORS[code] : undefined;
   if (!text) return t.common.error;
-  if (code !== 'meta_error') return text;
-  return text.replace('{message}', typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
+  if (code === 'meta_error') return text.replace('{message}', typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
+  const named: WaLine = line === 'chat' ? 'chat' : 'notifications';
+  return text.replace('{line}', t.enums.waLine[named]).replace('{key}', APP_ID_KEY[named]);
 }
 
 /** templates.error.<code> in words; Meta's own message (502 meta_error) when it sent one. */
 export function templateErrorText(error: unknown): string {
   const body = error instanceof ApiError ? (error.body as Record<string, unknown> | null) : null;
-  return codeText(errorCode(error) ?? undefined, body?.['meta_message'] ?? body?.['meta_code']);
+  return codeText({ code: errorCode(error) ?? undefined, detail: body?.['meta_message'] ?? body?.['meta_code'], line: body?.['line'] });
 }
 
-/** One number's failed sync in words (its code, Meta's message for meta_error). */
-export const lineSyncErrorText = (sync: Pick<TemplateLineSync, 'error' | 'message'>): string => codeText(sync.error, sync.message);
+type FailedSync = Pick<TemplateLineSync, 'line' | 'error' | 'message'>;
+
+/** One number's failed sync in words (its code, Meta's message for meta_error, its line). */
+export const lineSyncErrorText = (sync: FailedSync): string => codeText({ code: sync.error, detail: sync.message, line: sync.line });
+
+/** «تعذّرت مزامنة {line}: {error}» for one number's failed sync. */
+export const syncFailedText = (sync: FailedSync): string =>
+  t.templates.perNumber.syncFailed.replace('{line}', t.enums.waLine[sync.line]).replace('{error}', lineSyncErrorText(sync));

@@ -4,7 +4,7 @@ import { template } from '@/features/inbox/inbox-fixture';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { LINES } from './template-lines-fixture';
+import { LINES, lineView } from './template-lines-fixture';
 import { TemplateHealth } from './TemplateHealth';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -18,9 +18,9 @@ const WELCOME = template({ key: 'academy_welcome', meta_name: 'academy_welcome',
 const moveOf = (name: string) => screen.getByRole('button', { name: t.templates.moveFor.replace('{name}', name) });
 const linesCalls = () => apiFetch.mock.calls.filter(([path]) => path === '/messaging/templates/lines').length;
 
-async function renderMove() {
+async function renderMove(lines = LINES) {
   routeFetch(apiFetch, [
-    ['/messaging/templates/lines', LINES],
+    ['/messaging/templates/lines', lines],
     ['/messaging/templates', [BOOKING, WELCOME]],
   ]);
   renderWithClient(<TemplateHealth headingId="h" />);
@@ -52,7 +52,12 @@ describe('move a template to the other number', () => {
     fireEvent.click(moveOf('academy_welcome'));
     const dialog = within(screen.getByRole('dialog', { name: t.templates.moveTitle }));
     expect(dialog.queryByText(t.templates.moveProducerWarning)).toBeNull();
-    apiSend.mockResolvedValue({ template: { ...WELCOME, line: 'notifications', status: 'not_submitted' }, sync: null });
+    const moved = { ...WELCOME, line: 'notifications' as const, status: 'not_submitted' as const };
+    apiSend.mockResolvedValue({ template: moved, sync: null });
+    routeFetch(apiFetch, [
+      ['/messaging/templates/lines', LINES],
+      ['/messaging/templates', [BOOKING, moved]],
+    ]);
     fireEvent.click(dialog.getByRole('button', { name: t.templates.moveYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/messaging/templates/academy_welcome/line', { line: 'notifications' }));
     expect((await screen.findByRole('status')).textContent).toContain(t.templates.moved.replace('{line}', t.enums.waLine.notifications));
@@ -60,6 +65,16 @@ describe('move a template to the other number', () => {
     const row = screen.getAllByText('academy_welcome')[0]?.closest('tr');
     expect(row && within(row).getByText(t.enums.templateStatus.not_submitted)).toBeTruthy();
     await waitFor(() => expect(linesCalls()).toBe(2));
+  });
+
+  it('no move to a number the server is not set up for: disabled, with the reason beside it', async () => {
+    await renderMove([lineView('notifications'), lineView('chat', { configured: false })]);
+    await waitFor(() => expect((moveOf(t.templates.names.booking_confirmation) as HTMLButtonElement).disabled).toBe(true));
+    const reason = moveOf(t.templates.names.booking_confirmation).getAttribute('aria-describedby');
+    expect(reason && document.getElementById(reason)?.textContent).toBe(t.templates.moveUnavailable);
+    // The chat row moves to notifications, which is configured.
+    expect((moveOf('academy_welcome') as HTMLButtonElement).disabled).toBe(false);
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('a refused move keeps the row and says why', async () => {

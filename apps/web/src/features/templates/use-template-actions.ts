@@ -3,14 +3,15 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import type { ToastProps } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
-import { moveTemplateLine, setStarter, submitTemplate, templateErrorText, templateLinesQuery, templatesQuery } from './api';
+import { moveTemplateLine, setStarter, submitTemplate, syncFailedText, templateErrorText, templateLinesQuery, templatesQuery } from './api';
 
 /** The one toast of the template section. */
 export type Notice = Pick<ToastProps, 'message' | 'tone'>;
 
 /**
  * The per-row actions of template health: submit to Meta (T3, after its dialog), move to the other
- * number (after its dialog), the «متاح للمعلمين والمبيعات» switch. Every outcome is one toast.
+ * number (after its dialog), the «متاح للمعلمين والمبيعات» switch. Every outcome is one toast; a move
+ * whose re-sync on the new number failed says why (never only «نُقل»).
  */
 export function useTemplateActions() {
   const queryClient = useQueryClient();
@@ -32,10 +33,15 @@ export function useTemplateActions() {
   });
   const move = useMutation({
     mutationFn: moveTemplateLine,
-    onSuccess: async ({ template }) => {
+    onSuccess: async ({ template, sync }) => {
       replaceRow(template);
-      setNotice({ message: t.templates.moved.replace('{line}', t.enums.waLine[template.line]) });
-      await queryClient.invalidateQueries({ queryKey: templateLinesQuery.queryKey });
+      if (sync && !sync.ok) setNotice({ message: syncFailedText(sync), tone: 'error' });
+      else setNotice({ message: t.templates.moved.replace('{line}', t.enums.waLine[template.line]) });
+      // The re-sync may have imported or updated rows, and it is the new number's last sync.
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: templatesQuery.queryKey, exact: true }),
+        queryClient.invalidateQueries({ queryKey: templateLinesQuery.queryKey }),
+      ]);
     },
     onError: fail,
     onSettled: () => setMoving(null),

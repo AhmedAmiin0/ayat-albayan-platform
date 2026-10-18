@@ -13,7 +13,7 @@ const CHAT = { WA_CHAT_PHONE_NUMBER_ID: 'chat-phone', WA_CHAT_WABA_ID: 'chat-wab
 const env = (over: Record<string, string> = {}) => loadEnv({ ...BASE, ...over });
 
 describe('lineEnvs (docs/12 §13.1)', () => {
-  it('notifications keeps today’s config with appId; chat has its own ids and NO appId', () => {
+  it('notifications keeps today’s config with appId; chat has its own ids and WA_CHAT_APP_ID', () => {
     const lines = lineEnvs(env({ ...WA, ...CHAT, WA_CHAT_APP_ID: 'app-2' }));
     expect(lines.notifications).toEqual({
       base: 'http://localhost:4010',
@@ -29,7 +29,12 @@ describe('lineEnvs (docs/12 §13.1)', () => {
       phoneNumberId: 'chat-phone',
       wabaId: 'chat-waba',
       accessToken: 'chat-token',
+      appId: 'app-2',
     });
+  });
+
+  it('chat without WA_CHAT_APP_ID carries no appId (never the notifications app)', () => {
+    expect(lineEnvs(env({ ...WA, ...CHAT })).chat).not.toHaveProperty('appId');
   });
 
   it('the chat token falls back to WA_ACCESS_TOKEN', () => {

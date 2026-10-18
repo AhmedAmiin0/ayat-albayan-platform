@@ -16,6 +16,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 const p = t.templates.perNumber;
 const chatName = t.enums.waLine.chat;
 const syncChat = () => screen.getByRole('button', { name: p.syncFor.replace('{line}', chatName) });
+const syncingChat = () => screen.getByRole('button', { name: p.syncingFor.replace('{line}', chatName) });
 const block = (line: 'notifications' | 'chat') => {
   const el = screen.getAllByTestId('template-line').find((b) => b.getAttribute('data-line') === line);
   if (!el) throw new Error(`no block ${line}`);
@@ -55,17 +56,22 @@ describe('template lines: one sync per number', () => {
     fireEvent.click(syncChat());
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/health', { line: 'chat' }));
     expect(apiSend).toHaveBeenCalledTimes(1);
-    expect(syncChat().textContent).toBe(p.syncing);
-    expect((syncChat() as HTMLButtonElement).disabled).toBe(true);
+    // WCAG 2.5.3: the name starts with the number and contains the visible label, busy or not.
+    expect(syncingChat().textContent).toBe(p.syncing);
+    expect(syncingChat().getAttribute('aria-label')).toContain(p.syncing);
+    expect((syncingChat() as HTMLButtonElement).disabled).toBe(true);
     const welcome = template({ key: 'academy_welcome', meta_name: 'academy_welcome', line: 'chat' });
-    const sync = lineSync({ line: 'chat', meta_count: 7, synced: 3, imported: ['academy_welcome'], skipped: [{ name: 'promo_x', reason: 'not approved' }] });
+    const sync = lineSync({ line: 'chat', meta_count: 7, synced: 3, imported: ['academy_welcome'], skipped: [{ name: 'promo_x (ar)', reason: { code: 'too_many_vars', max: 9 } }] });
     answer({ lines: [sync], templates: [template(), welcome] });
     expect((await screen.findByRole('status')).textContent).toContain(p.synced.replace('{line}', chatName));
     const chat = block('chat');
     expect(chat.getByText(p.metaCount).nextElementSibling?.textContent).toBe('7');
     expect(chat.getByText(p.checkedRows).nextElementSibling?.textContent).toBe('3');
     expect(chat.getAllByText('academy_welcome')[0]?.closest('bdi')?.getAttribute('dir')).toBe('ltr');
-    expect(chat.getByText('not approved').closest('li')?.textContent).toBe(p.skipReason.replace('{name}', 'promo_x').replace('{reason}', 'not approved'));
+    const reason = p.skipReasons.too_many_vars.replace('{max}', '9');
+    const skip = chat.getByText('promo_x (ar)');
+    expect(skip.closest('bdi')?.getAttribute('dir')).toBe('ltr');
+    expect(skip.closest('li')?.textContent).toBe(p.skipReason.replace('{name}', 'promo_x (ar)').replace('{reason}', reason));
     await waitFor(() => expect(syncChat().textContent).toBe(p.sync));
     expect(await screen.findAllByText('academy_welcome')).not.toHaveLength(0);
     expect(block('notifications').getByText(p.neverSynced)).toBeTruthy();

@@ -1,10 +1,11 @@
-import { templateStatusStyle, type TemplateView } from '@ab/shared';
+import { templateStatusStyle, type TemplateLineView, type TemplateView, type WaLine } from '@ab/shared';
 import { createColumnHelper } from '@tanstack/react-table';
 import type { DataTableFeatures } from '@/components/DataTable';
 import { StatusChip } from '@/components/ui/status-chip';
 import { fullTime } from '@/features/inbox/format';
 import { t } from '@/lib/i18n';
 import { StarterToggle } from './StarterToggle';
+import { otherLine } from './api';
 import { Label, NameCell, NumberCell, RowActions, templateName } from './template-cells';
 import type { PhoneMap } from './use-template-lines';
 import { categoryOptions, lineOptions, qualityOptions, statusOptions } from './template-filters';
@@ -18,6 +19,8 @@ export interface TemplateColumnsInput {
   onMove: (tpl: TemplateView) => void;
   /** Each number's formatted phone, when a lines check has run. */
   phones: PhoneMap;
+  /** The server's facts for a number (a move to an unconfigured one is disabled). */
+  factsOf: (line: WaLine) => TemplateLineView | undefined;
   /** «متاح للمعلمين والمبيعات» (the restricted allow-list) switched for one row (owner 2026-10-12). */
   onStarter: (tpl: TemplateView, on: boolean) => void;
   /** The key whose starter flag is being saved: its switch waits. */
@@ -28,7 +31,7 @@ export interface TemplateColumnsInput {
  * R-MSG-01 health table: name + Meta name, number, category, status (+ Meta's reason), quality, checked,
  * the sales starter switch. The whole registry is loaded, so it sorts and filters locally.
  */
-export function templateColumns({ onSubmit, onMove, onStarter, saving, phones }: TemplateColumnsInput) {
+export function templateColumns({ onSubmit, onMove, onStarter, saving, phones, factsOf }: TemplateColumnsInput) {
   return col.columns([
     // The value is the shown name, so it sorts and filters by what the row says.
     col.accessor((r) => templateName(r.key), {
@@ -113,7 +116,7 @@ export function templateColumns({ onSubmit, onMove, onStarter, saving, phones }:
     col.display({
       id: 'actions',
       header: () => t.templates.actions,
-      cell: (c) => <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} />,
+      cell: (c) => <RowActions tpl={c.row.original} onSubmit={onSubmit} onMove={onMove} target={factsOf(otherLine(c.row.original.line))} />,
       meta: { className: 'max-sm:order-7', headClassName: 'w-px' },
     }),
   ]);

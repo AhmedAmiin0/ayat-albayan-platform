@@ -23,7 +23,7 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
   const lines = useTemplateLines();
   const a = useTemplateActions();
   const { setSubmitting, setMoving, toggleStarter, savingStarter: saving } = a;
-  const { phones } = lines;
+  const { phones, factsOf } = lines;
   const columns = useMemo(
     () =>
       templateColumns({
@@ -32,8 +32,9 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
         onStarter: (tpl, on) => toggleStarter({ key: tpl.key, on }),
         saving,
         phones,
+        factsOf,
       }),
-    [setSubmitting, setMoving, toggleStarter, saving, phones],
+    [setSubmitting, setMoving, toggleStarter, saving, phones, factsOf],
   );
   const rows = templates.data ?? [];
 
@@ -69,6 +70,7 @@ export function TemplateHealth({ headingId }: { headingId: string }) {
       {a.moving && (
         <MoveLineDialog
           template={a.moving}
+          target={factsOf(otherLine(a.moving.line))}
           busy={a.move.isPending}
           onConfirm={() => a.moving && a.move.mutate({ key: a.moving.key, line: otherLine(a.moving.line) })}
           onClose={() => setMoving(null)}

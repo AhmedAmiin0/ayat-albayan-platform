@@ -67,7 +67,7 @@ describe('template health (R-MSG-01, issue C1)', () => {
     expect((await screen.findByRole('status')).textContent).toContain(t.templates.perNumber.synced.replace('{line}', t.enums.waLine.notifications));
     await waitFor(() => expect(screen.queryByText(t.templates.names.renewal_due)).toBeNull());
     fireEvent.click(screen.getByRole('button', { name: sync }));
-    await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.templates.error.not_configured));
+    await waitFor(() => expect(screen.getByRole('status').textContent).toContain(t.templates.error.not_configured.replace('{line}', t.enums.waLine.notifications)));
   });
 
   it('submitting to Meta is explicit: the dialog shows the exact text, then T3', async () => {
@@ -87,12 +87,14 @@ describe('template health (R-MSG-01, issue C1)', () => {
 
   it('a PDF template without the Meta app id on the server says so', async () => {
     renderHealth();
-    apiSend.mockRejectedValue(new ApiError(409, { code: 'needs_app_id' }));
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'needs_app_id', line: 'notifications' }));
     await screen.findByText(t.templates.names.report_ready);
     fireEvent.click(rowOf('report_ready').getByRole('button', { name: t.templates.submit }));
     fireEvent.click(screen.getByRole('button', { name: t.templates.submitConfirmYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('POST', '/messaging/templates/report_ready/submit'));
-    expect((await screen.findByRole('status')).textContent).toContain(t.templates.error.needs_app_id);
+    expect((await screen.findByRole('status')).textContent).toContain(
+      t.templates.error.needs_app_id.replace('{line}', t.enums.waLine.notifications).replace('{key}', 'WA_APP_ID'),
+    );
   });
 
   it('a rejected row shows no stale quality', async () => {

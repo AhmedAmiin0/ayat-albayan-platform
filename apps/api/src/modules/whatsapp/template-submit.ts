@@ -23,8 +23,9 @@ export interface SubmitDeps {
 /**
  * POST /messaging/templates/:key/submit. A body Meta would reject is 409 invalid_template before any
  * call; the row's line must be configured (503 not_configured). A document header (report_ready) first
- * uploads the sample PDF for Meta's reviewer: that needs WA_APP_ID (409 needs_app_id without it; 409
- * needs_meta_driver on a kapso line). A rejected row is edited in place by the driver (Kapso: hsm_id).
+ * uploads the sample PDF for Meta's reviewer: that needs the line's app id (409 needs_app_id without it;
+ * 409 needs_meta_driver on a kapso line), both naming the row's line. A rejected row is edited in place
+ * by the driver (Kapso: hsm_id).
  */
 export async function submitTemplate(deps: SubmitDeps, key: string, actorId: string): Promise<TemplateView> {
   requireSync();
@@ -38,7 +39,7 @@ export async function submitTemplate(deps: SubmitDeps, key: string, actorId: str
   const document = row.header_format === 'document';
   // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching the line to meta.
   const noSamples = lineProvider(loadEnv(), row.line) === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
-  if (document && !client.canUploadSamples()) throw waHttpError(noSamples, 409);
+  if (document && !client.canUploadSamples()) throw waHttpError(noSamples, 409, { line: row.line });
   const headerHandle = document ? await fromMeta(() => client.uploadSample(SAMPLE_REPORT)) : undefined;
   const res = await fromMeta(() => client.submitTemplate(row, { headerHandle }));
   const status = ourStatus(res.status);

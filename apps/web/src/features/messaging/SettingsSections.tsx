@@ -42,6 +42,16 @@ export function SectionFields({ id, state }: { id: SettingsSection; state: Setti
   );
 }
 
+/** Does the search match LinesCard's own text? */
+export const linesMatch = (query: string): boolean =>
+  matchesText(`${t.templates.settings.lines.title} ${t.templates.settings.lines.intro}`, query);
+
+/** Does the search match the template section's own text (its title, intro, «القوالب حسب الرقم»)? */
+export const templatesMatch = (query: string): boolean => {
+  const p = t.templates.perNumber;
+  return matchesText(`${t.templates.title} ${t.templates.intro} ${p.title} ${p.sync}`, query);
+};
+
 /** «الرسائل والواتساب»: the switches that save on their own, the WhatsApp lines, the timing fields, template health. */
 export function MessagingSection({ settings, state }: { settings: AcademySettings; state: SettingsFormState }) {
   const templates = useId();
@@ -49,9 +59,8 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
   const showSending = matchesSetting('messaging_enabled', query) || matchesSetting('crm_cutover_done', query);
   const showAuto = matchesSetting('auto_messages_enabled', query);
   const showFeedback = matchesSetting('feedback_mode', query);
-  const showLines = matchesText(`${t.templates.settings.lines.title} ${t.templates.settings.lines.intro}`, query);
-  const p = t.templates.perNumber;
-  const showTemplates = matchesText(`${t.templates.title} ${t.templates.intro} ${p.title} ${p.sync}`, query);
+  const showLines = linesMatch(query);
+  const showTemplates = templatesMatch(query);
   const hasFields = FORM_KEYS.some((k) => settingDef(k).section === 'messaging' && matchesSetting(k, query));
   const searching = query.trim() !== '';
   if (searching && !showSending && !showAuto && !showFeedback && !showLines && !hasFields && !showTemplates) return null;
