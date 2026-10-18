@@ -28,7 +28,7 @@ const rows = () =>
  */
 export function SalesMoreScreen({ can }: { can: Can }) {
   return (
-    <Screen>
+    <Screen scroll>
       <ScreenHeader
         title={t.mobile.more}
         subtitle={t.mobileRoles.salesRole}
