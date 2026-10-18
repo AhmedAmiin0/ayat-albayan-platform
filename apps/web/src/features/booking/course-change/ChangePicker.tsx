@@ -23,7 +23,7 @@ export interface ChangePickerProps {
  * (tapping another slot that day replaces it), exactly the plan's days a week. Unchanged days are
  * refused by the series check (400 no_change, shown with its text): only the server knows the active
  * rules a pending change keeps. The grid opens on the first prefilled pick's week (changePicks: never
- * before startsOn); «الأسبوع السابق» pages back to the current week, so a pending change's old days
+ * before startsOn); «الأسبوع الماضي» pages back to the current week, so a pending change's old days
  * before its startsOn stay reachable.
  */
 export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePickerProps) {

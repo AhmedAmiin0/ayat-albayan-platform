@@ -46,10 +46,9 @@ export function sameDays(req: { byday: readonly number[]; startTimeLocal: string
 }
 
 /**
- * The first local day the change form offers: today in the course's zone while it runs (a change
- * saved earlier whose latest set starts later still runs its old days this week), else its opensOn
- * (a course booked ahead opens on its own first lesson day, of its old rules too while a change is
- * pending), never before today.
+ * The earliest day a change can start: today in the course's zone while it runs, else its opensOn
+ * (the first lesson day of its active rules, the old ones too while a change is pending), never
+ * before today. Only changePrefillFrom reads it; the forms open on the prefill, not on this day.
  */
 export function changeOpensOn(course: Pick<BookedCourse, 'tz' | 'opensOn' | 'running'>, now: Date): string {
   const today = wallParts(now.toISOString(), course.tz).date;
