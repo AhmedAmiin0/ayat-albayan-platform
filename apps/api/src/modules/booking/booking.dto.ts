@@ -37,5 +37,8 @@ export const slotsQuerySchema = z
 /** GET /booking/makeup-candidates?studentId (R-SCH-10). */
 export const makeupCandidatesQuery = z.object({ studentId: z.uuid() });
 
+/** GET /sales/booking/course?studentId (the assistant's course wizard). */
+export const courseQuerySchema = z.object({ studentId: z.uuid() });
+
 export type TeacherOptionsQuery = z.output<typeof teacherOptionsQuerySchema>;
 export type SlotsQuery = z.output<typeof slotsQuerySchema>;

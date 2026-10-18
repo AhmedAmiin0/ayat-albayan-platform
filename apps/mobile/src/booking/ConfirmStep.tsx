@@ -1,6 +1,5 @@
 import { counted } from '@ab/shared';
 import { View } from 'react-native';
-import { DayChips } from '@/inbox/qualification/DayChips';
 import { t } from '@/lib/i18n';
 import { SectionLabel } from '@/students/SectionLabel';
 import { AppText } from '@/ui/AppText';
@@ -11,7 +10,8 @@ import { summary, type SummaryRow } from './confirm-summary';
 import { FailureNotice, PackageDaysNote } from './ConfirmNotices';
 import type { StudentChoice, TrialDraft } from './draft';
 import { effectiveByday } from './package-choice';
-import { ruleFromSlot } from './slots';
+import { picksOf } from './picks';
+import { PicksList } from './PicksList';
 
 export interface ConfirmStepProps {
   draft: TrialDraft;
@@ -21,8 +21,6 @@ export interface ConfirmStepProps {
   onChangeSlot: () => void;
   /** Back to «الفاتورة» (a refused or expired one). */
   onChangeInvoice: () => void;
-  /** A paid package's weekly days (the first slot's day stays in). */
-  onDays: (byday: number[]) => void;
 }
 
 /** The label/value lines of a review, as the trial and the makeup both show them. */
@@ -44,7 +42,7 @@ export function SummaryList({ rows }: { rows: SummaryRow[] }) {
 
 /**
  * «المراجعة»: the booking as it will be made: a trial free of charge, or a package with its weekly
- * days (chips, the first slot's day always on) and its invoice; then the WhatsApp confirmation the
+ * days (each with its time, picked on the slot step) and its invoice; then the WhatsApp confirmation the
  * parent will get (queued by the API). A clash or a similar-named child shows its way out here.
  */
 export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: ConfirmStepProps) {
@@ -63,13 +61,8 @@ export function ConfirmStep({ draft, onSubmit, busy, failure, ...props }: Confir
         <AppText style={note}>{t.booking.trialFree}</AppText>
       ) : (
         <View style={{ gap: 6 }}>
-          <SectionLabel>{`${t.booking.pickDays} * · ${counted(t.booking.perWeek, days.length)}`}</SectionLabel>
-          <DayChips
-            value={days}
-            onChange={props.onDays}
-            locked={draft.startsAt ? ruleFromSlot(draft.startsAt, draft.tz).weekday : undefined}
-            accessibilityLabel={t.booking.pickDays}
-          />
+          <PicksList picks={picksOf(draft)} tz={draft.tz} />
+          <AppText style={note}>{counted(t.booking.perWeek, days.length)}</AppText>
           <PackageDaysNote pkg={draft.pkg} days={days.length} />
         </View>
       )}

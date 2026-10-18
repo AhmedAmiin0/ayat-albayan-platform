@@ -87,9 +87,13 @@ test.describe('forms parity (owner’s three Google Forms)', () => {
     await step.getByRole('button', { name: ar.schedule.nextWeek }).click();
     await step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('button').first().click();
     await expect(step.getByRole('heading', { name: 'تاريخ أول حلقة' })).toBeVisible();
-    const days = step.getByRole('group', { name: 'الأيام المتاحة' });
-    await expect(days.locator('legend')).toContainText('*');
-    expect(await days.getByRole('checkbox').evaluateAll((els) => els.map((e) => e.closest('label')?.textContent?.trim()))).toEqual(DAYS);
+    // DEVIATION (owner 2026-10-18): each day is picked on the slot grid with its own time (السبت →
+    // الجمعة columns); the picked days are listed under «الأيام المتاحة» *, each removable.
+    const columns = step.getByRole('group', { name: ar.booking.freeSlots }).getByRole('region');
+    expect((await columns.evaluateAll((els) => els.map((e) => e.getAttribute('aria-label') ?? ''))).map((l) => l.split(' ')[0])).toEqual(DAYS);
+    const days = step.getByRole('region', { name: /الأيام المتاحة/ });
+    await expect(days.getByRole('heading')).toContainText('*');
+    await expect(days.getByRole('button', { name: new RegExp(ar.booking.removeDay.replace('{day}', '')) })).toHaveCount(1);
   });
 
   test('2 · «تقرير الحلقة»: sections, titles, options and order', async ({ asRole }) => {

@@ -58,7 +58,11 @@ test('her only child is picked; the sales quote; a failed save retried keeps ONE
   expect(await screen.findByText(m.error.generic)).toBeTruthy();
   await fireEvent.press(await saveButton());
   await waitFor(() => expect(mockReplace).toHaveBeenCalledTimes(1));
-  expect(mockReplace).toHaveBeenCalledWith({ pathname: '/inbox/sales-transfer', params: { phone: PHONE, subscriptionId: SUB } });
+  // On to the package's weekly days, which go on to its transfer (owner 2026-10-18).
+  expect(mockReplace).toHaveBeenCalledWith({
+    pathname: '/inbox/sales-course',
+    params: { studentId: KID, phone: PHONE, subscriptionId: SUB },
+  });
 
   const [first, second] = sent('/sales/subscriptions').map((c) => c[2] as { clientRequestId: string });
   expect(first).toEqual({

@@ -13,6 +13,7 @@ import {
   pickSlot,
   pickTeacher,
   pickTeacherAndSlot,
+  pickWednesday,
   respond,
   routeSend,
   SISTER_ID,
@@ -82,11 +83,14 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
     expect(String(apiFetch.mock.calls.find(([p]) => String(p).startsWith('/booking/slots'))?.[0])).toContain(
       `studentIds=${STUDENT_ID}%2C${SISTER_ID}`,
     );
-    // The paid package came first, so the repeat days are offered right on the slot step, and the
-    // whole series is checked there before the review.
-    fireEvent.click(screen.getByRole('checkbox', { name: t.enums.weekday[3] }));
+    // The paid package came first, so a second day at its own time is picked right on the slot
+    // grid, and the whole series is checked there before the review.
+    expect(screen.getByText(t.booking.pickDayTimes)).toBeTruthy();
+    pickWednesday();
+    expect(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[3]) })).toBeTruthy();
     expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();
-    expect(apiSend).toHaveBeenCalledWith('POST', '/booking/check', expect.objectContaining({ byday: [0, 3] }));
+    const dayTimes = [{ weekday: 3, startTimeLocal: '19:30' }];
+    expect(apiSend).toHaveBeenCalledWith('POST', '/booking/check', expect.objectContaining({ byday: [0, 3], dayTimes }));
     next();
 
     // A paid package needs its invoice (R-PAY-03): «التالي» waits, the upload goes to the bucket.
@@ -103,6 +107,7 @@ describe('BookingWizard from a student profile (R-SCH-06)', () => {
       studentIds: [STUDENT_ID, SISTER_ID],
       teacherId: ABRAR.id,
       byday: [0, 3],
+      dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }],
       startTimeLocal: '17:00',
       tz: 'Asia/Riyadh',
       durationMin: 45,

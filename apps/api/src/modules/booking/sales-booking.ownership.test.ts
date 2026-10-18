@@ -10,6 +10,7 @@ import type { BookingService } from './booking.service';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 import { SalesBookingService } from './sales-booking.service';
+import type { SalesCourse } from './sales-course.service';
 
 // settings.sales_auto_assign OFF (owner 2026-10-12): /sales/booking checks no ownership (own = null);
 // the four trial-only rules still hold. ON keeps today's rules (sales-booking.scope.test.ts).
@@ -101,7 +102,7 @@ describe('SalesBookingService.book: OFF books any lead, ON still refuses it', ()
     sales.ownership.mockResolvedValue(NO_OWNERSHIP);
     const booking = { book: vi.fn(), check: vi.fn() };
     booking.book.mockResolvedValue({ rule_id: 'r1', student_ids: ['n1'], guardian_ids: ['g1'], lessons: [], message_ids: [], invoice_id: null });
-    return { booking, svc: new SalesBookingService(scope, booking as unknown as BookingService) };
+    return { booking, svc: new SalesBookingService(scope, booking as unknown as BookingService, {} as unknown as SalesCourse) };
   };
 
   it('OFF: a lead that is not hers books, with HER id as the actor (brought_by credits her)', async () => {

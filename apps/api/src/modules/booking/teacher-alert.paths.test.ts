@@ -6,6 +6,7 @@ import type { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
 import type { SalesBookingScope } from './sales-booking.ownership';
+import type { SalesCourse } from './sales-course.service';
 import { SalesBookingService } from './sales-booking.service';
 import { fakeTeacherAlert } from './teacher-alert.fakes';
 
@@ -35,9 +36,9 @@ describe('teacher alert on both booking paths (R-NOT-03)', () => {
 
   it('the assistant’s wizard (POST /sales/booking) alerts the teacher once', async () => {
     const { booking, push } = setup();
-    const scope = { of: vi.fn(async () => null) } as unknown as SalesBookingScope;
+    const scope = { forRequest: vi.fn(async () => null) } as unknown as SalesBookingScope;
     const user: AuthUser = { id: 'sales-1', email: null, role: 'sales' };
-    await new SalesBookingService(scope, booking).book(leadRequest(), user);
+    await new SalesBookingService(scope, booking, {} as unknown as SalesCourse).book(leadRequest(), user);
     expect(push.notifyProfiles).toHaveBeenCalledWith(expect.objectContaining({ kind: 'new_student', profileIds: ['P1'] }));
     expect(push.notifyProfiles).toHaveBeenCalledTimes(1);
   });

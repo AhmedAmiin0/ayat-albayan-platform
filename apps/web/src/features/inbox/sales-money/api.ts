@@ -1,6 +1,7 @@
 import type {
   SalesChatReceipt,
   SalesChatReceiptFile,
+  SalesCourseView,
   SalesFamilyView,
   SalesMoneySubscriptionView,
   SalesPaymentView,
@@ -96,3 +97,10 @@ export async function refreshAfterSalesWrite(queryClient: QueryClient): Promise<
     queryClient.invalidateQueries({ queryKey: ['sales', 'subscriptions'] }),
   ]);
 }
+
+/** GET /sales/booking/course?studentId=: what «أيام الحلقات» needs (the subscription's facts, or why she can't). */
+export const salesCourseQuery = (studentId: string) =>
+  queryOptions({
+    queryKey: [...SALES_MONEY_KEY, 'course', studentId],
+    queryFn: () => apiFetch<SalesCourseView>(`/sales/booking/course?studentId=${encodeURIComponent(studentId)}`),
+  });

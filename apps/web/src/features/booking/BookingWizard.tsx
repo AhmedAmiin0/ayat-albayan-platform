@@ -7,9 +7,10 @@ import { t } from '@/lib/i18n';
 import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
 import { GapChip } from './GapChip';
-import { stepReady, stepsFor, type BookingDraft, type PickedStudent, type StepKey } from './draft';
+import { stepReady, stepsOf, type BookingDraft, type PickedStudent, type StepKey } from './draft';
 import type { BookHint } from './hint';
 import { isNewStudent } from './new-student';
+import { useCourseClean } from './SeriesCheck';
 import { WizardBody } from './WizardBody';
 import { WizardSteps } from './WizardSteps';
 
@@ -36,7 +37,7 @@ export interface BookingWizardProps {
  */
 export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId }: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
-  const [step, setStep] = useState<StepKey>('students');
+  const [step, setStep] = useState<StepKey>(() => stepsOf(initial)[0] ?? 'students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
   const section = useRef<HTMLElement>(null);
   useFocusOnChange(section, step);
@@ -44,9 +45,12 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
     setDraft((d) => ({ ...d, ...p }));
     if (p.pkg || p.kind) onChoice?.({ kind: p.kind ?? draft.kind, pkg: p.pkg ?? draft.pkg });
   };
-  const steps = stepsFor(draft.kind);
+  const steps = stepsOf(draft);
   const index = steps.indexOf(step);
   const go = (to: number) => setStep(steps[to] ?? step);
+  // The assistant's course leaves the slot step only over a clean series check (no clash, no error).
+  const clean = useCourseClean(draft);
+  const ready = stepReady(draft, step) && (step !== 'slot' || !draft.course || clean);
 
   if (booked && draft.teacher) {
     return (
@@ -82,12 +86,15 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
       {step === 'students' && isNewStudent(draft) && !primary && !stepReady(draft, step) && (
         <p className="mt-3 text-xs text-ink-3">{t.booking.fillRequired}</p>
       )}
+      {step === 'slot' && draft.course && stepReady(draft, step) && !clean && (
+        <p className="mt-3 text-xs text-ink-3">{t.booking.courseNeedsCheck}</p>
+      )}
       <div className="mt-6 flex items-center justify-between gap-3 border-t border-rule pt-4">
         <Button type="button" variant="ghost" disabled={index === 0} onClick={() => go(index - 1)}>
           {t.booking.back}
         </Button>
         {step !== 'review' && (
-          <Button type="button" disabled={!stepReady(draft, step)} onClick={() => go(index + 1)}>
+          <Button type="button" disabled={!ready} onClick={() => go(index + 1)}>
             {t.booking.next}
           </Button>
         )}

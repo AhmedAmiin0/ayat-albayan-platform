@@ -21,6 +21,12 @@ describe('after a booking (R-SUB-01)', () => {
     expect(subscribeTarget({ ...emptyDraft({ kind: 'makeup' }), students: [picked] }, RESULT)).toBeNull();
   });
 
+  it('the assistant’s course follows the subscription she made: no second one offered', () => {
+    const picked = { id: 's-new', name: 'جود', code: 'AB-0184' };
+    const course = { perWeek: 2, lessonsTotal: 8, package: '8' as const, startsOn: '2026-10-03' };
+    expect(subscribeTarget({ ...emptyDraft(), students: [picked], course }, RESULT)).toBeNull();
+  });
+
   it('an existing student keeps their name and code', () => {
     const picked = { id: 's-1', name: 'سهيلة', code: 'AB-0183' };
     const draft = { ...emptyDraft(), students: [picked, { id: 's-2', name: 'جود', code: 'AB-0184' }] };

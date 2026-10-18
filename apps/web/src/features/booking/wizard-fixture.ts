@@ -20,6 +20,7 @@ export const ABRAR: BookingTeacherOption = {
 };
 export const NOOR: BookingTeacherOption = { ...ABRAR, id: 'n-1', display_name_ar: 'نور', has_availability: false };
 export const SLOT = '2026-10-04T14:00:00.000Z'; // Sunday 17:00 Riyadh
+export const WED_SLOT = '2026-10-07T16:30:00.000Z'; // Wednesday 19:30 Riyadh
 
 const PROFILE = {
   id: STUDENT_ID,
@@ -40,7 +41,7 @@ export const RESPONSES: [string, unknown][] = [
   [`/students/${STUDENT_ID}`, PROFILE],
   ['/guardians/g-1', { id: 'g-1', name: 'أم سهيلة', phone_e164: '+966501234567', country: 'SA', tz: 'Asia/Riyadh' }],
   ['/booking/teachers', [ABRAR, NOOR]],
-  ['/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [{ starts_at: SLOT, ends_at: SLOT, conflicts: [] }] }],
+  ['/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots: [SLOT, WED_SLOT].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] })) }],
   ['/pricing/quote', QUOTE],
 ];
 
@@ -62,6 +63,12 @@ export async function pickSlot(): Promise<void> {
   next();
   const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
   fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+}
+
+/** A package's second day at its own time: Wednesday 19:30 (multi-pick, owner 2026-10-18). */
+export function pickWednesday(): void {
+  const wednesday = screen.getByRole('region', { name: new RegExp(`^${t.enums.weekday[3]} `) });
+  fireEvent.click(within(wednesday).getByRole('button', { name: /19:30/ }));
 }
 
 /** Teacher → package (as preset) → slot (Sunday 17:00): the steps every path shares. */

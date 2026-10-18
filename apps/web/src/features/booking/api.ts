@@ -39,12 +39,14 @@ export const createBooking = (body: BookingBody, mode: BookingMode = 'admin') =>
 
 /**
  * POST /booking/check — the whole series' clashes for the slot step, before «احجز» (R-SCH-04),
- * including the weeks after a coming DST change. Keyed by the body minus its idempotency key.
+ * including the weeks after a coming DST change. Keyed by the body minus its idempotency key,
+ * invoice and meeting link.
  */
 export const bookingCheckQuery = (body: BookingBody, mode: BookingMode = 'admin') => {
   const key: Partial<BookingBody> = { ...body };
   delete key.clientRequestId;
   delete key.invoice; // the check never needs the proof
+  delete key.meetingLink; // nor the link: typing it never re-checks
   return queryOptions({
     queryKey: ['booking', mode, 'check', JSON.stringify(key)],
     queryFn: () => apiSend<{ conflicts: Conflict[] }>('POST', `${bookingBase(mode)}/check`, body),

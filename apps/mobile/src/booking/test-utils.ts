@@ -36,13 +36,14 @@ export function fakeBookingApi() {
   return { api, fetch };
 }
 
-/** The chat's «اشترك» wizard: name, teacher, the package step as it is, the slot → «الفاتورة». */
+/** The chat's «اشترك» wizard: name, teacher, the package step as it is, the slot, «التالي» → «الفاتورة». */
 export async function walkPackageToInvoice(time = '17:00') {
   await fireEvent.changeText(await screen.findByLabelText(t.leads.studentName), 'يوسف');
   await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await fireEvent.press(await screen.findByText(maryam.display_name_ar));
   await fireEvent.press(await screen.findByRole('button', { name: t.booking.next }));
-  await fireEvent.press(await screen.findByRole('button', { name: new RegExp(`^${time}`) }));
+  await fireEvent.press(await screen.findByRole('checkbox', { name: new RegExp(`^${time}`) }));
+  await fireEvent.press(screen.getByRole('button', { name: t.booking.next }));
   await screen.findByText(t.booking.invoice.hint);
 }
 

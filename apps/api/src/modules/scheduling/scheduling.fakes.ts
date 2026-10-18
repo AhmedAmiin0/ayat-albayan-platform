@@ -28,6 +28,8 @@ export function ruleRow(over: Partial<RuleWithLinks> = {}): RuleWithLinks {
     updated_at: '2026-10-01T10:00:00+00:00',
     created_by: null,
     client_request_id: null,
+    first_rule_id: null,
+    subscription_id: null,
     teacher: { id: TEACHER_ID, meeting_link: 'https://meet.jit.si/abrar', tz: 'Africa/Cairo' },
     schedule_rule_students: [{ student_id: STUDENT_ID, student: { meeting_link_override: null } }],
     ...over,

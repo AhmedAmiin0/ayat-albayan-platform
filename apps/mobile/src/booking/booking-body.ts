@@ -1,7 +1,7 @@
-import { normalizePhone, registrationStatus } from '@ab/shared';
+import { dayTimesFromPicks, normalizePhone, registrationStatus } from '@ab/shared';
 import type { BookingBody, InvoiceDraft, InvoiceInput } from './contract';
 import type { StudentChoice, TrialDraft } from './draft';
-import { effectiveByday } from './package-choice';
+import { picksOf } from './picks';
 import { ruleFromSlot } from './slots';
 
 export interface BodyOptions {
@@ -18,8 +18,22 @@ export function toInvoiceInput(invoice: InvoiceDraft): InvoiceInput {
 }
 
 /**
+ * The rule's timing: a trial one lesson on the slot's local day (invariant 4); a package every
+ * pick's weekday from the earliest pick, with `dayTimes` for the days at another time.
+ */
+export function ruleTiming(d: TrialDraft, startsAt: string) {
+  const picked = d.kind === 'package' ? dayTimesFromPicks(picksOf(d), d.tz) : null;
+  if (!picked) {
+    const rule = ruleFromSlot(startsAt, d.tz);
+    return { byday: [rule.weekday], startTimeLocal: rule.startTimeLocal, startsOn: rule.startsOn, startsAt };
+  }
+  const { dayTimes, ...rest } = picked;
+  return { ...rest, ...(dayTimes.length > 0 ? { dayTimes } : {}) };
+}
+
+/**
  * POST /booking: a trial is one lesson, a rule on the slot's local day that ends on it (invariant
- * 4); a paid package repeats weekly from the slot on its days, with its invoice (a trial has none).
+ * 4); a paid package repeats weekly on its picks' days, with its invoice (a trial has none).
  * The new child starts trial with a trial lesson, else new (registrationStatus, docs/18 row 1: only a
  * positive payment makes it active), and carries the form's age and gender; the guardian its
  * «عرفت عننا منين؟». Unanswered optional questions are left out.
@@ -27,18 +41,15 @@ export function toInvoiceInput(invoice: InvoiceDraft): InvoiceInput {
 export function toBookingRequest(d: TrialDraft, o: BodyOptions): BookingBody | null {
   const phone = normalizePhone(d.phone);
   if (!d.teacher || !d.startsAt || !phone.ok) return null;
-  const rule = ruleFromSlot(d.startsAt, d.tz);
   const base = {
     kind: d.kind,
     teacherId: d.teacher.id,
-    byday: effectiveByday(d),
-    startTimeLocal: rule.startTimeLocal,
+    // byday, startTimeLocal, startsOn, startsAt (+ dayTimes)
+    ...ruleTiming(d, d.startsAt),
     tz: d.tz,
     durationMin: d.durationMin,
-    startsOn: rule.startsOn,
     package: d.pkg,
     clientRequestId: o.requestId,
-    startsAt: d.startsAt,
     leadId: d.leadId,
     // The API answers 400 invoice_required when a package arrives without one.
     ...(d.kind !== 'trial' && d.invoice ? { invoice: toInvoiceInput(d.invoice) } : {}),

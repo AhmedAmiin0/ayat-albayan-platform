@@ -6,6 +6,7 @@ export * from './scheduling.js';
 export * from './lesson-time.js';
 export * from './feedback.js';
 export * from './booking-extras.js';
+export * from './day-times.js';
 export * from './teacher-students.js';
 export * from './student-filters.js';
 export * from './list-sort.js';

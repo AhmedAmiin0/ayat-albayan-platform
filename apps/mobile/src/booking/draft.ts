@@ -47,7 +47,7 @@ export interface TrialDraft {
   /** Teacher-gender preference (R-SCH-06); null = «مش فارقة». */
   gender: Gender | null;
   teacher: BookingTeacherOption | null;
-  /** The picked free slot (UTC instant). */
+  /** The picked free slot (UTC instant); a package's earliest pick (picks.ts). */
   startsAt: string | null;
   /** «نوع الحجز»: a trial or a package (a makeup has its own wizard: makeup-draft.ts). */
   kind: Exclude<BookingKind, 'makeup'>;
@@ -57,8 +57,8 @@ export interface TrialDraft {
   invoice: InvoiceDraft | null;
   /** «المده»: the lesson length the slots and the rule use (the form's default 45). */
   durationMin: Duration;
-  /** A paid package's extra weekly days; the first slot's day is always in (effectiveByday). */
-  byday: number[];
+  /** A paid package's other picks (one per family-tz weekday, each with its own time), sorted. */
+  extra: string[];
 }
 
 /** The answer to 409 duplicate_student: book that existing child, or create the new one anyway. */
@@ -104,7 +104,7 @@ export function draftFromLead(lead: BookingLead, pkg: PackageSize = 'trial'): Tr
     pkg,
     invoice: null,
     durationMin: DEFAULT_MINUTES,
-    byday: [],
+    extra: [],
   };
 }
 

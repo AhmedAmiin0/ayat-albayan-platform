@@ -1,4 +1,4 @@
-import { clockTime, lessonWhenText, RIYADH_TZ, type SlotView } from '@ab/shared';
+import { clockTime, lessonWhenText, RIYADH_TZ, utcOffsetMinutes, type SlotView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { ltr } from '@/ui/Ltr';
@@ -16,6 +16,19 @@ export const cityOf = (tz: string): string => cities[tz] ?? ltr(tz);
 /** GET /booking/slots `from`/`to`: now → 7 days on (the API caps a window at 14). */
 export function slotWindow(now: Date): { from: string; to: string } {
   return { from: now.toISOString(), to: new Date(now.getTime() + WINDOW_DAYS * DAY).toISOString() };
+}
+
+/** The instant a local day (YYYY-MM-DD) begins in `tz`; a second pass settles a DST change. */
+export function dayStartUtc(date: string, tz: string): Date {
+  const wall = Date.parse(`${date}T00:00:00Z`);
+  const first = wall - utcOffsetMinutes(tz, new Date(wall)) * 60_000;
+  return new Date(wall - utcOffsetMinutes(tz, new Date(first)) * 60_000);
+}
+
+/** Where the slot window opens: now, or `from` (an instant) when that is later. */
+export function windowStart(now: Date, from?: string): Date {
+  const at = from ? Date.parse(from) : NaN;
+  return Number.isNaN(at) || at <= now.getTime() ? now : new Date(at);
 }
 
 /** The rule fields a slot fixes in the family's zone: local day, «HH:MM», weekday 0 = الأحد. */

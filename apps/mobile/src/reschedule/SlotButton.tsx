@@ -10,17 +10,19 @@ export interface SlotButtonProps {
   tz: string;
   selected: boolean;
   onPick: (startsAt: string) => void;
+  /** One of several (radio, the default), a pick among many (checkbox), or a plain button. */
+  role?: 'radio' | 'checkbox' | 'button';
 }
 
 /** A free start: big Riyadh time, the student's clock under it; picked = inverse (docs/07 §6). */
-export function SlotButton({ startsAt, tz, selected, onPick }: SlotButtonProps) {
+export function SlotButton({ startsAt, tz, selected, onPick, role = 'radio' }: SlotButtonProps) {
   const { color } = useTheme();
   const { riyadh, local } = slotTimes(startsAt, tz);
   const ink = selected ? color.onInverse : color.ink;
   return (
     <Pressable
-      accessibilityRole="radio"
-      accessibilityState={{ checked: selected }}
+      accessibilityRole={role}
+      accessibilityState={role === 'button' ? {} : { checked: selected }}
       accessibilityLabel={local ? `${riyadh}${t.common.listSeparator}${local}` : riyadh}
       onPress={() => onPick(startsAt)}
       style={({ pressed }) => ({

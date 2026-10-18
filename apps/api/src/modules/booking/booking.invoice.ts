@@ -25,8 +25,12 @@ import { BookingQueries } from './booking.queries';
 const bad = (code: string) => domainError(HttpStatus.BAD_REQUEST, code);
 type Kind = InvoiceRow['kind'];
 type Saved = Pick<InvoiceRow, 'path' | 'mime' | 'size_bytes'>;
-/** The booked families' phones, and settings.upload_max_mb in bytes. */
-export type InvoiceScope = { phones: readonly string[]; maxBytes: number };
+/**
+ * The booked families' phones, and settings.upload_max_mb in bytes. `waived`: the caller's
+ * server-side option (BookingPlanner PrepareOptions.invoiceWaived, the assistant's course): no
+ * invoice is then null instead of 400 invoice_required.
+ */
+export type InvoiceScope = { phones: readonly string[]; maxBytes: number; waived?: boolean };
 
 /**
  * The فاتورة of a non-trial booking (R-PAY-03, R-MSG-06): a file in the private `invoices` bucket,
@@ -50,13 +54,14 @@ export class BookingInvoices {
   }
 
   /**
-   * The invoice row to store, null for a trial (a stray invoice is dropped). 400 invoice_required /
+   * The invoice row to store, null for a trial (a stray invoice is dropped) or a waived one. 400 invoice_required /
    * request_id_required / invoice_path / invoice_message / invoice_type, 410 media_expired, 413.
    * A replay (the request already stored its invoice) returns that row and copies nothing.
    */
   async resolve(req: BookingRequest, scope: InvoiceScope): Promise<InvoiceRow | null> {
     const kind = bookingKindOf(req);
     if (kind === 'trial') return null;
+    if (!req.invoice && scope.waived) return null;
     if (!req.invoice) throw bad('invoice_required');
     const requestId = req.clientRequestId;
     if (!requestId) throw bad('request_id_required');

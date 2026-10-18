@@ -35,8 +35,8 @@ export interface ConflictNoticeProps {
   teacherTz?: string;
   /** «اختار ميعاد تاني»: back to the slot grid. */
   onChangeSlot: () => void;
-  /** «احجز رغم التعارض» with the reason (R-SCH-04); stored on the clashing lessons. */
-  onOverride: (reason: string) => void;
+  /** «احجز رغم التعارض» with the reason (R-SCH-04); stored on the clashing lessons. Absent = never (the assistant). */
+  onOverride?: ((reason: string) => void) | undefined;
   busy?: boolean;
   /** A form that already asked why (an edit's «السبب») starts the override reason with it. */
   initialReason?: string;
@@ -64,7 +64,7 @@ export function ConflictNotice(p: ConflictNoticeProps) {
   const [missing, setMissing] = useState(false);
   const more = conflicts.length - SHOWN;
   const submit = () => {
-    if (reason.trim()) onOverride(reason.trim());
+    if (reason.trim()) onOverride?.(reason.trim());
     else setMissing(true);
   };
 
@@ -91,26 +91,30 @@ export function ConflictNotice(p: ConflictNoticeProps) {
       </ul>
       {more > 0 && <p className="text-xs text-ink-2">{t.booking.conflictMore.replace('{n}', String(more))}</p>}
       <div className="grid gap-3 border-t border-rule pt-3">
-        <Field label={labels.reason} hint={t.booking.overrideHint} error={missing ? t.common.required : undefined}>
-          {(f) => (
-            <Input
-              {...f}
-              value={reason}
-              placeholder={t.booking.overridePlaceholder}
-              onChange={(e) => {
-                setReason(e.target.value);
-                setMissing(false);
-              }}
-            />
-          )}
-        </Field>
+        {onOverride && (
+          <Field label={labels.reason} hint={t.booking.overrideHint} error={missing ? t.common.required : undefined}>
+            {(f) => (
+              <Input
+                {...f}
+                value={reason}
+                placeholder={t.booking.overridePlaceholder}
+                onChange={(e) => {
+                  setReason(e.target.value);
+                  setMissing(false);
+                }}
+              />
+            )}
+          </Field>
+        )}
         <div className="flex flex-wrap gap-2.5">
           <Button type="button" onClick={onChangeSlot}>
             {t.booking.changeSlot}
           </Button>
-          <Button type="button" variant="ghost" disabled={busy} onClick={submit}>
-            {labels.override}
-          </Button>
+          {onOverride && (
+            <Button type="button" variant="ghost" disabled={busy} onClick={submit}>
+              {labels.override}
+            </Button>
+          )}
         </div>
       </div>
     </section>

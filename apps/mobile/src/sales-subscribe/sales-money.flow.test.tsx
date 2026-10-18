@@ -23,6 +23,8 @@ function salesMoneyBackend() {
       student = kid({ open: [openSub()] });
       return openSub();
     })
+    .on('GET /sales/booking/course', () => jest.requireActual('@/sales-course/fixtures').courseView())
+    .on('GET /sales/booking/teachers', () => [])
     .on('GET /sales/money/chat-receipts', () => [chatImage])
     .on('GET /sales/money/chat-receipts/:id', () => ({ url: 'https://x/t.jpg', expires_at: '', mime: 'image/jpeg' }))
     .on('POST /sales/payments/receipt-from-chat', () => ({ receipt_path: `${SUB}/c.jpg` }))
@@ -33,7 +35,7 @@ function salesMoneyBackend() {
   return backend;
 }
 
-test('from a family chat: «اشتراك جديد» → saved → the transfer with a chat file → «أصبح الطالب مشتركًا» → back to the chat', async () => {
+test('from a family chat: «اشتراك جديد» → saved → the days (later) → the transfer with a chat file → «أصبح الطالب مشتركًا» → back to the chat', async () => {
   const backend = salesMoneyBackend();
   const app = await renderApp({ url: '/inbox', backend });
   await fireEvent.press(await screen.findByRole('button', { name: /أم يوسف/ }));
@@ -45,6 +47,9 @@ test('from a family chat: «اشتراك جديد» → saved → the transfer w
   await press('button', m.newSubscription);
   expect(app.pathname()).toBe('/inbox/sales-subscribe');
   await fireEvent.press(await screen.findByRole('button', { name: m.saveSubscription, disabled: false }));
+  // On to the package's weekly days (owner 2026-10-18); the transfer may come first.
+  await waitFor(() => expect(app.pathname()).toBe('/inbox/sales-course'));
+  await press('button', m.stepTransfer);
   await waitFor(() => expect(app.pathname()).toBe('/inbox/sales-transfer'));
   expect(backend.sent('POST /subscriptions')).toHaveLength(0);
   expect(backend.sent('POST /sales/subscriptions')[0]?.body).toMatchObject({ clientRequestId: expect.any(String) });

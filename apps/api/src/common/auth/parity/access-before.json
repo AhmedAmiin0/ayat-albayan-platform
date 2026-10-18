@@ -201,6 +201,7 @@
   "SalesBookingController.check": ["sales"],
   "SalesBookingOptionsController.slots": ["sales"],
   "SalesBookingOptionsController.teacherOptions": ["sales"],
+  "SalesCourseController.view": ["sales"],
   "SalesMoneyReadsController.chatReceipt": ["sales"],
   "SalesMoneyReadsController.chatReceipts": ["sales"],
   "SalesMoneyReadsController.family": ["sales"],

@@ -54,4 +54,11 @@ describe('ConflictNotice (R-SCH-04, issue B3)', () => {
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));
     expect(onChangeSlot).toHaveBeenCalled();
   });
+
+  it('without onOverride (the assistant) only «اختر موعدًا آخر» is offered: no reason, no book-anyway', () => {
+    render(<ConflictNotice conflicts={[busy('2026-10-04T14:00:00Z')]} onChangeSlot={vi.fn()} />);
+    expect(screen.getByRole('button', { name: t.booking.changeSlot })).toBeTruthy();
+    expect(screen.queryByRole('button', { name: t.booking.override })).toBeNull();
+    expect(screen.queryByPlaceholderText(t.booking.overridePlaceholder)).toBeNull();
+  });
 });

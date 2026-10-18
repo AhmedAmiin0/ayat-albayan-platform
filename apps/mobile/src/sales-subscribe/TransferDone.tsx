@@ -2,7 +2,7 @@ import type { SalesPaymentView } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { useTreeBase } from '@/nav/tree-base';
+import { inTree, useTreeBase } from '@/nav/tree-base';
 import { money } from '@/payments/format';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
@@ -11,12 +11,15 @@ import { NuqtaGlyph } from '@/ui/NuqtaGlyph';
 
 /**
  * The transfer is recorded: «أصبح الطالب مشتركًا» when the student is now active (a paid trial),
- * else «تم تسجيل التحويل»; then «مدفوعاتي» (her recorded payments) or «تم» back to the chat.
+ * else «تم تسجيل التحويل»; then «احجز أيام الحلقات الآن» (the package's weekly days, R-ASST-01),
+ * «مدفوعاتي» (her recorded payments) or «تم» back to the chat.
  */
 export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; onDone: () => void }) {
   const { color } = useTheme();
   const m = t.salesMoney;
-  const more = useTreeBase() === '/sales' ? '/sales/more' : '/more/sales';
+  const base = useTreeBase();
+  const more = base === '/sales' ? '/sales/more' : '/more/sales';
+  const course = { pathname: '/inbox/sales-course', params: { studentId: payment.student.id } };
   return (
     <View style={{ gap: 12 }}>
       <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
@@ -36,6 +39,7 @@ export function TransferDone({ payment, onDone }: { payment: SalesPaymentView; o
       <AppText style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}>
         {`${payment.student.name} · ${money(payment.amount, payment.currency)}`}
       </AppText>
+      <Button variant="secondary" label={t.booking.bookCourseDays} onPress={() => router.push(inTree(base, course))} />
       <Button variant="secondary" label={m.openMyPayments} onPress={() => router.push(`${more}/earnings?view=payments`)} />
       <Button label={m.done} onPress={onDone} />
     </View>

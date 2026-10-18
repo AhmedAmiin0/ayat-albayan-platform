@@ -47,8 +47,8 @@ describe('the steps of each booking type (R-SCH-10, R-PAY-03)', () => {
 
 describe('kindPatch', () => {
   it('changing the type resets the package, the missed lesson, the invoice and the slot', () => {
-    const d = ready({ pkg: '12', byday: [3], invoice: UPLOAD, missed: MISSED });
-    expect(kindPatch(d, 'trial')).toMatchObject({ kind: 'trial', pkg: 'trial', missed: null, invoice: null, startsAt: null, byday: [] });
+    const d = ready({ pkg: '12', extra: ['2026-10-07T14:00:00.000Z'], invoice: UPLOAD, missed: MISSED });
+    expect(kindPatch(d, 'trial')).toMatchObject({ kind: 'trial', pkg: 'trial', missed: null, invoice: null, startsAt: null, extra: [] });
     expect(kindPatch(d, 'package')).toEqual({});
     expect(kindPatch(ready({ kind: 'trial', pkg: 'trial' }), 'package')).toMatchObject({ kind: 'package', pkg: '8' });
   });
@@ -96,7 +96,7 @@ describe('toBookingRequest per type', () => {
   });
 
   it('a makeup sends the missed lesson, no package, one weekday and no lead', () => {
-    const body = toBookingRequest(ready({ kind: 'makeup', missed: MISSED, byday: [2], leadId: null, invoice: CHAT }));
+    const body = toBookingRequest(ready({ kind: 'makeup', missed: MISSED, extra: ['2026-10-06T14:00:00.000Z'], leadId: null, invoice: CHAT }));
     expect(body).toMatchObject({ kind: 'makeup', makeupOfLessonId: 'l-missed', studentIds: [STUDENT.id], byday: [0] });
     expect(body).not.toHaveProperty('package');
     expect(body).not.toHaveProperty('leadId');

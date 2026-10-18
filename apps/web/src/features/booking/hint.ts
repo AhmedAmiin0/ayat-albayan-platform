@@ -22,7 +22,7 @@ type TeacherChange = Partial<Pick<BookingDraft, 'program' | 'genderPref'>> & { t
 export function teacherPatch(draft: BookingDraft, change: TeacherChange, hint: BookHint | null): Partial<BookingDraft> {
   if (change.teacher === undefined || change.teacher?.id === draft.teacher?.id) return change;
   const startsAt = change.teacher && change.teacher.id === hint?.teacherId ? hint.startsAt : null;
-  return { ...change, startsAt, byday: [] };
+  return { ...change, startsAt, extra: [] };
 }
 
 /**

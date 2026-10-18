@@ -9,7 +9,8 @@ import { InvoiceStep } from './InvoiceStep';
 import { KindPills } from './KindPills';
 import { kindPatch } from './package-choice';
 import { PackageStep } from './PackageStep';
-import { SlotStep } from './SlotStep';
+import { fromPicks, NO_PICKS, picksOf } from './picks';
+import { SlotStep, type SlotStepProps } from './SlotStep';
 import type { Step } from './steps';
 import { TeacherStep } from './TeacherStep';
 
@@ -33,7 +34,7 @@ export interface WizardStepProps {
   };
 }
 
-/** The wizard's current step. A new package or length clears the slot (the slots depend on it). */
+/** The wizard's current step. A new package or length clears the picks (the slots depend on it). */
 export function WizardStep({ step, steps, draft, patch, go, requestId, booking }: WizardStepProps) {
   const next = steps[steps.indexOf(step) + 1] ?? 'confirm';
   // A salesperson registers a trial only: no booking type to pick.
@@ -46,7 +47,7 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
         <ContactStep
           value={draft}
           withDuration={!steps.includes('package')}
-          onChange={(p) => patch(p.durationMin ? { ...p, startsAt: null } : p)}
+          onChange={(p) => patch(p.durationMin ? { ...p, ...NO_PICKS } : p)}
           onNext={() => go(next)}
         />
       </View>
@@ -59,7 +60,7 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
         gender={draft.gender}
         onFilter={patch}
         onPick={(teacher) => {
-          patch({ teacher, startsAt: null });
+          patch({ teacher, ...NO_PICKS });
           go(next);
         }}
       />
@@ -69,7 +70,7 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
     return (
       <PackageStep
         value={draft}
-        onChange={(p) => patch({ ...p, startsAt: null })}
+        onChange={(p) => patch({ ...p, ...NO_PICKS })}
         onNext={() => go(next)}
       />
     );
@@ -80,10 +81,7 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
         teacherId={draft.teacher.id}
         tz={draft.tz}
         durationMin={draft.durationMin}
-        onPick={(startsAt) => {
-          patch({ startsAt });
-          go(next);
-        }}
+        {...slotChoice(draft, patch, () => go(next))}
       />
     );
   }
@@ -106,14 +104,27 @@ export function WizardStep({ step, steps, draft, patch, go, requestId, booking }
       failure={booking.failure}
       onSubmit={booking.submit}
       onChangeSlot={() => {
-        patch({ startsAt: null });
+        patch(NO_PICKS);
         go('slot');
       }}
       onChangeInvoice={() => go('invoice')}
-      onDays={(byday) => {
-        booking.reset();
-        patch({ byday });
-      }}
     />
   );
+}
+
+/** A package toggles a time per weekday, then «التالي»; a trial's one slot moves on at once. */
+function slotChoice(
+  draft: TrialDraft,
+  patch: (p: Partial<TrialDraft>) => void,
+  onward: () => void,
+): Pick<SlotStepProps, 'onPick' | 'multi'> {
+  if (draft.kind === 'package') {
+    return { multi: { picks: picksOf(draft), onChange: (picks) => patch(fromPicks(picks)), onNext: onward } };
+  }
+  return {
+    onPick: (startsAt) => {
+      patch({ startsAt });
+      onward();
+    },
+  };
 }

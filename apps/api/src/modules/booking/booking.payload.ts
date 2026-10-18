@@ -1,13 +1,15 @@
 import { bookingKindOf, registrationStatus, type BookingKind, type BookingRequest, type Conflict, type LeadStatus, type PackageSize } from '@ab/shared';
-import type { Occurrence, RuleTiming } from '../scheduling/occurrences';
+import type { Occurrence } from '../scheduling/occurrences';
 import {
   leadTarget,
   lessonRows,
   type BookingPayload,
   type InvoiceRow,
+  type SiblingRow,
 } from './booking.mapper';
 import { confirmationDrafts } from './booking.messages';
 import type { Resolved } from './booking.parties';
+import type { Plan } from './booking.plan';
 import type { BookingTeacher } from './booking.queries';
 
 export type PayloadInput = {
@@ -16,7 +18,10 @@ export type PayloadInput = {
   teacher: BookingTeacher;
   who: Resolved;
   lead: { id: string; status: LeadStatus } | null;
-  plan: { timing: RuleTiming; occurrences: Occurrence[] };
+  /** The first rule: the earliest time group (planSeries). */
+  plan: Plan;
+  /** The booking's other time groups, later in planSeries order; [] for one start time. */
+  siblings: readonly Plan[];
   /** plan.occurrences[0], which the caller checked exists. */
   first: Occurrence;
   conflicts: Conflict[];
@@ -29,7 +34,12 @@ export type PayloadInput = {
   confirmationLink: string | null;
   /** The missed lesson, for a makeup. */
   makeupOf: string | null;
+  /** The assistant's course: the subscription's label and id on every rule, whatever the request says. */
+  course?: CourseLabel | undefined;
 };
+
+/** PR #113 review M3 / M4: the server owns a course's package (null = a custom count) and ties it to its subscription. */
+export type CourseLabel = { package: PackageSize | null; subscriptionId: string };
 
 /** The rule's package: the request's, or none for a makeup (it has no package of its own). */
 export const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize | null =>
@@ -57,11 +67,32 @@ export function clientRequest(req: BookingRequest, role: string | null): Booking
   return { ...req, newStudent: { ...req.newStudent, status: registrationStatus(bookingKindOf(req) === 'trial') } };
 }
 
+/** rule.subscription_id only on an assistant course: every other payload is unchanged. */
+const courseTie = (input: PayloadInput) => (input.course ? { subscription_id: input.course.subscriptionId } : {});
+
+/** The other times' rules and lessons: the same link, package, subscription and override rule as the first. */
+function siblingRows(input: PayloadInput, pkg: PackageSize | null): SiblingRow[] {
+  const { req, conflicts } = input;
+  return input.siblings.map((p) => ({
+    rule: { ...p.timing, meeting_link: req.meetingLink ?? null, package: pkg, ...courseTie(input) },
+    lessons: lessonRows({
+      occurrences: p.occurrences,
+      conflicts,
+      reason: req.override?.reason ?? null,
+      meetingLink: input.meetingLink,
+    }),
+  }));
+}
+
+/** audit.after.day_times only when the request has per-day times (an old body's audit is unchanged). */
+const dayTimesAudit = (req: BookingRequest) =>
+  req.dayTimes?.length ? { day_times: req.dayTimes.map((d) => ({ weekday: d.weekday, start_time_local: d.startTimeLocal })) } : {};
+
 /** What create_booking writes (docs/10 §5 #14), minus the invoice the service resolves afterwards. */
 export function bookingPayload(input: PayloadInput): BookingPayload {
   const { req, kind, teacher, who, lead, plan, conflicts } = input;
   const reason = req.override?.reason ?? null;
-  const pkg = rulePackage(req, kind);
+  const pkg = input.course ? input.course.package : rulePackage(req, kind);
   return {
     // The rule keeps only an explicit link, so a later change of the teacher's link reaches
     // the lessons the daily job generates (R-LES-01, issue B8).
@@ -71,6 +102,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
       meeting_link: req.meetingLink ?? null,
       package: pkg,
       client_request_id: req.clientRequestId ?? null,
+      ...courseTie(input),
     },
     student_ids: who.student_ids,
     lead: lead && { id: lead.id, from: lead.status, to: leadTarget(lead.status, pkg) },
@@ -82,6 +114,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
       reason,
       meetingLink: input.meetingLink,
     }),
+    siblings: siblingRows(input, pkg),
     messages: confirmationDrafts({
       students: who.booked,
       firstStart: input.first.starts_at,
@@ -97,6 +130,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
         lead_id: req.leadId ?? null,
         override_reason: reason,
         conflicts: conflicts.map((c) => ({ ...c })),
+        ...dayTimesAudit(req),
       },
     },
   };

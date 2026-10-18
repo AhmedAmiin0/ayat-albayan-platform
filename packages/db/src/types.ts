@@ -2505,12 +2505,14 @@ export type Database = {
           created_from_lead_id: string | null;
           duration_min: number;
           ends_on: string | null;
+          first_rule_id: string | null;
           id: string;
           meeting_link: string | null;
           package: Database['public']['Enums']['package_size'] | null;
           start_time_local: string;
           starts_on: string;
           status: Database['public']['Enums']['schedule_rule_status'];
+          subscription_id: string | null;
           teacher_id: string;
           tz: string;
           updated_at: string;
@@ -2523,12 +2525,14 @@ export type Database = {
           created_from_lead_id?: string | null;
           duration_min: number;
           ends_on?: string | null;
+          first_rule_id?: string | null;
           id?: string;
           meeting_link?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
           start_time_local: string;
           starts_on: string;
           status?: Database['public']['Enums']['schedule_rule_status'];
+          subscription_id?: string | null;
           teacher_id: string;
           tz: string;
           updated_at?: string;
@@ -2541,12 +2545,14 @@ export type Database = {
           created_from_lead_id?: string | null;
           duration_min?: number;
           ends_on?: string | null;
+          first_rule_id?: string | null;
           id?: string;
           meeting_link?: string | null;
           package?: Database['public']['Enums']['package_size'] | null;
           start_time_local?: string;
           starts_on?: string;
           status?: Database['public']['Enums']['schedule_rule_status'];
+          subscription_id?: string | null;
           teacher_id?: string;
           tz?: string;
           updated_at?: string;
@@ -2565,6 +2571,20 @@ export type Database = {
             isOneToOne: false;
             referencedRelation: 'v_threads';
             referencedColumns: ['lead_id'];
+          },
+          {
+            foreignKeyName: 'schedule_rules_first_rule_id_fkey';
+            columns: ['first_rule_id'];
+            isOneToOne: false;
+            referencedRelation: 'schedule_rules';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'schedule_rules_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
+            referencedColumns: ['id'];
           },
           {
             foreignKeyName: 'schedule_rules_teacher_id_fkey';

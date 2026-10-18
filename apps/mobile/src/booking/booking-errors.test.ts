@@ -1,6 +1,6 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { bookFailure } from './booking-errors';
+import { bookFailure, isCodedRefusal } from './booking-errors';
 import { SUN_17 } from './fixtures';
 
 const END = '2026-10-04T14:45:00.000Z';
@@ -78,13 +78,29 @@ test('a salesperson’s registration the API scopes out says why (not her lead, 
   }
 });
 
+test('the course guard’s lesson and scope codes are coded refusals with their own line', () => {
+  const pastError = new ApiError(422, { code: 'date_in_past', message: 'x' });
+  expect(bookFailure(pastError)).toEqual({ kind: 'error', text: t.lessons.error.date_in_past });
+  expect(isCodedRefusal(pastError)).toBe(true);
+  const scopeError = new ApiError(403, { code: 'not_your_student', message: 'x' });
+  expect(bookFailure(scopeError)).toEqual({ kind: 'error', text: t.booking.error.not_your_student });
+  expect(isCodedRefusal(scopeError)).toBe(true);
+});
+
 test('anything else is the generic error', () => {
   const generic = { kind: 'error', text: t.common.error };
   expect(bookFailure(new ApiError(500, null))).toEqual(generic);
   expect(bookFailure(new ApiError(404, { code: 'lead_not_found' }))).toEqual(generic);
-  expect(bookFailure(new ApiError(409, { code: 'invalid_transition' }))).toEqual(generic);
   expect(bookFailure(new ApiError(409, { code: 'duplicate_student', candidates: [] }))).toEqual(
     generic,
   );
   expect(bookFailure(new Error('booking_incomplete'))).toEqual(generic);
+});
+
+test('a coded refusal (a guard) is told apart from a failure to retry', () => {
+  expect(isCodedRefusal(new ApiError(409, { code: 'course_exists', message: 'x' }))).toBe(true);
+  expect(isCodedRefusal(new ApiError(422, { code: 'days_count_mismatch', message: 'x' }))).toBe(true);
+  expect(isCodedRefusal(new ApiError(500, { code: 'internal', message: 'x' }))).toBe(false);
+  expect(isCodedRefusal(new ApiError(409, { code: 'conflict', conflicts: [] }))).toBe(false);
+  expect(isCodedRefusal(new TypeError('Network request failed'))).toBe(false);
 });

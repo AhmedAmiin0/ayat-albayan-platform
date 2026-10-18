@@ -3,6 +3,7 @@ import type { Href } from 'expo-router';
 import { t } from '@/lib/i18n';
 import { localDate } from '@/today/timeline';
 import type { TrialDraft } from './draft';
+import { NO_PICKS, picksOf } from './picks';
 import { ruleFromSlot } from './slots';
 
 // The booking's package (R-SCH-06, R-SUB-01): the lead screen books a trial; the chat's «اشترك»
@@ -19,23 +20,21 @@ export const PAID_SIZES = ['4', '8', '12', '16'] as const satisfies readonly Pac
  * on the old type goes: the slot (its length may change), the weekly days, the invoice (a trial has none).
  */
 export function kindPatch(kind: TrialDraft['kind']): Partial<TrialDraft> {
-  return { kind, pkg: kind === 'trial' ? 'trial' : '8', invoice: null, startsAt: null, byday: [] };
+  return { kind, pkg: kind === 'trial' ? 'trial' : '8', invoice: null, ...NO_PICKS };
 }
 
 /** The form's «المده» default: «لو مش متأكد سيبها وهنحسبها 45 دقيقة». */
 export const DEFAULT_MINUTES: Duration = 45;
 
-type PackageFields = Pick<TrialDraft, 'pkg' | 'byday' | 'startsAt' | 'tz'>;
+type PackageFields = Pick<TrialDraft, 'pkg' | 'extra' | 'startsAt' | 'tz'>;
 
 /**
- * The rule's weekdays (0 = الأحد): the first slot's day always; a trial only that one (docs/10
- * invariant 4), a paid package that one plus the picked repeat days, sorted, no repeats.
+ * The rule's weekdays (0 = الأحد) in the family's zone: a trial only its slot's day (docs/10
+ * invariant 4), a paid package every pick's day, sorted, no repeats.
  */
 export function effectiveByday(d: PackageFields): number[] {
-  if (!d.startsAt) return [];
-  const { weekday } = ruleFromSlot(d.startsAt, d.tz);
-  if (d.pkg === 'trial') return [weekday];
-  return [...new Set([weekday, ...d.byday])].sort((a, b) => a - b);
+  const picks = d.pkg === 'trial' ? picksOf({ startsAt: d.startsAt, extra: [] }) : picksOf(d);
+  return [...new Set(picks.map((p) => ruleFromSlot(p, d.tz).weekday))].sort((a, b) => a - b);
 }
 
 /**

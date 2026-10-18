@@ -8,3 +8,5 @@ export type * from './overview.js';
 export * from './teacher-name.js';
 export type * from './makeup-views.js';
 export * from './makeup-offer.js';
+export * from './day-times.js';
+export * from './pick-progress.js';

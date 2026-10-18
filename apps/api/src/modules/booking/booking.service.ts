@@ -1,6 +1,6 @@
 import type { BookingRequest, BookingResult, Conflict } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { BookingPlanner } from './booking.planner';
+import { BookingPlanner, type PrepareOptions } from './booking.planner';
 import { BookingQueries } from './booking.queries';
 import { BookingWriter } from './booking.writer';
 
@@ -21,16 +21,17 @@ export class BookingService {
   ) {}
 
   /** POST /booking/check: what «احجز» would clash with, before the review step. */
-  check(req: BookingRequest): Promise<Conflict[]> {
-    return this.planner.conflicts(req);
+  check(req: BookingRequest, opts?: PrepareOptions): Promise<Conflict[]> {
+    return this.planner.conflicts(req, opts);
   }
 
-  async book(req: BookingRequest, actorId: string): Promise<BookingResult> {
+  /** `opts` is the server's (PrepareOptions: the assistant's course); the admin controller passes none. */
+  async book(req: BookingRequest, actorId: string, opts?: PrepareOptions): Promise<BookingResult> {
     // The same request again (a retry, a double click) returns its booking before anything is
     // planned: its own lessons would otherwise show up as clashes.
     const first = req.clientRequestId ? await this.queries.replay(req.clientRequestId) : null;
     if (first) return this.writer.replayed({ req, result: first, actorId });
-    const prepared = await this.planner.prepare(req);
+    const prepared = await this.planner.prepare(req, opts);
     return this.writer.write({ req, prepared, actorId });
   }
 }

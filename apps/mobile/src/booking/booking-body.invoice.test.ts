@@ -37,6 +37,6 @@ test('a package with no invoice is still sent: the API answers invoice_required'
 });
 
 test('switching the type resets what hung on the old one', () => {
-  expect(kindPatch('trial')).toEqual({ kind: 'trial', pkg: 'trial', invoice: null, startsAt: null, byday: [] });
+  expect(kindPatch('trial')).toEqual({ kind: 'trial', pkg: 'trial', invoice: null, startsAt: null, extra: [] });
   expect(kindPatch('package')).toMatchObject({ kind: 'package', pkg: '8', invoice: null });
 });

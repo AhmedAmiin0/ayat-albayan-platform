@@ -1,26 +1,52 @@
 import { useQuery } from '@tanstack/react-query';
+import { FormAlert } from '@/components/ui/form-alert';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
+import { lessonErrorText } from '@/features/schedule/api';
 import { conflictText } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';
 import { bookingCheckQuery } from './api';
 import type { BookingBody } from './contract';
-import { toBookingRequest, type BookingDraft } from './draft';
+import { days, toBookingRequest, type BookingDraft } from './draft';
 import { useBookingMode } from './mode';
 
 /** How many clashes are listed under the count. */
 const SHOWN = 4;
 
+/** Whether the series can be checked: a course only once exactly its days a week are picked. */
+export const seriesReady = (d: BookingDraft): boolean => !d.course || days(d).length === d.course.perWeek;
+
+/**
+ * POST {base}/check for this draft (one cached query, shared by the slot and review steps).
+ * `enabled` false only reads the cache (the admin's review and the wizard's chrome never ask).
+ */
+export function useSeriesCheck(draft: BookingDraft, enabled = true) {
+  const mode = useBookingMode();
+  const body = seriesReady(draft) ? toBookingRequest(draft) : null;
+  return { body, check: useQuery({ ...bookingCheckQuery(body ?? emptyBody, mode), enabled: enabled && body !== null }) };
+}
+
+export type SeriesCheckResult = ReturnType<typeof useSeriesCheck>;
+
+/** Checked, no error and no clash over the whole series. */
+export const isSeriesClean = ({ body, check }: SeriesCheckResult): boolean =>
+  body !== null && !check.isError && Array.isArray(check.data?.conflicts) && check.data.conflicts.length === 0;
+
+/** The assistant's course leaves the slot step and books only over a clean check (no override). */
+export function useCourseClean(draft: BookingDraft): boolean {
+  return isSeriesClean(useSeriesCheck(draft, draft.course !== null));
+}
+
 /**
  * Under the picked slot (R-SCH-04, R-SCH-06): what «احجز» would clash with over the whole series
  * (POST /booking/check), so a clash in a later week — time off, or the teacher's availability
  * after a DST change — shows before the review step, on the teacher's clock too. Silent on error
- * (the review step reports it).
+ * (the review step reports it), except for the assistant's course, which can't book until it is clean.
+ * A course is checked only once its days are all picked (SlotDays shows the progress until then).
  */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
-  const mode = useBookingMode();
-  const body = toBookingRequest(draft);
-  const check = useQuery({ ...bookingCheckQuery(body ?? emptyBody, mode), enabled: body !== null });
-  if (!body || check.isError) return null;
+  const { body, check } = useSeriesCheck(draft);
+  if (!body) return null;
+  if (check.isError) return draft.course ? <FormAlert>{lessonErrorText(check.error)}</FormAlert> : null;
   if (!check.data) return <p className="text-xs text-ink-3">{t.booking.seriesChecking}</p>;
   const conflicts = Array.isArray(check.data.conflicts) ? check.data.conflicts : [];
   if (conflicts.length === 0) {
