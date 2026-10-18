@@ -98,8 +98,14 @@ export class LinesCheck {
     const { line, env, checkedAt } = input;
     if (!env) return { ...unconfigured(line, checkedAt), ...input.driver };
     const conn: GraphConn = { env, fetch: this.fetch, timeoutMs: this.timeoutMs };
-    const [phone, apps] = await Promise.all([attempt('phone', () => phoneOf(conn)), attempt('subscribed_apps', () => appsOf(conn))]);
-    const errors = [phone, apps].flatMap((o) => (o.ok ? [] : [o.error]));
+    // Kapso's Meta proxy has no /{waba}/subscribed_apps (404 on staging, 2026-10-18): its inbound comes
+    // through the Kapso webhook, so a kapso line is not asked (subscribed_apps stays null).
+    const kapso = input.driver.provider === 'kapso';
+    const [phone, apps] = await Promise.all([
+      attempt('phone', () => phoneOf(conn)),
+      kapso ? null : attempt('subscribed_apps', () => appsOf(conn)),
+    ]);
+    const errors = [phone, apps].flatMap((o) => (o && !o.ok ? [o.error] : []));
     return {
       line,
       configured: true,
@@ -108,7 +114,7 @@ export class LinesCheck {
       waba_id: env.wabaId,
       app_id: input.appId,
       ...(phone.ok ? phone.value : NO_PHONE),
-      subscribed_apps: apps.ok ? apps.value : null,
+      subscribed_apps: apps?.ok ? apps.value : null,
       errors,
       checked_at: checkedAt,
     };

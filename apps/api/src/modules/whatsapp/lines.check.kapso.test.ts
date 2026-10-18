@@ -28,14 +28,16 @@ afterEach(() => {
 });
 
 describe('LinesCheck on a kapso line', () => {
-  it('configured: provider kapso, no gaps, app_id null (WA_APP_ID ignored), both GETs with X-API-Key', async () => {
+  it('configured: provider kapso, no gaps, app_id null (WA_APP_ID ignored), the phone GET only, with X-API-Key', async () => {
     stubEnvs({ ...IDS, ...NO_CHAT, WA_PROVIDER: 'kapso', KAPSO_API_BASE: KAPSO_BASE, KAPSO_API_KEY: 'fake-kapso-key', WA_ACCESS_TOKEN: '' });
     const { lines, requests } = checker();
     const [notifications] = await lines.check();
     expect(notifications).toMatchObject({
       line: 'notifications', configured: true, provider: 'kapso', gaps: [], app_id: null, phone_number_id: 'n-phone', kapso_webhook_secret: false,
     });
-    expect(requests.map((r) => r.url.split('?')[0])).toEqual([`${KAPSO_BASE}/v24.0/n-phone`, `${KAPSO_BASE}/v24.0/n-waba/subscribed_apps`]);
+    // Kapso's proxy has no subscribed_apps (a 404 on staging): never asked, so never a false error.
+    expect(requests.map((r) => r.url.split('?')[0])).toEqual([`${KAPSO_BASE}/v24.0/n-phone`]);
+    expect(notifications).toMatchObject({ subscribed_apps: null, errors: [] });
     for (const r of requests) {
       expect(r.headers['x-api-key']).toBe('fake-kapso-key');
       expect(r.headers).not.toHaveProperty('authorization');
@@ -61,7 +63,7 @@ describe('LinesCheck on a kapso line', () => {
     const lines = new LinesCheck();
     lines.fetch = async () => new Response(JSON.stringify({ error: 'Unauthorized' }), { status: 401 });
     const [notifications] = await lines.check();
-    expect(notifications?.errors.map((e) => [e.step, e.code, e.credential])).toEqual([['phone', null, 'kapso'], ['subscribed_apps', null, 'kapso']]);
+    expect(notifications?.errors.map((e) => [e.step, e.code, e.credential])).toEqual([['phone', null, 'kapso']]);
     expect(JSON.stringify(notifications)).not.toContain('fake-kapso-key');
   });
 });
