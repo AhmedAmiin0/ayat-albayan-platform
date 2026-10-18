@@ -17,7 +17,7 @@ interface LineConn {
 export interface MetaLineEnv extends LineConn {
   provider?: 'meta';
   accessToken: string;
-  /** WA_APP_ID; absent = no sample uploads, so a document-header template can't be submitted. */
+  /** WA_APP_ID (chat: WA_CHAT_APP_ID); absent = no sample uploads, so a document-header template can't be submitted. */
   appId?: string;
 }
 /** A line on Kapso's Meta proxy (docs/19): X-API-Key instead of a bearer, never an app id. */
@@ -47,7 +47,9 @@ function chatEnv(env: Env, base: string | undefined): MetaLineEnv | null {
   const accessToken = env.WA_CHAT_ACCESS_TOKEN ?? env.WA_ACCESS_TOKEN;
   if (!base || !phoneNumberId || !wabaId || !accessToken) return null;
   if (phoneNumberId === env.WA_PHONE_NUMBER_ID) return null;
-  return { base, version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
+  const conn = { base, version: env.WA_API_VERSION, phoneNumberId, wabaId, accessToken };
+  // Sample uploads belong to the app that owns the chat WABA's token (a document template on chat).
+  return env.WA_CHAT_APP_ID ? { ...conn, appId: env.WA_CHAT_APP_ID } : conn;
 }
 
 function metaNotifications(env: Env, base: string | undefined): MetaLineEnv | null {
@@ -63,8 +65,8 @@ export function lineProvider(env: Env, line: WaLine): WaProvider {
 }
 
 /**
- * Each line under its own provider. meta: notifications = today's config (with appId); chat = its
- * own ids, token fallback, never appId. kapso: env.kapso.ts kapsoLine (same ids, Kapso base + key).
+ * Each line under its own provider. meta: notifications = today's config (appId = WA_APP_ID); chat =
+ * its own ids, token fallback, appId = WA_CHAT_APP_ID (none when unset). kapso: env.kapso.ts kapsoLine (same ids, Kapso base + key).
  */
 export function lineEnvs(env: Env): LineEnvs {
   const base = env.WA_API_BASE?.replace(/\/+$/, '');

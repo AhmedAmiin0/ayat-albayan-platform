@@ -11,6 +11,7 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 const heading = () => screen.queryByRole('heading', { name: t.templates.title });
+const noneNote = () => screen.queryByText(t.config.search.none);
 
 afterEach(() => {
   apiFetch.mockReset();
@@ -33,10 +34,16 @@ describe('settings search — templates', () => {
     fireEvent.change(box, { target: { value: t.templates.perNumber.sync } });
     expect(heading()).toBeTruthy();
     expect(screen.getAllByTestId('template-line')).toHaveLength(2);
+    expect(noneNote()).toBeNull();
     fireEvent.change(box, { target: { value: t.templates.perNumber.title } });
     expect(heading()).toBeTruthy();
+    // The section it found is never under «لا توجد إعدادات تطابق بحثك.»
+    expect(noneNote()).toBeNull();
+    fireEvent.change(box, { target: { value: t.templates.settings.lines.title } });
+    expect(noneNote()).toBeNull();
     fireEvent.change(box, { target: { value: 'zzzz-nothing' } });
     expect(heading()).toBeNull();
+    expect(noneNote()).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
   });
 });

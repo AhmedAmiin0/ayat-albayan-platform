@@ -73,7 +73,7 @@ describe('TemplateRegistry (R-MSG-01, docs/12 §3.4)', () => {
     expect((await status(registry().submit('renewal_due', 'a')))[1]).toMatchObject({ code: 'invalid_template' });
     queries.get.mockResolvedValueOnce(REPORT_READY_SEED);
     client.canUploadSamples.mockReturnValueOnce(false);
-    expect(await status(registry().submit('report_ready', 'a'))).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id' }]);
+    expect(await status(registry().submit('report_ready', 'a'))).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id', line: 'notifications' }]);
     expect(client.uploadSample).not.toHaveBeenCalled();
     client.configured.mockReturnValueOnce(false);
     expect((await status(registry().submit('renewal_due', 'a')))[0]).toBe(503);

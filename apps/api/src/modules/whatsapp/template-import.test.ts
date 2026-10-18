@@ -62,16 +62,16 @@ describe('starterRow — one chat-WABA template as a registry row', () => {
   });
 
   it.each([
-    ['AUTHENTICATION', meta({ category: 'AUTHENTICATION' }), 'category AUTHENTICATION'],
-    ['an image header', meta({ components: [{ type: 'HEADER', format: 'IMAGE' }, body('نص')] }), 'media or variable header'],
-    ['a header variable', meta({ components: [{ type: 'HEADER', format: 'TEXT', text: 'أهلًا {{1}}' }, body('نص')] }), 'media or variable header'],
-    ['named variables', meta({ components: [body('أهلًا {{first_name}}')] }), 'named variables'],
-    ['ten variables', meta({ components: [body('{{1}} {{2}} {{3}} {{4}} {{5}} {{6}} {{7}} {{8}} {{9}} {{10}}')] }), 'more than 9 variables'],
-    ['no body', meta({ components: [] }), 'no body'],
-    ['a name that is no key', meta({ name: 'Academy-Welcome' }), 'the name is not a registry key'],
-    ['a copy-code button', meta({ components: [body('نص'), { type: 'BUTTONS', buttons: [{ type: 'COPY_CODE', text: 'انسخ' }] }] }), 'a button that needs a value the platform cannot send'],
+    ['AUTHENTICATION', meta({ category: 'AUTHENTICATION' }), { code: 'category', category: 'AUTHENTICATION' }],
+    ['an image header', meta({ components: [{ type: 'HEADER', format: 'IMAGE' }, body('نص')] }), { code: 'media_header' }],
+    ['a header variable', meta({ components: [{ type: 'HEADER', format: 'TEXT', text: 'أهلًا {{1}}' }, body('نص')] }), { code: 'media_header' }],
+    ['named variables', meta({ components: [body('أهلًا {{first_name}}')] }), { code: 'named_vars' }],
+    ['ten variables', meta({ components: [body('{{1}} {{2}} {{3}} {{4}} {{5}} {{6}} {{7}} {{8}} {{9}} {{10}}')] }), { code: 'too_many_vars', max: 9 }],
+    ['no body', meta({ components: [] }), { code: 'no_body' }],
+    ['a name that is no key', meta({ name: 'Academy-Welcome' }), { code: 'bad_key' }],
+    ['a copy-code button', meta({ components: [body('نص'), { type: 'BUTTONS', buttons: [{ type: 'COPY_CODE', text: 'انسخ' }] }] }), { code: 'button_value' }],
   ])('skips %s', (_name, m, reason) => {
-    expect(starterRow(m, NOW)).toBe(reason);
+    expect(starterRow(m, NOW)).toEqual(reason);
   });
 });
 
@@ -91,8 +91,8 @@ describe('newStarters — the templates the registry does not know yet', () => {
     });
     expect(plan.rows.map((r) => r.key)).toEqual(['academy_welcome']);
     expect(plan.skipped).toEqual([
-      { name: 'lesson_reminder (ar)', reason: 'the key lesson_reminder is taken' },
-      { name: 'academy_welcome (en)', reason: 'the key academy_welcome is taken' },
+      { name: 'lesson_reminder (ar)', reason: { code: 'key_taken' } },
+      { name: 'academy_welcome (en)', reason: { code: 'key_taken' } },
     ]);
   });
 });

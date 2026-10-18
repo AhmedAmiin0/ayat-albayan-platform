@@ -5,6 +5,8 @@ import {
   TEMPLATE_CATEGORIES,
   TEMPLATE_KEY_PATTERN,
   type TemplateCategory,
+  type TemplateSkip,
+  type TemplateSkipReason,
   type WaLine,
 } from '@ab/shared';
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
@@ -21,7 +23,7 @@ export type ImportRow = TablesInsert<'message_templates'>;
 export interface ImportPlan {
   rows: ImportRow[];
   /** Returned by the line's sync: not imported, and why. */
-  skipped: { name: string; reason: string }[];
+  skipped: TemplateSkip[];
 }
 
 const isCategory = (c: string): c is TemplateCategory => (TEMPLATE_CATEGORIES as readonly string[]).includes(c);
@@ -60,20 +62,23 @@ function importButtons(comps: readonly Component[]) {
 /** Only a restricted default from the chat WABA comes on the allow-list. */
 const flagged = (line: WaLine, name: string): boolean => line === 'chat' && (RESTRICTED_TEMPLATE_DEFAULTS as readonly string[]).includes(name);
 
-/** The registry row for one template of `line`'s WABA, or the reason it is not imported. */
-export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat'): ImportRow | string {
+/** A skip reason, not a row: rows never carry `code`. */
+export const isSkip = (r: ImportRow | TemplateSkipReason): r is TemplateSkipReason => 'code' in r;
+
+/** The registry row for one template of `line`'s WABA, or the reason code it is not imported. */
+export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat'): ImportRow | TemplateSkipReason {
   const category = meta.category.toLowerCase();
-  if (!isCategory(category)) return `category ${meta.category}`;
-  if (!TEMPLATE_KEY_PATTERN.test(meta.name)) return 'the name is not a registry key';
+  if (!isCategory(category)) return { code: 'category', category: meta.category };
+  if (!TEMPLATE_KEY_PATTERN.test(meta.name)) return { code: 'bad_key' };
   const comps = components(meta.components);
-  if (!headerOk(comps)) return 'media or variable header';
+  if (!headerOk(comps)) return { code: 'media_header' };
   const body = comps.find((c) => c.type === 'BODY')?.text;
-  if (!body) return 'no body';
+  if (!body) return { code: 'no_body' };
   const n = varCount(body);
-  if (n === null) return 'named variables';
-  if (n > BODY_SLOTS.length) return `more than ${BODY_SLOTS.length} variables`;
+  if (n === null) return { code: 'named_vars' };
+  if (n > BODY_SLOTS.length) return { code: 'too_many_vars', max: BODY_SLOTS.length };
   const buttons = importButtons(comps);
-  if (!buttons) return 'a button that needs a value the platform cannot send';
+  if (!buttons) return { code: 'button_value' };
   return {
     key: meta.name,
     meta_name: meta.name,
@@ -113,8 +118,8 @@ export function newStarters(input: StarterInput): ImportPlan {
   const synced = new Set(input.known.map((r) => `${r.meta_name}:${r.language}`));
   for (const meta of input.meta) {
     if (ourStatus(meta.status) !== 'approved' || synced.has(`${meta.name}:${meta.language}`)) continue;
-    const row = keys.has(meta.name) ? `the key ${meta.name} is taken` : starterRow(meta, input.now, input.line);
-    if (typeof row === 'string') {
+    const row: ImportRow | TemplateSkipReason = keys.has(meta.name) ? { code: 'key_taken' } : starterRow(meta, input.now, input.line);
+    if (isSkip(row)) {
       plan.skipped.push({ name: `${meta.name} (${meta.language})`, reason: row });
       continue;
     }

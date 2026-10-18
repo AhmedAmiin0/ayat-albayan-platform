@@ -1,4 +1,4 @@
-import type { TemplateLineView, WaLine } from '@ab/shared';
+import type { TemplateLineSync, TemplateLineView, WaLine } from '@ab/shared';
 import { Button } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
 import { fullTime } from '@/features/inbox/format';
@@ -42,22 +42,29 @@ function LastSync({ at }: { at: string | undefined }) {
   );
 }
 
+/** The newer of two syncs by checked_at (a move's re-sync on the server beats an older session result). */
+export function newerSync(a: TemplateLineSync | null, b: TemplateLineSync | null): TemplateLineSync | null {
+  if (!a || !b) return a ?? b;
+  return Date.parse(a.checked_at) >= Date.parse(b.checked_at) ? a : b;
+}
+
 /**
  * One number of the template registry (owner 2026-10-18): its phone, WABA and driver, its own
- * «مزامنة مع Meta», and what its last sync found (this session's, else the server's since boot).
+ * «مزامنة مع Meta», and what its last sync found (the newer of this session's and the server's since boot).
  * A number the server has no credentials for says so and offers no sync.
  */
 export function TemplateLineBlock({ line, facts, phone, onNotice }: TemplateLineBlockProps) {
   const p = t.templates.perNumber;
   const { result, syncing, sync } = useLineSync({ line, onNotice });
-  const shown = result ?? facts?.last_sync ?? null;
+  const shown = newerSync(result, facts?.last_sync ?? null);
+  const name = t.enums.waLine[line];
   const off = facts?.configured === false;
   return (
     <section data-testid="template-line" data-line={line} aria-busy={syncing} className="grid min-w-0 content-start gap-2 rounded-md border border-rule p-3">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-2">
-        <h4 className="text-sm font-bold">{t.enums.waLine[line]}</h4>
+        <h4 className="text-sm font-bold">{name}</h4>
         {!off && (
-          <Button variant="secondary" size="sm" className="ms-auto" aria-label={p.syncFor.replace('{line}', t.enums.waLine[line])} disabled={syncing} onClick={sync}>
+          <Button variant="secondary" size="sm" className="ms-auto" aria-label={(syncing ? p.syncingFor : p.syncFor).replace('{line}', name)} disabled={syncing} onClick={sync}>
             {syncing ? p.syncing : p.sync}
           </Button>
         )}

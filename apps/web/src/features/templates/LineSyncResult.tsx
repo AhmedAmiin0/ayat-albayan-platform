@@ -1,21 +1,22 @@
 import type { TemplateLineSync } from '@ab/shared';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
-import { lineSyncErrorText } from './api';
+import { syncFailedText } from './api';
+import { skipReasonText } from './skip-reasons';
 
-/** Imported keys and skipped names are Meta's own (English) words: LTR islands that may wrap. */
+/** Imported keys and skipped names are Meta's own (English) words: LTR islands that may wrap; the reasons are ours. */
 const WRAP = 'whitespace-normal break-all';
 
 /**
  * What one number's sync found: the WABA's template count, the rows it re-checked, the keys it
- * imported and what it skipped (with the API's reason, as data). A failed read says why instead.
+ * imported and what it skipped (each reason code in words). A failed read says why instead.
  */
 export function LineSyncResult({ sync }: { sync: TemplateLineSync }) {
   const p = t.templates.perNumber;
   if (!sync.ok) {
     return (
       <p className="text-xs font-semibold whitespace-normal text-danger">
-        {p.syncFailed.replace('{line}', t.enums.waLine[sync.line]).replace('{error}', lineSyncErrorText(sync))}
+        {syncFailedText(sync)}
       </p>
     );
   }
@@ -50,7 +51,7 @@ export function LineSyncResult({ sync }: { sync: TemplateLineSync }) {
                   {before}
                   <Ltr className={WRAP}>{s.name}</Ltr>
                   {between}
-                  <Ltr className={WRAP}>{s.reason}</Ltr>
+                  {skipReasonText(s.reason)}
                   {after}
                 </li>
               ))}

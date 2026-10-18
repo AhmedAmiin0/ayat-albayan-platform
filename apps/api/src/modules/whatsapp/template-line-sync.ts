@@ -42,7 +42,7 @@ export async function syncLine(deps: LineSyncDeps, line: WaLine, now: Date): Pro
     if (await deps.queries.update(row.key, syncPatch(row, findMeta(row, list), now))) synced += 1;
   }
   const plan = newStarters({ meta: list, known: rows, now, line });
-  plan.skipped.forEach((s) => deps.log.warn(`${line} template ${s.name} not imported: ${s.reason}`));
+  plan.skipped.forEach((s) => deps.log.warn(`${line} template ${s.name} not imported: ${JSON.stringify(s.reason)}`));
   const saved = await Promise.all(plan.rows.map((row) => deps.queries.insert(row)));
   const imported = saved.flatMap((row) => (row ? [row.key] : []));
   return { ...facts, ok: true, checked_at: now.toISOString(), meta_count: list.length, synced, imported, skipped: plan.skipped };

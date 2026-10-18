@@ -36,10 +36,23 @@ describe('template routes per number (owner 2026-10-18)', () => {
 
   it('allow_list_only and line failures read in words', () => {
     expect(templateErrorText(new ApiError(403, { code: 'allow_list_only' }))).toBe(t.templates.error.allow_list_only);
-    expect(lineSyncErrorText({ error: 'kapso_auth' })).toBe(t.templates.error.kapso_auth);
-    expect(lineSyncErrorText({ error: 'meta_error', message: 'boom' })).toBe(t.templates.error.meta_error.replace('{message}', 'boom'));
-    expect(lineSyncErrorText({ error: 'meta_error' })).toBe(t.templates.error.meta_error.replace('{message}', '—'));
-    expect(lineSyncErrorText({})).toBe(t.common.error);
+    expect(lineSyncErrorText({ line: 'chat', error: 'kapso_auth' })).toBe(t.templates.error.kapso_auth);
+    expect(lineSyncErrorText({ line: 'chat', error: 'meta_error', message: 'boom' })).toBe(t.templates.error.meta_error.replace('{message}', 'boom'));
+    expect(lineSyncErrorText({ line: 'chat', error: 'meta_error' })).toBe(t.templates.error.meta_error.replace('{message}', '—'));
+    expect(lineSyncErrorText({ line: 'chat' })).toBe(t.common.error);
+  });
+
+  it('line-bound errors name the line the API sent (and its app id key), never a hard-coded one', () => {
+    const e = t.templates.error;
+    const { chat, notifications } = t.enums.waLine;
+    expect(templateErrorText(new ApiError(409, { code: 'needs_app_id', line: 'chat' }))).toBe(e.needs_app_id.replace('{line}', chat).replace('{key}', 'WA_CHAT_APP_ID'));
+    expect(templateErrorText(new ApiError(409, { code: 'needs_app_id', line: 'notifications' }))).toBe(
+      e.needs_app_id.replace('{line}', notifications).replace('{key}', 'WA_APP_ID'),
+    );
+    expect(templateErrorText(new ApiError(409, { code: 'needs_meta_driver', line: 'chat' }))).toBe(e.needs_meta_driver.replace('{line}', chat));
+    expect(templateErrorText(new ApiError(503, { code: 'not_configured', line: 'chat' }))).toBe(e.not_configured.replace('{line}', chat));
+    expect(lineSyncErrorText({ line: 'chat', error: 'not_configured' })).toBe(e.not_configured.replace('{line}', chat));
+    expect(templateErrorText(new ApiError(503, { code: 'not_configured' }))).not.toContain('{line}');
   });
 
   it('phonesOf keeps only the numbers Meta answered', () => {
