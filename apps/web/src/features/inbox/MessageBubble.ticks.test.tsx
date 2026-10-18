@@ -42,10 +42,10 @@ describe('MessageBubble delivery ticks (WhatsApp-style)', () => {
     expect(last?.previousElementSibling?.tagName).toBe('TIME');
   });
 
-  it('read is drawn in the read colour; delivered and sent in the muted ink', () => {
+  it('read is drawn in the read colour; delivered and sent in the tick grey', () => {
     expect(within(renderBubble({ status: 'read' })).getByRole('img').getAttribute('class')).toContain('text-read');
     document.body.innerHTML = '';
-    expect(within(renderBubble({ status: 'delivered' })).getByRole('img').getAttribute('class')).toContain('text-ink-3');
+    expect(within(renderBubble({ status: 'delivered' })).getByRole('img').getAttribute('class')).toContain('text-tick');
   });
 
   it('the delivery times are the tooltip', () => {
@@ -64,7 +64,7 @@ describe('MessageBubble delivery ticks (WhatsApp-style)', () => {
     const bubble = renderBubble({ status: 'failed', error_code: '131049', click_to_chat: 'https://wa.me/1?text=x' });
     expect(within(bubble).getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
     expect(within(bubble).getByRole('button', { name: t.messages.retry })).toBeTruthy();
-    expect(within(bubble).getByRole('img').getAttribute('class')).toContain('text-danger');
+    expect(within(bubble).getByRole('img').getAttribute('class')).toContain('text-act');
   });
 
   it('theirs carries no ticks', () => {

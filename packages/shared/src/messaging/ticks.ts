@@ -1,13 +1,13 @@
 import type { MessageStatus } from '../enums/index.js';
 
 // WhatsApp-style delivery ticks on OUR messages (owner, 2026-10-18), one truth for web and mobile:
-// a clock while queued, one tick sent, two delivered, two in the read colour once read, a red «!»
-// when it did not go out. Sent by hand has no WhatsApp equivalent: two ticks plus the word «يدويًا».
+// a clock while queued, one tick sent, two delivered, two in the read colour once read, a saffron «!»
+// when it did not go out (the same «دورك» tone as its chip and the bubble's ring: status-style.ts). Sent by hand has no WhatsApp equivalent: two ticks plus the word «يدويًا».
 
 export type TickKind = 'pending' | 'sent' | 'delivered' | 'read' | 'failed' | 'manual';
 
-/** The ink a tick kind is drawn in: the muted ink, the read blue, or the error red. */
-export type TickTone = 'muted' | 'read' | 'bad';
+/** The ink a tick kind is drawn in: the tick grey, the read blue, or saffron («دورك») when failed. */
+export type TickTone = 'muted' | 'read' | 'act';
 
 const KIND: Record<MessageStatus, TickKind> = {
   queued: 'pending',
@@ -21,7 +21,7 @@ const KIND: Record<MessageStatus, TickKind> = {
 export const messageTicks = (status: MessageStatus): TickKind => KIND[status];
 
 export const tickTone = (kind: TickKind): TickTone =>
-  kind === 'read' ? 'read' : kind === 'failed' ? 'bad' : 'muted';
+  kind === 'read' ? 'read' : kind === 'failed' ? 'act' : 'muted';
 
 /** Only «يدويًا» keeps a word beside its ticks (t.messages.manualTick). */
 export const tickHasWord = (kind: TickKind): boolean => kind === 'manual';

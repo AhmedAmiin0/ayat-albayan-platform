@@ -2,8 +2,9 @@ import { messageTicks, TICK_PATHS, tickHasWord, tickTone, type MessageStatus, ty
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 
-// Read is the WhatsApp-like blue token (--read), failed the error red, the rest the muted ink.
-const INK: Record<TickTone, string> = { muted: 'text-ink-3', read: 'text-read', bad: 'text-danger' };
+// Read is the WhatsApp-like blue (--read), the rest the tick grey (--tick); failed is saffron, the
+// «دورك» tone of its row word and the bubble's ring.
+const INK: Record<TickTone, string> = { muted: 'text-tick', read: 'text-read', act: 'text-act' };
 
 export interface DeliveryTicksProps {
   status: MessageStatus;
@@ -14,7 +15,9 @@ export interface DeliveryTicksProps {
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts): an image named by the status word,
- * so nothing is colour-only; the times stay on hover. Sent by hand keeps its short word «يدويًا».
+ * the times on hover. As in WhatsApp, delivered vs read is the same two ticks told apart by colour
+ * only (docs/07 principle 3 carve-out): the word goes to assistive tech and the hover title. Failed
+ * has its own «!» shape; sent by hand keeps its short word «يدويًا».
  */
 export function DeliveryTicks({ status, times, className }: DeliveryTicksProps) {
   const kind = messageTicks(status);

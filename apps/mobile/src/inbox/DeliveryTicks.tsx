@@ -3,50 +3,50 @@ import {
   messageTicks,
   TICK_PATHS,
   tickHasWord,
+  type TickKind,
   tickTone,
   type TickTone,
 } from '@ab/shared';
-import { useState } from 'react';
-import { Pressable } from 'react-native';
+import { Pressable, View, type ViewStyle } from 'react-native';
 import Svg, { Path } from 'react-native-svg';
 import { t } from '@/lib/i18n';
 import { type Palette, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 
-// Read is the WhatsApp-like blue token (`read`), failed the error red, the rest the muted ink.
-const INK: Record<TickTone, keyof Palette> = { muted: 'ink3', read: 'read', bad: 'bad' };
+// Read is the WhatsApp-like blue (`read`), the rest the tick grey (`tick`); failed is saffron, the
+// «دورك» tone of its chip (status-style.ts).
+const INK: Record<TickTone, keyof Palette> = { muted: 'tick', read: 'read', act: 'act' };
+const ROW: ViewStyle = { flexDirection: 'row', alignItems: 'center', gap: 2 };
 
 export interface DeliveryTicksProps {
   status: MessageStatus;
-  /** «أُرسلت … · وصلت … · قُرئت …» (deliveryTimes): read with the word; a long press shows it. */
+  /** «أُرسلت … · وصلت … · قُرئت …» (deliveryTimes): read with the word; a long press toggles them. */
   times?: string;
+  /** The bubble shows the times on its own line under the meta row (MessageMeta). */
+  onLongPress?: () => void;
+  /** In a thread row: the row's label already says the word (no separate stop), its chip «لم تُرسل». */
+  inList?: boolean;
+}
+
+/** The word beside the glyph: failed says «لم تُرسل» (no reason otherwise), sent by hand «يدويًا». */
+function shownWord(kind: TickKind, inList: boolean): string | null {
+  if (kind === 'failed') return inList ? null : t.enums.messageStatus.failed;
+  return tickHasWord(kind) ? t.messages.manualTick : null;
 }
 
 /**
  * WhatsApp-style ticks on OUR message (packages/shared ticks.ts), the web's DeliveryTicks drawn with
- * react-native-svg: an image named by the status word (+ times), so nothing is colour-only.
- * Sent by hand keeps its short word «يدويًا».
+ * react-native-svg: an image named by the status word (+ times). As in WhatsApp, delivered vs read is
+ * the same two ticks told apart by colour only (docs/07 principle 3 carve-out): the word goes to
+ * assistive tech and the long press. Failed has its own «!» and word; sent by hand «يدويًا».
  */
-export function DeliveryTicks({ status, times }: DeliveryTicksProps) {
+export function DeliveryTicks({ status, times, onLongPress, inList = false }: DeliveryTicksProps) {
   const { color } = useTheme();
-  const [open, setOpen] = useState(false);
   const kind = messageTicks(status);
   const ink = color[INK[tickTone(kind)]];
-  const word = t.enums.messageStatus[status];
-  const small = {
-    fontFamily: type.ui[500],
-    fontSize: type.size['2xs'],
-    lineHeight: type.lineHeight(type.size['2xs']),
-  };
-  return (
-    <Pressable
-      accessible
-      accessibilityRole="image"
-      accessibilityLabel={times ? `${word} · ${times}` : word}
-      testID={`ticks-${kind}`}
-      onLongPress={times ? () => setOpen((v) => !v) : undefined}
-      style={{ flexDirection: 'row', alignItems: 'center', gap: 2 }}
-    >
+  const word = shownWord(kind, inList);
+  const body = (
+    <>
       <Svg
         viewBox="0 0 20 20"
         width={16}
@@ -65,10 +65,39 @@ export function DeliveryTicks({ status, times }: DeliveryTicksProps) {
           strokeLinejoin="round"
         />
       </Svg>
-      {tickHasWord(kind) ? (
-        <AppText style={{ ...small, color: ink }}>{t.messages.manualTick}</AppText>
+      {word ? (
+        <AppText
+          style={{
+            fontFamily: type.ui[600],
+            fontSize: type.size['2xs'],
+            lineHeight: type.lineHeight(type.size['2xs']),
+            color: ink,
+          }}
+        >
+          {word}
+        </AppText>
       ) : null}
-      {open && times ? <AppText style={{ ...small, color: color.ink2 }}>{times}</AppText> : null}
+    </>
+  );
+  if (inList) {
+    // A tap here is the row's tap: no Pressable, and hidden from the reader (the row says the word).
+    return (
+      <View testID={`ticks-${kind}`} style={ROW} accessibilityElementsHidden importantForAccessibility="no-hide-descendants">
+        {body}
+      </View>
+    );
+  }
+  const a11y = {
+    accessible: true,
+    accessibilityRole: 'image' as const,
+    accessibilityLabel: times ? `${t.enums.messageStatus[status]} · ${times}` : t.enums.messageStatus[status],
+    testID: `ticks-${kind}`,
+    style: ROW,
+  };
+  if (!times) return <View {...a11y}>{body}</View>;
+  return (
+    <Pressable {...a11y} hitSlop={14} onLongPress={onLongPress}>
+      {body}
     </Pressable>
   );
 }

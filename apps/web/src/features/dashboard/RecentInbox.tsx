@@ -12,6 +12,10 @@ import { sectionTitle } from './Bar';
 /** How many conversations the dashboard shows; the rest is one click away in the inbox. */
 export const RECENT_THREADS = 5;
 
+/** The link's label replaces the ticks' name, so it carries our last message's status word. */
+const ticksWord = (th: ThreadView): string =>
+  th.last_direction === 'outbound' ? t.enums.messageStatus[th.last_status] : '';
+
 function ThreadItem({ thread: th }: { thread: ThreadView }) {
   const unread = th.unread_count > 0;
   const name = threadName(th);
@@ -20,7 +24,7 @@ function ThreadItem({ thread: th }: { thread: ThreadView }) {
       <Link
         to="/admin/inbox"
         search={{ page: 1, phone: th.phone_e164 }}
-        aria-label={t.inbox.openThread.replace('{name}', name)}
+        aria-label={[t.inbox.openThread.replace('{name}', name), ticksWord(th)].filter(Boolean).join(' — ')}
         className="grid grid-cols-[minmax(0,1fr)_auto] gap-x-3 gap-y-0.5 rounded-sm px-2 py-2.5 text-ink no-underline transition-colors duration-150 hover:bg-sunk"
       >
         <span className="flex min-w-0 items-center gap-2">

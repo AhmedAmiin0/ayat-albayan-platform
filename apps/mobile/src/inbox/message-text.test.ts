@@ -1,6 +1,7 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import {
+  deliveryTimes,
   errorLine,
   mediaKind,
   mediaLine,
@@ -10,6 +11,7 @@ import {
   stamp,
   templateLine,
 } from './message-text';
+import { delivered, inbound, message } from './thread-fixtures';
 
 const RIYADH = { now: new Date('2026-10-02T09:00:00Z'), tz: 'Asia/Riyadh' };
 
@@ -82,4 +84,32 @@ test('send errors: the API code in Arabic, anything else «الرسالة متب
   expect(sendError(new ApiError(409, { code: 'other' }))).toBe(t.inbox.error.send_failed);
   expect(sendError(new ApiError(500))).toBe(t.inbox.error.send_failed);
   expect(sendError(new Error('offline'))).toBe(t.inbox.error.send_failed);
+});
+
+describe('deliveryTimes: what the long press on our ticks shows', () => {
+  const sent = (iso: string) => t.messages.sentAt.replace('{time}', stamp(iso, RIYADH));
+  const reached = (iso: string) => t.messages.deliveredAt.replace('{time}', stamp(iso, RIYADH));
+  const read = (iso: string) => t.messages.readAt.replace('{time}', stamp(iso, RIYADH));
+
+  test('theirs has none, even with times on the row', () => {
+    expect(deliveryTimes({ ...inbound, sent_at: '2026-10-02T08:00:00Z' }, RIYADH)).toBe('');
+  });
+
+  test('only sent: the one time', () => {
+    const m = message({ id: 's', status: 'sent', sent_at: '2026-10-02T08:05:00Z' });
+    expect(deliveryTimes(m, RIYADH)).toBe(sent('2026-10-02T08:05:00Z'));
+  });
+
+  test('sent, delivered, read: in that order, joined by « · »', () => {
+    const m = { ...delivered, status: 'read' as const, read_at: '2026-10-02T08:07:00Z' };
+    expect(deliveryTimes(m, RIYADH)).toBe(
+      [sent('2026-10-02T08:05:00Z'), reached('2026-10-02T08:05:10Z'), read('2026-10-02T08:07:00Z')].join(' · '),
+    );
+  });
+
+  test('a missing time is skipped, never an empty step', () => {
+    const m = { ...delivered, sent_at: null, read_at: '2026-10-02T08:07:00Z' };
+    expect(deliveryTimes(m, RIYADH)).toBe([reached('2026-10-02T08:05:10Z'), read('2026-10-02T08:07:00Z')].join(' · '));
+    expect(deliveryTimes({ ...m, delivered_at: null, read_at: null }, RIYADH)).toBe('');
+  });
 });

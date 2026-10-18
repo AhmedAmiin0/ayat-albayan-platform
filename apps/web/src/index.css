@@ -102,6 +102,7 @@
   --color-cover-ink: var(--cover-ink);
   --color-scrim: var(--scrim);
   --color-read: var(--read);
+  --color-tick: var(--tick);
   /* elevation: three levels only */
   --shadow-page: var(--elev-page);
   --shadow-pop: var(--elev-pop);

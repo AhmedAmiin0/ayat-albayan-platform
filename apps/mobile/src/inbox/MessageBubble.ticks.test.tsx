@@ -1,5 +1,5 @@
 import type { MessageView } from '@ab/shared';
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen, within } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { MessageBubble } from './MessageBubble';
@@ -29,10 +29,25 @@ test('queued: the clock; sent by hand: two ticks and «يدويًا»', async ()
   expect(screen.getByText(t.messages.manualTick)).toBeTruthy();
 });
 
-test('failed: the red «!», and the bubble still renders its text', async () => {
+test('failed: the saffron «!» with its word and why, and the bubble still renders its text', async () => {
   await show(failed);
   expect(screen.getByLabelText(word.failed).props.testID).toBe('ticks-failed');
+  expect(screen.getByText(word.failed)).toBeTruthy();
+  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
   expect(screen.getByText(failed.body ?? '')).toBeTruthy();
+});
+
+test('a long press shows the times on their own line under the meta row, and hides them again', async () => {
+  await show(delivered);
+  const ticks = screen.getByLabelText(ticksLabel(word.delivered));
+  expect(screen.queryByTestId('ticks-times')).toBeNull();
+  await fireEvent(ticks, 'longPress');
+  const line = screen.getByTestId('ticks-times');
+  expect(line.props.children).toContain(t.messages.deliveredAt.replace('{time}', stamp(delivered.delivered_at ?? '')));
+  // Its own line, not inside the ticks (the stamp + ticks row): it wraps in the bubble on its own.
+  expect(within(ticks).queryByTestId('ticks-times')).toBeNull();
+  await fireEvent(ticks, 'longPress');
+  expect(screen.queryByTestId('ticks-times')).toBeNull();
 });
 
 test('theirs: no ticks', async () => {

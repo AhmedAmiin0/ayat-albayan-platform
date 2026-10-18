@@ -1,5 +1,6 @@
 import type { ThreadView } from '@ab/shared';
-import { screen, within } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
+import { router } from 'expo-router';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { InboxScreen } from './InboxScreen';
@@ -24,15 +25,29 @@ const theirs: ThreadView = {
 };
 const page = (items: ThreadView[]) => ({ items, total: items.length, page: 1, pageSize: 25 });
 const row = (name: string) => screen.getByRole('button', { name: new RegExp(name) });
+const hidden = { includeHiddenElements: true };
 
-beforeEach(() => mockApiFetch.mockReset());
+beforeEach(() => {
+  mockApiFetch.mockReset();
+  jest.mocked(router.push).mockReset();
+});
 
-test('our last message carries its ticks, named by the status word', async () => {
+test('our last message carries its ticks; the row (one stop) says the status word', async () => {
   mockApiFetch.mockResolvedValue(page([ours, theirs]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
-  const ticks = within(row('أم سارة')).getByLabelText(t.enums.messageStatus.read);
-  expect(ticks.props.testID).toBe('ticks-read');
+  expect(row(`أم سارة.*${t.enums.messageStatus.read} · ${t.inbox.you} أهلًا`)).toBeTruthy();
+  // The ticks add no stop of their own.
+  expect(screen.queryByLabelText(t.enums.messageStatus.read)).toBeNull();
+  expect(screen.getByTestId('ticks-read', hidden)).toBeTruthy();
+});
+
+test('a tap on the ticks opens the thread, as anywhere on the row', async () => {
+  mockApiFetch.mockResolvedValue(page([ours]));
+  await renderWithQuery(<InboxScreen />);
+  await screen.findByText('أم سارة');
+  await fireEvent.press(screen.getByTestId('ticks-read', hidden));
+  expect(router.push).toHaveBeenCalledTimes(1);
 });
 
 test('their last message shows no ticks; the unread chip stays', async () => {
@@ -43,10 +58,10 @@ test('their last message shows no ticks; the unread chip stays', async () => {
   expect(screen.getByText(t.inbox.unread.one)).toBeTruthy();
 });
 
-test('a failed last send: the red «!» before the preview, and the «لم تُرسل» chip', async () => {
+test('a failed last send: the saffron «!» before the preview, «لم تُرسل» said once (the chip)', async () => {
   mockApiFetch.mockResolvedValue(page([{ ...ours, last_status: 'failed' }]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
-  expect(screen.getByLabelText(t.enums.messageStatus.failed).props.testID).toBe('ticks-failed');
-  expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
+  expect(screen.getByTestId('ticks-failed', hidden)).toBeTruthy();
+  expect(screen.getAllByText(t.enums.messageStatus.failed, hidden)).toHaveLength(1);
 });

@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MESSAGE_STATUSES } from '../enums/index.js';
+import { messageStatusStyle } from './status-style.js';
 import { messageTicks, TICK_PATHS, tickHasWord, tickTone } from './ticks.js';
 
 describe('messageTicks (WhatsApp-style delivery ticks)', () => {
@@ -8,11 +9,15 @@ describe('messageTicks (WhatsApp-style delivery ticks)', () => {
     ['sent', 'sent', 'muted'],
     ['delivered', 'delivered', 'muted'],
     ['read', 'read', 'read'],
-    ['failed', 'failed', 'bad'],
+    ['failed', 'failed', 'act'],
     ['sent_manually', 'manual', 'muted'],
   ] as const)('%s → %s ticks in the %s ink', (status, kind, tone) => {
     expect(messageTicks(status)).toBe(kind);
     expect(tickTone(kind)).toBe(tone);
+  });
+
+  it('failed shares the «دورك» tone of its status chip', () => {
+    expect(tickTone(messageTicks('failed'))).toBe(messageStatusStyle.failed.tone);
   });
 
   it('covers every message status', () => {

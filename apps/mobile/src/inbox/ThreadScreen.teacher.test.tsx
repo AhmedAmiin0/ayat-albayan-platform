@@ -6,7 +6,6 @@ import { renderWithQuery } from '@/test/query';
 import { detail, failed, inbound, message, NOW, thread } from './thread-fixtures';
 import { ThreadModeProvider } from './thread-mode';
 import { ThreadScreen } from './ThreadScreen';
-import { ticksLabel } from './ticks.helpers';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -55,7 +54,8 @@ test('a guardian’s chat: messages, «بعتها», the composer; no subscripti
   expect(screen.getByLabelText(t.inbox.composer.placeholder)).toBeTruthy();
   expect(screen.queryByText(t.inbox.subscription.badge.none)).toBeNull();
   // A failed row: its status word, but retry / «بعتها يدوي» stay the admin's.
-  expect(screen.getByLabelText(ticksLabel(t.enums.messageStatus.failed))).toBeTruthy();
+  expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
+  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
   expect(screen.queryByText(t.messages.retry)).toBeNull();
   await fireEvent.press(screen.getByText(t.common.back));
   expect(mockReplace).toHaveBeenCalledWith('/teacher/chats');

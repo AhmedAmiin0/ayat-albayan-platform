@@ -13,6 +13,8 @@ export interface ListRowProps {
   subtitle?: string;
   /** Before the subtitle on its line: a thread's delivery ticks when its last message is ours. */
   subtitleLeading?: ReactNode;
+  /** What the reader says for the subtitle when it differs (the ticks' status word, then the text). */
+  subtitleLabel?: string;
   /** LTR value beside the title: «AB-0183» or formatPhone(phone). */
   meta?: string;
   /** Third line: chips and short words that wrap (a thread's lead status + source). */
@@ -24,7 +26,8 @@ export interface ListRowProps {
 }
 
 /** One list row, 56pt minimum, hairline below. Feed it to FlatList renderItem. */
-export function ListRow({ leading, title, subtitle, subtitleLeading, meta, tags, trailing, onPress }: ListRowProps) {
+export function ListRow(props: ListRowProps) {
+  const { leading, title, subtitle, subtitleLeading, subtitleLabel, meta, tags, trailing, onPress } = props;
   const { color } = useTheme();
   const row: ViewStyle = {
     minHeight: 56,
@@ -67,6 +70,7 @@ export function ListRow({ leading, title, subtitle, subtitleLeading, meta, tags,
             {subtitleLeading}
             <AppText
               numberOfLines={1}
+              accessibilityLabel={subtitleLabel}
               style={{
                 flexShrink: 1,
                 fontFamily: type.ui[400],

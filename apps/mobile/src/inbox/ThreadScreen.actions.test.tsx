@@ -38,7 +38,7 @@ beforeEach(() => {
 test('a failed reminder: template name, «متبعتتش», and why in Arabic', async () => {
   await open();
   expect(screen.getByText(t.inbox.templateLine.replace('{name}', t.templates.names.lesson_reminder_plain))).toBeTruthy();
-  expect(screen.getByLabelText(ticksLabel(word.failed))).toBeTruthy();
+  expect(screen.getByText(word.failed)).toBeTruthy();
   expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
 });
 
@@ -56,7 +56,7 @@ test('«حاول مرة أخرى» puts it back in the queue and the row says so
   await fireEvent.press(screen.getByRole('button', { name: t.messages.retry }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/messages/m3/retry');
   expect(await screen.findByLabelText(ticksLabel(word.queued))).toBeTruthy();
-  expect(screen.queryByLabelText(ticksLabel(word.failed))).toBeNull();
+  expect(screen.queryByText(word.failed)).toBeNull();
 });
 
 test('a refused retry says so and leaves the row as it was', async () => {
@@ -64,7 +64,7 @@ test('a refused retry says so and leaves the row as it was', async () => {
   await open();
   await fireEvent.press(screen.getByRole('button', { name: t.messages.retry }));
   expect(await screen.findByText(t.common.error)).toBeTruthy();
-  expect(screen.getByLabelText(ticksLabel(word.failed))).toBeTruthy();
+  expect(screen.getByText(word.failed)).toBeTruthy();
 });
 
 test('«ابعتها بنفسك» tells the server first (it holds the row), then opens the API wa.me link', async () => {

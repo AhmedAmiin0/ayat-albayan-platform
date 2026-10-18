@@ -62,7 +62,9 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
   const kind = threadKind(th);
   const turn = failed ? t.inbox.failedLast : unread ? unreadLabel(th.unread_count) : '';
   const line = th.last_inbound_line ? t.enums.waLine[th.last_inbound_line] : '';
-  const label = [t.inbox.openThread.replace('{name}', name), turn, line]
+  // The link's label replaces the ticks' name: ours carries its status word (failed is in `turn`).
+  const status = th.last_direction === 'outbound' && !failed ? t.enums.messageStatus[th.last_status] : '';
+  const label = [t.inbox.openThread.replace('{name}', name), status, turn, line]
     .filter(Boolean)
     .join(' — ');
 

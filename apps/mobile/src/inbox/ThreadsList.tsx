@@ -39,6 +39,15 @@ function turnChip(th: ThreadView): ReactNode {
 }
 
 /**
+ * The row reads the ticks' status word before the preview (the ticks add no stop of their own);
+ * failed is the row's «لم تُرسل» chip already.
+ */
+function ticksWord(th: ThreadView): string | undefined {
+  if (th.last_direction !== 'outbound' || th.last_status === 'failed') return undefined;
+  return `${t.enums.messageStatus[th.last_status]} · ${threadPreview(th)}`;
+}
+
+/**
  * «المحادثات» (R-MOB-02): every WhatsApp thread — a guardian's reschedule request or a teacher's
  * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
  * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
@@ -68,13 +77,15 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         renderItem={({ item: th }) => {
           const phone = formatPhone(th.phone_e164);
           const teacher = mode.kind === 'teacher';
+          const ours = th.last_direction === 'outbound';
           return (
             <ListRow
               leading={<Avatar letter={initialOf(th.display_name)} />}
               title={th.display_name ?? (teacher ? kindLabel(th) : ltr(phone))}
               meta={th.display_name && !teacher ? phone : undefined}
               subtitle={threadPreview(th)}
-              subtitleLeading={th.last_direction === 'outbound' ? <DeliveryTicks status={th.last_status} /> : undefined}
+              subtitleLeading={ours ? <DeliveryTicks status={th.last_status} inList /> : undefined}
+              subtitleLabel={ticksWord(th)}
               tags={mode.kind === 'admin' && !base ? <ThreadTags thread={th} /> : undefined}
               trailing={turnChip(th)}
               onPress={() => router.push(inTree(base, threadLink(th.phone_e164, mode)))}

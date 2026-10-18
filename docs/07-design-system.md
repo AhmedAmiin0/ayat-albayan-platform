@@ -24,7 +24,7 @@ Amiri, the revival of Cairo's Bulaq/Amiriya press Naskh, sets titles. IBM Plex S
 
 1. **Gold decorates, GREEN acts.** Gold (`--gold*`) never fills a button, a link or text. Anything clickable is the brand green (the `--lapis*` tokens, a historical name: their value is green), or neutral with a green focus ring. If you are reaching for gold to make something "important", use hierarchy instead. The `ok` status (brand green3 `#1E6B4C`) shares the green family on purpose, as in the brand's own reports («تم / حاضر»); it is never filled or underlined and always sits in a chip with its nuqta glyph, so it never reads as a link or a button.
 2. **Saffron means «دورك» and nothing else.** Saffron marks only things an admin must act on now: «يحتاج تأكيد», new lead «جديد», «محتاج معلم/ة», «الباقة خلصت», «بانتظار التجديد», «مش مدفوع», «تقرير ما اتبعتش», «فاضل حلقتين». It is never a button, a focus ring or a decoration. If nobody has to do anything, it is not saffron.
-3. **Shape carries state; colour only confirms it.** Every status shows a nuqta glyph (fill, half, hollow or struck) **and** the ar.json word. Colour is the third channel, so no state is ever communicated by colour alone.
+3. **Shape carries state; colour only confirms it.** Every status shows a nuqta glyph (fill, half, hollow or struck) **and** the ar.json word. Colour is the third channel, so no state is ever communicated by colour alone. **One carve-out: chat delivery ticks** follow WhatsApp, where delivered and read are the same two ticks told apart by colour (`tick` grey vs `read` blue, kept ≥ 1.4:1 apart in both themes by `theme.contrast.test.ts`, each ≥ 3:1 on the bubble and the thread row). The status word is still given: to assistive tech (the ticks' image name, and the thread row's label) and on hover (web) or long press (mobile). Queued (clock), sent (one tick) and failed (saffron «!» with «لم تُرسل») keep their own shapes.
 4. **One rosette, one cartouche, one filled button.** The verse-end rosette ۝ only ever holds a number (section, page, PDF page). It is never a status, never the logo and is never struck through. Each screen has exactly one cartouche (its title) and at most one filled primary button. The one exception is a list whose rows *are* the task: on the mobile «النهارده» screen every card that needs confirmation carries its own filled «تأكيد», because confirming is the only job on that screen.
 5. **Arabic first, one numeral system.**
    - Titles are Amiri 700 at 20px or larger, with line-height 1.5.
@@ -845,7 +845,7 @@ Expo specifics:
   6. «التقييم»: 6 rubric rows (label, 5 pips, grade word) beside an overall box (`gold-wash`, Amiri 2.6em grade word + pips).
   7. ملاحظات المعلمة | الواجب, then الخطة الجاية full width.
   8. Footer: the package line from `packageProgress` at the start, page number in the rosette in the middle, «اتبعت على الواتساب …» timestamp at the end.
-- **Greyscale-safe:** the meaning is in words and pips, never colour alone.
+- **Greyscale-safe:** the meaning is in words and pips, never colour alone. (Principle 3's one carve-out, the chat's delivery ticks, never appears in a report.)
 - Text stays selectable; nothing is rasterised.
 - File name: `AB-0183_2026-09-29_تقرير-الحلقة.pdf`.
 - Lines from the Quran appear only as references (surah + āyah range), never as decorative text.

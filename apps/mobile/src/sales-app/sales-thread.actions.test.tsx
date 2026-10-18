@@ -1,7 +1,6 @@
 import { screen } from '@testing-library/react-native';
 import { detail, failed, inbound } from '@/inbox/thread-fixtures';
 import { ThreadScreen } from '@/inbox/ThreadScreen';
-import { ticksLabel } from '@/inbox/ticks.helpers';
 import { t } from '@/lib/i18n';
 import { pathKey } from '@/lib/query-keys';
 import { TreeBaseProvider } from '@/nav/tree-base';
@@ -34,7 +33,8 @@ test('a failed send in the sales tree: its status word, but no retry / click-to-
     client,
   );
   await screen.findByText(inbound.body ?? '');
-  expect(screen.getByLabelText(ticksLabel(t.enums.messageStatus.failed))).toBeTruthy();
+  expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
+  expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.messages.retry })).toBeNull();
   expect(screen.queryByRole('button', { name: t.messages.clickToChat })).toBeNull();
   expect(screen.queryByText(t.messages.handedOff)).toBeNull();
