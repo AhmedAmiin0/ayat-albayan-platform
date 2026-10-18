@@ -6,7 +6,8 @@ import { AppText } from '@/ui/AppText';
 /**
  * In the reply box's place once the 24 h window closed: why only a template can go now
  * (inbox.sessionClosed, verbatim; a number with no message yet: the first message is a template).
- * One gold-washed line as tall as the box (two lines at most), beside «أرسل قالبًا».
+ * One gold-washed line as tall as the box, beside «أرسل قالبًا»: two lines at most, three for a new
+ * number (its longer note must fit a 360dp phone whole).
  */
 export function ClosedNote({ known }: { known: boolean }) {
   const { color } = useTheme();
@@ -25,7 +26,7 @@ export function ClosedNote({ known }: { known: boolean }) {
     >
       <AppText
         testID="closed-note"
-        numberOfLines={2}
+        numberOfLines={known ? 2 : 3}
         accessibilityLabel={text}
         style={{
           fontFamily: type.ui[500],

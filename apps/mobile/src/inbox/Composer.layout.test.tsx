@@ -1,6 +1,9 @@
 import { fireEvent, screen, within } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { t } from '@/lib/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';
+import { shape, type } from '@/theme';
+import { sessionUntil } from './message-text';
 import { detail, inbound, thread } from './thread-fixtures';
 import { ThreadScreen } from './ThreadScreen';
 
@@ -41,12 +44,23 @@ test('open window: template and send are icon buttons beside the box; the templa
   expect(await screen.findByText(t.inbox.composer.chooseTemplate)).toBeTruthy();
 });
 
-test('open window: the line and the window’s end are one line each', async () => {
+test('open window: the line gives way; the window’s end time is shown whole, never cut', async () => {
   await open(OPEN);
-  expect(screen.getByTestId('line-note').props.numberOfLines).toBe(1);
+  const line = screen.getByTestId('line-note');
+  expect(line.props.numberOfLines).toBe(1);
+  expect(StyleSheet.flatten(line.props.style)).toMatchObject({ flexShrink: 1, minWidth: 0 });
   const until = screen.getByTestId('session-until');
-  expect(until.props.numberOfLines).toBe(1);
-  expect(until.props.accessibilityLabel).toMatch(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')));
+  expect(until.props.numberOfLines).toBeUndefined();
+  expect(StyleSheet.flatten(until.props.style).flexShrink).toBe(0);
+  expect(until.props.children).toBe(sessionUntil(OPEN.last_inbound_at));
+  expect(until.props.children).toMatch(new RegExp(t.inbox.sessionOpenUntil.replace(' {time}', '')));
+});
+
+test('open window: one line of text makes the box exactly 44pt (26 line + 8 + 8 + border)', async () => {
+  await open(OPEN);
+  const { style } = screen.getByLabelText(t.inbox.composer.placeholder).props;
+  expect(style.lineHeight).toBe(type.lineHeight(type.size.base));
+  expect(style.lineHeight + 2 * style.paddingVertical + 2 * style.borderWidth).toBe(shape.control.touch);
 });
 
 test('closed window: one compact note beside a labelled «أرسل قالبًا», no free-text box', async () => {
@@ -66,4 +80,5 @@ test('sending off: GateNote is one line, read whole by a screen reader, and a ta
   await fireEvent.press(gate);
   expect(within(gate).getByText(t.inbox.messagingOff).props.numberOfLines).toBeUndefined();
   expect(gate.props.accessibilityState).toMatchObject({ expanded: true });
+  expect(gate.props.style).toMatchObject({ minHeight: shape.control.touch, justifyContent: 'center' });
 });

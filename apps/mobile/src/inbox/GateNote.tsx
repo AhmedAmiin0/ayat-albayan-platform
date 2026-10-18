@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Pressable } from 'react-native';
 import { apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { shape } from '@/theme';
 import { pathKey } from '@/lib/query-keys';
 import { AppText } from '@/ui/AppText';
 import { useNoteStyle } from './note-style';
@@ -30,7 +31,7 @@ export function GateNote() {
       accessibilityLabel={text}
       accessibilityState={{ expanded: whole }}
       onPress={() => setWhole((w) => !w)}
-      hitSlop={{ top: 8, bottom: 8 }}
+      style={{ minHeight: shape.control.touch, justifyContent: 'center' }}
     >
       <AppText numberOfLines={whole ? undefined : 1} style={note}>
         {text}
