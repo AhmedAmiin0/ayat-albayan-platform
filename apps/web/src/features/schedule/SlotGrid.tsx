@@ -14,6 +14,8 @@ export interface SlotGridProps {
   studentTz: string;
   /** starts_at of the picked slot. */
   value: string | null;
+  /** A package's other picked starts (one per weekday, owner 2026-10-18): shown picked too. */
+  also?: readonly string[] | undefined;
   onPick: (slot: SlotView) => void;
 }
 
@@ -24,7 +26,7 @@ const weekday: Record<string, string> = t.enums.weekday;
  * typed (rule 6). A start with conflicts stays pickable but reads «مش فاضي» (struck nuqta): booking
  * it shows the conflict and the book-anyway path (R-SCH-04).
  */
-export function SlotGrid({ week, slots, studentTz, value, onPick }: SlotGridProps) {
+export function SlotGrid({ week, slots, studentTz, value, also = [], onPick }: SlotGridProps) {
   const days = byLocalDay(slots, RIYADH_TZ);
   // Container query: 7 columns on a wide page, stacked days inside the narrow lesson drawer.
   return (
@@ -44,7 +46,12 @@ export function SlotGrid({ week, slots, studentTz, value, onPick }: SlotGridProp
                 <ul className="flex flex-wrap gap-1.5 @[640px]:grid @[640px]:max-h-[26rem] @[640px]:overflow-y-auto @[640px]:p-0.5">
                   {daySlots.map((slot) => (
                     <li key={slot.starts_at}>
-                      <SlotButton slot={slot} studentTz={studentTz} picked={slot.starts_at === value} onPick={onPick} />
+                      <SlotButton
+                        slot={slot}
+                        studentTz={studentTz}
+                        picked={slot.starts_at === value || also.includes(slot.starts_at)}
+                        onPick={onPick}
+                      />
                     </li>
                   ))}
                 </ul>

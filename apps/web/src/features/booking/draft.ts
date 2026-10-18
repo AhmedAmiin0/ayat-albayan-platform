@@ -2,7 +2,8 @@ import type { BookingTeacherOption, Duration, Gender, PackageSize, Program } fro
 import { RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
-import { isNewStudent, leadParts, newStudentReady, type NewStudentDraft } from './new-student';
+import { pickedRule } from './draft.days';
+import { leadParts, type NewStudentDraft } from './new-student';
 
 export type { NewStudentDraft } from './new-student';
 export type { InvoiceDraft, MissedPick } from './draft.invoice';
@@ -12,14 +13,16 @@ export type { InvoiceDraft, MissedPick } from './draft.invoice';
 
 export type StepKey = 'students' | 'missed' | 'teacher' | 'package' | 'slot' | 'invoice' | 'review';
 
-// The package (and lesson length) comes before the slot: the repeat days depend on it. A trial
-// has no invoice; a makeup picks the missed lesson instead of a package.
-const FLOWS: Record<BookingKind, readonly StepKey[]> = {
-  trial: ['students', 'teacher', 'package', 'slot', 'review'],
-  package: ['students', 'teacher', 'package', 'slot', 'invoice', 'review'],
-  makeup: ['students', 'missed', 'teacher', 'slot', 'invoice', 'review'],
-};
-export const stepsFor = (kind: BookingKind): readonly StepKey[] => FLOWS[kind];
+export { stepReady, stepsFor, stepsOf } from './draft.steps';
+export { days, draftPicks, pickPatch, withPicks } from './draft.days';
+
+/** The assistant's course of a subscription she sold (owner 2026-10-18, R-ASST-01). */
+export interface CourseDraft {
+  /** Days a week to pick, exactly (courseDaysPerWeek). */
+  perWeek: number;
+  /** subscriptions.lessons_total: the course stops after it. */
+  lessonsTotal: number;
+}
 
 export type PickedStudent = { id: string; name: string; code: string | null };
 
@@ -45,9 +48,12 @@ export interface BookingDraft {
   country: string | null;
   teacher: BookingTeacherOption | null;
   durationMin: Duration;
-  /** First lesson, picked on the slot grid (UTC instant). */
+  /** First lesson, picked on the slot grid (UTC instant): the earliest pick. */
   startsAt: string | null;
-  byday: number[];
+  /** A package: the other picked slots (UTC instants), one per weekday, each at its own time. */
+  extra: string[];
+  /** The assistant books a subscription's course: its fixed day count and lesson count; else null. */
+  course: CourseDraft | null;
   pkg: PackageSize;
   meetingLink: string;
   /** Idempotency key of this wizard's POST /booking: a retry or double submit books once. */
@@ -73,7 +79,8 @@ export function emptyDraft(o: { leadId?: string | null; trial?: boolean; kind?: 
     teacher: null,
     durationMin: 45,
     startsAt: null,
-    byday: [],
+    extra: [],
+    course: null,
     pkg: kind === 'trial' ? 'trial' : '8',
     meetingLink: '',
     requestId: crypto.randomUUID(),
@@ -87,43 +94,18 @@ export function ruleFromSlot(startsAt: string, tz: string): { startsOn: string; 
   return { startsOn: p.date, startTimeLocal: p.time, weekday: p.weekday };
 }
 
-/** A trial or a makeup is exactly one lesson: its rule repeats only on the first slot's day (docs/10 invariant 4). */
-export function effectiveByday(d: Pick<BookingDraft, 'startsAt' | 'tz' | 'kind' | 'byday'>): number[] {
-  if (!d.startsAt) return [];
-  const { weekday } = ruleFromSlot(d.startsAt, d.tz);
-  if (d.kind !== 'package') return [weekday];
-  return [...new Set([weekday, ...d.byday])].sort((a, b) => a - b);
-}
-
-/** Whether «التالي» may leave `step`. */
-export function stepReady(d: BookingDraft, step: StepKey): boolean {
-  switch (step) {
-    case 'students':
-      if (d.kind === 'makeup') return d.students.length === 1 && !d.leadId;
-      return isNewStudent(d) && d.students.length === 0 ? newStudentReady(d.newStudent) : d.students.length > 0;
-    case 'missed':
-      return d.missed !== null;
-    case 'invoice':
-      return d.invoice !== null;
-    case 'teacher':
-      return d.teacher !== null && d.teacher.has_availability;
-    case 'slot':
-      return d.startsAt !== null;
-    case 'package':
-    case 'review':
-      return true;
-  }
-}
-
 /** POST /booking body; `override` = the reason to book over conflicts (R-SCH-04). */
 export function toBookingRequest(d: BookingDraft, override?: string): BookingBody | null {
   if (!d.teacher || !d.startsAt) return null;
   if (d.kind === 'makeup' && !d.missed) return null;
-  const rule = ruleFromSlot(d.startsAt, d.tz);
+  // A trial or a makeup is exactly one lesson: one pick, on the first slot's day (docs/10 invariant 4).
+  const rule = pickedRule(d);
+  if (!rule) return null;
   const base = {
     teacherId: d.teacher.id,
-    byday: effectiveByday(d),
+    byday: rule.byday,
     startTimeLocal: rule.startTimeLocal,
+    ...(rule.dayTimes.length > 0 ? { dayTimes: rule.dayTimes } : {}),
     tz: d.tz,
     durationMin: d.durationMin,
     startsOn: rule.startsOn,
@@ -132,7 +114,7 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingBod
     ...(d.invoice && d.kind !== 'trial' ? { invoice: invoiceInput(d.invoice) } : {}),
     meetingLink: d.meetingLink.trim() || null,
     clientRequestId: d.requestId,
-    startsAt: d.startsAt,
+    startsAt: rule.startsAt,
     ...(override ? { override: { reason: override } } : {}),
   };
   if (d.students.length > 0) {

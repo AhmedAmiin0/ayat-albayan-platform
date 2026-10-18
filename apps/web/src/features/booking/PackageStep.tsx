@@ -13,7 +13,7 @@ import { quoteSelection, type PriceInput } from './price';
 export interface PackageStepProps {
   draft: BookingDraft;
   /** A new length clears the picked slot (the grid depends on it). */
-  onChange: (patch: Partial<Pick<BookingDraft, 'pkg' | 'durationMin' | 'startsAt'>>) => void;
+  onChange: (patch: Partial<Pick<BookingDraft, 'pkg' | 'durationMin' | 'startsAt' | 'extra'>>) => void;
 }
 
 /**
@@ -40,7 +40,7 @@ export function PackageStep({ draft, onChange }: PackageStepProps) {
               value={draft.durationMin}
               onChange={(e) => {
                 const next = DURATIONS.find((d) => String(d) === e.target.value);
-                if (next) onChange({ durationMin: next, startsAt: null });
+                if (next) onChange({ durationMin: next, startsAt: null, extra: [] });
               }}
             >
               {DURATIONS.map((d) => (

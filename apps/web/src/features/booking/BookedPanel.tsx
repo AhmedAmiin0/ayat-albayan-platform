@@ -47,7 +47,8 @@ export function BookedPanel({ result, teacherId, tz, kind, subscribeFor, chatPho
   const [paid, setPaid] = useState(false);
   const { first, week } = firstLesson(result);
   const offer = !!subscribeFor && !subscribed;
-  const invoices = useQuery({ ...invoicesQuery({ ruleId: result.rule_id }), enabled: !!kind && kind !== 'trial' });
+  // The assistant never has an invoice (her course follows the subscription she made).
+  const invoices = useQuery({ ...invoicesQuery({ ruleId: result.rule_id }), enabled: !sales && !!kind && kind !== 'trial' });
   const invoice = invoices.data?.[0];
   return (
     <section aria-labelledby="booked-title" className="grid justify-items-start gap-3 py-2">

@@ -6,11 +6,12 @@ import type { BookingDraft, PickedStudent } from './draft';
 
 /**
  * Who «اعمل الاشتراك» is for: the booked student (the lead's new one, or the first picked); null
- * after a trial or a makeup (it consumes no package). ponytail: one student; siblings booked together subscribe from their profiles.
+ * after a trial or a makeup (it consumes no package), and after the assistant's course (it follows a
+ * subscription she already made). ponytail: one student; siblings booked together subscribe from their profiles.
  */
 export function subscribeTarget(d: BookingDraft, r: BookingResult): PickedStudent | null {
   const id = r.student_ids[0];
-  if (d.kind !== 'package' || !id) return null;
+  if (d.kind !== 'package' || d.course || !id) return null;
   return d.students.find((s) => s.id === id) ?? { id, name: d.newStudent?.name.trim() ?? '', code: null };
 }
 

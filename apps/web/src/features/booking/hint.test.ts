@@ -15,13 +15,13 @@ describe('bookHint', () => {
 
 describe('teacherPatch', () => {
   it('the hinted teacher brings the hinted start', () => {
-    expect(teacherPatch(emptyDraft(), { teacher: ABRAR }, HINT)).toEqual({ teacher: ABRAR, startsAt: SLOT, byday: [] });
+    expect(teacherPatch(emptyDraft(), { teacher: ABRAR }, HINT)).toEqual({ teacher: ABRAR, startsAt: SLOT, extra: [] });
   });
 
   it('another teacher drops a start picked for someone else', () => {
-    const draft = { ...emptyDraft(), teacher: ABRAR, startsAt: SLOT, byday: [3] };
-    expect(teacherPatch(draft, { teacher: NOOR }, HINT)).toEqual({ teacher: NOOR, startsAt: null, byday: [] });
-    expect(teacherPatch(draft, { program: 'arabic', teacher: null }, null)).toEqual({ program: 'arabic', teacher: null, startsAt: null, byday: [] });
+    const draft = { ...emptyDraft(), teacher: ABRAR, startsAt: SLOT, extra: ['2026-10-07T14:00:00.000Z'] };
+    expect(teacherPatch(draft, { teacher: NOOR }, HINT)).toEqual({ teacher: NOOR, startsAt: null, extra: [] });
+    expect(teacherPatch(draft, { program: 'arabic', teacher: null }, null)).toEqual({ program: 'arabic', teacher: null, startsAt: null, extra: [] });
   });
 
   it('re-picking the same teacher or changing nothing about the teacher keeps the slot', () => {

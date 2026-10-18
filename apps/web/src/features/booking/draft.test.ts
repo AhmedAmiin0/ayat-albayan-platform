@@ -1,6 +1,6 @@
 import { bookingRequestSchema, type BookingTeacherOption } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { effectiveByday, emptyDraft, ruleFromSlot, stepReady, toBookingRequest, type BookingDraft } from './draft';
+import { emptyDraft, ruleFromSlot, stepReady, toBookingRequest, type BookingDraft } from './draft';
 
 const TEACHER: BookingTeacherOption = {
   id: '6f1c2a3e-1b2c-4d5e-8f90-123456789abc',
@@ -26,7 +26,7 @@ const ready = (o: Partial<BookingDraft> = {}): BookingDraft => ({
   ...o,
 });
 
-describe('ruleFromSlot / effectiveByday (R-SCH-06)', () => {
+describe('ruleFromSlot (R-SCH-06)', () => {
   it('reads the local start day and time in the family zone', () => {
     expect(ruleFromSlot(SLOT, 'Asia/Riyadh')).toEqual({ startsOn: '2026-10-04', startTimeLocal: '17:00', weekday: 0 });
     expect(ruleFromSlot('2026-10-03T22:00:00Z', 'America/New_York')).toEqual({
@@ -34,16 +34,6 @@ describe('ruleFromSlot / effectiveByday (R-SCH-06)', () => {
       startTimeLocal: '18:00',
       weekday: 6,
     });
-  });
-
-  it('always repeats on the first slot day, plus the ticked days, sorted and unique', () => {
-    expect(effectiveByday(ready({ byday: [3, 0, 3] }))).toEqual([0, 3]);
-    expect(effectiveByday(ready({ startsAt: null }))).toEqual([]);
-  });
-
-  it('a trial or a makeup is one lesson: only the first day', () => {
-    expect(effectiveByday(ready({ kind: 'trial', pkg: 'trial', byday: [1, 3] }))).toEqual([0]);
-    expect(effectiveByday(ready({ kind: 'makeup', byday: [1, 3] }))).toEqual([0]);
   });
 });
 
@@ -67,7 +57,8 @@ describe('stepReady', () => {
 
 describe('toBookingRequest (POST /booking)', () => {
   it('builds a valid existing-students request with the override reason', () => {
-    const body = toBookingRequest(ready({ byday: [2], meetingLink: ' ' }), 'طلب ولي الأمر');
+    // Tuesday 6 Oct 17:00 Riyadh: the same time, so no dayTimes.
+    const body = toBookingRequest(ready({ extra: ['2026-10-06T14:00:00.000Z'], meetingLink: ' ' }), 'طلب ولي الأمر');
     expect(body).toMatchObject({
       studentIds: [STUDENT.id],
       teacherId: TEACHER.id,
@@ -80,6 +71,7 @@ describe('toBookingRequest (POST /booking)', () => {
       meetingLink: null,
       override: { reason: 'طلب ولي الأمر' },
     });
+    expect(body).not.toHaveProperty('dayTimes');
     expect(bookingRequestSchema.safeParse(body).success).toBe(true);
   });
 

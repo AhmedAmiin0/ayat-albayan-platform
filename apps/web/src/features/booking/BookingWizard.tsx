@@ -7,7 +7,7 @@ import { t } from '@/lib/i18n';
 import { chatPhone, subscribeTarget } from './booked';
 import { BookedPanel } from './BookedPanel';
 import { GapChip } from './GapChip';
-import { stepReady, stepsFor, type BookingDraft, type PickedStudent, type StepKey } from './draft';
+import { stepReady, stepsOf, type BookingDraft, type PickedStudent, type StepKey } from './draft';
 import type { BookHint } from './hint';
 import { isNewStudent } from './new-student';
 import { WizardBody } from './WizardBody';
@@ -36,7 +36,7 @@ export interface BookingWizardProps {
  */
 export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId }: BookingWizardProps) {
   const [draft, setDraft] = useState(initial);
-  const [step, setStep] = useState<StepKey>('students');
+  const [step, setStep] = useState<StepKey>(() => stepsOf(initial)[0] ?? 'students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
   const section = useRef<HTMLElement>(null);
   useFocusOnChange(section, step);
@@ -44,7 +44,7 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
     setDraft((d) => ({ ...d, ...p }));
     if (p.pkg || p.kind) onChoice?.({ kind: p.kind ?? draft.kind, pkg: p.pkg ?? draft.pkg });
   };
-  const steps = stepsFor(draft.kind);
+  const steps = stepsOf(draft);
   const index = steps.indexOf(step);
   const go = (to: number) => setStep(steps[to] ?? step);
 

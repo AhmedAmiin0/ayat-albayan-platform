@@ -19,6 +19,8 @@ type Props = {
   packages: SalesMoneySubscriptionView[];
   onClose: () => void;
   onSaved: (payment: SalesPaymentView) => void;
+  /** Right after «اشتراك جديد»: «احجز أيام الحلقات الآن» for the new package's student. */
+  onBookCourse?: (() => void) | undefined;
 };
 
 const today = () => new Date().toLocaleDateString('en-CA', { timeZone: 'Asia/Riyadh' });
@@ -29,7 +31,7 @@ const formFor = (s: SalesMoneySubscriptionView | undefined): TransferForm => ({
 });
 
 /** Step 2 «سجّل التحويل البنكي» (R-ASST-04): «المرفقات» optional (up to five), the amount starts at what is due. */
-export function SalesTransferStep({ fixed, packages, onClose, onSaved }: Props) {
+export function SalesTransferStep({ fixed, packages, onClose, onSaved, onBookCourse }: Props) {
   const formId = useId();
   const maxBytes = useUploadMaxBytes();
   const [pickedId, setPickedId] = useState(() => fixed?.id ?? (packages.length === 1 ? (packages[0]?.id ?? '') : ''));
@@ -75,6 +77,11 @@ export function SalesTransferStep({ fixed, packages, onClose, onSaved }: Props) 
               {t.salesMoney.packageFor.replace('{student}', studentLabel(sub.student))} · {packageName(sub)} ·{' '}
               {t.salesMoney.due.replace('{amount}', moneyText(sub.due, sub.currency))}
             </p>
+            {onBookCourse && (
+              <Button type="button" variant="secondary" className="justify-self-start" onClick={onBookCourse}>
+                {t.booking.bookCourseDays}
+              </Button>
+            )}
             <ReceiptChooser sub={sub} value={attachments} onChange={setChosen} maxBytes={maxBytes} />
             <TransferFields form={form} set={(patch) => setForm((f) => ({ ...f, ...patch }))} packageCurrency={sub.currency} today={today()} amountError={amountError} />
           </>

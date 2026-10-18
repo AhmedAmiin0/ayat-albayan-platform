@@ -21,6 +21,8 @@ export interface SlotPickerProps {
   studentTz: string;
   /** starts_at of the picked slot; also opens the grid on that slot's week. */
   value: string | null;
+  /** A package's other picked starts: highlighted as picked too (multi-pick). */
+  also?: readonly string[];
   onPick: (slot: SlotView) => void;
   /** With nothing picked yet, open on this instant's week (the lesson being moved). */
   near?: string;
@@ -36,7 +38,7 @@ function openingWeek(anchor: string | undefined, first: string): string {
 }
 
 /** Week-by-week picker over GET /booking/slots (R-SCH-06, R-SCH-07): no past weeks, no typing. */
-export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, value, onPick, near }: SlotPickerProps) {
+export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, value, also, onPick, near }: SlotPickerProps) {
   const [now] = useState(() => new Date());
   const first = currentWeekStart(now);
   const [week, setWeek] = useState(() => openingWeek(value ?? near, first));
@@ -66,7 +68,7 @@ export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, valu
         </Button>
       </div>
       <p className="text-xs text-ink-3">{legend}</p>
-      <SlotsBody query={slots} grid={{ week, studentTz, value, onPick }} />
+      <SlotsBody query={slots} grid={{ week, studentTz, value, also, onPick }} />
     </div>
   );
 }

@@ -1,16 +1,13 @@
 import { counted, joinNames } from '@ab/shared';
 import type { ReactNode } from 'react';
-import { WEEK_ORDER } from '@/features/teachers/grid';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { teacherLabel } from '@/lib/teacher-label';
-import { effectiveByday, type BookingDraft } from './draft';
-import { PACKAGE_NOTE_CLASS, packageDaysNote } from './package-days';
+import type { BookingDraft } from './draft';
 import { InvoiceThumb } from './InvoiceThumb';
 import { PackagePrice } from './PackageStep';
+import { ReviewDays } from './ReviewDays';
 import { pickedText } from './SlotStep';
-
-const weekday: Record<string, string> = t.enums.weekday;
 
 function Row({ label, children }: { label: string; children: ReactNode }) {
   return (
@@ -33,13 +30,29 @@ function InvoiceRow({ invoice }: { invoice: NonNullable<BookingDraft['invoice']>
   );
 }
 
-/** The review step's summary of what «احجز» creates (R-SCH-06): who, with whom, when, how often. */
+/** The package row: its name and price; the assistant's course its lesson count (no price: the subscription has it). */
+function PackageValue({ draft, students }: { draft: BookingDraft; students: number }) {
+  if (draft.course) return <>{counted(t.schedule.lessonCount, draft.course.lessonsTotal)}</>;
+  return (
+    <>
+      {t.enums.packageSize[draft.pkg]}
+      {draft.kind === 'package' && (
+        <>
+          {' · '}
+          <PackagePrice input={{ pkg: draft.pkg, durationMin: draft.durationMin, country: draft.country, students }} />
+        </>
+      )}
+    </>
+  );
+}
+
+/**
+ * The review step's summary of what «احجز» creates (R-SCH-06): who, with whom, when, how often (each
+ * day with its time). The assistant's course: its lesson count and end date, no price, no invoice.
+ */
 export function ReviewSummary({ draft }: { draft: BookingDraft }) {
-  // Saturday first, like every week in the app (docs/07 §8).
-  const days = WEEK_ORDER.filter((d) => effectiveByday(draft).includes(d));
   const names = draft.students.length > 0 ? draft.students.map((s) => s.name) : [draft.newStudent?.name ?? ''];
   const students = Math.max(1, draft.students.length);
-  const note = packageDaysNote(draft.pkg, days.length);
   const { kind, missed, invoice } = draft;
   return (
     <dl>
@@ -52,23 +65,16 @@ export function ReviewSummary({ draft }: { draft: BookingDraft }) {
       </Row>
       {kind !== 'makeup' && (
         <Row label={t.booking.pickDays}>
-          {days.map((d) => weekday[String(d)]).join(t.common.listSeparator)} ({counted(t.booking.perWeek, days.length)})
-          {note && <p className={`mt-1 ${PACKAGE_NOTE_CLASS}`}>{note}</p>}
+          <ReviewDays draft={draft} />
         </Row>
       )}
       <Row label={t.booking.pickDuration}>{t.enums.duration[draft.durationMin]}</Row>
       {kind !== 'makeup' && (
         <Row label={t.booking.pickPackage}>
-          {t.enums.packageSize[draft.pkg]}
-          {kind === 'package' && (
-            <>
-              {' · '}
-              <PackagePrice input={{ pkg: draft.pkg, durationMin: draft.durationMin, country: draft.country, students }} />
-            </>
-          )}
+          <PackageValue draft={draft} students={students} />
         </Row>
       )}
-      {kind !== 'trial' && <Row label={t.booking.invoice.label}>{invoice ? <InvoiceRow invoice={invoice} /> : '—'}</Row>}
+      {kind !== 'trial' && !draft.course && <Row label={t.booking.invoice.label}>{invoice ? <InvoiceRow invoice={invoice} /> : '—'}</Row>}
     </dl>
   );
 }

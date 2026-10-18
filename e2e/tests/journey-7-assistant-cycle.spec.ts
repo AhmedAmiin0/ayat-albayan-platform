@@ -7,6 +7,7 @@ import { resetAbrar, setAvailability } from '../support/schedule';
 import { completeLesson, profileChip, startNow } from '../support/student-statuses';
 import { setMessaging, stubInbound, stubReset } from '../support/wa-stub';
 import { expectInMyPayments, registerWithTrial, saveSubscription, saveTransfer } from '../support/assistant-journey-ui';
+import { bookCourseDays, courseOf } from '../support/assistant-course';
 import {
   apiAs, checkRegistration, childAndTrial, expectQuietStub, expectStatus, leadIdOf, newestPackage, openChat, shot,
 } from '../support/assistant-journey';
@@ -14,7 +15,7 @@ import {
 // Journey 7 (owner 2026-10-15): the WHOLE student cycle as an assistant (base role sales), docs/16 + docs/18.
 // A family writes in → the assistant checks the number, registers the child with a trial (written at once as
 // «بانتظار الحلقة التجريبية») → the trial is attended («بانتظار الاشتراك») → she subscribes the family and
-// records the bank transfer («مشترك», in «مدفوعاتي») → the package ends («بانتظار التجديد») → expired
+// books the course days, records the bank transfer («مشترك», in «مدفوعاتي») → the package ends («بانتظار التجديد») → expired
 // («انتهى الاشتراك») → she renews from the chat («مشترك» again). The assistant's buttons in the web UI;
 // the API only where she has no action (the trial outcome, the renewal date, the expiry). Local Supabase
 // and tools/wa-stub only, fake numbers; messaging stays off and nothing reaches the stub as a template.
@@ -88,14 +89,19 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       await expectQuietStub(phone);
     });
 
-    await test.step('5. «اشتراك جديد» + «سجّل تحويلًا بنكيًا» → «أصبح الطالب مشتركًا», in «مدفوعاتي»', async () => {
+    await test.step('5. «اشتراك جديد» + «أيام الحلقات» + «سجّل تحويلًا بنكيًا» → «أصبح الطالب مشتركًا»', async () => {
       await openChat(page, phone);
       await page.getByRole('button', { name: ar.salesMoney.newSubscription }).click();
-      // The transfer step opens by itself; closed here to use the chat's own «سجّل تحويلًا بنكيًا».
+      // The transfer step opens by itself; first «احجز أيام الحلقات الآن» (owner 2026-10-18: the course before
+      // the transfer): exactly the plan's 4 lessons, one day a week; then closed to use the chat's own button.
       const step = await saveSubscription(page, WEEKLY);
+      await bookCourseDays(page, step);
+      await shot(page, info, '05a-course-days');
       await step.getByRole('button', { name: ar.common.cancel }).click();
       const pkg = await newestPackage(ids.studentId);
       expect(pkg.lessons_total).toBe(4);
+      const course = await courseOf(ids.studentId);
+      expect(course).toEqual([{ ends_on: expect.any(String), lessons: 4, created_by: assistantId }]);
       await page.getByRole('button', { name: ar.salesMoney.recordTransfer }).click();
       const done = await saveTransfer(page, pkg.currency);
       await shot(page, info, '05-subscribed');

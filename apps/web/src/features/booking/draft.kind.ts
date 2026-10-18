@@ -13,7 +13,7 @@ export function kindPatch(d: Pick<BookingDraft, 'kind' | 'students'>, kind: Book
     missed: null,
     invoice: null,
     startsAt: null,
-    byday: [],
+    extra: [],
     ...(kind === 'makeup' ? { students: d.students.slice(0, 1) } : {}),
   };
 }
