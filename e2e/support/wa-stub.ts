@@ -49,8 +49,9 @@ export const stubStatus = (spec: { id: string; status: 'sent' | 'delivered' | 'r
   stub<{ status: number }>('/__stub/status', spec);
 
 /** Meta's review result for a submitted template. */
-export const stubTemplateStatus = (name: string, status: 'APPROVED' | 'REJECTED' | 'PAUSED') =>
-  stub<unknown>(`/__stub/templates/${name}`, { status });
+/** Meta's review result; `waba` picks the copy on that WABA (a template created on one number). */
+export const stubTemplateStatus = (name: string, status: 'APPROVED' | 'REJECTED' | 'PAUSED', waba?: string) =>
+  stub<unknown>(`/__stub/templates/${name}`, { status, ...(waba ? { waba } : {}) });
 
 /** The admin's kill switch (settings.messaging_enabled); the API's env gate is already open. */
 export async function setMessaging(enabled: boolean): Promise<void> {
