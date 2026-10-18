@@ -1,5 +1,6 @@
 import { MESSAGE_STATUSES, type MessageStatus } from '@ab/shared';
 import { fireEvent, render, screen } from '@testing-library/react-native';
+import { StyleSheet } from 'react-native';
 import { t } from '@/lib/i18n';
 import { palette } from '@/theme';
 import { DeliveryTicks } from './DeliveryTicks';
@@ -35,7 +36,8 @@ test.each([
 
 test('no times: a plain image, not a Pressable that would swallow a tap', async () => {
   await render(<DeliveryTicks status="delivered" />);
-  expect(screen.getByLabelText(word.delivered).props.onLongPress).toBeUndefined();
+  // Pressable keeps onLongPress to itself; what would take the tap is its responder.
+  expect(screen.getByLabelText(word.delivered).props.onStartShouldSetResponder).toBeUndefined();
 });
 
 test('the times join the label, and a long press asks the bubble to show them', async () => {
@@ -60,4 +62,10 @@ test('in a list row: hidden from the reader (the row says the word), no failed w
   expect(screen.queryByLabelText(word.failed)).toBeNull();
   expect(screen.getByTestId('ticks-failed', hidden).props.importantForAccessibility).toBe('no-hide-descendants');
   expect(screen.queryByText(word.failed, hidden)).toBeNull();
+  expect(screen.getByTestId('ticks-failed', hidden).props.onStartShouldSetResponder).toBeUndefined();
+});
+
+test('«يدويًا» is text: drawn in the muted text ink, not the tick grey', async () => {
+  await render(<DeliveryTicks status="sent_manually" />);
+  expect(StyleSheet.flatten(screen.getByText(t.messages.manualTick).props.style).color).toBe(palette.light.ink3);
 });

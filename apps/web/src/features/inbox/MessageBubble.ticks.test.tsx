@@ -55,9 +55,14 @@ describe('MessageBubble delivery ticks (WhatsApp-style)', () => {
     expect(title).toContain(' · ');
   });
 
-  it('sent by hand keeps «يدويًا» beside its two ticks', () => {
+  it('sent by hand keeps «يدويًا» beside its two ticks, in the muted text ink (AA), not the tick grey', () => {
     const ticks = within(renderBubble({ status: 'sent_manually' })).getByRole('img');
     expect(ticks.textContent).toBe(t.messages.manualTick);
+    expect(within(ticks).getByText(t.messages.manualTick).getAttribute('class')).toContain('text-ink-3');
+  });
+
+  it('failed says «لم تُرسل» beside its «!», as on mobile', () => {
+    expect(within(renderBubble({ status: 'failed' })).getByRole('img').textContent).toBe(t.enums.messageStatus.failed);
   });
 
   it('failed keeps its reason line and the admin actions', () => {

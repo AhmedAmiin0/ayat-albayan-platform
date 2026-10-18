@@ -46,7 +46,10 @@ test('a tap on the ticks opens the thread, as anywhere on the row', async () => 
   mockApiFetch.mockResolvedValue(page([ours]));
   await renderWithQuery(<InboxScreen />);
   await screen.findByText('أم سارة');
-  await fireEvent.press(screen.getByTestId('ticks-read', hidden));
+  const ticks = screen.getByTestId('ticks-read', hidden);
+  // Nothing in the ticks takes the touch (RNTL would bubble a press past a nested Pressable anyway).
+  expect(ticks.props.onStartShouldSetResponder).toBeUndefined();
+  await fireEvent.press(ticks);
   expect(router.push).toHaveBeenCalledTimes(1);
 });
 
