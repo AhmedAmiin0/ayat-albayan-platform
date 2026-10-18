@@ -1,33 +1,21 @@
 import {
+  courseBodyPackage,
   courseEndsOn,
   dayTimesFromPicks,
-  PACKAGE_SIZES,
   timeGroups,
   type BookingRequest,
   type CourseBlock,
-  type PackageSize,
   type SalesCourseView,
 } from '@ab/shared';
 
 // The assistant's course for the subscription she sold (R-ASST-01, owner 2026-10-18): the plan's
 // package and length, the student's zone, one pick per weekday. Pure; the wizard only holds picks.
 
-/**
- * The size the booking names: the subscription's package; a custom count (package null) sends the
- * size of its weekly days (perWeek × 4) when that is a size, else null (the admin books it).
- */
-export function coursePackage(view: Pick<SalesCourseView, 'subscription' | 'perWeek'>): PackageSize | null {
-  if (!view.subscription) return null;
-  if (view.subscription.package) return view.subscription.package;
-  const size = view.perWeek === null ? '' : String(view.perWeek * 4);
-  return PACKAGE_SIZES.find((p) => p !== 'trial' && p === size) ?? null;
-}
-
-/** Why the wizard cannot go on: the API's own reason, or a count no booking can name. */
+/** Why the wizard cannot go on: the API's own reason, or days a week it could not count. */
 export function courseBlock(view: SalesCourseView): CourseBlock | null {
   if (view.blocked) return view.blocked;
   if (!view.subscription) return 'subscription_required';
-  return view.perWeek === null || coursePackage(view) === null ? 'custom_count_admin' : null;
+  return view.perWeek === null ? 'custom_count_admin' : null;
 }
 
 export interface CourseInput {
@@ -39,11 +27,14 @@ export interface CourseInput {
   requestId: string;
 }
 
-/** POST /sales/booking (and /check): a package for the one student, from the earliest pick. */
+/**
+ * POST /sales/booking (and /check): a package course for the one student, from the earliest pick.
+ * Its `package` only satisfies the schema (courseBodyPackage: a custom count sends '8'); the API
+ * labels the rule with the subscription's own package, and so does every label here.
+ */
 export function courseRequest({ view, teacherId, picks, requestId }: CourseInput): BookingRequest | null {
-  const pkg = coursePackage(view);
   const picked = dayTimesFromPicks(picks, view.student.tz);
-  if (!view.subscription || !pkg || !picked) return null;
+  if (!view.subscription || !picked) return null;
   const { dayTimes, ...rule } = picked;
   return {
     kind: 'package',
@@ -53,7 +44,7 @@ export function courseRequest({ view, teacherId, picks, requestId }: CourseInput
     ...(dayTimes.length > 0 ? { dayTimes } : {}),
     tz: view.student.tz,
     durationMin: view.subscription.duration,
-    package: pkg,
+    package: courseBodyPackage(view.subscription),
     clientRequestId: requestId,
   };
 }

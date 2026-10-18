@@ -1,6 +1,6 @@
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { bookFailure } from './booking-errors';
+import { bookFailure, isCodedRefusal } from './booking-errors';
 import { SUN_17 } from './fixtures';
 
 const END = '2026-10-04T14:45:00.000Z';
@@ -87,4 +87,12 @@ test('anything else is the generic error', () => {
     generic,
   );
   expect(bookFailure(new Error('booking_incomplete'))).toEqual(generic);
+});
+
+test('a coded refusal (a guard) is told apart from a failure to retry', () => {
+  expect(isCodedRefusal(new ApiError(409, { code: 'course_exists', message: 'x' }))).toBe(true);
+  expect(isCodedRefusal(new ApiError(422, { code: 'days_count_mismatch', message: 'x' }))).toBe(true);
+  expect(isCodedRefusal(new ApiError(500, { code: 'internal', message: 'x' }))).toBe(false);
+  expect(isCodedRefusal(new ApiError(409, { code: 'conflict', conflicts: [] }))).toBe(false);
+  expect(isCodedRefusal(new TypeError('Network request failed'))).toBe(false);
 });

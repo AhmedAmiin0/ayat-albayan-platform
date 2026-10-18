@@ -72,6 +72,11 @@ function conflictFailure(body: Record<string, unknown>): BookFailure | null {
   return null;
 }
 
+/** The API refused on purpose with a code it explains (a guard: course_exists…), not a failure to retry. */
+export function isCodedRefusal(error: unknown): boolean {
+  return error instanceof ApiError && isRecord(error.body) && codedFailure(error.body['code']) !== null;
+}
+
 export function bookFailure(error: unknown): BookFailure {
   if (isOffline(error)) return { kind: 'error', text: t.booking.mobile.offline };
   if (!(error instanceof ApiError) || !isRecord(error.body)) {

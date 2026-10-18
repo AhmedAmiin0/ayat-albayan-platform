@@ -5,12 +5,11 @@ import { t } from '@/lib/i18n';
 import { FormLabel } from '@/payments/FormLabel';
 import { SlotButton } from '@/reschedule/SlotButton';
 import { AppText } from '@/ui/AppText';
-import { Button } from '@/ui/Button';
 import { ErrorState } from '@/ui/ErrorState';
 import { type, useTheme } from '@/theme';
-import { PicksList } from './PicksList';
+import { MultiFooter } from './MultiFooter';
 import { useSlots } from './queries';
-import { freeSlotDays, slotLegend, slotWindow } from './slots';
+import { freeSlotDays, slotLegend, slotWindow, windowStart } from './slots';
 
 /** A weekly package: one slot per weekday of the family's zone, each with its own time. */
 export interface SlotMulti {
@@ -32,18 +31,20 @@ export interface SlotStepProps {
   onPick?: (startsAt: string) => void;
   /** Several slots (a package): toggled, then «التالي». */
   multi?: SlotMulti;
+  /** The earliest start (an instant), when later than now: a subscription that starts ahead. */
+  from?: string;
 }
 
 /**
  * The slot step (R-SCH-06): the teacher's free starts over the next 7 days, by Riyadh day. Each is
  * a button with the Riyadh time and the student's own; nothing is typed (rule 6). A package picks
  * one start per weekday (togglePick: the same one again removes it, another on that day replaces
- * it). Mounting again (after a clash) asks the API afresh from now.
+ * it). Mounting again (after a clash) asks the API afresh from now (or `from`, when later).
  */
-export function SlotStep({ teacherId, tz, durationMin, onPick, multi }: SlotStepProps) {
+export function SlotStep({ teacherId, tz, durationMin, onPick, multi, from }: SlotStepProps) {
   const { color } = useTheme();
   const [now] = useState(() => new Date());
-  const slots = useSlots({ teacherId, ...slotWindow(now), durationMin });
+  const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin });
   const days = slots.data ? freeSlotDays(slots.data.slots) : [];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   const picks = multi?.picks ?? [];
@@ -91,16 +92,4 @@ function SlotsStatus({ slots, empty }: { slots: ReturnType<typeof useSlots>; emp
   if (slots.isError) return <ErrorState message={t.booking.slotsError} onRetry={() => void slots.refetch()} />;
   if (slots.isPending) return <AppText style={note}>{t.common.loading}</AppText>;
   return empty ? <AppText style={note}>{t.booking.mobile.noSlots}</AppText> : null;
-}
-
-/** Under a package's slots: the picked days (each removable) and «التالي» once they are enough. */
-function MultiFooter({ multi, tz }: { multi: SlotMulti; tz: string }) {
-  const { picks, need } = multi;
-  const ready = picks.length > 0 && (need === undefined || picks.length === need);
-  return (
-    <>
-      <PicksList picks={picks} tz={tz} onRemove={(p) => multi.onChange(picks.filter((x) => x !== p))} />
-      <Button label={t.booking.next} disabled={!ready} onPress={multi.onNext} />
-    </>
-  );
 }

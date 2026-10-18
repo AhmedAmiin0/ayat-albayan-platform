@@ -1,4 +1,5 @@
 import { fireEvent, screen } from '@testing-library/react-native';
+import { pickProgress } from '@ab/shared';
 import { useState } from 'react';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
@@ -17,13 +18,14 @@ const SUN_19 = '2026-10-04T16:00:00.000Z';
 const onNext = jest.fn();
 const seen: string[][] = [];
 
-function Harness({ need }: { need?: number }) {
+function Harness({ need, from }: { need?: number; from?: string }) {
   const [picks, setPicks] = useState<string[]>([]);
   return (
     <SlotStep
       teacherId={maryam.id}
       tz="Asia/Riyadh"
       durationMin={45}
+      {...(from ? { from } : {})}
       multi={{
         picks,
         onChange: (next) => {
@@ -82,8 +84,29 @@ test('a course needs exactly n days: «التالي» waits for them', async () 
   expect(screen.getByText(t.booking.pickNDays.two)).toBeTruthy();
   await fireEvent.press(await box('19:00'));
   expect(nextDisabled()).toBe(true);
+  expect(screen.getByText(pickProgress(t.booking, 1, 2) ?? '')).toBeTruthy(); // «اخترت 1 من 2 — بقي يوم واحد»
   const tue = screen.getAllByRole('checkbox', { name: '17:00' })[1];
   if (!tue) throw new Error('no Tuesday 17:00');
   await fireEvent.press(tue);
   expect(nextDisabled()).toBe(false);
+  expect(screen.queryByText(pickProgress(t.booking, 1, 2) ?? '')).toBeNull();
+});
+
+test('one day too many says how many to remove', async () => {
+  await renderWithQuery(<Harness need={1} />);
+  await fireEvent.press(await box('19:00'));
+  const tue = screen.getAllByRole('checkbox', { name: '17:00' })[1];
+  if (!tue) throw new Error('no Tuesday 17:00');
+  await fireEvent.press(tue);
+  expect(screen.getByText(pickProgress(t.booking, 2, 1) ?? '')).toBeTruthy();
+  expect(nextDisabled()).toBe(true);
+});
+
+test('a later `from` opens the window there, 7 days on', async () => {
+  const from = '2099-01-01T21:00:00.000Z';
+  await renderWithQuery(<Harness need={2} from={from} />);
+  await box('19:00');
+  const path = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).find((p) => p.includes('/slots'));
+  expect(path).toContain(`from=${encodeURIComponent(from)}`);
+  expect(path).toContain(`to=${encodeURIComponent('2099-01-08T21:00:00.000Z')}`);
 });

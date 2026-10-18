@@ -1,6 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { CourseBlock } from '@ab/shared';
 import { ScrollView } from 'react-native';
+import { bookFailure } from '@/booking/booking-errors';
 import { BookingModeProvider } from '@/booking/booking-mode';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
@@ -10,9 +11,8 @@ import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
-import { courseBlock } from './course-body';
-import { useSalesCourse } from './course-queries';
 import { CourseWizard } from './CourseWizard';
+import { useCourseView, type CourseViewState } from './use-course-view';
 
 /** The student; the chat's number and the new package, when «اشتراك جديد» goes on to its transfer. */
 type Params = { studentId?: string; phone?: string; subscriptionId?: string };
@@ -21,11 +21,12 @@ type Params = { studentId?: string; phone?: string; subscriptionId?: string };
  * /inbox/sales-course?studentId=…[&phone=…&subscriptionId=…] (R-ASST-01, owner 2026-10-18): the
  * assistant books the weekly days of the subscription she sold: المعلم/ة → أيام الحلقات → المراجعة.
  * A student she cannot book shows why (courseBlocked). Opened right after «احفظ الاشتراك» it then
- * goes on to the transfer («سجّل التحويل البنكي», also offered to skip the days for now).
+ * goes on to the transfer («سجّل التحويل البنكي», also offered to skip the days for now, and
+ * whenever the wizard is not shown: a refusal, a failed read, still loading).
  */
 export function CourseScreen() {
   const params = useLocalSearchParams<Params>();
-  const course = useSalesCourse(params.studentId ?? '');
+  const { course, view, block } = useCourseView(params.studentId ?? '');
   const base = useTreeBase();
   const leave = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   const { phone, subscriptionId } = params;
@@ -33,8 +34,6 @@ export function CourseScreen() {
     phone && subscriptionId
       ? () => router.replace(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId } }))
       : undefined;
-  const view = course.data;
-  const block = view ? courseBlock(view) : null;
   return (
     <Screen>
       <BookingModeProvider value="sales">
@@ -48,7 +47,7 @@ export function CourseScreen() {
               trailing={<Button variant="ghost" label={t.common.back} onPress={leave} />}
             />
             <CourseStatus course={course} block={block} missing={!params.studentId} />
-            {block && transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
+            {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
           </ScrollView>
         )}
       </BookingModeProvider>
@@ -57,16 +56,20 @@ export function CourseScreen() {
 }
 
 interface CourseStatusProps {
-  course: ReturnType<typeof useSalesCourse>;
+  course: CourseViewState['course'];
   block: CourseBlock | null;
   /** A link without a student. */
   missing: boolean;
 }
 
-/** Why there is no wizard: no student, loading, a failed read, or the course she cannot book. */
+/** Why there is no wizard: no student, loading, a failed read (its code's line), or the course she cannot book. */
 function CourseStatus({ course, block, missing }: CourseStatusProps) {
   if (missing) return <EmptyState title={t.common.notFound} />;
-  if (course.isError) return <ErrorState onRetry={() => void course.refetch()} />;
+  if (course.isError) {
+    const failure = bookFailure(course.error);
+    const message = failure.kind === 'error' || failure.kind === 'invoice' ? failure.text : t.common.error;
+    return <ErrorState message={message} onRetry={() => void course.refetch()} />;
+  }
   if (block) return <EmptyState title={t.booking.courseBlocked[block]} />;
   return course.isPending ? <AppText>{t.common.loading}</AppText> : null;
 }

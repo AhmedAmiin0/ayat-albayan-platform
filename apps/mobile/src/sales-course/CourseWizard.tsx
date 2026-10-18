@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure } from '@/booking/booking-errors';
 import { SlotStep } from '@/booking/SlotStep';
+import { dayStartUtc } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { requestId as newRequestId } from '@/lib/request-id';
 import { Button } from '@/ui/Button';
@@ -11,6 +12,7 @@ import { courseRequest } from './course-body';
 import { useBookCourse } from './course-queries';
 import { CourseConfirm } from './CourseConfirm';
 import { CourseDone } from './CourseDone';
+import { CourseStarts } from './CourseStarts';
 import { CourseTeacherStep } from './CourseTeacherStep';
 
 type Step = 'teacher' | 'slot' | 'confirm';
@@ -29,7 +31,8 @@ export interface CourseWizardProps {
  * The assistant's course (R-ASST-01, R-SCH-06): المعلم/ة (filtered by the student's program and
  * preference) → one time per weekday, exactly the plan's days a week (SlotStep multi) → المراجعة
  * with the series check. The package, the length and the zone come from the subscription and the
- * student, never asked. One clientRequestId per wizard (rule 8).
+ * student, never asked; the days are offered from its first day on (starts_on in the student's
+ * zone), or from now. One clientRequestId per wizard (rule 8).
  */
 export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
   const [step, setStep] = useState<Step>('teacher');
@@ -39,6 +42,8 @@ export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
   const book = useBookCourse();
   const body = courseRequest({ view, teacherId: teacher.id, picks, requestId });
   const at = STEPS.indexOf(step);
+  const sub = view.subscription;
+  const from = sub ? dayStartUtc(sub.starts_on, view.student.tz).toISOString() : undefined;
   const go = (next: Step) => {
     book.reset();
     setStep(next);
@@ -62,7 +67,8 @@ export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
         <SlotStep
           teacherId={teacher.id}
           tz={view.student.tz}
-          durationMin={view.subscription?.duration ?? 45}
+          durationMin={sub?.duration ?? 45}
+          {...(from ? { from } : {})}
           multi={{ picks, onChange: setPicks, onNext: () => go('confirm'), need: view.perWeek ?? 0 }}
         />
       );
@@ -89,6 +95,7 @@ export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
         subtitle={book.isSuccess ? view.student.name : `${view.student.name} · ${position}`}
         trailing={<Button variant="ghost" label={t.common.back} busy={book.isPending} onPress={back} />}
       />
+      <CourseStarts subscription={sub} />
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         {content()}
       </ScrollView>
