@@ -2,11 +2,15 @@ import { courseOpensOn, prefillDays, type SalesCourseView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
-import { continuePlan, continueText } from './course-continue';
+import { adjustText, continuePlan, continueText } from './course-continue';
 import { courseDraft } from './course-draft';
 import { COURSE_SUB, COURSE_VIEW, NEXT_SUN, NEXT_WED, PREVIOUS, RENEWAL_VIEW } from './course-fixture';
 
 const NOW = '2026-10-03T09:00:00.000Z';
+/** The previous course's days as the choice names them: Sunday 17:00, Wednesday 19:30. */
+const previousDays = [t.booking.dayAt, t.booking.dayAt]
+  .map((s, i) => s.replace('{day}', t.enums.weekday[i === 0 ? 0 : 3]).replace('{time}', i === 0 ? '17:00' : '19:30'))
+  .join(t.common.listSeparator);
 
 describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-10-18)', () => {
   it('prefills the previous days from the day after the previous course, with its teacher', () => {
@@ -56,11 +60,14 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
   });
 
   it('names the previous days and the new start', () => {
-    const days = [t.booking.dayAt, t.booking.dayAt]
-      .map((s, i) => s.replace('{day}', t.enums.weekday[i === 0 ? 0 : 3]).replace('{time}', i === 0 ? '17:00' : '19:30'))
-      .join(t.common.listSeparator);
     expect(continueText(RENEWAL_VIEW)).toBe(
-      t.booking.courseChange.continueHint.replace('{days}', days).replace('{date}', dateLabel('2026-10-11')),
+      t.booking.courseChange.continueHint.replace('{days}', previousDays).replace('{date}', dateLabel('2026-10-11')),
     );
+  });
+
+  it('another day count than before: the previous days and the new count, with Arabic number agreement', () => {
+    const forms = t.booking.courseChange.continueAdjust;
+    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 3 })).toBe(forms.few.replace('{n}', '3').replace('{days}', previousDays));
+    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 1 })).toBe(forms.one.replace('{days}', previousDays));
   });
 });

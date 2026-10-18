@@ -38,6 +38,7 @@ describe('courseOpensOn', () => {
     durationMin: 45 as const,
     tz: 'Asia/Riyadh',
     endsOn: '2026-11-15',
+    running: false,
     days: [],
     lessonsTotal: 8,
     perWeek: 2,

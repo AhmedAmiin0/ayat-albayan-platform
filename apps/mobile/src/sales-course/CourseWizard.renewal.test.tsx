@@ -1,4 +1,4 @@
-import { pickProgress } from '@ab/shared';
+import { counted, pickProgress } from '@ab/shared';
 import { screen, waitFor } from '@testing-library/react-native';
 import { noAvailability } from '@/booking/fixtures';
 import { dayLine } from '@/booking/picks';
@@ -7,7 +7,7 @@ import { localDay } from '@/payments/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { daysText } from './course-days';
-import { fakeCourseApi, isDisabled, press } from './course-test-utils';
+import { fakeCourseApi, isDisabled, pressEnabled } from './course-test-utils';
 import { CourseScreen } from './CourseScreen';
 import { bookedCourse, courseView } from './fixtures';
 
@@ -42,7 +42,7 @@ test('a previous course and a start weeks in the past: the days land in the comi
     .replace('{days}', daysText(bookedCourse().days, TZ))
     .replace('{date}', localDay('2026-10-01'));
   expect(await screen.findByText(hint)).toBeTruthy();
-  await press('button', t.booking.courseChange.continueSameDays);
+  await pressEnabled(t.booking.courseChange.continueSameDays);
   expect(await screen.findByText(dayLine('2026-10-01T15:00:00.000Z', TZ))).toBeTruthy(); // today 18:00
   expect(screen.getByText(dayLine('2026-10-04T14:00:00.000Z', TZ))).toBeTruthy(); // Sunday 17:00
   expect(sent('/sales/booking/check')[0]?.[2]).toMatchObject({
@@ -52,10 +52,13 @@ test('a previous course and a start weeks in the past: the days land in the comi
   });
 });
 
-test('a plan of other days a week: «تابِع بنفس الأيام» opens the days, prefilled, to add one', async () => {
+test('a plan of other days a week: said so, no «تابِع»; «عدّل الأيام السابقة» opens the days, prefilled, to add one', async () => {
   serve({ perWeek: 3, previous: bookedCourse() });
   await renderWithQuery(<CourseScreen />);
-  await press('button', t.booking.courseChange.continueSameDays);
+  const adjust = counted(t.booking.courseChange.continueAdjust, 3).replace('{days}', daysText(bookedCourse().days, TZ));
+  expect(await screen.findByText(adjust)).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeNull();
+  await pressEnabled(t.booking.courseChange.adjustDays);
   await screen.findAllByRole('checkbox', { name: '17:00' });
   expect(screen.getByText(dayLine('2026-10-11T14:00:00.000Z', TZ))).toBeTruthy();
   expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ))).toBeTruthy();

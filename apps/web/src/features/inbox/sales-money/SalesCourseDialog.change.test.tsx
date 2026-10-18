@@ -14,7 +14,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
 
 // The course to change, booked ahead from Sunday 11 October (its own first week, after today).
-const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', endsOn: '2026-11-07' };
+const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', endsOn: '2026-11-07', running: false };
 const RUNNING = { ...COURSE_VIEW, blocked: 'course_exists' as const, current: CURRENT };
 const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 const changeButton = () => screen.findByRole('button', { name: t.booking.courseChange.changeDays });
@@ -31,10 +31,20 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
   });
 
   it('a course running today is called running', async () => {
-    routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, startsOn: '2026-09-13' } });
+    routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, startsOn: '2026-09-13', running: true } });
     openDialog();
     expect(await screen.findByText(t.booking.courseChange.running)).toBeTruthy();
     expect(screen.queryByText(t.booking.courseChange.upcoming)).toBeNull();
+  });
+
+  it('a pending change (its new days start later, the old ones still run): running, changed again from today', async () => {
+    routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, running: true } });
+    openDialog();
+    expect(await screen.findByText(t.booking.courseChange.running)).toBeTruthy();
+    fireEvent.click(await changeButton());
+    // The grid opens on this week (Sunday 4 October), not on the new set's 11 October.
+    expect(await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} 4 `) })).toBeTruthy();
+    expect(screen.queryByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} 11 `) })).toBeNull();
   });
 
   it('a course booked ahead offers the change instead of only the refusal, from its own first week, then saves it here', async () => {

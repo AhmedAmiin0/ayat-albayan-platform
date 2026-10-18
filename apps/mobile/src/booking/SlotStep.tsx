@@ -19,8 +19,6 @@ export interface SlotMulti {
   onNext: () => void;
   /** Days a week the course needs (the assistant's course): «التالي» waits for exactly that many. */
   need?: number;
-  /** Why «التالي» waits although the days are enough (the change's «لم تغيّر أي موعد بعد»). */
-  hold?: string | undefined;
 }
 
 export interface SlotStepProps {

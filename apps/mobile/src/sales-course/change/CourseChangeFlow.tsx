@@ -1,8 +1,9 @@
-import { changePicks, samePicks, type BookedCourse, type SalesCourseView } from '@ab/shared';
+import { changeOpensOn, changePicks, type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure } from '@/booking/booking-errors';
 import { SlotStep } from '@/booking/SlotStep';
+import { dayStartUtc } from '@/booking/slots';
 import { t } from '@/lib/i18n';
 import { requestId as newRequestId } from '@/lib/request-id';
 import { AppText } from '@/ui/AppText';
@@ -27,20 +28,21 @@ export interface CourseChangeFlowProps {
 
 /**
  * «تغيير أيام الحلقات» (owner 2026-10-18): exactly the plan's days a week, prefilled with the course's
- * own from max(today, its first day) (SlotStep multi, the course's lessons not busy against
- * themselves; «التالي» waits until a day or a time differs) → the review with the remaining lessons and
- * the clashes → «احفظ الأيام الجديدة». The teacher, the length and the zone stay the course's. One
- * clientRequestId per flow (rule 8).
+ * own from changeOpensOn (today while it runs, else its first day), the slots read from that day on
+ * (SlotStep multi, the course's lessons not busy against themselves) → the review with the remaining
+ * lessons and the clashes (unchanged days: the check's own no_change) → «احفظ الأيام الجديدة». The
+ * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
  */
 export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseChangeFlowProps) {
   const { color } = useTheme();
   const [step, setStep] = useState<'slot' | 'review'>('slot');
-  const [first] = useState(() => changePicks(course, new Date()));
+  const [now] = useState(() => new Date());
+  const [first] = useState(() => changePicks(course, now));
+  const [from] = useState(() => dayStartUtc(changeOpensOn(course, now), course.tz).toISOString());
   const [picks, setPicks] = useState(() => first.map((p) => p.at));
   const [requestId] = useState(newRequestId);
   const change = useChangeCourse();
   const body = changeRequest({ subscriptionId: course.subscriptionId, picks, tz: course.tz, requestId, prefilled: first });
-  const hold = samePicks(picks, course.tz, course.days) ? t.booking.courseChange.noChange : undefined;
   const go = (next: 'slot' | 'review') => {
     change.reset();
     setStep(next);
@@ -63,8 +65,9 @@ export function CourseChangeFlow({ student, course, onLeave, onDone }: CourseCha
             teacherId={course.teacherId}
             tz={course.tz}
             durationMin={course.durationMin}
+            from={from}
             exclude={{ course: course.subscriptionId, studentIds: [student.id] }}
-            multi={{ picks, onChange: setPicks, onNext: () => go('review'), need: course.perWeek ?? course.days.length, hold }}
+            multi={{ picks, onChange: setPicks, onNext: () => go('review'), need: course.perWeek ?? course.days.length }}
           />
         </>
       );

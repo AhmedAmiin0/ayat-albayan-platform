@@ -6,7 +6,7 @@ import { localDay } from '@/payments/format';
 import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { daysText, weekdayName } from './course-days';
-import { fakeCourseApi, isDisabled, press } from './course-test-utils';
+import { fakeCourseApi, isDisabled, press, pressEnabled } from './course-test-utils';
 import { CourseScreen } from './CourseScreen';
 import { bookedCourse, courseView, PREV_SUB_ID, STUDENT_ID } from './fixtures';
 
@@ -52,7 +52,7 @@ test('a renewal offers the previous days from the day after its last lesson', as
 
 test('«تابِع بنفس الأيام»: the same teacher and days, prefilled, checked and booked on the new subscription', async () => {
   await renderWithQuery(<CourseScreen />);
-  await press('button', t.booking.courseChange.continueSameDays);
+  await pressEnabled(t.booking.courseChange.continueSameDays);
   expect(await screen.findByText(dayLine(SUN_11, TZ))).toBeTruthy();
   expect(screen.getByText(dayLine(THU_15, TZ))).toBeTruthy();
   expect(await screen.findByText(maryam.display_name_ar)).toBeTruthy(); // the summary's teacher, once loaded
@@ -84,7 +84,7 @@ test('a prefilled day taken since: its day is named, «اختر موعدًا آ�
     conflicts: [{ kind: 'teacher_busy', startsAt: THU_15, endsAt: '2026-10-15T15:45:00.000Z' }],
   }));
   await renderWithQuery(<CourseScreen />);
-  await press('button', t.booking.courseChange.continueSameDays);
+  await pressEnabled(t.booking.courseChange.continueSameDays);
   const taken = t.booking.courseChange.continueTaken.replace('{day}', weekdayName(4));
   expect(await screen.findByText(taken)).toBeTruthy();
   expect(isDisabled(t.booking.submit)).toBe(true);

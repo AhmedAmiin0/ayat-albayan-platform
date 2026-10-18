@@ -1,4 +1,4 @@
-import type { BookedCourse, SalesCourseView } from '@ab/shared';
+import { continueFits, type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
 import { CurrentCourse } from './change/CurrentCourse';
 import { CourseContinue } from './CourseContinue';
@@ -28,19 +28,23 @@ export interface CourseOpeningProps {
 
 /**
  * The wizard's first step: «تابِع بنفس الأيام» / «اختر أيامًا أخرى» on a renewal, else the teacher list;
- * above it, when the student already has a course, its days and «تغيير أيام الحلقات» (owner 2026-10-18).
+ * above it, when the student already has a course, whether it runs or starts later, its days (not
+ * twice) and «تغيير أيام الحلقات» as the secondary beside the step's own primary (owner 2026-10-18).
  */
 export function CourseOpening(props: CourseOpeningProps) {
   const { view, step, opensOn, known, change, transfer } = props;
   const previous = view.previous ?? null;
+  // The renewal's choice names the previous course's days: the same course above does not repeat them.
+  const repeats = step === 'continue' && previous?.subscriptionId === change?.course.subscriptionId;
   return (
     <View style={{ gap: 16 }}>
-      {change ? <CurrentCourse course={change.course} onChange={change.open} /> : null}
+      {change ? <CurrentCourse course={change.course} onChange={change.open} secondary hideDays={repeats} /> : null}
       {step === 'continue' && previous && opensOn ? (
         <CourseContinue
           previous={previous}
           opensOn={opensOn}
-          unavailable={known.unavailable}
+          teacher={known}
+          adjustTo={continueFits(view) ? null : view.perWeek}
           onSame={() => props.onSame(previous, opensOn)}
           onOther={props.onOther}
           transfer={transfer}

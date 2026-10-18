@@ -1,3 +1,4 @@
+import type { SlotView } from '@ab/shared';
 import { MON_19, slot } from '@/booking/fixtures';
 import { t } from '@/lib/i18n';
 import { fakeCourseApi, press } from '../course-test-utils';
@@ -20,6 +21,18 @@ export function changeApi(view = courseView({ blocked: 'course_exists', current:
   const api = fakeCourseApi(view);
   api.api.slots.push(slot(MON_19));
   return api;
+}
+
+/** A GET answerer that honours the slot read's from/to (only the slots inside its window come back). */
+export function windowed(fetch: (path: string) => Promise<unknown>) {
+  return async (path: string): Promise<unknown> => {
+    const answer = await fetch(path);
+    if (!path.startsWith('/sales/booking/slots')) return answer;
+    const q = new URLSearchParams(path.split('?')[1] ?? '');
+    const [from, to] = [Date.parse(q.get('from') ?? ''), Date.parse(q.get('to') ?? '')];
+    const res = answer as { slots: SlotView[] };
+    return { ...res, slots: res.slots.filter((s) => Date.parse(s.starts_at) >= from && Date.parse(s.starts_at) < to) };
+  };
 }
 
 /** On the days: Sunday 17:00 off, Monday 19:00 on (the course's days changed), then «التالي». */

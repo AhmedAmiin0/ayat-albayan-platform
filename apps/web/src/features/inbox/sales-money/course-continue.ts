@@ -1,4 +1,4 @@
-import { courseOpensOn, inWeekOrder, prefillDays, type SalesCourseView } from '@ab/shared';
+import { counted, courseOpensOn, inWeekOrder, prefillDays, type SalesCourseView } from '@ab/shared';
 import type { BookingDraft } from '@/features/booking/draft';
 import { dayAtText } from '@/features/booking/DayTimesList';
 import type { BookHint } from '@/features/booking/hint';
@@ -34,11 +34,18 @@ export function continuePlan(view: SalesCourseView, now: string): ContinuePlan |
   };
 }
 
-/** «حلقات الباقة السابقة: السبت الساعة 17:00، الثلاثاء الساعة 19:30. تبدأ … من 3 نوفمبر 2026.» */
-export function continueText(view: SalesCourseView, now?: string): string {
-  const days = inWeekOrder(view.previous?.days ?? [])
+/** «السبت الساعة 17:00، الثلاثاء الساعة 19:30»: the previous course's days. */
+const previousDays = (view: SalesCourseView): string =>
+  inWeekOrder(view.previous?.days ?? [])
     .map((d) => dayAtText({ weekday: d.weekday, time: d.startTimeLocal }, view.student.tz))
     .join(t.common.listSeparator);
+
+/** «حلقات الباقة السابقة: السبت الساعة 17:00، الثلاثاء الساعة 19:30. تبدأ … من 3 نوفمبر 2026.» */
+export function continueText(view: SalesCourseView, now?: string): string {
   const from = courseOpensOn(view, now);
-  return t.booking.courseChange.continueHint.replace('{days}', days).replace('{date}', from ? dateLabel(from) : '');
+  return t.booking.courseChange.continueHint.replace('{days}', previousDays(view)).replace('{date}', from ? dateLabel(from) : '');
 }
+
+/** Another day count than before (!continueFits): «حلقات الباقة السابقة: …. الباقة الجديدة 3 أيام في الأسبوع، فأضف يومًا…». */
+export const adjustText = (view: SalesCourseView): string =>
+  counted(t.booking.courseChange.continueAdjust, view.perWeek ?? 0).replace('{days}', previousDays(view));

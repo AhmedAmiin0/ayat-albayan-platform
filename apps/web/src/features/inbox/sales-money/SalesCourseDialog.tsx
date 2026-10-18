@@ -1,4 +1,4 @@
-import { continueFits, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import { type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Dialog } from '@/components/ui/dialog';
@@ -29,18 +29,16 @@ function CourseBlocked({ view }: { view: SalesCourseView }) {
   );
 }
 
-type StartInput = { view: SalesCourseView; plan: ContinuePlan | null; continuing: boolean };
 
-/** The previous days prefilled when she continues, or when continuing does not fit; else null (the empty picker). */
-const wizardStart = ({ view, plan, continuing }: StartInput): ContinuePlan | null =>
-  continuing || !continueFits(view) ? plan : null;
+/** The previous days prefilled when she continues (or adjusts them); else null (the empty picker). */
+const wizardStart = (plan: ContinuePlan | null, continuing: boolean): ContinuePlan | null => (continuing ? plan : null);
 
 type BookingProps = { view: SalesCourseView; draft: BookingDraft; onClose: () => void };
 
 /**
  * A renewal's «تابِع بنفس الأيام» choice, then the wizard (teacher → one time per day → review),
- * prefilled with the previous teacher and days when she continues, or when continuing does not fit
- * the new plan's days a week (she adds or removes a day). «رجوع إلى اختيار الأيام» goes back to the choice.
+ * prefilled with the previous teacher and days when she continues, or adjusts them when they do not
+ * fit the new plan's days a week («عدّل الأيام السابقة»: she adds or removes a day). «رجوع إلى اختيار الأيام» goes back to the choice.
  */
 function CourseBooking({ view, draft, onClose }: BookingProps) {
   const [choice, setChoice] = useState<Choice>(null);
@@ -51,7 +49,7 @@ function CourseBooking({ view, draft, onClose }: BookingProps) {
       <ContinueChoice view={view} draft={draft} now={now} onContinue={() => setChoice('continue')} onOther={() => setChoice('other')} />
     );
   }
-  const start = wizardStart({ view, plan, continuing: choice === 'continue' }) ?? { draft: courseDraft(view, now) ?? draft, hint: courseHint(view) };
+  const start = wizardStart(plan, choice === 'continue') ?? { draft: courseDraft(view, now) ?? draft, hint: courseHint(view) };
   const exit = plan ? { label: t.booking.courseChange.backToChoice, onExit: () => setChoice(null) } : undefined;
   return (
     <BookingModeContext.Provider value="sales">

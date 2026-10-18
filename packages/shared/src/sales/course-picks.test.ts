@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dayTimesFromPicks } from '../lessons/day-times.js';
 import { prefillDays } from './course-follow.js';
-import { changePicks, dayTimesKeeping, inWeekOrder, sameDays, samePicks, WEEK_ORDER } from './course-picks.js';
+import { changeOpensOn, changePicks, dayTimesKeeping, inWeekOrder, sameDays, WEEK_ORDER } from './course-picks.js';
 
 const now = '2026-10-18T06:00:00.000Z';
 const days = [
@@ -39,13 +39,7 @@ describe('dayTimesKeeping — Cairo DST', () => {
   });
 });
 
-describe('samePicks / sameDays — nothing changed yet', () => {
-  const picks = prefillDays({ days, from: '2026-10-25', tz: 'Asia/Riyadh', now }).map((p) => p.at);
-  it('the course’s own weekdays and times', () => {
-    expect(samePicks(picks, 'Asia/Riyadh', days)).toBe(true);
-    expect(samePicks(picks.slice(0, 1), 'Asia/Riyadh', days)).toBe(false);
-    expect(samePicks(['2026-10-27T15:00:00.000Z', picks[0] ?? ''], 'Asia/Riyadh', days)).toBe(false);
-  });
+describe('sameDays — nothing changed yet', () => {
   it('a request body with the same days and times', () => {
     const req = { byday: [0, 2], startTimeLocal: '17:00', dayTimes: [{ weekday: 2, startTimeLocal: '19:30' }] };
     expect(sameDays(req, days)).toBe(true);
@@ -54,13 +48,21 @@ describe('samePicks / sameDays — nothing changed yet', () => {
   });
 });
 
-describe('changePicks', () => {
+describe('changePicks / changeOpensOn', () => {
+  const course = { days, tz: 'Asia/Riyadh', startsOn: '2026-09-01', running: true };
   it('a running course: from today', () => {
-    const picks = changePicks({ days, tz: 'Asia/Riyadh', startsOn: '2026-09-01' }, new Date(now));
+    const picks = changePicks(course, new Date(now));
     expect(picks.map((p) => p.at)).toEqual(['2026-10-18T14:00:00.000Z', '2026-10-20T16:30:00.000Z']);
   });
   it('a course booked ahead (a renewal): from its own first day', () => {
-    const picks = changePicks({ days, tz: 'Asia/Riyadh', startsOn: '2026-11-16' }, new Date(now));
+    const ahead = { ...course, startsOn: '2026-11-16', running: false };
+    expect(changeOpensOn(ahead, new Date(now))).toBe('2026-11-16');
+    const picks = changePicks(ahead, new Date(now));
     expect(picks.map((p) => p.at)).toEqual(['2026-11-17T16:30:00.000Z', '2026-11-22T14:00:00.000Z']);
+  });
+  it('a pending change (latest set later, the old rules still run): from today, not from the new set', () => {
+    const pending = { ...course, startsOn: '2026-11-16' };
+    expect(changeOpensOn(pending, new Date(now))).toBe('2026-10-18');
+    expect(changePicks(pending, new Date(now))[0]?.at).toBe('2026-10-18T14:00:00.000Z');
   });
 });

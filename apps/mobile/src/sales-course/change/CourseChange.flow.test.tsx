@@ -47,17 +47,17 @@ test('a running course shows its days and «تغيير أيام الحلقات»
   expect(screen.queryByText(t.booking.courseBlocked.course_exists)).toBeNull();
 });
 
-test('the days come prefilled from today, the course’s own lessons not busy; «التالي» waits for a change', async () => {
+test('the days come prefilled from today, the course’s own lessons not busy; «التالي» is not held on the client', async () => {
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
   await screen.findAllByRole('checkbox', { name: '17:00' });
   expect(screen.getByText(dayLine(THU_1, TZ))).toBeTruthy();
   expect(screen.getByText(dayLine(SUN_4, TZ))).toBeTruthy();
-  expect(screen.getByText(t.booking.courseChange.noChange)).toBeTruthy(); // nothing changed yet
-  expect(isDisabled(t.booking.next)).toBe(true);
+  // Nothing changed yet: only the series check knows (its 400 no_change), so «التالي» is open.
+  expect(isDisabled(t.booking.next)).toBe(false);
   await press('checkbox', '17:00'); // Sunday off: one day short
+  expect(isDisabled(t.booking.next)).toBe(true);
   await press('checkbox', '19:00'); // Monday 19:00 instead
-  expect(screen.queryByText(t.booking.courseChange.noChange)).toBeNull();
   expect(isDisabled(t.booking.next)).toBe(false);
   const [slots] = reads('/sales/booking/slots');
   expect(slots).toContain(`teacherId=${maryam.id}`);

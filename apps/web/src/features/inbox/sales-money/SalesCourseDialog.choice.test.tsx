@@ -3,6 +3,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ABRAR, next } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n';
 import { renderWithClient } from '../test-utils';
+import { adjustText, continueText } from './course-continue';
 import { COURSE_STUDENT_ID, RENEWAL_VIEW, routeCourseSend, routeRenewal } from './course-fixture';
 import { SalesCourseDialog } from './SalesCourseDialog';
 
@@ -30,17 +31,31 @@ describe('the renewal’s choice in «أيام الحلقات» (owner 2026-10-1
     apiSend.mockReset();
   });
 
-  it('another day count than before: no «تابِع», the picker opens on the previous days to add one', async () => {
+  it('another day count than before: says so, no «تابِع»; «عدّل الأيام السابقة» opens the previous days to add one', async () => {
     routeRenewal(apiFetch, { ...RENEWAL_VIEW, perWeek: 3 });
     openDialog();
-    fireEvent.click(await screen.findByRole('button', { name: t.booking.courseChange.pickOtherDays }));
+    expect(await screen.findByText(adjustText({ ...RENEWAL_VIEW, perWeek: 3 }))).toBeTruthy();
+    expect(screen.queryByText(continueText(RENEWAL_VIEW))).toBeNull();
     expect(screen.queryByRole('button', { name: t.booking.courseChange.continueSameDays })).toBeNull();
+    const adjust = await screen.findByRole('button', { name: t.booking.courseChange.adjustDays });
+    await waitFor(() => expect(adjust.hasAttribute('disabled')).toBe(false));
+    fireEvent.click(adjust);
     const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
     await waitFor(() => expect(abrar).toHaveProperty('checked', true));
     next();
     expect(await pressed(0, /17:00/)).toBe('true');
     expect(await pressed(3, /19:30/)).toBe('true');
     expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
+  });
+
+  it('another day count than before: «اختر أيامًا أخرى» opens the picker empty', async () => {
+    routeRenewal(apiFetch, { ...RENEWAL_VIEW, perWeek: 3 });
+    openDialog();
+    fireEvent.click(await screen.findByRole('button', { name: t.booking.courseChange.pickOtherDays }));
+    fireEvent.click(await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) }));
+    next();
+    expect(await pressed(0, /17:00/)).toBe('false');
+    expect(await pressed(3, /19:30/)).toBe('false');
   });
 
   it('the previous teacher no longer bookable: said on the choice, «تابِع» disabled, no empty teacher', async () => {

@@ -37,14 +37,6 @@ export function dayTimesKeeping(
   };
 }
 
-/** Do the picks hold exactly these weekdays at these times (nothing changed yet)? */
-export function samePicks(picks: readonly string[], tz: string, days: readonly DayTime[]): boolean {
-  const key = (d: DayTime) => `${d.weekday}@${d.startTimeLocal}`;
-  const picked = new Set(picks.map((at) => wallParts(at, tz)).map((w) => key({ weekday: w.weekday, startTimeLocal: w.time })));
-  const wanted = new Set(days.map(key));
-  return picked.size === wanted.size && [...wanted].every((k) => picked.has(k));
-}
-
 /** Does a request's weekday + time set equal the course's (the server's 400 no_change)? */
 export function sameDays(req: { byday: readonly number[]; startTimeLocal: string; dayTimes?: readonly DayTime[] | undefined }, days: readonly DayTime[]): boolean {
   const key = (d: DayTime) => `${d.weekday}@${d.startTimeLocal.slice(0, 5)}`;
@@ -54,11 +46,17 @@ export function sameDays(req: { byday: readonly number[]; startTimeLocal: string
 }
 
 /**
- * The change form's first picks: the course's own days from max(today in its zone, the first day of
- * its latest rules), so a course booked ahead (a renewal) opens on its own first week.
+ * The first local day the change form offers: today in the course's zone while it runs (a change
+ * saved earlier whose latest set starts later still runs its old days this week), else its first day
+ * (a course booked ahead, a renewal, opens on its own first week), never before today.
  */
-export function changePicks(course: Pick<BookedCourse, 'days' | 'tz' | 'startsOn'>, now: Date): PrefilledPick[] {
+export function changeOpensOn(course: Pick<BookedCourse, 'tz' | 'startsOn' | 'running'>, now: Date): string {
   const today = wallParts(now.toISOString(), course.tz).date;
-  const from = course.startsOn > today ? course.startsOn : today;
+  return !course.running && course.startsOn > today ? course.startsOn : today;
+}
+
+/** The change form's first picks: the course's own days from changeOpensOn. */
+export function changePicks(course: Pick<BookedCourse, 'days' | 'tz' | 'startsOn' | 'running'>, now: Date): PrefilledPick[] {
+  const from = changeOpensOn(course, now);
   return prefillDays({ days: course.days, from, tz: course.tz, now: now.toISOString() });
 }

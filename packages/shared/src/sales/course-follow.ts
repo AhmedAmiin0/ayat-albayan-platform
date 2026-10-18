@@ -22,6 +22,11 @@ export interface BookedCourse {
   startsOn: string;
   /** The course's last local day (its rules' ends_on). */
   endsOn: string;
+  /**
+   * Some active rule of it covers today in its zone (server-computed): it runs this week, even when a
+   * change saved earlier starts its latest set (startsOn) later. false = booked to start later.
+   */
+  running: boolean;
   /** Each weekday (0 = الأحد) with its "HH:MM", in weekday order. */
   days: DayTime[];
   /** subscriptions.lessons_total of the course's subscription. */

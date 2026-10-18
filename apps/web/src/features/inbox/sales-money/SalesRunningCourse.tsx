@@ -1,4 +1,4 @@
-import { wallParts, type BookedCourse, type SalesCourseView } from '@ab/shared';
+import { type BookedCourse, type SalesCourseView } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import { CourseChangeForm } from '@/features/booking/course-change/CourseChangeForm';
@@ -24,8 +24,9 @@ type Stage = 'ask' | 'change' | 'done';
 export function SalesRunningCourse({ view, current, children }: SalesRunningCourseProps) {
   const [stage, setStage] = useState<Stage>('ask');
   const { id, name, code, tz } = view.student;
-  // A course booked ahead (a renewal) has not started yet: say so instead of «جارية».
-  const ahead = current.startsOn > wallParts(new Date().toISOString(), current.tz).date;
+  // A course booked ahead (a renewal) has not started yet: say so instead of «جارية». A course with a
+  // pending change still runs its old days (running, from the server), whatever its latest startsOn.
+  const ahead = !current.running;
   if (stage === 'done') {
     return (
       <p role="status" className="rounded-md bg-sunk px-3.5 py-2.5 text-sm">

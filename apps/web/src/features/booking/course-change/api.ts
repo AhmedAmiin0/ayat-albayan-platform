@@ -19,13 +19,16 @@ export const courseChangeViewQuery = (subscriptionId: string) =>
     queryFn: () => apiFetch<CourseChangeView>(`/booking/course/change?subscriptionId=${encodeURIComponent(subscriptionId)}`),
   });
 
+/** The check's key segment (left out of the refresh after a save). */
+export const CHECK_KEY = 'course-change-check';
+
 /** POST /…/change/check: the clashes over the remaining course and what is left; keyed without the request id. */
 export const courseChangeCheckQuery = (body: CourseChangeBody, mode: BookingMode) => {
   const key: Partial<CourseChangeBody> = { ...body };
   delete key.clientRequestId;
   delete key.override;
   return queryOptions({
-    queryKey: ['booking', mode, 'course-change-check', JSON.stringify(key)],
+    queryKey: ['booking', mode, CHECK_KEY, JSON.stringify(key)],
     queryFn: () => apiSend<CourseChangeCheck>('POST', `${courseChangeBase(mode)}/change/check`, key),
     retry: false,
   });

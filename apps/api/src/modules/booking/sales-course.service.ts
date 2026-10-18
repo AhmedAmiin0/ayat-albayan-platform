@@ -45,7 +45,7 @@ export class SalesCourse {
     if (bad) throw domainError(bad.status, bad.code);
     if (!sub) throw domainError(HttpStatus.CONFLICT, 'subscription_required');
     // The audit names the course it follows (a renewal, «تابِع بنفس الأيام»), whichever days were picked.
-    const { previous } = courseFacts({ rows, today: wallParts(now.toISOString(), req.tz).date, subscriptionId: sub.id, booked });
+    const { previous } = courseFacts({ rows, now, subscriptionId: sub.id, booked });
     const course = { package: sub.package, subscriptionId: sub.id, follows: previous?.subscriptionId ?? null };
     return { invoiceWaived: true, endsOn, course };
   }
@@ -69,9 +69,10 @@ export class SalesCourse {
       this.queries.rules(studentId),
       this.queries.courseRules(studentId),
     ]);
-    const today = wallParts(new Date().toISOString(), student.tz).date;
+    const now = new Date();
+    const today = wallParts(now.toISOString(), student.tz).date;
     const booked = await this.booked(sub);
-    const { previous, current } = courseFacts({ rows, today, subscriptionId: sub?.id ?? null, booked });
+    const { previous, current } = courseFacts({ rows, now, subscriptionId: sub?.id ?? null, booked });
     const after = previous ? addLocalDays(previous.endsOn, 1) : today;
     const from = after > today ? after : today;
     return {

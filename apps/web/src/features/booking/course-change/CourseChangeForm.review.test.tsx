@@ -45,12 +45,32 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     const slots = apiFetch.mock.calls.map(([p]) => String(p)).find((p) => p.startsWith('/sales/booking/slots'));
     expect(slots).toContain(`excludeCourse=${COURSE.subscriptionId}`);
     expect(slots).toContain(`studentIds=${CHANGE_VIEW.student.id}`);
-    // Nothing changed yet: «التالي» waits, saying so (the API's no_change).
-    expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
-    expect(screen.getByText(t.booking.courseChange.noChange)).toBeTruthy();
+  });
+
+  it('unchanged days are not held on the client: the series check refuses them with no_change, by its text', async () => {
+    apiSend.mockRejectedValue(new ApiError(400, { code: 'no_change' }));
+    await openSales();
+    await day(0);
+    fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
+    expect(await screen.findByText(t.booking.error.no_change)).toBeTruthy();
+    expect(screen.getByRole('button', { name: t.booking.changeSlot })).toBeTruthy();
+  });
+
+  it('after the save the still-mounted check is not asked again (it would answer no_change)', async () => {
+    let checks = 0;
+    apiSend.mockImplementation((_m: string, path: string) => {
+      if (!path.endsWith('/change/check')) return Promise.resolve({ subscriptionId: COURSE.subscriptionId, ruleIds: ['r-9'], endsOn: CHECK.endsOn });
+      checks += 1;
+      return checks === 1 ? Promise.resolve(CHECK) : Promise.reject(new ApiError(400, { code: 'no_change' }));
+    });
+    const onDone = await openSales();
     await swapSundayForMonday();
-    expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(false);
-    expect(screen.queryByText(t.booking.courseChange.noChange)).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
+    fireEvent.click(await screen.findByRole('button', { name: t.booking.courseChange.submit }));
+    await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.booking.courseChange.done));
+    await new Promise((resolve) => setTimeout(resolve, 20));
+    expect(checks).toBe(1);
+    expect(screen.queryByText(t.booking.error.no_change)).toBeNull();
   });
 
   it('tapping another time that day replaces it; the review shows what is left and the new last lesson', async () => {

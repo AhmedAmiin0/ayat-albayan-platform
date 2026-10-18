@@ -14,13 +14,12 @@ export interface MultiFooterProps {
 
 /**
  * Under a package's slots: the picked days (each removable), how many are still missing or one too
- * many («اخترت 1 من 2 — بقي يوم واحد»), and «التالي» once they are enough (and nothing holds it,
- * its reason shown above it).
+ * many («اخترت 1 من 2 — بقي يوم واحد»), and «التالي» once they are enough.
  */
 export function MultiFooter({ multi, tz }: MultiFooterProps) {
   const { color } = useTheme();
   const { picks, need } = multi;
-  const ready = picks.length > 0 && (need === undefined || picks.length === need) && !multi.hold;
+  const ready = picks.length > 0 && (need === undefined || picks.length === need);
   const progress = need ? pickProgress(t.booking, picks.length, need) : null;
   return (
     <>
@@ -31,11 +30,6 @@ export function MultiFooter({ multi, tz }: MultiFooterProps) {
           style={{ fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 }}
         >
           {progress}
-        </AppText>
-      ) : null}
-      {multi.hold ? (
-        <AppText accessibilityLiveRegion="polite" style={{ fontFamily: type.ui[600], fontSize: type.size.sm, color: color.ink }}>
-          {multi.hold}
         </AppText>
       ) : null}
       <Button label={t.booking.next} disabled={!ready} onPress={multi.onNext} />

@@ -8,10 +8,10 @@ const days = [
   { weekday: 0, startTimeLocal: '17:00' },
   { weekday: 4, startTimeLocal: '18:00' },
 ];
-const course = { days, tz: RIYADH, startsOn: '2026-09-01' };
+const course = { days, tz: RIYADH, startsOn: '2026-09-01', running: true };
 const ats = (picks: PrefilledPick[]) => picks.map((p) => p.at);
 
-describe('changePicks: the course’s own days, from max(today, its first day) in its zone', () => {
+describe('changePicks: the course’s own days, from today while it runs, else its first day, in its zone', () => {
   it('Thursday 1 Oct 03:00 Riyadh: today 18:00 and Sunday 4 Oct 17:00', () => {
     expect(ats(changePicks(course, new Date('2026-10-01T00:00:00Z')))).toEqual(['2026-10-01T15:00:00.000Z', '2026-10-04T14:00:00.000Z']);
   });
@@ -19,7 +19,7 @@ describe('changePicks: the course’s own days, from max(today, its first day) i
     expect(ats(changePicks(course, new Date('2026-10-01T16:00:00Z')))).toEqual(['2026-10-04T14:00:00.000Z', '2026-10-08T15:00:00.000Z']);
   });
   it('a course booked ahead (a renewal) opens on its own first week', () => {
-    const ahead = { ...course, startsOn: '2026-10-11' };
+    const ahead = { ...course, startsOn: '2026-10-11', running: false };
     expect(ats(changePicks(ahead, new Date('2026-10-01T00:00:00Z')))).toEqual(['2026-10-11T14:00:00.000Z', '2026-10-15T15:00:00.000Z']);
   });
   it('each pick carries its day’s own time', () => {

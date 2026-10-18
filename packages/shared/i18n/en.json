@@ -732,6 +732,13 @@
       "continueSameDays": "Continue on the same days",
       "pickOtherDays": "Pick other days",
       "continueHint": "The previous package's lessons: {days}. The new package starts on the same days and times from {date}.",
+      "continueAdjust": {
+        "one": "Previous package's lessons: {days}. The new package is one day a week, so add or remove a day from the previous days",
+        "two": "Previous package's lessons: {days}. The new package is two days a week, so add or remove a day from the previous days",
+        "few": "Previous package's lessons: {days}. The new package is {n} days a week, so add or remove a day from the previous days",
+        "other": "Previous package's lessons: {days}. The new package is {n} days a week, so add or remove a day from the previous days"
+      },
+      "adjustDays": "Edit the previous days",
       "continueTaken": "The {day} time is no longer free; pick another time for that day",
       "changeDays": "Change the lesson days",
       "currentDays": "Current days: {days}",
@@ -754,7 +761,6 @@
       "review": "Review the new days",
       "overrideSave": "Save despite the conflict",
       "overrideReason": "Reason to save despite the conflict",
-      "noChange": "You have not changed any time yet",
       "teacherUnavailable": "The previous teacher is not available now; pick other days",
       "backToChoice": "Back to choosing the days",
       "newDays": "New days: {days}"

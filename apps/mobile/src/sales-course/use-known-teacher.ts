@@ -5,7 +5,9 @@ import { locale } from '@/lib/locale';
 export interface KnownTeacher {
   /** Her name; '' until loaded or when she is no longer listed (no row is shown then). */
   name: string;
-  /** The list is in and she is not on it, or has no free time: «تابِع بنفس الأيام» is not offered. */
+  /** The list is in and she is on it with free time: the only state «تابِع بنفس الأيام» is enabled in. */
+  bookable: boolean;
+  /** The list failed, or she is not on it, or has no free time: said so, «تابِع بنفس الأيام» disabled. */
   unavailable: boolean;
 }
 
@@ -16,8 +18,11 @@ export interface KnownTeacher {
 export function useKnownTeacher(program: Program, teacherId: string | undefined): KnownTeacher {
   const teachers = useBookingTeachers({ program, gender: null, enabled: teacherId !== undefined });
   const found = teachers.data?.find((o) => o.id === teacherId);
+  const bookable = teacherId !== undefined && teachers.isSuccess && found?.has_availability === true;
   return {
     name: found ? teacherName(found, locale) : '',
-    unavailable: teacherId !== undefined && teachers.isSuccess && !found?.has_availability,
+    bookable,
+    // Still loading is neither: nothing said yet, «تابِع» stays disabled until she is confirmed.
+    unavailable: teacherId !== undefined && (teachers.isError || (teachers.isSuccess && !bookable)),
   };
 }

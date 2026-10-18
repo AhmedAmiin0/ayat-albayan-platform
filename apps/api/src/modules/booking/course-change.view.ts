@@ -20,9 +20,10 @@ export class CourseChangeViews {
       this.course.student(sub.student_id),
       this.course.courseRules(sub.student_id),
     ]);
-    const course = studentCourses(rows).find((c) => c.subscriptionId === sub.id);
+    const now = new Date();
+    const course = studentCourses(rows, now).find((c) => c.subscriptionId === sub.id);
     if (!course) throw domainError(HttpStatus.NOT_FOUND, 'course_not_found');
-    const today = wallParts(new Date().toISOString(), course.tz).date;
+    const today = wallParts(now.toISOString(), course.tz).date;
     if (course.endsOn < today) throw domainError(HttpStatus.CONFLICT, 'course_finished');
     return {
       student: { id: student.id, name: student.name, code: student.code, tz: student.tz },

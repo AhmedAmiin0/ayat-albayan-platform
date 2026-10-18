@@ -36,6 +36,7 @@ export function bookedCourse(patch: Partial<BookedCourse> = {}): BookedCourse {
     tz: 'Asia/Riyadh',
     startsOn: '2026-09-13',
     endsOn: '2026-10-10',
+    running: true,
     days: [
       { weekday: 0, startTimeLocal: '17:00' },
       { weekday: 4, startTimeLocal: '18:00' },
