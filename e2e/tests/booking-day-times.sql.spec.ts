@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test';
 import { book, bookInstant, dayTimesPayload, rulesOf, seedSiblings } from '../support/day-times';
 import { rolledBack, type Tx } from '../support/edit-time';
 
-// create_booking v5 (migration 20261018000460, owner 2026-10-18 «اختر موعدًا لكل يوم») against the real
+// create_booking v5 (migration 20261018000465, owner 2026-10-18 «اختر موعدًا لكل يوم») against the real
 // database, in a transaction that is rolled back: one schedule_rules row per distinct time, the other
 // times as `siblings` tied to the first rule. Payloads have the shape the API's bookingPayload builds.
 

@@ -4,7 +4,7 @@
 --   * schedule_rules.subscription_id: set on EVERY rule of an assistant course (the first rule and its
 --     siblings); null for the admin's bookings, trials, makeups and imported rules. A deleted
 --     subscription leaves its rules (set null).
---   * create_booking v6 (copy of migration 460): rule.subscription_id and each sibling's
+--   * create_booking v6 (copy of migration 465): rule.subscription_id and each sibling's
 --     rule.subscription_id are inserted. A payload without it behaves exactly as before.
 -- SQL test plan (local DB, begin … rollback; e2e/tests/assistant-course-subscription.sql.spec.ts):
 --   1. a payload with rule.subscription_id and one sibling → both rules carry it.

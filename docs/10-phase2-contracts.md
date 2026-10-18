@@ -196,7 +196,7 @@ These supersede §2 and §5 where they differ.
 - **Privacy.** `LessonView.time_edit.reason` is the admin's internal note: returned for admins only (null for teachers and guardians; `at` and `was` stay).
 - **Accepted, documented.** (a) The payout lock is read before the RPC, not inside it: an approve landing between the two is not seen (single-admin operation; a repeat is refused by the lock). (b) In an approved month, a same-day start shift (length unchanged) and, with `payout_count_late` off, a length change on a `late` lesson are allowed: the payout stores lesson ids and counts per length, so nothing it paid changes. (c) A correction that moves a start before another lesson of the same students on that day renumbers them: the re-made PDF shows the new number, the other lesson's already-sent PDF keeps the old one (rare; lesson numbers are derived from `starts_at` order). (d) A lesson cannot be moved onto the exact start of a cancelled or rescheduled sibling of the same generated rule: 409 `slot_taken`, no override. (e) A scheduled lesson in the past that was never marked cannot be time-edited (move needs a future start, correct a held status): mark the outcome first. (f) Mobile has no override-with-reason: forcing a move over a clash is web only.
 
-## 11. A time per weekday; the assistant's course (owner 2026-10-18, migration 460)
+## 11. A time per weekday; the assistant's course (owner 2026-10-18, migrations 465 and 470)
 
 Owner: «assistant needs to select the days and the time at each day per week», «the selected days/time will be repeated in each week and the number of courses per week depends on the plan», «must be able to choose which days».
 

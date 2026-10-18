@@ -31,7 +31,7 @@ export type RuleRow = RuleTiming & {
   subscription_id?: string | null;
 };
 /**
- * Another time of the same booking (migration 460): its own schedule_rules row with the first rule's
+ * Another time of the same booking (migration 465): its own schedule_rules row with the first rule's
  * teacher, first_rule_id = the first rule, no client_request_id (create_booking fills both).
  */
 export type SiblingRow = {
