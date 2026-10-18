@@ -36,5 +36,5 @@ export async function courseAudit(subscriptionId: string): Promise<{ action: str
   return withSql((sql) => sql<{ action: string; actor_id: string | null; by: string | null }[]>`
     select action, actor_id, after ->> 'by' as by from public.audit_log
     where (entity = 'subscriptions' and entity_id = ${subscriptionId}) or after ->> 'subscription_id' = ${subscriptionId}::text
-    order by created_at`);
+    order by at`);
 }
