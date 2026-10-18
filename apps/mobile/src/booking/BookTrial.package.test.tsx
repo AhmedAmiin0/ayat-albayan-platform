@@ -3,7 +3,9 @@ import { t } from '@/lib/i18n';
 import { pickReceipt } from '@/payments/receipt';
 import { renderWithQuery } from '@/test/query';
 import { BookTrialScreen } from './BookTrialScreen';
-import { booked, maryam, SUN_17 } from './fixtures';
+import { booked, maryam, slot, SUN_17, THU_18 } from './fixtures';
+import { packageDaysNote } from './package-choice';
+import { dayLine } from './picks';
 import { uploadInvoice } from './invoice-upload';
 import { fakeBookingApi, PHOTO, PREVIEW } from './test-utils';
 
@@ -38,12 +40,14 @@ const press = async (role: 'button' | 'radio' | 'checkbox', name: string) =>
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockImplementation(fakeBookingApi().fetch);
+  const booking = fakeBookingApi();
+  booking.api.slots = [slot(SUN_17), slot(THU_18)];
+  mockApiFetch.mockImplementation(booking.fetch);
   jest.mocked(pickReceipt).mockResolvedValue(PHOTO);
   jest.mocked(uploadInvoice).mockResolvedValue('req/0b1c.jpg');
 });
 
-test('a lead from the chat books a package: size, slot, the required invoice, weekly days, then its subscription', async () => {
+test('a lead from the chat books a package: size, a time per day, the required invoice, then its subscription', async () => {
   await renderWithQuery(<BookTrialScreen />);
   expect(screen.getByRole('header', { name: t.subscriptions.new })).toBeTruthy();
   expect(screen.getByText('خطوة 1 من 6 · الطالب')).toBeTruthy();
@@ -58,7 +62,14 @@ test('a lead from the chat books a package: size, slot, the required invoice, we
   await press('radio', t.enums.packageSize['12']);
   await press('radio', t.enums.duration['60']);
   await press('button', t.booking.next);
-  await press('button', '17:00');
+  // A package picks one time per weekday, then «التالي» (disabled until a day is picked).
+  expect(await screen.findByText(t.booking.noDayPicked)).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.booking.next }).props.accessibilityState).toMatchObject({ disabled: true });
+  await press('checkbox', '17:00');
+  await press('checkbox', '18:00');
+  expect(screen.getByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh'))).toBeTruthy();
+  await press('button', t.booking.next);
   const slotsPath = mockApiFetch.mock.calls
     .map((c: unknown[]) => String(c[0]))
     .find((p) => p.startsWith('/booking/slots'));
@@ -72,14 +83,15 @@ test('a lead from the chat books a package: size, slot, the required invoice, we
   expect(await screen.findByLabelText(PREVIEW)).toBeTruthy();
   await press('button', t.booking.next);
 
-  // «المراجعة»: the type, the package, its length, the invoice and the weekly days (Sunday is in).
+  // «المراجعة»: the type, the package, its length, the invoice and each day with its time.
   expect(screen.getByText(t.booking.kind.package)).toBeTruthy();
   expect(screen.getByText(t.enums.packageSize['12'])).toBeTruthy();
   expect(screen.getByText(t.booking.mobile.invoiceUploaded)).toBeTruthy();
-  expect(screen.getByRole('checkbox', { name: 'الأحد', checked: true })).toBeTruthy();
-  await press('checkbox', 'الأحد'); // the first lesson's day cannot be dropped
-  await press('checkbox', 'الثلاثاء');
-  expect(screen.getByText(`${t.booking.pickDays} * · ${t.booking.perWeek.two}`)).toBeTruthy();
+  expect(screen.getByText(dayLine(SUN_17, 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.getByText(dayLine(THU_18, 'Asia/Riyadh'))).toBeTruthy();
+  expect(screen.getByText(t.booking.perWeek.two)).toBeTruthy();
+  // 12 a month = 3 a week: the admin's warning stays (a note, not a block).
+  expect(screen.getByText(packageDaysNote('12', 2) ?? '')).toBeTruthy();
   expect(screen.queryByText(t.booking.trialFree)).toBeNull();
 
   mockApiSend.mockResolvedValue(booked(SUN_17));
@@ -88,7 +100,9 @@ test('a lead from the chat books a package: size, slot, the required invoice, we
   const body = mockApiSend.mock.calls[0]?.[2];
   expect(body).toMatchObject({
     kind: 'package',
-    byday: [0, 2],
+    byday: [0, 4],
+    startTimeLocal: '17:00',
+    dayTimes: [{ weekday: 4, startTimeLocal: '18:00' }],
     durationMin: 60,
     package: '12',
     leadId: 'a1',

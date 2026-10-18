@@ -16,7 +16,8 @@ type Params = { phone?: string; studentId?: string };
 /**
  * /inbox/sales-subscribe?phone=… (R-ASST-01, owner 2026-10-12): «اشتراك جديد» from a family's chat by
  * the salesperson, for one of HER students only (GET /sales/money/family). Priced and saved through
- * the sales endpoints; then the transfer screen for the new package.
+ * the sales endpoints; then the package's weekly days and its transfer. A preselected child of hers
+ * also offers «أيام الحلقات» straight away (a package already sold, its days not booked yet).
  */
 export function SalesSubscribeScreen() {
   const params = useLocalSearchParams<Params>();
@@ -25,6 +26,10 @@ export function SalesSubscribeScreen() {
   const students = family.data?.students ?? [];
   const base = useTreeBase();
   const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
+  const own = students.find((s) => s.id === params.studentId);
+  const courseDays = own
+    ? () => router.push(inTree(base, { pathname: '/inbox/sales-course', params: { studentId: own.id } }))
+    : undefined;
   return (
     <Screen>
       <ScrollView
@@ -41,11 +46,14 @@ export function SalesSubscribeScreen() {
         ) : !family.data ? null : students.length === 0 ? (
           <EmptyState title={t.salesMoney.noOwnStudents} />
         ) : (
-          <SalesSubscribeForm
-            phone={phone}
-            students={students}
-            {...(params.studentId ? { studentId: params.studentId } : {})}
-          />
+          <>
+            {courseDays ? <Button variant="secondary" label={t.booking.courseDays} onPress={courseDays} /> : null}
+            <SalesSubscribeForm
+              phone={phone}
+              students={students}
+              {...(params.studentId ? { studentId: params.studentId } : {})}
+            />
+          </>
         )}
       </ScrollView>
     </Screen>

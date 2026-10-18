@@ -29,6 +29,10 @@ export const noAvailability: BookingTeacherOption = {
 export const SUN_17 = '2026-10-04T14:00:00.000Z';
 /** Monday 5 Oct 2026: 19:00 Riyadh. */
 export const MON_19 = '2026-10-05T16:00:00.000Z';
+/** Tuesday 6 Oct 2026: 17:00 Riyadh. */
+export const TUE_17 = '2026-10-06T14:00:00.000Z';
+/** Thursday 8 Oct 2026: 18:00 Riyadh. */
+export const THU_18 = '2026-10-08T15:00:00.000Z';
 
 export function slot(startsAt: string, busy = false): SlotView {
   const ends = new Date(Date.parse(startsAt) + 45 * 60_000).toISOString();
@@ -77,7 +81,7 @@ export function draft(patch: Partial<TrialDraft> = {}): TrialDraft {
     pkg: 'trial',
     invoice: null,
     durationMin: 45,
-    byday: [],
+    extra: [],
     ...patch,
   };
 }

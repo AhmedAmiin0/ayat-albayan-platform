@@ -30,8 +30,8 @@ const firstChild = (students: readonly SalesFamilyStudent[], first: string | und
 
 /**
  * The child, the admin's calculator inputs, the API's price, the first day (only with
- * subscriptions.set_start_date, StartDateField), «احفظ الاشتراك»; once saved, on to recording the
- * family's transfer for that package (the screen is replaced).
+ * subscriptions.set_start_date, StartDateField), «احفظ الاشتراك»; once saved, on to booking the
+ * package's weekly days (owner 2026-10-18), then the family's transfer (the screen is replaced).
  */
 export function SalesSubscribeForm({ phone, students, studentId: first }: SalesSubscribeFormProps) {
   const [picked, setPicked] = useState(() => firstChild(students, first));
@@ -56,7 +56,9 @@ export function SalesSubscribeForm({ phone, students, studentId: first }: SalesS
       { studentId, pricing, ...starts.body },
       {
         onSuccess: (sub) =>
-          router.replace(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId: sub.id } })),
+          router.replace(
+            inTree(base, { pathname: '/inbox/sales-course', params: { studentId, phone, subscriptionId: sub.id } }),
+          ),
       },
     );
   };

@@ -64,7 +64,8 @@ test('a lead without a student: «اشترك» → camera invoice → POST /book
   await fireEvent.press(await screen.findByText('مريم المعلمة'));
   expect(screen.getByRole('radio', { name: t.enums.packageSize['8'], checked: true })).toBeTruthy();
   await press('button', t.booking.next);
-  await press('button', '17:00');
+  await press('checkbox', '17:00'); // a package: a time per day, then «التالي»
+  await press('button', t.booking.next);
   await press('button', t.booking.mobile.takePhoto);
   expect(await screen.findByLabelText(new RegExp(`^${t.booking.mobile.invoiceA11y.split('{source}')[0]}`))).toBeTruthy();
   await press('button', t.booking.next);

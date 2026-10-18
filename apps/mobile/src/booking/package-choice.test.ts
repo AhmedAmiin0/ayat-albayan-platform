@@ -1,18 +1,17 @@
 import { bookingRequestSchema } from '@ab/shared';
 import { toBookingRequest } from './booking-body';
-import { booked, draft, maryam, SUN_17 } from './fixtures';
+import { booked, draft, maryam, SUN_17, THU_18, TUE_17 } from './fixtures';
 import { t } from '@/lib/i18n';
 import { effectiveByday, packageDaysNote, subscriptionHref } from './package-choice';
 
 const REQ = '99999999-9999-4999-8999-999999999999';
-const paid = draft({ pkg: '12', durationMin: 60, byday: [4, 2], tz: 'Asia/Riyadh' });
+const paid = draft({ pkg: '12', durationMin: 60, extra: [TUE_17, THU_18], tz: 'Asia/Riyadh' });
 
-test('weekdays: none before a slot; a trial only its day; a package its day plus the picked ones', () => {
+test('weekdays: none before a slot; a trial only its day; a package every pick’s day', () => {
   expect(effectiveByday(draft({ startsAt: null }))).toEqual([]);
-  expect(effectiveByday(draft({ byday: [2] }))).toEqual([0]); // Sunday's trial ignores extra days
+  expect(effectiveByday(draft({ extra: [TUE_17] }))).toEqual([0]); // Sunday's trial ignores extra picks
   expect(effectiveByday(paid)).toEqual([0, 2, 4]);
-  // Unticking the first lesson's day does not drop it.
-  expect(effectiveByday({ ...paid, byday: [2] })).toEqual([0, 2]);
+  expect(effectiveByday({ ...paid, extra: [TUE_17] })).toEqual([0, 2]);
 });
 
 test('a paid package: a weekly rule on its days, its length and size, the new child new until paid (docs/18 row 1)', () => {
@@ -21,6 +20,7 @@ test('a paid package: a weekly rule on its days, its length and size, the new ch
     teacherId: maryam.id,
     byday: [0, 2, 4],
     startTimeLocal: '17:00',
+    dayTimes: [{ weekday: 4, startTimeLocal: '18:00' }], // Thursday at its own time
     tz: 'Asia/Riyadh',
     durationMin: 60,
     startsOn: '2026-10-04',
