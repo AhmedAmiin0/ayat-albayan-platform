@@ -1,4 +1,4 @@
-import type { BookingTeacherOption, Duration, Gender, PackageSize, Program } from '@ab/shared';
+import { courseBodyPackage, type BookingTeacherOption, type Duration, type Gender, type PackageSize, type Program } from '@ab/shared';
 import { RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
@@ -22,6 +22,10 @@ export interface CourseDraft {
   perWeek: number;
   /** subscriptions.lessons_total: the course stops after it. */
   lessonsTotal: number;
+  /** The subscription's package; null = a custom count (labels use lessonsTotal, never the body's package). */
+  package: PackageSize | null;
+  /** subscriptions.starts_on (local date): the slot grid opens on its week. */
+  startsOn: string;
 }
 
 export type PickedStudent = { id: string; name: string; code: string | null };
@@ -94,6 +98,14 @@ export function ruleFromSlot(startsAt: string, tz: string): { startsOn: string; 
   return { startsOn: p.date, startTimeLocal: p.time, weekday: p.weekday };
 }
 
+/**
+ * The request's package. A course sends courseBodyPackage (the schema needs a paid size; the API
+ * ignores it and labels the rule with the subscription's own package): never shown in the UI.
+ */
+const packageField = (d: Pick<BookingDraft, 'pkg' | 'course'>): { package: PackageSize } => ({
+  package: d.course ? courseBodyPackage(d.course) : d.pkg,
+});
+
 /** POST /booking body; `override` = the reason to book over conflicts (R-SCH-04). */
 export function toBookingRequest(d: BookingDraft, override?: string): BookingBody | null {
   if (!d.teacher || !d.startsAt) return null;
@@ -110,7 +122,7 @@ export function toBookingRequest(d: BookingDraft, override?: string): BookingBod
     durationMin: d.durationMin,
     startsOn: rule.startsOn,
     kind: d.kind,
-    ...(d.kind === 'makeup' ? { makeupOfLessonId: d.missed?.lessonId } : { package: d.pkg }),
+    ...(d.kind === 'makeup' ? { makeupOfLessonId: d.missed?.lessonId } : packageField(d)),
     ...(d.invoice && d.kind !== 'trial' ? { invoice: invoiceInput(d.invoice) } : {}),
     meetingLink: d.meetingLink.trim() || null,
     clientRequestId: d.requestId,

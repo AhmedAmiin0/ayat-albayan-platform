@@ -9,18 +9,19 @@ import { ConflictNotice } from '@/features/schedule/ConflictNotice';
 import { duplicateCandidates } from '@/features/students/api';
 import { t } from '@/lib/i18n';
 import { createBooking } from './api';
+import { CourseCheckNotice } from './CourseCheckNotice';
 import { toBookingRequest, type BookingDraft } from './draft';
 import { DuplicateNotice } from './DuplicateNotice';
 import { useBookingMode } from './mode';
 import { ReviewSummary } from './ReviewSummary';
-import { useSeriesClean } from './SeriesCheck';
+import { isSeriesClean, useSeriesCheck } from './SeriesCheck';
 
 const INVOICE_ERRORS = new Set(['invoice_required', 'invoice_type', 'invoice_too_large', 'invoice_path', 'invoice_message', 'media_expired']);
 
 export interface ReviewStepProps {
   draft: BookingDraft;
   onMeetingLink: (link: string) => void;
-  /** «اختار ميعاد تاني» after a conflict: back to the slot step. */
+  /** «اختر موعدًا آخر» after a conflict: back to the slot step. */
   onChangeSlot: () => void;
   /** An invoice error (required, wrong file, expired chat media): back to the invoice step. */
   onInvoice: () => void;
@@ -48,9 +49,12 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
       onBooked(result);
     },
   });
-  // The assistant's course books only over a clean series check: she never books over a clash.
-  const clean = useSeriesClean(draft);
-  const waiting = draft.course !== null && !clean;
+  // The assistant's course books only over a clean series check: she never books over a clash. Only
+  // a course asks here (the admin's 409 lists the clashes), so «رابط الحلقة» never re-checks.
+  const course = draft.course !== null;
+  const series = useSeriesCheck(draft, course);
+  const clean = isSeriesClean(series);
+  const failed = course && (series.check.isError || (series.check.data !== undefined && !clean));
   const conflicts = conflictsOf(book.error);
   const duplicates = duplicateCandidates(book.error);
   // A missing, wrong or expired invoice is fixed on the invoice step, not here.
@@ -88,7 +92,7 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
           teacherTz={draft.teacher?.tz}
           busy={book.isPending}
           onChangeSlot={onChangeSlot}
-          onOverride={mode === 'admin' ? (reason) => book.mutate(reason) : undefined}
+          onOverride={mode === 'admin' && !course ? (reason) => book.mutate(reason) : undefined}
         />
       ) : (
         book.isError && !duplicates && (
@@ -111,9 +115,10 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
           </FormAlert>
         )
       )}
-      {!conflicts && !duplicates && (
+      {course && !conflicts && <CourseCheckNotice draft={draft} series={series} onChangeSlot={onChangeSlot} />}
+      {!conflicts && !duplicates && !failed && (
         <div className="flex justify-end">
-          <Button type="button" size="lg" disabled={book.isPending || waiting} onClick={() => book.mutate(undefined)}>
+          <Button type="button" size="lg" disabled={book.isPending || (course && !clean)} onClick={() => book.mutate(undefined)}>
             {book.isPending ? t.booking.submitting : t.booking.submit}
           </Button>
         </div>

@@ -10,6 +10,7 @@ import { GapChip } from './GapChip';
 import { stepReady, stepsOf, type BookingDraft, type PickedStudent, type StepKey } from './draft';
 import type { BookHint } from './hint';
 import { isNewStudent } from './new-student';
+import { useCourseClean } from './SeriesCheck';
 import { WizardBody } from './WizardBody';
 import { WizardSteps } from './WizardSteps';
 
@@ -47,6 +48,9 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
   const steps = stepsOf(draft);
   const index = steps.indexOf(step);
   const go = (to: number) => setStep(steps[to] ?? step);
+  // The assistant's course leaves the slot step only over a clean series check (no clash, no error).
+  const clean = useCourseClean(draft);
+  const ready = stepReady(draft, step) && (step !== 'slot' || !draft.course || clean);
 
   if (booked && draft.teacher) {
     return (
@@ -82,12 +86,15 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
       {step === 'students' && isNewStudent(draft) && !primary && !stepReady(draft, step) && (
         <p className="mt-3 text-xs text-ink-3">{t.booking.fillRequired}</p>
       )}
+      {step === 'slot' && draft.course && stepReady(draft, step) && !clean && (
+        <p className="mt-3 text-xs text-ink-3">{t.booking.courseNeedsCheck}</p>
+      )}
       <div className="mt-6 flex items-center justify-between gap-3 border-t border-rule pt-4">
         <Button type="button" variant="ghost" disabled={index === 0} onClick={() => go(index - 1)}>
           {t.booking.back}
         </Button>
         {step !== 'review' && (
-          <Button type="button" disabled={!stepReady(draft, step)} onClick={() => go(index + 1)}>
+          <Button type="button" disabled={!ready} onClick={() => go(index + 1)}>
             {t.booking.next}
           </Button>
         )}

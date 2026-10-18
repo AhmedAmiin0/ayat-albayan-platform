@@ -1,7 +1,7 @@
-import { counted } from '@ab/shared';
+import { counted, pickProgress } from '@ab/shared';
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR, next, pickSlot, pickWednesday, SLOT } from '@/features/booking/wizard-fixture';
+import { ABRAR, next, pickSlot, pickWednesday } from '@/features/booking/wizard-fixture';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { renderWithClient } from '../test-utils';
@@ -15,7 +15,6 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-ut
 
 const nextButton = () => screen.getByRole('button', { name: t.booking.next });
 const submit = () => screen.getByRole('button', { name: t.booking.submit });
-const CLASH = { kind: 'teacher_busy', startsAt: SLOT, endsAt: SLOT };
 
 /** Open the dialog, wait for the preselected teacher, then on to the slot step (its Sunday 17:00 picked). */
 async function toSlotStep(): Promise<void> {
@@ -41,6 +40,9 @@ describe('the assistant’s course: exactly the plan’s days, each with its tim
     routeCourseSend(apiSend);
     await toSlotStep();
     expect(screen.getByText(counted(t.booking.pickNDays, 2))).toBeTruthy();
+    // One of two: a neutral progress line, and no series check yet (no «days_count_mismatch»).
+    expect(screen.getByText(pickProgress(t.booking, 1, 2) ?? '')).toBeTruthy();
+    expect(apiSend.mock.calls.some(([, path]) => String(path).endsWith('/check'))).toBe(false);
     expect(nextButton().hasAttribute('disabled')).toBe(true);
     pickWednesday();
     expect(await screen.findByText(t.booking.seriesFree)).toBeTruthy();
@@ -82,16 +84,5 @@ describe('the assistant’s course: exactly the plan’s days, each with its tim
     fireEvent.click(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[3]) }));
     expect(nextButton().hasAttribute('disabled')).toBe(true);
     expect(screen.queryByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[3]) })).toBeNull();
-  });
-
-  it('a clash in any week keeps «احجز» disabled, with no override', async () => {
-    routeCourseSend(apiSend, { conflicts: [CLASH] });
-    await toSlotStep();
-    pickWednesday();
-    expect(await screen.findByText(t.booking.seriesCheck.replace('{n}', '1'))).toBeTruthy();
-    next();
-    await screen.findByRole('region', { name: t.booking.steps.review });
-    expect(submit().hasAttribute('disabled')).toBe(true);
-    expect(screen.queryByRole('button', { name: t.booking.override })).toBeNull();
   });
 });

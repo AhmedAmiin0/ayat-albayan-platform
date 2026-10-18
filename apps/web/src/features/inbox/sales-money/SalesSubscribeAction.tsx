@@ -1,4 +1,4 @@
-import { isPackageEnded, type StudentStatus, type ThreadView } from '@ab/shared';
+import { isPackageEnded, type SalesFamilyStudent, type StudentStatus, type ThreadView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -11,8 +11,14 @@ import { SalesMoneyFlow, type FlowStart } from './SalesMoneyFlow';
 
 type Opened = { start: FlowStart; studentId?: string };
 
-/** Who gets «أيام الحلقات»: a student with a subscription to follow (owner 2026-10-18). */
+/** Statuses that hold a subscription to follow (owner 2026-10-18). */
 const COURSE_STATUSES: ReadonlySet<StudentStatus> = new Set(['pending_subscription', 'active', 'pending_renewal']);
+
+/**
+ * Who gets «أيام الحلقات»: a student with a subscription to follow, by status or by an open
+ * (unpaid or partly paid) package of hers, e.g. a new, trial or expired student just sold one.
+ */
+export const hasCourse = (s: Pick<SalesFamilyStudent, 'status' | 'open'>): boolean => COURSE_STATUSES.has(s.status) || s.open.length > 0;
 
 /**
  * «اشتراك جديد» and «سجّل تحويلًا بنكيًا» in a sales chat (owner 2026-10-12, R-ASST-01/04): only in sales
@@ -21,7 +27,8 @@ const COURSE_STATUSES: ReadonlySet<StudentStatus> = new Set(['pending_subscripti
  * whose package ended (pending_renewal / expired, owner 2026-10-15) gets «جدّد الاشتراك»: the same
  * subscribe step with that student already picked, naming the child when several of hers are listed
  * (the visible text is the accessible name, as mobile renewTargets). A student with a subscription
- * (pending_subscription / active / pending_renewal) gets «أيام الحلقات»: she books its weekly course.
+ * (pending_subscription / active / pending_renewal, or any with a package still owed) gets «أيام الحلقات»:
+ * she books its weekly course.
  */
 export function SalesSubscribeAction({ thread }: { thread: ThreadView }) {
   const sales = useInboxMode() === 'sales' && !!thread.guardian_id;
@@ -51,7 +58,7 @@ export function SalesSubscribeAction({ thread }: { thread: ThreadView }) {
         </Button>
       )}
       {students
-        .filter((s) => COURSE_STATUSES.has(s.status))
+        .filter(hasCourse)
         .map((s) => (
           <Button key={`course-${s.id}`} type="button" size="sm" variant="secondary" onClick={() => setCourse(s.id)}>
             {named(t.booking.courseDays, s.name)}

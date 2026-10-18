@@ -23,7 +23,7 @@ describe('after a booking (R-SUB-01)', () => {
 
   it('the assistant’s course follows the subscription she made: no second one offered', () => {
     const picked = { id: 's-new', name: 'جود', code: 'AB-0184' };
-    const course = { perWeek: 2, lessonsTotal: 8 };
+    const course = { perWeek: 2, lessonsTotal: 8, package: '8' as const, startsOn: '2026-10-03' };
     expect(subscribeTarget({ ...emptyDraft(), students: [picked], course }, RESULT)).toBeNull();
   });
 

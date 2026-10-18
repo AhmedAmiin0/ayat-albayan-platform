@@ -87,7 +87,7 @@ describe('toBookingRequest with a time per day', () => {
 });
 
 describe('the assistant course (exact days a week, lesson count)', () => {
-  const course = { perWeek: 2, lessonsTotal: 8 };
+  const course = { perWeek: 2, lessonsTotal: 8, package: '8' as const, startsOn: '2026-10-03' };
 
   it('walks teacher → slot → review, and the slot step waits for exactly perWeek days', () => {
     expect(stepsOf(ready({ course }))).toEqual(['teacher', 'slot', 'review']);

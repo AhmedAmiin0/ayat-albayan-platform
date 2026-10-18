@@ -1,5 +1,6 @@
-import type { SalesCourseView } from '@ab/shared';
+import type { CourseSubscription, SalesCourseView } from '@ab/shared';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useState } from 'react';
 import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
 import { BookingWizard } from '@/features/booking/BookingWizard';
@@ -7,7 +8,7 @@ import { BookingModeContext, ChatReturnContext } from '@/features/booking/mode';
 import { lessonErrorText } from '@/features/schedule/api';
 import { t } from '@/lib/i18n';
 import { refreshAfterSalesWrite, salesCourseQuery } from './api';
-import { courseDraft, courseFixedText, courseHint } from './course-draft';
+import { courseDraft, courseFixedText, courseHint, courseTitle, subscriptionStartsText } from './course-draft';
 
 type Props = { studentId: string; onClose: () => void };
 
@@ -32,6 +33,16 @@ function CourseBody({ view, onClose }: { view: SalesCourseView; onClose: () => v
   );
 }
 
+/** The header's fixed facts: package and length, then «يبدأ الاشتراك في …». */
+function CourseFacts({ sub }: { sub: CourseSubscription }) {
+  return (
+    <>
+      <span className="block">{courseFixedText(sub)}</span>
+      <span className="block">{subscriptionStartsText(sub)}</span>
+    </>
+  );
+}
+
 /**
  * «أيام الحلقات» (owner 2026-10-18, R-ASST-01): the assistant books the weekly course of a subscription
  * she sold, over the chat. Exactly the plan's days a week, each with its own time from the teacher's
@@ -41,16 +52,22 @@ function CourseBody({ view, onClose }: { view: SalesCourseView; onClose: () => v
 export function SalesCourseDialog({ studentId, onClose }: Props) {
   const queryClient = useQueryClient();
   const course = useQuery(salesCourseQuery(studentId));
+  // The first bookable view stays while the dialog is open: a refetch after «احجز» (now
+  // course_exists) must not replace the booked panel with the refusal. Closing refreshes it.
+  const [held, setHeld] = useState<SalesCourseView | null>(null);
+  if (!held && course.data && courseDraft(course.data)) setHeld(course.data);
+  const view = held ?? course.data;
   const close = () => {
     void refreshAfterSalesWrite(queryClient);
     onClose();
   };
-  const sub = course.data?.subscription;
+  const sub = view?.subscription;
+  const description = sub ? <CourseFacts sub={sub} /> : undefined;
   return (
-    <Dialog title={t.booking.courseDays} description={sub ? courseFixedText(sub) : undefined} onClose={close} wide>
-      {course.isError && <FormAlert>{lessonErrorText(course.error)}</FormAlert>}
-      {course.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
-      {course.data && <CourseBody view={course.data} onClose={close} />}
+    <Dialog title={courseTitle(view)} description={description} onClose={close} wide>
+      {!view && course.isError && <FormAlert>{lessonErrorText(course.error)}</FormAlert>}
+      {!view && course.isPending && <p className="text-sm text-ink-3">{t.common.loading}</p>}
+      {view && <CourseBody view={view} onClose={close} />}
     </Dialog>
   );
 }

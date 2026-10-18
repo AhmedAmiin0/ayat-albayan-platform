@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookingTeachersQuery, parseBookSearch } from './api';
+import { bookingCheckQuery, bookingTeachersQuery, parseBookSearch } from './api';
 
 describe('parseBookSearch (/admin/book)', () => {
   it('a student id wins over a lead', () => {
@@ -51,5 +51,14 @@ describe('bookingTeachersQuery', () => {
     expect(bookingTeachersQuery({ program: 'arabic', gender: 'female' }).queryKey.at(-1)).toBe(
       'program=arabic&gender=female',
     );
+  });
+});
+
+describe('bookingCheckQuery', () => {
+  it('ignores the meeting link and the idempotency key: typing the link never re-checks', () => {
+    const body = { teacherId: 't', byday: [0], startTimeLocal: '17:00', tz: 'Asia/Riyadh', durationMin: 45 as const, startsOn: '2026-10-04', kind: 'package' as const, studentIds: ['s'] };
+    const a = bookingCheckQuery({ ...body, meetingLink: null, clientRequestId: 'a' }).queryKey;
+    expect(bookingCheckQuery({ ...body, meetingLink: 'https://meet.example/x', clientRequestId: 'b' }).queryKey).toEqual(a);
+    expect(bookingCheckQuery({ ...body, startTimeLocal: '18:00', meetingLink: null }).queryKey).not.toEqual(a);
   });
 });

@@ -1,9 +1,10 @@
-import { screen, waitFor, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { ABRAR } from '@/features/booking/wizard-fixture';
+import { ABRAR, next, pickSlot, pickWednesday } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n';
 import { renderWithClient } from '../test-utils';
 import { COURSE_STUDENT_ID, COURSE_VIEW, routeCourse, routeCourseSend } from './course-fixture';
+import { courseTitle, subscriptionStartsText } from './course-draft';
 import { SalesCourseDialog } from './SalesCourseDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -12,6 +13,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
 
 const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
+const courseReads = () => apiFetch.mock.calls.filter(([path]) => String(path).startsWith('/sales/booking/course')).length;
 
 describe('«أيام الحلقات» dialog (owner 2026-10-18, R-ASST-01)', () => {
   beforeEach(() => {
@@ -42,12 +44,34 @@ describe('«أيام الحلقات» dialog (owner 2026-10-18, R-ASST-01)', () 
   it('opens the wizard on the teacher step, the student’s teacher preselected, package and length fixed', async () => {
     routeCourse(apiFetch);
     openDialog();
-    const dialog = within(await screen.findByRole('dialog', { name: t.booking.courseDays }));
+    // Named for the child (name · code), with the subscription's start.
+    const dialog = within(await screen.findByRole('dialog', { name: courseTitle(COURSE_VIEW) }));
     expect(await dialog.findByText(t.booking.courseFixed.replace('{package}', t.enums.packageSize['8']).replace('{minutes}', '45'))).toBeTruthy();
+    expect(dialog.getByText(subscriptionStartsText(COURSE_VIEW.subscription ?? { starts_on: '' }))).toBeTruthy();
     expect(dialog.getByText(t.booking.stepOf.replace('{n}', '1').replace('{total}', '3'))).toBeTruthy();
     const abrar = await dialog.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
     await waitFor(() => expect(abrar).toHaveProperty('checked', true));
     expect(apiFetch).toHaveBeenCalledWith('/sales/booking/teachers?program=quran&gender=female');
     expect(dialog.queryByText(t.booking.kind.label)).toBeNull();
+  });
+
+  it('after «احجز» a refetch of the view (now course_exists) keeps the booked panel', async () => {
+    routeCourse(apiFetch);
+    const client = openDialog();
+    const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
+    await waitFor(() => expect(abrar).toHaveProperty('checked', true));
+    await pickSlot();
+    pickWednesday();
+    await screen.findByText(t.booking.seriesFree);
+    next();
+    const submit = screen.getByRole('button', { name: t.booking.submit });
+    await waitFor(() => expect(submit.hasAttribute('disabled')).toBe(false));
+    fireEvent.click(submit);
+    expect(await screen.findByText(t.booking.booked)).toBeTruthy();
+    routeCourse(apiFetch, { ...COURSE_VIEW, blocked: 'course_exists' });
+    await client.invalidateQueries();
+    await waitFor(() => expect(courseReads()).toBeGreaterThan(1));
+    expect(screen.getByText(t.booking.booked)).toBeTruthy();
+    expect(screen.queryByText(t.booking.courseBlocked.course_exists)).toBeNull();
   });
 });

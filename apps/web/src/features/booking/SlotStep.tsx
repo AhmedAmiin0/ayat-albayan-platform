@@ -23,6 +23,12 @@ export function pickedText(startsAt: string, tz: string): string {
   return `${riyadh}${t.common.listSeparator}${t.booking.studentLocal.replace('{time}', local)}`;
 }
 
+/** A course's grid opens near its subscription's start: max(now, starts_on) (the picker never opens before this week). */
+export function courseNear(startsOn: string, now: Date = new Date()): string {
+  const start = new Date(`${startsOn}T12:00:00.000Z`); // midday UTC: the same date in every zone we serve
+  return (start > now ? start : now).toISOString();
+}
+
 /**
  * Step 4 (R-SCH-06): the lessons from the teacher's real free slots (length picked with the package).
  * A package picks one slot per weekday, each at its own time (owner 2026-10-18); the earliest is the
@@ -49,6 +55,7 @@ export function SlotStep({ draft, onChange }: SlotStepProps) {
           value={draft.startsAt}
           also={pkg ? draft.extra : undefined}
           onPick={(slot) => onChange(pickPatch(draft, slot.starts_at))}
+          {...(draft.course ? { near: courseNear(draft.course.startsOn) } : {})}
         />
       </section>
       {draft.startsAt ? (

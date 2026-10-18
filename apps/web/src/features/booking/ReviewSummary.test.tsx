@@ -39,7 +39,7 @@ describe('ReviewSummary: each day with its time (owner 2026-10-18)', () => {
   });
 
   it('the assistant’s course: lesson count instead of a price, no invoice', () => {
-    renderSummary({ extra: [TUE], course: { perWeek: 2, lessonsTotal: 8 } });
+    renderSummary({ extra: [TUE], course: { perWeek: 2, lessonsTotal: 8, package: '8' as const, startsOn: '2026-10-03' } });
     expect(screen.getByText(counted(t.schedule.lessonCount, 8))).toBeTruthy();
     expect(screen.queryByText(t.booking.invoice.label)).toBeNull();
     expect(screen.getByText(new RegExp(counted(t.booking.courseEnds, 8).split('{date}')[0] ?? ''))).toBeTruthy();

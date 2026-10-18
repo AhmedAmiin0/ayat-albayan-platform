@@ -681,10 +681,10 @@
     },
     "courseDays": "Lesson days",
     "courseEnds": {
-      "one": "The course ends on {date} after one lesson",
-      "two": "The course ends on {date} after two lessons",
-      "few": "The course ends on {date} after {n} lessons",
-      "other": "The course ends on {date} after {n} lessons"
+      "one": "The package's lessons end on {date} after one lesson",
+      "two": "The package's lessons end on {date} after two lessons",
+      "few": "The package's lessons end on {date} after {n} lessons",
+      "other": "The package's lessons end on {date} after {n} lessons"
     },
     "removeDay": "Remove {day}",
     "noDayPicked": "No day picked yet",
@@ -694,7 +694,29 @@
       "course_exists": "This student already has weekly lessons in this period; ask the admin to change them",
       "custom_count_admin": "This subscription's lesson count does not split into weeks; the admin will book it"
     },
-    "bookCourseDays": "Book the lesson days now"
+    "bookCourseDays": "Book the lesson days now",
+    "pickProgress": "Picked {picked} of {n} — {left}",
+    "daysLeft": {
+      "one": "one day left",
+      "two": "two days left",
+      "few": "{n} days left",
+      "other": "{n} days left"
+    },
+    "pickedTooMany": "Picked {picked}, {remove}",
+    "daysPicked": {
+      "one": "one day",
+      "two": "two days",
+      "few": "{n} days",
+      "other": "{n} days"
+    },
+    "removeDays": {
+      "one": "remove one day",
+      "two": "remove two days",
+      "few": "remove {n} days",
+      "other": "remove {n} days"
+    },
+    "subscriptionStarts": "The subscription starts on {date}",
+    "courseNeedsCheck": "Check the times first, then go on to the review"
   },
   "lessons": {
     "title": "Lessons",

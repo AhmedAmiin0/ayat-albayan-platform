@@ -5,6 +5,7 @@ import { detail, PHONE } from '../inbox-fixture';
 import { InboxModeContext } from '../mode';
 import { renderWithClient, routeFetch } from '../test-utils';
 import { ThreadPane } from '../ThreadPane';
+import { courseTitle } from './course-draft';
 import { COURSE_VIEW } from './course-fixture';
 import { OPEN_SUB, paymentView, SALES_QUOTE, student } from './sales-money-fixture';
 import { SalesDoneStep } from './SalesDoneStep';
@@ -63,18 +64,32 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
     expect(screen.queryByRole('button', { name: t.booking.courseDays })).toBeNull();
   });
 
-  it('right after «اشتراك جديد»: «احجز أيام الحلقات الآن», and closing it comes back to the transfer', async () => {
+  it('a new, trial or expired student holding an unpaid package gets «أيام الحلقات» too', async () => {
+    openChat([student({ status: 'trial', open: [OPEN_SUB] }), student({ id: 'e', name: 'جود', status: 'expired', open: [OPEN_SUB] })]);
+    const course = (name: string) => ({ name: `${t.booking.courseDays} — ${name}` });
+    expect(await screen.findByRole('button', course('سهيلة'))).toBeTruthy();
+    expect(screen.getByRole('button', course('جود'))).toBeTruthy();
+  });
+
+  it('right after «اشتراك جديد»: «احجز أيام الحلقات الآن», and closing it comes back to the transfer as typed', async () => {
     routeFetch(apiFetch, [['/settings', {}], ['/sales/money/chat-receipts', []], ['/sales/booking/course', BLOCKED]]);
     apiSend.mockImplementation((_m: string, path: string) => Promise.resolve(path === '/sales/subscriptions' ? OPEN_SUB : SALES_QUOTE));
     renderWithClient(<SalesMoneyFlow start="subscribe" students={[student()]} onClose={vi.fn()} />);
     const subscribe = within(screen.getByRole('dialog', { name: t.salesMoney.newSubscription }));
     fireEvent.click(subscribe.getByRole('button', { name: t.salesMoney.saveSubscription }));
     fireEvent.click(await screen.findByRole('button', { name: t.booking.bookCourseDays }));
-    const course = within(await screen.findByRole('dialog', { name: t.booking.courseDays }));
+    const transfer = within(screen.getByRole('dialog', { name: t.salesMoney.stepTransfer }));
+    fireEvent.change(transfer.getByLabelText(t.salesMoney.amount), { target: { value: '150' } });
+    fireEvent.change(transfer.getByLabelText(t.salesMoney.note), { target: { value: 'دفعة أولى' } });
+    fireEvent.click(transfer.getByRole('button', { name: t.booking.bookCourseDays }));
+    const course = within(await screen.findByRole('dialog', { name: courseTitle(BLOCKED) }));
     expect(await course.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
     expect(apiFetch).toHaveBeenCalledWith(`/sales/booking/course?studentId=${OPEN_SUB.student.id}`);
     fireEvent.click(course.getByRole('button', { name: t.common.close }));
-    expect(await screen.findByRole('dialog', { name: t.salesMoney.stepTransfer })).toBeTruthy();
+    // The transfer stayed under the course: what she typed is still there.
+    const back = within(await screen.findByRole('dialog', { name: t.salesMoney.stepTransfer }));
+    expect(back.getByLabelText(t.salesMoney.amount)).toHaveProperty('value', '150');
+    expect(back.getByLabelText(t.salesMoney.note)).toHaveProperty('value', 'دفعة أولى');
   });
 
   it('after the transfer too: «احجز أيام الحلقات الآن» on the result', () => {

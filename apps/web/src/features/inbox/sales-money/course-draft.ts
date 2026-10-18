@@ -1,17 +1,19 @@
-import { counted, PACKAGE_SIZES, type CourseSubscription, type PackageSize, type SalesCourseView } from '@ab/shared';
+import { counted, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { emptyDraft, type BookingDraft } from '@/features/booking/draft';
 import type { BookHint } from '@/features/booking/hint';
+import { dateLabel } from '@/features/schedule/tz';
+import { studentLabel } from '@/features/subscriptions/format';
 import { t } from '@/lib/i18n';
 
 // «أيام الحلقات» (owner 2026-10-18, R-ASST-01): the booking wizard's draft for the course of a
 // subscription she sold. Student, package, length, zone, program and teacher preference come from
 // GET /sales/booking/course; she picks the teacher and one time per day. Pure.
 
-/** A custom lesson count books under the package of the same size when there is one (the API accepts any). */
-const packageOf = (sub: Pick<CourseSubscription, 'package' | 'lessons_total'>): PackageSize =>
-  sub.package ?? PACKAGE_SIZES.find((p) => p === String(sub.lessons_total)) ?? '8';
-
-/** The wizard's starting draft; null while she can't book it herself (blocked, or nothing to follow). */
+/**
+ * The wizard's starting draft; null while she can't book it herself (blocked, or no day count). The
+ * day count is the view's perWeek only. A custom count keeps no package of its own: the request
+ * carries courseBodyPackage (ignored by the API) and the wizard names the lesson count (courseFixedText).
+ */
 export function courseDraft(view: SalesCourseView): BookingDraft | null {
   const { student, subscription: sub, perWeek } = view;
   if (view.blocked || !sub || perWeek === null) return null;
@@ -22,8 +24,8 @@ export function courseDraft(view: SalesCourseView): BookingDraft | null {
     program: student.program,
     genderPref: student.teacher_gender_pref,
     durationMin: sub.duration,
-    pkg: packageOf(sub),
-    course: { perWeek, lessonsTotal: sub.lessons_total },
+    ...(sub.package ? { pkg: sub.package } : {}),
+    course: { perWeek, lessonsTotal: sub.lessons_total, package: sub.package, startsOn: sub.starts_on },
   };
 }
 
@@ -36,3 +38,11 @@ export function courseFixedText(sub: CourseSubscription): string {
   const name = sub.package ? t.enums.packageSize[sub.package] : counted(t.schedule.lessonCount, sub.lessons_total);
   return t.booking.courseFixed.replace('{package}', name).replace('{minutes}', String(sub.duration));
 }
+
+/** «أيام الحلقات — سهيلة · AB-0183» once the view names the child. */
+export const courseTitle = (view: SalesCourseView | undefined): string =>
+  view ? `${t.booking.courseDays} — ${studentLabel(view.student)}` : t.booking.courseDays;
+
+/** «يبدأ الاشتراك في 3 أكتوبر 2026». */
+export const subscriptionStartsText = (sub: Pick<CourseSubscription, 'starts_on'>): string =>
+  t.booking.subscriptionStarts.replace('{date}', dateLabel(sub.starts_on));
