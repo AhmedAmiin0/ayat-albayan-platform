@@ -16,6 +16,7 @@ jest.mock('@/lib/api', () => ({
 }));
 const mockPush = jest.fn();
 jest.mock('expo-router', () => ({
+  useFocusEffect: jest.fn(),
   router: { back: jest.fn(), canGoBack: () => true, replace: jest.fn(), push: (h: unknown) => mockPush(h) },
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));

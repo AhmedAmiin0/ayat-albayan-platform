@@ -14,6 +14,7 @@ jest.mock('@/lib/api', () => ({
 }));
 const mockReplace = jest.fn();
 jest.mock('expo-router', () => ({
+  useFocusEffect: jest.fn(),
   router: { back: jest.fn(), canGoBack: () => false, replace: (h: string) => mockReplace(h), push: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));
@@ -57,7 +58,7 @@ test('a guardian’s chat: messages, «بعتها», the composer; no subscripti
   expect(screen.getByText(t.enums.messageStatus.failed)).toBeTruthy();
   expect(screen.getByText(t.messages.errorLine.replace('{reason}', t.messages.errors['131049']))).toBeTruthy();
   expect(screen.queryByText(t.messages.retry)).toBeNull();
-  await fireEvent.press(screen.getByText(t.common.back));
+  await fireEvent.press(screen.getByRole('button', { name: t.common.back }));
   expect(mockReplace).toHaveBeenCalledWith('/teacher/chats');
 });
 

@@ -1,11 +1,9 @@
 import type { ThreadView } from '@ab/shared';
 import { router } from 'expo-router';
-import { View } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
-import { useTheme } from '@/theme';
-import { Button } from '@/ui/Button';
+import { PillButton } from '@/ui/PillButton';
 import { openPackages, renewTargets, useSalesFamily } from './family';
 
 /**
@@ -13,9 +11,9 @@ import { openPackages, renewTargets, useSalesFamily } from './family';
  * of the family's students is hers, «جدّد الاشتراك» for each of hers whose package ended (the same
  * screen, that child picked; owner 2026-10-15), and «سجّل تحويلًا بنكيًا» while one of their packages is owed.
  * Needs self.sales_money; nothing on a lead's chat (RegisterFromChat is there) or another's family.
+ * Pills in the chat's action strip (SalesChatActions).
  */
 export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
-  const { color } = useTheme();
   const allowed = useHolds('self.sales_money');
   const base = useTreeBase();
   const phone = thread?.guardian_id ? thread.phone_e164 : '';
@@ -24,33 +22,26 @@ export function SalesChatMoney({ thread }: { thread: ThreadView | null }) {
   const tz = thread?.guardian_tz;
   const owed = openPackages(family.data).length > 0;
   const subscribe = (studentId?: string) =>
-    router.push(inTree(base, { pathname: '/inbox/sales-subscribe', params: { phone, ...(studentId ? { studentId } : {}), ...(tz ? { tz } : {}) } }));
+    router.push(
+      inTree(base, {
+        pathname: '/inbox/sales-subscribe',
+        params: { phone, ...(studentId ? { studentId } : {}), ...(tz ? { tz } : {}) },
+      }),
+    );
   return (
-    <View
-      style={{
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-        gap: 8,
-        paddingVertical: 6,
-        borderBottomWidth: 1,
-        borderBottomColor: color.rule,
-      }}
-    >
-      <Button
-        variant="secondary"
-        label={t.salesMoney.newSubscription}
-        onPress={() => subscribe()}
-      />
+    <>
+      <PillButton label={t.salesMoney.newSubscription} onPress={() => subscribe()} />
       {renewTargets(family.data).map((r) => (
-        <Button key={r.studentId} variant="secondary" label={r.label} onPress={() => subscribe(r.studentId)} />
+        <PillButton key={r.studentId} label={r.label} onPress={() => subscribe(r.studentId)} />
       ))}
       {owed ? (
-        <Button
-          variant="secondary"
+        <PillButton
           label={t.salesMoney.recordTransfer}
-          onPress={() => router.push(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone } }))}
+          onPress={() =>
+            router.push(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone } }))
+          }
         />
       ) : null}
-    </View>
+    </>
   );
 }
