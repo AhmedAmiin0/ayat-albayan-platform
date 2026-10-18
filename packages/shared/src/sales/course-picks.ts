@@ -47,16 +47,17 @@ export function sameDays(req: { byday: readonly number[]; startTimeLocal: string
 
 /**
  * The first local day the change form offers: today in the course's zone while it runs (a change
- * saved earlier whose latest set starts later still runs its old days this week), else its first day
- * (a course booked ahead, a renewal, opens on its own first week), never before today.
+ * saved earlier whose latest set starts later still runs its old days this week), else its opensOn
+ * (a course booked ahead opens on its own first lesson day, of its old rules too while a change is
+ * pending), never before today.
  */
-export function changeOpensOn(course: Pick<BookedCourse, 'tz' | 'startsOn' | 'running'>, now: Date): string {
+export function changeOpensOn(course: Pick<BookedCourse, 'tz' | 'opensOn' | 'running'>, now: Date): string {
   const today = wallParts(now.toISOString(), course.tz).date;
-  return !course.running && course.startsOn > today ? course.startsOn : today;
+  return !course.running && course.opensOn > today ? course.opensOn : today;
 }
 
 /** The change form's first picks: the course's own days from changeOpensOn. */
-export function changePicks(course: Pick<BookedCourse, 'days' | 'tz' | 'startsOn' | 'running'>, now: Date): PrefilledPick[] {
+export function changePicks(course: Pick<BookedCourse, 'days' | 'tz' | 'opensOn' | 'running'>, now: Date): PrefilledPick[] {
   const from = changeOpensOn(course, now);
   return prefillDays({ days: course.days, from, tz: course.tz, now: now.toISOString() });
 }

@@ -34,6 +34,7 @@ describe('bookedCourse — a course from its rules (owner 2026-10-18)', () => {
       startsOn: '2026-10-18',
       endsOn: '2026-11-10',
       running: true,
+      opensOn: '2026-10-18',
       days: [
         { weekday: 0, startTimeLocal: '17:00' },
         { weekday: 2, startTimeLocal: '19:30' },
@@ -48,6 +49,17 @@ describe('bookedCourse — a course from its rules (owner 2026-10-18)', () => {
       rule({ id: 'new', byday: [3], start_time_local: '18:00:00' }),
     ];
     expect(bookedCourse(rows, NOW)?.days).toEqual([{ weekday: 3, startTimeLocal: '18:00' }]);
+  });
+  it('booked ahead + pending change: opensOn is the old rules\' first day, before the new set (startsOn)', () => {
+    // A renewal from Sun 8 Nov, Sunday swapped for Monday from Mon 9 Nov before it starts: Sun 8 stays.
+    const rows = [
+      rule({ id: 'sun', starts_on: '2026-11-08', ends_on: '2026-11-08' }),
+      rule({ id: 'mon', byday: [1], starts_on: '2026-11-09', ends_on: '2026-12-07' }),
+      rule({ id: 'gone', byday: [3], starts_on: '2026-11-04', ends_on: '2026-11-30', status: 'ended' }),
+    ];
+    const course = bookedCourse(rows, NOW);
+    expect(course).toMatchObject({ startsOn: '2026-11-09', opensOn: '2026-11-08', running: false });
+    expect(bookedCourse(rows, at('2026-11-09'))?.opensOn).toBe('2026-11-09');
   });
   it('no capped rule → null', () => {
     expect(bookedCourse([rule({ ends_on: null })], NOW)).toBeNull();

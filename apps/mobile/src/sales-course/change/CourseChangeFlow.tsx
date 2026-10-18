@@ -28,7 +28,7 @@ export interface CourseChangeFlowProps {
 
 /**
  * «تغيير أيام الحلقات» (owner 2026-10-18): exactly the plan's days a week, prefilled with the course's
- * own from changeOpensOn (today while it runs, else its first day), the slots read from that day on
+ * own from changeOpensOn (today while it runs, else its opensOn), the slots read from that day on
  * (SlotStep multi, the course's lessons not busy against themselves) → the review with the remaining
  * lessons and the clashes (unchanged days: the check's own no_change) → «احفظ الأيام الجديدة». The
  * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).

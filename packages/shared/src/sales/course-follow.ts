@@ -27,6 +27,11 @@ export interface BookedCourse {
    * change saved earlier starts its latest set (startsOn) later. false = booked to start later.
    */
   running: boolean;
+  /**
+   * The first local day ≥ today any active rule of it may still hold a lesson on (server-computed): a
+   * course booked ahead whose pending change starts later keeps its old days before startsOn.
+   */
+  opensOn: string;
   /** Each weekday (0 = الأحد) with its "HH:MM", in weekday order. */
   days: DayTime[];
   /** subscriptions.lessons_total of the course's subscription. */

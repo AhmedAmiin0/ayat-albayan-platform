@@ -14,7 +14,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-utils')).MockLink }));
 
 // The course to change, booked ahead from Sunday 11 October (its own first week, after today).
-const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', endsOn: '2026-11-07', running: false };
+const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', opensOn: '2026-10-11', endsOn: '2026-11-07', running: false };
 const RUNNING = { ...COURSE_VIEW, blocked: 'course_exists' as const, current: CURRENT };
 const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 const changeButton = () => screen.findByRole('button', { name: t.booking.courseChange.changeDays });

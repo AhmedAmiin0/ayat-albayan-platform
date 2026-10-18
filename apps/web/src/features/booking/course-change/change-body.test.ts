@@ -18,7 +18,7 @@ describe('«تغيير أيام الحلقات»: picks and body (owner 2026-10-
   });
 
   it('a course booked ahead (a renewal) opens on its own first week, never before it', () => {
-    const ahead = { ...COURSE, startsOn: '2026-10-25', running: false };
+    const ahead = { ...COURSE, startsOn: '2026-10-25', opensOn: '2026-10-25', running: false };
     expect(ats(ahead, NOW)).toEqual(['2026-10-25T14:00:00.000Z', '2026-10-28T16:30:00.000Z']);
   });
 

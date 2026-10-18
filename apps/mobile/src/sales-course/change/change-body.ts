@@ -2,7 +2,7 @@ import { dayTimesKeeping, type CourseChangeRequest, type PrefilledPick } from '@
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): new weekdays and times for the lessons of a running course
 // that have not happened yet. The teacher, the length and the zone stay the course's. Pure. The
-// slot step's first picks are shared changePicks (from max(today, the course's first day)).
+// slot step's first picks are shared changePicks (from max(today, the course's opensOn)).
 
 export interface ChangeInput {
   subscriptionId: string;

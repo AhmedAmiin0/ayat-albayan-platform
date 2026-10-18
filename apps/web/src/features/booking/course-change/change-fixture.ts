@@ -20,6 +20,7 @@ export const COURSE: BookedCourse = {
   startsOn: '2026-09-06',
   endsOn: '2026-10-28',
   running: true,
+  opensOn: '2026-10-03',
   days: [
     { weekday: 0, startTimeLocal: '17:00' },
     { weekday: 3, startTimeLocal: '19:30' },

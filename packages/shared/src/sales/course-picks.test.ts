@@ -49,20 +49,29 @@ describe('sameDays — nothing changed yet', () => {
 });
 
 describe('changePicks / changeOpensOn', () => {
-  const course = { days, tz: 'Asia/Riyadh', startsOn: '2026-09-01', running: true };
+  const course = { days, tz: 'Asia/Riyadh', opensOn: '2026-10-18', running: true };
   it('a running course: from today', () => {
     const picks = changePicks(course, new Date(now));
     expect(picks.map((p) => p.at)).toEqual(['2026-10-18T14:00:00.000Z', '2026-10-20T16:30:00.000Z']);
   });
   it('a course booked ahead (a renewal): from its own first day', () => {
-    const ahead = { ...course, startsOn: '2026-11-16', running: false };
+    const ahead = { ...course, opensOn: '2026-11-16', running: false };
     expect(changeOpensOn(ahead, new Date(now))).toBe('2026-11-16');
     const picks = changePicks(ahead, new Date(now));
     expect(picks.map((p) => p.at)).toEqual(['2026-11-17T16:30:00.000Z', '2026-11-22T14:00:00.000Z']);
   });
   it('a pending change (latest set later, the old rules still run): from today, not from the new set', () => {
-    const pending = { ...course, startsOn: '2026-11-16' };
+    const pending = { ...course, opensOn: '2026-10-18' };
     expect(changeOpensOn(pending, new Date(now))).toBe('2026-10-18');
     expect(changePicks(pending, new Date(now))[0]?.at).toBe('2026-10-18T14:00:00.000Z');
+  });
+  it('booked ahead + a pending change: from the old rules\' first day (opensOn), before the new set\'s start', () => {
+    // Renewal from Sun 8 Nov, Sun swapped for Mon from 9 Nov before it starts: Sun 8 stays (startsOn = 9 Nov).
+    const ahead = { ...course, opensOn: '2026-11-08', running: false };
+    expect(changeOpensOn(ahead, new Date(now))).toBe('2026-11-08');
+    expect(changePicks(ahead, new Date(now))[0]?.at).toBe('2026-11-08T14:00:00.000Z');
+  });
+  it('never before today', () => {
+    expect(changeOpensOn({ ...course, opensOn: '2026-10-01', running: false }, new Date(now))).toBe('2026-10-18');
   });
 });
