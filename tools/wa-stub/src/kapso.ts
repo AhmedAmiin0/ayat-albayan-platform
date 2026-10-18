@@ -30,7 +30,7 @@ const query = (req: IncomingMessage) => new URL(req.url ?? '/', 'http://stub').s
 /** POST /{waba}/message_templates?hsm_id=<id> edits that template; without hsm_id it creates. */
 const kapsoTemplatesRoute: Route = [createTemplateRoute[0], createTemplateRoute[1], async (req, m, s) => {
   const hsm = query(req).get('hsm_id');
-  return hsm ? editTemplate(s, hsm, await readJson(req)) : createTemplate(s, await readJson(req));
+  return hsm ? editTemplate(s, hsm, await readJson(req)) : createTemplate(s, { body: await readJson(req), wabaId: m[1] ?? '' });
 }];
 
 /** GET /{media id} needs phone_number_id; answers Meta's lookaside `url` (unusable) AND a `download_url`. */

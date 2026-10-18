@@ -4,7 +4,7 @@
 // characters.
 import { randomUUID } from 'node:crypto';
 import { stubLines } from './lines.ts';
-import { defaultChatTemplates, defaultTemplates, ERR, type Json, type StubTemplate } from './meta.ts';
+import { defaultChatTemplates, defaultTemplates, ERR, onWaba, type Json, type StubTemplate } from './meta.ts';
 import type { Reply, StubOptions, StubState } from './state.ts';
 
 /** createStub's and /__stub/reset's templates: the given (or default) ones, plus the chat line's starter. */
@@ -60,16 +60,25 @@ function componentsError(s: StubState, components: Json[]): Json | null {
 
 const componentsOf = (body: Json): Json[] => (Array.isArray(body['components']) ? (body['components'] as Json[]) : []);
 
-export function createTemplate(s: StubState, body: Json): Reply {
+/**
+ * The WABA a created template lives on: the path's, when it is a configured line's (as on Meta, the
+ * other number never lists it); a path no line owns (lenient single-line tests) = every WABA, as before.
+ */
+const ownWaba = (s: StubState, wabaId: string): string | undefined =>
+  stubLines(s.opts).some((l) => l.wabaId === wabaId) ? wabaId : undefined;
+
+export function createTemplate(s: StubState, input: { body: Json; wabaId: string }): Reply {
+  const { body } = input;
   const name = String(body['name'] ?? '');
   const language = String(body['language'] ?? 'ar');
+  const wabaId = ownWaba(s, input.wabaId);
   if (!/^[a-z0-9_]{1,512}$/.test(name)) return [400, ERR.badName(name)];
-  if (s.templates.some((t) => t.name === name && t.language === language)) return [400, ERR.duplicate(name)];
+  if (s.templates.some((t) => t.name === name && t.language === language && onWaba(t, input.wabaId))) return [400, ERR.duplicate(name)];
   const components = componentsOf(body);
   const invalid = componentsError(s, components);
   if (invalid) return [400, invalid];
   const category = String(body['category'] ?? 'UTILITY').toUpperCase();
-  const t: StubTemplate = { id: randomUUID(), name, language, category, status: 'PENDING', quality: 'UNKNOWN', components };
+  const t: StubTemplate = { id: randomUUID(), name, language, category, status: 'PENDING', quality: 'UNKNOWN', components, ...(wabaId ? { wabaId } : {}) };
   s.templates.push(t);
   return [200, { id: t.id, status: t.status, category }];
 }
@@ -86,4 +95,20 @@ export function editTemplate(s: StubState, id: string, body: Json): Reply {
   if (typeof body['category'] === 'string') t.category = body['category'].toUpperCase();
   t.status = 'PENDING';
   return [200, { success: true }];
+}
+
+/**
+ * POST /__stub/templates/{name}: Meta's review result. `waba` picks the template on that WABA (the
+ * same name may exist on both numbers); `rejected_reason` is what GET message_templates then answers.
+ */
+export function reviewTemplate(s: StubState, input: { name: string; body: Json }): Reply {
+  const { name, body } = input;
+  const waba = typeof body['waba'] === 'string' ? body['waba'] : undefined;
+  const named = s.templates.filter((x) => x.name === name && (!waba || onWaba(x, waba)));
+  const t = named.find((x) => x.wabaId === waba) ?? named[0];
+  if (!t) return [404, { error: `no template ${name}${waba ? ` on ${waba}` : ''}` }];
+  t.status = String(body['status'] ?? t.status);
+  t.quality = String(body['quality'] ?? t.quality);
+  if (typeof body['rejected_reason'] === 'string') t.rejectedReason = body['rejected_reason'];
+  return [200, t];
 }

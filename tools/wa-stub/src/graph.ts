@@ -20,7 +20,9 @@ export const listTemplatesRoute: Route = ['GET', new RegExp(`^${V}/([^/]+)/messa
   return [200, { data, paging: { cursors: { before: 'stub', after: 'stub' } } }];
 }];
 
-export const createTemplateRoute: Route = ['POST', new RegExp(`^${V}/[^/]+/message_templates$`), async (req, _m, s) => createTemplate(s, await readJson(req))];
+/** Created on the WABA of its path: listed and sendable there only (when that WABA is a configured line's). */
+export const createTemplateRoute: Route = ['POST', new RegExp(`^${V}/([^/]+)/message_templates$`), async (req, m, s) =>
+  createTemplate(s, { body: await readJson(req), wabaId: m[1] ?? '' })];
 
 const metaEditRoute: Route = ['POST', new RegExp(`^${V}/([^/]+)$`), async (req, m, s) => editTemplate(s, m[1] ?? '', await readJson(req))];
 
