@@ -37,7 +37,7 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     expect(screen.queryByText(t.booking.courseChange.upcoming)).toBeNull();
   });
 
-  it('a pending change (its new days start later, the old ones still run): running, changed again from today', async () => {
+  it('a pending change (its new days start later, the old ones still run): running, the grid opens today, the picks on the new set', async () => {
     routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, running: true } });
     openDialog();
     expect(await screen.findByText(t.booking.courseChange.running)).toBeTruthy();

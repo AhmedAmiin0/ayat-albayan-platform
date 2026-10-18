@@ -27,14 +27,24 @@ describe('«تابِع بنفس الأيام» while the previous teacher is rea
     expect(screen.queryByText(t.booking.courseChange.teacherUnavailable)).toBeNull();
   });
 
-  it('the read failed: the error with a retry, never «unavailable»; the retry brings «تابِع» back', async () => {
+  it('the read failed: the error alert with a retry, never «unavailable»; the retry brings «تابِع» back', async () => {
     apiFetch.mockRejectedValueOnce(new Error('offline')).mockResolvedValue([ABRAR]);
     open();
-    expect(await screen.findByText(t.common.error, { exact: false })).toBeTruthy();
+    expect((await screen.findByRole('alert')).textContent).toBe(t.common.error);
     expect(screen.queryByText(t.booking.courseChange.teacherUnavailable)).toBeNull();
     expect(same().hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.sales.retry }));
     await waitFor(() => expect(same().hasAttribute('disabled')).toBe(false));
     expect(screen.queryByRole('status')).toBeNull();
+    expect(screen.queryByRole('alert')).toBeNull();
+  });
+
+  it('a failed refetch keeps the old list but shows the error, «تابِع» disabled', async () => {
+    apiFetch.mockResolvedValueOnce([ABRAR]).mockRejectedValue(new Error('offline'));
+    const client = open();
+    await waitFor(() => expect(same().hasAttribute('disabled')).toBe(false));
+    await client.refetchQueries().catch(() => undefined);
+    expect((await screen.findByRole('alert')).textContent).toBe(t.common.error);
+    expect(same().hasAttribute('disabled')).toBe(true);
   });
 });

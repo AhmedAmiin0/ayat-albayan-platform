@@ -1,6 +1,7 @@
 import { continueFits, type SalesCourseView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
+import { FormAlert } from '@/components/ui/form-alert';
 import { bookingTeachersQuery } from '@/features/booking/api';
 import type { BookingDraft } from '@/features/booking/draft';
 import { t } from '@/lib/i18n';
@@ -24,12 +25,13 @@ export interface ContinueChoiceProps {
  * With another day count than before (!continueFits) it says so and offers «عدّل الأيام السابقة»
  * (the picker prefilled, to bring the days to the new count) instead. Either primary needs the previous
  * teacher still bookable here (in the wizard's teacher list, with availability). While the list loads the
- * status line says so; a failed read is the error with a retry, never «unavailable».
+ * status line says so; a failed read (or refetch) is the error alert with a retry, never «unavailable».
  */
 export function ContinueChoice({ view, draft, now, onContinue, onOther }: ContinueChoiceProps) {
   const teachers = useQuery(bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'));
   const fits = continueFits(view);
-  const bookable = !!teachers.data?.some((o) => o.id === view.previous?.teacherId && o.has_availability);
+  // isSuccess, not data: a failed refetch keeps the last list, never an enabled «تابِع» beside the error.
+  const bookable = teachers.isSuccess && teachers.data.some((o) => o.id === view.previous?.teacherId && o.has_availability);
   const unavailable = teachers.isSuccess && !bookable;
   return (
     <div className="grid gap-4">
@@ -40,12 +42,12 @@ export function ContinueChoice({ view, draft, now, onContinue, onOther }: Contin
         </p>
       )}
       {teachers.isError && (
-        <p role="status" className="text-sm text-ink-2">
-          {t.common.error}{' '}
+        <div className="grid justify-items-start gap-2">
+          <FormAlert>{t.common.error}</FormAlert>
           <Button type="button" variant="secondary" size="sm" onClick={() => void teachers.refetch()}>
             {t.sales.retry}
           </Button>
-        </p>
+        </div>
       )}
       {unavailable && (
         <p role="status" className="text-sm text-ink-2">

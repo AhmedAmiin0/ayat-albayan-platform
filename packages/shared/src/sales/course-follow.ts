@@ -18,7 +18,10 @@ export interface BookedCourse {
   durationMin: Duration;
   /** The rules' zone (the family's when booked). */
   tz: string;
-  /** The first local day of its latest set of rules: a change never starts before it. */
+  /**
+   * The first local day of its latest set of rules (`days`): before it only the old rules of a pending
+   * change hold lessons, so the change form's prefill starts on it at the earliest (changePicks).
+   */
   startsOn: string;
   /** The course's last local day (its rules' ends_on). */
   endsOn: string;
