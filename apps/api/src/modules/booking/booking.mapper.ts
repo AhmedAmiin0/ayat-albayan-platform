@@ -28,6 +28,14 @@ export type RuleRow = RuleTiming & {
   /** Idempotency key: a replay returns the first booking (migration 111). */
   client_request_id: string | null;
 };
+/**
+ * Another time of the same booking (migration 460): its own schedule_rules row with the first rule's
+ * teacher, first_rule_id = the first rule, no client_request_id (create_booking fills both).
+ */
+export type SiblingRow = {
+  rule: Omit<RuleRow, 'teacher_id' | 'client_request_id'>;
+  lessons: LessonRow[];
+};
 export type NewStudentRow = Omit<StudentCreate, 'guardian_id' | 'teacher_id'> & {
   name_normalized: string;
 };
@@ -43,7 +51,7 @@ export type InvoiceRow = {
   message_id: string | null;
 };
 
-/** The create_booking(p_booking) argument (migrations 090, 111, 171). */
+/** The create_booking(p_booking) argument (migrations 090, 111, 171, 460). */
 export type BookingPayload = {
   rule: RuleRow;
   student_ids: string[];
@@ -51,6 +59,8 @@ export type BookingPayload = {
   new_guardian: GuardianCreate | null;
   new_student: NewStudentRow | null;
   lessons: LessonRow[];
+  /** The booking's other start times (one rule each); [] or absent = one rule, as before. */
+  siblings?: SiblingRow[];
   messages: MessageDraft[];
   /** The missed lesson a makeup replaces (create_booking re-checks it). */
   makeup_of: string | null;

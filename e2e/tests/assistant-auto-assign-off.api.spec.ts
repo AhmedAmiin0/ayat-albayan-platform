@@ -65,12 +65,12 @@ test.describe.serial('sales auto-assign OFF: registration without the ownership 
     expect([teachers.status, slots.status]).toEqual([200, 200]);
   });
 
-  test('the trial-only rules still hold: a package is 403 kind_not_allowed, nothing booked', async ({ request }) => {
+  test('a package from a lead is not a course of her student (403 course_one_student), nothing booked', async ({ request }) => {
     const phone = freshPhone();
     const lead = await seedLead({ phone });
     const body = { ...trialBody({ teacherId: teacher, leadId: lead, phone, name: 'هند', time: '19:00' }), package: '8' };
     const res = await call(request, { token: need(a).token, method: 'POST', path: '/sales/booking', body });
-    expect([res.status, res.body]).toMatchObject([403, { code: 'kind_not_allowed' }]);
+    expect([res.status, res.body]).toMatchObject([403, { code: 'course_one_student' }]);
     const [row] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n from public.students s join public.guardians g on g.id = s.guardian_id where g.phone_e164 = ${phone}`);
     expect(row?.n).toBe(0);
   });

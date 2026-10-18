@@ -7,8 +7,10 @@ import { domainError } from './booking.errors';
 import { meetingLinkFor, type BookingPayload } from './booking.mapper';
 import { bookingPayload } from './booking.payload';
 import { BookingParties, type Resolved } from './booking.parties';
-import { planBooking } from './booking.plan';
+import type { Plan } from './booking.plan';
 import type { BookingTeacher } from './booking.queries';
+import type { Occurrence } from '../scheduling/occurrences';
+import { planSeries } from './booking.series-plan';
 
 export type Prepared = {
   payload: BookingPayload;
@@ -17,7 +19,27 @@ export type Prepared = {
   phones: string[];
   /** settings.upload_max_mb in bytes: the invoice file must not be larger. */
   invoiceMaxBytes: number;
+  /** The booking may go without an invoice (PrepareOptions.invoiceWaived). */
+  invoiceWaived: boolean;
 };
+
+/**
+ * Server-side choices of the caller, never of the request body: the assistant's course of a
+ * subscription she sold (SalesBookingService) has no invoice (the transfer is recorded later on the
+ * subscription, owner 2026-10-18 decision 2) and ends on its N-th lesson (decision 1). The admin
+ * passes none: invoice_required and open-ended rules, as before.
+ */
+export type PrepareOptions = {
+  invoiceWaived?: boolean;
+  /** Every rule's ends_on (courseEndsOn); later occurrences are dropped. */
+  endsOn?: string | null;
+};
+type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] };
+
+/** Before the plan: a missing invoice is not a clash the admin can override away. */
+function assertInvoice(req: BookingRequest, invoiceWaived: boolean): void {
+  if (bookingKindOf(req) !== 'trial' && !req.invoice && !invoiceWaived) throw domainError(HttpStatus.BAD_REQUEST, 'invoice_required');
+}
 
 /**
  * Everything POST /booking decides before writing (docs/10 §5 #14, R-SCH-04, R-SCH-06, R-LEAD-06,
@@ -39,20 +61,20 @@ export class BookingPlanner {
   ) {}
 
   /** POST /booking/check: the series' clashes, nothing written, never a 409 conflict. */
-  async conflicts(req: BookingRequest): Promise<Conflict[]> {
+  async conflicts(req: BookingRequest, opts: PrepareOptions = {}): Promise<Conflict[]> {
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
-    return (await this.series(req, teacher, who)).conflicts;
+    return (await this.series(req, { teacher, who, endsOn: opts.endsOn })).conflicts;
   }
 
-  async prepare(req: BookingRequest): Promise<Prepared> {
+  async prepare(req: BookingRequest, opts: PrepareOptions = {}): Promise<Prepared> {
     const kind = bookingKindOf(req);
-    // Before the plan: a missing invoice is not a clash the admin can override away.
-    if (kind !== 'trial' && !req.invoice) throw domainError(HttpStatus.BAD_REQUEST, 'invoice_required');
+    const invoiceWaived = opts.invoiceWaived === true;
+    assertInvoice(req, invoiceWaived);
     const { teacher, lead } = await this.parties.lookup(req);
     const who = await this.parties.resolve(req, lead);
     const makeupOf = kind === 'makeup' ? await this.parties.missed(req) : null;
-    const { plan, first, conflicts } = await this.series(req, teacher, who);
+    const { plan, siblings, first, conflicts } = await this.series(req, { teacher, who, endsOn: opts.endsOn });
     if (conflicts.length > 0 && !req.override) {
       throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
@@ -64,33 +86,40 @@ export class BookingPlanner {
     });
     // The lessons keep the link either way; in auto mode the confirmation names none (no lesson id yet, so no classroom token).
     const confirmationLink = settings.meeting_link_auto ? null : meetingLink;
-    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, first, conflicts, meetingLink, confirmationLink, makeupOf });
+    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, siblings, first, conflicts, meetingLink, confirmationLink, makeupOf });
     const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
-    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes: uploadMaxBytes(settings) };
+    return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes: uploadMaxBytes(settings), invoiceWaived };
   }
 
   /**
-   * Occurrences over the horizon plus a week after each coming DST change (probeOccurrences), all
-   * checked against lessons and the occurrences other rules will still generate (R-SCH-04,
-   * issue B3). Probed occurrences are reported, never written. A trial or a makeup is one lesson,
-   * so it has no series to probe.
+   * Occurrences over the horizon of every start time (planSeries) plus a week after each coming DST
+   * change of each time's rule (probeOccurrences), all checked at once against lessons and the
+   * occurrences other rules will still generate (R-SCH-04, issue B3). Probed occurrences are
+   * reported, never written. A trial or a makeup is one lesson, so it has no series to probe.
    */
-  private async series(req: BookingRequest, teacher: BookingTeacher, who: Resolved) {
+  private async series(req: BookingRequest, ctx: SeriesContext): Promise<Series> {
     const horizonWeeks = await this.settings.bookingHorizonWeeks();
     const single = isSingleLesson(bookingKindOf(req));
-    const plan = planBooking({ rule: { ...req, single }, now: new Date(), horizonWeeks });
-    const [first] = plan.occurrences;
-    const last = plan.occurrences.at(-1);
-    if (!first || !last) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
-    const probe = single
-      ? []
-      : probeOccurrences({ timing: plan.timing, tzs: [req.tz, teacher.tz], after: last.starts_at });
+    const plans = planSeries({ rule: { ...req, single }, now: new Date(), horizonWeeks, endsOn: ctx.endsOn });
+    const [plan, ...siblings] = plans;
+    const first = plan?.occurrences[0];
+    if (!plan || !first) throw domainError(HttpStatus.BAD_REQUEST, 'no_occurrences');
+    const tzs = [req.tz, ctx.teacher.tz];
+    const probe = single ? [] : plans.flatMap((p) => probeAfter(p, tzs));
     const conflicts = await this.checker.check({
-      teacherId: teacher.id,
-      studentIds: who.student_ids,
-      proposed: [...plan.occurrences, ...probe],
+      teacherId: ctx.teacher.id,
+      studentIds: ctx.who.student_ids,
+      proposed: [...plans.flatMap((p) => p.occurrences), ...probe],
       excludeIds: [],
     });
-    return { plan, first, conflicts };
+    return { plan, siblings, first, conflicts };
   }
+}
+
+type SeriesContext = { teacher: BookingTeacher; who: Resolved; endsOn?: string | null | undefined };
+
+/** The plan's rule a week around each DST change after its last generated lesson. */
+function probeAfter(plan: Plan, tzs: readonly string[]): Occurrence[] {
+  const last = plan.occurrences.at(-1);
+  return last ? probeOccurrences({ timing: plan.timing, tzs, after: last.starts_at }) : [];
 }

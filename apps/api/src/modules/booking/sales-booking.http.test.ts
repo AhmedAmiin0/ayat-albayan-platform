@@ -115,9 +115,9 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
     expect([res.statusCode, res.json()]).toEqual([409, { code: 'duplicate_student', message: 'duplicate_student', candidates: [{ id: S1, name: 'ياسمين' }] }]);
   });
 
-  it('book: only a trial, no custom meeting link, no invoice: 403 with the code, nothing booked; no invoice upload route', async () => {
+  it('book: a trial or her one-student course, no custom meeting link, no invoice: 403 with the code, nothing booked; no invoice upload route', async () => {
     const refused = async (over: object) => (await call({ method: 'POST', url: '/sales/booking', token: 'salesA', body: { ...NEW_FAMILY, ...over } })).json().code;
-    expect(await refused({ package: '8' })).toBe('kind_not_allowed');
+    expect(await refused({ package: '8' })).toBe('course_one_student');
     expect(await refused({ meetingLink: 'https://meet.example/x' })).toBe('meeting_link_not_allowed');
     expect(await refused({ invoice: { source: 'upload', path: 'invoices/x.pdf' } })).toBe('invoice_not_allowed');
     expect(booking.book).not.toHaveBeenCalled();

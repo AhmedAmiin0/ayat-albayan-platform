@@ -20,6 +20,9 @@ import { MakeupCandidates } from './makeup-candidates.service';
 import { SalesBookingController, SalesBookingOptionsController } from './sales-booking.controller';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { SalesBookingOptions, SalesBookingService } from './sales-booking.service';
+import { SalesCourseController } from './sales-course.controller';
+import { SalesCourseQueries } from './sales-course.queries';
+import { SalesCourse } from './sales-course.service';
 import { SlotsService } from './slots.service';
 import { TeacherAlertQueries } from './teacher-alert.queries';
 import { TeacherAlert, TeacherAlertDeps } from './teacher-alert.service';
@@ -35,7 +38,7 @@ import { TeacherOptionsService } from './teacher-options.service';
  */
 @Module({
   imports: [TeachersModule, SchedulingModule, SalesModule, SubscriptionsModule],
-  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController],
+  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController],
   providers: [
     BookingQueries,
     TeacherOptionsQueries,
@@ -48,6 +51,8 @@ import { TeacherOptionsService } from './teacher-options.service';
     SalesBookingScope,
     SalesBookingService,
     SalesBookingOptions,
+    SalesCourse,
+    SalesCourseQueries,
     BookingWriter,
     BookingFollowUps,
     TeacherAlert,

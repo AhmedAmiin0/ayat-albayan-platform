@@ -86,7 +86,7 @@ describe('BookingService (R-SCH-06, R-SCH-04, R-NFR-03)', () => {
     const { service, queries, invoices } = setup();
     const req = bookingRequest({ invoice: { source: 'upload', path: 'req/a.png' } });
     await service.book(req, ACTOR);
-    expect(invoices.resolve).toHaveBeenCalledWith(req, { phones: ['+966552147730'], maxBytes: 10 * 1024 * 1024 });
+    expect(invoices.resolve).toHaveBeenCalledWith(req, { phones: ['+966552147730'], maxBytes: 10 * 1024 * 1024, waived: false });
     expect(queries.createBooking.mock.calls[0]?.[0]?.invoice).toEqual(INVOICE);
   });
 

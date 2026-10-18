@@ -1,6 +1,8 @@
+import { bookingKindOf, type BookingRequest } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { SettingsService } from '../../common/settings/settings.service';
+import type { SalesOwnership } from '../sales/sales-ownership';
 import { SalesQueries } from '../sales/sales.queries';
 import type { BookingOwnership } from './sales-booking.scope';
 
@@ -19,5 +21,18 @@ export class SalesBookingScope {
 
   async of(user: AuthUser): Promise<BookingOwnership> {
     return (await this.settings.salesAutoAssign()) ? this.sales.ownership(user.id) : null;
+  }
+
+  /**
+   * A course (kind 'package', owner 2026-10-18) always reads her ownership, whatever the switch: it books the
+   * subscription she sold, like her money endpoints (SalesMoneyScope, docs/16 row 17). A trial follows `of`.
+   */
+  forRequest(req: BookingRequest, user: AuthUser): Promise<BookingOwnership> {
+    return bookingKindOf(req) === 'package' ? this.owned(user) : this.of(user);
+  }
+
+  /** Her ownership whatever the switch (a course and its wizard read). */
+  owned(user: AuthUser): Promise<SalesOwnership> {
+    return this.sales.ownership(user.id);
   }
 }
