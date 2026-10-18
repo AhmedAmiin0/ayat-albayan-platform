@@ -48,11 +48,15 @@ test.describe('templates per number (owner 2026-10-18)', () => {
       select last_checked_at from public.message_templates where key = 'booking_confirmation'`);
     const admin = await asRole('admin');
     await openSettings(admin);
+    // The boot sync may already have filled the notifications block: it must not change now.
+    const notif = numberBlock(admin, 'notifications');
+    await expect(notif).toContainText(p.provider);
+    const notifBefore = await notif.innerText();
     await syncNumber(admin, 'chat');
     const block = numberBlock(admin, 'chat');
     await expect(block).toContainText(p.metaCount);
     await expect(block).toContainText(p.lastSync.replace('{time}', '').trim());
-    await expect(numberBlock(admin, 'notifications')).toContainText(p.neverSynced);
+    expect(await notif.innerText()).toBe(notifBefore);
     const after = await withSql((sql) => sql<{ last_checked_at: Date | null }[]>`
       select last_checked_at from public.message_templates where key = 'booking_confirmation'`);
     expect(after).toEqual(before);
