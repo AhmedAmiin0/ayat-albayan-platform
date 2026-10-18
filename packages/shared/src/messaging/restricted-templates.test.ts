@@ -48,7 +48,7 @@ describe('the restricted allow-list (owner 2026-10-12)', () => {
 describe('sendsAllTemplates', () => {
   it('templates.manage or templates.send_all lift the list', () => {
     expect(sendsAllTemplates({ role: 'admin', permissions: ['messages.read', 'templates.manage'] })).toBe(true);
-    expect(sendsAllTemplates({ role: 'teacher', permissions: ['templates.send_all'] })).toBe(true);
+    expect(sendsAllTemplates({ role: 'admin', permissions: ['templates.send_all'] })).toBe(true);
   });
 
   it('anyone else (or nobody signed in) is restricted', () => {
@@ -58,10 +58,11 @@ describe('sendsAllTemplates', () => {
     expect(sendsAllTemplates(undefined)).toBe(false);
   });
 
-  it('the assistants (sales, classroom assistant) are restricted whatever they were granted (owner 2026-10-15)', () => {
+  it('sales, the classroom assistant and teachers are restricted whatever they were granted (owner 2026-10-15, 10-18)', () => {
     const granted = ['templates.manage', 'templates.send_all'];
     expect(sendsAllTemplates({ role: 'sales', permissions: granted })).toBe(false);
     expect(sendsAllTemplates({ role: 'assistant', permissions: granted })).toBe(false);
+    expect(sendsAllTemplates({ role: 'teacher', permissions: granted })).toBe(false);
   });
 
   it('both keys are catalog permissions', () => {

@@ -44,9 +44,10 @@ describe('GET /messaging/templates per role (restricted allow-list)', () => {
     expect(await list('admin')).toHaveLength(ROWS.length);
   });
 
-  it('a teacher granted templates.send_all lists every template', async () => {
-    customGrants = ['templates.send_all'];
-    expect(await list('teacher')).toHaveLength(ROWS.length);
+  // Owner 2026-10-18: «dont show all these templates to sales/teacher», whatever the teacher holds.
+  it('a teacher granted both keys still lists only the two', async () => {
+    customGrants = ['templates.send_all', 'templates.manage'];
+    expect(await list('teacher')).toEqual(TWO);
   });
 
   // Owner 2026-10-15: «only allowed templates should be listed to the assistants», whatever they hold.
