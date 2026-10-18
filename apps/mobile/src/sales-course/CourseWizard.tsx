@@ -1,4 +1,4 @@
-import { courseOpensOn, prefillPicks, type BookedCourse, type SalesCourseView } from '@ab/shared';
+import { continueFits, courseOpensOn, prefillDays, type BookedCourse, type PrefilledPick, type SalesCourseView } from '@ab/shared';
 import { useState } from 'react';
 import { ScrollView } from 'react-native';
 import { bookFailure } from '@/booking/booking-errors';
@@ -12,11 +12,10 @@ import { courseRequest } from './course-body';
 import { useBookCourse } from './course-queries';
 import { CourseConfirm } from './CourseConfirm';
 import { CourseDone } from './CourseDone';
+import { CourseOpening, type CourseChangeEntry } from './CourseOpening';
 import { CourseStarts } from './CourseStarts';
 import { COURSE_STEPS, firstStep, stepBack, stepNumber, type CourseStep } from './course-steps';
-import { CourseContinue } from './CourseContinue';
-import { CourseTeacherStep } from './CourseTeacherStep';
-import { useTeacherName } from './use-teacher-name';
+import { useKnownTeacher } from './use-known-teacher';
 
 type Teacher = { id: string; name: string };
 
@@ -26,6 +25,8 @@ export interface CourseWizardProps {
   onLeave: () => void;
   /** On to the package's transfer (opened right after «احفظ الاشتراك»). */
   transfer?: (() => void) | undefined;
+  /** The student's course (view.current): «تغيير أيام الحلقات» beside the first step. */
+  change?: CourseChangeEntry | undefined;
 }
 
 /**
@@ -33,22 +34,25 @@ export interface CourseWizardProps {
  * preference) → one time per weekday, exactly the plan's days a week (SlotStep multi) → المراجعة
  * with the series check. The package, the length and the zone come from the subscription and the
  * student, never asked; the days are offered from its first day on (starts_on in the student's
- * zone, or the day after a previous course: courseOpensOn), or from now. A renewal (view.previous) opens
- * on «تابِع بنفس الأيام»: its teacher and days, prefilled, straight to the review. One clientRequestId
- * per wizard (rule 8).
+ * zone, or the day after a previous course, never before today: courseOpensOn), or from now. A renewal
+ * (view.previous) opens on «تابِع بنفس الأيام»: its teacher and days prefilled in the coming week
+ * (prefillDays), straight to the review when they are the plan's days a week (continueFits), else to
+ * the days to add or remove one. One clientRequestId per wizard (rule 8).
  */
-export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
+export function CourseWizard({ view, onLeave, transfer, change }: CourseWizardProps) {
   const previous = view.previous ?? null;
+  const [now] = useState(() => new Date().toISOString());
   const [step, setStep] = useState<CourseStep>(firstStep(previous !== null));
   const [same, setSame] = useState(false);
   const [teacher, setTeacher] = useState<Teacher>({ id: '', name: '' });
   const [picks, setPicks] = useState<string[]>([]);
+  const [prefilled, setPrefilled] = useState<PrefilledPick[]>([]);
   const [requestId] = useState(newRequestId);
   const book = useBookCourse();
-  const known = useTeacherName(view.student.program, previous?.teacherId);
-  const body = courseRequest({ view, teacherId: teacher.id, picks, requestId });
+  const known = useKnownTeacher(view.student.program, previous?.teacherId);
+  const body = courseRequest({ view, teacherId: teacher.id, picks, requestId, prefilled });
   const sub = view.subscription;
-  const opensOn = courseOpensOn(view);
+  const opensOn = courseOpensOn(view, now);
   const from = opensOn ? { from: dayStartUtc(opensOn, view.student.tz).toISOString() } : {};
   const go = (next: CourseStep) => {
     book.reset();
@@ -63,34 +67,31 @@ export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
     .replace('{total}', String(COURSE_STEPS.length));
   const pickTeacher = (next: Teacher) => {
     setTeacher(next);
+    setPrefilled([]);
     setPicks([]);
     go('slot');
   };
   const continueSame = (prev: BookedCourse, opens: string) => {
-    const now = new Date().toISOString();
+    const days = prefillDays({ days: prev.days, from: opens, tz: view.student.tz, now });
     setTeacher({ id: prev.teacherId, name: '' });
-    setPicks(prefillPicks({ days: prev.days, from: opens, tz: view.student.tz, now }));
+    setPrefilled(days);
+    setPicks(days.map((p) => p.at));
     setSame(true);
-    go('confirm');
+    go(continueFits(view) ? 'confirm' : 'slot');
   };
-  const shownName = teacher.name || known;
-  /** A renewal's first step; the teacher step when the previous course or the start is unknown. */
-  const continueStep = () => {
-    const other = () => {
-      setSame(false);
-      go('teacher');
-    };
-    if (!previous || !opensOn) return <CourseTeacherStep student={view.student} onPick={pickTeacher} transfer={transfer} />;
-    return (
-      <CourseContinue previous={previous} opensOn={opensOn} onSame={() => continueSame(previous, opensOn)} onOther={other} transfer={transfer} />
-    );
+  const other = () => {
+    setSame(false);
+    go('teacher');
   };
+  const shownName = teacher.name || known.name;
   const content = () => {
     if (book.isSuccess && body) {
       return <CourseDone result={book.data} body={body} view={view} onDone={onLeave} transfer={transfer} />;
     }
-    if (step === 'continue') return continueStep();
-    if (step === 'teacher') return <CourseTeacherStep student={view.student} onPick={pickTeacher} transfer={transfer} />;
+    if (step === 'continue' || step === 'teacher') {
+      const handlers = { onSame: continueSame, onOther: other, onPick: pickTeacher };
+      return <CourseOpening view={view} step={step} opensOn={opensOn} known={known} change={change} {...handlers} transfer={transfer} />;
+    }
     if (step === 'slot') {
       return (
         <SlotStep
@@ -114,7 +115,7 @@ export function CourseWizard({ view, onLeave, transfer }: CourseWizardProps) {
           submit: () => (body ? book.mutate(body) : undefined),
         }}
         onChangeSlot={() => go('slot')}
-        prefilled={same}
+        prefilled={prefilled.map((p) => p.at)}
       />
     );
   };

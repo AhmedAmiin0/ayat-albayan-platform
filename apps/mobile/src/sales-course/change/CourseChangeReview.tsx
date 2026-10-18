@@ -2,7 +2,6 @@ import { counted, type BookedCourse, type CourseChangeRequest } from '@ab/shared
 import { View } from 'react-native';
 import type { BookFailure } from '@/booking/booking-errors';
 import { ConflictNotice } from '@/booking/ConflictNotice';
-import { PicksList } from '@/booking/PicksList';
 import { whenText } from '@/booking/slots';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
@@ -11,6 +10,7 @@ import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { type, useTheme } from '@/theme';
 import { CourseCheckNotice } from '../CourseCheckNotice';
+import { daysText, requestDays } from '../course-days';
 import { useCourseChangeCheck } from './change-queries';
 
 export interface CourseChangeReviewProps {
@@ -23,8 +23,8 @@ export interface CourseChangeReviewProps {
 }
 
 /**
- * The change's review: the new days, the first lesson on them, how many lessons they carry and the
- * new last day (POST …/course/change/check). A clash blocks the assistant (no override, owner
+ * The change's review: «الأيام الحالية» and «الأيام الجديدة» together, how many lessons are left
+ * and the new last day (POST …/course/change/check), then the first lesson on the new days. A clash blocks the assistant (no override, owner
  * 2026-10-18): its only way out is «اختر موعدًا آخر».
  */
 export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }: CourseChangeReviewProps) {
@@ -37,14 +37,17 @@ export function CourseChangeReview({ course, picks, body, saving, onChangeSlot }
   const texts = t.booking.courseChange;
   return (
     <View style={{ gap: 14 }}>
-      <PicksList picks={picks} tz={course.tz} />
-      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz))}</AppText> : null}
+      <View style={{ gap: 4 }}>
+        <AppText style={{ ...line, color: color.ink2 }}>{texts.currentDays.replace('{days}', daysText(course.days, course.tz))}</AppText>
+        {body ? <AppText style={line}>{texts.newDays.replace('{days}', daysText(requestDays(body), course.tz))}</AppText> : null}
+      </View>
       {check.isSuccess ? (
         <View style={{ gap: 4 }}>
           <AppText style={line}>{counted(texts.remaining, check.data.remaining)}</AppText>
           <AppText style={line}>{texts.newEnd.replace('{date}', localDay(check.data.endsOn))}</AppText>
         </View>
       ) : null}
+      {body ? <AppText style={line}>{texts.firstNew.replace('{when}', whenText(body.startsAt, course.tz))}</AppText> : null}
       {check.isPending ? (
         <AppText style={{ ...line, color: color.ink2 }}>{texts.checking}</AppText>
       ) : (

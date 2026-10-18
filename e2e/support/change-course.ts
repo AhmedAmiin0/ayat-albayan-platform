@@ -35,7 +35,7 @@ export async function seedCourse(tx: Tx): Promise<Course> {
   return { ...s, sub: sub.id, rules: rules.map((r) => r.id), lessons };
 }
 
-type NewRuleInput = { at: number; time: string; first: string | null; sub: string };
+type NewRuleInput = { at: number; time: string; first: string | null; sub: string; from: number };
 
 function newRule(c: Course, o: NewRuleInput & { id: string }) {
   const lessons = [o.at, o.at + 7 * DAY].map((at) => ({
@@ -44,38 +44,51 @@ function newRule(c: Course, o: NewRuleInput & { id: string }) {
   }));
   return {
     id: o.id, teacher_id: c.teacher, duration_min: 45, start_time_local: o.time, tz: 'Asia/Riyadh',
-    byday: [new Date(o.at).getUTCDay()], starts_on: day(CHANGE), ends_on: day(CHANGE + 14 * DAY), meeting_link: null,
+    byday: [new Date(o.at).getUTCDay()], starts_on: day(o.from), ends_on: day(o.from + 14 * DAY), meeting_link: null,
     package: '8', created_from_lead_id: null, subscription_id: o.sub, first_rule_id: o.first, student_ids: c.students, lessons,
   };
 }
 
+export type ChangeOptions = {
+  requestId: string;
+  /** Overrides the second new rule's course. */
+  sub?: string;
+  /** The change point (default CHANGE). */
+  at?: number;
+  /** The rules the payload ends (default the course's first two). */
+  rules?: string[];
+};
+
 /**
- * Both rules end the day before CHANGE; their lessons from CHANGE move; two new rules (18:00 one day
- * after CHANGE, 20:00 three days after) with two lessons each. `sub` overrides the second new rule's course.
+ * The rules end the day before the change point; their seeded lessons from it move; two new rules (18:00
+ * one day after it, 20:00 three days after) with two lessons each.
  */
-export function changeOf(c: Course, o: { requestId: string; sub?: string }) {
+export function changeOf(c: Course, o: ChangeOptions) {
+  const at = o.at ?? CHANGE;
   const first = randomUUID();
-  const moved = c.lessons.filter((l) => Date.parse(l.starts_at) >= CHANGE);
+  const moved = c.lessons.filter((l) => Date.parse(l.starts_at) >= at);
   return {
     actor: c.actor,
     client_request_id: o.requestId,
     subscription_id: c.sub,
-    end_rules: c.rules.map((id) => ({
-      id, ends_on: day(CHANGE - DAY),
+    starts_on: day(at),
+    end_rules: (o.rules ?? c.rules).map((id) => ({
+      id, ends_on: day(at - DAY),
       changes: moved.filter((l) => l.rule_id === id).map((l) => ({ id: l.id, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false })),
     })),
     new_rules: [
-      newRule(c, { id: first, at: CHANGE + DAY + 60 * MIN, time: '18:00', first: null, sub: c.sub }),
-      newRule(c, { id: randomUUID(), at: CHANGE + 3 * DAY + 180 * MIN, time: '20:00', first, sub: o.sub ?? c.sub }),
+      newRule(c, { id: first, at: at + DAY + 60 * MIN, time: '18:00', first: null, sub: c.sub, from: at }),
+      newRule(c, { id: randomUUID(), at: at + 3 * DAY + 180 * MIN, time: '20:00', first, sub: o.sub ?? c.sub, from: at }),
     ],
     messages: [],
     audit: { entity: 'subscriptions', entity_id: c.sub, action: 'course_change', after: { by: 'sales' } },
   };
 }
 
+type Move = { id: string; from_status: string; to_status: string; chargeable: boolean };
 export type ChangeResult = { rule_ids: string[]; ends_on: string | null };
 
-export async function change(tx: Tx, payload: ReturnType<typeof changeOf>): Promise<ChangeResult> {
+export async function change(tx: Tx, payload: ReturnType<typeof changeOf> & { changes?: Move[] }): Promise<ChangeResult> {
   const [row] = await tx<{ r: ChangeResult }[]>`select public.change_course(${tx.json(payload)}) as r`;
   if (!row) throw new Error('change_course returned nothing');
   return row.r;

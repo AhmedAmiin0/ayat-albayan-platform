@@ -17,7 +17,7 @@ function toSubscription(row: SubscriptionRow): CourseSubscription {
 
 /** A course rule with its plan; the inner join keeps only the student's own rules. */
 export const COURSE_RULE_SELECT =
-  'id, subscription_id, teacher_id, duration_min, start_time_local, tz, byday, starts_on, ends_on, status, first_rule_id, sub:subscriptions(package, lessons_total), schedule_rule_students!inner(student_id)' as const;
+  'id, subscription_id, teacher_id, duration_min, start_time_local, tz, byday, starts_on, ends_on, status, first_rule_id, sub:subscriptions(package, lessons_total), teacher:teachers(tz), schedule_rule_students!inner(student_id)' as const;
 
 const pickRule = (r: Omit<CourseRuleRow, 'subscription_id' | 'sub'>): Omit<CourseRuleRow, 'subscription_id' | 'sub'> => ({
   id: r.id,
@@ -30,6 +30,7 @@ const pickRule = (r: Omit<CourseRuleRow, 'subscription_id' | 'sub'>): Omit<Cours
   ends_on: r.ends_on,
   status: r.status,
   first_rule_id: r.first_rule_id,
+  teacher: r.teacher,
 });
 
 /** The reads of the assistant's course (service role; ownership is checked before). */

@@ -57,7 +57,7 @@ describe('CourseChange — «تغيير أيام الحلقات» (owner 2026-10
   it('course_finished: no active rule, or nothing left at the change point', async () => {
     expect(await failed(setup({ rules: [{ ...RULE_A, status: 'ended' }] }).service.change(body(), SALES))).toBe('course_finished');
     const used = setup();
-    used.queries.before.mockResolvedValue(Array.from({ length: 8 }, () => ({ status: 'completed', chargeable: true, makeup: false, instant: false })));
+    used.lessons.ofCourse.mockResolvedValue(Array.from({ length: 8 }, (_, i) => ({ id: `u${i}`, status: 'completed', chargeable: true, makeup: false, instant: false })));
     expect(await failed(used.service.change(body(), SALES))).toBe('course_finished');
   });
 

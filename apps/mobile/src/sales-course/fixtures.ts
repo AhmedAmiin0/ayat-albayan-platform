@@ -26,13 +26,15 @@ export function courseView(patch: Partial<SalesCourseView> = {}): SalesCourseVie
   };
 }
 
-/** ريم's course with مريم: Sunday 17:00 and Thursday 18:00 (Riyadh), 8 lessons, two days a week. */
+/** ريم's course with مريم (Cairo): Sunday 17:00 and Thursday 18:00 (Riyadh), 8 lessons from 13 Sep, two days a week. */
 export function bookedCourse(patch: Partial<BookedCourse> = {}): BookedCourse {
   return {
     subscriptionId: PREV_SUB_ID,
     teacherId: maryam.id,
+    teacherTz: 'Africa/Cairo',
     durationMin: 45,
     tz: 'Asia/Riyadh',
+    startsOn: '2026-09-13',
     endsOn: '2026-10-10',
     days: [
       { weekday: 0, startTimeLocal: '17:00' },

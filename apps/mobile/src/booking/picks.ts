@@ -29,9 +29,14 @@ export function fromPicks(picks: readonly string[]): PickFields {
 
 const weekdays: Record<string, string | undefined> = t.enums.weekday;
 
-/** «الأحد الساعة 18:00» in the family's zone, «… بتوقيت دبي» when that is not Riyadh. */
-export function dayLine(pick: string, tz: string): string {
-  const w = wallParts(pick, tz);
-  const text = t.booking.dayAt.replace('{day}', weekdays[String(w.weekday)] ?? '').replace('{time}', w.time);
-  return tz === RIYADH_TZ ? text : t.schedule.inCity.replace('{time}', text).replace('{city}', cityOf(tz));
+/**
+ * «الأحد الساعة 18:00» for a weekday and its time in `tz`, «… 18:00 بتوقيت دبي» when that is not
+ * Riyadh (the web's dayAtText).
+ */
+export function dayAtText(day: { weekday: number; time: string }, tz: string): string {
+  const time = tz === RIYADH_TZ ? day.time : t.schedule.inCity.replace('{time}', day.time).replace('{city}', cityOf(tz));
+  return t.booking.dayAt.replace('{day}', weekdays[String(day.weekday)] ?? '').replace('{time}', time);
 }
+
+/** A pick's day in the family's zone (dayAtText). */
+export const dayLine = (pick: string, tz: string): string => dayAtText(wallParts(pick, tz), tz);

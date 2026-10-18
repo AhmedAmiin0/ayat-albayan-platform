@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { bookedCourse, courseFacts, studentCourses, type CourseRuleRow } from './course-read';
+import { bookedCourse, courseFacts, currentCourse, studentCourses, type CourseRuleRow } from './course-read';
 
 const plan8 = { package: '8' as const, lessons_total: 8 };
 const rule = (o: Partial<CourseRuleRow> = {}): CourseRuleRow => ({
@@ -15,6 +15,7 @@ const rule = (o: Partial<CourseRuleRow> = {}): CourseRuleRow => ({
   status: 'active',
   first_rule_id: null,
   sub: plan8,
+  teacher: { tz: 'Africa/Cairo' },
   ...o,
 });
 
@@ -24,8 +25,10 @@ describe('bookedCourse — a course from its rules (owner 2026-10-18)', () => {
     expect(bookedCourse(rows)).toEqual({
       subscriptionId: 'sub1',
       teacherId: 't1',
+      teacherTz: 'Africa/Cairo',
       durationMin: 45,
       tz: 'Asia/Riyadh',
+      startsOn: '2026-10-18',
       endsOn: '2026-11-10',
       days: [
         { weekday: 0, startTimeLocal: '17:00' },
@@ -68,5 +71,26 @@ describe('courseFacts — previous (a renewal) and current (still running)', () 
   });
   it('studentCourses: the latest-ending first', () => {
     expect(studentCourses([older, old]).map((c) => c.subscriptionId)).toEqual(['old', 'older']);
+  });
+});
+
+describe('currentCourse — the course «تغيير أيام الحلقات» changes (review fix 5)', () => {
+  const running = rule({ subscription_id: 'old', starts_on: '2026-09-20', ends_on: '2026-11-03' });
+  const renewal = rule({ id: 'r5', subscription_id: 'new', starts_on: '2026-11-08', ends_on: '2026-12-01' });
+  const later = rule({ id: 'r6', subscription_id: 'later', starts_on: '2026-12-06', ends_on: '2027-01-01' });
+  const current = (rows: CourseRuleRow[], today: string) => currentCourse(rows, studentCourses(rows), today)?.subscriptionId;
+
+  it('a renewal booked ahead never hides the course running today', () => {
+    expect(current([running, renewal], '2026-10-18')).toBe('old');
+    expect(courseFacts({ rows: [running, renewal], today: '2026-10-18', subscriptionId: 'new', booked: true }).current?.subscriptionId).toBe('old');
+  });
+  it('nothing running today → the earliest-starting upcoming course', () => {
+    expect(current([later, renewal, rule({ ...running, ends_on: '2026-10-10', status: 'ended' })], '2026-10-18')).toBe('new');
+  });
+  it('an ended or paused course is never current', () => {
+    expect(current([rule({ ...running, status: 'paused' })], '2026-10-18')).toBeUndefined();
+  });
+  it('startsOn is the first day of the latest set of rules', () => {
+    expect(bookedCourse([renewal])?.startsOn).toBe('2026-11-08');
   });
 });

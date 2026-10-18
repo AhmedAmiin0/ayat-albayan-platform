@@ -12,7 +12,7 @@ export interface CurrentCourseProps {
   onChange: () => void;
 }
 
-/** A student whose course still runs (course_exists): its days, and the way to change them. */
+/** A student with a course (view.current, running or booked ahead): its days, and the way to change them. */
 export function CurrentCourse({ course, onChange }: CurrentCourseProps) {
   const { color } = useTheme();
   return (
@@ -20,7 +20,7 @@ export function CurrentCourse({ course, onChange }: CurrentCourseProps) {
       <AppText
         style={{ fontFamily: type.ui[500], fontSize: type.size.body, lineHeight: type.lineHeight(type.size.body), color: color.ink }}
       >
-        {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days))}
+        {t.booking.courseChange.currentDays.replace('{days}', daysText(course.days, course.tz))}
       </AppText>
       <Button label={t.booking.courseChange.changeDays} onPress={onChange} />
     </View>

@@ -21,11 +21,11 @@ export interface CourseRowsInput {
   body: BookingRequest | null;
 }
 
-/** The review's lines: the student, the teacher, the plan (from the subscription), the first lesson. */
+/** The review's lines: the student, the teacher (no row while her name is unknown), the plan, the first lesson. */
 export function courseRows({ view, teacherName, body }: CourseRowsInput): SummaryRow[] {
   const rows: SummaryRow[] = [
     [t.booking.studentSection, view.student.name],
-    [t.booking.steps.teacher, teacherName],
+    ...(teacherName ? [[t.booking.steps.teacher, teacherName] satisfies SummaryRow] : []),
     [t.booking.steps.package, courseFixedText(view.subscription)],
   ];
   if (body?.startsAt) rows.push([t.booking.startsOn, whenText(body.startsAt, view.student.tz)]);

@@ -676,7 +676,11 @@
       "course_not_found": "This package has no weekly lessons",
       "subscription_not_found": "This subscription does not exist",
       "override_not_allowed": "You cannot book over a clash; pick another time",
-      "trial_not_course": "A trial lesson is not one of the package's lessons"
+      "trial_not_course": "A trial lesson is not one of the package's lessons",
+      "starts_at_mismatch": "The first lesson is not on the start day; pick the time again",
+      "starts_before_course": "The first new time is before this package's lessons start; pick a time after it",
+      "course_changed": "This package's lessons just changed; open the window again",
+      "no_change": "You have not changed any time yet; pick another day or time"
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",
@@ -731,7 +735,7 @@
       "continueTaken": "The {day} time is no longer free; pick another time for that day",
       "changeDays": "Change the lesson days",
       "currentDays": "Current days: {days}",
-      "changeHint": "The package lessons that have not happened yet change, from the first new time you pick. Lessons before it stay as they are.",
+      "changeHint": "The package lessons that have not happened yet change from the start of the first new time's day, so that day's lessons not held yet move too, even before the new time. Lessons on earlier days stay as they are.",
       "remaining": {
         "one": "1 lesson left",
         "two": "2 lessons left",
@@ -748,7 +752,11 @@
       "pickNew": "Pick the new days and times",
       "review": "Review the new days",
       "overrideSave": "Save despite the conflict",
-      "overrideReason": "Reason to save despite the conflict"
+      "overrideReason": "Reason to save despite the conflict",
+      "noChange": "You have not changed any time yet",
+      "teacherUnavailable": "The previous teacher is not available now; pick other days",
+      "backToChoice": "Back to choosing the days",
+      "newDays": "New days: {days}"
     }
   },
   "lessons": {

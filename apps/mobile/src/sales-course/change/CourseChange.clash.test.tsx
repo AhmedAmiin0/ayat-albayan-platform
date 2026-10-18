@@ -5,7 +5,7 @@ import { fakeNow } from '@/test/fake-now';
 import { renderWithQuery } from '@/test/query';
 import { isDisabled, press } from '../course-test-utils';
 import { CourseScreen } from '../CourseScreen';
-import { changeApi, NOW } from './change-test-setup';
+import { changeApi, changeSundayToMonday, NOW } from './change-test-setup';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -33,7 +33,7 @@ afterEach(() => jest.useRealTimers());
 async function toReview() {
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
-  await press('button', t.booking.next);
+  await changeSundayToMonday();
 }
 
 test('a clash: only «اختر موعدًا آخر», no override, nothing saved', async () => {

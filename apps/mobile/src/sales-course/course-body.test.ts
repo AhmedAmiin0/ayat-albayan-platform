@@ -65,3 +65,15 @@ test('the review: the «الباقة» row holds the plan itself, no prefix', ()
   expect(rows.map(([label]) => label)).toEqual([t.booking.studentSection, t.booking.steps.teacher, t.booking.steps.package]);
   expect(rows[2]?.[1]).not.toContain(t.booking.steps.package);
 });
+
+test('the review never shows an empty teacher row (her name not known)', () => {
+  const rows = courseRows({ view: courseView(), teacherName: '', body: null });
+  expect(rows.map(([label]) => label)).toEqual([t.booking.studentSection, t.booking.steps.package]);
+});
+
+test('a prefilled day keeps its explicit time in the body (DST-safe)', () => {
+  const prefilled = [{ at: THU_18, weekday: 4, startTimeLocal: '17:59' }];
+  const input = { view: courseView(), teacherId: maryam.id, requestId: REQ, prefilled };
+  expect(courseRequest({ ...input, picks: [SUN_17, THU_18] })?.dayTimes).toEqual([{ weekday: 4, startTimeLocal: '17:59' }]);
+  expect(courseRequest({ ...input, picks: [SUN_17, TUE_17] })).not.toHaveProperty('dayTimes');
+});

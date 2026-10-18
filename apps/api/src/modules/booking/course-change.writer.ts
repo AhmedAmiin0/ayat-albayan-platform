@@ -5,8 +5,8 @@ import { DB, type Db } from '../../common/db/db.module';
 import { LessonEvents } from '../../common/events/lesson-events';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { callRpc } from '../scheduling/rpc';
-import { SettingsService } from '../../common/settings/settings.service';
 import { dbError } from '../teachers/http';
+import { CourseChangePlanner } from './course-change.planner';
 
 const changeResult = z.object({ rule_ids: z.array(z.string()), ends_on: z.string().nullable() });
 
@@ -47,7 +47,7 @@ export class CourseChangeWriter {
 export class CourseChangeDeps {
   constructor(
     readonly checker: ConflictChecker,
-    readonly settings: SettingsService,
+    readonly planner: CourseChangePlanner,
     readonly writer: CourseChangeWriter,
   ) {}
 }

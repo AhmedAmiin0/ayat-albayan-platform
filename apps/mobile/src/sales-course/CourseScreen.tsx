@@ -25,26 +25,30 @@ type Params = { studentId?: string; phone?: string; subscriptionId?: string };
  * assistant books the weekly days of the subscription she sold: المعلم/ة → أيام الحلقات → المراجعة.
  * A student she cannot book shows why (courseBlocked). Opened right after «احفظ الاشتراك» it then
  * goes on to the transfer («سجّل التحويل البنكي», also offered to skip the days for now, and
- * whenever the wizard is not shown: a refusal, a failed read, still loading). A course still running
- * (course_exists with view.current) offers «تغيير أيام الحلقات» instead of the refusal.
+ * whenever the wizard is not shown: a refusal, a failed read, still loading). A student with a course
+ * (view.current: running today, else booked ahead) is offered «تغيير أيام الحلقات» beside the wizard or
+ * the refusal; it replaces the course_exists refusal.
  */
 export function CourseScreen() {
   const params = useLocalSearchParams<Params>();
   const { course, view, block } = useCourseView(params.studentId ?? '');
   const base = useTreeBase();
   const [changing, setChanging] = useState(false);
-  const current = block === 'course_exists' ? (view?.current ?? null) : null;
+  const current = view?.current ?? null;
   const leave = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, '/inbox')));
   const { phone, subscriptionId } = params;
   const transfer =
     phone && subscriptionId
       ? () => router.replace(inTree(base, { pathname: '/inbox/sales-transfer', params: { phone, subscriptionId } }))
       : undefined;
+  const change = current ? { course: current, open: () => setChanging(true) } : undefined;
+  // The course shown with «تغيير أيام الحلقات» answers course_exists: no refusal line then.
+  const refusal = change && block === 'course_exists' ? null : block;
   const content = () => {
-    if (view && !block) return <CourseWizard view={view} onLeave={leave} transfer={transfer} />;
     if (view && current && changing) {
       return <CourseChangeFlow student={view.student} course={current} onLeave={() => setChanging(false)} onDone={leave} />;
     }
+    if (view && !block) return <CourseWizard view={view} onLeave={leave} transfer={transfer} change={change} />;
     return (
       <ScrollView style={{ flex: 1 }} contentContainerStyle={{ gap: 16, paddingBottom: 32 }}>
         <ScreenHeader
@@ -52,11 +56,8 @@ export function CourseScreen() {
           {...(view ? { subtitle: `${view.student.name} · ${view.student.code}` } : {})}
           trailing={<Button variant="ghost" label={t.common.back} onPress={leave} />}
         />
-        {current ? (
-          <CurrentCourse course={current} onChange={() => setChanging(true)} />
-        ) : (
-          <CourseStatus course={course} block={block} missing={!params.studentId} />
-        )}
+        <CourseStatus course={course} block={refusal} missing={!params.studentId} />
+        {change ? <CurrentCourse course={change.course} onChange={change.open} /> : null}
         {transfer ? <Button label={t.salesMoney.stepTransfer} onPress={transfer} /> : null}
       </ScrollView>
     );

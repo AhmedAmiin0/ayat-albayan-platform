@@ -13,9 +13,13 @@ import { addLocalDays, weekdayOfDate, zonedInstant } from '../lessons/zoned.js';
 export interface BookedCourse {
   subscriptionId: string;
   teacherId: string;
+  /** The course teacher's zone (a clash is also shown in it). */
+  teacherTz: string;
   durationMin: Duration;
   /** The rules' zone (the family's when booked). */
   tz: string;
+  /** The first local day of its latest set of rules: a change never starts before it. */
+  startsOn: string;
   /** The course's last local day (its rules' ends_on). */
   endsOn: string;
   /** Each weekday (0 = الأحد) with its "HH:MM", in weekday order. */
@@ -37,21 +41,38 @@ export interface PrefillInput {
   /** The first local day a pick may fall on. */
   from: string;
   tz: string;
-  /** ISO now: a pick that already passed moves on a week. */
+  /** ISO now: a pick that already passed moves on by whole weeks until it is ahead. */
   now: string;
 }
 
+/** A prefilled pick: its instant and the day's own time, carried as is (never re-read from the instant). */
+export interface PrefilledPick {
+  at: string;
+  weekday: number;
+  startTimeLocal: string;
+}
+
+const WEEK_MS = 7 * 86_400_000;
+
 /**
- * The picks (UTC instants) of `days` in their first week from `from`: each weekday's first local
- * date on or after `from` at its time in `tz`, a week later when that is not in the future. Sorted.
+ * Each of `days` on its first local date on or after `from` at its time in `tz`, moved on by whole
+ * weeks until it is after `now` (a `from` weeks in the past still lands in the coming week). Sorted.
  */
-export function prefillPicks({ days, from, tz, now }: PrefillInput): string[] {
+export function prefillDays({ days, from, tz, now }: PrefillInput): PrefilledPick[] {
   const start = weekdayOfDate(from);
+  const nowMs = Date.parse(now);
   return days
     .map((d) => {
-      const date = addLocalDays(from, (d.weekday - start + 7) % 7);
-      const at = zonedInstant(date, d.startTimeLocal, tz);
-      return Date.parse(at) > Date.parse(now) ? at : zonedInstant(addLocalDays(date, 7), d.startTimeLocal, tz);
+      let date = addLocalDays(from, (d.weekday - start + 7) % 7);
+      const behind = nowMs - Date.parse(zonedInstant(date, d.startTimeLocal, tz));
+      if (behind >= 0) date = addLocalDays(date, 7 * (Math.floor(behind / WEEK_MS) + 1));
+      let at = zonedInstant(date, d.startTimeLocal, tz);
+      // A DST shift can leave the rolled pick an hour short of now: one more week.
+      if (Date.parse(at) <= nowMs) at = zonedInstant(addLocalDays(date, 7), d.startTimeLocal, tz);
+      return { at, weekday: d.weekday, startTimeLocal: d.startTimeLocal };
     })
-    .sort((a, b) => Date.parse(a) - Date.parse(b));
+    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
 }
+
+/** prefillDays' instants only. */
+export const prefillPicks = (input: PrefillInput): string[] => prefillDays(input).map((p) => p.at);

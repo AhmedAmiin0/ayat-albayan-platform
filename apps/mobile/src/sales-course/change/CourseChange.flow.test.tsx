@@ -10,7 +10,7 @@ import { daysText } from '../course-days';
 import { isDisabled, press } from '../course-test-utils';
 import { CourseScreen } from '../CourseScreen';
 import { STUDENT_ID, SUB_ID } from '../fixtures';
-import { changeApi, changeBody, NOW, runningCourse, SUN_4, THU_1, TZ } from './change-test-setup';
+import { changeApi, changeBody, changeSundayToMonday, NOW, runningCourse, SUN_4, THU_1, TZ } from './change-test-setup';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -42,18 +42,23 @@ afterEach(() => jest.useRealTimers());
 
 test('a running course shows its days and «تغيير أيام الحلقات» instead of the refusal', async () => {
   await renderWithQuery(<CourseScreen />);
-  expect(await screen.findByText(t.booking.courseChange.currentDays.replace('{days}', daysText(runningCourse.days)))).toBeTruthy();
+  expect(await screen.findByText(t.booking.courseChange.currentDays.replace('{days}', daysText(runningCourse.days, TZ)))).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.courseChange.changeDays })).toBeTruthy();
   expect(screen.queryByText(t.booking.courseBlocked.course_exists)).toBeNull();
 });
 
-test('the days come prefilled from today, the course’s own lessons not busy', async () => {
+test('the days come prefilled from today, the course’s own lessons not busy; «التالي» waits for a change', async () => {
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
   await screen.findAllByRole('checkbox', { name: '17:00' });
   expect(screen.getByText(dayLine(THU_1, TZ))).toBeTruthy();
   expect(screen.getByText(dayLine(SUN_4, TZ))).toBeTruthy();
-  expect(isDisabled(t.booking.next)).toBe(false); // exactly two a week
+  expect(screen.getByText(t.booking.courseChange.noChange)).toBeTruthy(); // nothing changed yet
+  expect(isDisabled(t.booking.next)).toBe(true);
+  await press('checkbox', '17:00'); // Sunday off: one day short
+  await press('checkbox', '19:00'); // Monday 19:00 instead
+  expect(screen.queryByText(t.booking.courseChange.noChange)).toBeNull();
+  expect(isDisabled(t.booking.next)).toBe(false);
   const [slots] = reads('/sales/booking/slots');
   expect(slots).toContain(`teacherId=${maryam.id}`);
   expect(slots).toContain('durationMin=45');
@@ -61,12 +66,19 @@ test('the days come prefilled from today, the course’s own lessons not busy', 
   expect(slots).toContain(`excludeCourse=${SUB_ID}`);
 });
 
-test('the review: what is left and the new last day; «احفظ» posts the new days once', async () => {
+test('the review: the current and new days, what is left and the new last day; «احفظ» posts once', async () => {
   const { router } = jest.requireMock<{ router: { back: jest.Mock } }>('expo-router');
   await renderWithQuery(<CourseScreen />);
   await press('button', t.booking.courseChange.changeDays);
-  await press('button', t.booking.next);
+  await changeSundayToMonday();
   expect(await screen.findByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
+  const days = (key: 'currentDays' | 'newDays', list: { weekday: number; startTimeLocal: string }[]) =>
+    t.booking.courseChange[key].replace('{days}', daysText(list, TZ));
+  expect(screen.getByText(days('currentDays', runningCourse.days))).toBeTruthy();
+  const monday = [{ weekday: 1, startTimeLocal: '19:00' }, { weekday: 4, startTimeLocal: '18:00' }];
+  expect(screen.getByText(days('newDays', monday))).toBeTruthy();
+  const tree = JSON.stringify(screen.toJSON());
+  expect(tree.indexOf(days('newDays', monday))).toBeLessThan(tree.indexOf(counted(t.booking.courseChange.remaining, 5)));
   const end = t.booking.courseChange.newEnd.replace('{date}', localDay('2026-10-29'));
   expect(screen.getByText(end)).toBeTruthy();
   expect(sent(`${CHANGE}/check`)[0]?.[2]).toMatchObject(changeBody);

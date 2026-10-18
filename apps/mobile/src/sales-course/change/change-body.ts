@@ -1,13 +1,8 @@
-import { dayTimesFromPicks, prefillPicks, type BookedCourse, type CourseChangeRequest } from '@ab/shared';
-import { localDate } from '@/today/timeline';
+import { dayTimesKeeping, type CourseChangeRequest, type PrefilledPick } from '@ab/shared';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): new weekdays and times for the lessons of a running course
-// that have not happened yet. The teacher, the length and the zone stay the course's. Pure.
-
-/** The slot step's first picks: the course's own days, each on its next date from today in its zone. */
-export function currentPicks(course: Pick<BookedCourse, 'days' | 'tz'>, now: Date): string[] {
-  return prefillPicks({ days: course.days, from: localDate(now, course.tz), tz: course.tz, now: now.toISOString() });
-}
+// that have not happened yet. The teacher, the length and the zone stay the course's. Pure. The
+// slot step's first picks are shared changePicks (from max(today, the course's first day)).
 
 export interface ChangeInput {
   subscriptionId: string;
@@ -17,11 +12,13 @@ export interface ChangeInput {
   tz: string;
   /** Idempotency key, the same on every retry of this flow (rule 8). */
   requestId: string;
+  /** The first picks (changePicks): a day still on one keeps its own time (DST-safe). */
+  prefilled: readonly PrefilledPick[];
 }
 
 /** POST /sales/booking/course/change (and …/check): the change point is the earliest pick; null without one. */
-export function changeRequest({ subscriptionId, picks, tz, requestId }: ChangeInput): CourseChangeRequest | null {
-  const picked = dayTimesFromPicks(picks, tz);
+export function changeRequest({ subscriptionId, picks, tz, requestId, prefilled }: ChangeInput): CourseChangeRequest | null {
+  const picked = dayTimesKeeping(picks, tz, prefilled);
   if (!picked) return null;
   const { dayTimes, ...rule } = picked;
   return { subscriptionId, ...rule, ...(dayTimes.length > 0 ? { dayTimes } : {}), clientRequestId: requestId };

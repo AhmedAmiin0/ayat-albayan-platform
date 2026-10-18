@@ -35,3 +35,18 @@ test('a clash in any week: its line and «اختر موعدًا آخر»', async
   await fireEvent.press(screen.getByRole('button', { name: t.booking.changeSlot }));
   expect(onChangeSlot).toHaveBeenCalledTimes(1);
 });
+
+const COURSE_CODES = [
+  [400, 'starts_at_mismatch'],
+  [400, 'starts_before_course'],
+  [400, 'starts_before_subscription'],
+  [400, 'no_change'],
+  [409, 'course_changed'],
+  [409, 'course_exists'],
+] as const;
+
+test.each(COURSE_CODES)('a %i %s from the course check: its own line (booking.error), no retry', async (status, code) => {
+  await render(<CourseCheckNotice check={failed(new ApiError(status, { code, message: 'x' }))} onChangeSlot={jest.fn()} />);
+  expect(screen.getByText(t.booking.error[code])).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.mobile.retry })).toBeNull();
+});

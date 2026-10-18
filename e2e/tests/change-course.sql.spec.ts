@@ -1,7 +1,7 @@
 import { randomUUID } from 'node:crypto';
 import { expect, test } from '@playwright/test';
 import { change, changeOf, CHANGE, seedCourse } from '../support/change-course';
-import { iso, rolledBack, type Tx } from '../support/edit-time';
+import { BASE, iso, rolledBack, type Tx } from '../support/edit-time';
 
 // change_course (migration 20261018000480, owner 2026-10-18 «تغيير أيام الحلقات»): the old rules of an
 // assistant course end, their future lessons move, the new rules keep the course tie, in one
@@ -76,6 +76,52 @@ test.describe('change_course: the remaining lessons of a course on new days (R-A
       const empty = { ...changeOf(c, { requestId: randomUUID() }), new_rules: [] };
       const code = await tx.savepoint((sp) => change(sp, empty)).then(() => 'ok', (e: { code?: string }) => e.code);
       expect(code).toBe('22023');
+    });
+  });
+
+  test('a change never lengthens a rule: a later requested end leaves its ends_on (fix 1)', async () => {
+    await rolledBack(async (tx) => {
+      const c = await seedCourse(tx);
+      const seeded = iso(BASE + 21 * DAY).slice(0, 10);
+      await change(tx, changeOf(c, { requestId: randomUUID(), at: BASE + 28 * DAY }));
+      const old = (await rulesOf(tx, c.sub)).filter((r) => c.rules.includes(r.id));
+      expect(old.map((r) => r.ends_on)).toEqual([seeded, seeded]);
+    });
+  });
+
+  test('a second change does not push the first change’s old rules later (fix 1)', async () => {
+    await rolledBack(async (tx) => {
+      const c = await seedCourse(tx);
+      const first = await change(tx, changeOf(c, { requestId: randomUUID() }));
+      const rules = [...c.rules, ...first.rule_ids];
+      await change(tx, changeOf(c, { requestId: randomUUID(), at: CHANGE + 7 * DAY, rules }));
+      const all = await rulesOf(tx, c.sub);
+      expect(all.filter((r) => c.rules.includes(r.id)).map((r) => r.ends_on)).toEqual(c.rules.map(() => iso(CHANGE - DAY).slice(0, 10)));
+      expect(all.filter((r) => first.rule_ids.includes(r.id)).map((r) => r.ends_on)).toEqual(first.rule_ids.map(() => iso(CHANGE + 6 * DAY).slice(0, 10)));
+    });
+  });
+
+  test('a change planned before another one landed is refused (course_changed): one set of new rules (fix 6)', async () => {
+    await rolledBack(async (tx) => {
+      const c = await seedCourse(tx);
+      await change(tx, changeOf(c, { requestId: randomUUID() }));
+      const stale = changeOf(c, { requestId: randomUUID() });
+      const code = await tx.savepoint((sp) => change(sp, stale)).then(() => 'ok', (e: { message?: string }) => e.message);
+      expect(code).toBe('course_changed');
+      expect(await rulesOf(tx, c.sub)).toHaveLength(4);
+    });
+  });
+
+  test('the moved lessons of a rule with no end_rule step are written through `changes` (fix 3)', async () => {
+    await rolledBack(async (tx) => {
+      const c = await seedCourse(tx);
+      const [active, paused] = c.rules;
+      await tx`update public.schedule_rules set status = 'paused' where id = ${paused ?? ''}`;
+      const base = changeOf(c, { requestId: randomUUID(), rules: [active ?? ''] });
+      const ofPaused = c.lessons.filter((l) => l.rule_id === paused && Date.parse(l.starts_at) >= CHANGE).map((l) => l.id);
+      const changes = ofPaused.map((id) => ({ id, from_status: 'scheduled', to_status: 'rescheduled', chargeable: false }));
+      await change(tx, { ...base, changes });
+      expect(await lessonsOf(tx, ofPaused)).toEqual(ofPaused.map(() => ({ status: 'rescheduled', chargeable: false })));
     });
   });
 });

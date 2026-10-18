@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { continueFrom, prefillPicks } from './course-follow.js';
+import { continueFrom, prefillDays, prefillPicks } from './course-follow.js';
 
 const sunday = { weekday: 0, startTimeLocal: '17:00' };
 const days = [
@@ -38,5 +38,15 @@ describe('prefillPicks', () => {
   });
   it('no days → no picks', () => {
     expect(prefillPicks({ days: [], from: '2026-11-01', tz: 'Asia/Riyadh', now })).toEqual([]);
+  });
+  it('a `from` several weeks in the past rolls each pick by whole weeks into the coming week', () => {
+    // from Sunday 2026-09-06; now Sunday 2026-10-18 15:00Z (Sunday 17:00 passed, Tuesday 19:30 ahead).
+    const picks = prefillPicks({ days, from: '2026-09-06', tz: 'Asia/Riyadh', now: '2026-10-18T15:00:00.000Z' });
+    expect(picks).toEqual(['2026-10-20T16:30:00.000Z', '2026-10-25T14:00:00.000Z']);
+  });
+  it('prefillDays carries each day’s own time, not one read back from the instant', () => {
+    const [pick] = prefillDays({ days: [{ weekday: 5, startTimeLocal: '00:30' }], from: '2027-04-30', tz: 'Africa/Cairo', now });
+    // 2027-04-30 (Friday) 00:30 does not exist in Cairo (spring-forward): the time stays 00:30.
+    expect(pick).toEqual(expect.objectContaining({ weekday: 5, startTimeLocal: '00:30' }));
   });
 });

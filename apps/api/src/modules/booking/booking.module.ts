@@ -14,6 +14,8 @@ import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
 import { ConflictContext } from './conflict-context';
 import { CourseChangeController } from './course-change.controller';
+import { CourseLessonQueries } from './course-change.lessons';
+import { CourseChangePlanner } from './course-change.planner';
 import { CourseChangeQueries } from './course-change.queries';
 import { CourseChange } from './course-change.service';
 import { CourseChangeViews } from './course-change.view';
@@ -60,6 +62,8 @@ import { TeacherOptionsService } from './teacher-options.service';
     SalesCourseQueries,
     CourseChange,
     CourseChangeQueries,
+    CourseLessonQueries,
+    CourseChangePlanner,
     CourseChangeViews,
     CourseChangeDeps,
     CourseChangeWriter,

@@ -7,7 +7,6 @@ import {
   type Gender,
   type GroupKind,
   type LeadQualificationPatch,
-  type Weekday,
 } from '@ab/shared';
 import { t } from '@/lib/i18n';
 
@@ -46,8 +45,8 @@ export type QualErrors = Partial<Record<keyof QualForm, string>>;
 export type QualResult =
   { ok: true; patch: LeadQualificationPatch } | { ok: false; errors: QualErrors };
 
-/** Day chips: السبت → الجمعة, like the availability editor (docs/07 §8). */
-export const WEEK_ORDER: readonly Weekday[] = [6, 0, 1, 2, 3, 4, 5];
+/** Day chips: السبت → الجمعة, the one shared week order (docs/07 §8). */
+export { WEEK_ORDER } from '@ab/shared';
 
 const LAST_MINUTE = 23 * 60 + 59;
 const toTime = (minutes: number): string =>

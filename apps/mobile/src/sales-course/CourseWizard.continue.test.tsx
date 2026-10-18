@@ -43,7 +43,7 @@ afterEach(() => jest.useRealTimers());
 test('a renewal offers the previous days from the day after its last lesson', async () => {
   await renderWithQuery(<CourseScreen />);
   const hint = t.booking.courseChange.continueHint
-    .replace('{days}', daysText(previous.days))
+    .replace('{days}', daysText(previous.days, TZ))
     .replace('{date}', localDay('2026-10-11'));
   expect(await screen.findByText(hint)).toBeTruthy();
   expect(screen.getByRole('button', { name: t.booking.courseChange.pickOtherDays })).toBeTruthy();

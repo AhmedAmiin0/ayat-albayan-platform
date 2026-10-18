@@ -14,8 +14,8 @@ const NEW_SUB: CourseSubscription = { id: 'sub2', package: '8', duration: 45, le
 const STUDENT = { id: S1, code: 'AB-0001', name: 'سهيلة', tz: 'Asia/Riyadh', program: 'quran' as const, teacher_gender_pref: null, teacher_id: 't1' };
 // The first course: Sun 17:00 + Tue 19:30, still running until Tue 3 Nov.
 const OLD: CourseRuleRow[] = [
-  { id: 'r1', subscription_id: 'sub1', teacher_id: 't1', duration_min: 45, start_time_local: '17:00:00', tz: 'Asia/Riyadh', byday: [0], starts_on: '2026-10-04', ends_on: '2026-11-03', status: 'active', first_rule_id: null, sub: { package: '8', lessons_total: 8 } },
-  { id: 'r2', subscription_id: 'sub1', teacher_id: 't1', duration_min: 45, start_time_local: '19:30:00', tz: 'Asia/Riyadh', byday: [2], starts_on: '2026-10-06', ends_on: '2026-11-03', status: 'active', first_rule_id: 'r1', sub: { package: '8', lessons_total: 8 } },
+  { id: 'r1', subscription_id: 'sub1', teacher_id: 't1', duration_min: 45, start_time_local: '17:00:00', tz: 'Asia/Riyadh', byday: [0], starts_on: '2026-10-04', ends_on: '2026-11-03', status: 'active', first_rule_id: null, sub: { package: '8', lessons_total: 8 }, teacher: { tz: 'Africa/Cairo' } },
+  { id: 'r2', subscription_id: 'sub1', teacher_id: 't1', duration_min: 45, start_time_local: '19:30:00', tz: 'Asia/Riyadh', byday: [2], starts_on: '2026-10-06', ends_on: '2026-11-03', status: 'active', first_rule_id: 'r1', sub: { package: '8', lessons_total: 8 }, teacher: { tz: 'Africa/Cairo' } },
 ];
 const RULES: CourseRule[] = OLD.map((r) => ({ starts_on: r.starts_on, ends_on: r.ends_on, package: '8' }));
 

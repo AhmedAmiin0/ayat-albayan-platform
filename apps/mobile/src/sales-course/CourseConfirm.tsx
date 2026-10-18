@@ -11,7 +11,7 @@ import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { type, useTheme } from '@/theme';
 import { courseEnd } from './course-body';
-import { takenDays } from './course-days';
+import { takenTexts, type TakenInput } from './course-days';
 import { courseRows } from './course-summary';
 import { useCourseCheck } from './course-queries';
 import { CourseCheckNotice } from './CourseCheckNotice';
@@ -24,8 +24,8 @@ export interface CourseConfirmProps {
   body: BookingRequest | null;
   booking: { busy: boolean; failure: BookFailure | null; submit: () => void };
   onChangeSlot: () => void;
-  /** The picks are the previous course's days («تابِع بنفس الأيام»): a clash names the day to pick again. */
-  prefilled?: boolean;
+  /** The previous course's days as prefilled («تابِع بنفس الأيام»): a clash on one still kept names its day. */
+  prefilled?: readonly string[];
 }
 
 /**
@@ -48,7 +48,7 @@ export function CourseConfirm(props: CourseConfirmProps) {
       <SummaryList rows={courseRows({ view, teacherName, body })} />
       <PicksList picks={picks} tz={view.student.tz} />
       {ends ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
-      <TakenLine prefilled={prefilled} data={check.data} tz={view.student.tz} />
+      <TakenLines taken={{ picks, prefilled: prefilled ?? [], tz: view.student.tz }} data={check.data} />
       <CourseCheckNotice check={check} onChangeSlot={onChangeSlot} />
       <AppText style={note}>{t.booking.confirmationNote}</AppText>
       <BookError failure={booking.failure} onChangeSlot={onChangeSlot} />
@@ -69,21 +69,24 @@ function BookError({ failure, onChangeSlot }: { failure: BookFailure | null; onC
   return <ErrorLine message={failure.kind === 'duplicate' ? t.common.error : failure.text} />;
 }
 
-/** «موعد الخميس لم يعد متاحًا…»: the previous course's day(s) the series check found taken. */
-interface TakenLineProps {
-  prefilled: boolean | undefined;
+/** «موعد الخميس لم يعد متاحًا…», one line per still-prefilled day the series check found taken. */
+interface TakenLinesProps {
+  taken: TakenInput;
   /** The series check's answer, once in. */
   data: { conflicts: Conflict[] } | undefined;
-  tz: string;
 }
 
-function TakenLine({ prefilled, data, tz }: TakenLineProps) {
+function TakenLines({ taken, data }: TakenLinesProps) {
   const { color } = useTheme();
   const conflicts = data && Array.isArray(data.conflicts) ? data.conflicts : [];
-  if (!prefilled || conflicts.length === 0) return null;
+  const style = { fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.bad };
   return (
-    <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.bad }}>
-      {t.booking.courseChange.continueTaken.replace('{day}', takenDays(conflicts, tz))}
-    </AppText>
+    <>
+      {takenTexts(taken, conflicts).map((line) => (
+        <AppText key={line} style={style}>
+          {line}
+        </AppText>
+      ))}
+    </>
   );
 }

@@ -9,8 +9,8 @@ const pgError = (code: string, message: string): PostgrestError =>
   ({ code, message, details: '', hint: '', name: 'PostgrestError' }) as PostgrestError;
 
 describe('rpcError — lesson RPC errors → HTTP (docs/10 §3)', () => {
-  it('raised invalid_transition / rule_not_active / stale_time → 409 with that code', () => {
-    for (const code of ['invalid_transition', 'rule_not_active', 'stale_time']) {
+  it('raised invalid_transition / rule_not_active / stale_time / course_changed → 409 with that code', () => {
+    for (const code of ['invalid_transition', 'rule_not_active', 'stale_time', 'course_changed']) {
       const e = rpcError(pgError('P0001', code));
       expect(e).toBeInstanceOf(ConflictException);
       expect(errorCode(e)).toBe(code);

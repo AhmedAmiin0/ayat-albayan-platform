@@ -104,3 +104,12 @@ test('a coded refusal (a guard) is told apart from a failure to retry', () => {
   expect(isCodedRefusal(new ApiError(409, { code: 'conflict', conflicts: [] }))).toBe(false);
   expect(isCodedRefusal(new TypeError('Network request failed'))).toBe(false);
 });
+
+test('the course and its change refusals are coded, each with its booking.error line', () => {
+  const codes = ['starts_at_mismatch', 'starts_before_course', 'starts_before_subscription', 'no_change', 'course_changed', 'course_exists'] as const;
+  for (const code of codes) {
+    const error = new ApiError(code === 'course_changed' || code === 'course_exists' ? 409 : 400, { code, message: 'x' });
+    expect(bookFailure(error)).toEqual({ kind: 'error', text: t.booking.error[code] });
+    expect(isCodedRefusal(error)).toBe(true);
+  }
+});

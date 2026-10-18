@@ -10,6 +10,7 @@ import { SettingsService } from '../../common/settings/settings.service';
 import { SalesQueries } from '../sales/sales.queries';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { BODY, CLASH, RULE_A, RULE_B, S1, SUB, SUB_ID } from './course-change.fakes';
+import { CourseLessonQueries } from './course-change.lessons';
 import { CourseChangeQueries } from './course-change.queries';
 import { CourseChangeWriter } from './course-change.writer';
 
@@ -37,7 +38,8 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
   const sales = { ownership: vi.fn() };
   const checker = { check: vi.fn() };
   const writer = { replay: vi.fn(), apply: vi.fn() };
-  const queries = { subscription: vi.fn(), rules: vi.fn(), before: vi.fn(), openFrom: vi.fn(), contacts: vi.fn(), teacherLink: vi.fn() };
+  const queries = { subscription: vi.fn(), rules: vi.fn(), others: vi.fn(), contacts: vi.fn(), teacherLink: vi.fn() };
+  const lessons = { ofCourse: vi.fn(), openFrom: vi.fn(), held: vi.fn() };
   const post = (token: string, url: string, body: object) =>
     app.inject({ method: 'POST', url, payload: body, headers: { authorization: `Bearer ${token}` } });
 
@@ -48,6 +50,7 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
       .overrideProvider(SettingsService).useValue(fakeSettings({ sales_auto_assign: false }))
       .overrideProvider(ConflictChecker).useValue(checker)
       .overrideProvider(CourseChangeQueries).useValue(queries)
+      .overrideProvider(CourseLessonQueries).useValue(lessons)
       .overrideProvider(CourseChangeWriter).useValue(writer)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -65,8 +68,10 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
     writer.apply.mockResolvedValue(RESULT);
     queries.subscription.mockResolvedValue(SUB);
     queries.rules.mockResolvedValue([RULE_A, RULE_B]);
-    queries.before.mockResolvedValue([]);
-    queries.openFrom.mockResolvedValue([]);
+    queries.others.mockResolvedValue([]);
+    lessons.ofCourse.mockResolvedValue([]);
+    lessons.openFrom.mockResolvedValue([]);
+    lessons.held.mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21']));
     queries.contacts.mockResolvedValue([]);
     queries.teacherLink.mockResolvedValue(null);
   });

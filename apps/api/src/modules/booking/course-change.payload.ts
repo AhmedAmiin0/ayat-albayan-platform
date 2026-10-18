@@ -14,7 +14,7 @@ export type PayloadInput = {
   req: CourseChangeRequest & { clientRequestId: string };
   actor: { id: string; role: ChangeRole };
   subscriptionId: string;
-  /** The course's active rules: each ends the day before the change point. The first leads. */
+  /** The course's active rules (the first leads): those still reaching the change point end the day before it. */
   active: readonly ChangeRule[];
   moved: readonly (OpenCourseLesson & { rule_id: string | null })[];
   plan: ChangePlan;
@@ -61,9 +61,33 @@ function newRules(input: PayloadInput, head: ChangeRule): (NewRule & { lessons: 
   });
 }
 
+const moveOf = (m: PayloadInput['moved'][number]) => ({
+  id: m.id,
+  from_status: m.status,
+  to_status: 'rescheduled',
+  chargeable: false,
+});
+
 /**
- * end_rules (each active rule ends the day before the change point, its open lessons from there
- * rescheduled, chargeable false), new_rules with their lessons, the first new lesson's confirmation
+ * The active rules still reaching the change point (ends_on null or ≥ startsOn), each ending at
+ * min(its ends_on, startsOn − 1): a change never lengthens a rule (review fix 1). A rule already ending
+ * before has no end_rule step.
+ */
+function endRules(input: PayloadInput) {
+  const endsOld = addDays(input.req.startsOn, -1);
+  return input.active
+    .filter((r) => r.ends_on === null || r.ends_on >= input.req.startsOn)
+    .map((r) => ({
+      id: r.id,
+      ends_on: r.ends_on !== null && r.ends_on < endsOld ? r.ends_on : endsOld,
+      changes: input.moved.filter((m) => m.rule_id === r.id).map(moveOf),
+    }));
+}
+
+/**
+ * end_rules (endRules, each with its own open lessons from the change point: rescheduled, chargeable
+ * false), changes (every other moved lesson, keyed by its id: `moved` is exactly what is written,
+ * review fix 3), new_rules with their lessons, the first new lesson's confirmation
  * and the audit row naming the actor's role and the course (entity subscriptions).
  */
 export function changePayload(input: PayloadInput): Record<string, unknown> {
@@ -73,22 +97,15 @@ export function changePayload(input: PayloadInput): Record<string, unknown> {
   const first = rules
     .flatMap((r) => r.lessons)
     .sort((a, b) => Date.parse(a.starts_at) - Date.parse(b.starts_at))[0];
-  const endsOld = addDays(input.req.startsOn, -1);
-  const movedOf = (ruleId: string) => input.moved.filter((m) => m.rule_id === ruleId);
+  const ending = endRules(input);
+  const ended = new Set(ending.map((r) => r.id));
   return {
     actor: input.actor.id,
     client_request_id: input.req.clientRequestId,
     subscription_id: input.subscriptionId,
-    end_rules: input.active.map((r) => ({
-      id: r.id,
-      ends_on: endsOld,
-      changes: movedOf(r.id).map((m) => ({
-        id: m.id,
-        from_status: m.status,
-        to_status: 'rescheduled',
-        chargeable: false,
-      })),
-    })),
+    starts_on: input.req.startsOn,
+    end_rules: ending,
+    changes: input.moved.filter((m) => m.rule_id === null || !ended.has(m.rule_id)).map(moveOf),
     new_rules: rules,
     messages: first
       ? confirmationMessages(forMessages(first, input.link.auto), input.contacts)
@@ -97,7 +114,7 @@ export function changePayload(input: PayloadInput): Record<string, unknown> {
       entity: 'subscriptions',
       entity_id: input.subscriptionId,
       action: 'course_change',
-      before: { rule_ids: input.active.map((r) => r.id), ends_on: head.ends_on },
+      before: { rule_ids: input.active.map((r) => r.id), ended_rule_ids: [...ended], ends_on: head.ends_on },
       after: {
         by: input.actor.role,
         new_rule_ids: rules.map((r) => r.id),

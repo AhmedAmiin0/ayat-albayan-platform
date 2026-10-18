@@ -1,4 +1,6 @@
-import { fakeCourseApi } from '../course-test-utils';
+import { MON_19, slot } from '@/booking/fixtures';
+import { t } from '@/lib/i18n';
+import { fakeCourseApi, press } from '../course-test-utils';
 import { bookedCourse, courseView, SUB_ID } from '../fixtures';
 
 // Test-only: the student of the «تغيير أيام الحلقات» tests, whose course still runs (the jest.mock
@@ -13,15 +15,26 @@ export const SUN_4 = '2026-10-04T14:00:00.000Z';
 
 export const runningCourse = bookedCourse({ subscriptionId: SUB_ID, endsOn: '2026-10-29' });
 
-/** GET answers: course_exists with the running course; her teachers and free slots. */
-export const changeApi = () => fakeCourseApi(courseView({ blocked: 'course_exists', current: runningCourse }));
+/** GET answers: course_exists with the running course; her teachers and free slots (Monday 19:00 too). */
+export function changeApi(view = courseView({ blocked: 'course_exists', current: runningCourse })) {
+  const api = fakeCourseApi(view);
+  api.api.slots.push(slot(MON_19));
+  return api;
+}
 
-/** The change point is the earliest pick (today 18:00); Sunday keeps its own 17:00. */
+/** On the days: Sunday 17:00 off, Monday 19:00 on (the course's days changed), then «التالي». */
+export async function changeSundayToMonday() {
+  await press('checkbox', '17:00');
+  await press('checkbox', '19:00');
+  await press('button', t.booking.next);
+}
+
+/** The change point is the earliest pick (today 18:00); Monday keeps its own 19:00. */
 export const changeBody = {
   subscriptionId: SUB_ID,
-  byday: [0, 4],
+  byday: [1, 4],
   startTimeLocal: '18:00',
   startsOn: '2026-10-01',
   startsAt: THU_1,
-  dayTimes: [{ weekday: 0, startTimeLocal: '17:00' }],
+  dayTimes: [{ weekday: 1, startTimeLocal: '19:00' }],
 };
