@@ -1,29 +1,40 @@
-import { sessionWindowOpen, type ThreadLesson, type ThreadView, WA_TEXT_MAX } from '@ab/shared';
+import { sessionWindowOpen, type ThreadLesson, type ThreadView } from '@ab/shared';
 import { useRef, useState } from 'react';
-import { TextInput, View } from 'react-native';
+import { View } from 'react-native';
 import { t } from '@/lib/i18n';
 import { requestId } from '@/lib/request-id';
-import { shape, type, useTheme } from '@/theme';
-import { AppText } from '@/ui/AppText';
+import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
+import { IconButton } from '@/ui/IconButton';
+import { TemplateIcon, SendIcon } from './chat-icons';
+import { ClosedNote } from './ClosedNote';
+import { ComposerInput } from './ComposerInput';
+import { ComposerNotes } from './ComposerNotes';
 import { ErrorLine } from './ErrorLine';
 import { GateNote } from './GateNote';
-import { LineNote } from './LineNote';
-import { sendError, sessionUntil } from './message-text';
+import { sendError } from './message-text';
 import { TemplatePicker } from './TemplatePicker';
 import { type Outgoing, useSendMessage } from './use-thread';
 
 /** One template draft = one key + params: re-sending it after an error keeps its clientRequestId. */
-const draftOf = (out: Outgoing): string => (out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '');
+const draftOf = (out: Outgoing): string =>
+  out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
 
 /**
- * Reply box (R-MOB-02, R-MSG-03). Within 24 h of their last message: free text, plus a template if
- * wanted. After that WhatsApp allows only an approved template, so the box says why
- * (inbox.sessionClosed, verbatim; a number with no message yet says the first message is a template)
- * and offers the template sheet. The window is checked against the
- * device clock on every render (a refetch, a keystroke), not only when the thread loaded.
+ * Reply box (R-MOB-02, R-MSG-03), one WhatsApp-like row: [template] [text] [send]. Within 24 h of
+ * their last message: free text, plus a template if wanted. After that WhatsApp allows only an
+ * approved template, so the row says why (ClosedNote) beside «أرسل قالبًا». The window is checked
+ * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  */
-export function Composer({ phone, thread, lessons }: { phone: string; thread: ThreadView | null; lessons: ThreadLesson[] }) {
+export function Composer({
+  phone,
+  thread,
+  lessons,
+}: {
+  phone: string;
+  thread: ThreadView | null;
+  lessons: ThreadLesson[];
+}) {
   const { color } = useTheme();
   const send = useSendMessage(phone);
   const [text, setText] = useState('');
@@ -32,14 +43,8 @@ export function Composer({ phone, thread, lessons }: { phone: string; thread: Th
   // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
   const templateDraft = useRef<{ draft: string; id: string } | null>(null);
   const [picking, setPicking] = useState(false);
-  const lastInbound = thread?.last_inbound_at ?? null;
-  const open = sessionWindowOpen(lastInbound, new Date());
-  const note = {
-    fontFamily: type.ui[500],
-    fontSize: type.size.xs,
-    lineHeight: type.lineHeight(type.size.xs),
-    color: color.ink2,
-  };
+  const open = sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
+  const pick = () => setPicking(true);
 
   const sendText = () => {
     const body = text.trim();
@@ -55,62 +60,31 @@ export function Composer({ phone, thread, lessons }: { phone: string; thread: Th
   };
 
   return (
-    <View style={{ gap: 8, paddingBottom: 12 }}>
+    <View style={{ gap: 4, paddingBottom: 8 }}>
       {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
       <GateNote />
-      <LineNote thread={thread} open={open} />
+      <ComposerNotes thread={thread} open={open} />
       {open ? (
-        <>
-          <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 8 }}>
-            <TextInput
-              multiline
-              value={text}
-              maxLength={WA_TEXT_MAX}
-              onChangeText={(v) => {
-                setText(v);
-                setDraftId(requestId());
-              }}
-              accessibilityLabel={t.inbox.composer.placeholder}
-              placeholder={t.inbox.composer.placeholder}
-              placeholderTextColor={color.ink3}
-              style={{
-                flex: 1,
-                minHeight: shape.control.touch,
-                maxHeight: 140,
-                paddingHorizontal: 12,
-                paddingVertical: 10,
-                borderWidth: 1,
-                borderColor: color.ruleInput,
-                borderRadius: shape.radius.md,
-                backgroundColor: color.raised,
-                color: color.ink,
-                fontFamily: type.ui[400],
-                fontSize: type.size.base,
-                textAlign: 'left',
-              }}
-            />
-            <Button label={t.inbox.composer.send} onPress={sendText} />
-          </View>
-          {lastInbound ? <AppText style={note}>{sessionUntil(lastInbound)}</AppText> : null}
-          <Button variant="ghost" label={t.inbox.composer.sendTemplate} onPress={() => setPicking(true)} />
-        </>
-      ) : (
-        <>
-          <AppText
-            style={{
-              ...note,
-              padding: 12,
-              borderRadius: shape.radius.md,
-              borderWidth: 1,
-              borderColor: color.goldSoft,
-              backgroundColor: color.goldWash,
-              color: color.ink,
+        <View style={{ flexDirection: 'row', alignItems: 'flex-end', gap: 6 }}>
+          <IconButton label={t.inbox.composer.sendTemplate} onPress={pick}>
+            <TemplateIcon color={color.lapis} />
+          </IconButton>
+          <ComposerInput
+            value={text}
+            onChange={(v) => {
+              setText(v);
+              setDraftId(requestId());
             }}
-          >
-            {thread ? t.inbox.sessionClosed : t.inbox.newChat.firstTemplate}
-          </AppText>
-          <Button label={t.inbox.composer.sendTemplate} onPress={() => setPicking(true)} />
-        </>
+          />
+          <IconButton variant="filled" label={t.inbox.composer.send} onPress={sendText}>
+            <SendIcon color={color.onLapis} />
+          </IconButton>
+        </View>
+      ) : (
+        <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+          <ClosedNote known={thread !== null} />
+          <Button label={t.inbox.composer.sendTemplate} onPress={pick} />
+        </View>
       )}
       <TemplatePicker
         visible={picking}
