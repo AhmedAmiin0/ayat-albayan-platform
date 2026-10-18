@@ -19,3 +19,4 @@ export * from './wa.js';
 export type * from './views.js';
 export type * from './template-views.js';
 export type * from './line-views.js';
+export type * from './template-sync-views.js';

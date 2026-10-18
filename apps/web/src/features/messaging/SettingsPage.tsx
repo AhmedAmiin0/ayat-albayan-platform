@@ -19,7 +19,7 @@ import { integrationsMatch } from '../integrations/integrations-form';
 import { IntegrationsPanel } from '../integrations/IntegrationsPanel';
 import { settingsQuery } from './api';
 import { SettingsNav, type ExtraSection } from './SettingsNav';
-import { AppearanceSection, FieldsSection, MessagingSection, SalesSection } from './SettingsSections';
+import { AppearanceSection, FieldsSection, linesMatch, MessagingSection, SalesSection, templatesMatch } from './SettingsSections';
 import { useSettingsForm } from './use-settings-form';
 
 /** The sections made only of registry fields, in page order between messaging and sales. */
@@ -36,7 +36,7 @@ interface BodyProps {
   onNote: (message: string) => void;
 }
 
-/** Does the search match nothing on the page: no setting, no theme row, no custom entry? */
+/** Does the search match nothing on the page: no setting, theme row, lines card, template section or custom entry? */
 function useNothingMatches(query: string): boolean {
   const custom = useQuery(customConfigQuery);
   if (query.trim() === '') return false;
@@ -44,6 +44,8 @@ function useNothingMatches(query: string): boolean {
     !SETTING_KEYS.some((k) => matchesSetting(k, query)) &&
     !matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query) &&
     !integrationsMatch(query) &&
+    !linesMatch(query) &&
+    !templatesMatch(query) &&
     !(custom.data ?? []).some((e) => matchesCustom(e, query))
   );
 }

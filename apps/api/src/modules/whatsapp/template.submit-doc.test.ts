@@ -56,7 +56,7 @@ describe('POST /messaging/templates/:key/submit with a document header (report_r
 
   it('without WA_APP_ID: 409 needs_app_id and nothing reaches Meta', async () => {
     const { result, requests } = submit(REPORT_READY_SEED, STUB_ENV);
-    expect((await result).error).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id' }]);
+    expect((await result).error).toEqual([409, { code: 'needs_app_id', message: 'needs_app_id', line: 'notifications' }]);
     expect(requests).toHaveLength(0);
     expect(queries.update).not.toHaveBeenCalled();
   });

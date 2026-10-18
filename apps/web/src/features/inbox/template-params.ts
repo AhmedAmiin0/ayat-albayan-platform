@@ -42,16 +42,19 @@ export interface PrefillContext {
   studentName?: string | null;
   /** The thread is a teacher's. */
   teacherName?: string | null;
+  /** ThreadView.display_name, the name the thread header shows (guardian ?? lead ?? teacher). */
+  contactName?: string | null;
   /** The guardian's / teacher's next open lessons (ThreadDetail.lessons). */
   lessons?: readonly ThreadLesson[];
 }
 
-/** What the thread already knows: the student's or the teacher's name. */
+/** What the thread already knows: the student's, the teacher's or the recipient's name (still editable). */
 export function prefillParams(tpl: Pick<TemplateView, 'params'>, ctx: PrefillContext): ParamValues {
   const known: Record<string, string | null | undefined> = {
     student_names: ctx.studentName,
     student_name: ctx.studentName,
     teacher_name: ctx.teacherName,
+    contact_name: ctx.contactName,
   };
   const out: ParamValues = {};
   tpl.params.slice(0, SLOTS.length).forEach((name, i) => {

@@ -1,4 +1,4 @@
-import type { TemplateView } from '@ab/shared';
+import type { TemplateHealthView, TemplateLineSync, TemplateLineView, TemplateMoveView, TemplateView, WaLine } from '@ab/shared';
 import { queryOptions } from '@tanstack/react-query';
 import { errorCode } from '@/features/schedule/api';
 import { ApiError, apiFetch, apiSend } from '@/lib/api';
@@ -12,12 +12,25 @@ export const templatesQuery = queryOptions({
   queryFn: () => apiFetch<TemplateView[]>('/messaging/templates'),
 });
 
-/** T2: Meta's list → status, quality, last checked (and Meta's exact text) per row. */
-export const checkTemplateHealth = () => apiSend<TemplateView[]>('POST', '/messaging/templates/health');
+/** Both numbers as the server's env knows them (ids, driver, last sync): no Meta call, safe on mount. */
+export const templateLinesQuery = queryOptions({
+  queryKey: ['templates', 'lines'],
+  queryFn: () => apiFetch<TemplateLineView[]>('/messaging/templates/lines'),
+});
 
-/** T3: not_submitted / rejected / missing → pending, with Meta's id. */
+/** T2 per number (owner 2026-10-18): one line's rows against its own WABA, or both when no line is given. */
+export const checkTemplateHealth = (line?: WaLine) =>
+  line
+    ? apiSend<TemplateHealthView>('POST', '/messaging/templates/health', { line })
+    : apiSend<TemplateHealthView>('POST', '/messaging/templates/health');
+
+/** T3: not_submitted / rejected / missing → pending, on the WABA of the row's own line. */
 export const submitTemplate = (key: string) =>
   apiSend<TemplateView>('POST', `/messaging/templates/${encodeURIComponent(key)}/submit`);
+
+/** The row now goes out from the other number; the API re-reads its status on that number's WABA. */
+export const moveTemplateLine = ({ key, line }: { key: string; line: WaLine }) =>
+  apiSend<TemplateMoveView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/line`, { line });
 
 /**
  * «متاح للمعلمين والمبيعات» (the restricted allow-list, owner 2026-10-12, docs/16): the admin offers a
@@ -26,22 +39,45 @@ export const submitTemplate = (key: string) =>
 export const setStarter = ({ key, on }: { key: string; on: boolean }) =>
   apiSend<TemplateView>('PATCH', `/messaging/templates/${encodeURIComponent(key)}/starter`, { sales_starter: on });
 
-/**
- * A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4). Never a chat-line one:
- * submitting creates it on the notifications WABA (the API answers 409 not_submittable).
- */
-export const canSubmit = (tpl: Pick<TemplateView, 'status' | 'line'>): boolean =>
-  tpl.line !== 'chat' && (tpl.status === 'not_submitted' || tpl.status === 'rejected' || tpl.status === 'missing');
+/** A submittable row: never sent, refused, or gone from Meta (docs/12 §3.4), on either number. */
+export const canSubmit = (tpl: Pick<TemplateView, 'status'>): boolean =>
+  tpl.status === 'not_submitted' || tpl.status === 'rejected' || tpl.status === 'missing';
+
+/** The number a row would move to. */
+export const otherLine = (line: WaLine): WaLine => (line === 'chat' ? 'notifications' : 'chat');
 
 const ERRORS: Record<string, string | undefined> = t.templates.error;
+/** The app id a line's sample upload needs (409 needs_app_id). */
+const APP_ID_KEY: Record<WaLine, string> = { notifications: 'WA_APP_ID', chat: 'WA_CHAT_APP_ID' };
+
+interface CodeInput {
+  code: string | undefined;
+  /** Meta's own message or code (meta_error). */
+  detail: unknown;
+  /** The line the API named (not_configured, needs_app_id, needs_meta_driver); notifications when none. */
+  line: unknown;
+}
+
+/** templates.error.<code> in words: meta_error carries Meta's detail (or «—»), the rest name their line. */
+function codeText({ code, detail, line }: CodeInput): string {
+  const text = code ? ERRORS[code] : undefined;
+  if (!text) return t.common.error;
+  if (code === 'meta_error') return text.replace('{message}', typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
+  const named: WaLine = line === 'chat' ? 'chat' : 'notifications';
+  return text.replace('{line}', t.enums.waLine[named]).replace('{key}', APP_ID_KEY[named]);
+}
 
 /** templates.error.<code> in words; Meta's own message (502 meta_error) when it sent one. */
 export function templateErrorText(error: unknown): string {
-  const code = errorCode(error);
-  const text = code ? ERRORS[code] : undefined;
-  if (!text) return t.common.error;
-  if (code !== 'meta_error') return text;
   const body = error instanceof ApiError ? (error.body as Record<string, unknown> | null) : null;
-  const detail = body?.['meta_message'] ?? body?.['meta_code'];
-  return text.replace('{message}', typeof detail === 'string' || typeof detail === 'number' ? String(detail) : '—');
+  return codeText({ code: errorCode(error) ?? undefined, detail: body?.['meta_message'] ?? body?.['meta_code'], line: body?.['line'] });
 }
+
+type FailedSync = Pick<TemplateLineSync, 'line' | 'error' | 'message'>;
+
+/** One number's failed sync in words (its code, Meta's message for meta_error, its line). */
+export const lineSyncErrorText = (sync: FailedSync): string => codeText({ code: sync.error, detail: sync.message, line: sync.line });
+
+/** «تعذّرت مزامنة {line}: {error}» for one number's failed sync. */
+export const syncFailedText = (sync: FailedSync): string =>
+  t.templates.perNumber.syncFailed.replace('{line}', t.enums.waLine[sync.line]).replace('{error}', lineSyncErrorText(sync));

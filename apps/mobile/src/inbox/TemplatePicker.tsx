@@ -36,6 +36,8 @@ export interface TemplatePickerProps {
   visible: boolean;
   /** The guardian's / teacher's next open lessons: a lesson time is picked, never typed (rule 6). */
   lessons: readonly ThreadLesson[];
+  /** The thread's display name, for contact_name (null on a new chat). */
+  contactName?: string | null;
   /** A teacher's thread: only teacher templates, and only there. */
   teacher: boolean;
   onClose: () => void;
@@ -73,6 +75,7 @@ export function TemplatePicker(props: TemplatePickerProps) {
           <TemplateForm
             template={chosen}
             lessons={props.lessons}
+            contactName={props.contactName}
             onBack={() => setChosen(null)}
             onSend={(out) => {
               setChosen(null);

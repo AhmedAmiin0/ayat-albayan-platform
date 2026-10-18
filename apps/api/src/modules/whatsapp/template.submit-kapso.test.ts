@@ -27,7 +27,7 @@ describe('submit of a document-header template on a kapso line', () => {
       () => null,
       (e: { getStatus: () => number; getResponse: () => unknown }) => [e.getStatus(), e.getResponse()],
     );
-    expect(error).toEqual([409, { code: 'needs_meta_driver', message: 'needs_meta_driver' }]);
+    expect(error).toEqual([409, { code: 'needs_meta_driver', message: 'needs_meta_driver', line: 'notifications' }]);
     expect(f.requests).toHaveLength(0);
     expect(queries.update).not.toHaveBeenCalled();
   });

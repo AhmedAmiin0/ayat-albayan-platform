@@ -1,40 +1,35 @@
-import type { TemplateStatus, TemplateView } from '@ab/shared';
-import {
-  Inject,
-  Injectable,
-  Logger,
-  NotFoundException,
-  type OnApplicationBootstrap,
-  type OnModuleDestroy,
-} from '@nestjs/common';
+import { WA_LINES, type TemplateHealthView, type TemplateLineSync, type TemplateLineView, type TemplateMoveView, type TemplateView, type WaLine } from '@ab/shared';
+import { Inject, Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { lineProvider, loadEnv } from '../../env';
-import { listFor, type MetaLists } from './template-import';
-import { chatList, importStarters } from './template-lines';
-import { SAMPLE_REPORT, templateProblem } from './template-review';
-import { findMeta, ourStatus, syncPatch } from './template-sync';
-import { graphHttpError, REGISTRY_ENTITY_ID, toTemplateView, waHttpError } from './template.mapper';
+import { lineFacts, requireLine, requireSync, syncOn } from './template-env';
+import { syncLine } from './template-line-sync';
+import { moveTemplate } from './template-move';
+import { submitTemplate } from './template-submit';
+import { toTemplateView } from './template.mapper';
 import { TemplatesQueries } from './templates.queries';
-import { WaError, WHATSAPP_LINES, type WhatsappLines } from './whatsapp.types';
+import { WHATSAPP_LINES, type TemplateRow, type WhatsappLines } from './whatsapp.types';
 
-const SUBMITTABLE: ReadonlySet<TemplateStatus> = new Set(['not_submitted', 'rejected', 'missing']);
 /** Soon after boot, not at once: the e2e stub may still be starting. */
 const BOOT_CHECK_MS = 5_000;
-/** Read per call, so tests can vi.stubEnv it. */
-const syncOn = (): boolean => loadEnv().WA_TEMPLATE_SYNC !== false;
 const errText = (e: unknown): string => (e instanceof Error ? e.message : String(e));
 
+/** The newest last_checked_at of one line's rows. */
+const newest = (rows: readonly TemplateRow[], line: WaLine): string | null =>
+  rows.reduce<string | null>((max, r) => (r.line === line && r.last_checked_at && (!max || r.last_checked_at > max) ? r.last_checked_at : max), null);
+
 /**
- * The template registry (R-MSG-01, issue C1, docs/12 §3.4). The health check reads each line's Meta
- * list (read-only), syncs every row against its own line's and imports the chat line's new templates
- * (only the restricted defaults flagged); submitting creates a template on the notifications WABA and
- * is only ever the admin's explicit action (POST /messaging/templates/:key/submit), never at boot or
- * from a job.
+ * The template registry (R-MSG-01, issue C1, docs/12 §3.4), per number (owner 2026-10-18). Each line's
+ * sync reads only its own WABA's list (read-only) for only its own rows and imports that WABA's new
+ * templates; submitting creates a template on the row's own line's WABA and is only ever the admin's
+ * explicit action (POST /messaging/templates/:key/submit), never at boot or from a job; the admin can
+ * move a template to the other number (PATCH /messaging/templates/:key/line).
  */
 @Injectable()
 export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy {
   private readonly log = new Logger(TemplateRegistry.name);
   private timer: NodeJS.Timeout | null = null;
+  /** Each line's last sync since boot (this instance): GET /messaging/templates/lines. */
+  private readonly last = new Map<WaLine, TemplateLineSync>();
 
   constructor(
     private readonly queries: TemplatesQueries,
@@ -42,9 +37,9 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     private readonly audit: AuditService,
   ) {}
 
-  /** Best-effort boot health check when WhatsApp is configured: log and continue, never block. */
+  /** Best-effort boot sync when a line is configured: log and continue, never block. */
   onApplicationBootstrap(): void {
-    if (!this.lines.notifications.configured() || !syncOn()) return;
+    if (!this.configuredLines().length || !syncOn()) return;
     this.timer = setTimeout(() => void this.bootCheck(), BOOT_CHECK_MS).unref();
   }
 
@@ -54,9 +49,11 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
 
   async bootCheck(): Promise<void> {
     try {
-      const views = await this.verifyAll();
-      const notReady = views.filter((v) => v.status !== 'approved').map((v) => `${v.key}=${v.status}`);
-      this.log.log(`templates checked: ${views.length - notReady.length} approved; ${notReady.join(', ') || 'all ready'}`);
+      const { lines, templates } = await this.verifyAll();
+      const notReady = templates.filter((v) => v.status !== 'approved').map((v) => `${v.key}=${v.status}`);
+      const failed = lines.filter((l) => !l.ok).map((l) => `${l.line}: ${l.error ?? 'error'}`);
+      this.log.log(`templates checked: ${templates.length - notReady.length} approved; ${notReady.join(', ') || 'all ready'}`);
+      if (failed.length) this.log.warn(`template sync failed for ${failed.join(', ')}`);
     } catch (e) {
       this.log.warn(`boot template check skipped: ${errText(e)}`);
     }
@@ -72,79 +69,48 @@ export class TemplateRegistry implements OnApplicationBootstrap, OnModuleDestroy
     return row?.status === 'approved' ? toTemplateView(row) : null;
   }
 
-  /** POST /messaging/templates/health: every row against its line's Meta list, then the chat line's new templates. */
-  async verifyAll(now = new Date()): Promise<TemplateView[]> {
-    this.requireSync();
-    this.requireConfigured();
-    const notifications = await this.fromMeta(() => this.lines.notifications.getTemplates());
-    const chat = this.lines.chat.configured() ? () => this.lines.chat.getTemplates() : null;
-    const lists: MetaLists = { notifications, ...(await chatList(chat, this.log)) };
-    const rows = await this.queries.all();
-    const views: TemplateView[] = [];
-    for (const row of rows) {
-      const meta = listFor(row, lists);
-      const updated = meta ? await this.queries.update(row.key, syncPatch(row, findMeta(row, meta), now)) : null;
-      views.push(toTemplateView(updated ?? row));
-    }
-    return [...views, ...(await importStarters({ queries: this.queries, known: rows, lists, now, log: this.log }))];
-  }
-
   /**
-   * POST /messaging/templates/:key/submit. A body Meta would reject is 409 invalid_template before
-   * any call. A document header (report_ready) first uploads the sample PDF for Meta's reviewer:
-   * that needs WA_APP_ID (409 needs_app_id without it; 409 needs_meta_driver on a kapso line).
+   * POST /messaging/templates/health: `line` alone, or every configured line (notifications first, so
+   * the chat import sees its rows). A line whose read fails reports its error; the other still syncs.
+   * 503 not_configured when the asked line (or every line) is not configured.
    */
-  async submit(key: string, actorId: string): Promise<TemplateView> {
-    this.requireSync();
-    const row = await this.queries.get(key);
-    if (!row) throw new NotFoundException({ code: 'template_not_found', message: 'template_not_found' });
-    // A chat-WABA template is never posted to the notifications WABA (owner 2026-10-12).
-    if (!SUBMITTABLE.has(row.status) || row.line === 'chat') throw waHttpError('not_submittable', 409, { status: row.status });
-    const problem = templateProblem(row);
-    if (problem) throw waHttpError('invalid_template', 409, { reason: problem });
-    this.requireConfigured();
-    const document = row.header_format === 'document';
-    const client = this.lines.notifications;
-    // Kapso has no sample upload (docs/19): WA_APP_ID cannot help there, only switching the line to meta.
-    const noSamples = lineProvider(loadEnv(), 'notifications') === 'kapso' ? 'needs_meta_driver' : 'needs_app_id';
-    if (document && !client.canUploadSamples()) throw waHttpError(noSamples, 409);
-    const headerHandle = document ? await this.fromMeta(() => client.uploadSample(SAMPLE_REPORT)) : undefined;
-    const res = await this.fromMeta(() => client.submitTemplate(row, { headerHandle }));
-    const status = ourStatus(res.status);
-    const meta_id = res.metaId || row.meta_id;
-    const updated = await this.queries.update(key, {
-      status,
-      meta_id,
-      submitted_at: new Date().toISOString(),
-      last_error: null,
-    });
-    await this.audit.record({
-      actorId,
-      entity: 'message_templates',
-      entityId: REGISTRY_ENTITY_ID,
-      action: 'template_submitted',
-      before: { key, status: row.status, meta_id: row.meta_id },
-      after: { key, status, meta_id },
-    });
-    return toTemplateView(updated ?? row);
-  }
-
-  /** WA_TEMPLATE_SYNC=false (docs/12 §13.9): staging on Meta TEST credentials must not touch the registry. */
-  private requireSync(): void {
-    if (!syncOn()) throw waHttpError('template_sync_off', 409);
-  }
-
-  private requireConfigured(): void {
-    if (!this.lines.notifications.configured()) throw waHttpError('not_configured', 503);
-  }
-
-  /** A Graph failure → 502 meta_error with Meta's code and message, or kapso_auth (docs/19). */
-  private async fromMeta<T>(call: () => Promise<T>): Promise<T> {
-    try {
-      return await call();
-    } catch (e) {
-      if (!(e instanceof WaError)) throw e;
-      throw graphHttpError(e);
+  async verifyAll(opts: { line?: WaLine; now?: Date } = {}): Promise<TemplateHealthView> {
+    requireSync();
+    const now = opts.now ?? new Date();
+    if (opts.line) requireLine(this.lines[opts.line], opts.line);
+    const targets = opts.line ? [opts.line] : this.configuredLines();
+    if (!targets.length) requireLine(this.lines.notifications, 'notifications');
+    const results: TemplateLineSync[] = [];
+    for (const line of targets) {
+      const result = await syncLine({ queries: this.queries, lines: this.lines, log: this.log }, line, now);
+      this.last.set(line, result);
+      results.push(result);
     }
+    return { lines: results, templates: await this.list() };
+  }
+
+  /** GET /messaging/templates/lines: each line's facts (env only), its newest check, its last sync. */
+  async lineViews(): Promise<TemplateLineView[]> {
+    const rows = await this.queries.all();
+    return WA_LINES.map((line) => ({
+      ...lineFacts(line, this.lines[line]),
+      last_checked_at: newest(rows, line),
+      last_sync: this.last.get(line) ?? null,
+    }));
+  }
+
+  /** POST /messaging/templates/:key/submit (template-submit.ts). */
+  submit(key: string, actorId: string): Promise<TemplateView> {
+    return submitTemplate({ queries: this.queries, lines: this.lines, audit: this.audit }, key, actorId);
+  }
+
+  /** PATCH /messaging/templates/:key/line (template-move.ts). */
+  moveLine(input: { key: string; line: WaLine }, actorId: string): Promise<TemplateMoveView> {
+    const deps = { queries: this.queries, lines: this.lines, audit: this.audit, log: this.log };
+    return moveTemplate({ ...deps, remember: (sync) => this.last.set(sync.line, sync) }, input, actorId);
+  }
+
+  private configuredLines(): WaLine[] {
+    return WA_LINES.filter((line) => this.lines[line].configured());
   }
 }

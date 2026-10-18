@@ -5,7 +5,7 @@ import { diagnosticControlRoutes, resetHealth } from './diagnostics.ts';
 import { lineOf, stubLines } from './lines.ts';
 import { metaError } from './meta.ts';
 import { digits, readJson, type Route, type StubState } from './state.ts';
-import { initialTemplates } from './templates.ts';
+import { initialTemplates, reviewTemplate } from './templates.ts';
 import { forward, inboundValue, statusValue, type InboundSpec, type StatusSpec, type WebhookTarget } from './webhook.ts';
 
 /**
@@ -86,15 +86,8 @@ export const controlRoutes: Route[] = [
   /** Every Graph call with its prefix and credential kind (bearer / api-key / …). */
   ['GET', /^\/__stub\/requests$/, async (_r, _m, s) => [200, s.requests]],
   ['POST', /^\/__stub\/status$/, async (req, _m, s) => [...(await deliveryStatus(s, (await readJson(req)) as unknown as StatusSpec))]],
-  /** Meta's review result: {status: 'APPROVED' | 'REJECTED' | 'PAUSED' | 'DISABLED', quality?}. */
-  ['POST', /^\/__stub\/templates\/([a-z0-9_]+)$/, async (req, m, s) => {
-    const body = await readJson(req);
-    const t = s.templates.find((x) => x.name === m[1]);
-    if (!t) return [404, { error: `no template ${m[1] ?? ''}` }];
-    t.status = String(body['status'] ?? t.status);
-    t.quality = String(body['quality'] ?? t.quality);
-    return [200, t];
-  }],
+  /** Meta's review result: {status: 'APPROVED' | 'REJECTED' | 'PAUSED' | 'DISABLED', quality?, rejected_reason?, waba?}. */
+  ['POST', /^\/__stub\/templates\/([a-z0-9_]+)$/, async (req, m, s) => reviewTemplate(s, { name: m[1] ?? '', body: await readJson(req) })],
   /** The next send to `to` fails with Meta error `code` (default 131026 undeliverable). */
   ['POST', /^\/__stub\/fail$/, async (req, _m, s) => {
     const body = await readJson(req);

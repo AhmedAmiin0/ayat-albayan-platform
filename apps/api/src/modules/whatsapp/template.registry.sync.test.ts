@@ -41,6 +41,7 @@ describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => 
     queries.get.mockResolvedValue(null);
     expect(await status(registry().verifyAll())).toEqual(OFF);
     expect(await status(registry().submit('nope', ADMIN.id))).toEqual(OFF);
+    expect(await status(registry().moveLine({ key: 'nope', line: 'chat' }, ADMIN.id))).toEqual(OFF);
     expect(client.configured).not.toHaveBeenCalled();
     expect(queries.get).not.toHaveBeenCalled();
     expect(client.getTemplates).not.toHaveBeenCalled();
@@ -57,7 +58,7 @@ describe('TemplateRegistry with WA_TEMPLATE_SYNC=false (docs/12 §13.9)', () => 
     registry().onApplicationBootstrap();
     await vi.advanceTimersByTimeAsync(5_000);
     expect(client.getTemplates).toHaveBeenCalledTimes(1);
-    await expect(registry().verifyAll()).resolves.toEqual([]);
+    await expect(registry().verifyAll()).resolves.toMatchObject({ templates: [] });
   });
 });
 

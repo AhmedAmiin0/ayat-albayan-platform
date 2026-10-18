@@ -17,6 +17,9 @@ export const WHITELIST = new Set([
   'modules/whatsapp/lines.check.ts',
   'modules/whatsapp/message.dispatch.ts',
   'modules/whatsapp/template.registry.ts',
+  // The registry's own parts (150-line cap): one line's sync (read-only list), the explicit submit.
+  'modules/whatsapp/template-line-sync.ts',
+  'modules/whatsapp/template-submit.ts',
   'modules/whatsapp/live-client.ts',
   'modules/whatsapp/whatsapp.client.ts',
   'modules/whatsapp/whatsapp.module.ts',

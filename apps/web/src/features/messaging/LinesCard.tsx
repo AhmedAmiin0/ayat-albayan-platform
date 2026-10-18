@@ -1,10 +1,10 @@
 import { type LineCheckView, WA_LINES } from '@ab/shared';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Toast } from '@/components/ui/toast';
 import { t } from '@/lib/i18n';
-import { checkLines } from './api';
+import { checkLines, linesCheckQuery } from './api';
 import { LineRow } from './LineRow';
 
 /**
@@ -14,13 +14,18 @@ import { LineRow } from './LineRow';
  */
 export function LinesCard() {
   const s = t.templates.settings.lines;
+  const queryClient = useQueryClient();
   const [failed, setFailed] = useState(false);
   // The last good answer stays (with its checked_at) while re-checking and after a failed re-check.
   const [last, setLast] = useState<LineCheckView[]>();
   const check = useMutation({
     mutationFn: checkLines,
     onMutate: () => setFailed(false),
-    onSuccess: setLast,
+    onSuccess: (views) => {
+      setLast(views);
+      // The template blocks show each line's formatted number from this answer.
+      queryClient.setQueryData(linesCheckQuery.queryKey, views);
+    },
     onError: () => setFailed(true),
   });
   const views = check.data ?? last;

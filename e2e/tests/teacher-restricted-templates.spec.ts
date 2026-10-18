@@ -6,7 +6,7 @@ import { CHAT_PN, sentVia, SINGLE_LINE } from '../support/wa-lines';
 import { setMessaging, stubInbound, stubReset } from '../support/wa-stub';
 
 // Teacher mode and the restricted allow-list (owner 2026-10-12): «أبرار» lists and sends only
-// free_trial_invite and welcome_greeting, to her own families; the lesson reminders are no longer
+// the three defaults (free_trial_invite, welcome_greeting, trial_reschedule once approved), to her own families; the lesson reminders are no longer
 // hers to send by hand (403 template_not_allowed; the automatic reminders are unchanged).
 
 const KEY = 'free_trial_invite';
@@ -25,12 +25,12 @@ async function familyOf(teacherId: string, tag: string): Promise<string> {
 }
 
 test.describe('teacher mode: the restricted templates (owner 2026-10-12)', () => {
-  test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line, so the two templates are never imported');
+  test.skip(SINGLE_LINE, 'E2E_LINES=single: no chat line, so the restricted templates are never imported');
   test.afterEach(async () => {
     await setMessaging(false);
   });
 
-  test('a teacher lists the two, sends free_trial_invite to her family, and may not send a lesson reminder', async ({ asRole }) => {
+  test('a teacher lists the three, sends free_trial_invite to her family, and may not send a lesson reminder', async ({ asRole }) => {
     test.setTimeout(150_000);
     await stubReset();
     await setMessaging(true);

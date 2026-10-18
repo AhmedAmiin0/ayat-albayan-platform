@@ -6,8 +6,11 @@ import type { TemplateView } from './template-views.js';
 // custom role) lists and sends only the restricted allow-list: the message_templates rows flagged
 // `sales_starter` (the column kept its name; it now means «allowed for restricted roles», docs/16).
 
-/** Flagged by the chat line's import (template-import.ts); any other import comes unflagged. */
-export const RESTRICTED_TEMPLATE_DEFAULTS = ['free_trial_invite', 'welcome_greeting'] as const;
+/**
+ * Flagged by the chat line's import (template-import.ts); any other import comes unflagged. trial_reschedule
+ * (owner 2026-10-18: «one more template to reschedule the meeting») is seeded by migration 460.
+ */
+export const RESTRICTED_TEMPLATE_DEFAULTS = ['free_trial_invite', 'welcome_greeting', 'trial_reschedule'] as const;
 
 /** Sent only by their own button (signed link, picked lesson): never from a composer's picker. */
 export const OWN_BUTTON_TEMPLATES: readonly string[] = ['lesson_feedback_request', 'lesson_join_link', 'lesson_rating'];
@@ -33,6 +36,15 @@ export function sendsAllTemplates(who: TemplateSender | null | undefined): boole
   if (!who || (who.role && ALLOW_LIST_ONLY_ROLES.includes(who.role))) return false;
   const held = who.permissions ?? [];
   return ALL_TEMPLATES_PERMISSIONS.some((p) => held.includes(p));
+}
+
+/**
+ * May this user manage the registry (sync, submit, move, the allow-list, the lines check)? templates.manage,
+ * never a role based on sales, the classroom assistant or teacher, whatever it holds (owner 2026-10-18).
+ */
+export function managesTemplates(who: TemplateSender | null | undefined): boolean {
+  if (!who || (who.role && ALLOW_LIST_ONLY_ROLES.includes(who.role))) return false;
+  return (who.permissions ?? []).includes('templates.manage');
 }
 
 export type RestrictedCheck = Pick<TemplateView, 'key' | 'status' | 'sales_starter' | 'header_format'>;

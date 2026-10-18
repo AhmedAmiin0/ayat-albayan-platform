@@ -1,15 +1,18 @@
 import { makeAssistant } from '../support/assistant-api';
 import { ar, expect, test } from '../support/fixtures';
 import { freshDigits } from '../support/messages';
-import { chatRows, dropChatRows, importChatRows, listedKeys, RESTRICTED, sendAs, UNFLAGGED } from '../support/restricted-templates';
+import { chatRows, dropChatRows, importChatRows, listedKeys, pickerLabel, RESTRICTED, sendAs, UNFLAGGED } from '../support/restricted-templates';
+import { RESCHEDULE } from '../support/reschedule-template';
+import { syncNumber } from '../support/template-numbers';
 import { signInSales } from '../support/sales-portal';
 import { CHAT_PN, messagesWithLine, NOTIF_PN, sentVia, SINGLE_LINE } from '../support/wa-lines';
 import { setMessaging, stubReset } from '../support/wa-stub';
 
 // The restricted allow-list (owner 2026-10-12: «all roles except the ones allowed to have all
-// templates»): «راجع حالة القوالب» imports the chat number's approved templates and flags only
-// free_trial_invite and welcome_greeting; sales are offered only those, they leave from the chat
-// number, and the admin's switch changes the list (the sync never re-flags).
+// templates»): the chat number's sync imports its approved templates and flags only free_trial_invite and
+// welcome_greeting; trial_reschedule (seeded flagged, owner 2026-10-18) joins once approved on the chat
+// WABA. Sales are offered only those three, they leave from the chat number, and the admin's switch
+// changes the list (the sync never re-flags).
 
 const KEY = 'free_trial_invite';
 const WAIT = { timeout: 75_000, intervals: [1_000, 2_000, 5_000] };
@@ -28,7 +31,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     await setMessaging(false);
   });
 
-  test('only the two defaults come flagged; sales list and send only them, from the chat number; the admin’s switch rules', async ({ asRole, browser }) => {
+  test('only the three defaults are flagged; sales list and send only them, from the chat number; the admin’s switch rules', async ({ asRole, browser }) => {
     test.setTimeout(150_000);
     const admin = await asRole('admin');
     await importChatRows(admin);
@@ -42,7 +45,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     await expect(toggleOf(KEY)).toBeChecked();
     await expect(toggleOf(UNFLAGGED)).not.toBeChecked();
 
-    // Sales: exactly the two, by API and in «محادثة جديدة»; anything else is 403 template_not_allowed.
+    // Sales: exactly the three, by API and in «محادثة جديدة»; anything else is 403 template_not_allowed.
     const me = await makeAssistant(`rt${test.info().project.name}`);
     expect(sorted(await listedKeys(me.token))).toEqual(sorted(RESTRICTED));
     const digits = freshDigits();
@@ -54,7 +57,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
     const select = page.getByLabel(composer.chooseTemplate);
     await expect(select.locator('option')).toHaveCount(1 + RESTRICTED.length);
-    expect(sorted(await select.locator('option').allTextContents())).toEqual(sorted(['—', ...RESTRICTED]));
+    expect(sorted(await select.locator('option').allTextContents())).toEqual(sorted(['—', ...RESTRICTED.map(pickerLabel)]));
     await select.selectOption({ label: KEY });
     await page.getByLabel(composer.param.replace('{n}', '1'), { exact: true }).fill('أم سارة');
     await page.getByRole('button', { name: composer.sendTemplate, exact: true }).click();
@@ -71,9 +74,8 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     await expect(admin.getByText(t.starterOff)).toBeVisible();
     await toggleOf(UNFLAGGED).click();
     await expect(admin.getByText(t.starterOn)).toBeVisible();
-    expect(sorted(await listedKeys(me.token))).toEqual(sorted([KEY, UNFLAGGED]));
-    await admin.getByRole('button', { name: t.checkHealth }).click();
-    await expect(admin.getByText(t.checkedNow)).toBeVisible();
-    expect(sorted(await listedKeys(me.token))).toEqual(sorted([KEY, UNFLAGGED]));
+    expect(sorted(await listedKeys(me.token))).toEqual(sorted([KEY, UNFLAGGED, RESCHEDULE]));
+    await syncNumber(admin, 'chat');
+    expect(sorted(await listedKeys(me.token))).toEqual(sorted([KEY, UNFLAGGED, RESCHEDULE]));
   });
 });

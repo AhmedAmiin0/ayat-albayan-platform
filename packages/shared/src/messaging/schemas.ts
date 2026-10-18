@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { WA_LINES } from '../enums/messaging.js';
 import { leadQualificationSchema } from '../schemas/leads.js';
 import { BODY_SLOTS, type BodySlot } from './templates.js';
 
@@ -43,6 +44,12 @@ export const threadRatingSchema = z.object({ clientRequestId: z.uuid() });
  */
 export const templateStarterSchema = z.object({ sales_starter: z.boolean() });
 
+/** POST /messaging/templates/health: one line (WABA) only; none = every configured line (owner 2026-10-18). */
+export const templateHealthSchema = z.object({ line: z.enum(WA_LINES).optional() });
+
+/** PATCH /messaging/templates/:key/line: the number this template goes from (audited). */
+export const templateLineSchema = z.object({ line: z.enum(WA_LINES) });
+
 /** PATCH /leads/:id/qualification: merged into leads.qualification; null clears a field. */
 export const leadQualificationPatchSchema = leadQualificationSchema.partial();
 
@@ -54,5 +61,7 @@ export type TemplateParamsInput = z.infer<typeof templateParamsInputSchema>;
 export type ThreadTemplate = z.infer<typeof threadTemplateSchema>;
 export type ThreadRating = z.infer<typeof threadRatingSchema>;
 export type TemplateStarter = z.infer<typeof templateStarterSchema>;
+export type TemplateHealthInput = z.infer<typeof templateHealthSchema>;
+export type TemplateLineInput = z.infer<typeof templateLineSchema>;
 export type LeadQualificationPatch = z.infer<typeof leadQualificationPatchSchema>;
 export type LeadFollowUp = z.infer<typeof leadFollowUpSchema>;

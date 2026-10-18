@@ -8,8 +8,11 @@ const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const sql = readFileSync(join(dir, '20261012000360_restricted_templates.sql'), 'utf8');
 
 describe('migration 20261012000360: the restricted template allow-list', () => {
-  it('flags exactly the shared defaults, idempotently (only rows that differ are written)', () => {
-    const list = RESTRICTED_TEMPLATE_DEFAULTS.map((k) => `'${k}'`).join(', ');
+  it('flags exactly the defaults of its day, idempotently (only rows that differ are written)', () => {
+    // trial_reschedule joined the defaults later, seeded already flagged by migration 460.
+    const atTheTime = RESTRICTED_TEMPLATE_DEFAULTS.filter((k) => k !== 'trial_reschedule');
+    expect(atTheTime).toEqual(['free_trial_invite', 'welcome_greeting']);
+    const list = atTheTime.map((k) => `'${k}'`).join(', ');
     expect(sql).toContain(`set sales_starter = (key in (${list}))`);
     expect(sql).toContain(`where sales_starter is distinct from (key in (${list}))`);
   });
