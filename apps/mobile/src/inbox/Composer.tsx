@@ -115,6 +115,7 @@ export function Composer({ phone, thread, lessons }: { phone: string; thread: Th
       <TemplatePicker
         visible={picking}
         lessons={lessons}
+        contactName={thread?.display_name}
         teacher={!!thread?.teacher_id && !thread.guardian_id}
         onClose={() => setPicking(false)}
         onSend={(out) => {

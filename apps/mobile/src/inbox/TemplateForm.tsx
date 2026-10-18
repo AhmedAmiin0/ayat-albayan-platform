@@ -26,9 +26,19 @@ type Position = BodySlot;
 const POSITIONS: readonly Position[] = BODY_SLOTS;
 const NAMES: Record<string, string | undefined> = t.inbox.composer.paramNames;
 
+/** contact_name's starting value (still editable): the name the thread header shows. */
+function prefill(template: TemplateView, contactName?: string | null): TemplateParamsInput {
+  const name = contactName?.trim();
+  const at = template.params.indexOf('contact_name');
+  const slot = POSITIONS[at];
+  return name && slot ? { [slot]: name } : {};
+}
+
 export interface TemplateFormProps {
   template: TemplateView;
   lessons: readonly ThreadLesson[];
+  /** The thread's display name (guardian ?? lead's WhatsApp name ?? teacher): contact_name starts as it. */
+  contactName?: string | null;
   onBack: () => void;
   onSend: (out: Outgoing) => void;
 }
@@ -38,8 +48,8 @@ export interface TemplateFormProps {
  * lesson picked (rule 6: never typed, and in the recipient's tz), which also fills the names and
  * the meeting code. The meeting code when it has a link button, and the live preview.
  */
-export function TemplateForm({ template, lessons, onBack, onSend }: TemplateFormProps) {
-  const [params, setParams] = useState<TemplateParamsInput>({});
+export function TemplateForm({ template, lessons, contactName, onBack, onSend }: TemplateFormProps) {
+  const [params, setParams] = useState<TemplateParamsInput>(() => prefill(template, contactName));
   const [lessonId, setLessonId] = useState('');
   const [missing, setMissing] = useState(false);
   const positions = POSITIONS.slice(0, template.params.length);

@@ -24,7 +24,9 @@ const hamish = 'border-s border-s-rule ps-3 text-xs text-ink-2';
  * configured), which the switch alone cannot open. A teacher gets the plain version of it.
  * Phones (< 640px): the compact chat composer (ComposerPhone).
  */
-export function Composer({ thread, context }: { thread: ThreadView; context: PrefillContext }) {
+export function Composer({ thread, context: known }: { thread: ThreadView; context: PrefillContext }) {
+  // contact_name starts as the name the header shows (guardian ?? lead's WhatsApp name ?? teacher).
+  const context = { contactName: thread.display_name, ...known };
   const gate = useQuery(sendGateQuery);
   const asTeacher = useQuery(meQuery).data?.role === 'teacher';
   const phone = usePhone();

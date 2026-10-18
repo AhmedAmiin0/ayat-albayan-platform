@@ -37,6 +37,13 @@ describe('template composer params (R-LEAD-02)', () => {
     });
   });
 
+  it('prefills contact_name with the thread display name (trial_reschedule)', () => {
+    const reschedule = template({ key: 'trial_reschedule', params: ['contact_name'] });
+    expect(prefillParams(reschedule, { contactName: ' أم سهيلة ' })).toEqual({ '1': 'أم سهيلة' });
+    expect(prefillParams(reschedule, { contactName: null, studentName: 'سهيلة' })).toEqual({});
+    expect(paramFields(reschedule)[0]?.label).toBe('اسم المُرسَل إليه');
+  });
+
   it('every variable and the button suffix are required', () => {
     expect(missingParams(jitsi, { '1': 'سهيلة' })).toEqual(['2', 'button']);
     expect(missingParams(jitsi, { '1': 'سهيلة', '2': ' ', button: 'room' })).toEqual(['2']);
