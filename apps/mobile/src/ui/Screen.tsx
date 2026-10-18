@@ -4,6 +4,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@/theme';
 
 const BODY = { paddingHorizontal: 16, paddingTop: 16, gap: 16 } as const;
+const SCROLL_BODY = { ...BODY, paddingBottom: 24 } as const;
 
 /**
  * Tab-screen frame: margin background, top safe area (the tab bar owns the bottom), 16pt gutter,
@@ -16,7 +17,7 @@ export function Screen({ children, scroll = false }: { children: ReactNode; scro
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: color.margin }} edges={['top']}>
       {scroll ? (
-        <ScrollView style={{ flex: 1 }} contentContainerStyle={{ ...BODY, paddingBottom: 24 }}>
+        <ScrollView testID="screen-scroll" style={{ flex: 1 }} contentContainerStyle={SCROLL_BODY}>
           {children}
         </ScrollView>
       ) : (

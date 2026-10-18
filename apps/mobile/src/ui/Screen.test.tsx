@@ -1,5 +1,5 @@
 import { render, screen, within } from '@testing-library/react-native';
-import { ScrollView, Text } from 'react-native';
+import { Text } from 'react-native';
 import { Screen } from './Screen';
 
 test('scroll: the rows sit in a ScrollView, so the last one («تسجيل الخروج») can always be reached', async () => {
@@ -9,7 +9,7 @@ test('scroll: the rows sit in a ScrollView, so the last one («تسجيل الخ
       <Text>last</Text>
     </Screen>,
   );
-  const scroller = screen.UNSAFE_getByType(ScrollView);
+  const scroller = screen.getByTestId('screen-scroll');
   expect(within(scroller).getByText('last')).toBeTruthy();
 });
 
@@ -19,6 +19,6 @@ test('default: no ScrollView (a FlatList placed last does the scrolling)', async
       <Text>row</Text>
     </Screen>,
   );
-  expect(screen.UNSAFE_queryByType(ScrollView)).toBeNull();
+  expect(screen.queryByTestId('screen-scroll')).toBeNull();
   expect(screen.getByText('row')).toBeTruthy();
 });

@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fireEvent, render, screen, within } from '@testing-library/react-native';
 import { router } from 'expo-router';
-import { Appearance, ScrollView } from 'react-native';
+import { Appearance } from 'react-native';
 import { t } from '@/lib/i18n';
 import { APPEARANCE_KEY } from './appearance';
 import { MoreScreen } from './MoreScreen';
@@ -49,7 +49,7 @@ test('a saved choice shows selected and is re-applied', async () => {
 
 test('owner 2026-10-18 «cannot see the logout button»: with every section shown, تسجيل الخروج scrolls into view', async () => {
   await render(<MoreScreen />);
-  const scroller = screen.UNSAFE_getByType(ScrollView);
+  const scroller = screen.getByTestId('screen-scroll');
   expect(within(scroller).getByRole('button', { name: t.auth.logout })).toBeTruthy();
 });
 
