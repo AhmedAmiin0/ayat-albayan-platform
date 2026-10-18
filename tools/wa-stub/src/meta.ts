@@ -13,8 +13,10 @@ export interface StubTemplate {
   /** GREEN | YELLOW | RED | UNKNOWN */
   quality: string;
   components: Json[];
-  /** Only on this WABA (the chat line's starters); absent = on every WABA, as the academy's 8 are. */
+  /** Only on this WABA (the chat line's starters, a template created on a configured line); absent = on every WABA. */
   wabaId?: string;
+  /** Meta's rejected_reason (INVALID_FORMAT, …), set by POST /__stub/templates/{name}; absent = NONE. */
+  rejectedReason?: string;
 }
 
 /** The templates one WABA has: its own, plus those on every WABA (single line: all of them). */
@@ -79,6 +81,7 @@ export function templateJson(t: StubTemplate): Json {
     status: t.status,
     quality_score: { score: t.quality },
     components: t.components,
+    rejected_reason: t.rejectedReason ?? 'NONE',
   };
 }
 
