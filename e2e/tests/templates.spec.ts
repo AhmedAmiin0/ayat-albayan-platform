@@ -3,6 +3,7 @@ import { ar, expect, test } from '../support/fixtures';
 import {
   restoreTemplates, setTemplateStatus, snapshotTemplates, stubTemplates, templateRow, type TemplateRow,
 } from '../support/settings';
+import { syncNumber } from '../support/template-numbers';
 import { stubReset, stubTemplateStatus } from '../support/wa-stub';
 
 // Template registry on /admin/settings (R-MSG-01, T2/T3): the health check reads «Meta» (the
@@ -38,20 +39,19 @@ test.describe('templates — health check and submit', () => {
     await stubReset();
   });
 
-  test('«راجع حالة القوالب» shows the stub statuses; PAUSED at Meta shows paused and needs attention', async ({
+  test('the notifications number’s «مزامنة مع Meta» shows the stub statuses; PAUSED at Meta shows paused and needs attention', async ({
     asRole,
   }) => {
     const admin = await asRole('admin');
     await openSettings(admin);
-    await admin.getByRole('button', { name: t.checkHealth }).click();
-    await expect(admin.getByText(t.checkedNow)).toBeVisible();
+    await syncNumber(admin, 'notifications');
     await expect(row(admin, 'lesson_reminder')).toContainText(status.approved);
     await expect(row(admin, 'report_ready')).toContainText(status.not_submitted);
     expect((await templateRow('lesson_reminder')).last_checked_at).not.toBeNull();
 
     // Meta's meta_name for lesson_reminder is lesson_reminder_v2 (migration 141).
     await stubTemplateStatus('lesson_reminder_v2', 'PAUSED');
-    await admin.getByRole('button', { name: t.checkHealth }).click();
+    await syncNumber(admin, 'notifications');
     await expect(row(admin, 'lesson_reminder')).toContainText(status.paused);
     await expect(row(admin, 'lesson_reminder').getByRole('button', { name: t.submit })).toHaveCount(0);
     await expect(admin.getByText(t.needsAttention)).toBeVisible();
@@ -62,7 +62,7 @@ test.describe('templates — health check and submit', () => {
     await setTemplateStatus({ key: 'renewal_due', status: 'approved' }); // the stub does not have it
     const admin = await asRole('admin');
     await openSettings(admin);
-    await admin.getByRole('button', { name: t.checkHealth }).click();
+    await syncNumber(admin, 'notifications');
     await expect(row(admin, 'renewal_due')).toContainText(status.missing);
     expect((await templateRow('renewal_due')).status).toBe('missing');
 

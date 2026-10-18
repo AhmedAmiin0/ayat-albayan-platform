@@ -1,17 +1,26 @@
 import { expect, type Page } from '@playwright/test';
 import { ar } from './fixtures';
-import { API } from './messages';
+import { accessToken, API } from './messages';
+import { approveReschedule, RESCHEDULE } from './reschedule-template';
 import { dropTemplate } from './sales-portal';
 import { withSql } from './schedule';
+import { syncNumber } from './template-numbers';
 
 // The restricted template allow-list (owner 2026-10-12): every role without templates.manage or
 // templates.send_all (teachers, sales…) lists and sends only the flagged rows. The stub's chat WABA
 // has free_trial_invite, welcome_greeting and academy_welcome (tools/wa-stub defaultChatTemplates);
-// «راجع حالة القوالب» imports all three and flags only the first two.
+// the chat number's «مزامنة مع Meta» imports all three and flags only the first two. The third default,
+// trial_reschedule (owner 2026-10-18), is seeded flagged and listed once Meta approves it on the chat WABA.
 
-export const RESTRICTED = ['free_trial_invite', 'welcome_greeting'] as const;
+/** The imported defaults; with RESCHEDULE, the three restricted defaults. */
+const IMPORTED = ['free_trial_invite', 'welcome_greeting'] as const;
+export const RESTRICTED = [...IMPORTED, RESCHEDULE] as const;
 export const UNFLAGGED = 'academy_welcome';
-const CHAT_KEYS = [...RESTRICTED, UNFLAGGED];
+const CHAT_KEYS = [...IMPORTED, UNFLAGGED];
+const NAMES: Record<string, string | undefined> = ar.templates.names;
+
+/** What a composer's picker shows for a key: its Arabic name, else the Meta name. */
+export const pickerLabel = (key: string): string => NAMES[key] ?? key;
 
 export interface FlagRow {
   key: string;
@@ -30,12 +39,15 @@ export async function dropChatRows(): Promise<void> {
   for (const key of CHAT_KEYS) await dropTemplate(key);
 }
 
-/** The admin's «راجع حالة القوالب»: re-imports the chat rows with their default flags. */
+/**
+ * The chat number's «مزامنة مع Meta» re-imports the chat rows with their default flags; then the admin
+ * submits trial_reschedule and the stub approves it on the chat WABA, so all three defaults are listed.
+ */
 export async function importChatRows(admin: Page): Promise<void> {
   await admin.goto('/admin/settings');
-  await admin.getByRole('button', { name: ar.templates.checkHealth }).click();
-  await expect(admin.getByText(ar.templates.checkedNow)).toBeVisible();
+  await syncNumber(admin, 'chat');
   await expect.poll(async () => (await chatRows()).length).toBe(CHAT_KEYS.length);
+  await approveReschedule(await accessToken(admin));
 }
 
 /** GET /messaging/templates as one signed-in user: the keys they may send. */
