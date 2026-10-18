@@ -2,10 +2,10 @@ import { counted } from '@ab/shared';
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { CHECK, routeChangeSend } from '@/features/booking/course-change/change-fixture';
-import { ABRAR } from '@/features/booking/wizard-fixture';
+import { ABRAR, SLOT } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n';
 import { renderWithClient } from '../test-utils';
-import { COURSE_STUDENT_ID, COURSE_VIEW, NEXT_SUN_LATER, PREVIOUS, RENEWAL_VIEW, routeRenewal } from './course-fixture';
+import { COURSE_STUDENT_ID, COURSE_VIEW, NEXT_SUN, NEXT_SUN_LATER, NEXT_WED, PREVIOUS, RENEWAL_VIEW, routeRenewal } from './course-fixture';
 import { SalesCourseDialog } from './SalesCourseDialog';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -18,6 +18,18 @@ const CURRENT = { ...PREVIOUS, startsOn: '2026-10-11', opensOn: '2026-10-11', en
 const RUNNING = { ...COURSE_VIEW, blocked: 'course_exists' as const, current: CURRENT };
 const openDialog = () => renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
 const changeButton = () => screen.findByRole('button', { name: t.booking.courseChange.changeDays });
+const weekdayDay = (weekday: number, date: number) => new RegExp(`^${t.enums.weekday[weekday]} ${date} `);
+const day = (weekday: number, date: number) => screen.findByRole('region', { name: weekdayDay(weekday, date) });
+
+/** routeRenewal plus this week's Sunday 4 October 17:00 among the free slots. */
+function routeWithToday(view: typeof RUNNING): void {
+  routeRenewal(apiFetch, view);
+  const base = apiFetch.getMockImplementation();
+  const slots = [SLOT, NEXT_SUN, NEXT_SUN_LATER, NEXT_WED].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] }));
+  apiFetch.mockImplementation((path: string) =>
+    path.startsWith('/sales/booking/slots') ? Promise.resolve({ teacher_tz: 'Africa/Cairo', step_min: 45, slots }) : base?.(path),
+  );
+}
 
 describe('«تغيير أيام الحلقات» from the sales chat (owner 2026-10-18)', () => {
   beforeEach(() => {
@@ -37,14 +49,29 @@ describe('«تغيير أيام الحلقات» from the sales chat (owner 2026
     expect(screen.queryByText(t.booking.courseChange.upcoming)).toBeNull();
   });
 
-  it('a pending change (its new days start later, the old ones still run): running, the grid opens today, the picks on the new set', async () => {
-    routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, running: true } });
+  it('a pending change (its new days start later, the old ones still run): running, the grid opens on the prefilled picks\' week', async () => {
+    routeWithToday({ ...RUNNING, current: { ...CURRENT, running: true } });
     openDialog();
     expect(await screen.findByText(t.booking.courseChange.running)).toBeTruthy();
     fireEvent.click(await changeButton());
-    // The grid opens on this week (Sunday 4 October), not on the new set's 11 October.
-    expect(await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} 4 `) })).toBeTruthy();
-    expect(screen.queryByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} 11 `) })).toBeNull();
+    // The picks start on the new set's Sunday 11 October: its week opens, with them pressed.
+    const sun11 = await day(0, 11);
+    expect(within(sun11).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(await day(3, 14)).getByRole('button', { name: /19:30/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(screen.queryByRole('region', { name: weekdayDay(0, 4) })).toBeNull();
+    // «الأسبوع السابق» reaches this week: the old Sunday 4 October slot is there, not pressed.
+    fireEvent.click(screen.getByRole('button', { name: t.schedule.prevWeek }));
+    const sun4 = await day(0, 4);
+    expect(within(sun4).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('false');
+  });
+
+  it('a running course late in the Riyadh week (Friday 9 October) opens on its picks\' week, picks pressed', async () => {
+    vi.setSystemTime(new Date('2026-10-09T09:00:00.000Z'));
+    routeRenewal(apiFetch, { ...RUNNING, current: { ...CURRENT, startsOn: '2026-09-13', opensOn: '2026-10-09', running: true } });
+    openDialog();
+    fireEvent.click(await changeButton());
+    expect(within(await day(0, 11)).getByRole('button', { name: /17:00/ }).getAttribute('aria-pressed')).toBe('true');
+    expect(within(await day(3, 14)).getByRole('button', { name: /19:30/ }).getAttribute('aria-pressed')).toBe('true');
   });
 
   it('a course booked ahead offers the change instead of only the refusal, from its own first week, then saves it here', async () => {

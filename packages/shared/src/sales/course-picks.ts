@@ -57,12 +57,16 @@ export function changeOpensOn(course: Pick<BookedCourse, 'tz' | 'opensOn' | 'run
 }
 
 /**
- * The change form's first picks: the course's own (latest) days from the later of changeOpensOn and
- * its startsOn. Before startsOn only the old rules of a pending change hold lessons, so a latest-set
- * day there would move an old lesson on save (and miss the server's no_change).
+ * The first day the change form prefills: the later of changeOpensOn and the course's startsOn.
+ * Before startsOn only the old rules of a pending change hold lessons, so a latest-set day there
+ * would move an old lesson on save (and miss the server's no_change).
  */
-export function changePicks(course: Pick<BookedCourse, 'days' | 'tz' | 'opensOn' | 'running' | 'startsOn'>, now: Date): PrefilledPick[] {
+export function changePrefillFrom(course: Pick<BookedCourse, 'tz' | 'opensOn' | 'running' | 'startsOn'>, now: Date): string {
   const opens = changeOpensOn(course, now);
-  const from = course.startsOn > opens ? course.startsOn : opens;
-  return prefillDays({ days: course.days, from, tz: course.tz, now: now.toISOString() });
+  return course.startsOn > opens ? course.startsOn : opens;
+}
+
+/** The change form's first picks: the course's own (latest) days from changePrefillFrom. */
+export function changePicks(course: Pick<BookedCourse, 'days' | 'tz' | 'opensOn' | 'running' | 'startsOn'>, now: Date): PrefilledPick[] {
+  return prefillDays({ days: course.days, from: changePrefillFrom(course, now), tz: course.tz, now: now.toISOString() });
 }

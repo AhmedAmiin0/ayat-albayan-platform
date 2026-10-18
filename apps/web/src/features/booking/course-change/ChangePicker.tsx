@@ -1,5 +1,4 @@
-import { changeOpensOn, counted, pickProgress, togglePick, zonedInstant, type CourseChangeView } from '@ab/shared';
-import { useState } from 'react';
+import { counted, pickProgress, togglePick, type CourseChangeView } from '@ab/shared';
 import { Button } from '@/components/ui/button';
 import { SlotPicker } from '@/features/schedule/SlotPicker';
 import { t } from '@/lib/i18n';
@@ -23,12 +22,12 @@ export interface ChangePickerProps {
  * grid (the course's own lessons not busy: excludeCourse); one slot per weekday, each at its own time
  * (tapping another slot that day replaces it), exactly the plan's days a week. Unchanged days are
  * refused by the series check (400 no_change, shown with its text): only the server knows the active
- * rules a pending change keeps. The grid opens on changeOpensOn's week (today while it runs, else its
- * opensOn), which may come before the first prefilled pick (changePicks: never before startsOn).
+ * rules a pending change keeps. The grid opens on the first prefilled pick's week (changePicks: never
+ * before startsOn); «الأسبوع السابق» pages back to the current week, so a pending change's old days
+ * before its startsOn stay reachable.
  */
 export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePickerProps) {
   const { course, student } = view;
-  const [openOn] = useState(() => zonedInstant(changeOpensOn(course, new Date()), '00:00', course.tz));
   const zoned = { ...withPicks(picks), kind: 'package' as const, tz: course.tz };
   const listed = dayPicks(zoned);
   const note = course.perWeek === null ? null : pickProgress(t.booking, picks.length, course.perWeek);
@@ -50,7 +49,6 @@ export function ChangePicker({ view, picks, onPicks, onNext, onBack }: ChangePic
           studentTz={course.tz}
           value={picks[0] ?? null}
           also={picks.slice(1)}
-          openOn={openOn}
           excludeCourse={course.subscriptionId}
           onPick={(slot) => onPicks(togglePick({ picks: [...picks], slot: slot.starts_at, tz: course.tz }))}
         />

@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { dayTimesFromPicks } from '../lessons/day-times.js';
 import { prefillDays } from './course-follow.js';
-import { changeOpensOn, changePicks, dayTimesKeeping, inWeekOrder, sameDays, WEEK_ORDER } from './course-picks.js';
+import { changeOpensOn, changePicks, changePrefillFrom, dayTimesKeeping, inWeekOrder, sameDays, WEEK_ORDER } from './course-picks.js';
 
 const now = '2026-10-18T06:00:00.000Z';
 const days = [
@@ -81,5 +81,21 @@ describe('changePicks / changeOpensOn', () => {
   });
   it('never before today', () => {
     expect(changeOpensOn({ ...course, opensOn: '2026-10-01', running: false }, new Date(now))).toBe('2026-10-18');
+  });
+});
+
+describe('changePrefillFrom — the later of changeOpensOn and startsOn', () => {
+  const course = { tz: 'Asia/Riyadh', startsOn: '2026-10-04', opensOn: '2026-10-18', running: true };
+  it('running: today', () => {
+    expect(changePrefillFrom(course, new Date(now))).toBe('2026-10-18');
+  });
+  it('running + a pending change from Tue 20 Oct: its startsOn', () => {
+    expect(changePrefillFrom({ ...course, startsOn: '2026-10-20' }, new Date(now))).toBe('2026-10-20');
+  });
+  it('booked ahead: its opensOn (= startsOn)', () => {
+    expect(changePrefillFrom({ ...course, startsOn: '2026-11-16', opensOn: '2026-11-16', running: false }, new Date(now))).toBe('2026-11-16');
+  });
+  it('booked ahead + a pending change: the new set\'s startsOn, after opensOn', () => {
+    expect(changePrefillFrom({ ...course, startsOn: '2026-11-09', opensOn: '2026-11-08', running: false }, new Date(now))).toBe('2026-11-09');
   });
 });
