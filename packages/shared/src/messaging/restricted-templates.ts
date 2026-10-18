@@ -16,10 +16,11 @@ export const OWN_BUTTON_TEMPLATES: readonly string[] = ['lesson_feedback_request
 export const ALL_TEMPLATES_PERMISSIONS = ['templates.manage', 'templates.send_all'] as const satisfies readonly Permission[];
 
 /**
- * Owner 2026-10-15 («only allowed templates should be listed to the assistants»): a role based on sales
- * or the classroom assistant lists and sends only the allow-list, whatever it was granted.
+ * Owner 2026-10-15 («only allowed templates should be listed to the assistants») and 2026-10-18 («dont show
+ * all these templates to sales/teacher»): a role based on sales, the classroom assistant or teacher lists
+ * and sends only the allow-list, whatever it was granted.
  */
-export const ALLOW_LIST_ONLY_ROLES: readonly string[] = ['sales', 'assistant'];
+export const ALLOW_LIST_ONLY_ROLES: readonly string[] = ['sales', 'assistant', 'teacher'];
 
 /** The signed-in user as the rule reads it: base role (profiles.role) and effective permissions. */
 export interface TemplateSender {

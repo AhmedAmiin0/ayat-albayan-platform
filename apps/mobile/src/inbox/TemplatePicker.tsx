@@ -48,8 +48,8 @@ export interface TemplatePickerProps {
  */
 export function TemplatePicker(props: TemplatePickerProps) {
   const templates = useApprovedTemplates(props.visible);
-  // Without templates.manage or templates.send_all, and always for an assistant, only the admin's
-  // allow-list (owner 2026-10-12 / 10-15): none ticked (or not imported yet) is not «nothing approved».
+  // Without templates.manage or templates.send_all, and always for sales, an assistant or a teacher, only
+  // the admin's allow-list (owner 2026-10-12 / 10-15 / 10-18): none ticked (or not imported yet) is not «nothing approved».
   const restricted = !useSendsAllTemplates();
   const offered = (templates.data ?? []).filter((row) => forAudience(row.key, props.teacher));
   const [chosen, setChosen] = useState<TemplateView | null>(null);
