@@ -18,6 +18,13 @@ describe('teacherPatch', () => {
     expect(teacherPatch(emptyDraft(), { teacher: ABRAR }, HINT)).toEqual({ teacher: ABRAR, startsAt: SLOT, extra: [] });
   });
 
+  it('the hinted teacher of a renewal brings every picked day, the earliest first', () => {
+    const picks = ['2026-10-07T16:30:00.000Z', SLOT];
+    const hint = { teacherId: ABRAR.id, startsAt: null, picks };
+    expect(teacherPatch(emptyDraft(), { teacher: ABRAR }, hint)).toEqual({ teacher: ABRAR, startsAt: SLOT, extra: [picks[0]] });
+    expect(teacherPatch(emptyDraft(), { teacher: NOOR }, hint)).toEqual({ teacher: NOOR, startsAt: null, extra: [] });
+  });
+
   it('another teacher drops a start picked for someone else', () => {
     const draft = { ...emptyDraft(), teacher: ABRAR, startsAt: SLOT, extra: ['2026-10-07T14:00:00.000Z'] };
     expect(teacherPatch(draft, { teacher: NOOR }, HINT)).toEqual({ teacher: NOOR, startsAt: null, extra: [] });

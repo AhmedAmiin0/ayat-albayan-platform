@@ -5,6 +5,7 @@ import { lessonErrorText } from '@/features/schedule/api';
 import { conflictText } from '@/features/schedule/ConflictNotice';
 import { t } from '@/lib/i18n';
 import { bookingCheckQuery } from './api';
+import { takenTexts } from './course-taken';
 import type { BookingBody } from './contract';
 import { days, toBookingRequest, type BookingDraft } from './draft';
 import { useBookingMode } from './mode';
@@ -42,6 +43,7 @@ export function useCourseClean(draft: BookingDraft): boolean {
  * after a DST change — shows before the review step, on the teacher's clock too. Silent on error
  * (the review step reports it), except for the assistant's course, which can't book until it is clean.
  * A course is checked only once its days are all picked (SlotDays shows the progress until then).
+ * A renewal's prefilled day that clashes is named («موعد الأحد لم يعد متاحًا…», takenTexts).
  */
 export function SeriesCheck({ draft }: { draft: BookingDraft }) {
   const { body, check } = useSeriesCheck(draft);
@@ -63,6 +65,9 @@ export function SeriesCheck({ draft }: { draft: BookingDraft }) {
         <NuqtaGlyph shape="struck" className="text-danger" />
         {t.booking.seriesCheck.replace('{n}', String(conflicts.length))}
       </p>
+      {takenTexts(draft, conflicts).map((line) => (
+        <p key={line}>{line}</p>
+      ))}
       <ul className="grid gap-1 text-xs text-ink-2">
         {conflicts.slice(0, SHOWN).map((c, i) => (
           <li key={`${c.kind}-${c.startsAt}-${i}`}>{conflictText(c, draft.teacher?.tz)}</li>

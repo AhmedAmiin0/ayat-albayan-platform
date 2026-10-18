@@ -26,6 +26,8 @@ export interface SlotPickerProps {
   onPick: (slot: SlotView) => void;
   /** With nothing picked yet, open on this instant's week (the lesson being moved). */
   near?: string;
+  /** «تغيير أيام الحلقات»: the course (subscription id) whose own lessons are not shown busy. */
+  excludeCourse?: string;
 }
 
 const cityOf = (tz: string) => tzCity(tz) ?? tz;
@@ -38,13 +40,13 @@ function openingWeek(anchor: string | undefined, first: string): string {
 }
 
 /** Week-by-week picker over GET /booking/slots (R-SCH-06, R-SCH-07): no past weeks, no typing. */
-export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, value, also, onPick, near }: SlotPickerProps) {
+export function SlotPicker({ teacherId, durationMin, studentIds, studentTz, value, also, onPick, near, excludeCourse }: SlotPickerProps) {
   const [now] = useState(() => new Date());
   const first = currentWeekStart(now);
   const [week, setWeek] = useState(() => openingWeek(value ?? near, first));
   const range = bookableWindow(week, now);
   const slots = useQuery({
-    ...slotsQuery({ teacherId, durationMin, studentIds, from: range?.from ?? now, to: range?.to ?? now }, useBookingMode()),
+    ...slotsQuery({ teacherId, durationMin, studentIds, excludeCourse, from: range?.from ?? now, to: range?.to ?? now }, useBookingMode()),
     enabled: range !== null,
   });
   const legend =

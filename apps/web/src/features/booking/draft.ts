@@ -24,8 +24,10 @@ export interface CourseDraft {
   lessonsTotal: number;
   /** The subscription's package; null = a custom count (labels use lessonsTotal, never the body's package). */
   package: PackageSize | null;
-  /** subscriptions.starts_on (local date): the slot grid opens on its week. */
+  /** The first local day it may start (courseOpensOn: the subscription's, or after the previous course): the slot grid opens on its week. */
   startsOn: string;
+  /** «تابِع بنفس الأيام»: the previous course's days as picks (prefillPicks); a clash on one names its day. */
+  prefilled?: readonly string[];
 }
 
 export type PickedStudent = { id: string; name: string; code: string | null };

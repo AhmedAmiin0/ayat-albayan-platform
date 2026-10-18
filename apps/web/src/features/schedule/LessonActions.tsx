@@ -13,6 +13,8 @@ export interface LessonActionsProps {
   /** Admin only: open the cancel / reschedule forms. Teachers get neither (docs/10 §3 guards). */
   onCancel?: () => void;
   onReschedule?: () => void;
+  /** Admin: «تغيير أيام الحلقات» of the lesson's assistant course (course_subscription_id). */
+  onChangeCourse?: () => void;
   /** Teacher surfaces use 48px controls (docs/07 §4). */
   size?: 'sm' | 'lg';
 }
@@ -27,7 +29,7 @@ function eventsNow(lesson: LessonView, now: number): StatusRouteEvent[] {
  * The lesson's next steps from `allowed_events` (R-SCH-03, R-SCH-07, R-SCH-08): confirm (the one
  * primary), the attendance outcomes, then reschedule / cancel for the admin.
  */
-export function LessonActions({ lesson, onDone, onCancel, onReschedule, size = 'sm' }: LessonActionsProps) {
+export function LessonActions({ lesson, onDone, onCancel, onReschedule, onChangeCourse, size = 'sm' }: LessonActionsProps) {
   const queryClient = useQueryClient();
   const [now] = useState(() => Date.now());
   const done = async (message: string) => {
@@ -67,7 +69,13 @@ export function LessonActions({ lesson, onDone, onCancel, onReschedule, size = '
           </div>
         </div>
       )}
-      <AdminButtons events={lesson.allowed_events} size={size} onCancel={onCancel} onReschedule={onReschedule} />
+      <AdminButtons
+        events={lesson.allowed_events}
+        size={size}
+        onCancel={onCancel}
+        onReschedule={onReschedule}
+        onChangeCourse={lesson.course_subscription_id ? onChangeCourse : undefined}
+      />
     </div>
   );
 }
@@ -77,13 +85,16 @@ interface AdminButtonsProps {
   size: 'sm' | 'lg';
   onCancel?: (() => void) | undefined;
   onReschedule?: (() => void) | undefined;
+  /** Only for a lesson of an assistant course. */
+  onChangeCourse?: (() => void) | undefined;
 }
 
-/** «غيّر الميعاد» (with what it does: closes this lesson, opens a new one, can cover the series) and «إلغاء الحلقة», only where the caller opens their forms and the status allows. */
-function AdminButtons({ events, size, onCancel, onReschedule }: AdminButtonsProps) {
+/** «غيّر الميعاد» (with what it does: closes this lesson, opens a new one, can cover the series), «تغيير أيام الحلقات» of a course and «إلغاء الحلقة», only where the caller opens their forms and the status allows. */
+function AdminButtons({ events, size, onCancel, onReschedule, onChangeCourse }: AdminButtonsProps) {
   const reschedule = onReschedule && events.includes('reschedule');
+  const course = onChangeCourse && events.includes('reschedule');
   const cancel = onCancel && (events.includes('cancel_by_admin') || events.includes('cancel_by_teacher'));
-  if (!reschedule && !cancel) return null;
+  if (![reschedule, course, cancel].some(Boolean)) return null;
   return (
     <div className="flex flex-wrap items-start gap-3 border-t border-rule pt-3">
       {reschedule && (
@@ -93,6 +104,11 @@ function AdminButtons({ events, size, onCancel, onReschedule }: AdminButtonsProp
           </Button>
           <span className="text-xs text-ink-3">{t.lessons.timeEdit.captionReschedule}</span>
         </div>
+      )}
+      {course && (
+        <Button type="button" variant="secondary" size={size} onClick={onChangeCourse}>
+          {t.booking.courseChange.changeDays}
+        </Button>
       )}
       {cancel && (
         <Button type="button" variant="danger-quiet" size={size} onClick={onCancel}>

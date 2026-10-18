@@ -1,4 +1,4 @@
-import { counted, type CourseSubscription, type SalesCourseView } from '@ab/shared';
+import { counted, courseOpensOn, type CourseSubscription, type SalesCourseView } from '@ab/shared';
 import { emptyDraft, type BookingDraft } from '@/features/booking/draft';
 import type { BookHint } from '@/features/booking/hint';
 import { dateLabel } from '@/features/schedule/tz';
@@ -13,6 +13,7 @@ import { t } from '@/lib/i18n';
  * The wizard's starting draft; null while she can't book it herself (blocked, or no day count). The
  * day count is the view's perWeek only. A custom count keeps no package of its own: the request
  * carries courseBodyPackage (ignored by the API) and the wizard names the lesson count (courseFixedText).
+ * The slot grid opens on courseOpensOn: the subscription's start, or after a renewal's previous course.
  */
 export function courseDraft(view: SalesCourseView): BookingDraft | null {
   const { student, subscription: sub, perWeek } = view;
@@ -25,7 +26,7 @@ export function courseDraft(view: SalesCourseView): BookingDraft | null {
     genderPref: student.teacher_gender_pref,
     durationMin: sub.duration,
     ...(sub.package ? { pkg: sub.package } : {}),
-    course: { perWeek, lessonsTotal: sub.lessons_total, package: sub.package, startsOn: sub.starts_on },
+    course: { perWeek, lessonsTotal: sub.lessons_total, package: sub.package, startsOn: courseOpensOn(view) ?? sub.starts_on },
   };
 }
 

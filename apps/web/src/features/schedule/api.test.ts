@@ -41,4 +41,10 @@ describe('query keys', () => {
     expect(String(slotsQuery({ ...base, studentIds: ['a', 'b'] }).queryKey.at(-1))).toContain('studentIds=a%2Cb');
     expect(String(slotsQuery({ ...base, studentIds: [] }).queryKey.at(-1))).not.toContain('studentIds');
   });
+
+  it('slotsQuery sends excludeCourse only when a course is moving («تغيير أيام الحلقات»)', () => {
+    const base = { teacherId: 't1', from: FROM, to: TO, durationMin: 45, studentIds: ['a'] };
+    expect(String(slotsQuery({ ...base, excludeCourse: 'sub-1' }).queryKey.at(-1))).toContain('excludeCourse=sub-1');
+    expect(String(slotsQuery(base).queryKey.at(-1))).not.toContain('excludeCourse');
+  });
 });
