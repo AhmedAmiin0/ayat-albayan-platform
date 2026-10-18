@@ -70,14 +70,23 @@ describe('planSeries — one plan per start time (owner 2026-10-18, R-SCH-02)', 
     expect(plans.flatMap(starts).every((s) => s < '2026-10-28')).toBe(true);
   });
 
-  it('a time with no lesson left before endsOn is dropped', () => {
-    const plans = plan({}, '2026-10-05');
-    expect(plans.map((p) => p.timing.start_time_local)).toEqual(['17:00']);
-    expect(plans.flatMap(starts)).toEqual(['2026-10-04T14:00:00.000Z']);
+  it('a course whose picked day has no lesson before endsOn → 400 no_occurrences (never dropped)', () => {
+    expect(code(() => plan({}, '2026-10-05'))).toBe('no_occurrences');
+    expect(code(() => plan({}, '2026-10-02'))).toBe('no_occurrences');
   });
 
-  it('nothing in the window at all → []', () => {
-    expect(plan({}, '2026-10-02')).toEqual([]);
+  it('a course is planned through its last day whatever the horizon: 2-week horizon, 4-week course → all 8', () => {
+    const plans = planSeries({ rule, now, horizonWeeks: 2, endsOn: '2026-10-27' });
+    expect(plans.flatMap(starts)).toHaveLength(8);
+    expect(plans.flatMap(starts).at(-1)).toBe('2026-10-27T16:30:00.000Z');
+  });
+
+  it('open-ended: a time with nothing inside the horizon stays, last and with no lessons (the top-up makes them)', () => {
+    const fri = { byday: [0, 5], startTimeLocal: '17:00', dayTimes: [{ weekday: 0, startTimeLocal: '19:00' }] };
+    const plans = planSeries({ rule: { ...rule, ...fri }, now, horizonWeeks: 2 / 7 });
+    expect(plans.map((p) => p.timing.start_time_local)).toEqual(['17:00', '19:00']);
+    expect(plans.map((p) => p.occurrences.length)).toEqual([1, 0]);
+    expect(plans.every((p) => p.timing.ends_on === null)).toBe(true);
   });
 });
 

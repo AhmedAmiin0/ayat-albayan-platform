@@ -29,6 +29,8 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
     student: vi.fn().mockResolvedValue(STUDENT),
     subscription: vi.fn().mockResolvedValue(sub),
     rules: vi.fn().mockResolvedValue(rules),
+    subscriptionBooked: vi.fn().mockResolvedValue(false),
+    requested: vi.fn().mockResolvedValue(false),
   };
   const scope = { owned: vi.fn().mockResolvedValue({ leadIds: [], guardianIds: [], studentIds: [S1], phones: [] }) };
   const course = new SalesCourse(queries as unknown as SalesCourseQueries, scope as unknown as SalesBookingScope);
@@ -36,9 +38,14 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
 }
 
 describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () => {
-  it('an allowed course: no invoice, every rule ends on the 8th lesson (Sun 18 → Tue 10 Nov)', async () => {
+  beforeEach(() => vi.useFakeTimers({ now: new Date('2026-10-18T08:00:00Z'), toFake: ['Date'] }));
+  afterEach(() => vi.useRealTimers());
+
+  it('an allowed course: no invoice, every rule ends on the 8th lesson (Sun 18 → Tue 10 Nov), the subscription’s label', async () => {
     const { course, queries } = setup();
-    expect(await course.options(bookingRequestSchema.parse(BODY))).toEqual({ invoiceWaived: true, endsOn: '2026-11-10' });
+    const course8 = { package: '8', subscriptionId: 'sub1' };
+    expect(await course.options(bookingRequestSchema.parse(BODY))).toEqual({ invoiceWaived: true, endsOn: '2026-11-10', course: course8 });
+    expect(queries.subscriptionBooked).toHaveBeenCalledWith('sub1');
     expect(queries.subscription).toHaveBeenCalledWith(S1);
     expect(queries.rules).toHaveBeenCalledWith(S1);
   });
@@ -51,6 +58,19 @@ describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () =
     expect(await rejected(null)).toBe('subscription_required');
     expect(await rejected(SUB, [], { byday: [0, 2, 4] })).toBe('days_count_mismatch');
     expect(await rejected(SUB, [{ starts_on: '2026-09-01', ends_on: null, package: '8' }])).toBe('course_exists');
+    expect(await rejected(SUB, [], { startsAt: '2026-10-18T07:00:00.000Z' })).toBe('date_in_past');
+  });
+
+  it('the end counts from now: Sunday’s lesson already passed → the 8th lesson is Sun 15 Nov (m5)', async () => {
+    vi.setSystemTime(new Date('2026-10-18T15:00:00Z'));
+    expect((await setup().course.options(bookingRequestSchema.parse(BODY))).endsOn).toBe('2026-11-15');
+  });
+
+  it('isReplay: only a clientRequestId that already booked', async () => {
+    const { course, queries } = setup();
+    expect(await course.isReplay(bookingRequestSchema.parse(BODY))).toBe(false);
+    queries.requested.mockResolvedValue(true);
+    expect(await course.isReplay(bookingRequestSchema.parse({ ...BODY, clientRequestId: 'e0000000-0000-4000-8000-00000000000e' }))).toBe(true);
   });
 });
 
@@ -66,6 +86,9 @@ describe('SalesCourse.view — GET /sales/booking/course', () => {
   it('a running course blocks (course_exists); no subscription → perWeek null, subscription_required', async () => {
     const running = setup(SUB, [{ starts_on: '2026-09-01', ends_on: '2026-10-18', package: '8' }]);
     expect((await running.course.view(S1, USER)).blocked).toBe('course_exists');
+    const sold = setup();
+    sold.queries.subscriptionBooked.mockResolvedValue(true);
+    expect((await sold.course.view(S1, USER)).blocked).toBe('course_exists');
     const none = await setup(null).course.view(S1, USER);
     expect([none.perWeek, none.blocked]).toEqual([null, 'subscription_required']);
   });

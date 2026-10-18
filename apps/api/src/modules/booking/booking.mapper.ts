@@ -27,6 +27,8 @@ export type RuleRow = RuleTiming & {
   package: PackageSize | null;
   /** Idempotency key: a replay returns the first booking (migration 111). */
   client_request_id: string | null;
+  /** The subscription an assistant's course books (migration 470); null or absent otherwise. */
+  subscription_id?: string | null;
 };
 /**
  * Another time of the same booking (migration 460): its own schedule_rules row with the first rule's

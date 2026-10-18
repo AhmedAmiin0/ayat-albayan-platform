@@ -5,7 +5,7 @@ import { ConflictChecker } from '../scheduling/conflict-checker';
 import { probeOccurrences } from '../scheduling/dst-probe';
 import { domainError } from './booking.errors';
 import { meetingLinkFor, type BookingPayload } from './booking.mapper';
-import { bookingPayload } from './booking.payload';
+import { bookingPayload, type CourseLabel } from './booking.payload';
 import { BookingParties, type Resolved } from './booking.parties';
 import type { Plan } from './booking.plan';
 import type { BookingTeacher } from './booking.queries';
@@ -31,8 +31,10 @@ export type Prepared = {
  */
 export type PrepareOptions = {
   invoiceWaived?: boolean;
-  /** Every rule's ends_on (courseEndsOn); later occurrences are dropped. */
+  /** Every rule's ends_on (plannedCourseEnd): the whole course is planned and checked, nothing after it. */
   endsOn?: string | null;
+  /** The subscription it books: every rule's package and subscription_id (CourseLabel). */
+  course?: CourseLabel;
 };
 type Series = { plan: Plan; siblings: Plan[]; first: Occurrence; conflicts: Conflict[] };
 
@@ -86,7 +88,7 @@ export class BookingPlanner {
     });
     // The lessons keep the link either way; in auto mode the confirmation names none (no lesson id yet, so no classroom token).
     const confirmationLink = settings.meeting_link_auto ? null : meetingLink;
-    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, siblings, first, conflicts, meetingLink, confirmationLink, makeupOf });
+    const payload = bookingPayload({ req, kind, teacher, who, lead, plan, siblings, first, conflicts, meetingLink, confirmationLink, makeupOf, course: opts.course });
     const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
     return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes: uploadMaxBytes(settings), invoiceWaived };
   }

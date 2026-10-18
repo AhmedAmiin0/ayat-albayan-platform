@@ -1,6 +1,6 @@
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
-import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { PermissionResolver } from '../../common/auth/permissions';
@@ -44,7 +44,8 @@ describe('/sales/booking — the assistant books the course of her subscription'
   let app: NestFastifyApplication;
   const sales = { ownership: vi.fn() };
   const booking = { book: vi.fn(), check: vi.fn() };
-  const course = { student: vi.fn(), subscription: vi.fn(), rules: vi.fn() };
+  const course = { student: vi.fn(), subscription: vi.fn(), rules: vi.fn(), subscriptionBooked: vi.fn(), requested: vi.fn() };
+  const OPTS = { invoiceWaived: true, endsOn: '2026-11-10', course: { package: '8', subscriptionId: 'sub1' } };
   const call = (o: { method?: 'GET' | 'POST'; url: string; token: string; body?: object }) =>
     app.inject({ method: o.method ?? 'GET', url: o.url, payload: o.body, headers: { authorization: `Bearer ${o.token}` } });
   const post = (token: string, body: object, url = '/sales/booking') => call({ method: 'POST', url, token, body });
@@ -62,7 +63,9 @@ describe('/sales/booking — the assistant books the course of her subscription'
     await app.getHttpAdapter().getInstance().ready();
   }, 60_000);
   afterAll(() => app.close());
+  afterEach(() => vi.useRealTimers());
   beforeEach(() => {
+    vi.useFakeTimers({ now: new Date('2026-10-18T08:00:00Z'), toFake: ['Date'] });
     vi.resetAllMocks();
     sales.ownership.mockImplementation(async (id: string) => (id === A ? OWN_A : NONE));
     booking.book.mockResolvedValue({ rule_id: 'r1', student_ids: [S1], guardian_ids: ['g1'], lessons: [], message_ids: [], invoice_id: null });
@@ -70,17 +73,40 @@ describe('/sales/booking — the assistant books the course of her subscription'
     course.student.mockResolvedValue(STUDENT);
     course.subscription.mockResolvedValue(SUB);
     course.rules.mockResolvedValue([]);
+    course.subscriptionBooked.mockResolvedValue(false);
+    course.requested.mockResolvedValue(false);
   });
 
   it('book: her course → 201 with her id, no invoice and every rule ending on the 8th lesson', async () => {
     expect((await post('salesA', COURSE)).statusCode).toBe(201);
-    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ studentIds: [S1] }), A, { invoiceWaived: true, endsOn: '2026-11-10' });
+    expect(booking.book).toHaveBeenCalledWith(expect.objectContaining({ studentIds: [S1] }), A, OPTS);
+  });
+
+  it('a retry with the same clientRequestId after a success replays the same rule, not course_exists (m6)', async () => {
+    const body = { ...COURSE, clientRequestId: 'e0000000-0000-4000-8000-00000000000e' };
+    const first = await post('salesA', body);
+    course.requested.mockResolvedValue(true);
+    course.subscriptionBooked.mockResolvedValue(true);
+    const again = await post('salesA', body);
+    expect([first.json().rule_id, again.statusCode, again.json().rule_id]).toEqual(['r1', 201, 'r1']);
+    expect(booking.book).toHaveBeenLastCalledWith(expect.anything(), A);
+    expect((await post('salesB', body)).json().code).toBe('not_your_student');
+  });
+
+  it('the subscription already has its course → 409 course_exists (M3); a custom 24 books 6 days, package null (M4)', async () => {
+    course.subscriptionBooked.mockResolvedValue(true);
+    expect((await post('salesA', COURSE)).json().code).toBe('course_exists');
+    course.subscriptionBooked.mockResolvedValue(false);
+    course.subscription.mockResolvedValue({ ...SUB, package: null, lessons_total: 24 });
+    const six = { ...COURSE, byday: [0, 1, 2, 3, 4, 5], package: '8' };
+    expect((await post('salesA', six)).statusCode).toBe(201);
+    expect(booking.book).toHaveBeenLastCalledWith(expect.anything(), A, expect.objectContaining({ course: { package: null, subscriptionId: 'sub1' } }));
   });
 
   it('check: the same guard, then the conflicts of the capped series', async () => {
     const res = await post('salesA', COURSE, '/sales/booking/check');
     expect([res.statusCode, res.json()]).toEqual([200, { conflicts: [] }]);
-    expect(booking.check).toHaveBeenCalledWith(expect.anything(), { invoiceWaived: true, endsOn: '2026-11-10' });
+    expect(booking.check).toHaveBeenCalledWith(expect.anything(), OPTS);
   });
 
   it('403: no self.sales_money (kind_not_allowed), another assistant’s student even with auto-assign OFF', async () => {

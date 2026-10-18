@@ -46,6 +46,19 @@ describe('planNewRule — whole-rule reschedule (R-SCH-07)', () => {
     expect(rule.ends_on).toBe('2026-10-12');
   });
 
+  it('a capped rule (the assistant course) keeps its ends_on and stops its lessons there', () => {
+    const old = ruleRow({ ends_on: '2026-10-14' });
+    const { rule, occurrences } = planNewRule({ old, next: NEXT, now: NOW, weeks: 4 });
+    expect(rule.ends_on).toBe('2026-10-14');
+    expect(occurrences.map((o) => o.starts_at.toISOString())).toEqual(['2026-10-12T15:30:00.000Z', '2026-10-14T15:30:00.000Z']);
+  });
+
+  it('an open-ended rule stays open-ended', () => {
+    const { rule, occurrences } = planNewRule({ old: ruleRow({ ends_on: null }), next: NEXT, now: NOW, weeks: 4 });
+    expect(rule.ends_on).toBeNull();
+    expect(occurrences.length).toBeGreaterThan(2);
+  });
+
   it('a start beyond the horizon plans no lessons', () => {
     const { occurrences } = planNewRule({ old: ruleRow(), next: { ...NEXT, startsOn: '2027-02-01' }, now: NOW, weeks: 5 });
     expect(occurrences).toEqual([]);

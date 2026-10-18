@@ -28,6 +28,14 @@ export function courseDaysPerWeek(sub: Pick<CourseSubscription, 'package' | 'les
   return Number.isInteger(n) && n >= 1 && n <= 7 ? n : null;
 }
 
+/**
+ * The `package` a course's POST /sales/booking body carries: the subscription's, or for a custom count
+ * any paid size the schema accepts ('8'). The API ignores it for a course and labels every rule with
+ * the subscription's own package (null for a custom count, PR #113 review M4); never show it as a label.
+ */
+export const courseBodyPackage = (sub: Pick<CourseSubscription, 'package'>): Exclude<PackageSize, 'trial'> =>
+  sub.package === null || sub.package === 'trial' ? '8' : sub.package;
+
 /** GET /sales/booking/course?studentId=: what the course wizard needs (no guardian, no money). */
 export interface SalesCourseView {
   student: {

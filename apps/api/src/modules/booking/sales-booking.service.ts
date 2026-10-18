@@ -37,16 +37,28 @@ export class SalesBookingService {
    * not_your_lead / not_your_student / not_your_family; a course's codes: SalesCourse.options.
    */
   async book(req: BookingRequest, user: AuthUser): Promise<BookingResult> {
-    const { own, opts } = await this.allowed(req, user);
+    const own = await this.ownership(req, user);
+    // A retry after a booked course returns that booking (BookingService replays it), not course_exists.
+    if (bookingKindOf(req) === 'package' && (await this.course.isReplay(req))) return this.scoped(own, () => this.booking.book(req, user.id));
+    const opts = await this.courseOptions(req);
     return this.scoped(own, () => (opts ? this.booking.book(req, user.id, opts) : this.booking.book(req, user.id)));
   }
 
   /** The scope, then for a course its guard: the options it is booked with (undefined for a trial). */
   private async allowed(req: BookingRequest, user: AuthUser): Promise<{ own: BookingOwnership; opts?: PrepareOptions }> {
+    const own = await this.ownership(req, user);
+    const opts = await this.courseOptions(req);
+    return opts ? { own, opts } : { own };
+  }
+
+  private async ownership(req: BookingRequest, user: AuthUser): Promise<BookingOwnership> {
     const own = await this.scope.forRequest(req, user);
     assertBookingScope(req, own, can(user, 'self.sales_money'));
-    if (bookingKindOf(req) !== 'package') return { own };
-    return { own, opts: await this.course.options(req) };
+    return own;
+  }
+
+  private courseOptions(req: BookingRequest): Promise<PrepareOptions | undefined> {
+    return bookingKindOf(req) === 'package' ? this.course.options(req) : Promise.resolve(undefined);
   }
 
   private async scoped<T>(own: BookingOwnership, run: () => Promise<T>): Promise<T> {

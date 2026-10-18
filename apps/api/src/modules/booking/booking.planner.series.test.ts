@@ -71,4 +71,24 @@ describe('BookingPlanner — a time per weekday (owner 2026-10-18, R-SCH-04, R-S
     ]);
     await expect(planner.prepare(bookingRequest(TWO_TIMES))).rejects.toMatchObject({ response: { code: 'conflict' } });
   });
+
+  it('a course past a 2-week horizon: all 8 lessons written and checked; a clash in week 4 → 409', async () => {
+    const { planner, busy } = fakePlanner({ booking_horizon_weeks: 2 });
+    const req = bookingRequest({ ...TWO_TIMES, startsOn: '2026-10-04' });
+    const { payload } = await planner.prepare(req, { endsOn: '2026-10-27' });
+    expect(payload.lessons.length + (payload.siblings?.[0]?.lessons.length ?? 0)).toBe(8);
+    busy.teacherLessons.mockResolvedValue([
+      { id: 'T4', starts_at: new Date('2026-10-27T16:30:00Z'), ends_at: new Date('2026-10-27T17:15:00Z') },
+    ]);
+    await expect(planner.prepare(req, { endsOn: '2026-10-27' })).rejects.toMatchObject({ response: { code: 'conflict' } });
+  });
+
+  it('a course: every rule carries the subscription and its package (null = custom), whatever the body says', async () => {
+    const { planner } = fakePlanner();
+    const req = bookingRequest({ ...TWO_TIMES, startsOn: '2026-10-04' });
+    const { payload } = await planner.prepare(req, { endsOn: '2026-10-27', course: { package: null, subscriptionId: 'sub1' } });
+    const sibling = payload.siblings?.[0]?.rule;
+    expect([payload.rule.subscription_id, payload.rule.package, sibling?.subscription_id, sibling?.package]).toEqual(['sub1', null, 'sub1', null]);
+    expect('subscription_id' in (await planner.prepare(req)).payload.rule).toBe(false);
+  });
 });

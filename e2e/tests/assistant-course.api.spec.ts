@@ -88,8 +88,11 @@ test.describe.serial('sales: the course of her subscription with a time per day 
 
   test('Sun 17:00 + Tue 19:30 → 201: exactly 8 lessons over two rules, both created by her and ending together', async ({ request }) => {
     const me = need(a);
-    const res = await book(request, me.token, course());
+    const body = course();
+    const res = await book(request, me.token, body);
     expect(res.status, JSON.stringify(res.body)).toBe(201);
+    const again = await book(request, me.token, body); // a retry replays it (review m6), not course_exists
+    expect([again.status, again.body.rule_id]).toEqual([201, res.body.rule_id]);
     expect(res.body.lessons).toHaveLength(8);
     const rules = await withSql((sql) => sql<{ start: string; created_by: string; ends_on: string; first_rule_id: string | null; invoices: number }[]>`
       select r.start_time_local::text as start, r.created_by, r.ends_on::text as ends_on, r.first_rule_id,
@@ -101,6 +104,16 @@ test.describe.serial('sales: the course of her subscription with a time per day 
     expect(new Set(rules.map((r) => r.ends_on))).toEqual(new Set([addDays(sunday, 23)]));
     const [count] = await withSql((sql) => sql<{ n: number }[]>`select count(*)::int as n from public.lesson_students where student_id = ${student}`);
     expect(count?.n).toBe(8);
+    const ties = await withSql((sql) => sql<{ subscription_id: string | null }[]>`select distinct r.subscription_id
+      from public.schedule_rules r join public.schedule_rule_students rs on rs.rule_id = r.id where rs.student_id = ${student}`);
+    expect(ties).toHaveLength(1);
+    expect(ties[0]?.subscription_id).not.toBeNull();
+  });
+
+  test('a second course on the same subscription after the first one ended is 409 course_exists', async ({ request }) => {
+    const later = addDays(sunday, 28);
+    const res = await book(request, need(a).token, course({ startsOn: later, startsAt: riyadh(later, '17:00').toISOString() }));
+    expect([res.status, res.body.code]).toEqual([409, 'course_exists']);
   });
 
   test('a second course overlapping the first is 409 course_exists; the wizard now shows it blocked', async ({ request }) => {

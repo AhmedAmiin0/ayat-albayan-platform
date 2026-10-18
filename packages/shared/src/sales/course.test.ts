@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { courseDaysPerWeek } from './course.js';
+import { courseBodyPackage, courseDaysPerWeek } from './course.js';
 
 describe('courseDaysPerWeek', () => {
   it.each([
@@ -18,5 +18,12 @@ describe('courseDaysPerWeek', () => {
   it('a custom count the admin books (not by 4, or more than 7 a week)', () => {
     expect(courseDaysPerWeek({ package: null, lessons_total: 10 })).toBeNull();
     expect(courseDaysPerWeek({ package: null, lessons_total: 32 })).toBeNull();
+  });
+});
+
+describe('courseBodyPackage', () => {
+  it('the subscription’s package, or a paid size the schema accepts for a custom count', () => {
+    expect(courseBodyPackage({ package: '12' })).toBe('12');
+    expect(courseBodyPackage({ package: null })).toBe('8');
   });
 });

@@ -2512,6 +2512,7 @@ export type Database = {
           start_time_local: string;
           starts_on: string;
           status: Database['public']['Enums']['schedule_rule_status'];
+          subscription_id: string | null;
           teacher_id: string;
           tz: string;
           updated_at: string;
@@ -2531,6 +2532,7 @@ export type Database = {
           start_time_local: string;
           starts_on: string;
           status?: Database['public']['Enums']['schedule_rule_status'];
+          subscription_id?: string | null;
           teacher_id: string;
           tz: string;
           updated_at?: string;
@@ -2550,6 +2552,7 @@ export type Database = {
           start_time_local?: string;
           starts_on?: string;
           status?: Database['public']['Enums']['schedule_rule_status'];
+          subscription_id?: string | null;
           teacher_id?: string;
           tz?: string;
           updated_at?: string;
@@ -2574,6 +2577,13 @@ export type Database = {
             columns: ['first_rule_id'];
             isOneToOne: false;
             referencedRelation: 'schedule_rules';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'schedule_rules_subscription_id_fkey';
+            columns: ['subscription_id'];
+            isOneToOne: false;
+            referencedRelation: 'subscriptions';
             referencedColumns: ['id'];
           },
           {

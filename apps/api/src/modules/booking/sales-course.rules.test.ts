@@ -3,8 +3,8 @@ import { describe, expect, it } from 'vitest';
 import { courseBlock, courseOverlaps, courseProblem, isCourseRule, type CourseFacts, type CourseRule } from './sales-course.rules';
 
 const SUB: CourseSubscription = { id: 'sub1', package: '8', duration: 45, lessons_total: 8, starts_on: '2026-10-10' };
-const REQ: CourseFacts['req'] = { durationMin: 45, package: '8', startsOn: '2026-10-11', byday: [0, 2] };
-const facts = (over: Partial<CourseFacts> = {}): CourseFacts => ({ req: REQ, sub: SUB, rules: [], endsOn: '2026-11-03', ...over });
+const REQ: CourseFacts['req'] = { durationMin: 45, startsOn: '2026-10-11', byday: [0, 2] };
+const facts = (over: Partial<CourseFacts> = {}): CourseFacts => ({ req: REQ, sub: SUB, rules: [], endsOn: '2026-11-03', booked: false, ...over });
 const rule = (over: Partial<CourseRule> = {}): CourseRule => ({ starts_on: '2026-09-01', ends_on: null, package: '8', ...over });
 const result = (over: Partial<CourseFacts> = {}) => courseProblem(facts(over));
 
@@ -18,14 +18,21 @@ describe('courseProblem — what the assistant may book for her subscription (ow
     expect(result({ sub: null })).toEqual({ status: 409, code: 'subscription_required' });
   });
 
-  it('400 course_mismatch: another duration, or another package than the subscription’s', () => {
+  it('400 course_mismatch: another duration (the package is the subscription’s whatever is sent, review M4)', () => {
     expect(result({ req: { ...REQ, durationMin: 60 } })).toEqual({ status: 400, code: 'course_mismatch' });
-    expect(result({ req: { ...REQ, package: '12' } })).toEqual({ status: 400, code: 'course_mismatch' });
   });
 
-  it('a custom count (package null) takes any package size the request names', () => {
-    const custom = { ...SUB, package: null, lessons_total: 8 };
-    expect(result({ sub: custom, req: { ...REQ, package: '12' } })).toBeNull();
+  it('a custom count of 24 lessons is 6 days a week, bookable by the assistant', () => {
+    const custom = { ...SUB, package: null, lessons_total: 24 };
+    expect(result({ sub: custom, req: { ...REQ, byday: [0, 1, 2, 3, 4, 5] } })).toBeNull();
+  });
+
+  it('409 course_exists once the subscription has its course, even ended (review M3)', () => {
+    expect(result({ booked: true })).toEqual({ status: 409, code: 'course_exists' });
+  });
+
+  it('400 no_occurrences when a picked day has no lesson (no course end)', () => {
+    expect(result({ endsOn: null })).toEqual({ status: 400, code: 'no_occurrences' });
   });
 
   it('400 starts_before_subscription', () => {
@@ -72,9 +79,10 @@ describe('isCourseRule / courseOverlaps', () => {
 describe('courseBlock — the wizard’s gate (GET /sales/booking/course)', () => {
   const today = '2026-10-18';
   it('subscription_required, then custom_count_admin, then course_exists; else null', () => {
-    expect(courseBlock({ sub: null, rules: [rule()], today })).toBe('subscription_required');
-    expect(courseBlock({ sub: { ...SUB, package: null, lessons_total: 6 }, rules: [rule()], today })).toBe('custom_count_admin');
-    expect(courseBlock({ sub: SUB, rules: [rule({ ends_on: today })], today })).toBe('course_exists');
-    expect(courseBlock({ sub: SUB, rules: [rule({ ends_on: '2026-10-17' })], today })).toBeNull();
+    expect(courseBlock({ sub: null, rules: [rule()], today, booked: false })).toBe('subscription_required');
+    expect(courseBlock({ sub: { ...SUB, package: null, lessons_total: 6 }, rules: [rule()], today, booked: false })).toBe('custom_count_admin');
+    expect(courseBlock({ sub: SUB, rules: [rule({ ends_on: today })], today, booked: false })).toBe('course_exists');
+    expect(courseBlock({ sub: SUB, rules: [rule({ ends_on: '2026-10-17' })], today, booked: false })).toBeNull();
+    expect(courseBlock({ sub: SUB, rules: [], today, booked: true })).toBe('course_exists');
   });
 });

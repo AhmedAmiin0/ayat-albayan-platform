@@ -55,4 +55,21 @@ export class SalesCourseQueries {
     if (error) throw dbError(error);
     return data.map(({ rule }) => ({ starts_on: rule.starts_on, ends_on: rule.ends_on, package: rule.package }));
   }
+
+  /**
+   * Does the subscription already have its course (PR #113 review M3)? Any rule tied to it, whatever
+   * its status: one paid plan books exactly one course; a renewal is a new subscription.
+   */
+  async subscriptionBooked(subscriptionId: string): Promise<boolean> {
+    const { data, error } = await this.db.from('schedule_rules').select('id').eq('subscription_id', subscriptionId).limit(1);
+    if (error) throw dbError(error);
+    return data.length > 0;
+  }
+
+  /** Did this clientRequestId already book (a retry after a success, review m6)? */
+  async requested(requestId: string): Promise<boolean> {
+    const { data, error } = await this.db.from('schedule_rules').select('id').eq('client_request_id', requestId).limit(1);
+    if (error) throw dbError(error);
+    return data.length > 0;
+  }
 }
