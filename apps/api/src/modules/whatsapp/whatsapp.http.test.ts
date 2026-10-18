@@ -47,7 +47,8 @@ describe('WhatsApp admin routes T1–T3, M1–M2 (docs/12 §4)', () => {
     t.client.getTemplates.mockResolvedValue(recorded);
     const res = await t.call({ method: 'POST', url: '/messaging/templates/health' });
     expect(res.statusCode).toBe(200);
-    expect(res.json()[0]).toMatchObject({ key: 'booking_confirmation', quality: 'GREEN' });
+    expect(res.json()).toMatchObject({ lines: [{ line: 'notifications', ok: true, synced: 1 }], templates: [{ key: 'booking_confirmation' }] });
+    expect(t.templates.update).toHaveBeenCalledWith('booking_confirmation', expect.objectContaining({ quality: 'GREEN' }));
     t.client.configured.mockReturnValue(false);
     const off = await t.call({ method: 'POST', url: '/messaging/templates/health' });
     expect([off.statusCode, off.json().code]).toEqual([503, 'not_configured']);

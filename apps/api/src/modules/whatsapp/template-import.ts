@@ -5,40 +5,23 @@ import {
   TEMPLATE_CATEGORIES,
   TEMPLATE_KEY_PATTERN,
   type TemplateCategory,
+  type WaLine,
 } from '@ab/shared';
 import { components, metaButtons, ourStatus, type Component } from './template-sync';
 import type { MetaTemplate, TemplateRow } from './whatsapp.types';
 
-// The health check per line, pure part (owner 2026-10-12, docs/12 §3.4): which Meta list a row is
-// checked against, and the chat line's import: an approved template on the chat WABA the registry
-// does not know becomes a row on line 'chat', on the restricted allow-list only when it is one of
-// RESTRICTED_TEMPLATE_DEFAULTS (owner 2026-10-12: free_trial_invite, welcome_greeting).
-// Only what the sender and the composers can send is imported; the rest is skipped with a reason.
+// One line's sync, pure part (owner 2026-10-12, 2026-10-18, docs/12 §3.4): an approved template on a
+// line's WABA the registry does not know becomes a row on THAT line; on the restricted allow-list only
+// when it comes from the chat WABA and is one of RESTRICTED_TEMPLATE_DEFAULTS (a notifications import
+// is never flagged). Only what the sender and the composers can send is imported; the rest is skipped
+// with a reason, returned to the admin.
 
 export type ImportRow = TablesInsert<'message_templates'>;
 
 export interface ImportPlan {
   rows: ImportRow[];
-  /** Logged by name by the registry: not imported, and why. */
+  /** Returned by the line's sync: not imported, and why. */
   skipped: { name: string; reason: string }[];
-}
-
-/** The Meta lists one health check read. */
-export interface MetaLists {
-  notifications: readonly MetaTemplate[];
-  /** null = not read: the chat line is not configured, or its read failed. */
-  chat: readonly MetaTemplate[] | null;
-  /** The chat line is configured: chat rows are checked against its list only. */
-  chatOn: boolean;
-}
-
-/**
- * The list a row is checked against: its own line's. A chat row while the chat line is off is checked
- * against notifications (one line = one WABA, the one it would leave from); null = its list was not
- * read this time, so the row stays as it is (a failed chat read never marks rows missing).
- */
-export function listFor(row: Pick<TemplateRow, 'line'>, lists: MetaLists): readonly MetaTemplate[] | null {
-  return row.line === 'chat' && lists.chatOn ? lists.chat : lists.notifications;
 }
 
 const isCategory = (c: string): c is TemplateCategory => (TEMPLATE_CATEGORIES as readonly string[]).includes(c);
@@ -74,8 +57,11 @@ function importButtons(comps: readonly Component[]) {
   return metaButtons(comps, []) ?? (raw.every(valueFree) ? [] : null);
 }
 
-/** The registry row for one chat-WABA template, or the reason it is not imported. */
-export function starterRow(meta: MetaTemplate, now: Date): ImportRow | string {
+/** Only a restricted default from the chat WABA comes on the allow-list. */
+const flagged = (line: WaLine, name: string): boolean => line === 'chat' && (RESTRICTED_TEMPLATE_DEFAULTS as readonly string[]).includes(name);
+
+/** The registry row for one template of `line`'s WABA, or the reason it is not imported. */
+export function starterRow(meta: MetaTemplate, now: Date, line: WaLine = 'chat'): ImportRow | string {
   const category = meta.category.toLowerCase();
   if (!isCategory(category)) return `category ${meta.category}`;
   if (!TEMPLATE_KEY_PATTERN.test(meta.name)) return 'the name is not a registry key';
@@ -102,23 +88,32 @@ export function starterRow(meta: MetaTemplate, now: Date): ImportRow | string {
     quality: meta.quality,
     meta_id: meta.id,
     last_checked_at: now.toISOString(),
-    line: 'chat',
-    // The allow-list's defaults only; after the import the admin's toggle decides (the sync never flags).
-    sales_starter: (RESTRICTED_TEMPLATE_DEFAULTS as readonly string[]).includes(meta.name),
+    line,
+    // The allow-list's defaults from the chat WABA only; after the import the admin's toggle decides.
+    sales_starter: flagged(line, meta.name),
   };
 }
 
+export interface StarterInput {
+  meta: readonly MetaTemplate[];
+  /** Every registry row, of both lines: one Meta name + language is one row (unique). */
+  known: readonly TemplateRow[];
+  now: Date;
+  /** The WABA's line; chat when absent. */
+  line?: WaLine;
+}
+
 /**
- * Every approved chat-WABA template the registry does not know by Meta name + language (a known one
- * is the health sync's), each once. key = the Meta name, so a name whose key is taken is skipped.
+ * Every approved template of one WABA the registry does not know by Meta name + language (a known one
+ * is a sync's), each once. key = the Meta name, so a name whose key is taken is skipped.
  */
-export function newStarters(input: { meta: readonly MetaTemplate[]; known: readonly TemplateRow[]; now: Date }): ImportPlan {
+export function newStarters(input: StarterInput): ImportPlan {
   const plan: ImportPlan = { rows: [], skipped: [] };
   const keys = new Set(input.known.map((r) => r.key));
   const synced = new Set(input.known.map((r) => `${r.meta_name}:${r.language}`));
   for (const meta of input.meta) {
     if (ourStatus(meta.status) !== 'approved' || synced.has(`${meta.name}:${meta.language}`)) continue;
-    const row = keys.has(meta.name) ? `the key ${meta.name} is taken` : starterRow(meta, input.now);
+    const row = keys.has(meta.name) ? `the key ${meta.name} is taken` : starterRow(meta, input.now, input.line);
     if (typeof row === 'string') {
       plan.skipped.push({ name: `${meta.name} (${meta.language})`, reason: row });
       continue;

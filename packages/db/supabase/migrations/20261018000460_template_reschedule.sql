@@ -4,8 +4,8 @@
 --
 -- 1. message_templates.line is now also set by the admin: PATCH /messaging/templates/:key/line moves a
 --    template to the other number (audited, template_line_set), and each number's sync reads only its
---    own rows. Migration 340's column comment («Written by the health sync, not by admins») was wrong
---    from the start: nothing but inserts ever wrote it. Restated here (old migrations stay as they are).
+--    own rows. Migration 340's column comment (that only the health sync writes it, never an admin) was
+--    wrong from the start: nothing but inserts ever wrote it. Restated here (old migrations stay as they are).
 -- 2. trial_reschedule: a chat-line starter, on the restricted allow-list (sales_starter, now one of the
 --    three RESTRICTED_TEMPLATE_DEFAULTS), not submitted. The admin submits it to the chat number's WABA
 --    from the templates page; nothing here or at boot sends it to Meta.
