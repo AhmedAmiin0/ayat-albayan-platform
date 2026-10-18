@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { MESSAGE_STATUSES } from '../enums/index.js';
 import { messageStatusStyle } from './status-style.js';
-import { messageTicks, TICK_PATHS, tickHasWord, tickTone } from './ticks.js';
+import { messageTicks, TICK_PATHS, tickTone, tickWord } from './ticks.js';
 
 describe('messageTicks (WhatsApp-style delivery ticks)', () => {
   it.each([
@@ -30,7 +30,9 @@ describe('messageTicks (WhatsApp-style delivery ticks)', () => {
     expect(TICK_PATHS.sent).not.toBe(TICK_PATHS.read);
   });
 
-  it('only a manual send keeps its word', () => {
-    expect(MESSAGE_STATUSES.filter((s) => tickHasWord(messageTicks(s)))).toEqual(['sent_manually']);
+  it('failed and a manual send carry a word, failed not in a thread row (its own word says it)', () => {
+    expect(MESSAGE_STATUSES.filter((s) => tickWord(messageTicks(s)))).toEqual(['failed', 'sent_manually']);
+    expect(tickWord('failed', true)).toBeNull();
+    expect(tickWord('manual', true)).toBe('manual');
   });
 });

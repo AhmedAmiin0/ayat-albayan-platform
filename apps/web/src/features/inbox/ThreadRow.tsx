@@ -95,7 +95,7 @@ export function ThreadRow({ thread: th, search, active }: ThreadRowProps) {
           {listTime(th.last_message_at)}
         </time>
         <span className={cn('col-start-2 flex min-w-0 items-center gap-1 text-xs', unread ? 'text-ink' : 'text-ink-2')}>
-          {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} />}
+          {th.last_direction === 'outbound' && <DeliveryTicks status={th.last_status} inList />}
           <span dir="auto" className="min-w-0 truncate text-start">
             {previewText(th)}
           </span>

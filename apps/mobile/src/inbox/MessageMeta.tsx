@@ -45,7 +45,7 @@ export function MessageMeta({ message: m }: { message: MessageView }) {
         </View>
       </View>
       {open && times ? (
-        <AppText testID="ticks-times" style={{ ...small, alignSelf: 'flex-end' }}>
+        <AppText testID="ticks-times" style={{ ...small, alignSelf: 'flex-end', textAlign: 'right' }}>
           {times}
         </AppText>
       ) : null}
