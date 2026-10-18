@@ -13,6 +13,7 @@ jest.mock('@/lib/api', () => ({
   apiFetch: (mockPath: string) => mockApiFetch(mockPath),
 }));
 jest.mock('expo-router', () => ({
+  useFocusEffect: jest.fn(),
   router: { back: jest.fn(), canGoBack: () => false, replace: jest.fn(), push: jest.fn() },
   useLocalSearchParams: () => ({ phone: '+966552147730' }),
 }));

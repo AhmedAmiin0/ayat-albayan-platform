@@ -1,26 +1,22 @@
-import { formatPhone, type MessageView, sessionWindowOpen } from '@ab/shared';
+import { formatPhone, sessionWindowOpen } from '@ab/shared';
 import { router, useLocalSearchParams } from 'expo-router';
-import { useRef } from 'react';
-import { FlatList, KeyboardAvoidingView, Platform, View } from 'react-native';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
 import { CheckRegistrationButton } from '@/registration-check/CheckRegistrationButton';
-import { Button } from '@/ui/Button';
-import { EmptyState } from '@/ui/EmptyState';
 import { ErrorState } from '@/ui/ErrorState';
 import { ltr } from '@/ui/Ltr';
 import { Screen } from '@/ui/Screen';
-import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useHideTabBar } from '@/ui/tab-bar';
+import { ChatHeader } from './ChatHeader';
 import { Composer } from './Composer';
 import { clockAt, kindLabel } from './format';
-import { MessageBubble } from './MessageBubble';
+import { MessageList } from './MessageList';
 import { OwnThreadNote } from './OwnThreadNote';
-import { RegisterFromChat } from './RegisterFromChat';
-import { SalesChatMoney } from '@/sales-subscribe/SalesChatMoney';
+import { SalesChatActions } from './SalesChatActions';
 import { SendRating } from './rating/SendRating';
 import { SubscriptionPanel } from './subscription/SubscriptionPanel';
-import { threadMessages } from './thread-cache';
 import { isOwnThread, threadBase, useThreadMode } from './thread-mode';
 import { useThread } from './use-thread';
 
@@ -32,44 +28,9 @@ function subtitleOf(phone: string, query: ThreadQuery, teacher: boolean): string
     return t.mobile.lastUpdated.replace('{time}', clockAt(query.dataUpdatedAt));
   }
   const thread = query.data?.pages[0]?.thread;
-  return thread?.display_name && !teacher ? `${kindLabel(thread)} · ${ltr(formatPhone(phone))}` : kindLabel(thread);
-}
-
-/** Oldest → newest; follows the newest message (first load, a send) but not older pages. */
-function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
-  const list = useRef<FlatList<MessageView>>(null);
-  const newest = useRef<string | undefined>(undefined);
-  const messages = threadMessages(query.data);
-  const followNewest = () => {
-    const last = messages[messages.length - 1]?.id;
-    if (last === newest.current) return;
-    newest.current = last;
-    list.current?.scrollToEnd({ animated: false });
-  };
-  const older = query.hasNextPage ? (
-    <Button
-      variant="ghost"
-      label={t.inbox.loadOlder}
-      busy={query.isFetchingNextPage}
-      onPress={() => void query.fetchNextPage()}
-    />
-  ) : null;
-  return (
-    <FlatList
-      ref={list}
-      style={{ flex: 1 }}
-      contentContainerStyle={{ gap: 8, paddingVertical: 8 }}
-      data={messages}
-      keyExtractor={(m) => m.id}
-      renderItem={({ item }) => <MessageBubble message={item} phone={phone} />}
-      onContentSizeChange={followNewest}
-      maintainVisibleContentPosition={{ minIndexForVisible: 0 }}
-      refreshing={query.isRefetching && !query.isFetchingNextPage}
-      onRefresh={() => void query.refetch()}
-      ListHeaderComponent={older}
-      ListEmptyComponent={<EmptyState title={t.inbox.empty} />}
-    />
-  );
+  return thread?.display_name && !teacher
+    ? `${kindLabel(thread)} · ${ltr(formatPhone(phone))}`
+    : kindLabel(thread);
 }
 
 /**
@@ -81,6 +42,8 @@ function MessageList({ phone, query }: { phone: string; query: ThreadQuery }) {
  * A salesperson (self.sales, docs/16) gets «تسجيل طالب جديد» on a lead's chat instead of the panel,
  * and on her family's chat «اشتراك جديد» / «سجّل تحويلًا بنكيًا» (SalesChatMoney, R-ASST-01/04); her header
  * has «تحقق من التسجيل» for this number (students.check_registration).
+ * Room to read (owner 2026-10-18), the same in every tree: no tab bar while the chat is open, a
+ * one-line header, the sales actions in one row of pills, and a one-row composer.
  */
 export function ThreadScreen() {
   const { phone = '' } = useLocalSearchParams<{ phone: string }>();
@@ -90,36 +53,38 @@ export function ThreadScreen() {
   const sales = useHolds('self.sales');
   const query = useThread(phone);
   const thread = query.data?.pages[0]?.thread ?? null;
-  const back = () => (router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode))));
+  useHideTabBar();
+  const back = () =>
+    router.canGoBack() ? router.back() : router.replace(inTree(base, threadBase(mode)));
   return (
-    <Screen>
-      <ScreenHeader
+    <Screen chat>
+      <ChatHeader
         title={thread?.display_name ?? (teacher ? kindLabel(thread) : ltr(formatPhone(phone)))}
         subtitle={subtitleOf(phone, query, teacher)}
+        onBack={back}
         trailing={
-          <View style={{ flexDirection: 'row' }}>
-            {mode.kind === 'admin' && sales ? (
-              <CheckRegistrationButton href={inTree(base, { pathname: '/inbox/registration-check', params: { phone } })} />
-            ) : null}
-            <Button variant="ghost" label={t.common.back} onPress={back} />
-          </View>
+          mode.kind === 'admin' && sales ? (
+            <CheckRegistrationButton
+              icon
+              href={inTree(base, { pathname: '/inbox/registration-check', params: { phone } })}
+            />
+          ) : null
         }
       />
       {mode.kind !== 'admin' ? null : sales ? (
-        <>
-          <RegisterFromChat thread={thread} />
-          <SalesChatMoney thread={thread} />
-        </>
+        <SalesChatActions thread={thread} />
       ) : (
         <SubscriptionPanel data={query.data} phone={phone} />
       )}
       {query.data ? (
         <KeyboardAvoidingView
-          style={{ flex: 1, gap: 8 }}
+          style={{ flex: 1, gap: 4 }}
           behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         >
           <MessageList phone={phone} query={query} />
-          {mode.kind === 'admin' && thread?.guardian_id && !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
+          {mode.kind === 'admin' &&
+          thread?.guardian_id &&
+          !sessionWindowOpen(thread.last_inbound_at, new Date()) ? (
             <SendRating thread={thread} />
           ) : null}
           {isOwnThread(mode, thread) ? (

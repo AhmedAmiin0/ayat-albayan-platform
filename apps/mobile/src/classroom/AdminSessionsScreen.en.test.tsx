@@ -22,7 +22,7 @@ test('the live board reads in English', async () => {
   fakeNow(new Date('2026-10-01T13:10:00Z'));
   await renderWithQuery(<AdminSessionsScreen />);
   expect(await screen.findByRole('header', { name: 'Live lessons' }, { timeout: 5000 })).toBeTruthy();
-  expect(screen.getByRole('header', { name: 'Now 1' })).toBeTruthy();
+  expect(await screen.findByRole('header', { name: 'Now 1' }, { timeout: 5000 })).toBeTruthy(); // after the query, not the frame
   expect(screen.getByRole('button', { name: 'Send the lesson link' })).toBeTruthy();
   expect(screen.getByRole('button', { name: 'Previous day' })).toBeTruthy();
 });

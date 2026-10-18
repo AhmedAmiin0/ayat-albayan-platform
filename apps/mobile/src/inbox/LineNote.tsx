@@ -1,29 +1,28 @@
 import type { ThreadView } from '@ab/shared';
 import { t } from '@/lib/i18n';
-import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { lineWord } from './line-words';
+import { useNoteStyle } from './note-style';
 
 /**
  * Inside the 24 h window, which line the reply leaves from: the server's reply_line, the chat line
  * whenever its window is open (docs/12 §13.3, §13.10). Nothing when the window is closed or the
  * thread has no reply line (a single line, an old cache).
- * Names the line only, never its number.
+ * Names the line only, never its number. One line; the spoken name is the whole text.
  */
 export function LineNote({ thread, open }: { thread: ThreadView | null; open: boolean }) {
-  const { color } = useTheme();
+  const note = useNoteStyle();
   const line = thread?.reply_line;
   if (!open || !line) return null;
+  const text = t.inbox.line.replyFrom.replace('{line}', lineWord(line));
   return (
     <AppText
-      style={{
-        fontFamily: type.ui[500],
-        fontSize: type.size.xs,
-        lineHeight: type.lineHeight(type.size.xs),
-        color: color.ink2,
-      }}
+      testID="line-note"
+      numberOfLines={1}
+      accessibilityLabel={text}
+      style={{ ...note, flexShrink: 1, minWidth: 0 }}
     >
-      {t.inbox.line.replyFrom.replace('{line}', lineWord(line))}
+      {text}
     </AppText>
   );
 }
