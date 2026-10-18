@@ -6,7 +6,10 @@ import type { BookingDraft } from './draft';
 const SUN = '2026-10-11T14:00:00.000Z'; // Sunday 17:00 Riyadh
 const SUN_LATER = '2026-10-11T15:00:00.000Z';
 const WED = '2026-10-14T16:30:00.000Z'; // Wednesday 19:30
-const course = { perWeek: 2, lessonsTotal: 8, package: '8', startsOn: '2026-10-11', prefilled: [SUN, WED] } as const;
+const course = { perWeek: 2, lessonsTotal: 8, package: '8', startsOn: '2026-10-11', prefilled: [
+  { at: SUN, weekday: 0, startTimeLocal: '17:00' },
+  { at: WED, weekday: 3, startTimeLocal: '19:30' },
+] } as const;
 const draft = (startsAt: string, extra: string[]): Pick<BookingDraft, 'course' | 'tz' | 'startsAt' | 'extra' | 'kind'> => ({
   course,
   tz: 'Asia/Riyadh',

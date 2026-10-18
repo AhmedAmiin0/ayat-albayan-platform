@@ -54,8 +54,10 @@ export function routeCourseSend(apiSend: Mock, check: unknown = { conflicts: [] 
 export const PREVIOUS: BookedCourse = {
   subscriptionId: 'sub-0',
   teacherId: ABRAR.id,
+  teacherTz: 'Africa/Cairo',
   durationMin: 45,
   tz: 'Asia/Riyadh',
+  startsOn: '2026-09-13',
   endsOn: '2026-10-10',
   days: [
     { weekday: 0, startTimeLocal: '17:00' },
@@ -69,12 +71,12 @@ export const NEXT_SUN = '2026-10-11T14:00:00.000Z'; // Sunday 17:00 Riyadh
 export const NEXT_SUN_LATER = '2026-10-11T15:00:00.000Z'; // Sunday 18:00
 export const NEXT_WED = '2026-10-14T16:30:00.000Z'; // Wednesday 19:30
 
-/** apiFetch for a renewal: the view, her teachers, and the week of 10 October's free slots. */
-export function routeRenewal(apiFetch: Mock, view: SalesCourseView = RENEWAL_VIEW): void {
+/** apiFetch for a renewal: the view, her teachers (ABRAR by default), and the week of 10 October's free slots. */
+export function routeRenewal(apiFetch: Mock, view: SalesCourseView = RENEWAL_VIEW, teachers: unknown[] = [ABRAR]): void {
   const slots = [NEXT_SUN, NEXT_SUN_LATER, NEXT_WED].map((at) => ({ starts_at: at, ends_at: at, conflicts: [] }));
   const routes: [string, unknown][] = [
     ['/sales/booking/course', view],
-    ['/sales/booking/teachers', [ABRAR]],
+    ['/sales/booking/teachers', teachers],
     ['/sales/booking/slots', { teacher_tz: 'Africa/Cairo', step_min: 45, slots }],
   ];
   apiFetch.mockImplementation((path: string) => {

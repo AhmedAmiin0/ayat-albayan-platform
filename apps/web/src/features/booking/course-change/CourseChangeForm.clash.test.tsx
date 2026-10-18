@@ -1,10 +1,11 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient } from '@/features/inbox/test-utils';
+import { conflictText } from '@/features/schedule/ConflictNotice';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { BookingModeContext, type BookingMode } from '../mode';
-import { CHANGE_VIEW, changeBodies, CHECK, CLASH, NOW, routeChange, routeChangeSend } from './change-fixture';
+import { CHANGE_VIEW, changeBodies, CHECK, CLASH, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
 import { CourseChangeForm } from './CourseChangeForm';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -20,6 +21,7 @@ async function toReview(mode: BookingMode, onDone = vi.fn()) {
     </BookingModeContext.Provider>,
   );
   await screen.findAllByRole('button', { name: /17:00/ });
+  await swapSundayForMonday();
   fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
   return onDone;
 }
@@ -54,6 +56,13 @@ describe('«تغيير أيام الحلقات» over a clash (owner 2026-10-18,
     expect(reasonField()).toBeNull();
   });
 
+  it('a clash with the teacher’s week also reads on the teacher’s own clock (course.teacherTz)', async () => {
+    const off = { ...CLASH, kind: 'outside_availability' as const };
+    routeChangeSend(apiSend, { ...CHECK, conflicts: [off] });
+    await toReview('sales');
+    expect(await screen.findByText(conflictText(off, CHANGE_VIEW.course.teacherTz))).toBeTruthy();
+  });
+
   it('the admin: a reason field, then the change saved with override.reason on /booking/course/change', async () => {
     routeChangeSend(apiSend, { ...CHECK, conflicts: [CLASH] });
     const onDone = await toReview('admin');
@@ -63,5 +72,14 @@ describe('«تغيير أيام الحلقات» over a clash (owner 2026-10-18,
     await waitFor(() => expect(onDone).toHaveBeenCalledWith(t.booking.courseChange.done));
     expect(apiSend).toHaveBeenCalledWith('POST', '/booking/course/change/check', expect.anything());
     expect(changeBodies(apiSend)[0]).toMatchObject({ override: { reason: 'طلب ولي الأمر' } });
+  });
+
+  it('the admin: a save over the clash that fails otherwise names its refusal, the clash still listed', async () => {
+    routeChangeSend(apiSend, { ...CHECK, conflicts: [CLASH] }, [new ApiError(409, { code: 'course_changed' })]);
+    await toReview('admin');
+    fireEvent.change(await screen.findByLabelText(new RegExp(t.booking.courseChange.overrideReason)), { target: { value: 'طلب' } });
+    fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.overrideSave }));
+    expect(await screen.findByText(t.booking.error.course_changed)).toBeTruthy();
+    expect(screen.getByText(t.booking.conflictTitle)).toBeTruthy();
   });
 });

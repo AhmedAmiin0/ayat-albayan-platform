@@ -1,7 +1,7 @@
 import { counted, type LessonView } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { CHECK, COURSE, NOW, routeChange, routeChangeSend } from '@/features/booking/course-change/change-fixture';
+import { CHECK, COURSE, NOW, routeChange, routeChangeSend, swapSundayForMonday } from '@/features/booking/course-change/change-fixture';
 import { renderWithClient } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
 import { lesson } from './lesson-fixture';
@@ -52,6 +52,7 @@ describe('«تغيير أيام الحلقات» in the admin’s lesson drawer 
     fireEvent.click(open);
     expect(apiFetch).toHaveBeenCalledWith(`/booking/course/change?subscriptionId=${COURSE.subscriptionId}`);
     await screen.findAllByRole('button', { name: /17:00/ });
+    await swapSundayForMonday();
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
     expect(await screen.findByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.submit }));

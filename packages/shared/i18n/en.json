@@ -749,6 +749,7 @@
       "done": "The lesson days changed",
       "checking": "Counting the lessons left…",
       "running": "This student has a running package course; you can change its days and times.",
+      "upcoming": "This student has package lessons booked to start later; you can change their days and times.",
       "pickNew": "Pick the new days and times",
       "review": "Review the new days",
       "overrideSave": "Save despite the conflict",

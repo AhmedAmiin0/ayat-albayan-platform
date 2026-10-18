@@ -28,6 +28,21 @@ describe('error helpers (docs/10 §3 errors)', () => {
     expect(lessonErrorText(new ApiError(400, { code: 'no_occurrences' }))).toBe(t.lessons.error.no_occurrences);
     expect(lessonErrorText(new ApiError(500, null))).toBe(t.common.error);
   });
+
+  it('a course booking or change refusal names its code, never the generic retry (owner 2026-10-18)', () => {
+    const refusals = [
+      [400, 'starts_at_mismatch'],
+      [400, 'starts_before_course'],
+      [400, 'starts_before_subscription'],
+      [400, 'no_change'],
+      [409, 'course_changed'],
+      [409, 'course_exists'],
+    ] as const;
+    for (const [status, code] of refusals) {
+      expect(lessonErrorText(new ApiError(status, { code }))).toBe(t.booking.error[code]);
+      expect(t.booking.error[code]).not.toBe(t.common.error);
+    }
+  });
 });
 
 describe('query keys', () => {

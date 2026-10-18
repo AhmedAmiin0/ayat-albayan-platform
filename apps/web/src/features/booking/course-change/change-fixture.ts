@@ -1,5 +1,7 @@
 import type { BookedCourse, CourseChangeView } from '@ab/shared';
+import { fireEvent, screen, within } from '@testing-library/react';
 import type { Mock } from 'vitest';
+import { t } from '@/lib/i18n';
 import { ABRAR } from '../wizard-fixture';
 
 // Test data only: «تغيير أيام الحلقات» (owner 2026-10-18). Now is Saturday 3 October 2026, 12:00 Riyadh.
@@ -12,8 +14,10 @@ export const MON = '2026-10-05T15:00:00.000Z'; // Monday 18:00 (a new day)
 export const COURSE: BookedCourse = {
   subscriptionId: '7d3c2b1a-0f9e-4d8c-8b7a-6a5b4c3d2e1f',
   teacherId: ABRAR.id,
+  teacherTz: 'Africa/Cairo',
   durationMin: 45,
   tz: 'Asia/Riyadh',
+  startsOn: '2026-09-06',
   endsOn: '2026-10-28',
   days: [
     { weekday: 0, startTimeLocal: '17:00' },
@@ -54,3 +58,10 @@ export function routeChangeSend(apiSend: Mock, check: unknown, answers: unknown[
 /** The bodies of every POST …/change (checks left out). */
 export const changeBodies = (apiSend: Mock): Record<string, unknown>[] =>
   apiSend.mock.calls.filter(([, path]) => String(path).endsWith('/change')).map(([, , body]) => body as Record<string, unknown>);
+
+/** On the picker: Monday 18:00 instead of Sunday (so «التالي» has a change to check). */
+export async function swapSundayForMonday(): Promise<void> {
+  const monday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[1]} `) });
+  fireEvent.click(within(monday).getByRole('button', { name: /18:00/ }));
+  fireEvent.click(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[0]) }));
+}

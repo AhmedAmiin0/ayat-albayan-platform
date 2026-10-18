@@ -13,9 +13,10 @@ import { t } from '@/lib/i18n';
  * The wizard's starting draft; null while she can't book it herself (blocked, or no day count). The
  * day count is the view's perWeek only. A custom count keeps no package of its own: the request
  * carries courseBodyPackage (ignored by the API) and the wizard names the lesson count (courseFixedText).
- * The slot grid opens on courseOpensOn: the subscription's start, or after a renewal's previous course.
+ * The slot grid opens on courseOpensOn: the subscription's start, or after a renewal's previous course;
+ * with `now` (ISO), never before today in the family's zone.
  */
-export function courseDraft(view: SalesCourseView): BookingDraft | null {
+export function courseDraft(view: SalesCourseView, now?: string): BookingDraft | null {
   const { student, subscription: sub, perWeek } = view;
   if (view.blocked || !sub || perWeek === null) return null;
   return {
@@ -26,7 +27,7 @@ export function courseDraft(view: SalesCourseView): BookingDraft | null {
     genderPref: student.teacher_gender_pref,
     durationMin: sub.duration,
     ...(sub.package ? { pkg: sub.package } : {}),
-    course: { perWeek, lessonsTotal: sub.lessons_total, package: sub.package, startsOn: courseOpensOn(view) ?? sub.starts_on },
+    course: { perWeek, lessonsTotal: sub.lessons_total, package: sub.package, startsOn: courseOpensOn(view, now) ?? sub.starts_on },
   };
 }
 

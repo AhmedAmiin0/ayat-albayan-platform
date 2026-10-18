@@ -21,7 +21,10 @@ const taken = (n: 0 | 3) => t.booking.courseChange.continueTaken.replace('{day}'
 async function continueToSlots(): Promise<void> {
   renderWithClient(<SalesCourseDialog studentId={COURSE_STUDENT_ID} onClose={vi.fn()} />);
   expect(await screen.findByText(continueText(RENEWAL_VIEW))).toBeTruthy();
-  fireEvent.click(screen.getByRole('button', { name: t.booking.courseChange.continueSameDays }));
+  const same = screen.getByRole('button', { name: t.booking.courseChange.continueSameDays });
+  // Enabled once the previous teacher is found among the teachers she can book.
+  await waitFor(() => expect(same.hasAttribute('disabled')).toBe(false));
+  fireEvent.click(same);
   const abrar = await screen.findByRole('radio', { name: new RegExp(ABRAR.display_name_ar) });
   await waitFor(() => expect(abrar).toHaveProperty('checked', true));
   next();

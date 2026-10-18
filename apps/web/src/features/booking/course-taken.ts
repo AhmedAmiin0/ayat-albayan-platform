@@ -16,7 +16,7 @@ const weekday: Record<string, string> = t.enums.weekday;
 export function takenDays(d: TakenInput, conflicts: readonly Conflict[]): number[] {
   const prefilled = d.course?.prefilled ?? [];
   if (prefilled.length === 0) return [];
-  const kept = new Set(draftPicks(d).filter((p) => prefilled.includes(p)).map((p) => wallParts(p, d.tz).weekday));
+  const kept = new Set(draftPicks(d).filter((p) => prefilled.some((x) => x.at === p)).map((p) => wallParts(p, d.tz).weekday));
   const hit = new Set(conflicts.map((c) => wallParts(c.startsAt, d.tz).weekday).filter((w) => kept.has(w)));
   return WEEK_ORDER.filter((w) => hit.has(w));
 }

@@ -23,16 +23,17 @@ type Stage = 'pick' | 'review';
  * booking mode picks the routes. One idempotency key per form (rule 8).
  */
 export function CourseChangeForm({ view, onDone, onBack }: CourseChangeFormProps) {
-  const [picks, setPicks] = useState(() => currentPicks(view.course, new Date()));
+  const [prefilled] = useState(() => currentPicks(view.course, new Date()));
+  const [picks, setPicks] = useState(() => prefilled.map((p) => p.at));
   const [requestId] = useState(() => crypto.randomUUID());
   const [stage, setStage] = useState<Stage>('pick');
   const box = useRef<HTMLDivElement>(null);
   useFocusOnChange(box, stage);
-  const body = stage === 'review' ? changeBody({ course: view.course, picks, requestId }) : null;
+  const body = stage === 'review' ? changeBody({ course: view.course, picks, prefilled, requestId }) : null;
   return (
     <div ref={box} tabIndex={-1} role="group" aria-label={t.booking.courseChange.changeDays} className="grid gap-4 outline-none">
       {body ? (
-        <ChangeReview body={body} tz={view.course.tz} onChangeSlot={() => setStage('pick')} onDone={onDone} />
+        <ChangeReview body={body} course={view.course} onChangeSlot={() => setStage('pick')} onDone={onDone} />
       ) : (
         <ChangePicker view={view} picks={picks} onPicks={setPicks} onNext={() => setStage('review')} onBack={onBack} />
       )}

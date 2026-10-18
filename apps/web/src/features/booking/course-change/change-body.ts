@@ -1,15 +1,15 @@
-import { dayTimesFromPicks, prefillPicks, type BookedCourse } from '@ab/shared';
-import { zonedParts } from '@/features/schedule/tz';
+import { changePicks, dayTimesKeeping, type BookedCourse, type PrefilledPick } from '@ab/shared';
 import type { CourseChangeBody } from './api';
 
 // «تغيير أيام الحلقات» (owner 2026-10-18): the dialog's picks (one slot per weekday, each at its own
 // time, in the course's zone) and the request they make. Pure.
 
-/** The current days as picks, in their first future week from today (course zone). */
-export function currentPicks(course: Pick<BookedCourse, 'days' | 'tz'>, now: Date): string[] {
-  const from = zonedParts(now, course.tz).date;
-  return prefillPicks({ days: course.days, from, tz: course.tz, now: now.toISOString() });
-}
+/**
+ * The current days as picks, each with its day's own time, in their first future week from
+ * max(today, the course's first day) in the course zone: a course booked ahead opens on its own week.
+ */
+export const currentPicks = (course: Pick<BookedCourse, 'days' | 'tz' | 'startsOn'>, now: Date): PrefilledPick[] =>
+  changePicks(course, now);
 
 /** Exactly the plan's days a week; a custom count (perWeek null) needs at least one. */
 export const picksReady = (course: Pick<BookedCourse, 'perWeek'>, picks: readonly string[]): boolean =>
@@ -18,14 +18,16 @@ export const picksReady = (course: Pick<BookedCourse, 'perWeek'>, picks: readonl
 export interface ChangeBodyInput {
   course: Pick<BookedCourse, 'subscriptionId' | 'tz'>;
   picks: readonly string[];
+  /** The form's first picks (currentPicks): one still picked keeps its day's own time (DST-safe). */
+  prefilled?: readonly PrefilledPick[] | undefined;
   requestId: string;
   /** The admin's reason to save over clashes (R-SCH-04). */
   override?: string | undefined;
 }
 
 /** POST …/course/change[/check] body; null with nothing picked. */
-export function changeBody({ course, picks, requestId, override }: ChangeBodyInput): CourseChangeBody | null {
-  const rule = dayTimesFromPicks(picks, course.tz);
+export function changeBody({ course, picks, prefilled = [], requestId, override }: ChangeBodyInput): CourseChangeBody | null {
+  const rule = dayTimesKeeping(picks, course.tz, prefilled);
   if (!rule) return null;
   return {
     subscriptionId: course.subscriptionId,

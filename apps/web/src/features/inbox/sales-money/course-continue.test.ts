@@ -1,22 +1,38 @@
-import { courseOpensOn, prefillPicks } from '@ab/shared';
+import { courseOpensOn, prefillDays, type SalesCourseView } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { continuePlan, continueText } from './course-continue';
 import { courseDraft } from './course-draft';
-import { COURSE_VIEW, NEXT_SUN, NEXT_WED, PREVIOUS, RENEWAL_VIEW } from './course-fixture';
+import { COURSE_SUB, COURSE_VIEW, NEXT_SUN, NEXT_WED, PREVIOUS, RENEWAL_VIEW } from './course-fixture';
 
 const NOW = '2026-10-03T09:00:00.000Z';
 
 describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-10-18)', () => {
   it('prefills the previous days from the day after the previous course, with its teacher', () => {
     const plan = continuePlan(RENEWAL_VIEW, NOW);
-    const picks = prefillPicks({ days: PREVIOUS.days, from: '2026-10-11', tz: 'Asia/Riyadh', now: NOW });
-    expect(picks).toEqual([NEXT_SUN, NEXT_WED]);
-    expect(plan?.hint).toEqual({ teacherId: PREVIOUS.teacherId, startsAt: null, picks });
-    expect(plan?.draft.course).toMatchObject({ startsOn: '2026-10-11', prefilled: picks, perWeek: 2 });
+    const prefilled = prefillDays({ days: PREVIOUS.days, from: '2026-10-11', tz: 'Asia/Riyadh', now: NOW });
+    expect(prefilled.map((p) => p.at)).toEqual([NEXT_SUN, NEXT_WED]);
+    expect(plan?.hint).toEqual({ teacherId: PREVIOUS.teacherId, startsAt: null, picks: [NEXT_SUN, NEXT_WED] });
+    // Each prefilled day keeps its own time for the body (dayTimesKeeping).
+    expect(plan?.draft.course).toMatchObject({ startsOn: '2026-10-11', prefilled, perWeek: 2 });
+    expect(prefilled[1]).toEqual({ at: NEXT_WED, weekday: 3, startTimeLocal: '19:30' });
     // The draft itself starts empty: the hinted teacher brings the picks (teacherPatch).
     expect(plan?.draft).toMatchObject({ teacher: null, startsAt: null, extra: [] });
+  });
+
+  it('a `from` weeks in the past opens today and rolls each day to its coming week', () => {
+    const old: SalesCourseView = {
+      ...RENEWAL_VIEW,
+      subscription: { ...COURSE_SUB, starts_on: '2026-08-30' },
+      previous: { ...PREVIOUS, endsOn: '2026-09-05' },
+    };
+    expect(courseOpensOn(old)).toBe('2026-09-06');
+    const plan = continuePlan(old, NOW);
+    expect(plan?.draft.course?.startsOn).toBe('2026-10-03');
+    // Saturday 3 October, 12:00 Riyadh: Sunday 4 at 17:00 and Wednesday 7 at 19:30.
+    expect(plan?.hint.picks).toEqual(['2026-10-04T14:00:00.000Z', '2026-10-07T16:30:00.000Z']);
+    expect(continueText(old, NOW)).toContain(dateLabel('2026-10-03'));
   });
 
   it('the course draft opens on courseOpensOn, with or without a previous course', () => {
@@ -25,6 +41,12 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
     // A previous course that ended before the subscription starts: the subscription's day.
     const early = { ...RENEWAL_VIEW, previous: { ...PREVIOUS, endsOn: '2026-09-20' } };
     expect(courseDraft(early)?.course?.startsOn).toBe('2026-10-03');
+  });
+
+  it('with now, the course draft never opens before today in the family’s zone', () => {
+    const past = { ...COURSE_VIEW, subscription: { ...COURSE_SUB, starts_on: '2026-09-01' } };
+    expect(courseDraft(past)?.course?.startsOn).toBe('2026-09-01');
+    expect(courseDraft(past, NOW)?.course?.startsOn).toBe('2026-10-03');
   });
 
   it('nothing to continue without a previous course, without its days, or while blocked', () => {

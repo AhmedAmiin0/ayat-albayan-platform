@@ -5,7 +5,9 @@ import { renderWithClient } from '@/features/inbox/test-utils';
 import { dateLabel } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
 import { BookingModeContext } from '../mode';
-import { CHANGE_VIEW, changeBodies, CHECK, COURSE, MON, NOW, routeChange, routeChangeSend } from './change-fixture';
+import { ApiError } from '@/lib/api';
+import { CHANGE_VIEW, changeBodies, CHECK, COURSE, MON, NOW, routeChange, routeChangeSend, swapSundayForMonday } from './change-fixture';
+import { currentDaysText, newDaysText } from './change-text';
 import { CourseChangeForm } from './CourseChangeForm';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -43,6 +45,12 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     const slots = apiFetch.mock.calls.map(([p]) => String(p)).find((p) => p.startsWith('/sales/booking/slots'));
     expect(slots).toContain(`excludeCourse=${COURSE.subscriptionId}`);
     expect(slots).toContain(`studentIds=${CHANGE_VIEW.student.id}`);
+    // Nothing changed yet: «التالي» waits, saying so (the API's no_change).
+    expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
+    expect(screen.getByText(t.booking.courseChange.noChange)).toBeTruthy();
+    await swapSundayForMonday();
+    expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(false);
+    expect(screen.queryByText(t.booking.courseChange.noChange)).toBeNull();
   });
 
   it('tapping another time that day replaces it; the review shows what is left and the new last lesson', async () => {
@@ -53,7 +61,12 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
     expect(screen.getByRole('button', { name: t.booking.next }).hasAttribute('disabled')).toBe(true);
     fireEvent.click(screen.getByRole('button', { name: t.booking.removeDay.replace('{day}', t.enums.weekday[0]) }));
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
-    expect(await screen.findByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
+    const status = await screen.findByRole('status');
+    expect(within(status).getByText(counted(t.booking.courseChange.remaining, 5))).toBeTruthy();
+    const lines = within(status).getAllByRole('listitem').map((li) => li.textContent);
+    const newDays = newDaysText({ byday: [1, 3], startTimeLocal: '18:00', dayTimes: [{ weekday: 3, startTimeLocal: '19:30' }] }, COURSE.tz);
+    // The current and the new days together, above what is left and the new end.
+    expect(lines.slice(0, 3)).toEqual([currentDaysText(COURSE.days, COURSE.tz), newDays, counted(t.booking.courseChange.remaining, 5)]);
     expect(screen.getByText(t.booking.courseChange.newEnd.replace('{date}', dateLabel('2026-10-21')))).toBeTruthy();
     const checked = apiSend.mock.calls.find(([, path]) => path === '/sales/booking/course/change/check');
     expect(checked?.[2]).toMatchObject({ subscriptionId: COURSE.subscriptionId, byday: [1, 3], startsAt: MON });
@@ -65,12 +78,22 @@ describe('«تغيير أيام الحلقات»: pick, review, save (owner 2026
   });
 
   it('a failed check names the error with «اختر موعدًا آخر» back to the grid', async () => {
-    apiSend.mockRejectedValue(new (await import('@/lib/api')).ApiError(409, { code: 'course_finished' }));
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'course_finished' }));
     await openSales();
-    await day(0);
+    await swapSundayForMonday();
     fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
     expect(await screen.findByText(t.booking.error.course_finished)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));
     expect(await day(0)).toBeTruthy();
+  });
+
+  it('a refused save names its code (400 no_change), never a generic retry', async () => {
+    routeChangeSend(apiSend, CHECK, [new ApiError(400, { code: 'no_change' })]);
+    await openSales();
+    await swapSundayForMonday();
+    fireEvent.click(screen.getByRole('button', { name: t.booking.next }));
+    fireEvent.click(await screen.findByRole('button', { name: t.booking.courseChange.submit }));
+    expect(await screen.findByText(t.booking.error.no_change)).toBeTruthy();
+    expect(screen.queryByText(t.common.error)).toBeNull();
   });
 });
