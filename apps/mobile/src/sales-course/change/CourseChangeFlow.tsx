@@ -29,8 +29,9 @@ export interface CourseChangeFlowProps {
 /**
  * «تغيير أيام الحلقات» (owner 2026-10-18): exactly the plan's days a week, prefilled with the course's
  * own from changePrefillFrom (the later of changeOpensOn and startsOn), its 7-day slot window opening
- * on that same day (SlotStep multi, the course's lessons not busy against themselves) so every
- * prefilled pick is shown checked → the review with the remaining lessons and the clashes (unchanged
+ * on that same day (SlotStep multi, the course's lessons not busy against themselves) so the
+ * prefilled picks show checked (a pick rolled a week on while today's lesson is still on ends past
+ * the window and shows only in the picked list) → the review with the remaining lessons and the clashes (unchanged
  * days: the check's own no_change) → «احفظ الأيام الجديدة». Trade-off: the window has no paging, so a
  * pending change's old days before its startsOn cannot be picked here (web pages back to them). The
  * teacher, the length and the zone stay the course's. One clientRequestId per flow (rule 8).
