@@ -3,6 +3,7 @@ import { DURATIONS, PACKAGE_SIZES } from '../enums/index.js';
 import { CANCEL_BY, STATUS_ROUTE_EVENTS } from '../lessons/state-machine.js';
 import { bookingExtras, refineBookingKind } from './booking-extras.js';
 import { requiredText, timeOfDay, timeZone } from './common.js';
+import { dayTimesSchema, refineDayTimes } from './day-times.js';
 import { guardianCreateSchema, studentCreateSchema } from './people.js';
 
 // Scheduling commands (docs/10-phase2-contracts.md). Command DTOs are camelCase; the nested
@@ -46,6 +47,8 @@ const bookingBase = weeklyRuleSchema.extend({
   clientRequestId: z.uuid().optional(),
   /** The slot the admin picked; pins the first lesson when its wall time repeats (DST fall-back). */
   startsAt: instant.optional(),
+  /** A package's weekdays with their own time (only those differing from startTimeLocal). */
+  dayTimes: dayTimesSchema,
 });
 
 /**
@@ -64,7 +67,8 @@ export const bookingRequestSchema = z
       force: z.boolean().optional(),
     }),
   ])
-  .superRefine(refineBookingKind);
+  .superRefine(refineBookingKind)
+  .superRefine(refineDayTimes);
 
 /** POST /lessons/:id/reschedule (R-SCH-07): one occurrence, or this rule from `startsOn` on. */
 export const rescheduleRequestSchema = z.discriminatedUnion('scope', [

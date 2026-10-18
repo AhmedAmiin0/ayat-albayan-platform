@@ -660,8 +660,41 @@
       "makeup_student": "The student is not on the missed lesson",
       "makeup_scope_one": "A makeup lesson moves on its own, not with the rest of the schedule",
       "not_your_lead": "This lead is not assigned to you, so you cannot register it. Ask the admin to assign it to you.",
-      "not_your_family": "The guardian's number is not one of your leads' numbers; use the chat's number."
-    }
+      "not_your_family": "The guardian's number is not one of your leads' numbers; use the chat's number.",
+      "day_times_overlap": "Two days' times overlap; pick a time that does not",
+      "course_one_student": "Lesson days are booked for one registered student",
+      "subscription_required": "This student has no subscription; record it first",
+      "course_exists": "This student already has weekly lessons in this period; ask the admin",
+      "course_mismatch": "The lesson length or package does not match the subscription",
+      "starts_before_subscription": "The first lesson is before the subscription starts; pick a later time",
+      "days_count_mismatch": "The number of days does not match the package; pick the required days a week",
+      "custom_count_admin": "This subscription's lesson count does not split into weeks; the admin will book it",
+      "kind_not_allowed": "You cannot book this kind of lesson"
+    },
+    "pickDayTimes": "Pick a time for each day",
+    "dayAt": "{day} at {time}",
+    "pickNDays": {
+      "one": "Pick one day a week",
+      "two": "Pick two days a week",
+      "few": "Pick {n} days a week",
+      "other": "Pick {n} days a week"
+    },
+    "courseDays": "Lesson days",
+    "courseEnds": {
+      "one": "The course ends on {date} after one lesson",
+      "two": "The course ends on {date} after two lessons",
+      "few": "The course ends on {date} after {n} lessons",
+      "other": "The course ends on {date} after {n} lessons"
+    },
+    "removeDay": "Remove {day}",
+    "noDayPicked": "No day picked yet",
+    "courseFixed": "Package and lesson length from the subscription: {package} · {minutes} min",
+    "courseBlocked": {
+      "subscription_required": "Record the student's subscription first, then book the lesson days",
+      "course_exists": "This student already has weekly lessons in this period; ask the admin to change them",
+      "custom_count_admin": "This subscription's lesson count does not split into weeks; the admin will book it"
+    },
+    "bookCourseDays": "Book the lesson days now"
   },
   "lessons": {
     "title": "Lessons",
