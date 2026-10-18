@@ -59,7 +59,7 @@ const schema = z.object({
   WA_CHAT_ACCESS_TOKEN: optionalSecret,
   /** Webhook secret of the chat line's Meta app; signatures may match either secret. */
   WA_CHAT_APP_SECRET: optionalSecret,
-  /** Chat line's Meta app id: diagnostics only, no fallback to WA_APP_ID. */
+  /** Chat line's Meta app id: its PDF-header sample uploads (chatEnv) and the line check; no fallback to WA_APP_ID. */
   WA_CHAT_APP_ID: optionalSecret,
   /** Staging guard: only these E.164 numbers may receive anything; unset/blank = no restriction. */
   WA_ALLOWED_RECIPIENTS: z.preprocess(blankIsUnset, recipientList.optional()),
