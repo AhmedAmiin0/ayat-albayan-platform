@@ -41,4 +41,9 @@ describe('Logo', () => {
     expect(screen.getByText(t.app.academy)).toBeTruthy();
     expect(screen.queryByRole('img')).toBeNull();
   });
+
+  it('steps the Latin wordmark down to h4, so «Ayat Al-Bayan» fits the 236px sidebar (owner 2026-10-18)', () => {
+    render(<Logo />);
+    expect(screen.getByText(t.app.brand).className).toContain('ltr:text-h4');
+  });
 });

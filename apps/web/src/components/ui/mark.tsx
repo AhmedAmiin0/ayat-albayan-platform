@@ -36,7 +36,8 @@ export function Mark({ size = 42, labelled = false, className }: MarkProps) {
 
 /**
  * Mark + wordmark «أكاديمية / آيات البيان» (Amiri 700, live text): sidebar brand, teacher top bar.
- * `collapse`: below 900px only a 34px mark (the compact admin top row).
+ * `collapse`: below 900px only a 34px mark (the compact admin top row). The Latin «Ayat Al-Bayan» is half
+ * again as wide as «آيات البيان»: one step smaller (h4), so it fits the 236px sidebar beside a 16px scrollbar.
  */
 export function Logo({ collapse = false, className }: { collapse?: boolean; className?: string }) {
   return (
@@ -44,7 +45,7 @@ export function Logo({ collapse = false, className }: { collapse?: boolean; clas
       <Mark size={42} className={cn(collapse && 'size-[34px] shell:size-[42px]')} />
       <span className={cn('leading-tight', collapse && 'hidden shell:block')}>
         <small className="block text-2xs leading-[1.3] text-ink-3">{t.app.academy}</small>
-        <b className="block whitespace-nowrap font-display text-h3 leading-[1.35]">{t.app.brand}</b>
+        <b className="block whitespace-nowrap font-display text-h3 leading-[1.35] ltr:text-h4">{t.app.brand}</b>
       </span>
     </span>
   );
