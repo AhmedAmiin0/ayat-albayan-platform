@@ -37,6 +37,11 @@ describe('LineRow on a kapso line', () => {
     expect(screen.queryByText(s.webhookUnverified)).toBeNull();
   });
 
+  it('2026-10-18: the API no longer asks Kapso for subscribed apps (its proxy 404s): still the Kapso note, no error', () => {
+    render(<LineRow line="notifications" view={{ ...kapsoView, subscribed_apps: null }} />);
+    expect(screen.getByText(s.webhookKapso)).toBeTruthy();
+  });
+
   it('KAPSO_WEBHOOK_SECRET unset: the webhook row asks the admin to act', () => {
     render(<LineRow line="notifications" view={{ ...kapsoView, kapso_webhook_secret: false }} />);
     const note = screen.getByText(s.webhookKapsoNoSecret);
