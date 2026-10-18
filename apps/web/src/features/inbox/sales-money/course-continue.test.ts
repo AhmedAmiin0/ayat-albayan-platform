@@ -67,7 +67,17 @@ describe('«تابِع بنفس الأيام»: a renewal’s plan (owner 2026-1
 
   it('another day count than before: the previous days and the new count, with Arabic number agreement', () => {
     const forms = t.booking.courseChange.continueAdjust;
-    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 3 })).toBe(forms.few.replace('{n}', '3').replace('{days}', previousDays));
+    expect(adjustText({ ...RENEWAL_VIEW, perWeek: 3 })).toBe(forms.few.replaceAll('{n}', '3').replace('{days}', previousDays));
     expect(adjustText({ ...RENEWAL_VIEW, perWeek: 1 })).toBe(forms.one.replace('{days}', previousDays));
+  });
+
+  it('1 → 3 and 3 → 1 days a week: the target count, never «add or remove one day»', () => {
+    const sunday = PREVIOUS.days.slice(0, 1);
+    const three = [...PREVIOUS.days, { weekday: 5, startTimeLocal: '17:00' }];
+    const up = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: sunday }, perWeek: 3 });
+    const down = adjustText({ ...RENEWAL_VIEW, previous: { ...PREVIOUS, days: three }, perWeek: 1 });
+    expect(up).toMatch(/الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام$/);
+    expect(down).toMatch(/الباقة الجديدة يوم واحد في الأسبوع، فعدّل الأيام السابقة لتصبح يومًا واحدًا$/);
+    for (const text of [up, down]) expect(text).not.toContain('أضف');
   });
 });

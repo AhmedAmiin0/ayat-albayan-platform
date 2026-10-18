@@ -46,6 +46,6 @@ export function continueText(view: SalesCourseView, now?: string): string {
   return t.booking.courseChange.continueHint.replace('{days}', previousDays(view)).replace('{date}', from ? dateLabel(from) : '');
 }
 
-/** Another day count than before (!continueFits): «حلقات الباقة السابقة: …. الباقة الجديدة 3 أيام في الأسبوع، فأضف يومًا…». */
+/** Another day count than before (!continueFits): «حلقات الباقة السابقة: …. الباقة الجديدة 3 أيام في الأسبوع، فعدّل الأيام السابقة لتصبح 3 أيام». */
 export const adjustText = (view: SalesCourseView): string =>
   counted(t.booking.courseChange.continueAdjust, view.perWeek ?? 0).replace('{days}', previousDays(view));

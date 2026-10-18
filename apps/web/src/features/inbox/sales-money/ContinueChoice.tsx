@@ -22,17 +22,31 @@ export interface ContinueChoiceProps {
  * A renewal's first question (owner 2026-10-18), inside «أيام الحلقات» before the wizard: the
  * previous course's days and the new start, then continue on them (primary) or pick other days.
  * With another day count than before (!continueFits) it says so and offers «عدّل الأيام السابقة»
- * (the picker prefilled, to add or remove a day) instead. Either primary needs the previous teacher
- * still bookable here (in the wizard's teacher list, with availability; a failed read counts as not).
+ * (the picker prefilled, to bring the days to the new count) instead. Either primary needs the previous
+ * teacher still bookable here (in the wizard's teacher list, with availability). While the list loads the
+ * status line says so; a failed read is the error with a retry, never «unavailable».
  */
 export function ContinueChoice({ view, draft, now, onContinue, onOther }: ContinueChoiceProps) {
   const teachers = useQuery(bookingTeachersQuery({ program: draft.program, gender: draft.genderPref }, 'sales'));
   const fits = continueFits(view);
   const bookable = !!teachers.data?.some((o) => o.id === view.previous?.teacherId && o.has_availability);
-  const unavailable = teachers.isError || (!!teachers.data && !bookable);
+  const unavailable = teachers.isSuccess && !bookable;
   return (
     <div className="grid gap-4">
       <p className="rounded-md bg-sunk px-3.5 py-2.5 text-sm tabular-nums">{fits ? continueText(view, now) : adjustText(view)}</p>
+      {teachers.isPending && (
+        <p role="status" className="text-sm text-ink-2">
+          {t.common.loading}
+        </p>
+      )}
+      {teachers.isError && (
+        <p role="status" className="text-sm text-ink-2">
+          {t.common.error}{' '}
+          <Button type="button" variant="secondary" size="sm" onClick={() => void teachers.refetch()}>
+            {t.sales.retry}
+          </Button>
+        </p>
+      )}
       {unavailable && (
         <p role="status" className="text-sm text-ink-2">
           {t.booking.courseChange.teacherUnavailable}

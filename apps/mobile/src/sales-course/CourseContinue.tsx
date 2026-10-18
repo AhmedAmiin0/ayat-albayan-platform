@@ -4,16 +4,21 @@ import { t } from '@/lib/i18n';
 import { localDay } from '@/payments/format';
 import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
+import { ErrorState } from '@/ui/ErrorState';
 import { type, useTheme } from '@/theme';
 import { daysText } from './course-days';
+import type { KnownTeacher } from './use-known-teacher';
 
 export interface CourseContinueProps {
   /** The latest course of the student's earlier subscription. */
   previous: BookedCourse;
   /** The first local day the new course may start (courseOpensOn). */
   opensOn: string;
-  /** The previous teacher (known): «تابِع» is enabled only once she is bookable; unavailable says why not. */
-  teacher: { bookable: boolean; unavailable: boolean };
+  /**
+   * The previous teacher (known): «تابِع» is enabled only once she is bookable; busy while her list loads,
+   * the error with a retry when it failed, unavailable says why not.
+   */
+  teacher: Pick<KnownTeacher, 'bookable' | 'pending' | 'failed' | 'unavailable' | 'refetch'>;
   /** The new plan's days a week when it differs from the previous course's (!continueFits), else null. */
   adjustTo: number | null;
   /** «تابِع بنفس الأيام» (or «عدّل الأيام السابقة» with adjustTo): the same teacher, days and times, prefilled. */
@@ -26,7 +31,7 @@ export interface CourseContinueProps {
 
 /**
  * A renewal's first step (owner 2026-10-18): the previous course's days, offered again from opensOn;
- * with another day count than before (adjustTo), said so and «عدّل الأيام السابقة» to add or remove one.
+ * with another day count than before (adjustTo), said so and «عدّل الأيام السابقة» to bring them to that count.
  */
 export function CourseContinue(props: CourseContinueProps) {
   const { previous, opensOn, teacher, adjustTo, onSame, onOther, transfer } = props;
@@ -47,7 +52,13 @@ export function CourseContinue(props: CourseContinueProps) {
           {t.booking.courseChange.teacherUnavailable}
         </AppText>
       ) : null}
-      <Button label={adjustTo === null ? texts.continueSameDays : texts.adjustDays} disabled={!teacher.bookable} onPress={onSame} />
+      {teacher.failed ? <ErrorState message={t.common.error} onRetry={teacher.refetch} /> : null}
+      <Button
+        label={adjustTo === null ? texts.continueSameDays : texts.adjustDays}
+        busy={teacher.pending}
+        disabled={!teacher.bookable}
+        onPress={onSame}
+      />
       <Button variant="secondary" label={t.booking.courseChange.pickOtherDays} onPress={onOther} />
     </View>
   );
