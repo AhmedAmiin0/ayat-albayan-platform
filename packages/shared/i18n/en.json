@@ -669,7 +669,9 @@
       "starts_before_subscription": "The first lesson is before the subscription starts; pick a later time",
       "days_count_mismatch": "The number of days does not match the package; pick the required days a week",
       "custom_count_admin": "This subscription's lesson count does not split into weeks; the admin will book it",
-      "kind_not_allowed": "You cannot book this kind of lesson"
+      "kind_not_allowed": "You cannot book this kind of lesson",
+      "not_your_student": "This student is not one of yours.",
+      "student_not_found": "This student does not exist."
     },
     "pickDayTimes": "Pick a time for each day",
     "dayAt": "{day} at {time}",

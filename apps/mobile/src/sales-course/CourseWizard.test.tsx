@@ -94,6 +94,8 @@ test('opened after «احفظ الاشتراك»: the transfer can come first, a
   mockParams.current = { studentId: STUDENT_ID, phone: '+966501112223', subscriptionId: 'sub-1' };
   const { router } = jest.requireMock<{ router: { replace: jest.Mock } }>('expo-router');
   await renderWithQuery(<CourseScreen />);
+  // The wizard first: the loading screen's own transfer button unmounts once the course is read.
+  await screen.findByText(maryam.display_name_ar);
   await press('button', t.salesMoney.stepTransfer);
   const transfer = { pathname: '/inbox/sales-transfer', params: { phone: '+966501112223', subscriptionId: 'sub-1' } };
   expect(router.replace).toHaveBeenLastCalledWith(transfer);

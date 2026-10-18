@@ -19,7 +19,8 @@ export type RulePlan = { rule: NewRule; occurrences: Occurrence[] };
  * students, package and link (a new teacher drops the old rule's link so their own applies),
  * occurrences over the horizon; a trial keeps one lesson and ends on its day (invariant 4). The
  * assistant's course (owner 2026-10-18; its rules carry subscription_id) keeps its last day, so it
- * never becomes open-ended; any other rule's replacement is open-ended, as before.
+ * never becomes open-ended; any other rule's replacement is open-ended, as before. The replacement
+ * keeps subscription_id and first_rule_id, so rescheduling it again still keeps the last day.
  */
 export function planNewRule({ old, next, now, weeks }: RulePlanInput): RulePlan {
   const sameTeacher = next.teacherId === old.teacher_id;
@@ -53,6 +54,8 @@ export function planNewRule({ old, next, now, weeks }: RulePlanInput): RulePlan 
       meeting_link: ruleLink,
       package: old.package,
       created_from_lead_id: old.created_from_lead_id,
+      subscription_id: old.subscription_id,
+      first_rule_id: old.first_rule_id,
       student_ids: students.ids,
     },
     occurrences,

@@ -53,6 +53,15 @@ describe('planNewRule — whole-rule reschedule (R-SCH-07)', () => {
     expect(occurrences.map((o) => o.starts_at.toISOString())).toEqual(['2026-10-12T15:30:00.000Z', '2026-10-14T15:30:00.000Z']);
   });
 
+  it('the replacement keeps the course tie, so rescheduling it again still keeps ends_on', () => {
+    const old = ruleRow({ ends_on: '2026-10-14', subscription_id: 'sub-1', first_rule_id: 'rule-0' });
+    const { rule } = planNewRule({ old, next: NEXT, now: NOW, weeks: 4 });
+    expect(rule).toMatchObject({ subscription_id: 'sub-1', first_rule_id: 'rule-0' });
+    const again = ruleRow({ id: rule.id, ends_on: rule.ends_on, subscription_id: rule.subscription_id });
+    const second = planNewRule({ old: again, next: { ...NEXT, startTimeLocal: '19:00' }, now: NOW, weeks: 4 });
+    expect(second.rule).toMatchObject({ ends_on: '2026-10-14', subscription_id: 'sub-1' });
+  });
+
   it('an admin rule with an end day (not a course) gets an open-ended replacement, as before', () => {
     const { rule, occurrences } = planNewRule({ old: ruleRow({ ends_on: '2026-10-14' }), next: NEXT, now: NOW, weeks: 4 });
     expect(rule.ends_on).toBeNull();

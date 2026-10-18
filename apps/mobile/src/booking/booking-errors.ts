@@ -21,7 +21,9 @@ export type BookFailure =
   | { kind: 'invoice'; text: string }
   | { kind: 'error'; text: string };
 
-const messages: Record<string, string | undefined> = t.booking.error;
+// Every booking/lesson domain code (booking.error.*, lessons.error.*), like web's ERROR_TEXT: the course
+// guard also answers date_in_past, no_occurrences, not_your_student, student_not_found.
+const messages: Record<string, string | undefined> = { ...t.lessons.error, ...t.booking.error };
 const isInvoiceCode = (code: string) => code.startsWith('invoice_') || code === 'media_expired';
 
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -47,7 +49,7 @@ export function conflictLine(c: Conflict): string {
   );
 }
 
-/** The API's own refusal (invoice, makeup): its code has a line in booking.error. */
+/** The API's own refusal (invoice, makeup, the course guard): its code has a line in messages. */
 function codedFailure(code: unknown): BookFailure | null {
   const text = typeof code === 'string' ? messages[code] : undefined;
   if (typeof code !== 'string' || text === undefined) return null;

@@ -1,7 +1,7 @@
 import { router, useLocalSearchParams } from 'expo-router';
 import type { CourseBlock } from '@ab/shared';
 import { ScrollView } from 'react-native';
-import { bookFailure } from '@/booking/booking-errors';
+import { bookFailure, isCodedRefusal } from '@/booking/booking-errors';
 import { BookingModeProvider } from '@/booking/booking-mode';
 import { t } from '@/lib/i18n';
 import { inTree, useTreeBase } from '@/nav/tree-base';
@@ -62,11 +62,15 @@ interface CourseStatusProps {
   missing: boolean;
 }
 
-/** Why there is no wizard: no student, loading, a failed read (its code's line), or the course she cannot book. */
+/**
+ * Why there is no wizard: no student, loading, the course she cannot book, or a failed read: a refusal
+ * (403 not_your_student, 404 student_not_found) shows its line with no retry, anything else retries.
+ */
 function CourseStatus({ course, block, missing }: CourseStatusProps) {
   if (missing) return <EmptyState title={t.common.notFound} />;
   if (course.isError) {
     const failure = bookFailure(course.error);
+    if (failure.kind === 'error' && isCodedRefusal(course.error)) return <EmptyState title={failure.text} />;
     const message = failure.kind === 'error' || failure.kind === 'invoice' ? failure.text : t.common.error;
     return <ErrorState message={message} onRetry={() => void course.refetch()} />;
   }

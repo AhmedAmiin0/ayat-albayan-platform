@@ -2,8 +2,9 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { booked, maryam, SUN_17 } from '@/booking/fixtures';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { pathKey } from '@/lib/query-keys';
 import { localDay } from '@/payments/format';
-import { renderWithQuery } from '@/test/query';
+import { createTestQueryClient, renderWithQuery } from '@/test/query';
 import { fakeCourseApi, isDisabled, press, walkToReview } from './course-test-utils';
 import { CourseScreen } from './CourseScreen';
 import { courseView, STUDENT_ID, SUB_ID } from './fixtures';
@@ -57,18 +58,30 @@ test('a subscription that starts ahead: its first day in the header and the slot
   expect(reads('/sales/booking/slots')[0]).toContain(`from=${encodeURIComponent('2099-01-03T21:00:00.000Z')}`);
 });
 
-test('a failed course read after «احفظ الاشتراك»: its code’s line, a retry, and still the transfer', async () => {
+test('a stale cached bookable view does not latch: the fresh course_exists shows the blocked line', async () => {
+  const client = createTestQueryClient();
+  client.setQueryData([...pathKey('/sales/booking/course'), { studentId: STUDENT_ID }], courseView());
+  mockApiFetch.mockImplementation(fakeCourseApi(courseView({ blocked: 'course_exists' })).fetch);
+  await renderWithQuery(<CourseScreen />, client);
+  expect(await screen.findByText(t.booking.courseBlocked.course_exists)).toBeTruthy();
+});
+
+test.each([
+  [403, 'not_your_student'],
+  [404, 'student_not_found'],
+] as const)('a refused course read (%i %s): its line, no retry, and still the transfer', async (status, code) => {
   mockParams.current = { studentId: STUDENT_ID, phone: '+966501112223', subscriptionId: 'sub-1' };
-  mockApiFetch.mockRejectedValue(new ApiError(403, { code: 'not_your_lead', message: 'x' }));
+  mockApiFetch.mockRejectedValue(new ApiError(status, { code, message: 'x' }));
   await renderWithQuery(<CourseScreen />);
-  expect(await screen.findByText(t.booking.error.not_your_lead)).toBeTruthy();
-  expect(screen.getByRole('button', { name: t.mobile.retry })).toBeTruthy();
+  expect(await screen.findByText(t.booking.error[code])).toBeTruthy();
+  expect(screen.queryByRole('button', { name: t.mobile.retry })).toBeNull();
   expect(screen.getByRole('button', { name: t.salesMoney.stepTransfer })).toBeTruthy();
 });
 
-test('a read that failed without a code says the common line', async () => {
+test('a read that failed without a code says the common line, with a retry', async () => {
   mockApiFetch.mockRejectedValue(new ApiError(500, { code: 'internal', message: 'x' }));
   await renderWithQuery(<CourseScreen />);
   expect(await screen.findByText(t.common.error)).toBeTruthy();
+  expect(screen.getByRole('button', { name: t.mobile.retry })).toBeTruthy();
   expect(screen.queryByRole('button', { name: t.salesMoney.stepTransfer })).toBeNull();
 });

@@ -47,6 +47,10 @@ export type NewRule = {
   meeting_link: string | null;
   package: PackageSize | null;
   created_from_lead_id: string | null;
+  /** The assistant's course this rule belongs to (migration 470); carried by a reschedule. */
+  subscription_id: string | null;
+  /** The booking's first rule when this is one of its other times (migration 465). */
+  first_rule_id: string | null;
   student_ids: string[];
 };
 
