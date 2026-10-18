@@ -42,6 +42,11 @@ describe('AdminLayout sidebar', () => {
     for (const c of ['shell:gap-y-6', 'shell:pt-6', 'shell:pb-0', 'shell:overflow-y-auto']) expect(cls).toContain(c);
   });
 
+  it('owner 2026-10-18 «sidebar have horizontal overflow»: the sidebar scrolls down only, never sideways', () => {
+    const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
+    expect(container.querySelector('aside')?.className).toContain('shell:overflow-x-hidden');
+  });
+
   it('scrolls a focused or current link clear of the sticky foot (scroll-padding at least its height)', () => {
     const { container } = render(<AdminLayout nav={nav} title="t">x</AdminLayout>);
     expect(container.querySelector('aside')?.className).toContain('shell:scroll-pb-56');
