@@ -12,10 +12,14 @@ import { teacherLabel } from '@/lib/teacher-label';
 
 const CLOCK = new Intl.DateTimeFormat('en-GB', { hour: '2-digit', minute: '2-digit', hour12: false });
 
+/**
+ * Folds by the card's own width (container query), not the screen's (owner 2026-10-18): the card is a
+ * third of the dashboard on a wide screen, so the join buttons go under the details until it is 36rem.
+ */
 function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
   const style = lessonStatusStyle[lesson.status];
   return (
-    <li className="grid gap-3 border-b border-rule py-3.5 last:border-b-0 sm:grid-cols-[4.5rem_minmax(0,1fr)_auto] sm:items-start">
+    <li className="grid grid-cols-[4.5rem_minmax(0,1fr)] items-start gap-x-3 gap-y-2 border-b border-rule py-3.5 last:border-b-0 @xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]">
       <span className="flex items-center gap-2">
         <span dir="ltr" className="text-lg font-semibold tabular-nums">
           {CLOCK.format(new Date(lesson.starts_at))}
@@ -27,12 +31,15 @@ function LessonItem({ lesson, live }: { lesson: LessonView; live: boolean }) {
         <p className="text-sm text-ink-2">
           {t.dashboard.home.teacher.replace('{name}', teacherLabel(lesson.teacher))}
         </p>
-        <span>
+        <span className="flex flex-wrap items-center gap-x-2 gap-y-1">
           <StatusChip size="sm" tone={style.tone} glyph={style.glyph} label={t.enums.lessonStatus[lesson.status]} />
-          {live && <span className="ms-2 text-xs font-semibold text-ok">{t.dashboard.home.live}</span>}
+          {live && <span className="text-xs font-semibold text-ok">{t.dashboard.home.live}</span>}
         </span>
       </div>
-      <StaffJoinButton lesson={lesson} />
+      {/* empty:hidden: a lesson without a room (StaffJoinButton renders nothing) adds no row gap. */}
+      <div data-join className="col-start-2 empty:hidden @xl:col-start-3 @xl:row-start-1">
+        <StaffJoinButton lesson={lesson} />
+      </div>
     </li>
   );
 }
@@ -46,7 +53,7 @@ export function TodayLessons({ lessons, className }: { lessons: LessonView[] | u
   const win = useJoinWindow();
   const list = lessons ? todaysLessons(lessons) : undefined;
   return (
-    <section aria-labelledby="dash-today" className={cn('grid content-start gap-2 rounded-md border border-rule p-4', className)}>
+    <section aria-labelledby="dash-today" className={cn('@container grid content-start gap-2 rounded-md border border-rule p-4', className)}>
       <h2 id="dash-today" className={sectionTitle}>
         {t.dashboard.home.todayList}
       </h2>

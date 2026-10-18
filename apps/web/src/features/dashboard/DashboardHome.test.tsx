@@ -65,6 +65,15 @@ describe('TodayLessons', () => {
     expect(screen.getAllByRole('button', { name: t.classroom.enter }).length).toBeGreaterThan(0);
   });
 
+  it('owner 2026-10-18 «responsive bug in todays lesson»: a row folds by the card width, the buttons under the details', () => {
+    const { container } = wrap(<TodayLessons lessons={[lessonAt({ id: 'a', startsAt: '2026-10-05T09:50:00.000Z', student: 'سارة' })]} />);
+    expect(container.querySelector('section')?.className).toContain('@container');
+    const item = screen.getByRole('listitem');
+    expect(item.className).toContain('@xl:grid-cols-[4.5rem_minmax(0,1fr)_auto]');
+    expect(item.className).not.toMatch(/(^|\s)sm:grid-cols/);
+    expect(item.querySelector('[data-join]')?.className).toContain('col-start-2');
+  });
+
   it('says there is nothing today, and shows bars while loading', () => {
     const { rerender, container } = wrap(<TodayLessons lessons={undefined} />);
     expect(container.querySelector('[aria-busy=true]')).toBeTruthy();
