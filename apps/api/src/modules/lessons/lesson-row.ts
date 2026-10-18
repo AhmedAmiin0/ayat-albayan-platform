@@ -4,7 +4,7 @@ import type { Attendance, LessonStatus, PackageSize } from '@ab/shared';
 const LESSON_COLUMNS =
   'id, rule_id, teacher_id, starts_at, ends_at, status, meeting_link, cancel_reason, override_reason, confirmed_at, rescheduled_from_id, makeup_of_id, conflicts, time_edited_at, time_edit_reason, time_edit_was, room_opened_at, instant' as const;
 const LESSON_EMBEDS =
-  'teacher:teachers(id, display_name_ar, display_name_en, tz), rule:schedule_rules!lessons_rule_id_fkey(byday, package), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at), original:makeup_of_id(id, starts_at), makeups:lessons!makeup_of_id(id, starts_at, status, makeup_student_id)' as const;
+  'teacher:teachers(id, display_name_ar, display_name_en, tz), rule:schedule_rules!lessons_rule_id_fkey(byday, package, subscription_id), lesson_students(student_id, attendance, chargeable, student:students(id, code, name, tz)), proposals:lesson_proposals!lesson_proposals_lesson_id_fkey(id, proposed_starts_at, note, status, created_at), original:makeup_of_id(id, starts_at), makeups:lessons!makeup_of_id(id, starts_at, status, makeup_student_id)' as const;
 
 /** One select for every lesson view: the row, its teacher and its students. */
 export const LESSON_SELECT = `${LESSON_COLUMNS}, ${LESSON_EMBEDS}` as const;
@@ -41,7 +41,7 @@ export type LessonRow = {
    * The weekly rule's days (a series reschedule keeps them, R-SCH-07) and package (R-SCH-09
    * «تجريبية»); optional in test fakes.
    */
-  rule?: { byday: number[]; package?: PackageSize | null } | null;
+  rule?: { byday: number[]; package?: PackageSize | null; subscription_id?: string | null } | null;
   lesson_students: {
     student_id: string;
     attendance: Attendance | null;

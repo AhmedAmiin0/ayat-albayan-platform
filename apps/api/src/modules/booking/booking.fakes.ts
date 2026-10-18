@@ -75,7 +75,7 @@ export function fakeAvailability() {
 /** Occupying lessons (BusyQueries) and not-yet-generated rule occurrences (RuleProjectionQueries). */
 export function fakeBusy() {
   return {
-    busy: { teacherLessons: vi.fn().mockResolvedValue([]), studentLessons: vi.fn().mockResolvedValue([]) },
+    busy: { teacherLessons: vi.fn().mockResolvedValue([]), studentLessons: vi.fn().mockResolvedValue([]), courseLessonIds: vi.fn().mockResolvedValue([]) },
     projection: { busy: vi.fn().mockResolvedValue({ teacher: [], students: [] }) },
   };
 }

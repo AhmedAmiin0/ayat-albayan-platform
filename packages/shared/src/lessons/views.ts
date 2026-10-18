@@ -33,6 +33,8 @@ export interface LessonView {
   rule_byday?: number[] | null;
   /** The rule is a حلقة تجريبية (schedule_rules.package = 'trial'); a one-off move keeps it. Absent in an old cache. */
   trial?: boolean;
+  /** The assistant course its rule belongs to (schedule_rules.subscription_id): «تغيير أيام الحلقات». Absent in an old cache. */
+  course_subscription_id?: string | null;
   /** A حجز تعويضي: replaces a missed lesson, never consumes a package unit (lessons.makeup_of_id). */
   makeup?: boolean;
   /** For a makeup: the missed lesson it replaces. */

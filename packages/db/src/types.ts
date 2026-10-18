@@ -3794,6 +3794,8 @@ export type Database = {
       };
       booking_result: { Args: { p_rule: string }; Returns: Json };
       build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
+      change_course: { Args: { p: Json }; Returns: Json };
+      course_change_result: { Args: { p_first: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       custom_access_token_hook: { Args: { event: Json }; Returns: Json };

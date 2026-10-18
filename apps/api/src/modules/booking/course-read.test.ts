@@ -1,0 +1,72 @@
+import { describe, expect, it } from 'vitest';
+import { bookedCourse, courseFacts, studentCourses, type CourseRuleRow } from './course-read';
+
+const plan8 = { package: '8' as const, lessons_total: 8 };
+const rule = (o: Partial<CourseRuleRow> = {}): CourseRuleRow => ({
+  id: 'r1',
+  subscription_id: 'sub1',
+  teacher_id: 't1',
+  duration_min: 45,
+  start_time_local: '17:00:00',
+  tz: 'Asia/Riyadh',
+  byday: [0],
+  starts_on: '2026-10-18',
+  ends_on: '2026-11-10',
+  status: 'active',
+  first_rule_id: null,
+  sub: plan8,
+  ...o,
+});
+
+describe('bookedCourse — a course from its rules (owner 2026-10-18)', () => {
+  it('each weekday with its own time, the first rule leading, the plan of the subscription', () => {
+    const rows = [rule(), rule({ id: 'r2', byday: [2], start_time_local: '19:30:00', first_rule_id: 'r1' })];
+    expect(bookedCourse(rows)).toEqual({
+      subscriptionId: 'sub1',
+      teacherId: 't1',
+      durationMin: 45,
+      tz: 'Asia/Riyadh',
+      endsOn: '2026-11-10',
+      days: [
+        { weekday: 0, startTimeLocal: '17:00' },
+        { weekday: 2, startTimeLocal: '19:30' },
+      ],
+      lessonsTotal: 8,
+      perWeek: 2,
+    });
+  });
+  it('a rescheduled rule (ended earlier) is not one of its days: only the latest set', () => {
+    const rows = [
+      rule({ id: 'old', byday: [1], ends_on: '2026-10-25', status: 'ended' }),
+      rule({ id: 'new', byday: [3], start_time_local: '18:00:00' }),
+    ];
+    expect(bookedCourse(rows)?.days).toEqual([{ weekday: 3, startTimeLocal: '18:00' }]);
+  });
+  it('no capped rule → null', () => {
+    expect(bookedCourse([rule({ ends_on: null })])).toBeNull();
+  });
+});
+
+describe('courseFacts — previous (a renewal) and current (still running)', () => {
+  const old = rule({ subscription_id: 'old', ends_on: '2026-10-25', sub: plan8 });
+  const older = rule({ id: 'r0', subscription_id: 'older', ends_on: '2026-09-20', status: 'ended' });
+
+  it('the newest subscription has no course yet → the latest course of another subscription', () => {
+    const facts = courseFacts({ rows: [older, old], today: '2026-10-18', subscriptionId: 'new', booked: false });
+    expect(facts.previous?.subscriptionId).toBe('old');
+    expect(facts.current?.subscriptionId).toBe('old');
+  });
+  it('the newest subscription already has its course → no previous', () => {
+    const own = rule({ id: 'r9', subscription_id: 'new', ends_on: '2026-12-01' });
+    const facts = courseFacts({ rows: [old, own], today: '2026-10-18', subscriptionId: 'new', booked: true });
+    expect(facts.previous).toBeNull();
+    expect(facts.current?.subscriptionId).toBe('new');
+  });
+  it('no subscription to book → no previous; a course that ended is not current', () => {
+    const facts = courseFacts({ rows: [older], today: '2026-10-18', subscriptionId: null, booked: false });
+    expect(facts).toEqual({ previous: null, current: null });
+  });
+  it('studentCourses: the latest-ending first', () => {
+    expect(studentCourses([older, old]).map((c) => c.subscriptionId)).toEqual(['old', 'older']);
+  });
+});

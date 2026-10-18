@@ -1,5 +1,6 @@
 import type { Duration, Gender, PackageSize, Program } from '../enums/index.js';
 import { packagePerWeek } from '../money/tiers.js';
+import { continueFrom, type BookedCourse } from './course-follow.js';
 
 // The assistant books the weekly course of a subscription she sold (owner 2026-10-18, R-ASST-01):
 // exactly the plan's lesson count, the plan's days a week, each day with its own time.
@@ -52,4 +53,21 @@ export interface SalesCourseView {
   /** Days a week to pick; null when unknown (no subscription, or a custom count the admin books). */
   perWeek: number | null;
   blocked: CourseBlock | null;
+  /**
+   * The student's latest course of an earlier subscription, while the newest one has no course yet
+   * (a renewal: «تابِع بنفس الأيام», owner 2026-10-18); null otherwise. Absent from an older API.
+   */
+  previous?: BookedCourse | null;
+  /** The student's course still running (an active rule ending today or later): «تغيير أيام الحلقات». */
+  current?: BookedCourse | null;
+}
+
+/**
+ * The first local day the course may start: the subscription's, or after a previous course's last
+ * day (the guard refuses an overlap with course_exists). The slot grid opens on it.
+ */
+export function courseOpensOn(view: Pick<SalesCourseView, 'subscription' | 'previous'>): string | null {
+  const sub = view.subscription;
+  if (!sub) return null;
+  return view.previous ? continueFrom(view.previous, sub.starts_on) : sub.starts_on;
 }

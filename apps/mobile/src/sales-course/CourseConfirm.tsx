@@ -1,4 +1,4 @@
-import { counted, type BookingRequest, type SalesCourseView } from '@ab/shared';
+import { counted, type BookingRequest, type Conflict, type SalesCourseView } from '@ab/shared';
 import { View } from 'react-native';
 import type { BookFailure } from '@/booking/booking-errors';
 import { ConflictNotice } from '@/booking/ConflictNotice';
@@ -11,6 +11,7 @@ import { AppText } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { type, useTheme } from '@/theme';
 import { courseEnd } from './course-body';
+import { takenDays } from './course-days';
 import { courseRows } from './course-summary';
 import { useCourseCheck } from './course-queries';
 import { CourseCheckNotice } from './CourseCheckNotice';
@@ -23,14 +24,18 @@ export interface CourseConfirmProps {
   body: BookingRequest | null;
   booking: { busy: boolean; failure: BookFailure | null; submit: () => void };
   onChangeSlot: () => void;
+  /** The picks are the previous course's days («تابِع بنفس الأيام»): a clash names the day to pick again. */
+  prefilled?: boolean;
 }
 
 /**
  * «المراجعة» of the course: the student, the teacher, the plan, each day with its time and when the
  * course ends (its lessons_total-th lesson). «احجز» waits for exactly the plan's days a week and a
- * clean series check (POST /sales/booking/check).
+ * clean series check (POST /sales/booking/check). Prefilled from the previous course, a clash names its
+ * day(s) («موعد الخميس لم يعد متاحًا»); «اختر موعدًا آخر» keeps the other picks.
  */
-export function CourseConfirm({ view, teacherName, picks, body, booking, onChangeSlot }: CourseConfirmProps) {
+export function CourseConfirm(props: CourseConfirmProps) {
+  const { view, teacherName, picks, body, booking, onChangeSlot, prefilled } = props;
   const { color } = useTheme();
   const check = useCourseCheck(body);
   const total = view.subscription?.lessons_total ?? 0;
@@ -43,6 +48,7 @@ export function CourseConfirm({ view, teacherName, picks, body, booking, onChang
       <SummaryList rows={courseRows({ view, teacherName, body })} />
       <PicksList picks={picks} tz={view.student.tz} />
       {ends ? <AppText style={{ ...note, color: color.ink }}>{counted(t.booking.courseEnds, total).replace('{date}', localDay(ends))}</AppText> : null}
+      <TakenLine prefilled={prefilled} data={check.data} tz={view.student.tz} />
       <CourseCheckNotice check={check} onChangeSlot={onChangeSlot} />
       <AppText style={note}>{t.booking.confirmationNote}</AppText>
       <BookError failure={booking.failure} onChangeSlot={onChangeSlot} />
@@ -61,4 +67,23 @@ function BookError({ failure, onChangeSlot }: { failure: BookFailure | null; onC
   if (!failure) return null;
   if (failure.kind === 'conflict') return <ConflictNotice lines={failure.lines} onChangeSlot={onChangeSlot} />;
   return <ErrorLine message={failure.kind === 'duplicate' ? t.common.error : failure.text} />;
+}
+
+/** «موعد الخميس لم يعد متاحًا…»: the previous course's day(s) the series check found taken. */
+interface TakenLineProps {
+  prefilled: boolean | undefined;
+  /** The series check's answer, once in. */
+  data: { conflicts: Conflict[] } | undefined;
+  tz: string;
+}
+
+function TakenLine({ prefilled, data, tz }: TakenLineProps) {
+  const { color } = useTheme();
+  const conflicts = data && Array.isArray(data.conflicts) ? data.conflicts : [];
+  if (!prefilled || conflicts.length === 0) return null;
+  return (
+    <AppText style={{ fontFamily: type.ui[600], fontSize: type.size.sm, lineHeight: type.lineHeight(type.size.sm), color: color.bad }}>
+      {t.booking.courseChange.continueTaken.replace('{day}', takenDays(conflicts, tz))}
+    </AppText>
+  );
 }

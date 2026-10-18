@@ -31,6 +31,8 @@ export const slotsQuerySchema = z
     stepMin: z.coerce.number().int().min(5).max(180).optional(),
     /** «عدّل الوقت»: this lesson is not busy against itself when it is moved or resized in place. */
     excludeLessonId: z.uuid().optional(),
+    /** «تغيير أيام الحلقات»: this course's lessons (of `studentIds` only) are not busy: they move. */
+    excludeCourse: z.uuid().optional(),
   })
   .refine((q) => Date.parse(q.from) < Date.parse(q.to), { message: 'from_before_to', path: ['to'] });
 

@@ -29,6 +29,7 @@ function setup(sub: CourseSubscription | null = SUB, rules: CourseRule[] = []) {
     student: vi.fn().mockResolvedValue(STUDENT),
     subscription: vi.fn().mockResolvedValue(sub),
     rules: vi.fn().mockResolvedValue(rules),
+    courseRules: vi.fn().mockResolvedValue([]),
     subscriptionBooked: vi.fn().mockResolvedValue(false),
     requested: vi.fn().mockResolvedValue(false),
   };
@@ -43,7 +44,7 @@ describe('SalesCourse.options — the course guard (R-ASST-01, R-ASST-04)', () =
 
   it('an allowed course: no invoice, every rule ends on the 8th lesson (Sun 18 → Tue 10 Nov), the subscription’s label', async () => {
     const { course, queries } = setup();
-    const course8 = { package: '8', subscriptionId: 'sub1' };
+    const course8 = { package: '8', subscriptionId: 'sub1', follows: null };
     expect(await course.options(bookingRequestSchema.parse(BODY))).toEqual({ invoiceWaived: true, endsOn: '2026-11-10', course: course8 });
     expect(queries.subscriptionBooked).toHaveBeenCalledWith('sub1');
     expect(queries.subscription).toHaveBeenCalledWith(S1);
@@ -80,7 +81,7 @@ describe('SalesCourse.view — GET /sales/booking/course', () => {
 
   it('her student: the subscription, 2 days a week, not blocked', async () => {
     const { course } = setup();
-    expect(await course.view(S1, USER)).toEqual({ student: STUDENT, subscription: SUB, perWeek: 2, blocked: null });
+    expect(await course.view(S1, USER)).toEqual({ student: STUDENT, subscription: SUB, perWeek: 2, blocked: null, previous: null, current: null });
   });
 
   it('a running course blocks (course_exists); no subscription → perWeek null, subscription_required', async () => {
