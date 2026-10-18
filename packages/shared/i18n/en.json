@@ -2207,7 +2207,8 @@
         "remaining_label": "Remaining in package",
         "slot_1": "First time option",
         "slot_2": "Second time option",
-        "tz_city": "City (time zone)"
+        "tz_city": "City (time zone)",
+        "contact_name": "Recipient name"
       }
     },
     "sessionClosed": "More than 24 hours have passed since their last message — you need to send a template",
@@ -2372,9 +2373,42 @@
     "submitted": "Sent to Meta — waiting for approval",
     "needsAttention": "Some templates aren't ready — their messages will stay in the queue until they're approved",
     "line": "Line",
+    "number": "Number",
+    "numberCaption": "Sent from {line}",
+    "move": "Move to the other number",
+    "moveFor": "{name}: move to the other number",
+    "moveTitle": "Move the template to the other number",
+    "moveConfirm": "«{name}» will be sent from {to} instead of {from}. After the move its status is checked on the {to} account in Meta: it stays approved if it is approved there, otherwise it becomes «Not submitted» until you submit it to Meta from that number.",
+    "moveProducerWarning": "The platform sends this template automatically: moving it changes which number sends the bookings or reminders.",
+    "moveYes": "Yes, move it",
+    "moved": "Template moved to {line}",
+    "submitTarget": "Goes to",
+    "submitTargetValue": "{line} — {phone}, via {driver}",
+    "phoneUnknown": "Check the lines to show the number",
+    "perNumber": {
+      "title": "Templates by number",
+      "intro": "Each number has its own WhatsApp account at Meta. A sync checks only this number's templates against its account and adds its new approved templates.",
+      "sync": "Sync with Meta",
+      "syncFor": "Sync {line} with Meta",
+      "syncing": "Syncing…",
+      "synced": "{line} synced",
+      "syncFailed": "{line} could not be synced: {error}",
+      "lastSync": "Last sync: {time}",
+      "neverSynced": "Not synced yet",
+      "metaCount": "Templates on the Meta account",
+      "checkedRows": "Templates checked",
+      "imported": "Added",
+      "skipped": "Not added",
+      "noneImported": "No new templates",
+      "skipReason": "{name}: {reason}",
+      "notConfigured": "This number is not configured on the server, so it cannot be synced.",
+      "wabaId": "Account ID",
+      "phone": "Number",
+      "provider": "Sending provider"
+    },
     "salesStarter": "Available to teachers and sales",
     "salesStarterFor": "{name}: available to teachers and sales",
-    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without “Send every template” see only the approved templates ticked in the “Available to teachers and sales” column: free_trial_invite and welcome_greeting by default. They use them to start a conversation or resume it 24 hours after the contact’s last message. “Check template status” adds new chat-line templates and ticks only those two; it never changes your choice for an existing template. They are sent from the chat line, while booking and reminder templates always go from the notifications line; automatic reminders are not affected by this choice.",
+    "salesStarterIntro": "Teachers, sales, classroom assistants and any role without «Send all templates» see only the approved templates ticked in «Available to teachers and sales»: by default three, free_trial_invite, welcome_greeting and trial_reschedule. They start a conversation or resume it after 24 hours without a reply. Syncing with Meta adds each number's new templates and ticks only these three when they come from the chat line; it never changes your choice for an existing template. Each template is sent from the number in the «Number» column; the automatic reminders are not affected by this choice.",
     "starterOn": "Teachers, sales and the other limited roles can now send this template",
     "starterOff": "Teachers, sales and the other limited roles can no longer send this template",
     "qualityScore": {
@@ -2399,7 +2433,8 @@
       "lesson_feedback_request": "Lesson feedback request",
       "lesson_join_link": "Online classroom link",
       "lesson_rating": "Lesson rating (buttons)",
-      "teacher_new_student": "Teacher: new student alert"
+      "teacher_new_student": "Teacher: new student alert",
+      "trial_reschedule": "Reschedule the trial lesson"
     },
     "settings": {
       "title": "Sending settings",
@@ -2489,7 +2524,8 @@
       "needs_app_id": "This template includes a PDF file. To send it to Meta, the Meta app ID (WA_APP_ID) has to be set on the server first.",
       "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the notifications line's «Sending provider» to «Meta direct» in «Integrations», then try again.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
-      "template_sync_off": "Template sync with WhatsApp is turned off in this environment"
+      "template_sync_off": "Template sync with WhatsApp is turned off in this environment",
+      "allow_list_only": "Managing templates is for the admin only"
     },
     "checkedNow": "Template status checked",
     "buttons": "Buttons",
@@ -2506,7 +2542,8 @@
       "slot_1": "Saturday 3 October 17:00",
       "slot_2": "Sunday 4 October 19:00",
       "tz_city": "Riyadh",
-      "lesson_kind": "Trial"
+      "lesson_kind": "Trial",
+      "contact_name": "Ahmed"
     },
     "teacherNewStudentKind": {
       "trial": "Trial",

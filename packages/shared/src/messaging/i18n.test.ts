@@ -5,8 +5,13 @@ import { messageStatusStyle, templateStatusStyle } from './status-style.js';
 import { TEMPLATE_KEYS } from './templates.js';
 
 describe('Phase 4 strings and chips (rule 10, docs/07 §6)', () => {
-  it('every template key has an Arabic name', () => {
-    expect(Object.keys(ar.templates.names).sort()).toEqual([...TEMPLATE_KEYS].sort());
+  it('every template key has an Arabic name, and so does the seeded reschedule starter (migration 460)', () => {
+    expect(Object.keys(ar.templates.names).sort()).toEqual([...TEMPLATE_KEYS, 'trial_reschedule'].sort());
+  });
+
+  it('the reschedule starter keeps its exact names and its variable label', () => {
+    expect(ar.templates.names.trial_reschedule).toBe('إعادة جدولة الحلقة التجريبية');
+    expect(ar.inbox.composer.paramNames.contact_name).toBe('اسم المُرسَل إليه');
   });
 
   it('every push kind has a title and a body', () => {
