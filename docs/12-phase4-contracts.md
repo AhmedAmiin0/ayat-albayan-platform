@@ -227,7 +227,7 @@ All optional; `KEY=` (blank) means unset, as everywhere in `env.ts`.
 | `WA_CHAT_WABA_ID` | WABA of the chat line (needed to SEND only) |
 | `WA_CHAT_ACCESS_TOKEN` | token of the chat line; falls back to `WA_ACCESS_TOKEN` |
 | `WA_CHAT_APP_SECRET` | webhook secret of the chat line's Meta app; verification accepts ANY of `[WA_APP_SECRET, WA_CHAT_APP_SECRET]` |
-| `WA_CHAT_APP_ID` | id of the chat line's Meta app. Diagnostics only (`LineCheckView.app_id`), NO fallback to `WA_APP_ID`, never part of `WhatsappEnv` (so the chat client's `canUploadSamples()` stays false). Set it equal to `WA_APP_ID` when both lines share one Meta app |
+| `WA_CHAT_APP_ID` | id of the chat line's Meta app: part of the chat line's `MetaLineEnv` when set (`chatEnv`, owner 2026-10-18 §13.20), so the chat client's `canUploadSamples()` is true and a PDF-header chat template can be submitted; also `LineCheckView.app_id`. NO fallback to `WA_APP_ID`. Set it equal to `WA_APP_ID` when both lines share one Meta app |
 | `WA_ALLOWED_RECIPIENTS` | comma list of E.164 numbers; the staging safety guard (13.5) |
 | `WA_TEMPLATE_SYNC` | `z.preprocess(blankIsUnset, z.stringbool().default(true))`; `false` stops the template sync and submit (13.9) |
 

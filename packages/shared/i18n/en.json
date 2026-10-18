@@ -4414,7 +4414,7 @@
       },
       "WA_CHAT_APP_ID": {
         "label": "Chat line app ID",
-        "hint": "For the line check only; it never falls back to the notifications app ID."
+        "hint": "Needed to submit a PDF-header template from the chat line, and shown in the line check; it never falls back to the notifications app ID."
       },
       "WA_CHAT_ACCESS_TOKEN": {
         "label": "Chat line access token",
