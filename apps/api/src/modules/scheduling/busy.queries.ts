@@ -50,4 +50,24 @@ export class BusyQueries {
       ends_at: new Date(r.lessons.ends_at),
     }));
   }
+
+  /**
+   * The lessons of an assistant course (schedule_rules.subscription_id, migration 470) of these
+   * students inside `span`: «تغيير أيام الحلقات» moves them, so the slot grid does not show them busy.
+   */
+  async courseLessonIds(input: { subscriptionId: string; studentIds: readonly string[]; span: UtcWindow }): Promise<string[]> {
+    if (input.studentIds.length === 0) return [];
+    const rows = await readAll((from, to) =>
+      this.db
+        .from('lessons')
+        .select('id, rule:schedule_rules!inner(subscription_id), lesson_students!inner(student_id)')
+        .eq('rule.subscription_id', input.subscriptionId)
+        .in('lesson_students.student_id', [...input.studentIds])
+        .lt('starts_at', input.span.to.toISOString())
+        .gt('ends_at', input.span.from.toISOString())
+        .order('id')
+        .range(from, to),
+    );
+    return rows.map((r) => r.id);
+  }
 }

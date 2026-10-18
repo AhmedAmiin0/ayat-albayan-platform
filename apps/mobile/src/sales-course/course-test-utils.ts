@@ -1,5 +1,5 @@
 import type { SalesCourseView, SlotView } from '@ab/shared';
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { maryam, noAvailability, slot, SUN_17, THU_18 } from '@/booking/fixtures';
 import { t } from '@/lib/i18n';
 import { courseView } from './fixtures';
@@ -28,6 +28,13 @@ export const press = async (role: 'button' | 'checkbox', name: string | RegExp) 
 
 export const isDisabled = (name: string) =>
   screen.getByRole('button', { name }).props.accessibilityState?.disabled === true;
+
+/** Press a button once it is enabled (e.g. «تابِع» waits for the previous teacher to be confirmed). */
+export async function pressEnabled(name: string) {
+  await screen.findByRole('button', { name });
+  await waitFor(() => expect(isDisabled(name)).toBe(false));
+  await press('button', name);
+}
 
 /** The teacher, then the Sunday 17:00 and Thursday 18:00 picks, then «التالي» → the review. */
 export async function walkToReview() {

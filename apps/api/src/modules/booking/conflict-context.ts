@@ -9,6 +9,8 @@ export type ContextQuery = Range & {
   studentIds: readonly string[];
   /** A lesson being edited in place (R-SCH-11): it must not count as busy against itself. */
   excludeLessonId?: string | undefined;
+  /** «تغيير أيام الحلقات»: the lessons of this course (of these students) move, so they are not busy. */
+  excludeCourse?: string | undefined;
 };
 export type ConflictContextRows = Omit<ConflictInput, 'proposed'>;
 
@@ -26,13 +28,15 @@ export class ConflictContext {
 
   async load(q: ContextQuery): Promise<ConflictContextRows> {
     const range = { from: q.from, to: q.to };
-    const [availability, timeOff, teacherLessons, studentLessons] = await Promise.all([
+    const [availability, timeOff, teacherLessons, studentLessons, course] = await Promise.all([
       this.availability.bookableSlots(q.teacherId),
       this.availability.listTimeOff(q.teacherId, range),
       this.availability.listBusyLessons(q.teacherId, range),
       this.busy.studentLessons(q.studentIds, range),
+      q.excludeCourse ? this.busy.courseLessonIds({ subscriptionId: q.excludeCourse, studentIds: q.studentIds, span: range }) : [],
     ]);
-    const others = <T extends { id: string }>(lessons: T[]): T[] => lessons.filter((l) => l.id !== q.excludeLessonId);
+    const skip = new Set([...course, ...(q.excludeLessonId ? [q.excludeLessonId] : [])]);
+    const others = <T extends { id: string }>(lessons: T[]): T[] => lessons.filter((l) => !skip.has(l.id));
     return {
       availability,
       timeOff: timeOff.map((t) => ({ start: new Date(t.starts_at), end: new Date(t.ends_at) })),

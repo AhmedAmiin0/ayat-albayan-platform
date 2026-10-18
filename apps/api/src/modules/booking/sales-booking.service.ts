@@ -85,9 +85,13 @@ export class SalesBookingOptions {
     return (await this.teachers.list(q)).map((t) => ({ ...t, meeting_link: null }));
   }
 
-  /** `excludeLessonId` (moving a lesson) is the admin's; it is dropped. */
+  /**
+   * `excludeLessonId` (moving a lesson) is the admin's; it is dropped. `excludeCourse` («تغيير أيام
+   * الحلقات») frees only her own students' course lessons: those students must be hers whatever the switch.
+   */
   async slots(q: SlotsQuery, user: AuthUser): Promise<SlotsResponse> {
     if (q.studentIds?.length) assertOwnStudents(q.studentIds, await this.scope.of(user));
+    if (q.excludeCourse) assertOwnStudents(q.studentIds ?? [], await this.scope.owned(user));
     return this.slotsService.slots({ ...q, excludeLessonId: undefined });
   }
 }

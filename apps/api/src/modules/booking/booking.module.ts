@@ -13,6 +13,13 @@ import { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
 import { BookingWriter } from './booking.writer';
 import { ConflictContext } from './conflict-context';
+import { CourseChangeController } from './course-change.controller';
+import { CourseLessonQueries } from './course-change.lessons';
+import { CourseChangePlanner } from './course-change.planner';
+import { CourseChangeQueries } from './course-change.queries';
+import { CourseChange } from './course-change.service';
+import { CourseChangeViews } from './course-change.view';
+import { CourseChangeDeps, CourseChangeWriter } from './course-change.writer';
 import { InstantController } from './instant.controller';
 import { InstantQueries } from './instant.queries';
 import { InstantLessonService } from './instant.service';
@@ -38,7 +45,7 @@ import { TeacherOptionsService } from './teacher-options.service';
  */
 @Module({
   imports: [TeachersModule, SchedulingModule, SalesModule, SubscriptionsModule],
-  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController],
+  controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController],
   providers: [
     BookingQueries,
     TeacherOptionsQueries,
@@ -53,6 +60,13 @@ import { TeacherOptionsService } from './teacher-options.service';
     SalesBookingOptions,
     SalesCourse,
     SalesCourseQueries,
+    CourseChange,
+    CourseChangeQueries,
+    CourseLessonQueries,
+    CourseChangePlanner,
+    CourseChangeViews,
+    CourseChangeDeps,
+    CourseChangeWriter,
     BookingWriter,
     BookingFollowUps,
     TeacherAlert,

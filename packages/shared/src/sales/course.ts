@@ -1,5 +1,7 @@
 import type { Duration, Gender, PackageSize, Program } from '../enums/index.js';
 import { packagePerWeek } from '../money/tiers.js';
+import { wallParts } from '../lessons/day-times.js';
+import { continueFrom, type BookedCourse } from './course-follow.js';
 
 // The assistant books the weekly course of a subscription she sold (owner 2026-10-18, R-ASST-01):
 // exactly the plan's lesson count, the plan's days a week, each day with its own time.
@@ -52,4 +54,35 @@ export interface SalesCourseView {
   /** Days a week to pick; null when unknown (no subscription, or a custom count the admin books). */
   perWeek: number | null;
   blocked: CourseBlock | null;
+  /**
+   * The student's latest course of an earlier subscription, while the newest one has no course yet
+   * (a renewal: «تابِع بنفس الأيام», owner 2026-10-18); null otherwise. Absent from an older API.
+   */
+  previous?: BookedCourse | null;
+  /**
+   * The course «تغيير أيام الحلقات» changes: the one whose active rules cover today (starts_on ≤ today,
+   * ends_on null or ≥ today), else the earliest-starting upcoming one (a renewal booked ahead). null = none.
+   */
+  current?: BookedCourse | null;
 }
+
+/**
+ * The first local day the course may start: the subscription's, or after a previous course's last
+ * day (the guard refuses an overlap with course_exists), never before today in the family's zone
+ * (`now` given). The slot grid opens on it.
+ */
+export function courseOpensOn(
+  view: Pick<SalesCourseView, 'subscription' | 'previous' | 'student'>,
+  now?: string,
+): string | null {
+  const sub = view.subscription;
+  if (!sub) return null;
+  const opens = view.previous ? continueFrom(view.previous, sub.starts_on) : sub.starts_on;
+  if (!now) return opens;
+  const today = wallParts(now, view.student.tz).date;
+  return opens > today ? opens : today;
+}
+
+/** «تابِع بنفس الأيام» is offered only when the previous course had exactly the new plan's days a week. */
+export const continueFits = (view: Pick<SalesCourseView, 'previous' | 'perWeek'>): boolean =>
+  !!view.previous && view.perWeek !== null && view.previous.days.length === view.perWeek;

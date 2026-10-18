@@ -1,5 +1,8 @@
 import { WEEKDAYS, type AvailabilitySlot, type Weekday } from '@ab/shared';
 
+/** Rows of the editor: السبت → الجمعة (docs/07 §8), the one order shared with mobile. */
+export { WEEK_ORDER } from '@ab/shared';
+
 /** Weekly availability editor model (R-TCH-02): weekday → wall-clock "HH:MM" ranges. */
 export type Range = { start: string; end: string };
 export type Grid = Record<Weekday, Range[]>;
@@ -7,9 +10,6 @@ export type DayProblem = 'endBeforeStart' | 'overlap' | null;
 
 const DEFAULT_START = '16:00';
 const LAST_MINUTE = 23 * 60 + 59;
-
-/** Rows of the editor: السبت → الجمعة (docs/07 §8). */
-export const WEEK_ORDER: readonly Weekday[] = [6, 0, 1, 2, 3, 4, 5];
 
 export function emptyGrid(): Grid {
   return { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] };

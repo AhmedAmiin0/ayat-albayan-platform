@@ -27,6 +27,20 @@ export interface BookingWizardProps {
   onChoice?: (choice: Pick<BookingDraft, 'kind' | 'pkg'>) => void;
   /** From a missed lesson's drawer: the makeup's missed-lesson step preselects it (R-SCH-10). */
   missedLessonId?: string | undefined;
+  /** «رجوع» on the first step back to the caller's screen (a renewal's «تابِع بنفس الأيام» choice); absent = none. */
+  exit?: { label: string; onExit: () => void } | undefined;
+}
+
+type BackProps = { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void };
+
+/** «رجوع» to the previous step; on the first step the caller's exit, else disabled. */
+function BackButton({ first, exit, onBack }: BackProps) {
+  const leave = first ? exit : undefined;
+  return (
+    <Button type="button" variant="ghost" disabled={first && !leave} onClick={leave ? leave.onExit : onBack}>
+      {leave ? leave.label : t.booking.back}
+    </Button>
+  );
 }
 
 /**
@@ -35,7 +49,8 @@ export interface BookingWizardProps {
  * filled primary per step («التالي», then «احجز» on the review). Every step change (also «اختار
  * ميعاد تاني») moves focus to the new step.
  */
-export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId }: BookingWizardProps) {
+export function BookingWizard(props: BookingWizardProps) {
+  const { initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId, exit } = props;
   const [draft, setDraft] = useState(initial);
   const [step, setStep] = useState<StepKey>(() => stepsOf(initial)[0] ?? 'students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
@@ -90,9 +105,7 @@ export function BookingWizard({ initial, primary, siblings, onOpenStudent, hint 
         <p className="mt-3 text-xs text-ink-3">{t.booking.courseNeedsCheck}</p>
       )}
       <div className="mt-6 flex items-center justify-between gap-3 border-t border-rule pt-4">
-        <Button type="button" variant="ghost" disabled={index === 0} onClick={() => go(index - 1)}>
-          {t.booking.back}
-        </Button>
+        <BackButton first={index === 0} exit={exit} onBack={() => go(index - 1)} />
         {step !== 'review' && (
           <Button type="button" disabled={!ready} onClick={() => go(index + 1)}>
             {t.booking.next}

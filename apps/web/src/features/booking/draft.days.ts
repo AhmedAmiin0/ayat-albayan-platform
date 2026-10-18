@@ -1,5 +1,4 @@
-import { courseEndsOn, dayTimesFromPicks, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/shared';
-import { WEEK_ORDER } from '@/features/teachers/grid';
+import { courseEndsOn, dayTimesKeeping, inWeekOrder, timeGroups, togglePick, wallParts, type PickedRule } from '@ab/shared';
 import type { BookingDraft } from './draft';
 
 // The picked slots of the booking wizard (owner 2026-10-18: «اختر موعدًا لكل يوم»). A package picks
@@ -8,6 +7,8 @@ import type { BookingDraft } from './draft';
 
 type PickFields = Pick<BookingDraft, 'startsAt' | 'extra' | 'kind'>;
 type ZonedPicks = PickFields & Pick<BookingDraft, 'tz'>;
+/** With the course: its prefilled picks keep their days' own times. */
+type RulePicks = ZonedPicks & Partial<Pick<BookingDraft, 'course'>>;
 
 /** Every picked instant, earliest first (`startsAt` is kept the earliest). */
 export function draftPicks(d: PickFields): string[] {
@@ -27,8 +28,12 @@ export function pickPatch(d: ZonedPicks, slot: string): Pick<BookingDraft, 'star
   return withPicks(togglePick({ picks: draftPicks(d), slot, tz: d.tz }));
 }
 
-/** The rule fields the picks fix in the family zone (byday, first day and time, the other days' times). */
-export const pickedRule = (d: ZonedPicks): PickedRule | null => dayTimesFromPicks(draftPicks(d), d.tz);
+/**
+ * The rule fields the picks fix in the family zone (byday, first day and time, the other days' times);
+ * a pick still equal to a prefilled one («تابِع بنفس الأيام») keeps that day's own time (dayTimesKeeping).
+ */
+export const pickedRule = (d: RulePicks): PickedRule | null =>
+  dayTimesKeeping(draftPicks(d), d.tz, d.course?.prefilled ?? []);
 
 /** The weekdays booked (0 = الأحد), sorted. */
 export const days = (d: ZonedPicks): number[] => pickedRule(d)?.byday ?? [];
@@ -43,17 +48,16 @@ export interface DayPick {
 
 /** Each picked day with its time, Saturday first like every week in the app (docs/07 §8). */
 export function dayPicks(d: ZonedPicks): DayPick[] {
-  const order = (w: number) => WEEK_ORDER.findIndex((x) => x === w);
-  return draftPicks(d)
-    .map((at) => {
+  return inWeekOrder(
+    draftPicks(d).map((at) => {
       const w = wallParts(at, d.tz);
       return { at, weekday: w.weekday, time: w.time };
-    })
-    .sort((a, b) => order(a.weekday) - order(b.weekday));
+    }),
+  );
 }
 
 /** The assistant's course: the local date of its last lesson, from the picks and the lesson count. */
-export function courseEnd(d: ZonedPicks & Pick<BookingDraft, 'course'>): string | null {
+export function courseEnd(d: RulePicks): string | null {
   const rule = pickedRule(d);
   if (!rule || !d.course) return null;
   return courseEndsOn({ groups: timeGroups(rule), startsOn: rule.startsOn, lessonsTotal: d.course.lessonsTotal });

@@ -5,12 +5,13 @@ import { pathKey } from '@/lib/query-keys';
 import { bookingPath, useBookingMode } from './booking-mode';
 
 /** GET /booking/teachers?program&gender? (docs/10 route 12; sales: /sales/booking/teachers): active teachers by name, with load. */
-export function useBookingTeachers(f: { program: Program; gender: Gender | null }) {
+export function useBookingTeachers(f: { program: Program; gender: Gender | null; enabled?: boolean }) {
   const params = { program: f.program, gender: f.gender ?? undefined };
   const path = bookingPath(useBookingMode(), '/teachers');
   return useQuery({
     queryKey: [...pathKey(path), params],
     queryFn: () => apiFetch<BookingTeacherOption[]>(`${path}${toQueryString(params)}`),
+    enabled: f.enabled ?? true,
   });
 }
 
@@ -19,6 +20,9 @@ export interface SlotsParams {
   from: string;
   to: string;
   durationMin: number;
+  /** «تغيير أيام الحلقات»: `?studentIds=a,b`, whose lessons of `excludeCourse` are not busy (they move). */
+  studentIds?: string;
+  excludeCourse?: string;
 }
 
 /** GET /booking/slots (docs/10 route 13; sales: /sales/booking/slots): candidate starts, each with its clashes ([] = free). */

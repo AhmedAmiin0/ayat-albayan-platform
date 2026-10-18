@@ -7,10 +7,13 @@ import {
   type InvoiceRow,
   type SiblingRow,
 } from './booking.mapper';
+import { courseAudit, courseTie, type CourseLabel } from './booking.course-label';
 import { confirmationDrafts } from './booking.messages';
 import type { Resolved } from './booking.parties';
 import type { Plan } from './booking.plan';
 import type { BookingTeacher } from './booking.queries';
+
+export type { CourseLabel } from './booking.course-label';
 
 export type PayloadInput = {
   req: BookingRequest;
@@ -38,8 +41,6 @@ export type PayloadInput = {
   course?: CourseLabel | undefined;
 };
 
-/** PR #113 review M3 / M4: the server owns a course's package (null = a custom count) and ties it to its subscription. */
-export type CourseLabel = { package: PackageSize | null; subscriptionId: string };
 
 /** The rule's package: the request's, or none for a makeup (it has no package of its own). */
 export const rulePackage = (req: BookingRequest, kind: BookingKind): PackageSize | null =>
@@ -67,14 +68,12 @@ export function clientRequest(req: BookingRequest, role: string | null): Booking
   return { ...req, newStudent: { ...req.newStudent, status: registrationStatus(bookingKindOf(req) === 'trial') } };
 }
 
-/** rule.subscription_id only on an assistant course: every other payload is unchanged. */
-const courseTie = (input: PayloadInput) => (input.course ? { subscription_id: input.course.subscriptionId } : {});
 
 /** The other times' rules and lessons: the same link, package, subscription and override rule as the first. */
 function siblingRows(input: PayloadInput, pkg: PackageSize | null): SiblingRow[] {
   const { req, conflicts } = input;
   return input.siblings.map((p) => ({
-    rule: { ...p.timing, meeting_link: req.meetingLink ?? null, package: pkg, ...courseTie(input) },
+    rule: { ...p.timing, meeting_link: req.meetingLink ?? null, package: pkg, ...courseTie(input.course) },
     lessons: lessonRows({
       occurrences: p.occurrences,
       conflicts,
@@ -102,7 +101,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
       meeting_link: req.meetingLink ?? null,
       package: pkg,
       client_request_id: req.clientRequestId ?? null,
-      ...courseTie(input),
+      ...courseTie(input.course),
     },
     student_ids: who.student_ids,
     lead: lead && { id: lead.id, from: lead.status, to: leadTarget(lead.status, pkg) },
@@ -131,6 +130,7 @@ export function bookingPayload(input: PayloadInput): BookingPayload {
         override_reason: reason,
         conflicts: conflicts.map((c) => ({ ...c })),
         ...dayTimesAudit(req),
+        ...courseAudit(input.course),
       },
     },
   };

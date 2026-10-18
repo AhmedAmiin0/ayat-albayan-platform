@@ -1,4 +1,12 @@
-import { courseBodyPackage, type BookingTeacherOption, type Duration, type Gender, type PackageSize, type Program } from '@ab/shared';
+import {
+  courseBodyPackage,
+  type BookingTeacherOption,
+  type Duration,
+  type Gender,
+  type PackageSize,
+  type PrefilledPick,
+  type Program,
+} from '@ab/shared';
 import { RIYADH_TZ, zonedParts } from '@/features/schedule/tz';
 import type { BookingBody, BookingKind } from './contract';
 import { invoiceInput, type InvoiceDraft, type MissedPick } from './draft.invoice';
@@ -24,8 +32,13 @@ export interface CourseDraft {
   lessonsTotal: number;
   /** The subscription's package; null = a custom count (labels use lessonsTotal, never the body's package). */
   package: PackageSize | null;
-  /** subscriptions.starts_on (local date): the slot grid opens on its week. */
+  /** The first local day it may start (courseOpensOn: the subscription's, or after the previous course): the slot grid opens on its week. */
   startsOn: string;
+  /**
+   * «تابِع بنفس الأيام»: the previous course's days as picks (prefillDays), each with its day's own
+   * time: a pick still equal to one keeps that time in the body (DST-safe); a clash on one names its day.
+   */
+  prefilled?: readonly PrefilledPick[];
 }
 
 export type PickedStudent = { id: string; name: string; code: string | null };

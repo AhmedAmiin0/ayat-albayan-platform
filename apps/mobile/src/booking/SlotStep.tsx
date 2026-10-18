@@ -33,6 +33,8 @@ export interface SlotStepProps {
   multi?: SlotMulti;
   /** The earliest start (an instant), when later than now: a subscription that starts ahead. */
   from?: string;
+  /** «تغيير أيام الحلقات»: this course's own lessons (of these students) are not busy: they move. */
+  exclude?: { course: string; studentIds: readonly string[] };
 }
 
 /**
@@ -41,10 +43,10 @@ export interface SlotStepProps {
  * one start per weekday (togglePick: the same one again removes it, another on that day replaces
  * it). Mounting again (after a clash) asks the API afresh from now (or `from`, when later).
  */
-export function SlotStep({ teacherId, tz, durationMin, onPick, multi, from }: SlotStepProps) {
+export function SlotStep({ teacherId, tz, durationMin, onPick, multi, from, exclude }: SlotStepProps) {
   const { color } = useTheme();
   const [now] = useState(() => new Date());
-  const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin });
+  const slots = useSlots({ teacherId, ...slotWindow(windowStart(now, from)), durationMin, ...excludeParams(exclude) });
   const days = slots.data ? freeSlotDays(slots.data.slots) : [];
   const note = { fontFamily: type.ui[500], fontSize: type.size.sm, color: color.ink2 };
   const picks = multi?.picks ?? [];
@@ -83,6 +85,11 @@ export function SlotStep({ teacherId, tz, durationMin, onPick, multi, from }: Sl
       {multi ? <MultiFooter multi={multi} tz={tz} /> : null}
     </View>
   );
+}
+
+/** GET /booking/slots `studentIds` + `excludeCourse`, when a course's own lessons move. */
+function excludeParams(exclude: SlotStepProps['exclude']): { studentIds?: string; excludeCourse?: string } {
+  return exclude ? { studentIds: exclude.studentIds.join(','), excludeCourse: exclude.course } : {};
 }
 
 /** Loading, a failed read (retry) or no free start at all. */

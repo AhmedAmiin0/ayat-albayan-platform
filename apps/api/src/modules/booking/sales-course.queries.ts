@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { notFound } from '../scheduling/errors';
 import { dbError } from '../teachers/http';
+import type { CourseRuleRow } from './course-read';
 import type { CourseRule } from './sales-course.rules';
 
 type SubscriptionRow = Omit<CourseSubscription, 'duration'> & { duration: number };
@@ -13,6 +14,24 @@ function toSubscription(row: SubscriptionRow): CourseSubscription {
   if (duration === undefined) throw new Error(`subscription ${row.id} has duration ${row.duration}`);
   return { ...row, duration };
 }
+
+/** A course rule with its plan; the inner join keeps only the student's own rules. */
+export const COURSE_RULE_SELECT =
+  'id, subscription_id, teacher_id, duration_min, start_time_local, tz, byday, starts_on, ends_on, status, first_rule_id, sub:subscriptions(package, lessons_total), teacher:teachers(tz), schedule_rule_students!inner(student_id)' as const;
+
+const pickRule = (r: Omit<CourseRuleRow, 'subscription_id' | 'sub'>): Omit<CourseRuleRow, 'subscription_id' | 'sub'> => ({
+  id: r.id,
+  teacher_id: r.teacher_id,
+  duration_min: r.duration_min,
+  start_time_local: r.start_time_local,
+  tz: r.tz,
+  byday: r.byday,
+  starts_on: r.starts_on,
+  ends_on: r.ends_on,
+  status: r.status,
+  first_rule_id: r.first_rule_id,
+  teacher: r.teacher,
+});
 
 /** The reads of the assistant's course (service role; ownership is checked before). */
 @Injectable()
@@ -64,6 +83,22 @@ export class SalesCourseQueries {
     const { data, error } = await this.db.from('schedule_rules').select('id').eq('subscription_id', subscriptionId).limit(1);
     if (error) throw dbError(error);
     return data.length > 0;
+  }
+
+  /**
+   * Every rule of the student's assistant courses (subscription_id set, any status) with the plan of
+   * its subscription: course-read.ts groups them (the previous course, the running one).
+   */
+  async courseRules(studentId: string): Promise<CourseRuleRow[]> {
+    const { data, error } = await this.db
+      .from('schedule_rules')
+      .select(COURSE_RULE_SELECT)
+      .eq('schedule_rule_students.student_id', studentId)
+      .not('subscription_id', 'is', null);
+    if (error) throw dbError(error);
+    return data.flatMap((r) =>
+      r.subscription_id && r.sub ? [{ ...pickRule(r), subscription_id: r.subscription_id, sub: r.sub }] : [],
+    );
   }
 
   /** Did this clientRequestId already book (a retry after a success, review m6)? */
