@@ -22,12 +22,18 @@ function NoteText({ note, livekit }: { note: MeetingModeNote; livekit: boolean |
   const T = t.teachers;
   if (note === 'noLink') return <>{T.meetingModeNoLink}</>;
   if (note === 'livekitUnset') return <>{T.meetingModeLivekitUnset}</>;
+  const text = {
+    templatePending: T.meetingModeTemplatePending,
+    templatePaused: T.meetingModeTemplatePaused,
+    templateNotApproved: T.meetingModeTemplateNotApproved,
+  }[note];
   return (
     <>
-      {note === 'templatePending' ? T.meetingModeTemplatePending : T.meetingModeTemplateNotApproved}
+      {text}
       {/* Without LiveKit the teacher gets no link either (reminders.links.ts): only say so when it is set. */}
       {livekit === true && ` ${T.meetingModeTeacherOnly}`}{' '}
-      <a href={TEMPLATES_HREF} className="font-semibold text-lapis underline underline-offset-4">
+      {/* A new tab: this sits inside the unsaved teacher form, which a page load would throw away. */}
+      <a href={TEMPLATES_HREF} target="_blank" rel="noopener noreferrer" className="font-semibold text-lapis underline underline-offset-4">
         {T.meetingModeTemplatesLink}
       </a>
     </>
@@ -45,9 +51,11 @@ export function MeetingModeWarnings({ id, platform, link }: Props) {
   const integrations = useQuery({ ...integrationsQuery, enabled: known });
   const livekit = livekitConfigured(integrations.isSuccess ? integrations.data : undefined);
   const join = joinStatus(templates.isSuccess ? templates.data : undefined);
-  const notes = meetingModeNotes({ platform, link, join, livekit });
+  const settled = !templates.isPending && !integrations.isPending;
+  const notes = meetingModeNotes({ platform, link, join, livekit, settled });
+  // Never display:none while empty: a live region revealed with its first note is often not announced.
   return (
-    <div id={id} role="status" aria-live="polite" className="grid gap-2 empty:hidden">
+    <div id={id} role="status" aria-live="polite" className="mt-2 grid gap-2 empty:mt-0">
       {notes.map((note) => (
         <p key={note} className={NOTE}>
           <NoteText note={note} livekit={livekit} />

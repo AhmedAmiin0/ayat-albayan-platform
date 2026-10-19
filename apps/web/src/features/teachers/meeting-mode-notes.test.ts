@@ -4,7 +4,7 @@ import { joinStatus, livekitConfigured, meetingModeNotes, type NotesInput } from
 
 const LINK = 'https://meet.google.com/xqa-ngdu-fpe';
 const notes = (over: Partial<NotesInput>) =>
-  meetingModeNotes({ platform: true, link: '', join: 'approved', livekit: true, ...over });
+  meetingModeNotes({ platform: true, link: '', join: 'approved', livekit: true, settled: true, ...over });
 
 describe('joinStatus', () => {
   it('reads lesson_join_link’s row; no row (a restricted list) is null, not «not approved»', () => {
@@ -42,6 +42,12 @@ describe('meetingModeNotes', () => {
     expect(notes({ join: 'pending' })).toEqual(['templatePending']);
   });
 
+  it('platform: a template Meta paused or disabled gets its own note, not «send it to Meta» (nothing to submit)', () => {
+    expect(notes({ join: 'paused' })).toEqual(['templatePaused']);
+    expect(notes({ join: 'disabled' })).toEqual(['templatePaused']);
+    expect(notes({ join: 'missing' })).toEqual(['templateNotApproved']);
+  });
+
   it('platform without LiveKit: the server note first; unknown LiveKit says nothing', () => {
     expect(notes({ livekit: false, join: 'pending' })).toEqual(['livekitUnset', 'templatePending']);
     expect(notes({ livekit: null })).toEqual([]);
@@ -52,6 +58,11 @@ describe('meetingModeNotes', () => {
     expect(notes({ platform: false, join: 'pending' })).toEqual(['noLink']);
     expect(notes({ platform: false, livekit: false })).toEqual(['noLink']);
     expect(notes({ platform: false, join: null, livekit: null })).toEqual(['noLink']);
+  });
+
+  it('fixed link without a link: the note waits until both lists answered, so it never flashes on a ready academy', () => {
+    expect(notes({ platform: false, join: null, livekit: null, settled: false })).toEqual([]);
+    expect(notes({ platform: false, join: 'pending', settled: false })).toEqual([]);
   });
 
   it('fixed link with a link: no note', () => {

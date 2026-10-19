@@ -4,7 +4,7 @@ export const JOIN_TEMPLATE = 'lesson_join_link';
 const LIVEKIT_KEYS = ['LIVEKIT_URL', 'LIVEKIT_API_KEY', 'LIVEKIT_API_SECRET'] as const;
 
 /** One note under «طريقة حضور الحلقات», in display order. */
-export type MeetingModeNote = 'livekitUnset' | 'templateNotApproved' | 'templatePending' | 'noLink';
+export type MeetingModeNote = 'livekitUnset' | 'templateNotApproved' | 'templatePending' | 'templatePaused' | 'noLink';
 
 export interface NotesInput {
   /** The effective mode: usesPlatform(form mode, academy default); null = not known yet (no notes). */
@@ -15,6 +15,8 @@ export interface NotesInput {
   join: TemplateStatus | null;
   /** LIVEKIT_* all set; null = unknown (loading, failed or forbidden). */
   livekit: boolean | null;
+  /** Both lists answered (or failed): until then the fixed-link note waits, so it never flashes on a ready academy. */
+  settled: boolean;
 }
 
 /** lesson_join_link's row status in GET /messaging/templates; null when the row is not there. */
@@ -39,11 +41,13 @@ export function livekitConfigured(items: readonly Pick<IntegrationConfigItem, 'k
  * teacher with no link gives families our room only when both hold, so their note stays until then.
  * The template notes need the row itself: no row = no note.
  */
-export function meetingModeNotes({ platform, link, join, livekit }: NotesInput): MeetingModeNote[] {
+export function meetingModeNotes({ platform, link, join, livekit, settled }: NotesInput): MeetingModeNote[] {
   if (platform === null) return [];
-  if (!platform) return link.trim() === '' && !(join === 'approved' && livekit === true) ? ['noLink'] : [];
+  if (!platform) return settled && link.trim() === '' && !(join === 'approved' && livekit === true) ? ['noLink'] : [];
   const notes: MeetingModeNote[] = livekit === false ? ['livekitUnset'] : [];
   if (join === 'pending') notes.push('templatePending');
+  // Meta held an approved template: there is nothing to submit, so not the «send it to Meta» note.
+  else if (join === 'paused' || join === 'disabled') notes.push('templatePaused');
   else if (join !== null && join !== 'approved') notes.push('templateNotApproved');
   return notes;
 }

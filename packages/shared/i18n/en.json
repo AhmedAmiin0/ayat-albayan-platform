@@ -288,6 +288,7 @@
     "meetingModeNoLink": "No fixed link yet: families will get no lesson link until one is added.",
     "meetingModeTemplatePending": "The WhatsApp message «Online classroom link» is waiting for Meta's approval: families will not get their join link until it is approved.",
     "meetingModeTemplateNotApproved": "The WhatsApp message «Online classroom link» is not approved yet: families will not get their join link until it is sent to Meta from the message templates in the settings and approved.",
+    "meetingModeTemplatePaused": "Meta paused or disabled the WhatsApp message «Online classroom link»: families will not get their join link until it is approved again; check its status in the message templates in the settings.",
     "meetingModeTeacherOnly": "The teacher still gets the lesson's classroom link.",
     "meetingModeTemplatesLink": "Open the message templates",
     "meetingModeLivekitUnset": "The online classroom server is not configured yet: neither the teacher nor the families will get any link until it is set up in the settings.",

@@ -31,7 +31,7 @@ export function TeacherMeetingModeField({ form, set, teacher = null }: Props) {
     { value: 'platform', label: t.teachers.meetingModeOption.platform },
   ];
   return (
-    <div className="grid gap-2 sm:col-span-2">
+    <div className="grid sm:col-span-2">
       <RadioChips
         name="meeting_mode"
         legend={t.teachers.meetingMode}
