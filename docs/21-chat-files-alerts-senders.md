@@ -10,6 +10,13 @@ Owner 2026-10-19, after the web chat for the assistant (#123, #125): four decisi
 4. **Teachers see staff names** on academy messages in their own family chats (the same names everyone sees).
 5. Teachers do NOT send files (spec default: 403 `files_forbidden`).
 
+## As built (2026-10-19): what differs from the spec below
+
+- **Purge:** `WaMediaRetentionJob` deletes only stored inbound files whose mime is in `PLAYABLE_MIMES` (voice notes, videos), not every inbound kind (§4 item 6, §11 row 1). Photos and PDFs are never purged.
+- **Mobile:** voice notes and videos play inline in the chat (expo-audio play/pause + progress + duration; expo-video with native controls), loaded on tap through W6; the assistant sends images **and PDFs** (expo-document-picker). Replaces §4 item 9's `Linking.openURL` and §5 item 16's «images only».
+- **Release:** a new APK, version 0.2.0 (runtime 0.2.0), built with the `mobile` workflow `build-android-apk` after merge; not an OTA (§0 Mobile bullet, §12, §13 superseded). Phones on the 0.1.x APK get no OTA until they install it.
+- **e2e:** the Kapso file send is checked on `stubSent()` (`via: 'kapso'`, `type: 'image'`, `image.link`) plus `stubRequests()` (every send carried `X-API-Key`), since the request log holds no bodies.
+
 # Build spec: chat media, sending files, owner alerts, sender names (owner decisions 2026-10-19)
 
 One cloud routine, one branch `cloud/chat-files-alerts-senders`, one PR into `develop`. It is based on `origin/develop`, which is 8482d10a or later and includes PR #123.

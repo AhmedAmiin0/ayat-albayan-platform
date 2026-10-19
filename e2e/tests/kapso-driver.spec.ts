@@ -1,4 +1,5 @@
 import type { Page } from '@playwright/test';
+import { AVATAR_PNG } from '../support/account';
 import { ar, expect, test } from '../support/fixtures';
 import { openThread } from '../support/inbox';
 import { kapsoInbound, stubRequests, switchNotifications } from '../support/kapso';
@@ -9,7 +10,7 @@ import { setMessaging, stubReset } from '../support/wa-stub';
 
 // The kapso driver end to end (docs/19): with the notifications line switched to kapso, an inbound
 // arrives through POST /webhooks/kapso (Kapso-signed raw Meta payload) and shows in the inbox, and
-// a staff reply leaves through the stub's Kapso prefix with X-API-Key, never a bearer. A bad
+// a staff reply, and then a file (docs/21 D2), leave through the stub's Kapso prefix with X-API-Key, never a bearer. A bad
 // signature is 401 and stores nothing. Provider meta is ALWAYS restored, so other specs are unaffected.
 // Messaging opens only AFTER the switch and closes BEFORE the switch back: a row an earlier spec left
 // queued can then only leave through Kapso, never through Meta inside this spec's window.
@@ -40,7 +41,7 @@ test.describe('WhatsApp driver: Kapso on the notifications line', () => {
     }
   });
 
-  test('inbound via /webhooks/kapso, reply via Kapso with X-API-Key', async ({ asRole }) => {
+  test('inbound via /webhooks/kapso, reply and a file via Kapso with X-API-Key', async ({ asRole }) => {
     test.setTimeout(150_000);
     const admin = await asRole('admin');
     await onKapso(admin);
@@ -63,6 +64,18 @@ test.describe('WhatsApp driver: Kapso on the notifications line', () => {
     await expect.poll(async () => (await messagesFor(`+${digits}`)).filter((m) => m.direction === 'outbound'), WAIT).toEqual([
       expect.objectContaining({ body: reply, status: 'sent' }),
     ]);
+
+    // docs/21 D2: a file leaves through Kapso with the same body as on Meta (type image, by link), X-API-Key.
+    await admin.locator('input[type="file"][accept*="image/png"]').setInputFiles(AVATAR_PNG);
+    await admin.getByRole('button', { name: ar.inbox.composer.sendFile, exact: true }).click();
+    const images = async () => (await sentVia(NOTIF_PN)).filter((m) => m.to === digits && m.type === 'image');
+    await expect.poll(async () => (await images()).length, WAIT).toBe(1);
+    expect(await images()).toEqual([
+      expect.objectContaining({ via: 'kapso', body: expect.objectContaining({ type: 'image', image: expect.objectContaining({ link: expect.any(String) }) }) }),
+    ]);
+    const all = (await stubRequests()).filter((r) => r.method === 'POST' && r.path.endsWith(MESSAGES));
+    expect(all.length).toBeGreaterThanOrEqual(2);
+    for (const r of all) expect(r).toEqual(expect.objectContaining({ via: 'kapso', auth: 'api-key' }));
   });
 
   test('a bad Kapso signature is 401 and stores nothing', async ({ asRole }) => {

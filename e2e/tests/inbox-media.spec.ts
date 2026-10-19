@@ -13,6 +13,10 @@ const PNG = Buffer.from(
   'base64',
 ).toString('base64');
 const PDF = Buffer.from('%PDF-1.1\n1 0 obj<</Type/Catalog>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF').toString('base64');
+/** A real 0.1 s Ogg Opus voice note (191 bytes, ffmpeg anullsrc), so the player does not fall back to the link. */
+const OGG =
+  'T2dnUwACAAAAAAAAAAAAAAAAAAAAAAIotXIBE09wdXNIZWFkAQE4AYC7AAAAAABPZ2dTAAAAAAAAAAAAAAAAAAABAAAASZW+VAEuT3B1c1RhZ3MGAAAAZmZtcGVnAQAAABQAAABl' +
+  'bmNvZGVyPUxhdmMgbGlib3B1c09nZ1MABPgTAAAAAAAAAAAAAAIAAABBShkFBgcGBgYGBggL5jsjq2AICKyzDsYICKyzDsYICKyzDsYICKyzDsYICKyzDsY=';
 
 test.describe('inbox — inbound media (R-MSG-05)', () => {
   test.beforeEach(async () => {
@@ -63,5 +67,25 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
     const row = admin.getByRole('link', { name: ar.inbox.openThread.replace('{name}', name) });
     await expect(row).toContainText(ar.inbox.media.document);
     await expect.poll(() => pushesForPhone({ phone, kind: 'new_message' })).toBeGreaterThan(0);
+  });
+
+  // docs/21 D1: a voice note plays in the chat. «تشغيل رسالة صوتية» fetches it (W6), then an <audio> with the signed URL.
+  test('a voice note from a lead → «تشغيل رسالة صوتية», then an audio player with a src', async ({ asRole }) => {
+    test.setTimeout(90_000);
+    const digits = freshDigits();
+    const phone = `+${digits}`;
+    const name = `أم سلمى ${digits.slice(-4)}`;
+    await seedLead({ phone, name });
+    const voice = { kind: 'audio', mime: 'audio/ogg; codecs=opus', base64: OGG } as const;
+    expect((await stubInboundMedia({ from: digits, name, media: voice })).status).toBe(200);
+    await expect.poll(async () => (await inboundRows(phone)).map((r) => r.media_mime)).toEqual([voice.mime]);
+
+    const log = await openThread(await asRole('admin'), name);
+    const play = log.getByRole('button', { name: ar.inbox.playMedia.replace('{kind}', ar.inbox.media.audio) });
+    await expect(play).toBeVisible();
+    await expect(log.locator('audio')).toHaveCount(0);
+    await play.click();
+    await expect(log.locator('audio')).toHaveAttribute('src', /^https?:\/\/.+/, { timeout: 30_000 });
+    await expect(log.getByText(ar.inbox.mediaExpired)).toHaveCount(0);
   });
 });

@@ -102,6 +102,14 @@ export async function pushesForPhone(input: { phone: string; kind: string }): Pr
   return row?.n ?? 0;
 }
 
+/** One profile's push rows (the bell) of a kind for a phone (E.164): who was alerted (docs/21 D3). */
+export async function pushesForProfile(input: { profileId: string; kind: string; phone: string }): Promise<number> {
+  const [row] = await withSql((sql) => sql<{ n: number }[]>`
+    select count(*)::int as n from public.push_notifications
+    where profile_id = ${input.profileId} and kind = ${input.kind}::public.push_kind and data->>'phone' = ${input.phone}`);
+  return row?.n ?? 0;
+}
+
 /** Opens a thread from the inbox list by the contact's name; returns the message log. */
 export async function openThread(page: Page, name: string): Promise<Locator> {
   await page.goto('/admin/inbox');
