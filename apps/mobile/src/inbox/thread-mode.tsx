@@ -1,5 +1,6 @@
-import type { MessageView, ThreadView } from '@ab/shared';
+import { type MessageView, senderLine, type ThreadView } from '@ab/shared';
 import { createContext, type ReactNode, useContext } from 'react';
+import { t } from '@/lib/i18n';
 import { threadHref } from './thread-cache';
 
 /**
@@ -36,9 +37,12 @@ export function isOwnThread(mode: ThreadMode, thread: ThreadView | null): boolea
 }
 
 /**
- * The teacher who sent this row from the academy number, so the admin sees «بعتها: أبرار».
- * null = the academy or a system job; absent on old cached / optimistic rows.
+ * Who sent an outgoing row (owner 2026-10-19 #4): «أرسلها: سارة» for a staff member (a teacher's
+ * display name wins), «رسالة تلقائية» for a job's row; null for inbound rows, imported history and
+ * the optimistic row (the line appears when the API's row arrives).
  */
-export function sentByName(m: MessageView): string | null {
-  return m.sent_by_teacher_name || null;
+export function senderText(m: MessageView): string | null {
+  const line = senderLine(m);
+  if (!line) return null;
+  return line.kind === 'name' ? t.inbox.sentBy.replace('{name}', line.name) : t.inbox.automaticMessage;
 }

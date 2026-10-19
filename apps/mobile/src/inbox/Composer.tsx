@@ -6,6 +6,7 @@ import { requestId } from '@/lib/request-id';
 import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
 import { IconButton } from '@/ui/IconButton';
+import { AttachFile } from './AttachFile';
 import { TemplateIcon, SendIcon } from './chat-icons';
 import { ClosedNote } from './ClosedNote';
 import { ComposerInput } from './ComposerInput';
@@ -21,8 +22,8 @@ const draftOf = (out: Outgoing): string =>
   out.kind === 'template' ? JSON.stringify([out.key, out.params, out.lessonId]) : '';
 
 /**
- * Reply box (R-MOB-02, R-MSG-03), one WhatsApp-like row: [template] [text] [send]. Within 24 h of
- * their last message: free text, plus a template if wanted. After that WhatsApp allows only an
+ * Reply box (R-MOB-02, R-MSG-03), one WhatsApp-like row: [template] [file] [text] [send]. Within
+ * 24 h of their last message: free text, a photo or PDF, plus a template if wanted. After that WhatsApp allows only an
  * approved template, so the row says why (ClosedNote) beside «أرسل قالبًا». The window is checked
  * against the device clock on every render (a refetch, a keystroke), not only when the thread loaded.
  */
@@ -43,6 +44,8 @@ export function Composer({
   // The same for a template: the same template + params sent again (after «جرّب تاني») reuses its id.
   const templateDraft = useRef<{ draft: string; id: string } | null>(null);
   const [picking, setPicking] = useState(false);
+  // Why a photo / PDF did not go (AttachFile), until the next pick.
+  const [fileError, setFileError] = useState<string | null>(null);
   const open = sessionWindowOpen(thread?.last_inbound_at ?? null, new Date());
   const pick = () => setPicking(true);
 
@@ -62,6 +65,7 @@ export function Composer({
   return (
     <View style={{ gap: 4, paddingBottom: 8 }}>
       {send.isError ? <ErrorLine message={sendError(send.error)} /> : null}
+      {fileError && open ? <ErrorLine message={fileError} /> : null}
       <GateNote />
       <ComposerNotes thread={thread} open={open} />
       {open ? (
@@ -69,6 +73,7 @@ export function Composer({
           <IconButton label={t.inbox.composer.sendTemplate} onPress={pick}>
             <TemplateIcon color={color.lapis} />
           </IconButton>
+          <AttachFile phone={phone} onError={setFileError} />
           <ComposerInput
             value={text}
             onChange={(v) => {

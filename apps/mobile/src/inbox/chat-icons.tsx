@@ -57,6 +57,24 @@ export function SendIcon({ color, size = 20 }: IconProps) {
   );
 }
 
+function Line({ color, size = 22, d }: IconProps & { d: string }) {
+  return (
+    <Svg {...hidden} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke={color}
+      strokeWidth={1.75} strokeLinecap="round" strokeLinejoin="round">
+      <Path d={d} />
+    </Svg>
+  );
+}
+
+/** «أرفق صورة أو ملف PDF»: a paperclip. */
+export const AttachIcon = (p: IconProps) => (
+  <Line {...p} d="m20 11.5-7.8 7.8a5 5 0 0 1-7.1-7.1l8.5-8.5a3.3 3.3 0 0 1 4.7 4.7l-8.5 8.5a1.7 1.7 0 0 1-2.4-2.4L15 6.9" />
+);
+/** «تشغيل»: a triangle pointing right in both directions (a media control, never mirrored). */
+export const PlayIcon = (p: IconProps) => <Line {...p} d="M7 4.5v15l12-7.5-12-7.5Z" />;
+/** «إيقاف مؤقت»: two bars. */
+export const PauseIcon = (p: IconProps) => <Line {...p} d="M8 5v14M16 5v14" />;
+
 /** «تحقق من التسجيل»: a person with a check mark (is this number already a student?). */
 export function CheckPersonIcon({ color, size = 22 }: IconProps) {
   return (

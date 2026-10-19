@@ -1,4 +1,4 @@
-import { type MessageView, replyNote } from '@ab/shared';
+import { isChatViewMime, type MessageView, replyNote } from '@ab/shared';
 import { Linking, Pressable, View } from 'react-native';
 import { useHolds } from '@/auth/use-permissions';
 import { t } from '@/lib/i18n';
@@ -6,6 +6,7 @@ import { locale } from '@/lib/locale';
 import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { MessageActions } from './MessageActions';
+import { MessageFile } from './MessageFile';
 import { MessageMeta, useSmall } from './MessageMeta';
 import { errorLine, mediaLine, templateLine } from './message-text';
 import { useThreadMode } from './thread-mode';
@@ -31,8 +32,8 @@ function MediaLine({ label, url, file }: { label: string; url: string | null; fi
 /**
  * One message (R-MSG-05). Theirs at the inline-start, ours at the end, as WhatsApp lays out Arabic.
  * Ours carry WhatsApp-style delivery ticks (DeliveryTicks, named by the status word); a template
- * row says which template, its body already rendered by the API. A row a teacher sent from the
- * academy number says who («بعتها: أبرار»). Why a send failed is for everyone (as the web's
+ * row says which template, its body already rendered by the API. Ours say who sent them
+ * («أرسلها: سارة», «رسالة تلقائية»); a photo, PDF, voice note or video opens from MessageFile. Why a send failed is for everyone (as the web's
  * outboundNotes); retry / sent-by-hand stay the admin's (R-MSG-05).
  */
 export function MessageBubble({ message: m, phone }: { message: MessageView; phone: string }) {
@@ -43,6 +44,8 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
   const small = useSmall();
   const ours = m.direction === 'outbound';
   const media = mediaLine(m);
+  // A photo, PDF, voice note or video we can serve (W6): opened or played from the bubble.
+  const file = m.media_url === null && isChatViewMime(m.media_mime);
   // What a quick reply did (R-SCH-03): «اتأكدت حلقة …» only when its lesson is confirmed now.
   const note = replyNote(m, locale);
   const stuck = admin && manages && ours && (m.status === 'failed' || m.click_to_chat !== null);
@@ -63,7 +66,8 @@ export function MessageBubble({ message: m, phone }: { message: MessageView; pho
       }}
     >
       {m.template_key ? <AppText style={small}>{templateLine(m.template_key)}</AppText> : null}
-      {media ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
+      {file ? <MessageFile message={m} phone={phone} /> : null}
+      {media && !file ? <MediaLine label={media} url={m.media_url} file={m.media_mime !== null} /> : null}
       {m.body ? (
         <AppText
           selectable
