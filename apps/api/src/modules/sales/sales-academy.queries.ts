@@ -9,9 +9,10 @@ type Student = Pick<Tables<'students'>, 'id' | 'code' | 'name' | 'status' | 'pro
 
 /**
  * Whitelisted teacher columns: never rates, phone, calendar or load. The fixed meeting link is the one
- * exception (owner 2026-10-12, docs/16 rows 3 and 10): «رابط الحلقة الثابت» in «المعلمون» only.
+ * exception (owner 2026-10-12, docs/16 rows 3 and 10): «رابط الحلقة الثابت» in «المعلمون» only; meeting_mode
+ * (migration 490) only decides platform_classroom, it is not sent.
  */
-export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs' | 'meeting_link'> & {
+export type SalesTeacherRow = Pick<Tables<'teachers'>, 'id' | 'display_name_ar' | 'display_name_en' | 'gender' | 'programs' | 'meeting_link' | 'meeting_mode'> & {
   students: Student[];
 };
 
@@ -40,7 +41,7 @@ export class SalesAcademyQueries {
   async teachers(): Promise<SalesTeacherRow[]> {
     const { data, error } = await this.db
       .from('teachers')
-      .select('id, display_name_ar, display_name_en, gender, programs, meeting_link, students(id, code, name, status, program)')
+      .select('id, display_name_ar, display_name_en, gender, programs, meeting_link, meeting_mode, students(id, code, name, status, program)')
       .eq('status', 'active')
       .order('display_name_ar');
     if (error) throw dbError(error);

@@ -3348,6 +3348,7 @@ export type Database = {
           id: string;
           max_students: number | null;
           meeting_link: string | null;
+          meeting_mode: string | null;
           mirror_enabled: boolean;
           phone_e164: string | null;
           profile_id: string | null;
@@ -3370,6 +3371,7 @@ export type Database = {
           id?: string;
           max_students?: number | null;
           meeting_link?: string | null;
+          meeting_mode?: string | null;
           mirror_enabled?: boolean;
           phone_e164?: string | null;
           profile_id?: string | null;
@@ -3392,6 +3394,7 @@ export type Database = {
           id?: string;
           max_students?: number | null;
           meeting_link?: string | null;
+          meeting_mode?: string | null;
           mirror_enabled?: boolean;
           phone_e164?: string | null;
           profile_id?: string | null;

@@ -8,7 +8,7 @@ describe('sales academy mappers (whitelists)', () => {
     row.students = [{ id: 'b', code: null, name: 'يوسف', status: 'trial', program: 'arabic' }, { id: 'a', code: 'AB-1', name: 'أحمد', status: 'paused', program: 'quran' }, ...row.students];
     const out = toSalesTeacher(row);
     expect(Object.keys(out).sort()).toEqual([
-      'active_count', 'gender', 'id', 'lessons_today', 'live_now', 'meeting_link', 'name', 'name_en', 'programs', 'students', 'trial_count',
+      'active_count', 'gender', 'id', 'lessons_today', 'live_now', 'meeting_link', 'name', 'name_en', 'platform_classroom', 'programs', 'students', 'trial_count',
     ]);
     expect(Object.keys(out.students[0] ?? {}).sort()).toEqual(['code', 'id', 'name', 'next_lesson_at', 'program', 'status']);
     expect([out.active_count, out.trial_count, out.meeting_link]).toEqual([1, 1, 'https://meet.example.org/abrar']);
@@ -37,6 +37,15 @@ describe('sales academy mappers (whitelists)', () => {
     const facts = new Map([['tc1', { lessons_today: 3, live_now: true }]]);
     const out = toSalesTeacher(teacherRow(), { facts, next: new Map([['s1', '2026-10-12T15:00:00.000Z']]) });
     expect([out.lessons_today, out.live_now, out.students[0]?.next_lesson_at]).toEqual([3, true, '2026-10-12T15:00:00.000Z']);
+  });
+
+  it('toSalesTeacher: platform_classroom is the teacher’s mode, else the academy default; the mode itself is not sent', () => {
+    const ctx = (academyAuto: boolean) => ({ facts: new Map(), next: new Map(), academyAuto });
+    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: null }, ctx(true)).platform_classroom).toBe(true);
+    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: null }, ctx(false)).platform_classroom).toBe(false);
+    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: 'static' }, ctx(true)).platform_classroom).toBe(false);
+    expect(toSalesTeacher({ ...teacherRow(), meeting_mode: 'platform' }, ctx(false)).platform_classroom).toBe(true);
+    expect(toSalesTeacher(teacherRow())).not.toHaveProperty('meeting_mode');
   });
 
   it('toSalesStudent keeps code, name, status, program, teacher and guardian names only', () => {

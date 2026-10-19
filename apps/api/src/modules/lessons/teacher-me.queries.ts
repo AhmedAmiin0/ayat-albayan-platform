@@ -1,6 +1,8 @@
 import type { TeacherMe } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
+import { SettingsService } from '../../common/settings/settings.service';
+import { withMeeting } from '../teachers/meeting-view';
 import { dbError } from '../teachers/http';
 
 type MyStudent = TeacherMe['students'][number];
@@ -9,17 +11,25 @@ const STUDENT = 'id, code, name, tz, status' as const;
 /** GET /teachers/me data (R-TCH-03): the teacher's own row and students. */
 @Injectable()
 export class TeacherMeQueries {
-  constructor(@Inject(DB) private readonly db: Db) {}
+  constructor(
+    @Inject(DB) private readonly db: Db,
+    private readonly settings: SettingsService,
+  ) {}
 
-  /** null when the signed-in profile has no teachers row (→ 404 teacher_not_linked). */
+  /**
+   * null when the signed-in profile has no teachers row (→ 404 teacher_not_linked). meeting_mode and
+   * platform_classroom (migration 490) tell the dashboard whether to show the fixed link.
+   */
   async me(profileId: string): Promise<TeacherMe | null> {
     const { data, error } = await this.db
       .from('teachers')
-      .select('id, display_name_ar, gender, programs, tz, meeting_link')
+      .select('id, display_name_ar, gender, programs, tz, meeting_link, meeting_mode')
       .eq('profile_id', profileId)
       .maybeSingle();
     if (error) throw dbError(error);
-    return data && { ...data, students: await this.students(data.id) };
+    if (!data) return null;
+    const auto = (await this.settings.all()).meeting_link_auto;
+    return { ...withMeeting(data, auto), students: await this.students(data.id) };
   }
 
   /**

@@ -131,9 +131,9 @@ describe('/sales/booking: registration by the assistant, with her as the actor',
   });
 
   it('teachers: the same list without the meeting links; a student that is not hers is 403', async () => {
-    teachers.list.mockResolvedValue([{ id: TEACHER, display_name_ar: 'أبرار', meeting_link: 'https://meet.example/x', students_count: 3 }]);
+    teachers.list.mockResolvedValue([{ id: TEACHER, display_name_ar: 'أبرار', meeting_link: 'https://meet.example/x', platform_classroom: true, students_count: 3 }]);
     const res = await call({ url: '/sales/booking/teachers?program=quran', token: 'salesA' });
-    expect(res.json()).toEqual([{ id: TEACHER, display_name_ar: 'أبرار', meeting_link: null, students_count: 3 }]);
+    expect(res.json()).toEqual([{ id: TEACHER, display_name_ar: 'أبرار', meeting_link: null, platform_classroom: true, students_count: 3 }]);
     expect((await call({ url: `/sales/booking/teachers?studentId=${S2}`, token: 'salesA' })).statusCode).toBe(403);
     expect((await call({ url: `/sales/booking/teachers?studentId=${S1}`, token: 'salesB' })).statusCode).toBe(403);
     expect((await call({ url: `/sales/booking/teachers?studentId=${S1}`, token: 'salesA' })).statusCode).toBe(200);

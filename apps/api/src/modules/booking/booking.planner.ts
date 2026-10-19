@@ -1,4 +1,4 @@
-import { bookingKindOf, isSingleLesson, uploadMaxBytes, type BookingRequest, type Conflict } from '@ab/shared';
+import { bookingKindOf, isSingleLesson, meetingModeOf, uploadMaxBytes, usesPlatform, type BookingRequest, type Conflict } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { SettingsService } from '../../common/settings/settings.service';
 import { ConflictChecker } from '../scheduling/conflict-checker';
@@ -48,7 +48,7 @@ function assertInvoice(req: BookingRequest, invoiceWaived: boolean): void {
  * R-SCH-10): resolve students / lead, the missed lesson of a makeup, generate the horizon's
  * occurrences (one for a trial or a makeup), check every one for conflicts (409 unless
  * override.reason), pick the meeting link and draft one confirmation per guardian (with no link
- * while settings.meeting_link_auto is ON).
+ * when the teacher holds lessons in our classroom: usesPlatform(meeting_mode, settings.meeting_link_auto)).
  * `conflicts` runs the same check for the wizard before its last step (nothing written).
  * The invoice is not here: it is a file, resolved by BookingInvoices after this plan holds.
  * ponytail: check-then-write, so two admins booking the same slot at the same second can both
@@ -86,8 +86,9 @@ export class BookingPlanner {
       overrides: who.overrides,
       teacherLink: teacher.meeting_link,
     });
-    // The lessons keep the link either way; in auto mode the confirmation names none (no lesson id yet, so no classroom token).
-    const confirmationLink = settings.meeting_link_auto ? null : meetingLink;
+    // The lessons keep the link either way; a platform teacher's confirmation names none (no lesson id yet, so no classroom token).
+    const platform = usesPlatform(meetingModeOf(teacher.meeting_mode), settings.meeting_link_auto);
+    const confirmationLink = platform ? null : meetingLink;
     const payload = bookingPayload({ req, kind, teacher, who, lead, plan, siblings, first, conflicts, meetingLink, confirmationLink, makeupOf, course: opts.course });
     const phones = [...who.booked.map((s) => s.guardian.phone_e164), ...(lead?.phone_e164 ? [lead.phone_e164] : [])];
     return { payload, conflicts, phones: [...new Set(phones)], invoiceMaxBytes: uploadMaxBytes(settings), invoiceWaived };

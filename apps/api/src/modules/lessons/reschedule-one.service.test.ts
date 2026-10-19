@@ -46,7 +46,7 @@ describe('RescheduleOneService — move one occurrence (R-SCH-07, docs/10 route 
     expect(record).toHaveBeenCalledWith(expect.objectContaining({ entity: 'lessons', action: 'reschedule' }));
   });
 
-  it('settings.meeting_link_auto: the confirmation is plain while the new row keeps the fixed link', async () => {
+  it('a platform teacher (meetingLinkAuto, the academy default included): the confirmation is plain while the new row keeps the fixed link', async () => {
     const { service, writer, queries } = setup();
     queries.meetingLinkAuto.mockResolvedValue(true);
     await service.reschedule({ lessonId: LESSON_ID, body: one(), actor: ADMIN });

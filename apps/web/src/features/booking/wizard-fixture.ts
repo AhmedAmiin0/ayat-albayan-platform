@@ -14,6 +14,7 @@ export const ABRAR: BookingTeacherOption = {
   programs: ['quran'],
   tz: 'Africa/Cairo',
   meeting_link: null,
+  platform_classroom: false,
   students_count: 3,
   max_students: 10,
   has_availability: true,

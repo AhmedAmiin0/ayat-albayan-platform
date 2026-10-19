@@ -35,7 +35,7 @@ describe('the sales assistant side over HTTP (docs/16)', () => {
     expect(res.json()).toEqual([
       {
         id: 'tc1', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran'], lessons_today: 1, live_now: false,
-        active_count: 1, trial_count: 0, meeting_link: 'https://meet.example.org/abrar',
+        active_count: 1, trial_count: 0, meeting_link: 'https://meet.example.org/abrar', platform_classroom: false,
         students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', program: 'quran', status: 'active', next_lesson_at: '2026-10-12T15:00:00.000Z' }],
       },
     ]);

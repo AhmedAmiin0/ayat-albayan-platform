@@ -2,6 +2,8 @@ import {
   allowedLessonEvents,
   CONFLICT_KINDS,
   isOpenLesson,
+  meetingModeOf,
+  usesPlatform,
   type Conflict,
   type LessonEvent,
   type LessonProposalView,
@@ -24,7 +26,8 @@ const TEACHER_EVENTS: ReadonlySet<LessonEvent> = new Set([
   'excuse',
 ]);
 
-export type ViewContext = { role: Role | null; seq: SeqMap };
+/** academyAuto: settings.meeting_link_auto, the default of a teacher whose meeting_mode is null (false when absent). */
+export type ViewContext = { role: Role | null; seq: SeqMap; academyAuto?: boolean };
 
 /** Event list for the caller's role (LessonView.allowed_events). */
 export function eventsFor(row: Pick<LessonRow, 'status'>, role: Role | null): LessonEvent[] {
@@ -54,11 +57,13 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     course_subscription_id: row.rule?.subscription_id ?? null,
     makeup: (row.makeup_of_id ?? null) !== null,
     makeup_of: row.original ? { id: row.original.id, starts_at: iso(row.original.starts_at) } : null,
-    teacher: row.teacher ?? { id: row.teacher_id, display_name_ar: '', tz: '' },
+    teacher: teacherOf(row),
     starts_at: iso(row.starts_at),
     ends_at: iso(row.ends_at),
     status: row.status,
     meeting_link: row.meeting_link,
+    // The lesson's own teacher decides (a substitute's mode applies), migration 490.
+    platform_classroom: usesPlatform(meetingModeOf(row.teacher?.meeting_mode), ctx.academyAuto ?? false),
     cancel_reason: row.cancel_reason,
     override_reason: row.override_reason,
     confirmed_at: row.confirmed_at === null ? null : iso(row.confirmed_at),
@@ -73,6 +78,12 @@ export function toLessonView(row: LessonRow, ctx: ViewContext): LessonView {
     time_edit_mode: ctx.role === 'admin' ? timeEditMode(row.status) : null,
     time_edit: timeEdit(row, ctx.role),
   };
+}
+
+/** The lesson's teacher without meeting_mode (platform_classroom carries what it means). */
+function teacherOf(row: LessonRow): LessonView['teacher'] {
+  const t = row.teacher;
+  return t ? { id: t.id, display_name_ar: t.display_name_ar, display_name_en: t.display_name_en, tz: t.tz } : { id: row.teacher_id, display_name_ar: '', tz: '' };
 }
 
 /** Migration 190: «افتح الحلقة الآن» and «حلقة فورية». */

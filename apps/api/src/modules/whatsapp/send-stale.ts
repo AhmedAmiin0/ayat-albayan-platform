@@ -87,7 +87,8 @@ function followUpStale({ lead, dedup_key }: StaleInput): string | null {
 
 /**
  * What the jobs queue on their own: reminders (with the classroom's lesson_join_link when
- * settings.meeting_link_auto; the admin's «ابعت لينك الحلقة» carries created_by and is not held),
+ * a platform lesson: the teacher's meeting_mode, else settings.meeting_link_auto; the admin's
+ * «ابعت لينك الحلقة» carries created_by and is not held),
  * follow-ups and renewal reminders (migration 162), and the lesson_rating after a completed lesson
  * (migration 195; the admin's «إرسال تقييم الحلقة» is not). Every other TEMPLATE_KEYS key goes out
  * because someone acted: a booking, a submitted report (message.worker.auto.test checks the split).

@@ -1,11 +1,19 @@
-import type { AvailabilitySlot, TeacherCreate, TeacherStudentCounts } from '@ab/shared';
+import type { AvailabilitySlot, TeacherCreate, TeacherMeetingMode, TeacherStudentCounts } from '@ab/shared';
 import { keepPreviousData, queryOptions } from '@tanstack/react-query';
 import { apiFetch } from '@/lib/api';
 import { sortFilterParams } from '@/lib/list-search';
 import type { ListUrlState } from '@/lib/list-url';
 
 // Shapes returned by apps/api/src/modules/teachers (R-TCH-01, R-TCH-02).
-export type Teacher = TeacherCreate & { id: string };
+/**
+ * `meeting_mode`: the raw column (null = follow settings.meeting_link_auto); `platform_classroom`: what it
+ * resolves to now (usesPlatform on the API).
+ */
+export type Teacher = Omit<TeacherCreate, 'meeting_mode'> & {
+  id: string;
+  meeting_mode: TeacherMeetingMode | null;
+  platform_classroom: boolean;
+};
 /** A row of GET /teachers: the teacher and their current students by kind («مشترك · تجريبي»). */
 export type TeacherListRow = Teacher & TeacherStudentCounts;
 export type Page<T> = { items: T[]; total: number; page: number; pageSize: number };

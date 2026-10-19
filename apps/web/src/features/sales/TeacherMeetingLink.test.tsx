@@ -12,13 +12,16 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 const LINK = 'https://meet.example.org/abrar-fixed';
 const L = t.studentLists;
 
-/** `auto`: settings.meeting_link_auto as GET /settings/public answered it. */
-function show(link: string | null, auto = false) {
+/**
+ * `platform`: SalesTeacherView.platform_classroom (the teacher's mode); `auto`: settings.meeting_link_auto
+ * as GET /settings/public answered it, which the section ignores.
+ */
+function show(link: string | null, { platform = false, auto = false } = {}) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
   client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
   render(
     <QueryClientProvider client={client}>
-      <TeacherMeetingLink link={link} />
+      <TeacherMeetingLink link={link} platform={platform} />
     </QueryClientProvider>,
   );
 }
@@ -64,9 +67,14 @@ describe('TeacherMeetingLink «رابط الحلقة الثابت» (sales drawe
     expect(document.body.textContent).not.toContain('javascript');
   });
 
-  it('settings.meeting_link_auto: one line says families get the platform link instead', () => {
-    show(LINK, true);
+  it('teacher on the platform classroom: one line says families get the platform link instead', () => {
+    show(LINK, { platform: true });
     expect(screen.getByText(L.meetingLinkAuto)).toBeTruthy();
     expect(screen.getByRole('link', { name: L.openLink })).toBeTruthy();
+  });
+
+  it('academy switch ON but the teacher is on the fixed link: no platform line', () => {
+    show(LINK, { auto: true });
+    expect(screen.queryByText(L.meetingLinkAuto)).toBeNull();
   });
 });

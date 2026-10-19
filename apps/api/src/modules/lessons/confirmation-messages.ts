@@ -13,8 +13,8 @@ export type ConfirmedLesson = { id: string; starts_at: string; meeting_link: str
 const names = new Intl.ListFormat('ar', { type: 'conjunction' });
 
 /**
- * The lesson as its confirmation names it: with no link while settings.meeting_link_auto is ON
- * (booking_confirmation_plain; the classroom link goes with the same-day reminder). The lesson row
+ * The lesson as its confirmation names it: with no link when its teacher holds it in our classroom
+ * (`auto` = usesPlatform(teachers.meeting_mode, settings.meeting_link_auto); booking_confirmation_plain; the classroom link goes with the same-day reminder). The lesson row
  * itself keeps its link.
  */
 export const forMessages = <L extends ConfirmedLesson>(lesson: L, auto: boolean): L => (auto ? { ...lesson, meeting_link: null } : lesson);

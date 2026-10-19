@@ -24,11 +24,12 @@ export class LessonViews {
   async map(rows: readonly LessonRow[], role: Role | null): Promise<LessonView[]> {
     const now = Date.now();
     const completed = rows.filter((r) => r.status === 'completed').map((r) => r.id);
-    const [seq, flagged] = await Promise.all([
+    const [seq, flagged, academyAuto] = await Promise.all([
       this.lessons.seq(completed),
       this.flagged(upcomingStudentIds(rows, now)),
+      this.lessons.academyAuto(),
     ]);
-    return rows.map((row) => markUnpaid(toLessonView(row, { role, seq }), flagged, now));
+    return rows.map((row) => markUnpaid(toLessonView(row, { role, seq, academyAuto }), flagged, now));
   }
 
   /** The flag is a hint: a failed lookup must not take the schedule down with it. */

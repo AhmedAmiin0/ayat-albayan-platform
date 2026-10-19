@@ -83,11 +83,28 @@ test('a day without lessons says so', async () => {
   expect(screen.queryByText(t.reports.pending)).toBeNull();
 });
 
-test('settings.meeting_link_auto: every open lesson gets the platform classroom, not its fixed link', async () => {
+/** Today's lessons with the API's per-lesson flag, under the opposite academy setting. */
+async function renderDay(platform: boolean, academyAuto: boolean) {
+  const flagged = [later, held, tomorrow].map((l) => ({ ...l, platform_classroom: platform }));
+  mockApiFetch.mockImplementation(async (p: string) => {
+    if (p === '/teachers/me') return { ...me, meeting_mode: platform ? 'platform' : 'static', platform_classroom: platform };
+    if (p === '/teachers/me/pending-reports') return pending;
+    return flagged;
+  });
   const client = createTestQueryClient();
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: true });
+  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: academyAuto });
   await renderWithQuery(<TeacherTodayScreen />, client);
   await screen.findByText(counted(t.reports.pendingCount, 1));
-  // JoinClassroomButton on both of today's open lessons (static mode: only the 20:00 one, by its link).
+}
+
+test('lesson.platform_classroom: every open lesson gets the platform classroom even with the setting off', async () => {
+  await renderDay(true, false);
+  // JoinClassroomButton on both of today's open lessons (the fixed link would give only the 20:00 one).
   expect(await screen.findAllByRole('button', { name: t.classroom.enter })).toHaveLength(2);
+});
+
+test('platform_classroom false: the fixed link even with the academy setting meeting_link_auto on', async () => {
+  await renderDay(false, true);
+  // Only the 20:00 lesson has a link; the classroom would give both open lessons a way in.
+  expect(screen.getAllByRole('button', { name: t.teacherDash.join })).toHaveLength(1);
 });

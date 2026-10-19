@@ -59,6 +59,7 @@ export const teacher = (over: Partial<SalesTeacherView> = {}): SalesTeacherView 
   active_count: 1,
   trial_count: 1,
   meeting_link: null,
+  platform_classroom: false,
   students: [
     { id: 'st1', code: 'AB-0183', name: 'يوسف أحمد', program: 'quran', status: 'active', next_lesson_at: '2026-10-12T15:00:00.000Z' },
     { id: 'st2', code: 'AB-0190', name: 'جنى علي', program: 'arabic', status: 'trial', next_lesson_at: null },

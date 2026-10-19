@@ -56,7 +56,7 @@ export class RescheduleOneService {
       student_ids: studentIds,
     };
     const contacts = await this.store.queries.contacts(studentIds);
-    const auto = await this.store.queries.meetingLinkAuto();
+    const auto = await this.store.queries.meetingLinkAuto({ teacherId });
     await this.store.commit({
       change: {
         actor: actor.id,

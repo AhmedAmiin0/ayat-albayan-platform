@@ -5,10 +5,14 @@ import { PhonePreview } from '@/components/ui/phone-preview';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
 import type { SetField, TeacherForm } from './teacher-form';
+import { TeacherMeetingModeField } from './TeacherMeetingModeField';
 
 type Props = { form: TeacherForm; set: SetField };
 
-/** Identity + contact fields of the teacher dialog (R-TCH-01). Phone and link are LTR islands. */
+/**
+ * Identity + contact fields of the teacher dialog (R-TCH-01). Phone and link are LTR islands;
+ * then «طريقة حضور الحلقات».
+ */
 export function TeacherFormFields({ form, set }: Props) {
   const toggleProgram = (program: TeacherForm['programs'][number], on: boolean) =>
     set('programs', on ? [...form.programs, program] : form.programs.filter((p) => p !== program));
@@ -82,6 +86,7 @@ export function TeacherFormFields({ form, set }: Props) {
           <Input {...p} type="url" dir="ltr" value={form.meeting_link} onChange={(e) => set('meeting_link', e.target.value)} />
         )}
       </Field>
+      <TeacherMeetingModeField form={form} set={set} />
     </div>
   );
 }

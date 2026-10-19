@@ -11,6 +11,8 @@ export type TeacherOptionRow = {
   programs: Program[];
   tz: string;
   meeting_link: string | null;
+  /** teachers.meeting_mode (migration 490): null = the academy default. */
+  meeting_mode: string | null;
   max_students: number | null;
 };
 export type TeacherFilter = { program: Program; gender?: Gender };
@@ -27,13 +29,18 @@ export class TeacherOptionsQueries {
   async active(f: TeacherFilter): Promise<TeacherOptionRow[]> {
     let query = this.db
       .from('teachers')
-      .select('id, display_name_ar, gender, programs, tz, meeting_link, max_students')
+      .select('id, display_name_ar, gender, programs, tz, meeting_link, meeting_mode, max_students')
       .eq('status', 'active')
       .contains('programs', [f.program]);
     if (f.gender) query = query.eq('gender', f.gender);
     const { data, error } = await query.order('display_name_ar').order('id');
     if (error) throw dbError(error);
     return data;
+  }
+
+  /** settings.meeting_link_auto: the default of a teacher whose meeting_mode is null. */
+  async academyAuto(): Promise<boolean> {
+    return (await this.settings.all()).meeting_link_auto;
   }
 
   /** Teachers among `teacherIds` with at least one weekly availability row (all of them while 24/7 is on). */

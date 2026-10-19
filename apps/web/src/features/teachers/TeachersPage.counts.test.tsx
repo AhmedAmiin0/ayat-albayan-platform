@@ -17,6 +17,8 @@ const ABRAR: TeacherListRow = {
   programs: ['quran'],
   phone_e164: null,
   meeting_link: null,
+  meeting_mode: null,
+  platform_classroom: false,
   status: 'active',
   tz: 'Africa/Cairo',
   rate_30: 60,

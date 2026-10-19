@@ -22,7 +22,8 @@ export const pupil = (over: Partial<SalesTeacherStudent> = {}): SalesTeacherStud
 
 export const teacher = (over: Partial<SalesTeacherView> = {}): SalesTeacherView => ({
   id: 'tc1', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran', 'arabic'], lessons_today: 2, live_now: false,
-  students: [pupil()], active_count: 1, trial_count: 0, meeting_link: 'https://meet.example.org/abrar-fixed', ...over,
+  students: [pupil()], active_count: 1, trial_count: 0, meeting_link: 'https://meet.example.org/abrar-fixed',
+  platform_classroom: false, ...over,
 });
 
 export const scheduleLesson = (over: Partial<SalesScheduleLesson> = {}): SalesScheduleLesson => ({

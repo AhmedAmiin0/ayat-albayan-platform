@@ -6,6 +6,7 @@ import {
   STUDENT_STATUSES,
   TEACHER_STATUSES,
 } from '../enums/index.js';
+import { TEACHER_MEETING_MODES } from '../classroom/meeting-mode.js';
 import { optionalText, phoneE164, requiredText, timeZone } from './common.js';
 
 // DTOs use DB column names (snake_case) so they map 1:1 onto TablesInsert<...>.
@@ -60,6 +61,8 @@ export const teacherCreateSchema = z.object({
   programs: z.array(z.enum(PROGRAMS)).min(1),
   phone_e164: phoneE164.nullish(),
   meeting_link: z.url().nullish(),
+  /** null = follow settings.meeting_link_auto (migration 490). */
+  meeting_mode: z.enum(TEACHER_MEETING_MODES).nullish(),
   rate_30: rate,
   rate_45: rate,
   rate_60: rate,

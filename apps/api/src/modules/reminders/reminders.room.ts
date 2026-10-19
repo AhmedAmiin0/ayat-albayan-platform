@@ -5,7 +5,7 @@ import { dbError } from '../teachers/http';
 import { queuedRow, type QueuedMessage } from './queued-row';
 import type { RoomCandidate } from './reminders.links';
 
-// The family's classroom link minted by the reminders job (settings.meeting_link_auto). It lives in
+// The family's classroom link minted by the reminders job (a platform lesson, reminders.links.ts). It lives in
 // the lesson_join_links row of (lesson, student), the same row a student-link join goes in by
 // (migration 191), so a removal from the room (classroom_blocks.join_link_id) holds either way.
 

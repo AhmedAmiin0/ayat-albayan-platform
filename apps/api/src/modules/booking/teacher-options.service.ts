@@ -1,4 +1,4 @@
-import type { BookingTeacherOption } from '@ab/shared';
+import { meetingModeOf, usesPlatform, type BookingTeacherOption } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { domainError } from './booking.errors';
 import { BookingQueries } from './booking.queries';
@@ -8,7 +8,8 @@ import { TeachersQueries } from '../teachers/teachers.queries';
 
 /**
  * GET /booking/teachers (R-SCH-06): active teachers of the program, filtered by gender — the
- * query's, else the student's teacher_gender_pref, else any — with their current load.
+ * query's, else the student's teacher_gender_pref, else any — with their current load and whether
+ * their lessons go out with our classroom (platform_classroom, migration 490).
  */
 @Injectable()
 export class TeacherOptionsService {
@@ -22,12 +23,14 @@ export class TeacherOptionsService {
     const teachers = await this.options.active(await this.filter(q));
     if (teachers.length === 0) return [];
     const ids = teachers.map((t) => t.id);
-    const [loads, available] = await Promise.all([
+    const [loads, available, auto] = await Promise.all([
       this.teachers.loads(ids),
       this.options.withAvailability(ids),
+      this.options.academyAuto(),
     ]);
-    return teachers.map((t) => ({
+    return teachers.map(({ meeting_mode, ...t }) => ({
       ...t,
+      platform_classroom: usesPlatform(meetingModeOf(meeting_mode), auto),
       students_count: loads.get(t.id) ?? 0,
       has_availability: available.has(t.id),
     }));
