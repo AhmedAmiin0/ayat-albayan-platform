@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { Linking, Pressable, View } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { type, useTheme } from '@/theme';
+import { shape, type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
 import { AudioPlayer } from './AudioPlayer';
 import { mediaKind } from './message-text';
@@ -70,7 +70,7 @@ function FileOpener({ message: m, phone, kind }: { message: MessageView; phone: 
         accessibilityState={{ busy, disabled: busy }}
         disabled={busy}
         onPress={() => void open()}
-        style={{ minHeight: 32, justifyContent: 'center' }}
+        style={{ minHeight: shape.control.touch, justifyContent: 'center' }}
       >
         <AppText
           style={{

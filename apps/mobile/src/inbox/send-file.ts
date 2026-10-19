@@ -30,24 +30,27 @@ export class ChatFileError extends Error {
   }
 }
 
-/** The picked PDF's own name, made safe for the API (no path separators, ≤ 200 characters). */
+/** The picked PDF's own name, made safe for the API (no path separators or control characters, ≤ 200). */
 export function pdfName(name: string | undefined): string {
-  const clean = (name ?? '').replace(/[/\\]/g, '_').trim().slice(0, 200).trim();
+  const clean = (name ?? '').replace(/[/\\\p{Cc}]/gu, '_').trim().slice(0, 200).trim();
   return clean || 'file.pdf';
 }
 
-async function pickPdf(): Promise<ChatFilePick | null> {
+async function pickPdf(maxBytes: number): Promise<ChatFilePick | null> {
   const result = await DocumentPicker.getDocumentAsync({ type: 'application/pdf', copyToCacheDirectory: true });
   const asset = result.canceled ? undefined : result.assets[0];
   if (!asset) return null;
+  // Refused before the read: a 100 MB scan would otherwise sit in memory only to be refused.
+  const early = asset.size === undefined ? null : chatFileProblem({ mime: asset.mimeType ?? 'application/pdf', size: asset.size, maxBytes });
+  if (early) throw new ChatFileError(early);
   // The cached copy (copyToCacheDirectory) read through fetch: no file-system module in the APK.
   const bytes = await (await fetch(asset.uri)).arrayBuffer();
   return { mime: asset.mimeType ?? 'application/pdf', bytes, size: bytes.byteLength, filename: pdfName(asset.name) };
 }
 
-/** A photo from the gallery (compressed JPEG, no EXIF, as a receipt) or a PDF; null when cancelled. */
-export async function pickChatFile(source: ChatFileSource): Promise<ChatFilePick | null> {
-  if (source === 'pdf') return pickPdf();
+/** A photo from the gallery (compressed JPEG, no EXIF, as a receipt) or a PDF; null when cancelled. A PDF over maxBytes throws before it is read. */
+export async function pickChatFile(source: ChatFileSource, maxBytes: number): Promise<ChatFilePick | null> {
+  if (source === 'pdf') return pickPdf(maxBytes);
   const photo = await pickReceipt('library');
   if (!photo) return null;
   const ext = photo.mime === 'image/png' ? 'png' : 'jpg';

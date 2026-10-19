@@ -9,7 +9,8 @@ import { mediaKind } from './format';
 import { MediaPlayer } from './MediaPlayer';
 import { useInboxMode } from './mode';
 
-const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4';
+/** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
+const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
 
 /** An image the browser draws inline; HEIC is a named link like a PDF. */
 const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime !== 'image/heic';

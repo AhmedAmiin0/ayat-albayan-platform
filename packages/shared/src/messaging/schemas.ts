@@ -27,7 +27,8 @@ export const threadFileUploadSchema = z.object({
 export const threadFileSendSchema = z.object({
   clientRequestId: z.uuid(),
   path: z.string().min(1),
-  filename: z.string().trim().min(1).max(200).regex(/^[^/\\]+$/),
+  // No path separators and no control characters (a newline would reach the family's WhatsApp).
+  filename: z.string().trim().min(1).max(200).regex(/^[^/\\\p{Cc}]+$/u),
   caption: z.string().trim().max(WA_CAPTION_MAX).optional(),
 });
 

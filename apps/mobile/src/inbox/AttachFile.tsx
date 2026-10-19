@@ -72,7 +72,7 @@ export function AttachFile({ phone, onError }: AttachFileProps) {
     setChoosing(false);
     onError(null);
     try {
-      const file = await pickChatFile(source);
+      const file = await pickChatFile(source, maxBytes);
       if (file) await send.mutateAsync({ phone, file, id: requestId(), maxBytes });
     } catch (e) {
       onError(fileError(e));

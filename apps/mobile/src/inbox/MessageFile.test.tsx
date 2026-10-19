@@ -5,6 +5,7 @@ import { Linking } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
+import { shape } from '@/theme';
 import { MessageBubble } from './MessageBubble';
 import { message, PHONE } from './thread-fixtures';
 import { ThreadModeProvider } from './thread-mode';
@@ -52,6 +53,12 @@ test('a photo: nothing is signed on render; the tap asks W6 and opens the signed
   await press(t.inbox.viewMedia.replace('{kind}', kind.image));
   expect(mockApiFetch).toHaveBeenCalledWith(PATH);
   await waitFor(() => expect(openURL).toHaveBeenCalledWith(SIGNED));
+});
+
+test('the opener is a full touch target (docs/07: 44 pt)', async () => {
+  await show(row({ media_mime: 'audio/ogg' }));
+  const opener = screen.getByRole('button', { name: t.inbox.playMedia.replace('{kind}', kind.audio) });
+  expect(opener.props.style).toMatchObject({ minHeight: shape.control.touch });
 });
 
 test('our sent PDF opens too and shows its name', async () => {

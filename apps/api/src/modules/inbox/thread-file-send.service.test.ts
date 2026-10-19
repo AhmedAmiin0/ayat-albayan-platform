@@ -115,10 +115,13 @@ describe('ThreadFileSender.send (owner 2026-10-19 #2)', () => {
 describe('ThreadFileSender.uploadUrl', () => {
   beforeEach(() => {
     vi.resetAllMocks();
+    vi.stubEnv('WA_CHAT_PHONE_NUMBER_ID', '');
+    queries.thread.mockResolvedValue(threadRow());
     storage.signedUpload.mockResolvedValue({ bucket: 'wa-media', path: 'p', token: 't', signed_url: 'http://up' });
   });
   const upload = (mime: string, size: number, s = sender()) =>
-    s.uploadUrl({ phone: PHONE, input: { clientRequestId: REQ, mime, size } as never, actorId: ACTOR });
+    s.uploadUrl({ phone: PHONE, input: { clientRequestId: REQ, mime, size } as never, actorId: ACTOR }, NOW);
+  afterEach(() => vi.unstubAllEnvs());
 
   it('signs a wa-media path out/{actor}/{request}/{uuid}.{ext}', async () => {
     await expect(upload('application/pdf', 1000)).resolves.toMatchObject({ signed_url: 'http://up' });
@@ -131,6 +134,17 @@ describe('ThreadFileSender.uploadUrl', () => {
     const e1 = await upload('image/heic', 1000).catch((x: unknown) => x);
     const e2 = await upload('image/jpeg', 6 * MB).catch((x: unknown) => x);
     expect([status(e1), code(e1), status(e2), code(e2)]).toEqual([400, 'file_type', 413, 'file_too_large']);
+    expect(storage.signedUpload).not.toHaveBeenCalled();
+  });
+
+  it('a closed window or no thread: 409 session_closed, nothing signed (no orphan upload)', async () => {
+    queries.thread.mockResolvedValueOnce(threadRow({ last_inbound_at: '2026-09-01T08:00:00Z', last_notifications_inbound_at: '2026-09-01T08:00:00Z' }));
+    queries.thread.mockResolvedValueOnce(null);
+    for (let i = 0; i < 2; i++) {
+      const e = await upload('image/png', 1000).catch((x: unknown) => x);
+      expect([status(e), code(e)]).toEqual([409, 'session_closed']);
+    }
+    expect(queries.thread).toHaveBeenCalledWith(PHONE);
     expect(storage.signedUpload).not.toHaveBeenCalled();
   });
 });

@@ -24,6 +24,10 @@ function assertSendable(f: { mime: string; size: number; maxBytes: number }): vo
   if (problem) throw waHttpError(problem, HttpStatus.PAYLOAD_TOO_LARGE);
 }
 
+/** A PDF reaches the family named .pdf whatever the client called it (the bytes were sniffed as PDF). */
+export const sentFileName = (name: string, mime: string): string =>
+  mime !== 'application/pdf' || /\.pdf$/i.test(name) ? name : `${name.slice(0, 196)}.pdf`;
+
 const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
 
 /**
@@ -42,9 +46,13 @@ export class ThreadFileSender {
     private readonly storage: StorageService,
   ) {}
 
-  /** A signed upload URL for one file of this actor and request id; type and size checked first. */
-  async uploadUrl(s: ThreadSend<ThreadFileUpload>): Promise<SignedUpload> {
+  /**
+   * A signed upload URL for one file of this actor and request id; type and size checked first, then
+   * the 24 h window and line as send() does, so a closed or unknown chat stores nothing it cannot send.
+   */
+  async uploadUrl(s: ThreadSend<ThreadFileUpload>, now = new Date()): Promise<SignedUpload> {
     assertSendable({ mime: s.input.mime, size: s.input.size, maxBytes: await this.maxBytes() });
+    sendLine(await this.queries.thread(s.phone), now);
     const path = chatOutPath({ actorId: s.actorId, requestId: s.input.clientRequestId, mime: s.input.mime });
     return this.storage.signedUpload({ bucket: BUCKETS.waMedia, path });
   }
@@ -75,7 +83,7 @@ export class ThreadFileSender {
       body: caption || null,
       media_path: path,
       media_mime: mime,
-      media_name: filename,
+      media_name: sentFileName(filename, mime),
       ...line,
     });
   }

@@ -26,7 +26,7 @@ describe('threadFileSendSchema', () => {
     expect(r.success && r.data).toEqual({ ...base, filename: 'جدول.pdf', caption: 'مرحبا' });
   });
 
-  it.each(['', '   ', 'a/b.pdf', 'a\\b.pdf', 'x'.repeat(201)])('refuses the name %j', (filename) => {
+  it.each(['', '   ', 'a/b.pdf', 'a\\b.pdf', 'x'.repeat(201), 'a\nb.pdf', 'a\u0000.pdf'])('refuses the name %j', (filename) => {
     expect(threadFileSendSchema.safeParse({ ...base, filename }).success).toBe(false);
   });
 
