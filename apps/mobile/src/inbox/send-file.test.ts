@@ -35,7 +35,7 @@ afterEach(() => {
 
 test('a photo: the gallery, compressed as a receipt, named for its type', async () => {
   library.mockResolvedValue({ canceled: false, assets: [{ uri: 'file:///p.png', width: 1, height: 1, base64: 'aGVsbG8=', mimeType: 'image/png' }] });
-  await expect(pickChatFile('image')).resolves.toMatchObject({ mime: 'image/png', size: 5, filename: 'photo.png' });
+  await expect(pickChatFile('image', 10 * MB)).resolves.toMatchObject({ mime: 'image/png', size: 5, filename: 'photo.png' });
   expect(library).toHaveBeenCalledWith(expect.objectContaining({ mediaTypes: 'images', exif: false }));
 });
 
@@ -43,21 +43,30 @@ test('a PDF: the document picker, its cached copy read as bytes, a safe name', a
   documents.mockResolvedValue({ canceled: false, assets: [pdfAsset] });
   const fetchMock = jest.fn(async () => ({ arrayBuffer: async () => new ArrayBuffer(7) }));
   globalThis.fetch = fetchMock as unknown as typeof fetch;
-  await expect(pickChatFile('pdf')).resolves.toMatchObject({ mime: 'application/pdf', size: 7, filename: 'a_b_خطة الحفظ.pdf' });
+  await expect(pickChatFile('pdf', 10 * MB)).resolves.toMatchObject({ mime: 'application/pdf', size: 7, filename: 'a_b_خطة الحفظ.pdf' });
   expect(documents).toHaveBeenCalledWith({ type: 'application/pdf', copyToCacheDirectory: true });
   expect(fetchMock).toHaveBeenCalledWith('file:///cache/plan.pdf');
+});
+
+test('a PDF over the limit is refused from its picked size, before its bytes are read', async () => {
+  documents.mockResolvedValue({ canceled: false, assets: [{ ...pdfAsset, size: 80 * MB }] });
+  const fetchMock = jest.fn();
+  globalThis.fetch = fetchMock as unknown as typeof fetch;
+  await expect(pickChatFile('pdf', 10 * MB)).rejects.toEqual(new ChatFileError('file_too_large'));
+  expect(fetchMock).not.toHaveBeenCalled();
 });
 
 test('cancelled pickers send nothing', async () => {
   documents.mockResolvedValue({ canceled: true, assets: null });
   library.mockResolvedValue({ canceled: true, assets: null });
-  await expect(pickChatFile('pdf')).resolves.toBeNull();
-  await expect(pickChatFile('image')).resolves.toBeNull();
+  await expect(pickChatFile('pdf', 10 * MB)).resolves.toBeNull();
+  await expect(pickChatFile('image', 10 * MB)).resolves.toBeNull();
 });
 
 test('pdfName: no separators, at most 200 characters, never empty', () => {
   expect(pdfName('  ')).toBe('file.pdf');
   expect(pdfName(undefined)).toBe('file.pdf');
+  expect(pdfName('خطة\nالشهر.pdf')).toBe('خطة_الشهر.pdf');
   expect(pdfName('x'.repeat(250))).toHaveLength(200);
 });
 

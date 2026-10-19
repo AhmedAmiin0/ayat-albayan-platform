@@ -20,8 +20,12 @@ const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, bo
 
 /** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob). */
 export type CachedMedia = { id: string; media_path: string; media_mime: string | null };
-/** PostgREST `or`: the base mime of PLAYABLE_MIMES, with or without parameters («; codecs=opus»). */
-export const PLAYABLE_FILTER = PLAYABLE_MIMES.map((m) => `media_mime.ilike.${m}*`).join(',');
+/**
+ * PostgREST `or`: exactly a PLAYABLE_MIMES base type, bare or with parameters («; codecs=opus»). Not a
+ * bare prefix: `audio/mp4*` also matched audio/mp4a-latm, which the job skips and never clears, so a
+ * run of them at the old end would stop every later purge.
+ */
+export const PLAYABLE_FILTER = PLAYABLE_MIMES.flatMap((m) => [`media_mime.ilike.${m}`, `media_mime.ilike.${m};*`]).join(',');
 
 /** DB touches of InboundMedia and of the chat's file picker (service role; the callers are admin-only). */
 @Injectable()

@@ -77,6 +77,8 @@ describe('MessageMedia: a family image or PDF opens in the chat (W6)', () => {
     fireEvent.click(view(t.inbox.media.document));
     const link = await screen.findByRole('link', { name: 'جدول الحلقات.pdf' });
     expect(link.getAttribute('href')).toBe(SIGNED);
+    // #120: a 200-char name with no break point wraps inside the bubble at 390px.
+    expect(link.className).toContain('[overflow-wrap:anywhere]');
   });
 
   it('a sticker keeps its label and never fetches', () => {

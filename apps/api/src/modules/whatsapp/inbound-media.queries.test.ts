@@ -21,8 +21,11 @@ describe('InboundMediaQueries retention reads (owner 2026-10-19 #2)', () => {
   });
 
   it('the mime filter names every PLAYABLE_MIMES base type (params allowed) and no image or PDF', () => {
-    for (const m of PLAYABLE_MIMES) expect(PLAYABLE_FILTER).toContain(`media_mime.ilike.${m}*`);
-    expect(PLAYABLE_FILTER.split(',')).toHaveLength(PLAYABLE_MIMES.length);
+    const parts = PLAYABLE_FILTER.split(',');
+    for (const m of PLAYABLE_MIMES) expect(parts).toEqual(expect.arrayContaining([`media_mime.ilike.${m}`, `media_mime.ilike.${m};*`]));
+    expect(parts).toHaveLength(2 * PLAYABLE_MIMES.length);
+    // A bare prefix also matched audio/mp4a-latm (not playable): the job skipped it forever.
+    expect(parts.every((p) => !p.endsWith('*') || p.endsWith(';*'))).toBe(true);
     expect(PLAYABLE_FILTER).not.toMatch(/image|pdf/);
   });
 
