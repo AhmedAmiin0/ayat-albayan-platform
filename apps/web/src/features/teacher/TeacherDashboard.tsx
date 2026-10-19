@@ -14,6 +14,7 @@ import { PendingReports } from '@/features/reports/PendingReports';
 import { lessonsOnDay } from '@/features/schedule/lessons';
 import { addDays, dayMonthLabel, weekWindow, zonedParts } from '@/features/schedule/tz';
 import { t } from '@/lib/i18n';
+import { usePlatformClassroom } from '@/lib/public-config';
 import { myLessonsQuery, teacherMeQuery } from './api';
 import { JoinLink } from './JoinLink';
 import { LessonDayList } from './LessonDayList';
@@ -53,6 +54,7 @@ export function TeacherDashboard() {
  */
 function Dashboard({ me }: { me: TeacherMe }) {
   const [now] = useState(() => new Date());
+  const platform = usePlatformClassroom(me.platform_classroom);
   const today = zonedParts(now, me.tz).date;
   const lessons = useQuery(myLessonsQuery(weekWindow(today, me.tz)));
   const range = t.teacherDash.weekRange.replace('{from}', dayMonthLabel(today)).replace('{to}', dayMonthLabel(addDays(today, 6)));
@@ -74,7 +76,7 @@ function Dashboard({ me }: { me: TeacherMe }) {
   return (
     <>
       {/* Platform classroom (the teacher's mode, else the academy default): no fixed link at the top. */}
-      {!me.platform_classroom && <JoinLink link={me.meeting_link} />}
+      {!platform && <JoinLink link={me.meeting_link} />}
       <PendingReports tz={me.tz} />
       <Tabs label={t.teacherDash.tabs} tabs={TABS} value={tab} onChange={setTab} />
       <div role="tabpanel" aria-label={TABS.find((x) => x.value === tab)?.label}>

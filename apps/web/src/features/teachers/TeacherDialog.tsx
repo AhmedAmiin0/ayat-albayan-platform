@@ -64,7 +64,7 @@ export function TeacherDialog({ teacher, onClose }: Props) {
       }
     >
       <form id={formId} className="flex flex-col gap-6" onSubmit={submit} noValidate>
-        <TeacherFormFields form={form} set={set} />
+        <TeacherFormFields form={form} set={set} teacher={teacher} />
         <TeacherWorkFields form={form} set={set} />
         {error && <FormAlert>{error}</FormAlert>}
       </form>

@@ -1,28 +1,66 @@
 import { useQuery } from '@tanstack/react-query';
+import { sectionId } from '@/features/messaging/SettingsNav';
+import { integrationsQuery } from '@/features/integrations/integrations-api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
+import { joinStatus, livekitConfigured, meetingModeNotes, type MeetingModeNote } from './meeting-mode-notes';
 
-const JOIN_TEMPLATE = 'lesson_join_link';
 const NOTE = 'rounded-md bg-sunk px-3 py-2 text-sm text-ink-2';
+/** The templates live in the messaging section of /admin/settings, where the admin submits one to Meta. */
+const TEMPLATES_HREF = `/admin/settings#${sectionId('messaging')}`;
 
 interface Props {
-  /** usesPlatform(form mode, settings.meeting_link_auto). */
-  platform: boolean;
+  /** The live region's id: the radio group points at it (aria-describedby). */
+  id: string;
+  /** effectivePlatform(form mode, academy default); null = not known yet, so no note. */
+  platform: boolean | null;
   /** The form's fixed link, as typed. */
   link: string;
 }
 
+function NoteText({ note, livekit }: { note: MeetingModeNote; livekit: boolean | null }) {
+  const T = t.teachers;
+  if (note === 'noLink') return <>{T.meetingModeNoLink}</>;
+  if (note === 'livekitUnset') return <>{T.meetingModeLivekitUnset}</>;
+  const text = {
+    templatePending: T.meetingModeTemplatePending,
+    templatePaused: T.meetingModeTemplatePaused,
+    templateNotApproved: T.meetingModeTemplateNotApproved,
+  }[note];
+  return (
+    <>
+      {text}
+      {/* Without LiveKit the teacher gets no link either (reminders.links.ts): only say so when it is set. */}
+      {livekit === true && ` ${T.meetingModeTeacherOnly}`}{' '}
+      {/* A new tab: this sits inside the unsaved teacher form, which a page load would throw away. */}
+      <a href={TEMPLATES_HREF} target="_blank" rel="noopener noreferrer" className="font-semibold text-lapis underline underline-offset-4">
+        {T.meetingModeTemplatesLink}
+      </a>
+    </>
+  );
+}
+
 /**
- * Non-blocking notes under «طريقة حضور الحلقات» (save stays allowed): a fixed-link teacher with no
- * link sends families nothing; a platform teacher's families get no join link while lesson_join_link
- * is not approved. The template note waits for the templates list: nothing while loading or failed.
+ * Non-blocking notes under «طريقة حضور الحلقات» (save stays allowed), from meetingModeNotes. One
+ * always-mounted polite live region holds them, so a note that appears after the lists load is
+ * announced. A failed or forbidden read is unknown: no note rests on it.
  */
-export function MeetingModeWarnings({ platform, link }: Props) {
-  const templates = useQuery({ ...templatesQuery, enabled: platform });
-  if (!platform) {
-    return link.trim() === '' ? <p role="note" className={NOTE}>{t.teachers.meetingModeNoLink}</p> : null;
-  }
-  if (!templates.isSuccess) return null;
-  const approved = templates.data.some((x) => x.key === JOIN_TEMPLATE && x.status === 'approved');
-  return approved ? null : <p role="note" className={NOTE}>{t.teachers.meetingModeTemplatePending}</p>;
+export function MeetingModeWarnings({ id, platform, link }: Props) {
+  const known = platform !== null;
+  const templates = useQuery({ ...templatesQuery, enabled: known });
+  const integrations = useQuery({ ...integrationsQuery, enabled: known });
+  const livekit = livekitConfigured(integrations.isSuccess ? integrations.data : undefined);
+  const join = joinStatus(templates.isSuccess ? templates.data : undefined);
+  const settled = !templates.isPending && !integrations.isPending;
+  const notes = meetingModeNotes({ platform, link, join, livekit, settled });
+  // Never display:none while empty: a live region revealed with its first note is often not announced.
+  return (
+    <div id={id} role="status" aria-live="polite" className="mt-2 grid gap-2 empty:mt-0">
+      {notes.map((note) => (
+        <p key={note} className={NOTE}>
+          <NoteText note={note} livekit={livekit} />
+        </p>
+      ))}
+    </div>
+  );
 }

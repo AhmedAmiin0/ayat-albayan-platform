@@ -48,7 +48,7 @@ export interface LessonView {
   meeting_link: string | null;
   /**
    * The lesson's teacher holds it in our classroom (usesPlatform(teachers.meeting_mode, the academy
-   * default), migration 490): clients hide the fixed link then. Absent in an old cache (= the fixed link).
+   * default), migration 490): clients hide the fixed link then. Absent in an old cache: the academy default.
    */
   platform_classroom?: boolean;
   cancel_reason: string | null;
@@ -92,8 +92,11 @@ export interface TeacherMe {
   meeting_link: string | null;
   /** teachers.meeting_mode as stored: null = the academy default (migration 490). */
   meeting_mode: TeacherMeetingMode | null;
-  /** usesPlatform(meeting_mode, settings.meeting_link_auto): the fixed link is not shown then. */
-  platform_classroom: boolean;
+  /**
+   * usesPlatform(meeting_mode, settings.meeting_link_auto): the fixed link is not shown then. Absent in
+   * a payload cached before migration 490: clients use the academy default.
+   */
+  platform_classroom?: boolean;
   students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
 }
 

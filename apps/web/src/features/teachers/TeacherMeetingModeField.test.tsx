@@ -1,50 +1,27 @@
-import { PUBLIC_SETTING_DEFAULTS } from '@ab/shared';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { useState } from 'react';
+import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { publicConfigQuery } from '@/lib/public-config';
-import { emptyTeacherForm, type SetField, type TeacherForm } from './teacher-form';
-import { TeacherMeetingModeField } from './TeacherMeetingModeField';
+import type { Teacher } from './api';
+import { settle, showMeetingMode } from './meeting-mode-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
 
 const T = t.teachers;
 const LINK = 'https://meet.google.com/xqa-ngdu-fpe';
-
-function Harness({ start }: { start: Partial<TeacherForm> }) {
-  const [form, setForm] = useState<TeacherForm>({ ...emptyTeacherForm(), ...start });
-  const set: SetField = (key, value) => setForm((f) => ({ ...f, [key]: value }));
-  return <TeacherMeetingModeField form={form} set={set} />;
-}
-
-/**
- * `auto`: settings.meeting_link_auto; `status`: lesson_join_link's status in GET /messaging/templates
- * ('error': the list fails).
- */
-function show(start: Partial<TeacherForm>, { auto = false, status = 'approved' } = {}) {
-  apiFetch.mockImplementation((path: string) => {
-    if (path !== '/messaging/templates') return Promise.resolve([]);
-    return status === 'error' ? Promise.reject(new Error('403')) : Promise.resolve([{ key: 'lesson_join_link', status }]);
-  });
-  const client = new QueryClient({ defaultOptions: { queries: { retry: false, staleTime: Infinity } } });
-  client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
-  render(
-    <QueryClientProvider client={client}>
-      <Harness start={start} />
-    </QueryClientProvider>,
-  );
-}
-
 const academyLabel = (now: 'platform' | 'static') => `${T.meetingModeOption.academy} ${T.meetingModeResolves[now]}`;
+const notes = () => screen.getByRole('status');
+const SARA: Teacher = {
+  id: 't1', display_name_ar: 'أ. سارة', display_name_en: null, gender: 'female', programs: ['quran'], phone_e164: null,
+  meeting_link: null, meeting_mode: null, platform_classroom: true,
+  rate_30: null, rate_45: null, rate_60: null, rate_90: null, max_students: null, status: 'active', tz: 'Africa/Cairo',
+};
 
 describe('«طريقة حضور الحلقات» in the teacher form (owner 2026-10-19)', () => {
   afterEach(() => apiFetch.mockReset());
 
   it('offers three options; the academy one says what it resolves to now', () => {
-    show({}, { auto: true });
+    showMeetingMode(apiFetch, {}, { auto: true });
     expect(screen.getByRole('group', { name: T.meetingMode })).toBeTruthy();
     expect(screen.getByRole('radio', { name: academyLabel('platform') })).toHaveProperty('checked', true);
     expect(screen.getByRole('radio', { name: T.meetingModeOption.static })).toBeTruthy();
@@ -52,42 +29,55 @@ describe('«طريقة حضور الحلقات» in the teacher form (owner 2026
   });
 
   it('academy switch OFF: the academy option reads «الرابط الثابت»', () => {
-    show({ meeting_mode: 'platform', meeting_link: LINK });
+    showMeetingMode(apiFetch, { meeting_mode: 'platform', meeting_link: LINK });
     expect(screen.getByRole('radio', { name: academyLabel('static') })).toHaveProperty('checked', false);
     expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toHaveProperty('checked', true);
   });
 
-  it('fixed link chosen with no URL: families get no link (a note, not an error)', () => {
-    show({ meeting_link: '' }, { auto: true });
+  it('settings still loading: the bare academy label and no note (not the registry default)', async () => {
+    showMeetingMode(apiFetch, { meeting_mode: null, meeting_link: '' }, { auto: 'pending', status: 'not_submitted' });
+    expect(screen.getByRole('radio', { name: T.meetingModeOption.academy })).toHaveProperty('checked', true);
+    await settle();
+    expect(notes().textContent).toBe('');
+    expect(apiFetch).not.toHaveBeenCalledWith('/messaging/templates');
+  });
+
+  it('settings failed: still no claim about the academy default', async () => {
+    showMeetingMode(apiFetch, { meeting_mode: null, meeting_link: '' }, { auto: 'error' });
+    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/settings/public'));
+    await settle();
+    expect(screen.getByRole('radio', { name: T.meetingModeOption.academy })).toBeTruthy();
+    expect(notes().textContent).toBe('');
+  });
+
+  it('an academy-mode teacher while the settings load: their resolved mode stands in, as in TeacherFacts', async () => {
+    const start = { meeting_mode: null, meeting_link: '' };
+    showMeetingMode(apiFetch, start, { auto: 'pending', status: 'not_submitted', teacher: SARA });
+    expect(screen.getByRole('radio', { name: academyLabel('platform') })).toHaveProperty('checked', true);
+    await waitFor(() => expect(notes().textContent).toContain(T.meetingModeTemplateNotApproved));
+  });
+
+  it('a mode chosen in the form needs no setting: its notes show while the settings load', async () => {
+    showMeetingMode(apiFetch, { meeting_mode: 'static', meeting_link: '' }, { auto: 'pending', status: 'pending' });
+    await waitFor(() => expect(notes().textContent).toBe(T.meetingModeNoLink));
+  });
+
+  it('switching to a fixed link with no URL: the note appears in the live region', async () => {
+    showMeetingMode(apiFetch, { meeting_link: '' }, { auto: true, status: 'not_submitted' });
     expect(screen.queryByText(T.meetingModeNoLink)).toBeNull();
     fireEvent.click(screen.getByRole('radio', { name: T.meetingModeOption.static }));
-    expect(screen.getByRole('note').textContent).toBe(T.meetingModeNoLink);
+    await waitFor(() => expect(notes().textContent).toBe(T.meetingModeNoLink));
   });
 
-  it('platform with lesson_join_link not approved: only the teacher gets the classroom link', async () => {
-    show({ meeting_mode: 'platform', meeting_link: '' }, { status: 'pending' });
-    expect((await screen.findByRole('note')).textContent).toBe(T.meetingModeTemplatePending);
-    expect(screen.queryByText(T.meetingModeNoLink)).toBeNull();
-  });
-
-  it('academy default ON resolves to the platform: the template note applies too', async () => {
-    show({ meeting_mode: null }, { auto: true, status: 'not_submitted' });
-    expect(await screen.findByText(T.meetingModeTemplatePending)).toBeTruthy();
-  });
-
-  it('no notes when the link is there or the template is approved', async () => {
-    show({ meeting_mode: 'static', meeting_link: LINK }, { auto: true });
-    expect(screen.queryByRole('note')).toBeNull();
-    fireEvent.click(screen.getByRole('radio', { name: T.meetingModeOption.platform }));
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/messaging/templates'));
-    await new Promise((r) => setTimeout(r, 0));
-    expect(screen.queryByRole('note')).toBeNull();
-  });
-
-  it('no template note while the list fails', async () => {
-    show({ meeting_mode: 'platform', meeting_link: LINK }, { status: 'error' });
-    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/messaging/templates'));
-    await new Promise((r) => setTimeout(r, 0));
-    expect(screen.queryByText(T.meetingModeTemplatePending)).toBeNull();
+  it('the radio group is described by the always-mounted polite live region', async () => {
+    showMeetingMode(apiFetch, { meeting_mode: 'platform' }, { status: 'pending' });
+    const region = notes();
+    expect(region.getAttribute('aria-live')).toBe('polite');
+    // Never display:none while empty (a region revealed with its first note is often not announced).
+    expect(region.className).not.toContain('empty:hidden');
+    expect(screen.getByRole('group', { name: T.meetingMode }).getAttribute('aria-describedby')).toBe(region.id);
+    await waitFor(() => expect(region.textContent).toContain(T.meetingModeTemplatePending));
+    // Inside the unsaved teacher form: the templates page opens in a new tab, the form stays.
+    expect(screen.getByRole('link', { name: T.meetingModeTemplatesLink }).getAttribute('target')).toBe('_blank');
   });
 });
