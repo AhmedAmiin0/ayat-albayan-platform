@@ -62,7 +62,7 @@ All tables: `id uuid pk default gen_random_uuid()`, `created_at`, `updated_at`, 
 -- identity
 profiles(id uuid pk refs auth.users, role text check (role in ('admin','teacher','guardian')), full_name, phone_e164 unique, locale default 'ar', tz default 'Asia/Riyadh')
 
-teachers(id, profile_id refs profiles, display_name_ar, display_name_en, gender, programs text[], phone_e164, meeting_link, rate_30 int, rate_45 int, rate_60 int, rate_90 int, max_students int, status, google_calendar_id, mirror_enabled bool)
+teachers(id, profile_id refs profiles, display_name_ar, display_name_en, gender, programs text[], phone_e164, meeting_link, meeting_mode text null check in ('static','platform') -- null = follow settings.meeting_link_auto (the academy default), migration 20261019000490; trigger teachers_relink_lessons copies a changed meeting_link onto future open lessons that had the old link or none (a platform teacher's families need lesson_join_link approved), rate_30 int, rate_45 int, rate_60 int, rate_90 int, max_students int, status, google_calendar_id, mirror_enabled bool)
 teacher_availability(id, teacher_id, weekday smallint 0-6, start_time time, end_time time, tz)
 teacher_time_off(id, teacher_id, starts_at timestamptz, ends_at timestamptz, reason)
 

@@ -9,7 +9,7 @@ describe('SalesAcademyQueries (whitelisted selects)', () => {
     const f = fakeDb({ teachers: [{ data: [] }] });
     await new SalesAcademyQueries(f.db).teachers();
     const [select] = f.argsOf('teachers', 'select') ?? [];
-    expect(select).toBe('id, display_name_ar, display_name_en, gender, programs, meeting_link, students(id, code, name, status, program)');
+    expect(select).toBe('id, display_name_ar, display_name_en, gender, programs, meeting_link, meeting_mode, students(id, code, name, status, program)');
     expect(String(select)).not.toMatch(/rate|phone|notes|max_students|calendar|meeting_link_override/);
     expect(f.argsOf('teachers', 'eq')).toEqual(['status', 'active']);
   });

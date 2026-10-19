@@ -2,6 +2,7 @@ import type { Attendance, Gender, LessonStatus, Program, StudentStatus } from '.
 import type { Conflict } from './conflicts.js';
 import type { LessonEvent } from './state-machine.js';
 import type { LessonTimeEditView, TimeEditMode } from './time-edit.js';
+import type { TeacherMeetingMode } from '../classroom/meeting-mode.js';
 
 // Phase 2 API response shapes (docs/10-phase2-contracts.md §3). Responses are snake_case like
 // every other API row; instants are ISO-8601 UTC strings; tz fields are IANA ids.
@@ -45,6 +46,11 @@ export interface LessonView {
   status: LessonStatus;
   /** Copied onto the lesson at creation (R-LES-01), sent to the guardian (R-LES-02). */
   meeting_link: string | null;
+  /**
+   * The lesson's teacher holds it in our classroom (usesPlatform(teachers.meeting_mode, the academy
+   * default), migration 490): clients hide the fixed link then. Absent in an old cache (= the fixed link).
+   */
+  platform_classroom?: boolean;
   cancel_reason: string | null;
   override_reason: string | null;
   confirmed_at: string | null;
@@ -84,6 +90,10 @@ export interface TeacherMe {
   programs: Program[];
   tz: string;
   meeting_link: string | null;
+  /** teachers.meeting_mode as stored: null = the academy default (migration 490). */
+  meeting_mode: TeacherMeetingMode | null;
+  /** usesPlatform(meeting_mode, settings.meeting_link_auto): the fixed link is not shown then. */
+  platform_classroom: boolean;
   students: { id: string; code: string; name: string; tz: string; status: StudentStatus }[];
 }
 
@@ -95,6 +105,8 @@ export interface BookingTeacherOption {
   programs: Program[];
   tz: string;
   meeting_link: string | null;
+  /** usesPlatform(teachers.meeting_mode, settings.meeting_link_auto): the lessons go out with our classroom. */
+  platform_classroom: boolean;
   students_count: number;
   max_students: number | null;
   /** false = no weekly availability rows; the wizard shows the teacher disabled. */

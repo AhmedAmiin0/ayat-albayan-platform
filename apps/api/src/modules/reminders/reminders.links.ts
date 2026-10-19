@@ -1,13 +1,14 @@
-import { reminderDue, type JoinWindowConfig } from '@ab/shared';
+import { meetingModeOf, reminderDue, usesPlatform, type JoinWindowConfig } from '@ab/shared';
 import { linkExpiry } from '../classroom/join-link.token';
 import { isOpen, type ReminderLesson } from './reminders.plan';
 
-// Which link the reminders carry (settings.meeting_link_auto, owner 2026-10-12). Pure, decided when
-// the job queues and never written back: lessons.meeting_link keeps the fixed link in both modes,
-// so turning the switch off again brings the fixed links straight back.
+// Which link the reminders carry, per lesson: its teacher's meeting_mode (migration 490, owner
+// 2026-10-19), else the academy default settings.meeting_link_auto (owner 2026-10-12). Pure, decided
+// when the job queues and never written back: lessons.meeting_link keeps the fixed link in both
+// modes, so switching a teacher (or the academy) back to the fixed link brings it straight back.
 
 export interface RoomContext {
-  /** settings.meeting_link_auto. */
+  /** settings.meeting_link_auto: the academy default, for a teacher whose meeting_mode is null. */
   auto: boolean;
   /** LIVEKIT_* configured (env or the database's integration config), read every tick. */
   livekit: boolean;
@@ -17,12 +18,16 @@ export interface RoomContext {
   origin: string;
 }
 
+/** The lesson is held in our classroom: usesPlatform(its teacher's mode, the academy default). */
+export const platformLesson = (lesson: Pick<ReminderLesson, 'teacher'>, ctx: RoomContext): boolean =>
+  usesPlatform(meetingModeOf(lesson.teacher?.meeting_mode), ctx.auto);
+
 /**
- * Our classroom instead of the lesson's fixed link: always in auto mode once LiveKit is configured;
- * in static mode only for a lesson without a link, and only once the family's link can go too.
+ * Our classroom instead of the lesson's fixed link: always for a platform lesson once LiveKit is
+ * configured; for a static one only without a link, and only once the family's link can go too.
  */
-export const roomFor = (lesson: Pick<ReminderLesson, 'meeting_link'>, ctx: RoomContext): boolean =>
-  ctx.livekit && (ctx.auto || (!lesson.meeting_link && ctx.joinOk));
+export const roomFor = (lesson: Pick<ReminderLesson, 'meeting_link' | 'teacher'>, ctx: RoomContext): boolean =>
+  ctx.livekit && (platformLesson(lesson, ctx) || (!lesson.meeting_link && ctx.joinOk));
 
 /** The lesson's room for staff (login required): what the teacher's reminder links to. */
 export const classroomUrl = (origin: string, lessonId: string): string => `${origin}/classroom/${lessonId}`;
@@ -31,12 +36,12 @@ export const classroomUrl = (origin: string, lessonId: string): string => `${ori
  * The lessons as the reminders should name their link. A room lesson gets the classroom page, a
  * host no template button knows, so the guardian's reminder is lesson_reminder_plain (the family's
  * own link follows as lesson_join_link) and the teacher's is teacher_lesson_reminder with the URL in
- * {{2}}. Auto mode never falls back to the fixed link: without LiveKit the reminders carry none.
+ * {{2}}. A platform lesson never falls back to the fixed link: without LiveKit its reminders carry none.
  */
 export function sentLinks(lessons: readonly ReminderLesson[], ctx: RoomContext): ReminderLesson[] {
   return lessons.map((l) => {
     if (roomFor(l, ctx)) return { ...l, meeting_link: classroomUrl(ctx.origin, l.id) };
-    return ctx.auto ? { ...l, meeting_link: null } : l;
+    return platformLesson(l, ctx) ? { ...l, meeting_link: null } : l;
   });
 }
 

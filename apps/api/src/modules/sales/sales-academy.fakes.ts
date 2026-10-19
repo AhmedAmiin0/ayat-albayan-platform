@@ -13,6 +13,8 @@ import type { SalesScheduleRow } from './sales-schedule.queries';
 import { SalesScheduleQueries } from './sales-schedule.queries';
 import { SalesQueries } from './sales.queries';
 import { A, B, NONE, OWN_A } from './sales.fakes';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 
 export const SUB = 'c1000000-0000-4000-8000-0000000000c1';
 const USERS: Record<string, AuthUser> = {
@@ -33,7 +35,7 @@ const verify: TokenVerifier = async (token) => {
 export const teacherRow = (): SalesTeacherRow =>
   ({
     id: 'tc1', display_name_ar: 'أبرار', display_name_en: 'Abrar', gender: 'female', programs: ['quran'],
-    rate_60: 99, phone_e164: '+201001234567', meeting_link: 'https://meet.example.org/abrar', notes: 'سر',
+    rate_60: 99, phone_e164: '+201001234567', meeting_link: 'https://meet.example.org/abrar', meeting_mode: null, notes: 'سر',
     students: [{ id: 's1', code: 'AB-0101', name: 'ياسمين', status: 'active', program: 'quran', notes: 'سر' }, { id: 's2', code: 'AB-0102', name: 'قديم', status: 'churned', program: 'quran' }],
   }) as SalesTeacherRow;
 
@@ -85,6 +87,7 @@ export async function academyApp() {
     .overrideProvider(SalesAcademyQueries).useValue(academy)
     .overrideProvider(SalesHistoryQueries).useValue(history)
     .overrideProvider(SalesScheduleQueries).useValue(schedule)
+    .overrideProvider(SettingsService).useValue(fakeSettings())
     .compile();
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();

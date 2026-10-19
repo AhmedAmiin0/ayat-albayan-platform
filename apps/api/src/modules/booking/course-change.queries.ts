@@ -1,4 +1,4 @@
-import type { LessonStatus, PackageSize } from '@ab/shared';
+import { meetingModeOf, type LessonStatus, type PackageSize, type TeacherMeetingMode } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import type { Contact } from '../lessons/confirmation-messages';
@@ -98,5 +98,12 @@ export class CourseChangeQueries {
     const { data, error } = await this.db.from('teachers').select('meeting_link').eq('id', teacherId).maybeSingle();
     if (error) throw dbError(error);
     return data?.meeting_link ?? null;
+  }
+
+  /** The course teacher's teachers.meeting_mode (migration 490): null = the academy default. */
+  async teacherMode(teacherId: string): Promise<TeacherMeetingMode | null> {
+    const { data, error } = await this.db.from('teachers').select('meeting_mode').eq('id', teacherId).maybeSingle();
+    if (error) throw dbError(error);
+    return meetingModeOf(data?.meeting_mode);
   }
 }

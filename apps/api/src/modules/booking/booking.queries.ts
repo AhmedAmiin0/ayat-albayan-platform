@@ -21,7 +21,8 @@ export type BookingStudent = {
   meeting_link_override: string | null;
   guardian: { id: string; phone_e164: string; tz: string };
 };
-export type BookingTeacher = { id: string; tz: string; meeting_link: string | null };
+/** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in fakes. */
+export type BookingTeacher = { id: string; tz: string; meeting_link: string | null; meeting_mode?: string | null };
 /** The lesson a makeup would replace, with who was on it and whether each was charged. */
 export type MakeupOriginalRow = {
   id: string;
@@ -42,7 +43,7 @@ export class BookingQueries {
   async teacher(id: string): Promise<BookingTeacher | null> {
     const { data, error } = await this.db
       .from('teachers')
-      .select('id, tz, meeting_link')
+      .select('id, tz, meeting_link, meeting_mode')
       .eq('id', id)
       .maybeSingle();
     if (error) throw dbError(error);

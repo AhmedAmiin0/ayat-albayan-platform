@@ -34,6 +34,8 @@ export interface SalesTeacherView extends TeacherStudentCounts {
   live_now: boolean;
   /** teachers.meeting_link (owner 2026-10-12), null when unset; render it only when http(s). */
   meeting_link: string | null;
+  /** usesPlatform(teachers.meeting_mode, settings.meeting_link_auto): families get the platform link. */
+  platform_classroom: boolean;
   students: SalesTeacherStudent[];
 }
 
