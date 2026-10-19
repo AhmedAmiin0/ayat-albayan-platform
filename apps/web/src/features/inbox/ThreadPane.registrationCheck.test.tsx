@@ -38,6 +38,7 @@ describe('«تحقق من التسجيل» in the sales chat header', () => {
 
   it('checks the thread’s number', async () => {
     open('sales');
+    fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
     fireEvent.click(await screen.findByRole('button', { name: R.action }));
     const dialog = within(screen.getByRole('dialog', { name: R.title }));
     expect(dialog.getByLabelText(R.phone)).toHaveProperty('value', PHONE);

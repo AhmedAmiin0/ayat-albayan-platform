@@ -1,15 +1,13 @@
 import { useQuery } from '@tanstack/react-query';
-import { Cartouche } from '@/components/ui/cartouche';
+import type { ReactNode } from 'react';
 import { EmptyState } from '@/components/ui/empty-state';
-import { PageHead } from '@/components/ui/page';
 import { Pager } from '@/components/ui/pager';
 import { ListSkeleton } from '@/components/ui/skeleton';
 import { paneScroll } from '@/components/ui/rail';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';
-import { useInboxMode } from './mode';
-import { NewChatForm } from './NewChatForm';
+import { InboxListHead } from './InboxListHead';
 import { parseInboxSearch, type InboxSearch } from './search';
 import { ThreadList } from './ThreadList';
 import { ThreadPane } from './ThreadPane';
@@ -17,6 +15,8 @@ import { ThreadPane } from './ThreadPane';
 export interface InboxPageProps {
   search: InboxSearch;
   onSearch: (next: InboxSearch) => void;
+  /** Extra items in the list column's head row, before «محادثة جديدة» (sales: the running lessons chip). */
+  head?: ReactNode;
 }
 
 /**
@@ -24,62 +24,53 @@ export interface InboxPageProps {
  * /teacher/inbox (teacher mode): the same page over the teacher's own families only (API-scoped).
  * Admin and sales also start a chat by number («محادثة جديدة» → NewThread's first template).
  * Under 900px the list and the thread are separate screens (the thread has «رجوع»).
+ * The page title (ONE cartouche and the count) heads the list column, not the page: the nav tab
+ * above already names the screen, so the chat keeps that row.
  */
-export function InboxPage({ search, onSearch }: InboxPageProps) {
+export function InboxPage({ search, onSearch, head }: InboxPageProps) {
   const threads = useQuery(threadsQuery(search));
-  const mode = useInboxMode();
   const { phone, ...listSearch } = search;
   const filter = (patch: Record<string, unknown>) =>
     onSearch(parseInboxSearch({ ...search, ...patch, page: 1 }));
 
   return (
-    <>
-      <PageHead className="max-sm:mb-3">
-        <Cartouche>{mode !== 'admin' ? t.nav.conversations : t.inbox.title}</Cartouche>
-        {threads.data && (
-          <span className="text-sm text-ink-3 tabular-nums">
-            {t.leads.count.replace('{n}', String(threads.data.total))}
-          </span>
-        )}
-      </PageHead>
-      {/* From 900px the inbox is exactly the frame's height: the browser page never scrolls, the
-          list, the log and the side panel each scroll on their own. Phones: one pane, it flows. */}
+    /* From 900px the inbox is exactly the frame's height: the browser page never scrolls, the
+       list, the log and the side panel each scroll on their own. Phones: one pane, it flows. */
+    <div
+      data-testid="inbox-layout"
+      className="grid flex-auto gap-4 shell:h-0 shell:min-h-[400px] shell:grid-cols-[clamp(300px,30%,400px)_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
+    >
       <div
-        data-testid="inbox-layout"
-        className="grid flex-auto gap-[22px] shell:h-0 shell:min-h-[600px] shell:grid-cols-[320px_minmax(0,1fr)] shell:grid-rows-[minmax(0,1fr)]"
+        className={cn(
+          'min-w-0 transition-opacity duration-[120ms]',
+          paneScroll,
+          phone && 'max-shell:hidden',
+          threads.isPlaceholderData && 'opacity-60',
+        )}
+        aria-busy={threads.isPlaceholderData || undefined}
       >
-        <div
-          className={cn(
-            'min-w-0 transition-opacity duration-[120ms]',
-            paneScroll,
-            phone && 'max-shell:hidden',
-            threads.isPlaceholderData && 'opacity-60',
-          )}
-          aria-busy={threads.isPlaceholderData || undefined}
-        >
-          {mode !== 'teacher' && <NewChatForm onOpen={(next) => onSearch({ ...search, phone: next })} />}
-          {threads.isError && <p role="alert">{t.common.error}</p>}
-          {threads.isPending && <ListSkeleton rows={6} />}
-          {threads.data && (
-            <>
-              <ThreadList search={search} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
-              <Pager
-                page={search.page}
-                total={threads.data.total}
-                pageSize={threads.data.pageSize}
-                onPage={(page) => onSearch({ ...search, page })}
-              />
-            </>
-          )}
-        </div>
-        {phone ? (
-          <ThreadPane key={phone} phone={phone} listSearch={listSearch} />
-        ) : (
-          <EmptyState title={t.inbox.pickThread} className="self-start max-shell:hidden">
-            {t.inbox.pickThreadHint}
-          </EmptyState>
+        <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...search, phone: next })} />
+        {threads.isError && <p role="alert">{t.common.error}</p>}
+        {threads.isPending && <ListSkeleton rows={6} />}
+        {threads.data && (
+          <>
+            <ThreadList search={search} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
+            <Pager
+              page={search.page}
+              total={threads.data.total}
+              pageSize={threads.data.pageSize}
+              onPage={(page) => onSearch({ ...search, page })}
+            />
+          </>
         )}
       </div>
-    </>
+      {phone ? (
+        <ThreadPane key={phone} phone={phone} listSearch={listSearch} />
+      ) : (
+        <EmptyState title={t.inbox.pickThread} className="self-start max-shell:hidden">
+          {t.inbox.pickThreadHint}
+        </EmptyState>
+      )}
+    </div>
   );
 }

@@ -6,7 +6,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { threadKind, threadTitle } from './format';
+import { threadKind, threadTitle, timesInText } from './format';
 import { inboxBase, showsPhone, useInboxMode } from './mode';
 import { leadChip } from './subscription';
 import { SubscriptionChip } from './SubscriptionChip';
@@ -14,11 +14,12 @@ import type { ThreadHeaderProps } from './ThreadHeader';
 import { WindowBanner } from './WindowBanner';
 
 /**
- * The full-screen chat's header on phones (< 640px, owner 2026-10-05): one compact row (back to
- * the list, the initial, name and number, the client sheet's icon button), then the status chips
- * on one line that scrolls sideways instead of wrapping.
+ * The full-screen chat's header below 900px (owner 2026-10-05): one compact row (back to
+ * the list, the initial, name and number, the client sheet's icon button or the sales actions as
+ * icons plus «المزيد»), then the status chips (and the sales children line) on one line that
+ * scrolls sideways instead of wrapping, ending with the times' city like ThreadHeader (principle 7).
  */
-export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action }: ThreadHeaderProps) {
+export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   const title = threadTitle(th, mode);
@@ -53,6 +54,8 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
         <WindowBanner thread={th} compact />
         {badge && <SubscriptionChip size="sm" badge={badge} />}
         {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
+        {line}
+        <span>{timesInText()}</span>
       </div>
     </header>
   );

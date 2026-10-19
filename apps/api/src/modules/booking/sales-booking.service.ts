@@ -1,7 +1,8 @@
 import { bookingKindOf, type BookingRequest, type BookingResult, type BookingTeacherOption, type Conflict, type SlotsResponse } from '@ab/shared';
-import { Injectable } from '@nestjs/common';
+import { HttpStatus, Injectable } from '@nestjs/common';
 import { can } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { domainError } from './booking.errors';
 import type { PrepareOptions } from './booking.planner';
 import type { SlotsQuery, TeacherOptionsQuery } from './booking.dto';
 import { BookingService } from './booking.service';
@@ -34,12 +35,15 @@ export class SalesBookingService {
 
   /**
    * 201 BookingResult; 409 conflict (never overridden) or duplicate_student; 403 (ON only, always for a course)
-   * not_your_lead / not_your_student / not_your_family; a course's codes: SalesCourse.options.
+   * not_your_lead / not_your_student / not_your_family; 400 date_in_past (a trial whose first lesson
+   * already passed: the planner would book next week's occurrence instead, review M3); a course's codes: SalesCourse.options.
    */
   async book(req: BookingRequest, user: AuthUser): Promise<BookingResult> {
     const own = await this.ownership(req, user);
+    const course = bookingKindOf(req) === 'package';
+    if (!course && req.startsAt && Date.parse(req.startsAt) < Date.now()) throw domainError(HttpStatus.BAD_REQUEST, 'date_in_past');
     // A retry after a booked course returns that booking (BookingService replays it), not course_exists.
-    if (bookingKindOf(req) === 'package' && (await this.course.isReplay(req))) return this.scoped(own, () => this.booking.book(req, user.id));
+    if (course && (await this.course.isReplay(req))) return this.scoped(own, () => this.booking.book(req, user.id));
     const opts = await this.courseOptions(req);
     return this.scoped(own, () => (opts ? this.booking.book(req, user.id, opts) : this.booking.book(req, user.id)));
   }

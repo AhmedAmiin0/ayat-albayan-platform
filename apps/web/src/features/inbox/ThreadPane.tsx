@@ -1,13 +1,12 @@
 import { threadBadge } from '@ab/shared';
 import { useInfiniteQuery, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId, useState, type ReactNode } from 'react';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Toast } from '@/components/ui/toast';
-import { usePhone } from '@/components/ui/use-narrow';
+import { useBelowShell } from '@/components/ui/use-narrow';
 import { teacherMeQuery } from '@/features/teacher/api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
-import { cn } from '@/lib/utils';
 import { leadByPhoneQuery, threadQuery } from './api';
 import { Composer } from './Composer';
 import { LeadPanel, type LeadNotice } from './LeadPanel';
@@ -15,13 +14,17 @@ import { MessageLog } from './MessageLog';
 import { NewThread } from './NewThread';
 import { PhoneChat } from './PhoneChat';
 import { useInboxMode } from './mode';
-import { SalesChatActions } from './sales-money/SalesChatActions';
+import { readErrorText } from './read-error';
+import { SalesChatFrame } from './sales-money/SalesChatFrame';
+import { SalesFamilyLine } from './SalesFamilyLine';
 import type { InboxSearch } from './search';
 import { SubscribePanel } from './SubscribePanel';
-import { sendErrorText } from './TextComposer';
 import { ThreadHeader } from './ThreadHeader';
 import { ThreadHeaderPhone } from './ThreadHeaderPhone';
+import { ThreadPaneWide } from './ThreadPaneWide';
 import { ThreadSideSheet } from './ThreadSideSheet';
+import { useChatAccess } from './use-chat-access';
+import { useWindowFocus } from './use-window-focus';
 
 export interface ThreadPaneProps {
   phone: string;
@@ -30,22 +33,27 @@ export interface ThreadPaneProps {
 
 /**
  * One conversation (R-LEAD-02, R-MSG-05, R-SUB-01): the log, the reply box and beside it (below it under
- * 1280px) the lead's panel or the family's packages; sales gets its chat actions in the header instead.
- * Teacher mode: the log and the reply box only; their own chat with the academy is read-only. Phones
- * (< 640px): a full-screen chat; the panel is a full-screen sheet opened from the header's icon button.
+ * 1280px) the lead's panel or the family's packages; sales gets its chat actions and children line in the
+ * header instead. Teacher mode: the log and the reply box only; their own chat with the academy is
+ * read-only. Below 900px: a full-screen chat; the panel is a full-screen sheet opened from the header. The
+ * sales actions' dialogs sit above that switch (SalesChatFrame), so crossing 900px keeps them.
  */
 export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const queryClient = useQueryClient();
   const headingId = useId();
   // The lead panel's toasts live here (after «تسجيل الطالب» the aside becomes the family's panel).
   const [notice, setNotice] = useState<LeadNotice | null>(null);
-  const phoneView = usePhone();
+  const phoneView = useBelowShell();
   const [sheet, setSheet] = useState(false);
+  const mode = useInboxMode();
+  const access = useChatAccess(mode);
   const detail = useInfiniteQuery(threadQuery(phone));
-  const templates = useQuery(templatesQuery);
+  // Back to this window: fetch now, which also re-arms the focus-gated poll (W13).
+  useWindowFocus(detail.refetch, phone);
+  const templates = useQuery({ ...templatesQuery, enabled: access.templates });
   const th = detail.data?.pages[0]?.thread ?? null;
-  const admin = useInboxMode() === 'admin';
-  const teacherMode = useInboxMode() === 'teacher';
+  const admin = mode === 'admin';
+  const teacherMode = mode === 'teacher';
   const me = useQuery({ ...teacherMeQuery, enabled: teacherMode });
   // /leads is the admin's: never asked in teacher mode (the API also nulls lead_id there).
   const isLead = admin && !!th?.lead_id && !th.guardian_id && !th.teacher_id;
@@ -58,22 +66,22 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   }, [loaded, phone, queryClient]);
 
   if (detail.isPending) return <p className="text-sm text-ink-3">{t.common.loading}</p>;
-  if (detail.isError) return <FormAlert>{sendErrorText(detail.error)}</FormAlert>;
-  if (!th) return <NewThread phone={phone} lessons={detail.data.pages[0]?.lessons ?? []} />;
+  // A failed background poll (data kept) does not blank the chat: the log shows a status line instead.
+  if (detail.isError && !detail.data) return <FormAlert>{readErrorText(detail.error)}</FormAlert>;
+  const first = detail.data.pages[0];
+  if (!th) return <NewThread phone={phone} lessons={first?.lessons ?? []} />;
   const messages = [...detail.data.pages].reverse().flatMap((p) => p.messages);
   const waiting = new Set((templates.data ?? []).filter((x) => x.status !== 'approved').map((x) => x.key));
-  const context = {
-    studentName: lead.data?.qualification.student_name ?? null,
-    teacherName: th.teacher_name,
-    lessons: detail.data.pages[0]?.lessons ?? [],
-  };
-  const people = admin ? (detail.data.pages[0]?.people ?? null) : null;
-  const panel = isLead || !!people?.guardian;
+  const context = { studentName: lead.data?.qualification.student_name ?? null, teacherName: th.teacher_name, lessons: first?.lessons ?? [] };
+  // Sales keeps the children for its header line; their packages arrive nulled, so no badge (admin only).
+  const people = teacherMode ? null : (first?.people ?? null);
+  const family = admin && people?.guardian ? people : null;
+  const panel = isLead || !!family;
   const aside = panel && !phoneView;
   const side = (
     <>
       {isLead && <LeadPanel phone={phone} onNotice={setNotice} />}
-      {people?.guardian && <SubscribePanel people={people} />}
+      {family && <SubscribePanel people={family} />}
     </>
   );
   const sheetLabel = isLead ? t.inbox.leadSheet : t.inbox.subscriptionSheet;
@@ -82,28 +90,37 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   // Until /teachers/me answers, a teacher's number counts as their own (no composer).
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
-  const headerProps = { thread: th, listSearch, headingId, badge: people && threadBadge(people) };
-  const register = <SalesChatActions thread={th} />;
+  const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={first?.lessons ?? []} />;
+  const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line };
   const log = (fill: 'shell' | 'xl' | 'phone') => (
-    <MessageLog
-      messages={messages}
-      hasMore={detail.hasNextPage}
-      loadingOlder={detail.isFetchingNextPage}
-      onOlder={() => void detail.fetchNextPage()}
-      waitingKeys={waiting}
-      fill={fill}
-    />
+    <>
+      {detail.isError && (
+        <p role="status" className="shrink-0 px-3 py-1 text-xs text-danger shell:px-0">
+          {t.common.error}
+        </p>
+      )}
+      <MessageLog
+        phone={phone}
+        messages={messages}
+        hasMore={detail.hasNextPage}
+        loadingOlder={detail.isFetchingNextPage}
+        onOlder={() => void detail.fetchNextPage()}
+        waitingKeys={waiting}
+        fill={fill}
+      />
+    </>
   );
-  const reply = ownThread ? (
-    <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2 max-sm:mt-0 max-sm:px-3 max-sm:pb-[max(0.75rem,env(safe-area-inset-bottom))] max-sm:pt-3">
-      {t.inbox.ownThreadReadOnly}
+  const readOnly = ownThread ? t.inbox.ownThreadReadOnly : access.send ? null : t.inbox.sendNotAllowed;
+  const reply = readOnly ? (
+    <p className="mt-4 shrink-0 border-t border-rule pt-4 text-sm text-ink-2 max-shell:mt-0 max-shell:px-3 max-shell:pb-[max(0.75rem,env(safe-area-inset-bottom))] max-shell:pt-3">
+      {readOnly}
     </p>
   ) : (
     <Composer key={phone} thread={th} context={context} />
   );
 
-  if (phoneView) {
-    return (
+  const body = (actions: ReactNode) =>
+    phoneView ? (
       <PhoneChat labelledBy={headingId}>
         <ThreadHeaderPhone
           {...headerProps}
@@ -114,7 +131,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
                 {sheetOpen && toast}
               </ThreadSideSheet>
             ) : (
-              register
+              actions
             )
           }
         />
@@ -122,29 +139,8 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         {reply}
         {!sheetOpen && toast}
       </PhoneChat>
+    ) : (
+      <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={actions} />} log={log(aside ? 'xl' : 'shell')} reply={reply} aside={aside} side={side} toast={toast} />
     );
-  }
-
-  return (
-    <section aria-labelledby={headingId} className="min-w-0 shell:flex shell:h-full shell:min-h-0 shell:flex-col">
-      <ThreadHeader {...headerProps} action={register} />
-      <div
-        className={cn(
-          'grid gap-6 shell:min-h-0 shell:flex-1',
-          // With the side panel: one scrolling column below 1280px, three columns from it.
-          aside
-            ? 'shell:overflow-y-auto shell:overscroll-contain xl:grid-cols-[minmax(0,1fr)_340px] xl:grid-rows-[minmax(0,1fr)] xl:overflow-visible'
-            : 'shell:grid-rows-[minmax(0,1fr)]',
-        )}
-      >
-        {/* The log scrolls, the reply box stays pinned under it. */}
-        <div className={cn('min-w-0', aside ? 'xl:flex xl:min-h-0 xl:flex-col' : 'shell:flex shell:min-h-0 shell:flex-col')}>
-          {log(aside ? 'xl' : 'shell')}
-          {reply}
-        </div>
-        {aside && side}
-      </div>
-      {toast}
-    </section>
-  );
+  return <SalesChatFrame key={phone} thread={th} compact={phoneView}>{body}</SalesChatFrame>;
 }

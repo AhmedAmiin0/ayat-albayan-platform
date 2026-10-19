@@ -8,6 +8,7 @@ import { SalesThreadsService } from './sales-threads.service';
 import { TeacherScopes } from './teacher-scope';
 import { TeacherThreadsQueries } from './teacher-threads.queries';
 import { TeacherThreadsService } from './teacher-threads.service';
+import { ThreadFileController } from './thread-file.controller';
 import { ThreadMediaController } from './thread-media.controller';
 import { ThreadMediaService } from './thread-media.service';
 import { ThreadReads } from './thread-reads';
@@ -23,10 +24,11 @@ import { ThreadsService } from './threads.service';
  * package balances behind a thread's `people` and «مشترك» tag (R-SUB-01). Teacher mode (R-TCH-03):
  * ThreadReads picks the admin's or the teacher's reads per request (TeacherScopes); LessonsModule
  * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson every chat, redacted (docs/16).
+ * ThreadFileController serves bubble photos / PDFs to the admin and sales (docs/20 W6).
  */
 @Module({
   imports: [SubscriptionsModule, LessonsModule, SalesModule],
-  controllers: [ThreadsController, ThreadMediaController],
+  controllers: [ThreadsController, ThreadMediaController, ThreadFileController],
   providers: [
     ThreadsQueries,
     ThreadsService,

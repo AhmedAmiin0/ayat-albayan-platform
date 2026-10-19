@@ -1,4 +1,4 @@
-import { needsLesson, RATING_TEMPLATE, sendsAllTemplates } from '@ab/shared';
+import { needsLesson, sendsAllTemplates } from '@ab/shared';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -6,15 +6,16 @@ import { Field } from '@/components/ui/field';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Select } from '@/components/ui/select';
 import { meQuery } from '@/features/auth/me';
-import { FEEDBACK_TEMPLATE } from '@/features/feedback/types';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
+import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from './allowed-templates';
 import { sendTemplate } from './api';
 import { LessonPicker } from './LessonPicker';
 import { useInboxMode } from './mode';
+import { recordOwnSend } from './own-send';
 import { TemplateParamFields } from './TemplateParamFields';
-import { forAudience, lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
-import { sendErrorText } from './TextComposer';
+import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
+import { sendErrorText } from './send-error';
 
 const NAMES: Record<string, string | undefined> = t.templates.names;
 
@@ -34,14 +35,13 @@ export interface TemplateComposerProps {
  */
 export function TemplateComposer({ phone, context, teacher }: TemplateComposerProps) {
   const queryClient = useQueryClient();
-  const templates = useQuery(templatesQuery);
+  const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
   const me = useQuery(meQuery).data;
+  const staff = useInboxMode() !== 'admin';
+  const noneAllowed = useNoneAllowed(teacher);
   // Teacher and sales modes are always restricted; in the admin inbox, a role without the permissions.
-  const restricted = useInboxMode() !== 'admin' || (me ? !sendsAllTemplates(me) : false);
-  const approved = (templates.data ?? [])
-    // The feedback request needs its own signed link (token): it is sent only by «ابعت طلب الرأي»;
-    // the lesson rating picks its lesson and buttons itself: only «إرسال تقييم الحلقة».
-    .filter((x) => x.status === 'approved' && x.key !== FEEDBACK_TEMPLATE && x.key !== RATING_TEMPLATE && forAudience(x, teacher));
+  const restricted = staff || (me ? !sendsAllTemplates(me) : false);
+  const approved = allowedTemplates(templates.data, teacher);
   const lessons = context.lessons ?? [];
   const [key, setKey] = useState('');
   const [lessonId, setLessonId] = useState('');
@@ -60,7 +60,8 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   }
   const send = useMutation({
     mutationFn: sendTemplate,
-    onSuccess: async () => {
+    onSuccess: async (view) => {
+      recordOwnSend(phone, view.id);
       pick('');
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
@@ -71,6 +72,8 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
     if (tpl && lesson) setValues({ ...values, ...lessonValues(tpl, lesson) });
   };
   const missing = tpl && tried ? missingParams(tpl, values) : [];
+  // Teacher and sales with nothing allowed (or no messages.read): what she can do, not a disabled select (W7).
+  if (noneAllowed) return <p className="text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>;
 
   return (
     <form

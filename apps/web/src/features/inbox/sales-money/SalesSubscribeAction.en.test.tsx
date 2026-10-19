@@ -27,6 +27,7 @@ describe('the sales money actions, English', () => {
       </InboxModeContext.Provider>,
     );
     expect(await screen.findByRole('button', { name: 'New subscription' })).toBeTruthy();
+    fireEvent.click(screen.getByRole('button', { name: 'More' }));
     fireEvent.click(screen.getByRole('button', { name: 'Record a bank transfer' }));
     const dialog = within(screen.getByRole('dialog', { name: 'Record the bank transfer' }));
     expect(dialog.getByRole('button', { name: 'Pick the receipt from the chat' })).toBeTruthy();

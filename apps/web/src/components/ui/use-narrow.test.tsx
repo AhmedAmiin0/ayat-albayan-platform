@@ -1,6 +1,6 @@
 import { renderHook } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { useNarrow, usePhone } from './use-narrow';
+import { useBelowShell, useNarrow, usePhone } from './use-narrow';
 
 describe('useNarrow', () => {
   afterEach(() => vi.unstubAllGlobals());
@@ -26,5 +26,13 @@ describe('useNarrow', () => {
 
   it('usePhone is false without matchMedia: the inline forms stay', () => {
     expect(renderHook(() => usePhone()).result.current).toBe(false);
+  });
+
+  it('useBelowShell follows the shell breakpoint (900px), false without matchMedia', () => {
+    expect(renderHook(() => useBelowShell()).result.current).toBe(false);
+    const query = { matches: true, addEventListener: vi.fn(), removeEventListener: vi.fn() };
+    vi.stubGlobal('matchMedia', vi.fn(() => query));
+    expect(renderHook(() => useBelowShell()).result.current).toBe(true);
+    expect(matchMedia).toHaveBeenCalledWith('(max-width: 56.24rem)');
   });
 });

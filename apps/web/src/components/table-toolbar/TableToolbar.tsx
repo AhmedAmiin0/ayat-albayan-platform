@@ -19,6 +19,11 @@ export interface TableToolbarProps {
   resultCount?: number | undefined;
   /** At the inline-end of the row (e.g. the page's primary action). */
   end?: ReactNode;
+  /**
+   * A narrow column (the inbox list, 300–400px): a smaller search basis and «تصفية» as an icon (its
+   * name kept for screen readers), so search, filter and `end` share one row.
+   */
+  compact?: boolean;
 }
 
 /** The «تصفية» button's count of set filters (the number shown, «{n} مفعّلة» for screen readers). */
@@ -46,7 +51,7 @@ const APPLIED = 'border-lapis bg-accent text-ink enabled:hover:bg-accent [&_svg]
  * an optional action; under it the set filters as removable chips. The applied filters are announced
  * to screen readers as they change.
  */
-export function TableToolbar({ search, fields, chips, onClearAll, resultCount, end }: TableToolbarProps) {
+export function TableToolbar({ search, fields, chips, onClearAll, resultCount, end, compact = false }: TableToolbarProps) {
   const [open, setOpen] = useState(false);
   // Where focus lands when a chip or «مسح الكل» takes the chip row away (WCAG 2.4.3).
   const filterButton = useRef<HTMLButtonElement>(null);
@@ -63,7 +68,7 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
     <>
       <div className="mb-3 flex flex-wrap items-center gap-2">
         {/* Grows to 340px at most and shrinks to share the row with «تصفية» in a narrow column (the inbox list). */}
-        {search && <div className="min-w-0 flex-1 basis-44 sm:max-w-[340px]">{search}</div>}
+        {search && <div className={cn('min-w-0 flex-1 sm:max-w-[340px]', compact ? 'basis-24' : 'basis-44')}>{search}</div>}
         {fields && (
           <Button
             ref={filterButton}
@@ -72,10 +77,10 @@ export function TableToolbar({ search, fields, chips, onClearAll, resultCount, e
             aria-haspopup="dialog"
             data-applied={count > 0 || undefined}
             onClick={() => setOpen(true)}
-            className={cn('shrink-0', count > 0 && APPLIED)}
+            className={cn('shrink-0', compact && 'px-2.5', count > 0 && APPLIED)}
           >
             <Icon name="sliders" />
-            {t.table.filter}
+            <span className={cn(compact && 'sr-only')}>{t.table.filter}</span>
             <CountBadge count={count} />
           </Button>
         )}

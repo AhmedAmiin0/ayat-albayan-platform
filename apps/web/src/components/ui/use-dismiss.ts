@@ -3,8 +3,8 @@ import { useEffect, useRef, type RefObject } from 'react';
 export interface DismissOptions {
   /** Listen only while the popover is open. */
   open: boolean;
-  /** Called on a pointerdown outside `ref` or on Esc. */
-  onDismiss: () => void;
+  /** Called on a pointerdown outside `ref` or on Esc (`how` tells which: Esc may return focus). */
+  onDismiss: (how: 'outside' | 'escape') => void;
 }
 
 /**
@@ -20,10 +20,10 @@ export function useDismiss(ref: RefObject<HTMLElement | null>, { open, onDismiss
   useEffect(() => {
     if (!open) return;
     const away = (e: PointerEvent) => {
-      if (e.target instanceof Node && !ref.current?.contains(e.target)) latest.current();
+      if (e.target instanceof Node && !ref.current?.contains(e.target)) latest.current('outside');
     };
     const esc = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') latest.current();
+      if (e.key === 'Escape') latest.current('escape');
     };
     document.addEventListener('pointerdown', away);
     document.addEventListener('keydown', esc);

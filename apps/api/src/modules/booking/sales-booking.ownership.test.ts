@@ -116,4 +116,13 @@ describe('SalesBookingService.book: OFF books any lead, ON still refuses it', ()
     await expect(svc.book(fresh(), USER)).rejects.toMatchObject({ response: { code: 'not_your_lead' } });
     expect(booking.book).not.toHaveBeenCalled();
   });
+
+  it('a trial whose first lesson already passed: 400 date_in_past, nothing booked (review M3)', async () => {
+    const { booking, svc } = run(false);
+    const past = fresh({ startsAt: new Date(Date.now() - 60_000).toISOString() });
+    await expect(svc.book(past, USER)).rejects.toMatchObject({ response: { code: 'date_in_past' } });
+    expect(booking.book).not.toHaveBeenCalled();
+    await svc.book(fresh({ startsAt: new Date(Date.now() + 3_600_000).toISOString() }), USER);
+    expect(booking.book).toHaveBeenCalledTimes(1);
+  });
 });

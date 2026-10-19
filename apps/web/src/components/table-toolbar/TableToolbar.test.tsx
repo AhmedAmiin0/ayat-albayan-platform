@@ -22,6 +22,15 @@ describe('TableToolbar', () => {
     expect(screen.queryByText('حقول')).toBeNull();
   });
 
+  it('compact (the inbox list): a smaller search basis and «تصفية» as an icon, still named «تصفية»', () => {
+    render(<TableToolbar compact search={<input aria-label="بحث" />} fields={<p>حقول</p>} chips={[]} onClearAll={vi.fn()} end={<b>تبويبات</b>} />);
+    const button = screen.getByRole('button', { name: t.table.filter });
+    expect(button.querySelector('.sr-only')?.textContent).toBe(t.table.filter);
+    const box = screen.getByRole('textbox', { name: 'بحث' }).parentElement;
+    expect(box?.className).toContain('basis-24');
+    expect(box?.className).not.toContain('basis-44');
+  });
+
   it('the button counts the set filters; the panel holds the fields and closes on «عرض النتائج»', () => {
     render(<TableToolbar fields={<p>حقول</p>} chips={[chip()]} onClearAll={vi.fn()} />);
     const button = screen.getByRole('button', { name: new RegExp(`^${t.table.filter}`) });

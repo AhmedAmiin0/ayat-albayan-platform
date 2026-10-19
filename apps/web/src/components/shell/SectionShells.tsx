@@ -5,6 +5,7 @@ import { AdminNav } from '@/components/AdminNav';
 import { AppShell } from '@/components/AppShell';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { SALES_NAV_ITEMS, SalesNav } from '@/features/sales/SalesNav';
+import { useSalesUnread } from '@/features/sales/use-sales-unread';
 import { TEACHER_NAV_ITEMS, TeacherNav } from '@/features/teacher/TeacherNav';
 import { t } from '@/lib/i18n';
 import { useNavCounts } from './use-nav-counts';
@@ -34,10 +35,11 @@ export function TeacherShell() {
   return <AppShell title={t.teacher.dashboardTitle} home="/teacher" titles={TEACHER_TITLES} topNav={<TeacherNav can={can} />} />;
 }
 
-/** Sales: same as the teacher, with the salesperson's pages. */
+/** Sales: same as the teacher, with the salesperson's pages; «المحادثات» carries the unread count. */
 export function SalesShell() {
   const { can } = usePermissions();
-  return <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_TITLES} topNav={<SalesNav can={can} />} />;
+  const unread = useSalesUnread(can);
+  return <AppShell title={t.assistantPortal.title} home="/sales" titles={SALES_TITLES} topNav={<SalesNav can={can} unread={unread} />} />;
 }
 
 /** A teaching assistant's own page (no nav: one list). */

@@ -28,3 +28,21 @@ describe('the 24 h window in words', () => {
     expect(windowText(null, NOW).open).toBe(false);
   });
 });
+
+describe('the closed window for teacher and sales (W7)', () => {
+  it.each(['sales', 'teacher'] as const)('%s: what reopens it, never «تقييم» (the rating is the admin’s)', (mode) => {
+    const { open, text } = windowText(ago(25 * H), NOW, mode);
+    expect(open).toBe(false);
+    expect(text).toBe(t.inbox.window.closedStaff);
+    expect(text).not.toContain('تقييم');
+  });
+
+  it('admin: unchanged, also when passed explicitly', () => {
+    expect(windowText(ago(25 * H), NOW, 'admin')).toEqual({ open: false, text: t.inbox.window.closed });
+    expect(t.inbox.window.closed).toContain('تقييم');
+  });
+
+  it('an open window reads the same in every mode', () => {
+    expect(windowText(ago(2 * H), NOW, 'sales')).toEqual(windowText(ago(2 * H), NOW, 'admin'));
+  });
+});

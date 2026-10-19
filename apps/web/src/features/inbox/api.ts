@@ -1,5 +1,6 @@
 import type {
   FollowUpNote,
+  SignedDownload,
   LeadQualification,
   LeadStatus,
   MessageView,
@@ -39,7 +40,13 @@ export const threadsQuery = (s: InboxSearch) => {
 /** `+` must not reach the path raw (docs/12 H2: url-encoded E.164). */
 const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 
-/** One page per `before` (the oldest loaded message), newest page first. Opening stamps read_at. */
+/**
+ * One page per `before` (the oldest loaded message), newest page first. Opening stamps read_at, so the
+ * open chat polls only while its window has focus: a chat left open in a background window must not
+ * mark new messages read for everyone. TanStack's refetchOnWindowFocus follows visibilitychange only,
+ * so a click into another (still visible) window stops the poll with no event to restart it:
+ * ThreadPane refetches on the window's 'focus' event (useWindowFocus), which re-arms the interval.
+ */
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({
     queryKey: ['threads', 'detail', phone],
@@ -47,7 +54,23 @@ export const threadQuery = (phone: string) =>
       apiFetch<ThreadDetail>(pageParam ? `${threadPath(phone)}?before=${encodeURIComponent(pageParam)}` : threadPath(phone)),
     initialPageParam: '',
     getNextPageParam: (last) => (last.has_more ? last.messages[0]?.created_at : undefined),
-    refetchInterval: INBOX_REFRESH_MS,
+    refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false),
+  });
+
+/** A file in a chat bubble as a signed URL of our own copy (ThreadMediaService.file). */
+export type ThreadFile = SignedDownload & { mime: string };
+
+/**
+ * GET /threads/:phone/messages/:messageId/file: an inbound image or PDF, downloaded from WhatsApp on
+ * first use; 410 media_expired when it is gone. Asked only after a click; fresh for half the URL's hour.
+ */
+export const threadFileQuery = (phone: string, messageId: string) =>
+  queryOptions({
+    // Not under ['threads']: a send or an opened chat invalidates those, and this would sign it again.
+    queryKey: ['thread-file', phone, messageId],
+    queryFn: () => apiFetch<ThreadFile>(`${threadPath(phone)}/messages/${encodeURIComponent(messageId)}/file`),
+    staleTime: 30 * 60_000,
+    retry: false,
   });
 
 export const sendText = (input: { phone: string; text: string; clientRequestId: string }) =>

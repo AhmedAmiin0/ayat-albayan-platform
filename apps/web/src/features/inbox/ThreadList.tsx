@@ -21,13 +21,15 @@ export interface ThreadListProps {
 
 /**
  * The shared table toolbar (search by name / phone, «تصفية» with the order and the lead status, their
- * chips), the الكل | غير مقروءة tabs, then the conversations.
+ * chips) with the الكل | غير مقروءة tabs at the end of its row, then the conversations.
  */
 export function ThreadList({ search, threads, onFilter, total }: ThreadListProps) {
   const options = { search, mode: useInboxMode(), onFilter };
   return (
     <>
+      {/* compact: search, the icon «تصفية» and الكل/غير مقروءة on one row in the 300–400px list column. */}
       <TableToolbar
+        compact
         search={
           <ColumnFilterText
             ariaLabel={t.common.search}
@@ -40,16 +42,17 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
         chips={threadFilterChips(options)}
         onClearAll={() => onFilter(CLEAR_THREAD_FILTERS)}
         resultCount={total}
-      />
-      <SegmentedControl
-        label={t.inbox.title}
-        value={search.unread ? 'unread' : 'all'}
-        onChange={(v) => onFilter({ unread: v === 'unread' })}
-        options={[
-          { value: 'all', label: t.inbox.filterAll },
-          { value: 'unread', label: t.inbox.filterUnread },
-        ]}
-        className="mb-3"
+        end={
+          <SegmentedControl
+            label={t.inbox.title}
+            value={search.unread ? 'unread' : 'all'}
+            onChange={(v) => onFilter({ unread: v === 'unread' })}
+            options={[
+              { value: 'all', label: t.inbox.filterAll },
+              { value: 'unread', label: t.inbox.filterUnread },
+            ]}
+          />
+        }
       />
       {threads.length === 0 ? (
         <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />

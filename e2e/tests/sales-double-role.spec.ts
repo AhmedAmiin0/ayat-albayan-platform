@@ -26,9 +26,9 @@ test.describe('sales double role', () => {
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(foreign.phone)}`);
     await expect(page.getByRole('log', { name: ar.messages.log }).getByText(names.says)).toBeVisible();
 
-    // The landing's block of running lessons leads to /sales/live: my student's lesson, «ادخل الحلقة» open.
+    // The landing's running-lessons chip (the list's head row) leads to /sales/live: my student's lesson, «ادخل الحلقة» open.
     await page.goto('/sales/inbox');
-    await page.getByRole('link', { name: ar.sales.live.open }).click();
+    await page.getByRole('link', { name: new RegExp(ar.sales.live.strip.replace('{n}', '\\d+')) }).click();
     const lesson = page.getByRole('listitem').filter({ hasText: names.mine });
     await expect(lesson).toContainText(names.teacher);
     await expect(lesson.getByRole('link', { name: ar.classroom.enter })).toBeVisible();
@@ -85,7 +85,7 @@ async function startsWithTemplate(browser: Browser): Promise<void> {
 
   // «محادثة جديدة»: the family never wrote; the number opens the first-template pane (the templates load: no 403).
   await page.goto('/sales/inbox');
-  await page.getByText(ar.inbox.newChat.title, { exact: true }).click();
+  await page.getByRole('button', { name: ar.inbox.newChat.title }).click();
   await page.getByLabel(ar.inbox.newChat.phone).fill(booked.phone);
   await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
   await expect(page.getByText(ar.inbox.newChat.firstTemplate)).toBeVisible();

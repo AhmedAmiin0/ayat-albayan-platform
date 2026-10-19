@@ -1,46 +1,70 @@
 import type { ThreadView } from '@ab/shared';
 import { useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
+import { FormAlert } from '@/components/ui/form-alert';
 import { Icon } from '@/components/ui/icon';
-import { BookingWizard } from '@/features/booking/BookingWizard';
+import { IconButton } from '@/components/ui/icon-button';
+import { BookingWizard, type BookingWizardProps } from '@/features/booking/BookingWizard';
 import { BookingModeContext, ChatReturnContext } from '@/features/booking/mode';
 import { t } from '@/lib/i18n';
-import { useInboxMode } from './mode';
-import { canRegisterFrom, draftFromThread } from './sales-register';
+import { registerDrafts, resumable } from './register-drafts';
+import { draftFromThread } from './sales-register';
 
 const noop = () => undefined;
 
+/** «تسجيل طالب جديد» in a lead's sales chat header; `compact` (the phone header, W3): an icon button. */
+export function SalesRegisterButton({ compact, onOpen }: { compact: boolean; onOpen: () => void }) {
+  return compact ? (
+    <IconButton label={t.inbox.registerNew} onClick={onOpen} className="text-lapis">
+      <Icon name="plus" />
+    </IconButton>
+  ) : (
+    <Button type="button" size="sm" variant="secondary" onClick={onOpen}>
+      <Icon name="plus" />
+      {t.inbox.registerNew}
+    </Button>
+  );
+}
+
 /**
- * «تسجيل طالب جديد» in a sales chat (R-ASST-01, docs/16): the booking wizard in sales mode, in a dialog
- * over the conversation. Guardian + student + teacher + trial time, through /sales/booking, so the
- * student is credited to the salesperson (brought_by). No price, no invoice, no package. Closing it, or
- * «ارجع للمحادثة» after booking, stays in the same chat, refreshed (the number is a family now).
+ * «تسجيل طالب جديد» (R-ASST-01, docs/16): the booking wizard in sales mode, in a dialog over the
+ * conversation. Guardian + student + teacher + trial time, through /sales/booking, so the student is
+ * credited to the salesperson (brought_by). No price, no invoice, no package. Closing it, or «ارجع
+ * للمحادثة» after booking, stays in the same chat, refreshed (the number is a family now). Closing
+ * with ✕ or Esc keeps the draft and step for this phone (docs/20 W9); a booking clears them. A past
+ * first lesson is dropped on reopening (resumable), and one line says so (F). The sales chat holds
+ * its open state above the width switch (useSalesFamilyActions, m13), with the lead thread as opened.
  */
-export function SalesRegisterAction({ thread }: { thread: ThreadView }) {
+export function SalesRegisterDialog({ thread, onClose }: { thread: ThreadView & { lead_id: string }; onClose: () => void }) {
   const queryClient = useQueryClient();
-  const [open, setOpen] = useState(false);
-  if (useInboxMode() !== 'sales' || !canRegisterFrom(thread)) return null;
+  const phone = thread.phone_e164;
+  const onProgress = useCallback<NonNullable<BookingWizardProps['onProgress']>>(
+    ({ draft, step, booked }) => (booked ? registerDrafts.clear(phone) : registerDrafts.set(phone, { draft, step })),
+    [phone],
+  );
+  // A draft for another lead, or with a first lesson now past, does not resume as it was (review M3).
+  const [saved] = useState(() => resumable(registerDrafts.get(phone), thread.lead_id, new Date()));
   const close = () => {
-    setOpen(false);
+    onClose();
     for (const key of ['threads', 'leads']) void queryClient.invalidateQueries({ queryKey: [key] });
   };
   return (
-    <>
-      <Button type="button" size="sm" onClick={() => setOpen(true)}>
-        <Icon name="plus" />
-        {t.inbox.registerNew}
-      </Button>
-      {open && (
-        <Dialog title={t.inbox.registerNew} onClose={close} wide>
-          <BookingModeContext.Provider value="sales">
-            <ChatReturnContext.Provider value={close}>
-              <BookingWizard initial={draftFromThread(thread)} primary={null} siblings={[]} onOpenStudent={noop} />
-            </ChatReturnContext.Provider>
-          </BookingModeContext.Provider>
-        </Dialog>
-      )}
-    </>
+    <Dialog title={t.inbox.registerNew} onClose={close} wide>
+      {saved?.droppedPast && <FormAlert className="mb-3">{t.booking.firstLessonPast}</FormAlert>}
+      <BookingModeContext.Provider value="sales">
+        <ChatReturnContext.Provider value={close}>
+          <BookingWizard
+            initial={saved?.draft ?? draftFromThread(thread)}
+            initialStep={saved?.step}
+            onProgress={onProgress}
+            primary={null}
+            siblings={[]}
+            onOpenStudent={noop}
+          />
+        </ChatReturnContext.Provider>
+      </BookingModeContext.Provider>
+    </Dialog>
   );
 }

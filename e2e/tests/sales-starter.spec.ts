@@ -52,7 +52,7 @@ test.describe('restricted templates for sales (owner 2026-10-12)', () => {
     expect(await sendAs({ token: me.token, phone: `+${digits}`, key: 'booking_confirmation_plain' })).toEqual({ status: 403, code: 'template_not_allowed' });
     const page = await signInSales(browser, me.email);
     await page.goto('/sales/inbox');
-    await page.getByText(ar.inbox.newChat.title, { exact: true }).click();
+    await page.getByRole('button', { name: ar.inbox.newChat.title }).click();
     await page.getByLabel(ar.inbox.newChat.phone).fill(`+${digits}`);
     await page.getByRole('button', { name: ar.inbox.newChat.open }).click();
     const select = page.getByLabel(composer.chooseTemplate);

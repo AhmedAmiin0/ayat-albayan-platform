@@ -1,5 +1,5 @@
 import type { BookingResult } from '@ab/shared';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { useFocusOnChange } from '@/components/ui/use-focus-on-change';
 import type { StudentRef } from '@/features/students/types';
@@ -29,6 +29,10 @@ export interface BookingWizardProps {
   missedLessonId?: string | undefined;
   /** «رجوع» on the first step back to the caller's screen (a renewal's «تابِع بنفس الأيام» choice); absent = none. */
   exit?: { label: string; onExit: () => void } | undefined;
+  /** The step to open on (a kept sales draft, docs/20 W9); absent = the first step. */
+  initialStep?: StepKey | undefined;
+  /** Every draft / step change, and `booked` once the booking is made (the sales chat keeps the draft). */
+  onProgress?: ((p: { draft: BookingDraft; step: StepKey; booked: boolean }) => void) | undefined;
 }
 
 type BackProps = { first: boolean; exit: BookingWizardProps['exit']; onBack: () => void };
@@ -50,10 +54,13 @@ function BackButton({ first, exit, onBack }: BackProps) {
  * ميعاد تاني») moves focus to the new step.
  */
 export function BookingWizard(props: BookingWizardProps) {
-  const { initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId, exit } = props;
+  const { initial, primary, siblings, onOpenStudent, hint = null, onChoice, missedLessonId, exit, onProgress } = props;
   const [draft, setDraft] = useState(initial);
-  const [step, setStep] = useState<StepKey>(() => stepsOf(initial)[0] ?? 'students');
+  const [step, setStep] = useState<StepKey>(() => props.initialStep ?? stepsOf(initial)[0] ?? 'students');
   const [booked, setBooked] = useState<BookingResult | null>(null);
+  useEffect(() => {
+    onProgress?.({ draft, step, booked: booked !== null });
+  }, [draft, step, booked, onProgress]);
   const section = useRef<HTMLElement>(null);
   useFocusOnChange(section, step);
   const patch = (p: Partial<BookingDraft>) => {

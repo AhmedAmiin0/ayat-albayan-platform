@@ -4,6 +4,7 @@ import { t } from '@/lib/i18n';
 import { message, PHONE, template } from './inbox-fixture';
 import { InboxModeContext, type InboxMode } from './mode';
 import { NewChatForm } from './NewChatForm';
+import { NewThread } from './NewThread';
 import { renderWithClient, routeFetch } from './test-utils';
 import { ThreadPane } from './ThreadPane';
 
@@ -11,13 +12,15 @@ const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 const PATH = '/threads/%2B966501234567';
 const OPENER = template({ key: 'follow_up_slots', params: ['student_name'], body_ar: 'السلام عليكم، موعد {{1}}' });
+const ME = ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] }] as const;
 const EMPTY = { thread: null, messages: [], has_more: false, lessons: [], people: { guardian: null, lead: null, students: [] } };
 
 function renderNew(mode: InboxMode) {
-  routeFetch(apiFetch, [[PATH, EMPTY], ['/messaging/templates', [OPENER]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);
+  routeFetch(apiFetch, [ME, [PATH, EMPTY], ['/messaging/templates', [OPENER]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);
   renderWithClient(
     <InboxModeContext.Provider value={mode}>
       <ThreadPane phone={PHONE} listSearch={{ page: 1 }} />
@@ -53,7 +56,7 @@ describe('starting a conversation (no thread yet)', () => {
 
   it('a booked family: the template that needs a lesson picks it from the family’s next lessons (rule 6)', async () => {
     const lesson = { id: 'l-1', starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
-    routeFetch(apiFetch, [[PATH, { ...EMPTY, lessons: [lesson] }], ['/messaging/templates', [template()]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);
+    routeFetch(apiFetch, [ME, [PATH, { ...EMPTY, lessons: [lesson] }], ['/messaging/templates', [template()]], ['/messages/gate', { open: true, reason: null, queued: 0 }]]);
     renderWithClient(
       <InboxModeContext.Provider value="sales">
         <ThreadPane phone={PHONE} listSearch={{ page: 1 }} />
@@ -71,6 +74,31 @@ describe('starting a conversation (no thread yet)', () => {
     expect(await screen.findByRole('combobox', { name: t.inbox.composer.chooseTemplate })).toBeTruthy();
   });
 
+  it('W7 sales with no template allowed: why she cannot start it, and no form', async () => {
+    routeFetch(apiFetch, [ME, ['/messaging/templates', []]]);
+    renderWithClient(
+      <InboxModeContext.Provider value="sales">
+        <NewThread phone={PHONE} lessons={[]} />
+      </InboxModeContext.Provider>,
+    );
+    expect(await screen.findByText(t.inbox.newChat.noAllowed)).toBeTruthy();
+    expect(screen.queryByText(t.inbox.newChat.firstTemplate)).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
+    expect(screen.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();
+  });
+
+  it('round 2 J: sales without messages.read reads the permission line, not «no template»', async () => {
+    routeFetch(apiFetch, [['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: [] }]]);
+    renderWithClient(
+      <InboxModeContext.Provider value="sales">
+        <NewThread phone={PHONE} lessons={[]} />
+      </InboxModeContext.Provider>,
+    );
+    expect(await screen.findByText(t.inbox.composer.noPermissionHelp)).toBeTruthy();
+    expect(screen.queryByText(t.inbox.newChat.noAllowed)).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
+  });
+
   it('a teacher only reads: no composer, no number', async () => {
     renderNew('teacher');
     expect(await screen.findByText(t.inbox.noThread)).toBeTruthy();
@@ -85,7 +113,7 @@ describe('«محادثة جديدة» form', () => {
     renderWithClient(<NewChatForm onOpen={onOpen} />);
     const box = screen.getByLabelText(t.inbox.newChat.phone);
     expect(box.getAttribute('dir')).toBe('ltr');
-    expect(box.closest('details')?.open).toBe(false); // folded: the conversations list keeps the column
+    expect(document.activeElement).toBe(box); // unfolded by the head row's toggle (InboxPage.layout.test)
     fireEvent.change(box, { target: { value: 'abc' } });
     fireEvent.click(screen.getByRole('button', { name: t.inbox.newChat.open }));
     expect(screen.getByText(t.common.phoneErrors.not_a_number)).toBeTruthy();

@@ -5,7 +5,7 @@ import { InboxModeContext } from '@/features/inbox/mode';
 import { parseInboxSearch } from '@/features/inbox/search';
 import { SalesLiveStrip } from '@/features/sales/SalesLiveStrip';
 
-/** /sales/inbox «المحادثات» (the sales landing): every chat (API-scoped, redacted), phones shown; the running lessons on top. */
+/** /sales/inbox «المحادثات» (the sales landing): every chat (API-scoped, redacted), phones shown; the running lessons as a chip in the list's head. */
 export const Route = createFileRoute('/sales/inbox')({
   validateSearch: parseInboxSearch,
   component: SalesInboxRoute,
@@ -17,8 +17,11 @@ function SalesInboxRoute() {
   const { can } = usePermissions();
   return (
     <InboxModeContext.Provider value="sales">
-      <SalesLiveStrip enabled={can('self.sales_academy')} />
-      <InboxPage search={search} onSearch={(next) => void navigate({ search: next })} />
+      <InboxPage
+        search={search}
+        onSearch={(next) => void navigate({ search: next })}
+        head={<SalesLiveStrip enabled={can('self.sales_academy')} compact />}
+      />
     </InboxModeContext.Provider>
   );
 }

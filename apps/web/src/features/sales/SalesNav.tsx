@@ -18,7 +18,15 @@ export const SALES_NAV_ITEMS = [
   { to: '/sales/earnings', label: t.assistantPortal.nav.earnings, icon: 'wallet', permission: 'self.sales_earnings' },
 ] as const satisfies readonly SectionLink[];
 
+export interface SalesNavProps {
+  can?: (permission: Permission) => boolean;
+  /** Unread chats: «{n} غير مقروءة» on «المحادثات» while non-zero. */
+  unread?: number;
+}
+
 /** The salesperson's nav: a row of links from 900px, the «القائمة» sheet below (like TeacherNav). */
-export function SalesNav({ can }: { can?: (permission: Permission) => boolean }) {
-  return <SectionLinks label={t.sales.nav.label} items={SALES_NAV_ITEMS} can={can} />;
+export function SalesNav({ can, unread = 0 }: SalesNavProps) {
+  const count = unread > 0 ? t.nav.unread.replace('{n}', String(unread)) : undefined;
+  const items = SALES_NAV_ITEMS.map((item) => (item.to === '/sales/inbox' ? { ...item, count } : item));
+  return <SectionLinks label={t.sales.nav.label} items={items} can={can} />;
 }

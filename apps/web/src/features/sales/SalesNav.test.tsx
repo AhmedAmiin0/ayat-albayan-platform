@@ -28,4 +28,14 @@ describe('SalesNav', () => {
     expect(nav.querySelector('ul')?.className).toContain('shell:flex-row');
     for (const link of screen.getAllByRole('link')) expect(link.className).toContain('min-h-11');
   });
+
+  it('«المحادثات» carries the unread count in its name while non-zero; none at 0', () => {
+    const { unmount } = render(<SalesNav unread={4} />);
+    const chats = screen.getByRole('link', { name: `${t.sales.nav.chats} ${t.nav.unread.replace('{n}', '4')}` });
+    expect(chats.getAttribute('href')).toBe('/sales/inbox');
+    expect(screen.getByRole('link', { name: t.sales.nav.live })).toBeTruthy();
+    unmount();
+    render(<SalesNav unread={0} />);
+    expect(screen.getByRole('link', { name: t.sales.nav.chats }).textContent).toBe(t.sales.nav.chats);
+  });
 });
