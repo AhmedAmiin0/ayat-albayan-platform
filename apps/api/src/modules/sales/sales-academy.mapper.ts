@@ -1,4 +1,4 @@
-import { countByKind, type AssistantLessonView, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
+import { countByKind, meetingModeOf, usesPlatform, type AssistantLessonView, type SalesStudentView, type SalesTeacherView } from '@ab/shared';
 import type { SalesLiveRow, SalesStudentRow, SalesTeacherRow } from './sales-academy.queries';
 import type { TeacherDayFacts } from './sales-schedule.mapper';
 
@@ -6,6 +6,8 @@ import type { TeacherDayFacts } from './sales-schedule.mapper';
 export interface TeacherContext {
   facts: ReadonlyMap<string, TeacherDayFacts>;
   next: ReadonlyMap<string, string>;
+  /** settings.meeting_link_auto: the default of a teacher whose meeting_mode is null (migration 490). */
+  academyAuto?: boolean;
 }
 
 const NO_CONTEXT: TeacherContext = { facts: new Map(), next: new Map() };
@@ -15,7 +17,8 @@ const NO_CONTEXT: TeacherContext = { facts: new Map(), next: new Map() };
 /**
  * An active teacher with today's lesson count, whether one is running now, the students they teach
  * now (a churned student is no longer theirs) by name, each with program, status and next lesson, the
- * «مشترك / تجريبي» counts of those, and their fixed meeting link (owner 2026-10-12; null when unset).
+ * «مشترك / تجريبي» counts of those, their fixed meeting link (owner 2026-10-12; null when unset) and
+ * whether their lessons go out with our classroom (platform_classroom).
  */
 export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CONTEXT): SalesTeacherView {
   const today = ctx.facts.get(row.id);
@@ -32,6 +35,7 @@ export function toSalesTeacher(row: SalesTeacherRow, ctx: TeacherContext = NO_CO
     active_count: counts.active,
     trial_count: counts.trial,
     meeting_link: row.meeting_link?.trim() || null,
+    platform_classroom: usesPlatform(meetingModeOf(row.meeting_mode), ctx.academyAuto ?? false),
     students: current
       .map((s) => ({ id: s.id, code: s.code ?? '', name: s.name, program: s.program, status: s.status, next_lesson_at: ctx.next.get(s.id) ?? null }))
       .sort((a, b) => a.name.localeCompare(b.name, 'ar')),

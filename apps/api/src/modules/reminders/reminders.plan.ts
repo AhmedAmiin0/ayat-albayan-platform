@@ -29,7 +29,8 @@ export interface ReminderLesson {
   ends_at: string;
   status: LessonStatus;
   meeting_link: string | null;
-  teacher: { id: string; display_name_ar: string; phone_e164: string | null; tz: string } | null;
+  /** meeting_mode: teachers.meeting_mode (migration 490), null = the academy default; optional in fakes. */
+  teacher: { id: string; display_name_ar: string; phone_e164: string | null; tz: string; meeting_mode?: string | null } | null;
   students: { id: string; name: string; guardian: ReminderGuardian | null }[];
 }
 

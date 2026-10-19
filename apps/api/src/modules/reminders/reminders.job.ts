@@ -25,7 +25,7 @@ type QueueInput = { settings: AcademySettings; lessons: readonly ReminderLesson[
  * reminder to each guardian (template by meeting link, time in the guardian's tz) and to the
  * teacher (teacher's tz; not while settings.teacher_whatsapp_lesson_reminder is OFF); the day-before one only when settings.reminder_24h_enabled and
  * lesson_reminder_24h is approved; nothing while settings.auto_messages_enabled is OFF. The link is
- * chosen here (settings.meeting_link_auto, reminders.links.ts): our classroom adds one
+ * chosen here per lesson (its teacher's meeting_mode, else settings.meeting_link_auto; reminders.links.ts): our classroom adds one
  * lesson_join_link per student. Drops queued reminders of lessons cancelled since, and pushes
  * lesson_needs_confirmation (R-MOB-01) once per lesson (also when OFF). Only queues: the sender owns
  * the send gate.
@@ -80,7 +80,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
   }
 
   /**
-   * This tick's reminders, with the link settings.meeting_link_auto picks, and the families' own
+   * This tick's reminders, with the link each lesson's teacher mode picks (ctx.auto = the academy default), and the families' own
    * classroom links. LiveKit and the origin are read every tick (the integration config may change).
    * A template is looked up only when it could be used.
    */

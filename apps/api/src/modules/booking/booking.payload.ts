@@ -31,8 +31,8 @@ export type PayloadInput = {
   /** The resolved meeting link copied onto every lesson. */
   meetingLink: string | null;
   /**
-   * The link the confirmation names: meetingLink, or null while settings.meeting_link_auto is ON
-   * (booking_confirmation_plain; the classroom link goes with the same-day reminder).
+   * The link the confirmation names: meetingLink, or null for a teacher who holds lessons in our
+   * classroom (usesPlatform(meeting_mode, settings.meeting_link_auto); booking_confirmation_plain; the classroom link goes with the same-day reminder).
    */
   confirmationLink: string | null;
   /** The missed lesson, for a makeup. */

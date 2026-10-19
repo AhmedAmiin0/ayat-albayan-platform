@@ -4,7 +4,7 @@ import type { SalesTeacherView } from './academy.js';
 import { filterSalesTeachers, isRunningLesson, isTeacherFilterOn, NO_TEACHER_FILTER, teacherPrograms } from './teacher-filter.js';
 
 const tc = (over: Partial<SalesTeacherView>): SalesTeacherView => ({
-  id: 'x', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran', 'arabic'], lessons_today: 0, live_now: false, active_count: 0, trial_count: 0, meeting_link: null, students: [], ...over,
+  id: 'x', name: 'أبرار', name_en: 'Abrar', gender: 'female', programs: ['quran', 'arabic'], lessons_today: 0, live_now: false, active_count: 0, trial_count: 0, meeting_link: null, platform_classroom: false, students: [], ...over,
 });
 const LIST = [tc({ id: 'a' }), tc({ id: 'b', name: 'إسراء', name_en: null, programs: ['islamic_studies'] }), tc({ id: 'c', name: 'محمد', name_en: 'Mohamed', gender: 'male', programs: ['quran'] })];
 const ids = (f: typeof NO_TEACHER_FILTER) => filterSalesTeachers(LIST, f).map((t) => t.id);

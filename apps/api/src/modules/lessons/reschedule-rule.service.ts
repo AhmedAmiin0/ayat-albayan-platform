@@ -67,7 +67,7 @@ export class RescheduleRuleService {
     const [first] = lessons;
     if (!first) throw badRequest('no_occurrences');
     const contacts = await this.store.queries.contacts(plan.rule.student_ids);
-    const auto = await this.store.queries.meetingLinkAuto();
+    const auto = await this.store.queries.meetingLinkAuto({ teacherId: plan.rule.teacher_id });
     await this.store.commit({
       change: {
         actor: actor.id,

@@ -18,6 +18,8 @@ const FATMA: TeacherListRow = {
   programs: ['quran', 'islamic_studies'],
   phone_e164: '+201066123049',
   meeting_link: null,
+  meeting_mode: null,
+  platform_classroom: false,
   status: 'inactive',
   tz: 'Africa/Cairo',
   rate_30: 60,

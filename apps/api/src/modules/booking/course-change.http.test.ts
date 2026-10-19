@@ -38,7 +38,7 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
   const sales = { ownership: vi.fn() };
   const checker = { check: vi.fn() };
   const writer = { replay: vi.fn(), apply: vi.fn() };
-  const queries = { subscription: vi.fn(), rules: vi.fn(), others: vi.fn(), contacts: vi.fn(), teacherLink: vi.fn() };
+  const queries = { subscription: vi.fn(), rules: vi.fn(), others: vi.fn(), contacts: vi.fn(), teacherLink: vi.fn(), teacherMode: vi.fn() };
   const lessons = { ofCourse: vi.fn(), openFrom: vi.fn(), held: vi.fn() };
   const post = (token: string, url: string, body: object) =>
     app.inject({ method: 'POST', url, payload: body, headers: { authorization: `Bearer ${token}` } });
@@ -74,6 +74,7 @@ describe('POST /sales/booking/course/change and /booking/course/change', () => {
     lessons.held.mockResolvedValue(new Set(['ra:2026-10-19', 'rb:2026-10-21']));
     queries.contacts.mockResolvedValue([]);
     queries.teacherLink.mockResolvedValue(null);
+    queries.teacherMode.mockResolvedValue(null);
   });
 
   it('her student: check → 200 remaining + end; change → 201 the new rules', async () => {

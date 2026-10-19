@@ -4,6 +4,8 @@ import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vites
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 import { AvailabilityQueries } from './availability/availability.queries';
 import { TeachersModule } from './teachers.module';
 import { TeachersQueries } from './teachers.queries';
@@ -48,6 +50,8 @@ describe('TeachersController (R-TCH-01)', () => {
       .useValue(teachers)
       .overrideProvider(AvailabilityQueries)
       .useValue({})
+      .overrideProvider(SettingsService)
+      .useValue(fakeSettings())
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
     await app.init();

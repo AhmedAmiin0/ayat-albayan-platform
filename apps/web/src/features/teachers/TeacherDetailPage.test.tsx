@@ -17,6 +17,8 @@ const FATMA: Teacher = {
   programs: ['quran'],
   phone_e164: '+201066123049',
   meeting_link: 'https://meet.google.com/xqa-ngdu-fpe',
+  meeting_mode: null,
+  platform_classroom: false,
   status: 'active',
   tz: 'Africa/Cairo',
   rate_30: 60,
@@ -80,6 +82,23 @@ describe('TeacherDetailPage (R-TCH-01, R-TCH-02, docs/07 §8)', () => {
     expect(within(panel).getByText('Africa/Cairo').getAttribute('dir')).toBe('ltr');
     expect(within(panel).getByText('Fatma')).toBeTruthy();
     expect(screen.queryByRole('table', { name: t.availability.title })).toBeNull();
+  });
+
+  it('«البيانات» shows the meeting mode: the academy default with what it resolves to, or the chosen one', async () => {
+    RESPONSES['/teachers/t1'] = { ...FATMA, platform_classroom: true };
+    renderPage();
+    fireEvent.click(await screen.findByRole('tab', { name: t.teachers.tabData }));
+    const row = screen.getByText(t.teachers.meetingMode).parentElement;
+    expect(row?.textContent).toContain(`${t.teachers.meetingModeOption.academy} ${t.teachers.meetingModeResolves.platform}`);
+    RESPONSES['/teachers/t1'] = FATMA;
+  });
+
+  it('«البيانات»: a teacher set to the fixed link reads that option', async () => {
+    RESPONSES['/teachers/t1'] = { ...FATMA, meeting_mode: 'static', platform_classroom: false };
+    renderPage();
+    fireEvent.click(await screen.findByRole('tab', { name: t.teachers.tabData }));
+    expect(screen.getByText(t.teachers.meetingMode).nextElementSibling?.textContent).toBe(t.teachers.meetingModeOption.static);
+    RESPONSES['/teachers/t1'] = FATMA;
   });
 
   it('«الطلاب» tab: her students from the students list API, teacher fixed (R-TCH-03)', async () => {

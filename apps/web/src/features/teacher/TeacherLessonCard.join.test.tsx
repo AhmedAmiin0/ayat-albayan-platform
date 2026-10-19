@@ -9,13 +9,16 @@ import { TeacherLessonCard } from './TeacherLessonCard';
 
 const LINK = 'https://meet.jit.si/ayat-abrar'; // the fixture lesson's own link
 
-/** `auto`: settings.meeting_link_auto as GET /settings/public answered it. */
-function card(status: Parameters<typeof lesson>[0], auto = false) {
+/**
+ * `over`: the lesson (status, platform_classroom); `auto`: settings.meeting_link_auto as GET
+ * /settings/public answered it, which the card ignores (the lesson's own teacher decides).
+ */
+function card(over: Parameters<typeof lesson>[0], auto = false) {
   const client = new QueryClient();
   client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: auto });
   render(
     <QueryClientProvider client={client}>
-      <TeacherLessonCard lesson={lesson(status)} tz="Africa/Cairo" fallbackLink={null} onDone={vi.fn()} />
+      <TeacherLessonCard lesson={lesson(over)} tz="Africa/Cairo" fallbackLink={null} onDone={vi.fn()} />
     </QueryClientProvider>,
   );
 }
@@ -31,9 +34,14 @@ it.each(['rescheduled', 'cancelled_by_admin'] as const)('no way in to a %s lesso
   expect(screen.queryByText(t.lessons.noLink)).toBeNull();
 });
 
-it('settings.meeting_link_auto: no fixed link and no «no link» note; the platform classroom is the way in', () => {
-  card({ status: 'confirmed' }, true);
+it('lesson.platform_classroom: no fixed link and no «no link» note; the platform classroom is the way in', () => {
+  card({ status: 'confirmed', platform_classroom: true });
   expect(screen.queryByRole('link', { name: t.classroom.joinMeeting })).toBeNull();
   expect(screen.queryByText(t.lessons.noLink)).toBeNull();
   expect(screen.getAllByText(t.classroom.enter).length).toBeGreaterThan(0);
+});
+
+it('academy switch ON but the lesson is on the fixed link (its teacher is static): the link shows', () => {
+  card({ status: 'confirmed', platform_classroom: false }, true);
+  expect(screen.getByRole('link', { name: t.classroom.joinMeeting }).getAttribute('href')).toBe(LINK);
 });

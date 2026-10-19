@@ -1,4 +1,4 @@
-import { OPEN_LESSON_STATUSES, type LessonStatus } from '@ab/shared';
+import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { SettingsService } from '../../common/settings/settings.service';
@@ -69,8 +69,21 @@ export class LessonsQueries {
     return { items: rows, total: count ?? 0, page, pageSize };
   }
 
-  /** settings.meeting_link_auto: ON = a confirmation names no fixed link (forMessages). */
-  async meetingLinkAuto(): Promise<boolean> {
+  /**
+   * The teacher's lessons go out with our classroom: usesPlatform(teachers.meeting_mode,
+   * settings.meeting_link_auto) (migration 490). true = a confirmation names no fixed link (forMessages).
+   */
+  async meetingLinkAuto(opts: { teacherId: string }): Promise<boolean> {
+    const [auto, { data, error }] = await Promise.all([
+      this.academyAuto(),
+      this.db.from('teachers').select('meeting_mode').eq('id', opts.teacherId).maybeSingle(),
+    ]);
+    if (error) throw dbError(error);
+    return usesPlatform(meetingModeOf(data?.meeting_mode), auto);
+  }
+
+  /** settings.meeting_link_auto: the default for a teacher whose meeting_mode is null. */
+  async academyAuto(): Promise<boolean> {
     return (await this.settings.all()).meeting_link_auto;
   }
 

@@ -2,6 +2,7 @@ import type { ReactNode } from 'react';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
 import type { Teacher } from './api';
+import { meetingModeText } from './meeting-mode-text';
 
 /** «البيانات» tab: the teacher record as label / value rows (R-TCH-01). Empty values are left out. */
 export function TeacherFacts({ teacher }: { teacher: Teacher }) {
@@ -12,6 +13,7 @@ export function TeacherFacts({ teacher }: { teacher: Teacher }) {
     [t.teachers.programs, teacher.programs.map((p) => t.enums.program[p]).join(t.common.listSeparator)],
     [t.teachers.phone, teacher.phone_e164 && <Ltr>{teacher.phone_e164}</Ltr>],
     [t.teachers.meetingLink, teacher.meeting_link && <bdi dir="ltr" className="break-all">{teacher.meeting_link}</bdi>],
+    [t.teachers.meetingMode, meetingModeText(teacher.meeting_mode, teacher.platform_classroom)],
     [t.teachers.tz, <Ltr key="tz">{teacher.tz}</Ltr>],
     [t.teachers.maxStudents, teacher.max_students],
   ];

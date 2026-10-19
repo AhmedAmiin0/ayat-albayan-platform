@@ -92,10 +92,20 @@ describe('LessonsQueries (service role; docs/10 routes 1–5)', () => {
     expect(await q.contacts(['s1'])).toEqual([{ id: 's1', name: 'سهيلة', guardian: null }]);
   });
 
-  it('meetingLinkAuto reads settings.meeting_link_auto (off by default)', async () => {
-    const { db } = fakeDb({});
-    expect(await new LessonsQueries(db, fakeSettings()).meetingLinkAuto()).toBe(false);
-    expect(await new LessonsQueries(db, fakeSettings({ meeting_link_auto: true })).meetingLinkAuto()).toBe(true);
+  it('meetingLinkAuto: a teacher without a mode follows settings.meeting_link_auto (off by default)', async () => {
+    const t = { teacherId: 't1' };
+    expect(await new LessonsQueries(fakeDb({}).db, fakeSettings()).meetingLinkAuto(t)).toBe(false);
+    expect(await new LessonsQueries(fakeDb({}).db, fakeSettings({ meeting_link_auto: true })).meetingLinkAuto(t)).toBe(true);
+    const { db, calls } = fakeDb({ teachers: [{ data: { meeting_mode: null } }] });
+    expect(await new LessonsQueries(db, fakeSettings({ meeting_link_auto: true })).meetingLinkAuto(t)).toBe(true);
+    expect(methods(calls, 'teachers')).toEqual([['select', 'meeting_mode'], ['eq', 'id', 't1'], ['maybeSingle']]);
+  });
+
+  it("meetingLinkAuto: the teacher's own mode wins over the academy switch", async () => {
+    const mode = (meeting_mode: string) => fakeDb({ teachers: [{ data: { meeting_mode } }] }).db;
+    const t = { teacherId: 't1' };
+    expect(await new LessonsQueries(mode('platform'), fakeSettings()).meetingLinkAuto(t)).toBe(true);
+    expect(await new LessonsQueries(mode('static'), fakeSettings({ meeting_link_auto: true })).meetingLinkAuto(t)).toBe(false);
   });
 
   it('a DB error becomes an exception', async () => {

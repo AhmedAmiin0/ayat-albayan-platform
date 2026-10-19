@@ -79,7 +79,7 @@ export class SalesBookingOptions {
     private readonly slotsService: SlotsService,
   ) {}
 
-  /** Without the teachers' meeting links (the room is entered through the API). */
+  /** Without the teachers' meeting links (the room is entered through the API); platform_classroom stays. */
   async teacherOptions(q: TeacherOptionsQuery, user: AuthUser): Promise<BookingTeacherOption[]> {
     if (q.studentId) assertOwnStudents([q.studentId], await this.scope.of(user));
     return (await this.teachers.list(q)).map((t) => ({ ...t, meeting_link: null }));

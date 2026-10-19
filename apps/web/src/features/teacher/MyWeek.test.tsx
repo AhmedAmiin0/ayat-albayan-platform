@@ -20,6 +20,8 @@ const ME: TeacherMe = {
   programs: ['quran'],
   tz: 'Africa/Cairo',
   meeting_link: 'https://meet.jit.si/ayat-abrar',
+  meeting_mode: null,
+  platform_classroom: false,
   students: [],
 };
 // Sunday 4 Oct, 17:00 Riyadh.

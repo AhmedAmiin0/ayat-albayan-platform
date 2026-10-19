@@ -23,7 +23,7 @@ export interface MessageBubbleProps {
 /** The text with its http(s) links clickable (W11). */
 function Body({ text }: { text: string }) {
   return (
-    <p dir="auto" className="whitespace-pre-wrap break-words">
+    <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
       {splitLinks(text).map((part, i) =>
         part.href ? (
           <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all text-lapis underline underline-offset-4">
@@ -73,7 +73,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
     <li className={cn('flex', outbound ? 'justify-end' : 'justify-start')}>
       <article
         className={cn(
-          'max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
+          'min-w-0 max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
           // Below 900px (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
           outbound
             ? 'bg-sunk max-shell:rounded-ee-sm max-shell:border max-shell:border-lapis/25 max-shell:bg-lapis-wash'

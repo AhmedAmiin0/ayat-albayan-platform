@@ -53,6 +53,7 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
     others: vi.fn().mockResolvedValue([]),
     contacts: vi.fn().mockResolvedValue([{ id: S1, name: 'سهيلة', guardian: { id: 'g1', phone_e164: '+966500000001', tz: 'Asia/Riyadh' } }]),
     teacherLink: vi.fn().mockResolvedValue('https://meet.google.com/abc-defg-hij'),
+    teacherMode: vi.fn().mockResolvedValue(null),
   };
   // Every Mon/Wed lesson up to the change point exists (none to project); the course used none yet.
   const lessons = {
