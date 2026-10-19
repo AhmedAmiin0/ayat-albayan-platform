@@ -34,13 +34,19 @@ it('lesson.platform_classroom: the row says the lesson is held in the platform c
   expect(joinLink()).toBeNull();
 });
 
-it('academy switch ON but the lesson is on the fixed link (or the flag is absent): the link shows', () => {
+it('academy switch ON but the lesson is on the fixed link: the link shows', () => {
   details(false, true);
   expect(joinLink()?.getAttribute('href')).toBe('https://meet.jit.si/ayat-abrar');
   expect(screen.queryByText(t.lessons.viaClassroom)).toBeNull();
 });
 
-it('an older API without platform_classroom: the fixed link', () => {
+it('a payload cached without platform_classroom: the academy default decides', () => {
   details(undefined, true);
+  expect(screen.getByText(t.lessons.viaClassroom)).toBeTruthy();
+  expect(joinLink()).toBeNull();
+});
+
+it('a payload cached without platform_classroom, academy default OFF: the fixed link', () => {
+  details(undefined, false);
   expect(joinLink()).toBeTruthy();
 });

@@ -16,12 +16,14 @@ export interface RadioChipsProps<V extends string> {
   equal?: boolean;
   /** One scrolling row on a phone instead of wrapping into many (a week of day chips). */
   scroll?: boolean;
+  /** The id of what describes the choice (a live region of notes): aria-describedby on the group. */
+  describedBy?: string | undefined;
 }
 
 /** A legend and native radios styled as chips (one choice, «اختيار واحد» on the forms). */
 export function RadioChips<V extends string>(p: RadioChipsProps<V>) {
   return (
-    <fieldset disabled={p.disabled} aria-invalid={p.invalid || undefined} className="grid gap-2">
+    <fieldset disabled={p.disabled} aria-invalid={p.invalid || undefined} aria-describedby={p.describedBy} className="grid gap-2">
       <legend className="mb-1.5 text-sm font-semibold">
         {p.legend}
         {p.required && <RequiredMark />}

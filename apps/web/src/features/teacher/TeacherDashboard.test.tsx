@@ -115,7 +115,8 @@ describe('TeacherDashboard (R-TCH-03, R-SCH-08)', () => {
   });
 
   it('academy switch ON but the teacher is on the fixed link: the top link and card links stay', async () => {
-    renderDash(ME, true);
+    const fixed = [TODAY, MONDAY].map((l) => ({ ...l, platform_classroom: false }));
+    renderDash(ME, true, fixed);
     const card = await screen.findByRole('article', { name: /16:00 سهيلة/ });
     await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/settings/public'));
     expect(screen.getByRole('region', { name: t.teacherDash.joinLink })).toBeTruthy();

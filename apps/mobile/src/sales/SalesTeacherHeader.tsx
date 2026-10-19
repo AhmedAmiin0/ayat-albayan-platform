@@ -2,6 +2,7 @@ import type { SalesTeacherView, StudentListKind } from '@ab/shared';
 import { router } from 'expo-router';
 import { View } from 'react-native';
 import { t } from '@/lib/i18n';
+import { usePlatformClassroom } from '@/lib/public-config';
 import { Note } from '@/more/Note';
 import { kindPills } from '@/students/student-kinds';
 import { Button } from '@/ui/Button';
@@ -23,6 +24,7 @@ export interface SalesTeacherHeaderProps {
  */
 export function SalesTeacherHeader({ teacher, kind, onKind }: SalesTeacherHeaderProps) {
   const href = useSalesHrefs();
+  const platform = usePlatformClassroom(teacher.platform_classroom);
   const counts = { active: teacher.active_count, trial: teacher.trial_count, all: teacher.students.length };
   return (
     <View style={{ gap: 8, paddingHorizontal: 16, paddingBottom: 8, alignItems: 'flex-start' }}>
@@ -34,7 +36,7 @@ export function SalesTeacherHeader({ teacher, kind, onKind }: SalesTeacherHeader
         onPress={() => router.push(href.schedule(teacher.id))}
       />
       <Note>{t.schedule.riyadhTime}</Note>
-      <TeacherMeetingLink link={teacher.meeting_link} platform={teacher.platform_classroom} />
+      <TeacherMeetingLink link={teacher.meeting_link} platform={platform} />
       <FilterPills
         items={kindPills(counts)}
         value={kind}

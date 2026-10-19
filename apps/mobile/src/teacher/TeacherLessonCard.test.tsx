@@ -31,7 +31,7 @@ async function pressJoin(): Promise<boolean> {
   return open.mock.calls.some(([url]) => url === LINK);
 }
 
-/** The academy setting is the opposite of the lesson's own flag: only the lesson's flag may count. */
+/** The academy setting (meeting_link_auto) counts only when the lesson carries no flag of its own. */
 async function renderCard(platform: boolean | undefined, academyAuto: boolean) {
   const client = createTestQueryClient();
   client.setQueryData(publicConfigQuery.queryKey, { ...PUBLIC_SETTING_DEFAULTS, custom: {}, meeting_link_auto: academyAuto });
@@ -47,8 +47,13 @@ test('platform_classroom false: the fixed link, even with the academy setting me
   expect(await pressJoin()).toBe(true);
 });
 
-test('platform_classroom absent: treated as false (fixed link)', async () => {
+test('platform_classroom absent (cached before migration 490): the academy default ON, the classroom', async () => {
   await renderCard(undefined, true);
+  expect(await pressJoin()).toBe(false);
+});
+
+test('platform_classroom absent with the academy default OFF: the fixed link', async () => {
+  await renderCard(undefined, false);
   expect(await pressJoin()).toBe(true);
 });
 

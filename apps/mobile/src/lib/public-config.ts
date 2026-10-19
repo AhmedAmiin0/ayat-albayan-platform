@@ -35,6 +35,15 @@ export function usePublicConfig(): PublicSettings {
   return { ...PUBLIC_SETTING_DEFAULTS, ...data };
 }
 
+/**
+ * Is a lesson or teacher held in our classroom: its own platform_classroom (the teacher's mode, as the
+ * API resolved it), else the academy default; the field is absent in a payload cached before migration 490.
+ */
+export function usePlatformClassroom(flag: boolean | undefined): boolean {
+  const academy = usePublicConfig().meeting_link_auto;
+  return flag ?? academy;
+}
+
 /** joinWindow's third argument from the settings. */
 export const useJoinWindow = (): JoinWindowConfig => joinWindowConfig(usePublicConfig());
 

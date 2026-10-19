@@ -5,6 +5,7 @@ import { Ltr } from '@/components/ui/ltr';
 import { StatusChip } from '@/components/ui/status-chip';
 import { conflictText } from './ConflictNotice';
 import { t } from '@/lib/i18n';
+import { usePlatformClassroom } from '@/lib/public-config';
 import { teacherLabel } from '@/lib/teacher-label';
 import { locale } from '@/lib/locale';
 import { lengthText } from './edit-time-text';
@@ -33,7 +34,7 @@ export function LessonDetails({ lesson, onEditTime }: { lesson: LessonView; onEd
   const at = new Date(lesson.starts_at);
   const teacherTz = lesson.teacher.tz;
   const mins = durationMin(lesson);
-  const platform = lesson.platform_classroom ?? false;
+  const platform = usePlatformClassroom(lesson.platform_classroom);
   return (
     <>
       <div className="flex flex-wrap items-center gap-2">

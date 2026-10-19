@@ -286,7 +286,11 @@
       "static": "(currently: fixed link)"
     },
     "meetingModeNoLink": "No fixed link yet: families will get no lesson link until one is added.",
-    "meetingModeTemplatePending": "The WhatsApp message «Online classroom link» is not approved yet: families will not get their join link until it is approved, and only the teacher will get the classroom link.",
+    "meetingModeTemplatePending": "The WhatsApp message «Online classroom link» is waiting for Meta's approval: families will not get their join link until it is approved.",
+    "meetingModeTemplateNotApproved": "The WhatsApp message «Online classroom link» is not approved yet: families will not get their join link until it is sent to Meta from the message templates in the settings and approved.",
+    "meetingModeTeacherOnly": "The teacher still gets the lesson's classroom link.",
+    "meetingModeTemplatesLink": "Open the message templates",
+    "meetingModeLivekitUnset": "The online classroom server is not configured yet: neither the teacher nor the families will get any link until it is set up in the settings.",
     "rates": "Lesson rate (EGP)",
     "rate30": "30 minutes",
     "rate45": "45 minutes",
