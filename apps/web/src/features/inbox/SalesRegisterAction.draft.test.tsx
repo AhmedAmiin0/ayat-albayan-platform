@@ -106,6 +106,10 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     expect(dialog.queryByRole('button', { name: t.booking.submit })).toBeNull();
     // Round 2 F: one line says why the slot is gone.
     expect(dialog.getByRole('alert').textContent).toContain(t.booking.firstLessonPast);
+    // Round 3: the line goes once she picks a new time.
+    const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
+    fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
+    expect(dialog.queryByText(t.booking.firstLessonPast)).toBeNull();
   });
 
   it('a draft saved for another lead is not resumed: a fresh draft from the chat', () => {

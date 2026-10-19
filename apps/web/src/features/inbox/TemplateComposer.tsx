@@ -12,10 +12,10 @@ import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } 
 import { sendTemplate } from './api';
 import { LessonPicker } from './LessonPicker';
 import { useInboxMode } from './mode';
-import { recordOwnSend } from './own-send';
 import { TemplateParamFields } from './TemplateParamFields';
 import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
 import { sendErrorText } from './send-error';
+import { sendStart, settleOwnSend } from './send-start';
 
 const NAMES: Record<string, string | undefined> = t.templates.names;
 
@@ -60,8 +60,9 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   }
   const send = useMutation({
     mutationFn: sendTemplate,
-    onSuccess: async (view) => {
-      recordOwnSend(phone, view.id);
+    onMutate: sendStart,
+    onSuccess: async (view, sent, start) => {
+      settleOwnSend(sent.phone, view.id, start);
       pick('');
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
