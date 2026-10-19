@@ -77,7 +77,10 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
   }, [text]);
   const tooLong = text.length > WA_TEXT_MAX;
   // The failure's line follows the draft (a box mounted since the send still says why), else this box's.
-  const failedHere = !pending && draft.failed?.text === text.trim() ? sendErrorCodeText(draft.failed.code) : null;
+  // Not a stored session_closed: this box mounts only while the window is open, and the closed-window
+  // notice replaces it while it is not (round 3).
+  const stored = draft.failed?.code === 'session_closed' ? null : draft.failed;
+  const failedHere = !pending && stored?.text === text.trim() ? sendErrorCodeText(stored.code) : null;
   const local = send.isError && !pending ? sendErrorText(send.error) : null;
   const error = tooLong ? t.inbox.composer.tooLong : (failedHere ?? local);
   const blocked = !text.trim() || tooLong || pending;

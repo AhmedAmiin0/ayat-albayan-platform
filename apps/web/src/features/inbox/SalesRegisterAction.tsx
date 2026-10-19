@@ -40,19 +40,25 @@ export function SalesRegisterButton({ compact, onOpen }: { compact: boolean; onO
 export function SalesRegisterDialog({ thread, onClose }: { thread: ThreadView & { lead_id: string }; onClose: () => void }) {
   const queryClient = useQueryClient();
   const phone = thread.phone_e164;
-  const onProgress = useCallback<NonNullable<BookingWizardProps['onProgress']>>(
-    ({ draft, step, booked }) => (booked ? registerDrafts.clear(phone) : registerDrafts.set(phone, { draft, step })),
-    [phone],
-  );
   // A draft for another lead, or with a first lesson now past, does not resume as it was (review M3).
   const [saved] = useState(() => resumable(registerDrafts.get(phone), thread.lead_id, new Date()));
+  // The «first lesson passed» line stays only until she picks a new time (round 3).
+  const [pastShown, setPastShown] = useState(saved?.droppedPast ?? false);
+  const onProgress = useCallback<NonNullable<BookingWizardProps['onProgress']>>(
+    ({ draft, step, booked }) => {
+      if (draft.startsAt) setPastShown(false);
+      if (booked) registerDrafts.clear(phone);
+      else registerDrafts.set(phone, { draft, step });
+    },
+    [phone],
+  );
   const close = () => {
     onClose();
     for (const key of ['threads', 'leads']) void queryClient.invalidateQueries({ queryKey: [key] });
   };
   return (
     <Dialog title={t.inbox.registerNew} onClose={close} wide>
-      {saved?.droppedPast && <FormAlert className="mb-3">{t.booking.firstLessonPast}</FormAlert>}
+      {pastShown && <FormAlert className="mb-3">{t.booking.firstLessonPast}</FormAlert>}
       <BookingModeContext.Provider value="sales">
         <ChatReturnContext.Provider value={close}>
           <BookingWizard

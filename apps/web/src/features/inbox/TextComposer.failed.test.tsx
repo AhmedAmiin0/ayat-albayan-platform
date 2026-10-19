@@ -73,12 +73,27 @@ describe('TextComposer: a failure after a remount says why (round 2 H)', () => {
     fireEvent.click(button());
     first.unmount();
     show();
-    reject(new ApiError(409, { code: 'session_closed' }));
-    expect((await screen.findByRole('alert')).textContent).toBe(t.inbox.error.session_closed);
+    reject(new ApiError(503, {}));
+    expect((await screen.findByRole('alert')).textContent).toBe(t.inbox.error.send_failed);
     expect(box().value).toBe('السلام عليكم');
     expect(box().getAttribute('aria-invalid')).toBe('true');
     type('نص آخر');
     expect(screen.queryByRole('alert')).toBeNull();
+  });
+});
+
+describe('TextComposer: a stored session_closed is not shown again (round 3)', () => {
+  it('the window reopened: the restored text comes back without «you need to send a template»', async () => {
+    apiSend.mockRejectedValueOnce(new ApiError(409, { code: 'session_closed' }));
+    const first = show();
+    type('السلام عليكم');
+    fireEvent.click(button());
+    await waitFor(() => expect(getDraft(PHONE).failed?.code).toBe('session_closed'));
+    first.unmount();
+    show();
+    expect(box().value).toBe('السلام عليكم');
+    expect(screen.queryByRole('alert')).toBeNull();
+    expect(box().getAttribute('aria-invalid')).not.toBe('true');
   });
 });
 

@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { draftFromLead } from '@/features/booking/booking-entries';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/booking/wizard-fixture';
@@ -98,6 +98,9 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
   });
 
   it('a saved first lesson now past: reopening lands on the slot step with no slot (review M3)', async () => {
+    // The week of the fixture's slot (Sun 4 Oct 17:00), so a new time can be picked below (round 3).
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-03T09:00:00.000Z'));
     const old = draftFromLead({ leadId: 'lead-1', phone: PHONE }, null);
     registerDrafts.set(PHONE, { draft: { ...old, teacher: ABRAR, startsAt: '2020-01-01T10:00:00.000Z' }, step: 'review' });
     renderAction();
@@ -106,6 +109,10 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     expect(dialog.queryByRole('button', { name: t.booking.submit })).toBeNull();
     // Round 2 F: one line says why the slot is gone.
     expect(dialog.getByRole('alert').textContent).toContain(t.booking.firstLessonPast);
+    // Round 3: the line goes once she picks a new time.
+    const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
+    fireEvent.click(await within(sunday).findByRole('button', { name: /17:00/ }));
+    await waitFor(() => expect(dialog.queryByText(t.booking.firstLessonPast)).toBeNull());
   });
 
   it('a draft saved for another lead is not resumed: a fresh draft from the chat', () => {

@@ -8,7 +8,7 @@ import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { sendRating } from './api';
 import { useInboxMode } from './mode';
-import { recordOwnSend } from './own-send';
+import { sendStart, settleOwnSend } from './send-start';
 
 const r = t.inbox.rating;
 const ERRORS: Record<string, string | undefined> = {
@@ -36,9 +36,10 @@ export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e
   const requestId = useRef(crypto.randomUUID());
   const send = useMutation({
     mutationFn: sendRating,
-    onSuccess: async (view, sent) => {
+    onMutate: sendStart,
+    onSuccess: async (view, sent, start) => {
       // Her own send: the log snaps to it when the row arrives (W4), like a text or a template.
-      recordOwnSend(sent.phone, view.id);
+      settleOwnSend(sent.phone, view.id, start);
       requestId.current = crypto.randomUUID();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
