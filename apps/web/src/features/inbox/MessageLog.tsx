@@ -69,7 +69,8 @@ export function MessageLog({ messages, hasMore, loadingOlder, onOlder, waitingKe
         </div>
       )}
       <div role="log" aria-label={t.messages.log}>
-        <ol className="grid gap-2.5">
+        {/* minmax(0,1fr): a long unbroken link never widens the column past the chat (it scrolled sideways). */}
+        <ol className="grid grid-cols-[minmax(0,1fr)] gap-2.5">
           {items.map((item) =>
             item.kind === 'day' ? (
               <Day key={item.key} label={item.label} />
