@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES, INVOICE_MIMES, baseMime, isWaAuthError } from '@ab/shared';
+import { INVOICE_MIMES, baseMime, chatFileMaxBytes, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -17,17 +17,29 @@ export type InboundFile = { bucket: typeof BUCKETS.waMedia; path: string; mime: 
 export { baseMime };
 export const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 
+/**
+ * The gate of a file we may serve: inbound, with a media id, and a mime `allow` accepts. The default
+ * (images / PDFs) keeps the booking's «من الشات» and the sales receipt copy narrow; the chat bubble
+ * (W6) passes isChatViewMime for voice notes and videos too (owner 2026-10-19 #1).
+ */
+export function servable(msg: MediaMessage, allow: (mime: string | null) => boolean = isInvoiceMime): MediaMessage {
+  if (msg.direction !== 'inbound' || !msg.media_id || !allow(msg.media_mime)) {
+    throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
+  }
+  return msg;
+}
+
 /** Older than WhatsApp keeps the file (and never cached by us): it cannot be fetched any more. */
 export function mediaExpired(msg: Pick<MediaMessage, 'created_at' | 'media_path'>, now: Date): boolean {
   return msg.media_path === null && now.getTime() - Date.parse(msg.created_at) > MEDIA_FETCH_DAYS * DAY_MS;
 }
 
 /**
- * An inbound WhatsApp image or PDF as a file we own (R-MSG-06). The webhook stores only Meta's
- * media id, so the first time an admin needs the file (a thumbnail, «من الشات» on a booking) it is
+ * An inbound WhatsApp file (image / PDF; audio / video for the chat bubble) as a file we own
+ * (R-MSG-06). The webhook stores only Meta's media id, so the first time an admin needs the file (a thumbnail, «من الشات» on a booking) it is
  * fetched from Meta and cached in the private `wa-media` bucket; later calls read the cache.
  * 404 message_not_found, 400 invoice_message (not inbound, or not an image / PDF), 410 media_expired
- * (older than 29 days, or Meta refuses the id), 413 invoice_too_large. The file is fetched with the
+ * (older than 29 days, or Meta refuses the id), 413 invoice_too_large (chatFileMaxBytes). The file is fetched with the
  * RECEIVING line's client (docs/12 §13.4): 503 line_not_configured for a chat message while the chat
  * line is not configured, 502 meta_error when Meta refuses the line's token (190 / 10 / 200),
  * 502 kapso_auth when Kapso refuses the project key (docs/19).
@@ -41,26 +53,23 @@ export class InboundMedia {
   ) {}
 
   /** The message, checked to be a file we can serve; the caller checks it belongs to the right chat. */
-  async load(messageId: string): Promise<MediaMessage> {
+  async load(messageId: string, allow: (mime: string | null) => boolean = isInvoiceMime): Promise<MediaMessage> {
     const msg = await this.queries.message(messageId);
     if (!msg) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
-    if (msg.direction !== 'inbound' || !msg.media_id || !isInvoiceMime(msg.media_mime)) {
-      throw waHttpError('invoice_message', HttpStatus.BAD_REQUEST);
-    }
-    return msg;
+    return servable(msg, allow);
   }
 
   async ensure(messageId: string): Promise<InboundFile> {
     return this.cache(await this.load(messageId));
   }
 
-  /** The cached object of a loaded message, downloading it first when this is the first use. */
+  /** The cached object of a loaded message, downloading it first (cap: 16 MB audio/video, else 10 MB). */
   async cache(msg: MediaMessage): Promise<InboundFile> {
     const mime = baseMime(msg.media_mime);
     if (msg.media_path) return { bucket: BUCKETS.waMedia, path: msg.media_path, mime };
     if (mediaExpired(msg, new Date()) || !msg.media_id) throw waHttpError('media_expired', HttpStatus.GONE);
     const file = await this.download(msg, msg.media_id);
-    if (file.bytes.byteLength > INVOICE_MAX_BYTES) {
+    if (file.bytes.byteLength > chatFileMaxBytes(mime)) {
       throw waHttpError('invoice_too_large', HttpStatus.PAYLOAD_TOO_LARGE);
     }
     const path = waMediaPath({ messageId: msg.id, mime });

@@ -1,4 +1,4 @@
-import type { WaLine } from '@ab/shared';
+import { PLAYABLE_MIMES, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 
@@ -17,6 +17,11 @@ export type MediaMessage = {
   line: WaLine | null;
 };
 const COLUMNS = 'id, phone_e164, direction, media_id, media_mime, media_path, body, created_at, line';
+
+/** A cached inbound voice note or video, for the 30-day purge (WaMediaRetentionJob). */
+export type CachedMedia = { id: string; media_path: string; media_mime: string | null };
+/** PostgREST `or`: the base mime of PLAYABLE_MIMES, with or without parameters («; codecs=opus»). */
+export const PLAYABLE_FILTER = PLAYABLE_MIMES.map((m) => `media_mime.ilike.${m}*`).join(',');
 
 /** DB touches of InboundMedia and of the chat's file picker (service role; the callers are admin-only). */
 @Injectable()
@@ -48,5 +53,30 @@ export class InboundMediaQueries {
   async setPath(id: string, path: string): Promise<void> {
     const { error } = await this.db.from('messages').update({ media_path: path }).eq('id', id).is('media_path', null);
     if (error) throw new Error(`message media_path update failed: ${error.message}`);
+  }
+
+  /**
+   * Cached inbound audio / video older than `before`, oldest first (owner 2026-10-19 #2: photos
+   * and PDFs are never purged). Uses messages_media_cached_idx (migration 500).
+   */
+  async cachedBefore(input: { before: string; limit: number }): Promise<CachedMedia[]> {
+    const { data, error } = await this.db
+      .from('messages')
+      .select('id, media_path, media_mime')
+      .eq('direction', 'inbound')
+      .not('media_path', 'is', null)
+      .or(PLAYABLE_FILTER)
+      .lt('created_at', input.before)
+      .order('created_at', { ascending: true })
+      .limit(input.limit);
+    if (error) throw new Error(`cached media read failed: ${error.message}`);
+    return data.flatMap((r) => (r.media_path ? [{ id: r.id, media_path: r.media_path, media_mime: r.media_mime }] : []));
+  }
+
+  /** Forget the purged copies (inbound only: a sent file keeps its path, messages_content_check). */
+  async clearPaths(ids: readonly string[]): Promise<void> {
+    if (!ids.length) return;
+    const { error } = await this.db.from('messages').update({ media_path: null }).in('id', [...ids]).eq('direction', 'inbound');
+    if (error) throw new Error(`message media_path clear failed: ${error.message}`);
   }
 }

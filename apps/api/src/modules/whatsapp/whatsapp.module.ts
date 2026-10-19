@@ -20,6 +20,7 @@ import { TemplateStarters } from './template-starters';
 import { TemplateRegistry } from './template.registry';
 import { TemplatesController } from './templates.controller';
 import { TemplatesQueries } from './templates.queries';
+import { WaMediaRetentionJob } from './wa-media.retention.job';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
 
 /**
@@ -35,7 +36,8 @@ function lines(): WhatsappLines {
  * and routes T1–T3, M1–M2. Global: the inbox (B2) and the jobs (B3) inject WHATSAPP_CLIENT,
  * SendGate (is sending on?), MessageSender (kick after an enqueue), TemplateRegistry (approved?),
  * MessageViews (MessageView with click_to_chat) and InboundMedia (an inbound image / PDF as a file we
- * own, R-MSG-06). Two lines (docs/12 §13): WHATSAPP_LINES, and WHATSAPP_CLIENT = its notifications client.
+ * own, R-MSG-06; cached voice notes / videos purged after 30 days by WaMediaRetentionJob). Two lines
+ * (docs/12 §13): WHATSAPP_LINES, and WHATSAPP_CLIENT = its notifications client.
  */
 @Global()
 @Module({
@@ -59,6 +61,7 @@ function lines(): WhatsappLines {
     MessagesService,
     InboundMediaQueries,
     InboundMedia,
+    WaMediaRetentionJob,
   ],
   exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, MessageSender, MessageViews, InboundMedia, InboundMediaQueries],
 })

@@ -11,12 +11,17 @@ import { SENDING } from './send-plan';
 import { templateParams } from './wa-json';
 
 export type MessageRow = Tables<'messages'>;
-/** A messages row with the teacher who sent it (teacher mode «بعتها»), for every view-producing read. */
-export const MESSAGE_SELECT = '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar)' as const;
-/** A thread row: the message with its lesson and sending teacher embedded (ThreadsQueries.messages). */
+/**
+ * A messages row with who sent it, for every view-producing read: the teacher (teacher mode) and
+ * the staff profile behind created_by (D4, migration 510 points the FK at profiles).
+ */
+export const MESSAGE_SELECT =
+  '*, sent_by_teacher:teachers!messages_sent_by_teacher_id_fkey(display_name_ar), sender:profiles!messages_created_by_fkey(full_name)' as const;
+/** A thread row: the message with its lesson, sending teacher and staff sender embedded (ThreadsQueries.messages). */
 export type ThreadMessageRow = MessageRow & {
   lesson?: MessageLesson | null;
   sent_by_teacher?: { display_name_ar: string } | null;
+  sender?: { full_name: string } | null;
 };
 
 export interface MessageViewInput {
@@ -41,6 +46,18 @@ export function needsManualSend(row: Pick<MessageRow, 'direction' | 'status' | '
 /** The teacher who sent the row from their inbox; null for the academy or a job. */
 const senderName = (row: ThreadMessageRow): string | null => row.sent_by_teacher?.display_name_ar ?? null;
 
+/** Staff behind an outbound row (D4): the teacher's name wins, else the profile's; null for inbound. */
+const staffName = (row: ThreadMessageRow): string | null =>
+  row.direction === 'outbound' ? (senderName(row) ?? row.sender?.full_name ?? null) : null;
+
+/** Queued by the platform with no staff behind it; imported history has no dedup_key (D4). */
+const isAutomatic = (row: ThreadMessageRow): boolean =>
+  row.direction === 'outbound' && row.created_by === null && row.dedup_key !== null;
+
+/** wa.me cannot carry a file (D2): a sent file is retried here, never handed off. */
+const fallbackLink = (row: ThreadMessageRow, text: string | undefined): string | null =>
+  needsManualSend(row) && !row.media_path ? clickToChatLink(row.phone_e164, text) : null;
+
 /**
  * messages row → MessageView (R-MSG-05): a template row shows its rendered text; a queued or
  * failed outbound row carries the wa.me link with the same text pre-filled (R-MSG-03).
@@ -64,6 +81,7 @@ export function toMessageView(input: MessageViewInput): MessageView {
     body: row.body ?? (template ? renderTemplateBody(template.body_ar, params) : null),
     media_mime: row.media_mime,
     media_url: input.mediaUrl ?? null,
+    media_name: row.media_name,
     reply_to_wa_id: row.reply_to_wa_id,
     interactive_payload: row.interactive_payload,
     error_code: row.error_code,
@@ -76,8 +94,10 @@ export function toMessageView(input: MessageViewInput): MessageView {
     read_at: row.read_at,
     sent_manually_at: row.sent_manually_at,
     sent_by_teacher_name: senderName(row),
+    sender_name: staffName(row),
+    automatic: isAutomatic(row),
     created_at: row.created_at,
-    click_to_chat: needsManualSend(row) ? clickToChatLink(row.phone_e164, text) : null,
+    click_to_chat: fallbackLink(row, text),
     lesson: row.lesson ?? null,
     line: row.line,
   };
