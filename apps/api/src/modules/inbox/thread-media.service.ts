@@ -1,8 +1,9 @@
-import type { SignedDownload, ThreadMediaItem } from '@ab/shared';
+import { isChatViewMime, type SignedDownload, type ThreadMediaItem } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
+import { BUCKETS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { InboundMediaQueries } from '../whatsapp/inbound-media.queries';
-import { baseMime, InboundMedia, isInvoiceMime, mediaExpired } from '../whatsapp/inbound-media.service';
+import { baseMime, InboundMedia, isInvoiceMime, mediaExpired, servable } from '../whatsapp/inbound-media.service';
 import { waHttpError } from '../whatsapp/template.mapper';
 
 const DAY_MS = 86_400_000;
@@ -49,6 +50,25 @@ export class ThreadMediaService {
     const msg = await this.media.load(input.messageId);
     if (msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
     const file = await this.media.cache(msg);
+    const signed = await this.storage.signedDownload({ bucket: file.bucket, path: file.path });
+    return { ...signed, mime: file.mime };
+  }
+
+  /**
+   * W6 only (a chat bubble): any file of this phone's chat. The ownership check runs first (404
+   * message_not_found). Outbound = a file staff sent (D2): signed from wa-media as stored, 410
+   * media_expired when there is none (imported history). Inbound = images / PDFs, voice notes and
+   * videos (isChatViewMime), cached from WhatsApp on first use.
+   */
+  async bubbleFile(input: { phone: string; messageId: string }): Promise<ThreadFile> {
+    const msg = await this.queries.message(input.messageId);
+    if (!msg || msg.phone_e164 !== input.phone) throw waHttpError('message_not_found', HttpStatus.NOT_FOUND);
+    if (msg.direction === 'outbound') {
+      if (!msg.media_path) throw waHttpError('media_expired', HttpStatus.GONE);
+      const signed = await this.storage.signedDownload({ bucket: BUCKETS.waMedia, path: msg.media_path });
+      return { ...signed, mime: baseMime(msg.media_mime) };
+    }
+    const file = await this.media.cache(servable(msg, isChatViewMime));
     const signed = await this.storage.signedDownload({ bucket: file.bucket, path: file.path });
     return { ...signed, mime: file.mime };
   }

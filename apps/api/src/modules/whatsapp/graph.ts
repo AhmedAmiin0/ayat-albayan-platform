@@ -24,6 +24,8 @@ export interface GraphRequest {
   headers?: Record<string, string>;
   /** false = no credential at all (Kapso's download_url carries its own token: never send ours there). */
   auth?: false;
+  /** Overrides conn.timeoutMs for this call (the media byte download, up to 16 MB). */
+  timeoutMs?: number;
 }
 
 /** The credential by driver (docs/19): Meta's bearer token, or Kapso's project key (never a bearer). */
@@ -90,6 +92,8 @@ export function mayHaveReachedMeta(error: unknown): boolean {
   return !NEVER_SENT.has(code);
 }
 
+const timeoutSignal = (conn: GraphConn, req: GraphRequest): AbortSignal => AbortSignal.timeout(req.timeoutMs ?? conn.timeoutMs);
+
 /**
  * Resolves on 2xx; throws WaError otherwise. A network error or timeout is code null, status 0,
  * flagged `uncertain` unless the connection was never made.
@@ -106,7 +110,7 @@ export async function graphFetch(conn: GraphConn, req: GraphRequest): Promise<Re
         ...req.headers,
       },
       body: req.raw ?? (hasBody ? JSON.stringify(req.body) : undefined),
-      signal: AbortSignal.timeout(conn.timeoutMs),
+      signal: timeoutSignal(conn, req),
     });
   } catch (e) {
     const message = `WhatsApp request failed: ${e instanceof Error ? e.message : String(e)}`;

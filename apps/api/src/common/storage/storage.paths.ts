@@ -33,6 +33,9 @@ const EXT: Record<string, string> = {
   'audio/ogg': 'ogg',
   'audio/webm': 'webm',
   'audio/wav': 'wav',
+  'audio/amr': 'amr',
+  'video/mp4': 'mp4',
+  'video/3gpp': '3gp',
 };
 
 /** File extension for an accepted mime type; 'bin' for anything else (the bucket rejects it). */
@@ -83,6 +86,19 @@ export function chatName(messageId: string, mime: string): string {
 /** wa-media/{message_id}.{ext}: the cache of one inbound message's file. */
 export function waMediaPath(input: { messageId: string; mime: string }): string {
   return `${input.messageId}.${extFor(input.mime)}`;
+}
+
+/** wa-media/out/{actor}/{client_request_id}/{uuid}.{ext}: a file staff send from the chat (owner 2026-10-19 #2). */
+export function chatOutPath(input: { actorId: string; requestId: string; mime: string }): string {
+  return `out/${input.actorId}/${input.requestId}/${uploadName(input.mime)}`;
+}
+
+/** Was `path` signed for this actor and request? Exactly out/{actor}/{request}/{file}. */
+export function isChatOutPathOf(path: string, owner: { actorId: string; requestId: string }): boolean {
+  const parts = path.split('/');
+  const [out, actor, request, file] = parts;
+  return parts.length === 4 && out === 'out' && actor === owner.actorId && request === owner.requestId
+    && file !== undefined && file.length > 0 && file !== '..' && file !== '.';
 }
 
 /** Does `path` belong to `owner` (a report id or a subscription id)? Guards a client-sent path. */

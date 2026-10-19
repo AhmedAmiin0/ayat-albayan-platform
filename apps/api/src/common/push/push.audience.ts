@@ -30,14 +30,13 @@ export class PushAudience {
   ) {}
 
   /** Every enabled base-role admin (the admin events' candidates). */
-  async adminIds(): Promise<string[]> {
-    const { data, error } = await this.db
-      .from('profiles')
-      .select('id')
-      .eq('role', 'admin')
-      .is('disabled_at', null);
-    if (error) throw new Error(error.message);
-    return data.map((p) => p.id);
+  adminIds(): Promise<string[]> {
+    return this.roleIds('admin');
+  }
+
+  /** Every enabled base-role salesperson (an assistant): unowned and new-lead chats (docs/21 §6). */
+  salesIds(): Promise<string[]> {
+    return this.roleIds('sales');
   }
 
   async recipients(kind: PushKind, ids: readonly string[]): Promise<Recipient[]> {
@@ -49,6 +48,16 @@ export class PushAudience {
     if (error) throw new Error(error.message);
     const allowed = await Promise.all(data.map((p) => this.permitted(kind, p)));
     return data.filter((_, i) => allowed[i]);
+  }
+
+  private async roleIds(role: 'admin' | 'sales'): Promise<string[]> {
+    const { data, error } = await this.db
+      .from('profiles')
+      .select('id')
+      .eq('role', role)
+      .is('disabled_at', null);
+    if (error) throw new Error(error.message);
+    return data.map((p) => p.id);
   }
 
   private async permitted(kind: PushKind, profile: Recipient): Promise<boolean> {

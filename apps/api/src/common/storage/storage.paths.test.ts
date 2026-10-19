@@ -4,6 +4,8 @@ import {
   attachmentPath,
   BUCKETS,
   chatName,
+  chatOutPath,
+  isChatOutPathOf,
   extFor,
   invoicePath,
   isPathOf,
@@ -47,7 +49,8 @@ describe('storage paths (migration 122 policies parse these)', () => {
 
   it('every accepted mime has a real extension', () => {
     for (const mime of [...ATTACHMENT_MIMES, ...RECEIPT_MIMES]) expect(extFor(mime)).not.toBe('bin');
-    expect(extFor('video/mp4')).toBe('bin');
+    expect(extFor('application/zip')).toBe('bin');
+    expect([extFor('video/mp4'), extFor('video/3gpp'), extFor('audio/amr')]).toEqual(['mp4', '3gp', 'amr']);
   });
 
   it.each([
@@ -59,5 +62,21 @@ describe('storage paths (migration 122 policies parse these)', () => {
     ['../sub/abc.jpg', 'sub', false],
   ])('isPathOf(%s, %s) → %s', (path, owner, ok) => {
     expect(isPathOf(path, owner)).toBe(ok);
+  });
+
+  it('chatOutPath is out/{actor}/{request}/{uuid}.{ext}', () => {
+    expect(chatOutPath({ actorId: 'u1', requestId: 'r1', mime: 'application/pdf' })).toMatch(/^out\/u1\/r1\/[0-9a-f-]{36}\.pdf$/);
+  });
+
+  it.each([
+    ['out/u1/r1/a.png', true],
+    ['out/u2/r1/a.png', false],
+    ['out/u1/r2/a.png', false],
+    ['out/u1/r1/', false],
+    ['out/u1/r1/x/a.png', false],
+    ['in/u1/r1/a.png', false],
+    ['out/u1/r1/..', false],
+  ])('isChatOutPathOf(%s) → %s', (path, ok) => {
+    expect(isChatOutPathOf(path, { actorId: 'u1', requestId: 'r1' })).toBe(ok);
   });
 });

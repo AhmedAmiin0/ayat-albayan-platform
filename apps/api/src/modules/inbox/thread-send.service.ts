@@ -30,14 +30,14 @@ export interface ThreadSend<T> {
  * and to whom (`teacher:<teacher>:<phone>:<id>`, `admin:<phone>:<id>`), so one id reused on another
  * phone, or by another teacher, is a new send, never the first family's row.
  */
-function dedupKey<T>(s: ThreadSend<T>): string {
+export function dedupKey<T>(s: ThreadSend<T>): string {
   if (!s.input.clientRequestId) throw waHttpError('missing_client_request_id', 400);
   const who = s.sales ? `sales:${s.sales.salesId}` : s.scope ? `teacher:${s.scope.teacherId}` : 'admin';
   return `${who}:${s.phone}:${s.input.clientRequestId}`;
 }
 
 /** The row's people (by phone, like v_threads) and author; a teacher's row names them («بعتها»). */
-function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
+export function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
   return {
     phone_e164: s.phone,
     lead_id: thread?.lead_id ?? null,
@@ -48,7 +48,7 @@ function outboundBase<T>(s: ThreadSend<T>, thread: ThreadRow | null) {
 }
 
 /** pickSendLine as the inbox answers it: 409 session_closed (no thread too), 503 line_not_configured. */
-function sendLine(thread: ThreadRow | null, now: Date): { line?: WaLine } {
+export function sendLine(thread: ThreadRow | null, now: Date): { line?: WaLine } {
   const picked = pickSendLine(thread, now);
   if (!('code' in picked)) return picked;
   throw picked.code === 'line_not_configured' ? waHttpError('line_not_configured', 503) : waHttpError('session_closed', 409);

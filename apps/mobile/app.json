@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-admin",
     "owner": "holdmycup",
     "scheme": "ayatalbayan",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -20,6 +20,7 @@
     },
     "android": {
       "package": "com.ayatalbayan.admin",
+      "blockedPermissions": ["android.permission.RECORD_AUDIO"],
       "adaptiveIcon": {
         "backgroundColor": "#FDF8F0",
         "foregroundImage": "./assets/android-icon-foreground.png",
@@ -44,7 +45,16 @@
           "photosPermission": "نحتاج إلى الصور لاختيار صورة إيصال التحويل وتسجيلها مع الدفعة.",
           "microphonePermission": false
         }
-      ]
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false,
+          "recordAudioAndroid": false,
+          "enableBackgroundPlayback": false
+        }
+      ],
+      "expo-video"
     ],
     "runtimeVersion": {
       "policy": "appVersion"

@@ -42,3 +42,15 @@ export async function ownershipOf(db: Db, profileId: string): Promise<SalesOwner
   const studentIds = uniq([...families.data.map((s) => s.id), ...brought.data.map((s) => s.id)]);
   return { leadIds, guardianIds, studentIds, phones: [...phones] };
 }
+
+/** Who owns a family (docs/21 §6): its children's brought_by plus its converted leads' assigned_to, nulls dropped. */
+export async function guardianOwnerIds(db: Db, guardianId: string): Promise<string[]> {
+  const [brought, leads] = await Promise.all([
+    db.from('students').select('brought_by').eq('guardian_id', guardianId),
+    db.from('leads').select('assigned_to').eq('converted_guardian_id', guardianId),
+  ]);
+  if (brought.error) throw dbError(brought.error);
+  if (leads.error) throw dbError(leads.error);
+  const ids = [...brought.data.map((s) => s.brought_by), ...leads.data.map((l) => l.assigned_to)];
+  return uniq(ids.flatMap((id) => (id ? [id] : [])));
+}

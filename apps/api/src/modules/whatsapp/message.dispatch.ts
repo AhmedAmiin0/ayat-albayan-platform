@@ -1,4 +1,4 @@
-import type { TemplateDocument, WaLine } from '@ab/shared';
+import { waMediaKind, type TemplateDocument, type WaLine } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, SIGNED_URL_SECONDS } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -22,7 +22,18 @@ export async function documentLink(storage: StorageService, doc: TemplateDocumen
 }
 
 /**
- * Turns one queued row into one Graph call: a template, or a session text (B2's inbox replies).
+ * A 7-day signed link to a file staff sent from the chat (owner 2026-10-19 #2), signed again on
+ * every try. Only wa-media paths under out/ are ever signed: never an inbound cache, never a report.
+ */
+export async function mediaLink(storage: StorageService, path: string): Promise<string> {
+  if (!path.startsWith('out/') || path.split('/').includes('..')) throw new WaError(`media path ${path} is not a sent file`, { code: 100, status: 0 });
+  const signed = await storage.signedDownload({ bucket: BUCKETS.waMedia, path, seconds: SIGNED_URL_SECONDS.whatsapp });
+  return signed.url;
+}
+
+/**
+ * Turns one queued row into one Graph call: a template, a session file (by link, its body as the
+ * caption) or a session text (B2's inbox replies).
  * Two lines (docs/12 §13.3): both leave from `line` (lineOf: a template from its registry line, a
  * chat starter from chat; a text from the line it was stamped with).
  */
@@ -61,10 +72,18 @@ export class MessageDispatch {
         payloads: quickReplyPayloads(templateButtons(template.buttons), { params, ref }),
       });
     }
+    // Before the text branch: a captioned file must not go out as plain text.
+    if (!row.template_key && row.media_path) return this.sendFile(row, { line, path: row.media_path });
     if (!row.template_key && row.body) {
       return this.lines[line].sendText({ to: row.phone_e164, text: row.body, replyTo: row.reply_to_wa_id });
     }
-    // ponytail: outbound media rows (media_path only) have no producer yet; send them when one exists.
     throw new WaError('nothing to send: no approved template and no text', { code: 100, status: 0 });
+  }
+
+  /** A file staff sent from the chat: an image or a document by link, its body as the caption. */
+  private async sendFile(row: DueMessage, at: { line: WaLine; path: string }): Promise<WaSent> {
+    const url = await mediaLink(this.storage, at.path);
+    const kind = waMediaKind(row.media_mime ?? null);
+    return this.lines[at.line].sendDocument({ to: row.phone_e164, kind, url, filename: row.media_name ?? undefined, caption: row.body });
   }
 }

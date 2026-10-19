@@ -33,20 +33,26 @@ export function templateEditPath(env: WhatsappEnv, templateId: string): string {
   return `${encodeURIComponent(env.wabaId)}/message_templates?hsm_id=${encodeURIComponent(templateId)}`;
 }
 
+/** The media byte download's timeout (the JSON lookup keeps the connection's). */
+export const MEDIA_BYTES_TIMEOUT_MS = 60_000;
+
 /**
  * Inbound media bytes. Meta: GET /{media id}, then its short-lived URL with the bearer. Kapso: GET
  * /{media id}?phone_number_id=<line>, then download_url (its token is in the URL) with NO credential
  * at all; never Kapso's `url` (Meta's lookaside, which needs a Meta token this line does not have).
+ * The byte fetch gets 60 s (a 16 MB video); its signal also covers res.arrayBuffer(). ponytail: a
+ * timeout surfaces as WaError status 0 (or a DOMException mid-body) that InboundMedia rethrows as a
+ * 500; mapping it to 502/504 is a follow-up (docs/21 §10).
  */
 export async function fetchMedia(c: GraphConn, mediaId: string): Promise<{ bytes: Uint8Array; mime: string }> {
   const id = encodeURIComponent(mediaId);
   if (c.env.provider === 'kapso') {
     const q = new URLSearchParams({ phone_number_id: c.env.phoneNumberId });
     const meta = parsed(kapsoMediaSchema, await graphJson(c, { path: `${id}?${q}` }));
-    const res = await graphFetch(c, { path: meta.download_url, auth: false });
+    const res = await graphFetch(c, { path: meta.download_url, auth: false, timeoutMs: MEDIA_BYTES_TIMEOUT_MS });
     return { bytes: new Uint8Array(await res.arrayBuffer()), mime: meta.mime_type };
   }
   const meta = parsed(mediaSchema, await graphJson(c, { path: id }));
-  const res = await graphFetch(c, { path: meta.url });
+  const res = await graphFetch(c, { path: meta.url, timeoutMs: MEDIA_BYTES_TIMEOUT_MS });
   return { bytes: new Uint8Array(await res.arrayBuffer()), mime: meta.mime_type };
 }

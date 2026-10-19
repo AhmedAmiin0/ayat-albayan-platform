@@ -106,8 +106,8 @@ describe('W6 GET /threads/:phone/messages/:id/file: bubble media for admin and s
     expect(client.getMedia).not.toHaveBeenCalled();
   });
 
-  it('a voice note (not an image / PDF) is never served: 400 invoice_message', async () => {
-    queries.message.mockResolvedValue(row({ media_mime: 'audio/ogg; codecs=opus' }));
+  it('a type no bubble can open (a zip) is never served: 400 invoice_message', async () => {
+    queries.message.mockResolvedValue(row({ media_mime: 'application/zip' }));
     const res = await call('sales');
     expect([res.statusCode, res.json().code]).toEqual([400, 'invoice_message']);
     expect(client.getMedia).not.toHaveBeenCalled();

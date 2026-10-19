@@ -3,6 +3,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
 import { SettingsService } from '../../common/settings/settings.service';
+import { guardianOwnerIds } from '../sales/sales-ownership';
 import type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
 export type { Contact, OutboundRow, StatusMove } from './webhook.types';
@@ -126,5 +127,10 @@ export class WebhookQueries {
   async updateLead(id: string, patch: TablesUpdate<'leads'>): Promise<void> {
     const { error } = await this.db.from('leads').update(patch).eq('id', id);
     check(error);
+  }
+
+  /** The assistants who own this family (docs/21 §6). */
+  guardianOwners(guardianId: string): Promise<string[]> {
+    return guardianOwnerIds(this.db, guardianId);
   }
 }

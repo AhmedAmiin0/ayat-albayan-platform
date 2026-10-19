@@ -83,6 +83,13 @@ export class StorageService {
     const { error } = await this.db.storage.from(ref.bucket).remove([ref.path]);
     if (error) throw new Error(`storage remove failed: ${error.message}`);
   }
+
+  /** One Storage call for many objects of a bucket; a path that does not exist is a no-op. */
+  async removeMany(input: { bucket: Bucket; paths: readonly string[] }): Promise<void> {
+    if (!input.paths.length) return;
+    const { error } = await this.db.storage.from(input.bucket).remove([...input.paths]);
+    if (error) throw new Error(`storage remove failed: ${error.message}`);
+  }
 }
 
 /** Global: reports, the PDF job and payments inject StorageService. */

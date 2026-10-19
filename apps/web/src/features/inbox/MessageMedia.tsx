@@ -1,4 +1,4 @@
-import { INVOICE_MIMES, type MessageView } from '@ab/shared';
+import { isChatViewMime, isPlayableMime, type MessageView } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -6,14 +6,12 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { threadFileQuery, type ThreadFile } from './api';
 import { mediaKind } from './format';
+import { MediaPlayer } from './MediaPlayer';
 import { useInboxMode } from './mode';
 
-const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4';
+/** #120: a long sent file name (media_name, up to 200 chars) wraps instead of widening the log. */
+const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4 [overflow-wrap:anywhere]';
 
-/** «image/jpeg; codecs=…» → «image/jpeg», as the API reads it (InboundMedia.baseMime). */
-const baseMime = (mime: string | null): string => mime?.split(';')[0]?.trim().toLowerCase() ?? '';
-/** The files WhatsApp lets us fetch and keep: images and PDFs (InboundMedia's INVOICE_MIMES). */
-const viewable = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 /** An image the browser draws inline; HEIC is a named link like a PDF. */
 const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime !== 'image/heic';
 
@@ -26,12 +24,14 @@ function Label({ kind, forbidden = false }: { kind: string; forbidden?: boolean 
   );
 }
 
-function Loaded({ file, kind }: { file: ThreadFile; kind: string }) {
+/** `fileName`: a sent file's name (media_name), the PDF link's text. */
+function Loaded({ file, kind, fileName }: { file: ThreadFile; kind: string; fileName: string | null }) {
   const name = t.inbox.openMedia.replace('{kind}', kind);
+  if (isPlayableMime(file.mime)) return <MediaPlayer file={file} kind={kind} />;
   if (!inlineImage(file.mime)) {
     return (
-      <a href={file.url} target="_blank" rel="noopener noreferrer" className={LINK}>
-        {name}
+      <a href={file.url} target="_blank" rel="noopener noreferrer" className={LINK} dir="auto">
+        {fileName ?? name}
       </a>
     );
   }
@@ -49,12 +49,12 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   if (!asked) {
     return (
       <Button size="sm" variant="ghost" className="-ms-3" onClick={() => setAsked(true)}>
-        {t.inbox.viewMedia.replace('{kind}', kind)}
+        {(isPlayableMime(m.media_mime) ? t.inbox.playMedia : t.inbox.viewMedia).replace('{kind}', kind)}
       </Button>
     );
   }
   // A loaded file stays even when a background refetch fails (the error is only for no file at all).
-  if (file.data) return <Loaded file={file.data} kind={kind} />;
+  if (file.data) return <Loaded file={file.data} kind={kind} fileName={m.media_name ?? null} />;
   if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
   // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
   if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} forbidden />;
@@ -67,10 +67,11 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
 }
 
 /**
- * The file in a bubble (R-MSG-05, W6). A family's image or PDF opens on demand: «عرض صورة» fetches a
- * signed URL of our copy, then a thumbnail (full size in a new tab) or a named link. Other files
- * (voice notes, videos) keep their label until they can be stored too. Teacher mode gets the label
- * only: the API refuses them the file (403 media_forbidden).
+ * The file in a bubble (R-MSG-05, W6), theirs or one we sent (D2). An image or PDF opens on demand:
+ * «عرض صورة» fetches a signed URL of our copy, then a thumbnail (full size in a new tab) or a named
+ * link; a voice note or video «تشغيل رسالة صوتية» plays in the bubble (D1). Other files (stickers,
+ * locations…) keep their label. Teacher mode gets the label only: the API refuses them the file
+ * (403 media_forbidden).
  */
 export function MessageMedia({ message: m }: { message: MessageView }) {
   const kind = t.inbox.media[mediaKind(m.media_mime)];
@@ -82,6 +83,6 @@ export function MessageMedia({ message: m }: { message: MessageView }) {
       </a>
     );
   }
-  if (!teacher && m.direction === 'inbound' && viewable(m.media_mime)) return <FileView message={m} kind={kind} />;
+  if (!teacher && isChatViewMime(m.media_mime)) return <FileView message={m} kind={kind} />;
   return <Label kind={kind} forbidden={teacher} />;
 }

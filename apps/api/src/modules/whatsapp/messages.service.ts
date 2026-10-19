@@ -46,11 +46,15 @@ export class MessagesService {
     return { before, view: await this.views.view(after) };
   }
 
-  /** The admin opened wa.me for it: the sender holds it until they confirm (M2) or undo (M1). */
+  /**
+   * The admin opened wa.me for it: the sender holds it until they confirm (M2) or undo (M1).
+   * A sent file cannot ride along in wa.me: 409 media_handoff (retry stays allowed).
+   */
   async handOff(id: string): Promise<MessageChange> {
     const before = await this.row(id);
     const notManual = () => waHttpError('not_manual', 409, { status: before.status });
     if (!needsManualSend(before)) throw notManual();
+    if (before.media_path) throw waHttpError('media_handoff', 409);
     const after = await this.queries.handOff(id);
     if (!after) throw notManual();
     return { before, view: await this.views.view(after) };

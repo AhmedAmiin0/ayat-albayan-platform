@@ -1,6 +1,24 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
-import { ownershipOf } from './sales-ownership';
+import { guardianOwnerIds, ownershipOf } from './sales-ownership';
+
+describe('guardianOwnerIds (who owns a family, docs/21 §6)', () => {
+  it('the union of brought_by and converted-lead assigned_to, nulls dropped, deduplicated', async () => {
+    const { db, argsOf } = fakeDb({
+      students: [{ data: [{ brought_by: 'A' }, { brought_by: null }, { brought_by: 'B' }] }],
+      leads: [{ data: [{ assigned_to: 'C' }, { assigned_to: 'A' }, { assigned_to: null }] }],
+    });
+    expect(await guardianOwnerIds(db, 'g1')).toEqual(['A', 'B', 'C']);
+    expect(argsOf('students', 'eq')).toEqual(['guardian_id', 'g1']);
+    expect(argsOf('leads', 'eq')).toEqual(['converted_guardian_id', 'g1']);
+  });
+
+  it('nobody gives []; a database error is thrown', async () => {
+    expect(await guardianOwnerIds(fakeDb({ students: [{ data: [] }], leads: [{ data: [] }] }).db, 'g1')).toEqual([]);
+    const { db } = fakeDb({ students: [{ data: [] }], leads: [{ error: { message: 'boom' } }] });
+    await expect(guardianOwnerIds(db, 'g1')).rejects.toBeDefined();
+  });
+});
 
 describe('ownershipOf (leads and brought students)', () => {
   it('nothing at all: empty, and only the two first reads are made', async () => {

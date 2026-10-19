@@ -11,15 +11,13 @@ import type { SalesScope } from '../sales/sales-scope';
 import type { TeacherScope } from './teacher-scope';
 import { ThreadReads } from './thread-reads';
 import { threadListQuery } from './threads.list';
-import type { Sent } from './outbox';
+import { recordSend, type SendAudit } from './send-audit';
 import { ThreadSendService } from './thread-send.service';
 
 const detailQuery = z.object({
   before: z.iso.datetime({ offset: true }).optional(),
   limit: z.coerce.number().int().min(1).max(100).default(50),
 });
-
-type Audited = { sent: Sent; action: string; user: AuthUser; scope: TeacherScope | null; sales: SalesScope | null };
 
 /**
  * H1–H4 (docs/12 §4): the WhatsApp inbox (R-LEAD-02, R-MSG-05). Sends are audited. Same paths for
@@ -75,20 +73,7 @@ export class ThreadsController {
   }
 
   /** A teacher's send names them in the audit row too (every message a teacher sends is logged). */
-  private async audited(input: Audited): Promise<MessageView> {
-    const { sent, scope, sales } = input;
-    const { view } = sent;
-    if (sent.replayed) return view; // a retried request id: the first send was audited already
-    const teacher = scope ? { teacher_id: scope.teacherId, teacher_name: scope.teacherName } : {};
-    const by = sales ? { sales_id: sales.salesId } : teacher;
-    await this.audit.record({
-      actorId: input.user.id,
-      entity: 'messages',
-      entityId: view.id,
-      action: input.action,
-      before: null,
-      after: { phone: view.phone_e164, template_key: view.template_key, status: view.status, ...by },
-    });
-    return view;
+  private audited(input: SendAudit): Promise<MessageView> {
+    return recordSend(this.audit, input);
   }
 }

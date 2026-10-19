@@ -32,7 +32,15 @@ function markRead(s: StubState, body: Json, phoneNumberId: string): Reply {
   return [200, { success: true }];
 }
 
-/** Meta's refusal of a send to `to`: an injected failure, a template error, or a closed window. */
+/** An image or document must carry a `link` or an uploaded `id` (Meta: 100); catches dispatch bugs. */
+function mediaError(body: Json): Json | null {
+  const type = body['type'];
+  if (type !== 'image' && type !== 'document') return null;
+  const media = (body[type] ?? {}) as { link?: unknown; id?: unknown };
+  return media.link || media.id ? null : ERR.invalid(`${type} needs a link or an id`);
+}
+
+/** Meta's refusal of a send to `to`: an injected failure, a template or media error, or a closed window. */
 function refusal(s: StubState, send: { body: Json; to: string; phoneNumberId: string }): Reply | null {
   const { body, to } = send;
   const injected = s.failNext.get(to);
@@ -44,6 +52,8 @@ function refusal(s: StubState, send: { body: Json; to: string; phoneNumberId: st
     const err = templateError(s, body, send.phoneNumberId);
     return err ? [404, err] : null;
   }
+  const bad = mediaError(body);
+  if (bad) return [400, bad];
   const windowOpen = Date.now() - (s.lastInbound.get(to) ?? 0) < DAY_MS;
   return s.opts.enforceWindow === false || windowOpen ? null : [400, ERR.window()];
 }

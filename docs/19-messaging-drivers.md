@@ -26,6 +26,7 @@ There is **one** messaging engine: the outbox and its queue, the send gate and k
 | Template list paging | follow `paging.cursors.after` while `paging.next` is present | no `paging.next`: follow `after` while it is set **and** the page is full (100); same 20-page cap |
 | Create a template | `POST /{waba_id}/message_templates` | same |
 | Edit a rejected template | `POST /{template_id}` | `POST /{waba_id}/message_templates?hsm_id=<template_id>` (there is no `/{template_id}`) |
+| Outbound media (docs/21 D2) | `POST /{phone_number_id}/messages` with `{ type: 'image' \| 'document', [type]: { link, caption?, filename? } }`, the link a 7-day signed `wa-media/out/…` URL | same path and body (by link, never an upload) |
 | Inbound media | `GET /{media_id}` → `url`, downloaded with the bearer | `GET /{media_id}?phone_number_id=<line>` → `download_url` (token inside, ~4 min), downloaded with **no credential at all**; Kapso's `url` (Meta's lookaside) is never used |
 | Sample uploads (Resumable Upload API) | `/{app_id}/uploads` with `WA_APP_ID` | none: `canUploadSamples()` is false, so submitting a document-header template (`report_ready`) answers 409 `needs_meta_driver` («حوِّل مزوّد الإرسال إلى Meta مباشرة»), not `needs_app_id` |
 | Errors | `{error:{message,type,code,error_subcode}}` | same shape (same `WaError` mapping) |

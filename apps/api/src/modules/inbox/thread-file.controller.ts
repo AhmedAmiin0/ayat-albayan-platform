@@ -8,13 +8,14 @@ import { ThreadMediaService, type ThreadFile } from './thread-media.service';
 import { ThreadReads } from './thread-reads';
 
 /**
- * W6 (docs/20, docs/16 row 1b): a photo or PDF inside a chat bubble, for whoever reads the inbox.
- * Not in ThreadMediaController, whose class-level inbox.media keeps the «من الشات» picker admin
- * only. The admin and a salesperson (SalesScope) get the file; a teacher (TeacherScope) gets 403
- * media_forbidden (owner: a teacher never sees a payment proof). Errors come from
- * ThreadMediaService.file / InboundMedia: 404 message_not_found (unknown, or another phone's
- * message), 400 invoice_message (not an inbound image / PDF: only INVOICE_MIMES are served, audio
- * and video stay labels), 410 media_expired.
+ * W6 (docs/20, docs/16 row 1b; docs/21 D1/D2): a file inside a chat bubble, for whoever reads the
+ * inbox: a family's photo, PDF, voice note or video (CHAT_VIEW_MIMES), or a file staff sent. Not in
+ * ThreadMediaController, whose class-level inbox.media keeps the «من الشات» picker admin only (and
+ * images / PDFs only). The admin and a salesperson (SalesScope) get the file; a teacher
+ * (TeacherScope) still gets 403 media_forbidden (owner: a teacher never sees a payment proof).
+ * Errors come from ThreadMediaService.bubbleFile / InboundMedia: 404 message_not_found (unknown, or
+ * another phone's message), 400 invoice_message (an inbound type a bubble cannot open), 410
+ * media_expired (WhatsApp no longer has it, or a sent row with no stored file), 413 invoice_too_large.
  */
 @ApiTags('inbox')
 @ApiBearerAuth()
@@ -36,6 +37,6 @@ export class ThreadFileController {
     const phone = phoneParam(raw);
     const sales = await this.reads.salesScope(user);
     if (!sales && (await this.reads.scope(user))) throw waHttpError('media_forbidden', HttpStatus.FORBIDDEN);
-    return this.media.file({ phone, messageId });
+    return this.media.bubbleFile({ phone, messageId });
   }
 }

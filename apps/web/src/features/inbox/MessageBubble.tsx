@@ -1,4 +1,4 @@
-import { replyNote, type MessageView } from '@ab/shared';
+import { replyNote, senderLine, type MessageView } from '@ab/shared';
 import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
@@ -13,7 +13,6 @@ import { RatingChip } from './RatingChip';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
 
 export interface MessageBubbleProps {
-  /** `sent_by_teacher_name`: the teacher who sent it from the academy number; null = the academy. */
   message: MessageView;
   /** Its template is not approved yet, so the sender leaves it queued. */
   waitingTemplate: boolean;
@@ -42,6 +41,14 @@ function ReplyLine({ message: m }: { message: MessageView }) {
   const note = replyNote(m, locale);
   if (!note) return null;
   return <p className="mt-1 text-xs font-semibold text-ink-2">{t.inbox.quickReply[note.key].replace('{when}', note.when ?? '')}</p>;
+}
+
+/** Who sent ours (D4): «أرسلها: سارة» for staff, «رسالة تلقائية» for a job; nothing for theirs or history. */
+function SenderLine({ message: m }: { message: MessageView }) {
+  const line = senderLine(m);
+  if (!line) return null;
+  const text = line.kind === 'name' ? t.inbox.sentBy.replace('{name}', line.name) : t.inbox.automaticMessage;
+  return <p className="mt-1 text-2xs font-semibold text-ink-2">{text}</p>;
 }
 
 /** What was said: the template's name, the media, the text, and what a quick reply did. */
@@ -82,9 +89,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         )}
       >
         <Content message={m} />
-        {m.sent_by_teacher_name && (
-          <p className="mt-1 text-2xs font-semibold text-ink-2">{t.inbox.sentBy.replace('{name}', m.sent_by_teacher_name)}</p>
-        )}
+        <SenderLine message={m} />
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <LineBadge line={m.line} />
           <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
