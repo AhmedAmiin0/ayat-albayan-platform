@@ -52,7 +52,8 @@ describe('teacher dialog sends meeting_mode (owner 2026-10-19)', () => {
     expect(screen.getByRole('radio', { name: T.meetingModeOption.platform })).toHaveProperty('checked', true);
     fireEvent.change(screen.getByLabelText(T.meetingLink), { target: { value: '' } });
     fireEvent.click(screen.getByRole('radio', { name: T.meetingModeOption.static }));
-    expect(screen.getByText(T.meetingModeNoLink)).toBeTruthy();
+    // The note waits until the templates and integrations lists answered (no flash on a ready academy).
+    expect(await screen.findByText(T.meetingModeNoLink)).toBeTruthy();
     save();
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/teachers/t1', expect.anything()));
     expect(sent()).toMatchObject({ meeting_mode: 'static', meeting_link: null });
