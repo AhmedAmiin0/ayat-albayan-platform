@@ -112,5 +112,9 @@ describe('readyToSend, reportIdOf, messageLabel', () => {
     expect(messageLabel({ template_key: 'crm_legacy', body: null })).toBe('crm_legacy');
     expect(messageLabel({ template_key: null, body: '  وعليكم السلام  ' })).toBe('وعليكم السلام');
     expect(messageLabel({ template_key: null, body: 'ا'.repeat(50) })).toBe(`${'ا'.repeat(40)}…`);
+    // A file sent without a caption: its kind, so the failure push is not empty (owner 2026-10-19 #2).
+    expect(messageLabel({ template_key: null, body: null, media_path: 'out/a/r/x.jpg', media_mime: 'image/jpeg' })).toBe('صورة');
+    expect(messageLabel({ template_key: null, body: null, media_path: 'out/a/r/x.pdf', media_mime: 'application/pdf' })).toBe('ملف');
+    expect(messageLabel({ template_key: null, body: 'الواجب', media_path: 'out/a/r/x.pdf', media_mime: 'application/pdf' })).toBe('الواجب');
   });
 });

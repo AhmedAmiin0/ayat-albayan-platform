@@ -10,7 +10,7 @@ import {
   uploadHandleSchema,
   uploadSessionSchema,
 } from './meta-shapes';
-import { documentMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './wa-components';
+import { mediaMessage, readReceipt, submitPayload, templateMessage, textMessage, type GraphBody } from './wa-components';
 import {
   WaError,
   type MetaTemplate,
@@ -60,8 +60,8 @@ export class HttpWhatsappClient implements WhatsappClient {
     return this.send(input.to, () => textMessage(input));
   }
 
-  sendDocument(input: { to: string; url: string; filename: string; caption?: string | null }): Promise<WaSent> {
-    return this.send(input.to, () => documentMessage(input));
+  sendDocument(input: Parameters<WhatsappClient['sendDocument']>[0]): Promise<WaSent> {
+    return this.send(input.to, () => mediaMessage(input));
   }
 
   async markRead(waMessageId: string): Promise<void> {

@@ -49,6 +49,15 @@ export interface SampleFile {
   bytes: Uint8Array<ArrayBuffer>;
 }
 
+/** A session image or document by link; `kind` defaults to document, `filename` is a document's only. */
+export interface MediaSend {
+  to: string;
+  kind?: 'image' | 'document';
+  url: string;
+  filename?: string;
+  caption?: string | null;
+}
+
 /**
  * Every call throws WaError on a Meta error or a network failure, and WaError with code null and
  * status 0 when WhatsApp is not configured (whatsappEnv(env) === null).
@@ -58,8 +67,8 @@ export interface WhatsappClient {
   sendTemplate(input: TemplateSend): Promise<WaSent>;
   /** Session text: only inside the 24 h window (Meta answers 131047 otherwise). */
   sendText(input: { to: string; text: string; replyTo?: string | null }): Promise<WaSent>;
-  /** Session document by link (a signed Storage URL). */
-  sendDocument(input: { to: string; url: string; filename: string; caption?: string | null }): Promise<WaSent>;
+  /** Session image or document by link (a signed Storage URL); same body on both drivers. */
+  sendDocument(input: MediaSend): Promise<WaSent>;
   /** Blue ticks for an inbound wamid (POST /messages {status:'read'}). */
   markRead(waMessageId: string): Promise<void>;
   /** All pages of the WABA's templates. Read-only: safe for the health check. */

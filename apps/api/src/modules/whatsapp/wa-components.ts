@@ -1,7 +1,7 @@
 import { BODY_SLOTS, type TemplateParams } from '@ab/shared';
 import { bodyExamples } from './template-review';
 import { templateButtons } from './wa-json';
-import { WaError, type TemplateRow, type TemplateSend } from './whatsapp.types';
+import { WaError, type MediaSend, type TemplateRow, type TemplateSend } from './whatsapp.types';
 
 // Graph request bodies (docs/12 §3.2): what POST /{phone}/messages and POST /message_templates get.
 
@@ -79,9 +79,12 @@ export function textMessage(input: { to: string; text: string; replyTo?: string 
   };
 }
 
-export function documentMessage(input: { to: string; url: string; filename: string; caption?: string | null }): GraphBody {
-  const document = { link: input.url, filename: input.filename, ...(input.caption ? { caption: input.caption } : {}) };
-  return { ...envelope(input.to), type: 'document', document };
+/** A session image or document by link (`{type: kind, [kind]: {link, caption?, filename?}}`); a filename is a document's only. */
+export function mediaMessage(input: MediaSend): GraphBody {
+  const kind = input.kind ?? 'document';
+  const filename = kind === 'document' && input.filename ? { filename: input.filename } : {};
+  const media = { link: input.url, ...(input.caption ? { caption: input.caption } : {}), ...filename };
+  return { ...envelope(input.to), type: kind, [kind]: media };
 }
 
 export const readReceipt = (waMessageId: string): GraphBody => ({

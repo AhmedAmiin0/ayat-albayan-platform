@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import {
   bodyVarCount,
-  documentMessage,
+  mediaMessage,
   readReceipt,
   submitPayload,
   templateMessage,
@@ -91,7 +91,7 @@ describe('Graph message bodies (docs/12 §3.2)', () => {
       context: { message_id: 'wamid.in1' },
     });
     expect(textMessage({ to: TO, text: 'x' })).not.toHaveProperty('context');
-    expect(documentMessage({ to: TO, url: 'https://s/x.pdf', filename: 'x.pdf', caption: 'التقرير' })).toMatchObject({
+    expect(mediaMessage({ to: TO, url: 'https://s/x.pdf', filename: 'x.pdf', caption: 'التقرير' })).toMatchObject({
       type: 'document',
       document: { link: 'https://s/x.pdf', filename: 'x.pdf', caption: 'التقرير' },
     });
