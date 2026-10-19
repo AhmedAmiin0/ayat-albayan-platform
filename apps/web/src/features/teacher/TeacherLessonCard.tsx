@@ -8,6 +8,7 @@ import { LessonReportLinks } from '@/features/reports/LessonReportLinks';
 import { LessonActions } from '@/features/schedule/LessonActions';
 import { studentNames, studentTimes } from '@/features/schedule/lessons';
 import { t } from '@/lib/i18n';
+import { usePlatformClassroom } from '@/lib/public-config';
 import { cn } from '@/lib/utils';
 import { TeacherProposal } from './TeacherProposal';
 
@@ -30,7 +31,7 @@ export interface TeacherLessonCardProps {
  */
 export function TeacherLessonCard({ lesson, tz, fallbackLink, onDone }: TeacherLessonCardProps) {
   const style = lessonStatusStyle[lesson.status];
-  const platform = lesson.platform_classroom ?? false;
+  const platform = usePlatformClassroom(lesson.platform_classroom);
   const link = lesson.meeting_link ?? fallbackLink;
   return (
     <article

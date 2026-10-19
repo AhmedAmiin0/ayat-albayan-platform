@@ -3,6 +3,7 @@ import { Linking, View } from 'react-native';
 import { JoinClassroomButton } from '@/classroom/JoinClassroomButton';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
+import { usePlatformClassroom } from '@/lib/public-config';
 import { LiveBadge } from '@/live/LiveBadge';
 import { shape, type, useTheme } from '@/theme';
 import { durationLabel, studentNames } from '@/today/lesson-text';
@@ -43,7 +44,7 @@ function timeLine(lesson: LessonView, tz: string): string {
 export function TeacherLessonCard(p: TeacherLessonCardProps) {
   const { color } = useTheme();
   const { lesson } = p;
-  const auto = lesson.platform_classroom === true; // absent = the fixed link
+  const auto = usePlatformClassroom(lesson.platform_classroom);
   const canConfirm = lesson.allowed_events.includes('confirm') && applyLessonEvent(lesson.status, 'confirm') !== null;
   const link = !auto && isOpenLesson(lesson.status) ? lesson.meeting_link : null;
   const needsConfirm = lesson.status === 'scheduled';

@@ -4,6 +4,7 @@ import { buttonVariants } from '@/components/ui/button';
 import { Icon } from '@/components/ui/icon';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
+import { usePlatformClassroom } from '@/lib/public-config';
 import { programList } from './teacher-view';
 import { TeacherMeetingLink } from './TeacherMeetingLink';
 import { TeacherStudentsByKind } from './TeacherStudentsByKind';
@@ -16,6 +17,7 @@ import { TeacherStudentsByKind } from './TeacherStudentsByKind';
  */
 export function TeacherDetail({ teacher }: { teacher: SalesTeacherView }) {
   const { students } = teacher;
+  const platform = usePlatformClassroom(teacher.platform_classroom);
   return (
     <>
       <div className="grid gap-2">
@@ -34,7 +36,7 @@ export function TeacherDetail({ teacher }: { teacher: SalesTeacherView }) {
           {t.sales.teachers.openSchedule}
         </Link>
       </div>
-      <TeacherMeetingLink link={teacher.meeting_link} platform={teacher.platform_classroom} />
+      <TeacherMeetingLink link={teacher.meeting_link} platform={platform} />
       <TeacherStudentsByKind teacher={teacher} />
     </>
   );
