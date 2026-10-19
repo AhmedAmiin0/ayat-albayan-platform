@@ -92,4 +92,15 @@ describe('StorageService (R-REP-02/03, R-PAY-01)', () => {
     const write = { bucket: 'reports' as const, path: 'a', body: new Uint8Array(), contentType: 'x' };
     await expect(svc.upload(write)).rejects.toThrow(/nope/);
   });
+
+  it('removeMany sends every path in one call and skips an empty list', async () => {
+    const remove = vi.fn().mockResolvedValue({ error: null });
+    const { svc } = fakeStorage({ remove });
+    await svc.removeMany({ bucket: 'wa-media', paths: [] });
+    expect(remove).not.toHaveBeenCalled();
+    await svc.removeMany({ bucket: 'wa-media', paths: ['a.ogg', 'b.mp4'] });
+    expect(remove).toHaveBeenCalledWith(['a.ogg', 'b.mp4']);
+    remove.mockResolvedValue({ error: { message: 'nope' } });
+    await expect(svc.removeMany({ bucket: 'wa-media', paths: ['a.ogg'] })).rejects.toThrow(/nope/);
+  });
 });
