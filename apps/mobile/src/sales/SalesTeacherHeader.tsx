@@ -34,7 +34,7 @@ export function SalesTeacherHeader({ teacher, kind, onKind }: SalesTeacherHeader
         onPress={() => router.push(href.schedule(teacher.id))}
       />
       <Note>{t.schedule.riyadhTime}</Note>
-      <TeacherMeetingLink link={teacher.meeting_link} />
+      <TeacherMeetingLink link={teacher.meeting_link} platform={teacher.platform_classroom} />
       <FilterPills
         items={kindPills(counts)}
         value={kind}

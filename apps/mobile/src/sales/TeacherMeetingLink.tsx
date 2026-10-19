@@ -2,7 +2,6 @@ import { safeHttpUrl } from '@ab/shared';
 import { useState } from 'react';
 import { Linking, Share, View } from 'react-native';
 import { t } from '@/lib/i18n';
-import { usePublicConfig } from '@/lib/public-config';
 import { Note } from '@/more/Note';
 import { type, useTheme } from '@/theme';
 import { AppText } from '@/ui/AppText';
@@ -15,12 +14,12 @@ const L = t.studentLists;
  * «رابط الحلقة الثابت» on the sales teacher's page (owner 2026-10-12: the one place sales sees a
  * meeting link, web parity): the URL as selectable LTR text (long-press to copy), «شارك الرابط» (the
  * phone's share sheet: no clipboard module, the app ships by OTA) and «افتح الرابط». Only an http(s)
- * URL is shown, anything else reads «لا يوجد رابط ثابت». With settings.meeting_link_auto a line says
- * families get the platform link instead.
+ * URL is shown, anything else reads «لا يوجد رابط ثابت». When the teacher holds her lessons in our
+ * classroom (SalesTeacherView.platform_classroom, per-teacher meeting mode) a line says families get
+ * the platform link instead.
  */
-export function TeacherMeetingLink({ link }: { link: string | null }) {
+export function TeacherMeetingLink({ link, platform }: { link: string | null; platform: boolean }) {
   const { color } = useTheme();
-  const { meeting_link_auto: auto } = usePublicConfig();
   const [failed, setFailed] = useState(false);
   const url = safeHttpUrl(link);
   const share = (text: string) => {
@@ -53,7 +52,7 @@ export function TeacherMeetingLink({ link }: { link: string | null }) {
       ) : (
         <Note>{L.meetingLinkNone}</Note>
       )}
-      {auto ? <Note>{L.meetingLinkAuto}</Note> : null}
+      {platform ? <Note>{L.meetingLinkAuto}</Note> : null}
     </View>
   );
 }
