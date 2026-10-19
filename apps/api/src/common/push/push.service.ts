@@ -59,6 +59,21 @@ export class PushService {
     }
   }
 
+  /**
+   * An assistant's alert (docs/21 §6): the family's owners permitted for the kind; none (a new lead,
+   * an unowned family, or no owner eligible) → every enabled salesperson. An admin owner's row
+   * deduplicates against notifyAdmins (same dedup key), so it does not spread to the assistants.
+   */
+  async notifySales(kind: PushKind, event: PushEvent, owners: readonly string[]): Promise<void> {
+    try {
+      const owned = owners.length ? await this.audience.recipients(kind, owners) : [];
+      const ids = owned.length ? owned.map((p) => p.id) : await this.audience.salesIds();
+      await this.notifyProfiles({ ...event, kind, profileIds: ids });
+    } catch (e) {
+      this.warn(`${kind}:${event.subject}`, e);
+    }
+  }
+
   async notifyProfiles(target: PushTarget): Promise<void> {
     try {
       const ids = [...new Set(target.profileIds)];

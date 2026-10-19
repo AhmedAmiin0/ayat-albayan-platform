@@ -1,9 +1,9 @@
-import { waIdToE164, type LessonRating } from '@ab/shared';
+import { waIdToE164, type LessonRating, type PushKind } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
-import { PushService } from '../../common/push/push.service';
+import { PushService, type PushEvent } from '../../common/push/push.service';
 import type { InboundEvent } from './webhook.events';
 import { inboundPush, intentOf, ratingOf } from './webhook.inbound';
-import { InboundStore } from './webhook.inbound.store';
+import { InboundStore, type Sender } from './webhook.inbound.store';
 import type { Contact } from './webhook.queries';
 import { QuickReplies } from './webhook.quick-reply';
 
@@ -17,7 +17,8 @@ export interface InboundOptions {
 
 /**
  * One inbound WhatsApp message (R-MSG-04, R-LEAD-01): lead upsert, the stored row, quick reply
- * (a lesson_rating tap is stored on lesson_feedback, migration 195) and the admin push. Replay-safe: Meta re-sends a wamid until it gets a 200, and a wamid already
+ * (a lesson_rating tap is stored on lesson_feedback, migration 195), the admin push and the
+ * assistants' push (docs/21 §6: the family's owners, else every assistant). Replay-safe: Meta re-sends a wamid until it gets a 200, and a wamid already
  * stored stops here before any side effect (no second confirm, no second push). If the quick
  * reply fails (DB down) while Meta still waits for our answer, the row just stored is removed and
  * the error goes up (500): Meta's re-send then finds no row and does it all again. Past the
@@ -54,6 +55,19 @@ export class InboundService {
     }
     const { kind, event } = inboundPush({ m, phone, who, newLeadId: lead.created, intent });
     await this.push.notifyAdmins(kind, event);
+    await this.notifySalesFor(kind, event, { who, lead });
+  }
+
+  /** The assistants' alert (docs/21 §6): none for a teacher; a new lead → every assistant. */
+  private async notifySalesFor(kind: PushKind, event: PushEvent, from: Sender): Promise<void> {
+    if (from.who.teacher) return;
+    let owners: string[];
+    try {
+      owners = kind === 'new_lead' ? [] : await this.store.owners(from.who, from.lead);
+    } catch (e) {
+      return void this.log.warn(`inbound ${event.subject}: owners lookup failed, no sales push: ${e instanceof Error ? e.message : String(e)}`);
+    }
+    await this.push.notifySales(kind, event, owners);
   }
 
   /** A lesson_rating tap of a guardian on a lesson of theirs → lesson_feedback (migration 195). */

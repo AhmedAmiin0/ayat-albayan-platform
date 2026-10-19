@@ -85,6 +85,7 @@ export function fakeQueries() {
     recentLessonOutbound: vi.fn().mockResolvedValue(null),
     replyWindowMs: vi.fn().mockResolvedValue(48 * 3_600_000),
     updateLead: vi.fn().mockResolvedValue(undefined),
+    guardianOwners: vi.fn().mockResolvedValue([] as string[]),
   };
 }
 
@@ -93,7 +94,7 @@ export function fakeDeps() {
     queries: fakeQueries(),
     leads: { upsertByPhone: vi.fn().mockResolvedValue(lead({ id: NEW_LEAD_ID })) },
     lessons: { confirm: vi.fn().mockResolvedValue(LESSON_ID) },
-    push: { notifyAdmins: vi.fn().mockResolvedValue(undefined) },
+    push: { notifyAdmins: vi.fn().mockResolvedValue(undefined), notifySales: vi.fn().mockResolvedValue(undefined) },
     audit: { record: vi.fn().mockResolvedValue(undefined) },
     ratings: { record: vi.fn().mockResolvedValue(1) },
   };

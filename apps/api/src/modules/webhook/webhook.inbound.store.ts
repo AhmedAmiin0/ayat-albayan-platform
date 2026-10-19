@@ -12,6 +12,8 @@ export interface LeadLink {
   created: string | null;
   /** Follow-ups already sent; a reply starts the cadence over. */
   stage: number;
+  /** The lead's assistant (assigned_to, after auto-assign); null for a guardian, teacher or applicant. */
+  owner: string | null;
 }
 
 export interface Sender {
@@ -35,11 +37,18 @@ export class InboundStore {
   async sender(input: { m: InboundEvent; phone: string }): Promise<Sender> {
     const { m, phone } = input;
     const who = await this.queries.identify(phone);
-    const known = { id: who.lead?.id ?? null, created: null, stage: who.lead?.follow_up_stage ?? 0 };
+    const known = { id: who.lead?.id ?? null, created: null, stage: who.lead?.follow_up_stage ?? 0, owner: null };
     if (who.guardian || who.teacher) return { who, lead: known };
     const row = await this.leads.upsertByPhone({ phone, name: m.name, at: m.at });
     if (!row) return { who, lead: known };
-    return { who, lead: { id: row.id, created: who.lead ? null : row.id, stage: row.follow_up_stage } };
+    const created = who.lead ? null : row.id;
+    return { who, lead: { id: row.id, created, stage: row.follow_up_stage, owner: row.assigned_to } };
+  }
+
+  /** The assistants an inbound alert goes to (docs/21 §6): the lead's, plus the family's owners. */
+  async owners(who: Contact, lead: LeadLink): Promise<string[]> {
+    const family = who.guardian ? await this.queries.guardianOwners(who.guardian.id) : [];
+    return [...new Set([...(lead.owner ? [lead.owner] : []), ...family])];
   }
 
   /**
