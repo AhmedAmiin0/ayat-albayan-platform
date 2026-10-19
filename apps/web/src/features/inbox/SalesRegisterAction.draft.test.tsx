@@ -98,6 +98,9 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
   });
 
   it('a saved first lesson now past: reopening lands on the slot step with no slot (review M3)', async () => {
+    // The week of the fixture's slot (Sun 4 Oct 17:00), so a new time can be picked below (round 3).
+    vi.useFakeTimers({ toFake: ['Date'] });
+    vi.setSystemTime(new Date('2026-10-03T09:00:00.000Z'));
     const old = draftFromLead({ leadId: 'lead-1', phone: PHONE }, null);
     registerDrafts.set(PHONE, { draft: { ...old, teacher: ABRAR, startsAt: '2020-01-01T10:00:00.000Z' }, step: 'review' });
     renderAction();
