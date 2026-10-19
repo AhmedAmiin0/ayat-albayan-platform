@@ -1,4 +1,4 @@
-import { cleanup, fireEvent, screen, within } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { draftFromLead } from '@/features/booking/booking-entries';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/booking/wizard-fixture';
@@ -108,8 +108,8 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     expect(dialog.getByRole('alert').textContent).toContain(t.booking.firstLessonPast);
     // Round 3: the line goes once she picks a new time.
     const sunday = await screen.findByRole('region', { name: new RegExp(`^${t.enums.weekday[0]} `) });
-    fireEvent.click(within(sunday).getByRole('button', { name: /17:00/ }));
-    expect(dialog.queryByText(t.booking.firstLessonPast)).toBeNull();
+    fireEvent.click(await within(sunday).findByRole('button', { name: /17:00/ }));
+    await waitFor(() => expect(dialog.queryByText(t.booking.firstLessonPast)).toBeNull());
   });
 
   it('a draft saved for another lead is not resumed: a fresh draft from the chat', () => {
