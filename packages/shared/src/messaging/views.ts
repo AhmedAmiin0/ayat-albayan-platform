@@ -80,8 +80,14 @@ export interface MessageView {
   delivered_at: string | null;
   read_at: string | null;
   sent_manually_at: string | null;
-  /** The teacher who sent it from their inbox («بعتها»); null = the academy or a job. Absent in an old cache. */
+  /** @deprecated Read sender_name (D4); still filled for old mobile builds and cached rows. */
   sent_by_teacher_name?: string | null;
+  /** A sent file's name (D2); null for inbound, text and template rows. */
+  media_name?: string | null;
+  /** Staff who sent it: the teacher's display_name_ar, else profiles.full_name; null = automatic, history or inbound (D4). */
+  sender_name?: string | null;
+  /** Outbound queued by the platform with no staff behind it (created_by null, dedup_key set). Not send-stale's isAutomatic. */
+  automatic?: boolean;
   /** Line received on / sent from (docs/12 §13); null = history or a single line. Absent in an old cache. */
   line?: WaLine | null;
   created_at: string;

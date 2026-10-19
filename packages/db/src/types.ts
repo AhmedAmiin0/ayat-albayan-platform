@@ -2007,6 +2007,7 @@ export type Database = {
           line: Database['public']['Enums']['wa_line'] | null;
           media_id: string | null;
           media_mime: string | null;
+          media_name: string | null;
           media_path: string | null;
           next_attempt_at: string | null;
           phone_e164: string;
@@ -2043,6 +2044,7 @@ export type Database = {
           line?: Database['public']['Enums']['wa_line'] | null;
           media_id?: string | null;
           media_mime?: string | null;
+          media_name?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
           phone_e164: string;
@@ -2079,6 +2081,7 @@ export type Database = {
           line?: Database['public']['Enums']['wa_line'] | null;
           media_id?: string | null;
           media_mime?: string | null;
+          media_name?: string | null;
           media_path?: string | null;
           next_attempt_at?: string | null;
           phone_e164?: string;
@@ -2096,6 +2099,13 @@ export type Database = {
           wa_pricing_category?: string | null;
         };
         Relationships: [
+          {
+            foreignKeyName: 'messages_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
           {
             foreignKeyName: 'messages_guardian_id_fkey';
             columns: ['guardian_id'];

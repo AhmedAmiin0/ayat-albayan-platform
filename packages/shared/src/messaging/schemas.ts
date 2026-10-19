@@ -1,6 +1,7 @@
 import { z } from 'zod';
 import { WA_LINES } from '../enums/messaging.js';
 import { leadQualificationSchema } from '../schemas/leads.js';
+import { CHAT_SEND_MIMES, WA_CAPTION_MAX } from './chat-files.js';
 import { BODY_SLOTS, type BodySlot } from './templates.js';
 
 // Phase 4 request bodies (docs/12 §4). Commands are camelCase, like every other request.
@@ -13,6 +14,21 @@ export const threadTextSchema = z.object({
   text: z.string().trim().min(1).max(WA_TEXT_MAX),
   /** Idempotency (rule 8): a retried send returns the first row. */
   clientRequestId: z.uuid().optional(),
+});
+
+/** POST /threads/:phone/file-upload-url: a signed upload for one image or PDF (owner 2026-10-19 #2). */
+export const threadFileUploadSchema = z.object({
+  clientRequestId: z.uuid(),
+  mime: z.enum(CHAT_SEND_MIMES, { message: 'file_type' }),
+  size: z.int().min(1),
+});
+
+/** POST /threads/:phone/file: send the uploaded file; the id makes a retry return the first row. */
+export const threadFileSendSchema = z.object({
+  clientRequestId: z.uuid(),
+  path: z.string().min(1),
+  filename: z.string().trim().min(1).max(200).regex(/^[^/\\]+$/),
+  caption: z.string().trim().max(WA_CAPTION_MAX).optional(),
 });
 
 const paramText = z.string().trim().min(1).max(1024).optional();
@@ -57,6 +73,8 @@ export const leadQualificationPatchSchema = leadQualificationSchema.partial();
 export const leadFollowUpSchema = z.object({ paused: z.boolean() });
 
 export type ThreadText = z.infer<typeof threadTextSchema>;
+export type ThreadFileUpload = z.infer<typeof threadFileUploadSchema>;
+export type ThreadFileSendInput = z.infer<typeof threadFileSendSchema>;
 export type TemplateParamsInput = z.infer<typeof templateParamsInputSchema>;
 export type ThreadTemplate = z.infer<typeof threadTemplateSchema>;
 export type ThreadRating = z.infer<typeof threadRatingSchema>;

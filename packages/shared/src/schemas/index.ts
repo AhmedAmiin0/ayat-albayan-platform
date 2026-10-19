@@ -13,3 +13,4 @@ export * from './list-sort.js';
 export * from './people-sort.js';
 export * from './activity.js';
 export * from './course-change.js';
+export * from './chat-media.js';

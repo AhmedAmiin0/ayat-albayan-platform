@@ -1,4 +1,4 @@
-import { INVOICE_MAX_BYTES, INVOICE_MIMES, isWaAuthError } from '@ab/shared';
+import { INVOICE_MAX_BYTES, INVOICE_MIMES, baseMime, isWaAuthError } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
 import { BUCKETS, waMediaPath } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
@@ -13,8 +13,8 @@ const DAY_MS = 86_400_000;
 
 export type InboundFile = { bucket: typeof BUCKETS.waMedia; path: string; mime: string };
 
-/** «image/jpeg; codecs=…» → «image/jpeg». */
-export const baseMime = (mime: string | null): string => mime?.split(';')[0]?.trim().toLowerCase() ?? '';
+/** «image/jpeg; codecs=…» → «image/jpeg» (shared since owner 2026-10-19 #1). */
+export { baseMime };
 export const isInvoiceMime = (mime: string | null): boolean => (INVOICE_MIMES as readonly string[]).includes(baseMime(mime));
 
 /** Older than WhatsApp keeps the file (and never cached by us): it cannot be fetched any more. */

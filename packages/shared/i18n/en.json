@@ -2336,7 +2336,13 @@
         "slot_2": "Second time option",
         "tz_city": "City (time zone)",
         "contact_name": "Recipient name"
-      }
+      },
+      "attach": "Attach an image or PDF",
+      "attachImage": "Attach an image",
+      "attachPdf": "Attach a PDF",
+      "removeFile": "Remove file",
+      "captionPlaceholder": "Add a caption (optional)",
+      "sendFile": "Send"
     },
     "sessionClosed": "More than 24 hours have passed since their last message — you need to send a template",
     "sessionOpenUntil": "You can reply with a regular message until {time}",
@@ -2354,7 +2360,13 @@
       "own_thread_read_only": "This is your chat with the academy; it's read-only",
       "template_not_allowed": "Only the admin can send this template",
       "not_your_lesson": "This lesson isn't one of yours",
-      "line_not_configured": "The line the last message arrived on is not configured on the server"
+      "line_not_configured": "The line the last message arrived on is not configured on the server",
+      "file_type": "Only JPG or PNG images and PDF files can be sent",
+      "file_too_large": "The file is larger than allowed",
+      "file_path": "The file could not be uploaded. Try again",
+      "file_upload": "The file could not be uploaded. Try again",
+      "files_forbidden": "You cannot send files",
+      "media_handoff": "Files cannot be handed off to WhatsApp; retry here"
     },
     "line": {
       "replyFrom": "Your reply will be sent via: {line}"
@@ -2433,7 +2445,10 @@
       "hint": "Type the number with its country code, then send a template to start the chat",
       "firstTemplate": "To start the chat, send an approved template; WhatsApp allows no plain message before the family replies.",
       "noAllowed": "You can't start a chat now: no template is available to you. Ask the admin to enable a template."
-    }
+    },
+    "playMedia": "Play {kind}",
+    "pauseMedia": "Pause",
+    "automaticMessage": "Automatic message"
   },
   "mobileFinance": {
     "section": "Payouts and expenses",
@@ -3167,7 +3182,7 @@
       "defaultMeetingTitle": "Used when a meeting is created without a title.",
       "meetingLinkAuto": "This is the default for teachers whose lesson attendance is set to «Follow the academy setting»; it can be changed per teacher from the teacher's page. When on, the platform's online classroom links replace the teacher's fixed link: the guardian gets a personal join link with the reminder before the lesson, not with the booking confirmation, and the teacher gets the lesson's classroom page. Without the classroom server configured no link is sent; until Meta approves the «Online classroom link» template, the guardian's reminder carries no link.",
       "fxFreshHours": "After this, a new rate is fetched from the provider.",
-      "uploadMaxMb": "For receipts and booking invoices, up to 10 MB.",
+      "uploadMaxMb": "For receipts, booking invoices and files sent from the chat, up to 10 MB.",
       "academyWhatsapp": "International format, e.g. +966500000000; shown on public pages for guardians to reach us.",
       "academyTimezone": "Days in payment and invoice ranges, the day view and recurring expenses follow this zone.",
       "feedbackRateWindowMin": "Each link may send 10 requests and each IP 60 within this window.",
