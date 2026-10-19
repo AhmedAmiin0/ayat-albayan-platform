@@ -46,6 +46,8 @@ describe('teacher form (R-TCH-01)', () => {
       programs: ['quran', 'arabic'],
       phone_e164: '+966501234567',
       meeting_link: null,
+      meeting_mode: 'platform',
+      platform_classroom: true,
       rate_30: 50,
       rate_45: null,
       max_students: 10,
@@ -60,7 +62,14 @@ describe('teacher form (R-TCH-01)', () => {
       rate_90: '',
       max_students: '10',
       status: 'inactive',
+      meeting_mode: 'platform',
     });
+  });
+
+  it('sends meeting_mode: the chosen mode, null for «حسب إعداد الأكاديمية»', () => {
+    expect(emptyTeacherForm().meeting_mode).toBeNull();
+    expect(validateTeacher(filled)).toMatchObject({ ok: true, payload: { meeting_mode: null } });
+    expect(validateTeacher({ ...filled, meeting_mode: 'static' })).toMatchObject({ ok: true, payload: { meeting_mode: 'static' } });
   });
 
   it('maps API errors to Arabic messages', () => {

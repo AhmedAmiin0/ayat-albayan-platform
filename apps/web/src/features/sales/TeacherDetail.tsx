@@ -34,7 +34,7 @@ export function TeacherDetail({ teacher }: { teacher: SalesTeacherView }) {
           {t.sales.teachers.openSchedule}
         </Link>
       </div>
-      <TeacherMeetingLink link={teacher.meeting_link} />
+      <TeacherMeetingLink link={teacher.meeting_link} platform={teacher.platform_classroom} />
       <TeacherStudentsByKind teacher={teacher} />
     </>
   );

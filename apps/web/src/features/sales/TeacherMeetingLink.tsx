@@ -3,7 +3,6 @@ import { useState } from 'react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
-import { usePublicConfig } from '@/lib/public-config';
 
 const L = t.studentLists;
 
@@ -12,10 +11,10 @@ type CopyState = 'idle' | 'copied' | 'failed';
 /**
  * «رابط الحلقة الثابت» in the teacher's drawer (owner 2026-10-12: the one place sales sees a meeting
  * link): the URL as an LTR island, «انسخ الرابط» and «افتح الرابط». Only an http(s) URL is shown, anything
- * else reads «لا يوجد رابط ثابت». With settings.meeting_link_auto a line says families get the platform link.
+ * else reads «لا يوجد رابط ثابت». When the teacher's lessons go out with
+ * the platform classroom (SalesTeacherView.platform_classroom) a line says families get that link.
  */
-export function TeacherMeetingLink({ link }: { link: string | null }) {
-  const { meeting_link_auto: auto } = usePublicConfig();
+export function TeacherMeetingLink({ link, platform }: { link: string | null; platform: boolean }) {
   const [copy, setCopy] = useState<CopyState>('idle');
   const url = safeHttpUrl(link);
   const onCopy = async (text: string) => {
@@ -50,7 +49,7 @@ export function TeacherMeetingLink({ link }: { link: string | null }) {
       ) : (
         <p className="text-sm text-ink-3">{L.meetingLinkNone}</p>
       )}
-      {auto && <p className="text-xs text-ink-3">{L.meetingLinkAuto}</p>}
+      {platform && <p className="text-xs text-ink-3">{L.meetingLinkAuto}</p>}
     </section>
   );
 }

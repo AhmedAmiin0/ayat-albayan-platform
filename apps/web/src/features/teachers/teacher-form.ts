@@ -3,6 +3,7 @@ import {
   type Gender,
   type Program,
   type TeacherCreate,
+  type TeacherMeetingMode,
   type TeacherStatus,
 } from '@ab/shared';
 import { ApiError } from '@/lib/api';
@@ -26,6 +27,8 @@ export type TeacherForm = {
   programs: Program[];
   phone_e164: string;
   meeting_link: string;
+  /** null = «حسب إعداد الأكاديمية» (settings.meeting_link_auto). */
+  meeting_mode: TeacherMeetingMode | null;
   status: TeacherStatus;
   tz: string;
 } & Record<NumberKey, string>;
@@ -41,6 +44,7 @@ export function emptyTeacherForm(): TeacherForm {
     programs: ['quran'],
     phone_e164: '',
     meeting_link: '',
+    meeting_mode: null,
     status: 'active',
     tz: 'Africa/Cairo',
     rate_30: '',
@@ -61,6 +65,7 @@ export function toTeacherForm(teacher: Teacher): TeacherForm {
     programs: teacher.programs,
     phone_e164: teacher.phone_e164 ?? '',
     meeting_link: teacher.meeting_link ?? '',
+    meeting_mode: teacher.meeting_mode,
     status: teacher.status,
     tz: teacher.tz,
     rate_30: num(teacher.rate_30),
