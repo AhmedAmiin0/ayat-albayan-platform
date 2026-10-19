@@ -49,7 +49,7 @@ function Content({ message: m }: { message: MessageView }) {
       {m.template_key && <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>}
       {(m.media_mime || m.media_url) && <Media message={m} />}
       {m.body && (
-        <p dir="auto" className="whitespace-pre-wrap break-words">
+        <p dir="auto" className="whitespace-pre-wrap [overflow-wrap:anywhere]">
           {m.body}
         </p>
       )}
@@ -74,7 +74,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
     <li className={cn('flex', outbound ? 'justify-end' : 'justify-start')}>
       <article
         className={cn(
-          'max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
+          'min-w-0 max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
           // Phones (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
           outbound
             ? 'bg-sunk max-sm:rounded-ee-sm max-sm:border max-sm:border-lapis/25 max-sm:bg-lapis-wash'
