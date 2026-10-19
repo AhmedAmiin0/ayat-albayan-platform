@@ -4,7 +4,7 @@
     "slug": "ayat-albayan-admin",
     "owner": "holdmycup",
     "scheme": "ayatalbayan",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "automatic",
@@ -44,7 +44,14 @@
           "photosPermission": "نحتاج إلى الصور لاختيار صورة إيصال التحويل وتسجيلها مع الدفعة.",
           "microphonePermission": false
         }
-      ]
+      ],
+      [
+        "expo-audio",
+        {
+          "microphonePermission": false
+        }
+      ],
+      "expo-video"
     ],
     "runtimeVersion": {
       "policy": "appVersion"
