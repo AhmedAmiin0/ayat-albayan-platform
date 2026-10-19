@@ -3,6 +3,8 @@ import { useCallback, useSyncExternalStore } from 'react';
 const NARROW = '(max-width: 47.99rem)';
 /** Tailwind's `max-sm`: below 640px, where forms open as full-screen sheets (owner, 2026-10-05). */
 const PHONE = '(max-width: 39.99rem)';
+/** Below Tailwind's `shell` (900px): no sidebar fihris, so the open chat takes the whole screen. */
+const BELOW_SHELL = '(max-width: 56.24rem)';
 const hasMedia = () => typeof matchMedia === 'function';
 
 function useMedia(media: string): boolean {
@@ -29,4 +31,12 @@ export function useNarrow(): boolean {
  */
 export function usePhone(): boolean {
   return useMedia(PHONE);
+}
+
+/**
+ * True under `shell` (900px): the inbox opens a chat full-screen (PhoneChat) on phones, half-screen
+ * windows and tablets, where the page would otherwise scroll instead of the log. Dialogs keep usePhone.
+ */
+export function useBelowShell(): boolean {
+  return useMedia(BELOW_SHELL);
 }

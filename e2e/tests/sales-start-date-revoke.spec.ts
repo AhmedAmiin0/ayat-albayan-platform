@@ -1,4 +1,5 @@
 import { makeAssistant, message, tokenOf } from '../support/assistant-api';
+import { fromChatMore } from '../support/assistant-journey';
 import { ar, expect, test } from '../support/fixtures';
 import { freshDigits } from '../support/messages';
 import { signInSales } from '../support/sales-portal';
@@ -32,7 +33,7 @@ test.describe('sales start date: the admin can switch it off', () => {
 
     const page = await signInSales(browser, me.email);
     await page.goto(`/sales/inbox?phone=${encodeURIComponent(phone)}`);
-    await page.getByRole('button', { name: ar.registrationCheck.action }).click();
+    await fromChatMore(page, ar.registrationCheck.action);
     const check = page.getByRole('dialog', { name: ar.registrationCheck.title });
     await expect(check.getByText(name)).toBeVisible();
     await check.getByRole('button', { name: ar.registrationCheck.close }).first().click();

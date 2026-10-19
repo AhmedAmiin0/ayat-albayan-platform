@@ -34,6 +34,9 @@ function open(students: ReturnType<typeof student>[]) {
 
 const renewOf = (name: string) => ({ name: `${t.students.renew} — ${name}` });
 
+/** The header's «المزيد» (W3): the secondary sales actions live in it. */
+const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
+
 describe('«جدّد الاشتراك» in a sales chat (owner 2026-10-15)', () => {
   afterEach(() => {
     apiFetch.mockReset();
@@ -46,6 +49,7 @@ describe('«جدّد الاشتراك» in a sales chat (owner 2026-10-15)', () 
       student({ id: JUD, name: 'جود', status: 'expired' }),
       student({ id: 'x', name: 'يوسف', status: 'active' }),
     ]);
+    await openMore();
     expect(await screen.findByRole('button', renewOf('سهيلة'))).toBeTruthy();
     expect(screen.getByRole('button', renewOf('جود'))).toBeTruthy();
     expect(screen.queryByRole('button', renewOf('يوسف'))).toBeNull();
@@ -54,12 +58,14 @@ describe('«جدّد الاشتراك» in a sales chat (owner 2026-10-15)', () 
 
   it('several children: each button shows the child it renews (visible text = accessible name)', async () => {
     open([student({ status: 'pending_renewal' }), student({ id: JUD, name: 'جود', status: 'expired' })]);
+    await openMore();
     expect((await screen.findByRole('button', renewOf('جود'))).textContent).toBe(`${t.students.renew} — جود`);
     expect(screen.getByRole('button', renewOf('سهيلة')).textContent).toBe(`${t.students.renew} — سهيلة`);
   });
 
   it('a single student: the plain «جدّد الاشتراك»', async () => {
     open([student({ status: 'expired' })]);
+    await openMore();
     expect((await screen.findByRole('button', { name: t.students.renew })).textContent).toBe(t.students.renew);
   });
 
@@ -71,6 +77,7 @@ describe('«جدّد الاشتراك» in a sales chat (owner 2026-10-15)', () 
 
   it('opens the chat subscribe step with that student already picked', async () => {
     open([student({ status: 'trial' }), student({ id: JUD, name: 'جود', status: 'expired' })]);
+    await openMore();
     fireEvent.click(await screen.findByRole('button', renewOf('جود')));
     const dialog = within(screen.getByRole('dialog', { name: t.salesMoney.newSubscription }));
     expect(dialog.getByRole<HTMLSelectElement>('combobox', { name: t.salesMoney.pickChild }).value).toBe(JUD);

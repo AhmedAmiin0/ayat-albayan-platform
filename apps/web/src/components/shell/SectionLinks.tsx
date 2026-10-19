@@ -11,6 +11,8 @@ export interface SectionLink {
   exact?: boolean;
   /** Dynamic roles: the permission that opens the page. */
   permission: Permission;
+  /** A count after the label, part of the link's name (like AdminNav's): «3 غير مقروءة». */
+  count?: string | undefined;
 }
 
 export interface SectionLinksProps {
@@ -41,6 +43,12 @@ export function SectionLinks({ label, items, can = () => true }: SectionLinksPro
             >
               <Icon name={item.icon} className="text-ink-3 group-aria-[current=page]:text-lapis" />
               <span>{item.label}</span>
+              {item.count && (
+                <>
+                  {' '}
+                  <span className="ms-auto text-2xs font-bold text-act tabular-nums shell:ms-0">{item.count}</span>
+                </>
+              )}
             </Link>
           </li>
         ))}

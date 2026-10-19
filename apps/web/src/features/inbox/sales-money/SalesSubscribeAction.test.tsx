@@ -1,4 +1,4 @@
-import { screen } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { detail, PHONE } from '../inbox-fixture';
@@ -43,6 +43,7 @@ describe('«اشتراك جديد» / «سجّل تحويلًا بنكيًا» i
 
   it('a package still owed adds «سجّل تحويلًا بنكيًا»', async () => {
     open('sales', { students: [student({ open: [OPEN_SUB] })] });
+    fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
     expect(await screen.findByRole('button', { name: t.salesMoney.recordTransfer })).toBeTruthy();
   });
 

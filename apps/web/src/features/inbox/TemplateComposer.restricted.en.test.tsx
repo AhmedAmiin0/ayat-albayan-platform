@@ -10,15 +10,20 @@ vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 describe('TemplateComposer — restricted, English', () => {
   it('a teacher with no allowed template reads the English empty note', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', []]]);
+    routeFetch(apiFetch, [
+      ['/auth/me', { id: 'u1', email: null, role: 'teacher', permissions: ['messages.read'] }],
+      ['/messaging/templates', []],
+    ]);
     renderWithClient(
       <InboxModeContext.Provider value="teacher">
         <TemplateComposer phone={PHONE} context={{}} teacher={false} />
       </InboxModeContext.Provider>,
     );
-    expect(await screen.findByText('No templates are available to you yet')).toBeTruthy();
+    expect(await screen.findByText(en.inbox.composer.noAllowedHelp)).toBeTruthy();
+    expect(screen.getByText(/ask the admin to enable a template/)).toBeTruthy();
   });
 });

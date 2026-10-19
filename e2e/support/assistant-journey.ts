@@ -1,10 +1,13 @@
 import type { StudentStatus } from '@ab/shared';
 import type { Page, TestInfo } from '@playwright/test';
+import { chatMore, fromChatMore } from './chat-more';
 import { ar, expect } from './fixtures';
 import { bearer, API } from './messages';
 import { withSql } from './schedule';
 import { studentStatusOf } from './student-statuses';
 import { stubSent } from './wa-stub';
+
+export { expectInChatMore, fromChatMore } from './chat-more';
 
 // Helpers of journey 7 (owner 2026-10-15): the assistant's (base role sales) whole student cycle. Real API
 // (:3100), local Supabase and tools/wa-stub; every number is a fake. The status is read three ways: the
@@ -41,12 +44,12 @@ export async function lastStatusRow(studentId: string): Promise<StatusRow | unde
 /** The assistant's chat with the family, freshly loaded (no cached registration check). */
 export async function openChat(page: Page, phone: string): Promise<void> {
   await page.goto(`/sales/inbox?phone=${encodeURIComponent(phone)}`);
-  await expect(page.getByRole('button', { name: R.action })).toBeVisible({ timeout: 30_000 });
+  await expect(chatMore(page)).toBeVisible({ timeout: 30_000 });
 }
 
 /** «تحقق من التسجيل» in the open chat: `expected` is visible in the answer, then the dialog is closed. */
 export async function checkRegistration(page: Page, expected: string): Promise<void> {
-  await page.getByRole('button', { name: R.action }).click();
+  await fromChatMore(page, R.action);
   const dialog = page.getByRole('dialog', { name: R.title });
   await expect(dialog.getByText(expected, { exact: true })).toBeVisible();
   await dialog.getByRole('button', { name: R.close }).first().click();
@@ -73,6 +76,7 @@ export async function expectStatus(page: Page, who: Family & { studentId: string
   const row = await lastStatusRow(who.studentId);
   if (want.from === null) expect(row).toBeUndefined();
   else expect(row).toMatchObject({ from: want.from, to: want.to, reason: want.reason, ...(want.via ? { via: want.via } : {}) });
+  await page.bringToFront(); // the admin's page may hold focus; an open chat polls only while focused (W13)
   await openChat(page, who.phone);
   await checkRegistration(page, statusLine(want.to));
 }

@@ -11,10 +11,14 @@ vi.mock('@/lib/i18n', async (orig) => ({ ...(await orig<object>()), t: en }));
 vi.mock('@/lib/locale', async (orig) => ({ ...(await orig<object>()), locale: 'en' }));
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
+vi.mock('@/lib/supabase', () => ({ supabase: { auth: { getSession: async () => ({ data: { session: { access_token: 'x' } } }) } } }));
 
 describe('starting a conversation, English', () => {
-  it('the new chat form and the first-template note read in English', async () => {
-    routeFetch(apiFetch, [['/messaging/templates', []]]);
+  it('the new chat form and the no-template note read in English', async () => {
+    routeFetch(apiFetch, [
+      ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['messages.read'] }],
+      ['/messaging/templates', []],
+    ]);
     renderWithClient(
       <InboxModeContext.Provider value="sales">
         <NewChatForm onOpen={() => undefined} />
@@ -22,7 +26,9 @@ describe('starting a conversation, English', () => {
       </InboxModeContext.Provider>,
     );
     expect(screen.getByRole('button', { name: 'Open the chat' })).toBeTruthy();
-    expect(screen.getByText(en.inbox.newChat.firstTemplate)).toBeTruthy();
-    expect(await screen.findByText(en.inbox.composer.noAllowed)).toBeTruthy(); // sales: nothing on the allow-list yet
+    // Sales with nothing on the allow-list yet: why she cannot start it (W7), no composer.
+    expect(await screen.findByText(en.inbox.newChat.noAllowed)).toBeTruthy();
+    expect(screen.queryByText(en.inbox.newChat.firstTemplate)).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
   });
 });

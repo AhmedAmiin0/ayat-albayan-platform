@@ -17,7 +17,7 @@ const field = (n: string) => screen.getByLabelText(t.inbox.composer.param.replac
 
 function show(input: { mode: InboxMode; rows: unknown[]; permissions?: string[]; role?: string }) {
   routeFetch(apiFetch, [
-    ['/auth/me', { id: 'u1', email: null, role: input.role ?? input.mode, permissions: input.permissions ?? [] }],
+    ['/auth/me', { id: 'u1', email: null, role: input.role ?? input.mode, permissions: input.permissions ?? ['messages.read'] }],
     ['/messaging/templates', input.rows],
   ]);
   renderWithClient(
@@ -47,10 +47,21 @@ describe('TemplateComposer — restricted roles', () => {
     );
   });
 
-  it.each(['teacher', 'sales'] as const)('%s with nothing on the list reads «لا توجد قوالب متاحة لك بعد»', async (mode) => {
+  // W7: what she can do instead of a disabled select and button.
+  it.each(['teacher', 'sales'] as const)('%s with nothing on the list reads the help line, no select or button', async (mode) => {
     show({ mode, rows: [] });
-    expect(await screen.findByText(t.inbox.composer.noAllowed)).toBeTruthy();
+    expect(await screen.findByText(t.inbox.composer.noAllowedHelp)).toBeTruthy();
     expect(screen.queryByText(t.inbox.composer.noApproved)).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
+    expect(screen.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();
+  });
+
+  // W12: an edited role without messages.read never asks for the template list.
+  it('sales without messages.read makes no /messaging/templates request', async () => {
+    show({ mode: 'sales', rows: [INVITE], permissions: [] });
+    await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/auth/me'));
+    await new Promise((r) => setTimeout(r, 20));
+    expect(apiFetch).not.toHaveBeenCalledWith('/messaging/templates');
   });
 
   it('a limited role in the admin inbox (no templates.send_all) reads the same', async () => {

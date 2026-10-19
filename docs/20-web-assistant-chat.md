@@ -6,7 +6,7 @@ Owner 2026-10-19: «for the assistant the chat is not good … in the web». Aud
 
 ## Fixes (one PR)
 
-### W1 (major) The inbox fits the window: about 150px less chrome, no 1180px width cap, and the page itself stops scrolling
+### W1 (major) The inbox fits the window: about 150px less chrome, no 1180px width cap, and the page itself stops scrolling — ✅ done
 
 Files: `apps/web/src/components/shell/FixedTopBarLayout.tsx`, `apps/web/src/components/shell/TopBarLayout.tsx`, `apps/web/src/components/ui/running-head.tsx`, `apps/web/src/components/shell/inbox-route.ts`, `apps/web/src/features/inbox/InboxPage.tsx`, `apps/web/src/features/inbox/NewChatForm.tsx`, `apps/web/src/features/inbox/ThreadList.tsx`, `apps/web/src/features/sales/SalesLiveStrip.tsx`, `apps/web/src/routes/sales/inbox.tsx`, `apps/web/src/components/shell/inbox-route.test.ts`
 
@@ -25,7 +25,7 @@ Result: about 150px of chrome. At 1366 the chat column is about 850px.
 
 **Test:** inbox-route.test.ts: INBOX_PAGE_TOPBAR contains shell:m-0 and shell:p*-3, and INBOX_PAGE is unchanged. New FixedTopBarLayout.test.tsx: on /sales/inbox the root has max-w-none and the clocks render once, inside the header; on /sales/students the root keeps max-w-[1180px] and the separate running head. New InboxPage.layout.test.tsx (sales mode): [data-testid=inbox-layout] has shell:min-h-[400px] and the clamp column class; exactly one cartouche, inside the list column; the `head` node renders there. SalesLiveStrip.test.tsx: compact renders one link with the count, and nothing at 0. Before pushing, grep e2e/tests for `inbox-layout`, the «المحادثات» cartouche text and «محادثة جديدة», and update their selectors.
 
-### W2 (major) The desktop composer becomes the compact one: one line capped at 128px, a round send button, Enter sends, focus stays in the box
+### W2 (major) The desktop composer becomes the compact one: one line capped at 128px, a round send button, Enter sends, focus stays in the box — ✅ done
 
 Files: `apps/web/src/features/inbox/Composer.tsx`, `apps/web/src/features/inbox/ComposerPhone.tsx`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/features/inbox/composer-keys.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
@@ -41,7 +41,7 @@ TextComposer must stay ≤ 150 lines; deleting the branch frees about 15.
 
 **Test:** New composer-keys.test.ts: Enter with desktop=true sends; Shift+Enter, isComposing and Enter with desktop=false do not; Ctrl+Enter and ⌘+Enter send in both. New Composer.wide.test.tsx (matchMedia set to 1280px): renders the round send IconButton named «أرسل», no «رسالة عادية | قالب» SegmentedControl, and a textarea without min-h-[88px]. TextComposer.focus.test.tsx: after a mocked successful send the textarea is document.activeElement and empty. Grep e2e/tests for `Control+Enter` and for the «أرسل» button role; the name stays the same, so only Enter-dependent steps can need edits.
 
-### W3 (major) One-row thread header: secondary sales actions go in «المزيد», and sales sees which children the chat is about
+### W3 (major) One-row thread header: secondary sales actions go in «المزيد», and sales sees which children the chat is about — ✅ done
 
 Files: `apps/web/src/features/inbox/ThreadHeader.tsx`, `apps/web/src/features/inbox/ThreadHeaderPhone.tsx`, `apps/web/src/features/inbox/sales-money/SalesChatActions.tsx`, `apps/web/src/features/inbox/sales-money/SalesSubscribeAction.tsx`, `apps/web/src/features/inbox/sales-money/use-sales-family-actions.tsx`, `apps/web/src/features/inbox/SalesFamilyLine.tsx`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/ThreadPaneWide.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
@@ -63,7 +63,7 @@ Files: `apps/web/src/features/inbox/ThreadHeader.tsx`, `apps/web/src/features/in
 
 **Test:** ThreadHeader.test.tsx (sales lead): exactly one visible action «تسجيل طالب جديد» and a «المزيد» button holding «تحقق من التسجيل»; the header has no flex-wrap class. SalesChatActions.test.tsx (family with 2 ended children): one visible «اشتراك جديد»; the menu lists both renew buttons and the transfer; clicking renew opens SalesMoneyFlow, and it stays open after the menu closes. New SalesFamilyLine.test.tsx: renders the child name, code, the status word and the teacher; shows «يتابعه مساعد آخر أو الإدارة» when the family query returns []; never renders «غير مشترك». ThreadHeaderPhone.test.tsx at 375px (sales lead): the h2 is not covered and the action is icon plus menu only. ThreadPane stays ≤ 150 lines (lint).
 
-### W4 (major) The chat follows the conversation: full-screen chat below 900px, a jump-to-latest button with a count, and a snap to the bottom after she sends
+### W4 (major) The chat follows the conversation: full-screen chat below 900px, a jump-to-latest button with a count, and a snap to the bottom after she sends — ✅ done
 
 Files: `apps/web/src/components/ui/use-narrow.ts`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`, `apps/web/src/features/inbox/MessageLog.tsx`, `apps/web/src/features/inbox/JumpToLatest.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
@@ -78,7 +78,7 @@ Applies to all modes. MessageLog stays well under 150 lines with the button in i
 
 **Test:** New MessageLog.jump.test.tsx: mock scrollHeight/clientHeight, scroll up, rerender with one new inbound message → the button shows «1»; click → scrollTop equals scrollHeight and the button is gone; rerender with a new outbound queued row while away → it scrolls without the button. New ThreadPane.narrow.test.tsx: matchMedia (max-width: 56.24rem) = true → renders [data-testid=phone-chat], and the composer textarea is inside it. The existing MessageLog.pin.test.tsx still passes. Grep e2e/tests for `phone-chat` and check that the specs using an 800px viewport (if any) still find the header.
 
-### W5 (major) Unsent work survives: a reply draft per chat, text typed during a send is kept, and a failed background poll no longer blanks the chat
+### W5 (major) Unsent work survives: a reply draft per chat, text typed during a send is kept, and a failed background poll no longer blanks the chat — ✅ done
 
 Files: `apps/web/src/features/inbox/draft-store.ts`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/ThreadPaneWide.tsx`
 
@@ -90,7 +90,7 @@ All modes. Keep TextComposer ≤ 150 lines: the store and W2's key helper are se
 
 **Test:** New draft-store.test.ts: set, get, clear, and isolation per phone. New TextComposer.draft.test.tsx: type, unmount, remount with the same phone → text restored; another phone → empty. Submit with a mocked failing send → text restored and the retry sends the same clientRequestId. Submit, type «ب» before the mock resolves, resolve → the box still holds «ب». New ThreadPane.refetch-error.test.tsx: seed the query with data, then make a refetch fail → the log and the textarea still render, the error line shows, and «لم تُرسل الرسالة» is absent.
 
-### W6 (major) Photos and PDFs from families open in the chat (access bug: docs/16 row 1b promises bubble media for sales)
+### W6 (major) Photos and PDFs from families open in the chat (access bug: docs/16 row 1b promises bubble media for sales) — ✅ done
 
 Files: `apps/api/src/modules/inbox/thread-file.controller.ts`, `apps/api/src/modules/inbox/thread-file.http.test.ts`, `apps/api/src/modules/inbox/inbox.module.ts`, `apps/web/src/features/inbox/api.ts`, `apps/web/src/features/inbox/MessageMedia.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`, `e2e/tests/inbox-media.spec.ts`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
@@ -110,7 +110,7 @@ This is the only API change in the routine, allowed because docs/16 row 1b says 
 
 **Test:** New thread-file.http.test.ts: a sales user gets 200 and a signed url for a message of that phone; a message of another phone → 404 message_not_found; a teacher → 403 media_forbidden; a role without inbox.read → 403. Expired media → 410. New MessageMedia.test.tsx: an image row makes no request on render; a click fetches /threads/%2B9665…/messages/<id>/file and renders an img with the signed url; a 410 → «انتهت صلاحية الملف»; an audio/ogg row shows the label only and never fetches.
 
-### W7 (major) Closed window or no allowed template: tell sales what she can do, instead of offering a template and a rating she does not have
+### W7 (major) Closed window or no allowed template: tell sales what she can do, instead of offering a template and a rating she does not have — ✅ done
 
 Files: `apps/web/src/features/inbox/window-state.ts`, `apps/web/src/features/inbox/WindowBanner.tsx`, `apps/web/src/features/inbox/ComposerPhone.tsx`, `apps/web/src/features/inbox/TemplateComposer.tsx`, `apps/web/src/features/inbox/allowed-templates.ts`, `apps/web/src/features/inbox/NewThread.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
@@ -127,7 +127,7 @@ All strings MSA, with en parity. The real fix (an enabled template) is the templ
 
 **Test:** window-state.test.ts: closed with mode 'sales' and with mode 'teacher' → text without «تقييم»; closed with mode 'admin' → unchanged. New TemplateComposer.empty.test.tsx (sales mode, templates []) → the help line, no combobox, no disabled «أرسل قالبًا» button. ComposerPhone.test.tsx (open window, sales, empty list) → no template toggle; (closed, sales, empty) → the help line only. NewThread.test.tsx (sales, empty list) → the noAllowed line and no form.
 
-### W8 (major) Unread count on «المحادثات» and in the tab title, still updating while the tab is in the background
+### W8 (major) Unread count on «المحادثات» and in the tab title, still updating while the tab is in the background — ✅ done
 
 Files: `apps/web/src/features/sales/use-sales-unread.ts`, `apps/web/src/components/shell/SectionShells.tsx`, `apps/web/src/features/sales/SalesNav.tsx`, `apps/web/src/components/shell/SectionLinks.tsx`
 
@@ -142,7 +142,7 @@ Sales shell only. The count is the shared academy unread, the same number the ad
 
 **Test:** New use-sales-unread.test.tsx: a mocked total of 3 → returns 3 and document.title is «(3) …»; then 0 → title restored; the query options have refetchIntervalInBackground true; disabled without inbox.read (no fetch). SectionLinks.test.tsx: an item with count «3 غير مقروءة» renders it inside the link's name; an item without a count is unchanged.
 
-### W9 (major) «تسجيل طالب جديد» keeps its draft and step when she closes it to re-read the chat
+### W9 (major) «تسجيل طالب جديد» keeps its draft and step when she closes it to re-read the chat — ✅ done
 
 Files: `apps/web/src/features/inbox/SalesRegisterAction.tsx`, `apps/web/src/features/inbox/register-drafts.ts`, `apps/web/src/features/booking/BookingWizard.tsx`
 
@@ -156,7 +156,7 @@ Ceiling: the drawer still covers the thread while it is open. A non-modal pane i
 
 **Test:** New SalesRegisterAction.draft.test.tsx: open, fill the guardian name, go to step 2, close with Esc, reopen → same step and the name kept; another thread's phone → a fresh draftFromThread. BookingWizard.test (existing) still passes without the new props; with initialStep 'teacher' the wizard starts on that step.
 
-### W10 (minor) Day separators at every width, and only the clock time on each bubble
+### W10 (minor) Day separators at every width, and only the clock time on each bubble — ✅ done
 
 Files: `apps/web/src/features/inbox/MessageLog.tsx`, `apps/web/src/features/inbox/MessageBubble.tsx`
 
@@ -164,7 +164,7 @@ MessageLog.tsx:54: use `withDays(messages, now)` for every fill, not only 'phone
 
 **Test:** New MessageLog.days.test.tsx: fill 'shell' with messages from yesterday and today → two separators «أمس» and «اليوم» in order; the bubbles show «HH:MM» without a date; the title holds the full date.
 
-### W11 (minor) Links in messages are clickable
+### W11 (minor) Links in messages are clickable — ✅ done
 
 Files: `apps/web/src/features/inbox/linkify.ts`, `apps/web/src/features/inbox/MessageBubble.tsx`
 
@@ -172,7 +172,7 @@ New linkify.ts: `splitLinks(text): Array<{ text: string; href?: string }>`, matc
 
 **Test:** New linkify.test.ts: «رابط https://a.b/c.» → the link without the trailing dot; http is linked; javascript:alert(1), www.x.com and ftp:// stay text; Arabic text around a link is kept in order.
 
-### W12 (minor) The chat's controls follow the editable sales role's permissions instead of breaking with a generic error
+### W12 (minor) The chat's controls follow the editable sales role's permissions instead of breaking with a generic error — ✅ done
 
 Files: `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/Composer.tsx`, `apps/web/src/features/inbox/TemplateComposer.tsx`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/routes/sales/index.tsx`, `packages/shared/i18n/ar.json`, `packages/shared/i18n/en.json`
 
@@ -185,7 +185,7 @@ Non-admin modes. Admin mode is unchanged.
 
 **Test:** TextComposer.errors.test.ts: an ApiError with status 403 and no code → «غير مسموح لك بالإرسال»; 409 session_closed → unchanged. New ThreadPane.permissions.test.tsx (sales, inbox.send off): no textarea and the read-only line shows; with messages.read off, no /messaging/templates request is made. New routes/sales/index.test.tsx: without inbox.read → redirects to the next allowed nav item.
 
-### W13 (minor) An open chat in an unfocused window no longer marks new messages read for everyone
+### W13 (minor) An open chat in an unfocused window no longer marks new messages read for everyone — ✅ done
 
 Files: `apps/web/src/features/inbox/api.ts`
 

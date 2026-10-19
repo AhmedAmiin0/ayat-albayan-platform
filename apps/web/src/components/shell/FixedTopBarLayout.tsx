@@ -3,7 +3,8 @@ import { useRouterState } from '@tanstack/react-router';
 import type { ReactNode } from 'react';
 import { RunningHead } from '@/components/ui/running-head';
 import { meQuery } from '@/features/auth/me';
-import { INBOX_PAGE, isInboxPath } from './inbox-route';
+import { cn } from '@/lib/utils';
+import { INBOX_PAGE_TOPBAR, isInboxPath } from './inbox-route';
 import { MenuBar } from './MenuBar';
 import { PageFrame } from './PageFrame';
 import { WideHeader, type BarProps } from './TopBarLayout';
@@ -12,19 +13,26 @@ import { WideHeader, type BarProps } from './TopBarLayout';
  * The teacher's (and the salesperson's) layout: a fixed viewport-high frame. From 900px the
  * header, the row of links and the running head stay put; below it ONE compact bar whose
  * «القائمة» opens the same links in a sheet. The page fills the rest and ONLY its content scrolls.
+ * The inbox takes the full width, and from 900px its clocks sit inside the header row (no running-head row).
  */
 export function FixedTopBarLayout({ topNav, bar, children }: { topNav: ReactNode; bar: BarProps; children: ReactNode }) {
   const { data: me } = useQuery(meQuery);
   const inbox = isInboxPath(useRouterState({ select: (s) => s.resolvedLocation?.pathname }));
   return (
-    <div className="mx-auto flex h-dvh max-w-[1180px] flex-col overflow-hidden pb-[env(safe-area-inset-bottom)] sm:px-2 sm:pb-3 shell:px-6">
+    <div
+      className={cn(
+        'mx-auto flex h-dvh flex-col overflow-hidden pb-[env(safe-area-inset-bottom)] sm:px-2 sm:pb-3 shell:px-6',
+        inbox ? 'max-w-none' : 'max-w-[1180px]',
+      )}
+    >
       <MenuBar {...bar} nav={topNav} email={me?.email} className="shell:hidden" />
-      <WideHeader />
+      <WideHeader clocks={inbox ? <RunningHead className="min-h-0 flex-nowrap" /> : undefined} />
       <div className="hidden shrink-0 px-1.5 pt-3 shell:block">{topNav}</div>
-      <div className="shrink-0">
+      {/* The inbox's own row only below 900px, where the wide header (holding its clocks) is hidden. */}
+      <div className={cn('shrink-0', inbox && 'shell:hidden')}>
         <RunningHead />
       </div>
-      <PageFrame pageClassName={inbox ? INBOX_PAGE : undefined}>{children}</PageFrame>
+      <PageFrame pageClassName={inbox ? INBOX_PAGE_TOPBAR : undefined}>{children}</PageFrame>
     </div>
   );
 }

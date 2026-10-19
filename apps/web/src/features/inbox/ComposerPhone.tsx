@@ -1,10 +1,14 @@
 import type { ThreadView } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
+import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
+import { allowedTemplates, useReadsMessaging } from './allowed-templates';
 import { sessionUntil } from './format';
+import { useInboxMode } from './mode';
 import { replyFromText } from './reply-from';
 import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
@@ -45,20 +49,40 @@ function Notices({ notes }: { notes: string[] }) {
   );
 }
 
+/** Teacher and sales modes, once the list has loaded with nothing they may send (W7). */
+function useNoneAllowed(teacher: boolean): boolean {
+  const staff = useInboxMode() !== 'admin';
+  const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
+  return staff && templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0;
+}
+
 /**
- * The reply box of the full-screen chat on phones (< 640px, owner 2026-10-05): pinned under the
- * log above the home indicator: the notices in one line, then a one-line growing message box with
- * the template toggle before it and a round «أرسل» after it. Outside the 24 h window: templates only.
+ * The notices, the closed window's first. The reply line before the open window's note (collapsed,
+ * only the first shows); a template leaves from its own registry line (docs/12 §13.18), not
+ * reply_line: no reply line in template mode. With no template allowed the help line replaces
+ * «يجب أن ترسل قالبًا».
+ */
+function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: boolean }): string[] {
+  const { thread, gateNote, mode, noneAllowed } = input;
+  const open = thread.session_open;
+  const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at) : null;
+  const closedNote = open || noneAllowed ? null : t.inbox.sessionClosed;
+  const replyFrom = mode === 'text' ? replyFromText(thread) : null;
+  return [closedNote, gateNote, replyFrom, until].filter((n): n is string => !!n);
+}
+
+/**
+ * The reply box at every width (phones since owner 2026-10-05, desktop since W2): pinned under the
+ * log: the notices in one line, then a one-line growing message box with the template toggle
+ * before it and a round «أرسل» after it. Outside the 24 h window: templates only. Teacher and sales
+ * with no template allowed get no toggle, and after the window one line on what they can do.
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
-  const windowNote = open ? (thread.last_inbound_at ? sessionUntil(thread.last_inbound_at) : null) : t.inbox.sessionClosed;
-  // The reply line before the open window's note (collapsed, only the first shows); a template
-  // leaves from its own registry line (docs/12 §13.18), not reply_line: no reply line in template mode.
-  const replyFrom = mode === 'text' ? replyFromText(thread) : null;
-  const notes = [open ? null : windowNote, gateNote, replyFrom, open ? windowNote : null].filter((n): n is string => !!n);
-  const template = !open || mode === 'template';
-  const toggle = open && (
+  const noneAllowed = useNoneAllowed(teacher);
+  const notes = noticeLines({ thread, gateNote, mode, noneAllowed });
+  const template = !open || (mode === 'template' && !noneAllowed);
+  const toggle = open && !noneAllowed && (
     <IconButton
       label={t.inbox.composer.modeTemplate}
       aria-pressed={mode === 'template'}
@@ -74,10 +98,12 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Notices notes={notes} />
       {!open && <SendRatingButton thread={thread} />}
       {template && toggle && <div className="flex">{toggle}</div>}
-      {template ? (
+      {!open && noneAllowed ? (
+        <p className="px-1 text-xs text-ink-2">{t.inbox.composer.noAllowedHelp}</p>
+      ) : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
       ) : (
-        <TextComposer phone={thread.phone_e164} compact leading={toggle} />
+        <TextComposer phone={thread.phone_e164} leading={toggle} />
       )}
     </div>
   );

@@ -2273,6 +2273,7 @@
     },
     "openThread": "Open conversation with {name}",
     "loadOlder": "Older messages",
+    "jumpLatest": "Jump to the latest message",
     "replyTo": "Replying to:",
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",
@@ -2283,6 +2284,7 @@
     },
     "composer": {
       "placeholder": "Type a message…",
+      "placeholderDesktop": "Type a message — Enter to send, Shift+Enter for a new line",
       "send": "Send",
       "sending": "Sending…",
       "sendTemplate": "Send template",
@@ -2295,6 +2297,7 @@
       "modeTemplate": "Template",
       "noApproved": "No approved templates yet",
       "noAllowed": "No templates are available to you yet",
+      "noAllowedHelp": "The 24-hour window has ended and no template is available to you. You can reply as soon as the guardian messages you, or ask the admin to enable a template.",
       "buttonUrl": "The link will be: {url}",
       "required": "Enter {field}",
       "pickLesson": "Choose lesson",
@@ -2325,6 +2328,7 @@
       "template_not_approved": "This template isn't approved by Meta yet",
       "invalid_phone": "This number isn't valid",
       "send_failed": "The message wasn't sent. Try again or send it yourself from WhatsApp",
+      "forbidden": "You are not allowed to send",
       "not_your_thread": "This chat isn't one of yours",
       "own_thread_read_only": "This is your chat with the academy; it's read-only",
       "template_not_allowed": "Only the admin can send this template",
@@ -2339,6 +2343,8 @@
     "noThread": "No messages with this number yet",
     "openMedia": "Open {kind}",
     "mediaNotDownloaded": "Viewing files isn't available here yet",
+    "viewMedia": "View {kind}",
+    "mediaExpired": "This file has expired",
     "sendFailed": "The message wasn't sent. Try again",
     "leadPanel": "Lead",
     "leadSheet": "Lead details & registration",
@@ -2369,11 +2375,15 @@
     "convertedLead": "Became a student",
     "sentBy": "Sent by: {name}",
     "ownThreadReadOnly": "This is your chat with the academy, read only",
+    "sendNotAllowed": "You are not allowed to send from this chat",
+    "salesNotYours": "Followed by another assistant or the administration",
+    "nextLesson": "Next lesson: {when}",
     "window": {
       "open": "Chat open — {left} left",
       "hours": "{n}h",
       "minutes": "{n}m",
-      "closed": "Chat closed — send a template or a rating to reopen it"
+      "closed": "Chat closed — send a template or a rating to reopen it",
+      "closedStaff": "Chat closed — it reopens when the guardian messages you, or with a template available to you"
     },
     "rating": {
       "send": "Send lesson rating",
@@ -2399,7 +2409,8 @@
       "placeholder": "+966 5X XXX XXXX",
       "open": "Open the chat",
       "hint": "Type the number with its country code, then send a template to start the chat",
-      "firstTemplate": "To start the chat, send an approved template; WhatsApp allows no plain message before the family replies."
+      "firstTemplate": "To start the chat, send an approved template; WhatsApp allows no plain message before the family replies.",
+      "noAllowed": "You can't start a chat now: no template is available to you. Ask the admin to enable a template."
     }
   },
   "mobileFinance": {

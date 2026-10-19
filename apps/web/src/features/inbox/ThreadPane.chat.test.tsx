@@ -12,6 +12,7 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
 
 const PATH = '/threads/%2B966501234567';
+const PHONE_QUERIES = ['(max-width: 39.99rem)', '(max-width: 56.24rem)'];
 
 function renderThread(open: boolean, gate: 'switch_off' | null = null) {
   routeFetch(apiFetch, [
@@ -26,7 +27,8 @@ function renderThread(open: boolean, gate: 'switch_off' | null = null) {
 
 describe('the open thread on phones (< 640px): a full-screen chat', () => {
   beforeEach(() => {
-    const query = (media: string) => ({ matches: media === '(max-width: 39.99rem)', addEventListener: vi.fn(), removeEventListener: vi.fn() });
+    // A phone is also below the shell breakpoint (900px), where the chat goes full-screen.
+    const query = (media: string) => ({ matches: PHONE_QUERIES.includes(media), addEventListener: vi.fn(), removeEventListener: vi.fn() });
     vi.stubGlobal('matchMedia', vi.fn(query));
   });
   afterEach(() => {

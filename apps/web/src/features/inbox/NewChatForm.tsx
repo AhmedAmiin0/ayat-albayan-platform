@@ -1,32 +1,28 @@
 import { normalizePhone } from '@ab/shared';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Field } from '@/components/ui/field';
 import { Icon } from '@/components/ui/icon';
+import { IconButton } from '@/components/ui/icon-button';
 import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 
 /**
  * «محادثة جديدة» (admin and sales): type a family's WhatsApp number, open its chat (E.164 in the URL,
  * like a lead's «افتح المحادثة»). A number without messages opens NewThread: the first template.
- * A disclosure, so the conversations list keeps the column.
+ * Opened by NewChatToggle in the list's head row, so the conversations list keeps the column.
  */
 export function NewChatForm({ onOpen }: { onOpen: (phone: string) => void }) {
   const [value, setValue] = useState('');
   const [error, setError] = useState<string | undefined>(undefined);
-  // Folded by default (the list stays first); open while a number is being typed or refused.
+  const box = useRef<HTMLInputElement>(null);
+  // Unfolded by the toggle: the number box takes the focus.
+  useEffect(() => box.current?.focus(), []);
   return (
-    <details
-      className="group mb-3 border-b border-rule pb-3"
-      open={Boolean(value || error) || undefined}
-    >
-      <summary className="flex min-h-11 cursor-pointer items-center gap-2 text-sm font-semibold text-lapis sm:min-h-0">
-        <Icon name="plus" />
-        {t.inbox.newChat.title}
-      </summary>
+    <div className="mb-3 border-b border-rule pb-3">
       <form
         aria-label={t.inbox.newChat.title}
-        className="mt-2 grid gap-2"
+        className="grid gap-2"
         onSubmit={(e) => {
           e.preventDefault();
           const phone = normalizePhone(value);
@@ -47,6 +43,7 @@ export function NewChatForm({ onOpen }: { onOpen: (phone: string) => void }) {
           {(p) => (
             <Input
               {...p}
+              ref={box}
               dir="ltr"
               type="tel"
               inputMode="tel"
@@ -61,6 +58,15 @@ export function NewChatForm({ onOpen }: { onOpen: (phone: string) => void }) {
           {t.inbox.newChat.open}
         </Button>
       </form>
-    </details>
+    </div>
+  );
+}
+
+/** «محادثة جديدة» as an icon-only disclosure in the list's head row; the form unfolds below the row. */
+export function NewChatToggle({ open, onToggle }: { open: boolean; onToggle: () => void }) {
+  return (
+    <IconButton label={t.inbox.newChat.title} aria-expanded={open} onClick={onToggle} className="text-lapis aria-expanded:bg-sunk">
+      <Icon name="plus" />
+    </IconButton>
   );
 }

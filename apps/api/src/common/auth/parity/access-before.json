@@ -274,6 +274,7 @@
   "TemplatesController.setLine": ["admin"],
   "TemplatesController.setStarter": ["admin"],
   "TemplatesController.submit": ["admin"],
+  "ThreadFileController.file": ["admin","sales","teacher"],
   "ThreadMediaController.file": ["admin"],
   "ThreadMediaController.list": ["admin"],
   "ThreadsController.detail": ["admin","sales","teacher"],

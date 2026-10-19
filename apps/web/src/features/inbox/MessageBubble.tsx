@@ -3,9 +3,11 @@ import { t } from '@/lib/i18n';
 import { locale } from '@/lib/locale';
 import { cn } from '@/lib/utils';
 import { DeliveryTicks } from './DeliveryTicks';
-import { fullTime, mediaKind, stampText, templateLine } from './format';
+import { clockText, fullTime, templateLine } from './format';
 import { LineBadge } from './LineBadge';
+import { splitLinks } from './linkify';
 import { MessageActions } from './MessageActions';
+import { MessageMedia } from './MessageMedia';
 import { useInboxMode } from './mode';
 import { RatingChip } from './RatingChip';
 import { canRetry, canSendByHand, deliveryTitle, isHandedOff, outboundNotes } from './message-notes';
@@ -18,19 +20,20 @@ export interface MessageBubbleProps {
   now: Date;
 }
 
-function Media({ message: m }: { message: MessageView }) {
-  const kind = t.inbox.media[mediaKind(m.media_mime)];
-  if (!m.media_url) {
-    return (
-      <p className="text-xs font-semibold text-ink-2">
-        {kind} <span className="font-normal text-ink-3">· {t.inbox.mediaNotDownloaded}</span>
-      </p>
-    );
-  }
+/** The text with its http(s) links clickable (W11). */
+function Body({ text }: { text: string }) {
   return (
-    <a href={m.media_url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-lapis underline underline-offset-4">
-      {t.inbox.openMedia.replace('{kind}', kind)}
-    </a>
+    <p dir="auto" className="whitespace-pre-wrap break-words">
+      {splitLinks(text).map((part, i) =>
+        part.href ? (
+          <a key={i} href={part.href} target="_blank" rel="noopener noreferrer" dir="ltr" className="break-all text-lapis underline underline-offset-4">
+            {part.text}
+          </a>
+        ) : (
+          part.text
+        ),
+      )}
+    </p>
   );
 }
 
@@ -47,12 +50,8 @@ function Content({ message: m }: { message: MessageView }) {
   return (
     <>
       {m.template_key && <p className="mb-1 text-2xs font-semibold text-ink-3">{templateLine(m.template_key)}</p>}
-      {(m.media_mime || m.media_url) && <Media message={m} />}
-      {m.body && (
-        <p dir="auto" className="whitespace-pre-wrap break-words">
-          {m.body}
-        </p>
-      )}
+      {(m.media_mime || m.media_url) && <MessageMedia message={m} />}
+      {m.body && <Body text={m.body} />}
       {empty && <p className="text-xs text-ink-3">{t.inbox.media.other}</p>}
       <ReplyLine message={m} />
       <RatingChip message={m} />
@@ -61,9 +60,9 @@ function Content({ message: m }: { message: MessageView }) {
 }
 
 /**
- * One message (R-MSG-05). Theirs at the inline-start, ours at the end; the time (with the day when
- * it is not today), and on ours WhatsApp-style delivery ticks right after the time (DeliveryTicks), the
- * reason when it failed and what to do next.
+ * One message (R-MSG-05). Theirs at the inline-start, ours at the end; the clock time (the log's day
+ * separators carry the day, the tooltip the full date), and on ours WhatsApp-style delivery ticks
+ * right after the time (DeliveryTicks), the reason when it failed and what to do next.
  */
 export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbleProps) {
   const outbound = m.direction === 'outbound';
@@ -75,10 +74,10 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
       <article
         className={cn(
           'max-w-[min(85%,560px)] rounded-lg px-3.5 py-2.5 text-sm',
-          // Phones (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
+          // Below 900px (the full-screen chat on a sunk ground): ours mint with its tail at the end, theirs white.
           outbound
-            ? 'bg-sunk max-sm:rounded-ee-sm max-sm:border max-sm:border-lapis/25 max-sm:bg-lapis-wash'
-            : 'border border-rule bg-raised max-sm:rounded-es-sm',
+            ? 'bg-sunk max-shell:rounded-ee-sm max-shell:border max-shell:border-lapis/25 max-shell:bg-lapis-wash'
+            : 'border border-rule bg-raised max-shell:rounded-es-sm',
           m.status === 'failed' && 'shadow-[inset_0_0_0_1px_var(--color-act)]',
         )}
       >
@@ -89,7 +88,7 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <LineBadge line={m.line} />
           <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
-            {stampText(m.created_at, now)}
+            {clockText(m.created_at)}
           </time>
           {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m)} />}
         </footer>

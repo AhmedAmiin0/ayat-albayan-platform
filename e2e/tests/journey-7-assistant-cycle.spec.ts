@@ -9,7 +9,7 @@ import { setMessaging, stubInbound, stubReset } from '../support/wa-stub';
 import { expectInMyPayments, registerWithTrial, saveSubscription, saveTransfer } from '../support/assistant-journey-ui';
 import { bookCourseDays, courseOf } from '../support/assistant-course';
 import {
-  apiAs, checkRegistration, childAndTrial, expectQuietStub, expectStatus, leadIdOf, newestPackage, openChat, shot,
+  apiAs, checkRegistration, childAndTrial, expectInChatMore, expectQuietStub, expectStatus, fromChatMore, leadIdOf, newestPackage, openChat, shot,
 } from '../support/assistant-journey';
 
 // Journey 7 (owner 2026-10-15): the WHOLE student cycle as an assistant (base role sales), docs/16 + docs/18.
@@ -102,7 +102,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       expect(pkg.lessons_total).toBe(4);
       const course = await courseOf(ids.studentId);
       expect(course).toEqual([{ ends_on: expect.any(String), lessons: 4, created_by: assistantId }]);
-      await page.getByRole('button', { name: ar.salesMoney.recordTransfer }).click();
+      await fromChatMore(page, ar.salesMoney.recordTransfer);
       const done = await saveTransfer(page, pkg.currency);
       await shot(page, info, '05-subscribed');
       await expectInMyPayments(done, name);
@@ -117,7 +117,7 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
       const res = await apiAs(admin, { method: 'PATCH', path: `/subscriptions/${pkg.id}`, data: { renewsOn: riyadhDay(-1) } });
       expect(res.status, res.body).toBe(200);
       await expectStatus(page, who(), { from: 'active', to: 'pending_renewal', reason: null, via: 'subscription_ended' });
-      await expect(page.getByRole('button', { name: ar.students.renew, exact: true })).toBeVisible();
+      await expectInChatMore(page, ar.students.renew);
       await shot(page, info, '06-pending-renewal');
       await expectQuietStub(phone);
     });
@@ -135,13 +135,13 @@ test.describe('journey 7 — the assistant’s full student cycle (docs/16, docs
     });
 
     await test.step('8. «جدّد الاشتراك» from the chat + bank transfer → «مشترك» again', async () => {
-      await page.getByRole('button', { name: ar.students.renew, exact: true }).click();
+      await fromChatMore(page, ar.students.renew);
       await saveSubscription(page, WEEKLY);
       const pkg = await newestPackage(ids.studentId);
       await saveTransfer(page, pkg.currency);
       await shot(page, info, '08-renewed');
       await expectStatus(page, who(), { from: 'expired', to: 'active', reason: 'payment' });
-      await expect(page.getByRole('button', { name: ar.students.renew, exact: true })).toHaveCount(0);
+      await expectInChatMore(page, ar.students.renew, 0);
       await shot(page, info, '08b-active-again');
       await expectQuietStub(phone);
     });

@@ -6,6 +6,7 @@ import { RunningHead } from '@/components/ui/running-head';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
 import { meQuery } from '@/features/auth/me';
 import { NotificationBell } from '@/features/notifications/NotificationBell';
+import { cn } from '@/lib/utils';
 import { AccountChip } from './AccountChip';
 import { LanguageSwitch } from './LanguageSwitch';
 import { LogoutButton } from './LogoutButton';
@@ -19,12 +20,17 @@ export interface BarProps {
   title: string;
 }
 
-/** The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, «حسابي», logout. */
-export function WideHeader() {
+/**
+ * The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, «حسابي», logout.
+ * `clocks` (the top-bar inbox): the running head's calendars and clocks inline, between the logo and
+ * the bell, instead of their own row (docs/07 §7 keeps all four).
+ */
+export function WideHeader({ clocks }: { clocks?: ReactNode } = {}) {
   return (
     <header className="hidden shrink-0 items-center gap-3 px-1.5 pt-4 shell:flex">
       <Logo />
-      <div className="ms-auto flex items-center gap-2">
+      {clocks && <div className="ms-auto min-w-0">{clocks}</div>}
+      <div className={cn('flex items-center gap-2', !clocks && 'ms-auto')}>
         <NotificationBell />
         <LanguageSwitch />
         <ThemeToggle />

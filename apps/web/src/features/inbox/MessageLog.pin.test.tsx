@@ -62,13 +62,13 @@ describe('MessageLog: opens at the newest message and stays pinned there', () =>
     expect(el.scrollTop).toBe(100);
   });
 
-  it('phones get a separator per day; the wide layout does not', () => {
+  it('a separator per day at every width (W10), on phones and in the wide layout', () => {
     const { unmount } = render(<MessageLog {...base} messages={[A, B, C]} fill="phone" />);
     expect(box().querySelectorAll('li')).toHaveLength(5);
     expect(screen.getAllByRole('listitem')).toHaveLength(3); // the separators are decoration
     expect(box().className).toMatch(/overflow-y-auto/);
     unmount();
     render(<MessageLog {...base} messages={[A, B, C]} />);
-    expect(box().querySelectorAll('li')).toHaveLength(3);
+    expect(box().querySelectorAll('li')).toHaveLength(5);
   });
 });

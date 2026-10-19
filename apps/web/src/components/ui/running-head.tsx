@@ -26,14 +26,16 @@ export function useMinuteClock(): Date {
  * at the end, times in ink-2 600. Clocks hide under 640px (the whole head when there are no
  * crumbs). Deliberately NOT a live region: the minute tick must not be announced (and the page
  * keeps a single role=status). `end` (the bell) sits after the clocks, at the inline end.
+ * `className`: the inline copy inside the wide header (the top-bar inbox) drops the 54px row height.
  */
-export function RunningHead({ crumbs, end }: { crumbs?: ReactNode; end?: ReactNode }) {
+export function RunningHead({ crumbs, end, className }: { crumbs?: ReactNode; end?: ReactNode; className?: string }) {
   const head = formatRunningHead(useMinuteClock(), locale);
   return (
     <div
       className={cn(
         'flex min-h-[54px] flex-wrap items-center justify-between gap-x-5 gap-y-2 text-xs text-ink-3',
         !crumbs && 'max-sm:hidden',
+        className,
       )}
     >
       <div className="min-w-0">{crumbs}</div>

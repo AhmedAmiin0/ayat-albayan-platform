@@ -20,6 +20,9 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('../test-ut
 const FAMILY = { guardian_id: 'g-1', lead_id: null, lead_status: null, guardian_name: 'أم سهيلة' } as const;
 const BLOCKED = { ...COURSE_VIEW, blocked: 'course_exists' as const };
 
+/** The header's «المزيد» (W3): the secondary sales actions live in it. */
+const openMore = async () => fireEvent.click(await screen.findByRole('button', { name: t.common.more }));
+
 function openChat(students: ReturnType<typeof student>[]) {
   routeFetch(apiFetch, [
     ['/threads/%2B966501234567', detail([], FAMILY)],
@@ -50,6 +53,7 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
       student({ id: 't', name: 'مريم', status: 'trial' }),
     ]);
     const course = (name: string) => ({ name: `${t.booking.courseDays} — ${name}` });
+    await openMore();
     expect(await screen.findByRole('button', course('سهيلة'))).toBeTruthy();
     expect(screen.getByRole('button', course('جود'))).toBeTruthy();
     expect(screen.getByRole('button', course('يوسف'))).toBeTruthy();
@@ -67,6 +71,7 @@ describe('the entries to «أيام الحلقات» (owner 2026-10-18)', () => 
   it('a new, trial or expired student holding an unpaid package gets «أيام الحلقات» too', async () => {
     openChat([student({ status: 'trial', open: [OPEN_SUB] }), student({ id: 'e', name: 'جود', status: 'expired', open: [OPEN_SUB] })]);
     const course = (name: string) => ({ name: `${t.booking.courseDays} — ${name}` });
+    await openMore();
     expect(await screen.findByRole('button', course('سهيلة'))).toBeTruthy();
     expect(screen.getByRole('button', course('جود'))).toBeTruthy();
   });

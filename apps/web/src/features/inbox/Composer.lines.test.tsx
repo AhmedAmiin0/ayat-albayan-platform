@@ -1,4 +1,4 @@
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { SETTINGS } from '@/features/messaging/settings-fixture';
 import { t } from '@/lib/i18n';
@@ -29,10 +29,11 @@ describe('the reply line in the composer (review W1, W8)', () => {
     ]);
     renderWithClient(<ThreadPane phone={PHONE} listSearch={{ page: 1 }} />);
     expect(await screen.findByText(replyFrom)).toBeTruthy();
-    const modes = screen.getByRole('group', { name: t.inbox.composer.sendTemplate });
-    fireEvent.click(within(modes).getByRole('button', { name: t.inbox.composer.modeTemplate }));
+    // W2: the desktop composer is the compact one: the «قالب» icon toggle, no «رسالة عادية | قالب» control.
+    fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.modeTemplate }));
+    expect(screen.getByRole('button', { name: t.inbox.composer.modeTemplate }).getAttribute('aria-pressed')).toBe('true');
     expect(screen.queryByText(replyFrom)).toBeNull();
-    fireEvent.click(within(modes).getByRole('button', { name: t.inbox.composer.modeText }));
+    fireEvent.click(screen.getByRole('button', { name: t.inbox.composer.modeTemplate }));
     expect(screen.getByText(replyFrom)).toBeTruthy();
   });
 

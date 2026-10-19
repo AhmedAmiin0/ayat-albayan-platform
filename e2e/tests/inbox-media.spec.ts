@@ -4,7 +4,7 @@ import { freshDigits, seedLead } from '../support/messages';
 import { stubReset } from '../support/wa-stub';
 
 // Inbound media (R-MSG-05, R-MSG-06): a photo and a file from a lead show as bubbles named by
-// kind with their caption (the file itself is fetched from Meta only when an admin needs it), and
+// kind with their caption (the file itself is fetched from Meta only when «عرض …» is clicked, W6), and
 // the admin gets a new_message push. «Meta» is tools/wa-stub; nothing is sent back.
 
 /** A 1×1 PNG and a tiny PDF, made in memory (no binary fixtures in the repo). */
@@ -39,14 +39,24 @@ test.describe('inbox — inbound media (R-MSG-05)', () => {
 
     const admin = await asRole('admin');
     const log = await openThread(admin, name);
-    await expect(bubble(log, photo)).toContainText(ar.inbox.media.image);
-    await expect(bubble(log, photo)).toContainText(ar.inbox.mediaNotDownloaded);
-    await expect(bubble(log, file)).toContainText(ar.inbox.media.document);
-    await expect(bubble(log, file)).toContainText(ar.inbox.mediaNotDownloaded);
-    // Theirs, not ours: no delivery ticks and no retry actions on an inbound bubble. The ticks are the
-    // only role=img a bubble can hold (a not-downloaded file is a text line), so any image is ticks.
+    // W6: each file is a «عرض …» button; nothing is fetched until it is clicked.
+    const viewPhoto = bubble(log, photo).getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.image) });
+    const viewFile = bubble(log, file).getByRole('button', { name: ar.inbox.viewMedia.replace('{kind}', ar.inbox.media.document) });
+    await expect(viewPhoto).toBeVisible();
+    await expect(viewFile).toBeVisible();
+    // Theirs, not ours: no delivery ticks and no retry actions on an inbound bubble. Before a click the
+    // ticks are the only role=img a bubble can hold, and «عرض …» its only button.
     await expect(bubble(log, photo).getByRole('img')).toHaveCount(0);
-    await expect(bubble(log, file).getByRole('button')).toHaveCount(0);
+    await expect(bubble(log, file).getByRole('button')).toHaveCount(1);
+
+    // A click downloads it from «Meta» (the stub) into our bucket: a thumbnail for the photo, a link for the PDF.
+    await viewPhoto.click();
+    const thumb = bubble(log, photo).getByRole('img', { name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.image) });
+    await expect.poll(() => thumb.evaluate((i) => (i as unknown as { naturalWidth: number }).naturalWidth), { timeout: 30_000 }).toBeGreaterThan(0);
+    await viewFile.click();
+    const pdf = bubble(log, file).getByRole('link', { name: ar.inbox.openMedia.replace('{kind}', ar.inbox.media.document) });
+    await expect(pdf).toHaveAttribute('target', '_blank', { timeout: 30_000 });
+    await expect(bubble(log, file).getByText(ar.inbox.mediaExpired)).toHaveCount(0);
 
     // The list preview names the kind, and a push row (one per phone per 10 minutes) exists.
     await admin.goto('/admin/inbox');

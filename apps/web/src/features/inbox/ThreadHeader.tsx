@@ -19,40 +19,49 @@ export interface ThreadHeaderProps {
   headingId: string;
   /** The family's subscription (threadBadge); null for a teacher or an unknown number. */
   badge: SubscriptionBadge | null;
-  /** Phones: the opener of the side panel's sheet (ThreadSideSheet), on its own row at the end. */
+  /** At the end of the first row: the sales actions (SalesChatActions) or, on phones, the side sheet's opener. */
   action?: ReactNode;
+  /** Sales: which children the chat is about (SalesFamilyLine), in the second row. */
+  line?: ReactNode;
 }
 
-/** Name, phone, who the number is (lead status chip / guardian / teacher), «مشترك» and the source. */
-export function ThreadHeader({ thread: th, listSearch, headingId, badge, action }: ThreadHeaderProps) {
+/**
+ * Two rows that never wrap (W3): the name (truncated), the phone and the actions; then the chips on
+ * one line that scrolls sideways: who the number is (lead status chip / guardian / teacher), the
+ * window, «مشترك» and the source (admin), the sales children line and the times' city (principle 7).
+ */
+export function ThreadHeader({ thread: th, listSearch, headingId, badge, action, line }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   return (
-    <header className="mb-4 flex shrink-0 flex-wrap items-center gap-x-3 gap-y-2 border-b border-rule pb-3">
-      <Link
-        to={inboxBase(mode)}
-        search={listSearch}
-        className="inline-flex min-h-11 items-center gap-1 rounded-md px-1.5 text-sm font-semibold text-lapis shell:hidden"
-      >
-        <Icon name="chevron-right" />
-        {t.common.back}
-      </Link>
-      <h2 id={headingId} className="min-w-0 font-display text-h3 font-bold">
-        {threadTitle(th, mode)}
-      </h2>
-      {th.display_name && showsPhone(mode) && <Ltr className="text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
-      <span className="flex flex-wrap items-center gap-2 text-2xs text-ink-3 sm:ms-auto">
+    <header className="mb-2 shrink-0 border-b border-rule pb-2">
+      <div className="flex min-w-0 items-center gap-2">
+        <Link
+          to={inboxBase(mode)}
+          search={listSearch}
+          className="inline-flex min-h-11 shrink-0 items-center gap-1 rounded-md px-1.5 text-sm font-semibold text-lapis shell:hidden"
+        >
+          <Icon name="chevron-right" />
+          {t.common.back}
+        </Link>
+        <h2 id={headingId} className="min-w-0 truncate font-display text-base font-bold">
+          {threadTitle(th, mode)}
+        </h2>
+        {th.display_name && showsPhone(mode) && <Ltr className="shrink-0 text-xs text-ink-3">{formatPhone(th.phone_e164)}</Ltr>}
+        {action}
+      </div>
+      <div className="mt-1 flex items-center gap-1.5 overflow-x-auto text-2xs whitespace-nowrap text-ink-3 [scrollbar-width:none]">
         {kind === 'lead' && th.lead_status ? (
-          <StatusChip {...leadChip(th.lead_status)} />
+          <StatusChip size="sm" {...leadChip(th.lead_status)} />
         ) : (
-          <span className="text-xs font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
+          <span className="font-semibold text-ink-2">{kind ? t.inbox.kind[kind] : t.inbox.unknownNumber}</span>
         )}
-        <WindowBanner thread={th} />
-        {badge && <SubscriptionChip badge={badge} />}
+        <WindowBanner thread={th} compact />
+        {badge && <SubscriptionChip size="sm" badge={badge} />}
         {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
+        {line}
         <span>{timesInText()}</span>
-      </span>
-      {action}
+      </div>
     </header>
   );
 }
