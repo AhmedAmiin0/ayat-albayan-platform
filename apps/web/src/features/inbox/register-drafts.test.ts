@@ -28,6 +28,12 @@ describe('resumable (review M3)', () => {
     expect(back?.draft.extra).toEqual([]);
     expect(back?.step).toBe('slot');
     expect(back?.draft.leadId).toBe('lead-1');
+    expect(back?.droppedPast).toBe(true);
+  });
+
+  it('a future or empty slot reports nothing dropped (round 2 F)', () => {
+    expect(resumable(saved('2026-10-20T10:00:00.000Z'), 'lead-1', NOW)?.droppedPast).toBeUndefined();
+    expect(resumable(saved(null, 'teacher'), 'lead-1', NOW)?.droppedPast).toBeUndefined();
   });
 
   it('right now counts as past; an earlier step than the slot stays where it was', () => {

@@ -60,6 +60,7 @@ describe('TemplateComposer — restricted roles', () => {
   it('sales without messages.read makes no /messaging/templates request', async () => {
     show({ mode: 'sales', rows: [INVITE], permissions: [] });
     await waitFor(() => expect(apiFetch).toHaveBeenCalledWith('/auth/me'));
+    expect(await screen.findByText(t.inbox.composer.noPermissionHelp)).toBeTruthy(); // round 2 J
     await new Promise((r) => setTimeout(r, 20));
     expect(apiFetch).not.toHaveBeenCalledWith('/messaging/templates');
   });

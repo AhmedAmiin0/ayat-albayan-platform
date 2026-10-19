@@ -22,17 +22,18 @@ export interface BarProps {
 
 /**
  * The wide header (≥ 900px) of the top-bar layouts: logo, bell (staff), language, theme, «حسابي», logout.
- * `clocks` (the top-bar inbox): from 1100px the running head's calendars and clocks inline, between
- * the logo and the bell, instead of their own row (docs/07 §7 keeps all four); between 900 and 1100px
- * they would wrap there, so the layout shows its own row up to 1100px.
+ * `clocks` (the top-bar inbox): from 1340px the running head's calendars and clocks inline, between
+ * the logo and the bell, instead of their own row (docs/07 §7 keeps all four). Measured with the real
+ * fonts and the longest dates they need about 1190px (ar) and 1324px (en); narrower, they would wrap
+ * or paint under the bell, so the layout shows its own row up to 1340px. overflow-hidden guards the rest.
  */
 export function WideHeader({ clocks }: { clocks?: ReactNode } = {}) {
   return (
     <header className="hidden shrink-0 items-center gap-3 px-1.5 pt-4 shell:flex">
       <Logo />
-      {/* Inline only from 1100px, where they fit on one line; below it the layout keeps their own row. */}
-      {clocks && <div className="ms-auto hidden min-w-0 min-[1100px]:block">{clocks}</div>}
-      <div className={cn('ms-auto flex items-center gap-2', clocks && 'min-[1100px]:ms-0')}>
+      {/* Inline only from 1340px, where they fit on one line; below it the layout keeps their own row. */}
+      {clocks && <div className="ms-auto hidden min-w-0 overflow-hidden whitespace-nowrap min-[1340px]:block">{clocks}</div>}
+      <div className={cn('ms-auto flex items-center gap-2', clocks && 'min-[1340px]:ms-0')}>
         <NotificationBell />
         <LanguageSwitch />
         <ThemeToggle />

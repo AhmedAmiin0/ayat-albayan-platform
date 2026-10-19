@@ -66,7 +66,9 @@ describe('the chat follows the editable sales role (W12)', () => {
 
   it('messages.read off, window closed: the help line, no template form, no /messaging/templates request', async () => {
     open('sales', ['inbox.read', 'inbox.send'], false);
-    expect(await screen.findByText(t.inbox.composer.noAllowedHelp)).toBeTruthy();
+    // Round 2 J: the permission is what is missing, not a template.
+    expect(await screen.findByText(t.inbox.composer.noPermissionHelp)).toBeTruthy();
+    expect(screen.queryByText(t.inbox.composer.noAllowedHelp)).toBeNull();
     expect(screen.queryByRole('combobox')).toBeNull();
     expect(screen.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();
     expect(templateCalls()).toHaveLength(0);

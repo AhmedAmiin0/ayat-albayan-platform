@@ -1,9 +1,7 @@
 import { HOME_BY_ROLE } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n';
-import { clearAllDrafts } from '@/features/inbox/draft-store';
-import { clearOwnSends } from '@/features/inbox/own-send';
-import { registerDrafts } from '@/features/inbox/register-drafts';
+import { clearTabMemories } from '@/features/inbox/tab-memory';
 import { forgetWebPush } from '@/features/notifications/web-push';
 import { supabase } from '@/lib/supabase';
 import { isAccountDisabled, meQuery } from './me';
@@ -52,7 +50,5 @@ export async function signOut(queryClient: QueryClient): Promise<void> {
   await Promise.all([reportSession('logout'), forgetWebPush()]);
   await supabase.auth.signOut();
   queryClient.clear();
-  clearAllDrafts();
-  clearOwnSends();
-  registerDrafts.clearAll();
+  clearTabMemories();
 }

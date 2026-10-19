@@ -8,14 +8,14 @@ import { Select } from '@/components/ui/select';
 import { meQuery } from '@/features/auth/me';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
-import { allowedTemplates, useNoneAllowed, useReadsMessaging } from './allowed-templates';
+import { allowedTemplates, noneAllowedText, useNoneAllowed, useReadsMessaging } from './allowed-templates';
 import { sendTemplate } from './api';
 import { LessonPicker } from './LessonPicker';
 import { useInboxMode } from './mode';
 import { recordOwnSend } from './own-send';
 import { TemplateParamFields } from './TemplateParamFields';
 import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
-import { sendErrorText } from './TextComposer';
+import { sendErrorText } from './send-error';
 
 const NAMES: Record<string, string | undefined> = t.templates.names;
 
@@ -73,7 +73,7 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   };
   const missing = tpl && tried ? missingParams(tpl, values) : [];
   // Teacher and sales with nothing allowed (or no messages.read): what she can do, not a disabled select (W7).
-  if (noneAllowed) return <p className="text-xs text-ink-2">{t.inbox.composer.noAllowedHelp}</p>;
+  if (noneAllowed) return <p className="text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>;
 
   return (
     <form

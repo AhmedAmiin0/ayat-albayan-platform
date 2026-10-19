@@ -87,6 +87,18 @@ describe('starting a conversation (no thread yet)', () => {
     expect(screen.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();
   });
 
+  it('round 2 J: sales without messages.read reads the permission line, not «no template»', async () => {
+    routeFetch(apiFetch, [['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: [] }]]);
+    renderWithClient(
+      <InboxModeContext.Provider value="sales">
+        <NewThread phone={PHONE} lessons={[]} />
+      </InboxModeContext.Provider>,
+    );
+    expect(await screen.findByText(t.inbox.composer.noPermissionHelp)).toBeTruthy();
+    expect(screen.queryByText(t.inbox.newChat.noAllowed)).toBeNull();
+    expect(screen.queryByRole('combobox')).toBeNull();
+  });
+
   it('a teacher only reads: no composer, no number', async () => {
     renderNew('teacher');
     expect(await screen.findByText(t.inbox.noThread)).toBeTruthy();

@@ -19,10 +19,11 @@ describe('the review when the first lesson already passed (review M3)', () => {
   it('400 date_in_past: says so in words, and «اختر موعدًا آخر» goes back to the slot step', async () => {
     apiSend.mockRejectedValue(new ApiError(400, { code: 'date_in_past', message: 'date_in_past' }));
     const onChangeSlot = vi.fn();
+    const onPatch = vi.fn();
     render(
       <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false } } })}>
         <BookingModeContext.Provider value="sales">
-          <ReviewStep draft={DRAFT} onMeetingLink={vi.fn()} onChangeSlot={onChangeSlot} onInvoice={vi.fn()} onBooked={vi.fn()} onPatch={vi.fn()} />
+          <ReviewStep draft={DRAFT} onMeetingLink={vi.fn()} onChangeSlot={onChangeSlot} onInvoice={vi.fn()} onBooked={vi.fn()} onPatch={onPatch} />
         </BookingModeContext.Provider>
       </QueryClientProvider>,
     );
@@ -30,5 +31,8 @@ describe('the review when the first lesson already passed (review M3)', () => {
     expect(await screen.findByText(t.booking.firstLessonPast)).toBeTruthy();
     fireEvent.click(screen.getByRole('button', { name: t.booking.changeSlot }));
     expect(onChangeSlot).toHaveBeenCalledTimes(1);
+    // Round 2 G: the past start and its extra picks go first, so «التالي» needs a new slot.
+    expect(onPatch).toHaveBeenCalledWith({ startsAt: null, extra: [] });
+    expect(onPatch.mock.invocationCallOrder[0] ?? 0).toBeLessThan(onChangeSlot.mock.invocationCallOrder[0] ?? 0);
   });
 });

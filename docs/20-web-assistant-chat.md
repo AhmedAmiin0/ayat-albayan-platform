@@ -72,7 +72,7 @@ Files: `apps/web/src/components/ui/use-narrow.ts`, `apps/web/src/features/inbox/
 - In admin mode this also moves the lead/family panel into ThreadSideSheet in that band. That is intended: BOX.xl has the same no-scroll bug there.
 - MessageBubble.tsx:80-81: switch the `max-sm:` tints to `max-shell:`, or the bg-sunk bubbles vanish on the phone log's bg-sunk ground.
 (2) MessageLog.tsx: mirror `pinned` into state `away`, set in onScroll only when it changes. Record `seenId` = newest id while pinned. While away, render a new JumpToLatest.tsx: a sticky bottom-2 button at the inline end, aria-label inbox.jumpLatest «الانتقال إلى أحدث رسالة», with the count of messages after seenId. On click: scrollTop = scrollHeight, pinned = true.
-(3) Snap: the layout effect at :49-52 also scrolls when the newest row is `direction === 'outbound' && status === 'queued'`, i.e. her own send, even while away.
+(3) Snap (as built, review M1): her own sends are recorded in `own-send.ts` (`recordOwnSend(phone, messageId)` by TextComposer, TemplateComposer and, since round 2 I, SendRatingButton). The log snaps to the bottom, even while away, when the row with that id arrives, whatever its status by then (the send waits for a sender pass, so it comes back `sent` or `failed`, rarely `queued`). A colleague's or an automatic outbound row never moves her. Not keyed on `status === 'queued'`.
 
 Applies to all modes. MessageLog stays well under 150 lines with the button in its own file.
 
@@ -82,8 +82,8 @@ Applies to all modes. MessageLog stays well under 150 lines with the button in i
 
 Files: `apps/web/src/features/inbox/draft-store.ts`, `apps/web/src/features/inbox/TextComposer.tsx`, `apps/web/src/features/inbox/ThreadPane.tsx`, `apps/web/src/features/inbox/ThreadPaneWide.tsx`
 
-(1) New draft-store.ts: a module-level `Map<phone, { text: string; requestId: string }>` with get, set and clear. TextComposer seeds useState and the requestId ref from it (:37-38) and writes to it on change. The draft therefore survives a thread switch (InboxPage.tsx:76 and ThreadPane.tsx:102 key by phone), the قالب toggle, and the window flipping. A retried draft keeps its clientRequestId (rule 8).
-(2) Submit: snapshot the text, clear the box at once, and keep the requestId. onError: put the snapshot back only if the box is still empty, so new typing is never overwritten, with the same requestId. onSuccess: rotate the requestId and store whatever is in the box now. Never call setText('') after the POST returns; that is what wipes text typed during the send (:42).
+(1) New draft-store.ts: a module-level, subscribable `Map<phone, { text, failed: { text, id, code } | null }>` with get, set and clear (as built, review M2; the plan's single `requestId` per draft was replaced). TextComposer seeds useState and the requestId ref from it (:37-38) and writes to it on change. The draft therefore survives a thread switch (InboxPage.tsx:76 and ThreadPane.tsx:102 key by phone), the قالب toggle, and the window flipping. A retried draft keeps its clientRequestId (rule 8).
+(2) Submit (as built): the clientRequestId is chosen AT SUBMIT: the failed send's id when the box holds exactly that failed text (trimmed), else a fresh `crypto.randomUUID()` (rule 8). The box empties at once. onError: the text comes back only if the box is still empty (new typing is never overwritten), and `failed = { text, id, code }` is stored. The failed id is dropped on ANY successful send for that phone and as soon as the box text differs from `failed.text` (round 2 C), so it is never replayed later for an unrelated identical text. While a chat's send is in flight no box for it can send (`mutationKey ['inbox-send', phone]`), even one mounted since. Never call setText('') after the POST returns; that is what wipes text typed during the send.
 (3) ThreadPane.tsx:61: `if (detail.isError && !detail.data)`. When the query is in error but still has data (a refetch failed after 3 retries), keep the log and composer and show one small `<p role="status">` with t.common.error above the log. Do not use sendErrorText; nothing was sent.
 
 All modes. Keep TextComposer ≤ 150 lines: the store and W2's key helper are separate files.
@@ -189,11 +189,35 @@ Non-admin modes. Admin mode is unchanged.
 
 Files: `apps/web/src/features/inbox/api.ts`
 
-Web-only, replacing the API `peek` idea. api.ts:50 threadQuery uses `refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false)`. The list query (:35) keeps polling, so the unread rows and W8's count still rise. The default refetchOnWindowFocus refetches and marks the chat read when she comes back.
+Web-only, replacing the API `peek` idea. api.ts threadQuery uses `refetchInterval: () => (document.hasFocus() ? INBOX_REFRESH_MS : false)`. The list query keeps polling, so the unread rows and W8's count still rise. TanStack's refetchOnWindowFocus follows `visibilitychange` only, which never fires when she switches back from another window, so (as built, review M4) ThreadPane calls `useWindowFocus(detail.refetch, phone)`: the window's `focus` event refetches the open chat (marking it read) and re-arms the focus-gated poll.
 
 Ceiling: someone reading on a second monitor without focus sees new messages only after clicking that window. Separate read marks per person would need an API change. All modes.
 
 **Test:** api.test.ts: with document.hasFocus mocked false, threadQuery('+966…').refetchInterval() returns false; with true it returns INBOX_REFRESH_MS; threadsQuery keeps a numeric interval. Grep e2e/tests for specs that drive two pages (wa-two-lines, journey-7-assistant-cycle) and call page.bringToFront() before waiting on a thread poll.
+
+## Review fixes
+
+### Round 1 (commit 35607a0d)
+
+- **M1** The log snaps on HER send (own-send store, recorded by both composers), not on any queued row (W4 step 3).
+- **M2** A new clientRequestId at each submit; a failed send keeps `{text, id}` and only that text reuses it; `mutationKey` per phone blocks a remounted box while the send is pending; draft-store is subscribable, so a remounted box sees a restored failure and never loses new typing (W5 step 2).
+- **M3** A register draft for another lead is dropped; a past first lesson resumes with no slot on the slot step; /sales/booking refuses a past trial start with 400 `date_in_past` (review text + «اختر موعدًا آخر»).
+- **M4** The open chat refetches on the window `focus` event (useWindowFocus), re-arming its focus-gated poll (W13).
+- **m5** Inline header clocks only from a width where they fit (1100px then; 1340px since round 2 E). **m6** Compact inbox toolbar. **m7** Router Link for the live chip. **m8** Read-only line and the times' city below 900px. **m9** Teacher media label + 403 `media_forbidden` fallback. **m10** No template form without messages.read. **m11** Drafts cleared on sign-out. **m12** «المزيد» returns focus to its trigger. **m13** Sales dialogs kept across 900px (SalesChatFrame). **m14** sr-only dates and jump count. **m15** A loaded media file kept on a failed refetch. **m16** Read wording for a refused thread load. **m17** Unread count cleared without inbox.read, and no 401 retries.
+
+### Round 2
+
+- **A** «المزيد» closes (and focuses its trigger) only for a click whose DOM target is inside its panel: React clicks bubble through portals, so a click or typing in a dialog an entry opened (the registration check; CreateUserDialog from the student profile's «المزيد») no longer pulls focus out of the dialog.
+- **B** m13 completed: on a lead chat «تسجيل طالب جديد» and, in every sales chat, «تحقق من التسجيل» keep their open state and dialogs in useSalesFamilyActions `dialogs` (rendered by SalesChatFrame above the width switch), so crossing 900px keeps them open.
+- **C** A failed send's clientRequestId is dropped on any successful send for that phone, and as soon as the box text differs from the failed text: a much later identical text is never replayed under the old id.
+- **D** draft-store and own-send carry a generation bumped by their clearAll; a send captures it at submit and a write from an older generation (a send settling after sign-out) is ignored. The three tab memories (drafts, own sends, register drafts) are also cleared on Supabase `SIGNED_OUT` (web-push-session.ts), covering the account_disabled sign-out in me.ts.
+- **E** The header clocks inline only from 1340px (measured with the real fonts: ~1190px ar, ~1324px en, worst-case dates); below that the separate running-head row shows. The inline box keeps `whitespace-nowrap` and clips with `overflow-hidden` as a guard.
+- **F** A restored register draft whose first lesson has passed says so: `resumable` reports `droppedPast`, and the dialog shows one FormAlert line «موعد أول حلقة قد مضى، اختر موعدًا قادمًا».
+- **G** After 400 `date_in_past`, «اختر موعدًا آخر» first clears `startsAt` and the extra picks, so «التالي» cannot lead back to the same refusal.
+- **H** A send that fails after the box remounted shows its reason: the error code is stored with `failed` and shown (with `aria-invalid`) while the box holds that text and nothing is pending.
+- **I** «إرسال تقييم الحلقة» records her own send, so the log follows the rating.
+- **J** No messages.read and no allowed template read differently: useNoneAllowed returns a reason (`no_permission` | `no_template`); the permission case says «لا تملك صلاحية إرسال القوالب، فاطلب من الإدارة منحك صلاحية قراءة الرسائل» (ComposerPhone, TemplateComposer, NewThread). A teacher's or a 403 media label says «عرض الملفات غير متاح لك» (permanent); files we do not store yet keep «عرض الملفات غير متاح هنا بعد».
+- **K** This section, and W4 step 3, W5 steps 1-2 and W13 corrected to match the code.
 
 ## Decided defaults (no change in this PR)
 

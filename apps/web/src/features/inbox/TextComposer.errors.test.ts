@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
-import { sendErrorText } from './TextComposer';
+import { sendErrorText } from './send-error';
 
 describe('a failed send in words', () => {
   it('a 403 without a code (an edited role without inbox.send) reads «غير مسموح لك بالإرسال» (W12)', () => {

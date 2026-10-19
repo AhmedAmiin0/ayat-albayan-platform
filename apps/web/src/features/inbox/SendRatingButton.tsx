@@ -8,6 +8,7 @@ import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { sendRating } from './api';
 import { useInboxMode } from './mode';
+import { recordOwnSend } from './own-send';
 
 const r = t.inbox.rating;
 const ERRORS: Record<string, string | undefined> = {
@@ -25,7 +26,8 @@ const isApproved = (templates: readonly TemplateView[] | undefined): boolean =>
 /**
  * «إرسال تقييم الحلقة» (admin mode only, a guardian's closed chat): the API picks the children's latest lesson
  * that took place and sends lesson_rating; one tap on a button reopens the 24 h window. One request
- * id per press, kept across a retry (rule 8). Disabled until Meta approves the template.
+ * id per press, kept across a retry (rule 8). Disabled until Meta approves the template. A sent rating
+ * counts as her own send (own-send).
  */
 export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e164' | 'guardian_id'> }) {
   const queryClient = useQueryClient();
@@ -34,7 +36,9 @@ export function SendRatingButton({ thread }: { thread: Pick<ThreadView, 'phone_e
   const requestId = useRef(crypto.randomUUID());
   const send = useMutation({
     mutationFn: sendRating,
-    onSuccess: async () => {
+    onSuccess: async (view, sent) => {
+      // Her own send: the log snaps to it when the row arrives (W4), like a text or a template.
+      recordOwnSend(sent.phone, view.id);
       requestId.current = crypto.randomUUID();
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },

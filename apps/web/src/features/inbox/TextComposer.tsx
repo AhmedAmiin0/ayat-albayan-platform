@@ -7,22 +7,16 @@ import { controlClass } from '@/components/ui/input';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { usePhone } from '@/components/ui/use-narrow';
 import { errorCode } from '@/features/schedule/api';
-import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { sendText } from './api';
 import { sendsOnKey } from './composer-keys';
-import { getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
-import { recordOwnSend } from './own-send';
+import { draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
+import { ownSendGeneration, recordOwnSend } from './own-send';
+import { sendErrorCode, sendErrorCodeText, sendErrorText } from './send-error';
 
-const ERRORS: Record<string, string | undefined> = t.inbox.error;
-
-/** The API's reason in words (409 session_closed, 400 invalid_phone…; a bare 403 «غير مسموح لك بالإرسال»), else «لم تُرسل». */
-export function sendErrorText(error: unknown): string {
-  const code = errorCode(error);
-  if (!code && error instanceof ApiError && error.status === 403) return t.inbox.error.forbidden;
-  return ERRORS[code ?? ''] ?? t.inbox.error.send_failed;
-}
+/** A send and the tab-memory generations it started in (never sent to the API). */
+type Sent = { phone: string; text: string; clientRequestId: string; gen: { draft: number; own: number } };
 
 /** The box's tallest height (about five lines), then it scrolls. */
 const COMPACT_MAX_PX = 128;
@@ -35,10 +29,12 @@ export interface TextComposerProps {
 
 /**
  * A session message (H3), only inside the 24 h window: one auto-growing line with a round send icon
- * button. Each send gets its own clientRequestId at submit; a failed one is kept with its id, and only
- * that same text sent again reuses it (rule 8). The draft lives in draft-store (a thread switch or a
- * remount keeps it); the box empties at once on send and text typed meanwhile is never wiped. While
- * this chat's send is in flight no box for it can send (mutationKey), even one mounted since.
+ * button. Each send gets its own clientRequestId at submit; a failed one is kept with its id and
+ * reason, and only that same text sent again reuses it (rule 8): any successful send for the chat,
+ * or the box no longer holding that text, forgets it. The draft lives in draft-store (a thread switch
+ * or a remount keeps it, with the failure's line); the box empties at once on send and text typed
+ * meanwhile is never wiped. While this chat's send is in flight no box for it can send (mutationKey),
+ * even one mounted since. A send settling after a sign-out writes nothing back (generations).
  */
 export function TextComposer({ phone, leading }: TextComposerProps) {
   const queryClient = useQueryClient();
@@ -47,21 +43,25 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
   const desktop = !usePhone();
   const draft = useSyncExternalStore(subscribeDrafts, () => getDraft(phone));
   const text = draft.text;
-  const write = (next: string) => setDraft(phone, { ...getDraft(phone), text: next });
+  const write = (next: string) => {
+    const { failed } = getDraft(phone);
+    setDraft(phone, { text: next, failed: failed?.text === next.trim() ? failed : null });
+  };
   const mutationKey = ['inbox-send', phone];
   const send = useMutation({
     mutationKey,
-    mutationFn: sendText,
+    mutationFn: ({ phone: to, text: body, clientRequestId }: Sent) => sendText({ phone: to, text: body, clientRequestId }),
     onSuccess: async (view, sent) => {
-      recordOwnSend(sent.phone, view.id);
+      recordOwnSend(sent.phone, view.id, sent.gen.own);
       const now = getDraft(sent.phone);
-      if (now.failed?.id === sent.clientRequestId) setDraft(sent.phone, { ...now, failed: null });
+      if (now.failed) setDraft(sent.phone, { ...now, failed: null }, sent.gen.draft);
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onError: async (e, sent) => {
       // Put the message back with its key, unless she has typed a new one since (that one gets its own).
       const now = getDraft(sent.phone);
-      setDraft(sent.phone, { text: now.text || sent.text, failed: { text: sent.text, id: sent.clientRequestId } });
+      const failed = { text: sent.text, id: sent.clientRequestId, code: sendErrorCode(e) };
+      setDraft(sent.phone, { text: now.text || sent.text, failed }, sent.gen.draft);
       // The window may have closed since the page loaded: refetch so the composer switches.
       if (errorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
@@ -76,12 +76,16 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
     el.style.height = `${Math.min(el.scrollHeight, COMPACT_MAX_PX)}px`;
   }, [text]);
   const tooLong = text.length > WA_TEXT_MAX;
-  const error = tooLong ? t.inbox.composer.tooLong : send.isError ? sendErrorText(send.error) : null;
+  // The failure's line follows the draft (a box mounted since the send still says why), else this box's.
+  const failedHere = !pending && draft.failed?.text === text.trim() ? sendErrorCodeText(draft.failed.code) : null;
+  const local = send.isError && !pending ? sendErrorText(send.error) : null;
+  const error = tooLong ? t.inbox.composer.tooLong : (failedHere ?? local);
   const blocked = !text.trim() || tooLong || pending;
   const submit = () => {
     if (blocked) return;
-    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()) };
-    write('');
+    const gen = { draft: draftGeneration(), own: ownSendGeneration() };
+    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()), gen };
+    setDraft(phone, { text: '', failed: null });
     send.mutate(sent);
   };
 

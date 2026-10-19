@@ -37,19 +37,22 @@ beforeEach(() => {
 });
 
 describe('FixedTopBarLayout', () => {
-  it('on /sales/inbox: full width, the clocks inside the header row from 1100px (before the bell, never wrapping) and the row only below it', () => {
+  it('on /sales/inbox: full width, the clocks inside the header row from 1340px (before the bell, never wrapping) and the row only below it', () => {
     const { container } = renderAt('/sales/inbox');
     expect(root(container)).toContain('max-w-none');
     expect(root(container)).not.toContain('max-w-[1180px]');
     const all = screen.getAllByText(t.runningHead.riyadh);
     const riyadh = all.filter((el) => header().contains(el));
     expect(riyadh).toHaveLength(1);
-    // Between 900 and 1100px the inline clocks would wrap: hidden there, the separate row shows until 1100px.
+    // Below 1340px the inline clocks (ar ~1190px, en ~1324px with the real fonts) would paint under the
+    // bell: hidden there, the separate row shows until 1340px; the inline box clips as a guard (round 2 E).
     const inline = riyadh[0]?.closest('.min-h-0');
-    expect(inline?.parentElement?.className.split(' ')).toEqual(expect.arrayContaining(['hidden', 'min-[1100px]:block']));
+    const box = inline?.parentElement?.className.split(' ');
+    expect(box).toEqual(expect.arrayContaining(['hidden', 'min-[1340px]:block', 'overflow-hidden', 'whitespace-nowrap']));
+    expect(box).not.toContain('min-[1100px]:block');
     expect(inline?.className.split(' ')).toContain('whitespace-nowrap');
     const row = all.find((el) => !header().contains(el))?.closest('.min-h-\\[54px\\]')?.parentElement;
-    expect(row?.className.split(' ')).toContain('min-[1100px]:hidden');
+    expect(row?.className.split(' ')).toContain('min-[1340px]:hidden');
     expect(row?.className.split(' ')).not.toContain('shell:hidden');
     const bell = screen.getByRole('button', { name: t.bell.open });
     expect((riyadh[0]?.compareDocumentPosition(bell) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();

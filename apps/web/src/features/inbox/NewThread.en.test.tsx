@@ -31,4 +31,15 @@ describe('starting a conversation, English', () => {
     expect(screen.queryByText(en.inbox.newChat.firstTemplate)).toBeNull();
     expect(screen.queryByRole('combobox')).toBeNull();
   });
+
+  it('without messages.read: the permission line in English (round 2 J)', async () => {
+    routeFetch(apiFetch, [['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: [] }]]);
+    renderWithClient(
+      <InboxModeContext.Provider value="sales">
+        <NewThread phone={PHONE} lessons={[]} />
+      </InboxModeContext.Provider>,
+    );
+    expect(await screen.findByText(en.inbox.composer.noPermissionHelp)).toBeTruthy();
+    expect(screen.queryByText(en.inbox.newChat.noAllowed)).toBeNull();
+  });
 });

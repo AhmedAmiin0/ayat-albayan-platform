@@ -4,6 +4,7 @@ import { meQuery } from '@/features/auth/me';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { FEEDBACK_TEMPLATE } from '@/features/feedback/types';
 import { templatesQuery } from '@/features/templates/api';
+import { t } from '@/lib/i18n';
 import { useInboxMode } from './mode';
 import { forAudience } from './template-params';
 
@@ -35,16 +36,24 @@ export function useReadsMessaging(): boolean {
   return admin || can('messages.read');
 }
 
+/** Why teacher / sales modes have nothing to send: no messages.read, or no template for them. */
+export type NoneReason = 'no_permission' | 'no_template';
+
 /**
- * Teacher and sales modes with nothing they may send (W7): a known user without messages.read (the
- * list is never asked, W12), or the list loaded with none allowed for this audience. Never in admin mode.
+ * Teacher and sales modes with nothing they may send (W7), and why: a known user without
+ * messages.read (the list is never asked, W12), or the list loaded with none allowed for this
+ * audience. Null when something may be sent, and always in admin mode.
  */
-export function useNoneAllowed(teacher: boolean): boolean {
+export function useNoneAllowed(teacher: boolean): NoneReason | null {
   const staff = useInboxMode() !== 'admin';
   const known = !!useQuery(meQuery).data;
   const reads = useReadsMessaging();
   const templates = useQuery({ ...templatesQuery, enabled: reads });
-  if (!staff) return false;
-  if (!reads) return known;
-  return templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0;
+  if (!staff) return null;
+  if (!reads) return known ? 'no_permission' : null;
+  return templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0 ? 'no_template' : null;
 }
+
+/** The refusal line: the permission one for no messages.read (round 2 J), else the template one given. */
+export const noneAllowedText = (reason: NoneReason, noTemplate: string): string =>
+  reason === 'no_permission' ? t.inbox.composer.noPermissionHelp : noTemplate;
