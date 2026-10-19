@@ -9,12 +9,15 @@ import { useDismiss } from './use-dismiss';
  * that drops the page's secondary actions (its own buttons and links, unchanged) under the button.
  * Closes on a pick, a tap outside and Esc. No ARIA menu roles: the actions stay buttons/links.
  * A pick and Esc put focus back on the trigger (a pick first, so a dialog it opens records the
- * trigger, not an entry about to be hidden, and returns focus there on close).
+ * trigger, not an entry about to be hidden, and returns focus there on close). Only a click whose
+ * DOM target is inside the panel counts as a pick: React clicks bubble through portals, so a click
+ * in a dialog an entry opened must not close the menu or pull focus out of the dialog.
  */
 export function MoreMenu({ children, label = t.common.more }: { children: ReactNode; label?: string }) {
   const [open, setOpen] = useState(false);
   const box = useRef<HTMLDivElement>(null);
   const trigger = useRef<HTMLButtonElement>(null);
+  const panel = useRef<HTMLDivElement>(null);
   const close = () => {
     trigger.current?.focus();
     setOpen(false);
@@ -35,8 +38,11 @@ export function MoreMenu({ children, label = t.common.more }: { children: ReactN
       {/* Always mounted, hidden while closed: an action's own state (a pending export, a dialog
           it opened) outlives the menu closing on the pick. */}
       <div
+        ref={panel}
         hidden={!open}
-        onClick={close}
+        onClick={(e) => {
+          if (panel.current?.contains(e.target as Node)) close();
+        }}
         className="absolute end-0 top-full z-30 mt-1.5 grid w-max max-w-[calc(100vw-2rem)] min-w-48 gap-1 rounded-md border border-rule bg-card p-1.5 shadow-pop [&>*]:w-full [&>*]:justify-start [&[hidden]]:hidden"
       >
         {children}

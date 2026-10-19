@@ -6,13 +6,14 @@ import { t } from '@/lib/i18n';
 import { PHONE, thread } from './inbox-fixture';
 import { InboxModeContext } from './mode';
 import { registerDrafts } from './register-drafts';
-import { SalesRegisterAction } from './SalesRegisterAction';
+import { SalesChatActions } from './sales-money/SalesChatActions';
 import { renderWithClient, routeFetch } from './test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-utils')).MockLink }));
+vi.mock('@/features/auth/use-permissions', () => ({ usePermissions: () => ({ permissions: [], can: () => false }) }));
 
 const OTHER = '+966559999999';
 const RESULT = { rule_id: 'r1', student_ids: ['s1'], guardian_ids: ['g1'], lessons: [{ id: 'l1', starts_at: SLOT, ends_at: SLOT }], message_ids: ['m1'] };
@@ -27,7 +28,7 @@ function renderAction(phone = PHONE) {
   apiSend.mockImplementation((_m: string, path: string) => Promise.resolve(path === '/sales/booking/check' ? { conflicts: [] } : RESULT));
   renderWithClient(
     <InboxModeContext.Provider value="sales">
-      <SalesRegisterAction thread={thread({ phone_e164: phone, lead_id: phone === PHONE ? 'lead-1' : 'lead-2' })} />
+      <SalesChatActions thread={thread({ phone_e164: phone, lead_id: phone === PHONE ? 'lead-1' : 'lead-2' })} />
     </InboxModeContext.Provider>,
   );
 }
@@ -60,6 +61,7 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
 
     dialog = openDialog();
     expect(await dialog.findByRole('region', { name: t.booking.steps.teacher })).toBeTruthy();
+    expect(dialog.queryByText(t.booking.firstLessonPast)).toBeNull();
     fireEvent.click(dialog.getByRole('button', { name: t.booking.back }));
     expect(field(dialog, t.guardians.name).value).toBe('أم جود');
     expect(field(dialog, t.leads.studentName).value).toBe('جود');
@@ -102,6 +104,8 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     const dialog = openDialog();
     expect(await dialog.findByRole('region', { name: t.booking.steps.slot })).toBeTruthy();
     expect(dialog.queryByRole('button', { name: t.booking.submit })).toBeNull();
+    // Round 2 F: one line says why the slot is gone.
+    expect(dialog.getByRole('alert').textContent).toContain(t.booking.firstLessonPast);
   });
 
   it('a draft saved for another lead is not resumed: a fresh draft from the chat', () => {

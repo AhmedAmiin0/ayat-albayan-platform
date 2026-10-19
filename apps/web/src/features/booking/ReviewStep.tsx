@@ -101,7 +101,17 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
           <FormAlert>
             {past ? t.booking.firstLessonPast : lessonErrorText(book.error)}
             {past && (
-              <Button type="button" variant="secondary" size="sm" className="ms-3" onClick={onChangeSlot}>
+              // The past start is dropped first, so «التالي» cannot lead back to the same refusal.
+              <Button
+                type="button"
+                variant="secondary"
+                size="sm"
+                className="ms-3"
+                onClick={() => {
+                  onPatch({ startsAt: null, extra: [] });
+                  onChangeSlot();
+                }}
+              >
                 {t.booking.changeSlot}
               </Button>
             )}

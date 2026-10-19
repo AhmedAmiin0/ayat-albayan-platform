@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { clearAllDrafts, clearDraft, getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
+import { clearAllDrafts, clearDraft, draftGeneration, getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
 
 const A = '+966501234567';
 const B = '+966507654321';
@@ -46,7 +46,7 @@ describe('the reply draft per chat', () => {
 });
 
 describe('requestIdFor (rule 8)', () => {
-  const failed = { text: 'السلام عليكم', failed: { text: 'السلام عليكم', id: 'r-1' } };
+  const failed = { text: 'السلام عليكم', failed: { text: 'السلام عليكم', id: 'r-1', code: 'send_failed' } };
 
   it('the failed text again → the failed attempt’s id', () => {
     expect(requestIdFor(failed, 'السلام عليكم')).toBe('r-1');
@@ -61,5 +61,16 @@ describe('requestIdFor (rule 8)', () => {
   it('no failure → a fresh uuid each time', () => {
     const none = { text: 'x', failed: null };
     expect(requestIdFor(none, 'x')).not.toBe(requestIdFor(none, 'x'));
+  });
+});
+
+describe('draft generations (round 2 D)', () => {
+  it('a write from before clearAllDrafts is dropped; the current generation writes', () => {
+    const before = draftGeneration();
+    clearAllDrafts();
+    setDraft(A, { text: 'قديم', failed: null }, before);
+    expect(getDraft(A).text).toBe('');
+    setDraft(A, { text: 'جديد', failed: null }, draftGeneration());
+    expect(getDraft(A).text).toBe('جديد');
   });
 });

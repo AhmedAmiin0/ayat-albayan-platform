@@ -17,10 +17,11 @@ const viewable = (mime: string | null): boolean => (INVOICE_MIMES as readonly st
 /** An image the browser draws inline; HEIC is a named link like a PDF. */
 const inlineImage = (mime: string): boolean => mime.startsWith('image/') && mime !== 'image/heic';
 
-function Label({ kind }: { kind: string }) {
+/** `forbidden`: refused to this user (teacher mode, 403), for good; else a file we do not keep yet. */
+function Label({ kind, forbidden = false }: { kind: string; forbidden?: boolean }) {
   return (
     <p className="text-xs font-semibold text-ink-2">
-      {kind} <span className="font-normal text-ink-3">· {t.inbox.mediaNotDownloaded}</span>
+      {kind} <span className="font-normal text-ink-3">· {forbidden ? t.inbox.mediaNotAllowed : t.inbox.mediaNotDownloaded}</span>
     </p>
   );
 }
@@ -56,7 +57,7 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
   if (file.data) return <Loaded file={file.data} kind={kind} />;
   if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
   // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
-  if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} />;
+  if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} forbidden />;
   const expired = file.error instanceof ApiError && file.error.status === 410;
   return (
     <p role="status" className="text-xs font-semibold text-ink-2">
@@ -82,5 +83,5 @@ export function MessageMedia({ message: m }: { message: MessageView }) {
     );
   }
   if (!teacher && m.direction === 'inbound' && viewable(m.media_mime)) return <FileView message={m} kind={kind} />;
-  return <Label kind={kind} />;
+  return <Label kind={kind} forbidden={teacher} />;
 }

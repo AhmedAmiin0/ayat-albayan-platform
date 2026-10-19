@@ -28,7 +28,9 @@ describe('MessageMedia: who may open a file (m9) and a failed refetch (m15)', ()
       </InboxModeContext.Provider>,
     );
     expect(screen.queryByRole('button')).toBeNull();
-    expect(screen.getByText(`· ${t.inbox.mediaNotDownloaded}`)).toBeTruthy();
+    expect(screen.getByText(`· ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
+    // Round 2 J: a permanent refusal, not «not here yet».
+    expect(screen.queryByText(`· ${t.inbox.mediaNotDownloaded}`)).toBeNull();
     expect(apiFetch).not.toHaveBeenCalled();
   });
 
@@ -36,7 +38,7 @@ describe('MessageMedia: who may open a file (m9) and a failed refetch (m15)', ()
     apiFetch.mockRejectedValue(new ApiError(403, { code: 'media_forbidden' }));
     renderWithClient(<MessageMedia message={IMAGE} />);
     fireEvent.click(screen.getByRole('button', { name: viewName }));
-    expect(await screen.findByText(`· ${t.inbox.mediaNotDownloaded}`)).toBeTruthy();
+    expect(await screen.findByText(`· ${t.inbox.mediaNotAllowed}`)).toBeTruthy();
     expect(screen.queryByRole('status')).toBeNull();
   });
 

@@ -4,7 +4,7 @@ import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { useNoneAllowed } from './allowed-templates';
+import { noneAllowedText, useNoneAllowed, type NoneReason } from './allowed-templates';
 import { sessionUntil } from './format';
 import { replyFromText } from './reply-from';
 import { SendRatingButton } from './SendRatingButton';
@@ -52,7 +52,7 @@ function Notices({ notes }: { notes: string[] }) {
  * reply_line: no reply line in template mode. With no template allowed the help line replaces
  * «يجب أن ترسل قالبًا».
  */
-function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: boolean }): string[] {
+function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mode'> & { noneAllowed: NoneReason | null }): string[] {
   const { thread, gateNote, mode, noneAllowed } = input;
   const open = thread.session_open;
   const until = open && thread.last_inbound_at ? sessionUntil(thread.last_inbound_at) : null;
@@ -89,7 +89,7 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       {!open && <SendRatingButton thread={thread} />}
       {template && toggle && <div className="flex">{toggle}</div>}
       {!open && noneAllowed ? (
-        <p className="px-1 text-xs text-ink-2">{t.inbox.composer.noAllowedHelp}</p>
+        <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
       ) : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
       ) : (
