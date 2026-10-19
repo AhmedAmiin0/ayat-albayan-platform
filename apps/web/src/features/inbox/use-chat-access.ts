@@ -7,6 +7,8 @@ export interface ChatAccess {
   send: boolean;
   /** GET /messaging/templates (messages.read). */
   templates: boolean;
+  /** The paperclip (D2): staff who may send; never teachers (the API answers 403 files_forbidden). */
+  files: boolean;
 }
 
 /**
@@ -17,5 +19,6 @@ export interface ChatAccess {
 export function useChatAccess(mode: InboxMode): ChatAccess {
   const me = useQuery(meQuery).data;
   const lacks = (p: 'inbox.send' | 'messages.read') => mode !== 'admin' && !!me && !canDo(me, p);
-  return { send: !lacks('inbox.send'), templates: !lacks('messages.read') };
+  const send = !lacks('inbox.send');
+  return { send, templates: !lacks('messages.read'), files: send && mode !== 'teacher' };
 }

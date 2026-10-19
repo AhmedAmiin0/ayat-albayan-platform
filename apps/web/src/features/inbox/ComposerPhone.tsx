@@ -1,16 +1,20 @@
-import type { ThreadView } from '@ab/shared';
+import type { ChatFileProblem, ThreadView } from '@ab/shared';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { noneAllowedText, useNoneAllowed, type NoneReason } from './allowed-templates';
+import { AttachButton } from './AttachButton';
+import { FileComposer } from './FileComposer';
 import { sessionUntil } from './format';
+import { useInboxMode } from './mode';
 import { replyFromText } from './reply-from';
 import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
 import { TextComposer } from './TextComposer';
 import type { PrefillContext } from './template-params';
+import { useChatAccess } from './use-chat-access';
 
 export type ComposerMode = 'text' | 'template';
 
@@ -66,11 +70,17 @@ function noticeLines(input: Pick<ComposerPhoneProps, 'thread' | 'gateNote' | 'mo
  * log: the notices in one line, then a one-line growing message box with the template toggle
  * before it and a round «أرسل» after it. Outside the 24 h window: templates only. Teacher and sales
  * with no template allowed get no toggle, and after the window one line on what they can do.
+ * Staff (not teachers) also get a paperclip inside the window (D2): a picked file swaps the box for
+ * FileComposer. The File lives here only (never in the draft store), for this chat only.
  */
 export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher }: ComposerPhoneProps) {
   const open = thread.session_open;
   const noneAllowed = useNoneAllowed(teacher);
   const notes = noticeLines({ thread, gateNote, mode, noneAllowed });
+  const files = useChatAccess(useInboxMode()).files;
+  const [picked, setPicked] = useState<{ phone: string; file: File } | null>(null);
+  const [problem, setProblem] = useState<ChatFileProblem | null>(null);
+  const file = picked?.phone === thread.phone_e164 ? picked.file : null;
   const template = !open || (mode === 'template' && !noneAllowed);
   const toggle = open && !noneAllowed && (
     <IconButton
@@ -82,6 +92,15 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
       <Icon name="template" className="size-5" />
     </IconButton>
   );
+  const attach = open && files && (
+    <AttachButton
+      onPick={(next) => {
+        setProblem(null);
+        setPicked({ phone: thread.phone_e164, file: next });
+      }}
+      onProblem={setProblem}
+    />
+  );
 
   return (
     <div className="grid max-h-[70dvh] shrink-0 gap-1.5 overflow-y-auto border-t border-rule bg-page px-2 pt-1.5 pb-[max(0.5rem,env(safe-area-inset-bottom))]">
@@ -92,8 +111,15 @@ export function ComposerPhone({ thread, context, gateNote, mode, onMode, teacher
         <p className="px-1 text-xs text-ink-2">{noneAllowedText(noneAllowed, t.inbox.composer.noAllowedHelp)}</p>
       ) : template ? (
         <TemplateComposer phone={thread.phone_e164} context={context} teacher={teacher} />
+      ) : file ? (
+        <FileComposer phone={thread.phone_e164} file={file} onDone={() => setPicked(null)} />
       ) : (
-        <TextComposer phone={thread.phone_e164} leading={toggle} />
+        <TextComposer phone={thread.phone_e164} leading={<>{toggle}{attach}</>} />
+      )}
+      {problem && !template && (
+        <p role="alert" className="px-1 text-xs text-danger">
+          {t.inbox.error[problem]}
+        </p>
       )}
     </div>
   );
