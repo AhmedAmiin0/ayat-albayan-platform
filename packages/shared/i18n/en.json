@@ -560,6 +560,7 @@
     "overrideReason": "Reason for booking despite the conflict",
     "overrideHint": "The reason will be saved with the lesson",
     "changeSlot": "Pick another time",
+    "firstLessonPast": "The first lesson time has already passed; pick an upcoming time",
     "open": "Book lessons",
     "notAvailable": "Not available",
     "noAvailabilityWhy": "No available times recorded yet",
@@ -2286,6 +2287,8 @@
     "openThread": "Open conversation with {name}",
     "loadOlder": "Older messages",
     "jumpLatest": "Jump to the latest message",
+    "jumpLatestCount": "Jump to the latest message ({count} new)",
+    "readForbidden": "You are not allowed to view this chat",
     "replyTo": "Replying to:",
     "quickReply": {
       "confirmed": "Confirmed the {when} lesson (Riyadh time)",

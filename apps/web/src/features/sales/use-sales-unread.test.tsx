@@ -4,7 +4,8 @@ import type { ReactNode } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { INBOX_REFRESH_MS } from '@/features/inbox/api';
 import { t } from '@/lib/i18n';
-import { salesUnreadQuery, unreadTitle, useSalesUnread } from './use-sales-unread';
+import { ApiError } from '@/lib/api';
+import { salesUnreadQuery, unreadRetry, unreadTitle, useSalesUnread } from './use-sales-unread';
 
 const apiFetch = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch }));
@@ -41,6 +42,18 @@ describe('useSalesUnread (W8)', () => {
     expect(document.title).toBe(t.app.name);
   });
 
+  it('inbox.read lost mid-session: the cached count leaves the title at once', async () => {
+    total(4);
+    let reads = true;
+    const { result, rerender } = renderHook(() => useSalesUnread((p) => p !== 'inbox.read' || reads), { wrapper });
+    await waitFor(() => expect(result.current).toBe(4));
+    expect(document.title).toBe(`(4) ${t.app.name}`);
+    reads = false;
+    rerender();
+    expect(result.current).toBe(0);
+    expect(document.title).toBe(t.app.name);
+  });
+
   it('restores the base title on unmount', async () => {
     total(2);
     const { result, unmount } = renderHook(() => useSalesUnread(() => true), { wrapper });
@@ -57,6 +70,13 @@ describe('salesUnreadQuery', () => {
     expect(q.refetchInterval).toBe(INBOX_REFRESH_MS);
     expect(q.refetchIntervalInBackground).toBe(true);
     expect(salesUnreadQuery(false).enabled).toBe(false);
+  });
+
+  it('never retries a 401; other failures up to 3 times', () => {
+    expect(salesUnreadQuery(true).retry).toBe(unreadRetry);
+    expect(unreadRetry(0, new ApiError(401, null))).toBe(false);
+    expect(unreadRetry(0, new ApiError(500, null))).toBe(true);
+    expect(unreadRetry(3, new ApiError(500, null))).toBe(false);
   });
 
   it('unreadTitle', () => {

@@ -1,6 +1,6 @@
 import { WA_TEXT_MAX } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useId, useLayoutEffect, useRef, useState, type ReactNode } from 'react';
+import { useIsMutating, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useId, useLayoutEffect, useRef, useSyncExternalStore, type ReactNode } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
 import { controlClass } from '@/components/ui/input';
@@ -12,7 +12,8 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { sendText } from './api';
 import { sendsOnKey } from './composer-keys';
-import { clearDraft, getDraft, setDraft } from './draft-store';
+import { getDraft, requestIdFor, setDraft, subscribeDrafts } from './draft-store';
+import { recordOwnSend } from './own-send';
 
 const ERRORS: Record<string, string | undefined> = t.inbox.error;
 
@@ -34,42 +35,39 @@ export interface TextComposerProps {
 
 /**
  * A session message (H3), only inside the 24 h window: one auto-growing line with a round send icon
- * button. One idempotency key per draft, kept across a retry, so a double click or a lost response
- * never sends it twice (rule 8). The draft lives in draft-store, so a thread switch keeps it; the
- * box empties at once on send, and text typed while the send is in flight is never wiped.
+ * button. Each send gets its own clientRequestId at submit; a failed one is kept with its id, and only
+ * that same text sent again reuses it (rule 8). The draft lives in draft-store (a thread switch or a
+ * remount keeps it); the box empties at once on send and text typed meanwhile is never wiped. While
+ * this chat's send is in flight no box for it can send (mutationKey), even one mounted since.
  */
 export function TextComposer({ phone, leading }: TextComposerProps) {
   const queryClient = useQueryClient();
   const errorId = useId();
   const area = useRef<HTMLTextAreaElement>(null);
   const desktop = !usePhone();
-  const [seed] = useState(() => getDraft(phone));
-  const [text, setText] = useState(seed.text);
-  // The box as typed now: the mutation's callbacks run after the POST, when `text` may be stale.
-  const current = useRef(seed.text);
-  const requestId = useRef(seed.requestId);
-  const write = (next: string) => {
-    current.current = next;
-    setText(next);
-    if (next) setDraft(phone, { text: next, requestId: requestId.current });
-    else clearDraft(phone);
-  };
+  const draft = useSyncExternalStore(subscribeDrafts, () => getDraft(phone));
+  const text = draft.text;
+  const write = (next: string) => setDraft(phone, { ...getDraft(phone), text: next });
+  const mutationKey = ['inbox-send', phone];
   const send = useMutation({
+    mutationKey,
     mutationFn: sendText,
-    onSuccess: async () => {
-      requestId.current = crypto.randomUUID();
-      write(current.current);
+    onSuccess: async (view, sent) => {
+      recordOwnSend(sent.phone, view.id);
+      const now = getDraft(sent.phone);
+      if (now.failed?.id === sent.clientRequestId) setDraft(sent.phone, { ...now, failed: null });
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onError: async (e, sent) => {
-      // Put the message back with its key, unless she has typed a new one (that one gets its own key).
-      if (current.current) requestId.current = crypto.randomUUID();
-      write(current.current || sent.text);
+      // Put the message back with its key, unless she has typed a new one since (that one gets its own).
+      const now = getDraft(sent.phone);
+      setDraft(sent.phone, { text: now.text || sent.text, failed: { text: sent.text, id: sent.clientRequestId } });
       // The window may have closed since the page loaded: refetch so the composer switches.
       if (errorCode(e) === 'session_closed') await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
     onSettled: () => area.current?.focus(),
   });
+  const pending = useIsMutating({ mutationKey }) > 0;
   // The box grows with its text (1 line → about 5), also where `field-sizing` is missing.
   useLayoutEffect(() => {
     const el = area.current;
@@ -79,14 +77,12 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
   }, [text]);
   const tooLong = text.length > WA_TEXT_MAX;
   const error = tooLong ? t.inbox.composer.tooLong : send.isError ? sendErrorText(send.error) : null;
-  const blocked = !text.trim() || tooLong || send.isPending;
+  const blocked = !text.trim() || tooLong || pending;
   const submit = () => {
     if (blocked) return;
-    const clientRequestId = requestId.current;
+    const sent = { phone, text: text.trim(), clientRequestId: requestIdFor(draft, text.trim()) };
     write('');
-    // The draft keeps its key while the send is in flight: a failure restores both.
-    setDraft(phone, { text: '', requestId: clientRequestId });
-    send.mutate({ phone, text: text.trim(), clientRequestId });
+    send.mutate(sent);
   };
 
   return (
@@ -120,7 +116,7 @@ export function TextComposer({ phone, leading }: TextComposerProps) {
           type="submit"
           label={t.inbox.composer.send}
           disabled={blocked}
-          aria-busy={send.isPending || undefined}
+          aria-busy={pending || undefined}
           className="rounded-full bg-primary text-primary-foreground hover:bg-primary-hover hover:text-primary-foreground"
         >
           <Icon name="send" className="size-5" />

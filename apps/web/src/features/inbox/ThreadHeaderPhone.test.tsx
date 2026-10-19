@@ -1,6 +1,7 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
+import { timesInText } from './format';
 import { detail, PHONE } from './inbox-fixture';
 import { InboxModeContext } from './mode';
 import { renderWithClient, routeFetch } from './test-utils';
@@ -52,5 +53,11 @@ describe('ThreadHeaderPhone at 375px, a sales lead (W3)', () => {
     const actions = screen.getByRole('button', { name: t.inbox.registerNew }).closest('span');
     expect(actions?.className).toContain('shrink-0');
     expect(screen.getByTestId('phone-chat')).toBeTruthy();
+  });
+
+  it('the chip row ends with the times’ city, like the wide header (principle 7)', async () => {
+    const h2 = await screen.findByRole('heading', { level: 2 });
+    const chips = h2.closest('header')?.lastElementChild;
+    expect(chips?.lastElementChild?.textContent).toBe(timesInText());
   });
 });

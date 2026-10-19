@@ -1,8 +1,11 @@
-import { screen, within } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { meQuery, type Me } from '@/features/auth/me';
 import { SETTINGS } from '@/features/messaging/settings-fixture';
 import { t } from '@/lib/i18n';
 import { detail, lead, message, PHONE, template } from './inbox-fixture';
+import { InboxModeContext } from './mode';
 import { renderWithClient, routeFetch } from './test-utils';
 import { ThreadPane } from './ThreadPane';
 
@@ -57,5 +60,28 @@ describe('ThreadPane below 900px (a half-screen window, a tablet): the full-scre
     renderThread();
     expect(await screen.findByRole('log', { name: t.messages.log })).toBeTruthy();
     expect(screen.queryByTestId('phone-chat')).toBeNull();
+  });
+
+  it('at 800px without inbox.send (sales): the read-only line takes the full-screen chat’s padding', async () => {
+    viewport(800);
+    routeFetch(apiFetch, [
+      ['/threads/%2B966501234567', detail([message()])],
+      ['/messaging/templates', []],
+    ]);
+    // The shells load /auth/me first (requireRole): seeded the same way here.
+    const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
+    const me: Me = { id: 'u-1', email: null, role: 'sales', permissions: ['inbox.read', 'messages.read'] };
+    client.setQueryData(meQuery.queryKey, me);
+    render(
+      <QueryClientProvider client={client}>
+        <InboxModeContext.Provider value="sales">
+          <ThreadPane phone={PHONE} listSearch={{ page: 1 }} />
+        </InboxModeContext.Provider>
+      </QueryClientProvider>,
+    );
+    const line = await screen.findByText(t.inbox.sendNotAllowed);
+    expect(within(screen.getByTestId('phone-chat')).getByText(t.inbox.sendNotAllowed)).toBe(line);
+    expect(line.className).toContain('max-shell:px-3');
+    expect(line.className).not.toContain('max-sm:');
   });
 });

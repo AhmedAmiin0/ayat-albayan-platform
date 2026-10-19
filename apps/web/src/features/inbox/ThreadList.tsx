@@ -27,7 +27,9 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
   const options = { search, mode: useInboxMode(), onFilter };
   return (
     <>
+      {/* compact: search, the icon «تصفية» and الكل/غير مقروءة on one row in the 300–400px list column. */}
       <TableToolbar
+        compact
         search={
           <ColumnFilterText
             ariaLabel={t.common.search}

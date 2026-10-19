@@ -1,10 +1,8 @@
 import { formatPhone, type ThreadLesson } from '@ab/shared';
-import { useQuery } from '@tanstack/react-query';
 import { EmptyState } from '@/components/ui/empty-state';
 import { Ltr } from '@/components/ui/ltr';
-import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
-import { allowedTemplates, useReadsMessaging } from './allowed-templates';
+import { useNoneAllowed } from './allowed-templates';
 import { useInboxMode } from './mode';
 import { TemplateComposer } from './TemplateComposer';
 
@@ -18,9 +16,9 @@ import { TemplateComposer } from './TemplateComposer';
 export function NewThread({ phone, lessons }: { phone: string; lessons: readonly ThreadLesson[] }) {
   const mode = useInboxMode();
   const writes = mode !== 'teacher';
-  const reads = useReadsMessaging();
-  const templates = useQuery({ ...templatesQuery, enabled: writes && reads });
-  const noneAllowed = mode === 'sales' && templates.isSuccess && allowedTemplates(templates.data, false).length === 0;
+  // No messages.read, or none of the allowed templates (W7, W12).
+  const none = useNoneAllowed(false);
+  const noneAllowed = mode === 'sales' && none;
   const composes = writes && !noneAllowed;
   return (
     <section aria-label={t.inbox.newChat.title} className="grid content-start gap-4">

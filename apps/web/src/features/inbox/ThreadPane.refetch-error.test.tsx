@@ -1,5 +1,6 @@
 import { screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { threadQuery } from './api';
 import { detail, message, PHONE } from './inbox-fixture';
@@ -49,5 +50,12 @@ describe('a failed background poll keeps the chat (W5)', () => {
     renderWithClient(<ThreadPane phone={PHONE} listSearch={{ page: 1 }} />);
     expect(await screen.findByRole('alert')).toBeTruthy();
     expect(screen.queryByRole('log')).toBeNull();
+  });
+
+  it('a first load refused with a bare 403 reads as not allowed to view, not «not allowed to send»', async () => {
+    apiFetch.mockRejectedValue(new ApiError(403, null));
+    renderWithClient(<ThreadPane phone={PHONE} listSearch={{ page: 1 }} />);
+    expect((await screen.findByRole('alert')).textContent).toContain(t.inbox.readForbidden);
+    expect(document.body.textContent).not.toContain(t.inbox.error.forbidden);
   });
 });

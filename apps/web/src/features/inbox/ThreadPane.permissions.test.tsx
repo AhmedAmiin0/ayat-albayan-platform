@@ -15,9 +15,9 @@ vi.mock('@tanstack/react-router', async () => ({ Link: (await import('./test-uti
 
 const READ_SEND: Permission[] = ['inbox.read', 'inbox.send', 'messages.read'];
 
-function open(mode: InboxMode, permissions: Permission[]) {
+function open(mode: InboxMode, permissions: Permission[], session_open = true) {
   routeFetch(apiFetch, [
-    ['/threads/%2B966501234567', detail([message({ body: 'السلام عليكم' })], { session_open: true })],
+    ['/threads/%2B966501234567', detail([message({ body: 'السلام عليكم' })], { session_open })],
     ['/messaging/templates', []],
     ['/messages/gate', { open: true, reason: null, queued: 0 }],
     ['/settings', {}],
@@ -61,6 +61,14 @@ describe('the chat follows the editable sales role (W12)', () => {
     open('sales', ['inbox.read', 'inbox.send']);
     await screen.findByText('السلام عليكم');
     expect(box()).toBeTruthy();
+    expect(templateCalls()).toHaveLength(0);
+  });
+
+  it('messages.read off, window closed: the help line, no template form, no /messaging/templates request', async () => {
+    open('sales', ['inbox.read', 'inbox.send'], false);
+    expect(await screen.findByText(t.inbox.composer.noAllowedHelp)).toBeTruthy();
+    expect(screen.queryByRole('combobox')).toBeNull();
+    expect(screen.queryByRole('button', { name: t.inbox.composer.sendTemplate })).toBeNull();
     expect(templateCalls()).toHaveLength(0);
   });
 

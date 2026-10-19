@@ -1,6 +1,9 @@
 import { RATING_TEMPLATE, type TemplateView } from '@ab/shared';
+import { useQuery } from '@tanstack/react-query';
+import { meQuery } from '@/features/auth/me';
 import { usePermissions } from '@/features/auth/use-permissions';
 import { FEEDBACK_TEMPLATE } from '@/features/feedback/types';
+import { templatesQuery } from '@/features/templates/api';
 import { useInboxMode } from './mode';
 import { forAudience } from './template-params';
 
@@ -30,4 +33,18 @@ export function useReadsMessaging(): boolean {
   const admin = useInboxMode() === 'admin';
   const { can } = usePermissions();
   return admin || can('messages.read');
+}
+
+/**
+ * Teacher and sales modes with nothing they may send (W7): a known user without messages.read (the
+ * list is never asked, W12), or the list loaded with none allowed for this audience. Never in admin mode.
+ */
+export function useNoneAllowed(teacher: boolean): boolean {
+  const staff = useInboxMode() !== 'admin';
+  const known = !!useQuery(meQuery).data;
+  const reads = useReadsMessaging();
+  const templates = useQuery({ ...templatesQuery, enabled: reads });
+  if (!staff) return false;
+  if (!reads) return known;
+  return templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0;
 }

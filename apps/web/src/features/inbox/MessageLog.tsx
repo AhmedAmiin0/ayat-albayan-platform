@@ -5,9 +5,12 @@ import { t } from '@/lib/i18n';
 import { withDays, type LogItem } from './day-groups';
 import { JumpToLatest } from './JumpToLatest';
 import { MessageBubble } from './MessageBubble';
+import { lastOwnSend } from './own-send';
 import { isNearBottom } from './stick-to-bottom';
 
 export interface MessageLogProps {
+  /** The chat's number: her own last send in it (own-send) snaps the log down. */
+  phone: string;
   /** Oldest → newest. */
   messages: MessageView[];
   hasMore: boolean;
@@ -30,6 +33,7 @@ const BOX = {
   phone: 'min-h-0 flex-1 overflow-y-auto overscroll-contain bg-sunk px-2.5 py-3',
 };
 
+/** Hidden from screen readers: each bubble's <time> reads its full date instead. */
 function Day({ label }: { label: string }) {
   return (
     <li className="flex justify-center py-1" aria-hidden="true">
@@ -38,35 +42,32 @@ function Day({ label }: { label: string }) {
   );
 }
 
-/** Her own send just went in (queued): the log follows it even when she had scrolled up. */
-const ownSend = (m: MessageView | undefined): boolean => m?.direction === 'outbound' && m.status === 'queued';
-
 /**
  * The thread as a live log (role=log: new messages are announced). Opens at the newest message and
  * stays pinned there as messages arrive, unless the reader scrolled up: then «الانتقال إلى أحدث رسالة»
- * counts what came in below. Her own send always snaps to the bottom; «رسائل أقدم» pages back.
+ * counts what came in below. Her own send (the id her composer recorded) always snaps to the bottom; «رسائل أقدم» pages back.
  * A separator before each day's first message, at every width (the bubbles show the clock only).
  */
-export function MessageLog({ messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell' }: MessageLogProps) {
+export function MessageLog({ phone, messages, hasMore, loadingOlder, onOlder, waitingKeys, fill = 'shell' }: MessageLogProps) {
   const box = useRef<HTMLDivElement>(null);
   const pinned = useRef(true);
-  const last = messages.at(-1);
-  const newest = last?.id;
+  const newest = messages.at(-1)?.id;
+  // Her send recorded before its row arrived, or (a poll first) after: either way the log follows it.
+  const own = !!newest && newest === lastOwnSend(phone);
   // The newest id she had seen when she scrolled up; null while pinned at the bottom.
   const [awayAt, setAwayAt] = useState<string | null>(null);
-  const [prevNewest, setPrevNewest] = useState(newest);
-  if (newest !== prevNewest) {
-    setPrevNewest(newest);
-    if (ownSend(last)) setAwayAt(null);
+  const [prev, setPrev] = useState({ newest, own });
+  if (newest !== prev.newest || own !== prev.own) {
+    setPrev({ newest, own });
+    if (own) setAwayAt(null);
   }
+  // Only a new newest row (or it turning out to be hers) moves the reader, never a status change.
   useLayoutEffect(() => {
     const el = box.current;
-    if (!el || !(pinned.current || ownSend(last))) return;
+    if (!el || !(pinned.current || own)) return;
     el.scrollTop = el.scrollHeight;
     pinned.current = true;
-    // `last` changes with `newest`; a status change alone must not move the reader.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [newest]);
+  }, [newest, own]);
   const jump = () => {
     const el = box.current;
     if (el) el.scrollTop = el.scrollHeight;

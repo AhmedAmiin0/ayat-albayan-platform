@@ -1,6 +1,9 @@
 import { HOME_BY_ROLE } from '@ab/shared';
 import type { QueryClient } from '@tanstack/react-query';
 import { t } from '@/lib/i18n';
+import { clearAllDrafts } from '@/features/inbox/draft-store';
+import { clearOwnSends } from '@/features/inbox/own-send';
+import { registerDrafts } from '@/features/inbox/register-drafts';
 import { forgetWebPush } from '@/features/notifications/web-push';
 import { supabase } from '@/lib/supabase';
 import { isAccountDisabled, meQuery } from './me';
@@ -42,10 +45,14 @@ export async function signIn(creds: Credentials, queryClient: QueryClient): Prom
 
 /**
  * The activity report and dropping this browser's push subscription both need the token, are
- * bounded and never throw: a dead API never blocks signing out.
+ * bounded and never throw: a dead API never blocks signing out. On a shared PC the next user must
+ * not find the chats' unsent replies or a half-typed registration: those tab memories go with the cache.
  */
 export async function signOut(queryClient: QueryClient): Promise<void> {
   await Promise.all([reportSession('logout'), forgetWebPush()]);
   await supabase.auth.signOut();
   queryClient.clear();
+  clearAllDrafts();
+  clearOwnSends();
+  registerDrafts.clearAll();
 }

@@ -37,16 +37,20 @@ beforeEach(() => {
 });
 
 describe('FixedTopBarLayout', () => {
-  it('on /sales/inbox: full width, the clocks inside the header row (before the bell) and the row only below 900px', () => {
+  it('on /sales/inbox: full width, the clocks inside the header row from 1100px (before the bell, never wrapping) and the row only below it', () => {
     const { container } = renderAt('/sales/inbox');
     expect(root(container)).toContain('max-w-none');
     expect(root(container)).not.toContain('max-w-[1180px]');
     const all = screen.getAllByText(t.runningHead.riyadh);
     const riyadh = all.filter((el) => header().contains(el));
     expect(riyadh).toHaveLength(1);
-    // The other copy is the narrow screens' row, hidden from 900px where the header shows.
+    // Between 900 and 1100px the inline clocks would wrap: hidden there, the separate row shows until 1100px.
+    const inline = riyadh[0]?.closest('.min-h-0');
+    expect(inline?.parentElement?.className.split(' ')).toEqual(expect.arrayContaining(['hidden', 'min-[1100px]:block']));
+    expect(inline?.className.split(' ')).toContain('whitespace-nowrap');
     const row = all.find((el) => !header().contains(el))?.closest('.min-h-\\[54px\\]')?.parentElement;
-    expect(row?.className.split(' ')).toContain('shell:hidden');
+    expect(row?.className.split(' ')).toContain('min-[1100px]:hidden');
+    expect(row?.className.split(' ')).not.toContain('shell:hidden');
     const bell = screen.getByRole('button', { name: t.bell.open });
     expect((riyadh[0]?.compareDocumentPosition(bell) ?? 0) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
     // The inline copy drops the running head's 54px row height.

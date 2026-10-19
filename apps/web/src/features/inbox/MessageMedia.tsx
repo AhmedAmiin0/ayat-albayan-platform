@@ -6,6 +6,7 @@ import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { threadFileQuery, type ThreadFile } from './api';
 import { mediaKind } from './format';
+import { useInboxMode } from './mode';
 
 const LINK = 'text-xs font-semibold text-lapis underline underline-offset-4';
 
@@ -51,25 +52,28 @@ function FileView({ message: m, kind }: { message: MessageView; kind: string }) 
       </Button>
     );
   }
+  // A loaded file stays even when a background refetch fails (the error is only for no file at all).
+  if (file.data) return <Loaded file={file.data} kind={kind} />;
   if (file.isPending) return <p className="text-xs text-ink-3">{t.common.loading}</p>;
-  if (file.isError) {
-    const expired = file.error instanceof ApiError && file.error.status === 410;
-    return (
-      <p role="status" className="text-xs font-semibold text-ink-2">
-        {expired ? t.inbox.mediaExpired : t.common.error}
-      </p>
-    );
-  }
-  return <Loaded file={file.data} kind={kind} />;
+  // 403 media_forbidden (a role that may not open files): the label, as in teacher mode.
+  if (file.error instanceof ApiError && file.error.status === 403) return <Label kind={kind} />;
+  const expired = file.error instanceof ApiError && file.error.status === 410;
+  return (
+    <p role="status" className="text-xs font-semibold text-ink-2">
+      {expired ? t.inbox.mediaExpired : t.common.error}
+    </p>
+  );
 }
 
 /**
  * The file in a bubble (R-MSG-05, W6). A family's image or PDF opens on demand: «عرض صورة» fetches a
  * signed URL of our copy, then a thumbnail (full size in a new tab) or a named link. Other files
- * (voice notes, videos) keep their label until they can be stored too.
+ * (voice notes, videos) keep their label until they can be stored too. Teacher mode gets the label
+ * only: the API refuses them the file (403 media_forbidden).
  */
 export function MessageMedia({ message: m }: { message: MessageView }) {
   const kind = t.inbox.media[mediaKind(m.media_mime)];
+  const teacher = useInboxMode() === 'teacher';
   if (m.media_url) {
     return (
       <a href={m.media_url} target="_blank" rel="noopener noreferrer" className={LINK}>
@@ -77,6 +81,6 @@ export function MessageMedia({ message: m }: { message: MessageView }) {
       </a>
     );
   }
-  if (m.direction === 'inbound' && viewable(m.media_mime)) return <FileView message={m} kind={kind} />;
+  if (!teacher && m.direction === 'inbound' && viewable(m.media_mime)) return <FileView message={m} kind={kind} />;
   return <Label kind={kind} />;
 }

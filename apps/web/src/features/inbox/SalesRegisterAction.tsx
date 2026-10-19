@@ -9,7 +9,7 @@ import { BookingWizard, type BookingWizardProps } from '@/features/booking/Booki
 import { BookingModeContext, ChatReturnContext } from '@/features/booking/mode';
 import { t } from '@/lib/i18n';
 import { useInboxMode } from './mode';
-import { registerDrafts } from './register-drafts';
+import { registerDrafts, resumable } from './register-drafts';
 import { canRegisterFrom, draftFromThread } from './sales-register';
 
 const noop = () => undefined;
@@ -20,6 +20,7 @@ const noop = () => undefined;
  * student is credited to the salesperson (brought_by). No price, no invoice, no package. Closing it, or
  * «ارجع للمحادثة» after booking, stays in the same chat, refreshed (the number is a family now).
  * Closing with ✕ or Esc keeps the draft and step for this phone (docs/20 W9); a booking clears them.
+ * A past first lesson is dropped on reopening (resumable).
  * `compact` (the phone header, W3): an icon button named «تسجيل طالب جديد».
  */
 export function SalesRegisterAction({ thread, compact = false }: { thread: ThreadView; compact?: boolean }) {
@@ -35,7 +36,8 @@ export function SalesRegisterAction({ thread, compact = false }: { thread: Threa
     setOpen(false);
     for (const key of ['threads', 'leads']) void queryClient.invalidateQueries({ queryKey: [key] });
   };
-  const saved = registerDrafts.get(phone);
+  // A draft for another lead, or with a first lesson now past, does not resume as it was (review M3).
+  const saved = resumable(registerDrafts.get(phone), thread.lead_id, new Date());
   return (
     <>
       {compact ? (

@@ -43,7 +43,9 @@ const threadPath = (phone: string) => `/threads/${encodeURIComponent(phone)}`;
 /**
  * One page per `before` (the oldest loaded message), newest page first. Opening stamps read_at, so the
  * open chat polls only while its window has focus: a chat left open in a background window must not
- * mark new messages read for everyone. Coming back refetches (refetchOnWindowFocus) and marks them.
+ * mark new messages read for everyone. TanStack's refetchOnWindowFocus follows visibilitychange only,
+ * so a click into another (still visible) window stops the poll with no event to restart it:
+ * ThreadPane refetches on the window's 'focus' event (useWindowFocus), which re-arms the interval.
  */
 export const threadQuery = (phone: string) =>
   infiniteQueryOptions({

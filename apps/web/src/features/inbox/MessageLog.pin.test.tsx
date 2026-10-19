@@ -1,7 +1,7 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterAll, beforeAll, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { message } from './inbox-fixture';
+import { message, PHONE } from './inbox-fixture';
 import { MessageLog } from './MessageLog';
 
 // jsdom has no layout: give every box a 1000px tall content in a 400px window, and a real scrollTop.
@@ -29,7 +29,7 @@ afterAll(() => {
 const A = message({ id: 'a', body: 'الأولى', created_at: '2026-10-03T09:00:00Z' });
 const B = message({ id: 'b', body: 'الثانية', created_at: '2026-10-05T09:00:00Z' });
 const C = message({ id: 'c', body: 'الثالثة', created_at: '2026-10-05T10:00:00Z' });
-const base = { hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
 
 const box = () => {
   const el = screen.getByRole('log', { name: t.messages.log }).parentElement;

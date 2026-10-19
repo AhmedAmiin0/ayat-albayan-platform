@@ -1,4 +1,5 @@
 import type { ThreadView } from '@ab/shared';
+import type { ReactNode } from 'react';
 import { MoreMenu } from '@/components/ui/more-menu';
 import { useSalesFamilyActions } from './use-sales-family-actions';
 
@@ -6,6 +7,17 @@ export interface SalesChatActionsProps {
   thread: ThreadView;
   /** Phones: the visible action as an icon button, so the name keeps its space at 375px. */
   compact?: boolean;
+}
+
+/** The visible action and «المزيد» (W3), without the dialogs (SalesChatFrame keeps those still). */
+export function SalesChatButtons({ primary, items }: { primary: ReactNode; items: ReactNode[] }) {
+  if (!primary && items.length === 0) return null;
+  return (
+    <span className="ms-auto flex shrink-0 items-center gap-1.5">
+      {primary}
+      {items.length > 0 && <MoreMenu>{items}</MoreMenu>}
+    </span>
+  );
 }
 
 /**
@@ -16,12 +28,10 @@ export interface SalesChatActionsProps {
  */
 export function SalesChatActions({ thread, compact = false }: SalesChatActionsProps) {
   const { primary, items, dialogs } = useSalesFamilyActions({ thread, compact });
-  if (!primary && items.length === 0) return null;
   return (
-    <span className="ms-auto flex shrink-0 items-center gap-1.5">
-      {primary}
-      {items.length > 0 && <MoreMenu>{items}</MoreMenu>}
+    <>
+      <SalesChatButtons primary={primary} items={items} />
       {dialogs}
-    </span>
+    </>
   );
 }

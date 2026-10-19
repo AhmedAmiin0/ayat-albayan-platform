@@ -88,7 +88,9 @@ export function MessageBubble({ message: m, waitingTemplate, now }: MessageBubbl
         <footer className="mt-1.5 flex flex-wrap items-center justify-end gap-2 text-2xs text-ink-3">
           <LineBadge line={m.line} />
           <time dateTime={m.created_at} title={fullTime(m.created_at)} className="tabular-nums">
-            {clockText(m.created_at)}
+            {/* The day separators are hidden from screen readers: they hear the full date here. */}
+            <span aria-hidden="true">{clockText(m.created_at)}</span>
+            <span className="sr-only">{fullTime(m.created_at)}</span>
           </time>
           {outbound && <DeliveryTicks status={m.status} times={deliveryTitle(m)} />}
         </footer>

@@ -59,6 +59,8 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
   const duplicates = duplicateCandidates(book.error);
   // A missing, wrong or expired invoice is fixed on the invoice step, not here.
   const backToInvoice = INVOICE_ERRORS.has(errorCode(book.error) ?? '');
+  // The first lesson passed while the review was open (or in a resumed draft): back to the slot step.
+  const past = errorCode(book.error) === 'date_in_past';
 
   return (
     <div className="grid gap-5">
@@ -97,7 +99,12 @@ export function ReviewStep({ draft, onMeetingLink, onChangeSlot, onInvoice, onBo
       ) : (
         book.isError && !duplicates && (
           <FormAlert>
-            {lessonErrorText(book.error)}
+            {past ? t.booking.firstLessonPast : lessonErrorText(book.error)}
+            {past && (
+              <Button type="button" variant="secondary" size="sm" className="ms-3" onClick={onChangeSlot}>
+                {t.booking.changeSlot}
+              </Button>
+            )}
             {backToInvoice && (
               <Button
                 type="button"

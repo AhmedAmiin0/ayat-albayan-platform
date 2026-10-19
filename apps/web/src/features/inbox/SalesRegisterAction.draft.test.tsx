@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { draftFromLead } from '@/features/booking/booking-entries';
 import { ABRAR, next, pickSlot, pickTeacher, SLOT } from '@/features/booking/wizard-fixture';
 import { t } from '@/lib/i18n';
 import { PHONE, thread } from './inbox-fixture';
@@ -41,7 +42,7 @@ const field = (dialog: ReturnType<typeof openDialog>, label: string) =>
 describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)', () => {
   afterEach(() => {
     vi.useRealTimers();
-    registerDrafts.reset();
+    registerDrafts.clearAll();
     apiFetch.mockReset();
     apiSend.mockReset();
   });
@@ -92,5 +93,23 @@ describe('«تسجيل طالب جديد» keeps its draft and step (docs/20 W9)
     fireEvent.click(await screen.findByRole('button', { name: t.booking.submit }));
     expect(await screen.findByText(t.booking.booked)).toBeTruthy();
     expect(registerDrafts.get(PHONE)).toBeUndefined();
+  });
+
+  it('a saved first lesson now past: reopening lands on the slot step with no slot (review M3)', async () => {
+    const old = draftFromLead({ leadId: 'lead-1', phone: PHONE }, null);
+    registerDrafts.set(PHONE, { draft: { ...old, teacher: ABRAR, startsAt: '2020-01-01T10:00:00.000Z' }, step: 'review' });
+    renderAction();
+    const dialog = openDialog();
+    expect(await dialog.findByRole('region', { name: t.booking.steps.slot })).toBeTruthy();
+    expect(dialog.queryByRole('button', { name: t.booking.submit })).toBeNull();
+  });
+
+  it('a draft saved for another lead is not resumed: a fresh draft from the chat', () => {
+    const old = draftFromLead({ leadId: 'lead-old', phone: PHONE, name: 'قديم' }, null);
+    registerDrafts.set(PHONE, { draft: old, step: 'teacher' });
+    renderAction();
+    const dialog = openDialog();
+    expect(dialog.getByRole('region', { name: t.booking.steps.students })).toBeTruthy();
+    expect(field(dialog, t.guardians.name).value).toBe('أم سهيلة');
   });
 });

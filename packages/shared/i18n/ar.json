@@ -560,6 +560,7 @@
     "overrideReason": "سبب الحجز رغم التعارض",
     "overrideHint": "سيُسجَّل السبب مع الحلقة",
     "changeSlot": "اختر موعدًا آخر",
+    "firstLessonPast": "موعد أول حلقة قد مضى، اختر موعدًا قادمًا",
     "open": "احجز حلقات",
     "notAvailable": "غير متاح",
     "noAvailabilityWhy": "لا توجد مواعيد متاحة مسجلة بعد",
@@ -2286,6 +2287,8 @@
     "openThread": "افتح المحادثة مع {name}",
     "loadOlder": "رسائل أقدم",
     "jumpLatest": "الانتقال إلى أحدث رسالة",
+    "jumpLatestCount": "الانتقال إلى أحدث رسالة (رسائل جديدة: {count})",
+    "readForbidden": "غير مسموح لك بعرض هذه المحادثة",
     "replyTo": "ردًّا على:",
     "quickReply": {
       "confirmed": "تأكدت حلقة {when} (بتوقيت الرياض)",

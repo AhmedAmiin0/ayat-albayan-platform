@@ -2,10 +2,13 @@ import type { Permission } from '@ab/shared';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect } from 'react';
 import { INBOX_REFRESH_MS } from '@/features/inbox/api';
-import { apiFetch } from '@/lib/api';
+import { ApiError, apiFetch } from '@/lib/api';
 import { t } from '@/lib/i18n';
 
 type Total = { total: number };
+
+/** A signed-out session (401) is not retried: the next poll, or the sign-in, asks again. */
+export const unreadRetry = (count: number, error: unknown): boolean => !(error instanceof ApiError && error.status === 401) && count < 3;
 
 /**
  * The academy's unread chats (the same number the admin sees), at pageSize=1. Under ['threads'], so
@@ -18,6 +21,7 @@ export const salesUnreadQuery = (enabled: boolean) => ({
   select: (p: Total) => p.total,
   refetchInterval: INBOX_REFRESH_MS,
   refetchIntervalInBackground: true,
+  retry: unreadRetry,
 });
 
 /** The tab title with the count while there is something unread: «(3) أكاديمية آيات البيان». */
@@ -30,7 +34,10 @@ export function unreadTitle(n: number): string {
  * inbox.read: no request then). Mirrors it into document.title (boot.tsx sets the base).
  */
 export function useSalesUnread(can: (permission: Permission) => boolean): number {
-  const n = useQuery(salesUnreadQuery(can('inbox.read'))).data ?? 0;
+  const enabled = can('inbox.read');
+  const q = useQuery(salesUnreadQuery(enabled));
+  // inbox.read lost mid-session: the disabled query keeps its cached count, which must leave the title.
+  const n = enabled ? (q.data ?? 0) : 0;
   useEffect(() => {
     document.title = unreadTitle(n);
   }, [n]);

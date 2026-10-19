@@ -2,13 +2,13 @@ import { render, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
 import { fullTime } from './format';
-import { message } from './inbox-fixture';
+import { message, PHONE } from './inbox-fixture';
 import { MessageLog } from './MessageLog';
 
 // Day separators at every width; each bubble shows the clock only, the full date in its tooltip (W10).
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch: vi.fn(), apiSend: vi.fn() }));
 
-const base = { hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
+const base = { phone: PHONE, hasMore: false, loadingOlder: false, onOlder: vi.fn(), waitingKeys: new Set<string>() };
 const NOW = new Date(2026, 9, 19, 15, 0);
 const at = (day: number, hour: number) => new Date(2026, 9, day, hour, 5).toISOString();
 const Y = message({ id: 'y', body: 'من الأمس', created_at: at(18, 9) });
@@ -32,15 +32,19 @@ describe('MessageLog day separators (W10)', () => {
     expect(rows).toHaveLength(5);
   });
 
-  it('the bubbles show «HH:MM» without a date; the title holds the full date', () => {
+  it('the bubbles show «HH:MM» without a date; the title and a screen-reader line hold the full date', () => {
     render(<MessageLog {...base} messages={[Y, T1]} fill="shell" />);
     const times = screen.getAllByRole('article').map((a) => {
       const time = a.querySelector('time');
       if (!time) throw new Error('no time');
       return time;
     });
-    expect(times.map((x) => x.textContent)).toEqual(['09:05', '08:05']);
+    const shown = (x: Element) => x.querySelector('[aria-hidden="true"]')?.textContent;
+    expect(times.map(shown)).toEqual(['09:05', '08:05']);
     expect(times[0]?.getAttribute('title')).toBe(fullTime(Y.created_at));
-    expect(within(screen.getAllByRole('article')[0] as HTMLElement).queryByText(/أكتوبر|Oct/)).toBeNull();
+    // The day separators are aria-hidden: the date is read from the bubble's own <time>.
+    expect(times[0]?.querySelector('.sr-only')?.textContent).toBe(fullTime(Y.created_at));
+    const visible = within(screen.getAllByRole('article')[0] as HTMLElement).queryAllByText(/أكتوبر|Oct/);
+    expect(visible.every((el) => el.classList.contains('sr-only'))).toBe(true);
   });
 });

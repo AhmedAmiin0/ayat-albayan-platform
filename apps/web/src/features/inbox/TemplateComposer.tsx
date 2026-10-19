@@ -8,10 +8,11 @@ import { Select } from '@/components/ui/select';
 import { meQuery } from '@/features/auth/me';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
-import { allowedTemplates, useReadsMessaging } from './allowed-templates';
+import { allowedTemplates, useNoneAllowed, useReadsMessaging } from './allowed-templates';
 import { sendTemplate } from './api';
 import { LessonPicker } from './LessonPicker';
 import { useInboxMode } from './mode';
+import { recordOwnSend } from './own-send';
 import { TemplateParamFields } from './TemplateParamFields';
 import { lessonValues, missingParams, prefillParams, toParamsInput, type ParamValues, type PrefillContext } from './template-params';
 import { sendErrorText } from './TextComposer';
@@ -37,6 +38,7 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
   const me = useQuery(meQuery).data;
   const staff = useInboxMode() !== 'admin';
+  const noneAllowed = useNoneAllowed(teacher);
   // Teacher and sales modes are always restricted; in the admin inbox, a role without the permissions.
   const restricted = staff || (me ? !sendsAllTemplates(me) : false);
   const approved = allowedTemplates(templates.data, teacher);
@@ -58,7 +60,8 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
   }
   const send = useMutation({
     mutationFn: sendTemplate,
-    onSuccess: async () => {
+    onSuccess: async (view) => {
+      recordOwnSend(phone, view.id);
       pick('');
       await queryClient.invalidateQueries({ queryKey: ['threads'] });
     },
@@ -69,8 +72,8 @@ export function TemplateComposer({ phone, context, teacher }: TemplateComposerPr
     if (tpl && lesson) setValues({ ...values, ...lessonValues(tpl, lesson) });
   };
   const missing = tpl && tried ? missingParams(tpl, values) : [];
-  // Teacher and sales with nothing allowed: what she can do, not a disabled select (W7).
-  if (staff && templates.isSuccess && approved.length === 0) return <p className="text-xs text-ink-2">{t.inbox.composer.noAllowedHelp}</p>;
+  // Teacher and sales with nothing allowed (or no messages.read): what she can do, not a disabled select (W7).
+  if (noneAllowed) return <p className="text-xs text-ink-2">{t.inbox.composer.noAllowedHelp}</p>;
 
   return (
     <form

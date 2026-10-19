@@ -1,14 +1,11 @@
 import type { ThreadView } from '@ab/shared';
-import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { Icon } from '@/components/ui/icon';
 import { IconButton } from '@/components/ui/icon-button';
-import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
-import { allowedTemplates, useReadsMessaging } from './allowed-templates';
+import { useNoneAllowed } from './allowed-templates';
 import { sessionUntil } from './format';
-import { useInboxMode } from './mode';
 import { replyFromText } from './reply-from';
 import { SendRatingButton } from './SendRatingButton';
 import { TemplateComposer } from './TemplateComposer';
@@ -47,13 +44,6 @@ function Notices({ notes }: { notes: string[] }) {
       ))}
     </button>
   );
-}
-
-/** Teacher and sales modes, once the list has loaded with nothing they may send (W7). */
-function useNoneAllowed(teacher: boolean): boolean {
-  const staff = useInboxMode() !== 'admin';
-  const templates = useQuery({ ...templatesQuery, enabled: useReadsMessaging() });
-  return staff && templates.isSuccess && allowedTemplates(templates.data, teacher).length === 0;
 }
 
 /**
