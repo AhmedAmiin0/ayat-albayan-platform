@@ -11,6 +11,7 @@ import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
 import { SalesQueries } from '../sales/sales.queries';
 import { MessageSender } from '../whatsapp/message.sender';
 import { SendGate } from '../whatsapp/send-gate';
@@ -54,6 +55,11 @@ function mocks() {
       ...{ myStudentIds: vi.fn(), guardianStudents: vi.fn() },
     },
     sales: { ownership: vi.fn() },
+    lists: {
+      ...{ all: vi.fn(), one: vi.fn(), count: vi.fn(), create: vi.fn(), rename: vi.fn(), remove: vi.fn(), add: vi.fn(), drop: vi.fn() },
+      phonesOf: vi.fn(async (): Promise<string[]> => []),
+      listsOf: vi.fn(async () => []),
+    },
     templates: { all: vi.fn(), get: vi.fn(), update: vi.fn() },
     client: { configured: vi.fn(() => true), markRead: vi.fn() },
     chatClient: { configured: vi.fn(() => true), markRead: vi.fn() },
@@ -71,6 +77,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
     .overrideProvider(ThreadsQueries).useValue(m.queries)
     .overrideProvider(TeacherThreadsQueries).useValue(m.teacher)
     .overrideProvider(SalesQueries).useValue(m.sales)
+    .overrideProvider(ChatListsQueries).useValue(m.lists)
     .overrideProvider(TemplatesQueries).useValue(m.templates)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
@@ -81,7 +88,7 @@ export async function inboxApp(resolve: PermissionResolver = systemResolver) {
   const app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
   await app.init();
   await app.getHttpAdapter().getInstance().ready();
-  const call = (input: { method: 'GET' | 'POST'; url: string; token?: string; body?: object }) =>
+  const call = (input: { method: 'GET' | 'POST' | 'PATCH' | 'PUT' | 'DELETE'; url: string; token?: string; body?: object }) =>
     app.inject({
       method: input.method,
       url: input.url,

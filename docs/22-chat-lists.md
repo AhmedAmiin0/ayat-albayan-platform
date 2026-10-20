@@ -105,3 +105,27 @@ Suggested Arabic: القوائم · الكل · قائمة جديدة · اسم 
 
 docs/07 tokens only (no raw hex), chips look like the existing filter chips, Arabic-first RTL,
 visible focus, 44px targets, loading/empty/error states, light/dark, 390px with no page overflow.
+
+## 9. As built (2026-10-20)
+
+- **DB**: `20261020000520_chat_lists.sql` (both tables, the phone index, the `chat_lists_cap` trigger: a
+  serialised 30-list backstop raising 23514 «at most 30 lists», RLS on both: the admin reads, writes are
+  the API's) and `20261020000521_chat_lists_permission.sql` (inbox.lists for the system admin and sales).
+- **Permission**: `inbox.lists` (area messaging, grants sales); parity json rows `ChatListsController.*`
+  for admin and sales; `roles.seed.test.ts` reads migration 521.
+- **API**: `modules/chat-lists` (controller, service, queries, guard). Every route: `@Permissions('inbox.lists')`
+  plus an inline check of `inbox.read` and the base role (admin or sales; a teacher is 403
+  `lists_forbidden` even if a custom role grants the key). A malformed `:id` is 404 `list_not_found`, a
+  bad `:phone` 400 `invalid_phone`. `DELETE /chat-lists/:id` is 204 whether or not the list exists.
+  `GET /threads?list=` and the detail's `lists` live in `inbox/chat-list-filter.ts` (ThreadReads).
+- **Shared**: `packages/shared/src/messaging/chat-lists.ts` (name schema, key, phone check, error codes,
+  `ChatList` / `ChatListRef`); `ThreadDetail.lists?`.
+- **Web**: `apps/web/src/features/inbox/lists/` — the chip row (`ChatListsBar`, `ChatListChips`, `ListChip`),
+  create / edit / delete dialogs, the thread checklist (`ThreadListsDialog`, `use-membership.ts`:
+  optimistic, rolled back on error) reached from «المزيد» (`SalesChatFrame`, admin and sales), the
+  header chips (`ThreadListChips`). `InboxSearch.list` (a uuid; unknown → «الكل» via `activeList`).
+- **Mobile**: JS only (no native change), admin and assistant trees.
+- **Tests**: shared, API (service, queries, guard, http, threads list/detail, parity, seed), web, mobile,
+  `e2e/tests/chat-lists.spec.ts` (the journey) and `e2e/tests/chat-lists.sql.spec.ts` (RLS, cascade, key,
+  E.164, cap, seed).
+

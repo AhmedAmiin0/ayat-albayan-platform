@@ -32,4 +32,11 @@ describe('parseInboxSearch', () => {
   it('drops an unknown sort or status', () => {
     expect(parseInboxSearch({ sort: 'phone_e164', f_status: 'nope' })).toEqual({ page: 1 });
   });
+
+  it('keeps a chat list id «القوائم» and drops anything that is not an id (docs/22)', () => {
+    const list = '0c000000-0000-4000-8000-000000000001';
+    expect(parseInboxSearch({ list })).toEqual({ list, page: 1 });
+    expect(parseInboxSearch({ list: 'بانتظار الدفع' })).toEqual({ page: 1 });
+    expect(parseInboxSearch({ list: 42 })).toEqual({ page: 1 });
+  });
 });

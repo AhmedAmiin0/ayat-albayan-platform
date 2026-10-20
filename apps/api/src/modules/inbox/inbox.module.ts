@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { ChatListsModule } from '../chat-lists/chat-lists.module';
 import { LessonsModule } from '../lessons/lessons.module';
 import { SalesModule } from '../sales/sales.module';
 import { SubscriptionsModule } from '../subscriptions/subscriptions.module';
@@ -28,9 +29,10 @@ import { ThreadsService } from './threads.service';
  * brings TeacherMeQueries for «my students». Sales mode: SalesModule brings SalesScopes; SalesThreadsService serves a salesperson every chat, redacted (docs/16).
  * ThreadFileController serves bubble photos / PDFs to the admin and sales (docs/20 W6);
  * ThreadFileSendController lets them send images / PDFs from the chat (owner 2026-10-19 #2).
+ * ChatListsModule: GET /threads?list= and the open chat's «القوائم» (docs/22).
  */
 @Module({
-  imports: [SubscriptionsModule, LessonsModule, SalesModule],
+  imports: [SubscriptionsModule, LessonsModule, SalesModule, ChatListsModule],
   controllers: [ThreadsController, ThreadMediaController, ThreadFileController, ThreadFileSendController],
   providers: [
     ThreadsQueries,

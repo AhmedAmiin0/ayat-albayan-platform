@@ -16,6 +16,7 @@ import { StatusChip } from '@/ui/StatusChip';
 import { clockAt, initialOf, kindLabel } from './format';
 import { DeliveryTicks } from './DeliveryTicks';
 import { InboxHeaderActions } from './InboxHeaderActions';
+import { ChatListChips } from './lists/ChatListChips';
 import { threadPreview } from './message-text';
 import { threadLink, useThreadMode } from './thread-mode';
 import { ThreadTags } from './ThreadTags';
@@ -52,14 +53,16 @@ function ticksWord(th: ThreadView): string | undefined {
  * «هتأخر» is found here, not only through its push. Tap → the thread (reply, send a template).
  * A teacher (R-TCH-03) gets only her own threads from the API, without the lead tags. The admin and
  * sales (the same tabs) start a chat by number: «محادثة جديدة»; the lead / family tags stay in the admin
- * tree (as the web, where /sales/inbox shows none).
+ * tree (as the web, where /sales/inbox shows none). Admin and sales filter by the academy's chat
+ * lists «القوائم» (docs/22); a teacher gets no lists.
  */
 export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
   const mode = useThreadMode();
   const base = useTreeBase();
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState<Filter>('all');
-  const list = useThreadList({ search, unread: filter === 'unread' });
+  const [listId, setListId] = useState<string | null>(null);
+  const list = useThreadList({ search, unread: filter === 'unread', list: listId ?? undefined });
   const loaded = list.data !== undefined;
   const stale = list.isError && loaded;
   const subtitle = stale ? t.mobile.lastUpdated.replace('{time}', clockAt(list.dataUpdatedAt)) : undefined;
@@ -70,6 +73,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
       {switcher}
       <SearchField onSearch={setSearch} label={t.inbox.searchPlaceholder} />
       <FilterPills items={filterPills()} value={filter} onChange={setFilter} accessibilityLabel={t.inbox.title} />
+      {mode.kind === 'admin' ? <ChatListChips value={listId} onChange={setListId} /> : null}
       <FlatList
         style={{ flex: 1, marginHorizontal: -16 }}
         data={list.items}
@@ -97,7 +101,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         onRefresh={list.refresh}
         ListEmptyComponent={
           list.isPending ? null : loaded ? (
-            <EmptyState title={filter === 'unread' ? t.inbox.emptyUnread : t.inbox.empty} />
+            <EmptyState title={listId ? t.inbox.lists.empty : filter === 'unread' ? t.inbox.emptyUnread : t.inbox.empty} />
           ) : (
             <ErrorState onRetry={list.refresh} />
           )

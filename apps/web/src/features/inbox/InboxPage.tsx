@@ -8,6 +8,10 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadsQuery } from './api';
 import { InboxListHead } from './InboxListHead';
+import { activeList } from './lists/active-list';
+import { chatListsQuery } from './lists/api';
+import { ChatListsBar } from './lists/ChatListsBar';
+import { useListsAccess } from './lists/use-lists-access';
 import { parseInboxSearch, type InboxSearch } from './search';
 import { ThreadList } from './ThreadList';
 import { ThreadPane } from './ThreadPane';
@@ -28,10 +32,15 @@ export interface InboxPageProps {
  * above already names the screen, so the chat keeps that row.
  */
 export function InboxPage({ search, onSearch, head }: InboxPageProps) {
-  const threads = useQuery(threadsQuery(search));
-  const { phone, ...listSearch } = search;
+  // «القوائم» (docs/22): with inbox.lists outside teacher mode; an unknown list shows «الكل».
+  const lists = useListsAccess();
+  const all = useQuery({ ...chatListsQuery, enabled: lists });
+  const list = lists ? activeList(search.list, all.data) : undefined;
+  const shown = parseInboxSearch({ ...search, list });
+  const threads = useQuery(threadsQuery(shown));
+  const { phone, ...listSearch } = shown;
   const filter = (patch: Record<string, unknown>) =>
-    onSearch(parseInboxSearch({ ...search, ...patch, page: 1 }));
+    onSearch(parseInboxSearch({ ...shown, ...patch, page: 1 }));
 
   return (
     /* From 900px the inbox is exactly the frame's height: the browser page never scrolls, the
@@ -49,17 +58,18 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
         )}
         aria-busy={threads.isPlaceholderData || undefined}
       >
-        <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...search, phone: next })} />
+        <InboxListHead total={threads.data?.total} head={head} onOpen={(next) => onSearch({ ...shown, phone: next })} />
+        {lists && <ChatListsBar active={list} onPick={(next) => filter({ list: next })} />}
         {threads.isError && <p role="alert">{t.common.error}</p>}
         {threads.isPending && <ListSkeleton rows={6} />}
         {threads.data && (
           <>
-            <ThreadList search={search} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
+            <ThreadList search={shown} threads={threads.data.items} onFilter={filter} total={threads.isPlaceholderData ? undefined : threads.data.total} />
             <Pager
-              page={search.page}
+              page={shown.page}
               total={threads.data.total}
               pageSize={threads.data.pageSize}
-              onPage={(page) => onSearch({ ...search, page })}
+              onPage={(page) => onSearch({ ...shown, page })}
             />
           </>
         )}

@@ -74,6 +74,8 @@ export const AttachIcon = (p: IconProps) => (
 export const PlayIcon = (p: IconProps) => <Line {...p} d="M7 4.5v15l12-7.5-12-7.5Z" />;
 /** «إيقاف مؤقت»: two bars. */
 export const PauseIcon = (p: IconProps) => <Line {...p} d="M8 5v14M16 5v14" />;
+/** «القوائم»: three bulleted lines (the chat's lists). */
+export const ListsIcon = (p: IconProps) => <Line {...p} d="M9 6h11M9 12h11M9 18h11M4.5 6h.01M4.5 12h.01M4.5 18h.01" />;
 
 /** «تحقق من التسجيل»: a person with a check mark (is this number already a student?). */
 export function CheckPersonIcon({ color, size = 22 }: IconProps) {

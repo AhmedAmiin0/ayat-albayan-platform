@@ -6,6 +6,7 @@ import type {
   MessageStatus,
 } from '../enums/index.js';
 import type { WaLine } from '../enums/messaging.js';
+import type { ChatListRef } from './chat-lists.js';
 import type { TemplateParams } from './templates.js';
 import type { SubscriptionBadge, ThreadPeople } from './thread-people.js';
 
@@ -118,6 +119,8 @@ export interface ThreadDetail {
    * page (`before`) carries an empty one: clients read pages[0].
    */
   people: ThreadPeople;
+  /** The lists the chat is in (docs/22 §3): callers with inbox.lists only; absent otherwise. */
+  lists?: ChatListRef[];
 }
 
 /** An upcoming lesson of the thread's person: its times fill a template's variables (rule 6). */

@@ -17,9 +17,10 @@ export const THREAD_SORT: SortSpec<ThreadSortKey> = {
   fallback: { column: 'last_message_at', ascending: false },
 };
 
-/** GET /threads query: page, search, unread, `sort`/`dir` and the lead's status. */
+/** GET /threads query: page, search, unread, `sort`/`dir`, the lead's status and a chat list (docs/22). */
 export const threadListQuery = pageQuerySchema.extend({
   search: z.string().trim().max(100).optional(),
+  list: z.string().trim().max(100).optional(),
   unread: z.enum(['true', 'false']).optional().transform((v) => v === 'true'),
   status: z.enum(LEAD_STATUSES).optional(),
   ...listSortShape(THREAD_SORT_KEYS),
@@ -32,7 +33,9 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   unread?: boolean;
   /** The thread's lead status (admin and sales; a teacher sees no lead). */
   status?: LeadStatus | undefined;
-  /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
+  /** A chat list's id «القوائم» (admin and sales with inbox.lists; chat-list-filter.ts resolves it). */
+  list?: string | undefined;
+  /** Teacher mode or a chat list: only these phones (never empty — the caller answers an empty page itself). */
   phones?: readonly string[];
 }
 

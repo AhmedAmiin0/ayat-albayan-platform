@@ -507,6 +507,77 @@ export type Database = {
         };
         Relationships: [];
       };
+      chat_list_threads: {
+        Row: {
+          added_at: string;
+          added_by: string | null;
+          list_id: string;
+          phone_e164: string;
+        };
+        Insert: {
+          added_at?: string;
+          added_by?: string | null;
+          list_id: string;
+          phone_e164: string;
+        };
+        Update: {
+          added_at?: string;
+          added_by?: string | null;
+          list_id?: string;
+          phone_e164?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_list_threads_added_by_fkey';
+            columns: ['added_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_list_threads_list_id_fkey';
+            columns: ['list_id'];
+            isOneToOne: false;
+            referencedRelation: 'chat_lists';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      chat_lists: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          name: string;
+          name_key: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name: string;
+          name_key: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name?: string;
+          name_key?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_lists_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       classroom_blocks: {
         Row: {
           blocked_by: string | null;

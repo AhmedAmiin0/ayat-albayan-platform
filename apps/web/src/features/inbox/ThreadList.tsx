@@ -55,7 +55,7 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
         }
       />
       {threads.length === 0 ? (
-        <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />
+        <EmptyState title={emptyTitle(search)} />
       ) : (
         <ul aria-label={t.inbox.title} className="border-t border-rule">
           {threads.map((th) => (
@@ -65,4 +65,10 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
       )}
     </>
   );
+}
+
+/** A chat list says how to fill it (docs/22 §4); otherwise «لا محادثات» or «لا غير مقروءة». */
+function emptyTitle(search: InboxSearch): string {
+  if (search.list) return t.inbox.lists.empty;
+  return search.unread ? t.inbox.emptyUnread : t.inbox.empty;
 }
