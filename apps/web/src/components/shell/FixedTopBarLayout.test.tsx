@@ -17,12 +17,12 @@ vi.mock('@/features/notifications/NotificationBell', () => ({
   NotificationBell: () => <button type="button">{t.bell.open}</button>,
 }));
 
-function renderAt(pathname: string) {
+function renderAt(pathname: string, wide = false) {
   path.current = pathname;
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   return render(
     <QueryClientProvider client={client}>
-      <FixedTopBarLayout topNav={<nav aria-label={t.sales.nav.label} />} bar={{ home: '/sales', title: t.sales.nav.chats }}>
+      <FixedTopBarLayout topNav={<nav aria-label={t.sales.nav.label} />} bar={{ home: '/sales', title: t.sales.nav.chats }} wide={wide}>
         <p>page</p>
       </FixedTopBarLayout>
     </QueryClientProvider>,
@@ -67,12 +67,25 @@ describe('FixedTopBarLayout', () => {
     expect(page?.className).toContain('shell:px-3');
   });
 
-  it('on /sales/students: the 1180px cap and the separate running head, none in the header', () => {
-    const { container } = renderAt('/sales/students');
+  it('off the inbox (the teacher's shell): the 1180px cap and the separate running head, none in the header', () => {
+    const { container } = renderAt('/teacher/students');
     expect(root(container)).toContain('max-w-[1180px]');
     const riyadh = screen.getAllByText(t.runningHead.riyadh);
     expect(riyadh).toHaveLength(1);
     expect(header().contains(riyadh[0] ?? null)).toBe(false);
     expect(riyadh[0]?.closest('.min-h-\\[54px\\]')).toBeTruthy();
+  });
+
+  it("wide (the assistant's shell, owner 2026-10-20): every page gets the chat's width, clocks and frame, phones keep the toast room", () => {
+    const { container } = renderAt('/sales/students', true);
+    expect(root(container)).toContain('max-w-none');
+    expect(root(container)).not.toContain('max-w-[1180px]');
+    const riyadh = screen.getAllByText(t.runningHead.riyadh);
+    expect(riyadh.filter((el) => header().contains(el))).toHaveLength(1);
+    const row = riyadh.find((el) => !header().contains(el))?.closest('.min-h-\\[54px\\]')?.parentElement;
+    expect(row?.className.split(' ')).toContain('min-[1340px]:hidden');
+    const page = screen.getByText('page').closest('[data-page-scroll]')?.parentElement?.className.split(' ');
+    expect(page).toEqual(expect.arrayContaining(['shell:m-0', 'shell:px-3', 'shell:pt-3', 'shell:pb-3', 'max-sm:px-2']));
+    expect(page).not.toContain('max-sm:[&>div]:pb-0');
   });
 });
