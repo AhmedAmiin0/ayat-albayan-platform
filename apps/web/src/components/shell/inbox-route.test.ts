@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { INBOX_PAGE, INBOX_PAGE_TOPBAR, isInboxPath } from './inbox-route';
+import { INBOX_PAGE, INBOX_PAGE_TOPBAR, isInboxPath, WIDE_PAGE_TOPBAR } from './inbox-route';
 
 describe('isInboxPath', () => {
   it.each(['/admin/inbox', '/sales/inbox', '/teacher/inbox', '/admin/inbox/'])('%s is an inbox', (p) => {
@@ -20,5 +20,12 @@ describe('inbox page classes', () => {
     const classes = INBOX_PAGE_TOPBAR.split(' ');
     expect(classes).toEqual(expect.arrayContaining(['shell:m-0', 'shell:px-3', 'shell:pt-3', 'shell:pb-3']));
     expect(classes).toEqual(expect.arrayContaining(INBOX_PAGE.split(' ')));
+  });
+
+  it("a wide shell's other pages get the same frame from 900px and keep the phones' toast room", () => {
+    const inset = ['shell:m-0', 'shell:px-3', 'shell:pt-3', 'shell:pb-3'];
+    expect(WIDE_PAGE_TOPBAR.split(' ')).toEqual(expect.arrayContaining([...inset, 'max-sm:px-2', 'max-sm:pt-2']));
+    expect(WIDE_PAGE_TOPBAR).not.toContain('pb-0');
+    expect(WIDE_PAGE_TOPBAR).not.toContain('max-sm:pb-1');
   });
 });
