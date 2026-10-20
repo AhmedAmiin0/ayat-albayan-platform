@@ -87,13 +87,6 @@ export class ChatListsQueries {
     check(error, 'chat list remove');
   }
 
-  /** The list's chats (GET /threads?list=). */
-  async phonesOf(listId: string): Promise<string[]> {
-    const { data, error } = await this.db.from('chat_list_threads').select('phone_e164').eq('list_id', listId);
-    check(error, 'chat list members read');
-    return (data ?? []).map((r) => r.phone_e164);
-  }
-
   /** The lists one chat is in, oldest list first (the thread header). */
   async listsOf(phone: string): Promise<ChatListRef[]> {
     const { data, error } = await this.db

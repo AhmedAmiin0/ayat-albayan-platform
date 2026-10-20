@@ -29,9 +29,14 @@ export class ThreadsQueries {
     private readonly balances: BalanceQueries,
   ) {}
 
-  /** H1: one page of v_threads; filters, then the requested order (default newest message first). */
+  /**
+   * H1: one page of v_threads (of v_list_threads for a chat list «القوائم», docs/22); filters, then the
+   * requested order (default newest message first).
+   */
   async list(f: ThreadListFilter): Promise<{ items: ThreadRow[]; total: number }> {
-    let query = this.db.from('v_threads').select('*', { count: 'exact' });
+    let query = f.list
+      ? this.db.from('v_list_threads').select('*', { count: 'exact' }).eq('list_id', f.list)
+      : this.db.from('v_threads').select('*', { count: 'exact' });
     if (f.unread) query = query.gt('unread_count', 0);
     if (f.phones) query = query.in('phone_e164', [...f.phones]);
     if (f.status) query = query.eq('lead_status', f.status);

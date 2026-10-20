@@ -69,6 +69,20 @@ describe('InboxPage «القوائم» chip row (docs/22 §4)', () => {
     expect(screen.queryByRole('button', { name: /تعديل/ })).toBeNull();
   });
 
+  it('lists that fail to load: one quiet line, and the chats are not filtered by a list nobody can see', async () => {
+    routeFetch(apiFetch, [
+      ['/auth/me', { id: 'u1', email: null, role: 'sales', permissions: ['inbox.read', 'inbox.lists'] }],
+      ['/threads?', { items: [thread()], total: 1, page: 1, pageSize: 30 }],
+    ]);
+    renderWithClient(
+      <InboxModeContext.Provider value="sales">
+        <InboxPage search={{ page: 1, list: PAY }} onSearch={vi.fn()} />
+      </InboxModeContext.Provider>,
+    );
+    expect(await screen.findByText(L.loadError)).toBeTruthy();
+    await waitFor(() => expect(threadCalls().at(-1)).not.toContain('list='));
+  });
+
   it('scrolls sideways inside itself, never widening the page (#120)', async () => {
     show({ search: { page: 1 } });
     const ul = await row();

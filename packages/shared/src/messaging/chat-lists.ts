@@ -1,16 +1,21 @@
 import { z } from 'zod';
 import { normalizeArabic } from '../arabic.js';
-import { normalizePhone } from '../phone.js';
+import { E164_RE, normalizePhone } from '../phone.js';
 
 // Chat lists «القوائم» (owner 2026-10-20, docs/22): academy-wide names that only ORGANISE chats, like
 // WhatsApp Business lists. Nothing is ever sent because of a list.
 
-/** A list's name: 1–30 characters after trimming (docs/22 §1). */
+/** A list's name: 1–30 characters after trimming, not only tashkeel / tatweel (its key is never empty). */
 export const CHAT_LIST_NAME_MAX = 30;
 /** At most 30 lists for the whole academy (POST answers 409 list_limit). */
 export const CHAT_LIST_LIMIT = 30;
 
-export const chatListNameSchema = z.string().trim().min(1).max(CHAT_LIST_NAME_MAX);
+export const chatListNameSchema = z
+  .string()
+  .trim()
+  .min(1)
+  .max(CHAT_LIST_NAME_MAX)
+  .refine((name) => normalizeArabic(name).length > 0);
 
 /** POST /chat-lists and PATCH /chat-lists/:id. */
 export const chatListBodySchema = z.object({ name: chatListNameSchema });
@@ -31,8 +36,13 @@ export function chatListNameKey(name: string): string {
   return normalizeArabic(name);
 }
 
-/** A list member is a chat's E.164 number (a new-chat number with no message yet counts). */
+/**
+ * A list member is a chat's E.164 number (a new-chat number with no message yet counts). Any E.164 thread
+ * key is kept as is (a landline WhatsApp Business number too); other spellings are normalised.
+ */
 export function chatListPhone(raw: string): string | null {
+  const trimmed = raw.trim();
+  if (E164_RE.test(trimmed)) return trimmed;
   const phone = normalizePhone(raw);
   return phone.ok ? phone.e164 : null;
 }

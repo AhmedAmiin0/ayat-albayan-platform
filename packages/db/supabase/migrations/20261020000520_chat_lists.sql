@@ -32,6 +32,14 @@ create table if not exists public.chat_list_threads (
 -- «which lists is this chat in» (the thread header) reads by phone.
 create index if not exists chat_list_threads_phone_idx on public.chat_list_threads (phone_e164);
 
+-- GET /threads?list=: one list's chats as v_threads rows (a member with no message yet has no thread),
+-- filtered in SQL, so a list of any size never travels as a phone list in the request. Service role only,
+-- like v_threads.
+create or replace view public.v_list_threads with (security_invoker = true) as
+  select m.list_id, t.* from public.chat_list_threads m join public.v_threads t on t.phone_e164 = m.phone_e164;
+revoke all on public.v_list_threads from anon, authenticated;
+grant select on public.v_list_threads to service_role;
+
 -- The 30-list cap, behind the API's own check (409 list_limit): serialised, so two creates at once
 -- cannot both pass a count of 29.
 create or replace function public.chat_lists_cap() returns trigger

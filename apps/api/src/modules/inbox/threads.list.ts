@@ -33,9 +33,9 @@ export interface ThreadListFilter extends ListSort<ThreadSortKey> {
   unread?: boolean;
   /** The thread's lead status (admin and sales; a teacher sees no lead). */
   status?: LeadStatus | undefined;
-  /** A chat list's id «القوائم» (admin and sales with inbox.lists; chat-list-filter.ts resolves it). */
+  /** A chat list's id «القوائم» (admin and sales with inbox.lists; checked by chat-list-filter.ts). */
   list?: string | undefined;
-  /** Teacher mode or a chat list: only these phones (never empty — the caller answers an empty page itself). */
+  /** Teacher mode: only these phones (never empty — the caller answers an empty page itself). */
   phones?: readonly string[];
 }
 

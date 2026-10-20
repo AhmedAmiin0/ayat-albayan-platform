@@ -20,6 +20,11 @@ describe('chatListNameSchema', () => {
     expect(chatListNameSchema.safeParse('ب'.repeat(31)).success).toBe(false);
   });
 
+  it('refuses a name that is only tashkeel or tatweel (its key would be empty)', () => {
+    expect(chatListNameSchema.safeParse('ـــ').success).toBe(false);
+    expect(chatListNameSchema.safeParse('َ').success).toBe(false);
+  });
+
   it('is the body of create and rename', () => {
     expect(chatListBodySchema.parse({ name: ' عملاء جدد ' })).toEqual({ name: 'عملاء جدد' });
     expect(chatListBodySchema.safeParse({}).success).toBe(false);
@@ -43,6 +48,11 @@ describe('chatListPhone', () => {
   it('normalises a number to E.164', () => {
     expect(chatListPhone('+966501234567')).toBe('+966501234567');
     expect(chatListPhone('0501234567')).toBe('+966501234567');
+  });
+
+  it('keeps any E.164 chat number, a Saudi or Egyptian landline too', () => {
+    expect(chatListPhone('+966112345678')).toBe('+966112345678');
+    expect(chatListPhone(' +20223456789 ')).toBe('+20223456789');
   });
 
   it('refuses anything that is not a phone number', () => {

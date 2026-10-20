@@ -45,7 +45,7 @@ export class ThreadReads {
     const mine = await this.salesScope(user);
     const scope = mine ? null : await this.scopes.of(user);
     if (scope) return this.teacher.list(f, scope);
-    const g = await listFilter(f, { user, lists: this.chatLists });
+    const g = listFilter(f, user);
     if (!g) return { items: [], total: 0, page: f.page, pageSize: f.pageSize };
     return mine ? this.salesService().list(g) : this.admin.list(g);
   }

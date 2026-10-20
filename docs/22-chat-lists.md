@@ -108,7 +108,8 @@ visible focus, 44px targets, loading/empty/error states, light/dark, 390px with 
 
 ## 9. As built (2026-10-20)
 
-- **DB**: `20261020000520_chat_lists.sql` (both tables, the phone index, the `chat_lists_cap` trigger: a
+- **DB**: `20261020000520_chat_lists.sql` (both tables, the phone index, `v_list_threads` = a list's
+  members joined to `v_threads` for `GET /threads?list=` (filtered in SQL, service role only), the `chat_lists_cap` trigger: a
   serialised 30-list backstop raising 23514 «at most 30 lists», RLS on both: the admin reads, writes are
   the API's) and `20261020000521_chat_lists_permission.sql` (inbox.lists for the system admin and sales).
 - **Permission**: `inbox.lists` (area messaging, grants sales); parity json rows `ChatListsController.*`
@@ -117,7 +118,9 @@ visible focus, 44px targets, loading/empty/error states, light/dark, 390px with 
   plus an inline check of `inbox.read` and the base role (admin or sales; a teacher is 403
   `lists_forbidden` even if a custom role grants the key). A malformed `:id` is 404 `list_not_found`, a
   bad `:phone` 400 `invalid_phone`. `DELETE /chat-lists/:id` is 204 whether or not the list exists.
-  `GET /threads?list=` and the detail's `lists` live in `inbox/chat-list-filter.ts` (ThreadReads).
+  `GET /threads?list=` (ThreadsQueries reads `v_list_threads`) and the detail's `lists` go through
+  `inbox/chat-list-filter.ts` (ThreadReads). Names that are only tashkeel / tatweel are refused (400);
+  any E.164 chat number may be a member (landlines too).
 - **Shared**: `packages/shared/src/messaging/chat-lists.ts` (name schema, key, phone check, error codes,
   `ChatList` / `ChatListRef`); `ThreadDetail.lists?`.
 - **Web**: `apps/web/src/features/inbox/lists/` — the chip row (`ChatListsBar`, `ChatListChips`, `ListChip`),

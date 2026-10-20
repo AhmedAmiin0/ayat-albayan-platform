@@ -69,6 +69,6 @@ describe('ChatListsQueries', () => {
   });
 
   it('a read error throws (500), never an empty answer', async () => {
-    await expect(fake({ error: { code: 'XX000', message: 'down' } }).q.phonesOf('l1')).rejects.toThrow(/down/);
+    await expect(fake({ error: { code: 'XX000', message: 'down' } }).q.all()).rejects.toThrow(/down/);
   });
 });

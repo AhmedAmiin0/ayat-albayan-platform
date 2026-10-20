@@ -3,7 +3,7 @@ import { as, rolledBack, userId } from '../support/rls';
 import { USERS } from '../support/users';
 
 // Chat lists «القوائم» (docs/22 §1, migrations 520–521): RLS on both tables (the admin reads, nobody
-// writes but the API), one name per normalised key, at most 30 lists, members are E.164 numbers, and
+// writes but the API), v_list_threads for the service role only, one name per normalised key, at most 30 lists, members are E.164 numbers, and
 // deleting a list removes its memberships only. inbox.lists is seeded for the system admin and sales.
 // Rolled back; database only.
 
@@ -17,6 +17,9 @@ test.describe('chat lists in the database (migrations 520, 521)', () => {
       const rls = await tx<{ relname: string; on: boolean }[]>`select relname, relrowsecurity as on from pg_class
         where relname in ('chat_lists', 'chat_list_threads') and relnamespace = 'public'::regnamespace order by relname`;
       expect(rls).toEqual([{ relname: 'chat_list_threads', on: true }, { relname: 'chat_lists', on: true }]);
+      const [view] = await tx<{ anon: boolean; auth: boolean }[]>`select has_table_privilege('anon', 'public.v_list_threads', 'select') as anon,
+        has_table_privilege('authenticated', 'public.v_list_threads', 'select') as auth`;
+      expect(view).toEqual({ anon: false, auth: false });
       await tx`insert into public.chat_lists (name, name_key) values ('قائمة RLS', 'قائمه rls')`;
       const teacher = await userId(tx, USERS.teacher.email);
       const seen = await as(tx, teacher, () => tx<{ n: number }[]>`select count(*)::int as n from public.chat_lists`);
@@ -38,6 +41,8 @@ test.describe('chat lists in the database (migrations 520, 521)', () => {
       expect(await code(() => tx`insert into public.chat_list_threads (list_id, phone_e164) values (${list.id}, '0500000520')`)).toBe('23514');
       expect(await code(() => tx`insert into public.chat_lists (name, name_key) values ('بإنتظار الدفع', 'بانتظار الدفع')`)).toBe('23505');
       expect(await code(() => tx`insert into public.chat_lists (name, name_key) values (' مسافة', ' مسافة')`)).toBe('23514');
+      const [shown] = await tx<{ n: number }[]>`select count(*)::int as n from public.v_list_threads where list_id = ${list.id}`;
+      expect(shown?.n).toBe(1);
       await tx`delete from public.chat_lists where id = ${list.id}`;
       const [left] = await tx<{ members: number; messages: number }[]>`select
         (select count(*)::int from public.chat_list_threads where list_id = ${list.id}) as members,

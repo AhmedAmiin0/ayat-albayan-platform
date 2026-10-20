@@ -51,11 +51,12 @@ test('a tap saves at once (optimistic) with PUT / DELETE on the chat’s number'
   await openSheet();
   mockApiSend.mockReturnValueOnce(new Promise(() => undefined));
   await fireEvent.press(box(TRIAL.name));
-  expect(box(TRIAL.name).props.accessibilityState).toEqual({ checked: true });
+  // The optimistic cache write lands a tick after the press (TanStack runs onMutate asynchronously).
+  await waitFor(() => expect(box(TRIAL.name).props.accessibilityState).toEqual({ checked: true }));
   expect(mockApiSend).toHaveBeenCalledWith('PUT', `/chat-lists/${TRIAL.id}${MEMBERS}`);
   mockApiSend.mockResolvedValueOnce(undefined);
   await fireEvent.press(box(PAID.name));
-  expect(mockApiSend).toHaveBeenLastCalledWith('DELETE', `/chat-lists/${PAID.id}${MEMBERS}`);
+  await waitFor(() => expect(mockApiSend).toHaveBeenLastCalledWith('DELETE', `/chat-lists/${PAID.id}${MEMBERS}`));
 });
 
 test('a refused toggle rolls back with «تعذر حفظ التغيير»', async () => {
@@ -81,5 +82,7 @@ test('«قائمة جديدة» creates the list and adds this chat in one go; a
   await fireEvent.press(screen.getByRole('button', { name: t.inbox.lists.create }));
   expect(mockApiSend).toHaveBeenCalledWith('POST', '/chat-lists', { name: made.name });
   await waitFor(() => expect(mockApiSend).toHaveBeenLastCalledWith('PUT', `/chat-lists/${made.id}${MEMBERS}`));
-  expect((await screen.findByRole('checkbox', { name: made.name })).props.accessibilityState).toEqual({ checked: true });
+  await waitFor(async () =>
+    expect((await screen.findByRole('checkbox', { name: made.name })).props.accessibilityState).toEqual({ checked: true }),
+  );
 });

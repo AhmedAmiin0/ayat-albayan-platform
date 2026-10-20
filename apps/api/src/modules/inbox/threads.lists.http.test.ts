@@ -4,7 +4,6 @@ import { inboxApp } from './test-app';
 
 type App = Awaited<ReturnType<typeof inboxApp>>;
 const LIST = '0c000000-0000-4000-8000-000000000001';
-const OTHER = '+966559999999';
 const URL = `/threads/${encodeURIComponent(PHONE)}`;
 const REFS = [{ id: LIST, name: 'بانتظار الدفع' }];
 
@@ -23,7 +22,6 @@ describe('GET /threads?list= and the thread\'s lists (docs/22 §3)', () => {
     t.queries.lessons.mockResolvedValue([]);
     t.queries.people.mockResolvedValue({ guardian: null, lead: null, students: [] });
     t.queries.familyTags.mockResolvedValue(new Map());
-    t.lists.phonesOf.mockResolvedValue([PHONE, OTHER]);
     t.lists.listsOf.mockResolvedValue(REFS);
   });
 
@@ -32,19 +30,14 @@ describe('GET /threads?list= and the thread\'s lists (docs/22 §3)', () => {
       const res = await t.call({ method: 'GET', url: `/threads?list=${LIST}&search=أم&unread=true&status=new`, token });
       expect(res.statusCode).toBe(200);
     }
-    expect(t.lists.phonesOf).toHaveBeenCalledWith(LIST);
-    expect(t.queries.list).toHaveBeenCalledWith(
-      expect.objectContaining({ phones: [PHONE, OTHER], search: 'أم', unread: true, status: 'new' }),
-    );
-    expect(t.queries.list).not.toHaveBeenCalledWith(expect.objectContaining({ list: expect.anything() }));
+    expect(t.queries.list).toHaveBeenCalledTimes(2);
+    expect(t.queries.list).toHaveBeenCalledWith(expect.objectContaining({ list: LIST, search: 'أم', unread: true, status: 'new' }));
+    expect(t.queries.list).not.toHaveBeenCalledWith(expect.objectContaining({ phones: expect.anything() }));
   });
 
-  it('an unknown, empty or malformed list is an empty page, never a 500', async () => {
-    t.lists.phonesOf.mockResolvedValue([]);
-    for (const list of [LIST, 'not-a-uuid']) {
-      const res = await t.call({ method: 'GET', url: `/threads?list=${list}&page=2`, token: 'sales' });
-      expect([res.statusCode, res.json()]).toEqual([200, { items: [], total: 0, page: 2, pageSize: 25 }]);
-    }
+  it('a malformed list is an empty page, never a 500 (an unknown one is empty in SQL)', async () => {
+    const res = await t.call({ method: 'GET', url: '/threads?list=not-a-uuid&page=2', token: 'sales' });
+    expect([res.statusCode, res.json()]).toEqual([200, { items: [], total: 0, page: 2, pageSize: 25 }]);
     expect(t.queries.list).not.toHaveBeenCalled();
   });
 
@@ -55,7 +48,6 @@ describe('GET /threads?list= and the thread\'s lists (docs/22 §3)', () => {
     const res = await t.call({ method: 'GET', url: `/threads?list=${LIST}`, token: 'teacher' });
     expect(res.statusCode).toBe(200);
     expect(t.queries.list).toHaveBeenCalledWith({ page: 1, pageSize: 25, unread: false, phones: [PHONE] });
-    expect(t.lists.phonesOf).not.toHaveBeenCalled();
   });
 
   it('the first page of a chat carries its lists for admin and sales; older pages do not', async () => {

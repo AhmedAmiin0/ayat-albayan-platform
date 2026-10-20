@@ -13,7 +13,8 @@ export interface ThreadListChipsProps {
 
 /**
  * The open chat's lists as small quiet chips in the header's chip line (docs/22 §4). A chip shows that
- * list in the chip row, with this chat still open. Nothing when the chat is in no list.
+ * list in the chip row, with this chat still open. Nothing when the chat is in no list. The focus ring
+ * sits inside the chip (the header's chip line scrolls and would clip it); 44px on phones.
  */
 export function ThreadListChips({ phone, lists, listSearch }: ThreadListChipsProps) {
   const mode = useInboxMode();
@@ -25,7 +26,7 @@ export function ThreadListChips({ phone, lists, listSearch }: ThreadListChipsPro
           key={l.id}
           to={inboxBase(mode)}
           search={{ ...listSearch, list: l.id, phone, page: 1 }}
-          className="inline-flex min-h-6 items-center rounded-full border border-rule px-2 text-2xs text-ink-2 no-underline hover:bg-sunk"
+          className="inline-flex min-h-6 items-center rounded-full border border-rule px-2 text-2xs text-ink-2 no-underline outline-offset-[-2px] hover:bg-sunk max-sm:min-h-11 max-sm:px-3 pointer-coarse:min-h-11"
         >
           {l.name}
         </Link>

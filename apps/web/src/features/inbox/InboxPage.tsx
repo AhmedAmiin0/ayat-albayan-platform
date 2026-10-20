@@ -35,7 +35,8 @@ export function InboxPage({ search, onSearch, head }: InboxPageProps) {
   // «القوائم» (docs/22): with inbox.lists outside teacher mode; an unknown list shows «الكل».
   const lists = useListsAccess();
   const all = useQuery({ ...chatListsQuery, enabled: lists });
-  const list = lists ? activeList(search.list, all.data) : undefined;
+  // Lists that failed to load leave no chip to go back with: «الكل».
+  const list = lists ? activeList(search.list, all.isError ? [] : all.data) : undefined;
   const shown = parseInboxSearch({ ...search, list });
   const threads = useQuery(threadsQuery(shown));
   const { phone, ...listSearch } = shown;

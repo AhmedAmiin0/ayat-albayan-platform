@@ -3797,6 +3797,35 @@ export type Database = {
           },
         ];
       };
+      v_list_threads: {
+        Row: {
+          display_name: string | null;
+          guardian_id: string | null;
+          guardian_name: string | null;
+          guardian_tz: string | null;
+          last_body: string | null;
+          last_chat_inbound_at: string | null;
+          last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_inbound_at: string | null;
+          last_inbound_line: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime: string | null;
+          last_message_at: string | null;
+          last_message_id: string | null;
+          last_notifications_inbound_at: string | null;
+          last_status: Database['public']['Enums']['message_status'] | null;
+          last_template_key: string | null;
+          lead_id: string | null;
+          lead_name: string | null;
+          lead_source: Database['public']['Enums']['lead_source'] | null;
+          lead_status: Database['public']['Enums']['lead_status'] | null;
+          list_id: string | null;
+          phone_e164: string | null;
+          teacher_id: string | null;
+          teacher_name: string | null;
+          unread_count: number | null;
+        };
+        Relationships: [];
+      };
       v_threads: {
         Row: {
           display_name: string | null;
