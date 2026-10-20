@@ -32,7 +32,8 @@ export function StatementCard({ statement: s }: { statement: AssistantStatementV
       {s.lines.length > 0 && (
         <details className="text-sm">
           <summary className="min-h-11 cursor-pointer py-2 text-ink-2">{p.lines}</summary>
-          <ul className="grid gap-1.5">
+          {/* The full-width frame (owner 2026-10-20): each amount stays near its label. */}
+          <ul className="grid max-w-[60ch] gap-1.5">
             {s.lines.map((l, i) => (
               <li key={`${l.kind}-${i}`} className="flex flex-wrap justify-between gap-x-4">
                 <span>{lineText(l)}</span>

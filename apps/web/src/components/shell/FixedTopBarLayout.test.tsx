@@ -67,7 +67,7 @@ describe('FixedTopBarLayout', () => {
     expect(page?.className).toContain('shell:px-3');
   });
 
-  it('off the inbox (the teacher's shell): the 1180px cap and the separate running head, none in the header', () => {
+  it("off the inbox (the teacher's shell): the 1180px cap and the separate running head, none in the header", () => {
     const { container } = renderAt('/teacher/students');
     expect(root(container)).toContain('max-w-[1180px]');
     const riyadh = screen.getAllByText(t.runningHead.riyadh);

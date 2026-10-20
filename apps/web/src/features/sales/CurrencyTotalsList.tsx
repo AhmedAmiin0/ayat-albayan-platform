@@ -18,7 +18,7 @@ export function CurrencyTotalsList({ totals, label }: { totals: Record<string, C
         if (!row) return null;
         return (
           <li key={currency} data-currency={currency}>
-            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-4">
+            <dl className="grid grid-cols-2 gap-x-4 gap-y-2 sm:grid-cols-[repeat(4,minmax(0,12rem))]">
               {PARTS.map((part) => (
                 <div key={part} className="grid gap-0.5">
                   <dt className="text-xs text-ink-3">{t.assistantPortal.earnings.totals[part]}</dt>
