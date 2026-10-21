@@ -1,6 +1,6 @@
 import { detail } from '../thread-fixtures';
 import type { ThreadCache } from '../thread-cache';
-import { withMembership } from './use-list-membership';
+import { undoChange, withMembership } from './use-list-membership';
 
 const paid = { id: 'l-1', name: 'بانتظار الدفع' };
 const trial = { id: 'l-2', name: 'تجريبية' };
@@ -23,4 +23,10 @@ test('removing takes it out; removing a non-member changes nothing', () => {
 
 test('no cached thread: nothing to edit', () => {
   expect(withMembership(undefined, { list: paid, member: true })).toBeUndefined();
+});
+
+test('undoing a failed toggle keeps a later toggle of another list', () => {
+  const both = withMembership(withMembership(cache([]), { list: paid, member: true }), { list: trial, member: true });
+  expect(withMembership(both, undoChange({ list: paid, member: true }))?.pages[0]?.lists).toEqual([trial]);
+  expect(withMembership(cache([trial]), undoChange({ list: trial, member: false }))?.pages[0]?.lists).toEqual([trial]);
 });

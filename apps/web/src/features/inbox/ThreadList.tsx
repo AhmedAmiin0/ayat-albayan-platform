@@ -8,6 +8,7 @@ import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { ThreadFilterFields } from './ThreadFilterFields';
 import { ThreadRow } from './ThreadRow';
+import { emptyTitle } from './empty-title';
 import { CLEAR_THREAD_FILTERS, threadFilterChips } from './thread-filters';
 
 export interface ThreadListProps {
@@ -65,10 +66,4 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
       )}
     </>
   );
-}
-
-/** A chat list says how to fill it (docs/22 §4); otherwise «لا محادثات» or «لا غير مقروءة». */
-function emptyTitle(search: InboxSearch): string {
-  if (search.list) return t.inbox.lists.empty;
-  return search.unread ? t.inbox.emptyUnread : t.inbox.empty;
 }

@@ -19,6 +19,7 @@ import { InboxHeaderActions } from './InboxHeaderActions';
 import { ChatListChips } from './lists/ChatListChips';
 import { threadPreview } from './message-text';
 import { threadLink, useThreadMode } from './thread-mode';
+import { threadsEmptyTitle } from './threads-empty';
 import { ThreadTags } from './ThreadTags';
 import { useThreadList } from './use-thread-list';
 
@@ -101,7 +102,7 @@ export function ThreadsList({ switcher }: { switcher?: ReactNode }) {
         onRefresh={list.refresh}
         ListEmptyComponent={
           list.isPending ? null : loaded ? (
-            <EmptyState title={listId ? t.inbox.lists.empty : filter === 'unread' ? t.inbox.emptyUnread : t.inbox.empty} />
+            <EmptyState title={threadsEmptyTitle({ listId, filter, search })} />
           ) : (
             <ErrorState onRetry={list.refresh} />
           )
