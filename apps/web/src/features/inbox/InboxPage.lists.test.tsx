@@ -52,9 +52,10 @@ describe('InboxPage «القوائم» chip row (docs/22 §4)', () => {
     expect(onSearch).toHaveBeenCalledWith({ q: 'أم', list: PAY, page: 1 });
   });
 
-  it('asks the API for the URL\'s list, with the other filters, and says how to fill an empty list', async () => {
+  it('asks the API for the URL\'s list, with the other filters; an empty unread page is not «an empty list»', async () => {
     show({ search: { page: 1, list: PAY, unread: true }, items: [] });
-    expect(await screen.findByText(L.empty)).toBeTruthy();
+    expect(await screen.findByText(t.inbox.emptyUnread)).toBeTruthy();
+    expect(screen.queryByText(L.empty)).toBeNull();
     expect(within(await row()).getByRole('button', { name: /بانتظار الدفع/ }).getAttribute('aria-pressed')).toBe('true');
     expect(threadCalls().at(-1)).toContain(`list=${PAY}`);
     expect(threadCalls().at(-1)).toContain('unread=true');
