@@ -74,11 +74,13 @@ export class ChatListsQueries {
     check(error, 'chat list delete');
   }
 
-  /** Adding twice is a no-op. */
-  async add(input: { listId: string; phone: string; by: string }): Promise<void> {
+  /** Adding twice is a no-op. `gone` = the list was deleted meanwhile (23503: its FK), not a 500. */
+  async add(input: { listId: string; phone: string; by: string }): Promise<'added' | 'gone'> {
     const row = { list_id: input.listId, phone_e164: input.phone, added_by: input.by };
     const { error } = await this.db.from('chat_list_threads').upsert(row, { onConflict: 'list_id,phone_e164', ignoreDuplicates: true });
+    if (error?.code === '23503') return 'gone';
     check(error, 'chat list add');
+    return 'added';
   }
 
   /** Removing a non-member is a no-op. */

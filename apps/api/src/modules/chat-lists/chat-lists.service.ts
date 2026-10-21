@@ -43,7 +43,7 @@ export class ChatListsService {
   /** Adding twice is a no-op; 404 list_not_found for an unknown list. */
   async add(input: { listId: string; phone: string; by: string }): Promise<void> {
     await this.known(input.listId);
-    await this.queries.add(input);
+    if ((await this.queries.add(input)) === 'gone') throw notFound('list_not_found');
   }
 
   /** Removing a non-member is a no-op; 404 list_not_found for an unknown list. */

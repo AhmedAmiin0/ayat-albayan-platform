@@ -60,6 +60,12 @@ describe('ChatListsQueries', () => {
     expect(drop.calls).toEqual(expect.arrayContaining([['eq', 'list_id', 'l1'], ['eq', 'phone_e164', '+966501234567']]));
   });
 
+  it('add: a list deleted meanwhile (FK 23503) is `gone`, not a 500', async () => {
+    const gone = fake({ error: { code: '23503', message: 'chat_list_threads_list_id_fkey' } });
+    expect(await gone.q.add({ listId: 'l1', phone: '+966501234567', by: 'u' })).toBe('gone');
+    expect(await fake({}).q.add({ listId: 'l1', phone: '+966501234567', by: 'u' })).toBe('added');
+  });
+
   it('a chat\'s lists come oldest list first, without their timestamps', async () => {
     const data = [
       { list: { id: 'b', name: 'ثانية', created_at: '2026-10-20T10:00:00Z' } },

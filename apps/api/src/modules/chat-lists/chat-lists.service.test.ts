@@ -13,7 +13,7 @@ function setup() {
     create: vi.fn(async () => LIST),
     rename: vi.fn(async (): Promise<'renamed' | 'taken' | null> => 'renamed'),
     remove: vi.fn(async () => undefined),
-    add: vi.fn(async () => undefined),
+    add: vi.fn(async (): Promise<'added' | 'gone'> => 'added'),
     drop: vi.fn(async () => undefined),
   };
   return { q, service: new ChatListsService(q as unknown as ChatListsQueries) };
@@ -63,6 +63,12 @@ describe('ChatListsService', () => {
     expect(await code(service.add({ listId: ID, phone: '+966501234567', by: 'u1' }))).toBe('list_not_found');
     expect(await code(service.drop(ID, '+966501234567'))).toBe('list_not_found');
     expect(q.add).toHaveBeenCalledTimes(1);
+  });
+
+  it('a list deleted between the check and the insert is 404 list_not_found (never a 500)', async () => {
+    const { q, service } = setup();
+    q.add.mockResolvedValue('gone');
+    expect(await code(service.add({ listId: ID, phone: '+966501234567', by: 'u1' }))).toBe('list_not_found');
   });
 
   it('deletes through the queries (memberships cascade; nothing else is touched)', async () => {
