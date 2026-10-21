@@ -19,6 +19,9 @@ export function withMembership(data: ThreadCache | undefined, change: MemberChan
   return { ...data, pages: [{ ...first, lists }, ...rest] };
 }
 
+/** The toggle that puts one failed change back (the rollback of useListMembership). */
+export const undoChange = (change: MemberChange): MemberChange => ({ ...change, member: !change.member });
+
 /**
  * Adds or removes this chat (by its phone) from a list, optimistically: the checkmark moves at
  * once and goes back if the API refuses (the caller shows saveError). Then the chat list (filtered
@@ -32,11 +35,10 @@ export function useListMembership(phone: string) {
       apiSend(member ? 'PUT' : 'DELETE', `${listPath(list.id)}/threads/${encodeURIComponent(phone)}`),
     onMutate: async (change) => {
       await client.cancelQueries({ queryKey });
-      const before = client.getQueryData<ThreadCache>(queryKey);
       client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, change));
-      return { before };
     },
-    onError: (_error, _change, context) => client.setQueryData(queryKey, context?.before),
+    // Undo only this toggle: a snapshot would also undo a later toggle or a message cached meanwhile.
+    onError: (_error, change) => client.setQueryData<ThreadCache>(queryKey, (old) => withMembership(old, undoChange(change))),
     onSettled: () => {
       void client.invalidateQueries({ queryKey: threadsKey });
       void client.invalidateQueries({ queryKey: listsKey });
