@@ -33,12 +33,12 @@ describe('line providers', () => {
     const e = env({ ...WA, KAPSO_API_KEY: 'fake-kapso-key', WA_PROVIDER: 'kapso' });
     expect(lineEnvs(e).notifications).toBeNull();
     expect(lineGaps(e, 'notifications')).toEqual(['KAPSO_API_BASE']);
-    expect(sendingAllowed(loadEnv({ ...BASE, ...WA, KAPSO_API_KEY: 'k', WA_PROVIDER: 'kapso', MESSAGING_ENABLED: 'true' }), true)).toBe(false);
+    expect(sendingAllowed(loadEnv({ ...BASE, ...WA, KAPSO_API_KEY: 'k', WA_PROVIDER: 'kapso' }), true)).toBe(false);
     expect(lineGaps(env({ WA_PROVIDER: 'kapso' }), 'notifications')).toEqual(['WA_PHONE_NUMBER_ID', 'WA_WABA_ID', 'KAPSO_API_BASE', 'KAPSO_API_KEY']);
   });
 
   it('sending is allowed once the notifications line is configured under its provider', () => {
-    const on = { MESSAGING_ENABLED: 'true', WA_PROVIDER: 'kapso' };
+    const on = { WA_PROVIDER: 'kapso' };
     expect(sendingAllowed(env({ WA_PHONE_NUMBER_ID: 'n', WA_WABA_ID: 'w', ...KAPSO, ...on }), true)).toBe(true);
     expect(sendingAllowed(env({ ...WA, ...on }), true)).toBe(false);
   });

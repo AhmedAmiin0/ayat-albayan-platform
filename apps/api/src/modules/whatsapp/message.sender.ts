@@ -19,7 +19,7 @@ export type SendSummary = Record<SendOutcome, number>;
 
 /**
  * The outbound sender (R-MSG-01/02, docs/12 §3.3): drains `messages` where status = queued, due,
- * and either a session text or an approved template. Gate closed (env, WhatsApp config or the
+ * and either a session text or an approved template. Gate closed (WhatsApp config or the
  * admin's kill switch) → nothing is read, rows wait; the gate is asked again before every row. In-process and single-flight; safe across
  * instances because each row is claimed by compare-and-set.
  */

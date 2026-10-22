@@ -7,8 +7,8 @@ import { describe, expect, it } from 'vitest';
 // e2e/tests/google-sync.sql.spec.ts).
 const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const read = (f: string) => readFileSync(join(dir, f), 'utf8');
-const tables = read('20261022000530_google_sync.sql');
-const outbox = read('20261022000531_google_sync_outbox.sql');
+const tables = read('20261022000610_google_sync.sql');
+const outbox = read('20261022000611_google_sync_outbox.sql');
 
 describe('migration 530: Google sync tables', () => {
   it('integration_secret_key_ok lists exactly the shared secret keys, the Google client secret included', () => {

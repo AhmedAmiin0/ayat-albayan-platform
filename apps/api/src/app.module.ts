@@ -25,6 +25,7 @@ import { LessonRatingModule } from './modules/lesson-rating/lesson-rating.module
 import { LessonsModule } from './modules/lessons/lessons.module';
 import { MeModule } from './modules/me/me.module';
 import { MessagingJobsModule } from './modules/messaging-jobs/messaging-jobs.module';
+import { NotificationRulesModule } from './modules/notification-rules/rules.module';
 import { PaymentsModule } from './modules/payments/payments.module';
 import { SalesMoneyModule } from './modules/sales-money/sales-money.module';
 import { AssistantPayModule } from './modules/assistant-pay/assistant-pay.module';
@@ -92,6 +93,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     DashboardModule,
     ExportsModule,
     WhatsappModule,
+    NotificationRulesModule,
     InboxModule,
     FeedbackModule,
     LessonRatingModule,

@@ -109,8 +109,6 @@ const schema = z.object({
   SETTINGS_CACHE_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).default(30_000)),
   /** false = ignore the database's integration config (env only); vitest sets it so no boot reads it. */
   INTEGRATION_CONFIG_FROM_DB: z.preprocess(blankIsUnset, z.stringbool().default(true)),
-  /** Deployment-level send gate; the admin's settings.messaging_enabled must also be true. */
-  MESSAGING_ENABLED: z.preprocess(blankIsUnset, z.stringbool().default(false)),
   /**
    * Shortest password an admin may type for a login (POST /users, reset-password); generated ones
    * are at least as long. Keep it >= the project's Auth setting (supabase config minimum_password_length).

@@ -2,7 +2,7 @@ import en from '@ab/shared/i18n/en.json';
 import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { settings as mockSettings } from './fixtures';
+import { catalogue as mockCatalogue, settings as mockSettings } from './fixtures';
 import { SettingsScreen } from './SettingsScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
@@ -12,7 +12,7 @@ jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
 });
 jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
-  apiFetch: async () => mockSettings,
+  apiFetch: async (p: string) => (p === '/admin/notifications' ? mockCatalogue : mockSettings),
 }));
 jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true } }));
 
@@ -22,4 +22,5 @@ test('English: the form and the read-only note come from en.json', async () => {
   expect(screen.getByRole('header', { name: en.mobileAdmin.settings.title })).toBeTruthy();
   expect(await screen.findByLabelText(en.settings.reportingCurrency)).toBeTruthy();
   expect(screen.getByText(en.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
+  expect(await screen.findByText(en.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
 });

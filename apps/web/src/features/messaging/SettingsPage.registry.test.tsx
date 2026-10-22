@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
 import { SettingsPage } from './SettingsPage';
 import { sectionId } from './SettingsNav';
 
@@ -16,6 +16,7 @@ function renderPage() {
   routeFetch(apiFetch, [
     ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, join_opens_before_min: 20, academy_whatsapp_e164: '+201001234567' }],
+    CATALOGUE_ROUTE,
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],
   ]);

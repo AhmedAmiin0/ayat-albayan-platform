@@ -59,3 +59,10 @@ export function invalidKeys(changes: IntegrationChanges): IntegrationPlainKey[] 
     .filter(([key, value]) => value !== null && !integrationValueValid(key, value))
     .map(([key]) => key);
 }
+
+/**
+ * Does a save empty the allow-list (WA_ALLOWED_RECIPIENTS)? Then messages may reach every number,
+ * real families included, unless the server has its own list: the form asks first (docs/23a §E H5).
+ */
+export const emptiesAllowList = (changes: IntegrationChanges): boolean =>
+  'WA_ALLOWED_RECIPIENTS' in changes && changes.WA_ALLOWED_RECIPIENTS === null;

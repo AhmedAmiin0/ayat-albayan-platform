@@ -115,6 +115,8 @@ export type WaProvider = (typeof WA_PROVIDERS)[number];
 export const INTEGRATION_ENUMS: Partial<Record<IntegrationPlainKey, readonly string[]>> = {
   WA_PROVIDER: WA_PROVIDERS,
   WA_CHAT_PROVIDER: WA_PROVIDERS,
+  // A switch, not a word to type (docs/23a §E H3): the select shows «مفعّلة» / «متوقفة».
+  WA_TEMPLATE_SYNC: ['true', 'false'],
 };
 
 /** The allowed values of an enum key, or null for a free-text key. */

@@ -18,9 +18,9 @@ test('overridesFrom skips unset and empty keys and refuses line breaks', () => {
 });
 
 test('mergeEnv replaces in place, keeps comments and untouched keys, appends new ones', () => {
-  const current = '# staging\nSUPABASE_URL=https://x\nWA_WABA_ID=old\n\nMESSAGING_ENABLED=true\n';
-  const out = mergeEnv(current, new Map([['WA_WABA_ID', '1302'], ['MESSAGING_ENABLED', 'false'], ['LIVEKIT_URL', 'wss://lk']]));
-  assert.equal(out, '# staging\nSUPABASE_URL=https://x\nWA_WABA_ID=1302\n\nMESSAGING_ENABLED=false\nLIVEKIT_URL=wss://lk\n');
+  const current = '# staging\nSUPABASE_URL=https://x\nWA_WABA_ID=old\n\nWA_TEMPLATE_SYNC=true\n';
+  const out = mergeEnv(current, new Map([['WA_WABA_ID', '1302'], ['WA_TEMPLATE_SYNC', 'false'], ['LIVEKIT_URL', 'wss://lk']]));
+  assert.equal(out, '# staging\nSUPABASE_URL=https://x\nWA_WABA_ID=1302\n\nWA_TEMPLATE_SYNC=false\nLIVEKIT_URL=wss://lk\n');
 });
 
 test('mergeEnv keeps a value with = signs whole and drops a duplicate of an overridden key', () => {

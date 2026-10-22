@@ -98,7 +98,7 @@ The flow is still live (attendance and summary sheets were written on 2026-10-21
 
 ## 3. Build
 
-**DB** (migrations above the highest on develop — 20261022000530+; never edit an existing migration;
+**DB** (migrations above the highest on develop — 20261022000610+; never edit an existing migration;
 RLS on every table, service-role writes, admin read):
 - `google_account` (single row): connected email, granted scopes, connected_at/by, last_error, status.
   Refresh token + OAuth client secret in **Vault** (`integration_secret_*` pattern); client id in
@@ -167,11 +167,11 @@ to live (stub) ⇒ events created on the stub; cancel ⇒ deleted; submit a repo
 
 ## 6. As built (2026-10-22)
 
-- **DB**: migrations `20261022000530_google_sync.sql` (tables, RLS, Vault functions `google_token_set/read/clear`,
+- **DB**: migrations `20261022000610_google_sync.sql` (tables, RLS, Vault functions `google_token_set/read/clear`,
   `GOOGLE_CLIENT_SECRET` in `integration_secret_key_ok`, the three settings rows OFF / `dry_run` / 60),
-  `20261022000531_google_sync_outbox.sql` (`v_platform_origin_lessons`, `is_platform_report`, the queue functions,
+  `20261022000611_google_sync_outbox.sql` (`v_platform_origin_lessons`, `is_platform_report`, the queue functions,
   the lesson / report triggers that are the producers, `google_sync_claim`, `google_sync_requeue`,
-  `google_sync_reconcile`) and `20261022000532_push_kind_google.sql` (bell kind `google_sync_alert`).
+  `google_sync_reconcile`) and `20261022000612_push_kind_google.sql` (bell kind `google_sync_alert`).
   The mapping tables carry no FK to students / teachers: `merge_students` deletes the merged student and
   `clear:demo` refuses cascades into its tables.
 - **Worker**: in-process and single-flight like the report-PDF job (not pg-boss): the claim is a row-locked

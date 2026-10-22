@@ -9,6 +9,7 @@ import { ErrorState } from '@/ui/ErrorState';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
 import { GoogleSyncCard } from './GoogleSyncCard';
+import { NotificationCatalogue } from './NotificationCatalogue';
 import { ReadOnlySettings } from './ReadOnlySettings';
 import { SettingsFields } from './SettingsFields';
 import { useSettings } from './use-settings';
@@ -42,6 +43,7 @@ function Editor({ settings }: { settings: AcademySettings }) {
       </View>
       <ReadOnlySettings settings={settings} />
       {google ? <GoogleSyncCard /> : null}
+      <NotificationCatalogue />
     </ScrollView>
   );
 }
@@ -49,7 +51,7 @@ function Editor({ settings }: { settings: AcademySettings }) {
 /**
  * «إعدادات الأكاديمية» (R-SCH-07, R-SCH-02): the six settings the owner edits from the phone, on
  * GET/PATCH /settings. The messaging switches, the CRM cut-over and the Google sync status
- * (docs/24 §3) are read-only here.
+ * (docs/24 §3) are read-only here, and so is «ماذا يُرسل ومتى» (GET /admin/notifications).
  */
 export function SettingsScreen() {
   const query = useSettings();

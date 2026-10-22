@@ -1,6 +1,7 @@
 import { settingDef, type AcademySettings } from '@ab/shared';
 import { useId, type ReactNode } from 'react';
 import { ThemeToggle } from '@/components/ui/theme-toggle';
+import { CatalogueSection } from '@/features/notification-catalogue/CatalogueSection';
 import { SalesAutoAssignSwitch } from '@/features/sales/SalesAutoAssignSwitch';
 import { TemplateHealth } from '@/features/templates/TemplateHealth';
 import { t } from '@/lib/i18n';
@@ -46,13 +47,17 @@ export function SectionFields({ id, state }: { id: SettingsSection; state: Setti
 export const linesMatch = (query: string): boolean =>
   matchesText(`${t.templates.settings.lines.title} ${t.templates.settings.lines.intro}`, query);
 
+/** Does the search match «ماذا يُرسل ومتى» (its title or intro)? */
+export const catalogueMatch = (query: string): boolean =>
+  matchesText(`${t.notificationCatalogue.title} ${t.notificationCatalogue.intro}`, query);
+
 /** Does the search match the template section's own text (its title, intro, «القوالب حسب الرقم»)? */
 export const templatesMatch = (query: string): boolean => {
   const p = t.templates.perNumber;
   return matchesText(`${t.templates.title} ${t.templates.intro} ${p.title} ${p.sync}`, query);
 };
 
-/** «الرسائل والواتساب»: the switches that save on their own, the WhatsApp lines, the timing fields, template health. */
+/** «الرسائل والواتساب»: the switches that save on their own, the WhatsApp lines, «ماذا يُرسل ومتى», the timing fields, template health. */
 export function MessagingSection({ settings, state }: { settings: AcademySettings; state: SettingsFormState }) {
   const templates = useId();
   const { query } = useSettingsView();
@@ -60,10 +65,11 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
   const showAuto = matchesSetting('auto_messages_enabled', query);
   const showFeedback = matchesSetting('feedback_mode', query);
   const showLines = linesMatch(query);
+  const showCatalogue = catalogueMatch(query);
   const showTemplates = templatesMatch(query);
   const hasFields = FORM_KEYS.some((k) => settingDef(k).section === 'messaging' && matchesSetting(k, query));
   const searching = query.trim() !== '';
-  if (searching && !showSending && !showAuto && !showFeedback && !showLines && !hasFields && !showTemplates) return null;
+  if (searching && !showSending && !showAuto && !showFeedback && !showLines && !showCatalogue && !hasFields && !showTemplates) return null;
   return (
     <Section id="messaging">
       {showSending && (
@@ -78,6 +84,7 @@ export function MessagingSection({ settings, state }: { settings: AcademySetting
       )}
       {showFeedback && <FeedbackModeSwitch settings={settings} />}
       {showLines && <LinesCard />}
+      {showCatalogue && <CatalogueSection />}
       <SectionFields id="messaging" state={state} />
       {showTemplates && (
         <div className="min-w-0">

@@ -19,7 +19,7 @@ const TEMPLATES = [
   template({ key: 'teacher_lesson_reminder', params: ['teacher_name', 'lesson_slot'] }),
 ];
 const LESSON = { id: 'l-1', starts_at: '2026-10-04T14:00:00Z', meeting_link: null, student_names: ['سهيلة'], tz: 'Asia/Riyadh' };
-type Gate = 'switch_off' | 'env_off' | null;
+type Gate = 'switch_off' | 'not_configured' | null;
 
 function renderThread(open: boolean, gate: Gate = null) {
   routeFetch(apiFetch, [
@@ -70,7 +70,7 @@ describe('thread composer inside the 24 h window (R-LEAD-02)', () => {
   });
 
   it('a gate closed on the server (env / WhatsApp not configured) is said too, even with the switch on', async () => {
-    renderThread(true, 'env_off');
+    renderThread(true, 'not_configured');
     expect(await screen.findByText(t.inbox.messagingOffServer)).toBeTruthy();
   });
 });

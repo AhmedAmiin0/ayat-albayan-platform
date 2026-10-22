@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
 import { SettingsPage } from './SettingsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -11,12 +11,13 @@ vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, api
 
 const s = t.templates.settings;
 
-type Gate = { open: boolean; reason: 'env_off' | 'not_configured' | 'switch_off' | null; queued: number };
+type Gate = { open: boolean; reason: 'not_configured' | 'switch_off' | null; queued: number };
 
 function renderPage(messagingEnabled = false, gate: Gate = { open: messagingEnabled, reason: messagingEnabled ? null : 'switch_off', queued: 0 }) {
   routeFetch(apiFetch, [
     ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, messaging_enabled: messagingEnabled }],
+    CATALOGUE_ROUTE,
     ['/messages/gate', gate],
     ['/messaging/templates', []],
   ]);
@@ -46,10 +47,17 @@ describe('messaging kill switch (docs/12 §3.1)', () => {
     expect(screen.queryByRole('dialog')).toBeNull();
   });
 
-  it('cancel keeps it off; turning it OFF is immediate', async () => {
+  it('turning it OFF asks first too (cancel is the default and changes nothing); cancel keeps it off', async () => {
     renderPage(true);
     apiSend.mockResolvedValue({ ...SETTINGS, messaging_enabled: false });
     fireEvent.click(await screen.findByRole('button', { name: s.disable }));
+    const off = screen.getByRole('dialog', { name: s.disableTitle });
+    expect(within(off).getByText(s.disableConfirm)).toBeTruthy();
+    expect(document.activeElement?.textContent).toBe(t.common.cancel);
+    fireEvent.click(within(off).getByRole('button', { name: t.common.cancel }));
+    expect(apiSend).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: s.disable }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: s.disableYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { messagingEnabled: false }));
     fireEvent.click(await screen.findByRole('button', { name: s.enableTitle }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t.common.cancel }));
@@ -87,9 +95,11 @@ describe('academy settings form', () => {
     expect(apiSend).not.toHaveBeenCalled();
   });
 
-  it('a gate closed on the server is named: the switch alone would not send anything', async () => {
-    renderPage(true, { open: false, reason: 'env_off', queued: 2 });
-    expect(await screen.findByText(s.gateEnvOff)).toBeTruthy();
+  it('WhatsApp not set up is named and the chip never says «يعمل»: the switch alone sends nothing', async () => {
+    renderPage(true, { open: false, reason: 'not_configured', queued: 2 });
+    expect(await screen.findByText(s.gateNotConfigured)).toBeTruthy();
+    expect(screen.getByText(s.onBlocked)).toBeTruthy();
+    expect(screen.queryByText(s.on)).toBeNull();
     expect(screen.getByText(s.queued.two)).toBeTruthy();
   });
 
@@ -105,6 +115,7 @@ describe('academy settings form', () => {
     routeFetch(apiFetch, [
       ['/settings/integrations', []],
       ['/settings', { ...SETTINGS, crm_cutover_done: true }],
+      CATALOGUE_ROUTE,
       ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
       ['/messaging/templates', []],
     ]);

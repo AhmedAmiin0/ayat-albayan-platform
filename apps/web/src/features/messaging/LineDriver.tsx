@@ -1,15 +1,28 @@
-import type { LineCheckView } from '@ab/shared';
+import { isIntegrationKey, type LineCheckView } from '@ab/shared';
 import { Ltr } from '@/components/ui/ltr';
 import { t } from '@/lib/i18n';
-import { optionText } from '../integrations/integrations-form';
+import { integrationText, optionText } from '../integrations/integrations-form';
 
-/** Several key names in one LTR island must wrap at phone width (no horizontal page scroll). */
+/** An unknown key name stays an LTR island that wraps at phone width (no horizontal page scroll). */
 const WRAP = 'whitespace-normal break-all';
 
+/** What the line lacks, by the «التكاملات» label (docs/23a §E H3); a key outside the registry as written. */
+function GapNames({ gaps }: { gaps: readonly string[] }) {
+  const known = gaps.filter(isIntegrationKey).map((k) => integrationText(k).label);
+  const other = gaps.filter((k) => !isIntegrationKey(k));
+  return (
+    <>
+      {known.join(t.common.listSeparator)}
+      {known.length > 0 && other.length > 0 && t.common.listSeparator}
+      {other.length > 0 && <Ltr className={WRAP}>{other.join(', ')}</Ltr>}
+    </>
+  );
+}
+
 /**
- * The line's sending provider (docs/19: Meta directly or Kapso) and, when it cannot send yet, the
- * NAMES of the keys it still lacks (env names, so English in an LTR island; never values), and in
- * words when the chat line's phone id is the notifications one.
+ * The line's sending provider (docs/19: Meta directly or Kapso) and, when it cannot send yet, what it
+ * still lacks by its «التكاملات» label (never a value), and in words when the chat line's phone id
+ * is the notifications one.
  */
 export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'gaps' | 'duplicate_chat_phone'> | null }) {
   const s = t.templates.settings.lines;
@@ -24,7 +37,7 @@ export function LineDriver({ view }: { view: Pick<LineCheckView, 'provider' | 'g
       {view.gaps.length > 0 && (
         <p className="text-act">
           {before}
-          <Ltr className={WRAP}>{view.gaps.join(', ')}</Ltr>
+          <GapNames gaps={view.gaps} />
           {after}
         </p>
       )}

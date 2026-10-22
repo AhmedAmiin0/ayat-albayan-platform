@@ -5,6 +5,7 @@ import { bootGaps, lineProvider, loadEnv } from '../../env';
 import { InboundMedia } from './inbound-media.service';
 import { InboundMediaQueries } from './inbound-media.queries';
 import { LiveWhatsappClient } from './live-client';
+import { LineHealthStore } from './line-health.store';
 import { LinesCheck } from './lines.check';
 import { LinesController } from './lines.controller';
 import { MessageDispatch } from './message.dispatch';
@@ -48,6 +49,7 @@ function lines(): WhatsappLines {
     { provide: WHATSAPP_LINES, useFactory: lines },
     { provide: WHATSAPP_CLIENT, useFactory: (l: WhatsappLines): WhatsappClient => l.notifications, inject: [WHATSAPP_LINES] },
     LinesCheck,
+    LineHealthStore,
     TemplatesQueries,
     TemplateRegistry,
     TemplateStarters,
@@ -63,7 +65,7 @@ function lines(): WhatsappLines {
     InboundMedia,
     WaMediaRetentionJob,
   ],
-  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, MessageSender, MessageViews, InboundMedia, InboundMediaQueries],
+  exports: [WHATSAPP_CLIENT, WHATSAPP_LINES, TemplateRegistry, SendGate, MessageSender, MessageViews, InboundMedia, InboundMediaQueries, LineHealthStore],
 })
 export class WhatsappModule implements OnModuleInit {
   /**

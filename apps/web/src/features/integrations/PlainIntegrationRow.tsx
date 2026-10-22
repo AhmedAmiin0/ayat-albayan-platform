@@ -3,6 +3,7 @@ import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
 import { SettingRow } from '../messaging/SettingsFields';
+import { DeveloperKey } from './DeveloperKey';
 import { enumEmptyLabel, integrationText, optionText } from './integrations-form';
 import { IntegrationSourceNote } from './IntegrationSourceNote';
 
@@ -19,7 +20,8 @@ const selectClass = 'w-full text-sm sm:w-[300px]';
 
 /**
  * A plain integration value, prefilled with the value in use: free text (an id, a URL, a list) in
- * LTR, or a select for a key with fixed values (the WhatsApp provider), whose empty choice clears it.
+ * LTR, or a select for a key with fixed values (the provider, the template sync switch), whose empty
+ * choice clears it. Labelled in Arabic; the server's key name only under «للمطوّر».
  */
 export function PlainIntegrationRow({ item, value, invalid, onChange }: Props) {
   const words = integrationText(item.key);
@@ -29,7 +31,12 @@ export function PlainIntegrationRow({ item, value, invalid, onChange }: Props) {
       label={words.label}
       hint={words.hint}
       error={invalid ? t.integrations.invalid : undefined}
-      extra={<IntegrationSourceNote item={item} />}
+      extra={
+        <>
+          <IntegrationSourceNote item={item} />
+          <DeveloperKey name={item.key} />
+        </>
+      }
     >
       {(p) =>
         options ? (
@@ -49,7 +56,6 @@ export function PlainIntegrationRow({ item, value, invalid, onChange }: Props) {
             autoComplete="off"
             className={fieldClass}
             value={value}
-            placeholder={item.key}
             onChange={(e) => onChange(e.target.value)}
           />
         )

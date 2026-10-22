@@ -3714,6 +3714,30 @@ export type Database = {
         };
         Relationships: [];
       };
+      wa_line_health: {
+        Row: {
+          checked_at: string;
+          display_phone_e164: string | null;
+          line: Database['public']['Enums']['wa_line'];
+          updated_at: string;
+          verified_name: string | null;
+        };
+        Insert: {
+          checked_at: string;
+          display_phone_e164?: string | null;
+          line: Database['public']['Enums']['wa_line'];
+          updated_at?: string;
+          verified_name?: string | null;
+        };
+        Update: {
+          checked_at?: string;
+          display_phone_e164?: string | null;
+          line?: Database['public']['Enums']['wa_line'];
+          updated_at?: string;
+          verified_name?: string | null;
+        };
+        Relationships: [];
+      };
       web_push_subscriptions: {
         Row: {
           auth: string;
