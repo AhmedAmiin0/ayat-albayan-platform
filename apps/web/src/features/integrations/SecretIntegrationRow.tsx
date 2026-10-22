@@ -7,6 +7,8 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 import { SettingRow } from '../messaging/SettingsFields';
+import { DeveloperKey } from './DeveloperKey';
+import { sendGateQuery } from '../messaging/api';
 import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from './integrations-api';
 import { integrationText } from './integrations-form';
 import { SecretStatusChip } from './SecretStatusChip';
@@ -25,6 +27,7 @@ export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfig
   const done = (data: unknown, message: string) => {
     if (Array.isArray(data)) queryClient.setQueryData(integrationsQuery.queryKey, data);
     else void queryClient.invalidateQueries({ queryKey: integrationsQuery.queryKey });
+    void queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey }); // a token decides «configured»
     onNote(message);
   };
   const save = useMutation({
@@ -44,7 +47,16 @@ export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfig
   if (!isIntegrationSecretKey(item.key)) return null;
   const key = item.key;
   return (
-    <SettingRow label={words.label} hint={words.hint} extra={<SecretStatusChip item={item} />}>
+    <SettingRow
+      label={words.label}
+      hint={words.hint}
+      extra={
+        <>
+          <SecretStatusChip item={item} />
+          <DeveloperKey name={item.key} />
+        </>
+      }
+    >
       {(p) => (
         <div className="flex flex-wrap items-center gap-2">
           <Input

@@ -53,7 +53,7 @@ export const stubStatus = (spec: { id: string; status: 'sent' | 'delivered' | 'r
 export const stubTemplateStatus = (name: string, status: 'APPROVED' | 'REJECTED' | 'PAUSED', waba?: string) =>
   stub<unknown>(`/__stub/templates/${name}`, { status, ...(waba ? { waba } : {}) });
 
-/** The admin's kill switch (settings.messaging_enabled); the API's env gate is already open. */
+/** The admin's kill switch (settings.messaging_enabled): the only switch for sending (docs/23). */
 export async function setMessaging(enabled: boolean): Promise<void> {
   await withSql((sql) => sql`
     insert into public.settings (key, value) values ('messaging_enabled', ${sql.json(enabled)})

@@ -79,7 +79,7 @@ A keeps the door open: the table, Vault naming and UI are already per number; go
 Each catalogue entry carries: `audience` (guardian / teacher / lead / staff), `trigger` (Arabic description key), `templates` (the template keys it may send, so the UI shows their approval and **number** from `message_templates.line`), `automatic` (governed by «الرسائل التلقائية»), `locked` (safety rows such as `reminder_failed` cannot be turned off), defaults equal to today's values. RLS: admin read, service_role write.
 
 - **Effective state shown per row**: «يعمل» only when the master switch, the server gate, the number, the template approval and the row itself all agree; otherwise the first blocker in words («القالب لم يُعتمد بعد»). Fixes §E H1, M4.
-- **Still global:** `messaging_enabled` («إرسال الرسائل») and `auto_messages_enabled` («الرسائل التلقائية») stay as the two top switches; env `MESSAGING_ENABLED` stays as the deployment fuse (see Q2) and is shown read-only.
+- **Still global:** `messaging_enabled` («إرسال الرسائل») and `auto_messages_enabled` («الرسائل التلقائية») stay as the two top switches. The env `MESSAGING_ENABLED` fuse is removed (owner answer 2, phase 2).
 - **Template variants** (Jitsi / Meet / plain) stay chosen in code from the link host; the catalogue row lists all variants and their approval.
 - **Texts** stay where they are: template bodies via Meta, push/invite texts via `/admin/translations` (linked from each row).
 - **Not in scope:** new producers (cancellation, payment receipt; §B4) and per-person preferences (Q4). The catalogue makes adding them a row + a producer.
@@ -132,20 +132,23 @@ Principles: expand → copy → verify → switch reads → contract, each a sep
 5. **Switch reads** behind `settings.comms_source = 'legacy' | 'module'` (DB setting, default `legacy`; flipping back is one click). The sender and jobs read the new path only after the flip; queued rows are untouched.
 6. **Contract** (later PR, after ≥ 2 weeks clean): legacy settings keys become read-only aliases, then are removed; `WA_*` keys in `integration_config` cleared through the UI. Env fallbacks stay for local/e2e.
 
-## 3. Phases (each a shippable PR, smallest first)
+## 3. Phases (each a shippable PR, smallest first) — revised for the owner answers (2026-10-22)
+
+N live numbers with per-number routing is core work (answer 1); the env fuse is gone (answer 2).
 
 | # | PR | Scope | Visible result |
 |---|---|---|---|
-| 0 | this doc | docs/23, 23a | decisions |
-| 1 | «ماذا يُرسل ومتى» (read-only) | shared `catalogue.ts` + `GET /admin/notifications` built from today's settings + overview table on the settings page; persist last line check (display phone) | admin sees every notification, its number and state |
-| 2 | Copy and safety fixes | §E H3–H5, M1, M2, M5, M7: Arabic labels for keys, confirm dialogs, honest gate chip | no env words, no silent dangerous saves |
-| 3 | Notification rules | `notification_rules` + copy + `NotificationPolicy` with legacy fallback; producers read the policy; catalogue tab editable; day-before hour and separate teacher lead time become timings; booking/report rows toggleable (Q3) | scattered switches replaced |
-| 4 | Numbers table | `wa_numbers` + Vault RPCs + import + parity + `comms_source` flag; `NumbersConfig` behind `WhatsappModule` | numbers as cards; credentials per number |
-| 5 | One place | `/admin/communications` tabs, templates moved, settings sections replaced by a link; mobile overview + toggles | one module, web + mobile |
-| 6 | Contract | remove legacy keys after the flag has been `module` for 2 weeks | cleanup |
-| 7 | (only if Q1 = B) | N live numbers, per-template number, per-number reply windows | — |
+| 0 | Design | docs/23, 23a (#131) | decisions |
+| 1 | «ماذا يُرسل ومتى» (read-only) — **built** | shared `notifications/catalogue.ts` (every §B2/§B3 producer; test: every `TEMPLATE_KEYS` producer and `push_kind` is in it); `GET /admin/notifications` (`settings.read`) with each row's state from today's settings, first blocker in words; table on `/admin/settings` and a list on mobile admin; last good line check kept in `wa_line_health` (migration 600) | admin sees every notification, its number and state, without a live Meta call |
+| 2 | Safer settings, no env fuse — **built** | Arabic labels in «التكاملات», raw keys only under «للمطوّر»; confirm dialogs for sending on/off, automatic messages, emptying the allow-list; honest gate chip; `MESSAGING_ENABLED` removed from API, config, CI, e2e: sending = `settings.messaging_enabled` (only a stored `true`) + allow-list, fail-closed, no migration touches it | no env words, no silent dangerous saves, one switch |
+| 3 | Numbers as records | `wa_numbers` (any number of rows; `purpose` becomes a preset/default role, no one-per-role unique); Vault per number (`wa_number:<id>:*` RPCs); «استيراد الإعداد الحالي» (dry-run, idempotent, server-side copy); `GET …/parity`; `settings.comms_source = legacy \| module` (default legacy); `NumbersConfig` behind `WhatsappModule`; `messages.number_id` | numbers as cards; sends unchanged until the flag flips |
+| 4 | Notification rules | `notification_rules` (overrides; copied from today's settings) + `NotificationPolicy` with legacy fallback; producers read it; rows editable with timings (day-before hour, teacher lead time); essential rows off only with a typed confirmation + activity-log entry (answer 3); `number_id` per row (nullable = the template's number) | scattered switches replaced |
+| 5 | Routing per number | `(template key, number)` approvals (one Meta template per WABA) and a number per catalogue row; per-(phone, number) reply windows (`v_threads` per number, `replyNumber()` replaces `replyLine()`); inbound routed by `phone_number_id` → number; sender sends from the row's number; fallback order when a number is off | any number of live numbers, each template / notification picks its number |
+| 6 | One place | `/admin/communications` tabs (overview, numbers, notifications, templates, safety) on web; mobile overview + catalogue toggles with the same confirmations; settings sections become a link | one module, web + mobile |
+| 7 | Contract | after `comms_source = module` for ≥ 2 weeks: legacy settings keys and `WA_*` line keys removed, `wa_line` kept only as the preset role | cleanup |
+| later | Personal mutes «إشعاراتي» (answer 4) | reuses the catalogue | — |
 
-Every PR: unit tests next to the code, e2e journeys against `tools/wa-stub` only (stub gains a numbers list), CI green; no test calls Meta, Kapso, Expo or any hosted service.
+Every PR: unit tests next to the code, e2e journeys against `tools/wa-stub` only (stub gains a numbers list in 3), CI green; no test calls Meta, Kapso, Expo or any hosted service; each migration expands only, never turns sending on.
 
 ## 4. Risks
 

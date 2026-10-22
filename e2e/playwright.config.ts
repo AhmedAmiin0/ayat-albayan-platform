@@ -88,7 +88,7 @@ export default defineConfig({
       cwd: '../apps/api',
       url: `http://localhost:${API_PORT}/health`,
       // Unroutable: an e2e USD quote must use the seeded fx_rates row, never the live currency API.
-      // MESSAGING_ENABLED opens the env gate only: settings.messaging_enabled stays false (seeded
+      // Sending is the DB switch only (docs/23): settings.messaging_enabled stays false (seeded
       // default) until a journey turns it on (support/wa-stub.ts), so queued rows stay queued.
       env: {
         PORT: String(API_PORT),
@@ -104,7 +104,6 @@ export default defineConfig({
         WA_CHAT_PROVIDER: '',
         KAPSO_API_BASE: '',
         WA_TEMPLATE_SYNC: 'true',
-        MESSAGING_ENABLED: 'true',
         // One-second sender tick: specs that wait for a send wait ~1 s, not up to 30 s.
         MESSAGE_SENDER_POLL_MS: '1000',
         // Specs write settings rows with SQL (support/messages.ts setSetting): read them fresh every time.

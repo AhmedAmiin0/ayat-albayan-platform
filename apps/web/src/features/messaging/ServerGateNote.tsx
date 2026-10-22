@@ -8,12 +8,12 @@ const s = t.templates.settings;
 export const queuedText = (n: number): string => (n === 0 ? s.queued.zero : counted(s.queued, n));
 
 /**
- * The gates the admin's switch can't open (docs/12 §3.1): MESSAGING_ENABLED off on the server,
- * or WhatsApp not configured there. With either closed, «الإرسال شغال» alone would mislead.
+ * The gate the admin's switch can't open (docs/12 §3.1): WhatsApp not set up yet (there is no env
+ * fuse any more, docs/23). With it closed, «الإرسال يعمل» alone would mislead.
  * `restricted`: the server's allow-list (WA_ALLOWED_RECIPIENTS, docs/12 §13.5) holds other numbers.
  */
 export function ServerGateNote({ gate }: { gate: SendGateView }) {
-  const server = gate.reason === 'env_off' ? s.gateEnvOff : gate.reason === 'not_configured' ? s.gateNotConfigured : null;
+  const server = gate.reason === 'not_configured' ? s.gateNotConfigured : null;
   return (
     <div className="grid gap-1 text-xs">
       {server && (

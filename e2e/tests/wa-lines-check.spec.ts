@@ -38,6 +38,12 @@ test.describe('settings — WhatsApp lines check', () => {
     }
     await expect(admin.getByText(s.notChecked, { exact: true })).toHaveCount(0);
 
+    // The good number is kept (docs/23 phase 1): after a reload «ماذا يُرسل ومتى» shows it with no new check.
+    await admin.reload();
+    const catalogue = admin.getByRole('region', { name: ar.notificationCatalogue.title });
+    await expect(catalogue.getByText('+15550001111').first()).toBeVisible();
+    await expect(admin.getByText(s.notChecked, { exact: true })).toBeVisible();
+
     // The chat WABA loses its app subscription: only the chat row asks the admin to act.
     await stubLineHealth(CHAT_PN, { subscribed: false });
     await check.click();

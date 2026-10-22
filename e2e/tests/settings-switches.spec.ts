@@ -6,8 +6,9 @@ import {
 } from '../support/settings';
 import { setMessaging, stubInbound, stubReset, stubSent } from '../support/wa-stub';
 
-// /admin/settings switches (R-MSG-01, cut-over docs/09): the kill switch asks first and names the
-// queue, OFF is immediate, the automatic-messages switch holds job-made rows as auto_off.
+// /admin/settings switches (R-MSG-01, cut-over docs/09, docs/23 phase 2): the kill switch is the only
+// switch for sending (no env fuse) and asks first both ways (ON names the queue); the automatic-messages
+// switch asks first too and holds job-made rows as auto_off.
 
 const s = ar.templates.settings;
 const KEYS = ['messaging_enabled', 'auto_messages_enabled', 'crm_cutover_done'];
@@ -42,7 +43,10 @@ test.describe('settings switches — kill switch and automatic messages', () => 
 
     await expect(admin.getByText(s.off, { exact: true })).toBeVisible();
     await expect(admin.getByText(s.queued.two, { exact: true })).toBeVisible();
-    await expect(admin.getByText(s.gateEnvOff)).toHaveCount(0); // the env gate is open in e2e
+    await expect(admin.getByText(s.gateNotConfigured)).toHaveCount(0); // WhatsApp is set up (the stub)
+    // «ماذا يُرسل ومتى» says the report PDF is held because sending is off (read-only, no switch).
+    const report = admin.getByRole('region', { name: ar.notificationCatalogue.title }).locator('[data-key="report_ready"]');
+    await expect(report.getByText(ar.notificationCatalogue.blockers.messaging_off)).toBeVisible();
 
     // Cancel is the way out: nothing changes.
     await admin.getByRole('button', { name: s.enableTitle, exact: true }).click();
@@ -63,8 +67,13 @@ test.describe('settings switches — kill switch and automatic messages', () => 
       .toBe(2);
     expect((await messageState(`+${digits}`)).map((m) => m.status)).toEqual(['sent', 'sent']);
 
-    // OFF takes effect at once: no dialog, the row is written before the next tick can read it.
+    // OFF asks first too (cancel changes nothing); confirmed, the row is written before the next tick reads it.
     await admin.getByRole('button', { name: s.disable }).click();
+    const off = admin.getByRole('dialog', { name: s.disableTitle });
+    await off.getByRole('button', { name: ar.common.cancel }).click();
+    expect(await settingText('messaging_enabled')).toBe('true');
+    await admin.getByRole('button', { name: s.disable }).click();
+    await admin.getByRole('dialog', { name: s.disableTitle }).getByRole('button', { name: s.disableYes }).click();
     await expect(admin.getByText(s.off, { exact: true })).toBeVisible();
     expect(await settingText('messaging_enabled')).toBe('false');
   });
@@ -79,9 +88,11 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await expect(admin.getByText(s.autoOff, { exact: true })).toBeVisible();
 
     await admin.getByRole('button', { name: s.autoEnable }).click();
+    await admin.getByRole('dialog', { name: s.autoEnable }).getByRole('button', { name: s.autoEnableYes }).click();
     await expect(admin.getByText(s.autoOn, { exact: true })).toBeVisible();
     expect(await settingText('auto_messages_enabled')).toBe('true');
     await admin.getByRole('button', { name: s.autoDisable }).click();
+    await admin.getByRole('dialog', { name: s.autoDisable }).getByRole('button', { name: s.autoDisableYes }).click();
     await expect(admin.getByText(s.autoOff, { exact: true })).toBeVisible();
     expect(await settingText('auto_messages_enabled')).toBe('false');
 

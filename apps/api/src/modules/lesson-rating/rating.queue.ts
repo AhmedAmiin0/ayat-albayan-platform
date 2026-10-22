@@ -11,7 +11,7 @@ export type QueueResult = { queued: number; skipped: 'mode_link' | 'auto_off' | 
  * The automatic lesson_rating (migration 195): only when settings.feedback_mode is 'buttons', the
  * automatic messages switch is ON (docs/09 cut-over) and Meta approved the template. Only queues
  * (created_by null, so the sender also holds it while the switch is OFF); the sender owns the send
- * gate (messaging_enabled + MESSAGING_ENABLED), which this never bypasses.
+ * gate (settings.messaging_enabled + WhatsApp configured), which this never bypasses.
  */
 @Injectable()
 export class RatingQueue {

@@ -83,12 +83,13 @@ export function whatsappEnv(env: Env): WhatsappEnv | null {
 }
 
 /**
- * The one send gate (docs/12 §3) for the sender, the schedulers and the inbox: env
- * MESSAGING_ENABLED, WhatsApp configured, and the admin's kill switch (settings.messaging_enabled).
- * Any of them off → rows stay queued. The notifications line is mandatory, chat optional.
+ * The one send gate (docs/12 §3) for the sender, the schedulers and the inbox: WhatsApp configured
+ * and the admin's kill switch (settings.messaging_enabled). There is no env fuse any more (docs/23,
+ * owner answer 2): fail-closed, only a stored `true` opens it (a missing or malformed row reads as
+ * the registry default, false). Either off → rows stay queued. Notifications line mandatory, chat optional.
  */
 export function sendingAllowed(env: Env, messagingEnabledSetting: boolean): boolean {
-  return env.MESSAGING_ENABLED && whatsappEnv(env) !== null && messagingEnabledSetting;
+  return whatsappEnv(env) !== null && messagingEnabledSetting === true;
 }
 
 /** POST /webhooks/kapso's HMAC key; never one of the Meta app secrets' routes (docs/19). */

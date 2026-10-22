@@ -1,4 +1,4 @@
-import { SETTING_DEFAULTS, type AcademySettings, type ActivityView, type ReportView } from '@ab/shared';
+import { catalogueViews, SETTING_DEFAULTS, type AcademySettings, type ActivityView, type NotificationsOverview, type ReportView } from '@ab/shared';
 import type { DashboardWork, Summary } from './dashboard-types';
 
 export const summary: Summary = {
@@ -65,6 +65,12 @@ export const settings: AcademySettings = {
   renewal_alert_remaining: 2,
   follow_up_hours: [24, 72],
   messaging_enabled: true,
+};
+
+/** GET /admin/notifications under `settings` (automatic off), one kept number. */
+export const catalogue: NotificationsOverview = {
+  entries: catalogueViews({ settings, gateReason: null, templates: new Map([['report_ready', { status: 'approved', line: 'notifications' }]]) }),
+  lines: [{ line: 'notifications', display_phone_e164: '+966551234567', verified_name: null, checked_at: '2026-10-22T08:00:00Z' }],
 };
 
 export const activityRow = (over: Partial<ActivityView> = {}): ActivityView => ({

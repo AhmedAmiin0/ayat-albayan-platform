@@ -14,9 +14,10 @@ describe('WhatsApp driver keys', () => {
     expect(integrationDef('KAPSO_WEBHOOK_SECRET')).toMatchObject({ group: 'kapso', secret: true });
   });
 
-  it('only the provider keys are enums, valued meta | kapso', () => {
+  it('the provider keys are enums valued meta | kapso; the template sync is a true | false switch', () => {
     expect(WA_PROVIDERS).toEqual(['meta', 'kapso']);
-    expect(Object.keys(INTEGRATION_ENUMS).sort()).toEqual(['WA_CHAT_PROVIDER', 'WA_PROVIDER']);
+    expect(Object.keys(INTEGRATION_ENUMS).sort()).toEqual(['WA_CHAT_PROVIDER', 'WA_PROVIDER', 'WA_TEMPLATE_SYNC']);
+    expect(integrationEnum('WA_TEMPLATE_SYNC')).toEqual(['true', 'false']);
     expect(integrationEnum('WA_PROVIDER')).toEqual(['meta', 'kapso']);
     expect(integrationEnum('WA_API_BASE')).toBeNull();
     expect(integrationEnum('KAPSO_API_KEY')).toBeNull();
