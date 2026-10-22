@@ -3,6 +3,7 @@
 
 export const GOOGLE_ERROR_KEYS = [
   'invalid_grant',
+  'invalid_client',
   'not_platform_event',
   'not_platform_file',
   'deleted_in_google',

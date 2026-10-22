@@ -87,3 +87,28 @@ describe('daily reconcile timing', () => {
     expect(msUntilReconcile(new Date('2026-10-22T03:00:00Z'))).toBe(23 * 3_600_000);
   });
 });
+
+describe('stopping a live pass', () => {
+  it('invalid_client pauses the pass and KEEPS the refresh token (a wrong client secret is not a dead grant)', async () => {
+    const s = setup(vi.fn().mockRejectedValue(new GoogleApiError(401, 'invalid_client')));
+    const configFailed = vi.fn();
+    Object.assign(s.connection, { configFailed });
+    s.data.items.claim.mockResolvedValue([item(), item({ id: 'b' })]);
+    expect((await s.p.runOnce()).stopped).toBe(true);
+    expect(configFailed).toHaveBeenCalledTimes(1);
+    expect(s.connection.authFailed).not.toHaveBeenCalled();
+    expect(s.data.items.release).toHaveBeenCalledTimes(2);
+  });
+
+  it('sync turned OFF mid-pass: the rest of the batch is released, never written', async () => {
+    const write = vi.fn().mockResolvedValue({ state: 'synced', googleId: 'e', parentId: 'c', hash: 'h' });
+    const s = setup(write);
+    s.data.settings.read.mockResolvedValueOnce({ enabled: true, mode: 'live', window_days: 60 }).mockResolvedValueOnce({ enabled: true, mode: 'live', window_days: 60 })
+      .mockResolvedValue({ enabled: false, mode: 'live', window_days: 60 });
+    s.data.items.claim.mockResolvedValue([item(), item({ id: 'b' }), item({ id: 'c' })]);
+    expect((await s.p.runOnce()).stopped).toBe(true);
+    expect(write).toHaveBeenCalledTimes(1);
+    expect(s.data.items.release).toHaveBeenCalledTimes(2);
+    expect(s.data.items.touch).toHaveBeenCalledTimes(1);
+  });
+});

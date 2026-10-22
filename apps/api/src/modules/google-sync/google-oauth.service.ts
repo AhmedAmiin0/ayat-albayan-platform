@@ -61,9 +61,13 @@ export class GoogleOAuthService {
     if (!tokens.refreshToken) return 'exchange';
     if (!REQUIRED_SCOPES.every((s) => tokens.scopes.includes(s))) return 'scopes';
     const email = await oauth.email(tokens.accessToken).catch(() => null);
-    // Another Google account would turn every recorded id into «gone»: only the academy's account (once connected).
+    // Another Google account would turn every recorded id into «gone»: only the academy's account (once
+    // connected). No email = no proof of the account: refused too. A refused grant is revoked at once.
     const before = (await this.account.get()).email;
-    if (before && email !== before) return 'account';
+    if (!email || (before && email !== before)) {
+      await oauth.revoke(tokens.refreshToken);
+      return 'account';
+    }
     await this.account.setToken(tokens.refreshToken);
     await this.account.update({ status: 'connected', email, scopes: tokens.scopes, connected_at: new Date().toISOString(), connected_by: payload.u, last_error: null });
     this.run.connection.forget();
