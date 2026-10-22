@@ -21,9 +21,11 @@ export function TeacherRow({ row, calendars, onNote }: Props) {
   const [pick, setPick] = useState(initial);
   const save = useMutation({
     mutationFn: putTeacherCalendar,
-    onSuccess: (rows) => {
+    onSuccess: async (rows) => {
       queryClient.setQueryData(googleTeachersQuery.queryKey, rows);
       onNote(t.googleSync.common.saved);
+      // The live confirmation names the mapped calendars from the status; the API re-queued items.
+      await Promise.all([queryClient.invalidateQueries({ queryKey: ['google', 'status'] }), queryClient.invalidateQueries({ queryKey: ['google', 'items'] })]);
     },
   });
   const unchanged = row.confirmed_at !== null && pick === initial;

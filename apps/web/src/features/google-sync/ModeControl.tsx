@@ -18,7 +18,10 @@ export function ModeControl({ status, save }: Props) {
   const mode = status.settings.mode;
   const pick = (next: GoogleSyncMode) => {
     if (next === mode) return;
-    if (next === 'live') setConfirming(true);
+    if (next === 'live') {
+      save.reset();
+      setConfirming(true);
+    }
     else save.mutate({ mode: 'dry_run' });
   };
   return (

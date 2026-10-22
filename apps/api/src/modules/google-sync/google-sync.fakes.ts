@@ -40,6 +40,6 @@ export function fakeData() {
     update: vi.fn(), token: vi.fn(), setToken: vi.fn(), clearToken: vi.fn(), setNonce: vi.fn(), consumeNonce: vi.fn(),
   };
   const settings = { read: vi.fn().mockResolvedValue({ enabled: true, mode: 'live', window_days: 60 }), write: vi.fn() };
-  const items = { claim: vi.fn(), finish: vi.fn(), release: vi.fn(), sibling: vi.fn(), requeue: vi.fn(), requeueReportRows: vi.fn(), reconcile: vi.fn(), retry: vi.fn(), counts: vi.fn() };
+  const items = { claim: vi.fn(), finish: vi.fn(), release: vi.fn(), sibling: vi.fn(), requeue: vi.fn(), requeueReportRows: vi.fn(), touch: vi.fn(), reconcile: vi.fn(), retry: vi.fn(), counts: vi.fn() };
   return { account, settings, items };
 }

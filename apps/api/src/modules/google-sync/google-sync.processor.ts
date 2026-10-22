@@ -40,28 +40,36 @@ export class GoogleSyncProcessor {
     const claimed = await this.data.items.claim(BATCH);
     out.claimed = claimed.length;
     for (const [i, item] of claimed.entries()) {
-      const result = await this.one(item, ctx);
-      if (result === 'auth') {
+      // An OFF or a switch back to dry_run applies at once, not after the rest of a 25-item live batch.
+      const result = (await this.sameMode(ctx.live)) ? await this.one(item, ctx) : 'switched';
+      if (typeof result === 'string') {
         out.stopped = true;
         for (const rest of claimed.slice(i)) await this.data.items.release(rest);
-        await this.connection.authFailed();
+        if (result !== 'switched') await (result === 'auth' ? this.connection.authFailed() : this.connection.configFailed());
         break;
       }
       await this.data.items.finish(item, result);
       if (item.kind === 'report_pdf' && result.state === 'synced') await this.data.items.requeueReportRows({ reportId: item.subject_id, studentId: item.student_id });
       out[result.state === 'retry' ? 'retried' : result.state] += 1;
     }
-    await this.data.account.update({ last_run_at: new Date().toISOString() });
+    const ok = ctx.live && !out.stopped && out.claimed > 0;
+    await this.data.account.update({ last_run_at: new Date().toISOString(), ...(ok ? { last_error: null } : {}) });
     if (out.claimed) this.log.log(`google sync pass: ${JSON.stringify(out)}`);
     return out;
   }
 
-  private async one(item: SyncItem, ctx: WriteCtx): Promise<ItemResult | 'auth'> {
+  private async sameMode(live: boolean): Promise<boolean> {
+    const now = await this.data.settings.read();
+    return now.enabled && (now.mode === 'live') === live;
+  }
+
+  private async one(item: SyncItem, ctx: WriteCtx): Promise<ItemResult | 'auth' | 'config'> {
     try {
+      await this.data.items.touch(item);
       return await this.writers.of(item.kind).write(item, ctx);
     } catch (e) {
       const cls = classify(e);
-      if (cls === 'auth') return 'auth';
+      if (cls === 'auth' || cls === 'config') return cls;
       const attempts = item.attempts + 1;
       const error = errorText(e);
       this.log.warn(`google sync ${item.kind} ${item.id} attempt ${attempts}: ${error}`);

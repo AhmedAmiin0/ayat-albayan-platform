@@ -11,13 +11,16 @@ describe('retry policy', () => {
     expect(MAX_ATTEMPTS).toBe(5);
   });
 
-  it('retries 429 / 5xx / rate limits / network errors; invalid_grant is auth; other 4xx are fatal', () => {
+  it('retries 429 / 5xx / rate limits / network errors; invalid_grant is auth; other 401s are config; other 4xx are fatal', () => {
     expect(classify(new GoogleApiError(429, 'rateLimitExceeded'))).toBe('retry');
     expect(classify(new GoogleApiError(503, 'backendError'))).toBe('retry');
     expect(classify(new GoogleApiError(403, 'userRateLimitExceeded'))).toBe('retry');
     expect(classify(new Error('fetch failed'))).toBe('retry');
     expect(classify(new GoogleApiError(400, 'invalid_grant'))).toBe('auth');
-    expect(classify(new GoogleApiError(401, 'authError'))).toBe('auth');
+    expect(classify(new GoogleApiError(401, 'authError'))).toBe('config');
+    // A wrong client secret must never wipe a good refresh token.
+    expect(classify(new GoogleApiError(401, 'invalid_client'))).toBe('config');
+    expect(classify(new GoogleApiError(400, 'unauthorized_client'))).toBe('config');
     expect(classify(new GoogleApiError(403, 'forbidden'))).toBe('fatal');
     expect(classify(new GoogleApiError(400, 'badRequest'))).toBe('fatal');
   });

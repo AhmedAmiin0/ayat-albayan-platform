@@ -65,6 +65,15 @@ describe('GoogleOAuthService', () => {
     s.data.account.get.mockResolvedValue({ email: 'other@example.test' });
     expect(await s.svc.callback({ code: 'c', state: stateOf(await s.svc.connectUrl('admin-1')) })).toBe('account');
     expect(s.data.account.setToken).not.toHaveBeenCalled();
+    expect(s.oauth.revoke).toHaveBeenCalledWith('fake-refresh');
+  });
+
+  it('refuses a grant whose account email cannot be read (the switch check would be blind after it)', async () => {
+    const s = setup();
+    vi.mocked(s.oauth.email).mockResolvedValue(null);
+    expect(await s.svc.callback({ code: 'c', state: stateOf(await s.svc.connectUrl('admin-1')) })).toBe('account');
+    expect(s.data.account.setToken).not.toHaveBeenCalled();
+    expect(s.oauth.revoke).toHaveBeenCalledWith('fake-refresh');
   });
 
   it('disconnect revokes, clears the Vault token and marks disconnected', async () => {

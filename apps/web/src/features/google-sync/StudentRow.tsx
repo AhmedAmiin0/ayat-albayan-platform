@@ -24,7 +24,7 @@ export function StudentRow({ row, onNote }: { row: GoogleStudentMapRow; onNote: 
   const done = async () => {
     setManual(false);
     onNote(t.googleSync.common.saved);
-    await queryClient.invalidateQueries({ queryKey: ['google', 'students'] });
+    await Promise.all(['students', 'status', 'items'].map((k) => queryClient.invalidateQueries({ queryKey: ['google', k] })));
   };
   const put = useMutation({ mutationFn: putStudentFolder, onSuccess: done });
   const unmap = useMutation({ mutationFn: deleteStudentFolder, onSuccess: done });

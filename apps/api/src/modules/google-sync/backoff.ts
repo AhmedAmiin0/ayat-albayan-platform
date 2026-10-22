@@ -1,6 +1,6 @@
 import { GoogleApiError } from './google-client.port';
 
-/** Five attempts in all (docs/24 §3), then `failed` until an admin retries or the daily reconcile. */
+/** Five attempts in all (docs/24 §3), then `failed` until an admin retries (or, for lessons, the daily reconcile). */
 export const MAX_ATTEMPTS = 5;
 const BASE_MS = 30_000;
 const CAP_MS = 30 * 60_000;
@@ -13,13 +13,16 @@ export function retryDelayMs(attempt: number, random: () => number = Math.random
 
 /**
  * What an error means for the item: `retry` (429, 5xx, network), `auth` (the refresh token is
- * dead: invalid_grant / 401 → disconnect, alert, stop the pass), `fatal` (anything else: failed).
+ * dead: invalid_grant → disconnect, alert, stop the pass), `config` (any other 401, e.g. the token
+ * endpoint's invalid_client after a wrong client secret: stop the pass, KEEP the refresh token),
+ * `fatal` (anything else: failed).
  */
-export type ErrorClass = 'retry' | 'auth' | 'fatal';
+export type ErrorClass = 'retry' | 'auth' | 'config' | 'fatal';
 
 export function classify(e: unknown): ErrorClass {
   if (!(e instanceof GoogleApiError)) return 'retry';
-  if (e.reason === 'invalid_grant' || e.status === 401) return 'auth';
+  if (e.reason === 'invalid_grant') return 'auth';
+  if (e.status === 401 || e.reason === 'invalid_client' || e.reason === 'unauthorized_client') return 'config';
   if (e.status === 429 || e.status >= 500 || (e.status === 403 && /rateLimit|userRateLimit/i.test(e.reason))) return 'retry';
   return 'fatal';
 }

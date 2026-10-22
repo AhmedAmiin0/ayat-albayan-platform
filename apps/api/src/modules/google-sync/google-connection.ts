@@ -34,6 +34,13 @@ export class GoogleConnection {
     this.cached = null;
   }
 
+  /** The OAuth client itself is refused (invalid_client): the token stays, the admin fixes the client id/secret. */
+  async configFailed(): Promise<void> {
+    this.forget();
+    this.log.warn('google oauth client refused (invalid_client): sync paused, refresh token kept');
+    await this.account.update({ last_error: 'invalid_client' });
+  }
+
   async authFailed(): Promise<void> {
     this.forget();
     this.log.warn('google refresh token refused (invalid_grant): disconnected');

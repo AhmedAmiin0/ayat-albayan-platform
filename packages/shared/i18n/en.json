@@ -4922,7 +4922,7 @@
       "hint": "The last 100 items.",
       "empty": "No sync items yet.",
       "reconcile": "Sync now",
-      "reconciled": "{n} items were queued for sync",
+      "reconciled": "Items queued for sync: {n}",
       "retry": "Retry",
       "retried": "The item is back in the queue",
       "attempts": "Attempts: {n}",
@@ -4980,6 +4980,7 @@
     },
     "errors": {
       "invalid_grant": "The account link expired, reconnect it",
+      "invalid_client": "Google refused the OAuth client (id or secret); fix it in Integrations",
       "not_platform_event": "The event was not made by the platform, so it was left as is",
       "not_platform_file": "The file was not made by the platform, so it was left as is",
       "deleted_in_google": "Deleted in Google",

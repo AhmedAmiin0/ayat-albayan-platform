@@ -6,6 +6,7 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
 import { GoogleBlock } from './GoogleBlock';
+import { LiveConfirmDialog } from './LiveConfirmDialog';
 import { ModeControl } from './ModeControl';
 import { useSaveSettings } from './use-save-settings';
 import { WindowDaysField } from './WindowDaysField';
@@ -18,12 +19,17 @@ interface Props {
   onNote: (message: string) => void;
 }
 
-/** «التشغيل»: sync on/off (ON asks first, OFF is immediate), the mode, the calendar window. */
+/** «التشغيل»: sync on/off (ON asks first — naming its targets when the mode is live —, OFF is immediate), the mode, the window. */
 export function SyncSwitches({ status, onNote }: Props) {
   const save = useSaveSettings(onNote);
   const [confirming, setConfirming] = useState(false);
   const on = status.settings.enabled;
   const enable = () => save.mutate({ enabled: true }, { onSuccess: () => setConfirming(false) });
+  const ask = () => {
+    save.reset();
+    setConfirming(true);
+  };
+  const live = status.settings.mode === 'live';
   return (
     <GoogleBlock title={s.title}>
       <div className="grid gap-1.5">
@@ -35,7 +41,7 @@ export function SyncSwitches({ status, onNote }: Props) {
               {t.googleSync.web.disable}
             </Button>
           ) : (
-            <Button size="sm" variant="secondary" onClick={() => setConfirming(true)}>
+            <Button size="sm" variant="secondary" onClick={ask}>
               {c.enableOk}
             </Button>
           )}
@@ -45,7 +51,10 @@ export function SyncSwitches({ status, onNote }: Props) {
       <ModeControl status={status} save={save} />
       <WindowDaysField value={status.settings.window_days} save={save} />
       {save.isError && !confirming && <FormAlert>{t.googleSync.common.saveError}</FormAlert>}
-      {confirming && (
+      {confirming && live && (
+        <LiveConfirmDialog status={status} pending={save.isPending} failed={save.isError} onCancel={() => setConfirming(false)} onConfirm={enable} />
+      )}
+      {confirming && !live && (
         <Dialog
           title={c.enableTitle}
           glyph={{ tone: 'act', shape: 'hollow' }}

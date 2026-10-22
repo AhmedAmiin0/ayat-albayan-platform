@@ -65,7 +65,7 @@ export class GoogleItemsQueries {
 
   /**
    * Records this claim's outcome (the Google id first, always). When the subject changed while the
-   * worker held it (dirty), the row goes straight back to the queue with the id kept.
+   * worker held it (dirty), the row goes back to the queue with the id kept (dropped if gone: §2.4).
    */
   async finish(item: Pick<SyncItem, 'id' | 'claim_token'>, result: ItemResult): Promise<boolean> {
     if (!item.claim_token) return false;
@@ -73,7 +73,7 @@ export class GoogleItemsQueries {
     if (error) throw fail('finish', error);
     if (data[0]?.dirty) {
       const again = await this.db.from('google_sync_items')
-        .update({ state: 'pending', dirty: false, content_hash: null, attempts: 0, next_attempt_at: new Date().toISOString(), skip_reason: null, planned: null })
+        .update({ state: 'pending', dirty: false, content_hash: null, attempts: 0, next_attempt_at: new Date().toISOString(), skip_reason: null, planned: null, ...(result.state === 'gone' ? { google_id: null } : {}) })
         .eq('id', item.id).is('claim_token', null);
       if (again.error) throw fail('requeue dirty', again.error);
     }
@@ -85,14 +85,19 @@ export class GoogleItemsQueries {
     const subjects = [input.reportId, ...(input.studentId ? [input.studentId] : [])];
     const { error } = await this.db.from('google_sync_items')
       .update({ state: 'pending', attempts: 0, next_attempt_at: new Date().toISOString(), skip_reason: null, last_error: null })
-      .in('kind', ['attendance_row', 'summary_row']).in('subject_id', subjects).in('state', ['failed', 'skipped']).neq('skip_reason', 'already_in_sheet');
+      .in('kind', ['attendance_row', 'summary_row']).in('subject_id', subjects).in('state', ['failed', 'skipped'])
+      // A failed row has no skip_reason: `neq` alone would drop it (NULL <> x is not true).
+      .or('skip_reason.is.null,skip_reason.neq.already_in_sheet');
     if (error) throw fail('requeue rows', error);
   }
 
+  /** Keeps this claim fresh while a slow pass works through its batch: no second worker takes it over. */
+  async touch(item: Pick<SyncItem, 'id' | 'claim_token'>): Promise<void> {
+    if (item.claim_token) await this.db.from('google_sync_items').update({ claimed_at: new Date().toISOString() }).eq('id', item.id).eq('claim_token', item.claim_token);
+  }
   /** Release a claim untouched (the pass stopped: the account is disconnected). */
   async release(item: Pick<SyncItem, 'id' | 'claim_token'>): Promise<void> {
-    if (!item.claim_token) return;
-    await this.db.from('google_sync_items').update({ claimed_at: null, claim_token: null }).eq('id', item.id).eq('claim_token', item.claim_token);
+    if (item.claim_token) await this.db.from('google_sync_items').update({ claimed_at: null, claim_token: null }).eq('id', item.id).eq('claim_token', item.claim_token);
   }
 
   /** The google ids of another item (a report's PDF for its attendance row). */

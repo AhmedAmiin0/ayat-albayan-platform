@@ -65,6 +65,13 @@ export class SheetRowsWriter implements ItemWriter {
     return synced({ googleId: updatedRange || null, parentId: sheetId, hash });
   }
 
+  /** The PDF makes the sheet: wait while it is queued; else fail (its sync re-queues this row), never poll forever. */
+  private async waitForSheet(item: SyncItem, reportId: string): Promise<ItemResult> {
+    const pdf = await this.data.items.sibling({ kind: 'report_pdf', subjectId: reportId });
+    if (pdf?.state === 'pending') return later(item, 'sheet_not_ready');
+    return { state: 'failed', error: 'sheet_not_ready', attempts: item.attempts };
+  }
+
   private async summary(item: SyncItem, ctx: WriteCtx): Promise<ItemResult> {
     const src = item.report_id ? await this.source.report(item.report_id) : null;
     if (!src || !src.exportable) return { state: 'skipped', reason: 'not_platform_origin' };
@@ -73,7 +80,7 @@ export class SheetRowsWriter implements ItemWriter {
     const need = await this.drive.need(src.studentId);
     if (need.kind === 'unmapped') return { state: 'skipped', reason: 'student_unmapped' };
     if (!ctx.live) return planned({ method: 'PUT', target: `sheet:${acct.summary_sheet_id}`, summary: src.studentName });
-    if (need.kind !== 'ready') return later(item, 'sheet_not_ready');
+    if (need.kind !== 'ready') return this.waitForSheet(item, src.reportId);
     const { google } = ctx;
     const summaryId = acct.summary_sheet_id;
     const att = await google.readValues({ spreadsheetId: need.drive.sheetId, range: 'A2:M', render: 'UNFORMATTED_VALUE' });

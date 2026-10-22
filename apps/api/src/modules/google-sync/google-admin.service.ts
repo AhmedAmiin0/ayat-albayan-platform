@@ -37,9 +37,14 @@ export class GoogleAdminService {
       const found = await discover(google);
       await this.data.account.update({ discovery: found as unknown as Json });
     } catch (e) {
-      if (classify(e) === 'auth') {
+      const cls = classify(e);
+      if (cls === 'auth') {
         await this.run.connection.authFailed();
         throw new ConflictException({ message: 'not_connected' });
+      }
+      if (cls === 'config') {
+        await this.run.connection.configFailed();
+        throw new ConflictException({ message: 'invalid_client' });
       }
       throw e;
     }
