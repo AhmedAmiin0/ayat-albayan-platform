@@ -68,15 +68,21 @@ The flow is still live (attendance and summary sheets were written on 2026-10-21
 
 1. **Never touch what the script made.** The platform only updates or deletes events / files / rows that
    it created itself and recorded in its own tables (`google_*` ids). It never lists-and-edits.
-2. **Never twin a sheet booking.** The calendar sync writes ONLY lessons that originated in the platform:
-   lessons of rules/bookings created in the platform (booking wizard, sales registration, course change…),
-   NOT those created by the 2026-10-02 migration import (they are already mirrored by the script).
-   Find the import marker in the schema (tools/migrate, lessons/recurrence-rule columns); if there is none,
-   add a nullable `origin` column with a backfill that marks imported rows, in a NEW migration.
-   This also keeps the manual `dedupeCalendars` from deleting a platform event.
+2. **Never twin a sheet booking.** The calendar sync writes ONLY lessons that originated in the platform.
+   The 2026-10-02 import recorded every row it created in `public.import_items` (`entity`, `natural_key`,
+   `target_table`, `target_id`; tools/migrate/src/db/sql.ts), including `schedule_rules`, `lessons` and
+   `lesson_reports`. A lesson is **platform-origin** iff its id is NOT an imported `lessons` target AND its
+   `rule_id` (when set) is NOT an imported `schedule_rules` target — later occurrences generated from an
+   imported rule belong to a sheet booking the script already mirrors, so they are skipped too. Implement it
+   as one SQL predicate (a view or function in a NEW migration, e.g. `v_platform_origin_lessons`) with unit
+   + SQL tests. Known gap (tell the admin in the UI): if a sheet student's schedule is changed in the platform
+   (new rule), the platform writes the new times while the sheet row keeps the old ones until someone edits it.
+   This also keeps the manual `dedupeCalendars` from deleting a platform event in normal use.
 3. **Tag every platform event** with `extendedProperties.private = { ab_source: 'platform', ab_lesson_id }`
    and end its description with `مربوط تلقائيًا بمنصة آيات البيان — عدّل في المنصة مش هنا.` instead of
-   the sheet line. Never put a `meet.jit.si` link in an event (so `purgeJitsi` never rewrites one); use
+   the sheet line. The title gets a visible marker: `حلقة — <name> · المنصة` (+ ` (يحتاج تأكيد)` when that
+   applies), so the team sees which system made it and the manual `dedupeCalendars` (key `title|start`)
+   never groups a platform event with a script event when a family was entered in both systems. Never put a `meet.jit.si` link in an event (so `purgeJitsi` never rewrites one); use
    the lesson's own join URL (platform classroom link / teacher's fixed Meet link) as `لينك الحلقة`.
 4. **Deleted by someone in Google ⇒ do not fight.** If a platform event / file is gone (404/410 or
    `status: cancelled`) when the platform tries to update it, mark the mapping `gone`, log it, and do not
@@ -109,7 +115,10 @@ RLS on every table, service-role writes, admin read):
 **API** — new module `apps/api/src/modules/google-sync/` (each file ≤ 150 lines, ≤ 3 params):
 - OAuth: `GET /admin/google/connect` (redirect, scopes `calendar.events`, `drive`, `spreadsheets`,
   `openid email`, `access_type=offline`, `prompt=consent`, signed `state`), `GET /integrations/google/callback`
-  (code → tokens → Vault), `POST /admin/google/disconnect`, `GET /admin/google/status`.
+  (code → tokens → Vault), `POST /admin/google/disconnect`, `GET /admin/google/status`. The redirect URI
+  is exactly `https://api.ayatalbayan.com/integrations/google/callback` (shown read-only in the UI so the owner
+  can register it in the Google Cloud OAuth client); dev/e2e use the API base of that environment.
+- `googleapis` (or `google-auth-library` + fetch) is a new API-only dependency (pnpm-lock); no mobile/native change.
 - Discovery: list calendars named `آيات البيان — *` and the root folder «تقارير آيات البيان»; read the
   summary sheet to suggest student ↔ folder/sheet links; suggest teacher ↔ calendar by name. Nothing is
   used until an admin confirms the mapping (`PUT /admin/google/teachers/:id`, `PUT /admin/google/students/:id`).
@@ -125,6 +134,7 @@ RLS on every table, service-role writes, admin read):
   Brand styling (§1), and a summary row.
 - A `GoogleClient` port with a real `googleapis`-based adapter and a fake used by ALL tests; plus a small
   `tools/google-stub` HTTP stub (like tools/wa-stub) for e2e. No test or CI job ever calls Google.
+- Reports: imported reports (`import_items.target_table = 'lesson_reports'`) are never exported.
 - Rate limits/backoff (429/5xx retry with jitter, max attempts 5), token refresh, `invalid_grant` ⇒
   status `disconnected` + admin alert in the bell (no WhatsApp/push), never a crash loop.
 
