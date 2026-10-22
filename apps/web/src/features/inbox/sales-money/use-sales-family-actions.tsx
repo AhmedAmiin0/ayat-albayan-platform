@@ -50,16 +50,20 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
   if (mode !== 'sales') return { primary: null, items: [], dialogs: null };
   const students = sales ? (family.data?.students ?? []) : [];
   const checkItem = check ? [<RegistrationCheckTrigger key="check" onClick={() => setChecking(true)} />] : [];
-  const always = (
+  // One shape for the lead and the family alike: booking a lead makes it a family on the next poll,
+  // and a moved slot would re-mount the open «تسجيل طالب جديد» (its «تم الحجز» lost, journey 7).
+  const dialogs = (
     <>
       {registering && <SalesRegisterDialog thread={registering} onClose={() => setRegistering(null)} />}
       {checking && <RegistrationCheckDialog phone={thread.phone_e164} onClose={() => setChecking(false)} />}
+      {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
+      {opened && <SalesMoneyFlow {...opened} students={students} onClose={() => setOpened(null)} />}
     </>
   );
   if (students.length === 0) {
     const lead = canRegisterFrom(thread) ? thread : null;
     const primary = lead && <SalesRegisterButton compact={compact} onOpen={() => setRegistering(lead)} />;
-    return { primary, items: checkItem, dialogs: always };
+    return { primary, items: checkItem, dialogs };
   }
 
   const named = (label: string, name: string) => (students.length > 1 ? `${label} — ${name}` : label);
@@ -86,13 +90,6 @@ export function useSalesFamilyActions({ thread, compact = false }: { thread: Thr
       <Icon name="plus" />
       {t.salesMoney.newSubscription}
     </Button>
-  );
-  const dialogs = (
-    <>
-      {always}
-      {course && <SalesCourseDialog studentId={course} onClose={() => setCourse(null)} />}
-      {opened && <SalesMoneyFlow {...opened} students={students} onClose={() => setOpened(null)} />}
-    </>
   );
   return { primary, items, dialogs };
 }
