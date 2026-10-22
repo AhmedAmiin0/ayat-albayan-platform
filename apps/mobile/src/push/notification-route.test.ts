@@ -13,6 +13,7 @@ test.each([
   [{ kind: 'payment_due', studentId: 's-1', subscriptionId: 'sub1' }, '/students/s-1'],
   [{ kind: 'new_student', lessonId: 'l1', studentId: 's-1' }, '/students/s-1'],
   [{ kind: 'meeting_invite', meetingId: 'm1' }, '/more/live/meetings'],
+  [{ kind: 'google_sync_alert' }, '/more/ops/settings'],
 ])('%j opens %s', (data, href) => {
   expect(routeFor(data)).toBe(href);
 });
@@ -57,5 +58,7 @@ test('a push into a tab the role cannot see opens «المزيد» instead of no
   expect(routeFor({ kind: 'report_submitted', studentId: 's-1' }, only('students.read'))).toBe('/students/s-1');
   expect(routeFor({ kind: 'meeting_invite' }, only('students.read'))).toBe('/more');
   expect(routeFor({ kind: 'meeting_invite' }, only('meetings.read'))).toBe('/more/live/meetings');
+  expect(routeFor({ kind: 'google_sync_alert' }, only('students.read'))).toBe('/more');
+  expect(routeFor({ kind: 'google_sync_alert' }, only('settings.read'))).toBe('/more/ops/settings');
   expect(routeFor({ kind: 'nope' }, () => false)).toBeNull();
 });

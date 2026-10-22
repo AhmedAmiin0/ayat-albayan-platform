@@ -46,6 +46,13 @@ export class StorageService {
     if (error) throw new Error(`storage upload failed: ${error.message}`);
   }
 
+  /** Server-side read of a whole object (the Google sync uploads the report PDF), null when missing. */
+  async download(ref: ObjectRef): Promise<Uint8Array | null> {
+    const { data, error } = await this.db.storage.from(ref.bucket).download(ref.path);
+    if (error) return null;
+    return new Uint8Array(await data.arrayBuffer());
+  }
+
   /** Does the object exist? (A client-registered path must have been uploaded.) */
   async exists(ref: ObjectRef): Promise<boolean> {
     const { data, error } = await this.db.storage.from(ref.bucket).exists(ref.path);

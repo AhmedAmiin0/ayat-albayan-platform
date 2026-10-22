@@ -36,6 +36,7 @@ export * from './sales/course-change.js';
 export * from './sales/course-picks.js';
 export * from './i18n/index.js';
 export * from './integrations/index.js';
+export * from './google/index.js';
 export * from './users/index.js';
 export * from './account/index.js';
 export * from './notifications/index.js';

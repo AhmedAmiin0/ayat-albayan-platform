@@ -11,6 +11,7 @@ test.each([
   [{ kind: 'payment_due', studentId: 's-1' }, '/teacher/today'],
   [{ kind: 'new_student', lessonId: 'l1', studentId: 's-1' }, '/teacher/schedule'],
   [{ kind: 'meeting_invite', meetingId: 'm1' }, '/teacher/more/meetings'],
+  [{ kind: 'google_sync_alert' }, '/teacher/today'],
 ])('a teacher tapping %j opens %s', (data, href) => {
   expect(teacherRouteFor(data)).toBe(href);
 });

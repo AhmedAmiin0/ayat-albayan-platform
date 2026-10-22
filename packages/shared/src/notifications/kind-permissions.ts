@@ -5,6 +5,8 @@ import type { Permission } from '../permissions/catalog.js';
 const BELL: readonly Permission[] = ['notifications.push'];
 /** An inbox event names a family and quotes their message: only for who may read the inbox. */
 const INBOX: readonly Permission[] = ['notifications.push', 'inbox.read'];
+/** The Google sync's own alerts (docs/24): for who may read the settings, i.e. admins. */
+const SETTINGS: readonly Permission[] = ['notifications.push', 'settings.read'];
 
 /**
  * The permissions a profile must hold, at send time, to get a notification of each kind (bell row,
@@ -19,6 +21,7 @@ export const PUSH_KIND_PERMISSIONS: Readonly<Record<PushKind, readonly Permissio
   payment_due: BELL,
   new_student: BELL,
   meeting_invite: BELL,
+  google_sync_alert: SETTINGS,
 };
 
 /** May a profile holding `held` be told about `kind`? */

@@ -841,6 +841,198 @@ export type Database = {
         };
         Relationships: [];
       };
+      google_account: {
+        Row: {
+          connected_at: string | null;
+          connected_by: string | null;
+          discovery: Json | null;
+          drive_confirmed_at: string | null;
+          drive_confirmed_by: string | null;
+          email: string | null;
+          id: boolean;
+          last_error: string | null;
+          last_run_at: string | null;
+          oauth_nonce_expires_at: string | null;
+          oauth_nonce_hash: string | null;
+          root_folder_id: string | null;
+          root_folder_name: string | null;
+          scopes: string[];
+          status: string;
+          summary_sheet_id: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          connected_at?: string | null;
+          connected_by?: string | null;
+          discovery?: Json | null;
+          drive_confirmed_at?: string | null;
+          drive_confirmed_by?: string | null;
+          email?: string | null;
+          id?: boolean;
+          last_error?: string | null;
+          last_run_at?: string | null;
+          oauth_nonce_expires_at?: string | null;
+          oauth_nonce_hash?: string | null;
+          root_folder_id?: string | null;
+          root_folder_name?: string | null;
+          scopes?: string[];
+          status?: string;
+          summary_sheet_id?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          connected_at?: string | null;
+          connected_by?: string | null;
+          discovery?: Json | null;
+          drive_confirmed_at?: string | null;
+          drive_confirmed_by?: string | null;
+          email?: string | null;
+          id?: boolean;
+          last_error?: string | null;
+          last_run_at?: string | null;
+          oauth_nonce_expires_at?: string | null;
+          oauth_nonce_hash?: string | null;
+          root_folder_id?: string | null;
+          root_folder_name?: string | null;
+          scopes?: string[];
+          status?: string;
+          summary_sheet_id?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      google_student_files: {
+        Row: {
+          attendance_sheet_id: string | null;
+          confirmed_at: string;
+          confirmed_by: string | null;
+          created_by_platform: boolean;
+          folder_id: string | null;
+          student_id: string;
+          summary_row_hint: number | null;
+          updated_at: string;
+        };
+        Insert: {
+          attendance_sheet_id?: string | null;
+          confirmed_at?: string;
+          confirmed_by?: string | null;
+          created_by_platform?: boolean;
+          folder_id?: string | null;
+          student_id: string;
+          summary_row_hint?: number | null;
+          updated_at?: string;
+        };
+        Update: {
+          attendance_sheet_id?: string | null;
+          confirmed_at?: string;
+          confirmed_by?: string | null;
+          created_by_platform?: boolean;
+          folder_id?: string | null;
+          student_id?: string;
+          summary_row_hint?: number | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      google_sync_items: {
+        Row: {
+          attempts: number;
+          claim_token: string | null;
+          claimed_at: string | null;
+          content_hash: string | null;
+          created_at: string;
+          dirty: boolean;
+          google_id: string | null;
+          google_parent_id: string | null;
+          id: string;
+          kind: Database['public']['Enums']['google_sync_kind'];
+          last_error: string | null;
+          lesson_id: string | null;
+          next_attempt_at: string;
+          planned: Json | null;
+          report_id: string | null;
+          skip_reason: string | null;
+          state: Database['public']['Enums']['google_sync_state'];
+          student_id: string | null;
+          subject_id: string;
+          synced_at: string | null;
+          updated_at: string;
+        };
+        Insert: {
+          attempts?: number;
+          claim_token?: string | null;
+          claimed_at?: string | null;
+          content_hash?: string | null;
+          created_at?: string;
+          dirty?: boolean;
+          google_id?: string | null;
+          google_parent_id?: string | null;
+          id?: string;
+          kind: Database['public']['Enums']['google_sync_kind'];
+          last_error?: string | null;
+          lesson_id?: string | null;
+          next_attempt_at?: string;
+          planned?: Json | null;
+          report_id?: string | null;
+          skip_reason?: string | null;
+          state?: Database['public']['Enums']['google_sync_state'];
+          student_id?: string | null;
+          subject_id: string;
+          synced_at?: string | null;
+          updated_at?: string;
+        };
+        Update: {
+          attempts?: number;
+          claim_token?: string | null;
+          claimed_at?: string | null;
+          content_hash?: string | null;
+          created_at?: string;
+          dirty?: boolean;
+          google_id?: string | null;
+          google_parent_id?: string | null;
+          id?: string;
+          kind?: Database['public']['Enums']['google_sync_kind'];
+          last_error?: string | null;
+          lesson_id?: string | null;
+          next_attempt_at?: string;
+          planned?: Json | null;
+          report_id?: string | null;
+          skip_reason?: string | null;
+          state?: Database['public']['Enums']['google_sync_state'];
+          student_id?: string | null;
+          subject_id?: string;
+          synced_at?: string | null;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+      google_teacher_calendars: {
+        Row: {
+          calendar_id: string;
+          calendar_name: string | null;
+          confirmed_at: string;
+          confirmed_by: string | null;
+          teacher_id: string;
+          updated_at: string;
+        };
+        Insert: {
+          calendar_id: string;
+          calendar_name?: string | null;
+          confirmed_at?: string;
+          confirmed_by?: string | null;
+          teacher_id: string;
+          updated_at?: string;
+        };
+        Update: {
+          calendar_id?: string;
+          calendar_name?: string | null;
+          confirmed_at?: string;
+          confirmed_by?: string | null;
+          teacher_id?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
       guardians: {
         Row: {
           country: string | null;
@@ -3650,6 +3842,17 @@ export type Database = {
           },
         ];
       };
+      v_platform_origin_lessons: {
+        Row: {
+          ends_at: string | null;
+          id: string | null;
+          rule_id: string | null;
+          starts_at: string | null;
+          status: Database['public']['Enums']['lesson_status'] | null;
+          teacher_id: string | null;
+        };
+        Relationships: [];
+      };
       v_student_list: {
         Row: {
           code: string | null;
@@ -3961,6 +4164,30 @@ export type Database = {
       integration_secret_clear: { Args: { p_key: string }; Returns: boolean };
       integration_secret_key_ok: { Args: { p_key: string }; Returns: boolean };
       integration_secret_set: { Args: { p_key: string; p_value: string }; Returns: undefined };
+      google_sync_claim: {
+        Args: { p_limit: number; p_stale_before: string };
+        Returns: Database['public']['Tables']['google_sync_items']['Row'][];
+      };
+      google_sync_reconcile: {
+        Args: never;
+        Returns: number;
+      };
+      google_sync_requeue: {
+        Args: { p_reason: string };
+        Returns: number;
+      };
+      google_token_clear: {
+        Args: never;
+        Returns: boolean;
+      };
+      google_token_read: {
+        Args: never;
+        Returns: string;
+      };
+      google_token_set: {
+        Args: { p_value: string };
+        Returns: undefined;
+      };
       integration_secrets_read: {
         Args: Record<PropertyKey, never>;
         Returns: {
@@ -4023,7 +4250,10 @@ export type Database = {
       report_of_path: { Args: { p_name: string }; Returns: string };
       resync_teacher_earnings: { Args: { p_teacher?: string }; Returns: number };
       create_recurring_expense_drafts: { Args: { p_month: string }; Returns: number };
-      set_assistant_terms: { Args: { p: Json; p_actor: string; p_assistant: string }; Returns: undefined };
+      set_assistant_terms: {
+        Args: { p: Json; p_actor: string; p_assistant: string };
+        Returns: undefined;
+      };
       revoke_user_sessions: { Args: { p_user: string }; Returns: number };
       set_role_permissions: { Args: { perms: string[]; role_id: string }; Returns: undefined };
       set_student_brought_by: {
@@ -4031,7 +4261,12 @@ export type Database = {
         Returns: Json;
       };
       set_students_brought_by: {
-        Args: { p_actor: string; p_assistant: string | null; p_brought_at?: string; p_students: string[] };
+        Args: {
+          p_actor: string;
+          p_assistant: string | null;
+          p_brought_at?: string;
+          p_students: string[];
+        };
         Returns: Json;
       };
       teacher_rate_for: {
@@ -4103,6 +4338,9 @@ export type Database = {
       feedback_recommend: 'yes' | 'maybe' | 'no';
       feedback_source: 'web_link' | 'whatsapp_button';
       gender: 'male' | 'female';
+      google_sync_kind:
+        'teacher_event' | 'main_event' | 'report_pdf' | 'attendance_row' | 'summary_row';
+      google_sync_state: 'pending' | 'synced' | 'gone' | 'failed' | 'skipped';
       grade: 'excellent' | 'very_good' | 'good' | 'acceptable' | 'needs_review';
       import_run_status: 'running' | 'succeeded' | 'failed';
       job_applicant_status: 'new' | 'reviewing' | 'interview' | 'accepted' | 'rejected';
@@ -4142,10 +4380,19 @@ export type Database = {
         | 'reminder_failed'
         | 'payment_due'
         | 'new_student'
-        | 'meeting_invite';
+        | 'meeting_invite'
+        | 'google_sync_alert';
       report_status: 'draft' | 'submitted';
       schedule_rule_status: 'active' | 'paused' | 'ended';
-      student_status: 'new' | 'trial' | 'pending_subscription' | 'active' | 'pending_renewal' | 'expired' | 'paused' | 'churned';
+      student_status:
+        | 'new'
+        | 'trial'
+        | 'pending_subscription'
+        | 'active'
+        | 'pending_renewal'
+        | 'expired'
+        | 'paused'
+        | 'churned';
       subscription_status: 'trial' | 'active' | 'paused' | 'expired' | 'unpaid';
       teacher_earning_status: 'earned' | 'partially_paid' | 'paid';
       teacher_status: 'active' | 'inactive';
@@ -4279,6 +4526,14 @@ export const Constants = {
       feedback_recommend: ['yes', 'maybe', 'no'],
       feedback_source: ['web_link', 'whatsapp_button'],
       gender: ['male', 'female'],
+      google_sync_kind: [
+        'teacher_event',
+        'main_event',
+        'report_pdf',
+        'attendance_row',
+        'summary_row',
+      ],
+      google_sync_state: ['pending', 'synced', 'gone', 'failed', 'skipped'],
       grade: ['excellent', 'very_good', 'good', 'acceptable', 'needs_review'],
       import_run_status: ['running', 'succeeded', 'failed'],
       job_applicant_status: ['new', 'reviewing', 'interview', 'accepted', 'rejected'],
@@ -4321,10 +4576,20 @@ export const Constants = {
         'payment_due',
         'new_student',
         'meeting_invite',
+        'google_sync_alert',
       ],
       report_status: ['draft', 'submitted'],
       schedule_rule_status: ['active', 'paused', 'ended'],
-      student_status: ['new', 'trial', 'pending_subscription', 'active', 'pending_renewal', 'expired', 'paused', 'churned'],
+      student_status: [
+        'new',
+        'trial',
+        'pending_subscription',
+        'active',
+        'pending_renewal',
+        'expired',
+        'paused',
+        'churned',
+      ],
       subscription_status: ['trial', 'active', 'paused', 'expired', 'unpaid'],
       teacher_earning_status: ['earned', 'partially_paid', 'paid'],
       teacher_status: ['active', 'inactive'],

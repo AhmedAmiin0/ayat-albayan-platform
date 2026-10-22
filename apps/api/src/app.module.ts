@@ -32,6 +32,7 @@ import { PayoutsModule } from './modules/payouts/payouts.module';
 import { TeacherEarningsModule } from './modules/teacher-earnings/earnings.module';
 import { PricingModule } from './modules/pricing/pricing.module';
 import { ReceivablesModule } from './modules/receivables/receivables.module';
+import { GoogleSyncModule } from './modules/google-sync/google-sync.module';
 import { ReportPdfModule } from './modules/report-pdf/report-pdf.module';
 import { ReportsModule } from './modules/reports/reports.module';
 import { RolesModule } from './modules/roles/roles.module';
@@ -80,6 +81,7 @@ import { WhatsappModule } from './modules/whatsapp/whatsapp.module';
     RolesModule,
     UsersModule,
     ReportPdfModule,
+    GoogleSyncModule,
     SubscriptionsModule,
     PaymentsModule,
     SalesMoneyModule,

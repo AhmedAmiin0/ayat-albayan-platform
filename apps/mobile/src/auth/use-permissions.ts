@@ -35,6 +35,12 @@ export function useHolds(permission: Permission): boolean {
   return permissionsOf(me.data).includes(permission);
 }
 
+/** Strict: is /auth/me a base-role admin? false until it answers (the Google card's API is admins only). */
+export function useIsAdmin(): boolean {
+  const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });
+  return typeof me.data === 'object' && me.data !== null && Reflect.get(me.data, 'role') === 'admin';
+}
+
 /** Every template from the picker (shared sendsAllTemplates: never an assistant); false until /auth/me answers. */
 export function useSendsAllTemplates(): boolean {
   const me = useQuery({ queryKey: pathKey('/auth/me'), queryFn: () => apiFetch<unknown>('/auth/me') });

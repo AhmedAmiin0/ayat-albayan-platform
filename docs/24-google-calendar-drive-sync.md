@@ -164,3 +164,27 @@ mapping (13 columns), summary upsert recompute + matching by folder link then na
 mapping suggestions (Arabic normalisation), permission guards (admin only). e2e (Playwright + google-stub):
 connect (stubbed OAuth), map one teacher + one student, book a lesson in the platform ⇒ dry-run item, switch
 to live (stub) ⇒ events created on the stub; cancel ⇒ deleted; submit a report ⇒ PDF + row + summary.
+
+## 6. As built (2026-10-22)
+
+- **DB**: migrations `20261022000530_google_sync.sql` (tables, RLS, Vault functions `google_token_set/read/clear`,
+  `GOOGLE_CLIENT_SECRET` in `integration_secret_key_ok`, the three settings rows OFF / `dry_run` / 60),
+  `20261022000531_google_sync_outbox.sql` (`v_platform_origin_lessons`, `is_platform_report`, the queue functions,
+  the lesson / report triggers that are the producers, `google_sync_claim`, `google_sync_requeue`,
+  `google_sync_reconcile`) and `20261022000532_push_kind_google.sql` (bell kind `google_sync_alert`).
+  The mapping tables carry no FK to students / teachers: `merge_students` deletes the merged student and
+  `clear:demo` refuses cascades into its tables.
+- **Worker**: in-process and single-flight like the report-PDF job (not pg-boss): the claim is a row-locked
+  compare-and-set with a claim token, so a second instance only shares the work; poll 60 s (`GOOGLE_SYNC_POLL_MS`
+  in e2e), daily reconcile 05:00 Riyadh, kicked after every admin action. The worker re-checks the origin, so a
+  lesson queued during an import run is never written.
+- **OAuth**: `GET /admin/google/connect` answers `{ url }` (a browser redirect cannot carry the bearer); the web
+  navigates there. Scopes add `calendar.calendarlist.readonly`: discovery cannot list the «آيات البيان — …»
+  calendars with `calendar.events` alone. Dependency: `google-auth-library` (API only).
+- **Settings** live in `public.settings` but outside the generic registry: they have their own switches with a
+  confirmation in «التكاملات» → Google, so the generic form never flips `live`.
+- **Formats**: the event / sheet texts of §1 and §2.3 are kept byte for byte in
+  `apps/api/src/modules/google-sync/google-format.ts` (a data format shared with the script, not UI copy).
+- **Students**: nothing is written for a student until an admin confirms an existing folder (from the summary
+  sheet's suggestion or a pasted link) or «مجلد جديد»; the Drive root must be confirmed too.
+- **e2e**: `tools/google-stub` (port 4120) answers OAuth (auto-consent), Calendar v3, Drive v3 and Sheets v4.

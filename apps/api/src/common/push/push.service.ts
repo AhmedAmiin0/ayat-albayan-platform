@@ -17,6 +17,8 @@ export interface PushEvent {
   data?: Record<string, string>;
   /** Replaces notifications.<kind>.title (a reschedule request is not just «رسالة جديدة»). */
   title?: string;
+  /** The bell row only: no browser or app push (the Google sync's alerts, docs/24). */
+  bellOnly?: boolean;
 }
 
 /** One event for the given profiles (a teacher's new student, …). */
@@ -108,7 +110,7 @@ export class PushService {
         url: webNotificationPath(data, profile.role),
         tag: `${target.kind}:${target.subject}`,
       };
-      void this.channels.send({ profile, rowId: row.id, text, data, web });
+      if (!target.bellOnly) void this.channels.send({ profile, rowId: row.id, text, data, web });
     } catch (e) {
       this.warn(`${target.kind}:${target.subject} → ${profile.id}`, e);
     }
