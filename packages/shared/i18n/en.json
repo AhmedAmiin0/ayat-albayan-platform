@@ -2932,7 +2932,11 @@
       "body": "{title}: {when}"
     },
     "media": "Sent: {kind}",
-    "rescheduleTitle": "Reschedule request from {name}"
+    "rescheduleTitle": "Reschedule request from {name}",
+    "google_sync_alert": {
+      "title": "Google sync needs attention",
+      "body": "{reason}"
+    }
   },
   "bell": {
     "title": "Notifications",
@@ -3150,7 +3154,8 @@
       "reminder_failed": "Message not sent",
       "payment_due": "Package needs payment or renewal",
       "new_student": "New student",
-      "meeting_invite": "Meeting invitation"
+      "meeting_invite": "Meeting invitation",
+      "google_sync_alert": "Google sync alert"
     },
     "paymentKind": {
       "payment": "Payment",
@@ -4521,7 +4526,8 @@
       "livekit": "Online classrooms (LiveKit)",
       "expo": "Mobile push (Expo)",
       "web_push": "Browser notifications (Web Push)",
-      "fx": "Exchange rates"
+      "fx": "Exchange rates",
+      "google": "Google (Calendar, Drive and Sheets)"
     },
     "source": {
       "db": "From settings",
@@ -4672,6 +4678,14 @@
       "WEB_PUSH_SUBJECT": {
         "label": "Contact for push services",
         "hint": "mailto:name@example.com or an https:// URL the push services may contact about a problem."
+      },
+      "GOOGLE_CLIENT_ID": {
+        "label": "OAuth client ID",
+        "hint": "From the academy's Google Cloud project; it ends with apps.googleusercontent.com."
+      },
+      "GOOGLE_CLIENT_SECRET": {
+        "label": "OAuth client secret",
+        "hint": "Kept in the vault and never shown after saving."
       }
     },
     "developer": "For developers",
@@ -4803,6 +4817,194 @@
     "signOutConfirm": "End all of {name}'s open sessions on every device?",
     "roleFilter": "Filter by role",
     "statusFilter": "Filter by status"
+  },
+  "googleSync": {
+    "title": "Google: Calendar, Drive and Sheets",
+    "intro": "The platform writes its lessons and reports into the same teacher calendars, student folders and attendance sheets the old script uses, one way only, and never edits anything the old script created.",
+    "loadError": "Could not load the Google status.",
+    "retry": "Try again",
+    "gap": "Known gap: if a sheet student's schedule is changed in the platform, the platform writes the new times while the sheet row keeps the old ones until someone edits it.",
+    "connection": {
+      "title": "Connected account",
+      "notConfigured": "Enter the OAuth client ID and secret in the Google group above first.",
+      "redirect": "Redirect URI (register it in the Google Cloud OAuth client)",
+      "scopes": "Requested scopes",
+      "status": {
+        "disconnected": "Not connected",
+        "connected": "Connected",
+        "error": "Stopped by an error"
+      },
+      "email": "Account: {email}",
+      "since": "Connected since {at}",
+      "lastError": "Last error: {error}",
+      "connect": "Connect the Google account",
+      "reconnect": "Reconnect",
+      "connecting": "Redirecting to Google…",
+      "disconnect": "Disconnect",
+      "disconnectConfirm": "Disconnect the Google account? Sync stops and the access token is removed from the vault; nothing is deleted in Google.",
+      "connected": "The Google account is connected",
+      "failed": "Could not connect the Google account: {reason}",
+      "disconnected": "The Google account is disconnected",
+      "reasons": {
+        "denied": "Consent was not given in Google",
+        "state": "The connect request expired, start again",
+        "exchange": "Google refused to complete the link",
+        "scopes": "Not all the requested permissions were granted",
+        "not_configured": "The OAuth client is not set up yet",
+        "account": "This Google account differs from the academy account linked before"
+      }
+    },
+    "switches": {
+      "title": "Running",
+      "enabled": "Google sync",
+      "enabledHint": "When off, no new items are queued and nothing is sent.",
+      "mode": "Mode",
+      "dryRun": "Dry run (no writing)",
+      "dryRunHint": "The platform records what it would write without writing anything to Google.",
+      "live": "Live writing",
+      "liveHint": "The platform really writes to Google calendars, Drive folders and spreadsheets.",
+      "window": "Calendar window in days",
+      "windowHint": "Lessons starting within this many days are synced.",
+      "saved": "Sync settings saved",
+      "on": "On",
+      "off": "Off"
+    },
+    "confirm": {
+      "enableTitle": "Turn on Google sync?",
+      "enableBody": "The platform will start queuing sync items for its lessons and reports. In dry run nothing is written to Google.",
+      "liveTitle": "Start writing to Google for real?",
+      "liveBody": "The platform will write into these calendars and folders:",
+      "mainCalendar": "The academy main calendar: {name}",
+      "teacherCalendars": "Teacher calendars: {names}",
+      "noTeacherCalendars": "No teacher calendar is mapped yet.",
+      "rootFolder": "Reports folder: {name}",
+      "noRootFolder": "The reports folder is not confirmed yet, so reports will not be uploaded.",
+      "oldScript": "The platform will not edit or delete any event, file or row the old script created.",
+      "ok": "Start live writing",
+      "enableOk": "Turn on sync",
+      "cancel": "Cancel"
+    },
+    "drive": {
+      "title": "Drive and Sheets",
+      "discover": "Search Google",
+      "discovering": "Searching…",
+      "discovered": "Last search: {at}",
+      "never": "No search yet. The search reads calendars and folders and writes nothing.",
+      "rootFolder": "The reports root folder",
+      "summarySheet": "The subscribed students summary sheet",
+      "notFound": "Not found",
+      "confirm": "Confirm the folder and sheet",
+      "confirmed": "Confirmed since {at}",
+      "saved": "The reports folder is confirmed"
+    },
+    "teachers": {
+      "title": "Teachers and calendars",
+      "hint": "Each event goes to the confirmed teacher calendar plus a copy on the main calendar. An unmapped teacher gets the main copy only.",
+      "teacher": "Teacher",
+      "calendar": "Calendar",
+      "suggested": "Suggested: {name}",
+      "none": "No calendar",
+      "pick": "Pick a calendar",
+      "empty": "No active teachers."
+    },
+    "students": {
+      "title": "Students and folders",
+      "hint": "No report is uploaded before the student's folder is confirmed. «New folder» means the platform creates the folder and the attendance sheet with the first report.",
+      "search": "Search by student name or code",
+      "student": "Student",
+      "folder": "Folder",
+      "suggested": "Suggested from the summary sheet: {name}",
+      "createNew": "New folder",
+      "existing": "Existing folder",
+      "unmapped": "Not confirmed",
+      "unmap": "Remove confirmation",
+      "empty": "No matching students.",
+      "folderLink": "The student's Drive folder link",
+      "sheetLink": "Attendance sheet link (optional)",
+      "useLink": "Use this folder",
+      "badLink": "This is not a Drive folder link",
+      "badSheetLink": "This is not a spreadsheet link",
+      "manual": "Link manually"
+    },
+    "common": {
+      "confirm": "Confirm",
+      "confirmed": "Confirmed",
+      "saved": "Saved",
+      "saveError": "Could not save, try again.",
+      "open": "Open in Google"
+    },
+    "log": {
+      "title": "Sync log",
+      "hint": "The last 100 items.",
+      "empty": "No sync items yet.",
+      "reconcile": "Sync now",
+      "reconciled": "Items queued for sync: {n}",
+      "retry": "Retry",
+      "retried": "The item is back in the queue",
+      "attempts": "Attempts: {n}",
+      "planned": "Planned: {method} {target}",
+      "subject": "Item",
+      "kindLabel": "Kind",
+      "stateLabel": "State",
+      "detail": "Details",
+      "kind": {
+        "teacher_event": "Teacher calendar event",
+        "main_event": "Main calendar event",
+        "report_pdf": "Report PDF",
+        "attendance_row": "Attendance sheet row",
+        "summary_row": "Summary sheet row"
+      },
+      "state": {
+        "pending": "Pending",
+        "synced": "Synced",
+        "gone": "Deleted in Google",
+        "failed": "Failed",
+        "skipped": "Skipped"
+      },
+      "skip": {
+        "dry_run": "Dry run",
+        "teacher_unmapped": "Teacher not mapped to a calendar",
+        "student_unmapped": "Student folder not confirmed",
+        "drive_unconfirmed": "Reports folder not confirmed",
+        "already_in_sheet": "Report already in the sheet from the old script"
+      }
+    },
+    "counts": {
+      "title": "Items summary"
+    },
+    "alerts": {
+      "disconnected": "The Google account link expired, so sync stopped. Reconnect it from the settings.",
+      "teacherUnmapped": "{name}'s lessons go to the main calendar only until their calendar is mapped."
+    },
+    "web": {
+      "updated": "Updated {at}",
+      "notPlatformOrigin": "Not a platform lesson (imported from the sheet)",
+      "disable": "Turn off sync",
+      "windowInvalid": "Enter a whole number from {min} to {max}",
+      "save": "Save the window"
+    },
+    "mobile": {
+      "title": "Google sync",
+      "mode": "Mode: {mode}",
+      "state": "State: {state}",
+      "lastError": "Last error: {error}",
+      "noError": "No errors",
+      "webOnly": "Sync and the account link are managed from the web admin.",
+      "loadError": "Could not load the Google status.",
+      "counts": "Pending {pending} · Failed {failed}",
+      "sync": "Sync: {state}"
+    },
+    "errors": {
+      "invalid_grant": "The account link expired, reconnect it",
+      "invalid_client": "Google refused the OAuth client (id or secret); fix it in Integrations",
+      "not_platform_event": "The event was not made by the platform, so it was left as is",
+      "not_platform_file": "The file was not made by the platform, so it was left as is",
+      "deleted_in_google": "Deleted in Google",
+      "row_deleted_in_google": "The row was deleted in Google",
+      "pdf_not_synced": "The report file is not uploaded yet",
+      "summary_row_other_folder": "The student's summary row points at another folder, so it was left as is",
+      "other": "Google error: {code}"
+    }
   },
   "notificationCatalogue": {
     "title": "What is sent and when",
@@ -4956,6 +5158,10 @@
       "meeting_invite": {
         "name": "Internal meeting invitation",
         "trigger": "When a meeting is set, moved or cancelled"
+      },
+      "google_sync_alert": {
+        "name": "Google sync alert",
+        "trigger": "When the Google account link expires or a teacher has no mapped calendar"
       }
     }
   }

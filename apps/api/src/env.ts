@@ -1,6 +1,7 @@
 import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
 import { integrationOverlay } from './config/integration-overlay';
+import { GOOGLE_SHAPE } from './env.google';
 import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
 
@@ -10,6 +11,7 @@ export { allowedRecipients, recipientAllowed, parseAllowedRecipients, kapsoWebho
 export type { WhatsappEnv, MetaLineEnv, KapsoLineEnv, LineEnvs, LineNumbers } from './env.whatsapp';
 export { livekitEnv, type LivekitEnv } from './env.livekit';
 export { webPushEnv } from './env.web-push';
+export { googleEnv, googleRedirectUri, type GoogleEnv, type GoogleEndpoints } from './env.google';
 
 /** `KEY=` (empty, as in .env.example) means unset, never a boot failure. */
 const blankIsUnset = (v: unknown) => (typeof v === 'string' && v.trim() === '' ? undefined : v);
@@ -74,6 +76,7 @@ const schema = z.object({
    */
   EXPO_API_BASE: z.preprocess(blankIsUnset, z.url().optional()),
   ...WEB_PUSH_SHAPE,
+  ...GOOGLE_SHAPE,
   /**
    * HMAC key of the «رأيك يهمّنا» links (>= 32 chars, via Vault). Unset = feedback requests are 503
    * not_configured and every public link is refused; nothing else depends on it.

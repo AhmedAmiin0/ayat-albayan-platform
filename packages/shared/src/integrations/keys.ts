@@ -4,7 +4,7 @@
 // server env, which stays the fallback. Every other env key (PORT, SUPABASE_*, …) stays in env.
 
 /** The form's groups, in page order. */
-export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx'] as const;
+export const INTEGRATION_GROUPS = ['wa_notifications', 'wa_chat', 'kapso', 'wa_safety', 'livekit', 'expo', 'web_push', 'fx', 'google'] as const;
 export type IntegrationGroup = (typeof INTEGRATION_GROUPS)[number];
 
 export const INTEGRATION_PLAIN_KEYS = [
@@ -27,6 +27,7 @@ export const INTEGRATION_PLAIN_KEYS = [
   'WEB_PUSH_VAPID_PUBLIC_KEY',
   'WEB_PUSH_SUBJECT',
   'FX_API_URL',
+  'GOOGLE_CLIENT_ID',
 ] as const;
 
 /** Never returned, logged or audited: only their names and whether they are set. */
@@ -42,6 +43,7 @@ export const INTEGRATION_SECRET_KEYS = [
   'WEB_PUSH_VAPID_PRIVATE_KEY',
   'KAPSO_API_KEY',
   'KAPSO_WEBHOOK_SECRET',
+  'GOOGLE_CLIENT_SECRET',
 ] as const;
 
 export type IntegrationPlainKey = (typeof INTEGRATION_PLAIN_KEYS)[number];
@@ -88,6 +90,9 @@ const GROUP_OF: Record<IntegrationKey, IntegrationGroup> = {
   WEB_PUSH_VAPID_PRIVATE_KEY: 'web_push',
   WEB_PUSH_SUBJECT: 'web_push',
   FX_API_URL: 'fx',
+  // Google sync (docs/24): the owner's OAuth client; the refresh token never appears here (its own Vault entry).
+  GOOGLE_CLIENT_ID: 'google',
+  GOOGLE_CLIENT_SECRET: 'google',
 };
 
 const SECRET_SET: ReadonlySet<string> = new Set(INTEGRATION_SECRET_KEYS);

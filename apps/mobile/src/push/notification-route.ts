@@ -25,10 +25,14 @@ const toStudent = (data: unknown) => {
 /** The internal meetings list (the room itself opens from there, in the browser). */
 export const ADMIN_MEETINGS = '/more/live/meetings';
 
+/** «إعدادات الأكاديمية»: the Google sync status card is on it (docs/24 §3). */
+export const ADMIN_SETTINGS = '/more/ops/settings';
+
 /**
  * new lead / new message / failed reminder → that number's thread; lesson needs confirmation →
  * Today; report submitted / payment due / new student → the student (the balance card is on that
- * screen); meeting invite → the meetings list. Without the id it needs, the matching list. Typed
+ * screen); meeting invite → the meetings list; a Google sync alert → the settings (its status
+ * card). Without the id it needs, the matching list. Typed
  * by PushKind, so a new kind must pick a screen.
  */
 const ROUTES: Record<PushKind, (data: unknown) => string> = {
@@ -40,13 +44,15 @@ const ROUTES: Record<PushKind, (data: unknown) => string> = {
   payment_due: toStudent,
   new_student: toStudent,
   meeting_invite: () => ADMIN_MEETINGS,
+  google_sync_alert: () => ADMIN_SETTINGS,
 };
 
 const tabOf = (href: string): TabRoute => (href.startsWith('/inbox') ? 'inbox' : href.startsWith('/students') ? 'students' : 'today');
 
-/** May the role open this admin href? «المزيد» is always there; its meetings row needs meetings.read. */
+/** May the role open this admin href? «المزيد» is always there; its rows need their own permission. */
 function adminOpens(href: string, can: Can): boolean {
   if (href === ADMIN_MEETINGS) return can('meetings.read');
+  if (href === ADMIN_SETTINGS) return canOpen(can, 'settings');
   return tabOpen(can, tabOf(href));
 }
 
@@ -83,6 +89,8 @@ const TEACHER_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   payment_due: () => TEACHER_TODAY,
   new_student: () => '/teacher/schedule',
   meeting_invite: () => '/teacher/more/meetings',
+  // Admins only (settings.read); never sent to a teacher.
+  google_sync_alert: () => TEACHER_TODAY,
 };
 
 /** The teacher screen a tapped push opens; null for anything that is not one of our pushes. */

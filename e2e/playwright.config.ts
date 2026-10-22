@@ -33,6 +33,18 @@ const E2E_WA_CHAT_KEYS = {
  * fallback). Inert until a spec switches a line to kapso in the database (kapso-driver.spec.ts).
  */
 const E2E_KAPSO = { KAPSO_API_KEY: 'e2e-kapso-key', KAPSO_WEBHOOK_SECRET: 'e2e-kapso-webhook-secret' };
+/**
+ * Google sync (docs/24): tools/google-stub on its own port is Google for the API; a fake OAuth
+ * client so «اربط حساب Google» is enabled, and this API's own callback. Nothing reaches Google.
+ */
+const GOOGLE_STUB_PORT = 4120; // = support/google.ts GOOGLE_STUB
+const E2E_GOOGLE = {
+  GOOGLE_CLIENT_ID: '123456789012-e2estub.apps.googleusercontent.com',
+  GOOGLE_CLIENT_SECRET: 'e2e-google-secret',
+  GOOGLE_API_BASE: `http://localhost:${GOOGLE_STUB_PORT}`,
+  GOOGLE_REDIRECT_URI: `http://localhost:${API_PORT}/integrations/google/callback`,
+  GOOGLE_SYNC_POLL_MS: '1000',
+};
 /** E2E_LINES=single = the production default (no WA_CHAT_* keys): the CI job «e2e (single line)». */
 const E2E_WA_CHAT = process.env['E2E_LINES'] === 'single' ? {} : E2E_WA_CHAT_KEYS;
 
@@ -84,6 +96,13 @@ export default defineConfig({
       reuseExistingServer: !process.env['CI'],
     },
     {
+      command: 'node src/server.ts',
+      cwd: '../tools/google-stub',
+      url: `http://localhost:${GOOGLE_STUB_PORT}/__stub/health`,
+      env: { GOOGLE_STUB_PORT: String(GOOGLE_STUB_PORT) },
+      reuseExistingServer: !process.env['CI'],
+    },
+    {
       command: 'node --env-file-if-exists=.env dist/main.js',
       cwd: '../apps/api',
       url: `http://localhost:${API_PORT}/health`,
@@ -97,6 +116,7 @@ export default defineConfig({
         ...E2E_WA,
         ...E2E_WA_CHAT,
         ...E2E_KAPSO,
+        ...E2E_GOOGLE,
         // Set explicitly so a developer shell or .env cannot restrict recipients or stop the sync.
         WA_ALLOWED_RECIPIENTS: '',
         // Both lines start on meta and no Kapso base: only kapso-driver.spec.ts switches (in the DB).

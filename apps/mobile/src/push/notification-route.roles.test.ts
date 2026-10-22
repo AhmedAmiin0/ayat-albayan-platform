@@ -29,6 +29,7 @@ test.each([
   [{ kind: 'payment_due', studentId: 's-1' }, '/sales/students'],
   [{ kind: 'meeting_invite', meetingId: 'm1' }, '/sales/more/meetings'],
   [{ kind: 'lesson_needs_confirmation', lessonId: 'l1' }, '/sales/more'],
+  [{ kind: 'google_sync_alert' }, '/sales/more'],
 ])('a salesperson tapping %j opens %s', (data, href) => {
   expect(salesRouteFor(data)).toBe(href);
 });
@@ -47,6 +48,7 @@ test.each([
   [{ kind: 'new_message', phone: PHONE }, '/assistant/lessons'],
   [{ kind: 'lesson_needs_confirmation' }, '/assistant/lessons'],
   [{ kind: 'payment_due' }, '/assistant/lessons'],
+  [{ kind: 'google_sync_alert' }, '/assistant/lessons'],
 ])('an assistant tapping %j opens %s', (data, href) => {
   expect(assistantRouteFor(data)).toBe(href);
 });

@@ -19,6 +19,9 @@ export const vapidPublicKey = z.string().regex(/^[A-Za-z0-9_-]{87}$/);
 /** RFC 8292 `sub`: a mailto: address or an https: URL the push service may contact. */
 export const vapidSubject = z.string().max(200).regex(/^(mailto:[^\s@]+@[^\s@]+|https:\/\/[^\s]+)$/);
 
+/** A Google Cloud OAuth client id: «<digits>-<id>.apps.googleusercontent.com». */
+export const googleClientId = z.string().max(200).regex(/^[0-9]+-[a-z0-9]+\.apps\.googleusercontent\.com$/);
+
 const version = z.string().regex(/^v\d+\.\d+$/);
 const provider = z.enum(WA_PROVIDERS);
 
@@ -42,6 +45,7 @@ export const INTEGRATION_VALUE_CHECKS: Record<IntegrationPlainKey, z.ZodType> = 
   WEB_PUSH_VAPID_PUBLIC_KEY: vapidPublicKey,
   WEB_PUSH_SUBJECT: vapidSubject,
   FX_API_URL: url,
+  GOOGLE_CLIENT_ID: googleClientId,
 };
 
 /** Is `value` (trimmed) acceptable for this plain key? */

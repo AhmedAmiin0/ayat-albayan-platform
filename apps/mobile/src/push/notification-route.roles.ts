@@ -33,6 +33,8 @@ const SALES_ROUTES: Record<PushKind, (data: unknown, can: Can) => string> = {
   payment_due: toSalesStudents,
   new_student: toSalesStudents,
   meeting_invite: toSalesMeetings,
+  // Admins only (settings.read); never sent to a salesperson.
+  google_sync_alert: () => SALES_MORE,
 };
 
 /** The sales screen a tapped push opens; null for anything that is not one of our pushes. */

@@ -57,6 +57,8 @@ const ROUTES: Record<PushKind, (area: Area, data: Data) => string> = {
     const id = uuid(data, 'meetingId');
     return id ? `/meeting/${id}` : MEETINGS[area];
   },
+  // The Google section of «التكاملات» (docs/24); only admins get this kind.
+  google_sync_alert: (area) => (area === 'admin' ? '/admin/settings#integrations' : HOME_BY_ROLE[area]),
 };
 
 const isArea = (role: UserRole | null): role is Area =>
