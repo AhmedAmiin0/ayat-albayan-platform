@@ -27,4 +27,6 @@ export const PUSH_ENTRIES = [
   { ...STAFF, key: 'reminder_failed', audience: 'staff', pushKind: 'reminder_failed', locked: true },
   { ...STAFF, key: 'new_student', audience: 'teacher', pushKind: 'new_student' },
   { ...STAFF, key: 'meeting_invite', audience: 'staff', pushKind: 'meeting_invite' },
+  // docs/24: the Google link expired or a teacher has no calendar; admins, the bell only (no push).
+  { ...STAFF, channels: ['bell'], key: 'google_sync_alert', audience: 'staff', pushKind: 'google_sync_alert' },
 ] as const satisfies readonly NotificationEntry[];

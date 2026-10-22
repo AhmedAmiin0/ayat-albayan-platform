@@ -5158,6 +5158,10 @@
       "meeting_invite": {
         "name": "Internal meeting invitation",
         "trigger": "When a meeting is set, moved or cancelled"
+      },
+      "google_sync_alert": {
+        "name": "Google sync alert",
+        "trigger": "When the Google account link expires or a teacher has no mapped calendar"
       }
     }
   }
