@@ -2,6 +2,20 @@
 
 Owner request 2026-10-21: «the academy mobile numbers and its integrations with the notification engine to be more organized and in a separate module / more customizable». Design only; nothing here is built yet. Evidence and the full survey (lines, producers, UI, data model, design review): `docs/23a-numbers-notifications-map.md` (§A–§E below refer to it). Builds on docs/12 §13, docs/15, docs/19, docs/21.
 
+## Owner answers (2026-10-22) — these override §2–§5 below
+
+1. **Any number of live numbers (option B).** Numbers are records (§2a) AND routing is per number: each
+   template and each notification-catalogue row picks its number; inbound and replies follow the number the
+   family wrote to / was last written from (per (phone, number) reply windows). The two roles become
+   presets/defaults, not a hard limit. This makes phase 7 of §3 core work, not optional.
+2. **Remove the env fuse `MESSAGING_ENABLED`.** Sending is governed only by the DB switch
+   `messaging_enabled` («إرسال الرسائل») and the allow-list. The removal must be FAIL-CLOSED: the deploy that
+   removes the env check must not change the effective state anywhere (staging has `messaging_enabled = false`
+   and real families); a missing/unknown DB value means OFF; the overview states plainly what is on.
+3. **Essential notifications (booking confirmations, report PDF) may be turned off** with a typed
+   confirmation and an activity-log entry (option a of Q3).
+4. **Personal mutes: later**, after the module ships (option a of Q4).
+
 ## 1. Today (pain points, with evidence)
 
 1. **A number is not a thing.** A WhatsApp number exists only as ~20 env-style keys split into two fixed groups (`WA_*`, `WA_CHAT_*`, plus shared `KAPSO_*`, `WA_API_*`, one `WA_VERIFY_TOKEN`) (§A3). The phone itself is shown only after a live «افحص الخطوط» call and is forgotten on reload (§E H2).
