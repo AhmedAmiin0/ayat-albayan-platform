@@ -2448,7 +2448,32 @@
     },
     "playMedia": "Play {kind}",
     "pauseMedia": "Pause",
-    "automaticMessage": "Automatic message"
+    "automaticMessage": "Automatic message",
+    "lists": {
+      "title": "Lists",
+      "rowLabel": "Chat lists",
+      "all": "All",
+      "new": "New list",
+      "name": "List name",
+      "create": "Create",
+      "edit": "Edit list",
+      "editNamed": "Edit list {name}",
+      "editHint": "Long-press to rename or delete the list.",
+      "save": "Save",
+      "delete": "Delete list",
+      "deleteConfirm": "Delete the list “{name}”?",
+      "deleteNote": "Deleting a list does not delete its chats.",
+      "deleteYes": "Yes, delete the list",
+      "nameTaken": "A list with this name already exists.",
+      "limit": "The number of lists has reached the maximum (30).",
+      "notFound": "This list no longer exists.",
+      "chatLists": "This chat's lists",
+      "none": "No lists yet.",
+      "count": "Chats: {n}",
+      "empty": "No chats in this list yet. Open a chat and choose “Lists” to add it.",
+      "loadError": "Could not load the lists.",
+      "saveError": "Could not save the change, please try again."
+    }
   },
   "mobileFinance": {
     "section": "Payouts and expenses",
@@ -4381,6 +4406,7 @@
       "inbox.read": "Read conversations",
       "inbox.send": "Reply to conversations",
       "inbox.media": "Open conversation media",
+      "inbox.lists": "Organise chats in lists",
       "messages.read": "View WhatsApp templates and send status",
       "messages.manage": "Retry and resolve failed messages",
       "templates.manage": "Check and submit WhatsApp templates",
@@ -4423,7 +4449,8 @@
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
-      "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day."
+      "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
+      "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list."
     },
     "page": {
       "title": "Roles and permissions",

@@ -71,6 +71,9 @@ export const PERMISSION_ROWS = [
   { key: 'inbox.read', area: 'messaging', grants: TS },
   { key: 'inbox.send', area: 'messaging', grants: TS },
   { key: 'inbox.media', area: 'messaging', grants: [] },
+  // «القوائم» (owner 2026-10-20, docs/22): create, rename and delete the academy's chat lists and add
+  // chats to them. Sales by default (the admin may switch it off); teachers never get lists.
+  { key: 'inbox.lists', area: 'messaging', grants: ['sales'] },
   { key: 'messages.read', area: 'messaging', grants: TS },
   { key: 'messages.manage', area: 'messaging', grants: [] },
   { key: 'templates.manage', area: 'messaging', grants: [] },

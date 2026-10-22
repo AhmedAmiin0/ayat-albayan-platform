@@ -59,7 +59,7 @@ describe('SalesChatFrame: crossing 900px keeps an open sales dialog (m13)', () =
     expect(screen.getByRole('button', { name: t.salesMoney.newSubscription }).textContent).toBe('');
   });
 
-  it('outside sales mode: no buttons, the pane still renders', () => {
+  it('outside sales mode: no sales buttons, «المزيد» holds «القوائم» only (docs/22), the pane still renders', () => {
     routeFetch(apiFetch, []);
     render(
       <QueryClientProvider client={client}>
@@ -71,6 +71,8 @@ describe('SalesChatFrame: crossing 900px keeps an open sales dialog (m13)', () =
       </QueryClientProvider>,
     );
     expect(screen.getByText('الرسائل')).toBeTruthy();
-    expect(document.body.querySelectorAll('button')).toHaveLength(0);
+    expect(screen.queryByRole('button', { name: t.salesMoney.newSubscription })).toBeNull();
+    fireEvent.click(screen.getByRole('button', { name: t.common.more }));
+    expect(screen.getAllByRole('button').map((b) => b.textContent)).toEqual(['', t.inbox.lists.title]);
   });
 });

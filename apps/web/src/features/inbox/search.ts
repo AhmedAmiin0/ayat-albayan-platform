@@ -15,14 +15,17 @@ export type InboxSearch = {
   unread?: true;
   sort?: ThreadSort;
   f_status?: LeadStatus;
+  /** A chat list «القوائم» (docs/22 §4): its id; the chip row falls back to «الكل» for an unknown one. */
+  list?: string;
   page: number;
 };
 
 const E164 = /^\+[1-9]\d{6,14}$/;
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const pick = <T extends string>(all: readonly T[], v: unknown): T | undefined => all.find((x) => x === v);
 
-/** Route `validateSearch`: a bad phone closes the thread; blank search, unknown sort/status drop; bad page → 1. */
+/** Route `validateSearch`: a bad phone closes the thread; blank search, unknown sort/status, a non-id list drop; bad page → 1. */
 export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   const page = Number(s['page']);
   const out: InboxSearch = { page: Number.isInteger(page) && page > 1 ? page : 1 };
@@ -35,5 +38,6 @@ export function parseInboxSearch(s: Record<string, unknown>): InboxSearch {
   if (sort) out.sort = sort;
   const status = pick(LEAD_STATUSES, s['f_status']);
   if (status) out.f_status = status;
+  if (typeof s['list'] === 'string' && UUID.test(s['list'])) out.list = s['list'];
   return out;
 }

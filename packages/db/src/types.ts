@@ -507,6 +507,77 @@ export type Database = {
         };
         Relationships: [];
       };
+      chat_list_threads: {
+        Row: {
+          added_at: string;
+          added_by: string | null;
+          list_id: string;
+          phone_e164: string;
+        };
+        Insert: {
+          added_at?: string;
+          added_by?: string | null;
+          list_id: string;
+          phone_e164: string;
+        };
+        Update: {
+          added_at?: string;
+          added_by?: string | null;
+          list_id?: string;
+          phone_e164?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_list_threads_added_by_fkey';
+            columns: ['added_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+          {
+            foreignKeyName: 'chat_list_threads_list_id_fkey';
+            columns: ['list_id'];
+            isOneToOne: false;
+            referencedRelation: 'chat_lists';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
+      chat_lists: {
+        Row: {
+          created_at: string;
+          created_by: string | null;
+          id: string;
+          name: string;
+          name_key: string;
+          updated_at: string;
+        };
+        Insert: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name: string;
+          name_key: string;
+          updated_at?: string;
+        };
+        Update: {
+          created_at?: string;
+          created_by?: string | null;
+          id?: string;
+          name?: string;
+          name_key?: string;
+          updated_at?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'chat_lists_created_by_fkey';
+            columns: ['created_by'];
+            isOneToOne: false;
+            referencedRelation: 'profiles';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       classroom_blocks: {
         Row: {
           blocked_by: string | null;
@@ -3725,6 +3796,35 @@ export type Database = {
             referencedColumns: ['teacher_id'];
           },
         ];
+      };
+      v_list_threads: {
+        Row: {
+          display_name: string | null;
+          guardian_id: string | null;
+          guardian_name: string | null;
+          guardian_tz: string | null;
+          last_body: string | null;
+          last_chat_inbound_at: string | null;
+          last_direction: Database['public']['Enums']['message_direction'] | null;
+          last_inbound_at: string | null;
+          last_inbound_line: Database['public']['Enums']['wa_line'] | null;
+          last_media_mime: string | null;
+          last_message_at: string | null;
+          last_message_id: string | null;
+          last_notifications_inbound_at: string | null;
+          last_status: Database['public']['Enums']['message_status'] | null;
+          last_template_key: string | null;
+          lead_id: string | null;
+          lead_name: string | null;
+          lead_source: Database['public']['Enums']['lead_source'] | null;
+          lead_status: Database['public']['Enums']['lead_status'] | null;
+          list_id: string | null;
+          phone_e164: string | null;
+          teacher_id: string | null;
+          teacher_name: string | null;
+          unread_count: number | null;
+        };
+        Relationships: [];
       };
       v_threads: {
         Row: {

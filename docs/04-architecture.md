@@ -94,6 +94,9 @@ teacher_payouts(id, teacher_id, month date, lessons_count, amount, status, paid_
 message_templates(id, key text unique, meta_name, language, body_ar, variables text[], category, status, last_checked_at)
 messages(id, direction, channel default 'whatsapp', phone_e164, lead_id nullable, guardian_id nullable, lesson_id nullable, template_key nullable, body, wa_message_id, status, error_code, error_text, dedup_key unique nullable, scheduled_for, sent_at, delivered_at, read_at)
 
+chat_lists(id, name 1–30 trimmed, name_key unique (normalizeArabic), created_by, created_at, updated_at)   -- «القوائم», ≤ 30 (docs/22)
+chat_list_threads(list_id refs chat_lists on delete cascade, phone_e164 E.164, added_by, added_at, primary key(list_id, phone_e164))
+
 -- system
 audit_log(id, actor_id, entity, entity_id, action, before jsonb, after jsonb, at)
 settings(key pk, value jsonb)   -- follow-up delays, late-cancel hours, reminder offsets
@@ -117,6 +120,7 @@ RLS sketch: admin → all; teacher → `teacher_id = auth.uid()`-joined rows; gu
 | `subscriptions` | balance view, alerts job |
 | `payments` | record payment, payouts calculator |
 | `messaging` | `WhatsappClient` (Cloud API), `TemplateRegistry` (health check), `ReminderScheduler` (cron */5), `WebhookController` (signature verify) |
+| `chat-lists` | «القوائم» (docs/22): `ChatListsService` (shared academy lists, 409 `list_name_taken` / `list_limit`), `ChatListsQueries`; GET /threads?list= and the thread's `lists` via `inbox/chat-list-filter.ts` |
 | `calendar-mirror` | optional Google Calendar upsert by `lesson_id` extended property |
 | `dashboard` | funnel, load, finance aggregates |
 | `jobs` | pg-boss workers; all jobs idempotent with dedup keys |

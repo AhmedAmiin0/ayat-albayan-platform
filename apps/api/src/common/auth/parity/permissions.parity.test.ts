@@ -83,4 +83,12 @@ describe('system-role parity with the old @Roles table', () => {
     expect(routes.filter((r) => r.permission === 'students.check_registration').map((r) => r.key)).toEqual(['SalesRegistrationController.check']);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('students.check_registration'))).toEqual(['admin', 'sales']);
   });
+
+  // Owner 2026-10-20 (docs/22): «القوائم» is its own route permission, held by admin and sales only.
+  it('inbox.lists gates the chat-lists routes only, for admin and sales (never a teacher)', () => {
+    const gated = routes.filter((r) => r.permission === 'inbox.lists').map((r) => r.key);
+    expect(gated.length).toBe(6);
+    expect(gated.every((k) => k.startsWith('ChatListsController.'))).toBe(true);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);
+  });
 });

@@ -8,6 +8,7 @@ import { t } from '@/lib/i18n';
 import { cn } from '@/lib/utils';
 import { threadKind, threadTitle, timesInText } from './format';
 import { inboxBase, showsPhone, useInboxMode } from './mode';
+import { ThreadListChips } from './lists/ThreadListChips';
 import { leadChip } from './subscription';
 import { SubscriptionChip } from './SubscriptionChip';
 import type { ThreadHeaderProps } from './ThreadHeader';
@@ -19,7 +20,7 @@ import { WindowBanner } from './WindowBanner';
  * icons plus «المزيد»), then the status chips (and the sales children line) on one line that
  * scrolls sideways instead of wrapping, ending with the times' city like ThreadHeader (principle 7).
  */
-export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line }: ThreadHeaderProps) {
+export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, action, line, lists }: ThreadHeaderProps) {
   const kind = threadKind(th);
   const mode = useInboxMode();
   const title = threadTitle(th, mode);
@@ -55,6 +56,7 @@ export function ThreadHeaderPhone({ thread: th, listSearch, headingId, badge, ac
         {badge && <SubscriptionChip size="sm" badge={badge} />}
         {mode === 'admin' && th.lead_source && <span>{t.enums.leadSource[th.lead_source]}</span>}
         {line}
+        <ThreadListChips phone={th.phone_e164} lists={lists} listSearch={listSearch} />
         <span>{timesInText()}</span>
       </div>
     </header>

@@ -91,7 +91,7 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
   const ownThread = teacherMode && !!th.teacher_id && (!me.data || me.data.id === th.teacher_id);
 
   const line = mode === 'sales' && people && <SalesFamilyLine phone={phone} people={people} lessons={first?.lessons ?? []} />;
-  const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line };
+  const headerProps = { thread: th, listSearch, headingId, badge: admin && people ? threadBadge(people) : null, line, lists: first?.lists };
   const log = (fill: 'shell' | 'xl' | 'phone') => (
     <>
       {detail.isError && (
@@ -125,14 +125,15 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
         <ThreadHeaderPhone
           {...headerProps}
           action={
-            panel ? (
-              <ThreadSideSheet compact label={sheetLabel} open={sheet} onOpenChange={setSheet}>
-                {side}
-                {sheetOpen && toast}
-              </ThreadSideSheet>
-            ) : (
-              actions
-            )
+            <>
+              {panel && (
+                <ThreadSideSheet compact label={sheetLabel} open={sheet} onOpenChange={setSheet}>
+                  {side}
+                  {sheetOpen && toast}
+                </ThreadSideSheet>
+              )}
+              {actions}
+            </>
           }
         />
         {log('phone')}
@@ -142,5 +143,5 @@ export function ThreadPane({ phone, listSearch }: ThreadPaneProps) {
     ) : (
       <ThreadPaneWide labelledBy={headingId} header={<ThreadHeader {...headerProps} action={actions} />} log={log(aside ? 'xl' : 'shell')} reply={reply} aside={aside} side={side} toast={toast} />
     );
-  return <SalesChatFrame key={phone} thread={th} compact={phoneView}>{body}</SalesChatFrame>;
+  return <SalesChatFrame key={phone} thread={th} lists={first?.lists} compact={phoneView}>{body}</SalesChatFrame>;
 }

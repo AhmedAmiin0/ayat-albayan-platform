@@ -8,6 +8,7 @@ import { useInboxMode } from './mode';
 import type { InboxSearch } from './search';
 import { ThreadFilterFields } from './ThreadFilterFields';
 import { ThreadRow } from './ThreadRow';
+import { emptyTitle } from './empty-title';
 import { CLEAR_THREAD_FILTERS, threadFilterChips } from './thread-filters';
 
 export interface ThreadListProps {
@@ -55,7 +56,7 @@ export function ThreadList({ search, threads, onFilter, total }: ThreadListProps
         }
       />
       {threads.length === 0 ? (
-        <EmptyState title={search.unread ? t.inbox.emptyUnread : t.inbox.empty} />
+        <EmptyState title={emptyTitle(search)} />
       ) : (
         <ul aria-label={t.inbox.title} className="border-t border-rule">
           {threads.map((th) => (

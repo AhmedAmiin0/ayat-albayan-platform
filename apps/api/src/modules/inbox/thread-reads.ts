@@ -1,8 +1,10 @@
 import type { ThreadDetail, ThreadView } from '@ab/shared';
 import { ForbiddenException, Inject, Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { ChatListsQueries } from '../chat-lists/chat-lists.queries';
 import type { Page } from '../teachers/http';
 import { SalesScopes, type SalesScope } from '../sales/sales-scope';
+import { listFilter, withLists } from './chat-list-filter';
 import { SalesThreadsService } from './sales-threads.service';
 import { TeacherScopes, type TeacherScope } from './teacher-scope';
 import { TeacherThreadsService } from './teacher-threads.service';
@@ -19,6 +21,8 @@ export class ThreadReads {
   /** Sales mode (property-injected: the constructor is at the 3-parameter limit). */
   @Inject(SalesThreadsService) private readonly sales?: SalesThreadsService;
   @Inject(SalesScopes) private readonly salesScopes?: SalesScopes;
+  /** «القوائم» (docs/22): the list filter and the open chat's lists (admin and sales only). */
+  @Inject(ChatListsQueries) private readonly chatLists?: ChatListsQueries;
 
   constructor(
     private readonly admin: ThreadsService,
@@ -36,18 +40,22 @@ export class ThreadReads {
     return this.salesScopes ? this.salesScopes.of(user) : Promise.resolve(null);
   }
 
+  /** A chat list (`list`) narrows the admin's and sales' lists; teacher mode never has one. */
   async list(f: ThreadListFilter, user: AuthUser): Promise<Page<ThreadView>> {
     const mine = await this.salesScope(user);
-    if (mine) return this.salesService().list(f);
-    const scope = await this.scopes.of(user);
-    return scope ? this.teacher.list(f, scope) : this.admin.list(f);
+    const scope = mine ? null : await this.scopes.of(user);
+    if (scope) return this.teacher.list(f, scope);
+    const g = listFilter(f, user);
+    if (!g) return { items: [], total: 0, page: f.page, pageSize: f.pageSize };
+    return mine ? this.salesService().list(g) : this.admin.list(g);
   }
 
   async detail(q: ThreadPageQuery, user: AuthUser): Promise<ThreadDetail> {
     const mine = await this.salesScope(user);
-    if (mine) return this.salesService().detail(q);
-    const scope = await this.scopes.of(user);
-    return scope ? this.teacher.detail(q, scope) : this.admin.detail(q);
+    const scope = mine ? null : await this.scopes.of(user);
+    if (scope) return this.teacher.detail(q, scope);
+    const detail = mine ? await this.salesService().detail(q) : await this.admin.detail(q);
+    return withLists(detail, { user, lists: this.chatLists, phone: q.phone, first: !q.before });
   }
 
   private salesService(): SalesThreadsService {
