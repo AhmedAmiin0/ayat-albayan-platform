@@ -3,6 +3,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
+import { CATALOGUE_ROUTE } from '../messaging/settings-fixture';
 import { SettingsPage } from '../messaging/SettingsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -17,6 +18,7 @@ function renderPage() {
     ['/config/custom', []],
     ['/settings/integrations', []],
     ['/settings', SETTING_DEFAULTS],
+    CATALOGUE_ROUTE,
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],
   ]);

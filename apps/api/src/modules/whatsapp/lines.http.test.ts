@@ -40,6 +40,7 @@ describe('POST /messaging/lines/check (docs/12 §13.9)', () => {
     const res = await t.call({ method: 'POST', url: URL, token: 'teacher' });
     expect(res.statusCode).toBe(403);
     expect(t.lines.check).not.toHaveBeenCalled();
+    expect(t.health.save).not.toHaveBeenCalled();
   });
 
   it('admin → 200 with both lines in order [notifications, chat]; no audit row', async () => {
@@ -50,6 +51,8 @@ describe('POST /messaging/lines/check (docs/12 §13.9)', () => {
     expect(body[0]).toEqual(view('notifications', true));
     expect(t.lines.check).toHaveBeenCalledTimes(1);
     expect(t.audit.record).not.toHaveBeenCalled();
+    // The answer is kept for «ماذا يُرسل ومتى» (docs/23 phase 1): the store keeps the good rows only.
+    expect(t.health.save).toHaveBeenCalledWith(body);
   });
 
   it('the route is POST only (GET is 404)', async () => {

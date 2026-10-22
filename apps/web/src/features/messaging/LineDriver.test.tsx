@@ -13,16 +13,18 @@ describe('LineDriver (docs/19)', () => {
     expect(screen.queryByText(s.duplicateChatPhone)).toBeNull();
   });
 
-  it('a half-configured kapso line names the missing keys, never a value', () => {
+  it('a half-configured kapso line names what it lacks by its Arabic label, never a key or a value', () => {
     const { container } = render(<LineDriver view={{ provider: 'kapso', gaps: ['KAPSO_API_BASE', 'KAPSO_API_KEY'], duplicate_chat_phone: false }} />);
     expect(screen.getByText(t.integrations.options.kapso)).toBeTruthy();
-    expect(screen.getByText('KAPSO_API_BASE, KAPSO_API_KEY')).toBeTruthy();
+    const keys = t.integrations.keys;
+    expect(container.textContent).toContain(`${keys.KAPSO_API_BASE.label}${t.common.listSeparator}${keys.KAPSO_API_KEY.label}`);
+    expect(container.textContent).not.toContain('KAPSO_API_KEY');
     expect(container.textContent).toContain(s.provider);
   });
 
-  it('the missing-keys island wraps at phone width (not nowrap)', () => {
-    render(<LineDriver view={{ provider: 'kapso', gaps: ['WA_CHAT_PHONE_NUMBER_ID', 'WA_CHAT_WABA_ID', 'KAPSO_API_KEY'], duplicate_chat_phone: false }} />);
-    const island = screen.getByText('WA_CHAT_PHONE_NUMBER_ID, WA_CHAT_WABA_ID, KAPSO_API_KEY');
+  it('a key outside the registry stays an LTR island that wraps at phone width (not nowrap)', () => {
+    render(<LineDriver view={{ provider: 'kapso', gaps: ['WA_CHAT_PHONE_NUMBER_ID', 'SOME_NEW_KEY'], duplicate_chat_phone: false }} />);
+    const island = screen.getByText('SOME_NEW_KEY');
     expect(island.className).not.toContain('whitespace-nowrap');
     expect(island.className).toContain('whitespace-normal');
     expect(island.className).toContain('break-all');

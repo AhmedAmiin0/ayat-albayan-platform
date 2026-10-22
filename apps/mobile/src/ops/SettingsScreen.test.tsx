@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { settings } from './fixtures';
+import { catalogue, settings } from './fixtures';
 import { SettingsScreen } from './SettingsScreen';
 
 const mockApiFetch = jest.fn();
@@ -18,7 +18,7 @@ jest.mock('expo-router', () => ({
 
 beforeEach(() => {
   jest.clearAllMocks();
-  mockApiFetch.mockResolvedValue(settings);
+  mockApiFetch.mockImplementation(async (p: string) => (p === '/admin/notifications' ? catalogue : settings));
 });
 
 const box = (label: string) => screen.findByLabelText(label);

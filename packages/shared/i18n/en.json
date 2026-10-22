@@ -2348,7 +2348,7 @@
     "sessionOpenUntil": "You can reply with a regular message until {time}",
     "timesIn": "Times in {city} time",
     "messagingOff": "Sending is paused right now — messages wait in the queue until it's turned on",
-    "messagingOffServer": "Sending is turned off on the server — messages wait in the queue until it's turned on",
+    "messagingOffServer": "WhatsApp is not set up yet — messages wait in the queue until it is set up under «Integrations»",
     "messagingOffTeacher": "Your message will go out as soon as sending is back on",
     "error": {
       "session_closed": "More than 24 hours have passed since their last message — you need to send a template",
@@ -2648,8 +2648,7 @@
       "disable": "Pause sending",
       "on": "Sending is on",
       "off": "Sending is paused",
-      "gateEnvOff": "Sending is turned off on the server (MESSAGING_ENABLED) — even if you turn it on here, nothing will be sent",
-      "gateNotConfigured": "WhatsApp isn't connected on the server yet — even if you turn it on here, nothing will be sent",
+      "gateNotConfigured": "WhatsApp is not set up yet: complete «WhatsApp notifications line» under «Integrations». Until then nothing is sent, even with sending on here.",
       "queued": {
         "zero": "No messages waiting in the queue",
         "one": "1 message waiting in the queue",
@@ -2694,7 +2693,7 @@
         "webhookOtherApp": "The app linked to the account is not the app configured on the server, so incoming messages will not reach the platform",
         "webhookUnverified": "An app is linked to the account, but it could not be verified because the app ID is not configured on the server",
         "webhookKapso": "This line runs through Kapso: inbound messages are received through the Kapso webhook at /webhooks/kapso, so the WABA's subscribed apps are not compared with a Meta app on the server.",
-        "webhookKapsoNoSecret": "The Kapso webhook signing secret (KAPSO_WEBHOOK_SECRET) is not set, so every inbound message from Kapso is refused and never reaches the platform",
+        "webhookKapsoNoSecret": "«Kapso webhook signing secret» is not set under «Integrations», so every inbound message from Kapso is refused and never reaches the platform",
         "callbackOverride": "Alternative callback address: {url}",
         "checkedAt": "Last checked: {time}",
         "checkFailed": "Could not check the lines",
@@ -2702,13 +2701,22 @@
         "provider": "Sending provider",
         "gaps": "This line still needs: {keys}",
         "duplicateChatPhone": "The chat line's phone number id is the notifications line's, so the chat line is off"
-      }
+      },
+      "disableTitle": "Stop sending messages",
+      "disableConfirm": "No WhatsApp message will reach guardians, leads or teachers until you turn it back on; messages wait in the queue. Stop sending?",
+      "disableYes": "Yes, stop sending",
+      "onBlocked": "On here · nothing is sent",
+      "onRestricted": "On for allowed numbers only",
+      "autoEnableConfirm": "Lesson reminders, follow-ups and renewal reminders will start reaching families and leads automatically. First make sure the old Apps Script reminders have stopped. Turn them on?",
+      "autoDisableConfirm": "Lesson reminders, follow-ups and renewal reminders stop until you turn them back on. Booking confirmations, lesson reports and your own chat messages are not affected. Turn them off?",
+      "autoEnableYes": "Yes, turn them on",
+      "autoDisableYes": "Yes, turn them off"
     },
     "error": {
       "not_submittable": "This template was already sent or is already approved",
       "not_configured": "The {line} details aren't set up on the server",
       "meta_error": "Meta rejected the request: {message}",
-      "kapso_auth": "Kapso refused the project API key: update KAPSO_API_KEY in «Integrations», then try again.",
+      "kapso_auth": "Kapso refused the project API key: update «Kapso project API key» in «Integrations», then try again.",
       "needs_app_id": "This template includes a PDF file. To send it to Meta from the {line}, the Meta app ID ({key}) has to be set on the server first.",
       "needs_meta_driver": "This template includes a PDF file, and Kapso cannot upload the sample file. To send it to Meta, switch the «Sending provider» of the {line} to «Meta direct» in «Integrations», then try again.",
       "invalid_template": "Meta would reject this template's text: a variable at the very start or end, two variables side by side, a gap in the numbering, or a variable without a sample value.",
@@ -2821,7 +2829,7 @@
       "10": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
       "190": "The WhatsApp account's access has expired — it needs renewing from Business Manager, and messages are waiting in the queue",
       "200": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
-      "kapso_auth": "Kapso refused the project API key — update KAPSO_API_KEY in «Integrations»; messages wait in the queue",
+      "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Integrations»; messages wait in the queue",
       "470": "More than 24 hours have passed since their last message",
       "130429": "Meta paused sending for a while because of high message volume",
       "131026": "The number isn't on WhatsApp or can't receive messages",
@@ -4535,7 +4543,9 @@
     "invalid": "Not a valid value for this field",
     "options": {
       "meta": "Meta direct",
-      "kapso": "Kapso"
+      "kapso": "Kapso",
+      "true": "On",
+      "false": "Off"
     },
     "enumDefault": "Default: {value}",
     "enumServer": "Server value: {value}",
@@ -4624,7 +4634,7 @@
       },
       "WA_TEMPLATE_SYNC": {
         "label": "Template sync with Meta",
-        "hint": "Write false while on Meta test credentials so the template registry is not changed."
+        "hint": "Turn it off while using Meta test credentials so the template registry does not change."
       },
       "LIVEKIT_URL": {
         "label": "Classroom server URL",
@@ -4662,7 +4672,12 @@
         "label": "Contact for push services",
         "hint": "mailto:name@example.com or an https:// URL the push services may contact about a problem."
       }
-    }
+    },
+    "developer": "For developers",
+    "developerKey": "Server key name: {key}",
+    "allowListEmptyTitle": "Remove the allowed-numbers limit",
+    "allowListEmptyConfirm": "With this list empty, the server’s own list applies if it has one; otherwise messages may go to every number, real guardians included. Save?",
+    "allowListEmptyYes": "Yes, save with no limit"
   },
   "account": {
     "title": "My account",
@@ -4787,5 +4802,160 @@
     "signOutConfirm": "End all of {name}'s open sessions on every device?",
     "roleFilter": "Filter by role",
     "statusFilter": "Filter by status"
+  },
+  "notificationCatalogue": {
+    "title": "What is sent and when",
+    "intro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the switches in their own sections of this page.",
+    "readOnly": "Read-only",
+    "loadError": "Could not load the notifications list",
+    "retry": "Reload the list",
+    "columns": {
+      "name": "Notification",
+      "audience": "To",
+      "when": "When",
+      "channel": "Via",
+      "number": "From number",
+      "state": "Sent?"
+    },
+    "audience": {
+      "guardian": "Guardian",
+      "teacher": "Teacher",
+      "lead": "Lead",
+      "staff": "Academy team"
+    },
+    "channels": {
+      "whatsapp": "WhatsApp",
+      "bell": "Platform bell",
+      "push": "Phone and browser alert"
+    },
+    "states": {
+      "on": "Sends",
+      "off": "Not sent",
+      "manual": "By hand"
+    },
+    "blockers": {
+      "messaging_off": "because message sending is off",
+      "not_configured": "because WhatsApp is not set up yet",
+      "auto_off": "because automatic messages are off",
+      "row_off": "because its own setting on this page is off",
+      "template_not_approved": "because Meta has not approved the template yet"
+    },
+    "tags": {
+      "automatic": "Automatic message",
+      "essential": "Essential",
+      "locked": "Always on"
+    },
+    "timing": {
+      "reminder_minutes_before": "{value} minutes before the lesson",
+      "renewal_alert_remaining": "When {value} or fewer lessons are left in the package",
+      "follow_up_hours": "{value} hours after the last message without a booking"
+    },
+    "lines": {
+      "notifications": "Notifications number",
+      "chat": "Chat number"
+    },
+    "noNumber": "Not applicable",
+    "chatNumber": "The number the family wrote to",
+    "numbersTitle": "WhatsApp numbers",
+    "notChecked": "Number not checked yet",
+    "checkedAt": "Last good check: {time}",
+    "entries": {
+      "booking_confirmation": {
+        "name": "Booking and new-time confirmation",
+        "trigger": "As soon as a lesson is booked or moved"
+      },
+      "lesson_reminder": {
+        "name": "Lesson reminder",
+        "trigger": "On the lesson day, before it starts"
+      },
+      "lesson_reminder_24h": {
+        "name": "Reminder on the day before",
+        "trigger": "The day before, at the lesson hour, with confirm and reschedule buttons"
+      },
+      "teacher_lesson_reminder": {
+        "name": "Teacher lesson reminder",
+        "trigger": "Before the lesson starts"
+      },
+      "lesson_join_link": {
+        "name": "Lesson join link",
+        "trigger": "Before lessons held in the academy classroom only"
+      },
+      "teacher_new_student": {
+        "name": "New-student message to the teacher",
+        "trigger": "After a new student’s first lesson is booked"
+      },
+      "report_ready": {
+        "name": "Lesson report as PDF",
+        "trigger": "Once the teacher writes the report and its PDF is ready"
+      },
+      "renewal_due": {
+        "name": "Package renewal reminder",
+        "trigger": "When a package is about to run out"
+      },
+      "follow_up_slots": {
+        "name": "Lead follow-up with two times",
+        "trigger": "When a lead has not booked after contact"
+      },
+      "lesson_rating": {
+        "name": "Lesson rating buttons",
+        "trigger": "After the lesson ends"
+      },
+      "lesson_join_link_manual": {
+        "name": "Join link by hand",
+        "trigger": "When a staff member sends it from the lesson page"
+      },
+      "lesson_rating_manual": {
+        "name": "Rating request by hand",
+        "trigger": "When a staff member sends it from the chat"
+      },
+      "lesson_feedback_request": {
+        "name": "Feedback form link",
+        "trigger": "When a staff member sends it from the lesson page"
+      },
+      "inbox_templates": {
+        "name": "Chat templates",
+        "trigger": "Picked by the team in the inbox"
+      },
+      "meeting_invite_text": {
+        "name": "Meeting invitation",
+        "trigger": "When a guardian is invited to a meeting, within 24 hours of their last message"
+      },
+      "meeting_cancel_text": {
+        "name": "Meeting cancelled",
+        "trigger": "When a meeting a guardian was invited to is cancelled"
+      },
+      "new_lead": {
+        "name": "New lead",
+        "trigger": "On the first message from an unknown number"
+      },
+      "new_message": {
+        "name": "New message",
+        "trigger": "When a message arrives in the inbox"
+      },
+      "lesson_needs_confirmation": {
+        "name": "Lesson needs confirmation",
+        "trigger": "Before a lesson that is still unconfirmed, even with automatic messages off"
+      },
+      "report_submitted": {
+        "name": "New lesson report",
+        "trigger": "When a teacher submits a lesson report"
+      },
+      "payment_due": {
+        "name": "Package needs renewal or payment",
+        "trigger": "When a package is ending or a payment is late"
+      },
+      "reminder_failed": {
+        "name": "A message could not be sent",
+        "trigger": "When a WhatsApp message finally fails"
+      },
+      "new_student": {
+        "name": "New student for the teacher",
+        "trigger": "After a new student’s first lesson is booked"
+      },
+      "meeting_invite": {
+        "name": "Internal meeting invitation",
+        "trigger": "When a meeting is set, moved or cancelled"
+      }
+    }
   }
 }

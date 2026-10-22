@@ -21,7 +21,7 @@ describe('env: feedback link secret (optional, >= 32 chars)', () => {
 describe('env: WhatsApp is optional and off by default (docs/12 §3)', () => {
   it('boots without any WhatsApp or Expo value; sending is off', () => {
     const env = loadEnv(BASE);
-    expect(env.MESSAGING_ENABLED).toBe(false);
+    expect(env).not.toHaveProperty('MESSAGING_ENABLED');
     expect(env.WA_API_BASE).toBeUndefined();
     expect(whatsappEnv(env)).toBeNull();
     expect(sendingAllowed(env, true)).toBe(false);
@@ -52,16 +52,16 @@ describe('env: WhatsApp is optional and off by default (docs/12 §3)', () => {
   });
 
   it.each([
-    { name: 'env on, configured, setting on', extra: { MESSAGING_ENABLED: 'true', ...WA }, setting: true, allowed: true },
-    { name: 'admin kill switch off', extra: { MESSAGING_ENABLED: 'true', ...WA }, setting: false, allowed: false },
-    { name: 'env off', extra: { MESSAGING_ENABLED: 'false', ...WA }, setting: true, allowed: false },
-    { name: 'env on but not configured', extra: { MESSAGING_ENABLED: 'true' }, setting: true, allowed: false },
+    { name: 'configured, setting on', extra: { ...WA }, setting: true, allowed: true },
+    { name: 'admin kill switch off', extra: { ...WA }, setting: false, allowed: false },
+    { name: 'a leftover env MESSAGING_ENABLED=true does not open it', extra: { MESSAGING_ENABLED: 'true', ...WA }, setting: false, allowed: false },
+    { name: 'setting on but not configured', extra: {}, setting: true, allowed: false },
   ])('sendingAllowed: $name → $allowed', ({ extra, setting, allowed }) => {
     expect(sendingAllowed(loadEnv({ ...BASE, ...extra }), setting)).toBe(allowed);
   });
 
-  it('rejects a malformed switch or version instead of guessing', () => {
-    expect(() => loadEnv({ ...BASE, MESSAGING_ENABLED: 'maybe' })).toThrow();
+  it('rejects a malformed version instead of guessing; a stale MESSAGING_ENABLED is ignored, never a boot failure', () => {
     expect(() => loadEnv({ ...BASE, WA_API_VERSION: '21' })).toThrow();
+    expect(() => loadEnv({ ...BASE, MESSAGING_ENABLED: 'maybe' })).not.toThrow();
   });
 });

@@ -9,6 +9,7 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { PermissionResolver } from '../../common/auth/permissions';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { StorageService } from '../../common/storage/storage.service';
+import { LineHealthStore } from './line-health.store';
 import { LinesCheck } from './lines.check';
 import { MessageSender } from './message.sender';
 import { MessagesQueries } from './messages.queries';
@@ -46,6 +47,7 @@ function mocks() {
     /** A SEPARATE object (docs/12 §13.16): per-line calls can be told apart. */
     chatClient: clientMock(),
     lines: { check: vi.fn() },
+    health: { save: vi.fn(), all: vi.fn(async () => []) },
     storage: { signedDownload: vi.fn() },
     sender: { kick: vi.fn() },
     audit: { record: vi.fn() },
@@ -61,6 +63,7 @@ export async function whatsappApp(resolver: PermissionResolver = systemResolver)
     .overrideProvider(WHATSAPP_CLIENT).useValue(m.client)
     .overrideProvider(WHATSAPP_LINES).useValue({ notifications: m.client, chat: m.chatClient })
     .overrideProvider(LinesCheck).useValue(m.lines)
+    .overrideProvider(LineHealthStore).useValue(m.health)
     .overrideProvider(StorageService).useValue(m.storage)
     .overrideProvider(MessageSender).useValue(m.sender)
     .overrideProvider(SendGate).useValue(m.gate)

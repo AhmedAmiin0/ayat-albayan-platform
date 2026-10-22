@@ -23,7 +23,7 @@ jest.mock('expo-router', () => ({
 const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString();
 const OPEN = { ...thread, last_inbound_at: minutesAgo(5), reply_line: 'chat' as const };
 const CLOSED = { ...thread, last_inbound_at: minutesAgo(3 * 24 * 60) };
-type Gate = { open: boolean; reason: 'switch_off' | 'env_off' | null; queued: number };
+type Gate = { open: boolean; reason: 'switch_off' | 'not_configured' | null; queued: number };
 
 async function open(th: typeof thread, gate: Gate = { open: true, reason: null, queued: 0 }) {
   mockApiFetch.mockImplementation(async (p: string) => (p === '/messages/gate' ? gate : detail([inbound], { thread: th })));

@@ -1,8 +1,8 @@
-import { cleanup, fireEvent, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
 import { SettingsPage } from './SettingsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -15,6 +15,7 @@ function renderPage(auto: boolean, cutover = false) {
   routeFetch(apiFetch, [
     ['/settings/integrations', []],
     ['/settings', { ...SETTINGS, auto_messages_enabled: auto, crm_cutover_done: cutover }],
+    CATALOGUE_ROUTE,
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
     ['/messaging/templates', []],
   ]);
@@ -35,15 +36,25 @@ describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut
     expect(screen.getByText(s.off)).toBeTruthy(); // the send gate is its own switch
     apiSend.mockResolvedValue({ ...SETTINGS, auto_messages_enabled: true });
     fireEvent.click(screen.getByRole('button', { name: s.autoEnable }));
+    const dialog = screen.getByRole('dialog', { name: s.autoEnable });
+    expect(within(dialog).getByText(s.autoEnableConfirm)).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole('button', { name: s.autoEnableYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { autoMessagesEnabled: true }));
     expect(await screen.findByText(s.autoOn)).toBeTruthy();
     expect(screen.getByText(s.off)).toBeTruthy();
   });
 
-  it('turning it OFF is immediate', async () => {
+  it('turning it OFF asks first, saying what stops and what does not; cancel changes nothing', async () => {
     renderPage(true);
     apiSend.mockResolvedValue({ ...SETTINGS, auto_messages_enabled: false });
     fireEvent.click(await screen.findByRole('button', { name: s.autoDisable }));
+    const dialog = screen.getByRole('dialog', { name: s.autoDisable });
+    expect(within(dialog).getByText(s.autoDisableConfirm)).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: t.common.cancel }));
+    expect(apiSend).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: s.autoDisable }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: s.autoDisableYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { autoMessagesEnabled: false }));
     expect(await screen.findByText(s.autoOff)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledTimes(1);
@@ -53,6 +64,7 @@ describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut
     renderPage(false);
     apiSend.mockRejectedValue(new Error('down'));
     fireEvent.click(await screen.findByRole('button', { name: s.autoEnable }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: s.autoEnableYes }));
     expect(await screen.findByText(t.common.error)).toBeTruthy();
     expect(screen.getByText(s.autoOff)).toBeTruthy();
   });

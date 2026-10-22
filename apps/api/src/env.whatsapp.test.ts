@@ -64,11 +64,11 @@ describe('whatsappEnv / sendingAllowed keep today’s behaviour', () => {
     expect(whatsappEnv(env(CHAT))).toBeNull();
   });
 
-  it('sending needs MESSAGING_ENABLED, the notifications line and the setting; chat is optional', () => {
-    expect(sendingAllowed(env({ ...WA, MESSAGING_ENABLED: 'true' }), true)).toBe(true);
+  it('sending needs the notifications line and the setting (no env fuse); chat is optional', () => {
+    expect(sendingAllowed(env({ ...WA }), true)).toBe(true);
+    expect(sendingAllowed(env({ ...WA }), false)).toBe(false);
     expect(sendingAllowed(env({ ...WA, MESSAGING_ENABLED: 'true' }), false)).toBe(false);
-    expect(sendingAllowed(env({ ...WA }), true)).toBe(false);
-    expect(sendingAllowed(env({ WA_API_BASE: 'http://x', ...CHAT, MESSAGING_ENABLED: 'true' }), true)).toBe(false);
+    expect(sendingAllowed(env({ WA_API_BASE: 'http://x', ...CHAT }), true)).toBe(false);
   });
 });
 

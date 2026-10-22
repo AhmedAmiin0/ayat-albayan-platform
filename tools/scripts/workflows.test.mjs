@@ -15,8 +15,11 @@ const docs = readFileSync(root('docs/09-deployment.md'), 'utf8');
 const section = docs.slice(docs.indexOf('## GitHub Actions'));
 const secretsIn = (x) => [...JSON.stringify(x).matchAll(/secrets\.([A-Za-z_][A-Za-z0-9_]*)/g)].map((m) => m[1]);
 const jobsOf = (w) => Object.entries(w.doc.jobs ?? {});
-/** Server-only messaging switches (docs/12 §13.13): set by hand on the server, never by a workflow. */
-const FLAGS = /\b(MESSAGING_ENABLED|WA_PHONE_NUMBER_ID|WA_CHAT_PHONE_NUMBER_ID|WA_ALLOWED_RECIPIENTS)\b/;
+/**
+ * Server-only messaging values (docs/12 §13.13): set by hand, never by a workflow. Sending itself is
+ * the admin's switch in the database (docs/23: the env fuse is gone), which no workflow can reach.
+ */
+const FLAGS = /\b(WA_PHONE_NUMBER_ID|WA_CHAT_PHONE_NUMBER_ID|WA_ALLOWED_RECIPIENTS)\b/;
 
 test('every workflow parses and has jobs', () => {
   assert.ok(workflows.length >= 7);
@@ -33,13 +36,13 @@ test('every workflow has top-level permissions of contents: read only', () => {
 });
 
 test('the flag guard catches every server-only messaging switch, as whole words only', () => {
-  for (const k of ['MESSAGING_ENABLED', 'WA_PHONE_NUMBER_ID', 'WA_CHAT_PHONE_NUMBER_ID', 'WA_ALLOWED_RECIPIENTS']) {
+  for (const k of ['WA_PHONE_NUMBER_ID', 'WA_CHAT_PHONE_NUMBER_ID', 'WA_ALLOWED_RECIPIENTS']) {
     assert.ok(FLAGS.test(`echo "${k}=x" >> .env`), k);
   }
   assert.ok(!FLAGS.test('WA_ALLOWED_RECIPIENTS_LIST WA_TEMPLATE_SYNC WA_CHAT_WABA_ID'));
 });
 
-/** Where a workflow sets a flag: workflow, job and step env (keys AND values), run, with; the deploy guard `if` is allowed. */
+/** Where a workflow sets a flag: workflow, job and step env (keys AND values), run, with, if. */
 function flagHits(w) {
   const steps = [{ env: w.doc.env }, ...jobsOf(w).flatMap(([, j]) => [{ env: j.env }, ...(j.steps ?? [])])];
   const hits = [];
@@ -48,24 +51,22 @@ function flagHits(w) {
     if (FLAGS.test(Object.values(s.env ?? {}).map(String).join(' '))) hits.push(`${w.file}: env value`);
     if (FLAGS.test(s.run ?? '')) hits.push(`${w.file}: run script`);
     if (FLAGS.test(JSON.stringify(s.with ?? {}))) hits.push(`${w.file}: with`);
-    const guard = w.file === 'deploy-staging.yml' && /^\$\{\{ vars\.MESSAGING_ENABLED == 'true' \}\}$/.test(String(s.if));
-    if (s.if && FLAGS.test(String(s.if)) && !guard) hits.push(`${w.file}: if`);
+    if (s.if && FLAGS.test(String(s.if))) hits.push(`${w.file}: if`);
   }
   return hits;
 }
 
-test('no workflow sets MESSAGING_ENABLED, WA_PHONE_NUMBER_ID, WA_CHAT_PHONE_NUMBER_ID or WA_ALLOWED_RECIPIENTS (only the deploy guard may read the flag)', () => {
+test('no workflow sets or reads WA_PHONE_NUMBER_ID, WA_CHAT_PHONE_NUMBER_ID or WA_ALLOWED_RECIPIENTS', () => {
   for (const w of workflows) assert.deepEqual(flagHits(w), [], w.file);
 });
 
 test('the flag guard also reads workflow-level env and env values (review C, S3)', () => {
   const doc = (env) => ({ file: 'x.yml', doc: { env, jobs: { build: { steps: [{ run: 'pnpm build' }] } } } });
-  assert.deepEqual(flagHits(doc({ MESSAGING_ENABLED: 'true' })), ['x.yml: env key']);
+  assert.deepEqual(flagHits(doc({ WA_PHONE_NUMBER_ID: '1' })), ['x.yml: env key']);
   assert.deepEqual(flagHits(doc({ LIST: '${{ vars.WA_ALLOWED_RECIPIENTS }}' })), ['x.yml: env value']);
   assert.deepEqual(flagHits(doc({ NODE_ENV: 'test' })), []);
-  const guarded = { file: 'deploy-staging.yml', doc: { jobs: { d: { steps: [{ if: "${{ vars.MESSAGING_ENABLED == 'true' }}" }] } } } };
-  assert.deepEqual(flagHits(guarded), []);
-  assert.deepEqual(flagHits({ ...guarded, file: 'ci.yml' }), ['ci.yml: if']);
+  const reads = { file: 'deploy-staging.yml', doc: { jobs: { d: { steps: [{ if: "${{ vars.WA_ALLOWED_RECIPIENTS != '' }}" }] } } } };
+  assert.deepEqual(flagHits(reads), ['deploy-staging.yml: if']);
 });
 
 test('deploying, migrating and mobile workflows never run on pull_request from strangers', () => {

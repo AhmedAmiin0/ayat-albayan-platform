@@ -5,9 +5,10 @@ import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } fro
 import { SettingsService } from '../../common/settings/settings.service';
 
 /**
- * The one send gate (docs/12 §3.1): env MESSAGING_ENABLED, WhatsApp configured, and the admin's
- * kill switch (settings.messaging_enabled). Closed → rows stay queued; nothing fails, nothing is
- * lost. B2 asks it before an immediate send to tell the admin «inbox.messagingOff».
+ * The one send gate (docs/12 §3.1): WhatsApp configured and the admin's kill switch
+ * (settings.messaging_enabled, fail-closed: only a stored true). No env fuse (docs/23 owner answer 2).
+ * Closed → rows stay queued; nothing fails, nothing is lost. B2 asks it before an immediate send to
+ * tell the admin «inbox.messagingOff».
  */
 @Injectable()
 export class SendGate {
@@ -22,7 +23,7 @@ export class SendGate {
   }
 
   async open(): Promise<boolean> {
-    if (!sendingAllowed(this.env, true)) return false; // the deployment says no: skip the DB read
+    if (!sendingAllowed(this.env, true)) return false; // WhatsApp not configured: skip the DB read
     return sendingAllowed(this.env, (await this.settings.all()).messaging_enabled);
   }
 
@@ -40,11 +41,10 @@ export class SendGate {
     return { ...state, queued, ...(allowedRecipients(this.env) ? { restricted: true } : {}) };
   }
 
-  /** Which gate is closed, for the admin: the server's env, WhatsApp config, or their own switch. */
+  /** Which gate is closed, for the admin: WhatsApp config, or their own switch. */
   async state(): Promise<Omit<SendGateView, 'queued'>> {
-    if (!this.env.MESSAGING_ENABLED) return { open: false, reason: 'env_off' };
     if (!whatsappEnv(this.env)) return { open: false, reason: 'not_configured' };
-    const on = (await this.settings.all()).messaging_enabled;
+    const on = (await this.settings.all()).messaging_enabled === true;
     return on ? { open: true, reason: null } : { open: false, reason: 'switch_off' };
   }
 

@@ -25,7 +25,7 @@ const minutesAgo = (n: number) => new Date(Date.now() - n * 60_000).toISOString(
 const openThread = detail([inbound], { thread: { ...thread, last_inbound_at: minutesAgo(5) } });
 const box = () => screen.getByLabelText(t.inbox.composer.placeholder);
 
-type Gate = { open: boolean; reason: 'switch_off' | 'env_off' | null; queued: number };
+type Gate = { open: boolean; reason: 'switch_off' | 'not_configured' | null; queued: number };
 
 async function open(gate: Gate = { open: true, reason: null, queued: 0 }) {
   mockApiFetch.mockImplementation(async (path: string) => (path === '/messages/gate' ? gate : openThread));
@@ -97,7 +97,7 @@ test('sending switched off: the box says messages wait in the queue', async () =
 });
 
 test('a gate closed on the server is said too (the switch alone would not send)', async () => {
-  await open({ open: false, reason: 'env_off', queued: 0 });
+  await open({ open: false, reason: 'not_configured', queued: 0 });
   expect(await screen.findByText(t.inbox.messagingOffServer)).toBeTruthy();
 });
 

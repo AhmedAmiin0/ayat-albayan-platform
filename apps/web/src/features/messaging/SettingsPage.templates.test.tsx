@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { LINES } from '@/features/templates/template-lines-fixture';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
 import { SettingsPage } from './SettingsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -24,6 +24,7 @@ describe('settings search — templates', () => {
     routeFetch(apiFetch, [
       ['/settings/integrations', []],
       ['/settings', SETTINGS],
+      CATALOGUE_ROUTE,
       ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
       ['/messaging/templates/lines', LINES],
       ['/messaging/templates', []],

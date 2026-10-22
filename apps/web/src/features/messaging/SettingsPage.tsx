@@ -19,7 +19,7 @@ import { integrationsMatch } from '../integrations/integrations-form';
 import { IntegrationsPanel } from '../integrations/IntegrationsPanel';
 import { settingsQuery } from './api';
 import { SettingsNav, type ExtraSection } from './SettingsNav';
-import { AppearanceSection, FieldsSection, linesMatch, MessagingSection, SalesSection, templatesMatch } from './SettingsSections';
+import { AppearanceSection, catalogueMatch, FieldsSection, linesMatch, MessagingSection, SalesSection, templatesMatch } from './SettingsSections';
 import { useSettingsForm } from './use-settings-form';
 
 /** The sections made only of registry fields, in page order between messaging and sales. */
@@ -45,6 +45,7 @@ function useNothingMatches(query: string): boolean {
     !matchesText(`${t.settings.theme} ${t.settings.themeHint}`, query) &&
     !integrationsMatch(query) &&
     !linesMatch(query) &&
+    !catalogueMatch(query) &&
     !templatesMatch(query) &&
     !(custom.data ?? []).some((e) => matchesCustom(e, query))
   );

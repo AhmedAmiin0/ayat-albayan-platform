@@ -14,23 +14,22 @@ describe('SendGate.view restricted flag (WA_ALLOWED_RECIPIENTS, docs/12 §13.5)'
   });
 
   it('restricted: true when the allow-list is set (read at construction)', async () => {
-    vi.stubEnv('MESSAGING_ENABLED', '');
+    vi.stubEnv('WA_API_BASE', '');
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+20 100 123 4567, 966551234567');
-    await expect(gate().view()).resolves.toEqual({ open: false, reason: 'env_off', queued: 3, restricted: true });
+    await expect(gate().view()).resolves.toEqual({ open: false, reason: 'not_configured', queued: 3, restricted: true });
   });
 
   it('the key is ABSENT when the list is unset or blank (exact-shape asserts hold)', async () => {
-    vi.stubEnv('MESSAGING_ENABLED', '');
+    vi.stubEnv('WA_API_BASE', '');
     for (const raw of ['', '   ']) {
       vi.stubEnv('WA_ALLOWED_RECIPIENTS', raw);
       const view = await gate().view();
-      expect(view).toEqual({ open: false, reason: 'env_off', queued: 3 });
+      expect(view).toEqual({ open: false, reason: 'not_configured', queued: 3 });
       expect(Object.keys(view)).not.toContain('restricted');
     }
   });
 
   it('an open gate keeps its state and adds the flag', async () => {
-    vi.stubEnv('MESSAGING_ENABLED', 'true');
     vi.stubEnv('WA_API_BASE', 'http://127.0.0.1:4010');
     vi.stubEnv('WA_PHONE_NUMBER_ID', 'stub-phone');
     vi.stubEnv('WA_WABA_ID', 'stub-waba');
