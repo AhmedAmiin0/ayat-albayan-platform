@@ -1,5 +1,5 @@
 import type { Database, Json } from '@ab/db';
-import { GOOGLE_SYNC_STATES, type GooglePlannedRequest, type GoogleSkipReason, type GoogleSyncKind, type GoogleSyncState } from '@ab/shared';
+import { GOOGLE_SYNC_KINDS, GOOGLE_SYNC_STATES, type GooglePlannedRequest, type GoogleSkipReason, type GoogleSyncKind, type GoogleSyncState } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 
@@ -59,7 +59,8 @@ export class GoogleItemsQueries {
     const stale = new Date(Date.now() - 10 * 60_000).toISOString();
     const { data, error } = await this.db.rpc('google_sync_claim', { p_limit: limit, p_stale_before: stale });
     if (error) throw fail('claim', error);
-    return data as SyncItem[];
+    // UPDATE … RETURNING keeps no order: a report's PDF must run before its rows in the same pass.
+    return [...(data as SyncItem[])].sort((a, b) => GOOGLE_SYNC_KINDS.indexOf(a.kind) - GOOGLE_SYNC_KINDS.indexOf(b.kind));
   }
 
   /**

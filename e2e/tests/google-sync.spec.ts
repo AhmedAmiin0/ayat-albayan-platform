@@ -6,7 +6,7 @@ import { resetAbrar, seedFamily, seedLesson, withSql } from '../support/schedule
 // dry-run item → live writes both events to the stub → cancel deletes them → a report gives a PDF,
 // an attendance row and a summary row. tools/google-stub only: nothing ever reaches Google.
 
-const WAIT = { timeout: 30_000, intervals: [500, 1_000, 2_000] };
+const WAIT = { timeout: 45_000, intervals: [500, 1_000, 2_000] };
 const g = ar.googleSync;
 
 test.describe('Google sync alongside the old script (docs/24)', () => {

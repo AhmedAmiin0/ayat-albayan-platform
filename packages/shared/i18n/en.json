@@ -4965,7 +4965,7 @@
       "notPlatformOrigin": "Not a platform lesson (imported from the sheet)",
       "disable": "Turn off sync",
       "windowInvalid": "Enter a whole number from {min} to {max}",
-      "save": "Save"
+      "save": "Save the window"
     },
     "mobile": {
       "title": "Google sync",

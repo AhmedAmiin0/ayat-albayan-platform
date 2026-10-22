@@ -4965,7 +4965,7 @@
       "notPlatformOrigin": "ليست حلقة من المنصة (مستوردة من الشيت)",
       "disable": "أوقف المزامنة",
       "windowInvalid": "أدخل عددًا صحيحًا من {min} إلى {max}",
-      "save": "حفظ"
+      "save": "حفظ النطاق"
     },
     "mobile": {
       "title": "مزامنة Google",
