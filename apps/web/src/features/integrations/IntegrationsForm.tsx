@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { t } from '@/lib/i18n';
+import { sendGateQuery } from '../messaging/api';
 import { integrationsQuery, putIntegrationValues } from './integrations-api';
 import { ConfirmSwitchDialog } from '../messaging/ConfirmSwitchDialog';
 import { changesOf, draftOf, emptiesAllowList, invalidKeys, matchesIntegration, type IntegrationDraft } from './integrations-form';
@@ -30,6 +31,8 @@ export function IntegrationsForm({ items, query, onNote }: FormProps) {
       setDraft(draftOf(data));
       setConfirming(false);
       onNote(s.saved);
+      // The chip and the gate note read GET /messages/gate (configured? allow-list?): ask again.
+      void queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey });
     },
   });
   const changes = changesOf(items, draft);
@@ -37,7 +40,10 @@ export function IntegrationsForm({ items, query, onNote }: FormProps) {
     const bad = invalidKeys(changes);
     setInvalid(new Set(bad));
     if (bad.length > 0 || Object.keys(changes).length === 0) return;
-    if (emptiesAllowList(changes)) setConfirming(true);
+    if (emptiesAllowList(changes)) {
+      save.reset(); // an earlier failure must not greet the new question
+      setConfirming(true);
+    }
     else save.mutate(changes);
   };
   const shown = items.filter((i) => matchesIntegration(i.key, query));

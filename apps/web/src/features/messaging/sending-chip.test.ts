@@ -16,6 +16,9 @@ describe('sendingChip: the switch, honest about the server', () => {
   it('on under the allow-list: allowed numbers only; on and open: on', () => {
     expect(sendingChip(true, { open: true, reason: null, queued: 0, restricted: true }).label).toBe(s.onRestricted);
     expect(sendingChip(true, { open: true, reason: null, queued: 0 })).toEqual({ tone: 'ok', glyph: 'fill', label: s.on });
-    expect(sendingChip(true, undefined).label).toBe(s.on);
+  });
+
+  it('on while the server is not known yet (loading or failed): never a green «يعمل»', () => {
+    expect(sendingChip(true, undefined)).toEqual({ tone: 'act', glyph: 'half', label: s.onUnknown });
   });
 });

@@ -4,6 +4,7 @@ import { renderWithQuery } from '@/test/query';
 import { ltr } from '@/ui/Ltr';
 import { catalogue, settings } from './fixtures';
 import { NotificationCatalogue } from './NotificationCatalogue';
+import { whenOf } from './catalogue-words';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -42,4 +43,13 @@ test('a failed read says so and retries', async () => {
   fireEvent.press(screen.getByRole('button', { name: t.mobile.retry }));
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryByText(c.loadError)).toBeNull();
+});
+
+test('the when-line wraps (never cut to one line), so its timing stays readable at 390px', async () => {
+  await renderWithQuery(<NotificationCatalogue />);
+  await screen.findByText(c.entries.report_ready.name);
+  const entry = catalogue.entries.find((e) => e.timing) ?? catalogue.entries[0];
+  if (!entry) throw new Error('fixture has no entries');
+  const when = screen.getByText(whenOf(entry));
+  expect(when.props.numberOfLines).toBeUndefined();
 });
