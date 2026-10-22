@@ -1,5 +1,5 @@
 import { NOTIFICATION_CATALOGUE, type LineHealthView, type TemplateStatus, type WaLine } from '@ab/shared';
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, Logger } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { LineHealthStore } from '../whatsapp/line-health.store';
 
@@ -11,14 +11,24 @@ export const CATALOGUE_TEMPLATE_KEYS: readonly string[] = [...new Set(NOTIFICATI
 /** What the catalogue reads: message_templates (approval and number per key) and the kept line checks. */
 @Injectable()
 export class RulesQueries {
+  private readonly log = new Logger(RulesQueries.name);
+
   constructor(
     @Inject(DB) private readonly db: Db,
     private readonly health: LineHealthStore,
   ) {}
 
-  /** The last good number per line (no Meta call). */
-  lines(): Promise<LineHealthView[]> {
-    return this.health.all();
+  /**
+   * The last good number per line (no Meta call). A failed read (e.g. the table not migrated yet)
+   * shows «not checked yet» instead of failing the whole list.
+   */
+  async lines(): Promise<LineHealthView[]> {
+    try {
+      return await this.health.all();
+    } catch (e) {
+      this.log.warn(`line health unread: ${e instanceof Error ? e.message : String(e)}`);
+      return [];
+    }
   }
 
   async templates(): Promise<TemplateFacts> {

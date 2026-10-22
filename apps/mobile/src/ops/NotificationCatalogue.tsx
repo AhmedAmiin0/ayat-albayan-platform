@@ -41,8 +41,12 @@ export function NotificationCatalogue() {
               <ListRow
                 key={e.key}
                 title={c.entries[e.key].name}
-                subtitle={whenOf(e)}
-                tags={<Note>{factsOf(e)}</Note>}
+                tags={
+                  <>
+                    <Note>{whenOf(e)}</Note>
+                    <Note>{factsOf(e)}</Note>
+                  </>
+                }
                 trailing={<StatusChip {...chipOf(e)} size="sm" />}
               />
             ))}

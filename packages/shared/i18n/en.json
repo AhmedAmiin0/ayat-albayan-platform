@@ -2705,6 +2705,7 @@
       "disableTitle": "Stop sending messages",
       "disableConfirm": "No WhatsApp message will reach guardians, leads or teachers until you turn it back on; messages wait in the queue. Stop sending?",
       "disableYes": "Yes, stop sending",
+      "onUnknown": "On here · server not checked yet",
       "onBlocked": "On here · nothing is sent",
       "onRestricted": "On for allowed numbers only",
       "autoEnableConfirm": "Lesson reminders, follow-ups and renewal reminders will start reaching families and leads automatically. First make sure the old Apps Script reminders have stopped. Turn them on?",

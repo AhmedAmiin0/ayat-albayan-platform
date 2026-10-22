@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
 import { SettingRow } from '../messaging/SettingsFields';
 import { DeveloperKey } from './DeveloperKey';
+import { sendGateQuery } from '../messaging/api';
 import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from './integrations-api';
 import { integrationText } from './integrations-form';
 import { SecretStatusChip } from './SecretStatusChip';
@@ -26,6 +27,7 @@ export function SecretIntegrationRow({ item, onNote }: { item: IntegrationConfig
   const done = (data: unknown, message: string) => {
     if (Array.isArray(data)) queryClient.setQueryData(integrationsQuery.queryKey, data);
     else void queryClient.invalidateQueries({ queryKey: integrationsQuery.queryKey });
+    void queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey }); // a token decides «configured»
     onNote(message);
   };
   const save = useMutation({
