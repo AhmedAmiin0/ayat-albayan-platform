@@ -5180,6 +5180,7 @@
       "notifications": "Notifications number",
       "chat": "Chat number"
     },
+    "technical": "Technical details",
     "purpose": {
       "notifications": "Notifications role",
       "chat": "Chat role"

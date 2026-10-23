@@ -91,4 +91,16 @@ describe('system-role parity with the old @Roles table', () => {
     expect(gated.every((k) => k.startsWith('ChatListsController.'))).toBe(true);
     expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('inbox.lists'))).toEqual(['admin', 'sales']);
   });
+
+  // docs/23 phase 3: numbers.manage gates the numbers writes and the comms_source switch; reads are settings.read.
+  it('numbers.manage gates the numbers writes and the source switch only, for the system admin only', () => {
+    const gated = routes.filter((r) => r.permission === 'numbers.manage').map((r) => r.key).sort();
+    expect(gated).toEqual([
+      'CommunicationsController.setSource', 'NumbersController.clearSecret', 'NumbersController.create', 'NumbersController.import',
+      'NumbersController.remove', 'NumbersController.setSecret', 'NumbersController.update',
+    ]);
+    const reads = routes.filter((r) => r.key === 'NumbersController.list' || r.key === 'CommunicationsController.parity');
+    expect(reads.map((r) => r.permission)).toEqual(['settings.read', 'settings.read']);
+    expect(WHO.filter((who) => who !== null && systemPermissionsOf(who).includes('numbers.manage'))).toEqual(['admin']);
+  });
 });
