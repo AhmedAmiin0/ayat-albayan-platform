@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
+import { ClassroomSettings } from './classroom.settings';
 import type { ClassroomQueries } from './classroom.queries';
 import { CONFIG, decode, LESSON_ID, LINK_TOKEN, OPEN, queries, TEACHER } from './classroom.fakes';
 import { GuestJoinService } from './guest-join.service';
@@ -12,7 +13,7 @@ let q: ReturnType<typeof queries>;
 let mod: ReturnType<typeof moderation>;
 const deps = () => ({ q, mod, rec: recorder(), config: CONFIG });
 const staffJoin = () =>
-  new RoomJoinService(rolesOf({ q }), admissionOf(deps()), fakeSettings()).join({ user: TEACHER, lessonId: LESSON_ID }, OPEN);
+  new RoomJoinService(rolesOf({ q }), admissionOf(deps()), readerOf(ClassroomSettings)).join({ user: TEACHER, lessonId: LESSON_ID }, OPEN);
 const guestJoin = () =>
   new GuestJoinService(q as unknown as ClassroomQueries, new PublicJoinLimit(), admissionOf(deps())).join(
     { linkToken: LINK_TOKEN, ip: '9.9.9.9', body: { name: 'سهيلة' } },

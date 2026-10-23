@@ -1,9 +1,9 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { FxConverter } from '../dashboard/fx-converter';
 import type { ReceivablesQueries } from './receivables.queries';
 import { ReceivablesService } from './receivables.service';
+import { ReceivablesSettings } from './receivables.settings';
 
 const pkg = (id: string, currency: string, price: number) => ({
   id,
@@ -24,11 +24,10 @@ describe('ReceivablesService (GET /receivables)', () => {
     const fx = {
       conversion: vi.fn().mockResolvedValue({ currency: 'SAR', rates: { SAR: 1, EGP: 13 }, missing: ['AED'], date: null }),
     };
-    const settings = { all: vi.fn().mockResolvedValue(SETTING_DEFAULTS) };
     const svc = new ReceivablesService(
       queries as unknown as ReceivablesQueries,
       fx as unknown as FxConverter,
-      settings as unknown as SettingsService,
+      readerOf(ReceivablesSettings),
     );
     const v = await svc.list(new Date('2026-10-05T09:00:00Z'));
     expect(v.rows.map((r) => [r.id, r.owed, r.days_overdue])).toEqual([
@@ -37,6 +36,7 @@ describe('ReceivablesService (GET /receivables)', () => {
       ['c', 100, 34],
     ]);
     expect(queries.paid).toHaveBeenCalledWith(['a', 'b', 'c', 'd']);
+    expect(fx.conversion).toHaveBeenCalledWith('SAR', ['AED', 'EGP', 'SAR']); // settings.reporting_currency
     expect(v.total).toBe(400); // 300 SAR + 1300 EGP / 13; AED has no rate
     expect(v.fx_missing).toEqual(['AED']);
     expect(v.totals.map((t) => t.currency)).toEqual(['AED', 'EGP', 'SAR']);

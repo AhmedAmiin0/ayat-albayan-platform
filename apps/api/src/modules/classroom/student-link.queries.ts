@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { joinWindowConfig, OPEN_LESSON_STATUSES, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
+import { ClassroomSettings } from './classroom.settings';
 import { dbError } from '../teachers/http';
 import { hashLinkToken, linkExpiry, newLinkToken } from './join-link.token';
 
@@ -22,12 +22,12 @@ const AHEAD = 20;
 export class StudentLinkQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: ClassroomSettings,
   ) {}
 
   /** The classroom window from settings (join_opens_before_min / join_closes_after_min, cached). */
   async joinWindow(): Promise<JoinWindowConfig> {
-    return joinWindowConfig(await this.settings.all());
+    return joinWindowConfig(await this.settings.read());
   }
 
   async student(id: string): Promise<{ id: string; name: string } | null> {

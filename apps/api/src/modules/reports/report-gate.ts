@@ -1,12 +1,12 @@
 import { canEditReport } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { SettingsService } from '../../common/settings/settings.service';
 import { conflict } from '../scheduling/errors';
 import { ReportAccess } from './report-access';
 import type { ViewContext } from './report.mapper';
 import type { ReportRow } from './report-row';
 import { ReportsQueries } from './reports.queries';
+import { ReportsSettings } from './reports.settings';
 
 /** The caller, now, the teacher's edit window and the late-cancel policy. */
 export type ReportContext = ViewContext & { lateCancelHours: number | null };
@@ -17,7 +17,7 @@ export class ReportGate {
   constructor(
     private readonly queries: ReportsQueries,
     readonly access: ReportAccess,
-    private readonly settings: SettingsService,
+    private readonly settings: ReportsSettings,
   ) {}
 
   /** The report, if the caller may touch it: 404, else 403 for another teacher's report. */
@@ -29,7 +29,7 @@ export class ReportGate {
   }
 
   async context(user: AuthUser): Promise<ReportContext> {
-    const s = await this.settings.all();
+    const s = await this.settings.read();
     return {
       role: user.role,
       now: new Date(),

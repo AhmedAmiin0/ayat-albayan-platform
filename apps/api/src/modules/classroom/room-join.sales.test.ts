@@ -5,11 +5,12 @@ import { grantsFor } from './livekit-token';
 import { admissionOf, rolesOf } from './moderation.fakes';
 import { RoomJoinService } from './room-join.service';
 import { classroomApp } from './test-app';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
+import { ClassroomSettings } from './classroom.settings';
 
 let q: ReturnType<typeof queries>;
 const join = (now: Date) =>
-  new RoomJoinService(rolesOf({ q, teachers: { idByProfile: vi.fn() } }), admissionOf({ q, config: CONFIG }), fakeSettings()).join({ user: SALES, lessonId: LESSON_ID }, now);
+  new RoomJoinService(rolesOf({ q, teachers: { idByProfile: vi.fn() } }), admissionOf({ q, config: CONFIG }), readerOf(ClassroomSettings)).join({ user: SALES, lessonId: LESSON_ID }, now);
 const failure = async (p: Promise<unknown>) => ((await p.catch((e: unknown) => e)) as HttpException);
 
 beforeEach(() => {

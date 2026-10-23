@@ -1,12 +1,12 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
 import { vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { QueuedMessage } from '../reminders/queued-row';
 import type { FollowUpSlots } from './follow-up-slots';
 import { sampleLead } from './follow-ups.fakes';
 import { FollowUpsJob } from './follow-ups.job';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
 import type { AdvanceInput, FollowUpsQueries } from './follow-ups.queries';
+import { FollowUpsSettings } from './follow-ups.settings';
 
 /** Sun 4 Oct 17:00, Sun 17:45, Mon 5 Oct 18:00 Riyadh. */
 const FREE = ['2026-10-04T14:00:00Z', '2026-10-04T14:45:00Z', '2026-10-05T15:00:00Z'].map((s) => new Date(s));
@@ -44,11 +44,11 @@ export function setup(opts: JobSetup = {}) {
     advance: vi.fn(async (a: AdvanceInput) => advanced.push(a) > 0),
   };
   const slots = { freeStarts: vi.fn(async () => opts.free ?? FREE) };
-  const settings = { all: async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: opts.auto ?? true }) };
+  const settings = readerOf(FollowUpsSettings, { auto_messages_enabled: opts.auto ?? true });
   const job = new FollowUpsJob(
     queries as unknown as FollowUpsQueries,
     slots as unknown as FollowUpSlots,
-    settings as unknown as SettingsService,
+    settings,
   );
   return { job, queries, slots, queued, advanced, keys };
 }

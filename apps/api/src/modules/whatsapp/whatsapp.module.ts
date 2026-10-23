@@ -22,6 +22,7 @@ import { TemplateRegistry } from './template.registry';
 import { TemplatesController } from './templates.controller';
 import { TemplatesQueries } from './templates.queries';
 import { WaMediaRetentionJob } from './wa-media.retention.job';
+import { WhatsappSettings } from './whatsapp.settings';
 import { WHATSAPP_CLIENT, WHATSAPP_LINES, type WhatsappClient, type WhatsappLines } from './whatsapp.types';
 
 /**
@@ -53,6 +54,7 @@ function lines(): WhatsappLines {
     TemplatesQueries,
     TemplateRegistry,
     TemplateStarters,
+    WhatsappSettings,
     SendGate,
     SenderQueries,
     MessageDispatch,

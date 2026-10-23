@@ -18,6 +18,7 @@ import {
 import { ClassroomController, JoinLinkStaffController } from './classroom.controller';
 import { ClassroomPublicController } from './classroom.public.controller';
 import { ClassroomQueries } from './classroom.queries';
+import { ClassroomSettings } from './classroom.settings';
 import { GuestJoinService } from './guest-join.service';
 import { INTERNAL_MEETING_CONTROLLERS, INTERNAL_MEETING_PROVIDERS } from './internal-meetings.providers';
 import { PublicJoinLimit } from './join-limit';
@@ -87,6 +88,7 @@ import { StudentLinkService } from './student-link.service';
     { provide: LIVEKIT_HTTP, useValue: ((url, init) => fetch(url, init)) satisfies HttpPost },
     { provide: PublicJoinLimit, useFactory: () => new PublicJoinLimit() },
     { provide: MuteLimit, useFactory: () => new MuteLimit() },
+    ClassroomSettings,
     ClassroomQueries,
     AssistantsQueries,
     AssistantLessonsQueries,

@@ -11,6 +11,7 @@ import { InboundStore } from './webhook.inbound.store';
 import { WebhookQueries } from './webhook.queries';
 import { QuickReplies } from './webhook.quick-reply';
 import { WEBHOOK_CONFIG, WebhookService, type WebhookConfig } from './webhook.service';
+import { WebhookSettings } from './webhook.settings';
 import { StatusService } from './webhook.status.service';
 
 /**
@@ -30,6 +31,7 @@ import { StatusService } from './webhook.status.service';
     InboundStore,
     StatusService,
     QuickReplies,
+    WebhookSettings,
     WebhookQueries,
   ],
 })

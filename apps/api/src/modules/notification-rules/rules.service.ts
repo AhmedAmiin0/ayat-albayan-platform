@@ -1,7 +1,7 @@
 import { catalogueViews, type NotificationsOverview } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { SendGate } from '../whatsapp/send-gate';
+import { NotificationRulesSettings } from './notification-rules.settings';
 import { RulesQueries } from './rules.queries';
 
 /**
@@ -12,14 +12,14 @@ import { RulesQueries } from './rules.queries';
 @Injectable()
 export class RulesService {
   constructor(
-    private readonly settings: SettingsService,
+    private readonly settings: NotificationRulesSettings,
     private readonly gate: SendGate,
     private readonly queries: RulesQueries,
   ) {}
 
   async overview(): Promise<NotificationsOverview> {
     const [settings, state, templates, lines] = await Promise.all([
-      this.settings.all(),
+      this.settings.read(),
       this.gate.state(),
       this.queries.templates(),
       this.queries.lines(),

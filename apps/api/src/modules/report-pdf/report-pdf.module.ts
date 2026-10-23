@@ -3,6 +3,7 @@ import { PdfRenderer } from './pdf-renderer';
 import { ReportPdfJob } from './report-pdf.job';
 import { ReportPdfPublisher } from './report-pdf.publisher';
 import { ReportPdfQueries } from './report-pdf.queries';
+import { ReportPdfSettings } from './report-pdf.settings';
 import { ReportPdfSource } from './report-pdf.source';
 
 /**
@@ -11,7 +12,7 @@ import { ReportPdfSource } from './report-pdf.source';
  * Exports the job so the reports module can `kick()` it after a submit or an admin retry.
  */
 @Module({
-  providers: [ReportPdfQueries, ReportPdfSource, PdfRenderer, ReportPdfPublisher, ReportPdfJob],
+  providers: [ReportPdfQueries, ReportPdfSettings, ReportPdfSource, PdfRenderer, ReportPdfPublisher, ReportPdfJob],
   exports: [ReportPdfJob],
 })
 export class ReportPdfModule {}

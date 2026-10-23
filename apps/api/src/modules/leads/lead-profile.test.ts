@@ -1,8 +1,8 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
-import { describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { describe, expect, it } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { LeadProfileService, mergeQualification } from './lead-profile.service';
 import { fakeDeps, lead, LEAD_ID } from './leads.fakes';
+import { LeadsSettings } from './leads.settings';
 
 const ACTOR = 'a0000000-0000-4000-8000-000000000001';
 
@@ -10,8 +10,7 @@ function setup(row = lead()) {
   const deps = fakeDeps();
   deps.leads.findById.mockResolvedValue(row);
   deps.leads.update.mockImplementation(async (_id: string, patch: object) => ({ ...row, ...patch }));
-  const settings = { all: vi.fn(async () => SETTING_DEFAULTS) };
-  const service = new LeadProfileService(deps.asLeads, settings as unknown as SettingsService, deps.asAudit);
+  const service = new LeadProfileService(deps.asLeads, readerOf(LeadsSettings), deps.asAudit);
   return { ...deps, service };
 }
 

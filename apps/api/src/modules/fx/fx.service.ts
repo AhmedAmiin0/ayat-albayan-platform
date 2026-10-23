@@ -1,8 +1,8 @@
 import { SAR_PER_USD_PEG, type FxRate } from '@ab/shared';
 import { Inject, Injectable, Logger, ServiceUnavailableException } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { FX_FETCHER, type FxFetcher, type FxSnapshot } from './fx.fetcher';
 import { FxQueries, type FxRow } from './fx.queries';
+import { FxSettings } from './fx.settings';
 
 const HOUR_MS = 3_600_000;
 /** After a failed call the provider is left alone this long (it is rate-limited: docs/08 §4). */
@@ -24,12 +24,12 @@ export class FxService {
   constructor(
     @Inject(FX_FETCHER) private readonly fetcher: FxFetcher,
     private readonly queries: FxQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: FxSettings,
   ) {}
 
   async rateSarTo(quote: string): Promise<FxRate> {
     const stored = await this.queries.newest(quote);
-    const freshMs = (await this.settings.all()).fx_fresh_hours * HOUR_MS;
+    const freshMs = (await this.settings.read()).fx_fresh_hours * HOUR_MS;
     if (stored && Date.now() - Date.parse(stored.fetched_at) < freshMs) return fromRow(stored, false);
     try {
       const snap = await this.refresh();

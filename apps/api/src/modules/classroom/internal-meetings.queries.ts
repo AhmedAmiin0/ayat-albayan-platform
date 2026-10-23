@@ -2,7 +2,7 @@ import type { Tables } from '@ab/db';
 import { joinWindowConfig, type JoinWindowConfig } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
+import { ClassroomSettings } from './classroom.settings';
 import { dbError } from '../teachers/http';
 
 export type MeetingRow = Pick<
@@ -26,17 +26,17 @@ export interface NewMeeting {
 export class InternalMeetingsQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: ClassroomSettings,
   ) {}
 
   /** settings.default_meeting_title: the title of a meeting created without one. */
   async defaultTitle(): Promise<string> {
-    return (await this.settings.all()).default_meeting_title;
+    return (await this.settings.read()).default_meeting_title;
   }
 
   /** The lesson join window (settings.join_opens_before_min / join_closes_after_min). */
   async joinWindow(): Promise<JoinWindowConfig> {
-    return joinWindowConfig(await this.settings.all());
+    return joinWindowConfig(await this.settings.read());
   }
 
   /** null on a duplicate client_request_id (the caller reads the first row back). */

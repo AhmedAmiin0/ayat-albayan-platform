@@ -1,10 +1,11 @@
 // Test doubles for FxService (not shipped behaviour): no network, no database.
 import type { AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { FxFetcher, FxSnapshot } from './fx.fetcher';
 import type { FxQueries, FxRow } from './fx.queries';
 import { FxService } from './fx.service';
+import { FxSettings } from './fx.settings';
 
 export const NOW = new Date('2026-10-02T12:00:00Z');
 const HOUR = 3_600_000;
@@ -42,6 +43,6 @@ export function fakeFx(settings: Partial<AcademySettings> = {}) {
     newest: vi.fn<FxQueries['newest']>().mockResolvedValue(null),
     save: vi.fn<FxQueries['save']>().mockResolvedValue(undefined),
   };
-  const service = new FxService(fetcher, queries as unknown as FxQueries, fakeSettings(settings));
+  const service = new FxService(fetcher, queries as unknown as FxQueries, readerOf(FxSettings, settings));
   return { fetcher, queries, service };
 }

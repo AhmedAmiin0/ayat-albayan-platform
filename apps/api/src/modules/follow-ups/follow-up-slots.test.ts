@@ -1,9 +1,10 @@
 import { DEFAULT_DURATION, type AcademySettings } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { AvailabilityQuery, FreeSlotsQuery } from '../teachers/availability/availability.query';
 import { FollowUpSlots } from './follow-up-slots';
 import type { FollowUpsQueries } from './follow-ups.queries';
+import { FollowUpsSettings } from './follow-ups.settings';
 
 const byTeacher: Record<string, string[]> = {
   't-1': ['2026-10-04T14:00:00Z'],
@@ -18,7 +19,7 @@ function setup(over: Partial<AcademySettings> = {}) {
   const slots = new FollowUpSlots(
     queries as unknown as FollowUpsQueries,
     { freeSlots } as unknown as AvailabilityQuery,
-    fakeSettings(over),
+    readerOf(FollowUpsSettings, over),
   );
   return { slots, freeSlots };
 }

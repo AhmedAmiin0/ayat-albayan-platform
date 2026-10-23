@@ -1,7 +1,8 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { PublicFeedbackLimit, WindowCounter } from './feedback.rate-limit';
+import { FeedbackSettings } from './feedback.settings';
 
 const MIN = 60_000;
 
@@ -48,10 +49,17 @@ describe('PublicFeedbackLimit', () => {
   });
 
   it('check() reads settings.feedback_rate_window_min: a 2-minute window frees the bucket sooner', async () => {
-    const short = new PublicFeedbackLimit(fakeSettings({ feedback_rate_window_min: 2 }));
-    const usual = new PublicFeedbackLimit(fakeSettings());
+    const short = new PublicFeedbackLimit(readerOf(FeedbackSettings, { feedback_rate_window_min: 2 }));
+    const usual = new PublicFeedbackLimit(readerOf(FeedbackSettings));
     for (const l of [short, usual]) for (let i = 0; i < 10; i++) await l.check({ ip: '4.4.4.4', token: 't' }, 0);
     await expect(short.check({ ip: '4.4.4.4', token: 't' }, 3 * MIN)).resolves.toBeUndefined();
     await expect(usual.check({ ip: '4.4.4.4', token: 't' }, 3 * MIN)).rejects.toBeInstanceOf(HttpException);
+  });
+
+  it('check() without settings (unit use) keeps the 10-minute default window', async () => {
+    const l = new PublicFeedbackLimit();
+    for (let i = 0; i < 10; i++) await l.check({ ip: '5.5.5.5', token: 't' }, 0);
+    await expect(l.check({ ip: '5.5.5.5', token: 't' }, 9 * MIN)).rejects.toBeInstanceOf(HttpException);
+    await expect(l.check({ ip: '5.5.5.5', token: 't' }, 11 * MIN)).resolves.toBeUndefined();
   });
 });

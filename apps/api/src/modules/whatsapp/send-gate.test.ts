@@ -1,12 +1,15 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 import type { Db } from '../../common/db/db.module';
 import { fakeDb } from '../guardians/fake-db';
 import { SendGate } from './send-gate';
+import { WhatsappSettings } from './whatsapp.settings';
 
-const settings = { all: vi.fn() };
-const gate = (db: Db = fakeDb({}).db) => new SendGate(settings as unknown as SettingsService, db);
+// A full fake store (registry defaults); each test stubs what all() answers next.
+const store = fakeSettings();
+const all = vi.mocked(store.all);
+const gate = (db: Db = fakeDb({}).db) => new SendGate(new WhatsappSettings(store), db);
 
 function stubWhatsapp(): void {
   vi.stubEnv('WA_API_BASE', 'http://127.0.0.1:4010');
@@ -24,14 +27,14 @@ describe('SendGate — WhatsApp configured AND the admin kill switch (no env fus
   it('WhatsApp not configured → closed, no settings read at all', async () => {
     vi.stubEnv('WA_API_BASE', '');
     await expect(gate().open()).resolves.toBe(false);
-    expect(settings.all).not.toHaveBeenCalled();
+    expect(all).not.toHaveBeenCalled();
   });
 
   it('configured: the admin’s settings.messaging_enabled alone decides', async () => {
     stubWhatsapp();
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
     await expect(gate().open()).resolves.toBe(false);
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
     await expect(gate().open()).resolves.toBe(true);
   });
 
@@ -39,20 +42,29 @@ describe('SendGate — WhatsApp configured AND the admin kill switch (no env fus
     stubWhatsapp();
     expect(SETTING_DEFAULTS.messaging_enabled).toBe(false);
     for (const value of [undefined, null, 'true', 1, {}]) {
-      settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: value });
+      const stored = { ...SETTING_DEFAULTS, messaging_enabled: value } as unknown as AcademySettings;
+      all.mockResolvedValueOnce(stored);
       await expect(gate().open(), String(value)).resolves.toBe(false);
-      settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: value });
+      all.mockResolvedValueOnce(stored);
       await expect(gate().state(), String(value)).resolves.toEqual({ open: false, reason: 'switch_off' });
     }
+  });
+
+  it('fail-closed on a read error: open, state and view reject, never an open gate', async () => {
+    stubWhatsapp();
+    all.mockRejectedValue(new Error('db down'));
+    await expect(gate().open()).rejects.toThrow('db down');
+    await expect(gate().state()).rejects.toThrow('db down');
+    await expect(gate().view()).rejects.toThrow('db down');
   });
 
   it('a leftover MESSAGING_ENABLED in the server env changes nothing, either way', async () => {
     stubWhatsapp();
     vi.stubEnv('MESSAGING_ENABLED', 'true');
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
     await expect(gate().open()).resolves.toBe(false);
     vi.stubEnv('MESSAGING_ENABLED', 'false');
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
     await expect(gate().open()).resolves.toBe(true);
   });
 
@@ -60,16 +72,16 @@ describe('SendGate — WhatsApp configured AND the admin kill switch (no env fus
     vi.stubEnv('WA_API_BASE', '');
     await expect(gate().state()).resolves.toEqual({ open: false, reason: 'not_configured' });
     stubWhatsapp();
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: false });
     await expect(gate().state()).resolves.toEqual({ open: false, reason: 'switch_off' });
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, messaging_enabled: true });
     await expect(gate().state()).resolves.toEqual({ open: true, reason: null });
   });
 
   it('automaticOn is the admin’s settings.auto_messages_enabled (OFF by default), independent of the gate', async () => {
-    settings.all.mockResolvedValueOnce(SETTING_DEFAULTS);
+    all.mockResolvedValueOnce(SETTING_DEFAULTS);
     await expect(gate().automaticOn()).resolves.toBe(false);
-    settings.all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, auto_messages_enabled: true });
+    all.mockResolvedValueOnce({ ...SETTING_DEFAULTS, auto_messages_enabled: true });
     await expect(gate().automaticOn()).resolves.toBe(true);
   });
 
