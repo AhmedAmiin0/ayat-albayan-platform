@@ -11,6 +11,7 @@ import { BookingParties } from './booking.parties';
 import { BookingPlanner } from './booking.planner';
 import { BookingQueries } from './booking.queries';
 import { BookingService } from './booking.service';
+import { BookingSettings } from './booking.settings';
 import { BookingWriter } from './booking.writer';
 import { ConflictContext } from './conflict-context';
 import { CourseChangeController } from './course-change.controller';
@@ -47,6 +48,7 @@ import { TeacherOptionsService } from './teacher-options.service';
   imports: [TeachersModule, SchedulingModule, SalesModule, SubscriptionsModule],
   controllers: [BookingController, BookingExtrasController, InstantController, SalesBookingController, SalesBookingOptionsController, SalesCourseController, CourseChangeController],
   providers: [
+    BookingSettings,
     BookingQueries,
     TeacherOptionsQueries,
     ConflictContext,

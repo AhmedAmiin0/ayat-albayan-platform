@@ -1,6 +1,5 @@
 import { normalizeArabic, type BookingRequest } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { detectDuplicates } from '../students/duplicate-detector';
 import { domainError } from './booking.errors';
 import type { BookingPayload } from './booking.mapper';
@@ -8,6 +7,7 @@ import type { BookedStudent } from './booking.messages';
 import { withLeadFacts, type LeadFacts } from './booking.lead-merge';
 import { missedLesson } from './booking.makeup';
 import { BookingQueries } from './booking.queries';
+import { BookingSettings } from './booking.settings';
 
 /** Who is booked: existing rows (conflict-checked) and, on the lead path, the student to create. */
 export type Resolved = Pick<BookingPayload, 'student_ids' | 'new_guardian' | 'new_student'> & {
@@ -22,7 +22,7 @@ const notFound = (code: string) => domainError(HttpStatus.NOT_FOUND, code);
 export class BookingParties {
   constructor(
     private readonly queries: BookingQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   /** 404 teacher_not_found / lead_not_found. */
@@ -42,7 +42,7 @@ export class BookingParties {
     const lessonId = req.makeupOfLessonId;
     const studentId = 'studentIds' in req ? req.studentIds[0] : undefined;
     if (!lessonId || !studentId) throw domainError(HttpStatus.BAD_REQUEST, 'makeup_student');
-    const { makeup_window_days: windowDays } = await this.settings.all();
+    const { makeup_window_days: windowDays } = await this.settings.read();
     return missedLesson(this.queries, { lessonId, studentId, now: new Date(), windowDays });
   }
 

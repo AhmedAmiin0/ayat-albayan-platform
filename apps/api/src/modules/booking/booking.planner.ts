@@ -1,6 +1,5 @@
 import { bookingKindOf, isSingleLesson, meetingModeOf, uploadMaxBytes, usesPlatform, type BookingRequest, type Conflict } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { probeOccurrences } from '../scheduling/dst-probe';
 import { domainError } from './booking.errors';
@@ -11,6 +10,7 @@ import type { Plan } from './booking.plan';
 import type { BookingTeacher } from './booking.queries';
 import type { Occurrence } from '../scheduling/occurrences';
 import { planSeries } from './booking.series-plan';
+import { BookingSettings } from './booking.settings';
 
 export type Prepared = {
   payload: BookingPayload;
@@ -59,7 +59,7 @@ export class BookingPlanner {
   constructor(
     private readonly parties: BookingParties,
     private readonly checker: ConflictChecker,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   /** POST /booking/check: the series' clashes, nothing written, never a 409 conflict. */
@@ -80,7 +80,7 @@ export class BookingPlanner {
     if (conflicts.length > 0 && !req.override) {
       throw domainError(HttpStatus.CONFLICT, 'conflict', { conflicts });
     }
-    const settings = await this.settings.all();
+    const settings = await this.settings.read();
     const meetingLink = meetingLinkFor({
       requested: req.meetingLink,
       overrides: who.overrides,
@@ -101,7 +101,7 @@ export class BookingPlanner {
    * reported, never written. A trial or a makeup is one lesson, so it has no series to probe.
    */
   private async series(req: BookingRequest, ctx: SeriesContext): Promise<Series> {
-    const horizonWeeks = await this.settings.bookingHorizonWeeks();
+    const horizonWeeks = (await this.settings.read()).booking_horizon_weeks;
     const single = isSingleLesson(bookingKindOf(req));
     const plans = planSeries({ rule: { ...req, single }, now: new Date(), horizonWeeks, endsOn: ctx.endsOn });
     const [plan, ...siblings] = plans;

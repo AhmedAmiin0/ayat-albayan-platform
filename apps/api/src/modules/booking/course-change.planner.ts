@@ -1,8 +1,8 @@
 import { DURATIONS, courseDaysPerWeek, wallParts, type CourseChangeRequest, type CourseLessonFact } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { startOfLocalDay } from '../scheduling/horizon';
 import { domainError } from './booking.errors';
+import { BookingSettings } from './booking.settings';
 import { CourseLessonQueries, type MovedLesson } from './course-change.lessons';
 import { assertChange, assertStart, planChange, type ChangePlan, type ChangeRole } from './course-change.plan';
 import { unmaterialised } from './course-change.projection';
@@ -24,7 +24,7 @@ export class CourseChangePlanner {
   constructor(
     private readonly lessons: CourseLessonQueries,
     private readonly queries: CourseChangeQueries,
-    readonly settings: SettingsService,
+    readonly settings: BookingSettings,
   ) {}
 
   /**
@@ -45,7 +45,7 @@ export class CourseChangePlanner {
     const cutoff = new Date(Math.max(startOfLocalDay(req.startsOn, tz).getTime(), now.getTime()));
     const moved = await this.lessons.openFrom(all.map((r) => r.id), cutoff);
     const before = await this.used({ loaded, moved, req, now });
-    const horizonWeeks = await this.settings.bookingHorizonWeeks();
+    const horizonWeeks = (await this.settings.read()).booking_horizon_weeks;
     const plan = planChange({ req, facts: { ...facts, before }, now, horizonWeeks });
     if (courseOverlaps(await this.queries.others(sub), { from: req.startsOn, to: plan.endsOn })) {
       throw domainError(HttpStatus.CONFLICT, 'course_exists');

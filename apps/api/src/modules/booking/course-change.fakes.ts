@@ -1,6 +1,7 @@
 import { vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
+import { BookingSettings } from './booking.settings';
 import type { CourseLessonQueries } from './course-change.lessons';
 import { CourseChangePlanner } from './course-change.planner';
 import type { ChangeRule, CourseChangeQueries, CourseSub } from './course-change.queries';
@@ -66,11 +67,10 @@ export function setup(o: { rules?: ChangeRule[]; owned?: string[] } = {}) {
     replay: vi.fn().mockResolvedValue(null),
     apply: vi.fn().mockResolvedValue({ subscriptionId: SUB_ID, ruleIds: ['n1', 'n2'], endsOn: '2026-11-17' }),
   };
-  const settings = { bookingHorizonWeeks: vi.fn().mockResolvedValue(5), all: vi.fn().mockResolvedValue({ meeting_link_auto: false }) };
   const planner = new CourseChangePlanner(
     lessons as unknown as CourseLessonQueries,
     queries as unknown as CourseChangeQueries,
-    settings as unknown as SettingsService,
+    readerOf(BookingSettings), // the seeded 5-week horizon, meeting_link_auto off
   );
   const deps = { checker: { check: vi.fn().mockResolvedValue([]) }, planner, writer };
   const service = new CourseChange(

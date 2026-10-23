@@ -1,10 +1,11 @@
 import type { AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { StudentTrialStatus } from '../subscriptions/student-trial-status';
 import type { MessageSender } from '../whatsapp/message.sender';
 import { BookingFollowUps } from './booking.follow-ups';
+import { BookingSettings } from './booking.settings';
 import type { AlertLesson } from './teacher-alert.plan';
 import type { TeacherAlertQueries } from './teacher-alert.queries';
 import { TeacherAlert, TeacherAlertDeps } from './teacher-alert.service';
@@ -19,7 +20,7 @@ export function fakeTeacherAlert(over: { lessons?: AlertLesson[]; approved?: boo
   };
   const push = { notifyProfiles: vi.fn(async () => undefined) };
   const sender = { kick: vi.fn(async () => undefined) };
-  const settings = fakeSettings(over.settings);
+  const settings = readerOf(BookingSettings, over.settings);
   const deps = new TeacherAlertDeps(push as unknown as PushService, settings, sender as unknown as MessageSender);
   const alert = new TeacherAlert(queries as unknown as TeacherAlertQueries, deps);
   const trial = { evaluate: vi.fn(async () => 0) };
