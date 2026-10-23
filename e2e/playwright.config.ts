@@ -128,6 +128,8 @@ export default defineConfig({
         MESSAGE_SENDER_POLL_MS: '1000',
         // Specs write settings rows with SQL (support/messages.ts setSetting): read them fresh every time.
         SETTINGS_CACHE_MS: '0',
+        // Blank = unset: the integration config refresh follows SETTINGS_CACHE_MS, whatever the shell says.
+        INTEGRATION_REFRESH_MS: '',
       },
       reuseExistingServer: !process.env['CI'],
       // The API's own log (sender passes, job errors) in the CI output, next to the failing spec.
