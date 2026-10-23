@@ -255,10 +255,10 @@ jobs:
         if: matrix.shard != 'single'
         env:
           PROJECT: ${{ github.event_name == 'pull_request' && '--project=desktop' || '' }}
-          PLAYWRIGHT_JSON_OUTPUT_FILE: ${{ runner.temp }}/list.json
+          E2E_GROUPS_FILE: ${{ runner.temp }}/groups.json
         run: |
-          if pnpm --filter e2e exec playwright test --list --reporter=json $PROJECT >/dev/null \
-            && w=$(node tools/scripts/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/list.json") \
+          if pnpm --filter e2e exec playwright test --list --reporter=./support/durations-reporter.ts $PROJECT >/dev/null \
+            && w=$(node tools/scripts/e2e-shards.mjs weights "$SHARDS" "$RUNNER_TEMP/groups.json") \
             && [[ "$w" =~ ^[0-9]+(:[0-9]+)*$ ]]; then
             echo "weights=$w" >> "$GITHUB_OUTPUT"
           else

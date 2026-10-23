@@ -3,7 +3,7 @@
 // (the specs share one database per shard, so a different neighbour can change a result) and only moves
 // the cut points so that every shard costs about the same measured time. The result is the value of
 // PWTEST_SHARD_WEIGHTS (Playwright 1.63 reads it as the shard sizes); without it, equal counts as before.
-// Usage: node tools/scripts/e2e-shards.mjs weights <total> <list.json>   list = `playwright test --list --reporter=json`
+// Usage: node tools/scripts/e2e-shards.mjs weights <total> <groups.json>  groups = E2E_GROUPS_FILE of a --list run
 //        node tools/scripts/e2e-shards.mjs merge <durations-*.json…>    new e2e/shard-durations.json on stdout
 // The durations-*.json files come from e2e/support/durations-reporter.ts (CI artifacts «e2e-durations-*»).
 import { readFileSync } from 'node:fs';
@@ -11,21 +11,15 @@ import { fileURLToPath } from 'node:url';
 
 const DURATIONS = fileURLToPath(new URL('../../e2e/shard-durations.json', import.meta.url));
 
-/** Tests per (project, file) in Playwright's order: projects in config order, files as listed. */
-export function groupsFromList(list) {
-  const projects = (list.config?.projects ?? []).map((p) => p.name).filter((n) => n !== 'setup');
-  const count = (suite, project) =>
-    (suite.specs ?? []).reduce(
-      (n, s) => n + s.tests.filter((t) => t.projectName === project).length,
-      0,
-    ) + (suite.suites ?? []).reduce((n, s) => n + count(s, project), 0);
-  const groups = [];
-  for (const project of projects) {
-    for (const suite of list.suites ?? []) {
-      const tests = count(suite, project);
-      if (tests > 0) groups.push({ project, file: `tests/${suite.file}`, tests });
-    }
-  }
+/** The groups e2e/support/durations-reporter.ts wrote with --list (E2E_GROUPS_FILE), checked. */
+export function checkGroups(groups) {
+  const ok =
+    Array.isArray(groups) &&
+    groups.length > 0 &&
+    groups.every(
+      (g) => typeof g?.project === 'string' && typeof g?.file === 'string' && g.tests > 0,
+    );
+  if (!ok) throw new Error('no usable shard groups (Playwright internals changed?)');
   return groups;
 }
 
@@ -91,7 +85,7 @@ function main() {
   }
   if (mode !== 'weights')
     throw new Error('usage: e2e-shards.mjs weights <total> <list.json> | merge <files…>');
-  const groups = groupsFromList(read(args[1]));
+  const groups = checkGroups(read(args[1]));
   const ms = costs(groups, read(DURATIONS));
   const sizes = shardSizes(groups, ms, Number(args[0]));
   if (sizes.some((s) => s === 0)) throw new Error(`a shard would be empty: ${sizes.join(':')}`);

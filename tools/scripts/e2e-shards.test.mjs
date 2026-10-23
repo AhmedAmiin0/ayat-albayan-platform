@@ -1,36 +1,30 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { costs, groupsFromList, mergeDurations, shardMs, shardSizes } from './e2e-shards.mjs';
+import { checkGroups, costs, mergeDurations, shardMs, shardSizes } from './e2e-shards.mjs';
 
-const spec = (projects) => ({ tests: projects.map((projectName) => ({ projectName })) });
-const list = {
-  config: { projects: [{ name: 'setup' }, { name: 'desktop' }, { name: 'mobile' }] },
-  suites: [
-    { file: 'auth.setup.ts', specs: [spec(['setup', 'setup'])] },
-    {
-      file: 'a.spec.ts',
-      specs: [spec(['desktop', 'mobile'])],
-      suites: [{ specs: [spec(['desktop', 'mobile'])] }],
-    },
-    { file: 'b.spec.ts', specs: [spec(['desktop'])] },
-  ],
-};
+const groups = [
+  { project: 'desktop', file: 'tests/a.spec.ts', tests: 2 },
+  { project: 'desktop', file: 'tests/b.spec.ts', tests: 1 },
+  { project: 'mobile', file: 'tests/a.spec.ts', tests: 2 },
+];
 
-test('groups follow Playwright: projects in config order, files as listed, setup left out', () => {
-  assert.deepEqual(groupsFromList(list), [
-    { project: 'desktop', file: 'tests/a.spec.ts', tests: 2 },
-    { project: 'desktop', file: 'tests/b.spec.ts', tests: 1 },
-    { project: 'mobile', file: 'tests/a.spec.ts', tests: 2 },
-  ]);
+test('groups from the reporter are checked; null (internals changed) is refused', () => {
+  assert.equal(checkGroups(groups), groups);
+  for (const bad of [
+    null,
+    [],
+    [{ project: 'desktop', file: 'x', tests: 0 }],
+    [{ file: 'x', tests: 1 }],
+  ]) {
+    assert.throws(() => checkGroups(bad), /no usable shard groups/);
+  }
 });
 
 test('an unmeasured group costs the median ms per test', () => {
-  const groups = groupsFromList(list);
-  assert.deepEqual(costs(groups, { 'tests/a.spec.ts': { desktop: 400, mobile: 100 } }), [
-    400,
-    200,
-    100,
-  ]);
+  assert.deepEqual(
+    costs(groups, { 'tests/a.spec.ts': { desktop: 400, mobile: 100 } }),
+    [400, 200, 100],
+  );
   assert.deepEqual(costs(groups, {}), [2000, 1000, 2000]);
 });
 
