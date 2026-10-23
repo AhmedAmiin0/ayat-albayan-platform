@@ -23,6 +23,7 @@ import { GoogleSettings } from './google-settings';
 import { GoogleStatusService } from './google-status.service';
 import { GoogleSyncJob } from './google-sync.job';
 import { GoogleSyncProcessor } from './google-sync.processor';
+import { GoogleSyncAcademySettings } from './google-sync.settings';
 import { GoogleSyncSource } from './google-sync.source';
 import { GoogleWriters } from './google-writers';
 import { ReportPdfWriter } from './report-pdf.writer';
@@ -37,7 +38,7 @@ import { SheetRowsWriter } from './sheet-rows.writer';
   controllers: [GoogleAdminController, GoogleMapController, GoogleItemsController, GoogleCallbackController],
   providers: [
     { provide: GOOGLE_CLIENT_FACTORY, useFactory: () => httpFactory(() => googleEnv(loadEnv())) },
-    GoogleAccountQueries, GoogleItemsQueries, GoogleLogQueries, GoogleMapQueries, GoogleSettings, GoogleSyncSource,
+    GoogleAccountQueries, GoogleItemsQueries, GoogleLogQueries, GoogleMapQueries, GoogleSettings, GoogleSyncAcademySettings, GoogleSyncSource,
     GoogleData, GoogleRuntime, GoogleAlerts, GoogleConnection, DriveFiles, CalendarWriter, ReportPdfWriter, SheetRowsWriter, GoogleWriters,
     GoogleSyncProcessor, GoogleSyncJob, GoogleOAuthService, GoogleStatusService, GoogleAdminService, GoogleMapService,
   ],

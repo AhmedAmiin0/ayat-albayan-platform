@@ -1,11 +1,11 @@
 import { meetingModeOf, usesPlatform, type Attendance, type Grade, type LessonStatus, type Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
 import { loadEnv } from '../../env';
 import { firstWebOrigin } from '../classroom/classroom.config';
 import { classroomUrl } from '../reminders/reminders.links';
 import type { EventLesson, LessonKind } from './event-format';
+import { GoogleSyncAcademySettings } from './google-sync.settings';
 
 /** A lesson as the calendar writer needs it; origin=false: imported, never written (§2.2). */
 export type LessonSource = { origin: boolean; teacherId: string; lesson: EventLesson };
@@ -39,14 +39,14 @@ const fail = (what: string, error: { message: string }) => new Error(`google ${w
 export class GoogleSyncSource {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: GoogleSyncAcademySettings,
   ) {}
 
   async lesson(lessonId: string): Promise<LessonSource | null> {
-    const [l, origin, auto] = await Promise.all([
+    const [l, origin, { meeting_link_auto: auto }] = await Promise.all([
       this.db.from('lessons').select(LESSON).eq('id', lessonId).maybeSingle(),
       this.db.from('v_platform_origin_lessons').select('id').eq('id', lessonId).maybeSingle(),
-      this.settings.get('meeting_link_auto'),
+      this.settings.read(),
     ]);
     if (l.error) throw fail('lesson', l.error);
     if (origin.error) throw fail('origin', origin.error);
