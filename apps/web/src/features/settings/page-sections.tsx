@@ -10,6 +10,8 @@ import { INTEGRATIONS_SECTION } from '@/features/integrations/integrations-secti
 import { IntegrationsPanel } from '@/features/integrations/IntegrationsPanel';
 import { linesMatch } from '@/features/messaging/lines-match';
 import { catalogueMatch } from '@/features/notification-catalogue/catalogue-match';
+import { NUMBERS_SECTION, numbersMatch } from '@/features/numbers/numbers-section';
+import { NumbersPanel } from '@/features/numbers/NumbersPanel';
 import { templatesMatch } from '@/features/templates/templates-match';
 import { t } from '@/lib/i18n';
 import type { SettingsFormState } from './registry-form/use-settings-form';
@@ -49,7 +51,7 @@ const fieldSection = (id: (typeof FIELD_SECTIONS)[number]): PageSection => ({
 
 /**
  * /admin/settings in page order: the index (SettingsNav), the body (SettingsBody) and the «nothing
- * matches» note all read this list. The registry's nine sections, then «التكاملات», then «قيم مخصصة».
+ * matches» note all read this list. The registry's nine sections, then «الأرقام», «التكاملات», then «قيم مخصصة».
  */
 export const PAGE_SECTIONS: readonly PageSection[] = [
   {
@@ -70,6 +72,11 @@ export const PAGE_SECTIONS: readonly PageSection[] = [
     label: t.settings.sections.appearance,
     matches: (query) => themeMatch(query),
     render: () => <AppearanceSection />,
+  },
+  {
+    ...NUMBERS_SECTION,
+    matches: (query) => numbersMatch(query),
+    render: (p) => <NumbersPanel query={p.query} onSaved={p.onNote} />,
   },
   {
     ...INTEGRATIONS_SECTION,

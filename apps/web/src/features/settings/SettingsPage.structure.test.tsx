@@ -11,14 +11,16 @@ const apiSend = vi.hoisted(() => vi.fn());
 vi.mock('@/lib/api', async (orig) => ({ ...(await orig<object>()), apiFetch, apiSend }));
 
 /** The page's sections as e2e and deep links know them: id, then heading, in page order. */
-const IDS = ['messaging', 'schedule', 'classroom', 'reports', 'accounts', 'uploads', 'academy', 'sales', 'appearance', 'integrations', 'custom'];
-const HEADINGS = [...SETTINGS_SECTIONS.map((s) => t.settings.sections[s]), t.integrations.title, t.config.sections.custom];
+const IDS = ['messaging', 'schedule', 'classroom', 'reports', 'accounts', 'uploads', 'academy', 'sales', 'appearance', 'numbers', 'integrations', 'custom'];
+const HEADINGS = [...SETTINGS_SECTIONS.map((s) => t.settings.sections[s]), t.numbers.title, t.integrations.title, t.config.sections.custom];
 
 async function renderPage() {
   routeFetch(apiFetch, [
     ['/config/meta', { meta: {} }],
     ['/config/custom', []],
     ['/settings/integrations', []],
+    ['/admin/numbers', []],
+    ['/admin/communications/parity', { source: 'legacy', roles: [], differences: [] }],
     ['/settings', SETTINGS],
     CATALOGUE_ROUTE,
     ['/messages/gate', { open: false, reason: 'switch_off', queued: 0 }],
@@ -35,7 +37,7 @@ afterEach(() => {
 });
 
 describe('/admin/settings structure (pinned for e2e, deep links and the index)', () => {
-  it('renders the eleven sections in page order, each a region with its settings-<id> ids and its heading', async () => {
+  it('renders the twelve sections in page order, each a region with its settings-<id> ids and its heading', async () => {
     await renderPage();
     const sections = [...document.querySelectorAll('section[id^="settings-"]')];
     expect(sections.map((s) => s.id)).toEqual(IDS.map((id) => `settings-${id}`));
