@@ -2887,22 +2887,70 @@ export type Database = {
       };
       settings: {
         Row: {
+          default_value: Json | null;
+          description: string | null;
+          description_edited: boolean;
+          description_seed: string | null;
+          is_public: boolean;
           key: string;
+          module: string | null;
+          retired_at: string | null;
+          scope: string | null;
           updated_at: string;
           updated_by: string | null;
           value: NonNullable<Json>;
+          value_type: string | null;
+          version: number;
         };
         Insert: {
+          default_value?: Json | null;
+          description?: string | null;
+          description_edited?: boolean;
+          description_seed?: string | null;
+          is_public?: boolean;
           key: string;
+          module?: string | null;
+          retired_at?: string | null;
+          scope?: string | null;
           updated_at?: string;
           updated_by?: string | null;
           value: NonNullable<Json>;
+          value_type?: string | null;
+          version?: number;
         };
         Update: {
+          default_value?: Json | null;
+          description?: string | null;
+          description_edited?: boolean;
+          description_seed?: string | null;
+          is_public?: boolean;
           key?: string;
+          module?: string | null;
+          retired_at?: string | null;
+          scope?: string | null;
           updated_at?: string;
           updated_by?: string | null;
           value?: NonNullable<Json>;
+          value_type?: string | null;
+          version?: number;
+        };
+        Relationships: [];
+      };
+      settings_revision: {
+        Row: {
+          id: boolean;
+          registry_version: number;
+          rev: number;
+        };
+        Insert: {
+          id?: boolean;
+          registry_version?: number;
+          rev?: number;
+        };
+        Update: {
+          id?: boolean;
+          registry_version?: number;
+          rev?: number;
         };
         Relationships: [];
       };
@@ -4202,6 +4250,8 @@ export type Database = {
       booking_result: { Args: { p_rule: string }; Returns: Json };
       build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
       change_course: { Args: { p: Json }; Returns: Json };
+      config_seed: { Args: { entries: Json; registry_version: number }; Returns: Json };
+      config_set: { Args: { actor: string; changes: Json }; Returns: Json };
       course_change_result: { Args: { p_first: string }; Returns: Json };
       create_booking: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
       create_instant_lesson: { Args: { p_actor: string; p_booking: Json }; Returns: Json };
@@ -4369,6 +4419,7 @@ export type Database = {
         };
         Returns: Json;
       };
+      settings_kind_ok: { Args: { value: Json; value_type: string }; Returns: boolean };
       teacher_rate_for: {
         Args: { p_minutes: number; r30: number; r45: number; r60: number; r90: number };
         Returns: number;
