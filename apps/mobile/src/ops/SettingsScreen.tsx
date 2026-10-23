@@ -1,75 +1,75 @@
 import { router } from 'expo-router';
-import { ScrollView, View } from 'react-native';
+import { View } from 'react-native';
 import { useHolds, useIsAdmin } from '@/auth/use-permissions';
-import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
+import { useTheme } from '@/theme';
 import { Button } from '@/ui/Button';
-import { ErrorState } from '@/ui/ErrorState';
+import { Chevron } from '@/ui/Chevron';
+import { ListRow } from '@/ui/ListRow';
 import { Screen } from '@/ui/Screen';
 import { ScreenHeader } from '@/ui/ScreenHeader';
-import { GoogleSyncCard } from './GoogleSyncCard';
-import { NotificationCatalogue } from './NotificationCatalogue';
-import { NumbersList } from './NumbersList';
-import { ReadOnlySettings } from './ReadOnlySettings';
-import { SettingsFields } from './SettingsFields';
 import { useSettings } from './use-settings';
-import { useSettingsForm } from './use-settings-form';
-import type { AcademySettings } from '@ab/shared';
 
 const back = () => (router.canGoBack() ? router.back() : router.replace('/more'));
 
-function Editor({ settings }: { settings: AcademySettings }) {
-  const f = useSettingsForm(settings);
-  // The Google card is the admins' (settings.read AND base-role admin, as the API checks; strict: no request before /auth/me answers).
-  const holds = useHolds('settings.read');
-  const admin = useIsAdmin();
-  const google = holds && admin;
-  const failed = f.notice !== null && f.notice !== t.settings.saved;
-  return (
-    <ScrollView
-      style={{ flex: 1 }}
-      contentContainerStyle={{ gap: 20, paddingBottom: 32 }}
-      keyboardShouldPersistTaps="handled"
-      automaticallyAdjustKeyboardInsets
-    >
-      <SettingsFields form={f.form} errors={f.errors} set={f.set} />
-      {f.dirty ? <Note>{t.mobileAdmin.settings.unsaved}</Note> : null}
-      {f.notice ? failed ? <ErrorLine message={f.notice} /> : <Note>{f.notice}</Note> : null}
-      <View style={{ gap: 8, alignItems: 'flex-start' }}>
-        <Button label={t.common.save} busy={f.saving} disabled={!f.dirty} onPress={f.submit} />
-        {f.dirty ? (
-          <Button variant="ghost" label={t.mobileAdmin.settings.discard} onPress={f.discard} />
-        ) : null}
-      </View>
-      <ReadOnlySettings settings={settings} />
-      {google ? <GoogleSyncCard /> : null}
-      <NotificationCatalogue />
-      <NumbersList />
-    </ScrollView>
-  );
+export const SETTINGS_HREF = {
+  values: '/more/ops/settings/values',
+  communications: '/more/ops/settings/communications',
+  google: '/more/ops/settings/google',
+} as const;
+
+/** «إرسال الرسائل: متوقف»: the dangerous state is on the list, never hidden behind a row (docs/26b §5.4). */
+function useSendLine(): string | undefined {
+  const data = useSettings().data;
+  const m = t.mobileAdmin.settings;
+  return data ? `${m.messagingEnabled}: ${data.messaging_enabled ? m.on : m.off}` : undefined;
 }
 
 /**
- * «إعدادات الأكاديمية» (R-SCH-07, R-SCH-02): the six settings the owner edits from the phone, on
- * GET/PATCH /settings. The messaging switches, the CRM cut-over and the Google sync status
- * (docs/24 §3) are read-only here, and so are «ماذا يُرسل ومتى» (GET /admin/notifications) and
- * «الأرقام» (GET /admin/numbers + parity, docs/23 §3 phase 3).
+ * «الإعدادات» (docs/26b §4, R-MSG-01): the list that /more/ops/settings opens (push deep links land
+ * here). «القيم», «التواصل» and «مزامنة Google» open their screens; «التكاملات» is a line only:
+ * credentials stay on the website.
  */
 export function SettingsScreen() {
-  const query = useSettings();
+  const { color } = useTheme();
+  // The Google screen is the admins' (settings.read AND base-role admin, as the API checks).
+  const holds = useHolds('settings.read');
+  const admin = useIsAdmin();
+  const google = holds && admin;
+  const sendLine = useSendLine();
+  const next = <Chevron to="next" color={color.ink3} />;
   return (
-    <Screen>
+    <Screen scroll>
       <ScreenHeader
-        title={t.mobileAdmin.settings.title}
-        subtitle={t.mobileAdmin.settings.subtitle}
+        title={t.settingsHub.title}
         trailing={<Button variant="ghost" label={t.common.back} onPress={back} />}
       />
-      {query.data ? (
-        <Editor settings={query.data} />
-      ) : query.isError ? (
-        <ErrorState onRetry={() => void query.refetch()} />
-      ) : null}
+      <View style={{ marginHorizontal: -16 }}>
+        <ListRow
+          title={t.mobileValues.title}
+          trailing={next}
+          onPress={() => router.push(SETTINGS_HREF.values)}
+        />
+        <ListRow
+          title={t.settingsPages.communications}
+          subtitle={sendLine}
+          trailing={next}
+          onPress={() => router.push(SETTINGS_HREF.communications)}
+        />
+        {google ? (
+          <ListRow
+            title={t.googleSync.mobile.title}
+            trailing={next}
+            onPress={() => router.push(SETTINGS_HREF.google)}
+          />
+        ) : null}
+        <ListRow
+          title={t.mobileValues.integrations}
+          trailing={<Note>{t.mobileValues.integrationsNote}</Note>}
+        />
+      </View>
+      <Note>{t.mobileValues.integrationsHint}</Note>
     </Screen>
   );
 }

@@ -1,10 +1,12 @@
 import en from '@ab/shared/i18n/en.json';
-import { screen } from '@testing-library/react-native';
+import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { catalogue as mockCatalogue, settings as mockSettings } from './fixtures';
 import { numbersAnswer as mockNumbersAnswer } from './numbers-fixtures';
+import { CommunicationsScreen } from './CommunicationsScreen';
 import { SettingsScreen } from './SettingsScreen';
+import { ValuesScreen } from './values/ValuesScreen';
 
 jest.mock('react-native/Libraries/ReactNative/I18nManager', () => {
   const actual = jest.requireActual('react-native/Libraries/ReactNative/I18nManager').default;
@@ -15,13 +17,27 @@ jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: async (p: string) => mockNumbersAnswer(p) ?? (p === '/admin/notifications' ? mockCatalogue : mockSettings),
 }));
-jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true } }));
+jest.mock('expo-router', () => ({ router: { back: jest.fn(), canGoBack: () => true, push: jest.fn() } }));
 
-test('English: the form and the read-only note come from en.json', async () => {
+test('English: the list comes from en.json', async () => {
   expect(t).toEqual(en);
   await renderWithQuery(<SettingsScreen />);
-  expect(screen.getByRole('header', { name: en.mobileAdmin.settings.title })).toBeTruthy();
-  expect(await screen.findByLabelText(en.settings.reportingCurrency)).toBeTruthy();
-  expect(screen.getByText(en.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
+  expect(screen.getByRole('header', { name: en.settingsHub.title })).toBeTruthy();
+  expect(screen.getByRole('button', { name: en.mobileValues.title })).toBeTruthy();
+  expect(screen.getByText(en.mobileValues.integrationsNote)).toBeTruthy();
+});
+
+test('English: «Values» table and sheet', async () => {
+  await renderWithQuery(<ValuesScreen />);
+  expect(await screen.findByText(en.settings.bookingHorizonWeeks)).toBeTruthy();
+  await fireEvent.press(screen.getByRole('radio', { name: new RegExp(en.settings.sections.accounts) }));
+  await fireEvent.press(await screen.findByRole('button', { name: new RegExp(en.settings.reportingCurrency) }));
+  expect(screen.getByRole('radio', { name: 'SAR' })).toBeTruthy();
+  expect(screen.getByRole('button', { name: en.config.custom.save })).toBeTruthy();
+});
+
+test('English: «Communications» keeps the read-only send state and the catalogue', async () => {
+  await renderWithQuery(<CommunicationsScreen />);
+  expect(await screen.findByText(en.mobileAdmin.settings.readOnlyNote)).toBeTruthy();
   expect(await screen.findByText(en.notificationCatalogue.entries.report_ready.name)).toBeTruthy();
 });

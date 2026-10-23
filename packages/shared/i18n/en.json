@@ -2830,7 +2830,6 @@
       "10": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
       "190": "The WhatsApp account's access has expired — it needs renewing from Business Manager, and messages are waiting in the queue",
       "200": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
-      "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Integrations»; messages wait in the queue",
       "470": "More than 24 hours have passed since their last message",
       "130429": "Meta paused sending for a while because of high message volume",
       "131026": "The number isn't on WhatsApp or can't receive messages",
@@ -2842,6 +2841,7 @@
       "132000": "The template has the wrong number of variables",
       "132001": "The template doesn't exist on Meta",
       "132015": "Meta has paused this template temporarily",
+      "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Integrations»; messages wait in the queue",
       "expired": "Its time passed before it could be sent",
       "sending": "Sending now",
       "handed_off": "Waiting for you to confirm you sent it yourself",
@@ -5322,6 +5322,34 @@
     "communications": "Communications"
   },
   "mobileValues": {
-    "title": "Values"
+    "title": "Values",
+    "integrations": "Integrations",
+    "integrationsNote": "Managed on the website",
+    "integrationsHint": "Numbers, credentials and templates are edited on the website only.",
+    "groupsLabel": "Value groups",
+    "groups": {
+      "payouts": "Teacher payouts",
+      "messages": "Messages",
+      "retention": "Logs and retention",
+      "notifications": "Notifications (view only)",
+      "sending": "Sending and safety (view only)"
+    },
+    "name": "Name",
+    "value": "Value",
+    "edit": "Edit “{label}”: {value}",
+    "readOnly": "View only: you do not have permission to edit settings, so values are shown without editing.",
+    "owned": "Managed on another page",
+    "editOnWeb": "Edit it on the website",
+    "bounds": "From {min} to {max}",
+    "defaultValue": "Default: {value}",
+    "empty": "Not set",
+    "saveFailed": "Could not save the value",
+    "plainConfirm": "This change affects the whole academy right away. Save it?",
+    "typedConfirm": "This change may permanently delete old data. Type the number of days ({n}) to confirm.",
+    "typedLabel": "Number of days to confirm",
+    "typedMismatch": "The typed number does not match the value",
+    "unsavedClose": "You have not saved your edit. Close without saving?",
+    "closeAnyway": "Close without saving",
+    "keepEditing": "Keep editing"
   }
 }
