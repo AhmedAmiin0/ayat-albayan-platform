@@ -40,6 +40,11 @@ function whatsappBlocker(entry: NotificationEntry, inputs: CatalogueInputs, temp
   if (entry.manual) return null;
   if (entry.automatic && settings.auto_messages_enabled !== true) return 'auto_off';
   if (!rowOn(entry, inputs)) return 'row_off';
+  return rowBlocker(entry, inputs, templates);
+}
+
+/** After the row's own switch: the classroom (lesson_join_link only, PR #134 item 8), then the template. */
+function rowBlocker(entry: NotificationEntry, inputs: CatalogueInputs, templates: NotificationTemplateView[]): NotificationBlocker | null {
   if (entry.key === 'lesson_join_link' && inputs.classroom === false) return 'classroom_off';
   if (templates.length > 0 && !templates.some((t) => t.status === 'approved')) return 'template_not_approved';
   return null;
