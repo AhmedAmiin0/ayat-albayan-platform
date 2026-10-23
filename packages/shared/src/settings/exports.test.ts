@@ -51,7 +51,7 @@ const GOOGLE_NAMES = [
 /** Added by the segregation (additions only). */
 const NEW_NAMES = [
   'SETTINGS_LAYOUT', 'settingSection', 'PUBLIC_CONFIG_PATH', 'PUBLIC_CONFIG_QUERY_KEY', 'PUBLIC_CONFIG_STALE_MS',
-  'withPublicDefaults', 'CATALOGUE_SETTING_KEYS',
+  'withPublicDefaults', 'CATALOGUE_SETTING_KEYS', 'GOOGLE_SETTING_KEYS',
 ];
 
 /** Every registry key with today's default (the migrations seed the same values). */
