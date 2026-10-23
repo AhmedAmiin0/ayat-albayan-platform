@@ -30,7 +30,7 @@ export function valueText(key: SettingKey, value: unknown): string {
   if (typeof value === 'boolean') return onOff(value);
   if (value === null || value === undefined) return def.type === 'int' && def.nullable ? v.off : t.common.unset;
   if (typeof value === 'number') return countText(key, value);
-  if (Array.isArray(value)) return [value.join(t.common.listSeparator), unitWord(key)].filter(Boolean).join(' ');
+  if (Array.isArray(value)) return [value.join(t.common.listSeparator), unitWord(key, Number(value.at(-1)))].filter(Boolean).join(' ');
   const text = String(value);
   if (def.type === 'enum') return ENUM_WORDS[text] ?? text;
   if (def.type === 'tz') return tzCity(text) ?? text;

@@ -23,6 +23,16 @@ export function wasMoved(res: unknown, key: SettingKey): boolean {
   return isSaveOutcome(res) && (res.moved.includes(key) || res.moved.includes(SETTING_FIELD_OF[key]));
 }
 
+/**
+ * Did the API refuse this key's value (`invalid`, snake_case, from 26-P0; it never 400s per field)?
+ * Read from the whole answer (`AcademySettings & {saved, moved, invalid}`), by row key or field.
+ */
+export function wasInvalid(res: unknown, key: SettingKey): boolean {
+  if (res === null || typeof res !== 'object') return false;
+  const invalid = (res as Record<string, unknown>).invalid;
+  return strings(invalid) && (invalid.includes(key) || invalid.includes(SETTING_FIELD_OF[key]));
+}
+
 /** The server's own words for a refused save, when it sent any (`{message}` from Nest). */
 export function serverMessage(error: unknown): string | undefined {
   if (!(error instanceof ApiError) || error.body === null || typeof error.body !== 'object') return undefined;

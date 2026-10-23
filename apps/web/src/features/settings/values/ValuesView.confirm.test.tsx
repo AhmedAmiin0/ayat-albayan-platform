@@ -33,7 +33,7 @@ describe('«القيم» — confirmations and the row menu', () => {
     expect(apiSend).not.toHaveBeenCalled();
     expect((within(row).getByRole('switch', { name: ALWAYS }) as HTMLInputElement).checked).toBe(true);
     fireEvent.click(within(row).getByRole('switch', { name: ALWAYS }));
-    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: c.plainYes }));
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: v.confirmYes.teachersAlwaysAvailable.off }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { teachersAlwaysAvailable: false }));
   });
 
@@ -43,12 +43,13 @@ describe('«القيم» — confirmations and the row menu', () => {
     const row = await findRow(ACTIVITY);
     fireEvent.change(within(row).getByLabelText(ACTIVITY), { target: { value: '30' } });
     fireEvent.click(within(row).getByRole('button', { name: `${t.common.save}: ${ACTIVITY}` }));
-    const dialog = screen.getByRole('dialog', { name: c.typedTitle.replace('{n}', '30') });
+    const dialog = screen.getByRole('dialog', { name: c.typedTitleCount.replace('{count}', v.units.days.other.replace('{n}', '30')) });
     const yes = within(dialog).getByRole('button', { name: c.typedYes });
     expect(yes.getAttribute('aria-disabled')).toBe('true');
     fireEvent.click(yes);
     expect(apiSend).not.toHaveBeenCalled();
-    fireEvent.change(within(dialog).getByLabelText(c.typedLabel.replace('{n}', '30')), { target: { value: '30' } });
+    // Typed on an Arabic keypad: «٣٠» is 30.
+    fireEvent.change(within(dialog).getByLabelText(c.typedLabel.replace('{n}', '30')), { target: { value: '٣٠' } });
     fireEvent.click(within(dialog).getByRole('button', { name: c.typedYes }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { activityRetentionDays: 30 }));
   });

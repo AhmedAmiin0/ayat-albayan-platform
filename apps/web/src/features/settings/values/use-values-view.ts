@@ -15,7 +15,8 @@ export function useValuesView(search: ValuesSearch) {
   const api = useValues();
   const group = resolveGroup(search.group);
   const all = showsAll(search);
-  const entries = useQuery(customConfigQuery).data ?? [];
+  const custom = useQuery(customConfigQuery);
+  const entries = custom.data ?? [];
   const google = useQuery({ ...googleStatusQuery, enabled: all || group === 'google' }).data?.settings;
   const query: RowQuery = { q: search.q ?? '', filter: search.filter, settings: api.settings, google };
   const rows = all ? allRows(entries, query) : groupRows(group, entries);
@@ -26,6 +27,10 @@ export function useValuesView(search: ValuesSearch) {
     all,
     google,
     rows,
+    /** «قيم مخصصة» in view: its list failed to load, or is still loading. */
+    customFailed: group === 'custom' && !all && custom.isError,
+    customLoading: group === 'custom' && !all && custom.isPending,
+    retryCustom: () => void custom.refetch(),
     caption: all ? t.settingsValues.all : groupLabel(group),
     note: !all && isOwnedGroup(group) ? OWNER_PAGE[group].label : undefined,
     counts: Object.fromEntries(GROUP_IDS.map((id) => [id, groupRows(id, entries).length])),

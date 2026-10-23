@@ -23,8 +23,9 @@ export function UndoToast({ message, onUndo, onDismiss, duration = 10_000 }: Und
     return () => clearTimeout(id);
   }, [hovered, focused, onDismiss, duration]);
   return (
+    // Not a live region: «القيم» announces the save once, by name, in its own polite region.
     <div
-      role="status"
+      data-undo-toast
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       onFocus={() => setFocused(true)}
@@ -33,7 +34,7 @@ export function UndoToast({ message, onUndo, onDismiss, duration = 10_000 }: Und
     >
       <NuqtaGlyph shape="fill" className="size-[13px] text-inverse-gold" />
       <span>{message}</span>
-      <button type="button" onClick={onUndo} className="ms-auto min-h-9 rounded-sm px-2 font-bold text-on-inverse underline underline-offset-4">
+      <button type="button" onClick={onUndo} className="ms-auto min-h-11 rounded-sm px-2 font-bold text-on-inverse underline underline-offset-4 sm:min-h-9">
         {t.settingsValues.undo}
       </button>
     </div>

@@ -1,6 +1,6 @@
 import { GOOGLE_SETTING_KEYS, settingDef, type AcademySettings, type CustomConfigView, type GoogleSyncSettings, type SettingKey } from '@ab/shared';
 import { settingText } from '@/components/settings/setting-text';
-import { matchesText } from '@/components/settings/settings-search';
+import { matchesSetting, matchesText } from '@/components/settings/settings-search';
 import { t } from '@/lib/i18n';
 import { isModified } from '../registry-form/row-form';
 import { GROUP_IDS, groupKeys, isOwnedGroup, type ValuesGroupId } from './value-groups-view';
@@ -65,10 +65,14 @@ function isPublic(row: ValueRow): boolean {
   return row.kind === 'custom' && row.entry.isPublic;
 }
 
-/** Does the row match the search (label, description or key) and the filter? */
+/**
+ * Does the row match the search and the filter? A settings row matches as the hub search does
+ * (label, hint, the switch words of a number that can be OFF, key), so a hub hit lands on its row.
+ */
 export function rowMatches(row: ValueRow, query: RowQuery): boolean {
   if (query.filter === 'modified' && !modified(row, query)) return false;
   if (query.filter === 'public' && !isPublic(row)) return false;
+  if (row.kind === 'setting') return matchesSetting(row.key, query.q);
   const words = rowWords(row);
   const text = [words.label, words.hint, rowKey(row), row.kind === 'custom' ? row.entry.description : ''].filter(Boolean).join(' ');
   return matchesText(text, query.q);

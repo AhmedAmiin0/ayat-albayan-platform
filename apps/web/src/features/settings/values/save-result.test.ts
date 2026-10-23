@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { SETTINGS } from '@/test/settings-fixture';
-import { isSaveOutcome, serverMessage, wasMoved } from './save-result';
+import { isSaveOutcome, serverMessage, wasInvalid, wasMoved } from './save-result';
 
 describe('PATCH /settings answers', () => {
   it('reads both shapes: the whole settings (today) and {saved, moved}', () => {
@@ -16,6 +16,16 @@ describe('PATCH /settings answers', () => {
     expect(wasMoved({ saved: [], moved: ['lateCancelHours'] }, 'late_cancel_hours')).toBe(true);
     expect(wasMoved({ saved: ['lateCancelHours'], moved: [] }, 'late_cancel_hours')).toBe(false);
     expect(wasMoved(SETTINGS, 'late_cancel_hours')).toBe(false);
+  });
+
+  it('a key is invalid by its row key or field; the whole settings or another key is not', () => {
+    const res = { ...SETTINGS, saved: [], moved: [], invalid: ['booking_horizon_weeks'] };
+    expect(wasInvalid(res, 'booking_horizon_weeks')).toBe(true);
+    expect(wasInvalid({ ...res, invalid: ['bookingHorizonWeeks'] }, 'booking_horizon_weeks')).toBe(true);
+    expect(wasInvalid(res, 'fx_fresh_hours')).toBe(false);
+    expect(wasInvalid(SETTINGS, 'booking_horizon_weeks')).toBe(false);
+    expect(wasInvalid({ invalid: 'x' }, 'booking_horizon_weeks')).toBe(false);
+    expect(wasInvalid(null, 'booking_horizon_weeks')).toBe(false);
   });
 
   it('keeps the server’s message when there is one', () => {

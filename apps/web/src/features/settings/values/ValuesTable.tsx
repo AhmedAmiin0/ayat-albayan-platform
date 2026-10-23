@@ -1,6 +1,7 @@
 import { counted } from '@ab/shared';
 import { Skeleton } from '@/components/ui/skeleton';
 import { t } from '@/lib/i18n';
+import { cn } from '@/lib/utils';
 import { rowKey, type ValueRow } from './value-rows';
 import { ValueRowView, type RowEnv } from './rows/ValueRowView';
 
@@ -33,6 +34,13 @@ function SkeletonRows({ cols }: { cols: number }) {
 }
 
 /**
+ * Fixed column widths, so a row turning dirty («حفظ» + «تراجع», «لم يُحفظ») never moves the
+ * columns. Phones: the value gets 45% (its button holds the whole value, never cut short).
+ */
+const DESKTOP_COLS = ['', 'w-[30%]', 'w-[15%]', 'w-[15%]', 'w-[12%]'];
+const PHONE_COLS = ['', 'w-[45%]'];
+
+/**
  * The key/value/description table (docs/26b §2): a caption naming the group and its count, column
  * headers, one row per value. Desktop: الاسم | القيمة | الافتراضي | آخر تعديل | إجراء; phones keep the
  * first two. While loading: skeleton rows of the real height and aria-busy on the table.
@@ -41,7 +49,7 @@ export function ValuesTable({ caption, note, rows, env, loading }: ValuesTablePr
   const cols = env.phone ? [v.cols.name, v.cols.value] : [v.cols.name, v.cols.value, v.cols.default, v.cols.last, v.cols.action];
   return (
     <div className="min-w-0 overflow-x-auto">
-      <table aria-busy={loading || undefined} className="w-full border-collapse text-start">
+      <table aria-busy={loading || undefined} className={cn('w-full table-fixed border-collapse text-start', !env.phone && 'min-w-[680px]')}>
         <caption className="mb-2 text-start">
           <span className="flex flex-wrap items-baseline gap-x-2">
             <span className="text-base font-bold text-ink">{caption}</span>
@@ -49,6 +57,11 @@ export function ValuesTable({ caption, note, rows, env, loading }: ValuesTablePr
           </span>
           {note && <span className="block text-xs text-ink-3">{note}</span>}
         </caption>
+        <colgroup>
+          {(env.phone ? PHONE_COLS : DESKTOP_COLS).map((w, i) => (
+            <col key={i} className={w || undefined} />
+          ))}
+        </colgroup>
         <thead>
           <tr className="border-b border-rule-strong">
             {cols.map((c) => (

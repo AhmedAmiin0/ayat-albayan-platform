@@ -7,7 +7,7 @@ import { GroupNav } from './GroupNav';
 import type { RowEnv } from './rows/ValueRowView';
 import { valueCounts } from './value-rows';
 import { ValueSheet } from './ValueSheet';
-import { ValuesEmpty, ValuesLoadError } from './ValuesStates';
+import { GroupEmpty, ValuesEmpty, ValuesLoadError } from './ValuesStates';
 import { ValuesHead } from './ValuesHead';
 import { ValuesTable } from './ValuesTable';
 import { ValuesToolbar } from './ValuesToolbar';
@@ -42,7 +42,9 @@ export function ValuesBody({ search, onSearch, loading, failed, onRetry, custom 
       onPick={(id) => onSearch({ group: id })}
     />
   );
+  const busy = loading || view.customLoading;
   const empty = view.all && view.rows.length === 0 && !loading;
+  const groupEmpty = !view.all && view.rows.length === 0 && !busy && !view.customFailed;
   return (
     <>
       <ValuesHead
@@ -65,8 +67,12 @@ export function ValuesBody({ search, onSearch, loading, failed, onRetry, custom 
         {chips ? <div className="min-w-0">{nav}</div> : <aside className="shell:sticky shell:top-20 shell:self-start">{nav}</aside>}
         <div className="min-w-0">
           {failed && <ValuesLoadError onRetry={onRetry} />}
+          {!failed && view.customFailed && <ValuesLoadError onRetry={view.retryCustom} message={t.config.custom.loadError} />}
           {!failed && empty && <ValuesEmpty onClear={clear} />}
-          {!failed && !empty && <ValuesTable caption={view.caption} note={view.note} rows={view.rows} env={env} loading={loading} />}
+          {!failed && groupEmpty && <GroupEmpty />}
+          {!failed && !empty && !groupEmpty && !view.customFailed && (
+            <ValuesTable caption={view.caption} note={view.note} rows={view.rows} env={env} loading={busy} />
+          )}
           {view.all && !empty && (
             <button type="button" onClick={clear} className="mt-3 min-h-11 text-sm font-semibold text-lapis underline underline-offset-4 sm:min-h-8">
               {t.settingsValues.clearSearch}

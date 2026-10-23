@@ -32,13 +32,14 @@ describe('useValuesController', () => {
     expect(result.current.said).toBe(t.settingsValues.savedNamed.replace('{name}', t.settings.bookingHorizonWeeks));
   });
 
-  it('a key the API moved stays unsaved with «تُدار من صفحة أخرى»', async () => {
+  it('a key the API moved drops its edit and shows «تُدار من صفحة أخرى»', async () => {
     apiSend.mockResolvedValue({ saved: [], moved: ['lateCancelHours'] });
     const { result } = setup();
     act(() => result.current.api.drafts.edit('late_cancel_hours', { lateCancelHours: '12', lateCancelHoursOn: true }));
     act(() => result.current.api.save('late_cancel_hours'));
     await waitFor(() => expect(result.current.api.status('late_cancel_hours')).toEqual({ state: 'moved' }));
-    expect(result.current.api.drafts.dirty('late_cancel_hours')).toBe(true);
+    expect(result.current.api.drafts.dirty('late_cancel_hours')).toBe(false);
+    expect(result.current.said).toBe(t.settingsValues.moved);
     expect(result.current.note).toBeNull();
   });
 

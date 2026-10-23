@@ -1,4 +1,5 @@
 import { describe, expect, it } from 'vitest';
+import { settingText } from '@/components/settings/setting-text';
 import { t } from '@/lib/i18n';
 import { SETTINGS } from '@/test/settings-fixture';
 import { allRows, groupRows, rowKey, rowMatches, rowWords, valueCounts, type ValueRow } from './value-rows';
@@ -48,5 +49,13 @@ describe('«القيم» rows', () => {
     expect(counts.public).toBeGreaterThan(0);
     const [row] = groupRows('schedule', []);
     expect(row && rowMatches(row, q())).toBe(true);
+  });
+
+  it('a setting matches by its switch words too, like the hub search (late cancel, recording retention)', () => {
+    for (const key of ['late_cancel_hours', 'recording_retention_days'] as const) {
+      const toggle = settingText(key).toggle;
+      expect(toggle).toBeTruthy();
+      expect(allRows([], q({ q: toggle ?? '' })).map(rowKey)).toContain(key);
+    }
   });
 });

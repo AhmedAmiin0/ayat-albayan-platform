@@ -67,6 +67,7 @@ export function ShapeEditor({ settingKey, ids }: EditorProps) {
         size="sm"
         variant="secondary"
         aria-haspopup="dialog"
+        aria-label={`${v.shapeEdit}: ${settingText(settingKey).label}`}
         aria-describedby={ids.label}
         disabled={api.status(settingKey).state === 'saving'}
         onClick={() => setOpen(true)}

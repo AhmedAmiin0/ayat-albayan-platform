@@ -35,7 +35,7 @@ export function CustomValueRow({ entry, canWrite, onEdit, onDelete, announce, gr
   const labelId = useId();
   const label = entry.description ?? entry.key;
   const value = (
-    <bdi dir="ltr" className="block truncate font-mono text-xs text-ink-2">
+    <bdi dir="ltr" className="block truncate text-sm text-ink tabular-nums">
       {customPreview(entry)}
     </bdi>
   );
@@ -45,7 +45,7 @@ export function CustomValueRow({ entry, canWrite, onEdit, onDelete, announce, gr
       label={v.menu.replace('{name}', label)}
       items={[
         { id: 'edit', label: c.edit, onSelect: () => onEdit(entry) },
-        { id: 'delete', label: c.delete, danger: true, onSelect: () => onDelete(entry) },
+        { id: 'delete', label: v.customDelete, danger: true, onSelect: () => onDelete(entry) },
         keyItem(entry.key, announce),
       ]}
     />
@@ -55,7 +55,7 @@ export function CustomValueRow({ entry, canWrite, onEdit, onDelete, announce, gr
       <th scope="row" abbr={label} className={headClass(false)}>
         {name}
       </th>
-      <td className={`${cellClass} max-w-[260px]`}>
+      <td className={cellClass}>
         {phone ? (
           <span className="flex items-center justify-between gap-2">
             <span className="min-w-0">{value}</span>

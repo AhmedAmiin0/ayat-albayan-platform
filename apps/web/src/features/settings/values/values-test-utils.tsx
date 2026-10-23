@@ -17,6 +17,8 @@ export interface ValuesFixture {
   search?: ValuesSearch;
   /** GET /settings never answers (loading) or fails (load error). */
   settingsState?: 'pending' | 'error';
+  /** GET /config/custom fails. */
+  customState?: 'error';
 }
 
 /** The page with its search in local state (the route keeps it in the URL). */
@@ -44,9 +46,10 @@ export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
     ['/admin/google/status', { settings: fx.google ?? { enabled: false, mode: 'dry_run', window_days: 60 } }],
   ]);
   const routed = apiFetch.getMockImplementation();
-  if (fx.settingsState && routed) {
+  if ((fx.settingsState || fx.customState) && routed) {
     apiFetch.mockImplementation(async (path: string) => {
-      if (path !== '/settings') return routed(path);
+      if (path === '/config/custom' && fx.customState) throw new Error('down');
+      if (path !== '/settings' || !fx.settingsState) return routed(path);
       if (fx.settingsState === 'pending') return new Promise(() => undefined);
       throw new Error('down');
     });

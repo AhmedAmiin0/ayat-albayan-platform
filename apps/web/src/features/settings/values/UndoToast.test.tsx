@@ -15,10 +15,13 @@ describe('UndoToast', () => {
     act(() => vi.advanceTimersByTime(20_000));
     expect(onDismiss).not.toHaveBeenCalled();
     fireEvent.blur(undo);
-    fireEvent.mouseEnter(screen.getByRole('status'));
+    const toast = screen.getByText(t.settingsValues.saved).closest('[data-undo-toast]') as HTMLElement;
+    // Not a second live region: the page announces the save once.
+    expect(screen.queryByRole('status')).toBeNull();
+    fireEvent.mouseEnter(toast);
     act(() => vi.advanceTimersByTime(20_000));
     expect(onDismiss).not.toHaveBeenCalled();
-    fireEvent.mouseLeave(screen.getByRole('status'));
+    fireEvent.mouseLeave(toast);
     act(() => vi.advanceTimersByTime(9_999));
     expect(onDismiss).not.toHaveBeenCalled();
     act(() => vi.advanceTimersByTime(1));
@@ -30,5 +33,6 @@ describe('UndoToast', () => {
     render(<UndoToast message="x" onUndo={onUndo} onDismiss={vi.fn()} />);
     fireEvent.click(screen.getByRole('button', { name: t.settingsValues.undo }));
     expect(onUndo).toHaveBeenCalled();
+    expect(screen.getByRole('button', { name: t.settingsValues.undo }).className).toContain('min-h-11');
   });
 });

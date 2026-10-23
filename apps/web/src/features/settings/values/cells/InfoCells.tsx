@@ -36,12 +36,12 @@ export function LastCell({ meta, unsavedWas }: LastCellProps) {
   if (unsavedWas !== undefined) {
     return (
       <span className="grid gap-0.5 text-xs">
-        <span className="font-semibold text-lapis">{v.unsavedRow}</span>
+        <span className="font-semibold text-ink-2">{v.unsavedRow}</span>
         <small className="text-ink-3">{v.savedWas.replace('{value}', unsavedWas)}</small>
       </span>
     );
   }
-  if (!meta) return <small className="text-xs text-ink-3">{v.never}</small>;
+  if (!meta) return <small className="text-xs whitespace-nowrap text-ink-3">{v.never}</small>;
   return (
     <span className="grid gap-0.5 text-xs text-ink-2">
       <span>{meta.updatedByName ?? '—'}</span>

@@ -24,7 +24,9 @@ describe('«القيم» editors by type', () => {
     const input = within(row).getByLabelText(t.settings.bookingHorizonWeeks);
     const bounds = within(row).getByText(v.bounds.replace('{min}', '1').replace('{max}', '12'));
     expect(input.getAttribute('aria-describedby')).toContain(bounds.id);
-    expect(within(row).getByText(v.units.weeks.unit)).toBeTruthy();
+    // 5 → «أسابيع» (the counted form), and no spin arrows over the digits.
+    expect(within(row).getByText(v.units.weeks.few.replace('{n}', '').trim())).toBeTruthy();
+    expect(input.className).toContain('[&::-webkit-inner-spin-button]:appearance-none');
   });
 
   it('a number that can be OFF has its switch in the same cell; OFF disables the box', async () => {
@@ -49,7 +51,7 @@ describe('«القيم» editors by type', () => {
     renderValues(apiFetch, { search: { group: 'academy' } });
     const row = await findRow(t.config.academyContact);
     expect(within(row).getAllByText('ayatalbayan.com')).toHaveLength(2); // value and default
-    fireEvent.click(within(row).getByRole('button', { name: v.shapeEdit }));
+    fireEvent.click(within(row).getByRole('button', { name: `${v.shapeEdit}: ${t.config.academyContact}` }));
     const dialog = screen.getByRole('dialog', { name: t.config.academyContact });
     fireEvent.change(within(dialog).getByLabelText(t.config.fields.email), { target: { value: 'a@b.co' } });
     fireEvent.click(within(dialog).getByRole('button', { name: v.shapeSave }));

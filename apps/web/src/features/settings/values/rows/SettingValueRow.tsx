@@ -31,7 +31,9 @@ export function SettingValueRow({ settingKey, group, groupName }: SettingValueRo
   const ids = useRowIds();
   const words = settingText(settingKey);
   const owned = isOwnedGroup(group) ? (group as OwnedValueGroupId) : null;
-  const editable = owned === null && api.canWrite && isEditableValueKey(settingKey);
+  // The API refused the key as owned by a module page: the row is text from then on.
+  const moved = api.status(settingKey).state === 'moved';
+  const editable = owned === null && !moved && api.canWrite && isEditableValueKey(settingKey);
   const dirty = editable && api.drafts.dirty(settingKey);
   const stored = valueText(settingKey, api.settings[settingKey]);
   return (
@@ -52,7 +54,10 @@ export function SettingValueRow({ settingKey, group, groupName }: SettingValueRo
         ) : owned ? (
           <OwnedValue text={stored} group={owned} />
         ) : (
-          <span className="text-sm text-ink">{stored}</span>
+          <span className="grid gap-0.5">
+            <span className="text-sm text-ink">{stored}</span>
+            {moved && <small className="text-xs text-ink-2">{t.settingsValues.moved}</small>}
+          </span>
         )}
       </td>
       <td className={cellClass}>
@@ -65,7 +70,9 @@ export function SettingValueRow({ settingKey, group, groupName }: SettingValueRo
         {editable ? (
           <ActionCell settingKey={settingKey} />
         ) : (
-          api.canWrite && <RowMenu label={t.settingsValues.menu.replace('{name}', words.label)} items={[keyItem(settingKey, api.announce)]} />
+          api.canWrite && (
+            <RowMenu label={t.settingsValues.menu.replace('{name}', words.label)} items={[keyItem(settingKey, api.announce)]} />
+          )
         )}
       </td>
     </tr>
