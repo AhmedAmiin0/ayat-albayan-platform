@@ -12,8 +12,9 @@ custom desgin for it».
 
 - `docs/26a-config-survey.md` — survey: every key, SQL reader, API route, client (file:line).
 - `docs/26b-config-ui.md` — UI/UX: IA, the old → new map of all 127 controls, states, mobile, design review.
-- `docs/design/26-config/` — static mockups: `hub.html`, `values.html`, `values-390.html`, `notifications.html`,
-  `mobile.html` (+ `tokens.css`).
+- `docs/design/26-config/` — static mockups, one short screen each (owner: «i dont like long pages», «stick with
+  table»): `hub.html`, `values.html`, `values-390.html`, `notifications.html`, `mobile.html`, plus `states.html` (every
+  dialog and state) and `tokens.css`.
 
 ## 0. Summary
 
@@ -300,7 +301,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 | **26-P1** | Expand | §2a columns, sequences, revision table, RPCs, `NOT VALID` checks, generated types; registry gains `module`/`group`/`confirm`/`ownedBy`/`reachesFamilies`; `SEED_ENTRIES`. Inert | Revert the code; the unused columns stay |
 | 23-P4 | Notification rules (**amended**) | Copies 7 of the 8 notification keys (not `renewal_alert_remaining`, §1). Moves the messaging section's writes of the 8 keys to the rules API. Ownership of the 8 keys changes **in the registry** (`ownedBy: 'notifications'`), never through SQL metadata. Legacy rows are frozen while `comms_source = module`; switching back to `legacy` first copies rules → legacy, or needs an empty reverse parity | Its own |
 | **26-P2** | Seeder + atomic writes + parity | `ConfigSeeder` (`registry_version`, per-key savepoint), `config_set` (JSON null, versions), revision freshness, the description override copy, `/admin/config/parity`, null-parity and two-boot e2e; the `VALIDATE` migration after the pre-check | Revert the code. Rows keep their values (only metadata was written) |
-| **26-P3** | «القيم» + hub | `/config/entries` routes; web hub + «القيم» + description dialog; mobile list + «القيم»; the alias narrows to the 7 phone fields. The messaging section moves to a «التواصل» page with **its own form and save** (the gate routes, the rules API) until 23-P6. Redirects: `#integrations` → `/admin/settings/google` **with its query string, forever** (the web deploys before the API callback changes); the template-approval links go to the templates view. Push `google_sync_alert` opens the Google screen in the new bundle. **e2e updated in the same PR**: `settings-academy`, `templates`, `template-numbers`, `wa-lines-check`, `settings-switches`, `restricted-templates`, `responsive` (selectors, per-row «حفظ»; the skeleton uses `aria-busy`, not `role=status`) | Revert web/mobile. The aliases were never removed |
+| **26-P3** | «القيم» + hub | `/config/entries` routes; web hub (a five-row table) + «القيم» (a compact table, one group per view; docs/26b §2) + description dialog; mobile list + «القيم» (a two-column table with a bottom-sheet editor); the alias narrows to the 7 phone fields. The messaging section moves to a «التواصل» page with **its own form and save** (the gate routes, the rules API) until 23-P6. Redirects: `#integrations` → `/admin/settings/google` **with its query string, forever** (the web deploys before the API callback changes); the template-approval links go to the templates view. Push `google_sync_alert` opens the Google screen in the new bundle. **e2e updated in the same PR**: `settings-academy`, `templates`, `template-numbers`, `wa-lines-check`, `settings-switches`, `restricted-templates`, `responsive` (selectors, per-row «حفظ»; the skeleton uses `aria-busy`, not `role=status`) | Revert web/mobile. The aliases were never removed |
 | 23-P5, 23-P6 | Routing per number; `/admin/communications` | P6 uses the docs/26b design for «الإشعارات» and the 26-P0 gate routes | Their own |
 | **26-P4** | Send gate last | §5: uncached gate read, fail-closed tests | Revert one file |
 | 23-P7 + **26-P5** | Contract | Legacy keys and read code go after ≥ 2 clean weeks; `custom_config` absorbed as «قيم مخصصة»; aliases removed only under the §2f rule | A down-migration copies `custom.*` back |

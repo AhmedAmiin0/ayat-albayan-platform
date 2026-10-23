@@ -1,0 +1,343 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>حالات الإعدادات ونوافذها</title>
+<meta name="description" content="Design mock: every dialog and state of the settings redesign in one grid (docs/26b §2–§4). The main mockups stay one short screen each. Static, fake data, no JS.">
+<link rel="stylesheet" href="./tokens.css">
+<style>
+.vgrp { display: block; font-size: 12.5px; color: var(--ink-3); }
+.dlg-glyph--ok { background: var(--verdigris-wash); color: var(--verdigris); }
+.dlg-body > p { font-size: 15px; text-wrap: pretty; }
+.logline { display: flex; align-items: center; gap: 8px; padding-block: 8px; padding-inline: 10px; background: var(--sunk); border-radius: var(--r-md); font-size: 13px; color: var(--ink-2); }
+.web-note { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-3); }
+.web-note .i { inline-size: 16px; block-size: 16px; }
+.kvlist { display: grid; gap: 4px; margin: 0; }
+.kvlist div { display: flex; justify-content: space-between; gap: 12px; min-block-size: 32px; align-items: center; }
+.kvlist dt { color: var(--ink-2); } .kvlist dd { margin: 0; }
+.toast-dock { display: grid; justify-items: stretch; padding: 16px; }
+.toast-dock .toast { justify-content: space-between; }
+.frag .note { display: grid; gap: 6px; }
+/* the table */
+.nt { inline-size: 100%; border-collapse: collapse; table-layout: fixed; }
+.nt thead th { padding-block: 6px; padding-inline: 8px; border-block-end: 3px double var(--gold); color: var(--ink-3); font-size: 12px; font-weight: 600; text-align: start; white-space: nowrap; }
+.nt .k-ch { inline-size: 13%; } .nt .k-num { inline-size: 25%; } .nt .k-st { inline-size: 22%; } .nt .k-sw { inline-size: 128px; }
+.nt tbody th, .nt tbody td { padding-block: 5px; padding-inline: 8px; border-block-end: 1px solid var(--rule); text-align: start; vertical-align: top; font-weight: 400; }
+.nt tbody tr:not(.nsub):hover > * { background: color-mix(in oklab, var(--sunk) 70%, transparent); }
+.nt tr.is-off .nname { color: var(--ink-2); }
+.nt tr.is-dirty > * { background: color-mix(in oklab, var(--lapis-wash) 55%, transparent); }
+.nt tr.is-dirty > th { border-inline-start: 3px solid var(--lapis); }
+.nt tr.is-dirty:not(.nsub) > * { border-block-end: 0; }
+.nt tr.nsub > td { padding-block: 0 6px; border-inline-start: 3px solid var(--lapis); }
+.nt--manual thead th:nth-child(2) { inline-size: 30%; } .nt--manual thead th:nth-child(3) { inline-size: 40%; }
+.nname { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; font-weight: 600; color: var(--ink); }
+.nt .tag { block-size: 20px; padding-inline: 6px; font-size: 11.5px; gap: 4px; }
+.nt .tag .i { inline-size: 12px; block-size: 12px; }
+.when { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 6px; color: var(--ink-2); font-size: 13px; }
+.when .meta { margin-inline-start: 4px; }
+.meta { font-size: 12px; color: var(--ink-3); }
+.input--n { inline-size: 64px; min-block-size: var(--h-dense); padding-inline: 6px; text-align: center; }
+.sel--sm { display: inline-block; } .sel--sm select { inline-size: auto; min-block-size: var(--h-dense); padding-inline-start: 8px; font-size: 13px; }
+.numline { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; }
+.ch { display: grid; gap: 0; }
+.ch .check { min-block-size: 24px; font-size: 13px; }
+.ch .check input { inline-size: 16px; block-size: 16px; }
+.only, .ro-val { font-size: 13px; color: var(--ink-2); }
+.st { display: block; }
+.why { display: block; font-size: 12px; color: var(--ink-3); line-height: 1.5; }
+.lnk { display: inline-flex; align-items: center; min-block-size: 24px; font-size: 13px; }
+.lock-note { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--ink-2); }
+.k-sw .meta { display: block; }
+.dirty-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
+.unsaved { display: inline-flex; align-items: center; gap: 6px; color: var(--ink); font-weight: 600; font-size: 13px; }
+.dirty-bar .acts { display: flex; gap: 6px; margin-inline-start: auto; }
+.nt tr.is-conflict > th, .nt tr.nsub.is-conflict > td { border-inline-start: 4px solid var(--saffron); }
+.nt tr.is-conflict:not(.nsub) > * { border-block-end: 0; }
+.nt .field-err { display: flex; font-size: 12px; }
+
+
+.combo { display: grid; gap: 6px; max-inline-size: 560px; }
+.results { display: grid; gap: 4px; padding: 8px; background: var(--raised); border: 1px solid var(--rule-strong); border-radius: var(--r-md); box-shadow: var(--elev-pop); }
+.results [role='group'] { display: grid; gap: 2px; }
+.results .grp { padding-inline: 10px; padding-block: 8px 2px; font-size: 12px; font-weight: 600; color: var(--ink-3); }
+.results [role='option'] { display: grid; gap: 2px; padding-block: 8px; padding-inline: 10px; border-radius: var(--r-sm); color: var(--ink); cursor: pointer; }
+.results [role='option']:hover, .results [role='option'][aria-selected='true'] { background: var(--lapis-wash); }
+.results [role='option'][aria-selected='true'] { border-inline-start: 3px solid var(--lapis); padding-inline-start: 7px; }
+.results small { font-size: 12px; color: var(--ink-3); }
+.results .hit { color: var(--lapis); text-decoration: underline 2px; text-underline-offset: 7px; }
+.combo .total { padding-inline: 10px; font-size: 12px; color: var(--ink-3); }
+
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="g-fill" viewBox="0 0 16 16"><path fill="currentColor" d="M8 2.2 13.8 8 8 13.8 2.2 8Z"/></symbol>
+  <symbol id="g-half" viewBox="0 0 16 16"><path fill="currentColor" d="M2.9 8h10.2L8 13.1Z"/><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-hollow" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/></symbol>
+  <symbol id="g-struck" viewBox="0 0 16 16"><path fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" d="M8 2.9 13.1 8 8 13.1 2.9 8Z"/><path d="M2.6 13.4 13.4 2.6" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+  <symbol id="cap" viewBox="0 0 26 52">
+    <path style="fill:var(--gold-wash)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26Z"/>
+    <path fill="none" stroke="currentColor" d="M26 2.5H15C9.5 2.5 8.5 7 6.5 12L1.5 26L6.5 40C8.5 45 9.5 49.5 15 49.5H26"/>
+    <path fill="none" style="stroke:var(--gold-soft)" d="M26 6.5H16C12.5 6.5 11.5 9.5 10 13.5L5.6 26L10 38.5C11.5 42.5 12.5 45.5 16 45.5H26"/>
+    <path fill="currentColor" d="M13.5 23.6 15.9 26 13.5 28.4 11.1 26Z"/>
+  </symbol>
+  <symbol id="rhomb" viewBox="0 0 56 56"><g fill="none" stroke="currentColor" stroke-width="1.5"><path d="M28 4 52 28 28 52 4 28Z"/><path d="M28 10 46 28 28 46 10 28Z"/></g></symbol>
+  <symbol id="i-search" viewBox="0 0 20 20"><circle cx="9" cy="9" r="5.5"/><path d="m13.2 13.2 3.6 3.6"/></symbol>
+  <symbol id="i-chev-end" viewBox="0 0 20 20"><path d="M12.5 5 7.5 10l5 5"/></symbol>
+  <symbol id="i-chev-down" viewBox="0 0 20 20"><path d="m5 8 5 5 5-5"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 20 20"><path d="M10 4.5v11M4.5 10h11"/></symbol>
+  <symbol id="i-check" viewBox="0 0 20 20"><path d="m4.5 10.5 3.5 3.5 7.5-8"/></symbol>
+  <symbol id="i-x" viewBox="0 0 20 20"><path d="m5.5 5.5 9 9M14.5 5.5l-9 9"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 20 20"><path d="M7.5 5.5 4 9l3.5 3.5"/><path d="M4 9h8a4 4 0 0 1 0 8H9"/></symbol>
+  <symbol id="i-pencil" viewBox="0 0 20 20"><path d="M4 16l1-3.8 8.3-8.3a1.9 1.9 0 0 1 2.7 2.7L7.7 15Z"/><path d="M12 5.2l2.8 2.8"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 20 20"><path d="M4.5 6h11M8 6V4.5h4V6M6 6l.8 10h6.4L14 6"/></symbol>
+  <symbol id="i-grid" viewBox="0 0 20 20"><rect x="3.5" y="3.5" width="5" height="5" rx="1"/><rect x="11.5" y="3.5" width="5" height="5" rx="1"/><rect x="3.5" y="11.5" width="5" height="5" rx="1"/><rect x="11.5" y="11.5" width="5" height="5" rx="1"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 20 20"><path d="M10 3.5a6.5 6.5 0 0 0-5.6 9.8L3.5 16.5l3.3-.9A6.5 6.5 0 1 0 10 3.5Z"/></symbol>
+  <symbol id="i-users" viewBox="0 0 20 20"><circle cx="7.5" cy="7" r="2.8"/><path d="M2.8 16c.8-2.6 2.5-3.8 4.7-3.8s3.9 1.2 4.7 3.8"/><path d="M13 4.5a2.6 2.6 0 0 1 0 5M14.5 12.4c1.4.4 2.3 1.6 2.8 3.6"/></symbol>
+  <symbol id="i-teacher" viewBox="0 0 20 20"><circle cx="10" cy="6.5" r="3"/><path d="M4 16.5c1.1-2.9 3.3-4.3 6-4.3s4.9 1.4 6 4.3"/></symbol>
+  <symbol id="i-cal" viewBox="0 0 20 20"><rect x="3.5" y="4.5" width="13" height="12" rx="1.5"/><path d="M3.5 8.5h13M7 3v3M13 3v3"/></symbol>
+  <symbol id="i-doc" viewBox="0 0 20 20"><path d="M5.5 3.5h6l3 3v10h-9z"/><path d="M11.5 3.5v3h3M8 10.5h4.5M8 13.5h4.5"/></symbol>
+  <symbol id="i-wallet" viewBox="0 0 20 20"><rect x="3" y="5.5" width="14" height="10.5" rx="1.5"/><path d="M13.5 10.8h.5M3 8.5h14"/></symbol>
+  <symbol id="i-bell" viewBox="0 0 20 20"><path d="M5.5 13.5V9a4.5 4.5 0 0 1 9 0v4.5l1.5 1.5H4Z"/><path d="M8.5 17.5h3"/></symbol>
+  <symbol id="i-gear" viewBox="0 0 20 20"><circle cx="10" cy="10" r="2.4"/><circle cx="10" cy="10" r="5.4"/><path d="M10 2.6v2M10 15.4v2M2.6 10h2M15.4 10h2M4.8 4.8l1.4 1.4M13.8 13.8l1.4 1.4M4.8 15.2l1.4-1.4M13.8 6.2l1.4-1.4"/></symbol>
+  <symbol id="i-dots" viewBox="0 0 20 20"><circle cx="4.5" cy="10" r="1.2" fill="currentColor"/><circle cx="10" cy="10" r="1.2" fill="currentColor"/><circle cx="15.5" cy="10" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-out" viewBox="0 0 20 20"><path d="M12 4.5h3a1.5 1.5 0 0 1 1.5 1.5v8a1.5 1.5 0 0 1-1.5 1.5h-3M7.5 13.5 4 10l3.5-3.5M4 10h7.5"/></symbol>
+  <symbol id="i-copy" viewBox="0 0 20 20"><rect x="7" y="7" width="9" height="9" rx="1.5"/><path d="M13 7V5.5A1.5 1.5 0 0 0 11.5 4h-6A1.5 1.5 0 0 0 4 5.5v6A1.5 1.5 0 0 0 5.5 13H7"/></symbol>
+  <symbol id="i-eye" viewBox="0 0 20 20"><path d="M2.5 10s2.8-5 7.5-5 7.5 5 7.5 5-2.8 5-7.5 5-7.5-5-7.5-5Z"/><circle cx="10" cy="10" r="2.2"/></symbol>
+  <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="10.5" width="14" height="10" rx="2"/><path d="M8 10.5V7.5a4 4 0 0 1 8 0v3"/></symbol>
+  <symbol id="i-log" viewBox="0 0 24 24"><path d="M5 4h14v16H5Z"/><path d="M8 8h8M8 12h8M8 16h5"/></symbol>
+  <symbol id="i-monitor" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M9 20h6M12 16v4"/></symbol>
+</svg>
+
+<main class="board board--screen">
+  <header class="board-head">
+    <div><h1>الحالات والنوافذ</h1><p class="long">كل نافذة وحالة كانت في لوحات النماذج، في شبكة واحدة، لتبقى كل صفحة رئيسية شاشة واحدة قصيرة. لا شيء حُذف؛ بجانب كل مثال مصدره.</p>
+    <p><a href="#values">القيم</a> · <a href="#values-phone">الهاتف</a> · <a href="#notifications">الإشعارات</a> · <a href="#mobile">التطبيق</a> · <a href="#hub">الرئيسية</a></p></div>
+    <fieldset class="theme-pick">
+      <legend>المظهر</legend>
+      <label><input type="radio" name="theme" id="theme-auto" checked> حسب الجهاز</label>
+      <label><input type="radio" name="theme" id="theme-light"> فاتح</label>
+      <label><input type="radio" name="theme" id="theme-dark"> ليلي</label>
+    </fieldset>
+  </header>
+  <div class="sgrid">
+<h2 class="sec-title" id="values">القيم (values.html)</h2><p class="hint" style="grid-column:1/-1">نوافذ الصف وحالاته على سطح المكتب. حالات الصف نفسها (لم يُحفظ، خطأ، جارٍ الحفظ، تعارض) مرسومة داخل الجدول في values.html.</p><figure><figcaption><b>قائمة «⋯» للصف</b> <span class="src">(جديد: المفتاح البرمجي وإعادة الافتراضي هنا، لا في سطر ظاهر)</span></figcaption><div class="frag" style="justify-items:end">
+  <button class="icon-btn icon-btn--sm" type="button" aria-haspopup="menu" aria-expanded="true" aria-controls="m1" aria-label="خيارات: تُجدول الحلقات لكم أسبوعًا مقدمًا"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></button>
+  <div class="menu" role="menu" id="m1" aria-label="خيارات: تُجدول الحلقات لكم أسبوعًا مقدمًا">
+    <button role="menuitem" type="button"><svg class="i" aria-hidden="true"><use href="#i-pencil"/></svg>اقرأ الوصف وعدّله</button>
+    <button role="menuitem" type="button"><svg class="i i--flip" aria-hidden="true"><use href="#i-undo"/></svg>أعد القيمة الافتراضية (<span class="num">5</span>)</button>
+    <div role="separator"></div>
+    <div class="devkey" role="none"><span>للمطوّر: المفتاح</span><bdi dir="ltr">booking_horizon_weeks</bdi></div>
+    <button role="menuitem" type="button"><svg class="i" aria-hidden="true"><use href="#i-copy"/></svg>انسخ المفتاح</button>
+  </div>
+  <div class="menu" role="menu" aria-label="خيارات: نص الترحيب للحلقة التجريبية">
+    <button role="menuitem" type="button"><svg class="i" aria-hidden="true"><use href="#i-pencil"/></svg>اقرأ الوصف وعدّله</button>
+    <button role="menuitem" type="button"><svg class="i" aria-hidden="true"><use href="#i-eye"/></svg>اجعلها عامة…</button>
+    <button role="menuitem" type="button" class="danger"><svg class="i" aria-hidden="true"><use href="#i-trash"/></svg>احذف القيمة…</button>
+    <div role="separator"></div>
+    <div class="devkey" role="none"><span>للمطوّر: المفتاح</span><bdi dir="ltr">custom.trial_welcome_note</bdi></div>
+  </div>
+</div></figure><figure class="wide"><figcaption><b>البحث: «الكل» نتيجة بحث فقط</b> <span class="src">(جديد)</span></figcaption><div class="frag">
+  <div class="vbar" role="search"><div class="search" style="max-inline-size:none"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><label class="sr-only" for="q-all">ابحث في كل القيم</label><input class="input" id="q-all" type="search" value="ساعة"></div>
+  <span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>الكل · <span class="num">4</span> نتائج</span><button class="link-btn" type="button">امسح البحث</button></div>
+  <table class="vt"><caption><span class="cap-t">الكل</span><span class="cap-n">نتائج «ساعة» من كل المجموعات</span></caption>
+  <thead><tr><th scope="col">الاسم</th><th scope="col" class="k-val">القيمة</th><th scope="col" class="k-def">الافتراضي</th><th scope="col" class="k-last">آخر تعديل</th><th scope="col" class="k-act"><span class="sr-only">إجراء</span><span aria-hidden="true">إجراء</span></th></tr></thead>
+  <tbody>
+  <tr><th scope="row"><div class="vname"><div class="vtitle"><label class="vlabel" for="s-rt">يمكن للمعلم/ة تعديل التقرير حتى كم ساعة</label></div><span class="vgrp">التقارير</span></div></th><td class="k-val"><div class="ed ed-desk"><div class="ed-row unit-field"><input class="input" id="s-rt" type="number" inputmode="numeric" dir="ltr" min="0" max="168" value="24"><span class="unit">ساعة</span></div></div></td><td class="k-def"><span class="vdef"><span class="num">24</span></span></td><td class="k-last"><span class="vlast"><small>لم تُعدَّل بعد</small></span></td><td class="k-act"><div class="vact"><button class="icon-btn icon-btn--sm" type="button" aria-haspopup="menu" aria-label="خيارات: يمكن للمعلم/ة تعديل التقرير حتى كم ساعة"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></button></div></td></tr>
+  <tr><th scope="row"><div class="vname"><div class="vtitle"><label class="vlabel" for="s-fx">يُعاد استخدام سعر الصرف المحفوظ مدة كم ساعة</label></div><span class="vgrp">الحسابات والدفعات</span></div></th><td class="k-val"><div class="ed ed-desk"><div class="ed-row unit-field"><input class="input" id="s-fx" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="8"><span class="unit">ساعة</span></div></div></td><td class="k-def"><span class="vdef"><span class="num">24</span></span></td><td class="k-last"><span class="vlast">سارة<small>قبل دقيقتين</small></span></td><td class="k-act"><div class="vact"><button class="icon-btn icon-btn--sm" type="button" aria-haspopup="menu" aria-label="خيارات: يُعاد استخدام سعر الصرف المحفوظ مدة كم ساعة"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></button></div></td></tr>
+  <tr><th scope="row"><div class="vname"><div class="vtitle"><label class="vlabel" for="s-qr">يُعتمد رد «نعم» المكتوب خلال كم ساعة</label></div><span class="vgrp">الرسائل</span></div></th><td class="k-val"><div class="ed ed-desk"><div class="ed-row unit-field"><input class="input" id="s-qr" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="48"><span class="unit">ساعة</span></div></div></td><td class="k-def"><span class="vdef"><span class="num">48</span></span></td><td class="k-last"><span class="vlast"><small>لم تُعدَّل بعد</small></span></td><td class="k-act"><div class="vact"><button class="icon-btn icon-btn--sm" type="button" aria-haspopup="menu" aria-label="خيارات: يُعتمد رد «نعم» المكتوب خلال كم ساعة"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></button></div></td></tr>
+  <tr><th scope="row"><div class="vname"><div class="vtitle"><label class="vlabel" for="s-la">مدى البحث عن الحلقات القادمة للتذكير</label></div><span class="vgrp">الرسائل</span></div></th><td class="k-val"><div class="ed ed-desk"><div class="ed-row unit-field"><input class="input" id="s-la" type="number" inputmode="numeric" dir="ltr" min="25" max="72" value="25"><span class="unit">ساعة</span></div></div></td><td class="k-def"><span class="vdef"><span class="num">25</span></span></td><td class="k-last"><span class="vlast"><small>لم تُعدَّل بعد</small></span></td><td class="k-act"><div class="vact"><button class="icon-btn icon-btn--sm" type="button" aria-haspopup="menu" aria-label="خيارات: مدى البحث عن الحلقات القادمة للتذكير"><svg class="i" aria-hidden="true"><use href="#i-dots"/></svg></button></div></td></tr>
+  </tbody></table>
+  <p class="hint">«الكل» لا يظهر في قائمة المجموعات إلا عند البحث أو عند تشغيل «المعدَّلة فقط» أو «العامة فقط». مسح البحث يعيد المجموعة السابقة.</p>
+</div></figure><figure><figcaption><b>«عدّل الوصف»</b> <span class="src">(كان في values.html)</span></figcaption><div class="dlg-stage">
+          <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="d1-t" aria-describedby="d1-d">
+            <div class="dlg-head">
+              <span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span>
+              <h3 class="dlg-title" id="d1-t">تعديل الوصف</h3>
+              <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+              <p class="dlg-desc" id="d1-d">«تُجدول الحلقات لكم أسبوعًا مقدمًا». اكتب الوصف بعربية واضحة: ماذا تفعل القيمة، ومن يتأثر بها.</p>
+            </div>
+            <div class="dlg-body">
+              <div class="field"><label class="label" for="d1-text">الوصف</label><textarea class="textarea" id="d1-text" rows="4" maxlength="300" aria-describedby="d1-count">عدد الأسابيع التي تُنشأ فيها حلقات الطالب مسبقًا من مواعيده الثابتة. زيادته تُظهر حلقات أبعد في الجدول وفي صفحة ولي الأمر.</textarea><p class="hint" id="d1-count"><span class="num">121</span> من <span class="num">300</span> حرف</p></div>
+              <div><button class="link-btn" type="button">استعد الوصف الأصلي</button></div>
+            </div>
+            <div class="dlg-foot"><p class="hint">يراه كل من يفتح «القيم».</p><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">احفظ الوصف</button></div>
+          </div>
+        </div></figure><figure><figcaption><b>تأكيد بالكتابة قبل حفظ قيمة تحذف بيانات (مدة الاحتفاظ فقط)</b> <span class="src">(كان في values.html)</span></figcaption><div class="dlg-stage">
+          <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="d2-t" aria-describedby="d2-d">
+            <div class="dlg-head">
+              <span class="dlg-glyph dlg-glyph--bad" aria-hidden="true"><svg class="g"><use href="#g-struck"/></svg></span>
+              <h3 class="dlg-title" id="d2-t">حذف التسجيلات الأقدم من <span class="num">90</span> يومًا؟</h3>
+              <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+              <p class="dlg-desc" id="d2-d">غيّرت مدة الاحتفاظ من <span class="num">180</span> إلى <span class="num">90</span> يومًا. عند الحفظ يُحذف <span class="num">37</span> تسجيلًا نهائيًا الليلة، ولا يمكن استرجاعها.</p>
+            </div>
+            <div class="dlg-body">
+              <div class="field"><label class="label" for="d2-in">للتأكيد اكتب عدد الأيام: <span class="num">90</span></label><input class="input" id="d2-in" type="text" inputmode="numeric" dir="ltr" value="90" autocomplete="off"></div>
+            </div>
+            <div class="dlg-foot"><p class="hint">يُسجَّل التغيير في سجل النشاط.</p><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--danger" type="button">احفظ واحذف التسجيلات</button></div>
+          </div>
+        </div></figure><figure><figcaption><b>تأكيد عادي لقيمة تؤثر في الرسائل (<bdi dir="ltr">meeting_link_auto</bdi>)</b> <span class="src">(كان في values.html)</span></figcaption><div class="dlg-stage">
+          <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="d5-t" aria-describedby="d5-d">
+            <div class="dlg-head">
+              <span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span>
+              <h3 class="dlg-title" id="d5-t">إرسال رابط المنصة في كل الحلقات؟</h3>
+              <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+              <p class="dlg-desc" id="d5-d"><span class="num">12</span> حلقة في نافذة التذكير القادمة (<span class="num">24</span> ساعة) أُرسل تذكيرها بالرابط الثابت للمعلم/ة. ستصل رسائلها التالية برابط المنصة، فقد يصل إلى بعض الأسر رابطان مختلفان.</p>
+            </div>
+            <div class="dlg-foot"><p class="hint">يُسجَّل التغيير في سجل النشاط.</p><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">أرسل رابط المنصة</button></div>
+          </div>
+        </div></figure><figure><figcaption><b>«أضف قيمة» مع تأكيد القيمة العامة</b> <span class="src">(كان في values.html)</span></figcaption><div class="dlg-stage">
+          <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="d3-t" aria-describedby="d3-d">
+            <div class="dlg-head">
+              <span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span>
+              <h3 class="dlg-title" id="d3-t">إضافة قيمة</h3>
+              <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+              <p class="dlg-desc" id="d3-d">تظهر في مجموعة «قيم مخصصة».</p>
+            </div>
+            <div class="dlg-body">
+              <div class="field"><label class="label" for="d3-key">اسم القيمة البرمجي (بالإنجليزية)</label><input class="input" id="d3-key" type="text" dir="ltr" value="eid_greeting" autocomplete="off" aria-describedby="d3-key-h"><p class="hint" id="d3-key-h">أحرف إنجليزية صغيرة وأرقام و <bdi dir="ltr">. _ -</bdi> ويبدأ بحرف، من <span class="num">2</span> إلى <span class="num">64</span> حرفًا. لا يتغيّر بعد الحفظ.</p></div>
+              <div class="field"><label class="label" for="d3-type">النوع</label><span class="sel"><select id="d3-type"><option selected>نص</option><option>رقم</option><option>نعم/لا</option><option>قائمة</option><option>بيانات منظَّمة (JSON)</option></select><svg class="i" aria-hidden="true"><use href="#i-chev-down"/></svg></span></div>
+              <div class="field"><label class="label" for="d3-val">القيمة</label><input class="input" id="d3-val" type="text" value="كل عام وأنتم بخير، تقبّل الله منا ومنكم."></div>
+              <div class="field"><label class="label" for="d3-desc">الوصف (مطلوب)</label><textarea class="textarea" id="d3-desc" rows="2" maxlength="300" required>تهنئة العيد التي تظهر أعلى صفحة الحجز في أيام العيد.</textarea></div>
+              <label class="sw"><input type="checkbox" role="switch" checked><span class="track" aria-hidden="true"></span><span>عامة: تظهر قبل تسجيل الدخول</span></label>
+              <div class="alert alert--info" role="note"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p>القيمة العامة يقرؤها أي زائر دون تسجيل دخول، فلا تضع فيها بيانات خاصة أو أسرارًا.</p><label class="check"><input type="checkbox" id="d3-ok" checked aria-describedby="d3-role"><span>نعم، اجعلها عامة</span></label><p class="vnote" id="d3-role">يتطلب صلاحية مدير الأكاديمية</p></div></div>
+            </div>
+            <div class="dlg-foot"><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">أضف القيمة</button></div>
+          </div>
+        </div></figure><figure><figcaption><b>مغادرة الصفحة وفيها قيم لم تُحفظ</b> <span class="src">(كان في values.html)</span></figcaption><div class="dlg-stage">
+          <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="d4-t" aria-describedby="d4-d">
+            <div class="dlg-head">
+              <span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span>
+              <h3 class="dlg-title" id="d4-t">مغادرة الصفحة؟</h3>
+              <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+              <p class="dlg-desc" id="d4-d">لديك قيمتان لم تُحفظا: «تُجدول الحلقات لكم أسبوعًا مقدمًا» و«نبّه للتجديد عندما يتبقى في الباقة كم حلقة».</p>
+            </div>
+            <div class="dlg-foot"><button class="btn btn--ghost" type="button">غادر دون حفظ</button><button class="btn btn--primary" type="button">ابقَ في الصفحة</button></div>
+          </div>
+        </div></figure><figure><figcaption><b>قيمة من حقلين تُعدَّل في نافذة</b> <span class="src">(جديد: كانت حقولًا داخل الصف)</span></figcaption><div class="dlg-stage"><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="sh-t" aria-describedby="sh-d">
+  <div class="dlg-head"><span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span><h3 class="dlg-title" id="sh-t">بيانات تواصل الأكاديمية</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+  <p class="dlg-desc" id="sh-d">تظهر في تذييل صفحة الحجز وفي رسائل البريد الإلكتروني. قيمة عامة: يراها أي زائر.</p></div>
+  <fieldset class="dlg-body"><legend class="sr-only">القيمة: حقلان</legend>
+    <div class="field"><label class="label" for="sh-site">الموقع</label><input class="input" id="sh-site" type="text" dir="ltr" value="academy.example"></div>
+    <div class="field"><label class="label" for="sh-mail">البريد الإلكتروني</label><input class="input" id="sh-mail" type="email" dir="ltr" value="info@academy.example"></div>
+    <p class="hint">الافتراضي: الموقع فقط · آخر تعديل: أحمد، <span class="num">12</span> سبتمبر <span class="num">11:32</span></p>
+  </fieldset>
+  <div class="dlg-foot"><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">احفظ الحقلين</button></div>
+</div></div></figure><figure><figcaption><b>حذف قيمة مخصصة</b> <span class="src">(النافذة القائمة اليوم، مرسومة الآن)</span></figcaption><div class="dlg-stage"><div class="dlg" role="dialog" aria-modal="true" aria-labelledby="dl-t" aria-describedby="dl-d">
+  <div class="dlg-head"><span class="dlg-glyph dlg-glyph--bad" aria-hidden="true"><svg class="g"><use href="#g-struck"/></svg></span><h3 class="dlg-title" id="dl-t">حذف «نص الترحيب للحلقة التجريبية»؟</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+  <p class="dlg-desc" id="dl-d">لا يقرؤها النظام، لكن من ينسخها من الفريق لن يجدها بعد الحذف.</p></div>
+  <div class="dlg-foot"><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--danger" type="button">نعم، احذفها</button></div>
+</div></div></figure><figure><figcaption><b>التحميل</b> <span class="src">(كان في values.html)</span></figcaption><div class="frag" aria-busy="true"><span class="sr-only" role="status">جارٍ تحميل القيم…</span>
+  <div class="skel-row" aria-hidden="true"><div><span class="skel" style="inline-size:60%;block-size:14px"></span><span class="skel" style="inline-size:85%"></span></div><div><span class="skel" style="block-size:32px"></span></div><div><span class="skel" style="block-size:14px"></span></div></div>
+  <div class="skel-row" aria-hidden="true"><div><span class="skel" style="inline-size:45%;block-size:14px"></span><span class="skel" style="inline-size:75%"></span></div><div><span class="skel" style="block-size:32px"></span></div><div><span class="skel" style="block-size:14px"></span></div></div>
+  <div class="skel-row" aria-hidden="true"><div><span class="skel" style="inline-size:55%;block-size:14px"></span><span class="skel" style="inline-size:65%"></span></div><div><span class="skel" style="block-size:32px"></span></div><div><span class="skel" style="block-size:14px"></span></div></div>
+</div></figure><figure><figcaption><b>بحث بلا نتائج</b> <span class="src">(كان في values.html)</span></figcaption><div class="frag">
+          <div class="search" style="max-inline-size:none"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><label class="sr-only" for="q-empty">ابحث في القيم</label><input class="input" id="q-empty" type="search" value="مدة الجلسة"></div>
+          <div class="empty">
+            <svg aria-hidden="true"><use href="#rhomb"/></svg>
+            <h3>لا توجد قيم تطابق بحثك</h3>
+            <p>لم نجد «مدة الجلسة» في الأسماء أو الأوصاف أو المفاتيح. جرّب كلمة أخرى.</p>
+            <button class="btn btn--primary" type="button">امسح البحث</button>
+          </div>
+        </div></figure><figure><figcaption><b>تعذّر التحميل</b> <span class="src">(كان في values.html)</span></figcaption><div class="frag">
+          <div class="alert" role="alert"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><div class="alert-body"><p>تعذّر تحميل القيم. تحقق من الاتصال ثم أعد المحاولة.</p><div class="alert-actions"><button class="btn btn--secondary btn--sm" type="button">أعد المحاولة</button></div></div></div>
+        </div></figure><figure class="wide"><figcaption><b>للاطلاع فقط (دون صلاحية تعديل الإعدادات)</b> <span class="src">(كان في values.html)</span></figcaption><div class="frag">
+  <div class="frag-head"><b>القيم</b><span class="chip ro-badge"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>للاطلاع فقط</span></div>
+  <p class="hint">لا تملك صلاحية تعديل الإعدادات. إن احتجت إلى تغيير قيمة فاطلبه من مدير الأكاديمية.</p>
+  <table class="vt"><caption class="sr-only">الجدول والحلقات، للاطلاع فقط</caption>
+  <thead><tr><th scope="col">الاسم</th><th scope="col" class="k-val">القيمة</th><th scope="col" class="k-def">الافتراضي</th><th scope="col" class="k-last">آخر تعديل</th></tr></thead>
+  <tbody>
+  <tr class="is-readonly"><th scope="row"><div class="vname"><span class="vlabel">تُجدول الحلقات لكم أسبوعًا مقدمًا</span><span class="vgrp">عدد الأسابيع التي تُنشأ فيها حلقات الطالب مسبقًا.</span></div></th><td class="k-val"><span class="vval"><span class="num">4</span> أسابيع</span></td><td class="k-def"><span class="vdef"><span class="num">5</span></span></td><td class="k-last"><span class="vlast">أحمد<small><span class="num">21</span> أكتوبر</small></span></td></tr>
+  <tr class="is-readonly"><th scope="row"><div class="vname"><span class="vlabel">الإلغاء المتأخر</span><span class="vgrp">إن أُلغيت الحلقة قبل موعدها بأقل من هذه المدة تُحسب على الطالب.</span></div></th><td class="k-val"><span class="vval">مفعّل · قبل <span class="num">24</span> ساعة</span></td><td class="k-def"><span class="vdef">مغلق</span></td><td class="k-last"><span class="vlast">أحمد<small><span class="num">21</span> أكتوبر</small></span></td></tr>
+  </tbody></table>
+  <p class="hint">بلا محرّرات ولا قائمة «⋯»؛ الوصف يُقرأ كاملًا بلمس السطر. المفتاح يظهر في نافذة الوصف.</p>
+</div></figure><figure><figcaption><b>الإشعار بعد الحفظ (يختفي بعد <span class="num">5</span> ثوانٍ)، وعند تعذّره</b> <span class="src">(كان في values.html)</span></figcaption><div class="frag" style="justify-items:start">
+          <div class="toast" role="status"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>تم حفظ القيمة</span><button class="toast-act" type="button">تراجع</button></div>
+          <div class="toast toast--err" role="alert"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>تعذّر حفظ القيمة</span><button class="toast-act" type="button">أعد المحاولة</button></div>
+        </div></figure><h2 class="sec-title" id="values-phone">القيم على الهاتف (values-390.html)</h2><p class="hint" style="grid-column:1/-1">لمس صف في جدول العمودين يفتح هذه النافذة السفلية. أهداف اللمس 44px والحقول بخط 16px.</p><figure><figcaption><b>المحرّر في نافذة سفلية</b> <span class="src">(جديد)</span></figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="renewal-alert-remaining-t" aria-describedby="renewal-alert-remaining-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="renewal-alert-remaining-t">نبّه للتجديد عندما يتبقى في الباقة كم حلقة</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="renewal-alert-remaining-d">يظهر الطالب في «بانتظار التجديد» عند هذا العدد من الحلقات المتبقية. <button class="link-btn" type="button">عدّل الوصف</button></p></div><div class="field"><label class="label" for="bs1">عدد الحلقات</label><div class="unit-field"><input class="input" id="bs1" type="number" inputmode="numeric" dir="ltr" min="0" max="10" value="3" aria-describedby="bs1-b"><span class="unit">حلقة</span></div><p class="hint" id="bs1-b">من <span class="num">0</span> إلى <span class="num">10</span></p></div><div class="bs-meta"><span><b>الافتراضي:</b> <span class="num">2</span> · <button class="link-btn" type="button">أعد القيمة الافتراضية</button></span><span><b>آخر تعديل:</b> سارة، <span class="num">3</span> أكتوبر <span class="num">09:40</span> · <b>المحفوظ:</b> <span class="num">2</span></span></div><div class="bs-acts"><button class="btn btn--primary" type="button">احفظ</button><button class="btn btn--secondary" type="button">إلغاء</button></div><details><summary>للمطوّر</summary><bdi dir="ltr">renewal_alert_remaining</bdi></details><div class="sr-only" aria-live="polite"></div></div></div></figure><figure><figcaption><b>قيمة خارج الحدود</b> <span class="src">(جديد)</span></figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="subscription-expiry-days-t" aria-describedby="subscription-expiry-days-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="subscription-expiry-days-t">يُعدّ الاشتراك منتهيًا بعد كم يومًا</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="subscription-expiry-days-d">بعد هذه المدة من نفاد حلقات الباقة دون تجديد يُنقل الطالب إلى «منتهٍ». <button class="link-btn" type="button">عدّل الوصف</button></p></div><div class="field"><label class="label" for="bs2">عدد الأيام</label><div class="unit-field"><input class="input" id="bs2" type="number" inputmode="numeric" dir="ltr" min="1" max="90" value="120" aria-invalid="true" aria-describedby="bs2-e bs2-b"><span class="unit">يوم</span></div><div aria-live="polite"><p class="field-err" id="bs2-e"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>اكتب عددًا من <span class="num">1</span> إلى <span class="num">90</span></span></p></div><p class="hint" id="bs2-b">من <span class="num">1</span> إلى <span class="num">90</span></p></div><div class="bs-meta"><span><b>الافتراضي:</b> <span class="num">7</span></span><span><b>آخر تعديل:</b> لم تُعدَّل بعد</span></div><div class="bs-acts"><button class="btn btn--primary" type="button" aria-disabled="true">احفظ</button><button class="btn btn--secondary" type="button">إلغاء</button></div><details><summary>للمطوّر</summary><bdi dir="ltr">subscription_expiry_days</bdi></details><div class="sr-only" aria-live="polite"></div></div></div></figure><figure><figcaption><b>تعارض: غيّرها غيرك قبلك</b> <span class="src">(كان في values-390.html داخل الصف)</span></figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="fx-fresh-hours-t" aria-describedby="fx-fresh-hours-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="fx-fresh-hours-t">يُعاد استخدام سعر الصرف المحفوظ مدة كم ساعة</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="fx-fresh-hours-d">بعد هذه المدة يُطلب سعر جديد من مزوّد أسعار الصرف. <button class="link-btn" type="button">عدّل الوصف</button></p></div><div class="field"><label class="label" for="bs3">عدد الساعات</label><div class="unit-field"><input class="input" id="bs3" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="8"><span class="unit">ساعة</span></div></div><div class="alert alert--act" role="alert"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p>غيّرت سارة هذه القيمة إلى <span class="num">6</span> قبل دقيقتين. قيمتك: <span class="num">8</span>.</p></div></div><div class="bs-meta"><span><b>الافتراضي:</b> <span class="num">24</span></span><span><b>آخر تعديل:</b> سارة، قبل دقيقتين</span></div><div class="bs-acts"><button class="btn btn--secondary" type="button">احفظ قيمتي</button><button class="btn btn--ghost" type="button">اعتمد القيمة الجديدة</button></div><details><summary>للمطوّر</summary><bdi dir="ltr">fx_fresh_hours</bdi></details><div class="sr-only" aria-live="polite"></div></div></div></figure><figure><figcaption><b>زر تشغيل يطلب تأكيدًا، ثم «جارٍ الحفظ…»</b> <span class="src">(جديد)</span></figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="teachers-always-available-t" aria-describedby="teachers-always-available-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="teachers-always-available-t">كل المعلمين متاحون للحجز في أي وقت</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="teachers-always-available-d">يتجاهل المواعيد المسجلة للمعلمين عند اقتراح المواعيد وعند الحجز. <button class="link-btn" type="button">عدّل الوصف</button></p></div><label class="sw"><input type="checkbox" role="switch" aria-labelledby="teachers-always-available-t"><span class="track" aria-hidden="true"></span><span class="state" aria-hidden="true">مغلق</span></label><p class="impact"><b>يؤثر في الحجز:</b> بعد التأكيد يُحفظ، ويظهر «تم حفظ القيمة» مع «تراجع».</p><div class="bs-meta"><span><b>الافتراضي:</b> مفعّل · <button class="link-btn" type="button">أعد القيمة الافتراضية</button></span><span><b>آخر تعديل:</b> أحمد، <span class="num">20</span> أكتوبر</span></div><div class="bs-acts"><button class="btn btn--primary" type="button" disabled>جارٍ الحفظ…</button></div><details><summary>للمطوّر</summary><bdi dir="ltr">teachers_always_available</bdi></details><div class="sr-only" aria-live="polite"></div></div></div></figure><figure><figcaption><b>تأكيد عادي على الهاتف (الأزرار متراصة بترتيبها في الترميز: «إلغاء» ثم الإجراء)</b> <span class="src">(كان في values-390.html)</span></figcaption><div class="dlg-stage">
+          <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="pd1-t" aria-describedby="pd1-d">
+            <div class="dlg-head">
+              <span class="dlg-glyph" aria-hidden="true"><svg class="g"><use href="#g-hollow"/></svg></span>
+              <h3 class="dlg-title" id="pd1-t">إتاحة كل المعلمين للحجز في أي ساعة؟</h3>
+              <button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+              <p class="dlg-desc" id="pd1-d">يُقبل الحجز مع أي معلم/ة في أي ساعة، دون النظر إلى المواعيد المسجلة.</p>
+            </div>
+            <div class="dlg-foot"><button class="btn btn--ghost" type="button">إلغاء</button><button class="btn btn--primary" type="button">أتِح كل المعلمين للحجز</button></div>
+          </div>
+        </div></figure><figure><figcaption><b>للاطلاع فقط</b> <span class="src">(كان في values-390.html)</span></figcaption><div class="frag"><div class="alert alert--info" role="note"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p><b>للاطلاع فقط.</b> لا تملك صلاحية تعديل الإعدادات. إن احتجت إلى تغيير قيمة فاطلبه من مدير الأكاديمية.</p></div></div>
+  <table class="vt"><caption class="sr-only">الجدول والحلقات، للاطلاع فقط</caption><thead><tr><th scope="col">الاسم</th><th scope="col" class="k-val">القيمة</th></tr></thead><tbody>
+  <tr class="is-readonly"><th scope="row"><span class="vlabel">تُجدول الحلقات لكم أسبوعًا مقدمًا</span></th><td class="k-val"><div class="ed-phone"><button class="vbtn" type="button" aria-haspopup="dialog"><span><span class="num">4</span> أسابيع<small>الافتراضي: <span class="num">5</span></small></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg><span class="sr-only">: اقرأ وصف «تُجدول الحلقات لكم أسبوعًا مقدمًا»</span></button></div></td></tr>
+  <tr class="is-readonly"><th scope="row"><span class="vlabel">الإلغاء المتأخر</span></th><td class="k-val"><div class="ed-phone"><button class="vbtn" type="button" aria-haspopup="dialog"><span>قبل <span class="num">24</span> ساعة<small>الافتراضي: مغلق</small></span><svg class="i" aria-hidden="true"><use href="#i-chev-end"/></svg><span class="sr-only">: اقرأ وصف «الإلغاء المتأخر»</span></button></div></td></tr>
+  </tbody></table><p class="hint">لمس الصف يفتح النافذة السفلية للقراءة فقط: الوصف والافتراضي وآخر تعديل، بلا محرّر ولا «احفظ».</p></div></figure><figure><figcaption><b>الإشعار بعد الحفظ (يختفي بعد <span class="num">5</span> ثوانٍ)</b> <span class="src">(كان في values-390.html)</span></figcaption><div class="toast-dock"><div class="toast" role="status"><span style="display:inline-flex;align-items:center;gap:10px"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>تم حفظ القيمة</span></span><button class="toast-act" type="button">تراجع</button></div></div></figure><h2 class="sec-title" id="notifications">الإشعارات (notifications.html)</h2><p class="hint" style="grid-column:1/-1">النوافذ والحالات التي كانت تحت الجدول.</p><figure><figcaption><b>(أ) إيقاف إشعار أساسي.</b> يظهر عند إغلاق زر التشغيل في صف «تأكيد الحجز وتغيير الموعد» أو «تقرير الحلقة بصيغة PDF». الزر معطَّل حتى تُكتب «إيقاف» حرفيًا، والإيقاف يُسجَّل في سجل النشاط. لا لون أخضر هنا لأن الفعل هادم.</figcaption><div class="dlg-stage">
+        <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="nd1-t" aria-describedby="nd1-d">
+          <div class="dlg-head">
+            <span class="dlg-glyph dlg-glyph--bad" aria-hidden="true"><svg class="g"><use href="#g-struck"/></svg></span>
+            <h3 class="dlg-title" id="nd1-t">إيقاف تأكيد الحجز؟</h3>
+            <button class="icon-btn" type="button" aria-label="إغلاق نافذة إيقاف تأكيد الحجز"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="dlg-body">
+            <p id="nd1-d">تأكيد الحجز إشعار أساسي. إذا أوقفته فلن يصل إلى أولياء الأمور أي تأكيد عند حجز حلقة أو تغيير موعدها، ولن يعرفوا الموعد الجديد إلا إذا أبلغهم أحد الفريق بنفسه.</p>
+            <p>يصل هذا الإشعار اليوم إلى <span class="num">214</span> ولي أمر.</p>
+            <div class="field">
+              <label class="label" for="nd1-in">اكتب «إيقاف» للتأكيد</label>
+              <input class="input" id="nd1-in" type="text" autocomplete="off" aria-describedby="nd1-h">
+              <span class="hint" id="nd1-h">يُفعَّل الزر بعد كتابة الكلمة كما هي.</span>
+            </div>
+            <p class="logline"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span>سيُسجَّل هذا الإيقاف في سجل النشاط باسمك ووقته.</span></p>
+          </div>
+          <div class="dlg-foot">
+            <button class="btn btn--ghost" type="button">إلغاء</button>
+            <button class="btn btn--danger" type="button" disabled>أوقف تأكيد الحجز</button>
+          </div>
+        </div>
+      </div></figure><figure><figcaption><b>(ب) تشغيل إشعار يصل إلى الأسر.</b> كل صف موجَّه إلى ولي الأمر أو العميل يسأل قبل التشغيل ويذكر عدد من سيصلهم ومتى. صفوف فريق الأكاديمية تُشغَّل دون سؤال.</figcaption><div class="dlg-stage">
+        <div class="dlg" role="dialog" aria-modal="true" aria-labelledby="nd2-t" aria-describedby="nd2-d">
+          <div class="dlg-head">
+            <span class="dlg-glyph dlg-glyph--ok" aria-hidden="true"><svg class="g"><use href="#g-fill"/></svg></span>
+            <h3 class="dlg-title" id="nd2-t">تفعيل تذكير اليوم السابق؟</h3>
+            <button class="icon-btn" type="button" aria-label="إغلاق نافذة تفعيل التذكير"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button>
+          </div>
+          <div class="dlg-body">
+            <p id="nd2-d">سيصل إلى <span class="num">214</span> ولي أمر ابتداءً من الحلقة القادمة، في اليوم السابق الساعة <span class="num">20:00</span> بتوقيت كل ولي أمر.</p>
+            <p class="hint">لن يُرسل شيء الآن لأن إرسال الرسائل متوقف. يبدأ الإرسال عند تفعيله من تبويب «نظرة عامة».</p>
+          </div>
+          <div class="dlg-foot">
+            <span class="hint">يمكنك إيقافه في أي وقت.</span>
+            <button class="btn btn--ghost" type="button">إلغاء</button>
+            <button class="btn btn--primary" type="button">فعّل تذكير اليوم السابق</button>
+          </div>
+        </div>
+      </div></figure><figure class="wide"><figcaption><b>(ج) للاطلاع فقط.</b> لمن لا يملك صلاحية إدارة الإشعارات: القيم نصوص، بلا أزرار تشغيل ولا حقول ولا أزرار حفظ. الحالة الفعلية تبقى ظاهرة.</figcaption><div class="frag"><div class="frag-head"><span class="chip"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>للاطلاع فقط</span><span class="hint">تحتاج إلى صلاحية «إدارة الإشعارات» لتغيير هذه القائمة.</span></div>
+<table class="nt"><caption class="sr-only">إشعارات ولي الأمر، للاطلاع فقط</caption><thead><tr><th scope="col">الإشعار ومتى يُرسل</th><th scope="col" class="k-ch">عبر</th><th scope="col" class="k-num">من رقم · القالب</th><th scope="col" class="k-st">هل يُرسل الآن؟</th><th scope="col" class="k-sw">التشغيل</th></tr></thead><tbody>
+<tr><th scope="row"><span class="nname">تذكير الحلقة</span><span class="when">قبل الحلقة بـ <span class="num">60</span> دقيقة</span></th><td class="k-ch"><span class="only">واتساب</span></td><td class="k-num"><span class="only">رقم الإشعارات</span> <span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>معتمد</span></td><td class="k-st"><span class="st"><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span></span><span class="why">لا يُرسل لأن إرسال الرسائل متوقف</span></td><td class="k-sw"><span class="only">مفعّل</span></td></tr>
+</tbody></table></div></figure><figure class="wide"><figcaption><b>(هـ) تعارض وخطأ في القيمة.</b> كل صف يُحفظ برقم نسخته. التعارض صف زعفراني تحت الصف نفسه، والقيمة خارج الحدود سطر خطأ تحت الحقل، و«حفظ» لا يعمل حتى تُصحَّح.</figcaption><div class="frag"><table class="nt"><caption class="sr-only">تعارض وخطأ في القيمة</caption><thead><tr><th scope="col">الإشعار ومتى يُرسل</th><th scope="col" class="k-ch">عبر</th><th scope="col" class="k-num">من رقم · القالب</th><th scope="col" class="k-st">هل يُرسل الآن؟</th><th scope="col" class="k-sw">التشغيل</th></tr></thead><tbody>
+<tr class="is-conflict"><th scope="row"><span class="nname" id="x1-n">تذكير الحلقة</span><span class="when"><label for="x1-min" id="x1-l">قبل الحلقة بـ</label><input class="input input--n" id="x1-min" type="number" inputmode="numeric" dir="ltr" min="5" max="720" step="5" value="45" aria-labelledby="x1-n x1-l"><span>دقيقة</span></span></th><td class="k-ch"><span class="only">واتساب فقط</span></td><td class="k-num"><span class="only">رقم الإشعارات</span></td><td class="k-st"><span class="st"><span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span></span></td><td class="k-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="x1-n"><span class="track" aria-hidden="true"></span><span class="state" aria-hidden="true">مفعّل</span></label></td></tr>
+<tr class="nsub is-conflict"><td colspan="5"><div class="alert alert--act" role="alert"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p>غيّرت سارة هذه القيمة إلى <span class="num">30</span> دقيقة قبل دقيقتين. قيمتك: <span class="num">45</span>.</p><div class="alert-actions"><button class="btn btn--secondary btn--sm" type="button">احفظ قيمتي<span class="sr-only">: تذكير الحلقة</span></button><button class="btn btn--ghost btn--sm" type="button">اعتمد القيمة الجديدة<span class="sr-only">: تذكير الحلقة</span></button></div></div></div></td></tr>
+<tr class="is-dirty"><th scope="row"><span class="nname" id="x2-n">حلقة يحتاج تأكيد</span><span class="when"><label for="x2-min" id="x2-l">قبل الحلقة بـ</label><input class="input input--n" id="x2-min" type="number" inputmode="numeric" dir="ltr" min="5" max="720" step="5" value="900" aria-invalid="true" aria-labelledby="x2-n x2-l" aria-describedby="x2-e x2-b"><span>دقيقة</span><span class="meta" id="x2-b">من <span class="num">5</span> إلى <span class="num">720</span> · الافتراضي: <span class="num">60</span></span></span><span aria-live="polite"><span class="field-err" id="x2-e"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>اكتب عددًا من <span class="num">5</span> إلى <span class="num">720</span></span></span></span></th><td class="k-ch"><span class="only">جرس المنصة</span></td><td class="k-num"><span class="ro-val">لا ينطبق</span></td><td class="k-st"><span class="st"><span class="chip chip--sm chip--ok"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg>يُرسل</span></span></td><td class="k-sw"><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="x2-n"><span class="track" aria-hidden="true"></span><span class="state" aria-hidden="true">مفعّل</span></label></td></tr>
+<tr class="nsub is-dirty"><td colspan="5"><div class="dirty-bar"><span class="unsaved"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>لم يُحفظ</span><span class="acts"><button class="btn btn--secondary btn--sm" type="button" aria-disabled="true">حفظ<span class="sr-only">: حلقة يحتاج تأكيد</span></button><button class="btn btn--ghost btn--sm" type="button">تراجع<span class="sr-only">: حلقة يحتاج تأكيد</span></button></span></div></td></tr>
+</tbody></table></div></figure><figure><figcaption><b>(و) تعذّر التحميل، وإشعار الحفظ.</b> إن لم تُحمَّل القائمة يحل الشريط مكانها، بلا صفوف قديمة. بعد حفظ صف يظهر إشعار يُقرأ لقارئ الشاشة، وفيه «تراجع» مدة 5 ثوانٍ.</figcaption><div class="frag">
+        <div class="alert" role="alert"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><div class="alert-body"><p>تعذّر تحميل الإشعارات. تحقّق من الاتصال ثم أعد المحاولة.</p><div class="alert-actions"><button class="btn btn--secondary btn--sm" type="button">أعد المحاولة</button></div></div></div>
+        <div><div class="toast" role="status"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><span>تم حفظ تذكير الحلقة</span><button class="toast-act" type="button">تراجع</button></div></div>
+      </div></figure><figure><figcaption><b>(د) الهاتف: محرّر الصف في نافذة سفلية.</b> على عرض 390px يبقى الجدول عمودين (الإشعار | التشغيل) وتحت الاسم حالته وسببه. لمس الصف يفتح هذه النافذة: التوقيت والرقم والتشغيل.</figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="n-lesson-reminder-t" aria-describedby="n-lesson-reminder-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="n-lesson-reminder-t">تذكير الحلقة</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="n-lesson-reminder-d">يصل إلى ولي الأمر قبل الحلقة. <button class="link-btn" type="button">عدّل الوصف</button></p></div><div class="field"><label class="label" for="ns1">قبل الحلقة بـ (دقيقة)</label><div class="unit-field"><input class="input" id="ns1" type="number" inputmode="numeric" dir="ltr" min="5" max="720" step="5" value="45" aria-describedby="ns1-b"><span class="unit">دقيقة</span></div><p class="hint" id="ns1-b">من <span class="num">5</span> إلى <span class="num">720</span> · الافتراضي: <span class="num">60</span></p></div><div class="field"><label class="label" for="ns2">من رقم</label><span class="sel"><select id="ns2"><option selected>رقم الإشعارات</option><option>رقم المحادثات</option></select><svg class="i" aria-hidden="true"><use href="#i-chev-down"/></svg></span></div><label class="sw"><input type="checkbox" role="switch" checked aria-labelledby="n-lesson-reminder-t"><span class="track" aria-hidden="true"></span><span>التشغيل</span></label><div class="bs-meta"><span><b>عبر:</b> واتساب فقط · <b>القالب:</b> معتمد</span><span><b>هل يُرسل الآن؟</b> <span class="chip chip--sm"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg>متوقف</span> لا يُرسل لأن إرسال الرسائل متوقف</span></div><div class="bs-acts"><button class="btn btn--primary" type="button">احفظ</button><button class="btn btn--secondary" type="button">إلغاء</button></div><details><summary>للمطوّر</summary><bdi dir="ltr">n_lesson_reminder</bdi></details><div class="sr-only" aria-live="polite"></div></div></div></figure><h2 class="sec-title" id="mobile">تطبيق الإدارة (mobile.html)</h2><p class="hint" style="grid-column:1/-1">كانت مرسومة داخل إطارات الهاتف.</p><figure><figcaption><b>«اكتب: إيقاف» لإشعار أساسي</b> <span class="src">(كان في mobile.html، إطار التواصل)</span></figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="booking-confirmation-t" aria-describedby="booking-confirmation-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="booking-confirmation-t">إيقاف تأكيد الحجز؟</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="booking-confirmation-d">إشعار أساسي. إذا أوقفته فلن يصل إلى <span class="num">214</span> ولي أمر أي تأكيد عند حجز حلقة أو تغيير موعدها.</p></div><div class="field"><label class="label" for="p3-in">اكتب «إيقاف» للتأكيد</label><input class="input" id="p3-in" type="text" autocomplete="off" value="إيقا" aria-describedby="p3-h"><span class="hint" id="p3-h">يُفعَّل الزر بعد كتابة الكلمة كما هي.</span></div><div class="bs-meta"><p class="logline"><svg class="i" aria-hidden="true"><use href="#i-log"/></svg><span>سيُسجَّل في سجل النشاط باسمك ووقته.</span></p></div><div class="bs-acts"><button class="btn btn--danger" type="button" disabled>أوقف تأكيد الحجز</button><button class="btn btn--secondary" type="button">إلغاء</button></div><div class="sr-only" aria-live="polite"></div></div></div></figure><figure><figcaption><b>قيمة من حقلين: للاطلاع على الهاتف</b> <span class="src">(كان في mobile.html داخل الصف)</span></figcaption><div class="bs-stage"><div class="bs" role="dialog" aria-modal="true" aria-labelledby="academy-contact-t" aria-describedby="academy-contact-d"><span class="grabber" aria-hidden="true"></span><div class="bs-head"><h3 id="academy-contact-t">بيانات تواصل الأكاديمية</h3><button class="icon-btn" type="button" aria-label="إغلاق"><svg class="i" aria-hidden="true"><use href="#i-x"/></svg></button><p class="bs-desc" id="academy-contact-d">تظهر في تذييل صفحة الحجز وفي رسائل البريد الإلكتروني. <button class="link-btn" type="button">عدّل الوصف</button></p></div><dl class="kvlist"><div><dt>الموقع</dt><dd><bdi dir="ltr">academy.example</bdi></dd></div><div><dt>البريد الإلكتروني</dt><dd><bdi dir="ltr">info@academy.example</bdi></dd></div></dl><div class="bs-meta"><span><b>آخر تعديل:</b> أحمد، <span class="num">12</span> سبتمبر</span></div><div class="bs-acts"><p class="web-note"><svg class="i" aria-hidden="true"><use href="#i-monitor"/></svg>قيمة من حقلين: عدّلها من الموقع</p><button class="btn btn--secondary" type="button">إغلاق</button></div><details><summary>للمطوّر</summary><bdi dir="ltr">academy_contact</bdi></details><div class="sr-only" aria-live="polite"></div></div></div></figure><figure><figcaption><b>للاطلاع فقط: شريط فوق البحث</b> <span class="src">(كان في mobile.html)</span></figcaption><div class="frag"><div class="alert alert--info" role="note"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg><div class="alert-body"><p><b>للاطلاع فقط.</b> لا تملك صلاحية تعديل الإعدادات؛ تظهر القيم دون محرّر، ولمس الصف يفتح الوصف فقط.</p></div></div></div></figure><h2 class="sec-title" id="hub">الصفحة الرئيسية (hub.html)</h2><p class="hint" style="grid-column:1/-1">نتائج البحث والروابط القديمة.</p><figure><figcaption><b>نتائج البحث عن «واتساب»</b> <span class="src">(كان في hub.html)</span></figcaption><div class="combo">
+        <label class="sr-only" for="hub-q-ex">ابحث في الإعدادات</label>
+        <div class="search" style="max-inline-size:none"><svg class="i" aria-hidden="true"><use href="#i-search"/></svg><input class="input" id="hub-q-ex" type="search" value="واتساب" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="results" aria-activedescendant="opt-1"></div>
+        <div class="results" id="results" role="listbox" aria-label="نتائج البحث">
+          <div role="group" aria-labelledby="grp-values"><div role="presentation" class="grp" id="grp-values">القيم</div>
+            <div role="option" id="opt-1" aria-selected="true"><span>رقم <span class="hit">واتساب</span> الأكاديمية</span><small>القيم › الأكاديمية · <bdi dir="ltr">academy_whatsapp_e164</bdi></small></div>
+          </div>
+          <div role="group" aria-labelledby="grp-comms"><div role="presentation" class="grp" id="grp-comms">التواصل</div>
+            <div role="option" id="opt-2" aria-selected="false"><span>خط إشعارات <span class="hit">واتساب</span></span><small>التواصل › الأرقام</small></div>
+            <div role="option" id="opt-3" aria-selected="false"><span>رسالة <span class="hit">واتساب</span> للمعلم/ة عند حجز طالب جديد</span><small>التواصل › الإشعارات › المعلم/ة</small></div>
+          </div>
+        </div>
+        <p class="total" role="status"><span class="num">3</span> نتائج</p>
+      </div></figure><figure><figcaption><b>الروابط القديمة تبقى صالحة وتُحوَّل دون رسالة</b> <span class="src">(كان في hub.html)</span></figcaption><div class="frag"><ul class="note" style="display:grid;gap:6px">
+      <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><bdi dir="ltr">/admin/settings#integrations</bdi> ← <bdi dir="ltr">/admin/settings/integrations</bdi>، وعودة ربط Google ← <bdi dir="ltr">/admin/settings/google</bdi></li>
+      <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><bdi dir="ltr">#settings-messaging</bdi> ← <bdi dir="ltr">/admin/communications</bdi></li>
+      <li><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><bdi dir="ltr">#settings-&lt;group&gt;</bdi> ← <bdi dir="ltr">/admin/settings/values?group=&lt;group&gt;</bdi></li>
+    </ul></div></figure>
+  </div>
+</main>
+</body>
+</html>
