@@ -14,3 +14,8 @@ export function fakeSettings(over: Partial<AcademySettings> = {}): SettingsServi
     salesAutoAssign: vi.fn(() => get('sales_auto_assign')),
   } as unknown as SettingsService;
 }
+
+/** Tests only: a typed settings reader (settings-slice.ts) over fakeSettings(over). */
+export function readerOf<R>(Reader: new (store: SettingsService) => R, over: Partial<AcademySettings> = {}): R {
+  return new Reader(fakeSettings(over));
+}
