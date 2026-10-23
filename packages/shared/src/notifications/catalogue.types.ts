@@ -1,6 +1,7 @@
 import type { PushKind } from '../enums/index.js';
 import type { TemplateKey } from '../messaging/templates.js';
-import type { AcademySettings, SettingKey } from '../settings/index.js';
+import type { SettingKey } from '../settings/index.js';
+import type { CatalogueSettings } from './catalogue-settings.js';
 
 // The notification catalogue (docs/23 §2b): what the academy sends, to whom, through which channel,
 // and which of today's settings governs it. Code defines what exists; phase 3 adds the admin's overrides.
@@ -37,7 +38,7 @@ export interface NotificationEntry<K extends string = string> {
   /** A safety alert that stays on (a failed send must reach an admin). */
   locked: boolean;
   /** The row's own switch today, if any, and whether the given settings turn the row on. */
-  rowSwitch?: { key: RowSwitchKey; isOn: (s: AcademySettings) => boolean };
+  rowSwitch?: { key: RowSwitchKey; isOn: (s: CatalogueSettings) => boolean };
   /** The setting that says when it is sent. */
   timing?: TimingKey;
   /** Today's behaviour on a fresh install (the settings' seeded defaults). */
