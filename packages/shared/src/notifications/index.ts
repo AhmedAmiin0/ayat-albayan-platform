@@ -5,3 +5,6 @@ export * from './catalogue.js';
 export * from './catalogue-settings.js';
 export * from './catalogue-views.js';
 export * from './catalogue-state.js';
+export * from './rules.types.js';
+export * from './rules.legacy.js';
+export * from './rules.effective.js';
