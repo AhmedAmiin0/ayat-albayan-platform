@@ -1,7 +1,7 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from '@/test/settings-fixture';
+import { answerPatch } from '@/test/entries-fixture';
 import { findRow, renderValues } from '../values-test-utils';
 
 const apiFetch = vi.hoisted(() => vi.fn());
@@ -47,7 +47,7 @@ describe('«القيم» editors by type', () => {
   });
 
   it('a two-field value is a summary + «عدّل الحقلين»; the dialog saves both in one key', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch, { search: { group: 'academy' } });
     const row = await findRow(t.config.academyContact);
     expect(within(row).getAllByText('ayatalbayan.com')).toHaveLength(2); // value and default
@@ -56,16 +56,16 @@ describe('«القيم» editors by type', () => {
     fireEvent.change(within(dialog).getByLabelText(t.config.fields.email), { target: { value: 'a@b.co' } });
     fireEvent.click(within(dialog).getByRole('button', { name: v.shapeSave }));
     await waitFor(() =>
-      expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { academyContact: { site: 'ayatalbayan.com', email: 'a@b.co' } }),
+      expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/academy_contact', { value: { site: 'ayatalbayan.com', email: 'a@b.co' }, expectedVersion: 1 }),
     );
   });
 
   it('a select of choices (currency) saves its one key', async () => {
-    apiSend.mockResolvedValue(SETTINGS);
+    apiSend.mockImplementation(answerPatch);
     renderValues(apiFetch, { search: { group: 'accounts' } });
     const row = await findRow(t.settings.reportingCurrency);
     fireEvent.change(within(row).getByLabelText(t.settings.reportingCurrency), { target: { value: 'USD' } });
     fireEvent.click(within(row).getByRole('button', { name: `${t.common.save}: ${t.settings.reportingCurrency}` }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { reportingCurrency: 'USD' }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/config/entries/reporting_currency', { value: 'USD', expectedVersion: 1 }));
   });
 });

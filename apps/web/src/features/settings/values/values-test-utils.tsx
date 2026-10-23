@@ -1,8 +1,9 @@
-import type { AcademySettings, CustomConfigView, GoogleSyncSettings } from '@ab/shared';
+import type { AcademySettings, ConfigEntry, CustomConfigView, GoogleSyncSettings } from '@ab/shared';
 import { useState } from 'react';
 import { screen } from '@testing-library/react';
 import type { Mock } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
+import { entriesFixture } from '@/test/entries-fixture';
 import { SETTINGS } from '@/test/settings-fixture';
 import type { ValuesSearch } from './values-search';
 import { ValuesView } from './ValuesView';
@@ -19,6 +20,8 @@ export interface ValuesFixture {
   settingsState?: 'pending' | 'error';
   /** GET /config/custom fails. */
   customState?: 'error';
+  /** GET /config/entries: these rows replace the seeded ones (version 1, no description). */
+  entries?: ConfigEntry[];
 }
 
 /** The page with its search in local state (the route keeps it in the URL). */
@@ -42,6 +45,7 @@ export function renderValues(apiFetch: Mock, fx: ValuesFixture = {}) {
     ['/settings/public', {}],
     ['/settings', settings],
     ['/config/meta', { meta: {} }],
+    ['/config/entries', entriesFixture(fx.entries)],
     ['/config/custom', fx.custom ?? []],
     ['/admin/google/status', { settings: fx.google ?? { enabled: false, mode: 'dry_run', window_days: 60 } }],
   ]);

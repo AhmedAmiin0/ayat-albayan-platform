@@ -5,11 +5,11 @@ import { setSetting } from '../support/messages';
 import { restoreSettings, settingText, snapshotSettings } from '../support/settings';
 
 // «القيم» /admin/settings/values (R-SCH-07, R-SUB-02, R-REP-02, docs/26b §2): each row saves on its
-// own with its row «حفظ» (PATCH /settings with that one key); a value out of bounds is refused
-// inline and nothing is written. The follow-up hours (R-LEAD-05) moved to «التواصل»
+// own with its row «حفظ» (PATCH /config/entries/:key with the row's version, 26-P3); a value out of
+// bounds is refused inline and nothing is written. The follow-up hours (R-LEAD-05) moved to «التواصل»
 // (/admin/settings/communications, the «مواعيد الرسائل» tab), whose timing form keeps its page «حفظ»:
 // the API's own schema still rejects a non-ascending list there. Everything written is put back.
-// The three values used here are among the seven fields PATCH /settings keeps after 26-P3.
+// The spec reads only roles and labels, never request URLs, so the save route can change under it.
 
 const KEYS = ['booking_horizon_weeks', 'renewal_alert_remaining', 'report_teacher_edit_hours', 'follow_up_hours'];
 const v = ar.settingsValues;

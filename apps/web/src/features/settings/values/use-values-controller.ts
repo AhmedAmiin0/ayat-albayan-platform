@@ -1,19 +1,22 @@
-import { isEditableValueKey, settingDef, type AcademySettings, type SettingKey, type SettingMeta, type SettingsUpdate } from '@ab/shared';
+import { isEditableValueKey, settingDef, type AcademySettings, type ConfigEntry, type SettingKey, type SettingMeta } from '@ab/shared';
 import { useCallback, useState } from 'react';
 import { settingText } from '@/components/settings/setting-text';
 import { t } from '@/lib/i18n';
 import { rowForm, rowUpdate } from '../registry-form/row-form';
 import type { SettingsForm } from '../registry-form/settings-form';
-import { useRowSaves, type RowStatus } from './use-row-saves';
-import { useValueDrafts, type ValueDrafts } from './use-value-drafts';
+import type { DescribeTarget } from './describe-target';
+import { useRowSaves, type RowStatus, type SaveInput } from './use-row-saves';
+import { useTrackedDrafts } from './use-tracked-drafts';
+import type { ValueDrafts } from './use-value-drafts';
 import { confirmKind, type ConfirmKind } from './value-confirm';
 
 export { confirmKind, type ConfirmKind };
 export interface PendingConfirm {
   key: SettingKey;
-  body: SettingsUpdate;
   kind: ConfirmKind;
   value: unknown;
+  /** «احفظ قيمتي» after a conflict: the version to send. */
+  version?: number | undefined;
 }
 /** The last saved row, for the toast's «تراجع» (it re-saves `prev`). */
 export interface SavedNote {
@@ -41,41 +44,43 @@ export interface ValuesApi {
   /** When this key last saved (the phone sheet closes on a new one). */
   savedAt: (key: SettingKey) => number | undefined;
   announce: (message: string) => void;
+  /** Conflict: «احفظ قيمتي» (the edit again, over the newer version) / «اعتمد القيمة الجديدة» (drop the edit). */
+  keepMine: (key: SettingKey) => void;
+  takeTheirs: (key: SettingKey) => void;
+  /** The key's row of GET /config/entries, once read. */
+  entry: (key: string) => ConfigEntry | undefined;
+  /** Opens «تعديل الوصف» (read it in full; edit it with the right). */
+  describe: (target: DescribeTarget) => void;
+}
+
+export interface ControllerInput {
+  settings: AcademySettings;
+  meta: Record<string, SettingMeta>;
+  canWrite: boolean;
+  entries: readonly ConfigEntry[];
+  describe: (target: DescribeTarget) => void;
 }
 
 const v = t.settingsValues;
 
 /** The state of «القيم»: local edits, per-row saves, the pending confirmation and the saved note. */
-export function useValuesController(input: { settings: AcademySettings; meta: Record<string, SettingMeta>; canWrite: boolean }) {
-  const { settings, canWrite } = input;
-  const raw = useValueDrafts(settings);
+export function useValuesController(input: ControllerInput) {
+  const { settings, canWrite, entries } = input;
   const saves = useRowSaves();
+  const { raw, drafts } = useTrackedDrafts(settings, saves);
   const [pending, setPending] = useState<PendingConfirm | null>(null);
   const [note, setNote] = useState<SavedNote | null>(null);
   const [history, setHistory] = useState<History>({});
   const [said, setSaid] = useState('');
   const dismissNote = useCallback(() => setNote(null), []);
-  // Any change to a row (an edit, «تراجع», a new value) ends a failed save's «أعد المحاولة».
-  const drafts: ValueDrafts = {
-    ...raw,
-    edit: (key, patch) => {
-      saves.clearFailed(key);
-      raw.edit(key, patch);
-    },
-    put: (key, form) => {
-      saves.clearFailed(key);
-      raw.put(key, form);
-    },
-    discard: (key) => {
-      saves.clearFailed(key);
-      raw.discard(key);
-    },
-  };
-  const commit = async (key: SettingKey, body: SettingsUpdate) => {
+  const commit = async (key: SettingKey, save: SaveInput) => {
     const prev = settings[key];
     const name = settingText(key).label;
-    const end = await saves.run(key, body);
+    const end = await saves.run(key, save);
     if (end === 'failed') return setSaid(v.saveErrorNamed.replace('{name}', name));
+    // The server wants the typed number (its stored value differs from ours): ask for it.
+    if (end === 'confirm') return setPending({ key, kind: 'typed', value: save.value, version: save.version });
+    if (end === 'conflict') return; // the conflict row is an alert: it announces itself
     // Saved, or refused as owned by a module page: either way the edit is no longer pending here.
     raw.discard(key);
     if (end === 'moved') return setSaid(v.moved);
@@ -85,16 +90,18 @@ export function useValuesController(input: { settings: AcademySettings; meta: Re
     // The undo toast is not a live region: this line is the one announcement of the save.
     setSaid(v.savedNamed.replace('{name}', name));
   };
-  const saveForm = (key: SettingKey, form: SettingsForm) => {
+  const saveForm = (key: SettingKey, form: SettingsForm, version?: number) => {
     if (!canWrite || !isEditableValueKey(key)) return;
     const r = rowUpdate(key, form);
     if (!r.ok) return setSaid(r.error);
     const kind = confirmKind(key, r.value, settings[key]);
-    if (kind) return setPending({ key, body: r.body, kind, value: r.value });
-    void commit(key, r.body);
+    if (kind) return setPending({ key, kind, value: r.value, version });
+    void commit(key, { value: r.value, version });
   };
   const api: ValuesApi = {
-    ...input,
+    settings,
+    meta: input.meta,
+    canWrite,
     drafts,
     status: saves.status,
     error: (key) => {
@@ -114,16 +121,26 @@ export function useValuesController(input: { settings: AcademySettings; meta: Re
     },
     savedAt: (key) => history[key]?.at,
     announce: setSaid,
+    keepMine: (key) => {
+      const s = saves.status(key);
+      if (s.state !== 'conflict') return;
+      // The edit, or (a refetch dropped it as equal) the value the conflicting save sent.
+      const form = raw.dirty(key) ? raw.form(key) : rowForm(key, s.mine as AcademySettings[SettingKey]);
+      saveForm(key, form, s.conflict.version);
+    },
+    takeTheirs: (key) => drafts.discard(key),
+    entry: (key) => entries.find((e) => e.key === key),
+    describe: input.describe,
   };
   const cancel = () => {
     // A switch that was not confirmed goes back to its stored state.
     if (pending && settingDef(pending.key).type === 'bool') raw.discard(pending.key);
     setPending(null);
   };
-  const confirm = () => {
+  const confirm = (confirmText?: string) => {
     if (!pending) return;
     setPending(null);
-    void commit(pending.key, pending.body);
+    void commit(pending.key, { value: pending.value, version: pending.version, confirmText });
   };
   const undo = (n: SavedNote) => {
     setNote(null);
