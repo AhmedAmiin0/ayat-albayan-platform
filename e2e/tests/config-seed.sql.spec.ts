@@ -19,6 +19,10 @@ const gateOff = async (tx: Tx) => {
     from public.settings where key in ('messaging_enabled', 'auto_messages_enabled')`;
   return rows.every((r) => !r.on);
 };
+const byKey = (a: { key: string }, b: { key: string }) => a.key.localeCompare(b.key);
+const gateRows = async (tx: Tx) =>
+  (await tx<{ key: string; on: boolean }[]>`select key, coalesce(value = 'true'::jsonb, false) as on
+    from public.settings where key in ('messaging_enabled', 'auto_messages_enabled')`).sort(byKey);
 const google = (tx: Tx) => tx<{ on: boolean; days: number }[]>`
   select public.google_sync_on() as on, public.google_sync_window_days() as days`;
 
@@ -31,6 +35,7 @@ test.describe('config seeder (26-P2, real payload)', () => {
       await tx`update public.settings_revision set registry_version = 0`;
       await tx`insert into public.settings (key, value) values ('booking_horizon_weeks', 'null')`;
       const before = (await all(tx)).filter((r) => r.key !== 'messaging_enabled');
+      const gateBefore = await gateRows(tx);
       const first = await runConfigSeed(tx);
       expect(first['failed']).toEqual([]);
       const keys = (await all(tx)).map((r) => r.key);
@@ -42,7 +47,9 @@ test.describe('config seeder (26-P2, real payload)', () => {
       expect(await runConfigSeed(tx)).toEqual({ applied: 0, failed: [] });
       expect(await rev(tx)).toBe(r1);
       expect(await all(tx)).toEqual(after);
-      expect(await gateOff(tx)).toBe(true);
+      // The seeder never moves a switch: the deleted messaging_enabled is now JSON null (= OFF), and
+      // auto_messages_enabled keeps whatever the e2e database holds (seedSettings turns it on).
+      expect(await gateRows(tx)).toEqual([...gateBefore, { key: 'messaging_enabled', on: false }].sort(byKey));
     });
   });
 
