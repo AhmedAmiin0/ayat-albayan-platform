@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { t } from '@/lib/i18n';
 import { defaultForm, isModified, rowForm } from '../../registry-form/row-form';
 import { isDirty } from '../../registry-form/settings-dirty';
+import { describeItem, settingTarget } from '../row-description';
 import { RowMenu, type RowMenuItem } from '../RowMenu';
 import { valueText } from '../value-format';
 import type { ValuesApi } from '../use-values-controller';
@@ -15,9 +16,9 @@ const v = t.settingsValues;
 /** «حفظ: الاسم»: the visible word first, then the row (an aria-label, so every browser reads it alike). */
 export const rowActionName = (word: string, name: string): string => `${word}: ${name}`;
 
-/** The «⋯» items: the default, the value the last save replaced (same checks and confirmation), the key. */
+/** The «⋯» items: the description, the default, the value the last save replaced (same checks and confirmation), the key. */
 export function rowMenuItems(api: ValuesApi, key: SettingKey): RowMenuItem[] {
-  const items: RowMenuItem[] = [];
+  const items: RowMenuItem[] = [describeItem(api, settingTarget(key))];
   if (isModified(key, api.settings)) items.push({ id: 'reset', label: v.resetDefault, onSelect: () => api.apply(key, defaultForm(key)) });
   const prev = api.previous(key);
   if (prev && isDirty(key, rowForm(key, prev.value), rowForm(key, api.settings[key]))) {

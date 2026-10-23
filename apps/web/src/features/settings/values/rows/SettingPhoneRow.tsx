@@ -4,9 +4,11 @@ import { Icon } from '@/components/ui/icon';
 import { t } from '@/lib/i18n';
 import { rowValue } from '../../registry-form/row-form';
 import { NameCell } from '../cells/NameCell';
+import { conflictBy } from '../conflict-text';
 import { useRowIds } from '../editors/editor-props';
 import { valueText } from '../value-format';
 import { isOwnedGroup, type ValuesGroupId } from '../value-groups-view';
+import type { RowStatus } from '../use-row-saves';
 import { useValues } from '../values-context';
 import { OwnedValue } from './OwnedValue';
 import { cellClass, headClass, rowClass } from './row-classes';
@@ -20,6 +22,14 @@ export interface SettingPhoneRowProps {
   onOpen: (key: SettingKey) => void;
 }
 
+/** The row's small second line: saving, a newer value (conflict), moved, or «يحذف بيانات»; else none. */
+export function secondLine(key: SettingKey, s: RowStatus): string | null {
+  if (s.state === 'saving') return v.saving;
+  if (s.state === 'conflict') return v.conflict.phoneLine.replace('{name}', conflictBy(s.conflict));
+  if (s.state === 'moved') return v.moved;
+  return VALUE_CONFIRM[key] === 'typed' ? v.tags.deletes : null;
+}
+
 /** The value button's name: «عدّل «الاسم»: القيمة», or «الاسم: القيمة» where nothing can be changed. */
 export function phoneRowName(input: { label: string; text: string; editable: boolean }): string {
   return input.editable ? `${v.sheet.edit.replace('{name}', input.label)}: ${input.text}` : `${input.label}: ${input.text}`;
@@ -29,16 +39,17 @@ export function phoneRowName(input: { label: string; text: string; editable: boo
  * The phone row (docs/26b §2 «Phone»): الاسم | القيمة, the value cell one 44px button (value +
  * chevron) that opens the bottom sheet; a tap anywhere on the row opens it too (the button stays
  * the one control for keyboards and screen readers). A second line only for «جارٍ الحفظ…»,
- * «يحذف بيانات» or «تُدار من صفحة أخرى».
+ * «قيمة أحدث من …» (a conflict), «يحذف بيانات» or «تُدار من صفحة أخرى».
  */
 export function SettingPhoneRow({ settingKey, group, groupName, onOpen }: SettingPhoneRowProps) {
   const api = useValues();
   const ids = useRowIds();
   const label = settingText(settingKey).label;
-  const status = api.status(settingKey).state;
+  const full = api.status(settingKey);
+  const status = full.state;
   const text = valueText(settingKey, rowValue(settingKey, api.drafts.form(settingKey)));
   const saving = status === 'saving';
-  const second = saving ? v.saving : status === 'moved' ? v.moved : VALUE_CONFIRM[settingKey] === 'typed' ? v.tags.deletes : null;
+  const second = secondLine(settingKey, full);
   const owned = isOwnedGroup(group);
   const editable = api.canWrite && status !== 'moved';
   return (

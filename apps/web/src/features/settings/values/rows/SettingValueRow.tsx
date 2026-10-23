@@ -8,6 +8,8 @@ import { keyItem } from '../cells/key-item';
 import { NameCell } from '../cells/NameCell';
 import { useRowIds } from '../editors/editor-props';
 import { ValueEditor } from '../editors/ValueEditor';
+import { ConflictRow } from '../ConflictRow';
+import { describeItem, rowDescription, settingTarget } from '../row-description';
 import { RowMenu } from '../RowMenu';
 import { defaultNote, defaultText, valueText } from '../value-format';
 import { isOwnedGroup, type ValuesGroupId } from '../value-groups-view';
@@ -36,45 +38,60 @@ export function SettingValueRow({ settingKey, group, groupName }: SettingValueRo
   const editable = owned === null && !moved && api.canWrite && isEditableValueKey(settingKey);
   const dirty = editable && api.drafts.dirty(settingKey);
   const stored = valueText(settingKey, api.settings[settingKey]);
+  const target = settingTarget(settingKey);
   return (
-    <tr aria-busy={api.status(settingKey).state === 'saving' || undefined} className={rowClass(dirty)}>
-      <th scope="row" abbr={words.label} className={headClass(dirty)}>
-        <NameCell
-          label={words.label}
-          labelId={ids.label}
-          hint={words.hint}
-          settingKey={settingKey}
-          modified={isModified(settingKey, api.settings)}
-          groupName={groupName}
-        />
-      </th>
-      <td className={cellClass}>
-        {editable ? (
-          <ValueEditor settingKey={settingKey} ids={ids} />
-        ) : owned ? (
-          <OwnedValue text={stored} group={owned} />
-        ) : (
-          <span className="grid gap-0.5">
-            <span className="text-sm text-ink">{stored}</span>
-            {moved && <small className="text-xs text-ink-2">{t.settingsValues.moved}</small>}
-          </span>
-        )}
-      </td>
-      <td className={cellClass}>
-        <DefaultCell text={defaultText(settingKey)} note={defaultNote(settingKey)} noteId={ids.bounds} />
-      </td>
-      <td className={cellClass}>
-        <LastCell meta={api.meta[settingKey]} unsavedWas={dirty ? stored : undefined} />
-      </td>
-      <td className={cellClass}>
-        {editable ? (
-          <ActionCell settingKey={settingKey} />
-        ) : (
-          api.canWrite && (
-            <RowMenu label={t.settingsValues.menu.replace('{name}', words.label)} items={[keyItem(settingKey, api.announce)]} />
-          )
-        )}
-      </td>
-    </tr>
+    <>
+      <tr
+        aria-busy={api.status(settingKey).state === 'saving' || undefined}
+        className={rowClass(dirty)}
+      >
+        <th scope="row" abbr={words.label} className={headClass(dirty)}>
+          <NameCell
+            label={words.label}
+            labelId={ids.label}
+            hint={rowDescription(api, target, words.hint)}
+            onDescribe={() => api.describe(target)}
+            settingKey={settingKey}
+            modified={isModified(settingKey, api.settings)}
+            groupName={groupName}
+          />
+        </th>
+        <td className={cellClass}>
+          {editable ? (
+            <ValueEditor settingKey={settingKey} ids={ids} />
+          ) : owned ? (
+            <OwnedValue text={stored} group={owned} />
+          ) : (
+            <span className="grid gap-0.5">
+              <span className="text-sm text-ink">{stored}</span>
+              {moved && <small className="text-xs text-ink-2">{t.settingsValues.moved}</small>}
+            </span>
+          )}
+        </td>
+        <td className={cellClass}>
+          <DefaultCell
+            text={defaultText(settingKey)}
+            note={defaultNote(settingKey)}
+            noteId={ids.bounds}
+          />
+        </td>
+        <td className={cellClass}>
+          <LastCell meta={api.meta[settingKey]} unsavedWas={dirty ? stored : undefined} />
+        </td>
+        <td className={cellClass}>
+          {editable ? (
+            <ActionCell settingKey={settingKey} />
+          ) : (
+            api.canWrite && (
+              <RowMenu
+                label={t.settingsValues.menu.replace('{name}', words.label)}
+                items={[describeItem(api, target), keyItem(settingKey, api.announce)]}
+              />
+            )
+          )}
+        </td>
+      </tr>
+      <ConflictRow settingKey={settingKey} cols={5} />
+    </>
   );
 }

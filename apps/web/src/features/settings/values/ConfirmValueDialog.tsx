@@ -30,7 +30,14 @@ export function plainYes(key: SettingKey, value: unknown): string {
   return value ? words.on : words.off;
 }
 
-function TypedDialog({ pending, onYes, onClose }: { pending: PendingConfirm; onYes: () => void; onClose: () => void }) {
+export interface ConfirmValueDialogProps {
+  pending: PendingConfirm;
+  /** Yes; a typed confirmation passes the typed text (the server checks it again, 428). */
+  onYes: (confirmText?: string) => void;
+  onClose: () => void;
+}
+
+function TypedDialog({ pending, onYes, onClose }: ConfirmValueDialogProps) {
   const id = useId();
   const [typed, setTyped] = useState('');
   const days = Number(pending.value);
@@ -49,7 +56,7 @@ function TypedDialog({ pending, onYes, onClose }: { pending: PendingConfirm; onY
           <Button variant="secondary" data-autofocus onClick={onClose}>
             {t.common.cancel}
           </Button>
-          <Button variant="danger" aria-disabled={!ok || undefined} onClick={() => ok && onYes()}>
+          <Button variant="danger" aria-disabled={!ok || undefined} onClick={() => ok && onYes(typed.trim())}>
             {c.typedYes}
           </Button>
         </>
@@ -69,7 +76,7 @@ function TypedDialog({ pending, onYes, onClose }: { pending: PendingConfirm; onY
  * booking-wide switches (their hint is the impact), typed for retention days that delete data.
  * «إلغاء» is the default focus.
  */
-export function ConfirmValueDialog({ pending, onYes, onClose }: { pending: PendingConfirm; onYes: () => void; onClose: () => void }) {
+export function ConfirmValueDialog({ pending, onYes, onClose }: ConfirmValueDialogProps) {
   if (pending.kind === 'typed') return <TypedDialog pending={pending} onYes={onYes} onClose={onClose} />;
   const words = settingText(pending.key);
   return (
@@ -77,7 +84,7 @@ export function ConfirmValueDialog({ pending, onYes, onClose }: { pending: Pendi
       title={c.plainTitle.replace('{name}', words.label)}
       description={words.hint ?? c.logged}
       yes={plainYes(pending.key, pending.value)}
-      onYes={onYes}
+      onYes={() => onYes()}
       onClose={onClose}
       pending={false}
       failed={false}

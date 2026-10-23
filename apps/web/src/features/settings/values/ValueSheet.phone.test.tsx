@@ -1,5 +1,6 @@
 import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { SETTINGS } from '@/test/settings-fixture';
 import { findRow, renderValues } from './values-test-utils';
@@ -79,7 +80,7 @@ describe('«القيم» phone rows and sheet', () => {
   });
 
   it('a key the API moved: the sheet turns to text with «تُدار من صفحة أخرى»', async () => {
-    apiSend.mockResolvedValue({ saved: [], moved: ['bookingHorizonWeeks'] });
+    apiSend.mockRejectedValue(new ApiError(409, { code: 'owned_by_module' }));
     renderValues(apiFetch);
     fireEvent.click(within(await findRow(HORIZON)).getByRole('button'));
     const sheet = screen.getByRole('dialog', { name: HORIZON });
