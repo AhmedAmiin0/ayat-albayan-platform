@@ -105,6 +105,8 @@ const schema = z.object({
    * e2e sets 0 (its specs write settings rows with SQL).
    */
   SETTINGS_CACHE_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).default(30_000)),
+  /** How often the integration config is re-read (ms; integration-refresh.ts). Unset = SETTINGS_CACHE_MS. */
+  INTEGRATION_REFRESH_MS: z.preprocess(blankIsUnset, z.coerce.number().int().min(0).optional()),
   /** false = ignore the database's integration config (env only); vitest sets it so no boot reads it. */
   INTEGRATION_CONFIG_FROM_DB: z.preprocess(blankIsUnset, z.stringbool().default(true)),
   /**

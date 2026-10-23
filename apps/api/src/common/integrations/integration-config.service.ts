@@ -5,7 +5,7 @@ import { validOverlay } from '../../env';
 import { IntegrationConfigQueries } from './integration-config.queries';
 import { integrationItems } from './integration-config.view';
 
-/** Injection token of the refresh period in ms (env SETTINGS_CACHE_MS; 0 = every second; null = off). */
+/** Injection token of the refresh period in ms (integrationRefreshMs; 0 = every second; null = off). */
 export const INTEGRATION_REFRESH_MS = Symbol('INTEGRATION_REFRESH_MS');
 const MIN_REFRESH_MS = 1_000;
 /** A slow database never holds the boot longer than this. */
@@ -18,7 +18,7 @@ function timeout(ms: number): Promise<never> {
 /**
  * Integration config in the database (owner, 2026-10-12). Loads the DB values into the overlay
  * that loadEnv() lays over process.env: once in onModuleInit (awaited, so it is in place before
- * any onApplicationBootstrap and before the first request), every SETTINGS_CACHE_MS and right after
+ * any onApplicationBootstrap and before the first request), every refresh period and right after
  * an admin write. A failed load never blocks the boot: it logs and keeps the last good snapshot
  * (env only until the first good load). Logs carry key names only, never a value.
  */
