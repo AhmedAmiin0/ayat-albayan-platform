@@ -1,7 +1,7 @@
 import type { RoomJoinResult } from '@ab/shared';
 import { joinWindowConfig } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
+import { ClassroomSettings } from './classroom.settings';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { assertWindowOpen } from './join-gate';
 import { LessonRoleService } from './lesson-role.service';
@@ -18,13 +18,13 @@ export class RoomJoinService {
   constructor(
     private readonly roles: LessonRoleService,
     private readonly admission: RoomAdmission,
-    private readonly settings: SettingsService,
+    private readonly settings: ClassroomSettings,
   ) {}
 
   async join(input: { user: AuthUser; lessonId: string }, now = new Date()): Promise<RoomJoinResult> {
     this.admission.livekit();
     const { lesson, role } = await this.roles.resolve(input.user, input.lessonId);
-    if (role !== 'admin') assertWindowOpen(lesson, now, joinWindowConfig(await this.settings.all()));
+    if (role !== 'admin') assertWindowOpen(lesson, now, joinWindowConfig(await this.settings.read()));
     const name = await this.roles.nameOf(input.user, { role, lesson });
     return this.admission.admit({ lessonId: lesson.id, role, name, principal: { userId: input.user.id } }, now);
   }

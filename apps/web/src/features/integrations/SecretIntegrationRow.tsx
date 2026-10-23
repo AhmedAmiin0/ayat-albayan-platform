@@ -1,12 +1,12 @@
 import { isIntegrationSecretKey, type IntegrationConfigItem } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { SettingRow } from '@/components/settings/SettingRow';
 import { Button } from '@/components/ui/button';
 import { Dialog } from '@/components/ui/dialog';
 import { FormAlert } from '@/components/ui/form-alert';
 import { Input } from '@/components/ui/input';
 import { t } from '@/lib/i18n';
-import { SettingRow } from '../messaging/SettingsFields';
 import { DeveloperKey } from './DeveloperKey';
 import { sendGateQuery } from '../messaging/api';
 import { clearIntegrationSecret, integrationsQuery, putIntegrationSecret } from './integrations-api';

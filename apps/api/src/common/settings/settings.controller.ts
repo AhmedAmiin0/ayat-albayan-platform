@@ -1,15 +1,12 @@
-import { settingsUpdateSchema, type AcademySettings } from '@ab/shared';
+import { settingsChanges, settingsUpdateSchema, type AcademySettings } from '@ab/shared';
 import { Body, Controller, Get, Patch } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { parseOrThrow } from '../../modules/teachers/http';
 import { AuditService } from '../audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { CurrentUser, Permissions } from '../auth/decorators';
 import type { AuthUser } from '../auth/verify-token';
 import { SettingsService } from './settings.service';
-import { settingsChanges } from './settings.values';
-
-/** audit_log.entity_id of the academy-wide settings (one entity, no row id of its own). */
-const SETTINGS_ENTITY_ID = '00000000-0000-0000-0000-000000000000';
 
 /**
  * Academy settings for admins (R-SCH-07, R-SCH-02): late-cancel hours (null = OFF, the default
@@ -41,7 +38,7 @@ export class SettingsController {
     await this.audit.record({
       actorId: user.id,
       entity: 'settings',
-      entityId: SETTINGS_ENTITY_ID,
+      entityId: SINGLETON_ENTITY_ID,
       action: 'update',
       before: { ...before },
       after: { ...after },

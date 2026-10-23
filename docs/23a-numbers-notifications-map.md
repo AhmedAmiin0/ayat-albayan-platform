@@ -76,9 +76,9 @@ Also: `.github/workflows/ci.yml:146-189` (`E2E_LINES: single` job), `tools/migra
 
 Shared, not per line: `WA_API_BASE`/`WA_API_VERSION` (also used by a meta chat line, `env.whatsapp.ts:50,72`); the single `WA_VERIFY_TOKEN`; one Kapso project for both lines (`env.kapso.ts:36-40,51-57`). `WA_CHAT_ACCESS_TOKEN` falls back to `WA_ACCESS_TOKEN` (`env.whatsapp.ts:47`); `WA_CHAT_APP_ID` has no fallback (`env.ts:62-63`).
 
-Env only: `MESSAGING_ENABLED` (`env.ts:110`), `INTEGRATION_CONFIG_FROM_DB` (`:108`), `SETTINGS_CACHE_MS` (`:106`), `MESSAGE_SENDER_POLL_MS` (`:91`).
+Env only: `INTEGRATION_CONFIG_FROM_DB` (`env.ts:111`), `INTEGRATION_REFRESH_MS` (`:109`), `SETTINGS_CACHE_MS` (`:107`), `MESSAGE_SENDER_POLL_MS` (`:92`). There is no `MESSAGING_ENABLED` env var any more; the kill switch is `settings.messaging_enabled`.
 
-**DB wins, env is fallback.** `common/integrations/integration-config.queries.ts:26-27` reads plain rows + `rpc('integration_secrets_read')`; `integration-config.service.ts:36-60` refreshes on boot, every `SETTINGS_CACHE_MS` and after each write, keeping the last good snapshot; `env.ts:139-147` `validOverlay` drops invalid values (logged by name); `config/integration-overlay.ts:7-16` frozen snapshot; `env.ts:127-133` `loadEnv() = parse({...process.env, ...overlay})`; `integration-config.view.ts:22` source `db|env|unset`. Controller `settings/integrations` GET, PUT, `PUT|DELETE secrets/:key` (`integration-config.controller.ts:23-57`). Every new **secret** name needs a migration replacing `integration_secret_key_ok`; plain keys do not.
+**DB wins, env is fallback.** `common/integrations/integration-config.queries.ts:26-27` reads plain rows + `rpc('integration_secrets_read')`; `integration-config.service.ts:36-60` refreshes on boot, every `integrationRefreshMs` (`integration-refresh.ts`: `INTEGRATION_REFRESH_MS`, else `SETTINGS_CACHE_MS`) and after each write, keeping the last good snapshot; `env.ts:140-148` `validOverlay` drops invalid values (logged by name); `common/integrations/integration-overlay.ts:8-17` frozen snapshot; `env.ts:128-134` `loadEnv() = parse({...process.env, ...overlay})`; `integration-config.view.ts:22` source `db|env|unset`. Controller `settings/integrations` GET, PUT, `PUT|DELETE secrets/:key` (`integration-config.controller.ts:23-57`). Every new **secret** name needs a migration replacing `integration_secret_key_ok`; plain keys do not.
 
 ### A4. Clients, health check, webhooks, window choice, kill switches
 
@@ -86,7 +86,7 @@ Env only: `MESSAGING_ENABLED` (`env.ts:110`), `INTEGRATION_CONFIG_FROM_DB` (`:10
 - **«افحص الخطوط».** `POST /messaging/lines/check` (`lines.controller.ts:15-26`, `templates.manage` + `TemplateManagerGuard`) → `lines.check.ts:81-139`: per line provider, gaps by key NAME (`env.gaps.ts:24-45`, `env.kapso.ts:60-67`), duplicate phone, kapso webhook secret set?, then `GET {phone_id}` and (meta) `GET {waba}/subscribed_apps`. Result is not stored.
 - **Webhooks.** Meta: `webhook/webhook.controller.ts:37` (`/webhooks/whatsapp`); GET handshake with single `WA_VERIFY_TOKEN` (`:45-52`); POST signature must match any of `[WA_APP_SECRET, WA_CHAT_APP_SECRET]` (`env.whatsapp.ts:100-103`, `webhook.signature.ts:23`). Kapso: `webhook/webhook.kapso.controller.ts:22,36-46` (`/webhooks/kapso`), HMAC with the single `KAPSO_WEBHOOK_SECRET`. Both feed `WebhookService.handle`; `webhook.parse.ts:101-118` reads `metadata.phone_number_id`; `webhook.lines.ts:7-10` `acceptsNumber`, `:13-17` `lineFor` stamps only while a chat line exists; `webhook.inbound.ts:75-76` writes `line` only when stamped.
 - **24 h window.** DB per-line windows in `v_threads` (`…290_wa_lines.sql:40-42,54`, null line = notifications). Rule `reply-line.ts:24-29`: chat if its window is open and chat configured → notifications if its window is open → chat if only chat open (503) → null (409). API: `inbox/threads.mapper.ts:56-70`, `inbox/send-line.ts:15-22`, `inbox/thread-send.service.ts:51-55`.
-- **Kill switches.** `env.whatsapp.ts:90-92` `sendingAllowed` = env `MESSAGING_ENABLED` AND the **notifications** line configured AND `settings.messaging_enabled`. `whatsapp/send-gate.ts:24-27` `open()`, `:30-32` `automaticOn()` = `settings.auto_messages_enabled`, `:38-49` reasons `env_off|not_configured|switch_off` + `restricted`. `message.sender.ts:71-93` checks the gate, holds automatic rows, re-checks per row, pauses a line for the pass on auth failure (comment at `:80` about chat texts starving notifications). Jobs also read `auto_messages_enabled` (`reminders/reminders.job.ts:72`, `follow-ups/follow-ups.job.ts:80`). `WA_TEMPLATE_SYNC=false` stops sync and submit (`env.ts:66-67`, `template.registry.ts:78`).
+- **Kill switches.** `env.whatsapp.ts:91-93` `sendingAllowed` = the **notifications** line configured AND `settings.messaging_enabled`. `whatsapp/send-gate.ts:24-27` `open()`, `:30-32` `automaticOn()` = `settings.auto_messages_enabled`, `:38-49` reasons `not_configured|switch_off` + `restricted`. `message.sender.ts:71-93` checks the gate, holds automatic rows, re-checks per row, pauses a line for the pass on auth failure (comment at `:80` about chat texts starving notifications). Jobs also read `auto_messages_enabled` (`reminders/reminders.job.ts:72`, `follow-ups/follow-ups.job.ts:80`). `WA_TEMPLATE_SYNC=false` stops sync and submit (`env.ts:66-67`, `template.registry.ts:78`).
 
 ### A5. Cost of N numbers instead of 2
 
@@ -108,7 +108,7 @@ The two lines are two **roles**, not a list: notifications is mandatory and the 
 ### B0. Headline facts
 1. **No pg_cron / pg-boss.** Every scheduled producer is an in-process timer in the one API instance (`modules/reminders/ticker.ts`: "Move to pg_cron / pg-boss when the API scales out"). DB-side producers are only the booking/reschedule RPCs that insert `messages` rows in the same transaction.
 2. **Two pipelines.** WhatsApp: the `public.messages` table is the queue (`status='queued'`, unique `dedup_key`), drained by `MessageSender` (`whatsapp/message.sender.ts`, 50 rows per pass `:16`, every 30 s `whatsapp/sender-timing.ts:2`). Bell + web push + Expo: `PushService` (`common/push/push.service.ts`) writes one `push_notifications` row (dedup `{kind}:{subject}:{profile_id}`, `:37`) then fans out without awaiting (`push.channels.ts`). **Email: none** (`me/account.auth.ts:20` "no SMTP").
-3. **Gates.** Every WhatsApp send: env `MESSAGING_ENABLED` + notifications line configured + `settings.messaging_enabled` (`send-gate.ts:24-26`), plus `WA_ALLOWED_RECIPIENTS`. While closed, rows stay queued.
+3. **Gates.** Every WhatsApp send: notifications line configured + `settings.messaging_enabled` (`send-gate.ts:24-26`), plus `WA_ALLOWED_RECIPIENTS`. While closed, rows stay queued.
 4. **`auto_messages_enabled`** governs only `AUTOMATIC_KEYS` = reminder keys + `follow_up_slots` + `renewal_due` + `lesson_rating` with `created_by` null (`whatsapp/send-stale.ts:96`). OFF: jobs don't queue them and the sender fails queued ones `auto_off`. Booking confirmations, `report_ready`, `teacher_new_student`, meeting invites and admin sends are not affected.
 5. **Language fixed to Arabic**: one `message_templates` row per key, `language default 'ar'`; parameter text Arabic (`server-text.ts:10` "owner decision pending on English").
 6. **Line per template**: `message_templates.line` (default notifications; all 15 producer keys seeded notifications, `…340_template_lines.sql:27-33`); admin can move it (`PATCH /messaging/templates/:key/line`). Session texts prefer the chat line while its window is open.
@@ -182,45 +182,45 @@ Lesson cancelled; teacher proposes a new time; payment received / receipt / invo
 - **Ops:** no DB-visible job schedule or history.
 
 ### B6. Settings that drive notifications today
-Messaging form (`packages/shared/src/settings/registry.messaging.ts`): `reminder_minutes_before` 60, `reminder_24h_enabled` false, `teacher_whatsapp_new_student` true, `teacher_whatsapp_lesson_reminder` true, `follow_up_hours` [24,72], `reminder_lookahead_hours` 25, `follow_up_slots_from_hours` 12, `follow_up_slots_to_days` 7, `quick_reply_window_hours` 48. Self-saving: `messaging_enabled`, `auto_messages_enabled`, `feedback_mode`, `crm_cutover_done` (UI-only). Accounts: `renewal_alert_remaining` 2, `subscription_expiry_days` 7. Classroom: `meeting_link_auto`, `join_opens_before_min` 15, `join_closes_after_min` 120. Per teacher: `teachers.meeting_mode`.
+Messaging form (`SETTINGS_LAYOUT.messaging` in `packages/shared/src/settings/layout.ts`; entries in `settings/domains/*.ts`): `reminder_minutes_before` 60, `reminder_24h_enabled` false, `teacher_whatsapp_new_student` true, `teacher_whatsapp_lesson_reminder` true, `follow_up_hours` [24,72], `reminder_lookahead_hours` 25, `follow_up_slots_from_hours` 12, `follow_up_slots_to_days` 7, `quick_reply_window_hours` 48. Self-saving: `messaging_enabled`, `auto_messages_enabled`, `feedback_mode`, `crm_cutover_done` (UI-only). Accounts: `renewal_alert_remaining` 2, `subscription_expiry_days` 7. Classroom: `meeting_link_auto`, `join_opens_before_min` 15, `join_closes_after_min` 120. Per teacher: `teachers.meeting_mode`.
 
 ---
 
 ## C. ADMIN UI TODAY
 
 ### C1. Web `/admin/settings`
-Route `apps/web/src/routes/admin/settings.tsx:5` → `features/messaging/SettingsPage.tsx:88`; guard `requireRole('admin')` (`routes/admin.tsx:9`) and `settings.read` (`features/auth/admin-access.ts:26`). **No `settings.write` / `templates.manage` checks in the web UI.** Section order (`SettingsPage.tsx:60-67`): Messaging → schedule, classroom, reports, accounts, uploads, academy → sales → appearance → **Integrations** → custom values. **Four save models on one page**: sticky «حفظ» for registry fields, instant switches, «حفظ التكاملات», per-row secret saves.
+Route `apps/web/src/routes/admin/settings.tsx` → `features/settings/SettingsPage.tsx`; guard `requireRole('admin')` (`routes/admin.tsx:9`) and `settings.read` (`features/auth/admin-access.ts:26`). **No `settings.write` / `templates.manage` checks in the web UI.** Section order (`features/settings/page-sections.tsx`, `PAGE_SECTIONS`): Messaging → schedule, classroom, reports, accounts, uploads, academy → sales → appearance → **Integrations** → custom values. **Four save models on one page**: sticky «حفظ» for registry fields, instant switches, «حفظ التكاملات», per-row secret saves.
 
-**A. «الرسائل والواتساب» (`SettingsSections.tsx:56-89`)**
+**A. «الرسائل والواتساب» (`features/settings/sections/MessagingSection.tsx`)**
 
 | # | Control | File | Edits | API permission |
 |---|---|---|---|---|
-| A1 | CRM cut-over | `MessagingSwitch.tsx:40-59` | `settings.crm_cutover_done` | `settings.write` |
-| A2 | Kill switch «إرسال الرسائل» (confirm on enable only) | `MessagingSwitch.tsx:60-102` | `settings.messaging_enabled` | `settings.write` |
+| A1 | CRM cut-over | `features/messaging/MessagingSwitch.tsx` | `settings.crm_cutover_done` | `settings.write` |
+| A2 | Kill switch «إرسال الرسائل» (confirm on enable only) | `features/messaging/MessagingSwitch.tsx` | `settings.messaging_enabled` | `settings.write` |
 | A3 | Server gate note + queued count | `ServerGateNote.tsx:15-28` | read-only (`GET /messages/gate`) | `messages.read` |
-| A4 | «الرسائل التلقائية» (no confirm) | `AutoMessagesSwitch.tsx:38-45` | `auto_messages_enabled` | `settings.write` |
-| A5 | «بعد انتهاء الحلقة» chips (save on change) | `FeedbackModeSwitch.tsx:27-34` | `feedback_mode` | `settings.write` |
+| A4 | «الرسائل التلقائية» (no confirm) | `features/messaging/AutoMessagesSwitch.tsx` | `auto_messages_enabled` | `settings.write` |
+| A5 | «بعد انتهاء الحلقة» chips (save on change) | `features/messaging/FeedbackModeSwitch.tsx` | `feedback_mode` | `settings.write` |
 | A6 | «خطوط واتساب» + «افحص الخطوط» (nothing on mount) | `LinesCard.tsx`, `LineRow.tsx`, `LineFacts.tsx`, `LineDriver.tsx` | read-only | `templates.manage` + guard |
-| A7 | Registry fields (bottom «حفظ») | `RegistryField.tsx:33` | the B6 messaging keys | `settings.write` (audited) |
+| A7 | Registry fields (bottom «حفظ») | `features/settings/registry-form/RegistryField.tsx` | the B6 messaging keys | `settings.write` (audited) |
 | A8 | Template health | `TemplateHealth.tsx:43-48` | — | `messages.read` |
 | A9 | «القوالب حسب الرقم» + «مزامنة مع Meta» | `TemplateLines.tsx`, `TemplateLineBlock.tsx:56-83` | template status/quality/body sync | `templates.manage` |
 | A10 | «متاح للمعلمين والمبيعات» | `template-columns.tsx:101-115`, `StarterToggle.tsx` | `message_templates.sales_starter` | `templates.manage` |
 | A11 | «إرسال إلى ميتا» | `SubmitTemplateDialog.tsx` | status → pending | `templates.manage` |
 | A12 | «نقل إلى الرقم الآخر» | `MoveLineDialog.tsx` | `message_templates.line` | `templates.manage` |
 
-**B. Academy section:** `academy_whatsapp_e164` «رقم واتساب الأكاديمية» (`registry.accounts.ts:48-51`) — a third "number", the public contact, unrelated to either line in the UI.
-**C. Sales:** `SalesAutoAssignSwitch.tsx` (`sales_auto_assign`, no confirm).
-**D. «التكاملات»** (`IntegrationsPanel.tsx`), groups `wa_notifications`, `wa_chat`, `kapso`, `wa_safety`, `livekit`, `expo`, `web_push`, `fx`. Plain keys (`PlainIntegrationRow.tsx`, placeholder = raw key) saved together; secrets write-only per row (`SecretIntegrationRow.tsx`, confirm only on clear). Writes need `settings.write`; audit records key names only.
-**E. Custom values** (`CustomValuesPanel.tsx`).
+**B. Academy section:** `academy_whatsapp_e164` «رقم واتساب الأكاديمية» (`packages/shared/src/settings/domains/academy.ts`) — a third "number", the public contact, unrelated to either line in the UI.
+**C. Sales:** `features/sales/SalesAutoAssignSwitch.tsx` in `features/settings/sections/SalesSection.tsx` (`sales_auto_assign`, no confirm).
+**D. «التكاملات»** (`features/integrations/IntegrationsPanel.tsx`), groups `wa_notifications`, `wa_chat`, `kapso`, `wa_safety`, `livekit`, `expo`, `web_push`, `fx`. Plain keys (`PlainIntegrationRow.tsx`, placeholder = raw key) saved together; secrets write-only per row (`SecretIntegrationRow.tsx`, confirm only on clear). Writes need `settings.write`; audit records key names only.
+**E. Custom values** (`features/custom-config/CustomValuesPanel.tsx`; the concepts: docs/25).
 
 ### C2. Other places
-`/admin/inbox` (line badges, «سيصل ردّك عبر …» in text mode only, gate note, follow-up pause, retry / sent manually / hand-off); `/admin/roles` (grants `templates.*`, `settings.write`, `messages.*`, `notifications.push`); `/admin/translations` (push and invite texts); bell panel web-push toggle per device (`WebPushToggle.tsx`, `PUT|DELETE /me/web-push`).
+`/admin/inbox` (line badges, «سيصل ردّك عبر …» in text mode only, gate note, follow-up pause, retry / sent manually / hand-off); `/admin/roles` (grants `templates.*`, `settings.write`, `messages.*`, `notifications.push`); `/admin/translations` (push and invite texts); bell panel web-push toggle per device (`features/notifications/WebPushToggle.tsx`, `PUT|DELETE /me/web-push`).
 
 ### C3. Mobile admin (Expo)
 `app/(tabs)/more/ops/settings.tsx` → `SettingsScreen.tsx` (guard `settings.read`): 7 editable fields (`SettingsFields.tsx:133-190`, incl. `follow_up_hours`, renewal alert, expiry days); read-only `messaging_enabled`, `auto_messages_enabled`, `crm_cutover_done` («تُدار من الموقع فقط», `ReadOnlySettings.tsx:71-88`) — shown as «مفعّل» even when the server gate blocks. `more/notifications.tsx` list + mark all read; push registered automatically, no toggle. Inbox shows line and gate notes. **Missing:** lines check, templates, integrations, feedback mode, teacher toggles, reminder minutes, 24 h reminder, follow-up slot windows, quick-reply window.
 
 ### C4. Not editable from any UI
-Env: `MESSAGING_ENABLED`, `INTEGRATION_CONFIG_FROM_DB` (when false the UI still labels DB values «من الإعدادات», `integration-config.service.ts:65-68`), `SETTINGS_CACHE_MS` (changes apply within ~30 s), `MESSAGE_SENDER_POLL_MS`, `FEEDBACK_TOKEN_SECRET`. Code: job cadences, day-before hour, `TEMPLATE_KEYS` and which event sends which template, stale rules, restricted defaults. SQL: template `body_ar`, `footer_ar`, `params`, `buttons`, `meta_name`, `category`, `language`, `header_format`.
+Env: `INTEGRATION_CONFIG_FROM_DB` (when false the UI still labels DB values «من الإعدادات», `integration-config.service.ts:65-68`), `SETTINGS_CACHE_MS` (changes apply within ~30 s), `INTEGRATION_REFRESH_MS`, `MESSAGE_SENDER_POLL_MS`, `FEEDBACK_TOKEN_SECRET`. Code: job cadences, day-before hour, `TEMPLATE_KEYS` and which event sends which template, stale rules, restricted defaults. SQL: template `body_ar`, `footer_ar`, `params`, `buttons`, `meta_name`, `category`, `language`, `header_format`.
 
 ### C5. "Which number sends what, and is it on?" needs
 (1) Messaging «خطوط واتساب» (phone only after a live check), (2) template table «الرقم» (line name; phone only if (1) ran this session), (3) timing fields + auto switch, (4) academy section number, (5) Integrations (ids, provider, allow-list), (6) `/admin/roles`, (7) `/admin/inbox`, (8) server env. **Five sections of one page, two more pages and the server env; nothing on mobile.**

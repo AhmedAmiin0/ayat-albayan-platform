@@ -1,10 +1,9 @@
 import type { AcademySettings } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { StatusChip } from '@/components/ui/status-chip';
-import { apiSend } from '@/lib/api';
 import { t } from '@/lib/i18n';
+import { useSettingSwitch } from '@/lib/use-setting-switch';
 
 const s = t.sales.assign;
 
@@ -13,12 +12,8 @@ const s = t.sales.assign;
  * GET /settings, written with PATCH /settings { salesAutoAssign }, like the other switches.
  */
 export function SalesAutoAssignSwitch({ settings }: { settings: AcademySettings }) {
-  const queryClient = useQueryClient();
   const on = settings.sales_auto_assign;
-  const save = useMutation({
-    mutationFn: (salesAutoAssign: boolean) => apiSend<AcademySettings>('PATCH', '/settings', { salesAutoAssign }),
-    onSuccess: (next) => queryClient.setQueryData(['settings'], next),
-  });
+  const save = useSettingSwitch();
   return (
     <div className="grid gap-3 border-t border-rule pt-4">
       <div className="flex flex-wrap items-center gap-3">
@@ -28,7 +23,7 @@ export function SalesAutoAssignSwitch({ settings }: { settings: AcademySettings 
           size="sm"
           variant={on ? 'danger-quiet' : 'secondary'}
           disabled={save.isPending}
-          onClick={() => save.mutate(!on)}
+          onClick={() => save.mutate({ salesAutoAssign: !on })}
         >
           {on ? s.autoDisable : s.autoEnable}
         </Button>

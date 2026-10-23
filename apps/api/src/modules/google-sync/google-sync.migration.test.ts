@@ -3,14 +3,14 @@ import { join } from 'node:path';
 import { INTEGRATION_SECRET_KEYS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 
-// Migrations 530–532 (docs/24) read as text: no database in unit tests (the SQL behaviour is in
+// Migrations 20261022000610–612 (docs/24) read as text: no database in unit tests (the SQL behaviour is in
 // e2e/tests/google-sync.sql.spec.ts).
 const dir = join(__dirname, '../../../../../packages/db/supabase/migrations');
 const read = (f: string) => readFileSync(join(dir, f), 'utf8');
 const tables = read('20261022000610_google_sync.sql');
 const outbox = read('20261022000611_google_sync_outbox.sql');
 
-describe('migration 530: Google sync tables', () => {
+describe('migration 20261022000610: Google sync tables', () => {
   it('integration_secret_key_ok lists exactly the shared secret keys, the Google client secret included', () => {
     const fn = /integration_secret_key_ok\(p_key text\)[\s\S]*?array\[([\s\S]*?)\]/.exec(tables)?.[1] ?? '';
     const listed = [...fn.matchAll(/'([A-Z_]+)'/g)].map((m) => m[1]);
@@ -38,7 +38,7 @@ describe('migration 530: Google sync tables', () => {
   });
 });
 
-describe('migration 531: the platform-origin predicate and the producers', () => {
+describe('migration 20261022000611: the platform-origin predicate and the producers', () => {
   it('excludes imported lessons AND lessons generated from an imported rule', () => {
     expect(outbox).toMatch(/i\.target_table = 'lessons' and i\.target_id = l\.id/);
     expect(outbox).toMatch(/i\.target_table = 'schedule_rules' and i\.target_id = l\.rule_id/);

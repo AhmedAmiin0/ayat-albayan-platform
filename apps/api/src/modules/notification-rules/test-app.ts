@@ -1,12 +1,13 @@
 // HTTP test harness for GET /admin/notifications (test-only, excluded from the build): the real
 // controller, guards and service; settings, the gate and the readers are mocks.
-import { SETTING_DEFAULTS, type LineHealthView } from '@ab/shared';
+import type { LineHealthView } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 import { SettingsService } from '../../common/settings/settings.service';
 import { SendGate } from '../whatsapp/send-gate';
 import { RulesQueries } from './rules.queries';
@@ -24,7 +25,7 @@ const verify: TokenVerifier = async (token) => {
 
 export async function rulesApp() {
   const m = {
-    settings: { all: vi.fn(async () => SETTING_DEFAULTS), invalidate: vi.fn() },
+    settings: fakeSettings(),
     gate: { state: vi.fn(async () => ({ open: false, reason: 'switch_off' })), open: vi.fn(async () => false) },
     queries: { templates: vi.fn(async () => new Map()), lines: vi.fn(async (): Promise<LineHealthView[]> => []) },
   };

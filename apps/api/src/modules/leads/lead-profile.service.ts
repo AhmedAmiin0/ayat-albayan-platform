@@ -2,8 +2,8 @@ import type { Json } from '@ab/db';
 import { nextFollowUpAt, type LeadFollowUp, type LeadQualificationPatch } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { SettingsService } from '../../common/settings/settings.service';
 import { LeadsQueries, type LeadRow } from './leads.queries';
+import { LeadsSettings } from './leads.settings';
 
 export interface LeadPatch<T> {
   id: string;
@@ -25,7 +25,7 @@ export function mergeQualification(current: Json, patch: LeadQualificationPatch)
 export class LeadProfileService {
   constructor(
     private readonly leads: LeadsQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: LeadsSettings,
     private readonly audit: AuditService,
   ) {}
 
@@ -43,7 +43,7 @@ export class LeadProfileService {
    */
   async followUp({ id, patch, actorId }: LeadPatch<LeadFollowUp>): Promise<LeadRow> {
     const lead = await this.find(id);
-    const { follow_up_hours: hours } = await this.settings.all();
+    const { follow_up_hours: hours } = await this.settings.read();
     const next = nextFollowUpAt({ ...lead, follow_up_paused: patch.paused }, hours);
     const updated = await this.leads.update(id, {
       follow_up_paused: patch.paused,

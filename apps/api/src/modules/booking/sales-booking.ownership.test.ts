@@ -2,11 +2,12 @@ import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { NO_OWNERSHIP, type SalesOwnership } from '../sales/sales-ownership';
 import type { SalesQueries } from '../sales/sales.queries';
 import { errorCode } from '../scheduling/errors';
 import type { BookingService } from './booking.service';
+import { BookingSettings } from './booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { assertBookingScope, assertOwnStudents, scopeDuplicates } from './sales-booking.scope';
 import { SalesBookingService } from './sales-booking.service';
@@ -72,7 +73,7 @@ describe('assertBookingScope with own = null (sales_auto_assign OFF)', () => {
 
 const scopeWith = (on: boolean) => {
   const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-  return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, fakeSettings({ sales_auto_assign: on })) };
+  return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on })) };
 };
 
 describe('SalesBookingScope.of: the switch decides', () => {
@@ -89,8 +90,8 @@ describe('SalesBookingScope.of: the switch decides', () => {
   });
 
   it('a failed settings read fails the call (no silent OFF)', async () => {
-    const settings = fakeSettings();
-    vi.mocked(settings.salesAutoAssign).mockRejectedValue(new Error('settings down'));
+    const settings = readerOf(BookingSettings);
+    vi.spyOn(settings, 'read').mockRejectedValue(new Error('settings down'));
     const scope = new SalesBookingScope({ ownership: vi.fn() } as unknown as SalesQueries, settings);
     await expect(scope.of(USER)).rejects.toThrow('settings down');
   });

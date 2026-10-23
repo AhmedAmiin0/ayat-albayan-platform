@@ -1,31 +1,50 @@
-import { ACADEMY_SETTINGS, ACCOUNTS_SETTINGS, REPORTS_SETTINGS, SALES_SETTINGS, UPLOADS_SETTINGS } from './registry.accounts.js';
-import { CONFIG_SETTINGS } from './registry.config.js';
-import { MESSAGING_SETTINGS } from './registry.messaging.js';
-import { CLASSROOM_SETTINGS, SCHEDULE_SETTINGS } from './registry.schedule.js';
-import { camelKey, type CamelKey, type SettingDef, type SettingValue } from './types.js';
+import { camelKey, type CamelKey } from './camel.js';
+import type { SettingDef, SettingsOf } from './defs.js';
+import { ACADEMY_SETTINGS } from './domains/academy.js';
+import { ACTIVITY_SETTINGS } from './domains/activity.js';
+import { CLASSROOM_SETTINGS } from './domains/classroom.js';
+import { FEEDBACK_SETTINGS } from './domains/feedback.js';
+import { FINANCE_SETTINGS } from './domains/finance.js';
+import { FOLLOW_UP_SETTINGS } from './domains/follow-ups.js';
+import { MESSAGING_SETTINGS } from './domains/messaging.js';
+import { NOTIFICATION_SETTINGS } from './domains/notifications.js';
+import { PAYOUT_SETTINGS } from './domains/payouts.js';
+import { RECORDING_SETTINGS } from './domains/recordings.js';
+import { REPORT_SETTINGS } from './domains/reports.js';
+import { SALES_SETTINGS } from './domains/sales.js';
+import { SCHEDULING_SETTINGS } from './domains/scheduling.js';
+import { SUBSCRIPTION_SETTINGS } from './domains/subscriptions.js';
+import { UPLOAD_SETTINGS } from './domains/uploads.js';
 
 /**
- * Every academy setting (public.settings rows), in page order. Add a key here (with its i18n label
- * and a seeding migration) and the PATCH schema, the read validators, the defaults, the
- * AcademySettings type and the admin field all follow.
+ * Every academy setting (public.settings rows), one domain file per owner (the order here is not
+ * the page's: layout.ts places each key on /admin/settings). Add a key to its domain file (with its
+ * i18n label, its place in SETTINGS_LAYOUT and a seeding migration) and the PATCH schema, the read
+ * validators, the defaults, the AcademySettings type and the admin field all follow.
  */
 export const SETTINGS_REGISTRY = {
   ...MESSAGING_SETTINGS,
-  ...SCHEDULE_SETTINGS,
+  ...NOTIFICATION_SETTINGS,
+  ...FOLLOW_UP_SETTINGS,
+  ...FEEDBACK_SETTINGS,
+  ...SCHEDULING_SETTINGS,
   ...CLASSROOM_SETTINGS,
-  ...REPORTS_SETTINGS,
-  ...ACCOUNTS_SETTINGS,
-  ...UPLOADS_SETTINGS,
+  ...RECORDING_SETTINGS,
+  ...REPORT_SETTINGS,
+  ...SUBSCRIPTION_SETTINGS,
+  ...PAYOUT_SETTINGS,
+  ...FINANCE_SETTINGS,
+  ...UPLOAD_SETTINGS,
   ...ACADEMY_SETTINGS,
   ...SALES_SETTINGS,
-  ...CONFIG_SETTINGS,
+  ...ACTIVITY_SETTINGS,
 } as const satisfies Record<string, SettingDef>;
 
 type Registry = typeof SETTINGS_REGISTRY;
 export type SettingKey = keyof Registry;
 
 /** GET /settings (admin): every setting with its default filled in. */
-export type AcademySettings = { -readonly [K in SettingKey]: SettingValue<Registry[K]> };
+export type AcademySettings = SettingsOf<Registry>;
 
 /** PATCH /settings body: camelCase fields, only the ones that change. */
 export type SettingsUpdate = { [K in SettingKey as CamelKey<K>]?: AcademySettings[K] };
@@ -53,10 +72,6 @@ function defaultOf(key: SettingKey): AcademySettings[SettingKey] {
 
 /** Used when a row is missing or malformed; the migrations seed the same values. */
 export const SETTING_DEFAULTS = Object.fromEntries(SETTING_KEYS.map((k) => [k, defaultOf(k)])) as AcademySettings;
-
-/** 'buttons' = lesson_rating after a completed lesson; 'link' = no automatic message (migration 195). */
-export const FEEDBACK_MODES = SETTINGS_REGISTRY.feedback_mode.options;
-export type FeedbackMode = AcademySettings['feedback_mode'];
 
 /** Is this row key one of the registry's settings? (A custom entry may not reuse one.) */
 export const isSettingKey = (key: string): key is SettingKey => Object.hasOwn(SETTINGS_REGISTRY, key);

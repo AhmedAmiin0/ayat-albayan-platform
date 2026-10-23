@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setIntegrationOverlay } from './config/integration-overlay';
+import { setIntegrationOverlay } from './common/integrations/integration-overlay';
 import { lineEnvs, loadEnv, validOverlay } from './env';
 
 // Integration config in the database (owner, 2026-10-12): loadEnv() = env + the DB overlay.

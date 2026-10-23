@@ -2,7 +2,7 @@ import { E164_RE } from '../phone.js';
 import { isTimeZone } from '../schemas/common.js';
 import { SETTING_DEFAULTS, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingKey } from './registry.js';
 import { shapeValid } from './shape.js';
-import type { SettingDef } from './types.js';
+import type { SettingDef } from './defs.js';
 
 const CURRENCY_RE = /^[A-Z]{3}$/;
 

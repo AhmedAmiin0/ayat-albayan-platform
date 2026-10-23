@@ -43,8 +43,7 @@ describe('LessonTimeService — payout lock (E3, R-PAY-02)', () => {
     off.payouts.payoutStatus.mockResolvedValue('approved');
     await off.run(correction());
     expect(off.writer.retime).toHaveBeenCalledTimes(1);
-    const on = timeSetup(heldRow({ status: 'late' }));
-    on.settings.all.mockResolvedValue({ payout_count_late: true, payout_count_no_show: false });
+    const on = timeSetup(heldRow({ status: 'late' }), { payout_count_late: true });
     on.payouts.payoutStatus.mockResolvedValue('approved');
     await expect(on.run(correction())).rejects.toMatchObject({ response: { code: 'payout_locked' } });
   });

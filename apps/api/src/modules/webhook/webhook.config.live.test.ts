@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { setIntegrationOverlay } from '../../config/integration-overlay';
+import { setIntegrationOverlay } from '../../common/integrations/integration-overlay';
 import { loadEnv } from '../../env';
 import { liveWebhookConfig } from './webhook.config';
 

@@ -1,10 +1,10 @@
 import { RIYADH_TZ, type Gender, type LessonStatus, type Program, type TeacherStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
-import { SettingsService } from '../../../common/settings/settings.service';
 import { allDayRows } from '../../teachers/availability/free-slots';
 import { dbError } from '../../teachers/http';
 import type { LessonWindow } from '../lessons.queries';
+import { LessonsSettings } from '../lessons.settings';
 
 export type OverviewTeacherRow = {
   id: string;
@@ -30,7 +30,7 @@ export type OverviewTimeOffRow = { id: string; teacher_id: string; starts_at: st
 export class OverviewQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
   ) {}
 
   async teachers(w: LessonWindow): Promise<OverviewTeacherRow[]> {
@@ -43,7 +43,7 @@ export class OverviewQueries {
 
   /** Weekly rows; while teachers_always_available is on, every teacher all day (what booking accepts). */
   async slots(w: LessonWindow): Promise<OverviewSlotRow[]> {
-    if (await this.settings.get('teachers_always_available')) {
+    if ((await this.settings.read()).teachers_always_available) {
       let ids = this.db.from('teachers').select('id');
       if (w.teacherId) ids = ids.eq('id', w.teacherId);
       const { data, error } = await ids;

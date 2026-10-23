@@ -1,9 +1,9 @@
 import { bookingKindOf, type BookingRequest } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { SettingsService } from '../../common/settings/settings.service';
 import type { SalesOwnership } from '../sales/sales-ownership';
 import { SalesQueries } from '../sales/sales.queries';
+import { BookingSettings } from './booking.settings';
 import type { BookingOwnership } from './sales-booking.scope';
 
 /**
@@ -16,11 +16,11 @@ import type { BookingOwnership } from './sales-booking.scope';
 export class SalesBookingScope {
   constructor(
     private readonly sales: SalesQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   async of(user: AuthUser): Promise<BookingOwnership> {
-    return (await this.settings.salesAutoAssign()) ? this.sales.ownership(user.id) : null;
+    return (await this.settings.read()).sales_auto_assign ? this.sales.ownership(user.id) : null;
   }
 
   /**

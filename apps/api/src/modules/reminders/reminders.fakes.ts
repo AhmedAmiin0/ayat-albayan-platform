@@ -1,12 +1,13 @@
 import type { AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
-import { SETTING_DEFAULTS, type SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { QueuedMessage } from './queued-row';
 import { RemindersJob } from './reminders.job';
 import type { RoomCandidate } from './reminders.links';
 import type { ReminderLesson } from './reminders.plan';
 import type { RemindersQueries } from './reminders.queries';
+import { RemindersSettings } from './reminders.settings';
 
 // Invented sample data for the reminder tests: no real student, teacher or guardian.
 
@@ -57,11 +58,11 @@ export function fakeJob(opts: JobOpts = {}) {
     roomLinks: vi.fn(async (candidates: readonly RoomCandidate[]) => (candidates.length > 0 ? (opts.room ?? []) : [])),
   };
   // Automatic messages ON unless a test says otherwise (the default is OFF, migration 162).
-  const settings = { all: async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: true, ...opts.settings }) };
+  const settings = readerOf(RemindersSettings, { auto_messages_enabled: true, ...opts.settings });
   const push = { notifyAdmins: vi.fn(async () => undefined) };
   const job = new RemindersJob(
     queries as unknown as RemindersQueries,
-    settings as unknown as SettingsService,
+    settings,
     push as unknown as PushService,
   );
   return { job, queries, queued, push };

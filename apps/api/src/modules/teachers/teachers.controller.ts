@@ -16,10 +16,10 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { z } from 'zod';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { SettingsService } from '../../common/settings/settings.service';
 import { orNotFound, pageQuerySchema, parseOrThrow, sentOnly, type Page } from './http';
 import { withMeeting, type MeetingFields } from './meeting-view';
 import { TeachersQueries, type Teacher, type TeacherListRow } from './teachers.queries';
+import { TeachersSettings } from './teachers.settings';
 
 /** A teacher as the API returns it: meeting_mode raw and platform_classroom effective (migration 490). */
 type TeacherView = Omit<Teacher, 'meeting_mode'> & MeetingFields;
@@ -36,7 +36,7 @@ const listQuery = pageQuerySchema.extend({ search: z.string().trim().max(100).op
 export class TeachersController {
   constructor(
     private readonly teachers: TeachersQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: TeachersSettings,
   ) {}
 
   @Get()
@@ -76,7 +76,7 @@ export class TeachersController {
 
   /** settings.meeting_link_auto: the default of a teacher whose meeting_mode is null. */
   private async academyAuto(): Promise<boolean> {
-    return (await this.settings.all()).meeting_link_auto;
+    return (await this.settings.read()).meeting_link_auto;
   }
 
   private async view(row: Teacher): Promise<TeacherView> {

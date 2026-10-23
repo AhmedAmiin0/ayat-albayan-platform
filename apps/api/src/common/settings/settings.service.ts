@@ -1,10 +1,7 @@
 import type { Json } from '@ab/db';
-import { publicSettings, type AcademySettings, type PublicSettings, type SettingKey } from '@ab/shared';
+import { publicSettings, readSettings, type AcademySettings, type PublicSettings } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
-import { readSettings } from './settings.values';
-
-export { SETTING_DEFAULTS } from './settings.values';
 
 /** Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS). */
 export const SETTINGS_CACHE_MS = Symbol('SETTINGS_CACHE_MS');
@@ -13,7 +10,8 @@ const DEFAULT_TTL_MS = 30_000;
 /**
  * Academy settings (`settings` table, written by the service role; keys in the shared registry).
  * One query reads every row; the result is cached in memory for SETTINGS_CACHE_MS and dropped at
- * once by write() (PATCH /settings). Consumers read `all()` and pick their key.
+ * once by write() (PATCH /settings). Storage and cache only: a module reads its keys through its
+ * typed reader (`modules/<m>/<m>.settings.ts`, common/settings/settings-slice.ts), which calls all().
  */
 @Injectable()
 export class SettingsService {
@@ -37,11 +35,6 @@ export class SettingsService {
     return { ...(await this.cached.value) };
   }
 
-  /** One setting (cached like all()). */
-  async get<K extends SettingKey>(key: K): Promise<AcademySettings[K]> {
-    return (await this.all())[key];
-  }
-
   /** GET /settings/public: only the registry's `public: true` keys. */
   async publicView(): Promise<PublicSettings> {
     return publicSettings(await this.all());
@@ -50,21 +43,6 @@ export class SettingsService {
   /** Forget the cached rows (after a write). */
   invalidate(): void {
     this.cached = null;
-  }
-
-  /** null = policy OFF: a student's late cancellation never consumes a lesson (the default). */
-  lateCancelHours(): Promise<number | null> {
-    return this.get('late_cancel_hours');
-  }
-
-  /** How many weeks ahead rules generate lessons (R-SCH-02, default 5). */
-  bookingHorizonWeeks(): Promise<number> {
-    return this.get('booking_horizon_weeks');
-  }
-
-  /** Hand each NEW lead to a salesperson (migration 187 seeds true). */
-  salesAutoAssign(): Promise<boolean> {
-    return this.get('sales_auto_assign');
   }
 
   /**

@@ -1,5 +1,6 @@
 // HTTP test harness for the reports controllers (test-only, excluded from the build).
 // Real controllers, guards, services and ReportAccess; every DB / storage facing class is a mock.
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { vi } from 'vitest';
@@ -8,7 +9,8 @@ import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier
 import type { AuthUser } from '../../common/auth/verify-token';
 import { LessonEvents } from '../../common/events/lesson-events';
 import { PushService } from '../../common/push/push.service';
-import { SETTING_DEFAULTS, SettingsService } from '../../common/settings/settings.service';
+import { fakeSettings } from '../../common/settings/settings.fakes';
+import { SettingsService } from '../../common/settings/settings.service';
 import { StorageService } from '../../common/storage/storage.service';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import { ReportAttachmentsQueries } from './report-attachments.queries';
@@ -41,7 +43,7 @@ function mocks() {
     storage: { signedUpload: vi.fn(), signedDownload: vi.fn(), exists: vi.fn(), remove: vi.fn(), upload: vi.fn() },
     teachers: { idByProfile: vi.fn() },
     mine: { page: vi.fn(), students: vi.fn() },
-    settings: { all: vi.fn(), lateCancelHours: vi.fn(), bookingHorizonWeeks: vi.fn() },
+    settings: fakeSettings(),
     events: { changed: vi.fn(), onChanged: vi.fn() },
     pdf: { enqueue: vi.fn() },
     push: { notifyAdmins: vi.fn() },
@@ -79,7 +81,7 @@ export async function reportsApp() {
     m.lessons.lessonNumbers.mockResolvedValue(new Map());
     m.lessons.packages.mockResolvedValue(new Map());
     m.teachers.idByProfile.mockImplementation(async (id: string) => (id === TEACHER.id ? TEACHER_ID : id === OTHER_TEACHER.id ? 'other' : null));
-    m.settings.all.mockResolvedValue({ ...SETTING_DEFAULTS });
+    vi.mocked(m.settings.all).mockResolvedValue({ ...SETTING_DEFAULTS });
     m.history.submitted.mockResolvedValue([]);
     m.history.lessons.mockResolvedValue([]);
     m.history.sequence.mockResolvedValue(new Map());

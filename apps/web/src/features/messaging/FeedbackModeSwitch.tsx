@@ -1,10 +1,9 @@
 import { FEEDBACK_MODES, type AcademySettings, type FeedbackMode } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useId } from 'react';
 import { FormAlert } from '@/components/ui/form-alert';
 import { RadioChips } from '@/components/ui/radio-chips';
 import { t } from '@/lib/i18n';
-import { updateSettings } from './api';
+import { useSettingSwitch } from '@/lib/use-setting-switch';
 
 const s = t.templates.settings;
 const LABEL: Record<FeedbackMode, string> = { buttons: s.feedbackModeButtons, link: s.feedbackModeLink };
@@ -15,12 +14,8 @@ const LABEL: Record<FeedbackMode, string> = { buttons: s.feedbackModeButtons, li
  * link by hand). Saved at once with PATCH /settings { feedbackMode }, like the switches above.
  */
 export function FeedbackModeSwitch({ settings }: { settings: AcademySettings }) {
-  const queryClient = useQueryClient();
   const name = useId();
-  const save = useMutation({
-    mutationFn: updateSettings,
-    onSuccess: (next) => queryClient.setQueryData(['settings'], next),
-  });
+  const save = useSettingSwitch();
   const mode = settings.feedback_mode;
   return (
     <div className="grid gap-3 border-t border-rule pt-4">

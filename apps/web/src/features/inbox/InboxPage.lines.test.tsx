@@ -1,6 +1,6 @@
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SETTINGS } from '@/features/messaging/settings-fixture';
+import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n';
 import { ComposerPhone } from './ComposerPhone';
 import { InboxPage } from './InboxPage';

@@ -2,7 +2,6 @@
 import { vi } from 'vitest';
 import type { AuditService } from '../../common/audit/audit.service';
 import type { Db } from '../../common/db/db.module';
-import type { SettingsService } from '../../common/settings/settings.service';
 import type { RuleWithLinks } from './schedule.queries';
 
 export const RULE_ID = '00000000-0000-4000-8000-0000000000a1';
@@ -81,16 +80,6 @@ export function fakeLessonsDb(state: { ruleStatus: string } = { ruleStatus: 'act
     }),
   });
   return { db: { rpc, from } as unknown as Db, lessons, rpcCalls, state, flags };
-}
-
-export function fakeSettings(weeks = 5, lateCancelHours: number | null = null) {
-  return {
-    bookingHorizonWeeks: vi.fn().mockResolvedValue(weeks),
-    lateCancelHours: vi.fn().mockResolvedValue(lateCancelHours),
-  } as unknown as SettingsService & {
-    bookingHorizonWeeks: ReturnType<typeof vi.fn>;
-    lateCancelHours: ReturnType<typeof vi.fn>;
-  };
 }
 
 export function fakeAudit() {

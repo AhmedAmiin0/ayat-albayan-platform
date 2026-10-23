@@ -1,8 +1,8 @@
 import { bookingKindOf, type BookingRequest, type BookingResult } from '@ab/shared';
 import { Injectable, Logger } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
-import { SettingsService } from '../../common/settings/settings.service';
 import { MessageSender } from '../whatsapp/message.sender';
+import { BookingSettings } from './booking.settings';
 import { teacherAlerts } from './teacher-alert.plan';
 import { TeacherAlertQueries } from './teacher-alert.queries';
 
@@ -11,7 +11,7 @@ import { TeacherAlertQueries } from './teacher-alert.queries';
 export class TeacherAlertDeps {
   constructor(
     readonly push: PushService,
-    readonly settings: SettingsService,
+    readonly settings: BookingSettings,
     readonly sender: MessageSender,
   ) {}
 }
@@ -52,7 +52,7 @@ export class TeacherAlert {
     const plans = teacherAlerts({ lessons, students, kind: bookingKindOf(req), now: new Date() });
     for (const { push } of plans) if (push) await this.deps.push.notifyProfiles(push);
     const rows = plans.flatMap((p) => (p.message ? [p.message] : []));
-    if (rows.length === 0 || !(await this.deps.settings.all()).teacher_whatsapp_new_student) return;
+    if (rows.length === 0 || !(await this.deps.settings.read()).teacher_whatsapp_new_student) return;
     if (await this.queries.approved()) await this.queries.queue(rows);
   }
 }

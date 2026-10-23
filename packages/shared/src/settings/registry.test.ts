@@ -2,7 +2,7 @@ import { describe, expect, expectTypeOf, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import en from '../../i18n/en.json' with { type: 'json' };
 import { SETTING_DEFAULTS, SETTING_FIELD_OF, SETTING_KEYS, SETTINGS_REGISTRY, type AcademySettings, type SettingsUpdate } from './registry.js';
-import { SETTINGS_SECTIONS } from './types.js';
+import { SETTINGS_SECTIONS } from './layout.js';
 
 /** The 17 keys before the registry: their camelCase PATCH names must not change. */
 const LEGACY_FIELDS = [

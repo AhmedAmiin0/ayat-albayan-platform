@@ -1,11 +1,12 @@
 import { ForbiddenException } from '@nestjs/common';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { conflict } from '../scheduling/errors';
-import { fakeSettings } from '../scheduling/scheduling.fakes';
 import type { LessonAccess } from './lesson-access';
 import type { LessonRow } from './lesson-row';
 import { LessonStatusService } from './lesson-status.service';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, TEACHER } from './lessons.fakes';
+import { LessonsSettings } from './lessons.settings';
 
 const access = { assertCanTouch: vi.fn() };
 const AFTER = new Date('2026-10-04T15:00:00Z');
@@ -13,7 +14,7 @@ const BEFORE = new Date('2026-10-04T10:00:00Z');
 
 function setup(row: LessonRow | null = lessonRow(), lateCancelHours: number | null = null) {
   const deps = fakeStore(row);
-  const service = new LessonStatusService(deps.store, access as unknown as LessonAccess, fakeSettings(5, lateCancelHours));
+  const service = new LessonStatusService(deps.store, access as unknown as LessonAccess, readerOf(LessonsSettings, { booking_horizon_weeks: 5, late_cancel_hours: lateCancelHours }));
   return { ...deps, service };
 }
 

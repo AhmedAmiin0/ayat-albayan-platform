@@ -1,11 +1,11 @@
 import type { WeeklyRule } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { badRequest, conflict } from '../scheduling/errors';
 import { localDateOf } from '../scheduling/horizon';
 import { ScheduleQueries, type RuleWithLinks } from '../scheduling/schedule.queries';
 import { TeachersQueries } from '../teachers/teachers.queries';
 import type { LessonRow } from './lesson-row';
+import { LessonsSettings } from './lessons.settings';
 import { planNewRule, type RulePlan } from './rule-plan';
 
 export type PlannedMove = { old: RuleWithLinks; plan: RulePlan; teacherLink: string | null };
@@ -16,7 +16,7 @@ export class RulePlanner {
   constructor(
     private readonly rules: ScheduleQueries,
     private readonly teachers: TeachersQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
   ) {}
 
   /**
@@ -32,7 +32,7 @@ export class RulePlanner {
     if (next.startsOn < localDateOf(new Date(), next.tz)) throw badRequest('date_in_past');
     if (next.startsOn < localDateOf(new Date(lesson.starts_at), next.tz)) throw badRequest('starts_before_lesson');
     const teacherLink = await this.teacherLink(old, next.teacherId);
-    const weeks = await this.settings.bookingHorizonWeeks();
+    const weeks = (await this.settings.read()).booking_horizon_weeks;
     const plan = planNewRule({ old, next, now: new Date(), weeks });
     // TODO(R-SCH-07): a start date beyond the horizon has no first lesson yet; owner to decide.
     if (plan.occurrences.length === 0) throw badRequest('no_occurrences');

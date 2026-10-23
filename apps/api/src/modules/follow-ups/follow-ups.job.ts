@@ -1,6 +1,5 @@
 import { nextFollowUpAt, type FollowUpNote } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { Ticker } from '../reminders/ticker';
 import { FollowUpSlots } from './follow-up-slots';
 import {
@@ -13,6 +12,7 @@ import {
   type FollowUpLeadRow,
 } from './follow-ups.plan';
 import { FollowUpsQueries } from './follow-ups.queries';
+import { FollowUpsSettings } from './follow-ups.settings';
 
 const EVERY_MS = 5 * 60_000;
 const FIRST_RUN_MS = 60_000;
@@ -55,7 +55,7 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly queries: FollowUpsQueries,
     private readonly slots: FollowUpSlots,
-    private readonly settings: SettingsService,
+    private readonly settings: FollowUpsSettings,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -77,7 +77,7 @@ export class FollowUpsJob implements OnApplicationBootstrap, OnModuleDestroy {
       ...{ notDue: 0, waitingTemplate: 0, noSlots: 0, failed: 0 },
     };
     try {
-      const { follow_up_hours: hours, auto_messages_enabled: auto } = await this.settings.all();
+      const { follow_up_hours: hours, auto_messages_enabled: auto } = await this.settings.read();
       if (!auto) return summary; // automatic messages OFF (docs/09 cut-over): nothing queued or advanced
       const leads = await this.queries.candidates(hours.length);
       summary.leads = leads.length;

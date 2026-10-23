@@ -12,6 +12,7 @@ import { SalesMoneyReads } from './sales-money.reads';
 import { SalesMoneyScope } from './sales-money.scope';
 import { SalesMoney } from './sales-money.service';
 import { SalesMoneyServices } from './sales-money.services';
+import { SalesMoneySettings } from './sales-money.settings';
 
 /**
  * The salesperson subscribes her student from the chat and records the family's bank transfer (owner
@@ -24,7 +25,7 @@ import { SalesMoneyServices } from './sales-money.services';
   controllers: [SalesSubscribeController, SalesPaymentsController, SalesMoneyReadsController],
   providers: [
     ...[SalesMoney, SalesMoneyServices, SalesMoneyScope, SalesMoneyReads, SalesFamilyQueries],
-    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService],
+    ...[SalesChatReceipts, SalesChatFiles, ThreadMediaService, SalesMoneySettings],
   ],
 })
 export class SalesMoneyModule {}

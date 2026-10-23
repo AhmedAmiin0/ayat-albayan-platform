@@ -1,5 +1,5 @@
 // Fixtures of the sales money HTTP tests (test-only, excluded from the build).
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { paymentRow, STUDENT_ID, SUB_ID, subRow, WEEKLY_SA } from '../subscriptions/money.fakes';
 import type { Mocks } from '../subscriptions/test-app';
 import { SALES_A } from '../subscriptions/test-app';

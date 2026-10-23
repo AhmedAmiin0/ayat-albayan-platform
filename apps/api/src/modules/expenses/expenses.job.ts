@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { ExpensesQueries } from './expenses.queries';
+import { ExpensesSettings } from './expenses.settings';
 
 const EVERY_MS = 6 * 3_600_000;
 /** Not on boot: every API test boots AppModule (the AlertsJob rule). */
@@ -25,7 +25,7 @@ export class ExpensesJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   constructor(
     private readonly expenses: ExpensesQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: ExpensesSettings,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -40,7 +40,7 @@ export class ExpensesJob implements OnApplicationBootstrap, OnModuleDestroy {
   /** Never throws; the number of drafts written. */
   async runOnce(now = new Date()): Promise<number> {
     try {
-      const { academy_timezone: tz } = await this.settings.all();
+      const { academy_timezone: tz } = await this.settings.read();
       return await this.expenses.createRecurringDrafts(nextMonthStart(now, tz));
     } catch (e) {
       this.log.error(`recurring expenses failed: ${String(e)}`);

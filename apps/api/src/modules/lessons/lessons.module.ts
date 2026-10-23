@@ -15,6 +15,7 @@ import { LessonStore } from './lesson-store';
 import { LessonViews } from './lesson-views';
 import { LessonsController } from './lessons.controller';
 import { LessonsQueries } from './lessons.queries';
+import { LessonsSettings } from './lessons.settings';
 import { OverviewQueries } from './overview/overview.queries';
 import { OverviewService } from './overview/overview.service';
 import { RescheduleOneService } from './reschedule-one.service';
@@ -59,6 +60,7 @@ import { TeacherMeQueries } from './teacher-me.queries';
     LessonTimeService,
     LessonViews,
     LessonsQueries,
+    LessonsSettings,
     OverviewQueries,
     OverviewService,
     ProposalDecisionService,

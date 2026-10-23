@@ -4,10 +4,10 @@ import {
   type OnApplicationBootstrap,
   type OnModuleDestroy,
 } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { addDays } from './horizon';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleQueries } from './schedule.queries';
+import { SchedulingSettings } from './scheduling.settings';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
@@ -30,7 +30,7 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   constructor(
     private readonly rules: ScheduleQueries,
     private readonly generator: OccurrenceGenerator,
-    private readonly settings: SettingsService,
+    private readonly settings: SchedulingSettings,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -46,7 +46,7 @@ export class HorizonJob implements OnApplicationBootstrap, OnModuleDestroy {
   async runOnce(now = new Date()): Promise<RunSummary> {
     const summary: RunSummary = { rules: 0, inserted: 0, failed: 0, ended: 0 };
     try {
-      const weeks = await this.settings.bookingHorizonWeeks();
+      const weeks = (await this.settings.read()).booking_horizon_weeks;
       // UTC yesterday: every tz's local date is at least this, so no rule ends a day early.
       const today = addDays(now.toISOString().slice(0, 10), -1);
       summary.ended = await this.rules.endExpired(today);

@@ -1,6 +1,5 @@
 import { z } from 'zod';
-import type { JoinWindowConfig } from '../settings/public.js';
-import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow } from './join-window.js';
+import { DEFAULT_JOIN_WINDOW, joinWindow, type JoinWindow, type JoinWindowConfig } from './join-window.js';
 import {
   MAX_MEETING_INVITEES,
   meetingDurationSchema,

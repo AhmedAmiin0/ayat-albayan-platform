@@ -49,7 +49,7 @@ describe('settingsUpdateSchema (generated from the registry)', () => {
   });
 
   it('settingZod builds one field', () => {
-    expect(settingZod({ section: 'schedule', type: 'int', default: 1, min: 1, max: 2, labelKey: 'x' }).safeParse(3).success).toBe(false);
+    expect(settingZod({ type: 'int', default: 1, min: 1, max: 2, labelKey: 'x' }).safeParse(3).success).toBe(false);
   });
 
   it('settingsChanges maps camelCase → snake_case, only the sent keys', () => {

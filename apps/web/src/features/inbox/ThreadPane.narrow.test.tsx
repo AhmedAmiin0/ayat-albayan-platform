@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { render, screen, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { meQuery, type Me } from '@/features/auth/me';
-import { SETTINGS } from '@/features/messaging/settings-fixture';
+import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n';
 import { detail, lead, message, PHONE, template } from './inbox-fixture';
 import { InboxModeContext } from './mode';

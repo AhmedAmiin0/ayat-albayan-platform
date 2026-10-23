@@ -9,6 +9,7 @@ import { PaymentInputs } from './payment-inputs';
 import { PaymentsController } from './payments.controller';
 import { PaymentsQueries } from './payments.queries';
 import { PaymentsService } from './payments.service';
+import { PaymentsSettings } from './payments.settings';
 import { ReceiptsService } from './receipts.service';
 
 /**
@@ -18,7 +19,7 @@ import { ReceiptsService } from './receipts.service';
 @Module({
   imports: [SubscriptionsModule, FxModule, InvoicesModule],
   controllers: [PaymentsController],
-  providers: [PaymentInputs, PaymentsQueries, PaymentsService, ReceiptsService, PaymentFiles, PaymentAttachments, PaymentAttachmentsQueries],
+  providers: [PaymentInputs, PaymentsQueries, PaymentsService, PaymentsSettings, ReceiptsService, PaymentFiles, PaymentAttachments, PaymentAttachmentsQueries],
   // The salesperson's bank transfer from the chat reuses them (sales-money); her own files (/sales/me, assistant-pay).
   exports: [PaymentsService, ReceiptsService, PaymentAttachments],
 })

@@ -1,11 +1,14 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
+import { fakeSettings } from '../../common/settings/settings.fakes';
 import { fakeDb } from '../guardians/fake-db';
 import { SendGate } from './send-gate';
+import { WhatsappSettings } from './whatsapp.settings';
 
-const settings = { all: vi.fn() };
-const gate = () => new SendGate(settings as unknown as SettingsService, fakeDb({ messages: [{ count: 3 }] }).db);
+// A full fake store (registry defaults); each test stubs what all() answers next.
+const store = fakeSettings();
+const all = vi.mocked(store.all);
+const gate = () => new SendGate(new WhatsappSettings(store), fakeDb({ messages: [{ count: 3 }] }).db);
 
 describe('SendGate.view restricted flag (WA_ALLOWED_RECIPIENTS, docs/12 §13.5)', () => {
   afterEach(() => {
@@ -35,7 +38,7 @@ describe('SendGate.view restricted flag (WA_ALLOWED_RECIPIENTS, docs/12 §13.5)'
     vi.stubEnv('WA_WABA_ID', 'stub-waba');
     vi.stubEnv('WA_ACCESS_TOKEN', 'stub-token');
     vi.stubEnv('WA_ALLOWED_RECIPIENTS', '+201001234567');
-    settings.all.mockResolvedValue({ ...SETTING_DEFAULTS, messaging_enabled: true });
+    all.mockResolvedValue({ ...SETTING_DEFAULTS, messaging_enabled: true });
     await expect(gate().view()).resolves.toEqual({ open: true, reason: null, queued: 3, restricted: true });
   });
 });

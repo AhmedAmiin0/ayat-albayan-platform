@@ -1,8 +1,8 @@
 import { DEFAULT_DURATION } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { AvailabilityQuery } from '../teachers/availability/availability.query';
 import { FollowUpsQueries } from './follow-ups.queries';
+import { FollowUpsSettings } from './follow-ups.settings';
 
 const HOUR = 60 * 60_000;
 
@@ -18,11 +18,11 @@ export class FollowUpSlots {
   constructor(
     private readonly queries: FollowUpsQueries,
     private readonly availability: AvailabilityQuery,
-    private readonly settings: SettingsService,
+    private readonly settings: FollowUpsSettings,
   ) {}
 
   async freeStarts(now: Date): Promise<Date[]> {
-    const s = await this.settings.all();
+    const s = await this.settings.read();
     const from = new Date(now.getTime() + s.follow_up_slots_from_hours * HOUR);
     const to = new Date(now.getTime() + s.follow_up_slots_to_days * 24 * HOUR);
     if (to <= from) return [];

@@ -1,6 +1,5 @@
 import type { Conflict, SlotsResponse, SlotView } from '@ab/shared';
 import { HttpStatus, Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { findConflicts } from '../scheduling/conflicts';
 import type { Occurrence } from '../scheduling/occurrences';
 import { freeSlots } from '../teachers/availability/free-slots';
@@ -8,6 +7,7 @@ import { DAY } from '../teachers/availability/zoned-time';
 import type { SlotsQuery } from './booking.dto';
 import { domainError } from './booking.errors';
 import { BookingQueries } from './booking.queries';
+import { BookingSettings } from './booking.settings';
 import { ConflictContext } from './conflict-context';
 
 export const MAX_SLOT_RANGE_DAYS = 14;
@@ -38,7 +38,7 @@ export class SlotsService {
   constructor(
     private readonly queries: BookingQueries,
     private readonly context: ConflictContext,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   async slots(q: SlotsQuery): Promise<SlotsResponse> {
@@ -51,7 +51,7 @@ export class SlotsService {
     const studentIds = q.studentIds ?? [];
     const exclude = { excludeLessonId: q.excludeLessonId, excludeCourse: q.excludeCourse };
     const rows = await this.context.load({ teacherId: teacher.id, studentIds, from, to, ...exclude });
-    const alwaysOpen = await this.settings.get('teachers_always_available');
+    const alwaysOpen = (await this.settings.read()).teachers_always_available;
     const stepMin = q.stepMin ?? (alwaysOpen ? ALWAYS_STEP_MIN : q.durationMin);
     const { durationMin } = q;
     // Candidates ignore time-off and lessons on purpose; findConflicts reports them per slot.

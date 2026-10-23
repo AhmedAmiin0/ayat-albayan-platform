@@ -1,12 +1,13 @@
 import type { TemplateStatus, WaLine } from '../enums/index.js';
-import type { AcademySettings } from '../settings/index.js';
 import { NOTIFICATION_CATALOGUE, type NotificationKey } from './catalogue.js';
+import type { CatalogueSettings } from './catalogue-settings.js';
 import type { NotificationEntry } from './catalogue.types.js';
 import type { NotificationBlocker, NotificationEntryView, NotificationTemplateView } from './catalogue-views.js';
 
 /** What decides a row's state today: the settings, the send gate and the template registry. */
 export interface CatalogueInputs {
-  settings: AcademySettings;
+  /** Only the catalogue's slice is read (a full AcademySettings fits). */
+  settings: CatalogueSettings;
   /** GET /messages/gate's reason: not_configured = no notifications line on the server. */
   gateReason: 'not_configured' | 'switch_off' | null;
   templates: ReadonlyMap<string, { status: TemplateStatus; line: WaLine }>;
@@ -27,7 +28,7 @@ function whatsappBlocker(entry: NotificationEntry, inputs: CatalogueInputs, temp
   return null;
 }
 
-function timingOf(entry: NotificationEntry, settings: AcademySettings): NotificationEntryView['timing'] {
+function timingOf(entry: NotificationEntry, settings: CatalogueSettings): NotificationEntryView['timing'] {
   if (!entry.timing) return null;
   const value = settings[entry.timing];
   return { key: entry.timing, value: Array.isArray(value) ? value.join('، ') : String(value) };

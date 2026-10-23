@@ -12,6 +12,7 @@ import { SalesScopes } from './sales-scope';
 import { SalesController } from './sales.controller';
 import { SalesQueries } from './sales.queries';
 import { SalesService } from './sales.service';
+import { SalesSettings } from './sales.settings';
 
 /**
  * The sales role: a salesperson's own leads, subscriptions (no money, with their history) and meetings,
@@ -22,7 +23,7 @@ import { SalesService } from './sales.service';
 @Module({
   controllers: [SalesController, SalesAcademyController, SalesAdminController],
   providers: [
-    ...[SalesQueries, SalesService, SalesScopes, SalesAssignQueries, SalesAssignService],
+    ...[SalesSettings, SalesQueries, SalesService, SalesScopes, SalesAssignQueries, SalesAssignService],
     ...[SalesAcademyQueries, SalesHistoryQueries, SalesAcademyService, SalesScheduleQueries, SalesScheduleService],
   ],
   exports: [SalesQueries, SalesScopes, SalesAssignService],

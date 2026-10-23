@@ -1,8 +1,9 @@
 import { describe, expect, it, vi } from 'vitest';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { AlertsQueries } from './alerts.queries';
 import { SubscriptionAlertsService, type AlertsEnv } from './alerts.service';
 import type { PackagesService, StudentState } from './packages.service';
+import { SubscriptionsSettings } from './subscriptions.settings';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const RECIPIENT = { studentName: 'سهيلة', guardianId: 'g1', phone: '+966500000001' };
@@ -28,7 +29,7 @@ function setup(states: Record<string, StudentState | Error>, auto = true) {
     queueRenewal: vi.fn(async () => undefined),
     closeTasks: vi.fn(async () => undefined),
   };
-  const settings = { all: vi.fn(async () => ({ ...SETTING_DEFAULTS, auto_messages_enabled: auto })) };
+  const settings = readerOf(SubscriptionsSettings, { auto_messages_enabled: auto });
   const push = { notifyAdmins: vi.fn(async () => undefined) };
   const renewal = { apply: vi.fn(async () => null) };
   const service = new SubscriptionAlertsService(

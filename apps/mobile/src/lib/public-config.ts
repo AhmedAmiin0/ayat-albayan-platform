@@ -1,7 +1,10 @@
 import {
   joinWindowConfig,
-  PUBLIC_SETTING_DEFAULTS,
+  PUBLIC_CONFIG_PATH,
+  PUBLIC_CONFIG_QUERY_KEY,
+  PUBLIC_CONFIG_STALE_MS,
   uploadMaxBytes,
+  withPublicDefaults,
   type JoinWindowConfig,
   type PublicConfig,
   type PublicSettings,
@@ -16,9 +19,9 @@ import { apiFetch } from './api';
  * the registry defaults are used, so nothing waits on it.
  */
 export const publicConfigQuery = queryOptions({
-  queryKey: ['settings', 'public'],
-  queryFn: () => apiFetch<PublicConfig>('/settings/public'),
-  staleTime: 5 * 60_000,
+  queryKey: PUBLIC_CONFIG_QUERY_KEY,
+  queryFn: () => apiFetch<PublicConfig>(PUBLIC_CONFIG_PATH),
+  staleTime: PUBLIC_CONFIG_STALE_MS,
 });
 
 /** Used only where no QueryClientProvider is mounted (a row rendered on its own): never fetches. */
@@ -32,7 +35,7 @@ const idleClient = new QueryClient({ defaultOptions: { queries: { gcTime: Infini
 export function usePublicConfig(): PublicSettings {
   const client = useContext(QueryClientContext);
   const { data } = useQuery({ ...publicConfigQuery, enabled: client !== undefined }, client ?? idleClient);
-  return { ...PUBLIC_SETTING_DEFAULTS, ...data };
+  return withPublicDefaults(data);
 }
 
 /**

@@ -2,7 +2,7 @@ import type { SendGateView } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
 import { allowedRecipients, loadEnv, sendingAllowed, whatsappEnv, type Env } from '../../env';
-import { SettingsService } from '../../common/settings/settings.service';
+import { WhatsappSettings } from './whatsapp.settings';
 
 /**
  * The one send gate (docs/12 §3.1): WhatsApp configured and the admin's kill switch
@@ -13,7 +13,7 @@ import { SettingsService } from '../../common/settings/settings.service';
 @Injectable()
 export class SendGate {
   constructor(
-    private readonly settings: SettingsService,
+    private readonly settings: WhatsappSettings,
     @Inject(DB) private readonly db: Db,
   ) {}
 
@@ -24,12 +24,12 @@ export class SendGate {
 
   async open(): Promise<boolean> {
     if (!sendingAllowed(this.env, true)) return false; // WhatsApp not configured: skip the DB read
-    return sendingAllowed(this.env, (await this.settings.all()).messaging_enabled);
+    return sendingAllowed(this.env, (await this.settings.read()).messaging_enabled);
   }
 
   /** settings.auto_messages_enabled: job-made reminders, follow-ups and renewals go out only when ON. */
   async automaticOn(): Promise<boolean> {
-    return (await this.settings.all()).auto_messages_enabled;
+    return (await this.settings.read()).auto_messages_enabled;
   }
 
   /**
@@ -44,7 +44,7 @@ export class SendGate {
   /** Which gate is closed, for the admin: WhatsApp config, or their own switch. */
   async state(): Promise<Omit<SendGateView, 'queued'>> {
     if (!whatsappEnv(this.env)) return { open: false, reason: 'not_configured' };
-    const on = (await this.settings.all()).messaging_enabled === true;
+    const on = (await this.settings.read()).messaging_enabled === true;
     return on ? { open: true, reason: null } : { open: false, reason: 'switch_off' };
   }
 

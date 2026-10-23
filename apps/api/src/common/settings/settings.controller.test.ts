@@ -1,13 +1,13 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { FastifyAdapter, type NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test } from '@nestjs/testing';
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AppModule } from '../../app.module';
 import { AuditService } from '../audit/audit.service';
+import { SINGLETON_ENTITY_ID } from '../audit/singleton-entity';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../auth/auth.guard';
 import type { AuthUser } from '../auth/verify-token';
-import { CustomConfigService } from '../config/custom-config.service';
 import { SettingsService } from './settings.service';
-import { SETTING_DEFAULTS } from './settings.values';
 
 const USERS: Record<string, AuthUser> = {
   admin: { id: 'a0000000-0000-4000-8000-000000000001', email: null, role: 'admin' },
@@ -18,8 +18,7 @@ const verify: TokenVerifier = async (token) => {
   if (!user) throw new Error('bad token');
   return user;
 };
-const settings = { all: vi.fn(), write: vi.fn(), publicView: vi.fn() };
-const custom = { publicRows: vi.fn() };
+const settings = { all: vi.fn(), write: vi.fn() };
 const audit = { record: vi.fn() };
 
 describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH-02)', () => {
@@ -31,7 +30,6 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     const mod = await Test.createTestingModule({ imports: [AppModule] })
       .overrideProvider(PERMISSION_RESOLVER).useValue(systemResolver).overrideProvider(TOKEN_VERIFIER).useValue(verify)
       .overrideProvider(SettingsService).useValue(settings)
-      .overrideProvider(CustomConfigService).useValue(custom)
       .overrideProvider(AuditService).useValue(audit)
       .compile();
     app = mod.createNestApplication<NestFastifyApplication>(new FastifyAdapter());
@@ -42,7 +40,6 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
   beforeEach(() => {
     vi.resetAllMocks();
     settings.all.mockResolvedValue(SETTING_DEFAULTS);
-    custom.publicRows.mockResolvedValue([]);
   });
 
   it('admins read them; late-cancel is OFF (null) by default; teachers get 403', async () => {
@@ -68,7 +65,7 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     expect((await call('PATCH', 'admin', { autoMessagesEnabled: true })).json()).toEqual(after);
     expect(settings.write).toHaveBeenCalledWith({ auto_messages_enabled: true }, USERS['admin']?.id);
     expect(audit.record).toHaveBeenCalledWith(
-      expect.objectContaining({ entity: 'settings', action: 'update', before: SETTING_DEFAULTS, after }),
+      expect.objectContaining({ entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'update', before: SETTING_DEFAULTS, after }),
     );
     expect((await call('PATCH', 'teacher', { autoMessagesEnabled: true })).statusCode).toBe(403);
   });
@@ -89,24 +86,6 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     );
     expect((await call('PATCH', 'admin', { reportingCurrency: 'sar' })).statusCode).toBe(400);
     expect((await call('PATCH', 'admin', { reportTeacherEditHours: 169 })).statusCode).toBe(400);
-  });
-
-  it('GET /settings/public needs no login and returns only the public keys', async () => {
-    settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
-    const res = await app.inject({ method: 'GET', url: '/settings/public' });
-    expect([res.statusCode, res.json()]).toEqual([200, { join_opens_before_min: 10, custom: {} }]);
-    expect(res.headers['cache-control']).toBe('public, max-age=60');
-  });
-
-  it('GET /settings/public adds the custom entries flagged public, never a private or shadowing row', async () => {
-    settings.publicView.mockResolvedValue({ join_opens_before_min: 10 });
-    custom.publicRows.mockResolvedValue([
-      { key: 'promo', value: { text: 'hi' }, is_public: true },
-      { key: 'internal.note', value: 'x', is_public: false },
-      { key: 'messaging_enabled', value: 'shadow', is_public: true },
-    ]);
-    const res = await app.inject({ method: 'GET', url: '/settings/public' });
-    expect(res.json()).toEqual({ join_opens_before_min: 10, custom: { promo: { text: 'hi' } } });
   });
 
   it('PATCH validates the new keys from the registry (E.164, min/max)', async () => {

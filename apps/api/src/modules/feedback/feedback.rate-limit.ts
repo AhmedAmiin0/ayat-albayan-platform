@@ -1,6 +1,6 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { HttpException, HttpStatus } from '@nestjs/common';
-import type { SettingsService } from '../../common/settings/settings.service';
+import type { FeedbackSettings } from './feedback.settings';
 
 const MIN_MS = 60_000;
 /** The registry default (10 min): join and activity limits keep it; the feedback form reads the setting. */
@@ -45,11 +45,11 @@ export class PublicFeedbackLimit {
   private readonly perToken = new WindowCounter(10);
   private readonly perIp = new WindowCounter(60);
 
-  constructor(private readonly settings?: Pick<SettingsService, 'all'>) {}
+  constructor(private readonly settings?: Pick<FeedbackSettings, 'read'>) {}
 
   /** assert() with the window read from the settings (cached). */
   async check(input: { ip: string; token: string }, now = Date.now()): Promise<void> {
-    const minutes = this.settings ? (await this.settings.all()).feedback_rate_window_min : SETTING_DEFAULTS.feedback_rate_window_min;
+    const minutes = this.settings ? (await this.settings.read()).feedback_rate_window_min : SETTING_DEFAULTS.feedback_rate_window_min;
     this.assert({ ...input, windowMs: minutes * MIN_MS }, now);
   }
 

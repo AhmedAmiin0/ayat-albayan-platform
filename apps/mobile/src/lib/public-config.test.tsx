@@ -2,7 +2,7 @@ import { PUBLIC_SETTING_DEFAULTS, type LessonView } from '@ab/shared';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import { livePhase } from '@/live/live-filter';
 import { createTestQueryClient, queryWrapper } from '@/test/query';
-import { useJoinWindow, usePublicConfig, useUploadMaxBytes } from './public-config';
+import { publicConfigQuery, useJoinWindow, usePublicConfig, useUploadMaxBytes } from './public-config';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -11,6 +11,11 @@ jest.mock('@/lib/api', () => ({
 }));
 
 beforeEach(() => jest.clearAllMocks());
+
+test('keeps the cache key and the 5-minute stale time the admin save invalidates', () => {
+  expect(publicConfigQuery.queryKey).toEqual(['settings', 'public']);
+  expect(publicConfigQuery.staleTime).toBe(300_000);
+});
 
 test('outside a QueryClientProvider: the registry defaults, and no request', async () => {
   const { result } = await renderHook(() => usePublicConfig());

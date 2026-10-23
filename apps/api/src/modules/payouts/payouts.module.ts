@@ -7,6 +7,7 @@ import { PayoutsLedger } from './payouts.ledger';
 import { PayoutsPayment } from './payouts.payment';
 import { PayoutsQueries } from './payouts.queries';
 import { PayoutsService } from './payouts.service';
+import { PayoutsSettings } from './payouts.settings';
 
 /**
  * Teacher payouts: generate a month, approve, pay; a teacher reads own. R-PAY-02, R-TCH-04.
@@ -15,7 +16,7 @@ import { PayoutsService } from './payouts.service';
 @Module({
   imports: [TeachersModule, TeacherEarningsModule],
   controllers: [PayoutsController, PayoutPaymentController, TeacherPayoutsController],
-  providers: [PayoutsGenerator, PayoutsLedger, PayoutsPayment, PayoutsQueries, PayoutsService],
+  providers: [PayoutsSettings, PayoutsGenerator, PayoutsLedger, PayoutsPayment, PayoutsQueries, PayoutsService],
   exports: [PayoutsQueries, PayoutsService],
 })
 export class PayoutsModule {}

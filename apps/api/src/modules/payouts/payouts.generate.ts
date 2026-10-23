@@ -2,10 +2,10 @@ import type { Json } from '@ab/db';
 import { monthStart, payoutStatuses, type PayoutGenerateResult } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import { AuditService } from '../../common/audit/audit.service';
-import { SettingsService } from '../../common/settings/settings.service';
 import { toPayoutView } from './payouts.mapper';
 import { monthWindow, planPayout, type PayoutAction } from './payouts.plan';
 import { PayoutsQueries, type PayoutRow } from './payouts.queries';
+import { PayoutsSettings } from './payouts.settings';
 
 type Ctx = { teacherId: string; month: string; actorId: string };
 
@@ -18,12 +18,12 @@ type Ctx = { teacherId: string; month: string; actorId: string };
 export class PayoutsGenerator {
   constructor(
     private readonly payouts: PayoutsQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: PayoutsSettings,
     private readonly audit: AuditService,
   ) {}
 
   async generate(month: string, actorId: string): Promise<PayoutGenerateResult> {
-    const s = await this.settings.all();
+    const s = await this.settings.read();
     const statuses = payoutStatuses({ countLate: s.payout_count_late, countNoShow: s.payout_count_no_show });
     const first = monthStart(month);
     const existing = new Map((await this.payouts.forMonth(first)).map((r) => [r.teacher_id, r]));

@@ -3,8 +3,8 @@ import { AVATAR_PNG } from '../support/account';
 import { ar, expect, test } from '../support/fixtures';
 import { openThread } from '../support/inbox';
 import { kapsoInbound, stubRequests, switchNotifications } from '../support/kapso';
+import { clearQueue } from '../support/message-queue';
 import { freshDigits, messagesFor } from '../support/messages';
-import { clearQueue } from '../support/settings';
 import { NOTIF_PN, sentVia } from '../support/wa-lines';
 import { setMessaging, stubReset } from '../support/wa-stub';
 

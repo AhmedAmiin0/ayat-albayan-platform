@@ -1,8 +1,8 @@
 import type { Gender, Program } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
 import { dbError } from '../teachers/http';
+import { BookingSettings } from './booking.settings';
 
 export type TeacherOptionRow = {
   id: string;
@@ -22,7 +22,7 @@ export type TeacherFilter = { program: Program; gender?: Gender };
 export class TeacherOptionsQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   /** Active teachers teaching `program`, of `gender` when given, by name. */
@@ -40,12 +40,12 @@ export class TeacherOptionsQueries {
 
   /** settings.meeting_link_auto: the default of a teacher whose meeting_mode is null. */
   async academyAuto(): Promise<boolean> {
-    return (await this.settings.all()).meeting_link_auto;
+    return (await this.settings.read()).meeting_link_auto;
   }
 
   /** Teachers among `teacherIds` with at least one weekly availability row (all of them while 24/7 is on). */
   async withAvailability(teacherIds: readonly string[]): Promise<Set<string>> {
-    if (await this.settings.get('teachers_always_available')) return new Set(teacherIds);
+    if ((await this.settings.read()).teachers_always_available) return new Set(teacherIds);
     const { data, error } = await this.db
       .from('teacher_availability')
       .select('teacher_id')

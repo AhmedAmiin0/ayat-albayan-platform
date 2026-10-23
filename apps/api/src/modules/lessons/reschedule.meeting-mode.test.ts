@@ -1,9 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { ConflictChecker } from '../scheduling/conflict-checker';
-import { fakeSettings, ruleRow } from '../scheduling/scheduling.fakes';
+import { ruleRow } from '../scheduling/scheduling.fakes';
 import type { ScheduleQueries } from '../scheduling/schedule.queries';
 import type { TeachersQueries } from '../teachers/teachers.queries';
 import { ADMIN, appliedChange, fakeStore, LESSON_ID, lessonRow, OTHER_TEACHER_ID, TEACHER_ID } from './lessons.fakes';
+import { LessonsSettings } from './lessons.settings';
 import { RescheduleOneService } from './reschedule-one.service';
 import { RescheduleRuleService } from './reschedule-rule.service';
 import { RulePlanner } from './rule-planner';
@@ -51,7 +53,7 @@ describe('reschedule — the new teacher decides the confirmation link', () => {
   it('the whole rule moved to a platform substitute: plain confirmation', async () => {
     const { store, writer, queries } = fakeStore(lessonRow());
     queries.meetingLinkAuto.mockImplementation(async ({ teacherId }) => teacherId === OTHER_TEACHER_ID);
-    const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersQueries, fakeSettings(2));
+    const planner = new RulePlanner(rules as unknown as ScheduleQueries, teachers as unknown as TeachersQueries, readerOf(LessonsSettings, { booking_horizon_weeks: 2 }));
     const service = new RescheduleRuleService(store, planner, checker as unknown as ConflictChecker);
     const newRule = { teacherId: OTHER_TEACHER_ID, byday: [1, 3], startTimeLocal: '18:30', tz: 'Asia/Riyadh', durationMin: 60 as const, startsOn: '2026-10-12' };
     await service.reschedule({ lessonId: LESSON_ID, body: { scope: 'rule', newRule }, actor: ADMIN });

@@ -1,8 +1,8 @@
 import type { MakeupCandidate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
 import { dbError } from '../teachers/http';
+import { BookingSettings } from './booking.settings';
 
 const DAY_MS = 86_400_000;
 const LIMIT = 20;
@@ -20,11 +20,11 @@ const SELECT =
 export class MakeupCandidates {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   async list(studentId: string): Promise<MakeupCandidate[]> {
-    const { makeup_window_days: days } = await this.settings.all();
+    const { makeup_window_days: days } = await this.settings.read();
     const since = new Date(Date.now() - days * DAY_MS).toISOString();
     const { data, error } = await this.db
       .from('lessons')
