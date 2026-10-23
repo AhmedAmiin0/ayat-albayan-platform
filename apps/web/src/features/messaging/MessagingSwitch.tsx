@@ -7,8 +7,8 @@ import { FormAlert } from '@/components/ui/form-alert';
 import { NuqtaGlyph } from '@/components/ui/nuqta-glyph';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import { useSettingSwitch } from '@/lib/use-setting-switch';
 import { sendGateQuery } from './api';
+import { useGateSwitch } from './gate-api';
 import { sendingChip } from './sending-chip';
 import { queuedText, ServerGateNote } from './ServerGateNote';
 
@@ -29,7 +29,7 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
   const gate = useQuery(sendGateQuery);
   const [confirming, setConfirming] = useState<'on' | 'off' | null>(null);
   const enabled = settings.messaging_enabled;
-  const save = useSettingSwitch({
+  const save = useGateSwitch({
     onSaved: async () => {
       setConfirming(null);
       await queryClient.invalidateQueries({ queryKey: sendGateQuery.queryKey });
@@ -48,7 +48,7 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
             size="sm"
             variant="ghost"
             className="justify-self-start"
-            onClick={() => save.mutate({ crmCutoverDone: true })}
+            onClick={() => save.mutate({ cutover: true })}
           >
             {s.crmDone}
           </Button>
@@ -62,7 +62,7 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
             size="sm"
             variant="ghost"
             disabled={save.isPending}
-            onClick={() => save.mutate({ crmCutoverDone: false })}
+            onClick={() => save.mutate({ cutover: false })}
           >
             {s.crmUndo}
           </Button>
@@ -104,7 +104,7 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
           title={s.enableTitle}
           description={s.enableConfirm}
           yes={s.enableYes}
-          onYes={() => save.mutate({ messagingEnabled: true })}
+          onYes={() => save.mutate({ sending: true })}
           onClose={() => setConfirming(null)}
           pending={save.isPending}
           failed={save.isError}
@@ -122,7 +122,7 @@ export function MessagingSwitch({ settings }: { settings: AcademySettings }) {
           title={s.disableTitle}
           description={s.disableConfirm}
           yes={s.disableYes}
-          onYes={() => save.mutate({ messagingEnabled: false })}
+          onYes={() => save.mutate({ sending: false })}
           onClose={() => setConfirming(null)}
           pending={save.isPending}
           failed={save.isError}

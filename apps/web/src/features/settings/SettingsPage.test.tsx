@@ -42,7 +42,7 @@ describe('messaging kill switch (docs/12 §3.1)', () => {
     expect(apiSend).not.toHaveBeenCalled();
     apiSend.mockResolvedValue({ ...SETTINGS, messaging_enabled: true });
     fireEvent.click(within(dialog).getByRole('button', { name: s.enableYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { messagingEnabled: true }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/sending', { on: true, confirmText: s.enableYes }));
     expect(await screen.findByText(s.on)).toBeTruthy();
     expect(screen.queryByRole('dialog')).toBeNull();
   });
@@ -58,7 +58,7 @@ describe('messaging kill switch (docs/12 §3.1)', () => {
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: s.disable }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: s.disableYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { messagingEnabled: false }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/sending', { on: false }));
     fireEvent.click(await screen.findByRole('button', { name: s.enableTitle }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: t.common.cancel }));
     expect(screen.queryByRole('dialog')).toBeNull();
@@ -107,7 +107,7 @@ describe('academy settings form', () => {
     renderPage(false);
     apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: true });
     fireEvent.click(await screen.findByRole('button', { name: s.crmDone }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { crmCutoverDone: true }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/cutover', { done: true }));
     await waitFor(() => expect(screen.queryByText(s.crmWarning)).toBeNull());
   });
 
@@ -123,7 +123,7 @@ describe('academy settings form', () => {
     expect(await screen.findByText(s.crmMoved)).toBeTruthy();
     apiSend.mockResolvedValue({ ...SETTINGS, crm_cutover_done: false });
     fireEvent.click(screen.getByRole('button', { name: s.crmUndo }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { crmCutoverDone: false }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/cutover', { done: false }));
     expect((await screen.findAllByText(s.crmWarning)).length).toBeGreaterThan(0);
   });
 });

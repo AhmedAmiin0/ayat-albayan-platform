@@ -1,0 +1,39 @@
+name: owned-keys-guard
+# docs/26 §5 (26-P0): no migration newer than 20261023000621 may write a code-owned settings key
+# (messaging_enabled, auto_messages_enabled, crm_cutover_done, comms_source, google_sync_enabled,
+# google_sync_mode). They change only through their module routes, so a migration can never turn sending
+# on for staging's real families. Read-only and secret-free: safe for any PR, including forks.
+on:
+  pull_request:
+    paths:
+      - packages/db/supabase/migrations/**
+      - tools/scripts/owned-keys-check*
+      - .github/workflows/owned-keys-guard.yml
+  push:
+    branches: [develop, main]
+    paths:
+      - packages/db/supabase/migrations/**
+      - tools/scripts/owned-keys-check*
+      - .github/workflows/owned-keys-guard.yml
+
+permissions:
+  contents: read
+
+concurrency:
+  group: owned-keys-guard-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          package-manager-cache: false
+      - name: No migration writes a code-owned settings key
+        run: node tools/scripts/owned-keys-check.mjs
+      - name: The check's own tests
+        run: node --test tools/scripts/owned-keys-check.test.mjs
