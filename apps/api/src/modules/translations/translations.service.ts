@@ -4,6 +4,7 @@ import { createHash } from 'node:crypto';
 import { ar } from '../../common/i18n/server-text';
 import { DEFAULTS, listKeys, overrideProblem, type OverrideMaps } from './translations.catalog';
 import { TranslationsQueries, type OverrideRow, type OverrideWrite } from './translations.queries';
+import { assertNotValuesOwned } from './values-owned';
 
 /** Overrides saved on another API instance reach this one within this interval. */
 export const REFRESH_MS = 5 * 60_000;
@@ -71,18 +72,23 @@ export class TranslationsService implements OnApplicationBootstrap, OnModuleDest
     return listKeys(query, this.maps);
   }
 
-  /** 404 unknown key; 400 `{ message: 'placeholders_missing', missing }` when slots are dropped. */
+  /**
+   * 404 unknown key; 409 `{ code: 'edit_on_values', settingKey }` for the ar text of a settings hint
+   * (edited on «القيم», docs/26 §3); 400 `{ message: 'placeholders_missing', missing }` when slots are dropped.
+   */
   async save(w: OverrideWrite): Promise<void> {
     const problem = overrideProblem(w.locale, w.key, w.value);
     if (problem?.kind === 'unknown_key') throw new NotFoundException({ message: 'unknown_key' });
+    assertNotValuesOwned(w.locale, w.key);
     if (problem) throw new BadRequestException({ message: problem.kind, missing: problem.missing });
     await this.queries.upsert(w);
     await this.refresh();
   }
 
-  /** Back to the bundled text (deleting a key that has no override is a no-op). */
+  /** Back to the bundled text (deleting a key that has no override is a no-op). 409 as save(). */
   async restore(locale: Locale, key: string): Promise<void> {
     if (!Object.hasOwn(DEFAULTS[locale], key)) throw new NotFoundException({ message: 'unknown_key' });
+    assertNotValuesOwned(locale, key);
     await this.queries.remove(locale, key);
     await this.refresh();
   }

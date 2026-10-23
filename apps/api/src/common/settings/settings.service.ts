@@ -1,17 +1,19 @@
-import type { Json } from '@ab/db';
 import { publicSettings, readSettings, type AcademySettings, type PublicSettings } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import { ConfigStore } from '../config-store/config-store.service';
+import { DEFAULT_TTL_MS, SETTINGS_CACHE_MS } from '../config-store/config-store.types';
 import { DB, type Db } from '../db/db.module';
+import { writeLatest } from './settings-write';
 
-/** Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS). */
-export const SETTINGS_CACHE_MS = Symbol('SETTINGS_CACHE_MS');
-const DEFAULT_TTL_MS = 30_000;
+/** Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS), provided by ConfigStoreModule. */
+export { SETTINGS_CACHE_MS };
 
 /**
- * Academy settings (`settings` table, written by the service role; keys in the shared registry).
- * One query reads every row; the result is cached in memory for SETTINGS_CACHE_MS and dropped at
- * once by write() (PATCH /settings). Storage and cache only: a module reads its keys through its
- * typed reader (`modules/<m>/<m>.settings.ts`, common/settings/settings-slice.ts), which calls all().
+ * Academy settings (`settings` table, keys in the shared registry): the typed facade the module
+ * readers use. Reads stay on the legacy path (one query, `readSettings`, cached for SETTINGS_CACHE_MS)
+ * until GET /admin/config/parity has been empty for a week on staging (docs/26 §4); writes go through
+ * ConfigStore (config_set). Every ConfigStore invalidation drops this cache too. A module reads its keys
+ * through its typed reader (`modules/<m>/<m>.settings.ts`, common/settings/settings-slice.ts).
  */
 @Injectable()
 export class SettingsService {
@@ -20,7 +22,10 @@ export class SettingsService {
   constructor(
     @Inject(DB) private readonly db: Db,
     @Inject(SETTINGS_CACHE_MS) private readonly ttlMs: number = DEFAULT_TTL_MS,
-  ) {}
+    @Inject(ConfigStore) private readonly store: Pick<ConfigStore, 'fresh' | 'set' | 'onChange'>,
+  ) {
+    store.onChange(() => this.invalidate());
+  }
 
   /** Every setting, defaults filled in for missing or malformed rows (a copy: callers may spread it). */
   async all(now = Date.now()): Promise<AcademySettings> {
@@ -46,18 +51,13 @@ export class SettingsService {
   }
 
   /**
-   * PATCH /settings: writes the given keys, stamped with the admin. null removes the row, which
-   * reads back as the default (late_cancel_hours OFF): PostgREST cannot store a JSON null.
+   * PATCH /settings and the module writers: ONE config_set for every given key, stamped with the admin
+   * (last writer wins: current versions, retried once on a concurrent write). null is stored as JSON
+   * null, which reads back as the default (late_cancel_hours OFF); a row is never deleted.
    */
   async write(values: Partial<AcademySettings>, actorId: string): Promise<void> {
     try {
-      for (const [key, value] of Object.entries(values) as [string, Json][]) {
-        const { error } =
-          value === null
-            ? await this.db.from('settings').delete().eq('key', key)
-            : await this.db.from('settings').upsert({ key, value, updated_by: actorId });
-        if (error) throw new Error(`settings write failed: ${error.message}`);
-      }
+      await writeLatest(this.store, { values, actorId });
     } finally {
       this.invalidate();
     }

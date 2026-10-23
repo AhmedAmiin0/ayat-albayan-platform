@@ -4250,6 +4250,10 @@ export type Database = {
       booking_result: { Args: { p_rule: string }; Returns: Json };
       build_assistant_statement: { Args: { p_statement: string }; Returns: Json };
       change_course: { Args: { p: Json }; Returns: Json };
+      config_describe: {
+        Args: { actor: string; p_hint_key: string | null; p_key: string; p_text: string | null };
+        Returns: Json;
+      };
       config_seed: { Args: { entries: Json; registry_version: number }; Returns: Json };
       config_set: { Args: { actor: string; changes: Json }; Returns: Json };
       course_change_result: { Args: { p_first: string }; Returns: Json };
