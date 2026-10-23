@@ -1,3 +1,4 @@
+import '@/test/warm-rn';
 import { fireEvent, screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { createTestQueryClient, renderWithQuery } from '@/test/query';

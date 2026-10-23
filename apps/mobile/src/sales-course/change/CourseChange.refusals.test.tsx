@@ -1,3 +1,4 @@
+import '@/test/warm-rn';
 import { screen, waitFor } from '@testing-library/react-native';
 import { slot } from '@/booking/fixtures';
 import { dayStartUtc } from '@/booking/slots';
@@ -73,6 +74,7 @@ test('a course booked ahead (a renewal) is changed from its own first week: the 
   expect(await screen.findByText(t.booking.courseChange.upcoming)).toBeTruthy();
   await press('button', t.booking.courseChange.changeDays);
   expect(await screen.findByText(dayLine('2026-10-11T14:00:00.000Z', TZ))).toBeTruthy(); // Sunday 11 Oct 17:00
+  // The picks are seeded once the slots answer, a render after the day lines: wait for the check itself.
   expect(await screen.findByRole('checkbox', { name: '17:00', checked: true })).toBeTruthy();
   expect(screen.getByText(dayLine('2026-10-15T15:00:00.000Z', TZ))).toBeTruthy(); // Thursday 15 Oct 18:00
   const [read] = mockApiFetch.mock.calls.map((c: unknown[]) => String(c[0])).filter((p) => p.startsWith('/sales/booking/slots'));
