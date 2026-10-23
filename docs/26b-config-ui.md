@@ -19,7 +19,7 @@ fake data only): `docs/design/26-config/` — `hub.html`, `values.html`, `values
 ```
 
 - **Hub tiles** carry state, not just links: «القيم — 28 قيمة · 5 معدَّلة عن الافتراضي · 8 عامة»; «التواصل —
-  الإرسال متوقف» (struck glyph + word); «مزامنة Google — تجربة بدون كتابة»; «التكاملات — 2 بلا قيمة». The hub search
+  الإرسال متوقف» (struck glyph + word); «مزامنة Google — تجربة بدون كتابة»; «التكاملات — 3 خدمات مضبوطة · خدمة واحدة غير مضبوطة». The hub search
   covers labels, descriptions, keys and module pages, and jumps to the row or tab.
 - **Old links keep working** (docs/26 §4 compat): `/admin/settings#integrations` → `/admin/settings/integrations`
   (this also fixes today's non-scrolling anchor, 26a Part D §1.12); the Google OAuth callback and the
@@ -32,12 +32,12 @@ fake data only): `docs/design/26-config/` — `hub.html`, `values.html`, `values
 
 - **Toolbar:** search («ابحث بالاسم أو الوصف أو المفتاح»), group index (desktop: a fihris; 390px: a scrolling chip
   strip): الكل، الجدول والحلقات، الحلقات عبر الإنترنت، التقارير، الحسابات والدفعات، مستحقات المعلمين، الملفات
-  المرفوعة، الأكاديمية، الرسائل، المبيعات، السجلات والاحتفاظ، قيم مضافة، تُدار من صفحة أخرى; filters «المعدَّلة فقط»,
-  «العامة فقط».
+  المرفوعة، الأكاديمية، الرسائل، المبيعات، السجلات والاحتفاظ (28 values: 4 + 4 + 1 + 5 + 3 + 1 + 5 + 2 + 1 + 2), then
+  «قيم مخصصة» and «تُدار من صفحة أخرى» (14 rows); filters «المعدَّلة فقط», «العامة فقط» (8).
 - **Row:** label (Plex 600) · stored description (ink-2, «تعديل الوصف») · type-aware editor (number with unit and
   bounds «من 1 إلى 12», switch, choice, time zone, phone in E.164 inside `<bdi dir="ltr">`, text, list of numbers,
   a small fieldset for a fixed shape, a switch + number for a nullable value such as late cancellation) · «الافتراضي:
-  4» + «إعادة للافتراضي» (only when different) · «آخر تعديل: 21 أكتوبر 14:05 · أحمد» · badges «معدَّلة», «عامة»
+  4» + «أعد القيمة الافتراضية» (only when different) · «آخر تعديل: 21 أكتوبر 14:05 · أحمد» · badges «معدَّلة», «عامة»
   (visible before login), «يؤثر في الأسر» where `reachesFamilies` · the key in 12px LTR ink-3.
 - **One save model:** each row saves on its own (`PATCH /config/entries/:key` with its `version`). Editing marks the
   row (green inline-start rule + «لم يُحفظ») and shows «حفظ» (secondary) + «تراجع» (ghost); leaving the page with
@@ -47,7 +47,7 @@ fake data only): `docs/design/26-config/` — `hub.html`, `values.html`, `values
   (`recording_retention_days`, `activity_retention_days`: type the number of days). The server re-checks typed
   confirmations (428).
 - **Module-owned rows** (filter «تُدار من صفحة أخرى»): value read-only + «تُعدَّل من صفحة التواصل» link.
-- **«قيم مضافة»** (docs/26 phase 5): «إضافة قيمة» — key (LTR), type (نص، رقم، نعم/لا، قائمة، JSON), value,
+- **«قيم مخصصة»** (docs/26 phase 5): «أضف قيمة» — key (LTR), type (نص، رقم، نعم/لا، قائمة، JSON), value,
   description (required), «عامة؟» (confirmation: «ستظهر هذه القيمة لأي زائر قبل تسجيل الدخول»); delete keeps its dialog.
 
 ### States (every page of the hub follows them)
@@ -60,16 +60,16 @@ fake data only): `docs/design/26-config/` — `hub.html`, `values.html`, `values
 | Read-only (no `settings.write`) | chip «للاطلاع فقط» under the title; values as text; no buttons (today every control renders and the save fails with 403) |
 | Dirty | per row, as above; a count «3 قيم لم تُحفظ» in the running head |
 | Saving | the row's «حفظ» reads «جارٍ الحفظ…» and is disabled; other rows stay editable |
-| Saved | toast «حُفظت القيمة» with «تراجع» (5 s) |
-| Validation | field error under the editor, struck glyph, linked by `aria-describedby`: «القيمة يجب أن تكون بين 1 و12» |
-| Conflict (409) | inline alert in the row: «غيّرت سارة هذه القيمة إلى 6 قبل دقيقتين. قيمتك: 8.» + «احفظ قيمتي» / «اعتمد القيمة الجديدة» |
+| Saved | toast «تم حفظ القيمة» with «تراجع» (5 s) |
+| Validation | field error under the editor, struck glyph, linked by `aria-describedby`: «اكتب عددًا من 1 إلى 12» |
+| Conflict (409) | saffron (it is «دورك»: the save waits for the admin's choice) inline alert in the row: «غيّرت سارة هذه القيمة إلى 6 قبل دقيقتين. قيمتك: 8.» + «احفظ قيمتي» / «اعتمد القيمة الجديدة» |
 | Owned by a module (409) | not reachable from the UI (read-only rows); the API answer is shown as a plain error if it happens |
 
 ## 3. Module pages
 
 - **التواصل → الإشعارات** (`notifications.html`): a state strip always visible («إرسال الرسائل: متوقف» with the
   plain sentence why, «الرسائل التلقائية», queued count); the catalogue grouped by audience (ولي الأمر، المعلم/ة،
-  العميل المحتمل، فريق العمل); per row: name, timing editor (times are selects, never typed), channels, number,
+  العميل، فريق الأكاديمية); per row: name, timing editor (times are selects, never typed), channels, number,
   template status, the effective state or the first blocker in words, the switch. Essential rows (booking
   confirmation, report PDF) turn off only with a typed «إيقاف» and an activity-log entry (docs/23 owner answer 3);
   locked rows (`reminder_failed`) say «لا يمكن إيقافه»; switching on a family-facing row says whom it reaches.
@@ -123,9 +123,9 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | 0.2 | chrome → index «أقسام الإعدادات» (11 anchors) | — | HUB tiles (V, C, INT, G, AP) + «روابط ذات صلة»; V fihris of groups; old `#settings-<id>` anchors redirect | nav | list screen |
 | 0.3 | chrome → search «ابحث في الإعدادات» | client filter | HUB global search (labels, descriptions, keys, module pages) + V toolbar search «ابحث بالاسم أو الوصف أو المفتاح» | search; empty state «لا توجد قيم تطابق بحثك» + «مسح البحث» | edit (V search) |
 | 0.4 | chrome → load states | `GET /settings` | every page: skeleton rows + inline alert «أعد المحاولة» | — | same |
-| 0.5 | chrome → toast «تم حفظ الإعدادات» | — | per-row toast «حُفظت القيمة»; module toasts kept | — | same |
+| 0.5 | chrome → toast «تم حفظ الإعدادات» | — | per-row toast «تم حفظ القيمة»; module toasts kept | — | same |
 | 0.6 | chrome → SaveBar «حفظ» (whole form PATCH) | all FORM_KEYS | **removed**: replaced by per-row «حفظ»/«تراجع» in V; asks before leaving with unsaved rows | per-row save; conflict alert «احفظ قيمتي / اعتمد القيمة الجديدة» | edit (per row; old APK keeps its form save via m2) |
-| 0.7 | chrome → «أعد القيمة الافتراضية» | default | V row ghost «إعادة للافتراضي» + «الافتراضي: …» | saves like any edit | edit |
+| 0.7 | chrome → «أعد القيمة الافتراضية» | default | V row ghost «أعد القيمة الافتراضية» + «الافتراضي: …» | saves like any edit | edit |
 | 0.8 | chrome → «معدَّل», «آخر تعديل: … بواسطة …» | `/config/meta` | V row badge «معدَّلة» + meta line «آخر تعديل: … · name»; chip «المعدَّلة فقط» | — | ro meta |
 | 1.1 | messaging → DangerFrame «إعداد حساس…» | — | C TOP strip + SAFE tab framing | — | ro |
 | 1.2–1.3 | messaging → «نقلنا الرقم من الـCRM» / «أعد التحذير» | `crm_cutover_done` | C SAFE «CRM cut-over»; warning repeated on OV and in the sending confirmation | button + **ADDED** confirm both ways (dialog, cancel focused) | ro (shown on OV) |
@@ -150,9 +150,9 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | 2.1 | schedule → «تُجدول الحلقات لكم أسبوعًا مقدمًا» | `booking_horizon_weeks` | V «الجدول والحلقات» | number 1–12 | edit |
 | 2.2–2.3 | schedule → «حساب الإلغاء المتأخر» + hours | `late_cancel_hours` (nullable) | V «الجدول والحلقات», **one row** (switch + number) | switch + number 1–168 | edit |
 | 2.4 | schedule → «يمكن تعويض الحلقة الفائتة خلال كم يومًا» | `makeup_window_days` (public) | V «الجدول والحلقات», badge «عامة» | number 1–365 | edit |
-| 2.5 | schedule → «كل المعلمين متاحون للحجز…» | `teachers_always_available` | V «الجدول والحلقات», note «يؤثر في …» | switch + **ADDED** typed confirm «تأكيد» | edit (same typed confirm) |
+| 2.5 | schedule → «كل المعلمين متاحون للحجز…» | `teachers_always_available` | V «الجدول والحلقات», note «يؤثر في …» | switch + **ADDED** plain confirm (the button names the action) | edit (same confirm) |
 | 3.1–3.3 | classroom → «تُفتح الحلقة قبل…», «تُغلق…», «عنوان الاجتماع الداخلي» | `join_opens_before_min`, `join_closes_after_min` (public), `default_meeting_title` | V «الحلقات عبر الإنترنت» | numbers / text 1–60 | edit |
-| 3.4 | classroom → «الوضع الافتراضي: الحلقات عبر منصة الأكاديمية» | `meeting_link_auto` (public; default for `teachers.meeting_mode`) | V «الحلقات عبر الإنترنت», note «يؤثر في …» | switch + **ADDED** typed confirm «تأكيد» | edit (same) |
+| 3.4 | classroom → «الوضع الافتراضي: الحلقات عبر منصة الأكاديمية» | `meeting_link_auto` (public; default for `teachers.meeting_mode`) | V «الحلقات عبر الإنترنت», note «يؤثر في …» | switch + **ADDED** plain confirm stating how many lessons in the next reminder window were already reminded with the old link | edit (same) |
 | 4.1 | reports → «يمكن للمعلم/ة تعديل التقرير حتى كم ساعة» | `report_teacher_edit_hours` | V «التقارير» | number 0–168 | edit |
 | 5.1 | accounts → «عملة الأرقام في لوحة التحكم» | `reporting_currency` | V «الحسابات والدفعات» | select (ISO list; an unknown stored code is kept) | edit (select replaces free text) |
 | 5.2 | accounts → «نبّه للتجديد عندما يتبقى…» | `renewal_alert_remaining` | V «الحسابات والدفعات», **stays CONFIG** (SQL `v_student_list` reads it); C NOT row «تجديد الباقة» shows it **by reference** («من القيم» + link) | number 0–10 | edit |
@@ -192,12 +192,12 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | 11.15–11.17 | Google → student search, row actions, manual link | `/admin/google/students` | G «الطلاب والمجلدات» | unchanged (unmap still has no confirm; candidate) | web |
 | 11.18–11.19 | Google → «سجل المزامنة», «زامن الآن», «إعادة المحاولة» | reconcile/items | G «سجل المزامنة» | unchanged | ro (last error on card) |
 | 11.20 | Google → OAuth return toast | `?google=` | G page (callback 302 → `/admin/settings/google?google=…`) | toast | — |
-| 12.1 | custom → hint/empty/error | `/config/custom` | V «قيم مضافة»: group intro + V empty/error states | — | ro |
-| 12.2 | custom → entry row (key, «عامة/خاصة», description, preview) | `custom_config` | V row in «قيم مضافة» (label = description, key LTR, badge «عامة») | type-aware editor | edit (scalar) / ro (json, list) |
+| 12.1 | custom → hint/empty/error | `/config/custom` | V «قيم مخصصة»: group intro + V empty/error states | — | ro |
+| 12.2 | custom → entry row (key, «عامة/خاصة», description, preview) | `custom_config` | V row in «قيم مخصصة» (label = description, key LTR, badge «عامة») | type-aware editor | edit (scalar) / ro (json, list) |
 | 12.3 | custom → «عدّل» | — | inline row editor + «تعديل الوصف» | per-row save | edit (scalar) |
 | 12.4 | custom → «احذف» | `DELETE /config/custom/:key` | V row menu «حذف» (custom rows only) | kept: Dialog «نعم، احذفها» | web |
-| 12.5–12.8 | custom → «أضف قيمة», «المفتاح», «القيمة (JSON)», «الوصف» | `PUT /config/custom/:key` | V «إضافة قيمة» dialog: key (LTR), type (نص، رقم، نعم/لا، قائمة، JSON), value, required description | validation per type | web |
-| 12.9 | custom → «عامة (تُعرض بلا تسجيل دخول)» | `is_public` | V «إضافة قيمة» + row badge | **ADDED** confirm when made public | web |
+| 12.5–12.8 | custom → «أضف قيمة», «المفتاح», «القيمة (JSON)», «الوصف» | `PUT /config/custom/:key` | V «أضف قيمة» dialog: key (LTR), type (نص، رقم، نعم/لا، قائمة، JSON), value, required description | validation per type | web |
+| 12.9 | custom → «عامة (تُعرض بلا تسجيل دخول)» | `is_public` | V «أضف قيمة» + row badge | **ADDED** confirm when made public | web |
 | 12.10 | custom → «إلغاء» / «احفظ القيمة» | — | dialog buttons / row «حفظ»/«تراجع» | — | — |
 
 **Check:**
@@ -206,7 +206,7 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 - Decisions to confirm:
   - 1.16 and 1.19 go to V group «الرسائل» (scalar, independent: CONFIG by docs/26 §1); the «الإشعارات» tab links to them.
   - 10.31–10.32 go to G (next to the redirect URI they belong with); INT keeps a link.
-  - The «إضافة قيمة» form keeps today's `CUSTOM_KEY_RE` (letters, digits, `_`, `.`, `-`), so existing custom keys stay valid; the store prefixes them `custom.`.
+  - The «أضف قيمة» form keeps today's `CUSTOM_KEY_RE` (letters, digits, `_`, `.`, `-`), so existing custom keys stay valid; the store prefixes them `custom.`.
 
 **Added confirmations: 11**, on 10 controls.
 - The 9 named by the owner: crm cut-over, feedback mode, sales auto assign, recording retention ON, `teachers_always_available`, `meeting_link_auto`, custom public, Google sync off, secret overwrite.
@@ -221,7 +221,7 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | m2 | `PATCH /settings` (camelCase, changed only) | non-strict schema, 7 hand-edited keys | must check `settings.write` server-side (already 403); the per-row conflict check is not applied to old APKs | **yes**: `followUpHours` writes `follow_up_slots.timing.hours`; the other 6 keys stay CONFIG (no alias) |
 | m3 | `GET /settings` → `follow_up_hours.length` (lead qualification) | field name and type `int[]` | — | **yes** (same as m1) |
 | m4 | `GET /settings` → `renewal_alert_remaining` (payments) | key stays CONFIG | — | no |
-| m5 | `GET /settings/public` (13 consumers) | 8 public keys + `custom` block, snake_case | public «قيم مضافة» rows still go out in `custom`; descriptions are not added | no (frozen contract; test it) |
+| m5 | `GET /settings/public` (13 consumers) | 8 public keys + `custom` block, snake_case | public «قيم مخصصة» rows still go out in `custom`; descriptions are not added | no (frozen contract; test it) |
 | m6 | `GET /admin/google/status` (GoogleSyncCard) | unchanged | the push `google_sync_alert` still opens `/more/ops/settings`; the card moves to the «مزامنة Google» row | no |
 | m7 | `GET /admin/notifications` (catalogue) | response fields | additive fields (timing, channels, `essential`, `locked`); the new mobile toggles need a new write endpoint (`PATCH /admin/communications/notifications/:key`) | no (additive only) |
 | m8 | `GET /messages/gate` (inbox GateNote) | unchanged | also feeds the C OV send state on mobile | no |

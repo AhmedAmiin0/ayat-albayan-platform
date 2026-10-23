@@ -55,7 +55,7 @@ Otherwise it belongs to a named **MODULE**. Every key is classified below; refs 
 | **MODULE مزامنة Google** (docs/24) | `google_sync_enabled`, `google_sync_mode`, `google_calendar_window_days` (rows in this table with `scope = module`) | 3 rows |
 | **MODULE التواصل → الأرقام / الحماية** (docs/23 phase 3) | the 15 `WA_*` / `KAPSO_*` integration keys, the allow-list and template sync | 17 |
 | **MODULE التكاملات** (`integration_config` + Vault, unchanged) | LiveKit, Expo, Web Push, FX, the Google OAuth client | 15 |
-| **Free values → «قيم مضافة»** (today `custom_config`; no code reads them) | admin-made keys | 0 seeded |
+| **Free values → «قيم مخصصة»** (today `custom_config`; no code reads them) | admin-made keys | 0 seeded |
 | **Not config** | the theme (browser storage); env bootstrap keys (26a Part A §6); per-teacher meeting mode, pay rates, expense categories, roles (records with relations) | — |
 
 Two CONFIG keys stay in «القيم» but are also shown elsewhere:
@@ -303,7 +303,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
 | **26-P3** | «القيم» + hub | `/config/entries` routes; web hub + «القيم» + description dialog; mobile list + «القيم»; the alias narrows to the 7 phone fields. The messaging section moves to a «التواصل» page with **its own form and save** (the gate routes, the rules API) until 23-P6. Redirects: `#integrations` → `/admin/settings/google` **with its query string, forever** (the web deploys before the API callback changes); the template-approval links go to the templates view. Push `google_sync_alert` opens the Google screen in the new bundle. **e2e updated in the same PR**: `settings-academy`, `templates`, `template-numbers`, `wa-lines-check`, `settings-switches`, `restricted-templates`, `responsive` (selectors, per-row «حفظ»; the skeleton uses `aria-busy`, not `role=status`) | Revert web/mobile. The aliases were never removed |
 | 23-P5, 23-P6 | Routing per number; `/admin/communications` | P6 uses the docs/26b design for «الإشعارات» and the 26-P0 gate routes | Their own |
 | **26-P4** | Send gate last | §5: uncached gate read, fail-closed tests | Revert one file |
-| 23-P7 + **26-P5** | Contract | Legacy keys and read code go after ≥ 2 clean weeks; `custom_config` absorbed as «قيم مضافة»; aliases removed only under the §2f rule | A down-migration copies `custom.*` back |
+| 23-P7 + **26-P5** | Contract | Legacy keys and read code go after ≥ 2 clean weeks; `custom_config` absorbed as «قيم مخصصة»; aliases removed only under the §2f rule | A down-migration copies `custom.*` back |
 
 **Why this order.**
 - **26-P0 first:** today any `settings.write` holder, and any old tab's page-wide «حفظ», can write the send gate
@@ -335,7 +335,7 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
      academy works in Arabic, and this needs no extra column.
    - (b) Editable Arabic and English on «القيم» (a second column).
 2. **«قيم مخصصة».**
-   - (a) **Recommended:** fold them into the same store as «قيم مضافة», with simple types (نص، رقم، نعم/لا، قائمة،
+   - (a) **Recommended:** fold them into the same store as «قيم مخصصة», with simple types (نص، رقم، نعم/لا، قائمة،
      JSON), in the last phase. Making one public needs the base admin role.
    - (b) Keep them separate, as today.
    - (c) Let admins define bounds and choices per key: a schema builder, about twice the work, and no code reads these
