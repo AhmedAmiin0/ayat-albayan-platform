@@ -1,8 +1,8 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, Ref } from 'react';
 import { View } from 'react-native';
 import { type, useTheme } from '@/theme';
 import { Mark } from './Mark';
-import { AppText } from './AppText';
+import { AppText, type AppTextNode } from './AppText';
 
 export interface ScreenHeaderProps {
   /** Amiri title, e.g. t.mobile.today. Mobile has no cartouche: this is the screen's one title. */
@@ -13,6 +13,8 @@ export interface ScreenHeaderProps {
   trailing?: ReactNode;
   /** h1 for a screen; a sheet or dialog takes h2 so the title fits beside «إغلاق» (docs/07 §6). */
   size?: 'h1' | 'h2';
+  /** The title's node, for a sheet that moves screen-reader focus to it on open. */
+  titleRef?: Ref<AppTextNode>;
 }
 
 export function ScreenHeader({
@@ -20,6 +22,7 @@ export function ScreenHeader({
   subtitle,
   trailing = <Mark size={28} />,
   size = 'h1',
+  titleRef,
 }: ScreenHeaderProps) {
   const { color } = useTheme();
   return (
@@ -33,6 +36,7 @@ export function ScreenHeader({
         }}
       >
         <AppText
+          ref={titleRef}
           accessibilityRole="header"
           style={{
             flexShrink: 1,

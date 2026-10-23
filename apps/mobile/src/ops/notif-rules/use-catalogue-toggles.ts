@@ -10,7 +10,7 @@ type Key = NotificationEntryView['key'];
 /** The question open now: family ON (inline, under its row) or the typed «إيقاف» bottom sheet. */
 export type OpenAsk = { key: Key; kind: 'family' | 'typed' } | null;
 
-/** The politely announced line after a save, also shown above the list. */
+/** The line after a save, announced here once (no live region repeats it); also shown above the list. */
 function announce(text: string) {
   try {
     AccessibilityInfo.announceForAccessibility(text);

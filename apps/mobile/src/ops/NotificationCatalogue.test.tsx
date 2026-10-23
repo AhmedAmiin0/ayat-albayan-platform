@@ -5,6 +5,7 @@ import { ltr } from '@/ui/Ltr';
 import { catalogue, settings } from './fixtures';
 import { NotificationCatalogue } from './NotificationCatalogue';
 import { whenOf } from './catalogue-words';
+import { openAudience } from './notif-rules/rules-fixtures';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -22,11 +23,12 @@ beforeEach(() => {
 test('lists every notification with its state and the first blocker in words; nothing to switch', async () => {
   await renderWithQuery(<NotificationCatalogue />);
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
-  expect(screen.getByText(c.entries.reminder_failed.name)).toBeTruthy();
   // Automatic messages are off in the fixture: the reminder is held, with the reason.
   expect(screen.getAllByText(new RegExp(c.blockers.auto_off)).length).toBeGreaterThan(0);
   expect(screen.getAllByText(c.states.off).length).toBeGreaterThan(0);
   expect(screen.queryAllByRole('switch')).toHaveLength(0);
+  await openAudience(c.audience.staff);
+  expect(screen.getByText(c.entries.reminder_failed.name)).toBeTruthy();
 });
 
 test('the kept number shows without a live check; a line never checked says so', async () => {

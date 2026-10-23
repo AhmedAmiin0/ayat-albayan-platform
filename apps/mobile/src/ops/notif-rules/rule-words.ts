@@ -1,4 +1,4 @@
-import type { NotificationEntryView, NotificationRuleView, NotificationsOverview } from '@ab/shared';
+import { counted, type NotificationEntryView, type NotificationRuleView, type NotificationsOverview } from '@ab/shared';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 
@@ -37,11 +37,15 @@ export function askOf(entry: Pick<NotificationEntryView, 'audience' | 'essential
   return 'plain';
 }
 
-/** «سيصل إلى N ولي أمر» from GET /admin/notifications `reach`; a missing count says it generally. */
+/**
+ * «سيصل إلى N ولي أمر» from GET /admin/notifications `reach`, in the Arabic count form for N (1, 2,
+ * 3–10, 11+; the web's familyOn forms); none yet says so; a missing count says it generally.
+ */
 export function reachLine(audience: NotificationEntryView['audience'], reach: NotificationsOverview['reach']): string {
   if (audience !== 'guardian' && audience !== 'lead') return '';
   const n: unknown = isObject(reach) ? Reflect.get(reach, audience) : undefined;
-  return typeof n === 'number' ? r().reach[audience].replace('{n}', String(n)) : r().reach.unknown;
+  if (typeof n !== 'number') return r().reach.unknown;
+  return n === 0 ? r().reach.nobody : counted(r().reach[audience], n);
 }
 
 /** «لا يُرسل الآن: …» for a known blocker; an unknown one (a newer API) shows no reason. */

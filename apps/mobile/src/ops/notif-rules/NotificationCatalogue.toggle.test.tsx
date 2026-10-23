@@ -1,9 +1,10 @@
+import { counted } from '@ab/shared';
 import { fireEvent, screen, waitFor } from '@testing-library/react-native';
 import { AccessibilityInfo } from 'react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '../NotificationCatalogue';
-import { answer, catalogueV2, MANAGER } from './rules-fixtures';
+import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -24,9 +25,10 @@ beforeEach(() => {
   mockApiSend.mockResolvedValue({});
 });
 
-test('switching off a plain row saves at once, refetches the catalogue and announces it politely', async () => {
+test('switching off a plain row saves at once, refetches the catalogue and announces it once', async () => {
   const announce = jest.spyOn(AccessibilityInfo, 'announceForAccessibility');
   await renderWithQuery(<NotificationCatalogue />);
+  await openAudience(c.audience.teacher);
   const sw = await switchOf('teacher_lesson_reminder');
   expect(sw.props.accessibilityState).toMatchObject({ checked: true });
   const before = catalogueReads();
@@ -34,7 +36,10 @@ test('switching off a plain row saves at once, refetches the catalogue and annou
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/teacher_lesson_reminder', { enabled: false });
   const saved = r.savedOff.replace('{name}', c.entries.teacher_lesson_reminder.name);
   expect(await screen.findByText(saved)).toBeTruthy();
+  expect(announce).toHaveBeenCalledTimes(1);
   expect(announce).toHaveBeenCalledWith(saved);
+  // No live region repeats the line on Android.
+  expect(JSON.stringify(screen.toJSON())).not.toContain('accessibilityLiveRegion');
   await waitFor(() => expect(catalogueReads()).toBeGreaterThan(before));
 });
 
@@ -42,7 +47,7 @@ test('switching on a family row first says whom it reaches; «إلغاء» sends
   await renderWithQuery(<NotificationCatalogue />);
   await fireEvent(await switchOf('lesson_reminder_24h'), 'valueChange', true);
   const name = c.entries.lesson_reminder_24h.name;
-  const question = r.familyConfirm.replace('{name}', name).replace('{reach}', r.reach.guardian.replace('{n}', '214'));
+  const question = r.familyConfirm.replace('{name}', name).replace('{reach}', counted(r.reach.guardian, 214));
   expect(screen.getByText(question)).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
   await fireEvent.press(screen.getByRole('button', { name: r.cancel }));
@@ -53,32 +58,34 @@ test('switching on a family row first says whom it reaches; «إلغاء» sends
   expect(await screen.findByText(r.savedOn.replace('{name}', name))).toBeTruthy();
 });
 
-test('a lead row names the leads it reaches', async () => {
+test('a lead row names the leads it reaches, in the counted form', async () => {
   await renderWithQuery(<NotificationCatalogue />);
+  await openAudience(c.audience.lead);
   await fireEvent(await switchOf('follow_up_slots'), 'valueChange', false);
   expect(mockApiSend).toHaveBeenCalledWith('PATCH', '/admin/notifications/follow_up_slots', { enabled: false });
   mockApiSend.mockClear();
   await fireEvent(await switchOf('follow_up_slots'), 'valueChange', true);
-  expect(screen.getByText(new RegExp(r.reach.lead.replace('{n}', '37').replace('.', '\\.')))).toBeTruthy();
+  expect(screen.getByText(new RegExp(counted(r.reach.lead, 37).replace('.', '\\.')))).toBeTruthy();
   expect(mockApiSend).not.toHaveBeenCalled();
 });
 
 test('a locked row says «لا يمكن إيقافه»; manual rows have no switch; timing stays text', async () => {
   await renderWithQuery(<NotificationCatalogue />);
-  await switchOf('teacher_lesson_reminder');
+  expect(await screen.findByText(r.intro)).toBeTruthy();
+  await openAudience(c.audience.staff);
+  expect(screen.getByText(c.entries.reminder_failed.name)).toBeTruthy();
   expect(screen.getAllByText(r.locked)).toHaveLength(1);
-  const named = (key: keyof typeof c.entries) => screen.queryByRole('switch', { name: r.switchLabel.replace('{name}', c.entries[key].name) });
-  expect(named('reminder_failed')).toBeNull();
-  expect(named('lesson_join_link_manual')).toBeNull();
-  expect(named('inbox_templates')).toBeNull();
+  await openAudience(c.states.manual);
+  expect(screen.getByText(c.entries.inbox_templates.name)).toBeTruthy();
+  expect(screen.queryAllByRole('switch')).toHaveLength(0);
   expect(screen.queryAllByRole('spinbutton')).toHaveLength(0);
-  expect(screen.getByText(r.intro)).toBeTruthy();
 });
 
 test('a refused save (422 locked) is said under its row and the switch stays where it was', async () => {
   const { ApiError } = jest.requireActual<typeof import('@/lib/api')>('@/lib/api');
   mockApiSend.mockRejectedValue(new ApiError(422, { message: 'locked' }));
   await renderWithQuery(<NotificationCatalogue />);
+  await openAudience(c.audience.teacher);
   await fireEvent(await switchOf('teacher_lesson_reminder'), 'valueChange', false);
   expect(await screen.findByText(r.errors.locked)).toBeTruthy();
   expect((await switchOf('teacher_lesson_reminder')).props.accessibilityState).toMatchObject({ checked: true });
@@ -88,6 +95,7 @@ test('403 says the permission is missing', async () => {
   const { ApiError } = jest.requireActual<typeof import('@/lib/api')>('@/lib/api');
   mockApiSend.mockRejectedValue(new ApiError(403, { message: 'forbidden' }));
   await renderWithQuery(<NotificationCatalogue />);
+  await openAudience(c.audience.teacher);
   await fireEvent(await switchOf('teacher_lesson_reminder'), 'valueChange', false);
   expect(await screen.findByText(r.errors.forbidden)).toBeTruthy();
 });
