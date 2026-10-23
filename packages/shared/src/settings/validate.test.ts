@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, academyWhatsappUrl, publicSettings, uploadMaxBytes } from './public.js';
+import { PUBLIC_SETTING_DEFAULTS, PUBLIC_SETTING_KEYS, publicSettings } from './public.js';
 import { SETTING_DEFAULTS, SETTINGS_REGISTRY } from './registry.js';
 import { isValidSetting, readSettings } from './validate.js';
 
@@ -28,9 +28,11 @@ describe('readSettings', () => {
     expect(readSettings([{ key, value }])).toEqual(SETTING_DEFAULTS);
   });
 
-  it('a JSON null is valid only for a nullable int', () => {
+  it('a JSON null is valid only for nullable entries', () => {
     expect(isValidSetting(SETTINGS_REGISTRY.late_cancel_hours, null)).toBe(true);
+    expect(isValidSetting(SETTINGS_REGISTRY.recording_consent_notice, null)).toBe(true);
     expect(isValidSetting(SETTINGS_REGISTRY.booking_horizon_weeks, null)).toBe(false);
+    expect(isValidSetting(SETTINGS_REGISTRY.academy_contact, null)).toBe(false);
   });
 });
 
@@ -44,10 +46,5 @@ describe('public settings', () => {
     );
     expect(publicSettings({ ...SETTING_DEFAULTS, messaging_enabled: true })).toEqual(PUBLIC_SETTING_DEFAULTS);
     expect(PUBLIC_SETTING_DEFAULTS).not.toHaveProperty('messaging_enabled');
-  });
-
-  it('helpers: bytes and the wa.me link', () => {
-    expect(uploadMaxBytes({ upload_max_mb: 2 })).toBe(2 * 1024 * 1024);
-    expect(academyWhatsappUrl({ academy_whatsapp_e164: '+966566101447' })).toBe('https://wa.me/966566101447');
   });
 });

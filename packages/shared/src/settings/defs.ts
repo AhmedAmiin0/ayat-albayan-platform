@@ -1,23 +1,9 @@
 // The settings registry's vocabulary (owner, 2026-10-05 «dynamic configurations»): one entry per
 // row of public.settings. The PATCH schema, the read validators, the defaults, the typed
-// AcademySettings and the admin page's fields are all generated from these entries.
-
-/** The /admin/settings sections, in page order. `appearance` holds no setting rows (theme is per browser). */
-export const SETTINGS_SECTIONS = [
-  'messaging',
-  'schedule',
-  'classroom',
-  'reports',
-  'accounts',
-  'uploads',
-  'academy',
-  'sales',
-  'appearance',
-] as const;
-export type SettingsSectionId = (typeof SETTINGS_SECTIONS)[number];
+// AcademySettings and the admin page's fields are all generated from these entries. Where a row
+// shows on /admin/settings is not part of its entry: layout.ts holds the page order.
 
 interface Base {
-  section: SettingsSectionId;
   /** Dotted path into ar.json / en.json (e.g. 'settings.bookingHorizonWeeks'). */
   labelKey: string;
   hintKey?: string;
@@ -104,8 +90,5 @@ export type SettingValue<D> = D extends { type: 'json'; nullable: true }
               ? O
               : string;
 
-/** snake_case row key → camelCase PATCH field ('reminder_24h_enabled' → 'reminder24hEnabled'). */
-export type CamelKey<S extends string> = S extends `${infer H}_${infer T}` ? `${H}${CamelKey<Capitalize<T>>}` : S;
-
-export const camelKey = <S extends string>(key: S): CamelKey<S> =>
-  key.replace(/_(.)/g, (_m, c: string) => c.toUpperCase()) as CamelKey<S>;
+/** One typed object of a registry slice (a domain file's entries → their stored values). */
+export type SettingsOf<R extends Record<string, SettingDef>> = { -readonly [K in keyof R]: SettingValue<R[K]> };

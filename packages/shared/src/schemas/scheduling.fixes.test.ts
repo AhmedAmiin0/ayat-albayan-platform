@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
+import { settingsUpdateSchema } from '../settings/schema.js';
 import {
   bookingRequestSchema,
   lessonProposalRequestSchema,
   lessonStatusRequestSchema,
   proposalApproveSchema,
-  settingsUpdateSchema,
 } from './scheduling.js';
 
 const S = '6f1c2b8e-0d0a-4c8e-9a51-2a6b0f6d9e11';

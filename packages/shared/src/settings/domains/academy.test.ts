@@ -1,8 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { PUBLIC_SETTING_KEYS } from './public.js';
-import { SETTING_DEFAULTS, settingDef } from './registry.js';
-import { settingsChanges, settingsUpdateSchema } from './schema.js';
-import { readSettings } from './validate.js';
+import { PUBLIC_SETTING_KEYS } from '../public.js';
+import { SETTING_DEFAULTS, settingDef } from '../registry.js';
+import { settingsChanges, settingsUpdateSchema } from '../schema.js';
+import { readSettings } from '../validate.js';
+import { academyWhatsappUrl } from './academy.js';
 
 const ok = (b: object) => settingsUpdateSchema.safeParse(b).success;
 
@@ -74,5 +75,12 @@ describe('custom-config settings (2026-10-05)', () => {
       activity_retention_days: 90,
       recording_retention_days: null,
     });
+  });
+});
+
+describe('academy helpers', () => {
+  it('the wa.me link of the academy number (no plus sign)', () => {
+    expect(academyWhatsappUrl({ academy_whatsapp_e164: '+966566101447' })).toBe('https://wa.me/966566101447');
+    expect(academyWhatsappUrl(SETTING_DEFAULTS)).toBe('https://wa.me/966566101447');
   });
 });

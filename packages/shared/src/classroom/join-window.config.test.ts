@@ -2,7 +2,8 @@ import { describe, expect, it } from 'vitest';
 import { makeupOffer } from '../lessons/makeup-offer.js';
 import type { LessonView } from '../lessons/views.js';
 import { makeupEligible } from '../schemas/booking-extras.js';
-import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, roomClosesAt } from './join-window.js';
+import { SETTING_DEFAULTS } from '../settings/registry.js';
+import { canJoinNow, DEFAULT_JOIN_WINDOW, joinWindow, joinWindowConfig, roomClosesAt } from './join-window.js';
 import { pickStudentLesson } from './student-lesson.js';
 
 const lesson = { starts_at: '2026-10-05T16:00:00Z', ends_at: '2026-10-05T16:30:00Z' };
@@ -12,6 +13,11 @@ describe('joinWindow with the settings (join_opens_before_min / join_closes_afte
   it('defaults are the registry values: 15 before, 120 after', () => {
     expect(DEFAULT_JOIN_WINDOW).toEqual({ opensBeforeMin: 15, closesAfterMin: 120 });
     expect(joinWindow(lesson, at('2026-10-05T15:45:00Z')).state).toBe('open');
+  });
+
+  it('joinWindowConfig reads the two settings; the defaults give DEFAULT_JOIN_WINDOW', () => {
+    expect(joinWindowConfig({ join_opens_before_min: 5, join_closes_after_min: 30 })).toEqual({ opensBeforeMin: 5, closesAfterMin: 30 });
+    expect(joinWindowConfig(SETTING_DEFAULTS)).toEqual(DEFAULT_JOIN_WINDOW);
   });
 
   it('a changed window changes when the room opens and closes', () => {

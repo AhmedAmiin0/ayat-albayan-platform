@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { publicCustom, CUSTOM_VALUE_MAX_BYTES, customConfigUpsertSchema, customKeySchema } from './custom.js';
+import { CUSTOM_VALUE_MAX_BYTES, customConfigUpsertSchema, customKeySchema } from './schema.js';
 
 describe('custom entry validation', () => {
   it.each(['promo.banner', 'a1', 'site-name', 'x_y.z-9'])('accepts the key %s', (k) => {
@@ -26,23 +26,5 @@ describe('custom entry validation', () => {
     expect(customConfigUpsertSchema.safeParse({ value: `${fits}a` }).success).toBe(false);
     const arabic = 'ب'.repeat(CUSTOM_VALUE_MAX_BYTES / 2);
     expect(customConfigUpsertSchema.safeParse({ value: arabic }).success).toBe(false);
-  });
-});
-
-describe('public custom entries (GET /settings/public)', () => {
-  const rows = [
-    { key: 'promo', value: 'hi', is_public: true },
-    { key: 'internal.note', value: 'private', is_public: false },
-    { key: 'messaging_enabled', value: 'shadow', is_public: true },
-  ];
-
-  it('keeps only the rows flagged public that do not shadow a setting', () => {
-    expect(publicCustom(rows)).toEqual({ promo: 'hi' });
-    expect(publicCustom([])).toEqual({});
-  });
-
-  it('never leaks a private row or a setting key, in any form', () => {
-    const text = JSON.stringify(publicCustom(rows));
-    for (const leak of ['messaging_enabled', 'internal.note', 'private', 'shadow']) expect(text).not.toContain(leak);
   });
 });

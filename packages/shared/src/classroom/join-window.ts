@@ -1,11 +1,25 @@
-import { SETTING_DEFAULTS } from '../settings/registry.js';
-import { joinWindowConfig, type JoinWindowConfig } from '../settings/public.js';
+import { CLASSROOM_SETTINGS } from '../settings/domains/classroom.js';
+
+/** The classroom window in minutes (joinWindow's third argument). */
+export interface JoinWindowConfig {
+  opensBeforeMin: number;
+  closesAfterMin: number;
+}
+
+/** settings.join_opens_before_min / join_closes_after_min → the window joinWindow takes. */
+export const joinWindowConfig = (s: { join_opens_before_min: number; join_closes_after_min: number }): JoinWindowConfig => ({
+  opensBeforeMin: s.join_opens_before_min,
+  closesAfterMin: s.join_closes_after_min,
+});
 
 /**
  * The registry defaults (15 min before, 120 after): settings.join_opens_before_min /
  * join_closes_after_min. Callers pass the live values (GET /settings/public on the clients).
  */
-export const DEFAULT_JOIN_WINDOW: JoinWindowConfig = joinWindowConfig(SETTING_DEFAULTS);
+export const DEFAULT_JOIN_WINDOW: JoinWindowConfig = joinWindowConfig({
+  join_opens_before_min: CLASSROOM_SETTINGS.join_opens_before_min.default,
+  join_closes_after_min: CLASSROOM_SETTINGS.join_closes_after_min.default,
+});
 
 const MIN_MS = 60_000;
 
