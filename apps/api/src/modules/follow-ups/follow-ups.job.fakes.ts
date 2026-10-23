@@ -1,7 +1,9 @@
 import { vi } from 'vitest';
 import { readerOf } from '../../common/settings/settings.fakes';
+import { fakePolicy, type FakePolicyInput } from '../notification-rules/policy.fakes';
 import type { QueuedMessage } from '../reminders/queued-row';
 import type { FollowUpSlots } from './follow-up-slots';
+import { FollowUpsReads } from './follow-ups.deps';
 import { sampleLead } from './follow-ups.fakes';
 import { FollowUpsJob } from './follow-ups.job';
 import type { FollowUpLeadRow, StageRow } from './follow-ups.plan';
@@ -21,6 +23,8 @@ export interface JobSetup {
   inserted?: number;
   /** settings.auto_messages_enabled (default here: ON, the behaviour before migration 162). */
   auto?: boolean;
+  /** The notification rules (default: legacy mode, no rows, the registry's follow-up settings). */
+  rules?: FakePolicyInput;
 }
 
 /** FollowUpsJob over in-memory query doubles (test-only). */
@@ -48,7 +52,7 @@ export function setup(opts: JobSetup = {}) {
   const job = new FollowUpsJob(
     queries as unknown as FollowUpsQueries,
     slots as unknown as FollowUpSlots,
-    settings,
+    new FollowUpsReads(settings, fakePolicy(opts.rules)),
   );
   return { job, queries, slots, queued, advanced, keys };
 }

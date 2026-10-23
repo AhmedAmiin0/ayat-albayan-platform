@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { systemResolver } from '../auth/permissions';
+import { fakePolicy } from '../../modules/notification-rules/policy.fakes';
 import { PushAudience } from './push.audience';
 import { fakePushDb } from './push.fakes';
 
@@ -14,11 +15,11 @@ const profiles = [
 describe('PushAudience.salesIds / adminIds (docs/21 §6)', () => {
   it('salesIds: every enabled salesperson, no disabled one, no admin or teacher', async () => {
     const { db } = fakePushDb(profiles);
-    expect(await new PushAudience(db, systemResolver).salesIds()).toEqual(['s1', 's3']);
+    expect(await new PushAudience(db, systemResolver, fakePolicy()).salesIds()).toEqual(['s1', 's3']);
   });
 
   it('adminIds is unchanged: enabled admins only', async () => {
     const { db } = fakePushDb(profiles);
-    expect(await new PushAudience(db, systemResolver).adminIds()).toEqual(['a1']);
+    expect(await new PushAudience(db, systemResolver, fakePolicy()).adminIds()).toEqual(['a1']);
   });
 });

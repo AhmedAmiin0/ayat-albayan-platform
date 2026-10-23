@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { fakeDb } from '../guardians/fake-db';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 import { BusyQueries } from './busy.queries';
 import { LessonWriter } from './lesson-writer';
 import { ruleRow } from './scheduling.fakes';
@@ -47,7 +48,7 @@ describe('BusyQueries — occupying lessons only (R-SCH-04)', () => {
 describe('LessonWriter — RPC calls (migrations 080, 100)', () => {
   it('generate: nothing to insert → no call; else p_rule / p_lessons / p_actor, inserted rows parsed', async () => {
     const { db, calls } = fakeDb({ 'rpc:generate_rule_lessons': [{ data: [{ id: 'l1', starts_at: 'a', ends_at: 'b', status: 'scheduled' }] }] });
-    const writer = new LessonWriter(db);
+    const writer = new LessonWriter(db, fakePolicy());
     expect(await writer.generate({ ruleId: 'r1', lessons: [], actorId: null })).toEqual([]);
     expect(calls).toEqual([]);
     const lessons = [{ starts_at: 'a', ends_at: 'b', meeting_link: null }];
@@ -59,7 +60,7 @@ describe('LessonWriter — RPC calls (migrations 080, 100)', () => {
     const { db, argsOf } = fakeDb({
       'rpc:apply_lesson_changes': [{ data: null }, { error: { code: 'P0001', message: 'invalid_transition' } }],
     });
-    const writer = new LessonWriter(db);
+    const writer = new LessonWriter(db, fakePolicy());
     await writer.apply({ actor: null, changes: [] });
     expect(argsOf('rpc:apply_lesson_changes', 'rpc')).toEqual([{ p: { actor: null, changes: [] } }]);
     await expect(writer.apply({ actor: null })).rejects.toMatchObject({ response: { code: 'invalid_transition' } });

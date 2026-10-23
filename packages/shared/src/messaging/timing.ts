@@ -1,12 +1,13 @@
 import type { LeadStatus } from '../enums/index.js';
-import { utcOffsetMinutes } from '../time-zone.js';
+import { dayBeforeSendAt, localDate } from './timing.day-before.js';
+
+export { dayBeforeSendAt, localDayStart } from './timing.day-before.js';
 
 // When reminders and follow-ups go out (docs/12 §7). Pure: the jobs call these on every tick and
 // the dedup keys make a repeated tick a no-op (rule 8).
 
 const MINUTE = 60_000;
 const HOUR = 60 * MINUTE;
-const DAY = 24 * HOUR;
 
 /** R-LEAD-05: only these leads get follow-ups. */
 export const FOLLOW_UP_STATUSES = ['interested_no_slot', 'no_reply'] as const satisfies readonly LeadStatus[];
@@ -63,38 +64,6 @@ export function followUpKeyCycle(key: string | null): number | null {
   return Number.isSafeInteger(cycle) ? cycle : null;
 }
 
-const localDates = new Map<string, Intl.DateTimeFormat>();
-
-/** «YYYY-MM-DD» of `at` in `tz`. */
-function localDate(at: Date, tz: string): string {
-  let f = localDates.get(tz);
-  if (!f) {
-    f = new Intl.DateTimeFormat('en-CA', { timeZone: tz, year: 'numeric', month: '2-digit', day: '2-digit' });
-    localDates.set(tz, f);
-  }
-  return f.format(at);
-}
-
-/**
- * The day-before reminder goes out at the lesson's wall-clock time on the previous local day in
- * the recipient's tz (so «بكرة» is always true): 24 h, or 23 / 25 h across a DST change.
- */
-export function dayBeforeSendAt(startsAt: Date, tz: string): Date {
-  const naive = new Date(startsAt.getTime() - DAY);
-  const shift = utcOffsetMinutes(tz, startsAt) - utcOffsetMinutes(tz, naive);
-  return new Date(naive.getTime() + shift * MINUTE);
-}
-
-/**
- * Midnight that starts `at`'s local day in `tz`, as a UTC instant. The day-before reminder expires
- * then: sent any later (gate closed, retries) its «بكرة» would already be «النهاردة».
- */
-export function localDayStart(at: Date, tz: string): Date {
-  const naive = Date.parse(`${localDate(at, tz)}T00:00:00Z`);
-  const guess = naive - utcOffsetMinutes(tz, new Date(naive)) * MINUTE;
-  return new Date(naive - utcOffsetMinutes(tz, new Date(guess)) * MINUTE);
-}
-
 export type ReminderKind = 'day_before' | 'same_day';
 
 export interface ReminderTiming {
@@ -102,8 +71,10 @@ export interface ReminderTiming {
   startsAt: Date;
   /** The recipient's tz (guardian, or the teacher for teacher reminders). */
   tz: string;
-  /** settings.reminder_minutes_before (same_day). */
+  /** The lesson_reminder rule's minutes_before (same_day). */
   minutesBefore: number;
+  /** day_before: the rule's send_at_local («HH:MM» on the previous local day); null / absent = the lesson's own time. */
+  sendAtLocal?: string | null;
   now: Date;
 }
 
@@ -117,7 +88,7 @@ export function reminderDue(t: ReminderTiming): boolean {
   const start = t.startsAt.getTime();
   if (now >= start) return false;
   if (t.kind === 'same_day') return now >= start - t.minutesBefore * MINUTE;
-  if (now < dayBeforeSendAt(t.startsAt, t.tz).getTime()) return false;
+  if (now < dayBeforeSendAt(t.startsAt, t.tz, t.sendAtLocal ?? null).getTime()) return false;
   const tomorrow = new Date(`${localDate(t.now, t.tz)}T12:00:00Z`);
   tomorrow.setUTCDate(tomorrow.getUTCDate() + 1);
   return localDate(t.startsAt, t.tz) === tomorrow.toISOString().slice(0, 10);

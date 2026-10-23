@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 import type { ConflictChecker } from './conflict-checker';
 import { LessonWriter } from './lesson-writer';
 import { OccurrenceGenerator } from './occurrence-generator';
@@ -12,7 +13,7 @@ function setup() {
   const store = fakeLessonsDb();
   const { audit, record } = fakeAudit();
   const checker = { check: vi.fn().mockResolvedValue([]) };
-  const generator = new OccurrenceGenerator(new LessonWriter(store.db), checker as unknown as ConflictChecker, audit);
+  const generator = new OccurrenceGenerator(new LessonWriter(store.db, fakePolicy()), checker as unknown as ConflictChecker, audit);
   return { ...store, generator, record, checker };
 }
 

@@ -5,7 +5,9 @@ import {
   PERMISSION_RESOLVER,
   type PermissionResolver,
 } from '../auth/permissions';
+import { NotificationPolicy } from '../../modules/notification-rules/policy';
 import { DB, type Db } from '../db/db.module';
+import { pushRoute, type PushRoute } from './push.rules';
 
 /** A profile a notification may go to (enabled, permitted for its kind). */
 export interface Recipient {
@@ -18,7 +20,8 @@ export interface Recipient {
  * Who gets a notification, decided at send time (R-NOT-01): never a disabled profile (disabled_at
  * set), and only a profile whose effective permissions (the AuthGuard's resolver) hold what
  * PUSH_KIND_PERMISSIONS asks of the kind — a custom role without notifications.push (or, for an
- * inbox event, inbox.read) gets no bell row, no browser push, no app push.
+ * inbox event, inbox.read) gets no bell row, no browser push, no app push. And whether the kind goes
+ * out at all, and through which channels: its notification rule (route, NotificationPolicy).
  */
 @Injectable()
 export class PushAudience {
@@ -27,7 +30,15 @@ export class PushAudience {
   constructor(
     @Inject(DB) private readonly db: Db,
     @Inject(PERMISSION_RESOLVER) private readonly resolve: PermissionResolver,
+    private readonly policy: NotificationPolicy,
   ) {}
+
+  /** The kind's rule: off → no row; push not among its channels → the bell row only (pushRoute). */
+  async route(kind: PushKind): Promise<PushRoute> {
+    const snap = await this.policy.snapshot();
+    if (!snap) this.log.warn(`notification rules unread: ${kind} goes to the bell only`);
+    return pushRoute(snap, kind);
+  }
 
   /** Every enabled base-role admin (the admin events' candidates). */
   adminIds(): Promise<string[]> {
