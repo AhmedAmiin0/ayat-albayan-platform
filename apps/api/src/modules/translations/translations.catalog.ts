@@ -9,6 +9,7 @@ import {
   type TranslationKeysQuery,
 } from '@ab/shared';
 import { BUNDLES } from '../../common/i18n/server-text';
+import { VALUES_HINT_KEYS } from './values-owned';
 
 // Pure side of the translations editor: the key catalogue from the bundled JSON, the search /
 // section / page of GET /i18n/keys, and the checks a PUT must pass.
@@ -25,7 +26,9 @@ const SECTIONS = [...new Set(KEYS.map(sectionOf))].sort();
 export type OverrideMaps = Readonly<Record<Locale, FlatStrings>>;
 
 function row(key: string, overrides: OverrideMaps): TranslationKeyRow {
+  const valuesKey = VALUES_HINT_KEYS.get(key);
   return {
+    ...(valuesKey === undefined ? {} : { valuesKey }),
     key,
     section: sectionOf(key),
     ar: DEFAULTS.ar[key] ?? '',

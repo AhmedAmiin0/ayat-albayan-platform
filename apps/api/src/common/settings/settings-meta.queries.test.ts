@@ -3,7 +3,7 @@ import type { Db } from '../db/db.module';
 import { SettingsMetaQueries } from './settings-meta.queries';
 
 type Result = { data: unknown; error: { message: string } | null };
-type MetaRow = { key: string; updated_at: string; updated_by: string | null };
+type MetaRow = { key: string; value: unknown; updated_at: string; updated_by: string | null };
 
 const ok = (data: unknown): Result => ({ data, error: null });
 const fail = (message: string): Result => ({ data: null, error: { message } });
@@ -17,7 +17,7 @@ function queries(rows: Result, profiles: Result = ok([])) {
   return { q: new SettingsMetaQueries({ from } as unknown as Db), from, inIds };
 }
 
-const row = (key: string, by: string | null): MetaRow => ({ key, updated_at: '2026-10-05T00:00:00Z', updated_by: by });
+const row = (key: string, by: string | null, value: unknown = 1): MetaRow => ({ key, value, updated_at: '2026-10-05T00:00:00Z', updated_by: by });
 
 describe('SettingsMetaQueries.meta (GET /config/meta)', () => {
   it('asks for no profiles when no row has an updated_by', async () => {
@@ -37,6 +37,13 @@ describe('SettingsMetaQueries.meta (GET /config/meta)', () => {
   it('gives a null name for an id with no profile', async () => {
     const { q } = queries(ok([row('a', 'gone')]), ok([]));
     expect((await q.meta())['a']).toEqual({ updatedAt: '2026-10-05T00:00:00Z', updatedBy: 'gone', updatedByName: null });
+  });
+
+  it('skips a seeded row nobody wrote (JSON null, no writer); keeps an admin null save', async () => {
+    const { q } = queries(ok([row('seeded', null, null), row('cleared', 'u1', null)]), ok([{ id: 'u1', full_name: 'منى' }]));
+    const meta = await q.meta();
+    expect(Object.keys(meta)).toEqual(['cleared']);
+    expect(meta['cleared']?.updatedByName).toBe('منى');
   });
 
   it('throws on a read error of either table', async () => {

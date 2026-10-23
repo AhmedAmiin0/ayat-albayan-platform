@@ -1,15 +1,20 @@
 import type { SettingMeta } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
+import { neverWritten } from '../config-store/config-store.types';
 import { DB, type Db } from '../db/db.module';
 
-/** Who last changed each stored setting (rows that were never written have no entry). */
+/**
+ * Who last changed each stored setting. Rows that were never written have no entry: a missing row, and
+ * a row the seeder created (JSON null with no writer; an admin's null save has updated_by set).
+ */
 @Injectable()
 export class SettingsMetaQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async meta(): Promise<Record<string, SettingMeta>> {
-    const { data, error } = await this.db.from('settings').select('key, updated_at, updated_by');
-    if (error) throw new Error(`settings read failed: ${error.message}`);
+    const res = await this.db.from('settings').select('key, value, updated_at, updated_by');
+    if (res.error) throw new Error(`settings read failed: ${res.error.message}`);
+    const data = res.data.filter((r) => !neverWritten({ value: r.value as unknown, updatedBy: r.updated_by }));
     const ids = [...new Set(data.map((r) => r.updated_by).filter((id): id is string => id !== null))];
     const names = new Map<string, string>();
     if (ids.length > 0) {
