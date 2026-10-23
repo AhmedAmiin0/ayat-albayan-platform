@@ -138,7 +138,7 @@
                     <div class="vedit">
                       <div class="unit-field"><input class="input" id="f-bh" type="number" inputmode="numeric" dir="ltr" min="1" max="12" value="15" aria-invalid="true" aria-describedby="e-bh h-bh"><span class="unit">أسبوع</span></div>
                       <div class="vlive" aria-live="polite"><p class="field-err" id="e-bh"><svg class="g" aria-hidden="true"><use href="#g-struck"/></svg><span>اكتب عددًا من <span class="num">1</span> إلى <span class="num">12</span></span></p></div>
-                      <p class="vdefault" id="h-bh">من <span class="num">1</span> إلى <span class="num">12</span> · الافتراضي: <span class="num">4</span></p>
+                      <p class="vdefault" id="h-bh">من <span class="num">1</span> إلى <span class="num">12</span> · الافتراضي: <span class="num">5</span></p>
                     </div>
                     <div class="vmeta"><span>آخر تعديل: <span class="num">21</span> أكتوبر <span class="num">14:05</span> · أحمد</span><span class="vkey">للمطوّر: <bdi dir="ltr">booking_horizon_weeks</bdi></span><button class="link-btn" type="button">عدّل الوصف<span class="sr-only">: تُجدول الحلقات لكم أسبوعًا مقدمًا</span></button></div>
                     <div class="vactions"><span class="flag flag--dirty"><svg class="g" aria-hidden="true"><use href="#g-hollow"/></svg>لم يُحفظ</span><button class="btn btn--secondary btn--sm" type="button" aria-disabled="true">حفظ<span class="sr-only">: تُجدول الحلقات لكم أسبوعًا مقدمًا</span></button><button class="btn btn--ghost btn--sm" type="button"><svg class="i i--flip" aria-hidden="true"><use href="#i-undo"/></svg>تراجع<span class="sr-only">: تُجدول الحلقات لكم أسبوعًا مقدمًا</span></button></div>
@@ -154,7 +154,7 @@
                       <label class="sw"><input type="checkbox" role="switch" checked><span class="track" aria-hidden="true"></span><span>حساب الإلغاء المتأخر</span></label>
                       <div class="unit-field"><label class="unit" for="f-lc">قبل الحلقة بأقل من</label><input class="input" id="f-lc" type="number" inputmode="numeric" dir="ltr" min="1" max="168" value="24"><span class="unit">ساعة</span></div>
                       <div class="vlive" aria-live="polite"></div>
-                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">168</span> · الافتراضي: <span class="num">12</span> ساعة</p>
+                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">168</span> · الافتراضي: مغلق، و<span class="num">24</span> ساعة عند التشغيل</p>
                     </div>
                     <div class="vmeta"><span>آخر تعديل: <span class="num">21</span> أكتوبر <span class="num">14:05</span> · أحمد</span><span class="vkey">للمطوّر: <bdi dir="ltr">late_cancel_hours</bdi></span><button class="link-btn" type="button">عدّل الوصف<span class="sr-only">: الإلغاء المتأخر</span></button></div>
                     <div class="vactions"><button class="btn btn--ghost btn--sm" type="button">أعد القيمة الافتراضية<span class="sr-only">: الإلغاء المتأخر</span></button></div>
@@ -169,7 +169,7 @@
                     <div class="vedit">
                       <div class="unit-field"><input class="input" id="f-mw" type="number" inputmode="numeric" dir="ltr" min="1" max="365" value="14"><span class="unit">يوم</span></div>
                       <div class="vlive" aria-live="polite"></div>
-                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">365</span> · الافتراضي: <span class="num">14</span></p>
+                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">365</span> · الافتراضي: <span class="num">60</span></p>
                     </div>
                     <div class="vmeta"><span>لم تُعدَّل بعد</span><span class="vkey">للمطوّر: <bdi dir="ltr">makeup_window_days</bdi></span><button class="link-btn" type="button">عدّل الوصف<span class="sr-only">: تعويض الحلقة الفائتة</span></button></div>
                     <div class="vactions"></div>
@@ -372,7 +372,7 @@
                       <div class="unit-field"><input class="input" id="f-ar" type="number" inputmode="numeric" dir="ltr" min="1" max="3650" value="365"><span class="unit">يوم</span></div>
                       <div class="vlive" aria-live="polite"></div>
                       <p class="impact"><svg class="g" aria-hidden="true"><use href="#g-fill"/></svg><b>يؤثر في سجل النشاط:</b> تقصير المدة يحذف السجلات الأقدم نهائيًا. ستُطلب منك كتابة عدد الأيام قبل الحفظ.</p>
-                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">3650</span> · الافتراضي: <span class="num">365</span></p>
+                      <p class="vdefault">من <span class="num">1</span> إلى <span class="num">3650</span> · الافتراضي: <span class="num">180</span></p>
                     </div>
                     <div class="vmeta"><span>لم تُعدَّل بعد</span><span class="vkey">للمطوّر: <bdi dir="ltr">activity_retention_days</bdi></span><button class="link-btn" type="button">عدّل الوصف<span class="sr-only">: سجل النشاط</span></button></div>
                     <div class="vactions"></div>
@@ -574,7 +574,7 @@
           <p class="hint">لا تملك صلاحية تعديل الإعدادات. إن احتجت إلى تغيير قيمة فاطلبه من مدير الأكاديمية.</p>
           <article class="vrow" aria-labelledby="ro-1">
             <div class="vhead"><span class="vlabel" id="ro-1">تُجدول الحلقات لكم أسبوعًا مقدمًا</span><p class="vdesc">عدد الأسابيع التي تُنشأ فيها حلقات الطالب مسبقًا.</p></div>
-            <div class="vedit"><span class="vvalue"><span class="num">4</span> أسابيع</span><span class="vdefault">الافتراضي: <span class="num">4</span></span></div>
+            <div class="vedit"><span class="vvalue"><span class="num">4</span> أسابيع</span><span class="vdefault">الافتراضي: <span class="num">5</span></span></div>
             <div class="vmeta"><span class="vkey">للمطوّر: <bdi dir="ltr">booking_horizon_weeks</bdi></span></div>
           </article>
           <article class="vrow" aria-labelledby="ro-2">

@@ -235,3 +235,35 @@ Mobile column: **edit** = editable on the new Expo screen with `settings.write`;
 | `NotificationCatalogue` (read-only) | «التواصل → الإشعارات»: toggles editable with the same confirmations (family ON, typed «إيقاف» for essential); timing read-only |
 | `GoogleSyncCard` (base admin) | «مزامنة Google» read-only card, unchanged (m6) |
 | Tests `M/src/ops/*.test.tsx` | Keep the old-APK contract tests for m1–m5; add tests for the list, values and communications screens |
+
+## 7. Design review (2026-10-23) — findings and fixes
+
+Four independent reviews of the mockups: Nielsen heuristics, accessibility, brand consistency against docs/07, and
+UX copy. The pages were rendered in Chromium at 1440 px and 390 px, in light and dark. All 89 findings were applied to
+the mockups, except the four listed under «Not applied».
+
+| Review | Findings | Most severe, and the fix |
+|---|---|---|
+| **Heuristics** (Nielsen severity 0–4) | 20 (1 sev 4, 6 sev 3) | **sev 4:** module-owned rows were drawn nowhere → group «تُدار من صفحة أخرى» with read-only rows and links.<br>**sev 3, counts:** «42 قيمة» on the hub vs 28 in the design → «28 قيمة · 5 معدَّلة · 8 عامة»; group counts follow docs/26 §1.<br>**sev 3, confirmations:** typed confirmations on booking-wide switches → typed only for data deletion.<br>**sev 3, renewal:** `renewal_alert_remaining` was editable on the notification row → shown by reference.<br>**sev 3, mobile:** catalogue switches looked on while sending was stopped → per-row «لا يُرسل الآن».<br>**sev 3, 390 px:** horizontal scroll on the notifications page → the sidebar becomes a top strip |
+| **Accessibility** (WCAG 2.2) | 22 (3 high) | **Focus:** clipped outlines in scrolling strips → block padding / inner offset.<br>**Names:** unnamed brand link at ≤ 900 px; a switch named only «مفعَّل» → names from the row label.<br>**Targets:** selected-tab contrast 2.32:1 → green line; 36 px close buttons, 40 px tabs and inputs → 44 px.<br>**Structure:** several h1 per page → one.<br>**Feedback:** save toasts and field errors announced through polite live regions; the narrow dialog's tab order now matches the visual order |
+| **Brand** (docs/07) | 17 (2 high) | **Status tones:** «متوقف» was red on two screens and neutral on the hub → one neutral chip with the struck glyph, because a deliberate pause is not a failure; a rejected template is saffron («دورك»).<br>**Glyphs:** state glyphs on attribute tags («عامة», «أساسي») → plain tags.<br>**Gold:** the double gold rule under group headings → hairline.<br>**Look:** «لم يُحفظ» in green looked clickable → ink-2; boxed cards, monospace keys and green icon tiles removed; one switch design; the real logo PNG.<br>Token hex values match docs/07 §3 exactly |
+| **Copy** (MSA) | 30 (6 high) | No dialect was found.<br>**Grammar:** «غيّر سارة» → «غيّرت سارة»; «و2 قيمتان» → «وقيمتان».<br>**Accuracy:** the key hint wrongly forbade `.` and `-`.<br>**Domain words:** «المعلم» → «المعلم/ة»; one label per key on web and mobile.<br>**Reuse ar.json wording:** «قيم مخصصة», «أعد القيمة الافتراضية», «أضف قيمة», «تم حفظ القيمة», «مفعّل / مغلق», the audience and channel names, «يحتاج تأكيد».<br>**Buttons:** imperatives that name the action («أوقف تأكيد الحجز», «أتِح كل المعلمين للحجز») |
+
+**Decisions where reviewers disagreed:**
+- **«الإرسال متوقف».** The brand review wanted it neutral; the heuristics review wanted it red. It is neutral with the
+  struck glyph, plus a reason line under it.
+- **A conflict (409) is saffron.** It is «دورك»: the admin's save waits for their choice. The unsaved state is green.
+
+**Not applied:**
+- **Self-hosted fonts:** the mockups may not load external URLs, so they use the font stacks. Production self-hosts the
+  fonts (docs/07 §2).
+- **Breadcrumb «الإعدادات › التواصل»** stays, because the IA puts «التواصل» under the hub.
+- **One fake default** in `values.html` (`teachers_always_available` shown off by default; the code default is on). It
+  is illustrative only.
+- **Long mockup files:** the 150-line rule is for app code, not mockups.
+
+## 8. Known limits of the mockups
+
+The mockups are static. Dialogs and states are drawn inline as `<figure>` examples, and the theme switch uses CSS
+`:has()`. `notifications.html` and `mobile.html` carry their own inline token copies (byte-equal values), while the
+other pages share `tokens.css`. All data is fake.
