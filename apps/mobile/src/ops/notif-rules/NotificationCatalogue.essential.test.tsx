@@ -1,10 +1,11 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
-import { fireEvent, screen } from '@testing-library/react-native';
+import { fireEvent, screen, waitFor } from '@testing-library/react-native';
+import { AccessibilityInfo } from 'react-native';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
 import { NotificationCatalogue } from '../NotificationCatalogue';
-import { answer, catalogueV2, MANAGER } from './rules-fixtures';
+import { answer, catalogueV2, MANAGER, openAudience } from './rules-fixtures';
 
 const mockApiFetch = jest.fn();
 const mockApiSend = jest.fn();
@@ -12,6 +13,11 @@ jest.mock('@/lib/api', () => ({
   ...jest.requireActual('@/lib/api'),
   apiFetch: (p: string) => mockApiFetch(p),
   apiSend: (m: string, p: string, b: unknown) => mockApiSend(m, p, b),
+}));
+// The test renderer has no native tags: a mounted title gets one here.
+jest.mock('react-native/Libraries/ReactNative/RendererProxy', () => ({
+  ...jest.requireActual('react-native/Libraries/ReactNative/RendererProxy'),
+  findNodeHandle: (x: unknown) => (x ? 42 : null),
 }));
 
 const c = t.notificationCatalogue;
@@ -52,6 +58,13 @@ test('switching off an essential row opens the sheet; the button waits for the e
   expect(screen.queryByTestId('essential-sheet')).toBeNull();
 });
 
+test('on open the screen reader moves to the sheet title (Android has no accessibilityViewIsModal)', async () => {
+  const focus = jest.spyOn(AccessibilityInfo, 'setAccessibilityFocus').mockImplementation(() => undefined);
+  await switchOff();
+  await waitFor(() => expect(focus).toHaveBeenCalledTimes(1));
+  expect(focus).toHaveBeenCalledWith(42);
+});
+
 test('«إلغاء» closes the sheet without a request', async () => {
   await switchOff();
   await fireEvent.press(screen.getByRole('button', { name: r.cancel }));
@@ -71,6 +84,7 @@ test('a 428 from the sheet keeps it open and says to type the word', async () =>
 test('a 428 for a row this build saw as plain opens the typed sheet', async () => {
   mockApiSend.mockRejectedValueOnce(new ApiError(428, { message: 'confirmation_required' }));
   await renderWithQuery(<NotificationCatalogue />);
+  await openAudience(c.audience.teacher);
   const teacher = c.entries.teacher_lesson_reminder.name;
   await fireEvent(await screen.findByRole('switch', { name: r.switchLabel.replace('{name}', teacher) }), 'valueChange', false);
   expect(await screen.findByTestId('essential-sheet')).toBeTruthy();

@@ -22,7 +22,9 @@ test('without notifications.manage the v2 list is read-only, as before', async (
   expect(await screen.findByText(c.entries.report_ready.name)).toBeTruthy();
   expect(screen.queryAllByRole('switch')).toHaveLength(0);
   expect(screen.queryByText(r.locked)).toBeNull();
-  expect(screen.getByText(`${c.readOnly} · ${c.intro}`)).toBeTruthy();
+  expect(screen.getByText(r.readOnlyIntro)).toBeTruthy();
+  expect(screen.getByText(r.title)).toBeTruthy();
+  expect(screen.queryByText(new RegExp(c.readOnly))).toBeNull();
 });
 
 test('a v1 answer (no rule) renders read-only even for a manager', async () => {

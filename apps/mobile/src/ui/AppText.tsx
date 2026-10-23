@@ -1,3 +1,4 @@
+import type { Ref } from 'react';
 import { Text, type TextProps } from 'react-native';
 
 /**
@@ -6,6 +7,9 @@ import { Text, type TextProps } from 'react-native';
  * (doLeftAndRightSwapInRTL), so 'left' means "start": right in Arabic, left in English.
  * Pass textAlign: 'center' to override.
  */
-export function AppText({ style, ...props }: TextProps) {
-  return <Text {...props} style={[{ textAlign: 'left' }, style]} />;
+/** The node behind an AppText, for a ref (focus, measure) without importing Text elsewhere. */
+export type AppTextNode = Text;
+
+export function AppText({ style, ref, ...props }: TextProps & { ref?: Ref<Text> }) {
+  return <Text {...props} ref={ref} style={[{ textAlign: 'left' }, style]} />;
 }

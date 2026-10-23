@@ -38,9 +38,25 @@ test('askOf: family ON, essential OFF, everything else plain', () => {
   expect(askOf({ audience: 'staff', essential: false }, false)).toBe('plain');
 });
 
+test.each([
+  { n: 1, guardian: 'سيصل إلى ولي أمر واحد.', lead: 'سيصل إلى عميل واحد.' },
+  { n: 2, guardian: 'سيصل إلى وليَّي أمر.', lead: 'سيصل إلى عميلين.' },
+  { n: 7, guardian: 'سيصل إلى 7 أولياء أمور.', lead: 'سيصل إلى 7 عملاء.' },
+  { n: 103, guardian: 'سيصل إلى 103 أولياء أمور.', lead: 'سيصل إلى 103 عملاء.' },
+  { n: 37, guardian: 'سيصل إلى 37 ولي أمر.', lead: 'سيصل إلى 37 عميلًا.' },
+])('reachLine: $n takes its Arabic count form (1, 2, 3–10, 11+)', ({ n, guardian, lead }) => {
+  const reach = { guardian: n, teacher: 0, lead: n };
+  expect(reachLine('guardian', reach)).toBe(guardian);
+  expect(reachLine('lead', reach)).toBe(lead);
+});
+
+test('reachLine: nobody with a number yet says so instead of «0»', () => {
+  expect(reachLine('lead', { guardian: 3, teacher: 0, lead: 0 })).toBe(r.reach.nobody);
+});
+
 test('reachLine: the count for the audience, a general line without it', () => {
-  expect(reachLine('guardian', { guardian: 5, teacher: 1, lead: 2 })).toBe(r.reach.guardian.replace('{n}', '5'));
-  expect(reachLine('lead', { guardian: 5, teacher: 1, lead: 2 })).toBe(r.reach.lead.replace('{n}', '2'));
+  expect(reachLine('guardian', { guardian: 5, teacher: 1, lead: 2 })).toBe(r.reach.guardian.few.replace('{n}', '5'));
+  expect(reachLine('lead', { guardian: 5, teacher: 1, lead: 2 })).toBe(r.reach.lead.two);
   expect(reachLine('guardian', undefined)).toBe(r.reach.unknown);
   expect(reachLine('teacher', undefined)).toBe('');
 });

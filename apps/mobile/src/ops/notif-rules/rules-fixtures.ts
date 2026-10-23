@@ -1,4 +1,5 @@
 import type { NotificationEntryView, NotificationsOverview } from '@ab/shared';
+import { fireEvent, screen } from '@testing-library/react-native';
 import { catalogue, settings } from '../fixtures';
 
 // GET /admin/notifications as a tagged phone sees it (v2: rule, approval, mode, reach), for the switch tests.
@@ -51,3 +52,8 @@ export const answer =
     if (path === '/auth/me') return me;
     return settings;
   };
+
+/** Presses an audience pill (its name carries the count), e.g. t.notificationCatalogue.audience.teacher. */
+export const openAudience = async (label: string): Promise<void> => {
+  await fireEvent.press(await screen.findByRole('tab', { name: new RegExp(`^${label}`) }));
+};

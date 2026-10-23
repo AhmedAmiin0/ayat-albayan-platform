@@ -1,13 +1,15 @@
 import { ESSENTIAL_OFF_TEXT } from '@ab/shared';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Modal, Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { ErrorLine } from '@/inbox/ErrorLine';
 import { t } from '@/lib/i18n';
 import { Note } from '@/more/Note';
 import { shape, useTheme } from '@/theme';
+import type { AppTextNode } from '@/ui/AppText';
 import { Button } from '@/ui/Button';
 import { Field } from '@/ui/Field';
 import { ScreenHeader } from '@/ui/ScreenHeader';
+import { useFocusOnOpen } from './use-focus-on-open';
 
 export interface EssentialOffSheetProps {
   /** The row's name («تأكيد الحجز وتغيير الموعد»). */
@@ -21,11 +23,14 @@ export interface EssentialOffSheetProps {
 /**
  * «اكتب: إيقاف» for an essential row (states.html#mobile): the button stays off until the word is
  * typed exactly (ESSENTIAL_OFF_TEXT), then sends it as confirmText; the API logs the OFF. Not green:
- * the act removes something. Mount it only while the question is open.
+ * the act removes something. Mount it only while the question is open. On open the screen reader
+ * lands on the title (accessibilityViewIsModal alone is iOS-only).
  */
 export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: EssentialOffSheetProps) {
   const { color } = useTheme();
   const [typed, setTyped] = useState('');
+  const title = useRef<AppTextNode>(null);
+  useFocusOnOpen(title);
   const r = t.mobileNotificationRules;
   const matches = typed.trim() === ESSENTIAL_OFF_TEXT;
   return (
@@ -43,8 +48,8 @@ export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: Ess
           accessibilityViewIsModal
           style={{
             maxHeight: '90%',
-            borderTopLeftRadius: shape.radius.lg,
-            borderTopRightRadius: shape.radius.lg,
+            borderTopStartRadius: shape.radius.lg,
+            borderTopEndRadius: shape.radius.lg,
             backgroundColor: color.raised,
           }}
         >
@@ -55,6 +60,7 @@ export function EssentialOffSheet({ name, busy, error, onConfirm, onClose }: Ess
           >
             <ScreenHeader
               size="h2"
+              titleRef={title}
               title={r.essentialTitle.replace('{name}', name)}
               trailing={<Button variant="ghost" label={r.close} onPress={onClose} />}
             />

@@ -5742,7 +5742,10 @@
     "keepEditing": "Keep editing"
   },
   "mobileNotificationRules": {
+    "title": "Notifications",
     "intro": "Turn each notification on or off here. Timings, numbers and templates are changed on the website.",
+    "readOnlyIntro": "Everything the platform sends, to whom, from which number, and whether it goes out now. Notifications and their timings are changed on the website.",
+    "audienceEmpty": "No notifications for this group.",
     "switchLabel": "Send «{name}»",
     "locked": "Cannot be turned off",
     "heldNow": "Not sent now: {reason}",
@@ -5753,11 +5756,22 @@
       "auto_off": "automatic messages are off",
       "row_off": "this notification is off",
       "template_not_approved": "Meta has not approved the template yet",
-      "classroom_off": "the academy classroom is not in use"
+      "classroom_off": "because the academy classroom is not in use"
     },
     "reach": {
-      "guardian": "It will reach {n} guardians.",
-      "lead": "It will reach {n} leads.",
+      "guardian": {
+        "one": "It will reach one guardian.",
+        "two": "It will reach two guardians.",
+        "few": "It will reach {n} guardians.",
+        "other": "It will reach {n} guardians."
+      },
+      "lead": {
+        "one": "It will reach one lead.",
+        "two": "It will reach two leads.",
+        "few": "It will reach {n} leads.",
+        "other": "It will reach {n} leads."
+      },
+      "nobody": "Nobody has a registered number for it now; it will reach those added later.",
       "unknown": "It will reach families when it happens."
     },
     "familyConfirm": "Turn on «{name}»? {reach}",
@@ -5765,7 +5779,7 @@
     "cancel": "Cancel",
     "essentialTitle": "Turn off «{name}»?",
     "essentialBody": "This is an essential notification. If you turn it off, nobody receives it until you turn it back on.",
-    "typedLabel": "Type «{word}» to confirm",
+    "typedLabel": "Type: {word}",
     "typedHint": "The button works once the word is typed exactly.",
     "logLine": "This is recorded in the activity log with your name and the time.",
     "turnOff": "Turn off the notification",
