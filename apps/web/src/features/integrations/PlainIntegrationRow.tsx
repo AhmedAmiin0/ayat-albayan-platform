@@ -1,8 +1,8 @@
 import { integrationEnum, type IntegrationConfigItem } from '@ab/shared';
+import { SettingRow } from '@/components/settings/SettingRow';
 import { Input } from '@/components/ui/input';
 import { Select } from '@/components/ui/select';
 import { t } from '@/lib/i18n';
-import { SettingRow } from '../messaging/SettingsFields';
 import { DeveloperKey } from './DeveloperKey';
 import { enumEmptyLabel, integrationText, optionText } from './integrations-form';
 import { IntegrationSourceNote } from './IntegrationSourceNote';

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { sectionId } from '@/features/messaging/SettingsNav';
+import { sectionId } from '@/components/settings/section-id';
 import { integrationsQuery } from '@/features/integrations/integrations-api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';

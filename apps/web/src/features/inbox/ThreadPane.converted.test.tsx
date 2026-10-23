@@ -1,6 +1,6 @@
 import { screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SETTINGS } from '@/features/messaging/settings-fixture';
+import { SETTINGS } from '@/test/settings-fixture';
 import { t } from '@/lib/i18n';
 import { detail, lead, PHONE } from './inbox-fixture';
 import { renderWithClient, routeFetch } from './test-utils';

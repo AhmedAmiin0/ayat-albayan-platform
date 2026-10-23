@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
+import { Section } from '@/components/settings/Section';
 import { t } from '@/lib/i18n';
 import { GoogleSection } from '../google-sync/GoogleSection';
-import { Section } from '../messaging/SettingsSections';
 import { integrationsQuery } from './integrations-api';
 import { integrationsMatch } from './integrations-form';
+import { INTEGRATIONS_SECTION } from './integrations-section';
 import { IntegrationsForm } from './IntegrationsForm';
 
 const s = t.integrations;
@@ -18,7 +19,7 @@ export function IntegrationsPanel({ query, onSaved }: { query: string; onSaved: 
   const list = useQuery(integrationsQuery);
   if (!integrationsMatch(query)) return null;
   return (
-    <Section id="integrations">
+    <Section id={INTEGRATIONS_SECTION.id} title={INTEGRATIONS_SECTION.label}>
       <p className="text-xs text-ink-3">{s.intro}</p>
       <p className="text-xs text-ink-3">{s.secretNote}</p>
       {list.isError && <p className="text-sm text-ink-2">{s.loadError}</p>}

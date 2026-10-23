@@ -1,6 +1,6 @@
 import { fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { SETTINGS } from '@/features/messaging/settings-fixture';
+import { SETTINGS } from '@/test/settings-fixture';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
 import { detail, message, PHONE, template } from './inbox-fixture';

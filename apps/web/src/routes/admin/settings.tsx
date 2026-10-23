@@ -1,5 +1,5 @@
 import { createFileRoute } from '@tanstack/react-router';
-import { SettingsPage } from '@/features/messaging/SettingsPage';
+import { SettingsPage } from '@/features/settings/SettingsPage';
 
 /** /admin/settings — messaging switch, WhatsApp template health, academy settings (R-MSG-01). */
 export const Route = createFileRoute('/admin/settings')({

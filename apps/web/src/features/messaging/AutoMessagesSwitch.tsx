@@ -1,12 +1,11 @@
 import type { AcademySettings } from '@ab/shared';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useState } from 'react';
+import { ConfirmSwitchDialog } from '@/components/settings/ConfirmSwitchDialog';
 import { Button } from '@/components/ui/button';
 import { FormAlert } from '@/components/ui/form-alert';
 import { StatusChip } from '@/components/ui/status-chip';
 import { t } from '@/lib/i18n';
-import { updateSettings } from './api';
-import { ConfirmSwitchDialog } from './ConfirmSwitchDialog';
+import { useSettingSwitch } from '@/lib/use-setting-switch';
 
 const s = t.templates.settings;
 
@@ -30,19 +29,12 @@ const ask = (on: boolean) =>
  * Both ways ask first and say who is reached or what stops (docs/23a §E H4).
  */
 export function AutoMessagesSwitch({ settings }: { settings: AcademySettings }) {
-  const queryClient = useQueryClient();
   const on = settings.auto_messages_enabled;
   // On before the cut-over is ticked: families may get the Apps Script reminder too (the admin's turn).
   const risky = on && !settings.crm_cutover_done;
   const chip = chipOf(on, risky);
   const [confirming, setConfirming] = useState(false);
-  const save = useMutation({
-    mutationFn: updateSettings,
-    onSuccess: (next) => {
-      queryClient.setQueryData(['settings'], next);
-      setConfirming(false);
-    },
-  });
+  const save = useSettingSwitch({ onSaved: () => setConfirming(false) });
 
   return (
     <div className="grid gap-3 border-t border-rule pt-4">
