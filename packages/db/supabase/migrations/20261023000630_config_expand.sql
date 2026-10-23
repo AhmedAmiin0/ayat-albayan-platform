@@ -86,7 +86,8 @@ begin
     new.updated_at := now();
   else
     new.updated_at := old.updated_at;
-    new.updated_by := old.updated_by;
+    -- Only over a non-null writer: a future on-delete-set-null cascade must still clear it.
+    if new.updated_by is not null then new.updated_by := old.updated_by; end if;
   end if;
   return new;
 end;
@@ -127,29 +128,20 @@ begin
 end;
 $$;
 
--- Bumps only when the statement touched rows (transition table not empty): statement triggers also fire
--- for zero rows, and config_seed's "update only on difference" upserts must not bump on every boot.
-create or replace function public.settings_bump_revision_if_rows() returns trigger
-language plpgsql security definer set search_path = '' as $$
-begin
-  if exists (select 1 from changed) then
-    insert into public.settings_revision as r (id, rev) values (true, 1)
-    on conflict (id) do update set rev = r.rev + 1;
-  end if;
-  return null;
-end;
-$$;
-
+-- Bumped by a row-level constraint trigger DEFERRED to commit: every writer then takes the one
+-- revision-row lock last, after all its key-row locks, so a multi-key transaction (config_set,
+-- config_seed) and an autocommit upsert can never deadlock on it. Still inside the writer's
+-- transaction, so the new rev is visible exactly when the rows are. An upsert whose `do update … where`
+-- matches nothing fires no row trigger, so a no-change seeder boot does not bump rev.
 drop trigger if exists settings_revision_ins on public.settings;
 drop trigger if exists settings_revision_upd on public.settings;
 drop trigger if exists settings_revision_del on public.settings;
+drop trigger if exists settings_revision_bump on public.settings;
 drop trigger if exists settings_revision_trunc on public.settings;
-create trigger settings_revision_ins after insert on public.settings referencing new table as changed
-  for each statement execute function public.settings_bump_revision_if_rows();
-create trigger settings_revision_upd after update on public.settings referencing new table as changed
-  for each statement execute function public.settings_bump_revision_if_rows();
-create trigger settings_revision_del after delete on public.settings referencing old table as changed
-  for each statement execute function public.settings_bump_revision_if_rows();
+drop function if exists public.settings_bump_revision_if_rows();
+create constraint trigger settings_revision_bump after insert or update or delete on public.settings
+  deferrable initially deferred for each row execute function public.settings_bump_revision();
+-- TRUNCATE (e2e resetDb) cannot have a constraint trigger.
 create trigger settings_revision_trunc after truncate on public.settings
   for each statement execute function public.settings_bump_revision();
 
@@ -262,7 +254,7 @@ declare f text;
 begin
   foreach f in array array[
     'config_seed(jsonb, int)', 'config_set(jsonb, uuid)', 'settings_before_update()',
-    'settings_bump_revision()', 'settings_bump_revision_if_rows()'] loop
+    'settings_bump_revision()'] loop
     execute format('revoke execute on function public.%s from public, anon, authenticated', f);
     execute format('grant execute on function public.%s to service_role', f);
   end loop;
@@ -270,9 +262,8 @@ end $$;
 
 -- MANUAL ROLLBACK (only after the code rollback; no value is lost, the columns are unused):
 --   drop function public.config_set(jsonb, uuid); drop function public.config_seed(jsonb, int);
---   drop trigger settings_revision_ins, settings_revision_upd, settings_revision_del, settings_revision_trunc
---     on public.settings (one statement each); drop function public.settings_bump_revision_if_rows();
---   drop function public.settings_bump_revision(); drop table public.settings_revision;
+--   drop trigger settings_revision_bump, settings_revision_trunc
+--     on public.settings (one statement each); drop function public.settings_bump_revision(); drop table public.settings_revision;
 --   drop trigger settings_before_update on public.settings; drop function public.settings_before_update();
 --   create trigger settings_updated_at before update on public.settings
 --     for each row execute function public.set_updated_at();

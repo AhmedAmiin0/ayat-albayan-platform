@@ -19,7 +19,11 @@ const ENTRIES = [
 
 const rows = (tx: Tx) => tx<Row[]>`
   select key, value, version::text as version, updated_at from public.settings where key like 'zz\_e2e\_%' order by key`;
-const rev = async (tx: Tx) => (await tx<{ rev: string }[]>`select rev::text as rev from public.settings_revision`)[0]?.rev;
+// The bump is deferred to commit (no deadlock with autocommit writers); IMMEDIATE fires the pending ones.
+const rev = async (tx: Tx) => {
+  await tx`set constraints public.settings_revision_bump immediate`;
+  return (await tx<{ rev: string }[]>`select rev::text as rev from public.settings_revision`)[0]?.rev;
+};
 const stored = async (tx: Tx) =>
   (await tx<{ v: number }[]>`select registry_version as v from public.settings_revision`)[0]?.v ?? 0;
 const seed = async (tx: Tx, entries: unknown, version: number) =>
