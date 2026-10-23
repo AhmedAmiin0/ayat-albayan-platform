@@ -152,7 +152,10 @@ page; the menu still shows the key. **«قيم مخصصة»** (docs/26 phase 5):
 `/more/ops/settings` stays (push deep links open it) and becomes the list «الإعدادات»: «القيم», «التواصل», «مزامنة
 Google», and the line «التكاملات: تُدار من الموقع». **«القيم»** is the same two-column table and bottom-sheet editor as
 the web phone layout (editable with `settings.write`: scalars with per-row save and the same confirmations; shapes,
-lists, «أضف قيمة» and description edits «عدّلها من الموقع»). **«التواصل»**: send state read-only; catalogue switches
+lists and «أضف قيمة» «عدّلها من الموقع»; **descriptions are edited in the bottom sheet** (owner, 26-P2):
+«عدّل الوصف» opens a multiline box with «{n} / 500», «احفظ» / «إلغاء» and «أعد الوصف الأصلي» for an edited text,
+with `settings.write` and, on a module-owned key, that module's permission; an API without `GET /config/entries`
+shows today's text and no button). **«التواصل»**: send state read-only; catalogue switches
 editable with the same confirmations (the typed «إيقاف» is a bottom sheet); numbers, credentials and templates
 «تُدار من الموقع». **«مزامنة Google»**: read-only card, unchanged. No frame, no cartouche; nuqta, green and saffron stay
 (docs/07 §12); inputs 16px and ≥ 44px tall. Every frame in `mobile.html` fits a 390×844 screen.

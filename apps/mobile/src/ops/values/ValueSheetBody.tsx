@@ -11,7 +11,8 @@ import { SheetNotes, SheetNotice } from './SheetNotes';
 import { SheetQuestion } from './SheetQuestion';
 import { ValueEditor } from './ValueEditor';
 import { editorOf } from './value-draft';
-import { hintOf, labelOf, valueText } from './value-text';
+import { labelOf, valueText } from './value-text';
+import type { SheetDescription } from './use-description-editor';
 import type { ValueSheetState } from './use-value-sheet';
 
 export interface ValueSheetBodyProps {
@@ -21,6 +22,23 @@ export interface ValueSheetBodyProps {
   canWrite: boolean;
   meta: SettingMeta | undefined;
   sheet: ValueSheetState;
+  description: SheetDescription;
+  /** «عدّل الوصف»: the sheet switches to the description editor. */
+  onDescribe: () => void;
+}
+
+/** The full description, then «عدّل الوصف» when this admin may edit it (docs/26b §2 phone). */
+function Description({ description, onDescribe }: Pick<ValueSheetBodyProps, 'description' | 'onDescribe'>) {
+  return (
+    <>
+      {description.text ? <Note>{description.text}</Note> : null}
+      {description.canEdit ? (
+        <View style={{ alignItems: 'flex-start' }}>
+          <Button variant="ghost" label={t.mobileValues.description.edit} onPress={onDescribe} />
+        </View>
+      ) : null}
+    </>
+  );
 }
 
 /** The value as text when there is no editor. */
@@ -48,9 +66,9 @@ function Actions({ sheet }: { sheet: ValueSheetState }) {
 }
 
 /** The sheet's content (docs/26b §2 phone): title, description, editor, bounds, default, last change, actions. */
-export function ValueSheetBody({ valueKey, saved, canWrite, meta, sheet }: ValueSheetBodyProps) {
+export function ValueSheetBody(props: ValueSheetBodyProps) {
+  const { valueKey, saved, canWrite, meta, sheet } = props;
   const editable = canWrite && editorOf(valueKey) !== 'readonly';
-  const hint = hintOf(valueKey);
   return (
     <View style={{ gap: 12 }}>
       <ScreenHeader
@@ -58,7 +76,7 @@ export function ValueSheetBody({ valueKey, saved, canWrite, meta, sheet }: Value
         title={labelOf(valueKey)}
         trailing={<Button variant="ghost" label={t.common.close} onPress={sheet.requestClose} />}
       />
-      {hint ? <Note>{hint}</Note> : null}
+      <Description description={props.description} onDescribe={props.onDescribe} />
       {editable ? (
         <ValueEditor valueKey={valueKey} draft={sheet.draft} setDraft={sheet.setDraft} />
       ) : (

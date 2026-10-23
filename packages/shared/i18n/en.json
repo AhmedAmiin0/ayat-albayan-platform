@@ -5615,6 +5615,22 @@
     "typedMismatch": "The typed number does not match the value",
     "unsavedClose": "You have not saved your edit. Close without saving?",
     "closeAnyway": "Close without saving",
-    "keepEditing": "Keep editing"
+    "keepEditing": "Keep editing",
+    "description": {
+      "edit": "Edit description",
+      "title": "Edit description",
+      "label": "Description",
+      "counter": "{n} / {max}",
+      "save": "Save",
+      "cancel": "Cancel",
+      "restore": "Restore the original description",
+      "required": "Write the description before saving",
+      "tooLong": "The description must be at most {max} characters",
+      "forbidden": "You do not have permission to edit this value's description",
+      "invalid": "This description was not accepted; check the text and save it again",
+      "saveFailed": "Could not save the description",
+      "saved": "Description saved",
+      "restored": "The original description is restored"
+    }
   }
 }

@@ -46,6 +46,7 @@ function Loading() {
  * «القيم» on the phone (docs/26b §2 phone, §4; R-MSG-01): one group at a time in a two-column table;
  * a row opens its bottom sheet. Scalars are edited there with settings.write, one key per save;
  * shapes, lists, module-owned keys and «مزامنة Google» are read-only («عدّلها من الموقع»).
+ * Descriptions are edited in the sheet too («عدّل الوصف», PUT /config/entries/:key/description).
  */
 export function ValuesScreen() {
   const query = useSettings();
@@ -94,6 +95,7 @@ export function ValuesScreen() {
           meta={meta?.[open]}
           onSaved={() => setNotice(t.config.custom.saved)}
           onClose={() => setOpen(null)}
+          onDescribed={setNotice}
         />
       ) : null}
     </Screen>
