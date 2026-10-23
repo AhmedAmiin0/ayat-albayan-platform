@@ -76,7 +76,7 @@ Also: `.github/workflows/ci.yml:146-189` (`E2E_LINES: single` job), `tools/migra
 
 Shared, not per line: `WA_API_BASE`/`WA_API_VERSION` (also used by a meta chat line, `env.whatsapp.ts:50,72`); the single `WA_VERIFY_TOKEN`; one Kapso project for both lines (`env.kapso.ts:36-40,51-57`). `WA_CHAT_ACCESS_TOKEN` falls back to `WA_ACCESS_TOKEN` (`env.whatsapp.ts:47`); `WA_CHAT_APP_ID` has no fallback (`env.ts:62-63`).
 
-Env only: `MESSAGING_ENABLED` (`env.ts:110`), `INTEGRATION_CONFIG_FROM_DB` (`:108`), `SETTINGS_CACHE_MS` (`:106`), `MESSAGE_SENDER_POLL_MS` (`:91`).
+Env only: `INTEGRATION_CONFIG_FROM_DB` (`env.ts:111`), `INTEGRATION_REFRESH_MS` (`:109`), `SETTINGS_CACHE_MS` (`:107`), `MESSAGE_SENDER_POLL_MS` (`:92`). There is no `MESSAGING_ENABLED` env var any more; the kill switch is `settings.messaging_enabled`.
 
 **DB wins, env is fallback.** `common/integrations/integration-config.queries.ts:26-27` reads plain rows + `rpc('integration_secrets_read')`; `integration-config.service.ts:36-60` refreshes on boot, every `integrationRefreshMs` (`integration-refresh.ts`: `INTEGRATION_REFRESH_MS`, else `SETTINGS_CACHE_MS`) and after each write, keeping the last good snapshot; `env.ts:140-148` `validOverlay` drops invalid values (logged by name); `common/integrations/integration-overlay.ts:8-17` frozen snapshot; `env.ts:128-134` `loadEnv() = parse({...process.env, ...overlay})`; `integration-config.view.ts:22` source `db|env|unset`. Controller `settings/integrations` GET, PUT, `PUT|DELETE secrets/:key` (`integration-config.controller.ts:23-57`). Every new **secret** name needs a migration replacing `integration_secret_key_ok`; plain keys do not.
 
