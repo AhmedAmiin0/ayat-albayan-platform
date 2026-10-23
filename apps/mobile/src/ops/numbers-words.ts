@@ -24,10 +24,14 @@ export function parityLine(parity: Pick<ParityView, 'differences'>): string {
   return count === 0 ? n().mobile.parityOk : n().mobile.parityDiff.replace('{{count}}', String(count));
 }
 
-/** «دور الإشعارات · ⁦+1 555 000 1111⁩», or «لم يُفحص بعد» before the first check. */
-export function numberSubtitle(view: Pick<NumberView, 'purpose' | 'display_phone_e164'>): string {
-  const phone = view.display_phone_e164 ? ltr(formatPhone(view.display_phone_e164)) : n().chips.notChecked;
-  return `${n().purpose[view.purpose]} · ${phone}`;
+/**
+ * «دور الإشعارات · ⁦+1 555 000 1111⁩», «… · لم يُفحص بعد» before the first check, or the role alone
+ * once a check answered without a number (its health chip says why).
+ */
+export function numberSubtitle(view: Pick<NumberView, 'purpose' | 'display_phone_e164' | 'checked_at'>): string {
+  const role = n().purpose[view.purpose];
+  if (view.display_phone_e164) return `${role} · ${ltr(formatPhone(view.display_phone_e164))}`;
+  return view.checked_at ? role : `${role} · ${n().chips.notChecked}`;
 }
 
 /** «مفعّل» ok / «متوقف» neutral struck, then «الافتراضي لدوره» when it is. */

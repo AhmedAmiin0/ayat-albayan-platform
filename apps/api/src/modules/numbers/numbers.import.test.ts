@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { setIntegrationOverlay } from '../../common/integrations/integration-overlay';
-import type { NumbersConfig } from './numbers.config';
+import type { NumbersEffects } from './numbers.effects';
 import { numberRow } from './numbers.fakes';
 import { NumbersImport } from './numbers.import';
 import type { NumbersQueries } from './numbers.queries';
@@ -26,9 +26,9 @@ function setup() {
     copy: vi.fn(async (t: { id: string; name: string }) => (mark(t.id, t.name), true)),
     set: vi.fn(async (t: { id: string; name: string }) => mark(t.id, t.name)),
   };
-  const config = { refresh: vi.fn(async () => true) };
-  const importer = new NumbersImport(queries as unknown as NumbersQueries, secrets as unknown as NumbersSecrets, config as unknown as NumbersConfig);
-  return { importer, queries, secrets, config };
+  const effects = { after: vi.fn(async () => undefined) };
+  const importer = new NumbersImport(queries as unknown as NumbersQueries, secrets as unknown as NumbersSecrets, effects as unknown as NumbersEffects);
+  return { importer, queries, secrets, effects };
 }
 
 afterEach(() => {
@@ -45,6 +45,15 @@ describe('POST /admin/numbers/import', () => {
     expect(t.queries.insert).not.toHaveBeenCalled();
     expect(t.secrets.copy).not.toHaveBeenCalled();
     expect(t.secrets.set).not.toHaveBeenCalled();
+    expect(t.effects.after).not.toHaveBeenCalled();
+  });
+
+  it('a role that fails half-way is still audited and refreshed', async () => {
+    for (const [k, v] of Object.entries(ENV)) vi.stubEnv(k, v);
+    const t = setup();
+    t.secrets.set.mockRejectedValueOnce(new Error('vault down'));
+    await expect(t.importer.run(false, 'actor')).rejects.toThrow('vault down');
+    expect(t.effects.after).toHaveBeenCalledWith(expect.objectContaining({ action: 'import' }));
   });
 
   it('apply: inserts the row (enabled, default) and copies DB secrets in the database, env secrets via set', async () => {
@@ -60,8 +69,10 @@ describe('POST /admin/numbers/import', () => {
     const id = res.roles[0]?.number_id;
     expect(t.secrets.copy).toHaveBeenCalledWith({ id, name: 'access_token' }, 'WA_ACCESS_TOKEN');
     expect(t.secrets.set).toHaveBeenCalledWith({ id, name: 'app_secret' }, 'env-secret-fake');
-    expect(t.config.refresh).toHaveBeenCalledOnce();
-    expect(JSON.stringify(res)).not.toMatch(/token-fake|secret-fake/);
+    expect(t.effects.after).toHaveBeenCalledOnce();
+    expect(t.effects.after).toHaveBeenCalledWith(expect.objectContaining({ entity: 'wa_numbers', action: 'import', actorId: 'actor' }));
+    expect(JSON.stringify(t.effects.after.mock.calls)).toContain('access_token');
+    expect(JSON.stringify([res, t.effects.after.mock.calls])).not.toMatch(/token-fake|secret-fake/);
   });
 
   it('a second apply is a no-op diff: nothing inserted or copied again', async () => {

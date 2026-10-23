@@ -1,7 +1,8 @@
-import type { NumberCreate, NumberError, NumberUpdate, WaLine } from '@ab/shared';
+import type { NumberCreate, NumberError, WaLine } from '@ab/shared';
 import { ConflictException, Inject, Injectable } from '@nestjs/common';
 import type { Database } from '@ab/db';
 import { DB, type Db } from '../../common/db/db.module';
+import type { NumberPatch } from './numbers.patch';
 
 export type NumberRow = Database['public']['Tables']['wa_numbers']['Row'];
 type Health = Pick<NumberRow, 'health' | 'checked_at'> & { display_phone_e164?: string };
@@ -51,7 +52,7 @@ export class NumbersQueries {
   }
 
   /** null = no such number. is_default true goes through makeDefault, not here. */
-  async update(id: string, input: { patch: Omit<NumberUpdate, 'is_default'> & { is_default?: false }; actorId: string }): Promise<NumberRow | null> {
+  async update(id: string, input: { patch: NumberPatch; actorId: string }): Promise<NumberRow | null> {
     const { data, error } = await this.db
       .from('wa_numbers')
       .update({ ...input.patch, updated_by: input.actorId })

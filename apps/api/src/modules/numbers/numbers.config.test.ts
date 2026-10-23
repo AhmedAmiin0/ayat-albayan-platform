@@ -1,17 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { numbersOverlay, setNumbersOverlay } from '../../common/integrations/numbers-overlay';
-import { readerOf } from '../../common/settings/settings.fakes';
-import { NumbersConfig } from './numbers.config';
+import { config } from './numbers.config.fakes';
 import { numberRow } from './numbers.fakes';
-import type { NumbersQueries } from './numbers.queries';
-import type { NumbersSecrets } from './numbers.secrets';
-import { NumbersSettings } from './numbers.settings';
-
-function config(source: 'legacy' | 'module', defaults = vi.fn(async () => [numberRow()])) {
-  const queries = { defaults } as unknown as NumbersQueries;
-  const secrets = { read: vi.fn(async () => ({ access_token: 'token-fake' })) } as unknown as NumbersSecrets;
-  return new NumbersConfig(readerOf(NumbersSettings, { comms_source: source }), queries, secrets);
-}
 
 afterEach(() => setNumbersOverlay(null));
 
@@ -30,12 +20,14 @@ describe('NumbersConfig', () => {
     expect(numbersOverlay()?.numberIds).toEqual({ notifications: numberRow().id });
   });
 
-  it('a failed load keeps the current state and never throws', async () => {
-    const prev = { values: { WA_PHONE_NUMBER_ID: 'kept' }, numberIds: {} };
-    setNumbersOverlay(prev);
-    const c = config('module', vi.fn(async () => Promise.reject(new Error('db down'))));
+  it('a failed load after a good one keeps the current state and never throws', async () => {
+    const defaults = vi.fn(async () => [numberRow()]);
+    const c = config('module', defaults);
+    await c.refresh();
+    const prev = numbersOverlay()?.values;
+    defaults.mockRejectedValueOnce(new Error('db down'));
     expect(await c.refresh()).toBe(false);
-    expect(numbersOverlay()?.values).toEqual(prev.values);
+    expect(numbersOverlay()?.values).toEqual(prev);
   });
 
   it('onModuleInit reads nothing when the database config is off (vitest: INTEGRATION_CONFIG_FROM_DB=false)', async () => {

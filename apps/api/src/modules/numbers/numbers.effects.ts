@@ -17,7 +17,7 @@ export class NumbersEffects {
     try {
       await this.audit.record(entry);
     } finally {
-      await this.config.refresh();
+      await this.config.reload();
     }
   }
 }

@@ -15,12 +15,15 @@ const MIN_REFRESH_MS = 1_000;
  * (the default, and whenever the setting is unknown) clears the numbers overlay, so loadEnv() and every
  * send are exactly today's. module: each role's default enabled number supplies that role's line keys
  * instead of the legacy WA_* ones. Refreshed at boot (before WhatsappModule starts), on the integration
- * refresh period and after every numbers write. A failed load keeps the current state. Never logs a value.
+ * refresh period and after every numbers write (never when the database config is off). Never logs a value.
  */
 @Injectable()
 export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
   private readonly log = new Logger(NumbersConfig.name);
   private timer: NodeJS.Timeout | null = null;
+  private fromDb = false;
+  private loaded = false;
+  private generation = 0;
 
   constructor(
     private readonly settings: NumbersSettings,
@@ -32,6 +35,7 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
     // INTEGRATION_CONFIG_FROM_DB=false (unit tests, env-only runs): never read; legacy.
     const everyMs = integrationRefreshMs(loadEnv());
     if (everyMs === null) return;
+    this.fromDb = true;
     await this.refresh();
     this.timer = setInterval(() => void this.refresh(), Math.max(everyMs, MIN_REFRESH_MS)).unref();
   }
@@ -44,15 +48,34 @@ export class NumbersConfig implements OnModuleInit, OnModuleDestroy {
     return (await this.settings.read()).comms_source === 'module' ? 'module' : 'legacy';
   }
 
-  /** Never throws. true = the overlay matches the stored source now. */
+  /** After a numbers or source write: refresh(), unless the database config is off (docs/25 §7). */
+  reload(): Promise<boolean> {
+    return this.fromDb ? this.refresh() : Promise.resolve(true);
+  }
+
+  /**
+   * Never throws. true = the overlay matches the stored source now. Only the latest call installs its
+   * result (a slow interval load never overwrites a newer write's). A failed load keeps the current
+   * state, except that module mode with nothing loaded yet (boot) fails closed: every line blank.
+   */
   async refresh(): Promise<boolean> {
+    const generation = ++this.generation;
+    let source: CommsSource | null = null;
     try {
-      setNumbersOverlay((await this.source()) === 'module' ? await this.build() : null);
+      source = await this.source();
+      const next = source === 'module' ? await this.build() : null;
+      if (generation === this.generation) this.install(next);
       return true;
     } catch (e) {
+      if (source === 'module' && !this.loaded && generation === this.generation) setNumbersOverlay(this.overlayOf([]));
       this.log.warn(`numbers config not loaded, keeping the current one: ${e instanceof Error ? e.message : String(e)}`);
       return false;
     }
+  }
+
+  private install(next: NumbersOverlay | null): void {
+    setNumbersOverlay(next);
+    this.loaded = true;
   }
 
   /** The module side as it would be now (parity reads it in legacy mode too). */

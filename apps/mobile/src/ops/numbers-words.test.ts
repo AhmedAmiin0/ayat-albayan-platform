@@ -20,6 +20,10 @@ test('subtitle isolates the phone, or says not checked', () => {
   expect(numberSubtitle(chat)).toBe(`${n.purpose.chat} · ${n.chips.notChecked}`);
 });
 
+test('a checked number with no phone (its last check failed) never says «not checked yet»', () => {
+  expect(numberSubtitle({ ...chat, checked_at: '2026-10-22T08:00:00Z' })).toBe(n.purpose.chat);
+});
+
 test('state chips: enabled + default, or disabled alone', () => {
   expect(stateChips(main).map((c) => c.label)).toEqual([n.chips.enabled, n.chips.default]);
   expect(stateChips(chat)).toEqual([{ tone: 'neutral', glyph: 'struck', label: n.chips.disabled }]);

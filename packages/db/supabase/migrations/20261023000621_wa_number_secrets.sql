@@ -37,6 +37,13 @@ begin
   if p_value is null or btrim(p_value) = '' or octet_length(p_value) > 4096 then
     raise exception 'invalid number secret value' using errcode = '22023';
   end if;
+  -- A concurrent wa_number_delete waits for this write (and then removes the entry), or wins and this
+  -- one fails: never an orphaned credential. Two sets of the same name queue instead of colliding.
+  perform 1 from public.wa_numbers n where n.id = p_id for share;
+  if not found then
+    raise exception 'unknown number' using errcode = '22023';
+  end if;
+  perform pg_advisory_xact_lock(hashtext(v_name));
   select id into existing from vault.secrets where name = v_name;
   if existing is null then
     perform vault.create_secret(p_value, v_name, 'WhatsApp number credential (admin, «الأرقام»)');

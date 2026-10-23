@@ -19,13 +19,29 @@ afterEach(() => {
 });
 
 describe('a number’s buttons', () => {
-  it('enable / unset default PATCH the one field', async () => {
+  it('enabling a spare PATCHes at once; unsetting a default asks first, then PATCHes the one field', async () => {
     renderPanel(apiFetch);
     apiSend.mockResolvedValue(numberView());
     fireEvent.click(within(await card('Spare line')).getByRole('button', { name: a.enable }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/numbers/num-2', { enabled: true }));
+    apiSend.mockClear();
     fireEvent.click(within(await card('Notifications line')).getByRole('button', { name: a.unsetDefault }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText(a.confirmUnsetDefault)).toBeTruthy();
+    expect(apiSend).not.toHaveBeenCalled();
+    fireEvent.click(within(dialog).getByRole('button', { name: t.common.confirm }));
     await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/admin/numbers/num-1', { is_default: false }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+  });
+
+  it('turning off a default asks first; cancelling sends nothing', async () => {
+    renderPanel(apiFetch);
+    fireEvent.click(within(await card('Notifications line')).getByRole('button', { name: a.disable }));
+    const dialog = screen.getByRole('dialog');
+    expect(within(dialog).getByText(a.confirmDisableDefault)).toBeTruthy();
+    fireEvent.click(within(dialog).getByRole('button', { name: t.common.cancel }));
+    await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    expect(apiSend).not.toHaveBeenCalled();
   });
 
   it('a 409 is shown in words on the card', async () => {
