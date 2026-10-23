@@ -110,11 +110,14 @@ export class ReportPdfJob implements OnApplicationBootstrap, OnModuleDestroy {
   /**
    * Upload, then queue the message, then `ready`: a crash in between leaves `rendering`, which the
    * stale sweep re-queues; the re-render overwrites the same object and the message insert no-ops.
-   * The message only while the report_ready rule is on (off or unreadable: the PDF is still ready, logged).
+   * The message only while the report_ready rule is on (off: the PDF is still ready, logged). Unreadable
+   * rules throw before `ready`, so the retry / stale sweep tries again: an essential row is never dropped.
    */
   private async publish(id: string, version: number): Promise<void> {
     const { path, message } = await this.publisher.publish(id, new Date());
-    if (await this.policy.isOn('report_ready')) await this.queries.queueMessage(message);
+    const rule = await this.policy.known('report_ready');
+    if (!rule) throw new Error('notification rules unread: report_ready held for a retry');
+    if (rule.enabled) await this.queries.queueMessage(message);
     else this.log.log(`report_ready off: report ${id} v${version} not sent to the guardian`);
     if (!(await this.queries.finish({ id, version, status: 'ready', path }))) {
       this.log.log(`report ${id} changed while v${version} rendered; the newer version renders next`);

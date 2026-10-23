@@ -9,6 +9,8 @@ import { AuditService } from '../../common/audit/audit.service';
 import { PERMISSION_RESOLVER, systemResolver, TOKEN_VERIFIER, type TokenVerifier } from '../../common/auth/auth.guard';
 import type { AuthUser } from '../../common/auth/verify-token';
 import { SettingsService } from '../../common/settings/settings.service';
+import { NotificationPolicy } from '../notification-rules/policy';
+import { fakePolicy } from '../notification-rules/policy.fakes';
 import { ConflictChecker } from '../scheduling/conflict-checker';
 import { LessonWriter } from '../scheduling/lesson-writer';
 import { ruleRow } from '../scheduling/scheduling.fakes';
@@ -75,6 +77,8 @@ export async function lessonsApp() {
     .overrideProvider(OverviewQueries).useValue(m.overview)
     .overrideProvider(TimeEditQueries).useValue(m.time)
     .overrideProvider(LessonProposalQueries).useValue(m.proposals)
+    // The rules (legacy, no rows): no DB here.
+    .overrideProvider(NotificationPolicy).useValue(fakePolicy())
     // LessonEvents → SubscriptionAlerts listener; no DB here (R-SUB-02 is tested in subscriptions/).
     .overrideProvider(AlertsQueries).useValue({ studentsOfLessons: async () => [] })
     // LessonEvents → StudentTrialStatus listener (tested in subscriptions/student-trial-status.test.ts).

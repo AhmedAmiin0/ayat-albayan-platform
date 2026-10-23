@@ -108,14 +108,18 @@ describe('ReportPdfJob — the R-REP-03 queue worker', () => {
     expect(publisher.close).not.toHaveBeenCalled();
   });
 
-  it.each([
-    ['module mode, the report_ready row off', fakePolicy({ mode: 'module', rows: [{ key: 'report_ready', enabled: false }] })],
-    ['rules unreadable (fail closed)', fakePolicy({ fail: true })],
-  ])('%s: the PDF is stored and ready, no message queued', async (_name, policy) => {
-    const summary = await job(policy).runOnce(NOW);
+  it('module mode, the report_ready row off: the PDF is stored and ready, no message queued', async () => {
+    const summary = await job(fakePolicy({ mode: 'module', rows: [{ key: 'report_ready', enabled: false }] })).runOnce(NOW);
     expect(summary).toEqual({ recovered: 0, rendered: 2, failed: 0, skipped: 0 });
     expect(queries.queueMessage).not.toHaveBeenCalled();
     expect(queries.finish).toHaveBeenCalledWith({ id: 'r1', version: 3, status: 'ready', path: 's/r1.pdf' });
+  });
+
+  it('rules unreadable: no message and not ready, so the report is retried (an essential row is never dropped)', async () => {
+    const summary = await job(fakePolicy({ fail: true })).runOnce(NOW);
+    expect(summary.rendered).toBe(0);
+    expect(queries.queueMessage).not.toHaveBeenCalled();
+    expect(queries.finish).not.toHaveBeenCalledWith(expect.objectContaining({ status: 'ready' }));
   });
 
   it('never throws, even when the queue cannot be read', async () => {

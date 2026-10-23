@@ -49,6 +49,13 @@ export class NotificationPolicy {
     return resolveRule(notificationEntry(key), { mode: snap.mode, row: snap.rows.get(key) ?? null, settings: snap.settings });
   }
 
+  /** The rule, or null when the rules cannot be read (a caller that must retry rather than drop). */
+  async known(key: NotificationKey): Promise<EffectiveRule | null> {
+    const snap = await this.snapshot();
+    if (!snap) return null;
+    return resolveRule(notificationEntry(key), { mode: snap.mode, row: snap.rows.get(key) ?? null, settings: snap.settings });
+  }
+
   async isOn(key: NotificationKey): Promise<boolean> {
     return (await this.rule(key)).enabled;
   }
