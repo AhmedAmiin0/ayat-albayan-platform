@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { sectionId } from '@/components/settings/section-id';
 import { integrationsQuery } from '@/features/integrations/integrations-api';
 import { templatesQuery } from '@/features/templates/api';
 import { t } from '@/lib/i18n';
 import { joinStatus, livekitConfigured, meetingModeNotes, type MeetingModeNote } from './meeting-mode-notes';
 
 const NOTE = 'rounded-md bg-sunk px-3 py-2 text-sm text-ink-2';
-/** The templates live in the messaging section of /admin/settings, where the admin submits one to Meta. */
-const TEMPLATES_HREF = `/admin/settings#${sectionId('messaging')}`;
+/** The templates live in «التواصل» → «القوالب», where the admin submits one to Meta (docs/26b §1). */
+const TEMPLATES_HREF = '/admin/settings/communications?tab=templates';
 
 interface Props {
   /** The live region's id: the radio group points at it (aria-describedby). */

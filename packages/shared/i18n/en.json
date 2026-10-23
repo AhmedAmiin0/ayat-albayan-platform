@@ -5313,7 +5313,70 @@
     }
   },
   "settingsHub": {
-    "title": "Settings"
+    "title": "Settings",
+    "sections": "{n} sections",
+    "caption": "Settings sections and the state of each one now",
+    "colSection": "Section",
+    "colState": "State now",
+    "colOpen": "Open",
+    "open": "Open",
+    "placeholder": "Search by name, description or key",
+    "searchHint": "Searches values, communications, integrations and Google sync together.",
+    "results": "Search results",
+    "resultsCount": {
+      "one": "1 result",
+      "two": "2 results",
+      "few": "{n} results",
+      "other": "{n} results"
+    },
+    "unknown": "Not available now",
+    "googleName": "Google sync",
+    "desc": {
+      "values": "Booking and cancellation windows, subscription limits, academy details, retention periods and custom values.",
+      "communications": "WhatsApp numbers, what is sent and when, templates and safety.",
+      "integrations": "Connection details for online lessons, mobile and browser notifications, and exchange rates. Secrets are never shown.",
+      "google": "Account connection, calendars, student folders in Drive and the sync log.",
+      "appearance": "Light, dark or automatic. Saved in this browser only."
+    },
+    "valuesCount": {
+      "one": "1 value",
+      "two": "2 values",
+      "few": "{n} values",
+      "other": "{n} values"
+    },
+    "valuesModified": "{n} changed",
+    "valuesPublic": "{n} public",
+    "sendingOffWhy": "No message is sent until sending is turned on from the communications page.",
+    "servicesOk": {
+      "one": "1 service set up",
+      "two": "2 services set up",
+      "few": "{n} services set up",
+      "other": "{n} services set up"
+    },
+    "serviceUnset": "{name} not set up",
+    "servicesUnset": {
+      "one": "1 service not set up",
+      "two": "2 services not set up",
+      "few": "{n} services not set up",
+      "other": "{n} services not set up"
+    },
+    "googleNotConfigured": "Google client not set up",
+    "googleOff": "Sync is off",
+    "themeNow": "Now: {theme}",
+    "groups": {
+      "schedule": "Schedule and lessons",
+      "classroom": "Online lessons",
+      "reports": "Reports",
+      "accounts": "Accounts and payments",
+      "payouts": "Teacher payouts",
+      "uploads": "Uploads",
+      "academy": "Academy",
+      "messages": "Messages",
+      "sales": "Sales",
+      "retention": "Logs and retention",
+      "notifications": "Notifications",
+      "sending": "Sending and safety"
+    }
   },
   "settingsValues": {
     "title": "Values"

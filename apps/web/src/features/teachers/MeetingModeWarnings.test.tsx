@@ -28,7 +28,7 @@ describe('notes under «طريقة حضور الحلقات»', () => {
     showMeetingMode(apiFetch, PLATFORM, { status: 'not_submitted' });
     await waitFor(() => expect(notes().textContent).toContain(T.meetingModeTemplateNotApproved));
     const link = screen.getByRole('link', { name: T.meetingModeTemplatesLink });
-    expect(link.getAttribute('href')).toBe('/admin/settings#settings-messaging');
+    expect(link.getAttribute('href')).toBe('/admin/settings/communications?tab=templates');
     expect(notes().textContent).toContain(T.meetingModeTeacherOnly);
   });
 
