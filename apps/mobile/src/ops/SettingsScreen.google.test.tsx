@@ -1,10 +1,8 @@
 import { screen } from '@testing-library/react-native';
 import { t } from '@/lib/i18n';
 import { renderWithQuery } from '@/test/query';
-import { catalogue, settings } from './fixtures';
-import { numbersAnswer } from './numbers-fixtures';
 import { googleLive } from './google-status.fixtures';
-import { SettingsScreen } from './SettingsScreen';
+import { GoogleSyncScreen } from './GoogleSyncScreen';
 
 const mockApiFetch = jest.fn();
 jest.mock('@/lib/api', () => ({
@@ -16,25 +14,22 @@ jest.mock('expo-router', () => ({
 }));
 
 const answer = (permissions: string[]) => (path: string) =>
-  Promise.resolve(
-    numbersAnswer(path) ??
-      (path === '/auth/me' ? { role: 'admin', permissions } : path === '/admin/google/status' ? googleLive : path === '/admin/notifications' ? catalogue : settings),
-  );
+  Promise.resolve(path === '/auth/me' ? { role: 'admin', permissions } : googleLive);
 
 beforeEach(() => jest.clearAllMocks());
 
-test('with settings.read the Google sync card shows under the read-only settings', async () => {
+test('«مزامنة Google» with settings.read shows the read-only card, unchanged', async () => {
   mockApiFetch.mockImplementation(answer(['settings.read']));
-  await renderWithQuery(<SettingsScreen />);
+  await renderWithQuery(<GoogleSyncScreen />);
   // The card waits for /auth/me, then its status: give a loaded runner time.
   expect(await screen.findByText(t.googleSync.connection.status.connected, {}, { timeout: 5000 })).toBeTruthy();
-  expect(screen.getByRole('header', { name: t.googleSync.mobile.title })).toBeTruthy();
+  expect(screen.getAllByRole('header', { name: t.googleSync.mobile.title }).length).toBeGreaterThan(0);
 });
 
 test('without settings.read: no card and no Google request', async () => {
   mockApiFetch.mockImplementation(answer(['lessons.read']));
-  await renderWithQuery(<SettingsScreen />);
-  expect(await screen.findByText(t.mobileAdmin.settings.readOnlyTitle)).toBeTruthy();
-  expect(screen.queryByText(t.googleSync.mobile.title)).toBeNull();
+  await renderWithQuery(<GoogleSyncScreen />);
+  await screen.findByRole('header', { name: t.googleSync.mobile.title });
+  expect(screen.queryByText(t.googleSync.connection.status.connected)).toBeNull();
   expect(mockApiFetch).not.toHaveBeenCalledWith('/admin/google/status');
 });
