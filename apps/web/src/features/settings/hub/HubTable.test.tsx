@@ -47,4 +47,13 @@ describe('HubTable (the five destinations, docs/26b §1)', () => {
     expect(screen.getByText(H.desc.values)).toBeTruthy();
     expect(screen.getByText(H.desc.google)).toBeTruthy();
   });
+
+  it('the head sits on the strong hairline other tables use (no double gold rule)', () => {
+    answerHub(apiFetch, {});
+    renderHub(<HubTable />);
+    for (const th of screen.getAllByRole('columnheader')) {
+      expect(th.className).toContain('border-rule-strong');
+      expect(th.className).not.toMatch(/border-gold|border-double/);
+    }
+  });
 });

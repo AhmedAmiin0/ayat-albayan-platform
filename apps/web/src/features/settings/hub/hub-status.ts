@@ -82,6 +82,6 @@ export function googleChips(status: GoogleStatusView): HubChip[] {
   const sw = t.googleSync.switches;
   if (!status.settings.enabled) chips.push({ tone: 'neutral', glyph: 'struck', label: H.googleOff });
   else if (status.settings.mode === 'live') chips.push({ tone: 'ok', glyph: 'fill', label: sw.live });
-  else chips.push({ tone: 'neutral', glyph: 'half', label: sw.dryRun });
+  else chips.push({ tone: 'neutral', glyph: 'half', label: H.googleDryRun });
   return chips;
 }

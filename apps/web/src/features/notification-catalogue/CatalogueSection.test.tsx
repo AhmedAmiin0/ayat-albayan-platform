@@ -39,7 +39,13 @@ describe('«ماذا يُرسل ومتى» (read-only)', () => {
     expect(within(report).getByText(c.states.off)).toBeTruthy();
     expect(within(report).getByText(c.blockers.messaging_off)).toBeTruthy();
     expect(within(report).getByText(c.tags.essential)).toBeTruthy();
-    expect(within(report).getByText('+966 55 123 4567')).toBeTruthy();
+    // The number in its column and again under the name (the phone layout); each an LTR island.
+    const phones = within(report).getAllByText('+966 55 123 4567');
+    expect(phones).toHaveLength(2);
+    expect(phones.every((el) => el.tagName === 'BDI' && el.getAttribute('dir') === 'ltr')).toBe(true);
+    expect(phones[0]?.closest('[data-phone-details]')).toBeTruthy();
+    expect(table.querySelector('caption.sr-only')?.textContent).toContain(c.audience.guardian);
+    expect(within(region).getByRole('tabpanel', { name: new RegExp(c.audience.guardian) })).toBeTruthy();
     expect(within(region).queryAllByRole('checkbox')).toHaveLength(0);
     expect(within(region).getByText(c.readOnly)).toBeTruthy();
   });

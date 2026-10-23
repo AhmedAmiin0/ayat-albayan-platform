@@ -28,7 +28,7 @@ function Loading() {
  * «ماذا يُرسل ومتى» (docs/23 §3 phase 1, §E H1): every notification the platform sends, to whom,
  * when, through which channel and number, and whether it goes out now under today's settings
  * (the first blocker in words), one audience at a time (docs/26b §3). Read-only: the switches stay
- * on «الإرسال» of «التواصل».
+ * on «الإرسال» of «التواصل». No rule above it: the tab bar's own line is the one before the heading.
  */
 export function CatalogueSection() {
   const settings = useQuery(settingsQuery);
@@ -38,14 +38,14 @@ export function CatalogueSection() {
   const version = settings.dataUpdatedAt + check.dataUpdatedAt + integrations.dataUpdatedAt;
   const list = useQuery({ ...catalogueQuery(version), enabled: settings.isSuccess });
   return (
-    <div className="grid min-w-0 gap-2 border-t border-rule pt-4" aria-labelledby="notification-catalogue-title" role="region">
+    <div className="grid min-w-0 gap-2" aria-labelledby="notification-catalogue-title" role="region">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 id="notification-catalogue-title" className="text-sm font-bold">
           {c.title}
         </h3>
         <span className="rounded-sm border border-rule px-1.5 text-2xs text-ink-3">{c.readOnly}</span>
       </div>
-      <p className="max-w-[70ch] text-xs text-ink-2">{c.intro}</p>
+      <p className="max-w-[70ch] text-xs text-ink-2">{t.settingsPages.catalogueIntro}</p>
       {list.isPending && <Loading />}
       {list.isError && (
         <div className="grid justify-items-start gap-2">

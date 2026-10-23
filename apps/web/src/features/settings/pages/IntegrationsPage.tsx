@@ -13,7 +13,10 @@ export function IntegrationsPage() {
   return (
     <>
       <ModuleHead title={t.integrations.title} />
-      <IntegrationsPanel query="" onSaved={setNote} />
+      {/* The panel's own «التكاملات» h2 repeats the page title: kept for the region's name, not shown. */}
+      <div className="[&>section>h2]:sr-only">
+        <IntegrationsPanel query="" onSaved={setNote} />
+      </div>
       {note && <Toast message={note} onDismiss={() => setNote(null)} />}
     </>
   );

@@ -51,7 +51,7 @@ describe('HubStatus («الحالة الآن» of each hub row)', () => {
     expect(await screen.findByText(counted(H.servicesOk, 1))).toBeTruthy();
     expect(screen.getByText(counted(H.servicesUnset, 3))).toBeTruthy();
     expect(await screen.findByText(t.googleSync.connection.status.connected)).toBeTruthy();
-    expect(screen.getByText(t.googleSync.switches.dryRun)).toBeTruthy();
+    expect(screen.getByText(t.settingsHub.googleDryRun)).toBeTruthy();
   });
 
   it('a forbidden or failed read is a dash, never a crash', async () => {

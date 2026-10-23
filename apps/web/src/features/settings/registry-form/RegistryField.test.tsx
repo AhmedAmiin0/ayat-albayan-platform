@@ -17,7 +17,7 @@ function Harness({ k, meta = {} }: { k: SettingKey; meta?: Record<string, Settin
   const [form, setForm] = useState<SettingsForm>(saved);
   const set = (p: SettingsForm) => setForm((f) => ({ ...f, ...p }));
   const state: SettingsFormState = {
-    form, initial: saved, errors: {}, set, submit: () => undefined, saving: false, failed: false,
+    form, initial: saved, errors: {}, set, submit: () => undefined, changed: [], saving: false, failed: false,
     dirty: (key) => isDirty(key, form, saved), atDefault: (key) => isDefault(key, form), reset: (key) => set(resetPatch(key)),
   };
   return (

@@ -100,10 +100,13 @@ function errorText(def: SettingDef, message: string): string {
   return t.settings.invalid;
 }
 
-/** The whole form as one PATCH, validated with the API's own (registry-generated) schema. */
-export function settingsUpdate(form: SettingsForm): SettingsResult {
+/**
+ * The form as one PATCH, validated with the API's own (registry-generated) schema: every form key,
+ * or only `keys` (a page sends just what it changed, so it never rewrites another page's values).
+ */
+export function settingsUpdate(form: SettingsForm, keys: readonly SettingKey[] = FORM_KEYS): SettingsResult {
   const body: Record<string, unknown> = {};
-  for (const key of FORM_KEYS) {
+  for (const key of keys) {
     const field = SETTING_FIELD_OF[key];
     body[field] = bodyValue(settingDef(key), { form, field });
   }

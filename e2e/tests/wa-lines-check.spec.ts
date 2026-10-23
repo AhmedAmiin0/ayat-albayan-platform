@@ -41,7 +41,7 @@ test.describe('settings — WhatsApp lines check', () => {
     // The good number is kept (docs/23 phase 1): after a fresh load «ماذا يُرسل ومتى» shows it with no new check.
     await admin.goto('/admin/settings/communications?tab=catalogue');
     const catalogue = admin.getByRole('region', { name: ar.notificationCatalogue.title });
-    await expect(catalogue.getByText('+15550001111').first()).toBeVisible();
+    await expect(catalogue.getByText('+15550001111').filter({ visible: true }).first()).toBeVisible();
     await admin.getByRole('tab', { name: ar.settingsPages.communicationsTabs.numbers, exact: true }).click();
     await expect(admin.getByText(s.notChecked, { exact: true })).toBeVisible();
 
