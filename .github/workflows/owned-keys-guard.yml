@@ -3,12 +3,10 @@ name: owned-keys-guard
 # (messaging_enabled, auto_messages_enabled, crm_cutover_done, comms_source, google_sync_enabled,
 # google_sync_mode). They change only through their module routes, so a migration can never turn sending
 # on for staging's real families. Read-only and secret-free: safe for any PR, including forks.
+# Every PR runs it (a few seconds, no install), so it can be a required check without blocking PRs
+# that touch no migration.
 on:
   pull_request:
-    paths:
-      - packages/db/supabase/migrations/**
-      - tools/scripts/owned-keys-check*
-      - .github/workflows/owned-keys-guard.yml
   push:
     branches: [develop, main]
     paths:

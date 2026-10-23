@@ -6,7 +6,7 @@ and give it also a description field and for more complex settings like notifica
 and seeded with most of the modules and as for the modules that will require a heavey config like notifications make a
 custom desgin for it».
 
-**Design only.** Nothing here is built. No migration number is reserved: use the next free numbers at build time
+**Design.** 26-P0 and 26-P1 are built (§6 «Built»); the rest is not yet. No migration number is reserved: use the next free numbers at build time
 (docs/23 phase 3 holds `20261023000620–629`). Once built, this supersedes docs/25 §1 (the five concepts), §5
 (recipes) and §6 (Google rows); until then docs/25 describes the code. Companion files:
 
@@ -315,6 +315,27 @@ Order: **26-P0 → 23-P3 → 26-P1 → 23-P4 → 26-P2 → 26-P3 → 23-P5 → 2
   the other's data: none of the 8 keys is nullable, and the seeder never writes values. So if 23-P4 slips, 26-P2 may
   go first.
 - **26-P4 last:** the safety path changes alone, after everything else has settled.
+
+**Built (2026-10-23, branch `cloud/config-p0-p1`):**
+- **26-P0 — built.** Gate routes `PUT /messages/gate/sending|auto` (ON needs `GATE_CONFIRM_TEXT`, checked by the
+  server, 428 `confirmation_required`; OFF always accepted) and `PUT /messages/gate/cutover`:
+  `apps/api/src/modules/whatsapp/gate.controller.ts`, `gate.settings.ts`, `gate.errors.ts`; contract
+  `packages/shared/src/settings/gate.ts`. Per-key `PATCH /settings` answering `{...settings, saved, moved, invalid}`:
+  `packages/shared/src/settings/patch.ts`, `apps/api/src/common/settings/settings.controller.ts`, `settings-patch.ts`;
+  ownership in code: `packages/shared/src/settings/ownership.ts` (`OWNED_SETTING_KEYS`). `comms_source` is written only
+  by `POST /admin/communications/source` (`modules/numbers/numbers.settings.ts`). Migration guard:
+  `tools/scripts/owned-keys-check.mjs` + `.github/workflows/owned-keys-guard.yml` (cutoff `20261023000621`).
+  `X-AB-Client`: web `apps/web/src/lib/client-tag.ts` (`web/<VITE_BUILD_ID|dev>`), mobile
+  `apps/mobile/src/lib/client-tag.ts` (JS only), API counting `apps/api/src/common/client-usage/` (in memory, one log
+  line per 15 min). Web switches: `apps/web/src/features/messaging/gate-api.ts`. Not done here (left to 26-P3 /
+  `cloud/config-ui`): «the web form sends only changed keys».
+- **26-P1 — built, inert.** Migration `packages/db/supabase/migrations/20261023000630_config_expand.sql` (columns,
+  `settings_version_seq`, `settings_revision` bumped by a deferred row constraint trigger at commit, `config_seed`,
+  `config_set`, `NOT VALID` checks); types `packages/db/src/types.ts`; registry metadata in
+  `packages/shared/src/settings/domains/*.ts` + `groups.ts`; `SEED_ENTRIES` / `REGISTRY_VERSION` in
+  `packages/shared/src/settings/seed-entries.ts` (+ `google-defs.ts`); tests `seed-entries*.test.ts`,
+  `sql-defaults.migration.test.ts`, `apps/api/src/common/settings/config-expand.migration.test.ts`,
+  `e2e/tests/config-expand.sql.spec.ts`.
 
 ## 7. Assumptions (the owner's message ended with «but …»; any of these may be what it meant)
 
