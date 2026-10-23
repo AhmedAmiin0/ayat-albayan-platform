@@ -1,6 +1,7 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { Db } from '../db/db.module';
-import { SETTING_DEFAULTS, SettingsService } from './settings.service';
+import { SettingsService } from './settings.service';
 
 type Rows = { key: string; value: unknown }[];
 

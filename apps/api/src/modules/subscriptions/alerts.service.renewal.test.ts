@@ -1,5 +1,5 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import type { AlertsQueries } from './alerts.queries';
 import { SubscriptionAlertsService, type AlertsEnv } from './alerts.service';
 import type { PackagesService, StudentState } from './packages.service';

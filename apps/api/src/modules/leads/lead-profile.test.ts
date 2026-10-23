@@ -1,6 +1,6 @@
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { SettingsService } from '../../common/settings/settings.service';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 import { LeadProfileService, mergeQualification } from './lead-profile.service';
 import { fakeDeps, lead, LEAD_ID } from './leads.fakes';
 

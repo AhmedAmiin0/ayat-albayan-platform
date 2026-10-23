@@ -1,6 +1,6 @@
-import type { AcademySettings } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
-import { SETTING_DEFAULTS, type SettingsService } from './settings.service';
+import type { SettingsService } from './settings.service';
 
 /** Tests only: a SettingsService answering the registry defaults, with `over` on top. */
 export function fakeSettings(over: Partial<AcademySettings> = {}): SettingsService {
@@ -13,4 +13,9 @@ export function fakeSettings(over: Partial<AcademySettings> = {}): SettingsServi
     bookingHorizonWeeks: vi.fn(() => get('booking_horizon_weeks')),
     salesAutoAssign: vi.fn(() => get('sales_auto_assign')),
   } as unknown as SettingsService;
+}
+
+/** Tests only: a typed settings reader (settings-slice.ts) over fakeSettings(over). */
+export function readerOf<R>(Reader: new (store: SettingsService) => R, over: Partial<AcademySettings> = {}): R {
+  return new Reader(fakeSettings(over));
 }

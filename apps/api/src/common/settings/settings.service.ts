@@ -1,10 +1,7 @@
 import type { Json } from '@ab/db';
-import { publicSettings, type AcademySettings, type PublicSettings, type SettingKey } from '@ab/shared';
+import { publicSettings, readSettings, type AcademySettings, type PublicSettings, type SettingKey } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
-import { readSettings } from './settings.values';
-
-export { SETTING_DEFAULTS } from './settings.values';
 
 /** Injection token of the cache TTL in ms (env SETTINGS_CACHE_MS). */
 export const SETTINGS_CACHE_MS = Symbol('SETTINGS_CACHE_MS');

@@ -1,7 +1,7 @@
-import type { AcademySettings } from '@ab/shared';
+import { SETTING_DEFAULTS, type AcademySettings } from '@ab/shared';
 import { vi } from 'vitest';
 import type { PushService } from '../../common/push/push.service';
-import { SETTING_DEFAULTS, type SettingsService } from '../../common/settings/settings.service';
+import type { SettingsService } from '../../common/settings/settings.service';
 import type { QueuedMessage } from './queued-row';
 import { RemindersJob } from './reminders.job';
 import type { RoomCandidate } from './reminders.links';

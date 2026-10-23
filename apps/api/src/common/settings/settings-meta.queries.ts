@@ -1,15 +1,10 @@
+import type { SettingMeta } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../db/db.module';
 
-export interface SettingMeta {
-  updatedAt: string;
-  updatedBy: string | null;
-  updatedByName: string | null;
-}
-
 /** Who last changed each stored setting (rows that were never written have no entry). */
 @Injectable()
-export class ConfigAdminQueries {
+export class SettingsMetaQueries {
   constructor(@Inject(DB) private readonly db: Db) {}
 
   async meta(): Promise<Record<string, SettingMeta>> {

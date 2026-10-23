@@ -2,8 +2,8 @@ import { publicCustom, type PublicConfig } from '@ab/shared';
 import { Controller, Get, Header } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Public } from '../auth/decorators';
-import { CustomConfigService } from '../config/custom-config.service';
-import { SettingsService } from './settings.service';
+import { CustomConfigService } from '../custom-config/custom-config.service';
+import { SettingsService } from '../settings/settings.service';
 
 /**
  * GET /settings/public (no login): the registry's `public: true` settings — classroom join window,
@@ -14,7 +14,7 @@ import { SettingsService } from './settings.service';
 @ApiTags('settings')
 @Public()
 @Controller('settings/public')
-export class SettingsPublicController {
+export class PublicConfigController {
   constructor(
     private readonly settings: SettingsService,
     private readonly custom: CustomConfigService,

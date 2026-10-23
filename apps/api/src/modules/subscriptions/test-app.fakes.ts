@@ -1,6 +1,6 @@
 // Mocks of the money HTTP harness (test-only, excluded from the build): split from test-app.ts (max-lines).
+import { SETTING_DEFAULTS } from '@ab/shared';
 import { vi } from 'vitest';
-import { SETTING_DEFAULTS } from '../../common/settings/settings.values';
 
 export function mocks() {
   return {
