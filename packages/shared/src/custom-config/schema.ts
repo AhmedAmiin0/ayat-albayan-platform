@@ -1,7 +1,5 @@
-import type { Json } from '@ab/db';
 import { z } from 'zod';
-import type { PublicSettings } from './public.js';
-import { isSettingKey } from './registry.js';
+import { isSettingKey } from '../settings/registry.js';
 
 /** Free-form entries (`custom_config` table): the key shape the table's check enforces. */
 export const CUSTOM_KEY_RE = /^[a-z][a-z0-9_.-]{1,63}$/;
@@ -31,27 +29,3 @@ export const customConfigUpsertSchema = z.object({
   isPublic: z.boolean().default(false),
 });
 export type CustomConfigUpsert = z.infer<typeof customConfigUpsertSchema>;
-
-/** One custom entry as the admin API returns it. */
-export interface CustomConfigView {
-  key: string;
-  value: Json;
-  description: string | null;
-  isPublic: boolean;
-  updatedAt: string;
-  updatedBy: string | null;
-}
-
-/** GET /settings/public (no login): the public settings by row key, plus `custom`: the entries flagged public. */
-export type PublicConfig = PublicSettings & { custom: Record<string, Json> };
-
-interface CustomRow {
-  key: string;
-  value: Json;
-  is_public: boolean;
-}
-
-/** The public custom entries by key; a private row, or one shadowing a registry setting, is dropped. */
-export function publicCustom(rows: readonly CustomRow[]): Record<string, Json> {
-  return Object.fromEntries(rows.filter((r) => r.is_public && !isSettingKey(r.key)).map((r) => [r.key, r.value]));
-}

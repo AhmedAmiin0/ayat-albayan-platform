@@ -17,6 +17,8 @@ import type {
   SettingDef,
   SettingField,
   SettingKey,
+  SettingMeta,
+  SettingsMetaResponse,
   SettingsSectionId,
   SettingsUpdate,
   SettingValue,
@@ -45,6 +47,11 @@ const GOOGLE_NAMES = [
   'GOOGLE_SKIP_REASONS', 'GOOGLE_SYNC_KINDS', 'GOOGLE_SYNC_MODES', 'GOOGLE_SYNC_STATES', 'GOOGLE_WINDOW_DAYS',
   'driveFileLink', 'driveFolderLink', 'fileIdIn', 'folderIdIn', 'googleDriveSchema', 'googleErrorKey',
   'googleSettingsSchema', 'googleStudentMapSchema', 'googleTeacherMapSchema', 'sheetLink',
+];
+/** Added by the segregation (additions only). */
+const NEW_NAMES = [
+  'SETTINGS_LAYOUT', 'settingSection', 'PUBLIC_CONFIG_PATH', 'PUBLIC_CONFIG_QUERY_KEY', 'PUBLIC_CONFIG_STALE_MS',
+  'withPublicDefaults',
 ];
 
 /** Every registry key with today's default (the migrations seed the same values). */
@@ -101,6 +108,15 @@ describe('@ab/shared export surface (settings, custom config, integrations, goog
     expectTypeOf<keyof PublicConfig>().toEqualTypeOf<PublicSettingKey | 'custom'>();
     expectTypeOf<keyof CustomConfigView>().toEqualTypeOf<'key' | 'value' | 'description' | 'isPublic' | 'updatedAt' | 'updatedBy'>();
     expectTypeOf<CustomConfigUpsert['isPublic']>().toEqualTypeOf<boolean>();
+  });
+
+  it.each(NEW_NAMES)('%s is added', (name) => {
+    expect(surface[name]).toBeDefined();
+  });
+
+  it('the settings meta types describe GET /config/meta', () => {
+    expectTypeOf<SettingMeta>().toEqualTypeOf<{ updatedAt: string; updatedBy: string | null; updatedByName: string | null }>();
+    expectTypeOf<SettingsMetaResponse['meta']>().toEqualTypeOf<Record<string, SettingMeta>>();
   });
 
   it('the integrations and google types are still exported', () => {

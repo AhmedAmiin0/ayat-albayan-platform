@@ -15,6 +15,8 @@ export * from './permissions/index.js';
 export * from './running-head.js';
 export * from './schemas/index.js';
 export * from './settings/index.js';
+export * from './custom-config/index.js';
+export * from './public-config.js';
 export * from './status-style.js';
 export * from './student-lists.js';
 export * from './students/index.js';
