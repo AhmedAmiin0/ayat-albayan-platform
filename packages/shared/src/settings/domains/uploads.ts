@@ -5,6 +5,7 @@ const h = 'settings.hints';
 /** «الملفات المرفوعة»: one limit for receipts and booking invoices, at most the buckets' 10 MB (migrations 122, 170). */
 export const UPLOAD_SETTINGS = {
   upload_max_mb: {
+    module: 'uploads', group: 'uploads',
     type: 'int', default: 10, min: 1, max: 10, public: true,
     labelKey: 'settings.uploadMaxMb', hintKey: `${h}.uploadMaxMb`,
   },

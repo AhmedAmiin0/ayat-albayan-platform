@@ -25,7 +25,7 @@ export const VALUE_GROUPS = {
     'academy_contact',
     'recording_consent_notice',
   ],
-  messages: ['feedback_mode', 'quick_reply_window_hours'],
+  messages: ['quick_reply_window_hours', 'reminder_lookahead_hours'],
   sales: ['sales_auto_assign'],
   retention: ['recording_retention_days', 'activity_retention_days'],
 } as const satisfies Record<string, readonly SettingKey[]>;
@@ -43,7 +43,7 @@ export const OWNED_VALUE_GROUPS = {
     'teacher_whatsapp_new_student',
     'teacher_whatsapp_lesson_reminder',
     'follow_up_hours',
-    'reminder_lookahead_hours',
+    'feedback_mode',
     'follow_up_slots_from_hours',
     'follow_up_slots_to_days',
   ],

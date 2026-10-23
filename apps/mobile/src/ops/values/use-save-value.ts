@@ -6,7 +6,7 @@ import { pathKey } from '@/lib/query-keys';
 const SETTINGS = '/settings';
 const META = '/config/meta';
 
-export type SaveOutcome = 'saved' | 'moved';
+export type SaveOutcome = 'saved' | 'moved' | 'invalid';
 
 export interface ValueSave {
   key: SettingKey;
@@ -17,12 +17,16 @@ const isObject = (v: unknown): v is object => typeof v === 'object' && v !== nul
 
 /**
  * PATCH /settings answers with the settings, or with `{ saved, moved }` when the server moved a key
- * to its module page: a key listed in `moved` was not written here.
+ * to its module page: a key listed in `moved` (or found invalid, `invalid`) was not written here.
  */
 export function outcomeOf(key: SettingKey, answer: unknown): SaveOutcome {
-  const moved: unknown = isObject(answer) ? Reflect.get(answer, 'moved') : undefined;
-  const names: unknown[] = Array.isArray(moved) ? moved : [];
-  return names.includes(key) || names.includes(SETTING_FIELD_OF[key]) ? 'moved' : 'saved';
+  const lists = (name: string): unknown[] => {
+    const list: unknown = isObject(answer) ? Reflect.get(answer, name) : undefined;
+    return Array.isArray(list) ? list : [];
+  };
+  const names = (name: string) => lists(name).includes(key) || lists(name).includes(SETTING_FIELD_OF[key]);
+  if (names('moved')) return 'moved';
+  return names('invalid') ? 'invalid' : 'saved';
 }
 
 const SAVE_KEY = ['settings', 'value-save'] as const;

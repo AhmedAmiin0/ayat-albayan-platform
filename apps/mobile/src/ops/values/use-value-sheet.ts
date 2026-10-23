@@ -49,6 +49,10 @@ export function useValueSheet({ valueKey, saved, onSaved, onClose }: ValueSheetO
             setStage('edit');
             return setNotice(t.mobileValues.owned);
           }
+          if (outcome === 'invalid') {
+            setStage('edit');
+            return setNotice(t.settings.invalid);
+          }
           onSaved();
           onClose();
         },

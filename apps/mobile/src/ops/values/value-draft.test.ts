@@ -10,7 +10,7 @@ describe('editorOf: scalars are edited on the phone, the rest stays on the web',
     ['teachers_always_available', 'bool'],
     ['reporting_currency', 'choice'],
     ['academy_timezone', 'choice'],
-    ['feedback_mode', 'choice'],
+    ['feedback_mode', 'readonly'],
     ['academy_whatsapp_e164', 'text'],
     ['default_meeting_title', 'text'],
     ['academy_contact', 'readonly'],
@@ -76,4 +76,10 @@ test('outcomeOf: a key listed in `moved` (snake or camel) was not written', () =
   expect(outcomeOf('booking_horizon_weeks', { saved: [], moved: ['bookingHorizonWeeks'] })).toBe('moved');
   expect(outcomeOf('booking_horizon_weeks', { saved: ['booking_horizon_weeks'], moved: [] })).toBe('saved');
   expect(outcomeOf('booking_horizon_weeks', null)).toBe('saved');
+});
+
+test('outcomeOf: a key listed in `invalid` (the per-key PATCH answer) was not written either', () => {
+  const answer = { booking_horizon_weeks: 5, saved: [], moved: [], invalid: ['booking_horizon_weeks'] };
+  expect(outcomeOf('booking_horizon_weeks', answer)).toBe('invalid');
+  expect(outcomeOf('late_cancel_hours', answer)).toBe('saved');
 });

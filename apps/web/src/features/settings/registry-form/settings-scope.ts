@@ -29,6 +29,13 @@ export function movedKeys(res: unknown, sent: readonly SettingKey[]): SettingKey
   return sent.filter((k) => res.moved.includes(k) || res.moved.includes(SETTING_FIELD_OF[k]));
 }
 
+/** The sent keys the API wrote nothing for because it found the value invalid (`invalid`, never a 400). */
+export function invalidKeys(res: unknown, sent: readonly SettingKey[]): SettingKey[] {
+  const list: unknown = typeof res === 'object' && res !== null ? Reflect.get(res, 'invalid') : undefined;
+  if (!Array.isArray(list)) return [];
+  return sent.filter((k) => list.includes(k) || list.includes(SETTING_FIELD_OF[k]));
+}
+
 /**
  * After a save: what was sent for the written keys becomes their baseline (the moved ones stay
  * unsaved; an edit typed while saving stays dirty against what was sent).

@@ -39,6 +39,7 @@ describe('exports api (R-RPT-03)', () => {
     const [url, init] = fetchMock.mock.calls[0] as unknown as [string, RequestInit];
     expect(url).toBe('http://api.test/exports/students.csv');
     expect(new Headers(init.headers).get('Authorization')).toBe('Bearer tok');
+    expect(new Headers(init.headers).get('X-AB-Client')).toBe('web/dev');
     expect(click).toHaveBeenCalled();
 
     fetchMock.mockResolvedValueOnce(new Response(JSON.stringify({ code: 'invalid_month' }), { status: 400 }));

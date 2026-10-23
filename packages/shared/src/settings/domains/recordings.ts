@@ -7,12 +7,14 @@ import type { SettingDef } from '../defs.js';
  */
 export const RECORDING_SETTINGS = {
   recording_consent_notice: {
+    module: 'recordings', group: 'academy', reachesFamilies: true,
     type: 'json', default: null, nullable: true, public: true,
     shape: [{ name: 'ar', kind: 'text', max: 1000 }, { name: 'en', kind: 'text', max: 1000 }],
     labelKey: 'config.recordingConsentNotice', hintKey: 'config.recordingConsentNoticeHint',
   },
   /** null = keep recordings forever (the default). */
   recording_retention_days: {
+    module: 'recordings', group: 'retention', confirm: 'typed',
     type: 'int', default: null, min: 1, max: 3650, nullable: true, onValue: 90,
     labelKey: 'config.recordingRetentionDays',
     toggleLabelKey: 'config.recordingRetentionOn', toggleHintKey: 'config.recordingRetentionHint',

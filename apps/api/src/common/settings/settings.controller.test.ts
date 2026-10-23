@@ -52,22 +52,24 @@ describe('GET/PATCH /settings — late-cancel hours and horizon (R-SCH-07, R-SCH
     const after = { ...SETTING_DEFAULTS, late_cancel_hours: 24 };
     settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
     const res = await call('PATCH', 'admin', { lateCancelHours: 24 });
-    expect(res.json()).toEqual(after);
+    expect(res.json()).toMatchObject(after);
     expect(settings.write).toHaveBeenCalledWith({ late_cancel_hours: 24 }, USERS['admin']?.id);
     expect(audit.record).toHaveBeenCalledWith(
       expect.objectContaining({ entity: 'settings', before: SETTING_DEFAULTS, after }),
     );
   });
 
-  it('PATCH autoMessagesEnabled writes only auto_messages_enabled and audits before/after', async () => {
-    const after = { ...SETTING_DEFAULTS, auto_messages_enabled: true };
+  it('PATCH answers the full settings plus saved / moved / invalid', async () => {
+    const after = { ...SETTING_DEFAULTS, late_cancel_hours: 24 };
     settings.all.mockResolvedValueOnce(SETTING_DEFAULTS).mockResolvedValue(after);
-    expect((await call('PATCH', 'admin', { autoMessagesEnabled: true })).json()).toEqual(after);
-    expect(settings.write).toHaveBeenCalledWith({ auto_messages_enabled: true }, USERS['admin']?.id);
+    const res = await call('PATCH', 'admin', { lateCancelHours: 24, autoMessagesEnabled: true, bookingHorizonWeeks: 13 });
+    expect(res.statusCode).toBe(200);
+    expect(res.json()).toEqual({ ...after, saved: ['late_cancel_hours'], moved: ['auto_messages_enabled'], invalid: ['booking_horizon_weeks'] });
+    expect(settings.write).toHaveBeenCalledExactlyOnceWith({ late_cancel_hours: 24 }, USERS['admin']?.id);
     expect(audit.record).toHaveBeenCalledWith(
       expect.objectContaining({ entity: 'settings', entityId: SINGLETON_ENTITY_ID, action: 'update', before: SETTING_DEFAULTS, after }),
     );
-    expect((await call('PATCH', 'teacher', { autoMessagesEnabled: true })).statusCode).toBe(403);
+    expect((await call('PATCH', 'teacher', { lateCancelHours: 24 })).statusCode).toBe(403);
   });
 
   it('null turns the policy back OFF; out-of-range values → 400', async () => {

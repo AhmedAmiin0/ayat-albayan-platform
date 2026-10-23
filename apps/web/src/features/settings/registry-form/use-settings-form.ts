@@ -1,11 +1,12 @@
-import type { AcademySettings, SettingKey } from '@ab/shared';
+import { SETTING_FIELD_OF, type AcademySettings, type SettingKey } from '@ab/shared';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useEffect, useRef, useState } from 'react';
+import { t } from '@/lib/i18n';
 import { CONFIG_QUERY_KEYS } from '@/lib/query-keys';
 import { updateSettings } from '@/lib/settings-api';
 import { isDefault, isDirty, resetPatch } from './settings-dirty';
 import { FORM_KEYS, settingsForm, settingsUpdate, type SettingsErrors, type SettingsForm } from './settings-form';
-import { afterSave, changedKeys, movedKeys, refreshed, type FormPair } from './settings-scope';
+import { afterSave, changedKeys, invalidKeys, movedKeys, refreshed, type FormPair } from './settings-scope';
 
 export interface SettingsFormState {
   form: SettingsForm;
@@ -65,12 +66,14 @@ export function useSettingsForm(settings: AcademySettings, options: SettingsForm
     save.mutate(result.value, {
       onSuccess: (res: unknown) => {
         const moved = movedKeys(res, sent);
-        const written = sent.filter((k) => !moved.includes(k));
+        const invalid = invalidKeys(res, sent);
+        const written = sent.filter((k) => !moved.includes(k) && !invalid.includes(k));
+        setErrors(Object.fromEntries(invalid.map((k) => [SETTING_FIELD_OF[k], t.settings.invalid])));
         setPair((p) => afterSave(p, written, snapshot));
         for (const queryKey of [CONFIG_QUERY_KEYS.settings, CONFIG_QUERY_KEYS.settingsMeta, CONFIG_QUERY_KEYS.publicConfig]) {
           void queryClient.invalidateQueries({ queryKey });
         }
-        options.onSaved({ moved });
+        if (written.length > 0 || moved.length > 0) options.onSaved({ moved });
       },
     });
   };

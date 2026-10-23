@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { settingsForm, settingsUpdate } from './settings-form';
-import { afterSave, changedKeys, fieldsOf, movedKeys, refreshed } from './settings-scope';
+import { afterSave, changedKeys, fieldsOf, invalidKeys, movedKeys, refreshed } from './settings-scope';
 
 const base = settingsForm(SETTING_DEFAULTS);
 
@@ -37,5 +37,12 @@ describe('settings-scope (a page sends only what it changed)', () => {
     expect(pair.form['uploadMaxMb']).toBe('5');
     expect(pair.initial['uploadMaxMb']).toBe('5');
     expect(fieldsOf(['upload_max_mb'], fresh)).toEqual({ uploadMaxMb: '5' });
+  });
+
+  it('invalidKeys: the sent keys the per-key answer refused as invalid (snake or camel)', () => {
+    const res = { ...SETTING_DEFAULTS, saved: [], moved: [], invalid: ['follow_up_hours'] };
+    expect(invalidKeys(res, ['follow_up_hours', 'reminder_lookahead_hours'])).toEqual(['follow_up_hours']);
+    expect(invalidKeys({ invalid: ['reminderLookaheadHours'] }, ['reminder_lookahead_hours'])).toEqual(['reminder_lookahead_hours']);
+    expect(invalidKeys(SETTING_DEFAULTS, ['follow_up_hours'])).toEqual([]);
   });
 });

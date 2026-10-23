@@ -25,7 +25,7 @@ afterEach(() => {
 
 // Ported from the old /admin/settings page: «التواصل» › «الإرسال».
 describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut-over)', () => {
-  it('sits with the sending switch, OFF by default, with the Apps Script hint; ON sends only autoMessagesEnabled', async () => {
+  it('sits with the sending switch, OFF by default, with the Apps Script hint; ON goes to PUT /messages/gate/auto', async () => {
     renderPage(false);
     expect(await screen.findByText(s.autoMessages)).toBeTruthy();
     expect(screen.getByText(s.autoOff)).toBeTruthy();
@@ -37,7 +37,7 @@ describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut
     expect(within(dialog).getByText(s.autoEnableConfirm)).toBeTruthy();
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(within(dialog).getByRole('button', { name: s.autoEnableYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { autoMessagesEnabled: true }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/auto', { on: true, confirmText: s.autoEnableYes }));
     expect(await screen.findByText(s.autoOn)).toBeTruthy();
     expect(screen.getByText(s.off)).toBeTruthy();
   });
@@ -52,7 +52,7 @@ describe('automatic messages switch (settings.auto_messages_enabled, docs/09 cut
     expect(apiSend).not.toHaveBeenCalled();
     fireEvent.click(screen.getByRole('button', { name: s.autoDisable }));
     fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: s.autoDisableYes }));
-    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PATCH', '/settings', { autoMessagesEnabled: false }));
+    await waitFor(() => expect(apiSend).toHaveBeenCalledWith('PUT', '/messages/gate/auto', { on: false }));
     expect(await screen.findByText(s.autoOff)).toBeTruthy();
     expect(apiSend).toHaveBeenCalledTimes(1);
   });

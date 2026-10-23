@@ -9,10 +9,12 @@ const h = 'settings.hints';
  */
 export const ACADEMY_SETTINGS = {
   academy_whatsapp_e164: {
+    module: 'academy', group: 'academy', reachesFamilies: true,
     type: 'e164', default: '+966566101447', public: true,
     labelKey: 'settings.academyWhatsapp', hintKey: `${h}.academyWhatsapp`,
   },
   academy_timezone: {
+    module: 'academy', group: 'academy',
     type: 'tz', default: 'Asia/Riyadh',
     labelKey: 'settings.academyTimezone', hintKey: `${h}.academyTimezone`,
   },
@@ -21,6 +23,7 @@ export const ACADEMY_SETTINGS = {
    * WhatsApp number is academy_whatsapp_e164 (one source), not a field here.
    */
   academy_contact: {
+    module: 'academy', group: 'academy', reachesFamilies: true,
     type: 'json', default: { site: 'ayatalbayan.com' }, public: true,
     shape: [
       { name: 'site', kind: 'string', format: 'host', max: 100 },

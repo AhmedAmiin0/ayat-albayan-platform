@@ -7,6 +7,7 @@ export const ACTIVITY_SETTINGS = {
    * value was 180. A default change needs a migration too.
    */
   activity_retention_days: {
+    module: 'activity', group: 'retention', confirm: 'typed',
     type: 'int', default: 180, min: 1, max: 3650,
     labelKey: 'config.activityRetentionDays', hintKey: 'config.activityRetentionDaysHint',
   },
