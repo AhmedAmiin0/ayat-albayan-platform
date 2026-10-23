@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { loadEnv } from '../../env';
 import { InboxModule } from '../inbox/inbox.module';
 import { TeachersModule } from '../teachers/teachers.module';
@@ -13,6 +12,7 @@ import { FeedbackReadQueries } from './feedback.read.queries';
 import { FeedbackReadService } from './feedback.read.service';
 import { FeedbackRequestService } from './feedback.request.service';
 import { FeedbackSender } from './feedback.sender';
+import { FeedbackSettings } from './feedback.settings';
 
 /**
  * «رأيك يهمّنا» (docs/13-forms-spec.md form 3): the admin's «ابعت طلب الرأي» (an approved WhatsApp
@@ -24,7 +24,8 @@ import { FeedbackSender } from './feedback.sender';
   controllers: [FeedbackController, FeedbackPublicController],
   providers: [
     { provide: FEEDBACK_CONFIG, useFactory: (): FeedbackConfig => ({ secret: loadEnv().FEEDBACK_TOKEN_SECRET ?? null }) },
-    { provide: PublicFeedbackLimit, useFactory: (s: SettingsService) => new PublicFeedbackLimit(s), inject: [SettingsService] },
+    FeedbackSettings,
+    { provide: PublicFeedbackLimit, useFactory: (s: FeedbackSettings) => new PublicFeedbackLimit(s), inject: [FeedbackSettings] },
     FeedbackQueries,
     FeedbackReadQueries,
     FeedbackSender,

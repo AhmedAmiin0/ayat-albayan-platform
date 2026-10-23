@@ -1,13 +1,13 @@
-import { joinWindowConfig, type AcademySettings, type TemplateKey } from '@ab/shared';
+import { joinWindowConfig, type TemplateKey } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
 import { PushService } from '../../common/push/push.service';
-import { SettingsService } from '../../common/settings/settings.service';
 import { livekitEnv, loadEnv } from '../../env';
 import { firstWebOrigin } from '../classroom/classroom.config';
 import type { QueuedMessage } from './queued-row';
 import { joinCandidates, sentLinks, type RoomCandidate, type RoomContext } from './reminders.links';
 import { confirmationPush, needsConfirmation, planReminders, type ReminderLesson } from './reminders.plan';
 import { RemindersQueries } from './reminders.queries';
+import { RemindersSettings, type RemindersSettingsValues } from './reminders.settings';
 import { Ticker } from './ticker';
 
 const MINUTE = 60_000;
@@ -18,7 +18,7 @@ const FIRST_RUN_MS = 30_000;
 const PUSHED_SINCE_MS = 48 * 60 * MINUTE;
 
 export type ReminderSummary = { lessons: number; queued: number; dropped: number; pushed: number };
-type QueueInput = { settings: AcademySettings; lessons: readonly ReminderLesson[]; now: Date };
+type QueueInput = { settings: RemindersSettingsValues; lessons: readonly ReminderLesson[]; now: Date };
 
 /**
  * R-MSG-02 reminder scheduler (docs/12 §7): every 5 minutes, single flight. Queues the same-day
@@ -42,7 +42,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
 
   constructor(
     private readonly queries: RemindersQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: RemindersSettings,
     private readonly push: PushService,
   ) {}
 
@@ -63,7 +63,7 @@ export class RemindersJob implements OnApplicationBootstrap, OnModuleDestroy {
   async runOnce(now = new Date()): Promise<ReminderSummary> {
     const summary: ReminderSummary = { lessons: 0, queued: 0, dropped: 0, pushed: 0 };
     try {
-      const settings = await this.settings.all();
+      const settings = await this.settings.read();
       // settings.reminder_lookahead_hours (≥ 25): the day-before send time is 23–25 h ahead across DST.
       const until = new Date(now.getTime() + settings.reminder_lookahead_hours * 60 * MINUTE);
       const lessons = await this.queries.upcoming({ now, until });

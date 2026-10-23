@@ -1,8 +1,9 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import type { SettingsService } from '../../common/settings/settings.service';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { LessonEvents } from '../../common/events/lesson-events';
 import type { MessageSender } from '../whatsapp/message.sender';
+import { LessonRatingSettings } from './lesson-rating.settings';
 import { heldLesson, LESSON_ID, NOW } from './rating.fakes';
 import { RatingJob } from './rating.job';
 import type { RatingQueries } from './rating.queries';
@@ -17,7 +18,7 @@ let settings = { ...SETTING_DEFAULTS, auto_messages_enabled: true };
 function setup() {
   const queue = new RatingQueue(
     queries as unknown as RatingQueries,
-    { all: async () => settings } as unknown as SettingsService,
+    readerOf(LessonRatingSettings, settings),
     sender as unknown as MessageSender,
   );
   const events = new LessonEvents();

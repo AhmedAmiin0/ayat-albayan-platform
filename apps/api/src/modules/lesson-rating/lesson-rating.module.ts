@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { InboxModule } from '../inbox/inbox.module';
+import { LessonRatingSettings } from './lesson-rating.settings';
 import { RatingController } from './rating.controller';
 import { RatingJob } from './rating.job';
 import { RatingQueries } from './rating.queries';
@@ -16,7 +17,7 @@ import { RatingStore } from './rating.store';
 @Module({
   imports: [InboxModule],
   controllers: [RatingController],
-  providers: [RatingQueries, RatingQueue, RatingJob, RatingStore, RatingSendService],
+  providers: [RatingQueries, LessonRatingSettings, RatingQueue, RatingJob, RatingStore, RatingSendService],
   exports: [RatingStore],
 })
 export class LessonRatingModule {}

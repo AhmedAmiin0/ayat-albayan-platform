@@ -2,8 +2,8 @@ import type { TablesInsert, TablesUpdate } from '@ab/db';
 import { Inject, Injectable } from '@nestjs/common';
 import type { PostgrestError } from '@supabase/supabase-js';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
 import { guardianOwnerIds } from '../sales/sales-ownership';
+import { WebhookSettings } from './webhook.settings';
 import type { Contact, OutboundRow, StatusMove } from './webhook.types';
 
 export type { Contact, OutboundRow, StatusMove } from './webhook.types';
@@ -17,12 +17,12 @@ function check(error: PostgrestError | null): void {
 export class WebhookQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: WebhookSettings,
   ) {}
 
   /** settings.quick_reply_window_hours in ms: how far back a typed «نعم» looks for our lesson message. */
   async replyWindowMs(): Promise<number> {
-    return (await this.settings.all()).quick_reply_window_hours * 3_600_000;
+    return (await this.settings.read()).quick_reply_window_hours * 3_600_000;
   }
 
   async identify(phone: string): Promise<Contact> {

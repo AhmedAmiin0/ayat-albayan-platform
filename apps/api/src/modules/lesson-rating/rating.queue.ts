@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { MessageSender } from '../whatsapp/message.sender';
+import { LessonRatingSettings } from './lesson-rating.settings';
 import { planRatings, type RatingLesson } from './rating.plan';
 import { RatingQueries } from './rating.queries';
 
@@ -17,12 +17,12 @@ export type QueueResult = { queued: number; skipped: 'mode_link' | 'auto_off' | 
 export class RatingQueue {
   constructor(
     private readonly queries: RatingQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonRatingSettings,
     private readonly sender: MessageSender,
   ) {}
 
   async queue(read: () => Promise<RatingLesson[]>, now: Date): Promise<QueueResult> {
-    const settings = await this.settings.all();
+    const settings = await this.settings.read();
     if (settings.feedback_mode !== 'buttons') return { queued: 0, skipped: 'mode_link' };
     if (!settings.auto_messages_enabled) return { queued: 0, skipped: 'auto_off' };
     if (!(await this.queries.approved())) return { queued: 0, skipped: 'not_approved' };
