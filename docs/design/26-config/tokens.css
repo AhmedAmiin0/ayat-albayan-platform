@@ -355,7 +355,8 @@ figcaption { font-size: 13px; font-weight: 600; color: var(--ink-3); }
 .vt .input, .vt .sel select { min-block-size: var(--h-dense); font-size: 14px; }
 .vt .unit-field .input { inline-size: 84px; }
 .vt .sel { inline-size: 100%; max-inline-size: 216px; }
-.vt .input[type="text"], .vt .input[type="tel"] { max-inline-size: 216px; }
+.vt .input[type="tel"] { max-inline-size: 216px; }
+.vt .input[type="text"] { inline-size: 100%; }
 .ed { display: grid; gap: 2px; justify-items: start; min-inline-size: 0; }
 .ed-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; }
 .ed .field-err, .ed .preview-ok { font-size: 12px; line-height: 1.4; }
