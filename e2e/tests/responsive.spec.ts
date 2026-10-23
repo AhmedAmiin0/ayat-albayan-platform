@@ -45,6 +45,12 @@ test.describe('no horizontal overflow on the main screens', () => {
       '/admin/classrooms',
       '/admin/subscriptions',
       '/admin/settings',
+      // The settings hub's five pages (docs/26b §1).
+      '/admin/settings/values',
+      '/admin/settings/communications',
+      '/admin/settings/integrations',
+      '/admin/settings/google',
+      '/admin/settings/appearance',
       '/admin/book',
     ];
     for (const width of [390, 768]) {

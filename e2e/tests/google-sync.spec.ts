@@ -8,6 +8,8 @@ import { resetAbrar, seedFamily, seedLesson, withSql } from '../support/schedule
 
 const WAIT = { timeout: 45_000, intervals: [500, 1_000, 2_000] };
 const g = ar.googleSync;
+/** Back on «مزامنة Google» with the OAuth return's `?google=` read and cleared. */
+const returnCleared = (url: URL) => url.pathname === '/admin/settings/google' && !url.searchParams.has('google');
 
 test.describe('Google sync alongside the old script (docs/24)', () => {
   test.beforeEach(() => test.skip(test.info().project.name !== 'desktop', 'one shared stub: one run'));
@@ -22,13 +24,15 @@ test.describe('Google sync alongside the old script (docs/24)', () => {
     const studentId = family.studentIds[0] ?? '';
     const admin = await asRole('admin');
 
-    // Connect: the stub consents at once and Google's redirect comes back to the settings page.
-    await admin.goto('/admin/settings#integrations');
+    // Connect: the stub consents at once and Google's redirect comes back to the settings page,
+    // which forwards ?google=connected to «مزامنة Google» (/admin/settings/google).
+    await admin.goto('/admin/settings/google');
     await expect(admin.getByRole('heading', { name: g.title })).toBeVisible();
     await expect(admin.getByRole('textbox', { name: g.connection.redirect })).toHaveValue('http://localhost:3100/integrations/google/callback');
     await admin.getByRole('button', { name: g.connection.connect }).click();
-    await admin.waitForURL(/\/admin\/settings/);
-    await expect(admin.getByText(g.connection.connected).first()).toBeVisible();
+    // The return chain really ran: the page's note (oauthReturnNote) is up, and the query is cleared.
+    await expect(admin.getByRole('status').filter({ hasText: g.connection.connected })).toBeVisible({ timeout: 20_000 });
+    await expect(admin).toHaveURL(returnCleared);
     await expect(admin.getByText('academy@stub.test').first()).toBeVisible();
 
     // Discover (read-only), confirm the Drive root, map the teacher and the student («مجلد جديد»).

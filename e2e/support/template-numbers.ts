@@ -7,7 +7,7 @@ type Line = 'notifications' | 'chat';
 const p = ar.templates.perNumber;
 const lineName = (line: Line): string => ar.enums.waLine[line];
 
-/** One number's block on /admin/settings. */
+/** One number's block on «التواصل» › «القوالب» (/admin/settings/communications?tab=templates). */
 export const numberBlock = (page: Page, line: Line) => page.locator(`[data-testid="template-line"][data-line="${line}"]`);
 
 /** Clicks that number's sync and waits for its success toast. */

@@ -7,7 +7,7 @@ import { settingsQuery } from '@/lib/settings-api';
 import { integrationsQuery } from '../integrations/integrations-api';
 import { linesCheckQuery } from '../messaging/api';
 import { catalogueQuery } from './catalogue-api';
-import { CatalogueRow } from './CatalogueRow';
+import { CatalogueTable } from './CatalogueTable';
 import { NumbersLine } from './NumbersLine';
 
 const c = t.notificationCatalogue;
@@ -27,7 +27,8 @@ function Loading() {
 /**
  * «ماذا يُرسل ومتى» (docs/23 §3 phase 1, §E H1): every notification the platform sends, to whom,
  * when, through which channel and number, and whether it goes out now under today's settings
- * (the first blocker in words). Read-only: the switches stay in their own rows of this page.
+ * (the first blocker in words), one audience at a time (docs/26b §3). Read-only: the switches stay
+ * on «الإرسال» of «التواصل». No rule above it: the tab bar's own line is the one before the heading.
  */
 export function CatalogueSection() {
   const settings = useQuery(settingsQuery);
@@ -37,14 +38,14 @@ export function CatalogueSection() {
   const version = settings.dataUpdatedAt + check.dataUpdatedAt + integrations.dataUpdatedAt;
   const list = useQuery({ ...catalogueQuery(version), enabled: settings.isSuccess });
   return (
-    <div className="grid min-w-0 gap-2 border-t border-rule pt-4" aria-labelledby="notification-catalogue-title" role="region">
+    <div className="grid min-w-0 gap-2" aria-labelledby="notification-catalogue-title" role="region">
       <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
         <h3 id="notification-catalogue-title" className="text-sm font-bold">
           {c.title}
         </h3>
         <span className="rounded-sm border border-rule px-1.5 text-2xs text-ink-3">{c.readOnly}</span>
       </div>
-      <p className="max-w-[70ch] text-xs text-ink-2">{c.intro}</p>
+      <p className="max-w-[70ch] text-xs text-ink-2">{t.settingsPages.catalogueIntro}</p>
       {list.isPending && <Loading />}
       {list.isError && (
         <div className="grid justify-items-start gap-2">
@@ -60,11 +61,7 @@ export function CatalogueSection() {
       {list.data && (
         <>
           <NumbersLine lines={list.data.lines} />
-          <ul className="grid min-w-0">
-            {list.data.entries.map((entry) => (
-              <CatalogueRow key={entry.key} entry={entry} lines={list.data.lines} />
-            ))}
-          </ul>
+          <CatalogueTable entries={list.data.entries} lines={list.data.lines} />
         </>
       )}
     </div>

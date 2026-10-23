@@ -13,3 +13,4 @@ export * from './patch.js';
 export * from './groups.js';
 export * from './google-defs.js';
 export * from './seed-entries.js';
+export * from './value-groups.js';

@@ -21,7 +21,7 @@ const NAME = t.names.trial_reschedule;
 const row = (page: Page) => page.getByRole('row').filter({ hasText: NAME });
 
 async function openSettings(page: Page): Promise<void> {
-  await page.goto('/admin/settings');
+  await page.goto('/admin/settings/communications?tab=templates'); // «التواصل» › «القوالب»
   await expect(page.getByRole('heading', { name: t.title })).toBeVisible();
 }
 

@@ -19,6 +19,16 @@ export interface TabsProps<V extends string> {
    */
   orientation?: 'horizontal' | 'vertical';
   className?: string;
+  /**
+   * Gives each tab an id and the selected one `aria-controls` its panel (tabIds), so the panel can be
+   * `aria-labelledby` its tab. Without it the tabs carry no ids (as before).
+   */
+  idPrefix?: string;
+}
+
+/** The ids of one tab and its panel under an `idPrefix` (the panel: `id={panel} aria-labelledby={tab}`). */
+export function tabIds(prefix: string, value: string): { tab: string; panel: string } {
+  return { tab: `${prefix}-tab-${value}`, panel: `${prefix}-panel-${value}` };
 }
 
 // 44px touch targets below the `shell:` breakpoint (docs/07 §4).
@@ -53,6 +63,7 @@ export function Tabs<V extends string>({
   onChange,
   orientation = 'horizontal',
   className,
+  idPrefix,
 }: TabsProps<V>) {
   const vertical = orientation === 'vertical';
   const wide = useSyncExternalStore(subscribe, isWide);
@@ -89,6 +100,8 @@ export function Tabs<V extends string>({
           <button
             type="button"
             role="tab"
+            id={idPrefix === undefined ? undefined : tabIds(idPrefix, tab.value).tab}
+            aria-controls={idPrefix === undefined || tab.value !== value ? undefined : tabIds(idPrefix, tab.value).panel}
             aria-selected={tab.value === value}
             tabIndex={tab.value === value ? 0 : -1}
             onClick={() => onChange(tab.value)}

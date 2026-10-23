@@ -2830,7 +2830,6 @@
       "10": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
       "190": "The WhatsApp account's access has expired — it needs renewing from Business Manager, and messages are waiting in the queue",
       "200": "The WhatsApp account doesn't have permission to send — check the Business Manager settings",
-      "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Integrations»; messages wait in the queue",
       "470": "More than 24 hours have passed since their last message",
       "130429": "Meta paused sending for a while because of high message volume",
       "131026": "The number isn't on WhatsApp or can't receive messages",
@@ -2842,6 +2841,7 @@
       "132000": "The template has the wrong number of variables",
       "132001": "The template doesn't exist on Meta",
       "132015": "Meta has paused this template temporarily",
+      "kapso_auth": "Kapso refused the project API key — update «Kapso project API key» in «Integrations»; messages wait in the queue",
       "expired": "Its time passed before it could be sent",
       "sending": "Sending now",
       "handed_off": "Waiting for you to confirm you sent it yourself",
@@ -5012,7 +5012,7 @@
   },
   "notificationCatalogue": {
     "title": "What is sent and when",
-    "intro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the switches in their own sections of this page.",
+    "intro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the sending switches in the «Sending» tab and the timings in the fields below it.",
     "readOnly": "Read-only",
     "loadError": "Could not load the notifications list",
     "retry": "Reload the list",
@@ -5311,5 +5311,310 @@
       "parityOk": "Setup in parity",
       "parityDiff": "Differences: {{count}}"
     }
+  },
+  "settingsHub": {
+    "title": "Settings",
+    "sections": "{n} sections",
+    "sectionsCount": {
+      "one": "One section",
+      "two": "Two sections",
+      "few": "{n} sections",
+      "other": "{n} sections"
+    },
+    "caption": "Settings sections and the state of each one now",
+    "colSection": "Section",
+    "colState": "State now",
+    "colOpen": "Open",
+    "open": "Open",
+    "placeholder": "Search by name, description or key",
+    "searchHint": "Searches values, communications, integrations and Google sync together.",
+    "results": "Search results",
+    "resultsCount": {
+      "one": "1 result",
+      "two": "2 results",
+      "few": "{n} results",
+      "other": "{n} results"
+    },
+    "unknown": "Not available now",
+    "googleName": "Google sync",
+    "desc": {
+      "values": "Booking and cancellation windows, subscription limits, academy details, retention periods and custom values.",
+      "communications": "WhatsApp numbers, what is sent and when, templates and safety.",
+      "integrations": "Connection details for online lessons, mobile and browser notifications, and exchange rates. Secrets are never shown.",
+      "google": "Account connection, calendars, student folders in Drive and the sync log.",
+      "appearance": "Light, dark or automatic. Saved in this browser only."
+    },
+    "valuesCount": {
+      "one": "1 value",
+      "two": "2 values",
+      "few": "{n} values",
+      "other": "{n} values"
+    },
+    "valuesModified": "{n} changed",
+    "valuesPublic": "{n} public",
+    "sendingOffWhy": "No message is sent until sending is turned on from the communications page.",
+    "servicesOk": {
+      "one": "1 service set up",
+      "two": "2 services set up",
+      "few": "{n} services set up",
+      "other": "{n} services set up"
+    },
+    "serviceUnset": "{name} not set up",
+    "servicesUnset": {
+      "one": "1 service not set up",
+      "two": "2 services not set up",
+      "few": "{n} services not set up",
+      "other": "{n} services not set up"
+    },
+    "googleNotConfigured": "Google client not set up",
+    "googleOff": "Sync is off",
+    "googleDryRun": "Dry run (no writing)",
+    "themeNow": "Now: {theme}",
+    "groups": {
+      "schedule": "Schedule and lessons",
+      "classroom": "Online lessons",
+      "reports": "Reports",
+      "accounts": "Accounts and payments",
+      "payouts": "Teacher payouts",
+      "uploads": "Uploads",
+      "academy": "Academy",
+      "messages": "Messages",
+      "sales": "Sales",
+      "retention": "Logs and retention",
+      "notifications": "Notifications",
+      "sending": "Sending and safety"
+    }
+  },
+  "settingsValues": {
+    "title": "Values",
+    "readOnly": "Read only",
+    "readOnlyNote": "You do not have permission to change settings. Ask the academy manager if a value needs to change.",
+    "summary": "{total} · {modified} changed · {public} public",
+    "count": {
+      "one": "1 value",
+      "two": "2 values",
+      "few": "{n} values",
+      "other": "{n} values"
+    },
+    "unsaved": {
+      "one": "1 unsaved value",
+      "two": "2 unsaved values",
+      "few": "{n} unsaved values",
+      "other": "{n} unsaved values"
+    },
+    "searchLabel": "Search all values",
+    "searchPlaceholder": "Search by name, description or key",
+    "searchHint": "Results from every group are shown under «All».",
+    "filters": "Filter values",
+    "filterModified": "Changed only",
+    "filterPublic": "Public only",
+    "groupsNav": "Value groups",
+    "groupsTitle": "Groups",
+    "ownedHeading": "Managed on another page",
+    "groups": {
+      "payouts": "Teacher payouts",
+      "messages": "Messages",
+      "retention": "Logs and retention",
+      "notifications": "Notifications",
+      "sending": "Sending and safety",
+      "google": "Google sync"
+    },
+    "all": "All",
+    "clearSearch": "Clear search",
+    "cols": {
+      "name": "Name",
+      "value": "Value",
+      "default": "Default",
+      "last": "Last change",
+      "action": "Action"
+    },
+    "tags": {
+      "public": "Public",
+      "confirm": "Asks before saving",
+      "deletes": "Deletes data",
+      "modified": "Changed"
+    },
+    "on": "On",
+    "off": "Off",
+    "bounds": "From {min} to {max}",
+    "lengthBounds": "From {min} to {max} characters",
+    "onValue": "{value} when turned on",
+    "never": "Not changed yet",
+    "unsavedRow": "Not saved",
+    "savedWas": "Saved: {value}",
+    "undo": "Undo",
+    "saving": "Saving…",
+    "saved": "Value saved",
+    "savedNamed": "«{name}» saved",
+    "saveError": "Could not save the value",
+    "saveErrorNamed": "Could not save «{name}»",
+    "retry": "Try again",
+    "moved": "Managed on another page",
+    "invalidRange": "Enter a number from {min} to {max}",
+    "invalidLength": "Enter text of {min} to {max} characters",
+    "phonePreview": "Saved as: {phone}",
+    "menu": "Options: {name}",
+    "resetDefault": "Restore the default",
+    "devKey": "For developers: the key",
+    "copyKey": "Copy the key",
+    "copied": "Key copied",
+    "editFrom": {
+      "communications": "Edited in Communications",
+      "google": "Edited in Google sync"
+    },
+    "shapeEdit": "Edit both fields",
+    "shapeSave": "Save both fields",
+    "loadError": "Could not load the values",
+    "loading": "Loading the values…",
+    "empty": "No values match your search",
+    "emptyHint": "Nothing was found in names, descriptions or keys. Try another word.",
+    "groupEmpty": "This group has no values yet.",
+    "confirm": {
+      "plainTitle": "Save «{name}»?",
+      "plainYes": "Save the value",
+      "typedTitle": "Delete data older than {n} days?",
+      "typedBody": "On saving, data older than this is deleted for good and cannot be restored.",
+      "typedLabel": "To confirm, type the number of days: {n}",
+      "typedYes": "Save and delete data",
+      "logged": "The change is recorded in the activity log.",
+      "typedTitleCount": "Delete data older than {count}?"
+    },
+    "leave": {
+      "title": "Leave the page?",
+      "body": "You have unsaved values: {names}.",
+      "leave": "Leave without saving",
+      "stay": "Stay on the page"
+    },
+    "sheet": {
+      "edit": "Edit «{name}»",
+      "default": "Default: {value}",
+      "last": "Last change: {value}",
+      "dev": "For developers",
+      "save": "Save",
+      "discardTitle": "Close without saving?",
+      "discardBody": "The value you entered is not saved.",
+      "discard": "Close without saving",
+      "keep": "Keep editing"
+    },
+    "lastBy": "{name}, {at}",
+    "units": {
+      "hours": {
+        "one": "1 hour",
+        "two": "2 hours",
+        "few": "{n} hours",
+        "other": "{n} hours",
+        "unit": "hours"
+      },
+      "days": {
+        "one": "1 day",
+        "two": "2 days",
+        "few": "{n} days",
+        "other": "{n} days",
+        "unit": "days"
+      },
+      "weeks": {
+        "one": "1 week",
+        "two": "2 weeks",
+        "few": "{n} weeks",
+        "other": "{n} weeks",
+        "unit": "weeks"
+      },
+      "minutes": {
+        "one": "1 minute",
+        "two": "2 minutes",
+        "few": "{n} minutes",
+        "other": "{n} minutes",
+        "unit": "minutes"
+      },
+      "lessons": {
+        "one": "1 lesson",
+        "two": "2 lessons",
+        "few": "{n} lessons",
+        "other": "{n} lessons",
+        "unit": "lessons"
+      },
+      "mb": {
+        "one": "{n} MB",
+        "two": "{n} MB",
+        "few": "{n} MB",
+        "other": "{n} MB",
+        "unit": "MB"
+      }
+    },
+    "restorePrevious": "Restore the previous value",
+    "customDelete": "Delete the value…",
+    "customPublic": {
+      "title": "Make the value public?",
+      "body": "This value will be shown to any visitor before signing in.",
+      "yes": "Make it public and save"
+    },
+    "confirmYes": {
+      "teachersAlwaysAvailable": {
+        "on": "Make every teacher bookable",
+        "off": "Stop making every teacher bookable"
+      },
+      "meetingLinkAuto": {
+        "on": "Turn on the automatic link",
+        "off": "Turn off the automatic link"
+      },
+      "salesAutoAssign": {
+        "on": "Turn on automatic assignment",
+        "off": "Turn off automatic assignment"
+      }
+    }
+  },
+  "settingsPages": {
+    "communications": "Communications",
+    "google": "Google sync",
+    "crumbs": "Breadcrumb",
+    "tabs": "Page sections",
+    "communicationsTabs": {
+      "sending": "Sending",
+      "numbers": "Numbers",
+      "catalogue": "What is sent and when",
+      "timing": "Message timing",
+      "templates": "Templates"
+    },
+    "sendingNow": "Sending right now",
+    "sendingState": "Message sending: {state}",
+    "timingTitle": "Message timing",
+    "audiences": "Who receives it",
+    "audienceEmpty": "No notifications for this audience.",
+    "loadError": "Could not load the settings.",
+    "retry": "Try again",
+    "catalogueIntro": "Everything the platform sends, to whom, from which number, and whether it goes out now under the current settings. This list is read-only; change the sending switches in the «Sending» tab and the timings in the «Message timing» tab.",
+    "catalogueCaption": "What is sent and when: {audience}"
+  },
+  "mobileValues": {
+    "title": "Values",
+    "integrations": "Integrations",
+    "integrationsNote": "Managed on the website",
+    "integrationsHint": "Numbers, credentials and templates are edited on the website only.",
+    "groupsLabel": "Value groups",
+    "groups": {
+      "payouts": "Teacher payouts",
+      "messages": "Messages",
+      "retention": "Logs and retention",
+      "notifications": "Notifications (view only)",
+      "sending": "Sending and safety (view only)",
+      "google": "Google sync (view only)"
+    },
+    "name": "Name",
+    "value": "Value",
+    "edit": "Edit “{label}”: {value}",
+    "readOnly": "View only: you do not have permission to edit settings, so values are shown without editing.",
+    "owned": "Managed on another page",
+    "editOnWeb": "Edit it on the website",
+    "bounds": "From {min} to {max}",
+    "defaultValue": "Default: {value}",
+    "empty": "Not set",
+    "saveFailed": "Could not save the value",
+    "plainConfirm": "This change affects the whole academy right away. Save it?",
+    "typedConfirm": "This change may permanently delete old data. Type the number of days ({n}) to confirm.",
+    "typedLabel": "Number of days to confirm",
+    "typedMismatch": "The typed number does not match the value",
+    "unsavedClose": "You have not saved your edit. Close without saving?",
+    "closeAnyway": "Close without saving",
+    "keepEditing": "Keep editing"
   }
 }

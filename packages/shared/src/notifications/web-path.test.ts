@@ -31,6 +31,11 @@ describe('webNotificationPath (R-NOT-01)', () => {
     expect(webNotificationPath({ kind: 'meeting_invite' }, 'assistant')).toBe('/assistant');
   });
 
+  it('google_sync_alert: «مزامنة Google» for admins (docs/26b §1), home for anyone else', () => {
+    expect(webNotificationPath({ kind: 'google_sync_alert' }, 'admin')).toBe('/admin/settings/google');
+    expect(webNotificationPath({ kind: 'google_sync_alert' }, 'teacher')).toBe('/teacher');
+  });
+
   it('each portal keeps to its own pages', () => {
     expect(webNotificationPath({ kind: 'new_message', phone: PHONE }, 'teacher')).toBe('/teacher/inbox?phone=%2B966500000001');
     expect(webNotificationPath({ kind: 'new_message', phone: PHONE }, 'sales')).toBe('/sales/inbox?phone=%2B966500000001');

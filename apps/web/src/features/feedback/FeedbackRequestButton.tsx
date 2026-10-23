@@ -58,7 +58,7 @@ export function FeedbackRequestButton({ lesson }: { lesson: LessonView }) {
       {!approved && templates.isSuccess && (
         <p className="text-xs text-ink-3">
           {t.feedback.templateNotApproved}{' '}
-          <a href="/admin/settings" className="font-semibold text-lapis underline underline-offset-4">
+          <a href="/admin/settings/communications?tab=templates" className="font-semibold text-lapis underline underline-offset-4">
             {t.feedback.templateSettings}
           </a>
         </p>
