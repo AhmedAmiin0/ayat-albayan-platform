@@ -38,9 +38,9 @@ test.describe('settings switches — kill switch and automatic messages', () => 
     await queueText({ phone: `+${digits}`, leadId, body: 'أهلًا بحضرتك' });
     await queueText({ phone: `+${digits}`, leadId, body: 'تحب نحجز لك حلقة؟' });
     const admin = await asRole('admin');
-    // «ماذا يُرسل ومتى» (guardian tab by default) says the report PDF is held because sending is off (read-only, no switch).
+    // «الإشعارات» (?tab=catalogue, guardian tab by default) says the report PDF is held because sending is off.
     await admin.goto('/admin/settings/communications?tab=catalogue');
-    const report = admin.getByRole('region', { name: ar.notificationCatalogue.title }).locator('[data-key="report_ready"]');
+    const report = admin.getByRole('region', { name: ar.notificationRules.title, exact: true }).locator('[data-key="report_ready"]');
     await expect(report.getByText(ar.notificationCatalogue.blockers.messaging_off)).toBeVisible();
     // The page head names the state on every tab («إرسال الرسائل: …», never the switch's own words).
     await expect(admin.getByRole('group', { name: ar.settingsPages.sendingNow })).toContainText(s.off);

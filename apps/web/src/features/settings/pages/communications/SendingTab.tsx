@@ -1,13 +1,12 @@
 import type { AcademySettings } from '@ab/shared';
 import { DangerFrame } from '@/components/settings/DangerFrame';
 import { AutoMessagesSwitch } from '@/features/messaging/AutoMessagesSwitch';
-import { FeedbackModeSwitch } from '@/features/messaging/FeedbackModeSwitch';
 import { MessagingSwitch } from '@/features/messaging/MessagingSwitch';
 
 /**
  * «الإرسال»: the switches that save on their own, as they were on the old settings page — the kill
- * switch (with its server note) and the automatic messages, each in its danger frame, then the
- * feedback mode.
+ * switch (with its server note) and the automatic messages, each in its danger frame. The feedback
+ * mode is the «أزرار تقييم الحلقة» row of «الإشعارات» now (docs/26b §6a 1.7).
  */
 export function SendingTab({ settings }: { settings: AcademySettings }) {
   return (
@@ -18,7 +17,6 @@ export function SendingTab({ settings }: { settings: AcademySettings }) {
       <DangerFrame>
         <AutoMessagesSwitch settings={settings} />
       </DangerFrame>
-      <FeedbackModeSwitch settings={settings} />
     </div>
   );
 }

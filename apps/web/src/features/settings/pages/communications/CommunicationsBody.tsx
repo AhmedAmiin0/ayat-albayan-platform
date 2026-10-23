@@ -1,9 +1,9 @@
-import { settingSection, type AcademySettings } from '@ab/shared';
+import { RULE_SETTING_KEYS, settingSection, type AcademySettings, type SettingKey } from '@ab/shared';
 import { useState, type ReactNode } from 'react';
 import { settingText } from '@/components/settings/setting-text';
 import { tabIds } from '@/components/ui/tabs';
 import { Toast } from '@/components/ui/toast';
-import { CatalogueSection } from '@/features/notification-catalogue/CatalogueSection';
+import { RulesSection } from '@/features/notification-rules/RulesSection';
 import { t } from '@/lib/i18n';
 import { FORM_KEYS } from '../../registry-form/settings-form';
 import { useSettingsForm, type SettingsFormState } from '../../registry-form/use-settings-form';
@@ -16,8 +16,13 @@ import { TimingTab } from './TimingTab';
 /** The id prefix of «التواصل»'s tabs and panel (tabIds). */
 export const COMMUNICATIONS_TABS_ID = 'communications';
 
-/** The fields «مواعيد الرسائل» shows and saves: the «messaging» rows of the generic form. */
-export const TIMING_KEYS = FORM_KEYS.filter((k) => settingSection(k) === 'messaging');
+const RULE_KEYS: readonly SettingKey[] = RULE_SETTING_KEYS;
+
+/**
+ * The fields «مواعيد الرسائل» shows and saves: the «messaging» rows of the generic form, minus the 8
+ * keys the notification rules own now (docs/23b §1: edited on «الإشعارات», PATCH /settings moves them).
+ */
+export const TIMING_KEYS = FORM_KEYS.filter((k) => settingSection(k) === 'messaging' && !RULE_KEYS.includes(k));
 
 interface BodyProps {
   tab: CommunicationsTab;
@@ -35,8 +40,8 @@ interface TabBodyProps {
 
 function TabBody({ tab, settings, timing, onNote }: TabBodyProps) {
   if (tab === 'numbers') return <NumbersTab onNote={onNote} />;
-  if (tab === 'catalogue') return <CatalogueSection />;
-  if (tab === 'timing') return <TimingTab state={timing} />;
+  if (tab === 'catalogue') return <RulesSection onSaved={onNote} />;
+  if (tab === 'timing') return <TimingTab state={timing} keys={TIMING_KEYS} />;
   if (tab === 'templates') return <TemplatesTab />;
   return <SendingTab settings={settings} />;
 }
