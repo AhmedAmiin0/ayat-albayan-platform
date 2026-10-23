@@ -339,7 +339,7 @@ Comments that name settings but contain no SQL: `M/20261019000490_teacher_meetin
 | `M/20261001000187_sales_scope.sql:66-67` | `sales_auto_assign` true |
 | `M/20261001000195_lesson_rating.sql:21-22` | `feedback_mode` "buttons" |
 | `M/20261005000200_teacher_pay_rule.sql:24-25` | `payout_count_trials` false |
-| `M/20261005000206_settings_registry.sql:11-25` | `join_opens_before_min` 15, `join_closes_after_min` 120, `default_meeting_title` "اجتماع", `makeup_window_days` 60, `upload_max_mb` 10, `quick_reply_window_hours` 48, `reminder_lookahead_hours` 25, `follow_up_slots_from_hours` 12, `follow_up_slots_to_days` 7, `feedback_rate_window_min` 10, `fx_fresh_hours` 24, `academy_whatsapp_e164` "+966566101447", `academy_timezone` "Asia/Riyadh" |
+| `M/20261005000206_settings_registry.sql:11-25` | `join_opens_before_min` 15, `join_closes_after_min` 120, `default_meeting_title` "اجتماع", `makeup_window_days` 60, `upload_max_mb` 10, `quick_reply_window_hours` 48, `reminder_lookahead_hours` 25, `follow_up_slots_from_hours` 12, `follow_up_slots_to_days` 7, `feedback_rate_window_min` 10, `fx_fresh_hours` 24, `academy_whatsapp_e164` (a phone number, value omitted), `academy_timezone` "Asia/Riyadh" |
 | `M/20261012000320_teachers_always_available.sql:7-8` | `teachers_always_available` true |
 | `M/20261012000330_meeting_link_auto.sql:10-11` | `meeting_link_auto` false |
 | `M/20261012000382_teacher_whatsapp.sql:27-30` | `teacher_whatsapp_new_student` true, `teacher_whatsapp_lesson_reminder` true |
