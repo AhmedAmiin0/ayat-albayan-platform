@@ -1,6 +1,6 @@
 import type { IntegrationConfigItem, IntegrationPlainKey, IntegrationSecretKey } from '@ab/shared';
 import { Inject, Injectable, Logger, type OnModuleDestroy, type OnModuleInit } from '@nestjs/common';
-import { setIntegrationOverlay } from '../../config/integration-overlay';
+import { setIntegrationOverlay } from './integration-overlay';
 import { validOverlay } from '../../env';
 import { IntegrationConfigQueries } from './integration-config.queries';
 import { integrationItems } from './integration-config.view';

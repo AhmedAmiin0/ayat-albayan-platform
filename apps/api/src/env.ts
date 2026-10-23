@@ -1,6 +1,6 @@
 import { isIntegrationKey, parseAllowedRecipients } from '@ab/shared';
 import { z } from 'zod';
-import { integrationOverlay } from './config/integration-overlay';
+import { integrationOverlay } from './common/integrations/integration-overlay';
 import { GOOGLE_SHAPE } from './env.google';
 import { KAPSO_SHAPE } from './env.kapso';
 import { WEB_PUSH_SHAPE } from './env.web-push';
@@ -120,7 +120,7 @@ export type Env = z.infer<typeof schema>;
 
 /**
  * The API's config. Called with no argument (every reader in app code): process.env with the
- * database's integration values on top (config/integration-overlay, a non-empty DB value wins).
+ * database's integration values on top (common/integrations/integration-overlay, a non-empty DB value wins).
  * Called with an explicit source (tests, the import command): that source alone, nothing added.
  * The overlay is pre-checked key by key, and should the merge still fail, env alone is used: a DB
  * value never makes this throw.

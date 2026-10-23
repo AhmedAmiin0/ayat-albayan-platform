@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { setIntegrationOverlay } from '../../config/integration-overlay';
+import { setIntegrationOverlay } from '../../common/integrations/integration-overlay';
 import { LiveWhatsappClient } from './live-client';
 import { RECORDED, scriptedFetch } from './whatsapp.fakes';
 
