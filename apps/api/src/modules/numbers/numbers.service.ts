@@ -46,18 +46,33 @@ export class NumbersService {
     return this.view(row.id);
   }
 
-  /** is_default true → wa_number_make_default (409 not_enabled unless the number is on); numberPatch for the rest. */
+  /**
+   * is_default true → wa_number_make_default (409 not_enabled unless the number is on, checked before
+   * any write); numberPatch for the rest. Whatever was written is audited and refreshes the config,
+   * even when the default step then fails.
+   */
   async update(id: string, body: NumberUpdate, actorId: string): Promise<NumberView> {
     const before = (await this.queries.byId(id)) ?? missing();
     const { is_default: isDefault, ...rest } = body;
+    if (isDefault === true && !(rest.enabled ?? before.enabled)) throw new ConflictException({ message: 'not_enabled' });
     const patch = { ...numberPatch(before, rest), ...(isDefault === false ? { is_default: false as const } : {}) };
-    if (Object.keys(patch).length > 0 && !(await this.queries.update(id, { patch, actorId }))) missing();
-    if (isDefault === true && !(await this.queries.makeDefault(id, actorId))) {
-      throw new ConflictException({ message: 'not_enabled' });
+    let wrote = Object.keys(patch).length > 0;
+    if (wrote && !(await this.queries.update(id, { patch, actorId }))) missing();
+    try {
+      if (isDefault === true) {
+        if (!(await this.queries.makeDefault(id, actorId))) throw new ConflictException({ message: 'not_enabled' });
+        wrote = true;
+      }
+    } finally {
+      if (wrote) await this.updated({ id, before, actorId });
     }
+    return this.view(id);
+  }
+
+  private async updated(input: { id: string; before: NumberRow; actorId: string }): Promise<void> {
+    const { id, before, actorId } = input;
     const after = await this.queries.byId(id);
     await this.effects.after({ actorId, entity: 'wa_numbers', entityId: id, action: 'update', before: audited(before), after: audited(after) });
-    return this.view(id);
   }
 
   /** Only a disabled number (409 number_enabled); its Vault entries go with it. */
