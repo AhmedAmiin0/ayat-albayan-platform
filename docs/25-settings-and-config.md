@@ -83,7 +83,7 @@ export class ReportsSettings {
 - The keys a module depends on are listed in one place, and the type only exposes those keys.
 - Readers call only `store.all()` (one cached read). `SettingsService` keeps its token and cache, so `overrideProvider(SettingsService)` harnesses keep working.
 - Every reader has a `.settings.test.ts`: `read()` returns exactly `KEYS`, defaults filled. Other tests use `readerOf(Reader, over)` or `fakeSettings(over)` from `common/settings/settings.fakes.ts` and never pass partial blobs.
-- A class provided by two modules needs the reader in both modules' providers (`TeacherMeQueries`: lessons and inbox; `SendGate`: whatsapp and notification-rules). A missed registration fails Nest boot loudly.
+- Register the reader in the module that provides the consuming class, and in every module that does. Today each consumer is provided once: `TeacherMeQueries` by lessons (inbox gets it through the lessons export), `SendGate` by the global whatsapp module (notification-rules uses it from there). A missed registration fails Nest boot loudly.
 - The notification catalogue reads only `CATALOGUE_SETTING_KEYS` (`CatalogueSettings`, shared).
 
 ## 5. Recipes

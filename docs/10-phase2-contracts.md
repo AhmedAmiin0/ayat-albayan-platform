@@ -48,7 +48,7 @@ The single source for the Phase 2 builders (API B1–B3, web, mobile) so they ca
 - **Errors:** 400 `{ message: 'validation_failed', issues }` (from `parseOrThrow`). Domain errors carry **both** keys, `{ code, message: code, …details }`, e.g. `409 { code: 'conflict', message: 'conflict', conflicts: Conflict[] }` (`ConflictResponse`). Clients switch on `code`. Codes: `conflict`, `invalid_transition` (+ `from`, `event`), `not_started`, `slot_taken`, `rule_not_active`, `no_rule` (400), `range_too_large` (400), `teacher_not_linked` (404).
 - **Lists:** time-window lists (`/lessons`, `/teachers/me/lessons`) take `from`/`to` instants, half-open `[from, to)` on `starts_at`, max **31 days** (else 400 `range_too_large`) — the window is the page (R-NFR-08). `/students/:id/lessons` is paginated `{ items, total, page, pageSize }`.
 - **Guards:** `@Roles('admin')` or `@Roles('admin', 'teacher')`. A teacher may touch a lesson only if `lesson.teacher_id === TeachersQueries.idByProfile(user.id)`, else 403. `allowed_events` in a `LessonView` = `allowedLessonEvents(status)`, and for teachers only `confirm | complete | mark_late | mark_no_show | excuse`.
-- **Settings:** inject `SettingsService` → `lateCancelHours(): number | null`, `bookingHorizonWeeks(): number`.
+- **Settings:** inject the module's reader (`<module>.settings.ts`, docs/25) → `read()` gives `late_cancel_hours: number | null`, `booking_horizon_weeks: number`.
 - **Horizon window:** `from = max(now, zonedToUtc(startsOn, 00:00, tz))`, `to = now + bookingHorizonWeeks × 7 days` (R-SCH-02).
 
 ## 4. Shared building blocks (import, don't re-implement)
