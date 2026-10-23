@@ -22,7 +22,7 @@ export class SettingsService {
   constructor(
     @Inject(DB) private readonly db: Db,
     @Inject(SETTINGS_CACHE_MS) private readonly ttlMs: number = DEFAULT_TTL_MS,
-    @Inject(ConfigStore) private readonly store: Pick<ConfigStore, 'fresh' | 'set' | 'onChange'>,
+    @Inject(ConfigStore) private readonly store: Pick<ConfigStore, 'fresh' | 'set' | 'onChange' | 'invalidate'>,
   ) {
     store.onChange(() => this.invalidate());
   }
@@ -59,6 +59,21 @@ export class SettingsService {
     try {
       await writeLatest(this.store, { values, actorId });
     } finally {
+      this.invalidate();
+    }
+  }
+
+  /**
+   * One switch written WITHOUT a version (the gate routes, comms_source): one upsert, as before 26-P2,
+   * so turning a switch OFF never depends on a version read or a concurrent write (docs/26 §2f: OFF is
+   * always accepted). Never null: those switches are booleans or one of two words.
+   */
+  async writeSwitch(key: string, value: boolean | string, actorId: string): Promise<void> {
+    try {
+      const { error } = await this.db.from('settings').upsert({ key, value, updated_by: actorId });
+      if (error) throw new Error(`settings write failed: ${error.message}`);
+    } finally {
+      this.store.invalidate();
       this.invalidate();
     }
   }

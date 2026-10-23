@@ -13,18 +13,18 @@ describe('PUT /messages/gate/cutover', () => {
     const res = await t.put('/messages/gate/cutover', { done: true });
     expect(res.statusCode).toBe(200);
     expect(res.json()).toEqual(after);
-    expect(t.settings.write).toHaveBeenCalledExactlyOnceWith({ crm_cutover_done: true }, ADMIN_ID);
+    expect(t.settings.writeSwitch).toHaveBeenCalledExactlyOnceWith('crm_cutover_done', true, ADMIN_ID);
     expect(t.audit.record).toHaveBeenCalledWith(
       expect.objectContaining({ action: 'gate_cutover', before: { crm_cutover_done: false }, after: { crm_cutover_done: true } }),
     );
     expect((await t.put('/messages/gate/cutover', { done: false })).statusCode).toBe(200);
-    expect(t.settings.write).toHaveBeenLastCalledWith({ crm_cutover_done: false }, ADMIN_ID);
+    expect(t.settings.writeSwitch).toHaveBeenLastCalledWith('crm_cutover_done', false, ADMIN_ID);
   });
 
   it('403 for a teacher, 400 for a malformed body', async () => {
     expect((await t.put('/messages/gate/cutover', { done: true }, 'teacher')).statusCode).toBe(403);
     expect((await t.put('/messages/gate/cutover', { done: 'yes' })).statusCode).toBe(400);
     expect((await t.put('/messages/gate/cutover', { on: true })).statusCode).toBe(400);
-    expect(t.settings.write).not.toHaveBeenCalled();
+    expect(t.settings.writeSwitch).not.toHaveBeenCalled();
   });
 });

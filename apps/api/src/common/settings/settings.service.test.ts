@@ -18,7 +18,7 @@ function service(rows: Rows | { error: string }, ttlMs = 30_000) {
 describe('SettingsService.all (R-SCH-07, R-SCH-02)', () => {
   it('is storage only: no per-key getter (modules read through their typed readers)', () => {
     const methods = Object.getOwnPropertyNames(SettingsService.prototype).filter((m) => m !== 'constructor');
-    expect(methods.sort()).toEqual(['all', 'invalidate', 'load', 'publicView', 'write']);
+    expect(methods.sort()).toEqual(['all', 'invalidate', 'load', 'publicView', 'write', 'writeSwitch']);
   });
 
   it('reads the stored values', async () => {

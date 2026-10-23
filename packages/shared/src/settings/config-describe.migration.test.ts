@@ -36,4 +36,10 @@ describe('migration config_describe', () => {
     expect(sql).toContain('grant execute on function public.config_describe(text, text, text, uuid) to service_role');
     expect(sql).toContain('char_length(p_text) > 500');
   });
+
+  it('never cuts a longer override, and a description-only insert has no writer', () => {
+    expect(sql).toContain('where char_length(o.value) <= 500');
+    expect(sql).not.toContain('left(o.value');
+    expect(sql).toContain("values (p_key, 'null'::jsonb, p_text, p_text is not null)");
+  });
 });

@@ -20,10 +20,11 @@ begin
   if p_text is not null and (char_length(btrim(p_text)) = 0 or char_length(p_text) > 500) then
     raise exception using errcode = '22023', message = 'invalid description', detail = p_key;
   end if;
-  insert into public.settings as s (key, value, description, description_edited, updated_by)
-  values (p_key, 'null'::jsonb, p_text, p_text is not null, actor)
+  -- A new row gets no writer: only its description was edited, so «آخر تعديل» of the value stays empty.
+  insert into public.settings as s (key, value, description, description_edited)
+  values (p_key, 'null'::jsonb, p_text, p_text is not null)
   on conflict (key) do update set description = excluded.description,
-    description_edited = excluded.description_edited, updated_by = excluded.updated_by
+    description_edited = excluded.description_edited, updated_by = actor
   returning s.version into v;
   if p_hint_key is not null then
     if p_text is null then
@@ -45,7 +46,8 @@ grant execute on function public.config_describe(text, text, text, uuid) to serv
 -- One-time copy (docs/26 §3 «A data migration»; never in the seeder, §9 #19): an existing ar override
 -- of a registry hint key becomes that row's description, unless the row already has one. The list is
 -- SEED_ENTRIES with a hintKey, minus the keys owned by a module route (OWNED_SETTING_KEYS);
--- config-describe.migration.test.ts pins it to the registry.
+-- config-describe.migration.test.ts pins it to the registry. An override longer than a description
+-- (500) is not copied, never cut: it keeps showing through t() and stays in «الترجمات».
 with pairs(key, hint_key) as (values
     ('quick_reply_window_hours', 'settings.hints.quickReplyWindowHours'),
     ('reminder_minutes_before', 'settings.hints.reminderMinutesBefore'),
@@ -81,8 +83,9 @@ with pairs(key, hint_key) as (values
     ('activity_retention_days', 'config.activityRetentionDaysHint')
 )
 insert into public.settings as s (key, value, description, description_edited)
-select p.key, 'null'::jsonb, left(o.value, 500), true
+select p.key, 'null'::jsonb, o.value, true
 from pairs p join public.translation_overrides o on o.key = p.hint_key and o.locale = 'ar'
+where char_length(o.value) <= 500
 on conflict (key) do update set description = excluded.description, description_edited = true
 where s.description is null;
 

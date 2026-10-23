@@ -21,7 +21,7 @@ const verify: TokenVerifier = async (token) => {
 
 /** Tests only: AppModule over fake auth, a mocked SettingsService and AuditService (gate routes). */
 export function gateApp() {
-  const settings = { all: vi.fn(), write: vi.fn() };
+  const settings = { all: vi.fn(), write: vi.fn(), writeSwitch: vi.fn() };
   const audit = { record: vi.fn() };
   let app: NestFastifyApplication | undefined;
   beforeAll(async () => {

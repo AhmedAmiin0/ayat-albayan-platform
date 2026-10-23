@@ -18,6 +18,7 @@ export class GateSettings {
   }
 
   writeKey(key: GateKey, value: boolean, actorId: string): Promise<void> {
-    return this.store.write({ [key]: value }, actorId);
+    // Unversioned: an OFF must never fail over a version read or a concurrent save (docs/26 §2f).
+    return this.store.writeSwitch(key, value, actorId);
   }
 }

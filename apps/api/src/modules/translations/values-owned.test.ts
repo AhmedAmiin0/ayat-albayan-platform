@@ -1,4 +1,4 @@
-import { SEED_ENTRIES } from '@ab/shared';
+import { isOwnedSettingKey, SEED_ENTRIES } from '@ab/shared';
 import { ConflictException } from '@nestjs/common';
 import { describe, expect, it, vi } from 'vitest';
 import { listKeys } from './translations.catalog';
@@ -24,8 +24,10 @@ async function conflictBody(run: () => Promise<void>): Promise<unknown> {
 }
 
 describe('«الترجمات» vs «القيم» (docs/26 §3)', () => {
-  it('every SEED_ENTRIES hint key maps to its settings key', () => {
-    for (const e of SEED_ENTRIES) if (e.hintKey) expect(VALUES_HINT_KEYS.has(e.hintKey)).toBe(true);
+  it('every non-owned SEED_ENTRIES hint key maps to its settings key; owned keys stay on «الترجمات»', () => {
+    for (const e of SEED_ENTRIES) {
+      if (e.hintKey) expect(VALUES_HINT_KEYS.has(e.hintKey), e.key).toBe(!isOwnedSettingKey(e.key));
+    }
     expect(VALUES_HINT_KEYS.get(HINT)).toBe('upload_max_mb');
     expect(VALUES_HINT_KEYS.has('nav.leads')).toBe(false);
   });

@@ -23,4 +23,4 @@ export const confirmationRequired = (): HttpException =>
 
 /** 403 `owner_permission`: an owned key's description needs the owning module's permission. */
 export const ownerPermission = (ownedBy: SettingOwner | null): HttpException =>
-  new ForbiddenException({ message: 'owner_permission', ownedBy });
+  new ForbiddenException({ code: 'owner_permission', message: 'owner_permission', ownedBy });

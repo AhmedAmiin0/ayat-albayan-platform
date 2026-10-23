@@ -21,6 +21,6 @@ export class NumbersSettings {
   }
 
   writeSource(source: CommsSource, actorId: string): Promise<void> {
-    return this.store.write({ comms_source: source }, actorId);
+    return this.store.writeSwitch('comms_source', source, actorId);
   }
 }
