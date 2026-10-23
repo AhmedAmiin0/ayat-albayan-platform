@@ -1,4 +1,4 @@
-import { fireEvent, screen, waitFor } from '@testing-library/react';
+import { act, fireEvent, screen, waitFor } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ApiError } from '@/lib/api';
 import { t } from '@/lib/i18n';
@@ -26,18 +26,20 @@ afterEach(() => {
 });
 
 describe('ThreadListsDialog «القوائم» of one chat (docs/22 §4)', () => {
-  it('checks the lists the chat is in; a toggle saves at once (PUT in, DELETE out)', async () => {
-    apiSend.mockResolvedValue(undefined);
+  it('checks the lists the chat is in; a toggle shows and saves at once (PUT in, DELETE out)', async () => {
+    const answers: (() => void)[] = [];
+    apiSend.mockImplementation(() => new Promise<void>((r) => answers.push(r)));
     show();
     expect((await box(PAY.name)).checked).toBe(true);
     expect((await box(TRIAL.name)).checked).toBe(false);
     fireEvent.click(await box(TRIAL.name));
     expect((await box(TRIAL.name)).checked).toBe(true);
     fireEvent.click(await box(PAY.name));
+    expect((await box(PAY.name)).checked).toBe(false);
     await waitFor(() => expect(apiSend).toHaveBeenCalledTimes(2));
     expect(apiSend).toHaveBeenCalledWith('PUT', `/chat-lists/${TRIAL.id}/threads/%2B966501234567`);
     expect(apiSend).toHaveBeenCalledWith('DELETE', `/chat-lists/${PAY.id}/threads/%2B966501234567`);
-    expect((await box(PAY.name)).checked).toBe(false);
+    await act(async () => answers.forEach((a) => a()));
   });
 
   it('a failed save puts the box back and says so', async () => {
