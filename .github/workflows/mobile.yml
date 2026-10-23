@@ -1,9 +1,12 @@
 name: mobile
 # Android preview APK and over-the-air (OTA) updates from GitHub instead of the owner's PC
-# (docs/09-deployment.md «GitHub Actions»). Manual only: Actions → mobile → Run workflow, on develop.
+# (docs/09-deployment.md «GitHub Actions»). Manual (Actions → mobile → Run workflow, on develop), or an
+# ota-update to preview started by deploy-staging after a deploy with mobile JS changes and no native change.
 # Never production, never iOS/Apple. The repo is public: no pull_request trigger; EXPO_TOKEN lives
 # in the environment `mobile` (restrict it to develop). An OTA replaces JavaScript only, so it is
 # refused when a native dependency, plugin or app.json native field changed since the last build.
+# deploy-staging.yml «plan» finds the last preview OTA by this title (tools/scripts/deploy-baseline.mjs).
+run-name: mobile ${{ inputs.action }} ${{ inputs.branch }}
 on:
   workflow_dispatch:
     inputs:

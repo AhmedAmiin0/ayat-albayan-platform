@@ -54,7 +54,10 @@ export default defineConfig({
   workers: 1, // one shared DB; journeys reset/seed it
   forbidOnly: !!process.env['CI'],
   retries: process.env['CI'] ? 1 : 0,
-  reporter: process.env['CI'] ? [['github'], ['html', { open: 'never' }]] : 'list',
+  // durations-reporter: per-file times for the CI shard plan (tools/scripts/e2e-shards.mjs).
+  reporter: process.env['CI']
+    ? [['github'], ['html', { open: 'never' }], ['./support/durations-reporter.ts']]
+    : 'list',
   globalSetup: './support/global-setup.ts',
   use: {
     baseURL: WEB_URL,
