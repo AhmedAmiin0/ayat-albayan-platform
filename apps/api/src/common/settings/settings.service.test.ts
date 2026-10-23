@@ -16,12 +16,15 @@ function service(rows: Rows | { error: string }, ttlMs = 30_000) {
   return { svc: new SettingsService({ from } as unknown as Db, ttlMs), select, upsert, eq };
 }
 
-describe('SettingsService accessors (R-SCH-07, R-SCH-02)', () => {
+describe('SettingsService.all (R-SCH-07, R-SCH-02)', () => {
+  it('is storage only: no per-key getter (modules read through their typed readers)', () => {
+    const methods = Object.getOwnPropertyNames(SettingsService.prototype).filter((m) => m !== 'constructor');
+    expect(methods.sort()).toEqual(['all', 'invalidate', 'load', 'publicView', 'write']);
+  });
+
   it('reads the stored values', async () => {
     const { svc } = service([{ key: 'late_cancel_hours', value: 12 }, { key: 'booking_horizon_weeks', value: 8 }]);
-    expect(await svc.lateCancelHours()).toBe(12);
-    expect(await svc.bookingHorizonWeeks()).toBe(8);
-    expect(await svc.get('join_opens_before_min')).toBe(15);
+    expect(await svc.all()).toMatchObject({ late_cancel_hours: 12, booking_horizon_weeks: 8, join_opens_before_min: 15 });
   });
 
   it.each([
@@ -29,20 +32,19 @@ describe('SettingsService accessors (R-SCH-07, R-SCH-02)', () => {
     ['a string', [{ key: 'late_cancel_hours', value: '12' }]],
     ['a negative number', [{ key: 'late_cancel_hours', value: -1 }]],
   ])('late cancel is null (off) for %s', async (_name, rows) => {
-    expect(await service(rows).svc.lateCancelHours()).toBeNull();
+    expect((await service(rows).svc.all()).late_cancel_hours).toBeNull();
   });
 
   it('horizon falls back to 5 for zero; sales auto-assign defaults to true', async () => {
     const { svc } = service([{ key: 'booking_horizon_weeks', value: 0 }]);
-    expect(await svc.bookingHorizonWeeks()).toBe(5);
-    expect(await svc.salesAutoAssign()).toBe(true);
+    expect(await svc.all()).toMatchObject({ booking_horizon_weeks: 5, sales_auto_assign: true });
   });
 
   it('throws on a DB error instead of guessing, and does not cache the failure', async () => {
     const { svc, select } = service({ error: 'boom' });
-    await expect(svc.bookingHorizonWeeks()).rejects.toThrow(/boom/);
+    await expect(svc.all()).rejects.toThrow(/boom/);
     select.mockResolvedValue({ data: [], error: null });
-    expect(await svc.bookingHorizonWeeks()).toBe(5);
+    expect((await svc.all()).booking_horizon_weeks).toBe(5);
   });
 });
 
@@ -58,11 +60,11 @@ describe('SettingsService cache', () => {
 
   it('a write invalidates at once: the next read sees the new value', async () => {
     const { svc, select } = service([{ key: 'join_closes_after_min', value: 120 }]);
-    expect(await svc.get('join_closes_after_min')).toBe(120);
+    expect((await svc.all()).join_closes_after_min).toBe(120);
     select.mockResolvedValue({ data: [{ key: 'join_closes_after_min', value: 30 }], error: null });
-    expect(await svc.get('join_closes_after_min')).toBe(120); // still cached
+    expect((await svc.all()).join_closes_after_min).toBe(120); // still cached
     await svc.write({ join_closes_after_min: 30 }, 'admin-1');
-    expect(await svc.get('join_closes_after_min')).toBe(30);
+    expect((await svc.all()).join_closes_after_min).toBe(30);
   });
 
   it('TTL 0 (e2e) reads every time; callers get a copy they may change', async () => {
