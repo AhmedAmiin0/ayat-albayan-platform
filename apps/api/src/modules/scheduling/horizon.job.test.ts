@@ -1,7 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { HorizonJob } from './horizon.job';
 import type { OccurrenceGenerator } from './occurrence-generator';
-import { fakeSettings, ruleRow } from './scheduling.fakes';
+import { ruleRow } from './scheduling.fakes';
+import { SchedulingSettings } from './scheduling.settings';
 import type { ScheduleQueries } from './schedule.queries';
 
 const rules = { activeRuleIds: vi.fn(), rule: vi.fn(), endExpired: vi.fn() };
@@ -12,7 +14,7 @@ function job() {
   return new HorizonJob(
     rules as unknown as ScheduleQueries,
     generator as unknown as OccurrenceGenerator,
-    fakeSettings(5),
+    readerOf(SchedulingSettings, { booking_horizon_weeks: 5 }),
   );
 }
 

@@ -1,10 +1,11 @@
 import { RIYADH_TZ } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { allDayRows } from '../teachers/availability/free-slots';
 import type { SlotsQuery } from './booking.dto';
 import { fakeContext, IDS } from './booking.fakes';
 import type { BookingQueries } from './booking.queries';
+import { BookingSettings } from './booking.settings';
 import { ALWAYS_STEP_MIN, SlotsService } from './slots.service';
 
 // settings.teachers_always_available on: AvailabilityQueries.bookableSlots answers every day
@@ -19,7 +20,7 @@ const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
 function setup() {
   const deps = fakeContext();
   deps.availability.bookableSlots.mockResolvedValue(allDayRows(RIYADH_TZ));
-  const settings = fakeSettings({ teachers_always_available: true });
+  const settings = readerOf(BookingSettings, { teachers_always_available: true });
   return { ...deps, service: new SlotsService(deps.queries as unknown as BookingQueries, deps.context, settings) };
 }
 const byStart = (slots: { starts_at: string; conflicts: { kind: string }[] }[]) =>

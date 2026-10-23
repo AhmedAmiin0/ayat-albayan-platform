@@ -1,9 +1,9 @@
 import type { TeacherMe } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
 import { withMeeting } from '../teachers/meeting-view';
 import { dbError } from '../teachers/http';
+import { LessonsSettings } from './lessons.settings';
 
 type MyStudent = TeacherMe['students'][number];
 const STUDENT = 'id, code, name, tz, status' as const;
@@ -13,7 +13,7 @@ const STUDENT = 'id, code, name, tz, status' as const;
 export class TeacherMeQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
   ) {}
 
   /**
@@ -28,7 +28,7 @@ export class TeacherMeQueries {
       .maybeSingle();
     if (error) throw dbError(error);
     if (!data) return null;
-    const auto = (await this.settings.all()).meeting_link_auto;
+    const auto = (await this.settings.read()).meeting_link_auto;
     return { ...withMeeting(data, auto), students: await this.students(data.id) };
   }
 

@@ -1,9 +1,9 @@
 import type { Conflict } from '@ab/shared';
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { conflict } from './errors';
 import { OccurrenceGenerator } from './occurrence-generator';
 import { ScheduleQueries } from './schedule.queries';
+import { SchedulingSettings } from './scheduling.settings';
 
 export type ExtendInput = { ruleId: string; weeks?: number; actorId: string };
 /** POST /schedule-rules/:id/extend 200 (docs/10 route 11). */
@@ -18,14 +18,14 @@ export class RuleExtendService {
   constructor(
     private readonly rules: ScheduleQueries,
     private readonly generator: OccurrenceGenerator,
-    private readonly settings: SettingsService,
+    private readonly settings: SchedulingSettings,
   ) {}
 
   async extend(input: ExtendInput): Promise<ExtendResult> {
     const rule = await this.rules.rule(input.ruleId);
     if (!rule) throw new NotFoundException();
     if (rule.status !== 'active') throw conflict('rule_not_active');
-    const weeks = input.weeks ?? (await this.settings.bookingHorizonWeeks());
+    const weeks = input.weeks ?? (await this.settings.read()).booking_horizon_weeks;
     const { until, lessons, conflicts } = await this.generator.topUp(rule, { weeks, actorId: input.actorId });
     return { rule_id: rule.id, until: until.toISOString(), inserted: lessons.length, conflicts };
   }

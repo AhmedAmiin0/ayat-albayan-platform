@@ -9,6 +9,7 @@ import { RuleExtendService } from './rule-extend.service';
 import { RuleProjectionQueries } from './rule-projection.queries';
 import { ScheduleRulesController } from './schedule-rules.controller';
 import { ScheduleQueries } from './schedule.queries';
+import { SchedulingSettings } from './scheduling.settings';
 
 /**
  * Schedule rules + OccurrenceGenerator: idempotent horizon upsert, POST /schedule-rules/:id/extend
@@ -26,6 +27,7 @@ import { ScheduleQueries } from './schedule.queries';
     RuleExtendService,
     RuleProjectionQueries,
     ScheduleQueries,
+    SchedulingSettings,
   ],
   exports: [BusyQueries, ConflictChecker, LessonWriter, OccurrenceGenerator, ScheduleQueries],
 })

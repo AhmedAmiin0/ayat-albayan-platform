@@ -2,10 +2,10 @@ import { invoiceUploadSchema, uploadMaxBytes, type MakeupCandidate, type SignedU
 import { Body, Controller, Get, HttpCode, Post, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { Permissions } from '../../common/auth/decorators';
-import { SettingsService } from '../../common/settings/settings.service';
 import { parseOrThrow } from '../teachers/http';
 import { makeupCandidatesQuery } from './booking.dto';
 import { BookingInvoices } from './booking.invoice';
+import { BookingSettings } from './booking.settings';
 import { MakeupCandidates } from './makeup-candidates.service';
 
 /** The invoice and the makeup half of the booking wizard API (R-PAY-03, R-SCH-10). Admin only. */
@@ -17,7 +17,7 @@ export class BookingExtrasController {
   constructor(
     private readonly invoices: BookingInvoices,
     private readonly makeup: MakeupCandidates,
-    private readonly settings: SettingsService,
+    private readonly settings: BookingSettings,
   ) {}
 
   /** R-SCH-10: the student's missed lessons that a «حجز تعويضي» can replace. */
@@ -31,6 +31,6 @@ export class BookingExtrasController {
   @HttpCode(200)
   async invoiceUploadUrl(@Body() body: unknown): Promise<SignedUpload> {
     const input = parseOrThrow(invoiceUploadSchema, body);
-    return this.invoices.uploadUrl(input, uploadMaxBytes(await this.settings.all()));
+    return this.invoices.uploadUrl(input, uploadMaxBytes(await this.settings.read()));
   }
 }

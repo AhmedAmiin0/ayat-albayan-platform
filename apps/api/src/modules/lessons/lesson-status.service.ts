@@ -1,11 +1,11 @@
 import { applyLessonEvent, type LessonStatusRequest, type StatusRouteEvent } from '@ab/shared';
 import { Injectable } from '@nestjs/common';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { SettingsService } from '../../common/settings/settings.service';
 import { badRequest, conflict, errorCode } from '../scheduling/errors';
 import { LessonAccess } from './lesson-access';
 import { studentIdsOf, type LessonRow } from './lesson-row';
 import { LessonStore } from './lesson-store';
+import { LessonsSettings } from './lessons.settings';
 import { outcomeChange } from './outcomes';
 import { invalidTransition } from './transition';
 
@@ -33,7 +33,7 @@ export class LessonStatusService {
   constructor(
     private readonly store: LessonStore,
     private readonly access: LessonAccess,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
   ) {}
 
   /** scheduled → confirmed. Already confirmed → unchanged (a guardian may answer «نعم» twice). */
@@ -77,7 +77,7 @@ export class LessonStatusService {
     if (AFTER_START.has(event) && now < new Date(lesson.starts_at)) throw conflict('not_started');
     const onLesson = new Set(studentIdsOf(lesson));
     if (students?.some((s) => !onLesson.has(s.studentId))) throw badRequest('student_not_in_lesson');
-    const lateCancelHours = await this.settings.lateCancelHours();
+    const { late_cancel_hours: lateCancelHours } = await this.settings.read();
     const change = outcomeChange({ lesson, to, event, students, now, lateCancelHours });
     await this.store.commit({
       change: { actor: actor.id, changes: [change] },

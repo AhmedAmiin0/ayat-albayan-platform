@@ -15,10 +15,10 @@ import { Body, Controller, HttpCode, Post } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { CurrentUser, Permissions } from '../../common/auth/decorators';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { SettingsService } from '../../common/settings/settings.service';
 import { parseOrThrow } from '../teachers/http';
 import { SalesChatReceipts } from './sales-chat-receipts.service';
 import { SalesMoney } from './sales-money.service';
+import { SalesMoneySettings } from './sales-money.settings';
 
 /**
  * «اشتراك جديد» from a sales chat (owner 2026-10-12, R-ASST-01, docs/16 row 16): the price of the package
@@ -57,7 +57,7 @@ export class SalesPaymentsController {
   constructor(
     private readonly money: SalesMoney,
     private readonly receipts: SalesChatReceipts,
-    private readonly settings: SettingsService,
+    private readonly settings: SalesMoneySettings,
   ) {}
 
   @Post()
@@ -70,7 +70,7 @@ export class SalesPaymentsController {
   @HttpCode(200)
   async receiptUploadUrl(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SignedUpload> {
     const input = parseOrThrow(salesReceiptUploadSchema, body);
-    return this.money.uploadUrl(input, { user, maxBytes: uploadMaxBytes(await this.settings.all()) });
+    return this.money.uploadUrl(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
   }
 
   /** «اختر صورة الإيصال من المحادثة»: the chosen chat image / PDF copied server-side into receipts. */
@@ -78,6 +78,6 @@ export class SalesPaymentsController {
   @HttpCode(200)
   async receiptFromChat(@Body() body: unknown, @CurrentUser() user: AuthUser): Promise<SalesReceiptCopied> {
     const input = parseOrThrow(salesChatReceiptCopySchema, body);
-    return this.receipts.copy(input, { user, maxBytes: uploadMaxBytes(await this.settings.all()) });
+    return this.receipts.copy(input, { user, maxBytes: uploadMaxBytes(await this.settings.read()) });
   }
 }

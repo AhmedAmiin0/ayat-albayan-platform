@@ -1,8 +1,9 @@
-import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { AlertsQueries } from './alerts.queries';
 import { SubscriptionAlertsService, type AlertsEnv } from './alerts.service';
 import type { PackagesService, StudentState } from './packages.service';
+import { SubscriptionsSettings } from './subscriptions.settings';
 
 const NOW = new Date('2026-10-02T09:00:00Z');
 const STATE = { rows: [], ctx: { balances: new Map(), paid: new Map() } } as unknown as StudentState;
@@ -10,7 +11,7 @@ const STATE = { rows: [], ctx: { balances: new Map(), paid: new Map() } } as unk
 function setup(fail = false) {
   const packages = { recompute: vi.fn(async () => STATE) };
   const queries = { closeTasks: vi.fn(async () => undefined) };
-  const settings = { all: vi.fn(async () => SETTING_DEFAULTS) };
+  const settings = readerOf(SubscriptionsSettings);
   const renewal = { apply: vi.fn(async () => (fail ? Promise.reject(new Error('boom')) : null)) };
   const env = { settings, push: {}, renewal } as unknown as AlertsEnv;
   const service = new SubscriptionAlertsService(packages as unknown as PackagesService, queries as unknown as AlertsQueries, env);

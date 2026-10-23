@@ -1,9 +1,9 @@
 import { expiryMove } from '@ab/shared';
 import { Injectable, Logger, type OnApplicationBootstrap, type OnModuleDestroy } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { pendingSince } from './student-renewal.plan';
 import { StudentExpiryQueries } from './student-expiry.queries';
 import { StudentStatusQueries } from './student-status.queries';
+import { SubscriptionsSettings } from './subscriptions.settings';
 
 const DAY_MS = 86_400_000;
 /** Not on boot: every API test boots AppModule, and a restart loop must not hammer the DB. */
@@ -30,7 +30,7 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
   constructor(
     private readonly queries: StudentExpiryQueries,
     private readonly statuses: StudentStatusQueries,
-    private readonly settings: SettingsService,
+    private readonly settings: SubscriptionsSettings,
   ) {}
 
   onApplicationBootstrap(): void {
@@ -46,7 +46,7 @@ export class StudentExpiryJob implements OnApplicationBootstrap, OnModuleDestroy
   async runOnce(now = new Date()): Promise<ExpirySummary> {
     const summary: ExpirySummary = { students: 0, expired: 0, failed: 0 };
     try {
-      const days = await this.settings.get('subscription_expiry_days');
+      const days = (await this.settings.read()).subscription_expiry_days;
       for (const id of await this.queries.pendingRenewal()) {
         summary.students += 1;
         try {

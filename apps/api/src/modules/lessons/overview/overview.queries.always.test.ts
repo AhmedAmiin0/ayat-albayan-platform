@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { fakeSettings } from '../../../common/settings/settings.fakes';
+import { readerOf } from '../../../common/settings/settings.fakes';
 import { allDayRows } from '../../teachers/availability/free-slots';
 import { fakeDb } from '../../guardians/fake-db';
+import { LessonsSettings } from '../lessons.settings';
 import { teacherSpans } from './free-windows';
 import { OverviewQueries } from './overview.queries';
 
@@ -9,7 +10,7 @@ const WINDOW = { from: new Date('2026-10-03T21:00:00Z'), to: new Date('2026-10-1
 const SAVED = { teacher_id: 'A', weekday: 0, start_time: '16:00:00', end_time: '18:00:00', tz: 'Asia/Riyadh' };
 const setup = (on: boolean) => {
   const f = fakeDb({ teachers: [{ data: [{ id: 'A' }, { id: 'B' }] }], teacher_availability: [{ data: [SAVED] }] });
-  return { ...f, q: new OverviewQueries(f.db, fakeSettings({ teachers_always_available: on })) };
+  return { ...f, q: new OverviewQueries(f.db, readerOf(LessonsSettings, { teachers_always_available: on })) };
 };
 
 describe('OverviewQueries.slots — the calendar matches what booking accepts', () => {

@@ -105,7 +105,7 @@ export class CourseChange {
     const [head] = active;
     const teacherLink = head ? await this.queries.teacherLink(head.teacher_id) : null;
     const mode = head ? await this.queries.teacherMode(head.teacher_id) : null;
-    const auto = usesPlatform(mode, (await this.deps.planner.settings.all()).meeting_link_auto);
+    const auto = usesPlatform(mode, (await this.deps.planner.settings.read()).meeting_link_auto);
     const contacts = await this.queries.contacts(head ? head.schedule_rule_students.map((s) => s.student_id) : []);
     return { link: { teacherLink, auto }, contacts };
   }

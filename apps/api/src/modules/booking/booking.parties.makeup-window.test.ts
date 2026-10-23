@@ -1,9 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { fakeQueries, IDS, NOW } from './booking.fakes';
 import { makeupRequest, missedLessonRow } from './booking.makeup.fakes';
 import { BookingParties } from './booking.parties';
 import type { BookingQueries } from './booking.queries';
+import { BookingSettings } from './booking.settings';
 
 /** 92 days before NOW: too old for the default 60-day window. */
 const OLD = missedLessonRow({ starts_at: '2026-07-01T14:00:00Z' });
@@ -11,7 +12,7 @@ const OLD = missedLessonRow({ starts_at: '2026-07-01T14:00:00Z' });
 function parties(windowDays?: number) {
   const queries = fakeQueries();
   queries.makeupOriginal.mockResolvedValue(OLD);
-  const settings = fakeSettings(windowDays === undefined ? {} : { makeup_window_days: windowDays });
+  const settings = readerOf(BookingSettings, windowDays === undefined ? {} : { makeup_window_days: windowDays });
   return new BookingParties(queries as unknown as BookingQueries, settings);
 }
 

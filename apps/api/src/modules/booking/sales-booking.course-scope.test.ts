@@ -1,10 +1,11 @@
 import { bookingRequestSchema, type BookingRequest } from '@ab/shared';
 import { describe, expect, it, vi } from 'vitest';
 import type { AuthUser } from '../../common/auth/verify-token';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { SalesOwnership } from '../sales/sales-ownership';
 import type { SalesQueries } from '../sales/sales.queries';
 import { errorCode } from '../scheduling/errors';
+import { BookingSettings } from './booking.settings';
 import { SalesBookingScope } from './sales-booking.ownership';
 import { assertBookingScope } from './sales-booking.scope';
 
@@ -69,7 +70,7 @@ describe('assertBookingScope — a course (R-ASST-01)', () => {
 describe('SalesBookingScope.forRequest — a course always reads her ownership', () => {
   const scopeWith = (on: boolean) => {
     const sales = { ownership: vi.fn(async (): Promise<SalesOwnership> => OWN) };
-    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, fakeSettings({ sales_auto_assign: on })) };
+    return { sales, scope: new SalesBookingScope(sales as unknown as SalesQueries, readerOf(BookingSettings, { sales_auto_assign: on })) };
   };
 
   it('auto-assign OFF: a course gets her ownership, a trial gets null', async () => {

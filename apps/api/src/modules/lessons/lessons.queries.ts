@@ -1,11 +1,11 @@
 import { meetingModeOf, OPEN_LESSON_STATUSES, usesPlatform, type LessonStatus } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../common/db/db.module';
-import { SettingsService } from '../../common/settings/settings.service';
 import { readAll } from '../scheduling/read-all';
 import { dbError, type Page, type PageQuery } from '../teachers/http';
 import type { Contact } from './confirmation-messages';
 import { LESSON_SELECT, type LessonRow } from './lesson-row';
+import { LessonsSettings } from './lessons.settings';
 
 export type LessonWindow = { from: Date; to: Date; teacherId?: string };
 export type OpenLesson = { id: string; status: LessonStatus; starts_at: string };
@@ -17,7 +17,7 @@ export type SeqMap = ReadonlyMap<string, number>;
 export class LessonsQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: LessonsSettings,
   ) {}
 
   async get(id: string): Promise<LessonRow | null> {
@@ -84,7 +84,7 @@ export class LessonsQueries {
 
   /** settings.meeting_link_auto: the default for a teacher whose meeting_mode is null. */
   async academyAuto(): Promise<boolean> {
-    return (await this.settings.all()).meeting_link_auto;
+    return (await this.settings.read()).meeting_link_auto;
   }
 
   /** Each student's name + guardian, for the queued confirmation (docs/10 §5.11). */

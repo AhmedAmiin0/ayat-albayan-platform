@@ -1,7 +1,8 @@
 import { describe, expect, it } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import { fakeDb } from '../guardians/fake-db';
 import { TEACHER_ID } from './lessons.fakes';
+import { LessonsSettings } from './lessons.settings';
 import { TeacherMeQueries } from './teacher-me.queries';
 
 const ROW = { id: TEACHER_ID, display_name_ar: 'أبرار', gender: 'female', programs: ['quran'], tz: 'Africa/Cairo', meeting_link: null, meeting_mode: null };
@@ -10,7 +11,7 @@ const student = (id: string, name: string) => ({ id, code: `AB-${id}`, name, tz:
 describe('TeacherMeQueries.me (R-TCH-03)', () => {
   it('null when the profile has no teachers row', async () => {
     const { db, calls } = fakeDb({ teachers: [{ data: null }] });
-    expect(await new TeacherMeQueries(db, fakeSettings()).me('p1')).toBeNull();
+    expect(await new TeacherMeQueries(db, readerOf(LessonsSettings)).me('p1')).toBeNull();
     expect(calls).toContainEqual({ table: 'teachers', method: 'eq', args: ['profile_id', 'p1'] });
   });
 
@@ -27,7 +28,7 @@ describe('TeacherMeQueries.me (R-TCH-03)', () => {
         },
       ],
     });
-    const me = await new TeacherMeQueries(db, fakeSettings()).me('p1');
+    const me = await new TeacherMeQueries(db, readerOf(LessonsSettings)).me('p1');
     expect(me?.students.map((s) => s.name)).toEqual(['أحمد', 'سهيلة', 'مريم']);
     expect(me).toMatchObject({ id: TEACHER_ID, tz: 'Africa/Cairo' });
     expect(calls).toContainEqual({ table: 'students', method: 'eq', args: ['teacher_id', TEACHER_ID] });
@@ -40,13 +41,13 @@ describe('TeacherMeQueries.me (R-TCH-03)', () => {
       students: [{ error: { code: 'XX000', message: 'boom' } }],
       schedule_rules: [{ data: [] }],
     });
-    await expect(new TeacherMeQueries(db, fakeSettings()).me('p1')).rejects.toThrow(/boom/);
+    await expect(new TeacherMeQueries(db, readerOf(LessonsSettings)).me('p1')).rejects.toThrow(/boom/);
   });
 
   it('meeting_mode raw and platform_classroom: the teacher\'s own mode, else the academy default', async () => {
     const me = (mode: string | null, auto: boolean) => {
       const { db } = fakeDb({ teachers: [{ data: { ...ROW, meeting_mode: mode } }], students: [{ data: [] }], schedule_rules: [{ data: [] }] });
-      return new TeacherMeQueries(db, fakeSettings({ meeting_link_auto: auto })).me('p1');
+      return new TeacherMeQueries(db, readerOf(LessonsSettings, { meeting_link_auto: auto })).me('p1');
     };
     expect(await me(null, true)).toMatchObject({ meeting_mode: null, platform_classroom: true });
     expect(await me('static', true)).toMatchObject({ meeting_mode: 'static', platform_classroom: false });

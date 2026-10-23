@@ -1,9 +1,10 @@
 import { HttpException } from '@nestjs/common';
 import { describe, expect, it } from 'vitest';
-import { fakeSettings } from '../../common/settings/settings.fakes';
+import { readerOf } from '../../common/settings/settings.fakes';
 import type { SlotsQuery } from './booking.dto';
 import { fakeContext, IDS } from './booking.fakes';
 import type { BookingQueries } from './booking.queries';
+import { BookingSettings } from './booking.settings';
 import { slotViews, SlotsService } from './slots.service';
 
 // Sun 2026-10-04, Cairo UTC+3: the 16:00–22:00 grid is 13:00–19:00Z.
@@ -17,7 +18,7 @@ const query = (over: Partial<SlotsQuery> = {}): SlotsQuery => ({
 /** 24/7 off: these cases test the saved grid (slots.service.always.test.ts has it on). */
 function setup() {
   const deps = fakeContext();
-  const settings = fakeSettings({ teachers_always_available: false });
+  const settings = readerOf(BookingSettings, { teachers_always_available: false });
   return { ...deps, service: new SlotsService(deps.queries as unknown as BookingQueries, deps.context, settings) };
 }
 

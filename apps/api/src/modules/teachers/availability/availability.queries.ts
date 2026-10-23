@@ -2,9 +2,9 @@ import type { Tables } from '@ab/db';
 import { OCCUPYING_LESSON_STATUSES, RIYADH_TZ, type AvailabilitySlot, type TimeOffCreate } from '@ab/shared';
 import { Inject, Injectable } from '@nestjs/common';
 import { DB, type Db } from '../../../common/db/db.module';
-import { SettingsService } from '../../../common/settings/settings.service';
 import type { BusyLesson } from '../../scheduling/conflicts';
 import { dbError } from '../http';
+import { TeachersSettings } from '../teachers.settings';
 import { allDayRows, type WeeklyRow } from './free-slots';
 
 export type AvailabilityRow = AvailabilitySlot & { id: string };
@@ -19,7 +19,7 @@ const hhmm = (time: string) => time.slice(0, 5);
 export class AvailabilityQueries {
   constructor(
     @Inject(DB) private readonly db: Db,
-    private readonly settings: SettingsService,
+    private readonly settings: TeachersSettings,
   ) {}
 
   /**
@@ -28,7 +28,7 @@ export class AvailabilityQueries {
    * follow-up proposals read listSlots, so they keep the real grid.
    */
   async bookableSlots(teacherId: string): Promise<WeeklyRow[]> {
-    if (await this.settings.get('teachers_always_available')) return allDayRows(RIYADH_TZ);
+    if ((await this.settings.read()).teachers_always_available) return allDayRows(RIYADH_TZ);
     return this.listSlots(teacherId);
   }
 

@@ -8,11 +8,11 @@ import {
   type ThreadFileUpload,
 } from '@ab/shared';
 import { HttpStatus, Inject, Injectable } from '@nestjs/common';
-import { SettingsService } from '../../common/settings/settings.service';
 import { BUCKETS, chatOutPath, isChatOutPathOf } from '../../common/storage/storage.paths';
 import { StorageService } from '../../common/storage/storage.service';
 import { sniffMime, SNIFF_BYTES } from '../booking/invoice-sniff';
 import { waHttpError } from '../whatsapp/template.mapper';
+import { InboxSettings } from './inbox.settings';
 import { Outbox, type Sent } from './outbox';
 import { dedupKey, outboundBase, sendLine, type ThreadSend } from './thread-send.service';
 import { ThreadsQueries } from './threads.queries';
@@ -38,7 +38,7 @@ const filePath = () => waHttpError('file_path', HttpStatus.BAD_REQUEST);
 @Injectable()
 export class ThreadFileSender {
   /** Property-injected (the constructor is at the 3-parameter limit); absent → the registry default. */
-  @Inject(SettingsService) private readonly settings?: SettingsService;
+  @Inject(InboxSettings) private readonly settings?: InboxSettings;
 
   constructor(
     private readonly queries: ThreadsQueries,
@@ -89,6 +89,6 @@ export class ThreadFileSender {
   }
 
   private async maxBytes(): Promise<number> {
-    return uploadMaxBytes(this.settings ? await this.settings.all() : SETTING_DEFAULTS);
+    return uploadMaxBytes(this.settings ? await this.settings.read() : SETTING_DEFAULTS);
   }
 }
