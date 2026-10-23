@@ -2430,6 +2430,44 @@ export type Database = {
           },
         ];
       };
+      notification_rules: {
+        Row: {
+          channels: string[] | null;
+          enabled: boolean;
+          key: string;
+          number_id: string | null;
+          timing: Json | null;
+          updated_at: string;
+          updated_by: string | null;
+        };
+        Insert: {
+          channels?: string[] | null;
+          enabled: boolean;
+          key: string;
+          number_id?: string | null;
+          timing?: Json | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Update: {
+          channels?: string[] | null;
+          enabled?: boolean;
+          key?: string;
+          number_id?: string | null;
+          timing?: Json | null;
+          updated_at?: string;
+          updated_by?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: 'notification_rules_number_id_fkey';
+            columns: ['number_id'];
+            isOneToOne: false;
+            referencedRelation: 'wa_numbers';
+            referencedColumns: ['id'];
+          },
+        ];
+      };
       payment_attachments: {
         Row: {
           created_at: string;

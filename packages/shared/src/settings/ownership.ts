@@ -1,12 +1,13 @@
 import { camelKey } from './camel.js';
 
 /** The module page / route that writes a key owned outside the generic settings write path (docs/26 §2f, §5). */
-export type SettingOwner = 'messages_gate' | 'communications' | 'google_sync';
+export type SettingOwner = 'messages_gate' | 'communications' | 'google_sync' | 'notifications';
 
 /**
  * Keys owned elsewhere, decided IN CODE (never by a DB column, docs/26 §9 #6). PATCH /settings never
  * writes them: they come back in `moved`. messaging_enabled / auto_messages_enabled / crm_cutover_done
- * → PUT /messages/gate/*; comms_source → POST /admin/communications/source; Google → PUT /admin/google/settings.
+ * → PUT /messages/gate/*; comms_source → POST /admin/communications/source; Google → PUT /admin/google/settings;
+ * the 8 notification keys (RULE_SETTING_KEYS, docs/23 phase 4) → PATCH /admin/notifications/:key.
  */
 export const OWNED_SETTING_KEYS = {
   messaging_enabled: 'messages_gate',
@@ -17,6 +18,15 @@ export const OWNED_SETTING_KEYS = {
   google_sync_enabled: 'google_sync',
   google_sync_mode: 'google_sync',
   google_calendar_window_days: 'google_sync',
+  // RULE_SETTING_KEYS, written out (notifications/rules.ownership.test.ts pins them): docs/26 §1, 23-P4.
+  reminder_minutes_before: 'notifications',
+  reminder_24h_enabled: 'notifications',
+  teacher_whatsapp_new_student: 'notifications',
+  teacher_whatsapp_lesson_reminder: 'notifications',
+  follow_up_hours: 'notifications',
+  follow_up_slots_from_hours: 'notifications',
+  follow_up_slots_to_days: 'notifications',
+  feedback_mode: 'notifications',
 } as const satisfies Record<string, SettingOwner>;
 
 export type OwnedSettingKey = keyof typeof OWNED_SETTING_KEYS;

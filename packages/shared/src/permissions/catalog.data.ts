@@ -106,6 +106,9 @@ export const PERMISSION_ROWS = [
   // «الأرقام» (docs/23 §3 phase 3): add / edit WhatsApp numbers, their credentials, the import and the
   // comms_source switch. The admin only (migration 20261023000620); reading needs settings.read.
   { key: 'numbers.manage', area: 'system', grants: [] },
+  // «الإشعارات» (docs/23 §3 phase 4): switch, time and route the notification rules. Granted by migration
+  // 20261024000631 to every role holding settings.write; reading needs settings.read.
+  { key: 'notifications.manage', area: 'system', grants: [] },
   { key: 'activity.read', area: 'system', grants: [] },
   { key: 'roles.manage', area: 'system', grants: [] },
   // The bell (R-NOT-01, 2026-10-12): every staff portal reads its own notifications and registers its devices.

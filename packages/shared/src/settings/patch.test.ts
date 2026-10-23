@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { OWNED_SETTING_KEYS } from './ownership.js';
-import { splitSettingsPatch } from './patch.js';
+import { parseSettingField, splitSettingsPatch } from './patch.js';
 import { camelKey } from './camel.js';
 
 // PATCH /settings per key (docs/26 §2f, 26-P0): owned keys are moved, never written.
@@ -70,10 +70,13 @@ describe('splitSettingsPatch', () => {
   });
 
   it('names the inner path of a list issue (not_ascending keeps its wording)', () => {
-    const out = splitSettingsPatch({ followUpHours: [72, 24] });
-    expect(out.invalid).toEqual(['follow_up_hours']);
-    expect(out.issues).toEqual([{ path: 'followUpHours', message: 'not_ascending' }]);
-    expect(splitSettingsPatch({ followUpHours: [24, 'x'] }).issues[0]?.path).toBe('followUpHours.1');
+    // followUpHours is owned by the notification rules now (moved here); the API's alias validates it this way.
+    expect(splitSettingsPatch({ followUpHours: [72, 24] })).toMatchObject({ moved: ['follow_up_hours'], invalid: [], changes: {} });
+    const bad = parseSettingField({ field: 'followUpHours', key: 'follow_up_hours', value: [72, 24] });
+    expect(bad).toEqual({ ok: false, issues: [{ path: 'followUpHours', message: 'not_ascending' }] });
+    const inner = parseSettingField({ field: 'followUpHours', key: 'follow_up_hours', value: [24, 'x'] });
+    expect(inner.ok ? null : inner.issues[0]?.path).toBe('followUpHours.1');
+    expect(parseSettingField({ field: 'followUpHours', key: 'follow_up_hours', value: [12, 48] })).toEqual({ ok: true, value: [12, 48] });
   });
 
   it('rejects wrong types per key without touching the other keys', () => {

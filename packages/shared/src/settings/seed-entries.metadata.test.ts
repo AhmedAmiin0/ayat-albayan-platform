@@ -43,9 +43,9 @@ describe('registry metadata (docs/26 §1, §2b; owner defaults 2026-10-23)', () 
     expect(keysWhere((e) => e.scope === 'config')).toEqual([...config].sort());
   });
 
-  it('the 8 notification keys: group notifications, scope module, no owner yet (23-P4 sets it)', () => {
+  it('the 8 notification keys: group notifications, scope module, owned by the notification rules (23-P4)', () => {
     expect(keysWhere((e) => e.group === 'notifications')).toEqual([...NOTIFICATION_KEYS].sort());
-    for (const k of NOTIFICATION_KEYS) expect(byKey.get(k)).toMatchObject({ scope: 'module', ownedBy: null });
+    for (const k of NOTIFICATION_KEYS) expect(byKey.get(k)).toMatchObject({ scope: 'module', ownedBy: 'notifications' });
   });
 
   it('the send-gate keys: group safety, owned by their module page', () => {

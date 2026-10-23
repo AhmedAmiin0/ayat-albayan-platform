@@ -18,6 +18,7 @@ const LATER = [
   '20261012000430_sales_check_start_permissions.sql',
   '20261020000521_chat_lists_permission.sql',
   '20261023000620_wa_numbers.sql',
+  '20261024000631_notification_rules.sql',
 ]
   .map((file) => readFileSync(join(MIGRATIONS, file), 'utf8'))
   .join('\n');
@@ -32,7 +33,7 @@ function addedLater(key: string): string[] {
   return [...inserts].filter((m) => [...(m[2] ?? '').matchAll(/'([a-z_]+)'/g)].some((k) => k[1] === key)).map((m) => m[1] ?? '');
 }
 
-describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620)', () => {
+describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 521, 620, 631)', () => {
   it.each(['admin', 'teacher', 'assistant', 'sales'] as const)('%s gets exactly its catalog grants', (key) => {
     expect([...seeded(key), ...addedLater(key)].sort()).toEqual([...defaultGrantsOf(key)].sort());
   });
@@ -83,6 +84,10 @@ describe('migration 20261005000220 seed (+ 240, 274, 281, 300, 360, 380, 430, 52
   it('seeds nothing for guardians and only grantable keys', () => {
     expect(seeded('guardian')).toEqual([]);
     for (const key of ['admin', 'teacher', 'assistant', 'sales']) expect(seeded(key).every(isGrantable)).toBe(true);
+  });
+
+  it('seeds notifications.manage «الإشعارات» (docs/23 phase 4) for the admin among the system roles', () => {
+    expect(['admin', 'teacher', 'assistant', 'sales'].filter((k) => addedLater(k).includes('notifications.manage'))).toEqual(['admin']);
   });
 
   it('seeds numbers.manage «الأرقام» (docs/23 phase 3) for the admin only', () => {
