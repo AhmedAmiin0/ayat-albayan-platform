@@ -3,7 +3,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { LINES } from '@/features/templates/template-lines-fixture';
 import { t } from '@/lib/i18n';
-import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
 import { SettingsPage } from './SettingsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());

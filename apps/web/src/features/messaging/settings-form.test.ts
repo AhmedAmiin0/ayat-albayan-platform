@@ -1,7 +1,7 @@
 import { SETTING_DEFAULTS } from '@ab/shared';
 import { describe, expect, it } from 'vitest';
 import { t } from '@/lib/i18n';
-import { SETTINGS } from './settings-fixture';
+import { SETTINGS } from '@/test/settings-fixture';
 import { FORM_KEYS, settingsForm, settingsUpdate } from './settings-form';
 
 describe('settings form (generated from the settings registry)', () => {

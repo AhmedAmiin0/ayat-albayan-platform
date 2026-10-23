@@ -2,7 +2,7 @@ import { cleanup, fireEvent, screen, waitFor, within } from '@testing-library/re
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
 import { SettingsPage } from './SettingsPage';
 
 const apiFetch = vi.hoisted(() => vi.fn());

@@ -1,6 +1,6 @@
 import en from '@ab/shared/i18n/en.json';
 import { describe, expect, it, vi } from 'vitest';
-import { SETTINGS } from './settings-fixture';
+import { SETTINGS } from '@/test/settings-fixture';
 import { settingsForm, settingsUpdate } from './settings-form';
 
 // The UI in English: follow-up hours show as «24, 72» and still save as [24, 72].

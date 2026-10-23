@@ -2,7 +2,7 @@ import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { renderWithClient, routeFetch } from '@/features/inbox/test-utils';
 import { t } from '@/lib/i18n';
-import { CATALOGUE_ROUTE, SETTINGS } from './settings-fixture';
+import { CATALOGUE_ROUTE, SETTINGS } from '@/test/settings-fixture';
 import { SettingsPage } from './SettingsPage';
 import { sectionId } from './SettingsNav';
 
