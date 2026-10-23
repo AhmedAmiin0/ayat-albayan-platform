@@ -70,4 +70,10 @@ describe('migration 20261023000621: per-number Vault secrets', () => {
   it('a number is deleted only when disabled, with its Vault entries', () => {
     expect(vault).toContain('delete from public.wa_numbers where id = p_id and not enabled');
   });
+
+  it('a secret write locks its number (no orphan beside a concurrent delete) and queues per name', () => {
+    const set = vault.slice(vault.indexOf('function public.wa_number_secret_set'), vault.indexOf('function public.wa_number_secret_clear'));
+    expect(set).toContain('perform 1 from public.wa_numbers n where n.id = p_id for share');
+    expect(set.indexOf('pg_advisory_xact_lock(hashtext(v_name))')).toBeLessThan(set.indexOf('select id into existing'));
+  });
 });

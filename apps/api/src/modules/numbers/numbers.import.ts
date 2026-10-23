@@ -3,7 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ar } from '../../common/i18n/server-text';
 import { integrationOverlay } from '../../common/integrations/integration-overlay';
 import { envFrom } from '../../env';
-import { NumbersConfig } from './numbers.config';
+import { SINGLETON_ENTITY_ID } from '../../common/audit/singleton-entity';
+import { NumbersEffects } from './numbers.effects';
 import { planAll, type RolePlan } from './numbers.import-plan';
 import { NumbersQueries } from './numbers.queries';
 import { NumbersSecrets } from './numbers.secrets';
@@ -23,7 +24,7 @@ const toView = (p: RolePlan): ImportRoleView => ({
  * live default exists) and copies the missing secrets server-side: a DB secret Vault→Vault inside one
  * RPC (wa_number_secret_copy), an env-only one read here and written with wa_number_secret_set. Never
  * deletes an integration_config row or a Vault entry; a second apply finds nothing to do (changed false).
- * Only key names are ever logged.
+ * Only key names are ever logged or audited.
  */
 @Injectable()
 export class NumbersImport {
@@ -32,15 +33,20 @@ export class NumbersImport {
   constructor(
     private readonly queries: NumbersQueries,
     private readonly secrets: NumbersSecrets,
-    private readonly config: NumbersConfig,
+    private readonly effects: NumbersEffects,
   ) {}
 
   async run(dryRun: boolean, actorId: string): Promise<ImportResult> {
     const plans = await this.plan();
     const changed = plans.some((p) => p.action === 'create' || p.copies.length > 0);
     if (!dryRun && changed) {
-      for (const p of plans) await this.apply(p, actorId);
-      await this.config.refresh();
+      try {
+        for (const p of plans) await this.apply(p, actorId);
+      } finally {
+        // One audit row (roles, ids, secret NAMES) and the refresh, even when a role failed half-way.
+        const roles = plans.map((p) => ({ role: p.role, action: p.action, number_id: p.number_id, secrets: p.secrets_to_copy }));
+        await this.effects.after({ actorId, entity: 'wa_numbers', entityId: SINGLETON_ENTITY_ID, action: 'import', after: { roles } });
+      }
     }
     return { dry_run: dryRun, changed, roles: plans.map(toView) };
   }

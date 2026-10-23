@@ -5237,7 +5237,10 @@
       "makeDefault": "Make default",
       "unsetDefault": "Unset default",
       "delete": "Delete number",
-      "deleteConfirm": "Delete this number and its credentials for good?"
+      "deleteConfirm": "Delete this number and its credentials for good?",
+      "confirmDisableDefault": "Turn off this role's default number? In «Numbers» mode this role stops sending until another default is chosen, and it stops being the default.",
+      "confirmUnsetDefault": "Unset this number as the default? In «Numbers» mode this role stops sending until another default is chosen.",
+      "confirmMakeDefault": "Make this number its role's default? The previous default is unset, and in «Numbers» mode this role sends from this number at once."
     },
     "form": {
       "addTitle": "Add number",
@@ -5286,7 +5289,8 @@
       "legacy": "Current setup",
       "module": "Numbers",
       "noNumber": "No default number that is on for this role",
-      "secretSet": "Saved"
+      "secretSet": "Saved",
+      "loadError": "Could not load the setup parity, please try again."
     },
     "source": {
       "title": "Where the number setup comes from",

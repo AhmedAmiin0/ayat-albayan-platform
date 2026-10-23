@@ -40,6 +40,7 @@ export function NumbersPanel({ query, onSaved }: { query: string; onSaved: (mess
           </Button>
         )}
         {adding && <NumberFormDialog onClose={() => setAdding(false)} />}
+        {parity.isError && <p role="alert" className="text-sm text-danger">{n.parity.loadError}</p>}
         {parity.data && (
           <>
             <ParityList parity={parity.data} />

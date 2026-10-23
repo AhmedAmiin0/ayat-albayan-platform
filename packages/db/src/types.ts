@@ -2421,6 +2421,13 @@ export type Database = {
             referencedRelation: 'v_threads';
             referencedColumns: ['teacher_id'];
           },
+          {
+            foreignKeyName: 'messages_number_id_fkey';
+            columns: ['number_id'];
+            isOneToOne: false;
+            referencedRelation: 'wa_numbers';
+            referencedColumns: ['id'];
+          },
         ];
       };
       payment_attachments: {
@@ -4250,9 +4257,11 @@ export type Database = {
       wa_number_make_default: { Args: { p_id: string; p_actor: string | null }; Returns: boolean };
       wa_number_secret_clear: { Args: { p_id: string; p_name: string }; Returns: boolean };
       wa_number_secret_copy: { Args: { p_id: string; p_name: string; p_key: string }; Returns: boolean };
+      wa_number_secret_name_ok: { Args: { p_name: string }; Returns: boolean };
       wa_number_secret_read: { Args: { p_id: string }; Returns: { name: string; value: string }[] };
       wa_number_secret_set: { Args: { p_id: string; p_name: string; p_value: string }; Returns: undefined };
       wa_number_secret_status: { Args: Record<PropertyKey, never>; Returns: { number_id: string; name: string; updated_at: string }[] };
+      wa_number_secret_vault_name: { Args: { p_id: string; p_name: string }; Returns: string };
       integration_secret_key_ok: { Args: { p_key: string }; Returns: boolean };
       integration_secret_set: { Args: { p_key: string; p_value: string }; Returns: undefined };
       google_sync_claim: {

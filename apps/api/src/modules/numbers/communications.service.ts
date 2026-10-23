@@ -39,7 +39,7 @@ export class CommunicationsService {
       try {
         await this.settings.writeSource(source, actorId);
       } finally {
-        await this.config.refresh();
+        await this.config.reload();
       }
       await this.audit.record({
         actorId,

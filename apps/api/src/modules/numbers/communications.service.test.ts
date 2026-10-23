@@ -12,7 +12,7 @@ function setup(opts: { source: 'legacy' | 'module'; moduleValues: Record<string,
     source: vi.fn(async () => source),
     defaults: vi.fn(async () => []),
     overlayOf: vi.fn(() => ({ values: opts.moduleValues, numberIds: {} })),
-    refresh: vi.fn(async () => true),
+    reload: vi.fn(async () => true),
   };
   const audit = { record: vi.fn(async () => undefined) };
   const svc = new CommunicationsService(settings as unknown as NumbersSettings, config as unknown as NumbersConfig, audit as unknown as AuditService);
@@ -34,7 +34,7 @@ describe('POST /admin/communications/source', () => {
     const t = setup({ source: 'legacy', moduleValues: {} });
     expect(await t.svc.setSource('module', 'actor')).toEqual({ source: 'module' });
     expect(t.settings.writeSource).toHaveBeenCalledWith('module', 'actor');
-    expect(t.config.refresh).toHaveBeenCalled();
+    expect(t.config.reload).toHaveBeenCalled();
     expect(t.audit.record).toHaveBeenCalledWith(expect.objectContaining({ action: 'comms_source', before: { comms_source: 'legacy' }, after: { comms_source: 'module' } }));
   });
 

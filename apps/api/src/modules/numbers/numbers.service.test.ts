@@ -32,6 +32,12 @@ describe('NumbersService', () => {
     expect(t.queries.update).toHaveBeenCalledWith(numberRow().id, { patch: { label: 'جديد', is_default: false }, actorId: 'actor' });
   });
 
+  it('a role change of a live default unsets is_default in the same update (no silent default move)', async () => {
+    const t = setup(numberRow({ purpose: 'notifications', is_default: true }));
+    await t.svc.update(numberRow().id, { purpose: 'chat' }, 'actor');
+    expect(t.queries.update).toHaveBeenCalledWith(numberRow().id, { patch: { purpose: 'chat', is_default: false }, actorId: 'actor' });
+  });
+
   it('making a disabled number the default is 409 not_enabled', async () => {
     const t = setup();
     t.queries.makeDefault.mockResolvedValueOnce(false);

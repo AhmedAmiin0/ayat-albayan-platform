@@ -3,6 +3,7 @@ import type { NumberCreate, NumberSecretName, NumberUpdate, NumberView } from '@
 import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { numberView } from './numbers.mapper';
 import { NumbersEffects } from './numbers.effects';
+import { numberPatch } from './numbers.patch';
 import { NumbersQueries, type NumberRow } from './numbers.queries';
 import { NumbersSecrets } from './numbers.secrets';
 
@@ -45,11 +46,11 @@ export class NumbersService {
     return this.view(row.id);
   }
 
-  /** is_default true → wa_number_make_default (409 not_enabled unless the number is on). */
+  /** is_default true → wa_number_make_default (409 not_enabled unless the number is on); numberPatch for the rest. */
   async update(id: string, body: NumberUpdate, actorId: string): Promise<NumberView> {
     const before = (await this.queries.byId(id)) ?? missing();
     const { is_default: isDefault, ...rest } = body;
-    const patch = isDefault === false ? { ...rest, is_default: false as const } : rest;
+    const patch = { ...numberPatch(before, rest), ...(isDefault === false ? { is_default: false as const } : {}) };
     if (Object.keys(patch).length > 0 && !(await this.queries.update(id, { patch, actorId }))) missing();
     if (isDefault === true && !(await this.queries.makeDefault(id, actorId))) {
       throw new ConflictException({ message: 'not_enabled' });
