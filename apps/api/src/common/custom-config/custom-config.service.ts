@@ -21,7 +21,7 @@ export class CustomConfigService {
     return data ? toCustomView(data as CustomConfigRow) : null;
   }
 
-  /** Public rows only, as the GET /config whitelist's input. */
+  /** Public rows only, as the GET /settings/public whitelist's input. */
   async publicRows(): Promise<{ key: string; value: Json; is_public: boolean }[]> {
     const { data, error } = await this.db.from('custom_config').select('key, value, is_public').eq('is_public', true);
     if (error) throw new Error(`custom_config read failed: ${error.message}`);
