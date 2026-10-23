@@ -58,4 +58,18 @@ describe('NumbersService', () => {
     expect(t.secrets.set).toHaveBeenCalledWith({ id: numberRow().id, name: 'access_token' }, 'token-fake');
     expect(JSON.stringify(t.effects.after.mock.calls)).not.toContain('token-fake');
   });
+
+  it('turning a number off while making it the default is 409 not_enabled before anything is written', async () => {
+    const t = setup(numberRow({ is_default: false }));
+    await expect(t.svc.update(numberRow().id, { enabled: false, is_default: true }, 'actor')).rejects.toMatchObject({ status: 409, response: { message: 'not_enabled' } });
+    expect(t.queries.update).not.toHaveBeenCalled();
+    expect(t.queries.makeDefault).not.toHaveBeenCalled();
+  });
+
+  it('a patch that was written is audited and refreshes the config even when the default step then fails', async () => {
+    const t = setup(numberRow({ is_default: false }));
+    t.queries.makeDefault.mockRejectedValueOnce(new Error('default_taken'));
+    await expect(t.svc.update(numberRow().id, { label: 'جديد', is_default: true }, 'actor')).rejects.toThrow('default_taken');
+    expect(t.effects.after).toHaveBeenCalledWith(expect.objectContaining({ entity: 'wa_numbers', action: 'update' }));
+  });
 });
