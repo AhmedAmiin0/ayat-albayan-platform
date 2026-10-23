@@ -33,6 +33,17 @@ export function seedPayload(hint: HintText, entries: readonly SeedEntry[] = SEED
   }));
 }
 
+/** A HintText over a nested string bundle (ar.json): the leaf at the dotted path, or null. */
+export const bundleText =
+  (bundle: object): HintText =>
+  (path) => {
+    const hit = path.split('.').reduce<unknown>(
+      (node, part) => (node !== null && typeof node === 'object' ? (node as Record<string, unknown>)[part] : undefined),
+      bundle,
+    );
+    return typeof hit === 'string' ? hit : null;
+  };
+
 const clip = (text: string | null): string | null => {
   const t = text?.trim();
   return t ? t : null;

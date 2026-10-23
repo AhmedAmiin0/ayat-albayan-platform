@@ -1,12 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import ar from '../../i18n/ar.json' with { type: 'json' };
 import { SEED_ENTRIES } from './seed-entries.js';
-import { seedPayload } from './seed-payload.js';
+import { bundleText, seedPayload } from './seed-payload.js';
 
-const lookup = (path: string): string | null => {
-  const hit = path.split('.').reduce<unknown>((node, part) => (node as Record<string, unknown> | undefined)?.[part], ar);
-  return typeof hit === 'string' ? hit : null;
-};
+const lookup = bundleText(ar);
 
 describe('seedPayload (config_seed entries, docs/26 §2b)', () => {
   const payload = seedPayload(lookup);
@@ -22,6 +19,12 @@ describe('seedPayload (config_seed entries, docs/26 §2b)', () => {
       expect(row?.description_seed, e.key).toBeTruthy();
       expect(row?.description_seed?.length ?? 0).toBeLessThanOrEqual(500);
     }
+  });
+
+  it('bundleText reads a leaf and answers null for a branch or a missing path', () => {
+    expect(lookup('settings')).toBeNull();
+    expect(lookup('no.such.path')).toBeNull();
+    expect(bundleText({ a: { b: 'x' } })('a.b')).toBe('x');
   });
 
   it('has no seed without a hint key, and a blank text is null', () => {
