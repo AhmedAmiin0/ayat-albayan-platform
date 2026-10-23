@@ -35,7 +35,7 @@ describe('integration keys registry', () => {
 
   it('never registers a key that must stay in env', () => {
     const envOnly = ['PORT', 'WEB_ORIGIN', 'SUPABASE_URL', 'SUPABASE_JWT_SECRET', 'SUPABASE_SERVICE_ROLE_KEY', 'SETTINGS_CACHE_MS',
-      'MESSAGE_SENDER_POLL_MS', 'AUTH_PASSWORD_MIN_LENGTH', 'FEEDBACK_TOKEN_SECRET', 'MESSAGING_ENABLED'];
+      'MESSAGE_SENDER_POLL_MS', 'AUTH_PASSWORD_MIN_LENGTH', 'FEEDBACK_TOKEN_SECRET', 'MESSAGING_ENABLED', 'INTEGRATION_REFRESH_MS'];
     expect(envOnly.filter(isIntegrationKey)).toEqual([]);
   });
 });
