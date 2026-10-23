@@ -4462,13 +4462,15 @@
       "self.assistant": "Classroom assistant's own pages",
       "students.check_registration": "Check a student's registration",
       "subscriptions.set_start_date": "Set the subscription start date",
-      "numbers.manage": "Manage WhatsApp numbers"
+      "numbers.manage": "Manage WhatsApp numbers",
+      "notifications.manage": "Manage notifications"
     },
     "hints": {
       "students.check_registration": "Search by the guardian's phone or the student's name or code; shows only the name, code, status and teacher.",
       "subscriptions.set_start_date": "Pick the package's start day, including a past date for a student who started before the platform. Without it the package starts on the default day.",
       "inbox.lists": "Create, rename and delete the shared chat lists and add chats to them. Nothing is ever sent because of a list.",
-      "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending."
+      "numbers.manage": "Add and edit WhatsApp numbers, save their credentials, import the current setup and change the setup source. Does not open sending.",
+      "notifications.manage": "Turn notifications on or off and set their timing, channels and sending number. Does not open sending."
     },
     "page": {
       "title": "Roles and permissions",

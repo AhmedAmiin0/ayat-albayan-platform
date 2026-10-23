@@ -115,6 +115,19 @@ export interface ParityView {
   source: CommsSource;
   roles: ParityRoleView[];
   differences: { role: WaLine; field: ParityField; state: Exclude<ParityState, 'same'> }[];
+  /**
+   * docs/23b decision 5: per legacy-mapped notification rule, each part where the module path (the rule)
+   * and the legacy path (the settings keys) disagree; values JSON-encoded. The switch to module is
+   * refused while this or `differences` is non-empty. Optional only for older API builds.
+   */
+  rules?: RuleParityDiff[];
+}
+
+export interface RuleParityDiff {
+  key: string;
+  field: 'enabled' | 'timing';
+  legacy: string;
+  module: string;
 }
 
 /** POST /admin/communications/source → the source now in use. */
